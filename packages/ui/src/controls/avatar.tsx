@@ -94,7 +94,7 @@ export const AvatarBadge = forwardRef<HTMLSpanElement, AvatarBadgeProps>(functio
   );
 });
 
-/** Overlapping avatars; give it role="img" and an aria-label naming everyone ("Anna, Marcus and 3 more"). */
+/** Overlapping avatars; give it role="img" and an aria-label naming everyone ("Anna, Sander and 3 more"). */
 export const AvatarGroup = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function AvatarGroup(
   { className, ...props },
   ref,

@@ -1,4 +1,4 @@
-// @fume/ui: React components over the Fume design system (PROPOSED, 14 Oct 2026). See CONVENTIONS.md.
+// @fume/ui: React components over the Fume design system. See CONVENTIONS.md.
 export { cx } from "./cx";
 export * from "./icons";
 export * from "./controls";

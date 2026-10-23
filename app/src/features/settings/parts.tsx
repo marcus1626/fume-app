@@ -192,8 +192,8 @@ function TeamSections({ view, session }: { view: TeamView; session: Session }) {
   const toast = useToast();
   const pending = view.invitations.filter((i) => i.state === "sent");
   const nameOf = (id: string) => view.members.find((m) => m.user.id === id)?.user.name ?? "Someone";
-  // Round 13 (robot note 12): an agency's people work in the brand through the agency; they are the agency's to
-  // manage, so they are listed apart, with no role to change and no remove
+  // An agency's people work in the brand through the agency; they are the agency's to manage, so they are listed apart,
+  // with no role to change and no remove.
   const agencyPeople = view.members.filter((m) => m.user.agency);
   const people = view.members.filter((m) => !m.user.agency);
 
@@ -475,7 +475,7 @@ export function PackageSettings({ session }: { session: Session }) {
     >
       <Query query={settings}>
         {({ package: pkg, usage }) =>
-          // Round 13 (robot note 12): a brand an agency runs is under the agency's licence, so the agency answers for it
+          // A brand an agency runs is under the agency's licence, so the agency answers for it.
           session.agencyName ? (
             <SettingsSection
               title="Your package"
@@ -559,7 +559,7 @@ export function NotificationSettings() {
 }
 
 function NotificationForm({ prefs }: { prefs: Prefs }) {
-  // The contract has no call to save these yet, so they are kept for this visit only (reported).
+  // The contract has no call to save these yet, so they are kept for this visit only.
   const [saved, setSaved] = useState(prefs);
   const [value, setValue] = useState(prefs);
   const toast = useToast();
@@ -595,9 +595,9 @@ function NotificationForm({ prefs }: { prefs: Prefs }) {
 }
 
 // ─── Profile ────────────────────────────────────────────────────────────────
-// Round 13 (Marcus's video comment #49; PROPOSED 22 Oct 2026): her name, title and email are changed in place and
-// saved, not asked of Fume. ProfileForm is the one profile, shared by every frame: the customer's Settings › Profile,
-// Fume's people at /studio/settings/profile and an agency's at /agency/settings/profile (builder F links it).
+// Her name, title and email are changed in place and saved, not asked of Fume. ProfileForm is the one profile, shared
+// by every frame: the customer's Settings › Profile, Fume's people at /studio/settings/profile and an agency's at
+// /agency/settings/profile.
 
 const EMAIL = /^\S+@\S+\.\S+$/;
 

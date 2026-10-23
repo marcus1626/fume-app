@@ -1,7 +1,7 @@
 // Kbd and KbdGroup (design-system/components/kbd.css), shadcn's kbd: a key is a sunken pill in the mono face.
 // A key shows a shortcut; it is never a button. <KbdGroup><Kbd>⌘</Kbd><Kbd>K</Kbd></KbdGroup>
-// Round 9 (DWAY-9; PROPOSED 19 Oct 2026): shortcuts are written once the Mac way ("⌘B", "⇧⌘Z") and shown the way the
-// person's keyboard says it: "⌘B" on a Mac, "Ctrl+B" elsewhere (shortcutLabel). Tooltips and key hints use it.
+// Shortcuts are written once the Mac way ("⌘B", "⇧⌘Z") and shown the way the person's keyboard says it: "⌘B" on a Mac,
+// "Ctrl+B" elsewhere (shortcutLabel). Tooltips and key hints use it.
 import { forwardRef, type HTMLAttributes } from "react";
 import { cx } from "../cx";
 

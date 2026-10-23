@@ -1,10 +1,8 @@
-// Brand Rules (ARCHITECTURE §4.2): what every creative keeps to, by area (logo, colour, type, voice, layout,
-// imagery, claims). A hard constraint is never broken; a preference can bend for one campaign. A rule Fume found
-// itself says where it came from and how sure Fume is; a rule you gave or confirmed shows only itself (round 8,
-// LOAD-9). Owner, approver and member edit and add; a viewer reads. /brand/rules: "← Brand", no tab row (WAY-10).
-// Round 9 (desktop review DLAY-7; PROPOSED 19 Oct 2026): the reading measure (760), each area a 120 px column on the
-// left of its rules (Logo | rule | pencil), so seven rules fit in one screen with the pencil right after the text; a
-// rule is written in a panel on the right (a form, so never a centred dialog), the list still in view.
+// Brand Rules (ARCHITECTURE §4.2): what every creative keeps to, by area (logo, colour, type, voice, layout, imagery,
+// claims). A hard constraint is never broken; a preference can bend for one campaign. A rule Fume found itself says
+// where it came from and how sure Fume is; a rule you gave or confirmed shows only itself. Owner, approver and member
+// edit and add; a viewer reads. /brand/rules has "← Brand" and no tab row. Each area is a column on the left of its
+// rules, so seven rules fit in one screen; a rule is written in the right panel (a form), with the list still in view.
 import {
   Badge,
   Button,
@@ -42,9 +40,8 @@ import { Back, Nothing, Page, Query } from "../../shell/Page";
 import { useAddRule, useUpdateRule } from "./hooks";
 import { ruleArea, ruleAreas, ruleKind, ruleLine, useExpertName, useRole } from "./parts";
 
-// Round 13 (Marcus's video comment #43, robot note 05; PROPOSED 22 Oct 2026): every rule is a Do or a Don't, said on
-// the rule and chosen in the panel, with a filter over the list (All · Do · Don't). A new rule's area is not set to
-// Voice before she says anything: Fume guesses it from the words as she writes, or she chooses it.
+// Every rule is a Do or a Don't, said on the rule and chosen in the panel, with a filter over the list (All · Do ·
+// Don't). A new rule's area starts unset: Fume guesses it from the words as she writes, or she chooses it.
 type Draft = Omit<Pick<BrandRule, "area" | "kind" | "statement" | "polarity">, "area"> & { area: RuleArea | "" };
 
 export const polarityWord: Record<RulePolarity, string> = { do: "Do", dont: "Don’t" };
@@ -137,7 +134,7 @@ function RulePanel({
               </Field>
               <Field>
                 <FieldLabel id="rule-polarity-label">Do or don’t</FieldLabel>
-                {/* a segmented control, glass-aware on the panel: the chosen one is the white pill (round 13 after-check of #43) */}
+                {/* a segmented control, glass-aware on the panel: the chosen one is the white pill */}
                 <SegmentedControl
                   value={draft.polarity ?? ""}
                   onValueChange={(v) => {
@@ -301,7 +298,7 @@ export function RulesContent({ onAdd, onEdit }: { onAdd?: () => void; onEdit?: (
   );
 }
 
-/** /brand/rules: "← Brand", the title, who checks against them, Add a rule; then the rules by area (WAY-10). */
+/** /brand/rules: "← Brand", the title, who checks against them, Add a rule; then the rules by area. */
 export function BrandRules() {
   const brand = useBrandDna();
   const { canEdit } = useRole();

@@ -1,12 +1,10 @@
-// One campaigns table for Fume's studio and an agency (UX review DLAY-9, DLOAD-16, PROPOSED 20 Oct 2026; Marcus 20 Oct:
-// "Agency dashboard blir strengt tatt lik som vår"). Built on the agency's table: the cover, Under way and Done, sortable
-// headers. Each row holds the campaign with its one status sentence (copy.campaignStatus for the viewer, DLOAD-1),
-// its brand or client (on the page for every brand only), the stage as five dots, the next date with its label
-// ("Plan by", "Delivery", "Goes live", DLOAD-13), what is in check (a link into Check) and what is with the customer.
-// The whole row opens the campaign. On the phone the rows stay list rows.
-// Round 13 (Marcus #68: "columns for Under way, Done and so on instead of rows"): CampaignBoard shows the same rows as a
-// board, one column per stage (Brief … Delivery, from campaigns/stages.ts) and Done, a card per campaign; the page
-// keeps the table as List.
+// One campaigns table for Fume's studio and an agency: the cover, Under way and Done, sortable headers. Each row holds
+// the campaign with its one status sentence (copy.campaignStatus for the viewer), its brand or client (on the page for
+// every brand only), the stage as dots, the next date with its label ("Plan by", "Delivery", "Goes live"), what is in
+// check (a link into Check) and what is with the customer. The whole row opens the campaign. On the phone the rows stay
+// list rows.
+// CampaignBoard shows the same rows as a board, one column per stage (Brief … Delivery, from campaigns/stages.ts) and
+// Done, a card per campaign; the page keeps the table as List.
 import {
   Icon,
   Item,
@@ -201,7 +199,7 @@ function Opener({ row, children }: { row: CampaignTableRow; children: ReactNode 
         {children}
       </Link>
     );
-  // Neither a link nor an action (the admin's limited view, robots' note 09): the name, as words.
+  // Neither a link nor an action (the admin's limited view): the name, as words.
   if (!row.onOpen) return <>{children}</>;
   return (
     <button type="button" className="ui-agency-row-open" onClick={row.onOpen} aria-label={label}>
@@ -311,7 +309,7 @@ function CampaignItem({ row, showBrand }: { row: CampaignTableRow; showBrand: bo
   );
 }
 
-// ─── The board (r13 #68) ─────────────────────────────────────────────────────
+// ─── The board ───────────────────────────────────────────────────────────────
 
 /** The campaigns as a board: a column per stage, then Done; in each, what waits on the reader first. */
 export function CampaignBoard({

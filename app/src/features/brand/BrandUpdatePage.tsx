@@ -1,12 +1,8 @@
-// Update the brand (round 7, Marcus 16 Oct, decided points 2, 3, 5): an onboarded brand is read again. Two ways in:
-// read the website again, or upload a zip of new things or changes. Fume compares what it reads with the
-// approved Brand DNA and shows only what is new, changed or unsure, in the shared "What Fume found" review
-// (FoundReview, @fume/ui): Approve all, or confirm, change or remove one. Products it saw are only a link to Products.
-// /brand/update, from "More about your Brand DNA" on the Brand page. Round 8 (LOAD-21): two ways, each a title and one
-// short line, no footnote; a confirmed one shows in the row itself, so it posts no toast (MOB-19).
-// Round 9 (desktop review DLOAD-7, DLOAD-1, DLAY-7; PROPOSED 19 Oct 2026): Fume reads and finds, never "the Engine"
-// (it only makes creatives); a find is changed, never "fixed", in a panel on the right; the page keeps the reading
-// measure.
+// Update the brand (/brand/update, from "More about your Brand DNA"): an onboarded brand is read again, from the
+// website or from a zip of new things or changes. Fume compares what it reads with the approved Brand DNA and shows
+// only what is new, changed or unsure, in the shared "What Fume found" review (FoundReview, @fume/ui): Approve all, or
+// confirm, change or remove one. A find is changed, never "fixed", in the right panel; a confirmed one shows in the row
+// itself, so it posts no toast. Fume reads and finds, never "the Engine" (it only makes creatives).
 import {
   Alert,
   AlertAction,
@@ -427,7 +423,7 @@ function Review({ update, identity }: { update: BrandUpdate; identity?: BrandIde
             <Alert>
               <Icon name="package" />
               <AlertTitle>
-                {/* round 13 (robot note 05): the same products Import from website finds, new or changed */}
+                {/* the same products Import from website finds, new or changed */}
                 {update.products.count === 1
                   ? "1 product new or changed"
                   : `${update.products.count} products new or changed`}

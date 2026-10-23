@@ -1,19 +1,16 @@
-// The staff frame: where Fume's people and an agency's people work (FLOWS §4.2, §24.3). The Studio's desk itself
+// The staff frame: where Fume's people and an agency's people work (FLOWS §4.2, §24.3, §25.1). The Studio's desk itself
 // (/studio/doc/:id) is full screen, outside this frame, like Photoshop (FLOWS §9).
-// Round 12 (desktop review 20 Oct, DWAY-5, DWAY-1, DWAY-2, DWAY-3, DWAY-6, DWAY-8, DLAY-4, DWAY-15, DTASK-10,
-// DWAY-21; PROPOSED 20 Oct 2026): ONE frame for Fume's studio and an agency (Marcus 20 Oct 12:41Z: "Agency dashboard
-// blir strengt tatt lik som vår"). The same sidebar (StaffSidebar.tsx: the picker, one list of places per scope), the
-// same bar (Frame.tsx: the way back by name, the title once the header has scrolled away, Search with ⌘K, the bell),
-// the same ⌘K, the same folded sidebar remembered on this computer. Only the words of the scope differ (brands or
-// clients) and the root of the address:
+// Fume's studio and an agency share one frame: the same sidebar (StaffSidebar.tsx), the same bar (Frame.tsx), the same
+// ⌘K and the same folded sidebar remembered on this computer. Only the words of the scope (brands or clients) and the
+// root of the address differ:
 //   Fume's people   /studio/…   one brand  /studio/b/:workspaceId/…
 //   an agency's     /agency/…   one client /agency/b/:workspaceId/…
-// The address is the scope (scope.ts): the session follows the brand or client the address names (one hook for both
-// frames, so two browser tabs can hold two clients and a link opens in its own client); a page that names an object (a
-// campaign, its plan, its review) moves to that object's own brand when the address holds another; the customer's own
-// addresses (/campaigns/c-autumn, a link inside a customer page) open under the brand's prefix; the other frame's
-// addresses open the same place in this one (an agency's person on /studio/b/w-lysne/qa lands on
-// /agency/b/w-lysne/check); "/" is the frame's root on the first landing (DWAY-2), the brand's Home after that.
+// The address is the scope (scope.ts): the session follows the brand or client the address names, so two browser tabs
+// can hold two clients and a link opens in its own client. A page that names an object (a campaign, its plan, its
+// review) moves to that object's own brand when the address holds another; the customer's own addresses open under the
+// brand's prefix; the other frame's addresses open the same place in this one (an agency's person on
+// /studio/b/w-lysne/qa lands on /agency/b/w-lysne/check); "/" is the frame's root on the first landing, the brand's
+// Home after that.
 // Fume's admin follows the brands and does not check: a brand is its Home and its Campaigns (a list to read), anything
 // else in a brand goes to its Home, and Check goes to the overview.
 import type { CommandPaletteItem, IconName, NotificationData } from "@fume/ui";
@@ -88,7 +85,7 @@ function StaffFrame({ frame }: { frame: StaffFrameKind }) {
   if (frame === "agency")
     copy.setStatusReader({ agency: true, client: scope.entry?.client?.people[0]?.name.split(" ")[0] });
   else copy.setStatusReader({ agency: false, viewer: "staff" });
-  // Back in the studio, Customer view is over (it lasts until then, DWAY-2)
+  // Back in the studio, Customer view is over (it lasts until then)
   if (frame === "fume" && customerViewOn()) setCustomerView(false);
 
   // Where this address belongs, if not here. "wait" while the brands or campaigns that decide it are still coming.
@@ -130,7 +127,7 @@ function StaffFrame({ frame }: { frame: StaffFrameKind }) {
   ) : undefined;
 
   // ⌘K: the scope's places; in a brand its own pages (an agency's full client: also what she starts, every creative and
-  // the chat); every brand and its places, what waits for a check and the campaigns across brands (DTASK-10, DWAY-6)
+  // the chat); every brand and its places, what waits for a check and the campaigns across brands
   const parts: PaletteParts =
     !scope.entry || scope.entry.summary
       ? paletteParts.none
@@ -168,7 +165,7 @@ function StaffFrame({ frame }: { frame: StaffFrameKind }) {
   );
 }
 
-/** A board belongs to Brand, or to its campaign (WAY-13). */
+/** A board belongs to Brand, or to its campaign. */
 function useCampaignBoard(rest: string | undefined) {
   const boardId = /^\/boards\/([^/]+)/.exec(rest ?? "")?.[1];
   const board = useBoard(boardId);
@@ -210,8 +207,8 @@ function useStaffNeeds(frame: StaffFrameKind): AgencyNeed[] {
   return (frame === "agency" ? home.data?.needsYou : all.data?.needsYou) ?? [];
 }
 
-/** The bell (DWAY-8): the person's notifications, and what waits on them (shown as read: Check and the overview count
- *  it already, so the number stays the notifications'). */
+/** The bell: the person's notifications, and what waits on them (shown as read: Check and the overview count it
+ *  already, so the number stays the notifications'). */
 function useStaffBell(frame: StaffFrameKind, needs: AgencyNeed[]): { items: NotificationData[]; unread: number } {
   const own = useNotificationItems();
   return useMemo(() => {
@@ -234,8 +231,8 @@ function useStaffBell(frame: StaffFrameKind, needs: AgencyNeed[]): { items: Noti
       actor: { kind: "fume" },
     }));
     const items = [...waiting, ...own.items].sort((a, b) => (b.dateTime ?? "").localeCompare(a.dateTime ?? ""));
-    // Round 13 AGENCY (robot note 10-agency): the agency's bell reads every client's Needs you, so its number is the
-    // same under All clients and inside a client (AgencySidebar.tsx, agencyBell)
+    // The agency's bell reads every client's Needs you, so its number is the same under All clients and inside a client
+    // (AgencySidebar.tsx, agencyBell)
     if (frame === "agency") return agencyBell(items, own.query.data, needs);
     return { items, unread: own.unread };
   }, [needs, own.items, own.unread, own.query.data, frame]);
@@ -261,8 +258,8 @@ const brandPlaces = (frame: StaffFrameKind): { rest: string; label: string; icon
     : []),
 ];
 
-/** ⌘K across the scope (DTASK-10, DWAY-6): every brand or client and its places, the plans and creatives to check, and
- *  the campaigns across brands, each opening where it is worked on. */
+/** ⌘K across the scope: every brand or client and its places, the plans and creatives to check, and the campaigns
+ *  across brands, each opening where it is worked on. */
 function useStaffPaletteItems(scope: StaffScope, needs: AgencyNeed[]): CommandPaletteItem[] {
   const navigate = useNavigate();
   const qa = useQaQueue();
@@ -341,7 +338,7 @@ function useStaffPaletteItems(scope: StaffScope, needs: AgencyNeed[]): CommandPa
           onSelect: () => navigate(docHref(frame, v.item.documentId!)),
         });
     }
-    // The campaigns across brands, in the frame's words, each to the campaign (DWAY-14)
+    // The campaigns across brands, in the frame's words, each to the campaign
     for (const r of campaigns.data ?? [])
       items.push({
         id: `campaign-${r.campaign.id}`,

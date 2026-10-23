@@ -1,3 +1,2 @@
-// The agency's Home is the overview Fume's studio has (features/studio/OverviewPage.tsx): one page, as Marcus decided
-// 20 Oct 2026 ("Agency dashboard blir strengt tatt lik som vår, vi skal ha performance og alt sånt vi også").
+// The agency's Home is the same overview as Fume's studio (features/studio/OverviewPage.tsx).
 export { OverviewPage as AgencyHomePage } from "../studio/OverviewPage";

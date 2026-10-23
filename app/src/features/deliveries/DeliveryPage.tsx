@@ -1,14 +1,10 @@
-// One delivery (FLOWS §3.2, §7 step 13): the approved creatives, named and grouped by collection › product ›
-// direction, masters before their variants and each in its formats; the rights that come with them; and the
-// download, all at once, one format at a time or one creative, each with its progress and a done state (walk-through
-// 15 Oct, Must 6). Once it is downloaded, the customer tells Fume it is live, which
-// closes the loop for Creative Memory. Each creative carries the name she approved it under ("Night Body Oil · Feed",
-// round 8, TASK-17), with the file name that lands on her disk as a small data line under it.
-// Round 9 (desktop review 19 Oct, DLOAD-15, DTSK-17, DLAY-20; PROPOSED 19 Oct 2026): one way to take it all, Download
-// all, ONE zip (download.ts); "By format" only when there are two formats or more; no State column (a delivery only
-// ever holds approved creatives); a count only where there is more than one group; 72 px thumbnails that preview at
-// about 320 px under the mouse and open the creative in the viewer; and "Confirm it is live" in place of a sentence
-// that asked her to tell Fume with no way to.
+// One delivery (FLOWS §3.2): the approved creatives, grouped by collection › product › direction, masters before their
+// variants and each in its formats; the rights that come with them; and the download. Each creative carries the name
+// she approved it under ("Night Body Oil · Feed"), with the file name that lands on her disk as a small data line under
+// it. Its 72 px thumbnail previews at about 320 px under the mouse and opens the creative in the viewer.
+// Download all is one zip (download.ts); "By format" shows only with two formats or more. No State column: a delivery
+// only holds approved creatives. Once it is downloaded, "Confirm it is live" tells Fume, which closes the loop for
+// Creative Memory.
 import {
   Alert,
   AlertDescription,

@@ -1,19 +1,15 @@
-// The Studio, strictly like Photoshop (FLOWS §9): one creative document per creative, full screen, outside the
-// studio's sidebar. Top bar: the way back to where Anna came from (Check, Engine output, the Studio's start), the
-// creative's one name with the brand under it, its campaign as a chip (picked right there, v5, with its own look
-// beside it), the three studios (Render, Design, Video later), undo and redo, and the one action that moves the work
-// on (Send to check; for a model Save as draft / Save to the brand's models; for a reference Save to references).
-// Left: specs. Middle: the board with its view tools on a rail, the Engine bar docked under it, and the versions.
-// Right: the mode's variables. The page never scrolls; each panel scrolls on its own when its open part is tall.
-// Renders are versions (nothing is overwritten); edits between renders are undo and redo (⌘Z, ⌘⇧Z); ⌘\ hides both
-// panels so the board takes the screen.
-// Round 12 (UX review 20 Oct, PROPOSED 20 Oct 2026):
-// - DWAY-10, DTASK-12: no breadcrumb ("no breadcrumbs" is decided): the back arrow follows history and names the page
-//   she came from ("← Check" lands on the item she opened, `?item=` and all); a cold link falls back to "← Studio".
-//   The title is plain text; the campaign is a chip.
-// - DTASK-1: Send to check from a creative opened in Check says the new version left for Check, offers Undo, and
-//   takes her back to the item she came from.
-// - DLAY-6: the version shows once (in the strip); the board loses its floating bars.
+// The Studio, strictly like Photoshop (FLOWS §9): one creative document per creative, full screen, outside the studio's
+// sidebar. Top bar: the way back to where she came from, the creative's one name with the brand under it, its campaign
+// as a chip (picked right there, with its own look beside it), the three studios (Render, Design, Video later), undo
+// and redo, and the one action that moves the work on (Send to check; for a model Save as draft / Save to the brand's
+// models; for a reference Save to references). Left: specs. Middle: the board with its view tools on a rail, the Engine
+// bar docked under it, and the versions. Right: the mode's variables. The page never scrolls; each panel scrolls on its
+// own when its open part is tall. Renders are versions (nothing is overwritten); edits between renders are undo and
+// redo (⌘Z, ⌘⇧Z); ⌘\ hides both panels so the board takes the screen.
+// - No breadcrumb: the back arrow follows history and names the page she came from ("← Check" lands on the item she
+//   opened, `?item=` and all); a cold link falls back to "← Studio". The title is plain text; the campaign is a chip.
+// - Send to check from a creative opened in Check says the new version left for Check, offers Undo, and takes her back
+//   to the item she came from.
 // A desk tool: a phone shows the board and the versions read-only, with a note.
 import {
   BackLink,
@@ -166,11 +162,11 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
   const [formatsOpen, setFormatsOpen] = useState(false);
   const [lightView, setLightView] = useState<LightView>();
   const [bare, toggleBare] = useBare();
-  // r13 #59: the versions compared side by side on the board; the strip adds and removes them.
+  // The versions compared side by side on the board; the strip adds and removes them.
   const [compare, setCompare] = useState<string[]>([]);
   const placements = usePlacements().data ?? [];
 
-  // r13 #57/#63: the scene library's templates, backgrounds, surfaces and props are options of the mode's own variables.
+  // The scene library's templates, backgrounds, surfaces and props are options of the mode's own variables.
   const mode = withLibrary(
     modes.find((m) => m.id === doc.modeId),
     assets,
@@ -180,15 +176,14 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
     ? firstName(campaign.data.approver.name)
     : firstName(approverOf(peopleList) ?? "the customer");
   const title = documentName(doc, mode, product?.name);
-  // r13 #64: while the Engine works on this creative, the desk is locked (Wait or Take over).
+  // While the Engine works on this creative, the desk is locked (Wait or Take over).
   const work = useEngineWork(doc, title);
   const locked = Boolean(work) && !readOnly;
   const { state } = history;
   const name = (id: string | undefined) =>
     session && id === session.user.id ? firstName(session.user.name) : id === "u-tuva" ? "Tuva" : people.name(id);
-  // The way back follows history (DWAY-10): "← Check" when she came from Check, else the page she came from; a cold
-  // link opens the brand's Studio.
-  // round 13 AGENCY: a cold link goes back to the frame's own Studio (/agency/b/… for an agency's person)
+  // The way back follows history: "← Check" when she came from Check, else the page she came from. A cold link goes
+  // back to the frame's own Studio (/agency/b/… for an agency's person).
   const back = useBack({
     to: `${frameRoot[session?.user.agency ? "agency" : "fume"]}/b/${doc.workspaceId}/studio`,
     label: "Studio",
@@ -221,7 +216,7 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
       { onSuccess: () => history.reset() },
     );
   };
-  // v5: the creative's campaign, picked on its chip; its look leads the look sections.
+  // The creative's campaign, picked on its chip; its look leads the look sections.
   const switchCampaign = (picked: { id: string; name: string; look?: unknown } | undefined) => {
     history.flush();
     update.mutate(
@@ -522,7 +517,7 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
   );
 }
 
-/** The variables the Engine's open change touches, and the ones it would change if asked (DTASK-18). */
+/** The variables the Engine's open change touches, and the ones it would change if asked. */
 function proposedKeys(doc: CreativeDocument): string[] {
   const edit = [...doc.edits].reverse().find((e) => e.state === "proposed");
   if (!edit) return [];

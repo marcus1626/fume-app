@@ -1,7 +1,5 @@
-// One number for "waiting in Check" (walk-through 15 Oct, staff counts; round 12 the place is called Check): Check's
-// count, its badge in the menu and the brand cards on All brands all count the same thing, the creatives still
-// waiting for a check, for every expert alike. Before, the badge and the cards counted the old per-expert check queue, so
-// Anna saw "In check 0" for SOLV over a QA page that listed 2, and the badge stayed at 3 after Mark checked.
+// One number for "waiting in Check": Check's count, its badge in the menu and the brand cards on All brands all count
+// the same thing, the creatives still waiting for a check, for every expert alike.
 import {
   Badge,
   Icon,

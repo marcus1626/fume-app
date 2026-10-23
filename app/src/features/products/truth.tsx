@@ -1,8 +1,7 @@
-// Round 13 (Marcus's video comment #46; PROPOSED 22 Oct 2026): the product's page and the product check show much more
-// of what Fume holds about a product, in one organised sheet: measures and parts, materials and finish, colours with
-// their codes, the label's texts, the variants, the claims (and what never to say) and where it all came from. Every
-// value Fume holds is here, read or given; changing one is still done on its line above or under All details. The look
-// is r13-brand.css.
+// The product's page and the product check show what Fume holds about a product in one organised sheet: measures and
+// parts, materials and finish, colours with their codes, the label's texts, the variants, the claims (and what never to
+// say) and where it all came from. Every value Fume holds is here, read or given; changing one is done on its line or
+// under All details. The look is r13-brand.css.
 import { DataList, DataListItem } from "@fume/ui";
 import type { CSSProperties } from "react";
 import type {

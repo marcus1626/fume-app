@@ -1,18 +1,13 @@
-// Swipe through (FLOWS §11; UX review 19 Oct, TASK-4, TASK-21): the creatives that wait on her, one at a time, full
-// screen on the dark stage, as a layer over the campaign's review (?swipe=1). Approve (swipe right, →) acts at once,
-// like the viewer's Approve, with Undo in the toast; Ask for changes (left, ←) says in one line what should change
-// and puts the creative in the set's change request; Comment (up, ↑) adds the comment at once. So closing never
-// throws anything away: what is approved is approved, and the change request waits on the review page until it is
-// sent, once, as one. The end says what she decided and offers the change request's one Send.
-// For a member (who may not approve) right is "Looks good": a note to the approver.
-// Round 9 (PROPOSED 19 Oct 2026, UX review DWAY-2, DTSK-9, DTSK-15): Swipe through is the phone's; on a desk with a mouse
-// the review page does not offer it and its address opens the viewer. Where a keyboard is used anyway, the keys are the
-// viewer's: A approves, C asks for changes, ← → only move, Backspace or ⌘Z takes the last decision back. Never an
-// arrow to approve. The change request's Send sends at once, with Undo.
-// /review/:campaignId/swipe is the old address: it opens the same layer.
-// Round 13 (Marcus #33, #34; PROPOSED 21 Oct 2026): left is "Needs changes": its one line is a comment, posted at once
-// like every comment, and the creative is marked, so its open comments are the change list. The end offers "Start the
-// changes" for the marked ones (the review page has it too). Keys: A approves, N marks Needs changes, C comments.
+// Swipe through (FLOWS §11): the creatives that wait on her, one at a time, full screen on the dark stage, as a layer
+// over the campaign's review (?swipe=1). Approve (swipe right) acts at once, like the viewer's Approve, with Undo in
+// the toast. Left is "Needs changes": its one line is a comment, posted at once like every comment, and the creative is
+// marked, so its open comments are the change list. Comment (up) adds a comment at once. So closing never throws
+// anything away. The end says what she decided and offers "Start the changes" for the marked ones (the review page has
+// it too). For a member (who may not approve) right is "Looks good": a note to the approver.
+// Swipe through is the phone's; on a desk with a mouse the review page does not offer it and its address opens the
+// viewer. Where a keyboard is used anyway, the keys are the viewer's: A approves, N marks Needs changes, C comments, ←
+// → only move, Backspace or ⌘Z takes the last decision back. Never an arrow to approve. /review/:campaignId/swipe is
+// the old address: it opens the same layer.
 import { Button, Icon, Input, Kbd, KbdGroup, Progress, ViewerLayer, ViewerLayerTitle, useToast } from "@fume/ui";
 import {
   useEffect,
@@ -158,7 +153,7 @@ export function SwipeThrough({ campaign, set, all, approver, canApprove, threadI
     if (!ask || !text.trim()) return;
     const c = creative;
     if (ask === "no") {
-      // One place to write (round 13): what should change is a comment like any other, and the mark makes it the list.
+      // One place to write: what should change is a comment like any other, and the mark makes it the list.
       comment.mutate(
         { creativeId: c.id, versionId: c.current.id, text: text.trim(), pin: pin ?? undefined },
         { onError: (err) => toast.error("The comment wasn’t added", { description: err.message }) },
@@ -205,8 +200,8 @@ export function SwipeThrough({ campaign, set, all, approver, canApprove, threadI
     return true;
   };
 
-  // Keys (the viewer's): A approve, C ask for changes, ← → move, Backspace or ⌘Z the last decision back. Never an
-  // arrow to approve. Escape is the layer's (onEscape).
+  // Keys (the viewer's): A approves, N marks Needs changes, C comments, ← → move, Backspace or ⌘Z takes the last
+  // decision back. Never an arrow to approve. Escape is the layer's (onEscape).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.altKey || leaving || sender.dialog || inField(e.target)) return;
@@ -307,7 +302,7 @@ export function SwipeThrough({ campaign, set, all, approver, canApprove, threadI
             </ViewerLayerTitle>
             <span className="ui-rv-sub">
               <span>{done ? campaign.name : shapeLine(creative)}</span>
-              {/* The expert checked it: the Amber pointer beside who, as in the viewer (round 13, #28) */}
+              {/* The expert checked it: the Amber pointer beside who, as in the viewer */}
               {!done && creative.current.checkedBy && (
                 <span className="ui-rv-checked">
                   <Icon name="fume-check" />

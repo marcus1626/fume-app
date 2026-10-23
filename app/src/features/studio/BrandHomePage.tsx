@@ -1,14 +1,11 @@
-// One brand's Home, or one client's (FLOWS §4.2, §24.3): /studio/b/:workspaceId for Fume's people, /agency/b/:workspaceId
-// for an agency's.
-// Round 12 (desktop review 20 Oct, DLAY-8, DWAY-15, DWAY-7, DWAY-14, DWAY-17; PROPOSED 20 Oct 2026): ONE Home for both
-// frames, built like the agency's, which the review kept. The h1 is the brand: its mark and its name, and one sentence
-// of where it stands ("1 plan and 3 creatives to check; 6 creatives with Maja."), so three clients in three browser
-// tabs never read alike. The work comes first: what needs you here (a plan to check or approve, creatives to send,
-// Fume's questions, a brief), then what waits for a check, each row opening that creative in Check (/qa?item=, never
-// the retired full-screen check) beside the campaigns, each row opening the campaign (Fume's people: its plan), and
-// this month's numbers. Then what the Engine made as one row of six, with the way to Engine output. The Studio and the
-// boards are the sidebar's (Studio, Brand › Boards), so this page no longer repeats them. Fume's admin follows the
-// brand: its usage and its campaigns.
+// One brand's Home, or one client's (FLOWS §4.2, §24.3): /studio/b/:workspaceId for Fume's people,
+// /agency/b/:workspaceId for an agency's, one Home for both frames. The h1 is the brand: its mark and its name, and one
+// sentence of where it stands ("1 plan and 3 creatives to check; 6 creatives with Maja."), so three clients in three
+// browser tabs never read alike. The work comes first: what needs you here (a plan to check or approve, creatives to
+// send, Fume's questions, a brief), then what waits for a check, each row opening that creative in Check (/qa?item=),
+// beside the campaigns, each row opening the campaign (Fume's people: its plan), and this month's numbers. Then what
+// the Engine made as one row of six, with the way to Engine output. The Studio and the boards are the sidebar's. Fume's
+// admin follows the brand: its usage and its campaigns.
 import {
   Badge,
   Button,
@@ -84,7 +81,7 @@ const askIcon: Record<string, IconName> = {
 const toCheck = (href: string) => /\/(qa|check)(\?|$)/.test(href);
 
 /** What needs you in this brand or client, in the frame's words and addresses; for an agency, also the quiet line of
- *  products nothing waits on (DLOAD-14, as the agency's Home had it). */
+ *  products nothing waits on. */
 function useAsks(
   frame: StaffFrameKind,
   workspaceId: Id,
@@ -265,9 +262,8 @@ export function BrandHomePage() {
 
               <aside className="ui-app-stack ui-studio-gap" aria-label={`About ${v.workspace.brandName}`}>
                 {!admin && <CampaignsSection v={v} frame={frame} base={base} />}
-                {/* Every number names its period (AGENCY, 20 Oct): this month with its dates, as the agency's Home and
-                    Usage read it; a row without periods carries the last eight weeks. Round 13 (Marcus #69: "2 what?",
-                    robots' note 09): every number says what it counts, and the dates read as Usage writes them. */}
+                {/* Every number names its period and says what it counts: this month with its dates, as Usage writes
+                    them; a row without periods carries the last eight weeks. */}
                 <Section
                   title={usage?.periods ? "This month" : "The last 8 weeks"}
                   titleId="brand-usage"
@@ -366,7 +362,7 @@ function AskRow({ ask, onAsk }: { ask: Ask; onAsk: (ids: Id[]) => void }) {
   );
 }
 
-/** The creatives that wait for a check here, each opening in Check (DWAY-7, DWAY-17). */
+/** The creatives that wait for a check here, each opening in Check. */
 function CheckSection({
   checks,
   frame,
@@ -424,7 +420,7 @@ function CheckSection({
   );
 }
 
-/** The brand's campaigns, each opening the campaign (DWAY-14), in the frame's one status sentence. */
+/** The brand's campaigns, each opening the campaign, in the frame's one status sentence. */
 function CampaignsSection({
   v,
   frame,

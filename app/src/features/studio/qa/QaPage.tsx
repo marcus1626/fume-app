@@ -1,31 +1,25 @@
 // Check (FLOWS §10, §24.3): the one check workspace for Fume's experts and an agency's creatives, the same page in both
-// frames. Everything the Engine made that waits for a check, by due date and risk, grouped by campaign; plans Fume wrote
-// that wait on Fume's expert come first (Fume only: an agency approves its plans itself).
-// Round 12 (desktop review 20 Oct, DLAY-1, DLAY-2, DWAY-7, DWAY-11, DTASK-1–4, DTASK-11, DLOAD-14; PROPOSED 20 Oct 2026):
-// - On a desk (1024 px and wider) a fixed-height workspace, never a scrolling page: the list | the creative fitted to the
-//   screen | a ~300 px panel whose decision is pinned at its foot, at the same place for every creative. Each column
-//   scrolls on its own. The keys sit on the pills (Mark checked C, Tell the Engine F, Open in Studio S, ← → move).
-// - The list keeps the order it loaded in, so nothing moves under the cursor; a creative she answers stays where it was,
-//   marked in place ("Checked by you", "With the Engine"). The next creative is the next one that waits, in the order
-//   shown; ← → skip what is done, and past the last one the end card says what comes next (a plan to check, another
-//   brand's creatives, or that nothing else waits).
-// - Every check shows "Checked: <name>" with Undo, at the foot of the well; the panel's own head says where it stands
-//   in one line, updated in place. One actor per state: "Waiting for a check", "With the Engine", "In Studio with Anna".
+// frames. Everything the Engine made that waits for a check, by due date and risk, grouped by campaign. /studio/qa and
+// /agency/check show every brand or client; /studio/b/:id/qa and /agency/b/:id/check one.
+// - Tabs at the top, Plans · Images · Designs (Video later), each with how many wait; the list shows that kind only,
+//   and the keys and "the next one" stay inside it. Plans that wait on Fume's expert are Fume's only; a plan opens
+//   beside the list with "Check the plan".
+// - On a desk (1024 px and wider) a fixed-height workspace, never a scrolling page: the list | the creative fitted to
+//   the screen | a ~300 px panel whose decision is pinned at its foot, at the same place for every creative. Each
+//   column scrolls on its own. The keys sit on the pills (Mark checked C, Tell the Engine F, Open in Studio S, ← →
+//   move). On a phone the list comes first and a creative opens as a full-screen sheet.
+// - The list keeps the order it loaded in, so nothing moves under the cursor; a creative she answers stays where it
+//   was, marked in place ("Checked by you", "With the Engine"). The next creative is the next one that waits, in the
+//   order shown; ← → skip what is done, and past the last one the end card says what comes next.
+// - The panel, in one order: where it stands (one actor per state: "Waiting for a check", "With the Engine", "In Studio
+//   with Anna"), what the Engine found, what to tell the Engine, and the decision at its foot. Mark checked carries the
+//   expert's check, the Focus pointer in Amber; every check shows "Checked: <name>" with Undo.
+// - Pins: a click on the creative drops a numbered pin and a note beside it; the pins go with Tell the Engine as
+//   located notes.
 // - A version sent back from the Studio comes back to the same creative ("Version 2 from the Studio · Anna, 14:32"),
-//   with Before | After over the creative. The full-screen Quality Gate is retired (/studio/check/:id opens this page);
-//   its per-rule list lives on under "What it is checked against".
-// - ?run=<batch> shows one Engine run's creatives, ?campaign=<id> one campaign's, with Show all to see everything again.
-// /studio/qa and /agency/check show every brand or client; /studio/b/:id/qa and /agency/b/:id/check one.
-// On a phone (under 1024) the list comes first and a creative opens as a full-screen sheet.
-// Round 13 (Marcus's video comments #50–#54, PROPOSED 22 Oct 2026):
-// - #53: tabs at the top, Plans · Images · Designs (Video later), each with how many wait; the list shows that kind
-//   only, and the keys and "the next one" stay inside it. A plan opens beside the list with "Check the plan".
-// - #50: the panel in one order, with less text: where it stands, what the Engine found, what to tell the Engine, and
-//   the decision at its foot.
-// - #51: Frame.io-style pins: a click on the creative drops a numbered pin and a note beside it (the customer's review
-//   pin); the pins go with Tell the Engine as located notes.
-// - #52: Mark checked carries the expert's check, the Focus pointer in Amber; once checked the foot says so with it.
-// - #54: a campaign or run filter reads as a filter: a pill with its ×, and "Show all" as a quiet link.
+//   with Before | After over the creative.
+// - ?run=<batch> shows one Engine run's creatives, ?campaign=<id> one campaign's: a filter pill with its ×, and "Show
+//   all" as a quiet link.
 import {
   Badge,
   Button,
@@ -104,14 +98,15 @@ const END = "end";
 /** A creative that waits for a check (the rest are checked, with the Engine, or in the Studio). */
 const open = (v: QaView) => v.item.state === "waiting";
 
-/** The one name of a creative in Check (DLOAD-8). */
+/** The one name of a creative in Check. */
 export const qaName = (v: QaView) =>
   copy.creativeName({ title: v.item.title, format: v.item.format, productName: v.productName });
 
-/** The Engine run a creative came from, when the Engine chat made it (DESK adds QaItem.runId). */
+/** The Engine run a creative came from, when the Engine chat made it (a runId the contract's QaItem does not
+ *  declare). */
 const runOf = (item: QaItem) => (item as QaItem & { runId?: Id }).runId;
 
-/** What Check holds, as its tabs (#53). Video comes later. */
+/** What Check holds, as its tabs. Video comes later. */
 type Kind = "plans" | "images" | "designs";
 const KINDS: { id: Kind; label: string; noun: string }[] = [
   { id: "plans", label: "Plans", noun: "plans" },
@@ -168,7 +163,7 @@ export function QaPage() {
     ? (queue.data?.[0]?.workspace.brandName ?? session?.workspaces.find((w) => w.id === workspaceId)?.brandName)
     : undefined;
 
-  // The tabs (#53): how many of each wait; the tab shown is the one asked for, the one the opened creative is in, or the
+  // The tabs: how many of each wait; the tab shown is the one asked for, the one the opened creative is in, or the
   // first kind that has creatives waiting (images, then designs, then plans).
   const counts: Record<Kind, number> = {
     plans: plans.filter(planWaits).length,
@@ -232,7 +227,7 @@ export function QaPage() {
     if (opened) select(opened);
   }, [opened]);
 
-  // After a key or an answer, the keyboard follows the selection to its row in the list (DWAY-11).
+  // After a key or an answer, the keyboard follows the selection to its row in the list.
   const follow = useRef(false);
   useEffect(() => {
     if (!follow.current) return;
@@ -280,7 +275,7 @@ export function QaPage() {
   };
 
   // The decisions live here, not in the panel: the panel of one creative goes as soon as the next one opens, and a
-  // toast and its Undo must not depend on the button that started them still being on screen (DTASK-4).
+  // toast and its Undo must not depend on the button that started them still being on screen.
   const names = useNames();
   const toast = useToast();
   const check = useQaCheck();
@@ -335,7 +330,7 @@ export function QaPage() {
       ),
   };
 
-  // ← → ↑ ↓ move, from anywhere but a field; never an arrow to check (DWAY-11, brief: never an arrow to approve).
+  // ← → ↑ ↓ move, from anywhere but a field; never an arrow to check.
   useEffect(() => {
     if ((narrow && !current) || kind === "plans") return;
     const onKey = (e: KeyboardEvent) => {
@@ -579,10 +574,10 @@ function QaNoKind({
 
 // ─── The order she sees ─────────────────────────────────────────────────────
 
-/** The order the list loaded in, kept while the page is open (DTASK-3): a check or a fix moves nothing under the
- *  cursor; a creative that arrives later goes under the rest. A new scope (another brand, a run) starts a new order. */
-// r13 (robot note 07): the order lives for the session, not the page, so a creative sent from the Studio comes back
-// to its own place in the list (Feed 6 stays first), not under the ones that wait.
+/** The order the list loaded in (a check or a fix moves nothing under the cursor); a creative that arrives later goes
+ *  under the rest. A new scope (another brand, a run) starts a new order. */
+// The order lives for the session, not the page, so a creative sent from the Studio comes back to its own place in the
+// list, not under the ones that wait.
 const ranks = new Map<string, Map<Id, number>>();
 function useStableOrder(data: QaView[] | undefined, scope: string): QaView[] {
   const rank = ranks.get(scope) ?? new Map<Id, number>();
@@ -618,7 +613,7 @@ function QaList({
   onSelect: (id: Id) => void;
 }) {
   const names = useNames();
-  // One Tab stop for the creatives: the selected row (or the first); the arrows move it (roving tabindex, DWAY-11).
+  // One Tab stop for the creatives: the selected row (or the first); the arrows move it (roving tabindex).
   const stop = current ?? groups[0]?.[0]?.item.id;
   return (
     <nav className="ui-qa-list" aria-label="To check">
@@ -666,7 +661,7 @@ function QaList({
   );
 }
 
-/** One line on where the creative stands, one actor per state (DLOAD-14); only a checked one carries the Amber triangle. */
+/** One line on where the creative stands, one actor per state; only a checked one carries the Amber triangle. */
 function rowState(item: QaItem, who: (id?: Id) => string): ReactNode {
   switch (item.state) {
     case "checked":
@@ -683,7 +678,7 @@ function rowState(item: QaItem, who: (id?: Id) => string): ReactNode {
   }
 }
 
-// ─── Plans to check (round 10; Fume's expert only) ──────────────────────────
+// ─── Plans to check (Fume's expert only) ──────────────────────────────────
 
 /** The campaigns whose plan waits on Fume's expert (in check) or that Fume is still writing, in one brand or all. */
 function usePlansToCheck(workspaceId: string | undefined, fume: boolean): StudioCampaignRow[] {
@@ -709,7 +704,7 @@ function ago(iso: string): string {
 const planPath = (frame: StaffFrameKind, row: StudioCampaignRow) =>
   `${brandBase(frame, row.workspace.id)}/campaigns/${row.campaign.id}/plan`;
 
-/** The Plans tab's list: each plan as a row; the one picked opens beside it (#53). */
+/** The Plans tab's list: each plan as a row; the one picked opens beside it. */
 function PlansToCheck({
   rows,
   showBrand,
@@ -913,7 +908,7 @@ function QaFocus({
   const [words, setWords] = useState<Record<string, string>>({});
   const [active, setActive] = useState<string>();
   const [shown, setShown] = useState<"after" | "before">("after");
-  // #51: the pins she drops on the creative, and the one she is writing
+  // the pins she drops on the creative, and the one she is writing
   const [pins, setPins] = useState<QaPin[]>([]);
   const [draft, setDraft] = useState<{
     x: number;
@@ -957,7 +952,7 @@ function QaFocus({
     else go();
   };
 
-  // r13 #64: one creative, one worker. A creative a designer has open in the Studio goes to the Engine only after a yes.
+  // One creative, one worker: a creative a designer has open in the Studio goes to the Engine only after a yes.
   const [asking, setAsking] = useState(false);
   const tell = (sure = false) => {
     const said = text.trim();
@@ -985,7 +980,7 @@ function QaFocus({
     });
   };
 
-  // #51: a click on the creative drops a pin and opens its note beside it
+  // a click on the creative drops a pin and opens its note beside it
   const pinnable = !checked && !fixing && shown === "after";
   const dropPin = (e: ReactMouseEvent<HTMLElement>) => {
     if (!pinnable) return;
@@ -1199,7 +1194,7 @@ function QaFocus({
             format={item.format}
             brandDna={campaign.brandDnaVersion}
           >
-            {/* 2b. What was said to the Engine before: one folded line, so it never sits under the decision (round 13, #50) */}
+            {/* 2b. What was said to the Engine before: one folded line, so it never sits under the decision */}
             {item.feedback.length > 0 && (
               <Collapsible className="ui-qa-against">
                 <CollapsibleTrigger>{`Said to the Engine · ${item.feedback.length}`}</CollapsibleTrigger>
@@ -1408,7 +1403,7 @@ function QaFocus({
   );
 }
 
-/** Where it stands, in one line, updated in place (DLOAD-14). */
+/** Where it stands, in one line, updated in place. */
 function QaStatus({ item, who }: { item: QaItem; who: (id?: Id) => string }) {
   if (item.state === "checked")
     return (
@@ -1445,8 +1440,8 @@ function QaStatus({ item, who }: { item: QaItem; who: (id?: Id) => string }) {
   return <>Waiting for a check</>;
 }
 
-/** The Engine's own evaluation of what it made, in words, and what it is checked against (DLAY-2: the retired
- *  full-screen check's per-rule list, read-only, folded). */
+/** The Engine's own evaluation of what it made, in words, and what it is checked against (the per-rule list, read-only,
+ *  folded). */
 function Evaluated({
   evaluation,
   id,
@@ -1524,7 +1519,7 @@ function Evaluated({
   );
 }
 
-// ─── The end of the queue (DTASK-11) ────────────────────────────────────────
+// ─── The end of the queue ─────────────────────────────────────────────────
 
 function QaEnd({
   frame,
@@ -1545,9 +1540,9 @@ function QaEnd({
   brand?: string;
   /** One run or one campaign shown: "This run", "Autumn launch". */
   only?: string;
-  /** The tab that is done while other tabs still wait (#53): "Images". */
+  /** The tab that is done while other tabs still wait: "Images". */
   kindLabel?: string;
-  /** The other tabs with something waiting, first in "Next" (#53). */
+  /** The other tabs with something waiting, first in "Next". */
   otherKinds?: { key: string; title: string; text: string; to: string; action: string }[];
   /** Then: how many others wait for a check here. */
   beside: number;

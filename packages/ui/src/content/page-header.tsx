@@ -1,15 +1,13 @@
-// Page header: the top of a page in the app, design-system/components/page-header.css. The back link (back-link.tsx;
-// it replaced the breadcrumb, Marcus 15 Oct) 12 above the title
-// (GT Standard, 32; 24 on a phone), a meta line in the data face, the actions on the title's line: secondary actions
-// are white pills, one Ink main action, More (a quiet circle) holds the rest in a glass menu. Narrow (under 640 px)
-// the secondary actions fold into More, and the main action keeps its words (walk-through 19 Oct, MOB-6; PROPOSED
-// 19 Oct 2026): it goes under the title and meta line as a full-width labelled pill, since a bare icon in the corner
-// said too little (two actions shared one glyph). A button passed in `actions` with a .ui-page-header-label (New
-// campaign's +) stays a circle on a phone, the same on every top-level page.
-// Round 9 (DLAY-13, desktop review 19 Oct; PROPOSED 19 Oct 2026): the primary action has two homes only. (1) A
-// page-level action sits in this header, right, on the title's line (`actions` / `primaryAction`). (2) A step or a
-// decision (a form, a queue, an onboarding step) has its actions in PageFooter, pinned to the bottom right of the
-// content column while the page scrolls. One Ink per view; the rest secondary or quiet.
+// Page header: the top of a page in the app, design-system/components/page-header.css. The back link (back-link.tsx) 12
+// above the title (GT Standard, 32; 24 on a phone), a meta line in the data face, the actions on the title's line:
+// secondary actions are white pills, one Ink main action, More (a quiet circle) holds the rest in a glass menu. Narrow
+// (under 640 px) the secondary actions fold into More, and the main action keeps its words: it goes under the title and
+// meta line as a full-width labelled pill. A button passed in `actions` with a .ui-page-header-label (New campaign's +)
+// stays a circle on a phone, the same on every top-level page.
+// The primary action has two homes only. (1) A page-level action sits in this header, right, on the title's line
+// (`actions` / `primaryAction`). (2) A step or a decision (a form, a queue, an onboarding step) has its actions in
+// PageFooter, pinned to the bottom right of the content column while the page scrolls. One Ink per view; the rest
+// secondary or quiet.
 import {
   cloneElement,
   forwardRef,
@@ -41,8 +39,8 @@ export interface PageHeaderProps extends Omit<HTMLAttributes<HTMLElement>, "titl
   title: ReactNode;
   /** The heading element; h1 by default. */
   titleAs?: "h1" | "h2";
-  /** The way up: a BackLink to the parent page, above the title (it gets .ui-page-header-back). The app uses
-   *  this, never a breadcrumb (Marcus 15 Oct). */
+  /** The way up: a BackLink to the parent page, above the title (it gets .ui-page-header-back). The app uses this,
+   *  never a breadcrumb. */
   back?: ReactNode;
   /** @deprecated The app shows a back link (`back`), not a path. A Breadcrumb or BreadcrumbPath; it gets .ui-page-header-crumbs. */
   breadcrumb?: ReactNode;
@@ -215,10 +213,10 @@ export interface PageFooterProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * The step footer (DLAY-13): a step's or a decision's actions, pinned to the bottom right of the content column while
- * the page scrolls, on the page's own ground (div.ui-page-footer[data-ui-foot], so toasts rise above it). Put it last
- * in the Page. The main action last, the one Ink; Later / Skip for now quiet before it. On a phone it is the end of the
- * page, the actions full width.
+ * The step footer: a step's or a decision's actions, pinned to the bottom right of the content column while the page
+ * scrolls, on the page's own ground (div.ui-page-footer[data-ui-foot], so toasts rise above it). Put it last in the
+ * Page. The main action last, the one Ink; Later / Skip for now quiet before it. On a phone it is the end of the page,
+ * the actions full width.
  *   <PageFooter start="3 of 7"><Button variant="quiet">Later</Button><Button>Confirm</Button></PageFooter>
  */
 export const PageFooter = forwardRef<HTMLDivElement, PageFooterProps>(function PageFooter(

@@ -1,9 +1,9 @@
-// The plan's index (FLOWS §22.2). Round 12 (UX review DLAY-10, DWAY-12, DLOAD-10; PROPOSED 20 Oct 2026): it sits in the
-// plan's sticky summary aside, "In this plan" above the facts, beside what it indexes (Stripe's docs, Notion's outline),
-// not in the campaign's tab row: so "Creatives" is never both a tab and a part, and the expert's page needs no second
-// sticky row. Each entry is its part's own heading ("The brief", "Window light", "How it looks", "The 9 creatives",
-// "Rules", "When"). The part in view is lit by weight and colour; a press glides to its part, clear of the sticky rows
-// (the part's own scroll-margin), and the keyboard lands there too.
+// The plan's index (FLOWS §22.2). It sits in the plan's sticky summary aside, "In this plan" above the facts, beside
+// what it indexes (as in Stripe's docs or Notion's outline), not in the campaign's tab row: so "Creatives" is never
+// both a tab and a part, and the expert's page needs no second sticky row. Each entry is its part's own heading ("The
+// brief", "Window light", "How it looks", "The 9 creatives", "Rules", "When"). The part in view is lit by weight and
+// colour; a press glides to its part, clear of the sticky rows (the part's own scroll-margin), and the keyboard lands
+// there too.
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { partsOf } from "./words";
 

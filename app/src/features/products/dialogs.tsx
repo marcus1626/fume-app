@@ -1,7 +1,7 @@
-// The catalogue's three dialogs: a new collection (name, kind, its products), a product by hand or from a CSV, and
-// a new name for a collection Fume proposed. Each says what happens next in one line and names who acts.
-// Round 9 (desktop review 19 Oct, DLAY-15, DLOAD-1, DLOAD-7; PROPOSED): a new collection (a form with a product list)
-// opens as the right panel on a desk; the one-field rename stays a small dialog. Later, never "Not now".
+// The catalogue's dialogs: a new collection (name, kind, its products), a product by hand or from a CSV, and a new name
+// for a collection Fume proposed. Each says what happens next in one line and names who acts. A new collection (a form
+// with a product list) opens as the right panel on a desk; the one-field rename stays a small dialog. Later, never "Not
+// now".
 import {
   Button,
   Checkbox,
@@ -178,7 +178,7 @@ export function AddProductDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onAdded?: (products: Product[]) => void;
-  /** Round 6: one product is added by kind (products/add.tsx); this dialog is then only the CSV. */
+  /** One product is added by kind (products/add.tsx); this dialog is then only the CSV. */
   csvOnly?: boolean;
 }) {
   const add = useAddProducts();

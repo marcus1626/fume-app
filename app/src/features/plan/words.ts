@@ -1,9 +1,8 @@
-// The plan's words (FLOWS §22, PROPOSED 20 Oct 2026): where a line comes from, the parts of the document in order,
-// and the few sentences more than one place says. The customer SENDS her brief, Fume WRITES the plan, the expert CHECKS
-// it, she APPROVES it; the Engine only makes creatives. Directions are concepts in words with reference pictures.
-// Round 12 (UX review DLOAD-9, DLOAD-10, DLOAD-17; PROPOSED 20 Oct 2026): a brand manager's words. "The variables" is
-// "How it looks"; "What the Engine makes" is "The 9 creatives"; every part's index entry is its heading; the expert and
-// the agency read the brand's own lines about the customer by name ("Maja's Brand DNA"), never "your".
+// The plan's words (FLOWS §22): where a line comes from, the parts of the document in order, and the few sentences more
+// than one place says. The customer sends her brief, Fume writes the plan, the expert checks it, she approves it; the
+// Engine only makes creatives. Directions are concepts in words with reference pictures. A brand manager's words: "How
+// it looks", "The 9 creatives"; every part's index entry is its heading; the expert and the agency read the brand's own
+// lines about the customer by name ("Maja's Brand DNA"), never "your".
 import type { IconName } from "@fume/ui";
 import type { Campaign, CampaignPlan, PlanDirection, PlanSource, PlannedCreative } from "../../contract";
 import * as copy from "../../copy";
@@ -62,8 +61,8 @@ export function sourceLabel(
   return viewer === "customer" ? sourceWords[source] : neutralWords[source];
 }
 
-/** The parts of the plan, in order: its index (in the summary aside) says each part's own heading (DLOAD-10). The ids
- *  stay as they were, so links to a part keep working. */
+/** The parts of the plan, in order: its index (in the summary aside) says each part's own heading. The ids stay as they
+ *  were, so links to a part keep working. */
 export function partsOf(plan?: CampaignPlan): { id: string; label: string }[] {
   const direction = plan ? chosenOf(plan) : undefined;
   const total = plan ? creativesOf(plan).all.length : 0;
@@ -112,8 +111,8 @@ export function countWords(plan: CampaignPlan): { total: string; split: string }
 export const formatWord = (format: PlannedCreative["format"]) =>
   `${copy.format[format].label} ${copy.format[format].ratio}`;
 
-/** A planned creative's one name, with its format (DLOAD-8): "Master 1 · Feed 4:5", "The candle alone · Feed 4:5".
- *  A name that already ends in its format word says it once: "Master 1 in Story" is "Master 1 · Story 9:16". */
+/** A planned creative's one name, with its format: "Master 1 · Feed 4:5", "The candle alone · Feed 4:5". A name that
+ *  already ends in its format word says it once: "Master 1 in Story" is "Master 1 · Story 9:16". */
 export const plannedName = (c: Pick<PlannedCreative, "name" | "format">) => {
   const name = c.name.replace(new RegExp(` in ${copy.format[c.format].label}$`), "");
   return copy.creativeName({ title: name, format: c.format, planName: name });
@@ -136,7 +135,7 @@ export const sentOn = (iso: string) => date(iso);
 /** "Thu 15 Oct", "tomorrow": a day ahead. */
 export const byDay = (iso: string) => due(iso);
 
-/** What the plan will hold, in one line (DLAY-19): the waiting state says it while Fume writes and the expert checks. */
+/** What the plan will hold, in one line: the waiting state says it while Fume writes and the expert checks. */
 export function partsToCome(creatives: number): string {
   const masters = Math.max(1, Math.min(3, Math.ceil(creatives / 3)));
   const made =
@@ -148,8 +147,8 @@ export function partsToCome(creatives: number): string {
 
 /**
  * The plan's own sentences speak to the brand's customer ("You chose warm light", "your Brand DNA"). Read by the expert
- * or the agency, "you" is the customer, so they read her name (DLOAD-17): "Maja chose warm light", "Maja's Brand DNA".
- * The customer and the agency's client read them as written.
+ * or the agency, "you" is the customer, so they read her name: "Maja chose warm light", "Maja's Brand DNA". The
+ * customer and the agency's client read them as written.
  */
 export function voiceFor(viewer: PlanViewer, customer: string): (text: string) => string {
   if (viewer === "customer" || viewer === "client") return (text) => text;
@@ -157,7 +156,7 @@ export function voiceFor(viewer: PlanViewer, customer: string): (text: string) =
   const Name = name.charAt(0).toUpperCase() + name.slice(1);
   return (text) =>
     text
-      // the brand's own things are the brand's, not hers: "the Brand DNA", "the moodboard", "the brief" (DLOAD-17)
+      // the brand's own things are the brand's, not hers: "the Brand DNA", "the moodboard", "the brief"
       .replace(
         /\b([Yy])our (Brand DNA|brief|(?:[\w’']+ ){0,2}moodboard|(?:[\w’']+ ){0,2}look|voice|liked pictures)\b/g,
         (_m, y: string, what: string) => `${y === "Y" ? "The" : "the"} ${what}`,

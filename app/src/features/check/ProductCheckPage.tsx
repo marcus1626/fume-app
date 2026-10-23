@@ -1,10 +1,9 @@
-// The confirm queue (round 9, DLAY-10, DLOAD-13, DWAY-13, DTSK-14; round 8 TASK-6, LOAD-3): every product that waits
-// for her, inside the shell. On a desk it is master and detail: the products on the left (photo, name, why it waits, a
-// tick once confirmed; ↑ ↓ move through them), the product's card on the right (the one card, ProductCheckCard: photo,
-// Fume's question first, the lines), and Later · Confirm pinned at the bottom of the window, at the same place for every
+// The confirm queue: every product that waits for her, inside the shell. On a desk it is master and detail: the
+// products on the left (photo, name, why it waits, a tick once confirmed; ↑ ↓ move through them), the product's card on
+// the right (ProductCheckCard), and Later · Confirm pinned at the bottom of the window, at the same place for every
 // product. ‹ › and ← → step without deciding (outside a field), ⌘↵ confirms, Esc goes back where she came from. The
 // product on the card is in the address (?p=pr-candle, replaced on each step), so a reload or a link lands on it. The
-// end says what is next. On a phone the list goes and it is the one-card flow, the pills where the tab bar was.
+// end says what is next. On a phone it is the one-card flow, the pills where the tab bar was.
 // Opened from Home, Brand › Products, the import ("Confirm them now") and the brief: /check/products, ?ids=a,b to go
 // through only those, ?start=id (or ?p=id) to begin with one.
 import { Button, CheckCard, CheckEnd, CheckQueue, CheckQueueItem, CheckQueueList, PageHeader, tokenMs } from "@fume/ui";
@@ -184,7 +183,7 @@ function Queue({ queue }: { queue: Id[] }) {
           const v = verdict(id);
           const by = waitingOn(campaigns.data, id);
           const n = openQuestions(id);
-          // round 13 (robot note 05): what is still missing, as the add toast said it
+          // what is still missing, as the add toast said it
           const missing = p
             ? missingDetails(
                 p,

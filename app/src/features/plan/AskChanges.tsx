@@ -1,9 +1,8 @@
 // Ask Fume for changes to the plan (FLOWS §22.2): anything larger than a line goes to Fume in her words, and Fume
-// answers with the next version, checked again by the expert. On a desk it is the right panel (the plan stays in view
-// on the left); on a phone a sheet from the bottom. Quick chips start the sentence; ⌘↵ sends; Esc closes the panel.
-// Round 12 (brief r12 PLAN, PROPOSED 20 Oct 2026): in a brand an agency runs no Fume expert checks it again, so the
-// lead names one only when there is one; and it says that changing the plan never uses a change request (the plan's
-// "2 change requests included" are for the creatives).
+// answers with the next version. On a desk it is the right panel (the plan stays in view on the left); on a phone a
+// sheet from the bottom. Quick chips start the sentence; ⌘↵ sends; Esc closes the panel. The lead names Fume's expert
+// only when one checks the next version (none does in a brand an agency runs), and it says that changing the plan never
+// uses a change request (the plan's "2 change requests included" are for the creatives).
 import {
   Button,
   Drawer,

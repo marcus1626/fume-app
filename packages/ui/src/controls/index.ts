@@ -13,7 +13,7 @@ export * from "./separator";
 export * from "./field";
 export * from "./input-group";
 export * from "./select";
-export * from "./date-field"; // round 13 (#37): DateField and TimeField, no native date or time input
+export * from "./date-field"; // DateField and TimeField, never a native date or time input
 export * from "./checkbox";
 export * from "./choice";
 export * from "./radio";

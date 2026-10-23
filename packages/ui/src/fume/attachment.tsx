@@ -1,8 +1,8 @@
-// Attachment: a creative or a brief attached to a message or a brief (design-system/components/attachment.css).
-// DECIDED 13 Oct, round 8. A small card with no border; a creative keeps its hairline, a brief is the file-text
-// icon on a sunken tile. Name in medium, then a data line (format and size). States: idle (Waiting), uploading
-// (an Ink bar), processing (spinner and words), error (circle-alert and the reason in Rouge, try again and
-// remove), done. Vertical: the creative at its own format on top, remove on a bit of Smoke glass.
+// Attachment: a creative or a brief attached to a message or a brief (design-system/components/attachment.css). A small
+// card with no border; a creative keeps its hairline, a brief is the file-text icon on a sunken tile. Name in medium,
+// then a data line (format and size). States: idle (Waiting), uploading (an Ink bar), processing (spinner and words),
+// error (circle-alert and the reason in Rouge, try again and remove), done. Vertical: the creative at its own format on
+// top, remove on a bit of Smoke glass.
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { cx } from "../cx";
 import { Btn, Glyph, ProgressBar, Spinner, extOf, formatAttrs, type CreativeFormat } from "./_parts";

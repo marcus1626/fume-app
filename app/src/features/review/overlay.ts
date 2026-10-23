@@ -1,10 +1,9 @@
-// A full-screen layer kept in the address (?c=<creative>, ?creative=<creative>, ?swipe=1), over the page that holds
-// it (UX review 19 Oct, WAY-7, WAY-8): opening it is one history entry, moving inside it replaces that entry, and
-// closing goes back in history, so the phone's back gesture closes the layer and nothing else, and the page under it
-// (its selection, filters and scroll) is still there. On a cold deep link (nothing before it in this tab) closing
-// takes the parameter off instead.
-// Round 9 (PROPOSED 19 Oct 2026, DTSK-2): open() may carry more of the address with it (?c=<id>&ask=1 opens the viewer
-// with its change form already open in the panel); the viewer reads such a word once and takes it off.
+// A full-screen layer kept in the address (?c=<creative>, ?creative=<creative>, ?swipe=1), over the page that holds it:
+// opening it is one history entry, moving inside it replaces that entry, and closing goes back in history, so the
+// phone's back gesture closes the layer and nothing else, and the page under it (its selection, filters and scroll) is
+// still there. On a cold deep link (nothing before it in this tab) closing takes the parameter off instead. open() may
+// carry more of the address with it (?c=<id>&ask=1 opens the viewer as if N was pressed); the viewer reads such a word
+// once and takes it off.
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 /** True when this tab's history has an entry before this one that the app made (the browser router's idx). */

@@ -1,16 +1,13 @@
 // The conversation's parts: one message in its author's voice, and the cards a message carries (FLOWS §12: one
-// conversation, campaigns appear in it as cards).
-// People speak in bubbles; Fume and the Engine write plain text under their names (message.css). A card is what
-// Fume shows besides words: the brief, the directions, an Engine run, a question, or checked creatives.
-// Round 9 (PROPOSED 19 Oct 2026): the brief card shows the whole brief in the one order and names (DTSK-4, DLOAD-10),
-// and becomes one line when the brief panel beside the conversation shows it (desk.tsx); the run card speaks her
-// words and its pill names the step under way (DLOAD-11, DLOAD-2); her own name is "you" (DLOAD-18); a product is
-// confirmed in the one product panel (CHECK's ProductCheckHost, decision 5); "check" is the expert's word (DLOAD-1).
-// Round 10 (PROPOSED 20 Oct 2026, FLOWS §22–§23): she SENDS the brief ("Send to Fume"), never approves it; a sent brief
-// is one line; the plan card (plan.tsx) shows the plan as it is now, and only the campaign's latest one is drawn whole.
-// Round 12 AGENCY (UX review DLOAD-6; PROPOSED 20 Oct 2026): a person's tag comes from the person: "Fume" only for
-// Fume's people, the agency's name for the agency's (Nora, Sindre: "Brygga Studio"), and her own messages are hers
-// ("You", at the end), never a staff header with a tag.
+// conversation, campaigns appear in it as cards). People speak in bubbles; Fume and the Engine write plain text under
+// their names (message.css). A card is what Fume shows besides words: the brief, the plan, the directions, an Engine
+// run, a question, or checked creatives.
+// The brief card shows the whole brief in the one order and names, and is one line once it is sent or while the brief
+// panel beside the conversation shows it (desk.tsx). The plan card (plan.tsx) shows the plan as it is now, and only the
+// campaign's latest one is drawn whole. The run card speaks her words and its pill names the step under way; her own
+// name is "you". A product is confirmed in the one product panel (ProductCheckHost); "check" is the expert's word. A
+// person's tag comes from the person: "Fume" only for Fume's people, the agency's name for the agency's (Nora, Sindre:
+// "Brygga Studio"), and her own messages are hers ("You", at the end), never a staff header with a tag.
 import {
   Attachment,
   Avatar,
@@ -82,21 +79,21 @@ export interface MessageViewProps {
   onAnswer?: (answer: string) => void;
   /** Links that lead to a decision (review the creatives); hidden for a viewer. */
   canAct: boolean;
-  /** The message's anchor (round 8, WAY-5): the chat comes back to it, and reveals a new answer from it. */
+  /** The message's anchor: the chat comes back to it, and reveals a new answer from it. */
   anchorId?: string;
-  /** The time beside the name: once per burst of talk, not on every message (LOAD-19). Default true. */
+  /** The time beside the name: once per burst of talk, not on every message. Default true. */
   showTime?: boolean;
   /** She pressed Send on the brief's card: the chat shows Fume's next line, and the composer takes the focus.
    *  Called as the brief goes out, since Fume's next line can arrive with it. */
   onSend?: () => void;
-  /** Round 9: the brief panel beside the conversation shows this campaign's brief, so its card is one line. */
+  /** The brief panel beside the conversation shows this campaign's brief, so its card is one line. */
   briefInPanel?: boolean;
-  /** Round 10: the panel beside the conversation shows this campaign's plan, so its plan card is one line. */
+  /** The panel beside the conversation shows this campaign's plan, so its plan card is one line. */
   planInPanel?: boolean;
-  /** Round 10: this is the campaign's latest plan card; an earlier one is one line. Default true. */
+  /** This is the campaign's latest plan card; an earlier one is one line. Default true. */
   latestPlan?: boolean;
-  /** Round 13 (#19): her answer to this card's product question, which the chat does not repeat as her bubble: the
-   *  card shows the products it names instead. */
+  /** Her answer to this card's product question, which the chat does not repeat as her bubble: the card shows the
+   *  products it names instead. */
   answeredWith?: string;
 }
 
@@ -121,7 +118,7 @@ export function MessageView({
   const mine = author.kind === "person" && author.userId === meId;
   const session = useSession().data;
   // The Engine never talks (F-D040): what it posts shows as its run card alone, with no name or chat line of its own.
-  // No campaign name inside the card: the conversation (or the marker above it on a phone) names it (DLOAD-11).
+  // No campaign name inside the card: the conversation (or the marker above it on a phone) names it.
   if (author.kind === "engine") {
     const run =
       message.card?.kind === "run"
@@ -145,7 +142,7 @@ export function MessageView({
   // A person at Fume answering in the conversation: their name, face and a Fume tag, so it is clear a human answered.
   const staffer = author.kind === "person" && Boolean(user?.staffRole) && !mine;
   const org = user?.agency ? (session?.agency?.organisation.name ?? session?.agencyName ?? "Agency") : "Fume";
-  // Fume's words that only repeat its card's question ("Who should it reach?") are said once, by the card (LOAD-19).
+  // Fume's words that only repeat its card's question ("Who should it reach?") are said once, by the card.
   const echo =
     message.card?.kind === "question" &&
     message.text.trim().replace(/[?.]$/, "") === message.card.question.trim().replace(/[?.]$/, "");
@@ -223,10 +220,10 @@ export function MessageView({
 }
 
 /** The brief in the conversation: what Fume filled in, and one step. A ready brief is sent right here by an owner or
- *  approver (UX review C1; round 10: "Send to Fume", never "Approve the brief"), by the same rule as the plan page's
- *  brief (briefGaps, TASK-2) and with every line in the one order and names (DTSK-4, DLOAD-10). With the brief panel
- *  beside the conversation (a desk from 1280 px) the card is one line that points to it: one Send, in the panel. A
- *  sent brief is one line: Fume writes the plan from it, and the plan card follows. */
+ *  approver ("Send to Fume", never "Approve the brief"), by the same rule as the plan page's brief (briefGaps) and with
+ *  every line in the one order and names. With the brief panel beside the conversation (a desk from 1280 px) the card
+ *  is one line that points to it: one Send, in the panel. A sent brief is one line: Fume writes the plan from it, and
+ *  the plan card follows. */
 function BriefCard({
   campaignId,
   view,
@@ -250,7 +247,7 @@ function BriefCard({
   const rows = useBriefRows(view);
   const brief = view?.brief;
   const campaign = view?.campaign;
-  // A brief that covers no product cannot be sent (walk-through Must 2): Fume makes creatives of real products.
+  // A brief that covers no product cannot be sent: Fume makes creatives of real products.
   const covers = (campaign?.productIds.length ?? 0) + (campaign?.collectionIds?.length ?? 0);
   const gaps = brief ? briefGaps(brief) : [];
   const maySend = canAct && (role === "owner" || role === "approver");
@@ -347,8 +344,8 @@ function BriefCard({
 }
 
 /** "Masters 1 and 2 approved by Maja" → "You approved the first 2 creatives": a run's lines in her words, no system
- *  words (DLOAD-11), and its pill naming the step under way, "Anna is checking · 6 of 9"; "Done" only when every line
- *  is done (DLOAD-2). `me` is her first name. Exported so the campaign page can say the same. */
+ *  words, and its pill naming the step under way, "Anna is checking · 6 of 9"; "Done" only when every line is done.
+ *  `me` is her first name. Exported so the campaign page can say the same. */
 export function runForCustomer<T extends { state: EngineRunState; steps: EngineRunStepData[] }>(
   run: T,
   me: string,
@@ -414,8 +411,8 @@ function CardView({
   answeredWith?: string;
 }) {
   switch (card.kind) {
-    // Round 13 (#16): Fume's answer about something the app knows opens it beside the conversation; what waits on
-    // her and the month read the same sources as Home.
+    // Fume's answer about something the app knows opens it beside the conversation; what waits on her and the month
+    // read the same sources as Home.
     case "link":
       return <LinkCard link={card.link} />;
     case "summary":
@@ -446,7 +443,7 @@ function CardView({
       const chosen = view?.directions.find((d) => d.state === "chosen");
       return (
         <Item variant="outline" asChild>
-          {/* The chosen direction lands on the directions themselves, not on the tab above them (WAY-19). */}
+          {/* The chosen direction lands on the directions themselves, not on the tab above them. */}
           <Link
             to={
               chosen
@@ -490,8 +487,8 @@ function CardView({
         );
       return <TextQuestion card={card} view={view} onAnswer={onAnswer} canAct={canAct} />;
     case "creatives": {
-      // Round 13 (#14): small tiles, four at most and then +N; a tile opens the creative beside the conversation (on a
-      // phone, the one viewer, whose close goes back into the chat, WAY-5).
+      // Small tiles, four at most and then +N; a tile opens the creative beside the conversation (on a phone, the one
+      // viewer, whose close goes back into the chat).
       const shown = (view?.creatives ?? []).filter((c) => card.creativeIds.includes(c.id));
       if (shown.length === 0) return null;
       const waiting = shown.some((c) => c.current.state === "checked");
@@ -613,9 +610,9 @@ function MeetingBooked({ meetingId, people }: { meetingId: string; people: Peopl
   );
 }
 
-/** A question in words. One Fume has on record (a product's claims, a packshot) is answered in the one shared sheet,
- *  so answering it here closes it on Home, the product and the brief too (round 8 decision, LOAD-4); the brief's own
- *  questions keep their option pills, on the latest message only. */
+/** A question in words. One Fume has on record (a product's claims, a packshot) is answered in the one shared sheet, so
+ *  answering it here closes it on Home, the product and the brief too; the brief's own questions keep their option
+ *  pills, on the latest message only. */
 function TextQuestion({
   card,
   view,
@@ -665,12 +662,11 @@ function TextQuestion({
   );
 }
 
-/** Fume asks for the product (walk-through Must 2; round 8, TASK-1 and TASK-10). A product she named that waits to be
- *  confirmed is the card's first line, with what to do in words ("Confirm details"), not a cut badge and an ambiguous
- *  "Confirm". Round 9 (decision 5, DTSK-6): the details are confirmed in the one product panel (CHECK's
- *  ProductCheckHost: photo, the one question first, the lines), beside the conversation on a desk; once every product
- *  she named is confirmed, that is her answer and Fume moves on, so nothing has to be ticked again. Under it, the
- *  ready products to tick, "View all products" for the whole catalogue, and one button that answers. */
+/** Fume asks for the product. A product she named that waits to be confirmed is the card's first line, with what to do
+ *  in words ("Confirm details"), not a cut badge and an ambiguous "Confirm". The details are confirmed in the one
+ *  product panel (ProductCheckHost: photo, the one question first, the lines), beside the conversation on a desk; once
+ *  every product she named is confirmed, that is her answer and Fume moves on, so nothing has to be ticked again. Under
+ *  it, the ready products to tick, "View all products" for the whole catalogue, and one button that answers. */
 function ProductQuestion({
   card,
   onAnswer,
@@ -687,7 +683,7 @@ function ProductQuestion({
   const [all, setAll] = useState(false);
   // The one place a product is confirmed from the chat (?check=<id>, so Back closes it).
   const openCheck = useOpenProductCheck();
-  // Round 13 (robot note 02): the panel names the campaign she is briefing ("Christmas waits on it").
+  // The panel names the campaign she is briefing ("Christmas waits on it").
   const confirm = (id: string) =>
     openCheck(id, { over: "conversation", onConfirmed: confirmedHere, forCampaign: campaignName });
   // Confirmed here, before the catalogue has caught up.
@@ -706,15 +702,15 @@ function ProductQuestion({
   // A few ready tiles, plus any picked in the sheet beyond them; the order never moves under a tap.
   const tiles = ready.filter((p, i) => i < 6 || ticked.includes(p.id));
   const picked = products.filter((p) => ticked.includes(p.id));
-  // Round 13 (#18, "Kan collections komme opp her?"): her collections that hold ready products; ticking one ticks
-  // them all, and it shows ticked while every one of them is.
+  // Her collections that hold ready products; ticking one ticks them all, and it shows ticked while every one of them
+  // is.
   const collections = (catalogue?.collections ?? [])
     .map((c) => ({ c, ids: c.productIds.filter((id) => ready.some((p) => p.id === id)) }))
     .filter((x) => x.ids.length > 0);
   const tickAll = (ids: string[], on: boolean) =>
     setTicked((l) => (on ? [...new Set([...l, ...ids])] : l.filter((x) => !ids.includes(x))));
-  // Round 13 (#19): once she answered, the card shows what she picked, on Fume's side; her answer is not repeated as a
-  // bubble of hers (FumePage leaves it out).
+  // Once she answered, the card shows what she picked, on Fume's side; her answer is not repeated as a bubble of hers
+  // (FumePage leaves it out).
   const chosen = answeredWith
     ? answeredWith
         .split(", ")
@@ -727,7 +723,7 @@ function ProductQuestion({
     const nowTicked = [...new Set([...ticked, id])];
     setDone(nowDone);
     setTicked(nowTicked);
-    // Every product she named is confirmed: that was her answer (TASK-1).
+    // Every product she named is confirmed: that was her answer.
     const allDone = named.every((n) => nowDone.includes(n) || products.some((p) => p.id === n && confirmed(p)));
     if (onAnswer && named.includes(id) && allDone)
       onAnswer(
@@ -739,7 +735,7 @@ function ProductQuestion({
   }
 
   return (
-    // Open, its heading stays in view while she looks through the products (MOB-2, chat.css).
+    // Open, its heading stays in view while she looks through the products (chat.css).
     <Card className={onAnswer ? "ui-chat-ask" : undefined}>
       <CardHeader>
         <CardTitle as="p">{card.question}</CardTitle>

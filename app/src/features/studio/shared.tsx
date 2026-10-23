@@ -96,7 +96,7 @@ export function BoardCard({ board, to }: { board: Board; to: string }) {
         <CardHeader>
           <CardTitle>{board.name}</CardTitle>
           <CardDescription>
-            {/* round 13 (robots' note 08): the count the board itself says, its pictures (notes and swatches are not) */}
+            {/* the count the board itself says, its pictures (notes and swatches are not) */}
             {boardKindLabel[board.kind]} · {boardCount(board)} · changed {when(board.updatedAt)}
           </CardDescription>
         </CardHeader>

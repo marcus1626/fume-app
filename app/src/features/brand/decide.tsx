@@ -1,16 +1,12 @@
-// One rule across Brand DNA (FLOWS §2): every item shows where it came from and what state it is in, and a find
-// Fume is not sure of gets Confirm · Change · Remove. Only an owner or an approver decides; everyone else sees the
-// tag. The Brand DNA board acts in place (<ConfirmRow> for a colour, a typeface, a logo or a line of voice;
-// <Provenanced> for a picture that must stay big enough to judge); the onboarding's compact rows and the Brand
-// check use useDecision and DecisionActions directly.
-// Round 8 (UX review ONB-9, ONB-15, ONB-17): Confirm says nothing (the item's own "Confirmed" is the feedback, no
-// toast); Remove is one tap with Undo in its toast, and the removed item stays where it was, dimmed, with "Put back".
-// Round 9 (desktop review DLOAD-1, DLOAD-7, DLAY-19, DWAY-14; PROPOSED 19 Oct 2026): one verb per action: Confirm
-// (never Keep), Change, Remove; the tag says "Fume found this on lysne.no" (never "Engine proposal"). Change opens
-// in place, under the item: one field, Enter saves, Esc puts it back (no centred dialog over the board). The props
-// of every export stay as they were, so the onboarding and the queues keep working.
-// Round 13 (walk-through 21 Oct, #2, #42; PROPOSED 22 Oct 2026): a colour's Change has a colour picker beside its hex
-// and its uses as chips under it (colour.tsx); Save keeps both.
+// One rule across Brand DNA (FLOWS §2): every item shows where it came from and what state it is in, and a find Fume is
+// not sure of gets Confirm · Change · Remove. Only an owner or an approver decides; everyone else sees the tag. The
+// board acts in place (<ConfirmRow> for a colour, a typeface, a logo or a line of voice; <Provenanced> for a picture
+// that must stay big enough to judge); the onboarding's compact rows and the Brand check use useDecision and
+// DecisionActions directly.
+// Confirm says nothing (the item's own "Confirmed" is the feedback); Remove is one tap with Undo in its toast, and the
+// removed item stays where it was, dimmed, with "Put back". The tag says "Fume found this on lysne.no", never "Engine
+// proposal". Change opens in place, under the item: one field (a colour also has its picker and its uses, colour.tsx),
+// Enter saves, Esc puts it back.
 import {
   Button,
   Dialog,
@@ -92,9 +88,9 @@ export function ProvenanceTag({ provenance }: { provenance: Provenance }) {
 }
 
 /**
- * Confirm, Remove and Put back for one item, with the round 8 rule: no toast for Confirm; Remove's toast carries Undo
- * (which puts it back, confirmed). `removed` is true once it was removed here, so the caller can keep it in place,
- * dimmed. `keep` is the old name of `confirm`, kept so the onboarding's calls stay as they are.
+ * Confirm, Remove and Put back for one item: no toast for Confirm; Remove's toast carries Undo (which puts it back,
+ * confirmed). `removed` is true once it was removed here, so the caller can keep it in place, dimmed. `keep` is an
+ * alias of `confirm` for the onboarding's calls.
  */
 export function useDecision(kind: IdentityKind, id: string, name: string, onDecided?: (id: string) => void) {
   const decide = useDecide();
@@ -145,7 +141,7 @@ export function DecisionActions({
   disabled,
   name,
 }: {
-  /** Confirm (the prop keeps its first name, so every caller stays as it is). */
+  /** Confirm (the prop is named onKeep). */
   onKeep: () => void;
   onChange?: () => void;
   onRemove: () => void;
@@ -195,8 +191,8 @@ function useChangeValue(value: string, field: { hex?: boolean }) {
 }
 
 /**
- * Change in place (round 9, DWAY-14, DLAY-19): one field under the item, the old value in it. Enter saves, Esc puts
- * it back and returns to the item; nothing covers the board. Fume's value stays in the record ("was").
+ * Change in place: one field under the item, the old value in it. Enter saves, Esc puts it back and returns to the
+ * item; nothing covers the board. Fume's value stays in the record ("was").
  */
 export function ChangeInline({
   kind,
@@ -213,7 +209,7 @@ export function ChangeInline({
   name: string;
   value: string;
   field: { label: string; help: string; hex?: boolean };
-  /** A colour's uses (#42): chips under the hex, saved with it. */
+  /** A colour's uses: chips under the hex, saved with it. */
   uses?: ColourUse[];
   /** Saved or cancelled: the caller closes the field and gives focus back to its Change. */
   onDone: (saved: boolean) => void;
@@ -316,7 +312,7 @@ export interface ProvenancedProps {
   className?: string;
   /** Called once it was confirmed, changed or removed here, so the caller can keep it in place for the visit. */
   onDecided?: (id: string) => void;
-  /** A colour's uses, for its Change (#42). */
+  /** A colour's uses, for its Change. */
   uses?: ColourUse[];
   children: ReactNode;
 }
@@ -400,10 +396,10 @@ export function Provenanced({
 }
 
 /**
- * One find to confirm as a row (round 9, DLAY-19; brand-board.css .ui-brand-confirm): the thing small and sharp (a
- * 64 px swatch, the logo on its ground, "Aa" in the face), its name, where Fume found it and whether Fume is sure,
- * then Confirm · Change · Remove right after the words. Once decided here it stays in its place for the visit with
- * its new tag ("Confirmed", "You changed this", or dimmed with Put back), so nothing moves under the mouse.
+ * One find to confirm as a row (brand-board.css .ui-brand-confirm): the thing small and sharp (a 64 px swatch, the logo
+ * on its ground, "Aa" in the face), its name, where Fume found it and whether Fume is sure, then Confirm · Change ·
+ * Remove right after the words. Once decided here it stays in its place for the visit with its new tag ("Confirmed",
+ * "You changed this", or dimmed with Put back), so nothing moves under the mouse.
  */
 export function ConfirmRow({
   kind,
@@ -423,7 +419,7 @@ export function ConfirmRow({
   name: string;
   provenance: Provenance;
   value?: string;
-  /** A colour's uses, for its Change (#42). */
+  /** A colour's uses, for its Change. */
   uses?: ColourUse[];
   /** The thing itself, small: a swatch, a logo tile, a specimen. Left out for a line of voice. */
   media?: ReactNode;

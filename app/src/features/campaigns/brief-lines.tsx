@@ -1,15 +1,11 @@
-// The brief, finished where it is read (walk-through 15 Oct, Must 12; UX review H6). Before the brief is sent,
-// every line is editable in place: press it, change it, save. An empty line says so and shows Fume's suggestion,
-// taken from the last brief the customer sent, with "Use it". Sending waits until the objective, the audience and
-// the message are there (briefGaps), so a brief is never sent half empty.
-// Round 8 (UX review 19 Oct, TASK-2): briefGaps is the ONE rule for when a brief is done, in the chat, on the brief page
-// and on the form written by hand. The form also reads its first line the way Fume reads it in the chat (channelsIn,
-// audienceIn, namedIn, nameFrom), so it only asks what it cannot read (TASK-3, LOAD-5).
-// Round 9 (desktop review 19 Oct, DLOAD-10; PROPOSED): ONE set of names for the brief's lines, in one order, here
-// (briefLabel, BRIEF_ORDER). The form, the brief page and the chat's brief panel all name a line the same way.
-// Round 10 (FLOWS §22, PROPOSED 20 Oct 2026): the customer SENDS her brief to Fume ("Send to Fume"); she no longer
-// approves it. Until it is sent every line changes in place; once sent it is fixed, and Fume writes the plan from it.
-// BriefFacts is the whole brief as one list (the Plan tab before the plan exists, and "Your brief, sent 13 Oct" under it).
+// The brief, finished where it is read. Before the brief is sent every line is editable in place: press it, change it,
+// save. An empty line says so and shows Fume's suggestion, taken from the last brief the customer sent, with "Use it".
+// briefGaps is the one rule for when a brief is done (the objective, the audience and the message), in the chat, on the
+// brief page and on the form written by hand, so a brief is never sent half empty. One set of names for the brief's
+// lines, in one order, lives here (briefLabel, BRIEF_ORDER). The form reads its first line the way Fume reads it in the
+// chat (channelsIn, audienceIn, namedIn, nameFrom), so it only asks what it cannot read. Once sent, Fume writes the
+// plan from the brief (FLOWS §22). BriefFacts is the whole brief as one list (the Plan tab before the plan exists, and
+// "Your brief, sent 13 Oct" under it).
 import {
   Button,
   CreativeMedia,
@@ -32,8 +28,8 @@ import { due } from "../../lib/time";
 type TextKey = "objective" | "audience" | "offer" | "message";
 type ListKey = "mandatory" | "never";
 
-/** Every line of a brief, by its one name (round 9, DLOAD-10). Use these words wherever a brief is shown or written:
- *  the form's labels, the brief page, the chat's brief panel and card. */
+/** Every line of a brief, by its one name. Use these words wherever a brief is shown or written: the form's labels, the
+ *  brief page, the chat's brief panel and card. */
 export const briefLabel = {
   products: "Product",
   objective: "Goal",
@@ -274,7 +270,7 @@ function LineValue({
   return (
     <>
       <span>{value || empty}</span>
-      {/* Round 9 (DLOAD-20): Fume's suggestion in its own words, without "as in <another campaign>". */}
+      {/* Fume's suggestion in its own words, without "as in <another campaign>". */}
       {suggestion && <DataListNote>Fume suggests “{suggestion.replace(/[.\s]+$/, "")}”</DataListNote>}
       {editable && (
         <span className="ui-app-row">
@@ -293,7 +289,7 @@ function LineValue({
               aria-label={`Change the ${label.toLowerCase()}`}
             />
           ) : (
-            // Round 9 (DLOAD-1): one verb for editing a line, Change.
+            // One verb for editing a line: Change.
             <Button
               variant="quiet"
               size="sm"
@@ -400,7 +396,7 @@ export function BriefFacts({
 }) {
   const catalogue = useCatalogue();
   const products = (catalogue.data?.products ?? []).filter((p) => campaign.productIds.includes(p.id));
-  // The brief's number and what is made agree (DLOAD-2): once creatives exist and the count differs, both are said.
+  // The brief's number and what is made agree: once creatives exist and the count differs, both are said.
   const creatives =
     made > 0 && made !== brief.creatives ? `${brief.creatives} · ${made} made so far` : String(brief.creatives);
   return (

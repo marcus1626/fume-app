@@ -1,20 +1,16 @@
-// A board: moodboards and idea boards (FLOWS §0 row 6, §3.3, §7 steps 6 and 8). The customer's and the staff screens
-// use the same component: <Board board={…} />. It joins the data to the view: saves moves and new items through the
-// API, keeps the selection, and carries the floating toolbar and the side panel of the selected item.
-//
-// Data and view are apart on purpose (FLOWS §6): BoardView.tsx only draws a Board and reports gestures as callbacks
+// A board: moodboards and idea boards (FLOWS §3.3). The customer's and the staff screens use the same component, <Board
+// board={…} />. It joins the data to the view: saves moves and new items through the API, keeps the selection, and
+// carries the floating toolbar and the side panel of the selected item.
+// Data and view are apart on purpose (FLOWS §6): BoardView.tsx only draws a Board, reports gestures as callbacks
 // (onSelect, onMove) and takes commands through its handle (zoomBy, fit, centre). When the boards move onto
-// OpenPencil's scene graph and renderer, BoardView is the part that is replaced; this file, the toolbar, the panel
-// and the API calls stay.
-//
-// Provenance stays quiet on the canvas (Fume's mark on a proposal, a small verdict disc on an image) and is
-// spelled out in the side panel: who put the item in, where Fume found it, Confirm · Remove for a proposal (only
-// the customer's owner or approver decides, F-D077), and This is us · Not us with its reason, which is what teaches
-// Fume her taste.
-// Round 9 (desktop review DWAY-18, DLOAD-1, DLOAD-6, DLOAD-7; PROPOSED 19 Oct 2026): ⌘Z / Ctrl+Z puts the last move
-// back and ⇧⌘Z / Ctrl+Y (or Ctrl+Shift+Z) does it again, as on any canvas; the first move of a visit says so in a
-// "Moved" toast with Undo. Never while typing in a field. A proposal is Fume's find (never "the Engine's"), confirmed
-// without a toast, removed with an Undo; the verdicts are her words for taste: This is us · Not us · Not yet.
+// OpenPencil's renderer, BoardView is the part that is replaced; this file, the toolbar, the panel and the API calls
+// stay.
+// Provenance stays quiet on the canvas (Fume's mark on a proposal, a small verdict disc on an image) and is spelled out
+// in the side panel: who put the item in, where Fume found it, Confirm · Remove for a proposal (only the owner or
+// approver decides, F-D077), and the verdicts This is us · Not us · Not yet, which teach Fume her taste. A proposal is
+// Fume's find, never "the Engine's".
+// ⌘Z / Ctrl+Z puts the last move back and ⇧⌘Z / Ctrl+Y does it again, never while typing in a field; the first move of
+// a visit says so in a "Moved" toast with Undo.
 import {
   Button,
   Field,
@@ -103,7 +99,7 @@ export function Board({ board, embedded, references }: BoardProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [zoom, setZoom] = useState(1);
   const [refsOpen, setRefsOpen] = useState(false);
-  // the moves of this visit, so ⌘Z puts one back and ⇧⌘Z does it again (DWAY-18)
+  // The moves of this visit, so ⌘Z puts one back and ⇧⌘Z does it again.
   const history = useRef<{ undo: Move[]; redo: Move[]; told: boolean }>({ undo: [], redo: [], told: false });
 
   const staff = Boolean(session.user.staffRole);
@@ -158,7 +154,7 @@ export function Board({ board, embedded, references }: BoardProps) {
     }
     moveTo(itemId, { x, y });
   };
-  // the keys always reach the latest undo and redo, without re-binding on every render
+  // The keys always reach the latest undo and redo, without re-binding on every render.
   const keys = useRef({ undo, redo });
   keys.current = { undo, redo };
   useEffect(() => {
@@ -321,7 +317,7 @@ export function Board({ board, embedded, references }: BoardProps) {
             decide.mutate(
               { kind: "board_item", id, verdict },
               {
-                // Confirm shows on the item itself (its tag), so it says nothing; Remove takes it away, so it says so
+                // Confirm shows on the item itself (its tag), so it says nothing; Remove takes it away, so it says so.
                 onSuccess: () => {
                   if (verdict !== "remove") return;
                   setSelectedId(null);

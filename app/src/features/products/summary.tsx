@@ -1,6 +1,6 @@
-// The product's spec in a narrow panel, read only (round 6): for the Studio's Specs, under the product picker.
-// Fume's people see what the customer holds (fidelity, measures, parts with their finishes, the label lines) and
-// keep the Studio's own "change for this creative" on the Product Truth lines. One line to wire it in Specs.tsx:
+// The product's spec in a narrow panel, read only: for the Studio's Specs, under the product picker. Fume's people see
+// what the customer holds (fidelity, measures, parts with their finishes, the label lines) and keep the Studio's own
+// "change for this creative" on the Product Truth lines. One line to wire it in Specs.tsx:
 //   {specs.productId && <ProductSpecSummary productId={specs.productId} />}
 import { Progress } from "@fume/ui";
 import { useProduct, useProductKinds } from "../../api/hooks";

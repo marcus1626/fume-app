@@ -1,11 +1,9 @@
-// "@" in the Fume composer (round 13, Marcus's video comment #16 of 21 Oct; PROPOSED 22 Oct 2026: "burde ha flere
-// funksjoner i input feltet her … referere til produkt eller kampanje, og få et relativt default svar").
-// Typing "@" (or the composer's @ button) opens a small Smoke glass list over the composer: her campaigns, products,
-// collections and the creatives of her campaigns, filtered as she types. ↑ ↓ move, Enter or Tab picks, Esc closes; a
-// click picks too. The pick writes "@Autumn launch " into her words, and Fume answers about what she named (r13-chat.ts
-// in the mock: where it is, the numbers, what comes next, and a line that opens it beside the conversation).
-// When the composer is empty, a few things to ask sit over it ("Where is Autumn launch?", "What waits on me?",
-// "This month in numbers").
+// "@" in the Fume composer (FLOWS §26.1). Typing "@" (or the composer's @ button) opens a small Smoke glass list over
+// the composer: her campaigns, products, collections and the creatives of her campaigns, filtered as she types. ↑ ↓
+// move, Enter or Tab picks, Esc closes; a click picks too. The pick writes "@Autumn launch " into her words, and Fume
+// answers about what she named (in the mock: where it is, the numbers, what comes next, and a line that
+// opens it beside the conversation). When the composer is empty, a few things to ask sit over it ("Where is Autumn
+// launch?", "What waits on me?", "This month in numbers").
 import { Button, Icon, type IconName } from "@fume/ui";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useCampaigns, useCampaignViews, useCatalogue } from "../../api/hooks";
@@ -240,7 +238,7 @@ export function useMentions({
   return { list, open };
 }
 
-/** A few things to ask, over an empty composer (#16). */
+/** A few things to ask, over an empty composer. */
 export function AskSuggestions({ campaign, onAsk }: { campaign?: string; onAsk: (text: string) => void }) {
   const asks = [campaign ? `Where is @${campaign}?` : undefined, "What waits on me?", "This month in numbers"].filter(
     (x): x is string => Boolean(x),

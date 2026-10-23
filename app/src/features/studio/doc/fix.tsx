@@ -1,5 +1,5 @@
-// Product fix (FLOWS §17), PROPOSED 15 Oct 2026. The Engine masks the product on every render and reads its details
-// against the product's detail tokens (real cut-outs of the real product). On the board:
+// Product fix (FLOWS §17). The Engine masks the product on every render and reads its details against the product's
+// detail tokens (real cut-outs of the real product). On the board:
 // - DetailsOverlay: the details it masked as subtle outlined regions, when "Product details" is on; a detail that
 //   reads wrong always shows, with a small marker ("Reads 200 ml · should be 100 ml"). Tap one: what the Engine
 //   read beside the real cut-out, and Fix with the real product. While it fixes, the region shimmers white; the fix
@@ -151,7 +151,7 @@ function DetailRegion({
     <span className="ui-pfix-marker">
       <Icon name="triangle-alert" />
       Reads {find.read}
-      {/* side by side the pictures are narrow: compare shows only what it reads (round 13, #59) */}
+      {/* side by side the pictures are narrow: compare shows only what it reads */}
       <span className="ui-pfix-should"> · should be {token.value}</span>
     </span>
   );

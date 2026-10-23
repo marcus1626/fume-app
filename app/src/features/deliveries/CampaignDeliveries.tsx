@@ -1,12 +1,12 @@
-// A campaign's deliveries, each said once (UX review 19 Oct, TASK-16; PROPOSED 19 Oct 2026): one row per delivery
-// that exists ("Autumn launch · Masters · 2 creatives"), then a row only for approved creatives that are in no
-// delivery yet. "Make the delivery" is offered only once everything in the campaign (or the collection it takes) is
-// approved, so it never reads as something she must press, and it never packs the same creatives twice. Making one
-// keeps her where she is; the toast opens it. Used on the campaign's Delivery tab and on All deliveries.
+// A campaign's deliveries, each said once: one row per delivery that exists ("Autumn launch · Masters · 2 creatives"),
+// then a row only for approved creatives that are in no delivery yet. "Make the delivery" is offered only once
+// everything in the campaign (or the collection it takes) is approved, so it never reads as something she must press,
+// and it never packs the same creatives twice. Making one keeps her where she is; the toast opens it. Used on the
+// campaign's Delivery tab and on Deliveries.
 //
 //   <CampaignDeliveries campaignId="c-autumn" />
-//   <CampaignDeliveries campaignId="c-autumn" named />   (All deliveries, with no campaign heading over the rows: the
-//   rows that are not a delivery yet say the campaign's name too, round 9, DLOAD-15)
+//   <CampaignDeliveries campaignId="c-autumn" named />   (Deliveries: no campaign heading over the rows, so the rows
+//   that are not a delivery yet name the campaign too)
 import {
   Button,
   Icon,

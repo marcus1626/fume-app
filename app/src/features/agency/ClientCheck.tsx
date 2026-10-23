@@ -1,10 +1,7 @@
-// Round 11 CLIENT FLOW (FLOWS §24.2, §24.5; PROPOSED 20 Oct 2026): a creative's check line in a brand an agency runs.
-// An approval the agency recorded says so ("Maja approved · recorded by Nora", "recorded by you"); a change the client
-// asked for names the client ("Maja asked for changes"). Everything else is the app's one check line
-// (CreativeCheck: "Nora", "Changes asked for"), with the Amber triangle only on checked work as everywhere.
-// Round 12 AGENCY (UX review DLOAD-5; brief r12 SENDING): for the agency a checked creative is in one of two states,
-// each named once: "Checked, not sent" (its to send) or "With Maja" (sent, she approves it). The Amber triangle stays:
-// both are checked work.
+// A creative's check line in a brand an agency runs (FLOWS §24.2, §24.5). An approval the agency recorded says so
+// ("Maja approved · recorded by Nora"); a change the client asked for names the client ("Maja asked for changes"). For
+// the agency a checked creative is "Checked, not sent" or "With Maja" (sent; she approves it). Everything else is the
+// app's one check line (CreativeCheck), with the Amber triangle on checked work.
 import { CheckMark } from "@fume/ui";
 import type { Creative, User } from "../../contract";
 import { useSession } from "../../api/hooks";
@@ -27,7 +24,7 @@ export function ClientCheck({
   const v = creative.current;
   if (v.state === "checked" && (waitingOn || user?.agency))
     return <CheckMark className="ui-client-check" state="checked" label={sendState(waitingOn)} />;
-  // the agency reads who asked: the client, never "You asked for changes"
+  // The agency reads who asked: the client, never "You asked for changes".
   if (v.state === "changes_requested" && user?.agency)
     return (
       <CheckMark className="ui-client-check" state="changes" label={`${client ?? "The client"} asked for changes`} />

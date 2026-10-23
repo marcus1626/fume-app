@@ -77,9 +77,9 @@ export function useSlidingIndicator(
   useEffect(() => {
     const list = listRef.current;
     if (!list || typeof ResizeObserver === "undefined") return;
-    // Every call re-places, the first one too: a count that arrives just after the first paint (Check's tabs, round 13)
-    // changes the options' widths before the observer's first call, and skipping it left the pill short. The options
-    // are watched as well as the track, so a sibling growing inside a track of fixed width moves the pill too.
+    // Every call re-places, the first one too: a count that arrives just after the first paint (Check's tabs) changes
+    // the options' widths before the observer's first call. The options are watched as well as the track, so a sibling
+    // growing inside a track of fixed width moves the pill too.
     const ro = new ResizeObserver(() => {
       // Before the pill shows, place it at once (it is hidden, so nothing slides); after, place it without motion.
       if (!listRef.current?.classList.contains("is-ready")) place();

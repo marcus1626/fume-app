@@ -1,21 +1,17 @@
-// Step 3, "Confirm what Fume found", and step 4, "Your taste" (FLOWS §7 steps 4, 6, 7; round 8, UX review ONB-5,
-// ONB-6, ONB-9, ONB-10, ONB-11, ONB-13, ONB-14, ONB-19, LOAD-15).
+// Step 3, "Confirm what Fume found", and step 4, "Your taste" (FLOWS §7 steps 4, 6, 7).
 // Step 3 goes through five parts, one at a time: Logo, Colour, Type, Imagery, Voice (products are not part of the
-// onboarding: each is confirmed the first time it goes into a campaign). Every item is one compact row: the thing
-// itself, where Fume found it, Confirm · Change · Remove. What Fume is not sure of is asked on its own card, with why,
-// its answers on the right in line with the rows'. Confirm says nothing (the row says "Confirmed"); Remove has Undo
-// and the row stays, dimmed, with "Put back".
-// Round 9 (desktop review DTSK-5, DTSK-7, DLAY-12, DLAY-13, DLOAD-1, DLOAD-17, DTSK-22; PROPOSED 19 Oct 2026):
-//   - One way forward per part, pinned bottom right: "Confirm all and go to Type" while finds are open (it confirms
-//     every open find of the part, then moves on), "Next: Type" once nothing is open, and a quiet "Skip for now"
-//     beside it. No second "Keep all" at the top, no "Keep it" pill for one logo. Enter presses the forward pill.
-//   - Imagery is a grid of pictures big enough to judge (240 px at the least on a desk), Confirm · Remove under each.
-//   - "You added this" only for what she uploaded; a website reading says "Found on lysne.no".
-// Step 4 is one deck of six cards, saved on the tap (the three pairs: tap or swipe toward the picture you prefer;
-// the three test directions: swipe a single picture, or the pills, or Y / N). After the last card, "What Fume
-// understood" REPLACES the deck as its own view: five short lines she can Confirm or Change, the products in one
-// sentence, how many finds are not confirmed yet ("creatives use only what you confirm", with Confirm them now),
-// and at its foot Back one and Approve and start.
+// onboarding: each is confirmed the first time it goes into a campaign). Every item is one compact row, the same
+// ConfirmRow as the Brand DNA board: the thing itself, where Fume found it, Confirm · Change · Remove. What Fume is not
+// sure of is asked on its own card, with why. Confirm says nothing (the row says "Confirmed"); Remove has Undo and the
+// row stays, dimmed, with "Put back". Imagery is a grid of pictures big enough to judge, in Fume's groups. "You added
+// this" only for what she uploaded; a website reading says "Found on lysne.no".
+// One way forward per part, pinned bottom right: "Confirm all and go to Type" while finds are open (it confirms every
+// open find of the part, then moves on), "Next: Type" once nothing is open, and a quiet "Skip for now" beside it. Enter
+// presses the forward pill.
+// Step 4 is one deck in two parts, saved on the tap (the pairs: tap or swipe toward the picture you prefer; the single
+// pictures: swipe, or the pills, or Y / N). After the last card, "What Fume understood" replaces the deck as its own
+// view: five short lines she can Confirm or Change, the products in one sentence, how many finds are not confirmed yet
+// ("creatives use only what you confirm", with Confirm them now), and at its foot Back one and Approve and start.
 import {
   Button,
   Field,
@@ -86,9 +82,9 @@ interface CheckItem {
   detailFont?: string;
   /** What Change starts from. */
   value?: string;
-  /** A colour's uses (#42), chosen as chips in its Change. */
+  /** A colour's uses, chosen as chips in its Change. */
   uses?: ColourUse[];
-  /** A picture, for its group and its Move (#3). */
+  /** A picture, for its group and its Move. */
   image?: BrandImage;
   provenance: Provenance;
   /** The thing itself, small and sharp (none for a line of voice). */
@@ -176,7 +172,7 @@ function itemsOf(identity: BrandIdentity, part: CheckPart): CheckItem[] {
         ),
       }));
     default:
-      // Round 13 (#4): the voice's five parts, each one find
+      // the voice's five parts, each one find
       if (identity.voiceBook)
         return identity.voiceBook.parts.map((v) => ({
           ...base(v.provenance),
@@ -200,7 +196,7 @@ function itemsOf(identity: BrandIdentity, part: CheckPart): CheckItem[] {
 
 /**
  * Where an item came from, in her words: "Found on lysne.no, product pages". "You added this" only when she gave Fume
- * material; from a website alone, what the brand already had reads "Found on lysne.no" (DLOAD-17).
+ * material; from a website alone, what the brand already had reads "Found on lysne.no".
  */
 function sourceWords(p: Provenance, scan: BrandScan | null | undefined): string {
   if (p.origin === "customer")
@@ -311,9 +307,9 @@ const detailOf = (x: CheckItem) =>
   );
 
 /**
- * A find of a list part (logo, colour, type, voice): BRAND's ConfirmRow, so step 3 and the Brand DNA board look the
- * same (round 9, DLAY-19): the thing small and sharp, where Fume found it, "Fume is not sure" when it is not, and
- * Confirm · Change · Remove right after the words. Decided here, it stays in its place with its new tag.
+ * A find of a list part (logo, colour, type, voice): the Brand DNA board's ConfirmRow, so step 3 and the board look the
+ * same: the thing small and sharp, where Fume found it, "Fume is not sure" when it is not, and Confirm · Change ·
+ * Remove right after the words. Decided here, it stays in its place with its new tag.
  */
 function FindRow({ item }: { item: CheckItem }) {
   return (
@@ -333,7 +329,7 @@ function FindRow({ item }: { item: CheckItem }) {
   );
 }
 
-/** What the brand already had: the same row, still, saying where it came from ("Found on lysne.no", DLOAD-17). */
+/** What the brand already had: the same row, still, saying where it came from ("Found on lysne.no"). */
 function SettledRow({ item, scan }: { item: CheckItem; scan: BrandScan | null | undefined }) {
   return (
     <li className="ui-ob-find">
@@ -359,7 +355,7 @@ function SettledRow({ item, scan }: { item: CheckItem; scan: BrandScan | null | 
   );
 }
 
-/** A picture big enough to judge (DLAY-12): the picture, its name and source, Confirm · Remove under it. */
+/** A picture big enough to judge: the picture, its name and source, Confirm · Remove under it. */
 function CheckTile({
   item,
   scan,
@@ -480,7 +476,7 @@ function PartBody({
       ))}
       {items.length > 0 &&
         (part === "voice" && identity.voiceBook ? (
-          // #4: the voice's five parts in a fixed order, each with Confirm · Change
+          // the voice's five parts in a fixed order, each with Confirm · Change
           <ul className="ui-ob-finds" aria-label="Voice: what Fume found">
             {voiceParts.map((id) => (
               <li key={id} className="ui-ob-find">
@@ -489,7 +485,7 @@ function PartBody({
             ))}
           </ul>
         ) : part === "imagery" ? (
-          // #3: Fume sorted the pictures into groups; she moves one with its Move menu
+          // Fume sorted the pictures into groups; she moves one with its Move menu
           byGroup(items.map((x) => ({ ...x.image!, x }))).map((g) => (
             <section key={g.group} className="ui-image-group" aria-labelledby={`ob-group-${g.group}`}>
               <div className="ui-image-group-head">
@@ -545,7 +541,7 @@ export function CheckFound() {
       }))
     : undefined;
 
-  // One way forward (DTSK-5, DTSK-7): confirm what is open and move on, or move on.
+  // One way forward: confirm what is open and move on, or move on.
   const confirmable = identity && canApprove ? confirmableIn(identity, part, scan.data) : [];
   const goNext = () => (next ? go(next.id) : navigate("/welcome/taste"));
   async function confirmAllAndGo() {
@@ -629,10 +625,10 @@ export const tasteReasons = (card: TasteDeckCard, answer: TasteDeckAnswer) =>
       : yesReasons;
 
 /**
- * Round 13 (Marcus's video comments #5, #47; PROPOSED 22 Oct 2026): the deck in two named parts, each with one line on
- * what it teaches, so the two kinds of card are not a puzzle: "Part 1 of 2 · Which is closer to LYSNE?" (the pairs:
- * what she prefers; "Neither feels like LYSNE" when neither is), then "Part 2 of 2 · Is this LYSNE?" (single pictures:
- * where the edges are). A part with no cards drops out, and one part alone is not numbered. The same on Brand › Taste.
+ * The deck in two named parts, each with one line on what it teaches, so the two kinds of card are not a puzzle: "Part
+ * 1 of 2 · Which is closer to LYSNE?" (the pairs: what she prefers; "Neither feels like LYSNE" when neither is), then
+ * "Part 2 of 2 · Is this LYSNE?" (single pictures: where the edges are). A part with no cards drops out, and one part
+ * alone is not numbered. The same on Brand › Taste.
  */
 export function tasteParts(brand: string, pairs: TasteDeckCard[], singles: TasteDeckCard[]): TasteDeckCard[] {
   const groups = [
@@ -778,9 +774,8 @@ function SummaryLine({ line, saved, canEdit }: { line: Understood; saved?: Under
 }
 
 /**
- * What Fume understood, its own view once the deck is done (DLOAD-17, DLAY-12, DTSK-5, DTSK-22): the lines, the
- * products in one sentence, what is not confirmed yet, and at its foot Back one and Approve and start (not pinned:
- * she reaches it by reading down).
+ * What Fume understood, its own view once the deck is done: the lines, the products in one sentence, what is not
+ * confirmed yet, and at its foot Back one and Approve and start (not pinned: she reaches it by reading down).
  */
 function Summary({ view, brand, onBack }: { view: BrandDnaView; brand: string; onBack?: () => void }) {
   const scan = useBrandScan();

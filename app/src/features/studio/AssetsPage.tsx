@@ -1,10 +1,9 @@
 // Models and references (FLOWS §9.4, §9.6), for Fume's people under one brand: the brand's chosen presets (first in
-// every swatch in Studio), its models (AI people, always labelled) and its reference library. Every asset says who
-// made it and where it stands: a designer's draft, saved to the brand (waiting for the customer), approved by the
-// customer, or declined. Only the customer approves a model; a reference is the designer's to save.
-// Round 12 (UX review DLAY-5, PROPOSED 20 Oct 2026): presets are a two-column list of rows (swatch, name and hex, use,
-// source), and a long state is a line under the name, never a pill that runs out of its card.
-// "Make a model" and "Make a reference" open a new document in Studio in Model or Reference maker mode.
+// every swatch in Studio), its models (AI people, always labelled) and its reference library. Every asset says who made
+// it and where it stands: a designer's draft, saved to the brand (waiting for the customer), approved by the customer,
+// or declined. Only the customer approves a model; a reference is the designer's to save. Presets are a two-column list
+// of rows, and a long state is a line under the name, never a pill that runs out of its card. "Make a model" and "Make
+// a reference" open a new document in Studio in Model or Reference maker mode.
 import {
   Badge,
   Button,
@@ -171,7 +170,7 @@ export function AssetsPage() {
 
 // ─── Presets ────────────────────────────────────────────────────────────────
 
-/** One preset as a row (DLAY-5): the swatch, its name and hex, what it is for, and where it comes from. */
+/** One preset as a row: the swatch, its name and hex, what it is for, and where it comes from. */
 function Preset({ preset }: { preset: BrandPreset }) {
   const names = useNames();
   const p = preset.provenance;
@@ -212,7 +211,7 @@ function Model({ model }: { model: BrandModel }) {
   const made = `Made by ${names.name(model.madeBy)}`;
   const saved = model.savedBy ? `saved by ${names.name(model.savedBy)}` : undefined;
   const decided = model.decidedBy ? names.name(model.decidedBy) : "the customer";
-  // A long state is a line under the name, not a pill (DLAY-5); the pills stay short.
+  // A long state is a line under the name, not a pill; the pills stay short.
   const where: Record<AssetState, ReactNode> = {
     draft: <Badge>Draft</Badge>,
     saved: <Badge dot="idle">Saved</Badge>,

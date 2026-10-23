@@ -67,9 +67,8 @@ export function useRole() {
 }
 
 /**
- * Round 13 (robots' notes, 08-studio-brand): who reads a brand page. The brand's own people read "your" and "you";
- * Fume's people and an agency's read the brand's name and the person's ("LYSNE's taste", "Maja said"), never the
- * customer's own voice.
+ * Who reads a brand page. The brand's own people read "your" and "you"; Fume's people and an agency's read the brand's
+ * name and the person's ("LYSNE's taste", "Maja said"), never the customer's own voice.
  */
 export function useViewer() {
   const session = useSession().data!;
@@ -79,8 +78,8 @@ export function useViewer() {
 }
 
 /**
- * An AI person Fume saved waits until the first campaign introduces it (ONB-8): before any campaign, Home, the
- * check flow (/brand/check) and the board all hold saved models back, so their counts agree.
+ * An AI person Fume saved waits until the first campaign introduces it: before any campaign, Home, the check flow
+ * (/brand/check) and the board all hold saved models back, so their counts agree.
  */
 export function useModelsHeldBack(): boolean {
   const campaigns = useCampaigns();
@@ -93,7 +92,7 @@ export function useExpertName(): string {
   return expert ? firstName(expert.name) : "Fume's expert";
 }
 
-// ─── The Brand page's header actions (round 9, DLAY-13) ────────────────────────
+// ─── The Brand page's header actions ───────────────────────────────────────
 // Brand is one page with three tabs, so one header: a tab's page-level action (Brand DNA's "Confirm 7 finds",
 // Products' "Confirm 7 products" with Import and Add as quiet pills to its left) is drawn in that header, right, on
 // the title's baseline. A tab's content renders its actions inside <BrandHeaderActions>; the page provides the place.
@@ -185,12 +184,12 @@ export function sourceWords(
   return `${words}. ${confidence[fact.confidence]}`;
 }
 
-/** What the customer gave or confirmed: it needs no provenance on screen (LOAD-9, round 8). */
+/** What the customer gave or confirmed: it needs no provenance on screen. */
 export const isConfirmed = (source: FactSource) => source === "supplied" || source === "verified";
 
 /**
- * The line under a rule: how strict it is (a hard constraint says so with its badge instead) and, only while Fume
- * has not had it confirmed, where it came from. A rule you gave or confirmed shows no provenance (LOAD-9).
+ * The line under a rule: how strict it is (a hard constraint says so with its badge instead) and, only while Fume has
+ * not had it confirmed, where it came from. A rule you gave or confirmed shows no provenance.
  */
 export function ruleLine(rule: BrandRule): string | undefined {
   const where: Partial<Record<FactSource, string>> = {

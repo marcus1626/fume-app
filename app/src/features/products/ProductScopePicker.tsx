@@ -1,12 +1,10 @@
 // Product scope picker (FLOWS §3.2, §7 step 8): what a campaign is about, as single products and whole collections,
-// picked as a grid of pictures (Marcus 15 Oct: "ser man produktene som grid, ikke liste med navn"). A collection brings
-// all its products, and new products in it join later.
-// Round 8 (UX review 19 Oct, LOAD-5 and LOAD-2): the grid shows only products that can be used. Products not confirmed
-// yet fold into ONE row, "6 more products to confirm". A product the brief's line names comes first, alone.
-// Collections wait behind a quiet "A whole collection", so the first question stays "Which product?".
-// Round 9 (desktop review 19 Oct, DWAY-5, DTSK-6, DLOAD-1; PROPOSED): a product that waits is confirmed in CHECK's one
-// product panel (useOpenProductCheck, the card with the photo and Fume's question first), beside the form; once
-// confirmed it is ticked here. One verb: Confirm.
+// picked as a grid of pictures, never a list of names. A collection brings all its products, and new products in it
+// join later.
+// The grid shows only products that can be used; products not confirmed yet fold into one row, "6 more products to
+// confirm". A product the brief's line names comes first, alone. Collections wait behind a quiet "A whole collection",
+// so the first question stays "Which product?". A product that waits is confirmed in the one product panel
+// (useOpenProductCheck), beside the form; once confirmed it is ticked here.
 //
 //   With a campaign, it saves itself through useSetCampaignScope:
 //     <ProductScopePicker campaign={campaign} onSaved={() => …} />
@@ -82,7 +80,7 @@ export function ProductScopePicker({
   const catalogue = useCatalogue();
   const save = useSetCampaignScope();
   const toast = useToast();
-  // Round 6 (walk-through Must 1, worker T): a few tiles inline, the whole catalogue in the All products sheet.
+  // A few tiles inline, the whole catalogue in the All products sheet.
   const [all, setAll] = useState(false);
   const [own, setOwn] = useState<Scope>(() => ({
     collectionIds: campaign?.collectionIds ?? [],
@@ -122,7 +120,7 @@ export function ProductScopePicker({
           ? `Confirm ${names(asked)} first`
           : `${ready.length ? `${waiting.length} more ${waiting.length === 1 ? "product" : "products"}` : copy.count(waiting.length, "product")} to confirm`;
         const line = asked.length ? "Confirm what Fume read, and it is added here." : names(waiting);
-        // The one product panel (CHECK), beside the page; once she confirms, the product is ticked here.
+        // The one product panel (ProductCheckHost), beside the page; once she confirms, the product is ticked here.
         const check = (id: Id) =>
           openCheck(id, {
             over: "brief",

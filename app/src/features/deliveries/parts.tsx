@@ -27,8 +27,8 @@ export const deliveryLine = (d: Delivery) =>
     date(d.createdAt),
   ].join(" · ");
 
-/** The state as a badge: ready to download wears Moss, the proposed state green (round 13, #39); a breathing dot while
- *  it is prepared, a quiet one once it is downloaded or live. */
+/** The state as a badge: ready to download wears Moss; a breathing dot while it is prepared, a quiet one once it is
+ *  downloaded or live. */
 export function DeliveryBadge({ state }: { state: Delivery["state"] }) {
   return (
     <Badge

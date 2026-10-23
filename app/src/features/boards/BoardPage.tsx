@@ -1,9 +1,8 @@
-// One board, full height (FLOWS §3.3): /boards/:boardId for the customer (the brand moodboard, a campaign's
-// moodboard, an idea board) and /studio/b/:workspaceId/boards/:boardId for Fume's people. Same Board component.
-// Round 9 (desktop review DWAY-15, DLOAD-6, DLOAD-7, DLAY-8; PROPOSED 19 Oct 2026): the brand moodboard's fixed parent
-// is Taste (/brand/taste), where it lives, so its Back says "Taste" on a cold load too. The meta says what is on it
-// in her words: "6 pictures · 1 from Fume · updated 12 Oct" (no kind label, never "Engine proposal"). The header
-// sits on the shared 1200 grid (board.css), so the left edge does not jump from the Brand page.
+// One board, full height (FLOWS §3.3): /boards/:boardId for the customer (the brand moodboard, a campaign's moodboard,
+// an idea board) and /studio/b/:workspaceId/boards/:boardId for Fume's people. The brand moodboard's fixed parent is
+// Taste (/brand/taste), so its Back says "Taste" on a cold load too. The meta says what is on it in her words: "6
+// pictures · 1 from Fume · updated 12 Oct". The header sits on the shared 1200 grid (board.css), so the left edge does
+// not jump from the Brand page.
 import { PageHeader } from "@fume/ui";
 import { useParams } from "react-router-dom";
 import { useBoard, useCampaign } from "../../api/hooks";

@@ -1,8 +1,7 @@
-// Team (ARCHITECTURE §7.2): who on Fume's team carries what, against a capacity of four Core-equivalents each
-// (Business Model & GTM), with today's checks and their time. It answers one question for the founders: who has room
-// for the next customer, and who is past their share. Round 12 (UX review DLAY-14, DTASK-7, DLOAD-20, PROPOSED 20 Oct
-// 2026): the agency's Team table, one component for both frames (team-table.tsx), with the studio's checks added;
-// the load once, as the bar in its row (no chart, no tiles); an admin follows and is left out of the capacity.
+// Team (ARCHITECTURE §7.2): who on Fume's team carries what, against a capacity of four Core-equivalents each (Business
+// Model & GTM), with today's checks and their time. It answers one question for the founders: who has room for the next
+// customer, and who is past their share. The agency's Team table, one component for both frames (team-table.tsx), with
+// the studio's checks added; the load once, as the bar in its row. An admin follows and is left out of the capacity.
 import { PageHeader } from "@fume/ui";
 import { useSession, useTeamLoad } from "../../api/hooks";
 import type { TeamLoadRow } from "../../contract";

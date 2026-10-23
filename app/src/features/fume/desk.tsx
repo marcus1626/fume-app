@@ -1,10 +1,8 @@
-// The Fume chat on a desk (round 9, PROPOSED 19 Oct 2026; UX review DLAY-5, DTSK-13, DTSK-4, DTSK-3).
-// Round 10 (PROPOSED 20 Oct 2026; FLOWS §23, Marcus's card "Én samtale"): there is ONE conversation, so the list of
-// conversations is gone; the head names it "Fume". From 1280 px, while a campaign is being briefed, "The brief" fills
-// in on the right, line by line as she answers, with the same lines, names and order as the plan page's brief
-// (brief-lines.tsx), each line changed in place, and "Send to Fume" pinned at its foot: she SENDS the brief, Fume
-// writes the plan from it, and she approves the plan before anything is made. Once it is sent the panel follows the
-// campaign as "The plan" (plan.tsx). A phone keeps the brief card in the conversation.
+// The Fume chat on a desk (FLOWS §23). There is one conversation; the head names it "Fume". From 1280 px, while a
+// campaign is being briefed, "The brief" fills in on the right, line by line as she answers, with the same lines, names
+// and order as the plan page's brief (brief-lines.tsx), each line changed in place, and "Send to Fume" pinned at its
+// foot: she sends the brief, Fume writes the plan from it, and she approves the plan before anything is made. Once it
+// is sent the panel follows the campaign as "The plan" (plan.tsx). A phone keeps the brief card in the conversation.
 import {
   Button,
   DataList,
@@ -76,14 +74,14 @@ function missingLine(missing: string): BriefLineKey | undefined {
 }
 
 /**
- * Every line of the brief in the one order (BRIEF_ORDER) with the one names (briefLabel), as the brief page shows
- * them (DTSK-4: the chat shows the whole brief, the formats, how many creatives and the market too). `named` are the
- * products she named that wait to be confirmed.
+ * Every line of the brief in the one order (BRIEF_ORDER) with the one names (briefLabel), as the brief page shows them
+ * (the chat shows the whole brief, the formats, how many creatives and the market too). `named` are the products she
+ * named that wait to be confirmed.
  */
 export function useBriefRows(view: CampaignView | undefined, named: string[] = []): BriefRow[] {
   const catalogue = useCatalogue().data;
   const usage = useHome().data?.usage;
-  // An agency pays by use, not from a package (round 12, DLOAD-6): its brief says the creatives count in the month.
+  // An agency pays by use, not from a package: its brief says the creatives count in the month.
   const byUse = Boolean(useSession().data?.workspace.agencyId);
   const brief: Brief | undefined = view?.brief;
   const campaign = view?.campaign;
@@ -109,7 +107,7 @@ export function useBriefRows(view: CampaignView | undefined, named: string[] = [
       case "formats":
         return brief.formats.length ? { value: formatWords(brief.formats) } : {};
       case "creatives":
-        // What it costs, before she sends it (DTSK-4): the number, and what is left in her package.
+        // What it costs, before she sends it: the number, and what is left in her package.
         return brief.creatives > 0
           ? {
               value: String(brief.creatives),
@@ -148,7 +146,7 @@ export function useBriefRows(view: CampaignView | undefined, named: string[] = [
 }
 
 /** The lines as a data list; with `onEdit` each line she may change carries its pencil, and the open one its form.
- *  Saving or putting a line back returns the focus to its pencil (DTSK-20). */
+ *  Saving or putting a line back returns the focus to its pencil. */
 export function BriefRowsList({
   rows,
   campaignId,
@@ -224,7 +222,7 @@ export function BriefRowsList({
   );
 }
 
-/** One line changed in place (DTSK-13: never a full page). ⌘↵ saves, Esc puts it back. */
+/** One line changed in place (never a full page). ⌘↵ saves, Esc puts it back. */
 function LineForm({
   label,
   field,
@@ -262,7 +260,7 @@ function LineForm({
       },
     );
   }
-  // ⌘↵ / Ctrl+↵ saves: the form's own submit (SHELL's submitOnModEnter); Esc is the field's.
+  // ⌘↵ / Ctrl+↵ saves: the form's own submit (@fume/ui's submitOnModEnter); Esc is the field's.
   const keys = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Escape") {
       // The field first: Esc closes this line, nothing behind it.
@@ -319,8 +317,8 @@ export interface BriefPanelProps {
 /** What the panel says under its title: what sending does, so nothing reads as made before the plan is approved. */
 export const SEND_LINE = "Fume writes the plan from it. You approve the plan before anything is made.";
 
-/** "The brief" beside the conversation, filling in as she answers; "Send to Fume" pinned at its foot (DLAY-5,
- *  DTSK-3/4/13; round 10: she sends the brief, she approves the plan). */
+/** "The brief" beside the conversation, filling in as she answers; "Send to Fume" pinned at its foot. She sends the
+ *  brief; she approves the plan. */
 export function BriefPanel({ view, named, canAct, approver, onSending, onSent }: BriefPanelProps) {
   const role = useSession().data?.role;
   const send = useSendBrief();

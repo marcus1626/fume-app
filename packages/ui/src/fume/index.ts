@@ -1,4 +1,4 @@
-// The Fume family: Fume's own screens and parts over design-system/components (DECIDED 13 Oct, round 8).
+// The Fume family: Fume's own screens and parts over design-system/components.
 // See API.md for one line per export. _parts.tsx is internal (its Btn, Avatar, Kbd, Seg render the same markup
 // as controls/ so this family does not depend on files written in parallel).
 export * from "./message";

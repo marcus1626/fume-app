@@ -1,10 +1,9 @@
-// All notifications (ARCHITECTURE §7.1): everything the bell holds, in full, with All · Unread · Mentions. Opening a row
-// marks it read and goes where it points (a review, a campaign, a conversation with Fume) through the router.
-// Round 8 (walk-through 19 Oct, MOB-17, MOB-18): one header, "Notifications · 3 unread · Mark all read", then the
-// filter and the list, so the first notification is on the first screen. On a phone the bell opens this page.
-// Round 9 (desktop review DWAY-11, DLOAD-4; PROPOSED 19 Oct 2026): on a desk the bell's popover is the whole list, so
-// this page is for the phone and for links. It is "All notifications", not a second inbox: it has its way back (Home),
-// Home is not lit while you are on it, and it counts unread as the bell does (what Home already asks shows as read).
+// All notifications (ARCHITECTURE §7.1): everything the bell holds, in full, with All · Unread · Mentions. Opening a
+// row marks it read and goes where it points (a review, a campaign, a conversation with Fume) through the router. One
+// header ("Notifications · 3 unread · Mark all read"), then the filter and the list, so the first notification is on
+// the first screen. On a desk the bell's popover is the whole list, so this page is for the phone and for links. It is
+// not a second inbox: it has its way back (Home), Home is not lit while you are on it, and it counts unread as the bell
+// does (what Home already asks shows as read).
 import {
   Button,
   NotificationList,

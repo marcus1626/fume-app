@@ -1,14 +1,9 @@
-// Round 11 CLIENT FLOW (FLOWS §24.2, §24.5; PROPOSED 20 Oct 2026): Record an approval. When the client approved
-// outside Fume (in a meeting, on a call, by email), the agency records it: which creatives, who at the client
-// approved, and how, in a note that is required. The approval stays the client's ("Maja approved"); the creative
-// says who recorded it ("Maja approved · recorded by Nora"). A small right panel on a desk, a sheet on a phone;
-// ⌘↵ records; Esc closes.
-// Round 12 AGENCY (UX review DTASK-15; PROPOSED 20 Oct 2026): a record of someone else's decision must be exact, so the
-// panel starts with nothing ticked ("Tick what Maja approved"; a tile sent to her says "with Maja since 14 Oct"), asks
-// "When" (a day, today unless she approved earlier) above "How Maja approved", and its action counts: "Record 4
-// approvals". It opens from a white pill in the review's header, no longer from a one-item More menu.
-// Round 13 (#37): "When" is @fume/ui's DateField ("Mon 19 Oct 2026" and a glass month, days after today faded), not
-// the browser's date input.
+// Record an approval (FLOWS §24.2, §24.5): the client approved outside Fume (in a meeting, on a call, by email), and
+// the agency records which creatives, who at the client approved, when, and how, in a note that is required. The
+// approval stays the client's ("Maja approved"); the creative says who recorded it ("Maja approved · recorded by
+// Nora"). A record of someone else's decision must be exact, so the panel starts with nothing ticked and its action
+// counts ("Record 4 approvals"). "When" is @fume/ui's DateField, never the browser's date input (FLOWS §26.7). A small
+// right panel on a desk, a sheet on a phone; ⌘↵ records; Esc closes.
 import {
   Button,
   Choice,

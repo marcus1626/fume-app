@@ -1,15 +1,13 @@
-// Usage (FLOWS §20): what each brand uses, for Fume's admin and operators. Renders, what they cost (staff only),
-// creatives made and delivered, and renders per week over the last eight weeks. Calm: no Amber here (Amber counts
-// checked work only), the series are Ink and Focus.
-// Round 12 AGENCY (UX review DTASK-6, DLOAD-7, DLAY-16; PROPOSED 20 Oct 2026): ONE Usage page for both frames, at
-// /studio/usage for Fume's people and /agency/usage for an agency's. A period control at the top, This month (the
-// default) · Last month · Last 8 weeks, kept in the address (?period=last_month | weeks), with the dates written out
-// in the meta line ("1–31 Oct 2026"). Then one table, a row per brand or client: Package (used of included, when it
-// renews; Fume's brands, this month only), Creatives made, Approved by the customer (the client, for an agency),
-// Delivered, and Renders and Cost (Fume's people only), with "In all" at its foot. No stat cards: the table is the
-// answer. Fume's people then see the renders per week; an agency sees what its licence covers. The numbers are the
-// same ones the brand's Home and the agency's Licence read (mock: r11-agency.ts usage()). On a phone each brand is a
-// row with its figures in one line.
+// Usage (FLOWS §20): what each brand uses, one page for both frames, at /studio/usage for Fume's admin and operators
+// and /agency/usage for an agency's people. Calm: no Amber here (Amber counts checked work only); the series are Ink
+// and Focus.
+// A period control at the top, This month (the default) · Last month · Last 8 weeks, kept in the address
+// (?period=last_month | weeks), with the dates written out in the meta line ("1–31 Oct 2026"). Then one table, a row
+// per brand or client: Package (used of included, when it renews; Fume's brands, this month only), Creatives made,
+// Approved by the customer (the client, for an agency), Delivered, and Renders and Cost (Fume's people only), with "In
+// all" at its foot. Fume's people then see the renders per week; an agency sees what its licence covers. The numbers
+// are the same ones the brand's Home and the agency's Licence read (the mock's usage()). On a phone each brand is a row
+// with its figures in one line.
 import {
   Button,
   Chart,
@@ -301,7 +299,8 @@ function UsageTable({ rows, period, agency }: { rows: UsageRow[]; period: UsageP
   );
 }
 
-/** Fume's people: the Engine's images (renders) per brand over the last eight weeks, Monday to Sunday (r13 #58: "Image" in the words). */
+/** Fume's people: the Engine's images (renders) per brand over the last eight weeks, Monday to Sunday ("Image" in the
+ *  words). */
 function RendersChart({ rows }: { rows: UsageRow[] }) {
   const weeks = weekStarts();
   const name = (r: UsageRow) => r.workspace?.brandName ?? r.workspaceId;

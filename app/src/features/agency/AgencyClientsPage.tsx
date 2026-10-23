@@ -1,11 +1,8 @@
-// Clients (FLOWS §24.3, round 11, PROPOSED 20 Oct 2026): every client brand the agency runs, A to Z (round 12, DWAY-20:
-// a fixed order, so a client stays where it was; the picker's Recent group comes from 8 clients up). On a desk a
-// table to scan: the client's mark and name with its one status sentence (a quiet dot when something waits on the
-// agency), its campaigns under way, the next delivery, what waits on the client, the client's people and who leads
-// it at the agency. The whole row opens the client (its Home; a summary client's Home says it is an example). The
-// phone keeps rows. ?client=<id> marks that row for a moment and brings it into view (a link from Home or ⌘K, and the
-// client just added). The lead's one action is Add a client, a right panel (?add=1): the new client lands in the
-// table with Fume reading its website.
+// Clients (FLOWS §24.3): every client brand the agency runs, A to Z, so a client stays where it was. On a desk a table
+// to scan: the client's mark, name and status sentence (a quiet dot when something waits on the agency), its campaigns
+// under way, the next delivery, what waits on the client, the client's people and who leads it at the agency. The whole
+// row opens the client's Home. The phone keeps rows. ?client=<id> marks that row for a moment and brings it into view.
+// The lead's one action is Add a client, a right panel (?add=1).
 import {
   Button,
   Icon,

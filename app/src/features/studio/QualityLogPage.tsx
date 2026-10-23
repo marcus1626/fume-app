@@ -1,8 +1,7 @@
 // The quality log (ARCHITECTURE §4.6, §7.2): everything the Quality Gate caught before a customer saw it, how bad it
-// was and whether it is fixed. The table holds each one and comes first; the chart below it shows catches week by
-// week, stacked by severity. Round 12 (UX review DLAY-16, PROPOSED 20 Oct 2026): no stat tiles, the counts are the
-// line under the title; Critical is one of the table's filters; the chart is the compact height.
-// The point of the page is the record behind "every creative is checked" (F-D025), so nothing here is softened.
+// was and whether it is fixed. The table holds each one and comes first, with Critical as one of its filters; the chart
+// below it shows catches week by week, stacked by severity. The counts are the line under the title. The point of the
+// page is the record behind "every creative is checked" (F-D025), so nothing here is softened.
 import {
   Badge,
   Chart,
@@ -47,7 +46,7 @@ function byWeek(entries: QualityLogEntry[]): ChartDatum[] {
   return Array.from({ length: WEEKS }, (_, i) => {
     const week = new Date(thisWeek - (WEEKS - 1 - i) * 7 * DAY).toISOString().slice(0, 10);
     const inWeek = entries.filter((e) => monday(Date.parse(e.at)) === week);
-    // The week as the table writes a day ("24 Aug", DLOAD-21); the bar chart shows its key as it is.
+    // The week as the table writes a day ("24 Aug"); the bar chart shows its key as it is.
     return {
       week: date(week),
       ...Object.fromEntries(severities.map((s) => [s, inWeek.filter((e) => e.severity === s).length])),
@@ -63,7 +62,7 @@ export function QualityLogPage() {
   const people = directory(usePeople().data);
   const [show, setShow] = useState<Show>("all");
   const campaignOf = new Map((campaigns ?? []).map((r) => [r.campaign.id, r]));
-  // Round 13 AGENCY: an agency's checks keep its clients from seeing a mistake.
+  // An agency's checks keep its clients from seeing a mistake.
   const agency = Boolean(useSession().data?.user.agency);
 
   return (

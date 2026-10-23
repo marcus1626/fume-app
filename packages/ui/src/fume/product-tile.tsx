@@ -1,5 +1,5 @@
-// Product pick (design-system/components/product-pick.css), PROPOSED 15 Oct 2026: products, collections and
-// campaigns are picked as a grid of pictures, never a list of names (Marcus 15 Oct). One tile for every picker.
+// Product pick (design-system/components/product-pick.css): products, collections and campaigns are picked as a grid of
+// pictures, never a list of names. One tile for every picker.
 //   <PickGrid aria-label="Products">
 //     <ProductTile name="Night Body Oil" variant="100 ml" src={img} selected={on} onSelectedChange={set} />
 //     <ProductTile name="Hand Balm" variant="50 ml" flag="To confirm" action={<Button size="sm" …>Confirm</Button>} />

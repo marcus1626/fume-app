@@ -1,7 +1,6 @@
-// What Fume found that she has not confirmed yet: the one count the onboarding uses (step 2's summary, step 3's
-// parts and its "12 left" in the progress, step 1's Continue, and the end card's "12 finds are not confirmed yet").
-// Round 9 (desktop review DTSK-5, PROPOSED 19 Oct 2026): it lives on its own so the frame can count without
-// importing the steps.
+// What Fume found that she has not confirmed yet: the one count the onboarding uses (step 2's summary, step 3's parts
+// and its "12 left" in the progress, step 1's Continue, and the end card's "12 finds are not confirmed yet"). It lives
+// on its own so the frame can count without importing the steps.
 import type { BrandIdentity, Provenance } from "../../contract";
 
 /** The parts of step 3, in order. Products are not part of the onboarding: each is confirmed when it is first used. */
@@ -21,7 +20,7 @@ export function listOf(identity: BrandIdentity, part: CheckPart): { provenance: 
   if (part === "colour") return identity.colours;
   if (part === "type") return identity.typefaces;
   if (part === "imagery") return identity.imagery;
-  // Round 13 (#4): the voice is five parts (Identity, How we speak, Rules, Audience, Examples), each confirmed once
+  // The voice is five parts (Identity, How we speak, Rules, Audience, Examples), each confirmed once.
   return identity.voiceBook?.parts ?? identity.voice;
 }
 

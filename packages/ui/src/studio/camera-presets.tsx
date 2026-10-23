@@ -1,7 +1,6 @@
-// StudioCameraPresets: the camera as named presets (FLOWS §18, PROPOSED 15 Oct 2026). The brand's own camera specs
-// ("LYSNE close · 85 mm") and Fume's camera presets with a picture of the camera and its body and lens
-// ("Hasselblad X2D 100C · XCD 90 mm"), as small cards; picking one sets the lens. The chosen one's note sits under
-// the cards. Own values stay with StudioLens.
+// StudioCameraPresets: the camera as named presets (FLOWS §18). The brand's own camera specs ("LYSNE close · 85 mm")
+// and Fume's camera presets with a picture of the camera and its body and lens ("Hasselblad X2D 100C · XCD 90 mm"), as
+// small cards; picking one sets the lens. The chosen one's note sits under the cards. Own values stay with StudioLens.
 //   <StudioCameraPresets label="LYSNE’s cameras" presets={cams} value={pickedId} onPick={(c) => setLens(c.lens)} />
 import { StudioPresetPicker } from "./source";
 import type { StudioLensValue } from "./types";

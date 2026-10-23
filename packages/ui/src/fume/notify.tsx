@@ -1,6 +1,6 @@
 // Notifications: the bell, its popover and the inbox page (design-system/components/notify.css, behaviour from
-// notify.js). DECIDED 13 Oct, round 8. What happened, in Fume's words: "Anna checked 6 creatives in Autumn
-// launch", "The Engine finished 12 creatives", "Anna asked for changes on creative 3", "Marcus mentioned you".
+// notify.js). What happened, in Fume's words: "Anna checked 6 creatives in Autumn launch", "The Engine finished 12
+// creatives", "Anna asked for changes on creative 3", "Sander mentioned you".
 // People are their avatars (Anna in Ink), the Engine its own icon. Unread is the words at full strength and a
 // small dot after the time, never a blue dot. Grouped Today, Yesterday, Earlier with space.
 // The read state belongs to the app: rows call onRead, Mark all read calls onReadAll. Arrow Up and Down move

@@ -1,12 +1,10 @@
-// A brand's Studio start (FLOWS §9). Round 12 (UX review DLAY-12, DTASK-12, DLOAD-19, DWAY-13; PROPOSED 20 Oct 2026):
-// carrying on comes first, as Photoshop and Figma open on recent work: "In the Studio" is one row of the six newest
-// creatives, every tile the same 4:5 box with the creative contained and its name (with its ratio) under it, and
-// "All N" shows the rest in place.
-// Round 13: past one row the action reads "Show all (N)" (#55), "Show fewer" after; a tile names who made it with the
-// names Check and Models use, so Tuva's Leo says Tuva, not "Someone" (robot note 07). Then one "New creative" block: Render or Design and the campaign on one line (No
-// campaign by default; a campaign can bring its own look, v5), then the modes as compact tiles, their one line in a
-// tooltip. Modes that are not built yet are left out. The header links to the Engine chat and Engine output.
-// Large sets ("50 packshots") are made as a batch on the campaign page or by the Engine chat, not here (FLOWS §9.7).
+// A brand's Studio start (FLOWS §9). Carrying on comes first, as Photoshop and Figma open on recent work: "In the
+// Studio" is one row of the six newest creatives, every tile the same 4:5 box with the creative contained and its name
+// (with its ratio) under it; "Show all (N)" shows the rest in place, "Show fewer" after. A tile names who made it with
+// the names Check and Models use. Then one "New creative" block: Render or Design and the campaign on one line (No
+// campaign by default; a campaign can bring its own look), then the modes as compact tiles, their one line in a
+// tooltip. Modes that are not built yet are left out. The header links to the Engine chat and Engine output. Large sets
+// ("50 packshots") are made as a batch on the campaign page or by the Engine chat, not here (FLOWS §9.7).
 import {
   Badge,
   CreativeGrid,

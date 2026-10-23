@@ -1,10 +1,9 @@
-// Proposal (design-system/components/proposal.css): Fume finds and proposes, only the customer approves (app v2,
-// FLOWS §2). PROPOSED 15 Oct 2026. Wrap the thing in <Proposal state>, put <ProposalTag> and, while it is a
-// proposal and the person may decide, <ProposalActions> in its foot.
-// Round 9 (desktop review DLOAD-7, DLOAD-1; PROPOSED 19 Oct 2026): who acts is named once and the same everywhere:
-// Fume reads, finds and proposes; the Engine only makes creatives. So a proposal's tag says "Fume found this on
-// lysne.no/about" (or "Fume found this · Brand guide, page 6"), never "Engine proposal"; the props keep their names
-// (origin "engine" is still the data's word for Fume's reading). The answers are the verbs of facts: Confirm ·
+// Proposal (design-system/components/proposal.css): Fume finds and proposes, only the customer approves (FLOWS §2).
+// Wrap the thing in <Proposal state>, put <ProposalTag> and, while it is a proposal and the person may decide,
+// <ProposalActions> in its foot.
+// Who acts is named once and the same everywhere: Fume reads, finds and proposes; the Engine only makes creatives. So a
+// proposal's tag says "Fume found this on lysne.no/about" (or "Fume found this · Brand guide, page 6"), never "Engine
+// proposal"; origin "engine" is the data's word for Fume's reading. The answers are the verbs of facts: Confirm ·
 // Change · Remove, Confirm a secondary pill so a page of proposals never shows more than one Ink.
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { cx } from "../cx";

@@ -1,10 +1,11 @@
 // Creative tile, check mark and aspect ratio: design-system/components/creative.css. The customer's creative, the one
 // pure white content surface, always with its hairline. The check (rule check-states): checked = the Amber fume-check
 // beside the checker's name and time; in check = the same triangle in grey beside "In check". Selected = the Ink ring
-// and the round Ink badge, never Amber. The "more" circle sits on its own Smoke glass, revealed on hover, always on touch.
-// Round 9, the desktop (PROPOSED 19 Oct 2026, UX review DTSK-10): onSelectedChange gets the click, so a grid can select a
-// range with shift; on a tile that opens and selects, Space on the picture toggles the selection (Enter opens it); with
-// a mouse, a quiet "Open" shows on the picture of a tile that opens.
+// and the round Ink badge, never Amber. The "more" circle sits on its own Smoke glass, revealed on hover, always on
+// touch.
+// onSelectedChange gets the click, so a grid can select a range with shift; on a tile that opens and selects, Space on
+// the picture toggles the selection (Enter opens it); with a mouse, a quiet "Open" shows on the picture of a tile that
+// opens.
 import {
   forwardRef,
   type ButtonHTMLAttributes,
@@ -167,8 +168,8 @@ export interface CreativeTileProps extends Omit<HTMLAttributes<HTMLElement>, "on
   onSelectedChange?: (selected: boolean, event?: ReactMouseEvent<HTMLElement>) => void;
   /** Open mode: the media is a link. */
   href?: string;
-  /** Open mode: the media is a button. With `selected` too, a tap on the media opens it and the round corner
-   *  checkbox selects it (the standard grid pattern; PROPOSED 15 Oct 2026, walk-through Must 8). */
+  /** Open mode: the media is a button. With `selected` too, a tap on the media opens it and the round corner checkbox
+   *  selects it (the standard grid pattern). */
   onOpen?: () => void;
   /** The more circle: pass a whole menu whose trigger is <CreativeMoreButton/> (asChild). */
   more?: ReactNode;

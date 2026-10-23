@@ -1,10 +1,9 @@
-// What Fume found (design-system/components/found-review.css), PROPOSED 16 Oct 2026, round 7 (Marcus 16 Oct,
-// decided point 3): one review for everything Fume reads in, products from a website, a CSV or an unsorted zip,
-// and the brand read again. Items lie as picture tiles marked New, Changed or Unsure; a tile opens in place, across
-// the grid, with old and new side by side for a change; "Approve all (N)" is the one main action (round 8: its words can
-// say what it does, "Add 2 to the catalogue"), and any one item can be confirmed, changed or removed on its own, none
-// of them in Ink. Round 9 (desktop review 19 Oct, DLOAD-1, DLOAD-7; PROPOSED): one verb per action, Confirm · Change ·
-// Remove (a change: Use the new · Keep yours), and Fume reads; the Engine only makes creatives.
+// What Fume found (design-system/components/found-review.css): one review for everything Fume reads in, products from a
+// website, a CSV or an unsorted zip, and the brand read again. Items lie as picture tiles marked New, Changed or
+// Unsure; a tile opens in place, across the grid, with old and new side by side for a change. "Approve all (N)" is the
+// one main action (its words can say what it does, "Add 2 to the catalogue"), and any one item can be confirmed,
+// changed or removed on its own, none of them in Ink. One verb per action, Confirm · Change · Remove (a change: Use the
+// new · Keep yours); Fume reads, the Engine only makes creatives.
 //   <FoundReview title="What Fume found" summary="On lysne.no: 1 new product, 1 changed."
 //     items={[{ id, status: "changed", title: "Pillow Mist", image, before: <…50 ml>, after: <…50 ml · 100 ml> }]}
 //     onApproveAll={…} onKeep={(id) => …} onFix={(id) => …} onRemove={(id) => …} />
@@ -70,8 +69,8 @@ export interface FoundReviewProps {
   hideFilter?: boolean;
   /** A write is under way: the actions wait. */
   busy?: boolean;
-  /** "Approve all"; the count is added in brackets. Or a function of the count, for words that say what the action
-   *  does ("Add 2 to the catalogue", round 8). */
+  /** "Approve all"; the count is added in brackets. Or a function of the count, for words that say what the action does
+   *  ("Add 2 to the catalogue"). */
   approveLabel?: string | ((n: number) => string);
   /** Under the grid: what Fume set aside, a link to something found elsewhere. */
   footer?: ReactNode;
@@ -181,7 +180,7 @@ function Panel({
       {item.detail && <div className="ui-found-detail">{item.detail}</div>}
       <div className="ui-found-actions">
         {!item.kept && (
-          // Round 8 (MOB-8): the review's one Ink action is the header's; confirming one item is secondary.
+          // The review's one Ink action is the header's; confirming one item is secondary.
           <Btn size="sm" variant="secondary" icon="check" onClick={onKeep} disabled={busy}>
             {item.status === "changed" ? "Use the new" : "Confirm"}
           </Btn>

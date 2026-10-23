@@ -1,22 +1,14 @@
-// The plan as one document (FLOWS §22.2, PROPOSED 20 Oct 2026): what Fume will make, before anything is made, read like
-// an agency's treatment and shot list. In order: the brief in Fume's words (her own lines fold under it), the
-// direction (its idea, the idea in one line, why it fits with each reason's source, the reference pictures, and the
-// two more directions Fume considered), how every creative looks (the look and the content, each line with its source,
-// Change in place), the creatives (the masters first, then what follows them), the rules it keeps and when. At 960 px
-// of column and more a summary aside stays in view; narrower it is a strip above the parts. The decision (Approve the
-// plan, Ask for changes, Mark checked) is the caller's step footer.
-// Round 12 (UX review DLAY-10, DLOAD-9, DLOAD-10, DWAY-12, DLOAD-22, DLOAD-3, DLOAD-4; PROPOSED 20 Oct 2026): the same
-// plan, tighter. The aside holds the index of the parts ("In this plan", each entry its part's heading), the facts and
-// who checked it (and what changed since); the plan's own intro sentence is gone (the aside says it once). Lines are a
-// compact spec with one quiet source each; the masters are compact rows; what follows them is a table; the other
-// directions are rows. A product the plan uses that still waits to be confirmed is named on the Products line, with
-// the way to confirm it. Who approves follows who reads it (people.ts): the customer in Fume, the agency in a brand an
-// agency runs; the agency's client reads it with no decision ("Brygga Studio approves the plan; you approve the
-// creatives."). The expert and the agency read the brand's lines about the customer by her name.
-// Round 13 (Marcus's comments #25, #28, #67; PROPOSED 22 Oct 2026): the expert's check is optional, so "Checked by
-// Anna" is the Focus pointer in Amber (as Check marks "Checked by you"), and only when she checked it; a plan nobody was
-// asked to check says nothing about a check. A new version says what changed in it. When holds a small calendar strip
-// of the days the creatives go live, each day editable, and a link to the content calendar (GoLive.tsx).
+// The plan as one document (FLOWS §22.2): what Fume will make, before anything is made, read like an agency's treatment
+// and shot list. In order: the brief in Fume's words (her own lines fold under it), the direction (its idea, why it
+// fits with each reason's source, the reference pictures, and the two more directions Fume considered), how every
+// creative looks (each line a compact spec with one quiet source, Change in place), the creatives (the masters as
+// compact rows, then a table of what follows them), the rules it keeps, and when (with a calendar strip of the go-live
+// days, GoLive.tsx). At 960 px of column and more a summary aside stays in view (the index of the parts, the facts, who
+// checked it and what changed since); narrower it is a strip above the parts. The decision is the caller's step footer.
+// A product the plan uses that still waits to be confirmed is named on the Products line, with the way to confirm it.
+// Who approves follows who reads it (people.ts); the expert and the agency read the brand's lines about the customer by
+// her name. The expert's check is optional (FLOWS §26.2), so "Checked by Anna" (the Focus pointer in Amber) shows only
+// when someone checked it. A new version says what changed in it.
 import { Button, CheckMark, Collapsible, CollapsibleContent, CollapsibleTrigger, Icon, useToast } from "@fume/ui";
 import { useMemo, type ReactNode } from "react";
 import { useCampaigns, useCatalogue, useChoosePlanDirection, useStudioKit } from "../../api/hooks";
@@ -52,8 +44,8 @@ export interface PlanDocumentProps {
   edit: boolean;
   /** "Use this direction" (she, while it is ready). */
   choose: boolean;
-  /** More for the summary aside, under the index and the facts (the expert's page: the customer's brief beside the lines
-   *  she checks, DLAY-11). With it, the facts fold to one line so it has the room. */
+  /** More for the summary aside, under the index and the facts (the expert's page: the customer's brief beside the
+   *  lines she checks). With it, the facts fold to one line so it has the room. */
   aside?: ReactNode;
 }
 
@@ -79,7 +71,7 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
   const approvesCreatives = people.name(campaign.approverId);
   const yours = viewer === "customer";
 
-  // A product the plan uses whose details still wait to be confirmed (DLOAD-3): the Products line names it.
+  // A product the plan uses whose details still wait to be confirmed: the Products line names it.
   const waiting = campaign.productIds
     .map((id) => products.find((p) => p.id === id))
     .filter((p): p is Product => Boolean(p && p.state === "needs_you"))
@@ -294,8 +286,7 @@ function LineTag({ line, tag, people }: { line: PlanLine; tag: Tag; people: Plan
 // ─── The head: only what the aside cannot say ───────────────────────────────
 
 /** The head holds what the summary aside does not: the version she asked to change, Fume's note on a new version, the
- *  expert's status line, and for the agency's client who decides. The plan's intro sentence is gone (DLOAD-9): the
- *  aside says who checked it. */
+ *  expert's status line, and for the agency's client who decides. The aside says who checked it. */
 function PlanHead({
   plan,
   people,
@@ -323,13 +314,13 @@ function PlanHead({
         : plan.state === "approved"
           ? `${people.Name(plan.approvedBy)} approved it${plan.approvedAt ? ` ${onDay(plan.approvedAt)}` : ""}.`
           : plan.checkAsked
-            ? // Round 13 (#25): the check is one she asked for
+            ? // the check is one she asked for
               `${wrote} ${people.Name(plan.checkAsked.by)} asked for a check ${onDay(plan.checkAsked.at)}; once you check it, it goes back to ${people.isMe(plan.checkAsked.by) ? "you" : people.name(plan.checkAsked.by)}.`
             : `${wrote} You check it; then it goes to ${customer}.`;
   }
   const note =
     plan.note && plan.note.by === "fume" && plan.version > 1 && mode !== "previous" ? plan.note.text : undefined;
-  // Round 13 (#25): what this version changed, line by line, when Fume says so
+  // What this version changed, line by line, when Fume says so
   const latest = plan.versions?.find((v) => v.version === plan.version);
   if (!title && !status && !note) return null;
   return (
@@ -365,7 +356,7 @@ function PlanHead({
 
 // ─── The summary: the aside on a desk (the index, the facts, who checked it), a strip of facts narrower ─────
 
-/** What changed since the expert checked it (DLOAD-22), as "the direction and 1 line"; nothing when nothing did. */
+/** What changed since the expert checked it, as "the direction and 1 line"; nothing when nothing did. */
 function changedSince(plan: CampaignPlan, checkedAt?: string): { words: string; by: string[] } | undefined {
   const direction = chosenOf(plan)!;
   const after = (x: { changedBy?: string; changedAt?: string }) =>
@@ -404,8 +395,8 @@ function Summary({
   const picked = direction.recommended ? "Fume’s pick" : `Chosen by ${chooser}`;
 
   let status: ReactNode = null;
-  // Round 13 (Marcus's card, 23 Oct 2026): in a brand an agency runs the agency checks the plan and the client approves
-  // it, so it reads as in Fume: "Maja approved it · Checked by Nora" (the client reads the agency's name for the check).
+  // In a brand an agency runs the agency checks the plan and the client approves it (FLOWS §26.8), so it reads as in
+  // Fume: "Maja approved it · Checked by Nora" (the client reads the agency's name for the check).
   const agencyRun = people.viewer === "agency" || people.viewer === "client";
   const checkWords = (id: string) =>
     copy.checkedBy(
@@ -441,7 +432,7 @@ function Summary({
         <p className="ui-plandoc-checked">Waits for your check</p>
       ) : null;
   } else if (people.viewer !== "client") {
-    // Round 13 (#25, #28): only a plan someone checked, or one in check, says so; the check is optional.
+    // Only a plan someone checked, or one in check, says so; the check is optional.
     const expert = checker ?? (plan.state === "in_check" ? people.expert : undefined);
     const since = mode !== "staff" && checker ? changedSince(plan, plan.checkedAt) : undefined;
     status = expert ? (
@@ -647,7 +638,7 @@ function stepsOf(plan: CampaignPlan, campaign: Campaign, people: PlanPeople): St
         : campaign.stage === "delivery"
           ? 2
           : 0;
-  // Round 13 (Marcus's card, 23 Oct 2026): the client approves the plan in agency work too, so the first step is hers.
+  // The client approves the plan in agency work too, so the first step is hers (FLOWS §26.8).
   const first: Step = approved
     ? {
         label: `${people.Name(plan.approvedBy)} approved the plan`,

@@ -1,5 +1,5 @@
 // Share: who sees a campaign, and the link (design-system/components/share.css, behaviour from share.js).
-// DECIDED 13 Oct, round 8. A glass dialog on Radix Dialog (focus trap, Escape, scrim, focus back to the
+// A glass dialog on Radix Dialog (focus trap, Escape, scrim, focus back to the
 // trigger); a sheet at the bottom on a phone (the CSS does that). One white button on the glass: Invite.
 // Roles say what someone may do: Viewer, Can comment, Can approve (contract viewer, member, approver; the
 // owner's row has words). "Can approve" is the customer's right: the expert checks, only the customer approves.

@@ -1,8 +1,8 @@
-// The Scene section with its library (round 13, Marcus #57, #63). Each of the section's variables is a short row of
-// the first few choices (the one in force first) and "More…", which opens the whole library: Fume's scene templates,
-// the brand's scenes and backgrounds, surfaces, props and references, with a search, "Upload a background" and
-// "Pick from references". A pick applies at once, like every other variable (one undo step each); props are several.
-// The library sheet is the product sheet's frame (opaque glass, search, chips, a picture grid).
+// The Scene section with its library. Each of the section's variables is a short row of the first few choices (the one
+// in force first) and "More…", which opens the whole library: Fume's scene templates, the brand's scenes and
+// backgrounds, surfaces, props and references, with a search, "Upload a background" and "Pick from references". A pick
+// applies at once, like every other variable (one undo step each); props are several. The library sheet is the product
+// sheet's frame (opaque glass, search, chips, a picture grid).
 import {
   Button,
   Dialog,

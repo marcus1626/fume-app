@@ -1,16 +1,12 @@
-// The comprehension check (Product Vision §4.2; ARCHITECTURE §6.1 step 4): before any campaign, Fume shows what it
-// understood from the brand material, and three deliberately different test directions. The customer marks each line
-// right or not quite, says yes or no to each direction, and an owner or approver approves Brand DNA.
-// Round 8 (UX review ONB-13, ONB-14, ONB-15, ONB-19, PROPOSED 19 Oct 2026): What Fume understood is five short lines
-// (what the brand is, the light, the product and people, its rules, who it speaks to), each with Right · Not quite;
-// "Not quite" opens one line to say what is right. The onboarding ends on the same lines (UnderstoodLines). Everything
-// is saved on the tap or when she leaves the field: no Save buttons. Open questions about a product live on that
-// product, so they never hold back the approval.
-// Round 9 (desktop review DLOAD-8, DLOAD-6, DLOAD-1, DLAY-7; PROPOSED 19 Oct 2026): the page is the Brand DNA summary.
-// An approved version is a record, read at the reading measure: the lines as text, the conflict as "Settled: …", the
-// directions as "You said: This is us" with her reason, and no controls. One secondary pill, "Change something",
-// opens the edit state: only there are the lines marked Confirm · Change, the directions This is us · Not us, and
-// only there does a change become version 4 to approve. A Brand DNA not approved yet opens straight in that state.
+// The Brand DNA summary, the comprehension check (Product Vision §4.2; ARCHITECTURE §6.1 step 4): before any campaign,
+// Fume shows what it understood from the brand material, and three deliberately different test directions. What Fume
+// understood is five short lines (what the brand is, the light, the product and people, its rules, who it speaks to),
+// each with Confirm · Change; the onboarding ends on the same lines (UnderstoodLines). Everything is saved on the tap
+// or when she leaves the field. Open questions about a product live on that product, so they never hold back the
+// approval.
+// An approved version is a record at the reading measure: the lines as text, the conflict as "Settled: …", the
+// directions as "You said: This is us" with her reason, and no controls. "Change something" opens the edit state, and
+// only there does a change become a new version to approve. A Brand DNA not approved yet opens straight in that state.
 import {
   Alert,
   AlertAction,
@@ -360,7 +356,7 @@ export function UnderstandingCheck({ view, editing = false }: { view: BrandDnaVi
   const open = u.unknowns.filter((x) => !x.answer);
   const unanswered = u.testDirections.filter((d) => !d.verdict);
   const approved = view.dna.state === "approved";
-  // the controls show only in the edit state: a done version is a record (DLOAD-8)
+  // the controls show only in the edit state: a done version is a record
   const canEdit = mayEdit && (!approved || editing);
   // A change after approval is a new version the customer approves (ARCHITECTURE §5.4).
   const [changedSinceApproval, setChanged] = useState(false);
@@ -517,7 +513,7 @@ function intro(view: BrandDnaView, name: (id?: string) => string, me?: string): 
   return "What Fume read from your brand material. Confirm each line or change it, then approve your Brand DNA.";
 }
 
-/** /brand/understanding: the Brand DNA summary, a record until "Change something" (DLOAD-8). */
+/** /brand/understanding: the Brand DNA summary, a record until "Change something". */
 export function UnderstandingPage() {
   const brand = useBrandDna();
   const { canEdit, me } = useRole();

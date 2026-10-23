@@ -1,11 +1,8 @@
-// The customer's name for a creative (UX review H8, TASK-17, MOB-20, DTSK-11): what it shows, where it runs and which
-// one it is, "Night Body Oil · Feed 2", never "Master 1 · Variant 1" and never the file name. The product is the
-// campaign's when it has one; with several, the campaign's name. "Feed A2" is the creative's short label: its format,
-// its direction's letter and its number among that direction's creatives in that format, in the order they were made,
-// so three Feeds of one product never share a name. Review, the viewer, Swipe through, the toasts, the change request,
-// the delivery and the calendar all name a creative through here, so she approves and downloads the same name.
-// Round 9 (PROPOSED 19 Oct 2026): useCreativeLabels(campaign) gives the label alone ("Feed A2") for a tile's caption
-// or a calendar chip; useCustomerNames puts it in the title.
+// The customer's name for a creative: what it shows, where it runs and which one it is, "Night Body Oil · Feed 2",
+// never "Master 1 · Variant 1" and never the file name. The product is the campaign's when it has one; with several,
+// the campaign's name. Review, the viewer, Swipe through, the toasts, the change request, the delivery and the calendar
+// all name a creative through here, so she approves and downloads the same name. useCreativeLabels(campaign) gives the
+// short label alone ("Feed 2") for a tile's caption or a calendar chip; useCustomerNames puts it in the title.
 import { useCallback, useMemo } from "react";
 import { useCampaign, useCampaignViews, useCatalogue } from "../../api/hooks";
 import type { Campaign, Creative, Direction, Format, Id, Product } from "../../contract";
@@ -21,18 +18,18 @@ export function campaignSubject(
   return only?.name ?? campaign.name;
 }
 
-/** "Night Body Oil · Feed" (or "Night Body Oil · Feed 2" with the creative's label in place of the format). Round 12:
- *  the one name is copy.creativeName (DLOAD-8); this keeps the old call sites on it. */
+/** "Night Body Oil · Feed" (or "Night Body Oil · Feed 2" with the creative's label in place of the format). The one
+ *  name is copy.creativeName; this keeps the older call sites on it. */
 export const customerName = (subject: string, format: Format, label?: string) =>
   label
     ? copy.creativeName({ title: label, format, productName: subject })
     : `${subject} · ${copy.format[format].label}`;
 
 /**
- * Every creative's short label in one campaign: "Feed 1", "Feed 2", "Story 1" (round 12, DLOAD-8: no direction letter;
- * the number counts the campaign's creatives in that format, in the order the Engine made them). A creative whose
- * title is already its label ("Feed 3", the backend's name) keeps it. Pass the campaign's creatives in the order the
- * Engine made them (the campaign view's order); `directions` is no longer read.
+ * Every creative's short label in one campaign: "Feed 1", "Feed 2", "Story 1" (no direction letter; the number counts
+ * the campaign's creatives in that format, in the order the Engine made them). A creative whose title is already its
+ * label ("Feed 3", the backend's name) keeps it. Pass the campaign's creatives in the order the Engine made them (the
+ * campaign view's order); `directions` is not read.
  */
 export function creativeLabels(
   creatives: (Pick<Creative, "id" | "directionId" | "format"> & { title?: string })[],
@@ -52,7 +49,7 @@ export function creativeLabels(
   return out;
 }
 
-/** The label of one creative ("Feed A2"); the format's word alone until the campaign has loaded. */
+/** The label of one creative ("Feed 2"); the format's word alone until the campaign has loaded. */
 export function useCreativeLabels(campaign: Pick<Campaign, "id"> | undefined) {
   const view = useCampaign(campaign?.id);
   const labels = useMemo(
@@ -65,7 +62,7 @@ export function useCreativeLabels(campaign: Pick<Campaign, "id"> | undefined) {
   );
 }
 
-/** A creative with its customer name as its title: "Night Body Oil · Feed A2". */
+/** A creative with its customer name as its title: "Night Body Oil · Feed 2". */
 export function useCustomerNames(campaign: Campaign | undefined) {
   const catalogue = useCatalogue();
   const what = campaignSubject(campaign, catalogue.data?.products);
@@ -102,7 +99,7 @@ export function useCustomerNamesAcross(campaigns: Campaign[] | undefined) {
 export const shapeLine = (c: Creative) =>
   `${copy.format[c.format].ratio}${c.current.number > 1 ? ` · version ${c.current.number}` : ""}`;
 
-/** The short label back out of a customer name ("Night Body Oil · Feed A2" → "Feed A2"), for a caption. */
+/** The short label back out of a customer name ("Night Body Oil · Feed 2" → "Feed 2"), for a caption. */
 export const labelOf = (c: Pick<Creative, "title" | "format">) => {
   const parts = c.title.split(" · ");
   return parts.length > 1 ? parts[parts.length - 1]! : copy.format[c.format].label;

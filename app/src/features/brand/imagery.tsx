@@ -1,7 +1,7 @@
-// Round 13 (walk-through 21 Oct, #3; PROPOSED 22 Oct 2026): Fume sorts the pictures it found into groups, so a look
-// that was only for one campaign never steers every creative: Your look (lasting), Campaign looks (temporary, each
-// named after its campaign or season), Product shots, Not used. She moves a picture to another group from its Move
-// menu. The same groups in the onboarding's Imagery part and on the Brand DNA board. The look is r13-brand.css.
+// Fume sorts the pictures it found into groups, so a look that was only for one campaign never steers every creative:
+// Your look (lasting), Campaign looks (temporary, each named after its campaign or season), Product shots, Not used.
+// She moves a picture to another group from its Move menu. The same groups in the onboarding's Imagery part and on the
+// Brand DNA board. The look is r13-brand.css.
 import {
   Button,
   DropdownMenu,

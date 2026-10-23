@@ -1,8 +1,6 @@
-// The agency's team (FLOWS §24.3, round 11, PROPOSED 20 Oct 2026): its people, their role, the clients they work on,
-// how full their week is (a quiet bar, the share as data) and what they do this week. Round 12 (UX review DLAY-14,
-// DTASK-7): the same Team table as Fume's studio (features/studio/team-table.tsx). The lead invites someone with
-// Invite, a secondary pill (a small right panel: email and role; in the preview a toast says the invitation went).
-// Round 13 (Marcus #70): the roles are Fume's own, Admin, Expert and Operator.
+// The agency's team (FLOWS §24.3): the same Team table as Fume's studio (features/studio/team-table.tsx), with Fume's
+// roles (Admin, Expert, Operator). The lead invites someone with Invite, a small right panel; in the preview a toast
+// says the invitation went.
 import { Button, PageHeader } from "@fume/ui";
 import { useState } from "react";
 import { useAgencyClients, useAgencyTeam } from "../../api/hooks";

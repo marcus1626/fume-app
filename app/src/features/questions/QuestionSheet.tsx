@@ -1,13 +1,12 @@
-// One question, one sheet (UX review 19 Oct, WAY-3, LOAD-4; round 8 decision: "a question about a product lives on
-// that product and is answered in one shared sheet wherever it is asked"). Home, the Fume chat, a campaign and the
-// product page all open this sheet (or, on the product page, show its answer inline): the question, why Fume asks,
-// the answer field and "Answer". She stays where she was. The answer lands on the product's own line, and the mock
-// spreads it to the brief, the chat and the Brand understanding, so answering once closes it everywhere.
-// Round 9 (DWAY-5, DTSK-6, decision 5): on a desk it is the right-side panel, never a centred dialog, and the page stays
-// in view. Questions that are all about one product open that product's card instead (ProductCheckPanel: the photo,
-// Fume's question first, the lines, Later · Confirm), so a product is confirmed in one place, however it was asked.
-// Answer is never greyed out: pressed with nothing written, it says what is missing. The hint is under the field, not
-// a placeholder that reads as an answer.
+// One question, one sheet: a question about a product lives on that product and is answered in one shared sheet
+// wherever it is asked. Home, the Fume chat, a campaign and the product page all open this sheet (or, on the product
+// page, show its answer inline): the question, why Fume asks, the answer field and "Answer". She stays where she was.
+// The answer lands on the product's own line, and the mock spreads it to the brief, the chat and the Brand
+// understanding, so answering once closes it everywhere.
+// On a desk it is the right-side panel, never a centred dialog. Questions that are all about one product open that
+// product's card instead (ProductCheckPanel), so a product is confirmed in one place, however it was asked. Answer is
+// never greyed out: pressed with nothing written, it says what is missing. The hint is under the field, not a
+// placeholder that reads as an answer.
 //
 // Use:
 //   const q = useQuestion({ campaignId });            // or { productId }, { questionId }
@@ -182,7 +181,7 @@ function AnswerFields({
   }
   return (
     <form id={formId} className="ui-qs-form" onSubmit={submit}>
-      {/* round 13 (#6, #7): each suggestion with its words, and what this kind of product usually says */}
+      {/* each suggestion with its words, and what this kind of product usually says */}
       <AnswerSuggestions question={question} value={state.text} onChange={state.setText} glass={glass} />
       <Field invalid={missing}>
         <FieldLabel htmlFor={fieldId}>Your answer</FieldLabel>

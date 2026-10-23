@@ -1,16 +1,13 @@
-// The brand's AI models on the Brand DNA board (FLOWS §9.6): the AI people Fume's designers made in the Studio's Model
-// mode. The part is called "AI models" (F-D041: always said to be AI). The customer never sees a designer's drafts (the
-// mock and the backend never send them) and never the variables or prompts behind a model.
-// Round 9 (desktop review DWAY-14, DLOAD-1, DLOAD-5; PROPOSED 19 Oct 2026): the board acts in place: a model that
-// waits for the customer carries Confirm · Remove under its portrait, which stays big enough to judge; once decided
-// it keeps its place for the visit. The part says "AI models" once: no "AI person" pill on each card, no line under
-// the heading. Before the first campaign a saved model is held back (useModelsHeldBack), as on Home.
-// Round 13 (Marcus's video comment #41; PROPOSED 22 Oct 2026): each AI model has a page of its own
-// (/brand/models/:id): the model sheet (front, three-quarter, profile, back, and the face close), every angle in a
-// white studio in the same plain clothes; the specs (age range, height, build, skin tone, hair, eyes, clothing sizes);
-// what the model may and may never be used for; how many creatives it is in; who made it and who decided. "AI model"
-// is on every picture of it, always: an AI model never poses as a real person. The board's cards open the page and
-// carry the label too. Fume's and an agency's people read the brand's name where the customer reads "your brand".
+// The brand's AI models (FLOWS §9.6): the AI people Fume's designers made in the Studio's Model mode. The part is
+// called "AI models" (F-D041: always said to be AI). The customer never sees a designer's drafts (the mock and the
+// backend never send them) and never the variables or prompts behind a model.
+// On the board a model that waits for the customer carries Confirm · Remove under its portrait, which stays big enough
+// to judge. Before the first campaign a saved model is held back (useModelsHeldBack), as on Home.
+// Each AI model has a page of its own (/brand/models/:id): the model sheet (front, three-quarter, profile, back, and
+// the face close) in a white studio in the same plain clothes; the specs; what the model may and may never be used for;
+// how many creatives it is in; who made it and who decided. "AI model" is on every picture of it, always: an AI model
+// never poses as a real person. Fume's and an agency's people read the brand's name where the customer reads "your
+// brand".
 import { DataList, DataListItem, Icon, PageHeader, Proposal, ProposalFoot, useToast } from "@fume/ui";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -23,7 +20,7 @@ import { BoardPart } from "./board";
 import { DecisionActions } from "./decide";
 import { useModelsHeldBack, useRole, useViewer } from "./parts";
 
-/** "AI model", on every picture of one (#41): Smoke glass over the picture's corner, never hidden. */
+/** "AI model", on every picture of one: Smoke glass over the picture's corner, never hidden. */
 export function AiLabel() {
   return <span className="ui-ai-label">AI model</span>;
 }
@@ -139,7 +136,7 @@ export function useHasModels(): boolean {
   return (assets.data?.models ?? []).some((m) => m.state !== "declined" && !(heldBack && m.state === "saved"));
 }
 
-// ─── The model's own page (#41) ─────────────────────────────────────────────
+// ─── The model's own page ─────────────────────────────────────────────────
 
 const angleWords: Record<ModelAngle, string> = {
   front: "Front",

@@ -1,14 +1,12 @@
 // The desk's left panel (FLOWS §9.1): specs only. The mode picker on top (a grid menu in a popover, filtered by the
 // studio), then folding sections with only the specs the mode uses: format, count and image model; the brand's
-// references (library, upload, make one); the product and its Product Truth, each fact changeable for this creative
-// or for the product itself (FLOWS §9.5); the brand's models with their state (FLOWS §9.6). Design shows the layers
-// in place of the product's data.
-// Round 12 (UX review DLAY-3, DLOAD-15, PROPOSED 20 Oct 2026): the panel scrolls when its open part is taller than
-// it (nothing is cut off any more), and the product is one row with only what needs a look under it: the details the
-// picked version reads wrong and the facts changed for this creative. "All 20 facts" opens the whole product in a
-// right panel over the board (measures, parts and every Product Truth line, each changeable there).
-// Round 13 (#60, Marcus: "what happens if you switch in the middle of a project?"): a mode switch asks first, in the
-// popover, and says what carries over, what is set aside (kept in the last version) and that the versions stay.
+// references (library, upload, make one); the product and its Product Truth, each fact changeable for this creative or
+// for the product itself (FLOWS §9.5); the brand's models with their state (FLOWS §9.6). Design shows the layers in
+// place of the product's data.
+// The panel scrolls when its open part is taller than it. The product is one row with only what needs a look under it:
+// the details the picked version reads wrong and the facts changed for this creative; "All 20 facts" opens the whole
+// product in a right panel over the board. A mode switch asks first, in the popover, and says what carries over, what
+// is set aside (kept in the last version) and that the versions stay.
 import {
   Button,
   Icon,
@@ -191,8 +189,8 @@ export function SpecsPanel(props: SpecsProps) {
 /** "Light and camera" from ["Light", "Camera"]. */
 const listWords = (xs: string[]) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
 
-/** What a switch from one mode to another does, in one sentence (#60): the sections that carry over, the ones set
- *  aside (the last version keeps them, so going back or reopening that version brings them back), the versions. */
+/** What a switch from one mode to another does, in one sentence: the sections that carry over, the ones set aside (the
+ *  last version keeps them, so going back or reopening that version brings them back), the versions. */
 export function switchWords(doc: CreativeDocument, from: StudioMode | undefined, to: StudioMode): string {
   const keys = new Set(to.variables.map((v) => v.key));
   const sections = from?.sections ?? [];
@@ -493,10 +491,9 @@ function FactRow({
   );
 }
 
-/** The product as a picture; it opens the brand's products as a grid of tiles (Marcus 15 Oct: products as a grid,
- *  never a list of names). The popover holds the few confirmed products, the current one first, and "View all
- *  products" opens the whole catalogue in the shared sheet (walk-through Must 1): search, kinds and collections, and
- *  a lock on products whose facts the customer has not confirmed. */
+/** The product as a picture; it opens the brand's products as a grid of tiles, never a list of names. The popover holds
+ *  the few confirmed products, the current one first, and "View all products" opens the whole catalogue in the shared
+ *  sheet: search, kinds and collections, and a lock on products whose facts the customer has not confirmed. */
 const RECENT = 6;
 function ProductPicker({
   workspaceId,

@@ -77,7 +77,7 @@ export const AlertDialogContent = forwardRef<ElementRef<typeof DialogPrimitive.C
             }}
             onCloseAutoFocus={(event) => {
               onCloseAutoFocus?.(event);
-              // focus goes back to what asked (round 9, DWAY-8), also when no Trigger did
+              // focus goes back to what asked, also when no Trigger did
               if (!event.defaultPrevented && returnFocusTo(opener.current, el.current)) event.preventDefault();
             }}
             onPointerDownOutside={(event) => {

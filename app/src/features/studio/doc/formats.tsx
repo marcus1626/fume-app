@@ -1,4 +1,4 @@
-// Format is the placement; the ratio follows (FLOWS §15), and Make formats (FLOWS §16). PROPOSED 15 Oct 2026.
+// Format is the placement; the ratio follows (FLOWS §15), and Make formats (FLOWS §16).
 // - PlacementPicker: in the Output section, a row that opens the placements grouped by where they run (Instagram,
 //   Meta ads, Pinterest, Email, Web), each with its ratio as a small proportional frame. Under it a quiet line says
 //   how it is made: natively when the image model renders that ratio, otherwise at the nearest ratio and cropped.

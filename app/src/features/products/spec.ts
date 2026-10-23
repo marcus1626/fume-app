@@ -1,5 +1,5 @@
-// A product's specs read against its kind (round 6): how ready it is for the Engine, what is missing, and how each
-// value reads in words. Pure functions, no React; the product page, the add flow and the Studio read the same.
+// A product's specs read against its kind: how ready it is for the Engine, what is missing, and how each value reads in
+// words. Pure functions, no React; the product page, the add flow and the Studio read the same.
 import type {
   ColourValue,
   Dimensions,
@@ -21,13 +21,13 @@ export const isDims = (v: SpecValue | undefined): v is Dimensions =>
   typeof v === "object" && v !== null && !Array.isArray(v) && "w" in v;
 export const isColour = (v: unknown): v is ColourValue =>
   typeof v === "object" && v !== null && !Array.isArray(v) && "hex" in v;
-// Round 7: the rich types.
+// The rich values: a fibre blend, a measurement table, parts.
 const isObj = (v: unknown): v is object => typeof v === "object" && v !== null && !Array.isArray(v);
 export const isBlend = (v: unknown): v is FibreBlend => isObj(v) && "fibres" in v;
 export const isTable = (v: unknown): v is MeasureTable => isObj(v) && "rows" in v && "sizes" in v;
 export const isParts = (v: unknown): v is PartsValue => isObj(v) && "parts" in v;
 
-/** The level a field sits on (round 7): short on top, full in the sections, technical beside the files. */
+/** The level a field sits on: short on top, full in the sections, technical beside the files. */
 export const levelOf = (f: SpecField): SpecLevel => f.level ?? "full";
 
 /** A blend's total, rounded to a tenth. */
@@ -119,8 +119,8 @@ export function fidelity(product: Product, kind: ProductKind | undefined): Fidel
   return { score, ready: gaps.length === 0, gaps, proposals, total, settled };
 }
 
-/** What Fume still needs and could not read (fields and photos), not what it read and waits to be confirmed: the
- *  number the add toast and the confirm queue both say (round 13, robot note 05). */
+/** What Fume still needs and could not read (fields and photos), not what it read and waits to be confirmed: the number
+ *  the add toast and the confirm queue both say. */
 export const missingDetails = (product: Product, kind: ProductKind | undefined) =>
   fidelity(product, kind).gaps.filter((g) => g.kind !== "proposals").length;
 

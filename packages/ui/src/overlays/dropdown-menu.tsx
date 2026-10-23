@@ -6,8 +6,8 @@
 //     div.ui-menu-item.ui-menu-item--danger (Delete: neutral at rest, Rouge when reached).
 // Rows fill the menu edge to edge; Radix's data-highlighted is the keyboard highlight the CSS reads.
 // A danger row that cannot be undone opens an AlertDialog that asks first.
-// Round 9 (DWAY-4, DWAY-8; PROPOSED 19 Oct 2026): solid over the light app (glass.css); a row that goes to another page
-// does not hand focus back to the menu's button, so the new page's title can take it.
+// It is solid over the light app (glass.css). A row that goes to another page does not hand focus back to the menu's
+// button, so the new page's title can take it.
 import * as MenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { forwardRef, useRef, type ComponentPropsWithoutRef, type ElementRef, type HTMLAttributes } from "react";
 import { cx } from "../cx";
@@ -48,7 +48,7 @@ export const DropdownMenuContent = forwardRef<ElementRef<typeof MenuPrimitive.Co
     },
     ref,
   ) => {
-    // a row that went to another page leaves focus to that page's title, not to this menu's button (DWAY-8)
+    // a row that went to another page leaves focus to that page's title, not to this menu's button
     const openedOn = useRef(pagePath());
     return (
       <MenuPrimitive.Portal container={container}>

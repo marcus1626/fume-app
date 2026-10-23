@@ -1,13 +1,11 @@
-// Round 13 AGENCY (Marcus's video comment #71, 22 Oct 2026: "Burde være book a meeting og borrow manpower funksjon. Og
-// customer service."; PROPOSED): an agency's ways to Fume's people. An agency has no Fume people in its plan (#70: "de
-// får ikke vår manpower"), so it asks for them:
-// - Book a meeting: the customer's meeting dialog (features/fume/meeting.tsx), with Sander, the agency's producer at
-//   Fume. It lands in the calendar.
-// - Borrow Fume's people: a right panel. Which client and campaign, what (checks, design, renders), about how much and
-//   when, a note; it sends a request (askFume) and Sander answers with who and when.
-// - Customer service: a right panel. What it is about and the message; Fume answers in a working day.
-// Where an agency person finds them: "Help from Fume" at the foot of the sidebar (above the person), the person menu,
-// and on the Overview beside the team. Each place holds its own panels (useFumeHelp).
+// An agency's ways to Fume's people. An agency has no Fume people in its plan, so it asks for them:
+// - Book a meeting: the customer's meeting dialog (features/fume/meeting.tsx), with the agency's producer at Fume. It
+//   lands in the calendar.
+// - Borrow Fume's people: a right panel (which client and campaign, what, about how much and when, a note); it sends a
+//   request (askFume) and the producer answers with who and when.
+// - Customer service: a right panel with the topic and the message; Fume answers in a working day.
+// They are offered at the foot of the sidebar ("Help from Fume"), in the person menu, and on the Overview beside the
+// team. Each place holds its own panels (useFumeHelp).
 import {
   Button,
   Checkbox,

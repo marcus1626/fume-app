@@ -1,5 +1,5 @@
-// Quality Gate review: Anna's screen (design-system/components/qg-review.css, behaviour from qg-review.js).
-// DECIDED 13 Oct, round 8. Composable parts inside QgScreen:
+// Quality Gate review: Anna's screen (design-system/components/qg-review.css, behaviour from qg-review.js). Composable
+// parts inside QgScreen:
 //   <QgScreen state reviewer checkedAt notesCount onMarkChecked onRequestChanges onUndo onPrev onNext onAddNote>
 //     <QgBar …/>                      back, the creative's name, the format switch, previous · 3 of 12 · next
 //     <QgStage src format notes …/>   the creative large in its well, Anna's numbered pins, the seal

@@ -1,10 +1,9 @@
-// Review, a place of its own again (round 13, Marcus #29: "Burde være tydeligere i UI/UX at dette er Review"; PROPOSED
-// 21 Oct 2026). Between 15 Oct (UX review §2.3) and round 13 /review sent you Home. Now the customer's sidebar has
-// Review, with the number of creatives that wait on her across campaigns, and this page lists them grouped by
-// campaign: the review grid (every one selected to start with, "Approve 8" one press with Undo), the viewer over the
-// page with ← → through all of them, and per campaign the creatives she marked "Needs changes" with its one "Start
-// the changes". A campaign's own review (/campaigns/:id/review) stays, and lights Review too. Home keeps its inbox.
-// In a staff frame (Fume's studio, an agency) the brand's /review address goes on to the frame's start, as before.
+// Review, a place of its own (FLOWS §26.3): the customer's sidebar has Review, with the number of creatives that wait
+// on her across campaigns, and this page lists them grouped by campaign: the review grid (every one selected to start
+// with, "Approve 8" one press with Undo), the viewer over the page with ← → through all of them, and per campaign the
+// creatives she marked "Needs changes" with its one "Start the changes". A campaign's own review
+// (/campaigns/:id/review) stays, and lights Review too. Home keeps its inbox. In a staff frame (Fume's studio, an
+// agency) the brand's /review address goes on to the frame's start.
 import { Button, CreativeGrid, PageHeader } from "@fume/ui";
 import { useMemo, type MouseEvent as ReactMouseEvent } from "react";
 import { Link, Navigate, useLocation } from "react-router-dom";
@@ -28,7 +27,7 @@ type Rights = ReturnType<typeof rights>;
 
 export function ReviewPage() {
   const { pathname } = useLocation();
-  // A staff frame's brand address (/studio/b/w-lysne/review): its start, as before round 13.
+  // A staff frame's brand address (/studio/b/w-lysne/review): its start.
   if (pathname !== "/review") return <Navigate to="/" replace />;
   return (
     <Page title="Review">

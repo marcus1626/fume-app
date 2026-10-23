@@ -1,7 +1,6 @@
-// Round 13 (Marcus's video comments #2 and #42, 22 Oct 2026; PROPOSED): a colour is checked and changed with a colour
-// picker beside its hex (the hex stays: most brands know theirs), and its uses are chosen as chips (Buttons, Accent,
-// Backgrounds, Text, Light, Packaging, UI and design system) instead of one line of words. The same two controls in
-// the onboarding's Colour part, on the Brand DNA board and in Confirm your brand. The look is r13-brand.css.
+// A colour is checked and changed with a colour picker beside its hex (most brands know their hex), and its uses are
+// chosen as chips (Buttons, Accent, Backgrounds, Text, Light, Packaging, UI and design system). The same two controls
+// in the onboarding's Colour part, on the Brand DNA board and in Confirm your brand. The look is r13-brand.css.
 import { ToggleGroup, ToggleGroupItem } from "@fume/ui";
 import type { ColourUse } from "../../contract";
 import { vars } from "./board";
@@ -40,8 +39,8 @@ const pickerValue = (hex: string) =>
   HEX.test(hex.trim()) ? `#${hex.trim().replace(/^#/, "")}`.toLowerCase() : "#000000";
 
 /**
- * The colour picker beside the hex field (#2): a swatch of the colour as typed; a click opens the system's picker,
- * and what is picked is written into the hex field (in capitals, with its #).
+ * The colour picker beside the hex field: a swatch of the colour as typed; a click opens the system's picker, and what
+ * is picked is written into the hex field (in capitals, with its #).
  */
 export function HexPicker({
   value,
@@ -71,7 +70,7 @@ export function HexPicker({
   );
 }
 
-/** What a colour is used for, as chips (#42): any number of them. */
+/** What a colour is used for, as chips: any number of them. */
 export function ColourUsesField({
   id,
   value,

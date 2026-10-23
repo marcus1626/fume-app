@@ -256,7 +256,7 @@ export function SettingsPage({ title, description, backLabel, className, childre
   return (
     <>
       <div className={cx("ui-settings-page-head", className)} {...props}>
-        {/* the app's one back: the arrow in its rounded square, the parent's name beside it (back-link.css; WAY-21) */}
+        {/* the app's one back: the arrow in its rounded square, the parent's name beside it (back-link.css) */}
         <button className="ui-back ui-settings-back" type="button" onClick={ctx?.back}>
           <span className="ui-back-icon" aria-hidden="true">
             <Icon name="arrow-left" />

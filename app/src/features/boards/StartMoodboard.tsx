@@ -1,12 +1,7 @@
-// Start a moodboard on the spot (Marcus 15 Oct: "man måtte velge eksisterende moodboard og ikke fikk muligheten til å
-// lage et på stedet"). Pick pictures from the brand's boards and products, or add your own; they become the campaign's
-// own moodboard. Used by a campaign's Moodboard tab when the campaign has none yet ("Start the moodboard"). Round 8
-// (UX review 19 Oct, LOAD-5): no longer part of creating a campaign; Fume proposes a moodboard with the brief, which is
-// where the customer judges it.
-// Round 13 (Marcus's video comments #21, #23; PROPOSED 22 Oct 2026): the moodboard is a stage of its own and optional.
-// Fume proposes one from the brief and the Brand DNA (her brief's references, the products, the pictures she liked),
-// already picked; she takes pictures away, adds more from her boards or her own, and starts it, or skips it. The brief
-// form's Inspiration uses the same picker (MoodboardPicker) and seeds the moodboard with it.
+// Start a campaign's moodboard on the spot, from its Moodboard tab (FLOWS §26.2). The moodboard is optional: Fume
+// proposes one from the brief and the Brand DNA (her brief's references, the products, the pictures she liked), already
+// picked; she takes pictures away, adds more from her boards or her own, and starts it, or skips it. The brief form's
+// Inspiration uses the same picker (MoodboardPicker) and seeds the moodboard with it.
 import {
   Button,
   CreativeGrid,
@@ -159,8 +154,8 @@ export function MoodboardPicker({
   );
 }
 
-/** Fume's proposal for a campaign's moodboard (round 13): her brief's references, a picture of each product, then the
- *  pictures she liked on her boards; six at most. */
+/** Fume's proposal for a campaign's moodboard: her brief's references, a picture of each product, then the pictures she
+ *  liked on her boards; six at most. */
 export function useProposedMoodboard(campaign: Campaign, brief?: Brief): { images: string[]; ready: boolean } {
   const boards = useBoards();
   const catalogue = useCatalogue();

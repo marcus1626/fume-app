@@ -1,11 +1,10 @@
-// Step 2, "Fume reads it" (FLOWS §7 step 3; round 7, Marcus 16 Oct; round 8, UX review ONB-2, ONB-3, ONB-22): the
-// moment the customer sees Fume understand them. The reading plays as a mind map on a calm Paper grid: the logo lands
-// in the middle, then Palette, Type, Pictures, Products, Voice, Rules and Audience connect to it one by one, each
-// with a line of what is being read ("Reading lysne.no/about"). A node waits for the page it is read from.
-// The map is the payoff and stays: no board, no Confirm · Change · Remove here (that is step 3's one job). When the
-// reading is done, one summary line with one honest count ("12 finds to confirm, about 5 minutes") and one pill,
-// "Confirm what Fume found", pinned to the bottom of the screen. After 3 s a quiet "Show me the result" skips the
-// rest of the animation; a reading that is already done opens settled, so coming back never replays it.
+// Step 2, "Fume reads it" (FLOWS §7 step 3): the moment the customer sees Fume understand them. The reading plays as a
+// mind map on a calm Paper grid: the logo lands in the middle, then Palette, Type, Pictures, Products, Voice, Rules and
+// Audience connect to it one by one, each with a line of what is being read ("Reading lysne.no/about"). A node waits
+// for the page it is read from. The map is the payoff and stays: no Confirm · Change · Remove here (that is step 3's
+// one job). When the reading is done, one summary line with one honest count ("12 finds to confirm, about 5 minutes")
+// and one pill, "Confirm what Fume found", pinned to the bottom of the screen. After 3 s a quiet "Show me the result"
+// skips the rest of the animation; a reading that is already done opens settled, so coming back never replays it.
 // The look and motion are design-system/components/mind-map.css and MindMap (@fume/ui). Reduced motion: a static map.
 import {
   Alert,

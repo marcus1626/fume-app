@@ -1,9 +1,8 @@
-// Onboarding: the first run (design-system/components/onboard.css). DECIDED 13 Oct, round 8 (Paper ground, round 9).
-// No script of its own: a step is done when its work is. Welcome by name, one sentence on what happens next,
-// three steps in order (Add your Brand DNA, Invite your team, Write your first brief), each a card with one
-// action. The step to do now carries the only Ink button; the next ones are white; a finished one keeps a quiet
-// way back in. A finished step's mark is an Ink circle with a Paper check, never Amber, and the words say Done.
-// Below, the campaigns are empty and point at the first brief.
+// Onboarding: the first run (design-system/components/onboard.css), on the Paper ground. No script of its own: a step
+// is done when its work is. Welcome by name, one sentence on what happens next, three steps in order (Add your Brand
+// DNA, Invite your team, Write your first brief), each a card with one action. The step to do now carries the only Ink
+// button; the next ones are white; a finished one keeps a quiet way back in. A finished step's mark is an Ink circle
+// with a Paper check, never Amber, and the words say Done. Below, the campaigns are empty and point at the first brief.
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { cx } from "../cx";
 import { Icon, type IconName } from "../icons";
@@ -168,7 +167,7 @@ export function EmptyCampaigns({
 export interface OnboardingProps extends Omit<HTMLAttributes<HTMLDivElement>, "title"> {
   /** "LYSNE": the title says "Welcome to Fume, LYSNE", and "You are set up, LYSNE" when every step is done. */
   workspace: string;
-  /** The person in the eyebrow ("LYSNE · Marcus"); the workspace's mark is an Ink avatar. */
+  /** The person in the eyebrow ("LYSNE · Maja"); the workspace's mark is an Ink avatar. */
   person?: string;
   workspaceSign?: PersonSign;
   title?: string;
@@ -220,13 +219,13 @@ export const Onboarding = forwardRef<HTMLDivElement, OnboardingProps>(function O
   );
 });
 
-// ─── Where she is in the brand onboarding (round 8, UX review ONB-12, ONB-16, MOB-5, WAY-15) ──────────────
-// design-system/components/welcome-progress.css. PROPOSED 19 Oct 2026. One progress for the whole onboarding, held at
-// the top of the screen as she scrolls: the steps by name (a step she has visited stays tappable, also one after the
-// current), and in a step with parts (Check what Fume found) equal segments for the parts, a check on each part done.
-// On a phone it is one line ("Step 3 of 4 · Confirm what Fume found · Colour, 2 of 5") over one thin bar.
-// Round 9 (desktop review DTSK-5, PROPOSED 19 Oct 2026): a step can say what is left ("12 left"); while it does, its
-// marker keeps its number instead of the tick, so a step with open finds never reads as done.
+// ─── Where she is in the brand onboarding ────────────────────────────────────────
+// design-system/components/welcome-progress.css. One progress for the whole onboarding, held at the top of the screen
+// as she scrolls: the steps by name (a step she has visited stays tappable, also one after the current), and in a step
+// with parts (Confirm what Fume found) equal segments for the parts, a check on each part done. On a phone it is one
+// line ("Step 3 of 4 · Confirm what Fume found · Colour, 2 of 5") over one thin bar. A step can say what is left ("12
+// left"); while it does, its marker keeps its number instead of the tick, so a step with open finds never reads as
+// done.
 
 export interface WelcomeProgressStep {
   id: string;
