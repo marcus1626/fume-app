@@ -14,7 +14,10 @@ export default defineConfig({
   base: process.env.VITE_ROUTER === "memory" ? "./" : "/",
   plugins: [react()],
   resolve: {
-    alias: [{ find: /^@fume\/ui$/, replacement: `${ui}/index.ts` }, { find: /^@fume\/ui\/(.*)$/, replacement: `${ui}/$1` }],
+    alias: [
+      { find: /^@fume\/ui$/, replacement: `${ui}/index.ts` },
+      { find: /^@fume\/ui\/(.*)$/, replacement: `${ui}/$1` },
+    ],
     dedupe: ["react", "react-dom", ...Object.keys(pkg.dependencies).filter((d) => d.startsWith("@radix-ui/"))],
   },
   server: { fs: { allow: [".."] } },

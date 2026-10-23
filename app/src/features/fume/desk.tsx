@@ -5,7 +5,17 @@
 // (brief-lines.tsx), each line changed in place, and "Send to Fume" pinned at its foot: she SENDS the brief, Fume
 // writes the plan from it, and she approves the plan before anything is made. Once it is sent the panel follows the
 // campaign as "The plan" (plan.tsx). A phone keeps the brief card in the conversation.
-import { Button, DataList, DataListItem, DataListNote, Field, FieldLabel, submitOnModEnter, Textarea, useToast } from "@fume/ui";
+import {
+  Button,
+  DataList,
+  DataListItem,
+  DataListNote,
+  Field,
+  FieldLabel,
+  submitOnModEnter,
+  Textarea,
+  useToast,
+} from "@fume/ui";
 import { useId, useState, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
 import { useCatalogue, useChangeBrief, useHome, useSendBrief, useSession } from "../../api/hooks";
 import type { Brief, CampaignView, Id } from "../../contract";
@@ -31,7 +41,13 @@ export function ChatHead({ children }: { children?: ReactNode }) {
 // ─── The brief, line by line ────────────────────────────────────────────────
 
 type EditKey = "objective" | "audience" | "message" | "mandatory" | "never";
-const editable: Partial<Record<BriefLineKey, EditKey>> = { objective: "objective", audience: "audience", message: "message", mandatory: "mandatory", never: "never" };
+const editable: Partial<Record<BriefLineKey, EditKey>> = {
+  objective: "objective",
+  audience: "audience",
+  message: "message",
+  mandatory: "mandatory",
+  never: "never",
+};
 
 export interface BriefRow {
   key: BriefLineKey;
@@ -95,10 +111,21 @@ export function useBriefRows(view: CampaignView | undefined, named: string[] = [
       case "creatives":
         // What it costs, before she sends it (DTSK-4): the number, and what is left in her package.
         return brief.creatives > 0
-          ? { value: String(brief.creatives), note: !open ? undefined : byUse ? "Counted in this month’s usage" : left !== undefined ? `Of the ${left} left in your package` : undefined }
+          ? {
+              value: String(brief.creatives),
+              note: !open
+                ? undefined
+                : byUse
+                  ? "Counted in this month’s usage"
+                  : left !== undefined
+                    ? `Of the ${left} left in your package`
+                    : undefined,
+            }
           : {};
       case "market":
-        return campaign.market ? { value: campaign.language ? `${campaign.market}, in ${campaign.language}` : campaign.market } : {};
+        return campaign.market
+          ? { value: campaign.language ? `${campaign.market}, in ${campaign.language}` : campaign.market }
+          : {};
       case "live":
         if (campaign.dueAt) return { value: date(campaign.dueAt) };
         return missing.has("live") ? {} : { value: "No fixed date" };
@@ -111,9 +138,11 @@ export function useBriefRows(view: CampaignView | undefined, named: string[] = [
   };
   return BRIEF_ORDER.map((key) => {
     const v = value(key);
-    const empty = key === asking ? "Fume is asking" : key === "mandatory" || key === "never" ? "Nothing yet" : "Not yet";
+    const empty =
+      key === asking ? "Fume is asking" : key === "mandatory" || key === "never" ? "Nothing yet" : "Not yet";
     // A line Fume still asks about is answered in the chat; the rest can be changed here before she sends it.
-    const edit = open && editable[key] && !missing.has(key) && (v.value || brief?.state === "ready") ? editable[key] : undefined;
+    const edit =
+      open && editable[key] && !missing.has(key) && (v.value || brief?.state === "ready") ? editable[key] : undefined;
     return { key, label: briefLabel[key], ...v, empty, asking: key === asking && !v.value, edit };
   });
 }
@@ -154,10 +183,26 @@ export function BriefRowsList({
       {rows.map((r) => (
         <DataListItem key={r.key} label={r.label}>
           {editing === r.key && r.edit && campaignId && onEdit ? (
-            <LineForm label={r.label} field={r.edit} value={r.value ?? ""} campaignId={campaignId} onDone={() => done(r.key)} />
+            <LineForm
+              label={r.label}
+              field={r.edit}
+              value={r.value ?? ""}
+              campaignId={campaignId}
+              onDone={() => done(r.key)}
+            />
           ) : (
             <>
-              {r.value ? <span className="ui-chat-brief-value">{r.value}</span> : <span className={r.asking ? "ui-chat-brief-value ui-chat-brief-asking" : "ui-chat-brief-value ui-chat-brief-empty"}>{r.empty}</span>}
+              {r.value ? (
+                <span className="ui-chat-brief-value">{r.value}</span>
+              ) : (
+                <span
+                  className={
+                    r.asking ? "ui-chat-brief-value ui-chat-brief-asking" : "ui-chat-brief-value ui-chat-brief-empty"
+                  }
+                >
+                  {r.empty}
+                </span>
+              )}
               {r.note && <DataListNote>{r.note}</DataListNote>}
               {r.edit && onEdit && (
                 <Button
@@ -180,7 +225,19 @@ export function BriefRowsList({
 }
 
 /** One line changed in place (DTSK-13: never a full page). ⌘↵ saves, Esc puts it back. */
-function LineForm({ label, field, value, campaignId, onDone }: { label: string; field: EditKey; value: string; campaignId: Id; onDone: () => void }) {
+function LineForm({
+  label,
+  field,
+  value,
+  campaignId,
+  onDone,
+}: {
+  label: string;
+  field: EditKey;
+  value: string;
+  campaignId: Id;
+  onDone: () => void;
+}) {
   const id = useId();
   const list = field === "mandatory" || field === "never";
   const [text, setText] = useState(list ? value.split(". ").join("\n") : value);
@@ -188,7 +245,12 @@ function LineForm({ label, field, value, campaignId, onDone }: { label: string; 
   const toast = useToast();
   function save(event?: FormEvent) {
     event?.preventDefault();
-    const next = list ? text.split("\n").map((s) => s.trim().replace(/\.$/, "")).filter(Boolean) : text.trim();
+    const next = list
+      ? text
+          .split("\n")
+          .map((s) => s.trim().replace(/\.$/, ""))
+          .filter(Boolean)
+      : text.trim();
     change.mutate(
       { campaignId, change: { [field]: next } },
       {
@@ -215,7 +277,15 @@ function LineForm({ label, field, value, campaignId, onDone }: { label: string; 
         <FieldLabel htmlFor={id} className="ui-sr-only">
           {label}
         </FieldLabel>
-        <Textarea id={id} value={text} rows={list ? 3 : 2} autoFocus onChange={(e) => setText(e.target.value)} onKeyDown={keys} placeholder={list ? "One line each" : undefined} />
+        <Textarea
+          id={id}
+          value={text}
+          rows={list ? 3 : 2}
+          autoFocus
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={keys}
+          placeholder={list ? "One line each" : undefined}
+        />
       </Field>
       <div className="ui-app-row">
         <Button type="submit" size="sm" loading={change.isPending}>
@@ -283,7 +353,12 @@ export function BriefPanel({ view, named, canAct, approver, onSending, onSent }:
         <p className="ui-chat-brief-lead">{SEND_LINE}</p>
       </div>
       <div className="ui-chat-brief-body">
-        <BriefRowsList rows={rows} campaignId={campaign?.id} editing={editing} onEdit={canAct ? setEditing : undefined} />
+        <BriefRowsList
+          rows={rows}
+          campaignId={campaign?.id}
+          editing={editing}
+          onEdit={canAct ? setEditing : undefined}
+        />
       </div>
       <div className="ui-chat-brief-foot">
         <p className="ui-chat-brief-note" role="status">
@@ -299,7 +374,9 @@ export function BriefPanel({ view, named, canAct, approver, onSending, onSent }:
               // mutateAsync: once sent, this panel makes way for "The plan", and the toast and the focus still follow.
               send.mutateAsync(campaign.id).then(
                 () => {
-                  toast.done("Sent to Fume.", { description: "Fume is writing the plan. Nothing is made before you approve it." });
+                  toast.done("Sent to Fume.", {
+                    description: "Fume is writing the plan. Nothing is made before you approve it.",
+                  });
                   onSent?.();
                 },
                 (e: Error) => toast.error("The brief wasn’t sent", { description: e.message }),

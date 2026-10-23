@@ -78,24 +78,89 @@ const imageGroups: Record<string, Pick<BrandImage, "group" | "campaign">> = {
 
 /** More of what Fume found on the website, so every group has something in it. */
 const moreImages = (p: (evidence: string) => Provenance): BrandImage[] => [
-  { id: "im-5", image: img("06-05"), caption: "Summer evenings, golden hour", provenance: p("Summer evenings 2025, lysne.no/journal"), group: "campaign", campaign: "Summer evenings 2025" },
-  { id: "im-6", image: gen("oil-pack"), caption: "Night Body Oil on white", provenance: p("lysne.no/shop"), group: "product" },
-  { id: "im-7", image: gen("balm-pack"), caption: "Hand Balm on white", provenance: p("lysne.no/shop"), group: "product" },
-  { id: "im-8", image: img("04-06"), caption: "Christmas market stand, 2024", provenance: p("lysne.no/journal"), group: "unused" },
+  {
+    id: "im-5",
+    image: img("06-05"),
+    caption: "Summer evenings, golden hour",
+    provenance: p("Summer evenings 2025, lysne.no/journal"),
+    group: "campaign",
+    campaign: "Summer evenings 2025",
+  },
+  {
+    id: "im-6",
+    image: gen("oil-pack"),
+    caption: "Night Body Oil on white",
+    provenance: p("lysne.no/shop"),
+    group: "product",
+  },
+  {
+    id: "im-7",
+    image: gen("balm-pack"),
+    caption: "Hand Balm on white",
+    provenance: p("lysne.no/shop"),
+    group: "product",
+  },
+  {
+    id: "im-8",
+    image: img("04-06"),
+    caption: "Christmas market stand, 2024",
+    provenance: p("lysne.no/journal"),
+    group: "unused",
+  },
 ];
 
 // ─── Rules as Do or Don't (#43) ─────────────────────────────────────────────
 
-const rulePolarity: Record<string, BrandRule["polarity"]> = { r1: "do", r2: "do", r3: "do", r4: "do", r5: "do", r6: "do", r7: "dont" };
+const rulePolarity: Record<string, BrandRule["polarity"]> = {
+  r1: "do",
+  r2: "do",
+  r3: "do",
+  r4: "do",
+  r5: "do",
+  r6: "do",
+  r7: "dont",
+};
 const moreRules: BrandRule[] = [
-  { id: "r8", area: "colour", statement: "No cold blue light and no saturated colour.", kind: "rule", source: "verified", confidence: "high", polarity: "dont" },
-  { id: "r9", area: "voice", statement: "No exclamation marks and no urgency: never “now”, “hurry” or “last chance”.", kind: "hard_constraint", source: "supplied", confidence: "high", polarity: "dont" },
-  { id: "r10", area: "imagery", statement: "No real person’s face. People are AI models, always labelled as AI.", kind: "hard_constraint", source: "supplied", confidence: "high", polarity: "dont" },
+  {
+    id: "r8",
+    area: "colour",
+    statement: "No cold blue light and no saturated colour.",
+    kind: "rule",
+    source: "verified",
+    confidence: "high",
+    polarity: "dont",
+  },
+  {
+    id: "r9",
+    area: "voice",
+    statement: "No exclamation marks and no urgency: never “now”, “hurry” or “last chance”.",
+    kind: "hard_constraint",
+    source: "supplied",
+    confidence: "high",
+    polarity: "dont",
+  },
+  {
+    id: "r10",
+    area: "imagery",
+    statement: "No real person’s face. People are AI models, always labelled as AI.",
+    kind: "hard_constraint",
+    source: "supplied",
+    confidence: "high",
+    polarity: "dont",
+  },
 ];
 
 // ─── AI model sheets (#41) ──────────────────────────────────────────────────
 
-const angles: ModelAngle[] = ["front", "three-quarter", "profile", "back", "face", "face-three-quarter", "face-profile"];
+const angles: ModelAngle[] = [
+  "front",
+  "three-quarter",
+  "profile",
+  "back",
+  "face",
+  "face-three-quarter",
+  "face-profile",
+];
 const sheet = (name: string) => angles.map((angle) => ({ angle, image: gen(`models/${name}-${angle}`) }));
 const clothing = "Off-white t-shirt, grey trousers, barefoot";
 const never = ["Shown as a real customer, a review or a testimonial", "Before-and-after", "Nudity"];
@@ -164,38 +229,88 @@ const modelSpecs: Record<string, { look: string; spec: ModelSpec }> = {
 
 const voiceBook = (p: (evidence: string) => Provenance): VoiceBook => ({
   parts: [
-    { id: "identity", found: "Calm, warm and close: a brand for the hour before sleep.", provenance: p("lysne.no/about") },
-    { id: "speak", found: "Short, quiet sentences. “You”, rarely “we”; informal «du» in Norwegian.", provenance: p("lysne.no, 14 pages") },
-    { id: "rules", found: "No result claims, no urgency, no exclamation marks.", provenance: p("lysne.no/about and product pages") },
+    {
+      id: "identity",
+      found: "Calm, warm and close: a brand for the hour before sleep.",
+      provenance: p("lysne.no/about"),
+    },
+    {
+      id: "speak",
+      found: "Short, quiet sentences. “You”, rarely “we”; informal «du» in Norwegian.",
+      provenance: p("lysne.no, 14 pages"),
+    },
+    {
+      id: "rules",
+      found: "No result claims, no urgency, no exclamation marks.",
+      provenance: p("lysne.no/about and product pages"),
+    },
     { id: "audience", found: "Women 30 to 55 in Norway who keep an evening ritual.", provenance: p("lysne.no/about") },
     { id: "examples", found: "6 good lines, in Norwegian and English.", provenance: p("lysne.no, Instagram") },
   ],
   identity: {
     who: "LYSNE makes body oils and small rituals for the hour before sleep. Made in Norway, sold in Norway and the Nordics.",
-    believe: ["The evening is worth slowing down for.", "Fewer, better things: a short list, made well.", "Care is a habit, not a promise of results."],
+    believe: [
+      "The evening is worth slowing down for.",
+      "Fewer, better things: a short list, made well.",
+      "Care is a habit, not a promise of results.",
+    ],
     personality: ["Calm", "Warm", "Close", "Quietly sure"],
   },
   speak: {
     traits: [
-      { trait: "Calm", means: "We never hurry the reader.", do: "Warm the oil in your hands. Breathe out.", dont: "Don’t miss out. Order tonight!" },
-      { trait: "Close", means: "We write to one person, as a friend would.", do: "Your evening, slowed down.", dont: "Our customers love our bestselling oil." },
-      { trait: "Plain", means: "Simple words; the product speaks for itself.", do: "Almond oil and squalane. Nothing else.", dont: "A luxurious, transformative elixir." },
-      { trait: "Sensory", means: "We say what it feels like, not what it does.", do: "Golden, slow, warm on the skin.", dont: "Visibly firmer skin in 7 days." },
+      {
+        trait: "Calm",
+        means: "We never hurry the reader.",
+        do: "Warm the oil in your hands. Breathe out.",
+        dont: "Don’t miss out. Order tonight!",
+      },
+      {
+        trait: "Close",
+        means: "We write to one person, as a friend would.",
+        do: "Your evening, slowed down.",
+        dont: "Our customers love our bestselling oil.",
+      },
+      {
+        trait: "Plain",
+        means: "Simple words; the product speaks for itself.",
+        do: "Almond oil and squalane. Nothing else.",
+        dont: "A luxurious, transformative elixir.",
+      },
+      {
+        trait: "Sensory",
+        means: "We say what it feels like, not what it does.",
+        do: "Golden, slow, warm on the skin.",
+        dont: "Visibly firmer skin in 7 days.",
+      },
     ],
     use: ["evening", "slow", "warm", "your hands", "breathe", "kveld", "ro", "varme"],
     avoid: ["anti-ageing", "miracle", "results", "luxury", "hurry", "transform", "best ever"],
     sentences: "Short: two to eight words, one idea a line. A full stop where others use a comma.",
     formality: "Informal and close: «du» in Norwegian, “you” in English. Never «dere» or “customers”.",
-    languages: "Norwegian (bokmål) first, on lysne.no and in Norway; English for the Nordics and Instagram. Never both in one line.",
+    languages:
+      "Norwegian (bokmål) first, on lysne.no and in Norway; English for the Nordics and Instagram. Never both in one line.",
   },
   rules: {
-    must: ["Name the product as it is printed: Night Body Oil · 100 ml.", "Say “you”, rarely “we”.", "End a line with a full stop."],
-    never: ["Skin-result claims, or before-and-after.", "Urgency: “now”, “hurry”, “last chance”.", "Exclamation marks and emojis."],
+    must: [
+      "Name the product as it is printed: Night Body Oil · 100 ml.",
+      "Say “you”, rarely “we”.",
+      "End a line with a full stop.",
+    ],
+    never: [
+      "Skin-result claims, or before-and-after.",
+      "Urgency: “now”, “hurry”, “last chance”.",
+      "Exclamation marks and emojis.",
+    ],
     claims: ["For the hour before sleep.", "100 % natural oils.", "Made in Norway."],
   },
   audience: {
     who: "Women 30 to 55 in Norway who keep an evening ritual.",
-    cares: ["A calm end to the day", "Few, honest ingredients", "Things that look good on a bedside", "Gifts that feel personal"],
+    cares: [
+      "A calm end to the day",
+      "Few, honest ingredients",
+      "Things that look good on a bedside",
+      "Gifts that feel personal",
+    ],
     notFor: "Not for quick fixes or results-led skincare.",
   },
   examples: [
@@ -210,17 +325,23 @@ const voiceBook = (p: (evidence: string) => Provenance): VoiceBook => ({
 
 /** The layer: the db patched once (after a fresh start is set up), the new calls, and the board's two calls wrapped
  *  (they carry the voice book) over the calls as they were before. */
-export function r13BrandApi(ctx: R13BrandContext): { calls: Pick<FumeApi, Calls>; wraps: (base: Pick<FumeApi, Wraps>) => Pick<FumeApi, Wraps> } {
+export function r13BrandApi(ctx: R13BrandContext): {
+  calls: Pick<FumeApi, Calls>;
+  wraps: (base: Pick<FumeApi, Wraps>) => Pick<FumeApi, Wraps>;
+} {
   const { db, wait } = ctx;
   // A fresh brand's first reading: everything Fume read waits for her; otherwise what Maja already approved.
   const found = (evidence: string): Provenance =>
-    ctx.fresh ? { origin: "engine", state: "proposed", evidence, confidence: "medium" } : { origin: "engine", state: "approved", evidence, by: "u-maja", at: at(60 * 24 * 9) };
+    ctx.fresh
+      ? { origin: "engine", state: "proposed", evidence, confidence: "medium" }
+      : { origin: "engine", state: "approved", evidence, by: "u-maja", at: at(60 * 24 * 9) };
 
   for (const c of db.identity.colours) c.uses = c.uses ?? colourUses[c.id] ?? [];
   for (const i of db.identity.imagery) Object.assign(i, imageGroups[i.id] ?? { group: i.group ?? "look" });
   if (!db.identity.imagery.some((i) => i.id === "im-5")) db.identity.imagery.push(...moreImages(found));
   for (const r of db.rules) {
-    if (r.id === "r5") r.statement = "Stone, linen and glass. People are AI models only, always labelled; skin in soft crops.";
+    if (r.id === "r5")
+      r.statement = "Stone, linen and glass. People are AI models only, always labelled; skin in soft crops.";
     if (r.id === "r2") r.statement = "Warm neutrals and amber light.";
     r.polarity = r.polarity ?? rulePolarity[r.id] ?? (/^(no|never|don’t|don't)\b/i.test(r.statement) ? "dont" : "do");
   }
@@ -235,13 +356,18 @@ export function r13BrandApi(ctx: R13BrandContext): { calls: Pick<FumeApi, Calls>
     m.image = gen(`models/${name}-face`);
     m.sheet = m.angles.map((a) => a.image);
   }
-  for (const b of db.boards) for (const it of b.items) if (it.id === "bi-5") it.text = "Product low in the frame, air above. People are AI models, always labelled.";
+  for (const b of db.boards)
+    for (const it of b.items)
+      if (it.id === "bi-5") it.text = "Product low in the frame, air above. People are AI models, always labelled.";
   for (const p of db.products) if (p.id === "pr-kveld" || p.id === "pr-sweater") p.isNew = true;
   const book = voiceBook(found);
   // Robot note 05: «Update the brand» names the products Import from website finds (seed8), not three others
   brandUpdate.products = { count: 2, names: ["Body Scrub, new", "Pillow Mist, a new 100 ml size"] };
 
-  const withBook = <T extends { identity: BrandIdentity }>(view: T): T => ({ ...view, identity: { ...view.identity, voiceBook: clone(book) } });
+  const withBook = <T extends { identity: BrandIdentity }>(view: T): T => ({
+    ...view,
+    identity: { ...view.identity, voiceBook: clone(book) },
+  });
 
   const wraps = (base: Pick<FumeApi, Wraps>): Pick<FumeApi, Wraps> => ({
     async brandBoard() {
@@ -269,11 +395,18 @@ export function r13BrandApi(ctx: R13BrandContext): { calls: Pick<FumeApi, Calls>
     async decideVoicePart({ part, verdict, note }) {
       const p = book.parts.find((x) => x.id === part);
       if (!p) throw new FumeError("not_found", `No voice part ${part}`);
-      p.provenance = { ...p.provenance, state: verdict === "keep" ? "approved" : "changed", by: ctx.userId(), at: new Date().toISOString() };
+      p.provenance = {
+        ...p.provenance,
+        state: verdict === "keep" ? "approved" : "changed",
+        by: ctx.userId(),
+        at: new Date().toISOString(),
+      };
       p.note = verdict === "change" ? note?.trim() || p.note : undefined;
       // How we speak holds the board's short voice lines: confirming the part confirms them too.
       if (part === "speak" && verdict === "keep")
-        for (const v of db.identity.voice) if (v.provenance.state === "proposed") v.provenance = { ...v.provenance, state: "approved", by: ctx.userId(), at: new Date().toISOString() };
+        for (const v of db.identity.voice)
+          if (v.provenance.state === "proposed")
+            v.provenance = { ...v.provenance, state: "approved", by: ctx.userId(), at: new Date().toISOString() };
       return wait(clone(book));
     },
     async passTastePair({ pairId, cardId, reason }) {
@@ -296,7 +429,8 @@ export function r13BrandApi(ctx: R13BrandContext): { calls: Pick<FumeApi, Calls>
       const u = db.users.find((x) => x.id === ctx.userId());
       if (!u) throw new FumeError("not_found", "No such person");
       if (!name.trim()) throw new FumeError("invalid", "Your name is needed.");
-      if (!/^\S+@\S+\.\S+$/.test(email.trim())) throw new FumeError("invalid", "That email address doesn’t look right.");
+      if (!/^\S+@\S+\.\S+$/.test(email.trim()))
+        throw new FumeError("invalid", "That email address doesn’t look right.");
       Object.assign(u, { name: name.trim(), title: title.trim(), email: email.trim() });
       return wait(clone(u));
     },

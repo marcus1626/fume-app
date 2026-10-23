@@ -31,7 +31,21 @@ export function withUnit(value: number, unit?: string) {
   return /^[°%]$/.test(unit) ? `${value}${unit === "%" ? " %" : unit}` : `${value} ${unit}`;
 }
 
-export function StudioSlider({ value, onChange, label, id, disabled, min = 0, max = 100, step = 1, unit, help, format, bare, className }: StudioSliderProps) {
+export function StudioSlider({
+  value,
+  onChange,
+  label,
+  id,
+  disabled,
+  min = 0,
+  max = 100,
+  step = 1,
+  unit,
+  help,
+  format,
+  bare,
+  className,
+}: StudioSliderProps) {
   const sid = studioId(label, id);
   const root = useRef<HTMLDivElement>(null);
   const p = max > min ? (clamp(value, min, max) - min) / (max - min) : 0;
@@ -59,7 +73,14 @@ export function StudioSlider({ value, onChange, label, id, disabled, min = 0, ma
     e.currentTarget.querySelector<HTMLElement>(".ui-slider-thumb")?.removeAttribute("data-dragging");
   };
   const keys = (e: KeyboardEvent<HTMLSpanElement>) => {
-    const by: Record<string, number> = { ArrowRight: step, ArrowUp: step, ArrowLeft: -step, ArrowDown: -step, PageUp: step * 10, PageDown: -step * 10 };
+    const by: Record<string, number> = {
+      ArrowRight: step,
+      ArrowUp: step,
+      ArrowLeft: -step,
+      ArrowDown: -step,
+      PageUp: step * 10,
+      PageDown: -step * 10,
+    };
     let next: number | undefined;
     if (e.key in by) next = value + by[e.key]!;
     if (e.key === "Home") next = min;

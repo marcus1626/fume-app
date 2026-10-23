@@ -11,7 +11,8 @@ import { useApprove, useUnapprove } from "../../api/hooks";
 import type { Creative, Id } from "../../contract";
 import * as copy from "../../copy";
 
-const inField = (t: EventTarget | null) => t instanceof HTMLElement && (t.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(t.tagName));
+const inField = (t: EventTarget | null) =>
+  t instanceof HTMLElement && (t.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(t.tagName));
 
 /** The selection over `list` (in its order): `marked` creatives are left out of it. */
 export function useReviewSelection(list: Creative[], marked: (c: Creative) => boolean, canApprove: boolean) {
@@ -83,7 +84,10 @@ export function ApproveBar({
         toast.done(`${copy.creatives(ids.length)} approved`, {
           action: {
             label: "Undo",
-            onClick: () => unapprove.mutateAsync(ids).catch((e: Error) => toast.error("The approval stays", { description: e.message })),
+            onClick: () =>
+              unapprove
+                .mutateAsync(ids)
+                .catch((e: Error) => toast.error("The approval stays", { description: e.message })),
           },
         }),
       (e: Error) => toast.error("Nothing was approved", { description: e.message }),
@@ -99,8 +103,22 @@ export function ApproveBar({
         onClear={onClear}
         aria-label={`${n} selected`}
         actions={[
-          ...(n === 1 && onNeedsChanges ? [{ label: "Needs changes", icon: "message-square" as const, onSelect: () => onNeedsChanges(selected[0]!) }] : []),
-          { label: `Approve ${n}`, icon: "check" as const, variant: "white" as const, disabled: approve.isPending, onSelect: approveSelected },
+          ...(n === 1 && onNeedsChanges
+            ? [
+                {
+                  label: "Needs changes",
+                  icon: "message-square" as const,
+                  onSelect: () => onNeedsChanges(selected[0]!),
+                },
+              ]
+            : []),
+          {
+            label: `Approve ${n}`,
+            icon: "check" as const,
+            variant: "white" as const,
+            disabled: approve.isPending,
+            onSelect: approveSelected,
+          },
         ]}
       />
     </div>
@@ -108,10 +126,27 @@ export function ApproveBar({
 }
 
 /** The words over the grid: they follow the selection, so they and the bar never disagree (DLOAD-12). */
-export function selectionWords({ n, total, open, approver, canApprove, canAsk }: { n: number; total: number; open: number; approver: string; canApprove: boolean; canAsk: boolean }): string {
+export function selectionWords({
+  n,
+  total,
+  open,
+  approver,
+  canApprove,
+  canAsk,
+}: {
+  n: number;
+  total: number;
+  open: number;
+  approver: string;
+  canApprove: boolean;
+  canAsk: boolean;
+}): string {
   const marked = total - open;
   const needs = marked ? ` ${copy.count(marked, "creative")} ${marked === 1 ? "needs" : "need"} changes.` : "";
-  if (!canApprove) return canAsk ? `Open one to comment, or mark it Needs changes; ${approver} approves.` : `${approver} approves these.`;
+  if (!canApprove)
+    return canAsk
+      ? `Open one to comment, or mark it Needs changes; ${approver} approves.`
+      : `${approver} approves these.`;
   if (open === 0) return total === 1 ? "It needs changes." : "All of them need changes.";
   if (n === 0) return `None is selected; click a circle to select one.${needs}`;
   if (n === total) return total === 1 ? "It is selected." : "All are selected; click a circle to leave one out.";

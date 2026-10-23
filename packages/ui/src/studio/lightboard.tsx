@@ -14,7 +14,12 @@ import { StudioRow } from "./row";
 import { StudioSlider, withUnit } from "./slider";
 import { studioId, type StudioControlProps, type StudioLight, type StudioLightRig } from "./types";
 
-export const lightKindNames: Record<StudioLight["kind"], string> = { key: "Key", fill: "Fill", rim: "Rim", practical: "Practical" };
+export const lightKindNames: Record<StudioLight["kind"], string> = {
+  key: "Key",
+  fill: "Fill",
+  rim: "Rim",
+  practical: "Practical",
+};
 const kindOrder: StudioLight["kind"][] = ["key", "fill", "rim", "practical"];
 
 /** A colour temperature in Kelvin as RGB 0–255 (Tanner Helland's fit), for a preview of the light's warmth. */
@@ -61,7 +66,19 @@ export interface StudioLightboardProps extends StudioControlProps<StudioLightRig
 // Kept a little inside the board, so a dot never hangs over its edge.
 const clamp01 = (n: number) => Math.min(0.96, Math.max(0.04, Number(n.toFixed(3))));
 
-export function StudioLightboard({ value, onChange, label, id, disabled, selected, onSelect, onDragging, preview, max = 6, help }: StudioLightboardProps) {
+export function StudioLightboard({
+  value,
+  onChange,
+  label,
+  id,
+  disabled,
+  selected,
+  onSelect,
+  onDragging,
+  preview,
+  max = 6,
+  help,
+}: StudioLightboardProps) {
   const sid = studioId(label, id);
   const board = useRef<HTMLDivElement>(null);
   const dragging = useRef<string>();
@@ -74,7 +91,8 @@ export function StudioLightboard({ value, onChange, label, id, disabled, selecte
     onSelect?.(lightId);
   };
 
-  const setLight = (lightId: string, change: Partial<StudioLight>) => onChange({ lights: value.lights.map((l) => (l.id === lightId ? { ...l, ...change } : l)) });
+  const setLight = (lightId: string, change: Partial<StudioLight>) =>
+    onChange({ lights: value.lights.map((l) => (l.id === lightId ? { ...l, ...change } : l)) });
 
   const toBoard = (x: number, y: number) => {
     const r = board.current?.getBoundingClientRect();
@@ -110,7 +128,12 @@ export function StudioLightboard({ value, onChange, label, id, disabled, selecte
   };
   const keys = (l: StudioLight) => (e: KeyboardEvent<HTMLButtonElement>) => {
     const by = e.shiftKey ? 0.1 : 0.02;
-    const d = ({ ArrowRight: [by, 0], ArrowLeft: [-by, 0], ArrowUp: [0, -by], ArrowDown: [0, by] } as Record<string, [number, number]>)[e.key];
+    const d = (
+      { ArrowRight: [by, 0], ArrowLeft: [-by, 0], ArrowUp: [0, -by], ArrowDown: [0, by] } as Record<
+        string,
+        [number, number]
+      >
+    )[e.key];
     if (!d) return;
     e.preventDefault();
     setLight(l.id, { x: clamp01(l.x + d[0]), y: clamp01(l.y + d[1]) });
@@ -119,8 +142,20 @@ export function StudioLightboard({ value, onChange, label, id, disabled, selecte
   const add = () => {
     const have = new Set(value.lights.map((l) => l.kind));
     const kind = kindOrder.find((k) => !have.has(k)) ?? "fill";
-    const base = { key: { x: 0.8, y: 0.3, height: 25 }, fill: { x: 0.2, y: 0.6, height: 20 }, rim: { x: 0.5, y: 0.1, height: 35 }, practical: { x: 0.3, y: 0.2, height: 10 } }[kind];
-    const n: StudioLight = { id: `l-${Date.now().toString(36)}`, kind, ...base, warmth: 3200, strength: kind === "key" ? 80 : 40, softness: 70 };
+    const base = {
+      key: { x: 0.8, y: 0.3, height: 25 },
+      fill: { x: 0.2, y: 0.6, height: 20 },
+      rim: { x: 0.5, y: 0.1, height: 35 },
+      practical: { x: 0.3, y: 0.2, height: 10 },
+    }[kind];
+    const n: StudioLight = {
+      id: `l-${Date.now().toString(36)}`,
+      kind,
+      ...base,
+      warmth: 3200,
+      strength: kind === "key" ? 80 : 40,
+      softness: 70,
+    };
     onChange({ lights: [...value.lights, n] });
     select(n.id);
   };
@@ -131,59 +166,117 @@ export function StudioLightboard({ value, onChange, label, id, disabled, selecte
     select(rest[0]!.id);
   };
 
-  const part = (key: "warmth" | "strength" | "softness" | "height", name: string, min: number, maxV: number, unit: string, step = 1) =>
+  const part = (
+    key: "warmth" | "strength" | "softness" | "height",
+    name: string,
+    min: number,
+    maxV: number,
+    unit: string,
+    step = 1,
+  ) =>
     chosen && (
       <div className="ui-sl-part">
         <span className="ui-sc-label" aria-hidden="true">
           {name}
         </span>
-        <StudioSlider bare label={`${names[chosen.id]} light: ${name.toLowerCase()}`} id={`${sid}-${key}`} value={chosen[key]} min={min} max={maxV} step={step} unit={unit} disabled={disabled} onChange={(n) => setLight(chosen.id, { [key]: n })} />
+        <StudioSlider
+          bare
+          label={`${names[chosen.id]} light: ${name.toLowerCase()}`}
+          id={`${sid}-${key}`}
+          value={chosen[key]}
+          min={min}
+          max={maxV}
+          step={step}
+          unit={unit}
+          disabled={disabled}
+          onChange={(n) => setLight(chosen.id, { [key]: n })}
+        />
         <span className="ui-sc-readout">{withUnit(chosen[key], unit)}</span>
       </div>
     );
 
   return (
-    <StudioRow label={label} labelId={`${sid}-l`} readout={`${value.lights.length} ${value.lights.length === 1 ? "light" : "lights"}`} help={help} disabled={disabled}>
+    <StudioRow
+      label={label}
+      labelId={`${sid}-l`}
+      readout={`${value.lights.length} ${value.lights.length === 1 ? "light" : "lights"}`}
+      help={help}
+      disabled={disabled}
+    >
       <div className="ui-sl" role="group" aria-labelledby={`${sid}-l`}>
         <div className="ui-sl-stage" data-preview={preview ? "" : undefined}>
-          <div ref={board} className="ui-sl-board" data-disabled={disabled ? "" : undefined} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
+          <div
+            ref={board}
+            className="ui-sl-board"
+            data-disabled={disabled ? "" : undefined}
+            onPointerDown={down}
+            onPointerMove={move}
+            onPointerUp={up}
+            onPointerCancel={up}
+          >
             <span className="ui-sl-subject" aria-hidden="true" />
             <Icon name="camera" className="ui-sl-camera" />
             {value.lights.map((l) => (
-                <button
-                  key={l.id}
-                  type="button"
-                  data-light={l.id}
-                  className="ui-sl-dot"
-                  aria-pressed={l.id === chosen?.id}
-                  aria-label={`${names[l.id]} light, ${Math.round(l.x * 100)} % across, ${Math.round(l.y * 100)} % toward the camera. Arrow keys move it.`}
-                  disabled={disabled}
-                  style={{ "--x": l.x, "--y": l.y } as CSSProperties}
-                  onKeyDown={keys(l)}
-                  onFocus={() => select(l.id)}
-                >
-                  {names[l.id]!.charAt(0)}
-                </button>
+              <button
+                key={l.id}
+                type="button"
+                data-light={l.id}
+                className="ui-sl-dot"
+                aria-pressed={l.id === chosen?.id}
+                aria-label={`${names[l.id]} light, ${Math.round(l.x * 100)} % across, ${Math.round(l.y * 100)} % toward the camera. Arrow keys move it.`}
+                disabled={disabled}
+                style={{ "--x": l.x, "--y": l.y } as CSSProperties}
+                onKeyDown={keys(l)}
+                onFocus={() => select(l.id)}
+              >
+                {names[l.id]!.charAt(0)}
+              </button>
             ))}
           </div>
           {preview && <div className="ui-sl-preview">{preview}</div>}
         </div>
 
         <div className="ui-sl-lights">
-          <SegmentedControl className="ui-sl-pick" aria-label="Chosen light" value={chosen?.id ?? ""} onValueChange={select}>
+          <SegmentedControl
+            className="ui-sl-pick"
+            aria-label="Chosen light"
+            value={chosen?.id ?? ""}
+            onValueChange={select}
+          >
             {value.lights.map((l) => (
               <SegmentedOption key={l.id} value={l.id} disabled={disabled}>
                 {names[l.id]}
               </SegmentedOption>
             ))}
           </SegmentedControl>
-          <Button size="sm" variant="quiet" iconOnly icon="plus" aria-label="Add a light" disabled={disabled || value.lights.length >= max} onClick={add} />
-          <Button size="sm" variant="quiet" iconOnly icon="trash" aria-label={chosen ? `Remove the ${names[chosen.id]!.toLowerCase()} light` : "Remove the light"} disabled={disabled || value.lights.length < 2} onClick={remove} />
+          <Button
+            size="sm"
+            variant="quiet"
+            iconOnly
+            icon="plus"
+            aria-label="Add a light"
+            disabled={disabled || value.lights.length >= max}
+            onClick={add}
+          />
+          <Button
+            size="sm"
+            variant="quiet"
+            iconOnly
+            icon="trash"
+            aria-label={chosen ? `Remove the ${names[chosen.id]!.toLowerCase()} light` : "Remove the light"}
+            disabled={disabled || value.lights.length < 2}
+            onClick={remove}
+          />
         </div>
 
         {chosen && (
           <div className="ui-sl-parts">
-            <SegmentedControl className="ui-sc-seg ui-sl-kind" aria-label={`${names[chosen.id]} light: kind`} value={chosen.kind} onValueChange={(k) => setLight(chosen.id, { kind: k as StudioLight["kind"] })}>
+            <SegmentedControl
+              className="ui-sc-seg ui-sl-kind"
+              aria-label={`${names[chosen.id]} light: kind`}
+              value={chosen.kind}
+              onValueChange={(k) => setLight(chosen.id, { kind: k as StudioLight["kind"] })}
+            >
               {kindOrder.map((k) => (
                 <SegmentedOption key={k} value={k} disabled={disabled}>
                   {lightKindNames[k]}
@@ -222,7 +315,14 @@ export function StudioLightOverlay({ rig, selected, active }: StudioLightOverlay
             key={l.id}
             className="ui-sl-glow"
             data-selected={l.id === selected ? "" : undefined}
-            style={{ "--x": at.x, "--y": at.y, "--power": (l.strength / 100).toFixed(2), "--soft": (l.softness / 100).toFixed(2) } as CSSProperties}
+            style={
+              {
+                "--x": at.x,
+                "--y": at.y,
+                "--power": (l.strength / 100).toFixed(2),
+                "--soft": (l.softness / 100).toFixed(2),
+              } as CSSProperties
+            }
           />
         );
       })}

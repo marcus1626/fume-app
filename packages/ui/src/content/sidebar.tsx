@@ -157,7 +157,9 @@ export const SidebarProvider = forwardRef<HTMLDivElement, SidebarProviderProps>(
   useEffect(() => {
     const sb = sidebarRef.current;
     if (openMobile && !wasOpenMobile.current && isMobile && sb) {
-      const first = sb.querySelector<HTMLElement>('[aria-current="page"], [data-active="true"]') || sb.querySelector<HTMLElement>(FOCUSABLE);
+      const first =
+        sb.querySelector<HTMLElement>('[aria-current="page"], [data-active="true"]') ||
+        sb.querySelector<HTMLElement>(FOCUSABLE);
       if (first) window.setTimeout(() => first.focus({ preventScroll: true }), 0);
     } else if (!openMobile && wasOpenMobile.current && returnFocus.current && lastTrigger.current) {
       lastTrigger.current.focus({ preventScroll: true });
@@ -253,7 +255,10 @@ export interface SidebarProps extends HTMLAttributes<HTMLElement> {
 }
 
 /** The sidebar itself (<aside class="ui-sidebar">) and the phone's scrim after it. */
-export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar({ className, children, "aria-label": label = "Fume", ...props }, ref) {
+export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
+  { className, children, "aria-label": label = "Fume", ...props },
+  ref,
+) {
   const sb = useSidebar();
   const collapsed = sb.state === "collapsed";
   const localRef = useRef<HTMLElement | null>(null);
@@ -392,7 +397,22 @@ export interface SidebarMenuButtonProps extends Omit<ButtonHTMLAttributes<HTMLEl
 
 /** A row (.ui-sidebar-menu-button). On the rail its label floats out as a small glass tooltip. */
 export const SidebarMenuButton = forwardRef<HTMLElement, SidebarMenuButtonProps>(function SidebarMenuButton(
-  { asChild, href, isActive, size = "default", icon, leading, description, badge, endIcon, type, disabled, className, children, ...props },
+  {
+    asChild,
+    href,
+    isActive,
+    size = "default",
+    icon,
+    leading,
+    description,
+    badge,
+    endIcon,
+    type,
+    disabled,
+    className,
+    children,
+    ...props
+  },
   ref,
 ) {
   const inner = (label: ReactNode) => (
@@ -425,7 +445,12 @@ export const SidebarMenuButton = forwardRef<HTMLElement, SidebarMenuButtonProps>
   }
   if (href !== undefined) {
     return (
-      <a ref={ref as Ref<HTMLAnchorElement>} href={disabled ? undefined : href} aria-disabled={disabled || undefined} {...own}>
+      <a
+        ref={ref as Ref<HTMLAnchorElement>}
+        href={disabled ? undefined : href}
+        aria-disabled={disabled || undefined}
+        {...own}
+      >
         {inner(children)}
       </a>
     );
@@ -442,14 +467,24 @@ export interface SidebarInsetProps extends HTMLAttributes<HTMLElement> {
   as?: "main" | "div";
 }
 /** The page: a Porcelain sheet lying on the layer behind (.ui-sidebar-inset); inert while the phone drawer is open. */
-export const SidebarInset = forwardRef<HTMLElement, SidebarInsetProps>(function SidebarInset({ as = "main", className, ...props }, ref) {
+export const SidebarInset = forwardRef<HTMLElement, SidebarInsetProps>(function SidebarInset(
+  { as = "main", className, ...props },
+  ref,
+) {
   const sb = useSidebar();
   const localRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
     if (localRef.current) localRef.current.inert = sb.isMobile && sb.openMobile;
   }, [sb.isMobile, sb.openMobile]);
   const Tag = as as "main";
-  return <Tag ref={mergeRefs(ref, localRef)} data-slot="sidebar-inset" className={cx("ui-sidebar-inset", className)} {...props} />;
+  return (
+    <Tag
+      ref={mergeRefs(ref, localRef)}
+      data-slot="sidebar-inset"
+      className={cx("ui-sidebar-inset", className)}
+      {...props}
+    />
+  );
 });
 
 export interface SidebarTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -489,4 +524,3 @@ export const SidebarTrigger = forwardRef<HTMLButtonElement, SidebarTriggerProps>
     </WithTooltip>
   );
 });
-

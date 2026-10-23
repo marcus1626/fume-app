@@ -10,7 +10,13 @@
 //     <SelectContent><SelectItem value="lysne">LYSNE</SelectItem></SelectContent>
 //   </Select>
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { forwardRef, type ComponentPropsWithoutRef, type CSSProperties, type ReactNode, type SelectHTMLAttributes } from "react";
+import {
+  forwardRef,
+  type ComponentPropsWithoutRef,
+  type CSSProperties,
+  type ReactNode,
+  type SelectHTMLAttributes,
+} from "react";
 import { cx } from "../cx";
 import { Icon } from "../icons";
 
@@ -35,9 +41,16 @@ export interface SelectTriggerProps extends ComponentPropsWithoutRef<typeof Sele
 }
 
 /** The field-like button; put a SelectValue in it. Mark errors with aria-invalid. */
-export const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(function SelectTrigger({ size = "md", className, children, ...props }, ref) {
+export const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(function SelectTrigger(
+  { size = "md", className, children, ...props },
+  ref,
+) {
   return (
-    <SelectPrimitive.Trigger ref={ref} className={cx("ui-select-trigger", size === "sm" && "ui-select-trigger--sm", className)} {...props}>
+    <SelectPrimitive.Trigger
+      ref={ref}
+      className={cx("ui-select-trigger", size === "sm" && "ui-select-trigger--sm", className)}
+      {...props}
+    >
       {children}
       <SelectPrimitive.Icon asChild>
         <svg className="ui-select-icon" aria-hidden="true">
@@ -49,9 +62,11 @@ export const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(f
 });
 
 /** The chosen row's words, or the placeholder in tertiary. */
-export const SelectValue = forwardRef<HTMLSpanElement, ComponentPropsWithoutRef<typeof SelectPrimitive.Value>>(function SelectValue({ className, ...props }, ref) {
-  return <SelectPrimitive.Value ref={ref} className={cx("ui-select-value", className)} {...props} />;
-});
+export const SelectValue = forwardRef<HTMLSpanElement, ComponentPropsWithoutRef<typeof SelectPrimitive.Value>>(
+  function SelectValue({ className, ...props }, ref) {
+    return <SelectPrimitive.Value ref={ref} className={cx("ui-select-value", className)} {...props} />;
+  },
+);
 
 export interface SelectContentProps extends ComponentPropsWithoutRef<typeof SelectPrimitive.Content> {
   /** Portal target; default document.body. */
@@ -91,14 +106,18 @@ export const SelectContent = forwardRef<HTMLDivElement, SelectContentProps>(func
 });
 
 /** Rows that belong together, with a SelectLabel; groups are parted by space. */
-export const SelectGroup = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<typeof SelectPrimitive.Group>>(function SelectGroup({ className, ...props }, ref) {
-  return <SelectPrimitive.Group ref={ref} className={cx("ui-select-group", className)} {...props} />;
-});
+export const SelectGroup = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<typeof SelectPrimitive.Group>>(
+  function SelectGroup({ className, ...props }, ref) {
+    return <SelectPrimitive.Group ref={ref} className={cx("ui-select-group", className)} {...props} />;
+  },
+);
 
 /** A group's quiet title. */
-export const SelectLabel = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<typeof SelectPrimitive.Label>>(function SelectLabel({ className, ...props }, ref) {
-  return <SelectPrimitive.Label ref={ref} className={cx("ui-menu-label", "ui-select-label", className)} {...props} />;
-});
+export const SelectLabel = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<typeof SelectPrimitive.Label>>(
+  function SelectLabel({ className, ...props }, ref) {
+    return <SelectPrimitive.Label ref={ref} className={cx("ui-menu-label", "ui-select-label", className)} {...props} />;
+  },
+);
 
 export interface SelectItemProps extends ComponentPropsWithoutRef<typeof SelectPrimitive.Item> {
   /** Data beside the option, in the mono face ("1080 × 1350"). It also shows in the trigger when chosen. */
@@ -106,7 +125,10 @@ export interface SelectItemProps extends ComponentPropsWithoutRef<typeof SelectP
 }
 
 /** One option: its words and the check that shows when it is chosen. */
-export const SelectItem = forwardRef<HTMLDivElement, SelectItemProps>(function SelectItem({ meta, className, children, ...props }, ref) {
+export const SelectItem = forwardRef<HTMLDivElement, SelectItemProps>(function SelectItem(
+  { meta, className, children, ...props },
+  ref,
+) {
   return (
     <SelectPrimitive.Item ref={ref} className={cx("ui-menu-item", "ui-select-item", className)} {...props}>
       <SelectPrimitive.ItemText className="ui-select-item-text">
@@ -121,9 +143,11 @@ export const SelectItem = forwardRef<HTMLDivElement, SelectItemProps>(function S
 });
 
 /** Space between groups (.ui-menu-sep), never a line. */
-export const SelectSeparator = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>>(function SelectSeparator({ className, ...props }, ref) {
-  return <SelectPrimitive.Separator ref={ref} className={cx("ui-menu-sep", className)} {...props} />;
-});
+export const SelectSeparator = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>>(
+  function SelectSeparator({ className, ...props }, ref) {
+    return <SelectPrimitive.Separator ref={ref} className={cx("ui-menu-sep", className)} {...props} />;
+  },
+);
 
 export interface NativeSelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "size"> {
   /** sm 32 or md 40 (default). */
@@ -133,10 +157,17 @@ export interface NativeSelectProps extends Omit<SelectHTMLAttributes<HTMLSelectE
 }
 
 /** The browser's own select inside the field look. An <option value=""> chosen reads as the placeholder. */
-export const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(function NativeSelect({ size = "md", wrapperClassName, className, ...props }, ref) {
+export const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(function NativeSelect(
+  { size = "md", wrapperClassName, className, ...props },
+  ref,
+) {
   return (
     <div className={cx("ui-native-select-wrap", wrapperClassName)}>
-      <select ref={ref} className={cx("ui-native-select", size === "sm" && "ui-native-select--sm", className)} {...props} />
+      <select
+        ref={ref}
+        className={cx("ui-native-select", size === "sm" && "ui-native-select--sm", className)}
+        {...props}
+      />
       <Icon name="chevrons-up-down" className="ui-native-select-icon" />
     </div>
   );

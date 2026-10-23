@@ -15,7 +15,12 @@ export interface SpinnerProps extends Omit<SVGProps<SVGSVGElement>, "ref"> {
   decorative?: boolean;
 }
 
-const spinnerSize: Record<SpinnerSize, string | false> = { sm: "ui-spinner--sm", md: false, lg: "ui-spinner--lg", xl: "ui-spinner--xl" };
+const spinnerSize: Record<SpinnerSize, string | false> = {
+  sm: "ui-spinner--sm",
+  md: false,
+  lg: "ui-spinner--lg",
+  xl: "ui-spinner--xl",
+};
 
 /** `<svg class="ui-spinner" role="status" aria-label="Loading"><use href="#fi-loader-circle"/></svg>` */
 export const Spinner = forwardRef<SVGSVGElement, SpinnerProps>(function Spinner(
@@ -49,7 +54,12 @@ export const SpinnerLabel = forwardRef<HTMLSpanElement, SpinnerLabelProps>(funct
   ref,
 ) {
   return (
-    <span ref={ref} role="status" className={cx("ui-spinner-label", stack && "ui-spinner-label--stack", className)} {...props}>
+    <span
+      ref={ref}
+      role="status"
+      className={cx("ui-spinner-label", stack && "ui-spinner-label--stack", className)}
+      {...props}
+    >
       <Spinner decorative size={size ?? (stack ? "xl" : "md")} />
       {children}
     </span>

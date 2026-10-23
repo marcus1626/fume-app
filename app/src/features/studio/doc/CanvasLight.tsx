@@ -19,7 +19,9 @@ export function CanvasLight({ rig, view }: { rig?: StudioLightRig; view?: LightV
 
   useLayoutEffect(() => {
     if (!on) return;
-    const shots = anchor.current?.closest(".ui-desk-centre")?.querySelectorAll<HTMLElement>(".ui-desk-canvas .ui-desk-shot");
+    const shots = anchor.current
+      ?.closest(".ui-desk-centre")
+      ?.querySelectorAll<HTMLElement>(".ui-desk-canvas .ui-desk-shot");
     const next = shots?.length ? shots[shots.length - 1]! : null;
     if (next !== frame) setFrame(next);
   });
@@ -27,7 +29,9 @@ export function CanvasLight({ rig, view }: { rig?: StudioLightRig; view?: LightV
   return (
     <>
       <span ref={anchor} hidden />
-      {on && frame?.isConnected && createPortal(<StudioLightOverlay rig={rig!} selected={view!.selected} active={view!.active} />, frame)}
+      {on &&
+        frame?.isConnected &&
+        createPortal(<StudioLightOverlay rig={rig!} selected={view!.selected} active={view!.active} />, frame)}
     </>
   );
 }

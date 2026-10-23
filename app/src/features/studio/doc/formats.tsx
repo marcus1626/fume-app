@@ -39,7 +39,10 @@ export const ratioNum = (r: string) => {
 const FORMAT_RATIO: Record<Format, string> = { feed: "4:5", square: "1:1", story: "9:16" };
 
 /** The placement the specs are made for: the one picked, or the first that matches the short format. */
-export function placementOf(specs: Pick<Specs, "placementId" | "format">, placements: Placement[]): Placement | undefined {
+export function placementOf(
+  specs: Pick<Specs, "placementId" | "format">,
+  placements: Placement[],
+): Placement | undefined {
   return placements.find((p) => p.id === specs.placementId) ?? placements.find((p) => p.format === specs.format);
 }
 
@@ -63,7 +66,9 @@ export function howMade(p: Placement, model: string): string {
   const native = MODEL_RATIOS[model] ?? ["1:1"];
   if (native.includes(p.ratio)) return `Rendered at ${p.ratio}`;
   const want = Math.log(ratioNum(p.ratio));
-  const nearest = [...native].sort((a, b) => Math.abs(Math.log(ratioNum(a)) - want) - Math.abs(Math.log(ratioNum(b)) - want))[0];
+  const nearest = [...native].sort(
+    (a, b) => Math.abs(Math.log(ratioNum(a)) - want) - Math.abs(Math.log(ratioNum(b)) - want),
+  )[0];
   return `Rendered at ${nearest} and cropped to ${p.ratio}`;
 }
 
@@ -75,18 +80,34 @@ function fit(ratio: number) {
 /** The small proportional frame that shows a ratio. */
 export function RatioFrame({ ratio, className }: { ratio: string; className?: string }) {
   const { fw, fh } = fit(ratioNum(ratio));
-  return <span className={className ? `ui-fmt-ratio ${className}` : "ui-fmt-ratio"} style={{ "--fw": fw, "--fh": fh } as CSSProperties} aria-hidden="true" />;
+  return (
+    <span
+      className={className ? `ui-fmt-ratio ${className}` : "ui-fmt-ratio"}
+      style={{ "--fw": fw, "--fh": fh } as CSSProperties}
+      aria-hidden="true"
+    />
+  );
 }
 
 const GROUPS = ["Instagram", "Meta ads", "Pinterest", "Email", "Web"];
 const grouped = (placements: Placement[]) => {
   const names = [...GROUPS, ...placements.map((p) => p.group).filter((g) => !GROUPS.includes(g))];
-  return [...new Set(names)].map((g) => ({ group: g, items: placements.filter((p) => p.group === g) })).filter((g) => g.items.length);
+  return [...new Set(names)]
+    .map((g) => ({ group: g, items: placements.filter((p) => p.group === g) }))
+    .filter((g) => g.items.length);
 };
 
 // ─── The format picker ───────────────────────────────────────────────────────
 
-export function PlacementPicker({ placements, specs, onPick }: { placements: Placement[]; specs: Specs; onPick: (p: Placement) => void }) {
+export function PlacementPicker({
+  placements,
+  specs,
+  onPick,
+}: {
+  placements: Placement[];
+  specs: Specs;
+  onPick: (p: Placement) => void;
+}) {
   const [open, setOpen] = useState(false);
   const current = placementOf(specs, placements);
   return (
@@ -120,7 +141,12 @@ export function PlacementPicker({ placements, specs, onPick }: { placements: Pla
           </PopoverHeader>
           <div className="ui-fmt-groups">
             {grouped(placements).map(({ group, items }) => (
-              <div key={group} className="ui-fmt-group" role="group" aria-labelledby={`fmt-g-${group.replace(/\W+/g, "-")}`}>
+              <div
+                key={group}
+                className="ui-fmt-group"
+                role="group"
+                aria-labelledby={`fmt-g-${group.replace(/\W+/g, "-")}`}
+              >
                 <p className="ui-fmt-group-title" id={`fmt-g-${group.replace(/\W+/g, "-")}`}>
                   {group}
                 </p>
@@ -173,7 +199,18 @@ export function SafeZones({ placement, sourceRatio }: { placement: Placement; so
   return (
     <span
       className="ui-fmt-safe"
-      style={{ "--x": win.x, "--y": win.y, "--w": win.w, "--h": win.h, "--st": s.top, "--sb": s.bottom, "--sl": s.left, "--sr": s.right } as CSSProperties}
+      style={
+        {
+          "--x": win.x,
+          "--y": win.y,
+          "--w": win.w,
+          "--h": win.h,
+          "--st": s.top,
+          "--sb": s.bottom,
+          "--sl": s.left,
+          "--sr": s.right,
+        } as CSSProperties
+      }
       aria-hidden="true"
     >
       {cropped && <span className="ui-fmt-safe-out" />}
@@ -192,7 +229,17 @@ export function SafeZones({ placement, sourceRatio }: { placement: Placement; so
 
 const methodWord = { native: "Native", crop: "Crop", expand: "Expand" } as const;
 
-export function MakeFormats({ doc, placements, source, onClose }: { doc: CreativeDocument; placements: Placement[]; source?: RenderVersion; onClose: () => void }) {
+export function MakeFormats({
+  doc,
+  placements,
+  source,
+  onClose,
+}: {
+  doc: CreativeDocument;
+  placements: Placement[];
+  source?: RenderVersion;
+  onClose: () => void;
+}) {
   const make = useMakeFormats();
   const toast = useToast();
   const tiles = doc.formats ?? [];
@@ -218,7 +265,9 @@ export function MakeFormats({ doc, placements, source, onClose }: { doc: Creativ
         <h2 className="ui-fmt-strip-title" id="fmt-strip-title">
           Make formats
           <span className="ui-fmt-strip-sub">
-            {source ? `from version ${source.number}${current ? `, ${current.name} ${current.ratio}` : ""}` : "Render and pick a version first"}
+            {source
+              ? `from version ${source.number}${current ? `, ${current.name} ${current.ratio}` : ""}`
+              : "Render and pick a version first"}
             {!choosing && making > 0 ? ` · the Engine is making ${making}` : ""}
           </span>
         </h2>
@@ -231,7 +280,9 @@ export function MakeFormats({ doc, placements, source, onClose }: { doc: Creativ
                 </Button>
               )}
               <Button size="sm" icon="crop" loading={make.isPending} disabled={!targets.length || !source} onClick={go}>
-                {targets.length ? `Make ${targets.length} ${targets.length === 1 ? "format" : "formats"}` : "Make formats"}
+                {targets.length
+                  ? `Make ${targets.length} ${targets.length === 1 ? "format" : "formats"}`
+                  : "Make formats"}
               </Button>
             </>
           ) : (
@@ -244,7 +295,15 @@ export function MakeFormats({ doc, placements, source, onClose }: { doc: Creativ
       </header>
 
       {choosing ? (
-        <ToggleGroup type="multiple" size="sm" variant="outline" className="ui-fmt-targets" aria-label="Formats to make" value={targets} onValueChange={setTargets}>
+        <ToggleGroup
+          type="multiple"
+          size="sm"
+          variant="outline"
+          className="ui-fmt-targets"
+          aria-label="Formats to make"
+          value={targets}
+          onValueChange={setTargets}
+        >
           {options.map((p) => (
             <ToggleGroupItem key={p.id} value={p.id}>
               {p.name} <span className="ui-fmt-chip-ratio">{p.ratio}</span>
@@ -255,7 +314,16 @@ export function MakeFormats({ doc, placements, source, onClose }: { doc: Creativ
         <ol className="ui-fmt-tiles" aria-label="Formats">
           {tiles.map((t) => {
             const p = byId(t.placementId);
-            return p ? <FormatTileView key={t.placementId} doc={doc} tile={t} placement={p} source={source} sourceRatio={versionRatio(source, placements)} /> : null;
+            return p ? (
+              <FormatTileView
+                key={t.placementId}
+                doc={doc}
+                tile={t}
+                placement={p}
+                source={source}
+                sourceRatio={versionRatio(source, placements)}
+              />
+            ) : null;
           })}
         </ol>
       )}
@@ -263,7 +331,19 @@ export function MakeFormats({ doc, placements, source, onClose }: { doc: Creativ
   );
 }
 
-function FormatTileView({ doc, tile, placement, source, sourceRatio }: { doc: CreativeDocument; tile: FormatTile; placement: Placement; source?: RenderVersion; sourceRatio: number }) {
+function FormatTileView({
+  doc,
+  tile,
+  placement,
+  source,
+  sourceRatio,
+}: {
+  doc: CreativeDocument;
+  tile: FormatTile;
+  placement: Placement;
+  source?: RenderVersion;
+  sourceRatio: number;
+}) {
   const set = useSetFormatTile();
   const toast = useToast();
   const making = tile.state === "making";
@@ -301,7 +381,13 @@ function FormatTileView({ doc, tile, placement, source, sourceRatio }: { doc: Cr
           </SegmentedControl>
         )}
         <p className="ui-fmt-tile-why" title={why}>
-          {making ? <TextShimmer>{tile.method === "expand" ? "The Engine is extending the scene" : "The Engine is making it"}</TextShimmer> : why}
+          {making ? (
+            <TextShimmer>
+              {tile.method === "expand" ? "The Engine is extending the scene" : "The Engine is making it"}
+            </TextShimmer>
+          ) : (
+            why
+          )}
         </p>
       </div>
     </li>
@@ -309,15 +395,32 @@ function FormatTileView({ doc, tile, placement, source, sourceRatio }: { doc: Cr
 }
 
 /** The tile's picture: for a crop, the source with its window you can drag; otherwise the made format. */
-function FormatPreview({ doc, tile, placement, source, sourceRatio }: { doc: CreativeDocument; tile: FormatTile; placement: Placement; source?: RenderVersion; sourceRatio: number }) {
+function FormatPreview({
+  doc,
+  tile,
+  placement,
+  source,
+  sourceRatio,
+}: {
+  doc: CreativeDocument;
+  tile: FormatTile;
+  placement: Placement;
+  source?: RenderVersion;
+  sourceRatio: number;
+}) {
   const target = ratioNum(placement.ratio);
-  if (tile.method === "crop" && source) return <CropPreview doc={doc} tile={tile} placement={placement} source={source} sourceRatio={sourceRatio} />;
+  if (tile.method === "crop" && source)
+    return <CropPreview doc={doc} tile={tile} placement={placement} source={source} sourceRatio={sourceRatio} />;
   const { fw, fh } = fit(target);
   const image = tile.method === "native" ? (tile.image ?? source?.image) : tile.image;
   return (
     <span className="ui-fmt-preview">
       <span className="ui-fmt-frame" style={{ "--fw": fw, "--fh": fh } as CSSProperties}>
-        {tile.state === "making" || !image ? <Skeleton className="ui-fmt-skeleton" /> : <img src={image} alt={`${placement.name}, ${placement.ratio}`} />}
+        {tile.state === "making" || !image ? (
+          <Skeleton className="ui-fmt-skeleton" />
+        ) : (
+          <img src={image} alt={`${placement.name}, ${placement.ratio}`} />
+        )}
       </span>
     </span>
   );
@@ -325,16 +428,32 @@ function FormatPreview({ doc, tile, placement, source, sourceRatio }: { doc: Cre
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
-function CropPreview({ doc, tile, placement, source, sourceRatio }: { doc: CreativeDocument; tile: FormatTile; placement: Placement; source: RenderVersion; sourceRatio: number }) {
+function CropPreview({
+  doc,
+  tile,
+  placement,
+  source,
+  sourceRatio,
+}: {
+  doc: CreativeDocument;
+  tile: FormatTile;
+  placement: Placement;
+  source: RenderVersion;
+  sourceRatio: number;
+}) {
   const set = useSetFormatTile();
   const frame = useRef<HTMLSpanElement>(null);
   const drag = useRef<{ px: number; py: number; x: number; y: number }>();
   const start = tile.crop ?? windowOf(ratioNum(placement.ratio), sourceRatio);
   const [crop, setCrop] = useState(start);
-  useEffect(() => setCrop(tile.crop ?? windowOf(ratioNum(placement.ratio), sourceRatio)), [tile.crop, placement.ratio, sourceRatio]);
+  useEffect(
+    () => setCrop(tile.crop ?? windowOf(ratioNum(placement.ratio), sourceRatio)),
+    [tile.crop, placement.ratio, sourceRatio],
+  );
   const { fw, fh } = fit(sourceRatio);
 
-  const send = (c: typeof crop) => set.mutate({ documentId: doc.id, placementId: tile.placementId, change: { crop: c } });
+  const send = (c: typeof crop) =>
+    set.mutate({ documentId: doc.id, placementId: tile.placementId, change: { crop: c } });
   const move = (dx: number, dy: number) => {
     const c = { ...crop, x: clamp(crop.x + dx, 0, 1 - crop.w), y: clamp(crop.y + dy, 0, 1 - crop.h) };
     setCrop(c);
@@ -349,7 +468,11 @@ function CropPreview({ doc, tile, placement, source, sourceRatio }: { doc: Creat
     const d = drag.current;
     const box = frame.current?.getBoundingClientRect();
     if (!d || !box) return;
-    setCrop((c) => ({ ...c, x: clamp(d.x + (e.clientX - d.px) / box.width, 0, 1 - c.w), y: clamp(d.y + (e.clientY - d.py) / box.height, 0, 1 - c.h) }));
+    setCrop((c) => ({
+      ...c,
+      x: clamp(d.x + (e.clientX - d.px) / box.width, 0, 1 - c.w),
+      y: clamp(d.y + (e.clientY - d.py) / box.height, 0, 1 - c.h),
+    }));
   };
   const up = () => {
     if (!drag.current) return;
@@ -368,7 +491,11 @@ function CropPreview({ doc, tile, placement, source, sourceRatio }: { doc: Creat
     <span className="ui-fmt-preview">
       <span ref={frame} className="ui-fmt-frame" style={{ "--fw": fw, "--fh": fh } as CSSProperties}>
         <img src={source.image} alt="" draggable={false} />
-        <span className="ui-fmt-crop-out" style={{ "--x": crop.x, "--y": crop.y, "--w": crop.w, "--h": crop.h } as CSSProperties} aria-hidden="true" />
+        <span
+          className="ui-fmt-crop-out"
+          style={{ "--x": crop.x, "--y": crop.y, "--w": crop.w, "--h": crop.h } as CSSProperties}
+          aria-hidden="true"
+        />
         <button
           type="button"
           className="ui-fmt-crop"

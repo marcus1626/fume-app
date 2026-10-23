@@ -32,7 +32,11 @@ import { useNames } from "./qa/names";
 
 const presetKind: Record<BrandPreset["kind"], string> = { background: "Background", colour: "Colour", light: "Light" };
 const modelOrder: Record<AssetState, number> = { saved: 0, draft: 1, approved: 2, declined: 3 };
-const origin: Record<BrandReference["origin"], string> = { made: "Made in Studio", upload: "Uploaded", brand: "From the brand" };
+const origin: Record<BrandReference["origin"], string> = {
+  made: "Made in Studio",
+  upload: "Uploaded",
+  brand: "From the brand",
+};
 
 export function AssetsPage() {
   const { workspaceId } = useParams();
@@ -59,7 +63,11 @@ export function AssetsPage() {
         description={`${brand}’s chosen presets, its models and its reference library. Everything Studio puts first.`}
         meta={
           data
-            ? [copy.count(data.presets.length, "preset"), copy.count(data.models.length, "model"), copy.count(data.references.length, "reference")]
+            ? [
+                copy.count(data.presets.length, "preset"),
+                copy.count(data.models.length, "model"),
+                copy.count(data.references.length, "reference"),
+              ]
             : undefined
         }
       />
@@ -105,7 +113,11 @@ export function AssetsPage() {
               }
             >
               {models.length === 0 ? (
-                <Nothing icon="users" title="No models yet" text="Make a model in Studio: every variable it takes, then save it to the brand." />
+                <Nothing
+                  icon="users"
+                  title="No models yet"
+                  text="Make a model in Studio: every variable it takes, then save it to the brand."
+                />
               ) : (
                 <div className="ui-app-grid">
                   {[...models]
@@ -220,7 +232,10 @@ function Model({ model }: { model: BrandModel }) {
           {where[model.state]}
         </>
       }
-      meta={[[made, saved].filter(Boolean).join(", "), model.usedIn ? `In ${copy.creatives(model.usedIn)}` : `Since ${date(model.at)}`]}
+      meta={[
+        [made, saved].filter(Boolean).join(", "),
+        model.usedIn ? `In ${copy.creatives(model.usedIn)}` : `Since ${date(model.at)}`,
+      ]}
       state={model.state === "saved" ? `Saved to the brand, waiting for ${decided}` : undefined}
     />
   );

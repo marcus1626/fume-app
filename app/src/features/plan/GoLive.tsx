@@ -24,7 +24,8 @@ const fromKey = (key: string) => new Date(`${key}T08:00:00Z`).toISOString();
 const noon = (key: string) => Date.parse(`${key}T12:00:00Z`);
 
 /** The plan's go-live day: its "Goes live" step, else the campaign's. */
-export const liveOf = (plan: CampaignPlan, campaign: Campaign) => plan.timeline.find((s) => /^goes live/i.test(s.label))?.at ?? campaign.dueAt;
+export const liveOf = (plan: CampaignPlan, campaign: Campaign) =>
+  plan.timeline.find((s) => /^goes live/i.test(s.label))?.at ?? campaign.dueAt;
 
 /** Each planned creative with its go-live day: its own, else the masters on the day and two variants a day after. */
 export function liveDays(plan: CampaignPlan, campaign: Campaign): { creative: PlannedCreative; at: string }[] {
@@ -34,7 +35,10 @@ export function liveDays(plan: CampaignPlan, campaign: Campaign): { creative: Pl
   const base = Date.parse(live);
   return [
     ...masters.map((c) => ({ creative: c, at: c.liveAt ?? live })),
-    ...variants.map((c, i) => ({ creative: c, at: c.liveAt ?? new Date(base + (Math.floor(i / 2) + 1) * DAY).toISOString() })),
+    ...variants.map((c, i) => ({
+      creative: c,
+      at: c.liveAt ?? new Date(base + (Math.floor(i / 2) + 1) * DAY).toISOString(),
+    })),
   ];
 }
 

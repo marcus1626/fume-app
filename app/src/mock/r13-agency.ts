@@ -10,7 +10,20 @@
 //   holds a brief with Fume's questions ("LYSNE · Hand Balm introduction: 2 questions for you"), as Campaigns says.
 // - engineChat / engineSay: in a client an agency runs, the Engine says the agency's own check ("for your check"),
 //   never "for the expert": no Fume expert checks an agency's work (FLOWS §24.1).
-import type { AgencyClient, AgencyFeature, AgencyFumePlan, AgencyNeed, CustomerRole, EngineMessage, FumeApi, FumeRequest, Id, Membership, User, Workspace } from "../contract";
+import type {
+  AgencyClient,
+  AgencyFeature,
+  AgencyFumePlan,
+  AgencyNeed,
+  CustomerRole,
+  EngineMessage,
+  FumeApi,
+  FumeRequest,
+  Id,
+  Membership,
+  User,
+  Workspace,
+} from "../contract";
 import { FumeError } from "../contract";
 import { FUME_CONTACT } from "./r11-client";
 
@@ -29,19 +42,73 @@ export interface R13AgencyContext {
 
 /** What an agency's Fume plan holds in the preview: Fume decides it (Marcus #70). */
 const FEATURES: AgencyFeature[] = [
-  { id: "f-dna", name: "Brand DNA for each client", detail: "Fume reads each client’s brand and keeps it apart from the others", state: "included" },
+  {
+    id: "f-dna",
+    name: "Brand DNA for each client",
+    detail: "Fume reads each client’s brand and keeps it apart from the others",
+    state: "included",
+  },
   { id: "f-chat", name: "The Fume chat", detail: "One conversation per client, with its memory", state: "included" },
-  { id: "f-engine", name: "The Engine with Product Truth", detail: "Images and designs, each product as it really is", state: "included" },
+  {
+    id: "f-engine",
+    name: "The Engine with Product Truth",
+    detail: "Images and designs, each product as it really is",
+    state: "included",
+  },
   { id: "f-studio", name: "The Studio", detail: "Image and Design, models, references and boards", state: "included" },
-  { id: "f-check", name: "Check", detail: "Your own experts check every creative before the client sees it", state: "included" },
-  { id: "f-send", name: "Send to client and the client link", detail: "The client approves in Fume, or through a link without an account", state: "included" },
-  { id: "f-calendar", name: "The calendar and deliveries", detail: "Campaign windows, deliveries and approved creatives", state: "included" },
-  { id: "f-video", name: "The video editor", detail: "Video in the Studio, next to Image and Design", state: "coming", when: "Next on Fume’s list" },
-  { id: "f-performance", name: "Performance", detail: "How the creatives do once they run, per client", state: "coming", when: "Later this year" },
-  { id: "f-publish", name: "Publishing to Meta and Instagram", detail: "From the calendar, straight to the channels", state: "coming", when: "Later this year" },
+  {
+    id: "f-check",
+    name: "Check",
+    detail: "Your own experts check every creative before the client sees it",
+    state: "included",
+  },
+  {
+    id: "f-send",
+    name: "Send to client and the client link",
+    detail: "The client approves in Fume, or through a link without an account",
+    state: "included",
+  },
+  {
+    id: "f-calendar",
+    name: "The calendar and deliveries",
+    detail: "Campaign windows, deliveries and approved creatives",
+    state: "included",
+  },
+  {
+    id: "f-video",
+    name: "The video editor",
+    detail: "Video in the Studio, next to Image and Design",
+    state: "coming",
+    when: "Next on Fume’s list",
+  },
+  {
+    id: "f-performance",
+    name: "Performance",
+    detail: "How the creatives do once they run, per client",
+    state: "coming",
+    when: "Later this year",
+  },
+  {
+    id: "f-publish",
+    name: "Publishing to Meta and Instagram",
+    detail: "From the calendar, straight to the channels",
+    state: "coming",
+    when: "Later this year",
+  },
   { id: "f-figma", name: "Figma", detail: "Masters and designs both ways", state: "coming", when: "Not dated yet" },
-  { id: "f-connectors", name: "Claude, ChatGPT and Slack", detail: "Fume in the tools your team already uses", state: "coming", when: "Not dated yet" },
-  { id: "f-people", name: "Fume’s people", detail: "Fume’s experts, designers and operators for a campaign that needs more hands", state: "on_request" },
+  {
+    id: "f-connectors",
+    name: "Claude, ChatGPT and Slack",
+    detail: "Fume in the tools your team already uses",
+    state: "coming",
+    when: "Not dated yet",
+  },
+  {
+    id: "f-people",
+    name: "Fume’s people",
+    detail: "Fume’s experts, designers and operators for a campaign that needs more hands",
+    state: "on_request",
+  },
 ];
 
 /** calls: the agency's own (spread into the api); wraps: four calls it changes, put on over the finished api. */
@@ -68,7 +135,10 @@ export function r13AgencyApi(ctx: R13AgencyContext): { calls: Pick<FumeApi, Call
   const agencyWords = (m: EngineMessage): EngineMessage => {
     if (!seat() || !db.workspaces.find((w) => w.id === m.workspaceId)?.agencyId) return m;
     const text = m.text
-      .replace(/Each lands in Check as it is made, for the expert\./g, "Each lands in Check as it is made, for your check.")
+      .replace(
+        /Each lands in Check as it is made, for the expert\./g,
+        "Each lands in Check as it is made, for your check.",
+      )
       .replace(/, for the expert\b/g, ", for your check")
       .replace(/wait for their plans to be approved/g, "wait for your check of their plans")
       .replace(/waits for its plan to be approved/g, "waits for your check of its plan");
@@ -80,7 +150,8 @@ export function r13AgencyApi(ctx: R13AgencyContext): { calls: Pick<FumeApi, Call
       if (!seat()) throw new FumeError("forbidden", "This is for the agency’s people.");
       const plan: AgencyFumePlan = {
         name: "Agency · early access",
-        decidedBy: "Fume decides which features and updates an agency gets, and when. A new one shows here before it reaches your team.",
+        decidedBy:
+          "Fume decides which features and updates an agency gets, and when. A new one shows here before it reaches your team.",
         contact: db.users.find((u) => u.id === FUME_CONTACT),
         features: FEATURES,
         requests: [...requests],
@@ -93,7 +164,14 @@ export function r13AgencyApi(ctx: R13AgencyContext): { calls: Pick<FumeApi, Call
         if (!input.clientId) throw new FumeError("invalid", "Choose the client the work is for.");
         if (!input.work?.length) throw new FumeError("invalid", "Choose what Fume’s people should do.");
       } else if (!input.text?.trim()) throw new FumeError("invalid", "Write what it is about.");
-      const request: FumeRequest = { ...input, text: input.text?.trim() || undefined, id: ctx.nextId("fr"), by: ctx.userId(), at: ctx.now(), state: "sent" };
+      const request: FumeRequest = {
+        ...input,
+        text: input.text?.trim() || undefined,
+        id: ctx.nextId("fr"),
+        by: ctx.userId(),
+        at: ctx.now(),
+        state: "sent",
+      };
       requests.unshift(request);
       return wait(request);
     },
@@ -108,11 +186,24 @@ export function r13AgencyApi(ctx: R13AgencyContext): { calls: Pick<FumeApi, Call
       // as Campaigns says "2 questions for you".
       const rows = await base().agencyCampaigns();
       const asked: AgencyNeed[] = rows
-        .filter((r) => r.example === "full" && r.campaign.state === "awaiting_input" && (r.campaign.waits?.questions ?? 0) > 0)
+        .filter(
+          (r) =>
+            r.example === "full" && r.campaign.state === "awaiting_input" && (r.campaign.waits?.questions ?? 0) > 0,
+        )
         .filter((r) => !view.needsYou.some((n) => n.href.startsWith(`/campaigns/${r.campaign.id}`)))
         .map(({ campaign: c, client }) => {
           const n = c.waits?.questions ?? 0;
-          return { id: `an-questions-${c.id}`, clientId: client.id, kind: "brief", title: `${client.brandName} · ${c.name}`, detail: `${n === 1 ? "1 question" : `${n} questions`} for you`, action: "Answer", href: `/campaigns/${c.id}`, picture: c.cover, at: c.updatedAt };
+          return {
+            id: `an-questions-${c.id}`,
+            clientId: client.id,
+            kind: "brief",
+            title: `${client.brandName} · ${c.name}`,
+            detail: `${n === 1 ? "1 question" : `${n} questions`} for you`,
+            action: "Answer",
+            href: `/campaigns/${c.id}`,
+            picture: c.cover,
+            at: c.updatedAt,
+          };
         });
       const needsYou = [...view.needsYou, ...asked].sort((a, b) => b.at.localeCompare(a.at));
       return { ...view, needsYou, clients: view.clients.map(withRoles) };

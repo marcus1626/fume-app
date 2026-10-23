@@ -5,7 +5,15 @@
 // is r13-brand.css.
 import { DataList, DataListItem } from "@fume/ui";
 import type { CSSProperties } from "react";
-import type { ColourValue, Product, ProductFact, ProductFactArea, ProductFile, ProductKind, SpecGroupId } from "../../contract";
+import type {
+  ColourValue,
+  Product,
+  ProductFact,
+  ProductFactArea,
+  ProductFile,
+  ProductKind,
+  SpecGroupId,
+} from "../../contract";
 import * as copy from "../../copy";
 import { coloursIn, filled, valueWords } from "./spec";
 
@@ -71,8 +79,23 @@ const Swatch = ({ c }: { c: ColourValue }) => (
 );
 
 /** Every value Fume holds about a product, in six blocks and its sources. Empty blocks are left out. */
-export function ProductTruthSheet({ product, kind, title = "Everything Fume holds" }: { product: Product; kind?: ProductKind; title?: string }) {
-  const blocks: Record<BlockId, Row[]> = { measures: [], materials: [], colours: [], label: [], variants: [], claims: [] };
+export function ProductTruthSheet({
+  product,
+  kind,
+  title = "Everything Fume holds",
+}: {
+  product: Product;
+  kind?: ProductKind;
+  title?: string;
+}) {
+  const blocks: Record<BlockId, Row[]> = {
+    measures: [],
+    materials: [],
+    colours: [],
+    label: [],
+    variants: [],
+    claims: [],
+  };
   const specs = product.specs ?? [];
 
   // the kind's fields, in the kind's order, each in its block (a value with colours goes to Colours)
@@ -86,20 +109,34 @@ export function ProductTruthSheet({ product, kind, title = "Everything Fume hold
     }
   // the parts: what each is made of, its finish and its colour
   for (const part of product.parts ?? []) {
-    const words = [part.material, part.finish && part.finish.charAt(0).toUpperCase() + part.finish.slice(1), part.opacity, part.decoration, part.note].filter(Boolean).join(" · ");
+    const words = [
+      part.material,
+      part.finish && part.finish.charAt(0).toUpperCase() + part.finish.slice(1),
+      part.opacity,
+      part.decoration,
+      part.note,
+    ]
+      .filter(Boolean)
+      .join(" · ");
     blocks.measures.push({ key: `part-${part.id}`, label: part.name, value: words || "A part of the product" });
-    if (part.colour) blocks.colours.push({ key: `part-colour-${part.id}`, label: part.name, value: "", colours: [part.colour] });
+    if (part.colour)
+      blocks.colours.push({ key: `part-colour-${part.id}`, label: part.name, value: "", colours: [part.colour] });
   }
   // the Product Truth lines, where the kind holds no value of the same name
   const named = new Set(Object.values(blocks).flatMap((rows) => rows.map((r) => r.label.toLowerCase())));
   for (const f of product.facts.filter((x: ProductFact) => x.source !== "unknown")) {
     if (named.has(f.label.toLowerCase()) && f.area !== "never" && f.area !== "claim") continue;
-    blocks[blockOfFact[f.area]].push({ key: `fact-${f.id}`, label: f.area === "never" ? `Never: ${f.label.toLowerCase()}` : f.label, value: f.statement });
+    blocks[blockOfFact[f.area]].push({
+      key: `fact-${f.id}`,
+      label: f.area === "never" ? `Never: ${f.label.toLowerCase()}` : f.label,
+      value: f.statement,
+    });
   }
   // the variants
   if (product.variant) blocks.variants.unshift({ key: "variant", label: "As sold", value: product.variant });
   if (product.sku) blocks.variants.push({ key: "sku", label: "SKU", value: product.sku });
-  for (const v of product.variants ?? []) blocks.variants.push({ key: `v-${v.id}`, label: v.name, value: v.sku ? `SKU ${v.sku}` : "A variant" });
+  for (const v of product.variants ?? [])
+    blocks.variants.push({ key: `v-${v.id}`, label: v.name, value: v.sku ? `SKU ${v.sku}` : "A variant" });
 
   // where it came from: each source once, with how many values it gave; the files she added
   const sources = new Map<string, number>();
@@ -107,7 +144,8 @@ export function ProductTruthSheet({ product, kind, title = "Everything Fume hold
   specs.forEach((s) => from(s.provenance.evidence));
   (product.parts ?? []).forEach((x) => from(x.provenance.evidence));
   (product.shots ?? []).forEach((x) => from(x.provenance.evidence));
-  if (product.provenance?.evidence && !sources.has(product.provenance.evidence)) sources.set(product.provenance.evidence, 0);
+  if (product.provenance?.evidence && !sources.has(product.provenance.evidence))
+    sources.set(product.provenance.evidence, 0);
   const given = specs.filter((s) => s.provenance.origin === "customer").length;
   const files = product.files ?? [];
 

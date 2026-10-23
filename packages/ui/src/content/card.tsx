@@ -28,7 +28,13 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
     <Comp
       ref={ref}
       data-slot="card"
-      className={cx("ui-card", size === "lg" && "ui-card--lg", behind && "ui-card--behind", interactive && "ui-card--interactive", className)}
+      className={cx(
+        "ui-card",
+        size === "lg" && "ui-card--lg",
+        behind && "ui-card--behind",
+        interactive && "ui-card--interactive",
+        className,
+      )}
       data-state={selected === undefined ? undefined : selected ? "checked" : "unchecked"}
       aria-disabled={disabled || undefined}
       {...props}
@@ -83,7 +89,11 @@ export function CardTime({ className, ...props }: HTMLAttributes<HTMLTimeElement
 }
 
 /** A row of small creatives at the top of a card; put CreativeMedia (or .ui-creative-media elements) inside. */
-export function CardMedia({ className, children, ...props }: HTMLAttributes<HTMLDivElement> & { children?: ReactNode }) {
+export function CardMedia({
+  className,
+  children,
+  ...props
+}: HTMLAttributes<HTMLDivElement> & { children?: ReactNode }) {
   return (
     <div className={cx("ui-card-media", className)} {...props}>
       {children}

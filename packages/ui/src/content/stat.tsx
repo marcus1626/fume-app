@@ -125,7 +125,9 @@ export const Stat = forwardRef<HTMLDivElement, StatProps>(function Stat(
   }
 
   const empty = state === "empty";
-  const parts: StatValuePart[] = isParts(value) ? value : [{ num: empty && value === undefined ? 0 : (value as ReactNode) }];
+  const parts: StatValuePart[] = isParts(value)
+    ? value
+    : [{ num: empty && value === undefined ? 0 : (value as ReactNode) }];
   return (
     <div ref={ref} className={cx("ui-card ui-stat", empty && "ui-stat--empty", className)} {...props}>
       <div className="ui-stat-head">
@@ -166,7 +168,12 @@ export const Stat = forwardRef<HTMLDivElement, StatProps>(function Stat(
             unit={spark.unit}
             format={spark.format}
             min={spark.min}
-            config={{ value: { label: spark.title, color: spark.color ?? (approved ? "var(--ui-chart-approved)" : "var(--ui-stat-spark-line)") } }}
+            config={{
+              value: {
+                label: spark.title,
+                color: spark.color ?? (approved ? "var(--ui-chart-approved)" : "var(--ui-stat-spark-line)"),
+              },
+            }}
           />
         )
       )}

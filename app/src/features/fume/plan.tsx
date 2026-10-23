@@ -11,7 +11,24 @@
 //   with its state, then its summary and "Open the plan" (secondary: the composer's Send stays the chat's one primary).
 // Words: Fume writes the plan; the expert checks it ("Checked by Anna"); she approves it; the Engine only makes
 // creatives. No Amber here: Amber stays on checked creatives.
-import { Avatar, Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Icon, Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle, TextShimmer } from "@fume/ui";
+import {
+  Avatar,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  Icon,
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+  TextShimmer,
+} from "@fume/ui";
 import type { MouseEvent as ReactMouseEvent, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useCampaign, usePeople, usePlan } from "../../api/hooks";
@@ -54,11 +71,15 @@ export function planFacts(plan: CampaignPlan) {
   // Round 13 (#20): how many of them are videos and carousels, once she asked for some in the chat.
   const videos = creatives.filter((c) => c.medium === "video").length;
   const carousels = creatives.filter((c) => c.medium === "carousel").length;
-  const media = [videos ? copy.count(videos, "video") : "", carousels ? copy.count(carousels, "carousel") : ""].filter(Boolean).join(" and ");
+  const media = [videos ? copy.count(videos, "video") : "", carousels ? copy.count(carousels, "carousel") : ""]
+    .filter(Boolean)
+    .join(" and ");
   return {
     direction,
     /** "9 creatives: 3 masters, 6 variants and formats" (", 2 of them videos") */
-    count: creatives.length ? `${copy.creatives(creatives.length)}: ${copy.count(masters, "master")}${after}${media ? `; ${media} among them` : ""}` : undefined,
+    count: creatives.length
+      ? `${copy.creatives(creatives.length)}: ${copy.count(masters, "master")}${after}${media ? `; ${media} among them` : ""}`
+      : undefined,
     /** "Masters by Thu 22 Oct" */
     masters: plan.timeline[0] ? `Masters by ${day(plan.timeline[0].at)}` : undefined,
   };
@@ -71,18 +92,36 @@ export function usePlanWords(plan: CampaignPlan | null | undefined) {
   const people = directory(usePeople().data);
   if (!plan) return {};
   const checker = plan.checkedBy ? people.user(plan.checkedBy) : undefined;
-  const approver = plan.approvedBy ? copy.byYou(people.user(plan.approvedBy)?.name ?? "Someone", isMe(plan.approvedBy), true) : undefined;
+  const approver = plan.approvedBy
+    ? copy.byYou(people.user(plan.approvedBy)?.name ?? "Someone", isMe(plan.approvedBy), true)
+    : undefined;
   switch (plan.state) {
     case "writing":
       return { working: "Fume is writing the plan", meta: readyWords(plan.readyBy), short: "Fume is writing it" };
     case "in_check":
-      return { working: `${expert} is checking the plan`, meta: readyWords(plan.readyBy), short: `${expert} is checking it` };
+      return {
+        working: `${expert} is checking the plan`,
+        meta: readyWords(plan.readyBy),
+        short: `${expert} is checking it`,
+      };
     case "changes_asked":
-      return { working: "Fume is changing the plan", meta: readyWords(plan.readyBy, `Version ${plan.version + 1}, ready`), short: "Fume is changing it" };
+      return {
+        working: "Fume is changing the plan",
+        meta: readyWords(plan.readyBy, `Version ${plan.version + 1}, ready`),
+        short: "Fume is changing it",
+      };
     case "ready":
-      return { checker, short: checker ? `Checked by ${copy.byYou(checker.name, isMe(checker.id))}, ready to approve` : "Ready to approve" };
+      return {
+        checker,
+        short: checker
+          ? `Checked by ${copy.byYou(checker.name, isMe(checker.id))}, ready to approve`
+          : "Ready to approve",
+      };
     case "approved":
-      return { checker, short: `${approver ?? "Someone"} approved it${plan.approvedAt ? ` ${onDay(plan.approvedAt)}` : ""}` };
+      return {
+        checker,
+        short: `${approver ?? "Someone"} approved it${plan.approvedAt ? ` ${onDay(plan.approvedAt)}` : ""}`,
+      };
   }
 }
 
@@ -104,7 +143,13 @@ function CheckedBy({ plan }: { plan: CampaignPlan }) {
   if (!user) return null;
   return (
     <p className="ui-chat-plan-checked">
-      <Avatar size="sm" src={user.avatar} initials={initials(user.name)} ink={user.staffRole === "expert"} aria-hidden="true" />
+      <Avatar
+        size="sm"
+        src={user.avatar}
+        initials={initials(user.name)}
+        ink={user.staffRole === "expert"}
+        aria-hidden="true"
+      />
       <span>Checked by {copy.byYou(user.name, isMe(user.id))}</span>
     </p>
   );
@@ -145,7 +190,15 @@ function VersionNote({ plan }: { plan: CampaignPlan }) {
 
 /** The plan as it is now. `latest`: this is the campaign's latest plan card (an earlier one is not drawn). `inPanel`:
  *  the panel beside the conversation shows this plan, so the card points to it. */
-export function PlanCard({ campaignId, latest = true, inPanel }: { campaignId: Id; latest?: boolean; inPanel?: boolean }) {
+export function PlanCard({
+  campaignId,
+  latest = true,
+  inPanel,
+}: {
+  campaignId: Id;
+  latest?: boolean;
+  inPanel?: boolean;
+}) {
   const plan = usePlan(campaignId).data;
   const words = usePlanWords(plan);
   // Round 13 after-check of #15: the card opens the plan the way every chat link does, in the panel beside the talk
@@ -167,7 +220,11 @@ export function PlanCard({ campaignId, latest = true, inPanel }: { campaignId: I
         </ItemMedia>
         <ItemContent>
           <ItemTitle>The plan</ItemTitle>
-          <ItemDescription>{plan.state === "ready" ? "It is on the right. Open it to approve it or ask for changes." : `${words.short ?? "The plan"}. It is on the right.`}</ItemDescription>
+          <ItemDescription>
+            {plan.state === "ready"
+              ? "It is on the right. Open it to approve it or ask for changes."
+              : `${words.short ?? "The plan"}. It is on the right.`}
+          </ItemDescription>
         </ItemContent>
       </Item>
     );
@@ -194,7 +251,9 @@ export function PlanCard({ campaignId, latest = true, inPanel }: { campaignId: I
       <Card className="ui-chat-plan-card">
         <CardHeader>
           <CardTitle as="p">The plan</CardTitle>
-          <CardDescription>The direction, the look, every creative and the dates, before anything is made.</CardDescription>
+          <CardDescription>
+            The direction, the look, every creative and the dates, before anything is made.
+          </CardDescription>
         </CardHeader>
         <CardContent>{words.working && <PlanWorking working={words.working} meta={words.meta} />}</CardContent>
       </Card>
@@ -203,7 +262,9 @@ export function PlanCard({ campaignId, latest = true, inPanel }: { campaignId: I
     <Card className="ui-chat-plan-card">
       <CardHeader>
         <CardTitle as="p">The plan</CardTitle>
-        <CardDescription>{plan.version > 1 ? `Version ${plan.version}, ready to approve` : "Ready to approve"}</CardDescription>
+        <CardDescription>
+          {plan.version > 1 ? `Version ${plan.version}, ready to approve` : "Ready to approve"}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="ui-app-stack ui-app-stack--tight">
@@ -290,7 +351,9 @@ export function PlanPanel({ campaignId, actions }: { campaignId: Id; actions?: R
       </div>
       <div className="ui-chat-brief-foot">
         <p className="ui-chat-brief-note" role="status">
-          {ready ? "Change it here: tell Fume how many creatives, videos or carousels, or the dates. Nothing is made before you approve it." : "Nothing is made before you approve the plan."}
+          {ready
+            ? "Change it here: tell Fume how many creatives, videos or carousels, or the dates. Nothing is made before you approve it."
+            : "Nothing is made before you approve the plan."}
         </p>
         {ready && (
           <Button asChild variant="secondary" iconEnd="arrow-right">

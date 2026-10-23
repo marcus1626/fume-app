@@ -72,7 +72,9 @@ export type DialogProps = DialogPrimitive.DialogProps;
 export const DialogOverlay = forwardRef<
   ElementRef<typeof DialogPrimitive.Overlay>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => <DialogPrimitive.Overlay ref={ref} className={cx("ui-dialog-overlay", className)} {...props} />);
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Overlay ref={ref} className={cx("ui-dialog-overlay", className)} {...props} />
+));
 DialogOverlay.displayName = "DialogOverlay";
 
 export type DialogSize = "sm" | "md" | "lg";
@@ -187,7 +189,12 @@ export const DialogContent = forwardRef<ElementRef<typeof DialogPrimitive.Conten
           data-size={size}
           data-phone={sheet ? "sheet" : undefined}
           data-dragging={dragging ? "" : undefined}
-          className={cx("ui-glass ui-dialog", size === "sm" && "ui-dialog--sm", size === "lg" && "ui-dialog--lg", className)}
+          className={cx(
+            "ui-glass ui-dialog",
+            size === "sm" && "ui-dialog--sm",
+            size === "lg" && "ui-dialog--lg",
+            className,
+          )}
           // the drag's offset is computed at run time, as the drawer's --drawer-y
           style={sheet ? ({ ...style, "--dialog-y": `${offset}px` } as CSSProperties) : style}
           onOpenAutoFocus={(event) => {
@@ -243,22 +250,27 @@ export const DialogContent = forwardRef<ElementRef<typeof DialogPrimitive.Conten
 DialogContent.displayName = "DialogContent";
 
 /** Title and description as one group, 8 apart: div.ui-dialog-header. */
-export const DialogHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
-  <div ref={ref} className={cx("ui-dialog-header", className)} {...props} />
-));
+export const DialogHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => <div ref={ref} className={cx("ui-dialog-header", className)} {...props} />,
+);
 DialogHeader.displayName = "DialogHeader";
 
 /** h2.ui-dialog-title, wired to the dialog's aria-labelledby. Required by Radix (it warns without one). */
-export const DialogTitle = forwardRef<ElementRef<typeof DialogPrimitive.Title>, ComponentPropsWithoutRef<typeof DialogPrimitive.Title>>(
-  ({ className, ...props }, ref) => <DialogPrimitive.Title ref={ref} className={cx("ui-dialog-title", className)} {...props} />,
-);
+export const DialogTitle = forwardRef<
+  ElementRef<typeof DialogPrimitive.Title>,
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Title ref={ref} className={cx("ui-dialog-title", className)} {...props} />
+));
 DialogTitle.displayName = "DialogTitle";
 
 /** p.ui-dialog-description, wired to aria-describedby. Without one, pass aria-describedby={undefined} to DialogContent. */
 export const DialogDescription = forwardRef<
   ElementRef<typeof DialogPrimitive.Description>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
->(({ className, ...props }, ref) => <DialogPrimitive.Description ref={ref} className={cx("ui-dialog-description", className)} {...props} />);
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Description ref={ref} className={cx("ui-dialog-description", className)} {...props} />
+));
 DialogDescription.displayName = "DialogDescription";
 
 /** The work between the words and the actions: div.ui-dialog-body. */
@@ -268,7 +280,7 @@ export const DialogBody = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
 DialogBody.displayName = "DialogBody";
 
 /** The actions, right-aligned (stacked on a phone, the last one nearest the thumb): div.ui-dialog-footer. */
-export const DialogFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
-  <div ref={ref} className={cx("ui-dialog-footer", className)} {...props} />
-));
+export const DialogFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => <div ref={ref} className={cx("ui-dialog-footer", className)} {...props} />,
+);
 DialogFooter.displayName = "DialogFooter";

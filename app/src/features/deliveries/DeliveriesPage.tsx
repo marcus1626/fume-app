@@ -27,7 +27,11 @@ export function DeliveriesPage() {
       <PageHeader
         title="Deliveries"
         description="Approved creatives, named and grouped by collection, product and format."
-        meta={deliveries.data ? [ready ? `${ready} ready to download` : copy.count(deliveries.data.length, "delivery", "deliveries")] : undefined}
+        meta={
+          deliveries.data
+            ? [ready ? `${ready} ready to download` : copy.count(deliveries.data.length, "delivery", "deliveries")]
+            : undefined
+        }
       />
       <Query query={deliveries}>
         {(list) => {

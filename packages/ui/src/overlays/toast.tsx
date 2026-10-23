@@ -87,7 +87,11 @@ export interface ToastApi {
   /** A loading toast that becomes done or error when the promise settles. */
   promise: <T>(
     promise: Promise<T>,
-    messages: { loading: string; done: string | ((value: T) => Partial<ToastOptions>); error: string | ((error: unknown) => Partial<ToastOptions>) },
+    messages: {
+      loading: string;
+      done: string | ((value: T) => Partial<ToastOptions>);
+      error: string | ((error: unknown) => Partial<ToastOptions>);
+    },
   ) => ToastHandle;
   /** Dismiss one toast by id, or all of them. */
   dismiss: (id?: string | number) => void;
@@ -96,7 +100,12 @@ export interface ToastApi {
   leave: () => void;
 }
 
-const ICON: Record<ToastType, IconName> = { done: "circle-check", error: "circle-alert", loading: "loader-circle", info: "info" };
+const ICON: Record<ToastType, IconName> = {
+  done: "circle-check",
+  error: "circle-alert",
+  loading: "loader-circle",
+  info: "info",
+};
 const MAX_SHOWN = 3;
 /** A toast raised this close before a change of place was raised with the move ("Brief sent", then the campaign opens). */
 const MOVE_MS = 1200;
@@ -127,7 +136,8 @@ function placement(): Place {
   const r = column.getBoundingClientRect();
   const w = Math.max(0, Math.min(width, r.width - 2 * inset));
   if (w < 240) return { mode: "center" };
-  if (anchor?.dataset.uiToastAnchor === "top") return { mode: "top", x: Math.round(r.left + inset), y: Math.round(Math.max(0, r.top) + inset), w };
+  if (anchor?.dataset.uiToastAnchor === "top")
+    return { mode: "top", x: Math.round(r.left + inset), y: Math.round(Math.max(0, r.top) + inset), w };
   return { mode: "start", x: Math.round(r.left + inset), w };
 }
 
@@ -216,7 +226,9 @@ export function ToastProvider({ children, label = "Notifications (Alt+T)", conta
   const durationOf = (r: Rec) => {
     if (r.type === "loading") return Infinity;
     if (r.duration) return r.duration;
-    return r.type === "error" || r.action ? tokenMs("--ui-toast-duration-long", 8000) : tokenMs("--ui-toast-duration", 5000);
+    return r.type === "error" || r.action
+      ? tokenMs("--ui-toast-duration-long", 8000)
+      : tokenMs("--ui-toast-duration", 5000);
   };
   const stop = (r: Rec) => {
     if (r.timer) {
@@ -293,11 +305,21 @@ export function ToastProvider({ children, label = "Notifications (Alt+T)", conta
     const toast = (input: ToastOptions | string): ToastHandle => {
       const o: ToastOptions = typeof input === "string" ? { title: input } : input;
       // the same message again while it shows: the open toast takes it and starts its time again
-      const same = live().find(
-        (x) => (o.id != null ? x.id === o.id : x.title === o.title && x.type === (o.type ?? "done") && x.description === o.description),
+      const same = live().find((x) =>
+        o.id != null
+          ? x.id === o.id
+          : x.title === o.title && x.type === (o.type ?? "done") && x.description === o.description,
       );
       if (same) {
-        Object.assign(same, { title: o.title, type: o.type ?? same.type, description: o.description, meta: o.meta, action: o.action, duration: o.duration, born: Date.now() });
+        Object.assign(same, {
+          title: o.title,
+          type: o.type ?? same.type,
+          description: o.description,
+          meta: o.meta,
+          action: o.action,
+          duration: o.duration,
+          born: Date.now(),
+        });
         same.left = undefined;
         start(same);
         render();
@@ -322,7 +344,8 @@ export function ToastProvider({ children, label = "Notifications (Alt+T)", conta
       render();
       return handleOf(r);
     };
-    const typed = (type: ToastType) => (title: string, options?: Omit<ToastOptions, "title" | "type">) => toast({ ...options, title, type });
+    const typed = (type: ToastType) => (title: string, options?: Omit<ToastOptions, "title" | "type">) =>
+      toast({ ...options, title, type });
     apiRef.current = {
       toast,
       done: typed("done"),
@@ -338,7 +361,9 @@ export function ToastProvider({ children, label = "Notifications (Alt+T)", conta
         return t;
       },
       dismiss: (id) => {
-        recs.current.filter((r) => r.state === "open" && (id == null || r.id === id)).forEach((r) => dismissRef.current(r));
+        recs.current
+          .filter((r) => r.state === "open" && (id == null || r.id === id))
+          .forEach((r) => dismissRef.current(r));
       },
       leave: () => {
         const now = Date.now();
@@ -383,7 +408,8 @@ export function ToastProvider({ children, label = "Notifications (Alt+T)", conta
     const measure = () => {
       const p = placement();
       setPlace((old) => (old.mode === p.mode && old.x === p.x && old.y === p.y && old.w === p.w ? old : p));
-      const w = p.w ?? Math.min(tokenPx("--ui-toast-width", 400), window.innerWidth - 2 * tokenPx("--ui-overlay-margin", 16));
+      const w =
+        p.w ?? Math.min(tokenPx("--ui-toast-width", 400), window.innerWidth - 2 * tokenPx("--ui-overlay-margin", 16));
       const x = p.x ?? (window.innerWidth - w) / 2;
       setClear(p.mode === "top" ? 0 : footClearance(x, x + w));
     };
@@ -426,7 +452,7 @@ export function ToastProvider({ children, label = "Notifications (Alt+T)", conta
     >
       <ol className="ui-toaster-list">
         {recs.current.map((r) => {
-          const index = r.state === "open" ? order.indexOf(r) : r.frozen ?? 0;
+          const index = r.state === "open" ? order.indexOf(r) : (r.frozen ?? 0);
           return (
             <ToastItem
               key={r.id}

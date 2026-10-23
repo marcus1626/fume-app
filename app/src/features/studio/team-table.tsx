@@ -43,7 +43,19 @@ export interface TeamTableRow {
   checks?: { today: number; perCheck: number };
 }
 
-export function TeamTable({ rows, me, brandLabel = "Brands", checks = false, label }: { rows: TeamTableRow[]; me?: User; brandLabel?: string; checks?: boolean; label: string }) {
+export function TeamTable({
+  rows,
+  me,
+  brandLabel = "Brands",
+  checks = false,
+  label,
+}: {
+  rows: TeamTableRow[];
+  me?: User;
+  brandLabel?: string;
+  checks?: boolean;
+  label: string;
+}) {
   const desk = !useNarrowScreen("(max-width: 1023px)");
   const name = (t: TeamTableRow) => `${t.user.name}${t.user.id === me?.id ? " (you)" : ""}`;
   if (!desk)
@@ -56,7 +68,9 @@ export function TeamTable({ rows, me, brandLabel = "Brands", checks = false, lab
             </ItemMedia>
             <ItemContent>
               <ItemTitle>{name(t)}</ItemTitle>
-              <ItemDescription>{[t.user.title, t.role, t.brands.join(", ")].filter(Boolean).join(" · ")}</ItemDescription>
+              <ItemDescription>
+                {[t.user.title, t.role, t.brands.join(", ")].filter(Boolean).join(" · ")}
+              </ItemDescription>
               <Week t={t} />
               <ItemDescription>{t.doing}</ItemDescription>
             </ItemContent>
@@ -91,7 +105,13 @@ export function TeamTable({ rows, me, brandLabel = "Brands", checks = false, lab
             <TableRow key={t.user.id}>
               <TableCell>
                 <span className="ui-agency-cell-client">
-                  <Avatar size="md" src={t.user.avatar} initials={initials(t.user.name)} ink={t.lead} aria-hidden="true" />
+                  <Avatar
+                    size="md"
+                    src={t.user.avatar}
+                    initials={initials(t.user.name)}
+                    ink={t.lead}
+                    aria-hidden="true"
+                  />
                   <TableTitle sub={t.user.title}>{name(t)}</TableTitle>
                 </span>
               </TableCell>
@@ -123,7 +143,12 @@ function Week({ t }: { t: TeamTableRow }) {
   if (!t.week) return <span className="ui-table-muted">Follows</span>;
   return (
     <span className="ui-records-bar">
-      <Progress className="ui-agency-load" value={Math.min(t.week.value, t.week.max)} max={t.week.max} aria-label={`${firstName(t.user.name)}: ${t.week.label}`} />
+      <Progress
+        className="ui-agency-load"
+        value={Math.min(t.week.value, t.week.max)}
+        max={t.week.max}
+        aria-label={`${firstName(t.user.name)}: ${t.week.label}`}
+      />
       <span className="ui-records-data">{t.week.words}</span>
     </span>
   );

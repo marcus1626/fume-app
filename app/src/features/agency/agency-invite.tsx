@@ -29,7 +29,17 @@ import { agencyRoleHelp, agencyRoleWords, type AgencyRoleName } from "./agency-p
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export function InvitePanel({ open, onOpenChange, agencyName, known }: { open: boolean; onOpenChange: (open: boolean) => void; agencyName: string; known: string[] }) {
+export function InvitePanel({
+  open,
+  onOpenChange,
+  agencyName,
+  known,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  agencyName: string;
+  known: string[];
+}) {
   const toast = useToast();
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<AgencyRoleName>("expert");
@@ -59,7 +69,9 @@ export function InvitePanel({ open, onOpenChange, agencyName, known }: { open: b
       field.current?.focus();
       return;
     }
-    toast.done(`Invitation sent to ${v}`, { description: `They join ${agencyName} as ${role === "operator" ? "an operator" : role === "admin" ? "an admin" : "an expert"}.` });
+    toast.done(`Invitation sent to ${v}`, {
+      description: `They join ${agencyName} as ${role === "operator" ? "an operator" : role === "admin" ? "an admin" : "an expert"}.`,
+    });
     onOpenChange(false);
   };
 

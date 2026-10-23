@@ -20,13 +20,21 @@ export function scopeWords(d: Delivery, collections?: Collection[]): string {
 
 /** "2 creatives · Feed, Story · 9.6 MB · 12 Oct" */
 export const deliveryLine = (d: Delivery) =>
-  [copy.creatives(d.creativeIds.length), d.formats.map((f) => copy.format[f].label).join(", "), bytes(d.bytes), date(d.createdAt)].join(" · ");
+  [
+    copy.creatives(d.creativeIds.length),
+    d.formats.map((f) => copy.format[f].label).join(", "),
+    bytes(d.bytes),
+    date(d.createdAt),
+  ].join(" · ");
 
 /** The state as a badge: ready to download wears Moss, the proposed state green (round 13, #39); a breathing dot while
  *  it is prepared, a quiet one once it is downloaded or live. */
 export function DeliveryBadge({ state }: { state: Delivery["state"] }) {
   return (
-    <Badge dot={state === "ready" ? "on" : state === "preparing" ? "live" : "idle"} className={state === "ready" ? "ui-badge--ready" : undefined}>
+    <Badge
+      dot={state === "ready" ? "on" : state === "preparing" ? "live" : "idle"}
+      className={state === "ready" ? "ui-badge--ready" : undefined}
+    >
       {deliveryState[state]}
     </Badge>
   );

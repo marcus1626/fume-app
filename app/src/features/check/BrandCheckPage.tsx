@@ -29,8 +29,25 @@ import {
 } from "@fume/ui";
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useBrandAssets, useBrandBoard, useDecide, useDecideModel, useSession, useSetColourUses } from "../../api/hooks";
-import type { BoardItem, BrandColour, BrandIdentity, BrandImage, BrandLogo, BrandModel, BrandTypeface, BrandVoiceLine, Provenance } from "../../contract";
+import {
+  useBrandAssets,
+  useBrandBoard,
+  useDecide,
+  useDecideModel,
+  useSession,
+  useSetColourUses,
+} from "../../api/hooks";
+import type {
+  BoardItem,
+  BrandColour,
+  BrandIdentity,
+  BrandImage,
+  BrandLogo,
+  BrandModel,
+  BrandTypeface,
+  BrandVoiceLine,
+  Provenance,
+} from "../../contract";
 import * as copy from "../../copy";
 import { Back, Nothing, Page, Query, useBack } from "../../shell/Page";
 import { ColourUsesField, HexPicker } from "../brand/colour";
@@ -40,7 +57,15 @@ import { useQueueKeys } from "./queue";
 
 const parts = ["logo", "colour", "type", "imagery", "voice", "taste", "models"] as const;
 type Part = (typeof parts)[number];
-const partName: Record<Part, string> = { logo: "Logo", colour: "Colour", type: "Type", imagery: "Imagery", voice: "Voice", taste: "Taste", models: "AI model" };
+const partName: Record<Part, string> = {
+  logo: "Logo",
+  colour: "Colour",
+  type: "Type",
+  imagery: "Imagery",
+  voice: "Voice",
+  taste: "Taste",
+  models: "AI model",
+};
 
 type Thing =
   | { part: "logo"; kind: "logo"; item: BrandLogo }
@@ -52,7 +77,12 @@ type Thing =
   | { part: "models"; kind: "model"; item: BrandModel };
 
 type Verdict = "confirmed" | "changed" | "removed" | "later";
-const verdictWord: Record<Verdict, string> = { confirmed: "Confirmed", changed: "Changed", removed: "Removed", later: "Later" };
+const verdictWord: Record<Verdict, string> = {
+  confirmed: "Confirmed",
+  changed: "Changed",
+  removed: "Removed",
+  later: "Later",
+};
 
 const keyOf = (t: Thing) => `${t.kind}:${t.item.id}`;
 const open = (p: Provenance) => p.state === "proposed";
@@ -61,11 +91,21 @@ const open = (p: Provenance) => p.state === "proposed";
 function things(identity: BrandIdentity, moodboard: BoardItem[], models: BrandModel[]): Thing[] {
   return [
     ...identity.logos.filter((x) => open(x.provenance)).map((item) => ({ part: "logo", kind: "logo", item }) as const),
-    ...identity.colours.filter((x) => open(x.provenance)).map((item) => ({ part: "colour", kind: "colour", item }) as const),
-    ...identity.typefaces.filter((x) => open(x.provenance)).map((item) => ({ part: "type", kind: "typeface", item }) as const),
-    ...identity.imagery.filter((x) => open(x.provenance)).map((item) => ({ part: "imagery", kind: "image", item }) as const),
-    ...identity.voice.filter((x) => open(x.provenance)).map((item) => ({ part: "voice", kind: "voice", item }) as const),
-    ...moodboard.filter((x) => open(x.provenance)).map((item) => ({ part: "taste", kind: "board_item", item }) as const),
+    ...identity.colours
+      .filter((x) => open(x.provenance))
+      .map((item) => ({ part: "colour", kind: "colour", item }) as const),
+    ...identity.typefaces
+      .filter((x) => open(x.provenance))
+      .map((item) => ({ part: "type", kind: "typeface", item }) as const),
+    ...identity.imagery
+      .filter((x) => open(x.provenance))
+      .map((item) => ({ part: "imagery", kind: "image", item }) as const),
+    ...identity.voice
+      .filter((x) => open(x.provenance))
+      .map((item) => ({ part: "voice", kind: "voice", item }) as const),
+    ...moodboard
+      .filter((x) => open(x.provenance))
+      .map((item) => ({ part: "taste", kind: "board_item", item }) as const),
     ...models.filter((m) => m.state === "saved").map((item) => ({ part: "models", kind: "model", item }) as const),
   ];
 }
@@ -112,11 +152,20 @@ const changeOf: Partial<Record<Thing["kind"], { label: string; help: string; hex
   logo: changeField.logo,
   voice: changeField.voice && { ...changeField.voice, long: true },
 };
-const valueOf = (t: Thing) => (t.kind === "colour" ? t.item.hex : t.kind === "voice" ? t.item.statement : t.kind === "typeface" || t.kind === "logo" ? t.item.name : "");
+const valueOf = (t: Thing) =>
+  t.kind === "colour"
+    ? t.item.hex
+    : t.kind === "voice"
+      ? t.item.statement
+      : t.kind === "typeface" || t.kind === "logo"
+        ? t.item.name
+        : "";
 const HEX = /^#[0-9a-f]{6}$/i;
 /** The value she typed, as it would be saved ("5c1f2a" → "#5C1F2A"). */
-const cleaned = (t: Thing, text: string) => (changeOf[t.kind]?.hex ? (text.trim().startsWith("#") ? text.trim() : `#${text.trim()}`).toUpperCase() : text.trim());
-const isValid = (t: Thing, text: string) => (changeOf[t.kind]?.hex ? HEX.test(cleaned(t, text)) : cleaned(t, text).length > 0);
+const cleaned = (t: Thing, text: string) =>
+  changeOf[t.kind]?.hex ? (text.trim().startsWith("#") ? text.trim() : `#${text.trim()}`).toUpperCase() : text.trim();
+const isValid = (t: Thing, text: string) =>
+  changeOf[t.kind]?.hex ? HEX.test(cleaned(t, text)) : cleaned(t, text).length > 0;
 
 const vars = (v: Record<string, string | undefined>) => v as CSSProperties;
 
@@ -132,7 +181,14 @@ function logoColours(t: Extract<Thing, { kind: "logo" }>, identity: BrandIdentit
 function Visual({ t, identity }: { t: Thing; identity: BrandIdentity }) {
   switch (t.kind) {
     case "colour":
-      return <div className="ui-check-swatch" style={vars({ "--swatch": t.item.hex })} role="img" aria-label={`${t.item.name}, ${t.item.hex}`} />;
+      return (
+        <div
+          className="ui-check-swatch"
+          style={vars({ "--swatch": t.item.hex })}
+          role="img"
+          aria-label={`${t.item.name}, ${t.item.hex}`}
+        />
+      );
     case "typeface":
       return (
         <div className="ui-check-specimen" style={vars({ "--specimen-family": t.item.cssFamily })}>
@@ -146,7 +202,12 @@ function Visual({ t, identity }: { t: Thing; identity: BrandIdentity }) {
       const c = logoColours(t, identity);
       const display = identity.typefaces.find((f) => f.role === "display")?.cssFamily;
       return (
-        <div className="ui-check-logo" style={vars({ "--brand-ground": c.ground, "--brand-ink": c.ink, "--brand-display": display })} role="img" aria-label={`${t.item.name}, on a ${c.dark ? "dark" : "light"} ground`}>
+        <div
+          className="ui-check-logo"
+          style={vars({ "--brand-ground": c.ground, "--brand-ink": c.ink, "--brand-display": display })}
+          role="img"
+          aria-label={`${t.item.name}, on a ${c.dark ? "dark" : "light"} ground`}
+        >
           {t.item.image ? <img src={t.item.image} alt="" /> : <span>{t.item.wordmark}</span>}
         </div>
       );
@@ -154,7 +215,13 @@ function Visual({ t, identity }: { t: Thing; identity: BrandIdentity }) {
     case "image":
       return <img className="ui-check-picture" src={t.item.image} alt={t.item.caption} />;
     case "board_item":
-      return t.item.image ? <img className="ui-check-picture" src={t.item.image} alt={t.item.note ?? "A picture Fume found for your moodboard"} /> : null;
+      return t.item.image ? (
+        <img
+          className="ui-check-picture"
+          src={t.item.image}
+          alt={t.item.note ?? "A picture Fume found for your moodboard"}
+        />
+      ) : null;
     case "model":
       return <img className="ui-check-picture" src={t.item.image} alt={`${t.item.name}, an AI model`} />;
     default:
@@ -187,8 +254,10 @@ function Thumb({ t, identity }: { t: Thing; identity: BrandIdentity }) {
 function Facts({ t }: { t: Thing }) {
   const where = "provenance" in t.item ? t.item.provenance.evidence : undefined;
   const rows: { label: string; value: string; data?: boolean }[] = [];
-  if (t.kind === "colour") rows.push({ label: "Hex", value: t.item.hex.toUpperCase(), data: true }, { label: "Where", value: t.item.usage });
-  if (t.kind === "typeface") rows.push({ label: "Weights", value: t.item.weights.join(", ") }, { label: "Use", value: t.item.usage });
+  if (t.kind === "colour")
+    rows.push({ label: "Hex", value: t.item.hex.toUpperCase(), data: true }, { label: "Where", value: t.item.usage });
+  if (t.kind === "typeface")
+    rows.push({ label: "Weights", value: t.item.weights.join(", ") }, { label: "Use", value: t.item.usage });
   if (t.kind === "logo") rows.push({ label: "Use", value: t.item.use });
   if (t.kind === "image") rows.push({ label: "What it shows", value: t.item.caption });
   if (t.kind === "model") rows.push({ label: "Look", value: t.item.look });
@@ -217,7 +286,10 @@ function CheckColourUses({ colour }: { colour: BrandColour }) {
       value={uses}
       onChange={(next) => {
         setUses(next);
-        save.mutate({ colourId: colour.id, uses: next }, { onError: (error) => toast.error("That wasn’t saved", { description: error.message }) });
+        save.mutate(
+          { colourId: colour.id, uses: next },
+          { onError: (error) => toast.error("That wasn’t saved", { description: error.message }) },
+        );
       }}
     />
   );
@@ -288,7 +360,8 @@ function ThingCard({
           </h2>
           {t.kind === "model" ? (
             <p className="ui-check-lead">
-              {t.item.name} is an AI model Fume made for {brand}, never shown as a real one. Confirm {t.item.name}, and Fume may cast {t.item.name} in your creatives.
+              {t.item.name} is an AI model Fume made for {brand}, never shown as a real one. Confirm {t.item.name}, and
+              Fume may cast {t.item.name} in your creatives.
             </p>
           ) : t.kind === "board_item" ? (
             <p className="ui-check-lead">What you confirm here teaches Fume your taste.</p>
@@ -311,16 +384,44 @@ function ThingCard({
             <Field invalid={bad}>
               <FieldLabel htmlFor="check-change">{field.label}</FieldLabel>
               {field.long ? (
-                <Textarea id="check-change" rows={2} value={text} onChange={(e) => onText(e.target.value)} onKeyDown={cancel} aria-invalid={bad || undefined} autoFocus />
+                <Textarea
+                  id="check-change"
+                  rows={2}
+                  value={text}
+                  onChange={(e) => onText(e.target.value)}
+                  onKeyDown={cancel}
+                  aria-invalid={bad || undefined}
+                  autoFocus
+                />
               ) : field.hex ? (
                 <div className="ui-colour-hex">
                   <HexPicker value={text} onChange={onText} label={`Pick ${nameOf(t)}’s colour`} />
-                  <Input id="check-change" value={text} onChange={(e) => onText(e.target.value)} onKeyDown={cancel} aria-invalid={bad || undefined} autoFocus />
+                  <Input
+                    id="check-change"
+                    value={text}
+                    onChange={(e) => onText(e.target.value)}
+                    onKeyDown={cancel}
+                    aria-invalid={bad || undefined}
+                    autoFocus
+                  />
                 </div>
               ) : (
-                <Input id="check-change" value={text} onChange={(e) => onText(e.target.value)} onKeyDown={cancel} aria-invalid={bad || undefined} autoFocus />
+                <Input
+                  id="check-change"
+                  value={text}
+                  onChange={(e) => onText(e.target.value)}
+                  onKeyDown={cancel}
+                  aria-invalid={bad || undefined}
+                  autoFocus
+                />
               )}
-              <FieldDescription>{bad ? (field.hex ? "Six digits after the #, for example #5C1F2A." : "Write it first, then confirm.") : `${field.help} Confirm saves it.`}</FieldDescription>
+              <FieldDescription>
+                {bad
+                  ? field.hex
+                    ? "Six digits after the #, for example #5C1F2A."
+                    : "Write it first, then confirm."
+                  : `${field.help} Confirm saves it.`}
+              </FieldDescription>
             </Field>
             <div className="ui-check-actions">
               <Button type="button" variant="quiet" size="sm" onClick={() => onChanging(false)} disabled={busy}>
@@ -331,7 +432,13 @@ function ThingCard({
         ) : (
           <div className="ui-check-actions">
             {field && (
-              <Button id="check-change-open" variant="quiet" icon="pencil" onClick={() => onChanging(true)} disabled={busy}>
+              <Button
+                id="check-change-open"
+                variant="quiet"
+                icon="pencil"
+                onClick={() => onChanging(true)}
+                disabled={busy}
+              >
                 Change
               </Button>
             )}
@@ -359,7 +466,10 @@ export function BrandCheckPage() {
   const [snapshot, setSnapshot] = useState<Map<string, Thing>>(new Map());
 
   const all = useMemo(
-    () => (board.data ? things(board.data.identity, board.data.moodboard.items, held ? [] : (assets.data?.models ?? [])) : []),
+    () =>
+      board.data
+        ? things(board.data.identity, board.data.moodboard.items, held ? [] : (assets.data?.models ?? []))
+        : [],
     [board.data, assets.data, held],
   );
 
@@ -379,7 +489,11 @@ export function BrandCheckPage() {
       <Query query={board} loading="Loading your brand">
         {(view) =>
           !canApprove ? (
-            <Nothing icon="palette" title="Your brand’s approver confirms these" text={`Fume found ${copy.count(view.open, "thing")} it is not sure of. They wait for your brand’s approver.`} />
+            <Nothing
+              icon="palette"
+              title="Your brand’s approver confirms these"
+              text={`Fume found ${copy.count(view.open, "thing")} it is not sure of. They wait for your brand’s approver.`}
+            />
           ) : keys === null ? null : keys.length === 0 ? (
             <CheckQueue>
               <CheckEnd
@@ -401,7 +515,17 @@ export function BrandCheckPage() {
   );
 }
 
-function Queue({ keys, snapshot, all, identity }: { keys: string[]; snapshot: Map<string, Thing>; all: Thing[]; identity: BrandIdentity }) {
+function Queue({
+  keys,
+  snapshot,
+  all,
+  identity,
+}: {
+  keys: string[];
+  snapshot: Map<string, Thing>;
+  all: Thing[];
+  identity: BrandIdentity;
+}) {
   const session = useSession().data!;
   const decide = useDecide();
   const decideModel = useDecideModel();
@@ -475,7 +599,9 @@ function Queue({ keys, snapshot, all, identity }: { keys: string[]; snapshot: Ma
   function advance(k: string, v: Verdict, said: string) {
     const after = { ...results, [k]: v };
     setResults(after);
-    const next = [...keys.slice(at + 1), ...keys.slice(0, at)].find((x) => !(after[x] ?? (byKey.has(x) || x === k ? undefined : "confirmed")));
+    const next = [...keys.slice(at + 1), ...keys.slice(0, at)].find(
+      (x) => !(after[x] ?? (byKey.has(x) || x === k ? undefined : "confirmed")),
+    );
     setLive(`${said}${next ? ` Next: ${nameOf((byKey.get(next) ?? snapshot.get(next))!)}.` : ""}`);
     setLeaving(true);
     timer.current = window.setTimeout(
@@ -507,14 +633,18 @@ function Queue({ keys, snapshot, all, identity }: { keys: string[]; snapshot: Ma
       if (value !== valueOf(t)) {
         flush();
         setBusy(true);
-        decide.mutate({ kind: t.kind, id: t.item.id, verdict: "change", value }, { onSuccess: () => advance(key, "changed", `${nameOf(t)} changed.`), onError: fail });
+        decide.mutate(
+          { kind: t.kind, id: t.item.id, verdict: "change", value },
+          { onSuccess: () => advance(key, "changed", `${nameOf(t)} changed.`), onError: fail },
+        );
         return;
       }
     }
     flush();
     setBusy(true);
     const done = () => advance(key, "confirmed", `${nameOf(t)} confirmed.`);
-    if (t.kind === "model") decideModel.mutate({ modelId: t.item.id, verdict: "approve" }, { onSuccess: done, onError: fail });
+    if (t.kind === "model")
+      decideModel.mutate({ modelId: t.item.id, verdict: "approve" }, { onSuccess: done, onError: fail });
     else decide.mutate({ kind: t.kind, id: t.item.id, verdict: "keep" }, { onSuccess: done, onError: fail });
   }
 
@@ -549,9 +679,16 @@ function Queue({ keys, snapshot, all, identity }: { keys: string[]; snapshot: Ma
     advance(k, "removed", `${nameOf(t)} removed.`);
   }
 
-  useQueueKeys({ onPrev: () => step(-1), onNext: () => step(1), onClose: () => (flush(), back.back()), onConfirm: finished ? undefined : confirm });
+  useQueueKeys({
+    onPrev: () => step(-1),
+    onNext: () => step(1),
+    onClose: () => (flush(), back.back()),
+    onConfirm: finished ? undefined : confirm,
+  });
 
-  const counted = (["confirmed", "changed", "removed"] as const).map((v) => [v, keys.filter((k) => results[k] === v).length] as const).filter(([, n]) => n > 0);
+  const counted = (["confirmed", "changed", "removed"] as const)
+    .map((v) => [v, keys.filter((k) => results[k] === v).length] as const)
+    .filter(([, n]) => n > 0);
   const left = keys.filter((k) => results[k] === "later");
   const decided = current ? verdict(key) : undefined;
 
@@ -585,11 +722,29 @@ function Queue({ keys, snapshot, all, identity }: { keys: string[]; snapshot: Ma
       step={
         !finished && total > 1 ? (
           <>
-            <Button variant="quiet" size="sm" iconOnly icon="chevron-left" aria-label="Previous find" shortcut="←" disabled={at <= 0} onClick={() => step(-1)} />
+            <Button
+              variant="quiet"
+              size="sm"
+              iconOnly
+              icon="chevron-left"
+              aria-label="Previous find"
+              shortcut="←"
+              disabled={at <= 0}
+              onClick={() => step(-1)}
+            />
             <span className="ui-check-queue-count">
               {at + 1} of {total}
             </span>
-            <Button variant="quiet" size="sm" iconOnly icon="chevron-right" aria-label="Next find" shortcut="→" disabled={at >= total - 1} onClick={() => step(1)} />
+            <Button
+              variant="quiet"
+              size="sm"
+              iconOnly
+              icon="chevron-right"
+              aria-label="Next find"
+              shortcut="→"
+              disabled={at >= total - 1}
+              onClick={() => step(1)}
+            />
           </>
         ) : undefined
       }
@@ -638,7 +793,11 @@ function Queue({ keys, snapshot, all, identity }: { keys: string[]; snapshot: Ma
         <CheckEnd
           key={key}
           title={`${nameOf(current)}: ${verdictWord[decided].toLowerCase()}`}
-          text={decided === "removed" ? "Fume will not use it. Undo it from the message, or go on with the next." : "It is part of your Brand DNA now."}
+          text={
+            decided === "removed"
+              ? "Fume will not use it. Undo it from the message, or go on with the next."
+              : "It is part of your Brand DNA now."
+          }
         />
       ) : current ? (
         <ThingCard

@@ -66,7 +66,11 @@ const toSend = (c: Campaign) => Math.min(c.counts.checked, c.waits?.toSend ?? 0)
 function byDefault(rows: CampaignTableRow[], latest = false) {
   return rows
     .slice()
-    .sort((a, b) => Number(b.status.on === "you") - Number(a.status.on === "you") || (latest ? when(b.campaign) - when(a.campaign) : when(a.campaign) - when(b.campaign)));
+    .sort(
+      (a, b) =>
+        Number(b.status.on === "you") - Number(a.status.on === "you") ||
+        (latest ? when(b.campaign) - when(a.campaign) : when(a.campaign) - when(b.campaign)),
+    );
 }
 
 export function CampaignTables({
@@ -86,14 +90,27 @@ export function CampaignTables({
   const desk = !useNarrowScreen("(max-width: 1023px)");
   const groups = [
     { key: "under-way", title: "Under way", rows: byDefault(rows.filter((r) => !done(r.campaign))) },
-    { key: "done", title: "Done", rows: byDefault(rows.filter((r) => done(r.campaign)), true) },
+    {
+      key: "done",
+      title: "Done",
+      rows: byDefault(
+        rows.filter((r) => done(r.campaign)),
+        true,
+      ),
+    },
   ].filter((g) => g.rows.length);
   return (
     <div className="ui-campaign-list">
       {groups.map((g) => (
         <Section key={g.key} title={g.title} meta={g.rows.length} titleId={`${idPrefix}-${g.key}`}>
           {desk ? (
-            <CampaignTable rows={g.rows} showBrand={showBrand} brandLabel={brandLabel} customerLabel={customerLabel} labelledBy={`${idPrefix}-${g.key}`} />
+            <CampaignTable
+              rows={g.rows}
+              showBrand={showBrand}
+              brandLabel={brandLabel}
+              customerLabel={customerLabel}
+              labelledBy={`${idPrefix}-${g.key}`}
+            />
           ) : (
             <ItemGroup as="ul" aria-labelledby={`${idPrefix}-${g.key}`}>
               {g.rows.map((r) => (
@@ -107,10 +124,28 @@ export function CampaignTables({
   );
 }
 
-function CampaignTable({ rows, showBrand, brandLabel, customerLabel, labelledBy }: { rows: CampaignTableRow[]; showBrand: boolean; brandLabel: string; customerLabel: string; labelledBy: string }) {
+function CampaignTable({
+  rows,
+  showBrand,
+  brandLabel,
+  customerLabel,
+  labelledBy,
+}: {
+  rows: CampaignTableRow[];
+  showBrand: boolean;
+  brandLabel: string;
+  customerLabel: string;
+  labelledBy: string;
+}) {
   const sort = useTableSort<SortKey>();
   const shown = sort.key
-    ? sort.sorted(rows, (r, key) => (key === "date" ? when(r.campaign) : key === "brand" ? r.brand.brandName : stepOf(r.campaign).step + (stepOf(r.campaign).done ? 1 : 0)))
+    ? sort.sorted(rows, (r, key) =>
+        key === "date"
+          ? when(r.campaign)
+          : key === "brand"
+            ? r.brand.brandName
+            : stepOf(r.campaign).step + (stepOf(r.campaign).done ? 1 : 0),
+      )
     : rows;
   return (
     <TableContainer>
@@ -122,11 +157,19 @@ function CampaignTable({ rows, showBrand, brandLabel, customerLabel, labelledBy 
             </TableHead>
             <TableHead>Campaign</TableHead>
             {showBrand && (
-              <TableHead className="ui-records-col-md" sort={sort.directionOf("brand")} onSort={() => sort.sortBy("brand")}>
+              <TableHead
+                className="ui-records-col-md"
+                sort={sort.directionOf("brand")}
+                onSort={() => sort.sortBy("brand")}
+              >
                 {brandLabel}
               </TableHead>
             )}
-            <TableHead className="ui-campaign-col-stage" sort={sort.directionOf("stage")} onSort={() => sort.sortBy("stage")}>
+            <TableHead
+              className="ui-campaign-col-stage"
+              sort={sort.directionOf("stage")}
+              onSort={() => sort.sortBy("stage")}
+            >
               Stage
             </TableHead>
             <TableHead className="ui-records-col-md" sort={sort.directionOf("date")} onSort={() => sort.sortBy("date")}>
@@ -204,7 +247,9 @@ function CampaignRow({ row, showBrand }: { row: CampaignTableRow; showBrand: boo
       <TableCell muted={!next}>
         {next ? (
           <TableTitle sub={next.label}>
-            <span className="ui-records-data">{next.label === copy.dateLabel.delivered || next.label === "Went live" ? date(next.at) : due(next.at)}</span>
+            <span className="ui-records-data">
+              {next.label === copy.dateLabel.delivered || next.label === "Went live" ? date(next.at) : due(next.at)}
+            </span>
           </TableTitle>
         ) : done(c) ? (
           "—"
@@ -214,7 +259,11 @@ function CampaignRow({ row, showBrand }: { row: CampaignTableRow; showBrand: boo
       </TableCell>
       <TableCell num muted={!c.counts.inCheck}>
         {c.counts.inCheck && row.checkTo ? (
-          <Link className="ui-link ui-records-cell-link" to={row.checkTo} aria-label={`${copy.creatives(c.counts.inCheck)} in check: open Check`}>
+          <Link
+            className="ui-link ui-records-cell-link"
+            to={row.checkTo}
+            aria-label={`${copy.creatives(c.counts.inCheck)} in check: open Check`}
+          >
             {c.counts.inCheck}
           </Link>
         ) : (
@@ -233,7 +282,9 @@ function CampaignItem({ row, showBrand }: { row: CampaignTableRow; showBrand: bo
   const next = copy.campaignDateWords(c);
   const body = (
     <>
-      <ItemMedia variant={c.cover ? "image" : "icon"}>{c.cover ? <ItemMediaImage src={c.cover} alt="" /> : <Icon name="megaphone" />}</ItemMedia>
+      <ItemMedia variant={c.cover ? "image" : "icon"}>
+        {c.cover ? <ItemMediaImage src={c.cover} alt="" /> : <Icon name="megaphone" />}
+      </ItemMedia>
       <ItemContent>
         <ItemTitle>
           {c.name} {showBrand && <span className="ui-home-due">{row.brand.brandName}</span>}
@@ -263,15 +314,40 @@ function CampaignItem({ row, showBrand }: { row: CampaignTableRow; showBrand: bo
 // ─── The board (r13 #68) ─────────────────────────────────────────────────────
 
 /** The campaigns as a board: a column per stage, then Done; in each, what waits on the reader first. */
-export function CampaignBoard({ rows, showBrand, label = "Campaigns by stage" }: { rows: CampaignTableRow[]; showBrand: boolean; label?: string }) {
+export function CampaignBoard({
+  rows,
+  showBrand,
+  label = "Campaigns by stage",
+}: {
+  rows: CampaignTableRow[];
+  showBrand: boolean;
+  label?: string;
+}) {
   const columns = [
-    ...STAGES.map((s) => ({ id: s.id as string, title: s.label, rows: byDefault(rows.filter((r) => !done(r.campaign) && stageOf(r.campaign) === s.id)) })),
-    { id: "done", title: "Done", rows: byDefault(rows.filter((r) => done(r.campaign)), true) },
+    ...STAGES.map((s) => ({
+      id: s.id as string,
+      title: s.label,
+      rows: byDefault(rows.filter((r) => !done(r.campaign) && stageOf(r.campaign) === s.id)),
+    })),
+    {
+      id: "done",
+      title: "Done",
+      rows: byDefault(
+        rows.filter((r) => done(r.campaign)),
+        true,
+      ),
+    },
   ];
   return (
     <div className="ui-stage-board" role="list" aria-label={label}>
       {columns.map((col) => (
-        <section key={col.id} className="ui-stage-col" role="listitem" aria-labelledby={`stage-col-${col.id}`} data-empty={col.rows.length ? undefined : ""}>
+        <section
+          key={col.id}
+          className="ui-stage-col"
+          role="listitem"
+          aria-labelledby={`stage-col-${col.id}`}
+          data-empty={col.rows.length ? undefined : ""}
+        >
           <h3 className="ui-stage-col-head" id={`stage-col-${col.id}`}>
             {col.title}
             <span className="ui-stage-col-count">{col.rows.length}</span>

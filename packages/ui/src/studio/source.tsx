@@ -13,7 +13,13 @@ import { cx } from "../cx";
 import { Icon } from "../icons";
 import type { StudioLookSource } from "./types";
 
-export const lookSourceNames: Record<StudioLookSource, string> = { campaign: "Campaign", brand: "Brand", fume: "Fume", own: "Own", engine: "Engine" };
+export const lookSourceNames: Record<StudioLookSource, string> = {
+  campaign: "Campaign",
+  brand: "Brand",
+  fume: "Fume",
+  own: "Own",
+  engine: "Engine",
+};
 const order: StudioLookSource[] = ["campaign", "brand", "fume", "own", "engine"];
 
 export interface StudioSourceProps {
@@ -31,7 +37,16 @@ export interface StudioSourceProps {
   className?: string;
 }
 
-export function StudioSource({ value, onChange, label, brand, campaign, unavailable = [], disabled, className }: StudioSourceProps) {
+export function StudioSource({
+  value,
+  onChange,
+  label,
+  brand,
+  campaign,
+  unavailable = [],
+  disabled,
+  className,
+}: StudioSourceProps) {
   const title: Record<StudioLookSource, string> = {
     campaign: campaign ? `${campaign}’s look` : "The campaign’s look",
     brand: brand ? `${brand}’s own` : "The brand’s own",
@@ -40,12 +55,24 @@ export function StudioSource({ value, onChange, label, brand, campaign, unavaila
     engine: "The Engine decides",
   };
   return (
-    <SegmentedControl className={cx("ui-sc-seg ui-sl-source", campaign && "ui-sl-source--five", className)} aria-label={`${label} comes from`} value={value} onValueChange={(v) => !disabled && onChange(v as StudioLookSource)}>
-      {order.filter((s) => s !== "campaign" || campaign).map((s) => (
-        <SegmentedOption key={s} value={s} title={unavailable.includes(s) ? `${title[s]}: none yet` : title[s]} disabled={disabled || unavailable.includes(s)}>
-          {lookSourceNames[s]}
-        </SegmentedOption>
-      ))}
+    <SegmentedControl
+      className={cx("ui-sc-seg ui-sl-source", campaign && "ui-sl-source--five", className)}
+      aria-label={`${label} comes from`}
+      value={value}
+      onValueChange={(v) => !disabled && onChange(v as StudioLookSource)}
+    >
+      {order
+        .filter((s) => s !== "campaign" || campaign)
+        .map((s) => (
+          <SegmentedOption
+            key={s}
+            value={s}
+            title={unavailable.includes(s) ? `${title[s]}: none yet` : title[s]}
+            disabled={disabled || unavailable.includes(s)}
+          >
+            {lookSourceNames[s]}
+          </SegmentedOption>
+        ))}
     </SegmentedControl>
   );
 }
@@ -81,7 +108,10 @@ export function StudioPresetPicker({ items, value, onPick, label, disabled, clas
     const step = ({ ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 } as Record<string, number>)[e.key];
     if (!step || !items.length) return;
     e.preventDefault();
-    const i = Math.max(0, items.findIndex((x) => x.id === value));
+    const i = Math.max(
+      0,
+      items.findIndex((x) => x.id === value),
+    );
     const next = items[(i + step + items.length) % items.length]!;
     onPick(next.id);
     requestAnimationFrame(() => list.current?.querySelector<HTMLElement>('[aria-checked="true"]')?.focus());
@@ -143,7 +173,14 @@ export function StudioSummary({ rows, onAdjust, disabled }: StudioSummaryProps) 
         </dl>
       )}
       {onAdjust && (
-        <Button size="sm" variant="secondary" icon="sliders-horizontal" className="ui-sl-adjust" disabled={disabled} onClick={onAdjust}>
+        <Button
+          size="sm"
+          variant="secondary"
+          icon="sliders-horizontal"
+          className="ui-sl-adjust"
+          disabled={disabled}
+          onClick={onAdjust}
+        >
           Adjust
         </Button>
       )}

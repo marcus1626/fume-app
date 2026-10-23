@@ -52,7 +52,6 @@ import { Icon } from "../icons";
 import { DialogOverlay, focusTitleOnTouch, submitOnModEnter } from "./dialog";
 import { currentOpener, focusFirst, mergeRefs, returnFocusTo, tokenNumber, useControllableState } from "./shared";
 
-
 const CHROME = ".ui-sheet-close, .ui-drawer-handle";
 
 // ---------------------------------------------------------------- sheet
@@ -82,7 +81,19 @@ export interface SheetContentProps extends ComponentPropsWithoutRef<typeof Dialo
 /** The side panel (the desk's right panel, see above) or an edge sheet, with its scrim, in a portal. */
 export const SheetContent = forwardRef<ElementRef<typeof DialogPrimitive.Content>, SheetContentProps>(
   (
-    { side = "right", size = "md", showClose = true, closeLabel = "Close", container, className, children, onOpenAutoFocus, onCloseAutoFocus, onKeyDown, ...props },
+    {
+      side = "right",
+      size = "md",
+      showClose = true,
+      closeLabel = "Close",
+      container,
+      className,
+      children,
+      onOpenAutoFocus,
+      onCloseAutoFocus,
+      onKeyDown,
+      ...props
+    },
     ref,
   ) => {
     const el = useRef<HTMLDivElement | null>(null);
@@ -115,7 +126,10 @@ export const SheetContent = forwardRef<ElementRef<typeof DialogPrimitive.Content
         >
           {children}
           {showClose && (
-            <DialogPrimitive.Close className="ui-btn ui-btn--glass-clear ui-btn--icon ui-btn--sm ui-sheet-close" aria-label={closeLabel}>
+            <DialogPrimitive.Close
+              className="ui-btn ui-btn--glass-clear ui-btn--icon ui-btn--sm ui-sheet-close"
+              aria-label={closeLabel}
+            >
               <Icon name="x" />
             </DialogPrimitive.Close>
           )}
@@ -142,16 +156,21 @@ export const SheetBody = part("SheetBody", "ui-sheet-body");
 export const SheetFooter = part("SheetFooter", "ui-sheet-footer");
 
 /** h2.ui-sheet-title. */
-export const SheetTitle = forwardRef<ElementRef<typeof DialogPrimitive.Title>, ComponentPropsWithoutRef<typeof DialogPrimitive.Title>>(
-  ({ className, ...props }, ref) => <DialogPrimitive.Title ref={ref} className={cx("ui-sheet-title", className)} {...props} />,
-);
+export const SheetTitle = forwardRef<
+  ElementRef<typeof DialogPrimitive.Title>,
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Title ref={ref} className={cx("ui-sheet-title", className)} {...props} />
+));
 SheetTitle.displayName = "SheetTitle";
 
 /** p.ui-sheet-description. */
 export const SheetDescription = forwardRef<
   ElementRef<typeof DialogPrimitive.Description>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
->(({ className, ...props }, ref) => <DialogPrimitive.Description ref={ref} className={cx("ui-sheet-description", className)} {...props} />);
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Description ref={ref} className={cx("ui-sheet-description", className)} {...props} />
+));
 SheetDescription.displayName = "SheetDescription";
 
 // ---------------------------------------------------------------- drawer
@@ -268,7 +287,15 @@ export const DrawerContent = forwardRef<ElementRef<typeof DialogPrimitive.Conten
       if (target.closest("button:not(.ui-drawer-handle), a, input, textarea, select")) return;
       if (!snaps.current.length) snaps.current = measure();
       const now = performance.now();
-      drag.current = { y: e.clientY, h: el.current.offsetHeight, lastY: e.clientY, lastT: now, v: 0, moved: false, id: e.pointerId };
+      drag.current = {
+        y: e.clientY,
+        h: el.current.offsetHeight,
+        lastY: e.clientY,
+        lastT: now,
+        v: 0,
+        moved: false,
+        id: e.pointerId,
+      };
       try {
         grip.setPointerCapture(e.pointerId);
       } catch {
@@ -349,7 +376,11 @@ export const DrawerContent = forwardRef<ElementRef<typeof DialogPrimitive.Conten
     };
 
     // height and --drawer-y are computed here at run time, as dialog.js sets them
-    const runtime = { ...style, height: height == null ? undefined : Math.round(height), "--drawer-y": `${offset}px` } as CSSProperties;
+    const runtime = {
+      ...style,
+      height: height == null ? undefined : Math.round(height),
+      "--drawer-y": `${offset}px`,
+    } as CSSProperties;
 
     return (
       <DialogPrimitive.Portal container={container}>
@@ -384,7 +415,13 @@ export const DrawerContent = forwardRef<ElementRef<typeof DialogPrimitive.Conten
           }}
           {...props}
         >
-          <button type="button" className="ui-drawer-handle" aria-label={handleLabel} onClick={onHandleClick} onKeyDown={onHandleKeyDown} />
+          <button
+            type="button"
+            className="ui-drawer-handle"
+            aria-label={handleLabel}
+            onClick={onHandleClick}
+            onKeyDown={onHandleKeyDown}
+          />
           {children}
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
@@ -401,14 +438,19 @@ export const DrawerBody = part("DrawerBody", "ui-drawer-body");
 export const DrawerFooter = part("DrawerFooter", "ui-drawer-footer");
 
 /** h2.ui-drawer-title. */
-export const DrawerTitle = forwardRef<ElementRef<typeof DialogPrimitive.Title>, ComponentPropsWithoutRef<typeof DialogPrimitive.Title>>(
-  ({ className, ...props }, ref) => <DialogPrimitive.Title ref={ref} className={cx("ui-drawer-title", className)} {...props} />,
-);
+export const DrawerTitle = forwardRef<
+  ElementRef<typeof DialogPrimitive.Title>,
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Title ref={ref} className={cx("ui-drawer-title", className)} {...props} />
+));
 DrawerTitle.displayName = "DrawerTitle";
 
 /** p.ui-drawer-description. */
 export const DrawerDescription = forwardRef<
   ElementRef<typeof DialogPrimitive.Description>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
->(({ className, ...props }, ref) => <DialogPrimitive.Description ref={ref} className={cx("ui-drawer-description", className)} {...props} />);
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Description ref={ref} className={cx("ui-drawer-description", className)} {...props} />
+));
 DrawerDescription.displayName = "DrawerDescription";

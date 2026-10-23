@@ -73,7 +73,15 @@ import {
   type RefObject,
 } from "react";
 import { Navigate, useLocation, useParams, useSearchParams } from "react-router-dom";
-import { useAddReviewComment, useApprove, usePeople, useResolveReviewComment, useReviewComments, useSession, useUnapprove } from "../../api/hooks";
+import {
+  useAddReviewComment,
+  useApprove,
+  usePeople,
+  useResolveReviewComment,
+  useReviewComments,
+  useSession,
+  useUnapprove,
+} from "../../api/hooks";
 import type { Campaign, Creative, CreativeVersion, Id, ReviewComment } from "../../contract";
 import * as copy from "../../copy";
 import { when } from "../../lib/time";
@@ -97,8 +105,10 @@ const PHONE = "(max-width: 719.98px)";
 const TOAST_DESK = "(min-width: 1024px)";
 
 const pos = (x: number, y: number) => ({ "--x": `${x * 100}%`, "--y": `${y * 100}%` }) as CSSProperties;
-const inField = (t: EventTarget | null) => t instanceof HTMLElement && (t.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(t.tagName));
-const emptyField = (t: EventTarget | null) => (t instanceof HTMLTextAreaElement || (t instanceof HTMLInputElement && t.type === "text")) && t.value === "";
+const inField = (t: EventTarget | null) =>
+  t instanceof HTMLElement && (t.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(t.tagName));
+const emptyField = (t: EventTarget | null) =>
+  (t instanceof HTMLTextAreaElement || (t instanceof HTMLInputElement && t.type === "text")) && t.value === "";
 
 /** The old address: the same creative, in the viewer over the campaign's review. */
 export function ViewerPage() {
@@ -109,12 +119,14 @@ export function ViewerPage() {
 /** Checked by the expert and not yet decided: the words say who checked it, beside the Amber pointer (round 13, #28). */
 const checkedOnly = (v: CreativeVersion) => v.state === "checked" && Boolean(v.checkedBy);
 /** The Amber Focus pointer, as Check marks "Checked by you"; only where the words say who checked it. */
-const CheckedIcon = ({ v }: { v: CreativeVersion }) => (checkedOnly(v) ? <Icon name="fume-check" className="ui-rv-check-icon" /> : null);
+const CheckedIcon = ({ v }: { v: CreativeVersion }) =>
+  checkedOnly(v) ? <Icon name="fume-check" className="ui-rv-check-icon" /> : null;
 
 /** The version's state in words for the stage and the compare captions: "You approved" when it was her. */
 function versionWords(v: CreativeVersion, people: People, me: Id): string {
   if ((v.state === "approved" || v.state === "delivered") && v.recordedBy) return approvedWords(v, people.name, me);
-  if (v.state === "approved" || v.state === "delivered") return v.approvedBy ? `${copy.byYou(people.name(v.approvedBy), v.approvedBy === me, true)} approved` : "Approved";
+  if (v.state === "approved" || v.state === "delivered")
+    return v.approvedBy ? `${copy.byYou(people.name(v.approvedBy), v.approvedBy === me, true)} approved` : "Approved";
   if (v.state === "changes_requested") return "Changes asked for";
   if (v.checkedBy) return v.checkedBy === me ? "You checked it" : copy.checkedBy(people.name(v.checkedBy));
   return copy.versionState[v.state];
@@ -197,7 +209,11 @@ export function ReviewViewer({ set, campaigns, creativeId, all, threadId, onMove
         const a = document.activeElement;
         if (a && a !== document.body) return;
         if (opener?.isConnected && returnFocusTo(opener)) return;
-        const tile = ids.map((id) => id && document.querySelector<HTMLElement>(`[data-creative="${CSS.escape(id)}"] .ui-creative-media`)).find(Boolean);
+        const tile = ids
+          .map(
+            (id) => id && document.querySelector<HTMLElement>(`[data-creative="${CSS.escape(id)}"] .ui-creative-media`),
+          )
+          .find(Boolean);
         if (tile) tile.focus();
         else returnFocusTo(opener);
       });
@@ -220,7 +236,15 @@ export function ReviewViewer({ set, campaigns, creativeId, all, threadId, onMove
   };
 
   return (
-    <ViewerLayer ref={root} className="ui-rv" label={creative.title} onClose={onClose} onEscape={(e) => escape.current(e)} onBlurCapture={guard} onFocusCapture={remember}>
+    <ViewerLayer
+      ref={root}
+      className="ui-rv"
+      label={creative.title}
+      onClose={onClose}
+      onEscape={(e) => escape.current(e)}
+      onBlurCapture={guard}
+      onFocusCapture={remember}
+    >
       <Viewer
         key={creative.id}
         creative={creative}
@@ -345,7 +369,10 @@ function Viewer({
   };
 
   // The comments on this creative: the open ones first in time order, pins numbered in the order they were dropped.
-  const mine = useMemo(() => (comments.data ?? []).filter((c) => c.versionId === v.id || c.creativeId === creative.id), [comments.data, v.id, creative.id]);
+  const mine = useMemo(
+    () => (comments.data ?? []).filter((c) => c.versionId === v.id || c.creativeId === creative.id),
+    [comments.data, v.id, creative.id],
+  );
   const pinned = mine.filter((c) => c.pin);
   const number = (c: ReviewComment) => pinned.indexOf(c) + 1;
   const open = mine.filter((c) => !c.resolved);
@@ -472,7 +499,11 @@ function Viewer({
   const before = versions.length > 1 ? versions[versions.length - 2] : undefined;
   const writable = can.ask && waiting;
   /** The expert checked it: the Amber pointer beside who (rule check-states; round 13, #28). */
-  const checked = v.checkedBy ? (v.checkedBy === me ? "Checked by you" : copy.checkedBy(people.name(v.checkedBy))) : undefined;
+  const checked = v.checkedBy
+    ? v.checkedBy === me
+      ? "Checked by you"
+      : copy.checkedBy(people.name(v.checkedBy))
+    : undefined;
   /** The frame never grows past the creative's own pixels (DLAY-1). */
   const real = { "--real-w": `${v.width || 1080}px` } as CSSProperties;
   const product = Boolean(marked?.tags.includes("product"));
@@ -481,7 +512,15 @@ function Viewer({
     <div className="ui-rv-screen" data-sheet={sheet ? "open" : "closed"} data-panel="comments">
       {/* ── the bar: close and what this is at the left; compare, then ← → · previous · 3 of 6 · next at a fixed place ── */}
       <header className="ui-rv-bar">
-        <Button variant="glass-clear" iconOnly icon="x" aria-label="Close" shortcut="Esc" data-keep="close" onClick={onClose} />
+        <Button
+          variant="glass-clear"
+          iconOnly
+          icon="x"
+          aria-label="Close"
+          shortcut="Esc"
+          data-keep="close"
+          onClick={onClose}
+        />
         <div className="ui-rv-title">
           <ViewerLayerTitle asChild>
             <h1>{creative.title}</h1>
@@ -512,17 +551,38 @@ function Viewer({
           )}
           {n > 1 && (
             <div className="ui-rv-nav" role="group" aria-label="Creatives in this set">
-              <span className="ui-rv-nav-keys ui-keys-hint" title="The arrow keys move to the previous and the next creative">
+              <span
+                className="ui-rv-nav-keys ui-keys-hint"
+                title="The arrow keys move to the previous and the next creative"
+              >
                 <KbdGroup aria-hidden="true">
                   <Kbd>←</Kbd>
                   <Kbd>→</Kbd>
                 </KbdGroup>
               </span>
-              <Button variant="glass-clear" iconOnly icon="chevron-left" aria-label="The previous creative" aria-keyshortcuts="ArrowLeft" shortcut="←" data-keep="previous" onClick={() => go(-1)} />
+              <Button
+                variant="glass-clear"
+                iconOnly
+                icon="chevron-left"
+                aria-label="The previous creative"
+                aria-keyshortcuts="ArrowLeft"
+                shortcut="←"
+                data-keep="previous"
+                onClick={() => go(-1)}
+              />
               <span className="ui-rv-count" aria-live="polite">
                 {index + 1} of {n}
               </span>
-              <Button variant="glass-clear" iconOnly icon="chevron-right" aria-label="The next creative" aria-keyshortcuts="ArrowRight" shortcut="→" data-keep="next" onClick={() => go(1)} />
+              <Button
+                variant="glass-clear"
+                iconOnly
+                icon="chevron-right"
+                aria-label="The next creative"
+                aria-keyshortcuts="ArrowRight"
+                shortcut="→"
+                data-keep="next"
+                onClick={() => go(1)}
+              />
             </div>
           )}
         </div>
@@ -532,7 +592,11 @@ function Viewer({
       <main className="ui-rv-stage" data-compare={comparing && before ? "" : undefined}>
         {comparing && before ? (
           <>
-            <figure className="ui-rv-frame" data-format={creative.format} style={{ "--real-w": `${before.width || 1080}px` } as CSSProperties}>
+            <figure
+              className="ui-rv-frame"
+              data-format={creative.format}
+              style={{ "--real-w": `${before.width || 1080}px` } as CSSProperties}
+            >
               <div className="ui-rv-media">
                 <img src={before.image} alt={`${creative.title}, version ${before.number}`} draggable={false} />
               </div>
@@ -577,7 +641,11 @@ function Viewer({
                     setActive(c.id);
                     setDraft(null);
                     setSheet(true);
-                    requestAnimationFrame(() => document.getElementById(`${ids}-c-${c.id}`)?.scrollIntoView({ block: "nearest", behavior: "smooth" }));
+                    requestAnimationFrame(() =>
+                      document
+                        .getElementById(`${ids}-c-${c.id}`)
+                        ?.scrollIntoView({ block: "nearest", behavior: "smooth" }),
+                    );
                   }}
                 >
                   {number(c)}
@@ -649,7 +717,15 @@ function Viewer({
             </KeyButton>
           )}
           {waiting && mayApprove && (
-            <KeyButton keyName="A" tip="Approve" variant="glass-white" icon="check" data-keep="approve" loading={decisions.approving} onClick={approve}>
+            <KeyButton
+              keyName="A"
+              tip="Approve"
+              variant="glass-white"
+              icon="check"
+              data-keep="approve"
+              loading={decisions.approving}
+              onClick={approve}
+            >
               Approve
             </KeyButton>
           )}
@@ -658,7 +734,12 @@ function Viewer({
               <Button variant="glass-clear" icon="check" data-keep="record" onClick={() => setClientPanel("record")}>
                 Record an approval
               </Button>
-              <Button variant={withClient ? "glass-clear" : "glass-white"} icon="send" data-keep="send-client" onClick={() => setClientPanel("send")}>
+              <Button
+                variant={withClient ? "glass-clear" : "glass-white"}
+                icon="send"
+                data-keep="send-client"
+                onClick={() => setClientPanel("send")}
+              >
                 {withClient ? "Send again" : copy.send.action(firstName(people.name(campaign.approverId)))}
               </Button>
             </>
@@ -714,7 +795,10 @@ function Viewer({
                 </p>
                 <Choice>
                   <Checkbox checked={product} onCheckedChange={(on) => setProduct(on === true)} />
-                  <ChoiceText label="The product itself is off" hint={`${who === "Fume" ? "Fume’s" : `${who}’s`} own mistake: fixing it uses no change request.`} />
+                  <ChoiceText
+                    label="The product itself is off"
+                    hint={`${who === "Fume" ? "Fume’s" : `${who}’s`} own mistake: fixing it uses no change request.`}
+                  />
                 </Choice>
               </div>
             ) : null
@@ -726,7 +810,14 @@ function Viewer({
               {answered ? "Every creative has an answer. " : ""}
               {copy.count(tray.items.length, "creative")} {tray.items.length === 1 ? "needs" : "need"} changes.
             </span>
-            <Button variant={answered ? "glass-white" : "glass-clear"} size="sm" icon="send" loading={sender.pending} data-keep="start" onClick={sender.send}>
+            <Button
+              variant={answered ? "glass-white" : "glass-clear"}
+              size="sm"
+              icon="send"
+              loading={sender.pending}
+              data-keep="start"
+              onClick={sender.send}
+            >
               {startWords(tray.items.length)}
             </Button>
           </div>
@@ -735,8 +826,20 @@ function Viewer({
       {sender.dialog}
       {agency && (
         <>
-          <SendToClientSheet campaign={campaign} creatives={checkedSet} initial={[creative.id]} open={clientPanel === "send"} onOpenChange={(o) => !o && setClientPanel(null)} />
-          <RecordApprovalSheet campaign={campaign} creatives={checkedSet} initial={[creative.id]} open={clientPanel === "record"} onOpenChange={(o) => !o && setClientPanel(null)} />
+          <SendToClientSheet
+            campaign={campaign}
+            creatives={checkedSet}
+            initial={[creative.id]}
+            open={clientPanel === "send"}
+            onOpenChange={(o) => !o && setClientPanel(null)}
+          />
+          <RecordApprovalSheet
+            campaign={campaign}
+            creatives={checkedSet}
+            initial={[creative.id]}
+            open={clientPanel === "record"}
+            onOpenChange={(o) => !o && setClientPanel(null)}
+          />
         </>
       )}
     </div>
@@ -745,7 +848,10 @@ function Viewer({
 
 /** A decision pill with its key in it, as a keycap that reads as a shortcut ("Approve  A"), and a tooltip that names
  *  both (round 13, #32). Touch screens hide the key (kbd.css). */
-const KeyButton = forwardRef<HTMLButtonElement, ButtonProps & { keyName: string; tip: string }>(function KeyButton({ keyName, tip, children, className, ...props }, ref) {
+const KeyButton = forwardRef<HTMLButtonElement, ButtonProps & { keyName: string; tip: string }>(function KeyButton(
+  { keyName, tip, children, className, ...props },
+  ref,
+) {
   return (
     <WithTooltip label={tip} shortcut={keyName} side="top">
       <Button ref={ref} aria-keyshortcuts={keyName} className={cx("ui-rv-keyed", className)} {...props}>
@@ -815,7 +921,14 @@ function PinBox({
   };
 
   return (
-    <form ref={box} className="ui-rv-pinbox" style={pos(draft.x, draft.y)} data-flip-x={flip.x ? "" : undefined} data-flip-y={flip.y ? "" : undefined} onSubmit={send}>
+    <form
+      ref={box}
+      className="ui-rv-pinbox"
+      style={pos(draft.x, draft.y)}
+      data-flip-x={flip.x ? "" : undefined}
+      data-flip-y={flip.y ? "" : undefined}
+      onSubmit={send}
+    >
       <label className="ui-sr-only" htmlFor={id}>
         Comment on pin {n}
       </label>
@@ -837,7 +950,14 @@ function PinBox({
         <span className="ui-rv-pinbox-keys ui-keys-hint">
           <Kbd>↵</Kbd> Add <Kbd>Esc</Kbd> Cancel
         </span>
-        <Button type="submit" variant="glass-white" size="sm" icon="send" loading={add.isPending} disabled={!text.trim()}>
+        <Button
+          type="submit"
+          variant="glass-white"
+          size="sm"
+          icon="send"
+          loading={add.isPending}
+          disabled={!text.trim()}
+        >
           Add
         </Button>
       </div>
@@ -881,7 +1001,11 @@ function useDecisions(move: MutableRefObject<(id: Id) => void>, alive: MutableRe
     history.current = history.current.filter((h) => !items.includes(h as Approval));
     unapprove.mutateAsync(items.map((i) => i.versionId)).then(
       () => {
-        toast.info(items.length === 1 ? `${items[0]!.title} waits on you again` : `${copy.creatives(items.length)} wait on you again`);
+        toast.info(
+          items.length === 1
+            ? `${items[0]!.title} waits on you again`
+            : `${copy.creatives(items.length)} wait on you again`,
+        );
         back(items[0]!.creativeId);
       },
       (e: Error) => toast.error("The approval stays", { description: e.message }),
@@ -1042,7 +1166,11 @@ function Comments({
         {loading ? (
           <p className="ui-rv-empty">Loading the comments</p>
         ) : count === 0 ? (
-          <p className="ui-rv-empty">{writable ? `No comments yet. ${touch ? "Tap" : "Click"} a spot on the creative to pin one, or write below.` : "No comments yet."}</p>
+          <p className="ui-rv-empty">
+            {writable
+              ? `No comments yet. ${touch ? "Tap" : "Click"} a spot on the creative to pin one, or write below.`
+              : "No comments yet."}
+          </p>
         ) : (
           <ol className="ui-rv-comments">
             {open.map((c) => (
@@ -1075,7 +1203,17 @@ function Comments({
             {showResolved && (
               <ol className="ui-rv-comments">
                 {resolved.map((c) => (
-                  <CommentItem key={c.id} c={c} n={c.pin ? number(c) : undefined} active={false} onFocus={() => undefined} people={people} can={can} me={me} ids={ids} />
+                  <CommentItem
+                    key={c.id}
+                    c={c}
+                    n={c.pin ? number(c) : undefined}
+                    active={false}
+                    onFocus={() => undefined}
+                    people={people}
+                    can={can}
+                    me={me}
+                    ids={ids}
+                  />
                 ))}
               </ol>
             )}
@@ -1091,7 +1229,14 @@ function Comments({
                 {pinNumber}
               </span>
               Pin {pinNumber} on the creative
-              <Button variant="glass-clear" size="sm" iconOnly icon="x" aria-label={`Take pin ${pinNumber} away`} onClick={onClearDraft} />
+              <Button
+                variant="glass-clear"
+                size="sm"
+                iconOnly
+                icon="x"
+                aria-label={`Take pin ${pinNumber} away`}
+                onClick={onClearDraft}
+              />
             </span>
           )}
           <label className="ui-sr-only" htmlFor={`${ids}-text`}>
@@ -1113,7 +1258,16 @@ function Comments({
                 }
               }}
             />
-            <Button type="submit" variant="glass-clear" iconOnly icon="send" aria-label="Add the comment" shortcut="↵" loading={add.isPending} disabled={!text.trim()} />
+            <Button
+              type="submit"
+              variant="glass-clear"
+              iconOnly
+              icon="send"
+              aria-label="Add the comment"
+              shortcut="↵"
+              loading={add.isPending}
+              disabled={!text.trim()}
+            />
           </div>
         </form>
       )}
@@ -1164,14 +1318,26 @@ function CommentItem({
   };
 
   return (
-    <li className="ui-rv-comment" id={`${ids}-c-${c.id}`} data-active={active ? "" : undefined} data-resolved={c.resolved ? "" : undefined} onFocusCapture={onFocus}>
+    <li
+      className="ui-rv-comment"
+      id={`${ids}-c-${c.id}`}
+      data-active={active ? "" : undefined}
+      data-resolved={c.resolved ? "" : undefined}
+      onFocusCapture={onFocus}
+    >
       <div className="ui-rv-comment-head">
         {n !== undefined ? (
           <span className="ui-rv-num" aria-label={`Pin ${n}`}>
             {n}
           </span>
         ) : null}
-        <Avatar size="sm" src={author?.avatar} initials={sign(author).initials} ink={author?.staffRole === "expert"} alt="" />
+        <Avatar
+          size="sm"
+          src={author?.avatar}
+          initials={sign(author).initials}
+          ink={author?.staffRole === "expert"}
+          alt=""
+        />
         <span className="ui-rv-comment-who">{who(c.by)}</span>
         <time className="ui-rv-comment-time" dateTime={c.at}>
           {when(c.at)}
@@ -1194,7 +1360,13 @@ function CommentItem({
       {can.ask && (
         <div className="ui-rv-comment-actions">
           {!c.resolved && (
-            <Button variant="glass-clear" size="sm" icon="reply" onClick={() => setReplying((r) => !r)} aria-expanded={replying}>
+            <Button
+              variant="glass-clear"
+              size="sm"
+              icon="reply"
+              onClick={() => setReplying((r) => !r)}
+              aria-expanded={replying}
+            >
               Reply
             </Button>
           )}
@@ -1232,7 +1404,16 @@ function CommentItem({
               }
             }}
           />
-          <Button type="submit" variant="glass-clear" iconOnly icon="send" aria-label="Send the reply" shortcut="↵" loading={add.isPending} disabled={!reply.trim()} />
+          <Button
+            type="submit"
+            variant="glass-clear"
+            iconOnly
+            icon="send"
+            aria-label="Send the reply"
+            shortcut="↵"
+            loading={add.isPending}
+            disabled={!reply.trim()}
+          />
         </form>
       )}
     </li>

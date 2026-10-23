@@ -61,7 +61,8 @@ function useFinds(view: BrandBoardView | undefined) {
   const models = useBrandAssets().data?.models ?? [];
   if (!view) return { count: 0, words: [] as string[] };
   const waiting = heldBack ? [] : models.filter((m) => m.state === "saved");
-  const open = (list: { provenance: { state: string } }[]) => list.filter((x) => x.provenance.state === "proposed").length;
+  const open = (list: { provenance: { state: string } }[]) =>
+    list.filter((x) => x.provenance.state === "proposed").length;
   const id = view.identity;
   const kinds: [number, string, string][] = [
     [open(id.logos), "logo", "logos"],
@@ -71,7 +72,10 @@ function useFinds(view: BrandBoardView | undefined) {
     [open(id.imagery), "picture", "pictures"],
     [open(view.moodboard.items), "moodboard picture", "moodboard pictures"],
   ];
-  const words = [...kinds.filter(([n]) => n > 0).map(([n, one, many]) => findWords(n, one, many)), ...waiting.map((m) => `${m.name}, an AI model`)];
+  const words = [
+    ...kinds.filter(([n]) => n > 0).map(([n, one, many]) => findWords(n, one, many)),
+    ...waiting.map((m) => `${m.name}, an AI model`),
+  ];
   return { count: view.open + waiting.length, words };
 }
 
@@ -155,7 +159,12 @@ function BrandTabs() {
         {tab === "products" ? (
           <ProductsContent />
         ) : tab === "taste" ? (
-          <TasteContent moodboardId={board.data?.moodboard.id ?? "bd-brand"} moodboardItems={board.data?.moodboard.items.filter((i) => i.kind === "image" || i.kind === "creative").length} />
+          <TasteContent
+            moodboardId={board.data?.moodboard.id ?? "bd-brand"}
+            moodboardItems={
+              board.data?.moodboard.items.filter((i) => i.kind === "image" || i.kind === "creative").length
+            }
+          />
         ) : (
           <Query query={board} loading="Loading your Brand DNA">
             {(view) => <BoardTab view={view} finds={finds} />}
@@ -217,12 +226,15 @@ function PartIndex() {
     const pick = () => {
       const below = nav.current?.getBoundingClientRect().bottom ?? 0;
       const line = below + (s.getBoundingClientRect().bottom - below) / 4;
-      const tops = parts.map((p) => document.getElementById(p.id)?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY);
+      const tops = parts.map(
+        (p) => document.getElementById(p.id)?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY,
+      );
       let at = -1;
       tops.forEach((top, i) => {
         if (top <= line && (at < 0 || top > tops[at]! + 4)) at = i;
       });
-      if (s.scrollTop + s.clientHeight >= s.scrollHeight - 2) at = tops.findIndex((t) => Math.abs(t - tops[tops.length - 1]!) <= 4);
+      if (s.scrollTop + s.clientHeight >= s.scrollHeight - 2)
+        at = tops.findIndex((t) => Math.abs(t - tops[tops.length - 1]!) <= 4);
       // while the jump is still under way (a second), or while its row is the one in view, the pick stays lit
       const pin = picked.current;
       const p = pin ? parts.findIndex((x) => x.id === pin.id) : -1;
@@ -279,7 +291,13 @@ function BoardTab({ view, finds }: { view: BrandBoardView; finds: { count: numbe
   const [decided, setDecided] = useState<ReadonlySet<string>>(new Set());
   const visit: Visit = { decided, onDecided: (id) => setDecided((s) => new Set(s).add(id)) };
   const [open, setOpen] = useState<PartOpen>({});
-  const part = (p: Part) => ({ identity: view.identity, rules: view.rules, visit, open: Boolean(open[p]), onOpen: (o: boolean) => setOpen((x) => ({ ...x, [p]: o })) });
+  const part = (p: Part) => ({
+    identity: view.identity,
+    rules: view.rules,
+    visit,
+    open: Boolean(open[p]),
+    onOpen: (o: boolean) => setOpen((x) => ({ ...x, [p]: o })),
+  });
   const never = view.rules.filter((r) => r.kind === "hard_constraint").length;
 
   return (

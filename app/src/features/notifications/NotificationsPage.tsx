@@ -5,7 +5,14 @@
 // Round 9 (desktop review DWAY-11, DLOAD-4; PROPOSED 19 Oct 2026): on a desk the bell's popover is the whole list, so
 // this page is for the phone and for links. It is "All notifications", not a second inbox: it has its way back (Home),
 // Home is not lit while you are on it, and it counts unread as the bell does (what Home already asks shows as read).
-import { Button, NotificationList, PageHeader, SegmentedControl, SegmentedOption, type NotificationFilter } from "@fume/ui";
+import {
+  Button,
+  NotificationList,
+  PageHeader,
+  SegmentedControl,
+  SegmentedOption,
+  type NotificationFilter,
+} from "@fume/ui";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMarkRead } from "../../api/hooks";
@@ -32,17 +39,29 @@ export function NotificationsPage() {
         title="All notifications"
         meta={query.data ? [unread ? `${unread} unread` : "All read"] : undefined}
         actions={
-          <Button variant="secondary" size="sm" icon="check" disabled={!anyUnread} onClick={() => markRead.mutate("all")}>
+          <Button
+            variant="secondary"
+            size="sm"
+            icon="check"
+            disabled={!anyUnread}
+            onClick={() => markRead.mutate("all")}
+          >
             Mark all read
           </Button>
         }
       />
       <Query query={query}>
         {() => {
-          const shown = items.filter((n) => (filter === "unread" ? n.unread : filter === "mentions" ? n.kind === "mention" : true));
+          const shown = items.filter((n) =>
+            filter === "unread" ? n.unread : filter === "mentions" ? n.kind === "mention" : true,
+          );
           return (
             <div className="ui-app-stack">
-              <SegmentedControl aria-label="Show" value={filter} onValueChange={(v) => setFilter(v as NotificationFilter)}>
+              <SegmentedControl
+                aria-label="Show"
+                value={filter}
+                onValueChange={(v) => setFilter(v as NotificationFilter)}
+              >
                 {FILTERS.map((f) => (
                   <SegmentedOption key={f.value} value={f.value}>
                     {f.label}
@@ -63,7 +82,13 @@ export function NotificationsPage() {
               ) : (
                 <Nothing
                   icon="inbox"
-                  title={filter === "all" ? "Nothing new since you last looked" : filter === "unread" ? "Everything is read" : "No one has mentioned you"}
+                  title={
+                    filter === "all"
+                      ? "Nothing new since you last looked"
+                      : filter === "unread"
+                        ? "Everything is read"
+                        : "No one has mentioned you"
+                  }
                   text={
                     filter === "all"
                       ? "Checked creatives, questions from Fume and mentions show here as they happen."

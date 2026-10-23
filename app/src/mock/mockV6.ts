@@ -2,7 +2,18 @@
 // specs, parts, reference shots and files. createMockApi mixes these in. The Engine's "reading" of photos and the
 // product page is a small table per kind (seed6.readGuesses).
 
-import { FumeError, type Category, type DetailToken, type FumeApi, type Id, type Product, type ProductKind, type Provenance, type SpecEntry, type User } from "../contract";
+import {
+  FumeError,
+  type Category,
+  type DetailToken,
+  type FumeApi,
+  type Id,
+  type Product,
+  type ProductKind,
+  type Provenance,
+  type SpecEntry,
+  type User,
+} from "../contract";
 import * as seed6 from "./seed6";
 
 /** The v6 tables, merged into the mock's in-memory db. */
@@ -14,8 +25,10 @@ type Db = ReturnType<typeof v6Db> & { products: Product[]; detailTokens: DetailT
 
 /** Gives LYSNE's products their kind, specs, parts, shots and files; adds the round 7 demo sweater (merchandise). */
 export function upgradeV6(db: Db) {
-  if (!db.products.some((p) => p.id === seed6.sweaterProduct.id)) db.products.push(structuredClone(seed6.sweaterProduct) as Product);
-  if (db.categories && !db.categories.some((c) => c.id === seed6.merchCategory.id)) db.categories.push({ ...seed6.merchCategory } as Category);
+  if (!db.products.some((p) => p.id === seed6.sweaterProduct.id))
+    db.products.push(structuredClone(seed6.sweaterProduct) as Product);
+  if (db.categories && !db.categories.some((c) => c.id === seed6.merchCategory.id))
+    db.categories.push({ ...seed6.merchCategory } as Category);
   for (const p of db.products) {
     const v6 = seed6.productSpecs[p.id];
     if (!v6) continue;
@@ -47,7 +60,8 @@ export function v6Api(ctx: V6Context): Pick<FumeApi, V6Keys> {
     return k;
   };
   const mine = (): Provenance => ({ origin: "customer", state: "approved", by: ctx.me().id, at: now() });
-  const fieldOf = (k: ProductKind | undefined, fieldId: Id) => k?.groups.flatMap((g) => g.fields).find((f) => f.id === fieldId);
+  const fieldOf = (k: ProductKind | undefined, fieldId: Id) =>
+    k?.groups.flatMap((g) => g.fields).find((f) => f.id === fieldId);
 
   /** A label line linked to a detail token: the token says what the customer says. */
   function syncToken(p: Product, entry: SpecEntry) {
@@ -55,7 +69,13 @@ export function v6Api(ctx: V6Context): Pick<FumeApi, V6Keys> {
     const t = db.detailTokens.find((x) => x.id === entry.detailTokenId);
     if (!t || typeof entry.value !== "string") return;
     t.value = entry.value.split("\n").join(" · ");
-    t.provenance = { ...t.provenance, origin: "customer", state: entry.provenance.state === "proposed" ? "proposed" : "approved", by: ctx.me().id, at: now() };
+    t.provenance = {
+      ...t.provenance,
+      origin: "customer",
+      state: entry.provenance.state === "proposed" ? "proposed" : "approved",
+      by: ctx.me().id,
+      at: now(),
+    };
     void p;
   }
 
@@ -78,15 +98,40 @@ export function v6Api(ctx: V6Context): Pick<FumeApi, V6Keys> {
         provenance: { origin: "customer", state: "approved", by: ctx.me().id, at: now() },
         specs: (seed6.readGuesses[k.id] ?? [])
           .filter((g) => fieldOf(k, g.fieldId))
-          .map((g) => ({ fieldId: g.fieldId, value: g.value, ...(g.unit ? { unit: g.unit } : {}), provenance: { origin: "engine", state: "proposed", evidence: input.url && /page/.test(g.evidence) ? input.url.replace(/^https?:\/\//, "") : g.evidence, confidence: "medium" } })),
-        parts: k.parts.map((name) => ({ id: nextId("pp"), name, provenance: { origin: "engine", state: "proposed", evidence: `Usual for ${k.name.toLowerCase()}`, confidence: "low" } })),
+          .map((g) => ({
+            fieldId: g.fieldId,
+            value: g.value,
+            ...(g.unit ? { unit: g.unit } : {}),
+            provenance: {
+              origin: "engine",
+              state: "proposed",
+              evidence: input.url && /page/.test(g.evidence) ? input.url.replace(/^https?:\/\//, "") : g.evidence,
+              confidence: "medium",
+            },
+          })),
+        parts: k.parts.map((name) => ({
+          id: nextId("pp"),
+          name,
+          provenance: {
+            origin: "engine",
+            state: "proposed",
+            evidence: `Usual for ${k.name.toLowerCase()}`,
+            confidence: "low",
+          },
+        })),
         shots: input.shots.filter((s) => s.src).map((s) => ({ slotId: s.slotId, image: s.src!, provenance: mine() })),
         files: [],
       };
       // The size the customer typed is the net content, when the kind has one.
       const n = /^(\d+(?:[.,]\d+)?)\s*([a-zA-Z/²]+)?/.exec(input.variant.trim());
       const net = fieldOf(k, "net") ?? fieldOf(k, "count");
-      if (n && net) p.specs!.push({ fieldId: net.id, value: Number(n[1]!.replace(",", ".")), ...(n[2] ? { unit: n[2] } : {}), provenance: mine() });
+      if (n && net)
+        p.specs!.push({
+          fieldId: net.id,
+          value: Number(n[1]!.replace(",", ".")),
+          ...(n[2] ? { unit: n[2] } : {}),
+          provenance: mine(),
+        });
       db.products.push(p);
       return wait(p);
     },
@@ -104,7 +149,8 @@ export function v6Api(ctx: V6Context): Pick<FumeApi, V6Keys> {
           fieldId: v.fieldId,
           value: v.value,
           ...(v.unit ? { unit: v.unit } : {}),
-          provenance: old?.provenance.origin === "engine" ? { ...mine(), state: "changed", ...(was ? { was } : {}) } : mine(),
+          provenance:
+            old?.provenance.origin === "engine" ? { ...mine(), state: "changed", ...(was ? { was } : {}) } : mine(),
           ...(old?.detailTokenId ? { detailTokenId: old.detailTokenId } : {}),
         };
         p.specs = p.specs.filter((s) => s.fieldId !== v.fieldId).concat(entry);
@@ -122,7 +168,9 @@ export function v6Api(ctx: V6Context): Pick<FumeApi, V6Keys> {
         const before = new Map((p.parts ?? []).map((x) => [x.id, x]));
         p.parts = input.parts.map((x) => {
           const old = before.get(x.id);
-          const same = old && JSON.stringify({ ...old, provenance: undefined }) === JSON.stringify({ ...x, provenance: undefined });
+          const same =
+            old &&
+            JSON.stringify({ ...old, provenance: undefined }) === JSON.stringify({ ...x, provenance: undefined });
           return { ...x, id: x.id || nextId("pp"), provenance: same && old ? old.provenance : mine() };
         });
       }
@@ -149,7 +197,15 @@ export function v6Api(ctx: V6Context): Pick<FumeApi, V6Keys> {
 
     async uploadProductFile(productId, file) {
       const p = product(productId);
-      p.files = (p.files ?? []).concat({ id: nextId("pf"), kind: file.kind, name: file.name, bytes: file.bytes, at: now(), by: ctx.me().id, read: seed6.fileReads[file.kind] });
+      p.files = (p.files ?? []).concat({
+        id: nextId("pf"),
+        kind: file.kind,
+        name: file.name,
+        bytes: file.bytes,
+        at: now(),
+        by: ctx.me().id,
+        read: seed6.fileReads[file.kind],
+      });
       return wait(p);
     },
   };

@@ -85,14 +85,16 @@ export function SettingsLayout({
 
   // the pill follows the chosen tab (tabs.js placeVertical)
   const place = () => {
-    const ind = indicatorRef.current, sel = tabRefs.current[selected];
+    const ind = indicatorRef.current,
+      sel = tabRefs.current[selected];
     if (!ind || !sel) return;
     ind.style.setProperty("--y", sel.offsetTop + "px");
     ind.style.setProperty("--h", sel.offsetHeight + "px");
   };
   useLayoutEffect(place);
   useEffect(() => {
-    let r1 = 0, r2 = 0;
+    let r1 = 0,
+      r2 = 0;
     r1 = requestAnimationFrame(() => {
       r2 = requestAnimationFrame(() => {
         setReady(true);
@@ -164,7 +166,11 @@ export function SettingsLayout({
         <div className="ui-tabs ui-settings-layout" data-orientation="vertical">
           <div
             ref={listRef}
-            className={cx("ui-tabs-list ui-tabs-list--vertical ui-settings-nav", placing && "is-placing", ready && "is-ready")}
+            className={cx(
+              "ui-tabs-list ui-tabs-list--vertical ui-settings-nav",
+              placing && "is-placing",
+              ready && "is-ready",
+            )}
             role="tablist"
             aria-orientation="vertical"
             aria-label={navLabel}
@@ -321,7 +327,9 @@ export function SettingsForm({
           label={unsavedLabel}
           optionalLabel
           onFocusLost={() => {
-            const first = formRef.current?.querySelector<HTMLElement>("input:not([type=hidden]), textarea, select, [role=switch], [role=checkbox]");
+            const first = formRef.current?.querySelector<HTMLElement>(
+              "input:not([type=hidden]), textarea, select, [role=switch], [role=checkbox]",
+            );
             first?.focus({ preventScroll: true });
           }}
         >

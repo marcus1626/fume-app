@@ -173,11 +173,15 @@ export function sourceWords(
   ctx?: { me?: string; people?: (id?: string) => User | undefined },
 ): string {
   if (fact.source === "verified" && fact.verifiedBy) {
-    const who = fact.verifiedBy === ctx?.me ? copy.factSource.verified : `Confirmed by ${firstName(ctx?.people?.(fact.verifiedBy)?.name ?? "your team")}`;
+    const who =
+      fact.verifiedBy === ctx?.me
+        ? copy.factSource.verified
+        : `Confirmed by ${firstName(ctx?.people?.(fact.verifiedBy)?.name ?? "your team")}`;
     return fact.verifiedAt ? `${who}, ${date(fact.verifiedAt)}` : who;
   }
   const words: string = copy.factSource[fact.source];
-  if (fact.source === "supplied" || fact.source === "verified" || fact.source === "unknown" || !fact.confidence) return words;
+  if (fact.source === "supplied" || fact.source === "verified" || fact.source === "unknown" || !fact.confidence)
+    return words;
   return `${words}. ${confidence[fact.confidence]}`;
 }
 
@@ -195,7 +199,9 @@ export function ruleLine(rule: BrandRule): string | undefined {
     campaign: "For one campaign",
     unknown: "Fume needs this from you",
   };
-  const source = isConfirmed(rule.source) ? "" : `${where[rule.source] ?? ""}${rule.confidence === "low" ? ", not sure yet" : ""}`;
+  const source = isConfirmed(rule.source)
+    ? ""
+    : `${where[rule.source] ?? ""}${rule.confidence === "low" ? ", not sure yet" : ""}`;
   const parts = [rule.kind === "preference" ? "Can bend for a campaign" : "", source].filter(Boolean);
   return parts.length ? parts.join(" · ") : undefined;
 }
@@ -220,7 +226,9 @@ export function needs(view: BrandDnaView) {
 export function factsLine(p: Product): string {
   if (p.facts.length === 0) return "Fume is reading it";
   const open = p.facts.filter((f) => f.source !== "verified" && f.source !== "supplied").length;
-  return open === 0 ? `${copy.count(p.facts.length, "line")}, all yours or confirmed` : `${open} of ${copy.count(p.facts.length, "line")} to confirm`;
+  return open === 0
+    ? `${copy.count(p.facts.length, "line")}, all yours or confirmed`
+    : `${open} of ${copy.count(p.facts.length, "line")} to confirm`;
 }
 
 /** A product's state as a badge: confirmed, needs you, or Fume is reading it. */
@@ -252,7 +260,12 @@ export function SourceUpload({ brand }: { brand: string }) {
   const [items, setItems] = useState<DropzoneItem[]>([]);
 
   function add(files: File[]) {
-    const batch = files.map((f, i) => ({ id: `up-${Date.now()}-${i}`, name: f.name, bytes: f.size, state: "uploading" as const }));
+    const batch = files.map((f, i) => ({
+      id: `up-${Date.now()}-${i}`,
+      name: f.name,
+      bytes: f.size,
+      state: "uploading" as const,
+    }));
     setItems((now) => [...now, ...batch]);
     const ids = new Set(batch.map((b) => b.id));
     upload.mutate(
@@ -260,10 +273,16 @@ export function SourceUpload({ brand }: { brand: string }) {
       {
         onSuccess: () => {
           setItems((now) => now.filter((x) => !ids.has(x.id)));
-          toast.done(`${copy.count(files.length, "piece", "pieces")} of brand material added`, { description: "Fume reads them and tells you what it finds." });
+          toast.done(`${copy.count(files.length, "piece", "pieces")} of brand material added`, {
+            description: "Fume reads them and tells you what it finds.",
+          });
         },
         onError: (error) =>
-          setItems((now) => now.map((x) => (ids.has(x.id) ? { ...x, state: "error", error: error.message || "This didn’t arrive. Try again." } : x))),
+          setItems((now) =>
+            now.map((x) =>
+              ids.has(x.id) ? { ...x, state: "error", error: error.message || "This didn’t arrive. Try again." } : x,
+            ),
+          ),
       },
     );
   }
@@ -307,7 +326,8 @@ export function SourceList({ assets, people, me }: { assets: SourceAsset[]; peop
           <ItemContent>
             <ItemTitle>{a.name}</ItemTitle>
             <ItemDescription>
-              {assetKind[a.kind].label}, {bytes(a.bytes)}. Added by {a.uploadedBy === me ? "you" : dir.name(a.uploadedBy)} on {date(a.at)}
+              {assetKind[a.kind].label}, {bytes(a.bytes)}. Added by{" "}
+              {a.uploadedBy === me ? "you" : dir.name(a.uploadedBy)} on {date(a.at)}
             </ItemDescription>
           </ItemContent>
         </Item>
@@ -341,7 +361,9 @@ export function AddProductDialog({
       { name: name.trim(), variant: variant.trim(), url: url.trim() || undefined },
       {
         onSuccess: (product) => {
-          toast.done(`${product.name} added`, { description: "Fume reads it now. Confirm each line once it is there." });
+          toast.done(`${product.name} added`, {
+            description: "Fume reads it now. Confirm each line once it is there.",
+          });
           setName("");
           setVariant("");
           setUrl("");
@@ -367,20 +389,42 @@ export function AddProductDialog({
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="product-name">Name</FieldLabel>
-                <Input id="product-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Night Body Oil" required data-ui-autofocus />
+                <Input
+                  id="product-name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Night Body Oil"
+                  required
+                  data-ui-autofocus
+                />
               </Field>
               <Field>
                 <FieldLabel htmlFor="product-variant">
                   Size or variant <FieldOptional />
                 </FieldLabel>
-                <Input id="product-variant" value={variant} onChange={(e) => setVariant(e.target.value)} placeholder="100 ml" />
+                <Input
+                  id="product-variant"
+                  value={variant}
+                  onChange={(e) => setVariant(e.target.value)}
+                  placeholder="100 ml"
+                />
               </Field>
               <Field>
                 <FieldLabel htmlFor="product-url">
                   Product page <FieldOptional />
                 </FieldLabel>
-                <Input id="product-url" type="url" inputMode="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://" aria-describedby="product-url-help" />
-                <FieldDescription id="product-url-help">A page alone does not make it true: you confirm every line after.</FieldDescription>
+                <Input
+                  id="product-url"
+                  type="url"
+                  inputMode="url"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="https://"
+                  aria-describedby="product-url-help"
+                />
+                <FieldDescription id="product-url-help">
+                  A page alone does not make it true: you confirm every line after.
+                </FieldDescription>
               </Field>
             </FieldGroup>
           </form>
@@ -389,7 +433,13 @@ export function AddProductDialog({
           <DialogClose asChild>
             <Button variant="glass-clear">Later</Button>
           </DialogClose>
-          <Button type="submit" form="add-product" variant="glass-white" loading={add.isPending} disabled={!name.trim()}>
+          <Button
+            type="submit"
+            form="add-product"
+            variant="glass-white"
+            loading={add.isPending}
+            disabled={!name.trim()}
+          >
             Add the product
           </Button>
         </DialogFooter>

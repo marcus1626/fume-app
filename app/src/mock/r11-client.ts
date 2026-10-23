@@ -20,7 +20,19 @@
 //   so the people of the brand include him; and Fume says why it asks in the agency's words ("Your team checks each
 //   one against the client's answer"), since no Fume expert checks an agency's work (FLOWS §24.1).
 // A brand no agency runs is as it was.
-import type { Campaign, CampaignPlan, ClientSend, Creative, FumeApi, Id, Membership, Notification, Product, User, Workspace } from "../contract";
+import type {
+  Campaign,
+  CampaignPlan,
+  ClientSend,
+  Creative,
+  FumeApi,
+  Id,
+  Membership,
+  Notification,
+  Product,
+  User,
+  Workspace,
+} from "../contract";
 import * as copy from "../copy";
 
 interface ClientDb {
@@ -45,7 +57,8 @@ export interface R11ClientContext {
 }
 
 /** The workspace an agency runs, or undefined. */
-const agencyRun = (db: Pick<ClientDb, "workspaces">, workspaceId: Id | undefined) => db.workspaces.find((w) => w.id === workspaceId && w.agencyId);
+const agencyRun = (db: Pick<ClientDb, "workspaces">, workspaceId: Id | undefined) =>
+  db.workspaces.find((w) => w.id === workspaceId && w.agencyId);
 
 /** True for a checked creative in a client brand that the agency has not sent to the client yet. */
 export function unsentToClient(db: Pick<ClientDb, "workspaces" | "campaigns" | "clientSends">, c: Creative): boolean {
@@ -56,17 +69,25 @@ export function unsentToClient(db: Pick<ClientDb, "workspaces" | "campaigns" | "
 }
 
 /** The client's people of a brand: its members who hold no agency seat. */
-const clientPerson = (db: ClientDb, userId: Id, workspaceId: Id) => Boolean(agencyRun(db, workspaceId)) && !db.users.find((u) => u.id === userId)?.agency;
+const clientPerson = (db: ClientDb, userId: Id, workspaceId: Id) =>
+  Boolean(agencyRun(db, workspaceId)) && !db.users.find((u) => u.id === userId)?.agency;
 
 /** What Fume says to an agency about why it asks: the agency checks its own creatives (FLOWS §24.1). */
-export const agencyWhy = (why: string) => why.replace(/Fume[’']s expert checks each one against your answer/, "Your team checks each one against the client’s answer");
+export const agencyWhy = (why: string) =>
+  why.replace(
+    /Fume[’']s expert checks each one against your answer/,
+    "Your team checks each one against the client’s answer",
+  );
 
 /** The person at Fume who answers an agency in its Fume conversation (FLOWS §24.1, §21). */
 export const FUME_CONTACT = "u-sander";
 
-export function r11ClientApi(ctx: R11ClientContext): Pick<FumeApi, "home" | "clientLink" | "notifications" | "people" | "questions"> {
+export function r11ClientApi(
+  ctx: R11ClientContext,
+): Pick<FumeApi, "home" | "clientLink" | "notifications" | "people" | "questions"> {
   const { db } = ctx;
-  const toSend = (campaignId: Id) => db.creatives.filter((c) => c.campaignId === campaignId && unsentToClient(db, c)).length;
+  const toSend = (campaignId: Id) =>
+    db.creatives.filter((c) => c.campaignId === campaignId && unsentToClient(db, c)).length;
 
   // Every campaign of a client brand carries how many checked creatives wait to be sent (r9-campaign.ts gives each
   // campaign its live `waits`; this adds `toSend` to the client brands' ones, and to the campaigns added later).
@@ -92,13 +113,16 @@ export function r11ClientApi(ctx: R11ClientContext): Pick<FumeApi, "home" | "cli
 
   /** creative id → its one name (copy.creativeName), over the campaign's creatives in the order they were made. */
   const customerNames = (campaign: Campaign): Record<Id, string> => {
-    const product = campaign.productIds.length === 1 ? db.products.find((p) => p.id === campaign.productIds[0])?.name : undefined;
+    const product =
+      campaign.productIds.length === 1 ? db.products.find((p) => p.id === campaign.productIds[0])?.name : undefined;
     const count = new Map<string, number>();
     const names: Record<Id, string> = {};
     for (const c of db.creatives.filter((x) => x.campaignId === campaign.id)) {
       const n = (count.get(c.format) ?? 0) + 1;
       count.set(c.format, n);
-      const own = /^(Feed|Square|Story) [A-Z]?\d+$/.test(c.title.trim()) ? c.title.trim() : `${copy.format[c.format].label} ${n}`;
+      const own = /^(Feed|Square|Story) [A-Z]?\d+$/.test(c.title.trim())
+        ? c.title.trim()
+        : `${copy.format[c.format].label} ${n}`;
       names[c.id] = copy.creativeName({ title: own, format: c.format, productName: product ?? campaign.name });
     }
     return names;
@@ -117,13 +141,22 @@ export function r11ClientApi(ctx: R11ClientContext): Pick<FumeApi, "home" | "cli
         return {
           ...view,
           waitingOnYou: view.waitingOnYou.flatMap((w) =>
-            w.kind === "creatives" ? [] : w.kind === "plan" ? (checked(w.campaignId) ? [] : [{ ...w, detail: "The plan waits for your check. Check it and send it to the client." }]) : [w],
+            w.kind === "creatives"
+              ? []
+              : w.kind === "plan"
+                ? checked(w.campaignId)
+                  ? []
+                  : [{ ...w, detail: "The plan waits for your check. Check it and send it to the client." }]
+                : [w],
           ),
         };
       // The client: the plan once the agency sent it, and the creatives she approves, counted as sent (the agency's
       // unsent ones are not hers yet).
       const waitingOnYou = view.waitingOnYou.flatMap((w) => {
-        if (w.kind === "plan") return checked(w.campaignId) ? [{ ...w, detail: `${agencyName} checked the plan. Approve it and Fume starts.` }] : [];
+        if (w.kind === "plan")
+          return checked(w.campaignId)
+            ? [{ ...w, detail: `${agencyName} checked the plan. Approve it and Fume starts.` }]
+            : [];
         if (w.kind !== "creatives") return [];
         const campaign = db.campaigns.find((c) => c.id === w.campaignId);
         const n = campaign ? campaign.counts.checked - toSend(campaign.id) : 0;
@@ -138,7 +171,9 @@ export function r11ClientApi(ctx: R11ClientContext): Pick<FumeApi, "home" | "cli
     async notifications() {
       const list = await ctx.base().notifications();
       // The client's bell: what she approves (the agency's sends) and her deliveries.
-      return clientPerson(db, ctx.userId(), ctx.workspaceId()) ? list.filter((n) => n.kind === "checked" || n.kind === "delivered") : list;
+      return clientPerson(db, ctx.userId(), ctx.workspaceId())
+        ? list.filter((n) => n.kind === "checked" || n.kind === "delivered")
+        : list;
     },
     async people() {
       const list = await ctx.base().people();

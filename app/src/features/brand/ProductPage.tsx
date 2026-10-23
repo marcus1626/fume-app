@@ -68,7 +68,18 @@ import {
   useUploadShot,
   useVerifyProduct,
 } from "../../api/hooks";
-import type { FidelityGap, OpenQuestion, Product, ProductFact, ProductFile, ProductKind, ProductOverride, SpecField, SpecGroupId, SpecValue } from "../../contract";
+import type {
+  FidelityGap,
+  OpenQuestion,
+  Product,
+  ProductFact,
+  ProductFile,
+  ProductKind,
+  ProductOverride,
+  SpecField,
+  SpecGroupId,
+  SpecValue,
+} from "../../contract";
 import * as copy from "../../copy";
 import { Back, Nothing, Page, Query } from "../../shell/Page";
 import { directory } from "../../shell/people";
@@ -110,12 +121,24 @@ function Gallery({ product }: { product: Product }) {
   const shown = pictures[Math.min(at, pictures.length - 1)];
   return (
     <div className="ui-pspec-gallery">
-      <div className="ui-pspec-media">{shown ? <img src={shown} alt={`${product.name}, picture ${at + 1} of ${pictures.length}`} /> : <Icon name="camera" />}</div>
+      <div className="ui-pspec-media">
+        {shown ? (
+          <img src={shown} alt={`${product.name}, picture ${at + 1} of ${pictures.length}`} />
+        ) : (
+          <Icon name="camera" />
+        )}
+      </div>
       {pictures.length > 1 && (
         <ul className="ui-pspec-thumbs" aria-label="Pictures">
           {pictures.map((src, i) => (
             <li key={src}>
-              <button type="button" className="ui-pspec-thumb" aria-pressed={i === at} aria-label={`Picture ${i + 1}`} onClick={() => setAt(i)}>
+              <button
+                type="button"
+                className="ui-pspec-thumb"
+                aria-pressed={i === at}
+                aria-label={`Picture ${i + 1}`}
+                onClick={() => setAt(i)}
+              >
                 <img src={src} alt="" loading="lazy" />
               </button>
             </li>
@@ -133,7 +156,12 @@ function PhotoButton({ product }: { product: Product }) {
   const count = new Set([...product.images, ...(product.shots ?? []).map((s) => s.image)]).size;
   return (
     <>
-      <button type="button" className="ui-pcheck-photo" onClick={() => setOpen(true)} aria-label={count > 1 ? `See the ${count} pictures of ${product.name}` : `See the picture of ${product.name}`}>
+      <button
+        type="button"
+        className="ui-pcheck-photo"
+        onClick={() => setOpen(true)}
+        aria-label={count > 1 ? `See the ${count} pictures of ${product.name}` : `See the picture of ${product.name}`}
+      >
         {src ? <img src={src} alt="" /> : <Icon name="camera" />}
       </button>
       {open && (
@@ -173,7 +201,8 @@ function LineAnswer({ fact, product }: { fact: ProductFact; product: Product }) 
     correct.mutate(
       { factId: fact.id, statement: said },
       {
-        onSuccess: () => toast.done("Answer saved", { description: `${expert} checks every creative of ${product.name} against it.` }),
+        onSuccess: () =>
+          toast.done("Answer saved", { description: `${expert} checks every creative of ${product.name} against it.` }),
         onError: (error) => toast.error("That wasn’t saved", { description: error.message }),
       },
     );
@@ -203,12 +232,17 @@ function Needs({ product, questions, facts }: { product: Product; questions: Ope
   const total = questions.length + facts.length;
   const q = questions[0];
   const f = q ? undefined : facts[0];
-  const then = q ? (questions[1]?.question ?? (facts[0] && `${factArea[facts[0].area]}: ${asked(facts[0])}`)) : facts[1] && `${factArea[facts[1].area]}: ${asked(facts[1])}`;
+  const then = q
+    ? (questions[1]?.question ?? (facts[0] && `${factArea[facts[0].area]}: ${asked(facts[0])}`))
+    : facts[1] && `${factArea[facts[1].area]}: ${asked(facts[1])}`;
 
   // A link from Home with #needs lands on the answer, ready to type (MOB-4). The shell scrolls to it.
   useEffect(() => {
     if (location.hash !== "#needs" || !total) return;
-    const t = window.setTimeout(() => document.querySelector<HTMLTextAreaElement>("#needs textarea")?.focus({ preventScroll: true }), 300);
+    const t = window.setTimeout(
+      () => document.querySelector<HTMLTextAreaElement>("#needs textarea")?.focus({ preventScroll: true }),
+      300,
+    );
     return () => window.clearTimeout(t);
   }, [location.hash, total]);
 
@@ -221,7 +255,11 @@ function Needs({ product, questions, facts }: { product: Product; questions: Ope
       </h2>
       <div className="ui-pcheck-ask">
         <p className="ui-pcheck-ask-q">{q ? q.question : f ? `${factArea[f.area]}: ${asked(f)}` : ""}</p>
-        <p className="ui-pcheck-ask-why">{q ? q.why : `Every claim on a creative must be true before anything ships. ${expert} checks each one against your answer.`}</p>
+        <p className="ui-pcheck-ask-why">
+          {q
+            ? q.why
+            : `Every claim on a creative must be true before anything ships. ${expert} checks each one against your answer.`}
+        </p>
         {!canEdit ? (
           <p className="ui-pcheck-ask-why">Someone on your team who can edit Brand DNA answers it.</p>
         ) : q ? (
@@ -277,7 +315,13 @@ function CorrectDialog({ fact, onOpenChange }: { fact: ProductFact; onOpenChange
           <DialogClose asChild>
             <Button variant="glass-clear">Cancel</Button>
           </DialogClose>
-          <Button type="submit" form="correct-fact" variant="glass-white" loading={correct.isPending} disabled={!text.trim() || text.trim() === fact.statement}>
+          <Button
+            type="submit"
+            form="correct-fact"
+            variant="glass-white"
+            loading={correct.isPending}
+            disabled={!text.trim() || text.trim() === fact.statement}
+          >
             Save
           </Button>
         </DialogFooter>
@@ -294,7 +338,11 @@ function ChangeProposal({ o, canApprove }: { o: ProductOverride; canApprove: boo
   const who = useWho();
   const name = who(o.by) ?? "Fume’s designer";
   const viewer = useViewer();
-  const verdict = (v: "approve" | "decline") => decide.mutate({ overrideId: o.id, verdict: v }, { onError: (e) => toast.error("That wasn’t saved", { description: e.message }) });
+  const verdict = (v: "approve" | "decline") =>
+    decide.mutate(
+      { overrideId: o.id, verdict: v },
+      { onError: (e) => toast.error("That wasn’t saved", { description: e.message }) },
+    );
   return (
     <div className="ui-pcheck-change">
       <p className="ui-pcheck-change-text">
@@ -306,10 +354,20 @@ function ChangeProposal({ o, canApprove }: { o: ProductOverride; canApprove: boo
       </p>
       {canApprove ? (
         <div className="ui-pcheck-line-actions">
-          <Button size="sm" variant="secondary" onClick={() => verdict("approve")} loading={decide.isPending && decide.variables?.verdict === "approve"}>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => verdict("approve")}
+            loading={decide.isPending && decide.variables?.verdict === "approve"}
+          >
             Use it
           </Button>
-          <Button size="sm" variant="quiet" onClick={() => verdict("decline")} loading={decide.isPending && decide.variables?.verdict === "decline"}>
+          <Button
+            size="sm"
+            variant="quiet"
+            onClick={() => verdict("decline")}
+            loading={decide.isPending && decide.variables?.verdict === "decline"}
+          >
             Keep yours
           </Button>
         </div>
@@ -320,7 +378,15 @@ function ChangeProposal({ o, canApprove }: { o: ProductOverride; canApprove: boo
   );
 }
 
-function TruthList({ product, kind, onDetails }: { product: Product; kind?: ProductKind; onDetails: (section?: string) => void }) {
+function TruthList({
+  product,
+  kind,
+  onDetails,
+}: {
+  product: Product;
+  kind?: ProductKind;
+  onDetails: (section?: string) => void;
+}) {
   const { canEdit, canApprove, role } = useRole();
   const verify = useVerifyProduct();
   const save = useSaveProductSpecs();
@@ -343,16 +409,27 @@ function TruthList({ product, kind, onDetails }: { product: Product; kind?: Prod
   ].map((w, i) => (i === 0 ? w : w.toLowerCase()));
   // DLOAD-19: "From your detail photo and LYS-KN-001 tech pack v3.pdf": only a plain capitalised word ("Your") goes lower
   // case after "From"; a code or a file name keeps its capitals.
-  const readFrom = [...new Set(read.specs.map((s) => s.provenance.evidence).filter((e): e is string => Boolean(e)))].slice(0, 2).map(lowerFirst);
+  const readFrom = [...new Set(read.specs.map((s) => s.provenance.evidence).filter((e): e is string => Boolean(e)))]
+    .slice(0, 2)
+    .map(lowerFirst);
   const unmatched = overrides.filter((o) => !known.some((f) => f.label === o.field));
-  const canConfirm = canEdit && !confirmed && !unknown && (known.some((f) => !settled(f)) || read.count > 0 || product.state === "needs_you");
+  const canConfirm =
+    canEdit &&
+    !confirmed &&
+    !unknown &&
+    (known.some((f) => !settled(f)) || read.count > 0 || product.state === "needs_you");
   const next = catalogue?.products.find((x) => x.id !== product.id && x.state === "needs_you");
 
   async function confirm() {
     setBusy(true);
     try {
       if (read.count)
-        await save.mutateAsync({ productId: product.id, keep: read.specs.map((s) => s.fieldId), keepParts: read.parts.map((x) => x.id), keepShots: read.shots.map((x) => x.slotId) });
+        await save.mutateAsync({
+          productId: product.id,
+          keep: read.specs.map((s) => s.fieldId),
+          keepParts: read.parts.map((x) => x.id),
+          keepShots: read.shots.map((x) => x.slotId),
+        });
       await verify.mutateAsync(product.id);
       toast.done(`${product.name} confirmed`, {
         description: "It is ready for campaigns.",
@@ -360,7 +437,9 @@ function TruthList({ product, kind, onDetails }: { product: Product; kind?: Prod
         action: next ? { label: "Confirm the next", onClick: () => navigate(CHECK_PRODUCTS) } : undefined,
       });
     } catch (error) {
-      toast.error(`${product.name} wasn’t confirmed`, { description: error instanceof Error ? error.message : undefined });
+      toast.error(`${product.name} wasn’t confirmed`, {
+        description: error instanceof Error ? error.message : undefined,
+      });
     } finally {
       setBusy(false);
     }
@@ -375,7 +454,11 @@ function TruthList({ product, kind, onDetails }: { product: Product; kind?: Prod
         <p className="ui-pcheck-truth-text">What every creative must keep true.</p>
       </header>
       {known.length === 0 && !unknown && read.count === 0 && unmatched.length === 0 ? (
-        <Nothing icon="tag" title="Fume is reading this product" text="The lines it finds land here for you to confirm." />
+        <Nothing
+          icon="tag"
+          title="Fume is reading this product"
+          text="The lines it finds land here for you to confirm."
+        />
       ) : (
         <ul className="ui-pcheck-lines">
           {known.map((f) => {
@@ -388,7 +471,9 @@ function TruthList({ product, kind, onDetails }: { product: Product; kind?: Prod
                 {open && (
                   <span className="ui-pcheck-source">
                     <Icon name="fume-engine" />
-                    {product.provenance?.evidence ? `Fume read this on ${product.provenance.evidence}` : "Fume read this"}
+                    {product.provenance?.evidence
+                      ? `Fume read this on ${product.provenance.evidence}`
+                      : "Fume read this"}
                     {f.confidence === "low" ? " · not sure" : ""}
                   </span>
                 )}
@@ -461,9 +546,17 @@ function TruthList({ product, kind, onDetails }: { product: Product; kind?: Prod
           )}
         </div>
       )}
-      {canConfirm && read.count > 0 && <p className="ui-pcheck-confirm-note">It keeps what Fume read and confirms every line.</p>}
-      {role === null && <p className="ui-pcheck-confirm-note">The customer’s Product Truth, read only. A change to the product is a proposal the customer decides on.</p>}
-      {correcting && <CorrectDialog key={correcting.id} fact={correcting} onOpenChange={(o) => !o && setCorrecting(null)} />}
+      {canConfirm && read.count > 0 && (
+        <p className="ui-pcheck-confirm-note">It keeps what Fume read and confirms every line.</p>
+      )}
+      {role === null && (
+        <p className="ui-pcheck-confirm-note">
+          The customer’s Product Truth, read only. A change to the product is a proposal the customer decides on.
+        </p>
+      )}
+      {correcting && (
+        <CorrectDialog key={correcting.id} fact={correcting} onOpenChange={(o) => !o && setCorrecting(null)} />
+      )}
     </section>
   );
 }
@@ -481,7 +574,21 @@ const fileAccept: Record<ProductFile["kind"], string> = {
 };
 
 /** Everything else, under one closed row (LOAD-1): each section opens on its own, the factory files one level deeper. */
-function AllDetails({ product, kind, open, onOpen, sections, onSections }: { product: Product; kind?: ProductKind; open: boolean; onOpen: (open: boolean) => void; sections: string[]; onSections: (s: string[]) => void }) {
+function AllDetails({
+  product,
+  kind,
+  open,
+  onOpen,
+  sections,
+  onSections,
+}: {
+  product: Product;
+  kind?: ProductKind;
+  open: boolean;
+  onOpen: (open: boolean) => void;
+  sections: string[];
+  onSections: (s: string[]) => void;
+}) {
   const { canEdit } = useRole();
   const catalogue = useCatalogue().data;
   const toast = useToast();
@@ -499,21 +606,35 @@ function AllDetails({ product, kind, open, onOpen, sections, onSections }: { pro
   const fid = fidelity(product, kind);
   const read = proposalsOf(product);
   // One count (DLOAD-2): every detail Fume holds, read or given, the same unit as "Fume read 14 details" above.
-  const details = specs.filter((x) => filled(x.value)).length + (product.parts ?? []).length + (product.shots ?? []).length;
+  const details =
+    specs.filter((x) => filled(x.value)).length + (product.parts ?? []).length + (product.shots ?? []).length;
 
   function saveValue(field: SpecField, v: { value: SpecValue; unit?: string }) {
-    save.mutate({ productId: product.id, values: [{ fieldId: field.id, ...v }] }, { onSuccess: () => setEditing(null), onError: fail });
+    save.mutate(
+      { productId: product.id, values: [{ fieldId: field.id, ...v }] },
+      { onSuccess: () => setEditing(null), onError: fail },
+    );
   }
-  const keep = (input: { keep?: string[]; keepParts?: string[]; keepShots?: string[] }) => save.mutate({ productId: product.id, ...input }, { onError: fail });
+  const keep = (input: { keep?: string[]; keepParts?: string[]; keepShots?: string[] }) =>
+    save.mutate({ productId: product.id, ...input }, { onError: fail });
 
   function addShot(slotId: string, file: File) {
     setBusySlot(slotId);
-    upload.mutate({ productId: product.id, slotId, name: file.name, bytes: file.size, src: previewOf(file) }, { onError: fail, onSettled: () => setBusySlot(undefined) });
+    upload.mutate(
+      { productId: product.id, slotId, name: file.name, bytes: file.size, src: previewOf(file) },
+      { onError: fail, onSettled: () => setBusySlot(undefined) },
+    );
   }
   async function addFile(kindOfFile: ProductFile["kind"], label: string) {
     const [file] = await pickFiles(fileAccept[kindOfFile], false);
     if (!file) return;
-    uploadFile.mutate({ productId: product.id, kind: kindOfFile, name: file.name, bytes: file.size }, { onSuccess: () => toast.done(`${label} added`, { description: "Fume reads it and shows what it finds here." }), onError: fail });
+    uploadFile.mutate(
+      { productId: product.id, kind: kindOfFile, name: file.name, bytes: file.size },
+      {
+        onSuccess: () => toast.done(`${label} added`, { description: "Fume reads it and shows what it finds here." }),
+        onError: fail,
+      },
+    );
   }
   async function onGap(g: FidelityGap) {
     if (g.kind === "field") {
@@ -530,9 +651,20 @@ function AllDetails({ product, kind, open, onOpen, sections, onSections }: { pro
 
   const row = (f: SpecField) => {
     const e = entry(f.id);
-    return <SpecRow key={f.id} field={f} entry={e} canEdit={canEdit} onEdit={() => setEditing(f)} extra={e?.detailTokenId ? <span className="ui-pspec-need">Protected on every creative</span> : undefined} />;
+    return (
+      <SpecRow
+        key={f.id}
+        field={f}
+        entry={e}
+        canEdit={canEdit}
+        onEdit={() => setEditing(f)}
+        extra={e?.detailTokenId ? <span className="ui-pspec-need">Protected on every creative</span> : undefined}
+      />
+    );
   };
-  const rows = (fields: SpecField[], two = false) => <dl className={two ? "ui-pspec-rows ui-pspec-rows--two" : "ui-pspec-rows"}>{fields.map(row)}</dl>;
+  const rows = (fields: SpecField[], two = false) => (
+    <dl className={two ? "ui-pspec-rows ui-pspec-rows--two" : "ui-pspec-rows"}>{fields.map(row)}</dl>
+  );
 
   /** A section's rows folded to what matters first, with "Show all" for the rest. */
   const folded = (key: string, fields: SpecField[], two: boolean) => {
@@ -546,7 +678,14 @@ function AllDetails({ product, kind, open, onOpen, sections, onSections }: { pro
         {shown.length > 0 && rows(shown, two)}
         {(hidden > 0 || (more[key] && keepIds.size > 0 && fields.length - keepIds.size > 1)) && (
           <div className="ui-pspec-more">
-            <Button size="sm" variant="quiet" icon="chevron-down" data-open={isOpen || undefined} aria-expanded={isOpen} onClick={() => setMore((o) => ({ ...o, [key]: !isOpen }))}>
+            <Button
+              size="sm"
+              variant="quiet"
+              icon="chevron-down"
+              data-open={isOpen || undefined}
+              aria-expanded={isOpen}
+              onClick={() => setMore((o) => ({ ...o, [key]: !isOpen }))}
+            >
               {isOpen ? "Show fewer" : `Show all ${fields.length}`}
             </Button>
           </div>
@@ -559,7 +698,14 @@ function AllDetails({ product, kind, open, onOpen, sections, onSections }: { pro
   const keepAll = (n: number, title: string, input: { keep?: string[]; keepParts?: string[]; keepShots?: string[] }) =>
     canEdit && n > 0 ? (
       <div className="ui-pdetails-keep">
-        <Button size="sm" variant="secondary" icon="check" aria-label={n === 1 ? `Confirm it, in ${title}` : `Confirm all ${n} in ${title}`} onClick={() => keep(input)} disabled={save.isPending}>
+        <Button
+          size="sm"
+          variant="secondary"
+          icon="check"
+          aria-label={n === 1 ? `Confirm it, in ${title}` : `Confirm all ${n} in ${title}`}
+          onClick={() => keep(input)}
+          disabled={save.isPending}
+        >
           {n === 1 ? "Confirm it" : `Confirm all ${n}`}
         </Button>
         <span className="ui-pspec-need">Fume read {n === 1 ? "this" : "these"}. Change any that is off.</span>
@@ -567,7 +713,8 @@ function AllDetails({ product, kind, open, onOpen, sections, onSections }: { pro
     ) : null;
 
   // DLOAD-1, DLOAD-2: what waits for her inside a section is "to confirm"; only the expert checks.
-  const metaFor = (proposed: number, missing: number) => (proposed ? `${proposed} to confirm` : missing ? `${missing} missing` : undefined);
+  const metaFor = (proposed: number, missing: number) =>
+    proposed ? `${proposed} to confirm` : missing ? `${missing} missing` : undefined;
 
   const group = (id: SpecGroupId) => kind?.groups.find((g) => g.id === id);
   const all = kind ? fieldsOf(kind) : [];
@@ -625,7 +772,9 @@ function AllDetails({ product, kind, open, onOpen, sections, onSections }: { pro
                   ))}
                 </ul>
               )}
-              {g.id === "variants" && product.variants && product.variants.length > 0 && <p className="ui-pspec-need">On sale as: {product.variants.map((v) => v.name).join(", ")}</p>}
+              {g.id === "variants" && product.variants && product.variants.length > 0 && (
+                <p className="ui-pspec-need">On sale as: {product.variants.map((v) => v.name).join(", ")}</p>
+              )}
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -671,7 +820,12 @@ function AllDetails({ product, kind, open, onOpen, sections, onSections }: { pro
                         <dd className="ui-pspec-value">{kind?.name ?? "Not set"}</dd>
                         {canEdit && (
                           <dd className="ui-pspec-actions">
-                            <Button size="sm" variant="quiet" onClick={() => setChoosingKind(true)} aria-label="Change the kind">
+                            <Button
+                              size="sm"
+                              variant="quiet"
+                              onClick={() => setChoosingKind(true)}
+                              aria-label="Change the kind"
+                            >
                               {kind ? "Change" : "Choose"}
                             </Button>
                           </dd>
@@ -683,11 +837,15 @@ function AllDetails({ product, kind, open, onOpen, sections, onSections }: { pro
                       </div>
                       <div className="ui-pspec-row" data-missing={product.categoryId ? undefined : ""}>
                         <dt className="ui-pspec-label">Category</dt>
-                        <dd className="ui-pspec-value">{categoryPath(categories, product.categoryId) ?? "Not sorted yet"}</dd>
+                        <dd className="ui-pspec-value">
+                          {categoryPath(categories, product.categoryId) ?? "Not sorted yet"}
+                        </dd>
                       </div>
                       <div className="ui-pspec-row" data-missing={inCollections.length ? undefined : ""}>
                         <dt className="ui-pspec-label">Collections</dt>
-                        <dd className="ui-pspec-value">{inCollections.length ? inCollections.map((c) => c.name).join(", ") : "In none yet"}</dd>
+                        <dd className="ui-pspec-value">
+                          {inCollections.length ? inCollections.map((c) => c.name).join(", ") : "In none yet"}
+                        </dd>
                       </div>
                     </dl>
                     {canEdit && catalogue && (
@@ -718,7 +876,14 @@ function AllDetails({ product, kind, open, onOpen, sections, onSections }: { pro
                     <div className="ui-pdetails-body">
                       {keepAll(read.shots.length, "Reference shots", { keepShots: read.shots.map((x) => x.slotId) })}
                       <p className="ui-pspec-need">On white, the whole product in frame, the label readable.</p>
-                      <ShotGrid kind={kind} shots={shots} who={() => undefined} onPick={canEdit ? addShot : undefined} busySlot={busySlot} label={`Reference shots of ${product.name}`} />
+                      <ShotGrid
+                        kind={kind}
+                        shots={shots}
+                        who={() => undefined}
+                        onPick={canEdit ? addShot : undefined}
+                        busySlot={busySlot}
+                        label={`Reference shots of ${product.name}`}
+                      />
                     </div>
                   </AccordionContent>
                 </AccordionItem>
@@ -733,7 +898,9 @@ function AllDetails({ product, kind, open, onOpen, sections, onSections }: { pro
                   </AccordionTrigger>
                   <AccordionContent>
                     <div className="ui-pdetails-body">
-                      <p className="ui-pspec-need">Not needed to start. Each one takes the guessing out of a creative.</p>
+                      <p className="ui-pspec-need">
+                        Not needed to start. Each one takes the guessing out of a creative.
+                      </p>
                       <GapList gaps={gaps} canEdit={canEdit} onGap={(g) => void onGap(g)} />
                     </div>
                   </AccordionContent>
@@ -748,7 +915,12 @@ function AllDetails({ product, kind, open, onOpen, sections, onSections }: { pro
                   <AccordionContent>
                     <div className="ui-pdetails-body">
                       <ul className="ui-pfiles">
-                        {[...kind.files, ...files.filter((x) => !kind.files.some((k) => k.kind === x.kind)).map((x) => ({ kind: x.kind, label: x.name, help: "" }))].map((f) => {
+                        {[
+                          ...kind.files,
+                          ...files
+                            .filter((x) => !kind.files.some((k) => k.kind === x.kind))
+                            .map((x) => ({ kind: x.kind, label: x.name, help: "" })),
+                        ].map((f) => {
                           const mine = files.filter((x) => x.kind === f.kind);
                           return (
                             <li key={f.label} className="ui-pfile" data-missing={mine.length ? undefined : ""}>
@@ -770,7 +942,11 @@ function AllDetails({ product, kind, open, onOpen, sections, onSections }: { pro
                                             <li key={line}>{line}</li>
                                           ))}
                                         </ul>
-                                        {x.filled && x.filled.length > 0 && <span className="ui-pfile-help">Filled: {x.filled.map(label).filter(Boolean).join(", ")}</span>}
+                                        {x.filled && x.filled.length > 0 && (
+                                          <span className="ui-pfile-help">
+                                            Filled: {x.filled.map(label).filter(Boolean).join(", ")}
+                                          </span>
+                                        )}
                                       </div>
                                     )}
                                   </div>
@@ -778,7 +954,17 @@ function AllDetails({ product, kind, open, onOpen, sections, onSections }: { pro
                               </div>
                               {canEdit && (
                                 <div className="ui-pfile-action">
-                                  <Button size="sm" variant="quiet" icon="upload" onClick={() => void addFile(f.kind, f.label)} aria-label={mine.length ? `Add another ${f.label.toLowerCase()}` : `Add the ${f.label.toLowerCase()}`}>
+                                  <Button
+                                    size="sm"
+                                    variant="quiet"
+                                    icon="upload"
+                                    onClick={() => void addFile(f.kind, f.label)}
+                                    aria-label={
+                                      mine.length
+                                        ? `Add another ${f.label.toLowerCase()}`
+                                        : `Add the ${f.label.toLowerCase()}`
+                                    }
+                                  >
                                     {mine.length ? "Add another" : "Add"}
                                   </Button>
                                 </div>
@@ -802,8 +988,26 @@ function AllDetails({ product, kind, open, onOpen, sections, onSections }: { pro
         </AccordionItem>
       </Accordion>
 
-      {editing && <SpecDialog key={editing.id} field={editing} entry={entry(editing.id)} productName={product.name} saving={save.isPending} onSave={(v) => saveValue(editing, v)} onOpenChange={(o) => !o && setEditing(null)} />}
-      {canEdit && <KindDialog open={choosingKind} onOpenChange={setChoosingKind} value={product.kindId} onPick={chooseKind} busy={save.isPending} />}
+      {editing && (
+        <SpecDialog
+          key={editing.id}
+          field={editing}
+          entry={entry(editing.id)}
+          productName={product.name}
+          saving={save.isPending}
+          onSave={(v) => saveValue(editing, v)}
+          onOpenChange={(o) => !o && setEditing(null)}
+        />
+      )}
+      {canEdit && (
+        <KindDialog
+          open={choosingKind}
+          onOpenChange={setChoosingKind}
+          value={product.kindId}
+          onPick={chooseKind}
+          busy={save.isPending}
+        />
+      )}
     </section>
   );
 }
@@ -813,7 +1017,12 @@ function AllDetails({ product, kind, open, onOpen, sections, onSections }: { pro
 /** One status sentence under the title (LOAD-16; round 9, DLOAD-2): what blocks confirming, said as questions ("2
  *  questions for you", the same number as the card's "1 of 2"), "Ready to confirm", then "Confirmed", with a change
  *  someone proposes named ("Confirmed · Anna proposes a change"). */
-function statusOf(p: Product, questions: number, proposals: ProductOverride[], who: (id?: string) => string | undefined): string {
+function statusOf(
+  p: Product,
+  questions: number,
+  proposals: ProductOverride[],
+  who: (id?: string) => string | undefined,
+): string {
   if (p.state === "verified") {
     if (!proposals.length) return "Confirmed";
     const name = who(proposals[0].by) ?? "Fume’s designer";
@@ -853,7 +1062,13 @@ export function ProductPage() {
       target = first ? first.id : read?.parts.length ? "parts" : read?.shots.length ? "shots" : undefined;
     }
     if (target) setSections((s) => (s.includes(target!) ? s : [...s, target!]));
-    window.setTimeout(() => document.getElementById(target ? `spec-${target}` : "all-details")?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
+    window.setTimeout(
+      () =>
+        document
+          .getElementById(target ? `spec-${target}` : "all-details")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" }),
+      80,
+    );
   }
 
   return (
@@ -879,7 +1094,14 @@ export function ProductPage() {
             </div>
             {/* round 13 (#46): everything Fume holds, organised, in view without opening a section */}
             <ProductTruthSheet product={data} kind={kind} />
-            <AllDetails product={data} kind={kind} open={detailsOpen} onOpen={setDetailsOpen} sections={sections} onSections={setSections} />
+            <AllDetails
+              product={data}
+              kind={kind}
+              open={detailsOpen}
+              onOpen={setDetailsOpen}
+              sections={sections}
+              onSections={setSections}
+            />
           </>
         )}
       </Query>

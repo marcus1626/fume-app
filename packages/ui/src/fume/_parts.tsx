@@ -94,19 +94,17 @@ export function initialsOf(name: string): string {
   return ((parts[0]?.[0] ?? "") + (parts.length > 1 ? parts[parts.length - 1][0] : "")).toUpperCase() || "?";
 }
 
-export function Avatar({
-  person,
-  size,
-  className,
-}: {
-  person: PersonSign;
-  size?: "sm" | "lg";
-  className?: string;
-}) {
+export function Avatar({ person, size, className }: { person: PersonSign; size?: "sm" | "lg"; className?: string }) {
   const initials = person.initials ?? person.name.trim().charAt(0).toUpperCase();
   return (
     <span
-      className={cx("ui-avatar", size === "sm" && "ui-avatar--sm", size === "lg" && "ui-avatar--lg", person.ink && "ui-avatar--ink", className)}
+      className={cx(
+        "ui-avatar",
+        size === "sm" && "ui-avatar--sm",
+        size === "lg" && "ui-avatar--lg",
+        person.ink && "ui-avatar--ink",
+        className,
+      )}
       aria-hidden="true"
     >
       {person.avatar ? (
@@ -124,7 +122,11 @@ export function Avatar({
 /** The Engine's mark in a message: frame corners and focal point, two layers of fi-fume-engine (message.css). */
 export function EngineMark({ thinking, className }: { thinking?: boolean; className?: string }) {
   return (
-    <span className={cx("ui-message-mark", className)} aria-hidden="true" data-state={thinking ? "thinking" : undefined}>
+    <span
+      className={cx("ui-message-mark", className)}
+      aria-hidden="true"
+      data-state={thinking ? "thinking" : undefined}
+    >
       <svg className="ui-message-mark-frame" aria-hidden="true">
         <use href="#fi-fume-engine" />
       </svg>
@@ -174,7 +176,11 @@ export function ProgressBar({
 }
 
 export function prefersReducedMotion(): boolean {
-  return typeof window !== "undefined" && !!window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  return (
+    typeof window !== "undefined" &&
+    !!window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
 }
 
 export function isCoarsePointer(): boolean {
@@ -219,7 +225,11 @@ function num(v: number): string {
   return v >= 100 ? String(Math.round(v)) : v.toFixed(1);
 }
 export function formatBytes(b: number): string {
-  return b >= 1e9 ? num(b / 1e9) + NB + "GB" : b >= 1e6 ? num(b / 1e6) + NB + "MB" : Math.max(1, Math.round(b / 1e3)) + NB + "KB";
+  return b >= 1e9
+    ? num(b / 1e9) + NB + "GB"
+    : b >= 1e6
+      ? num(b / 1e6) + NB + "MB"
+      : Math.max(1, Math.round(b / 1e3)) + NB + "KB";
 }
 /** "15.7 / 19.2 MB" while a creative uploads. */
 export function formatBytesPart(done: number, total: number): string {
@@ -308,12 +318,16 @@ export function Seg<V extends string>({
     if (!o) return;
     if (o.value !== value) onChange(o.value);
     if (focus) {
-      const btn = root.current?.querySelectorAll<HTMLButtonElement>(".ui-seg-option")[(i + options.length) % options.length];
+      const btn =
+        root.current?.querySelectorAll<HTMLButtonElement>(".ui-seg-option")[(i + options.length) % options.length];
       btn?.focus();
     }
   };
 
-  const current = Math.max(0, options.findIndex((o) => o.value === value));
+  const current = Math.max(
+    0,
+    options.findIndex((o) => o.value === value),
+  );
   return (
     <div
       ref={root}
@@ -334,7 +348,11 @@ export function Seg<V extends string>({
         }
       }}
     >
-      <span className="ui-seg-indicator" aria-hidden="true" style={pos ? vars({ "--x": `${pos.x}px`, "--w": `${pos.w}px` }) : undefined} />
+      <span
+        className="ui-seg-indicator"
+        aria-hidden="true"
+        style={pos ? vars({ "--x": `${pos.x}px`, "--w": `${pos.w}px` }) : undefined}
+      />
       {options.map((o) => {
         const on = o.value === value;
         const data: Record<string, string> = {};

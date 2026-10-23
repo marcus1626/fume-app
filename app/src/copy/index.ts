@@ -113,22 +113,36 @@ export const creatives = (n: number) => count(n, "creative");
  *  for a page that knows more. `waiting` is true while it waits on the customer; `on` says who acts next ("expert"
  *  while the expert checks). `{ date: false }` leaves out "· by <date>" where the date has a column of its own.
  *  "by" is the date Fume works to for the step under way; the go-live is `campaignLive()` ("Live from Sat, 17 Oct"). */
-export function campaignStatus(c: CampaignStatusInput, waits?: Partial<CampaignWaits>, options?: CampaignStatusOptions): CampaignStatus {
+export function campaignStatus(
+  c: CampaignStatusInput,
+  waits?: Partial<CampaignWaits>,
+  options?: CampaignStatusOptions,
+): CampaignStatus {
   // Round 12 (DLOAD-1): one sentence per viewer. Without a viewer: the customer's, or the agency's under the agency's
   // frame (setStatusReader, round 11).
-  const viewer: StatusViewer = options?.viewer ?? (options?.asCustomer ? "customer" : (statusReader.viewer ?? (statusReader.agency ? "agency" : "customer")));
+  const viewer: StatusViewer =
+    options?.viewer ??
+    (options?.asCustomer ? "customer" : (statusReader.viewer ?? (statusReader.agency ? "agency" : "customer")));
   if (viewer === "customer") return customerStatus(c, waits, options);
   const customerName = options?.customerName ?? (viewer === "agency" ? statusReader.client : undefined);
   const agencyName = options?.agencyName ?? statusReader.agencyName;
   return viewerStatus(c, waits, viewer, { ...options, customerName, agencyName });
 }
 
-function customerStatus(c: CampaignStatusInput, waits?: Partial<CampaignWaits>, options?: CampaignStatusOptions): CampaignStatus {
+function customerStatus(
+  c: CampaignStatusInput,
+  waits?: Partial<CampaignWaits>,
+  options?: CampaignStatusOptions,
+): CampaignStatus {
   const w: CampaignWaits = { questions: 0, directions: 0, briefReady: false, ...c.waits, ...waits };
   const by = options?.date !== false && w.by ? ` · by ${due(w.by)}` : "";
   const you = (words: string): CampaignStatus => ({ words, waiting: true, on: "you" });
   const fume = (words: string): CampaignStatus => ({ words, waiting: false, on: "fume" });
-  const expert = (n: number): CampaignStatus => ({ words: `${creatives(n)} in check${by}`, waiting: false, on: "expert" });
+  const expert = (n: number): CampaignStatus => ({
+    words: `${creatives(n)} in check${by}`,
+    waiting: false,
+    on: "expert",
+  });
   const done = (words: string): CampaignStatus => ({ words, waiting: false, on: "done" });
   const { counts } = c;
   // The plan, while it is the step under way: Fume writes it, the expert checks it, she approves it (FLOWS §22.3).
@@ -137,7 +151,11 @@ function customerStatus(c: CampaignStatusInput, waits?: Partial<CampaignWaits>, 
       case "writing":
         return fume(`${planStatus.writing}${by}`);
       case "in_check":
-        return { words: `${options?.expertName ? `${options.expertName} is checking the plan` : planStatus.in_check}${by}`, waiting: false, on: "expert" };
+        return {
+          words: `${options?.expertName ? `${options.expertName} is checking the plan` : planStatus.in_check}${by}`,
+          waiting: false,
+          on: "expert",
+        };
       case "ready":
         return you(planStatus.ready);
       case "changes_asked":
@@ -153,7 +171,8 @@ function customerStatus(c: CampaignStatusInput, waits?: Partial<CampaignWaits>, 
     case "in_review":
       if (w.directions > 0) return you(`${count(w.directions, "direction")} to choose from`);
       // Round 12: only what was sent to her (never a checked creative not sent yet, `waits.toSend`).
-      if (counts.checked - Math.min(counts.checked, w.toSend ?? 0) > 0) return you(`${creatives(counts.checked - Math.min(counts.checked, w.toSend ?? 0))} to approve`);
+      if (counts.checked - Math.min(counts.checked, w.toSend ?? 0) > 0)
+        return you(`${creatives(counts.checked - Math.min(counts.checked, w.toSend ?? 0))} to approve`);
       if (counts.inCheck > 0) return expert(counts.inCheck);
       // In the plan stage, review means the plan (an older backend without `waits.plan`).
       if (c.stage === "plan") return you(planStatus.ready);
@@ -163,7 +182,8 @@ function customerStatus(c: CampaignStatusInput, waits?: Partial<CampaignWaits>, 
     case "scoped":
     case "in_production":
     case "revision":
-      if (counts.inCheck > 0 && c.stage !== "directions" && c.stage !== "brief" && c.stage !== "plan") return expert(counts.inCheck);
+      if (counts.inCheck > 0 && c.stage !== "directions" && c.stage !== "brief" && c.stage !== "plan")
+        return expert(counts.inCheck);
       return fume(`${campaignMaking(c)}${by}`);
     case "approved":
       return done(`${creatives(counts.approved)} approved`);
@@ -219,12 +239,17 @@ function due(iso: string): string {
  *  before she approves it); masters and variants are creatives (the Engine makes them, rule DLOAD-7). "Fume is making
  *  3 directions" stays only for a campaign that ran before the plan and still sits on its directions. */
 export function campaignMaking(c: CampaignStatusInput): string {
-  if (c.state === "revision") return c.stage === "plan" || c.stage === "brief" ? planStatus.changes_asked : "Fume is making your changes";
+  if (c.state === "revision")
+    return c.stage === "plan" || c.stage === "brief" ? planStatus.changes_asked : "Fume is making your changes";
   switch (c.stage) {
     case "masters": {
       const n = c.waits?.masters;
       // round 13 (robot note 03): only the masters under way are counted, so "1 master" when the others wait
-      return n ? (n === 1 ? "The Engine is making 1 master" : `The Engine is making the ${n} masters`) : "The Engine is making the masters";
+      return n
+        ? n === 1
+          ? "The Engine is making 1 master"
+          : `The Engine is making the ${n} masters`
+        : "The Engine is making the masters";
     }
     case "variants":
       return "The Engine is making the variants";
@@ -268,7 +293,9 @@ export const planReady = (campaign: string) => `The plan for ${campaign} is read
 /** The go-live, the one meaning of a campaign's date (DLOAD-10): "Live from Sat, 17 Oct"; "Went live 17 Oct" after. */
 export function campaignLive(c: Pick<Campaign, "dueAt" | "state">): string | undefined {
   if (!c.dueAt) return undefined;
-  return c.state === "delivered" || c.state === "closed" ? `Went live ${dueDay(c.dueAt)}` : `Live from ${dueDay(c.dueAt)}`;
+  return c.state === "delivered" || c.state === "closed"
+    ? `Went live ${dueDay(c.dueAt)}`
+    : `Live from ${dueDay(c.dueAt)}`;
 }
 
 // ── round 9 SHELL ──
@@ -280,7 +307,8 @@ export function campaignLive(c: Pick<Campaign, "dueAt" | "state">): string | und
  *   `${copy.byYou(approver.name, isMe(approver.id), true)} approved it on 3 Oct`   → "You approved it on 3 Oct"
  *   `Chosen by ${copy.byYou(user.name, isMe(user.id))} on 8 Oct`                    → "Chosen by you on 8 Oct"
  */
-export const byYou = (name: string, isMe: boolean, start = false): string => (isMe ? (start ? "You" : "you") : name.trim().split(/\s+/)[0] || name);
+export const byYou = (name: string, isMe: boolean, start = false): string =>
+  isMe ? (start ? "You" : "you") : name.trim().split(/\s+/)[0] || name;
 
 // ── round 9 forms ──
 // DLOAD-19 (PROPOSED 19 Oct 2026): the channel says what it is, "Display ads", not "Display".
@@ -317,7 +345,12 @@ export interface CampaignStatusOptions {
  * the plan, once sent, as hers ("The plan is ready to approve"). `on` says who acts: "you" (the reader), "client" (the customer or the client, when someone
  * else reads), "fume" (the maker: Fume, the Engine, or the agency for its client), "expert" or "done".
  */
-function viewerStatus(c: CampaignStatusInput, waits: Partial<CampaignWaits> | undefined, viewer: Exclude<StatusViewer, "customer">, o: CampaignStatusOptions): CampaignStatus {
+function viewerStatus(
+  c: CampaignStatusInput,
+  waits: Partial<CampaignWaits> | undefined,
+  viewer: Exclude<StatusViewer, "customer">,
+  o: CampaignStatusOptions,
+): CampaignStatus {
   const w: CampaignWaits = { questions: 0, directions: 0, briefReady: false, ...c.waits, ...waits };
   const by = o.date !== false && w.by ? ` · by ${due(w.by)}` : "";
   const who = o.customerName ?? (viewer === "agency" ? "the client" : "the customer");
@@ -331,7 +364,12 @@ function viewerStatus(c: CampaignStatusInput, waits: Partial<CampaignWaits> | un
   // what the agency has not sent (the backend says it in `waits.toSend`).
   const toSend = Math.min(counts.checked, w.toSend ?? (c.state === "in_production" ? counts.checked : 0));
   const withThem = counts.checked - toSend;
-  const ended = c.state === "approved" ? done(`${creatives(counts.approved)} approved`) : c.state === "delivered" || c.state === "closed" ? done(`${creatives(counts.delivered || counts.approved)} delivered`) : undefined;
+  const ended =
+    c.state === "approved"
+      ? done(`${creatives(counts.approved)} approved`)
+      : c.state === "delivered" || c.state === "closed"
+        ? done(`${creatives(counts.delivered || counts.approved)} delivered`)
+        : undefined;
   if (ended) return ended;
 
   if (viewer === "client") {
@@ -339,7 +377,8 @@ function viewerStatus(c: CampaignStatusInput, waits: Partial<CampaignWaits> | un
     const agency = o.agencyName ?? "The agency";
     if (c.stage === "plan" && w.plan === "ready" && w.planChecked) return you(planStatus.ready);
     if (c.state === "in_review" && withThem > 0) return you(`${creatives(withThem)} to approve`);
-    if (c.state === "draft" || c.state === "awaiting_input" || c.stage === "brief") return maker(`${agency} is writing the brief`);
+    if (c.state === "draft" || c.state === "awaiting_input" || c.stage === "brief")
+      return maker(`${agency} is writing the brief`);
     if (c.stage === "plan" || c.stage === "directions") return maker(`${agency} is planning${by}`);
     if (counts.inCheck > 0) return maker(`${agency} is checking ${creatives(counts.inCheck)}${by}`);
     return maker(`${campaignMaking(c).replace(/^(The Engine|Fume) is /, `${agency} is `)}${by}`);
@@ -371,14 +410,19 @@ function viewerStatus(c: CampaignStatusInput, waits: Partial<CampaignWaits> | un
     case "in_review":
       if (counts.inCheck > 0) return you(`${creatives(counts.inCheck)} to check`);
       if (toSend > 0) return you(`${creatives(toSend)} to send to ${who}`);
-      if (w.directions > 0) return agency ? you(`${count(w.directions, "direction")} to choose from`) : them(`${count(w.directions, "direction")} with ${who}`);
+      if (w.directions > 0)
+        return agency
+          ? you(`${count(w.directions, "direction")} to choose from`)
+          : them(`${count(w.directions, "direction")} with ${who}`);
       if (withThem > 0) return them(`${creatives(withThem)} with ${who}`);
-      if (c.stage === "plan") return agency && !w.planChecked ? you(`Check the plan${by}`) : them(`The plan waits on ${who}`);
+      if (c.stage === "plan")
+        return agency && !w.planChecked ? you(`Check the plan${by}`) : them(`The plan waits on ${who}`);
       return maker(`Fume is making the next creatives${by}`);
     case "scoped":
     case "in_production":
     case "revision":
-      if (counts.inCheck > 0 && c.stage !== "directions" && c.stage !== "brief" && c.stage !== "plan") return you(`${creatives(counts.inCheck)} to check${by}`);
+      if (counts.inCheck > 0 && c.stage !== "directions" && c.stage !== "brief" && c.stage !== "plan")
+        return you(`${creatives(counts.inCheck)} to check${by}`);
       if (toSend > 0) return you(`${creatives(toSend)} to send to ${who}`);
       return maker(`${campaignMaking(c)}${by}`);
     default:
@@ -427,7 +471,9 @@ export function creativeName(c: { title: string; format: Format; productName?: s
     return subject ? `${subject} · ${label}` : label;
   }
   // A name from before the plan named it ("Master 2 · Variant 2 · square"): the master's name alone, then the format.
-  const own = /^(Master \d+) · Variant \d+/.exec(parts.join(" · "))?.[1] ?? parts.filter((p) => !/^(feed|square|story)$/i.test(p)).join(" · ");
+  const own =
+    /^(Master \d+) · Variant \d+/.exec(parts.join(" · "))?.[1] ??
+    parts.filter((p) => !/^(feed|square|story)$/i.test(p)).join(" · ");
   return `${own || f.label} · ${shape}`;
 }
 
@@ -442,11 +488,20 @@ export function creativeLabel(c: { title: string; format: Format; planName?: str
 /** A campaign's next date, always with its label (DLOAD-13): "Plan by" while Fume writes or the expert checks the plan,
  *  the plan's "Delivery" until it is delivered, then "Delivered"; "Goes live" only when no delivery date is known.
  *  `{ delivery: true }` skips "Plan by" (the Deliveries list). */
-export function campaignDate(c: CampaignStatusInput & Pick<Campaign, "dueAt">, options?: { delivery?: boolean }): { label: string; at: string } | undefined {
+export function campaignDate(
+  c: CampaignStatusInput & Pick<Campaign, "dueAt">,
+  options?: { delivery?: boolean },
+): { label: string; at: string } | undefined {
   const w = c.waits;
-  if (c.state === "delivered" || c.state === "closed") return w?.delivery ? { label: dateLabel.delivered, at: w.delivery } : c.dueAt ? { label: "Went live", at: c.dueAt } : undefined;
+  if (c.state === "delivered" || c.state === "closed")
+    return w?.delivery
+      ? { label: dateLabel.delivered, at: w.delivery }
+      : c.dueAt
+        ? { label: "Went live", at: c.dueAt }
+        : undefined;
   // `delivery`: the delivery's own date (Deliveries), never the plan's.
-  if (!options?.delivery && c.stage === "plan" && w?.plan && w.plan !== "approved" && w.plan !== "ready" && w.by) return { label: dateLabel.plan, at: w.by };
+  if (!options?.delivery && c.stage === "plan" && w?.plan && w.plan !== "approved" && w.plan !== "ready" && w.by)
+    return { label: dateLabel.plan, at: w.by };
   if (w?.delivery) return { label: dateLabel.delivery, at: w.delivery };
   return c.dueAt ? { label: dateLabel.live, at: c.dueAt } : undefined;
 }
@@ -474,6 +529,7 @@ export function approvedOf(approved: number, total: number, planned?: number): s
 export function toCheck(plans: number, creativesWaiting: number): string {
   const total = plans + creativesWaiting;
   if (!total) return "Nothing to check";
-  if (!plans || !creativesWaiting) return plans ? `${count(plans, "plan")} to check` : `${creatives(creativesWaiting)} to check`;
+  if (!plans || !creativesWaiting)
+    return plans ? `${count(plans, "plan")} to check` : `${creatives(creativesWaiting)} to check`;
   return `${total} to check: ${count(plans, "plan")}, ${creatives(creativesWaiting)}`;
 }

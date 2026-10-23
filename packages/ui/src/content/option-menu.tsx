@@ -50,11 +50,14 @@ export function OptionMenu({ children, title, options, align = "end", className 
   const [open, setOpen] = useState(false);
   if (narrow) {
     const trigger = isValidElement(children)
-      ? cloneElement(children as ReactElement<{ onClick?: () => void; "aria-haspopup"?: string; "aria-expanded"?: boolean }>, {
-          onClick: () => setOpen(true),
-          "aria-haspopup": "dialog",
-          "aria-expanded": open,
-        })
+      ? cloneElement(
+          children as ReactElement<{ onClick?: () => void; "aria-haspopup"?: string; "aria-expanded"?: boolean }>,
+          {
+            onClick: () => setOpen(true),
+            "aria-haspopup": "dialog",
+            "aria-expanded": open,
+          },
+        )
       : children;
     return (
       <>

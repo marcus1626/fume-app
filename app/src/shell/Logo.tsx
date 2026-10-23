@@ -13,9 +13,25 @@ const lockup = parts(lockupInk);
 const mark = parts(markInk);
 
 export function Lockup({ className }: { className?: string }) {
-  return <svg className={className} viewBox={lockup.viewBox} role="img" aria-label="Fume" dangerouslySetInnerHTML={{ __html: lockup.inner }} />;
+  return (
+    <svg
+      className={className}
+      viewBox={lockup.viewBox}
+      role="img"
+      aria-label="Fume"
+      dangerouslySetInnerHTML={{ __html: lockup.inner }}
+    />
+  );
 }
 
 export function Mark({ className }: { className?: string }) {
-  return <svg className={className} viewBox={mark.viewBox} role="img" aria-label="Fume" dangerouslySetInnerHTML={{ __html: mark.inner }} />;
+  return (
+    <svg
+      className={className}
+      viewBox={mark.viewBox}
+      role="img"
+      aria-label="Fume"
+      dangerouslySetInnerHTML={{ __html: mark.inner }}
+    />
+  );
 }

@@ -22,8 +22,18 @@ export interface MentionItem {
   picture?: string;
 }
 
-const ICON: Record<MentionItem["kind"], IconName> = { campaign: "megaphone", product: "tag", collection: "folder", creative: "image" };
-const KIND: Record<MentionItem["kind"], string> = { campaign: "Campaign", product: "Product", collection: "Collection", creative: "Creative" };
+const ICON: Record<MentionItem["kind"], IconName> = {
+  campaign: "megaphone",
+  product: "tag",
+  collection: "folder",
+  creative: "image",
+};
+const KIND: Record<MentionItem["kind"], string> = {
+  campaign: "Campaign",
+  product: "Product",
+  collection: "Collection",
+  creative: "Creative",
+};
 const live = (c: Campaign) => !["closed"].includes(c.state);
 
 /** Everything she can name, in the order the list offers it: campaigns, products, collections, creatives. */
@@ -34,13 +44,36 @@ function useMentionItems(): MentionItem[] {
   const views = useCampaignViews(withCreatives.map((c) => c.id)).data;
   return useMemo(() => {
     const items: MentionItem[] = [];
-    for (const c of (campaigns ?? []).filter(live)) items.push({ id: `c:${c.id}`, name: c.name, kind: "campaign", meta: "Campaign" });
-    for (const p of catalogue?.products ?? []) items.push({ id: `p:${p.id}`, name: p.name, kind: "product", meta: [`Product`, p.variant].filter(Boolean).join(" · "), picture: p.images[0] });
-    for (const k of catalogue?.collections ?? []) items.push({ id: `k:${k.id}`, name: k.name, kind: "collection", meta: `Collection · ${k.productIds.length} ${k.productIds.length === 1 ? "product" : "products"}`, picture: k.cover });
+    for (const c of (campaigns ?? []).filter(live))
+      items.push({ id: `c:${c.id}`, name: c.name, kind: "campaign", meta: "Campaign" });
+    for (const p of catalogue?.products ?? [])
+      items.push({
+        id: `p:${p.id}`,
+        name: p.name,
+        kind: "product",
+        meta: [`Product`, p.variant].filter(Boolean).join(" · "),
+        picture: p.images[0],
+      });
+    for (const k of catalogue?.collections ?? [])
+      items.push({
+        id: `k:${k.id}`,
+        name: k.name,
+        kind: "collection",
+        meta: `Collection · ${k.productIds.length} ${k.productIds.length === 1 ? "product" : "products"}`,
+        picture: k.cover,
+      });
     for (const v of views ?? []) {
       const labels = creativeLabels(v.creatives);
-      for (const cr of v.creatives.filter((x) => x.current.state !== "making" && x.current.state !== "in_check" && x.current.state !== "correcting"))
-        items.push({ id: `cr:${cr.id}`, name: `${labels.get(cr.id)} in ${v.campaign.name}`, kind: "creative", meta: "Creative", picture: cr.current.image });
+      for (const cr of v.creatives.filter(
+        (x) => x.current.state !== "making" && x.current.state !== "in_check" && x.current.state !== "correcting",
+      ))
+        items.push({
+          id: `cr:${cr.id}`,
+          name: `${labels.get(cr.id)} in ${v.campaign.name}`,
+          kind: "creative",
+          meta: "Creative",
+          picture: cr.current.image,
+        });
     }
     return items;
   }, [campaigns, catalogue, views]);
@@ -66,14 +99,26 @@ function match(items: MentionItem[], query: string): MentionItem[] {
  * The @ list for the composer whose textarea has `inputId`. Returns the list (to render over the composer, inside a
  * positioned parent) and `open`, for the composer's own keys.
  */
-export function useMentions({ inputId, text, onText, disabled }: { inputId: string; text: string; onText: (text: string) => void; disabled?: boolean }) {
+export function useMentions({
+  inputId,
+  text,
+  onText,
+  disabled,
+}: {
+  inputId: string;
+  text: string;
+  onText: (text: string) => void;
+  disabled?: boolean;
+}) {
   const items = useMentionItems();
   const [caret, setCaret] = useState(0);
   const [active, setActive] = useState(0);
   const [closedAt, setClosedAt] = useState<number | null>(null);
   // The caret as the field has it now (after a keystroke the field is ahead of the last caret this hook kept).
-  const field = typeof document !== "undefined" ? (document.getElementById(inputId) as HTMLTextAreaElement | null) : null;
-  const here = field && document.activeElement === field && field.value === text ? (field.selectionStart ?? caret) : caret;
+  const field =
+    typeof document !== "undefined" ? (document.getElementById(inputId) as HTMLTextAreaElement | null) : null;
+  const here =
+    field && document.activeElement === field && field.value === text ? (field.selectionStart ?? caret) : caret;
   const found = disabled ? undefined : queryAt(text, here);
   const shown = found && closedAt !== found.at ? match(items, found.query) : [];
   const open = shown.length > 0;
@@ -165,7 +210,12 @@ export function useMentions({ inputId, text, onText, disabled }: { inputId: stri
   }, [open, active, inputId, listId]);
 
   const list = open ? (
-    <div className="ui-glass ui-glass--small ui-mention" role="listbox" id={listId} aria-label="Name something for Fume">
+    <div
+      className="ui-glass ui-glass--small ui-mention"
+      role="listbox"
+      id={listId}
+      aria-label="Name something for Fume"
+    >
       {shown.map((item, i) => (
         <div
           key={item.id}
@@ -192,7 +242,9 @@ export function useMentions({ inputId, text, onText, disabled }: { inputId: stri
 
 /** A few things to ask, over an empty composer (#16). */
 export function AskSuggestions({ campaign, onAsk }: { campaign?: string; onAsk: (text: string) => void }) {
-  const asks = [campaign ? `Where is @${campaign}?` : undefined, "What waits on me?", "This month in numbers"].filter((x): x is string => Boolean(x));
+  const asks = [campaign ? `Where is @${campaign}?` : undefined, "What waits on me?", "This month in numbers"].filter(
+    (x): x is string => Boolean(x),
+  );
   return (
     <div className="ui-chat-chips ui-chat-asks" role="group" aria-label="Ask Fume">
       {asks.map((a) => (

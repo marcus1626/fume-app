@@ -1,7 +1,15 @@
 // Slot: the asChild helper for controls that are not Radix primitives (Button, Badge). It renders its one child
 // element with the parent's props merged in: classes joined, event handlers chained (the child's first), styles
 // merged, refs composed. A tiny stand-in for @radix-ui/react-slot, which is not a dependency of @fume/ui.
-import { Children, cloneElement, forwardRef, isValidElement, type HTMLAttributes, type ReactNode, type Ref } from "react";
+import {
+  Children,
+  cloneElement,
+  forwardRef,
+  isValidElement,
+  type HTMLAttributes,
+  type ReactNode,
+  type Ref,
+} from "react";
 import { cx } from "../cx";
 
 /** Sets every ref it is given (callback refs and object refs). */
@@ -37,7 +45,8 @@ export const Slot = forwardRef<HTMLElement, SlotProps>(function Slot({ children,
     }
   }
   merged.className = cx(slotProps.className, childProps.className as string | undefined);
-  if (slotProps.style || childProps.style) merged.style = { ...slotProps.style, ...(childProps.style as object | undefined) };
+  if (slotProps.style || childProps.style)
+    merged.style = { ...slotProps.style, ...(childProps.style as object | undefined) };
   // React 18 keeps the child's ref on the element, not in its props.
   const childRef = (child as unknown as { ref?: Ref<HTMLElement> }).ref;
   merged.ref = composeRefs(ref, childRef);

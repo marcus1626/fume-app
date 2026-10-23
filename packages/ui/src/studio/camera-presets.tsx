@@ -37,7 +37,13 @@ export function StudioCameraPresets({ presets, value, onPick, label, disabled }:
         className="ui-sl-presets--cameras"
         value={value}
         disabled={disabled}
-        items={presets.map((p) => ({ id: p.id, name: p.name, meta: `${p.lens.focal} mm`, line: p.body, image: p.image }))}
+        items={presets.map((p) => ({
+          id: p.id,
+          name: p.name,
+          meta: `${p.lens.focal} mm`,
+          line: p.body,
+          image: p.image,
+        }))}
         onPick={(id) => {
           const p = presets.find((x) => x.id === id);
           if (p) onPick(p);

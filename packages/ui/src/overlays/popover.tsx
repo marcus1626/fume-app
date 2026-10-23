@@ -28,7 +28,20 @@ export interface PopoverContentProps extends ComponentPropsWithoutRef<typeof Pop
 
 /** The glass popover in a portal. side top|right|bottom|left (default bottom), align start|center|end (default center). */
 export const PopoverContent = forwardRef<ElementRef<typeof PopoverPrimitive.Content>, PopoverContentProps>(
-  ({ className, side = "bottom", align = "center", sideOffset, collisionPadding, container, style, onCloseAutoFocus, ...props }, ref) => {
+  (
+    {
+      className,
+      side = "bottom",
+      align = "center",
+      sideOffset,
+      collisionPadding,
+      container,
+      style,
+      onCloseAutoFocus,
+      ...props
+    },
+    ref,
+  ) => {
     // a link inside that went to another page leaves focus to that page's title, not to the trigger (DWAY-8)
     const openedOn = useRef(pagePath());
     return (
@@ -54,21 +67,21 @@ export const PopoverContent = forwardRef<ElementRef<typeof PopoverPrimitive.Cont
 PopoverContent.displayName = "PopoverContent";
 
 /** div.ui-popover-header: title and description, 4 apart. */
-export const PopoverHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
-  <div ref={ref} className={cx("ui-popover-header", className)} {...props} />
-));
+export const PopoverHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => <div ref={ref} className={cx("ui-popover-header", className)} {...props} />,
+);
 PopoverHeader.displayName = "PopoverHeader";
 
 /** h3.ui-popover-title. Give PopoverContent aria-labelledby with its id (Radix does not wire a popover's title). */
-export const PopoverTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement>>(({ className, ...props }, ref) => (
-  <h3 ref={ref} className={cx("ui-popover-title", className)} {...props} />
-));
+export const PopoverTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement>>(
+  ({ className, ...props }, ref) => <h3 ref={ref} className={cx("ui-popover-title", className)} {...props} />,
+);
 PopoverTitle.displayName = "PopoverTitle";
 
 /** p.ui-popover-description. */
-export const PopoverDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>>(({ className, ...props }, ref) => (
-  <p ref={ref} className={cx("ui-popover-description", className)} {...props} />
-));
+export const PopoverDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>>(
+  ({ className, ...props }, ref) => <p ref={ref} className={cx("ui-popover-description", className)} {...props} />,
+);
 PopoverDescription.displayName = "PopoverDescription";
 
 /** div.ui-popover-row: a field (input.ui-input) and its button on one line. */

@@ -100,10 +100,16 @@ function ReviewScreen({ view }: { view: CampaignView }) {
       <PageHeader
         title="Review"
         back={<Back to={`/campaigns/${c.id}`} label={c.name} />}
-        meta={[c.name, ...(c.dueAt ? [`due ${due(c.dueAt)}`] : []), ...(mine ? [] : [`${view.approver.name.split(" ")[0]} approves`])]}
+        meta={[
+          c.name,
+          ...(c.dueAt ? [`due ${due(c.dueAt)}`] : []),
+          ...(mine ? [] : [`${view.approver.name.split(" ")[0]} approves`]),
+        ]}
       />
 
-      {can.ask && <ChangesSection campaign={c} tray={tray} sender={sender} answered={answered} onOpen={(id) => viewer.open(id)} />}
+      {can.ask && (
+        <ChangesSection campaign={c} tray={tray} sender={sender} answered={answered} onOpen={(id) => viewer.open(id)} />
+      )}
 
       {queue.isPending ? (
         <Loading label="Loading what waits for you" />
@@ -128,7 +134,9 @@ function ReviewScreen({ view }: { view: CampaignView }) {
         ))
       )}
 
-      {viewer.value && <ViewerLayerFor view={view} creativeId={viewer.value} onMove={viewer.move} onClose={viewer.close} />}
+      {viewer.value && (
+        <ViewerLayerFor view={view} creativeId={viewer.value} onMove={viewer.move} onClose={viewer.close} />
+      )}
       {swipe.value && can.ask && <SwipeLayerFor view={view} canApprove={can.approve} onClose={swipe.close} />}
 
       {sender.dialog}
@@ -138,17 +146,45 @@ function ReviewScreen({ view }: { view: CampaignView }) {
 
 /** The viewer over the review: the set is what waited when it opened; a creative outside it (a link from the chat
  *  to one already approved) opens among all of the campaign's. */
-function ViewerLayerFor({ view, creativeId, onMove, onClose }: { view: CampaignView; creativeId: string; onMove: (id: string) => void; onClose: () => void }) {
+function ViewerLayerFor({
+  view,
+  creativeId,
+  onMove,
+  onClose,
+}: {
+  view: CampaignView;
+  creativeId: string;
+  onMove: (id: string) => void;
+  onClose: () => void;
+}) {
   const review = useReviewSet(view.campaign.id);
   const named = useCustomerNames(view.campaign);
   const list = useMemo(() => review.list.map(named), [review.list, named]);
   const all = useMemo(() => review.all.map(named), [review.all, named]);
   if (!review.ready) return null;
   const set = list.some((c) => c.id === creativeId) ? list : all;
-  return <ReviewViewer set={set} campaigns={[view.campaign]} creativeId={creativeId} all={review.all} threadId={view.threadId} onMove={onMove} onClose={onClose} />;
+  return (
+    <ReviewViewer
+      set={set}
+      campaigns={[view.campaign]}
+      creativeId={creativeId}
+      all={review.all}
+      threadId={view.threadId}
+      onMove={onMove}
+      onClose={onClose}
+    />
+  );
 }
 
-function SwipeLayerFor({ view, canApprove, onClose }: { view: CampaignView; canApprove: boolean; onClose: () => void }) {
+function SwipeLayerFor({
+  view,
+  canApprove,
+  onClose,
+}: {
+  view: CampaignView;
+  canApprove: boolean;
+  onClose: () => void;
+}) {
   const review = useReviewSet(view.campaign.id);
   const named = useCustomerNames(view.campaign);
   const set = useMemo(() => review.list.map(named), [review.list, named]);
@@ -162,7 +198,17 @@ function SwipeLayerFor({ view, canApprove, onClose }: { view: CampaignView; canA
   if (!review.ready || empty) return null;
   // On a desk the address of Swipe through opens the viewer on the first creative that waits.
   if (desk) return <Navigate to={`?c=${set[0]!.id}`} replace />;
-  return <SwipeThrough campaign={view.campaign} set={set} all={review.all} approver={view.approver.name} canApprove={canApprove} threadId={view.threadId} onClose={onClose} />;
+  return (
+    <SwipeThrough
+      campaign={view.campaign}
+      set={set}
+      all={review.all}
+      approver={view.approver.name}
+      canApprove={canApprove}
+      threadId={view.threadId}
+      onClose={onClose}
+    />
+  );
 }
 
 function Decision({
@@ -182,10 +228,26 @@ function Decision({
   onAsk: (c: Creative) => void;
   onSwipe: () => void;
 }) {
-  if (item.kind === "directions") return <DirectionsDecision directions={item.directions} view={view} people={people} can={can} />;
-  if (item.kind === "creatives") return <CreativesDecision creatives={item.creatives} view={view} people={people} can={can} onOpen={onOpen} onAsk={onAsk} onSwipe={onSwipe} />;
+  if (item.kind === "directions")
+    return <DirectionsDecision directions={item.directions} view={view} people={people} can={can} />;
+  if (item.kind === "creatives")
+    return (
+      <CreativesDecision
+        creatives={item.creatives}
+        view={view}
+        people={people}
+        can={can}
+        onOpen={onOpen}
+        onAsk={onAsk}
+        onSwipe={onSwipe}
+      />
+    );
   return (
-    <Section title="The brief" titleId="review-brief" text="The brief is ready to send. Read it in full, then send it to Fume: Fume writes the plan from it.">
+    <Section
+      title="The brief"
+      titleId="review-brief"
+      text="The brief is ready to send. Read it in full, then send it to Fume: Fume writes the plan from it."
+    >
       <div className="ui-app-row">
         <Button asChild iconEnd="arrow-right">
           <Link to={`/campaigns/${view.campaign.id}/plan`}>Read the brief</Link>
@@ -194,7 +256,6 @@ function Decision({
     </Section>
   );
 }
-
 
 // ─── The agency's review (round 11) ─────────────────────────────────────────
 
@@ -211,7 +272,10 @@ function AgencyReviewScreen({ view }: { view: CampaignView }) {
   const sender = useSendChanges({ campaign: c, tray, threadId: view.threadId });
   const named = useCustomerNames(c);
   const items = useMemo(() => (queue.data ?? []).filter((i) => i.campaign.id === c.id), [queue.data, c.id]);
-  const checked = useMemo(() => (items.find((i) => i.kind === "creatives")?.creatives ?? []).map(named), [items, named]);
+  const checked = useMemo(
+    () => (items.find((i) => i.kind === "creatives")?.creatives ?? []).map(named),
+    [items, named],
+  );
   const others = items.filter((i) => i.kind !== "creatives");
   const panels = useClientPanels(view, checked);
   const headActions = useClientActions(view, checked, panels);
@@ -242,7 +306,13 @@ function AgencyReviewScreen({ view }: { view: CampaignView }) {
       />
 
       {can.ask && (
-        <ChangesSection campaign={c} tray={tray} sender={sender} answered={checked.length > 0 && checked.every((cr) => tray.has(cr.id))} onOpen={(id) => viewer.open(id)} />
+        <ChangesSection
+          campaign={c}
+          tray={tray}
+          sender={sender}
+          answered={checked.length > 0 && checked.every((cr) => tray.has(cr.id))}
+          onOpen={(id) => viewer.open(id)}
+        />
       )}
 
       {queue.isPending ? (
@@ -256,11 +326,26 @@ function AgencyReviewScreen({ view }: { view: CampaignView }) {
               <PlanNext view={view} />
             ) : (
               others.map((item) => (
-                <Decision key={item.kind} item={item} view={view} people={people} can={can} onOpen={(cr) => viewer.open(cr.id)} onAsk={(cr) => askFor(cr.id)} onSwipe={() => undefined} />
+                <Decision
+                  key={item.kind}
+                  item={item}
+                  view={view}
+                  people={people}
+                  can={can}
+                  onOpen={(cr) => viewer.open(cr.id)}
+                  onAsk={(cr) => askFor(cr.id)}
+                  onSwipe={() => undefined}
+                />
               ))
             )}
             {items.length === 0 && c.stage !== "plan" && <ClientNext view={view} />}
-            <ClientCreatives view={view} checked={checked} people={people} me={session.user.id} onOpen={(cr) => viewer.open(cr.id)} />
+            <ClientCreatives
+              view={view}
+              checked={checked}
+              people={people}
+              me={session.user.id}
+              onOpen={(cr) => viewer.open(cr.id)}
+            />
           </div>
           <aside className="ui-app-stack" aria-label="Sent to the client">
             <ClientSent view={view} />
@@ -268,7 +353,9 @@ function AgencyReviewScreen({ view }: { view: CampaignView }) {
         </div>
       )}
 
-      {viewer.value && <ViewerLayerFor view={view} creativeId={viewer.value} onMove={viewer.move} onClose={viewer.close} />}
+      {viewer.value && (
+        <ViewerLayerFor view={view} creativeId={viewer.value} onMove={viewer.move} onClose={viewer.close} />
+      )}
       {panels.panels}
       {sender.dialog}
     </>
@@ -286,7 +373,11 @@ function PlanNext({ view }: { view: CampaignView }) {
     <Nothing
       icon="file-text"
       title={status.words}
-      text={ready ? "Approve it and Fume starts on the masters. Nothing is made before that." : "Nothing is made before you approve the plan. Fume tells you when it is ready."}
+      text={
+        ready
+          ? "Approve it and Fume starts on the masters. Nothing is made before that."
+          : "Nothing is made before you approve the plan. Fume tells you when it is ready."
+      }
       action={
         <div className="ui-app-row">
           <Button asChild variant={ready ? "primary" : "secondary"} iconEnd="arrow-right">
@@ -322,7 +413,13 @@ function WhatNext({ view }: { view: CampaignView }) {
     <>
       <Nothing
         icon="circle-check"
-        title={next ? (download ? `Done here. Next: download ${next.title}’s masters` : `Done here. Next: ${next.title}`) : "Nothing more waits on you here"}
+        title={
+          next
+            ? download
+              ? `Done here. Next: download ${next.title}’s masters`
+              : `Done here. Next: ${next.title}`
+            : "Nothing more waits on you here"
+        }
         text={next ? detail : `${checker} tells you when the next work in ${view.campaign.name} is checked and ready.`}
         action={
           <div className="ui-app-row">
@@ -341,14 +438,26 @@ function WhatNext({ view }: { view: CampaignView }) {
           </div>
         }
       />
-      {next?.questionIds?.length ? <QuestionSheet ids={next.questionIds} open={asking} onOpenChange={setAsking} /> : null}
+      {next?.questionIds?.length ? (
+        <QuestionSheet ids={next.questionIds} open={asking} onOpenChange={setAsking} />
+      ) : null}
     </>
   );
 }
 
 // ─── Directions ─────────────────────────────────────────────────────────────
 
-function DirectionsDecision({ directions, view, people, can }: { directions: Direction[]; view: CampaignView; people: People; can: Rights }) {
+function DirectionsDecision({
+  directions,
+  view,
+  people,
+  can,
+}: {
+  directions: Direction[];
+  view: CampaignView;
+  people: People;
+  can: Rights;
+}) {
   const [choosing, setChoosing] = useState<Direction | null>(null);
   const [passing, setPassing] = useState(false);
   return (
@@ -428,8 +537,17 @@ function CreativesDecision({
 
   // "Anna checked these 6. All are selected; click a circle to leave one out." (DLOAD-12): the words follow the
   // selection, so they and the bar never disagree.
-  const checked = checkers.length ? `${checkers.join(" and ")} checked ${total === 1 ? "this one" : `these ${total}`}. ` : "";
-  const words = selectionWords({ n, total, open: pick.open.length, approver, canApprove: can.approve, canAsk: can.ask });
+  const checked = checkers.length
+    ? `${checkers.join(" and ")} checked ${total === 1 ? "this one" : `these ${total}`}. `
+    : "";
+  const words = selectionWords({
+    n,
+    total,
+    open: pick.open.length,
+    approver,
+    canApprove: can.approve,
+    canAsk: can.ask,
+  });
 
   return (
     <Section
@@ -468,7 +586,9 @@ function CreativesDecision({
         ))}
       </CreativeGrid>
 
-      {can.approve && <ApproveBar selected={pick.selected} onClear={pick.clear} onNeedsChanges={can.ask ? onAsk : undefined} />}
+      {can.approve && (
+        <ApproveBar selected={pick.selected} onClear={pick.clear} onNeedsChanges={can.ask ? onAsk : undefined} />
+      )}
     </Section>
   );
 }

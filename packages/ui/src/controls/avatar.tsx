@@ -29,7 +29,11 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
   ref,
 ) {
   return (
-    <span ref={ref} className={cx("ui-avatar", size !== "md" && `ui-avatar--${size}`, ink && "ui-avatar--ink", className)} {...props}>
+    <span
+      ref={ref}
+      className={cx("ui-avatar", size !== "md" && `ui-avatar--${size}`, ink && "ui-avatar--ink", className)}
+      {...props}
+    >
       {initials !== undefined ? <AvatarFallback>{initials}</AvatarFallback> : null}
       {src ? <AvatarImage src={src} alt={alt} /> : null}
       {children}
@@ -62,7 +66,10 @@ export const AvatarImage = forwardRef<HTMLImageElement, ImgHTMLAttributes<HTMLIm
 });
 
 /** The initials beneath the image. */
-export const AvatarFallback = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function AvatarFallback({ className, ...props }, ref) {
+export const AvatarFallback = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function AvatarFallback(
+  { className, ...props },
+  ref,
+) {
   return <span ref={ref} className={cx("ui-avatar-fallback", className)} {...props} />;
 });
 
@@ -72,16 +79,33 @@ export interface AvatarBadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 /** The status dot, cut out of the avatar with the ground colour. */
-export const AvatarBadge = forwardRef<HTMLSpanElement, AvatarBadgeProps>(function AvatarBadge({ status = "here", className, ...props }, ref) {
-  return <span ref={ref} aria-hidden="true" data-status={status === "away" ? "away" : undefined} className={cx("ui-avatar-badge", className)} {...props} />;
+export const AvatarBadge = forwardRef<HTMLSpanElement, AvatarBadgeProps>(function AvatarBadge(
+  { status = "here", className, ...props },
+  ref,
+) {
+  return (
+    <span
+      ref={ref}
+      aria-hidden="true"
+      data-status={status === "away" ? "away" : undefined}
+      className={cx("ui-avatar-badge", className)}
+      {...props}
+    />
+  );
 });
 
 /** Overlapping avatars; give it role="img" and an aria-label naming everyone ("Anna, Marcus and 3 more"). */
-export const AvatarGroup = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function AvatarGroup({ className, ...props }, ref) {
+export const AvatarGroup = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function AvatarGroup(
+  { className, ...props },
+  ref,
+) {
   return <span ref={ref} className={cx("ui-avatar-group", className)} {...props} />;
 });
 
 /** "+3" at the end of a group. */
-export const AvatarGroupCount = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function AvatarGroupCount({ className, ...props }, ref) {
+export const AvatarGroupCount = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function AvatarGroupCount(
+  { className, ...props },
+  ref,
+) {
   return <span ref={ref} className={cx("ui-avatar-group-count", className)} {...props} />;
 });

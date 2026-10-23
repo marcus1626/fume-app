@@ -15,7 +15,10 @@ export interface BackLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
 }
 
 /** a.ui-back > span.ui-back-icon (arrow-left) + span.ui-back-label. */
-export const BackLink = forwardRef<HTMLAnchorElement, BackLinkProps>(function BackLink({ label, iconOnly, className, ...props }, ref) {
+export const BackLink = forwardRef<HTMLAnchorElement, BackLinkProps>(function BackLink(
+  { label, iconOnly, className, ...props },
+  ref,
+) {
   return (
     <a ref={ref} className={cx("ui-back", className)} {...props}>
       <span className="ui-back-icon" aria-hidden="true">

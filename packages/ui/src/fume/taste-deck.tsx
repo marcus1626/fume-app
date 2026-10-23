@@ -18,7 +18,15 @@
 // line on what the part teaches; the head then counts the cards of that part only. A pair may be answered "Neither"
 // (neitherLabel, key N) when neither picture feels like the brand.
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { useEffect, useRef, useState, type CSSProperties, type HTMLAttributes, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type HTMLAttributes,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from "react";
 import { cx } from "../cx";
 import { Icon } from "../icons";
 import { Btn, Kbd, prefersReducedMotion } from "./_parts";
@@ -106,7 +114,15 @@ export function TasteDeck({
   function answer(value: TasteDeckAnswer) {
     if (!card || leaving || disabled) return;
     onAnswer(card, value);
-    setSaid(card.kind === "pair" ? (value === "neither" ? (neitherLabel ?? "Neither") : `${value === "a" ? "The first" : "The second"} picture chosen`) : value === "yes" ? yesLabel : noLabel);
+    setSaid(
+      card.kind === "pair"
+        ? value === "neither"
+          ? (neitherLabel ?? "Neither")
+          : `${value === "a" ? "The first" : "The second"} picture chosen`
+        : value === "yes"
+          ? yesLabel
+          : noLabel,
+    );
     setLeaving(card.kind === "pair" ? (value as "a" | "b" | "neither") : value === "yes" ? "right" : "left");
     const next = () => {
       setLeaving(null);
@@ -146,7 +162,14 @@ export function TasteDeck({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null;
-      if (e.metaKey || e.ctrlKey || e.altKey || (t && ["INPUT", "TEXTAREA", "SELECT"].includes(t.tagName)) || t?.isContentEditable) return;
+      if (
+        e.metaKey ||
+        e.ctrlKey ||
+        e.altKey ||
+        (t && ["INPUT", "TEXTAREA", "SELECT"].includes(t.tagName)) ||
+        t?.isContentEditable
+      )
+        return;
       if (!stage.current?.isConnected) return;
       const k = e.key.toLowerCase();
       if (k === "backspace" && index > 0) back();
@@ -171,7 +194,13 @@ export function TasteDeck({
     const edge = 24;
     if (e.clientX < edge || e.clientX > window.innerWidth - edge) return;
     swiped.current = false;
-    start.current = { x: e.clientX, y: e.clientY, id: e.pointerId, w: e.currentTarget.getBoundingClientRect().width, captured: false };
+    start.current = {
+      x: e.clientX,
+      y: e.clientY,
+      id: e.pointerId,
+      w: e.currentTarget.getBoundingClientRect().width,
+      captured: false,
+    };
     if (card.kind === "single") {
       e.currentTarget.setPointerCapture(e.pointerId);
       start.current.captured = true;
@@ -209,10 +238,16 @@ export function TasteDeck({
     setDrag(null);
   };
   const width = start.current?.w ?? 1;
-  const hint = drag && Math.abs(drag.x) > Math.abs(drag.y) && Math.abs(drag.x) > width * 0.12 ? (drag.x > 0 ? "yes" : "no") : null;
+  const hint =
+    drag && Math.abs(drag.x) > Math.abs(drag.y) && Math.abs(drag.x) > width * 0.12 ? (drag.x > 0 ? "yes" : "no") : null;
   const stamp = leaving === "right" ? "yes" : leaving === "left" ? "no" : hint;
   // The side a dragged pair leans to.
-  const lean = card?.kind === "pair" && drag && Math.abs(drag.x) > Math.abs(drag.y) && Math.abs(drag.x) > width * 0.08 ? (drag.x < 0 ? "a" : "b") : null;
+  const lean =
+    card?.kind === "pair" && drag && Math.abs(drag.x) > Math.abs(drag.y) && Math.abs(drag.x) > width * 0.08
+      ? drag.x < 0
+        ? "a"
+        : "b"
+      : null;
 
   const chipList = last && reasons ? reasons(last.card, last.answer) : [];
   // A card that names its part: the head counts the cards of that part only ("Part 1 of 2", "2 of 3").
@@ -231,7 +266,13 @@ export function TasteDeck({
             Why?
           </span>
           {chipList.map((c) => (
-            <button key={c} type="button" className="ui-toggle ui-toggle--outline ui-toggle--sm" aria-pressed={chips.includes(c)} onClick={() => toggleChip(c)}>
+            <button
+              key={c}
+              type="button"
+              className="ui-toggle ui-toggle--outline ui-toggle--sm"
+              aria-pressed={chips.includes(c)}
+              onClick={() => toggleChip(c)}
+            >
               {c}
             </button>
           ))}
@@ -256,7 +297,11 @@ export function TasteDeck({
         </div>
       ) : (
         <p className="ui-td-hint">
-          <span className="ui-td-hint-touch">{card?.kind === "single" ? `Swipe right for “${yesLabel}”, left for “${noLabel}”.` : "Tap or swipe toward the picture that is more you."}</span>
+          <span className="ui-td-hint-touch">
+            {card?.kind === "single"
+              ? `Swipe right for “${yesLabel}”, left for “${noLabel}”.`
+              : "Tap or swipe toward the picture that is more you."}
+          </span>
           <span className="ui-td-hint-keys">
             {card?.kind === "single" ? (
               <>
@@ -285,14 +330,27 @@ export function TasteDeck({
   );
 
   return (
-    <div ref={stage} className={cx("ui-td", className)} role="group" aria-label={label} data-done={done ? "" : undefined} {...props}>
+    <div
+      ref={stage}
+      className={cx("ui-td", className)}
+      role="group"
+      aria-label={label}
+      data-done={done ? "" : undefined}
+      {...props}
+    >
       {!done && (
         <div className="ui-td-head" data-part={card?.part ? "" : undefined}>
           {card?.part?.label && <span className="ui-td-part">{card.part.label}</span>}
           <ol className="ui-td-dots" aria-hidden="true">
             {inPart.map((c, j) => {
               const i = offset + j;
-              return <li key={c.id} className="ui-td-dot" data-state={i < index ? "done" : i === index ? "current" : "todo"} />;
+              return (
+                <li
+                  key={c.id}
+                  className="ui-td-dot"
+                  data-state={i < index ? "done" : i === index ? "current" : "todo"}
+                />
+              );
             })}
           </ol>
           <span className="ui-td-count">{`${shown} of ${n}`}</span>
@@ -357,7 +415,12 @@ export function TasteDeck({
           ) : null}
           {card.kind === "pair" && neitherLabel ? (
             <div className="ui-td-answers" data-kind="pair" role="group" aria-labelledby={`td-q-${card.id}`}>
-              <Btn variant="secondary" onClick={() => answer("neither")} disabled={disabled || Boolean(leaving)} aria-pressed={card.answer === "neither" || leaving === "neither"}>
+              <Btn
+                variant="secondary"
+                onClick={() => answer("neither")}
+                disabled={disabled || Boolean(leaving)}
+                aria-pressed={card.answer === "neither" || leaving === "neither"}
+              >
                 {neitherLabel}
                 <Kbd className="ui-td-key">N</Kbd>
               </Btn>
@@ -381,11 +444,23 @@ export function TasteDeck({
                 </span>
               </div>
               <div className="ui-td-answers" role="group" aria-labelledby={`td-q-${card.id}`}>
-                <Btn variant="secondary" icon="x" onClick={() => answer("no")} disabled={disabled || Boolean(leaving)} aria-pressed={card.answer === "no"}>
+                <Btn
+                  variant="secondary"
+                  icon="x"
+                  onClick={() => answer("no")}
+                  disabled={disabled || Boolean(leaving)}
+                  aria-pressed={card.answer === "no"}
+                >
                   {noLabel}
                   <Kbd className="ui-td-key">N</Kbd>
                 </Btn>
-                <Btn variant="primary" icon="thumbs-up" onClick={() => answer("yes")} disabled={disabled || Boolean(leaving)} aria-pressed={card.answer === "yes"}>
+                <Btn
+                  variant="primary"
+                  icon="thumbs-up"
+                  onClick={() => answer("yes")}
+                  disabled={disabled || Boolean(leaving)}
+                  aria-pressed={card.answer === "yes"}
+                >
                   {yesLabel}
                   <Kbd className="ui-td-key">Y</Kbd>
                 </Btn>
@@ -416,14 +491,23 @@ export interface TasteDeckStageProps {
 }
 
 /** The deck on its own full screen, on the light ground (Brand › Taste): a close pill, the title, the deck. */
-export function TasteDeckStage({ open, onOpenChange, title, description, closeLabel = "Done", children }: TasteDeckStageProps) {
+export function TasteDeckStage({
+  open,
+  onOpenChange,
+  title,
+  description,
+  closeLabel = "Done",
+  children,
+}: TasteDeckStageProps) {
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPrimitive.Portal>
         <DialogPrimitive.Content className="ui-td-stage" {...(description ? {} : { "aria-describedby": undefined })}>
           <header className="ui-td-stage-bar">
             <DialogPrimitive.Title className="ui-td-stage-title">{title}</DialogPrimitive.Title>
-            {description && <DialogPrimitive.Description className="ui-td-live">{description}</DialogPrimitive.Description>}
+            {description && (
+              <DialogPrimitive.Description className="ui-td-live">{description}</DialogPrimitive.Description>
+            )}
             <DialogPrimitive.Close asChild>
               <Btn variant="secondary" size="sm" icon="x">
                 {closeLabel}

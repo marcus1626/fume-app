@@ -48,7 +48,10 @@ export function StudioDeliveriesPage() {
 
   return (
     <Page title="Deliveries">
-      <PageHeader title="Deliveries" meta={campaigns.data ? [`${dueRows.length} due`, `${sent.length} sent`] : undefined} />
+      <PageHeader
+        title="Deliveries"
+        meta={campaigns.data ? [`${dueRows.length} due`, `${sent.length} sent`] : undefined}
+      />
 
       <Query query={campaigns} loading="Loading the deliveries">
         {() => (
@@ -78,14 +81,28 @@ const to = (r: StudioCampaignRow) => `/studio/b/${r.workspace.id}/campaigns/${r.
 // Round 13 AGENCY (robot note 10-agency): the frame's reader (StudioShell sets it), so an agency reads its own step
 // ("Check the plan"), not Fume's staff's ("The plan waits on Maja")
 const status = (r: StudioCampaignRow) =>
-  copy.campaignStatus(r.campaign, undefined, { customerName: r.approver ? firstName(r.approver.name) : undefined, date: false }).words;
+  copy.campaignStatus(r.campaign, undefined, {
+    customerName: r.approver ? firstName(r.approver.name) : undefined,
+    date: false,
+  }).words;
 const dayOf = (r: StudioCampaignRow) => {
   const d = dateOf(r);
   if (!d) return undefined;
-  return { label: d.label, day: d.label === copy.dateLabel.delivered || d.label === "Went live" ? date(d.at) : due(d.at) };
+  return {
+    label: d.label,
+    day: d.label === copy.dateLabel.delivered || d.label === "Went live" ? date(d.at) : due(d.at),
+  };
 };
 
-function Deliveries({ rows, showBrand, labelledBy }: { rows: StudioCampaignRow[]; showBrand: boolean; labelledBy: string }) {
+function Deliveries({
+  rows,
+  showBrand,
+  labelledBy,
+}: {
+  rows: StudioCampaignRow[];
+  showBrand: boolean;
+  labelledBy: string;
+}) {
   const desk = !useNarrowScreen("(max-width: 1023px)");
   if (!desk)
     return (
@@ -95,12 +112,16 @@ function Deliveries({ rows, showBrand, labelledBy }: { rows: StudioCampaignRow[]
           return (
             <Item key={r.campaign.id} as="li" asChild>
               <Link to={to(r)}>
-                <ItemMedia variant={r.campaign.cover ? "image" : "icon"}>{r.campaign.cover ? <ItemMediaImage src={r.campaign.cover} alt="" /> : <Icon name="megaphone" />}</ItemMedia>
+                <ItemMedia variant={r.campaign.cover ? "image" : "icon"}>
+                  {r.campaign.cover ? <ItemMediaImage src={r.campaign.cover} alt="" /> : <Icon name="megaphone" />}
+                </ItemMedia>
                 <ItemContent>
                   <ItemTitle>
                     {r.campaign.name} {showBrand && <span className="ui-home-due">{r.workspace.brandName}</span>}
                   </ItemTitle>
-                  <ItemDescription>{[approved(r), d ? `${d.label} ${d.day}` : undefined].filter(Boolean).join(" · ")}</ItemDescription>
+                  <ItemDescription>
+                    {[approved(r), d ? `${d.label} ${d.day}` : undefined].filter(Boolean).join(" · ")}
+                  </ItemDescription>
                 </ItemContent>
                 <ItemActions>
                   <Icon name="chevron-right" />
@@ -142,7 +163,11 @@ function Deliveries({ rows, showBrand, labelledBy }: { rows: StudioCampaignRow[]
                 </TableCell>
                 <TableCell className="ui-campaign-cell-name">
                   <TableTitle sub={status(r)}>
-                    <Link className="ui-campaign-row-link" to={to(r)} aria-label={`${r.campaign.name}, ${r.workspace.brandName}: open the campaign`}>
+                    <Link
+                      className="ui-campaign-row-link"
+                      to={to(r)}
+                      aria-label={`${r.campaign.name}, ${r.workspace.brandName}: open the campaign`}
+                    >
                       {r.campaign.name}
                     </Link>
                   </TableTitle>
@@ -179,4 +204,5 @@ function Deliveries({ rows, showBrand, labelledBy }: { rows: StudioCampaignRow[]
 }
 
 /** "2 of 11 approved", "Planned: 9 creatives". */
-const approved = (r: StudioCampaignRow) => copy.approvedOf(r.campaign.counts.approved, r.campaign.counts.creatives, r.campaign.waits?.planned);
+const approved = (r: StudioCampaignRow) =>
+  copy.approvedOf(r.campaign.counts.approved, r.campaign.counts.creatives, r.campaign.waits?.planned);

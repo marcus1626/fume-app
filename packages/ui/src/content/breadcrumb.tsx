@@ -1,7 +1,15 @@
 // Breadcrumb: design-system/components/breadcrumb.css (shadcn's parts: breadcrumb, list, item, link, page, separator,
 // ellipsis). Links in secondary, the page in Ink, the chevron between. Narrow (under 400 px) the middle folds into an
 // ellipsis button that opens the hidden levels as a glass menu; BreadcrumbPath does that for you.
-import { Fragment, forwardRef, useId, type AnchorHTMLAttributes, type HTMLAttributes, type LiHTMLAttributes, type ReactNode } from "react";
+import {
+  Fragment,
+  forwardRef,
+  useId,
+  type AnchorHTMLAttributes,
+  type HTMLAttributes,
+  type LiHTMLAttributes,
+  type ReactNode,
+} from "react";
 import { cx } from "../cx";
 import { Icon, type IconName } from "../icons";
 import { Slot, useGlassMenu } from "./internal";
@@ -19,21 +27,40 @@ export interface BreadcrumbItemProps extends LiHTMLAttributes<HTMLLIElement> {
   fold?: boolean;
 }
 export function BreadcrumbItem({ fold, className, ...props }: BreadcrumbItemProps) {
-  return <li data-slot="breadcrumb-item" data-fold={fold ? "" : undefined} className={cx("ui-breadcrumb-item", className)} {...props} />;
+  return (
+    <li
+      data-slot="breadcrumb-item"
+      data-fold={fold ? "" : undefined}
+      className={cx("ui-breadcrumb-item", className)}
+      {...props}
+    />
+  );
 }
 
 export interface BreadcrumbLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   /** Render the one child (a router Link) as the link. */
   asChild?: boolean;
 }
-export const BreadcrumbLink = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(function BreadcrumbLink({ asChild, className, ...props }, ref) {
+export const BreadcrumbLink = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(function BreadcrumbLink(
+  { asChild, className, ...props },
+  ref,
+) {
   const Comp = (asChild ? Slot : "a") as "a";
   return <Comp ref={ref} data-slot="breadcrumb-link" className={cx("ui-breadcrumb-link", className)} {...props} />;
 });
 
 /** The current page, in Ink; it truncates last. */
 export function BreadcrumbPage({ className, ...props }: HTMLAttributes<HTMLSpanElement>) {
-  return <span data-slot="breadcrumb-page" role="link" aria-disabled="true" aria-current="page" className={cx("ui-breadcrumb-page", className)} {...props} />;
+  return (
+    <span
+      data-slot="breadcrumb-page"
+      role="link"
+      aria-disabled="true"
+      aria-current="page"
+      className={cx("ui-breadcrumb-page", className)}
+      {...props}
+    />
+  );
 }
 
 export interface BreadcrumbSeparatorProps extends LiHTMLAttributes<HTMLLIElement> {
@@ -64,12 +91,21 @@ export interface BreadcrumbEllipsisProps extends Omit<LiHTMLAttributes<HTMLLIEle
   label?: string;
 }
 /** The folded middle: a quiet circle that opens a glass menu of the hidden levels. Shown only when the path folds. */
-export function BreadcrumbEllipsis({ children, label = "Show the whole path", className, ...props }: BreadcrumbEllipsisProps) {
+export function BreadcrumbEllipsis({
+  children,
+  label = "Show the whole path",
+  className,
+  ...props
+}: BreadcrumbEllipsisProps) {
   const id = `ui-crumbs-${useId().replace(/:/g, "")}`;
   const menu = useGlassMenu(id);
   return (
     <li className={cx("ui-breadcrumb-item ui-breadcrumb-fold", className)} {...props}>
-      <button {...menu.triggerProps} className="ui-btn ui-btn--quiet ui-btn--icon ui-btn--sm ui-breadcrumb-ellipsis" aria-label={label}>
+      <button
+        {...menu.triggerProps}
+        className="ui-btn ui-btn--quiet ui-btn--icon ui-btn--sm ui-breadcrumb-ellipsis"
+        aria-label={label}
+      >
         <Icon name="ellipsis" />
       </button>
       <div {...menu.contentProps} className="ui-glass ui-menu ui-breadcrumb-menu" role="menu" aria-label={label}>
@@ -88,7 +124,12 @@ export const BreadcrumbMenuLink = forwardRef<HTMLAnchorElement, BreadcrumbMenuLi
   { icon, asChild, className, children, ...props },
   ref,
 ) {
-  if (asChild) return <Slot ref={ref} role="menuitem" className={cx("ui-menu-item", className)} {...props}>{children}</Slot>;
+  if (asChild)
+    return (
+      <Slot ref={ref} role="menuitem" className={cx("ui-menu-item", className)} {...props}>
+        {children}
+      </Slot>
+    );
   return (
     <a ref={ref} role="menuitem" className={cx("ui-menu-item", className)} {...props}>
       {icon && <Icon name={icon} />}
@@ -155,7 +196,9 @@ export function BreadcrumbPath({ items, renderLink, foldLabel, ...props }: Bread
                   <BreadcrumbSeparator folded />
                 </>
               )}
-              <BreadcrumbItem fold={isMiddle}>{last ? <BreadcrumbPage>{it.label}</BreadcrumbPage> : link(it, "ui-breadcrumb-link")}</BreadcrumbItem>
+              <BreadcrumbItem fold={isMiddle}>
+                {last ? <BreadcrumbPage>{it.label}</BreadcrumbPage> : link(it, "ui-breadcrumb-link")}
+              </BreadcrumbItem>
               {!last && <BreadcrumbSeparator fold={isMiddle} />}
             </Fragment>
           );

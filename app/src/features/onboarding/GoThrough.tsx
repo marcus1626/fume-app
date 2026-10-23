@@ -16,7 +16,20 @@
 // understood" REPLACES the deck as its own view: five short lines she can Confirm or Change, the products in one
 // sentence, how many finds are not confirmed yet ("creatives use only what you confirm", with Confirm them now),
 // and at its foot Back one and Approve and start.
-import { Button, Field, FieldLabel, FieldOptional, Icon, Input, TasteDeck, ToggleGroup, ToggleGroupItem, useToast, type TasteDeckAnswer, type TasteDeckCard } from "@fume/ui";
+import {
+  Button,
+  Field,
+  FieldLabel,
+  FieldOptional,
+  Icon,
+  Input,
+  TasteDeck,
+  ToggleGroup,
+  ToggleGroupItem,
+  useToast,
+  type TasteDeckAnswer,
+  type TasteDeckCard,
+} from "@fume/ui";
 import { useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import {
@@ -33,7 +46,18 @@ import {
   useSaveOnboardingProgress,
   useSession,
 } from "../../api/hooks";
-import type { BrandColour, BrandDnaView, BrandIdentity, BrandImage, BrandScan, ColourUse, IdentityKind, Provenance, UnderstoodLine, VoicePartId } from "../../contract";
+import type {
+  BrandColour,
+  BrandDnaView,
+  BrandIdentity,
+  BrandImage,
+  BrandScan,
+  ColourUse,
+  IdentityKind,
+  Provenance,
+  UnderstoodLine,
+  VoicePartId,
+} from "../../contract";
 import * as copy from "../../copy";
 import { Query } from "../../shell/Page";
 import { brandFaces, colourRole, typeRole, vars } from "../brand/board";
@@ -113,7 +137,14 @@ function itemsOf(identity: BrandIdentity, part: CheckPart): CheckItem[] {
         detail: roleAndUses(colourRole[c.role], c.uses),
         value: c.hex,
         uses: c.uses ?? [],
-        media: <div className="ui-brand-swatch-colour" style={vars({ "--swatch": c.hex })} role="img" aria-label={`${c.name}, ${c.hex}`} />,
+        media: (
+          <div
+            className="ui-brand-swatch-colour"
+            style={vars({ "--swatch": c.hex })}
+            role="img"
+            aria-label={`${c.name}, ${c.hex}`}
+          />
+        ),
       }));
     case "type":
       return identity.typefaces.map((t) => ({
@@ -147,7 +178,14 @@ function itemsOf(identity: BrandIdentity, part: CheckPart): CheckItem[] {
     default:
       // Round 13 (#4): the voice's five parts, each one find
       if (identity.voiceBook)
-        return identity.voiceBook.parts.map((v) => ({ ...base(v.provenance), kind: "voice", id: v.id, name: voicePartTitle[v.id], detail: v.found, media: null }));
+        return identity.voiceBook.parts.map((v) => ({
+          ...base(v.provenance),
+          kind: "voice",
+          id: v.id,
+          name: voicePartTitle[v.id],
+          detail: v.found,
+          media: null,
+        }));
       return identity.voice.map((v) => ({
         ...base(v.provenance),
         kind: "voice",
@@ -165,7 +203,8 @@ function itemsOf(identity: BrandIdentity, part: CheckPart): CheckItem[] {
  * material; from a website alone, what the brand already had reads "Found on lysne.no" (DLOAD-17).
  */
 function sourceWords(p: Provenance, scan: BrandScan | null | undefined): string {
-  if (p.origin === "customer") return scan && scan.files.length === 0 && scan.url ? `Found on ${scan.url}` : "You added this";
+  if (p.origin === "customer")
+    return scan && scan.files.length === 0 && scan.url ? `Found on ${scan.url}` : "You added this";
   return p.evidence ? `Found on ${p.evidence}` : "Fume found this";
 }
 
@@ -176,7 +215,9 @@ function colourConflicts(scan: BrandScan | null | undefined, colours: BrandColou
     .filter((f) => f.kind === "colour")
     .flatMap((f) => {
       const c = colours.find((x) => x.name === f.label && x.provenance.state !== "removed");
-      return c && c.provenance.state === "proposed" && c.hex.toUpperCase() !== f.value.toUpperCase() ? [{ find: f, colour: c }] : [];
+      return c && c.provenance.state === "proposed" && c.hex.toUpperCase() !== f.value.toUpperCase()
+        ? [{ find: f, colour: c }]
+        : [];
     });
 }
 
@@ -209,7 +250,14 @@ function useItemActions(item: CheckItem, root: RefObject<HTMLElement | null>) {
   const actions =
     st === "removed" ? (
       canApprove && (
-        <Button size="sm" variant="secondary" icon="undo-2" onClick={d.putBack} disabled={d.pending} aria-label={`Put back ${item.name}`}>
+        <Button
+          size="sm"
+          variant="secondary"
+          icon="undo-2"
+          onClick={d.putBack}
+          disabled={d.pending}
+          aria-label={`Put back ${item.name}`}
+        >
           Put back
         </Button>
       )
@@ -250,7 +298,8 @@ function useItemActions(item: CheckItem, root: RefObject<HTMLElement | null>) {
 const settledOf = (x: CheckItem) => x.provenance.origin === "customer" && x.provenance.state === "approved";
 
 /** Beside the name: a hex in the data face, or a role in words, as the board writes them. */
-const metaOf = (x: CheckItem) => (x.meta ? <span className={x.metaIsData ? "ui-brand-hex" : "ui-brand-caption-meta"}>{x.meta}</span> : undefined);
+const metaOf = (x: CheckItem) =>
+  x.meta ? <span className={x.metaIsData ? "ui-brand-hex" : "ui-brand-caption-meta"}>{x.meta}</span> : undefined;
 
 const detailOf = (x: CheckItem) =>
   x.detail && x.detailFont ? (
@@ -311,7 +360,15 @@ function SettledRow({ item, scan }: { item: CheckItem; scan: BrandScan | null | 
 }
 
 /** A picture big enough to judge (DLAY-12): the picture, its name and source, Confirm · Remove under it. */
-function CheckTile({ item, scan, campaigns }: { item: CheckItem; scan: BrandScan | null | undefined; campaigns: string[] }) {
+function CheckTile({
+  item,
+  scan,
+  campaigns,
+}: {
+  item: CheckItem;
+  scan: BrandScan | null | undefined;
+  campaigns: string[];
+}) {
   const root = useRef<HTMLLIElement>(null);
   const a = useItemActions(item, root);
   const { canEdit } = useRole();
@@ -322,9 +379,13 @@ function CheckTile({ item, scan, campaigns }: { item: CheckItem; scan: BrandScan
       {item.media}
       <div className="ui-ob-text">
         <p className="ui-ob-name">{item.name}</p>
-        {item.image?.group === "campaign" && item.image.campaign && <p className="ui-ob-campaign">{item.image.campaign}</p>}
+        {item.image?.group === "campaign" && item.image.campaign && (
+          <p className="ui-ob-campaign">{item.image.campaign}</p>
+        )}
         <p className="ui-ob-source">
-          <span className="ui-proposal-tag">{st === "removed" ? "Removed. Fume will not use it." : sourceWords(item.provenance, scan)}</span>
+          <span className="ui-proposal-tag">
+            {st === "removed" ? "Removed. Fume will not use it." : sourceWords(item.provenance, scan)}
+          </span>
           {item.unsure && st === "proposed" && <span className="ui-proposal-tag">{confidence.low}</span>}
         </p>
       </div>
@@ -343,9 +404,14 @@ function ConflictCard({ find, colour }: { find: BrandScan["finds"][number]; colo
   const { canApprove } = useRole();
   const ours = colour.provenance.evidence ?? "your Brand DNA";
   function pick(hex: string) {
-    decide.mutate(hex === colour.hex ? { kind: "colour", id: colour.id, verdict: "keep" } : { kind: "colour", id: colour.id, verdict: "change", value: hex }, {
-      onError: (error) => toast.error("That wasn’t saved", { description: error.message }),
-    });
+    decide.mutate(
+      hex === colour.hex
+        ? { kind: "colour", id: colour.id, verdict: "keep" }
+        : { kind: "colour", id: colour.id, verdict: "change", value: hex },
+      {
+        onError: (error) => toast.error("That wasn’t saved", { description: error.message }),
+      },
+    );
   }
   return (
     <div className="ui-ob-ask" data-state={colour.provenance.state}>
@@ -353,7 +419,8 @@ function ConflictCard({ find, colour }: { find: BrandScan["finds"][number]; colo
       <div className="ui-ob-text">
         <p className="ui-ob-ask-eyebrow">Two values for one colour</p>
         <p className="ui-ob-ask-title">
-          {ours} says {colour.hex.toUpperCase()} for {colour.name}; {find.evidence} uses {find.value.toUpperCase()}. Which is right?
+          {ours} says {colour.hex.toUpperCase()} for {colour.name}; {find.evidence} uses {find.value.toUpperCase()}.
+          Which is right?
         </p>
         <p className="ui-ob-ask-why">Fume matches every accent to this colour, so it needs one value.</p>
       </div>
@@ -380,14 +447,23 @@ const partLede: Record<CheckPart, string> = {
   colour: "Creatives use only the colours you confirm.",
   type: "Layouts use only the typefaces you confirm.",
   imagery: "Fume sorted the pictures it found. Your look steers every creative; a campaign’s look only its campaign.",
-  voice: "Every word on a creative is held against your voice. Here is each of its five parts in short; the whole voice is in Brand › Voice.",
+  voice:
+    "Every word on a creative is held against your voice. Here is each of its five parts in short; the whole voice is in Brand › Voice.",
 };
 
 /** Fume is not sure first, then the other finds, then what the brand already had: a fixed order, so a decision never
  * moves a row under the mouse. */
 const rank = (x: CheckItem) => (settledOf(x) ? 2 : x.unsure ? 0 : 1);
 
-function PartBody({ part, identity, scan }: { part: CheckPart; identity: BrandIdentity; scan: BrandScan | null | undefined }) {
+function PartBody({
+  part,
+  identity,
+  scan,
+}: {
+  part: CheckPart;
+  identity: BrandIdentity;
+  scan: BrandScan | null | undefined;
+}) {
   const label = checkParts.find((p) => p.id === part)!.label;
   const conflicts = part === "colour" ? colourConflicts(scan, identity.colours) : [];
   const conflicted = new Set(conflicts.map((c) => c.colour.id));
@@ -431,7 +507,9 @@ function PartBody({ part, identity, scan }: { part: CheckPart; identity: BrandId
           ))
         ) : (
           <ul className="ui-ob-finds" aria-label={`${label}: what Fume found`}>
-            {items.map((x) => (settledOf(x) ? <SettledRow key={x.id} item={x} scan={scan} /> : <FindRow key={x.id} item={x} />))}
+            {items.map((x) =>
+              settledOf(x) ? <SettledRow key={x.id} item={x} scan={scan} /> : <FindRow key={x.id} item={x} />,
+            )}
           </ul>
         ))}
     </section>
@@ -458,7 +536,13 @@ export function CheckFound() {
   const label = checkParts[index].label;
 
   const parts = identity
-    ? checkParts.map((p) => ({ id: p.id, label: p.label, done: itemsOf(identity, p.id).every((x) => !isOpen(x)), current: p.id === part, onSelect: () => go(p.id) }))
+    ? checkParts.map((p) => ({
+        id: p.id,
+        label: p.label,
+        done: itemsOf(identity, p.id).every((x) => !isOpen(x)),
+        current: p.id === part,
+        onSelect: () => go(p.id),
+      }))
     : undefined;
 
   // One way forward (DTSK-5, DTSK-7): confirm what is open and move on, or move on.
@@ -517,7 +601,9 @@ export function CheckFound() {
         <h1 className="ui-welcome-title">{label}</h1>
         <p className="ui-welcome-lede">
           {partLede[part]}
-          {index === 0 ? " Confirm what is right, change what is close, remove what is wrong. Nothing is used until you confirm it." : ""}
+          {index === 0
+            ? " Confirm what is right, change what is close, remove what is wrong. Nothing is used until you confirm it."
+            : ""}
         </p>
       </header>
       <Query query={board} loading="Loading what Fume found">
@@ -534,7 +620,13 @@ const yesReasons = ["The light", "The calm", "The colours", "The setting"];
 const noReasons = ["Too cold", "Too busy", "Too staged", "Not our colours"];
 const neitherReasons = ["Both too cold", "Both too busy", "Both too staged", "Not our colours"];
 export const tasteReasons = (card: TasteDeckCard, answer: TasteDeckAnswer) =>
-  card.kind === "pair" ? (answer === "neither" ? neitherReasons : pairReasons) : answer === "no" ? noReasons : yesReasons;
+  card.kind === "pair"
+    ? answer === "neither"
+      ? neitherReasons
+      : pairReasons
+    : answer === "no"
+      ? noReasons
+      : yesReasons;
 
 /**
  * Round 13 (Marcus's video comments #5, #47; PROPOSED 22 Oct 2026): the deck in two named parts, each with one line on
@@ -548,13 +640,24 @@ export function tasteParts(brand: string, pairs: TasteDeckCard[], singles: Taste
     { cards: singles, question: `Is this ${brand}?`, line: "Teaches Fume where the edges are." },
   ].filter((g) => g.cards.length > 0);
   return groups.flatMap((g, i) =>
-    g.cards.map((c) => ({ ...c, question: g.question, part: { label: groups.length > 1 ? `Part ${i + 1} of ${groups.length}` : "", line: g.line } })),
+    g.cards.map((c) => ({
+      ...c,
+      question: g.question,
+      part: { label: groups.length > 1 ? `Part ${i + 1} of ${groups.length}` : "", line: g.line },
+    })),
   );
 }
 
 /** The deck's cards: the pairs (part 1), then the test directions (part 2). */
 function deckOf(view: BrandDnaView, brand: string): TasteDeckCard[] {
-  const pairs: TasteDeckCard[] = view.tastePairs.map((p) => ({ id: p.id, kind: "pair", question: p.question, a: p.a, b: p.b, answer: p.neither ? "neither" : p.chosen }));
+  const pairs: TasteDeckCard[] = view.tastePairs.map((p) => ({
+    id: p.id,
+    kind: "pair",
+    question: p.question,
+    a: p.a,
+    b: p.b,
+    answer: p.neither ? "neither" : p.chosen,
+  }));
   const singles: TasteDeckCard[] = view.understanding.testDirections.map((d) => ({
     id: d.id,
     kind: "single",
@@ -567,7 +670,17 @@ function deckOf(view: BrandDnaView, brand: string): TasteDeckCard[] {
   return tasteParts(brand, pairs, singles);
 }
 
-function TasteDeckStep({ cards, index, onIndexChange, brand }: { cards: TasteDeckCard[]; index: number; onIndexChange: (i: number) => void; brand: string }) {
+function TasteDeckStep({
+  cards,
+  index,
+  onIndexChange,
+  brand,
+}: {
+  cards: TasteDeckCard[];
+  index: number;
+  onIndexChange: (i: number) => void;
+  brand: string;
+}) {
   const { canEdit } = useRole();
   const choose = useChooseTastePair();
   const answerU = useAnswerUnderstanding();
@@ -577,7 +690,8 @@ function TasteDeckStep({ cards, index, onIndexChange, brand }: { cards: TasteDec
 
   function save(card: TasteDeckCard, answer: TasteDeckAnswer, reason?: string) {
     if (card.kind === "pair" && answer === "neither") pass.mutate({ pairId: card.id, reason }, { onError: failed });
-    else if (card.kind === "pair") choose.mutate({ pairId: card.id, chosen: answer as "a" | "b", reason }, { onError: failed });
+    else if (card.kind === "pair")
+      choose.mutate({ pairId: card.id, chosen: answer as "a" | "b", reason }, { onError: failed });
     else answerU.mutate({ directionId: card.id, verdict: answer as "yes" | "no", reason }, { onError: failed });
   }
 
@@ -608,7 +722,11 @@ function SummaryLine({ line, saved, canEdit }: { line: Understood; saved?: Under
   function mark(value: string) {
     const v = value as "" | UnderstoodLine["verdict"];
     setVerdict(v);
-    if (v) save.mutate({ line: { id: line.id, verdict: v, reason: v === "not_quite" ? reason.trim() || undefined : undefined } }, { onError: failed });
+    if (v)
+      save.mutate(
+        { line: { id: line.id, verdict: v, reason: v === "not_quite" ? reason.trim() || undefined : undefined } },
+        { onError: failed },
+      );
   }
 
   return (
@@ -618,7 +736,15 @@ function SummaryLine({ line, saved, canEdit }: { line: Understood; saved?: Under
         <p className="ui-ob-line-words">{line.text}</p>
       </div>
       {canEdit && (
-        <ToggleGroup type="single" variant="outline" size="sm" className="ui-ob-line-actions" value={verdict} onValueChange={mark} aria-label={`${line.label}: did Fume read it right?`}>
+        <ToggleGroup
+          type="single"
+          variant="outline"
+          size="sm"
+          className="ui-ob-line-actions"
+          value={verdict}
+          onValueChange={mark}
+          aria-label={`${line.label}: did Fume read it right?`}
+        >
           <ToggleGroupItem value="right" icon="check">
             Confirm
           </ToggleGroupItem>
@@ -635,7 +761,13 @@ function SummaryLine({ line, saved, canEdit }: { line: Understood; saved?: Under
             value={reason}
             autoFocus={!saved?.reason}
             onChange={(e) => setReason(e.target.value)}
-            onBlur={() => reason.trim() !== (saved?.reason ?? "") && save.mutate({ line: { id: line.id, verdict: "not_quite", reason: reason.trim() || undefined } }, { onError: failed })}
+            onBlur={() =>
+              reason.trim() !== (saved?.reason ?? "") &&
+              save.mutate(
+                { line: { id: line.id, verdict: "not_quite", reason: reason.trim() || undefined } },
+                { onError: failed },
+              )
+            }
             onKeyDown={(e) => e.key === "Enter" && e.currentTarget.blur()}
             placeholder="In your words; Fume asks before it guesses"
           />
@@ -669,7 +801,10 @@ function Summary({ view, brand, onBack }: { view: BrandDnaView; brand: string; o
     approve.mutate(undefined, {
       onSuccess: () => {
         toast.done("Your Brand DNA is approved", {
-          description: open > 0 ? `Creatives use what you confirmed. ${finds(open)} wait for you on Brand.` : "Every creative is made and checked against it.",
+          description:
+            open > 0
+              ? `Creatives use what you confirmed. ${finds(open)} wait for you on Brand.`
+              : "Every creative is made and checked against it.",
         });
         navigate("/");
       },
@@ -686,7 +821,12 @@ function Summary({ view, brand, onBack }: { view: BrandDnaView; brand: string; o
           ))}
         </ul>
       )}
-      {products > 0 && <p className="ui-ob-note">Fume also found {copy.count(products, "product")}. You confirm each one the first time it goes into a campaign.</p>}
+      {products > 0 && (
+        <p className="ui-ob-note">
+          Fume also found {copy.count(products, "product")}. You confirm each one the first time it goes into a
+          campaign.
+        </p>
+      )}
       {open > 0 && !approved && (
         <div className="ui-ob-open">
           <p className="ui-ob-open-text">

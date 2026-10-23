@@ -58,7 +58,8 @@ const agencyPage = (name: string) => () =>
   import("./features/agency/index").then((m) => ({ Component: m[name as keyof typeof m] }));
 
 const brandCheckPage = () => import("./features/check/BrandCheckPage").then((m) => ({ Component: m.BrandCheckPage }));
-const productCheckPage = () => import("./features/check/ProductCheckPage").then((m) => ({ Component: m.ProductCheckPage }));
+const productCheckPage = () =>
+  import("./features/check/ProductCheckPage").then((m) => ({ Component: m.ProductCheckPage }));
 
 /** For Fume's people a campaign is its plan, the studio's page of a campaign (DWAY-14); its other tabs are the
  *  customer's, seen through Customer view. */
@@ -222,7 +223,9 @@ const routes = [
 // The preview build (VITE_ROUTER=memory) runs where the address bar cannot be used, so it keeps the route in memory
 // (and starts where a demo reload asked: the agency's Home in the agency demo).
 const router =
-  import.meta.env.VITE_ROUTER === "memory" ? createMemoryRouter(routes, { initialEntries: [demoStartPath()] }) : createBrowserRouter(routes);
+  import.meta.env.VITE_ROUTER === "memory"
+    ? createMemoryRouter(routes, { initialEntries: [demoStartPath()] })
+    : createBrowserRouter(routes);
 
 export function App() {
   return (

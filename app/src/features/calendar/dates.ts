@@ -26,7 +26,8 @@ const fromNoon = (t: number): Day => new Date(t).toISOString().slice(0, 10);
 
 /** The Oslo day of an instant. */
 export const dayOf = (t: number | string): Day => keyFmt.format(typeof t === "string" ? Date.parse(t) : t);
-export const isDay = (s: string | null): s is Day => Boolean(s && /^\d{4}-\d{2}-\d{2}$/.test(s) && !Number.isNaN(noon(s)));
+export const isDay = (s: string | null): s is Day =>
+  Boolean(s && /^\d{4}-\d{2}-\d{2}$/.test(s) && !Number.isNaN(noon(s)));
 export const addDays = (d: Day, n: number): Day => fromNoon(noon(d) + n * DAY_MS);
 /** Monday 0 … Sunday 6. */
 export const weekday = (d: Day) => (new Date(noon(d)).getUTCDay() + 6) % 7;
@@ -58,19 +59,29 @@ export function instant(d: Day, hhmm = "00:00"): string {
 }
 
 /** "18:00", Oslo time. */
-export const clock = (iso: string) => new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: TZ }).format(Date.parse(iso));
+export const clock = (iso: string) =>
+  new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: TZ }).format(
+    Date.parse(iso),
+  );
 
 const at = (d: Day) => new Date(noon(d));
-export const monthTitle = (d: Day) => new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric", timeZone: "UTC" }).format(at(d));
-export const dayTitle = (d: Day) => new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }).format(at(d));
-export const dayShort = (d: Day) => new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).format(at(d));
-export const dateShort = (d: Day) => new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "UTC" }).format(at(d));
-export const weekdayShort = (d: Day) => new Intl.DateTimeFormat("en-GB", { weekday: "short", timeZone: "UTC" }).format(at(d));
+export const monthTitle = (d: Day) =>
+  new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric", timeZone: "UTC" }).format(at(d));
+export const dayTitle = (d: Day) =>
+  new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }).format(at(d));
+export const dayShort = (d: Day) =>
+  new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).format(at(d));
+export const dateShort = (d: Day) =>
+  new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "UTC" }).format(at(d));
+export const weekdayShort = (d: Day) =>
+  new Intl.DateTimeFormat("en-GB", { weekday: "short", timeZone: "UTC" }).format(at(d));
 export const dayNumber = (d: Day) => String(Number(d.slice(8, 10)));
 
 /** "12 – 18 Oct 2026", or across months "28 Sep – 4 Oct 2026". */
 export function weekTitle(start: Day): string {
   const end = addDays(start, 6);
   const year = end.slice(0, 4);
-  return sameMonth(start, end) ? `${dayNumber(start)} – ${dateShort(end)} ${year}` : `${dateShort(start)} – ${dateShort(end)} ${year}`;
+  return sameMonth(start, end)
+    ? `${dayNumber(start)} – ${dateShort(end)} ${year}`
+    : `${dateShort(start)} – ${dateShort(end)} ${year}`;
 }

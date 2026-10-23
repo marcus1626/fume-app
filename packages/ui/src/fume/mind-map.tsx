@@ -65,7 +65,12 @@ const boxOf = (el: Element, origin: DOMRect): Box => {
 };
 
 /** A box in its offset parent's layout, without the transform it may be animating through. */
-const layoutBox = (el: HTMLElement): Box => ({ x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight });
+const layoutBox = (el: HTMLElement): Box => ({
+  x: el.offsetLeft,
+  y: el.offsetTop,
+  w: el.offsetWidth,
+  h: el.offsetHeight,
+});
 
 /** A wide map: from the center's edge toward the node, a soft curve into the node's nearest side. */
 function spoke(c: Box, n: Box): string {
@@ -139,7 +144,8 @@ export function MindMap({ label, center, centerState, nodes, settled = false, bo
   const follow = (el: HTMLElement | null | undefined) => {
     if (!el) return;
     const below = parseFloat(getComputedStyle(el).scrollMarginBottom) || 0;
-    if (el.getBoundingClientRect().bottom > window.innerHeight - below) el.scrollIntoView({ block: "end", behavior: reduced ? "auto" : "smooth" });
+    if (el.getBoundingClientRect().bottom > window.innerHeight - below)
+      el.scrollIntoView({ block: "end", behavior: reduced ? "auto" : "smooth" });
   };
   useEffect(() => {
     if (readingId) follow(nodeEls.current.get(readingId));
@@ -205,14 +211,25 @@ export function MindMap({ label, center, centerState, nodes, settled = false, bo
       const to = boxOf(el, ro);
       const delay = i * (slow / 4);
       if (!from || !to.w) {
-        return el.animate([{ opacity: 0, filter: `blur(${blur * 1.5}px)` }, { opacity: 1, filter: "blur(0px)" }], { duration: slow * 3, delay, easing: ease, fill: "backwards" });
+        return el.animate(
+          [
+            { opacity: 0, filter: `blur(${blur * 1.5}px)` },
+            { opacity: 1, filter: "blur(0px)" },
+          ],
+          { duration: slow * 3, delay, easing: ease, fill: "backwards" },
+        );
       }
       const scale = Math.min(1, Math.max(0.35, from.w / to.w));
       const dx = from.x + from.w / 2 - (to.x + (to.w * scale) / 2);
       const dy = from.y - to.y;
       return el.animate(
         [
-          { transformOrigin: "0 0", transform: `translate(${dx}px, ${dy}px) scale(${scale})`, opacity: 0.2, filter: `blur(${blur * 1.5}px)` },
+          {
+            transformOrigin: "0 0",
+            transform: `translate(${dx}px, ${dy}px) scale(${scale})`,
+            opacity: 0.2,
+            filter: `blur(${blur * 1.5}px)`,
+          },
           { transformOrigin: "0 0", transform: "none", opacity: 1, filter: "blur(0px)" },
         ],
         { duration: slow * 3.5, delay, easing: ease, fill: "backwards" },
@@ -225,8 +242,19 @@ export function MindMap({ label, center, centerState, nodes, settled = false, bo
   }, [handover, reduced]);
 
   const map = (
-    <div className={cx("ui-mind-map-stage", leaving && "ui-mind-map-stage--leaving")} ref={stage} aria-hidden={handover || undefined}>
-      <svg className="ui-mind-map-lines" width={geo.w} height={geo.h} viewBox={`0 0 ${geo.w || 1} ${geo.h || 1}`} aria-hidden="true" focusable="false">
+    <div
+      className={cx("ui-mind-map-stage", leaving && "ui-mind-map-stage--leaving")}
+      ref={stage}
+      aria-hidden={handover || undefined}
+    >
+      <svg
+        className="ui-mind-map-lines"
+        width={geo.w}
+        height={geo.h}
+        viewBox={`0 0 ${geo.w || 1} ${geo.h || 1}`}
+        aria-hidden="true"
+        focusable="false"
+      >
         <defs>
           <pattern id={pattern} width="24" height="24" patternUnits="userSpaceOnUse">
             <circle className="ui-mind-map-dot" cx="12" cy="12" r="1" />
@@ -269,7 +297,13 @@ export function MindMap({ label, center, centerState, nodes, settled = false, bo
             </div>
             <div className="ui-mind-map-node-body">{n.children}</div>
             <p className="ui-mind-map-node-source">
-              {n.state === "reading" ? <span className="ui-text-shimmer">{n.reading ?? "Reading"}</span> : n.state === "landed" && n.source ? n.source : " "}
+              {n.state === "reading" ? (
+                <span className="ui-text-shimmer">{n.reading ?? "Reading"}</span>
+              ) : n.state === "landed" && n.source ? (
+                n.source
+              ) : (
+                " "
+              )}
             </p>
           </li>
         ))}
@@ -278,7 +312,13 @@ export function MindMap({ label, center, centerState, nodes, settled = false, bo
   );
 
   return (
-    <div className={cx("ui-mind-map", className)} ref={root} role="group" aria-label={label} data-settled={settled ? "" : undefined}>
+    <div
+      className={cx("ui-mind-map", className)}
+      ref={root}
+      role="group"
+      aria-label={label}
+      data-settled={settled ? "" : undefined}
+    >
       {handover ? (
         <>
           {leaving && map}

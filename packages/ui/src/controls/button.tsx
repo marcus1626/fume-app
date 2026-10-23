@@ -14,14 +14,7 @@ import { Slot } from "./slot";
 import { Spinner } from "./spinner";
 
 export type ButtonVariant =
-  | "primary"
-  | "secondary"
-  | "quiet"
-  | "danger"
-  | "link"
-  | "glass-white"
-  | "glass-clear"
-  | "glass-danger";
+  "primary" | "secondary" | "quiet" | "danger" | "link" | "glass-white" | "glass-clear" | "glass-danger";
 
 export type ButtonSize = "sm" | "md" | "lg";
 
@@ -47,12 +40,30 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 /** The modifier class of a variant and size, for elements that only need the look (a link styled as a button). */
-export function buttonClass({ variant = "primary", size = "md", iconOnly = false }: Pick<ButtonProps, "variant" | "size" | "iconOnly"> = {}): string {
+export function buttonClass({
+  variant = "primary",
+  size = "md",
+  iconOnly = false,
+}: Pick<ButtonProps, "variant" | "size" | "iconOnly"> = {}): string {
   return cx("ui-btn", `ui-btn--${variant}`, size !== "md" && `ui-btn--${size}`, iconOnly && "ui-btn--icon");
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = "primary", size = "md", iconOnly = false, icon, iconEnd, loading = false, asChild = false, shortcut, tooltip, type, className, children, ...props },
+  {
+    variant = "primary",
+    size = "md",
+    iconOnly = false,
+    icon,
+    iconEnd,
+    loading = false,
+    asChild = false,
+    shortcut,
+    tooltip,
+    type,
+    className,
+    children,
+    ...props
+  },
   ref,
 ) {
   const inTrigger = useInTooltipTrigger();

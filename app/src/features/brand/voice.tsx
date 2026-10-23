@@ -7,7 +7,18 @@
 //   - Examples: good lines, in the brand's languages.
 // The onboarding shows what Fume found for each part on one card with Confirm · Change, so it stays quick to get
 // through. Brand › Voice (/brand/voice) is the whole voice, a section per part. The look is r13-brand.css.
-import { Badge, Button, DataList, DataListItem, Field, FieldDescription, FieldLabel, PageHeader, Textarea, useToast } from "@fume/ui";
+import {
+  Badge,
+  Button,
+  DataList,
+  DataListItem,
+  Field,
+  FieldDescription,
+  FieldLabel,
+  PageHeader,
+  Textarea,
+  useToast,
+} from "@fume/ui";
 import { useId, useState, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
 import { useBrandBoard, useDecideVoicePart } from "../../api/hooks";
 import type { VoiceBook, VoicePartId } from "../../contract";
@@ -39,7 +50,12 @@ const languageWord = { no: "Norsk", en: "English" } as const;
 function chipsOf(book: VoiceBook, id: VoicePartId): string[] {
   if (id === "identity") return book.identity.personality;
   if (id === "speak") return book.speak.traits.map((t) => t.trait);
-  if (id === "rules") return [`${book.rules.must.length} musts`, `${book.rules.never.length} nevers`, `${book.rules.claims.length} claims`];
+  if (id === "rules")
+    return [
+      `${book.rules.must.length} musts`,
+      `${book.rules.never.length} nevers`,
+      `${book.rules.claims.length} claims`,
+    ];
   if (id === "audience") return book.audience.cares.slice(0, 4);
   return [];
 }
@@ -75,7 +91,15 @@ function VoiceChange({ part, onDone }: { part: VoicePartId; onDone: (saved: bool
     <form className="ui-brand-change" onSubmit={submit} aria-label={`Change ${voicePartTitle[part]}`}>
       <Field>
         <FieldLabel htmlFor={id}>What should be different?</FieldLabel>
-        <Textarea id={id} value={text} onChange={(e) => setText(e.target.value)} onKeyDown={keys} rows={2} autoFocus aria-describedby={`${id}-help`} />
+        <Textarea
+          id={id}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={keys}
+          rows={2}
+          autoFocus
+          aria-describedby={`${id}-help`}
+        />
         <FieldDescription id={`${id}-help`}>In your own words. Fume rewrites the part from them.</FieldDescription>
       </Field>
       <div className="ui-brand-change-actions">
@@ -98,16 +122,33 @@ function usePartActions(book: VoiceBook, id: VoicePartId) {
   const [changing, setChanging] = useState(false);
   const part = book.parts.find((p) => p.id === id)!;
   const proposed = part.provenance.state === "proposed";
-  const confirm = () => decide.mutate({ part: id, verdict: "keep" }, { onError: (error) => toast.error("That wasn’t saved", { description: error.message }) });
+  const confirm = () =>
+    decide.mutate(
+      { part: id, verdict: "keep" },
+      { onError: (error) => toast.error("That wasn’t saved", { description: error.message }) },
+    );
   const actions =
     canApprove && !changing ? (
       <div className="ui-proposal-actions">
         {proposed && (
-          <Button size="sm" variant="secondary" icon="check" onClick={confirm} disabled={decide.isPending} aria-label={`Confirm ${voicePartTitle[id]}`}>
+          <Button
+            size="sm"
+            variant="secondary"
+            icon="check"
+            onClick={confirm}
+            disabled={decide.isPending}
+            aria-label={`Confirm ${voicePartTitle[id]}`}
+          >
             Confirm
           </Button>
         )}
-        <Button size="sm" variant="quiet" onClick={() => setChanging(true)} disabled={decide.isPending} aria-label={`Change ${voicePartTitle[id]}`}>
+        <Button
+          size="sm"
+          variant="quiet"
+          onClick={() => setChanging(true)}
+          disabled={decide.isPending}
+          aria-label={`Change ${voicePartTitle[id]}`}
+        >
           Change
         </Button>
       </div>
@@ -117,7 +158,12 @@ function usePartActions(book: VoiceBook, id: VoicePartId) {
 }
 
 /** What she asked Fume to change in a part, until Fume has redone it. */
-const NoteLine = ({ note, who }: { note?: string; who: string }) => (note ? <p className="ui-voice-note">{who} asked: “{note}”</p> : null);
+const NoteLine = ({ note, who }: { note?: string; who: string }) =>
+  note ? (
+    <p className="ui-voice-note">
+      {who} asked: “{note}”
+    </p>
+  ) : null;
 
 /** The onboarding's card for one part: what Fume found in one line, a few chips, where, Confirm · Change. */
 export function VoicePartCard({ book, id }: { book: VoiceBook; id: VoicePartId }) {
@@ -147,7 +193,8 @@ export function VoicePartCard({ book, id }: { book: VoiceBook; id: VoicePartId }
           <ul className="ui-voice-lines" data-size="small">
             {book.examples.slice(0, 2).map((e) => (
               <li key={e.line}>
-                <span className="ui-voice-line-text">“{e.line}”</span> <span className="ui-voice-line-lang">{languageWord[e.language]}</span>
+                <span className="ui-voice-line-text">“{e.line}”</span>{" "}
+                <span className="ui-voice-line-lang">{languageWord[e.language]}</span>
               </li>
             ))}
           </ul>
@@ -169,7 +216,12 @@ function PartSection({ book, id, children }: { book: VoiceBook; id: VoicePartId;
   const a = usePartActions(book, id);
   const viewer = useViewer();
   return (
-    <section className="ui-voice-part" id={`voice-${id}`} aria-labelledby={`voice-${id}-title`} data-state={a.part.provenance.state}>
+    <section
+      className="ui-voice-part"
+      id={`voice-${id}`}
+      aria-labelledby={`voice-${id}-title`}
+      data-state={a.part.provenance.state}
+    >
       <div className="ui-voice-part-head">
         <div className="ui-voice-part-words">
           <h2 className="ui-voice-part-title" id={`voice-${id}-title`}>
@@ -320,7 +372,11 @@ export function VoicePage() {
           view.identity.voiceBook ? (
             <VoiceBookView book={view.identity.voiceBook} />
           ) : (
-            <Nothing icon="message-square" title="No voice yet" text="Fume reads it from your website and the material you give it." />
+            <Nothing
+              icon="message-square"
+              title="No voice yet"
+              text="Fume reads it from your website and the material you give it."
+            />
           )
         }
       </Query>

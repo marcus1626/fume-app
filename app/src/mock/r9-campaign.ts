@@ -9,7 +9,20 @@
 //    folder per collection › product › format, and answers with its blob: link. The screen names it
 //    LYSNE_Autumn-launch_Masters.zip (features/deliveries/download.ts).
 
-import type { Brief, Campaign, CampaignPlan, CampaignWaits, Collection, Creative, Delivery, Direction, FumeApi, Id, Product, ServiceClock } from "../contract";
+import type {
+  Brief,
+  Campaign,
+  CampaignPlan,
+  CampaignWaits,
+  Collection,
+  Creative,
+  Delivery,
+  Direction,
+  FumeApi,
+  Id,
+  Product,
+  ServiceClock,
+} from "../contract";
 import { FumeError } from "../contract";
 import { unsentByFume } from "./r13-studio";
 
@@ -62,8 +75,11 @@ function mastersOf(db: Db, campaign: Campaign | undefined): Pick<CampaignWaits, 
   const plan = db.plans?.find((p) => p.campaignId === campaign.id && p.state === "approved");
   // Round 13 (robot note 03): a master whose product still waits to be confirmed is not under way, so it is not counted
   // (the toast and the status say the same: "The Engine has started on Master 2" / "making 1 master").
-  const waiting = new Set(db.products.filter((p) => campaign.productIds.includes(p.id) && p.state === "needs_you").map((p) => p.id));
-  const all = plan?.directions.find((d) => d.id === plan.chosenDirectionId)?.creatives.filter((c) => c.kind === "master") ?? [];
+  const waiting = new Set(
+    db.products.filter((p) => campaign.productIds.includes(p.id) && p.state === "needs_you").map((p) => p.id),
+  );
+  const all =
+    plan?.directions.find((d) => d.id === plan.chosenDirectionId)?.creatives.filter((c) => c.kind === "master") ?? [];
   const going = all.filter((m) => !m.productIds.some((id) => waiting.has(id))).length;
   const n = going || all.length;
   return n ? { masters: n } : {};
@@ -74,8 +90,11 @@ function mastersOf(db: Db, campaign: Campaign | undefined): Pick<CampaignWaits, 
 function planNumbers(db: Db, id: Id): Pick<CampaignWaits, "delivery" | "planned"> {
   const campaign = db.campaigns.find((c) => c.id === id);
   // A delivered campaign's date is its delivery's; one closed before deliveries were recorded keeps its last change.
-  const sent = db.deliveries.filter((d) => d.campaignId === id && d.state === "confirmed_live").sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
-  if (campaign && ["delivered", "closed"].includes(campaign.state)) return { delivery: sent?.createdAt ?? campaign.updatedAt };
+  const sent = db.deliveries
+    .filter((d) => d.campaignId === id && d.state === "confirmed_live")
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
+  if (campaign && ["delivered", "closed"].includes(campaign.state))
+    return { delivery: sent?.createdAt ?? campaign.updatedAt };
   // A campaign made before plans existed (it chose a direction) has a plan written afterwards from its brief, on
   // demand: its dates are not the record, so they are left out (the go-live stays).
   const plan = campaign?.chosenDirectionId ? undefined : db.plans?.find((p) => p.campaignId === id);
@@ -94,14 +113,21 @@ function waitsOf(db: Db, id: Id): CampaignWaits {
   // due three working days after the approval, as the chat said when it was approved.
   const campaign = db.campaigns.find((c) => c.id === id);
   const fresh =
-    !clock && brief?.state === "approved" && brief.approvedAt && (campaign?.stage === "directions" || campaign?.stage === "plan") && !db.directions.some((d) => d.campaignId === id);
+    !clock &&
+    brief?.state === "approved" &&
+    brief.approvedAt &&
+    (campaign?.stage === "directions" || campaign?.stage === "plan") &&
+    !db.directions.some((d) => d.campaignId === id);
   return {
     questions: open ? brief.missing.length : 0,
     directions: db.directions.filter((d) => d.campaignId === id && d.state === "proposed").length,
     briefReady: Boolean(open && brief.state === "ready" && brief.missing.length === 0),
     // Round 10: where the plan stands, while it is the step under way (the status sentence says it).
     ...(campaign?.stage === "plan" && db.plans?.some((p) => p.campaignId === id)
-      ? { plan: db.plans.find((p) => p.campaignId === id)!.state, planChecked: Boolean(db.plans.find((p) => p.campaignId === id)!.checkedBy) }
+      ? {
+          plan: db.plans.find((p) => p.campaignId === id)!.state,
+          planChecked: Boolean(db.plans.find((p) => p.campaignId === id)!.checkedBy),
+        }
       : {}),
     // Round 10 FLOW: how many masters the Engine makes, from the approved plan, while the masters are being made.
     ...mastersOf(db, campaign),
@@ -188,10 +214,19 @@ function zip(files: { path: string; data: Uint8Array }[]): Blob {
 }
 
 /** A format's folder, as the delivery names it ("Feed 4:5"). */
-const formatFolder: Record<Creative["format"], string> = { feed: "Feed 4:5", square: "Square 1:1", story: "Story 9:16" };
+const formatFolder: Record<Creative["format"], string> = {
+  feed: "Feed 4:5",
+  square: "Square 1:1",
+  story: "Story 9:16",
+};
 
 /** "Night Body Oil" → "Night-Body-Oil", "Feed 4:5" → "Feed-4x5": safe on every disk. */
-const slug = (s: string) => s.trim().replace(/:/g, "x").replace(/[\\/?%*|"<>]/g, "").replace(/\s+/g, "-");
+const slug = (s: string) =>
+  s
+    .trim()
+    .replace(/:/g, "x")
+    .replace(/[\\/?%*|"<>]/g, "")
+    .replace(/\s+/g, "-");
 
 export function r9CampaignApi(ctx: R9CampaignContext): Pick<FumeApi, "downloadUrl"> {
   const { db, wait } = ctx;
@@ -201,21 +236,26 @@ export function r9CampaignApi(ctx: R9CampaignContext): Pick<FumeApi, "downloadUr
       const d = db.deliveries.find((x) => x.id === id);
       if (!d) throw new FumeError("not_found", `No delivery ${id}`);
       const fallback = `/demo/download/${id}${format ? `-${format}` : ""}.zip`;
-      if (typeof fetch === "undefined" || typeof URL === "undefined" || typeof URL.createObjectURL !== "function") return wait(fallback);
+      if (typeof fetch === "undefined" || typeof URL === "undefined" || typeof URL.createObjectURL !== "function")
+        return wait(fallback);
       const campaign = db.campaigns.find((c) => c.id === d.campaignId);
       const creatives = db.creatives.filter((c) => d.creativeIds.includes(c.id) && (!format || c.format === format));
       const productId = campaign?.productIds.length === 1 ? campaign.productIds[0] : undefined;
       const product = db.products.find((p) => p.id === productId);
       const collection =
         db.collections.find((c) => c.id === d.collectionId) ??
-        db.collections.find((c) => campaign?.collectionIds?.includes(c.id) && (!productId || c.productIds.includes(productId)));
+        db.collections.find(
+          (c) => campaign?.collectionIds?.includes(c.id) && (!productId || c.productIds.includes(productId)),
+        );
       try {
         const files = await Promise.all(
           creatives.map(async (c) => {
             const res = await fetch(c.current.image);
             if (!res.ok) throw new Error(c.current.image);
             const ext = c.current.image.split("?")[0]!.split(".").pop() || "jpg";
-            const folder = [collection?.name, product?.name, formatFolder[c.format]].filter(Boolean).map((s) => slug(s!));
+            const folder = [collection?.name, product?.name, formatFolder[c.format]]
+              .filter(Boolean)
+              .map((s) => slug(s!));
             return { path: [...folder, `${c.name}.${ext}`].join("/"), data: new Uint8Array(await res.arrayBuffer()) };
           }),
         );

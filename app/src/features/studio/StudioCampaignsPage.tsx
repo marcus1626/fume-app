@@ -80,7 +80,11 @@ const toSend = (row: StudioCampaignRow) => Math.min(row.campaign.counts.checked,
 /** "Maja": the person who approves, as the studio's sentences name her. */
 const customerOf = (row: StudioCampaignRow) => (row.approver ? firstName(row.approver.name) : undefined);
 /** "Anna, Sander": who from Fume is on it. */
-const onIt = (row: StudioCampaignRow) => [row.expert, row.operator].filter((u): u is User => Boolean(u)).map((u) => firstName(u.name)).join(", ");
+const onIt = (row: StudioCampaignRow) =>
+  [row.expert, row.operator]
+    .filter((u): u is User => Boolean(u))
+    .map((u) => firstName(u.name))
+    .join(", ");
 
 export function StudioCampaignsPage() {
   const session = useSession().data!;
@@ -142,7 +146,14 @@ export function StudioCampaignsPage() {
         tabs={
           !workspaceId && brands.length > 1 ? (
             <div className="ui-agency-filter">
-              <ToggleGroup type="single" size="sm" loose value={filter || "all"} onValueChange={(v) => choose(v === "all" ? "" : v)} aria-label="Show the campaigns of">
+              <ToggleGroup
+                type="single"
+                size="sm"
+                loose
+                value={filter || "all"}
+                onValueChange={(v) => choose(v === "all" ? "" : v)}
+                aria-label="Show the campaigns of"
+              >
                 <ToggleGroupItem value="all">All brands</ToggleGroupItem>
                 {brands.map((b) => (
                   <ToggleGroupItem key={b.id} value={b.id}>
@@ -158,7 +169,11 @@ export function StudioCampaignsPage() {
       <Query query={campaigns} loading="Loading the campaigns">
         {(rows) =>
           rows.length === 0 ? (
-            <Nothing icon="megaphone" title="No campaigns yet" text="A campaign shows here once a customer starts a brief with Fume." />
+            <Nothing
+              icon="megaphone"
+              title="No campaigns yet"
+              text="A campaign shows here once a customer starts a brief with Fume."
+            />
           ) : (
             <>
               <ToSend rows={rows.filter((r) => toSend(r) > 0)} />
@@ -189,7 +204,10 @@ function tableRow(row: StudioCampaignRow, limited = false): CampaignTableRow {
     // admin, whose view stops at this page (robots' note 09).
     ...(limited
       ? {}
-      : { to: `/studio/b/${workspace.id}/campaigns/${campaign.id}/plan`, checkTo: `/studio/b/${workspace.id}/qa?campaign=${campaign.id}` }),
+      : {
+          to: `/studio/b/${workspace.id}/campaigns/${campaign.id}/plan`,
+          checkTo: `/studio/b/${workspace.id}/qa?campaign=${campaign.id}`,
+        }),
   };
 }
 
@@ -197,11 +215,19 @@ function tableRow(row: StudioCampaignRow, limited = false): CampaignTableRow {
  *  run, so its 9 is not read as the campaign's 11 (robots' note 08). Nothing before the first run. */
 function RunLine({ campaignId }: { campaignId: Id }) {
   const detail = useCampaign(campaignId).data;
-  const run = detail?.runs.find((r) => r.state === "running" || r.state === "queued" || r.state === "paused") ?? detail?.runs.at(-1);
+  const run =
+    detail?.runs.find((r) => r.state === "running" || r.state === "queued" || r.state === "paused") ??
+    detail?.runs.at(-1);
   if (!run) return null;
   const checked = run.steps.find((s) => /check/i.test(s.label))?.detail;
   const done = checked?.match(/^(\d+) of \d+$/)?.[1] ?? checked;
-  return <>{[`The Engine’s last run: ${run.made} of ${run.total} made`, done ? `${done} checked` : ""].filter(Boolean).join(" · ")}</>;
+  return (
+    <>
+      {[`The Engine’s last run: ${run.made} of ${run.total} made`, done ? `${done} checked` : ""]
+        .filter(Boolean)
+        .join(" · ")}
+    </>
+  );
 }
 
 /** Campaigns holding checked work the customer has not been sent: one row each, "Send to Maja" (operators and
@@ -213,7 +239,12 @@ function ToSend({ rows }: { rows: StudioCampaignRow[] }) {
   const toast = useToast();
   if (!rows.length) return null;
   return (
-    <Section title="To send" meta={rows.length} titleId="studio-to-send" text="Checked creatives reach the customer only when they are sent as a set.">
+    <Section
+      title="To send"
+      meta={rows.length}
+      titleId="studio-to-send"
+      text="Checked creatives reach the customer only when they are sent as a set."
+    >
       <ItemGroup as="ul">
         {rows.map((row) => {
           const { campaign, workspace, operator } = row;
@@ -241,7 +272,10 @@ function ToSend({ rows }: { rows: StudioCampaignRow[] }) {
                     loading={release.isPending && release.variables === campaign.id}
                     onClick={() =>
                       release.mutate(campaign.id, {
-                        onSuccess: () => toast.done(`${copy.creatives(n)} sent to ${who}`, { description: `${copy.send.withThem(who)} now, to approve.` }),
+                        onSuccess: () =>
+                          toast.done(`${copy.creatives(n)} sent to ${who}`, {
+                            description: `${copy.send.withThem(who)} now, to approve.`,
+                          }),
                         onError: (e) => toast.error("They weren’t sent", { description: e.message }),
                       })
                     }
@@ -249,7 +283,9 @@ function ToSend({ rows }: { rows: StudioCampaignRow[] }) {
                     {copy.send.action(who)}
                   </Button>
                 ) : (
-                  <span className="ui-app-section-meta">{operator ? `${firstName(operator.name)} sends them` : "The operator sends them"}</span>
+                  <span className="ui-app-section-meta">
+                    {operator ? `${firstName(operator.name)} sends them` : "The operator sends them"}
+                  </span>
                 )}
               </ItemActions>
             </Item>
@@ -263,7 +299,8 @@ function ToSend({ rows }: { rows: StudioCampaignRow[] }) {
 // ─── Batches (FLOWS §9.7) ───────────────────────────────────────────────────
 
 /** What a mode makes, in a batch's words: "12 packshots". */
-const made = (mode: StudioMode | undefined, n: number) => (mode?.id === "m-packshot" ? copy.count(n, "packshot") : copy.creatives(n));
+const made = (mode: StudioMode | undefined, n: number) =>
+  mode?.id === "m-packshot" ? copy.count(n, "packshot") : copy.creatives(n);
 /** A batch's QA items (the Engine chat's batches carry their run's id). */
 const ofBatch = (item: QaItem, b: Batch) => (item as QaItem & { runId?: Id }).runId === b.id;
 
@@ -278,7 +315,9 @@ function Batches({ rows, workspaceIds }: { rows: StudioCampaignRow[]; workspaceI
   const [open, setOpen] = useState(false);
   const shown = new Map(rows.map((r) => [r.campaign.id, r]));
   // A batch made outside a campaign is the product page's (DLOAD-3a): it carries no campaign's name.
-  const list = (batches.data ?? []).filter((b) => shown.has(b.campaignId) || (!b.campaignId && workspaceIds.includes(b.workspaceId)));
+  const list = (batches.data ?? []).filter(
+    (b) => shown.has(b.campaignId) || (!b.campaignId && workspaceIds.includes(b.workspaceId)),
+  );
   const check = workspaceId ? `/studio/b/${workspaceId}/qa` : "/studio/qa";
 
   return (
@@ -303,7 +342,11 @@ function Batches({ rows, workspaceIds }: { rows: StudioCampaignRow[]; workspaceI
             return (
               <EngineRun
                 key={b.id}
-                title={b.state === "done" ? `The Engine made ${made(mode, b.total)}` : `The Engine is making ${made(mode, b.total)}`}
+                title={
+                  b.state === "done"
+                    ? `The Engine made ${made(mode, b.total)}`
+                    : `The Engine is making ${made(mode, b.total)}`
+                }
                 description={`${row ? row.campaign.name : "Product page"} · ${mode?.name ?? "Batch"} · ${copy.count(b.productIds.length, "product")} × ${b.perProduct} · ${formatName(b.format)} · ${names.name(b.by)} started it at ${time(b.at)}`}
                 state={b.state === "queued" ? "queued" : b.state === "running" ? "running" : "done"}
                 steps={batchSteps(b, waiting)}
@@ -349,7 +392,11 @@ function batchSteps(b: Batch, waiting: number) {
       // Where it is, in numbers Check also shows (DLOAD-2): never "waiting" for something Check does not hold.
       label: "Check",
       state: !done ? ("pending" as const) : waiting ? ("active" as const) : ("done" as const),
-      detail: done ? (waiting ? `${copy.creatives(waiting)} waiting for a check` : "Nothing waits for a check") : undefined,
+      detail: done
+        ? waiting
+          ? `${copy.creatives(waiting)} waiting for a check`
+          : "Nothing waits for a check"
+        : undefined,
     },
   ];
 }
@@ -362,9 +409,20 @@ const NONE = "none:";
 
 /** Make a batch: for the product page (first, no campaign) or a campaign; mode, products or a collection, count per
  *  product, format. The Engine runs it; what it makes lands in Check. */
-function BatchDialog({ rows, workspaceIds, open, onOpenChange }: { rows: StudioCampaignRow[]; workspaceIds: Id[]; open: boolean; onOpenChange: (open: boolean) => void }) {
+function BatchDialog({
+  rows,
+  workspaceIds,
+  open,
+  onOpenChange,
+}: {
+  rows: StudioCampaignRow[];
+  workspaceIds: Id[];
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   const session = useSession().data!;
-  const brandOf = (id: Id) => rows.find((r) => r.workspace.id === id)?.workspace ?? session.workspaces.find((w) => w.id === id);
+  const brandOf = (id: Id) =>
+    rows.find((r) => r.workspace.id === id)?.workspace ?? session.workspaces.find((w) => w.id === id);
   const several = workspaceIds.length > 1;
   const live = rows.filter((r) => !["approved", "delivered", "closed"].includes(r.campaign.state));
   // For the product page unless the designer picks a campaign.
@@ -372,10 +430,14 @@ function BatchDialog({ rows, workspaceIds, open, onOpenChange }: { rows: StudioC
   const row = target.startsWith(NONE) ? undefined : rows.find((r) => r.campaign.id === target);
   const campaign = row?.campaign;
   const workspace = row?.workspace ?? brandOf(target.slice(NONE.length)) ?? rows[0]!.workspace;
-  const modes = (useStudioModes().data ?? []).filter((m) => m.studio === "render" && m.output === "creative" && m.available);
+  const modes = (useStudioModes().data ?? []).filter(
+    (m) => m.studio === "render" && m.output === "creative" && m.available,
+  );
   const products = useStudioKit(workspace.id).data?.products ?? [];
   // The brand's collections, when the session can read that brand's catalogue.
-  const collections = (useCatalogue().data?.collections ?? []).filter((c) => c.workspaceId === workspace.id && c.productIds.length > 0);
+  const collections = (useCatalogue().data?.collections ?? []).filter(
+    (c) => c.workspaceId === workspace.id && c.productIds.length > 0,
+  );
   const start = useStartBatch();
   const toast = useToast();
   const [modeId, setModeId] = useState("m-packshot");
@@ -391,7 +453,8 @@ function BatchDialog({ rows, workspaceIds, open, onOpenChange }: { rows: StudioC
 
   const mode = modes.find((m) => m.id === modeId) ?? modes[0];
   const collection = collections.find((c) => c.id === (collectionId ?? collections[0]?.id));
-  const productIds = by === "collection" ? (collection?.productIds ?? []) : picked.filter((id) => products.some((p) => p.id === id));
+  const productIds =
+    by === "collection" ? (collection?.productIds ?? []) : picked.filter((id) => products.some((p) => p.id === id));
   const total = productIds.length * perProduct;
 
   function submit(event: FormEvent) {
@@ -430,7 +493,12 @@ function BatchDialog({ rows, workspaceIds, open, onOpenChange }: { rows: StudioC
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="batch-campaign">Campaign</FieldLabel>
-                <NativeSelect id="batch-campaign" value={target} onChange={(e) => pickCampaign(e.target.value)} data-ui-autofocus>
+                <NativeSelect
+                  id="batch-campaign"
+                  value={target}
+                  onChange={(e) => pickCampaign(e.target.value)}
+                  data-ui-autofocus
+                >
                   {workspaceIds.map((id) => (
                     <option key={`${NONE}${id}`} value={`${NONE}${id}`}>
                       {several ? `${brandOf(id)?.brandName ?? ""} · ` : ""}No campaign (product page)
@@ -456,7 +524,12 @@ function BatchDialog({ rows, workspaceIds, open, onOpenChange }: { rows: StudioC
               </Field>
 
               {collections.length > 0 && (
-                <SegmentedControl className="ui-seg-hug" aria-label="Make it for" value={by} onValueChange={(v) => setBy(v as "products" | "collection")}>
+                <SegmentedControl
+                  className="ui-seg-hug"
+                  aria-label="Make it for"
+                  value={by}
+                  onValueChange={(v) => setBy(v as "products" | "collection")}
+                >
                   <SegmentedOption value="products">Products</SegmentedOption>
                   <SegmentedOption value="collection">A collection</SegmentedOption>
                 </SegmentedControl>
@@ -472,7 +545,9 @@ function BatchDialog({ rows, workspaceIds, open, onOpenChange }: { rows: StudioC
                         title={c.name}
                         line={copy.count(c.productIds.length, "product")}
                         src={c.cover}
-                        images={c.productIds.map((id) => products.find((p) => p.id === id)?.images[0]).filter((x): x is string => Boolean(x))}
+                        images={c.productIds
+                          .map((id) => products.find((p) => p.id === id)?.images[0])
+                          .filter((x): x is string => Boolean(x))}
                         icon="layers"
                         selected={collection?.id === c.id}
                         onSelectedChange={() => setCollectionId(c.id)}
@@ -491,7 +566,9 @@ function BatchDialog({ rows, workspaceIds, open, onOpenChange }: { rows: StudioC
                         variant={p.variant}
                         src={p.images[0]}
                         selected={picked.includes(p.id)}
-                        onSelectedChange={(on) => setPicked((now) => (on ? [...now, p.id] : now.filter((id) => id !== p.id)))}
+                        onSelectedChange={(on) =>
+                          setPicked((now) => (on ? [...now, p.id] : now.filter((id) => id !== p.id)))
+                        }
                       />
                     ))}
                   </PickGrid>
@@ -500,7 +577,11 @@ function BatchDialog({ rows, workspaceIds, open, onOpenChange }: { rows: StudioC
 
               <Field>
                 <FieldLabel htmlFor="batch-count">Count per product</FieldLabel>
-                <NativeSelect id="batch-count" value={String(perProduct)} onChange={(e) => setPerProduct(Number(e.target.value))}>
+                <NativeSelect
+                  id="batch-count"
+                  value={String(perProduct)}
+                  onChange={(e) => setPerProduct(Number(e.target.value))}
+                >
                   {counts.map((n) => (
                     <option key={n} value={n}>
                       {n}
@@ -513,7 +594,13 @@ function BatchDialog({ rows, workspaceIds, open, onOpenChange }: { rows: StudioC
                 <FieldLabel as="span" id="batch-format">
                   Format
                 </FieldLabel>
-                <SegmentedControl className="ui-seg-hug" aria-labelledby="batch-format" aria-label="Format" value={format} onValueChange={(v) => setFormat(v as Format)}>
+                <SegmentedControl
+                  className="ui-seg-hug"
+                  aria-labelledby="batch-format"
+                  aria-label="Format"
+                  value={format}
+                  onValueChange={(v) => setFormat(v as Format)}
+                >
                   {formats.map((f) => (
                     <SegmentedOption key={f} value={f}>
                       {formatName(f)}
@@ -528,7 +615,14 @@ function BatchDialog({ rows, workspaceIds, open, onOpenChange }: { rows: StudioC
           <DialogClose asChild>
             <Button variant="glass-clear">Later</Button>
           </DialogClose>
-          <Button type="submit" form="make-batch" variant="glass-white" icon="fume-engine" loading={start.isPending} disabled={total === 0}>
+          <Button
+            type="submit"
+            form="make-batch"
+            variant="glass-white"
+            icon="fume-engine"
+            loading={start.isPending}
+            disabled={total === 0}
+          >
             {total === 0 ? "Pick a product" : `Make ${made(mode, total)}`}
           </Button>
         </DialogFooter>

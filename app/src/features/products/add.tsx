@@ -40,7 +40,15 @@ import { fieldsOf, missingDetails } from "./spec";
 import { draftOf, previewOf, ShotGrid, SpecInput, valueOf, type Draft } from "./specs";
 
 /** The kinds as a picture grid; picking one moves on. */
-export function KindGrid({ kinds, value, onPick }: { kinds: ProductKind[]; value?: string; onPick: (k: ProductKind) => void }) {
+export function KindGrid({
+  kinds,
+  value,
+  onPick,
+}: {
+  kinds: ProductKind[];
+  value?: string;
+  onPick: (k: ProductKind) => void;
+}) {
   return (
     <PickGrid size="sm" aria-label="Kinds of product">
       {kinds.map((k) => (
@@ -90,14 +98,72 @@ interface Measure {
   units: string[];
 }
 export const productTypes: { id: ProductType; label: string; kindId: string; measures: Measure[] }[] = [
-  { id: "bottle", label: "Bottle (skincare, fragrance, sprays)", kindId: "kind-skincare", measures: [{ id: "volume", label: "Volume", units: ["ml", "cl", "l", "fl oz"] }, { id: "height", label: "Height", units: ["cm", "mm"] }] },
-  { id: "jar", label: "Jar", kindId: "kind-skincare", measures: [{ id: "content", label: "Content", units: ["ml", "g"] }, { id: "diameter", label: "Diameter", units: ["cm", "mm"] }] },
-  { id: "tube", label: "Tube", kindId: "kind-skincare", measures: [{ id: "content", label: "Content", units: ["ml", "g"] }, { id: "length", label: "Length", units: ["cm", "mm"] }] },
-  { id: "candle", label: "Candle", kindId: "kind-home", measures: [{ id: "weight", label: "Weight", units: ["g", "kg"] }, { id: "burn", label: "Burn time", units: ["hours"] }] },
-  { id: "textile", label: "Textile (clothing, linen)", kindId: "kind-apparel", measures: [{ id: "size", label: "Sizes", units: ["XS to XL", "S to L", "One size"] }, { id: "length", label: "Length", units: ["cm", "m"] }] },
-  { id: "accessory", label: "Accessory (cap, bag, scarf)", kindId: "kind-bags", measures: [{ id: "size", label: "Size", units: ["cm", "One size"] }] },
-  { id: "box", label: "Box or set", kindId: "kind-other", measures: [{ id: "pieces", label: "Pieces in it", units: ["pieces"] }, { id: "width", label: "Width", units: ["cm"] }] },
-  { id: "other", label: "Something else", kindId: "kind-other", measures: [{ id: "size", label: "Size", units: ["ml", "g", "cm", "pieces"] }] },
+  {
+    id: "bottle",
+    label: "Bottle (skincare, fragrance, sprays)",
+    kindId: "kind-skincare",
+    measures: [
+      { id: "volume", label: "Volume", units: ["ml", "cl", "l", "fl oz"] },
+      { id: "height", label: "Height", units: ["cm", "mm"] },
+    ],
+  },
+  {
+    id: "jar",
+    label: "Jar",
+    kindId: "kind-skincare",
+    measures: [
+      { id: "content", label: "Content", units: ["ml", "g"] },
+      { id: "diameter", label: "Diameter", units: ["cm", "mm"] },
+    ],
+  },
+  {
+    id: "tube",
+    label: "Tube",
+    kindId: "kind-skincare",
+    measures: [
+      { id: "content", label: "Content", units: ["ml", "g"] },
+      { id: "length", label: "Length", units: ["cm", "mm"] },
+    ],
+  },
+  {
+    id: "candle",
+    label: "Candle",
+    kindId: "kind-home",
+    measures: [
+      { id: "weight", label: "Weight", units: ["g", "kg"] },
+      { id: "burn", label: "Burn time", units: ["hours"] },
+    ],
+  },
+  {
+    id: "textile",
+    label: "Textile (clothing, linen)",
+    kindId: "kind-apparel",
+    measures: [
+      { id: "size", label: "Sizes", units: ["XS to XL", "S to L", "One size"] },
+      { id: "length", label: "Length", units: ["cm", "m"] },
+    ],
+  },
+  {
+    id: "accessory",
+    label: "Accessory (cap, bag, scarf)",
+    kindId: "kind-bags",
+    measures: [{ id: "size", label: "Size", units: ["cm", "One size"] }],
+  },
+  {
+    id: "box",
+    label: "Box or set",
+    kindId: "kind-other",
+    measures: [
+      { id: "pieces", label: "Pieces in it", units: ["pieces"] },
+      { id: "width", label: "Width", units: ["cm"] },
+    ],
+  },
+  {
+    id: "other",
+    label: "Something else",
+    kindId: "kind-other",
+    measures: [{ id: "size", label: "Size", units: ["ml", "g", "cm", "pieces"] }],
+  },
 ];
 /** The photos each type asks for (round 13 after-check of #45: they followed the kind, so a linen spray asked for "the
  *  wax from above" and a wool cap for "the clasp"). The type decides them; the kind keeps the facts. Slot ids stay the
@@ -106,14 +172,54 @@ const slot = (id: string, label: string, help: string, required = false): ShotSl
 const front = slot("front", "Front", "Straight on, the label readable, on white.", true);
 const scale = slot("scale", "In a hand", "In a hand or beside something known, for scale.");
 const typeShots: Record<ProductType, ShotSlot[]> = {
-  bottle: [front, slot("back", "Back", "Straight on, the back label readable.", true), slot("side", "Side", "From the left, to show depth and the shoulder.", true), slot("open", "Cap off", "The cap beside it, the pump or the spray showing."), scale],
-  jar: [front, slot("top", "Top", "The lid from above.", true), slot("open", "Open", "Lid off: the texture inside."), scale],
-  tube: [front, slot("back", "Back", "Straight on, the back label readable.", true), slot("open", "Cap off", "The cap beside it."), scale],
-  candle: [front, slot("side", "Side", "From the left, to show the vessel.", true), slot("top", "Top", "The wax from above."), slot("lit", "Lit", "Burning, in a dim room."), scale],
-  textile: [slot("front", "Laid flat", "The whole piece, flat on white.", true), slot("back", "Back", "Turned over, flat on white."), slot("detail", "Detail", "Close: the weave or knit, a seam, the label.", true)],
-  accessory: [front, slot("side", "Side", "From the side, to show depth and shape.", true), slot("detail", "Detail", "Close: the stitching, the hardware, the logo."), slot("scale", "For scale", "Held or beside something known.")],
-  box: [slot("front", "Closed", "The box or set closed, straight on.", true), slot("open", "Open", "Open, with everything in it in view.", true), slot("detail", "Each piece", "The pieces side by side, on white.")],
-  other: [front, slot("side", "Side", "From the left, to show depth.", true), slot("detail", "Detail", "Close: the texture or the print."), scale],
+  bottle: [
+    front,
+    slot("back", "Back", "Straight on, the back label readable.", true),
+    slot("side", "Side", "From the left, to show depth and the shoulder.", true),
+    slot("open", "Cap off", "The cap beside it, the pump or the spray showing."),
+    scale,
+  ],
+  jar: [
+    front,
+    slot("top", "Top", "The lid from above.", true),
+    slot("open", "Open", "Lid off: the texture inside."),
+    scale,
+  ],
+  tube: [
+    front,
+    slot("back", "Back", "Straight on, the back label readable.", true),
+    slot("open", "Cap off", "The cap beside it."),
+    scale,
+  ],
+  candle: [
+    front,
+    slot("side", "Side", "From the left, to show the vessel.", true),
+    slot("top", "Top", "The wax from above."),
+    slot("lit", "Lit", "Burning, in a dim room."),
+    scale,
+  ],
+  textile: [
+    slot("front", "Laid flat", "The whole piece, flat on white.", true),
+    slot("back", "Back", "Turned over, flat on white."),
+    slot("detail", "Detail", "Close: the weave or knit, a seam, the label.", true),
+  ],
+  accessory: [
+    front,
+    slot("side", "Side", "From the side, to show depth and shape.", true),
+    slot("detail", "Detail", "Close: the stitching, the hardware, the logo."),
+    slot("scale", "For scale", "Held or beside something known."),
+  ],
+  box: [
+    slot("front", "Closed", "The box or set closed, straight on.", true),
+    slot("open", "Open", "Open, with everything in it in view.", true),
+    slot("detail", "Each piece", "The pieces side by side, on white."),
+  ],
+  other: [
+    front,
+    slot("side", "Side", "From the left, to show depth.", true),
+    slot("detail", "Detail", "Close: the texture or the print."),
+    scale,
+  ],
 };
 
 /** Units that are a size in words, not a number ("One size"): no number is asked with them. */
@@ -213,7 +319,11 @@ export function AddProductFlow({
     const k = kinds.data?.find((x) => x.id === p.kindId);
     const left = missingDetails(p, k);
     // round 13 (robot note 05): the same words the confirm queue uses for it
-    toast.done(`${p.name} added.`, { description: left ? `${copy.count(left, "detail")} missing. It waits in your products to confirm.` : "It only needs a look. It waits in your products to confirm." });
+    toast.done(`${p.name} added.`, {
+      description: left
+        ? `${copy.count(left, "detail")} missing. It waits in your products to confirm.`
+        : "It only needs a look. It waits in your products to confirm.",
+    });
     onAdded?.(p);
     onOpenChange(false);
     reset();
@@ -227,7 +337,10 @@ export function AddProductFlow({
   const fields = kind ? fieldsOf(kind) : [];
   const field = (id: string) => fields.find((f) => f.id === id);
   // The gaps: fields the Engine needs and did not read. Long lists stay short: the first four, the rest later.
-  const gaps = useMemo(() => fields.filter((f) => f.required && !(product?.specs ?? []).some((s) => s.fieldId === f.id)), [fields, product]);
+  const gaps = useMemo(
+    () => fields.filter((f) => f.required && !(product?.specs ?? []).some((s) => s.fieldId === f.id)),
+    [fields, product],
+  );
   const shownGaps = gaps.slice(0, 4);
   const neededShots = slotsKind?.shots.filter((s) => s.required) ?? [];
   const missingShots = neededShots.filter((s) => !shots[s.id]);
@@ -243,7 +356,13 @@ export function AddProductFlow({
     if (!k) return;
     const page = url.trim() ? (/^https?:\/\//i.test(url.trim()) ? url.trim() : `https://${url.trim()}`) : undefined;
     read.mutate(
-      { kindId: k.id, name: name.trim(), variant: variant.trim(), url: page, shots: Object.entries(shots).map(([slotId, s]) => ({ slotId, ...s })) },
+      {
+        kindId: k.id,
+        name: name.trim(),
+        variant: variant.trim(),
+        url: page,
+        shots: Object.entries(shots).map(([slotId, s]) => ({ slotId, ...s })),
+      },
       {
         onSuccess: (p) => {
           const open = fieldsOf(k).filter((f) => f.required && !(p.specs ?? []).some((s) => s.fieldId === f.id));
@@ -267,13 +386,29 @@ export function AddProductFlow({
       if (v) values.push({ fieldId, ...v });
     }
     if (!values.length) return landed(product);
-    save.mutate({ productId: product.id, values }, { onSuccess: (p) => landed(p), onError: (error) => toast.error("That wasn’t saved", { description: error.message }) });
+    save.mutate(
+      { productId: product.id, values },
+      {
+        onSuccess: (p) => landed(p),
+        onError: (error) => toast.error("That wasn’t saved", { description: error.message }),
+      },
+    );
   }
 
-  const draft = (f: SpecField) => drafts[f.id] ?? draftOf(f, product?.specs?.find((s) => s.fieldId === f.id));
+  const draft = (f: SpecField) =>
+    drafts[f.id] ??
+    draftOf(
+      f,
+      product?.specs?.find((s) => s.fieldId === f.id),
+    );
   const setDraft = (f: SpecField, d: Draft) => setDrafts((now) => ({ ...now, [f.id]: d }));
 
-  const title = step === "kind" ? "What kind of product is it?" : step === "basics" ? "Add a product" : `What Fume still needs for ${product?.name ?? name}`;
+  const title =
+    step === "kind"
+      ? "What kind of product is it?"
+      : step === "basics"
+        ? "Add a product"
+        : `What Fume still needs for ${product?.name ?? name}`;
   const description =
     step === "kind"
       ? "It decides what Fume asks for: a serum needs other measures than a shirt."
@@ -317,7 +452,9 @@ export function AddProductFlow({
                     autoComplete="off"
                     data-ui-autofocus
                   />
-                  <FieldError id="add-name-error">{noName && !name.trim() ? "Its name first; Fume reads the rest." : undefined}</FieldError>
+                  <FieldError id="add-name-error">
+                    {noName && !name.trim() ? "Its name first; Fume reads the rest." : undefined}
+                  </FieldError>
                 </Field>
                 <Field>
                   <FieldLabel htmlFor="add-type">Product type</FieldLabel>
@@ -343,12 +480,15 @@ export function AddProductFlow({
                     ))}
                   </NativeSelect>
                   <FieldDescription id="add-type-help">
-                    {!typeChosen && typeGuess ? "Fume chose it from the name. It decides which measures are asked." : "It decides which measures are asked."}
+                    {!typeChosen && typeGuess
+                      ? "Fume chose it from the name. It decides which measures are asked."
+                      : "It decides which measures are asked."}
                   </FieldDescription>
                 </Field>
                 {typeDef?.measures.map((m) => {
                   const v = measures[m.id] ?? { value: "", unit: m.units[0]! };
-                  const set = (change: Partial<typeof v>) => setMeasures((now) => ({ ...now, [m.id]: { ...v, ...change } }));
+                  const set = (change: Partial<typeof v>) =>
+                    setMeasures((now) => ({ ...now, [m.id]: { ...v, ...change } }));
                   return (
                     <Field key={`${productType}-${m.id}`}>
                       <FieldLabel htmlFor={`add-m-${m.id}`}>
@@ -356,7 +496,13 @@ export function AddProductFlow({
                       </FieldLabel>
                       <div className="ui-measure">
                         {!wordUnit(v.unit) && (
-                          <Input id={`add-m-${m.id}`} inputMode="decimal" value={v.value} onChange={(e) => set({ value: e.target.value.replace(/[^0-9.,]/g, "") })} autoComplete="off" />
+                          <Input
+                            id={`add-m-${m.id}`}
+                            inputMode="decimal"
+                            value={v.value}
+                            onChange={(e) => set({ value: e.target.value.replace(/[^0-9.,]/g, "") })}
+                            autoComplete="off"
+                          />
                         )}
                         <NativeSelect
                           id={wordUnit(v.unit) ? `add-m-${m.id}` : undefined}
@@ -376,8 +522,20 @@ export function AddProductFlow({
                   );
                 })}
                 <div className="ui-pspec-kind" aria-live="polite">
-                  <span className="ui-pspec-need">{kind ? `${chosen ? "Kind" : "Looks like"}: ${kind.name}` : name.trim() ? "Kind: not sure yet" : "Fume proposes the kind from the name"}</span>
-                  <Button size="sm" variant="glass-clear" type="button" onClick={() => setStep("kind")} aria-label={kind ? `Change the kind, now ${kind.name}` : "Choose the kind"}>
+                  <span className="ui-pspec-need">
+                    {kind
+                      ? `${chosen ? "Kind" : "Looks like"}: ${kind.name}`
+                      : name.trim()
+                        ? "Kind: not sure yet"
+                        : "Fume proposes the kind from the name"}
+                  </span>
+                  <Button
+                    size="sm"
+                    variant="glass-clear"
+                    type="button"
+                    onClick={() => setStep("kind")}
+                    aria-label={kind ? `Change the kind, now ${kind.name}` : "Choose the kind"}
+                  >
                     {kind ? "Change" : "Choose"}
                   </Button>
                 </div>
@@ -385,16 +543,37 @@ export function AddProductFlow({
                   <FieldLabel htmlFor="add-url">
                     Product page <FieldOptional />
                   </FieldLabel>
-                  <Input id="add-url" type="text" inputMode="url" autoComplete="url" spellCheck={false} value={url} onChange={(e) => setUrl(e.target.value)} placeholder="lysne.no/products/…" />
+                  <Input
+                    id="add-url"
+                    type="text"
+                    inputMode="url"
+                    autoComplete="url"
+                    spellCheck={false}
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    placeholder="lysne.no/products/…"
+                  />
                 </Field>
               </FieldGroup>
               {slotsKind && (
                 <div className="ui-pspec-group">
-                  <p className="ui-pspec-sub">Photos on white{missingShots.length ? ` · ${copy.count(missingShots.length, "more angle")} would help` : ""}</p>
+                  <p className="ui-pspec-sub">
+                    Photos on white
+                    {missingShots.length ? ` · ${copy.count(missingShots.length, "more angle")} would help` : ""}
+                  </p>
                   <ShotGrid
                     kind={slotsKind}
-                    shots={Object.entries(shots).map(([slotId, s]) => ({ slotId, image: s.src, provenance: { origin: "customer", state: "approved" } }))}
-                    onPick={(slotId, file) => setShots((now) => ({ ...now, [slotId]: { name: file.name, bytes: file.size, src: previewOf(file) } }))}
+                    shots={Object.entries(shots).map(([slotId, s]) => ({
+                      slotId,
+                      image: s.src,
+                      provenance: { origin: "customer", state: "approved" },
+                    }))}
+                    onPick={(slotId, file) =>
+                      setShots((now) => ({
+                        ...now,
+                        [slotId]: { name: file.name, bytes: file.size, src: previewOf(file) },
+                      }))
+                    }
                     label={`Photos of ${name.trim() || "the product"}`}
                   />
                 </div>
@@ -403,13 +582,27 @@ export function AddProductFlow({
           )}
 
           {step === "gaps" && product && kind && (
-            <form id="add-gaps" onSubmit={submitGaps} className="ui-pspec-step" aria-label={`What Fume still needs for ${product.name}`}>
+            <form
+              id="add-gaps"
+              onSubmit={submitGaps}
+              className="ui-pspec-step"
+              aria-label={`What Fume still needs for ${product.name}`}
+            >
               <FieldGroup>
                 {shownGaps.map((f, i) => (
-                  <SpecInput key={f.id} field={f} draft={draft(f)} onDraft={(d) => setDraft(f, d)} idPrefix="gap" autoFocus={i === 0} />
+                  <SpecInput
+                    key={f.id}
+                    field={f}
+                    draft={draft(f)}
+                    onDraft={(d) => setDraft(f, d)}
+                    idPrefix="gap"
+                    autoFocus={i === 0}
+                  />
                 ))}
               </FieldGroup>
-              {gaps.length > shownGaps.length && <p className="ui-pspec-sub">{gaps.length - shownGaps.length} more can wait for its page.</p>}
+              {gaps.length > shownGaps.length && (
+                <p className="ui-pspec-sub">{gaps.length - shownGaps.length} more can wait for its page.</p>
+              )}
             </form>
           )}
         </SheetBody>
@@ -458,7 +651,19 @@ export function AddProductFlow({
 }
 
 /** Choose or change the kind of a product that has none yet: a picture grid, in the right panel on a desk. */
-export function KindDialog({ open, onOpenChange, value, onPick, busy }: { open: boolean; onOpenChange: (open: boolean) => void; value?: string; onPick: (k: ProductKind) => void; busy?: boolean }) {
+export function KindDialog({
+  open,
+  onOpenChange,
+  value,
+  onPick,
+  busy,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  value?: string;
+  onPick: (k: ProductKind) => void;
+  busy?: boolean;
+}) {
   const kinds = useProductKinds();
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -467,7 +672,13 @@ export function KindDialog({ open, onOpenChange, value, onPick, busy }: { open: 
           <SheetTitle>What kind of product is it?</SheetTitle>
           <SheetDescription>It decides what Fume asks for. What is already known stays.</SheetDescription>
         </SheetHeader>
-        <SheetBody>{kinds.data ? <KindGrid kinds={kinds.data} value={value} onPick={onPick} /> : <Spinner label="Loading the kinds" />}</SheetBody>
+        <SheetBody>
+          {kinds.data ? (
+            <KindGrid kinds={kinds.data} value={value} onPick={onPick} />
+          ) : (
+            <Spinner label="Loading the kinds" />
+          )}
+        </SheetBody>
         <SheetFooter>
           <SheetClose asChild>
             <Button variant="glass-clear" disabled={busy}>

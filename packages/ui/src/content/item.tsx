@@ -27,7 +27,9 @@ export function ItemGroupLabel({ count, className, children, ...props }: ItemGro
 
 /** shadcn's ItemSeparator: space between groups, never a line. */
 export function ItemSeparator({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div data-slot="item-separator" aria-hidden="true" className={cx("ui-item-separator", className)} {...props} />;
+  return (
+    <div data-slot="item-separator" aria-hidden="true" className={cx("ui-item-separator", className)} {...props} />
+  );
 }
 
 export interface ItemProps extends HTMLAttributes<HTMLElement> {
@@ -64,9 +66,20 @@ export const Item = forwardRef<HTMLElement, ItemProps>(function Item(
   }
   const tag = as ?? (href ? "a" : "div");
   if (tag === "a")
-    return <a ref={ref as Ref<HTMLAnchorElement>} href={disabled ? undefined : href} target={target} rel={rel} {...common} {...props} />;
+    return (
+      <a
+        ref={ref as Ref<HTMLAnchorElement>}
+        href={disabled ? undefined : href}
+        target={target}
+        rel={rel}
+        {...common}
+        {...props}
+      />
+    );
   if (tag === "button")
-    return <button ref={ref as Ref<HTMLButtonElement>} type={type ?? "button"} disabled={disabled} {...common} {...props} />;
+    return (
+      <button ref={ref as Ref<HTMLButtonElement>} type={type ?? "button"} disabled={disabled} {...common} {...props} />
+    );
   if (tag === "li") return <li ref={ref as Ref<HTMLLIElement>} {...common} {...props} />;
   return <div ref={ref as Ref<HTMLDivElement>} {...common} {...props} />;
 });

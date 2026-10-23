@@ -10,7 +10,16 @@
 // page-level action sits in this header, right, on the title's line (`actions` / `primaryAction`). (2) A step or a
 // decision (a form, a queue, an onboarding step) has its actions in PageFooter, pinned to the bottom right of the
 // content column while the page scrolls. One Ink per view; the rest secondary or quiet.
-import { cloneElement, forwardRef, isValidElement, useId, type ButtonHTMLAttributes, type HTMLAttributes, type ReactElement, type ReactNode } from "react";
+import {
+  cloneElement,
+  forwardRef,
+  isValidElement,
+  useId,
+  type ButtonHTMLAttributes,
+  type HTMLAttributes,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 import { cx } from "../cx";
 import { Icon, type IconName } from "../icons";
 import { WithTooltip } from "../overlays/tooltip";
@@ -56,7 +65,22 @@ export interface PageHeaderProps extends Omit<HTMLAttributes<HTMLElement>, "titl
 }
 
 export const PageHeader = forwardRef<HTMLElement, PageHeaderProps>(function PageHeader(
-  { title, titleAs: H = "h1", back, breadcrumb, description, meta, secondaryActions = [], primaryAction, menu, moreLabel, actions, tabs, className, ...props },
+  {
+    title,
+    titleAs: H = "h1",
+    back,
+    breadcrumb,
+    description,
+    meta,
+    secondaryActions = [],
+    primaryAction,
+    menu,
+    moreLabel,
+    actions,
+    tabs,
+    className,
+    ...props
+  },
   ref,
 ) {
   const menuId = `ui-pagehead-${useId().replace(/:/g, "")}`;
@@ -94,7 +118,13 @@ export const PageHeader = forwardRef<HTMLElement, PageHeaderProps>(function Page
         {(secondaryActions.length > 0 || primaryAction || hasMore || actions) && (
           <div className="ui-page-header-actions">
             {secondaryActions.map((a, i) => (
-              <button key={i} className="ui-btn ui-btn--secondary ui-page-header-fold" type="button" disabled={a.disabled} onClick={a.onSelect}>
+              <button
+                key={i}
+                className="ui-btn ui-btn--secondary ui-page-header-fold"
+                type="button"
+                disabled={a.disabled}
+                onClick={a.onSelect}
+              >
                 {a.icon && <Icon name={a.icon} />}
                 {a.label}
               </button>
@@ -119,7 +149,12 @@ export const PageHeader = forwardRef<HTMLElement, PageHeaderProps>(function Page
                     <Icon name="ellipsis" />
                   </button>
                 </WithTooltip>
-                <div {...more.contentProps} className="ui-glass ui-menu ui-page-header-menu" role="menu" aria-label={moreName}>
+                <div
+                  {...more.contentProps}
+                  className="ui-glass ui-menu ui-page-header-menu"
+                  role="menu"
+                  aria-label={moreName}
+                >
                   {secondaryActions.map((a, i) => (
                     <button
                       key={i}
@@ -156,7 +191,13 @@ export const PageHeaderMenuItem = forwardRef<HTMLButtonElement, PageHeaderMenuIt
   ref,
 ) {
   return (
-    <button ref={ref} type="button" role="menuitem" className={cx("ui-menu-item", danger && "ui-menu-item--danger", className)} {...props}>
+    <button
+      ref={ref}
+      type="button"
+      role="menuitem"
+      className={cx("ui-menu-item", danger && "ui-menu-item--danger", className)}
+      {...props}
+    >
       {icon && <Icon name={icon} />}
       {children}
     </button>
@@ -180,7 +221,10 @@ export interface PageFooterProps extends HTMLAttributes<HTMLDivElement> {
  * page, the actions full width.
  *   <PageFooter start="3 of 7"><Button variant="quiet">Later</Button><Button>Confirm</Button></PageFooter>
  */
-export const PageFooter = forwardRef<HTMLDivElement, PageFooterProps>(function PageFooter({ start, className, children, ...props }, ref) {
+export const PageFooter = forwardRef<HTMLDivElement, PageFooterProps>(function PageFooter(
+  { start, className, children, ...props },
+  ref,
+) {
   return (
     <div ref={ref} className={cx("ui-page-footer", className)} data-ui-foot="" {...props}>
       {start !== undefined && <div className="ui-page-footer-start">{start}</div>}

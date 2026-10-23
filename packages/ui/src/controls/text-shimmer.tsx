@@ -8,6 +8,9 @@ import { cx } from "../cx";
 
 export type TextShimmerProps = HTMLAttributes<HTMLSpanElement>;
 
-export const TextShimmer = forwardRef<HTMLSpanElement, TextShimmerProps>(function TextShimmer({ className, ...props }, ref) {
+export const TextShimmer = forwardRef<HTMLSpanElement, TextShimmerProps>(function TextShimmer(
+  { className, ...props },
+  ref,
+) {
   return <span ref={ref} className={cx("ui-text-shimmer", className)} {...props} />;
 });

@@ -101,7 +101,21 @@ export interface MessageViewProps {
 }
 
 /** One message in its author's voice, with what it carries. */
-export function MessageView({ message, people, meId, view, onAnswer, canAct, anchorId, showTime = true, onSend, briefInPanel, planInPanel, latestPlan, answeredWith }: MessageViewProps) {
+export function MessageView({
+  message,
+  people,
+  meId,
+  view,
+  onAnswer,
+  canAct,
+  anchorId,
+  showTime = true,
+  onSend,
+  briefInPanel,
+  planInPanel,
+  latestPlan,
+  answeredWith,
+}: MessageViewProps) {
   const { author } = message;
   const user = author.kind === "person" ? people.user(author.userId) : undefined;
   const mine = author.kind === "person" && author.userId === meId;
@@ -109,7 +123,10 @@ export function MessageView({ message, people, meId, view, onAnswer, canAct, anc
   // The Engine never talks (F-D040): what it posts shows as its run card alone, with no name or chat line of its own.
   // No campaign name inside the card: the conversation (or the marker above it on a phone) names it (DLOAD-11).
   if (author.kind === "engine") {
-    const run = message.card?.kind === "run" ? view?.runs.find((r) => r.id === (message.card as { runId: string }).runId) : undefined;
+    const run =
+      message.card?.kind === "run"
+        ? view?.runs.find((r) => r.id === (message.card as { runId: string }).runId)
+        : undefined;
     return run ? (
       <Message id={anchorId}>
         <MessageContent>
@@ -117,21 +134,33 @@ export function MessageView({ message, people, meId, view, onAnswer, canAct, anc
         </MessageContent>
       </Message>
     ) : (
-      <Marker id={anchorId} icon="fume-engine">The Engine is at work: {message.text.charAt(0).toLowerCase() + message.text.slice(1)}</Marker>
+      <Marker id={anchorId} icon="fume-engine">
+        The Engine is at work: {message.text.charAt(0).toLowerCase() + message.text.slice(1)}
+      </Marker>
     );
   }
   // Fume hands the conversation to a person (FLOWS §21): one quiet line with their face and the reason, not a speech.
-  if (message.card?.kind === "handover") return <HandoverLine card={message.card} people={people} at={message.at} id={anchorId} />;
+  if (message.card?.kind === "handover")
+    return <HandoverLine card={message.card} people={people} at={message.at} id={anchorId} />;
   // A person at Fume answering in the conversation: their name, face and a Fume tag, so it is clear a human answered.
   const staffer = author.kind === "person" && Boolean(user?.staffRole) && !mine;
   const org = user?.agency ? (session?.agency?.organisation.name ?? session?.agencyName ?? "Agency") : "Fume";
   // Fume's words that only repeat its card's question ("Who should it reach?") are said once, by the card (LOAD-19).
-  const echo = message.card?.kind === "question" && message.text.trim().replace(/[?.]$/, "") === message.card.question.trim().replace(/[?.]$/, "");
+  const echo =
+    message.card?.kind === "question" &&
+    message.text.trim().replace(/[?.]$/, "") === message.card.question.trim().replace(/[?.]$/, "");
   return (
     <Message id={anchorId} align={mine ? "end" : "start"} className={staffer ? "ui-chat-staff" : undefined}>
       {staffer && user ? (
         <div className="ui-message-header">
-          <Avatar size="sm" className="ui-message-avatar" src={user.avatar} initials={initials(user.name)} ink={user.staffRole === "expert"} aria-hidden="true" />
+          <Avatar
+            size="sm"
+            className="ui-message-avatar"
+            src={user.avatar}
+            initials={initials(user.name)}
+            ink={user.staffRole === "expert"}
+            aria-hidden="true"
+          />
           <span className="ui-message-name">{people.author(author)}</span>
           <Badge variant="secondary" className="ui-chat-staff-tag">
             {org}
@@ -154,7 +183,11 @@ export function MessageView({ message, people, meId, view, onAnswer, canAct, anc
         />
       )}
       <MessageContent>
-        {author.kind === "person" ? <Bubble>{message.text}</Bubble> : !echo && <MessageText>{message.text}</MessageText>}
+        {author.kind === "person" ? (
+          <Bubble>{message.text}</Bubble>
+        ) : (
+          !echo && <MessageText>{message.text}</MessageText>
+        )}
         {message.attachments && message.attachments.length > 0 && (
           <AttachmentGroup>
             {message.attachments.map((a) => (
@@ -194,7 +227,23 @@ export function MessageView({ message, people, meId, view, onAnswer, canAct, anc
  *  brief (briefGaps, TASK-2) and with every line in the one order and names (DTSK-4, DLOAD-10). With the brief panel
  *  beside the conversation (a desk from 1280 px) the card is one line that points to it: one Send, in the panel. A
  *  sent brief is one line: Fume writes the plan from it, and the plan card follows. */
-function BriefCard({ campaignId, view, people, meId, canAct, onSend, inPanel }: { campaignId: string; view?: CampaignView; people: People; meId: Id; canAct: boolean; onSend?: () => void; inPanel?: boolean }) {
+function BriefCard({
+  campaignId,
+  view,
+  people,
+  meId,
+  canAct,
+  onSend,
+  inPanel,
+}: {
+  campaignId: string;
+  view?: CampaignView;
+  people: People;
+  meId: Id;
+  canAct: boolean;
+  onSend?: () => void;
+  inPanel?: boolean;
+}) {
   const role = useSession().data?.role;
   const send = useSendBrief();
   const toast = useToast();
@@ -242,7 +291,9 @@ function BriefCard({ campaignId, view, people, meId, canAct, onSend, inPanel }: 
         </ItemMedia>
         <ItemContent>
           <ItemTitle>The brief</ItemTitle>
-          <ItemDescription>It is on the right, line by line. Change any line there, then send it to Fume.</ItemDescription>
+          <ItemDescription>
+            It is on the right, line by line. Change any line there, then send it to Fume.
+          </ItemDescription>
         </ItemContent>
       </Item>
     );
@@ -259,7 +310,11 @@ function BriefCard({ campaignId, view, people, meId, canAct, onSend, inPanel }: 
       )}
       <CardFooter>
         <div className="ui-app-stack ui-app-stack--tight">
-          {canSend && <p className="ui-chat-card-note">Fume writes the plan from it. You approve the plan before anything is made.</p>}
+          {canSend && (
+            <p className="ui-chat-card-note">
+              Fume writes the plan from it. You approve the plan before anything is made.
+            </p>
+          )}
           <div className="ui-app-row">
             {canSend && (
               <Button
@@ -270,7 +325,10 @@ function BriefCard({ campaignId, view, people, meId, canAct, onSend, inPanel }: 
                   onSend?.();
                   // mutateAsync: the card turns into one line as the brief is sent, and the toast still comes.
                   send.mutateAsync(campaignId).then(
-                    () => toast.done("Sent to Fume.", { description: "Fume is writing the plan. Nothing is made before you approve it." }),
+                    () =>
+                      toast.done("Sent to Fume.", {
+                        description: "Fume is writing the plan. Nothing is made before you approve it.",
+                      }),
                     (e: Error) => toast.error("The brief wasn’t sent", { description: e.message }),
                   );
                 }}
@@ -291,7 +349,10 @@ function BriefCard({ campaignId, view, people, meId, canAct, onSend, inPanel }: 
 /** "Masters 1 and 2 approved by Maja" → "You approved the first 2 creatives": a run's lines in her words, no system
  *  words (DLOAD-11), and its pill naming the step under way, "Anna is checking · 6 of 9"; "Done" only when every line
  *  is done (DLOAD-2). `me` is her first name. Exported so the campaign page can say the same. */
-export function runForCustomer<T extends { state: EngineRunState; steps: EngineRunStepData[] }>(run: T, me: string): T & { badge?: ReactNode } {
+export function runForCustomer<T extends { state: EngineRunState; steps: EngineRunStepData[] }>(
+  run: T,
+  me: string,
+): T & { badge?: ReactNode } {
   const words = (label: ReactNode): ReactNode => {
     if (typeof label !== "string") return label;
     const gate = /^Quality Gate: (\S+) checks each (creative|direction|master)s?$/.exec(label);
@@ -310,7 +371,11 @@ export function runForCustomer<T extends { state: EngineRunState; steps: EngineR
   const original = run.steps[steps.indexOf(open)]?.label;
   const gate = typeof original === "string" ? /^Quality Gate: (\S+)/.exec(original) : null;
   const count = open.progress ? ` · ${open.progress.made} of ${open.progress.total}` : "";
-  const label = gate ? (open.state === "waiting" ? `Waiting for ${gate[1]}` : `${gate[1]} is checking${count}`) : `Under way${count}`;
+  const label = gate
+    ? open.state === "waiting"
+      ? `Waiting for ${gate[1]}`
+      : `${gate[1]} is checking${count}`
+    : `Under way${count}`;
   return { ...run, steps, badge: <EngineRunBadge state="running" label={label} /> };
 }
 
@@ -358,9 +423,23 @@ function CardView({
     case "handover":
       return null;
     case "meeting":
-      return card.meetingId ? <MeetingBooked meetingId={card.meetingId} people={people} /> : <MeetingOffer slots={card.slots} topic={card.topic} canAct={canAct} idBase={`offer-${messageId}`} />;
+      return card.meetingId ? (
+        <MeetingBooked meetingId={card.meetingId} people={people} />
+      ) : (
+        <MeetingOffer slots={card.slots} topic={card.topic} canAct={canAct} idBase={`offer-${messageId}`} />
+      );
     case "brief":
-      return <BriefCard campaignId={card.campaignId} view={view} people={people} meId={meId} canAct={canAct} onSend={onSend} inPanel={briefInPanel} />;
+      return (
+        <BriefCard
+          campaignId={card.campaignId}
+          view={view}
+          people={people}
+          meId={meId}
+          canAct={canAct}
+          onSend={onSend}
+          inPanel={briefInPanel}
+        />
+      );
     case "plan":
       return <PlanCard campaignId={card.campaignId} latest={latestPlan} inPanel={planInPanel} />;
     case "directions": {
@@ -368,7 +447,13 @@ function CardView({
       return (
         <Item variant="outline" asChild>
           {/* The chosen direction lands on the directions themselves, not on the tab above them (WAY-19). */}
-          <Link to={chosen ? `/campaigns/${card.campaignId}/creatives#campaign-directions` : `/campaigns/${card.campaignId}/review`}>
+          <Link
+            to={
+              chosen
+                ? `/campaigns/${card.campaignId}/creatives#campaign-directions`
+                : `/campaigns/${card.campaignId}/review`
+            }
+          >
             <ItemMedia variant="icon">
               <Icon name="columns-2" />
             </ItemMedia>
@@ -394,7 +479,15 @@ function CardView({
       return run ? <EngineRun {...runForCustomer(runProps(run), people.name(meId))} /> : null;
     }
     case "question":
-      if (card.productIds?.length) return <ProductQuestion card={card} onAnswer={onAnswer} answeredWith={answeredWith} campaignName={view?.campaign.name} />;
+      if (card.productIds?.length)
+        return (
+          <ProductQuestion
+            card={card}
+            onAnswer={onAnswer}
+            answeredWith={answeredWith}
+            campaignName={view?.campaign.name}
+          />
+        );
       return <TextQuestion card={card} view={view} onAnswer={onAnswer} canAct={canAct} />;
     case "creatives": {
       // Round 13 (#14): small tiles, four at most and then +N; a tile opens the creative beside the conversation (on a
@@ -421,18 +514,36 @@ function CardView({
 /** Why someone cannot write to Fume, or undefined when they can. */
 export function cannotWrite(role: string | null, staff: boolean, owner: User | undefined): string | undefined {
   if (staff) return undefined;
-  if (role === "viewer") return `Viewers read the conversation. ${owner ? `Ask ${owner.name}` : "Ask the owner"} for Can comment to write to Fume.`;
-  if (role === null) return "You are not on this workspace’s team, so you can read the conversation but not write in it.";
+  if (role === "viewer")
+    return `Viewers read the conversation. ${owner ? `Ask ${owner.name}` : "Ask the owner"} for Can comment to write to Fume.`;
+  if (role === null)
+    return "You are not on this workspace’s team, so you can read the conversation but not write in it.";
   return undefined;
 }
 
 /** "Sander at Fume will answer you here": who takes over, and why Fume handed it on. */
-function HandoverLine({ card, people, at, id }: { card: Extract<MessageCard, { kind: "handover" }>; people: People; at: string; id?: string }) {
+function HandoverLine({
+  card,
+  people,
+  at,
+  id,
+}: {
+  card: Extract<MessageCard, { kind: "handover" }>;
+  people: People;
+  at: string;
+  id?: string;
+}) {
   const user = people.user(card.userId);
   const name = firstName(user?.name ?? "Someone");
   return (
     <div className="ui-handover" role="note" id={id}>
-      <Avatar size="sm" src={user?.avatar} initials={initials(user?.name ?? "?")} ink={user?.staffRole === "expert"} aria-hidden="true" />
+      <Avatar
+        size="sm"
+        src={user?.avatar}
+        initials={initials(user?.name ?? "?")}
+        ink={user?.staffRole === "expert"}
+        aria-hidden="true"
+      />
       <div className="ui-handover-text">
         <p className="ui-handover-title">{name} at Fume will answer you here</p>
         <p className="ui-handover-why">
@@ -447,7 +558,17 @@ function HandoverLine({ card, people, at, id }: { card: Extract<MessageCard, { k
 }
 
 /** Fume offers times. Once one of them is booked, the card says so instead of offering again. */
-function MeetingOffer({ slots, topic, canAct, idBase }: { slots: string[]; topic?: string; canAct: boolean; idBase: string }) {
+function MeetingOffer({
+  slots,
+  topic,
+  canAct,
+  idBase,
+}: {
+  slots: string[];
+  topic?: string;
+  canAct: boolean;
+  idBase: string;
+}) {
   const meetings = useMeetings();
   const booked = (meetings.data ?? []).find((m) => m.state === "booked" && slots.includes(m.at));
   if (booked)
@@ -495,9 +616,21 @@ function MeetingBooked({ meetingId, people }: { meetingId: string; people: Peopl
 /** A question in words. One Fume has on record (a product's claims, a packshot) is answered in the one shared sheet,
  *  so answering it here closes it on Home, the product and the brief too (round 8 decision, LOAD-4); the brief's own
  *  questions keep their option pills, on the latest message only. */
-function TextQuestion({ card, view, onAnswer, canAct }: { card: Extract<MessageCard, { kind: "question" }>; view?: CampaignView; onAnswer?: (answer: string) => void; canAct: boolean }) {
+function TextQuestion({
+  card,
+  view,
+  onAnswer,
+  canAct,
+}: {
+  card: Extract<MessageCard, { kind: "question" }>;
+  view?: CampaignView;
+  onAnswer?: (answer: string) => void;
+  canAct: boolean;
+}) {
   const [open, setOpen] = useState(false);
-  const record = useOpenQuestions().questions.find((q) => q.question === card.question && (!view || !q.campaignId || q.campaignId === view.campaign.id));
+  const record = useOpenQuestions().questions.find(
+    (q) => q.question === card.question && (!view || !q.campaignId || q.campaignId === view.campaign.id),
+  );
   return (
     <Card className={onAnswer ? "ui-chat-ask" : undefined}>
       <CardHeader>
@@ -538,19 +671,32 @@ function TextQuestion({ card, view, onAnswer, canAct }: { card: Extract<MessageC
  *  ProductCheckHost: photo, the one question first, the lines), beside the conversation on a desk; once every product
  *  she named is confirmed, that is her answer and Fume moves on, so nothing has to be ticked again. Under it, the
  *  ready products to tick, "View all products" for the whole catalogue, and one button that answers. */
-function ProductQuestion({ card, onAnswer, answeredWith, campaignName }: { card: ProductQuestionCard; onAnswer?: (answer: string) => void; answeredWith?: string; campaignName?: string }) {
+function ProductQuestion({
+  card,
+  onAnswer,
+  answeredWith,
+  campaignName,
+}: {
+  card: ProductQuestionCard;
+  onAnswer?: (answer: string) => void;
+  answeredWith?: string;
+  campaignName?: string;
+}) {
   const catalogue = useCatalogue().data;
   const [ticked, setTicked] = useState<string[]>([]);
   const [all, setAll] = useState(false);
   // The one place a product is confirmed from the chat (?check=<id>, so Back closes it).
   const openCheck = useOpenProductCheck();
   // Round 13 (robot note 02): the panel names the campaign she is briefing ("Christmas waits on it").
-  const confirm = (id: string) => openCheck(id, { over: "conversation", onConfirmed: confirmedHere, forCampaign: campaignName });
+  const confirm = (id: string) =>
+    openCheck(id, { over: "conversation", onConfirmed: confirmedHere, forCampaign: campaignName });
   // Confirmed here, before the catalogue has caught up.
   const [done, setDone] = useState<string[]>([]);
   const named = card.named ?? [];
   // In the order Fume offers them: the products named first.
-  const products = (card.productIds ?? []).map((id) => catalogue?.products.find((p) => p.id === id)).filter((p): p is NonNullable<typeof p> => Boolean(p));
+  const products = (card.productIds ?? [])
+    .map((id) => catalogue?.products.find((p) => p.id === id))
+    .filter((p): p is NonNullable<typeof p> => Boolean(p));
   const ok = (p: (typeof products)[number]) => confirmed(p) || done.includes(p.id);
   const ready = products.filter(ok);
   const waiting = products.filter((p) => !ok(p));
@@ -565,7 +711,8 @@ function ProductQuestion({ card, onAnswer, answeredWith, campaignName }: { card:
   const collections = (catalogue?.collections ?? [])
     .map((c) => ({ c, ids: c.productIds.filter((id) => ready.some((p) => p.id === id)) }))
     .filter((x) => x.ids.length > 0);
-  const tickAll = (ids: string[], on: boolean) => setTicked((l) => (on ? [...new Set([...l, ...ids])] : l.filter((x) => !ids.includes(x))));
+  const tickAll = (ids: string[], on: boolean) =>
+    setTicked((l) => (on ? [...new Set([...l, ...ids])] : l.filter((x) => !ids.includes(x))));
   // Round 13 (#19): once she answered, the card shows what she picked, on Fume's side; her answer is not repeated as a
   // bubble of hers (FumePage leaves it out).
   const chosen = answeredWith
@@ -582,7 +729,13 @@ function ProductQuestion({ card, onAnswer, answeredWith, campaignName }: { card:
     setTicked(nowTicked);
     // Every product she named is confirmed: that was her answer (TASK-1).
     const allDone = named.every((n) => nowDone.includes(n) || products.some((p) => p.id === n && confirmed(p)));
-    if (onAnswer && named.includes(id) && allDone) onAnswer(products.filter((p) => nowTicked.includes(p.id)).map((p) => p.name).join(", "));
+    if (onAnswer && named.includes(id) && allDone)
+      onAnswer(
+        products
+          .filter((p) => nowTicked.includes(p.id))
+          .map((p) => p.name)
+          .join(", "),
+      );
   }
 
   return (
@@ -595,7 +748,9 @@ function ProductQuestion({ card, onAnswer, answeredWith, campaignName }: { card:
       {!onAnswer && chosen.length > 0 && (
         <CardContent>
           <div className="ui-app-stack ui-app-stack--tight">
-            <p className="ui-chat-plan-eyebrow">{chosen.length === 1 ? "The product for this campaign" : "The products for this campaign"}</p>
+            <p className="ui-chat-plan-eyebrow">
+              {chosen.length === 1 ? "The product for this campaign" : "The products for this campaign"}
+            </p>
             <ul className="ui-chat-picked">
               {chosen.map((p) => (
                 <li key={p.id}>
@@ -605,7 +760,9 @@ function ProductQuestion({ card, onAnswer, answeredWith, campaignName }: { card:
                     </ItemMedia>
                     <ItemContent>
                       <ItemTitle>{p.name}</ItemTitle>
-                      <ItemDescription>{[p.variant, confirmed(p) ? "Confirmed" : "Not confirmed yet"].filter(Boolean).join(" · ")}</ItemDescription>
+                      <ItemDescription>
+                        {[p.variant, confirmed(p) ? "Confirmed" : "Not confirmed yet"].filter(Boolean).join(" · ")}
+                      </ItemDescription>
                     </ItemContent>
                   </Item>
                 </li>
@@ -626,7 +783,9 @@ function ProductQuestion({ card, onAnswer, answeredWith, campaignName }: { card:
                     </ItemMedia>
                     <ItemContent>
                       <ItemTitle>{p.name}</ItemTitle>
-                      <ItemDescription>{named.includes(p.id) ? "You named it. Confirm its details first." : "Not confirmed yet."}</ItemDescription>
+                      <ItemDescription>
+                        {named.includes(p.id) ? "You named it. Confirm its details first." : "Not confirmed yet."}
+                      </ItemDescription>
                     </ItemContent>
                     <ItemActions>
                       <Button size="sm" onClick={() => confirm(p.id)} aria-label={`Confirm the details of ${p.name}`}>
@@ -673,13 +832,27 @@ function ProductQuestion({ card, onAnswer, answeredWith, campaignName }: { card:
             )}
             {products.length > 1 && <ProductSheetButton count={products.length} onClick={() => setAll(true)} />}
           </div>
-          <AllProductsSheet open={all} onOpenChange={setAll} only={card.productIds} multiple value={ticked} onPick={setTicked} onConfirm={confirm} />
+          <AllProductsSheet
+            open={all}
+            onOpenChange={setAll}
+            only={card.productIds}
+            multiple
+            value={ticked}
+            onPick={setTicked}
+            onConfirm={confirm}
+          />
         </CardContent>
       )}
       {onAnswer && (tiles.length > 0 || picked.length > 0) && (
         <CardFooter>
           <div className="ui-app-row">
-            <Button size="sm" iconEnd="arrow-right" variant={rows.length && !picked.length ? "secondary" : undefined} disabled={!picked.length} onClick={() => onAnswer(picked.map((p) => p.name).join(", "))}>
+            <Button
+              size="sm"
+              iconEnd="arrow-right"
+              variant={rows.length && !picked.length ? "secondary" : undefined}
+              disabled={!picked.length}
+              onClick={() => onAnswer(picked.map((p) => p.name).join(", "))}
+            >
               {picked.length ? `Use ${copy.count(picked.length, "product")}` : "Tick a product"}
             </Button>
           </div>

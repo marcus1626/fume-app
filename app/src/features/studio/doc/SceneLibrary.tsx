@@ -56,23 +56,35 @@ export function SceneSection({ vars, valueOf, onVariable, assets, brandName, con
   const all = libraryOf(assets);
   const has = (key: string) => vars.some((v) => v.key === key);
   const props = (valueOf("props") as string[] | undefined) ?? [];
-  const picked = (item: LibraryItem) => (KIND_VAR[item.kind] === "props" ? props.includes(item.value) : valueOf(KIND_VAR[item.kind]) === item.value);
+  const picked = (item: LibraryItem) =>
+    KIND_VAR[item.kind] === "props" ? props.includes(item.value) : valueOf(KIND_VAR[item.kind]) === item.value;
   const pick = (item: LibraryItem, on = true) => {
     const key = KIND_VAR[item.kind];
     if (!has(key)) return;
-    if (key === "props") onVariable("props", on ? [...new Set([...props, item.value])] : props.filter((p) => p !== item.value));
+    if (key === "props")
+      onVariable("props", on ? [...new Set([...props, item.value])] : props.filter((p) => p !== item.value));
     else onVariable(key, item.value);
   };
   const upload = (f: File) => {
     const item = addUpload(f.name.replace(/\.[^.]+$/, ""), URL.createObjectURL(f));
     setUploaded((n) => n + 1);
     pick(item);
-    toast.done(`${item.name} is the background`, { description: "The Engine puts the product on it in the next render. Fume keeps uploads once the backend stores them." });
+    toast.done(`${item.name} is the background`, {
+      description:
+        "The Engine puts the product on it in the next render. Fume keeps uploads once the backend stores them.",
+    });
   };
 
   const rows = ROWS.filter((r) => has(r.key));
   const others = vars.filter((v) => !rows.some((r) => r.key === v.key));
-  const origin = (i: LibraryItem) => (i.origin === "fume" ? "Fume" : i.origin === "upload" ? "Upload" : i.origin === "reference" ? "Reference" : brandName);
+  const origin = (i: LibraryItem) =>
+    i.origin === "fume"
+      ? "Fume"
+      : i.origin === "upload"
+        ? "Upload"
+        : i.origin === "reference"
+          ? "Reference"
+          : brandName;
 
   return (
     <>
@@ -80,17 +92,41 @@ export function SceneSection({ vars, valueOf, onVariable, assets, brandName, con
         const v = vars.find((x) => x.key === r.key)!;
         const items = all.filter((i) => r.kinds.includes(i.kind));
         // The one in force first, then the rest in the library's order.
-        const first = [...items.filter(picked), ...items.filter((i) => !picked(i))].slice(0, r.key === "props" ? Math.max(FIRST, props.length) : FIRST);
+        const first = [...items.filter(picked), ...items.filter((i) => !picked(i))].slice(
+          0,
+          r.key === "props" ? Math.max(FIRST, props.length) : FIRST,
+        );
         const current = items.filter(picked);
         const more = (
-          <Button size="sm" variant="quiet" className="ui-scene-lib-more" onClick={() => setLibrary(r.kinds[0]!)} aria-label={`More ${v.label.toLowerCase()}s: ${items.length} in the library`}>
+          <Button
+            size="sm"
+            variant="quiet"
+            className="ui-scene-lib-more"
+            onClick={() => setLibrary(r.kinds[0]!)}
+            aria-label={`More ${v.label.toLowerCase()}s: ${items.length} in the library`}
+          >
             More…
           </Button>
         );
         if (r.key === "props")
           return (
-            <StudioRow key={r.key} label={v.label} labelId="scene-props-l" readout={`${current.length} of ${items.length}`} inline={more} className="ui-scene-lib-row">
-              <ToggleGroup type="multiple" size="sm" variant="outline" className="ui-sc-chips" aria-labelledby="scene-props-l" value={props} onValueChange={(next) => onVariable("props", next)}>
+            <StudioRow
+              key={r.key}
+              label={v.label}
+              labelId="scene-props-l"
+              readout={`${current.length} of ${items.length}`}
+              inline={more}
+              className="ui-scene-lib-row"
+            >
+              <ToggleGroup
+                type="multiple"
+                size="sm"
+                variant="outline"
+                className="ui-sc-chips"
+                aria-labelledby="scene-props-l"
+                value={props}
+                onValueChange={(next) => onVariable("props", next)}
+              >
                 {first.map((i) => (
                   <ToggleGroupItem key={i.value} value={i.value}>
                     {i.name}
@@ -100,11 +136,25 @@ export function SceneSection({ vars, valueOf, onVariable, assets, brandName, con
             </StudioRow>
           );
         return (
-          <StudioRow key={r.key} label={v.label} labelId={`scene-${r.key}-l`} readout={current[0]?.name} inline={more} className="ui-scene-lib-row">
+          <StudioRow
+            key={r.key}
+            label={v.label}
+            labelId={`scene-${r.key}-l`}
+            readout={current[0]?.name}
+            inline={more}
+            className="ui-scene-lib-row"
+          >
             <ul className="ui-desk-thumbs" aria-labelledby={`scene-${r.key}-l`}>
               {first.map((i) => (
                 <li key={i.value}>
-                  <button type="button" className="ui-desk-thumb" aria-pressed={picked(i)} title={`${i.name} · ${origin(i)}`} aria-label={`${i.name}, ${origin(i)}`} onClick={() => pick(i)}>
+                  <button
+                    type="button"
+                    className="ui-desk-thumb"
+                    aria-pressed={picked(i)}
+                    title={`${i.name} · ${origin(i)}`}
+                    aria-label={`${i.name}, ${origin(i)}`}
+                    onClick={() => pick(i)}
+                  >
                     <img src={i.image} alt="" />
                     {picked(i) && <Icon name="check" className="ui-desk-thumb-check" />}
                   </button>
@@ -187,7 +237,9 @@ function LibrarySheet({
   const kinds = (Object.keys(KIND_LABEL) as LibraryKind[]).filter((k) => items.some((i) => i.kind === k));
   const shown = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return items.filter((i) => (!kind || i.kind === kind) && (!q || `${i.name} ${origin(i)}`.toLowerCase().includes(q)));
+    return items.filter(
+      (i) => (!kind || i.kind === kind) && (!q || `${i.name} ${origin(i)}`.toLowerCase().includes(q)),
+    );
   }, [items, kind, query, origin]);
 
   return (
@@ -195,7 +247,10 @@ function LibrarySheet({
       <DialogContent size="lg" className="ui-product-sheet ui-scene-lib">
         <DialogHeader>
           <DialogTitle>Scene library</DialogTitle>
-          <DialogDescription>Fume’s scene templates and {brandName}’s own scenes, backgrounds and references. A pick goes into the next render.</DialogDescription>
+          <DialogDescription>
+            Fume’s scene templates and {brandName}’s own scenes, backgrounds and references. A pick goes into the next
+            render.
+          </DialogDescription>
         </DialogHeader>
         <DialogBody>
           <div className="ui-product-sheet-body">
@@ -204,7 +259,14 @@ function LibrarySheet({
                 <InputGroupAddon>
                   <Icon name="search" />
                 </InputGroupAddon>
-                <InputGroupInput value={query} onChange={(e) => setQuery(e.target.value)} onClear={() => setQuery("")} placeholder="Search the library" aria-label="Search the library" autoComplete="off" />
+                <InputGroupInput
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onClear={() => setQuery("")}
+                  placeholder="Search the library"
+                  aria-label="Search the library"
+                  autoComplete="off"
+                />
                 <InputGroupAddon align="inline-end">
                   <InputGroupButton clear aria-label="Clear search" onClick={() => setQuery("")} />
                 </InputGroupAddon>
@@ -215,7 +277,15 @@ function LibrarySheet({
             </div>
             <div className="ui-product-sheet-chips" role="group" aria-label="Show">
               {(["", ...kinds] as const).map((k) => (
-                <Button key={k || "all"} type="button" size="sm" variant="glass-clear" icon={kind === k ? "check" : undefined} aria-pressed={kind === k} onClick={() => setKind(k)}>
+                <Button
+                  key={k || "all"}
+                  type="button"
+                  size="sm"
+                  variant="glass-clear"
+                  icon={kind === k ? "check" : undefined}
+                  aria-pressed={kind === k}
+                  onClick={() => setKind(k)}
+                >
                   {k ? KIND_LABEL[k] : "All"}
                 </Button>
               ))}
@@ -226,7 +296,15 @@ function LibrarySheet({
             {shown.length ? (
               <PickGrid size="sm" aria-label="Scene library" className="ui-product-sheet-grid">
                 {shown.map((i) => (
-                  <PickTile key={i.value} title={i.name} line={origin(i)} src={i.image} icon="package" selected={picked(i)} onSelectedChange={(on) => onPick(i, i.kind === "prop" ? on : true)} />
+                  <PickTile
+                    key={i.value}
+                    title={i.name}
+                    line={origin(i)}
+                    src={i.image}
+                    icon="package"
+                    selected={picked(i)}
+                    onSelectedChange={(on) => onPick(i, i.kind === "prop" ? on : true)}
+                  />
                 ))}
               </PickGrid>
             ) : (

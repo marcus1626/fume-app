@@ -40,7 +40,17 @@ const ROW = 6;
 const NO_CAMPAIGN = "none";
 
 const modeIcon = (m: StudioMode): IconName =>
-  m.output === "model" ? "user" : m.output === "reference" ? "image-plus" : /packshot/i.test(m.name) ? "package" : /layout|design|type/i.test(m.name) ? "type" : /free/i.test(m.name) ? "pencil" : "image";
+  m.output === "model"
+    ? "user"
+    : m.output === "reference"
+      ? "image-plus"
+      : /packshot/i.test(m.name)
+        ? "package"
+        : /layout|design|type/i.test(m.name)
+          ? "type"
+          : /free/i.test(m.name)
+            ? "pencil"
+            : "image";
 
 export function StudioHomePage() {
   const { workspaceId = "" } = useParams();
@@ -63,7 +73,10 @@ export function StudioHomePage() {
   const start = (mode: StudioMode) =>
     open.mutate(
       { workspaceId, studio: mode.studio, modeId: mode.id, campaignId },
-      { onSuccess: (d) => navigate(`/studio/doc/${d.id}`), onError: (e) => toast.error("The Studio didn’t open", { description: e.message }) },
+      {
+        onSuccess: (d) => navigate(`/studio/doc/${d.id}`),
+        onError: (e) => toast.error("The Studio didn’t open", { description: e.message }),
+      },
     );
   const modeOf = (d: CreativeDocument) => modes.data?.find((m) => m.id === d.modeId);
 
@@ -83,7 +96,13 @@ export function StudioHomePage() {
         meta={docs.data?.length || undefined}
         action={
           (docs.data?.length ?? 0) > ROW ? (
-            <Button size="sm" variant="quiet" className="ui-studio-recent-all" aria-expanded={all} onClick={() => setAll(!all)}>
+            <Button
+              size="sm"
+              variant="quiet"
+              className="ui-studio-recent-all"
+              aria-expanded={all}
+              onClick={() => setAll(!all)}
+            >
               {all ? "Show fewer" : `Show all (${docs.data!.length})`}
             </Button>
           ) : undefined
@@ -146,7 +165,10 @@ export function StudioHomePage() {
               <SegmentedOption value="design">Design</SegmentedOption>
             </SegmentedControl>
             {campaigns.length > 0 && (
-              <Select value={campaignId ?? NO_CAMPAIGN} onValueChange={(v) => setCampaignId(v === NO_CAMPAIGN ? undefined : v)}>
+              <Select
+                value={campaignId ?? NO_CAMPAIGN}
+                onValueChange={(v) => setCampaignId(v === NO_CAMPAIGN ? undefined : v)}
+              >
                 <SelectTrigger className="ui-studio-new-campaign" aria-label="Campaign">
                   <SelectValue />
                 </SelectTrigger>
@@ -160,7 +182,9 @@ export function StudioHomePage() {
                 </SelectContent>
               </Select>
             )}
-            {campaign?.look && <p className="ui-studio-new-help">{campaign.name}’s own colours and light lead the look sections.</p>}
+            {campaign?.look && (
+              <p className="ui-studio-new-help">{campaign.name}’s own colours and light lead the look sections.</p>
+            )}
           </div>
           <Query query={modes} loading="Loading the modes">
             {(list) => {
@@ -170,7 +194,12 @@ export function StudioHomePage() {
                   {live.map((m) => (
                     <li key={m.id}>
                       <WithTooltip label={m.description.replace(/ Coming later\.?$/, "")}>
-                        <button type="button" className="ui-studio-new-mode" disabled={open.isPending} onClick={() => start(m)}>
+                        <button
+                          type="button"
+                          className="ui-studio-new-mode"
+                          disabled={open.isPending}
+                          onClick={() => start(m)}
+                        >
                           <Icon name={modeIcon(m)} className="ui-studio-new-mode-icon" />
                           <span className="ui-studio-new-mode-name">{m.name}</span>
                         </button>

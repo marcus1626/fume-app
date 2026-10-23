@@ -46,7 +46,14 @@ import {
   under,
   type StaffFrameKind,
 } from "./scope";
-import { FumePersonMenu, ScopePicker, StaffSidebar, useStaffPlaces, useStaffScope, type StaffScope } from "./StaffSidebar";
+import {
+  FumePersonMenu,
+  ScopePicker,
+  StaffSidebar,
+  useStaffPlaces,
+  useStaffScope,
+  type StaffScope,
+} from "./StaffSidebar";
 
 /** The staff frame for the person signed in: the agency's for an agency's people, the studio's for Fume's. */
 export function StudioShell() {
@@ -78,7 +85,8 @@ function StaffFrame({ frame }: { frame: StaffFrameKind }) {
   const bell = useStaffBell(frame, needs);
 
   // Every status sentence under this frame reads the frame's way: an agency's "6 creatives with Maja", Fume's the staff's
-  if (frame === "agency") copy.setStatusReader({ agency: true, client: scope.entry?.client?.people[0]?.name.split(" ")[0] });
+  if (frame === "agency")
+    copy.setStatusReader({ agency: true, client: scope.entry?.client?.people[0]?.name.split(" ")[0] });
   else copy.setStatusReader({ agency: false, viewer: "staff" });
   // Back in the studio, Customer view is over (it lasts until then, DWAY-2)
   if (frame === "fume" && customerViewOn()) setCustomerView(false);
@@ -87,7 +95,8 @@ function StaffFrame({ frame }: { frame: StaffFrameKind }) {
   const target = ((): string | "wait" | undefined => {
     const other = ownAddress(frame, pathname, tail);
     if (other) return other;
-    const workspaceOf = (id: Id | undefined) => (id ? campaigns.data?.find((r) => r.campaign.id === id)?.workspace.id : undefined);
+    const workspaceOf = (id: Id | undefined) =>
+      id ? campaigns.data?.find((r) => r.campaign.id === id)?.workspace.id : undefined;
     if (pathname === "/") return location.key === "default" ? frameRoot[frame] : brandBase(frame, session.workspace.id);
     if (isCustomerPath(pathname)) {
       const id = campaignIn(pathname);
@@ -122,10 +131,19 @@ function StaffFrame({ frame }: { frame: StaffFrameKind }) {
 
   // ⌘K: the scope's places; in a brand its own pages (an agency's full client: also what she starts, every creative and
   // the chat); every brand and its places, what waits for a check and the campaigns across brands (DTASK-10, DWAY-6)
-  const parts: PaletteParts = !scope.entry || scope.entry.summary ? paletteParts.none : frame === "agency" ? { start: true, brand: true, creatives: true, chat: true } : { brand: true };
+  const parts: PaletteParts =
+    !scope.entry || scope.entry.summary
+      ? paletteParts.none
+      : frame === "agency"
+        ? { start: true, brand: true, creatives: true, chat: true }
+        : { brand: true };
   const brandId = scope.entry?.workspace.id;
   const link = useMemo(() => (brandId ? (to: string) => hrefIn(frame, brandId, to) : undefined), [frame, brandId]);
-  const label = name ? `${name}, ${frame === "agency" ? scope.orgName : "the Fume studio"}` : frame === "agency" ? `${scope.orgName} in Fume` : "Fume studio";
+  const label = name
+    ? `${name}, ${frame === "agency" ? scope.orgName : "the Fume studio"}`
+    : frame === "agency"
+      ? `${scope.orgName} in Fume`
+      : "Fume studio";
 
   return (
     <ShellFrame
@@ -137,7 +155,14 @@ function StaffFrame({ frame }: { frame: StaffFrameKind }) {
       barStart={({ phone, away }) => (phone && !away ? <ScopePicker scope={scope} compact /> : null)}
       account={() => (frame === "agency" ? <AgencyPersonMenu avatar /> : <FumePersonMenu avatar />)}
       content={content}
-      palette={{ nav: places, parts, extra, settings: frame === "agency" ? "/agency/settings" : null, meeting: frame === "agency", link }}
+      palette={{
+        nav: places,
+        parts,
+        extra,
+        settings: frame === "agency" ? "/agency/settings" : null,
+        meeting: frame === "agency",
+        link,
+      }}
       sidebar={(f) => <StaffSidebar scope={scope} places={places} frame={f} />}
     />
   );
@@ -218,7 +243,12 @@ function useStaffBell(frame: StaffFrameKind, needs: AgencyNeed[]): { items: Noti
 
 /** A brand's places in ⌘K, by their names ("LYSNE · Engine output"). */
 const brandPlaces = (frame: StaffFrameKind): { rest: string; label: string; icon: IconName; keywords: string }[] => [
-  { rest: `/${frame === "agency" ? "check" : "qa"}`, label: "Check", icon: "inbox", keywords: "check qa queue to check" },
+  {
+    rest: `/${frame === "agency" ? "check" : "qa"}`,
+    label: "Check",
+    icon: "inbox",
+    keywords: "check qa queue to check",
+  },
   { rest: "/campaigns", label: "Campaigns", icon: "megaphone", keywords: "campaigns plans" },
   { rest: "/brand", label: "Brand", icon: "palette", keywords: "brand dna products" },
   { rest: "/studio", label: "Studio", icon: "layers", keywords: "studio desk documents" },
@@ -226,7 +256,9 @@ const brandPlaces = (frame: StaffFrameKind): { rest: string; label: string; icon
   { rest: "/output", label: "Engine output", icon: "image", keywords: "engine output runs made" },
   { rest: "/assets", label: "Models and references", icon: "users", keywords: "models references cast assets" },
   { rest: "/boards", label: "Boards", icon: "layout-grid", keywords: "boards moodboard" },
-  ...(frame === "agency" ? [{ rest: "/fume", label: "Fume", icon: "message-square" as IconName, keywords: "chat ask fume" }] : []),
+  ...(frame === "agency"
+    ? [{ rest: "/fume", label: "Fume", icon: "message-square" as IconName, keywords: "chat ask fume" }]
+    : []),
 ];
 
 /** ⌘K across the scope (DTASK-10, DWAY-6): every brand or client and its places, the plans and creatives to check, and
@@ -278,7 +310,8 @@ function useStaffPaletteItems(scope: StaffScope, needs: AgencyNeed[]): CommandPa
       items.push({
         id: `need-${n.id}`,
         group: "To check",
-        label: frame === "fume" ? `Check the ${campaignName ?? n.title} plan` : `Open the ${campaignName ?? n.title} plan`,
+        label:
+          frame === "fume" ? `Check the ${campaignName ?? n.title} plan` : `Open the ${campaignName ?? n.title} plan`,
         icon: "file-text",
         meta: brandName,
         keywords: "plan check approve brief",

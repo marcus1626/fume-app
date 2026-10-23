@@ -40,7 +40,12 @@ export function NotificationsPopover({ items, unread }: { items: NotificationDat
     if (e.key !== "ArrowLeft" && e.key !== "ArrowRight" && e.key !== "Home" && e.key !== "End") return;
     e.preventDefault();
     const i = TABS.findIndex((t) => t.value === filter);
-    const j = e.key === "Home" ? 0 : e.key === "End" ? TABS.length - 1 : (i + (e.key === "ArrowRight" ? 1 : -1) + TABS.length) % TABS.length;
+    const j =
+      e.key === "Home"
+        ? 0
+        : e.key === "End"
+          ? TABS.length - 1
+          : (i + (e.key === "ArrowRight" ? 1 : -1) + TABS.length) % TABS.length;
     setFilter(TABS[j]!.value);
     tabs.current?.querySelectorAll<HTMLElement>("[role=tab]")[j]?.focus();
   };
@@ -88,7 +93,12 @@ export function NotificationsPopover({ items, unread }: { items: NotificationDat
             ))}
           </div>
         )}
-        <div className="ui-popover-scroll" id={`${id}-panel`} role={items.length ? "tabpanel" : undefined} aria-labelledby={items.length ? `${id}-tab-${filter}` : undefined}>
+        <div
+          className="ui-popover-scroll"
+          id={`${id}-panel`}
+          role={items.length ? "tabpanel" : undefined}
+          aria-labelledby={items.length ? `${id}-tab-${filter}` : undefined}
+        >
           {shown.length > 0 ? (
             <NotificationList
               items={items}
@@ -104,7 +114,11 @@ export function NotificationsPopover({ items, unread }: { items: NotificationDat
           ) : (
             <NotificationEmpty
               title={filter === "unread" ? "Everything is read" : "You are all caught up"}
-              text={filter === "unread" ? "What waits on you is on Home." : "Plans ready for you, checked creatives, questions from Fume and mentions show here as they happen."}
+              text={
+                filter === "unread"
+                  ? "What waits on you is on Home."
+                  : "Plans ready for you, checked creatives, questions from Fume and mentions show here as they happen."
+              }
             />
           )}
         </div>

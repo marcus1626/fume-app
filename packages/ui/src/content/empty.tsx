@@ -11,7 +11,13 @@ export interface EmptyProps extends HTMLAttributes<HTMLDivElement> {
   size?: "default" | "sm";
 }
 export function Empty({ surface, size = "default", className, ...props }: EmptyProps) {
-  return <div data-slot="empty" className={cx("ui-empty", surface && "ui-empty--surface", size === "sm" && "ui-empty--sm", className)} {...props} />;
+  return (
+    <div
+      data-slot="empty"
+      className={cx("ui-empty", surface && "ui-empty--surface", size === "sm" && "ui-empty--sm", className)}
+      {...props}
+    />
+  );
 }
 
 export function EmptyHeader({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
@@ -31,7 +37,12 @@ export function EmptyMedia({ variant = "icon", icon, waiting, className, childre
   return (
     <div
       data-slot="empty-media"
-      className={cx("ui-empty-media", variant === "icon" && "ui-empty-media--icon", waiting && "ui-empty-media--waiting", className)}
+      className={cx(
+        "ui-empty-media",
+        variant === "icon" && "ui-empty-media--icon",
+        waiting && "ui-empty-media--waiting",
+        className,
+      )}
       {...props}
     >
       {icon && <Icon name={icon} />}

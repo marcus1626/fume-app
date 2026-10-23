@@ -31,7 +31,8 @@ export function toNotificationData(list: Notification[] | undefined, people: Use
       dateTime: n.at,
       text: n.text,
       href: n.href,
-      actor: n.actor.kind === "person" ? { kind: "person", person: sign(byId.get(n.actor.userId)) } : { kind: n.actor.kind },
+      actor:
+        n.actor.kind === "person" ? { kind: "person", person: sign(byId.get(n.actor.userId)) } : { kind: n.actor.kind },
     }));
 }
 
@@ -47,7 +48,9 @@ const campaignIn = (href: string | undefined) => /^\/campaigns\/([^/?#]+)/.exec(
 
 /** What Home asks, as the keys isOnHome reads: each row's kinds ("plan"), and each with its campaign ("plan@c-winter"). */
 export function homeKeys(rows: { kind: WaitingKind; also?: WaitingKind[]; campaignId?: string }[]): string[] {
-  return rows.flatMap((r) => [r.kind, ...(r.also ?? [])].flatMap((k) => (r.campaignId ? [k, `${k}@${r.campaignId}`] : [k])));
+  return rows.flatMap((r) =>
+    [r.kind, ...(r.also ?? [])].flatMap((k) => (r.campaignId ? [k, `${k}@${r.campaignId}`] : [k])),
+  );
 }
 
 /**
@@ -77,7 +80,9 @@ export function useNotificationItems() {
   const homeKey = homeKeys(waiting.items).join(",");
   const items = useMemo(() => {
     const home = new Set(homeKey ? homeKey.split(",") : []);
-    return toNotificationData(notifications.data, people.data).map((n) => (n.unread && isOnHome(n.kind, home, n.href, campaigns.data) ? { ...n, unread: false } : n));
+    return toNotificationData(notifications.data, people.data).map((n) =>
+      n.unread && isOnHome(n.kind, home, n.href, campaigns.data) ? { ...n, unread: false } : n,
+    );
   }, [notifications.data, people.data, homeKey, campaigns.data]);
   const unread = waiting.loading ? 0 : items.filter((n) => n.unread).length;
   return { query: notifications, items, unread };

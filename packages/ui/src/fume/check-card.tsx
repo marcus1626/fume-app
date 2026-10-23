@@ -8,7 +8,15 @@
 // the right at a 760 measure, and its foot pinned to the bottom of the window at the same place for every item: where
 // she is ("2 of 7", ‹ ›) on the left, Later · Confirm on the right (the app's step footer, PageFooter). On a phone the
 // list goes and the foot takes the tab bar's place, so the one-card flow stays.
-import { forwardRef, useLayoutEffect, useRef, type ButtonHTMLAttributes, type HTMLAttributes, type KeyboardEvent, type ReactNode } from "react";
+import {
+  forwardRef,
+  useLayoutEffect,
+  useRef,
+  type ButtonHTMLAttributes,
+  type HTMLAttributes,
+  type KeyboardEvent,
+  type ReactNode,
+} from "react";
 import { PageFooter } from "../content/page-header";
 import { cx } from "../cx";
 import { Icon } from "../icons";
@@ -27,7 +35,17 @@ export interface CheckStageProps extends Omit<HTMLAttributes<HTMLDivElement>, "t
   live?: string;
 }
 
-export function CheckStage({ title, step, onClose, closeLabel = "Close", foot, live, className, children, ...props }: CheckStageProps) {
+export function CheckStage({
+  title,
+  step,
+  onClose,
+  closeLabel = "Close",
+  foot,
+  live,
+  className,
+  children,
+  ...props
+}: CheckStageProps) {
   return (
     <div className={cx("ui-check", className)} {...props}>
       <header className="ui-check-bar">
@@ -39,7 +57,16 @@ export function CheckStage({ title, step, onClose, closeLabel = "Close", foot, l
           </span>
         )}
       </header>
-      {step && step.of > 1 ? <ProgressBar className="ui-check-progress" value={step.at} max={step.of} label={`${step.at} of ${step.of} done`} /> : <span />}
+      {step && step.of > 1 ? (
+        <ProgressBar
+          className="ui-check-progress"
+          value={step.at}
+          max={step.of}
+          label={`${step.at} of ${step.of} done`}
+        />
+      ) : (
+        <span />
+      )}
       <main className="ui-check-stage">{children}</main>
       <footer className="ui-check-foot">{foot}</footer>
       <p className="ui-check-live" aria-live="polite">
@@ -58,7 +85,10 @@ export interface CheckCardProps extends HTMLAttributes<HTMLElement> {
   media?: boolean;
 }
 
-export const CheckCard = forwardRef<HTMLElement, CheckCardProps>(function CheckCard({ leaving, page, media, className, ...props }, ref) {
+export const CheckCard = forwardRef<HTMLElement, CheckCardProps>(function CheckCard(
+  { leaving, page, media, className, ...props },
+  ref,
+) {
   return (
     <article
       ref={ref}
@@ -89,7 +119,11 @@ export function CheckLine({ label, note, editing, action, className, children, .
         {label}
         {note && <span className="ui-check-line-note">{note}</span>}
       </span>
-      {editing ? <div className="ui-check-line-field">{children}</div> : <span className="ui-check-line-text">{children}</span>}
+      {editing ? (
+        <div className="ui-check-line-field">{children}</div>
+      ) : (
+        <span className="ui-check-line-text">{children}</span>
+      )}
       {action && !editing && <span className="ui-check-line-act">{action}</span>}
     </li>
   );
@@ -102,7 +136,14 @@ export interface CheckAskProps extends Omit<HTMLAttributes<HTMLElement>, "title"
   why?: ReactNode;
 }
 
-export function CheckAsk({ eyebrow = "Fume needs this from you", title, why, className, children, ...props }: CheckAskProps) {
+export function CheckAsk({
+  eyebrow = "Fume needs this from you",
+  title,
+  why,
+  className,
+  children,
+  ...props
+}: CheckAskProps) {
   return (
     <section className={cx("ui-check-ask", className)} {...props}>
       <div className="ui-check-ask-head">
@@ -148,14 +189,21 @@ export interface CheckQueueProps extends HTMLAttributes<HTMLDivElement> {
 
 /** The scroller the queue lives in: the shell's inset, or the window. */
 function scrollerOf(el: HTMLElement): HTMLElement {
-  return el.closest<HTMLElement>(".ui-sidebar-inset") ?? (document.scrollingElement as HTMLElement | null) ?? document.documentElement;
+  return (
+    el.closest<HTMLElement>(".ui-sidebar-inset") ??
+    (document.scrollingElement as HTMLElement | null) ??
+    document.documentElement
+  );
 }
 
 /**
  * The queue frame. The card column fills the window down to its foot, so the foot sits at the bottom of the window
  * for a short card and stays there (sticky) for a long one: Later and Confirm never move between items.
  */
-export const CheckQueue = forwardRef<HTMLDivElement, CheckQueueProps>(function CheckQueue({ list, step, foot, live, className, children, ...props }, ref) {
+export const CheckQueue = forwardRef<HTMLDivElement, CheckQueueProps>(function CheckQueue(
+  { list, step, foot, live, className, children, ...props },
+  ref,
+) {
   const own = useRef<HTMLDivElement | null>(null);
   // The room from the queue’s top to the window’s foot, as a custom property the stylesheet reads at every width.
   useLayoutEffect(() => {
@@ -194,7 +242,11 @@ export const CheckQueue = forwardRef<HTMLDivElement, CheckQueueProps>(function C
         {(step || foot) && (
           // The app's step footer (PageFooter, DLAY-13), pinned to the window's foot under the card. On a phone it takes
           // the tab bar's place (tab-bar.css: data-tab-bar="replace").
-          <PageFooter className="ui-check-queue-foot" data-tab-bar="replace" start={step ? <div className="ui-check-queue-step">{step}</div> : undefined}>
+          <PageFooter
+            className="ui-check-queue-foot"
+            data-tab-bar="replace"
+            start={step ? <div className="ui-check-queue-step">{step}</div> : undefined}
+          >
             {foot}
           </PageFooter>
         )}
@@ -248,7 +300,13 @@ export interface CheckQueueItemProps extends Omit<ButtonHTMLAttributes<HTMLButto
 export function CheckQueueItem({ media, title, detail, current, done, className, ...props }: CheckQueueItemProps) {
   return (
     <li>
-      <button type="button" className={cx("ui-check-queue-item", className)} aria-current={current ? "step" : undefined} data-done={done || undefined} {...props}>
+      <button
+        type="button"
+        className={cx("ui-check-queue-item", className)}
+        aria-current={current ? "step" : undefined}
+        data-done={done || undefined}
+        {...props}
+      >
         <span className="ui-check-queue-media" aria-hidden="true">
           {media}
         </span>

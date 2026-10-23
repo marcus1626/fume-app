@@ -15,7 +15,8 @@ export { OverviewPage as AllBrandsPage } from "./OverviewPage";
 export function DeliveriesDue({ rows }: { rows: AllBrandsView["deliveriesDue"] }) {
   const frame = useFrameKind();
   const admin = useSession().data?.user.staffRole === "admin" && frame === "fume";
-  if (!rows.length) return <Nothing icon="download" title="Nothing due" text="A delivery shows here once a campaign has a date." />;
+  if (!rows.length)
+    return <Nothing icon="download" title="Nothing due" text="A delivery shows here once a campaign has a date." />;
   return (
     <ItemGroup as="ul">
       {rows.map((d) => (

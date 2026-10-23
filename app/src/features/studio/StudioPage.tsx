@@ -40,7 +40,16 @@ import {
   WithTooltip,
   useToast,
 } from "@fume/ui";
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+  type PointerEvent,
+  type ReactNode,
+} from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   useBrandWorkspace,
@@ -71,7 +80,11 @@ const lcFirst = (t: string) => (/^[A-Z][a-z]/.test(t) ? t[0]!.toLowerCase() + t.
 
 export function StudioPage() {
   const { workspaceId = "", sessionId } = useParams();
-  return sessionId ? <StudioDesk key={sessionId} workspaceId={workspaceId} sessionId={sessionId} /> : <StudioStart workspaceId={workspaceId} />;
+  return sessionId ? (
+    <StudioDesk key={sessionId} workspaceId={workspaceId} sessionId={sessionId} />
+  ) : (
+    <StudioStart workspaceId={workspaceId} />
+  );
 }
 
 // ─── The start: pick a campaign slot, carry on a session, or start free ─────
@@ -115,9 +128,17 @@ function StudioStart({ workspaceId }: { workspaceId: string }) {
             </Section>
           )}
 
-          <Section title="Pick a campaign slot" titleId="studio-slots" text="Each planned creative of a campaign is a slot. The session fills one, and what you pick goes to check for it.">
+          <Section
+            title="Pick a campaign slot"
+            titleId="studio-slots"
+            text="Each planned creative of a campaign is a slot. The session fills one, and what you pick goes to check for it."
+          >
             {active.length === 0 ? (
-              <Nothing icon="megaphone" title="No campaign in production" text="Start free, or wait for a brief to be approved." />
+              <Nothing
+                icon="megaphone"
+                title="No campaign in production"
+                text="Start free, or wait for a brief to be approved."
+              />
             ) : (
               <div className="ui-app-stack ui-studio-gap">
                 <div className="ui-studio-seg-scroll">
@@ -144,7 +165,13 @@ function StudioStart({ workspaceId }: { workspaceId: string }) {
                             </ItemDescription>
                           </ItemContent>
                           <ItemActions>
-                            <Button size="sm" variant="secondary" icon="layers" disabled={studio.pending} onClick={() => studio.open({ campaignId: c.campaignId, slot })}>
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              icon="layers"
+                              disabled={studio.pending}
+                              onClick={() => studio.open({ campaignId: c.campaignId, slot })}
+                            >
                               Open in the Studio
                             </Button>
                           </ItemActions>
@@ -218,10 +245,30 @@ function StudioDesk({ workspaceId, sessionId }: { workspaceId: string; sessionId
       </Page>
     );
   const campaign = brand.data?.campaigns.find((c) => c.campaign.id === session.data.campaignId)?.campaign;
-  return <Desk session={session.data} kit={kit.data} workspaceId={workspaceId} campaignName={campaign?.name} brandName={brand.data?.workspace.brandName} />;
+  return (
+    <Desk
+      session={session.data}
+      kit={kit.data}
+      workspaceId={workspaceId}
+      campaignName={campaign?.name}
+      brandName={brand.data?.workspace.brandName}
+    />
+  );
 }
 
-function Desk({ session, kit, workspaceId, campaignName, brandName }: { session: StudioSession; kit: StudioKit; workspaceId: string; campaignName?: string; brandName?: string }) {
+function Desk({
+  session,
+  kit,
+  workspaceId,
+  campaignName,
+  brandName,
+}: {
+  session: StudioSession;
+  kit: StudioKit;
+  workspaceId: string;
+  campaignName?: string;
+  brandName?: string;
+}) {
   const toast = useToast();
   const generate = useGenerate();
   const repair = useRepair();
@@ -236,7 +283,9 @@ function Desk({ session, kit, workspaceId, campaignName, brandName }: { session:
   const [recipe, setRecipe] = useState<Recipe>(() => structuredClone(session.recipe));
 
   const selected = gens.find((g) => g.id === selectedId) ?? gens.find((g) => g.id === session.pickedId) ?? gens.at(-1);
-  const compare = gens.find((g) => g.id === compareId && g.id !== selected?.id) ?? gens.find((g) => g.id === session.pickedId && g.id !== selected?.id);
+  const compare =
+    gens.find((g) => g.id === compareId && g.id !== selected?.id) ??
+    gens.find((g) => g.id === session.pickedId && g.id !== selected?.id);
   const picked = gens.find((g) => g.id === session.pickedId);
   const sent = gens.find((g) => g.state === "sent_to_check");
   const making = gens.filter((g) => g.state === "making").length;
@@ -270,7 +319,9 @@ function Desk({ session, kit, workspaceId, campaignName, brandName }: { session:
         onSuccess: (s) => {
           setSelectedId(s.generations.at(-1)?.id);
           setMode("view");
-          toast.done("The Engine is repairing it", { description: "The repair lands as a new branch; the original stays as it was." });
+          toast.done("The Engine is repairing it", {
+            description: "The repair lands as a new branch; the original stays as it was.",
+          });
         },
         onError: (e) => toast.error("The repair didn’t start", { description: e.message }),
       },
@@ -282,11 +333,17 @@ function Desk({ session, kit, workspaceId, campaignName, brandName }: { session:
     selected &&
     pick.mutate(
       { sessionId: session.id, generationId: selected.id },
-      { onSuccess: () => toast.done("Picked for the slot", { description: session.slot ?? "This session’s creative" }), onError: (e) => toast.error("The pick didn’t go through", { description: e.message }) },
+      {
+        onSuccess: () => toast.done("Picked for the slot", { description: session.slot ?? "This session’s creative" }),
+        onError: (e) => toast.error("The pick didn’t go through", { description: e.message }),
+      },
     );
   const onSend = () =>
     send.mutate(session.id, {
-      onSuccess: () => toast.done("Sent to check", { description: `${session.slot ?? "The creative"} waits in the queue for an expert. You cannot check your own work.` }),
+      onSuccess: () =>
+        toast.done("Sent to check", {
+          description: `${session.slot ?? "The creative"} waits in the queue for an expert. You cannot check your own work.`,
+        }),
       onError: (e) => toast.error("It didn’t go to check", { description: e.message }),
     });
 
@@ -341,7 +398,13 @@ function Desk({ session, kit, workspaceId, campaignName, brandName }: { session:
 
         <Inspector g={selected} type={type} session={session} kit={kit} />
 
-        <Branches gens={gens} selectedId={selected?.id} compareId={mode === "compare" ? compare?.id : undefined} onSelect={select} kit={kit} />
+        <Branches
+          gens={gens}
+          selectedId={selected?.id}
+          compareId={mode === "compare" ? compare?.id : undefined}
+          onSelect={select}
+          kit={kit}
+        />
       </div>
     </Page>
   );
@@ -349,7 +412,19 @@ function Desk({ session, kit, workspaceId, campaignName, brandName }: { session:
 
 // ─── Recipe ──────────────────────────────────────────────────────────────────
 
-function RecipePanel({ kit, recipe, onChange, onMake, making }: { kit: StudioKit; recipe: Recipe; onChange: (r: Recipe) => void; onMake: (r: Recipe) => void; making: boolean }) {
+function RecipePanel({
+  kit,
+  recipe,
+  onChange,
+  onMake,
+  making,
+}: {
+  kit: StudioKit;
+  recipe: Recipe;
+  onChange: (r: Recipe) => void;
+  onMake: (r: Recipe) => void;
+  making: boolean;
+}) {
   const set = (patch: Partial<Recipe>) => onChange({ ...recipe, ...patch });
   const type = recipe.mode === "type" ? kit.creativeTypes.find((t) => t.id === recipe.creativeTypeId) : undefined;
   const needs = new Set(recipe.mode === "free" ? (["product", "variant"] as const) : (type?.needs ?? []));
@@ -380,14 +455,21 @@ function RecipePanel({ kit, recipe, onChange, onMake, making }: { kit: StudioKit
     const parts = [
       type ? type.family : "Free",
       recipe.mode === "free" ? recipe.direction?.trim() : undefined,
-      product ? `${brandless(product.name)} ${product.variants?.find((v) => v.id === recipe.variantId)?.name ?? product.variant}` : undefined,
+      product
+        ? `${brandless(product.name)} ${product.variants?.find((v) => v.id === recipe.variantId)?.name ?? product.variant}`
+        : undefined,
       needs.has("angle") ? recipe.angle : undefined,
       cast ? `AI model: ${cast.name}, ${cast.look}` : undefined,
       scene ? `${scene.name}, ${scene.light}` : undefined,
       `${copy.format[recipe.format].label} ${copy.format[recipe.format].ratio}`,
       product ? "label front and true to the Product Truth" : undefined,
     ].filter(Boolean);
-    onMake({ ...recipe, castIds: needs.has("cast") ? recipe.castIds : [], prompt: parts.join(" · "), seed: Math.floor(Math.random() * 90000) + 10000 });
+    onMake({
+      ...recipe,
+      castIds: needs.has("cast") ? recipe.castIds : [],
+      prompt: parts.join(" · "),
+      seed: Math.floor(Math.random() * 90000) + 10000,
+    });
   };
 
   return (
@@ -399,7 +481,12 @@ function RecipePanel({ kit, recipe, onChange, onMake, making }: { kit: StudioKit
             <FieldLabel as="span" id="rc-mode">
               Mode
             </FieldLabel>
-            <SegmentedControl value={recipe.mode} onValueChange={(m) => set({ mode: m as Recipe["mode"] })} aria-labelledby="rc-mode" aria-label="Mode">
+            <SegmentedControl
+              value={recipe.mode}
+              onValueChange={(m) => set({ mode: m as Recipe["mode"] })}
+              aria-labelledby="rc-mode"
+              aria-label="Mode"
+            >
               <SegmentedOption value="free">Free</SegmentedOption>
               <SegmentedOption value="type">Creative Type</SegmentedOption>
             </SegmentedControl>
@@ -421,12 +508,20 @@ function RecipePanel({ kit, recipe, onChange, onMake, making }: { kit: StudioKit
                 value={recipe.creativeTypeId ?? ""}
                 onValueChange={(id) => {
                   const t = kit.creativeTypes.find((x) => x.id === id);
-                  set({ creativeTypeId: id, format: t && !t.formats.includes(recipe.format) ? t.formats[0]! : recipe.format });
+                  set({
+                    creativeTypeId: id,
+                    format: t && !t.formats.includes(recipe.format) ? t.formats[0]! : recipe.format,
+                  });
                 }}
                 aria-labelledby="rc-type"
               >
                 {kit.creativeTypes.map((t) => (
-                  <RadioCard key={t.id} value={t.id} title={t.name} preview={<img className="ui-studio-card-img" src={t.cover} alt="" />} />
+                  <RadioCard
+                    key={t.id}
+                    value={t.id}
+                    title={t.name}
+                    preview={<img className="ui-studio-card-img" src={t.cover} alt="" />}
+                  />
                 ))}
               </RadioGroup>
               {type && (
@@ -465,7 +560,8 @@ function RecipePanel({ kit, recipe, onChange, onMake, making }: { kit: StudioKit
               </RadioGroup>
               {blocked.length > 0 && (
                 <FieldDescription>
-                  {blocked.map((p) => p.name).join(", ")} can’t be used yet: {blocked.length === 1 ? "its" : "their"} facts wait for the customer’s approval in Products.
+                  {blocked.map((p) => p.name).join(", ")} can’t be used yet: {blocked.length === 1 ? "its" : "their"}{" "}
+                  facts wait for the customer’s approval in Products.
                 </FieldDescription>
               )}
             </Field>
@@ -516,7 +612,10 @@ function RecipePanel({ kit, recipe, onChange, onMake, making }: { kit: StudioKit
               <FieldLabel as="span" id="rc-area">
                 Area
               </FieldLabel>
-              <Select value={recipe.angle && AREAS.includes(recipe.angle) ? recipe.angle : AREAS[0]} onValueChange={(angle) => set({ angle })}>
+              <Select
+                value={recipe.angle && AREAS.includes(recipe.angle) ? recipe.angle : AREAS[0]}
+                onValueChange={(angle) => set({ angle })}
+              >
                 <SelectTrigger aria-labelledby="rc-area">
                   <SelectValue />
                 </SelectTrigger>
@@ -536,7 +635,13 @@ function RecipePanel({ kit, recipe, onChange, onMake, making }: { kit: StudioKit
               <FieldLabel as="span" id="rc-cast">
                 Cast
               </FieldLabel>
-              <RadioGroup cards className="ui-studio-cards" value={recipe.castIds[0] ?? ""} onValueChange={(id) => set({ castIds: [id] })} aria-labelledby="rc-cast">
+              <RadioGroup
+                cards
+                className="ui-studio-cards"
+                value={recipe.castIds[0] ?? ""}
+                onValueChange={(id) => set({ castIds: [id] })}
+                aria-labelledby="rc-cast"
+              >
                 {kit.cast.map((c) => (
                   <RadioCard
                     key={c.id}
@@ -553,7 +658,8 @@ function RecipePanel({ kit, recipe, onChange, onMake, making }: { kit: StudioKit
                 ))}
               </RadioGroup>
               <FieldDescription>
-                {cast ? `${cast.look}. Allowed for ${cast.allowedUses.map(lcFirst).join(", ")}. ` : ""}Every creative with a person from the cast carries the AI-person label; never as a customer or a review.
+                {cast ? `${cast.look}. Allowed for ${cast.allowedUses.map(lcFirst).join(", ")}. ` : ""}Every creative
+                with a person from the cast carries the AI-person label; never as a customer or a review.
               </FieldDescription>
             </Field>
           )}
@@ -563,9 +669,20 @@ function RecipePanel({ kit, recipe, onChange, onMake, making }: { kit: StudioKit
               <FieldLabel as="span" id="rc-scene">
                 Scene
               </FieldLabel>
-              <RadioGroup cards className="ui-studio-cards" value={recipe.sceneId ?? ""} onValueChange={(sceneId) => set({ sceneId })} aria-labelledby="rc-scene">
+              <RadioGroup
+                cards
+                className="ui-studio-cards"
+                value={recipe.sceneId ?? ""}
+                onValueChange={(sceneId) => set({ sceneId })}
+                aria-labelledby="rc-scene"
+              >
                 {kit.scenes.map((s) => (
-                  <RadioCard key={s.id} value={s.id} title={s.name} preview={<img className="ui-studio-card-img" src={s.image} alt="" />} />
+                  <RadioCard
+                    key={s.id}
+                    value={s.id}
+                    title={s.name}
+                    preview={<img className="ui-studio-card-img" src={s.image} alt="" />}
+                  />
                 ))}
               </RadioGroup>
               {scene && <FieldDescription>Light: {scene.light}.</FieldDescription>}
@@ -575,7 +692,10 @@ function RecipePanel({ kit, recipe, onChange, onMake, making }: { kit: StudioKit
           {needs.has("layout") && (
             <Field>
               <FieldLabel as="span">Layout</FieldLabel>
-              <FieldDescription>Headline, logo, offer and legal line come from a layout board, built from the brand’s own components. Layout boards open with OpenPencil.</FieldDescription>
+              <FieldDescription>
+                Headline, logo, offer and legal line come from a layout board, built from the brand’s own components.
+                Layout boards open with OpenPencil.
+              </FieldDescription>
             </Field>
           )}
 
@@ -608,7 +728,11 @@ function RecipePanel({ kit, recipe, onChange, onMake, making }: { kit: StudioKit
                       aria-checked={on}
                       aria-label={`Reference ${i + 1} from the boards`}
                       className="ui-studio-ref"
-                      onClick={() => set({ references: on ? recipe.references.filter((r) => r !== src) : [...recipe.references, src] })}
+                      onClick={() =>
+                        set({
+                          references: on ? recipe.references.filter((r) => r !== src) : [...recipe.references, src],
+                        })
+                      }
                     >
                       <img src={src} alt="" />
                       {on && <Icon name="check" />}
@@ -624,7 +748,11 @@ function RecipePanel({ kit, recipe, onChange, onMake, making }: { kit: StudioKit
             <FieldLabel as="span" id="rc-format">
               Format
             </FieldLabel>
-            <SegmentedControl value={recipe.format} onValueChange={(f) => set({ format: f as Format })} aria-label="Format">
+            <SegmentedControl
+              value={recipe.format}
+              onValueChange={(f) => set({ format: f as Format })}
+              aria-label="Format"
+            >
               {formats.map((f) => (
                 <SegmentedOption key={f} value={f}>
                   {copy.format[f].label}
@@ -637,7 +765,11 @@ function RecipePanel({ kit, recipe, onChange, onMake, making }: { kit: StudioKit
             <FieldLabel as="span" id="rc-count">
               How many
             </FieldLabel>
-            <SegmentedControl value={String(recipe.count)} onValueChange={(n) => set({ count: Number(n) })} aria-label="How many">
+            <SegmentedControl
+              value={String(recipe.count)}
+              onValueChange={(n) => set({ count: Number(n) })}
+              aria-label="How many"
+            >
               {COUNTS.map((n) => (
                 <SegmentedOption key={n} value={String(n)}>
                   {n}
@@ -653,7 +785,14 @@ function RecipePanel({ kit, recipe, onChange, onMake, making }: { kit: StudioKit
           {missing ?? `${copy.count(recipe.count, "candidate")} · ${formatName(recipe.format)}`}
           <span className="ui-studio-data">{usd(0.12 * recipe.count)}</span>
         </p>
-        <Button size="lg" icon="fume-engine" className="ui-studio-make-button" disabled={Boolean(missing)} loading={making} onClick={make}>
+        <Button
+          size="lg"
+          icon="fume-engine"
+          className="ui-studio-make-button"
+          disabled={Boolean(missing)}
+          loading={making}
+          onClick={make}
+        >
           Make
         </Button>
       </div>
@@ -702,7 +841,10 @@ function Canvas({
 
   const frac = (e: PointerEvent<HTMLElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
-    return { x: Math.min(Math.max((e.clientX - r.left) / r.width, 0), 1), y: Math.min(Math.max((e.clientY - r.top) / r.height, 0), 1) };
+    return {
+      x: Math.min(Math.max((e.clientX - r.left) / r.width, 0), 1),
+      y: Math.min(Math.max((e.clientY - r.top) / r.height, 0), 1),
+    };
   };
   const regionEvents =
     mode === "repair" && selected && selected.state !== "making"
@@ -728,7 +870,12 @@ function Canvas({
   const shot = (g: Generation | undefined, label?: string, withRegion?: boolean) =>
     !g ? null : (
       <figure className="ui-studio-figure">
-        <span className="ui-studio-shot" data-format={g.recipe.format} data-drawing={withRegion && mode === "repair" ? "" : undefined} {...(withRegion ? regionEvents : {})}>
+        <span
+          className="ui-studio-shot"
+          data-format={g.recipe.format}
+          data-drawing={withRegion && mode === "repair" ? "" : undefined}
+          {...(withRegion ? regionEvents : {})}
+        >
           {g.state === "making" ? (
             <Skeleton shape="creative" ratio={ratioOf(g.recipe.format)} className="ui-studio-shot-skeleton">
               <SkeletonEngine meta={making > 1 ? `Making · ${making} on their way` : "Making"} />
@@ -739,7 +886,14 @@ function Canvas({
           {withRegion && region && (
             <span
               className="ui-studio-region"
-              style={{ "--x": `${region.x * 100}%`, "--y": `${region.y * 100}%`, "--w": `${region.w * 100}%`, "--h": `${region.h * 100}%` } as CSSProperties}
+              style={
+                {
+                  "--x": `${region.x * 100}%`,
+                  "--y": `${region.y * 100}%`,
+                  "--w": `${region.w * 100}%`,
+                  "--h": `${region.h * 100}%`,
+                } as CSSProperties
+              }
               aria-hidden="true"
             />
           )}
@@ -757,17 +911,37 @@ function Canvas({
       {selected && (
         <div className="ui-glass ui-glass--bar ui-studio-tools" role="toolbar" aria-label="Canvas tools">
           <WithTooltip label="Zoom out" shortcut="−">
-            <Button variant="glass-clear" iconOnly icon="zoom-out" aria-label="Zoom out" disabled={zoom <= 1 || mode === "compare"} onClick={() => onZoom(Math.max(1, zoom / 2))} />
+            <Button
+              variant="glass-clear"
+              iconOnly
+              icon="zoom-out"
+              aria-label="Zoom out"
+              disabled={zoom <= 1 || mode === "compare"}
+              onClick={() => onZoom(Math.max(1, zoom / 2))}
+            />
           </WithTooltip>
           <output className="ui-studio-zoom" aria-live="polite">
             {zoom === 1 ? "Fit" : `${zoom * 100} %`}
           </output>
           <WithTooltip label="Zoom in" shortcut="+">
-            <Button variant="glass-clear" iconOnly icon="zoom-in" aria-label="Zoom in" disabled={zoom >= 4 || mode === "compare"} onClick={() => onZoom(Math.min(4, zoom * 2))} />
+            <Button
+              variant="glass-clear"
+              iconOnly
+              icon="zoom-in"
+              aria-label="Zoom in"
+              disabled={zoom >= 4 || mode === "compare"}
+              onClick={() => onZoom(Math.min(4, zoom * 2))}
+            />
           </WithTooltip>
           <span className="ui-studio-tools-gap" aria-hidden="true" />
           <WithTooltip label="Compare two side by side">
-            <Button variant={mode === "compare" ? "glass-white" : "glass-clear"} icon="columns-2" aria-pressed={mode === "compare"} onClick={() => toggle("compare")} className="ui-studio-desk-only">
+            <Button
+              variant={mode === "compare" ? "glass-white" : "glass-clear"}
+              icon="columns-2"
+              aria-pressed={mode === "compare"}
+              onClick={() => toggle("compare")}
+              className="ui-studio-desk-only"
+            >
               Compare
             </Button>
           </WithTooltip>
@@ -785,10 +959,24 @@ function Canvas({
           </WithTooltip>
           <span className="ui-studio-tools-gap ui-studio-desk-only" aria-hidden="true" />
           <WithTooltip label="Reframe to another format, coming later">
-            <Button variant="glass-clear" iconOnly icon="crop" aria-label="Reframe to another format, coming later" aria-disabled="true" className="ui-studio-desk-only" />
+            <Button
+              variant="glass-clear"
+              iconOnly
+              icon="crop"
+              aria-label="Reframe to another format, coming later"
+              aria-disabled="true"
+              className="ui-studio-desk-only"
+            />
           </WithTooltip>
           <WithTooltip label="Upscale, coming later">
-            <Button variant="glass-clear" iconOnly icon="maximize-2" aria-label="Upscale, coming later" aria-disabled="true" className="ui-studio-desk-only" />
+            <Button
+              variant="glass-clear"
+              iconOnly
+              icon="maximize-2"
+              aria-label="Upscale, coming later"
+              aria-disabled="true"
+              className="ui-studio-desk-only"
+            />
           </WithTooltip>
         </div>
       )}
@@ -797,12 +985,18 @@ function Canvas({
         {!selected ? (
           <div className="ui-studio-empty">
             <Icon name="fume-engine" />
-            <p>Nothing made in this session yet. Set the recipe and press Make; the candidates land along the bottom.</p>
+            <p>
+              Nothing made in this session yet. Set the recipe and press Make; the candidates land along the bottom.
+            </p>
           </div>
         ) : mode === "compare" ? (
           <>
             {shot(selected, "A")}
-            {compare ? shot(compare, "B") : <p className="ui-studio-hint">Choose a second candidate along the bottom to set it beside this one.</p>}
+            {compare ? (
+              shot(compare, "B")
+            ) : (
+              <p className="ui-studio-hint">Choose a second candidate along the bottom to set it beside this one.</p>
+            )}
           </>
         ) : (
           shot(selected, undefined, true)
@@ -827,18 +1021,33 @@ function Canvas({
               <label className="ui-field-label" htmlFor="repair-what">
                 What is wrong here, in words
               </label>
-              <Textarea id="repair-what" value={what} onChange={(e) => setWhat(e.target.value)} rows={2} placeholder="The cap reads glossy; make it matte" autoFocus />
+              <Textarea
+                id="repair-what"
+                value={what}
+                onChange={(e) => setWhat(e.target.value)}
+                rows={2}
+                placeholder="The cap reads glossy; make it matte"
+                autoFocus
+              />
               <div className="ui-studio-repair-actions">
                 <Button variant="glass-clear" onClick={() => setRegion(undefined)}>
                   Draw again
                 </Button>
-                <Button type="submit" variant="glass-white" icon="fume-engine" disabled={!what.trim()} loading={repairing}>
+                <Button
+                  type="submit"
+                  variant="glass-white"
+                  icon="fume-engine"
+                  disabled={!what.trim()}
+                  loading={repairing}
+                >
                   Repair
                 </Button>
               </div>
             </>
           ) : (
-            <p className="ui-studio-repair-hint">Drag over the part that is wrong. The Engine repairs only that region, as a new branch.</p>
+            <p className="ui-studio-repair-hint">
+              Drag over the part that is wrong. The Engine repairs only that region, as a new branch.
+            </p>
           )}
         </form>
       )}
@@ -850,14 +1059,26 @@ const ratioOf = (f: Format) => (f === "square" ? "1 / 1" : f === "story" ? "9 / 
 
 // ─── Inspector ───────────────────────────────────────────────────────────────
 
-function Inspector({ g, type, session, kit }: { g?: Generation; type?: CreativeType; session: StudioSession; kit: StudioKit }) {
+function Inspector({
+  g,
+  type,
+  session,
+  kit,
+}: {
+  g?: Generation;
+  type?: CreativeType;
+  session: StudioSession;
+  kit: StudioKit;
+}) {
   const total = session.generations.reduce((n, x) => n + x.cost, 0);
   if (!g)
     return (
       <aside className="ui-studio-inspector" aria-label="Inspector">
         <div className="ui-studio-panel-scroll">
           <h2 className="ui-studio-panel-title">Inspector</h2>
-          <p className="ui-studio-quiet">Choose a candidate to see what the Engine found, where it came from and what it cost.</p>
+          <p className="ui-studio-quiet">
+            Choose a candidate to see what the Engine found, where it came from and what it cost.
+          </p>
         </div>
       </aside>
     );
@@ -879,10 +1100,32 @@ function Inspector({ g, type, session, kit }: { g?: Generation; type?: CreativeT
             </p>
           ) : (
             <DataList>
-              <DataListItem label="Product Truth">{e.productTruth === "pass" ? <Badge icon="circle-check">Pass</Badge> : <Badge variant="ink" icon="triangle-alert">Flagged</Badge>}</DataListItem>
-              <DataListItem label="Brand rules">{e.brandRules === "pass" ? <Badge icon="circle-check">Pass</Badge> : <Badge variant="ink" icon="triangle-alert">Flagged</Badge>}</DataListItem>
+              <DataListItem label="Product Truth">
+                {e.productTruth === "pass" ? (
+                  <Badge icon="circle-check">Pass</Badge>
+                ) : (
+                  <Badge variant="ink" icon="triangle-alert">
+                    Flagged
+                  </Badge>
+                )}
+              </DataListItem>
+              <DataListItem label="Brand rules">
+                {e.brandRules === "pass" ? (
+                  <Badge icon="circle-check">Pass</Badge>
+                ) : (
+                  <Badge variant="ink" icon="triangle-alert">
+                    Flagged
+                  </Badge>
+                )}
+              </DataListItem>
               <DataListItem label="Artefacts">
-                {e.artefacts === "none" ? <Badge icon="circle-check">None</Badge> : e.artefacts === "minor" ? <Badge icon="triangle-alert">Minor</Badge> : <Badge variant="danger">Major</Badge>}
+                {e.artefacts === "none" ? (
+                  <Badge icon="circle-check">None</Badge>
+                ) : e.artefacts === "minor" ? (
+                  <Badge icon="triangle-alert">Minor</Badge>
+                ) : (
+                  <Badge variant="danger">Major</Badge>
+                )}
               </DataListItem>
             </DataList>
           )}
@@ -906,7 +1149,9 @@ function Inspector({ g, type, session, kit }: { g?: Generation; type?: CreativeT
           </h2>
           <DataList>
             <DataListItem label="Mode">{r.mode === "free" ? "Free" : (type?.name ?? "Creative Type")}</DataListItem>
-            {product && <DataListItem label="Product">{`${product.name}${r.variantId ? `, ${product.variants?.find((v) => v.id === r.variantId)?.name ?? ""}` : ""}`}</DataListItem>}
+            {product && (
+              <DataListItem label="Product">{`${product.name}${r.variantId ? `, ${product.variants?.find((v) => v.id === r.variantId)?.name ?? ""}` : ""}`}</DataListItem>
+            )}
             {r.angle && <DataListItem label="Angle">{r.angle}</DataListItem>}
             {cast.length > 0 && (
               <DataListItem label="Cast">
@@ -927,7 +1172,9 @@ function Inspector({ g, type, session, kit }: { g?: Generation; type?: CreativeT
             <Badge icon="lock">Staff only</Badge>
           </div>
           <DataList>
-            <DataListItem label="Route">{r.route ? `${r.route.provider} · ${r.route.model}` : "The Engine chooses"}</DataListItem>
+            <DataListItem label="Route">
+              {r.route ? `${r.route.provider} · ${r.route.model}` : "The Engine chooses"}
+            </DataListItem>
             <DataListItem label="Seed">
               <DataListData>{r.seed ?? "Not set"}</DataListData>
             </DataListItem>
@@ -935,7 +1182,9 @@ function Inspector({ g, type, session, kit }: { g?: Generation; type?: CreativeT
               <DataListData>{g.branch}</DataListData>
             </DataListItem>
             <DataListItem label="Made">
-              <DataListData>{when(g.at) === time(g.at) ? `Today ${time(g.at)}` : `${when(g.at)} ${time(g.at)}`}</DataListData>
+              <DataListData>
+                {when(g.at) === time(g.at) ? `Today ${time(g.at)}` : `${when(g.at)} ${time(g.at)}`}
+              </DataListData>
             </DataListItem>
           </DataList>
           {r.prompt && (
@@ -964,7 +1213,9 @@ function Inspector({ g, type, session, kit }: { g?: Generation; type?: CreativeT
           <h2 className="ui-studio-panel-title" id="in-notes">
             Notes
           </h2>
-          <p className="ui-studio-quiet">{evaluationWords(g) === "Clean" ? "No notes. The Engine found nothing to flag." : evaluationWords(g)}</p>
+          <p className="ui-studio-quiet">
+            {evaluationWords(g) === "Clean" ? "No notes. The Engine found nothing to flag." : evaluationWords(g)}
+          </p>
         </section>
       </div>
     </aside>
@@ -973,7 +1224,19 @@ function Inspector({ g, type, session, kit }: { g?: Generation; type?: CreativeT
 
 // ─── Branches ────────────────────────────────────────────────────────────────
 
-function Branches({ gens, selectedId, compareId, onSelect, kit }: { gens: Generation[]; selectedId?: string; compareId?: string; onSelect: (g: Generation) => void; kit: StudioKit }) {
+function Branches({
+  gens,
+  selectedId,
+  compareId,
+  onSelect,
+  kit,
+}: {
+  gens: Generation[];
+  selectedId?: string;
+  compareId?: string;
+  onSelect: (g: Generation) => void;
+  kit: StudioKit;
+}) {
   const branches = useMemo(() => {
     const by = new Map<number, Generation[]>();
     for (const g of gens) by.set(g.branch, [...(by.get(g.branch) ?? []), g]);
@@ -997,11 +1260,21 @@ function Branches({ gens, selectedId, compareId, onSelect, kit }: { gens: Genera
       {gens.length === 0 ? (
         <p className="ui-studio-quiet">The candidates land here, one branch per Make or repair.</p>
       ) : (
-        <div className="ui-studio-strip" role="listbox" aria-label="Candidates by branch" aria-orientation="horizontal" onKeyDown={onKey}>
+        <div
+          className="ui-studio-strip"
+          role="listbox"
+          aria-label="Candidates by branch"
+          aria-orientation="horizontal"
+          onKeyDown={onKey}
+        >
           {branches.map(([branch, gs]) => {
             const r = gs[0]!;
             const type = kit.creativeTypes.find((t) => t.id === r.recipe.creativeTypeId);
-            const label = r.repair ? `Repair: ${r.repair}` : r.recipe.mode === "free" ? "Free" : (type?.name ?? "Creative Type");
+            const label = r.repair
+              ? `Repair: ${r.repair}`
+              : r.recipe.mode === "free"
+                ? "Free"
+                : (type?.name ?? "Creative Type");
             return (
               <div key={branch} role="group" aria-label={`Branch ${branch}, ${label}`} className="ui-studio-branch">
                 <div className="ui-studio-branch-head">
@@ -1026,7 +1299,11 @@ function Branches({ gens, selectedId, compareId, onSelect, kit }: { gens: Genera
                       data-format={g.recipe.format}
                       onClick={() => onSelect(g)}
                     >
-                      {g.state === "making" ? <Skeleton shape="creative" ratio={ratioOf(g.recipe.format)} index={gs.indexOf(g)} /> : <img src={g.image} alt="" />}
+                      {g.state === "making" ? (
+                        <Skeleton shape="creative" ratio={ratioOf(g.recipe.format)} index={gs.indexOf(g)} />
+                      ) : (
+                        <img src={g.image} alt="" />
+                      )}
                       {g.state === "picked" && (
                         <span className="ui-studio-frame-tag">
                           <Icon name="bookmark" />
@@ -1037,11 +1314,12 @@ function Branches({ gens, selectedId, compareId, onSelect, kit }: { gens: Genera
                           <Icon name="fume-check" />
                         </span>
                       )}
-                      {g.state !== "making" && (g.evaluation.productTruth === "flag" || g.evaluation.brandRules === "flag") && (
-                        <span className="ui-studio-frame-flag">
-                          <Icon name="triangle-alert" />
-                        </span>
-                      )}
+                      {g.state !== "making" &&
+                        (g.evaluation.productTruth === "flag" || g.evaluation.brandRules === "flag") && (
+                          <span className="ui-studio-frame-flag">
+                            <Icon name="triangle-alert" />
+                          </span>
+                        )}
                     </button>
                   ))}
                 </div>

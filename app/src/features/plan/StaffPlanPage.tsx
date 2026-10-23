@@ -51,7 +51,15 @@ export function StaffPlanPage() {
   );
 }
 
-function StaffPlan({ view, plan, workspaceId }: { view: CampaignView; plan: CampaignPlan | null; workspaceId: string }) {
+function StaffPlan({
+  view,
+  plan,
+  workspaceId,
+}: {
+  view: CampaignView;
+  plan: CampaignPlan | null;
+  workspaceId: string;
+}) {
   const people = usePlanPeople();
   const session = useSession().data;
   const brand = session?.workspaces.find((w) => w.id === workspaceId)?.brandName ?? "";
@@ -62,7 +70,11 @@ function StaffPlan({ view, plan, workspaceId }: { view: CampaignView; plan: Camp
   const all = useQaWaiting();
   const next = here.total || all.total;
   const back = <Back to={`/studio/b/${workspaceId}/campaigns`} label="Campaigns" />;
-  const meta = [brand, plan ? `Plan · version ${plan.version}` : "Plan", ...(plan ? [held.held ? copy.checkedBy("you") : stateWords(plan, people, approver)] : [])].filter(Boolean);
+  const meta = [
+    brand,
+    plan ? `Plan · version ${plan.version}` : "Plan",
+    ...(plan ? [held.held ? copy.checkedBy("you") : stateWords(plan, people, approver)] : []),
+  ].filter(Boolean);
   const inCheck = plan?.state === "in_check";
 
   // ⌘↵ / Ctrl+↵: Mark checked, from anywhere on the page but a field (a line's own editor keeps its keys).
@@ -109,7 +121,11 @@ function StaffPlan({ view, plan, workspaceId }: { view: CampaignView; plan: Camp
           words="Fume is writing the plan"
           line={`Ready for your check by ${plan.readyBy ? byDay(plan.readyBy) : "tomorrow"}.`}
           steps={[
-            { label: `${cap(approver)} sent the brief`, when: view.brief.approvedAt ? sentOn(view.brief.approvedAt) : undefined, state: "done" },
+            {
+              label: `${cap(approver)} sent the brief`,
+              when: view.brief.approvedAt ? sentOn(view.brief.approvedAt) : undefined,
+              state: "done",
+            },
             { label: "Fume writes the plan", state: "now" },
             { label: "You check it", state: "ahead" },
             { label: `${cap(approver)} approves it, and the Engine starts`, state: "ahead" },
@@ -133,7 +149,10 @@ function StaffPlan({ view, plan, workspaceId }: { view: CampaignView; plan: Camp
         </>
       ) : null}
       {inCheck && !held.held && !held.sent && (
-        <PageFooter className="ui-plandoc-foot" start={`${mine ? `You changed ${mine} in your check.` : "Change what needs it, line by line."} Marked checked, the plan goes to ${approver}.`}>
+        <PageFooter
+          className="ui-plandoc-foot"
+          start={`${mine ? `You changed ${mine} in your check.` : "Change what needs it, line by line."} Marked checked, the plan goes to ${approver}.`}
+        >
           <Button icon="check" loading={held.sending} onClick={held.mark}>
             Mark checked
             <Kbd className="ui-qa-key" aria-hidden="true">
@@ -150,7 +169,10 @@ function StaffPlan({ view, plan, workspaceId }: { view: CampaignView; plan: Camp
               {/* Round 13 (#28): the Focus pointer in Amber, as Check marks "Checked by you" */}
               <CheckMark state="checked" label={copy.checkedBy("you")} />
               {" · "}
-              {[held.held ? `${cap(approver)} sees it in 10 s` : `It waits on ${approver}`, ...(here.loaded && all.loaded && !next ? ["Nothing else waits on you"] : [])].join(" · ")}
+              {[
+                held.held ? `${cap(approver)} sees it in 10 s` : `It waits on ${approver}`,
+                ...(here.loaded && all.loaded && !next ? ["Nothing else waits on you"] : []),
+              ].join(" · ")}
             </>
           }
         >
@@ -161,7 +183,9 @@ function StaffPlan({ view, plan, workspaceId }: { view: CampaignView; plan: Camp
           )}
           {next > 0 && (
             <Button asChild iconEnd="arrow-right">
-              <Link to={checkPath("fume", here.total ? workspaceId : undefined)}>Next: {copy.creatives(next)} in Check</Link>
+              <Link to={checkPath("fume", here.total ? workspaceId : undefined)}>
+                Next: {copy.creatives(next)} in Check
+              </Link>
             </Button>
           )}
         </PageFooter>
@@ -208,7 +232,11 @@ function useHeldCheck(campaignId: Id, Approver: string) {
     setHeld(true);
     pending.current = send;
     timer.current = window.setTimeout(send, HOLD);
-    shown.current = toast.done("Plan checked", { description: `${Approver} sees it in 10 s.`, duration: HOLD, action: { label: "Undo", onClick: undo } });
+    shown.current = toast.done("Plan checked", {
+      description: `${Approver} sees it in 10 s.`,
+      duration: HOLD,
+      action: { label: "Undo", onClick: undo },
+    });
   };
   useEffect(() => () => pending.current?.(), []);
 
@@ -219,7 +247,8 @@ function useHeldCheck(campaignId: Id, Approver: string) {
 function changedByMe(plan: CampaignPlan, me?: Id): string {
   const direction = chosenOf(plan);
   if (!direction || !me) return "";
-  const since = (x: { changedBy?: string; changedAt?: string }) => x.changedBy === me && (!plan.writtenAt || !x.changedAt || x.changedAt >= plan.writtenAt);
+  const since = (x: { changedBy?: string; changedAt?: string }) =>
+    x.changedBy === me && (!plan.writtenAt || !x.changedAt || x.changedAt >= plan.writtenAt);
   const lines = [...direction.look, ...plan.content].filter(since).length;
   const made = direction.creatives.filter(since).length;
   return [lines ? copy.count(lines, "line") : "", made ? copy.creatives(made) : ""].filter(Boolean).join(" and ");
@@ -233,7 +262,9 @@ function stateWords(plan: CampaignPlan, people: PlanPeople, approver: string): s
     case "writing":
       return "Fume is writing it";
     case "in_check":
-      return people.expert && people.isMe(people.expert.id) ? "Waits on your check" : `In check with ${people.expertName}`;
+      return people.expert && people.isMe(people.expert.id)
+        ? "Waits on your check"
+        : `In check with ${people.expertName}`;
     case "ready":
       return `Waits on ${approver}`;
     case "changes_asked":

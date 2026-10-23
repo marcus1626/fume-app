@@ -20,7 +20,16 @@ import {
   type IconName,
   type NotificationData,
 } from "@fume/ui";
-import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode, type RefObject } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type MouseEvent,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useCampaigns, useCampaignViews, useCatalogue, useDeliveries, usePlans, useThreads } from "../api/hooks";
 import type { CampaignPlan, VersionState } from "../contract";
@@ -44,12 +53,20 @@ export interface Frame {
 
 /** An address at or under `to`, where a star in `to` stands for one segment (round 13). */
 const underPattern = (pathname: string, to: string) =>
-  to.includes("*") ? new RegExp(`^${to.split("*").map((p) => p.replace(/[.+?^${}()|[\]\\]/g, "\\$&")).join("[^/]+")}(?:/|$)`).test(pathname) : under(pathname, to);
+  to.includes("*")
+    ? new RegExp(
+        `^${to
+          .split("*")
+          .map((p) => p.replace(/[.+?^${}()|[\]\\]/g, "\\$&"))
+          .join("[^/]+")}(?:/|$)`,
+      ).test(pathname)
+    : under(pathname, to);
 
 /** Whether a place is the one you are on: its own address, or one it holds, and none it leaves to another place. */
 export const placeIsActive = (pathname: string, item: NavItem) =>
   !(item.except ?? []).some((x) => underPattern(pathname, x)) &&
-  ((item.end ? pathname === item.to : under(pathname, item.to)) || (item.holds ?? []).some((h) => underPattern(pathname, h)));
+  ((item.end ? pathname === item.to : under(pathname, item.to)) ||
+    (item.holds ?? []).some((h) => underPattern(pathname, h)));
 
 export function ShellFrame({
   label,
@@ -116,7 +133,14 @@ export function ShellFrame({
             </div>
           )}
           <div className="ui-app-bar-end">
-            <Button variant="quiet" iconOnly icon="search" aria-label="Search" shortcut="⌘K" onClick={() => setPaletteOpen(true)} />
+            <Button
+              variant="quiet"
+              iconOnly
+              icon="search"
+              aria-label="Search"
+              shortcut="⌘K"
+              onClick={() => setPaletteOpen(true)}
+            />
             {phone ? (
               // On a phone the inbox is a page, in reach of the thumb, not a small glass card at the top (MOB-18)
               <NotificationBell unread={shownBell.unread} onClick={() => navigate("/notifications")} />
@@ -232,11 +256,26 @@ const inside: {
   },
   // The Brand DNA's parts (DWAY-10): each lands on its part of the board (/brand#logo), which marks it
   { to: "/brand#logo", label: "Brand · Logo", icon: "image", keywords: "logo mark wordmark brand dna" },
-  { to: "/brand#colour", label: "Brand · Colour", icon: "palette", keywords: "colour color colours palette swatch brand dna" },
+  {
+    to: "/brand#colour",
+    label: "Brand · Colour",
+    icon: "palette",
+    keywords: "colour color colours palette swatch brand dna",
+  },
   { to: "/brand#type", label: "Brand · Type", icon: "type", keywords: "type typeface font fonts typography brand dna" },
   { to: "/brand#voice", label: "Brand · Voice", icon: "message-square", keywords: "voice tone words copy brand dna" },
-  { to: "/brand#imagery", label: "Brand · Imagery", icon: "image", keywords: "imagery photos pictures style brand dna" },
-  { to: "/brand/understanding", label: "Brand · What Fume understood", icon: "file-text", keywords: "understanding summary brand dna read answers" },
+  {
+    to: "/brand#imagery",
+    label: "Brand · Imagery",
+    icon: "image",
+    keywords: "imagery photos pictures style brand dna",
+  },
+  {
+    to: "/brand/understanding",
+    label: "Brand · What Fume understood",
+    icon: "file-text",
+    keywords: "understanding summary brand dna read answers",
+  },
   { to: "/brand/check", label: "Brand · Confirm your brand", icon: "check", keywords: "check confirm finds brand dna" },
 ];
 
@@ -282,7 +321,17 @@ export interface PaletteProps {
 }
 
 /** ⌘K: the places and what is inside them, every campaign, and the few things a person starts from anywhere. */
-function Palette({ open, onOpenChange, nav, onBookMeeting, parts = paletteParts.customer, extra, settings = "/settings", meeting = true, link }: PaletteProps) {
+function Palette({
+  open,
+  onOpenChange,
+  nav,
+  onBookMeeting,
+  parts = paletteParts.customer,
+  extra,
+  settings = "/settings",
+  meeting = true,
+  link,
+}: PaletteProps) {
   const go = useNavigate();
   const navigate = useCallback((to: string) => go(link ? link(to) : to), [go, link]);
   const campaigns = useCampaigns();
@@ -291,13 +340,22 @@ function Palette({ open, onOpenChange, nav, onBookMeeting, parts = paletteParts.
   const deliveries = useDeliveries();
   const threads = useThreads();
   // … and every creative she can see (DWAY-10), loaded once the palette opens
-  const campaignIds = useMemo(() => (open && parts.creatives ? (campaigns.data ?? []).map((c) => c.id) : []), [open, parts.creatives, campaigns.data]);
+  const campaignIds = useMemo(
+    () => (open && parts.creatives ? (campaigns.data ?? []).map((c) => c.id) : []),
+    [open, parts.creatives, campaigns.data],
+  );
   const views = useCampaignViews(campaignIds);
   // … and each campaign's plan (round 10, FLOWS §22.3): "Winter gifting · Plan" opens the Plan tab. A campaign whose
   // brief is not sent has no plan yet: "Hand Balm introduction · Brief" opens the same tab, where she sends it.
-  const planIds = useMemo(() => (open && parts.campaigns ? (campaigns.data ?? []).filter((c) => c.stage !== "brief").map((c) => c.id) : []), [open, parts.campaigns, campaigns.data]);
+  const planIds = useMemo(
+    () => (open && parts.campaigns ? (campaigns.data ?? []).filter((c) => c.stage !== "brief").map((c) => c.id) : []),
+    [open, parts.campaigns, campaigns.data],
+  );
   const plans = usePlans(planIds);
-  const planOf = useMemo(() => new Map((plans.data ?? []).filter((p): p is CampaignPlan => Boolean(p)).map((p) => [p.campaignId, p])), [plans.data]);
+  const planOf = useMemo(
+    () => new Map((plans.data ?? []).filter((p): p is CampaignPlan => Boolean(p)).map((p) => [p.campaignId, p])),
+    [plans.data],
+  );
   const creatives = useMemo<CommandPaletteItem[]>(() => {
     const out: CommandPaletteItem[] = [];
     for (const v of views.data ?? []) {
@@ -362,14 +420,16 @@ function Palette({ open, onOpenChange, nav, onBookMeeting, parts = paletteParts.
   const items = useMemo<CommandPaletteItem[]>(
     () => [
       ...(parts.start ? start : []),
-      ...nav.flatMap((n) => [n, ...(n.sub ?? [])]).map((n) => ({
-        id: `go-${n.to}`,
-        group: "Go to",
-        label: n.label,
-        icon: n.icon,
-        keywords: n.keywords ?? keywords[n.to],
-        onSelect: () => navigate(n.to),
-      })),
+      ...nav
+        .flatMap((n) => [n, ...(n.sub ?? [])])
+        .map((n) => ({
+          id: `go-${n.to}`,
+          group: "Go to",
+          label: n.label,
+          icon: n.icon,
+          keywords: n.keywords ?? keywords[n.to],
+          onSelect: () => navigate(n.to),
+        })),
       // The places inside the four, by the names people may still look for (not one the sidebar has itself, round 13)
       ...(parts.brand ? inside.filter((n) => !nav.some((x) => x.to === n.to)) : []).map((n) => ({
         id: `in-${n.to}`,
@@ -392,7 +452,7 @@ function Palette({ open, onOpenChange, nav, onBookMeeting, parts = paletteParts.
           ]
         : []),
       ...(extra ?? []),
-      ...(parts.campaigns ? campaigns.data ?? [] : []).flatMap((c) => {
+      ...(parts.campaigns ? (campaigns.data ?? []) : []).flatMap((c) => {
         const plan = planOf.get(c.id);
         const tab: CommandPaletteItem | undefined = plan
           ? {
@@ -425,7 +485,7 @@ function Palette({ open, onOpenChange, nav, onBookMeeting, parts = paletteParts.
         };
         return tab ? [row, tab] : [row];
       }),
-      ...(parts.brand ? catalogue.data?.products ?? [] : []).map((p) => ({
+      ...(parts.brand ? (catalogue.data?.products ?? []) : []).map((p) => ({
         id: `p-${p.id}`,
         group: "Products",
         label: `${p.name} ${p.variant}`.trim(),
@@ -434,7 +494,7 @@ function Palette({ open, onOpenChange, nav, onBookMeeting, parts = paletteParts.
         meta: p.state === "verified" ? "Confirmed" : copy.waitingOnYou,
         onSelect: () => navigate(`/brand/products/${p.id}`),
       })),
-      ...(parts.brand ? deliveries.data ?? [] : []).map((d) => ({
+      ...(parts.brand ? (deliveries.data ?? []) : []).map((d) => ({
         id: `d-${d.id}`,
         group: "Deliveries",
         label: d.name,
@@ -445,7 +505,7 @@ function Palette({ open, onOpenChange, nav, onBookMeeting, parts = paletteParts.
       })),
       ...(parts.creatives ? creatives : []),
       // Where a campaign was talked about in the one Fume chat (round 10, FLOWS §23: one conversation, no list; DWAY-10)
-      ...(parts.chat ? threads.data ?? [] : []).map((t) => ({
+      ...(parts.chat ? (threads.data ?? []) : []).map((t) => ({
         id: `t-${t.id}`,
         group: "In the Fume chat",
         label: t.campaignId ? t.title : "Fume",
@@ -455,7 +515,27 @@ function Palette({ open, onOpenChange, nav, onBookMeeting, parts = paletteParts.
         onSelect: () => navigate(`/fume/${t.id}`),
       })),
     ],
-    [parts, start, extra, settings, campaigns.data, planOf, catalogue.data, deliveries.data, threads.data, creatives, nav, navigate],
+    [
+      parts,
+      start,
+      extra,
+      settings,
+      campaigns.data,
+      planOf,
+      catalogue.data,
+      deliveries.data,
+      threads.data,
+      creatives,
+      nav,
+      navigate,
+    ],
   );
-  return <CommandPalette items={items} open={open} onOpenChange={onOpenChange} placeholder="Search creatives, campaigns and actions" />;
+  return (
+    <CommandPalette
+      items={items}
+      open={open}
+      onOpenChange={onOpenChange}
+      placeholder="Search creatives, campaigns and actions"
+    />
+  );
 }

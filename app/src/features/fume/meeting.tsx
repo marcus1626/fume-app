@@ -50,8 +50,7 @@ export const slotTime = (iso: string) =>
   }).format(Date.parse(iso));
 export const slotLabel = (iso: string) => `${slotDay(iso)}, ${slotTime(iso)}`;
 /** The day of an instant in Oslo, as YYYY-MM-DD (the calendar's ?d=). */
-export const osloDay = (iso: string) =>
-  new Intl.DateTimeFormat("en-CA", { timeZone: TZ }).format(Date.parse(iso));
+export const osloDay = (iso: string) => new Intl.DateTimeFormat("en-CA", { timeZone: TZ }).format(Date.parse(iso));
 
 /** The person at Fume who takes meetings for this brand: the operator, else whoever is on the Fume team. */
 export function useHost(): User | undefined {
@@ -80,15 +79,7 @@ export interface SlotFormProps {
 }
 
 /** The topic, the times and the Book action. */
-export function SlotForm({
-  slots,
-  idBase,
-  glass,
-  footer,
-  onBooked,
-  quiet,
-  topic: about,
-}: SlotFormProps) {
+export function SlotForm({ slots, idBase, glass, footer, onBooked, quiet, topic: about }: SlotFormProps) {
   const book = useBookMeeting();
   const toast = useToast();
   const navigate = useNavigate();
@@ -122,20 +113,15 @@ export function SlotForm({
         onSuccess: (meeting) => {
           if (!quiet)
             toast.done(`Booked: ${slotLabel(meeting.at)}`, {
-            description: host
-              ? `${words}, with ${firstName(host.name)} at Fume.`
-              : `${words}.`,
-            action: {
-              label: "See the calendar",
-              onClick: () => navigate(`/calendar?d=${osloDay(meeting.at)}`),
-            },
-          });
+              description: host ? `${words}, with ${firstName(host.name)} at Fume.` : `${words}.`,
+              action: {
+                label: "See the calendar",
+                onClick: () => navigate(`/calendar?d=${osloDay(meeting.at)}`),
+              },
+            });
           onBooked?.(meeting);
         },
-        onError: () =>
-          toast.error(
-            "The meeting wasn’t booked. Pick the time again in a moment.",
-          ),
+        onError: () => toast.error("The meeting wasn’t booked. Pick the time again in a moment."),
       },
     );
   };
@@ -162,8 +148,7 @@ export function SlotForm({
         </FieldLabel>
         {slots.length === 0 ? (
           <FieldDescription>
-            Fume’s people have no free times this week. Ask Fume in the
-            conversation, and we find one.
+            Fume’s people have no free times this week. Ask Fume in the conversation, and we find one.
           </FieldDescription>
         ) : (
           <ToggleGroup
@@ -187,8 +172,7 @@ export function SlotForm({
           </ToggleGroup>
         )}
         <FieldDescription>
-          30 minutes{host ? ` with ${firstName(host.name)}` : ""}, on a video
-          call. Times are Oslo time.
+          30 minutes{host ? ` with ${firstName(host.name)}` : ""}, on a video call. Times are Oslo time.
         </FieldDescription>
       </Field>
       <Field>
@@ -237,35 +221,18 @@ export function SlotForm({
 }
 
 /** Book a meeting, from anywhere: the person menu, ⌘K, Settings. */
-export function BookMeetingDialog({
-  open,
-  onOpenChange,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}) {
+export function BookMeetingDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const id = useId().replace(/:/g, "");
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="md">
-        {open && (
-          <BookMeetingBody
-            idBase={`book-${id}`}
-            onDone={() => onOpenChange(false)}
-          />
-        )}
+        {open && <BookMeetingBody idBase={`book-${id}`} onDone={() => onOpenChange(false)} />}
       </DialogContent>
     </Dialog>
   );
 }
 
-function BookMeetingBody({
-  idBase,
-  onDone,
-}: {
-  idBase: string;
-  onDone: () => void;
-}) {
+function BookMeetingBody({ idBase, onDone }: { idBase: string; onDone: () => void }) {
   const slots = useMeetingSlots();
   const host = useHost();
   return (
@@ -273,18 +240,12 @@ function BookMeetingBody({
       <DialogHeader>
         <DialogTitle>Book a meeting with Fume</DialogTitle>
         <DialogDescription>
-          {host ? `${firstName(host.name)} at Fume` : "Someone at Fume"} talks
-          it through with you. The meeting lands in your calendar.
+          {host ? `${firstName(host.name)} at Fume` : "Someone at Fume"} talks it through with you. The meeting lands in
+          your calendar.
         </DialogDescription>
       </DialogHeader>
       {slots.data ? (
-        <SlotForm
-          slots={slots.data}
-          idBase={idBase}
-          glass
-          footer
-          onBooked={onDone}
-        />
+        <SlotForm slots={slots.data} idBase={idBase} glass footer onBooked={onDone} />
       ) : (
         <DialogBody>
           <div className="ui-meeting-wait">

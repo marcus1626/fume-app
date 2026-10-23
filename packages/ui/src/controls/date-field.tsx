@@ -13,7 +13,16 @@
 //   <DateField id="day" value={day} onChange={setDay} min="2026-10-14" />
 //   <FieldLabel as="span" id="time-l">Time</FieldLabel>
 //   <TimeField aria-labelledby="time-l" value={time} onChange={setTime} />
-import { forwardRef, useEffect, useId, useMemo, useRef, useState, type ButtonHTMLAttributes, type KeyboardEvent } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type ButtonHTMLAttributes,
+  type KeyboardEvent,
+} from "react";
 import { cx } from "../cx";
 import { Icon } from "../icons";
 import { Popover, PopoverContent, PopoverTrigger } from "../overlays/popover";
@@ -25,7 +34,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 
 const DAY_MS = 86_400_000;
 const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 const pad = (n: number) => String(n).padStart(2, "0");
 
 function noonOf(s: string | undefined): number {
@@ -63,7 +85,10 @@ function longLabel(s: string): string {
 
 /* ---------- DateField ---------- */
 
-export interface DateFieldProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "value" | "onChange" | "type" | "children" | "placeholder"> {
+export interface DateFieldProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  "value" | "onChange" | "type" | "children" | "placeholder"
+> {
   /** The day, "YYYY-MM-DD", or "" for none. */
   value: string;
   /** The picked day ("YYYY-MM-DD"), or "" after Clear. */
@@ -85,7 +110,22 @@ export interface DateFieldProps extends Omit<ButtonHTMLAttributes<HTMLButtonElem
 
 /** A day field: the field's look, the day in words, and the month in a glass popover. No native date input. */
 export const DateField = forwardRef<HTMLButtonElement, DateFieldProps>(function DateField(
-  { value, onChange, size = "md", min, max, required, placeholder = "Pick a day", today, container, className, disabled, onKeyDown, "aria-describedby": describedBy, ...props },
+  {
+    value,
+    onChange,
+    size = "md",
+    min,
+    max,
+    required,
+    placeholder = "Pick a day",
+    today,
+    container,
+    className,
+    disabled,
+    onKeyDown,
+    "aria-describedby": describedBy,
+    ...props
+  },
   ref,
 ) {
   const [open, setOpen] = useState(false);
@@ -134,7 +174,9 @@ export const DateField = forwardRef<HTMLButtonElement, DateFieldProps>(function 
         onOpenAutoFocus={(event) => {
           // the chosen day (or today) takes the focus, not the month's first button
           event.preventDefault();
-          (event.currentTarget as HTMLElement).querySelector<HTMLElement>('.ui-calendar-day[tabindex="0"]')?.focus({ preventScroll: true });
+          (event.currentTarget as HTMLElement)
+            .querySelector<HTMLElement>('.ui-calendar-day[tabindex="0"]')
+            ?.focus({ preventScroll: true });
         }}
       >
         <Month
@@ -190,7 +232,8 @@ function Month({ value, today, min, max, onPick, onClear }: MonthProps) {
     if (step) next = addDays(focus, step);
     else if (event.key === "Home") next = addDays(focus, -weekdayOf(focus));
     else if (event.key === "End") next = addDays(focus, 6 - weekdayOf(focus));
-    else if (event.key === "PageUp" || event.key === "PageDown") next = addMonths(focus, (event.key === "PageUp" ? -1 : 1) * (event.shiftKey ? 12 : 1));
+    else if (event.key === "PageUp" || event.key === "PageDown")
+      next = addMonths(focus, (event.key === "PageUp" ? -1 : 1) * (event.shiftKey ? 12 : 1));
     if (!next) return;
     event.preventDefault();
     setKeyed(true);
@@ -321,7 +364,19 @@ export interface TimeFieldProps {
 }
 
 /** A time field: the glass Select with 24-hour slots ("20:00"). No native time input. */
-export function TimeField({ value, onChange, step = 15, id, size, disabled, required, placeholder = "Pick a time", className, container, ...aria }: TimeFieldProps) {
+export function TimeField({
+  value,
+  onChange,
+  step = 15,
+  id,
+  size,
+  disabled,
+  required,
+  placeholder = "Pick a time",
+  className,
+  container,
+  ...aria
+}: TimeFieldProps) {
   const slots = useMemo(() => timeSlots(step, value), [step, value]);
   const [open, setOpen] = useState(false);
   const list = useRef<HTMLDivElement>(null);

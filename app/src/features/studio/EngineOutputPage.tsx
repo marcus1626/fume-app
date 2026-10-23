@@ -22,24 +22,41 @@ export function EngineOutputPage() {
   const [show, setShow] = useState<Show>("all");
   const v = view.data;
   const all = v ? distinctOutput(v.engineOutput).flatMap((o) => o.generations) : [];
-  const flagged = all.filter((g) => g.evaluation.productTruth === "flag" || g.evaluation.brandRules === "flag" || g.evaluation.artefacts !== "none");
+  const flagged = all.filter(
+    (g) =>
+      g.evaluation.productTruth === "flag" || g.evaluation.brandRules === "flag" || g.evaluation.artefacts !== "none",
+  );
 
   return (
     <Page title={v ? `${v.workspace.brandName} Engine output` : "Engine output"}>
       <PageHeader
         title="Engine output"
-        description={v ? `Every run for ${v.workspace.brandName} and what it made, best first. Open a version in the Studio to work on it.` : undefined}
-        meta={v ? [copy.count(v.engineOutput.length, "run"), copy.count(all.length, "version"), `${flagged.length} flagged`] : undefined}
+        description={
+          v
+            ? `Every run for ${v.workspace.brandName} and what it made, best first. Open a version in the Studio to work on it.`
+            : undefined
+        }
+        meta={
+          v
+            ? [copy.count(v.engineOutput.length, "run"), copy.count(all.length, "version"), `${flagged.length} flagged`]
+            : undefined
+        }
       />
 
       <Query query={view} loading="Loading what the Engine made">
         {(v) =>
           v.engineOutput.length === 0 ? (
-            <Nothing icon="fume-engine" title="No runs yet" text={`The Engine’s runs for ${v.workspace.brandName} show here with every candidate they made.`} />
+            <Nothing
+              icon="fume-engine"
+              title="No runs yet"
+              text={`The Engine’s runs for ${v.workspace.brandName} show here with every candidate they made.`}
+            />
           ) : (
             <>
               {distinctOutput(v.engineOutput).map(({ run, campaign, generations }, i) => {
-                const shown = bestFirst(generations).filter((g) => (show === "all" ? true : show === "flagged" ? flagged.includes(g) : !flagged.includes(g)));
+                const shown = bestFirst(generations).filter((g) =>
+                  show === "all" ? true : show === "flagged" ? flagged.includes(g) : !flagged.includes(g),
+                );
                 return (
                   <Section
                     key={run.id}
@@ -48,7 +65,11 @@ export function EngineOutputPage() {
                     titleId={`run-${run.id}`}
                     action={
                       i === 0 ? (
-                        <SegmentedControl value={show} onValueChange={(s) => setShow(s as Show)} aria-label="Which versions to show">
+                        <SegmentedControl
+                          value={show}
+                          onValueChange={(s) => setShow(s as Show)}
+                          aria-label="Which versions to show"
+                        >
                           <SegmentedOption value="all" count={all.length}>
                             All
                           </SegmentedOption>
@@ -66,7 +87,15 @@ export function EngineOutputPage() {
                       {...runProps(run)}
                       actions={
                         generations.length ? (
-                          <Button size="sm" variant="secondary" icon="layers" disabled={studio.pending} onClick={() => studio.open({ campaignId: campaign.id, fromGenerationId: bestFirst(generations)[0]!.id })}>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            icon="layers"
+                            disabled={studio.pending}
+                            onClick={() =>
+                              studio.open({ campaignId: campaign.id, fromGenerationId: bestFirst(generations)[0]!.id })
+                            }
+                          >
                             Open the best in the Studio
                           </Button>
                         ) : undefined
@@ -75,12 +104,18 @@ export function EngineOutputPage() {
                     {shown.length ? (
                       <CreativeGrid>
                         {shown.map((g) => (
-                          <CandidateTile key={g.id} g={g} onOpen={() => studio.open({ campaignId: campaign.id, fromGenerationId: g.id })} />
+                          <CandidateTile
+                            key={g.id}
+                            g={g}
+                            onOpen={() => studio.open({ campaignId: campaign.id, fromGenerationId: g.id })}
+                          />
                         ))}
                       </CreativeGrid>
                     ) : (
                       <p className="ui-app-section-text">
-                        {generations.length ? "No versions of this run match." : "This run’s creatives went to Check; no Studio document holds them."}
+                        {generations.length
+                          ? "No versions of this run match."
+                          : "This run’s creatives went to Check; no Studio document holds them."}
                       </p>
                     )}
                   </Section>

@@ -14,7 +14,15 @@
 // like every comment, and the creative is marked, so its open comments are the change list. The end offers "Start the
 // changes" for the marked ones (the review page has it too). Keys: A approves, N marks Needs changes, C comments.
 import { Button, Icon, Input, Kbd, KbdGroup, Progress, ViewerLayer, ViewerLayerTitle, useToast } from "@fume/ui";
-import { useEffect, useId, useRef, useState, type CSSProperties, type FormEvent, type PointerEvent as ReactPointerEvent } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type CSSProperties,
+  type FormEvent,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { useAddReviewComment, useApprove, usePeople, useSession, useUnapprove } from "../../api/hooks";
 import type { Campaign, Creative, Id } from "../../contract";
@@ -264,19 +272,32 @@ export function SwipeThrough({ campaign, set, all, approver, canApprove, threadI
   const tap = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (!ask) return;
     const b = e.currentTarget.getBoundingClientRect();
-    setPin({ x: Math.min(1, Math.max(0, (e.clientX - b.left) / b.width)), y: Math.min(1, Math.max(0, (e.clientY - b.top) / b.height)) });
+    setPin({
+      x: Math.min(1, Math.max(0, (e.clientX - b.left) / b.width)),
+      y: Math.min(1, Math.max(0, (e.clientY - b.top) / b.height)),
+    });
     field.current?.focus();
   };
 
   const count = (v: Verdict) => set.filter((c) => made[c.id] === v).length;
   const changes = tray.items.filter((d) => set.some((c) => c.id === d.creativeId)).length;
   const summary =
-    [count("yes") ? (canApprove ? `${count("yes")} approved` : `${count("yes")} look good`) : "", changes ? `${changes} ${changes === 1 ? "needs" : "need"} changes` : "", count("comment") ? copy.count(count("comment"), "comment") : ""]
+    [
+      count("yes") ? (canApprove ? `${count("yes")} approved` : `${count("yes")} look good`) : "",
+      changes ? `${changes} ${changes === 1 ? "needs" : "need"} changes` : "",
+      count("comment") ? copy.count(count("comment"), "comment") : "",
+    ]
       .filter(Boolean)
       .join(" · ") || "Nothing decided";
 
   return (
-    <ViewerLayer ref={layer} className="ui-rv ui-sw" label={`Swipe through ${campaign.name}`} onClose={onClose} onEscape={onEscape}>
+    <ViewerLayer
+      ref={layer}
+      className="ui-rv ui-sw"
+      label={`Swipe through ${campaign.name}`}
+      onClose={onClose}
+      onEscape={onEscape}
+    >
       <div className="ui-sw-screen">
         <header className="ui-rv-bar">
           <Button variant="glass-clear" iconOnly icon="x" aria-label="Close" onClick={onClose} />
@@ -290,14 +311,22 @@ export function SwipeThrough({ campaign, set, all, approver, canApprove, threadI
               {!done && creative.current.checkedBy && (
                 <span className="ui-rv-checked">
                   <Icon name="fume-check" />
-                  {creative.current.checkedBy === me ? "Checked by you" : copy.checkedBy(people.name(creative.current.checkedBy))}
+                  {creative.current.checkedBy === me
+                    ? "Checked by you"
+                    : copy.checkedBy(people.name(creative.current.checkedBy))}
                 </span>
               )}
             </span>
           </div>
           <span className="ui-rv-count">{done ? `${n} of ${n}` : `${i + 1} of ${n}`}</span>
         </header>
-        <Progress glass className="ui-sw-progress" value={Math.min(i, n)} max={n} aria-label={`${Math.min(i, n)} of ${n} gone through`} />
+        <Progress
+          glass
+          className="ui-sw-progress"
+          value={Math.min(i, n)}
+          max={n}
+          aria-label={`${Math.min(i, n)} of ${n} gone through`}
+        />
 
         {done ? (
           <>
@@ -315,10 +344,23 @@ export function SwipeThrough({ campaign, set, all, approver, canApprove, threadI
               <ol className="ui-sw-grid">
                 {set.map((c, x) => {
                   const v = made[c.id] ?? (tray.has(c.id) ? "no" : c.current.state === "approved" ? "yes" : undefined);
-                  const words = v === "yes" ? yesWord.replace("Approve", "Approved") : v === "no" ? "Needs changes" : v === "comment" ? "Comment" : "Not decided";
+                  const words =
+                    v === "yes"
+                      ? yesWord.replace("Approve", "Approved")
+                      : v === "no"
+                        ? "Needs changes"
+                        : v === "comment"
+                          ? "Comment"
+                          : "Not decided";
                   return (
                     <li key={c.id}>
-                      <button type="button" className="ui-sw-tile" data-verdict={v ?? "open"} onClick={() => setI(x)} aria-label={`${c.title}, ${shapeLine(c)}: ${words}. Look again`}>
+                      <button
+                        type="button"
+                        className="ui-sw-tile"
+                        data-verdict={v ?? "open"}
+                        onClick={() => setI(x)}
+                        aria-label={`${c.title}, ${shapeLine(c)}: ${words}. Look again`}
+                      >
                         <span className="ui-sw-tile-media" data-format={c.format}>
                           <img src={c.current.image} alt="" />
                         </span>
@@ -369,7 +411,12 @@ export function SwipeThrough({ campaign, set, all, approver, canApprove, threadI
               >
                 <img src={creative.current.image} alt={creative.title} draggable={false} />
                 {pin && (
-                  <span className="ui-qg-pin is-new" data-state="draft" style={{ "--x": `${pin.x * 100}%`, "--y": `${pin.y * 100}%` } as CSSProperties} aria-hidden="true">
+                  <span
+                    className="ui-qg-pin is-new"
+                    data-state="draft"
+                    style={{ "--x": `${pin.x * 100}%`, "--y": `${pin.y * 100}%` } as CSSProperties}
+                    aria-hidden="true"
+                  >
                     1
                   </span>
                 )}
@@ -409,9 +456,19 @@ export function SwipeThrough({ campaign, set, all, approver, canApprove, threadI
                   </Button>
                 </form>
               ) : decided ? (
-                <div className="ui-sw-pills" role="group" aria-label={`${creative.title}: ${approved ? "approved" : "needs changes"}`}>
+                <div
+                  className="ui-sw-pills"
+                  role="group"
+                  aria-label={`${creative.title}: ${approved ? "approved" : "needs changes"}`}
+                >
                   {approved ? (
-                    <Button variant="glass-clear" size="lg" icon="rotate-ccw" onClick={undoApproval} loading={unapprove.isPending}>
+                    <Button
+                      variant="glass-clear"
+                      size="lg"
+                      icon="rotate-ccw"
+                      onClick={undoApproval}
+                      loading={unapprove.isPending}
+                    >
                       Undo the approval
                     </Button>
                   ) : (
@@ -429,7 +486,13 @@ export function SwipeThrough({ campaign, set, all, approver, canApprove, threadI
                     <Button variant="glass-clear" size="lg" icon="message-square" onClick={() => askFor("no")}>
                       Needs changes
                     </Button>
-                    <Button variant="glass-clear" size="lg" icon="pencil" className="ui-sw-pill-icon" onClick={() => askFor("comment")}>
+                    <Button
+                      variant="glass-clear"
+                      size="lg"
+                      icon="pencil"
+                      className="ui-sw-pill-icon"
+                      onClick={() => askFor("comment")}
+                    >
                       <span className="ui-sw-pill-word">Comment</span>
                     </Button>
                     <Button variant="glass-white" size="lg" icon="check" onClick={yes}>
@@ -450,7 +513,9 @@ export function SwipeThrough({ campaign, set, all, approver, canApprove, threadI
                       </>
                     )}
                   </p>
-                  <p className="ui-sw-touch">Swipe right to {yesWord.toLowerCase()}, left when it needs changes, up to comment.</p>
+                  <p className="ui-sw-touch">
+                    Swipe right to {yesWord.toLowerCase()}, left when it needs changes, up to comment.
+                  </p>
                 </>
               )}
             </div>

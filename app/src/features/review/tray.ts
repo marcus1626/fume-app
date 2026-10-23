@@ -69,7 +69,8 @@ const subscribe = (l: () => void) => {
 };
 
 /** True when the mark still applies: the creative waits on her, at the version she marked. */
-const applies = (d: ChangeDraft, c: Creative | undefined) => Boolean(c && c.current.id === d.versionId && c.current.state === "checked");
+const applies = (d: ChangeDraft, c: Creative | undefined) =>
+  Boolean(c && c.current.id === d.versionId && c.current.state === "checked");
 
 export interface ChangeTray {
   /** The marks that still apply: each creative still waits on her, at the version she marked. */
@@ -145,6 +146,7 @@ export function useMarksAcross(campaignIds: Id[]): Set<string> {
 }
 
 /** Whether a creative is marked, by the set useMarksAcross gives. */
-export const isMarked = (marks: Set<string>, c: Creative) => c.current.state === "checked" && marks.has(`${c.id}:${c.current.id}`);
+export const isMarked = (marks: Set<string>, c: Creative) =>
+  c.current.state === "checked" && marks.has(`${c.id}:${c.current.id}`);
 
 const EMPTY: ChangeDraft[] = [];

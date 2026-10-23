@@ -31,7 +31,8 @@ export interface ClientPerson {
 }
 
 /** "Approves", "Can comment", "Can look": a client person's part, as the panels say it. */
-export const clientRole = (p: ClientPerson) => (p.approves ? "Approves" : p.role === "member" ? "Can comment" : "Can look");
+export const clientRole = (p: ClientPerson) =>
+  p.approves ? "Approves" : p.role === "member" ? "Can comment" : "Can look";
 
 /** The client's own people in this brand, the ones who approve first. */
 export function useClientPeople(enabled = true): { people: ClientPerson[]; loading: boolean } {
@@ -40,7 +41,11 @@ export function useClientPeople(enabled = true): { people: ClientPerson[]; loadi
     () =>
       (team.data?.members ?? [])
         .filter((m) => !m.user.agency)
-        .map((m) => ({ user: m.user, role: m.membership.role, approves: m.membership.role === "owner" || m.membership.role === "approver" }))
+        .map((m) => ({
+          user: m.user,
+          role: m.membership.role,
+          approves: m.membership.role === "owner" || m.membership.role === "approver",
+        }))
         .sort((a, b) => Number(b.approves) - Number(a.approves)),
     [team.data],
   );
@@ -74,7 +79,10 @@ export function useCampaignSends(campaignId: Id | undefined, enabled: boolean) {
   );
   /** The checked creatives split by where they are: the agency's to send, and the ones with the client. */
   const split = useCallback(
-    <C extends Pick<Creative, "current">>(checked: C[]) => ({ toSend: checked.filter((c) => !sendOf(c.current.id)), withThem: checked.filter((c) => Boolean(sendOf(c.current.id))) }),
+    <C extends Pick<Creative, "current">>(checked: C[]) => ({
+      toSend: checked.filter((c) => !sendOf(c.current.id)),
+      withThem: checked.filter((c) => Boolean(sendOf(c.current.id))),
+    }),
     [sendOf],
   );
   return { sends: list, loading: enabled && sends.isPending, who, sendOf, waitingOn, split };
@@ -82,7 +90,8 @@ export function useCampaignSends(campaignId: Id | undefined, enabled: boolean) {
 
 /** The words for where a checked creative stands, the same in every place the agency sees it (brief r12):
  *  "Checked, not sent" before the agency sends it, "With Maja" after. */
-export const sendState = (withWhom: string | undefined) => (withWhom ? copy.send.withThem(withWhom) : copy.send.notSent);
+export const sendState = (withWhom: string | undefined) =>
+  withWhom ? copy.send.withThem(withWhom) : copy.send.notSent;
 
 /** The status sentence's reader in this frame (DLOAD-1): the client of an agency reads the agency's work as a fact
  *  ("Brygga Studio is planning") and only her approvals as hers; everyone else as the frame says (undefined). */
@@ -96,13 +105,28 @@ export function useStatusOptions(): copy.CampaignStatusOptions | undefined {
 export function sendLine(send: ClientSend, who: string, day: (iso: string) => string): string {
   const to = send.to.length ? `Sent to ${who}` : "A client link";
   // Round 13: a send can carry the plan ("the plan, version 2"), the creatives, or both.
-  const what = [send.plan ? `the plan, version ${send.plan.version}` : "", send.versionIds.length || !send.plan ? copy.creatives(send.versionIds.length) : ""].filter(Boolean);
-  return [`${to} on ${day(send.sentAt)}`, ...what, ...(send.link && send.to.length ? [`client link until ${day(send.link.expiresAt)}`] : send.link ? [`until ${day(send.link.expiresAt)}`] : [])].join(" · ");
+  const what = [
+    send.plan ? `the plan, version ${send.plan.version}` : "",
+    send.versionIds.length || !send.plan ? copy.creatives(send.versionIds.length) : "",
+  ].filter(Boolean);
+  return [
+    `${to} on ${day(send.sentAt)}`,
+    ...what,
+    ...(send.link && send.to.length
+      ? [`client link until ${day(send.link.expiresAt)}`]
+      : send.link
+        ? [`until ${day(send.link.expiresAt)}`]
+        : []),
+  ].join(" · ");
 }
 
 /** "Maja approved · recorded by Nora" ("You approved", "recorded by you" for the person reading it); the plain
  *  "Maja approved" when it was given in Fume or through the client link. */
-export function approvedWords(v: Pick<CreativeVersion, "approvedBy" | "recordedBy">, name: (id?: Id) => string, me: Id): string {
+export function approvedWords(
+  v: Pick<CreativeVersion, "approvedBy" | "recordedBy">,
+  name: (id?: Id) => string,
+  me: Id,
+): string {
   const who = v.approvedBy ? copy.byYou(name(v.approvedBy), v.approvedBy === me, true) : "The client";
   const approved = `${who} approved`;
   return v.recordedBy ? `${approved} · recorded by ${copy.byYou(name(v.recordedBy), v.recordedBy === me)}` : approved;

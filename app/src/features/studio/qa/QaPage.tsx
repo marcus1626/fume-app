@@ -66,7 +66,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@fume/ui";
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent as ReactMouseEvent,
+  type ReactNode,
+} from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
@@ -97,7 +105,8 @@ const END = "end";
 const open = (v: QaView) => v.item.state === "waiting";
 
 /** The one name of a creative in Check (DLOAD-8). */
-export const qaName = (v: QaView) => copy.creativeName({ title: v.item.title, format: v.item.format, productName: v.productName });
+export const qaName = (v: QaView) =>
+  copy.creativeName({ title: v.item.title, format: v.item.format, productName: v.productName });
 
 /** The Engine run a creative came from, when the Engine chat made it (DESK adds QaItem.runId). */
 const runOf = (item: QaItem) => (item as QaItem & { runId?: Id }).runId;
@@ -144,11 +153,20 @@ export function QaPage() {
   };
 
   const inScope = (v: QaView) => (!run || runOf(v.item) === run) && (!campaignOnly || v.campaign.id === campaignOnly);
-  const scoped = useMemo(() => (queue.data && filtered ? queue.data.filter(inScope) : queue.data), [queue.data, run, campaignOnly]);
+  const scoped = useMemo(
+    () => (queue.data && filtered ? queue.data.filter(inScope) : queue.data),
+    [queue.data, run, campaignOnly],
+  );
   const all = useStableOrder(scoped, `${workspaceId ?? "all"}|${run ?? ""}|${campaignOnly ?? ""}`);
   // What the filter is called: "This run", or the campaign's name.
-  const only = run ? "This run" : campaignOnly ? (queue.data?.find((v) => v.campaign.id === campaignOnly)?.campaign.name ?? "This campaign") : undefined;
-  const brand = workspaceId ? (queue.data?.[0]?.workspace.brandName ?? session?.workspaces.find((w) => w.id === workspaceId)?.brandName) : undefined;
+  const only = run
+    ? "This run"
+    : campaignOnly
+      ? (queue.data?.find((v) => v.campaign.id === campaignOnly)?.campaign.name ?? "This campaign")
+      : undefined;
+  const brand = workspaceId
+    ? (queue.data?.[0]?.workspace.brandName ?? session?.workspaces.find((w) => w.id === workspaceId)?.brandName)
+    : undefined;
 
   // The tabs (#53): how many of each wait; the tab shown is the one asked for, the one the opened creative is in, or the
   // first kind that has creatives waiting (images, then designs, then plans).
@@ -159,8 +177,26 @@ export function QaPage() {
   };
   const asked = params.get("kind");
   const selectedAny = all.find((v) => v.item.id === selectedId);
-  const fallback: Kind = counts.images ? "images" : counts.designs ? "designs" : counts.plans ? "plans" : all.some((v) => kindOf(v) === "images") ? "images" : all.length ? "designs" : plans.length ? "plans" : "images";
-  const kind: Kind = isKind(asked) ? asked : selectedAny ? kindOf(selectedAny) : params.get("plan") ? "plans" : fallback;
+  const fallback: Kind = counts.images
+    ? "images"
+    : counts.designs
+      ? "designs"
+      : counts.plans
+        ? "plans"
+        : all.some((v) => kindOf(v) === "images")
+          ? "images"
+          : all.length
+            ? "designs"
+            : plans.length
+              ? "plans"
+              : "images";
+  const kind: Kind = isKind(asked)
+    ? asked
+    : selectedAny
+      ? kindOf(selectedAny)
+      : params.get("plan")
+        ? "plans"
+        : fallback;
   const chooseKind = (k: string) => {
     const next = new URLSearchParams(params);
     next.set("kind", k);
@@ -266,7 +302,11 @@ export function QaPage() {
     check: (v) =>
       check.mutateAsync(v.item.id).then(() => {
         checkToasts.current.get(v.item.id)?.dismiss();
-        const shown = toast.done(`Checked: ${qaName(v)}`, { description: `Not sent to ${customerOf(v)} yet.`, duration: 10_000, action: { label: "Undo", onClick: () => void act.undo(v) } });
+        const shown = toast.done(`Checked: ${qaName(v)}`, {
+          description: `Not sent to ${customerOf(v)} yet.`,
+          duration: 10_000,
+          action: { label: "Undo", onClick: () => void act.undo(v) },
+        });
         checkToasts.current.set(v.item.id, shown);
         if (shownId.current === v.item.id) after(v.item.id);
       }, failed("The check didn’t go through")),
@@ -280,7 +320,11 @@ export function QaPage() {
     tell: (v, text, pins) =>
       feedback.mutateAsync({ itemId: v.item.id, text, pins }).then(
         () => {
-          toast.done(`With the Engine: ${qaName(v)}`, { description: pins.length ? `${copy.count(pins.length, "pinned note")} with it. Its fix comes back here.` : "Its fix comes back here to check." });
+          toast.done(`With the Engine: ${qaName(v)}`, {
+            description: pins.length
+              ? `${copy.count(pins.length, "pinned note")} with it. Its fix comes back here.`
+              : "Its fix comes back here to check.",
+          });
           if (shownId.current === v.item.id) after(v.item.id);
           return true;
         },
@@ -297,7 +341,12 @@ export function QaPage() {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey || e.defaultPrevented) return;
       const t = e.target as HTMLElement | null;
-      if (t && (t.closest("input, textarea, select, [contenteditable='true'], [role='tablist'], [role='menu']") || t.closest("[role='dialog']:not(.ui-qa-sheet)"))) return;
+      if (
+        t &&
+        (t.closest("input, textarea, select, [contenteditable='true'], [role='tablist'], [role='menu']") ||
+          t.closest("[role='dialog']:not(.ui-qa-sheet)"))
+      )
+        return;
       if (e.key === "ArrowDown" || e.key === "ArrowRight") {
         e.preventDefault();
         move(1);
@@ -310,14 +359,24 @@ export function QaPage() {
     return () => window.removeEventListener("keydown", onKey);
   });
 
-  const meta = queue.data ? [copy.toCheck(toCheck, waitingAll), ...(fixing ? [`${fixing} with the Engine`] : [])] : undefined;
+  const meta = queue.data
+    ? [copy.toCheck(toCheck, waitingAll), ...(fixing ? [`${fixing} with the Engine`] : [])]
+    : undefined;
   const nothingAtAll = queue.data && all.length === 0 && plans.length === 0;
   // The other tabs that still have something waiting, for the end card's "Next".
   const otherKinds = KINDS.filter((k) => k.id !== kind && counts[k.id] > 0);
-  const currentPlan = kind === "plans" ? (plans.find((r) => r.campaign.id === params.get("plan")) ?? plans.find(planWaits) ?? plans[0]) : undefined;
+  const currentPlan =
+    kind === "plans"
+      ? (plans.find((r) => r.campaign.id === params.get("plan")) ?? plans.find(planWaits) ?? plans[0])
+      : undefined;
 
   return (
-    <Page title={brand ? `Check · ${brand}` : "Check"} docTitle={brand ? `Check · ${brand}` : "Check"} width={narrow ? "default" : "fill"} className="ui-qa-page">
+    <Page
+      title={brand ? `Check · ${brand}` : "Check"}
+      docTitle={brand ? `Check · ${brand}` : "Check"}
+      width={narrow ? "default" : "fill"}
+      className="ui-qa-page"
+    >
       <PageHeader
         className="ui-qa-header"
         title="Check"
@@ -325,9 +384,19 @@ export function QaPage() {
         tabs={
           nothingAtAll ? undefined : (
             <div className="ui-qa-bar">
-              <SegmentedControl className="ui-qa-kinds" aria-label="What to check" value={kind} onValueChange={chooseKind}>
+              <SegmentedControl
+                className="ui-qa-kinds"
+                aria-label="What to check"
+                value={kind}
+                onValueChange={chooseKind}
+              >
                 {KINDS.map((k) => (
-                  <SegmentedOption key={k.id} value={k.id} count={counts[k.id] || undefined} disabled={k.id === "plans" && agency}>
+                  <SegmentedOption
+                    key={k.id}
+                    value={k.id}
+                    count={counts[k.id] || undefined}
+                    disabled={k.id === "plans" && agency}
+                  >
                     {k.label}
                   </SegmentedOption>
                 ))}
@@ -340,7 +409,12 @@ export function QaPage() {
                   <span className="ui-filter-pill">
                     <span className="ui-filter-pill-key">{run ? "Run" : "Campaign"}</span>
                     <span className="ui-filter-pill-value">{run ? "This run" : only}</span>
-                    <button type="button" className="ui-filter-pill-remove" aria-label={`Remove the filter: ${only}`} onClick={showAll}>
+                    <button
+                      type="button"
+                      className="ui-filter-pill-remove"
+                      aria-label={`Remove the filter: ${only}`}
+                      onClick={showAll}
+                    >
                       <Icon name="x" />
                     </button>
                   </span>
@@ -359,7 +433,11 @@ export function QaPage() {
             <Nothing
               icon="inbox"
               title={only ? `Nothing from ${run ? "this run" : only} waits for a check` : "Nothing waits for a check"}
-              text={agency ? "What the Engine makes lands here first, before anything goes to the client." : "What the Engine makes lands here first, before anyone sends it to a customer."}
+              text={
+                agency
+                  ? "What the Engine makes lands here first, before anything goes to the client."
+                  : "What the Engine makes lands here first, before anyone sends it to a customer."
+              }
               action={
                 filtered ? (
                   <Button variant="secondary" onClick={showAll}>
@@ -371,7 +449,11 @@ export function QaPage() {
           ) : kind === "plans" ? (
             <div className="ui-qa" data-end="">
               <PlansToCheck rows={plans} showBrand={!workspaceId} frame={frame} current={currentPlan?.campaign.id} />
-              {currentPlan ? <PlanFocus row={currentPlan} frame={frame} showBrand={!workspaceId} /> : <QaNoKind noun="plans" filtered={filtered} onShowAll={showAll} />}
+              {currentPlan ? (
+                <PlanFocus row={currentPlan} frame={frame} showBrand={!workspaceId} />
+              ) : (
+                <QaNoKind noun="plans" filtered={filtered} onShowAll={showAll} />
+              )}
             </div>
           ) : (
             <div className="ui-qa" data-end={atEnd ? "" : undefined}>
@@ -379,17 +461,50 @@ export function QaPage() {
               {current ? (
                 narrow ? (
                   createPortal(
-                    <QaSheet view={current} index={ordered.indexOf(current)} total={ordered.length} onClose={() => select(null)} onMove={move}>
-                      <QaFocus key={current.item.id} view={current} index={ordered.indexOf(current)} total={ordered.length} onMove={move} act={act} />
+                    <QaSheet
+                      view={current}
+                      index={ordered.indexOf(current)}
+                      total={ordered.length}
+                      onClose={() => select(null)}
+                      onMove={move}
+                    >
+                      <QaFocus
+                        key={current.item.id}
+                        view={current}
+                        index={ordered.indexOf(current)}
+                        total={ordered.length}
+                        onMove={move}
+                        act={act}
+                      />
                     </QaSheet>,
                     document.body,
                   )
                 ) : (
-                  <QaFocus key={current.item.id} view={current} index={ordered.indexOf(current)} total={ordered.length} onMove={move} act={act} />
+                  <QaFocus
+                    key={current.item.id}
+                    view={current}
+                    index={ordered.indexOf(current)}
+                    total={ordered.length}
+                    onMove={move}
+                    act={act}
+                  />
                 )
               ) : atEnd ? (
                 views.length === 0 ? (
-                  <QaNoKind noun={KINDS.find((k) => k.id === kind)!.noun} filtered={filtered} onShowAll={showAll} next={otherKinds[0] ? { label: otherKinds[0].label, count: counts[otherKinds[0].id], to: kindHref(otherKinds[0].id) } : undefined} />
+                  <QaNoKind
+                    noun={KINDS.find((k) => k.id === kind)!.noun}
+                    filtered={filtered}
+                    onShowAll={showAll}
+                    next={
+                      otherKinds[0]
+                        ? {
+                            label: otherKinds[0].label,
+                            count: counts[otherKinds[0].id],
+                            to: kindHref(otherKinds[0].id),
+                          }
+                        : undefined
+                    }
+                  />
                 ) : (
                   <QaEnd
                     frame={frame}
@@ -397,7 +512,16 @@ export function QaPage() {
                     brand={brand}
                     only={only}
                     kindLabel={otherKinds.length ? KINDS.find((k) => k.id === kind)!.label : undefined}
-                    otherKinds={otherKinds.map((k) => ({ key: `kind-${k.id}`, title: k.id === "plans" ? "Plans" : k.label, text: k.id === "plans" ? `${copy.count(counts.plans, "plan")} to check` : `${copy.creatives(counts[k.id])} to check`, to: kindHref(k.id), action: `Check the ${k.noun}` }))}
+                    otherKinds={otherKinds.map((k) => ({
+                      key: `kind-${k.id}`,
+                      title: k.id === "plans" ? "Plans" : k.label,
+                      text:
+                        k.id === "plans"
+                          ? `${copy.count(counts.plans, "plan")} to check`
+                          : `${copy.creatives(counts[k.id])} to check`,
+                      to: kindHref(k.id),
+                      action: `Check the ${k.noun}`,
+                    }))}
                     beside={filtered ? (queue.data ?? []).filter((v) => open(v) && !inScope(v)).length : 0}
                     waiting={ordered.filter(open)}
                     fixing={views.filter((v) => v.item.state === "fixing").length}
@@ -419,7 +543,17 @@ export function QaPage() {
 }
 
 /** A tab with nothing in it: says so, and where the work is instead. */
-function QaNoKind({ noun, filtered, onShowAll, next }: { noun: string; filtered: boolean; onShowAll: () => void; next?: { label: string; count: number; to: string } }) {
+function QaNoKind({
+  noun,
+  filtered,
+  onShowAll,
+  next,
+}: {
+  noun: string;
+  filtered: boolean;
+  onShowAll: () => void;
+  next?: { label: string; count: number; to: string };
+}) {
   return (
     <section className="ui-qa-end" aria-labelledby="qa-none-title" data-ui-toast-anchor>
       <Icon name="circle-check" className="ui-qa-end-icon" />
@@ -472,7 +606,17 @@ function byCampaign(views: QaView[]): QaView[][] {
 
 // ─── The list ───────────────────────────────────────────────────────────────
 
-function QaList({ groups, current, showBrand, onSelect }: { groups: QaView[][]; current?: Id; showBrand: boolean; onSelect: (id: Id) => void }) {
+function QaList({
+  groups,
+  current,
+  showBrand,
+  onSelect,
+}: {
+  groups: QaView[][];
+  current?: Id;
+  showBrand: boolean;
+  onSelect: (id: Id) => void;
+}) {
   const names = useNames();
   // One Tab stop for the creatives: the selected row (or the first); the arrows move it (roving tabindex, DWAY-11).
   const stop = current ?? groups[0]?.[0]?.item.id;
@@ -483,7 +627,9 @@ function QaList({ groups, current, showBrand, onSelect }: { groups: QaView[][]; 
         const left = group.filter(open).length;
         return (
           <ItemGroup key={groupOf(group[0]!)} as="ul" aria-label={campaign.name}>
-            <ItemGroupLabel count={left ? `${left} to check` : "All answered"}>{showBrand ? `${workspace.brandName} · ${campaign.name}` : campaign.name}</ItemGroupLabel>
+            <ItemGroupLabel count={left ? `${left} to check` : "All answered"}>
+              {showBrand ? `${workspace.brandName} · ${campaign.name}` : campaign.name}
+            </ItemGroupLabel>
             {group.map((v) => (
               <li key={v.item.id}>
                 <Item
@@ -501,7 +647,12 @@ function QaList({ groups, current, showBrand, onSelect }: { groups: QaView[][]; 
                   <ItemContent>
                     <ItemTitle>{qaName(v)}</ItemTitle>
                     <ItemDescription>
-                      {[v.item.risk === "high" && v.item.state !== "checked" ? "High risk" : undefined, `Due ${due(v.item.dueAt)}`].filter(Boolean).join(" · ")}
+                      {[
+                        v.item.risk === "high" && v.item.state !== "checked" ? "High risk" : undefined,
+                        `Due ${due(v.item.dueAt)}`,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
                     </ItemDescription>
                     <ItemDescription>{rowState(v.item, names.who)}</ItemDescription>
                   </ItemContent>
@@ -525,7 +676,8 @@ function rowState(item: QaItem, who: (id?: Id) => string): ReactNode {
     case "in_studio":
       return `In Studio with ${who(item.studioBy)}`;
     default:
-      if (item.sentAt) return (item.version ?? 1) > 1 ? `Version ${item.version} from the Studio` : "Back from the Studio";
+      if (item.sentAt)
+        return (item.version ?? 1) > 1 ? `Version ${item.version} from the Studio` : "Back from the Studio";
       if (item.feedback.at(-1)?.state === "fixed") return "The Engine’s fix is back";
       return "Waiting for a check";
   }
@@ -538,7 +690,10 @@ function usePlansToCheck(workspaceId: string | undefined, fume: boolean): Studio
   const rows = useStudioCampaigns().data ?? [];
   if (!fume) return [];
   return rows.filter(
-    (r) => (!workspaceId || r.workspace.id === workspaceId) && r.campaign.stage === "plan" && (r.campaign.waits?.plan === "in_check" || r.campaign.waits?.plan === "writing"),
+    (r) =>
+      (!workspaceId || r.workspace.id === workspaceId) &&
+      r.campaign.stage === "plan" &&
+      (r.campaign.waits?.plan === "in_check" || r.campaign.waits?.plan === "writing"),
   );
 }
 
@@ -551,17 +706,34 @@ function ago(iso: string): string {
   return when(iso);
 }
 
-const planPath = (frame: StaffFrameKind, row: StudioCampaignRow) => `${brandBase(frame, row.workspace.id)}/campaigns/${row.campaign.id}/plan`;
+const planPath = (frame: StaffFrameKind, row: StudioCampaignRow) =>
+  `${brandBase(frame, row.workspace.id)}/campaigns/${row.campaign.id}/plan`;
 
 /** The Plans tab's list: each plan as a row; the one picked opens beside it (#53). */
-function PlansToCheck({ rows, showBrand, frame, current }: { rows: StudioCampaignRow[]; showBrand: boolean; frame: StaffFrameKind; current?: Id }) {
+function PlansToCheck({
+  rows,
+  showBrand,
+  frame,
+  current,
+}: {
+  rows: StudioCampaignRow[];
+  showBrand: boolean;
+  frame: StaffFrameKind;
+  current?: Id;
+}) {
   const left = rows.filter(planWaits).length;
   return (
     <nav className="ui-qa-list" aria-label="Plans to check">
       <ItemGroup as="ul" aria-label="Plans to check">
         <ItemGroupLabel count={left ? `${left} to check` : undefined}>Plans to check</ItemGroupLabel>
         {rows.map((r) => (
-          <PlanToCheck key={r.campaign.id} row={r} showBrand={showBrand} frame={frame} current={r.campaign.id === current} />
+          <PlanToCheck
+            key={r.campaign.id}
+            row={r}
+            showBrand={showBrand}
+            frame={frame}
+            current={r.campaign.id === current}
+          />
         ))}
       </ItemGroup>
     </nav>
@@ -569,11 +741,29 @@ function PlansToCheck({ rows, showBrand, frame, current }: { rows: StudioCampaig
 }
 
 /** One plan: the campaign, its brand (across brands), when Fume wrote it, and when it is due. */
-function PlanToCheck({ row, showBrand, current }: { row: StudioCampaignRow; showBrand: boolean; frame: StaffFrameKind; current: boolean }) {
+function PlanToCheck({
+  row,
+  showBrand,
+  current,
+}: {
+  row: StudioCampaignRow;
+  showBrand: boolean;
+  frame: StaffFrameKind;
+  current: boolean;
+}) {
   const plan = usePlan(row.campaign.id).data;
   const [params, setParams] = useSearchParams();
   const writing = (plan?.state ?? row.campaign.waits?.plan) === "writing";
-  const line = [showBrand ? row.workspace.brandName : undefined, writing ? "Fume is writing it" : plan?.writtenAt ? `${showBrand ? "written" : "Written"} ${ago(plan.writtenAt)}` : undefined].filter(Boolean).join(" · ");
+  const line = [
+    showBrand ? row.workspace.brandName : undefined,
+    writing
+      ? "Fume is writing it"
+      : plan?.writtenAt
+        ? `${showBrand ? "written" : "Written"} ${ago(plan.writtenAt)}`
+        : undefined,
+  ]
+    .filter(Boolean)
+    .join(" · ");
   const by = plan?.readyBy ?? row.clock?.dueAt;
   return (
     <li>
@@ -594,7 +784,9 @@ function PlanToCheck({ row, showBrand, current }: { row: StudioCampaignRow; show
         <ItemContent>
           <ItemTitle>{row.campaign.name}</ItemTitle>
           {line && <ItemDescription>{line}</ItemDescription>}
-          <ItemDescription>{[`Version ${plan?.version ?? 1}`, by ? `Due ${due(by)}` : undefined].filter(Boolean).join(" · ")}</ItemDescription>
+          <ItemDescription>
+            {[`Version ${plan?.version ?? 1}`, by ? `Due ${due(by)}` : undefined].filter(Boolean).join(" · ")}
+          </ItemDescription>
         </ItemContent>
       </Item>
     </li>
@@ -613,7 +805,12 @@ function PlanFocus({ row, frame, showBrand }: { row: StudioCampaignRow; frame: S
         {row.campaign.name} · the plan
       </h2>
       <p className="ui-qa-end-text">
-        {[showBrand ? row.workspace.brandName : undefined, writing ? "Fume is writing it" : plan?.writtenAt ? `Fume wrote it ${ago(plan.writtenAt)}` : "Fume wrote it", `version ${plan?.version ?? 1}`, by ? `due ${due(by)}` : undefined]
+        {[
+          showBrand ? row.workspace.brandName : undefined,
+          writing ? "Fume is writing it" : plan?.writtenAt ? `Fume wrote it ${ago(plan.writtenAt)}` : "Fume wrote it",
+          `version ${plan?.version ?? 1}`,
+          by ? `due ${due(by)}` : undefined,
+        ]
           .filter(Boolean)
           .join(" · ")}
       </p>
@@ -690,7 +887,19 @@ interface QaActions {
 const ROOM_X = 300;
 const ROOM_Y = 150;
 
-function QaFocus({ view, index, total, onMove, act }: { view: QaView; index: number; total: number; onMove: (step: 1 | -1) => void; act: QaActions }) {
+function QaFocus({
+  view,
+  index,
+  total,
+  onMove,
+  act,
+}: {
+  view: QaView;
+  index: number;
+  total: number;
+  onMove: (step: 1 | -1) => void;
+  act: QaActions;
+}) {
   const { item, campaign, workspace } = view;
   const name = qaName(view);
   const names = useNames();
@@ -706,7 +915,12 @@ function QaFocus({ view, index, total, onMove, act }: { view: QaView; index: num
   const [shown, setShown] = useState<"after" | "before">("after");
   // #51: the pins she drops on the creative, and the one she is writing
   const [pins, setPins] = useState<QaPin[]>([]);
-  const [draft, setDraft] = useState<{ x: number; y: number; side: "right" | "left" | "center"; flipY: boolean } | null>(null);
+  const [draft, setDraft] = useState<{
+    x: number;
+    y: number;
+    side: "right" | "left" | "center";
+    flipY: boolean;
+  } | null>(null);
   const [draftText, setDraftText] = useState("");
   const [activePin, setActivePin] = useState<number>();
   const dirty = textLayers.some((l) => words[l.id] !== undefined && words[l.id] !== l.text);
@@ -717,7 +931,8 @@ function QaFocus({ view, index, total, onMove, act }: { view: QaView; index: num
   const fixing = item.state === "fixing";
   const failed = (what: string) => (e: Error) => toast.error(what, { description: e.message });
 
-  const changedLayers = (): Layer[] => (item.layers ?? []).map((l) => (words[l.id] !== undefined ? { ...l, text: words[l.id] } : l));
+  const changedLayers = (): Layer[] =>
+    (item.layers ?? []).map((l) => (words[l.id] !== undefined ? { ...l, text: words[l.id] } : l));
   const saveWords = (then?: () => void) =>
     edit.mutate(
       { itemId: item.id, layers: changedLayers() },
@@ -800,7 +1015,12 @@ function QaFocus({ view, index, total, onMove, act }: { view: QaView; index: num
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
       const t = e.target as HTMLElement | null;
-      if (t && (t.closest("input, textarea, select, [contenteditable='true'], [role='tablist'], [role='menu']") || t.closest("[role='dialog']:not(.ui-qa-sheet)"))) return;
+      if (
+        t &&
+        (t.closest("input, textarea, select, [contenteditable='true'], [role='tablist'], [role='menu']") ||
+          t.closest("[role='dialog']:not(.ui-qa-sheet)"))
+      )
+        return;
       const k = e.key.toLowerCase();
       if (k === "c") markChecked();
       else if (k === "f" && !checked) {
@@ -816,7 +1036,8 @@ function QaFocus({ view, index, total, onMove, act }: { view: QaView; index: num
   const before = shown === "before" && item.previous;
   const image = before ? item.previous!.image : item.image;
   const version = before ? item.previous!.version : (item.version ?? 1);
-  const pinStyle = (p: { x: number; y: number }) => ({ "--x": `${p.x * 100}%`, "--y": `${p.y * 100}%` }) as CSSProperties;
+  const pinStyle = (p: { x: number; y: number }) =>
+    ({ "--x": `${p.x * 100}%`, "--y": `${p.y * 100}%` }) as CSSProperties;
 
   return (
     <>
@@ -824,7 +1045,11 @@ function QaFocus({ view, index, total, onMove, act }: { view: QaView; index: num
         <div className="ui-qa-stage-bar">
           <div className="ui-qa-stage-start">
             {item.previous ? (
-              <SegmentedControl aria-label="Version shown" value={shown} onValueChange={(v) => setShown(v as "after" | "before")}>
+              <SegmentedControl
+                aria-label="Version shown"
+                value={shown}
+                onValueChange={(v) => setShown(v as "after" | "before")}
+              >
                 <SegmentedOption value="before">Before · V{item.previous.version}</SegmentedOption>
                 <SegmentedOption value="after">After · V{item.version ?? item.previous.version + 1}</SegmentedOption>
               </SegmentedControl>
@@ -838,8 +1063,25 @@ function QaFocus({ view, index, total, onMove, act }: { view: QaView; index: num
             <span className="ui-qa-pos">
               {index + 1} of {total}
             </span>
-            <Button variant="quiet" size="sm" iconOnly icon="chevron-left" aria-label="The one before that waits" shortcut="←" disabled={index === 0} onClick={() => onMove(-1)} />
-            <Button variant="quiet" size="sm" iconOnly icon="chevron-right" aria-label="The next one that waits" shortcut="→" onClick={() => onMove(1)} />
+            <Button
+              variant="quiet"
+              size="sm"
+              iconOnly
+              icon="chevron-left"
+              aria-label="The one before that waits"
+              shortcut="←"
+              disabled={index === 0}
+              onClick={() => onMove(-1)}
+            />
+            <Button
+              variant="quiet"
+              size="sm"
+              iconOnly
+              icon="chevron-right"
+              aria-label="The next one that waits"
+              shortcut="→"
+              onClick={() => onMove(1)}
+            />
           </div>
         </div>
         <div className="ui-qa-fit">
@@ -950,7 +1192,13 @@ function QaFocus({ view, index, total, onMove, act }: { view: QaView; index: num
           </header>
 
           {/* 2. What the Engine found */}
-          <Evaluated evaluation={item.evaluation} id={item.id} against={view.against} format={item.format} brandDna={campaign.brandDnaVersion}>
+          <Evaluated
+            evaluation={item.evaluation}
+            id={item.id}
+            against={view.against}
+            format={item.format}
+            brandDna={campaign.brandDnaVersion}
+          >
             {/* 2b. What was said to the Engine before: one folded line, so it never sits under the decision (round 13, #50) */}
             {item.feedback.length > 0 && (
               <Collapsible className="ui-qa-against">
@@ -960,7 +1208,8 @@ function QaFocus({ view, index, total, onMove, act }: { view: QaView; index: num
                     {item.feedback.map((f) => (
                       <li key={f.id} className="ui-qa-said">
                         <span className="ui-qa-said-who">
-                          {names.Who(f.by)} · <time dateTime={f.at}>{time(f.at)}</time> · {f.state === "sent" ? "with the Engine" : "the Engine fixed it"}
+                          {names.Who(f.by)} · <time dateTime={f.at}>{time(f.at)}</time> ·{" "}
+                          {f.state === "sent" ? "with the Engine" : "the Engine fixed it"}
                         </span>
                         {f.text && <p>{f.text}</p>}
                         {(f.pins ?? []).map((p) => (
@@ -1030,7 +1279,14 @@ function QaFocus({ view, index, total, onMove, act }: { view: QaView; index: num
                         {p.n}
                       </span>
                       <span className="ui-qa-pin-text">{p.text}</span>
-                      <Button size="sm" variant="quiet" iconOnly icon="x" aria-label={`Remove pin ${p.n}`} onClick={() => removePin(p.n)} />
+                      <Button
+                        size="sm"
+                        variant="quiet"
+                        iconOnly
+                        icon="x"
+                        aria-label={`Remove pin ${p.n}`}
+                        onClick={() => removePin(p.n)}
+                      />
                     </li>
                   ))}
                 </ol>
@@ -1038,7 +1294,9 @@ function QaFocus({ view, index, total, onMove, act }: { view: QaView; index: num
               <Textarea
                 ref={tellRef}
                 aria-labelledby={`${item.id}-tell`}
-                placeholder={pins.length ? "Anything else, in words" : "What is wrong? Or click the creative to pin it."}
+                placeholder={
+                  pins.length ? "Anything else, in words" : "What is wrong? Or click the creative to pin it."
+                }
                 value={text}
                 disabled={fixing}
                 onChange={(e) => setText(e.target.value)}
@@ -1070,7 +1328,6 @@ function QaFocus({ view, index, total, onMove, act }: { view: QaView; index: num
               )}
             </section>
           )}
-
         </div>
 
         {/* 5. The decision, at the same place for every creative */}
@@ -1085,16 +1342,35 @@ function QaFocus({ view, index, total, onMove, act }: { view: QaView; index: num
             </>
           ) : (
             <>
-              <Button className="ui-qa-foot-main ui-qa-mark" icon="fume-check" onClick={markChecked} disabled={fixing} loading={act.checking}>
+              <Button
+                className="ui-qa-foot-main ui-qa-mark"
+                icon="fume-check"
+                onClick={markChecked}
+                disabled={fixing}
+                loading={act.checking}
+              >
                 Mark checked
                 <Kbd className="ui-qa-key">C</Kbd>
               </Button>
               <div className="ui-qa-foot-row">
-                <Button variant="secondary" size="sm" icon="send" disabled={fixing} loading={act.telling} onClick={() => tell()}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  icon="send"
+                  disabled={fixing}
+                  loading={act.telling}
+                  onClick={() => tell()}
+                >
                   {pins.length ? `Tell the Engine · ${pins.length}` : "Tell the Engine"}
                   <Kbd className="ui-qa-key">F</Kbd>
                 </Button>
-                <Button variant="quiet" size="sm" icon="external-link" loading={toStudio.isPending} onClick={openStudio}>
+                <Button
+                  variant="quiet"
+                  size="sm"
+                  icon="external-link"
+                  loading={toStudio.isPending}
+                  onClick={openStudio}
+                >
                   Open in Studio
                   <Kbd className="ui-qa-key">S</Kbd>
                 </Button>
@@ -1109,9 +1385,13 @@ function QaFocus({ view, index, total, onMove, act }: { view: QaView; index: num
           <AlertDialog open={asking} onOpenChange={setAsking}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>{names.Who(item.studioBy)} {names.who(item.studioBy) === "you" ? "have" : "has"} this open in the Studio</AlertDialogTitle>
+                <AlertDialogTitle>
+                  {names.Who(item.studioBy)} {names.who(item.studioBy) === "you" ? "have" : "has"} this open in the
+                  Studio
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  The Engine and a designer never work on one creative at once. Send it to the Engine and the Studio locks until the fix is back, or wait until it comes back from the Studio.
+                  The Engine and a designer never work on one creative at once. Send it to the Engine and the Studio
+                  locks until the fix is back, or wait until it comes back from the Studio.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -1131,18 +1411,36 @@ function QaFocus({ view, index, total, onMove, act }: { view: QaView; index: num
 /** Where it stands, in one line, updated in place (DLOAD-14). */
 function QaStatus({ item, who }: { item: QaItem; who: (id?: Id) => string }) {
   if (item.state === "checked")
-    return <CheckMark state="checked" by={who(item.checkedBy)} time={item.checkedAt ? time(item.checkedAt) : undefined} dateTime={item.checkedAt} wording="long" />;
+    return (
+      <CheckMark
+        state="checked"
+        by={who(item.checkedBy)}
+        time={item.checkedAt ? time(item.checkedAt) : undefined}
+        dateTime={item.checkedAt}
+        wording="long"
+      />
+    );
   if (item.state === "fixing") {
     const said = item.feedback.at(-1);
     return (
       <>
         <TextShimmer>With the Engine</TextShimmer>
-        {said?.text ? `: “${said.text.replace(/[.\s]+$/, "")}”` : said?.pins?.length ? `: ${copy.count(said.pins.length, "pinned note")}` : ""}
+        {said?.text
+          ? `: “${said.text.replace(/[.\s]+$/, "")}”`
+          : said?.pins?.length
+            ? `: ${copy.count(said.pins.length, "pinned note")}`
+            : ""}
       </>
     );
   }
-  if (item.state === "in_studio") return <>{`In Studio with ${who(item.studioBy)}${item.studioAt ? ` since ${time(item.studioAt)}` : ""}. Send it back from the Studio, or check this version.`}</>;
-  if (item.sentAt) return <>{`${(item.version ?? 1) > 1 ? `Version ${item.version} from the Studio` : "Back from the Studio"} · ${who(item.sentBy)}, ${time(item.sentAt)}`}</>;
+  if (item.state === "in_studio")
+    return (
+      <>{`In Studio with ${who(item.studioBy)}${item.studioAt ? ` since ${time(item.studioAt)}` : ""}. Send it back from the Studio, or check this version.`}</>
+    );
+  if (item.sentAt)
+    return (
+      <>{`${(item.version ?? 1) > 1 ? `Version ${item.version} from the Studio` : "Back from the Studio"} · ${who(item.sentBy)}, ${time(item.sentAt)}`}</>
+    );
   if (item.feedback.at(-1)?.state === "fixed") return <>The Engine’s fix is back. Check it again.</>;
   return <>Waiting for a check</>;
 }
@@ -1166,18 +1464,31 @@ function Evaluated({
   children?: ReactNode;
 }) {
   const rows: { result: "pass" | "flag"; text: string }[] = [
-    { result: evaluation.productTruth, text: evaluation.productTruth === "pass" ? "Product Truth holds" : "Product Truth is off" },
-    { result: evaluation.brandRules, text: evaluation.brandRules === "pass" ? "Brand rules hold" : "A brand rule is broken" },
+    {
+      result: evaluation.productTruth,
+      text: evaluation.productTruth === "pass" ? "Product Truth holds" : "Product Truth is off",
+    },
+    {
+      result: evaluation.brandRules,
+      text: evaluation.brandRules === "pass" ? "Brand rules hold" : "A brand rule is broken",
+    },
     {
       result: evaluation.artefacts === "none" ? "pass" : "flag",
-      text: evaluation.artefacts === "none" ? "No artefacts" : evaluation.artefacts === "minor" ? "A minor artefact" : "A major artefact",
+      text:
+        evaluation.artefacts === "none"
+          ? "No artefacts"
+          : evaluation.artefacts === "minor"
+            ? "A minor artefact"
+            : "A major artefact",
     },
     ...evaluation.notes.map((n) => ({ result: "flag" as const, text: n })),
   ];
   const flagged = rows.filter((r) => r.result === "flag").length;
   const f = copy.format[format];
   // The channel line follows the creative's own format (the brand's list is written for a feed).
-  const lines = (against ?? []).map((a) => (a.area === "channel" ? { ...a, against: `${f.label} ${f.size}; nothing important in the outer 6 %.` } : a));
+  const lines = (against ?? []).map((a) =>
+    a.area === "channel" ? { ...a, against: `${f.label} ${f.size}; nothing important in the outer 6 %.` } : a,
+  );
   return (
     <section className="ui-qa-part" aria-labelledby={`${id}-found`}>
       <h3 className="ui-qa-part-title" id={`${id}-found`}>
@@ -1193,7 +1504,9 @@ function Evaluated({
       </ul>
       {lines.length > 0 && (
         <Collapsible className="ui-qa-against">
-          <CollapsibleTrigger>{brandDna ? `Checked against Brand DNA v${brandDna}` : "What it is checked against"}</CollapsibleTrigger>
+          <CollapsibleTrigger>
+            {brandDna ? `Checked against Brand DNA v${brandDna}` : "What it is checked against"}
+          </CollapsibleTrigger>
           <CollapsibleContent>
             <dl className="ui-qa-against-list">
               {lines.map((a) => (
@@ -1248,17 +1561,33 @@ function QaEnd({
   const all = useQaQueue(undefined).data ?? [];
   const elsewhere = useMemo(() => {
     const map = new Map<Id, QaView[]>();
-    for (const v of all) if (open(v) && v.workspace.id !== workspaceId && workspaceId) map.set(v.workspace.id, [...(map.get(v.workspace.id) ?? []), v]);
+    for (const v of all)
+      if (open(v) && v.workspace.id !== workspaceId && workspaceId)
+        map.set(v.workspace.id, [...(map.get(v.workspace.id) ?? []), v]);
     return [...map.values()];
   }, [all, workspaceId]);
   const plansLeft = plans.filter((r) => r.campaign.waits?.plan === "in_check");
   const nexts: { key: string; title: string; text: string; to: string; action: string }[] = [
     ...otherKinds,
-    ...(otherKinds.some((k) => k.key === "kind-plans") ? [] : plansLeft).map((r) => ({ key: r.campaign.id, title: `${r.campaign.name} · the plan`, text: [workspaceId ? undefined : r.workspace.brandName, "Fume wrote it; it waits on your check"].filter(Boolean).join(" · "), to: planPath(frame, r), action: "Check the plan" })),
+    ...(otherKinds.some((k) => k.key === "kind-plans") ? [] : plansLeft).map((r) => ({
+      key: r.campaign.id,
+      title: `${r.campaign.name} · the plan`,
+      text: [workspaceId ? undefined : r.workspace.brandName, "Fume wrote it; it waits on your check"]
+        .filter(Boolean)
+        .join(" · "),
+      to: planPath(frame, r),
+      action: "Check the plan",
+    })),
     ...elsewhere.map((list) => {
       const v = list[0]!;
       const campaigns = [...new Set(list.map((x) => x.campaign.name))];
-      return { key: v.workspace.id, title: `${v.workspace.brandName} · ${campaigns.join(", ")}`, text: `${copy.creatives(list.length)} to check`, to: checkPath(frame, v.workspace.id), action: `Check ${v.workspace.brandName}` };
+      return {
+        key: v.workspace.id,
+        title: `${v.workspace.brandName} · ${campaigns.join(", ")}`,
+        text: `${copy.creatives(list.length)} to check`,
+        to: checkPath(frame, v.workspace.id),
+        action: `Check ${v.workspace.brandName}`,
+      };
     }),
   ];
   const [first, ...rest] = nexts;
@@ -1278,7 +1607,13 @@ function QaEnd({
       </section>
     );
 
-  const title = kindLabel ? `${kindLabel} are checked` : only ? `${only} is checked` : brand ? `${brand} is checked` : "Everything is checked";
+  const title = kindLabel
+    ? `${kindLabel} are checked`
+    : only
+      ? `${only} is checked`
+      : brand
+        ? `${brand} is checked`
+        : "Everything is checked";
   if (only && beside > 0)
     return (
       <section className="ui-qa-end" aria-labelledby="qa-end-title" data-ui-toast-anchor>
@@ -1294,14 +1629,18 @@ function QaEnd({
         </div>
       </section>
     );
-  const engine = fixing ? ` ${fixing === 1 ? "One is" : `${fixing} are`} with the Engine; ${fixing === 1 ? "its fix comes" : "their fixes come"} back here.` : "";
+  const engine = fixing
+    ? ` ${fixing === 1 ? "One is" : `${fixing} are`} with the Engine; ${fixing === 1 ? "its fix comes" : "their fixes come"} back here.`
+    : "";
   return (
     <section className="ui-qa-end" aria-labelledby="qa-end-title" data-ui-toast-anchor>
       <Icon name="circle-check" className="ui-qa-end-icon" />
       <h2 className="ui-qa-end-title" id="qa-end-title" tabIndex={-1}>
         {title}
       </h2>
-      <p className="ui-qa-end-text">{(first ? "Nothing else waits for a check here." : "Nothing else waits on you.") + engine}</p>
+      <p className="ui-qa-end-text">
+        {(first ? "Nothing else waits for a check here." : "Nothing else waits on you.") + engine}
+      </p>
       {first ? (
         <>
           <ul className="ui-qa-end-next" aria-label="Next">

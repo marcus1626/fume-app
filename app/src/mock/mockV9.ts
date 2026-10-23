@@ -2,7 +2,17 @@
 // reading (startBrandScan) plays seed9's map data: the website's pages one by one, brand and products together.
 // "Update the brand" reads lysne.no (or a zip) again and keeps only what is new, changed or unsure.
 
-import { FumeError, type BrandIdentity, type BrandScan, type BrandUpdate, type FumeApi, type FumeEvent, type Id, type Provenance, type User } from "../contract";
+import {
+  FumeError,
+  type BrandIdentity,
+  type BrandScan,
+  type BrandUpdate,
+  type FumeApi,
+  type FumeEvent,
+  type Id,
+  type Provenance,
+  type User,
+} from "../contract";
 import * as seed9 from "./seed9";
 
 /** The v9 tables, merged into the mock's in-memory db. */
@@ -10,7 +20,11 @@ export function v9Db() {
   return { brandUpdate: null as BrandUpdate | null };
 }
 
-type Db = ReturnType<typeof v9Db> & { scan: BrandScan | null; identity: BrandIdentity; brandDna: { version: number; approvedAt?: string; approvedBy?: Id } };
+type Db = ReturnType<typeof v9Db> & {
+  scan: BrandScan | null;
+  identity: BrandIdentity;
+  brandDna: { version: number; approvedAt?: string; approvedBy?: Id };
+};
 
 export interface V9Context {
   db: Db;
@@ -22,7 +36,8 @@ export interface V9Context {
   mustApprove: () => void;
 }
 
-type V9Keys = "startBrandScan" | "brandScan" | "startBrandUpdate" | "brandUpdate" | "decideBrandFound" | "approveBrandUpdate";
+type V9Keys =
+  "startBrandScan" | "brandScan" | "startBrandUpdate" | "brandUpdate" | "decideBrandFound" | "approveBrandUpdate";
 
 /** One page or file per tick: the current one is read, the next one opens; after the last, done. */
 function step(sources: BrandScan["sources"]): string | undefined {
@@ -77,7 +92,12 @@ export function v9Api(ctx: V9Context): Pick<FumeApi, V9Keys> {
     const prov: Provenance = { ...mine(), evidence: f.source };
     if (f.kind === "image") {
       (f.images ?? (f.image ? [f.image] : [])).forEach((src, i) =>
-        id.imagery.push({ id: nextId("im"), image: src, caption: `${value ?? f.title}, ${i + 1}`, provenance: { ...prov } }),
+        id.imagery.push({
+          id: nextId("im"),
+          image: src,
+          caption: `${value ?? f.title}, ${i + 1}`,
+          provenance: { ...prov },
+        }),
       );
     } else if (f.kind === "colour" && f.targetId) {
       const c = id.colours.find((x) => x.id === f.targetId);
@@ -94,7 +114,12 @@ export function v9Api(ctx: V9Context): Pick<FumeApi, V9Keys> {
         t.provenance = { ...prov, state: "changed", was };
       }
     } else if (f.kind === "voice") {
-      id.voice.push({ id: nextId("vo"), statement: value ?? f.after ?? f.title, example: (f.subtitle ?? "").replace(/^“|”$/g, ""), provenance: prov });
+      id.voice.push({
+        id: nextId("vo"),
+        statement: value ?? f.after ?? f.title,
+        example: (f.subtitle ?? "").replace(/^“|”$/g, ""),
+        provenance: prov,
+      });
     }
     f.decision = value !== undefined ? "fixed" : "kept";
   }
@@ -102,18 +127,28 @@ export function v9Api(ctx: V9Context): Pick<FumeApi, V9Keys> {
   return {
     async startBrandScan(input) {
       const base = structuredClone(seed9.firstScan);
-      const files = (input.files ?? []).map((f, i) => ({ id: `sf${i}`, label: f.name, kind: "file" as const, state: "waiting" as const }));
+      const files = (input.files ?? []).map((f, i) => ({
+        id: `sf${i}`,
+        label: f.name,
+        kind: "file" as const,
+        state: "waiting" as const,
+      }));
       const pages = input.source === "upload" ? [] : base.sources;
       const sources = [...pages, ...files];
       const finds =
         input.source === "upload"
-          ? base.finds.map((f, i) => ({ ...f, origin: "customer" as const, sourceId: files[i % Math.max(1, files.length)]?.id, evidence: files[i % Math.max(1, files.length)]?.label ?? f.evidence }))
+          ? base.finds.map((f, i) => ({
+              ...f,
+              origin: "customer" as const,
+              sourceId: files[i % Math.max(1, files.length)]?.id,
+              evidence: files[i % Math.max(1, files.length)]?.label ?? f.evidence,
+            }))
           : base.finds;
       const scan: BrandScan = {
         ...base,
         id: nextId("scan"),
         source: input.source,
-        url: input.source === "upload" ? undefined : input.url ?? base.url,
+        url: input.source === "upload" ? undefined : (input.url ?? base.url),
         files: files.map((f) => f.label),
         sources: sources.length ? sources : base.sources,
         finds,
@@ -134,11 +169,14 @@ export function v9Api(ctx: V9Context): Pick<FumeApi, V9Keys> {
         ...base,
         id: nextId("bu"),
         source: input.source,
-        url: input.source === "website" ? input.url ?? base.url : undefined,
+        url: input.source === "website" ? (input.url ?? base.url) : undefined,
         files,
         sources: input.source === "website" ? base.sources : seed9.zipSources(files),
         // A zip shows the same finds, read from its files.
-        found: input.source === "website" ? base.found : base.found.map((f) => ({ ...f, source: files[0] ?? "LYSNE autumn 2026.zip" })),
+        found:
+          input.source === "website"
+            ? base.found
+            : base.found.map((f) => ({ ...f, source: files[0] ?? "LYSNE autumn 2026.zip" })),
         startedAt: now(),
       };
       db.brandUpdate = update;
@@ -174,8 +212,8 @@ export function v9Api(ctx: V9Context): Pick<FumeApi, V9Keys> {
       update.appliedAt = now();
       update.appliedBy = ctx.me().id;
       db.brandDna.version += 1;
-        db.brandDna.approvedAt = now();
-        db.brandDna.approvedBy = ctx.me().id;
+      db.brandDna.approvedAt = now();
+      db.brandDna.approvedBy = ctx.me().id;
       return wait(structuredClone(update));
     },
   };

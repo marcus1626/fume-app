@@ -96,7 +96,15 @@ function Tile({ tile, i }: { tile: RunTileData; i: number }) {
       </div>
     );
   else if (tile.state === "active")
-    body = <div className="ui-skeleton ui-skeleton--creative" role="img" aria-label={`${name}, being made`} {...fa} style={{ ...fa.style, ...vars({ "--i": i }) }} />;
+    body = (
+      <div
+        className="ui-skeleton ui-skeleton--creative"
+        role="img"
+        aria-label={`${name}, being made`}
+        {...fa}
+        style={{ ...fa.style, ...vars({ "--i": i }) }}
+      />
+    );
   else if (tile.state === "failed")
     body = (
       <div className="ui-run-slot" role="img" aria-label={`${name} couldn’t be made`} {...fa}>
@@ -110,7 +118,7 @@ function Tile({ tile, i }: { tile: RunTileData; i: number }) {
       {tile.state === "done" && tile.check && (
         <span className="ui-creative-check" data-check={tile.check.state === "checked" ? "approved" : "waiting"}>
           <Icon name="fume-check" />
-          {tile.check.state === "checked" ? tile.check.by ?? "Checked" : "In check"}
+          {tile.check.state === "checked" ? (tile.check.by ?? "Checked") : "In check"}
           {tile.check.state === "checked" && tile.check.time && (
             <>
               {" "}
@@ -163,7 +171,14 @@ export const EngineRun = forwardRef<HTMLDivElement, EngineRunProps>(function Eng
   const open = state === "done" && steps.some((s) => s.state !== "done");
   const shown: EngineRunState = open ? "running" : state;
   return (
-    <div ref={ref} className={cx("ui-card ui-run", className)} data-state={shown} role="group" aria-label={`Engine run for ${title}`} {...props}>
+    <div
+      ref={ref}
+      className={cx("ui-card ui-run", className)}
+      data-state={shown}
+      role="group"
+      aria-label={`Engine run for ${title}`}
+      {...props}
+    >
       <div className="ui-run-header">
         <div className="ui-run-heading">
           <h4 className="ui-run-title">{title}</h4>
@@ -193,7 +208,10 @@ export interface EngineRunActionProps extends Omit<HTMLAttributes<HTMLButtonElem
 }
 
 /** A button at the run's foot: button.ui-btn.ui-btn--{variant}.ui-btn--sm with its icon. */
-export const EngineRunAction = forwardRef<HTMLButtonElement, EngineRunActionProps>(function EngineRunAction({ variant = "quiet", icon, children, ...props }, ref) {
+export const EngineRunAction = forwardRef<HTMLButtonElement, EngineRunActionProps>(function EngineRunAction(
+  { variant = "quiet", icon, children, ...props },
+  ref,
+) {
   return (
     <Btn ref={ref} variant={variant} size="sm" icon={icon} {...props}>
       {children}

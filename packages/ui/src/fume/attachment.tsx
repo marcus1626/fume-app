@@ -9,9 +9,7 @@ import { Btn, Glyph, ProgressBar, Spinner, extOf, formatAttrs, type CreativeForm
 
 export type AttachmentState = "idle" | "uploading" | "processing" | "error" | "done";
 
-export type AttachmentMedia =
-  | { kind: "image"; src?: string; alt?: string; format?: CreativeFormat }
-  | { kind: "icon" };
+export type AttachmentMedia = { kind: "image"; src?: string; alt?: string; format?: CreativeFormat } | { kind: "icon" };
 
 export interface AttachmentProps extends Omit<HTMLAttributes<HTMLDivElement>, "title"> {
   /** The name ("Autumn launch brief.pdf", "Creative 3"); cut with an ellipsis, whole in the title attribute. */
@@ -105,7 +103,9 @@ export const Attachment = forwardRef<HTMLDivElement, AttachmentProps>(function A
   const actions =
     onRemove || (state === "error" && onRetry) ? (
       <div className={cx("ui-attachment-actions", vertical && "ui-glass ui-glass--small ui-glass--bar")}>
-        {state === "error" && onRetry && <Btn variant={btn} size="sm" iconOnly icon="refresh-cw" aria-label={`Try ${title} again`} onClick={onRetry} />}
+        {state === "error" && onRetry && (
+          <Btn variant={btn} size="sm" iconOnly icon="refresh-cw" aria-label={`Try ${title} again`} onClick={onRetry} />
+        )}
         {onRemove && (
           <Btn
             variant={btn}
@@ -129,9 +129,20 @@ export const Attachment = forwardRef<HTMLDivElement, AttachmentProps>(function A
       data-orientation={vertical ? "vertical" : undefined}
       {...props}
     >
-      {onOpen && <button className="ui-attachment-trigger" type="button" aria-label={openLabel ?? `Open ${title}`} onClick={onOpen} />}
+      {onOpen && (
+        <button
+          className="ui-attachment-trigger"
+          type="button"
+          aria-label={openLabel ?? `Open ${title}`}
+          onClick={onOpen}
+        />
+      )}
       <div className="ui-attachment-media" data-variant={media.kind === "image" ? "image" : "icon"} {...fmt}>
-        {media.kind === "image" ? media.src && <img src={media.src} alt={media.alt ?? ""} /> : <Glyph name="file-text" />}
+        {media.kind === "image" ? (
+          media.src && <img src={media.src} alt={media.alt ?? ""} />
+        ) : (
+          <Glyph name="file-text" />
+        )}
       </div>
       <div className="ui-attachment-content">
         <span className="ui-attachment-title" title={title}>
@@ -150,8 +161,17 @@ export interface AttachmentGroupProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /** div.ui-attachment-group: attachments wrap, 8 apart (they line up at the end in your own message). */
-export const AttachmentGroup = forwardRef<HTMLDivElement, AttachmentGroupProps>(function AttachmentGroup({ scroll, className, ...props }, ref) {
-  return <div ref={ref} className={cx("ui-attachment-group", scroll && "ui-attachment-group--scroll", className)} {...props} />;
+export const AttachmentGroup = forwardRef<HTMLDivElement, AttachmentGroupProps>(function AttachmentGroup(
+  { scroll, className, ...props },
+  ref,
+) {
+  return (
+    <div
+      ref={ref}
+      className={cx("ui-attachment-group", scroll && "ui-attachment-group--scroll", className)}
+      {...props}
+    />
+  );
 });
 
 /** The data line for an attachment: "PDF · 240 KB" from a name and a size in bytes (contract Attachment). */

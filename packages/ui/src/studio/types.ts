@@ -4,7 +4,17 @@
 
 /** Every mode variable is edited with one of these. */
 export type StudioControlKind =
-  | "slider" | "segmented" | "select" | "swatch" | "toggle" | "angle" | "lens" | "chips" | "text" | "number" | "lightboard";
+  | "slider"
+  | "segmented"
+  | "select"
+  | "swatch"
+  | "toggle"
+  | "angle"
+  | "lens"
+  | "chips"
+  | "text"
+  | "number"
+  | "lightboard";
 
 /** A light direction: azimuth in degrees around the subject (0 = from the camera, 90 = from the right, -90 = from
  *  the left), elevation in degrees above the horizon (0–90). */

@@ -172,7 +172,12 @@ export function placeOf(pathname: string): PlaceKey {
  * from a brand to all: Check to all Check, Campaigns to all Campaigns, anything else to the overview. `limited` (Fume's
  * admin, who follows the brands but has no Check, Studio or Engine) keeps Campaigns and lands on the first place else.
  */
-export function equivalent(pathname: string, frame: StaffFrameKind, workspaceId: string | undefined, limited = false): string {
+export function equivalent(
+  pathname: string,
+  frame: StaffFrameKind,
+  workspaceId: string | undefined,
+  limited = false,
+): string {
   const found = placeOf(pathname);
   const place = limited && found !== "campaigns" ? "other" : found;
   if (workspaceId) {

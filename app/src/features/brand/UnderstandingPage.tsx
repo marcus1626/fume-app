@@ -44,7 +44,15 @@ import {
 } from "@fume/ui";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAnswerUnderstanding, useApproveBrandDna, useBrandDna, useBrandScan, useOnboardingProgress, usePeople, useSaveOnboardingProgress } from "../../api/hooks";
+import {
+  useAnswerUnderstanding,
+  useApproveBrandDna,
+  useBrandDna,
+  useBrandScan,
+  useOnboardingProgress,
+  usePeople,
+  useSaveOnboardingProgress,
+} from "../../api/hooks";
 import type { BrandDnaView, BrandScan, Understanding, UnderstoodLine } from "../../contract";
 import * as copy from "../../copy";
 import { date } from "../../lib/time";
@@ -67,16 +75,29 @@ const summaryLabels = ["What the brand is", "The light", "The product and people
 
 /** The five lines: the summary's three, then the rules and the audience the reading found. */
 export function understoodLines(view: BrandDnaView, scan?: BrandScan | null): Understood[] {
-  const out: Understood[] = view.understanding.summary.slice(0, 3).map((text, i) => ({ id: `summary-${i}`, label: summaryLabels[i] ?? "What Fume read", text }));
+  const out: Understood[] = view.understanding.summary
+    .slice(0, 3)
+    .map((text, i) => ({ id: `summary-${i}`, label: summaryLabels[i] ?? "What Fume read", text }));
   const ruleFinds = scan?.finds.filter((f) => f.kind === "rule") ?? [];
   const rules = ruleFinds.length ? ruleFinds.map((f) => f.value) : view.rules.slice(0, 2).map((r) => r.statement);
-  if (rules.length) out.push({ id: "rules", label: "Its rules", text: rules.map((r) => r.replace(/\.?$/, ".")).join(" ") });
+  if (rules.length)
+    out.push({ id: "rules", label: "Its rules", text: rules.map((r) => r.replace(/\.?$/, ".")).join(" ") });
   const audience = scan?.finds.find((f) => f.kind === "audience");
   if (audience) out.push({ id: "audience", label: "Who it speaks to", text: audience.value });
   return out;
 }
 
-function LineRow({ line, saved, canEdit, onSaved }: { line: Understood; saved?: UnderstoodLine; canEdit: boolean; onSaved?: () => void }) {
+function LineRow({
+  line,
+  saved,
+  canEdit,
+  onSaved,
+}: {
+  line: Understood;
+  saved?: UnderstoodLine;
+  canEdit: boolean;
+  onSaved?: () => void;
+}) {
   const save = useSaveOnboardingProgress();
   const toast = useToast();
   const [verdict, setVerdict] = useState<"" | UnderstoodLine["verdict"]>(saved?.verdict ?? "");
@@ -87,7 +108,11 @@ function LineRow({ line, saved, canEdit, onSaved }: { line: Understood; saved?: 
   function mark(value: string) {
     const v = value as "" | UnderstoodLine["verdict"];
     setVerdict(v);
-    if (v) save.mutate({ line: { id: line.id, verdict: v, reason: v === "not_quite" ? reason.trim() || undefined : undefined } }, { onSuccess: onSaved, onError: failed });
+    if (v)
+      save.mutate(
+        { line: { id: line.id, verdict: v, reason: v === "not_quite" ? reason.trim() || undefined : undefined } },
+        { onSuccess: onSaved, onError: failed },
+      );
   }
 
   return (
@@ -97,7 +122,15 @@ function LineRow({ line, saved, canEdit, onSaved }: { line: Understood; saved?: 
         <p className="ui-ob-line-words">{line.text}</p>
       </div>
       {canEdit && (
-        <ToggleGroup type="single" variant="outline" size="sm" className="ui-ob-line-actions" value={verdict} onValueChange={mark} aria-label={`${line.label}: is it right?`}>
+        <ToggleGroup
+          type="single"
+          variant="outline"
+          size="sm"
+          className="ui-ob-line-actions"
+          value={verdict}
+          onValueChange={mark}
+          aria-label={`${line.label}: is it right?`}
+        >
           <ToggleGroupItem value="right" icon="check">
             Confirm
           </ToggleGroupItem>
@@ -114,7 +147,13 @@ function LineRow({ line, saved, canEdit, onSaved }: { line: Understood; saved?: 
             value={reason}
             autoFocus={!saved?.reason}
             onChange={(e) => setReason(e.target.value)}
-            onBlur={() => reason.trim() !== (saved?.reason ?? "") && save.mutate({ line: { id: line.id, verdict: "not_quite", reason: reason.trim() || undefined } }, { onSuccess: onSaved, onError: failed })}
+            onBlur={() =>
+              reason.trim() !== (saved?.reason ?? "") &&
+              save.mutate(
+                { line: { id: line.id, verdict: "not_quite", reason: reason.trim() || undefined } },
+                { onSuccess: onSaved, onError: failed },
+              )
+            }
             onKeyDown={(e) => e.key === "Enter" && e.currentTarget.blur()}
             placeholder="In your words; Fume asks before it guesses"
           />
@@ -126,7 +165,15 @@ function LineRow({ line, saved, canEdit, onSaved }: { line: Understood; saved?: 
 
 /** The lines, each with Confirm · Change (a line marked Change asks what is right), saved on the tap. Without
  *  canEdit they are a record: the words only. */
-export function UnderstoodLines({ lines, canEdit, onSaved }: { lines: Understood[]; canEdit: boolean; onSaved?: () => void }) {
+export function UnderstoodLines({
+  lines,
+  canEdit,
+  onSaved,
+}: {
+  lines: Understood[];
+  canEdit: boolean;
+  onSaved?: () => void;
+}) {
   const progress = useOnboardingProgress();
   if (!progress.data) return null;
   const saved = new Map(progress.data.lines.map((l) => [l.id, l]));
@@ -142,7 +189,15 @@ export function UnderstoodLines({ lines, canEdit, onSaved }: { lines: Understood
 // ─── Questions and test directions ──────────────────────────────────────────
 
 /** One open question: why Fume asks, and the answer. An answered one can be changed. */
-export function QuestionCard({ unknown, canEdit, onSaved }: { unknown: Unknown; canEdit: boolean; onSaved: () => void }) {
+export function QuestionCard({
+  unknown,
+  canEdit,
+  onSaved,
+}: {
+  unknown: Unknown;
+  canEdit: boolean;
+  onSaved: () => void;
+}) {
   const answer = useAnswerUnderstanding();
   const toast = useToast();
   const [editing, setEditing] = useState(!unknown.answer);
@@ -202,7 +257,15 @@ export function QuestionCard({ unknown, canEdit, onSaved }: { unknown: Unknown; 
 }
 
 /** One test direction: is this you, saved on the tap, and why, saved when she leaves the field. */
-function DirectionCard({ direction, canEdit, onSaved }: { direction: TestDirection; canEdit: boolean; onSaved: () => void }) {
+function DirectionCard({
+  direction,
+  canEdit,
+  onSaved,
+}: {
+  direction: TestDirection;
+  canEdit: boolean;
+  onSaved: () => void;
+}) {
   const answer = useAnswerUnderstanding();
   const toast = useToast();
   const viewer = useViewer();
@@ -214,17 +277,30 @@ function DirectionCard({ direction, canEdit, onSaved }: { direction: TestDirecti
   function pick(v: string) {
     if (v !== "yes" && v !== "no") return;
     setVerdict(v);
-    answer.mutate({ directionId: direction.id, verdict: v, reason: reason.trim() || undefined }, { onSuccess: onSaved, onError: failed });
+    answer.mutate(
+      { directionId: direction.id, verdict: v, reason: reason.trim() || undefined },
+      { onSuccess: onSaved, onError: failed },
+    );
   }
   function saveReason() {
     if (!verdict || reason.trim() === (direction.reason ?? "")) return;
-    answer.mutate({ directionId: direction.id, verdict, reason: reason.trim() || undefined }, { onSuccess: onSaved, onError: failed });
+    answer.mutate(
+      { directionId: direction.id, verdict, reason: reason.trim() || undefined },
+      { onSuccess: onSaved, onError: failed },
+    );
   }
 
   const words = direction.verdict === "yes" ? "This is us" : "Not us";
   const said = direction.verdict ? `${viewer.staff ? viewer.brand : "You"} said: ${words}` : "Not answered yet";
   // a reason that only repeats the answer ("This is us.") is said once
-  const why = direction.reason && direction.reason.trim().replace(/[.!\s]+$/, "").toLowerCase() !== words.toLowerCase() ? direction.reason : undefined;
+  const why =
+    direction.reason &&
+    direction.reason
+      .trim()
+      .replace(/[.!\s]+$/, "")
+      .toLowerCase() !== words.toLowerCase()
+      ? direction.reason
+      : undefined;
   return (
     <Card>
       <CardMedia>
@@ -236,7 +312,14 @@ function DirectionCard({ direction, canEdit, onSaved }: { direction: TestDirecti
       </CardHeader>
       {canEdit && (
         <CardContent>
-          <ToggleGroup type="single" variant="outline" value={verdict} onValueChange={pick} aria-label={`Is ${direction.name} you?`} size="sm">
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            value={verdict}
+            onValueChange={pick}
+            aria-label={`Is ${direction.name} you?`}
+            size="sm"
+          >
             <ToggleGroupItem value="yes" icon="thumbs-up">
               This is us
             </ToggleGroupItem>
@@ -249,7 +332,13 @@ function DirectionCard({ direction, canEdit, onSaved }: { direction: TestDirecti
               <FieldLabel htmlFor={id}>
                 Why <FieldOptional />
               </FieldLabel>
-              <Input id={id} value={reason} onChange={(e) => setReason(e.target.value)} onBlur={saveReason} onKeyDown={(e) => e.key === "Enter" && e.currentTarget.blur()} />
+              <Input
+                id={id}
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                onBlur={saveReason}
+                onKeyDown={(e) => e.key === "Enter" && e.currentTarget.blur()}
+              />
             </Field>
           )}
         </CardContent>
@@ -282,7 +371,9 @@ export function UnderstandingCheck({ view, editing = false }: { view: BrandDnaVi
     approve.mutate(undefined, {
       onSuccess: (dna) => {
         setChanged(false);
-        toast.done(`Brand DNA version ${dna.version} approved`, { description: "Every campaign from now on is made and checked against it." });
+        toast.done(`Brand DNA version ${dna.version} approved`, {
+          description: "Every campaign from now on is made and checked against it.",
+        });
       },
       onError: (error) => toast.error("Brand DNA wasn’t approved", { description: error.message }),
     });
@@ -290,7 +381,15 @@ export function UnderstandingCheck({ view, editing = false }: { view: BrandDnaVi
 
   return (
     <>
-      <Section title="What Fume read" titleId="und-summary" text={canEdit ? "From your brand material and your answers. Confirm each line, or change one that is not quite right." : undefined}>
+      <Section
+        title="What Fume read"
+        titleId="und-summary"
+        text={
+          canEdit
+            ? "From your brand material and your answers. Confirm each line, or change one that is not quite right."
+            : undefined
+        }
+      >
         <UnderstoodLines lines={understoodLines(view, scan.data)} canEdit={canEdit} onSaved={changed} />
         {canEdit && (
           <div className="ui-app-row">
@@ -302,7 +401,12 @@ export function UnderstandingCheck({ view, editing = false }: { view: BrandDnaVi
       </Section>
 
       {open.length > 0 && (
-        <Section title="Fume needs an answer" meta={open.length} titleId="und-questions" text="Fume asks before it guesses. Each answer goes into your Brand DNA as something you gave us.">
+        <Section
+          title="Fume needs an answer"
+          meta={open.length}
+          titleId="und-questions"
+          text="Fume asks before it guesses. Each answer goes into your Brand DNA as something you gave us."
+        >
           <div className="ui-app-grid ui-app-grid--wide">
             {open.map((x) => (
               <QuestionCard key={x.id} unknown={x} canEdit={mayEdit} onSaved={changed} />
@@ -321,7 +425,11 @@ export function UnderstandingCheck({ view, editing = false }: { view: BrandDnaVi
                 </ItemMedia>
                 <ItemContent>
                   <ItemTitle>{c.text}</ItemTitle>
-                  <ItemDescription>{c.resolved ? `Settled: ${c.resolved}` : "Not settled yet. Fume asks you about it before the first campaign."}</ItemDescription>
+                  <ItemDescription>
+                    {c.resolved
+                      ? `Settled: ${c.resolved}`
+                      : "Not settled yet. Fume asks you about it before the first campaign."}
+                  </ItemDescription>
                 </ItemContent>
               </Item>
             ))}
@@ -367,12 +475,20 @@ export function UnderstandingCheck({ view, editing = false }: { view: BrandDnaVi
           {approved && !changedSinceApproval ? (
             <Alert>
               <AlertTitle>{versionLine(view.dna, dir.name, me)}</AlertTitle>
-              <AlertDescription>Campaigns are made and checked against this version. A change here becomes version {view.dna.version + 1} for you to approve.</AlertDescription>
+              <AlertDescription>
+                Campaigns are made and checked against this version. A change here becomes version{" "}
+                {view.dna.version + 1} for you to approve.
+              </AlertDescription>
             </Alert>
           ) : canApprove ? (
             <Alert>
-              <AlertTitle>{approved ? `Version ${view.dna.version + 1} is ready for you` : "Ready when you are"}</AlertTitle>
-              <AlertDescription>Approving tells Fume this is your brand. Every campaign is made and checked against it, and you can change it later.</AlertDescription>
+              <AlertTitle>
+                {approved ? `Version ${view.dna.version + 1} is ready for you` : "Ready when you are"}
+              </AlertTitle>
+              <AlertDescription>
+                Approving tells Fume this is your brand. Every campaign is made and checked against it, and you can
+                change it later.
+              </AlertDescription>
               <AlertAction>
                 <Button icon="check" onClick={approveNow} loading={approve.isPending} disabled={!mayApprove}>
                   Approve Brand DNA v{view.dna.version + 1}

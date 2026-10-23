@@ -58,7 +58,21 @@ import {
 } from "@fume/ui";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useNavigationType, useParams, useSearchParams } from "react-router-dom";
-import { useCampaign, useCampaigns, useCatalogue, useChangePlanWithFume, useConversation, usePeople, usePlan, useSay, useSend, useSession, useStartCampaign, useTeam, useThreads } from "../../api/hooks";
+import {
+  useCampaign,
+  useCampaigns,
+  useCatalogue,
+  useChangePlanWithFume,
+  useConversation,
+  usePeople,
+  usePlan,
+  useSay,
+  useSend,
+  useSession,
+  useStartCampaign,
+  useTeam,
+  useThreads,
+} from "../../api/hooks";
 import type { Campaign, ChatLink, Id, Message as FumeMessage, ProductQuestionCard } from "../../contract";
 import { time } from "../../lib/time";
 import { Page, Query } from "../../shell/Page";
@@ -112,11 +126,14 @@ function keepPanel(hidden: boolean) {
   }
 }
 /** #17: words that ask for a new campaign ("Make a Christmas campaign for Hand Balm"). */
-const NEW_CAMPAIGN = /(^(please\s+)?(make|start|create|set up|begin|plan|launch)\b|\b(i want|i'd like|i would like|let's|lets|can you|could you|we need|i need)\b)[^.?!]*\b(a|an|new|another)\b[^.?!]*\bcampaign\b\s*(for|to|about|on|around|with|$|[.!])/i;
+const NEW_CAMPAIGN =
+  /(^(please\s+)?(make|start|create|set up|begin|plan|launch)\b|\b(i want|i'd like|i would like|let's|lets|can you|could you|we need|i need)\b)[^.?!]*\b(a|an|new|another)\b[^.?!]*\bcampaign\b\s*(for|to|about|on|around|with|$|[.!])/i;
 /** #20: words that change a plan: how many, which kind, when. */
-const PLAN_WORDS = /\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|twelve)\s+(creatives?|videos?|carousels?|stories|feed posts?)\b|\b(more|fewer|less|no|add|some)\s+(creatives?|videos?|carousels?)\b|\b(masters?|go(es)? live|launch)\b[^?]*\b(by|on|to)\b|\bweeks? (earlier|sooner|later)\b/i;
+const PLAN_WORDS =
+  /\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|twelve)\s+(creatives?|videos?|carousels?|stories|feed posts?)\b|\b(more|fewer|less|no|add|some)\s+(creatives?|videos?|carousels?)\b|\b(masters?|go(es)? live|launch)\b[^?]*\b(by|on|to)\b|\bweeks? (earlier|sooner|later)\b/i;
 /** A question rather than a change ("Where is…?"). */
-const ASKS = (words: string) => /\?\s*$/.test(words.trim()) || /^(where|what|when|how|why|who|which|is|are|can|could|do|does)\b/i.test(words.trim());
+const ASKS = (words: string) =>
+  /\?\s*$/.test(words.trim()) || /^(where|what|when|how|why|who|which|is|are|can|could|do|does)\b/i.test(words.trim());
 
 function read<T>(key: string): T | undefined {
   try {
@@ -148,9 +165,11 @@ function campaignWords(): string {
 /** A card with buttons, or a question: it comes into view with its buttons above the composer (DTSK-3). */
 const acts = (m: FumeMessage) => m.author.kind !== "person" && Boolean(m.card) && m.card?.kind !== "handover";
 /** The campaign a card speaks of, for a message said where no campaign is named. */
-const cardCampaign = (m: FumeMessage): Id | undefined => (m.card && "campaignId" in m.card ? m.card.campaignId : undefined);
+const cardCampaign = (m: FumeMessage): Id | undefined =>
+  m.card && "campaignId" in m.card ? m.card.campaignId : undefined;
 /** A campaign whose brief is still being written: not sent yet. */
-const briefOpen = (c: Campaign | undefined) => Boolean(c && c.stage === "brief" && (c.state === "draft" || c.state === "awaiting_input"));
+const briefOpen = (c: Campaign | undefined) =>
+  Boolean(c && c.stage === "brief" && (c.state === "draft" || c.state === "awaiting_input"));
 /** A campaign the chat is still working on with her: its brief is being written, or its plan is not approved yet. */
 const inFlight = (c: Campaign | undefined) => (c && (briefOpen(c) || c.stage === "plan") ? c : undefined);
 
@@ -231,7 +250,10 @@ export function FumePage() {
 
   const staff = Boolean(session.user.staffRole);
   const owner = team.data?.members.find((m) => m.membership.role === "owner")?.user;
-  const approverName = firstName(team.data?.members.find((m) => m.membership.role === "owner" || m.membership.role === "approver")?.user.name ?? "The approver");
+  const approverName = firstName(
+    team.data?.members.find((m) => m.membership.role === "owner" || m.membership.role === "approver")?.user.name ??
+      "The approver",
+  );
   const blocked = cannotWrite(session.role, staff, owner);
   const canStart = session.role === "owner" || session.role === "approver" || session.role === "member";
   const canAct = session.role !== "viewer" && session.role !== null;
@@ -263,7 +285,13 @@ export function FumePage() {
     items.forEach((m, i) => {
       const before = lastIn.get(m.threadId);
       lastIn.set(m.threadId, m);
-      if (before?.author.kind === "fume" && before.card?.kind === "question" && before.card.productIds?.length && m.author.kind === "person" && !m.attachments?.length) {
+      if (
+        before?.author.kind === "fume" &&
+        before.card?.kind === "question" &&
+        before.card.productIds?.length &&
+        m.author.kind === "person" &&
+        !m.attachments?.length
+      ) {
         const names = m.text.split(", ").map((n) => n.trim());
         if (names.every((n) => productNames.has(n))) {
           answers.set(before.id, m.text);
@@ -306,10 +334,19 @@ export function FumePage() {
       const said = items.filter((m) => m.threadId === t.id);
       const newest = said[said.length - 1];
       const campaign = t.campaignId ? byId.get(t.campaignId) : undefined;
-      const asking = newest?.author.kind === "fume" && newest.card?.kind === "question" ? newest.card.question : undefined;
+      const asking =
+        newest?.author.kind === "fume" && newest.card?.kind === "question" ? newest.card.question : undefined;
       if (!briefOpen(campaign) && !asking) continue;
-      const asked = [...said].reverse().find((m) => m.author.kind === "fume" && (m.card?.kind === "question" || m.card?.kind === "brief")) ?? newest;
-      rows.push({ threadId: t.id, campaignId: t.campaignId, at: asked?.at ?? t.updatedAt, why: asking ? `Fume asked: ${asking}` : "A brief being written" });
+      const asked =
+        [...said]
+          .reverse()
+          .find((m) => m.author.kind === "fume" && (m.card?.kind === "question" || m.card?.kind === "brief")) ?? newest;
+      rows.push({
+        threadId: t.id,
+        campaignId: t.campaignId,
+        at: asked?.at ?? t.updatedAt,
+        why: asking ? `Fume asked: ${asking}` : "A brief being written",
+      });
     }
     return rows.sort((a, b) => b.at.localeCompare(a.at));
   }, [fumeThreads, items, byId]);
@@ -317,7 +354,8 @@ export function FumePage() {
   const addressedOpen = threadId && open.some((o) => o.threadId === threadId) ? threadId : undefined;
   // Round 10: the brief she just sent stays where her next words go while Fume writes its plan, so a line typed right
   // after "Send to Fume" is about that campaign, not about another brief still open.
-  const followThread = follow && byId.get(follow)?.stage === "plan" ? fumeThreads.find((t) => t.campaignId === follow)?.id : undefined;
+  const followThread =
+    follow && byId.get(follow)?.stage === "plan" ? fumeThreads.find((t) => t.campaignId === follow)?.id : undefined;
   const autoReply = addressedOpen ?? followThread ?? open[0]?.threadId ?? general?.id;
   const replyTo = replyChoice && replyChoice.over === autoReply ? replyChoice.threadId : autoReply;
   const replyCampaign = replyTo ? byId.get(threadCampaign.get(replyTo) ?? "") : undefined;
@@ -327,8 +365,24 @@ export function FumePage() {
   // She chose where her reply goes: that brief comes into the panel; else the campaign she started or sent here, the
   // one the address names, or the brief her reply answers.
   const chosen = replyChoice && replyChoice.over === autoReply && briefOpen(replyCampaign) ? replyCampaign : undefined;
-  const focus = starting ? undefined : (chosen ?? inFlight(byId.get(follow ?? "")) ?? inFlight(byId.get(addressed ?? "")) ?? (briefOpen(replyCampaign) ? replyCampaign : undefined));
-  const panel: "new" | "brief" | "plan" | "link" | null = !desk || !roomy ? null : starting ? "new" : opened ? "link" : !focus ? null : focus.stage === "plan" ? "plan" : "brief";
+  const focus = starting
+    ? undefined
+    : (chosen ??
+      inFlight(byId.get(follow ?? "")) ??
+      inFlight(byId.get(addressed ?? "")) ??
+      (briefOpen(replyCampaign) ? replyCampaign : undefined));
+  const panel: "new" | "brief" | "plan" | "link" | null =
+    !desk || !roomy
+      ? null
+      : starting
+        ? "new"
+        : opened
+          ? "link"
+          : !focus
+            ? null
+            : focus.stage === "plan"
+              ? "plan"
+              : "brief";
   // #13: the panel she hid stays hidden (the head's toggle shows it again); a thing she opens shows it.
   const shown = panel !== null && !hidden;
   // #15: a link opens in the panel on a desk with room for it, else on its own page (with the way back).
@@ -343,7 +397,8 @@ export function FumePage() {
     if (planParam) setParams({}, { replace: true });
   };
   // #20: the plan her words change: the one the address or the panel shows.
-  const planFor = planParam ?? (opened?.kind === "plan" ? opened.campaignId : !opened && panel === "plan" ? focus?.id : undefined);
+  const planFor =
+    planParam ?? (opened?.kind === "plan" ? opened.campaignId : !opened && panel === "plan" ? focus?.id : undefined);
   const planNow = usePlan(planFor).data;
   const changePlan = useChangePlanWithFume();
   const briefView = useCampaign(panel === "brief" ? focus?.id : undefined).data;
@@ -354,7 +409,14 @@ export function FumePage() {
   // The products she named that wait to be confirmed: the brief's Product line says so while Fume asks.
   const named = useMemo(() => {
     if (!focus) return [];
-    const q = [...items].reverse().find((m) => layout.about.get(m.id) === focus.id && m.card?.kind === "question" && (m.card as ProductQuestionCard).named?.length);
+    const q = [...items]
+      .reverse()
+      .find(
+        (m) =>
+          layout.about.get(m.id) === focus.id &&
+          m.card?.kind === "question" &&
+          (m.card as ProductQuestionCard).named?.length,
+      );
     const ids = (q?.card as ProductQuestionCard | undefined)?.named ?? [];
     return (catalogue.data?.products ?? []).filter((p) => ids.includes(p.id) && !confirmed(p)).map((p) => p.name);
   }, [items, layout, focus, catalogue.data]);
@@ -401,7 +463,8 @@ export function FumePage() {
   };
   /** A message from its top (its campaign's marker over it), or, when it carries buttons and is too tall to show
    *  whole, from its buttons (DTSK-3). */
-  const revealMessage = (m: FumeMessage, smooth?: boolean) => reveal(layout.turns.has(m.id) ? turnAnchor(m.id) : anchor(m.id), { smooth, block: acts(m) ? "end" : "start" });
+  const revealMessage = (m: FumeMessage, smooth?: boolean) =>
+    reveal(layout.turns.has(m.id) ? turnAnchor(m.id) : anchor(m.id), { smooth, block: acts(m) ? "end" : "start" });
 
   // A card asked for: unfold first if it sits in the earlier talk, then bring it into view once it is rendered (and
   // mark the message an address pointed at). Each ask is handled once; its settle timers live until the next ask.
@@ -427,7 +490,7 @@ export function FumePage() {
       window.clearTimeout(unmark);
       marked?.removeAttribute("data-ui-target");
     };
-  }, [target, fold]);  
+  }, [target, fold]);
 
   // Fume's answer to what she just did comes into view: its question, and its buttons above the composer.
   const newest = last;
@@ -535,13 +598,26 @@ export function FumePage() {
 
   const submit = (words: string) => {
     // #20: words that change the plan the panel shows go to the plan (a question still goes to the talk).
-    if (!starting && planFor && !ASKS(words) && !picked.length && (planParam || opened?.kind === "plan" ? true : planNow?.state === "ready" && PLAN_WORDS.test(words))) {
+    if (
+      !starting &&
+      planFor &&
+      !ASKS(words) &&
+      !picked.length &&
+      (planParam || opened?.kind === "plan" ? true : planNow?.state === "ready" && PLAN_WORDS.test(words))
+    ) {
       changePlan.mutate({ campaignId: planFor, text: words }, { onSuccess: () => sent() });
       return;
     }
     // #17: "Make a Christmas campaign for Hand Balm" starts it, as New campaign does; not while she answers a brief.
     const namesOne = (campaigns.data ?? []).some((c) => words.toLowerCase().includes(c.name.toLowerCase()));
-    if (!starting && canStart && !picked.length && NEW_CAMPAIGN.test(words.trim()) && !/\?\s*$/.test(words.trim()) && !namesOne) {
+    if (
+      !starting &&
+      canStart &&
+      !picked.length &&
+      NEW_CAMPAIGN.test(words.trim()) &&
+      !/\?\s*$/.test(words.trim()) &&
+      !namesOne
+    ) {
       startFrom(words);
       return;
     }
@@ -574,7 +650,10 @@ export function FumePage() {
     setParams({}, { replace: true });
   };
 
-  const nameOf = (campaignId: Id | null | undefined) => (campaignId ? (byId.get(campaignId)?.name ?? fumeThreads.find((t) => t.campaignId === campaignId)?.title ?? "A campaign") : NO_CAMPAIGN);
+  const nameOf = (campaignId: Id | null | undefined) =>
+    campaignId
+      ? (byId.get(campaignId)?.name ?? fumeThreads.find((t) => t.campaignId === campaignId)?.title ?? "A campaign")
+      : NO_CAMPAIGN;
 
   const conversationView = (
     <Query query={conversation} loading="Opening the conversation">
@@ -582,7 +661,11 @@ export function FumePage() {
         <MessageScroller
           ref={scroller}
           label="Your conversation with Fume"
-          announcement={last ? `${last.author.kind === "person" && last.author.userId === session.user.id ? "You" : people.author(last.author)}: ${last.text}` : undefined}
+          announcement={
+            last
+              ? `${last.author.kind === "person" && last.author.userId === session.user.id ? "You" : people.author(last.author)}: ${last.text}`
+              : undefined
+          }
         >
           <AiLine />
           {items.length === 0 && !starting && <MessageText>Nothing here yet. Tell Fume what you need.</MessageText>}
@@ -634,25 +717,27 @@ export function FumePage() {
                       {NO_CAMPAIGN}
                     </Marker>
                   ))}
-                {!layout.hidden.has(m.id) && <Line
-                  message={m}
-                  campaignId={campaignId}
-                  people={people}
-                  meId={session.user.id}
-                  canAct={canAct}
-                  anchorId={anchor(m.id)}
-                  showTime={showTime}
-                  briefInPanel={panel === "brief" && Boolean(campaignId) && campaignId === focus?.id}
-                  planInPanel={panel === "plan" && m.card?.kind === "plan" && m.card.campaignId === focus?.id}
-                  latestPlan={m.card?.kind !== "plan" || layout.latestPlan.get(m.card.campaignId) === m.id}
-                  onSend={() => {
-                    if (campaignId) setFollow(campaignId);
-                    expecting.current = true;
-                    focusComposer();
-                  }}
-                  onAnswer={latest && !blocked && !pending ? (words) => reply(m, words) : undefined}
-                  answeredWith={layout.answers.get(m.id)}
-                />}
+                {!layout.hidden.has(m.id) && (
+                  <Line
+                    message={m}
+                    campaignId={campaignId}
+                    people={people}
+                    meId={session.user.id}
+                    canAct={canAct}
+                    anchorId={anchor(m.id)}
+                    showTime={showTime}
+                    briefInPanel={panel === "brief" && Boolean(campaignId) && campaignId === focus?.id}
+                    planInPanel={panel === "plan" && m.card?.kind === "plan" && m.card.campaignId === focus?.id}
+                    latestPlan={m.card?.kind !== "plan" || layout.latestPlan.get(m.card.campaignId) === m.id}
+                    onSend={() => {
+                      if (campaignId) setFollow(campaignId);
+                      expecting.current = true;
+                      focusComposer();
+                    }}
+                    onAnswer={latest && !blocked && !pending ? (words) => reply(m, words) : undefined}
+                    answeredWith={layout.answers.get(m.id)}
+                  />
+                )}
               </Fragment>
             );
           })}
@@ -663,7 +748,10 @@ export function FumePage() {
               <MessageContent>
                 <MessageText>
                   <p>Tell us what the new campaign is for: the product, who it should reach and where it will run.</p>
-                  <p>We ask a few questions, one at a time, and write the brief with you. Once you send it, we write the plan; nothing is made before you approve the plan.</p>
+                  <p>
+                    We ask a few questions, one at a time, and write the brief with you. Once you send it, we write the
+                    plan; nothing is made before you approve the plan.
+                  </p>
                 </MessageText>
               </MessageContent>
             </Message>
@@ -683,12 +771,16 @@ export function FumePage() {
 
   // When more than one thing is open (the brief she just sent counts), the line over the composer says where her reply
   // goes, with Change.
-  const sentRow = followThread && !open.some((o) => o.threadId === followThread) ? [{ threadId: followThread, campaignId: follow, at: "", why: "The brief you just sent" }] : [];
+  const sentRow =
+    followThread && !open.some((o) => o.threadId === followThread)
+      ? [{ threadId: followThread, campaignId: follow, at: "", why: "The brief you just sent" }]
+      : [];
   const choices = [...sentRow, ...open];
   const replyLine = !starting && choices.length > 1 && replyTo && (
     <div className="ui-chat-to">
       <p className="ui-chat-to-text">
-        Your reply is about <span className="ui-chat-to-name">{replyCampaign ? replyCampaign.name : NO_CAMPAIGN.toLowerCase()}</span>
+        Your reply is about{" "}
+        <span className="ui-chat-to-name">{replyCampaign ? replyCampaign.name : NO_CAMPAIGN.toLowerCase()}</span>
       </p>
       <OptionMenu
         title="What is your reply about?"
@@ -705,7 +797,15 @@ export function FumePage() {
             },
           })),
           ...(general && !choices.some((o) => o.threadId === general.id)
-            ? [{ id: general.id, icon: "message-square" as const, label: NO_CAMPAIGN, description: "Something else for Fume", onSelect: () => (setReplyChoice({ threadId: general.id, over: autoReply }), focusComposer()) }]
+            ? [
+                {
+                  id: general.id,
+                  icon: "message-square" as const,
+                  label: NO_CAMPAIGN,
+                  description: "Something else for Fume",
+                  onSelect: () => (setReplyChoice({ threadId: general.id, over: autoReply }), focusComposer()),
+                },
+              ]
             : []),
         ]}
       >
@@ -717,10 +817,22 @@ export function FumePage() {
   );
 
   // #16: "@" names something for Fume; an empty composer offers a few questions.
-  const mentions = useMentions({ inputId: COMPOSER_ID, text, onText: write, disabled: Boolean(blocked) || pending || starting });
+  const mentions = useMentions({
+    inputId: COMPOSER_ID,
+    text,
+    onText: write,
+    disabled: Boolean(blocked) || pending || starting,
+  });
   // Not while Fume's own question waits for one of its answers (its buttons are the answer then).
-  const asking = !starting && !blocked && !pending && !text.trim() && !planFor && !(last && last.author.kind === "fume" && last.card?.kind === "question");
-  const askAbout = talked[0]?.campaign.name ?? (campaigns.data ?? []).find((c) => !["delivered", "closed"].includes(c.state))?.name;
+  const asking =
+    !starting &&
+    !blocked &&
+    !pending &&
+    !text.trim() &&
+    !planFor &&
+    !(last && last.author.kind === "fume" && last.card?.kind === "question");
+  const askAbout =
+    talked[0]?.campaign.name ?? (campaigns.data ?? []).find((c) => !["delivered", "closed"].includes(c.state))?.name;
 
   const foot = (
     <div className="ui-chat-foot">
@@ -754,7 +866,13 @@ export function FumePage() {
                 : "Write to Fume, or @ to name a campaign or product")
         }
         label={starting ? "Start a campaign with Fume" : "Write to Fume"}
-        inputLabel={starting ? "What the campaign is for" : replyCampaign ? `Message to Fume about ${replyCampaign.name}` : "Message to Fume"}
+        inputLabel={
+          starting
+            ? "What the campaign is for"
+            : replyCampaign
+              ? `Message to Fume about ${replyCampaign.name}`
+              : "Message to Fume"
+        }
         inputId={COMPOSER_ID}
         // "Send to Fume" is the brief's button (round 10); the composer sends a message, so it says only that.
         sendLabel={starting ? "Start the campaign" : "Send the message"}
@@ -798,51 +916,53 @@ export function FumePage() {
     return (
       <Page title="Fume" docTitle="Fume chat" width="fill">
         <ChatLinkProvider open={openLink}>
-        <div className="ui-app-page ui-chat-page" data-desk="" data-panel={shown ? "" : undefined}>
-          <div className="ui-chat">
-            <ChatHead>
-              {!starting && jumpMenu}
-              {/* Quiet here: the composer's Send is the chat's one primary action (DTSK-21). */}
-              {canStart && !starting && (
-                <Button variant="quiet" size="sm" icon="plus" onClick={() => navigate("/fume?new=1")}>
-                  New campaign
-                </Button>
-              )}
-              {/* #13: the panel hides and shows, like Claude's artifact panel; the choice is kept on this device. */}
-              {panel && (
-                <Button
-                  variant="quiet"
-                  size="sm"
-                  icon="panel-left"
-                  iconOnly
-                  className="ui-chat-panel-toggle"
-                  aria-pressed={shown}
-                  aria-label={shown ? "Hide the panel" : "Show the panel"}
-                  title={shown ? "Hide the panel" : "Show the panel"}
-                  onClick={() => setHidden(shown)}
-                />
-              )}
-            </ChatHead>
-            {conversationView}
-            {foot}
+          <div className="ui-app-page ui-chat-page" data-desk="" data-panel={shown ? "" : undefined}>
+            <div className="ui-chat">
+              <ChatHead>
+                {!starting && jumpMenu}
+                {/* Quiet here: the composer's Send is the chat's one primary action (DTSK-21). */}
+                {canStart && !starting && (
+                  <Button variant="quiet" size="sm" icon="plus" onClick={() => navigate("/fume?new=1")}>
+                    New campaign
+                  </Button>
+                )}
+                {/* #13: the panel hides and shows, like Claude's artifact panel; the choice is kept on this device. */}
+                {panel && (
+                  <Button
+                    variant="quiet"
+                    size="sm"
+                    icon="panel-left"
+                    iconOnly
+                    className="ui-chat-panel-toggle"
+                    aria-pressed={shown}
+                    aria-label={shown ? "Hide the panel" : "Show the panel"}
+                    title={shown ? "Hide the panel" : "Show the panel"}
+                    onClick={() => setHidden(shown)}
+                  />
+                )}
+              </ChatHead>
+              {conversationView}
+              {foot}
+            </div>
+            {shown && panel === "link" && opened && (
+              <LinkPanel key={linkKey(opened)} link={opened} onClose={closeLink} />
+            )}
+            {shown && (panel === "new" || panel === "brief") && (
+              <BriefPanel
+                key={panel === "new" ? "new" : focus?.id}
+                view={panel === "new" ? undefined : briefView}
+                named={named}
+                canAct={canAct && !blocked}
+                approver={approverName}
+                onSending={() => {
+                  if (focus) setFollow(focus.id);
+                  expecting.current = true;
+                }}
+                onSent={focusComposer}
+              />
+            )}
+            {shown && panel === "plan" && focus && <PlanPanel key={focus.id} campaignId={focus.id} />}
           </div>
-          {shown && panel === "link" && opened && <LinkPanel key={linkKey(opened)} link={opened} onClose={closeLink} />}
-          {shown && (panel === "new" || panel === "brief") && (
-            <BriefPanel
-              key={panel === "new" ? "new" : focus?.id}
-              view={panel === "new" ? undefined : briefView}
-              named={named}
-              canAct={canAct && !blocked}
-              approver={approverName}
-              onSending={() => {
-                if (focus) setFollow(focus.id);
-                expecting.current = true;
-              }}
-              onSent={focusComposer}
-            />
-          )}
-          {shown && panel === "plan" && focus && <PlanPanel key={focus.id} campaignId={focus.id} />}
-        </div>
         </ChatLinkProvider>
       </Page>
     );
@@ -850,25 +970,25 @@ export function FumePage() {
   return (
     <Page title="Fume" width="fill">
       <ChatLinkProvider open={openLink}>
-      {/* The fill page has no padding of its own; the header and the conversation take the page frame's. */}
-      <div className="ui-app-page ui-chat-page">
-        <PageHeader
-          title="Fume"
-          actions={
-            !starting && (talked.length > 0 || canStart) ? (
-              <>
-                {jumpMenu}
-                {/* Secondary here: the composer's Send is the chat's one primary action (DTSK-21). */}
-                {canStart && <StartCampaign quiet />}
-              </>
-            ) : undefined
-          }
-        />
-        <div className="ui-chat">
-          {conversationView}
-          {foot}
+        {/* The fill page has no padding of its own; the header and the conversation take the page frame's. */}
+        <div className="ui-app-page ui-chat-page">
+          <PageHeader
+            title="Fume"
+            actions={
+              !starting && (talked.length > 0 || canStart) ? (
+                <>
+                  {jumpMenu}
+                  {/* Secondary here: the composer's Send is the chat's one primary action (DTSK-21). */}
+                  {canStart && <StartCampaign quiet />}
+                </>
+              ) : undefined
+            }
+          />
+          <div className="ui-chat">
+            {conversationView}
+            {foot}
+          </div>
         </div>
-      </div>
       </ChatLinkProvider>
     </Page>
   );
@@ -910,7 +1030,9 @@ function when(at: string): string {
 function AiLine() {
   return (
     <Marker icon="info">
-      <span>Fume is AI. When something needs a person, Fume brings one in here, and remembers everything you tell it.</span>
+      <span>
+        Fume is AI. When something needs a person, Fume brings one in here, and remembers everything you tell it.
+      </span>
     </Marker>
   );
 }
@@ -930,7 +1052,9 @@ function usePicked() {
         name: f.name,
         bytes: f.size,
         meta: attachmentMeta(f.name, f.size),
-        media: f.type.startsWith("image/") ? { kind: "image" as const, src: URL.createObjectURL(f), alt: f.name } : { kind: "icon" as const },
+        media: f.type.startsWith("image/")
+          ? { kind: "image" as const, src: URL.createObjectURL(f), alt: f.name }
+          : { kind: "icon" as const },
       })),
     ]);
   const remove = (id: string) => setPicked((list) => list.filter((a) => a.id !== id));

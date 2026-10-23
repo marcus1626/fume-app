@@ -13,7 +13,11 @@ export function NotFound() {
       <Nothing
         icon={crashed ? "circle-alert" : "search"}
         title={crashed ? "Something went wrong on this page" : "This page isn’t here"}
-        text={crashed ? "Your work is safe. Go home and try again; if it happens again, tell Fume." : "The link may be old, or the campaign was moved."}
+        text={
+          crashed
+            ? "Your work is safe. Go home and try again; if it happens again, tell Fume."
+            : "The link may be old, or the campaign was moved."
+        }
         action={
           <Button asChild variant="secondary" icon="house">
             <Link to="/">Go home</Link>

@@ -18,7 +18,18 @@ export interface StudioRowProps extends Omit<HTMLAttributes<HTMLDivElement>, "ti
   disabled?: boolean;
 }
 
-export function StudioRow({ label, htmlFor, labelId, readout, inline, help, disabled, className, children, ...props }: StudioRowProps) {
+export function StudioRow({
+  label,
+  htmlFor,
+  labelId,
+  readout,
+  inline,
+  help,
+  disabled,
+  className,
+  children,
+  ...props
+}: StudioRowProps) {
   return (
     <div className={cx("ui-sc", className)} data-disabled={disabled ? "" : undefined} {...props}>
       <div className="ui-sc-head">
@@ -31,7 +42,9 @@ export function StudioRow({ label, htmlFor, labelId, readout, inline, help, disa
             {label}
           </span>
         )}
-        {readout !== undefined && readout !== null && readout !== "" ? <span className="ui-sc-readout">{readout}</span> : null}
+        {readout !== undefined && readout !== null && readout !== "" ? (
+          <span className="ui-sc-readout">{readout}</span>
+        ) : null}
         {inline}
       </div>
       {children}

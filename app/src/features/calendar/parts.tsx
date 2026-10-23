@@ -28,7 +28,18 @@ import type { CalendarEntry, Campaign, Creative, Id, Placement } from "../../con
 import * as copy from "../../copy";
 import { Nothing } from "../../shell/Page";
 import { useCustomerNames } from "../review/names";
-import { addDays, between, clock, dateShort, dayNumber, dayOf, dayTitle, sameMonth, weekdayShort, type Day } from "./dates";
+import {
+  addDays,
+  between,
+  clock,
+  dateShort,
+  dayNumber,
+  dayOf,
+  dayTitle,
+  sameMonth,
+  weekdayShort,
+  type Day,
+} from "./dates";
 import type { DragPayload, DragState } from "./drag";
 import type { PlanTarget } from "./plan";
 
@@ -54,7 +65,11 @@ export interface CalendarActions {
 
 const vars = (v: Record<string, string | number>) => v as CSSProperties;
 
-const kindIcon: Record<Exclude<CalendarEntry["kind"], "campaign" | "post">, IconName> = { drop: "tag", delivery: "download", meeting: "users" };
+const kindIcon: Record<Exclude<CalendarEntry["kind"], "campaign" | "post">, IconName> = {
+  drop: "tag",
+  delivery: "download",
+  meeting: "users",
+};
 
 /** Entries by their Oslo day, campaigns apart (they span days). */
 function sortEntries(entries: CalendarEntry[]) {
@@ -98,7 +113,19 @@ function barsFor(weekStart: Day, spans: CalendarEntry[]): Bar[] {
 
 // ─── Month and week ──────────────────────────────────────────────────────────
 
-export function MonthGrid({ start, end, month, entries, actions }: { start: Day; end: Day; month: Day; entries: CalendarEntry[]; actions: CalendarActions }) {
+export function MonthGrid({
+  start,
+  end,
+  month,
+  entries,
+  actions,
+}: {
+  start: Day;
+  end: Day;
+  month: Day;
+  entries: CalendarEntry[];
+  actions: CalendarActions;
+}) {
   const { spans, byDay } = useMemo(() => sortEntries(entries), [entries]);
   const weeks: Day[] = [];
   for (let w = start; w <= end; w = addDays(w, 7)) weeks.push(w);
@@ -116,7 +143,15 @@ export function MonthGrid({ start, end, month, entries, actions }: { start: Day;
   );
 }
 
-export function WeekGrid({ start, entries, actions }: { start: Day; entries: CalendarEntry[]; actions: CalendarActions }) {
+export function WeekGrid({
+  start,
+  entries,
+  actions,
+}: {
+  start: Day;
+  entries: CalendarEntry[];
+  actions: CalendarActions;
+}) {
   const { spans, byDay } = useMemo(() => sortEntries(entries), [entries]);
   return (
     <div className="ui-plan-cal" data-view="week">
@@ -165,7 +200,8 @@ function Week({
           className="ui-plan-date"
           data-today={d === actions.today ? "" : undefined}
           data-outside={month && !sameMonth(d, month) ? "" : undefined}
-          style={vars({ "--plan-col": i + 1 })}>
+          style={vars({ "--plan-col": i + 1 })}
+        >
           {named && <span className="ui-plan-date-day">{weekdayShort(d)}</span>}
           <span className="ui-plan-date-number">{dayNumber(d)}</span>
           {d === actions.today && <span className="ui-plan-sr">Today</span>}
@@ -224,7 +260,15 @@ function EntryChip({ entry, actions, large }: { entry: CalendarEntry; actions: C
     const subject = parts.length > 1 ? parts.slice(0, -1).join(" · ") : undefined;
     const body = (
       <>
-        {entry.image && <img className="ui-plan-post-media" src={entry.image} alt="" draggable={false} data-ratio={placement?.format} />}
+        {entry.image && (
+          <img
+            className="ui-plan-post-media"
+            src={entry.image}
+            alt=""
+            draggable={false}
+            data-ratio={placement?.format}
+          />
+        )}
         <span className="ui-plan-post-text">
           <span className="ui-plan-post-title">{short}</span>
           {subject && <span className="ui-plan-post-subject">{subject}</span>}
@@ -240,7 +284,12 @@ function EntryChip({ entry, actions, large }: { entry: CalendarEntry; actions: C
     const label = `${title} on ${where}, ${dayTitle(dayOf(entry.start))} at ${clock(entry.start)}`;
     if (!actions.canPlan)
       return (
-        <div className="ui-plan-post" data-size={large ? "lg" : undefined} aria-label={label} title={`${title}, ${where}`}>
+        <div
+          className="ui-plan-post"
+          data-size={large ? "lg" : undefined}
+          aria-label={label}
+          title={`${title}, ${where}`}
+        >
           {body}
         </div>
       );
@@ -253,7 +302,11 @@ function EntryChip({ entry, actions, large }: { entry: CalendarEntry; actions: C
         data-dragging={actions.dragging === entry.id ? "" : undefined}
         data-draggable={actions.canDrag ? "" : undefined}
         aria-label={`${label}. Move or change`}
-        onPointerDown={actions.canDrag ? (e) => actions.startDrag(e, { kind: "entry", id: entry.id, image: entry.image, label: title }) : undefined}
+        onPointerDown={
+          actions.canDrag
+            ? (e) => actions.startDrag(e, { kind: "entry", id: entry.id, image: entry.image, label: title })
+            : undefined
+        }
         onClick={() => actions.openEntry(entry)}
       >
         {body}
@@ -289,14 +342,36 @@ function EntryChip({ entry, actions, large }: { entry: CalendarEntry; actions: C
 
 // ─── Agenda ───────────────────────────────────────────────────────────────────
 
-const kindWord: Record<CalendarEntry["kind"], string> = { campaign: "Campaign", drop: "Drop", delivery: "Delivery", post: "Post", meeting: "Meeting with Fume" };
+const kindWord: Record<CalendarEntry["kind"], string> = {
+  campaign: "Campaign",
+  drop: "Drop",
+  delivery: "Delivery",
+  post: "Post",
+  meeting: "Meeting with Fume",
+};
 
-export function Agenda({ start, end, entries, actions }: { start: Day; end: Day; entries: CalendarEntry[]; actions: CalendarActions }) {
+export function Agenda({
+  start,
+  end,
+  entries,
+  actions,
+}: {
+  start: Day;
+  end: Day;
+  entries: CalendarEntry[];
+  actions: CalendarActions;
+}) {
   const { spans, byDay } = useMemo(() => sortEntries(entries), [entries]);
   const days = [...byDay.keys()].filter((d) => d >= start && d <= end).sort();
   const running = spans.filter((s) => dayOf(s.end ?? s.start) >= start && dayOf(s.start) <= end);
   if (days.length === 0 && running.length === 0)
-    return <Nothing icon="calendar" title="Nothing planned this month" text="Plan an approved creative on a day, or ask Fume to book a meeting." />;
+    return (
+      <Nothing
+        icon="calendar"
+        title="Nothing planned this month"
+        text="Plan an approved creative on a day, or ask Fume to book a meeting."
+      />
+    );
   return (
     <div className="ui-plan-agenda">
       {running.length > 0 && (
@@ -327,7 +402,12 @@ export function Agenda({ start, end, entries, actions }: { start: Day; end: Day;
         </section>
       )}
       {days.map((d) => (
-        <section key={d} className="ui-plan-agenda-day" aria-labelledby={`plan-day-${d}`} data-today={d === actions.today ? "" : undefined}>
+        <section
+          key={d}
+          className="ui-plan-agenda-day"
+          aria-labelledby={`plan-day-${d}`}
+          data-today={d === actions.today ? "" : undefined}
+        >
           <h3 className="ui-plan-agenda-title" id={`plan-day-${d}`}>
             {dayTitle(d)}
             {d === actions.today && <span className="ui-plan-agenda-today">Today</span>}
@@ -367,7 +447,12 @@ function AgendaRow({ entry, actions }: { entry: CalendarEntry; actions: Calendar
   if (entry.kind === "post" && actions.canPlan)
     return (
       <Item as="li" size="sm" className="ui-plan-agenda-row">
-        <button type="button" className="ui-plan-agenda-open" onClick={() => actions.openEntry(entry)} aria-label={`${actions.nameOf(entry)} on ${placement?.name ?? "a placement"} at ${clock(entry.start)}. Move or change`}>
+        <button
+          type="button"
+          className="ui-plan-agenda-open"
+          onClick={() => actions.openEntry(entry)}
+          aria-label={`${actions.nameOf(entry)} on ${placement?.name ?? "a placement"} at ${clock(entry.start)}. Move or change`}
+        >
           {media}
           {content}
           <ItemActions>
@@ -399,13 +484,25 @@ function AgendaRow({ entry, actions }: { entry: CalendarEntry; actions: Calendar
 // ─── Ready to plan ──────────────────────────────────────────────────────────
 
 /** Approved creatives, by campaign, to plan on a day. */
-export function ReadyTray({ campaigns, entries, actions, anchor }: { campaigns: Campaign[]; entries: CalendarEntry[]; actions: CalendarActions; anchor: Day }) {
+export function ReadyTray({
+  campaigns,
+  entries,
+  actions,
+  anchor,
+}: {
+  campaigns: Campaign[];
+  entries: CalendarEntry[];
+  actions: CalendarActions;
+  anchor: Day;
+}) {
   const planned = useMemo(() => {
     const n = new Map<Id, number>();
     for (const e of entries) if (e.creativeId) n.set(e.creativeId, (n.get(e.creativeId) ?? 0) + 1);
     return n;
   }, [entries]);
-  const open = [...campaigns].filter((c) => c.state !== "closed").sort((a, b) => Number(a.state === "delivered") - Number(b.state === "delivered"));
+  const open = [...campaigns]
+    .filter((c) => c.state !== "closed")
+    .sort((a, b) => Number(a.state === "delivered") - Number(b.state === "delivered"));
   const touch = useTouch();
   return (
     <aside className="ui-plan-tray" aria-labelledby="plan-tray-title">
@@ -427,17 +524,31 @@ export function ReadyTray({ campaigns, entries, actions, anchor }: { campaigns: 
       <p className="ui-plan-later">
         <Icon name="info" />
         {/* Round 13 (#38): the channels it publishes to, and Connect for the others, are in the dialog */}
-        <span>Planned posts go out on the channels you connect: Instagram, Facebook, Meta ads, TikTok and Pinterest.</span>
+        <span>
+          Planned posts go out on the channels you connect: Instagram, Facebook, Meta ads, TikTok and Pinterest.
+        </span>
       </p>
     </aside>
   );
 }
 
 /** One campaign's approved creatives, closed to one row at first: "Autumn launch · 2 to plan". */
-function TrayGroup({ campaign, planned, actions, anchor }: { campaign: Campaign; planned: Map<Id, number>; actions: CalendarActions; anchor: Day }) {
+function TrayGroup({
+  campaign,
+  planned,
+  actions,
+  anchor,
+}: {
+  campaign: Campaign;
+  planned: Map<Id, number>;
+  actions: CalendarActions;
+  anchor: Day;
+}) {
   const view = useCampaign(campaign.id);
   const named = useCustomerNames(campaign);
-  const ready = (view.data?.creatives ?? []).filter((c) => c.current.state === "approved" || c.current.state === "delivered").map(named);
+  const ready = (view.data?.creatives ?? [])
+    .filter((c) => c.current.state === "approved" || c.current.state === "delivered")
+    .map(named);
   if (ready.length === 0) return null;
   const toPlan = ready.filter((c) => !planned.get(c.id)).length;
   return (
@@ -462,8 +573,24 @@ function TrayGroup({ campaign, planned, actions, anchor }: { campaign: Campaign;
 }
 
 /** One approved creative: dragged onto a day on a desk, or clicked (tapped) to pick its day in the plan dialog. */
-function TrayItem({ creative, count, actions, anchor }: { creative: Creative; count: number; actions: CalendarActions; anchor: Day }) {
-  const payload: DragPayload = { kind: "creative", id: creative.id, image: creative.current.image, label: creative.title, format: creative.format };
+function TrayItem({
+  creative,
+  count,
+  actions,
+  anchor,
+}: {
+  creative: Creative;
+  count: number;
+  actions: CalendarActions;
+  anchor: Day;
+}) {
+  const payload: DragPayload = {
+    kind: "creative",
+    id: creative.id,
+    image: creative.current.image,
+    label: creative.title,
+    format: creative.format,
+  };
   return (
     <li className="ui-plan-tray-entry">
       <button
@@ -471,7 +598,15 @@ function TrayItem({ creative, count, actions, anchor }: { creative: Creative; co
         className="ui-plan-item"
         data-draggable={actions.canDrag ? "" : undefined}
         onPointerDown={actions.canDrag ? (e) => actions.startDrag(e, payload) : undefined}
-        onClick={() => actions.openCreative({ creativeId: creative.id, title: creative.title, image: creative.current.image, format: creative.format, day: anchor })}
+        onClick={() =>
+          actions.openCreative({
+            creativeId: creative.id,
+            title: creative.title,
+            image: creative.current.image,
+            format: creative.format,
+            day: anchor,
+          })
+        }
         aria-label={`${creative.title}${count > 0 ? `, planned ${count === 1 ? "once" : `${count} times`}` : ""}. Pick its day`}
       >
         <img className="ui-plan-item-media" src={creative.current.image} alt="" draggable={false} />
@@ -490,7 +625,11 @@ function TrayItem({ creative, count, actions, anchor }: { creative: Creative; co
 /** The creative under the pointer while it is dragged. */
 export function DragGhost({ drag }: { drag: DragState }) {
   return (
-    <div className="ui-plan-ghost" style={vars({ "--plan-x": `${drag.x}px`, "--plan-y": `${drag.y}px` })} aria-hidden="true">
+    <div
+      className="ui-plan-ghost"
+      style={vars({ "--plan-x": `${drag.x}px`, "--plan-y": `${drag.y}px` })}
+      aria-hidden="true"
+    >
       {drag.image ? <img src={drag.image} alt="" /> : <Icon name="image" />}
       {drag.over && <span className="ui-plan-ghost-day">{dateShort(drag.over)}</span>}
     </div>

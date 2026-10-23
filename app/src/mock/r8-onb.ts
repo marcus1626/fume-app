@@ -24,7 +24,8 @@ export function r8OnbApi(ctx: R8OnbContext): Pick<FumeApi, "onboardingProgress" 
 
   if (ctx.fresh) {
     db.understanding.conflicts = [];
-    for (const b of db.boards) if (b.kind === "brand_moodboard") b.items = b.items.filter((i) => i.provenance.origin === "customer");
+    for (const b of db.boards)
+      if (b.kind === "brand_moodboard") b.items = b.items.filter((i) => i.provenance.origin === "customer");
   }
 
   return {
@@ -37,8 +38,13 @@ export function r8OnbApi(ctx: R8OnbContext): Pick<FumeApi, "onboardingProgress" 
         const next = steps.indexOf(step);
         if (next > now) {
           progress.step = step;
-          progress.part = step === "review" ? part ?? parts[0] : undefined;
-        } else if (next === now && step === "review" && part && parts.indexOf(part) > parts.indexOf(progress.part ?? parts[0])) {
+          progress.part = step === "review" ? (part ?? parts[0]) : undefined;
+        } else if (
+          next === now &&
+          step === "review" &&
+          part &&
+          parts.indexOf(part) > parts.indexOf(progress.part ?? parts[0])
+        ) {
           progress.part = part;
         }
       }

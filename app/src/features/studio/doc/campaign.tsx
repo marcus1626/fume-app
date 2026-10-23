@@ -32,10 +32,26 @@ export function useBrandCampaigns(workspaceId: Id) {
 }
 
 /** "No campaign" and the brand's campaigns as tiles with their covers; one is picked. */
-export function CampaignGrid({ campaigns, value, onPick, size = "md" }: { campaigns: Campaign[]; value?: Id; onPick: (id: Id | undefined) => void; size?: "md" | "sm" }) {
+export function CampaignGrid({
+  campaigns,
+  value,
+  onPick,
+  size = "md",
+}: {
+  campaigns: Campaign[];
+  value?: Id;
+  onPick: (id: Id | undefined) => void;
+  size?: "md" | "sm";
+}) {
   return (
     <PickGrid size={size} aria-label="Campaigns">
-      <PickTile title="No campaign" line="The brand’s own look" icon="minus" selected={!value} onSelectedChange={() => onPick(undefined)} />
+      <PickTile
+        title="No campaign"
+        line="The brand’s own look"
+        icon="minus"
+        selected={!value}
+        onSelectedChange={() => onPick(undefined)}
+      />
       {campaigns.map((c) => (
         <PickTile
           key={c.id}
@@ -52,13 +68,29 @@ export function CampaignGrid({ campaigns, value, onPick, size = "md" }: { campai
 }
 
 /** The campaign chip in the desk's top bar: the campaign's name (or "No campaign"), opening the campaign grid. */
-export function CampaignChip({ workspaceId, campaign, onPick, disabled }: { workspaceId: Id; campaign?: Campaign; onPick: (picked: Campaign | undefined) => void; disabled?: boolean }) {
+export function CampaignChip({
+  workspaceId,
+  campaign,
+  onPick,
+  disabled,
+}: {
+  workspaceId: Id;
+  campaign?: Campaign;
+  onPick: (picked: Campaign | undefined) => void;
+  disabled?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const campaigns = useBrandCampaigns(workspaceId);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button type="button" className="ui-desk-campaign" data-empty={campaign ? undefined : ""} disabled={disabled} aria-label={campaign ? `Campaign: ${campaign.name}. Change` : "No campaign. Pick one"}>
+        <button
+          type="button"
+          className="ui-desk-campaign"
+          data-empty={campaign ? undefined : ""}
+          disabled={disabled}
+          aria-label={campaign ? `Campaign: ${campaign.name}. Change` : "No campaign. Pick one"}
+        >
           <Icon name="megaphone" />
           <span className="ui-desk-campaign-name">{campaign?.name ?? "No campaign"}</span>
           <Icon name="chevron-down" className="ui-desk-campaign-chevron" />
@@ -67,7 +99,9 @@ export function CampaignChip({ workspaceId, campaign, onPick, disabled }: { work
       <PopoverContent align="start" className="ui-pick-popover" aria-labelledby="campaign-pick-title">
         <PopoverHeader>
           <PopoverTitle id="campaign-pick-title">Campaign</PopoverTitle>
-          <PopoverDescription>A campaign can bring its own colours, light and moodboard; they lead the look sections.</PopoverDescription>
+          <PopoverDescription>
+            A campaign can bring its own colours, light and moodboard; they lead the look sections.
+          </PopoverDescription>
         </PopoverHeader>
         <CampaignGrid
           size="sm"
@@ -87,7 +121,10 @@ export function CampaignChip({ workspaceId, campaign, onPick, disabled }: { work
 export function CampaignLookChip({ campaign, workspaceId }: { campaign: Campaign; workspaceId: Id }) {
   const look = campaign.look;
   if (!look) return null;
-  const colours = [...look.backgrounds, ...look.colours.filter((c) => !look.backgrounds.some((b) => b.hex.toLowerCase() === c.hex.toLowerCase()))];
+  const colours = [
+    ...look.backgrounds,
+    ...look.colours.filter((c) => !look.backgrounds.some((b) => b.hex.toLowerCase() === c.hex.toLowerCase())),
+  ];
   return (
     <Popover>
       <PopoverTrigger asChild>

@@ -4,7 +4,19 @@
 // collection, or without one for the whole campaign, and opens the new delivery. Only owner and approver make one.
 //
 //   <CollectionDeliveries campaignId="c-autumn" />
-import { Button, Icon, Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemMediaImage, ItemTitle, useToast } from "@fume/ui";
+import {
+  Button,
+  Icon,
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemMedia,
+  ItemMediaImage,
+  ItemTitle,
+  useToast,
+} from "@fume/ui";
 import { Link, useNavigate } from "react-router-dom";
 import { useCampaign, useCatalogue, useDeliveries, useMakeDelivery } from "../../api/hooks";
 import { readiness, readinessLine, type Readiness } from "../deliveries/grouping";
@@ -27,7 +39,9 @@ export function CollectionDeliveries({ campaignId, hideWholeCampaign }: Collecti
 
   if (!view.data || !catalogue.data || !deliveries.data) return null;
   const { campaign, creatives } = view.data;
-  const rows = readiness(campaign, creatives, catalogue.data.collections, deliveries.data).filter((r) => !(hideWholeCampaign && !r.collection));
+  const rows = readiness(campaign, creatives, catalogue.data.collections, deliveries.data).filter(
+    (r) => !(hideWholeCampaign && !r.collection),
+  );
 
   function deliver(r: Readiness) {
     const name = r.collection ? `${campaign.name} · ${r.collection.name}` : campaign.name;
@@ -69,7 +83,14 @@ export function CollectionDeliveries({ campaignId, hideWholeCampaign }: Collecti
                   <Link to={`/deliveries/${r.delivery.id}`}>Open the delivery</Link>
                 </Button>
               ) : canDecide && r.approved > 0 ? (
-                <Button variant={r.ready ? "primary" : "secondary"} size="sm" icon="download" loading={busy} disabled={make.isPending && !busy} onClick={() => deliver(r)}>
+                <Button
+                  variant={r.ready ? "primary" : "secondary"}
+                  size="sm"
+                  icon="download"
+                  loading={busy}
+                  disabled={make.isPending && !busy}
+                  onClick={() => deliver(r)}
+                >
                   {r.ready ? "Make delivery" : `Deliver the ${r.approved} approved`}
                 </Button>
               ) : null}

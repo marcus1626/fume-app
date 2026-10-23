@@ -49,7 +49,10 @@ function ReviewPlace() {
   const people = directory(usePeople().data);
   const can = rights(session.role);
   const viewer = useOverlay("c");
-  const groups = useMemo(() => (queue.data ?? []).filter((i) => i.kind === "creatives" && i.creatives.length > 0), [queue.data]);
+  const groups = useMemo(
+    () => (queue.data ?? []).filter((i) => i.kind === "creatives" && i.creatives.length > 0),
+    [queue.data],
+  );
   const campaigns = useMemo(() => groups.map((g) => g.campaign), [groups]);
   const campaignIds = useMemo(() => campaigns.map((c) => c.id), [campaigns]);
   const named = useCustomerNamesAcross(campaigns);
@@ -60,7 +63,14 @@ function ReviewPlace() {
   const total = list.length;
   const checkers = [...new Set(list.map((c) => c.current.checkedBy).filter(Boolean))].map((id) => people.name(id));
   const approvers = [...new Set(campaigns.map((c) => people.name(c.approverId).split(" ")[0]!))];
-  const words = selectionWords({ n, total, open: pick.open.length, approver: approvers.join(" or ") || "The approver", canApprove: can.approve, canAsk: can.ask });
+  const words = selectionWords({
+    n,
+    total,
+    open: pick.open.length,
+    approver: approvers.join(" or ") || "The approver",
+    canApprove: can.approve,
+    canAsk: can.ask,
+  });
 
   return (
     <>
@@ -109,10 +119,22 @@ function ReviewPlace() {
         ))
       )}
 
-      {can.approve && <ApproveBar selected={pick.selected} onClear={pick.clear} onNeedsChanges={can.ask ? (c) => viewer.open(c.id, { ask: "1" }) : undefined} />}
+      {can.approve && (
+        <ApproveBar
+          selected={pick.selected}
+          onClear={pick.clear}
+          onNeedsChanges={can.ask ? (c) => viewer.open(c.id, { ask: "1" }) : undefined}
+        />
+      )}
 
       {viewer.value && campaignIds.length > 0 && (
-        <ViewerAcross campaigns={campaigns} campaignIds={campaignIds} creativeId={viewer.value} onMove={viewer.move} onClose={viewer.close} />
+        <ViewerAcross
+          campaigns={campaigns}
+          campaignIds={campaignIds}
+          creativeId={viewer.value}
+          onMove={viewer.move}
+          onClose={viewer.close}
+        />
       )}
     </>
   );
@@ -203,5 +225,15 @@ function ViewerAcross({
   if (!review.ready) return null;
   const set = list.some((c) => c.id === creativeId) ? list : all;
   const fresh = review.views.map((v) => v.campaign);
-  return <ReviewViewer set={set} campaigns={fresh.length ? fresh : campaigns} creativeId={creativeId} all={review.all} threadId={review.views.length === 1 ? review.views[0]!.threadId : undefined} onMove={onMove} onClose={onClose} />;
+  return (
+    <ReviewViewer
+      set={set}
+      campaigns={fresh.length ? fresh : campaigns}
+      creativeId={creativeId}
+      all={review.all}
+      threadId={review.views.length === 1 ? review.views[0]!.threadId : undefined}
+      onMove={onMove}
+      onClose={onClose}
+    />
+  );
 }

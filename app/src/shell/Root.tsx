@@ -122,7 +122,11 @@ const KEEP = 120;
 
 /** The page's scroller: the shell's inset, or the window (the onboarding, full-screen pages). */
 function scroller(): HTMLElement {
-  return document.querySelector<HTMLElement>(".ui-sidebar-inset") ?? (document.scrollingElement as HTMLElement | null) ?? document.documentElement;
+  return (
+    document.querySelector<HTMLElement>(".ui-sidebar-inset") ??
+    (document.scrollingElement as HTMLElement | null) ??
+    document.documentElement
+  );
 }
 
 /** Each entry's place, with the address it was left at: a fresh document's first entry has no key of its own (the
@@ -202,7 +206,9 @@ function stuckAbove(s: HTMLElement, target: HTMLElement): number {
   const win = s === document.scrollingElement || s === document.documentElement;
   let covered = win ? 0 : (s.querySelector<HTMLElement>(":scope > .ui-app-bar")?.offsetHeight ?? 0);
   // sticky rows that hold to the top (top under the screen's first third), not the item itself or what holds it
-  for (const el of Array.from(s.querySelectorAll<HTMLElement>(".ui-page-header-tabs, [data-ui-sticky], [class*='-bar'], [class*='tabs']"))) {
+  for (const el of Array.from(
+    s.querySelectorAll<HTMLElement>(".ui-page-header-tabs, [data-ui-sticky], [class*='-bar'], [class*='tabs']"),
+  )) {
     if (el.contains(target) || target.contains(el) || !el.offsetHeight) continue;
     const cs = getComputedStyle(el);
     if (cs.position !== "sticky") continue;
@@ -210,7 +216,8 @@ function stuckAbove(s: HTMLElement, target: HTMLElement): number {
     if (!Number.isFinite(stick) || stick > window.innerHeight / 3) continue;
     covered = Math.max(covered, stick + el.offsetHeight);
   }
-  const margin = parseFloat(getComputedStyle(target).scrollMarginBlockStart || getComputedStyle(target).scrollMarginTop) || 0;
+  const margin =
+    parseFloat(getComputedStyle(target).scrollMarginBlockStart || getComputedStyle(target).scrollMarginTop) || 0;
   return Math.max(covered + tokenPx("--ui-space-lg", 24), margin);
 }
 
@@ -231,7 +238,8 @@ function toHash(hash: string) {
     const place = (el: HTMLElement) => {
       const s = scroller();
       const win = s === document.scrollingElement || s === document.documentElement;
-      const top = el.getBoundingClientRect().top - (win ? 0 : s.getBoundingClientRect().top) + s.scrollTop - stuckAbove(s, el);
+      const top =
+        el.getBoundingClientRect().top - (win ? 0 : s.getBoundingClientRect().top) + s.scrollTop - stuckAbove(s, el);
       if (Math.abs(s.scrollTop - Math.max(0, top)) > 1) jump(s, Math.max(0, top));
     };
     const step = () => {

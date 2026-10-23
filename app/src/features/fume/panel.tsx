@@ -26,7 +26,16 @@ import {
 } from "@fume/ui";
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { useBrandDna, useCampaign, useCatalogue, useCollection, useCreative, useHome, usePeople, useProduct } from "../../api/hooks";
+import {
+  useBrandDna,
+  useCampaign,
+  useCatalogue,
+  useCollection,
+  useCreative,
+  useHome,
+  usePeople,
+  useProduct,
+} from "../../api/hooks";
 import type { ChatLink, Creative, Id } from "../../contract";
 import * as copy from "../../copy";
 import { date, due } from "../../lib/time";
@@ -39,8 +48,20 @@ import { BriefRowsList, useBriefRows } from "./desk";
 import { useOpenFullPage, useOpenLink } from "./open";
 import { PlanPanel } from "./plan";
 
-const KIND_WORD: Record<ChatLink["kind"], string> = { campaign: "Campaign", plan: "The plan", creative: "Creative", product: "Product", collection: "Collection" };
-const KIND_ICON: Record<ChatLink["kind"], IconName> = { campaign: "megaphone", plan: "layers", creative: "image", product: "tag", collection: "folder" };
+const KIND_WORD: Record<ChatLink["kind"], string> = {
+  campaign: "Campaign",
+  plan: "The plan",
+  creative: "Creative",
+  product: "Product",
+  collection: "Collection",
+};
+const KIND_ICON: Record<ChatLink["kind"], IconName> = {
+  campaign: "megaphone",
+  plan: "layers",
+  creative: "image",
+  product: "tag",
+  collection: "folder",
+};
 
 /** "Open full page" and ✕, in the panel's head. */
 export function PanelActions({ link, onClose }: { link: ChatLink; onClose?: () => void }) {
@@ -56,7 +77,21 @@ export function PanelActions({ link, onClose }: { link: ChatLink; onClose?: () =
 }
 
 /** The panel's card: its head (what it is, its name, a line under it, the actions), its body, its foot. */
-function Shell({ link, onClose, title, meta, children, foot }: { link: ChatLink; onClose?: () => void; title: string; meta?: ReactNode; children?: ReactNode; foot?: ReactNode }) {
+function Shell({
+  link,
+  onClose,
+  title,
+  meta,
+  children,
+  foot,
+}: {
+  link: ChatLink;
+  onClose?: () => void;
+  title: string;
+  meta?: ReactNode;
+  children?: ReactNode;
+  foot?: ReactNode;
+}) {
   return (
     <aside className="ui-chat-brief ui-chat-link-panel" aria-labelledby="fume-link-title">
       <div className="ui-chat-brief-head">
@@ -99,7 +134,9 @@ function CampaignPanel({ link, onClose }: { link: Extract<ChatLink, { kind: "cam
   const c = view.campaign;
   const status = copy.campaignStatus(c);
   const waiting = view.creatives.filter((x) => x.current.state === "checked");
-  const shown = view.creatives.filter((x) => !["making", "in_check", "correcting", "held"].includes(x.current.state)).map(named);
+  const shown = view.creatives
+    .filter((x) => !["making", "in_check", "correcting", "held"].includes(x.current.state))
+    .map(named);
   return (
     <Shell
       link={link}
@@ -109,7 +146,9 @@ function CampaignPanel({ link, onClose }: { link: Extract<ChatLink, { kind: "cam
       foot={
         waiting.length > 0 ? (
           <>
-            <p className="ui-chat-brief-note">{copy.creatives(waiting.length)} checked by the expert, waiting on you.</p>
+            <p className="ui-chat-brief-note">
+              {copy.creatives(waiting.length)} checked by the expert, waiting on you.
+            </p>
             <Button asChild variant="secondary" iconEnd="arrow-right">
               <Link to={`/campaigns/${c.id}/review`}>Review them</Link>
             </Button>
@@ -150,7 +189,11 @@ function CreativePanel({ link, onClose }: { link: Extract<ChatLink, { kind: "cre
       meta={data.campaign.name}
       foot={
         <>
-          <p className="ui-chat-brief-note">{waits ? "Checked by the expert. Approve it, or say what to change, on its page." : "Its page shows it full size, with its comments."}</p>
+          <p className="ui-chat-brief-note">
+            {waits
+              ? "Checked by the expert. Approve it, or say what to change, on its page."
+              : "Its page shows it full size, with its comments."}
+          </p>
           <Button variant={waits ? "secondary" : "quiet"} iconEnd="arrow-right" onClick={() => full(link)}>
             {waits ? "Review it" : "Open it"}
           </Button>
@@ -206,7 +249,15 @@ function CollectionPanel({ link, onClose }: { link: Extract<ChatLink, { kind: "c
   if (!view) return <Shell link={link} onClose={onClose} title="Opening the collection" />;
   const waiting = view.products.filter((p) => p.state !== "verified").length;
   return (
-    <Shell link={link} onClose={onClose} title={view.collection.name} meta={[copy.count(view.products.length, "product"), waiting ? `${waiting} not confirmed yet` : "All confirmed"].join(" · ")}>
+    <Shell
+      link={link}
+      onClose={onClose}
+      title={view.collection.name}
+      meta={[
+        copy.count(view.products.length, "product"),
+        waiting ? `${waiting} not confirmed yet` : "All confirmed",
+      ].join(" · ")}
+    >
       <ItemGroup>
         {view.products.map((p) => (
           <Item key={p.id} size="sm" asChild>
@@ -216,7 +267,9 @@ function CollectionPanel({ link, onClose }: { link: Extract<ChatLink, { kind: "c
               </ItemMedia>
               <ItemContent>
                 <ItemTitle>{p.name}</ItemTitle>
-                <ItemDescription>{[p.variant, p.state === "verified" ? "Confirmed" : "Not confirmed yet"].filter(Boolean).join(" · ")}</ItemDescription>
+                <ItemDescription>
+                  {[p.variant, p.state === "verified" ? "Confirmed" : "Not confirmed yet"].filter(Boolean).join(" · ")}
+                </ItemDescription>
               </ItemContent>
               <ItemActions>
                 <Icon name="chevron-right" />
@@ -232,7 +285,15 @@ function CollectionPanel({ link, onClose }: { link: Extract<ChatLink, { kind: "c
 // ─── In the conversation ────────────────────────────────────────────────────
 
 /** #14: creatives in a message, as small tiles: four at most, then "+N" (it opens the campaign). */
-export function ChatThumbs({ creatives, campaignId, max = 4 }: { creatives: Creative[]; campaignId: Id; max?: number }) {
+export function ChatThumbs({
+  creatives,
+  campaignId,
+  max = 4,
+}: {
+  creatives: Creative[];
+  campaignId: Id;
+  max?: number;
+}) {
   const open = useOpenLink();
   const label = useCreativeLabels({ id: campaignId });
   const shown = creatives.slice(0, max);
@@ -241,14 +302,25 @@ export function ChatThumbs({ creatives, campaignId, max = 4 }: { creatives: Crea
     <ul className="ui-chat-thumbs" aria-label={copy.creatives(creatives.length)}>
       {shown.map((c) => (
         <li key={c.id}>
-          <button type="button" className="ui-chat-thumb" data-format={c.format} onClick={() => open({ kind: "creative", campaignId, creativeId: c.id })} aria-label={`Open ${label(c)}`}>
+          <button
+            type="button"
+            className="ui-chat-thumb"
+            data-format={c.format}
+            onClick={() => open({ kind: "creative", campaignId, creativeId: c.id })}
+            aria-label={`Open ${label(c)}`}
+          >
             <img src={c.current.image} alt="" />
           </button>
         </li>
       ))}
       {rest > 0 && (
         <li>
-          <button type="button" className="ui-chat-thumb ui-chat-thumb-more" onClick={() => open({ kind: "campaign", campaignId })} aria-label={`${rest} more: open the campaign`}>
+          <button
+            type="button"
+            className="ui-chat-thumb ui-chat-thumb-more"
+            onClick={() => open({ kind: "campaign", campaignId })}
+            aria-label={`${rest} more: open the campaign`}
+          >
             +{rest}
           </button>
         </li>
@@ -265,18 +337,37 @@ function useLinkWords(link: ChatLink): { title: string; description?: string; pi
   const label = useCreativeLabels(campaign?.campaign);
   switch (link.kind) {
     case "campaign":
-      return { title: campaign?.campaign.name ?? "The campaign", description: campaign ? copy.campaignStatus(campaign.campaign).words : undefined, picture: campaign?.creatives.find((c) => c.current.state !== "making")?.current.image };
+      return {
+        title: campaign?.campaign.name ?? "The campaign",
+        description: campaign ? copy.campaignStatus(campaign.campaign).words : undefined,
+        picture: campaign?.creatives.find((c) => c.current.state !== "making")?.current.image,
+      };
     case "plan":
-      return { title: `The plan for ${campaign?.campaign.name ?? "the campaign"}`, description: "Open it beside the conversation" };
+      return {
+        title: `The plan for ${campaign?.campaign.name ?? "the campaign"}`,
+        description: "Open it beside the conversation",
+      };
     case "creative":
-      return { title: creative ? `${label(creative)} in ${campaign?.campaign.name}` : "The creative", description: creative ? copy.format[creative.format].label : undefined, picture: creative?.current.image };
+      return {
+        title: creative ? `${label(creative)} in ${campaign?.campaign.name}` : "The creative",
+        description: creative ? copy.format[creative.format].label : undefined,
+        picture: creative?.current.image,
+      };
     case "product": {
       const p = catalogue?.products.find((x) => x.id === link.productId);
-      return { title: p ? `${p.name}${p.variant ? ` ${p.variant}` : ""}` : "The product", description: p ? (p.state === "verified" ? "Confirmed" : "Not confirmed yet") : undefined, picture: p?.images[0] };
+      return {
+        title: p ? `${p.name}${p.variant ? ` ${p.variant}` : ""}` : "The product",
+        description: p ? (p.state === "verified" ? "Confirmed" : "Not confirmed yet") : undefined,
+        picture: p?.images[0],
+      };
     }
     case "collection": {
       const c = catalogue?.collections.find((x) => x.id === link.collectionId);
-      return { title: c?.name ?? "The collection", description: c ? copy.count(c.productIds.length, "product") : undefined, picture: c?.cover };
+      return {
+        title: c?.name ?? "The collection",
+        description: c ? copy.count(c.productIds.length, "product") : undefined,
+        picture: c?.cover,
+      };
     }
   }
 }
@@ -288,7 +379,9 @@ export function LinkCard({ link }: { link: ChatLink }) {
   return (
     <Item variant="outline" size="sm" asChild className="ui-chat-link">
       <button type="button" onClick={() => open(link)}>
-        <ItemMedia variant={words.picture ? "image" : "icon"}>{words.picture ? <ItemMediaImage src={words.picture} /> : <Icon name={KIND_ICON[link.kind]} />}</ItemMedia>
+        <ItemMedia variant={words.picture ? "image" : "icon"}>
+          {words.picture ? <ItemMediaImage src={words.picture} /> : <Icon name={KIND_ICON[link.kind]} />}
+        </ItemMedia>
         <ItemContent>
           <ItemTitle>{words.title}</ItemTitle>
           {words.description && <ItemDescription>{words.description}</ItemDescription>}
@@ -333,7 +426,9 @@ function WaitingSummary() {
 function SummaryRow({ title, detail, picture }: { title: string; detail: string; picture?: string }) {
   return (
     <>
-      <ItemMedia variant={picture ? "image" : "icon"}>{picture ? <ItemMediaImage src={picture} /> : <Icon name="palette" />}</ItemMedia>
+      <ItemMedia variant={picture ? "image" : "icon"}>
+        {picture ? <ItemMediaImage src={picture} /> : <Icon name="palette" />}
+      </ItemMedia>
       <ItemContent>
         <ItemTitle>{title}</ItemTitle>
         <ItemDescription>{detail}</ItemDescription>
@@ -355,7 +450,11 @@ function MonthSummary() {
         <Stat label="Creatives used" value={[{ num: usage.creativesUsed, unit: `of ${usage.creativeCap}` }]} />
         <Stat label="Campaigns active" value={usage.campaignsActive} />
       </StatGrid>
-      <Progress value={usage.creativesUsed} max={usage.creativeCap} aria-label={`${usage.creativesUsed} of ${usage.creativeCap} creatives used`} />
+      <Progress
+        value={usage.creativesUsed}
+        max={usage.creativeCap}
+        aria-label={`${usage.creativesUsed} of ${usage.creativeCap} creatives used`}
+      />
       <p className="ui-chat-card-note">
         {usage.periodEndsAt ? `The package renews ${date(usage.periodEndsAt)}.` : ""}
         {lessons ? ` Fume learned ${lessons === 1 ? "one thing" : `${lessons} things`} from your campaigns.` : ""}

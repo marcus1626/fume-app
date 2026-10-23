@@ -17,7 +17,13 @@ import {
   useToast,
 } from "@fume/ui";
 import { useState } from "react";
-import { useDetailTokens, useDocumentToCheck, useFixProduct, useSession, useUndoDocumentToCheck } from "../../../api/hooks";
+import {
+  useDetailTokens,
+  useDocumentToCheck,
+  useFixProduct,
+  useSession,
+  useUndoDocumentToCheck,
+} from "../../../api/hooks";
 import type { CreativeDocument } from "../../../contract";
 import * as copy from "../../../copy";
 
@@ -26,7 +32,11 @@ export function useOpenFlags(doc: CreativeDocument) {
   const tokens = useDetailTokens(doc.specs.productId).data ?? [];
   const picked = doc.versions.find((v) => v.id === doc.pickedVersionId);
   const flags = (picked?.details ?? [])
-    .filter((d) => !d.ok && !(doc.fixes ?? []).some((f) => f.tokenId === d.tokenId && (f.state === "fixing" || f.versionId === picked?.id)))
+    .filter(
+      (d) =>
+        !d.ok &&
+        !(doc.fixes ?? []).some((f) => f.tokenId === d.tokenId && (f.state === "fixing" || f.versionId === picked?.id)),
+    )
     .map((d) => ({ find: d, token: tokens.find((t) => t.id === d.tokenId) }));
   return { picked, flags };
 }
@@ -66,7 +76,9 @@ export function SendToCheck({
             ? `${agency ? "Your team sees" : "The expert sees"} the ${flags.length === 1 ? "product flag" : "product flags"} in Check.`
             : onSent
               ? "It takes the place of the version Check had."
-              : agency ? "It waits in Check for your team." : "It waits in Check for the expert.",
+              : agency
+                ? "It waits in Check for your team."
+                : "It waits in Check for the expert.",
           action: {
             label: "Undo",
             onClick: () =>
@@ -89,12 +101,19 @@ export function SendToCheck({
         { documentId: doc.id, versionId: picked.id, tokenId: find.tokenId },
         { onError: (e) => toast.error("The fix didn’t start", { description: e.message }) },
       );
-    toast.done(flags.length === 1 && flags[0].token ? `Fixing the ${flags[0].token.label.toLowerCase()}` : `Fixing ${copy.count(flags.length, "product detail")}`, {
-      description: "The Engine makes a new version with the real product. Send that one to check.",
-    });
+    toast.done(
+      flags.length === 1 && flags[0].token
+        ? `Fixing the ${flags[0].token.label.toLowerCase()}`
+        : `Fixing ${copy.count(flags.length, "product detail")}`,
+      {
+        description: "The Engine makes a new version with the real product. Send that one to check.",
+      },
+    );
   };
   const what = flags
-    .map(({ find, token }) => (token ? `${token.label} reads ${find.read}, should be ${token.value}` : `It reads ${find.read}`))
+    .map(({ find, token }) =>
+      token ? `${token.label} reads ${find.read}, should be ${token.value}` : `It reads ${find.read}`,
+    )
     .join(". ");
 
   return (
@@ -111,7 +130,9 @@ export function SendToCheck({
       <AlertDialog open={asking} onOpenChange={setAsking}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{flags.length === 1 ? "1 product detail is wrong" : `${flags.length} product details are wrong`}</AlertDialogTitle>
+            <AlertDialogTitle>
+              {flags.length === 1 ? "1 product detail is wrong" : `${flags.length} product details are wrong`}
+            </AlertDialogTitle>
             <AlertDialogDescription>
               {what}. Fix it first, or send it anyway and the expert sees the flag in Check.
             </AlertDialogDescription>

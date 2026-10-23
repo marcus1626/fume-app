@@ -37,7 +37,10 @@ export function StudioSwatch({ value, onChange, label, id, disabled, options, pr
     const step = ({ ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>)[e.key];
     if (!step) return;
     e.preventDefault();
-    const i = Math.max(0, all.findIndex((o) => o === chosen));
+    const i = Math.max(
+      0,
+      all.findIndex((o) => o === chosen),
+    );
     const next = all[(i + step + all.length) % all.length]!;
     onChange(next.value);
     requestAnimationFrame(() => list.current?.querySelector<HTMLElement>('[aria-checked="true"]')?.focus());
@@ -64,7 +67,14 @@ export function StudioSwatch({ value, onChange, label, id, disabled, options, pr
 
   return (
     <StudioRow label={label} labelId={`${sid}-l`} readout={chosen?.label} help={help} disabled={disabled}>
-      <div ref={list} id={sid} role="radiogroup" aria-labelledby={`${sid}-l`} className="ui-sc-swatches" onKeyDown={keys}>
+      <div
+        ref={list}
+        id={sid}
+        role="radiogroup"
+        aria-labelledby={`${sid}-l`}
+        className="ui-sc-swatches"
+        onKeyDown={keys}
+      >
         {groups.map((g) => (
           <span key={g.name} className="ui-sc-swatch-group" data-brand="">
             <span className="ui-sc-swatch-brand">{g.name}</span>

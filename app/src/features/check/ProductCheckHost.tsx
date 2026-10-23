@@ -117,7 +117,16 @@ export function ProductCheckHost() {
   );
 
   if (!shown) return null;
-  return <ProductCheckPanel key={shown} productId={shown} open={Boolean(id) && id === shown} onClose={close} over={waiting.get(shown)?.over} forCampaign={waiting.get(shown)?.forCampaign} />;
+  return (
+    <ProductCheckPanel
+      key={shown}
+      productId={shown}
+      open={Boolean(id) && id === shown}
+      onClose={close}
+      over={waiting.get(shown)?.over}
+      forCampaign={waiting.get(shown)?.forCampaign}
+    />
+  );
 }
 
 export interface ProductCheckPanelProps {
@@ -138,14 +147,30 @@ export function ProductCheckPanel({ productId, open = true, onClose, over, forCa
   const done = (verdict: CheckVerdict, p: Product) => {
     if (verdict === "confirmed") {
       const unblocked = waitingOn(campaigns.data, p.id);
-      toast.done(over === "brief" ? `${p.name} confirmed and in the brief.` : over === "conversation" ? `${p.name} confirmed and ticked for the campaign.` : `${p.name} confirmed.`, {
-        description: over ? undefined : unblocked ? `${unblocked.name} can go on with it now.` : "Fume can use it in any campaign now.",
-      });
+      toast.done(
+        over === "brief"
+          ? `${p.name} confirmed and in the brief.`
+          : over === "conversation"
+            ? `${p.name} confirmed and ticked for the campaign.`
+            : `${p.name} confirmed.`,
+        {
+          description: over
+            ? undefined
+            : unblocked
+              ? `${unblocked.name} can go on with it now.`
+              : "Fume can use it in any campaign now.",
+        },
+      );
     }
     onClose(verdict === "confirmed");
   };
   // The panel is the Smoke glass over the page (glass.css): the glass pills, Confirm the one white.
-  const check = useProductCheck(productId, { onDone: done, nameAs: phone ? DrawerTitle : SheetTitle, glass: true, forCampaign });
+  const check = useProductCheck(productId, {
+    onDone: done,
+    nameAs: phone ? DrawerTitle : SheetTitle,
+    glass: true,
+    forCampaign,
+  });
   const mac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
 
   const foot = (
@@ -186,7 +211,13 @@ export function ProductCheckPanel({ productId, open = true, onClose, over, forCa
   if (phone)
     return (
       <Drawer open={open} onOpenChange={(o) => !o && onClose(false)}>
-        <DrawerContent className="ui-check-panel" tabIndex={-1} onKeyDown={check.onKeyDown} onEscapeKeyDown={onEscapeKeyDown} aria-describedby={`check-${productId}-lead`}>
+        <DrawerContent
+          className="ui-check-panel"
+          tabIndex={-1}
+          onKeyDown={check.onKeyDown}
+          onEscapeKeyDown={onEscapeKeyDown}
+          aria-describedby={`check-${productId}-lead`}
+        >
           <DrawerHeader>{check.head}</DrawerHeader>
           <DrawerBody>{check.body}</DrawerBody>
           <DrawerFooter>{foot}</DrawerFooter>

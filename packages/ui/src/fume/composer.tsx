@@ -5,7 +5,17 @@
 // the Engine runs. Enter sends, Shift + Enter makes a new line; on a touch screen Enter makes a new line.
 // Controlled: the screen owns the text, the choices and the attachments; onSubmit hands it all over and the
 // screen clears what it sent.
-import { forwardRef, useId, useRef, type ForwardedRef, type FormEvent, type HTMLAttributes, type KeyboardEvent, type ReactElement, type Ref } from "react";
+import {
+  forwardRef,
+  useId,
+  useRef,
+  type ForwardedRef,
+  type FormEvent,
+  type HTMLAttributes,
+  type KeyboardEvent,
+  type ReactElement,
+  type Ref,
+} from "react";
 import { cx } from "../cx";
 import { Icon } from "../icons";
 import { Attachment, AttachmentGroup, type AttachmentMedia } from "./attachment";
@@ -66,7 +76,13 @@ export interface ComposerProps<F extends string = string> extends Omit<HTMLAttri
   /** The format toggles (multiple). Options from the contract: feed, story, square (the board shows Banner too). */
   formats?: { value: F[]; options: ComposerOption<F>[]; onChange: (value: F[]) => void; label?: string };
   /** How many creatives. */
-  count?: { value: number; options: number[]; onChange: (value: number) => void; label?: string; format?: (n: number) => string };
+  count?: {
+    value: number;
+    options: number[];
+    onChange: (value: number) => void;
+    label?: string;
+    format?: (n: number) => string;
+  };
   /** Attachments above the brief. */
   attachments?: ComposerAttachment[];
   onRemoveAttachment?: (id: string) => void;
@@ -136,7 +152,9 @@ function ComposerInner<F extends string>(
   const over = !!limit && n > limit;
   const has = !!value.trim() || attachments.length > 0;
   const sendDisabled = !!disabled || (!running && (!has || over));
-  const errorText = over ? `Shorten the brief by ${fmt(n - limit)}${n - limit === 1 ? " character" : " characters"} to send it.` : error;
+  const errorText = over
+    ? `Shorten the brief by ${fmt(n - limit)}${n - limit === 1 ? " character" : " characters"} to send it.`
+    : error;
   const tool = glass ? "glass-clear" : "quiet";
 
   const send = () => {
@@ -164,7 +182,8 @@ function ComposerInner<F extends string>(
   const mention = () => {
     const el = input.current;
     if (!el || el.disabled) return;
-    const a = el.selectionStart ?? value.length, b = el.selectionEnd ?? a;
+    const a = el.selectionStart ?? value.length,
+      b = el.selectionEnd ?? a;
     const before = a > 0 && !/\s/.test(value[a - 1]) ? " @" : "@";
     const next = value.slice(0, a) + before + value.slice(b);
     onValueChange(next);
@@ -186,7 +205,9 @@ function ComposerInner<F extends string>(
     onRemoveAttachment?.(id);
     // focus the next remove circle, or the brief
     requestAnimationFrame(() => {
-      const list = input.current?.closest(".ui-composer")?.querySelectorAll<HTMLButtonElement>(".ui-composer-attachments .ui-attachment-actions .ui-btn");
+      const list = input.current
+        ?.closest(".ui-composer")
+        ?.querySelectorAll<HTMLButtonElement>(".ui-composer-attachments .ui-attachment-actions .ui-btn");
       const next = list && (list[i] ?? list[i - 1]);
       (next ?? input.current)?.focus();
     });
@@ -200,7 +221,7 @@ function ComposerInner<F extends string>(
 
   const showCount = !!limit && n >= limit * 0.8;
   const brandOpt = brand && (brand.options.find((o) => o.value === brand.value) ?? brand.options[0]);
-  const brandDisplay = brandOpt ? brandOpt.display ?? brandOpt.label : "";
+  const brandDisplay = brandOpt ? (brandOpt.display ?? brandOpt.label) : "";
   const countFmt = count?.format ?? ((c: number) => `${c} creatives`);
 
   return (
@@ -250,11 +271,37 @@ function ComposerInner<F extends string>(
             <div className="ui-composer-tools">
               {onAttach && (
                 <>
-                  <Btn variant={tool} size="sm" iconOnly icon="paperclip" aria-label="Attach a brief" disabled={disabled} onClick={() => attach("brief")} />
-                  <Btn variant={tool} size="sm" iconOnly icon="image-plus" aria-label="Add a reference image" disabled={disabled} onClick={() => attach("image")} />
+                  <Btn
+                    variant={tool}
+                    size="sm"
+                    iconOnly
+                    icon="paperclip"
+                    aria-label="Attach a brief"
+                    disabled={disabled}
+                    onClick={() => attach("brief")}
+                  />
+                  <Btn
+                    variant={tool}
+                    size="sm"
+                    iconOnly
+                    icon="image-plus"
+                    aria-label="Add a reference image"
+                    disabled={disabled}
+                    onClick={() => attach("image")}
+                  />
                 </>
               )}
-              {onMention && <Btn variant={tool} size="sm" iconOnly icon="at-sign" aria-label={mentionLabel} disabled={disabled} onClick={mention} />}
+              {onMention && (
+                <Btn
+                  variant={tool}
+                  size="sm"
+                  iconOnly
+                  icon="at-sign"
+                  aria-label={mentionLabel}
+                  disabled={disabled}
+                  onClick={mention}
+                />
+              )}
             </div>
           )}
           {(brand || formats) && (
@@ -290,9 +337,13 @@ function ComposerInner<F extends string>(
                   data-type="multiple"
                   aria-label={formats.label ?? "Formats"}
                   onKeyDown={(e) => {
-                    const step = ({ ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>)[e.key];
+                    const step = (
+                      { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>
+                    )[e.key];
                     if (!step) return;
-                    const items = Array.from(formatsRef.current?.querySelectorAll<HTMLButtonElement>(".ui-toggle:not(:disabled)") ?? []);
+                    const items = Array.from(
+                      formatsRef.current?.querySelectorAll<HTMLButtonElement>(".ui-toggle:not(:disabled)") ?? [],
+                    );
                     const i = items.indexOf(document.activeElement as HTMLButtonElement);
                     if (i < 0) return;
                     e.preventDefault();
@@ -343,7 +394,11 @@ function ComposerInner<F extends string>(
               </label>
             )}
             <button
-              className={cx("ui-btn", glass ? "ui-btn--glass-white" : "ui-btn--primary", "ui-btn--icon ui-btn--sm ui-composer-send")}
+              className={cx(
+                "ui-btn",
+                glass ? "ui-btn--glass-white" : "ui-btn--primary",
+                "ui-btn--icon ui-btn--sm ui-composer-send",
+              )}
               type="submit"
               aria-label={running ? stopLabel : sendLabel}
               disabled={sendDisabled}
@@ -371,7 +426,11 @@ function ComposerInner<F extends string>(
             </span>
           )}
           {showCount && (
-            <span className="ui-composer-count" data-near={n >= limit * 0.9 && !over ? "" : undefined} data-over={over ? "" : undefined}>
+            <span
+              className="ui-composer-count"
+              data-near={n >= limit * 0.9 && !over ? "" : undefined}
+              data-over={over ? "" : undefined}
+            >
               {fmt(n)} / {fmt(limit)}
             </span>
           )}

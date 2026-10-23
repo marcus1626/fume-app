@@ -73,9 +73,22 @@ export function useAddClientParam() {
 }
 
 /** "https://www.aurea.dk/" → "aurea.dk" */
-const host = (url: string) => url.trim().replace(/^https?:\/\//i, "").replace(/^www\./i, "").replace(/\/+$/, "");
+const host = (url: string) =>
+  url
+    .trim()
+    .replace(/^https?:\/\//i, "")
+    .replace(/^www\./i, "")
+    .replace(/\/+$/, "");
 
-export function AddClientPanel({ open, onOpenChange, onAdded }: { open: boolean; onOpenChange: (open: boolean) => void; onAdded?: (client: AgencyClient) => void }) {
+export function AddClientPanel({
+  open,
+  onOpenChange,
+  onAdded,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onAdded?: (client: AgencyClient) => void;
+}) {
   const add = useAddClient();
   const toast = useToast();
   const next = useRef(1);
@@ -95,15 +108,22 @@ export function AddClientPanel({ open, onOpenChange, onAdded }: { open: boolean;
     setMarket(marketKey(MARKETS[0]));
     setPeople([blank("owner")]);
     setTried(false);
-  }, [open]);  
+  }, [open]);
 
   const filled = (p: Person) => Boolean(p.name.trim() || p.email.trim());
-  const emailProblem = (p: Person) => (filled(p) && !EMAIL.test(p.email.trim()) ? (p.email.trim() ? "That is not an email address yet." : "Write their email; the invitation goes there.") : undefined);
+  const emailProblem = (p: Person) =>
+    filled(p) && !EMAIL.test(p.email.trim())
+      ? p.email.trim()
+        ? "That is not an email address yet."
+        : "Write their email; the invitation goes there."
+      : undefined;
   const noName = !name.trim();
   const problems = tried ? people.filter((p) => emailProblem(p)).length + (noName ? 1 : 0) : 0;
 
-  const change = (key: number, patch: Partial<Person>) => setPeople((all) => all.map((p) => (p.key === key ? { ...p, ...patch } : p)));
-  const remove = (key: number) => setPeople((all) => (all.length > 1 ? all.filter((p) => p.key !== key) : [blank("owner")]));
+  const change = (key: number, patch: Partial<Person>) =>
+    setPeople((all) => all.map((p) => (p.key === key ? { ...p, ...patch } : p)));
+  const remove = (key: number) =>
+    setPeople((all) => (all.length > 1 ? all.filter((p) => p.key !== key) : [blank("owner")]));
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
@@ -120,13 +140,23 @@ export function AddClientPanel({ open, onOpenChange, onAdded }: { open: boolean;
     const m = MARKETS.find((x) => marketKey(x) === market) ?? MARKETS[0];
     const invited = people.filter(filled).map((p) => ({ name: p.name.trim(), email: p.email.trim(), role: p.role }));
     add.mutate(
-      { brandName: name.trim(), website: website.trim() ? `https://${host(website)}` : undefined, market: m.market, language: m.language, people: invited },
+      {
+        brandName: name.trim(),
+        website: website.trim() ? `https://${host(website)}` : undefined,
+        market: m.market,
+        language: m.language,
+        people: invited,
+      },
       {
         onSuccess: (client) => {
           const who = invited.map((p) => firstName(p.name || p.email));
           const said = [
-            website.trim() ? `Fume is reading ${host(website)} and starts the Brand DNA.` : "Fume needs the website or the brand guide to start the Brand DNA.",
-            who.length ? `${who.length === 1 ? who[0] : `${who.slice(0, -1).join(", ")} and ${who.at(-1)}`} ${who.length === 1 ? "has" : "have"} an invitation.` : "",
+            website.trim()
+              ? `Fume is reading ${host(website)} and starts the Brand DNA.`
+              : "Fume needs the website or the brand guide to start the Brand DNA.",
+            who.length
+              ? `${who.length === 1 ? who[0] : `${who.slice(0, -1).join(", ")} and ${who.at(-1)}`} ${who.length === 1 ? "has" : "have"} an invitation.`
+              : "",
           ]
             .filter(Boolean)
             .join(" ");
@@ -144,7 +174,10 @@ export function AddClientPanel({ open, onOpenChange, onAdded }: { open: boolean;
         <form className="ui-sheet-form" onSubmit={submit} noValidate aria-label="Add a client">
           <SheetHeader>
             <SheetTitle>Add a client</SheetTitle>
-            <SheetDescription>Fume reads the brand from its website and starts its Brand DNA. The client’s people get an invitation to approve the creatives you send them.</SheetDescription>
+            <SheetDescription>
+              Fume reads the brand from its website and starts its Brand DNA. The client’s people get an invitation to
+              approve the creatives you send them.
+            </SheetDescription>
           </SheetHeader>
           <SheetBody>
             <div className="ui-agency-form">
@@ -161,7 +194,9 @@ export function AddClientPanel({ open, onOpenChange, onAdded }: { open: boolean;
                     aria-invalid={tried && noName ? true : undefined}
                     aria-describedby="add-client-name-error"
                   />
-                  <FieldError id="add-client-name-error">{tried && noName ? "The brand’s name first, as it is written on the product." : undefined}</FieldError>
+                  <FieldError id="add-client-name-error">
+                    {tried && noName ? "The brand’s name first, as it is written on the product." : undefined}
+                  </FieldError>
                 </Field>
                 <Field>
                   <FieldLabel htmlFor="add-client-site">
@@ -177,7 +212,9 @@ export function AddClientPanel({ open, onOpenChange, onAdded }: { open: boolean;
                     autoComplete="off"
                     aria-describedby="add-client-site-help"
                   />
-                  <FieldDescription id="add-client-site-help">Fume reads the brand from it: the logo, colours, type, voice and products.</FieldDescription>
+                  <FieldDescription id="add-client-site-help">
+                    Fume reads the brand from it: the logo, colours, type, voice and products.
+                  </FieldDescription>
                 </Field>
                 <Field>
                   <FieldLabel as="span" id="add-client-market-label">
@@ -200,7 +237,9 @@ export function AddClientPanel({ open, onOpenChange, onAdded }: { open: boolean;
 
               <FieldSet className="ui-agency-people">
                 <FieldLegend>The client’s people</FieldLegend>
-                <FieldDescription>They approve the creatives you send. Invite them now, or later from the client’s settings.</FieldDescription>
+                <FieldDescription>
+                  They approve the creatives you send. Invite them now, or later from the client’s settings.
+                </FieldDescription>
                 <ul className="ui-agency-people-list">
                   {people.map((p, i) => {
                     const problem = tried ? emailProblem(p) : undefined;
@@ -209,7 +248,12 @@ export function AddClientPanel({ open, onOpenChange, onAdded }: { open: boolean;
                       <li key={p.key} className="ui-agency-person" aria-label={`Person ${n}`}>
                         <Field>
                           <FieldLabel htmlFor={`add-client-person-${p.key}`}>Name</FieldLabel>
-                          <Input id={`add-client-person-${p.key}`} value={p.name} onChange={(e) => change(p.key, { name: e.target.value })} autoComplete="off" />
+                          <Input
+                            id={`add-client-person-${p.key}`}
+                            value={p.name}
+                            onChange={(e) => change(p.key, { name: e.target.value })}
+                            autoComplete="off"
+                          />
                         </Field>
                         <Field invalid={Boolean(problem)}>
                           <FieldLabel htmlFor={`add-client-email-${p.key}`}>Email</FieldLabel>
@@ -245,7 +289,14 @@ export function AddClientPanel({ open, onOpenChange, onAdded }: { open: boolean;
                             </Select>
                           </Field>
                           {(people.length > 1 || filled(p)) && (
-                            <Button type="button" variant="glass-clear" size="sm" icon="x" onClick={() => remove(p.key)} aria-label={`Remove person ${n}`}>
+                            <Button
+                              type="button"
+                              variant="glass-clear"
+                              size="sm"
+                              icon="x"
+                              onClick={() => remove(p.key)}
+                              aria-label={`Remove person ${n}`}
+                            >
                               Remove
                             </Button>
                           )}
@@ -255,7 +306,13 @@ export function AddClientPanel({ open, onOpenChange, onAdded }: { open: boolean;
                   })}
                 </ul>
                 <div className="ui-app-row">
-                  <Button type="button" variant="glass-clear" size="sm" icon="plus" onClick={() => setPeople((all) => [...all, blank("approver")])}>
+                  <Button
+                    type="button"
+                    variant="glass-clear"
+                    size="sm"
+                    icon="plus"
+                    onClick={() => setPeople((all) => [...all, blank("approver")])}
+                  >
                     Add another
                   </Button>
                 </div>

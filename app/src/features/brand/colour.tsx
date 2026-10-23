@@ -19,36 +19,86 @@ export const colourUseLabel: Record<ColourUse, string> = {
 };
 
 /** "Accent · Light · Packaging", or undefined when none is chosen. */
-export const usesWords = (uses?: ColourUse[]) => (uses?.length ? colourUses.filter((u) => uses.includes(u)).map((u) => colourUseLabel[u]).join(" · ") : undefined);
+export const usesWords = (uses?: ColourUse[]) =>
+  uses?.length
+    ? colourUses
+        .filter((u) => uses.includes(u))
+        .map((u) => colourUseLabel[u])
+        .join(" · ")
+    : undefined;
 
 /** "Primary · Accent · Light": a colour's role, then its uses (a use that repeats the role is said once). */
 export const roleAndUses = (role: string, uses?: ColourUse[]) =>
-  [role, ...colourUses.filter((u) => uses?.includes(u) && colourUseLabel[u] !== role).map((u) => colourUseLabel[u])].join(" · ");
+  [
+    role,
+    ...colourUses.filter((u) => uses?.includes(u) && colourUseLabel[u] !== role).map((u) => colourUseLabel[u]),
+  ].join(" · ");
 
 const HEX = /^#?[0-9a-f]{6}$/i;
 /** A hex as the picker takes it: "#5c1f2a", or black while what is typed is not a hex yet. */
-const pickerValue = (hex: string) => (HEX.test(hex.trim()) ? `#${hex.trim().replace(/^#/, "")}`.toLowerCase() : "#000000");
+const pickerValue = (hex: string) =>
+  HEX.test(hex.trim()) ? `#${hex.trim().replace(/^#/, "")}`.toLowerCase() : "#000000";
 
 /**
  * The colour picker beside the hex field (#2): a swatch of the colour as typed; a click opens the system's picker,
  * and what is picked is written into the hex field (in capitals, with its #).
  */
-export function HexPicker({ value, onChange, label, disabled }: { value: string; onChange: (hex: string) => void; label: string; disabled?: boolean }) {
+export function HexPicker({
+  value,
+  onChange,
+  label,
+  disabled,
+}: {
+  value: string;
+  onChange: (hex: string) => void;
+  label: string;
+  disabled?: boolean;
+}) {
   return (
-    <label className="ui-colour-picker" style={vars({ "--swatch": pickerValue(value) })} data-disabled={disabled ? "" : undefined}>
-      <input type="color" value={pickerValue(value)} onChange={(e) => onChange(e.target.value.toUpperCase())} aria-label={label} disabled={disabled} />
+    <label
+      className="ui-colour-picker"
+      style={vars({ "--swatch": pickerValue(value) })}
+      data-disabled={disabled ? "" : undefined}
+    >
+      <input
+        type="color"
+        value={pickerValue(value)}
+        onChange={(e) => onChange(e.target.value.toUpperCase())}
+        aria-label={label}
+        disabled={disabled}
+      />
     </label>
   );
 }
 
 /** What a colour is used for, as chips (#42): any number of them. */
-export function ColourUsesField({ id, value, onChange, disabled, label = "What it is used for" }: { id: string; value: ColourUse[]; onChange: (uses: ColourUse[]) => void; disabled?: boolean; label?: string }) {
+export function ColourUsesField({
+  id,
+  value,
+  onChange,
+  disabled,
+  label = "What it is used for",
+}: {
+  id: string;
+  value: ColourUse[];
+  onChange: (uses: ColourUse[]) => void;
+  disabled?: boolean;
+  label?: string;
+}) {
   return (
     <div className="ui-colour-uses" role="group" aria-labelledby={`${id}-label`}>
       <p className="ui-colour-uses-label" id={`${id}-label`}>
         {label}
       </p>
-      <ToggleGroup type="multiple" variant="outline" size="sm" value={value} onValueChange={(v) => onChange(v as ColourUse[])} disabled={disabled} aria-labelledby={`${id}-label`}>
+      <ToggleGroup
+        type="multiple"
+        variant="outline"
+        size="sm"
+        value={value}
+        onValueChange={(v) => onChange(v as ColourUse[])}
+        disabled={disabled}
+        aria-labelledby={`${id}-label`}
+      >
         {colourUses.map((u) => (
           <ToggleGroupItem key={u} value={u}>
             {colourUseLabel[u]}

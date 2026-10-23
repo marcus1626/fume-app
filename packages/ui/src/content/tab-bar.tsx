@@ -2,7 +2,15 @@
 // 15 Oct 2026). A Smoke glass pill that floats over the page; each place is an icon over its label, the current one
 // on the glass's one white pill. It shows under 640 px only (the CSS hides it on a desk, where the sidebar holds the
 // same places in the same order). A count is for the one thing that waits on you (Home), nowhere else.
-import { Children, forwardRef, isValidElement, type AnchorHTMLAttributes, type HTMLAttributes, type ReactNode, type Ref } from "react";
+import {
+  Children,
+  forwardRef,
+  isValidElement,
+  type AnchorHTMLAttributes,
+  type HTMLAttributes,
+  type ReactNode,
+  type Ref,
+} from "react";
 import { cx } from "../cx";
 import { Icon, type IconName } from "../icons";
 import { mergeIntoChild } from "./internal";
@@ -62,7 +70,8 @@ export const TabBarItem = forwardRef<HTMLAnchorElement, TabBarItemProps>(functio
   };
   if (asChild) {
     const child = Children.only(children);
-    if (isValidElement(child)) return mergeIntoChild(child, own, ref, inner((child.props as { children?: ReactNode }).children));
+    if (isValidElement(child))
+      return mergeIntoChild(child, own, ref, inner((child.props as { children?: ReactNode }).children));
   }
   return (
     <a ref={ref as Ref<HTMLAnchorElement>} {...own}>

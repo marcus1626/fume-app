@@ -43,7 +43,7 @@ export function Alert({
   children,
   ...props
 }: AlertProps) {
-  const name = icon === false ? null : icon ?? ICONS[variant];
+  const name = icon === false ? null : (icon ?? ICONS[variant]);
   return (
     <div
       data-slot="alert"
@@ -60,7 +60,12 @@ export function Alert({
       {name && <Icon name={name} className="ui-alert-icon" />}
       {children}
       {onDismiss && (
-        <button className="ui-btn ui-btn--quiet ui-btn--icon ui-btn--sm ui-alert-close" type="button" aria-label={dismissLabel} onClick={onDismiss}>
+        <button
+          className="ui-btn ui-btn--quiet ui-btn--icon ui-btn--sm ui-alert-close"
+          type="button"
+          aria-label={dismissLabel}
+          onClick={onDismiss}
+        >
           <Icon name="x" />
         </button>
       )}

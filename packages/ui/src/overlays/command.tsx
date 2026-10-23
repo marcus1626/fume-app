@@ -75,13 +75,7 @@ export interface CommandPaletteProps {
 
 /** Lower case, accents off (ø, æ, å too), as command.js matches. */
 export function normalizeSearch(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/ø/g, "o")
-    .replace(/æ/g, "ae")
-    .replace(/å/g, "a");
+  return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ø/g, "o").replace(/æ/g, "ae").replace(/å/g, "a");
 }
 
 function matches(item: CommandPaletteItem, words: string[]): boolean {
@@ -279,7 +273,12 @@ export function CommandPalette({
               {groups.map((g, gi) => {
                 const headingId = `${uid}-g${gi}`;
                 return (
-                  <div className="ui-command-group" role="group" key={g.name || `group-${gi}`} aria-labelledby={g.name ? headingId : undefined}>
+                  <div
+                    className="ui-command-group"
+                    role="group"
+                    key={g.name || `group-${gi}`}
+                    aria-labelledby={g.name ? headingId : undefined}
+                  >
                     {g.name && (
                       <div className="ui-command-group-heading" id={headingId} onMouseDown={keepFocus}>
                         {g.name}

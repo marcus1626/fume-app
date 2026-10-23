@@ -79,7 +79,19 @@ export function useCopyLink() {
 }
 
 /** The tiles to choose from: a creative is in or out with a press on its picture (or its round corner). */
-export function CreativeChoice({ creatives, chosen, onChange, note, labelledBy }: { creatives: Creative[]; chosen: Set<Id>; onChange: (next: Set<Id>) => void; note?: (c: Creative) => string | undefined; labelledBy: string }) {
+export function CreativeChoice({
+  creatives,
+  chosen,
+  onChange,
+  note,
+  labelledBy,
+}: {
+  creatives: Creative[];
+  chosen: Set<Id>;
+  onChange: (next: Set<Id>) => void;
+  note?: (c: Creative) => string | undefined;
+  labelledBy: string;
+}) {
   const toggle = (id: Id, on: boolean) => {
     const next = new Set(chosen);
     if (on) next.add(id);
@@ -185,8 +197,18 @@ export function SendToClientSheet({ campaign, creatives, initial, plan, open, on
   const names = people.filter((p) => to.has(p.user.id));
   const noCreative = tried && picked.length === 0 && !plan;
   const noOne = tried && names.length === 0 && !link;
-  const submitWords = names.length === 1 ? copy.send.action(firstName(names[0]!.user.name)) : names.length > 1 ? `Send to ${names.length} people` : "Make the client link";
-  const whoWords = names.length === 1 ? firstName(names[0]!.user.name) : names.length > 1 ? `${names.length} people at ${brand}` : brand;
+  const submitWords =
+    names.length === 1
+      ? copy.send.action(firstName(names[0]!.user.name))
+      : names.length > 1
+        ? `Send to ${names.length} people`
+        : "Make the client link";
+  const whoWords =
+    names.length === 1
+      ? firstName(names[0]!.user.name)
+      : names.length > 1
+        ? `${names.length} people at ${brand}`
+        : brand;
   /** The panel's name: the campaign's approver at the client, as the review's Ink says it ("Send to Maja"). */
   const approverPerson = people.find((p) => p.user.id === campaign.approverId) ?? people.find((p) => p.approves);
   const title = plan
@@ -195,7 +217,9 @@ export function SendToClientSheet({ campaign, creatives, initial, plan, open, on
       ? copy.send.action(firstName(approverPerson.user.name))
       : `Send to ${brand}`;
   // The plan in one row: its version, the direction and what Fume makes in it.
-  const direction = plan ? (plan.directions.find((d) => d.id === plan.chosenDirectionId) ?? plan.directions[0]) : undefined;
+  const direction = plan
+    ? (plan.directions.find((d) => d.id === plan.chosenDirectionId) ?? plan.directions[0])
+    : undefined;
   const planMasters = direction?.creatives.filter((c) => c.kind === "master").length ?? 0;
   const planRest = (direction?.creatives.length ?? 0) - planMasters;
 
@@ -206,16 +230,28 @@ export function SendToClientSheet({ campaign, creatives, initial, plan, open, on
       setTried(true);
       return;
     }
-    void send.mutateAsync({ campaignId: campaign.id, versionIds: plan ? [] : picked.map((c) => c.current.id), to: names.map((p) => p.user.id), link, note: note.trim() || undefined, plan: Boolean(plan) }).then(
-      (s) => {
-        toast.done(names.length ? `Sent to ${whoWords}` : "Client link made", {
-          description: [s.plan ? `The plan, version ${s.plan.version}` : copy.creatives(s.versionIds.length), ...(s.link ? [`client link until ${date(s.link.expiresAt)}`] : [])].join(" · "),
-        });
-        if (s.link) setSent(s);
-        else onOpenChange(false);
-      },
-      (err: Error) => toast.error("Nothing was sent", { description: err.message }),
-    );
+    void send
+      .mutateAsync({
+        campaignId: campaign.id,
+        versionIds: plan ? [] : picked.map((c) => c.current.id),
+        to: names.map((p) => p.user.id),
+        link,
+        note: note.trim() || undefined,
+        plan: Boolean(plan),
+      })
+      .then(
+        (s) => {
+          toast.done(names.length ? `Sent to ${whoWords}` : "Client link made", {
+            description: [
+              s.plan ? `The plan, version ${s.plan.version}` : copy.creatives(s.versionIds.length),
+              ...(s.link ? [`client link until ${date(s.link.expiresAt)}`] : []),
+            ].join(" · "),
+          });
+          if (s.link) setSent(s);
+          else onOpenChange(false);
+        },
+        (err: Error) => toast.error("Nothing was sent", { description: err.message }),
+      );
   };
 
   const togglePerson = (p: ClientPerson, on: boolean) => {
@@ -233,7 +269,9 @@ export function SendToClientSheet({ campaign, creatives, initial, plan, open, on
             <SheetHeader>
               <SheetTitle>{sent.to.length ? `Sent to ${whoWords}` : "The client link is ready"}</SheetTitle>
               <SheetDescription>
-                {sent.to.length ? `${whoWords === brand ? "They have" : `${whoWords} has`} ${sent.plan ? "the plan" : `the ${copy.creatives(sent.versionIds.length)}`} in Fume. ` : ""}
+                {sent.to.length
+                  ? `${whoWords === brand ? "They have" : `${whoWords} has`} ${sent.plan ? "the plan" : `the ${copy.creatives(sent.versionIds.length)}`} in Fume. `
+                  : ""}
                 {sent.plan
                   ? `The client link opens the plan, with Approve and Ask for changes, until ${date(sent.link.expiresAt)}. The creatives come in the same link.`
                   : `The client link opens only these, with Approve and Ask for changes, until ${date(sent.link.expiresAt)}.`}
@@ -244,10 +282,18 @@ export function SendToClientSheet({ campaign, creatives, initial, plan, open, on
                 <Field>
                   <FieldLabel htmlFor={`${id}-url`}>Client link</FieldLabel>
                   <Input id={`${id}-url`} readOnly value={sent.link.url} onFocus={(e) => e.currentTarget.select()} />
-                  <FieldDescription>Anyone with the link can approve {sent.plan ? "the plan" : "these creatives"} or ask for changes. No account needed.</FieldDescription>
+                  <FieldDescription>
+                    Anyone with the link can approve {sent.plan ? "the plan" : "these creatives"} or ask for changes. No
+                    account needed.
+                  </FieldDescription>
                 </Field>
                 <div className="ui-app-row">
-                  <Button variant="glass-white" icon="copy" data-ui-autofocus="" onClick={() => copyLink(sent.link!.url)}>
+                  <Button
+                    variant="glass-white"
+                    icon="copy"
+                    data-ui-autofocus=""
+                    onClick={() => copyLink(sent.link!.url)}
+                  >
                     Copy the link
                   </Button>
                   <Button variant="glass-clear" icon="external-link" onClick={() => navigate(`/c/${sent.link!.token}`)}>
@@ -278,7 +324,9 @@ export function SendToClientSheet({ campaign, creatives, initial, plan, open, on
                     : names.length > 1
                       ? `They are told in Fume; whoever approves for ${brand} approves them there.`
                       : `Make a client link for someone at ${brand} without an account.`}{" "}
-                {plan ? "Sending it is your check; only the client approves the plan." : "Only the client approves a creative."}
+                {plan
+                  ? "Sending it is your check; only the client approves the plan."
+                  : "Only the client approves a creative."}
               </SheetDescription>
             </SheetHeader>
             <SheetBody>
@@ -292,7 +340,14 @@ export function SendToClientSheet({ campaign, creatives, initial, plan, open, on
                       <ItemContent>
                         <ItemTitle>The plan · version {plan.version}</ItemTitle>
                         <ItemDescription>
-                          {[direction ? `Direction ${direction.letter} · ${direction.name}` : "", planMasters ? `${copy.count(planMasters, "master")}${planRest ? ` and ${planRest} more` : ""}` : ""].filter(Boolean).join(" · ")}
+                          {[
+                            direction ? `Direction ${direction.letter} · ${direction.name}` : "",
+                            planMasters
+                              ? `${copy.count(planMasters, "master")}${planRest ? ` and ${planRest} more` : ""}`
+                              : "",
+                          ]
+                            .filter(Boolean)
+                            .join(" · ")}
                         </ItemDescription>
                       </ItemContent>
                     </Item>
@@ -301,7 +356,12 @@ export function SendToClientSheet({ campaign, creatives, initial, plan, open, on
                   <FieldSet>
                     <FieldLegend className="ui-client-legend">
                       <span id={`${id}-creatives`}>Creatives</span>
-                      <ChooseAll n={picked.length} total={creatives.length} onAll={() => setChosen(new Set(creatives.map((c) => c.id)))} onNone={() => setChosen(new Set())} />
+                      <ChooseAll
+                        n={picked.length}
+                        total={creatives.length}
+                        onAll={() => setChosen(new Set(creatives.map((c) => c.id)))}
+                        onNone={() => setChosen(new Set())}
+                      />
                     </FieldLegend>
                     <CreativeChoice
                       creatives={creatives}
@@ -325,8 +385,14 @@ export function SendToClientSheet({ campaign, creatives, initial, plan, open, on
                     <div className="ui-app-stack ui-app-stack--tight">
                       {people.map((p) => (
                         <Choice key={p.user.id}>
-                          <Checkbox checked={to.has(p.user.id)} onCheckedChange={(on) => togglePerson(p, on === true)} />
-                          <ChoiceText label={p.user.name} hint={[clientRole(p), p.user.title].filter(Boolean).join(" · ")} />
+                          <Checkbox
+                            checked={to.has(p.user.id)}
+                            onCheckedChange={(on) => togglePerson(p, on === true)}
+                          />
+                          <ChoiceText
+                            label={p.user.name}
+                            hint={[clientRole(p), p.user.title].filter(Boolean).join(" · ")}
+                          />
                         </Choice>
                       ))}
                     </div>
@@ -334,7 +400,11 @@ export function SendToClientSheet({ campaign, creatives, initial, plan, open, on
                   <Choice end>
                     <ChoiceText
                       label="Also make a client link"
-                      hint={plan ? "Opens the plan, with Approve and Ask for changes; the creatives come in the same link later. Expires in 30 days." : "Opens only these creatives, with Approve and Ask for changes. Expires in 30 days."}
+                      hint={
+                        plan
+                          ? "Opens the plan, with Approve and Ask for changes; the creatives come in the same link later. Expires in 30 days."
+                          : "Opens only these creatives, with Approve and Ask for changes. Expires in 30 days."
+                      }
                     />
                     <Switch glass checked={link} onCheckedChange={setLink} />
                   </Choice>
@@ -345,7 +415,17 @@ export function SendToClientSheet({ campaign, creatives, initial, plan, open, on
                   <FieldLabel htmlFor={`${id}-note`}>
                     A note <FieldOptional />
                   </FieldLabel>
-                  <Textarea id={`${id}-note`} rows={3} value={note} onChange={(e) => setNote(e.target.value)} placeholder={plan ? "Window light, as we said. Tell me if the candle should go." : "The story frames follow on Friday."} />
+                  <Textarea
+                    id={`${id}-note`}
+                    rows={3}
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                    placeholder={
+                      plan
+                        ? "Window light, as we said. Tell me if the candle should go."
+                        : "The story frames follow on Friday."
+                    }
+                  />
                 </Field>
               </FieldGroup>
             </SheetBody>
@@ -383,8 +463,22 @@ export function ClientSends({ campaignId, titleId }: { campaignId: Id; titleId: 
           </ItemContent>
           {s.link && (
             <ItemActions>
-              <Button variant="quiet" size="sm" iconOnly icon="copy" aria-label="Copy the link" onClick={() => copyLink(s.link!.url)} />
-              <Button variant="quiet" size="sm" iconOnly icon="external-link" aria-label="Open the link" onClick={() => navigate(`/c/${s.link!.token}`)} />
+              <Button
+                variant="quiet"
+                size="sm"
+                iconOnly
+                icon="copy"
+                aria-label="Copy the link"
+                onClick={() => copyLink(s.link!.url)}
+              />
+              <Button
+                variant="quiet"
+                size="sm"
+                iconOnly
+                icon="external-link"
+                aria-label="Open the link"
+                onClick={() => navigate(`/c/${s.link!.token}`)}
+              />
             </ItemActions>
           )}
         </Item>

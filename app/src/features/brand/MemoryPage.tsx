@@ -4,7 +4,18 @@
 // from all of it. /brand/memory, "What Fume learned": "← Brand", no tab row (WAY-10).
 // Round 9 (desktop review DLAY-7; PROPOSED 19 Oct 2026): the reading measure (760), so a lesson and its campaign link
 // sit close together.
-import { Button, Icon, Item, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle, PageHeader, type IconName } from "@fume/ui";
+import {
+  Button,
+  Icon,
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemMedia,
+  ItemTitle,
+  PageHeader,
+  type IconName,
+} from "@fume/ui";
 import { Link } from "react-router-dom";
 import { useBrandDna, useCampaigns } from "../../api/hooks";
 import type { MemoryEntry } from "../../contract";
@@ -79,7 +90,11 @@ export function MemoryContent() {
 export function MemoryPage() {
   return (
     <Page title="What Fume learned · Brand" width="reading">
-      <PageHeader title="What Fume learned" back={<Back to="/brand" label="Brand" />} description="Every new campaign starts from these." />
+      <PageHeader
+        title="What Fume learned"
+        back={<Back to="/brand" label="Brand" />}
+        description="Every new campaign starts from these."
+      />
       <MemoryContent />
     </Page>
   );

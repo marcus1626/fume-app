@@ -74,7 +74,16 @@ import { directory, firstName } from "../../shell/people";
 import { emptyMoodboard, moodboardImages } from "../boards/StartMoodboard";
 import { usable } from "../products/parts";
 import { ProductScopePicker, type Scope } from "../products/ProductScopePicker";
-import { audienceIn, briefGapKeys, briefLabel, channelsIn, formatsFor, nameFrom, namedIn, useBriefSuggestion } from "./brief-lines";
+import {
+  audienceIn,
+  briefGapKeys,
+  briefLabel,
+  channelsIn,
+  formatsFor,
+  nameFrom,
+  namedIn,
+  useBriefSuggestion,
+} from "./brief-lines";
 import { Alternatives, InspirationPicker, TemplatePicker, type BriefWords, type Inspiration } from "./brief-tools";
 import { rights } from "./parts";
 
@@ -168,7 +177,10 @@ function writeShared(name: string, goal: string) {
     const g = goal.trim();
     if (!n && !g) return sessionStorage.removeItem(SHARED_KEY);
     const text = n && !g.toLowerCase().includes(n.toLowerCase()) ? `${n}. ${g}`.trim() : g;
-    sessionStorage.setItem(SHARED_KEY, JSON.stringify({ ...(n ? { name: n } : {}), ...(g ? { goal: g } : {}), text } satisfies Shared));
+    sessionStorage.setItem(
+      SHARED_KEY,
+      JSON.stringify({ ...(n ? { name: n } : {}), ...(g ? { goal: g } : {}), text } satisfies Shared),
+    );
   } catch {
     /* the chat just starts empty */
   }
@@ -196,17 +208,21 @@ function reveal(id: string) {
   const target = el.matches("input, textarea, select, button")
     ? el
     : (el.querySelector<HTMLElement>("[data-reveal]") ??
-      el.querySelector<HTMLElement>("[tabindex='0']:not([disabled]), input:not([disabled]), textarea, button:not([disabled])") ??
+      el.querySelector<HTMLElement>(
+        "[tabindex='0']:not([disabled]), input:not([disabled]), textarea, button:not([disabled])",
+      ) ??
       el);
   const inset = el.closest<HTMLElement>(".ui-sidebar-inset");
-  const scroller = inset && inset.scrollHeight > inset.clientHeight ? inset : (document.scrollingElement as HTMLElement | null);
+  const scroller =
+    inset && inset.scrollHeight > inset.clientHeight ? inset : (document.scrollingElement as HTMLElement | null);
   const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (scroller) {
     const port = scroller === inset ? scroller.getBoundingClientRect() : { top: 0, height: window.innerHeight };
     // The line's top in the upper quarter; if that leaves the control low (under the pinned footer), the control mid-screen.
     let y = scroller.scrollTop + el.getBoundingClientRect().top - port.top - port.height / 4;
     const box = target.getBoundingClientRect();
-    if (box.bottom - el.getBoundingClientRect().top > port.height * 0.6) y = scroller.scrollTop + box.top - port.top - port.height / 2;
+    if (box.bottom - el.getBoundingClientRect().top > port.height * 0.6)
+      y = scroller.scrollTop + box.top - port.top - port.height / 2;
     scroller.scrollTo({ top: Math.max(0, y), behavior: smooth ? "smooth" : "auto" });
   }
   target.focus({ preventScroll: true });
@@ -266,13 +282,43 @@ export function NewBriefPage() {
   const has = (k: Touched) => touched.includes(k);
 
   useEffect(() => {
-    const draft: Draft = { name, goal, audience, message, mandatory, never, scope, picked, shapes, creatives, market, deadline, notes, touched };
+    const draft: Draft = {
+      name,
+      goal,
+      audience,
+      message,
+      mandatory,
+      never,
+      scope,
+      picked,
+      shapes,
+      creatives,
+      market,
+      deadline,
+      notes,
+      touched,
+    };
     try {
       sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
     } catch {
       /* the draft just isn't kept */
     }
-  }, [name, goal, audience, message, mandatory, never, scope, picked, shapes, creatives, market, deadline, notes, touched]);
+  }, [
+    name,
+    goal,
+    audience,
+    message,
+    mandatory,
+    never,
+    scope,
+    picked,
+    shapes,
+    creatives,
+    market,
+    deadline,
+    notes,
+    touched,
+  ]);
   useEffect(() => writeShared(name, goal), [name, goal]);
   useEffect(() => {
     if (!jump) return;
@@ -318,7 +364,9 @@ export function NewBriefPage() {
   const audienceNow = has("audience") ? audience : (audienceRead ?? "");
   const pickedNames = products.filter((p) => scopeNow.productIds.includes(p.id) && usable(p)).map((p) => p.name);
   const nameNow = name.trim() || nameFrom(goal, pickedNames);
-  const scoped = scopeNow.productIds.filter((id) => products.some((p) => p.id === id && usable(p))).length + scopeNow.collectionIds.length;
+  const scoped =
+    scopeNow.productIds.filter((id) => products.some((p) => p.id === id && usable(p))).length +
+    scopeNow.collectionIds.length;
   const home = { market: session.workspace.market, language: session.workspace.language };
   const markets = [home, ...MARKETS.filter((m) => marketKey(m) !== marketKey(home))];
   const marketNow = markets.find((m) => marketKey(m) === market) ?? home;
@@ -327,30 +375,44 @@ export function NewBriefPage() {
   // One rule (the same as sendBrief): briefGaps for the brief's own lines, then what a campaign needs to start.
   const gaps = briefGapKeys({ objective: goal, audience: audienceNow, message, offer: "" });
   const suggest = (key: "audience" | "message") => (goal.trim() ? hint.brief?.[key]?.trim() || undefined : undefined);
-  const needs = ([
-    gaps.includes("objective") && { id: "brief-goal", label: briefLabel.objective, error: "Say in a line what the campaign is for." },
-    scoped === 0 && { id: "brief-products", label: briefLabel.products, error: "Pick a product, or confirm one first." },
-    gaps.includes("audience") && {
-      id: "brief-audience",
-      label: briefLabel.audience,
-      error: suggest("audience") ? "Say who it should reach, or use Fume’s suggestion." : "Say who it should reach.",
-    },
-    gaps.includes("message") && {
-      id: "brief-message",
-      label: briefLabel.message,
-      error: suggest("message") ? "Say what it should say, or use Fume’s suggestion." : "Say what it should say.",
-    },
-    channelsNow.length === 0 && { id: "brief-channels", label: briefLabel.channels, error: "Pick where it runs." },
-    formatsNow.length === 0 && { id: "brief-formats", label: briefLabel.formats, error: "Pick at least one format." },
-    (!Number.isInteger(count) || count < 1) && { id: "brief-creatives", label: briefLabel.creatives, error: "Say how many creatives, one or more." },
-    Number.isInteger(count) &&
-      left !== undefined &&
-      count > left && {
+  const needs = (
+    [
+      gaps.includes("objective") && {
+        id: "brief-goal",
+        label: briefLabel.objective,
+        error: "Say in a line what the campaign is for.",
+      },
+      scoped === 0 && {
+        id: "brief-products",
+        label: briefLabel.products,
+        error: "Pick a product, or confirm one first.",
+      },
+      gaps.includes("audience") && {
+        id: "brief-audience",
+        label: briefLabel.audience,
+        error: suggest("audience") ? "Say who it should reach, or use Fume’s suggestion." : "Say who it should reach.",
+      },
+      gaps.includes("message") && {
+        id: "brief-message",
+        label: briefLabel.message,
+        error: suggest("message") ? "Say what it should say, or use Fume’s suggestion." : "Say what it should say.",
+      },
+      channelsNow.length === 0 && { id: "brief-channels", label: briefLabel.channels, error: "Pick where it runs." },
+      formatsNow.length === 0 && { id: "brief-formats", label: briefLabel.formats, error: "Pick at least one format." },
+      (!Number.isInteger(count) || count < 1) && {
         id: "brief-creatives",
         label: briefLabel.creatives,
-        error: `Your package has ${left} left. Ask for ${left} or fewer, or ask Fume about more.`,
+        error: "Say how many creatives, one or more.",
       },
-  ] as (Need | false)[]).filter((n): n is Need => Boolean(n));
+      Number.isInteger(count) &&
+        left !== undefined &&
+        count > left && {
+          id: "brief-creatives",
+          label: briefLabel.creatives,
+          error: `Your package has ${left} left. Ask for ${left} or fewer, or ask Fume about more.`,
+        },
+    ] as (Need | false)[]
+  ).filter((n): n is Need => Boolean(n));
   const error = (id: string) => (tried ? needs.find((n) => n.id === id)?.error : undefined);
   const go = (n: Need) => {
     const opening = Boolean(n.more) && !more.includes("more");
@@ -359,7 +421,9 @@ export function NewBriefPage() {
   };
   const filled = [name, deadline, mandatory, never, notes].filter((x) => x.trim()).length;
   // Who sends the brief to Fume when she may not: the workspace's approver (or owner).
-  const approverUser = team.data?.members.find((m) => m.user.id !== session.user.id && (m.membership.role === "approver" || m.membership.role === "owner"))?.user;
+  const approverUser = team.data?.members.find(
+    (m) => m.user.id !== session.user.id && (m.membership.role === "approver" || m.membership.role === "owner"),
+  )?.user;
   const approver = approverUser ? firstName(approverUser.name) : "the approver";
   const commit = can.approve ? "Send to Fume" : `Send to ${approver}`;
   // What happens next, once nothing is missing (the same sentence as the chat's brief panel).
@@ -381,7 +445,10 @@ export function NewBriefPage() {
     const pictures = moodboardImages(inspiration.pictures);
     // Robot note 03: the plan opens with its data, never a spinner first.
     const ready = (id: string) =>
-      Promise.all([queries.prefetchQuery({ queryKey: ["campaign", id], queryFn: () => api.campaign(id) }), queries.prefetchQuery({ queryKey: ["plan", id], queryFn: () => api.plan(id) })]).catch(() => undefined);
+      Promise.all([
+        queries.prefetchQuery({ queryKey: ["campaign", id], queryFn: () => api.campaign(id) }),
+        queries.prefetchQuery({ queryKey: ["plan", id], queryFn: () => api.plan(id) }),
+      ]).catch(() => undefined);
     try {
       const campaign = await order.mutateAsync({
         name: nameNow,
@@ -395,7 +462,9 @@ export function NewBriefPage() {
         language: marketNow.language,
         deadline: deadline ? new Date(`${deadline}T16:00:00`).toISOString() : undefined,
         // the links go to Fume with her notes (#23)
-        notes: [notes.trim(), inspiration.links.length ? `Links for inspiration: ${inspiration.links.join(" ")}` : ""].filter(Boolean).join("\n\n"),
+        notes: [notes.trim(), inspiration.links.length ? `Links for inspiration: ${inspiration.links.join(" ")}` : ""]
+          .filter(Boolean)
+          .join("\n\n"),
         audience: audienceNow.trim(),
         message: message.trim(),
         mandatory: lines(mandatory),
@@ -408,7 +477,9 @@ export function NewBriefPage() {
       // The form is done: it leaves the history, so Back from the plan goes where she came from.
       const plan = `/campaigns/${campaign.id}/plan`;
       if (!can.approve) {
-        toast.done(`${campaign.name} is with ${people.name(campaign.approverId)}`, { description: `${people.name(campaign.approverId)} sends the brief to Fume. Nothing is made before the plan is approved.` });
+        toast.done(`${campaign.name} is with ${people.name(campaign.approverId)}`, {
+          description: `${people.name(campaign.approverId)} sends the brief to Fume. Nothing is made before the plan is approved.`,
+        });
         await ready(campaign.id);
         navigate(plan, { replace: true });
         return;
@@ -417,13 +488,17 @@ export function NewBriefPage() {
         // The same send as the chat and the plan page, by the same rule: one step for her, two calls here.
         await send.mutateAsync(campaign.id);
       } catch (e) {
-        toast.error(`${campaign.name} is saved, but not sent yet`, { description: e instanceof Error ? e.message : undefined });
+        toast.error(`${campaign.name} is saved, but not sent yet`, {
+          description: e instanceof Error ? e.message : undefined,
+        });
         await ready(campaign.id);
         navigate(plan, { replace: true });
         return;
       }
       await ready(campaign.id);
-      toast.done(`${campaign.name} is sent to Fume`, { description: "Fume writes the plan. Nothing is made before you approve it." });
+      toast.done(`${campaign.name} is sent to Fume`, {
+        description: "Fume writes the plan. Nothing is made before you approve it.",
+      });
       navigate(plan, { replace: true });
     } catch (e) {
       toast.error("The brief wasn’t sent", { description: e instanceof Error ? e.message : undefined });
@@ -450,10 +525,13 @@ export function NewBriefPage() {
     setMessage(t.message);
     setPicked(t.channels);
     setShapes(t.formats);
-    if (t.creatives) setCreatives(String(left !== undefined ? Math.min(t.creatives, left || t.creatives) : t.creatives));
+    if (t.creatives)
+      setCreatives(String(left !== undefined ? Math.min(t.creatives, left || t.creatives) : t.creatives));
     setMandatory((t.mandatory ?? []).join("; "));
     setNever((t.never ?? []).join("; "));
-    setTouched((k) => [...new Set<Touched>([...k, "audience", "channels", "formats", ...(t.creatives ? (["creatives"] as const) : [])])]);
+    setTouched((k) => [
+      ...new Set<Touched>([...k, "audience", "channels", "formats", ...(t.creatives ? (["creatives"] as const) : [])]),
+    ]);
   };
   const words: BriefWords = { goal, audience: audienceNow, message };
   const header = (
@@ -472,7 +550,11 @@ export function NewBriefPage() {
     return (
       <Page title="New campaign" width="reading">
         {header}
-        <Nothing icon="megaphone" title="Campaigns are started by the team" text={`${session.workspace.brandName}’s owner, approvers and members start campaigns.`} />
+        <Nothing
+          icon="megaphone"
+          title="Campaigns are started by the team"
+          text={`${session.workspace.brandName}’s owner, approvers and members start campaigns.`}
+        />
       </Page>
     );
 
@@ -483,7 +565,13 @@ export function NewBriefPage() {
     return (
       <div className="ui-brief-suggest">
         <FieldDescription>Fume suggests “{s.replace(/[.\s]+$/, "")}”</FieldDescription>
-        <Button variant="secondary" size="sm" icon="check" aria-label={`Use Fume’s suggestion for ${label}`} onClick={() => use(s)}>
+        <Button
+          variant="secondary"
+          size="sm"
+          icon="check"
+          aria-label={`Use Fume’s suggestion for ${label}`}
+          onClick={() => use(s)}
+        >
           Use it
         </Button>
       </div>
@@ -493,7 +581,15 @@ export function NewBriefPage() {
   return (
     <Page title="New campaign" width="reading">
       {header}
-      <form id="brief-form" ref={form} onSubmit={(e) => void submit(e)} onKeyDown={onKeyDown} noValidate className="ui-brief-form" aria-label="The brief">
+      <form
+        id="brief-form"
+        ref={form}
+        onSubmit={(e) => void submit(e)}
+        onKeyDown={onKeyDown}
+        noValidate
+        className="ui-brief-form"
+        aria-label="The brief"
+      >
         <TemplatePicker value={template} onPick={fill} />
         <FieldGroup>
           <Field invalid={Boolean(error("brief-goal"))}>
@@ -577,7 +673,13 @@ export function NewBriefPage() {
             />
             {!message.trim() && suggestion("message", "the message", setMessage)}
             <div className="ui-brief-alts-slot">
-              <Alternatives part="message" label="Alternatives" now={words} productIds={scopeNow.productIds} onPick={(b) => setMessage(b.message)} />
+              <Alternatives
+                part="message"
+                label="Alternatives"
+                now={words}
+                productIds={scopeNow.productIds}
+                onPick={(b) => setMessage(b.message)}
+              />
             </div>
             <FieldError>{error("brief-message")}</FieldError>
           </Field>
@@ -628,7 +730,9 @@ export function NewBriefPage() {
                 </ToggleGroupItem>
               ))}
             </ToggleGroup>
-            {!has("formats") && formatsNow.length > 0 && <FieldDescription>Fume picked them from the channels.</FieldDescription>}
+            {!has("formats") && formatsNow.length > 0 && (
+              <FieldDescription>Fume picked them from the channels.</FieldDescription>
+            )}
             <FieldError>{error("brief-formats")}</FieldError>
           </FieldSet>
 
@@ -651,7 +755,11 @@ export function NewBriefPage() {
                 aria-invalid={Boolean(error("brief-creatives"))}
               />
               <FieldDescription id="brief-creatives-help">
-                {session.workspace.agencyId ? "Counted in this month’s usage" : left !== undefined ? `${left} left in your package` : "From your package"}
+                {session.workspace.agencyId
+                  ? "Counted in this month’s usage"
+                  : left !== undefined
+                    ? `${left} left in your package`
+                    : "From your package"}
                 {!has("creatives") && formatsNow.length > 0 ? ` · ${PER_FORMAT} per format` : ""}
               </FieldDescription>
               <FieldError>{error("brief-creatives")}</FieldError>
@@ -698,30 +806,64 @@ export function NewBriefPage() {
                     <FieldLabel htmlFor="brief-name">
                       Name <FieldOptional />
                     </FieldLabel>
-                    <Input id="brief-name" value={name} onChange={(e) => setName(e.target.value)} placeholder={nameNow} aria-describedby="brief-name-help" autoComplete="off" />
+                    <Input
+                      id="brief-name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder={nameNow}
+                      aria-describedby="brief-name-help"
+                      autoComplete="off"
+                    />
                     <FieldDescription id="brief-name-help">
-                      {name.trim() ? "Your name for it." : goal.trim() ? `Fume names it “${nameNow}” from your first line.` : "Fume names it from your first line."}
+                      {name.trim()
+                        ? "Your name for it."
+                        : goal.trim()
+                          ? `Fume names it “${nameNow}” from your first line.`
+                          : "Fume names it from your first line."}
                     </FieldDescription>
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="brief-deadline">
                       {briefLabel.live} <FieldOptional />
                     </FieldLabel>
-                    <DateField id="brief-deadline" value={deadline} onChange={setDeadline} today={todayKey()} aria-describedby="brief-deadline-help" />
-                    <FieldDescription id="brief-deadline-help">Fume plans back from it and tells you if your package needs longer.</FieldDescription>
+                    <DateField
+                      id="brief-deadline"
+                      value={deadline}
+                      onChange={setDeadline}
+                      today={todayKey()}
+                      aria-describedby="brief-deadline-help"
+                    />
+                    <FieldDescription id="brief-deadline-help">
+                      Fume plans back from it and tells you if your package needs longer.
+                    </FieldDescription>
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="brief-mandatory">
                       {briefLabel.mandatory} <FieldOptional />
                     </FieldLabel>
-                    <Input id="brief-mandatory" value={mandatory} onChange={(e) => setMandatory(e.target.value)} placeholder="The label, front on" autoComplete="off" />
+                    <Input
+                      id="brief-mandatory"
+                      value={mandatory}
+                      onChange={(e) => setMandatory(e.target.value)}
+                      placeholder="The label, front on"
+                      autoComplete="off"
+                    />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="brief-never">
                       {briefLabel.never} <FieldOptional />
                     </FieldLabel>
-                    <Input id="brief-never" value={never} onChange={(e) => setNever(e.target.value)} placeholder="Price tags; hands that cover the label" aria-describedby="brief-lists-help" autoComplete="off" />
-                    <FieldDescription id="brief-lists-help">Several things? Put a semicolon between them.</FieldDescription>
+                    <Input
+                      id="brief-never"
+                      value={never}
+                      onChange={(e) => setNever(e.target.value)}
+                      placeholder="Price tags; hands that cover the label"
+                      aria-describedby="brief-lists-help"
+                      autoComplete="off"
+                    />
+                    <FieldDescription id="brief-lists-help">
+                      Several things? Put a semicolon between them.
+                    </FieldDescription>
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="brief-notes-text">
@@ -756,7 +898,11 @@ export function NewBriefPage() {
 
         {narrow ? (
           // The floating bar holds a short line: what happens next, in a few words.
-          <ActionBar open aria-label={commit} label={needs.length ? footNote : can.approve ? "Fume writes the plan" : `${approver} sends it to Fume`}>
+          <ActionBar
+            open
+            aria-label={commit}
+            label={needs.length ? footNote : can.approve ? "Fume writes the plan" : `${approver} sends it to Fume`}
+          >
             <Button type="submit" variant="glass-white" icon="send" loading={busy}>
               {commit}
             </Button>
@@ -791,6 +937,8 @@ export function NewBriefPage() {
 /** "3 pictures, 1 link", or "Optional": what Inspiration holds, on its fold. */
 function inspirationMeta(i: Inspiration): string {
   const n = moodboardImages(i.pictures).length;
-  const parts = [n ? copy.count(n, "picture") : "", i.links.length ? copy.count(i.links.length, "link") : ""].filter(Boolean);
+  const parts = [n ? copy.count(n, "picture") : "", i.links.length ? copy.count(i.links.length, "link") : ""].filter(
+    Boolean,
+  );
   return parts.length ? parts.join(", ") : "Optional";
 }

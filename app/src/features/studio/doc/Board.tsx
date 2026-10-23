@@ -25,10 +25,33 @@ import {
   useToast,
   type StudioVariable,
 } from "@fume/ui";
-import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type FormEvent,
+  type KeyboardEvent,
+  type ReactNode,
+} from "react";
 import { useSearchParams } from "react-router-dom";
-import { useDecideEdit, useDetailTokens, useEngineEdit, usePlacements, useRender, usePickVersion } from "../../../api/hooks";
-import type { CreativeDocument, DetailToken, EngineEdit, Layer, RenderVersion, StudioMode, VarValue } from "../../../contract";
+import {
+  useDecideEdit,
+  useDetailTokens,
+  useEngineEdit,
+  usePlacements,
+  useRender,
+  usePickVersion,
+} from "../../../api/hooks";
+import type {
+  CreativeDocument,
+  DetailToken,
+  EngineEdit,
+  Layer,
+  RenderVersion,
+  StudioMode,
+  VarValue,
+} from "../../../contract";
 import * as copy from "../../../copy";
 import { when } from "../../../lib/time";
 import { DetailsOverlay, useFixDone } from "./fix";
@@ -41,7 +64,9 @@ const ratio = { feed: "4 / 5", square: "1 / 1", story: "9 / 16" } as const;
 export function documentName(doc: CreativeDocument, mode?: StudioMode, productName?: string) {
   // The title first, as Check names the same creative (DLOAD-8: one name in the Studio, Check and the toast).
   const own = doc.title || doc.slot || "";
-  return mode && mode.output !== "creative" ? own : copy.creativeName({ title: own, format: doc.specs.format, productName });
+  return mode && mode.output !== "creative"
+    ? own
+    : copy.creativeName({ title: own, format: doc.specs.format, productName });
 }
 
 /** "Clean", or what the Engine's evaluation and its product read flagged ("1 flag · size reads 200 ml"). */
@@ -65,7 +90,9 @@ export function flagWords(v: RenderVersion, tokens: DetailToken[] = []): { clean
 }
 
 export const shownVersion = (doc: CreativeDocument) =>
-  doc.versions.find((v) => v.id === doc.pickedVersionId) ?? [...doc.versions].reverse().find((v) => v.state === "done") ?? doc.versions.at(-1);
+  doc.versions.find((v) => v.id === doc.pickedVersionId) ??
+  [...doc.versions].reverse().find((v) => v.state === "done") ??
+  doc.versions.at(-1);
 
 // ─── The board ───────────────────────────────────────────────────────────────
 
@@ -111,8 +138,11 @@ export function Board({
   const [real, setReal] = useState(false);
   const shown = shownVersion(doc);
   const rendering = doc.versions.find((v) => v.state === "rendering");
-  const before = shown ? [...doc.versions].reverse().find((v) => v.number < shown.number && v.state === "done") : undefined;
-  const compared = compare.length && !readOnly ? doc.versions.filter((v) => compare.includes(v.id) && v.state === "done") : [];
+  const before = shown
+    ? [...doc.versions].reverse().find((v) => v.number < shown.number && v.state === "done")
+    : undefined;
+  const compared =
+    compare.length && !readOnly ? doc.versions.filter((v) => compare.includes(v.id) && v.state === "done") : [];
   const withReal = real && Boolean(realProduct) && !readOnly;
   const comparing = compared.length + (withReal ? 1 : 0) > 1 || (withReal && !compared.length);
   const figures = comparing ? (compared.length ? compared : shown ? [shown] : []).length + (withReal ? 1 : 0) : 1;
@@ -131,14 +161,17 @@ export function Board({
   const hasProduct = Boolean(doc.specs.productId) && mode?.output === "creative";
   // r13 #56: a new creative starts with no product; it renders once one is picked
   // (Free renders without one: it may be a mood picture)
-  const needsProduct = Boolean(mode?.uses.includes("product")) && doc.studio === "render" && mode?.id !== "m-free" && !doc.specs.productId;
+  const needsProduct =
+    Boolean(mode?.uses.includes("product")) && doc.studio === "render" && mode?.id !== "m-free" && !doc.specs.productId;
   useFixDone(doc);
 
   const figure = (v: RenderVersion, label: string | undefined, withLayers: boolean) => (
     <figure className="ui-desk-figure" key={v.id}>
       <span className="ui-desk-shot" style={{ "--ratio": ratio[format] } as CSSProperties}>
         <img src={v.image} alt={`${doc.title}, version ${v.number}`} draggable={false} />
-        {withLayers && safe && placement && !readOnly && <SafeZones placement={placement} sourceRatio={versionRatio(v, placements)} />}
+        {withLayers && safe && placement && !readOnly && (
+          <SafeZones placement={placement} sourceRatio={versionRatio(v, placements)} />
+        )}
         {withLayers && hasProduct && v.state === "done" && (
           <DetailsOverlay
             doc={doc}
@@ -180,10 +213,21 @@ export function Board({
 
   return (
     <>
-      <section className="ui-desk-canvas" data-zoom={zoom} data-compare={comparing ? "" : undefined} style={comparing ? ({ "--compare-n": figures } as CSSProperties) : undefined} aria-label="Board">
+      <section
+        className="ui-desk-canvas"
+        data-zoom={zoom}
+        data-compare={comparing ? "" : undefined}
+        style={comparing ? ({ "--compare-n": figures } as CSSProperties) : undefined}
+        aria-label="Board"
+      >
         {!readOnly && (
           <Glass className="ui-desk-rail" role="toolbar" aria-orientation="vertical" aria-label="View">
-            <RailToggle label={zoom === "full" ? "Fit to the board" : "Actual size, 100 %"} icon={zoom === "full" ? "minimize-2" : "zoom-in"} pressed={zoom === "full"} onPressedChange={(on) => setZoom(on ? "full" : "fit")} />
+            <RailToggle
+              label={zoom === "full" ? "Fit to the board" : "Actual size, 100 %"}
+              icon={zoom === "full" ? "minimize-2" : "zoom-in"}
+              pressed={zoom === "full"}
+              onPressedChange={(on) => setZoom(on ? "full" : "fit")}
+            />
             <RailToggle
               label="Compare versions: tap them in the strip"
               icon="columns-2"
@@ -191,16 +235,42 @@ export function Board({
               disabled={!before}
               onPressedChange={(on) => onCompare(on && shown && before ? [before.id, shown.id] : [])}
             />
-            {realProduct && hasProduct && <RailToggle label="Compare with the real product" icon="image" pressed={real} onPressedChange={setReal} />}
-            {placement && <RailToggle label={`Safe zones · ${placement.name}`} icon="crop" pressed={safe} onPressedChange={setSafe} />}
+            {realProduct && hasProduct && (
+              <RailToggle label="Compare with the real product" icon="image" pressed={real} onPressedChange={setReal} />
+            )}
+            {placement && (
+              <RailToggle
+                label={`Safe zones · ${placement.name}`}
+                icon="crop"
+                pressed={safe}
+                onPressedChange={setSafe}
+              />
+            )}
             {hasProduct && (
               <>
-                <RailToggle label="Product details the Engine masked" icon="package" pressed={details} onPressedChange={setDetails} />
-                <RailToggle label="Brush a fix: draw a box on the creative" icon="pencil" pressed={brushing} disabled={!shown || Boolean(rendering)} onPressedChange={setBrushing} />
+                <RailToggle
+                  label="Product details the Engine masked"
+                  icon="package"
+                  pressed={details}
+                  onPressedChange={setDetails}
+                />
+                <RailToggle
+                  label="Brush a fix: draw a box on the creative"
+                  icon="pencil"
+                  pressed={brushing}
+                  disabled={!shown || Boolean(rendering)}
+                  onPressedChange={setBrushing}
+                />
               </>
             )}
             <span className="ui-desk-rail-gap" aria-hidden="true" />
-            <RailToggle label={bare ? "Show the panels" : "Hide the panels"} shortcut="⌘\" icon={bare ? "minimize-2" : "maximize-2"} pressed={bare} onPressedChange={onToggleBare} />
+            <RailToggle
+              label={bare ? "Show the panels" : "Hide the panels"}
+              shortcut="⌘\"
+              icon={bare ? "minimize-2" : "maximize-2"}
+              pressed={bare}
+              onPressedChange={onToggleBare}
+            />
           </Glass>
         )}
 
@@ -216,11 +286,17 @@ export function Board({
             </figure>
           ) : comparing ? (
             <>
-              {(compared.length ? compared : shown ? [shown] : []).map((v) => figure(v, `Version ${v.number}${v.id === shown?.id ? ", picked" : ""}`, v.id === shown?.id))}
+              {(compared.length ? compared : shown ? [shown] : []).map((v) =>
+                figure(v, `Version ${v.number}${v.id === shown?.id ? ", picked" : ""}`, v.id === shown?.id),
+              )}
               {withReal && realProduct && (
                 <figure className="ui-desk-figure" key="real">
                   <span className="ui-desk-shot">
-                    <img src={realProduct.image} alt={`${realProduct.name}, the product's own photo`} draggable={false} />
+                    <img
+                      src={realProduct.image}
+                      alt={`${realProduct.name}, the product's own photo`}
+                      draggable={false}
+                    />
                   </span>
                   <figcaption className="ui-desk-caption">The real product</figcaption>
                 </figure>
@@ -229,18 +305,44 @@ export function Board({
           ) : shown ? (
             figure(shown, undefined, true)
           ) : (
-            <p className="ui-desk-empty">{needsProduct ? "Pick a product, set the variables, then render." : "Nothing rendered yet. Set the variables, then render."}</p>
+            <p className="ui-desk-empty">
+              {needsProduct
+                ? "Pick a product, set the variables, then render."
+                : "Nothing rendered yet. Set the variables, then render."}
+            </p>
           )}
         </div>
       </section>
 
-      {!readOnly && (lock ?? <EngineBar doc={doc} mode={mode} busy={Boolean(rendering)} needsProduct={needsProduct} onBeforeRender={onBeforeRender} onVariable={onVariable} />)}
+      {!readOnly &&
+        (lock ?? (
+          <EngineBar
+            doc={doc}
+            mode={mode}
+            busy={Boolean(rendering)}
+            needsProduct={needsProduct}
+            onBeforeRender={onBeforeRender}
+            onVariable={onVariable}
+          />
+        ))}
     </>
   );
 }
 
 /** One tool on the rail: an icon, its name in a tooltip on the board's side. */
-function RailToggle({ label, icon, shortcut, ...props }: { label: string; icon: "zoom-in" | "minimize-2" | "maximize-2" | "columns-2" | "crop" | "package" | "pencil" | "image"; shortcut?: string; pressed: boolean; disabled?: boolean; onPressedChange: (on: boolean) => void }) {
+function RailToggle({
+  label,
+  icon,
+  shortcut,
+  ...props
+}: {
+  label: string;
+  icon: "zoom-in" | "minimize-2" | "maximize-2" | "columns-2" | "crop" | "package" | "pencil" | "image";
+  shortcut?: string;
+  pressed: boolean;
+  disabled?: boolean;
+  onPressedChange: (on: boolean) => void;
+}) {
   return (
     <WithTooltip label={label} shortcut={shortcut} side="right">
       <Toggle size="sm" iconOnly icon={icon} className="ui-desk-rail-tool" aria-label={label} {...props} />
@@ -257,9 +359,29 @@ const changeWords = (c: { key: string; label: string; from: VarValue; to: VarVal
 
 /** An example for the Engine bar that fits the mode. */
 const example = (doc: CreativeDocument, mode?: StudioMode) =>
-  doc.studio === "design" ? "Hide the logo" : mode?.output === "model" ? "Make her hair longer" : mode?.output === "reference" ? "Make it in oak" : "Make the light warmer";
+  doc.studio === "design"
+    ? "Hide the logo"
+    : mode?.output === "model"
+      ? "Make her hair longer"
+      : mode?.output === "reference"
+        ? "Make it in oak"
+        : "Make the light warmer";
 
-function EngineBar({ doc, mode, busy, needsProduct, onBeforeRender, onVariable }: { doc: CreativeDocument; mode?: StudioMode; busy: boolean; needsProduct?: boolean; onBeforeRender: () => void; onVariable: (key: string, value: VarValue) => void }) {
+function EngineBar({
+  doc,
+  mode,
+  busy,
+  needsProduct,
+  onBeforeRender,
+  onVariable,
+}: {
+  doc: CreativeDocument;
+  mode?: StudioMode;
+  busy: boolean;
+  needsProduct?: boolean;
+  onBeforeRender: () => void;
+  onVariable: (key: string, value: VarValue) => void;
+}) {
   const [text, setText] = useState("");
   const engineEdit = useEngineEdit();
   const render = useRender();
@@ -274,13 +396,27 @@ function EngineBar({ doc, mode, busy, needsProduct, onBeforeRender, onVariable }
     onBeforeRender();
     engineEdit.mutate(
       { documentId: doc.id, text: words },
-      { onSuccess: () => setText(""), onError: (err) => toast.error("The Engine didn’t take that", { description: err.message }) },
+      {
+        onSuccess: () => setText(""),
+        onError: (err) => toast.error("The Engine didn’t take that", { description: err.message }),
+      },
     );
   };
 
   return (
     <div className="ui-desk-engine" data-proposed={proposed ? "" : undefined}>
-      {proposed && <ChangeCard key={proposed.id} doc={doc} edit={proposed} mode={mode} busy={busy} onBeforeRender={onBeforeRender} onVariable={onVariable} onDone={() => input.current?.focus()} />}
+      {proposed && (
+        <ChangeCard
+          key={proposed.id}
+          doc={doc}
+          edit={proposed}
+          mode={mode}
+          busy={busy}
+          onBeforeRender={onBeforeRender}
+          onVariable={onVariable}
+          onDone={() => input.current?.focus()}
+        />
+      )}
       <form className="ui-desk-engine-form" onSubmit={submit}>
         <Icon name="fume-engine" className="ui-desk-engine-mark" />
         <label className="ui-sr-only" htmlFor="engine-bar">
@@ -295,10 +431,19 @@ function EngineBar({ doc, mode, busy, needsProduct, onBeforeRender, onVariable }
           autoComplete="off"
           onChange={(e) => setText(e.target.value)}
         />
-        <Button type="submit" size="sm" variant="secondary" icon="arrow-up" loading={engineEdit.isPending} disabled={!text.trim()}>
+        <Button
+          type="submit"
+          size="sm"
+          variant="secondary"
+          icon="arrow-up"
+          loading={engineEdit.isPending}
+          disabled={!text.trim()}
+        >
           Send
         </Button>
-        <WithTooltip label={needsProduct ? "Pick a product first" : "Render a new version from the variables as they are"}>
+        <WithTooltip
+          label={needsProduct ? "Pick a product first" : "Render a new version from the variables as they are"}
+        >
           <Button
             size="sm"
             variant="secondary"
@@ -307,7 +452,9 @@ function EngineBar({ doc, mode, busy, needsProduct, onBeforeRender, onVariable }
             disabled={busy || needsProduct}
             onClick={() => {
               onBeforeRender();
-              render.mutate(doc.id, { onError: (err) => toast.error("The render didn’t start", { description: err.message }) });
+              render.mutate(doc.id, {
+                onError: (err) => toast.error("The render didn’t start", { description: err.message }),
+              });
             }}
           >
             Render
@@ -372,7 +519,8 @@ function ChangeCard({
           <p className="ui-desk-engine-line">
             {edit.changes.length ? (
               <>
-                The Engine changed <span className="ui-desk-engine-what">{edit.changes.map((c) => changeWords(c, mode)).join(" · ")}</span>
+                The Engine changed{" "}
+                <span className="ui-desk-engine-what">{edit.changes.map((c) => changeWords(c, mode)).join(" · ")}</span>
               </>
             ) : (
               "The Engine found nothing to change for that"
@@ -388,9 +536,21 @@ function ChangeCard({
                   <Icon name={p.keys.length || took ? "circle-check" : "minus"} className="ui-desk-engine-part-icon" />
                   <span className="ui-desk-engine-part-text">
                     <span className="ui-desk-engine-said">“{p.text}”</span>
-                    {p.keys.length > 0 && <span className="ui-desk-engine-what">{p.keys.map((k) => byKey(k)).filter(Boolean).map((c) => changeWords(c!, mode)).join(" · ")}</span>}
+                    {p.keys.length > 0 && (
+                      <span className="ui-desk-engine-what">
+                        {p.keys
+                          .map((k) => byKey(k))
+                          .filter(Boolean)
+                          .map((c) => changeWords(c!, mode))
+                          .join(" · ")}
+                      </span>
+                    )}
                     {!p.keys.length && p.note && <span className="ui-desk-engine-note">{p.note}.</span>}
-                    {!p.keys.length && s && <span className="ui-desk-engine-what">{took ? changeWords(s, mode) : `${changeWords(s, mode)}?`}</span>}
+                    {!p.keys.length && s && (
+                      <span className="ui-desk-engine-what">
+                        {took ? changeWords(s, mode) : `${changeWords(s, mode)}?`}
+                      </span>
+                    )}
                   </span>
                   {!p.keys.length && s && !took && (
                     <Button
@@ -418,7 +578,15 @@ function ChangeCard({
         </WithTooltip>
         {canKeep && (
           <WithTooltip label="Keep it and render a new version" shortcut="↵">
-            <Button ref={keep} size="sm" variant="secondary" icon="refresh-cw" loading={decide.isPending} disabled={busy} onClick={keepIt}>
+            <Button
+              ref={keep}
+              size="sm"
+              variant="secondary"
+              icon="refresh-cw"
+              loading={decide.isPending}
+              disabled={busy}
+              onClick={keepIt}
+            >
               Keep and render
             </Button>
           </WithTooltip>
@@ -433,7 +601,17 @@ function ChangeCard({
 /** Up to four versions side by side on the board. */
 const COMPARE_MAX = 4;
 
-export function Versions({ doc, readOnly, compare = [], onCompare }: { doc: CreativeDocument; readOnly: boolean; compare?: string[]; onCompare?: (ids: string[]) => void }) {
+export function Versions({
+  doc,
+  readOnly,
+  compare = [],
+  onCompare,
+}: {
+  doc: CreativeDocument;
+  readOnly: boolean;
+  compare?: string[];
+  onCompare?: (ids: string[]) => void;
+}) {
   const pick = usePickVersion();
   const tokens = useDetailTokens(doc.specs.productId).data ?? [];
   const strip = useRef<HTMLOListElement>(null);
@@ -444,12 +622,23 @@ export function Versions({ doc, readOnly, compare = [], onCompare }: { doc: Crea
     if (el) el.scrollLeft = el.scrollWidth;
   }, [count]);
 
-  if (!count) return <p className="ui-desk-versions ui-desk-versions--empty">No versions yet. Each render becomes a version here; nothing is ever overwritten.</p>;
+  if (!count)
+    return (
+      <p className="ui-desk-versions ui-desk-versions--empty">
+        No versions yet. Each render becomes a version here; nothing is ever overwritten.
+      </p>
+    );
   // While comparing (#59), a tap adds a version to the board or takes it off; otherwise it picks.
   const comparing = compare.length > 0 && Boolean(onCompare);
-  const toggle = (id: string) => onCompare?.(compare.includes(id) ? compare.filter((x) => x !== id) : [...compare, id].slice(-COMPARE_MAX));
+  const toggle = (id: string) =>
+    onCompare?.(compare.includes(id) ? compare.filter((x) => x !== id) : [...compare, id].slice(-COMPARE_MAX));
   return (
-    <ol ref={strip} className="ui-desk-versions" aria-label={comparing ? "Versions: tap to compare" : "Versions"} data-comparing={comparing ? "" : undefined}>
+    <ol
+      ref={strip}
+      className="ui-desk-versions"
+      aria-label={comparing ? "Versions: tap to compare" : "Versions"}
+      data-comparing={comparing ? "" : undefined}
+    >
       {doc.versions.map((v) => {
         const picked = v.id === doc.pickedVersionId;
         const flags = flagWords(v, tokens);
@@ -468,7 +657,15 @@ export function Versions({ doc, readOnly, compare = [], onCompare }: { doc: Crea
                 )}
                 <span className="ui-desk-version-when">{when(v.at)}</span>
               </span>
-              <span className="ui-desk-version-line">{v.state === "rendering" ? <TextShimmer>Rendering</TextShimmer> : v.instruction ? `“${v.instruction}”` : "Rendered from the variables"}</span>
+              <span className="ui-desk-version-line">
+                {v.state === "rendering" ? (
+                  <TextShimmer>Rendering</TextShimmer>
+                ) : v.instruction ? (
+                  `“${v.instruction}”`
+                ) : (
+                  "Rendered from the variables"
+                )}
+              </span>
               {v.state === "done" && (
                 <span className="ui-desk-version-flags" data-clean={flags.clean ? "" : undefined}>
                   <Icon name={flags.clean ? "circle-check" : "triangle-alert"} />
@@ -491,9 +688,19 @@ export function Versions({ doc, readOnly, compare = [], onCompare }: { doc: Crea
                 aria-current={picked ? "true" : undefined}
                 aria-pressed={comparing ? compare.includes(v.id) : undefined}
                 aria-label={`Version ${v.number}${picked ? ", picked" : ""}. ${v.instruction ?? ""} ${flags.words}`}
-                title={comparing ? (compare.includes(v.id) ? "On the board: tap to take it off" : "Tap to compare it") : flags.clean ? undefined : flags.words}
+                title={
+                  comparing
+                    ? compare.includes(v.id)
+                      ? "On the board: tap to take it off"
+                      : "Tap to compare it"
+                    : flags.clean
+                      ? undefined
+                      : flags.words
+                }
                 disabled={v.state !== "done" || pick.isPending}
-                onClick={() => (comparing ? toggle(v.id) : !picked && pick.mutate({ documentId: doc.id, versionId: v.id }))}
+                onClick={() =>
+                  comparing ? toggle(v.id) : !picked && pick.mutate({ documentId: doc.id, versionId: v.id })
+                }
               >
                 {body}
               </button>

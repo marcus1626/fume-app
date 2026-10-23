@@ -7,12 +7,19 @@
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { partsOf } from "./words";
 
-const scrollerOf = (el: Element | null) => (el?.closest(".ui-sidebar-inset") as HTMLElement | null) ?? (document.scrollingElement as HTMLElement | null);
+const scrollerOf = (el: Element | null) =>
+  (el?.closest(".ui-sidebar-inset") as HTMLElement | null) ?? (document.scrollingElement as HTMLElement | null);
 
 /** How much of the scroller's top the sticky rows cover: the parts say it themselves (scroll-margin-top). */
 const covered = (el: Element | null) => (el ? parseFloat(getComputedStyle(el).scrollMarginTop) || 0 : 0);
 
-export function PlanIndex({ label = "In this plan", parts = partsOf() }: { label?: string; parts?: { id: string; label: string }[] }) {
+export function PlanIndex({
+  label = "In this plan",
+  parts = partsOf(),
+}: {
+  label?: string;
+  parts?: { id: string; label: string }[];
+}) {
   const nav = useRef<HTMLElement>(null);
   const [current, setCurrent] = useState<string | null>(null);
   const picked = useRef<{ id: string; at: number } | null>(null);
@@ -74,7 +81,12 @@ export function PlanIndex({ label = "In this plan", parts = partsOf() }: { label
       <ul className="ui-plandoc-index-list">
         {parts.map((p) => (
           <li key={p.id}>
-            <a href={`#${p.id}`} className="ui-plandoc-index-link" aria-current={current === p.id ? "location" : undefined} onClick={(e) => go(e, p.id)}>
+            <a
+              href={`#${p.id}`}
+              className="ui-plandoc-index-link"
+              aria-current={current === p.id ? "location" : undefined}
+              onClick={(e) => go(e, p.id)}
+            >
               {p.label}
             </a>
           </li>

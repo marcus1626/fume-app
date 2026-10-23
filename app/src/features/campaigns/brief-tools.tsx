@@ -7,7 +7,22 @@
 //   the Engine's writing, said in Fume's voice: the Engine never talks to customers.
 // - Inspiration (#23): pictures she adds, pictures from her boards and links to pages she likes. The pictures start the
 //   campaign's moodboard; the links go to Fume with the brief.
-import { Button, Field, FieldDescription, FieldError, FieldLabel, Input, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue, useToast } from "@fume/ui";
+import {
+  Button,
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+  Input,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+  useToast,
+} from "@fume/ui";
 import { useState, type KeyboardEvent } from "react";
 import { useBriefAlternatives, useBriefTemplates } from "../../api/hooks";
 import type { BriefTemplate } from "../../contract";
@@ -34,7 +49,11 @@ export function TemplatePicker({ value, onPick }: { value: string; onPick: (t: B
         }}
         disabled={!list.length}
       >
-        <SelectTrigger id="brief-template" aria-labelledby="brief-template-label" aria-describedby="brief-template-help">
+        <SelectTrigger
+          id="brief-template"
+          aria-labelledby="brief-template-label"
+          aria-describedby="brief-template-help"
+        >
           <SelectValue placeholder="A blank brief" />
         </SelectTrigger>
         <SelectContent>
@@ -59,7 +78,11 @@ export function TemplatePicker({ value, onPick }: { value: string; onPick: (t: B
         </SelectContent>
       </Select>
       <FieldDescription id="brief-template-help">
-        {picked ? `${picked.description} Change anything below.` : yours.length ? "Fume’s templates, and yours: Fume made them from your past campaigns." : "Fume’s templates fill the form; change anything after."}
+        {picked
+          ? `${picked.description} Change anything below.`
+          : yours.length
+            ? "Fume’s templates, and yours: Fume made them from your past campaigns."
+            : "Fume’s templates fill the form; change anything after."}
       </FieldDescription>
     </Field>
   );
@@ -100,7 +123,15 @@ export function Alternatives({
   const ask = (nextRound: number, words = feedback) => {
     setRound(nextRound);
     alt.mutate(
-      { part, goal: now.goal, audience: now.audience, message: now.message, productIds, feedback: words.trim() || undefined, round: nextRound },
+      {
+        part,
+        goal: now.goal,
+        audience: now.audience,
+        message: now.message,
+        productIds,
+        feedback: words.trim() || undefined,
+        round: nextRound,
+      },
       { onError: (e) => toast.error("No alternatives this time", { description: e.message }) },
     );
   };
@@ -113,7 +144,9 @@ export function Alternatives({
     setFeedback("");
   };
   const nudge = (word: string) => {
-    const words = feedback.toLowerCase().includes(word.toLowerCase()) ? feedback : [feedback.trim(), word.toLowerCase()].filter(Boolean).join(", ");
+    const words = feedback.toLowerCase().includes(word.toLowerCase())
+      ? feedback
+      : [feedback.trim(), word.toLowerCase()].filter(Boolean).join(", ");
     setFeedback(words);
     ask(round + 1, words);
   };
@@ -126,16 +159,36 @@ export function Alternatives({
   };
   if (!open)
     return (
-      <Button type="button" variant={part === "brief" ? "secondary" : "quiet"} size="sm" icon="fume-engine" onClick={start} aria-label={`${label}: three alternatives for ${what}`}>
+      <Button
+        type="button"
+        variant={part === "brief" ? "secondary" : "quiet"}
+        size="sm"
+        icon="fume-engine"
+        onClick={start}
+        aria-label={`${label}: three alternatives for ${what}`}
+      >
         {label}
       </Button>
     );
   const options = alt.data ?? [];
   return (
-    <div className="ui-brief-alts" role="group" aria-label={`Three alternatives for ${what}`} aria-busy={alt.isPending || undefined}>
+    <div
+      className="ui-brief-alts"
+      role="group"
+      aria-label={`Three alternatives for ${what}`}
+      aria-busy={alt.isPending || undefined}
+    >
       <div className="ui-brief-alts-head">
         <p className="ui-brief-alts-title">Three alternatives for {what}</p>
-        <Button type="button" variant="quiet" size="sm" iconOnly icon="x" aria-label="Close the alternatives" onClick={close} />
+        <Button
+          type="button"
+          variant="quiet"
+          size="sm"
+          iconOnly
+          icon="x"
+          aria-label="Close the alternatives"
+          onClick={close}
+        />
       </div>
       <ul className="ui-brief-alts-list">
         {alt.isPending && !options.length
@@ -173,7 +226,14 @@ export function Alternatives({
       <div className="ui-brief-alts-again">
         <div className="ui-brief-alts-nudges" role="group" aria-label="Make them">
           {NUDGES.map((n) => (
-            <Button key={n} type="button" variant="secondary" size="sm" disabled={alt.isPending} onClick={() => nudge(n)}>
+            <Button
+              key={n}
+              type="button"
+              variant="secondary"
+              size="sm"
+              disabled={alt.isPending}
+              onClick={() => nudge(n)}
+            >
               {n}
             </Button>
           ))}
@@ -188,7 +248,14 @@ export function Alternatives({
             aria-label={`What to change in the alternatives for ${what}`}
             autoComplete="off"
           />
-          <Button type="button" variant="secondary" size="sm" icon="refresh-cw" loading={alt.isPending} onClick={() => ask(round + 1)}>
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            icon="refresh-cw"
+            loading={alt.isPending}
+            onClick={() => ask(round + 1)}
+          >
             New alternatives
           </Button>
         </div>
@@ -227,8 +294,16 @@ export function InspirationPicker({ value, onChange }: { value: Inspiration; onC
   };
   return (
     <div className="ui-app-stack">
-      <FieldDescription>Pictures and pages that show the feeling you want. The pictures start the campaign’s moodboard; Fume reads the links with the brief.</FieldDescription>
-      <MoodboardPicker value={value.pictures} onChange={(pictures) => onChange({ ...value, pictures })} legend="From your boards" optional />
+      <FieldDescription>
+        Pictures and pages that show the feeling you want. The pictures start the campaign’s moodboard; Fume reads the
+        links with the brief.
+      </FieldDescription>
+      <MoodboardPicker
+        value={value.pictures}
+        onChange={(pictures) => onChange({ ...value, pictures })}
+        legend="From your boards"
+        optional
+      />
       <Field invalid={bad}>
         <FieldLabel htmlFor="brief-link">Links</FieldLabel>
         <div className="ui-brief-link-add">
@@ -264,7 +339,15 @@ export function InspirationPicker({ value, onChange }: { value: Inspiration; onC
                 <a href={l} target="_blank" rel="noreferrer" className="ui-link">
                   {l.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}
                 </a>
-                <Button type="button" variant="quiet" size="sm" iconOnly icon="x" aria-label={`Remove ${l}`} onClick={() => onChange({ ...value, links: value.links.filter((x) => x !== l) })} />
+                <Button
+                  type="button"
+                  variant="quiet"
+                  size="sm"
+                  iconOnly
+                  icon="x"
+                  aria-label={`Remove ${l}`}
+                  onClick={() => onChange({ ...value, links: value.links.filter((x) => x !== l) })}
+                />
               </li>
             ))}
           </ul>

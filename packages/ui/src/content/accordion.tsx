@@ -48,7 +48,17 @@ export interface AccordionProps extends Omit<HTMLAttributes<HTMLDivElement>, "de
 }
 
 export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(function Accordion(
-  { type = "single", value, defaultValue = [], onValueChange, collapsible = true, flush, className, onKeyDown, ...props },
+  {
+    type = "single",
+    value,
+    defaultValue = [],
+    onValueChange,
+    collapsible = true,
+    flush,
+    className,
+    onKeyDown,
+    ...props
+  },
   ref,
 ) {
   const [open, setOpen] = useControllable<string[]>(value, defaultValue, onValueChange);
@@ -70,9 +80,11 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(function Acc
     const root = rootRef.current;
     const t = (e.target as HTMLElement).closest?.(".ui-accordion-trigger") as HTMLElement | null;
     if (!root || !t) return;
-    const list = Array.from(root.querySelectorAll<HTMLButtonElement>(":scope > .ui-accordion-item > .ui-accordion-header > .ui-accordion-trigger")).filter(
-      (x) => !x.disabled && !x.hasAttribute("data-disabled"),
-    );
+    const list = Array.from(
+      root.querySelectorAll<HTMLButtonElement>(
+        ":scope > .ui-accordion-item > .ui-accordion-header > .ui-accordion-trigger",
+      ),
+    ).filter((x) => !x.disabled && !x.hasAttribute("data-disabled"));
     const i = list.indexOf(t as HTMLButtonElement);
     if (i < 0) return;
     const go = ({ ArrowDown: i + 1, ArrowUp: i - 1, Home: 0, End: list.length - 1 } as Record<string, number>)[e.key];
@@ -103,7 +115,10 @@ export function AccordionItem({ value, disabled = false, className, ...props }: 
   const acc = useContext(AccordionContext);
   const id = useId();
   const open = !!acc && acc.open.includes(value);
-  const ctx = useMemo(() => ({ value, open, disabled, triggerId: `${id}-trigger`, contentId: `${id}-content` }), [value, open, disabled, id]);
+  const ctx = useMemo(
+    () => ({ value, open, disabled, triggerId: `${id}-trigger`, contentId: `${id}-content` }),
+    [value, open, disabled, id],
+  );
   return (
     <ItemContext.Provider value={ctx}>
       <div
@@ -191,13 +206,24 @@ export interface CollapsibleProps extends HTMLAttributes<HTMLDivElement> {
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
-export function Collapsible({ open: openProp, defaultOpen = false, onOpenChange, className, ...props }: CollapsibleProps) {
+export function Collapsible({
+  open: openProp,
+  defaultOpen = false,
+  onOpenChange,
+  className,
+  ...props
+}: CollapsibleProps) {
   const [open, setOpen] = useControllable<boolean>(openProp, defaultOpen, onOpenChange);
   const id = useId();
   const ctx = useMemo(() => ({ open, setOpen, contentId: `${id}-content` }), [open, setOpen, id]);
   return (
     <CollapsibleContext.Provider value={ctx}>
-      <div data-slot="collapsible" data-state={open ? "open" : "closed"} className={cx("ui-collapsible", className)} {...props} />
+      <div
+        data-slot="collapsible"
+        data-state={open ? "open" : "closed"}
+        className={cx("ui-collapsible", className)}
+        {...props}
+      />
     </CollapsibleContext.Provider>
   );
 }
@@ -235,7 +261,13 @@ export const CollapsibleTrigger = forwardRef<HTMLButtonElement, CollapsibleTrigg
 export function CollapsibleContent({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
   const c = useContext(CollapsibleContext);
   return (
-    <div data-slot="collapsible-content" id={c?.contentId} data-state={c?.open ? "open" : "closed"} className={cx("ui-collapsible-content", className)} {...props}>
+    <div
+      data-slot="collapsible-content"
+      id={c?.contentId}
+      data-state={c?.open ? "open" : "closed"}
+      className={cx("ui-collapsible-content", className)}
+      {...props}
+    >
       <div>{children}</div>
     </div>
   );

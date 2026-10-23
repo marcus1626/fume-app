@@ -89,7 +89,9 @@ export function ReturnToChat() {
     if (inChat) keepReturn(undefined);
     setPath(readReturn());
   }, [inChat, location.pathname]);
-  const shown = !inChat && (direct || (path !== undefined && (location.pathname === path || location.pathname.startsWith(`${path}/`))));
+  const shown =
+    !inChat &&
+    (direct || (path !== undefined && (location.pathname === path || location.pathname.startsWith(`${path}/`))));
   if (!shown) return null;
   return (
     <div className="ui-glass ui-glass--bar ui-chat-return">

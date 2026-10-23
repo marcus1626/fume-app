@@ -24,7 +24,8 @@ export const CHANNELS: PublishChannel[] = [
 ];
 
 /** The channel a placement belongs to (a group no channel names goes with Email and web). */
-export const channelOf = (placement?: Pick<Placement, "group">) => CHANNELS.find((c) => placement && c.groups.includes(placement.group)) ?? CHANNELS[CHANNELS.length - 1]!;
+export const channelOf = (placement?: Pick<Placement, "group">) =>
+  CHANNELS.find((c) => placement && c.groups.includes(placement.group)) ?? CHANNELS[CHANNELS.length - 1]!;
 
 let connected: ReadonlySet<string> = new Set(["instagram", "meta-ads"]);
 const listeners = new Set<() => void>();

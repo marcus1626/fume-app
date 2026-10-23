@@ -146,17 +146,35 @@ export function AgencyPersonMenu({ avatar }: { avatar?: boolean }) {
 
 // ─── The agency's bell (round 13, robot note 10-agency) ─────────────────────
 
-const needKinds: Record<AgencyNeed["kind"], WaitingKind[]> = { plan: ["plan"], check: ["creatives"], brief: ["brief"], products: ["products"], brand: ["brand"], client_changes: [] };
+const needKinds: Record<AgencyNeed["kind"], WaitingKind[]> = {
+  plan: ["plan"],
+  check: ["creatives"],
+  brief: ["brief"],
+  products: ["products"],
+  brand: ["brand"],
+  client_changes: [],
+};
 /** The campaign a Needs-you row is about: "/campaigns/c-winter/plan", "…/qa?campaign=c-autumn". */
-const needCampaign = (href: string) => /\/campaigns\/([^/?#]+)/.exec(href)?.[1] ?? /[?&]campaign=([^&#]+)/.exec(href)?.[1];
+const needCampaign = (href: string) =>
+  /\/campaigns\/([^/?#]+)/.exec(href)?.[1] ?? /[?&]campaign=([^&#]+)/.exec(href)?.[1];
 
 /**
  * The agency's bell is the same under All clients and inside any client (the robot saw 2 and 3): a notification is
  * read when it was read, or when the agency's Needs you (every client) already asks what it asks. The customer's rule
  * (shell/notifications.ts) read the session's one brand, so the number changed with the client.
  */
-export function agencyBell(items: NotificationData[], raw: Notification[] | undefined, needs: AgencyNeed[]): { items: NotificationData[]; unread: number } {
-  const keys = new Set(homeKeys(needs.map((n) => ({ kind: needKinds[n.kind][0] ?? "draft", campaignId: needCampaign(n.href) })).filter((r) => r.kind !== "draft")));
+export function agencyBell(
+  items: NotificationData[],
+  raw: Notification[] | undefined,
+  needs: AgencyNeed[],
+): { items: NotificationData[]; unread: number } {
+  const keys = new Set(
+    homeKeys(
+      needs
+        .map((n) => ({ kind: needKinds[n.kind][0] ?? "draft", campaignId: needCampaign(n.href) }))
+        .filter((r) => r.kind !== "draft"),
+    ),
+  );
   const read = new Map((raw ?? []).map((n) => [n.id, n.read]));
   const shown = items.map((n) => {
     const unread = read.get(n.id) === false && !isOnHome(n.kind, keys, n.href);

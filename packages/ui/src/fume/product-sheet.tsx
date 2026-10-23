@@ -182,7 +182,9 @@ export function ProductSheet({
         </div>
       )}
       <p className="ui-product-sheet-count" aria-live="polite">
-        {filtering ? `${shown.length} of ${plural(products.length, "product", "products")}` : plural(products.length, "product", "products")}
+        {filtering
+          ? `${shown.length} of ${plural(products.length, "product", "products")}`
+          : plural(products.length, "product", "products")}
         {multiple && ticked.length > 0 ? ` · ${ticked.length} ticked` : ""}
       </p>
       {shown.length ? (
@@ -199,7 +201,9 @@ export function ProductSheet({
               action={p.locked ? p.action : undefined}
               selected={p.locked ? undefined : multiple ? ticked.includes(p.id) : value.includes(p.id)}
               onSelectedChange={(on) => pick(p.id, multiple ? on : true)}
-              label={p.locked ? `${p.name}${p.variant ? `, ${p.variant}` : ""}: ${lockedLabel.toLowerCase()}` : undefined}
+              label={
+                p.locked ? `${p.name}${p.variant ? `, ${p.variant}` : ""}: ${lockedLabel.toLowerCase()}` : undefined
+              }
             />
           ))}
         </PickGrid>
@@ -276,9 +280,23 @@ export interface ProductSheetButtonProps {
 }
 
 /** "View all products (12)": opens the sheet, under a picker's few tiles. */
-export function ProductSheetButton({ count, onClick, label = "View all products", glass, disabled }: ProductSheetButtonProps) {
+export function ProductSheetButton({
+  count,
+  onClick,
+  label = "View all products",
+  glass,
+  disabled,
+}: ProductSheetButtonProps) {
   return (
-    <Button type="button" size="sm" variant={glass ? "glass-clear" : "secondary"} icon="layout-grid" onClick={onClick} disabled={disabled} className="ui-product-sheet-open">
+    <Button
+      type="button"
+      size="sm"
+      variant={glass ? "glass-clear" : "secondary"}
+      icon="layout-grid"
+      onClick={onClick}
+      disabled={disabled}
+      className="ui-product-sheet-open"
+    >
       {label} ({count})
     </Button>
   );

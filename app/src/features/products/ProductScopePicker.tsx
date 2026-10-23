@@ -61,9 +61,24 @@ export interface ProductScopePickerProps {
 }
 
 const names = (list: Product[]) =>
-  list.length <= 3 ? list.map((p) => p.name).join(", ").replace(/, ([^,]*)$/, " and $1") : `${list.slice(0, 3).map((p) => p.name).join(", ")} and ${list.length - 3} more`;
+  list.length <= 3
+    ? list
+        .map((p) => p.name)
+        .join(", ")
+        .replace(/, ([^,]*)$/, " and $1")
+    : `${list
+        .slice(0, 3)
+        .map((p) => p.name)
+        .join(", ")} and ${list.length - 3} more`;
 
-export function ProductScopePicker({ campaign, onSaved, value, onChange, named = [], size = "md" }: ProductScopePickerProps) {
+export function ProductScopePicker({
+  campaign,
+  onSaved,
+  value,
+  onChange,
+  named = [],
+  size = "md",
+}: ProductScopePickerProps) {
   const catalogue = useCatalogue();
   const save = useSetCampaignScope();
   const toast = useToast();
@@ -82,15 +97,24 @@ export function ProductScopePicker({ campaign, onSaved, value, onChange, named =
     <Query query={catalogue} loading="Loading your catalogue">
       {({ products, collections }) => {
         const fromCollections = new Map<Id, string>();
-        for (const c of collections) if (scope.collectionIds.includes(c.id)) for (const id of c.productIds) if (!fromCollections.has(id)) fromCollections.set(id, c.name);
-        const total = new Set([...scope.productIds.filter((id) => products.some((p) => p.id === id && usable(p))), ...fromCollections.keys()]).size;
+        for (const c of collections)
+          if (scope.collectionIds.includes(c.id))
+            for (const id of c.productIds) if (!fromCollections.has(id)) fromCollections.set(id, c.name);
+        const total = new Set([
+          ...scope.productIds.filter((id) => products.some((p) => p.id === id && usable(p))),
+          ...fromCollections.keys(),
+        ]).size;
         const toggle = (key: keyof Scope, id: Id, on: boolean) =>
           set({ ...scope, [key]: on ? [...new Set([...scope[key], id])] : scope[key].filter((x) => x !== id) });
-        const pictures = (ids: Id[]) => ids.map((id) => products.find((p) => p.id === id)?.images[0]).filter((s): s is string => Boolean(s));
+        const pictures = (ids: Id[]) =>
+          ids.map((id) => products.find((p) => p.id === id)?.images[0]).filter((s): s is string => Boolean(s));
 
         const ready = products.filter(usable);
         // A product picked before its check (an older campaign) keeps its tile, with the way to check it.
-        const shown = [...ready.filter((p, i) => i < INLINE || scope.productIds.includes(p.id)), ...products.filter((p) => !usable(p) && scope.productIds.includes(p.id))];
+        const shown = [
+          ...ready.filter((p, i) => i < INLINE || scope.productIds.includes(p.id)),
+          ...products.filter((p) => !usable(p) && scope.productIds.includes(p.id)),
+        ];
         const waiting = products.filter((p) => !usable(p) && !scope.productIds.includes(p.id));
         const asked = waiting.filter((p) => named.includes(p.id));
         const next = asked.length ? asked : waiting;
@@ -125,7 +149,13 @@ export function ProductScopePicker({ campaign, onSaved, value, onChange, named =
                       flag={ok ? undefined : "Not confirmed yet"}
                       action={
                         ok ? undefined : (
-                          <Button size="sm" variant="secondary" icon="circle-check" aria-label={`Confirm ${p.name}`} onClick={() => check(p.id)}>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            icon="circle-check"
+                            aria-label={`Confirm ${p.name}`}
+                            onClick={() => check(p.id)}
+                          >
                             Confirm
                           </Button>
                         )
@@ -137,7 +167,13 @@ export function ProductScopePicker({ campaign, onSaved, value, onChange, named =
             )}
             {ready.length > INLINE && <ProductSheetButton count={products.length} onClick={() => setAll(true)} />}
             {waiting.length > 0 && (
-              <Item as="button" type="button" variant="muted" data-reveal={asked.length ? "" : undefined} onClick={() => check(next[0].id)}>
+              <Item
+                as="button"
+                type="button"
+                variant="muted"
+                data-reveal={asked.length ? "" : undefined}
+                onClick={() => check(next[0].id)}
+              >
                 {next[0].images[0] ? (
                   <ItemMedia variant="image">
                     <img src={next[0].images[0]} alt="" />

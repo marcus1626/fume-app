@@ -42,7 +42,11 @@ import { confidence, useRole } from "./parts";
 
 /** What Change edits for each kind: the mock changes a hex, a statement or a name. Images have nothing to rename. */
 export const changeField: Partial<Record<IdentityKind, { label: string; help: string; hex?: boolean }>> = {
-  colour: { label: "The colour’s hex", help: "Six digits, for example #5C1F2A. Fume uses your value from the next creative on.", hex: true },
+  colour: {
+    label: "The colour’s hex",
+    help: "Six digits, for example #5C1F2A. Fume uses your value from the next creative on.",
+    hex: true,
+  },
   typeface: { label: "The typeface’s name", help: "As it is called in your guidelines or by the foundry." },
   logo: { label: "The logo’s name", help: "What your team calls this version." },
   voice: { label: "The line, in your words", help: "Write it the way you would tell a copywriter." },
@@ -71,7 +75,14 @@ export function provenanceWords(p: Provenance, who: (id?: string) => string | un
 /** The tag alone: who put it in and where it stands (proposal.css .ui-proposal-tag). */
 export function ProvenanceTag({ provenance }: { provenance: Provenance }) {
   const who = useWho();
-  const icon = provenance.state === "proposed" ? "fume-engine" : provenance.origin === "customer" && provenance.state === "approved" ? "user" : provenance.state === "removed" ? "x" : "check";
+  const icon =
+    provenance.state === "proposed"
+      ? "fume-engine"
+      : provenance.origin === "customer" && provenance.state === "approved"
+        ? "user"
+        : provenance.state === "removed"
+          ? "x"
+          : "check";
   return (
     <span className="ui-proposal-tag">
       <Icon name={icon} />
@@ -117,7 +128,10 @@ export function useDecision(kind: IdentityKind, id: string, name: string, onDeci
           },
         },
       );
-      toast.done(`${name} removed`, { description: "Fume will not use it.", action: { label: "Undo", onClick: putBack } });
+      toast.done(`${name} removed`, {
+        description: "Fume will not use it.",
+        action: { label: "Undo", onClick: putBack },
+      });
     },
     putBack,
   };
@@ -141,7 +155,14 @@ export function DecisionActions({
 }) {
   return (
     <div className="ui-proposal-actions">
-      <Button size="sm" variant="secondary" icon="check" onClick={onKeep} disabled={disabled} aria-label={`Confirm ${name}`}>
+      <Button
+        size="sm"
+        variant="secondary"
+        icon="check"
+        onClick={onKeep}
+        disabled={disabled}
+        aria-label={`Confirm ${name}`}
+      >
         Confirm
       </Button>
       {onChange && (
@@ -149,7 +170,14 @@ export function DecisionActions({
           Change
         </Button>
       )}
-      <Button size="sm" variant="quiet" onClick={onRemove} disabled={disabled} aria-label={`Remove ${name}`} className="ui-decide-remove">
+      <Button
+        size="sm"
+        variant="quiet"
+        onClick={onRemove}
+        disabled={disabled}
+        aria-label={`Remove ${name}`}
+        className="ui-decide-remove"
+      >
         Remove
       </Button>
     </div>
@@ -231,7 +259,15 @@ export function ChangeInline({
       <Field>
         <FieldLabel htmlFor={fieldId}>{field.label}</FieldLabel>
         {long ? (
-          <Textarea id={fieldId} value={v.text} onChange={(e) => v.setText(e.target.value)} onKeyDown={keys} rows={2} autoFocus aria-describedby={`${fieldId}-help`} />
+          <Textarea
+            id={fieldId}
+            value={v.text}
+            onChange={(e) => v.setText(e.target.value)}
+            onKeyDown={keys}
+            rows={2}
+            autoFocus
+            aria-describedby={`${fieldId}-help`}
+          />
         ) : (
           <div className={field.hex ? "ui-colour-hex" : undefined}>
             {field.hex && <HexPicker value={v.text} onChange={v.setText} label={`Pick ${name}’s colour`} />}
@@ -250,7 +286,13 @@ export function ChangeInline({
       </Field>
       {uses !== undefined && <ColourUsesField id={`${fieldId}-uses`} value={chosen} onChange={setChosen} />}
       <div className="ui-brand-change-actions">
-        <Button type="submit" size="sm" variant="secondary" loading={decide.isPending || setUses.isPending} disabled={!v.valid || unchanged}>
+        <Button
+          type="submit"
+          size="sm"
+          variant="secondary"
+          loading={decide.isPending || setUses.isPending}
+          disabled={!v.valid || unchanged}
+        >
           Save the change
         </Button>
         <Button type="button" size="sm" variant="quiet" onClick={() => onDone(false)}>
@@ -280,7 +322,18 @@ export interface ProvenancedProps {
 }
 
 /** The item, then its tag, then (for a find, and only for someone who may decide) Confirm · Change · Remove. */
-export function Provenanced({ kind, id, name, provenance, value, bare, className, onDecided, uses, children }: ProvenancedProps) {
+export function Provenanced({
+  kind,
+  id,
+  name,
+  provenance,
+  value,
+  bare,
+  className,
+  onDecided,
+  uses,
+  children,
+}: ProvenancedProps) {
   const { canApprove } = useRole();
   const d = useDecision(kind, id, name, onDecided);
   const [changing, setChanging] = useState(false);
@@ -291,13 +344,26 @@ export function Provenanced({ kind, id, name, provenance, value, bare, className
   const field = changeField[kind];
 
   return (
-    <Proposal state={provenance.state} bare={bare} className={className} data-confidence={proposal ? provenance.confidence : undefined} data-removed={removed ? "" : undefined}>
+    <Proposal
+      state={provenance.state}
+      bare={bare}
+      className={className}
+      data-confidence={proposal ? provenance.confidence : undefined}
+      data-removed={removed ? "" : undefined}
+    >
       {children}
       <ProposalFoot>
         <ProvenanceTag provenance={provenance} />
         {proposal && provenance.confidence === "low" && <span className="ui-proposal-tag">{confidence.low}</span>}
         {removed && canApprove ? (
-          <Button size="sm" variant="secondary" icon="undo-2" onClick={d.putBack} disabled={d.pending} className="ui-decide-putback">
+          <Button
+            size="sm"
+            variant="secondary"
+            icon="undo-2"
+            onClick={d.putBack}
+            disabled={d.pending}
+            className="ui-decide-putback"
+          >
             Put back
           </Button>
         ) : (
@@ -379,7 +445,12 @@ export function ConfirmRow({
   const unsure = proposal && provenance.confidence === "low";
 
   return (
-    <div className="ui-brand-confirm" data-state={provenance.state} data-removed={removed ? "" : undefined} data-media={media ? undefined : "none"}>
+    <div
+      className="ui-brand-confirm"
+      data-state={provenance.state}
+      data-removed={removed ? "" : undefined}
+      data-media={media ? undefined : "none"}
+    >
       {media && <div className="ui-brand-confirm-media">{media}</div>}
       <div className="ui-brand-confirm-body">
         <p className="ui-brand-confirm-title">
@@ -414,7 +485,14 @@ export function ConfirmRow({
       {canApprove && (removed || (proposal && !changing)) && (
         <div className="ui-brand-confirm-actions">
           {removed ? (
-            <Button size="sm" variant="secondary" icon="undo-2" onClick={d.putBack} disabled={d.pending} className="ui-decide-putback">
+            <Button
+              size="sm"
+              variant="secondary"
+              icon="undo-2"
+              onClick={d.putBack}
+              disabled={d.pending}
+              className="ui-decide-putback"
+            >
               Put back
             </Button>
           ) : (
@@ -469,7 +547,9 @@ export function ChangeDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Change {name}</DialogTitle>
-          <DialogDescription>Say what is right, and it becomes yours. What Fume read stays in the record.</DialogDescription>
+          <DialogDescription>
+            Say what is right, and it becomes yours. What Fume read stays in the record.
+          </DialogDescription>
         </DialogHeader>
         <DialogBody>
           <form id={`change-${id}`} onSubmit={submit}>
@@ -491,7 +571,13 @@ export function ChangeDialog({
           <DialogClose asChild>
             <Button variant="glass-clear">Cancel</Button>
           </DialogClose>
-          <Button type="submit" form={`change-${id}`} variant="glass-white" loading={decide.isPending} disabled={!v.valid || v.next === value}>
+          <Button
+            type="submit"
+            form={`change-${id}`}
+            variant="glass-white"
+            loading={decide.isPending}
+            disabled={!v.valid || v.next === value}
+          >
             Save the change
           </Button>
         </DialogFooter>

@@ -15,7 +15,17 @@
 //   takes her back to the item she came from.
 // - DLAY-6: the version shows once (in the strip); the board loses its floating bars.
 // A desk tool: a phone shows the board and the versions read-only, with a note.
-import { BackLink, Badge, Button, SegmentedControl, SegmentedOption, Toggle, WithTooltip, useNarrowScreen, useToast } from "@fume/ui";
+import {
+  BackLink,
+  Badge,
+  Button,
+  SegmentedControl,
+  SegmentedOption,
+  Toggle,
+  WithTooltip,
+  useNarrowScreen,
+  useToast,
+} from "@fume/ui";
 import { useCallback, useEffect, useState, type MouseEvent } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import {
@@ -57,8 +67,18 @@ function DocumentScreen() {
   const { documentId } = useParams();
   const doc = useDocument(documentId);
   const modes = useStudioModes();
-  if (doc.isPending || modes.isPending) return <div className="ui-desk ui-desk--state"><Loading label="Opening the creative" /></div>;
-  if (doc.error || !doc.data) return <div className="ui-desk ui-desk--state"><Failed error={doc.error} onRetry={() => doc.refetch()} /></div>;
+  if (doc.isPending || modes.isPending)
+    return (
+      <div className="ui-desk ui-desk--state">
+        <Loading label="Opening the creative" />
+      </div>
+    );
+  if (doc.error || !doc.data)
+    return (
+      <div className="ui-desk ui-desk--state">
+        <Failed error={doc.error} onRetry={() => doc.refetch()} />
+      </div>
+    );
   return <Desk key={doc.data.id} doc={doc.data} modes={modes.data ?? []} />;
 }
 
@@ -66,8 +86,30 @@ function DocumentScreen() {
 function startLayers(doc: CreativeDocument): Layer[] {
   const v = shownVersion(doc);
   return [
-    { id: "ly-img", kind: "image", name: v ? `Image v${v.number}` : "Image", x: 0, y: 0, w: 1, h: 1, image: v?.image, visible: true, locked: true },
-    { id: "ly-head", kind: "text", name: "Headline", x: 0.08, y: 0.72, w: 0.84, h: 0.1, text: "A headline", style: "headline", visible: true },
+    {
+      id: "ly-img",
+      kind: "image",
+      name: v ? `Image v${v.number}` : "Image",
+      x: 0,
+      y: 0,
+      w: 1,
+      h: 1,
+      image: v?.image,
+      visible: true,
+      locked: true,
+    },
+    {
+      id: "ly-head",
+      kind: "text",
+      name: "Headline",
+      x: 0.08,
+      y: 0.72,
+      w: 0.84,
+      h: 0.1,
+      text: "A headline",
+      style: "headline",
+      visible: true,
+    },
     { id: "ly-logo", kind: "logo", name: "Logo", x: 0.08, y: 0.07, w: 0.2, h: 0.05, visible: true },
   ];
 }
@@ -129,19 +171,28 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
   const placements = usePlacements().data ?? [];
 
   // r13 #57/#63: the scene library's templates, backgrounds, surfaces and props are options of the mode's own variables.
-  const mode = withLibrary(modes.find((m) => m.id === doc.modeId), assets);
+  const mode = withLibrary(
+    modes.find((m) => m.id === doc.modeId),
+    assets,
+  );
   const brandName = session?.workspaces.find((w) => w.id === doc.workspaceId)?.brandName ?? "The brand";
-  const approver = campaign.data ? firstName(campaign.data.approver.name) : firstName(approverOf(peopleList) ?? "the customer");
+  const approver = campaign.data
+    ? firstName(campaign.data.approver.name)
+    : firstName(approverOf(peopleList) ?? "the customer");
   const title = documentName(doc, mode, product?.name);
   // r13 #64: while the Engine works on this creative, the desk is locked (Wait or Take over).
   const work = useEngineWork(doc, title);
   const locked = Boolean(work) && !readOnly;
   const { state } = history;
-  const name = (id: string | undefined) => (session && id === session.user.id ? firstName(session.user.name) : id === "u-tuva" ? "Tuva" : people.name(id));
+  const name = (id: string | undefined) =>
+    session && id === session.user.id ? firstName(session.user.name) : id === "u-tuva" ? "Tuva" : people.name(id);
   // The way back follows history (DWAY-10): "← Check" when she came from Check, else the page she came from; a cold
   // link opens the brand's Studio.
   // round 13 AGENCY: a cold link goes back to the frame's own Studio (/agency/b/… for an agency's person)
-  const back = useBack({ to: `${frameRoot[session?.user.agency ? "agency" : "fume"]}/b/${doc.workspaceId}/studio`, label: "Studio" });
+  const back = useBack({
+    to: `${frameRoot[session?.user.agency ? "agency" : "fume"]}/b/${doc.workspaceId}/studio`,
+    label: "Studio",
+  });
   const fromCheck = !back.cold && isCheck(back.href);
   const goBack = (e: MouseEvent<HTMLAnchorElement>) => {
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -159,7 +210,14 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
     if (!next) return;
     history.flush();
     update.mutate(
-      { documentId: doc.id, change: { studio, modeId: next.id, ...(studio === "design" && !doc.layers.length ? { layers: startLayers(doc) } : {}) } },
+      {
+        documentId: doc.id,
+        change: {
+          studio,
+          modeId: next.id,
+          ...(studio === "design" && !doc.layers.length ? { layers: startLayers(doc) } : {}),
+        },
+      },
       { onSuccess: () => history.reset() },
     );
   };
@@ -179,7 +237,13 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
   };
   const switchMode = (modeId: string) => {
     history.flush();
-    update.mutate({ documentId: doc.id, change: { modeId } }, { onSuccess: () => history.reset(), onError: (e) => toast.error("The mode didn’t change", { description: e.message }) });
+    update.mutate(
+      { documentId: doc.id, change: { modeId } },
+      {
+        onSuccess: () => history.reset(),
+        onError: (e) => toast.error("The mode didn’t change", { description: e.message }),
+      },
+    );
   };
 
   const model = assets?.models.find((m) => m.documentId === doc.id);
@@ -193,18 +257,38 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
       saveModel.mutate(
         { documentId: doc.id, name: doc.title, state: s },
         {
-          onSuccess: (m) => toast.done(s === "saved" ? `${m.name} saved to ${brandName}’s models` : `${m.name} kept as a draft`, s === "saved" ? { description: `${approver} can approve the AI model now.` } : undefined),
+          onSuccess: (m) =>
+            toast.done(
+              s === "saved" ? `${m.name} saved to ${brandName}’s models` : `${m.name} kept as a draft`,
+              s === "saved" ? { description: `${approver} can approve the AI model now.` } : undefined,
+            ),
           onError: (e) => toast.error("The model didn’t save", { description: e.message }),
         },
       );
     };
     actions = (
       <>
-        {model && <Badge>{model.state === "approved" ? `${approver} approved` : model.state === "saved" ? `Saved · waiting for ${approver}` : model.state === "declined" ? `${approver} declined` : "Draft"}</Badge>}
+        {model && (
+          <Badge>
+            {model.state === "approved"
+              ? `${approver} approved`
+              : model.state === "saved"
+                ? `Saved · waiting for ${approver}`
+                : model.state === "declined"
+                  ? `${approver} declined`
+                  : "Draft"}
+          </Badge>
+        )}
         <Button size="sm" variant="secondary" disabled={noVersion || saveModel.isPending} onClick={() => save("draft")}>
           Save as draft
         </Button>
-        <Button size="sm" icon="users" loading={saveModel.isPending} disabled={noVersion || model?.state === "approved"} onClick={() => save("saved")}>
+        <Button
+          size="sm"
+          icon="users"
+          loading={saveModel.isPending}
+          disabled={noVersion || model?.state === "approved"}
+          onClick={() => save("saved")}
+        >
           Save to {brandName}’s models
         </Button>
       </>
@@ -222,7 +306,13 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
             history.flush();
             saveReference.mutate(
               { documentId: doc.id, name: doc.title, state: "saved" },
-              { onSuccess: (r) => toast.done(`${r.name} saved to the references`, { description: "Use it in any creative from the References section." }), onError: (e) => toast.error("The reference didn’t save", { description: e.message }) },
+              {
+                onSuccess: (r) =>
+                  toast.done(`${r.name} saved to the references`, {
+                    description: "Use it in any creative from the References section.",
+                  }),
+                onError: (e) => toast.error("The reference didn’t save", { description: e.message }),
+              },
             );
           }}
         >
@@ -233,14 +323,27 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
   } else {
     actions =
       doc.state === "draft" ? (
-        <SendToCheck doc={doc} name={title} disabled={!doc.pickedVersionId || noVersion} onBefore={history.flush} onSent={fromCheck ? back.back : undefined} />
+        <SendToCheck
+          doc={doc}
+          name={title}
+          disabled={!doc.pickedVersionId || noVersion}
+          onBefore={history.flush}
+          onSent={fromCheck ? back.back : undefined}
+        />
       ) : (
-        <Badge check={doc.state === "checked" ? "approved" : "waiting"}>{doc.state === "checked" ? "Checked" : "In check"}</Badge>
+        <Badge check={doc.state === "checked" ? "approved" : "waiting"}>
+          {doc.state === "checked" ? "Checked" : "In check"}
+        </Badge>
       );
   }
 
   return (
-    <div className="ui-desk" data-studio={doc.studio} data-readonly={readOnly ? "" : undefined} data-bare={bare && !readOnly ? "" : undefined}>
+    <div
+      className="ui-desk"
+      data-studio={doc.studio}
+      data-readonly={readOnly ? "" : undefined}
+      data-bare={bare && !readOnly ? "" : undefined}
+    >
       <header className="ui-desk-bar">
         <div className="ui-desk-bar-start">
           <WithTooltip label={`Back to ${back.label}`} side="bottom">
@@ -256,12 +359,25 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
           {readOnly ? (
             campaign.data && <Badge icon="megaphone">{campaign.data.campaign.name}</Badge>
           ) : (
-            <CampaignChip workspaceId={doc.workspaceId} campaign={doc.campaignId ? campaign.data?.campaign : undefined} disabled={update.isPending} onPick={switchCampaign} />
+            <CampaignChip
+              workspaceId={doc.workspaceId}
+              campaign={doc.campaignId ? campaign.data?.campaign : undefined}
+              disabled={update.isPending}
+              onPick={switchCampaign}
+            />
           )}
-          {!readOnly && doc.campaignId && campaign.data?.campaign.look && <CampaignLookChip campaign={campaign.data.campaign} workspaceId={doc.workspaceId} />}
+          {!readOnly && doc.campaignId && campaign.data?.campaign.look && (
+            <CampaignLookChip campaign={campaign.data.campaign} workspaceId={doc.workspaceId} />
+          )}
         </div>
         {!readOnly && (
-          <SegmentedControl className="ui-desk-studios" aria-label="Studio" value={doc.studio} onValueChange={(s) => switchStudio(s as StudioKind)} {...lockProps(locked)}>
+          <SegmentedControl
+            className="ui-desk-studios"
+            aria-label="Studio"
+            value={doc.studio}
+            onValueChange={(s) => switchStudio(s as StudioKind)}
+            {...lockProps(locked)}
+          >
             <SegmentedOption value="render">Image</SegmentedOption>
             <SegmentedOption value="design">Design</SegmentedOption>
             <SegmentedOption value="video" disabled aria-disabled="true" title="Video is coming later">
@@ -274,14 +390,37 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
             <>
               <span className="ui-desk-undo" role="group" aria-label="Undo and redo">
                 <WithTooltip label="Undo" shortcut="⌘Z">
-                  <Button size="sm" variant="quiet" iconOnly icon="undo-2" aria-label="Undo" disabled={!history.canUndo} onClick={history.undo} />
+                  <Button
+                    size="sm"
+                    variant="quiet"
+                    iconOnly
+                    icon="undo-2"
+                    aria-label="Undo"
+                    disabled={!history.canUndo}
+                    onClick={history.undo}
+                  />
                 </WithTooltip>
                 <WithTooltip label="Redo" shortcut="⌘⇧Z">
-                  <Button size="sm" variant="quiet" iconOnly icon="redo-2" aria-label="Redo" disabled={!history.canRedo} onClick={history.redo} />
+                  <Button
+                    size="sm"
+                    variant="quiet"
+                    iconOnly
+                    icon="redo-2"
+                    aria-label="Redo"
+                    disabled={!history.canRedo}
+                    onClick={history.redo}
+                  />
                 </WithTooltip>
               </span>
               {mode?.output === "creative" && doc.studio === "render" && (
-                <Toggle size="sm" variant="outline" icon="crop" pressed={formatsOpen} disabled={noVersion} onPressedChange={setFormatsOpen}>
+                <Toggle
+                  size="sm"
+                  variant="outline"
+                  icon="crop"
+                  pressed={formatsOpen}
+                  disabled={noVersion}
+                  onPressedChange={setFormatsOpen}
+                >
                   Make formats
                 </Toggle>
               )}
@@ -291,26 +430,30 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
         </div>
       </header>
 
-      {readOnly && <p className="ui-desk-phone-note">The Studio is made for a larger screen. Here you can look at the board and its versions.</p>}
+      {readOnly && (
+        <p className="ui-desk-phone-note">
+          The Studio is made for a larger screen. Here you can look at the board and its versions.
+        </p>
+      )}
 
       {!readOnly && !bare && (
         <div className="ui-desk-lockable" {...lockProps(locked)}>
-        <SpecsPanel
-          doc={doc}
-          mode={mode}
-          modes={modes}
-          specs={state.specs}
-          layers={state.layers}
-          assets={assets}
-          brandName={brandName}
-          approver={approver}
-          name={name}
-          onSpecs={(specs, key) => history.change({ specs }, `spec-${key}`)}
-          onLayers={(layers, key) => history.change({ layers }, key)}
-          onMode={switchMode}
-          selectedLayer={selectedLayer}
-          onSelectLayer={setSelectedLayer}
-        />
+          <SpecsPanel
+            doc={doc}
+            mode={mode}
+            modes={modes}
+            specs={state.specs}
+            layers={state.layers}
+            assets={assets}
+            brandName={brandName}
+            approver={approver}
+            name={name}
+            onSpecs={(specs, key) => history.change({ specs }, `spec-${key}`)}
+            onLayers={(layers, key) => history.change({ layers }, key)}
+            onMode={switchMode}
+            selectedLayer={selectedLayer}
+            onSelectLayer={setSelectedLayer}
+          />
         </div>
       )}
 
@@ -324,7 +467,9 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
           onSelectLayer={setSelectedLayer}
           readOnly={readOnly}
           onBeforeRender={history.flush}
-          onVariable={(key, value) => history.change({ variables: { ...state.variables, [key]: value } }, `engine-${key}`)}
+          onVariable={(key, value) =>
+            history.change({ variables: { ...state.variables, [key]: value } }, `engine-${key}`)
+          }
           bare={bare}
           onToggleBare={toggleBare}
           compare={compare}
@@ -333,7 +478,12 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
           lock={locked && work ? <EngineLockBar item={work} title={title} /> : undefined}
         />
         {formatsOpen && !readOnly ? (
-          <MakeFormats doc={doc} placements={placements} source={doc.versions.find((v) => v.id === doc.pickedVersionId && v.state === "done")} onClose={() => setFormatsOpen(false)} />
+          <MakeFormats
+            doc={doc}
+            placements={placements}
+            source={doc.versions.find((v) => v.id === doc.pickedVersionId && v.state === "done")}
+            onClose={() => setFormatsOpen(false)}
+          />
         ) : (
           <div className="ui-desk-lockable" {...lockProps(locked)}>
             <Versions doc={doc} readOnly={readOnly} compare={compare} onCompare={setCompare} />
@@ -344,22 +494,28 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
 
       {!readOnly && !bare && (
         <div className="ui-desk-lockable" {...lockProps(locked)}>
-        <VariablesPanel
-          key={doc.campaignId ?? "no-campaign"}
-          doc={doc}
-          mode={mode}
-          variables={state.variables}
-          layers={state.layers}
-          selectedLayer={selectedLayer}
-          assets={assets}
-          brandName={brandName}
-          campaign={doc.campaignId && campaign.data ? { name: campaign.data.campaign.name, look: campaign.data.campaign.look } : undefined}
-          proposed={proposedKeys(doc)}
-          onVariable={(key, value) => history.change({ variables: { ...state.variables, [key]: value } }, `var-${key}`)}
-          onVariables={(patch, key) => history.change({ variables: { ...state.variables, ...patch } }, key)}
-          onLayers={(layers, key) => history.change({ layers }, key)}
-          onLightView={setLightView}
-        />
+          <VariablesPanel
+            key={doc.campaignId ?? "no-campaign"}
+            doc={doc}
+            mode={mode}
+            variables={state.variables}
+            layers={state.layers}
+            selectedLayer={selectedLayer}
+            assets={assets}
+            brandName={brandName}
+            campaign={
+              doc.campaignId && campaign.data
+                ? { name: campaign.data.campaign.name, look: campaign.data.campaign.look }
+                : undefined
+            }
+            proposed={proposedKeys(doc)}
+            onVariable={(key, value) =>
+              history.change({ variables: { ...state.variables, [key]: value } }, `var-${key}`)
+            }
+            onVariables={(patch, key) => history.change({ variables: { ...state.variables, ...patch } }, key)}
+            onLayers={(layers, key) => history.change({ layers }, key)}
+            onLightView={setLightView}
+          />
         </div>
       )}
     </div>
@@ -370,7 +526,12 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
 function proposedKeys(doc: CreativeDocument): string[] {
   const edit = [...doc.edits].reverse().find((e) => e.state === "proposed");
   if (!edit) return [];
-  return [...new Set([...edit.changes.map((c) => c.key), ...(edit.parts ?? []).flatMap((p) => (p.suggestion ? [p.suggestion.key] : []))])];
+  return [
+    ...new Set([
+      ...edit.changes.map((c) => c.key),
+      ...(edit.parts ?? []).flatMap((p) => (p.suggestion ? [p.suggestion.key] : [])),
+    ]),
+  ];
 }
 
 /** Without a campaign, the customer who approves is the workspace's first person who is not Fume's. */

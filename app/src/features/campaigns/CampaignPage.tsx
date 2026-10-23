@@ -68,8 +68,26 @@ import {
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { useBoard, useCampaign, useDeliveries, usePeople, usePlan, useSendBrief, useSession, useSkipMoodboard, useTeam } from "../../api/hooks";
-import type { Board as BoardData, CampaignPlan, CampaignView, Creative, Format, MessageAuthor, RecordEvent } from "../../contract";
+import {
+  useBoard,
+  useCampaign,
+  useDeliveries,
+  usePeople,
+  usePlan,
+  useSendBrief,
+  useSession,
+  useSkipMoodboard,
+  useTeam,
+} from "../../api/hooks";
+import type {
+  Board as BoardData,
+  CampaignPlan,
+  CampaignView,
+  Creative,
+  Format,
+  MessageAuthor,
+  RecordEvent,
+} from "../../contract";
 import * as copy from "../../copy";
 import { date, due, when } from "../../lib/time";
 import { Back, Nothing, Page, Query, Section, useTabNavigate } from "../../shell/Page";
@@ -164,7 +182,8 @@ function tabState(t: Tab, view: CampaignView): "done" | "now" | "later" {
   const now = stageIndex(stageNow(view));
   const i = stageIndex(t);
   const finished = ["delivered", "closed"].includes(view.campaign.state);
-  if (finished || i < now) return t === "moodboard" && !view.campaign.boardId && !view.campaign.moodboardSkipped ? "later" : "done";
+  if (finished || i < now)
+    return t === "moodboard" && !view.campaign.boardId && !view.campaign.moodboardSkipped ? "later" : "done";
   return i === now ? "now" : "later";
 }
 
@@ -236,7 +255,13 @@ function CampaignScreen({ view }: { view: CampaignView }) {
                   value={t}
                   data-stage={state}
                   icon={state === "done" ? "circle-check" : undefined}
-                  title={state === "done" ? `${stageLabel(t)}, done` : state === "now" ? `${stageLabel(t)}, the stage it is in` : undefined}
+                  title={
+                    state === "done"
+                      ? `${stageLabel(t)}, done`
+                      : state === "now"
+                        ? `${stageLabel(t)}, the stage it is in`
+                        : undefined
+                  }
                   count={kindOf[t] ? count(kindOf[t]!) : undefined}
                 >
                   {stageLabel(t)}
@@ -251,7 +276,9 @@ function CampaignScreen({ view }: { view: CampaignView }) {
             {tab === "brief" && <BriefTab view={view} can={can} />}
             {tab === "moodboard" && <MoodboardTab view={view} can={can} />}
             {tab === "plan" && <PlanTab view={view} can={can} />}
-            {(tab === "masters" || tab === "creatives") && <CreativesTab key={tab} view={view} names={names} plan={plan} kind={kindOf[tab]!} />}
+            {(tab === "masters" || tab === "creatives") && (
+              <CreativesTab key={tab} view={view} names={names} plan={plan} kind={kindOf[tab]!} />
+            )}
             {tab === "delivery" && <DeliveryTab view={view} />}
           </div>
         </TabsContent>
@@ -267,7 +294,9 @@ function CampaignScreen({ view }: { view: CampaignView }) {
         <SheetContent side={narrow ? "bottom" : "right"} size="md">
           <SheetHeader>
             <SheetTitle>History</SheetTitle>
-            <SheetDescription>Who did what to {campaign.name}, and when. Nothing here is ever overwritten.</SheetDescription>
+            <SheetDescription>
+              Who did what to {campaign.name}, and when. Nothing here is ever overwritten.
+            </SheetDescription>
           </SheetHeader>
           <SheetBody>
             <RecordPanel view={view} names={names} plan={plan} />
@@ -290,7 +319,10 @@ function CampaignMeta({ view, names }: { view: CampaignView; names: Names }) {
   // Round 12 (DLOAD-4): in agency work the agency writes the brief, so "Maja approves" shows from the plan on (round 13,
   // Marcus's card 23 Oct 2026: the client approves the plan the agency checked and sent her).
   const planning = useAgencyScope() === "agency" && campaign.stage === "brief";
-  const approver = view.approver.id !== useSession().data?.user.id && !planning ? `${names.Name(view.approver.id)} approves` : undefined;
+  const approver =
+    view.approver.id !== useSession().data?.user.id && !planning
+      ? `${names.Name(view.approver.id)} approves`
+      : undefined;
   const parts: ReactNode[] = [
     <span key="status" className="ui-campaign-meta-status" data-waiting={status.waiting ? "" : undefined}>
       {status.words}
@@ -318,7 +350,17 @@ function CampaignMeta({ view, names }: { view: CampaignView; names: Names }) {
 /** The campaign's one Ink action, on the title's line (DLAY-13): what waits on her, wherever she is in the campaign.
  *  None while Fume works, for a viewer, or on the Plan tab while its own footer holds the step (Send to Fume, Approve
  *  the plan). */
-function HeadAction({ view, tab, can, plan }: { view: CampaignView; tab: Tab; can: ReturnType<typeof rights>; plan: CampaignPlan | null | undefined }) {
+function HeadAction({
+  view,
+  tab,
+  can,
+  plan,
+}: {
+  view: CampaignView;
+  tab: Tab;
+  can: ReturnType<typeof rights>;
+  plan: CampaignPlan | null | undefined;
+}) {
   const { campaign, brief } = view;
   const deliveries = useDeliveries();
   const send = useSendBrief();
@@ -353,7 +395,8 @@ function HeadAction({ view, tab, can, plan }: { view: CampaignView; tab: Tab; ca
           go("Answer", `/fume/${view.threadId}`)
         );
       // She sends her brief to Fume (round 10): only once it is complete; on the Brief tab its footer has the action.
-      if (brief.state === "ready" && briefGaps(brief).length > 0) return tab === "brief" ? null : go("Finish the brief", `${base}/brief`);
+      if (brief.state === "ready" && briefGaps(brief).length > 0)
+        return tab === "brief" ? null : go("Finish the brief", `${base}/brief`);
       if (brief.state === "ready")
         return tab === "brief" || !can.approve ? null : (
           <Button
@@ -362,7 +405,10 @@ function HeadAction({ view, tab, can, plan }: { view: CampaignView; tab: Tab; ca
             loading={send.isPending}
             onClick={() =>
               void send.mutateAsync(campaign.id).then(
-                () => toast.done("Sent to Fume", { description: "Fume is writing the plan. You approve it before anything is made." }),
+                () =>
+                  toast.done("Sent to Fume", {
+                    description: "Fume is writing the plan. You approve it before anything is made.",
+                  }),
                 (e: Error) => toast.error("The brief wasn’t sent", { description: e.message }),
               )
             }
@@ -374,16 +420,25 @@ function HeadAction({ view, tab, can, plan }: { view: CampaignView; tab: Tab; ca
     }
     case "in_review":
       // A brief she changed after sending it goes to Fume again from its own tab (round 13).
-      if (brief.state === "ready" && campaign.stage === "plan" && can.approve) return tab === "brief" ? null : go("Send the new brief", `${base}/brief`);
+      if (brief.state === "ready" && campaign.stage === "plan" && can.approve)
+        return tab === "brief" ? null : go("Send the new brief", `${base}/brief`);
       // The plan waits on her: its own footer decides on the Plan tab; anywhere else the way there.
       // Round 13 (Marcus's card): the agency's client gets the plan once the agency sent it (checked); then it is hers.
-      if (campaign.stage === "plan" || planReady) return planReady && (scope !== "client" || plan?.checkedBy || w.planChecked) ? (tab === "plan" ? null : go("Open the plan", `${base}/plan`)) : null;
+      if (campaign.stage === "plan" || planReady)
+        return planReady && (scope !== "client" || plan?.checkedBy || w.planChecked)
+          ? tab === "plan"
+            ? null
+            : go("Open the plan", `${base}/plan`)
+          : null;
       if (w.directions > 0) return go("Choose a direction", `${base}/review`);
       // The agency sends checked creatives to the client, who approves them (round 11).
       if (campaign.counts.checked > 0) {
         // Round 12: the agency's Ink only while something is not sent; the client reviews what was sent to her.
         const toSend = w.toSend ?? 0;
-        if (agency) return toSend > 0 ? go(copy.send.action(view.approver.name.split(" ")[0] ?? "the client"), `${base}/review?send=1`) : null;
+        if (agency)
+          return toSend > 0
+            ? go(copy.send.action(view.approver.name.split(" ")[0] ?? "the client"), `${base}/review?send=1`)
+            : null;
         const ready = campaign.counts.checked - toSend;
         return ready > 0 ? go(`Review ${ready}`, `${base}/review`) : null;
       }
@@ -409,7 +464,17 @@ const inTheWorks = (c: Creative) => ["making", "in_check", "correcting", "held"]
 
 /** Masters (kind "master": the first creatives she approves, and directions on a campaign from before the plan) or
  *  Creatives (kind "variant": the variants and formats that follow them), round 13. */
-function CreativesTab({ view, names, plan, kind }: { view: CampaignView; names: Names; plan: CampaignPlan | null | undefined; kind: Creative["kind"] }) {
+function CreativesTab({
+  view,
+  names,
+  plan,
+  kind,
+}: {
+  view: CampaignView;
+  names: Names;
+  plan: CampaignPlan | null | undefined;
+  kind: Creative["kind"];
+}) {
   const [query, setQuery] = useState("");
   const [value, setValue] = useState<FilterValue>({});
   const [sheet, setSheet] = useState(false);
@@ -424,7 +489,11 @@ function CreativesTab({ view, names, plan, kind }: { view: CampaignView; names: 
   const all = useMemo(() => view.creatives.filter((c) => c.kind === kind).map(named), [view.creatives, named, kind]);
   const masters = kind === "master";
   // The run of this stage: the masters (or the directions before them), or the variants and formats.
-  const running = view.runs.find((r) => r.state !== "done" && (masters ? r.purpose !== "variants" : r.purpose === "variants" || r.purpose === "correction"));
+  const running = view.runs.find(
+    (r) =>
+      r.state !== "done" &&
+      (masters ? r.purpose !== "variants" : r.purpose === "variants" || r.purpose === "correction"),
+  );
   const filtering = all.length >= FILTER_FROM;
   const proposed = masters ? view.directions.filter((d) => d.state === "proposed") : [];
   const chosen = view.directions.find((d) => d.state === "chosen");
@@ -437,17 +506,30 @@ function CreativesTab({ view, names, plan, kind }: { view: CampaignView; names: 
   };
   const directionIds = [...new Set(all.map((c) => c.directionId))];
   const filters: FilterDef[] = [
-    ...(directionIds.length > 1 ? [{ key: "direction", label: "Direction", options: directionIds.map((id) => ({ value: id, label: directionName(id) })) }] : []),
+    ...(directionIds.length > 1
+      ? [
+          {
+            key: "direction",
+            label: "Direction",
+            options: directionIds.map((id) => ({ value: id, label: directionName(id) })),
+          },
+        ]
+      : []),
     {
       key: "format",
       label: "Format",
-      options: formats.filter((f) => all.some((c) => c.format === f)).map((f) => ({ value: f, label: copy.format[f].label, meta: copy.format[f].ratio })),
+      options: formats
+        .filter((f) => all.some((c) => c.format === f))
+        .map((f) => ({ value: f, label: copy.format[f].label, meta: copy.format[f].ratio })),
     },
   ];
   const pick = (key: string, v: string) => !filtering || !value[key]?.length || value[key]!.includes(v);
   const q = filtering ? query.trim().toLowerCase() : "";
   const shown = all.filter(
-    (c) => (!q || c.title.toLowerCase().includes(q) || c.name.toLowerCase().includes(q)) && pick("direction", c.directionId) && pick("format", c.format),
+    (c) =>
+      (!q || c.title.toLowerCase().includes(q) || c.name.toLowerCase().includes(q)) &&
+      pick("direction", c.directionId) &&
+      pick("format", c.format),
   );
 
   // The viewer moves through what is shown; a link to a creative that the filters hide opens it among all of them.
@@ -470,7 +552,14 @@ function CreativesTab({ view, names, plan, kind }: { view: CampaignView; names: 
         format={c.format}
         label={c.title}
         caption={formatLine(c)}
-        check={<ClientCheck creative={c} people={names.user} waitingOn={scope === "agency" ? waitingOn(c.current) : undefined} client={names.Name(view.approver.id)} />}
+        check={
+          <ClientCheck
+            creative={c}
+            people={names.user}
+            waitingOn={scope === "agency" ? waitingOn(c.current) : undefined}
+            client={names.Name(view.approver.id)}
+          />
+        }
         onOpen={() => viewer.open(c.id)}
       />
     ) : (
@@ -487,28 +576,31 @@ function CreativesTab({ view, names, plan, kind }: { view: CampaignView; names: 
       // 23 Oct 2026): in agency work the agency checks the plan and sends it; the client approves it.
       const client = scope === "client";
       const clientName = view.approver.name.split(" ")[0] ?? "the client";
-      const text =
-        client
-          ? state === "ready" && plan?.checkedBy
-            ? "Your agency checked the plan. Approve it and Fume starts on the masters."
-            : "Your agency checks the plan and sends it to you. Nothing is made before you approve it."
-          : !plan
+      const text = client
+        ? state === "ready" && plan?.checkedBy
+          ? "Your agency checked the plan. Approve it and Fume starts on the masters."
+          : "Your agency checks the plan and sends it to you. Nothing is made before you approve it."
+        : !plan
           ? "Send your brief to Fume. Fume writes the plan from it, and you approve the plan first."
           : state === "ready" && scope === "agency"
             ? plan.checkedBy
               ? `You sent the plan to ${clientName}. Fume starts on the masters once she approves it.`
               : `Check the plan and send it to ${clientName}. Fume starts on the masters once she approves it.`
-          : state === "ready"
-            ? `The plan is ready, checked by ${names.expert}. Approve it and Fume starts on the masters.`
-            : state === "changes_asked"
-              ? "Fume is changing the plan as you asked. You approve the next version first."
-              : state === "in_check"
-                ? `${names.expert.charAt(0).toUpperCase() + names.expert.slice(1)} is checking the plan${plan.readyBy ? `; you see it by ${due(plan.readyBy)}` : ""}.`
-                : `Fume is writing the plan${plan.readyBy ? `; you see it by ${due(plan.readyBy)}` : ""}.`;
+            : state === "ready"
+              ? `The plan is ready, checked by ${names.expert}. Approve it and Fume starts on the masters.`
+              : state === "changes_asked"
+                ? "Fume is changing the plan as you asked. You approve the next version first."
+                : state === "in_check"
+                  ? `${names.expert.charAt(0).toUpperCase() + names.expert.slice(1)} is checking the plan${plan.readyBy ? `; you see it by ${due(plan.readyBy)}` : ""}.`
+                  : `Fume is writing the plan${plan.readyBy ? `; you see it by ${due(plan.readyBy)}` : ""}.`;
       return (
         <Nothing
           icon="file-text"
-          title={scope === "agency" ? `Nothing is made before ${clientName} approves the plan.` : "Nothing is made before you approve the plan."}
+          title={
+            scope === "agency"
+              ? `Nothing is made before ${clientName} approves the plan.`
+              : "Nothing is made before you approve the plan."
+          }
           text={text}
           action={
             <Button asChild variant="quiet" size="sm" iconEnd="arrow-right">
@@ -554,12 +646,20 @@ function CreativesTab({ view, names, plan, kind }: { view: CampaignView; names: 
         <Section title="Being made" titleId="campaign-making">
           {/* The date it works to is in the header's sentence ("· by Sun 18 Oct"); a paused clock is said here. */}
           {/* In her words, as the chat says it ("Anna is checking · 6 of 9", "You approved the first 2 creatives"). */}
-          <EngineRun {...runForCustomer(runProps(running), me)} description={view.clock?.state === "paused_waiting_on_you" ? "Paused until you answer Fume." : undefined} />
+          <EngineRun
+            {...runForCustomer(runProps(running), me)}
+            description={view.clock?.state === "paused_waiting_on_you" ? "Paused until you answer Fume." : undefined}
+          />
         </Section>
       )}
 
       {proposed.length > 0 && (
-        <Section title="Directions to choose from" meta={proposed.length} titleId="campaign-directions" text="Pick one to take forward, or tell Fume why none fits.">
+        <Section
+          title="Directions to choose from"
+          meta={proposed.length}
+          titleId="campaign-directions"
+          text="Pick one to take forward, or tell Fume why none fits."
+        >
           <div className="ui-app-grid">
             {view.directions.map((d) => (
               <DirectionCard key={d.id} direction={d} name={names.name} />
@@ -570,14 +670,39 @@ function CreativesTab({ view, names, plan, kind }: { view: CampaignView; names: 
 
       {filtering && all.length > 0 && (
         <>
-          <FilterBar query={query} onQueryChange={setQuery} filters={filters} value={value} onValueChange={setValue} shown={shown.length} total={all.length} onOpenSheet={() => setSheet(true)} />
-          <FilterSheet open={sheet} onOpenChange={setSheet} filters={filters} value={value} onValueChange={setValue} shown={shown.length} noun={["creative", "creatives"]} />
+          <FilterBar
+            query={query}
+            onQueryChange={setQuery}
+            filters={filters}
+            value={value}
+            onValueChange={setValue}
+            shown={shown.length}
+            total={all.length}
+            onOpenSheet={() => setSheet(true)}
+          />
+          <FilterSheet
+            open={sheet}
+            onOpenChange={setSheet}
+            filters={filters}
+            value={value}
+            onValueChange={setValue}
+            shown={shown.length}
+            noun={["creative", "creatives"]}
+          />
         </>
       )}
-      {filtering && shown.length === 0 && <Nothing icon="search" title="No creative matches" text="Try another format or kind, or clear the filters." />}
+      {filtering && shown.length === 0 && (
+        <Nothing icon="search" title="No creative matches" text="Try another format or kind, or clear the filters." />
+      )}
 
       {scope === "agency" && toApprove.length > 0 && (
-        <AgencyChecked toApprove={toApprove} split={split} tile={tile} checked={names.expert === me ? "You checked them" : `Checked by ${names.expert}`} client={names.Name(view.approver.id)} />
+        <AgencyChecked
+          toApprove={toApprove}
+          split={split}
+          tile={tile}
+          checked={names.expert === me ? "You checked them" : `Checked by ${names.expert}`}
+          client={names.Name(view.approver.id)}
+        />
       )}
 
       {scope !== "agency" && toApprove.length > 0 && (
@@ -592,7 +717,16 @@ function CreativesTab({ view, names, plan, kind }: { view: CampaignView; names: 
       )}
 
       {changing.length > 0 && (
-        <Section title="Being changed" meta={changing.length} titleId="campaign-changing" text={scope === "agency" ? `${names.Name(view.approver.id)} asked for changes. Make the new versions in the Studio and check them; then send them again.` : `You asked for changes. ${names.expert} checks each new version before you see it.`}>
+        <Section
+          title="Being changed"
+          meta={changing.length}
+          titleId="campaign-changing"
+          text={
+            scope === "agency"
+              ? `${names.Name(view.approver.id)} asked for changes. Make the new versions in the Studio and check them; then send them again.`
+              : `You asked for changes. ${names.expert} checks each new version before you see it.`
+          }
+        >
           <CreativeGrid aria-labelledby="campaign-changing">{changing.map(tile)}</CreativeGrid>
         </Section>
       )}
@@ -604,7 +738,12 @@ function CreativesTab({ view, names, plan, kind }: { view: CampaignView; names: 
       )}
 
       {(inCheckShown.length > 0 || unseen > 0) && (
-        <Section title="In check" meta={inCheckShown.length + unseen} titleId="campaign-in-check" text={`${names.expert === "the expert" ? "The expert checks" : `${names.expert} checks`} each one. You see it here once it is checked.`}>
+        <Section
+          title="In check"
+          meta={inCheckShown.length + unseen}
+          titleId="campaign-in-check"
+          text={`${names.expert === "the expert" ? "The expert checks" : `${names.expert} checks`} each one. You see it here once it is checked.`}
+        >
           <CreativeGrid aria-labelledby="campaign-in-check">
             {inCheckShown.map(tile)}
             {Array.from({ length: unseen }, (_, i) => (
@@ -621,14 +760,31 @@ function CreativesTab({ view, names, plan, kind }: { view: CampaignView; names: 
         <Nothing
           icon="image"
           title="No creatives to see yet"
-          text={campaign.counts.inCheck > 0 ? `${copy.creatives(campaign.counts.inCheck)} in check. You see each one once it is checked.` : "You see each creative here once it is checked; the other sizes follow once you approve the masters."}
+          text={
+            campaign.counts.inCheck > 0
+              ? `${copy.creatives(campaign.counts.inCheck)} in check. You see each one once it is checked.`
+              : "You see each creative here once it is checked; the other sizes follow once you approve the masters."
+          }
         />
       )}
 
-      {masters && (chosen ? <ChosenDirection view={view} names={names} /> : plan?.state === "approved" && <PlanDirection view={view} plan={plan} names={names} />)}
+      {masters &&
+        (chosen ? (
+          <ChosenDirection view={view} names={names} />
+        ) : (
+          plan?.state === "approved" && <PlanDirection view={view} plan={plan} names={names} />
+        ))}
 
       {open && list.some((c) => c.id === open) && (
-        <ReviewViewer set={list} campaigns={[campaign]} creativeId={open} all={all} threadId={view.threadId} onMove={viewer.move} onClose={viewer.close} />
+        <ReviewViewer
+          set={list}
+          campaigns={[campaign]}
+          creativeId={open}
+          all={all}
+          threadId={view.threadId}
+          onMove={viewer.move}
+          onClose={viewer.close}
+        />
       )}
     </>
   );
@@ -656,7 +812,13 @@ function ChosenDirection({ view, names }: { view: CampaignView; names: Names }) 
       </Item>
       {view.directions.length > 1 && (
         <div className="ui-app-row">
-          <Button variant="quiet" size="sm" iconEnd={all ? "chevron-up" : "chevron-down"} aria-expanded={all} onClick={() => setAll((x) => !x)}>
+          <Button
+            variant="quiet"
+            size="sm"
+            iconEnd={all ? "chevron-up" : "chevron-down"}
+            aria-expanded={all}
+            onClick={() => setAll((x) => !x)}
+          >
             {all ? "Hide the other directions" : `See all ${view.directions.length} directions`}
           </Button>
         </div>
@@ -701,7 +863,9 @@ function PlanDirection({ view, plan, names }: { view: CampaignView; plan: Campai
             {direction.letter} · {direction.name}
           </ItemTitle>
           <ItemDescription>
-            In the plan {names.name(plan.approvedBy)} approved{plan.approvedAt ? ` on ${date(plan.approvedAt)}` : ""}. The {copy.count(masters.length, "master")} and everything after {masters.length === 1 ? "it" : "them"} are made on it.
+            In the plan {names.name(plan.approvedBy)} approved{plan.approvedAt ? ` on ${date(plan.approvedAt)}` : ""}.
+            The {copy.count(masters.length, "master")} and everything after {masters.length === 1 ? "it" : "them"} are
+            made on it.
           </ItemDescription>
         </ItemContent>
       </Item>
@@ -737,7 +901,13 @@ function MoodboardTab({ view, can }: { view: CampaignView; can: ReturnType<typeo
         />
       );
     if (!can.ask)
-      return <Nothing icon="layers" title="No moodboard yet" text="Fume proposes one from the brief and the Brand DNA; the team adds to it or skips it." />;
+      return (
+        <Nothing
+          icon="layers"
+          title="No moodboard yet"
+          text="Fume proposes one from the brief and the Brand DNA; the team adds to it or skips it."
+        />
+      );
     // Fume's proposal from the brief and the Brand DNA, ready to start; she takes pictures away, adds her own, or skips.
     return (
       <Section
@@ -753,7 +923,10 @@ function MoodboardTab({ view, can }: { view: CampaignView; can: ReturnType<typeo
               ? undefined
               : () =>
                   skip.mutate(campaign.id, {
-                    onSuccess: () => toast.done("Moodboard skipped", { description: "Fume plans from your brief and your Brand DNA." }),
+                    onSuccess: () =>
+                      toast.done("Moodboard skipped", {
+                        description: "Fume plans from your brief and your Brand DNA.",
+                      }),
                     onError: (e) => toast.error("That wasn’t saved", { description: e.message }),
                   })
           }
@@ -847,7 +1020,11 @@ function DeliveryTab({ view }: { view: CampaignView }) {
     <Section
       title="Delivery"
       titleId="campaign-delivery"
-      text={campaign.collectionIds?.length ? "Each collection can be delivered as soon as all of its creatives are approved." : undefined}
+      text={
+        campaign.collectionIds?.length
+          ? "Each collection can be delivered as soon as all of its creatives are approved."
+          : undefined
+      }
     >
       <CampaignDeliveries campaignId={campaign.id} />
     </Section>
@@ -867,7 +1044,8 @@ interface HistoryRow {
   checked?: boolean;
 }
 
-const person = (id?: string): MessageAuthor => (id && id !== "fume" ? { kind: "person", userId: id } : { kind: "fume" });
+const person = (id?: string): MessageAuthor =>
+  id && id !== "fume" ? { kind: "person", userId: id } : { kind: "fume" };
 
 /** The plan's steps as History lines: the brief sent, the plan written, the expert's check (asked for and done), each
  *  line or creative changed, each change asked for and each version Fume wrote, the approval. */
@@ -875,31 +1053,114 @@ function planHistory(view: CampaignView, plan: CampaignPlan | null | undefined):
   const rows: HistoryRow[] = [];
   const { brief } = view;
   if (brief.approvedAt && !view.record.some((e) => e.action === "brief_approved"))
-    rows.push({ id: "h-brief", icon: "send", detail: `Sent the brief, version ${brief.version}`, actor: person(brief.approvedBy), at: brief.approvedAt });
+    rows.push({
+      id: "h-brief",
+      icon: "send",
+      detail: `Sent the brief, version ${brief.version}`,
+      actor: person(brief.approvedBy),
+      at: brief.approvedAt,
+    });
   if (!plan) return rows;
   const first = plan.versions?.length ? undefined : plan.writtenAt;
-  if (first) rows.push({ id: "h-written", icon: "file-text", detail: `Wrote the plan, version ${plan.version}`, actor: { kind: "fume" }, at: first });
-  if (plan.checkAsked) rows.push({ id: "h-ask-check", icon: "user", detail: "Asked the expert to check the plan", actor: person(plan.checkAsked.by), at: plan.checkAsked.at });
-  if (plan.checkedBy && plan.checkedAt) rows.push({ id: "h-checked", icon: "fume-check", detail: `Checked the plan, version ${plan.version}`, actor: person(plan.checkedBy), at: plan.checkedAt, checked: true });
+  if (first)
+    rows.push({
+      id: "h-written",
+      icon: "file-text",
+      detail: `Wrote the plan, version ${plan.version}`,
+      actor: { kind: "fume" },
+      at: first,
+    });
+  if (plan.checkAsked)
+    rows.push({
+      id: "h-ask-check",
+      icon: "user",
+      detail: "Asked the expert to check the plan",
+      actor: person(plan.checkAsked.by),
+      at: plan.checkAsked.at,
+    });
+  if (plan.checkedBy && plan.checkedAt)
+    rows.push({
+      id: "h-checked",
+      icon: "fume-check",
+      detail: `Checked the plan, version ${plan.version}`,
+      actor: person(plan.checkedBy),
+      at: plan.checkedAt,
+      checked: true,
+    });
   const direction = chosenOf(plan);
   for (const l of [...(direction?.look ?? []), ...plan.content])
-    if (l.changedBy && l.changedAt && l.changedBy !== "fume") rows.push({ id: `h-line-${l.key}`, icon: "pencil", detail: `Changed the plan’s ${l.label.toLowerCase()}`, actor: person(l.changedBy), at: l.changedAt });
+    if (l.changedBy && l.changedAt && l.changedBy !== "fume")
+      rows.push({
+        id: `h-line-${l.key}`,
+        icon: "pencil",
+        detail: `Changed the plan’s ${l.label.toLowerCase()}`,
+        actor: person(l.changedBy),
+        at: l.changedAt,
+      });
   for (const c of direction?.creatives ?? [])
-    if (c.changedBy && c.changedAt && c.changedBy !== "fume") rows.push({ id: `h-cr-${c.id}`, icon: "pencil", detail: `Changed ${c.name} in the plan`, actor: person(c.changedBy), at: c.changedAt });
+    if (c.changedBy && c.changedAt && c.changedBy !== "fume")
+      rows.push({
+        id: `h-cr-${c.id}`,
+        icon: "pencil",
+        detail: `Changed ${c.name} in the plan`,
+        actor: person(c.changedBy),
+        at: c.changedAt,
+      });
   for (const v of plan.versions ?? []) {
-    if (v.asked) rows.push({ id: `h-ask-${v.version}`, icon: "message-square", detail: `Asked Fume to change the plan: “${v.asked}”`, actor: person(v.by), at: v.at });
-    rows.push({ id: `h-v-${v.version}`, icon: "file-text", detail: `Wrote version ${v.version} of the plan${v.changes.length ? `: ${v.changes.join("; ")}` : ""}`, actor: { kind: "fume" }, at: v.at });
+    if (v.asked)
+      rows.push({
+        id: `h-ask-${v.version}`,
+        icon: "message-square",
+        detail: `Asked Fume to change the plan: “${v.asked}”`,
+        actor: person(v.by),
+        at: v.at,
+      });
+    rows.push({
+      id: `h-v-${v.version}`,
+      icon: "file-text",
+      detail: `Wrote version ${v.version} of the plan${v.changes.length ? `: ${v.changes.join("; ")}` : ""}`,
+      actor: { kind: "fume" },
+      at: v.at,
+    });
   }
   if (plan.state === "changes_asked" && plan.note && plan.note.by !== "fume")
-    rows.push({ id: "h-asking", icon: "message-square", detail: `Asked Fume to change the plan: “${plan.note.text}”`, actor: person(plan.note.by), at: plan.note.at });
-  if (plan.approvedAt) rows.push({ id: "h-approved", icon: "circle-check", detail: `Approved the plan, version ${plan.version}`, actor: person(plan.approvedBy), at: plan.approvedAt });
+    rows.push({
+      id: "h-asking",
+      icon: "message-square",
+      detail: `Asked Fume to change the plan: “${plan.note.text}”`,
+      actor: person(plan.note.by),
+      at: plan.note.at,
+    });
+  if (plan.approvedAt)
+    rows.push({
+      id: "h-approved",
+      icon: "circle-check",
+      detail: `Approved the plan, version ${plan.version}`,
+      actor: person(plan.approvedBy),
+      at: plan.approvedAt,
+    });
   return rows;
 }
 
-function RecordPanel({ view, names, plan }: { view: CampaignView; names: Names; plan: CampaignPlan | null | undefined }) {
+function RecordPanel({
+  view,
+  names,
+  plan,
+}: {
+  view: CampaignView;
+  names: Names;
+  plan: CampaignPlan | null | undefined;
+}) {
   const { campaign } = view;
   const rows: HistoryRow[] = [
-    ...view.record.map((e) => ({ id: e.id, icon: recordIcon[e.action], detail: e.detail, actor: e.actor, at: e.at, checked: e.action === "checked" })),
+    ...view.record.map((e) => ({
+      id: e.id,
+      icon: recordIcon[e.action],
+      detail: e.detail,
+      actor: e.actor,
+      at: e.at,
+      checked: e.action === "checked",
+    })),
     ...planHistory(view, plan),
   ].sort((a, b) => a.at.localeCompare(b.at));
   return (
@@ -921,15 +1182,20 @@ function RecordPanel({ view, names, plan }: { view: CampaignView; names: Names; 
             <Icon name="user" />
           </ItemMedia>
           <ItemContent>
-            <ItemTitle>{names.Name(view.approver.id)} approve{names.name(view.approver.id) === "you" ? "" : "s"}</ItemTitle>
+            <ItemTitle>
+              {names.Name(view.approver.id)} approve{names.name(view.approver.id) === "you" ? "" : "s"}
+            </ItemTitle>
             <ItemDescription>
-              {campaign.counts.approved} of {campaign.counts.creatives} creatives approved · Brand DNA version {campaign.brandDnaVersion}
+              {campaign.counts.approved} of {campaign.counts.creatives} creatives approved · Brand DNA version{" "}
+              {campaign.brandDnaVersion}
             </ItemDescription>
           </ItemContent>
         </Item>
       </ItemGroup>
       {rows.length === 0 ? (
-        <p className="ui-campaign-history-empty">Nothing recorded yet. Each decision, check and delivery is kept here.</p>
+        <p className="ui-campaign-history-empty">
+          Nothing recorded yet. Each decision, check and delivery is kept here.
+        </p>
       ) : (
         <ItemGroup as="ol" aria-label="What happened">
           {rows
@@ -956,17 +1222,39 @@ function RecordPanel({ view, names, plan }: { view: CampaignView; names: Names; 
 
 /** The agency's checked creatives in a client brand (round 12, brief r12 SENDING): "To send" (checked, not sent) and
  *  "With Maja" (sent; she approves them), each state named once. */
-function AgencyChecked({ toApprove, split, tile, checked, client }: { toApprove: Creative[]; split: ReturnType<typeof useCampaignSends>["split"]; tile: (c: Creative) => ReactNode; checked: string; client: string }) {
+function AgencyChecked({
+  toApprove,
+  split,
+  tile,
+  checked,
+  client,
+}: {
+  toApprove: Creative[];
+  split: ReturnType<typeof useCampaignSends>["split"];
+  tile: (c: Creative) => ReactNode;
+  checked: string;
+  client: string;
+}) {
   const { toSend, withThem } = split(toApprove);
   return (
     <>
       {toSend.length > 0 && (
-        <Section title="To send" meta={toSend.length} titleId="campaign-to-send" text={`${checked}. ${client} sees them once you send them; only ${client} approves a creative.`}>
+        <Section
+          title="To send"
+          meta={toSend.length}
+          titleId="campaign-to-send"
+          text={`${checked}. ${client} sees them once you send them; only ${client} approves a creative.`}
+        >
           <CreativeGrid aria-labelledby="campaign-to-send">{toSend.map(tile)}</CreativeGrid>
         </Section>
       )}
       {withThem.length > 0 && (
-        <Section title={copy.send.withThem(client)} meta={withThem.length} titleId="campaign-with-client" text={`${client} approves them in Fume or through the client link. When ${client} approved outside Fume, record it in the review.`}>
+        <Section
+          title={copy.send.withThem(client)}
+          meta={withThem.length}
+          titleId="campaign-with-client"
+          text={`${client} approves them in Fume or through the client link. When ${client} approved outside Fume, record it in the review.`}
+        >
           <CreativeGrid aria-labelledby="campaign-with-client">{withThem.map(tile)}</CreativeGrid>
         </Section>
       )}

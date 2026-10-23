@@ -10,7 +10,10 @@ export const Kbd = forwardRef<HTMLElement, HTMLAttributes<HTMLElement>>(function
 });
 
 /** Keys pressed together, 4 apart. */
-export const KbdGroup = forwardRef<HTMLElement, HTMLAttributes<HTMLElement>>(function KbdGroup({ className, ...props }, ref) {
+export const KbdGroup = forwardRef<HTMLElement, HTMLAttributes<HTMLElement>>(function KbdGroup(
+  { className, ...props },
+  ref,
+) {
   return <kbd ref={ref} className={cx("ui-kbd-group", className)} {...props} />;
 });
 
@@ -34,7 +37,10 @@ export function shortcutLabel(shortcut: string, mac: boolean = isMacPlatform()):
   const chars = Array.from(shortcut);
   const mods = chars.filter((c) => c in MODS).map((c) => MODS[c]!);
   if (!mods.length) return shortcut;
-  const key = chars.filter((c) => !(c in MODS)).join("").trim();
+  const key = chars
+    .filter((c) => !(c in MODS))
+    .join("")
+    .trim();
   const sorted = ORDER.filter((m) => mods.includes(m));
   return [...sorted, key].filter(Boolean).join("+");
 }

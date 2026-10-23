@@ -63,14 +63,23 @@ export const OnboardingStep = forwardRef<HTMLLIElement, OnboardingStepProps>(fun
       <p className="ui-onboard-step-text">{text}</p>
       <div className="ui-onboard-step-action">
         {back ? (
-          <Btn variant="quiet" icon={back.icon} aria-label={back.more ? `${back.label}${back.more}` : undefined} onClick={back.onClick}>
+          <Btn
+            variant="quiet"
+            icon={back.icon}
+            aria-label={back.more ? `${back.label}${back.more}` : undefined}
+            onClick={back.onClick}
+          >
             <span>
               {back.label}
               {back.more && <span className="ui-onboard-more">{back.more}</span>}
             </span>
           </Btn>
         ) : (
-          <Btn variant={state === "current" ? "primary" : state === "done" ? "quiet" : "secondary"} icon={action.icon} onClick={action.onClick}>
+          <Btn
+            variant={state === "current" ? "primary" : state === "done" ? "quiet" : "secondary"}
+            icon={action.icon}
+            onClick={action.onClick}
+          >
             {action.label}
           </Btn>
         )}
@@ -85,7 +94,15 @@ export function OnboardingSteps({ steps, className }: { steps: OnboardingStepDat
   return (
     <ol className={cx("ui-onboard-steps", className)}>
       {steps.map((s, i) => (
-        <OnboardingStep key={s.id} number={i + 1} state={states[i]} title={s.title} text={s.text} action={s.action} doneAction={s.doneAction} />
+        <OnboardingStep
+          key={s.id}
+          number={i + 1}
+          state={states[i]}
+          title={s.title}
+          text={s.text}
+          action={s.action}
+          doneAction={s.doneAction}
+        />
       ))}
     </ol>
   );
@@ -178,9 +195,12 @@ export const Onboarding = forwardRef<HTMLDivElement, OnboardingProps>(function O
               <Avatar person={workspaceSign ?? { name: workspace, ink: true }} size="sm" />
               {person ? `${workspace} · ${person}` : workspace}
             </p>
-            <h3 className="ui-onboard-title">{title ?? (all ? `You are set up, ${workspace}` : `Welcome to Fume, ${workspace}`)}</h3>
+            <h3 className="ui-onboard-title">
+              {title ?? (all ? `You are set up, ${workspace}` : `Welcome to Fume, ${workspace}`)}
+            </h3>
             <p className="ui-onboard-lede">
-              {lede ?? `${steps.length === 3 ? "Three steps" : `${steps.length} steps`}, and the Engine can make your first creatives. Anna checks every one against your Brand DNA before you see it.`}
+              {lede ??
+                `${steps.length === 3 ? "Three steps" : `${steps.length} steps`}, and the Engine can make your first creatives. Anna checks every one against your Brand DNA before you see it.`}
             </p>
           </div>
           <div className="ui-progress-field ui-onboard-progress">
@@ -236,7 +256,10 @@ export interface WelcomeProgressProps extends HTMLAttributes<HTMLElement> {
 
 /** nav.ui-wp: the line (phone), the steps, the parts. */
 export function WelcomeProgress({ steps, parts, partsLabel, className, ...props }: WelcomeProgressProps) {
-  const at = Math.max(0, steps.findIndex((s) => s.state === "current"));
+  const at = Math.max(
+    0,
+    steps.findIndex((s) => s.state === "current"),
+  );
   const pi = parts ? parts.findIndex((p) => p.current) : -1;
   return (
     <nav className={cx("ui-wp", className)} data-parts={parts ? "" : undefined} {...props}>
@@ -265,14 +288,27 @@ export function WelcomeProgress({ steps, parts, partsLabel, className, ...props 
             </>
           );
           return (
-            <li key={s.id} className="ui-wp-step" data-state={s.state} data-left={s.left ? "" : undefined} data-open={s.onSelect && s.state !== "current" ? "" : undefined}>
+            <li
+              key={s.id}
+              className="ui-wp-step"
+              data-state={s.state}
+              data-left={s.left ? "" : undefined}
+              data-open={s.onSelect && s.state !== "current" ? "" : undefined}
+            >
               {s.onSelect && s.state !== "current" ? (
-                <button type="button" className="ui-wp-step-btn" onClick={s.onSelect} aria-label={`${s.title}${s.left ? `, ${s.left}` : s.state === "done" ? ", done" : ""}. Open this step`}>
+                <button
+                  type="button"
+                  className="ui-wp-step-btn"
+                  onClick={s.onSelect}
+                  aria-label={`${s.title}${s.left ? `, ${s.left}` : s.state === "done" ? ", done" : ""}. Open this step`}
+                >
                   {inner}
                 </button>
               ) : (
                 <span className="ui-wp-step-btn" aria-current={s.state === "current" ? "step" : undefined}>
-                  <span className="ui-sr-only">{s.state === "current" ? "Current step: " : s.state === "done" ? "Done: " : ""}</span>
+                  <span className="ui-sr-only">
+                    {s.state === "current" ? "Current step: " : s.state === "done" ? "Done: " : ""}
+                  </span>
                   {inner}
                 </span>
               )}

@@ -12,9 +12,16 @@ export interface SwitchProps extends ComponentPropsWithoutRef<typeof SwitchPrimi
   glass?: boolean;
 }
 
-export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch({ size = "md", glass = false, className, ...props }, ref) {
+export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch(
+  { size = "md", glass = false, className, ...props },
+  ref,
+) {
   return (
-    <SwitchPrimitive.Root ref={ref} className={cx("ui-switch", size === "sm" && "ui-switch--sm", glass && "ui-switch--glass", className)} {...props}>
+    <SwitchPrimitive.Root
+      ref={ref}
+      className={cx("ui-switch", size === "sm" && "ui-switch--sm", glass && "ui-switch--glass", className)}
+      {...props}
+    >
       <SwitchPrimitive.Thumb className="ui-switch-thumb" />
     </SwitchPrimitive.Root>
   );

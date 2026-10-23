@@ -51,14 +51,17 @@ export function usePlanPeople(): PlanPeople {
   for (const u of [...people, ...team, ...(me ? [me] : [])]) byId.set(u.id, u);
   const agencyRun = Boolean(session?.workspace.agencyId);
   const viewer: PlanViewer = agencyRun ? (me?.agency ? "agency" : "client") : me?.staffRole ? "staff" : "customer";
-  const agencyName = agencyRun ? (session?.agency?.organisation.name ?? session?.agencyName ?? "The agency") : undefined;
+  const agencyName = agencyRun
+    ? (session?.agency?.organisation.name ?? session?.agencyName ?? "The agency")
+    : undefined;
   // No Fume expert checks the plan in a brand an agency runs (FLOWS §24.2).
   const expert = agencyRun ? undefined : team.find((u) => u.staffRole === "expert");
   const isMe = (id?: Id) => Boolean(id && me && id === me.id);
   const full = (id?: Id) => (id ? (byId.get(id)?.name ?? "Someone") : "Someone");
   const name = (id?: Id) => copy.byYou(full(id), isMe(id));
   const approver = (c: Pick<Campaign, "approverId">) => name(c.approverId);
-  const planner = (c: Pick<Campaign, "approverId">) => (viewer === "agency" ? "you" : viewer === "client" ? (agencyName ?? "the agency") : approver(c));
+  const planner = (c: Pick<Campaign, "approverId">) =>
+    viewer === "agency" ? "you" : viewer === "client" ? (agencyName ?? "the agency") : approver(c);
   return {
     user: (id) => (id ? byId.get(id) : undefined),
     name,

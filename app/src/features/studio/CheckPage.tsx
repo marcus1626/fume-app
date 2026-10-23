@@ -25,5 +25,10 @@ function ToCheck({ checkId, frame }: { checkId: Id; frame: "fume" | "agency" }) 
   if (!check.data || !queue.data) return <Loading label="Opening Check" />;
   const { creative, workspace } = check.data;
   const item = queue.data.find((v) => v.item.creativeId === creative.id && v.item.format === creative.format);
-  return <Navigate to={`${checkPath(frame, workspace.id)}${item ? `?item=${encodeURIComponent(item.item.id)}` : ""}`} replace />;
+  return (
+    <Navigate
+      to={`${checkPath(frame, workspace.id)}${item ? `?item=${encodeURIComponent(item.item.id)}` : ""}`}
+      replace
+    />
+  );
 }

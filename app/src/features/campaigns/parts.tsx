@@ -49,10 +49,20 @@ export function rights(role: CustomerRole | null) {
 // "directions" and "masters" are Masters, "variants" Creatives. The moodboard is optional; past it, it reads as done.
 
 /** Where a campaign is: step 1–6 and its word; a delivered or closed campaign is past the last step ("Delivered"). */
-export function stepOf(campaign: Pick<Campaign, "stage" | "state">): { step: number; of: number; word: string; done: boolean } {
+export function stepOf(campaign: Pick<Campaign, "stage" | "state">): {
+  step: number;
+  of: number;
+  word: string;
+  done: boolean;
+} {
   const done = campaign.state === "delivered" || campaign.state === "closed";
   const stage = stageOf(campaign);
-  return { step: done ? STAGES.length : stageIndex(stage) + 1, of: STAGES.length, word: done ? "Delivered" : stageLabel(stage), done };
+  return {
+    step: done ? STAGES.length : stageIndex(stage) + 1,
+    of: STAGES.length,
+    word: done ? "Delivered" : stageLabel(stage),
+    done,
+  };
 }
 
 /** Where a campaign is, as six small dots and the stage's word (round 9, DLAY-3, DLAY-6; round 13, six stages); it is
@@ -69,7 +79,11 @@ export function StepDots({ campaign, word = true }: { campaign: Pick<Campaign, "
       <span className="ui-campaign-sr">{said}</span>
       <span className="ui-campaign-dots" aria-hidden="true">
         {STAGES.map((st, i) => (
-          <span key={st.id} className="ui-campaign-dot" data-state={s.done || i + 1 < s.step ? "done" : i + 1 === s.step ? "current" : undefined} />
+          <span
+            key={st.id}
+            className="ui-campaign-dot"
+            data-state={s.done || i + 1 < s.step ? "done" : i + 1 === s.step ? "current" : undefined}
+          />
         ))}
       </span>
       {word && <span className="ui-campaign-steps-word">{s.word}</span>}
@@ -111,7 +125,13 @@ export function StartCampaign({ quiet }: { quiet?: boolean } = {}) {
   return (
     <OptionMenu
       title="New campaign"
-      options={newCampaignWays.map((w) => ({ id: w.id, icon: w.icon, label: w.label, description: w.description, onSelect: () => navigate(w.to) }))}
+      options={newCampaignWays.map((w) => ({
+        id: w.id,
+        icon: w.icon,
+        label: w.label,
+        description: w.description,
+        onSelect: () => navigate(w.to),
+      }))}
     >
       <Button variant={quiet ? "secondary" : "primary"} icon="plus">
         <span className="ui-page-header-label">New campaign</span>
@@ -129,7 +149,11 @@ export const clockShows = (clock: ServiceClock | undefined): clock is ServiceClo
 // ─── The next action ────────────────────────────────────────────────────────
 
 /** Where the campaign's one next action (copy.campaignNext) goes; none while Fume is the one working. */
-export function nextAction(campaign: Campaign, threadId: string, deliveryId?: string): { label: string; to: string } | undefined {
+export function nextAction(
+  campaign: Campaign,
+  threadId: string,
+  deliveryId?: string,
+): { label: string; to: string } | undefined {
   const label = copy.campaignNext[campaign.state];
   if (!label) return undefined;
   switch (campaign.state) {
@@ -151,7 +175,9 @@ export function nextAction(campaign: Campaign, threadId: string, deliveryId?: st
 /** The direction's state for the customer: chosen (who and when), passed, or ready for a decision. */
 function DirectionBadge({ direction, name }: { direction: Direction; name: (id?: string) => string }) {
   if (direction.state === "chosen")
-    return <Badge variant="ink">{`Chosen by ${name(direction.decidedBy)}${direction.decidedAt ? ` · ${date(direction.decidedAt)}` : ""}`}</Badge>;
+    return (
+      <Badge variant="ink">{`Chosen by ${name(direction.decidedBy)}${direction.decidedAt ? ` · ${date(direction.decidedAt)}` : ""}`}</Badge>
+    );
   if (direction.state === "passed") return <Badge>Not taken forward</Badge>;
   if (direction.state === "proposed") return <Badge variant="ink">{copy.waitingOnYou}</Badge>;
   return <Badge check="waiting">{copy.versionState.in_check}</Badge>;
@@ -172,7 +198,11 @@ export function DirectionCard({
   return (
     <Card selected={direction.state === "chosen" ? true : undefined}>
       <CardMedia>
-        <CreativeMedia src={direction.cover} alt={`The cover of direction ${direction.letter}, ${direction.name}`} format="feed" />
+        <CreativeMedia
+          src={direction.cover}
+          alt={`The cover of direction ${direction.letter}, ${direction.name}`}
+          format="feed"
+        />
       </CardMedia>
       <CardHeader>
         <CardTitle as={headingLevel}>
@@ -190,10 +220,16 @@ export function DirectionCard({
             {direction.message && <DataListItem label="The message">{direction.message}</DataListItem>}
             {direction.visualIdea && <DataListItem label="What you will see">{direction.visualIdea}</DataListItem>}
             {direction.whyItFits && <DataListItem label="Why it fits your brand">{direction.whyItFits}</DataListItem>}
-            {direction.risks.length > 0 && <DataListItem label="What to watch">{direction.risks.join(" ")}</DataListItem>}
-            {direction.plannedOutputs && <DataListItem label="What it will make">{direction.plannedOutputs}</DataListItem>}
+            {direction.risks.length > 0 && (
+              <DataListItem label="What to watch">{direction.risks.join(" ")}</DataListItem>
+            )}
+            {direction.plannedOutputs && (
+              <DataListItem label="What it will make">{direction.plannedOutputs}</DataListItem>
+            )}
             {direction.reason && (
-              <DataListItem label={direction.state === "chosen" ? `Why ${name(direction.decidedBy)} chose it` : "The reason"}>
+              <DataListItem
+                label={direction.state === "chosen" ? `Why ${name(direction.decidedBy)} chose it` : "The reason"}
+              >
                 {direction.reason}
               </DataListItem>
             )}

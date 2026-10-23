@@ -12,7 +12,9 @@ const timeFmt = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-d
 // Round 12 (DLOAD-21): en-GB writes September "Sept"; the app writes "Sep" everywhere, as the charts do.
 const sep = (f: Intl.DateTimeFormat) => ({ format: (t: number) => f.format(t).replace("Sept", "Sep") });
 const dayFmt = sep(new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: tz }));
-const weekdayFmt = sep(new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: tz }));
+const weekdayFmt = sep(
+  new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: tz }),
+);
 const dayKey = (t: number) => new Intl.DateTimeFormat("en-CA", { timeZone: tz }).format(t);
 /** Round 13 (#37): today in Oslo on the demo's clock, as a DateField writes it ("2026-10-14"). */
 export const todayKey = () => dayKey(now());

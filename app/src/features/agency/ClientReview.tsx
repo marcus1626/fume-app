@@ -29,11 +29,27 @@ export function useClientPanels(view: CampaignView, checked: Creative[]) {
   const [record, setRecord] = useState<{ initial?: Id[] } | null>(null);
   const panels = (
     <>
-      <SendToClientSheet campaign={view.campaign} creatives={checked} initial={send?.initial} open={send !== null} onOpenChange={(o) => !o && setSend(null)} />
-      <RecordApprovalSheet campaign={view.campaign} creatives={checked} initial={record?.initial} open={record !== null} onOpenChange={(o) => !o && setRecord(null)} />
+      <SendToClientSheet
+        campaign={view.campaign}
+        creatives={checked}
+        initial={send?.initial}
+        open={send !== null}
+        onOpenChange={(o) => !o && setSend(null)}
+      />
+      <RecordApprovalSheet
+        campaign={view.campaign}
+        creatives={checked}
+        initial={record?.initial}
+        open={record !== null}
+        onOpenChange={(o) => !o && setRecord(null)}
+      />
     </>
   );
-  return { openSend: (initial?: Id[]) => setSend({ initial }), openRecord: (initial?: Id[]) => setRecord({ initial }), panels };
+  return {
+    openSend: (initial?: Id[]) => setSend({ initial }),
+    openRecord: (initial?: Id[]) => setRecord({ initial }),
+    panels,
+  };
 }
 
 /** The review's header actions for the agency: "Send to Maja" (Ink) while anything is not sent, else "Send again"
@@ -52,23 +68,53 @@ export function useClientActions(view: CampaignView, checked: Creative[], panels
   );
   const record = pill("Record an approval", "check", () => panels.openRecord());
   return toSend.length
-    ? { actions: record, primaryAction: { label: copy.send.action(approver), icon: "send" as const, onSelect: () => panels.openSend() } }
+    ? {
+        actions: record,
+        primaryAction: { label: copy.send.action(approver), icon: "send" as const, onSelect: () => panels.openSend() },
+      }
     : { actions: [record, pill("Send again", "send", () => panels.openSend())] };
 }
 
 /** The checked creatives in their two states, then what the client asked to change and what she approved. */
-export function ClientCreatives({ view, checked, people, me, onOpen }: { view: CampaignView; checked: Creative[]; people: People; me: Id; onOpen: (c: Creative) => void }) {
+export function ClientCreatives({
+  view,
+  checked,
+  people,
+  me,
+  onOpen,
+}: {
+  view: CampaignView;
+  checked: Creative[];
+  people: People;
+  me: Id;
+  onOpen: (c: Creative) => void;
+}) {
   const named = useCustomerNames(view.campaign);
   const { waitingOn, split, sendOf } = useCampaignSends(view.campaign.id, true);
   const approver = firstName(view.approver.name);
-  const approved = useMemo(() => view.creatives.filter((c) => c.current.state === "approved" || c.current.state === "delivered").map(named), [view.creatives, named]);
-  const changed = useMemo(() => view.creatives.filter((c) => c.current.state === "changes_requested").map(named), [view.creatives, named]);
+  const approved = useMemo(
+    () => view.creatives.filter((c) => c.current.state === "approved" || c.current.state === "delivered").map(named),
+    [view.creatives, named],
+  );
+  const changed = useMemo(
+    () => view.creatives.filter((c) => c.current.state === "changes_requested").map(named),
+    [view.creatives, named],
+  );
   const { toSend, withThem } = split(checked);
   const checkers = [...new Set(toSend.map((c) => c.current.checkedBy).filter((id): id is Id => Boolean(id)))];
   const byWhom = checkers.map((id) => copy.byYou(people.user(id)?.name ?? people.name(id), id === me, true));
   // "You checked these 2. Maja sees them once you send them; only Maja approves a creative."
-  const checkedLine = byWhom.length ? `${byWhom.join(" and ")} checked ${toSend.length === 1 ? "this one" : `these ${toSend.length}`}. ` : "";
-  const sentOn = [...new Set(withThem.map((c) => sendOf(c.current.id)?.sentAt).filter((d): d is string => Boolean(d)).map((d) => date(d)))];
+  const checkedLine = byWhom.length
+    ? `${byWhom.join(" and ")} checked ${toSend.length === 1 ? "this one" : `these ${toSend.length}`}. `
+    : "";
+  const sentOn = [
+    ...new Set(
+      withThem
+        .map((c) => sendOf(c.current.id)?.sentAt)
+        .filter((d): d is string => Boolean(d))
+        .map((d) => date(d)),
+    ),
+  ];
 
   const tile = (c: Creative) => (
     <CreativeTile
@@ -87,7 +133,12 @@ export function ClientCreatives({ view, checked, people, me, onOpen }: { view: C
   return (
     <>
       {toSend.length > 0 && (
-        <Section title="To send" meta={toSend.length} titleId="review-to-send" text={`${checkedLine}${approver} sees ${toSend.length === 1 ? "it" : "them"} once you send ${toSend.length === 1 ? "it" : "them"}; only ${approver} approves a creative.`}>
+        <Section
+          title="To send"
+          meta={toSend.length}
+          titleId="review-to-send"
+          text={`${checkedLine}${approver} sees ${toSend.length === 1 ? "it" : "them"} once you send ${toSend.length === 1 ? "it" : "them"}; only ${approver} approves a creative.`}
+        >
           <CreativeGrid className="ui-review-grid" aria-labelledby="review-to-send">
             {toSend.map(tile)}
           </CreativeGrid>
@@ -116,7 +167,12 @@ export function ClientCreatives({ view, checked, people, me, onOpen }: { view: C
         </Section>
       )}
       {approved.length > 0 && (
-        <Section title="Approved" meta={approved.length} titleId="review-approved" text={`${approver} approved these, in Fume, through a client link, or as you recorded it.`}>
+        <Section
+          title="Approved"
+          meta={approved.length}
+          titleId="review-approved"
+          text={`${approver} approved these, in Fume, through a client link, or as you recorded it.`}
+        >
           <CreativeGrid aria-labelledby="review-approved">{approved.map(tile)}</CreativeGrid>
         </Section>
       )}
@@ -132,7 +188,11 @@ export function ClientSent({ view }: { view: CampaignView }) {
     <Section
       title="Sent"
       titleId="review-sent"
-      text={sends.length ? undefined : `Nothing sent yet. ${approver} sees checked creatives only once you send them. A client link is for someone at the client without an account.`}
+      text={
+        sends.length
+          ? undefined
+          : `Nothing sent yet. ${approver} sees checked creatives only once you send them. A client link is for someone at the client without an account.`
+      }
     >
       {sends.length > 0 && <ClientSends campaignId={view.campaign.id} titleId="review-sent" />}
     </Section>

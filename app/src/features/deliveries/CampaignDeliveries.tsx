@@ -7,7 +7,18 @@
 //   <CampaignDeliveries campaignId="c-autumn" />
 //   <CampaignDeliveries campaignId="c-autumn" named />   (All deliveries, with no campaign heading over the rows: the
 //   rows that are not a delivery yet say the campaign's name too, round 9, DLOAD-15)
-import { Button, Icon, Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle, useToast } from "@fume/ui";
+import {
+  Button,
+  Icon,
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemMedia,
+  ItemTitle,
+  useToast,
+} from "@fume/ui";
 import { Link, useNavigate } from "react-router-dom";
 import { useCampaign, useCatalogue, useDeliveries, useMakeDelivery, useSession } from "../../api/hooks";
 import type { Campaign, Collection, Creative, Delivery } from "../../contract";
@@ -30,7 +41,12 @@ export interface ToDeliver {
 const done = (c: Creative) => c.current.state === "approved" || c.current.state === "delivered";
 
 /** What waits for a delivery: per collection the campaign takes, or the whole campaign when it takes none. */
-export function toDeliver(campaign: Campaign, creatives: Creative[], collections: Collection[], deliveries: Delivery[]): ToDeliver[] {
+export function toDeliver(
+  campaign: Campaign,
+  creatives: Creative[],
+  collections: Collection[],
+  deliveries: Delivery[],
+): ToDeliver[] {
   const packed = new Set(deliveries.filter((d) => d.campaignId === campaign.id).flatMap((d) => d.creativeIds));
   // What she cannot see yet (being made or checked) is still under way, though it is not in her list.
   const unseen = Math.max(0, campaign.counts.creatives - creatives.length);
@@ -39,8 +55,17 @@ export function toDeliver(campaign: Campaign, creatives: Creative[], collections
     const underWay = list.filter((c) => !done(c)).length + unseen;
     return { collection, waiting, underWay, ready: waiting.length > 0 && underWay === 0 };
   };
-  const taken = (campaign.collectionIds ?? []).map((id) => collections.find((c) => c.id === id)).filter((c): c is Collection => Boolean(c));
-  const rows = taken.map((cl) => measure(creatives.filter((c) => inCollection(c, campaign, cl)), cl)).filter((r) => r.waiting.length > 0);
+  const taken = (campaign.collectionIds ?? [])
+    .map((id) => collections.find((c) => c.id === id))
+    .filter((c): c is Collection => Boolean(c));
+  const rows = taken
+    .map((cl) =>
+      measure(
+        creatives.filter((c) => inCollection(c, campaign, cl)),
+        cl,
+      ),
+    )
+    .filter((r) => r.waiting.length > 0);
   if (rows.length > 0) return rows;
   const whole = measure(creatives);
   return whole.waiting.length > 0 ? [whole] : [];
@@ -64,7 +89,9 @@ export function CampaignDeliveries({ campaignId, named = false }: { campaignId: 
   if (made.length === 0 && rows.length === 0)
     return named ? null : (
       <p className="ui-app-section-text">
-        {campaign.counts.approved > 0 ? "Everything approved is in a delivery." : "Nothing approved yet. Once it is, Fume packs it here: every format, named and ready to use."}
+        {campaign.counts.approved > 0
+          ? "Everything approved is in a delivery."
+          : "Nothing approved yet. Once it is, Fume packs it here: every format, named and ready to use."}
       </p>
     );
 
@@ -103,7 +130,11 @@ export function CampaignDeliveries({ campaignId, named = false }: { campaignId: 
         </Item>
       ))}
       {rows.map((r) => {
-        const name = r.collection ? (named ? `${campaign.name} · ${r.collection.name}` : r.collection.name) : campaign.name;
+        const name = r.collection
+          ? named
+            ? `${campaign.name} · ${r.collection.name}`
+            : r.collection.name
+          : campaign.name;
         const busy = make.isPending && make.variables?.collectionId === r.collection?.id;
         return (
           <Item key={r.collection?.id ?? "campaign"} as="li" variant="muted">
@@ -112,7 +143,9 @@ export function CampaignDeliveries({ campaignId, named = false }: { campaignId: 
             </ItemMedia>
             <ItemContent>
               <ItemTitle>
-                {r.ready ? `${name} is ready to deliver` : `${named ? `${name} · ` : ""}${copy.creatives(r.waiting.length)} approved, in no delivery yet`}
+                {r.ready
+                  ? `${name} is ready to deliver`
+                  : `${named ? `${name} · ` : ""}${copy.creatives(r.waiting.length)} approved, in no delivery yet`}
               </ItemTitle>
               <ItemDescription>
                 {r.ready
@@ -122,7 +155,14 @@ export function CampaignDeliveries({ campaignId, named = false }: { campaignId: 
             </ItemContent>
             {r.ready && can.approve && (
               <ItemActions>
-                <Button variant="secondary" size="sm" icon="package" loading={busy} disabled={make.isPending && !busy} onClick={() => deliver(r)}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  icon="package"
+                  loading={busy}
+                  disabled={make.isPending && !busy}
+                  onClick={() => deliver(r)}
+                >
                   Make the delivery
                 </Button>
               </ItemActions>

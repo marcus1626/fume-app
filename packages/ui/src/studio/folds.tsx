@@ -61,7 +61,13 @@ export function StudioFolds({ sections, label, initialOpen, newest, newestKey, c
         return (
           <section key={s.id} className="ui-sc-fold" data-state={isOpen ? "open" : "closed"}>
             <h3 className="ui-sc-fold-head">
-              <button type="button" className="ui-sc-fold-trigger" aria-expanded={isOpen} aria-controls={bodyId} onClick={() => toggle(s.id)}>
+              <button
+                type="button"
+                className="ui-sc-fold-trigger"
+                aria-expanded={isOpen}
+                aria-controls={bodyId}
+                onClick={() => toggle(s.id)}
+              >
                 <span className="ui-sc-fold-title">{s.title}</span>
                 {s.meta !== undefined && s.meta !== null && <span className="ui-sc-fold-meta">{s.meta}</span>}
                 <Icon name="chevron-down" className="ui-sc-fold-chevron" />

@@ -50,19 +50,50 @@ export interface PlanTarget {
 }
 
 /** The placement a creative's format fits first: a feed creative goes to the Instagram feed. */
-export const defaultPlacement = (placements: Placement[], format?: Format) => placements.find((p) => p.format === format) ?? placements[0];
+export const defaultPlacement = (placements: Placement[], format?: Format) =>
+  placements.find((p) => p.format === format) ?? placements[0];
 
 export const DEFAULT_TIME = "09:00";
 
-export function PlanDialog({ target, placements, today, onClose }: { target: PlanTarget | null; placements: Placement[]; today: Day; onClose: () => void }) {
+export function PlanDialog({
+  target,
+  placements,
+  today,
+  onClose,
+}: {
+  target: PlanTarget | null;
+  placements: Placement[];
+  today: Day;
+  onClose: () => void;
+}) {
   return (
     <Dialog open={Boolean(target)} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent size="sm">{target && <PlanForm key={target.entry?.id ?? target.creativeId} target={target} placements={placements} today={today} onClose={onClose} />}</DialogContent>
+      <DialogContent size="sm">
+        {target && (
+          <PlanForm
+            key={target.entry?.id ?? target.creativeId}
+            target={target}
+            placements={placements}
+            today={today}
+            onClose={onClose}
+          />
+        )}
+      </DialogContent>
     </Dialog>
   );
 }
 
-function PlanForm({ target, placements, today, onClose }: { target: PlanTarget; placements: Placement[]; today: Day; onClose: () => void }) {
+function PlanForm({
+  target,
+  placements,
+  today,
+  onClose,
+}: {
+  target: PlanTarget;
+  placements: Placement[];
+  today: Day;
+  onClose: () => void;
+}) {
   const schedule = useSchedule();
   const move = useMoveEntry();
   const remove = useRemoveEntry();
@@ -70,13 +101,19 @@ function PlanForm({ target, placements, today, onClose }: { target: PlanTarget; 
   const entry = target.entry;
   const [day, setDay] = useState<string>(entry ? dayOf(entry.start) : (target.day ?? today));
   const [time, setTime] = useState(entry ? clock(entry.start) : DEFAULT_TIME);
-  const [placementId, setPlacementId] = useState(entry?.placementId ?? defaultPlacement(placements, target.format)?.id ?? "");
+  const [placementId, setPlacementId] = useState(
+    entry?.placementId ?? defaultPlacement(placements, target.format)?.id ?? "",
+  );
   const placement = placements.find((p) => p.id === placementId);
   const connected = useConnected();
   const [channelId, setChannelId] = useState(() => channelOf(placement).id);
   const channel = CHANNELS.find((c) => c.id === channelId) ?? channelOf(placement);
   // The channels with placements, and this channel's placements (#38)
-  const channels = CHANNELS.filter((c) => placements.some((p) => c.groups.includes(p.group) || (c.id === "other" && !CHANNELS.some((x) => x.groups.includes(p.group)))));
+  const channels = CHANNELS.filter((c) =>
+    placements.some(
+      (p) => c.groups.includes(p.group) || (c.id === "other" && !CHANNELS.some((x) => x.groups.includes(p.group))),
+    ),
+  );
   const own = placements.filter((p) => channelOf(p).id === channel.id);
   const groups = [...new Set(own.map((p) => p.group))];
   const pickChannel = (id: string) => {
@@ -90,7 +127,9 @@ function PlanForm({ target, placements, today, onClose }: { target: PlanTarget; 
   const id = `plan-${target.entry?.id ?? target.creativeId}`;
 
   const done = (verb: string) => {
-    toast.done(`${verb}: ${target.title}`, { description: `${placement!.name}, ${dayShort(day)} at ${time}.${offline ? ` Connect ${channel.name} to publish it.` : ""}` });
+    toast.done(`${verb}: ${target.title}`, {
+      description: `${placement!.name}, ${dayShort(day)} at ${time}.${offline ? ` Connect ${channel.name} to publish it.` : ""}`,
+    });
     onClose();
   };
   const failed = () => toast.error("The calendar didn’t change. Try again in a moment.");
@@ -129,7 +168,9 @@ function PlanForm({ target, placements, today, onClose }: { target: PlanTarget; 
   return (
     <>
       <DialogHeader>
-        <DialogTitle>{entry ? `${target.title} on ${placement?.name ?? "the calendar"}` : `Plan ${target.title}`}</DialogTitle>
+        <DialogTitle>
+          {entry ? `${target.title} on ${placement?.name ?? "the calendar"}` : `Plan ${target.title}`}
+        </DialogTitle>
         <DialogDescription>Fume publishes it then, on the channels you connect.</DialogDescription>
       </DialogHeader>
       <DialogBody>
@@ -145,7 +186,14 @@ function PlanForm({ target, placements, today, onClose }: { target: PlanTarget; 
                 <FieldLabel as="span" id={`${id}-time-label`}>
                   Time
                 </FieldLabel>
-                <TimeField id={`${id}-time`} aria-labelledby={`${id}-time-label`} value={time} onChange={setTime} required step={15} />
+                <TimeField
+                  id={`${id}-time`}
+                  aria-labelledby={`${id}-time-label`}
+                  value={time}
+                  onChange={setTime}
+                  required
+                  step={15}
+                />
               </Field>
             </div>
             <Field>
@@ -166,7 +214,9 @@ function PlanForm({ target, placements, today, onClose }: { target: PlanTarget; 
               </Select>
               {offline && (
                 <div className="ui-plan-form-connect">
-                  <FieldDescription>{channel.name} isn’t connected yet. Fume plans it here; connect it to publish.</FieldDescription>
+                  <FieldDescription>
+                    {channel.name} isn’t connected yet. Fume plans it here; connect it to publish.
+                  </FieldDescription>
                   <Button
                     type="button"
                     variant="glass-clear"
@@ -174,7 +224,9 @@ function PlanForm({ target, placements, today, onClose }: { target: PlanTarget; 
                     icon="link"
                     onClick={() => {
                       connectChannel(channel.id);
-                      toast.done(`${channel.name} is connected`, { description: "Planned posts go out on it at their time." });
+                      toast.done(`${channel.name} is connected`, {
+                        description: "Planned posts go out on it at their time.",
+                      });
                     }}
                   >
                     Connect {channel.name}

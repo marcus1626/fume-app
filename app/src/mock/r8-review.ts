@@ -4,7 +4,15 @@
 // every creative in it is remade, and the campaign uses one change request (none when each item is Fume's own
 // mistake, tagged "product"). Both reuse the mock's own helpers (setVersion, recount), passed in from createMockApi.
 
-import { FumeError, type Campaign, type Creative, type CreativeVersion, type FumeApi, type Id, type RecordEvent } from "../contract";
+import {
+  FumeError,
+  type Campaign,
+  type Creative,
+  type CreativeVersion,
+  type FumeApi,
+  type Id,
+  type RecordEvent,
+} from "../contract";
 
 interface Db {
   creatives: Creative[];
@@ -40,7 +48,8 @@ export function r8ReviewApi(ctx: R8ReviewContext): Pick<FumeApi, "unapprove" | "
       for (const vid of versionIds) {
         const c = creativeOf(vid);
         // Only an approval that has not moved on (into a delivery) can be taken back.
-        if (c.current.state !== "approved") throw new FumeError("conflict", "Only an approved creative that is not delivered can go back.");
+        if (c.current.state !== "approved")
+          throw new FumeError("conflict", "Only an approved creative that is not delivered can go back.");
         setVersion(c, { state: "checked", approvedBy: undefined, approvedAt: undefined });
         back.push(c.current);
         touched.add(c.campaignId);
@@ -66,16 +75,29 @@ export function r8ReviewApi(ctx: R8ReviewContext): Pick<FumeApi, "unapprove" | "
       if (items.length === 0) throw new FumeError("invalid", "Say what should change on at least one creative.");
       const campaign = campaignOf(campaignId);
       const list = items.map((item) => ({ item, creative: creativeOf(item.versionId) }));
-      if (list.some(({ creative }) => creative.campaignId !== campaignId)) throw new FumeError("invalid", "Every creative in one change request is from the same campaign.");
-      if (list.some(({ creative }) => creative.current.state !== "checked")) throw new FumeError("conflict", "Only creatives that wait on you can be changed.");
+      if (list.some(({ creative }) => creative.campaignId !== campaignId))
+        throw new FumeError("invalid", "Every creative in one change request is from the same campaign.");
+      if (list.some(({ creative }) => creative.current.state !== "checked"))
+        throw new FumeError("conflict", "Only creatives that wait on you can be changed.");
       const correction = list.every(({ item }) => item.tags.includes("product"));
       if (!correction && campaign.roundsUsed >= campaign.roundsIncluded)
-        throw new FumeError("conflict", "The change requests in your package are used for this campaign. Ask Fume what one more takes.");
+        throw new FumeError(
+          "conflict",
+          "The change requests in your package are used for this campaign. Ask Fume what one more takes.",
+        );
       if (!correction) campaign.roundsUsed += 1;
       const versions: CreativeVersion[] = [];
       for (const { item, creative } of list) {
         setVersion(creative, { state: "changes_requested" });
-        const next: CreativeVersion = { ...creative.current, id: nextId("v"), number: creative.current.number + 1, state: "making", madeAt: now(), checkedAt: undefined, checkedBy: undefined };
+        const next: CreativeVersion = {
+          ...creative.current,
+          id: nextId("v"),
+          number: creative.current.number + 1,
+          state: "making",
+          madeAt: now(),
+          checkedAt: undefined,
+          checkedBy: undefined,
+        };
         creative.versions.push(next);
         creative.current = next;
         versions.push(next);

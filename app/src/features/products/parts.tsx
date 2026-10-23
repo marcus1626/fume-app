@@ -116,7 +116,9 @@ export function ProvenanceTag({ provenance }: { provenance?: Provenance }) {
   const p = provenance ?? fallback;
   const state = p.state === "removed" ? "approved" : p.state;
   const by = p.by ? (p.by === me ? "You" : people.name(p.by)) : undefined;
-  return <ProposalTag origin={p.origin} state={state} evidence={p.evidence} by={by} when={p.at ? date(p.at) : undefined} />;
+  return (
+    <ProposalTag origin={p.origin} state={state} evidence={p.evidence} by={by} when={p.at ? date(p.at) : undefined} />
+  );
 }
 
 const stateOf = (p?: Provenance) => (p?.state === "removed" ? "approved" : (p?.state ?? "approved"));
@@ -153,7 +155,9 @@ export function ProductCard({ product: p }: ProductCardProps) {
   const image = p.images[0] ?? p.variants?.find((v) => v.image)?.image;
   return (
     <div className="ui-product-card" data-state={p.state}>
-      <div className="ui-product-card-media">{image ? <img src={image} alt="" loading="lazy" /> : <Icon name="image" />}</div>
+      <div className="ui-product-card-media">
+        {image ? <img src={image} alt="" loading="lazy" /> : <Icon name="image" />}
+      </div>
       <div className="ui-product-card-body">
         <Link to={`/brand/products/${p.id}`} className="ui-product-card-link">
           {p.name}
@@ -191,13 +195,18 @@ export function ProductMenu({
   const move = (change: { categoryId?: string; collectionIds?: string[] }, done: string) =>
     place.mutate(
       { productId: p.id, ...change },
-      { onSuccess: () => toast.done(done), onError: (error) => toast.error("That wasn’t moved", { description: error.message }) },
+      {
+        onSuccess: () => toast.done(done),
+        onError: (error) => toast.error("That wasn’t moved", { description: error.message }),
+      },
     );
 
   return (
     <div className="ui-product-card-menu">
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>{trigger ?? <CreativeMoreButton aria-label={`More for ${p.name}`} />}</DropdownMenuTrigger>
+        <DropdownMenuTrigger asChild>
+          {trigger ?? <CreativeMoreButton aria-label={`More for ${p.name}`} />}
+        </DropdownMenuTrigger>
         <DropdownMenuContent align={trigger ? "start" : "end"}>
           {!onPage && (
             <>
@@ -258,7 +267,9 @@ export function CollectionCard({ collection: c, onDecide, deciding }: Collection
   const state = stateOf(c.provenance);
   return (
     <Proposal state={state} className="ui-collection-card">
-      <div className="ui-collection-card-cover">{c.cover ? <img src={c.cover} alt="" loading="lazy" /> : <Icon name="layers" />}</div>
+      <div className="ui-collection-card-cover">
+        {c.cover ? <img src={c.cover} alt="" loading="lazy" /> : <Icon name="layers" />}
+      </div>
       <div className="ui-product-card-body">
         <Link to={`/products/collections/${c.id}`} className="ui-collection-card-link">
           {c.name}
@@ -272,7 +283,13 @@ export function CollectionCard({ collection: c, onDecide, deciding }: Collection
           {onDecide && (
             // Round 8 (MOB-8): no Ink on a card; the page keeps its one Ink action. Round 9 (DLOAD-1): Confirm.
             <div className="ui-proposal-actions">
-              <Button size="sm" variant="secondary" disabled={deciding} onClick={() => onDecide("keep")} aria-label={`Confirm ${c.name}`}>
+              <Button
+                size="sm"
+                variant="secondary"
+                disabled={deciding}
+                onClick={() => onDecide("keep")}
+                aria-label={`Confirm ${c.name}`}
+              >
                 Confirm
               </Button>
               <Button size="sm" variant="quiet" disabled={deciding} onClick={() => onDecide("change")}>
@@ -288,4 +305,3 @@ export function CollectionCard({ collection: c, onDecide, deciding }: Collection
     </Proposal>
   );
 }
-

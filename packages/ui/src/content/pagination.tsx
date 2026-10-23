@@ -2,7 +2,13 @@
 // page Ink; Previous and Next are quiet pills. Narrow (under 440 px) it turns compact: two chevron circles around
 // "Page 2 of 9". The page list follows the board: every page up to 6, else 1, the neighbours of the current one and
 // the last, with an ellipsis mark in the gaps.
-import { forwardRef, type AnchorHTMLAttributes, type HTMLAttributes, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
+import {
+  forwardRef,
+  type AnchorHTMLAttributes,
+  type HTMLAttributes,
+  type MouseEvent as ReactMouseEvent,
+  type ReactNode,
+} from "react";
 import { cx } from "../cx";
 import { Icon } from "../icons";
 
@@ -32,7 +38,12 @@ export const PaginationLink = forwardRef<HTMLAnchorElement, PaginationLinkProps>
       aria-current={isActive ? "page" : undefined}
       aria-disabled={disabled || undefined}
       tabIndex={disabled ? -1 : undefined}
-      className={cx("ui-pagination-link", kind === "previous" && "ui-pagination-previous", kind === "next" && "ui-pagination-next", className)}
+      className={cx(
+        "ui-pagination-link",
+        kind === "previous" && "ui-pagination-previous",
+        kind === "next" && "ui-pagination-next",
+        className,
+      )}
       {...props}
     >
       {children}
@@ -51,7 +62,9 @@ export function PaginationEllipsis({ className, ...props }: HTMLAttributes<HTMLS
 /** The pages in view: numbers and "gap" marks. */
 export function paginationRange(page: number, pageCount: number): Array<number | "gap"> {
   if (pageCount <= 6) return Array.from({ length: pageCount }, (_, i) => i + 1);
-  const list = Array.from(new Set([1, pageCount, page - 1, page, page + 1].filter((i) => i >= 1 && i <= pageCount))).sort((a, b) => a - b);
+  const list = Array.from(
+    new Set([1, pageCount, page - 1, page, page + 1].filter((i) => i >= 1 && i <= pageCount)),
+  ).sort((a, b) => a - b);
   const out: Array<number | "gap"> = [];
   list.forEach((p, k) => {
     if (k && p - list[k - 1] > 1) out.push("gap");
@@ -75,7 +88,16 @@ export interface PaginationProps extends Omit<HTMLAttributes<HTMLElement>, "onCh
 }
 
 /** The whole control, from page and pageCount. */
-export function Pagination({ page, pageCount, onPageChange, hrefFor, previousLabel = "Previous", nextLabel = "Next", summary, ...props }: PaginationProps) {
+export function Pagination({
+  page,
+  pageCount,
+  onPageChange,
+  hrefFor,
+  previousLabel = "Previous",
+  nextLabel = "Next",
+  summary,
+  ...props
+}: PaginationProps) {
   const go = (to: number) => (e: ReactMouseEvent<HTMLAnchorElement>) => {
     if (to < 1 || to > pageCount || to === page) {
       e.preventDefault();
@@ -89,7 +111,13 @@ export function Pagination({ page, pageCount, onPageChange, hrefFor, previousLab
     <PaginationRoot {...props}>
       <PaginationContent>
         <li>
-          <PaginationLink kind="previous" href={href(page - 1)} onClick={go(page - 1)} disabled={page <= 1} aria-label="Go to the previous page">
+          <PaginationLink
+            kind="previous"
+            href={href(page - 1)}
+            onClick={go(page - 1)}
+            disabled={page <= 1}
+            aria-label="Go to the previous page"
+          >
             <Icon name="chevron-left" />
             <span className="ui-pagination-label">{previousLabel}</span>
           </PaginationLink>
@@ -117,7 +145,13 @@ export function Pagination({ page, pageCount, onPageChange, hrefFor, previousLab
           ),
         )}
         <li>
-          <PaginationLink kind="next" href={href(page + 1)} onClick={go(page + 1)} disabled={page >= pageCount} aria-label="Go to the next page">
+          <PaginationLink
+            kind="next"
+            href={href(page + 1)}
+            onClick={go(page + 1)}
+            disabled={page >= pageCount}
+            aria-label="Go to the next page"
+          >
             <span className="ui-pagination-label">{nextLabel}</span>
             <Icon name="chevron-right" />
           </PaginationLink>

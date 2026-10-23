@@ -18,14 +18,27 @@ export interface LibraryItem {
 }
 
 /** Which variable each kind sets: scenes, backgrounds and references are what the product stands in. */
-export const KIND_VAR: Record<LibraryKind, "scene" | "surface" | "props"> = { scene: "scene", background: "scene", reference: "scene", surface: "surface", prop: "props" };
+export const KIND_VAR: Record<LibraryKind, "scene" | "surface" | "props"> = {
+  scene: "scene",
+  background: "scene",
+  reference: "scene",
+  surface: "surface",
+  prop: "props",
+};
 
-export const KIND_LABEL: Record<LibraryKind, string> = { scene: "Scenes", background: "Backgrounds", surface: "Surfaces", prop: "Props", reference: "References" };
+export const KIND_LABEL: Record<LibraryKind, string> = {
+  scene: "Scenes",
+  background: "Backgrounds",
+  surface: "Surfaces",
+  prop: "Props",
+  reference: "References",
+};
 
 const pic = (tile: string) => `${import.meta.env.BASE_URL}demo/lysne/${tile}-square.jpg`;
 const gen = (name: string) => `${import.meta.env.BASE_URL}demo/lysne/gen/${name}.jpg`;
 /** A flat colour as a picture: a surface or a background swatch. */
-const swatch = (hex: string) => `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><rect width="1" height="1" fill="${hex}"/></svg>`)}`;
+const swatch = (hex: string) =>
+  `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><rect width="1" height="1" fill="${hex}"/></svg>`)}`;
 
 /** The brand's own scenes (the mode's first three) and Fume's templates. */
 const SCENES: LibraryItem[] = [
@@ -59,7 +72,13 @@ const SURFACES: LibraryItem[] = (
     ["steel", "Brushed steel", "#A7A9AB"],
     ["paper", "Paper", "#F4EFE8"],
   ] as const
-).map(([value, name, hex], i) => ({ value, name, kind: "surface", origin: i < 4 ? "brand" : "fume", image: swatch(hex) }));
+).map(([value, name, hex], i) => ({
+  value,
+  name,
+  kind: "surface",
+  origin: i < 4 ? "brand" : "fume",
+  image: swatch(hex),
+}));
 
 const PROPS: LibraryItem[] = (
   [
@@ -82,7 +101,13 @@ const PROPS: LibraryItem[] = (
 const uploads: LibraryItem[] = [];
 
 export function addUpload(name: string, image: string): LibraryItem {
-  const item: LibraryItem = { value: `upload-${uploads.length + 1}`, name, kind: "background", origin: "upload", image };
+  const item: LibraryItem = {
+    value: `upload-${uploads.length + 1}`,
+    name,
+    kind: "background",
+    origin: "upload",
+    image,
+  };
   uploads.unshift(item);
   return item;
 }
@@ -91,9 +116,23 @@ export function addUpload(name: string, image: string): LibraryItem {
 export function libraryOf(assets?: BrandAssetsView): LibraryItem[] {
   const backgrounds: LibraryItem[] = [
     ...uploads,
-    ...(assets?.presets ?? []).filter((p) => p.kind === "background" && p.hex).map((p) => ({ value: `bg-${p.hex}`, name: p.name, kind: "background" as const, origin: "brand" as const, image: swatch(p.hex!) })),
+    ...(assets?.presets ?? [])
+      .filter((p) => p.kind === "background" && p.hex)
+      .map((p) => ({
+        value: `bg-${p.hex}`,
+        name: p.name,
+        kind: "background" as const,
+        origin: "brand" as const,
+        image: swatch(p.hex!),
+      })),
   ];
-  const references: LibraryItem[] = (assets?.references ?? []).map((r) => ({ value: `ref-${r.id}`, name: r.name, kind: "reference", origin: "reference", image: r.image }));
+  const references: LibraryItem[] = (assets?.references ?? []).map((r) => ({
+    value: `ref-${r.id}`,
+    name: r.name,
+    kind: "reference",
+    origin: "reference",
+    image: r.image,
+  }));
   return [...SCENES, ...backgrounds, ...SURFACES, ...PROPS, ...references];
 }
 
@@ -106,7 +145,9 @@ export function withLibrary(mode: StudioMode | undefined, assets?: BrandAssetsVi
     ...mode,
     variables: mode.variables.map((v) => {
       if (v.section !== "Scene" || !(["scene", "surface", "props"] as string[]).includes(v.key)) return v;
-      const extra = all.filter((i) => KIND_VAR[i.kind] === v.key && !(v.options ?? []).some((o) => o.value === i.value)).map((i) => ({ value: i.value, label: i.name }));
+      const extra = all
+        .filter((i) => KIND_VAR[i.kind] === v.key && !(v.options ?? []).some((o) => o.value === i.value))
+        .map((i) => ({ value: i.value, label: i.name }));
       return extra.length ? { ...v, options: [...(v.options ?? []), ...extra] } : v;
     }),
   };

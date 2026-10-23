@@ -140,7 +140,13 @@ export interface IconProps extends Omit<SVGProps<SVGSVGElement>, "name"> {
 
 export function Icon({ name, label, className, ...props }: IconProps) {
   return (
-    <svg className={cx("ico", className)} aria-hidden={label ? undefined : true} role={label ? "img" : undefined} aria-label={label} {...props}>
+    <svg
+      className={cx("ico", className)}
+      aria-hidden={label ? undefined : true}
+      role={label ? "img" : undefined}
+      aria-label={label}
+      {...props}
+    >
       <use href={`#fi-${name}`} />
     </svg>
   );

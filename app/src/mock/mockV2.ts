@@ -54,9 +54,26 @@ export function startCampaignBoard(
   const provenance: Provenance = { origin: who.staff ? "fume" : "customer", state: "approved", by: who.id, at };
   const rows = Math.max(1, Math.ceil(images.length / 3));
   const board: Board = {
-    id, workspaceId: campaign.workspaceId, kind: "campaign_moodboard", campaignId: campaign.id, name: `${campaign.name} moodboard`,
-    width: 1100, height: 80 + rows * 405, updatedAt: at,
-    items: images.map((image, i) => ({ id: nextId("bi"), boardId: id, kind: "image" as const, x: 40 + (i % 3) * 340, y: 40 + Math.floor(i / 3) * 405, w: 300, h: 375, image, verdict: "liked" as const, provenance })),
+    id,
+    workspaceId: campaign.workspaceId,
+    kind: "campaign_moodboard",
+    campaignId: campaign.id,
+    name: `${campaign.name} moodboard`,
+    width: 1100,
+    height: 80 + rows * 405,
+    updatedAt: at,
+    items: images.map((image, i) => ({
+      id: nextId("bi"),
+      boardId: id,
+      kind: "image" as const,
+      x: 40 + (i % 3) * 340,
+      y: 40 + Math.floor(i / 3) * 405,
+      w: 300,
+      h: 375,
+      image,
+      verdict: "liked" as const,
+      provenance,
+    })),
   };
   db.boards.push(board);
   campaign.boardId = id;
@@ -105,11 +122,35 @@ export interface V2Context {
   teamLoad: () => TeamLoadRow[];
 }
 
-export function v2Api(ctx: V2Context): Pick<
+export function v2Api(
+  ctx: V2Context,
+): Pick<
   FumeApi,
-  | "startBrandScan" | "brandScan" | "brandBoard" | "decide" | "catalogue" | "collection" | "addCollection" | "setProductPlace"
-  | "boards" | "board" | "addBoardItem" | "updateBoardItem" | "removeBoardItem" | "startMoodboard" | "setCampaignScope" | "makeDelivery"
-  | "allBrands" | "brandWorkspace" | "studioKit" | "studioSession" | "openStudio" | "generate" | "repair" | "pickGeneration" | "sendToCheck"
+  | "startBrandScan"
+  | "brandScan"
+  | "brandBoard"
+  | "decide"
+  | "catalogue"
+  | "collection"
+  | "addCollection"
+  | "setProductPlace"
+  | "boards"
+  | "board"
+  | "addBoardItem"
+  | "updateBoardItem"
+  | "removeBoardItem"
+  | "startMoodboard"
+  | "setCampaignScope"
+  | "makeDelivery"
+  | "allBrands"
+  | "brandWorkspace"
+  | "studioKit"
+  | "studioSession"
+  | "openStudio"
+  | "generate"
+  | "repair"
+  | "pickGeneration"
+  | "sendToCheck"
 > {
   const { db, wait, now, nextId, emit } = ctx;
   const find = <T extends { id: Id }>(list: T[], id: Id, what: string): T => {
@@ -130,7 +171,9 @@ export function v2Api(ctx: V2Context): Pick<
     const id = db.identity;
     const all = [...id.colours, ...id.typefaces, ...id.logos, ...id.voice, ...id.imagery].map((x) => x.provenance);
     const moodboard = db.boards.find((b) => b.workspaceId === ws() && b.kind === "brand_moodboard")!;
-    const open = all.filter((p) => p.state === "proposed").length + moodboard.items.filter((i) => i.provenance.state === "proposed").length;
+    const open =
+      all.filter((p) => p.state === "proposed").length +
+      moodboard.items.filter((i) => i.provenance.state === "proposed").length;
     return { dna: db.brandDna, identity: id, rules: db.rules, moodboard, open };
   }
 
@@ -164,7 +207,12 @@ export function v2Api(ctx: V2Context): Pick<
     async startBrandScan(input) {
       const base = structuredClone(seed2.scan);
       const pages = base.sources.filter((s) => s.kind === "page");
-      const files = (input.files ?? []).map((f, i) => ({ id: `sf${i}`, label: f.name, kind: "file" as const, state: "waiting" as const }));
+      const files = (input.files ?? []).map((f, i) => ({
+        id: `sf${i}`,
+        label: f.name,
+        kind: "file" as const,
+        state: "waiting" as const,
+      }));
       const sources = input.source === "website" ? pages : input.source === "upload" ? files : [...pages, ...files];
       const scan: BrandScan = {
         ...base,
@@ -199,12 +247,25 @@ export function v2Api(ctx: V2Context): Pick<
       };
       const list = lists[kind];
       if (!list) throw new FumeError("invalid", `Nothing to decide for ${kind}`);
-      const target = find(list as { id: Id; provenance: Provenance }[], id, kind) as { id: Id; provenance: Provenance; hex?: string; statement?: string; name?: string };
+      const target = find(list as { id: Id; provenance: Provenance }[], id, kind) as {
+        id: Id;
+        provenance: Provenance;
+        hex?: string;
+        statement?: string;
+        name?: string;
+      };
       let was: string | undefined;
       if (verdict === "change" && value !== undefined) {
-        if ("hex" in target && target.hex !== undefined) { was = target.hex; target.hex = value; }
-        else if ("statement" in target && target.statement !== undefined) { was = target.statement; target.statement = value; }
-        else if ("name" in target && target.name !== undefined) { was = target.name; target.name = value; }
+        if ("hex" in target && target.hex !== undefined) {
+          was = target.hex;
+          target.hex = value;
+        } else if ("statement" in target && target.statement !== undefined) {
+          was = target.statement;
+          target.statement = value;
+        } else if ("name" in target && target.name !== undefined) {
+          was = target.name;
+          target.name = value;
+        }
       }
       target.provenance = decided(target.provenance, verdict, was);
       return wait(brandBoardView());
@@ -220,15 +281,28 @@ export function v2Api(ctx: V2Context): Pick<
     async collection(collectionId) {
       const collection = find(db.collections, collectionId, "collection");
       const products = db.products.filter((p) => collection.productIds.includes(p.id));
-      const campaigns = db.campaigns.filter((c) => c.collectionIds?.includes(collectionId) || c.productIds.some((id) => collection.productIds.includes(id)));
-      const approved = db.creatives.filter((cr) => campaigns.some((c) => c.id === cr.campaignId) && ["approved", "delivered"].includes(cr.current.state));
-      const deliveries = db.deliveries.filter((d) => d.collectionId === collectionId || campaigns.some((c) => c.id === d.campaignId && d.scope !== "collection"));
+      const campaigns = db.campaigns.filter(
+        (c) => c.collectionIds?.includes(collectionId) || c.productIds.some((id) => collection.productIds.includes(id)),
+      );
+      const approved = db.creatives.filter(
+        (cr) => campaigns.some((c) => c.id === cr.campaignId) && ["approved", "delivered"].includes(cr.current.state),
+      );
+      const deliveries = db.deliveries.filter(
+        (d) =>
+          d.collectionId === collectionId || campaigns.some((c) => c.id === d.campaignId && d.scope !== "collection"),
+      );
       return wait({ collection, products, campaigns, approved, deliveries });
     },
     async addCollection(input) {
-      const c = { id: nextId("cl"), workspaceId: ws(), ...input, provenance: { origin: "customer" as const, state: "approved" as const, by: ctx.me().id, at: now() } };
+      const c = {
+        id: nextId("cl"),
+        workspaceId: ws(),
+        ...input,
+        provenance: { origin: "customer" as const, state: "approved" as const, by: ctx.me().id, at: now() },
+      };
       db.collections.push(c);
-      for (const p of db.products.filter((x) => input.productIds.includes(x.id))) p.collectionIds = [...(p.collectionIds ?? []), c.id];
+      for (const p of db.products.filter((x) => input.productIds.includes(x.id)))
+        p.collectionIds = [...(p.collectionIds ?? []), c.id];
       return wait(c);
     },
     async setProductPlace(productId, change) {
@@ -253,7 +327,12 @@ export function v2Api(ctx: V2Context): Pick<
     async addBoardItem(boardId, input) {
       const b = find(db.boards, boardId, "board");
       const staff = Boolean(ctx.me().staffRole);
-      b.items.push({ ...input, id: nextId("bi"), boardId, provenance: { origin: staff ? "fume" : "customer", state: "approved", by: ctx.me().id, at: now() } });
+      b.items.push({
+        ...input,
+        id: nextId("bi"),
+        boardId,
+        provenance: { origin: staff ? "fume" : "customer", state: "approved", by: ctx.me().id, at: now() },
+      });
       b.updatedAt = now();
       return wait(b);
     },
@@ -274,14 +353,23 @@ export function v2Api(ctx: V2Context): Pick<
         const b = find(db.boards, c.boardId, "board");
         return wait(b);
       }
-      const b = startCampaignBoard(db, c, images, { id: ctx.me().id, staff: Boolean(ctx.me().staffRole) }, now(), nextId);
+      const b = startCampaignBoard(
+        db,
+        c,
+        images,
+        { id: ctx.me().id, staff: Boolean(ctx.me().staffRole) },
+        now(),
+        nextId,
+      );
       emit({ type: "campaign.state", campaign: structuredClone(c) });
       return wait(b);
     },
 
     async setCampaignScope(campaignId, scope) {
       const c = find(db.campaigns, campaignId, "campaign");
-      const fromCollections = db.collections.filter((cl) => scope.collectionIds.includes(cl.id)).flatMap((cl) => cl.productIds);
+      const fromCollections = db.collections
+        .filter((cl) => scope.collectionIds.includes(cl.id))
+        .flatMap((cl) => cl.productIds);
       c.collectionIds = scope.collectionIds;
       c.productIds = [...new Set([...scope.productIds, ...fromCollections])];
       c.updatedAt = now();
@@ -294,15 +382,19 @@ export function v2Api(ctx: V2Context): Pick<
       const collection = collectionId ? find(db.collections, collectionId, "collection") : undefined;
       // round 8 REVIEW (TASK-16): only what is in no delivery yet, so a second delivery never packs the same creatives again
       const packed = new Set(db.deliveries.filter((x) => x.campaignId === campaignId).flatMap((x) => x.creativeIds));
-      const creatives = db.creatives.filter((cr) => cr.campaignId === campaignId && cr.current.state === "approved" && !packed.has(cr.id));
-      if (!creatives.length) throw new FumeError("conflict", "Every approved creative in this campaign is in a delivery already.");
+      const creatives = db.creatives.filter(
+        (cr) => cr.campaignId === campaignId && cr.current.state === "approved" && !packed.has(cr.id),
+      );
+      if (!creatives.length)
+        throw new FumeError("conflict", "Every approved creative in this campaign is in a delivery already.");
       const d: Delivery = {
         id: nextId("dl"),
         campaignId,
         name: collection ? `${c.name} · ${collection.name}` : c.name,
         creativeIds: creatives.map((cr) => cr.id),
         state: "preparing",
-        rightsNote: "For LYSNE's paid and organic channels in the Nordics, no end date. Images with AI people are labelled.",
+        rightsNote:
+          "For LYSNE's paid and organic channels in the Nordics, no end date. Images with AI people are labelled.",
         bytes: creatives.length * 4_800_000,
         createdAt: now(),
         formats: [...new Set(creatives.map((cr) => cr.format))],
@@ -321,7 +413,9 @@ export function v2Api(ctx: V2Context): Pick<
       // Round 12 NUMBERS (DLOAD-2): one count per thing. "In check" is what the Check page lists as waiting (its QA
       // items), for every brand alike; "to send" is the checked work not yet with the customer (waits.toSend), so a
       // card never says "6 ready to release" over a list that says 0.
-      const qaWaiting = ((db as { qaItems?: import("../contract").QaItem[] }).qaItems ?? []).filter((q) => q.state === "waiting");
+      const qaWaiting = ((db as { qaItems?: import("../contract").QaItem[] }).qaItems ?? []).filter(
+        (q) => q.state === "waiting",
+      );
       return wait({
         brands: db.workspaces.map((workspace) => {
           const mine = rows.filter((r) => r.workspace.id === workspace.id);
@@ -329,8 +423,12 @@ export function v2Api(ctx: V2Context): Pick<
             workspace,
             inCheck: qaWaiting.filter((q) => q.workspaceId === workspace.id).length,
             readyToRelease: mine.reduce((n, r) => n + Math.min(r.readyToRelease, r.campaign.waits?.toSend ?? 0), 0),
-            running: db.runs.filter((r) => r.state === "running" && mine.some((m) => m.campaign.id === r.campaignId)).length,
-            nextDue: mine.map((r) => r.campaign.dueAt).filter(Boolean).sort()[0],
+            running: db.runs.filter((r) => r.state === "running" && mine.some((m) => m.campaign.id === r.campaignId))
+              .length,
+            nextDue: mine
+              .map((r) => r.campaign.dueAt)
+              .filter(Boolean)
+              .sort()[0],
             blocked: mine.filter((r) => r.campaign.state === "awaiting_input").length,
           };
         }),
@@ -342,8 +440,17 @@ export function v2Api(ctx: V2Context): Pick<
         // Round 12 (DLOAD-13, DLOAD-21): due by the plan's delivery date, not the go-live; before any creative is made
         // the total is what the plan holds ("Planned: 9 creatives"), never "0 of 0".
         deliveriesDue: rows
-          .filter((r) => (r.campaign.waits?.delivery ?? r.campaign.dueAt) && !["delivered", "closed"].includes(r.campaign.state))
-          .map((r) => ({ campaign: r.campaign, workspace: r.workspace, dueAt: r.campaign.waits?.delivery ?? r.campaign.dueAt, approved: r.campaign.counts.approved, total: r.campaign.counts.creatives || (r.campaign.waits?.planned ?? 0) }))
+          .filter(
+            (r) =>
+              (r.campaign.waits?.delivery ?? r.campaign.dueAt) && !["delivered", "closed"].includes(r.campaign.state),
+          )
+          .map((r) => ({
+            campaign: r.campaign,
+            workspace: r.workspace,
+            dueAt: r.campaign.waits?.delivery ?? r.campaign.dueAt,
+            approved: r.campaign.counts.approved,
+            total: r.campaign.counts.creatives || (r.campaign.waits?.planned ?? 0),
+          }))
           .sort((a, b) => (a.dueAt ?? "").localeCompare(b.dueAt ?? "")),
         team: ctx.teamLoad(),
       });
@@ -357,7 +464,11 @@ export function v2Api(ctx: V2Context): Pick<
         campaigns,
         engineOutput: db.runs
           .filter((r) => campaigns.some((c) => c.campaign.id === r.campaignId))
-          .map((run) => ({ run, campaign: find(db.campaigns, run.campaignId, "campaign"), generations: db.sessions.filter((s) => s.campaignId === run.campaignId).flatMap((s) => s.generations) })),
+          .map((run) => ({
+            run,
+            campaign: find(db.campaigns, run.campaignId, "campaign"),
+            generations: db.sessions.filter((s) => s.campaignId === run.campaignId).flatMap((s) => s.generations),
+          })),
         queue: ctx.queue().filter((q) => q.workspace.id === workspaceId),
         sessions: db.sessions.filter((s) => s.workspaceId === workspaceId),
         boards: db.boards.filter((b) => b.workspaceId === workspaceId),
@@ -370,7 +481,9 @@ export function v2Api(ctx: V2Context): Pick<
         cast: db.cast.filter((c) => !c.workspaceId || c.workspaceId === workspaceId),
         scenes: db.scenes.filter((s) => s.workspaceId === workspaceId),
         products: db.products.filter((p) => p.workspaceId === workspaceId),
-        references: db.boards.filter((b) => b.workspaceId === workspaceId).flatMap((b) => b.items.filter((i) => i.image && i.verdict !== "disliked").map((i) => i.image!)),
+        references: db.boards
+          .filter((b) => b.workspaceId === workspaceId)
+          .flatMap((b) => b.items.filter((i) => i.image && i.verdict !== "disliked").map((i) => i.image!)),
       });
     },
     async studioSession(sessionId) {
@@ -379,13 +492,17 @@ export function v2Api(ctx: V2Context): Pick<
     },
     async openStudio({ workspaceId, campaignId, slot, fromGenerationId }) {
       ctx.mustStaff();
-      const from = fromGenerationId ? db.sessions.flatMap((s) => s.generations).find((g) => g.id === fromGenerationId) : undefined;
+      const from = fromGenerationId
+        ? db.sessions.flatMap((s) => s.generations).find((g) => g.id === fromGenerationId)
+        : undefined;
       const s: StudioSession = {
         id: nextId("ss"),
         workspaceId,
         campaignId,
         slot,
-        recipe: from ? structuredClone(from.recipe) : { mode: "free", castIds: [], references: [], format: "feed", count: 4 },
+        recipe: from
+          ? structuredClone(from.recipe)
+          : { mode: "free", castIds: [], references: [], format: "feed", count: 4 },
         generations: from ? [{ ...structuredClone(from), id: nextId("g"), state: "candidate", branch: 1 }] : [],
         by: ctx.me().id,
         updatedAt: now(),
@@ -400,17 +517,31 @@ export function v2Api(ctx: V2Context): Pick<
       const branch = Math.max(0, ...s.generations.map((g) => g.branch)) + 1;
       const tiles = ["05-06", "04-02", "08-06", "03-05", "05-03", "09-13"];
       const made: Generation[] = Array.from({ length: Math.min(recipe.count, 6) }, (_, i) => ({
-        id: nextId("g"), sessionId, branch, image: seed.img(tiles[(i + branch) % tiles.length], recipe.format), recipe: structuredClone(recipe),
-        evaluation: { productTruth: i === 1 ? "flag" : "pass", brandRules: "pass", artefacts: i === 2 ? "minor" : "none", notes: i === 1 ? ["Label edge soft"] : [] },
-        cost: 0.12, state: "making", at: now(),
+        id: nextId("g"),
+        sessionId,
+        branch,
+        image: seed.img(tiles[(i + branch) % tiles.length], recipe.format),
+        recipe: structuredClone(recipe),
+        evaluation: {
+          productTruth: i === 1 ? "flag" : "pass",
+          brandRules: "pass",
+          artefacts: i === 2 ? "minor" : "none",
+          notes: i === 1 ? ["Label edge soft"] : [],
+        },
+        cost: 0.12,
+        state: "making",
+        at: now(),
       }));
       s.generations.push(...made);
       s.updatedAt = now();
       made.forEach((g, i) => {
-        const t = setTimeout(() => {
-          g.state = "candidate";
-          emit({ type: "generation.state", generation: structuredClone(g) });
-        }, 900 * (i + 1));
+        const t = setTimeout(
+          () => {
+            g.state = "candidate";
+            emit({ type: "generation.state", generation: structuredClone(g) });
+          },
+          900 * (i + 1),
+        );
         (t as unknown as { unref?: () => void }).unref?.();
       });
       return wait(s);
@@ -420,7 +551,15 @@ export function v2Api(ctx: V2Context): Pick<
       const s = sessionOf(sessionId);
       const from = find(s.generations, generationId, "generation");
       const branch = Math.max(...s.generations.map((g) => g.branch)) + 1;
-      const g: Generation = { ...structuredClone(from), id: nextId("g"), branch, state: "making", repair: what, at: now(), evaluation: { ...from.evaluation, productTruth: "pass", notes: [] } };
+      const g: Generation = {
+        ...structuredClone(from),
+        id: nextId("g"),
+        branch,
+        state: "making",
+        repair: what,
+        at: now(),
+        evaluation: { ...from.evaluation, productTruth: "pass", notes: [] },
+      };
       s.generations.push(g);
       const t = setTimeout(() => {
         g.state = "candidate";

@@ -38,16 +38,30 @@ function save(href: string, name: string) {
 const fileName = (c: Creative) => `${c.name}.${c.current.image.split(".").pop()?.split("?")[0] || "jpg"}`;
 
 /** "Autumn launch" → "Autumn-launch", "Feed 4:5" → "Feed-4x5": safe on every disk. */
-const slug = (s: string) => s.trim().replace(/:/g, "x").replace(/[\\/?%*|"<>]/g, "").replace(/\s+/g, "-");
+const slug = (s: string) =>
+  s
+    .trim()
+    .replace(/:/g, "x")
+    .replace(/[\\/?%*|"<>]/g, "")
+    .replace(/\s+/g, "-");
 
 /** The zip's name: the brand, then the delivery's name, then the format when it is one format.
  *  "LYSNE" + "Autumn launch · Masters" → LYSNE_Autumn-launch_Masters.zip; with Feed → LYSNE_Autumn-launch_Masters_Feed-4x5.zip. */
 export function zipName(brand: string, delivery: string, format?: Format): string {
-  const parts = [brand.toUpperCase(), ...delivery.split(" · "), ...(format ? [`${copy.format[format].label} ${copy.format[format].ratio}`] : [])];
+  const parts = [
+    brand.toUpperCase(),
+    ...delivery.split(" · "),
+    ...(format ? [`${copy.format[format].label} ${copy.format[format].ratio}`] : []),
+  ];
   return `${parts.map(slug).filter(Boolean).join("_")}.zip`;
 }
 
-export function useDeliveryDownload(deliveryId: Id | undefined, totalBytes: number, totalCount: number, deliveryName = "Delivery") {
+export function useDeliveryDownload(
+  deliveryId: Id | undefined,
+  totalBytes: number,
+  totalCount: number,
+  deliveryName = "Delivery",
+) {
   const api = useApi();
   const toast = useToast();
   const brand = useSession().data?.workspace.brandName ?? "Fume";
@@ -102,7 +116,11 @@ export function useDeliveryDownload(deliveryId: Id | undefined, totalBytes: numb
       setTaken((s) => new Set(s).add(key));
       t.update({ type: "done", title: `${copy.creatives(n)} downloaded`, meta: size(shareOf(n)) });
     } catch {
-      t.update({ type: "error", title: "The download didn’t start. Your creatives are safe; try again in a moment.", meta: undefined });
+      t.update({
+        type: "error",
+        title: "The download didn’t start. Your creatives are safe; try again in a moment.",
+        meta: undefined,
+      });
     } finally {
       setJob(null);
     }

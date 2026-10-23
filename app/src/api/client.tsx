@@ -120,7 +120,11 @@ export function restartDemo(fresh: boolean) {
 
 export function ApiProvider({ children }: { children: ReactNode }) {
   const api = useMemo(createApi, []);
-  const queryClient = useMemo(() => new QueryClient({ defaultOptions: { queries: { staleTime: 15_000, retry: 1, refetchOnWindowFocus: false } } }), []);
+  const queryClient = useMemo(
+    () =>
+      new QueryClient({ defaultOptions: { queries: { staleTime: 15_000, retry: 1, refetchOnWindowFocus: false } } }),
+    [],
+  );
   return (
     <ApiContext.Provider value={api}>
       <QueryClientProvider client={queryClient}>

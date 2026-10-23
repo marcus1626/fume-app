@@ -12,7 +12,17 @@
 // item can be dragged, everything else pans. Arrow keys move the selected item (Shift for bigger steps), + and −
 // zoom, Shift+1 fits, Escape lets go.
 import { cx, Icon } from "@fume/ui";
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import type { Board as BoardData, BoardItem } from "../../contract";
 
 export interface BoardViewHandle {
@@ -61,7 +71,8 @@ const PAD = 48;
 const TAP = 4;
 const clamp = (k: number) => Math.min(MAX_K, Math.max(MIN_K, k));
 
-const editableTarget = (t: EventTarget | null) => t instanceof HTMLElement && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(t.tagName));
+const editableTarget = (t: EventTarget | null) =>
+  t instanceof HTMLElement && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(t.tagName));
 
 export function defaultItemLabel(item: BoardItem): string {
   const proposal = item.provenance.state === "proposed" ? ", found by Fume" : "";
@@ -79,7 +90,18 @@ export function defaultItemLabel(item: BoardItem): string {
 }
 
 export const BoardView = forwardRef<BoardViewHandle, BoardViewProps>(function BoardView(
-  { board, label, selectedId = null, onSelect, onMove, editable = false, onZoomChange, embedded, itemLabel = defaultItemLabel, children },
+  {
+    board,
+    label,
+    selectedId = null,
+    onSelect,
+    onMove,
+    editable = false,
+    onZoomChange,
+    embedded,
+    itemLabel = defaultItemLabel,
+    children,
+  },
   ref,
 ) {
   const frame = useRef<HTMLDivElement>(null);
@@ -118,10 +140,12 @@ export const BoardView = forwardRef<BoardViewHandle, BoardViewProps>(function Bo
   // A saved board that agrees with a dropped place lets the local place go.
   useEffect(() => {
     setMoved((m) => {
-      const left = Object.fromEntries(Object.entries(m).filter(([id, p]) => {
-        const it = board.items.find((x) => x.id === id);
-        return it && (it.x !== p.x || it.y !== p.y) && dragging !== id;
-      }));
+      const left = Object.fromEntries(
+        Object.entries(m).filter(([id, p]) => {
+          const it = board.items.find((x) => x.id === id);
+          return it && (it.x !== p.x || it.y !== p.y) && dragging !== id;
+        }),
+      );
       return Object.keys(left).length === Object.keys(m).length ? m : left;
     });
   }, [board, dragging]);
@@ -148,7 +172,12 @@ export const BoardView = forwardRef<BoardViewHandle, BoardViewProps>(function Bo
       const list = board.items.filter((i) => i.provenance.state !== "removed");
       const box = list.length
         ? list.reduce(
-            (b, i) => ({ x0: Math.min(b.x0, i.x), y0: Math.min(b.y0, i.y), x1: Math.max(b.x1, i.x + i.w), y1: Math.max(b.y1, i.y + i.h) }),
+            (b, i) => ({
+              x0: Math.min(b.x0, i.x),
+              y0: Math.min(b.y0, i.y),
+              x1: Math.max(b.x1, i.x + i.w),
+              y1: Math.max(b.y1, i.y + i.h),
+            }),
             { x0: Infinity, y0: Infinity, x1: -Infinity, y1: -Infinity },
           )
         : { x0: 0, y0: 0, x1: board.width, y1: board.height };
@@ -243,7 +272,12 @@ export const BoardView = forwardRef<BoardViewHandle, BoardViewProps>(function Bo
   const startPinch = () => {
     const [a, b] = [...pointers.current.values()];
     if (!a || !b) return;
-    gesture.current = { type: "pinch", dist: Math.hypot(a.x - b.x, a.y - b.y) || 1, mid: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }, view: viewRef.current };
+    gesture.current = {
+      type: "pinch",
+      dist: Math.hypot(a.x - b.x, a.y - b.y) || 1,
+      mid: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 },
+      view: viewRef.current,
+    };
     setDragging(null);
   };
 
@@ -260,10 +294,28 @@ export const BoardView = forwardRef<BoardViewHandle, BoardViewProps>(function Bo
     const touch = e.pointerType === "touch";
     if (item && editable && !space && e.button === 0 && item.kind !== "section" && (!touch || selectedId === item.id)) {
       const at = place(item);
-      gesture.current = { type: "drag", id: item.id, sx: p.x, sy: p.y, ix: at.x, iy: at.y, x: at.x, y: at.y, moved: false };
+      gesture.current = {
+        type: "drag",
+        id: item.id,
+        sx: p.x,
+        sy: p.y,
+        ix: at.x,
+        iy: at.y,
+        x: at.x,
+        y: at.y,
+        moved: false,
+      };
       onSelect?.(item.id);
     } else {
-      gesture.current = { type: "pan", sx: p.x, sy: p.y, vx: viewRef.current.x, vy: viewRef.current.y, moved: false, itemId: id };
+      gesture.current = {
+        type: "pan",
+        sx: p.x,
+        sy: p.y,
+        vx: viewRef.current.x,
+        vy: viewRef.current.y,
+        moved: false,
+        itemId: id,
+      };
     }
   };
 
@@ -308,7 +360,17 @@ export const BoardView = forwardRef<BoardViewHandle, BoardViewProps>(function Bo
     if (g?.type === "pinch") {
       // One finger left after a pinch pans on from where it is.
       const rest = [...pointers.current.values()][0];
-      gesture.current = rest ? { type: "pan", sx: rest.x, sy: rest.y, vx: viewRef.current.x, vy: viewRef.current.y, moved: true, itemId: null } : null;
+      gesture.current = rest
+        ? {
+            type: "pan",
+            sx: rest.x,
+            sy: rest.y,
+            vx: viewRef.current.x,
+            vy: viewRef.current.y,
+            moved: true,
+            itemId: null,
+          }
+        : null;
       return;
     }
     if (pointers.current.size > 0) return;
@@ -376,7 +438,13 @@ export const BoardView = forwardRef<BoardViewHandle, BoardViewProps>(function Bo
         <div className="ui-board-world" style={worldStyle}>
           {ordered.map((item) => {
             const at = place(item);
-            const style = { "--x": at.x, "--y": at.y, "--w": item.w, "--h": item.h, ...(item.hex ? { "--swatch": item.hex } : {}) } as CSSProperties;
+            const style = {
+              "--x": at.x,
+              "--y": at.y,
+              "--w": item.w,
+              "--h": item.h,
+              ...(item.hex ? { "--swatch": item.hex } : {}),
+            } as CSSProperties;
             const proposed = item.provenance.state === "proposed";
             return (
               <div
@@ -422,7 +490,9 @@ function ItemBody({ item }: { item: BoardItem }) {
   switch (item.kind) {
     case "image":
     case "creative":
-      return item.image ? <img className="ui-board-image" src={item.image} alt="" draggable={false} loading="lazy" /> : null;
+      return item.image ? (
+        <img className="ui-board-image" src={item.image} alt="" draggable={false} loading="lazy" />
+      ) : null;
     case "note":
       return <p className="ui-board-note-text">{item.text}</p>;
     case "section":

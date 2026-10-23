@@ -310,14 +310,7 @@ export interface Direction {
 
 /** ARCHITECTURE §5.2. The customer never sees making, in_check or correcting as a creative, only as counts. */
 export type VersionState =
-  | "making"
-  | "in_check"
-  | "correcting"
-  | "held"
-  | "checked"
-  | "changes_requested"
-  | "approved"
-  | "delivered";
+  "making" | "in_check" | "correcting" | "held" | "checked" | "changes_requested" | "approved" | "delivered";
 
 export interface CreativeVersion {
   id: Id;
@@ -504,12 +497,23 @@ export type MessageCard =
   /** Round 10 (FLOWS §22): the plan, written or ready; the card opens it. */
   | { kind: "plan"; campaignId: Id; version: number }
   | { kind: "run"; runId: Id }
-  | { kind: "question"; question: string; why: string; options?: string[]; /** v7: Fume asks for the product with its picture grid (walk-through Must 2). */ productIds?: Id[] }
+  | {
+      kind: "question";
+      question: string;
+      why: string;
+      options?: string[];
+      /** v7: Fume asks for the product with its picture grid (walk-through Must 2). */ productIds?: Id[];
+    }
   | { kind: "creatives"; campaignId: Id; creativeIds: Id[] }
   /** v4: Fume hands the conversation to a person at Fume (FLOWS §21). */
   | { kind: "handover"; userId: Id; reason: string }
   /** v4: Fume offers meeting times (FLOWS §21). */
-  | { kind: "meeting"; meetingId?: Id; slots: Instant[]; /** v7: what the customer asked to talk about ("Christmas plans"). */ topic?: string }
+  | {
+      kind: "meeting";
+      meetingId?: Id;
+      slots: Instant[];
+      /** v7: what the customer asked to talk about ("Christmas plans"). */ topic?: string;
+    }
   /** Round 13 CHAT (#15, #16): a campaign, plan, creative, product or collection Fume points at; it opens in the panel. */
   | { kind: "link"; link: ChatLink }
   /** Round 13 CHAT (#16): what waits on her, or this month in numbers, read from the same source as Home. */
@@ -546,13 +550,7 @@ export interface Thread {
 }
 
 export type NotificationKind =
-  | "checked"
-  | "engine_done"
-  | "changes_asked"
-  | "mention"
-  | "waiting_on_you"
-  | "delivered"
-  | "held";
+  "checked" | "engine_done" | "changes_asked" | "mention" | "waiting_on_you" | "delivered" | "held";
 
 export interface Notification {
   id: Id;
@@ -668,7 +666,8 @@ export interface BrandIdentity {
   imagery: BrandImage[];
 }
 
-export type IdentityKind = "colour" | "typeface" | "logo" | "voice" | "image" | "rule" | "product" | "collection" | "board_item";
+export type IdentityKind =
+  "colour" | "typeface" | "logo" | "voice" | "image" | "rule" | "product" | "collection" | "board_item";
 
 // ─── v2 §3.1 Catalogue ──────────────────────────────────────────────────────
 
@@ -873,7 +872,16 @@ export type StudioKind = "render" | "design" | "video";
 
 /** The Studio's control library: every mode variable is edited with one of these (FLOWS §9.3). */
 export type ControlKind =
-  | "slider" | "segmented" | "select" | "swatch" | "toggle" | "angle" | "lens" | "chips" | "text" | "number"
+  | "slider"
+  | "segmented"
+  | "select"
+  | "swatch"
+  | "toggle"
+  | "angle"
+  | "lens"
+  | "chips"
+  | "text"
+  | "number"
   /** v4: the advanced light board (FLOWS §18). */
   | "lightboard";
 
@@ -1395,9 +1403,34 @@ export interface CalendarEntry {
 // produkt, er masse data Engine krever for å få fidelity, inkludert mål og alt"). Research and sources:
 // /mnt/project-files/app/product-data-research.md.
 
-export type SpecFieldType = "text" | "number" | "dimensions" | "colour" | "material" | "finish" | "choice" | "list" | "image" | "file" | "blend" | "measurements" | "parts";
+export type SpecFieldType =
+  | "text"
+  | "number"
+  | "dimensions"
+  | "colour"
+  | "material"
+  | "finish"
+  | "choice"
+  | "list"
+  | "image"
+  | "file"
+  | "blend"
+  | "measurements"
+  | "parts";
 
-export type SpecGroupId = "identity" | "size" | "materials" | "packaging" | "label" | "variants" | "use" | "construction" | "decoration" | "formula" | "trims" | "care";
+export type SpecGroupId =
+  | "identity"
+  | "size"
+  | "materials"
+  | "packaging"
+  | "label"
+  | "variants"
+  | "use"
+  | "construction"
+  | "decoration"
+  | "formula"
+  | "trims"
+  | "care";
 
 export type Finish = "matte" | "satin" | "gloss" | "frosted" | "metallic" | "brushed" | "soft-touch" | "textured";
 
@@ -1475,7 +1508,8 @@ export interface ColourValue {
   pantone?: string;
 }
 
-export type SpecValue = string | number | string[] | Dimensions | ColourValue | ColourValue[] | FibreBlend | MeasureTable | PartsValue;
+export type SpecValue =
+  string | number | string[] | Dimensions | ColourValue | ColourValue[] | FibreBlend | MeasureTable | PartsValue;
 
 export interface SpecEntry {
   fieldId: Id;
@@ -2244,7 +2278,8 @@ export interface BrandRule {
 }
 
 /** #41: one angle of an AI model's sheet. Every angle is shot in a white studio in the same plain clothes. */
-export type ModelAngle = "front" | "three-quarter" | "profile" | "back" | "face" | "face-three-quarter" | "face-profile";
+export type ModelAngle =
+  "front" | "three-quarter" | "profile" | "back" | "face" | "face-three-quarter" | "face-profile";
 export interface ModelSpec {
   ageRange: string;
   height: string;
@@ -2281,7 +2316,14 @@ export interface VoiceBook {
   /** What Fume found for each part, in one line, where, and whether she confirmed it. */
   parts: { id: VoicePartId; found: string; provenance: Provenance; note?: string }[];
   identity: { who: string; believe: string[]; personality: string[] };
-  speak: { traits: VoiceTrait[]; use: string[]; avoid: string[]; sentences: string; formality: string; languages: string };
+  speak: {
+    traits: VoiceTrait[];
+    use: string[];
+    avoid: string[];
+    sentences: string;
+    formality: string;
+    languages: string;
+  };
   rules: { must: string[]; never: string[]; claims: string[] };
   audience: { who: string; cares: string[]; notFor: string };
   examples: VoiceExample[];

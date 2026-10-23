@@ -79,7 +79,10 @@ export function CollectionPage() {
   const c = view.data?.collection;
   const name = c?.name ?? "Collection";
   // Only the campaigns that belong here, and what they made (DLOAD-21).
-  const campaigns = useMemo(() => (view.data && c ? view.data.campaigns.filter((cp) => campaignOfCollection(cp, c)) : []), [view.data, c]);
+  const campaigns = useMemo(
+    () => (view.data && c ? view.data.campaigns.filter((cp) => campaignOfCollection(cp, c)) : []),
+    [view.data, c],
+  );
   const named = useCustomerNamesAcross(campaigns);
   const approvedNamed = useMemo(
     () => (view.data?.approved ?? []).filter((cr) => campaigns.some((cp) => cp.id === cr.campaignId)).map(named),
@@ -88,7 +91,8 @@ export function CollectionPage() {
   // What is approved and in no delivery yet, per campaign: only that is packed, and only once everything in that
   // campaign is approved, as on the campaign's Delivery tab (TASK-16: never a pill she must press half way).
   const packed = useMemo(() => new Set((allDeliveries.data ?? []).flatMap((d) => d.creativeIds)), [allDeliveries.data]);
-  const waiting = (cp: Campaign) => approvedNamed.filter((cr) => cr.campaignId === cp.id && cr.current.state === "approved" && !packed.has(cr.id));
+  const waiting = (cp: Campaign) =>
+    approvedNamed.filter((cr) => cr.campaignId === cp.id && cr.current.state === "approved" && !packed.has(cr.id));
   const ready = campaigns.filter((cp) => waiting(cp).length > 0 && cp.counts.approved >= cp.counts.creatives);
 
   function deliver(campaign: Campaign) {
@@ -129,7 +133,15 @@ export function CollectionPage() {
         title={name}
         back={<Back to="/brand/products" label="Products" />}
         description={c?.description}
-        meta={c ? [collectionKind[c.kind], ...(seasonDates(c) ? [seasonDates(c)!] : []), copy.count(c.productIds.length, "product")] : undefined}
+        meta={
+          c
+            ? [
+                collectionKind[c.kind],
+                ...(seasonDates(c) ? [seasonDates(c)!] : []),
+                copy.count(c.productIds.length, "product"),
+              ]
+            : undefined
+        }
         primaryAction={
           canDecide && c && ready.length > 0
             ? {
@@ -151,129 +163,161 @@ export function CollectionPage() {
       <Query query={view} loading="Loading the collection">
         {({ collection, products, deliveries: all }) => {
           const approved = approvedNamed;
-          const deliveries = all.filter((d) => d.collectionId === collection.id || campaigns.some((cp) => cp.id === d.campaignId && d.scope !== "collection"));
+          const deliveries = all.filter(
+            (d) =>
+              d.collectionId === collection.id ||
+              campaigns.some((cp) => cp.id === d.campaignId && d.scope !== "collection"),
+          );
           return (
-          <>
-            {collection.provenance.state === "proposed" && (
-              <Proposal state="proposed">
-                <p className="ui-app-section-text">
-                  Fume grouped these products from your website. Keep it as a collection, give it your own name, or remove it; the products stay
-                  either way.
-                </p>
-                <ProposalFoot>
-                  <ProvenanceTag provenance={collection.provenance} />
-                  {canDecide && <ProposalActions disabled={decide.isPending} onKeep={() => onDecide("keep")} onChange={() => onDecide("change")} onRemove={() => onDecide("remove")} />}
-                </ProposalFoot>
-              </Proposal>
-            )}
-
-            <Section title="Products" meta={products.length} titleId="collection-products">
-              {products.length === 0 ? (
-                <Nothing icon="package" title="No products in it yet" text="Add products to it from their menu in the catalogue." />
-              ) : (
-                <ul className="ui-catalogue-grid" aria-label={`Products in ${collection.name}`}>
-                  {products.map((p) => (
-                    <li key={p.id}>
-                      <ProductCard product={p} categories={catalogue.data?.categories ?? []} collections={catalogue.data?.collections ?? []} canEdit={canEdit} />
-                    </li>
-                  ))}
-                </ul>
+            <>
+              {collection.provenance.state === "proposed" && (
+                <Proposal state="proposed">
+                  <p className="ui-app-section-text">
+                    Fume grouped these products from your website. Keep it as a collection, give it your own name, or
+                    remove it; the products stay either way.
+                  </p>
+                  <ProposalFoot>
+                    <ProvenanceTag provenance={collection.provenance} />
+                    {canDecide && (
+                      <ProposalActions
+                        disabled={decide.isPending}
+                        onKeep={() => onDecide("keep")}
+                        onChange={() => onDecide("change")}
+                        onRemove={() => onDecide("remove")}
+                      />
+                    )}
+                  </ProposalFoot>
+                </Proposal>
               )}
-            </Section>
 
-            <div className="ui-app-cols">
-              <div className="ui-app-stack">
-                <Section
-                  title="Approved for it"
-                  meta={approved.length}
-                  titleId="collection-approved"
-                  text={approved.length ? `Everything approved for ${collection.name}, across campaigns.` : undefined}
-                >
-                  {approved.length === 0 ? (
-                    <Nothing icon="image" title="Nothing approved yet" text={`When you approve creatives of these products, they gather here, ready to deliver as ${collection.name}.`} />
-                  ) : (
-                    // Round 13 (robot note 08): each campaign names its creatives Feed 1, Feed 2…, so across campaigns the
-                    // names repeat; they are grouped under their campaign's name
-                    campaigns
-                      .map((cp) => ({ cp, items: approvedNamed.filter((cr) => cr.campaignId === cp.id) }))
-                      .filter((g) => g.items.length > 0)
-                      .map(({ cp, items }) => (
-                        <section key={cp.id} className="ui-product-group" aria-labelledby={`approved-${cp.id}`}>
-                          <div className="ui-image-group-head">
-                            <h3 className="ui-image-group-title" id={`approved-${cp.id}`}>
-                              {cp.name} <span className="ui-image-group-count">{items.length}</span>
-                            </h3>
-                          </div>
-                          <CreativeGrid aria-label={`Approved for ${collection.name} in ${cp.name}`}>
-                            {items.map((cr) => (
-                              <CreativeTile key={cr.id} src={cr.current.image} alt={`${cr.title}, ${cp.name}`} format={cr.format} label={cr.title} caption={formatLine(cr)} onOpen={() => viewer.open(cr.id)} />
-                            ))}
-                          </CreativeGrid>
-                        </section>
-                      ))
-                  )}
-                </Section>
+              <Section title="Products" meta={products.length} titleId="collection-products">
+                {products.length === 0 ? (
+                  <Nothing
+                    icon="package"
+                    title="No products in it yet"
+                    text="Add products to it from their menu in the catalogue."
+                  />
+                ) : (
+                  <ul className="ui-catalogue-grid" aria-label={`Products in ${collection.name}`}>
+                    {products.map((p) => (
+                      <li key={p.id}>
+                        <ProductCard
+                          product={p}
+                          categories={catalogue.data?.categories ?? []}
+                          collections={catalogue.data?.collections ?? []}
+                          canEdit={canEdit}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </Section>
+
+              <div className="ui-app-cols">
+                <div className="ui-app-stack">
+                  <Section
+                    title="Approved for it"
+                    meta={approved.length}
+                    titleId="collection-approved"
+                    text={approved.length ? `Everything approved for ${collection.name}, across campaigns.` : undefined}
+                  >
+                    {approved.length === 0 ? (
+                      <Nothing
+                        icon="image"
+                        title="Nothing approved yet"
+                        text={`When you approve creatives of these products, they gather here, ready to deliver as ${collection.name}.`}
+                      />
+                    ) : (
+                      // Round 13 (robot note 08): each campaign names its creatives Feed 1, Feed 2…, so across campaigns the
+                      // names repeat; they are grouped under their campaign's name
+                      campaigns
+                        .map((cp) => ({ cp, items: approvedNamed.filter((cr) => cr.campaignId === cp.id) }))
+                        .filter((g) => g.items.length > 0)
+                        .map(({ cp, items }) => (
+                          <section key={cp.id} className="ui-product-group" aria-labelledby={`approved-${cp.id}`}>
+                            <div className="ui-image-group-head">
+                              <h3 className="ui-image-group-title" id={`approved-${cp.id}`}>
+                                {cp.name} <span className="ui-image-group-count">{items.length}</span>
+                              </h3>
+                            </div>
+                            <CreativeGrid aria-label={`Approved for ${collection.name} in ${cp.name}`}>
+                              {items.map((cr) => (
+                                <CreativeTile
+                                  key={cr.id}
+                                  src={cr.current.image}
+                                  alt={`${cr.title}, ${cp.name}`}
+                                  format={cr.format}
+                                  label={cr.title}
+                                  caption={formatLine(cr)}
+                                  onOpen={() => viewer.open(cr.id)}
+                                />
+                              ))}
+                            </CreativeGrid>
+                          </section>
+                        ))
+                    )}
+                  </Section>
+                </div>
+
+                <aside className="ui-app-stack" aria-label={`About ${collection.name}`}>
+                  <Section title="Campaigns" meta={campaigns.length} titleId="collection-campaigns">
+                    {campaigns.length === 0 ? (
+                      <p className="ui-app-section-text">No campaign uses it yet. A new campaign can take it whole.</p>
+                    ) : (
+                      <ItemGroup as="ul">
+                        {campaigns.map((cp) => (
+                          <Item key={cp.id} as="li" size="sm" asChild>
+                            <Link to={`/campaigns/${cp.id}`}>
+                              {cp.cover ? (
+                                <ItemMedia variant="image">
+                                  <ItemMediaImage src={cp.cover} alt="" />
+                                </ItemMedia>
+                              ) : (
+                                <ItemMedia variant="icon">
+                                  <Icon name="megaphone" />
+                                </ItemMedia>
+                              )}
+                              <ItemContent>
+                                <ItemTitle>{cp.name}</ItemTitle>
+                                <ItemDescription>{copy.campaignStatus(cp).words}</ItemDescription>
+                              </ItemContent>
+                            </Link>
+                          </Item>
+                        ))}
+                      </ItemGroup>
+                    )}
+                  </Section>
+
+                  <Section title="Deliveries" meta={deliveries.length} titleId="collection-deliveries">
+                    {deliveries.length === 0 ? (
+                      <p className="ui-app-section-text">No delivery yet.</p>
+                    ) : (
+                      <ItemGroup as="ul">
+                        {deliveries.map((d) => (
+                          <Item key={d.id} as="li" size="sm" asChild>
+                            <Link to={`/deliveries/${d.id}`} title={d.name}>
+                              <ItemContent className="ui-collection-delivery">
+                                <ItemTitle>{d.name}</ItemTitle>
+                                <ItemDescription>
+                                  {deliveryLine(d)
+                                    .split(" · ")
+                                    .map((v, i) => (
+                                      <span key={i}>{i > 0 ? ` · ${v}` : v}</span>
+                                    ))}
+                                </ItemDescription>
+                              </ItemContent>
+                              <ItemActions>
+                                <DeliveryBadge state={d.state} />
+                              </ItemActions>
+                            </Link>
+                          </Item>
+                        ))}
+                      </ItemGroup>
+                    )}
+                  </Section>
+                </aside>
               </div>
-
-              <aside className="ui-app-stack" aria-label={`About ${collection.name}`}>
-                <Section title="Campaigns" meta={campaigns.length} titleId="collection-campaigns">
-                  {campaigns.length === 0 ? (
-                    <p className="ui-app-section-text">No campaign uses it yet. A new campaign can take it whole.</p>
-                  ) : (
-                    <ItemGroup as="ul">
-                      {campaigns.map((cp) => (
-                        <Item key={cp.id} as="li" size="sm" asChild>
-                          <Link to={`/campaigns/${cp.id}`}>
-                            {cp.cover ? (
-                              <ItemMedia variant="image">
-                                <ItemMediaImage src={cp.cover} alt="" />
-                              </ItemMedia>
-                            ) : (
-                              <ItemMedia variant="icon">
-                                <Icon name="megaphone" />
-                              </ItemMedia>
-                            )}
-                            <ItemContent>
-                              <ItemTitle>{cp.name}</ItemTitle>
-                              <ItemDescription>{copy.campaignStatus(cp).words}</ItemDescription>
-                            </ItemContent>
-                          </Link>
-                        </Item>
-                      ))}
-                    </ItemGroup>
-                  )}
-                </Section>
-
-                <Section title="Deliveries" meta={deliveries.length} titleId="collection-deliveries">
-                  {deliveries.length === 0 ? (
-                    <p className="ui-app-section-text">No delivery yet.</p>
-                  ) : (
-                    <ItemGroup as="ul">
-                      {deliveries.map((d) => (
-                        <Item key={d.id} as="li" size="sm" asChild>
-                          <Link to={`/deliveries/${d.id}`} title={d.name}>
-                            <ItemContent className="ui-collection-delivery">
-                              <ItemTitle>{d.name}</ItemTitle>
-                              <ItemDescription>
-                                {deliveryLine(d)
-                                  .split(" · ")
-                                  .map((v, i) => (
-                                    <span key={i}>{i > 0 ? ` · ${v}` : v}</span>
-                                  ))}
-                              </ItemDescription>
-                            </ItemContent>
-                            <ItemActions>
-                              <DeliveryBadge state={d.state} />
-                            </ItemActions>
-                          </Link>
-                        </Item>
-                      ))}
-                    </ItemGroup>
-                  )}
-                </Section>
-              </aside>
-            </div>
-          </>
+            </>
           );
         }}
       </Query>
@@ -290,9 +334,17 @@ export function CollectionPage() {
         />
       )}
       {viewer.value && view.data && approvedNamed.some((cr) => cr.id === viewer.value) && (
-        <ReviewViewer set={approvedNamed} campaigns={campaigns} creativeId={viewer.value} onMove={viewer.move} onClose={viewer.close} />
+        <ReviewViewer
+          set={approvedNamed}
+          campaigns={campaigns}
+          creativeId={viewer.value}
+          onMove={viewer.move}
+          onClose={viewer.close}
+        />
       )}
-      {canDecide && <ChangeCollectionDialog collection={changing} onOpenChange={(open) => !open && setChanging(null)} />}
+      {canDecide && (
+        <ChangeCollectionDialog collection={changing} onOpenChange={(open) => !open && setChanging(null)} />
+      )}
     </Page>
   );
 }
@@ -347,7 +399,13 @@ function MakeDeliveryDialog({
           <DialogClose asChild>
             <Button variant="glass-clear">Later</Button>
           </DialogClose>
-          <Button variant="glass-white" icon="package" loading={busy} disabled={!campaign} onClick={() => campaign && onPick(campaign)}>
+          <Button
+            variant="glass-white"
+            icon="package"
+            loading={busy}
+            disabled={!campaign}
+            onClick={() => campaign && onPick(campaign)}
+          >
             Make the delivery
           </Button>
         </DialogFooter>

@@ -55,7 +55,17 @@ import {
 } from "@fume/ui";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useBrandDna, useCampaigns, useCatalogue, useHome, usePeople, useQaQueue, useReviewQueue, useSession, useUsage } from "../../api/hooks";
+import {
+  useBrandDna,
+  useCampaigns,
+  useCatalogue,
+  useHome,
+  usePeople,
+  useQaQueue,
+  useReviewQueue,
+  useSession,
+  useUsage,
+} from "../../api/hooks";
 import type { Campaign, HomeView, Id } from "../../contract";
 import * as copy from "../../copy";
 import { date, due } from "../../lib/time";
@@ -142,7 +152,11 @@ function WaitingRowItem({ row, onAsk }: { row: WaitingRow; onAsk: (ids: Id[]) =>
   if (row.productId || row.questionIds?.length)
     return (
       <Item as="li" variant="muted" asChild>
-        <button type="button" onClick={() => (row.productId ? openCheck(row.productId) : onAsk(row.questionIds!))} aria-haspopup="dialog">
+        <button
+          type="button"
+          onClick={() => (row.productId ? openCheck(row.productId) : onAsk(row.questionIds!))}
+          aria-haspopup="dialog"
+        >
           <RowMedia row={row} />
           <RowWords row={row} />
           {end}
@@ -175,7 +189,15 @@ function QuietLine({ quiet, first }: { quiet: QuietProducts; first?: boolean }) 
         : above > 0
           ? `${copy.count(total, "product")} to confirm, ${above} of them for a campaign above. `
           : `${copy.count(total, "product")} to confirm, none holds up a campaign. `}
-      Confirm {above > 0 ? (quiet.count === 1 ? "the other one when you first use it" : "the rest when you first use them") : total === 1 ? "it when you first use it" : "them when you first use them"}, or{" "}
+      Confirm{" "}
+      {above > 0
+        ? quiet.count === 1
+          ? "the other one when you first use it"
+          : "the rest when you first use them"
+        : total === 1
+          ? "it when you first use it"
+          : "them when you first use them"}
+      , or{" "}
       <Link className="ui-link" to={quiet.href}>
         {total === 1 ? "now" : "all now"} ({minutes})
       </Link>
@@ -190,7 +212,9 @@ function FirstCampaign({ quiet }: { quiet?: QuietProducts }) {
     <Card className="ui-home-first">
       <CardHeader>
         <CardTitle as="h2">Your Brand DNA is ready. Start your first campaign</CardTitle>
-        <CardDescription>Say what you need in a sentence. Fume asks what is missing, then writes the brief with you.</CardDescription>
+        <CardDescription>
+          Say what you need in a sentence. Fume asks what is missing, then writes the brief with you.
+        </CardDescription>
         {quiet && <QuietLine quiet={quiet} first />}
       </CardHeader>
       <CardFooter>
@@ -284,18 +308,29 @@ function CustomerHome({ client }: { client: boolean }) {
   const all = useWaitingOnYou();
   const can = rights(session.role);
   const [asking, setAsking] = useState<Id[] | null>(null);
-  const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "numeric", hour12: false, timeZone: "Europe/Oslo" }).format(Date.now()));
+  const hour = Number(
+    new Intl.DateTimeFormat("en-GB", { hour: "numeric", hour12: false, timeZone: "Europe/Oslo" }).format(Date.now()),
+  );
   // In a brand an agency runs, the brief, the Brand DNA and the products are the agency's (round 11); the plan is hers
   // once the agency sent it (round 13).
   const items = client ? all.items.filter((row) => clientKinds.includes(row.kind)) : all.items;
-  const waiting = { ...all, items, count: items.length, quiet: client ? undefined : all.quiet, campaignIds: items.map((r) => r.campaignId).filter((c): c is Id => Boolean(c)) };
+  const waiting = {
+    ...all,
+    items,
+    count: items.length,
+    quiet: client ? undefined : all.quiet,
+    campaignIds: items.map((r) => r.campaignId).filter((c): c is Id => Boolean(c)),
+  };
   // The first visit: the card's "Tell Fume what you need" is the one Ink, so the header's New campaign steps aside.
   const welcome = waiting.firstRun && can.start && !client;
   const agencyName = session.agencyName ?? "Your agency";
 
   return (
     <Page title="Home">
-      <PageHeader title={`${greeting(hour)}, ${firstName(session.user.name)}`} actions={welcome || client ? undefined : <StartCampaign />} />
+      <PageHeader
+        title={`${greeting(hour)}, ${firstName(session.user.name)}`}
+        actions={welcome || client ? undefined : <StartCampaign />}
+      />
 
       <Query query={home}>
         {(view) => {
@@ -310,13 +345,23 @@ function CustomerHome({ client }: { client: boolean }) {
                   title="Waiting on you"
                   meta={waiting.count || undefined}
                   titleId="home-waiting"
-                  text={waiting.count && !can.approve ? (can.ask ? "You can look and ask for changes. The approver approves." : "You can look. The approver decides.") : undefined}
+                  text={
+                    waiting.count && !can.approve
+                      ? can.ask
+                        ? "You can look and ask for changes. The approver approves."
+                        : "You can look. The approver decides."
+                      : undefined
+                  }
                 >
                   {waiting.count === 0 ? (
                     <Nothing
                       icon="circle-check"
                       title="Nothing waits on you"
-                      text={client ? `${agencyName} tells you the moment creatives are ready for your approval.` : "Fume tells you the moment something is ready for your decision."}
+                      text={
+                        client
+                          ? `${agencyName} tells you the moment creatives are ready for your approval.`
+                          : "Fume tells you the moment something is ready for your decision."
+                      }
                     />
                   ) : (
                     <ItemGroup as="ul" aria-labelledby="home-waiting">
@@ -337,16 +382,29 @@ function CustomerHome({ client }: { client: boolean }) {
                   The client of an agency: who makes the brand's creatives, in one line (round 11). */}
               <aside className="ui-app-stack ui-home-aside" aria-label="About your workspace">
                 {client ? (
-                  <Section title={agencyName} titleId="home-agency" text={`${agencyName} makes ${session.workspace.brandName}’s creatives with Fume and sends you what is ready to approve.`} />
+                  <Section
+                    title={agencyName}
+                    titleId="home-agency"
+                    text={`${agencyName} makes ${session.workspace.brandName}’s creatives with Fume and sends you what is ready to approve.`}
+                  />
                 ) : (
                   <>
                     <Section title="This month" titleId="home-usage">
                       <StatGrid>
-                        <Stat label="Creatives used" value={[{ num: view.usage.creativesUsed, unit: `of ${view.usage.creativeCap}` }]} />
+                        <Stat
+                          label="Creatives used"
+                          value={[{ num: view.usage.creativesUsed, unit: `of ${view.usage.creativeCap}` }]}
+                        />
                         <Stat label="Campaigns active" value={view.usage.campaignsActive} />
                       </StatGrid>
-                      <Progress value={view.usage.creativesUsed} max={view.usage.creativeCap} aria-label={`${view.usage.creativesUsed} of ${view.usage.creativeCap} creatives used`} />
-                      {view.usage.periodEndsAt && <p className="ui-app-section-text">The package renews {date(view.usage.periodEndsAt)}.</p>}
+                      <Progress
+                        value={view.usage.creativesUsed}
+                        max={view.usage.creativeCap}
+                        aria-label={`${view.usage.creativesUsed} of ${view.usage.creativeCap} creatives used`}
+                      />
+                      {view.usage.periodEndsAt && (
+                        <p className="ui-app-section-text">The package renews {date(view.usage.periodEndsAt)}.</p>
+                      )}
                     </Section>
                     <LearnedLine view={view} />
                   </>
@@ -365,7 +423,8 @@ function CustomerHome({ client }: { client: boolean }) {
 // ─── The agency in one client (round 11) ────────────────────────────────────
 
 /** The soonest go-live first, then rows without a date, as the inbox orders them (shell/waiting.ts). */
-const byGoLive = (a: WaitingRow, b: WaitingRow) => (a.dueAt && b.dueAt ? a.dueAt.localeCompare(b.dueAt) : a.dueAt ? -1 : b.dueAt ? 1 : 0);
+const byGoLive = (a: WaitingRow, b: WaitingRow) =>
+  a.dueAt && b.dueAt ? a.dueAt.localeCompare(b.dueAt) : a.dueAt ? -1 : b.dueAt ? 1 : 0;
 
 /** Home for the agency's people in one client: what waits on the agency here, and what is with the client. */
 function AgencyHome() {
@@ -376,12 +435,16 @@ function AgencyHome() {
   const campaigns = useCampaigns();
   const people = usePeople();
   const [asking, setAsking] = useState<Id[] | null>(null);
-  const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "numeric", hour12: false, timeZone: "Europe/Oslo" }).format(Date.now()));
+  const hour = Number(
+    new Intl.DateTimeFormat("en-GB", { hour: "numeric", hour12: false, timeZone: "Europe/Oslo" }).format(Date.now()),
+  );
   const brand = session.workspace.brandName;
   const nameOf = (id?: Id) => firstName(people.data?.find((u) => u.id === id)?.name ?? "the client");
 
   // The creatives the agency checks (the client's Check), as one row.
-  const toCheck = (qa.data ?? []).filter((q) => q.item.state === "waiting" && q.item.workspaceId === session.workspace.id);
+  const toCheck = (qa.data ?? []).filter(
+    (q) => q.item.state === "waiting" && q.item.workspaceId === session.workspace.id,
+  );
   const checkCampaigns = [...new Map(toCheck.map((q) => [q.campaign.id, q.campaign])).values()];
   const checkRow: WaitingRow | undefined = toCheck.length
     ? {
@@ -389,7 +452,10 @@ function AgencyHome() {
         kind: "creatives",
         title: checkCampaigns.length === 1 ? checkCampaigns[0]!.name : brand,
         detail: `${copy.creatives(toCheck.length)} to check`,
-        dueAt: checkCampaigns.map((c) => c.dueAt).filter((d): d is string => Boolean(d)).sort()[0],
+        dueAt: checkCampaigns
+          .map((c) => c.dueAt)
+          .filter((d): d is string => Boolean(d))
+          .sort()[0],
         href: `/studio/b/${session.workspace.id}/qa`,
         pictures: toCheck.slice(0, 3).map((q) => q.item.image),
         count: toCheck.length,
@@ -416,11 +482,20 @@ function AgencyHome() {
   // What is with the client: only what the agency sent; it waits on whoever approves each campaign (the mock leaves
   // the checked creatives out of the agency's own waits, so they are never "to approve" here).
   const withClient = list.filter((c) => c.counts.checked - toSendOf(c) > 0 && c.state !== "in_production");
-  const busy = new Set([...waiting.campaignIds, ...checkCampaigns.map((c) => c.id), ...sendRows.map((r) => r.campaignId!), ...withClient.map((c) => c.id)]);
+  const busy = new Set([
+    ...waiting.campaignIds,
+    ...checkCampaigns.map((c) => c.id),
+    ...sendRows.map((r) => r.campaignId!),
+    ...withClient.map((c) => c.id),
+  ]);
 
   return (
     <Page title="Home">
-      <PageHeader title={`${greeting(hour)}, ${firstName(session.user.name)}`} meta={[brand]} actions={<StartCampaign />} />
+      <PageHeader
+        title={`${greeting(hour)}, ${firstName(session.user.name)}`}
+        meta={[brand]}
+        actions={<StartCampaign />}
+      />
 
       <Query query={home}>
         {(view) => {
@@ -430,10 +505,20 @@ function AgencyHome() {
               <div className="ui-app-stack ui-home-main">
                 <Section title="Waiting on you" meta={rows.length || undefined} titleId="home-waiting">
                   {rows.length === 0 ? (
-                    <Nothing icon="circle-check" title={`Nothing in ${brand} waits on you`} text="Fume tells you when a plan is ready, and the Engine’s creatives come to your Check." />
+                    <Nothing
+                      icon="circle-check"
+                      title={`Nothing in ${brand} waits on you`}
+                      text="Fume tells you when a plan is ready, and the Engine’s creatives come to your Check."
+                    />
                   ) : (
                     <ItemGroup as="ul" aria-labelledby="home-waiting">
-                      {rows.map((row) => (row.href.endsWith("?send=1") ? <SendRowItem key={row.id} row={row} /> : <WaitingRowItem key={row.id} row={row} onAsk={setAsking} />))}
+                      {rows.map((row) =>
+                        row.href.endsWith("?send=1") ? (
+                          <SendRowItem key={row.id} row={row} />
+                        ) : (
+                          <WaitingRowItem key={row.id} row={row} onAsk={setAsking} />
+                        ),
+                      )}
                     </ItemGroup>
                   )}
                   {waiting.quiet && <QuietLine quiet={waiting.quiet} />}
@@ -443,7 +528,12 @@ function AgencyHome() {
                   <Section title="With the client" titleId="home-client">
                     <ItemGroup as="ul" aria-labelledby="home-client" className="ui-home-making">
                       {withClient.map((c) => (
-                        <WithClientRow key={c.id} campaign={c} n={c.counts.checked - toSendOf(c)} client={nameOf(c.approverId)} />
+                        <WithClientRow
+                          key={c.id}
+                          campaign={c}
+                          n={c.counts.checked - toSendOf(c)}
+                          client={nameOf(c.approverId)}
+                        />
                       ))}
                     </ItemGroup>
                   </Section>
@@ -453,7 +543,12 @@ function AgencyHome() {
               </div>
 
               <aside className="ui-app-stack ui-home-aside" aria-label={`About ${brand}`}>
-                <ClientMonth brand={brand} workspaceId={session.workspace.id} lead={session.agency?.role === "lead"} active={view.usage.campaignsActive} />
+                <ClientMonth
+                  brand={brand}
+                  workspaceId={session.workspace.id}
+                  lead={session.agency?.role === "lead"}
+                  active={view.usage.campaignsActive}
+                />
                 <LearnedLine view={view} />
               </aside>
             </div>
@@ -492,7 +587,13 @@ function WithClientRow({ campaign: c, n, client }: { campaign: Campaign; n: numb
           <ItemTitle>
             {copy.creatives(n)} with {client}
           </ItemTitle>
-          <ItemDescription>{[c.name, ...(sent ? [`since ${date(sent.sentAt)}`] : []), ...(sent?.link ? [`client link until ${date(sent.link.expiresAt)}`] : [])].join(" · ")}</ItemDescription>
+          <ItemDescription>
+            {[
+              c.name,
+              ...(sent ? [`since ${date(sent.sentAt)}`] : []),
+              ...(sent?.link ? [`client link until ${date(sent.link.expiresAt)}`] : []),
+            ].join(" · ")}
+          </ItemDescription>
         </ItemContent>
         <ItemActions>
           <Icon name="chevron-right" />
@@ -504,7 +605,17 @@ function WithClientRow({ campaign: c, n, client }: { campaign: Campaign; n: numb
 
 /** This month in one client, from the one Usage page's numbers (round 12, DLOAD-7, DTASK-6): made, and approved by the
  *  client; the lead has the way to Usage. */
-function ClientMonth({ brand, workspaceId, lead, active }: { brand: string; workspaceId: Id; lead: boolean; active: number }) {
+function ClientMonth({
+  brand,
+  workspaceId,
+  lead,
+  active,
+}: {
+  brand: string;
+  workspaceId: Id;
+  lead: boolean;
+  active: number;
+}) {
   const usage = useUsage();
   const month = usage.data?.find((r) => r.workspaceId === workspaceId)?.periods?.month;
   return (
@@ -546,9 +657,20 @@ function ClientWaiting() {
         </Button>
       </div>
       <CreativeGrid aria-label={`${item.campaign.name}: the creatives that wait on you`}>
-        {item.creatives.slice(0, 8).map(named).map((c) => (
-          <CreativeTile key={c.id} src={c.current.image} alt={c.title} format={c.format} label={c.title} caption={tileCaption(c)} onOpen={() => navigate(`${review}?c=${c.id}`)} />
-        ))}
+        {item.creatives
+          .slice(0, 8)
+          .map(named)
+          .map((c) => (
+            <CreativeTile
+              key={c.id}
+              src={c.current.image}
+              alt={c.title}
+              format={c.format}
+              label={c.title}
+              caption={tileCaption(c)}
+              onOpen={() => navigate(`${review}?c=${c.id}`)}
+            />
+          ))}
       </CreativeGrid>
     </div>
   );

@@ -71,7 +71,13 @@ const fromWords = (job: ImportJob) => job.url ?? job.fileName ?? "your files";
 // ─── The entry point ────────────────────────────────────────────────────────
 
 /** "Import products": one button with the three sources in an option menu; each opens its own right panel. */
-export function ImportProducts({ variant = "quiet", size = "sm" }: { variant?: "quiet" | "secondary" | "primary"; size?: "sm" | "md" }) {
+export function ImportProducts({
+  variant = "quiet",
+  size = "sm",
+}: {
+  variant?: "quiet" | "secondary" | "primary";
+  size?: "sm" | "md";
+}) {
   const [source, setSource] = useState<ImportSource | null>(null);
   return (
     <>
@@ -94,7 +100,13 @@ export function ImportProducts({ variant = "quiet", size = "sm" }: { variant?: "
   );
 }
 
-export function ImportSourceDialog({ source, onOpenChange }: { source: ImportSource | null; onOpenChange: (open: boolean) => void }) {
+export function ImportSourceDialog({
+  source,
+  onOpenChange,
+}: {
+  source: ImportSource | null;
+  onOpenChange: (open: boolean) => void;
+}) {
   const start = useStartProductImport();
   const toast = useToast();
   const [url, setUrl] = useState("https://lysne.no");
@@ -117,7 +129,8 @@ export function ImportSourceDialog({ source, onOpenChange }: { source: ImportSou
   }
 
   const ready = source === "website" ? /\w+\.\w+/.test(url) : Boolean(file);
-  const title = source === "website" ? "Import from your website" : source === "csv" ? "Import from a CSV" : "Import from a zip";
+  const title =
+    source === "website" ? "Import from your website" : source === "csv" ? "Import from a CSV" : "Import from a zip";
   const description =
     source === "website"
       ? "Fume reads your product pages, the sitemap and your shop’s product feed (Shopify, WooCommerce), and compares what it finds with your products."
@@ -138,8 +151,20 @@ export function ImportSourceDialog({ source, onOpenChange }: { source: ImportSou
               <FieldGroup>
                 <Field>
                   <FieldLabel htmlFor="import-url">Your website</FieldLabel>
-                  <Input id="import-url" type="text" inputMode="url" autoComplete="url" spellCheck={false} value={url} onChange={(e) => setUrl(e.target.value)} placeholder="lysne.no" data-ui-autofocus />
-                  <FieldDescription>Your shop’s front page is enough, such as lysne.no; Fume finds the products from there.</FieldDescription>
+                  <Input
+                    id="import-url"
+                    type="text"
+                    inputMode="url"
+                    autoComplete="url"
+                    spellCheck={false}
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    placeholder="lysne.no"
+                    data-ui-autofocus
+                  />
+                  <FieldDescription>
+                    Your shop’s front page is enough, such as lysne.no; Fume finds the products from there.
+                  </FieldDescription>
                 </Field>
               </FieldGroup>
             ) : (
@@ -202,7 +227,9 @@ function ImportProgress({ job }: { job: ImportJob }) {
       </div>
       <p className="ui-import-now" aria-live="polite">
         <Icon name="fume-engine" />
-        <TextShimmer>{job.reading ? `Fume is ${job.reading.charAt(0).toLowerCase()}${job.reading.slice(1)}` : "Fume is reading"}</TextShimmer>
+        <TextShimmer>
+          {job.reading ? `Fume is ${job.reading.charAt(0).toLowerCase()}${job.reading.slice(1)}` : "Fume is reading"}
+        </TextShimmer>
       </p>
       <Progress value={Math.round(job.progress * 100)} aria-label="How far Fume has read" />
       <dl className="ui-import-counts">
@@ -236,14 +263,22 @@ function ImportMapping({ job }: { job: ImportJob }) {
   const columns = job.columns ?? [];
   const unsure = columns.filter((c) => !c.sure);
   const [all, setAll] = useState(false);
-  const [picked, setPicked] = useState<Record<string, string>>(() => Object.fromEntries(columns.map((c) => [c.column, c.fieldId ?? "skip"])));
+  const [picked, setPicked] = useState<Record<string, string>>(() =>
+    Object.fromEntries(columns.map((c) => [c.column, c.fieldId ?? "skip"])),
+  );
   const shown = all ? columns : unsure;
   const options = [...(job.fieldOptions ?? []), { id: "skip", label: "Leave this column out" }];
 
   function submit(e: FormEvent) {
     e.preventDefault();
     map.mutate(
-      { jobId: job.id, columns: columns.map((c) => ({ column: c.column, fieldId: picked[c.column] === "skip" ? null : (picked[c.column] ?? null) })) },
+      {
+        jobId: job.id,
+        columns: columns.map((c) => ({
+          column: c.column,
+          fieldId: picked[c.column] === "skip" ? null : (picked[c.column] ?? null),
+        })),
+      },
       { onError: (error) => toast.error("That wasn’t saved", { description: error.message }) },
     );
   }
@@ -259,7 +294,8 @@ function ImportMapping({ job }: { job: ImportJob }) {
         </Button>
       </div>
       <p className="ui-import-text">
-        Fume matched {columns.length - unsure.length} of the {columns.length} columns in {fromWords(job)}. It is unsure of {unsure.length === 1 ? "this one" : "these"}; its guess is filled in.
+        Fume matched {columns.length - unsure.length} of the {columns.length} columns in {fromWords(job)}. It is unsure
+        of {unsure.length === 1 ? "this one" : "these"}; its guess is filled in.
       </p>
       <form id="import-map" onSubmit={submit} className="ui-import-map">
         {shown.map((c) => (
@@ -302,7 +338,15 @@ function ImportMapping({ job }: { job: ImportJob }) {
 // ─── What Fume found ──────────────────────────────────────────────────
 
 const fileIcon = (f: ImportFile) => (f.kind === "picture" ? "image" : f.kind === "page" ? "link" : "file-text");
-const fileKind: Record<ImportFile["kind"], string> = { page: "Page", picture: "Picture", pdf: "PDF", spec: "Spec sheet", techpack: "Tech pack", artwork: "Label artwork", other: "File" };
+const fileKind: Record<ImportFile["kind"], string> = {
+  page: "Page",
+  picture: "Picture",
+  pdf: "PDF",
+  spec: "Spec sheet",
+  techpack: "Tech pack",
+  artwork: "Label artwork",
+  other: "File",
+};
 
 function Files({ files }: { files: ImportFile[] }) {
   if (files.length < 2) return null;
@@ -337,8 +381,18 @@ function ImportReview({ job }: { job: ImportJob }) {
   const [fixing, setFixing] = useState<FoundProduct | null>(null);
   const [merging, setMerging] = useState<FoundProduct | null>(null);
 
-  const run = (foundId: string, decision: Parameters<ReturnType<typeof useDecideFound>["mutate"]>[0]["decision"], done?: string) =>
-    decide.mutate({ jobId: job.id, foundId, decision }, { onSuccess: () => done && toast.done(done), onError: (error) => toast.error("That wasn’t saved", { description: error.message }) });
+  const run = (
+    foundId: string,
+    decision: Parameters<ReturnType<typeof useDecideFound>["mutate"]>[0]["decision"],
+    done?: string,
+  ) =>
+    decide.mutate(
+      { jobId: job.id, foundId, decision },
+      {
+        onSuccess: () => done && toast.done(done),
+        onError: (error) => toast.error("That wasn’t saved", { description: error.message }),
+      },
+    );
 
   const items: FoundItem[] = job.found.map((f) => {
     const pictures = f.files.filter((x) => x.kind === "picture").length;
@@ -356,10 +410,20 @@ function ImportReview({ job }: { job: ImportJob }) {
       source: f.source,
       note: f.note,
       kept: Boolean(f.decision),
-      before: f.status === "changed" ? <FoundFields image={f.patch?.image ? f.images[1] : undefined} rows={f.fields.map((x) => ({ label: x.label, value: x.before ?? "Not known yet" }))} /> : undefined,
+      before:
+        f.status === "changed" ? (
+          <FoundFields
+            image={f.patch?.image ? f.images[1] : undefined}
+            rows={f.fields.map((x) => ({ label: x.label, value: x.before ?? "Not known yet" }))}
+          />
+        ) : undefined,
       after:
         f.status === "changed" ? (
-          <FoundFields image={f.patch?.image} imageLabel="New picture" rows={f.fields.map((x) => ({ label: x.label, value: x.value, changed: x.before !== x.value }))} />
+          <FoundFields
+            image={f.patch?.image}
+            imageLabel="New picture"
+            rows={f.fields.map((x) => ({ label: x.label, value: x.value, changed: x.before !== x.value }))}
+          />
         ) : read.length ? (
           <FoundFields rows={[{ label: "Kind", value: kindLine(f, kinds) }, ...read]} />
         ) : undefined,
@@ -367,16 +431,42 @@ function ImportReview({ job }: { job: ImportJob }) {
       actions:
         job.source === "zip"
           ? [
-              ...(pictures > 1 ? [{ id: "split", label: `Split into ${pictures}`, icon: "columns-2" as const, onSelect: () => run(f.id, { verdict: "split" }, `${f.name} split into ${pictures}`) }] : []),
-              ...(others.length ? [{ id: "merge", label: "Merge with…", icon: "layers" as const, onSelect: () => setMerging(f) }] : []),
+              ...(pictures > 1
+                ? [
+                    {
+                      id: "split",
+                      label: `Split into ${pictures}`,
+                      icon: "columns-2" as const,
+                      onSelect: () => run(f.id, { verdict: "split" }, `${f.name} split into ${pictures}`),
+                    },
+                  ]
+                : []),
+              ...(others.length
+                ? [{ id: "merge", label: "Merge with…", icon: "layers" as const, onSelect: () => setMerging(f) }]
+                : []),
             ]
           : undefined,
     };
   });
 
-  const counts = { new: job.found.filter((f) => f.status === "new").length, changed: job.found.filter((f) => f.status === "changed").length, unsure: job.found.filter((f) => f.status === "unsure").length };
-  const parts = [counts.new && `${counts.new} new`, counts.changed && `${counts.changed} changed`, counts.unsure && `${counts.unsure} it is unsure of`].filter(Boolean).join(", ");
-  const read = job.source === "website" ? `On ${fromWords(job)}` : job.source === "csv" ? `In ${fromWords(job)}` : `In ${fromWords(job)}`;
+  const counts = {
+    new: job.found.filter((f) => f.status === "new").length,
+    changed: job.found.filter((f) => f.status === "changed").length,
+    unsure: job.found.filter((f) => f.status === "unsure").length,
+  };
+  const parts = [
+    counts.new && `${counts.new} new`,
+    counts.changed && `${counts.changed} changed`,
+    counts.unsure && `${counts.unsure} it is unsure of`,
+  ]
+    .filter(Boolean)
+    .join(", ");
+  const read =
+    job.source === "website"
+      ? `On ${fromWords(job)}`
+      : job.source === "csv"
+        ? `In ${fromWords(job)}`
+        : `In ${fromWords(job)}`;
   const summary =
     job.found.length === 0
       ? `${read} Fume found nothing new: ${copy.count(job.unchanged, "product")} ${job.unchanged === 1 ? "is" : "are"} exactly as Fume has ${job.unchanged === 1 ? "it" : "them"}.`
@@ -399,7 +489,11 @@ function ImportReview({ job }: { job: ImportJob }) {
         onFix={(id) => setFixing(job.found.find((f) => f.id === id) ?? null)}
         onRemove={(id) => {
           const f = job.found.find((x) => x.id === id);
-          run(id, { verdict: "remove" }, f?.status === "changed" ? `${f.name} stays as it was` : `${f?.name ?? "It"} is not imported`);
+          run(
+            id,
+            { verdict: "remove" },
+            f?.status === "changed" ? `${f.name} stays as it was` : `${f?.name ?? "It"} is not imported`,
+          );
         }}
         footer={
           <>
@@ -413,23 +507,50 @@ function ImportReview({ job }: { job: ImportJob }) {
         }
       />
       <FixDialog job={job} found={fixing} kinds={kinds} onOpenChange={(o) => !o && setFixing(null)} />
-      <MergeDialog found={merging} others={job.found.filter((f) => f.id !== merging?.id)} onOpenChange={(o) => !o && setMerging(null)} onMerge={(intoId) => {
-        if (!merging) return;
-        const into = job.found.find((f) => f.id === intoId);
-        run(merging.id, { verdict: "merge", intoId }, `Merged into ${into?.name ?? "the product"}`);
-        setMerging(null);
-      }} />
+      <MergeDialog
+        found={merging}
+        others={job.found.filter((f) => f.id !== merging?.id)}
+        onOpenChange={(o) => !o && setMerging(null)}
+        onMerge={(intoId) => {
+          if (!merging) return;
+          const into = job.found.find((f) => f.id === intoId);
+          run(merging.id, { verdict: "merge", intoId }, `Merged into ${into?.name ?? "the product"}`);
+          setMerging(null);
+        }}
+      />
     </section>
   );
 }
 
 /** Change one: the found product's fields with Fume's values filled in, each marked as what Fume read. */
-function FixDialog({ job, found, kinds, onOpenChange }: { job: ImportJob; found: FoundProduct | null; kinds: ProductKind[]; onOpenChange: (open: boolean) => void }) {
+function FixDialog({
+  job,
+  found,
+  kinds,
+  onOpenChange,
+}: {
+  job: ImportJob;
+  found: FoundProduct | null;
+  kinds: ProductKind[];
+  onOpenChange: (open: boolean) => void;
+}) {
   const decide = useDecideFound();
   const toast = useToast();
-  const [draft, setDraft] = useState<{ id?: string; name: string; variant: string; kindId: string; fields: Record<string, string> }>({ name: "", variant: "", kindId: "", fields: {} });
+  const [draft, setDraft] = useState<{
+    id?: string;
+    name: string;
+    variant: string;
+    kindId: string;
+    fields: Record<string, string>;
+  }>({ name: "", variant: "", kindId: "", fields: {} });
   if (found && draft.id !== found.id)
-    setDraft({ id: found.id, name: found.name, variant: found.variant === "Name not found" ? "" : (found.variant ?? ""), kindId: found.kindId ?? "", fields: Object.fromEntries(found.fields.map((f) => [f.fieldId, f.value])) });
+    setDraft({
+      id: found.id,
+      name: found.name,
+      variant: found.variant === "Name not found" ? "" : (found.variant ?? ""),
+      kindId: found.kindId ?? "",
+      fields: Object.fromEntries(found.fields.map((f) => [f.fieldId, f.value])),
+    });
 
   function submit(e: FormEvent) {
     e.preventDefault();
@@ -438,11 +559,19 @@ function FixDialog({ job, found, kinds, onOpenChange }: { job: ImportJob; found:
       {
         jobId: job.id,
         foundId: found.id,
-        decision: { verdict: "fix", name: draft.name.trim() || found.name, variant: draft.variant.trim(), kindId: draft.kindId || undefined, fields: Object.entries(draft.fields).map(([fieldId, value]) => ({ fieldId, value })) },
+        decision: {
+          verdict: "fix",
+          name: draft.name.trim() || found.name,
+          variant: draft.variant.trim(),
+          kindId: draft.kindId || undefined,
+          fields: Object.entries(draft.fields).map(([fieldId, value]) => ({ fieldId, value })),
+        },
       },
       {
         onSuccess: () => {
-          toast.done(`${draft.name.trim() || found.name} changed.`, { description: "It comes in with the others when you add them." });
+          toast.done(`${draft.name.trim() || found.name} changed.`, {
+            description: "It comes in with the others when you add them.",
+          });
           onOpenChange(false);
         },
         onError: (error) => toast.error("That wasn’t saved", { description: error.message }),
@@ -455,7 +584,9 @@ function FixDialog({ job, found, kinds, onOpenChange }: { job: ImportJob; found:
       <SheetContent side="right" size="lg">
         <SheetHeader>
           <SheetTitle>Change {found?.name}</SheetTitle>
-          <SheetDescription>What Fume read is filled in. Change what is wrong; what you save counts as yours.</SheetDescription>
+          <SheetDescription>
+            What Fume read is filled in. Change what is wrong; what you save counts as yours.
+          </SheetDescription>
         </SheetHeader>
         <SheetBody>
           {found && (
@@ -463,11 +594,21 @@ function FixDialog({ job, found, kinds, onOpenChange }: { job: ImportJob; found:
               <FieldGroup>
                 <Field>
                   <FieldLabel htmlFor="fix-name">Name</FieldLabel>
-                  <Input id="fix-name" value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} data-ui-autofocus />
+                  <Input
+                    id="fix-name"
+                    value={draft.name}
+                    onChange={(e) => setDraft({ ...draft, name: e.target.value })}
+                    data-ui-autofocus
+                  />
                 </Field>
                 <Field>
                   <FieldLabel htmlFor="fix-variant">Size or variant</FieldLabel>
-                  <Input id="fix-variant" value={draft.variant} onChange={(e) => setDraft({ ...draft, variant: e.target.value })} placeholder="100 ml" />
+                  <Input
+                    id="fix-variant"
+                    value={draft.variant}
+                    onChange={(e) => setDraft({ ...draft, variant: e.target.value })}
+                    placeholder="100 ml"
+                  />
                 </Field>
                 <Field>
                   <FieldLabel id="fix-kind-label">Kind of product</FieldLabel>
@@ -483,12 +624,20 @@ function FixDialog({ job, found, kinds, onOpenChange }: { job: ImportJob; found:
                       ))}
                     </SelectContent>
                   </Select>
-                  {found.kindId && <FieldDescription>Fume’s guess{found.kindConfidence === "low" ? ", not sure" : ""}</FieldDescription>}
+                  {found.kindId && (
+                    <FieldDescription>
+                      Fume’s guess{found.kindConfidence === "low" ? ", not sure" : ""}
+                    </FieldDescription>
+                  )}
                 </Field>
                 {found.fields.map((f) => (
                   <Field key={f.fieldId}>
                     <FieldLabel htmlFor={`fix-${f.fieldId}`}>{f.label}</FieldLabel>
-                    <Input id={`fix-${f.fieldId}`} value={draft.fields[f.fieldId] ?? ""} onChange={(e) => setDraft({ ...draft, fields: { ...draft.fields, [f.fieldId]: e.target.value } })} />
+                    <Input
+                      id={`fix-${f.fieldId}`}
+                      value={draft.fields[f.fieldId] ?? ""}
+                      onChange={(e) => setDraft({ ...draft, fields: { ...draft.fields, [f.fieldId]: e.target.value } })}
+                    />
                     <FieldDescription>Fume read this{f.source ? ` on ${f.source}` : ""}</FieldDescription>
                   </Field>
                 ))}
@@ -510,7 +659,17 @@ function FixDialog({ job, found, kinds, onOpenChange }: { job: ImportJob; found:
 }
 
 /** Merge a zip group into another found product: the other products as pictures. */
-function MergeDialog({ found, others, onOpenChange, onMerge }: { found: FoundProduct | null; others: FoundProduct[]; onOpenChange: (open: boolean) => void; onMerge: (intoId: string) => void }) {
+function MergeDialog({
+  found,
+  others,
+  onOpenChange,
+  onMerge,
+}: {
+  found: FoundProduct | null;
+  others: FoundProduct[];
+  onOpenChange: (open: boolean) => void;
+  onMerge: (intoId: string) => void;
+}) {
   return (
     <Sheet open={Boolean(found)} onOpenChange={onOpenChange}>
       <SheetContent side="right" size="lg">
@@ -521,7 +680,15 @@ function MergeDialog({ found, others, onOpenChange, onMerge }: { found: FoundPro
         <SheetBody>
           <PickGrid size="sm" aria-label="Found products">
             {others.map((o) => (
-              <PickTile key={o.id} title={o.name} line={o.variant} src={o.images[0]} icon="package" onOpen={() => onMerge(o.id)} label={`Merge into ${o.name}`} />
+              <PickTile
+                key={o.id}
+                title={o.name}
+                line={o.variant}
+                src={o.images[0]}
+                icon="package"
+                onOpen={() => onMerge(o.id)}
+                label={`Merge into ${o.name}`}
+              />
             ))}
           </PickGrid>
         </SheetBody>
@@ -541,7 +708,9 @@ function ImportResult({ job }: { job: ImportJob }) {
   const catalogue = useCatalogue().data;
   const dismiss = useDismissImport();
   const navigate = useNavigate();
-  const landed = (job.result?.productIds ?? []).map((id) => catalogue?.products.find((p) => p.id === id)).filter((p): p is NonNullable<typeof p> => Boolean(p));
+  const landed = (job.result?.productIds ?? [])
+    .map((id) => catalogue?.products.find((p) => p.id === id))
+    .filter((p): p is NonNullable<typeof p> => Boolean(p));
   const toConfirm = landed.filter((p) => p.state !== "verified");
   const added = job.result?.added ?? 0;
   const updated = job.result?.updated ?? 0;
@@ -551,17 +720,27 @@ function ImportResult({ job }: { job: ImportJob }) {
     <section className="ui-import" data-state="done" aria-labelledby="import-title">
       <div className="ui-import-head">
         <h2 className="ui-import-title" id="import-title">
-          {copy.count(landed.length, "product")} from {fromWords(job)} {landed.length === 1 ? "is" : "are"} in your catalogue
+          {copy.count(landed.length, "product")} from {fromWords(job)} {landed.length === 1 ? "is" : "are"} in your
+          catalogue
         </h2>
       </div>
       <p className="ui-import-text">
         {what ? `${what[0]!.toUpperCase()}${what.slice(1)}. ` : ""}
-        {toConfirm.length ? `Fume read ${toConfirm.length === 1 ? "it" : "them"}; confirm ${toConfirm.length === 1 ? "it" : "them"} before ${toConfirm.length === 1 ? "it goes" : "they go"} into a campaign, one at a time.` : "Every one is confirmed."}
+        {toConfirm.length
+          ? `Fume read ${toConfirm.length === 1 ? "it" : "them"}; confirm ${toConfirm.length === 1 ? "it" : "them"} before ${toConfirm.length === 1 ? "it goes" : "they go"} into a campaign, one at a time.`
+          : "Every one is confirmed."}
       </p>
       {landed.length > 0 && (
         <PickGrid size="sm" aria-label="Imported products">
           {landed.map((p) => (
-            <ProductTile key={p.id} name={p.name} line={p.variant || undefined} note={p.state === "verified" ? "Confirmed" : "Not confirmed yet"} src={p.images[0]} onOpen={() => navigate(`/brand/products/${p.id}`)} />
+            <ProductTile
+              key={p.id}
+              name={p.name}
+              line={p.variant || undefined}
+              note={p.state === "verified" ? "Confirmed" : "Not confirmed yet"}
+              src={p.images[0]}
+              onOpen={() => navigate(`/brand/products/${p.id}`)}
+            />
           ))}
         </PickGrid>
       )}
@@ -578,7 +757,11 @@ function ImportResult({ job }: { job: ImportJob }) {
             Confirm {toConfirm.length === 1 ? "it" : "them"} now
           </Button>
         )}
-        <Button variant={toConfirm.length ? "quiet" : "secondary"} onClick={() => dismiss.mutate(job.id)} disabled={dismiss.isPending}>
+        <Button
+          variant={toConfirm.length ? "quiet" : "secondary"}
+          onClick={() => dismiss.mutate(job.id)}
+          disabled={dismiss.isPending}
+        >
           {toConfirm.length ? "Later" : "Done"}
         </Button>
       </div>

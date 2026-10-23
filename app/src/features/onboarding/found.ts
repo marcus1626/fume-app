@@ -26,13 +26,15 @@ export function listOf(identity: BrandIdentity, part: CheckPart): { provenance: 
 }
 
 /** The open items of one part. */
-export const openIn = (identity: BrandIdentity, part: CheckPart | string) => listOf(identity, part as CheckPart).filter(isOpen).length;
+export const openIn = (identity: BrandIdentity, part: CheckPart | string) =>
+  listOf(identity, part as CheckPart).filter(isOpen).length;
 
 /** The open items of all five parts. */
 export const openTotal = (identity: BrandIdentity) => checkParts.reduce((sum, p) => sum + openIn(identity, p.id), 0);
 
 /** The first part with something open, for "Confirm them now". */
-export const firstOpenPart = (identity: BrandIdentity): CheckPart | undefined => checkParts.find((p) => openIn(identity, p.id) > 0)?.id;
+export const firstOpenPart = (identity: BrandIdentity): CheckPart | undefined =>
+  checkParts.find((p) => openIn(identity, p.id) > 0)?.id;
 
 /** "12 finds", the word the onboarding uses for what Fume found. */
 export const finds = (n: number) => `${n} ${n === 1 ? "find" : "finds"}`;

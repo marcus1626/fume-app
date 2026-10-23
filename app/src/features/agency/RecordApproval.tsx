@@ -108,13 +108,17 @@ export function RecordApprovalSheet({ campaign, creatives, initial, open, onOpen
     }
     // A day before today is kept at its noon; today is now.
     const at = day < today() ? new Date(`${day}T12:00:00`).toISOString() : undefined;
-    void record.mutateAsync({ versionIds: picked.map((c) => c.current.id), clientUserId: who, note: how.trim(), at }).then(
-      (done) => {
-        toast.done(`${Name} approved ${copy.creatives(done.length)}`, { description: "Recorded by you, with your note." });
-        onOpenChange(false);
-      },
-      (err: Error) => toast.error("Nothing was recorded", { description: err.message }),
-    );
+    void record
+      .mutateAsync({ versionIds: picked.map((c) => c.current.id), clientUserId: who, note: how.trim(), at })
+      .then(
+        (done) => {
+          toast.done(`${Name} approved ${copy.creatives(done.length)}`, {
+            description: "Recorded by you, with your note.",
+          });
+          onOpenChange(false);
+        },
+        (err: Error) => toast.error("Nothing was recorded", { description: err.message }),
+      );
   };
 
   return (
@@ -124,8 +128,8 @@ export function RecordApprovalSheet({ campaign, creatives, initial, open, onOpen
           <SheetHeader>
             <SheetTitle>Record an approval</SheetTitle>
             <SheetDescription>
-              When {name} approved outside Fume: in a meeting, on a call, by email. The creatives then show “{Name} approved · recorded by
-              you”.
+              When {name} approved outside Fume: in a meeting, on a call, by email. The creatives then show “{Name}{" "}
+              approved · recorded by you”.
             </SheetDescription>
           </SheetHeader>
           <SheetBody>
@@ -155,13 +159,18 @@ export function RecordApprovalSheet({ campaign, creatives, initial, open, onOpen
               <FieldSet>
                 <FieldLegend id={`${id}-who`}>Who approved</FieldLegend>
                 {people.length === 0 ? (
-                  <FieldDescription>No one at {brand} approves in Fume yet. Invite the person who approves first.</FieldDescription>
+                  <FieldDescription>
+                    No one at {brand} approves in Fume yet. Invite the person who approves first.
+                  </FieldDescription>
                 ) : (
                   <RadioGroup value={who} onValueChange={setWho} aria-labelledby={`${id}-who`}>
                     {people.map((p) => (
                       <Choice key={p.user.id}>
                         <RadioGroupItem value={p.user.id} />
-                        <ChoiceText label={p.user.name} hint={[clientRole(p), p.user.title].filter(Boolean).join(" · ")} />
+                        <ChoiceText
+                          label={p.user.name}
+                          hint={[clientRole(p), p.user.title].filter(Boolean).join(" · ")}
+                        />
                       </Choice>
                     ))}
                   </RadioGroup>
@@ -183,7 +192,9 @@ export function RecordApprovalSheet({ campaign, creatives, initial, open, onOpen
                 {noDay ? (
                   <FieldError id={`${id}-when-help`}>Give the day {name} approved, today or before.</FieldError>
                 ) : (
-                  <FieldDescription id={`${id}-when-help`}>The day {name} said yes. Today unless it was earlier.</FieldDescription>
+                  <FieldDescription id={`${id}-when-help`}>
+                    The day {name} said yes. Today unless it was earlier.
+                  </FieldDescription>
                 )}
               </Field>
 

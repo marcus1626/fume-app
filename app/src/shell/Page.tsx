@@ -14,8 +14,31 @@
 // Round 12 (desktop review 20 Oct, DWAY-15; PROPOSED 20 Oct 2026): in a staff frame's brand or client scope the frame
 // names the brand (PageScopeProvider), and the tab says it after the page: "Autumn launch · LYSNE · Fume", so three
 // clients in three tabs never read the same. A page whose name already holds the brand ("LYSNE") says it once.
-import { BackLink, Button, cx, Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle, Spinner, WithTooltip, type IconName } from "@fume/ui";
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type HTMLAttributes, type MouseEvent, type ReactNode } from "react";
+import {
+  BackLink,
+  Button,
+  cx,
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  Spinner,
+  WithTooltip,
+  type IconName,
+} from "@fume/ui";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type HTMLAttributes,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import { useHref, useLocation, useNavigate, type NavigateOptions } from "react-router-dom";
 import { FumeError } from "../contract";
 
@@ -57,7 +80,8 @@ export function Page({ title, docTitle, width = "default", className, ...props }
   useEffect(() => {
     // "<page> · <parent> · Fume": the parent is the page's Back, unless the title or docTitle already says more; in a
     // brand's scope the brand takes the parent's place ("Autumn launch · LYSNE · Fume"), once
-    const own = docTitle ?? (!scope && parent && !title.includes(" · ") && parent !== title ? `${title} · ${parent}` : title);
+    const own =
+      docTitle ?? (!scope && parent && !title.includes(" · ") && parent !== title ? `${title} · ${parent}` : title);
     const name = scope && !own.includes(scope) ? `${own} · ${scope}` : own;
     document.title = tabTitle(name);
     nameEntry(title);
@@ -68,7 +92,11 @@ export function Page({ title, docTitle, width = "default", className, ...props }
   return (
     <PageTitleContext.Provider value={title}>
       <PageParentContext.Provider value={setParent}>
-        <div ref={ref} className={cx("ui-app-page", width !== "default" && `ui-app-page--${width}`, className)} {...props} />
+        <div
+          ref={ref}
+          className={cx("ui-app-page", width !== "default" && `ui-app-page--${width}`, className)}
+          {...props}
+        />
       </PageParentContext.Provider>
     </PageTitleContext.Provider>
   );
@@ -86,7 +114,10 @@ export const pageName = (title: string) => title.split(" · ")[0]!.trim();
  */
 export function useTabNavigate() {
   const navigate = useNavigate();
-  return useCallback((to: string, options?: Omit<NavigateOptions, "replace">) => navigate(to, { ...options, replace: true }), [navigate]);
+  return useCallback(
+    (to: string, options?: Omit<NavigateOptions, "replace">) => navigate(to, { ...options, replace: true }),
+    [navigate],
+  );
 }
 
 // ─── Tabs that don't jump ───────────────────────────────────────────────────
@@ -139,7 +170,9 @@ function useHoldHeight() {
     const scroller = el.closest(".ui-sidebar-inset");
     const release = () => {
       const floor = scroller
-        ? scroller.scrollTop + scroller.clientHeight - (el.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop)
+        ? scroller.scrollTop +
+          scroller.clientHeight -
+          (el.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop)
         : 0;
       if (floor > 0) el.style.setProperty("--ui-app-page-hold", `${Math.ceil(floor)}px`);
       else {
@@ -399,7 +432,9 @@ export function Loading({ label = "Loading" }: { label?: string }) {
 /** When a call fails: what happened in words, and one way on. A forbidden call says who can do it instead. */
 export function Failed({ error, onRetry }: { error: unknown; onRetry?: () => void }) {
   const message =
-    error instanceof FumeError ? error.message : "Fume couldn’t load this just now. Your work is safe; try again in a moment.";
+    error instanceof FumeError
+      ? error.message
+      : "Fume couldn’t load this just now. Your work is safe; try again in a moment.";
   const notFound = error instanceof FumeError && error.code === "not_found";
   return (
     <Empty>
@@ -420,7 +455,17 @@ export function Failed({ error, onRetry }: { error: unknown; onRetry?: () => voi
 }
 
 /** An empty list with one line on why and, when there is one, the way to fill it. */
-export function Nothing({ icon, title, text, action }: { icon: IconName; title: string; text?: ReactNode; action?: ReactNode }) {
+export function Nothing({
+  icon,
+  title,
+  text,
+  action,
+}: {
+  icon: IconName;
+  title: string;
+  text?: ReactNode;
+  action?: ReactNode;
+}) {
   return (
     <Empty surface>
       <EmptyHeader>

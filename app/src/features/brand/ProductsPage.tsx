@@ -35,9 +35,24 @@ const order: Record<Product["state"], number> = {
  *  confirmed. Empty groups are left out. */
 function productGroups(list: Product[]) {
   return [
-    { id: "new", title: "New", line: "Fume found these since you last looked. Confirm them before they go into a campaign.", items: list.filter((p) => p.isNew) },
-    { id: "open", title: "Not confirmed yet", line: "Fume uses a product in a campaign once you confirm what it read.", items: list.filter((p) => !p.isNew && p.state !== "verified") },
-    { id: "confirmed", title: "Confirmed", line: "Every creative shows these as they are.", items: list.filter((p) => !p.isNew && p.state === "verified") },
+    {
+      id: "new",
+      title: "New",
+      line: "Fume found these since you last looked. Confirm them before they go into a campaign.",
+      items: list.filter((p) => p.isNew),
+    },
+    {
+      id: "open",
+      title: "Not confirmed yet",
+      line: "Fume uses a product in a campaign once you confirm what it read.",
+      items: list.filter((p) => !p.isNew && p.state !== "verified"),
+    },
+    {
+      id: "confirmed",
+      title: "Confirmed",
+      line: "Every creative shows these as they are.",
+      items: list.filter((p) => !p.isNew && p.state === "verified"),
+    },
   ].filter((g) => g.items.length > 0);
 }
 
@@ -46,7 +61,8 @@ export function ProductsContent() {
   const catalogue = useCatalogue();
   const { canEdit, canDecide } = useCatalogueRights();
   const importJob = useProductImport().data;
-  const importing = canEdit && (importJob?.state === "mapping" || importJob?.state === "review" || importJob?.state === "done");
+  const importing =
+    canEdit && (importJob?.state === "mapping" || importJob?.state === "review" || importJob?.state === "done");
   const decide = useDecide();
   const toast = useToast();
   const navigate = useNavigate();
@@ -97,7 +113,11 @@ export function ProductsContent() {
           const needYou = all.filter((p) => p.state === "needs_you").length;
           const q = query.trim().toLowerCase();
           const shown = all
-            .filter((p) => !q || `${p.name} ${p.variant} ${p.variants?.map((v) => v.name).join(" ") ?? ""}`.toLowerCase().includes(q))
+            .filter(
+              (p) =>
+                !q ||
+                `${p.name} ${p.variant} ${p.variants?.map((v) => v.name).join(" ") ?? ""}`.toLowerCase().includes(q),
+            )
             .sort((a, b) => order[a.state] - order[b.state] || a.name.localeCompare(b.name));
           return (
             <>
@@ -166,7 +186,12 @@ export function ProductsContent() {
                       <ul className="ui-catalogue-grid" aria-labelledby={`products-${g.id}`}>
                         {g.items.map((p) => (
                           <li key={p.id} id={`product-${p.id}`}>
-                            <ProductCard product={p} categories={categories} collections={collections} canEdit={canEdit} />
+                            <ProductCard
+                              product={p}
+                              categories={categories}
+                              collections={collections}
+                              canEdit={canEdit}
+                            />
                           </li>
                         ))}
                       </ul>
@@ -188,11 +213,20 @@ export function ProductsContent() {
                 }
               >
                 {collections.length === 0 ? (
-                  <Nothing icon="layers" title="No collections yet" text="Group products into a season, a launch or a line, such as SS27." />
+                  <Nothing
+                    icon="layers"
+                    title="No collections yet"
+                    text="Group products into a season, a launch or a line, such as SS27."
+                  />
                 ) : (
                   <div className="ui-catalogue-grid ui-catalogue-grid--collections">
                     {collections.map((c) => (
-                      <CollectionCard key={c.id} collection={c} onDecide={canDecide ? (v) => onDecide(c, v) : undefined} deciding={decide.isPending} />
+                      <CollectionCard
+                        key={c.id}
+                        collection={c}
+                        onDecide={canDecide ? (v) => onDecide(c, v) : undefined}
+                        deciding={decide.isPending}
+                      />
                     ))}
                   </div>
                 )}
@@ -225,7 +259,9 @@ export function ProductsContent() {
           <ImportSourceDialog source={csv ? "csv" : null} onOpenChange={setCsv} />
         </>
       )}
-      {canDecide && <ChangeCollectionDialog collection={changing} onOpenChange={(open) => !open && setChanging(null)} />}
+      {canDecide && (
+        <ChangeCollectionDialog collection={changing} onOpenChange={(open) => !open && setChanging(null)} />
+      )}
     </>
   );
 }

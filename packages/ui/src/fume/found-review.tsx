@@ -130,7 +130,9 @@ function Panel({
   busy?: boolean;
 }) {
   const compare = item.status === "changed" && (item.before !== undefined || item.after !== undefined);
-  const facts = [item.source && `Read in ${item.source}`, item.confidence && confidenceWords[item.confidence]].filter(Boolean);
+  const facts = [item.source && `Read in ${item.source}`, item.confidence && confidenceWords[item.confidence]].filter(
+    Boolean,
+  );
   return (
     <li className="ui-found-panel" id={id} data-status={item.status} aria-label={item.title}>
       <div className="ui-found-panel-head">
@@ -143,7 +145,15 @@ function Panel({
           {item.subtitle && <p className="ui-found-panel-line">{item.subtitle}</p>}
           {facts.length > 0 && <p className="ui-found-panel-facts">{facts.join(" · ")}</p>}
         </div>
-        <Btn variant="quiet" size="sm" iconOnly icon="x" aria-label={`Close ${item.title}`} className="ui-found-panel-close" onClick={onClose} />
+        <Btn
+          variant="quiet"
+          size="sm"
+          iconOnly
+          icon="x"
+          aria-label={`Close ${item.title}`}
+          className="ui-found-panel-close"
+          onClick={onClose}
+        />
       </div>
       {item.note && (
         <p className="ui-found-panel-note">
@@ -186,7 +196,13 @@ function Panel({
             {a.label}
           </Btn>
         ))}
-        <Btn size="sm" variant="quiet" icon={item.status === "changed" ? "rotate-ccw" : "trash"} onClick={onRemove} disabled={busy}>
+        <Btn
+          size="sm"
+          variant="quiet"
+          icon={item.status === "changed" ? "rotate-ccw" : "trash"}
+          onClick={onRemove}
+          disabled={busy}
+        >
           {item.status === "changed" ? "Keep yours" : "Remove"}
         </Btn>
       </div>
@@ -270,13 +286,19 @@ export function FoundReview({
           onChange={setFilter}
           options={[
             { value: "all", label: <FilterLabel label="All" n={counts.all} /> },
-            ...statuses.map((s) => ({ value: s as FoundFilter, label: <FilterLabel label={FOUND_STATUS_LABEL[s]} n={counts[s]} /> })),
+            ...statuses.map((s) => ({
+              value: s as FoundFilter,
+              label: <FilterLabel label={FOUND_STATUS_LABEL[s]} n={counts[s]} />,
+            })),
           ]}
         />
       )}
 
       {shown.length === 0 ? (
-        <p className="ui-found-none">Nothing {filter === "all" ? "" : `${FOUND_STATUS_LABEL[filter as FoundStatus].toLowerCase()} `}left to look at.</p>
+        <p className="ui-found-none">
+          Nothing {filter === "all" ? "" : `${FOUND_STATUS_LABEL[filter as FoundStatus].toLowerCase()} `}left to look
+          at.
+        </p>
       ) : (
         groups.map((g, gi) => (
           <div className="ui-found-group" key={g.name ?? `g${gi}`}>
@@ -286,7 +308,13 @@ export function FoundReview({
                 const isOpen = open === item.id;
                 const panelId = `${uid}-${item.id}`;
                 return [
-                  <li key={item.id} className="ui-found-tile" data-status={item.status} data-selected={isOpen || undefined} data-kept={item.kept || undefined}>
+                  <li
+                    key={item.id}
+                    className="ui-found-tile"
+                    data-status={item.status}
+                    data-selected={isOpen || undefined}
+                    data-kept={item.kept || undefined}
+                  >
                     <div className="ui-found-frame">
                       <button
                         type="button"
@@ -345,7 +373,15 @@ function FilterLabel({ label, n }: { label: string; n: number }) {
 }
 
 /** A small old/new value list for before and after: an optional picture, then label and value rows; changed rows are marked. */
-export function FoundFields({ rows, image, imageLabel }: { rows: { label: string; value: ReactNode; changed?: boolean }[]; image?: string; imageLabel?: string }) {
+export function FoundFields({
+  rows,
+  image,
+  imageLabel,
+}: {
+  rows: { label: string; value: ReactNode; changed?: boolean }[];
+  image?: string;
+  imageLabel?: string;
+}) {
   return (
     <dl className="ui-found-fields">
       {image && (

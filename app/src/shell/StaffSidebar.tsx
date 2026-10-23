@@ -46,7 +46,16 @@ import { AgencyPersonMenu, type NavItem } from "./AgencySidebar";
 import type { Frame } from "./Frame";
 import { Mark } from "./Logo";
 import { initials } from "./people";
-import { addressBrand, brandBase, checkPath, checkSegment, equivalent, frameRoot, setCustomerView, type StaffFrameKind } from "./scope";
+import {
+  addressBrand,
+  brandBase,
+  checkPath,
+  checkSegment,
+  equivalent,
+  frameRoot,
+  setCustomerView,
+  type StaffFrameKind,
+} from "./scope";
 
 // ─── The scope ──────────────────────────────────────────────────────────────
 
@@ -80,7 +89,8 @@ export interface StaffScope {
   noun: "brand" | "client";
 }
 
-const byName = (a: ScopeEntry, b: ScopeEntry) => a.workspace.brandName.localeCompare(b.workspace.brandName, "en", { sensitivity: "base" });
+const byName = (a: ScopeEntry, b: ScopeEntry) =>
+  a.workspace.brandName.localeCompare(b.workspace.brandName, "en", { sensitivity: "base" });
 
 /** Where the person is: all brands or clients, or the one the address names. */
 export function useStaffScope(frame: StaffFrameKind): StaffScope {
@@ -94,17 +104,31 @@ export function useStaffScope(frame: StaffFrameKind): StaffScope {
   const entries = useMemo<ScopeEntry[]>(() => {
     if (agency) {
       if (clients.data)
-        return clients.data.map((c) => ({ workspace: c.workspace, waiting: c.waitingOnYou, summary: c.example === "summary", openedAt: c.openedAt, client: c })).sort(byName);
+        return clients.data
+          .map((c) => ({
+            workspace: c.workspace,
+            waiting: c.waitingOnYou,
+            summary: c.example === "summary",
+            openedAt: c.openedAt,
+            client: c,
+          }))
+          .sort(byName);
       return session.workspaces.map((workspace) => ({ workspace, waiting: 0, summary: false })).sort(byName);
     }
     const needs = all.data?.needsYou ?? [];
     const brands = all.data?.brands.map((b) => b.workspace) ?? session.workspaces;
     const seen = new Set(brands.map((w) => w.id));
-    return [...brands, ...session.workspaces.filter((w) => !seen.has(w.id))]
-      // Round 13 (robots' note 06: "SOLV, 1 waiting on you" while SOLV had 2 to check): a creative waiting in Check counts
-      // one each, as Check counts it; the rest of what needs you (a plan, a question) one each too.
-      .map((workspace) => ({ workspace, waiting: needs.filter((n) => n.clientId === workspace.id && n.kind !== "check").length + qa.of(workspace.id), summary: false }))
-      .sort(byName);
+    return (
+      [...brands, ...session.workspaces.filter((w) => !seen.has(w.id))]
+        // Round 13 (robots' note 06: "SOLV, 1 waiting on you" while SOLV had 2 to check): a creative waiting in Check counts
+        // one each, as Check counts it; the rest of what needs you (a plan, a question) one each too.
+        .map((workspace) => ({
+          workspace,
+          waiting: needs.filter((n) => n.clientId === workspace.id && n.kind !== "check").length + qa.of(workspace.id),
+          summary: false,
+        }))
+        .sort(byName)
+    );
   }, [agency, clients.data, all.data, session.workspaces, qa]);
   const entry = workspaceId ? entries.find((e) => e.workspace.id === workspaceId) : undefined;
   return {
@@ -113,7 +137,7 @@ export function useStaffScope(frame: StaffFrameKind): StaffScope {
     entry,
     entries,
     loaded: agency ? clients.isSuccess || clients.isError : all.isSuccess || all.isError,
-    orgName: agency ? session.agency?.organisation.name ?? "Your agency" : "Fume",
+    orgName: agency ? (session.agency?.organisation.name ?? "Your agency") : "Fume",
     limited: !agency && session.user.staffRole === "admin",
     noun: agency ? "client" : "brand",
   };
@@ -126,7 +150,10 @@ export function useStaffScope(frame: StaffFrameKind): StaffScope {
 function useCheckCount(frame: StaffFrameKind): { total: number; of: (workspaceId: string) => number } {
   const qa = useQaWaiting();
   const rows = useStudioCampaigns().data;
-  const plans = frame === "fume" ? (rows ?? []).filter((r) => r.campaign.stage === "plan" && r.campaign.waits?.plan === "in_check") : [];
+  const plans =
+    frame === "fume"
+      ? (rows ?? []).filter((r) => r.campaign.stage === "plan" && r.campaign.waits?.plan === "in_check")
+      : [];
   return { total: qa.total + plans.length, of: (id) => qa.of(id) + plans.filter((r) => r.workspace.id === id).length };
 }
 
@@ -136,31 +163,104 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
   const { frame, workspaceId, limited } = scope;
   const root = frameRoot[frame];
   if (!workspaceId) {
-    const overview: NavItem = { to: root, label: "Overview", icon: "house", end: true, keywords: "home today all brands clients needs you" };
-    const deliveries: NavItem = { to: `${root}/deliveries`, label: "Deliveries", icon: "download", keywords: "deliveries due sent download" };
-    const team: NavItem = { to: `${root}/team`, label: "Team", icon: "users", keywords: "team people load capacity invite" };
+    const overview: NavItem = {
+      to: root,
+      label: "Overview",
+      icon: "house",
+      end: true,
+      keywords: "home today all brands clients needs you",
+    };
+    const deliveries: NavItem = {
+      to: `${root}/deliveries`,
+      label: "Deliveries",
+      icon: "download",
+      keywords: "deliveries due sent download",
+    };
+    const team: NavItem = {
+      to: `${root}/team`,
+      label: "Team",
+      icon: "users",
+      keywords: "team people load capacity invite",
+    };
     // Settings › Licence is its own page under Settings (AGENCY, 20 Oct): Usage is lit only on Usage
-    const usage: NavItem = { to: `${root}/usage`, label: "Usage", icon: "chart-column", keywords: "usage licence creatives made approved renders month" };
-    const quality: NavItem = { to: `${root}/quality`, label: "Quality log", icon: "list", keywords: "quality log findings severity fixed" };
-    const campaigns: NavItem = { to: `${root}/campaigns`, label: "Campaigns", icon: "megaphone", keywords: "campaigns across brands clients calendar plans" };
+    const usage: NavItem = {
+      to: `${root}/usage`,
+      label: "Usage",
+      icon: "chart-column",
+      keywords: "usage licence creatives made approved renders month",
+    };
+    const quality: NavItem = {
+      to: `${root}/quality`,
+      label: "Quality log",
+      icon: "list",
+      keywords: "quality log findings severity fixed",
+    };
+    const campaigns: NavItem = {
+      to: `${root}/campaigns`,
+      label: "Campaigns",
+      icon: "megaphone",
+      keywords: "campaigns across brands clients calendar plans",
+    };
     if (limited) return [overview, campaigns, deliveries, team, usage, quality];
     return [
       overview,
-      { to: checkPath(frame), label: "Check", icon: "inbox", count: qa.total || undefined, holds: [`${root}/queue`], keywords: "check qa queue creatives plans to check mark checked" },
+      {
+        to: checkPath(frame),
+        label: "Check",
+        icon: "inbox",
+        count: qa.total || undefined,
+        holds: [`${root}/queue`],
+        keywords: "check qa queue creatives plans to check mark checked",
+      },
       campaigns,
       deliveries,
-      ...(frame === "agency" ? [{ to: "/agency/clients", label: "Clients", icon: "layout-grid", keywords: "clients brands add a client" } satisfies NavItem] : []),
+      ...(frame === "agency"
+        ? [
+            {
+              to: "/agency/clients",
+              label: "Clients",
+              icon: "layout-grid",
+              keywords: "clients brands add a client",
+            } satisfies NavItem,
+          ]
+        : []),
       team,
       usage,
       quality,
       // Round 13 AGENCY (robot note 10-agency): the agency's Settings is a place of its own (its plan with Fume, its people)
-      ...(frame === "agency" ? [{ to: "/agency/settings", label: "Settings", icon: "settings", keywords: "settings agency fume plan features licence profile roles" } satisfies NavItem] : []),
+      ...(frame === "agency"
+        ? [
+            {
+              to: "/agency/settings",
+              label: "Settings",
+              icon: "settings",
+              keywords: "settings agency fume plan features licence profile roles",
+            } satisfies NavItem,
+          ]
+        : []),
     ];
   }
   const base = brandBase(frame, workspaceId);
-  const home: NavItem = { to: base, label: "Home", icon: "house", end: true, holds: [`${base}/review`], keywords: "home brand today needs you waiting" };
+  const home: NavItem = {
+    to: base,
+    label: "Home",
+    icon: "house",
+    end: true,
+    holds: [`${base}/review`],
+    keywords: "home brand today needs you waiting",
+  };
   // Fume's admin reads the brand's campaigns (NUMBERS, 20 Oct: she follows the work); a campaign opens the brand's Home
-  if (limited) return [home, { to: `${base}/campaigns`, label: "Campaigns", icon: "megaphone", end: true, keywords: "campaigns brief plan creatives delivery" }];
+  if (limited)
+    return [
+      home,
+      {
+        to: `${base}/campaigns`,
+        label: "Campaigns",
+        icon: "megaphone",
+        end: true,
+        keywords: "campaigns brief plan creatives delivery",
+      },
+    ];
   const boards = `${base}/boards`;
   return [
     home,
@@ -187,7 +287,12 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
       holds: [`${base}/products`, `${base}/check/products`, `${base}/assets`, ...(campaignBoard ? [] : [boards])],
       keywords: "brand dna products taste rules",
       sub: [
-        { to: `${base}/assets`, label: "Models and references", icon: "users", keywords: "models references cast presets assets" },
+        {
+          to: `${base}/assets`,
+          label: "Models and references",
+          icon: "users",
+          keywords: "models references cast presets assets",
+        },
         { to: boards, label: "Boards", icon: "layout-grid", keywords: "boards moodboard" },
       ],
     },
@@ -198,9 +303,25 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
       icon: "fume-engine",
       holds: [`${base}/output`],
       keywords: "engine chat make generate runs",
-      sub: [{ to: `${base}/output`, label: "Engine output", icon: "image", keywords: "engine output runs generations made candidates" }],
+      sub: [
+        {
+          to: `${base}/output`,
+          label: "Engine output",
+          icon: "image",
+          keywords: "engine output runs generations made candidates",
+        },
+      ],
     },
-    ...(frame === "agency" ? [{ to: `${base}/fume`, label: "Fume", icon: "message-square", keywords: "chat ask fume conversation" } satisfies NavItem] : []),
+    ...(frame === "agency"
+      ? [
+          {
+            to: `${base}/fume`,
+            label: "Fume",
+            icon: "message-square",
+            keywords: "chat ask fume conversation",
+          } satisfies NavItem,
+        ]
+      : []),
   ];
 }
 
@@ -208,7 +329,11 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
 
 export function StaffSidebar({ scope, places, frame }: { scope: StaffScope; places: NavItem[]; frame: Frame }) {
   const name = scope.entry?.workspace.brandName;
-  const label = name ? `${name}, ${scope.frame === "agency" ? scope.orgName : "the Fume studio"}` : scope.frame === "agency" ? `${scope.orgName} in Fume` : "Fume studio";
+  const label = name
+    ? `${name}, ${scope.frame === "agency" ? scope.orgName : "the Fume studio"}`
+    : scope.frame === "agency"
+      ? `${scope.orgName} in Fume`
+      : "Fume studio";
   return (
     <Sidebar aria-label={label}>
       <SidebarHeader>
@@ -222,12 +347,17 @@ export function StaffSidebar({ scope, places, frame }: { scope: StaffScope; plac
         <SidebarGroup>
           <SidebarMenu>
             {places.flatMap((item) => {
-              const open = frame.isActive(item) ? item.sub ?? [] : [];
+              const open = frame.isActive(item) ? (item.sub ?? []) : [];
               const inside = open.some((s) => frame.isActive(s));
               return [
                 <SidebarMenuItem key={item.to}>
                   {/* A place is lit while you are in it, unless one of its places inside is (then that one is) */}
-                  <SidebarMenuButton asChild isActive={frame.isActive(item) && !inside} icon={item.icon} badge={item.count}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={frame.isActive(item) && !inside}
+                    icon={item.icon}
+                    badge={item.count}
+                  >
                     <Link to={item.to} onClick={frame.onPlace(item)} aria-label={item.name}>
                       {item.label}
                     </Link>
@@ -318,12 +448,24 @@ export function ScopePicker({ scope, compact }: { scope: StaffScope; compact?: b
   const many = entries.length >= MANY;
   const q = query.trim().toLowerCase();
   const shown = q ? entries.filter((e) => e.workspace.brandName.toLowerCase().includes(q)) : entries;
-  const recent = many && !q ? entries.filter((e) => e.openedAt).sort((a, b) => b.openedAt!.localeCompare(a.openedAt!)).slice(0, 3) : [];
+  const recent =
+    many && !q
+      ? entries
+          .filter((e) => e.openedAt)
+          .sort((a, b) => b.openedAt!.localeCompare(a.openedAt!))
+          .slice(0, 3)
+      : [];
   const triggerName = `${current ? current.brandName : allLabel}${frame === "agency" ? `, ${scope.orgName}` : ""}. Switch ${noun}`;
   const go = (workspaceId?: string) => navigate(equivalent(pathname, frame, workspaceId, limited));
 
   const trigger = compact ? (
-    <Button variant="quiet" size="sm" iconEnd="chevrons-up-down" className="ui-agency-bar-picker" aria-label={triggerName}>
+    <Button
+      variant="quiet"
+      size="sm"
+      iconEnd="chevrons-up-down"
+      className="ui-agency-bar-picker"
+      aria-label={triggerName}
+    >
       {current ? (
         <span className="ui-agency-mark" aria-hidden="true">
           {letter(current.brandName)}
@@ -377,7 +519,12 @@ export function ScopePicker({ scope, compact }: { scope: StaffScope; compact?: b
   const row = (e: ScopeEntry, key: string) => {
     const here = current?.id === e.workspace.id;
     return (
-      <DropdownMenuItem key={key} onSelect={() => go(e.workspace.id)} aria-label={entryName(e.workspace.brandName, e.waiting)} aria-current={here ? "page" : undefined}>
+      <DropdownMenuItem
+        key={key}
+        onSelect={() => go(e.workspace.id)}
+        aria-label={entryName(e.workspace.brandName, e.waiting)}
+        aria-current={here ? "page" : undefined}
+      >
         <span className="ui-switcher-mark" aria-hidden="true">
           {letter(e.workspace.brandName)}
         </span>
@@ -417,7 +564,11 @@ export function ScopePicker({ scope, compact }: { scope: StaffScope; compact?: b
             />
           </div>
         )}
-        <DropdownMenuItem onSelect={() => go(undefined)} aria-label={allLabel} aria-current={current ? undefined : "page"}>
+        <DropdownMenuItem
+          onSelect={() => go(undefined)}
+          aria-label={allLabel}
+          aria-current={current ? undefined : "page"}
+        >
           <span className="ui-switcher-mark ui-switcher-mark--fume" aria-hidden="true">
             <Mark />
           </span>
@@ -436,9 +587,17 @@ export function ScopePicker({ scope, compact }: { scope: StaffScope; compact?: b
             <DropdownMenuSeparator />
           </>
         )}
-        {shown.length > 0 && <DropdownMenuLabel>{q ? `${noun === "brand" ? "Brands" : "Clients"} found` : noun === "brand" ? "Brands" : "Clients"}</DropdownMenuLabel>}
+        {shown.length > 0 && (
+          <DropdownMenuLabel>
+            {q ? `${noun === "brand" ? "Brands" : "Clients"} found` : noun === "brand" ? "Brands" : "Clients"}
+          </DropdownMenuLabel>
+        )}
         {shown.map((e) => row(e, e.workspace.id))}
-        {q && !shown.length && <p className="ui-agency-picker-none">No {noun} called “{query.trim()}”</p>}
+        {q && !shown.length && (
+          <p className="ui-agency-picker-none">
+            No {noun} called “{query.trim()}”
+          </p>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -464,7 +623,13 @@ export function FumePersonMenu({ avatar }: { avatar?: boolean }) {
             <Avatar size="sm" ink initials={initials(user.name)} />
           </Button>
         ) : (
-          <SidebarMenuButton size="lg" leading={<SidebarAvatar>{initials(user.name)}</SidebarAvatar>} description={`${user.title} · ${role}`} endIcon="chevrons-up-down" aria-label={triggerName}>
+          <SidebarMenuButton
+            size="lg"
+            leading={<SidebarAvatar>{initials(user.name)}</SidebarAvatar>}
+            description={`${user.title} · ${role}`}
+            endIcon="chevrons-up-down"
+            aria-label={triggerName}
+          >
             {user.name}
           </SidebarMenuButton>
         )}

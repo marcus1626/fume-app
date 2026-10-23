@@ -45,7 +45,16 @@ import {
 } from "@fume/ui";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { useChangeRole, useInvite, useMeetings, useRemoveMember, useSettings, useTeam, useUpdateProfile, useUpdateWorkspace } from "../../api/hooks";
+import {
+  useChangeRole,
+  useInvite,
+  useMeetings,
+  useRemoveMember,
+  useSettings,
+  useTeam,
+  useUpdateProfile,
+  useUpdateWorkspace,
+} from "../../api/hooks";
 import type { Session, SettingsView, TeamView, User } from "../../contract";
 import * as copy from "../../copy";
 import { date, now } from "../../lib/time";
@@ -64,7 +73,13 @@ function ownerOnly(team: TeamView | undefined, what: string) {
 function Person({ user }: { user: User }) {
   return (
     <ItemMedia>
-      <Avatar size="md" src={user.avatar} initials={initials(user.name)} ink={user.staffRole === "expert"} aria-hidden="true" />
+      <Avatar
+        size="md"
+        src={user.avatar}
+        initials={initials(user.name)}
+        ink={user.staffRole === "expert"}
+        aria-hidden="true"
+      />
     </ItemMedia>
   );
 }
@@ -76,26 +91,43 @@ export function WorkspaceSettings({ session }: { session: Session }) {
   const team = useTeam();
   return (
     <SettingsPane title="Workspace" description="The brand this workspace is for, and where its creatives run.">
-      <Query query={settings}>{(view) => <WorkspaceForm view={view} editable={isOwner(session)} reason={ownerOnly(team.data, "changes the workspace")} />}</Query>
+      <Query query={settings}>
+        {(view) => (
+          <WorkspaceForm
+            view={view}
+            editable={isOwner(session)}
+            reason={ownerOnly(team.data, "changes the workspace")}
+          />
+        )}
+      </Query>
     </SettingsPane>
   );
 }
 
 function WorkspaceForm({ view, editable, reason }: { view: SettingsView; editable: boolean; reason: string }) {
-  const saved = { brandName: view.workspace.brandName, market: view.workspace.market, language: view.workspace.language };
+  const saved = {
+    brandName: view.workspace.brandName,
+    market: view.workspace.market,
+    language: view.workspace.language,
+  };
   const [value, setValue] = useState(saved);
   const update = useUpdateWorkspace();
   const toast = useToast();
   // A save (or a change elsewhere) brings new saved values: the form follows them.
   useEffect(() => setValue(saved), [saved.brandName, saved.market, saved.language]); // eslint-disable-line react-hooks/exhaustive-deps
-  const dirty = value.brandName !== saved.brandName || value.market !== saved.market || value.language !== saved.language;
+  const dirty =
+    value.brandName !== saved.brandName || value.market !== saved.market || value.language !== saved.language;
   const empty = !value.brandName.trim();
 
   const submit = (_: FormEvent<HTMLFormElement>) => {
     if (empty) return;
     update.mutate(
       { brandName: value.brandName.trim(), market: value.market.trim(), language: value.language.trim() },
-      { onSuccess: () => toast.done("Workspace saved"), onError: () => toast.error("The workspace wasn’t saved", { description: "Your changes are still here; try again." }) },
+      {
+        onSuccess: () => toast.done("Workspace saved"),
+        onError: () =>
+          toast.error("The workspace wasn’t saved", { description: "Your changes are still here; try again." }),
+      },
     );
   };
 
@@ -111,13 +143,18 @@ function WorkspaceForm({ view, editable, reason }: { view: SettingsView; editabl
         onChange={(e) => setValue({ ...value, [key]: e.target.value })}
       />
       <FieldDescription id={`ws-${key}-help`}>{help}</FieldDescription>
-      {key === "brandName" && empty && <FieldError>Give the brand its name; Fume uses it on every creative’s delivery name.</FieldError>}
+      {key === "brandName" && empty && (
+        <FieldError>Give the brand its name; Fume uses it on every creative’s delivery name.</FieldError>
+      )}
     </Field>
   );
 
   return (
     <SettingsForm dirty={dirty} saving={update.isPending} onDiscard={() => setValue(saved)} onSubmit={submit}>
-      <SettingsSection title="The brand" description={editable ? "How Fume names the brand in the workspace and in deliveries." : reason}>
+      <SettingsSection
+        title="The brand"
+        description={editable ? "How Fume names the brand in the workspace and in deliveries." : reason}
+      >
         <FieldGroup>
           {field("brandName", "Brand name", "As it is written on the product.")}
           {field("market", "Market", "Where the creatives run. It decides the claims Fume may use.")}
@@ -139,7 +176,10 @@ const staffWork = {
 export function TeamSettings({ session }: { session: Session }) {
   const team = useTeam();
   return (
-    <SettingsPane title="Team" description={`Who works on ${session.workspace.brandName} in Fume, and what each of them can do.`}>
+    <SettingsPane
+      title="Team"
+      description={`Who works on ${session.workspace.brandName} in Fume, and what each of them can do.`}
+    >
       <Query query={team}>{(view) => <TeamSections view={view} session={session} />}</Query>
     </SettingsPane>
   );
@@ -159,7 +199,14 @@ function TeamSections({ view, session }: { view: TeamView; session: Session }) {
 
   return (
     <>
-      <SettingsSection title="People" description={owner ? "Change what someone can do, or take them off the workspace." : ownerOnly(view, "changes roles and the team")}>
+      <SettingsSection
+        title="People"
+        description={
+          owner
+            ? "Change what someone can do, or take them off the workspace."
+            : ownerOnly(view, "changes roles and the team")
+        }
+      >
         <ItemGroup as="ul">
           {people.map(({ user, membership }) => {
             const you = user.id === session.user.id;
@@ -184,7 +231,10 @@ function TeamSections({ view, session }: { view: TeamView; session: Session }) {
                         label={`What ${firstName(user.name)} can do`}
                         disabled={changeRole.isPending}
                         onValueChange={(role) =>
-                          changeRole.mutate({ userId: user.id, role }, { onSuccess: () => toast.done(`${firstName(user.name)}: ${copy.role[role]}`) })
+                          changeRole.mutate(
+                            { userId: user.id, role },
+                            { onSuccess: () => toast.done(`${firstName(user.name)}: ${copy.role[role]}`) },
+                          )
                         }
                       />
                       <AlertDialog>
@@ -197,12 +247,18 @@ function TeamSections({ view, session }: { view: TeamView; session: Session }) {
                               Remove {user.name} from {session.workspace.brandName}?
                             </AlertDialogTitle>
                             <AlertDialogDescription>
-                              They lose the campaigns, the conversation with Fume and the deliveries. Their decisions stay in the record.
+                              They lose the campaigns, the conversation with Fume and the deliveries. Their decisions
+                              stay in the record.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Keep {firstName(user.name)}</AlertDialogCancel>
-                            <AlertDialogAction icon="trash" onClick={() => remove.mutate(user.id, { onSuccess: () => toast.done(`${user.name} removed`) })}>
+                            <AlertDialogAction
+                              icon="trash"
+                              onClick={() =>
+                                remove.mutate(user.id, { onSuccess: () => toast.done(`${user.name} removed`) })
+                              }
+                            >
                               Remove
                             </AlertDialogAction>
                           </AlertDialogFooter>
@@ -267,7 +323,10 @@ function TeamSections({ view, session }: { view: TeamView; session: Session }) {
         </SettingsSection>
       )}
 
-      <SettingsSection title="What each role can do" description="Only the owner and the people who can approve make decisions on creatives.">
+      <SettingsSection
+        title="What each role can do"
+        description="Only the owner and the people who can approve make decisions on creatives."
+      >
         <DataList>
           {(Object.keys(copy.role) as (keyof typeof copy.role)[]).map((r) => (
             <DataListItem key={r} label={copy.role[r]}>
@@ -315,7 +374,8 @@ function FumeTeamSection({ view }: { view: TeamView }) {
               <ItemContent>
                 <ItemTitle>{m.topic}</ItemTitle>
                 <ItemDescription>
-                  {slotLabel(m.at)} · {m.minutes} min{people.get(m.hostId) ? ` with ${firstName(people.get(m.hostId)!.name)}` : ""}
+                  {slotLabel(m.at)} · {m.minutes} min
+                  {people.get(m.hostId) ? ` with ${firstName(people.get(m.hostId)!.name)}` : ""}
                 </ItemDescription>
               </ItemContent>
             </Item>
@@ -343,7 +403,9 @@ function InviteSection({ view }: { view: TeamView }) {
   const [problem, setProblem] = useState<string | null>(null);
   const known = [
     ...view.members.map((m) => ({ id: m.user.id, name: m.user.name, email: m.user.email, role: m.membership.role })),
-    ...view.invitations.filter((i) => i.state === "sent").map((i) => ({ id: i.id, name: i.email, email: i.email, role: i.role })),
+    ...view.invitations
+      .filter((i) => i.state === "sent")
+      .map((i) => ({ id: i.id, name: i.email, email: i.email, role: i.role })),
   ];
 
   const send = (event: FormEvent<HTMLFormElement>) => {
@@ -407,9 +469,12 @@ function InviteSection({ view }: { view: TeamView }) {
 export function PackageSettings({ session }: { session: Session }) {
   const settings = useSettings();
   return (
-    <SettingsPane title="Package and usage" description="What your package includes, and how much of it this period has used.">
+    <SettingsPane
+      title="Package and usage"
+      description="What your package includes, and how much of it this period has used."
+    >
       <Query query={settings}>
-        {({ package: pkg, usage }) => (
+        {({ package: pkg, usage }) =>
           // Round 13 (robot note 12): a brand an agency runs is under the agency's licence, so the agency answers for it
           session.agencyName ? (
             <SettingsSection
@@ -423,41 +488,55 @@ export function PackageSettings({ session }: { session: Session }) {
               </DataList>
             </SettingsSection>
           ) : (
-          <>
-            <SettingsSection title="This period" description={usage.periodEndsAt ? `The package renews ${date(usage.periodEndsAt)}.` : "A one-off package: it does not renew."}>
-              <ProgressField>
-                <ProgressHead label="Creatives used" labelId="usage-label" num={`${usage.creativesUsed} / ${usage.creativeCap}`} />
-                <Progress value={usage.creativesUsed} max={usage.creativeCap} aria-labelledby="usage-label" />
-              </ProgressField>
-              <DataList>
-                <DataListItem label="Campaigns active">{usage.campaignsActive}</DataListItem>
-                <DataListItem label="Creatives left">{Math.max(usage.creativeCap - usage.creativesUsed, 0)}</DataListItem>
-              </DataList>
-            </SettingsSection>
-            <SettingsSection title="Your package" description="Fume’s own corrections never use a round.">
-              <DataList>
-                <DataListItem label="Package">{copy.packageName[pkg.kind]}</DataListItem>
-                <DataListItem label="Creatives">
-                  {pkg.creativeCap} {pkg.period === "monthly" ? "a month" : "in all"}
-                </DataListItem>
-                <DataListItem label="Rounds included">
-                  {copy.count(pkg.directionRounds, "direction round")} and {copy.count(pkg.productionRounds, "round")} of changes per campaign
-                </DataListItem>
-                <DataListItem label="Period">{pkg.period === "monthly" ? "Monthly" : "One-off"}</DataListItem>
-              </DataList>
-              {isOwner(session) ? (
-                <div className="ui-app-row">
-                  <Button asChild variant="secondary" icon="message-square">
-                    <Link to="/fume">Ask Fume about the package</Link>
-                  </Button>
-                </div>
-              ) : (
-                <p className="ui-app-section-text">The owner changes the package.</p>
-              )}
-            </SettingsSection>
-          </>
+            <>
+              <SettingsSection
+                title="This period"
+                description={
+                  usage.periodEndsAt
+                    ? `The package renews ${date(usage.periodEndsAt)}.`
+                    : "A one-off package: it does not renew."
+                }
+              >
+                <ProgressField>
+                  <ProgressHead
+                    label="Creatives used"
+                    labelId="usage-label"
+                    num={`${usage.creativesUsed} / ${usage.creativeCap}`}
+                  />
+                  <Progress value={usage.creativesUsed} max={usage.creativeCap} aria-labelledby="usage-label" />
+                </ProgressField>
+                <DataList>
+                  <DataListItem label="Campaigns active">{usage.campaignsActive}</DataListItem>
+                  <DataListItem label="Creatives left">
+                    {Math.max(usage.creativeCap - usage.creativesUsed, 0)}
+                  </DataListItem>
+                </DataList>
+              </SettingsSection>
+              <SettingsSection title="Your package" description="Fume’s own corrections never use a round.">
+                <DataList>
+                  <DataListItem label="Package">{copy.packageName[pkg.kind]}</DataListItem>
+                  <DataListItem label="Creatives">
+                    {pkg.creativeCap} {pkg.period === "monthly" ? "a month" : "in all"}
+                  </DataListItem>
+                  <DataListItem label="Rounds included">
+                    {copy.count(pkg.directionRounds, "direction round")} and {copy.count(pkg.productionRounds, "round")}{" "}
+                    of changes per campaign
+                  </DataListItem>
+                  <DataListItem label="Period">{pkg.period === "monthly" ? "Monthly" : "One-off"}</DataListItem>
+                </DataList>
+                {isOwner(session) ? (
+                  <div className="ui-app-row">
+                    <Button asChild variant="secondary" icon="message-square">
+                      <Link to="/fume">Ask Fume about the package</Link>
+                    </Button>
+                  </div>
+                ) : (
+                  <p className="ui-app-section-text">The owner changes the package.</p>
+                )}
+              </SettingsSection>
+            </>
           )
-        )}
+        }
       </Query>
     </SettingsPane>
   );
@@ -470,7 +549,10 @@ type Prefs = SettingsView["notificationPrefs"];
 export function NotificationSettings() {
   const settings = useSettings();
   return (
-    <SettingsPane title="Notifications" description="What Fume tells you, in the app and by email. These are yours alone.">
+    <SettingsPane
+      title="Notifications"
+      description="What Fume tells you, in the app and by email. These are yours alone."
+    >
       <Query query={settings}>{(view) => <NotificationForm prefs={view.notificationPrefs} />}</Query>
     </SettingsPane>
   );
@@ -482,7 +564,8 @@ function NotificationForm({ prefs }: { prefs: Prefs }) {
   const [value, setValue] = useState(prefs);
   const toast = useToast();
   const dirty = JSON.stringify(value) !== JSON.stringify(saved);
-  const set = (kind: string, channel: "inApp" | "email", on: boolean) => setValue(value.map((p) => (p.kind === kind ? { ...p, [channel]: on } : p)));
+  const set = (kind: string, channel: "inApp" | "email", on: boolean) =>
+    setValue(value.map((p) => (p.kind === kind ? { ...p, [channel]: on } : p)));
 
   const rows = (channel: "inApp" | "email") =>
     value.map((p) => (
@@ -570,12 +653,24 @@ export function ProfileForm({ user, about }: { user: User; about?: ReactNode }) 
         <FieldGroup>
           <Field invalid={tried && nameMissing}>
             <FieldLabel htmlFor="profile-name">Name</FieldLabel>
-            <Input id="profile-name" autoComplete="name" value={value.name} aria-invalid={tried && nameMissing ? true : undefined} onChange={(e) => setValue({ ...value, name: e.target.value })} />
+            <Input
+              id="profile-name"
+              autoComplete="name"
+              value={value.name}
+              aria-invalid={tried && nameMissing ? true : undefined}
+              onChange={(e) => setValue({ ...value, name: e.target.value })}
+            />
             {tried && nameMissing && <FieldError>Your name is needed: it signs what you decide.</FieldError>}
           </Field>
           <Field>
             <FieldLabel htmlFor="profile-title">Title</FieldLabel>
-            <Input id="profile-title" autoComplete="organization-title" value={value.title} aria-describedby="profile-title-help" onChange={(e) => setValue({ ...value, title: e.target.value })} />
+            <Input
+              id="profile-title"
+              autoComplete="organization-title"
+              value={value.title}
+              aria-describedby="profile-title-help"
+              onChange={(e) => setValue({ ...value, title: e.target.value })}
+            />
             <FieldDescription id="profile-title-help">Your real job title, shown with your name.</FieldDescription>
           </Field>
           <Field invalid={tried && emailWrong}>
@@ -608,7 +703,11 @@ export function ProfileSettings({ session }: { session: Session }) {
         about={
           <DataList>
             <DataListItem label={`On ${workspace.brandName}`}>
-              {role ? `${copy.role[role]}: ${copy.roleHelp[role].toLowerCase()}` : user.staffRole ? `Fume’s ${user.title.toLowerCase()}, in Fume view` : "Not on the team"}
+              {role
+                ? `${copy.role[role]}: ${copy.roleHelp[role].toLowerCase()}`
+                : user.staffRole
+                  ? `Fume’s ${user.title.toLowerCase()}, in Fume view`
+                  : "Not on the team"}
             </DataListItem>
           </DataList>
         }

@@ -68,10 +68,38 @@ interface AgencyDb {
 // ─── The agency world: made once, when the demo starts as Nora ─────────────
 
 const agencyPeople: User[] = [
-  { id: "u-nora", name: "Nora Vik", title: "Creative lead", email: "nora@brygga.example", staffRole: "expert", agency: { organisationId: AGENCY_ID, role: "lead" } },
-  { id: "u-even", name: "Even Dahl", title: "Designer", email: "even@brygga.example", staffRole: "expert", agency: { organisationId: AGENCY_ID, role: "creative" } },
-  { id: "u-live", name: "Live Hauge", title: "Art director", email: "live@brygga.example", staffRole: "expert", agency: { organisationId: AGENCY_ID, role: "creative" } },
-  { id: "u-sindre", name: "Sindre Moe", title: "Producer", email: "sindre@brygga.example", staffRole: "operator", agency: { organisationId: AGENCY_ID, role: "creative" } },
+  {
+    id: "u-nora",
+    name: "Nora Vik",
+    title: "Creative lead",
+    email: "nora@brygga.example",
+    staffRole: "expert",
+    agency: { organisationId: AGENCY_ID, role: "lead" },
+  },
+  {
+    id: "u-even",
+    name: "Even Dahl",
+    title: "Designer",
+    email: "even@brygga.example",
+    staffRole: "expert",
+    agency: { organisationId: AGENCY_ID, role: "creative" },
+  },
+  {
+    id: "u-live",
+    name: "Live Hauge",
+    title: "Art director",
+    email: "live@brygga.example",
+    staffRole: "expert",
+    agency: { organisationId: AGENCY_ID, role: "creative" },
+  },
+  {
+    id: "u-sindre",
+    name: "Sindre Moe",
+    title: "Producer",
+    email: "sindre@brygga.example",
+    staffRole: "operator",
+    agency: { organisationId: AGENCY_ID, role: "creative" },
+  },
 ];
 const clientPeople: User[] = [
   { id: "u-camille", name: "Camille Roux", title: "Brand director", email: "camille@aurea.example" },
@@ -79,9 +107,39 @@ const clientPeople: User[] = [
   { id: "u-sara", name: "Sara Lind", title: "Marketing lead", email: "sara@vev.example" },
 ];
 const summaryClients: { workspace: Workspace; org: Organisation }[] = [
-  { workspace: { id: "w-aurea", organisationId: "o-aurea", brandName: "AURÉA", market: "Denmark", language: "Danish", agencyId: AGENCY_ID }, org: { id: "o-aurea", name: "AURÉA", packageId: "p-core", kind: "brand" } },
-  { workspace: { id: "w-halm", organisationId: "o-halm", brandName: "HALM", market: "Norway", language: "Norwegian", agencyId: AGENCY_ID }, org: { id: "o-halm", name: "HALM", packageId: "p-core", kind: "brand" } },
-  { workspace: { id: "w-vev", organisationId: "o-vev", brandName: "VEV", market: "Sweden", language: "Swedish", agencyId: AGENCY_ID }, org: { id: "o-vev", name: "VEV", packageId: "p-core", kind: "brand" } },
+  {
+    workspace: {
+      id: "w-aurea",
+      organisationId: "o-aurea",
+      brandName: "AURÉA",
+      market: "Denmark",
+      language: "Danish",
+      agencyId: AGENCY_ID,
+    },
+    org: { id: "o-aurea", name: "AURÉA", packageId: "p-core", kind: "brand" },
+  },
+  {
+    workspace: {
+      id: "w-halm",
+      organisationId: "o-halm",
+      brandName: "HALM",
+      market: "Norway",
+      language: "Norwegian",
+      agencyId: AGENCY_ID,
+    },
+    org: { id: "o-halm", name: "HALM", packageId: "p-core", kind: "brand" },
+  },
+  {
+    workspace: {
+      id: "w-vev",
+      organisationId: "o-vev",
+      brandName: "VEV",
+      market: "Sweden",
+      language: "Swedish",
+      agencyId: AGENCY_ID,
+    },
+    org: { id: "o-vev", name: "VEV", packageId: "p-core", kind: "brand" },
+  },
 ];
 /** Who leads each client at the agency, and the client's own people. */
 const leads: Record<Id, Id> = { "w-lysne": "u-nora", "w-aurea": "u-live", "w-halm": "u-even", "w-vev": "u-live" };
@@ -115,12 +173,16 @@ export function agencyWorld(db: AgencyDb & Record<string, unknown>) {
     if (["users", "memberships", "staff", "organisations", "workspaces"].includes(key)) continue;
     db[key] = swapDeep(db[key]);
   }
-  db.organisations.push({ id: AGENCY_ID, name: "Brygga Studio", packageId: "p-core", kind: "agency" }, ...summaryClients.map((c) => c.org));
+  db.organisations.push(
+    { id: AGENCY_ID, name: "Brygga Studio", packageId: "p-core", kind: "agency" },
+    ...summaryClients.map((c) => c.org),
+  );
   const lysne = db.workspaces.find((w) => w.id === FULL_CLIENT);
   if (lysne) lysne.agencyId = AGENCY_ID;
   db.workspaces.push(...summaryClients.map((c) => c.workspace));
   db.users.push(...agencyPeople, ...clientPeople);
-  for (const [ws, ids] of Object.entries(clientOwners)) ids.forEach((userId) => db.memberships.push({ userId, workspaceId: ws, role: "owner" }));
+  for (const [ws, ids] of Object.entries(clientOwners))
+    ids.forEach((userId) => db.memberships.push({ userId, workspaceId: ws, role: "owner" }));
   // Agency people work in every client: an assignment (what they can open) and the approver's seat for the brief and
   // the plan (the agency is Fume's customer). Creatives stay the client's to approve (approve() below refuses them).
   db.staff = db.staff.filter((s) => s.workspaceId !== FULL_CLIENT);
@@ -131,7 +193,8 @@ export function agencyWorld(db: AgencyDb & Record<string, unknown>) {
     }
   // Who said what: in LYSNE's Fume conversation it is the agency that talks to Fume, and it sent the briefs.
   const asAgency = (id?: Id) => (id === "u-maja" ? "u-nora" : id);
-  for (const m of (db.messages as { author: { kind: string; userId?: Id } }[]) ?? []) if (m.author.kind === "person") m.author.userId = asAgency(m.author.userId);
+  for (const m of (db.messages as { author: { kind: string; userId?: Id } }[]) ?? [])
+    if (m.author.kind === "person") m.author.userId = asAgency(m.author.userId);
   for (const b of (db.briefs as { approvedBy?: Id }[]) ?? []) b.approvedBy = asAgency(b.approvedBy);
   // The plans are the agency's to check, with no Fume check in between: one in check is ready for Nora. Round 13 (robot
   // notes 10-agency, 11-agency-client; Marcus's card 23 Oct 2026, DECIDED): the agency checks a plan and sends it to the
@@ -151,7 +214,11 @@ export function agencyWorld(db: AgencyDb & Record<string, unknown>) {
     }
   }
   // Nora hears what the brand's activity says, as Maja does (the client keeps her own).
-  db.notifications.push(...db.notifications.filter((n) => n.userId === "u-maja").map((n) => ({ ...n, id: `${n.id}-nora`, userId: "u-nora" })));
+  db.notifications.push(
+    ...db.notifications
+      .filter((n) => n.userId === "u-maja")
+      .map((n) => ({ ...n, id: `${n.id}-nora`, userId: "u-nora" })),
+  );
 
   // Round 12 AGENCY (UX review DLOAD-5, DLOAD-6, DTASK-13; PROPOSED 20 Oct 2026).
   // What the agency sent: Nora checked 6 of Autumn launch's creatives and sent the first 4 to Maja; 2 wait to be sent.
@@ -193,7 +260,12 @@ export function agencyWorld(db: AgencyDb & Record<string, unknown>) {
   for (const d of (db.directions as { decidedBy?: Id }[] | undefined) ?? []) d.decidedBy = asAgency(d.decidedBy);
   // The agency's Fume conversation: Fume hands the invoice to its own person (Sander at Fume), who answers Nora; Fume
   // tells the agency its checked creatives are ready to send; Fume's "why" says the agency checks its own work.
-  type Said = { id: Id; text: string; author: { kind: string; userId?: Id }; card?: { kind: string; userId?: Id; why?: string } };
+  type Said = {
+    id: Id;
+    text: string;
+    author: { kind: string; userId?: Id };
+    card?: { kind: string; userId?: Id; why?: string };
+  };
   const messages = (db.messages as Said[] | undefined) ?? [];
   const said = (id: Id, change: (m: Said) => void) => {
     const m = messages.find((x) => x.id === id);
@@ -209,9 +281,13 @@ export function agencyWorld(db: AgencyDb & Record<string, unknown>) {
   });
   said("cm1", (m) => {
     m.author.userId = FUME_CONTACT;
-    m.text = "Hi Nora, I’m Sander, Brygga Studio’s producer at Fume. Write here whenever you’d rather talk to a person.";
+    m.text =
+      "Hi Nora, I’m Sander, Brygga Studio’s producer at Fume. Write here whenever you’d rather talk to a person.";
   });
-  said("msg6", (m) => (m.text = "Nora checked 6 creatives: 4 went to Maja and 2 wait to be sent. 3 more are in check."));
+  said(
+    "msg6",
+    (m) => (m.text = "Nora checked 6 creatives: 4 went to Maja and 2 wait to be sent. 3 more are in check."),
+  );
   for (const m of messages) if (m.card?.why) m.card.why = agencyWhy(m.card.why);
   // The bell. Nora's: her own work in her words. The client's: only what she approves and her deliveries (the brief,
   // the plan and the runs are the agency's), and the 4 creatives Brygga Studio sent her.
@@ -225,12 +301,33 @@ export function agencyWorld(db: AgencyDb & Record<string, unknown>) {
   nora("n7", "The plan for Winter gifting waits for your check");
   nora("n2", "You are fixing one creative in Autumn launch before Maja sees it");
   const agencyIds = new Set(agencyPeople.map((p) => p.id));
-  const clientOfLysne = new Set(db.memberships.filter((m) => m.workspaceId === FULL_CLIENT && !agencyIds.has(m.userId)).map((m) => m.userId));
+  const clientOfLysne = new Set(
+    db.memberships.filter((m) => m.workspaceId === FULL_CLIENT && !agencyIds.has(m.userId)).map((m) => m.userId),
+  );
   db.notifications = db.notifications.filter((n) => !clientOfLysne.has(n.userId) || n.kind === "delivered");
   const firstSend = db.clientSends[0];
   if (firstSend)
-    db.notifications.unshift({ id: "n-send-autumn-1", userId: "u-maja", kind: "checked", actor: { kind: "person", userId: "u-nora" }, text: `LYSNE: ${copy.creatives(firstSend.versionIds.length)} from Brygga Studio to approve in Autumn launch`, href: "/campaigns/c-autumn/review", read: false, at: firstSend.sentAt });
-  if (bfPlan) db.notifications.unshift({ id: "n-send-bf-plan", userId: "u-maja", kind: "checked", actor: { kind: "person", userId: "u-nora" }, text: "LYSNE: the plan for Black Friday from Brygga Studio to approve", href: "/campaigns/c-bf/plan", read: false, at: at(60 * 2) });
+    db.notifications.unshift({
+      id: "n-send-autumn-1",
+      userId: "u-maja",
+      kind: "checked",
+      actor: { kind: "person", userId: "u-nora" },
+      text: `LYSNE: ${copy.creatives(firstSend.versionIds.length)} from Brygga Studio to approve in Autumn launch`,
+      href: "/campaigns/c-autumn/review",
+      read: false,
+      at: firstSend.sentAt,
+    });
+  if (bfPlan)
+    db.notifications.unshift({
+      id: "n-send-bf-plan",
+      userId: "u-maja",
+      kind: "checked",
+      actor: { kind: "person", userId: "u-nora" },
+      text: "LYSNE: the plan for Black Friday from Brygga Studio to approve",
+      href: "/campaigns/c-bf/plan",
+      read: false,
+      at: at(60 * 2),
+    });
 }
 
 // ─── The agency's calls ─────────────────────────────────────────────────────
@@ -251,7 +348,17 @@ export interface R11AgencyContext {
 
 type AgencyCalls = Pick<
   FumeApi,
-  "agencyHome" | "agencyClients" | "agencyCampaigns" | "agencyTeam" | "licence" | "addClient" | "sendToClient" | "clientSends" | "recordClientApproval" | "clientLink" | "answerClientLink"
+  | "agencyHome"
+  | "agencyClients"
+  | "agencyCampaigns"
+  | "agencyTeam"
+  | "licence"
+  | "addClient"
+  | "sendToClient"
+  | "clientSends"
+  | "recordClientApproval"
+  | "clientLink"
+  | "answerClientLink"
 >;
 type AgencyWraps = Pick<FumeApi, "session" | "switchWorkspace" | "approve" | "allBrands" | "usage">;
 
@@ -291,9 +398,21 @@ function rendersIn(trend: number[], nowIso: string, p: { from: string; to: strin
 
 /** The example clients' own figures (the preview has full data for LYSNE only, FLOWS §24.8). */
 const summaryUsage: Record<Id, Record<UsagePeriod, Pick<UsageFigures, "creatives" | "approved" | "delivered">>> = {
-  "w-vev": { month: { creatives: 16, approved: 10, delivered: 0 }, last_month: { creatives: 12, approved: 12, delivered: 12 }, weeks: { creatives: 28, approved: 22, delivered: 12 } },
-  "w-halm": { month: { creatives: 0, approved: 0, delivered: 0 }, last_month: { creatives: 0, approved: 0, delivered: 0 }, weeks: { creatives: 0, approved: 0, delivered: 0 } },
-  "w-aurea": { month: { creatives: 0, approved: 0, delivered: 0 }, last_month: { creatives: 0, approved: 0, delivered: 0 }, weeks: { creatives: 0, approved: 0, delivered: 0 } },
+  "w-vev": {
+    month: { creatives: 16, approved: 10, delivered: 0 },
+    last_month: { creatives: 12, approved: 12, delivered: 12 },
+    weeks: { creatives: 28, approved: 22, delivered: 12 },
+  },
+  "w-halm": {
+    month: { creatives: 0, approved: 0, delivered: 0 },
+    last_month: { creatives: 0, approved: 0, delivered: 0 },
+    weeks: { creatives: 0, approved: 0, delivered: 0 },
+  },
+  "w-aurea": {
+    month: { creatives: 0, approved: 0, delivered: 0 },
+    last_month: { creatives: 0, approved: 0, delivered: 0 },
+    weeks: { creatives: 0, approved: 0, delivered: 0 },
+  },
 };
 
 /** calls: the agency's own (spread into the api); wraps: three calls the agency changes, put on over the finished api. */
@@ -315,7 +434,9 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
 
   // LYSNE, counted from its own data: plans ready, briefs to send, creatives to check, creatives with the client.
   const lysneCounts = () => {
-    const ids = new Set(db.campaigns.filter((c) => c.workspaceId === FULL_CLIENT && c.state !== "closed").map((c) => c.id));
+    const ids = new Set(
+      db.campaigns.filter((c) => c.workspaceId === FULL_CLIENT && c.state !== "closed").map((c) => c.id),
+    );
     // Round 13: a plan the agency checked is with the client (she approves it); only the unchecked ones are the agency's.
     const plans = db.plans.filter((p) => ids.has(p.campaignId) && p.state === "ready" && !p.checkedBy);
     const toCheck = db.qaItems.filter((q) => q.workspaceId === FULL_CLIENT && q.state === "waiting");
@@ -343,13 +464,26 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
     return {
       workspace: ws,
       status,
-      waitingOnYou: k.plans.length + (k.toCheck.length ? 1 : 0) + (k.toSend.length ? 1 : 0) + (k.products.length ? 1 : 0),
+      waitingOnYou:
+        k.plans.length + (k.toCheck.length ? 1 : 0) + (k.toSend.length ? 1 : 0) + (k.products.length ? 1 : 0),
       waitingOn: k.withClient.length ? `${copy.creatives(k.withClient.length)} with Maja` : undefined,
       picture: autumn?.cover ?? db.creatives.find((c) => c.campaignId === "c-autumn")?.current.image,
-      campaignsActive: db.campaigns.filter((c) => c.workspaceId === FULL_CLIENT && !["closed", "delivered"].includes(c.state)).length,
-      current: autumn ? { campaignId: autumn.id, name: autumn.name, progress: Math.min(1, autumn.counts.approved / planned), detail: `${autumn.counts.creatives} creatives · ${autumn.counts.approved} approved` } : undefined,
+      campaignsActive: db.campaigns.filter(
+        (c) => c.workspaceId === FULL_CLIENT && !["closed", "delivered"].includes(c.state),
+      ).length,
+      current: autumn
+        ? {
+            campaignId: autumn.id,
+            name: autumn.name,
+            progress: Math.min(1, autumn.counts.approved / planned),
+            detail: `${autumn.counts.creatives} creatives · ${autumn.counts.approved} approved`,
+          }
+        : undefined,
       nextDelivery: autumn?.dueAt ? { title: `${autumn.name}, the delivery`, at: autumn.dueAt } : undefined,
-      people: db.memberships.filter((m) => m.workspaceId === FULL_CLIENT && !person(m.userId)?.agency).map((m) => person(m.userId)!).filter(Boolean),
+      people: db.memberships
+        .filter((m) => m.workspaceId === FULL_CLIENT && !person(m.userId)?.agency)
+        .map((m) => person(m.userId)!)
+        .filter(Boolean),
       lead: person(leads[FULL_CLIENT]),
       example: "full",
       since: at(60 * 24 * 120),
@@ -405,26 +539,77 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
       },
     ];
   };
-  const clients = () => [lysneClient(), ...summary()].sort((a, b) => (b.openedAt ?? "").localeCompare(a.openedAt ?? ""));
+  const clients = () =>
+    [lysneClient(), ...summary()].sort((a, b) => (b.openedAt ?? "").localeCompare(a.openedAt ?? ""));
 
   const needs = (): AgencyNeed[] => {
     const k = lysneCounts();
     const lysnePic = (campaignId: Id) => db.campaigns.find((c) => c.id === campaignId)?.cover;
     const rows: AgencyNeed[] = [
-      ...k.plans.map((p) => ({ id: `an-plan-${p.campaignId}`, clientId: FULL_CLIENT, kind: "plan" as const, title: `LYSNE · ${campaignName(p.campaignId)}`, detail: "The plan waits for your check", action: "Check the plan", href: `/campaigns/${p.campaignId}/plan`, picture: lysnePic(p.campaignId), at: p.writtenAt ?? now() })),
+      ...k.plans.map((p) => ({
+        id: `an-plan-${p.campaignId}`,
+        clientId: FULL_CLIENT,
+        kind: "plan" as const,
+        title: `LYSNE · ${campaignName(p.campaignId)}`,
+        detail: "The plan waits for your check",
+        action: "Check the plan",
+        href: `/campaigns/${p.campaignId}/plan`,
+        picture: lysnePic(p.campaignId),
+        at: p.writtenAt ?? now(),
+      })),
       // One row per campaign, as in Fume's studio; a batch made outside a plan is the "Product page".
       ...[...new Set(k.toCheck.map((q) => q.campaignId))].map((campaignId) => {
         const items = k.toCheck.filter((q) => q.campaignId === campaignId);
-        return { id: `an-check-${campaignId || "product-page"}`, clientId: FULL_CLIENT, kind: "check" as const, title: `LYSNE · ${campaignName(campaignId) || "Product page"}`, detail: `${copy.creatives(items.length)} to check`, action: "Check", href: `/studio/b/${FULL_CLIENT}/qa${campaignId ? `?campaign=${campaignId}` : ""}`, picture: items[0]?.image, at: items[0]?.madeAt ?? now() };
+        return {
+          id: `an-check-${campaignId || "product-page"}`,
+          clientId: FULL_CLIENT,
+          kind: "check" as const,
+          title: `LYSNE · ${campaignName(campaignId) || "Product page"}`,
+          detail: `${copy.creatives(items.length)} to check`,
+          action: "Check",
+          href: `/studio/b/${FULL_CLIENT}/qa${campaignId ? `?campaign=${campaignId}` : ""}`,
+          picture: items[0]?.image,
+          at: items[0]?.madeAt ?? now(),
+        };
       }),
       // Round 12 (DTASK-13): sending checked creatives is the agency's own step, so it is a row here, and it opens the
       // Send panel. VEV's checks are not here (DLOAD-7): VEV is a summary-only example the Check page cannot open.
       ...[...new Set(k.toSend.map((c) => c.campaignId))].map((campaignId) => {
         const n = k.toSend.filter((c) => c.campaignId === campaignId);
-        return { id: `an-send-${campaignId}`, clientId: FULL_CLIENT, kind: "check" as const, title: `LYSNE · ${campaignName(campaignId)}`, detail: `${copy.creatives(n.length)} to send to Maja`, action: "Send", href: `/campaigns/${campaignId}/review?send=1`, picture: n[0]?.current.image, at: n[0]?.current.checkedAt ?? n[0]?.current.madeAt ?? now() };
+        return {
+          id: `an-send-${campaignId}`,
+          clientId: FULL_CLIENT,
+          kind: "check" as const,
+          title: `LYSNE · ${campaignName(campaignId)}`,
+          detail: `${copy.creatives(n.length)} to send to Maja`,
+          action: "Send",
+          href: `/campaigns/${campaignId}/review?send=1`,
+          picture: n[0]?.current.image,
+          at: n[0]?.current.checkedAt ?? n[0]?.current.madeAt ?? now(),
+        };
       }),
-      { id: "an-halm-brief", clientId: "w-halm", kind: "brief", title: "HALM · Studio chair launch", detail: "The brief waits on you: who it is for", action: "Open", href: "/agency/clients?client=w-halm", picture: pic("kinds/furniture.jpg"), at: at(60 * 5) },
-      { id: "an-aurea-brand", clientId: "w-aurea", kind: "brand", title: "AURÉA · Brand DNA", detail: "14 finds to confirm", action: "Open", href: "/agency/clients?client=w-aurea", picture: pic("kinds/fragrance.jpg"), at: at(60 * 20) },
+      {
+        id: "an-halm-brief",
+        clientId: "w-halm",
+        kind: "brief",
+        title: "HALM · Studio chair launch",
+        detail: "The brief waits on you: who it is for",
+        action: "Open",
+        href: "/agency/clients?client=w-halm",
+        picture: pic("kinds/furniture.jpg"),
+        at: at(60 * 5),
+      },
+      {
+        id: "an-aurea-brand",
+        clientId: "w-aurea",
+        kind: "brand",
+        title: "AURÉA · Brand DNA",
+        detail: "14 finds to confirm",
+        action: "Open",
+        href: "/agency/clients?client=w-aurea",
+        picture: pic("kinds/fragrance.jpg"),
+        at: at(60 * 20),
+      },
     ];
     return rows.sort((a, b) => b.at.localeCompare(a.at));
   };
@@ -432,17 +617,73 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
   const team = (): AgencyTeamMember[] => {
     const k = lysneCounts();
     return [
-      { user: person("u-nora")!, role: "lead", clientIds: ["w-lysne"], load: 0.82, thisWeek: [copy.creatives(k.toCheck.length) + " to check", k.plans.length ? `${copy.count(k.plans.length, "plan")} to check` : "", "LYSNE"].filter(Boolean).join(" · ") },
-      { user: person("u-live")!, role: "creative", clientIds: ["w-vev", "w-aurea"], load: 0.7, thisWeek: "Autumn knit's variants · AURÉA's Brand DNA" },
-      { user: person("u-even")!, role: "creative", clientIds: ["w-halm"], load: 0.45, thisWeek: "Studio chair launch: the brief and the plan" },
-      { user: person("u-sindre")!, role: "creative", clientIds: ["w-lysne", "w-vev"], load: 0.58, thisWeek: "Deliveries: Autumn launch, Autumn knit" },
+      {
+        user: person("u-nora")!,
+        role: "lead",
+        clientIds: ["w-lysne"],
+        load: 0.82,
+        thisWeek: [
+          copy.creatives(k.toCheck.length) + " to check",
+          k.plans.length ? `${copy.count(k.plans.length, "plan")} to check` : "",
+          "LYSNE",
+        ]
+          .filter(Boolean)
+          .join(" · "),
+      },
+      {
+        user: person("u-live")!,
+        role: "creative",
+        clientIds: ["w-vev", "w-aurea"],
+        load: 0.7,
+        thisWeek: "Autumn knit's variants · AURÉA's Brand DNA",
+      },
+      {
+        user: person("u-even")!,
+        role: "creative",
+        clientIds: ["w-halm"],
+        load: 0.45,
+        thisWeek: "Studio chair launch: the brief and the plan",
+      },
+      {
+        user: person("u-sindre")!,
+        role: "creative",
+        clientIds: ["w-lysne", "w-vev"],
+        load: 0.58,
+        thisWeek: "Deliveries: Autumn launch, Autumn knit",
+      },
     ];
   };
 
-  const summaryCampaign = (id: Id, workspaceId: Id, name: string, stage: Campaign["stage"], state: Campaign["state"], counts: Campaign["counts"], dueAt?: string, cover?: string): Campaign => ({
-    id, workspaceId, name, productIds: [], state, stage, approverId: clientOwners[workspaceId]?.[0] ?? "", channels: ["paid_social"], formats: ["feed", "story"],
-    market: db.workspaces.find((w) => w.id === workspaceId)?.market ?? "", language: db.workspaces.find((w) => w.id === workspaceId)?.language ?? "",
-    dueAt, createdBy: leads[workspaceId] ?? "u-nora", createdAt: at(60 * 24 * 20), updatedAt: at(60 * 3), counts, roundsUsed: 0, roundsIncluded: 2, brandDnaVersion: 1, cover,
+  const summaryCampaign = (
+    id: Id,
+    workspaceId: Id,
+    name: string,
+    stage: Campaign["stage"],
+    state: Campaign["state"],
+    counts: Campaign["counts"],
+    dueAt?: string,
+    cover?: string,
+  ): Campaign => ({
+    id,
+    workspaceId,
+    name,
+    productIds: [],
+    state,
+    stage,
+    approverId: clientOwners[workspaceId]?.[0] ?? "",
+    channels: ["paid_social"],
+    formats: ["feed", "story"],
+    market: db.workspaces.find((w) => w.id === workspaceId)?.market ?? "",
+    language: db.workspaces.find((w) => w.id === workspaceId)?.language ?? "",
+    dueAt,
+    createdBy: leads[workspaceId] ?? "u-nora",
+    createdAt: at(60 * 24 * 20),
+    updatedAt: at(60 * 3),
+    counts,
+    roundsUsed: 0,
+    roundsIncluded: 2,
+    brandDnaVersion: 1,
+    cover,
   });
 
   /** One brand's figures in one period, counted from its own creatives and deliveries (renders from its weekly trend). */
@@ -454,8 +695,12 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
     return {
       ...p,
       creatives: mine.filter((c) => inPeriod(c.versions[0]?.madeAt ?? c.current.madeAt)).length,
-      approved: mine.filter((c) => (c.current.state === "approved" || c.current.state === "delivered") && inPeriod(c.current.approvedAt)).length,
-      delivered: new Set(db.deliveries.filter((d) => ids.has(d.campaignId) && inPeriod(d.createdAt)).flatMap((d) => d.creativeIds)).size,
+      approved: mine.filter(
+        (c) => (c.current.state === "approved" || c.current.state === "delivered") && inPeriod(c.current.approvedAt),
+      ).length,
+      delivered: new Set(
+        db.deliveries.filter((d) => ids.has(d.campaignId) && inPeriod(d.createdAt)).flatMap((d) => d.creativeIds),
+      ).size,
       renders,
       cost: row && row.renders ? Math.round(renders * (row.cost / row.renders) * 100) / 100 : 0,
     };
@@ -463,7 +708,8 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
   const periodsOf = (workspaceId: Id, row?: UsageRow) => {
     const all = usagePeriods(now());
     const summary = summaryUsage[workspaceId];
-    const one = (k: UsagePeriod): UsageFigures => (summary ? { ...all[k], ...summary[k], renders: 0, cost: 0 } : figures(workspaceId, all[k], row));
+    const one = (k: UsagePeriod): UsageFigures =>
+      summary ? { ...all[k], ...summary[k], renders: 0, cost: 0 } : figures(workspaceId, all[k], row);
     return { month: one("month"), last_month: one("last_month"), weeks: one("weeks") };
   };
   /** The agency's clients (the ones added in this session too), each with its figures; no renders or cost. */
@@ -473,7 +719,17 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
       .filter((w) => w.agencyId === org)
       .map((w) => {
         const periods = periodsOf(w.id);
-        return { workspaceId: w.id, workspace: w, renders: 0, cost: 0, creatives: periods.weeks.creatives, delivered: periods.weeks.delivered, trend: [], periods, example: w.id === FULL_CLIENT || !summaryUsage[w.id] ? ("full" as const) : ("summary" as const) };
+        return {
+          workspaceId: w.id,
+          workspace: w,
+          renders: 0,
+          cost: 0,
+          creatives: periods.weeks.creatives,
+          delivered: periods.weeks.delivered,
+          trend: [],
+          periods,
+          example: w.id === FULL_CLIENT || !summaryUsage[w.id] ? ("full" as const) : ("summary" as const),
+        };
       });
   };
   /** A Fume customer's package this month, counted as her Home counts it (creatives in her campaigns under way). */
@@ -482,8 +738,14 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
     const org = db.organisations.find((o) => o.id === ws?.organisationId);
     const pkg = db.packages.find((p) => p.id === org?.packageId);
     if (!pkg || ws?.agencyId) return undefined;
-    const live = db.campaigns.filter((c) => c.workspaceId === workspaceId && !["delivered", "closed"].includes(c.state));
-    return { used: live.reduce((n, c) => n + c.counts.creatives, 0), included: pkg.creativeCap, renewsAt: usagePeriods(now()).month.to };
+    const live = db.campaigns.filter(
+      (c) => c.workspaceId === workspaceId && !["delivered", "closed"].includes(c.state),
+    );
+    return {
+      used: live.reduce((n, c) => n + c.counts.creatives, 0),
+      included: pkg.creativeCap,
+      renewsAt: usagePeriods(now()).month.to,
+    };
   };
 
   const wraps: AgencyWraps = {
@@ -494,7 +756,12 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
       const rows = await base().usage();
       return rows
         .filter((r) => !db.workspaces.find((w) => w.id === r.workspaceId)?.agencyId)
-        .map((r) => ({ ...r, workspace: db.workspaces.find((w) => w.id === r.workspaceId), periods: periodsOf(r.workspaceId, r), package: packageOf(r.workspaceId) }));
+        .map((r) => ({
+          ...r,
+          workspace: db.workspaces.find((w) => w.id === r.workspaceId),
+          periods: periodsOf(r.workspaceId, r),
+          package: packageOf(r.workspaceId),
+        }));
     },
     // The session says who the agency is; it changes nothing else.
     async session(): Promise<Session> {
@@ -513,7 +780,11 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
     },
     // Approving a creative is the client's word (FLOWS §24.2): the agency sends it, or records an approval given outside.
     async approve(versionIds) {
-      if (seat()) throw new FumeError("forbidden", "Only the client approves creatives. Send them to the client, or record an approval the client gave you.");
+      if (seat())
+        throw new FumeError(
+          "forbidden",
+          "Only the client approves creatives. Send them to the client, or record an approval the client gave you.",
+        );
       return base().approve(versionIds);
     },
     // The overview is one page for Fume's studio and an agency (Marcus 20 Oct 2026: "Agency dashboard blir strengt
@@ -532,7 +803,12 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
           const c = list[0];
           const planned = c?.counts.creatives ?? 0;
           const current = c
-            ? { campaignId: c.id, name: c.name, progress: planned ? Math.min(1, c.counts.approved / planned) : 0, detail: planned ? `${planned} creatives · ${c.counts.approved} approved` : "No creatives yet" }
+            ? {
+                campaignId: c.id,
+                name: c.name,
+                progress: planned ? Math.min(1, c.counts.approved / planned) : 0,
+                detail: planned ? `${planned} creatives · ${c.counts.approved} approved` : "No creatives yet",
+              }
             : undefined;
           return { ...b, picture: c?.cover ?? list.find((x) => x.cover)?.cover, current };
         });
@@ -542,15 +818,39 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
         .flatMap((p) => {
           const c = db.campaigns.find((x) => x.id === p.campaignId);
           if (!c) return [];
-          return [{ id: `on-plan-${c.id}`, clientId: c.workspaceId, kind: "plan" as const, title: `${brandOf(c.workspaceId)} · ${c.name}`, detail: "The plan waits for your check", action: "Check the plan", href: `/studio/b/${c.workspaceId}/campaigns/${c.id}/plan`, picture: c.cover, at: p.writtenAt ?? now() }];
+          return [
+            {
+              id: `on-plan-${c.id}`,
+              clientId: c.workspaceId,
+              kind: "plan" as const,
+              title: `${brandOf(c.workspaceId)} · ${c.name}`,
+              detail: "The plan waits for your check",
+              action: "Check the plan",
+              href: `/studio/b/${c.workspaceId}/campaigns/${c.id}/plan`,
+              picture: c.cover,
+              at: p.writtenAt ?? now(),
+            },
+          ];
         });
       const waiting = db.qaItems.filter((q) => q.state === "waiting");
       const checks: AgencyNeed[] = [...new Set(waiting.map((q) => `${q.workspaceId}|${q.campaignId}`))].map((key) => {
         const [wsOf, campaignId] = key.split("|") as [Id, Id];
-        const items = waiting.filter((q) => q.workspaceId === wsOf && q.campaignId === campaignId).sort((x, y) => x.dueAt.localeCompare(y.dueAt));
+        const items = waiting
+          .filter((q) => q.workspaceId === wsOf && q.campaignId === campaignId)
+          .sort((x, y) => x.dueAt.localeCompare(y.dueAt));
         const c = db.campaigns.find((x) => x.id === campaignId);
         const ws = items[0].workspaceId;
-        return { id: `on-check-${campaignId || `${ws}-product-page`}`, clientId: ws, kind: "check" as const, title: `${brandOf(ws)} · ${c?.name ?? "Product page"}`, detail: `${copy.creatives(items.length)} to check`, action: "Check", href: `/studio/b/${ws}/qa${c ? `?campaign=${c.id}` : ""}`, picture: items[0].image, at: items[0].madeAt };
+        return {
+          id: `on-check-${campaignId || `${ws}-product-page`}`,
+          clientId: ws,
+          kind: "check" as const,
+          title: `${brandOf(ws)} · ${c?.name ?? "Product page"}`,
+          detail: `${copy.creatives(items.length)} to check`,
+          action: "Check",
+          href: `/studio/b/${ws}/qa${c ? `?campaign=${c.id}` : ""}`,
+          picture: items[0].image,
+          at: items[0].madeAt,
+        };
       });
       return {
         ...v,
@@ -571,8 +871,17 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
       const list = clients();
       // Round 12 (DLOAD-5, DLOAD-7, DTASK-13): what waits on the agency, the checks and the sending included, then what is
       // with the client; the same numbers as Needs you.
-      const yours = [k.plans.length ? copy.count(k.plans.length, "plan") : "", k.toCheck.length ? `${copy.creatives(k.toCheck.length)} to check` : "", k.toSend.length ? `${k.toSend.length} to send` : ""].filter(Boolean);
-      const mine = yours.length > 1 ? `${yours.slice(0, -1).join(", ")} and ${yours[yours.length - 1]} wait on you` : yours.length ? `${yours[0]} ${yours[0]!.startsWith("1 ") ? "waits" : "wait"} on you` : "";
+      const yours = [
+        k.plans.length ? copy.count(k.plans.length, "plan") : "",
+        k.toCheck.length ? `${copy.creatives(k.toCheck.length)} to check` : "",
+        k.toSend.length ? `${k.toSend.length} to send` : "",
+      ].filter(Boolean);
+      const mine =
+        yours.length > 1
+          ? `${yours.slice(0, -1).join(", ")} and ${yours[yours.length - 1]} wait on you`
+          : yours.length
+            ? `${yours[0]} ${yours[0]!.startsWith("1 ") ? "waits" : "wait"} on you`
+            : "";
       const theirs = k.withClient.length ? `${copy.creatives(k.withClient.length)} with Maja` : "";
       const parts = [mine, theirs].filter(Boolean);
       const summaryLine = `${list.length} client brands.${parts.length ? ` ${parts.join("; ")}.` : " Nothing waits on you today."}`;
@@ -588,10 +897,52 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
       const ws = (id: Id) => db.workspaces.find((w) => w.id === id)!;
       const full: AgencyCampaignRow[] = db.campaigns
         .filter((c) => c.workspaceId === FULL_CLIENT && c.state !== "closed")
-        .map((c) => ({ campaign: c, client: lysne, status: "", liveAt: c.dueAt, example: "full" as const, waitingOn: db.creatives.some((x) => x.campaignId === c.id && x.current.state === "checked" && !unsentToClient(db as never, x)) ? "Waiting on Maja" : undefined }));
+        .map((c) => ({
+          campaign: c,
+          client: lysne,
+          status: "",
+          liveAt: c.dueAt,
+          example: "full" as const,
+          waitingOn: db.creatives.some(
+            (x) => x.campaignId === c.id && x.current.state === "checked" && !unsentToClient(db as never, x),
+          )
+            ? "Waiting on Maja"
+            : undefined,
+        }));
       const rest: AgencyCampaignRow[] = [
-        { campaign: summaryCampaign("c-vev-knit", "w-vev", "Autumn knit", "variants", "in_review", { creatives: 16, inCheck: 0, checked: 6, approved: 10, delivered: 0 }, inDays(3), pic("lysne/gen/sweater-flat.jpg")), client: ws("w-vev"), status: "6 creatives with Sara", waitingOn: "Waiting on Sara", liveAt: inDays(6), example: "summary" },
-        { campaign: summaryCampaign("c-halm-chair", "w-halm", "Studio chair launch", "brief", "awaiting_input", { creatives: 0, inCheck: 0, checked: 0, approved: 0, delivered: 0 }, inDays(24), pic("kinds/furniture.jpg")), client: ws("w-halm"), status: "The brief waits on you", liveAt: inDays(24), example: "summary" },
+        {
+          campaign: summaryCampaign(
+            "c-vev-knit",
+            "w-vev",
+            "Autumn knit",
+            "variants",
+            "in_review",
+            { creatives: 16, inCheck: 0, checked: 6, approved: 10, delivered: 0 },
+            inDays(3),
+            pic("lysne/gen/sweater-flat.jpg"),
+          ),
+          client: ws("w-vev"),
+          status: "6 creatives with Sara",
+          waitingOn: "Waiting on Sara",
+          liveAt: inDays(6),
+          example: "summary",
+        },
+        {
+          campaign: summaryCampaign(
+            "c-halm-chair",
+            "w-halm",
+            "Studio chair launch",
+            "brief",
+            "awaiting_input",
+            { creatives: 0, inCheck: 0, checked: 0, approved: 0, delivered: 0 },
+            inDays(24),
+            pic("kinds/furniture.jpg"),
+          ),
+          client: ws("w-halm"),
+          status: "The brief waits on you",
+          liveAt: inDays(24),
+          example: "summary",
+        },
       ];
       return wait([...full, ...rest]);
     },
@@ -603,13 +954,20 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
       mustAgency();
       // Round 12 (DLOAD-7, DTASK-6): the same numbers as Usage and the client's Home: this month's, per client.
       const month = usagePeriods(now()).month;
-      const usage = agencyUsage().map((r) => ({ client: r.workspace!, creativesMade: r.periods!.month.creatives, creativesApproved: r.periods!.month.approved }));
+      const usage = agencyUsage().map((r) => ({
+        client: r.workspace!,
+        creativesMade: r.periods!.month.creatives,
+        creativesApproved: r.periods!.month.approved,
+      }));
       return wait({
         agency: agency()!,
         period: { from: month.from, to: month.to },
         scope: "Early access: product campaigns for paid social, scoped with Fume on 6 Oct",
         usage,
-        total: { creativesMade: usage.reduce((n, u) => n + u.creativesMade, 0), creativesApproved: usage.reduce((n, u) => n + u.creativesApproved, 0) },
+        total: {
+          creativesMade: usage.reduce((n, u) => n + u.creativesMade, 0),
+          creativesApproved: usage.reduce((n, u) => n + u.creativesApproved, 0),
+        },
         seats: { used: agencyPeople.length, included: 6 },
       });
     },
@@ -619,20 +977,36 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
       const name = brandName.trim();
       if (!name) throw new FumeError("invalid", "Write the brand's name.");
       const orgId = nextId("o");
-      const workspace: Workspace = { id: nextId("w"), organisationId: orgId, brandName: name, market: market || "Norway", language: language || "Norwegian", agencyId: s.organisationId };
+      const workspace: Workspace = {
+        id: nextId("w"),
+        organisationId: orgId,
+        brandName: name,
+        market: market || "Norway",
+        language: language || "Norwegian",
+        agencyId: s.organisationId,
+      };
       db.organisations.push({ id: orgId, name, packageId: "p-core", kind: "brand" });
       db.workspaces.push(workspace);
-      for (const p of agencyPeople) db.staff.push({ userId: p.id, workspaceId: workspace.id, staffRole: p.staffRole === "operator" ? "operator" : "expert" });
+      for (const p of agencyPeople)
+        db.staff.push({
+          userId: p.id,
+          workspaceId: workspace.id,
+          staffRole: p.staffRole === "operator" ? "operator" : "expert",
+        });
       for (const p of agencyPeople) db.memberships.push({ userId: p.id, workspaceId: workspace.id, role: "approver" });
-      const invited = people.filter((p) => p.email.trim()).map((p) => {
-        const u: User = { id: nextId("u"), name: p.name.trim() || p.email.trim(), title: "", email: p.email.trim() };
-        db.users.push(u);
-        db.memberships.push({ userId: u.id, workspaceId: workspace.id, role: p.role as CustomerRole });
-        return u;
-      });
+      const invited = people
+        .filter((p) => p.email.trim())
+        .map((p) => {
+          const u: User = { id: nextId("u"), name: p.name.trim() || p.email.trim(), title: "", email: p.email.trim() };
+          db.users.push(u);
+          db.memberships.push({ userId: u.id, workspaceId: workspace.id, role: p.role as CustomerRole });
+          return u;
+        });
       const client: AgencyClient = {
         workspace,
-        status: website ? `New client: Fume is reading ${website.replace(/^https?:\/\//, "")}` : "New client: Fume needs the website or the brand guide",
+        status: website
+          ? `New client: Fume is reading ${website.replace(/^https?:\/\//, "")}`
+          : "New client: Fume needs the website or the brand guide",
         waitingOnYou: website ? 0 : 1,
         campaignsActive: 0,
         people: invited,
@@ -653,14 +1027,20 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
       if (!c) throw new FumeError("not_found", "No such campaign");
       if (!versionIds.length && !plan) throw new FumeError("invalid", "Choose the creatives to send.");
       const versions = versionIds.map((vid) => db.creatives.find((x) => x.current.id === vid));
-      if (versions.some((x) => !x || x.current.state !== "checked")) throw new FumeError("conflict", "Only checked creatives go to the client.");
-      const clientPeople = new Set(db.memberships.filter((m) => m.workspaceId === c.workspaceId && !person(m.userId)?.agency).map((m) => m.userId));
+      if (versions.some((x) => !x || x.current.state !== "checked"))
+        throw new FumeError("conflict", "Only checked creatives go to the client.");
+      const clientPeople = new Set(
+        db.memberships.filter((m) => m.workspaceId === c.workspaceId && !person(m.userId)?.agency).map((m) => m.userId),
+      );
       if (to.some((id) => !clientPeople.has(id))) throw new FumeError("invalid", "Send to the client's own people.");
-      if (!to.length && !link) throw new FumeError("invalid", "Choose who at the client approves, or make a client link.");
+      if (!to.length && !link)
+        throw new FumeError("invalid", "Choose who at the client approves, or make a client link.");
       // Round 13 (Marcus's card, 23 Oct 2026): sending the plan is the agency's check of it; the client approves it.
       const checkedPlan = plan ? await base().checkPlan(campaignId) : undefined;
       // One client link per campaign: the plan first, then the creatives, in the same link while it works.
-      const open = link ? sends().find((x) => x.campaignId === campaignId && x.link && x.link.expiresAt > now())?.link : undefined;
+      const open = link
+        ? sends().find((x) => x.campaignId === campaignId && x.link && x.link.expiresAt > now())?.link
+        : undefined;
       const token = nextId("lk").replace(/[^a-z0-9]/gi, "");
       const send: ClientSend = {
         id: nextId("cs"),
@@ -669,7 +1049,13 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
         versionIds,
         ...(checkedPlan ? { plan: { version: checkedPlan.version } } : {}),
         to,
-        link: link ? (open ?? { token, url: `https://app.fumecreatives.com/c/${token}`, expiresAt: new Date(Date.parse(now()) + 30 * 86_400_000).toISOString() }) : undefined,
+        link: link
+          ? (open ?? {
+              token,
+              url: `https://app.fumecreatives.com/c/${token}`,
+              expiresAt: new Date(Date.parse(now()) + 30 * 86_400_000).toISOString(),
+            })
+          : undefined,
         note: note?.trim() || undefined,
         sentBy: ctx.userId(),
         sentAt: now(),
@@ -677,10 +1063,24 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
       sends().unshift(send);
       const brand = db.workspaces.find((w) => w.id === c.workspaceId)?.brandName ?? "";
       const from = agency()?.name ?? first(ctx.userId());
-      const what = [checkedPlan ? "the plan" : "", versionIds.length ? copy.creatives(versionIds.length) : ""].filter(Boolean).join(" and ");
+      const what = [checkedPlan ? "the plan" : "", versionIds.length ? copy.creatives(versionIds.length) : ""]
+        .filter(Boolean)
+        .join(" and ");
       for (const userId of to)
         // Round 12: "checked" (creatives ready for her), so Home's creatives row and the bell say it once (shell/notifications).
-        db.notifications.unshift({ id: nextId("n"), userId, kind: "checked", actor: { kind: "person", userId: ctx.userId() }, text: checkedPlan && !versionIds.length ? `${brand}: the plan for ${c.name} from ${from} to approve` : `${brand}: ${what} from ${from} to approve in ${c.name}`, href: `/campaigns/${c.id}/${checkedPlan && !versionIds.length ? "plan" : "review"}`, read: false, at: now() });
+        db.notifications.unshift({
+          id: nextId("n"),
+          userId,
+          kind: "checked",
+          actor: { kind: "person", userId: ctx.userId() },
+          text:
+            checkedPlan && !versionIds.length
+              ? `${brand}: the plan for ${c.name} from ${from} to approve`
+              : `${brand}: ${what} from ${from} to approve in ${c.name}`,
+          href: `/campaigns/${c.id}/${checkedPlan && !versionIds.length ? "plan" : "review"}`,
+          read: false,
+          at: now(),
+        });
       ctx.emit({ type: "campaign.state", campaign: c });
       return wait(send);
     },
@@ -698,7 +1098,13 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
         const c = db.creatives.find((x) => x.current.id === vid);
         if (!c) throw new FumeError("not_found", `No version ${vid}`);
         if (c.current.state !== "checked") throw new FumeError("conflict", "Only checked creatives can be approved.");
-        ctx.setVersion(c, { state: "approved", approvedBy: clientUserId, approvedAt, recordedBy: ctx.userId(), recordedNote: note.trim() });
+        ctx.setVersion(c, {
+          state: "approved",
+          approvedBy: clientUserId,
+          approvedAt,
+          recordedBy: ctx.userId(),
+          recordedNote: note.trim(),
+        });
         done.push(c.current);
       }
       const touched = new Set(versionIds.map((v) => db.creatives.find((c) => c.current.id === v)!.campaignId));
@@ -725,28 +1131,53 @@ export function r11AgencyApi(ctx: R11AgencyContext): { calls: AgencyCalls; wraps
         client: db.workspaces.find((w) => w.id === send.workspaceId)!,
         agency: db.organisations.find((o) => o.id === db.workspaces.find((w) => w.id === send.workspaceId)?.agencyId)!,
         campaign,
-        creatives: db.creatives.filter((c) => versionIds.includes(c.current.id) || c.versions.some((v) => versionIds.includes(v.id))),
+        creatives: db.creatives.filter(
+          (c) => versionIds.includes(c.current.id) || c.versions.some((v) => versionIds.includes(v.id)),
+        ),
         sentBy: person(send.sentBy)!,
         ...(plan && planSend ? { plan, planSend } : {}),
       });
     },
     async answerClientLink({ token, versionId, verdict, text, name }) {
       // the send of the link that holds this creative (one link per campaign holds several sends)
-      const send = sends().find((s) => s.link?.token === token && s.versionIds.includes(versionId)) ?? sends().find((s) => s.link?.token === token);
+      const send =
+        sends().find((s) => s.link?.token === token && s.versionIds.includes(versionId)) ??
+        sends().find((s) => s.link?.token === token);
       if (!send) throw new FumeError("not_found", "This client link has expired.");
       // Round 12 (DWAY-4): the agency's own people see the link as a preview; an answer there is never the client's.
-      if (me()?.agency) throw new FumeError("forbidden", "This is a preview of the client’s page. Only the client answers here.");
+      if (me()?.agency)
+        throw new FumeError("forbidden", "This is a preview of the client’s page. Only the client answers here.");
       const c = db.creatives.find((x) => x.current.id === versionId);
-      if (!c || !send.versionIds.includes(versionId)) throw new FumeError("not_found", "This creative is not in the link.");
+      if (!c || !send.versionIds.includes(versionId))
+        throw new FumeError("not_found", "This creative is not in the link.");
       // The link is the client's: their approval is theirs (the first person it was sent to, or the client's owner).
-      const owner = send.to[0] ?? db.memberships.find((m) => m.workspaceId === send.workspaceId && m.role === "owner" && !person(m.userId)?.agency)?.userId;
+      const owner =
+        send.to[0] ??
+        db.memberships.find(
+          (m) => m.workspaceId === send.workspaceId && m.role === "owner" && !person(m.userId)?.agency,
+        )?.userId;
       if (verdict === "approve") {
-        if (c.current.state !== "checked") throw new FumeError("conflict", "This creative is not waiting for approval.");
-        ctx.setVersion(c, { state: "approved", approvedBy: owner, approvedAt: now(), recordedNote: name.trim() ? `Through the client link, by ${name.trim()}` : "Through the client link" });
+        if (c.current.state !== "checked")
+          throw new FumeError("conflict", "This creative is not waiting for approval.");
+        ctx.setVersion(c, {
+          state: "approved",
+          approvedBy: owner,
+          approvedAt: now(),
+          recordedNote: name.trim() ? `Through the client link, by ${name.trim()}` : "Through the client link",
+        });
       } else {
         if (!text?.trim()) throw new FumeError("invalid", "Say what should change.");
         ctx.setVersion(c, { state: "changes_requested" });
-        db.notifications.unshift({ id: nextId("n"), userId: send.sentBy, kind: "changes_asked", actor: { kind: "person", userId: owner ?? send.sentBy }, text: `${name.trim() || first(owner) || "The client"} asked for changes on ${c.title}: “${text.trim()}”`, href: `/campaigns/${c.campaignId}/review`, read: false, at: now() });
+        db.notifications.unshift({
+          id: nextId("n"),
+          userId: send.sentBy,
+          kind: "changes_asked",
+          actor: { kind: "person", userId: owner ?? send.sentBy },
+          text: `${name.trim() || first(owner) || "The client"} asked for changes on ${c.title}: “${text.trim()}”`,
+          href: `/campaigns/${c.campaignId}/review`,
+          read: false,
+          at: now(),
+        });
       }
       const campaign = db.campaigns.find((x) => x.id === c.campaignId);
       if (campaign) {

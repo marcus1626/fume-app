@@ -27,7 +27,12 @@ export const Marker = forwardRef<HTMLDivElement, MarkerProps>(function Marker(
   ref,
 ) {
   return (
-    <div ref={ref} className={cx("ui-marker", isNew && "ui-marker--new", className)} data-variant={variant === "default" ? undefined : variant} {...props}>
+    <div
+      ref={ref}
+      className={cx("ui-marker", isNew && "ui-marker--new", className)}
+      data-variant={variant === "default" ? undefined : variant}
+      {...props}
+    >
       {isNew && <span className="ui-marker-dot" aria-hidden="true" />}
       {!isNew && icon && (
         <span className="ui-marker-icon" aria-hidden="true">

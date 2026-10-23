@@ -7,7 +7,16 @@
 // Undo toast is the app's: put the person back in `people`). Copy link says Copied for --ui-share-copied.
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Select from "@radix-ui/react-select";
-import { forwardRef, useEffect, useId, useRef, useState, type FormEvent, type HTMLAttributes, type ReactNode } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type FormEvent,
+  type HTMLAttributes,
+  type ReactNode,
+} from "react";
 import { cx } from "../cx";
 import { Icon } from "../icons";
 import { Avatar, Btn, initialsOf, tokenMs, tokenPx, useAnnouncer, type PersonSign } from "./_parts";
@@ -52,7 +61,17 @@ export function checkInviteEmail(value: string, people: SharePerson[]): string |
 }
 
 /** The role select: Radix Select with the ui-select markup, its listbox glass. */
-export function ShareRoleSelect({ value, onValueChange, label, disabled }: { value: ShareGrant; onValueChange: (r: ShareGrant) => void; label: string; disabled?: boolean }) {
+export function ShareRoleSelect({
+  value,
+  onValueChange,
+  label,
+  disabled,
+}: {
+  value: ShareGrant;
+  onValueChange: (r: ShareGrant) => void;
+  label: string;
+  disabled?: boolean;
+}) {
   return (
     <Select.Root value={value} onValueChange={(v) => onValueChange(v as ShareGrant)} disabled={disabled}>
       <div className="ui-select">
@@ -166,7 +185,10 @@ export const ShareDialog = forwardRef<HTMLDivElement, ShareDialogProps>(function
     if (!added.length) return;
     setFresh((s) => new Set([...s, ...added]));
     if (listRef.current) listRef.current.scrollTop = 0;
-    const t = window.setTimeout(() => setFresh((s) => new Set([...s].filter((x) => !added.includes(x)))), tokenMs("--ui-motion-base", 240) + 40);
+    const t = window.setTimeout(
+      () => setFresh((s) => new Set([...s].filter((x) => !added.includes(x)))),
+      tokenMs("--ui-motion-base", 240) + 40,
+    );
     return () => window.clearTimeout(t);
   }, [people, open]);
 
@@ -196,14 +218,17 @@ export const ShareDialog = forwardRef<HTMLDivElement, ShareDialogProps>(function
       emailRef.current;
     land?.focus();
     setLeaving((s) => new Set(s).add(p.id));
-    window.setTimeout(() => {
-      setLeaving((s) => {
-        const n = new Set(s);
-        n.delete(p.id);
-        return n;
-      });
-      onRemove?.(p);
-    }, tokenMs("--ui-motion-base", 240));
+    window.setTimeout(
+      () => {
+        setLeaving((s) => {
+          const n = new Set(s);
+          n.delete(p.id);
+          return n;
+        });
+        onRemove?.(p);
+      },
+      tokenMs("--ui-motion-base", 240),
+    );
   };
 
   const copy = () => {
@@ -239,12 +264,20 @@ export const ShareDialog = forwardRef<HTMLDivElement, ShareDialogProps>(function
           {...props}
         >
           <Dialog.Close asChild>
-            <Btn variant="glass-clear" size="sm" iconOnly icon="x" className="ui-dialog-close" aria-label={closeLabel} />
+            <Btn
+              variant="glass-clear"
+              size="sm"
+              iconOnly
+              icon="x"
+              className="ui-dialog-close"
+              aria-label={closeLabel}
+            />
           </Dialog.Close>
           <div className="ui-dialog-header">
             <Dialog.Title className="ui-dialog-title">{title ?? `Share ${campaign}`}</Dialog.Title>
             <Dialog.Description className="ui-dialog-description">
-              {description ?? `Invite the people who brief, comment and approve. They see every creative in ${campaign}.`}
+              {description ??
+                `Invite the people who brief, comment and approve. They see every creative in ${campaign}.`}
             </Dialog.Description>
           </div>
           <div className="ui-share-inner">
@@ -286,9 +319,17 @@ export const ShareDialog = forwardRef<HTMLDivElement, ShareDialogProps>(function
               </div>
               <ul ref={listRef} className="ui-share-list">
                 {people.map((p) => {
-                  const sign: PersonSign = { name: p.name, avatar: p.avatar, initials: p.initials ?? initialsOf(p.name), ink: p.ink };
+                  const sign: PersonSign = {
+                    name: p.name,
+                    avatar: p.avatar,
+                    initials: p.initials ?? initialsOf(p.name),
+                    ink: p.ink,
+                  };
                   return (
-                    <li key={p.id} className={cx("ui-share-person", fresh.has(p.id) && "is-new", leaving.has(p.id) && "is-leaving")}>
+                    <li
+                      key={p.id}
+                      className={cx("ui-share-person", fresh.has(p.id) && "is-new", leaving.has(p.id) && "is-leaving")}
+                    >
                       <Avatar person={sign} />
                       <span className="ui-share-who">
                         <span className="ui-share-name">
@@ -352,7 +393,13 @@ export const ShareDialog = forwardRef<HTMLDivElement, ShareDialogProps>(function
                   <div className="ui-share-url">
                     <span>{link.url.replace(/^https?:\/\//, "")}</span>
                   </div>
-                  <Btn variant="glass-clear" className="ui-share-copy" data-state={copied ? "copied" : undefined} icon={copied ? "check" : "link"} onClick={copy}>
+                  <Btn
+                    variant="glass-clear"
+                    className="ui-share-copy"
+                    data-state={copied ? "copied" : undefined}
+                    icon={copied ? "check" : "link"}
+                    onClick={copy}
+                  >
                     <span className="ui-share-copy-label">
                       <span>Copy link</span>
                       <span aria-hidden="true">Copied</span>

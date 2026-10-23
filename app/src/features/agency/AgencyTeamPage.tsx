@@ -21,7 +21,9 @@ function teamRow(t: AgencyTeamMember, clients: AgencyClient[]): TeamTableRow {
     user: t.user,
     role: agencyRoleWords[agencyRoleOf(t.role, t.user)],
     lead: t.role === "lead",
-    brands: t.clientIds.map((id) => clients.find((c) => c.workspace.id === id)?.workspace.brandName).filter((n): n is string => Boolean(n)),
+    brands: t.clientIds
+      .map((id) => clients.find((c) => c.workspace.id === id)?.workspace.brandName)
+      .filter((n): n is string => Boolean(n)),
     week: { value: pct, max: 100, words: `${pct} %`, label: `${firstName(t.user.name)}’s week is ${pct} % full` },
     doing: t.thisWeek,
   };
@@ -55,13 +57,23 @@ export function AgencyTeamPage() {
             <Nothing icon="users" title="No one on the team yet" />
           ) : (
             <Section aria-label="This week">
-              <TeamTable rows={rows.map((t) => teamRow(t, clients.data ?? []))} me={me} brandLabel="Clients" label="The team this week" />
+              <TeamTable
+                rows={rows.map((t) => teamRow(t, clients.data ?? []))}
+                me={me}
+                brandLabel="Clients"
+                label="The team this week"
+              />
             </Section>
           )
         }
       </Query>
 
-      <InvitePanel open={inviting} onOpenChange={setInviting} agencyName={name} known={(team.data ?? []).map((t) => t.user.email)} />
+      <InvitePanel
+        open={inviting}
+        onOpenChange={setInviting}
+        agencyName={name}
+        known={(team.data ?? []).map((t) => t.user.email)}
+      />
     </Page>
   );
 }

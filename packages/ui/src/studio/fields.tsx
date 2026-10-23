@@ -20,9 +20,25 @@ export function StudioText({ value, onChange, label, id, disabled, placeholder, 
   return (
     <StudioRow label={label} htmlFor={sid} help={help} disabled={disabled}>
       {rows === 1 ? (
-        <Input id={sid} size="sm" className="ui-sc-field" value={value} placeholder={placeholder} disabled={disabled} onChange={(e) => onChange(e.target.value)} />
+        <Input
+          id={sid}
+          size="sm"
+          className="ui-sc-field"
+          value={value}
+          placeholder={placeholder}
+          disabled={disabled}
+          onChange={(e) => onChange(e.target.value)}
+        />
       ) : (
-        <Textarea id={sid} rows={rows} className="ui-sc-field ui-sc-textarea" value={value} placeholder={placeholder} disabled={disabled} onChange={(e) => onChange(e.target.value)} />
+        <Textarea
+          id={sid}
+          rows={rows}
+          className="ui-sc-field ui-sc-textarea"
+          value={value}
+          placeholder={placeholder}
+          disabled={disabled}
+          onChange={(e) => onChange(e.target.value)}
+        />
       )}
     </StudioRow>
   );
@@ -36,7 +52,18 @@ export interface StudioNumberProps extends StudioControlProps<number> {
   help?: string;
 }
 
-export function StudioNumber({ value, onChange, label, id, disabled, min = 0, max = 999, step = 1, unit, help }: StudioNumberProps) {
+export function StudioNumber({
+  value,
+  onChange,
+  label,
+  id,
+  disabled,
+  min = 0,
+  max = 999,
+  step = 1,
+  unit,
+  help,
+}: StudioNumberProps) {
   const sid = studioId(label, id);
   // The field keeps what is typed until it is a number in range; the value changes only then.
   const [draft, setDraft] = useState(String(value));
@@ -45,7 +72,15 @@ export function StudioNumber({ value, onChange, label, id, disabled, min = 0, ma
   return (
     <StudioRow label={label} htmlFor={sid} help={help} disabled={disabled} readout={unit}>
       <div className="ui-sc-number">
-        <Button variant="quiet" size="sm" iconOnly icon="minus" aria-label={`Less ${label.toLowerCase()}`} disabled={disabled || value <= min} onClick={() => set(value - step)} />
+        <Button
+          variant="quiet"
+          size="sm"
+          iconOnly
+          icon="minus"
+          aria-label={`Less ${label.toLowerCase()}`}
+          disabled={disabled || value <= min}
+          onClick={() => set(value - step)}
+        />
         <Input
           id={sid}
           size="sm"
@@ -60,7 +95,15 @@ export function StudioNumber({ value, onChange, label, id, disabled, min = 0, ma
           }}
           onBlur={() => setDraft(String(value))}
         />
-        <Button variant="quiet" size="sm" iconOnly icon="plus" aria-label={`More ${label.toLowerCase()}`} disabled={disabled || value >= max} onClick={() => set(value + step)} />
+        <Button
+          variant="quiet"
+          size="sm"
+          iconOnly
+          icon="plus"
+          aria-label={`More ${label.toLowerCase()}`}
+          disabled={disabled || value >= max}
+          onClick={() => set(value + step)}
+        />
       </div>
     </StudioRow>
   );

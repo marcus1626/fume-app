@@ -77,7 +77,12 @@ function line(c: Campaign, options?: copy.CampaignStatusOptions): string {
 /** The default order: what waits on you first, then the soonest go-live. */
 function byDefault(rows: Campaign[], options?: copy.CampaignStatusOptions): Campaign[] {
   const live = (c: Campaign) => (c.dueAt ? Date.parse(c.dueAt) : Number.POSITIVE_INFINITY);
-  return rows.slice().sort((a, b) => Number(campaignGroup(b, options) === "you") - Number(campaignGroup(a, options) === "you") || live(a) - live(b));
+  return rows
+    .slice()
+    .sort(
+      (a, b) =>
+        Number(campaignGroup(b, options) === "you") - Number(campaignGroup(a, options) === "you") || live(a) - live(b),
+    );
 }
 
 export function CampaignsPage() {
@@ -101,7 +106,10 @@ export function CampaignsPage() {
   };
 
   return (
-    <Page title={show === "calendar" ? "Calendar · Campaigns" : "Campaigns"} className={show === "calendar" ? "ui-plan-page" : undefined}>
+    <Page
+      title={show === "calendar" ? "Calendar · Campaigns" : "Campaigns"}
+      className={show === "calendar" ? "ui-plan-page" : undefined}
+    >
       <PageHeader
         title="Campaigns"
         meta={campaigns.data ? [copy.count(campaigns.data.length, "campaign")] : undefined}
@@ -161,23 +169,37 @@ export function CampaignsPage() {
 /** Under way, then Done: a table on a desk (one sort for both), the rows on a phone. */
 function CampaignGroups({ all, desk }: { all: Campaign[]; desk: boolean }) {
   const sort = useTableSort<SortKey>();
-  const expert = useTeam().data?.fumeTeam.find((u) => u.staffRole === "expert")?.name.split(" ")[0] ?? "Fume’s expert";
+  const expert =
+    useTeam()
+      .data?.fumeTeam.find((u) => u.staffRole === "expert")
+      ?.name.split(" ")[0] ?? "Fume’s expert";
   const options = useStatusOptions();
   return (
     <div className="ui-campaign-list">
       {groups.map((g) => {
-        const rows = byDefault(all.filter((c) => (campaignGroup(c, options) === "done") === (g.key === "done")), options);
+        const rows = byDefault(
+          all.filter((c) => (campaignGroup(c, options) === "done") === (g.key === "done")),
+          options,
+        );
         if (rows.length === 0) return null;
         return (
           <Section key={g.key} title={g.title} meta={rows.length} titleId={`campaigns-${g.key}`}>
             {desk ? (
-              <CampaignTable rows={rows} sort={sort} expert={expert} labelledBy={`campaigns-${g.key}`} options={options} />
+              <CampaignTable
+                rows={rows}
+                sort={sort}
+                expert={expert}
+                labelledBy={`campaigns-${g.key}`}
+                options={options}
+              />
             ) : (
               <ItemGroup as="ul" aria-labelledby={`campaigns-${g.key}`}>
                 {rows.map((c) => (
                   <Item key={c.id} as="li" asChild>
                     <Link to={`/campaigns/${c.id}`}>
-                      <ItemMedia variant={c.cover ? "image" : "icon"}>{c.cover ? <ItemMediaImage src={c.cover} alt="" /> : <Icon name="megaphone" />}</ItemMedia>
+                      <ItemMedia variant={c.cover ? "image" : "icon"}>
+                        {c.cover ? <ItemMediaImage src={c.cover} alt="" /> : <Icon name="megaphone" />}
+                      </ItemMedia>
                       <ItemContent>
                         <ItemTitle>{c.name}</ItemTitle>
                         <ItemDescription>{line(c, options)}</ItemDescription>
@@ -199,13 +221,37 @@ function CampaignGroups({ all, desk }: { all: Campaign[]; desk: boolean }) {
 
 /** One group as a table (DLAY-6). The campaign's name is the link, stretched over the row, so the whole row opens it
  *  (and a middle click opens it in a new tab). */
-function CampaignTable({ rows, sort, expert, labelledBy, options }: { rows: Campaign[]; sort: TableSort<SortKey>; expert: string; labelledBy: string; options?: copy.CampaignStatusOptions }) {
+function CampaignTable({
+  rows,
+  sort,
+  expert,
+  labelledBy,
+  options,
+}: {
+  rows: Campaign[];
+  sort: TableSort<SortKey>;
+  expert: string;
+  labelledBy: string;
+  options?: copy.CampaignStatusOptions;
+}) {
   const shown = sort.key
-    ? sort.sorted(rows, (c, key) => (key === "live" ? (c.dueAt ? Date.parse(c.dueAt) : Number.MAX_SAFE_INTEGER) : stepOf(c).step + (stepOf(c).done ? 1 : 0)))
+    ? sort.sorted(rows, (c, key) =>
+        key === "live"
+          ? c.dueAt
+            ? Date.parse(c.dueAt)
+            : Number.MAX_SAFE_INTEGER
+          : stepOf(c).step + (stepOf(c).done ? 1 : 0),
+      )
     : rows;
   const waitingOn = (c: Campaign) => {
     const on = copy.campaignStatus(c, undefined, options).on;
-    return on === "you" ? "You" : on === "fume" ? (options?.agencyName ?? "Fume") : on === "expert" ? expert : undefined;
+    return on === "you"
+      ? "You"
+      : on === "fume"
+        ? (options?.agencyName ?? "Fume")
+        : on === "expert"
+          ? expert
+          : undefined;
   };
   return (
     <TableContainer>
@@ -216,11 +262,19 @@ function CampaignTable({ rows, sort, expert, labelledBy, options }: { rows: Camp
               <span className="ui-campaign-sr">Cover</span>
             </TableHead>
             <TableHead>Campaign</TableHead>
-            <TableHead className="ui-campaign-col-stage" sort={sort.directionOf("stage")} onSort={() => sort.sortBy("stage")}>
+            <TableHead
+              className="ui-campaign-col-stage"
+              sort={sort.directionOf("stage")}
+              onSort={() => sort.sortBy("stage")}
+            >
               Stage
             </TableHead>
             <TableHead className="ui-campaign-col-who">Waiting on</TableHead>
-            <TableHead className="ui-campaign-col-live" sort={sort.directionOf("live")} onSort={() => sort.sortBy("live")}>
+            <TableHead
+              className="ui-campaign-col-live"
+              sort={sort.directionOf("live")}
+              onSort={() => sort.sortBy("live")}
+            >
               Goes live
             </TableHead>
             <TableHead className="ui-campaign-col-made" num>

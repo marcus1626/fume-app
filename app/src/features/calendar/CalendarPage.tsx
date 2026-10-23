@@ -15,12 +15,36 @@
 import { Button, PageHeader, useNarrowScreen, useToast } from "@fume/ui";
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useCalendar, useCampaignViews, useCampaigns, useCatalogue, useDeliveries, useMoveEntry, usePlacements, useSchedule, useSession } from "../../api/hooks";
+import {
+  useCalendar,
+  useCampaignViews,
+  useCampaigns,
+  useCatalogue,
+  useDeliveries,
+  useMoveEntry,
+  usePlacements,
+  useSchedule,
+  useSession,
+} from "../../api/hooks";
 import type { CalendarEntry, Placement } from "../../contract";
 import { now } from "../../lib/time";
 import { campaignSubject, creativeLabels, customerName } from "../review/names";
 import { Page, Query } from "../../shell/Page";
-import { addDays, addMonths, clock, dayOf, dayShort, endOfMonth, instant, isDay, monthTitle, startOfMonth, startOfWeek, weekTitle, type Day } from "./dates";
+import {
+  addDays,
+  addMonths,
+  clock,
+  dayOf,
+  dayShort,
+  endOfMonth,
+  instant,
+  isDay,
+  monthTitle,
+  startOfMonth,
+  startOfWeek,
+  weekTitle,
+  type Day,
+} from "./dates";
 import { useCalendarDrag, type DragPayload } from "./drag";
 import { Agenda, DragGhost, MonthGrid, ReadyTray, WeekGrid, type CalendarActions } from "./parts";
 import { DEFAULT_TIME, defaultPlacement, PlanDialog, type PlanTarget } from "./plan";
@@ -70,7 +94,10 @@ export function CalendarView() {
   const catalogue = useCatalogue();
   // A planned creative under the name she approved it by, short and unique: what it shows, and which one it is
   // ("Night Body Oil · Feed A2", DLOAD-16). The labels come from each planned campaign's creatives.
-  const postCampaigns = useMemo(() => [...new Set(entries.filter((e) => e.kind === "post" && e.campaignId).map((e) => e.campaignId!))].sort(), [entries]);
+  const postCampaigns = useMemo(
+    () => [...new Set(entries.filter((e) => e.kind === "post" && e.campaignId).map((e) => e.campaignId!))].sort(),
+    [entries],
+  );
   const views = useCampaignViews(postCampaigns);
   const labels = useMemo(() => {
     const all = new Map<string, string>();
@@ -92,7 +119,11 @@ export function CalendarView() {
   const deliveryHref = (e: CalendarEntry) => {
     const near = (deliveries.data ?? [])
       .filter((d) => d.campaignId === e.campaignId)
-      .sort((a, b) => Math.abs(Date.parse(a.createdAt) - Date.parse(e.start)) - Math.abs(Date.parse(b.createdAt) - Date.parse(e.start)))[0];
+      .sort(
+        (a, b) =>
+          Math.abs(Date.parse(a.createdAt) - Date.parse(e.start)) -
+          Math.abs(Date.parse(b.createdAt) - Date.parse(e.start)),
+      )[0];
     return near ? `/deliveries/${near.id}` : "/deliveries";
   };
 
@@ -194,11 +225,23 @@ export function CalendarView() {
               {range.title}
             </h2>
             <div className="ui-plan-nav" role="group" aria-label="Move through the calendar">
-              <Button variant="quiet" iconOnly icon="chevron-left" aria-label={view === "week" ? "Previous week" : "Previous month"} onClick={() => step(-1)} />
+              <Button
+                variant="quiet"
+                iconOnly
+                icon="chevron-left"
+                aria-label={view === "week" ? "Previous week" : "Previous month"}
+                onClick={() => step(-1)}
+              />
               <Button variant="secondary" size="sm" onClick={() => go({ d: today })} disabled={anchor === today}>
                 Today
               </Button>
-              <Button variant="quiet" iconOnly icon="chevron-right" aria-label={view === "week" ? "Next week" : "Next month"} onClick={() => step(1)} />
+              <Button
+                variant="quiet"
+                iconOnly
+                icon="chevron-right"
+                aria-label={view === "week" ? "Next week" : "Next month"}
+                onClick={() => step(1)}
+              />
             </div>
           </div>
           <Query query={calendar} loading="Opening the calendar">
@@ -216,7 +259,12 @@ export function CalendarView() {
         {canPlan && <ReadyTray campaigns={campaigns.data ?? []} entries={entries} actions={actions} anchor={anchor} />}
       </div>
       {drag && <DragGhost drag={drag} />}
-      <PlanDialog target={plan} placements={(placements.data ?? []) as Placement[]} today={today} onClose={() => setPlan(null)} />
+      <PlanDialog
+        target={plan}
+        placements={(placements.data ?? []) as Placement[]}
+        today={today}
+        onClose={() => setPlan(null)}
+      />
     </>
   );
 }

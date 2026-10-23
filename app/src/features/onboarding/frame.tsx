@@ -29,7 +29,13 @@ export type OnboardingStep = OnboardingStepId;
 export const stepTitle = (id: OnboardingStepId) => onboardingSteps.find((s) => s.id === id)?.title ?? "";
 
 export const stepPath = (id: OnboardingStepId, part?: string) =>
-  id === "review" ? (part && part !== "logo" ? `/welcome/review?part=${part}` : "/welcome/review") : id ? `/welcome/${id}` : "/welcome";
+  id === "review"
+    ? part && part !== "logo"
+      ? `/welcome/review?part=${part}`
+      : "/welcome/review"
+    : id
+      ? `/welcome/${id}`
+      : "/welcome";
 
 /** Where "continue" goes: the furthest step and part reached. */
 export const resumePath = (p?: OnboardingProgress) => (p ? stepPath(p.step, p.part) : "/welcome");
@@ -81,9 +87,26 @@ export function useEnterForward(go: (() => void) | undefined) {
   ref.current = go;
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "Enter" || e.defaultPrevented || e.isComposing || e.metaKey || e.ctrlKey || e.altKey || e.shiftKey || !ref.current) return;
+      if (
+        e.key !== "Enter" ||
+        e.defaultPrevented ||
+        e.isComposing ||
+        e.metaKey ||
+        e.ctrlKey ||
+        e.altKey ||
+        e.shiftKey ||
+        !ref.current
+      )
+        return;
       const t = e.target as HTMLElement | null;
-      if (t && t !== document.body && t.closest("input, textarea, select, button, a[href], [role=button], [role=option], [role=menuitem], [role=tab], [role=radio], [role=checkbox], [contenteditable=true], [role=dialog]")) return;
+      if (
+        t &&
+        t !== document.body &&
+        t.closest(
+          "input, textarea, select, button, a[href], [role=button], [role=option], [role=menuitem], [role=tab], [role=radio], [role=checkbox], [contenteditable=true], [role=dialog]",
+        )
+      )
+        return;
       if (document.querySelector("[role=dialog][data-state=open], [role=menu][data-state=open]")) return;
       e.preventDefault();
       ref.current();
@@ -102,7 +125,10 @@ function useKeepProgress(step: OnboardingStepId, part?: string) {
     if (!p || !step || save.isPending) return;
     const ahead = stepIndex(step) > stepIndex(p.step);
     const partAhead =
-      step === "review" && p.step === "review" && part && checkParts.findIndex((x) => x.id === part) > checkParts.findIndex((x) => x.id === (p.part ?? "logo"));
+      step === "review" &&
+      p.step === "review" &&
+      part &&
+      checkParts.findIndex((x) => x.id === part) > checkParts.findIndex((x) => x.id === (p.part ?? "logo"));
     if (ahead || partAhead) save.mutate({ step, part });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [p?.step, p?.part, step, part]);
@@ -126,7 +152,16 @@ export interface StepFrameProps {
 }
 
 /** A step's page: the bar, where she is, the step itself, its way forward. */
-export function StepFrame({ step, title, parts, part, foot, footAlign = "between", footPinned = true, children }: StepFrameProps) {
+export function StepFrame({
+  step,
+  title,
+  parts,
+  part,
+  foot,
+  footAlign = "between",
+  footPinned = true,
+  children,
+}: StepFrameProps) {
   const navigate = useNavigate();
   const progress = useKeepProgress(step, part);
   const board = useBrandBoard();
@@ -140,7 +175,10 @@ export function StepFrame({ step, title, parts, part, foot, footAlign = "between
     title: s.title,
     state: (i < current ? "done" : i === current ? "current" : "todo") as "done" | "current" | "todo",
     left: s.id === "review" && open > 0 ? `${open} left` : undefined,
-    onSelect: i <= furthest && i !== current ? () => navigate(i === stepIndex(progress?.step ?? "") ? resumePath(progress) : stepPath(s.id)) : undefined,
+    onSelect:
+      i <= furthest && i !== current
+        ? () => navigate(i === stepIndex(progress?.step ?? "") ? resumePath(progress) : stepPath(s.id))
+        : undefined,
   }));
 
   return (
@@ -148,11 +186,20 @@ export function StepFrame({ step, title, parts, part, foot, footAlign = "between
       <Bar to={resumePath(progress)} />
       <Page title={title}>
         <div className="ui-welcome-screen" data-step={step || "brand"}>
-          <WelcomeProgress aria-label="Your onboarding" steps={steps} parts={parts} partsLabel="The parts of your brand" />
+          <WelcomeProgress
+            aria-label="Your onboarding"
+            steps={steps}
+            parts={parts}
+            partsLabel="The parts of your brand"
+          />
           {children}
           {foot && (
             <div
-              className={cx("ui-welcome-foot", footAlign !== "between" && `ui-welcome-foot--${footAlign}`, !footPinned && "ui-welcome-foot--static")}
+              className={cx(
+                "ui-welcome-foot",
+                footAlign !== "between" && `ui-welcome-foot--${footAlign}`,
+                !footPinned && "ui-welcome-foot--static",
+              )}
               data-ui-foot={footPinned ? "" : undefined}
             >
               {foot}

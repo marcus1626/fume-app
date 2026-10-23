@@ -11,7 +11,9 @@ import { useOpenClient } from "./useOpenClient";
 
 /** "Good morning" … "Good evening", by the hour in Oslo (as the customer's Home). */
 export function greeting(): string {
-  const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "numeric", hour12: false, timeZone: "Europe/Oslo" }).format(Date.now()));
+  const hour = Number(
+    new Intl.DateTimeFormat("en-GB", { hour: "numeric", hour12: false, timeZone: "Europe/Oslo" }).format(Date.now()),
+  );
   if (hour < 5 || hour >= 22) return "Good evening";
   if (hour < 12) return "Good morning";
   if (hour < 18) return "Good afternoon";
@@ -23,14 +25,19 @@ export function greeting(): string {
 // seat stays "lead" or "creative"; the Admin is the lead, and a creative is an Expert, or an Operator when they run the
 // Engine (staffRole "operator", Sindre the producer).
 export type AgencyRoleName = "admin" | "expert" | "operator";
-export const agencyRoleWords: Record<AgencyRoleName, string> = { admin: "Admin", expert: "Expert", operator: "Operator" };
+export const agencyRoleWords: Record<AgencyRoleName, string> = {
+  admin: "Admin",
+  expert: "Expert",
+  operator: "Operator",
+};
 export const agencyRoleHelp: Record<AgencyRoleName, string> = {
   admin: "Everything an expert does, plus clients, the team, the Fume plan and usage",
   expert: "Briefs and plans, the Studio and the Engine, checks every creative, sends to the client",
   operator: "Runs the Engine and the Studio for the campaigns; an expert checks the work",
 };
 /** A person's role in the agency, in Fume's words. */
-export const agencyRoleOf = (role: AgencyRole, user?: Pick<User, "staffRole">): AgencyRoleName => (role === "lead" ? "admin" : user?.staffRole === "operator" ? "operator" : "expert");
+export const agencyRoleOf = (role: AgencyRole, user?: Pick<User, "staffRole">): AgencyRoleName =>
+  role === "lead" ? "admin" : user?.staffRole === "operator" ? "operator" : "expert";
 /** The seat's role in Fume's words, where the person is not at hand (the Overview's team line falls back to it). */
 export const agencyRole: Record<AgencyRole, string> = { lead: agencyRoleWords.admin, creative: agencyRoleWords.expert };
 
@@ -42,7 +49,15 @@ export function useAgencySeat() {
 }
 
 /** A client brand's mark: its initial on the Ink soft square, as in the switcher (studio.css). */
-export function ClientMark({ workspace, small, className }: { workspace: Pick<Workspace, "brandName">; small?: boolean; className?: string }) {
+export function ClientMark({
+  workspace,
+  small,
+  className,
+}: {
+  workspace: Pick<Workspace, "brandName">;
+  small?: boolean;
+  className?: string;
+}) {
   return (
     <span className={cx("ui-studio-mark", small && "ui-studio-mark--sm", className)} aria-hidden="true">
       {initials(workspace.brandName)}
@@ -54,7 +69,11 @@ export function ClientMark({ workspace, small, className }: { workspace: Pick<Wo
 export function WaitsDot({ count }: { count: number }) {
   if (count <= 0) return null;
   return (
-    <span className="ui-agency-dot" role="img" aria-label={count === 1 ? "One thing waits on you" : `${count} things wait on you`}>
+    <span
+      className="ui-agency-dot"
+      role="img"
+      aria-label={count === 1 ? "One thing waits on you" : `${count} things wait on you`}
+    >
       <BadgeDot />
     </span>
   );
@@ -78,7 +97,8 @@ export function Faces({ people, max = 3, label }: { people: User[]; max?: number
  *  a summary client always opens its Home, where the shell says it is an example (FLOWS §24.8). */
 export function useOpenFromAgency() {
   const open = useOpenClient();
-  return (client: { id: Id; example: AgencyClient["example"] }, to = "/") => open(client.id, client.example === "full" ? to : "/");
+  return (client: { id: Id; example: AgencyClient["example"] }, to = "/") =>
+    open(client.id, client.example === "full" ? to : "/");
 }
 
 /** "Waiting on Maja" or "6 creatives with Maja" → "Maja". */
@@ -100,14 +120,19 @@ export function agencyStatus(c: Campaign, client?: string): { words: string; on:
 export function rowStatus(row: AgencyCampaignRow): { words: string; on: string } {
   const person = clientPerson(row.waitingOn);
   // A summary row's sentence names the agency's own step ("2 creatives to check", "The brief waits on you") when it has one.
-  if (row.example === "summary") return { words: row.status, on: /to check|on you|for you|to confirm|to send/i.test(row.status) ? "You" : (person ?? "You") };
+  if (row.example === "summary")
+    return {
+      words: row.status,
+      on: /to check|on you|for you|to confirm|to send/i.test(row.status) ? "You" : (person ?? "You"),
+    };
   const s = agencyStatus(row.campaign, person);
   const on = s.on === "client" ? (person ?? "The client") : s.on === "you" ? "You" : s.on === "fume" ? "Fume" : "";
   return { words: s.words, on: person && s.on !== "done" && s.on !== "you" ? person : on };
 }
 
 /** "Nora" or "You". */
-export const nameOrYou = (user: User | undefined, me: User | undefined) => (user ? copy.byYou(user.name, user.id === me?.id, true) : undefined);
+export const nameOrYou = (user: User | undefined, me: User | undefined) =>
+  user ? copy.byYou(user.name, user.id === me?.id, true) : undefined;
 
 /** The first name, for a column that only has room for it. */
 export const first = (user?: User) => (user ? firstName(user.name) : undefined);
@@ -117,7 +142,23 @@ export const first = (user?: User) => (user ? firstName(user.name) : undefined);
 export function useCheckWords() {
   const agency = Boolean(useSession().data?.user.agency);
   return agency
-    ? { taught: "what your team has taught it in Check", waitFor: "wait for your check", lands: "lands in Check for your team", allChecked: "Your team checked all of them", checkedBy: "checked by your team", talks: "Only your team talks to it; your clients talk to you.", planDone: "checked" }
-    : { taught: "what the expert has taught it in Check", waitFor: "wait for the expert", lands: "lands in Check for the expert", allChecked: "The expert checked all of them", checkedBy: "checked by the expert", talks: "Only Fume’s people talk to it; customers talk to Fume.", planDone: "approved" };
+    ? {
+        taught: "what your team has taught it in Check",
+        waitFor: "wait for your check",
+        lands: "lands in Check for your team",
+        allChecked: "Your team checked all of them",
+        checkedBy: "checked by your team",
+        talks: "Only your team talks to it; your clients talk to you.",
+        planDone: "checked",
+      }
+    : {
+        taught: "what the expert has taught it in Check",
+        waitFor: "wait for the expert",
+        lands: "lands in Check for the expert",
+        allChecked: "The expert checked all of them",
+        checkedBy: "checked by the expert",
+        talks: "Only Fume’s people talk to it; customers talk to Fume.",
+        planDone: "approved",
+      };
 }
 export type CheckWords = ReturnType<typeof useCheckWords>;

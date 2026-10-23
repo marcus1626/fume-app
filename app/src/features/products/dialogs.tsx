@@ -73,7 +73,9 @@ export function NewCollectionDialog({
       { name: name.trim(), kind, productIds: picked },
       {
         onSuccess: (c) => {
-          toast.done(`${c.name} made`, { description: `${copy.count(picked.length, "product")} in it. A campaign can take it whole.` });
+          toast.done(`${c.name} made`, {
+            description: `${copy.count(picked.length, "product")} in it. A campaign can take it whole.`,
+          });
           setName("");
           setPicked([]);
           onOpenChange(false);
@@ -89,18 +91,31 @@ export function NewCollectionDialog({
       <SheetContent side="right" size="lg">
         <SheetHeader>
           <SheetTitle>New collection</SheetTitle>
-          <SheetDescription>A season, a launch or a line. A campaign can take it whole, and each collection can be its own delivery.</SheetDescription>
+          <SheetDescription>
+            A season, a launch or a line. A campaign can take it whole, and each collection can be its own delivery.
+          </SheetDescription>
         </SheetHeader>
         <SheetBody>
           <form id="new-collection" onSubmit={submit} aria-label="New collection">
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="collection-name">Name</FieldLabel>
-                <Input id="collection-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="SS27" required data-ui-autofocus />
+                <Input
+                  id="collection-name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="SS27"
+                  required
+                  data-ui-autofocus
+                />
               </Field>
               <Field>
                 <FieldLabel htmlFor="collection-kind">Kind</FieldLabel>
-                <NativeSelect id="collection-kind" value={kind} onChange={(e) => setKind(e.target.value as Collection["kind"])}>
+                <NativeSelect
+                  id="collection-kind"
+                  value={kind}
+                  onChange={(e) => setKind(e.target.value as Collection["kind"])}
+                >
                   {kinds.map((k) => (
                     <option key={k} value={k}>
                       {collectionKind[k]}
@@ -113,7 +128,9 @@ export function NewCollectionDialog({
                   <Choice key={p.id}>
                     <Checkbox
                       checked={picked.includes(p.id)}
-                      onCheckedChange={(on) => setPicked((now) => (on ? [...now, p.id] : now.filter((id) => id !== p.id)))}
+                      onCheckedChange={(on) =>
+                        setPicked((now) => (on ? [...now, p.id] : now.filter((id) => id !== p.id)))
+                      }
                     />
                     <ChoiceText label={p.name} hint={categoryPath(categories, p.categoryId)} />
                   </Choice>
@@ -126,7 +143,13 @@ export function NewCollectionDialog({
           <SheetClose asChild>
             <Button variant="glass-clear">Later</Button>
           </SheetClose>
-          <Button type="submit" form="new-collection" variant="glass-white" loading={add.isPending} disabled={!name.trim()}>
+          <Button
+            type="submit"
+            form="new-collection"
+            variant="glass-white"
+            loading={add.isPending}
+            disabled={!name.trim()}
+          >
             Make the collection
           </Button>
         </SheetFooter>
@@ -172,7 +195,9 @@ export function AddProductDialog({
     if (!file) return setRows([]);
     const parsed = parseCsv(await file.text());
     setRows(parsed);
-    setCsvError(parsed.length ? undefined : "Fume found no products in it. One product per line: name, size or variant, page.");
+    setCsvError(
+      parsed.length ? undefined : "Fume found no products in it. One product per line: name, size or variant, page.",
+    );
   }
 
   const ready = how === "hand" ? Boolean(name.trim()) : rows.length > 0;
@@ -180,7 +205,8 @@ export function AddProductDialog({
   function submit(event: FormEvent) {
     event.preventDefault();
     if (!ready) return;
-    const input = how === "hand" ? [{ name: name.trim(), variant: variant.trim(), url: url.trim() || undefined }] : rows;
+    const input =
+      how === "hand" ? [{ name: name.trim(), variant: variant.trim(), url: url.trim() || undefined }] : rows;
     add.mutate(input, {
       onSuccess: (products) => {
         toast.done(products.length === 1 ? `${products[0]!.name} added` : `${products.length} products added`, {
@@ -203,7 +229,9 @@ export function AddProductDialog({
         <DialogHeader>
           <DialogTitle>{csvOnly ? "Add products from a CSV" : "Add a product"}</DialogTitle>
           <DialogDescription>
-            {csvOnly ? "One product per line. Fume reads each one; open it after to choose its kind and add its photos." : "Fume reads what it can. Nothing is used in a campaign until you verify its facts."}
+            {csvOnly
+              ? "One product per line. Fume reads each one; open it after to choose its kind and add its photos."
+              : "Fume reads what it can. Nothing is used in a campaign until you verify its facts."}
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
@@ -219,27 +247,57 @@ export function AddProductDialog({
                 <>
                   <Field>
                     <FieldLabel htmlFor="product-name">Name</FieldLabel>
-                    <Input id="product-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Night Body Oil" data-ui-autofocus />
+                    <Input
+                      id="product-name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Night Body Oil"
+                      data-ui-autofocus
+                    />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="product-variant">
                       Size or variant <FieldOptional />
                     </FieldLabel>
-                    <Input id="product-variant" value={variant} onChange={(e) => setVariant(e.target.value)} placeholder="100 ml" />
+                    <Input
+                      id="product-variant"
+                      value={variant}
+                      onChange={(e) => setVariant(e.target.value)}
+                      placeholder="100 ml"
+                    />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="product-url">
                       Product page <FieldOptional />
                     </FieldLabel>
-                    <Input id="product-url" type="url" inputMode="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://" />
+                    <Input
+                      id="product-url"
+                      type="url"
+                      inputMode="url"
+                      value={url}
+                      onChange={(e) => setUrl(e.target.value)}
+                      placeholder="https://"
+                    />
                   </Field>
                 </>
               ) : (
                 <Field invalid={Boolean(csvError)}>
                   <FieldLabel htmlFor="product-csv">Your product list</FieldLabel>
-                  <FileInput id="product-csv" accept=".csv,text/csv,.txt" placeholder="Choose a CSV" onFilesChange={readCsv} aria-describedby="product-csv-help" />
+                  <FileInput
+                    id="product-csv"
+                    accept=".csv,text/csv,.txt"
+                    placeholder="Choose a CSV"
+                    onFilesChange={readCsv}
+                    aria-describedby="product-csv-help"
+                  />
                   <FieldDescription id="product-csv-help">
-                    {csvError ?? (rows.length ? `${copy.count(rows.length, "product")} found: ${rows.slice(0, 3).map((r) => r.name).join(", ")}${rows.length > 3 ? " …" : ""}` : "One product per line: name, size or variant, page.")}
+                    {csvError ??
+                      (rows.length
+                        ? `${copy.count(rows.length, "product")} found: ${rows
+                            .slice(0, 3)
+                            .map((r) => r.name)
+                            .join(", ")}${rows.length > 3 ? " …" : ""}`
+                        : "One product per line: name, size or variant, page.")}
                   </FieldDescription>
                 </Field>
               )}
@@ -261,7 +319,13 @@ export function AddProductDialog({
 
 // ─── Change a proposed collection ───────────────────────────────────────────
 
-export function ChangeCollectionDialog({ collection, onOpenChange }: { collection: Collection | null; onOpenChange: (open: boolean) => void }) {
+export function ChangeCollectionDialog({
+  collection,
+  onOpenChange,
+}: {
+  collection: Collection | null;
+  onOpenChange: (open: boolean) => void;
+}) {
   const decide = useDecide();
   const toast = useToast();
   const [name, setName] = useState("");
@@ -288,13 +352,21 @@ export function ChangeCollectionDialog({ collection, onOpenChange }: { collectio
       <DialogContent size="sm">
         <DialogHeader>
           <DialogTitle>Change {collection?.name}</DialogTitle>
-          <DialogDescription>Fume found it on your website. Give it the name you use, and it is yours.</DialogDescription>
+          <DialogDescription>
+            Fume found it on your website. Give it the name you use, and it is yours.
+          </DialogDescription>
         </DialogHeader>
         <DialogBody>
           <form id="change-collection" onSubmit={submit}>
             <Field>
               <FieldLabel htmlFor="collection-rename">Name</FieldLabel>
-              <Input id="collection-rename" value={name} onChange={(e) => setName(e.target.value)} placeholder={collection?.name} data-ui-autofocus />
+              <Input
+                id="collection-rename"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder={collection?.name}
+                data-ui-autofocus
+              />
             </Field>
           </form>
         </DialogBody>
@@ -302,7 +374,13 @@ export function ChangeCollectionDialog({ collection, onOpenChange }: { collectio
           <DialogClose asChild>
             <Button variant="glass-clear">Later</Button>
           </DialogClose>
-          <Button type="submit" form="change-collection" variant="glass-white" loading={decide.isPending} disabled={!name.trim()}>
+          <Button
+            type="submit"
+            form="change-collection"
+            variant="glass-white"
+            loading={decide.isPending}
+            disabled={!name.trim()}
+          >
             Save the name
           </Button>
         </DialogFooter>

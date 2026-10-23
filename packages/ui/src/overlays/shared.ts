@@ -29,7 +29,11 @@ export function tokenMs(name: string, fallback: number): number {
 }
 
 /** Controlled when `value` is given, otherwise its own state; `onChange` hears every change either way. */
-export function useControllableState<T>(value: T | undefined, defaultValue: T, onChange?: (next: T) => void): [T, (next: T) => void] {
+export function useControllableState<T>(
+  value: T | undefined,
+  defaultValue: T,
+  onChange?: (next: T) => void,
+): [T, (next: T) => void] {
   const [inner, setInner] = useState<T>(defaultValue);
   const controlled = value !== undefined;
   const onChangeRef = useRef(onChange);
@@ -91,7 +95,9 @@ export function focusFirst(layer: HTMLElement | null, skip: string): boolean {
   if (!layer) return false;
   const target =
     layer.querySelector<HTMLElement>("[data-ui-autofocus]") ||
-    Array.from(layer.querySelectorAll<HTMLElement>(FOCUSABLE)).find((n) => !n.matches(skip) && n.getClientRects().length > 0) ||
+    Array.from(layer.querySelectorAll<HTMLElement>(FOCUSABLE)).find(
+      (n) => !n.matches(skip) && n.getClientRects().length > 0,
+    ) ||
     null;
   if (!target) return false;
   target.focus({ preventScroll: true });
@@ -148,7 +154,13 @@ export function returnFocusTo(opener: HTMLElement | null, layer?: HTMLElement | 
   if (typeof document === "undefined") return false;
   if (opener && openedOn.has(opener) && openedOn.get(opener) !== pagePath()) return true;
   const ok = (el: HTMLElement | null | undefined): el is HTMLElement =>
-    Boolean(el && el.isConnected && !(layer && layer.contains(el)) && !el.closest("[inert], [hidden]") && el.getClientRects().length > 0);
+    Boolean(
+      el &&
+      el.isConnected &&
+      !(layer && layer.contains(el)) &&
+      !el.closest("[inert], [hidden]") &&
+      el.getClientRects().length > 0,
+    );
   let target: HTMLElement | null = ok(opener) ? opener : null;
   if (!target && opener) {
     // the opener is gone (a menu row): the element focused just before it

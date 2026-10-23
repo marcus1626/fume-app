@@ -443,13 +443,22 @@ export interface FumeApi {
   // ─── v2 (FLOWS.md) ───
 
   // Onboarding: the Engine reads the brand (FLOWS §7 step 3)
-  startBrandScan(input: { source: ScanSource; url?: string; files?: { name: string; bytes: number }[] }): Promise<BrandScan>;
+  startBrandScan(input: {
+    source: ScanSource;
+    url?: string;
+    files?: { name: string; bytes: number }[];
+  }): Promise<BrandScan>;
   brandScan(): Promise<BrandScan | null>;
 
   // Brand DNA board
   brandBoard(): Promise<BrandBoardView>;
   /** Keep, change or remove an Engine proposal (FLOWS §2). Only the customer decides. */
-  decide(input: { kind: IdentityKind; id: Id; verdict: "keep" | "change" | "remove"; value?: string }): Promise<BrandBoardView>;
+  decide(input: {
+    kind: IdentityKind;
+    id: Id;
+    verdict: "keep" | "change" | "remove";
+    value?: string;
+  }): Promise<BrandBoardView>;
 
   // Catalogue (FLOWS §3.1)
   catalogue(): Promise<CatalogueView>;
@@ -461,7 +470,11 @@ export interface FumeApi {
   boards(): Promise<Board[]>;
   board(boardId: Id): Promise<Board>;
   addBoardItem(boardId: Id, item: Omit<BoardItem, "id" | "boardId" | "provenance">): Promise<Board>;
-  updateBoardItem(boardId: Id, itemId: Id, change: Partial<Pick<BoardItem, "x" | "y" | "w" | "h" | "verdict" | "note" | "text">>): Promise<Board>;
+  updateBoardItem(
+    boardId: Id,
+    itemId: Id,
+    change: Partial<Pick<BoardItem, "x" | "y" | "w" | "h" | "verdict" | "note" | "text">>,
+  ): Promise<Board>;
   removeBoardItem(boardId: Id, itemId: Id): Promise<Board>;
   /** v5: start a campaign's moodboard on the spot with these pictures; the campaign gets its boardId. */
   startMoodboard(campaignId: Id, images: string[]): Promise<Board>;
@@ -487,14 +500,32 @@ export interface FumeApi {
   studioModes(): Promise<StudioMode[]>;
   documents(workspaceId: Id): Promise<CreativeDocument[]>;
   document(documentId: Id): Promise<CreativeDocument>;
-  openDocument(input: { workspaceId: Id; studio: StudioKind; modeId: Id; campaignId?: Id; creativeId?: Id; title?: string; slot?: string; /** v7: a candidate opened in the Studio becomes V1 of one document (walk-through Must 10). */ fromGenerationId?: Id; /** r13 #56: started from a product; otherwise a new creative starts with no product (or its campaign's first) */ productId?: Id }): Promise<CreativeDocument>;
-  updateDocument(documentId: Id, change: Partial<Pick<CreativeDocument, "variables" | "specs" | "layers" | "modeId" | "studio" | "title" | "campaignId">>): Promise<CreativeDocument>; // v5: campaignId (a key with undefined clears it)
+  openDocument(input: {
+    workspaceId: Id;
+    studio: StudioKind;
+    modeId: Id;
+    campaignId?: Id;
+    creativeId?: Id;
+    title?: string;
+    slot?: string;
+    /** v7: a candidate opened in the Studio becomes V1 of one document (walk-through Must 10). */ fromGenerationId?: Id;
+    /** r13 #56: started from a product; otherwise a new creative starts with no product (or its campaign's first) */ productId?: Id;
+  }): Promise<CreativeDocument>;
+  updateDocument(
+    documentId: Id,
+    change: Partial<
+      Pick<CreativeDocument, "variables" | "specs" | "layers" | "modeId" | "studio" | "title" | "campaignId">
+    >,
+  ): Promise<CreativeDocument>; // v5: campaignId (a key with undefined clears it)
   /** Words in the Engine bar: the Engine proposes a variable change and shows it before it renders. */
   engineEdit(documentId: Id, text: string): Promise<CreativeDocument>;
   decideEdit(documentId: Id, editId: Id, verdict: "keep" | "undo"): Promise<CreativeDocument>;
   render(documentId: Id): Promise<CreativeDocument>;
   pickVersion(documentId: Id, versionId: Id): Promise<CreativeDocument>;
-  overrideProduct(documentId: Id, change: { field: string; value: string; scope: ProductOverride["scope"] }): Promise<CreativeDocument>;
+  overrideProduct(
+    documentId: Id,
+    change: { field: string; value: string; scope: ProductOverride["scope"] },
+  ): Promise<CreativeDocument>;
   documentToCheck(documentId: Id): Promise<CreativeDocument>;
 
   // Brand assets (FLOWS §9.4, §9.6)
@@ -517,14 +548,24 @@ export interface FumeApi {
 
   // Review like frame.io (FLOWS §11)
   reviewComments(creativeId: Id): Promise<ReviewComment[]>;
-  addReviewComment(input: { creativeId: Id; versionId: Id; text: string; pin?: { x: number; y: number }; replyTo?: Id }): Promise<ReviewComment>;
+  addReviewComment(input: {
+    creativeId: Id;
+    versionId: Id;
+    text: string;
+    pin?: { x: number; y: number };
+    replyTo?: Id;
+  }): Promise<ReviewComment>;
   resolveReviewComment(commentId: Id): Promise<ReviewComment>;
   rate(input: { creativeId: Id; versionId: Id; stars: Rating["stars"] }): Promise<Rating>;
   ratings(campaignId: Id): Promise<Rating[]>;
 
   // Taste keeps learning (FLOWS §14)
   tasteTraining(): Promise<{ cards: TasteCard[]; state: TasteState }>;
-  answerTaste(input: { cardId: Id; answer: "a" | "b" | "yes" | "no"; reason?: string }): Promise<{ card: TasteCard; state: TasteState }>;
+  answerTaste(input: {
+    cardId: Id;
+    answer: "a" | "b" | "yes" | "no";
+    reason?: string;
+  }): Promise<{ card: TasteCard; state: TasteState }>;
 
   // One Fume chat (FLOWS §12): no list of chats, Fume remembers everything
   conversation(): Promise<Message[]>;
@@ -534,19 +575,33 @@ export interface FumeApi {
 
   // Batches (FLOWS §9.7)
   batches(campaignId?: Id): Promise<Batch[]>;
-  startBatch(input: { campaignId: Id; modeId: Id; productIds: Id[]; collectionId?: Id; perProduct: number; format: Format }): Promise<Batch>;
+  startBatch(input: {
+    campaignId: Id;
+    modeId: Id;
+    productIds: Id[];
+    collectionId?: Id;
+    perProduct: number;
+    format: Format;
+  }): Promise<Batch>;
 
   // ─── v4 (FLOWS §15–§21) ───
 
   // Placements and Make formats
   placements(): Promise<Placement[]>;
   makeFormats(documentId: Id, placementIds: Id[]): Promise<CreativeDocument>;
-  setFormatTile(documentId: Id, placementId: Id, change: { method?: FormatTile["method"]; crop?: FormatTile["crop"] }): Promise<CreativeDocument>;
+  setFormatTile(
+    documentId: Id,
+    placementId: Id,
+    change: { method?: FormatTile["method"]; crop?: FormatTile["crop"] },
+  ): Promise<CreativeDocument>;
 
   // Product fix
   detailTokens(productId: Id): Promise<DetailToken[]>;
   /** Fix a detail with the real product: a token the Engine masked, or a region the designer brushed. */
-  fixProduct(documentId: Id, input: { versionId: Id; tokenId?: Id; region?: ProductFix["region"]; what?: string }): Promise<CreativeDocument>;
+  fixProduct(
+    documentId: Id,
+    input: { versionId: Id; tokenId?: Id; region?: ProductFix["region"]; what?: string },
+  ): Promise<CreativeDocument>;
 
   // Light and camera
   lookPresets(workspaceId: Id): Promise<{ cameras: CameraPreset[]; lights: LightPreset[] }>;
@@ -555,7 +610,11 @@ export interface FumeApi {
   // The Engine chat (Fume's people)
   engineChat(workspaceId: Id): Promise<EngineMessage[]>;
   engineSay(workspaceId: Id, text: string): Promise<EngineMessage>;
-  answerEngineWidget(workspaceId: Id, messageId: Id, answer: { picked?: Id[]; choice?: string }): Promise<EngineMessage>;
+  answerEngineWidget(
+    workspaceId: Id,
+    messageId: Id,
+    answer: { picked?: Id[]; choice?: string },
+  ): Promise<EngineMessage>;
 
   // Admin
   usage(): Promise<UsageRow[]>;
@@ -573,7 +632,13 @@ export interface FumeApi {
   /** The category templates: fields, shot slots, parts (like Studio modes). */
   productKinds(): Promise<ProductKind[]>;
   /** Add a product of a kind: the Engine reads the shots and the product page and proposes specs and parts. */
-  readProduct(input: { kindId: Id; name: string; variant: string; url?: string; shots: { slotId: Id; name: string; bytes: number; src?: string }[] }): Promise<Product>;
+  readProduct(input: {
+    kindId: Id;
+    name: string;
+    variant: string;
+    url?: string;
+    shots: { slotId: Id; name: string; bytes: number; src?: string }[];
+  }): Promise<Product>;
   /** The customer's values and decisions: set values (supplied), keep proposals (approved), remove, parts. */
   saveProductSpecs(
     productId: Id,
@@ -600,11 +665,20 @@ export interface FumeApi {
 // ─── v9 Update the brand (round 7, PROPOSED 16 Oct 2026); merged into FumeApi ───
 export interface FumeApi {
   /** Read the website again, or a zip of new things, and compare with the approved Brand DNA. */
-  startBrandUpdate(input: { source: "website" | "upload"; url?: string; files?: { name: string; bytes: number }[] }): Promise<BrandUpdate>;
+  startBrandUpdate(input: {
+    source: "website" | "upload";
+    url?: string;
+    files?: { name: string; bytes: number }[];
+  }): Promise<BrandUpdate>;
   /** The latest update, while it reads and after (null when there is none). */
   brandUpdate(): Promise<BrandUpdate | null>;
   /** Keep, fix (with the customer's value) or remove one thing the Engine found. Keep and fix write it into Brand DNA. */
-  decideBrandFound(input: { updateId: Id; foundId: Id; verdict: "keep" | "fix" | "remove"; value?: string }): Promise<BrandUpdate>;
+  decideBrandFound(input: {
+    updateId: Id;
+    foundId: Id;
+    verdict: "keep" | "fix" | "remove";
+    value?: string;
+  }): Promise<BrandUpdate>;
   /** Approve all: keep everything not answered yet, and close the update. */
   approveBrandUpdate(updateId: Id): Promise<BrandUpdate>;
 }
@@ -613,7 +687,11 @@ export interface FumeApi {
 export interface ProductImportApi {
   /** The import that is under way or waits for review, or the result not yet closed; null when none. */
   productImport(): Promise<ImportJob | null>;
-  startProductImport(input: { source: ImportSource; url?: string; file?: { name: string; bytes: number } }): Promise<ImportJob>;
+  startProductImport(input: {
+    source: ImportSource;
+    url?: string;
+    file?: { name: string; bytes: number };
+  }): Promise<ImportJob>;
   importJob(id: Id): Promise<ImportJob>;
   /** csv: the customer's answer to the column mapping; reading goes on. */
   mapImportColumns(jobId: Id, columns: { column: string; fieldId: Id | null }[]): Promise<ImportJob>;
@@ -631,7 +709,7 @@ export interface ProductImportApi {
   /** Close the result (or cancel an import under way). */
   dismissImport(jobId: Id): Promise<void>;
 }
- 
+
 export interface FumeApi extends ProductImportApi {}
 
 // ── round 8 HOME ──
@@ -666,7 +744,12 @@ export interface FumeApi {
   /** The questions Fume still waits on (open only), the soonest needed first. */
   questions(): Promise<OpenQuestion[]>;
   /** Answer one: in words, or with a picture for a picture question. Returns what is still open. */
-  answerQuestion(input: { questionId: Id; text?: string; picture?: { name: string; bytes: number; src?: string }; keepPicture?: boolean }): Promise<OpenQuestion[]>;
+  answerQuestion(input: {
+    questionId: Id;
+    text?: string;
+    picture?: { name: string; bytes: number; src?: string };
+    keepPicture?: boolean;
+  }): Promise<OpenQuestion[]>;
 }
 
 // ── round 8 REVIEW ──
@@ -687,7 +770,10 @@ export interface FumeApi {
   /** Undo approvals just made: the versions are checked and waiting again. Owner and approver only. */
   unapprove(versionIds: Id[]): Promise<CreativeVersion[]>;
   /** Send a review set's collected change requests as one. */
-  requestChangeRound(input: { campaignId: Id; items: ChangeRoundItem[] }): Promise<{ versions: CreativeVersion[]; usesRound: boolean; roundsLeft: number }>;
+  requestChangeRound(input: {
+    campaignId: Id;
+    items: ChangeRoundItem[];
+  }): Promise<{ versions: CreativeVersion[]; usesRound: boolean; roundsLeft: number }>;
 }
 
 // ── round 8 ONB ──
@@ -715,7 +801,11 @@ export interface FumeApi {
   /** The workspace's onboarding progress (step "" before anything is read). */
   onboardingProgress(): Promise<OnboardingProgress>;
   /** Moves the furthest step or part forward (never back) and merges lines by id. */
-  saveOnboardingProgress(input: { step?: OnboardingStepId; part?: string; line?: UnderstoodLine }): Promise<OnboardingProgress>;
+  saveOnboardingProgress(input: {
+    step?: OnboardingStepId;
+    part?: string;
+    line?: UnderstoodLine;
+  }): Promise<OnboardingProgress>;
 }
 
 // ── round 9 VIEWER ──
@@ -780,22 +870,51 @@ export interface FumeApi {
   agencyTeam(): Promise<AgencyTeamMember[]>;
   licence(): Promise<LicenceView>;
   /** Lead only: a new client brand; Fume starts its Brand DNA from the website; the client's people are invited. */
-  addClient(input: { brandName: string; website?: string; market?: string; language?: string; people: { name: string; email: string; role: CustomerRole }[] }): Promise<AgencyClient>;
+  addClient(input: {
+    brandName: string;
+    website?: string;
+    market?: string;
+    language?: string;
+    people: { name: string; email: string; role: CustomerRole }[];
+  }): Promise<AgencyClient>;
   /** Checked creatives to the client: the people named are told in Fume; with link, a client link too. With `plan`
    *  the agency checks the plan and sends it (round 13): the client approves it, and only then does the Engine start.
    *  A campaign has one client link: a later send with a link reuses it. */
-  sendToClient(input: { campaignId: Id; versionIds: Id[]; to: Id[]; link: boolean; note?: string; plan?: boolean }): Promise<ClientSend>;
+  sendToClient(input: {
+    campaignId: Id;
+    versionIds: Id[];
+    to: Id[];
+    link: boolean;
+    note?: string;
+    plan?: boolean;
+  }): Promise<ClientSend>;
   /** What was sent to the client for a campaign, newest first. */
   clientSends(campaignId: Id): Promise<ClientSend[]>;
   /** An approval the client gave outside Fume, recorded by the agency (approvedBy stays the client). */
-  recordClientApproval(input: { versionIds: Id[]; clientUserId: Id; note: string; /** Round 12 (DTASK-15): the day she approved; today when left out. */ at?: Instant }): Promise<CreativeVersion[]>;
+  recordClientApproval(input: {
+    versionIds: Id[];
+    clientUserId: Id;
+    note: string;
+    /** Round 12 (DTASK-15): the day she approved; today when left out. */ at?: Instant;
+  }): Promise<CreativeVersion[]>;
   /** What a client link opens (no sign-in in the real app; the mock serves it to anyone). */
   clientLink(token: string): Promise<ClientLinkView>;
   /** Approve or ask for changes through a client link, as the client person it was sent to. */
-  answerClientLink(input: { token: string; versionId: Id; verdict: "approve" | "changes"; text?: string; name: string }): Promise<CreativeVersion>;
+  answerClientLink(input: {
+    token: string;
+    versionId: Id;
+    verdict: "approve" | "changes";
+    text?: string;
+    name: string;
+  }): Promise<CreativeVersion>;
   /** Round 13: approve the plan or ask for changes through a client link, as the client person it was sent to. Approved,
    *  the Engine starts on the masters; changes go to Fume, and the agency checks the next version before she sees it. */
-  answerClientPlan(input: { token: string; verdict: "approve" | "changes"; text?: string; name: string }): Promise<CampaignPlan>;
+  answerClientPlan(input: {
+    token: string;
+    verdict: "approve" | "changes";
+    text?: string;
+    name: string;
+  }): Promise<CampaignPlan>;
 }
 
 // ── round 12 numbers ──
@@ -868,11 +987,22 @@ export interface FumeApi {
 // Marcus's video comments #2–#5, #41–#49 (22 Oct 2026; PROPOSED). Merged into FumeApi.
 export interface FumeApi {
   /** #42: the uses she chose for a colour. */
-  setColourUses(input: { colourId: Id; uses: import("./entities").ColourUse[] }): Promise<import("./entities").BrandColour>;
+  setColourUses(input: {
+    colourId: Id;
+    uses: import("./entities").ColourUse[];
+  }): Promise<import("./entities").BrandColour>;
   /** #3: she moves a picture to another group (a campaign look names its campaign). */
-  moveImage(input: { imageId: Id; group: import("./entities").ImageGroup; campaign?: string }): Promise<import("./entities").BrandImage>;
+  moveImage(input: {
+    imageId: Id;
+    group: import("./entities").ImageGroup;
+    campaign?: string;
+  }): Promise<import("./entities").BrandImage>;
   /** #4: Confirm or Change one part of the voice (Change says what is right in her words). */
-  decideVoicePart(input: { part: import("./entities").VoicePartId; verdict: "keep" | "change"; note?: string }): Promise<import("./entities").VoiceBook>;
+  decideVoicePart(input: {
+    part: import("./entities").VoicePartId;
+    verdict: "keep" | "change";
+    note?: string;
+  }): Promise<import("./entities").VoiceBook>;
   /** #47: neither picture of a pair (onboarding pairId, Brand › Taste cardId) feels like the brand. */
   passTastePair(input: { pairId?: Id; cardId?: Id; reason?: string }): Promise<void>;
   /** #49: her own name, title and email, changed in place. */
@@ -885,7 +1015,9 @@ export interface FumeApi {
   /** #70: what the agency's Fume plan holds and what comes (Fume decides). */
   agencyPlan(): Promise<import("./entities").AgencyFumePlan>;
   /** #71: Borrow Fume's people, or write to Fume's customer service. Sends a request; Fume answers in a working day. */
-  askFume(input: Omit<import("./entities").FumeRequest, "id" | "by" | "at" | "state">): Promise<import("./entities").FumeRequest>;
+  askFume(
+    input: Omit<import("./entities").FumeRequest, "id" | "by" | "at" | "state">,
+  ): Promise<import("./entities").FumeRequest>;
 }
 
 // ── round 13 chat ──
@@ -904,4 +1036,3 @@ export interface FumeApi {
    *  plan is ready for her. */
   changePlanWithFume(campaignId: Id, text: string): Promise<CampaignPlan>;
 }
-

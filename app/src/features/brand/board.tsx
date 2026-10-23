@@ -9,10 +9,29 @@
 // a picture stays its full size, so it can be judged, with the same three answers under it. Each part opens its
 // details in place ("How it is used": each item's use and the part's rules), so the part pages (/brand/colour …)
 // are gone and send you to /brand#colour. No counters per part, no blur as a status.
-import { Badge, Button, Icon, Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemTitle, Proposal } from "@fume/ui";
+import {
+  Badge,
+  Button,
+  Icon,
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemTitle,
+  Proposal,
+} from "@fume/ui";
 import type { CSSProperties, ReactNode } from "react";
 import { Link } from "react-router-dom";
-import type { BrandColour, BrandIdentity, BrandLogo, BrandRule, BrandTypeface, Provenance, RuleArea } from "../../contract";
+import type {
+  BrandColour,
+  BrandIdentity,
+  BrandLogo,
+  BrandRule,
+  BrandTypeface,
+  Provenance,
+  RuleArea,
+} from "../../contract";
 import { roleAndUses, usesWords } from "./colour";
 import { ConfirmRow, Provenanced } from "./decide";
 import { byGroup, campaignsOf, imageGroupLine, imageGroupTitle, MoveImage } from "./imagery";
@@ -31,7 +50,8 @@ export const colourRole: Record<BrandColour["role"], string> = {
 
 export const typeRole: Record<BrandTypeface["role"], string> = { display: "Display", body: "Body", accent: "Accent" };
 
-const live = <T extends { provenance: { state: string } }>(list: T[]) => list.filter((x) => x.provenance.state !== "removed");
+const live = <T extends { provenance: { state: string } }>(list: T[]) =>
+  list.filter((x) => x.provenance.state !== "removed");
 
 /** decide: each item with its tag and, for a find, Confirm · Change · Remove. read: the brand as it is, no buttons. */
 export type BoardMode = "decide" | "read";
@@ -43,7 +63,8 @@ export interface Visit {
 }
 
 /** True while Fume waits for the customer on it, or once she decided it on this visit (it stays where it was). */
-const isFind = (x: { id: string; provenance: Provenance }, visit: Visit) => x.provenance.state === "proposed" || visit.decided.has(x.id);
+const isFind = (x: { id: string; provenance: Provenance }, visit: Visit) =>
+  x.provenance.state === "proposed" || visit.decided.has(x.id);
 /** What the board draws: every live item, plus one removed here (it stays, dimmed, with Put back). */
 const drawn = <T extends { id: string; provenance: Provenance }>(list: T[], visit: Visit) =>
   list.filter((x) => x.provenance.state !== "removed" || visit.decided.has(x.id));
@@ -91,7 +112,13 @@ export function BoardPart({
   children: ReactNode;
 }) {
   return (
-    <section className="ui-brand-part" id={id} aria-labelledby={`${id}-title`} data-span={span} data-open={open ? "" : undefined}>
+    <section
+      className="ui-brand-part"
+      id={id}
+      aria-labelledby={`${id}-title`}
+      data-span={span}
+      data-open={open ? "" : undefined}
+    >
       <div className="ui-brand-part-head">
         <h2 className="ui-brand-part-title" id={`${id}-title`}>
           {title}
@@ -150,7 +177,11 @@ function LogoFace({ logo, identity }: { logo: BrandLogo; identity: BrandIdentity
       <div
         className="ui-brand-logo-tile"
         data-ground={logo.ground}
-        style={vars({ "--brand-ground": dark ? f.ink : f.ground, "--brand-ink": dark ? f.ground : f.ink, "--brand-display": f.display })}
+        style={vars({
+          "--brand-ground": dark ? f.ink : f.ground,
+          "--brand-ink": dark ? f.ground : f.ink,
+          "--brand-display": f.display,
+        })}
         role="img"
         aria-label={`${logo.name}, on a ${dark ? "dark" : "light"} ground`}
       >
@@ -170,7 +201,17 @@ export function LogoPart({ identity, rules, visit, open, onOpen }: PartProps) {
       <div className="ui-brand-logos" data-mode="board">
         {drawn(identity.logos, visit).map((l) =>
           isFind(l, visit) ? (
-            <Provenanced key={l.id} kind="logo" id={l.id} name={l.name} provenance={l.provenance} value={l.name} bare className="ui-brand-logo" onDecided={visit.onDecided}>
+            <Provenanced
+              key={l.id}
+              kind="logo"
+              id={l.id}
+              name={l.name}
+              provenance={l.provenance}
+              value={l.name}
+              bare
+              className="ui-brand-logo"
+              onDecided={visit.onDecided}
+            >
               <LogoFace logo={l} identity={identity} />
               {open && <p className="ui-brand-caption-text">{l.use}</p>}
             </Provenanced>
@@ -192,7 +233,14 @@ export function LogoPart({ identity, rules, visit, open, onOpen }: PartProps) {
 // ─── Colour ─────────────────────────────────────────────────────────────────
 
 function SwatchColour({ colour }: { colour: BrandColour }) {
-  return <div className="ui-brand-swatch-colour" style={vars({ "--swatch": colour.hex })} role="img" aria-label={`${colour.name}, ${colour.hex}`} />;
+  return (
+    <div
+      className="ui-brand-swatch-colour"
+      style={vars({ "--swatch": colour.hex })}
+      role="img"
+      aria-label={`${colour.name}, ${colour.hex}`}
+    />
+  );
 }
 
 export function ColourPart({ identity, rules, visit, open, onOpen }: PartProps) {
@@ -299,7 +347,11 @@ export function TypePart({ identity, rules, visit, open, onOpen }: PartProps) {
           value={t.name}
           media={<Aa face={t} />}
           meta={<span className="ui-brand-caption-meta">{typeRole[t.role]}</span>}
-          text={<span className="ui-brand-type-inline" style={vars({ "--brand-font": t.cssFamily })}>{open ? t.usage : t.sample}</span>}
+          text={
+            <span className="ui-brand-type-inline" style={vars({ "--brand-font": t.cssFamily })}>
+              {open ? t.usage : t.sample}
+            </span>
+          }
           onDecided={visit.onDecided}
         />
       ))}
@@ -380,7 +432,16 @@ export function ImageryPart({ identity, rules, visit, open, onOpen }: PartProps)
                 </>
               );
               return isFind(i, visit) ? (
-                <Provenanced key={i.id} kind="image" id={i.id} name={i.caption} provenance={i.provenance} bare className="ui-brand-image" onDecided={visit.onDecided}>
+                <Provenanced
+                  key={i.id}
+                  kind="image"
+                  id={i.id}
+                  name={i.caption}
+                  provenance={i.provenance}
+                  bare
+                  className="ui-brand-image"
+                  onDecided={visit.onDecided}
+                >
                   {body}
                 </Provenanced>
               ) : (

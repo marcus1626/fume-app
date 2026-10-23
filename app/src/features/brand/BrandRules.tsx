@@ -49,7 +49,8 @@ type Draft = Omit<Pick<BrandRule, "area" | "kind" | "statement" | "polarity">, "
 
 export const polarityWord: Record<RulePolarity, string> = { do: "Do", dont: "Don’t" };
 /** A rule that starts with No, Never or Don't is a Don't. */
-export const polarityOf = (r: Pick<BrandRule, "polarity" | "statement">): RulePolarity => r.polarity ?? (/^(no|never|don[’']t|avoid)\b/i.test(r.statement.trim()) ? "dont" : "do");
+export const polarityOf = (r: Pick<BrandRule, "polarity" | "statement">): RulePolarity =>
+  r.polarity ?? (/^(no|never|don[’']t|avoid)\b/i.test(r.statement.trim()) ? "dont" : "do");
 
 /** The area a rule is about, guessed from its words; undefined when nothing says. */
 function guessArea(text: string): RuleArea | undefined {
@@ -66,11 +67,21 @@ function guessArea(text: string): RuleArea | undefined {
 
 /** Edit a rule, or add one when there is none to edit, in the right panel. Saving a rule makes it confirmed by you (the
  *  mock sets source "verified"). */
-function RulePanel({ open, onOpenChange, rule }: { open: boolean; onOpenChange: (open: boolean) => void; rule?: BrandRule }) {
+function RulePanel({
+  open,
+  onOpenChange,
+  rule,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  rule?: BrandRule;
+}) {
   const update = useUpdateRule();
   const add = useAddRule();
   const toast = useToast();
-  const [draft, setDraft] = useState<Draft>(rule ? { ...rule, polarity: polarityOf(rule) } : { area: "", kind: "rule", statement: "" });
+  const [draft, setDraft] = useState<Draft>(
+    rule ? { ...rule, polarity: polarityOf(rule) } : { area: "", kind: "rule", statement: "" },
+  );
   // what she chose herself is never guessed over
   const [chose, setChose] = useState({ area: Boolean(rule), polarity: Boolean(rule) });
   const busy = update.isPending || add.isPending;
@@ -94,7 +105,8 @@ function RulePanel({ open, onOpenChange, rule }: { open: boolean; onOpenChange: 
         toast.done(rule ? "Rule changed" : "Rule added", { description: "Fume follows it from the next creative on." });
         onOpenChange(false);
       },
-      onError: (error: Error) => toast.error(rule ? "The rule wasn’t changed" : "The rule wasn’t added", { description: error.message }),
+      onError: (error: Error) =>
+        toast.error(rule ? "The rule wasn’t changed" : "The rule wasn’t added", { description: error.message }),
     };
     if (rule) update.mutate({ ...rule, ...draft, area, polarity, statement }, done);
     else add.mutate({ ...draft, area, polarity, statement }, done);
@@ -105,14 +117,23 @@ function RulePanel({ open, onOpenChange, rule }: { open: boolean; onOpenChange: 
       <SheetContent side="right">
         <SheetHeader>
           <SheetTitle>{rule ? "Change the rule" : "Add a rule"}</SheetTitle>
-          <SheetDescription>Write it the way you would tell a designer. Every creative is made and checked against it.</SheetDescription>
+          <SheetDescription>
+            Write it the way you would tell a designer. Every creative is made and checked against it.
+          </SheetDescription>
         </SheetHeader>
         <form className="ui-sheet-form" onSubmit={submit}>
           <SheetBody>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="rule-statement">The rule</FieldLabel>
-                <Textarea id="rule-statement" value={draft.statement} onChange={(e) => write(e.target.value)} rows={3} required data-ui-autofocus />
+                <Textarea
+                  id="rule-statement"
+                  value={draft.statement}
+                  onChange={(e) => write(e.target.value)}
+                  rows={3}
+                  required
+                  data-ui-autofocus
+                />
               </Field>
               <Field>
                 <FieldLabel id="rule-polarity-label">Do or don’t</FieldLabel>
@@ -152,16 +173,27 @@ function RulePanel({ open, onOpenChange, rule }: { open: boolean; onOpenChange: 
                     </option>
                   ))}
                 </NativeSelect>
-                {guessed && <FieldDescription id="rule-area-help">Fume chose it from your words. Change it if it is not right.</FieldDescription>}
+                {guessed && (
+                  <FieldDescription id="rule-area-help">
+                    Fume chose it from your words. Change it if it is not right.
+                  </FieldDescription>
+                )}
               </Field>
               <Field>
                 <FieldLabel htmlFor="rule-kind">How strict</FieldLabel>
-                <NativeSelect id="rule-kind" value={draft.kind} onChange={(e) => set({ kind: e.target.value as BrandRule["kind"] })} aria-describedby="rule-kind-help">
+                <NativeSelect
+                  id="rule-kind"
+                  value={draft.kind}
+                  onChange={(e) => set({ kind: e.target.value as BrandRule["kind"] })}
+                  aria-describedby="rule-kind-help"
+                >
                   <option value="hard_constraint">{ruleKind.hard_constraint}</option>
                   <option value="rule">{ruleKind.rule}</option>
                   <option value="preference">{ruleKind.preference}</option>
                 </NativeSelect>
-                <FieldDescription id="rule-kind-help">A rule that is never broken stops a creative in the check. A preference can bend for one campaign.</FieldDescription>
+                <FieldDescription id="rule-kind-help">
+                  A rule that is never broken stops a creative in the check. A preference can bend for one campaign.
+                </FieldDescription>
               </Field>
             </FieldGroup>
           </SheetBody>
@@ -171,7 +203,12 @@ function RulePanel({ open, onOpenChange, rule }: { open: boolean; onOpenChange: 
                 Cancel
               </Button>
             </SheetClose>
-            <Button type="submit" variant="glass-white" loading={busy} disabled={!draft.statement.trim() || !draft.area}>
+            <Button
+              type="submit"
+              variant="glass-white"
+              loading={busy}
+              disabled={!draft.statement.trim() || !draft.area}
+            >
               {rule ? "Save the rule" : "Add the rule"}
             </Button>
           </SheetFooter>
@@ -241,7 +278,16 @@ export function RulesContent({ onAdd, onEdit }: { onAdd?: () => void; onEdit?: (
                           </ItemContent>
                           <ItemActions>
                             {r.kind === "hard_constraint" && <Badge variant="ink">{ruleKind.hard_constraint}</Badge>}
-                            {onEdit && <Button variant="quiet" size="sm" iconOnly icon="pencil" aria-label={`Change the rule: ${r.statement}`} onClick={() => onEdit(r.id)} />}
+                            {onEdit && (
+                              <Button
+                                variant="quiet"
+                                size="sm"
+                                iconOnly
+                                icon="pencil"
+                                aria-label={`Change the rule: ${r.statement}`}
+                                onClick={() => onEdit(r.id)}
+                              />
+                            )}
                           </ItemActions>
                         </Item>
                       ))}

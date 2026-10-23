@@ -10,7 +10,24 @@
 // each brand's Home); then the Engine's runs beside the team this week, each person's load as "1.5 of 4". Fume's admin
 // follows the work and checks nothing: no Needs you, and the page starts with the brands. Every link is the frame's
 // own address (scope.ts): a campaign opens the campaign (Fume: its plan), a run its brand's Engine output.
-import { Avatar, Button, EngineRun, Icon, Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemMediaImage, ItemTitle, PageHeader, Progress, useNarrowScreen, type PageHeaderPrimaryAction } from "@fume/ui";
+import {
+  Avatar,
+  Button,
+  EngineRun,
+  Icon,
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemMedia,
+  ItemMediaImage,
+  ItemTitle,
+  PageHeader,
+  Progress,
+  useNarrowScreen,
+  type PageHeaderPrimaryAction,
+} from "@fume/ui";
 import type { ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAgencyHome, useAllBrands, useQaQueue, useSession, useStudioCampaigns } from "../../api/hooks";
@@ -80,11 +97,20 @@ interface OverviewModel {
 }
 
 /** "LYSNE · 2 of 11 approved", or "LYSNE · No creatives yet" while the plan comes first (DLOAD-12: one way to say it). */
-const approvedOf = (d: AllBrandsView["deliveriesDue"][number]) => `${d.workspace.brandName} · ${d.total ? `${d.approved} of ${d.total} approved` : "No creatives yet"}`;
+const approvedOf = (d: AllBrandsView["deliveriesDue"][number]) =>
+  `${d.workspace.brandName} · ${d.total ? `${d.approved} of ${d.total} approved` : "No creatives yet"}`;
 
-const needIcon = { plan: "file-text", check: "fume-check", client_changes: "message-square", brief: "file-text", products: "tag", brand: "palette" } as const;
+const needIcon = {
+  plan: "file-text",
+  check: "fume-check",
+  client_changes: "message-square",
+  brief: "file-text",
+  products: "tag",
+  brand: "palette",
+} as const;
 
-const byBrand = <T extends { workspace: Workspace }>(a: T, b: T) => a.workspace.brandName.localeCompare(b.workspace.brandName, "en", { sensitivity: "base" });
+const byBrand = <T extends { workspace: Workspace }>(a: T, b: T) =>
+  a.workspace.brandName.localeCompare(b.workspace.brandName, "en", { sensitivity: "base" });
 
 /** "LYSNE · " (a batch made outside a campaign has no name yet) → "LYSNE". */
 const tidy = (title: string) => title.replace(/\s·\s*$/, "");
@@ -111,12 +137,22 @@ export function withCustomers(rows: StudioCampaignRow[], frame: StaffFrameKind) 
     const who = approver ? firstName(approver.name) : frame === "agency" ? "the client" : "the customer";
     people.set(who, (people.get(who) ?? 0) + sent);
   }
-  const withThem = [...people].map(([who, n], i) => (i === 0 ? `${copy.creatives(n)} with ${who}` : `${n} with ${who}`)).join(", ");
+  const withThem = [...people]
+    .map(([who, n], i) => (i === 0 ? `${copy.creatives(n)} with ${who}` : `${n} with ${who}`))
+    .join(", ");
   return { toSend, withThem };
 }
 
 /** The headline, the same sentence in both frames (DLOAD-12): how many, what to check, what to send, what is with whom. */
-export function headline(o: { count?: string; plans: number; checks: number; toSend: number; withThem: string; frame: StaffFrameKind; follows: boolean }): string {
+export function headline(o: {
+  count?: string;
+  plans: number;
+  checks: number;
+  toSend: number;
+  withThem: string;
+  frame: StaffFrameKind;
+  follows: boolean;
+}): string {
   const asks: string[] = [];
   if (!o.follows) {
     const plans = o.plans ? copy.count(o.plans, "plan") : "";
@@ -158,7 +194,11 @@ function StudioOverview() {
         const first = needs.find((n) => n.clientId === b.workspace.id);
         const inCheck = waiting.filter((x) => x.item.workspaceId === b.workspace.id).length;
         const status = admin
-          ? b.current ? `${b.current.name}: ${b.current.detail}` : b.running ? `${copy.count(b.running, "run")} under way` : "Nothing due"
+          ? b.current
+            ? `${b.current.name}: ${b.current.detail}`
+            : b.running
+              ? `${copy.count(b.running, "run")} under way`
+              : "Nothing due"
           : first
             ? askLine(first)
             : inCheck
@@ -176,7 +216,9 @@ function StudioOverview() {
           to: brandBase("fume", b.workspace.id),
         };
       }),
-      needs: admin ? undefined : needs.map((n) => ({ ...n, title: tidy(n.title), to: hrefIn("fume", n.clientId, n.href) })),
+      needs: admin
+        ? undefined
+        : needs.map((n) => ({ ...n, title: tidy(n.title), to: hrefIn("fume", n.clientId, n.href) })),
       runs: v.runs,
       runsOpen: !admin,
       deliveries: v.deliveriesDue.map((d) => ({
@@ -189,11 +231,16 @@ function StudioOverview() {
       })),
       deliveriesTo: "/studio/deliveries",
       team: v.team.map((r) => {
-        const brands = (r.brandIds ?? []).map((id) => v.brands.find((b) => b.workspace.id === id)?.workspace.brandName).filter(Boolean).join(", ");
+        const brands = (r.brandIds ?? [])
+          .map((id) => v.brands.find((b) => b.workspace.id === id)?.workspace.brandName)
+          .filter(Boolean)
+          .join(", ");
         return {
           user: r.user,
           name: `${firstName(r.user.name)}${r.user.id === me?.id ? " (you)" : ""}`,
-          small: [staffRoleLabel[r.user.staffRole ?? "expert"], r.follows ? "follows every brand" : brands].filter(Boolean).join(" · "),
+          small: [staffRoleLabel[r.user.staffRole ?? "expert"], r.follows ? "follows every brand" : brands]
+            .filter(Boolean)
+            .join(" · "),
           load: r.follows
             ? undefined
             : {
@@ -253,7 +300,10 @@ function AgencyOverview() {
       title: d.campaign.name,
       detail: approvedOf(d),
       at: d.dueAt,
-      to: client(d.workspace.id)?.example === "summary" ? brandBase("agency", d.workspace.id) : campaignHref("agency", d.workspace.id, d.campaign.id),
+      to:
+        client(d.workspace.id)?.example === "summary"
+          ? brandBase("agency", d.workspace.id)
+          : campaignHref("agency", d.workspace.id, d.campaign.id),
     }));
     return {
       frame: "agency",
@@ -282,14 +332,22 @@ function AgencyOverview() {
       deliveriesTo: "/agency/deliveries",
       team: view.team.map((t) => {
         const pct = Math.round(t.load * 100);
-        const brands = t.clientIds.map((id) => client(id)?.workspace.brandName).filter(Boolean).join(", ");
+        const brands = t.clientIds
+          .map((id) => client(id)?.workspace.brandName)
+          .filter(Boolean)
+          .join(", ");
         return {
           user: t.user,
           lead: t.role === "lead",
           name: `${firstName(t.user.name)}${t.user.id === me?.id ? " (you)" : ""}`,
           // Round 13 AGENCY (Marcus #70): the role in Fume's words, as Fume's own team line ("Expert · LYSNE")
           small: `${agencyRoleWords[agencyRoleOf(t.role, t.user)]} · ${brands}`,
-          load: { value: pct, max: 100, number: `${pct} %`, label: `${firstName(t.user.name)}’s week is ${pct} % full` },
+          load: {
+            value: pct,
+            max: 100,
+            number: `${pct} %`,
+            label: `${firstName(t.user.name)}’s week is ${pct} % full`,
+          },
           week: t.thisWeek,
         };
       }),
@@ -320,7 +378,11 @@ function AgencyOverview() {
       <Query query={home} loading="Loading your clients">
         {(view) => <Overview model={model(view)} />}
       </Query>
-      <AddClientPanel open={add.open} onOpenChange={(o) => add.setOpen(o)} onAdded={(client) => navigate(`/agency/clients?client=${client.workspace.id}`, { replace: true })} />
+      <AddClientPanel
+        open={add.open}
+        onOpenChange={(o) => add.setOpen(o)}
+        onAdded={(client) => navigate(`/agency/clients?client=${client.workspace.id}`, { replace: true })}
+      />
     </Page>
   );
 }
@@ -328,7 +390,9 @@ function AgencyOverview() {
 /** The greeting and the day's sentence; the page's one action is its primary one (under the sentence on a phone). */
 function Greeting({ summary, action }: { summary?: string; action?: PageHeaderPrimaryAction }) {
   const me = useSession().data?.user;
-  return <PageHeader title={`${greeting()}, ${me ? firstName(me.name) : ""}`} description={summary} primaryAction={action} />;
+  return (
+    <PageHeader title={`${greeting()}, ${me ? firstName(me.name) : ""}`} description={summary} primaryAction={action} />
+  );
 }
 
 /** Two rows of tiles at most; the rest are a click away (Clients). */
@@ -337,7 +401,12 @@ const MAX_TILES = 8;
 function Overview({ model }: { model: OverviewModel }) {
   const m = model;
   const tiles = (
-    <Section title={m.tilesTitle} meta={m.tiles.length} titleId="overview-brands" action={m.tiles.length > MAX_TILES || m.frame === "agency" ? m.tilesAction : undefined}>
+    <Section
+      title={m.tilesTitle}
+      meta={m.tiles.length}
+      titleId="overview-brands"
+      action={m.tiles.length > MAX_TILES || m.frame === "agency" ? m.tilesAction : undefined}
+    >
       <ul className="ui-agency-tiles" aria-labelledby="overview-brands">
         {m.tiles.slice(0, MAX_TILES).map((t) => (
           <BrandTile key={t.id} tile={t} />
@@ -431,7 +500,11 @@ function Overview({ model }: { model: OverviewModel }) {
                   ))}
                 </ItemGroup>
               ) : (
-                <Nothing icon="circle-check" title="Nothing needs you" text="A plan to check, a creative to check or an answer shows here first." />
+                <Nothing
+                  icon="circle-check"
+                  title="Nothing needs you"
+                  text="A plan to check, a creative to check or an answer shows here first."
+                />
               )}
             </Section>
           </div>
@@ -470,7 +543,9 @@ function BrandTile({ tile }: { tile: TileModel }) {
             {tile.at && <span className="ui-agency-data ui-agency-tile-at">{due(tile.at)}</span>}
           </span>
           <span className="ui-agency-tile-status">{tile.status}</span>
-          {current && <Progress className="ui-agency-tile-bar" value={pct} aria-label={`${current.name}: ${current.detail}`} />}
+          {current && (
+            <Progress className="ui-agency-tile-bar" value={pct} aria-label={`${current.name}: ${current.detail}`} />
+          )}
         </span>
       </Link>
     </li>
@@ -531,7 +606,9 @@ function TeamWeek({ team }: { team: TeamModel[] }) {
                 </span>
               )}
             </span>
-            {t.load && <Progress className="ui-agency-load" value={t.load.value} max={t.load.max} aria-label={t.load.label} />}
+            {t.load && (
+              <Progress className="ui-agency-load" value={t.load.value} max={t.load.max} aria-label={t.load.label} />
+            )}
             {t.week && <span className="ui-agency-team-week">{t.week}</span>}
           </span>
         </li>

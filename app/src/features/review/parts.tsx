@@ -30,7 +30,14 @@ import {
 import { useId, useState, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useApi } from "../../api/client";
-import { useChooseDirection, usePassDirections, useRequestChangeRound, useReviewComments, useSession, useWithdrawChangeRound } from "../../api/hooks";
+import {
+  useChooseDirection,
+  usePassDirections,
+  useRequestChangeRound,
+  useReviewComments,
+  useSession,
+  useWithdrawChangeRound,
+} from "../../api/hooks";
 import type { Campaign, ChangeTag, Creative, Direction, Id, Pin, ReviewComment, User } from "../../contract";
 import * as copy from "../../copy";
 import { Section } from "../../shell/Page";
@@ -41,7 +48,8 @@ import type { ChangeDraft, ChangeTray } from "./tray";
 // ─── A checked creative in review ───────────────────────────────────────────
 
 /** "Feed A2 · 4:5", and the version once there is more than one: the tile's caption (DTSK-11). */
-export const tileCaption = (c: Creative) => `${labelOf(c)} · ${copy.format[c.format].ratio}${c.current.number > 1 ? ` · version ${c.current.number}` : ""}`;
+export const tileCaption = (c: Creative) =>
+  `${labelOf(c)} · ${copy.format[c.format].ratio}${c.current.number > 1 ? ` · version ${c.current.number}` : ""}`;
 
 /**
  * Two targets and nothing else (MOB-21): the picture opens the viewer, the round corner checkbox (the circle itself,
@@ -72,7 +80,13 @@ export function ReviewTile({
       format={creative.format}
       label={creative.title}
       caption={tileCaption(creative)}
-      check={toChange ? <CheckMark state="changes" label="Needs changes" /> : <CreativeCheck creative={creative} people={people} />}
+      check={
+        toChange ? (
+          <CheckMark state="changes" label="Needs changes" />
+        ) : (
+          <CreativeCheck creative={creative} people={people} />
+        )
+      }
       selected={toChange ? undefined : selected}
       onSelectedChange={toChange ? undefined : onSelectedChange}
       onOpen={onOpen}
@@ -100,14 +114,17 @@ export function useChangeRecipient(): string {
 
 /** "This is change request 2 of 2." in words, once, before anything is sent. */
 export function roundLine(campaign: Campaign, correction = false, who = "Fume"): string {
-  if (correction) return `A product that is off is ${who === "Fume" ? "Fume’s" : `${who}’s`} own mistake, so fixing it uses no change request.`;
+  if (correction)
+    return `A product that is off is ${who === "Fume" ? "Fume’s" : `${who}’s`} own mistake, so fixing it uses no change request.`;
   const left = campaign.roundsIncluded - campaign.roundsUsed;
-  if (left <= 0) return `All ${copy.count(campaign.roundsIncluded, "change request")} in this campaign are used. ${who} tells you what one more takes before any work starts.`;
+  if (left <= 0)
+    return `All ${copy.count(campaign.roundsIncluded, "change request")} in this campaign are used. ${who} tells you what one more takes before any work starts.`;
   return `This is change request ${campaign.roundsUsed + 1} of ${campaign.roundsIncluded}. Each new version is checked before you see it.`;
 }
 
 /** The open comments that are a creative's change list: every open comment on it, oldest first. */
-export const changeList = (comments: ReviewComment[], creativeId: Id) => comments.filter((c) => c.creativeId === creativeId && !c.resolved);
+export const changeList = (comments: ReviewComment[], creativeId: Id) =>
+  comments.filter((c) => c.creativeId === creativeId && !c.resolved);
 
 // ─── Start the changes, once, at once ───────────────────────────────────────
 
@@ -177,13 +194,19 @@ export function useSendChanges({
           action: {
             label: "Undo",
             onClick: () =>
-              withdraw.mutateAsync({ campaignId: campaign.id, versionIds: r.versions.map((v) => v.id), usedRound: r.usesRound }).then(
-                () => {
-                  sent.forEach((d) => tray.put(d));
-                  toast.info("The changes are back with you, not sent");
-                },
-                (e: Error) => toast.error("The change request stays sent", { description: e.message }),
-              ),
+              withdraw
+                .mutateAsync({
+                  campaignId: campaign.id,
+                  versionIds: r.versions.map((v) => v.id),
+                  usedRound: r.usesRound,
+                })
+                .then(
+                  () => {
+                    sent.forEach((d) => tray.put(d));
+                    toast.info("The changes are back with you, not sent");
+                  },
+                  (e: Error) => toast.error("The change request stays sent", { description: e.message }),
+                ),
           },
         });
         onSent?.();
@@ -203,7 +226,11 @@ export function useSendChanges({
     <Dialog open onOpenChange={(o) => !o && setAsking(null)}>
       <DialogContent size="sm">
         <DialogHeader>
-          <DialogTitle>{asking === "last" ? "Your last change request" : `All ${copy.count(campaign.roundsIncluded, "change request")} are used`}</DialogTitle>
+          <DialogTitle>
+            {asking === "last"
+              ? "Your last change request"
+              : `All ${copy.count(campaign.roundsIncluded, "change request")} are used`}
+          </DialogTitle>
           <DialogDescription>
             {asking === "last"
               ? `This is change request ${campaign.roundsIncluded} of ${campaign.roundsIncluded} in your package. After it, ${who} tells you what one more takes before any work starts.`
@@ -261,22 +288,41 @@ export function ChangesSection({
   const who = useChangeRecipient();
   const n = tray.items.length;
   if (!n) return null;
-  const round = roundLine(campaign, tray.items.every((d) => d.tags.includes("product")), who);
+  const round = roundLine(
+    campaign,
+    tray.items.every((d) => d.tags.includes("product")),
+    who,
+  );
   return (
     <Section
       title={title}
       meta={n}
       titleId={`review-changes-${campaign.id}`}
-      text={answered ? `Every creative has an answer. Start the changes and ${who} gets them as one change request. ${round}` : round}
+      text={
+        answered
+          ? `Every creative has an answer. Start the changes and ${who} gets them as one change request. ${round}`
+          : round
+      }
       action={
-        <Button variant={answered ? "primary" : "secondary"} size="sm" icon="send" loading={sender.pending} onClick={sender.send}>
+        <Button
+          variant={answered ? "primary" : "secondary"}
+          size="sm"
+          icon="send"
+          loading={sender.pending}
+          onClick={sender.send}
+        >
           {startWords(n)}
         </Button>
       }
     >
       <ul className="ui-review-tray-list" aria-labelledby={`review-changes-${campaign.id}`}>
         {tray.items.map((d) => (
-          <MarkLine key={d.creativeId} draft={d} onOpen={() => onOpen(d.creativeId)} onRemove={() => tray.remove(d.creativeId)} />
+          <MarkLine
+            key={d.creativeId}
+            draft={d}
+            onOpen={() => onOpen(d.creativeId)}
+            onRemove={() => tray.remove(d.creativeId)}
+          />
         ))}
       </ul>
     </Section>
@@ -290,13 +336,22 @@ function MarkLine({ draft, onOpen, onRemove }: { draft: ChangeDraft; onOpen: () 
   const product = draft.tags.includes("product");
   const line = [
     product ? "The product itself is off" : "",
-    open.length ? `${copy.count(open.length, "comment")}: ${open[open.length - 1]!.text}` : product ? "" : "No comment yet. Open it and say what should change.",
+    open.length
+      ? `${copy.count(open.length, "comment")}: ${open[open.length - 1]!.text}`
+      : product
+        ? ""
+        : "No comment yet. Open it and say what should change.",
   ]
     .filter(Boolean)
     .join(" · ");
   return (
     <li className="ui-review-tray-item">
-      <button type="button" className="ui-review-tray-open" onClick={onOpen} aria-label={`${draft.title}: ${line}. Open its comments`}>
+      <button
+        type="button"
+        className="ui-review-tray-open"
+        onClick={onOpen}
+        aria-label={`${draft.title}: ${line}. Open its comments`}
+      >
         <span className="ui-review-tray-thumb" data-format={draft.format as CreativeFormat}>
           <img src={draft.image} alt="" />
         </span>
@@ -305,7 +360,15 @@ function MarkLine({ draft, onOpen, onRemove }: { draft: ChangeDraft; onOpen: () 
           <span>{comments.isPending ? "Reading the comments" : line}</span>
         </span>
       </button>
-      <Button variant="quiet" size="sm" iconOnly icon="x" aria-label={`${draft.title} does not need changes after all`} tooltip="Take the mark back" onClick={onRemove} />
+      <Button
+        variant="quiet"
+        size="sm"
+        iconOnly
+        icon="x"
+        aria-label={`${draft.title} does not need changes after all`}
+        tooltip="Take the mark back"
+        onClick={onRemove}
+      />
     </li>
   );
 }
@@ -313,7 +376,15 @@ function MarkLine({ draft, onOpen, onRemove }: { draft: ChangeDraft; onOpen: () 
 // ─── Directions ─────────────────────────────────────────────────────────────
 
 /** Take one direction forward, with an optional reason (it teaches Fume your taste). */
-export function ChooseDialog({ direction, open, onOpenChange }: { direction: Direction; open: boolean; onOpenChange: (open: boolean) => void }) {
+export function ChooseDialog({
+  direction,
+  open,
+  onOpenChange,
+}: {
+  direction: Direction;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   const id = useId();
   const toast = useToast();
   const choose = useChooseDirection();
@@ -325,14 +396,21 @@ export function ChooseDialog({ direction, open, onOpenChange }: { direction: Dir
           <DialogTitle>
             Take {direction.letter}, {direction.name}, forward
           </DialogTitle>
-          <DialogDescription>The Engine makes the masters on this direction. The others are not taken forward.</DialogDescription>
+          <DialogDescription>
+            The Engine makes the masters on this direction. The others are not taken forward.
+          </DialogDescription>
         </DialogHeader>
         <DialogBody>
           <Field>
             <FieldLabel htmlFor={id}>
               Why this one <FieldOptional />
             </FieldLabel>
-            <Textarea id={id} value={reason} onChange={(e) => setReason(e.target.value)} aria-describedby={`${id}-help`} />
+            <Textarea
+              id={id}
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              aria-describedby={`${id}-help`}
+            />
             <FieldDescription id={`${id}-help`}>Fume keeps your reason in Creative Memory.</FieldDescription>
           </Field>
         </DialogBody>
@@ -347,7 +425,9 @@ export function ChooseDialog({ direction, open, onOpenChange }: { direction: Dir
             onClick={() =>
               choose.mutateAsync({ directionId: direction.id, reason: reason.trim() || undefined }).then(
                 () => {
-                  toast.done(`${direction.letter}, ${direction.name}, chosen`, { description: "The Engine starts on the masters." });
+                  toast.done(`${direction.letter}, ${direction.name}, chosen`, {
+                    description: "The Engine starts on the masters.",
+                  });
                   onOpenChange(false);
                 },
                 (e: Error) => toast.error("The direction wasn’t chosen", { description: e.message }),
@@ -363,7 +443,15 @@ export function ChooseDialog({ direction, open, onOpenChange }: { direction: Dir
 }
 
 /** None fits: say why, and Fume makes new directions from it. The reason is required. */
-export function PassDialog({ campaign, open, onOpenChange }: { campaign: Campaign; open: boolean; onOpenChange: (open: boolean) => void }) {
+export function PassDialog({
+  campaign,
+  open,
+  onOpenChange,
+}: {
+  campaign: Campaign;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   const id = useId();
   const toast = useToast();
   const pass = usePassDirections();
@@ -378,7 +466,12 @@ export function PassDialog({ campaign, open, onOpenChange }: { campaign: Campaig
         <DialogBody>
           <Field>
             <FieldLabel htmlFor={id}>What is missing</FieldLabel>
-            <Textarea id={id} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="All three feel too cool for autumn." />
+            <Textarea
+              id={id}
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="All three feel too cool for autumn."
+            />
           </Field>
         </DialogBody>
         <DialogFooter>

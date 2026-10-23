@@ -95,17 +95,21 @@ export function Tooltip({ open: openProp, defaultOpen = false, onOpenChange, chi
       window.clearTimeout(t.long);
       window.clearTimeout(t.hide);
       t.start = { x: e.clientX, y: e.clientY };
-      t.long = window.setTimeout(() => {
-        setOpen(true);
-        t.suppress = true;
-        t.hide = window.setTimeout(() => setOpen(false), 1500);
-      }, tokenMs("--ui-tooltip-long-press", 500));
+      t.long = window.setTimeout(
+        () => {
+          setOpen(true);
+          t.suppress = true;
+          t.hide = window.setTimeout(() => setOpen(false), 1500);
+        },
+        tokenMs("--ui-tooltip-long-press", 500),
+      );
     },
     [setOpen],
   );
   const move = useCallback((e: ReactPointerEvent<HTMLElement>) => {
     const t = timers.current;
-    if (e.pointerType === "touch" && t.start && Math.hypot(e.clientX - t.start.x, e.clientY - t.start.y) > 10) window.clearTimeout(t.long);
+    if (e.pointerType === "touch" && t.start && Math.hypot(e.clientX - t.start.x, e.clientY - t.start.y) > 10)
+      window.clearTimeout(t.long);
   }, []);
   const cancel = useCallback(() => window.clearTimeout(timers.current.long), []);
   // the tap that ends a long press only showed the label
@@ -116,7 +120,10 @@ export function Tooltip({ open: openProp, defaultOpen = false, onOpenChange, chi
     e.stopPropagation();
   }, []);
 
-  const value = useMemo<TooltipCtx>(() => ({ open, setOpen, longPress: { start, move, cancel, swallow } }), [open, setOpen, start, move, cancel, swallow]);
+  const value = useMemo<TooltipCtx>(
+    () => ({ open, setOpen, longPress: { start, move, cancel, swallow } }),
+    [open, setOpen, start, move, cancel, swallow],
+  );
 
   return (
     <Ctx.Provider value={value}>
@@ -131,50 +138,53 @@ export type TooltipTriggerProps = ComponentPropsWithoutRef<typeof TooltipPrimiti
 
 /** The control it names; almost always asChild around a Button. Adds the touch long press. */
 export const TooltipTrigger = forwardRef<ElementRef<typeof TooltipPrimitive.Trigger>, TooltipTriggerProps>(
-  ({ onPointerDown, onPointerMove, onPointerUp, onPointerCancel, onClickCapture, onContextMenu, onFocus, ...props }, ref) => {
+  (
+    { onPointerDown, onPointerMove, onPointerUp, onPointerCancel, onClickCapture, onContextMenu, onFocus, ...props },
+    ref,
+  ) => {
     const ctx = useContext(Ctx);
     return (
       <InTrigger.Provider value>
-      <TooltipPrimitive.Trigger
-        ref={ref}
-        data-ui-tooltip=""
-        onFocus={(e) => {
-          onFocus?.(e);
-          // keyboard focus opens it; focus handed back by a closing dialog or menu after a click does not
-          let keyboard = true;
-          try {
-            keyboard = e.currentTarget.matches(":focus-visible");
-          } catch {
-            /* an old engine without :focus-visible: open as before */
-          }
-          if (!keyboard) e.preventDefault();
-        }}
-        onPointerDown={(e) => {
-          onPointerDown?.(e);
-          ctx?.longPress.start(e);
-        }}
-        onPointerMove={(e) => {
-          onPointerMove?.(e);
-          ctx?.longPress.move(e);
-        }}
-        onPointerUp={(e) => {
-          onPointerUp?.(e);
-          ctx?.longPress.cancel();
-        }}
-        onPointerCancel={(e) => {
-          onPointerCancel?.(e);
-          ctx?.longPress.cancel();
-        }}
-        onClickCapture={(e) => {
-          onClickCapture?.(e);
-          ctx?.longPress.swallow(e);
-        }}
-        onContextMenu={(e) => {
-          onContextMenu?.(e);
-          if (ctx?.open) e.preventDefault();
-        }}
-        {...props}
-      />
+        <TooltipPrimitive.Trigger
+          ref={ref}
+          data-ui-tooltip=""
+          onFocus={(e) => {
+            onFocus?.(e);
+            // keyboard focus opens it; focus handed back by a closing dialog or menu after a click does not
+            let keyboard = true;
+            try {
+              keyboard = e.currentTarget.matches(":focus-visible");
+            } catch {
+              /* an old engine without :focus-visible: open as before */
+            }
+            if (!keyboard) e.preventDefault();
+          }}
+          onPointerDown={(e) => {
+            onPointerDown?.(e);
+            ctx?.longPress.start(e);
+          }}
+          onPointerMove={(e) => {
+            onPointerMove?.(e);
+            ctx?.longPress.move(e);
+          }}
+          onPointerUp={(e) => {
+            onPointerUp?.(e);
+            ctx?.longPress.cancel();
+          }}
+          onPointerCancel={(e) => {
+            onPointerCancel?.(e);
+            ctx?.longPress.cancel();
+          }}
+          onClickCapture={(e) => {
+            onClickCapture?.(e);
+            ctx?.longPress.swallow(e);
+          }}
+          onContextMenu={(e) => {
+            onContextMenu?.(e);
+            if (ctx?.open) e.preventDefault();
+          }}
+          {...props}
+        />
       </InTrigger.Provider>
     );
   },

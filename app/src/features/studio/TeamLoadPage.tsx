@@ -30,7 +30,14 @@ export function TeamLoadPage() {
     user: r.user,
     role: r.user.staffRole ? staffRoleLabel[r.user.staffRole] : "Fume",
     brands: (r.brandIds ?? []).map(brandName).filter((n): n is string => Boolean(n)),
-    week: r.follows ? undefined : { value: r.load, max: r.capacity, words: `${units(r.load)} of ${r.capacity}`, label: `${units(r.load)} of ${r.capacity} Core-equivalents this week` },
+    week: r.follows
+      ? undefined
+      : {
+          value: r.load,
+          max: r.capacity,
+          words: `${units(r.load)} of ${r.capacity}`,
+          label: `${units(r.load)} of ${r.capacity} Core-equivalents this week`,
+        },
     doing: r.doing ?? "",
     checks: r.checksToday ? { today: r.checksToday, perCheck: r.minutesPerCheck } : undefined,
   });
@@ -40,7 +47,16 @@ export function TeamLoadPage() {
       <PageHeader
         title="Team"
         description="What each person carries this week, against four Core-equivalents each. An admin follows the work and carries none."
-        meta={team.data ? [copy.count(team.data.length, "person", "people"), `load ${units(load)} of ${capacity}`, `${copy.count(checks, "check")} today`, `${minutes} min`] : undefined}
+        meta={
+          team.data
+            ? [
+                copy.count(team.data.length, "person", "people"),
+                `load ${units(load)} of ${capacity}`,
+                `${copy.count(checks, "check")} today`,
+                `${minutes} min`,
+              ]
+            : undefined
+        }
       />
 
       <Query query={team} loading="Loading the team">

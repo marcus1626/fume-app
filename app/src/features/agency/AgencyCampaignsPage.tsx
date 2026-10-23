@@ -42,27 +42,52 @@ export function AgencyCampaignsPage() {
   const tableRow = (r: AgencyCampaignRow): CampaignTableRow => {
     const status: copy.CampaignStatus =
       r.example === "full"
-        ? copy.campaignStatus(r.campaign, undefined, { viewer: "agency", customerName: personOf(r.client.id) ?? clientPerson(r.waitingOn), date: false })
+        ? copy.campaignStatus(r.campaign, undefined, {
+            viewer: "agency",
+            customerName: personOf(r.client.id) ?? clientPerson(r.waitingOn),
+            date: false,
+          })
         : { words: r.status, waiting: rowStatus(r).on === "You", on: rowStatus(r).on === "You" ? "you" : "client" };
-    return { campaign: r.campaign, brand: r.client, status, onOpen: () => open({ id: r.client.id, example: r.example }, `/campaigns/${r.campaign.id}`), checkTo: r.example === "full" ? "/agency/check" : undefined };
+    return {
+      campaign: r.campaign,
+      brand: r.client,
+      status,
+      onOpen: () => open({ id: r.client.id, example: r.example }, `/campaigns/${r.campaign.id}`),
+      checkTo: r.example === "full" ? "/agency/check" : undefined,
+    };
   };
   const live = all.filter((r) => !["approved", "delivered", "closed"].includes(r.campaign.state));
   const checking = useQaWaiting().total;
   const sending = live.reduce((n, r) => n + Math.min(r.campaign.counts.checked, r.campaign.waits?.toSend ?? 0), 0);
 
   return (
-    <Page title="Campaigns" docTitle={filter ? `${clients.find((c) => c.id === filter)?.brandName ?? "Campaigns"} · Campaigns` : "Campaigns"}>
+    <Page
+      title="Campaigns"
+      docTitle={filter ? `${clients.find((c) => c.id === filter)?.brandName ?? "Campaigns"} · Campaigns` : "Campaigns"}
+    >
       <PageHeader
         title="Campaigns"
         meta={
           campaigns.data
-            ? [`${copy.count(live.length, "campaign")} under way`, copy.count(clients.length, "client"), copy.toCheck(0, checking), ...(sending ? [copy.send.toSend(sending)] : [])]
+            ? [
+                `${copy.count(live.length, "campaign")} under way`,
+                copy.count(clients.length, "client"),
+                copy.toCheck(0, checking),
+                ...(sending ? [copy.send.toSend(sending)] : []),
+              ]
             : undefined
         }
         tabs={
           clients.length > 1 ? (
             <div className="ui-agency-filter">
-              <ToggleGroup type="single" size="sm" loose value={filter || "all"} onValueChange={(v) => choose(v === "all" ? "" : v)} aria-label="Show the campaigns of">
+              <ToggleGroup
+                type="single"
+                size="sm"
+                loose
+                value={filter || "all"}
+                onValueChange={(v) => choose(v === "all" ? "" : v)}
+                aria-label="Show the campaigns of"
+              >
                 <ToggleGroupItem value="all">All clients</ToggleGroupItem>
                 {clients.map((c) => (
                   <ToggleGroupItem key={c.id} value={c.id}>
@@ -79,8 +104,22 @@ export function AgencyCampaignsPage() {
         {(rows) => {
           const shown = filter ? rows.filter((r) => r.client.id === filter) : rows;
           if (!shown.length)
-            return <Nothing icon="megaphone" title={filter ? "No campaigns for this client yet" : "No campaigns yet"} text="A campaign starts in a client’s Fume conversation, or from a brief you write." />;
-          return <CampaignTables rows={shown.map(tableRow)} showBrand={!filter} brandLabel="Client" customerLabel="With the client" idPrefix="agency-campaigns" />;
+            return (
+              <Nothing
+                icon="megaphone"
+                title={filter ? "No campaigns for this client yet" : "No campaigns yet"}
+                text="A campaign starts in a client’s Fume conversation, or from a brief you write."
+              />
+            );
+          return (
+            <CampaignTables
+              rows={shown.map(tableRow)}
+              showBrand={!filter}
+              brandLabel="Client"
+              customerLabel="With the client"
+              idPrefix="agency-campaigns"
+            />
+          );
         }}
       </Query>
     </Page>

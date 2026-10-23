@@ -87,7 +87,11 @@ export function WorkspaceShell() {
   // A customer, or a client of an agency, who follows a studio or agency link: her own page
   if (staffPath) return <Navigate to={customerAddress(pathname, search + hash)} replace />;
   // She reads the status sentences as hers; a client of an agency as the client (round 12, DLOAD-4)
-  copy.setStatusReader({ agency: false, viewer: session.agencyName ? "client" : undefined, agencyName: session.agencyName });
+  copy.setStatusReader({
+    agency: false,
+    viewer: session.agencyName ? "client" : undefined,
+    agencyName: session.agencyName,
+  });
   return <CustomerWorkspace />;
 }
 
@@ -112,7 +116,9 @@ function CustomerWorkspace() {
   const agencyClient = Boolean(session.workspace.agencyId);
   // … and its Home keeps only her approvals and deliveries (HomePage, CLIENT FLOW): the badge counts the same rows
   // (round 13: and the plans the agency checked and sent her).
-  const homeCount = agencyClient ? waiting.items.filter((row) => row.kind === "plan" || row.kind === "creatives" || row.kind === "download").length : waiting.count;
+  const homeCount = agencyClient
+    ? waiting.items.filter((row) => row.kind === "plan" || row.kind === "creatives" || row.kind === "download").length
+    : waiting.count;
   const reviewCount = useReviewCount();
   // Round 13 (Marcus #29): Review and Deliveries are places of their own again. Order: Home, Review, Campaigns,
   // Deliveries, Brand, Fume. A campaign's review lights Review, never Campaigns.
@@ -140,11 +146,18 @@ function CustomerWorkspace() {
       except: [CAMPAIGN_REVIEW],
     },
     { to: "/deliveries", label: "Deliveries", icon: "package", keywords: "deliveries download zip ready masters" },
-    { to: "/brand", label: "Brand", icon: "palette", holds: ["/products", "/check", ...(campaignBoard ? [] : ["/boards"])] },
+    {
+      to: "/brand",
+      label: "Brand",
+      icon: "palette",
+      holds: ["/products", "/check", ...(campaignBoard ? [] : ["/boards"])],
+    },
     ...(agencyClient ? [] : [{ to: "/fume", label: "Fume", icon: "message-square" as IconName }]),
   ];
   // The phone's tab bar keeps five: Deliveries lives in Campaigns there.
-  const tabs = nav.filter((i) => i.to !== "/deliveries").map((i) => (i.to === "/campaigns" ? { ...i, holds: [...(i.holds ?? []), "/deliveries"] } : i));
+  const tabs = nav
+    .filter((i) => i.to !== "/deliveries")
+    .map((i) => (i.to === "/campaigns" ? { ...i, holds: [...(i.holds ?? []), "/deliveries"] } : i));
   if (agencyClient && under(pathname, "/fume")) return <Navigate to="/" replace />;
   const place = `${session.workspace.brandName} in Fume`;
   return (
@@ -213,7 +226,11 @@ function AccountMenu({ onBookMeeting, avatar }: { onBookMeeting: () => void; ava
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         {avatar ? (
-          <Button variant="quiet" iconOnly aria-label={`${user.name}, ${workspace.brandName}. Settings, profile and workspace`}>
+          <Button
+            variant="quiet"
+            iconOnly
+            aria-label={`${user.name}, ${workspace.brandName}. Settings, profile and workspace`}
+          >
             <Avatar size="sm" ink initials={initials(user.name)} />
           </Button>
         ) : (
@@ -271,7 +288,13 @@ function AccountMenu({ onBookMeeting, avatar }: { onBookMeeting: () => void; ava
           icon="user"
           onSelect={() => {
             if (user.staffRole || user.agency) setCustomerView(false);
-            navigate(user.staffRole ? "/studio/settings/profile" : user.agency ? "/agency/settings/profile" : "/settings/profile");
+            navigate(
+              user.staffRole
+                ? "/studio/settings/profile"
+                : user.agency
+                  ? "/agency/settings/profile"
+                  : "/settings/profile",
+            );
           }}
         >
           Your profile

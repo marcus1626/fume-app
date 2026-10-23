@@ -109,7 +109,8 @@ function typeNames(accept: string[]): string {
 
 function allowed(file: File, accept: string[]): boolean {
   if (!accept.length) return true;
-  const type = (file.type || "").toLowerCase(), name = (file.name || "").toLowerCase();
+  const type = (file.type || "").toLowerCase(),
+    name = (file.name || "").toLowerCase();
   return accept.some((a) => {
     if (a.charAt(0) === ".") return name.endsWith(a) || (a === ".jpg" && /\.jpeg$/.test(name));
     if (/\/\*$/.test(a)) return type.indexOf(a.slice(0, -1)) === 0;
@@ -119,9 +120,14 @@ function allowed(file: File, accept: string[]): boolean {
 
 /** Why a creative cannot be added, in words, or "" when it can (dropzone.js check). */
 export function checkCreativeFile(file: File, opts: { accept?: string; maxBytes?: number; maxLabel?: string }): string {
-  const accept = (opts.accept ?? "").split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
-  if (!allowed(file, accept)) return `${extOf(file.name) || "This type"} is not supported here. Use ${typeNames(accept)}.`;
-  if (opts.maxBytes && file.size > opts.maxBytes) return `Too big at ${formatBytes(file.size)}. Up to ${(opts.maxLabel ?? formatBytes(opts.maxBytes)).replace(/\s+/g, NB)}.`;
+  const accept = (opts.accept ?? "")
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+  if (!allowed(file, accept))
+    return `${extOf(file.name) || "This type"} is not supported here. Use ${typeNames(accept)}.`;
+  if (opts.maxBytes && file.size > opts.maxBytes)
+    return `Too big at ${formatBytes(file.size)}. Up to ${(opts.maxLabel ?? formatBytes(opts.maxBytes)).replace(/\s+/g, NB)}.`;
   return "";
 }
 
@@ -132,14 +138,16 @@ function glyphOf(name: string, kind?: DropzoneItem["kind"]): IconName {
   if (kind === "video") return "play";
   if (kind === "image") return "image";
   const ext = extOf(name).toLowerCase();
-  if (["pdf", "doc", "docx", "txt", "rtf", "pages", "key", "ppt", "pptx", "indd", "ai"].includes(ext)) return "file-text";
+  if (["pdf", "doc", "docx", "txt", "rtf", "pages", "key", "ppt", "pptx", "indd", "ai"].includes(ext))
+    return "file-text";
   if (["otf", "ttf", "woff", "woff2"].includes(ext)) return "type";
   if (["zip", "rar", "7z"].includes(ext)) return "folder";
   if (["mp4", "mov", "webm", "m4v"].includes(ext)) return "play";
   if (["jpg", "jpeg", "png", "webp", "gif", "svg", "heic", "tif", "tiff", "avif"].includes(ext)) return "image";
   return "file";
 }
-const isFiles = (e: DragEvent | globalThis.DragEvent) => !!e.dataTransfer && Array.from(e.dataTransfer.types || []).includes("Files");
+const isFiles = (e: DragEvent | globalThis.DragEvent) =>
+  !!e.dataTransfer && Array.from(e.dataTransfer.types || []).includes("Files");
 
 interface Rejected extends DropzoneItem {
   rejected: true;
@@ -185,15 +193,22 @@ export const Dropzone = forwardRef<DropzoneHandle, DropzoneProps>(function Dropz
   const metaId = useId();
   const titleId = useId();
 
-  const types = typeNames(accept.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean));
+  const types = typeNames(
+    accept
+      .split(",")
+      .map((s) => s.trim().toLowerCase())
+      .filter(Boolean),
+  );
   const limit = maxLabel ?? (maxBytes ? formatBytes(maxBytes) : "");
-  const metaText = meta ?? [types, limit ? `up${NB}to${NB}${limit.replace(/\s+/g, NB)}` : ""].filter(Boolean).join(`${NB}· `);
+  const metaText =
+    meta ?? [types, limit ? `up${NB}to${NB}${limit.replace(/\s+/g, NB)}` : ""].filter(Boolean).join(`${NB}· `);
   const tiles = grid ?? !compact;
 
   const add = useCallback(
     (files: File[]) => {
       if (disabled || !files.length) return;
-      const ok: File[] = [], bad: DropzoneRejection[] = [];
+      const ok: File[] = [],
+        bad: DropzoneRejection[] = [];
       files.forEach((f) => {
         const reason = checkCreativeFile(f, { accept, maxBytes, maxLabel });
         if (reason) bad.push({ file: f, reason });
@@ -202,10 +217,22 @@ export const Dropzone = forwardRef<DropzoneHandle, DropzoneProps>(function Dropz
       if (bad.length) {
         setRejected((r) => [
           ...r,
-          ...bad.map((b, i) => ({ id: `rejected-${Date.now()}-${i}`, name: b.file.name || "Untitled creative", bytes: b.file.size, state: "error" as const, error: b.reason, rejected: true as const })),
+          ...bad.map((b, i) => ({
+            id: `rejected-${Date.now()}-${i}`,
+            name: b.file.name || "Untitled creative",
+            bytes: b.file.size,
+            state: "error" as const,
+            error: b.reason,
+            rejected: true as const,
+          })),
         ]);
         onReject?.(bad);
-        if (!ok.length) say(bad.length === 1 ? `${bad[0].file.name} could not be added. ${bad[0].reason}` : `${bad.length} creatives could not be added. Each row says why.`);
+        if (!ok.length)
+          say(
+            bad.length === 1
+              ? `${bad[0].file.name} could not be added. ${bad[0].reason}`
+              : `${bad.length} creatives could not be added. Each row says why.`,
+          );
       }
       if (ok.length) onFiles(ok);
     },
@@ -217,19 +244,34 @@ export const Dropzone = forwardRef<DropzoneHandle, DropzoneProps>(function Dropz
     pickFiles(accept).then(add);
   }, [accept, add, disabled]);
 
-  useImperativeHandle(ref, () => ({ open, get element() { return zone.current; } }), [open]);
+  useImperativeHandle(
+    ref,
+    () => ({
+      open,
+      get element() {
+        return zone.current;
+      },
+    }),
+    [open],
+  );
 
   // say what landed: creatives that finished uploading since the last render, and the ones that stopped
   const prev = useRef(new Map<string, DropzoneItem["state"]>());
   useEffect(() => {
-    let added = 0, failed = 0;
+    let added = 0,
+      failed = 0;
     items.forEach((it) => {
       const was = prev.current.get(it.id);
       if (was === "uploading" && it.state === "done") added++;
       if (was === "uploading" && it.state === "error") failed++;
     });
     prev.current = new Map(items.map((it) => [it.id, it.state]));
-    const words = [added ? `${plural(added)} added${target ? ` to ${target}` : ""}.` : "", failed ? `${plural(failed)} stopped uploading.` : ""].filter(Boolean).join(" ");
+    const words = [
+      added ? `${plural(added)} added${target ? ` to ${target}` : ""}.` : "",
+      failed ? `${plural(failed)} stopped uploading.` : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
     if (words) say(words);
   }, [items, say, target]);
 
@@ -251,7 +293,8 @@ export const Dropzone = forwardRef<DropzoneHandle, DropzoneProps>(function Dropz
       e.preventDefault();
       if (!e.dataTransfer) return;
       if (dropAnywhere) e.dataTransfer.dropEffect = disabled ? "none" : "copy";
-      else if (!(zone.current && e.target instanceof Node && zone.current.contains(e.target))) e.dataTransfer.dropEffect = "none";
+      else if (!(zone.current && e.target instanceof Node && zone.current.contains(e.target)))
+        e.dataTransfer.dropEffect = "none";
     };
     const drop = (e: globalThis.DragEvent) => {
       if (!isFiles(e)) return;
@@ -317,7 +360,9 @@ export const Dropzone = forwardRef<DropzoneHandle, DropzoneProps>(function Dropz
       size="sm"
       iconOnly
       icon={kind === "retry" ? "rotate-ccw" : "x"}
-      aria-label={kind === "cancel" ? `Cancel ${it.name}` : kind === "retry" ? `Try ${it.name} again` : `Remove ${it.name}`}
+      aria-label={
+        kind === "cancel" ? `Cancel ${it.name}` : kind === "retry" ? `Try ${it.name} again` : `Remove ${it.name}`
+      }
       data-dz-action={kind}
       data-dz-for={it.id}
       onClick={() => (kind === "retry" ? onRetry?.(it.id) : removeItem(it, kind === "cancel"))}
@@ -348,7 +393,13 @@ export const Dropzone = forwardRef<DropzoneHandle, DropzoneProps>(function Dropz
   return (
     <div
       ref={zone}
-      className={cx("ui-dropzone", compact && "ui-dropzone--compact", pointer === "touch" && "is-touch", pointer === "pointer" && "is-pointer", className)}
+      className={cx(
+        "ui-dropzone",
+        compact && "ui-dropzone--compact",
+        pointer === "touch" && "is-touch",
+        pointer === "pointer" && "is-pointer",
+        className,
+      )}
       data-filled={filled ? "" : undefined}
       data-drag={drag && !disabled ? "" : undefined}
       data-disabled={disabled ? "" : undefined}
@@ -405,7 +456,9 @@ export const Dropzone = forwardRef<DropzoneHandle, DropzoneProps>(function Dropz
               <div className="ui-item-content">
                 <div className="ui-dropzone-row-head">
                   <span className="ui-dropzone-name">{it.name}</span>
-                  <span className="ui-dropzone-size">{it.state === "uploading" ? formatBytesPart((it.bytes * p) / 100, it.bytes) : formatBytes(it.bytes)}</span>
+                  <span className="ui-dropzone-size">
+                    {it.state === "uploading" ? formatBytesPart((it.bytes * p) / 100, it.bytes) : formatBytes(it.bytes)}
+                  </span>
                 </div>
                 {it.state === "uploading" && <ProgressBar value={p} max={100} label={`Uploading ${it.name}`} />}
                 {it.state === "error" && (
@@ -416,7 +469,9 @@ export const Dropzone = forwardRef<DropzoneHandle, DropzoneProps>(function Dropz
                 )}
               </div>
               <div className="ui-item-actions">
-                {it.state === "uploading" ? btn("cancel", it) : [it.state === "error" && it.retry && onRetry ? btn("retry", it) : null, btn("remove", it)]}
+                {it.state === "uploading"
+                  ? btn("cancel", it)
+                  : [it.state === "error" && it.retry && onRetry ? btn("retry", it) : null, btn("remove", it)]}
               </div>
             </li>
           );
@@ -441,7 +496,9 @@ export const Dropzone = forwardRef<DropzoneHandle, DropzoneProps>(function Dropz
           <Glyph name="upload" />
         </span>
         <span className="ui-dropzone-text">
-          <span className="ui-dropzone-title">{dropLabel ?? (target ? `Drop to add to ${target}` : "Drop to add them")}</span>
+          <span className="ui-dropzone-title">
+            {dropLabel ?? (target ? `Drop to add to ${target}` : "Drop to add them")}
+          </span>
           {metaText && <span className="ui-dropzone-meta">{metaText}</span>}
         </span>
       </div>
@@ -469,7 +526,20 @@ export interface DropzonePanelProps extends Omit<HTMLAttributes<HTMLElement>, "o
 
 /** .ui-dropzone-panel: a panel (a brief, a campaign) that takes drops anywhere; the overlay covers it. */
 export const DropzonePanel = forwardRef<HTMLElement, DropzonePanelProps>(function DropzonePanel(
-  { onFiles, onReject, accept = "", maxBytes, maxLabel, target, dropLabel, disabled, as = "section", className, children, ...props },
+  {
+    onFiles,
+    onReject,
+    accept = "",
+    maxBytes,
+    maxLabel,
+    target,
+    dropLabel,
+    disabled,
+    as = "section",
+    className,
+    children,
+    ...props
+  },
   ref,
 ) {
   const depth = useRef(0);
@@ -502,7 +572,8 @@ export const DropzonePanel = forwardRef<HTMLElement, DropzonePanelProps>(functio
         depth.current = 0;
         setDrag(false);
         if (disabled) return;
-        const ok: File[] = [], bad: DropzoneRejection[] = [];
+        const ok: File[] = [],
+          bad: DropzoneRejection[] = [];
         Array.from(e.dataTransfer.files).forEach((f) => {
           const reason = checkCreativeFile(f, { accept, maxBytes, maxLabel });
           if (reason) bad.push({ file: f, reason });
@@ -519,7 +590,9 @@ export const DropzonePanel = forwardRef<HTMLElement, DropzonePanelProps>(functio
           <Glyph name="upload" />
         </span>
         <span className="ui-dropzone-text">
-          <span className="ui-dropzone-title">{dropLabel ?? (target ? `Drop to add to ${target}` : "Drop to add them")}</span>
+          <span className="ui-dropzone-title">
+            {dropLabel ?? (target ? `Drop to add to ${target}` : "Drop to add them")}
+          </span>
         </span>
       </div>
     </Tag>

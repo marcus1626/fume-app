@@ -40,7 +40,16 @@ import {
 } from "@fume/ui";
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { useAddReference, useAnswerTaste, useBrandDna, useChooseTastePair, usePassTastePair, usePeople, useSession, useTasteTraining } from "../../api/hooks";
+import {
+  useAddReference,
+  useAnswerTaste,
+  useBrandDna,
+  useChooseTastePair,
+  usePassTastePair,
+  usePeople,
+  useSession,
+  useTasteTraining,
+} from "../../api/hooks";
 import type { Reference, TasteArea, TasteCard, TastePair, TasteState } from "../../contract";
 import { Back, Nothing, Page, Query, Section } from "../../shell/Page";
 import { directory } from "../../shell/people";
@@ -78,7 +87,9 @@ function AddReferencePanel({ open, onOpenChange }: { open: boolean; onOpenChange
         <form className="ui-sheet-form" onSubmit={submit}>
           <SheetHeader>
             <SheetTitle>Add a reference</SheetTitle>
-            <SheetDescription>A picture that is you, or one that is not. A line on why helps Fume most.</SheetDescription>
+            <SheetDescription>
+              A picture that is you, or one that is not. A line on why helps Fume most.
+            </SheetDescription>
           </SheetHeader>
           <SheetBody>
             <FieldGroup>
@@ -86,7 +97,15 @@ function AddReferencePanel({ open, onOpenChange }: { open: boolean; onOpenChange
                 items={picked ? [picked] : []}
                 onFiles={(files) => {
                   const f = files[0];
-                  if (f) setPicked({ id: `ref-${Date.now()}`, name: f.name, bytes: f.size, state: "done", src: URL.createObjectURL(f), kind: "image" });
+                  if (f)
+                    setPicked({
+                      id: `ref-${Date.now()}`,
+                      name: f.name,
+                      bytes: f.size,
+                      state: "done",
+                      src: URL.createObjectURL(f),
+                      kind: "image",
+                    });
                 }}
                 onRemove={() => setPicked(null)}
                 accept="image/jpeg,image/png,image/webp"
@@ -99,7 +118,11 @@ function AddReferencePanel({ open, onOpenChange }: { open: boolean; onOpenChange
                 gridLabel="The reference"
                 target="your taste"
               />
-              <RadioGroup value={verdict} onValueChange={(v) => setVerdict(v as "liked" | "disliked")} aria-label="Is it you?">
+              <RadioGroup
+                value={verdict}
+                onValueChange={(v) => setVerdict(v as "liked" | "disliked")}
+                aria-label="Is it you?"
+              >
                 <Choice>
                   <RadioGroupItem value="liked" />
                   <ChoiceText label="This is us" hint="Fume moves toward it" />
@@ -152,14 +175,27 @@ function References({ list, me, name }: { list: Reference[]; me: string; name: (
 
 // ─── Teach Fume your taste ──────────────────────────────────────────────────
 
-const areaLabel: Record<TasteArea, string> = { light: "Light", colour: "Colour", people: "People", composition: "Composition", styling: "Styling" };
-const areaWords: Record<TasteArea, string> = { light: "light", colour: "colours", people: "people", composition: "composition", styling: "styling" };
+const areaLabel: Record<TasteArea, string> = {
+  light: "Light",
+  colour: "Colour",
+  people: "People",
+  composition: "Composition",
+  styling: "Styling",
+};
+const areaWords: Record<TasteArea, string> = {
+  light: "light",
+  colour: "colours",
+  people: "people",
+  composition: "composition",
+  styling: "styling",
+};
 const areas = Object.keys(areaLabel) as TasteArea[];
 const and = (xs: string[]) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
 
 /** How sure Fume is, in one sentence: "Fume knows your light and colours well, and is still learning people and styling." */
 export function tasteSentence(state: TasteState, brand: string, your = "your") {
-  if (state.answered === 0) return `Fume is just starting to learn ${your} taste. A couple of minutes of pictures teaches it what is ${brand}.`;
+  if (state.answered === 0)
+    return `Fume is just starting to learn ${your} taste. A couple of minutes of pictures teaches it what is ${brand}.`;
   const well = areas.filter((a) => state.confidence[a] >= 0.7).map((a) => areaWords[a]);
   const less = areas.filter((a) => state.confidence[a] < 0.5).map((a) => areaWords[a]);
   const first = well.length ? `Fume knows ${your} ${and(well)} well` : `Fume is getting to know ${your} taste`;
@@ -171,7 +207,13 @@ const yesReasons = ["The light", "The calm", "The colours", "The setting"];
 const noReasons = ["Too cold", "Too busy", "Too staged", "Not our colours"];
 const neitherReasons = ["Both too cold", "Both too busy", "Both too staged", "Not our colours"];
 const reasonsFor = (card: TasteDeckCard, answer: TasteDeckAnswer) =>
-  card.kind === "pair" ? (answer === "neither" ? neitherReasons : pairReasons) : answer === "no" ? noReasons : yesReasons;
+  card.kind === "pair"
+    ? answer === "neither"
+      ? neitherReasons
+      : pairReasons
+    : answer === "no"
+      ? noReasons
+      : yesReasons;
 
 /**
  * One sitting, about two minutes: Part 1, the pairs (the onboarding's still open, then training pairs), and Part 2,
@@ -179,8 +221,17 @@ const reasonsFor = (card: TasteDeckCard, answer: TasteDeckAnswer) =>
  */
 const SITTING = 8;
 function sittingOf(pairs: TastePair[], cards: TasteCard[], brand: string): TasteDeckCard[] {
-  const open: TasteDeckCard[] = pairs.filter((p) => !p.chosen && !p.neither).map((p) => ({ id: `p:${p.id}`, kind: "pair", question: p.question, a: p.a, b: p.b }));
-  const training: TasteDeckCard[] = cards.map((c) => ({ id: `t:${c.id}`, kind: c.kind, eyebrow: areaLabel[c.area], question: c.question, a: c.a, b: c.b }));
+  const open: TasteDeckCard[] = pairs
+    .filter((p) => !p.chosen && !p.neither)
+    .map((p) => ({ id: `p:${p.id}`, kind: "pair", question: p.question, a: p.a, b: p.b }));
+  const training: TasteDeckCard[] = cards.map((c) => ({
+    id: `t:${c.id}`,
+    kind: c.kind,
+    eyebrow: areaLabel[c.area],
+    question: c.question,
+    a: c.a,
+    b: c.b,
+  }));
   const pairCards = [...open, ...training.filter((c) => c.kind === "pair")];
   const singles = training.filter((c) => c.kind === "single");
   const p = pairCards.slice(0, Math.max(SITTING - singles.length, SITTING / 2));
@@ -188,7 +239,17 @@ function sittingOf(pairs: TastePair[], cards: TasteCard[], brand: string): Taste
 }
 
 /** The deck on its own screen. Its cards are fixed when it opens, so an answered card never comes round again mid-way. */
-function TeachTaste({ open, onOpenChange, cards, onMore }: { open: boolean; onOpenChange: (open: boolean) => void; cards: TasteDeckCard[]; onMore: () => void }) {
+function TeachTaste({
+  open,
+  onOpenChange,
+  cards,
+  onMore,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  cards: TasteDeckCard[];
+  onMore: () => void;
+}) {
   const choose = useChooseTastePair();
   const answerTaste = useAnswerTaste();
   const pass = usePassTastePair();
@@ -201,7 +262,8 @@ function TeachTaste({ open, onOpenChange, cards, onMore }: { open: boolean; onOp
 
   function save(card: TasteDeckCard, answer: TasteDeckAnswer, reason?: string) {
     const [kind, id] = [card.id.slice(0, 1), card.id.slice(2)];
-    if (answer === "neither") pass.mutate(kind === "p" ? { pairId: id, reason } : { cardId: id, reason }, { onError: failed });
+    if (answer === "neither")
+      pass.mutate(kind === "p" ? { pairId: id, reason } : { cardId: id, reason }, { onError: failed });
     else if (kind === "p") choose.mutate({ pairId: id, chosen: answer as "a" | "b", reason }, { onError: failed });
     else answerTaste.mutate({ cardId: id, answer, reason }, { onError: failed });
   }
@@ -209,7 +271,12 @@ function TeachTaste({ open, onOpenChange, cards, onMore }: { open: boolean; onOp
   const shown = cards.map((c) => (answers[c.id] ? { ...c, answer: answers[c.id] } : c));
   const state = training.data?.state;
   return (
-    <TasteDeckStage open={open} onOpenChange={onOpenChange} title="Teach Fume your taste" description="Every answer is saved as you go. Stop whenever you like.">
+    <TasteDeckStage
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Teach Fume your taste"
+      description="Every answer is saved as you go. Stop whenever you like."
+    >
       <TasteDeck
         label={`Is it ${brand}?`}
         cards={shown}
@@ -226,7 +293,9 @@ function TeachTaste({ open, onOpenChange, cards, onMore }: { open: boolean; onOp
           <div className="ui-ob-understood">
             <div className="ui-ob-understood-head">
               <h2 className="ui-ob-understood-title">Thank you</h2>
-              <p className="ui-ob-understood-lede">{state ? tasteSentence(state, brand) : "Fume took your answers into your taste."}</p>
+              <p className="ui-ob-understood-lede">
+                {state ? tasteSentence(state, brand) : "Fume took your answers into your taste."}
+              </p>
             </div>
             <div className="ui-ob-line-actions">
               <Button
@@ -279,7 +348,10 @@ export function TasteContent({ moodboardId, moodboardItems }: { moodboardId?: st
           <div className="ui-app-row">
             {moodboardId && (
               <Button asChild variant="secondary" iconEnd="arrow-right">
-                <Link to={`/boards/${moodboardId}`} aria-label={moodboardItems ? `Open the moodboard, ${moodboardItems} pictures` : undefined}>
+                <Link
+                  to={`/boards/${moodboardId}`}
+                  aria-label={moodboardItems ? `Open the moodboard, ${moodboardItems} pictures` : undefined}
+                >
                   Open the moodboard
                 </Link>
               </Button>
@@ -292,7 +364,9 @@ export function TasteContent({ moodboardId, moodboardItems }: { moodboardId?: st
           </div>
         }
       />
-      {canEdit && <TeachTaste key={sitting.key} open={teaching} onOpenChange={setTeaching} cards={sitting.cards} onMore={teach} />}
+      {canEdit && (
+        <TeachTaste key={sitting.key} open={teaching} onOpenChange={setTeaching} cards={sitting.cards} onMore={teach} />
+      )}
 
       <Query query={brand} loading="Loading your taste">
         {(view) => {
@@ -313,7 +387,11 @@ export function TasteContent({ moodboardId, moodboardItems }: { moodboardId?: st
                 }
               >
                 {liked.length === 0 ? (
-                  <Nothing icon="thumbs-up" title="No pictures here yet" text="Add pictures that feel like you, from anywhere." />
+                  <Nothing
+                    icon="thumbs-up"
+                    title="No pictures here yet"
+                    text="Add pictures that feel like you, from anywhere."
+                  />
                 ) : (
                   <References list={liked} me={me} name={dir.name} />
                 )}
@@ -321,7 +399,11 @@ export function TasteContent({ moodboardId, moodboardItems }: { moodboardId?: st
 
               <Section title="Not us" meta={disliked.length || undefined} titleId="taste-disliked">
                 {disliked.length === 0 ? (
-                  <Nothing icon="x" title="Nothing here yet" text="A picture that is wrong for you teaches Fume as much as one that is right." />
+                  <Nothing
+                    icon="x"
+                    title="Nothing here yet"
+                    text="A picture that is wrong for you teaches Fume as much as one that is right."
+                  />
                 ) : (
                   <References list={disliked} me={me} name={dir.name} />
                 )}
@@ -346,7 +428,14 @@ export function TastePage() {
         title="Taste"
         back={<Back to="/brand" label="Brand" />}
         description={`What ${viewer.staff ? viewer.brand : "your brand"} looks like when words run out. Pick, pass and say why; Fume learns from all of it.`}
-        meta={brand.data ? [`${refs.filter((r) => r.verdict === "liked").length} This is us`, `${refs.filter((r) => r.verdict === "disliked").length} Not us`] : undefined}
+        meta={
+          brand.data
+            ? [
+                `${refs.filter((r) => r.verdict === "liked").length} This is us`,
+                `${refs.filter((r) => r.verdict === "disliked").length} Not us`,
+              ]
+            : undefined
+        }
       />
       <TasteContent />
     </Page>

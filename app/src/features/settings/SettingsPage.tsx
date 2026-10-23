@@ -75,7 +75,10 @@ export function SettingsPage() {
     );
 
   return (
-    <Page title="Settings" docTitle={page ? `${sections.find((x) => x.id === value)?.label ?? "Settings"} · Settings` : "Settings"}>
+    <Page
+      title="Settings"
+      docTitle={page ? `${sections.find((x) => x.id === value)?.label ?? "Settings"} · Settings` : "Settings"}
+    >
       <SettingsLayout
         header={<PageHeader title="Settings" meta={[session.workspace.brandName]} />}
         sections={sections}
