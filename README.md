@@ -19,7 +19,9 @@ Sign in as anyone in the demo from the person menu, or with `?as=` on the first 
 ## Check it
 
 ```sh
-npm run check        # from the repo root: typecheck, tests and the brand rule gate
+npm ci               # once, at the repo root: the lint and format tools
+npm run check        # lint, format, typecheck, tests and the brand rule gate
+cd app && npm run e2e  # the main flows in a browser
 ```
 
 CI (`.github/workflows/ci.yml`) runs the same on every push and pull request.
@@ -31,7 +33,8 @@ CI (`.github/workflows/ci.yml`) runs the same on every push and pull request.
 | `app/` | The app. Start with `app/ARCHITECTURE.md` (actors, entities, states) and `app/FLOWS.md` (every flow). |
 | `app/src/contract/` | The data contract: entities and `FumeApi`. The backend's whole job. |
 | `packages/ui/` | `@fume/ui`: React components that render the design system's classes. |
-| `design-system/`, `tokens/`, `assets/`, `rules/`, `tools/gate/` | Copies from the brand repository, [marcus1626/Fume-Brand](https://github.com/marcus1626/Fume-Brand). Change them there, then run `npm run sync:design-system`. |
+| `docs/WIRING.md` | How the backend and the Engine plug in. |
+| `design-system/`, `tokens/`, `assets/`, `rules/`, `tools/` | Shared with the brand repository, [marcus1626/Fume-Brand](https://github.com/marcus1626/Fume-Brand): shared tokens and components change there first, then `npm run sync:design-system`. |
 
 ## The preview
 

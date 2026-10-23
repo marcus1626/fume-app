@@ -24,11 +24,15 @@ propose. Docs and UI copy are in English; Marcus talks to agents in Norwegian.
 - The look lives only in the design system. The app and `@fume/ui` add no inline styles and no colours or sizes of
   their own; use `--ui-*` tokens and the design system's classes (`packages/ui/CONVENTIONS.md`).
 - Amber only marks checked work. No gradients, no glow.
-- `design-system/`, `tokens/`, `assets/`, `rules/` and `tools/gate/` are copies from
-  [marcus1626/Fume-Brand](https://github.com/marcus1626/Fume-Brand). Change them there first, then
-  `npm run sync:design-system`.
+- `design-system/`, `tokens/`, `assets/`, `rules/` and `tools/{gate,tokens,icons}/` are shared with
+  [marcus1626/Fume-Brand](https://github.com/marcus1626/Fume-Brand). Shared tokens and components are changed there
+  first, then `npm run sync:design-system` (it never deletes a file that exists only here). Token changes: edit
+  `design-system/tokens/*.tokens.json`, run `node tools/tokens/build.mjs`; icons: `node tools/icons/build.mjs`.
 
 ## Before you say done
-- `npm run check` from the repo root: typecheck, tests, and the brand rule gate with 0 errors.
+- `npm ci` once at the repo root (lint and format tools) and in `app/`.
+- `npm run check` from the repo root: lint, format, typecheck, tests, and the brand rule gate with 0 errors.
+- `cd app && npm run e2e`: the main flows clicked through in a browser.
+- Wiring the backend or the Engine: read `docs/WIRING.md` first.
 - Run the app and look at what you changed (`cd app && npm run dev`); sign in as the person the change is for.
 - Commit in small steps with clear messages. Never commit secrets or `.env` files.
