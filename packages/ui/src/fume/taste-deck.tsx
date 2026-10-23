@@ -1,22 +1,21 @@
-// Taste deck (design-system/components/taste-deck.css): one card at a time, saved on the tap (app round 8, UX review
-// ONB-11, MOB-11, LOAD-12). PROPOSED 19 Oct 2026. The same deck in the onboarding (step 4) and on Brand › Taste.
+// Taste deck (design-system/components/taste-deck.css): one card at a time, saved on the tap. The same deck in the
+// onboarding (step 4) and on Brand › Taste.
 // A single picture is swiped: right "This is us", left "Not us", with the two pills under it too. The card follows the
-// finger a little turned, a stamp in words fades in, and past 30 % of its width it leaves and the answer is saved;
-// let go earlier and it glides back (no spring). A pair is answered by tapping the picture you prefer, or by swiping
-// toward it (Marcus 19 Oct: left picks the left one, right the right one; the pair follows the finger a little and the
-// side it leans to shows its ring): an Ink ring and a check, saved at once, and the next card comes in after 300 ms. "Why" is asked after the pick, as quiet chips
-// about the card just answered; ignoring them costs nothing. "Back one" returns to the last card.
-// Keys: 1/2 pick in a pair; Y/N answer a single picture; Backspace goes back one. Arrows answer nothing (round 9,
-// desktop review DWAY-2: an arrow moves, it never decides).
-// Round 9 (desktop review DLAY-12, DTSK-22, PROPOSED 19 Oct 2026): on a desk (≥ 1024 px) the picture is sized from
-// the screen (min(55vh, 560 px), and never taller than the room the page leaves it) and the question, the answers,
-// "Why?" and Back one stand beside it, on the picture's left edge's axis; a phone keeps one column. Once the last card
-// is answered the deck is gone: only `end` shows, never under the last card's "Why?".
+// finger a little turned, a stamp in words fades in, and past 30 % of its width it leaves and the answer is saved; let
+// go earlier and it glides back (no spring). A pair is answered by tapping the picture you prefer, or by swiping toward
+// it (left picks the left one, right the right one; the pair follows the finger a little and the side it leans to shows
+// its ring): an Ink ring and a check, saved at once, and the next card comes in after 300 ms. A pair may also be
+// answered "Neither" (neitherLabel, key N) when neither picture feels like the brand. "Why" is asked after the pick, as
+// quiet chips about the card just answered; ignoring them costs nothing. "Back one" returns to the last card. A card
+// may name its part ("Part 1 of 2") with one line on what the part teaches; the head then counts the cards of that part
+// only.
+// Keys: 1/2 pick in a pair; Y/N answer a single picture; Backspace goes back one. Arrows answer nothing: an arrow
+// moves, it never decides.
+// On a desk (≥ 1024 px) the picture is sized from the screen (min(55vh, 560 px), and never taller than the room the
+// page leaves it) and the question, the answers, "Why?" and Back one stand beside it; a phone keeps one column. Once
+// the last card is answered the deck is gone: only `end` shows, never under the last card's "Why?".
 //   <TasteDeck label="Your taste" cards={…} index={i} onIndexChange={setI} onAnswer={save} reasons={…} onReason={…} end={<Card/>} />
 //   <TasteDeckStage open title="Teach Fume your taste" onOpenChange={…}> <TasteDeck …/> </TasteDeckStage>
-// Round 13 (Marcus's video comments #5, #47; PROPOSED 22 Oct 2026): a card may name its part ("Part 1 of 2") with one
-// line on what the part teaches; the head then counts the cards of that part only. A pair may be answered "Neither"
-// (neitherLabel, key N) when neither picture feels like the brand.
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {
   useEffect,
@@ -256,7 +255,7 @@ export function TasteDeck({
   const n = inPart.length;
   const shown = Math.min(index - offset + 1, n);
 
-  // Under the card; once the deck is done, nothing of it stays (DTSK-22).
+  // Under the card; once the deck is done, nothing of it stays.
   const foot = !done && (
     <div className="ui-td-foot">
       {last && chipList.length > 0 && onReason ? (

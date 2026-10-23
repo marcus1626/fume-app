@@ -1,9 +1,8 @@
-// Send to check, with a stop for open product errors (walk-through Must 11): when the picked version still reads a
-// product detail wrong ("Reads 200 ml · should be 100 ml") and no fix is under way, the designer sees it first and
-// chooses: fix it first (the Engine's product fix, a new version) or send anyway (the expert sees the flag in Check).
-// Round 12 (UX review DTASK-1, PROPOSED 20 Oct 2026): sending says which version left for Check, offers Undo, and,
-// when the creative was opened from Check, takes her back to the item she came from (the item now shows the new
-// version: the mock's documentToCheck, QA's).
+// Send to check, with a stop for open product errors: when the picked version still reads a product detail wrong
+// ("Reads 200 ml · should be 100 ml") and no fix is under way, the designer sees it first and chooses: fix it first
+// (the Engine's product fix, a new version) or send anyway (the expert sees the flag in Check). Sending says which
+// version left for Check, offers Undo, and, when the creative was opened from Check, takes her back to the item she
+// came from (the item then shows the new version).
 import {
   AlertDialog,
   AlertDialogAction,
@@ -60,7 +59,7 @@ export function SendToCheck({
   const undo = useUndoDocumentToCheck();
   const fix = useFixProduct();
   const toast = useToast();
-  const agency = Boolean(useSession().data?.user.agency); // round 13 AGENCY: the agency's own team checks
+  const agency = Boolean(useSession().data?.user.agency); // the agency's own team checks
   const [asking, setAsking] = useState(false);
   const { picked, flags } = useOpenFlags(doc);
 

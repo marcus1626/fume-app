@@ -1,44 +1,28 @@
-// One conversation with Fume (FLOWS §12 and §23; Marcus 15 Oct: "Fume chatten lagrer ikke chatter, fordi den husker
-// alt"; Marcus's card 20 Oct: "Én samtale", DECIDED). Fume remembers everything; campaigns appear in the talk as cards
-// (brief, plan, runs, creatives, questions). ?new=1 starts a campaign: the next message becomes its first brief line.
-//
-// Round 8 (UX review 19 Oct, PROPOSED): the chat remembers her, not only the work.
-// - Her unsent words stay, and a new campaign's words travel to and from the manual brief through sessionStorage
-//   "fume-campaign-draft" = {name?, goal?, text?} (WAY-5, WAY-16, TASK-9).
-// - Back from a card puts her where she was; a new answer from Fume comes into view from its top (WAY-5, TASK-10).
-// - A new campaign starts on its own marker with the earlier talk folded behind "Earlier" (WAY-17); "Jump to a
-//   campaign" lands on a campaign's latest card (WAY-19, MOB-2); on a phone the composer is one line and the tab bar
-//   steps away while she writes (chat.css).
-//
-// Round 9 (desktop first, PROPOSED 19 Oct 2026), kept: the head over the conversation at its left edge, the composer
-// with the focus on a desk and its keys, Fume's message with buttons in view above the composer (DTSK-3), the focus
-// back in the composer after a tapped answer (DTSK-20), and from 1280 px the panel on the right (DLAY-5).
-//
-// Round 10 (PROPOSED 20 Oct 2026; FLOWS §22–§23):
-// - ONE conversation on every screen size: no list of conversations. Every Fume message of the workspace, oldest
-//   first, in one stream at a reading measure (the backend still keeps a thread per campaign: they are merged here).
-//   Where the talk turns to a campaign, a quiet marker names it once (a link to it); where it turns back to talk
-//   about nothing in particular, a quiet "Not about a campaign".
-// - /fume/:threadId (the bell, Home, ⌘K) opens the one stream at that campaign's latest message, marked for a moment.
-// - The composer answers what Fume last asked (the thread of the newest open question or brief), else the talk that
-//   is not about a campaign. When more than one thing is open, a line over the composer says which campaign the reply
-//   goes to, with Change.
+// One conversation with Fume (FLOWS §12, §23): no list of conversations. Fume remembers everything; campaigns appear in
+// the talk as cards (brief, plan, runs, creatives, questions). ?new=1 starts a campaign: the next message becomes its
+// first brief line.
+// - One stream on every screen size: every Fume message of the workspace, oldest first, at a reading measure (the
+//   backend still keeps a thread per campaign: they are merged here). Where the talk turns to a campaign, a quiet
+//   marker names it once (a link to it); where it turns back to talk about nothing in particular, a quiet "Not about a
+//   campaign". A new campaign starts on its own marker with the earlier talk folded behind "Earlier".
+// - /fume/:threadId (the bell, Home, ⌘K) opens the stream at that campaign's latest message, marked for a moment. Back
+//   from a card puts her where she was; a new answer from Fume comes into view from its top, its buttons above the
+//   composer.
+// - The composer answers what Fume last asked (the thread of the newest open question or brief), else the talk that is
+//   not about a campaign. When more than one thing is open, a line over the composer says which campaign the reply goes
+//   to, with Change. Her unsent words stay, and a new campaign's words travel to and from the manual brief through
+//   sessionStorage "fume-campaign-draft" = {name?, goal?, text?}. "Make a Christmas campaign for Hand Balm" starts the
+//   campaign from the composer, as New campaign does. "@" names a campaign, a product, a collection or a creative
+//   (mention.tsx); an empty composer offers a few questions.
 // - The panel on the right (from 1280 px): "The brief" while one is written, with "Send to Fume"; once it is sent it
-//   follows that campaign as "The plan" (writing, in check, then its summary and "Open the plan"). Nothing in flight:
-//   no panel. She SENDS the brief; she approves the plan, on the plan page; nothing is made before that.
-//
-// Round 13 (Marcus's video comments of 21 Oct, #13 to #20; PROPOSED 22 Oct 2026):
-// - #13: the panel hides and shows like Claude's artifact panel: a toggle in the head, remembered per viewer
-//   (localStorage "fume-chat-panel"); without the panel the conversation is one calm column in the middle, the
-//   composer pinned at its foot.
-// - #15: what the chat links to (a campaign, a plan, a creative, a product, a collection) opens in the panel, with
-//   "Open full page" (open.tsx, panel.tsx); the full page has "← Back to the conversation".
-// - #16: "@" names a campaign, a product, a collection or a creative (mention.tsx); Fume answers about it with a line
-//   that opens it in the panel. An empty composer offers a few questions.
-// - #17: "Make a Christmas campaign for Hand Balm" starts the campaign from the composer, as New campaign does.
-// - #19: her answer to "Which product is it for?" is not repeated as her bubble; the card shows the product.
-// - #20: /fume?plan=<campaignId> (the plan page's "Change it with Fume") opens the chat with that plan in the panel,
-//   and her words change it: Fume writes the next version at once and says in one line what changed.
+//   follows that campaign as "The plan". What the chat links to (a campaign, a plan, a creative, a product, a
+//   collection) opens there too, with "Open full page" (open.tsx, panel.tsx). A toggle in the head hides and shows it,
+//   remembered per viewer (localStorage "fume-chat-panel"); without the panel the conversation is one calm column in
+//   the middle, the composer pinned at its foot.
+// - /fume?plan=<campaignId> (the plan's "Change it with Fume") opens the chat with that plan in the panel, and her
+//   words change it: Fume writes the next version at once and says in one line what changed. Nothing is made before she
+//   approves the plan.
+// - Her answer to "Which product is it for?" is not repeated as her bubble; the card shows the product.
 import {
   Button,
   Composer,
@@ -107,9 +91,9 @@ const chatDraft = (workspaceId: Id) => `fume-chat-draft:${workspaceId}`;
 const PLACE = "fume-chat-place";
 /** The campaign the panel follows once she started or sent it here, until its plan is approved. */
 const FOLLOW = (workspaceId: Id) => `fume-chat-follow:${workspaceId}`;
-/** Round 13 (#15): what she opened from the chat into the panel, for the visit (Back from its full page keeps it). */
+/** What she opened from the chat into the panel, for the visit (Back from its full page keeps it). */
 const OPENED = (workspaceId: Id) => `fume-chat-open:${workspaceId}`;
-/** Round 13 (#13): the panel hidden or shown, per viewer, kept on this device. */
+/** The panel hidden or shown, per viewer, kept on this device. */
 const PANEL = "fume-chat-panel";
 function panelHidden(): boolean {
   try {
@@ -125,10 +109,10 @@ function keepPanel(hidden: boolean) {
     /* the choice holds for this visit only */
   }
 }
-/** #17: words that ask for a new campaign ("Make a Christmas campaign for Hand Balm"). */
+/** Words that ask for a new campaign ("Make a Christmas campaign for Hand Balm"). */
 const NEW_CAMPAIGN =
   /(^(please\s+)?(make|start|create|set up|begin|plan|launch)\b|\b(i want|i'd like|i would like|let's|lets|can you|could you|we need|i need)\b)[^.?!]*\b(a|an|new|another)\b[^.?!]*\bcampaign\b\s*(for|to|about|on|around|with|$|[.!])/i;
-/** #20: words that change a plan: how many, which kind, when. */
+/** Words that change a plan: how many, which kind, when. */
 const PLAN_WORDS =
   /\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|twelve)\s+(creatives?|videos?|carousels?|stories|feed posts?)\b|\b(more|fewer|less|no|add|some)\s+(creatives?|videos?|carousels?)\b|\b(masters?|go(es)? live|launch)\b[^?]*\b(by|on|to)\b|\bweeks? (earlier|sooner|later)\b/i;
 /** A question rather than a change ("Where is…?"). */
@@ -162,7 +146,7 @@ function campaignWords(): string {
   return goal || name;
 }
 
-/** A card with buttons, or a question: it comes into view with its buttons above the composer (DTSK-3). */
+/** A card with buttons, or a question: it comes into view with its buttons above the composer. */
 const acts = (m: FumeMessage) => m.author.kind !== "person" && Boolean(m.card) && m.card?.kind !== "handover";
 /** The campaign a card speaks of, for a message said where no campaign is named. */
 const cardCampaign = (m: FumeMessage): Id | undefined =>
@@ -214,7 +198,7 @@ export function FumePage() {
   const [waiting, setWaiting] = useState(false);
   // Fume's next message answers something she did (sent, answered, sent the brief): it comes into view from its top.
   const expecting = useRef(false);
-  // Messages before this index sit behind "Earlier" while a new campaign is started (WAY-17).
+  // Messages before this index sit behind "Earlier" while a new campaign is started.
   const [fold, setFold] = useState(0);
   // A card to bring into view once it is on the page (after unfolding, a jump, coming back).
   const [target, setTarget] = useState<{ id: string; offset?: number; smooth?: boolean; mark?: string } | null>(null);
@@ -224,7 +208,7 @@ export function FumePage() {
     setFollowState(id);
     keep(FOLLOW(workspaceId), id);
   };
-  // Round 13 (#15): what she opened from the chat, shown in the panel; (#13) the panel hidden, per viewer.
+  // What she opened from the chat, shown in the panel; and whether the panel is hidden, per viewer.
   const [opened, setOpenedState] = useState<ChatLink | undefined>(() => read<ChatLink>(OPENED(workspaceId)));
   const setOpened = (link: ChatLink | undefined) => {
     setOpenedState(link);
@@ -235,7 +219,7 @@ export function FumePage() {
     setHiddenState(h);
     keepPanel(h);
   };
-  // #20: /fume?plan=<campaignId> opens that plan in the panel; her words change it.
+  // /fume?plan=<campaignId> opens that plan in the panel; her words change it.
   const planParam = params.get("plan") ?? undefined;
   useEffect(() => {
     if (!planParam) return;
@@ -245,7 +229,7 @@ export function FumePage() {
   const openFull = useOpenFullPage();
   // She chose where her reply goes; it holds while what is open stays the same.
   const [replyChoice, setReplyChoice] = useState<{ threadId: Id; over: Id | undefined } | null>(null);
-  // A tapped answer: the composer takes the focus back once it is no longer busy (DTSK-20).
+  // A tapped answer: the composer takes the focus back once it is no longer busy.
   const refocus = useRef(false);
 
   const staff = Boolean(session.user.staffRole);
@@ -275,8 +259,8 @@ export function FumePage() {
     const latestTurn = new Map<Id, Id>();
     const latestPlan = new Map<Id, Id>();
     const lastSaid = new Map<Id, string>();
-    // Round 13 (#19): her tick answer to Fume's product question ("Hand Balm") is not repeated as her bubble; the
-    // question's card shows the product instead.
+    // Her tick answer to Fume's product question ("Hand Balm") is not repeated as her bubble; the question's card shows
+    // the product instead.
     const answers = new Map<Id, string>();
     const hidden = new Set<Id>();
     const lastIn = new Map<Id, FumeMessage>();
@@ -352,8 +336,8 @@ export function FumePage() {
   }, [fumeThreads, items, byId]);
   // The address names a campaign she came to answer; else what Fume last asked; else the talk about no campaign.
   const addressedOpen = threadId && open.some((o) => o.threadId === threadId) ? threadId : undefined;
-  // Round 10: the brief she just sent stays where her next words go while Fume writes its plan, so a line typed right
-  // after "Send to Fume" is about that campaign, not about another brief still open.
+  // The brief she just sent stays where her next words go while Fume writes its plan, so a line typed right after "Send
+  // to Fume" is about that campaign, not about another brief still open.
   const followThread =
     follow && byId.get(follow)?.stage === "plan" ? fumeThreads.find((t) => t.campaignId === follow)?.id : undefined;
   const autoReply = addressedOpen ?? followThread ?? open[0]?.threadId ?? general?.id;
@@ -383,9 +367,9 @@ export function FumePage() {
             : focus.stage === "plan"
               ? "plan"
               : "brief";
-  // #13: the panel she hid stays hidden (the head's toggle shows it again); a thing she opens shows it.
+  // The panel she hid stays hidden (the head's toggle shows it again); a thing she opens shows it.
   const shown = panel !== null && !hidden;
-  // #15: a link opens in the panel on a desk with room for it, else on its own page (with the way back).
+  // A link opens in the panel on a desk with room for it, else on its own page (with the way back).
   const openLink = (link: ChatLink) => {
     if (desk && roomy) {
       setOpened(opened && linkKey(opened) === linkKey(link) ? opened : link);
@@ -396,7 +380,7 @@ export function FumePage() {
     setOpened(undefined);
     if (planParam) setParams({}, { replace: true });
   };
-  // #20: the plan her words change: the one the address or the panel shows.
+  // The plan her words change: the one the address or the panel shows.
   const planFor =
     planParam ?? (opened?.kind === "plan" ? opened.campaignId : !opened && panel === "plan" ? focus?.id : undefined);
   const planNow = usePlan(planFor).data;
@@ -461,8 +445,8 @@ export function FumePage() {
     if (el) scroller.current?.reveal(el, options);
     return Boolean(el);
   };
-  /** A message from its top (its campaign's marker over it), or, when it carries buttons and is too tall to show
-   *  whole, from its buttons (DTSK-3). */
+  /** A message from its top (its campaign's marker over it), or, when it carries buttons and is too tall to show whole,
+   *  from its buttons. */
   const revealMessage = (m: FumeMessage, smooth?: boolean) =>
     reveal(layout.turns.has(m.id) ? turnAnchor(m.id) : anchor(m.id), { smooth, block: acts(m) ? "end" : "start" });
 
@@ -505,7 +489,7 @@ export function FumePage() {
 
   // Opening the chat. A new campaign: the composer, on its marker, the earlier talk folded. An address that names a
   // campaign (the bell, Home): that campaign's latest message, marked. Back from a card: where she was. Otherwise the
-  // newest item, from its top, its buttons above the composer. On a desk the composer has the focus (DLAY-4).
+  // newest item, from its top, its buttons above the composer. On a desk the composer has the focus.
   const addressedLatest = addressed ? layout.latest.get(addressed) : undefined;
   useEffect(() => {
     if (!ready) return;
@@ -597,7 +581,7 @@ export function FumePage() {
     );
 
   const submit = (words: string) => {
-    // #20: words that change the plan the panel shows go to the plan (a question still goes to the talk).
+    // Words that change the plan the panel shows go to the plan (a question still goes to the talk).
     if (
       !starting &&
       planFor &&
@@ -608,7 +592,7 @@ export function FumePage() {
       changePlan.mutate({ campaignId: planFor, text: words }, { onSuccess: () => sent() });
       return;
     }
-    // #17: "Make a Christmas campaign for Hand Balm" starts it, as New campaign does; not while she answers a brief.
+    // "Make a Christmas campaign for Hand Balm" starts it, as New campaign does; not while she answers a brief.
     const namesOne = (campaigns.data ?? []).some((c) => words.toLowerCase().includes(c.name.toLowerCase()));
     if (
       !starting &&
@@ -630,7 +614,7 @@ export function FumePage() {
     else say.mutate({ text: words, attachments }, { onSuccess: () => sent() });
   };
   // A question card is answered where it was asked, so the answer reaches that campaign's brief; her draft stays, and
-  // the focus goes back to the composer (DTSK-20).
+  // the focus goes back to the composer.
   const reply = (m: FumeMessage, words: string) => {
     refocus.current = true;
     answer.mutate({ threadId: m.threadId, text: words }, { onSuccess: () => sent(false) });
@@ -701,7 +685,7 @@ export function FumePage() {
                 {turned &&
                   (campaignId ? (
                     <Marker icon="megaphone" id={turnAnchor(m.id)} className="ui-chat-turn">
-                      {/* #15: the campaign opens beside the conversation (on a phone, its page with the way back) */}
+                      {/* the campaign opens beside the conversation (on a phone, its page with the way back) */}
                       <Link
                         to={`/campaigns/${campaignId}`}
                         onClick={(e) => {
@@ -816,7 +800,7 @@ export function FumePage() {
     </div>
   );
 
-  // #16: "@" names something for Fume; an empty composer offers a few questions.
+  // "@" names something for Fume; an empty composer offers a few questions.
   const mentions = useMentions({
     inputId: COMPOSER_ID,
     text,
@@ -843,7 +827,7 @@ export function FumePage() {
           <Button variant="quiet" size="sm" icon="x" onClick={cancel}>
             Cancel
           </Button>
-          {/* Her words go with her: the form reads them from the shared draft (TASK-9). */}
+          {/* Her words go with her: the form reads them from the shared draft. */}
           <Button variant="quiet" size="sm" icon="file-text" onClick={() => navigate("/campaigns/new")}>
             Write it yourself instead
           </Button>
@@ -874,7 +858,7 @@ export function FumePage() {
               : "Message to Fume"
         }
         inputId={COMPOSER_ID}
-        // "Send to Fume" is the brief's button (round 10); the composer sends a message, so it says only that.
+        // "Send to Fume" is the brief's button; the composer sends a message, so it says only that.
         sendLabel={starting ? "Start the campaign" : "Send the message"}
         attachments={picked}
         onRemoveAttachment={remove}
@@ -920,13 +904,13 @@ export function FumePage() {
             <div className="ui-chat">
               <ChatHead>
                 {!starting && jumpMenu}
-                {/* Quiet here: the composer's Send is the chat's one primary action (DTSK-21). */}
+                {/* Quiet here: the composer's Send is the chat's one primary action. */}
                 {canStart && !starting && (
                   <Button variant="quiet" size="sm" icon="plus" onClick={() => navigate("/fume?new=1")}>
                     New campaign
                   </Button>
                 )}
-                {/* #13: the panel hides and shows, like Claude's artifact panel; the choice is kept on this device. */}
+                {/* the panel hides and shows, like Claude's artifact panel; the choice is kept on this device */}
                 {panel && (
                   <Button
                     variant="quiet"
@@ -978,7 +962,7 @@ export function FumePage() {
               !starting && (talked.length > 0 || canStart) ? (
                 <>
                   {jumpMenu}
-                  {/* Secondary here: the composer's Send is the chat's one primary action (DTSK-21). */}
+                  {/* Secondary here: the composer's Send is the chat's one primary action. */}
                   {canStart && <StartCampaign quiet />}
                 </>
               ) : undefined
@@ -1025,8 +1009,8 @@ function when(at: string): string {
 }
 
 /** The quiet line at the top of the conversation: Fume is AI and says so (FLOWS §1.1; AI Act art. 50, F-D041; exact
- *  wording to counsel), and a person is brought in here when one is needed (FLOWS §21). Round 9 (DLOAD-11): one voice
- *  in the sentence, Fume's, in the third person. */
+ *  wording to counsel), and a person is brought in here when one is needed (FLOWS §21). One voice in the sentence,
+ *  Fume's, in the third person. */
 function AiLine() {
   return (
     <Marker icon="info">

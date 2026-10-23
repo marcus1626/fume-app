@@ -1,5 +1,5 @@
 // Creative viewer: full screen on Ink (design-system/components/viewer.css, behaviour from viewer.js).
-// DECIDED 13 Oct, round 8. Modal on Radix Dialog (focus trap, Escape, focus back to the creative you came from,
+// Modal on Radix Dialog (focus trap, Escape, focus back to the creative you came from,
 // the page stops scrolling); inline (in place on a page) as a region with the same screen and keys.
 // Keys inside: the arrows move, + and - zoom, 0 fits, I shows the info, F expands, Escape closes (inline:
 // Escape brings the tools back). A swipe of --ui-viewer-swipe moves on touch; past fit a drag pans; a double
@@ -479,10 +479,9 @@ export interface ViewerLayerProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * The review viewer's frame (PROPOSED 19 Oct 2026, UX review WAY-8): a modal layer over the page that opened it,
- * so the page and what was selected on it stay put underneath. Radix Dialog gives the focus trap, Escape and focus
- * back to the tile it came from. Nothing outside closes it: the layer covers the screen, and the only things
- * outside are the toasts, whose Undo must stay pressable.
+ * The review viewer's frame: a modal layer over the page that opened it, so the page and what was selected on it stay
+ * put underneath. Radix Dialog gives the focus trap, Escape and focus back to the tile it came from. Nothing outside
+ * closes it: the layer covers the screen, and the only things outside are the toasts, whose Undo must stay pressable.
  */
 export const ViewerLayer = forwardRef<HTMLDivElement, ViewerLayerProps>(function ViewerLayer(
   { label, onClose, onEscape, children, ...props },

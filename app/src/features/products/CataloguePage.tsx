@@ -1,8 +1,8 @@
-// Products (FLOWS §0 row 4, §3.1, §7 step 5): the customer's catalogue, image-led. Every product with its picture,
-// variants, category and collections, its state (verified, or it needs you) and who put it in: the Engine's
-// proposals from the website lie flat until someone opens the product and verifies its facts. Filter by category
-// (a tree) and by collection, search by name. Under the products, the collections: a campaign can take one whole,
-// and each can be its own delivery. A proposed collection gets Keep · Change · Remove.
+// Products (FLOWS §3.1, §7 step 5): the customer's catalogue, image-led. Every product with its picture, variants,
+// category and collections, its state (verified, or it needs you) and who put it in: what Fume read from the website
+// lies flat until someone opens the product and verifies its facts. Filter by category (a tree) and by collection,
+// search by name. Under the products, the collections: a campaign can take one whole, and each can be its own delivery.
+// A proposed collection gets Confirm · Change · Remove.
 import {
   Button,
   Icon,
@@ -293,7 +293,7 @@ export function CataloguePage() {
       </Query>
 
       {canEdit && (
-        // Round 6: one product starts with its kind; many come in by CSV.
+        // One product starts with its kind; many come in by CSV.
         <>
           <AddProductFlow
             open={adding}

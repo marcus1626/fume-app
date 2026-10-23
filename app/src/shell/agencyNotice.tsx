@@ -1,15 +1,12 @@
-// Round 11 (FLOWS §24.8; PROPOSED 20 Oct 2026): an example client's places in the preview. The mock is one brand deep
-// (LYSNE), so a summary client's own pages would show LYSNE's Brand DNA, products and chat under AURÉA's name. Instead
-// every place of a summary client shows this one notice, inside the agency's sidebar: the client's mark and name,
-// where it stands in one sentence, its current campaign and how far it is, its people, and the line that says only
-// LYSNE has the full example data, with one way on (Open LYSNE) and a quiet way back (All clients).
-// Round 13 AGENCY (robot note 10-agency, 22 Oct 2026; PROPOSED):
-// - Each place says its own (the robot saw the same Home under VEV's Campaigns, Check and Studio): Home keeps the
-//   summary; Campaigns shows the client's campaign; Check, Brand, Studio, Engine and Fume say what that place holds
-//   for this client, and the way on opens LYSNE's same place ("Open LYSNE’s Check").
-// - A client the agency has just added is new, not an example: "Fume is reading nordlys.no", and its first place is
-//   the Brand DNA.
-// - Each of the client's people has their role ("Can approve"), an invited one says so.
+// An example client's places in the preview (FLOWS §24.8). The mock is one brand deep (LYSNE), so a summary client's
+// own pages would show LYSNE's Brand DNA, products and chat under AURÉA's name. Instead every place of a summary client
+// shows a notice inside the agency's sidebar, with one way on (Open LYSNE) and a quiet way back (All clients):
+// - Home keeps the summary: the client's mark and name, where it stands, its current campaign and how far it is, its
+//   people, and the line that says only LYSNE has the full example data;
+// - Campaigns shows the client's campaign; Check, Brand, Studio, Engine and Fume say what that place holds for this
+//   client, and the way on opens LYSNE's same place ("Open LYSNE’s Check").
+// A client the agency has just added is new, not an example: "Fume is reading nordlys.no", and its first place is the
+// Brand DNA. Each of the client's people shows their role ("Can approve"); an invited one says so.
 import {
   Alert,
   AlertAction,

@@ -10,19 +10,17 @@
 // to the newest. The region is a polite live region, so each toast is read out.
 // Words: say what happened, the actor named ("3 creatives approved", "Delivery failed"), no exclamation marks.
 // Error: the icon alone is Rouge, the words say what went wrong. Never Amber, never green.
-// Round 8 (walk-through 19 Oct, MOB-19, ONB-17; PROPOSED 19 Oct 2026): a toast is for what happens out of sight or
-// what can be undone, never for a change the item already shows. It leaves after 4 s (8 s with an action or for an
-// error), leaves when the page changes (leave(): the app calls it on a change of path; a toast raised with the move,
-// one with an action and a loading one stay), shows its whole sentence (it wraps, never cut), and rises above whatever
-// sits at the foot of the screen: the tab bar, a floating action bar, a docked composer, a sheet's or dialog's footer,
-// or anything marked [data-ui-foot].
-// Round 9 (desktop review DTSK-19; PROPOSED 19 Oct 2026): on a desk (1024 px and wider) toasts sit at the bottom left
-// of the main column, 24 in from its edge (the sidebar's side), away from the composer's send and the viewer's Approve
-// at the centre. A screen can name where its toasts go instead: [data-ui-toast-anchor] on a column puts them at its
-// bottom left; [data-ui-toast-anchor="top"] at its top left (the viewer's comments panel). Up to three show; the same
-// message raised again while it shows does not stack a second toast: the open one takes the new words and starts its
-// time again. A toast never covers the control in use: what sits at the foot under it, and the element with focus
-// when it is low on the screen, push it up.
+// A toast is for what happens out of sight or what can be undone, never for a change the item already shows. It leaves
+// after 4 s (8 s with an action or for an error), leaves when the page changes (leave(): the app calls it on a change
+// of path; a toast raised with the move, one with an action and a loading one stay), shows its whole sentence (it
+// wraps, never cut), and rises above whatever sits at the foot of the screen: the tab bar, a floating action bar, a
+// docked composer, a sheet's or dialog's footer, or anything marked [data-ui-foot].
+// On a desk (1024 px and wider) toasts sit at the bottom left of the main column, 24 in from its edge (the sidebar's
+// side), away from the composer's send and the viewer's Approve at the centre. A screen can name where its toasts go
+// instead: [data-ui-toast-anchor] on a column puts them at its bottom left; [data-ui-toast-anchor="top"] at its top
+// left (the viewer's comments panel). The same message raised again while it shows does not stack a second toast: the
+// open one takes the new words and starts its time again. A toast never covers the control in use: what sits at the
+// foot under it, and the element with focus when it is low on the screen, push it up.
 import {
   createContext,
   useContext,

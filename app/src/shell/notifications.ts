@@ -1,13 +1,10 @@
 // The contract's notifications in the shape the notification components draw.
-// Round 9 (desktop review DWAY-11, DLOAD-4; PROPOSED 19 Oct 2026): Home is the one to-do list and its count the only
-// to-do count. A notification whose ask is already a row on Home ("Anna checked 6 creatives": the creatives row; "Fume
-// needs the Hand Balm claims": the question row; "Masters are ready": the download row) is news she has already been
-// given, so the bell and All notifications show it as read and do not count it. The bell then counts only what Home
-// does not say (seed: 1, "Anna is fixing one creative").
-// Round 10 (FLOWS §22.3, PROPOSED 20 Oct 2026): "The plan for Winter gifting is ready" opens the plan and is read while
-// Home has the plan's row. A notification that names a campaign (/campaigns/c-winter/plan) is matched to that
-// campaign's row, not to any row of the same kind; once its ask is answered (the plan approved, nothing waits on her in
-// that campaign) it stays read, so approving the plan never lights the bell.
+// Home is the one to-do list and its count the only to-do count. A notification whose ask is already a row on Home
+// ("Anna checked 6 creatives": the creatives row; "Fume needs the Hand Balm claims": the question row; "Masters are
+// ready": the download row) is news she has already been given, so the bell and All notifications show it as read and
+// do not count it. A notification that names a campaign (/campaigns/c-winter/plan) is matched to that campaign's row,
+// not to any row of the same kind; once its ask is answered (the plan approved, nothing waits on her in that campaign)
+// it stays read, so approving the plan never lights the bell.
 import type { NotificationData } from "@fume/ui";
 import { useMemo } from "react";
 import { useCampaigns, useNotifications, usePeople } from "../api/hooks";

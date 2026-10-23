@@ -1,7 +1,6 @@
-// One brand's boards (FLOWS §3.3, §4.2): the brand moodboard, one moodboard per campaign, idea boards and layouts.
-// Each opens the board itself (/studio/b/:workspaceId/boards/:boardId). Round 12 (UX review DLAY-18, PROPOSED 20 Oct
-// 2026): one grid while there are few (each card's meta line already says its kind); headed groups only once a kind
-// holds four boards or more.
+// One brand's boards (FLOWS §3.3, §4.2): the brand moodboard, one moodboard per campaign, idea boards and layouts. Each
+// opens the board itself (/studio/b/:workspaceId/boards/:boardId). One grid while there are few (each card's meta line
+// already says its kind); headed groups only once a kind holds four boards or more.
 import { PageHeader } from "@fume/ui";
 import { useParams } from "react-router-dom";
 import { useBrandWorkspace } from "../../api/hooks";

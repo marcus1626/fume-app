@@ -1,6 +1,6 @@
-// Look sources (FLOWS §18, PROPOSED 15 Oct 2026): every section that sets a look (Light, Camera, a section with a
-// brand preset) says where its look comes from, with the same four words at its head (five when the creative belongs
-// to a campaign with a look of its own, v5):
+// Look sources (FLOWS §18): every section that sets a look (Light, Camera, a section with a brand preset) says where
+// its look comes from, with the same four words at its head (five when the creative belongs to a campaign with a look
+// of its own):
 //   StudioSource        (Campaign ·) Brand · Fume · Own · Engine, a small segmented control
 //   StudioPresetPicker  the presets of the chosen source as rows (a picture or a colour, a name, a line)
 //   StudioSummary       the section's values in words, read-only, while a preset sets them

@@ -1,10 +1,9 @@
-// Fume's help under a question it asks (round 13, Marcus's video comments #6 and #7 of 21 Oct; PROPOSED 22 Oct 2026).
-// One component for the question sheet, the inline answer and the product check (the Hand Balm claims):
-// - #7 ("Kan ikke stå «Same as Night Body Oil» uten at man ser hva Night Body Oil sier"): a suggestion shows what it
-//   says, inline, under its name; pressed, it puts those words in the field.
-// - #6 ("Er det mulighet for noe templates her? Er dette hvis det ikke sto noe om det på nettsiden?"): when the brand's
-//   website did not say, Fume says so in one line and offers what this kind of product usually says. Each is a pill
-//   with its own words; pressed, it adds that line to the answer (one claim per line), pressed again it takes it out.
+// Fume's help under a question it asks, for the question sheet, the inline answer and the product check:
+// - A suggestion shows what it says, inline, under its name ("Same as Night Body Oil" alone is not enough); pressed, it
+//   puts those words in the field.
+// - When the brand's website did not say, Fume says so in one line and offers what this kind of product usually says.
+//   Each is a pill with its own words; pressed, it adds that line to the answer (one claim per line), pressed again it
+//   takes it out.
 import { Button, Icon } from "@fume/ui";
 import type { OpenQuestion } from "../../contract";
 

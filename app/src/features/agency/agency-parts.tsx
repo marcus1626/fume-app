@@ -1,7 +1,6 @@
-// Round 11 (FLOWS §24.3, PROPOSED 20 Oct 2026): the parts the agency's places share. A client's mark, who an agency
-// person is, opening a client from any of the agency's places (a summary client opens its Home, where the shell shows
-// its preview notice), and a campaign's one status sentence as the agency reads it: the agency checks, and creatives
-// it has checked wait on the client ("6 creatives with Maja"), never "to approve" (only the client approves, §24.2).
+// The parts the agency's places share (FLOWS §24.3): a client's mark, who an agency person is, opening a client, and a
+// campaign's status sentence as the agency reads it. The agency checks, and the creatives it checked wait on the client
+// ("6 creatives with Maja"), never "to approve": only the client approves (§24.2).
 import { Avatar, AvatarGroup, AvatarGroupCount, BadgeDot, cx } from "@fume/ui";
 import { useSession } from "../../api/hooks";
 import type { AgencyCampaignRow, AgencyClient, AgencyRole, Campaign, Id, User, Workspace } from "../../contract";
@@ -20,10 +19,8 @@ export function greeting(): string {
   return "Good evening";
 }
 
-// Round 13 AGENCY (Marcus #70, 22 Oct 2026: "Agency skal egentlig bare være ganske likt som vår egen side, admin,
-// expert, sånne ting"; PROPOSED): an agency's people have Fume's own roles, Admin, Expert and Operator. The contract's
-// seat stays "lead" or "creative"; the Admin is the lead, and a creative is an Expert, or an Operator when they run the
-// Engine (staffRole "operator", Sindre the producer).
+// An agency's people have Fume's roles: Admin, Expert and Operator. The contract's seat stays "lead" or "creative": the
+// lead is the Admin, and a creative is an Expert, or an Operator when they run the Engine (staffRole "operator").
 export type AgencyRoleName = "admin" | "expert" | "operator";
 export const agencyRoleWords: Record<AgencyRoleName, string> = {
   admin: "Admin",
@@ -137,8 +134,8 @@ export const nameOrYou = (user: User | undefined, me: User | undefined) =>
 /** The first name, for a column that only has room for it. */
 export const first = (user?: User) => (user ? firstName(user.name) : undefined);
 
-/** Round 13 AGENCY (robot note 11-agency-client: "4 wait for the expert", "made for the expert"): who checks, in the
- *  frame's words. Fume's expert in Fume; in an agency its own team, since no Fume expert checks an agency's work. */
+/** Who checks, in the frame's words: Fume's expert in Fume, the agency's own team in an agency (no Fume expert checks
+ *  an agency's work). */
 export function useCheckWords() {
   const agency = Boolean(useSession().data?.user.agency);
   return agency

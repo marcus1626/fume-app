@@ -1,7 +1,7 @@
-// Focus frame (design-system/components/focus-frame.css): Fume's own sign in UI, two corners and one point, drawn
-// with the Focus System v1.3 geometry (F-D059). PROPOSED 15 Oct 2026. The geometry is the same as
-// templates/lib/focus.mjs (the port of tools/canvas/tools/geo.py): corners sized from the frame's short side
-// (u = 5 % of it / 3, corner 11u, arms 2.5u), the point from its area (5 % of √(w × h)). Never draw a frame by hand.
+// Focus frame (design-system/components/focus-frame.css): Fume's own sign in UI, two corners and one point, drawn with
+// the Focus System v1.3 geometry (F-D059). The geometry is the same as templates/lib/focus.mjs (the port of
+// tools/canvas/tools/geo.py): corners sized from the frame's short side (u = 5 % of it / 3, corner 11u, arms 2.5u), the
+// point from its area (5 % of √(w × h)). Never draw a frame by hand.
 //   <div style={{ position: "relative" }}> … <FocusFrame point="focal" /></div>
 // The frame fills its positioned parent; it redraws when the parent changes size.
 import { useEffect, useRef, useState, type HTMLAttributes } from "react";

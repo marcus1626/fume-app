@@ -1,4 +1,4 @@
-// Marker: a place in a conversation (design-system/components/marker.css). DECIDED 13 Oct, round 8.
+// Marker: a place in a conversation (design-system/components/marker.css).
 // Space and a label, never a line. default: an icon and words at the start (read up to here, a run done);
 // separator: the words alone in the middle (a day); border: space under the words; isNew: new since you left,
 // in Ink, with an Ink count badge.

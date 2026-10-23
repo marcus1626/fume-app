@@ -1,12 +1,12 @@
-// Campaigns across the clients (FLOWS §24.3, round 11, PROPOSED 20 Oct 2026). Round 12 (UX review DLAY-9, DLOAD-1,
-// DLOAD-13): the same table as Fume's studio (features/studio/campaign-table.tsx): the cover, the campaign and its
-// one status sentence as the agency reads it (copy.campaignStatus, viewer "agency": "3 creatives to check",
-// "6 creatives to send to Maja", "6 creatives with Maja"), the client, the stage dots, the next date with its label,
-// In check and what is with the client. Under way first (what waits on the agency, then the soonest date), then Done.
-// The whole row opens it: a full example client opens that client and then the campaign; a summary client opens its
-// Home, which says it is an example. Pills above filter by client (?client=). The phone keeps rows.
-// Round 13 AGENCY (robot note 10-agency): the header's "to check" is Check's own number (its badge and the Overview's),
-// the product page's creatives included; the table's In check column keeps each campaign's.
+// Campaigns across the clients (FLOWS §24.3): the same table as Fume's studio (features/studio/campaign-table.tsx).
+// Each row has the cover, the campaign and its one status sentence as the agency reads it (copy.campaignStatus, viewer
+// "agency": "3 creatives to check", "6 creatives to send to Maja", "6 creatives with Maja"), the client, the stage
+// dots, the next date, In check and what is with the client. Under way first (what waits on the agency, then the
+// soonest date), then Done. The whole row opens it: a full example client opens that client and then the campaign; a
+// summary client opens its Home, which says it is an example. Pills above filter by client (?client=). The phone keeps
+// rows.
+// The header's "to check" is Check's own number (its badge and the Overview's), product pages included; the table's In
+// check column counts each campaign's.
 import { PageHeader, ToggleGroup, ToggleGroupItem } from "@fume/ui";
 import { useSearchParams } from "react-router-dom";
 import { useAgencyCampaigns, useAgencyClients } from "../../api/hooks";

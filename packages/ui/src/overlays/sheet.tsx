@@ -10,11 +10,11 @@
 // between snaps and down and away, and the handle (click, ArrowUp, ArrowDown) moves between snaps.
 // The sheet on a desk, the drawer on a phone: pick with useNarrowScreen().
 // Footers: one ui-btn--glass-white (or --glass-danger), the rest ui-btn--glass-clear (glass-one-white).
-// Round 8 (walk-through 19 Oct, MOB-14; PROPOSED 19 Oct 2026): on a touch screen the first focus is the title, never
-// the first field, so the keyboard does not rise over the footer before the sheet is read.
+// On a touch screen the first focus is the title, never the first field, so the keyboard does not rise over the
+// footer before the sheet is read.
 //
-// Round 9: THE RIGHT PANEL (DLAY-15, DWAY-5, DWAY-4; PROPOSED 19 Oct 2026). On a desk, anything with a form or more
-// than about three fields opens as a panel on the right, never as a centred dialog: the page stays in view on the left.
+// The right panel. On a desk, anything with a form or more than about three fields opens as a panel on the right,
+// never as a centred dialog: the page stays in view on the left.
 //   <Sheet open={open} onOpenChange={setOpen}>
 //     <SheetContent side="right" size="lg" aria-describedby={undefined}>      size md 440 (default) or lg 520
 //       <SheetHeader><SheetTitle>Add a product</SheetTitle><SheetDescription>…</SheetDescription></SheetHeader>

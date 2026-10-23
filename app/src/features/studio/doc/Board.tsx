@@ -1,18 +1,16 @@
 // The middle of the desk (FLOWS §9.1): the board with the picked version large (fit or 100 %, side by side with the
 // version before it), the layers of a Design creative on top, the Engine bar under it, and the versions strip. The
 // Engine never talks in its bar: it shows what it changed ("The Engine changed Hair length 40 → 65").
-// Round 12 (UX review 20 Oct, PROPOSED 20 Oct 2026):
-// - DLAY-6: the creative takes the board. The view tools sit on a glass rail at the board's left edge (icons, their
-//   names in tooltips), the Engine bar is docked in its own row under the board, and nothing floats over the
-//   picture; the rail also hides both panels (⌘\). The version is named once, in the strip.
-// - DTASK-18: the Engine bar's change card lists each part of the instruction: what it changed, and for a part it
-//   did not read, why and the change it would make if asked (Yes). Enter on the card keeps and renders; Esc undoes.
-// - DLOAD-15: a version whose product details read wrong is never "Clean": the strip says "1 flag · size reads
-//   200 ml"; the Engine bar's two buttons say what they do (Send, Render).
-// Round 13 (#59, Marcus: "can you pick several versions and compare, or compare with the real product?"): Compare on
-// the rail starts with the picked version and the one before; while it is on, a tap on a version in the strip adds it
-// to the board or takes it off (up to four side by side). "Compare with the real product" puts the product's own
-// photo (its packshot) beside the creative.
+// - The creative takes the board. The view tools sit on a glass rail at the board's left edge (icons, their names in
+//   tooltips), the Engine bar is docked in its own row under the board, and nothing floats over the picture; the rail
+//   also hides both panels (⌘\). The version is named once, in the strip.
+// - The Engine bar's change card lists each part of the instruction: what it changed, and for a part it did not read,
+//   why and the change it would make if asked (Yes). Enter on the card keeps and renders; Esc undoes.
+// - A version whose product details read wrong is never "Clean": the strip says "1 flag · size reads 200 ml"; the
+//   Engine bar's two buttons say what they do (Send, Render).
+// - Compare on the rail starts with the picked version and the one before; while it is on, a tap on a version in the
+//   strip adds it to the board or takes it off (up to four side by side). "Compare with the real product" puts the
+//   product's own photo (its packshot) beside the creative.
 import {
   Button,
   Glass,
@@ -59,10 +57,10 @@ import { placementOf, SafeZones, versionRatio } from "./formats";
 
 const ratio = { feed: "4 / 5", square: "1 / 1", story: "9 / 16" } as const;
 
-/** A document's one name (DLOAD-8): a creative by copy.creativeName ("Master 3 · Feed 4:5"); a model or a reference
- *  by its own name. */
+/** A document's one name: a creative by copy.creativeName ("Master 3 · Feed 4:5"); a model or a reference by its own
+ *  name. */
 export function documentName(doc: CreativeDocument, mode?: StudioMode, productName?: string) {
-  // The title first, as Check names the same creative (DLOAD-8: one name in the Studio, Check and the toast).
+  // The title first, as Check names the same creative: one name in the Studio, Check and the toast.
   const own = doc.title || doc.slot || "";
   return mode && mode.output !== "creative"
     ? own
@@ -126,12 +124,12 @@ export function Board({
   /** Both panels hidden (⌘\). */
   bare: boolean;
   onToggleBare: () => void;
-  /** r13 #59: the versions on the board side by side (empty: not comparing); the strip adds and removes them. */
+  /** The versions on the board side by side (empty: not comparing); the strip adds and removes them. */
   compare: string[];
   onCompare: (ids: string[]) => void;
   /** The product's own photo, to compare the creative with. */
   realProduct?: { name: string; image: string };
-  /** r13 #64: while the Engine works on the creative, this takes the Engine bar's place (Wait · Take over). */
+  /** While the Engine works on the creative, this takes the Engine bar's place (Wait · Take over). */
   lock?: ReactNode;
 }) {
   const [zoom, setZoom] = useState<"fit" | "full">("fit");
@@ -159,7 +157,7 @@ export function Board({
   const placement = mode?.output === "creative" ? placementOf(doc.specs, placements) : undefined;
   const tokens = useDetailTokens(doc.specs.productId).data ?? [];
   const hasProduct = Boolean(doc.specs.productId) && mode?.output === "creative";
-  // r13 #56: a new creative starts with no product; it renders once one is picked
+  // A new creative starts with no product; it renders once one is picked
   // (Free renders without one: it may be a mood picture)
   const needsProduct =
     Boolean(mode?.uses.includes("product")) && doc.studio === "render" && mode?.id !== "m-free" && !doc.specs.productId;
@@ -465,7 +463,7 @@ function EngineBar({
   );
 }
 
-/** The Engine's change, shown before it renders (FLOWS §9.1), part by part (DTASK-18). */
+/** The Engine's change, shown before it renders (FLOWS §9.1), part by part. */
 function ChangeCard({
   doc,
   edit,
@@ -628,7 +626,7 @@ export function Versions({
         No versions yet. Each render becomes a version here; nothing is ever overwritten.
       </p>
     );
-  // While comparing (#59), a tap adds a version to the board or takes it off; otherwise it picks.
+  // While comparing, a tap adds a version to the board or takes it off; otherwise it picks.
   const comparing = compare.length > 0 && Boolean(onCompare);
   const toggle = (id: string) =>
     onCompare?.(compare.includes(id) ? compare.filter((x) => x !== id) : [...compare, id].slice(-COMPARE_MAX));

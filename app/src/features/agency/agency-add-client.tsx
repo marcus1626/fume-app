@@ -1,8 +1,7 @@
-// Round 11 (FLOWS §24.3, PROPOSED 20 Oct 2026): Add a client, the agency lead's right panel. The brand's name, its
-// website (Fume reads the brand from it and starts the Brand DNA), where its creatives run, and the client's people
-// to invite (name, email, what they can do; another person is one quiet pill away). The footer's "Add the client"
-// adds it; the panel closes, a toast says what Fume does next, and the new client lands in the list. The panel's
-// state is in the address (?add=1), so Back closes it and a link opens it. ⌘↵ adds; Esc closes.
+// Add a client, the agency lead's right panel (FLOWS §24.3): the brand's name, its website (Fume reads the brand from
+// it and starts the Brand DNA), where its creatives run, and the client's people to invite. Added, the panel closes, a
+// toast says what Fume does next, and the new client lands in the list. The panel's state is in the address (?add=1),
+// so Back closes it and a link opens it. ⌘↵ adds; Esc closes.
 import {
   Button,
   Field,

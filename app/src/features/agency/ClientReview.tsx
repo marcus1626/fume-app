@@ -1,11 +1,8 @@
-// Round 11 CLIENT FLOW (FLOWS §24.2, §24.5; PROPOSED 20 Oct 2026): a campaign's review as the agency sees it. The
-// agency never approves a creative, so there is no selection and no Approve here. What was approved shows with who
-// recorded it ("Maja approved · recorded by you"); what was sent, and the client link, sit beside on a desk.
-// Round 12 AGENCY (UX review DLOAD-5, DTASK-15; brief r12 SENDING; PROPOSED 20 Oct 2026): a checked creative reaches
-// the client only when the agency sends it, so the review has the two states in two groups, each named once: "To send"
-// (checked, not sent: the header's Ink "Send to Maja") and "With Maja" (sent; she approves them), then "Changes asked
-// for" and "Approved". Record an approval is a visible secondary pill in the header while anything waits on the
-// client (no "…" menu); its panel starts with nothing ticked.
+// A campaign's review as the agency sees it (FLOWS §24.2, §24.5). The agency never approves a creative, so there is no
+// selection and no Approve here. A checked creative reaches the client only when the agency sends it, so the groups are
+// "To send" (checked, not sent), "With Maja" (sent; she approves them), "Changes asked for" and "Approved". An approval
+// the agency recorded shows who recorded it ("Maja approved · recorded by you"). What was sent, and the client link,
+// sit beside on a desk.
 import { Button, CreativeGrid, CreativeTile } from "@fume/ui";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";

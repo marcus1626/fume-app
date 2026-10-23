@@ -69,7 +69,7 @@ export function CreativeCheck({
       time={
         long && v.checkedAt && state === "checked" && !label
           ? time(v.checkedAt)
-          : undefined /* round 8 REVIEW (LOAD-10): no clock time on tiles; only the long line keeps it */
+          : undefined /* no clock time on tiles; only the long line keeps it */
       }
       dateTime={v.checkedAt}
       wording={long ? "long" : "short"}

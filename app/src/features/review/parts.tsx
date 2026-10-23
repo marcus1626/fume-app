@@ -1,12 +1,10 @@
 // The review screens' parts: a checked creative as a tile you can open or leave out; the creatives she marked "Needs
-// changes" and their one "Start the changes" (UX review 19 Oct, TASK-5; round 9, DTSK-15: at once, with Undo); and
-// the two direction decisions (take one forward, or tell Fume why none fits).
-// Round 13 (Marcus #33, #34; PROPOSED 21 Oct 2026): one place to write. Comments (with pins) post at once and her team
-// and the expert see them; per creative she decides Approve or Needs changes, and a creative that needs changes takes
-// its open comments as its change list. "Start the changes" sends the marked creatives of a campaign as ONE change
-// request, the comments read at that moment, with the package's counting, the last-one and none-left dialogs and Undo.
-// The separate change form ("What should change", "Send these comments with it") is gone. In a brand an agency runs,
-// the client's change request goes to the agency, and the toast says so (FLOWS §24.5).
+// changes" and their one "Start the changes"; and the two direction decisions (take one forward, or tell Fume why none
+// fits). One place to write (FLOWS §26.3): comments (with pins) post at once and her team and the expert see them; per
+// creative she decides Approve or Needs changes, and a creative that needs changes takes its open comments as its
+// change list. "Start the changes" sends the marked creatives of a campaign as one change request, the comments read at
+// that moment, with the package's counting, the last-one and none-left dialogs and Undo. In a brand an agency runs, the
+// client's change request goes to the agency, and the toast says so (FLOWS §24.5).
 import {
   Button,
   CheckMark,
@@ -47,14 +45,14 @@ import type { ChangeDraft, ChangeTray } from "./tray";
 
 // ─── A checked creative in review ───────────────────────────────────────────
 
-/** "Feed A2 · 4:5", and the version once there is more than one: the tile's caption (DTSK-11). */
+/** "Feed 2 · 4:5", and the version once there is more than one: the tile's caption. */
 export const tileCaption = (c: Creative) =>
   `${labelOf(c)} · ${copy.format[c.format].ratio}${c.current.number > 1 ? ` · version ${c.current.number}` : ""}`;
 
 /**
- * Two targets and nothing else (MOB-21): the picture opens the viewer, the round corner checkbox (the circle itself,
- * 44 px to a finger, round 13) leaves it out of the selection (shift-click selects a range, DTSK-10). A creative
- * marked "Needs changes" says so where its check was, and is never in the selection.
+ * Two targets and nothing else: the picture opens the viewer, the round corner checkbox (the circle itself, 44 px to a
+ * finger) leaves it out of the selection (shift-click selects a range). A creative marked "Needs changes" says so where
+ * its check was, and is never in the selection.
  */
 export function ReviewTile({
   creative,
@@ -129,11 +127,11 @@ export const changeList = (comments: ReviewComment[], creativeId: Id) =>
 // ─── Start the changes, once, at once ───────────────────────────────────────
 
 /**
- * One "Start the changes" for the campaign's marked creatives (DTSK-15, round 13). It sends straight away, with Undo
- * in the toast for 10 s: Undo takes it back and marks the creatives again. Each creative's change list is its open
- * comments at that moment (their pins go with them), or "The product itself is off". Only two cases stop to ask first,
- * each in a short dialog: the last change request in the package (the title says so), and none left (then Fume, or
- * the agency, is asked about one more).
+ * One "Start the changes" for the campaign's marked creatives. It sends straight away, with Undo in the toast for 10 s:
+ * Undo takes it back and marks the creatives again. Each creative's change list is its open comments at that moment
+ * (their pins go with them), or "The product itself is off". Only two cases stop to ask first, each in a short dialog:
+ * the last change request in the package (the title says so), and none left (then Fume, or the agency, is asked about
+ * one more).
  */
 export function useSendChanges({
   campaign,
@@ -260,7 +258,7 @@ export function useSendChanges({
 
 /** The one action's words: "Start the changes", with how many when there is more than one. */
 export const startWords = (n: number) => (n > 1 ? `Start the changes (${n})` : "Start the changes");
-/** Before round 13 the action was "Send it"; kept for old call sites. */
+/** The older name of startWords, kept for older call sites. */
 export const sendWords = startWords;
 
 /**

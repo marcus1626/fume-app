@@ -1,8 +1,7 @@
-// The scene library (round 13, Marcus #57 "only four choices?" and #63 "templates, upload a background or pick an
-// existing one: scenes, backgrounds, surfaces, references"). One catalogue for a mode's Scene section: Fume's scene
-// templates, the brand's own scenes and backgrounds (its background presets and what was uploaded), surfaces, props
-// and the brand's references. Every entry is a value of the mode's own variables (scene, surface, props), so the
-// Engine, the version notes and Undo read it like any other choice. Mock data: the pictures are the demo set.
+// The scene library: one catalogue for a mode's Scene section, with Fume's scene templates, the brand's own scenes and
+// backgrounds (its background presets and what was uploaded), surfaces, props and the brand's references. Every entry
+// is a value of the mode's own variables (scene, surface, props), so the Engine, the version notes and Undo read it
+// like any other choice. Mock data: the pictures are the demo set.
 import type { BrandAssetsView, StudioMode } from "../../../contract";
 
 export type LibraryKind = "scene" | "background" | "surface" | "prop" | "reference";

@@ -1,6 +1,5 @@
-// Round 11 (FLOWS §24.3, PROPOSED 20 Oct 2026): Invite someone to the agency, the lead's small right panel: their
-// email and their role (Creative, or Agency lead). In the preview it sends nothing: a toast says the invitation went.
-// Round 13 (Marcus #70): the roles are Fume's own, Expert, Operator or Admin.
+// Invite someone to the agency, the lead's small right panel (FLOWS §24.3): their email and one of Fume's roles
+// (Expert, Operator, Admin). In the preview it sends nothing: a toast says the invitation went.
 import {
   Button,
   Choice,

@@ -1,6 +1,7 @@
 // StudioSwatch: one colour from a row of round swatches (FLOWS §9.4). The chosen colours come first, each group under
-// whose they are: a campaign's look first ("Black Friday", v5), then the brand's ("LYSNE"); then the mode's others. The colour is data: it reaches the CSS through the
-// --swatch custom property, never a class. Arrow keys move between swatches (a radio group).
+// whose they are: a campaign's look first ("Black Friday"), then the brand's ("LYSNE"); then the mode's others. The
+// colour is data: it reaches the CSS through the --swatch custom property, never a class. Arrow keys move between
+// swatches (a radio group).
 //   <StudioSwatch label="Background" value="#F4EFE8" options={…} presets={[{ name: "LYSNE packshot white",
 //     hex: "#F4EFE8", brand: "LYSNE" }]} onChange={set} />
 import { useRef, type CSSProperties, type KeyboardEvent } from "react";

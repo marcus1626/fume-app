@@ -1,11 +1,11 @@
-// Every word the app shows about states, in one place (ARCHITECTURE §5), so the copy rules can run on all of it:
+// Every word the app shows about states, in one place (ARCHITECTURE §5), so the copy rules apply to all of it:
 // "creative", never "file"; the expert checks ("In check", "Checked by Anna"); only the customer approves; name who
 // acts; no exclamation marks. Sentences that belong to one screen stay in that screen, in the same voice.
 import type { Campaign, CampaignStage, CampaignState, Channel, Format, PackageKind, VersionState } from "../contract";
 
-/** One word for each state, everywhere (walk-through 15 Oct): "Waiting on you" is the only name for a decision that
- *  waits on the customer, on a chip, a group title or a card. Use campaignStatus() where the campaign is at hand: it
- *  says "Waiting on you" only while something really does. */
+/** One word for each state, everywhere: "Waiting on you" is the only name for a decision that waits on the customer, on
+ *  a chip, a group title or a card. Use campaignStatus() where the campaign is at hand: it says "Waiting on you" only
+ *  while something really does. */
 export const waitingOnYou = "Waiting on you";
 
 export const campaignState: Record<CampaignState, string> = {
@@ -30,8 +30,8 @@ export const campaignNext: Partial<Record<CampaignState, string>> = {
   closed: "Start the next campaign",
 };
 
-/** Round 13 (#21, #36): the six stages' words (features/campaigns/stages.ts); directions and masters are Masters,
- *  variants and formats are Creatives. */
+/** The six stages' words (features/campaigns/stages.ts): directions and masters are Masters, variants and formats are
+ *  Creatives. */
 export const stage: Record<CampaignStage, string> = {
   brief: "Brief",
   plan: "Plan",
@@ -100,26 +100,23 @@ export const approvedBy = (name: string) => `${name} approved`;
 export const count = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 export const creatives = (n: number) => count(n, "creative");
 
-/** Where a campaign stands, in ONE sentence (round 9, UX review DLOAD-3, PROPOSED 19 Oct 2026). Every place that shows
- *  it calls this (Home, the Campaigns list, the campaign header, ⌘K, the collection, the chat cards, the bell), so a
- *  campaign never has two statuses: "6 creatives to approve", "2 questions for you", "A brief to send", "The plan is
- *  ready to approve", "Fume is writing the plan · by Thu 15 Oct", "The Engine is making the 3 masters · by Thu 22
- *  Oct", "3 creatives in check", "8 creatives delivered". Never "Running", "In production" or "Brief approved"; the
- *  stage has its own line (the step dots).
- *  Round 10 (FLOWS §22.3, PROPOSED 20 Oct 2026): she SENDS her brief ("A brief to send"); Fume writes the plan, the
- *  expert checks it, she approves it, and only then does the Engine make anything. A campaign in the plan stage says
- *  where its plan stands (`waits.plan`), never that directions are being made.
- *  The numbers come from the campaign: its counts and its `waits` (the backend fills them); `waits` passed here wins,
- *  for a page that knows more. `waiting` is true while it waits on the customer; `on` says who acts next ("expert"
- *  while the expert checks). `{ date: false }` leaves out "· by <date>" where the date has a column of its own.
- *  "by" is the date Fume works to for the step under way; the go-live is `campaignLive()` ("Live from Sat, 17 Oct"). */
+/** Where a campaign stands, in one sentence. Every place that shows it calls this (Home, the Campaigns list, the
+ *  campaign header, ⌘K, the collection, the chat cards, the bell), so a campaign never has two statuses: "6 creatives
+ *  to approve", "A brief to send", "The plan is ready to approve", "Fume is writing the plan · by Thu 15 Oct", "3
+ *  creatives in check". Never "Running", "In production" or "Brief approved"; the stage has its own line (the step
+ *  dots).
+ *  In the plan stage it says where the plan stands (`waits.plan`), never that directions are being made (FLOWS §22.3).
+ *  The numbers come from the campaign's counts and `waits` (the backend fills them); `waits` passed here wins, for a
+ *  page that knows more. `waiting` is true while it waits on the customer; `on` says who acts next. `{ date: false }`
+ *  leaves out "· by <date>" where the date has a column of its own. "by" is the date Fume works to for the step under
+ *  way; the go-live is `campaignLive()`. */
 export function campaignStatus(
   c: CampaignStatusInput,
   waits?: Partial<CampaignWaits>,
   options?: CampaignStatusOptions,
 ): CampaignStatus {
-  // Round 12 (DLOAD-1): one sentence per viewer. Without a viewer: the customer's, or the agency's under the agency's
-  // frame (setStatusReader, round 11).
+  // One sentence per viewer. Without a viewer: the customer's, or the agency's under the agency's frame
+  // (setStatusReader).
   const viewer: StatusViewer =
     options?.viewer ??
     (options?.asCustomer ? "customer" : (statusReader.viewer ?? (statusReader.agency ? "agency" : "customer")));
@@ -170,7 +167,7 @@ function customerStatus(
       return you(c.state === "draft" ? "A brief to finish" : "Fume has a question for you");
     case "in_review":
       if (w.directions > 0) return you(`${count(w.directions, "direction")} to choose from`);
-      // Round 12: only what was sent to her (never a checked creative not sent yet, `waits.toSend`).
+      // Only what was sent to her counts, never a checked creative not sent yet (`waits.toSend`).
       if (counts.checked - Math.min(counts.checked, w.toSend ?? 0) > 0)
         return you(`${creatives(counts.checked - Math.min(counts.checked, w.toSend ?? 0))} to approve`);
       if (counts.inCheck > 0) return expert(counts.inCheck);
@@ -193,8 +190,7 @@ function customerStatus(
   }
 }
 
-// ── round 9 campaign ──
-// The one status sentence (campaignStatus above) and the go-live, PROPOSED 19 Oct 2026 (UX review DLOAD-3, DLOAD-10).
+// Types and helpers for campaignStatus above, and the go-live.
 import { due as dueDay } from "../lib/time";
 import type { CampaignWaits } from "../contract";
 
@@ -206,16 +202,14 @@ export interface CampaignStatus {
   words: string;
   /** True while a decision or an answer waits on the customer. */
   waiting: boolean;
-  /** Who acts next: the customer, Fume, Fume's expert (creatives in check), the agency's client (round 11), or nobody. */
+  /** Who acts next: the customer, Fume, Fume's expert (creatives in check), the agency's client, or nobody. */
   on: "you" | "fume" | "expert" | "client" | "done";
 }
 
-// ── round 11 agencies ──
-// FLOWS §24.2 (PROPOSED 20 Oct 2026): an agency's people read the same one sentence the agency's way. The creatives
-// they checked wait on the client ("6 creatives with Maja", never "to approve": only the client approves); the
-// creatives in check are theirs to check. The shell says who reads (setStatusReader) from the session.
-// Round 12: the reader can also carry the viewer and the agency's name, for the lists that call campaignStatus(c) with
-// no options (the client of an agency: { agency: false, viewer: "client", agencyName: "Brygga Studio" }).
+// An agency's people read the same sentence the agency's way (FLOWS §24.2): the creatives they checked wait on the
+// client ("6 creatives with Maja", never "to approve": only the client approves), and the creatives in check are theirs
+// to check. The shell sets the reader from the session; it can also carry the viewer and the agency's name, for the
+// lists that call campaignStatus(c) with no options.
 let statusReader: StatusReader = { agency: false };
 export interface StatusReader {
   agency: boolean;
@@ -236,15 +230,15 @@ function due(iso: string): string {
 }
 
 /** What is being made while nothing waits on the customer. The plan is Fume's (it writes it; nothing is generated
- *  before she approves it); masters and variants are creatives (the Engine makes them, rule DLOAD-7). "Fume is making
- *  3 directions" stays only for a campaign that ran before the plan and still sits on its directions. */
+ *  before she approves it); masters and variants are creatives, which the Engine makes. "Fume is making 3 directions"
+ *  stays only for a campaign that ran before the plan and still sits on its directions. */
 export function campaignMaking(c: CampaignStatusInput): string {
   if (c.state === "revision")
     return c.stage === "plan" || c.stage === "brief" ? planStatus.changes_asked : "Fume is making your changes";
   switch (c.stage) {
     case "masters": {
       const n = c.waits?.masters;
-      // round 13 (robot note 03): only the masters under way are counted, so "1 master" when the others wait
+      // Only the masters under way are counted, so "1 master" when the others wait.
       return n
         ? n === 1
           ? "The Engine is making 1 master"
@@ -263,10 +257,9 @@ export function campaignMaking(c: CampaignStatusInput): string {
   }
 }
 
-// ── round 10 FLOW ──
-// The plan wherever a campaign shows (FLOWS §22.3, PROPOSED 20 Oct 2026): the status sentence's words for each state,
-// and the plan's own state as a short meta (⌘K, the staff QA list). She sends the brief, Fume writes the plan, the
-// expert checks it ("Checked by Anna"), she approves it ("Approve the plan"); the Engine only makes creatives.
+// The plan wherever a campaign shows (FLOWS §22.3): the status sentence for each state, and the plan's state as a short
+// meta (⌘K, the staff Check list). She sends the brief, Fume writes the plan, the expert checks it, she approves it;
+// the Engine only makes creatives.
 import type { PlanState } from "../contract";
 
 /** The status sentence while the plan is the step under way (campaignStatus adds " · by Thu 15 Oct"). */
@@ -290,7 +283,7 @@ export const planState: Record<PlanState, string> = {
 /** "The plan for Winter gifting is ready": Home, the bell and the chat say it in these words (FLOWS §22.3). */
 export const planReady = (campaign: string) => `The plan for ${campaign} is ready`;
 
-/** The go-live, the one meaning of a campaign's date (DLOAD-10): "Live from Sat, 17 Oct"; "Went live 17 Oct" after. */
+/** The go-live, the one meaning of a campaign's date: "Live from Sat, 17 Oct"; "Went live 17 Oct" after. */
 export function campaignLive(c: Pick<Campaign, "dueAt" | "state">): string | undefined {
   if (!c.dueAt) return undefined;
   return c.state === "delivered" || c.state === "closed"
@@ -298,11 +291,10 @@ export function campaignLive(c: Pick<Campaign, "dueAt" | "state">): string | und
     : `Live from ${dueDay(c.dueAt)}`;
 }
 
-// ── round 9 SHELL ──
 /**
- * The person named, as the signed-in person reads it (DLOAD-18): "you" when it is them, otherwise their first name.
- * `start` is for the start of a sentence ("You approved it on 3 Oct"); mid-sentence it is "you" ("Chosen by you on
- * 8 Oct"). Others keep their names ("Jonas approved"). Pair it with useIsMe() from shell/people.ts:
+ * The person named, as the signed-in person reads it: "you" when it is them, otherwise their first name. `start` is for
+ * the start of a sentence ("You approved it on 3 Oct"); mid-sentence it is "you" ("Chosen by you on 8 Oct"). Others
+ * keep their names ("Jonas approved"). Pair it with useIsMe() from shell/people.ts:
  *   const isMe = useIsMe();
  *   `${copy.byYou(approver.name, isMe(approver.id), true)} approved it on 3 Oct`   → "You approved it on 3 Oct"
  *   `Chosen by ${copy.byYou(user.name, isMe(user.id))} on 8 Oct`                    → "Chosen by you on 8 Oct"
@@ -310,12 +302,10 @@ export function campaignLive(c: Pick<Campaign, "dueAt" | "state">): string | und
 export const byYou = (name: string, isMe: boolean, start = false): string =>
   isMe ? (start ? "You" : "you") : name.trim().split(/\s+/)[0] || name;
 
-// ── round 9 forms ──
-// DLOAD-19 (PROPOSED 19 Oct 2026): the channel says what it is, "Display ads", not "Display".
+// The channel says what it is: "Display ads", not "Display".
 channel.display = "Display ads";
 
-// ── round 12 numbers ──
-// ONE STATUS PER CAMPAIGN, PER VIEWER (UX review DLOAD-1, PROPOSED 20 Oct 2026) and ONE NAME PER CREATIVE (DLOAD-8).
+// One status per campaign and viewer, and one name per creative (FLOWS §25.4).
 
 /** Who reads the status sentence: the customer (Maja in Fume), Fume's people, an agency's people, or an agency's
  *  client. The person who acts reads "you"; everyone else reads that person's name. */
@@ -337,13 +327,13 @@ export interface CampaignStatusOptions {
 }
 
 /**
- * The sentence for everyone but the customer (DLOAD-1). Fume's people and an agency's people check creatives and send
- * them as a set ("6 creatives to send to Maja"; then "6 creatives with Maja"); in Fume the expert checks the plan and
- * the customer approves it ("Check the plan", then "The plan waits on Maja"); in an agency the agency checks the plan
- * and sends it, and the client approves it and the creatives (round 13, Marcus's card 23 Oct 2026: "Check the plan",
- * then "The plan waits on Maja"), so the client reads the agency's work as a fact ("Brygga Studio is planning") and
- * the plan, once sent, as hers ("The plan is ready to approve"). `on` says who acts: "you" (the reader), "client" (the customer or the client, when someone
- * else reads), "fume" (the maker: Fume, the Engine, or the agency for its client), "expert" or "done".
+ * The sentence for everyone but the customer. Fume's people and an agency's people check creatives and send them as a
+ * set ("6 creatives to send to Maja", then "6 creatives with Maja"). In Fume the expert checks the plan and the
+ * customer approves it; in an agency the agency checks the plan and sends it, and the client approves it and the
+ * creatives (FLOWS §26.8). So the client reads the agency's work as a fact ("Brygga Studio is planning") and the plan,
+ * once sent, as hers ("The plan is ready to approve").
+ * `on` says who acts: "you" (the reader), "client" (the customer or the client, when someone else reads), "fume" (the
+ * maker: Fume, the Engine, or the agency for its client), "expert" or "done".
  */
 function viewerStatus(
   c: CampaignStatusInput,
@@ -395,7 +385,7 @@ function viewerStatus(
       case "in_check":
         return you(`Check the plan${by}`);
       case "ready":
-        // Round 13 (Marcus's card, 23 Oct 2026): an agency checks its plans and sends them; the client approves them.
+        // An agency checks its plans and sends them; the client approves them (FLOWS §26.8).
         return agency && !w.planChecked ? you(`Check the plan${by}`) : them(`The plan waits on ${who}`);
     }
   }
@@ -430,7 +420,7 @@ function viewerStatus(
   }
 }
 
-/** "6 creatives to send", "6 creatives with Maja": the sending words, the same in Fume and in an agency (brief r12). */
+/** "6 creatives to send", "6 creatives with Maja": the sending words, the same in Fume and in an agency. */
 export const send = {
   /** The checker's list, for a count: "6 to send". */
   toSend: (n: number) => `${n} to send`,
@@ -442,18 +432,18 @@ export const send = {
   withThem: (name: string) => `With ${name}`,
 } as const;
 
-/** The three dates a campaign has, each with its label, never a bare "Due" (DLOAD-13). */
+/** The three dates a campaign has, each with its label, never a bare "Due". */
 export const dateLabel = { plan: "Plan by", delivery: "Delivery", live: "Goes live", delivered: "Delivered" } as const;
 
 const SHORT_LABEL = /^(Feed|Square|Story) [A-Z]?(\d+)$/;
 
 /**
- * ONE NAME PER CREATIVE (DLOAD-8): the only way to label a creative, in the chat, tiles, review, the viewer, the client
- * link, Check, Home, the Studio, Engine output, ⌘K and deliveries. A creative the plan named keeps that name with its
- * format: "Master 1 · Feed 4:5", "The candle alone · Feed 4:5", "Master 1 in Story · Story 9:16". A creative made
- * before plans existed is its product and its number among the campaign's creatives in that format: "Night Body Oil ·
- * Feed 3" (its title is "Feed 3"). Never "A3", "Variant 2" or "candidate, branch 2": the lineage stays in the Studio's
- * version strip. It reads a name it made before as it is, so a name never doubles.
+ * One name per creative: the only way to label a creative, in the chat, tiles, review, the viewer, the client link,
+ * Check, Home, the Studio, Engine output, ⌘K and deliveries. A creative the plan named keeps that name with its format:
+ * "Master 1 · Feed 4:5", "Master 1 in Story · Story 9:16". A creative made before plans existed is its product and its
+ * number among the campaign's creatives in that format: "Night Body Oil · Feed 3" (its title is "Feed 3"). Never "A3",
+ * "Variant 2" or "candidate, branch 2": the lineage stays in the Studio's version strip. A name it made before is read
+ * as it is, so a name never doubles.
  */
 export function creativeName(c: { title: string; format: Format; productName?: string; planName?: string }): string {
   const f = format[c.format];
@@ -485,8 +475,8 @@ export function creativeLabel(c: { title: string; format: Format; planName?: str
   return SHORT_LABEL.test(last) ? last : parts.slice(0, -1).join(" · ") || name;
 }
 
-/** A campaign's next date, always with its label (DLOAD-13): "Plan by" while Fume writes or the expert checks the plan,
- *  the plan's "Delivery" until it is delivered, then "Delivered"; "Goes live" only when no delivery date is known.
+/** A campaign's next date, always with its label: "Plan by" while Fume writes or the expert checks the plan, the plan's
+ *  "Delivery" until it is delivered, then "Delivered"; "Goes live" only when no delivery date is known.
  *  `{ delivery: true }` skips "Plan by" (the Deliveries list). */
 export function campaignDate(
   c: CampaignStatusInput & Pick<Campaign, "dueAt">,
@@ -519,13 +509,13 @@ function dayMonth(iso: string): string {
   return `${d.getUTCDate()} ${["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][d.getUTCMonth()]}`;
 }
 
-/** "2 of 11 approved", or "Planned: 9 creatives" before any is made (DLOAD-21: never "0 of 0"). */
+/** "2 of 11 approved", or "Planned: 9 creatives" before any is made (never "0 of 0"). */
 export function approvedOf(approved: number, total: number, planned?: number): string {
   if (total > 0) return `${approved} of ${total} approved`;
   return planned ? `Planned: ${creatives(planned)}` : "No creatives yet";
 }
 
-/** What waits for a check, as one count with its parts (DLOAD-2): "6 to check: 1 plan, 5 creatives". */
+/** What waits for a check, as one count with its parts: "6 to check: 1 plan, 5 creatives". */
 export function toCheck(plans: number, creativesWaiting: number): string {
   const total = plans + creativesWaiting;
   if (!total) return "Nothing to check";

@@ -1,5 +1,4 @@
-// Round 13 (Marcus's video comment #4, 22 Oct 2026; PROPOSED): the voice is much more than three lines (Fume's own
-// came out of a 37-page brand process), so it has five parts:
+// The brand's voice, in five parts:
 //   - Identity: who we are, what we believe, the personality.
 //   - How we speak: tone traits with a do and a don't each, words we use and avoid, sentences, formality, languages.
 //   - Rules: what every line must and must never do, and the claims the brand may make.

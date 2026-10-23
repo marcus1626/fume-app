@@ -1,13 +1,13 @@
-// Upload box (design-system/components/dropzone.css, behaviour from dropzone.js). DECIDED 13 Oct, round 8.
+// Upload box (design-system/components/dropzone.css, behaviour from dropzone.js).
 // A well you drop on or press (a real button opens the picker), a row per creative on its way in with its
 // progress, a tile per creative that made it, and an overlay while creatives are dragged over: the seat turns
 // Ink and the words say where they go. No shimmer and no Amber where creatives land. Errors are words.
 // The screen owns the uploads: `items` are what it is uploading or holds; onFiles hands it the creatives that
 // pass the type and size check. Creatives that do not pass get a row here with the reason, until removed.
-// Round 9 (desktop review DTSK-22, PROPOSED 19 Oct 2026): `dropAnywhere` makes the whole page the drop target while
-// the zone is on it (onboarding step 1): files dragged anywhere over the window light the zone up with its "Drop to
-// add to …" words, and a drop anywhere adds them. An upload that is not a picture or a video shows what it is (a
-// document, a typeface, a folder for a zip), never a picture icon.
+// `dropAnywhere` makes the whole page the drop target while the zone is on it (onboarding step 1): files dragged
+// anywhere over the window light the zone up with its "Drop to add to …" words, and a drop anywhere adds them. An
+// upload that is not a picture or a video shows what it is (a document, a typeface, a folder for a zip), never a
+// picture icon.
 import {
   forwardRef,
   useCallback,

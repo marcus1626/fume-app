@@ -1,12 +1,11 @@
-// The frame every onboarding step shares (FLOWS §7; round 8, UX review ONB-1, ONB-4, ONB-10, ONB-12, ONB-16): Fume's
-// lockup on its own bar (the onboarding has no sidebar), where she is in the four steps (and, in step 3, in its five
-// parts), held at the top as she scrolls, the step itself, and its way forward pinned to the bottom of the screen.
-// Four steps, named as what happens: 1 Your brand, 2 Fume reads it, 3 Confirm what Fume found, 4 Your taste.
-// A new step (or part) opens at its top with focus on its title; Back and forward keep the browser's own place.
-// The furthest step and part she reached is kept on the workspace, so she can leave and continue where she left off:
-// the logo, step 1's "Continue" and the root (/welcome?resume) all go there.
-// Round 9 (desktop review DTSK-5, DTSK-7, PROPOSED 19 Oct 2026): while finds are open, step 3 says how many are left
-// ("3 · 12 left") instead of a tick, on every step; Enter, outside a control, presses the step's forward pill.
+// The frame every onboarding step shares (FLOWS §7): Fume's lockup on its own bar (the onboarding has no sidebar),
+// where she is in the four steps (and, in step 3, in its five parts), held at the top as she scrolls, the step itself,
+// and its way forward pinned to the bottom of the screen. Four steps, named as what happens: 1 Your brand, 2 Fume reads
+// it, 3 Confirm what Fume found, 4 Your taste. A new step (or part) opens at its top with focus on its title; Back and
+// forward keep the browser's own place. The furthest step and part she reached is kept on the workspace, so she can
+// leave and continue where she left off: the logo, step 1's "Continue" and the root (/welcome?resume) all go there.
+// While finds are open, step 3 says how many are left ("3 · 12 left") instead of a tick. Enter, outside a control,
+// presses the step's forward pill.
 import { cx, WelcomeProgress, type WelcomeProgressPart } from "@fume/ui";
 import { useEffect, useRef, type ReactNode } from "react";
 import { Link, useLocation, useNavigate, useNavigationType } from "react-router-dom";
@@ -79,8 +78,8 @@ export function useOpenAtTop() {
 }
 
 /**
- * Enter presses the step's forward pill (DTSK-7) when nothing else wants it: not in a field, not on a button or a
- * link (they have their own Enter), not while a dialog or a menu is open.
+ * Enter presses the step's forward pill when nothing else wants it: not in a field, not on a button or a link (they
+ * have their own Enter), not while a dialog or a menu is open.
  */
 export function useEnterForward(go: (() => void) | undefined) {
   const ref = useRef(go);
@@ -167,7 +166,7 @@ export function StepFrame({
   const board = useBrandBoard();
   const current = stepIndex(step);
   const furthest = Math.max(current, progress ? stepIndex(progress.step) : 0);
-  // Step 3 says how many finds are left once she has reached it, instead of a tick (DTSK-5).
+  // Step 3 says how many finds are left once she has reached it, instead of a tick.
   const identity = board.data?.identity;
   const open = identity && furthest >= stepIndex("review") ? openTotal(identity) : 0;
   const steps = onboardingSteps.map((s, i) => ({

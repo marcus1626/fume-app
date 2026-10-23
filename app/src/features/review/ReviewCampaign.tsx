@@ -1,34 +1,19 @@
-// A campaign's review (ARCHITECTURE §6.2, §6.4; UX review 19 Oct, WAY-8, WAY-9, TASK-4, TASK-5, TASK-20, MOB-10,
-// MOB-21): a state of the campaign at /campaigns/:id/review, with Campaigns lit and the back arrow to the campaign
-// (or wherever she came from). The three directions side by side, or the checked creatives, every one selected to
-// start with, so "Approve 6" is one press; it acts at once, with Undo in the toast. On a phone the Approve bar takes
-// the tab bar's place while the selection is open. A creative opens in the one viewer as a layer over this page
-// (?c=<id>), and Swipe through is a layer too (?swipe=1), so the selection stays as she left it and the phone's back
-// closes the layer. "Ask for changes" collects into one change request for the set, sent once. When nothing more
-// waits here the page says what is next. /review/:campaignId is the old address and sends you on.
-// Round 9, the desktop (PROPOSED 19 Oct 2026, UX review DTSK-10, DLAY-2, DLOAD-12, DWAY-2, DTSK-9, DTSK-2, DTSK-15):
-// tiles of at least 240 (creative.css); shift-click selects a range and ⌘A selects all; the words say how many are
-// selected. "Ask for changes" opens the creative in the viewer with the change form in its right-hand panel (?ask=1),
-// never a dialog over the page. "Send it" sends at once, with Undo. Swipe through is the phone's: on a desk with a
-// mouse it is not offered, and its address opens the viewer, which has the same speed with A, C and ← →.
-// Round 10 (FLOWS §22, PROPOSED 20 Oct 2026): a campaign in the plan stage has no directions to choose here; the review
-// says where its plan stands ("The plan is ready to approve") and opens the plan. A brief she can send opens the Plan
-// tab, where she sends it to Fume.
-// Round 11 CLIENT FLOW (FLOWS §24.2, §24.5, PROPOSED 20 Oct 2026): in a brand an agency runs, the agency's people never
-// see Approve on a creative. Their review has no selection: the checked creatives are "Ready for Maja", each saying
-// whether it waits on her ("Waiting on Maja"); the header's one Ink action is Send to client (a right panel, with the
-// client link), and its quiet More menu holds Record an approval. ?send=1 (from the campaign's page) opens the panel.
-// Swipe through is the customer's phone way to approve, so its address brings them back here. The client's own people
-// (Maja) review as before.
-// Round 12 AGENCY (UX review DLOAD-5, DTASK-15; brief r12 SENDING; PROPOSED 20 Oct 2026): the agency's review names the
-// two states of a checked creative once each, "To send" and "With Maja"; the Ink is "Send to Maja" while anything is not
-// sent ("Send again", a white pill, after), and Record an approval is a white pill beside it, no longer in More. The
-// meta leaves out "Maja approves": the groups say it.
-// Round 13 (Marcus #29, #33, #34; PROPOSED 21 Oct 2026): the review lights Review in the sidebar (WorkspaceShell). No
-// change form and no "Send it": a creative she marks "Needs changes" in the viewer takes its open comments as its change
-// list, and the marked creatives sit above the grid with one "Start the changes" (parts.tsx, ChangesSection); when every
-// creative has an answer the section says so and its pill is the page's Ink. The selection and its bar are shared with
-// the Review place (select.tsx).
+// A campaign's review (ARCHITECTURE §6.2, §6.4): a state of the campaign at /campaigns/:id/review, with Review lit in
+// the sidebar and the back arrow to the campaign (or wherever she came from); /review/:campaignId is the old address
+// and sends you on. The checked creatives, every one selected to start with, so "Approve 6" is one press; it acts at
+// once, with Undo in the toast (the selection and its bar are select.tsx, shared with the Review place). Tiles are at
+// least 240 (creative.css). A creative opens in the one viewer as a layer over this page (?c=<id>), and Swipe through
+// is a layer too (?swipe=1), so the selection stays as she left it and the phone's back closes the layer. Swipe through
+// is the phone's: on a desk with a mouse it is not offered, and its address opens the viewer, which has the same speed
+// with its keys.
+// A creative she marks "Needs changes" in the viewer takes its open comments as its change list; the marked creatives
+// sit above the grid with one "Start the changes" (parts.tsx, ChangesSection), and when every creative has an answer
+// the section says so and its pill is the page's Ink. When nothing more waits here the page says what is next. A
+// campaign in the plan stage has nothing to review yet: the page says where its plan stands and opens the plan.
+// In a brand an agency runs the agency's people never see Approve (FLOWS §24.2): their review has no selection, names
+// the two states of a checked creative once each ("To send", "With Maja"), and its Ink is "Send to Maja" while anything
+// is not sent ("Send again", a white pill, after), with Record an approval as a white pill beside it. ?send=1 (from the
+// campaign's page) opens the Send panel. The client's own people review as the customer does.
 import { Button, CreativeGrid, PageHeader, useNarrowScreen } from "@fume/ui";
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useLocation, useParams, useSearchParams } from "react-router-dom";
@@ -55,13 +40,13 @@ import { ReviewViewer } from "./ViewerPage";
 type People = ReturnType<typeof directory>;
 type Rights = ReturnType<typeof rights>;
 
-/** A desk: a wide screen and a mouse. Swipe through is not offered there (decision 3, DWAY-2). */
+/** A desk: a wide screen and a mouse. Swipe through is not offered there. */
 export const DESK = "(min-width: 1024px) and (pointer: fine)";
 
 export function ReviewCampaign() {
   const { campaignId } = useParams<"campaignId">();
   const { pathname, search } = useLocation();
-  // The old address (/review/:campaignId, from links and notifications made before 19 Oct)
+  // The old address (/review/:campaignId, from older links and notifications)
   if (pathname.startsWith("/review/")) return <Navigate to={`/campaigns/${campaignId}/review${search}`} replace />;
   return <CampaignReview campaignId={campaignId!} />;
 }
@@ -257,7 +242,7 @@ function Decision({
   );
 }
 
-// ─── The agency's review (round 11) ─────────────────────────────────────────
+// ─── The agency's review ────────────────────────────────────────────────────
 
 /** The review for the agency's people in a client brand: Send to Maja and Record an approval, never Approve. */
 function AgencyReviewScreen({ view }: { view: CampaignView }) {
@@ -362,7 +347,7 @@ function AgencyReviewScreen({ view }: { view: CampaignView }) {
   );
 }
 
-// ─── The plan (round 10) ────────────────────────────────────────────────────
+// ─── The plan ───────────────────────────────────────────────────────────────
 
 /** A campaign in the plan stage: nothing to review yet. Where the plan stands, in the status sentence's words, and the
  *  way to it; nothing is made before she approves it. */
@@ -396,15 +381,15 @@ function PlanNext({ view }: { view: CampaignView }) {
 
 // ─── When nothing more waits here ───────────────────────────────────────────
 
-/** The end of the review never dead-ends (TASK-20): the next thing that waits on her, and Home. A question opens
- *  the one question sheet right here. */
+/** The end of the review never dead-ends: the next thing that waits on her, and Home. A question opens the one question
+ *  sheet right here. */
 function WhatNext({ view }: { view: CampaignView }) {
   const waiting = useWaitingOnYou();
   const session = useSession().data;
   const [asking, setAsking] = useState(false);
   const next = waiting.items.find((w) => !w.href.includes(view.campaign.id));
-  // Round 12 AGENCY (DTASK-20): a delivery says what she does there ("download Autumn launch’s masters", "Download"),
-  // and what is still in check says who checks it ("3 more come once Brygga Studio has checked them").
+  // A delivery says what she does there ("download Autumn launch’s masters", "Download"), and what is still in check
+  // says who checks it ("3 more come once Brygga Studio has checked them").
   const download = next?.kind === "download";
   const checker = session?.workspace.agencyId && !session.user.agency ? (session.agencyName ?? "the agency") : "Fume";
   const inCheck = next?.campaignId === view.campaign.id ? view.campaign.counts.inCheck : 0;
@@ -535,8 +520,8 @@ function CreativesDecision({
   const checkers = [...new Set(creatives.map((c) => c.current.checkedBy).filter(Boolean))].map((id) => people.name(id));
   const approver = view.approver.name.split(" ")[0]!;
 
-  // "Anna checked these 6. All are selected; click a circle to leave one out." (DLOAD-12): the words follow the
-  // selection, so they and the bar never disagree.
+  // "Anna checked these 6. All are selected; click a circle to leave one out.": the words follow the selection, so they
+  // and the bar never disagree.
   const checked = checkers.length
     ? `${checkers.join(" and ")} checked ${total === 1 ? "this one" : `these ${total}`}. `
     : "";

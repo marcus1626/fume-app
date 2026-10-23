@@ -1,11 +1,8 @@
 // The calendar's parts (calendar-plan.css): the month and the week (weeks of seven days with campaign bars across
-// them), the agenda list, the "Ready to plan" tray, and the creative that follows the pointer while it is dragged.
-// Round 8 (LOAD-18, WAY-19, MOB-23): every creative under its customer name; a delivery opens that delivery; a finger
-// reads "Tap".
-// Round 9 (desktop review 19 Oct, DLAY-14, DLOAD-16; PROPOSED 19 Oct 2026): a planned creative on a day shows its
-// thumbnail, its short unique name ("Night Body Oil · Feed A2", review/names.ts) on up to two lines, and the time; the
-// placement is in its tooltip and its name for screen readers. The tray has no Plan pill per creative: a creative is
-// dragged onto a day, or clicked to pick its day. Each campaign starts closed as one row, "Autumn launch · 2 to plan".
+// them), the agenda list, the "Ready to plan" tray, and the creative that follows the pointer while it is dragged. A
+// planned creative on a day shows its thumbnail, its short unique name (review/names.ts) on up to two lines, and the
+// time; the placement is in its tooltip and its accessible name. In the tray each campaign starts closed as one row,
+// "Autumn launch · 2 to plan"; a creative is dragged onto a day, or clicked to pick its day.
 import {
   Collapsible,
   CollapsibleContent,
@@ -254,7 +251,7 @@ function EntryChip({ entry, actions, large }: { entry: CalendarEntry; actions: C
     const where = placement?.name ?? "A placement";
     const title = actions.nameOf(entry);
     // The part that tells it apart leads ("Feed A2"), what it shows follows ("Night Body Oil"), so a narrow day never
-    // cuts the one word that makes the name unique (DLOAD-16). The whole name and the placement are in the tooltip.
+    // cuts the one word that makes the name unique. The whole name and the placement are in the tooltip.
     const parts = title.split(" · ");
     const short = parts.length > 1 ? parts[parts.length - 1]! : title;
     const subject = parts.length > 1 ? parts.slice(0, -1).join(" · ") : undefined;
@@ -523,7 +520,7 @@ export function ReadyTray({
       ))}
       <p className="ui-plan-later">
         <Icon name="info" />
-        {/* Round 13 (#38): the channels it publishes to, and Connect for the others, are in the dialog */}
+        {/* the channels it publishes to, and Connect for the others, are in the dialog */}
         <span>
           Planned posts go out on the channels you connect: Instagram, Facebook, Meta ads, TikTok and Pinterest.
         </span>

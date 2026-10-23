@@ -1,5 +1,5 @@
-// The keys of a confirm queue (round 9, DWAY-13, DTSK-14): ← → step between items when the focus is not in a field,
-// ⌘↵ (Ctrl+Enter) confirms, Esc leaves a field first (onto its card, tabIndex -1) and then the queue (what Back does). ↑ ↓ live on the list itself
+// The keys of a confirm queue: ← → step between items when the focus is not in a field, ⌘↵ (Ctrl+Enter) confirms, Esc
+// leaves a field first (onto its card, tabIndex -1) and then the queue (what Back does). ↑ ↓ live on the list itself
 // (CheckQueueList). A dialog, sheet, menu or the palette on top keeps its own keys. Never an arrow to decide.
 import { useEffect, useRef } from "react";
 

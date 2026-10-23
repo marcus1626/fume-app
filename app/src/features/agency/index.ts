@@ -1,4 +1,4 @@
-// Round 11 (FLOWS §24): the agency's places and the client link (loaded on first open, see App.tsx).
+// The agency's places and the client link (FLOWS §24), loaded on first open (see App.tsx).
 export { AgencyHomePage } from "./AgencyHomePage";
 export { AgencyClientsPage } from "./AgencyClientsPage";
 export { AgencyCampaignsPage } from "./AgencyCampaignsPage";

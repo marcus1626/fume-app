@@ -1,15 +1,13 @@
-// Import products (round 7, Marcus 16 Oct, decided points 2 and 3; PROPOSED): one button, three sources. From your
-// website (Fume reads the product pages, the sitemap and a Shopify or WooCommerce feed), from a CSV (Fume
-// maps the columns to Fume's fields and asks only about the ones it is unsure of, with its guesses filled in), from
-// an unsorted zip (pictures, PDFs, spec sheets, tech packs: Fume groups the files into products, proposes the
-// kind and pulls the data). While it reads: what it reads now in shimmer words, the counts, the last few steps. Then
-// "What Fume found" (FoundReview, shared with the brand update), and after it the products in the catalogue.
-// Round 8 (walk-through 19 Oct, TASK-6; PROPOSED): the main action says what it does, "Add 2 to the catalogue" (it
-// never approved anything), and after it one Ink pill, "Confirm them now", opens the confirm queue: one product at a
-// time, two taps each, instead of opening every product's page.
-// Round 9 (desktop review 19 Oct, DLAY-15, DTSK-18, DLOAD-1, DLOAD-7; PROPOSED): each source opens as the right panel on
-// a desk (the grid stays in view; a sheet from the bottom on a phone), and so do Change and Merge. Fume reads, sorts
-// and finds; the Engine only makes creatives. One verb each: Confirm, Change, Later.
+// Import products: one button, three sources.
+// - From your website: Fume reads the product pages, the sitemap and a Shopify or WooCommerce feed.
+// - From a CSV: Fume maps the columns to its fields and asks only about the ones it is unsure of, with its guesses
+//   filled in.
+// - From an unsorted zip (pictures, PDFs, spec sheets, tech packs): Fume groups the files into products, proposes the
+//   kind and pulls the data.
+// While it reads: what it reads now in shimmer words, the counts, the last few steps. Then "What Fume found"
+// (FoundReview, shared with the brand update), whose action says what it does, "Add 2 to the catalogue" (it approves
+// nothing), and after it one Ink pill, "Confirm them now", opens the confirm queue. Each source opens as the right
+// panel on a desk, and so do Change and Merge. Fume reads, sorts and finds; the Engine only makes creatives.
 import {
   Button,
   Dropzone,
@@ -120,7 +118,7 @@ export function ImportSourceDialog({
   function submit(e: FormEvent) {
     e.preventDefault();
     if (!source) return;
-    // Round 13 (robot note 05): «lysne.no» is enough; the https:// is added for her
+    // «lysne.no» is enough; the https:// is added for her
     const site = /^https?:\/\//i.test(url.trim()) ? url.trim() : `https://${url.trim()}`;
     start.mutate(source === "website" ? { source, url: site } : { source, file: file ?? undefined }, {
       onSuccess: () => close(),

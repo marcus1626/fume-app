@@ -1,13 +1,9 @@
-// Taste (ARCHITECTURE §4.2): what the brand looks like when words run out. Fume reads the pictures she picks and
-// passes on, and the reason weighs more than the pick. Owner, approver and member teach and add; a viewer reads.
-// Round 8 (UX review LOAD-12, MOB-11, PROPOSED 19 Oct 2026): taste is taught with the same deck as the onboarding, one
-// card at a time on its own screen: a pair is a tap on the picture that is more you, a single picture is swiped right
-// ("This is us") or left ("Not us"), with the two pills too, and "Why?" is optional chips after the pick. Every answer
-// is saved on the tap. "Teach Fume your taste" opens it; how sure Fume is reads as one sentence, not five bars.
-// Round 9 (desktop review DLOAD-1, DLOAD-6, DLOAD-22, DLAY-15; PROPOSED 19 Oct 2026): one pair of words for taste,
-// "This is us" / "Not us", in the lists, the add form and its toast; the moodboard is named once (a pill beside
-// Teach Fume your taste), not as a section of its own over the same pictures; what Fume learned last is said on the
-// lessons page and after a sitting, not on the tab; "Taste Map" is "Taste"; Add a reference opens as the right panel.
+// Taste (ARCHITECTURE §4.2): what the brand looks like when words run out. Fume reads the pictures she picks and passes
+// on, and the reason weighs more than the pick. Owner, approver and member teach and add; a viewer reads.
+// Taste is taught with the onboarding's deck, one card at a time on its own screen: a pair is a tap on the picture that
+// is more you, a single picture is swiped right ("This is us") or left ("Not us"), and "Why?" is optional chips after
+// the pick. Every answer is saved on the tap. How sure Fume is reads as one sentence. One pair of words for taste
+// everywhere: "This is us" / "Not us". The moodboard is named once, as a pill beside Teach Fume your taste.
 import {
   Button,
   Choice,
@@ -216,8 +212,8 @@ const reasonsFor = (card: TasteDeckCard, answer: TasteDeckAnswer) =>
       : yesReasons;
 
 /**
- * One sitting, about two minutes: Part 1, the pairs (the onboarding's still open, then training pairs), and Part 2,
- * the single pictures (round 13, #5: the two parts named, each with what it teaches; #47: "Neither" in a pair).
+ * One sitting, about two minutes: Part 1, the pairs (the onboarding's still open, then training pairs, with "Neither"),
+ * and Part 2, the single pictures.
  */
 const SITTING = 8;
 function sittingOf(pairs: TastePair[], cards: TasteCard[], brand: string): TasteDeckCard[] {

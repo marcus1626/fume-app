@@ -1,5 +1,5 @@
-// An older address that now lives inside one of the four places (UX review 15 Oct, §2.3): it sends you on and keeps
-// what the address said (/calendar?d=2026-10-20 opens that day in Campaigns' calendar view).
+// An older address that lives inside one of the places: it sends you on and keeps what the address said
+// (/calendar?d=2026-10-20 opens that day in Campaigns' calendar view).
 import { Navigate, useLocation, useParams } from "react-router-dom";
 
 export function Redirect({ to, add }: { to: string; add?: Record<string, string> }) {
@@ -10,7 +10,7 @@ export function Redirect({ to, add }: { to: string; add?: Record<string, string>
   return <Navigate to={`${to}${query ? `?${query}` : ""}${hash}`} replace />;
 }
 
-/** /products/:id now lives at /brand/products/:id (walk-through 19 Oct, WAY-11). */
+/** /products/:id lives at /brand/products/:id. */
 export function ProductRedirect() {
   const { productId } = useParams<"productId">();
   return <Redirect to={`/brand/products/${productId}`} />;

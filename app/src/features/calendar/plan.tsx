@@ -1,11 +1,8 @@
-// Planning one creative on the calendar (FLOWS §21): the day, the time and the placement, in a small dialog. On a
-// desk a drag onto a day plans it straight away (with the placement its format fits and 09:00), and "Change" opens
-// this dialog; on a phone, "Plan" opens it. A planned post opens it too, to move it, change it or take it off.
-// Round 13 (Marcus's comment #38; PROPOSED 22 Oct 2026): first the channel (Instagram, Facebook, Meta ads, TikTok,
-// Pinterest, or Email and web), then its placement. A channel the brand has not connected says so, with Connect
-// (channels.ts; the mock connects at once).
-// Round 13 (#37): the day and the time are @fume/ui's DateField and TimeField ("Sat 17 Oct 2026", 24-hour slots every
-// 15 minutes), never the browser's date and time inputs, which lit the part being edited in system blue.
+// Planning one creative on the calendar (FLOWS §21), in a small dialog: first the channel, then its placement, the day
+// and the time. On a desk a drag onto a day plans it straight away (with the placement its format fits and 09:00), and
+// "Change" opens this dialog; on a phone, "Plan" opens it. A planned post opens it too, to move it, change it or take
+// it off. A channel the brand has not connected says so, with Connect (channels.ts). The day and the time are
+// @fume/ui's DateField and TimeField, never the browser's inputs (FLOWS §26.7).
 import {
   Button,
   DateField,
@@ -108,7 +105,7 @@ function PlanForm({
   const connected = useConnected();
   const [channelId, setChannelId] = useState(() => channelOf(placement).id);
   const channel = CHANNELS.find((c) => c.id === channelId) ?? channelOf(placement);
-  // The channels with placements, and this channel's placements (#38)
+  // The channels with placements, and this channel's placements.
   const channels = CHANNELS.filter((c) =>
     placements.some(
       (p) => c.groups.includes(p.group) || (c.id === "other" && !CHANNELS.some((x) => x.groups.includes(p.group))),

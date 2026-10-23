@@ -1,34 +1,23 @@
-// Write the brief yourself (FLOWS §12; Marcus 15 Oct: "mulighet for å unngå Fume AI chat og bare legge inn brief som
-// bestilling også, rent manuelt"). Round 8 (UX review 19 Oct: LOAD-5, TASK-2, TASK-3, TASK-7, TASK-9, WAY-16): short.
-// Round 9 (desktop review 19 Oct: DTSK-12, DLOAD-10, DLOAD-20, DTSK-20, DLAY-13; PROPOSED 19 Oct 2026):
-// - ONE commit. The form shows everything the brief holds (product, goal, audience, message, channels, formats,
-//   creatives with what is left in the package, market).
-// Round 10 (PROPOSED 20 Oct 2026, FLOWS §22): she SENDS the brief, never approves it. "Send to Fume" orders the brief
-//   and sends it in one step; Fume writes the plan from it, the expert checks it, and she approves the plan before
-//   anything is made (the footer says so). She lands on the campaign's Plan tab, where Fume is writing the plan.
-//   Someone who may not send it (a member) hands it to the approver instead ("Send to Maja").
-// - One rule for "done", the same as the plan page's brief, the chat and the mock's sendBrief: briefGaps (goal, audience,
-//   message) plus a product, a channel, a format and a number of creatives the package holds. The button is never
-//   greyed out: pressing it with something missing says what, in place, and puts the cursor on the first one; the
+// Write the brief yourself (FLOWS §12, §26.2): a plain form for a customer who prefers not to chat.
+// - One commit. The form shows everything the brief holds (product, goal, audience, message, channels, formats,
+//   creatives with what is left in the package, market). She sends the brief, never approves it: "Send to Fume" orders
+//   the brief and sends it in one step, and she lands on the campaign's plan, which opens with its data. Someone who
+//   may not send it (a member) hands it to the approver instead ("Send to Maja").
+// - One rule for "done", the same as the plan page's brief, the chat and the mock's sendBrief: briefGaps (goal,
+//   audience, message) plus a product, a channel, a format and a number of creatives the package holds. The button is
+//   never greyed out: pressing it with something missing says what, in place, and puts the cursor on the first one; the
 //   footer says how many lines are left.
 // - One set of names (briefLabel in brief-lines.tsx): the labels are the brief's own (Goal, Product, Audience, …), the
 //   plain question under the three that need it.
-// - Fume reads the first line: the products it names, the channels ("on Instagram" is Organic social), who it is for,
-//   a name. Formats follow the channels and the creatives follow the formats until she sets them herself. Fume's
-//   suggestion for Audience and Message shows once the goal is written, never as a placeholder (DLOAD-20).
-// - Desktop: the cursor starts in Goal, Enter never sends (only the button or ⌘↵ does), and the commit sits in a footer
-//   pinned to the foot of the content column. On a phone it floats above the tab bar.
+// - Fume reads the first line: the products it names, the channels ("on Instagram" is Organic social), who it is for, a
+//   name. Formats follow the channels and the creatives follow the formats until she sets them herself. Fume's
+//   suggestion for Audience and Message shows once the goal is written, never as a placeholder.
+// - On a desk the cursor starts in Goal, Enter never sends (only the button or ⌘↵ does), and the commit sits in a
+//   footer pinned to the foot of the content column. On a phone it floats above the tab bar.
 // - The draft is kept for the visit (sessionStorage), and the first line is shared with the Fume chat through
 //   "fume-campaign-draft" = {name?, goal?, text?}, so switching between the two ways never loses what she wrote.
-// Round 13 (Marcus's video comments #22, #23, #24, robot note 03; PROPOSED 22 Oct 2026; brief-tools.tsx):
-// - "Start from" at the top: Fume's templates and hers ("Like Autumn launch"); picking one fills the form.
-// - "Alternatives" for the message, and for the whole brief: three from Fume, again with what she wants changed.
-// - Inspiration (folded, optional): pictures she adds or picks from her boards, and links. The pictures start the
-//   campaign's moodboard (and are the brief's references); the links go to Fume with the brief.
-// - Sent, the plan opens at once (its data fetched before she gets there, so no spinner first). The expert's check of
-//   the plan is optional now, so the toast no longer says the expert checks it.
-// Round 13 (#37): the go-live day is @fume/ui's DateField ("Sat 17 Oct 2026" and a glass month, Clear while it holds a
-//   day), not the browser's date input.
+// - "Start from", "Alternatives" and Inspiration are brief-tools.tsx. The go-live day is @fume/ui's DateField, not the
+//   browser's date input.
 import {
   Accordion,
   AccordionContent,
@@ -144,7 +133,7 @@ const blank: Draft = {
   touched: [],
 };
 
-/** The first line, shared with the Fume chat (worker CHAT writes {text} from its composer). */
+/** The first line, shared with the Fume chat (the chat writes {text} from its composer). */
 const SHARED_KEY = "fume-campaign-draft";
 interface Shared {
   name?: string;
@@ -270,7 +259,7 @@ export function NewBriefPage() {
   const [deadline, setDeadline] = useState(first.deadline);
   const [notes, setNotes] = useState(first.notes);
   const [touched, setTouched] = useState<Touched[]>(first.touched);
-  // Round 13: the template it started from (#22) and her inspiration (#23), for this visit
+  // The template it started from and her inspiration, for this visit
   const [template, setTemplate] = useState("");
   const [inspiration, setInspiration] = useState<Inspiration>({ pictures: emptyMoodboard, links: [] });
   const [more, setMore] = useState<string[]>([]);
@@ -328,8 +317,8 @@ export function NewBriefPage() {
     }, jump.wait);
     return () => window.clearTimeout(timer);
   }, [jump]);
-  // DTSK-20: with a mouse and a keyboard the cursor starts in Goal, after what she already wrote. On a touch screen the
-  // keyboard does not rise before she has read the page.
+  // With a mouse and a keyboard the cursor starts in Goal, after what she already wrote. On a touch screen the keyboard
+  // does not rise before she has read the page.
   useEffect(() => {
     if (!window.matchMedia("(pointer: fine)").matches) return;
     const timer = window.setTimeout(() => {
@@ -443,7 +432,7 @@ export function NewBriefPage() {
     if (busy) return;
     setBusy(true);
     const pictures = moodboardImages(inspiration.pictures);
-    // Robot note 03: the plan opens with its data, never a spinner first.
+    // The plan opens with its data, never a spinner first.
     const ready = (id: string) =>
       Promise.all([
         queries.prefetchQuery({ queryKey: ["campaign", id], queryFn: () => api.campaign(id) }),
@@ -461,7 +450,7 @@ export function NewBriefPage() {
         market: marketNow.market,
         language: marketNow.language,
         deadline: deadline ? new Date(`${deadline}T16:00:00`).toISOString() : undefined,
-        // the links go to Fume with her notes (#23)
+        // the links go to Fume with her notes
         notes: [notes.trim(), inspiration.links.length ? `Links for inspiration: ${inspiration.links.join(" ")}` : ""]
           .filter(Boolean)
           .join("\n\n"),
@@ -469,7 +458,7 @@ export function NewBriefPage() {
         message: message.trim(),
         mandatory: lines(mandatory),
         never: lines(never),
-        // the pictures start the campaign's moodboard (#23)
+        // the pictures start the campaign's moodboard
         references: pictures,
         ...(pictures.length ? { moodboard: { images: pictures } } : {}),
       });
@@ -517,7 +506,7 @@ export function NewBriefPage() {
     } else if (el instanceof HTMLInputElement && el.form === form.current) event.preventDefault();
   }
 
-  /** A template fills the form (#22); she changes anything after. */
+  /** A template fills the form; she changes anything after. */
   const fill = (t: BriefTemplate) => {
     setTemplate(t.id);
     setGoal(t.goal);
@@ -908,7 +897,7 @@ export function NewBriefPage() {
             </Button>
           </ActionBar>
         ) : (
-          // DLAY-13: the step's one action, in a footer pinned to the foot of the content column; what it costs beside it.
+          // The step's one action, in a footer pinned to the foot of the content column; what it costs beside it.
           <div className="ui-brief-foot" data-stuck={stuck || undefined}>
             <p className="ui-brief-foot-note" aria-live="polite">
               {footNote}

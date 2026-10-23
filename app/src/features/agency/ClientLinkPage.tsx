@@ -1,21 +1,11 @@
-// Round 11 CLIENT FLOW (FLOWS §24.5; PROPOSED 20 Oct 2026): the client link, /c/:token, outside the shells. A calm page
-// for a client without an account: who sent what at the top ("Brygga Studio sent you 6 creatives for LYSNE · Autumn
-// launch"), the sender's note, then each creative big enough to judge with Approve and Ask for changes (a text field
-// opens for changes). The reviewer's name is asked once, before the first answer; when every creative has an answer
-// the page closes with what was said. A small "Made with Fume" at the foot. An expired or unknown link says so in one
-// calm sentence. In the demo an agency person opens it from Send to client, so the page says it is the client's view
-// and keeps a way back to the review (design-system/components/client-flow.css).
-// Round 12 AGENCY (UX review DWAY-4, DWAY-16; PROPOSED 20 Oct 2026): signed in as one of the agency's people, the link
-// is a preview: a full-width line at the top says "Preview of what Maja sees. Nothing you do here counts." with "Close
-// the preview"; Approve and Ask for changes show but are switched off, and the name field is left out, so the agency
-// never answers as the client (the mock refuses it too). Close the preview goes back the way she came (the history,
-// or the window when it was opened as one), so the review's own back arrow still leads Home.
-// Round 13 (Marcus's card, 23 Oct 2026, DECIDED "Klienten godkjenner"): the agency checks the plan and sends it, and
-// the client approves it here, in the same link where she approves the creatives: one link per campaign. The plan
-// comes first, as one card (its version and the agency's check, the brief in words, the direction with its pictures,
-// how it looks, the masters and what follows them, and when), with Approve the plan and Ask for changes under it, as
-// a creative has. Approved, Fume starts on the masters and the creatives come to this page once they are checked; asked
-// to change, Fume writes the next version and the agency sends it here again.
+// The client link, /c/:token, outside the shells (FLOWS §24.5, §26.8): one link per campaign, for a client without an
+// account. Who sent what at the top ("Brygga Studio sent you 6 creatives for LYSNE · Autumn launch"), the sender's
+// note, then the plan when the link carries it (one card with Approve the plan and Ask for changes), then each creative
+// big enough to judge with Approve and Ask for changes. The reviewer's name is asked once, before the first answer;
+// when everything has an answer the page closes with what was said. An expired or unknown link says so in one calm
+// sentence.
+// Signed in as one of the agency's people the page is a preview: a line at the top says so, the answers show but are
+// switched off, and the name field is left out, so the agency never answers as the client (the mock refuses it too).
 import { Button, Field, FieldDescription, FieldError, FieldLabel, Icon, Input, Textarea, useToast } from "@fume/ui";
 import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -39,12 +29,12 @@ export function ClientLinkPage() {
   const session = useSession().data;
   const people = usePeople().data;
   const navigate = useNavigate();
-  // The agency's own people see the link as a preview (DWAY-4); the real link has no sign-in and no way into Fume.
+  // The agency's own people see the link as a preview; the real link has no sign-in and no way into Fume.
   const preview = Boolean(session?.user.agency);
   const sentTo = link.data?.send.to[0];
   const client =
     (sentTo && people?.find((u) => u.id === sentTo)?.name.split(" ")[0]) || link.data?.client.brandName || "the client";
-  /** Back the way she came: the window she opened, else the page before, else the campaign's review (DWAY-16). */
+  /** Back the way she came: the window she opened, else the page before, else the campaign's review. */
   const close = () => {
     if (window.opener) return window.close();
     const at = (window.history.state as { idx?: number } | null)?.idx ?? 0;
@@ -108,7 +98,7 @@ function ClientLinkBody({ view, token, preview }: { view: ClientLinkView; token:
   const brand = view.client.brandName;
   const campaign = view.campaign.name;
   const creatives = view.creatives;
-  // Round 13: the plan, when the link carries it. It waits on her while the version the agency sent is the plan's own.
+  // The plan, when the link carries it. It waits on her while the version the agency sent is the plan's own.
   const plan = view.plan;
   const planOpen = Boolean(
     plan && plan.state === "ready" && plan.checkedBy && plan.version === view.planSend?.plan?.version,
@@ -123,7 +113,7 @@ function ClientLinkBody({ view, token, preview }: { view: ClientLinkView; token:
   const nameOf = (c: Creative) => view.names?.[c.id] ?? `${campaign} · ${formatWord[c.format]}`;
   const sender = view.sentBy.name;
 
-  // the closing words take focus once the last answer is in, so the reader hears and sees that it is done
+  // The closing words take focus once the last answer is in, so the reader hears and sees that it is done.
   const wasDone = useRef(allDone);
   useEffect(() => {
     if (allDone && !wasDone.current) closing.current?.focus();
@@ -465,7 +455,7 @@ function LinkCreative({ creative: c, name, place, brand, agency, mine, busy, pre
   );
 }
 
-// ─── The plan (round 13): one card, then Approve the plan and Ask for changes ─────────
+// ─── The plan: one card, then Approve the plan and Ask for changes ─────────
 
 const shapeWords = (f: Format) => `${formatWord[f]} ${formatShape[f]}`;
 

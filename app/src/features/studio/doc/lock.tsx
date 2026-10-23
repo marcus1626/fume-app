@@ -1,7 +1,7 @@
-// One creative, one worker at a time (round 13, Marcus #64: "make sure the Engine isn't working on a project at the
-// same time as a designer"). While the Engine works on this creative (the expert told it what to fix in Check), the
-// desk says so over the board, the panels and the Engine bar are locked, and she can Wait (the desk opens again when
-// the fix is back) or Take over (the creative comes to her in the Studio and the Engine's fix stops).
+// One creative, one worker at a time: the Engine never works on a creative while a designer does. While the Engine
+// works on this creative (the expert told it what to fix in Check), the desk says so over the board, the panels and the
+// Engine bar are locked, and she can Wait (the desk opens again when the fix is back) or Take over (the creative comes
+// to her in the Studio and the Engine's fix stops).
 import { Button, Icon, TextShimmer, useToast } from "@fume/ui";
 import { useEffect, useRef, useState } from "react";
 import { useQaQueue, useQaTakeOver } from "../../../api/hooks";

@@ -1,13 +1,13 @@
-// Check card (design-system/components/check-card.css): one thing at a time to confirm (app round 8, UX review
-// LOAD-3, TASK-6, WAY-6). PROPOSED 19 Oct 2026. <CheckCard> is the card (a product, a brand item); <CheckLine> one
-// Product Truth line with its Change; <CheckAsk> the one question Fume has, on the card itself; <CheckEnd> what is next
-// after the last card. <CheckStage> is the round 8 full-screen stage (kept for old callers; the queues no longer use it).
-// Round 9 (DLAY-10, DLOAD-13, DWAY-13, DTSK-14; PROPOSED 19 Oct 2026): <CheckQueue> is the ONE queue frame for every
-// "one at a time" confirm (products, the brand), inside the app's shell: on a desk a 260 list of the items on the left
-// (<CheckQueueList>, <CheckQueueItem>: thumbnail, name, why it waits, a done tick; ↑ ↓ move through it), the card on
-// the right at a 760 measure, and its foot pinned to the bottom of the window at the same place for every item: where
-// she is ("2 of 7", ‹ ›) on the left, Later · Confirm on the right (the app's step footer, PageFooter). On a phone the
-// list goes and the foot takes the tab bar's place, so the one-card flow stays.
+// Check card (design-system/components/check-card.css): one thing at a time to confirm. <CheckCard> is the card (a
+// product, a brand item); <CheckLine> one Product Truth line with its Change; <CheckAsk> the one question Fume has, on
+// the card itself; <CheckEnd> what is next after the last card. <CheckStage> is a full-screen stage (the queues use
+// CheckQueue).
+// <CheckQueue> is the one queue frame for every "one at a time" confirm (products, the brand), inside the app's shell:
+// on a desk a 260 list of the items on the left (<CheckQueueList>, <CheckQueueItem>: thumbnail, name, why it waits, a
+// done tick; ↑ ↓ move through it), the card on the right at a 760 measure, and its foot pinned to the bottom of the
+// window at the same place for every item: where she is ("2 of 7", ‹ ›) on the left, Later · Confirm on the right (the
+// app's step footer, PageFooter). On a phone the list goes and the foot takes the tab bar's place, so the one-card flow
+// stays.
 import {
   forwardRef,
   useLayoutEffect,
@@ -174,7 +174,7 @@ export function CheckEnd({ title, text, actions, className, children, ...props }
   );
 }
 
-// ---------------------------------------------------------------- the queue frame (round 9)
+// ---------------------------------------------------------------- the queue frame
 
 export interface CheckQueueProps extends HTMLAttributes<HTMLDivElement> {
   /** <CheckQueueList> of every item. Shown beside the card on a desk; gone on a phone. */
@@ -240,8 +240,8 @@ export const CheckQueue = forwardRef<HTMLDivElement, CheckQueueProps>(function C
       <div className="ui-check-queue-main">
         <div className="ui-check-queue-stage">{children}</div>
         {(step || foot) && (
-          // The app's step footer (PageFooter, DLAY-13), pinned to the window's foot under the card. On a phone it takes
-          // the tab bar's place (tab-bar.css: data-tab-bar="replace").
+          // The app's step footer (PageFooter), pinned to the window's foot under the card. On a phone it takes the tab
+          // bar's place (tab-bar.css: data-tab-bar="replace").
           <PageFooter
             className="ui-check-queue-foot"
             data-tab-bar="replace"

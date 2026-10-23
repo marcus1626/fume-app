@@ -1,8 +1,6 @@
-// Round 13 (robots' notes 08 and 10, Marcus's video comment #49; PROPOSED 22 Oct 2026): Fume's people have a profile
-// of their own, in the studio (/studio/settings/profile): the person menu's "Your profile" opens it, never the
-// customer's Settings with a brand's tabs and roles. The form is the customer's own (ProfileForm): name, title and
-// email changed in place, Save changes. An agency's people get the same form on their Settings page
-// (/agency/settings/profile, the agency's Settings).
+// Fume's people have a profile of their own in the studio (/studio/settings/profile): the person menu's "Your profile"
+// opens it, never the customer's Settings with a brand's tabs and roles. The form is the customer's own (ProfileForm).
+// An agency's people get the same form at /agency/settings/profile.
 import { DataList, DataListItem, PageHeader } from "@fume/ui";
 import { useSession } from "../../api/hooks";
 import { Back, Page } from "../../shell/Page";

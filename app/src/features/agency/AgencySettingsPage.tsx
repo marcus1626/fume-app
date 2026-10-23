@@ -1,15 +1,11 @@
-// The agency's settings (FLOWS §24.3, §24.6, round 11, PROPOSED 20 Oct 2026): the agency (its name, clients and
-// people) and Licence and usage: this period, what the early access covers, the creatives made and approved per
-// client this month with the total, and the seats used of those included. Usage only: no prices anywhere (the licence
-// is a fixed platform fee; production is by use). Each page has its own address (/agency/settings/:page), as the
-// customer's settings: the phone shows the list at /agency/settings and a page at its address.
-// Round 12 AGENCY (UX review DLOAD-7, DTASK-6; PROPOSED 20 Oct 2026): the licence keeps what the licence is (this
-// period's totals, "Approved by clients", the seats, what it covers); the figures per client and per period are on the
-// one Usage page (/agency/usage), the same numbers each client's Home reads.
-// Round 13 AGENCY (Marcus #70, #71, robot note 10-agency; PROPOSED 22 Oct 2026): the roles are Fume's own (Admin, Expert,
-// Operator); "Fume plan" says what the agency has, what comes and that Fume decides it, with Fume's people on request
-// (Borrow Fume's people) and what the agency asked Fume; "Your profile" is the agency person's own page here, never
-// the customer's settings.
+// The agency's settings (FLOWS §24.3, §24.6), each page at its own address (/agency/settings/:page); the phone shows
+// the list at /agency/settings.
+// - The agency: its name, clients and people, with Fume's roles (Admin, Expert, Operator).
+// - Licence and usage: this period's totals, "Approved by clients", the seats and what the licence covers. No prices
+//   anywhere: the licence is a fixed platform fee and production is by use. The figures per client and per period are
+//   on the one Usage page (/agency/usage).
+// - Fume plan: what the agency has, what comes and that Fume decides it; Fume's people on request.
+// - Your profile: the agency person's own page, never the customer's settings.
 import {
   Avatar,
   Badge,
@@ -215,8 +211,7 @@ function LicencePane() {
 function Licence({ view }: { view: LicenceView }) {
   const { period, scope, total, seats } = view;
   const span = `${utcDay(period.from)} to ${utcDay(period.to)}`;
-  // Round 12 (DLOAD-7, DTASK-6): the same numbers as Usage and each client's Home, under the same names; the figures
-  // per client and per period live on the one Usage page.
+  // The same numbers as Usage and each client's Home, under the same names.
   return (
     <>
       <SettingsSection title="This period" description={span}>
@@ -246,7 +241,7 @@ function Licence({ view }: { view: LicenceView }) {
   );
 }
 
-// ─── The Fume plan (round 13, Marcus #70) ───────────────────────────────────
+// ─── The Fume plan ─────────────────────────────────────────────────────────
 
 const featureIcon = { included: "circle-check", coming: "clock", on_request: "users" } as const;
 
@@ -353,7 +348,7 @@ function PlanPane() {
   );
 }
 
-// ─── Your profile (round 13, robot note 10-agency) ──────────────────────────
+// ─── Your profile ──────────────────────────────────────────────────────────
 
 /** The agency person's own profile: who they are and their role in the agency, never a client's customer role. */
 function ProfilePane() {
@@ -367,8 +362,7 @@ function ProfilePane() {
     .filter(Boolean);
   const role = mine ? agencyRoleOf(mine.role, mine.user) : undefined;
   if (!me) return null;
-  // The one profile form (features/settings/parts.tsx, builder D): name, title and email changed in place and saved;
-  // under it, the person's role at the agency and their clients.
+  // The one profile form (features/settings/parts.tsx), then the person's role at the agency and their clients.
   return (
     <SettingsPane title="Your profile" description="You, as your team, your clients and Fume see you.">
       <ProfileForm

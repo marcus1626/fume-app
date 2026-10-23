@@ -1,8 +1,6 @@
-// The plan in the Fume chat (FLOWS §22 and §23; round 10, PROPOSED 20 Oct 2026). Marcus, 20 Oct: "hvor er planen
-// som blir lagd før Engine genererer? Kunden må jo godkjenne det før Engine begynner å generere."
-// She SENDS her brief; Fume writes the plan from it; the expert checks it; she approves it on the plan page, and only
-// then does the Engine make anything. The chat never says or implies that something is made before that.
-// - The plan card in the conversation (MessageCard kind "plan") reads the plan as it is NOW, not as it was when the
+// The plan in the Fume chat (FLOWS §22, §23). She sends her brief; Fume writes the plan from it; she approves it, and
+// only then does the Engine make anything. The chat never says or implies that something is made before that.
+// - The plan card in the conversation (MessageCard kind "plan") reads the plan as it is now, not as it was when the
 //   card was posted: writing / in check (the words under way in the text shimmer, "Ready by …"), ready (the chosen
 //   direction, the count and the dates, "Checked by Anna", "Open the plan"), changes asked, approved. Only the
 //   campaign's latest plan card is drawn; an earlier one would show the same plan again, so Fume's words stand alone
@@ -40,7 +38,7 @@ import { useExpertName } from "../brand/parts";
 import { BriefRowsList, useBriefRows } from "./desk";
 import { useOpenFullPage, useOpenLink } from "./open";
 
-/** The plan page (PLAN's), where she approves the plan or asks for changes. */
+/** The plan page, where she approves the plan or asks for changes. */
 export const planHref = (campaignId: Id) => `/campaigns/${campaignId}/plan`;
 
 /** "today", "tomorrow", "Thu 15 Oct": a day in the plan's words, as the plan page and the status sentence say it. */
@@ -68,7 +66,7 @@ export function planFacts(plan: CampaignPlan) {
   const masters = creatives.filter((c) => c.kind === "master").length;
   const rest = creatives.length - masters;
   const after = rest === 0 ? "" : rest === 1 ? ", 1 variant or format" : `, ${rest} variants and formats`;
-  // Round 13 (#20): how many of them are videos and carousels, once she asked for some in the chat.
+  // How many of them are videos and carousels, once she asked for some in the chat.
   const videos = creatives.filter((c) => c.medium === "video").length;
   const carousels = creatives.filter((c) => c.medium === "carousel").length;
   const media = [videos ? copy.count(videos, "video") : "", carousels ? copy.count(carousels, "carousel") : ""]
@@ -201,8 +199,8 @@ export function PlanCard({
 }) {
   const plan = usePlan(campaignId).data;
   const words = usePlanWords(plan);
-  // Round 13 after-check of #15: the card opens the plan the way every chat link does, in the panel beside the talk
-  // (on a smaller screen its page, with "Back to the conversation"); the href stays for a new tab.
+  // The card opens the plan the way every chat link does, in the panel beside the talk (on a smaller screen its page,
+  // with "Back to the conversation"); the href stays for a new tab.
   const openLink = useOpenLink();
   const open = (e: ReactMouseEvent) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey) return;
@@ -298,8 +296,8 @@ const PARTS = [
 ];
 
 /** "The plan" beside the conversation: its state while Fume writes it and the expert checks it, then its summary and
- *  "Open the plan". The brief she sent stays under it, read-only. Round 13 (#15, #20): opened from a link, its head
- *  has "Open full page" and ✕ (`actions`); while it is ready, her words in the composer change it with Fume. */
+ *  "Open the plan". The brief she sent stays under it, read-only. Opened from a link, its head has "Open full page" and
+ *  ✕ (`actions`); while it is ready, her words in the composer change it with Fume. */
 export function PlanPanel({ campaignId, actions }: { campaignId: Id; actions?: ReactNode }) {
   const openFull = useOpenFullPage();
   const plan = usePlan(campaignId).data;

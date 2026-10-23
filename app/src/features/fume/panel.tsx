@@ -1,11 +1,11 @@
 // The panel beside the conversation, for what the chat links to, and the small things the conversation shows of it
-// (round 13, Marcus's video comments #13, #14, #15 and #16 of 21 Oct; PROPOSED 22 Oct 2026).
-// - LinkPanel (#15): a campaign, its plan, a creative, a product or a collection, opened from the chat, shows in the
-//   panel (the same card as "The brief" and "The plan"), its head with "Open full page" and ✕. The conversation stays.
-// - ChatThumbs (#14, "Til å ikke være åpnet, dekket de litt voldsomt mye av skjermen"): creatives in a message are a
-//   row of small tiles, four at most and then "+N"; a tile opens the creative in the panel.
-// - LinkCard and SummaryCard (#16): what Fume answers with when she asks about something the app knows: one line that
-//   opens it in the panel; what waits on her (the same rows as Home); this month in numbers (the same as Home).
+// (FLOWS §26.1):
+// - LinkPanel: a campaign, its plan, a creative, a product or a collection, opened from the chat, shows in the panel
+//   (the same card as "The brief" and "The plan"), its head with "Open full page" and ✕. The conversation stays.
+// - ChatThumbs: creatives in a message are a row of small tiles, four at most and then "+N"; a tile opens the creative
+//   in the panel.
+// - LinkCard and SummaryCard: what Fume answers with when she asks about something the app knows: one line that opens
+//   it in the panel; what waits on her (the same rows as Home); this month in numbers (the same as Home).
 import {
   Button,
   DataList,
@@ -284,7 +284,7 @@ function CollectionPanel({ link, onClose }: { link: Extract<ChatLink, { kind: "c
 
 // ─── In the conversation ────────────────────────────────────────────────────
 
-/** #14: creatives in a message, as small tiles: four at most, then "+N" (it opens the campaign). */
+/** Creatives in a message, as small tiles: four at most, then "+N" (it opens the campaign). */
 export function ChatThumbs({
   creatives,
   campaignId,
@@ -372,7 +372,7 @@ function useLinkWords(link: ChatLink): { title: string; description?: string; pi
   }
 }
 
-/** #16: one line that opens what Fume answered about, beside the conversation. */
+/** One line that opens what Fume answered about, beside the conversation. */
 export function LinkCard({ link }: { link: ChatLink }) {
   const open = useOpenLink();
   const words = useLinkWords(link);
@@ -394,7 +394,7 @@ export function LinkCard({ link }: { link: ChatLink }) {
   );
 }
 
-/** #16: what waits on her (Home's rows, the same list), or this month in numbers (Home's, the same numbers). */
+/** What waits on her (Home's rows, the same list), or this month in numbers (Home's, the same numbers). */
 export function SummaryCard({ of }: { of: "waiting" | "month" }) {
   return of === "waiting" ? <WaitingSummary /> : <MonthSummary />;
 }

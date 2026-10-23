@@ -1,13 +1,8 @@
-// Who the plan names, for the customer and for Fume's expert alike: the brand's people and Fume's team on it, and
-// "you" for the person signed in (DLOAD-18).
-// Round 12 (UX review DLOAD-4, FLOWS §24.2; PROPOSED 20 Oct 2026): who reads the plan decides who approves it in its
-// words. In Fume the customer approves the plan and Fume's expert checks it. In a brand an agency runs, the agency
-// approves the plan itself (no expert check), and the agency's client reads it without a decision: she approves the
-// creatives. So `viewer` is "customer" (Maja in Fume), "staff" (Anna), "agency" (Nora) or "client" (Maja in Brygga
-// Studio's world), and `approver` names who approves the plan as that reader says it ("you", "Maja", "Brygga Studio").
-// Round 13 (Marcus's card, 23 Oct 2026, DECIDED "Klienten godkjenner"): in a brand an agency runs the agency checks the
-// plan and sends it to the client, and the client approves it, as the customer does in Fume. So `approver` is the
-// client for everyone ("Maja", "you" for her), and `planner` names who shapes the plan: the agency there ("you",
+// Who the plan names, for the customer and for Fume's expert alike: the brand's people and Fume's team on it, and "you"
+// for the person signed in. `viewer` is who reads: "customer" (Maja in Fume), "staff" (Anna), "agency" (Nora) or
+// "client" (Maja in Brygga Studio's world). The customer approves the plan, in Fume and in a brand an agency runs,
+// where the agency checks it and sends it to the client (FLOWS §26.8). So `approver` is the customer or client for
+// everyone ("Maja", "you" for her), and `planner` names who shapes the plan: the agency in a brand it runs ("you",
 // "Brygga Studio"), the one who approves it everywhere else.
 import { usePeople, useSession, useTeam } from "../../api/hooks";
 import type { Campaign, Id, User } from "../../contract";

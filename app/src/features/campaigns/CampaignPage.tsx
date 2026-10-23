@@ -1,39 +1,24 @@
-// One campaign (FLOWS §13; Marcus 15 Oct: the Campaigns page "ble litt kaotisk hierarki-messig").
-// Round 9 (desktop review 19 Oct, DLAY-3, DWAY-7, DLOAD-9, DLOAD-10, DWAY-20; PROPOSED 19 Oct 2026): ONE compact header,
-// the same on all four tabs: the title with the one Ink action on its line ("Review 6") and a quiet History pill; under
-// it one meta line: where the campaign stands in one sentence (copy.campaignStatus, the same words as Home, the list,
-// ⌘K and the chat), five step dots with the stage's word, and the go-live ("Live from Sat 17 Oct"). The banner is gone:
-// what used to sit in it (the run while Fume works, the directions, what is in check) is the body of Creatives. So the
-// tabs sit at the same height on every tab, stick under the app bar, and change with replace (Back leaves the page).
-// Creatives come in three groups, To approve, Approved and In check (grey places for what Anna still checks), with
-// no second "Creatives 8" heading; the chosen direction is one line under them.
-// The tabs are routes (/campaigns/:id/:tab). Older tab links still land: overview opens the default tab, directions
-// opens Creatives, record opens History. ?c=<id> opens the creative in the one review viewer over Creatives (the same
-// word as review; round 9, VIEWER: an older ?creative=<id> link is moved to ?c= on arrival).
-// Round 10 (FLOWS §22, PROPOSED 20 Oct 2026; Marcus 20 Oct: "hvor er planen som blir lagd før Engine genererer?"):
-// the tabs are Creatives · Moodboard · Plan · Delivery. The Plan tab replaces Brief (features/plan/PlanTab): her brief
-// until she sends it, then the plan Fume writes from it, which she approves before the Engine makes anything. An old
-// /brief link lands on the Plan tab. The default tab is the Plan until the plan is approved, Creatives after. The
-// header's one Ink: "Send to Fume" while the brief waits to be sent (on the Plan tab its footer has it), "Open the
-// plan" while the plan waits on her (none on the Plan tab: the plan's own footer decides). Nothing in Creatives says
-// that directions or pictures come after the brief: nothing is made before she approves the plan.
-// Round 11 CLIENT FLOW (FLOWS §24.2, §24.5; PROPOSED 20 Oct 2026): in a brand an agency runs, the agency's people never
-// approve a creative. Their header's Ink is "Send to client" (the review, with the panel open); their first group is
-// "Ready for Maja", each creative saying whether it waits on her; an approval they recorded says so on its tile
-// ("Maja approved · recorded by Nora", "recorded by you").
-// Round 12 AGENCY (UX review DLOAD-5, DLOAD-4; brief r12 SENDING; PROPOSED 20 Oct 2026): the agency's checked creatives
-// are in two groups, "To send" and "With Maja", and its Ink is "Send to Maja" only while something is not sent. The
-// client's "Review N" counts what was sent to her (waits.toSend is the agency's, never hers).
-// Round 13 (Marcus's video comments #21, #27, #36, #35, #28, robot note 03; PROPOSED 22 Oct 2026): the tabs are the
-// campaign's six stages, Brief → Moodboard → Plan → Masters → Creatives → Delivery (stages.ts), and the page opens on
-// the stage the campaign is in. A stage behind it reads as done (a check before its word), the one it is in reads as
-// the step, and later stages are quiet but open (they say what comes there). Brief is her brief, changeable until the
-// plan is approved; Moodboard is optional: Fume proposes one from the brief and the Brand DNA, she adds to it, or skips
-// it. Masters are the first creatives (and directions, on a campaign from before the plan); Creatives the variants and
-// formats. /campaigns/:id/<stage> opens each; /directions lands on Masters. The moodboard sits in a board of fixed
-// height (zoom never scrolls the page) and opens full screen as a layer over the whole app (Esc closes it). History
-// holds the plan's own steps too (sent, written, checked, changed, asked, approved), the expert's check with the
-// Amber checked triangle.
+// One campaign (FLOWS §13, §26.2). The tabs are the campaign's six stages, Brief → Moodboard → Plan → Masters →
+// Creatives → Delivery (stages.ts), as routes (/campaigns/:id/<stage>), and the page opens on the stage the campaign is
+// in. A stage behind it reads as done (a check before its word), the one it is in reads as the step, and later stages
+// are quiet but open (they say what comes there). Older links still land: /directions on Masters, /variants on
+// Creatives. ?c=<id> opens the creative in the one review viewer (an older ?creative=<id> link is moved to ?c= on
+// arrival).
+// One compact header, the same on every tab: the title with the one Ink action on its line and a quiet History pill;
+// under it one meta line: the campaign's status sentence (copy.campaignStatus, the same words as Home, the list, ⌘K and
+// the chat), the step dots and the go-live. So the tabs sit at the same height on every tab, stick under the app bar,
+// and change with replace (Back leaves the page).
+// Brief is her brief, changeable until the plan is approved. Moodboard is optional: Fume proposes one from the brief
+// and the Brand DNA, she adds to it, or skips it; it sits in a board of fixed height (zoom never scrolls the page) and
+// opens full screen over the whole app (Esc closes it). Masters are the first creatives (and directions, on a campaign
+// from before the plan); Creatives the variants and formats. Each comes in groups: To approve, Approved, and grey
+// places for what the expert still checks. Nothing is made before she approves the plan. History holds the record and
+// the plan's own steps (sent, written, checked, changed, asked, approved), the expert's check with the Amber checked
+// triangle.
+// In a brand an agency runs, the agency's people never approve a creative (FLOWS §24.2): their checked creatives are in
+// two groups, "To send" and "With Maja", their Ink is "Send to Maja" only while something is not sent, and an approval
+// they recorded says so on its tile ("Maja approved · recorded by Nora"). The client's "Review N" counts what was sent
+// to her (waits.toSend is the agency's, never hers).
 import {
   Button,
   CreativeGrid,
@@ -109,7 +94,7 @@ import { DirectionCard, FilterSheet, rights, StepDots } from "./parts";
 import { briefGaps } from "./brief-lines";
 import { STAGES, stageIndex, stageLabel, stageOf, type Stage } from "./stages";
 
-/** The tabs are the six stages (round 13), in stages.ts's order and words. */
+/** The tabs are the six stages, in stages.ts's order and words. */
 type Tab = Stage;
 const tabs = STAGES.map((s) => s.id) as Tab[];
 /** The tab names of earlier campaign pages, so their links keep working. */
@@ -131,7 +116,7 @@ const recordIcon: Record<RecordEvent["action"], IconName> = {
   brand_dna_approved: "palette",
 };
 
-/** Names as the signed-in person reads them: "you" for herself (DLOAD-18), first names for everyone else. */
+/** Names as the signed-in person reads them: "you" for herself, first names for everyone else. */
 interface Names {
   /** "you" / "Anna", for the middle of a sentence. */
   name: (id?: string) => string;
@@ -165,8 +150,8 @@ function stageNow(view: CampaignView): Tab {
   return stageOf(campaign);
 }
 
-/** The tab a tab param names, or the default: the stage the campaign is in (round 13). A creative opened in the viewer
- *  (?c=) opens the stage it belongs to. */
+/** The tab a tab param names, or the default: the stage the campaign is in. A creative opened in the viewer (?c=) opens
+ *  the stage it belongs to. */
 function tabOf(param: string | undefined, view: CampaignView, open: string | null): Tab {
   if ((tabs as readonly string[]).includes(param ?? "")) return param as Tab;
   const old = oldTab[param ?? ""];
@@ -269,7 +254,7 @@ function CampaignScreen({ view }: { view: CampaignView }) {
               );
             })}
           </TabsList>
-          {/* Round 12 (DLAY-10, DWAY-12): the plan's index lives in the plan's own sticky aside, not in this row */}
+          {/* the plan's index lives in the plan's own sticky aside, not in this row */}
         </div>
         <TabsContent value={tab}>
           <div className="ui-campaign-tab">
@@ -309,15 +294,15 @@ function CampaignScreen({ view }: { view: CampaignView }) {
 
 // ─── The header: one sentence, the step, the go-live; one Ink action ─────────
 
-/** The meta line under the title (DLOAD-3, DLOAD-10): where it stands in ONE sentence, the step as dots (their name
- *  says the step; no second stage word beside a sentence that already says it), the go-live, each part after a dot:
- *  "Fume is making 3 directions · ●●○○○ · Live from Tue 3 Nov". */
+/** The meta line under the title: where it stands in one sentence, the step as dots (their name says the step; no
+ *  second stage word beside a sentence that already says it), the go-live, each part after a dot: "Fume is making 3
+ *  directions · ●●○○○ · Live from Tue 3 Nov". */
 function CampaignMeta({ view, names }: { view: CampaignView; names: Names }) {
   const { campaign } = view;
   const status = copy.campaignStatus(campaign);
   const live = copy.campaignLive(campaign);
-  // Round 12 (DLOAD-4): in agency work the agency writes the brief, so "Maja approves" shows from the plan on (round 13,
-  // Marcus's card 23 Oct 2026: the client approves the plan the agency checked and sent her).
+  // In agency work the agency writes the brief, so "Maja approves" shows from the plan on (the client approves the plan
+  // the agency checked and sent her).
   const planning = useAgencyScope() === "agency" && campaign.stage === "brief";
   const approver =
     view.approver.id !== useSession().data?.user.id && !planning
@@ -347,9 +332,9 @@ function CampaignMeta({ view, names }: { view: CampaignView; names: Names }) {
   );
 }
 
-/** The campaign's one Ink action, on the title's line (DLAY-13): what waits on her, wherever she is in the campaign.
- *  None while Fume works, for a viewer, or on the Plan tab while its own footer holds the step (Send to Fume, Approve
- *  the plan). */
+/** The campaign's one Ink action, on the title's line: what waits on her, wherever she is in the campaign. None while
+ *  Fume works, for a viewer, or on the Plan tab while its own footer holds the step (Send to Fume, Approve the
+ *  plan). */
 function HeadAction({
   view,
   tab,
@@ -394,7 +379,7 @@ function HeadAction({
         ) : (
           go("Answer", `/fume/${view.threadId}`)
         );
-      // She sends her brief to Fume (round 10): only once it is complete; on the Brief tab its footer has the action.
+      // She sends her brief to Fume only once it is complete; on the Brief tab its footer has the action.
       if (brief.state === "ready" && briefGaps(brief).length > 0)
         return tab === "brief" ? null : go("Finish the brief", `${base}/brief`);
       if (brief.state === "ready")
@@ -419,11 +404,11 @@ function HeadAction({
       return go("Continue with Fume", `/fume/${view.threadId}`);
     }
     case "in_review":
-      // A brief she changed after sending it goes to Fume again from its own tab (round 13).
+      // A brief she changed after sending it goes to Fume again from its own tab.
       if (brief.state === "ready" && campaign.stage === "plan" && can.approve)
         return tab === "brief" ? null : go("Send the new brief", `${base}/brief`);
-      // The plan waits on her: its own footer decides on the Plan tab; anywhere else the way there.
-      // Round 13 (Marcus's card): the agency's client gets the plan once the agency sent it (checked); then it is hers.
+      // The plan waits on her: its own footer decides on the Plan tab; anywhere else the way there. The agency's client
+      // gets the plan once the agency sent it (checked); then it is hers.
       if (campaign.stage === "plan" || planReady)
         return planReady && (scope !== "client" || plan?.checkedBy || w.planChecked)
           ? tab === "plan"
@@ -431,9 +416,9 @@ function HeadAction({
             : go("Open the plan", `${base}/plan`)
           : null;
       if (w.directions > 0) return go("Choose a direction", `${base}/review`);
-      // The agency sends checked creatives to the client, who approves them (round 11).
+      // The agency sends checked creatives to the client, who approves them.
       if (campaign.counts.checked > 0) {
-        // Round 12: the agency's Ink only while something is not sent; the client reviews what was sent to her.
+        // The agency's Ink only while something is not sent; the client reviews what was sent to her.
         const toSend = w.toSend ?? 0;
         if (agency)
           return toSend > 0
@@ -456,14 +441,14 @@ function HeadAction({
 
 const formats = Object.keys(copy.format) as Format[];
 
-/** Under this many creatives the grid shows them all: search and filters cost more than they help (LOAD-13). */
+/** Under this many creatives the grid shows them all: search and filters cost more than they help. */
 const FILTER_FROM = 20;
 
 const isApproved = (c: Creative) => c.current.state === "approved" || c.current.state === "delivered";
 const inTheWorks = (c: Creative) => ["making", "in_check", "correcting", "held"].includes(c.current.state);
 
 /** Masters (kind "master": the first creatives she approves, and directions on a campaign from before the plan) or
- *  Creatives (kind "variant": the variants and formats that follow them), round 13. */
+ *  Creatives (kind "variant": the variants and formats that follow them). */
 function CreativesTab({
   view,
   names,
@@ -481,10 +466,10 @@ function CreativesTab({
   const viewer = useOverlay("c");
   const me = useSession().data?.user.name.split(" ")[0] ?? "";
   const { campaign } = view;
-  // A brand an agency runs (round 11): the tiles say who a creative waits on and who recorded an approval.
+  // A brand an agency runs: the tiles say who a creative waits on and who recorded an approval.
   const scope = useAgencyScope();
   const { waitingOn, split } = useCampaignSends(campaign.id, scope === "agency");
-  // Every creative under the name she approves it by, here, in the viewer and in the delivery (TASK-17).
+  // Every creative under the name she approves it by, here, in the viewer and in the delivery.
   const named = useCustomerNames(campaign);
   const all = useMemo(() => view.creatives.filter((c) => c.kind === kind).map(named), [view.creatives, named, kind]);
   const masters = kind === "master";
@@ -536,8 +521,8 @@ function CreativesTab({
   const open = viewer.value;
   const list: Creative[] = open && !shown.some((c) => c.id === open) ? all : shown;
 
-  // Three groups (DLOAD-9): what waits on her, what is with Fume after her change request, what she approved; then
-  // a grey place for each creative the expert still checks (she sees it once it is checked).
+  // Three groups: what waits on her, what is with Fume after her change request, what she approved; then a grey place
+  // for each creative the expert still checks (she sees it once it is checked).
   const toApprove = shown.filter((c) => c.current.state === "checked");
   const changing = shown.filter((c) => c.current.state === "changes_requested");
   const approved = shown.filter(isApproved);
@@ -567,13 +552,13 @@ function CreativesTab({
     );
   const by = campaign.waits?.by;
 
-  // Nothing made yet. Before the plan is approved nothing is made at all (round 10): say so, and the way to the plan.
+  // Nothing made yet. Before the plan is approved nothing is made at all: say so, and the way to the plan.
   const planApproved = plan?.state === "approved" || !["brief", "plan"].includes(campaign.stage);
   if (all.length === 0 && (!masters || view.directions.length === 0) && !running && unseen === 0) {
     if (!planApproved) {
       const state = plan?.state;
-      // Round 12 (DLOAD-4, brief r12): Fume starts on the masters (the Engine only makes them). Round 13 (Marcus's card,
-      // 23 Oct 2026): in agency work the agency checks the plan and sends it; the client approves it.
+      // Fume starts on the masters (the Engine only makes them). In agency work the agency checks the plan and sends
+      // it; the client approves it.
       const client = scope === "client";
       const clientName = view.approver.name.split(" ")[0] ?? "the client";
       const text = client
@@ -612,7 +597,7 @@ function CreativesTab({
         />
       );
     }
-    // Creatives before the masters are approved: they follow them (round 13).
+    // Creatives before the masters are approved: they follow them.
     if (!masters && !here)
       return (
         <Nothing
@@ -884,7 +869,7 @@ function MoodboardTab({ view, can }: { view: CampaignView; can: ReturnType<typeo
   const [full, setFull] = useState(false);
   const opener = useRef<HTMLButtonElement>(null);
   if (!campaign.boardId) {
-    // Skipped (round 13): Fume plans from the brief and the Brand DNA; a moodboard can still be started.
+    // Skipped: Fume plans from the brief and the Brand DNA; a moodboard can still be started.
     if (campaign.moodboardSkipped && !starting)
       return (
         <Nothing
@@ -969,8 +954,8 @@ function MoodboardTab({ view, can }: { view: CampaignView; can: ReturnType<typeo
   );
 }
 
-/** The moodboard full screen (round 13, #35): one layer over the whole app, sidebar and all, the board filling it with
- *  its toolbar pinned at the foot. Esc closes it (after letting go of a selected item), and so does "Close". */
+/** The moodboard full screen: one layer over the whole app, sidebar and all, the board filling it with its toolbar
+ *  pinned at the foot. Esc closes it (after letting go of a selected item), and so does "Close". */
 function FullScreenBoard({ board, onClose }: { board: BoardData; onClose: () => void }) {
   const close = useRef<HTMLButtonElement>(null);
   const done = useRef(onClose);
@@ -1033,14 +1018,14 @@ function DeliveryTab({ view }: { view: CampaignView }) {
 
 // ─── History (the side panel) ───────────────────────────────────────────────
 
-/** One line of History: the campaign's record, and (round 13, robot note 03) the plan's own steps. */
+/** One line of History: the campaign's record, and the plan's own steps. */
 interface HistoryRow {
   id: string;
   icon: IconName;
   detail: string;
   actor: MessageAuthor;
   at: string;
-  /** The expert's check: the Amber checked triangle, the same mark as Check's "Checked by you" (#28). */
+  /** The expert's check: the Amber checked triangle, the same mark as Check's "Checked by you". */
   checked?: boolean;
 }
 
@@ -1220,8 +1205,8 @@ function RecordPanel({
   );
 }
 
-/** The agency's checked creatives in a client brand (round 12, brief r12 SENDING): "To send" (checked, not sent) and
- *  "With Maja" (sent; she approves them), each state named once. */
+/** The agency's checked creatives in a client brand: "To send" (checked, not sent) and "With Maja" (sent; she approves
+ *  them), each state named once. */
 function AgencyChecked({
   toApprove,
   split,

@@ -1,10 +1,8 @@
-// The review grid's selection and its one Approve (UX review 19 Oct, TASK-4, MOB-10; round 9, DTSK-10, DLOAD-12):
-// everything checked starts selected, she leaves one out with its circle, shift-click selects a range and ⌘A selects
-// all; "Approve 6" acts at once, with Undo in the toast. On a phone the bar takes the tab bar's slot while the
-// selection is open. A creative marked "Needs changes" is never in the selection.
-// Round 13 (PROPOSED 21 Oct 2026): taken out of ReviewCampaign.tsx, so a campaign's review and the Review place (every
-// campaign at once) share it; with one selected, the bar's second pill is "Needs changes" (it opens the creative as if
-// N was pressed there).
+// The review grid's selection and its one Approve, shared by a campaign's review and the Review place: everything
+// checked starts selected, she leaves one out with its circle, shift-click selects a range and ⌘A selects all; "Approve
+// 6" acts at once, with Undo in the toast. With one selected, the bar's second pill is "Needs changes" (it opens the
+// creative as if N was pressed there). On a phone the bar takes the tab bar's slot while the selection is open. A
+// creative marked "Needs changes" is never in the selection.
 import { ActionBar, useToast } from "@fume/ui";
 import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import { useApprove, useUnapprove } from "../../api/hooks";
@@ -17,7 +15,7 @@ const inField = (t: EventTarget | null) =>
 /** The selection over `list` (in its order): `marked` creatives are left out of it. */
 export function useReviewSelection(list: Creative[], marked: (c: Creative) => boolean, canApprove: boolean) {
   const [out, setOut] = useState<Set<Id>>(() => new Set());
-  /** The last circle she clicked, where a shift-click's range starts (DTSK-10). */
+  /** The last circle she clicked, where a shift-click's range starts. */
   const anchor = useRef<number | null>(null);
   const open = list.filter((c) => !marked(c));
   const selected = open.filter((c) => !out.has(c.id));
@@ -125,7 +123,7 @@ export function ApproveBar({
   );
 }
 
-/** The words over the grid: they follow the selection, so they and the bar never disagree (DLOAD-12). */
+/** The words over the grid: they follow the selection, so they and the bar never disagree. */
 export function selectionWords({
   n,
   total,

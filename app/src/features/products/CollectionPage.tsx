@@ -1,14 +1,11 @@
-// One collection (FLOWS §3.1, §3.2): its cover, dates and products, the campaigns that use it, everything approved
-// for it across campaigns, and its deliveries. An Engine-proposed collection shows Keep · Change · Remove under the
-// header until someone decides. Round 8 (UX review 19 Oct, WAY-12): an approved creative opens in the viewer over this
-// page and closes back to it (?c=, the same word as review); "Make a delivery" is a labelled pill that opens a sheet ("2 approved
-// creatives from SS27", with the campaign to pick when there are several), and after it she stays here: the toast
-// opens the new delivery.
-// Round 9 (desktop review 19 Oct, DLAY-17, DLOAD-21, DLOAD-3; PROPOSED 19 Oct 2026): the cover is a 160 px band under
-// the header (collection-head.css), not a 376 px hero, so the products start on the first screen. The page lists
-// only the campaigns that belong to it (they take it, or take no collection and make only its products), each with
-// its one status sentence (copy.campaignStatus); no "Uses some of its products" under every row and no "Maja
-// approved" under every creative in "Approved for it". A delivery in the rail keeps its name on one line.
+// One collection (FLOWS §3.1, §3.2): its cover (a band under the header, so the products start on the first screen),
+// dates and products, the campaigns that belong to it, everything approved for it across campaigns, and its deliveries.
+// A collection Fume proposed shows Confirm · Change · Remove under the header until someone decides.
+// - The campaigns that belong to it take it whole, or take no collection and make only its products, each with its one
+//   status sentence (copy.campaignStatus).
+// - An approved creative opens in the viewer over this page and closes back to it (?c=, the same word as review).
+// - "Make a delivery" is a labelled pill that opens a sheet ("2 approved creatives from SS27", with the campaign to
+//   pick when there are several); after it she stays here, and the toast opens the new delivery.
 import {
   Button,
   CreativeGrid,
@@ -55,7 +52,7 @@ import { ChangeCollectionDialog } from "./dialogs";
 import { collectionKind, ProductCard, ProvenanceTag, seasonDates, useCatalogueRights } from "./parts";
 
 /** Does this campaign belong on the collection's page? It takes the collection whole, or it takes no collection and
- *  makes only products that are in it (DLOAD-21: an AW26 campaign is not listed under SS27 for sharing one product). */
+ *  makes only products that are in it (an AW26 campaign is not listed under SS27 for sharing one product). */
 function campaignOfCollection(campaign: Campaign, collection: Collection): boolean {
   if (campaign.collectionIds?.includes(collection.id)) return true;
   if (campaign.collectionIds?.length) return false;
@@ -78,7 +75,7 @@ export function CollectionPage() {
 
   const c = view.data?.collection;
   const name = c?.name ?? "Collection";
-  // Only the campaigns that belong here, and what they made (DLOAD-21).
+  // Only the campaigns that belong here, and what they made.
   const campaigns = useMemo(
     () => (view.data && c ? view.data.campaigns.filter((cp) => campaignOfCollection(cp, c)) : []),
     [view.data, c],
@@ -89,7 +86,7 @@ export function CollectionPage() {
     [view.data?.approved, campaigns, named],
   );
   // What is approved and in no delivery yet, per campaign: only that is packed, and only once everything in that
-  // campaign is approved, as on the campaign's Delivery tab (TASK-16: never a pill she must press half way).
+  // campaign is approved, as on the campaign's Delivery tab (never a pill she must press half way).
   const packed = useMemo(() => new Set((allDeliveries.data ?? []).flatMap((d) => d.creativeIds)), [allDeliveries.data]);
   const waiting = (cp: Campaign) =>
     approvedNamed.filter((cr) => cr.campaignId === cp.id && cr.current.state === "approved" && !packed.has(cr.id));
@@ -228,8 +225,8 @@ export function CollectionPage() {
                         text={`When you approve creatives of these products, they gather here, ready to deliver as ${collection.name}.`}
                       />
                     ) : (
-                      // Round 13 (robot note 08): each campaign names its creatives Feed 1, Feed 2…, so across campaigns the
-                      // names repeat; they are grouped under their campaign's name
+                      // Each campaign names its creatives Feed 1, Feed 2…, so across campaigns the names repeat; they
+                      // are grouped under their campaign's name.
                       campaigns
                         .map((cp) => ({ cp, items: approvedNamed.filter((cr) => cr.campaignId === cp.id) }))
                         .filter((g) => g.items.length > 0)

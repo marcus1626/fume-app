@@ -1,7 +1,6 @@
-// All brands (FLOWS §4.2) is the overview now (OverviewPage.tsx): one page for Fume's studio and an agency, as Marcus
-// decided 20 Oct 2026. What stays here is the deliveries list the studio's Deliveries page shares.
-// Round 12 (DTASK-19, DWAY-14; PROPOSED 20 Oct 2026): a delivery opens its campaign (for Fume's people its plan, for an
-// agency's the campaign; Fume's admin, who checks no plan, the brand's Home), in the frame's own address.
+// All brands (FLOWS §4.2) is the overview (OverviewPage.tsx), one page for Fume's studio and an agency. What stays here
+// is the deliveries list the studio's Deliveries page shares. A delivery opens its campaign in the frame's own address
+// (for Fume's people its plan, for an agency's the campaign; for Fume's admin, who checks no plan, the brand's Home).
 import { Badge, Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemTitle } from "@fume/ui";
 import { Link } from "react-router-dom";
 import { useSession } from "../../api/hooks";

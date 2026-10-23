@@ -1,6 +1,6 @@
-// The Studio control library's shapes (FLOWS §9.3, PROPOSED 15 Oct 2026). These mirror the app contract's
-// ModeVariable and VarValue (app/src/contract/entities.ts) structurally, so packages/ui never imports app code:
-// a ModeVariable from the backend is a StudioVariable here, and a VarValue a StudioValue.
+// The Studio control library's shapes (FLOWS §9.3). These mirror the app contract's ModeVariable and VarValue
+// (app/src/contract) structurally, so packages/ui never imports app code: a ModeVariable from the backend is a
+// StudioVariable here, and a VarValue a StudioValue.
 
 /** Every mode variable is edited with one of these. */
 export type StudioControlKind =
@@ -46,9 +46,8 @@ export interface StudioLightRig {
   lights: StudioLight[];
 }
 
-/** Where a look section (Light, Camera, a brand-preset section) comes from (FLOWS §18): the campaign's own look
- *  (v5, Marcus 15 Oct: "Black Friday has completely different colours"), the brand's own preset, one of Fume's
- *  presets, the designer's own values, or the Engine decides. */
+/** Where a look section (Light, Camera, a brand-preset section) comes from (FLOWS §18): the campaign's own look, the
+ *  brand's own preset, one of Fume's presets, the designer's own values, or the Engine decides. */
 export type StudioLookSource = "campaign" | "brand" | "fume" | "own" | "engine";
 
 export type StudioValue = string | number | boolean | string[] | StudioLightAngle | StudioLensValue | StudioLightRig;

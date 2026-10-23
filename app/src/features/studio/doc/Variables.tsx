@@ -1,18 +1,16 @@
 // The desk's right panel (FLOWS §9.1): the mode's variables, grouped by section in folding sections like Photoshop's
 // panels, each drawn by the control library (ModeControl) from its `control` kind. The brand's presets lead every
 // swatch and select (FLOWS §9.4). In Design, the selected layer's words sit on top.
-// v4 (FLOWS §18): every look section (Light, Camera, a section with a brand preset) says where its look comes from:
-// Brand · Fume · Own · Engine. v5 (Marcus 15 Oct: "Black Friday has completely different colours"): when the creative
-// belongs to a campaign with a look of its own, Campaign comes first and is the default: its colours and backgrounds
-// lead every swatch under the campaign's name, and its light is a preset of its own. Brand and Fume pick a preset and show its values read-only, with Adjust to take them
-// over as Own; Own is the controls; Engine leaves it to the Engine. Light has a simple and an advanced way: Advanced
-// is the light board (drag the lights; the creative shows where they fall) with a 3D preview beside it. Camera's
-// presets are named cards with a picture of the camera.
-// Round 12 (UX review DLOAD-15, DTASK-18, PROPOSED 20 Oct 2026): a plain section shows no bare count beside its name;
-// the first look section says in one line what Fume and Engine mean; when the Engine proposes a change, the section
-// that holds it opens and the changed control is marked until she keeps or undoes it.
-// Round 13 (#57, #63): the Scene section has a library: a few choices per row and "More…" for Fume's templates, the
-// brand's scenes and backgrounds, surfaces, props and references (SceneLibrary.tsx).
+// Every look section (Light, Camera, a section with a brand preset) says where its look comes from (FLOWS §18):
+// Campaign · Brand · Fume · Own · Engine. When the creative belongs to a campaign with a look of its own, Campaign
+// comes first and is the default: its colours and backgrounds lead every swatch under the campaign's name, and its
+// light is a preset of its own. Campaign, Brand and Fume pick a preset and show its values read-only, with Adjust to
+// take them over as Own; Own is the controls; Engine leaves it to the Engine. The first look section says in one line
+// what Fume and Engine mean.
+// Light has a simple and an advanced way: Advanced is the light board (drag the lights; the creative shows where they
+// fall) with a 3D preview beside it. Camera's presets are named cards with a picture of the camera. The Scene section
+// has a library (SceneLibrary.tsx). When the Engine proposes a change, the section that holds it opens and the changed
+// control is marked until she keeps or undoes it.
 import {
   ModeControl,
   StudioCameraPresets,
@@ -73,7 +71,7 @@ export interface VariablesProps {
   onLayers: (layers: Layer[], key: string) => void;
   /** A light on the advanced board is dragged or let go: the board draws it on the creative. */
   onLightView?: (view: LightView) => void;
-  /** The variables the Engine's open change touches (DTASK-18): their section opens, the controls are marked. */
+  /** The variables the Engine's open change touches: their section opens, the controls are marked. */
   proposed?: string[];
 }
 
@@ -147,7 +145,7 @@ export function VariablesPanel({
   const [light, setLight] = useState<string>();
   const [focus, setFocus] = useState<{ id: string; n: number }>();
   const bringForward = (id: string) => setFocus((f) => ({ id, n: (f?.n ?? 0) + 1 }));
-  // The Engine's change opens the section that holds it (DTASK-18).
+  // The Engine's change opens the section that holds it.
   const proposedKey = proposed.join(",");
   useEffect(() => {
     const section = mode?.variables.find((v) => proposed.includes(v.key))?.section;
@@ -253,8 +251,8 @@ export function VariablesPanel({
     }
     return { campaign: fromCampaign, brand, fume };
   };
-  // Where a section's look comes from: what the designer chose, what the document says, else the campaign's look
-  // when it has one for this section (v5), else the brand's (FLOWS §9.4), else the designer's own.
+  // Where a section's look comes from: what the designer chose, what the document says, else the campaign's look when
+  // it has one for this section, else the brand's (FLOWS §9.4), else the designer's own.
   const sourceOf = (section: string, choices?: Record<Picks, PresetChoice[]>): LookSource =>
     chosenSources[section] ??
     doc.sources?.[section] ??
@@ -332,7 +330,7 @@ export function VariablesPanel({
   for (const section of mode?.sections ?? []) {
     const vars = (mode?.variables ?? []).filter((v) => v.section === section);
     if (!vars.length) continue;
-    // r13 #57/#63: the Scene section is a short row of choices per variable, with the whole library behind "More…".
+    // The Scene section is a short row of choices per variable, with the whole library behind "More…".
     if (section === "Scene" && vars.some((v) => v.key === "scene")) {
       sections.push({
         id: section,
@@ -361,7 +359,7 @@ export function VariablesPanel({
     // The preset in force: the one the values match, else the source's first (the Engine renders with it).
     const current = items.find((i) => matches(i.match ?? i.patch)) ?? items[0];
     const rigVar = vars.find((v) => v.control === "lightboard");
-    // Once per panel: what the two sources that are not the brand's mean (DLOAD-15).
+    // Once per panel: what the two sources that are not the brand's mean.
     const explain = !explained;
     explained = true;
     const head = (

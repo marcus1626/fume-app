@@ -1,14 +1,14 @@
-// The brand onboarding (FLOWS §0.10, §7), outside the shell, in four steps (round 8, UX review ONB-10):
+// The brand onboarding (FLOWS §0.10, §7), outside the shell, in four steps:
 //   /welcome         1 Your brand: the website's address and Build; beside it on a desk (≥ 1024 px), a drop target
-//                      for brand material (two equal ways in, DLAY-11); under it on a phone, as a compact row.
-//                      While files are dragged, the whole page takes them (DTSK-22).
+//                      for brand material (two equal ways in); under it on a phone, as a compact row.
+//                      While files are dragged, the whole page takes them.
 //   /welcome/scan    2 Fume reads it: the mind map, then one pill, "Confirm what Fume found".
 //   /welcome/review  3 Confirm what Fume found: Logo, Colour, Type, Imagery, Voice, one part at a time (?part=).
-//   /welcome/taste   4 Your taste: one deck of six cards; then "What Fume understood" replaces it, with Approve and
+//   /welcome/taste   4 Your taste: one deck of cards; then "What Fume understood" replaces it, with Approve and
 //                      start at its foot.
-// A new customer is sent here until Brand DNA is approved (shell/Root → /welcome?resume, which opens the furthest
-// step she reached; ?fresh in the mock). Once a reading exists, step 1 says "Continue" instead of starting again.
-// "Start from nothing" (answer questions instead of a website) is not offered until that path exists (ONB-7).
+// A new customer is sent here until Brand DNA is approved (shell/Root → /welcome?resume, which opens the furthest step
+// she reached; ?fresh in the mock). Once a reading exists, step 1 says "Continue" instead of starting again. "Start
+// from nothing" (answer questions instead of a website) is not offered until that path exists.
 import {
   Alert,
   AlertAction,
@@ -235,7 +235,7 @@ export function Welcome() {
   if (step === "scan") return <BuildingDna />;
   if (step === "review") return <CheckFound />;
   if (step === "taste") return <TasteStep />;
-  // What Fume understood is now the last card of the taste deck.
+  // What Fume understood is the taste deck's last view; its own address lands there.
   if (step === "understanding") return <Navigate to="/welcome/taste" replace />;
   return <WaysIn />;
 }

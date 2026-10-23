@@ -1,20 +1,15 @@
-// One product's page (ARCHITECTURE §4.2; Product Vision §4.3; FLOWS §7 step 5).
-// Round 8 (walk-through 19 Oct, LOAD-1, LOAD-2, LOAD-9, LOAD-10, LOAD-16, LOAD-20, MOB-4, MOB-8, TASK-14; PROPOSED):
-// the page was a 13-screen spec sheet with the one thing to do at the bottom. It is now two layers.
-//   CHECK, on top: the product's photo (a thumbnail beside the name on a phone, big on a desk), what Fume still needs
+// One product's page (ARCHITECTURE §4.2; Product Vision §4.3), in two layers:
+// - Check, on top: the product's photo (a thumbnail beside the name on a phone, big on a desk), what Fume still needs
 //   from her as the first card (id="needs", the shared question), then the Product Truth lines, with what Fume read and
-//   has not had confirmed marked on its line, Anna's proposed change on the line it changes, and one pill: "Confirm
-//   <product>", which keeps what Fume read and confirms every line at once. One state word: Confirmed. Confirmed lines
-//   show their words only; where a value came from shows only while it waits for her.
-//   ALL DETAILS, one closed row: every section of the kind (size, materials, label, variants, use, …), the reference
-//   shots, what would make it better, and what the factory works to (tech pack, CAD, factory data) one level deeper; each section opens on its own, keeps
+//   has not had confirmed marked on its line, the expert's proposed change on the line it changes, and one pill:
+//   "Confirm <product>", which confirms every line at once. One state word: Confirmed. Where a value came from shows
+//   only while it waits for her.
+// - All details, one closed row: every section of the kind (size, materials, label, variants, use, …), the reference
+//   shots, what would make it better, and the factory files one level deeper. Each section opens on its own, confirms
 //   all its proposals with one labelled pill, and changes one value with a quiet "Change". No percentage, no meter.
-// Fume's people see it read only. Looks: product-check.css (the two layers) on product-spec.css and product-data.css.
-// Round 9 (desktop review 19 Oct, DLOAD-2, DLOAD-19, DLOAD-1, DLAY-20, DLAY-15; PROPOSED): one count per object. The
-// line under the title says what blocks confirming, as questions ("2 questions for you", the same number as the card's
-// "1 of 2"), then "Confirmed"; All details counts details ("14 details"), never "to check" (only the expert checks).
-// Change a line, Confirm all, Category and collections, Production notes; the source line keeps its capitals; the
-// pictures under the photo wrap to a second row on a desk; choosing the kind opens as the right panel.
+// One count per object: the line under the title says what blocks confirming, as questions ("2 questions for you"), and
+// All details counts details ("14 details"), never "to check" (only the expert checks). Fume's people see the page read
+// only. Looks: product-check.css on product-spec.css and product-data.css.
 import {
   Accordion,
   AccordionContent,
@@ -149,7 +144,7 @@ function Gallery({ product }: { product: Product }) {
   );
 }
 
-/** On a phone (MOB-4): the photo as a small square beside the name; a tap opens every picture in a sheet. */
+/** On a phone: the photo as a small square beside the name; a tap opens every picture in a sheet. */
 function PhotoButton({ product }: { product: Product }) {
   const [open, setOpen] = useState(false);
   const src = product.images[0] ?? product.shots?.[0]?.image;
@@ -222,9 +217,9 @@ function LineAnswer({ fact, product }: { fact: ProductFact; product: Product }) 
   );
 }
 
-/** The first card (MOB-4, LOAD-4): what Fume cannot know and needs from her, on the product it is about, one question
- *  at a time (the next one is named, quietly). A shared question is answered with the shared answer (HOME's
- *  QuestionAnswer), so the answer closes it on Home, in the chat and in the brief too. */
+/** The first card: what Fume cannot know and needs from her, on the product it is about, one question at a time (the
+ *  next one is named, quietly). A shared question is answered with the shared answer (QuestionAnswer), so the answer
+ *  closes it on Home, in the chat and in the brief too. */
 function Needs({ product, questions, facts }: { product: Product; questions: OpenQuestion[]; facts: ProductFact[] }) {
   const { canEdit } = useRole();
   const expert = useExpertName();
@@ -236,7 +231,7 @@ function Needs({ product, questions, facts }: { product: Product; questions: Ope
     ? (questions[1]?.question ?? (facts[0] && `${factArea[facts[0].area]}: ${asked(facts[0])}`))
     : facts[1] && `${factArea[facts[1].area]}: ${asked(facts[1])}`;
 
-  // A link from Home with #needs lands on the answer, ready to type (MOB-4). The shell scrolls to it.
+  // A link from Home with #needs lands on the answer, ready to type. The shell scrolls to it.
   useEffect(() => {
     if (location.hash !== "#needs" || !total) return;
     const t = window.setTimeout(
@@ -407,8 +402,8 @@ function TruthList({
     ...read.parts.map((x) => x.name),
     ...read.shots.map((x) => `${kind?.shots.find((s) => s.id === x.slotId)?.label ?? x.slotId} photo`),
   ].map((w, i) => (i === 0 ? w : w.toLowerCase()));
-  // DLOAD-19: "From your detail photo and LYS-KN-001 tech pack v3.pdf": only a plain capitalised word ("Your") goes lower
-  // case after "From"; a code or a file name keeps its capitals.
+  // "From your detail photo and LYS-KN-001 tech pack v3.pdf": only a plain capitalised word ("Your") goes lower case
+  // after "From"; a code or a file name keeps its capitals.
   const readFrom = [...new Set(read.specs.map((s) => s.provenance.evidence).filter((e): e is string => Boolean(e)))]
     .slice(0, 2)
     .map(lowerFirst);
@@ -433,7 +428,7 @@ function TruthList({
       await verify.mutateAsync(product.id);
       toast.done(`${product.name} confirmed`, {
         description: "It is ready for campaigns.",
-        // The rest wait in the confirm queue, one at a time (TASK-6).
+        // The rest wait in the confirm queue, one at a time.
         action: next ? { label: "Confirm the next", onClick: () => navigate(CHECK_PRODUCTS) } : undefined,
       });
     } catch (error) {
@@ -528,7 +523,7 @@ function TruthList({
             </Button>
           )}
           {known.length > 0 && (
-            // One quiet way to change any line (LOAD-1, DLOAD-1), the open lines first; no button on every line.
+            // One quiet way to change any line, the open lines first; no button on every line.
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button size="sm" variant="quiet" icon="pencil">
@@ -573,7 +568,7 @@ const fileAccept: Record<ProductFile["kind"], string> = {
   spec: ".pdf,.xlsx,.xls",
 };
 
-/** Everything else, under one closed row (LOAD-1): each section opens on its own, the factory files one level deeper. */
+/** Everything else, under one closed row: each section opens on its own, the factory files one level deeper. */
 function AllDetails({
   product,
   kind,
@@ -605,7 +600,7 @@ function AllDetails({
   const fail = (error: Error) => toast.error("That wasn’t saved", { description: error.message });
   const fid = fidelity(product, kind);
   const read = proposalsOf(product);
-  // One count (DLOAD-2): every detail Fume holds, read or given, the same unit as "Fume read 14 details" above.
+  // One count: every detail Fume holds, read or given, the same unit as "Fume read 14 details" above.
   const details =
     specs.filter((x) => filled(x.value)).length + (product.parts ?? []).length + (product.shots ?? []).length;
 
@@ -694,7 +689,7 @@ function AllDetails({
     );
   };
 
-  /** "Confirm all 3": one labelled pill per section for what Fume read in it (MOB-8); never one per value. */
+  /** "Confirm all 3": one labelled pill per section for what Fume read in it; never one per value. */
   const keepAll = (n: number, title: string, input: { keep?: string[]; keepParts?: string[]; keepShots?: string[] }) =>
     canEdit && n > 0 ? (
       <div className="ui-pdetails-keep">
@@ -712,7 +707,7 @@ function AllDetails({
       </div>
     ) : null;
 
-  // DLOAD-1, DLOAD-2: what waits for her inside a section is "to confirm"; only the expert checks.
+  // What waits for her inside a section is "to confirm"; only the expert checks.
   const metaFor = (proposed: number, missing: number) =>
     proposed ? `${proposed} to confirm` : missing ? `${missing} missing` : undefined;
 
@@ -802,7 +797,7 @@ function AllDetails({
     <section className="ui-pdetails" aria-label="All details">
       <Accordion value={open ? ["all"] : []} onValueChange={(v) => onOpen(v.includes("all"))}>
         <AccordionItem value="all" id="all-details">
-          {/* DLOAD-2: one count, the details it holds ("14 details"), the same words as the line above; never "to check". */}
+          {/* one count, the details it holds ("14 details"), the same words as the line above; never "to check" */}
           <AccordionTrigger headingLevel={2} meta={details ? copy.count(details, "detail") : undefined}>
             All details
           </AccordionTrigger>
@@ -1014,9 +1009,9 @@ function AllDetails({
 
 // ─── The page ───────────────────────────────────────────────────────────────
 
-/** One status sentence under the title (LOAD-16; round 9, DLOAD-2): what blocks confirming, said as questions ("2
- *  questions for you", the same number as the card's "1 of 2"), "Ready to confirm", then "Confirmed", with a change
- *  someone proposes named ("Confirmed · Anna proposes a change"). */
+/** One status sentence under the title: what blocks confirming, said as questions ("2 questions for you", the same
+ *  number as the card's "1 of 2"), "Ready to confirm", then "Confirmed", with a change someone proposes named
+ *  ("Confirmed · Anna proposes a change"). */
 function statusOf(
   p: Product,
   questions: number,
@@ -1092,7 +1087,7 @@ export function ProductPage() {
                 <TruthList product={data} kind={kind} onDetails={openDetails} />
               </div>
             </div>
-            {/* round 13 (#46): everything Fume holds, organised, in view without opening a section */}
+            {/* everything Fume holds, organised, in view without opening a section */}
             <ProductTruthSheet product={data} kind={kind} />
             <AllDetails
               product={data}

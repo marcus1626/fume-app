@@ -1,7 +1,7 @@
-// People in the app's words: the sign a person carries (avatar or initials), and who acted on something.
-// Anna's avatar is Ink: the person who checks (F-D074). Fume and the Engine never pose as people.
-// Round 9 (DLOAD-18; PROPOSED 19 Oct 2026): the signed-in person is "you", never their own name in the third person.
-// useIsMe() tells whether a person (an id, a User or a name) is the one signed in; copy.byYou() says it.
+// People in the app's words: the sign a person carries (avatar or initials), and who acted on something. Anna's avatar
+// is Ink: the person who checks (F-D074). Fume and the Engine never pose as people. The signed-in person is "you",
+// never their own name in the third person: useIsMe() tells whether a person (an id, a User or a name) is the one
+// signed in; copy.byYou() says it.
 import type { PersonSign } from "@fume/ui";
 import { useCallback } from "react";
 import { useSession } from "../api/hooks";
@@ -37,8 +37,8 @@ export function directory(people: User[] | undefined) {
 }
 
 /**
- * Whether a person is the one signed in (DLOAD-18): pass their id ("u-maja"), the User, or a name ("Maja Lind" or
- * "Maja"). Use it with copy.byYou: `copy.byYou(user.name, isMe(user), true)` → "You".
+ * Whether a person is the one signed in: pass their id ("u-maja"), the User, or a name ("Maja Lind" or "Maja"). Use it
+ * with copy.byYou: `copy.byYou(user.name, isMe(user), true)` → "You".
  *   const isMe = useIsMe();
  */
 export function useIsMe(): (who: string | Pick<User, "id"> | null | undefined) => boolean {

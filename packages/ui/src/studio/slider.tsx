@@ -1,5 +1,5 @@
-// StudioSlider: the design system's slider (slider.css, DECIDED 13 Oct) as a React control, with its unit and the
-// value as data on the label line. Drag anywhere on the track; arrows one step, Page Up/Down ten, Home/End.
+// StudioSlider: the design system's slider (slider.css) as a React control, with its unit and the value as data on the
+// label line. Drag anywhere on the track; arrows one step, Page Up/Down ten, Home/End.
 //   <StudioSlider label="Hair length" value={40} min={0} max={100} unit="%" onChange={set} />
 import { useRef, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 import { cx } from "../cx";

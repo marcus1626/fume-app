@@ -1,6 +1,6 @@
-// The parts of a product's spec (round 6): the fidelity meter, rows that say where each value came from, swatches,
-// the dimensions drawing, the packaging parts, the reference-shot slots, and one editor for every field type. The
-// product page, the add-product flow and the Studio's read-only summary use these. Looks: product-spec.css.
+// The parts of a product's spec: rows that say where each value came from, swatches, the dimensions drawing, the
+// packaging parts, the reference-shot slots, and one editor for every field type. The product page, the add-product
+// flow and the Studio's read-only summary use these. Looks: product-spec.css.
 import {
   Button,
   Dialog,
@@ -118,12 +118,12 @@ export function DimsDrawing({ dims, label }: { dims: Dimensions; label: string }
   );
 }
 
-// ─── What would make it truer (round 8) ─────────────────────────────────────
+// ─── What would make it truer ─────────────────────────────────────────────
 
 const gapAction = (g: FidelityGap) => (g.kind === "shot" ? "Add the photo" : "Add it");
 
-/** Round 8 (walk-through 19 Oct, LOAD-16, TASK-14): the old "Ready for the Engine N %" meter is gone; what is
- *  missing is an optional extra, one row per gap with its one action, folded under All details. No percentage. */
+/** What is missing is an optional extra: one row per gap with its one action, folded under All details. No
+ *  percentage. */
 export function GapList({
   gaps,
   canEdit,
@@ -174,8 +174,8 @@ export function provenanceTag(
   );
 }
 
-/** Round 8 (LOAD-9): where a value came from shows only while it waits for the customer ("Fume read this on
- *  lysne.no/hand-balm"); what is hers or confirmed shows the value alone. The history is not repeated on every line. */
+/** Where a value came from shows only while it waits for the customer ("Fume read this on lysne.no/hand-balm"); what is
+ *  hers or confirmed shows the value alone. */
 export function ReadTag({ provenance }: { provenance?: SpecEntry["provenance"] }) {
   if (provenance?.state !== "proposed") return null;
   return (
@@ -217,7 +217,7 @@ export function SpecRow({
   field: SpecField;
   entry?: SpecEntry;
   canEdit: boolean;
-  /** @deprecated round 8: provenance shows only on proposals (ReadTag); kept so callers need not change. */
+  /** @deprecated Provenance shows only on proposals (ReadTag); kept so callers need not change. */
   who?: (id?: string) => string | undefined;
   onEdit?: () => void;
   extra?: ReactNode;
@@ -243,7 +243,7 @@ export function SpecRow({
         </dd>
       )}
       {canEdit && onEdit && (
-        // Round 8 (MOB-8): no Keep on each field; a section keeps all its proposals at once. One quiet way to change.
+        // No Keep on each field: a section confirms all its proposals at once. One quiet way to change.
         <dd className="ui-pspec-actions">
           <Button
             size="sm"
@@ -272,9 +272,9 @@ export interface Draft {
   name: string;
   hex: string;
   pantone: string;
-  /** Round 7: the value of a blend, a measurement table or parts, edited by its own editor. */
+  /** The value of a blend, a measurement table or parts, edited by its own editor. */
   rich?: SpecValue;
-  /** Round 7: a list with options, picked as chips. */
+  /** A list with options, picked as chips. */
   picks?: string[];
 }
 
@@ -678,7 +678,7 @@ export function PartsList({
   actions,
 }: {
   parts: ProductPart[];
-  /** @deprecated round 8: provenance shows only on proposals. */ who?: (id?: string) => string | undefined;
+  /** @deprecated Provenance shows only on proposals. */ who?: (id?: string) => string | undefined;
   actions?: (p: ProductPart) => ReactNode;
 }) {
   return (
@@ -776,7 +776,7 @@ export function ShotGrid({
 /** The browser's preview of a picked photo; the mock keeps it as the uploaded image. */
 export const previewOf = (file: File) => URL.createObjectURL(file);
 
-// ─── Round 7: fibre blend ───────────────────────────────────────────────────
+// ─── Fibre blend ───────────────────────────────────────────────────────────
 
 /** Up to four fibres take the chart's four series in order; a fifth and more fold into Other (the design system never
  *  makes up a fifth colour). */
@@ -922,7 +922,7 @@ const FIBRES = [
   "Polyester",
 ];
 
-// ─── Round 7: measurement table ─────────────────────────────────────────────
+// ─── Measurement table ─────────────────────────────────────────────────────
 
 /** Points of measure × sizes. It scrolls sideways inside its own box, never the page. */
 function MeasureTableView({ table, label }: { table: MeasureTable; label: string }) {
@@ -971,8 +971,8 @@ function MeasureTableView({ table, label }: { table: MeasureTable; label: string
   );
 }
 
-/** The size table. On a desk the whole table; on a phone (LOAD-20) the base size only, one measure per line, and
- *  "See all sizes" opens the whole table in a sheet that scrolls sideways. */
+/** The size table. On a desk the whole table; on a phone the base size only, one measure per line, and "See all sizes"
+ *  opens the whole table in a sheet that scrolls sideways. */
 export function MeasureView({ table, label }: { table: MeasureTable; label: string }) {
   const narrow = useNarrowScreen();
   const [all, setAll] = useState(false);
@@ -1151,7 +1151,7 @@ export function MeasureEditor({
   );
 }
 
-// ─── Round 7: parts as data ─────────────────────────────────────────────────
+// ─── Parts as data ──────────────────────────────────────────────────────────
 
 const partWords = (p: SpecPart) =>
   [p.material, p.finish, p.colour?.name, p.decoration, p.size].filter(Boolean).join(" · ");

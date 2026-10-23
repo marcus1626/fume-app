@@ -1,4 +1,4 @@
-// Engine run: the steps the Engine takes for a brief (design-system/components/run.css). DECIDED 13 Oct, round 8.
+// Engine run: the steps the Engine takes for a brief (design-system/components/run.css).
 // A card with steps parted by space (no rail): a check when done, the spinner while it works, a grey dot before
 // it starts, pause or stop when you held it, the circle-alert in Rouge when it failed, and for the Quality Gate
 // the checked triangle in grey while it waits for Anna. Generating says "4 of 12" as data, fills an Ink bar and
@@ -55,7 +55,7 @@ export interface EngineRunProps extends Omit<HTMLAttributes<HTMLDivElement>, "ti
 
 const BADGE: Record<EngineRunState, { dot?: "live" | "danger" | "idle"; icon?: IconName; words: string }> = {
   queued: { dot: "idle", words: "Queued" },
-  // Round 9 (DLOAD-11): "Running" was a system word; the card says what a person would.
+  // The card says what a person would, never the system word "Running".
   running: { dot: "live", words: "Under way" },
   paused: { icon: "pause", words: "Paused" },
   stopped: { icon: "square", words: "Stopped by you" },
@@ -166,8 +166,8 @@ export const EngineRun = forwardRef<HTMLDivElement, EngineRunProps>(function Eng
   { title, description, state, time, steps, badge, failedLabel, actions, className, ...props },
   ref,
 ) {
-  // Done only when every line is done (round 9, DLOAD-2): a run whose making is over while a step still works or
-  // waits (the Quality Gate) wears "Under way", never "Done" next to a spinner.
+  // Done only when every line is done: a run whose making is over while a step still works or waits (the Quality Gate)
+  // wears "Under way", never "Done" next to a spinner.
   const open = state === "done" && steps.some((s) => s.state !== "done");
   const shown: EngineRunState = open ? "running" : state;
   return (

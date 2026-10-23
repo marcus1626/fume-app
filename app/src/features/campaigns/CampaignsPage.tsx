@@ -1,21 +1,16 @@
-// Every campaign, calmer (FLOWS §13): two groups. Under way (the ones that wait on you first) and Done (approved,
-// delivered, closed). Home is the one inbox, so Campaigns has no "Waiting on you" group of its own (UX review 19 Oct,
-// TASK-11); each row still says what waits or where it is, and when it goes live. The two ways to start a campaign sit
-// in the header: with Fume in the conversation, or a brief written by hand (FLOWS §12).
-// The same campaigns show as a list or on the calendar, chosen with ONE control (round 8, WAY-18, LOAD-18): "List |
-// Month | Week" on a desk, "List | Calendar" on a phone, where the calendar is always its agenda (?show=calendar and
-// the calendar's own ?view and ?d). Every delivery is one quiet link away; a campaign's own delivery is its last stage.
-// Round 9 (desktop review 19 Oct, DLAY-6, DLOAD-3, DLOAD-10; PROPOSED 19 Oct 2026): on a desk (1024 px and wider) each
-// group is a table she can scan and sort: the cover, the campaign and its one status sentence (copy.campaignStatus,
-// the same words as Home and the campaign's header), the stage as five dots and a word, who it waits on, when it goes
-// live, and how many creatives are approved of those made. The whole row is the link. Sort by Goes live or Stage. The
-// phone keeps the rows.
-// Round 10 (FLOWS §22.3, PROPOSED 20 Oct 2026): the plan is the second step. A campaign in it says where its plan
-// stands in the same sentence ("The plan is ready to approve": waiting on you; "The plan is in check": waiting on the
-// expert; "Fume is writing the plan"), and a brief not sent yet says "A brief to send".
-// Round 12 AGENCY (UX review DLOAD-4; PROPOSED 20 Oct 2026): the client of an agency reads each campaign as the client
-// (useStatusOptions: "4 creatives to approve", "Brygga Studio is planning"), "Waiting on" names the agency where it
-// says Fume, and she has no New campaign (the agency starts them).
+// Every campaign, calmer (FLOWS §13): two groups, Under way (the ones that wait on you first) and Done (approved,
+// delivered, closed). Home is the one inbox, so Campaigns has no "Waiting on you" group of its own; each row still says
+// what waits or where it is, and when it goes live. The two ways to start a campaign sit in the header: with Fume in
+// the conversation, or a brief written by hand (FLOWS §12).
+// The same campaigns show as a list or on the calendar, chosen with one control: "List | Month | Week" on a desk, "List
+// | Calendar" on a phone, where the calendar is always its agenda (?show=calendar and the calendar's own ?view and ?d).
+// Every delivery is one quiet link away; a campaign's own delivery is its last stage. On a desk each group is a table
+// she can scan and sort by Goes live or Stage: the cover, the campaign and its one status sentence
+// (copy.campaignStatus), the stage as dots and a word, who it waits on, when it goes live, and how many creatives are
+// approved of those made. The whole row is the link. The phone keeps the rows.
+// The client of an agency reads each campaign as the client (useStatusOptions: "4 creatives to approve", "Brygga Studio
+// is planning"), "Waiting on" names the agency where it says Fume, and she has no New campaign (the agency starts
+// them).
 import {
   Button,
   Icon,
@@ -62,7 +57,7 @@ const groups = [
   { key: "done", title: "Done" },
 ] as const;
 
-/** The go-live, as a row says it: "Sat 17 Oct" ahead, "17 Oct" once it is past (DLOAD-10). */
+/** The go-live, as a row says it: "Sat 17 Oct" ahead, "17 Oct" once it is past. */
 function liveDay(c: Campaign): string | undefined {
   if (!c.dueAt) return undefined;
   return c.state === "delivered" || c.state === "closed" ? date(c.dueAt) : due(c.dueAt);
@@ -219,8 +214,8 @@ function CampaignGroups({ all, desk }: { all: Campaign[]; desk: boolean }) {
   );
 }
 
-/** One group as a table (DLAY-6). The campaign's name is the link, stretched over the row, so the whole row opens it
- *  (and a middle click opens it in a new tab). */
+/** One group as a table. The campaign's name is the link, stretched over the row, so the whole row opens it (and a
+ *  middle click opens it in a new tab). */
 function CampaignTable({
   rows,
   sort,

@@ -1,14 +1,10 @@
 // The parts of the Brand DNA board (FLOWS §0.3, §2): the logo on light and dark, every colour as a swatch, type
-// specimens drawn in the customer's own face, voice lines with examples, imagery, and the rules for each area.
-// The look is design-system/components/brand-board.css; the customer's own values (a hex, a font family, the logo's
-// grounds) reach it as CSS custom properties, never as styles of our own.
-// Round 9 (desktop review DLAY-9, DWAY-14, DLAY-19, DLOAD-5; PROPOSED 19 Oct 2026): the board acts in place. What
-// is settled is drawn compact (two logos abreast, the colours as one strip, three specimens, the voice lines, four
-// pictures); a find Fume is not sure of carries Confirm · Change · Remove right where it is: a colour, a typeface
-// or a line of voice as one row (a sharp 64 px swatch or "Aa", where Fume found it, "Fume is not sure"); a logo or
-// a picture stays its full size, so it can be judged, with the same three answers under it. Each part opens its
-// details in place ("How it is used": each item's use and the part's rules), so the part pages (/brand/colour …)
-// are gone and send you to /brand#colour. No counters per part, no blur as a status.
+// specimens drawn in the customer's own face, voice lines with examples, imagery, and the rules for each area. The look
+// is design-system/components/brand-board.css; the customer's own values (a hex, a font family, the logo's grounds)
+// reach it as CSS custom properties, never as styles of our own.
+// The board acts in place. What is settled is drawn compact; a find Fume is not sure of carries Confirm · Change ·
+// Remove right where it is: a colour, a typeface or a line of voice as one row, a logo or a picture at its full size so
+// it can be judged. Each part opens its details in place ("How it is used"). No counters per part, no blur as a status.
 import {
   Badge,
   Button,
@@ -79,9 +75,9 @@ export function brandFaces(identity: BrandIdentity) {
 }
 
 /**
- * A part of the board: its title and, when it has details, "How it is used" at the end of its title line, which
- * opens the part's details in place (each item's use and the part's rules). The id sits on the section itself, so
- * /brand#colour scrolls to and marks the whole part, not only its heading (WAY-14).
+ * A part of the board: its title and, when it has details, "How it is used" at the end of its title line, which opens
+ * the part's details in place. The id sits on the section itself, so /brand#colour scrolls to and marks the whole part,
+ * not only its heading.
  */
 export function BoardPart({
   id,
@@ -400,8 +396,8 @@ export function VoicePart({ identity, rules, visit, open, onOpen }: PartProps) {
 
 // ─── Imagery ────────────────────────────────────────────────────────────────
 
-/** Round 13 (#3): the pictures in Fume's groups (Your look, Campaign looks, Product shots, Not used), each group a row
- *  with its title and line; a picture moves to another group from its Move menu. */
+/** The pictures in Fume's groups (Your look, Campaign looks, Product shots, Not used), each group a row with its title
+ *  and line; a picture moves to another group from its Move menu. */
 export function ImageryPart({ identity, rules, visit, open, onOpen }: PartProps) {
   const { canEdit } = useRole();
   const campaigns = campaignsOf(identity.imagery);

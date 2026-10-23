@@ -1,11 +1,8 @@
-// The frame every shell draws (moved here from WorkspaceShell.tsx in round 12, so the customer's workspace, Fume's
-// studio and an agency share one): the sidebar (given), the page's sheet with the app bar (the way back and, once the
-// header has scrolled away, the page's title; search with ⌘K; the bell; the person on a phone), the phone's tab bar,
-// ⌘K and the product card beside the page.
-// Round 12 (desktop review 20 Oct, DWAY-5, DWAY-8, DLAY-4, DTASK-10, DWAY-21; PROPOSED 20 Oct 2026): Fume's studio
-// gets this frame too, so its bar is the agency's and the customer's (56 px: "← Campaigns | Black Friday", search, the
-// bell), the folded sidebar is remembered (storageKey), and ⌘K works on every studio page. In a brand or client scope
-// the frame names the brand to the page, so the browser tab says "Autumn launch · LYSNE · Fume" (DWAY-15).
+// The frame every shell draws, so the customer's workspace, Fume's studio and an agency share one: the sidebar (given),
+// the page's sheet with the app bar (56 px: the way back by name and, once the header has scrolled away, the page's
+// title; search with ⌘K; the bell; the person on a phone), the phone's tab bar, ⌘K and the product card beside the
+// page. The folded sidebar is remembered (storageKey). In a brand or client scope the frame names the brand to the
+// page, so the browser tab says "Autumn launch · LYSNE · Fume".
 import {
   Button,
   CommandPalette,
@@ -51,7 +48,7 @@ export interface Frame {
   openMeeting: () => void;
 }
 
-/** An address at or under `to`, where a star in `to` stands for one segment (round 13). */
+/** An address at or under `to`, where a star in `to` stands for one segment. */
 const underPattern = (pathname: string, to: string) =>
   to.includes("*")
     ? new RegExp(
@@ -103,14 +100,14 @@ export function ShellFrame({
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [meetingOpen, setMeetingOpen] = useState(false);
   const openMeeting = useCallback(() => setMeetingOpen(true), []);
-  // What the page tells the bar, and whether its header has scrolled away under the bar (MOB-7)
+  // What the page tells the bar, and whether its header has scrolled away under the bar
   const [bar, setBarState] = useState<PageBar>({});
   const setBar = useCallback((b: PageBar) => setBarState((prev) => ({ ...prev, ...b })), []);
   const inset = useRef<HTMLElement>(null);
   const away = useHeaderAway(inset, pathname, Boolean(bar.back || bar.title));
 
   const isActive = (item: NavItem) => placeIsActive(pathname, item);
-  // The place you are on: its top. From a page inside it: the place itself (the link does that) (WAY-20).
+  // The place you are on: its top. From a page inside it: the place itself (the link does that).
   const onPlace = (item: NavItem) => (e: MouseEvent<HTMLAnchorElement>) => {
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     if (pathname !== item.to) return;
@@ -142,7 +139,7 @@ export function ShellFrame({
               onClick={() => setPaletteOpen(true)}
             />
             {phone ? (
-              // On a phone the inbox is a page, in reach of the thumb, not a small glass card at the top (MOB-18)
+              // On a phone the inbox is a page, in reach of the thumb, not a small glass card at the top
               <NotificationBell unread={shownBell.unread} onClick={() => navigate("/notifications")} />
             ) : (
               <NotificationsPopover items={shownBell.items} unread={shownBell.unread} />
@@ -171,7 +168,7 @@ export function ShellFrame({
   );
 }
 
-/** True once the page's own title has scrolled up under the app bar (the bar then shows the way back, MOB-7). */
+/** True once the page's own title has scrolled up under the app bar (the bar then shows the way back). */
 function useHeaderAway(inset: RefObject<HTMLElement | null>, pathname: string, watching: boolean) {
   const [away, setAway] = useState(false);
   useEffect(() => {
@@ -202,7 +199,7 @@ function useHeaderAway(inset: RefObject<HTMLElement | null>, pathname: string, w
 
 // ─── ⌘K ─────────────────────────────────────────────────────────────────────
 
-/** Words that find one of the customer's four places, and the agency's, by what it now holds. */
+/** Words that find one of the customer's places, and the agency's, by what it holds. */
 const keywords: Record<string, string> = {
   "/": "inbox waiting review decisions approve ready download learned",
   "/campaigns": "brief creatives delivery",
@@ -210,7 +207,7 @@ const keywords: Record<string, string> = {
   "/fume": "chat ask conversation contact",
 };
 
-/** The places inside the four, so ⌘K still finds them by their own names. */
+/** The places inside the main places, so ⌘K still finds them by their own names. */
 const inside: {
   to: string;
   label: string;
@@ -221,7 +218,7 @@ const inside: {
     to: "/campaigns?show=calendar",
     label: "Campaigns · Calendar",
     icon: "calendar",
-    // not "plan": that word finds each campaign's plan (round 10)
+    // not "plan": that word finds each campaign's plan
     keywords: "calendar schedule when dates",
   },
   {
@@ -254,7 +251,7 @@ const inside: {
     icon: "bookmark",
     keywords: "memory lessons learned",
   },
-  // The Brand DNA's parts (DWAY-10): each lands on its part of the board (/brand#logo), which marks it
+  // The Brand DNA's parts: each lands on its part of the board (/brand#logo), which marks it
   { to: "/brand#logo", label: "Brand · Logo", icon: "image", keywords: "logo mark wordmark brand dna" },
   {
     to: "/brand#colour",
@@ -283,7 +280,7 @@ const inside: {
 const unseen: ReadonlySet<VersionState> = new Set<VersionState>(["making", "in_check", "correcting", "held"]);
 
 /**
- * What ⌘K offers from the brand in the session, part by part (round 11; round 12 adds the staff frames):
+ * What ⌘K offers from the brand in the session, part by part:
  * - start: New campaign with Fume, write it yourself, Ask Fume, Book a meeting (a customer; an agency in a client);
  * - brand: the places inside Brand and Campaigns, the products and the deliveries;
  * - campaigns: each campaign of the brand and its plan (a customer's; the staff frames list every brand's instead);
@@ -335,18 +332,18 @@ function Palette({
   const go = useNavigate();
   const navigate = useCallback((to: string) => go(link ? link(to) : to), [go, link]);
   const campaigns = useCampaigns();
-  // Search finds products and deliveries too (walk-through 15 Oct): a brand can have many products
+  // Search finds products and deliveries too: a brand can have many products
   const catalogue = useCatalogue();
   const deliveries = useDeliveries();
   const threads = useThreads();
-  // … and every creative she can see (DWAY-10), loaded once the palette opens
+  // … and every creative she can see, loaded once the palette opens
   const campaignIds = useMemo(
     () => (open && parts.creatives ? (campaigns.data ?? []).map((c) => c.id) : []),
     [open, parts.creatives, campaigns.data],
   );
   const views = useCampaignViews(campaignIds);
-  // … and each campaign's plan (round 10, FLOWS §22.3): "Winter gifting · Plan" opens the Plan tab. A campaign whose
-  // brief is not sent has no plan yet: "Hand Balm introduction · Brief" opens the same tab, where she sends it.
+  // … and each campaign's plan (FLOWS §22.3): "Winter gifting · Plan" opens the Plan tab. A campaign whose brief is not
+  // sent has no plan yet: "Hand Balm introduction · Brief" opens the same tab, where she sends it.
   const planIds = useMemo(
     () => (open && parts.campaigns ? (campaigns.data ?? []).filter((c) => c.stage !== "brief").map((c) => c.id) : []),
     [open, parts.campaigns, campaigns.data],
@@ -430,7 +427,7 @@ function Palette({
           keywords: n.keywords ?? keywords[n.to],
           onSelect: () => navigate(n.to),
         })),
-      // The places inside the four, by the names people may still look for (not one the sidebar has itself, round 13)
+      // The places inside the main ones, by the names people may still look for (not one the sidebar has itself)
       ...(parts.brand ? inside.filter((n) => !nav.some((x) => x.to === n.to)) : []).map((n) => ({
         id: `in-${n.to}`,
         group: "Go to",
@@ -504,7 +501,7 @@ function Palette({
         onSelect: () => navigate(`/deliveries/${d.id}`),
       })),
       ...(parts.creatives ? creatives : []),
-      // Where a campaign was talked about in the one Fume chat (round 10, FLOWS §23: one conversation, no list; DWAY-10)
+      // Where a campaign was talked about in the one Fume chat (FLOWS §23: one conversation, no list)
       ...(parts.chat ? (threads.data ?? []) : []).map((t) => ({
         id: `t-${t.id}`,
         group: "In the Fume chat",

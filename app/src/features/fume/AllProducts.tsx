@@ -1,10 +1,9 @@
-// "View all products" (walk-through Must 1, Marcus 15 Oct: a customer can have many products): the brand's whole
-// catalogue in the shared ProductSheet (packages/ui/src/fume/product-sheet.tsx), with the kinds and collections as
-// chips, and a lock on products the customer has not confirmed yet (round 8, LOAD-2: one word, "Confirmed"; round 9,
-// DLOAD-1: the picker's own "To confirm" on the lock, since "check" is the expert's word; the readiness percentage only for Fume's
-// people, never on a confirmed product). A locked product's "Confirm details" opens the one product panel.
-// Every product picker uses it: the Studio's product, the Engine chat's tick grid, the manual brief and Fume's
-// product question. A picker shows a few tiles and <ProductSheetButton> under them.
+// "View all products": the brand's whole catalogue in the shared ProductSheet (packages/ui/src/fume/product-sheet.tsx),
+// with the kinds and collections as chips, and a lock on products the customer has not confirmed yet ("To confirm" on
+// the lock, since "check" is the expert's word; the readiness percentage only for Fume's people, never on a confirmed
+// product). A locked product's "Confirm details" opens the one product panel. Every product picker uses it: the
+// Studio's product, the Engine chat's tick grid, the manual brief and Fume's product question. A picker shows a few
+// tiles and <ProductSheetButton> under them.
 import { Button, ProductSheet, useToast, type SheetFilterGroup, type SheetProduct } from "@fume/ui";
 import { useMemo, type ReactNode } from "react";
 import { Link } from "react-router-dom";

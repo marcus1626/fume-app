@@ -1,10 +1,9 @@
-// StudioLightboard: advanced light (FLOWS §18, PROPOSED 15 Oct 2026). A square board seen from above, like the light
-// dial: the subject in the middle, the camera at the foot. Each light is a dot you drag where you want it (key, fill,
-// rim, practical); a press on the empty board brings the chosen light there. Add a light with the plus, take the
-// chosen one away with the bin. Under the board, the chosen light's own warmth, strength, softness and height.
-// While a light is dragged, `onDragging` tells the desk, which shows the light on the creative (StudioLightOverlay).
-// `preview` takes a slot beside the board: the app puts its three.js view of the lights there (lazy, so the library
-// stays free of three.js).
+// StudioLightboard: advanced light (FLOWS §18). A square board seen from above, like the light dial: the subject in the
+// middle, the camera at the foot. Each light is a dot you drag where you want it (key, fill, rim, practical); a press
+// on the empty board brings the chosen light there. Add a light with the plus, take the chosen one away with the bin.
+// Under the board, the chosen light's own warmth, strength, softness and height. While a light is dragged, `onDragging`
+// tells the desk, which shows the light on the creative (StudioLightOverlay). `preview` takes a slot beside the board:
+// the app puts its three.js view of the lights there (lazy, so the library stays free of three.js).
 //   <StudioLightboard label="Lights" value={rig} onChange={set} onDragging={(on, id) => …} preview={<Light3D … />} />
 import { useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
 import { Button } from "../controls/button";

@@ -1,32 +1,18 @@
-// The campaign's Plan tab (FLOWS §22, PROPOSED 20 Oct 2026; round 10 brief, PLAN). Marcus, 20 Oct: "hvor er planen som
-// blir lagd før Engine genererer? Kunden må jo godkjenne det før Engine begynner å generere."
-// By the plan's state:
-// - no plan yet: her brief, every line changeable in place, and "Send to Fume" in the step footer once it is complete
-//   (she SENDS her brief; she no longer approves it). Nothing is made yet.
-// - writing / in check: a calm state (the step in words, with the text shimmer on the words under way), when it is
-//   ready, what the plan will hold in one line, and her brief beside it, read-only.
+// The campaign's Plan tab (FLOWS §22, §26.2, §26.8). By the plan's state:
+// - no plan yet: the brief is its own stage (BriefTab, the campaign's Brief tab); nothing is made yet.
+// - writing / in check: a calm state on one screen (the step in words, with the text shimmer on the words under way),
+//   when it is ready, what the plan will hold in one line, and her brief beside it, read-only.
 // - changes asked: "Fume is changing the plan", her note, and the version she asked to change, read-only.
-// - ready: the plan document with the step footer: "Ask for changes" and "Approve the plan" (the one Ink; ⌘↵ too when
-//   the focus is not in a field). Approve acts at once, with Undo in the toast.
+// - ready: the plan document with the step footer. Fume writes the plan and it is hers at once: "Approve and start"
+//   (the one Ink; ⌘↵ too when the focus is not in a field) starts the masters, with Undo in the toast; "Change it with
+//   Fume" opens the Fume chat with the plan in its side panel; "Ask Anna to check" is optional, and the plan comes back
+//   checked.
 // - approved: the same document, read-only.
-// Round 12 (UX review DLOAD-4, DLAY-19, DLOAD-3, DLOAD-22; brief r12 PLAN; PROPOSED 20 Oct 2026): who approves follows
-// who reads it. In a brand an agency runs, the agency approves the plan (its footer is the customer's), and the agency's
-// client reads it with no footer: "Brygga Studio approves the plan; you approve the creatives." The customer talks to
-// Fume: "Approve it and Fume starts on the 3 masters" (the Engine only as the one making creatives). While the plan is
-// written or checked the page is one screen: the state with the parts it will hold in one line, her brief beside it.
-// A new version is checked again before it is hers ("Anna is checking version 2").
-// Round 13 (Marcus's video comments #20, #21, #25, #28, robot note 03; PROPOSED 22 Oct 2026): plans without a designer.
-// Fume writes the plan and it is hers at once: "Approve and start" (the one Ink) starts the masters, "Change it with
-// Fume" opens the Fume chat with the plan in its side panel (to iterate the number of creatives, videos, carousels,
-// timing), and "Ask Anna to check" is optional and then goes the way it went before (Anna checks; the plan comes back
-// checked). The brief is its own stage now (BriefTab, the campaign's Brief tab): changeable until the plan is approved;
-// changed after it was sent, it goes to Fume again and the plan is written again as its next version. An expert's
-// step carries the checked triangle (grey while it waits, Amber once checked), the same mark as Check's.
-// Round 13 (Marcus's card, 23 Oct 2026, DECIDED "Klienten godkjenner"): in a brand an agency runs the agency checks the
-// plan and sends it to the client: its footer's Ink is "Send to Maja" (the Send panel the creatives use, with the plan
-// in it and the campaign's client link), and once sent it reads "You sent it to Maja". The client sees where the plan
-// is until it is sent; then the plan with "Ask for changes" and "Approve and start", as the customer has in Fume (or the
-// same in the client link). Her approval starts the Engine.
+// In a brand an agency runs the agency checks the plan and sends it to the client: its footer's Ink is "Send to Maja"
+// (the Send panel the creatives use, with the plan in it and the campaign's client link), and once sent it reads "You
+// sent it to Maja". The client sees where the plan is until it is sent; then the plan with "Ask for changes" and
+// "Approve and start", as the customer has in Fume (or the same in the client link). Her approval starts the Engine. An
+// expert's step carries the checked triangle (grey while it waits, Amber once checked), the same mark as Check's.
 import { Button, Icon, PageFooter, PickGrid, PickTile, ProductTile, cx, useToast } from "@fume/ui";
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -80,7 +66,7 @@ function PlanByState({
   people: PlanPeople;
 }) {
   const { campaign, brief } = view;
-  // Before the brief is sent there is no plan: the brief is its own stage (round 13).
+  // Before the brief is sent there is no plan: the brief is its own stage.
   if (!plan)
     return (
       <Nothing
@@ -122,7 +108,7 @@ function PlanByState({
         </>
       );
     case "ready":
-      // Round 13: the agency's client sees the plan once the agency has checked it and sent it to her.
+      // The agency's client sees the plan once the agency has checked it and sent it to her.
       if (people.viewer === "client" && !plan.checkedBy)
         return <PlanWaiting plan={plan} campaign={campaign} brief={brief} people={people} />;
       return <PlanReady plan={plan} campaign={campaign} brief={brief} people={people} can={can} />;
@@ -162,18 +148,18 @@ function PlanReady({
   const chatPath = usePlanChatPath(campaign.id);
   const catalogue = useCatalogue();
   const toast = useToast();
-  // Round 13 (#25): the expert's check is optional; she asks for it while no expert has checked this version.
+  // The expert's check is optional; she asks for it while no expert has checked this version.
   const expert = people.expert && people.viewer === "customer" && !plan.checkedBy ? people.expertName : undefined;
   const Expert = expert ? expert.charAt(0).toUpperCase() + expert.slice(1) : undefined;
   const { masters } = creativesOf(plan);
   const mastersWords = masters.length === 1 ? "the master" : `the ${masters.length} masters`;
-  // A product the plan uses that waits to be confirmed (DLOAD-3): the footer says it once, the toast says what waits.
+  // A product the plan uses that waits to be confirmed: the footer says it once, the toast says what waits.
   const waiting = (catalogue.data?.products ?? []).filter(
     (p) => campaign.productIds.includes(p.id) && p.state === "needs_you",
   );
   const held = masters.filter((m) => m.productIds.some((id) => waiting.some((p) => p.id === id)));
   const first = waiting.map((p) => p.name).join(" and ");
-  // Round 13 (Marcus's card): an agency checks the plan and sends it to the client; only the client approves it.
+  // An agency checks the plan and sends it to the client; only the client approves it.
   const agency = people.viewer === "agency";
   const client = people.viewer === "client";
   const sent = agency && Boolean(plan.checkedBy);
@@ -232,7 +218,7 @@ function PlanReady({
     return () => window.removeEventListener("keydown", onKey);
   });
 
-  // The footer says once what approving starts, and what waits for a product to be confirmed (DLOAD-3, DLOAD-9).
+  // The footer says once what approving starts, and what waits for a product to be confirmed.
   const going = masters.filter((m) => !held.includes(m));
   const line =
     held.length === 0
@@ -368,7 +354,7 @@ const listWords = (names: string[]) =>
 // ─── While Fume writes, the expert checks, or Fume changes it ──────────────
 
 type StepState = "done" | "now" | "ahead";
-/** A step of the waiting state; `check` marks the expert's (the checked triangle, round 13 #28). */
+/** A step of the waiting state; `check` marks the expert's (the checked triangle). */
 type WaitStep = { label: string; when?: string; state: StepState; check?: boolean };
 
 function PlanWaiting({
@@ -389,8 +375,8 @@ function PlanWaiting({
   const client = people.viewer === "client";
   // Who approves the plan, as this reader says it: "You", "Maja".
   const Who = people.Approver(campaign);
-  // Round 13 (Marcus's card, 23 Oct 2026): in a brand an agency runs the agency checks the plan and sends it ("You
-  // check it and send it to Maja", "Brygga Studio checks it"), then the client approves it.
+  // In a brand an agency runs the agency checks the plan and sends it ("You check it and send it to Maja", "Brygga
+  // Studio checks it"), then the client approves it.
   const agencyRun = people.viewer === "agency" || client;
   const Agency = people.viewer === "agency" ? "You" : (people.agencyName ?? "Your agency");
   const approves = `${Who} ${Who === "You" ? "approve" : "approves"} it`;
@@ -428,7 +414,7 @@ function PlanWaiting({
   let words: string;
   let line: string;
   let steps: WaitStep[];
-  // Round 13 (#25): the expert checks only when she asked; who asked, in this reader's words.
+  // The expert checks only when she asked; who asked, in this reader's words.
   const askedCheck = plan.checkAsked
     ? people.isMe(plan.checkAsked.by)
       ? "You"
@@ -446,7 +432,7 @@ function PlanWaiting({
       last,
     ];
   } else if (plan.state === "ready") {
-    // Round 13: the agency's client, before the agency has checked the plan and sent it to her.
+    // The agency's client, before the agency has checked the plan and sent it to her.
     const again = plan.version > 1;
     words = again ? `${Agency} is checking version ${plan.version}` : `${Agency} is checking the plan`;
     line = `You see it here once ${Agency} sends it to you. Nothing is made before you approve it.`;
@@ -585,7 +571,7 @@ export function WaitingState({
             data-state={s.state}
             aria-current={s.state === "now" ? "step" : undefined}
           >
-            {/* the expert's step: the checked triangle, grey while it waits and Amber once checked (#28) */}
+            {/* the expert's step: the checked triangle, grey while it waits and Amber once checked */}
             {s.check ? (
               <span
                 className="ui-creative-check"
@@ -611,7 +597,7 @@ export function WaitingState({
   );
 }
 
-/** What the plan will hold, in one line of its parts (DLAY-19). */
+/** What the plan will hold, in one line of its parts. */
 export function ToCome({ creatives }: { creatives: number }) {
   return (
     <p className="ui-plandoc-tocome">
@@ -623,9 +609,9 @@ export function ToCome({ creatives }: { creatives: number }) {
 
 // ─── The brief: her brief, changed in place until the plan is approved, then Send to Fume ─────────
 
-/** The campaign's Brief tab (round 13, #21): her brief, every line changeable in place until the plan is approved, and
- *  "Send to Fume" once it is complete. Changed after it was sent, the new version goes to Fume again and the plan is
- *  written again from it (its next version). */
+/** The campaign's Brief tab: her brief, every line changeable in place until the plan is approved, and "Send to Fume"
+ *  once it is complete. Changed after it was sent, the new version goes to Fume again and the plan is written again
+ *  from it (its next version). */
 export function BriefTab({ view, can }: { view: CampaignView; can: Rights }) {
   const people = usePlanPeople();
   const plan = usePlan(view.campaign.id).data;
@@ -655,7 +641,7 @@ function BriefToSend({
     ["directions", "masters", "variants", "delivery"].includes(campaign.stage);
   // The agency's client reads the brief; the agency writes it and sends it (FLOWS §24.2).
   const client = people.viewer === "client";
-  // Round 13: changeable until the plan is approved (a change after sending makes the next version, sent again).
+  // Changeable until the plan is approved (a change after sending makes the next version, sent again).
   const editable = !over && can.ask && !client && plan?.state !== "writing" && plan?.state !== "changes_asked";
   const again = Boolean(plan) && !sent;
   const complete =
@@ -676,7 +662,7 @@ function BriefToSend({
             : brief.state === "ready" || complete
               ? "Change any line here before you send it."
               : "Fume is still forming the brief with you, one question at a time.";
-  // Round 13 (Marcus's card, 23 Oct 2026): the agency checks the plan and sends it; its client approves it.
+  // The agency checks the plan and sends it; its client approves it.
   const checksPlan = people.viewer === "agency";
   const after = checksPlan
     ? `Fume writes the plan ${again ? "again from this version" : "from your brief"}. You check it and send it to ${people.approver(campaign)}; nothing is made before she approves it.`

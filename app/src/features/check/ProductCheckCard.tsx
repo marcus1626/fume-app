@@ -1,11 +1,11 @@
-// Confirming a product is ONE component everywhere (round 9, DWAY-5, DTSK-6, DTSK-14; decision 5): the product's photo,
-// its name and why it waits, the one question Fume has about it first, then its Product Truth lines, each changeable
-// in place. The frame around it holds Later and Confirm at its foot: the right-side panel (ProductCheckHost, opened
-// from Home, the chat, the brief and the product page) and the queue (/check/products) show exactly this card.
+// Confirming a product is one component everywhere: the product's photo, its name and why it waits, the one question
+// Fume has about it first, then its Product Truth lines, each changeable in place. The frame around it holds Later and
+// Confirm at its foot: the right-side panel (ProductCheckHost, opened from Home, the chat, the brief and the product
+// page) and the queue (/check/products) show exactly this card.
 //
-// Round 8, kept: Confirm is never greyed out without a reason. Pressed while Fume's question is open, it marks that
-// field, says so and puts the focus there. Fume's questions are answered in their own record (closed everywhere); the
-// photo question is answered by the photo on the card (kept, or the one she drops or adds).
+// Confirm is never greyed out without a reason. Pressed while Fume's question is open, it marks that field, says so and
+// puts the focus there. Fume's questions are answered in their own record (closed everywhere); the photo question is
+// answered by the photo on the card (kept, or the one she drops or adds).
 //
 // Use:
 //   const check = useProductCheck(productId, { onDone });
@@ -52,8 +52,8 @@ export const waitingOn = (campaigns: Campaign[] | undefined, productId: Id) =>
     (c) => !["delivered", "closed", "approved"].includes(c.state) && c.productIds.includes(productId),
   );
 
-/** Round 13 (robot note 02, builder A): every campaign that waits on it, the newest first, so the Christmas brief
- *  that just picked Hand Balm is named, not only the older Hand Balm introduction. */
+/** Every campaign that waits on it, the newest first, so the brief that just picked Hand Balm is named, not only an
+ *  older one. */
 const waitWords = (campaigns: Campaign[] | undefined, productId: Id, first?: string) => {
   const found = (campaigns ?? [])
     .filter((c) => !["delivered", "closed", "approved"].includes(c.state) && c.productIds.includes(productId))
@@ -68,7 +68,7 @@ const waitWords = (campaigns: Campaign[] | undefined, productId: Id, first?: str
 /** The product's own photo: the front reference shot, else its first picture. */
 export const photoOf = (p: Product | undefined) => p?.shots?.find((s) => s.slotId === "front")?.image ?? p?.images[0];
 
-/** Focus a field without making a phone raise its keyboard over the card before it is read (MOB-14). */
+/** Focus a field without making a phone raise its keyboard over the card before it is read. */
 const finePointer = () => typeof window !== "undefined" && window.matchMedia?.("(pointer: fine)").matches;
 
 type Photo = { name: string; bytes: number; src: string };
@@ -84,7 +84,7 @@ export interface ProductCheckOptions {
   glass?: boolean;
   /** The product as a list already has it (the catalogue), shown while its own record loads: no flash between items. */
   fallback?: Product;
-  /** Round 13 (builder A): the campaign she is briefing where she opened it (the chat's Christmas brief), named first. */
+  /** The campaign she is briefing where she opened it (the chat's brief), named first. */
   forCampaign?: string;
 }
 
@@ -142,7 +142,7 @@ export function useProductCheck(
   const p = product.data ?? (fallback?.id === productId ? fallback : undefined);
   const base = `check-${productId}`;
 
-  // What Fume does not know comes first: it is the one line she has to write (round 8 robot walk, 19 Oct).
+  // What Fume does not know comes first: it is the one line she has to write.
   const unknown = p ? p.facts.filter((f) => f.source === "unknown") : [];
   const lines = p ? p.facts.filter((f) => f.source !== "unknown") : [];
   const pictureQuestion = questions.find((q) => q.answer === "picture");
@@ -154,7 +154,7 @@ export function useProductCheck(
   const fieldId = (f: ProductFact) => `${base}-ask-${f.id}`;
   const quiet = glass ? "glass-clear" : "quiet";
 
-  // The focus goes to the first empty answer once the product is there (DTSK-6, DWAY-13), on a desk.
+  // The focus goes to the first empty answer once the product is there, on a desk.
   useEffect(() => {
     if (!p || p.id !== productId || focused.current) return;
     focused.current = true;
@@ -209,7 +209,7 @@ export function useProductCheck(
   }
   const later = () => p && !busy && onDone("later", p);
 
-  // ⌘↵ confirms from anywhere in the card (DTSK-14, DTSK-20).
+  // ⌘↵ confirms from anywhere in the card.
   const onKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !e.defaultPrevented) {
       e.preventDefault();
@@ -225,7 +225,7 @@ export function useProductCheck(
     const [file] = await pickFiles("image/*", false);
     take(file);
   }
-  // The photo is a drop target: drag a better packshot onto it from the desktop (DTSK-14).
+  // The photo is a drop target: drag a better packshot onto it from the desktop.
   const files = (e: DragEvent) => Array.from(e.dataTransfer?.types ?? []).includes("Files");
   const drop = {
     onDragEnter: (e: DragEvent) => files(e) && (e.preventDefault(), setDropping(true)),
@@ -325,7 +325,7 @@ export function useProductCheck(
             title={q?.question ?? f.statement}
             why={q?.why ?? "Every line on a creative must be true, so Fume asks before it guesses."}
           >
-            {/* round 13 (#6, #7, builder A): each suggestion with its words, and what this kind of product usually says */}
+            {/* each suggestion with its words, and what this kind of product usually says */}
             <AnswerSuggestions
               question={q}
               value={said(f)}
@@ -334,8 +334,8 @@ export function useProductCheck(
             />
             <Field invalid={missing}>
               <FieldLabel htmlFor={id}>Your answer</FieldLabel>
-              {/* No placeholder: an empty field must never look answered (DTSK-6). What a good answer looks like is
-                  said under it, and the field is marked if Confirm is pressed while it is empty. */}
+              {/* No placeholder: an empty field must never look answered. What a good answer looks like is said under
+                  it, and the field is marked if Confirm is pressed while it is empty. */}
               <Textarea
                 id={id}
                 rows={2}
@@ -417,7 +417,7 @@ export function useProductCheck(
           })}
         </ul>
       )}
-      {/* round 13 (#46, builder D): everything else Fume holds about it, organised, so she confirms it knowing all of it */}
+      {/* everything else Fume holds about it, organised, so she confirms it knowing all of it */}
       {p && !glass && (
         <ProductTruthSheet
           product={p}

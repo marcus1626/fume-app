@@ -1,15 +1,14 @@
-// Every campaign across the brands Fume works for (ARCHITECTURE §7.2), or one brand's under /studio/b/:workspaceId.
-// Round 12 (UX review DLAY-9, DLOAD-16, DLOAD-1, DLOAD-13, PROPOSED 20 Oct 2026): the agency's table, one component for
-// both frames (campaign-table.tsx). Each row: the campaign and its one status sentence as Fume's people read it
+// Every campaign across the brands Fume works for (ARCHITECTURE §7.2), or one brand's under /studio/b/:workspaceId. The
+// campaigns show as a board first, a column per stage and Done (CampaignBoard); List keeps the table (?view=list), the
+// agency's table (campaign-table.tsx). Each row: the campaign and its one status sentence as Fume's people read it
 // ("Check the plan · by Fri 16 Oct", "The plan waits on Maja", "6 creatives with Maja"), the Engine's run as a quiet
 // line, the brand with who from Fume is on it, the stage dots, the next date with its label, In check (a link into
-// Check) and what is with the customer. The whole row opens the campaign's plan. No stat tiles: the line under the
-// title holds the counts. Checked work reaches the customer only when it is sent as a set (brief r12, ARCHITECTURE
-// §5.2): a campaign that holds some says "6 creatives to send to Maja", and "Send to Maja" sits above the table.
-// Batches (FLOWS §9.7): large sets ("50 packshots") are made from here, for a campaign or for the product page alone.
-// Round 13 (Marcus #68, PROPOSED 22 Oct 2026): the campaigns show as a board first, a column per stage and Done
-// (CampaignBoard); List keeps the table (?view=list). Robots' note 09: the admin's view is limited to brand Home and
-// Campaigns (StudioShell), so for her a campaign is not a link, and Make a batch, Open Check and In check are not shown.
+// Check) and what is with the customer. The whole row opens the campaign's plan.
+// Checked work reaches the customer only when it is sent as a set (ARCHITECTURE §5.2): a campaign that holds some says
+// "6 creatives to send to Maja", and "Send to Maja" sits above the table. Batches (FLOWS §9.7): large sets ("50
+// packshots") are made from here, for a campaign or for the product page alone. The admin's view is limited to brand
+// Home and Campaigns (StudioShell), so for her a campaign is not a link, and Make a batch, Open Check and In check are
+// not shown.
 import {
   Button,
   FieldLegend,
@@ -91,7 +90,7 @@ export function StudioCampaignsPage() {
   const { workspaceId } = useParams();
   const [params, setParams] = useSearchParams();
   const studio = useStudioCampaigns();
-  // What is in check is what Check holds (robots' note 08: the table said "3 to check" while the bell and Check said 4).
+  // What is in check is what Check holds, so the table, the bell and Check give one number.
   const queue = useQaQueue().data;
   const all = { ...studio, data: queue ? studio.data?.map((r) => withCheck(r, queue)) : studio.data };
   const brand = workspaceId ? session.workspaces.find((w) => w.id === workspaceId) : undefined;
@@ -107,7 +106,7 @@ export function StudioCampaignsPage() {
   const sending = live.reduce((n, r) => n + toSend(r), 0);
   const people = rows?.[0] && workspaceId ? onIt(rows[0]) : "";
   const view = params.get("view") === "list" ? "list" : "board";
-  // The admin (outside an agency) sees brand Home and Campaigns only: nothing here leads further in (robots' note 09).
+  // The admin (outside an agency) sees brand Home and Campaigns only: nothing here leads further in.
   const limited = !session.agency && session.user.staffRole === "admin";
   const asRow = (r: StudioCampaignRow) => tableRow(r, limited);
   const show = (v: string) => {
@@ -200,8 +199,8 @@ function tableRow(row: StudioCampaignRow, limited = false): CampaignTableRow {
     brandLine: onIt(row) || undefined,
     status: copy.campaignStatus(campaign, undefined, { viewer: "staff", customerName: customerOf(row), date: false }),
     line: <RunLine campaignId={campaign.id} />,
-    // A campaign row opens the campaign for Fume's people: its plan, with the campaign's tabs (DWAY-14). Not for the
-    // admin, whose view stops at this page (robots' note 09).
+    // A campaign row opens the campaign for Fume's people: its plan, with the campaign's tabs. Not for the admin, whose
+    // view stops at this page.
     ...(limited
       ? {}
       : {
@@ -211,8 +210,8 @@ function tableRow(row: StudioCampaignRow, limited = false): CampaignTableRow {
   };
 }
 
-/** The Engine's last run, as one quiet line: "The Engine's last run: 9 of 9 made · 6 checked" (DLOAD-16). It names the
- *  run, so its 9 is not read as the campaign's 11 (robots' note 08). Nothing before the first run. */
+/** The Engine's last run, as one quiet line: "The Engine's last run: 9 of 9 made · 6 checked". It names the run, so its
+ *  9 is not read as the campaign's 11. Nothing before the first run. */
 function RunLine({ campaignId }: { campaignId: Id }) {
   const detail = useCampaign(campaignId).data;
   const run =
@@ -314,7 +313,7 @@ function Batches({ rows, workspaceIds }: { rows: StudioCampaignRow[]; workspaceI
   const { workspaceId } = useParams();
   const [open, setOpen] = useState(false);
   const shown = new Map(rows.map((r) => [r.campaign.id, r]));
-  // A batch made outside a campaign is the product page's (DLOAD-3a): it carries no campaign's name.
+  // A batch made outside a campaign is the product page's: it carries no campaign's name.
   const list = (batches.data ?? []).filter(
     (b) => shown.has(b.campaignId) || (!b.campaignId && workspaceIds.includes(b.workspaceId)),
   );
@@ -389,7 +388,7 @@ function batchSteps(b: Batch, waiting: number) {
       tiles,
     },
     {
-      // Where it is, in numbers Check also shows (DLOAD-2): never "waiting" for something Check does not hold.
+      // Where it is, in numbers Check also shows: never "waiting" for something Check does not hold.
       label: "Check",
       state: !done ? ("pending" as const) : waiting ? ("active" as const) : ("done" as const),
       detail: done
@@ -404,7 +403,7 @@ function batchSteps(b: Batch, waiting: number) {
 const counts = [1, 2, 4, 6, 8, 12];
 const formats: Format[] = ["feed", "square", "story"];
 
-/** "none:w-lysne": the product page of a brand, no campaign (DLOAD-3a). */
+/** "none:w-lysne": the product page of a brand, no campaign. */
 const NONE = "none:";
 
 /** Make a batch: for the product page (first, no campaign) or a campaign; mode, products or a collection, count per

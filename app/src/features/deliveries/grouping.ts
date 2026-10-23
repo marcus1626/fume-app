@@ -35,8 +35,8 @@ export interface Readiness {
 function measure(creatives: Creative[], deliveries: Delivery[], collection?: Collection): Readiness {
   const approved = creatives.filter((c) => c.current.state === "approved");
   const delivered = creatives.filter((c) => c.current.state === "delivered").length;
-  // Any of the campaign's deliveries counts (round 8, TASK-16): what a collection delivery holds is delivered for the
-  // whole campaign too, so the same creatives are never offered twice. The row opens the newest one that holds them.
+  // Any of the campaign's deliveries counts: what a collection delivery holds is delivered for the whole campaign too,
+  // so the same creatives are never offered twice. The row opens the newest one that holds them.
   const packed = new Set(deliveries.flatMap((d) => d.creativeIds));
   const delivery =
     approved.length > 0 && approved.every((c) => packed.has(c.id))

@@ -1,19 +1,14 @@
-// Round 12 (desktop review 20 Oct, DWAY-5, DWAY-1, DWAY-6, DWAY-9, DWAY-17, DWAY-20, DWAY-21; PROPOSED 20 Oct 2026): the
-// one sidebar of Fume's studio and an agency (Marcus 20 Oct 12:41Z: "Agency dashboard blir strengt tatt lik som vår").
-// One list of places per scope, the same names in both frames:
-// - all brands or all clients: Overview · Check · Campaigns · Deliveries · (Clients) · Team · Usage · Quality log;
-//   Fume's admin follows and does not check: Overview · Campaigns · Deliveries · Team · Usage · Quality log;
-// - one brand or client: Home · Check · Campaigns · Brand · Studio · Engine (· Fume for an agency). Brand holds the
-//   Brand DNA, the products, the models and references and the boards (FLOWS §9.6: brand assets); the Engine holds what
-//   it made. While Brand or the Engine is the current place, its two or one places inside show under it. Fume's people
-//   have Customer view at the foot of a brand (the brand as its customer sees it, marked "Fume view"); the admin a
-//   brand's Home and its Campaigns, to read.
-// The top of the sidebar is one picker for both (the agency's, which the review kept): the Fume mark and "All brands"
-// or "All clients", or the brand's mark and its market; its glass menu lists them A to Z (never recent first, so a
-// brand stays where it was), with a quiet dot where something waits on you, "Here" on the one you are in, and from 8 up
-// a search and a Recent group. Choosing one keeps the place you are on when the new scope has it (scope.ts,
-// equivalent). The brand is found in the brands the menu lists, never only in the session (DWAY-1: SOLV said
-// "All brands · Here").
+// The one sidebar of Fume's studio and an agency (FLOWS §25.1), with one list of places per scope and the same names in
+// both frames. All brands or all clients: Overview · Check · Campaigns · Deliveries · (Clients) · Team · Usage ·
+// Quality log; Fume's admin follows and does not check, so has no Check. One brand or client: Home · Check · Campaigns
+// · Brand · Studio · Engine (· Fume for an agency). Brand holds the Brand DNA, the products, the models and references
+// and the boards; the Engine holds what it made; while one of them is the current place, its places inside show under
+// it. Fume's people have Customer view at the foot of a brand; the admin has a brand's Home and its Campaigns, to read.
+// The top of the sidebar is one picker for both: the Fume mark and "All brands" or "All clients", or the brand's mark
+// and its market. Its glass menu lists them A to Z (never recent first, so a brand stays where it was), with a quiet
+// dot where something waits on you, "Here" on the one you are in, and from 8 up a search and a Recent group. Choosing
+// one keeps the place you are on when the new scope has it (scope.ts, equivalent). The brand is found in the brands the
+// menu lists, never only in the session.
 import {
   Avatar,
   Button,
@@ -77,7 +72,7 @@ export interface StaffScope {
   workspaceId?: string;
   /** That brand or client, once the list knows it. */
   entry?: ScopeEntry;
-  /** Every brand or client, A to Z (DWAY-20). */
+  /** Every brand or client, A to Z. */
   entries: ScopeEntry[];
   /** True once the list has come, so an unknown address can be told from one still loading. */
   loaded: boolean;
@@ -120,8 +115,8 @@ export function useStaffScope(frame: StaffFrameKind): StaffScope {
     const seen = new Set(brands.map((w) => w.id));
     return (
       [...brands, ...session.workspaces.filter((w) => !seen.has(w.id))]
-        // Round 13 (robots' note 06: "SOLV, 1 waiting on you" while SOLV had 2 to check): a creative waiting in Check counts
-        // one each, as Check counts it; the rest of what needs you (a plan, a question) one each too.
+        // A creative waiting in Check counts one each, as Check counts it; the rest of what needs you (a plan, a
+        // question) one each too.
         .map((workspace) => ({
           workspace,
           waiting: needs.filter((n) => n.clientId === workspace.id && n.kind !== "check").length + qa.of(workspace.id),
@@ -146,7 +141,7 @@ export function useStaffScope(frame: StaffFrameKind): StaffScope {
 // ─── The places ─────────────────────────────────────────────────────────────
 
 /** Check's number as its page says it (copy.toCheck, "8 to check: 1 plan, 7 creatives"): the creatives that wait for a
- *  check and, in Fume, the plans that wait for the expert's check (an agency approves its own plans). */
+ *  check and, in Fume, the plans that wait for the expert's check. */
 function useCheckCount(frame: StaffFrameKind): { total: number; of: (workspaceId: string) => number } {
   const qa = useQaWaiting();
   const rows = useStudioCampaigns().data;
@@ -182,7 +177,7 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
       icon: "users",
       keywords: "team people load capacity invite",
     };
-    // Settings › Licence is its own page under Settings (AGENCY, 20 Oct): Usage is lit only on Usage
+    // Licence is its own page under Settings, so Usage is lit only on Usage
     const usage: NavItem = {
       to: `${root}/usage`,
       label: "Usage",
@@ -227,7 +222,7 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
       team,
       usage,
       quality,
-      // Round 13 AGENCY (robot note 10-agency): the agency's Settings is a place of its own (its plan with Fume, its people)
+      // The agency's Settings is a place of its own (its plan with Fume, its people)
       ...(frame === "agency"
         ? [
             {
@@ -249,7 +244,7 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
     holds: [`${base}/review`],
     keywords: "home brand today needs you waiting",
   };
-  // Fume's admin reads the brand's campaigns (NUMBERS, 20 Oct: she follows the work); a campaign opens the brand's Home
+  // Fume's admin reads the brand's campaigns (she follows the work); a campaign opens the brand's Home
   if (limited)
     return [
       home,
@@ -387,8 +382,8 @@ export function StaffSidebar({ scope, places, frame }: { scope: StaffScope; plac
         )}
       </SidebarContent>
       <SidebarFooter>
-        {/* Settings is in the person menu: the foot stays one row (FLOWS §24.3). Round 13 AGENCY (Marcus #71): an agency
-            has Help from Fume above the person (Book a meeting, Borrow Fume's people, Customer service). */}
+        {/* Settings is in the person menu, so the foot stays one row. An agency has Help from Fume above the person
+            (Book a meeting, Borrow Fume's people, Customer service). */}
         <SidebarMenu>
           {scope.frame === "agency" && (
             <SidebarMenuItem>
@@ -402,8 +397,8 @@ export function StaffSidebar({ scope, places, frame }: { scope: StaffScope; plac
   );
 }
 
-/** Opens the brand as its customer sees it, marked "Fume view" there (DWAY-2): the session is already on the brand of
- *  the address, so the customer's Home is the brand's, until "Back to <brand> in the studio". */
+/** Opens the brand as its customer sees it, marked "Fume view" there: the session is already on the brand of the
+ *  address, so the customer's Home is the brand's, until "Back to <brand> in the studio". */
 function CustomerView() {
   const navigate = useNavigate();
   return (
@@ -421,19 +416,19 @@ function CustomerView() {
 
 // ─── The picker ─────────────────────────────────────────────────────────────
 
-/** A search and a Recent group in the picker from this many brands or clients up (FLOWS §24.4, DWAY-20). */
+/** A search and a Recent group in the picker from this many brands or clients up (FLOWS §24.4). */
 const MANY = 8;
 
 /** A small mark (16 px) holds one letter; the large ones keep two ("BS"). */
 const letter = (name: string) => initials(name).slice(0, 1);
 
-/** "LYSNE, 2 waiting on you": a name with what waits on you, for a screen reader and the robot. */
+/** "LYSNE, 2 waiting on you": a name with what waits on you, for a screen reader. */
 const entryName = (name: string, waiting: number) => (waiting ? `${name}, ${waiting} waiting on you` : name);
 
 /**
  * The picker: the top of the sidebar (a large row), or on a phone a quiet pill in the app bar (compact). Its glass
  * menu: All brands or All clients, then each one A to Z with a dot where something waits on you. Choosing keeps the
- * place (DWAY-9).
+ * place.
  */
 export function ScopePicker({ scope, compact }: { scope: StaffScope; compact?: boolean }) {
   const navigate = useNavigate();
@@ -636,7 +631,7 @@ export function FumePersonMenu({ avatar }: { avatar?: boolean }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent side={avatar ? "bottom" : "top"} align={avatar ? "end" : "start"}>
         <DropdownMenuLabel>{`${user.name}, ${role.toLowerCase()} at Fume`}</DropdownMenuLabel>
-        {/* Round 13 (robot note 08): Fume's person's own profile, in the studio, never the customer's Settings */}
+        {/* A Fume person's own profile, in the studio, never the customer's Settings */}
         <DropdownMenuItem icon="user" onSelect={() => navigate("/studio/settings/profile")}>
           Your profile
         </DropdownMenuItem>

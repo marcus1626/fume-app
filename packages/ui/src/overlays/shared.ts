@@ -104,11 +104,11 @@ export function focusFirst(layer: HTMLElement | null, skip: string): boolean {
   return true;
 }
 
-// ─── Focus goes back where it came from (round 9, DWAY-8; PROPOSED 19 Oct 2026) ────────────────────────────────────
+// ─── Focus goes back where it came from ───────────────────────────────────────────────────────────────────────
 // Radix gives focus back to a layer's Trigger. A layer opened from code (a menu row, a shortcut, a button that sets
-// state, the palette's Search) has none, so focus fell to the page body and the keyboard started over at the top.
-// Each layer notes what had focus when it opened (in onOpenAutoFocus, before focus moves in) and gives it back when
-// it closes. When that element is gone (a menu row that opened a dialog), the element focused just before it (the
+// state, the palette's Search) has none, so focus would fall to the page body and the keyboard would start over at the
+// top. Each layer notes what had focus when it opened (in onOpenAutoFocus, before focus moves in) and gives it back
+// when it closes. When that element is gone (a menu row that opened a dialog), the element focused just before it (the
 // menu's own button) takes it.
 const recent: HTMLElement[] = [];
 if (typeof document !== "undefined" && !(document as { __fumeFocusTrail?: boolean }).__fumeFocusTrail) {

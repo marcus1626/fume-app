@@ -1,10 +1,10 @@
-// Mind map (design-system/components/mind-map.css): Fume reading a brand for the first time (app round 7,
-// FLOWS §7 step 3). PROPOSED 16 Oct 2026. A calm Paper grid; the center (the brand's logo) lands first, then each
-// node arrives one by one, drawn to the center with a thin connector, while one line says what Fume is reading.
-// When `settled` turns true the map hands over to `board`: every element there with data-mind-map-part="<node id>"
-// (or "center") flies in from where its node stood and comes from soft to sharp (FLIP with WAAPI), while the map
-// blurs away. Without a board (round 8, UX review ONB-2: the onboarding keeps the map as the payoff) the settled map
-// simply stays, every node landed. On a narrow container the map stacks: center on top, nodes below on one spine.
+// Mind map (design-system/components/mind-map.css): Fume reading a brand for the first time (FLOWS §7 step 3). A calm
+// Paper grid; the center (the brand's logo) lands first, then each node arrives one by one, drawn to the center with a
+// thin connector, while one line says what Fume is reading. When `settled` turns true the map hands over to `board`:
+// every element there with data-mind-map-part="<node id>" (or "center") flies in from where its node stood and comes
+// from soft to sharp (FLIP with WAAPI), while the map blurs away. Without a board (the onboarding keeps the map as the
+// payoff) the settled map simply stays, every node landed. On a narrow container the map stacks: center on top, nodes
+// below on one spine.
 //   <MindMap label="LYSNE, as Fume reads it" center={<logo/>} centerState="landed"
 //     nodes={[{ id: "palette", title: "Palette", icon: "palette", place: "nw", state: "reading", reading: "Reading lysne.no", children: … }]} />
 // Children of a node that should land one by one carry className "ui-mind-map-item" (CSS staggers them).

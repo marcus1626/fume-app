@@ -1,9 +1,8 @@
-// Deliveries across every brand (FLOWS §4.2). Round 12 (UX review DLAY-15, DLOAD-13, DLOAD-21, PROPOSED 20 Oct 2026):
-// the records table of Campaigns, grouped Due and Sent (not by brand): the cover, the campaign and where it stands
-// (the one status sentence, as Fume's people read it), the brand on the page for every brand, how much is approved
-// ("2 of 11" with a bar, or "Planned: 9 creatives" before any is made, never "0 of 0") and the delivery date with
-// its label: the plan's "Delivery", never the go-live under a bare "Due"; a sent row says "Delivered 26 Sep".
-// Due is sorted by that date, soonest first. A row opens the campaign.
+// Deliveries across every brand (FLOWS §4.2): the records table of Campaigns, grouped Due and Sent (not by brand). The
+// cover, the campaign and where it stands (the one status sentence, as Fume's people read it), the brand on the page
+// for every brand, how much is approved ("2 of 11" with a bar, or "Planned: 9 creatives" before any is made, never "0
+// of 0") and the delivery date with its label: the plan's "Delivery", never the go-live under a bare "Due"; a sent row
+// says "Delivered 26 Sep". Due is sorted by that date, soonest first. A row opens the campaign.
 import {
   Icon,
   Item,
@@ -78,8 +77,8 @@ export function StudioDeliveriesPage() {
 }
 
 const to = (r: StudioCampaignRow) => `/studio/b/${r.workspace.id}/campaigns/${r.campaign.id}/plan`;
-// Round 13 AGENCY (robot note 10-agency): the frame's reader (StudioShell sets it), so an agency reads its own step
-// ("Check the plan"), not Fume's staff's ("The plan waits on Maja")
+// The frame's reader (StudioShell sets it), so an agency reads its own step ("Check the plan"), not Fume's staff's
+// ("The plan waits on Maja").
 const status = (r: StudioCampaignRow) =>
   copy.campaignStatus(r.campaign, undefined, {
     customerName: r.approver ? firstName(r.approver.name) : undefined,

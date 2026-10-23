@@ -1,14 +1,11 @@
-// Brand › Confirm your brand (round 9, DLAY-10, DLOAD-13, DLOAD-1; round 8 WAY-6, LOAD-6, ONB-18): what Fume found and
-// is not sure of, and the AI people waiting for her, in the SAME queue frame as the products: on a desk the finds on
-// the left (the thing itself as a thumbnail, its name, its part, a tick once decided; ↑ ↓ move through them), the card
-// on the right (the thing itself, big, one question, where Fume found it, Change and Remove on the card), and Later ·
-// Confirm pinned at the bottom of the window, at the same place for every find. Change opens the value in place and
-// Confirm then saves it; Remove sits apart and can be undone from its toast. ← → step, ⌘↵ confirms, Esc goes back.
-// The find on the card is in the address (?p=colour:c-3); ?part=colour starts at that part (logo, colour, type,
-// imagery, voice, taste, models).
-// Round 13 (walk-through 21 Oct, #2, #42; PROPOSED 22 Oct 2026): a colour's card says what it is used for as chips
-// (Buttons, Accent, Backgrounds, Text, Light, Packaging, UI and design system), saved on the tap, and its Change has
-// a colour picker beside the hex.
+// Brand › Confirm your brand: what Fume found and is not sure of, and the AI people waiting for her, in the same queue
+// frame as the products. On a desk the finds are on the left (a thumbnail, its name, its part, a tick once decided; ↑ ↓
+// move through them), the card on the right (the thing itself, big, one question, where Fume found it, Change and
+// Remove), and Later · Confirm pinned at the bottom of the window, at the same place for every find. Change opens the
+// value in place and Confirm then saves it; Remove sits apart and can be undone from its toast. A colour's card has its
+// uses as chips, saved on the tap, and a colour picker beside the hex. ← → step, ⌘↵ confirms, Esc goes back. The find
+// on the card is in the address (?p=colour:c-3); ?part=colour starts at that part (logo, colour, type, imagery, voice,
+// taste, models).
 import {
   Badge,
   Button,
@@ -275,7 +272,7 @@ function Facts({ t }: { t: Thing }) {
   );
 }
 
-/** A colour's uses as chips (#42), saved on the tap. */
+/** A colour's uses as chips, saved on the tap. */
 function CheckColourUses({ colour }: { colour: BrandColour }) {
   const save = useSetColourUses();
   const toast = useToast();

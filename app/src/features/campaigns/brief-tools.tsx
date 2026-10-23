@@ -1,11 +1,11 @@
-// The brief form's tools (round 13, Marcus's video comments #22, #23, #24; PROPOSED 22 Oct 2026):
-// - Templates (#22): "Start from" at the top of the form. Fume's own (Product launch, Seasonal, Black Friday, Always-on
-//   social, Email) and hers, which Fume made from her past campaigns ("Like Autumn launch"). Picking one fills the form;
-//   she changes anything after.
-// - Alternatives (#24): Fume writes three alternatives for the message, or for the whole brief (goal, audience and
-//   message). She picks one, or says what to change ("Warmer", "Shorter", her own words) and gets three new ones. It is
-//   the Engine's writing, said in Fume's voice: the Engine never talks to customers.
-// - Inspiration (#23): pictures she adds, pictures from her boards and links to pages she likes. The pictures start the
+// The brief form's tools (FLOWS §26.2):
+// - Templates: "Start from" at the top of the form. Fume's own (Product launch, Seasonal, Black Friday, Always-on
+//   social, Email) and hers, which Fume made from her past campaigns ("Like Autumn launch"). Picking one fills the
+//   form; she changes anything after.
+// - Alternatives: Fume writes three alternatives for the message, or for the whole brief (goal, audience and message).
+//   She picks one, or says what to change ("Warmer", "Shorter", her own words) and gets three new ones. It is the
+//   Engine's writing, said in Fume's voice: the Engine never talks to customers.
+// - Inspiration: pictures she adds, pictures from her boards and links to pages she likes. The pictures start the
 //   campaign's moodboard; the links go to Fume with the brief.
 import {
   Button,
@@ -28,7 +28,7 @@ import { useBriefAlternatives, useBriefTemplates } from "../../api/hooks";
 import type { BriefTemplate } from "../../contract";
 import { MoodboardPicker, type MoodboardDraft } from "../boards/StartMoodboard";
 
-// ─── Templates (#22) ────────────────────────────────────────────────────────
+// ─── Templates ──────────────────────────────────────────────────────────────
 
 export function TemplatePicker({ value, onPick }: { value: string; onPick: (t: BriefTemplate) => void }) {
   const templates = useBriefTemplates();
@@ -88,7 +88,7 @@ export function TemplatePicker({ value, onPick }: { value: string; onPick: (t: B
   );
 }
 
-// ─── Alternatives (#24) ─────────────────────────────────────────────────────
+// ─── Alternatives ───────────────────────────────────────────────────────────
 
 export interface BriefWords {
   goal: string;
@@ -264,7 +264,7 @@ export function Alternatives({
   );
 }
 
-// ─── Inspiration (#23) ──────────────────────────────────────────────────────
+// ─── Inspiration ────────────────────────────────────────────────────────────
 
 export interface Inspiration {
   pictures: MoodboardDraft;

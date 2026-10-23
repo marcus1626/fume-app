@@ -1,14 +1,11 @@
-// Add a product (round 6, Marcus 15 Oct: "velger man produkt kategori når man legger til produkt"). Round 8
-// (walk-through 19 Oct, TASK-13; PROPOSED): two short steps in one dialog, and the page is for later, not a second
-// pass. 1. Its name, its page and its photos; the kind is proposed from the name ("Looks like Skincare and body ·
-// Change"), and the photo slots follow the kind. 2. Only what the Engine still needs and could not read, the first
-// four; everything else waits. Then it lands in the list with a toast that says what is left ("Foot Cream added · 3
-// things left"); what the Engine read is confirmed with the other products, one at a time. Many products come in by
-// Import products (website, CSV or zip).
-// Round 9 (desktop review 19 Oct, DLAY-15, DTSK-18, DLOAD-1; PROPOSED): on a desk it opens as the right panel (520,
-// the full height, its own scroll, the footer pinned at its foot), so the product grid stays in view on the left; the
-// phone keeps a sheet from the bottom (the same Sheet). The new product lands in the grid and is shown there. Fume
-// reads the product; the Engine only makes creatives.
+// Add a product: two short steps in one panel, and the product's page is for later, not a second pass.
+//   1. Its name, its page and its photos; the kind is proposed from the name ("Looks like Skincare and body ·
+//      Change"), and the photo slots follow its type (or its kind).
+//   2. Only what Fume still needs and could not read, the first four; everything else waits.
+// Then it lands in the grid with a toast that says what is left ("Foot Cream added · 3 things left"); what Fume read is
+// confirmed with the other products, one at a time. Many products come in by Import products (website, CSV or zip). On
+// a desk it opens as the right panel, so the product grid stays in view; on a phone a sheet from the bottom. Fume reads
+// the product; the Engine only makes creatives.
 import {
   Button,
   Field,
@@ -85,7 +82,7 @@ export function guessKind(kinds: ProductKind[], text: string): ProductKind | und
   return undefined;
 }
 
-// ─── Round 13 (Marcus's video comment #45, robot note 05; PROPOSED 22 Oct 2026) ─────────────────────────────────
+// ─── Product types ───────────────────────────────────────────────────────────
 // The product type is a select (Bottle, Jar, Tube, Candle, Textile, Accessory, Box or set) and decides which measures
 // are asked, each a number with its unit chosen from a select, never typed: a cap has a size in cm, never ml. Fume
 // chooses the type from the name as she writes it (Linen Spray: Bottle), and the kind with it when the name alone
@@ -165,9 +162,9 @@ export const productTypes: { id: ProductType; label: string; kindId: string; mea
     measures: [{ id: "size", label: "Size", units: ["ml", "g", "cm", "pieces"] }],
   },
 ];
-/** The photos each type asks for (round 13 after-check of #45: they followed the kind, so a linen spray asked for "the
- *  wax from above" and a wool cap for "the clasp"). The type decides them; the kind keeps the facts. Slot ids stay the
- *  shared ones (front, back, side, top, open, detail, scale, lit), so the product page shows them in its kind's slots. */
+/** The photos each type asks for. The type decides them, so a linen spray never asks for "the wax from above"; the kind
+ *  keeps the facts. Slot ids are the shared ones (front, back, side, top, open, detail, scale, lit), so the product
+ *  page shows them in its kind's slots. */
 const slot = (id: string, label: string, help: string, required = false): ShotSlot => ({ id, label, help, required });
 const front = slot("front", "Front", "Straight on, the label readable, on white.", true);
 const scale = slot("scale", "In a hand", "In a hand or beside something known, for scale.");
@@ -255,9 +252,9 @@ export function AddProductFlow({
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** Called once it is added. Round 8: by default it stays in the list, with a toast. */
+  /** Called once it is added. By default it stays in the list, with a toast. */
   onAdded?: (product: Product) => void;
-  /** Many products at once: Import products (round 7: website, CSV or zip). */
+  /** Many products at once: Import products (website, CSV or zip). */
   onCsv?: () => void;
 }) {
   const kinds = useProductKinds();
@@ -267,7 +264,7 @@ export function AddProductFlow({
   const [step, setStep] = useState<Step>("basics");
   const [chosen, setChosen] = useState<ProductKind>();
   const [name, setName] = useState("");
-  // Round 9: the button is never greyed out; pressed with no name, it says so under Name.
+  // The button is never greyed out; pressed with no name, it says so under Name.
   const [noName, setNoName] = useState(false);
   const [type, setType] = useState<ProductType | "">("");
   const [typeChosen, setTypeChosen] = useState(false);
@@ -298,7 +295,7 @@ export function AddProductFlow({
     .filter(Boolean)
     .join(" · ");
   const baseKind = kind ?? kinds.data?.find((k) => k.id === OTHER);
-  // The photos follow the type when there is one (round 13, #45), else the kind's own
+  // The photos follow the type when there is one, else the kind's own.
   const slotsKind = baseKind && productType ? { ...baseKind, shots: typeShots[productType] } : baseKind;
 
   function reset() {
@@ -318,7 +315,7 @@ export function AddProductFlow({
   function landed(p: Product) {
     const k = kinds.data?.find((x) => x.id === p.kindId);
     const left = missingDetails(p, k);
-    // round 13 (robot note 05): the same words the confirm queue uses for it
+    // the same words the confirm queue uses for it
     toast.done(`${p.name} added.`, {
       description: left
         ? `${copy.count(left, "detail")} missing. It waits in your products to confirm.`

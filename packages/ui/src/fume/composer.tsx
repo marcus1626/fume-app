@@ -1,4 +1,4 @@
-// Brief composer (design-system/components/composer.css, behaviour from composer.js). DECIDED 13 Oct, round 8.
+// Brief composer (design-system/components/composer.css, behaviour from composer.js).
 // One field that floats: the brief (16 px, grows 2 to 10 lines with field-sizing), its attachments, then the
 // brief's settings as chips (the Brand DNA, the formats as toggle pills, how many creatives), the quiet circles
 // (attach a brief, add a reference image, mention), and the Ink send circle that turns into stop in place while
@@ -90,7 +90,7 @@ export interface ComposerProps<F extends string = string> extends Omit<HTMLAttri
   onAttach?: (files: File[], kind: "brief" | "image") => void;
   /** Shows Mention someone (at-sign): inserts "@" at the caret, then calls this. */
   onMention?: () => void;
-  /** Round 13 (app's Fume chat, #16): the @ button's name, when it names things rather than people. */
+  /** The @ button's name, when it names things rather than people (the app's Fume chat). */
   mentionLabel?: string;
   /** An error from the screen (e.g. the brief could not be sent), shown on the error line. */
   error?: string;
@@ -100,8 +100,8 @@ export interface ComposerProps<F extends string = string> extends Omit<HTMLAttri
   glass?: boolean;
   /** Docked at the bottom of a phone screen (.ui-composer-dock--sticky). */
   sticky?: boolean;
-  /** One line that grows as you type, the circles inside it on the right (.ui-composer--inline; PROPOSED 19 Oct 2026,
-   *  the Fume chat on a phone, MOB-2): the conversation keeps the room. No settings chips in this form. */
+  /** One line that grows as you type, the circles inside it on the right (.ui-composer--inline; the Fume chat on a
+   *  phone): the conversation keeps the room. No settings chips in this form. */
   inline?: boolean;
   sendLabel?: string;
   stopLabel?: string;

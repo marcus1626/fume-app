@@ -28,11 +28,11 @@ import type { Meeting, User } from "../../contract";
 import { firstName } from "../../shell/people";
 
 export const MEETING_TOPIC = "A call with Fume";
-/** Round 13 (#11): the preset that clears the field for her own words. */
+/** The preset that clears the field for her own words. */
 const OTHER_TOPIC = "Something else";
 const TZ = "Europe/Oslo";
 
-/** "Fri 17 Oct", Oslo's day, in the European order the whole app writes (walk-through 15 Oct). */
+/** "Fri 17 Oct", Oslo's day, in the European order the whole app writes. */
 export const slotDay = (iso: string) =>
   new Intl.DateTimeFormat("en-GB", {
     weekday: "short",
@@ -55,7 +55,7 @@ export const osloDay = (iso: string) => new Intl.DateTimeFormat("en-CA", { timeZ
 /** The person at Fume who takes meetings for this brand: the operator, else whoever is on the Fume team. */
 export function useHost(): User | undefined {
   const team = useTeam().data?.fumeTeam ?? [];
-  // Round 13 AGENCY (#71): an agency's own people are its team, not Fume; its meetings are with its contact at Fume.
+  // An agency's own people are its team, not Fume; its meetings are with its contact at Fume.
   const agency = Boolean(useSession().data?.user.agency);
   const contact = useAgencyPlan(agency).data?.contact;
   if (agency) return contact;
@@ -86,8 +86,8 @@ export function SlotForm({ slots, idBase, glass, footer, onBooked, quiet, topic:
   const host = useHost();
   const [topic, setTopic] = useState(about ?? MEETING_TOPIC);
   const [at, setAt] = useState("");
-  // Round 13 (#11, Marcus 21 Oct: "Burde ha noen mer presets her … hastemøte, eller updates"; PROPOSED): what a
-  // meeting is usually about, as pills like the times; one fills the field, "Something else" empties it for her words.
+  // What a meeting is usually about, as pills like the times; one fills the field, "Something else" empties it for her
+  // words.
   const topics = useMeetingTopics().data ?? [];
   const [other, setOther] = useState(false);
   const preset = other ? OTHER_TOPIC : topics.includes(topic) ? topic : "";

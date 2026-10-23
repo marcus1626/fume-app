@@ -1,20 +1,15 @@
-// Brand (FLOWS §0.3, §2, §4.1; UX review 15 Oct, §2.3; round 8 UX walk-through 19 Oct). One place, three tabs:
-// Brand DNA, Products and Taste (/brand, /brand/products, /brand/taste). The Brand DNA tab is the brand's guidelines
-// page: the logo on light and dark, every colour, type in the customer's own face, voice, imagery and the AI models.
-// Round 9 (desktop review DLAY-9, DLOAD-5, DLOAD-6, DWAY-14, DWAY-15, DWAY-17, DLAY-13; PROPOSED 19 Oct 2026):
-// - The tab is "Brand DNA" (the name the onboarding teaches); "Behind the board" is "More about your Brand DNA".
-// - The board acts in place: a find Fume is not sure of carries Confirm · Change · Remove where it is (board.tsx),
-//   so the part pages are gone: /brand/logo, /colour, /type, /voice and /imagery send you to /brand#<part>, and a
-//   part's "How it is used" opens its details in place. /brand/check stays as the one-at-a-time queue: its way in,
-//   "Confirm 7 finds", is the page's one Ink action, in the header on the title's line (DLAY-13); a line under the
-//   summary says what the finds are.
-// - From 1280 px the board is two columns (Logo | Colour, Type | Voice, Imagery across, AI models | More), so the
-//   whole brand fits in two screens at 1440 × 900 instead of four.
+// Brand (FLOWS §0.3, §2, §4.1): one place, three tabs, Brand DNA, Products and Taste (/brand, /brand/products,
+// /brand/taste).
+// - Brand DNA is the brand's guidelines page: the logo on light and dark, every colour, type in the customer's own
+//   face, voice, imagery and the AI models. From 1280 px it is two columns, so the whole brand fits in two screens.
+// - The board acts in place: a find Fume is not sure of carries Confirm · Change · Remove where it is (board.tsx), and
+//   a part's "How it is used" opens its details in place. /brand/logo, /colour, /type and /imagery send you to
+//   /brand#<part>. /brand/check is the one-at-a-time queue; its way in, "Confirm 7 finds", is the page's one Ink
+//   action.
 // - The tab row sticks under the app bar (≥ 1024 px) with, on Brand DNA, an index that jumps to each part and lights
-//   the part in view; tabs switch with replace, so Back leaves Brand instead of stepping through its tabs, and a tab
-//   that sticks stays where the mouse left it.
-// Rules (/brand/rules), What Fume learned (/brand/memory), Brand DNA summary (/brand/understanding) and Update the
-// brand (/brand/update) are pages of their own.
+//   the part in view. Tabs switch with replace, so Back leaves Brand instead of stepping through its tabs.
+// Voice (/brand/voice), Rules (/brand/rules), What Fume learned (/brand/memory), Brand DNA summary
+// (/brand/understanding) and Update the brand (/brand/update) are pages of their own.
 import { Button, Icon, PageHeader, Tabs, TabsList, TabsTrigger } from "@fume/ui";
 import { useEffect, useRef, useState } from "react";
 import { Link, Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
@@ -40,7 +35,7 @@ const tabs = [
 ] as const;
 type Tab = (typeof tabs)[number]["id"];
 
-/** The board's parts that once had a page of their own; their addresses now land on the part (/brand#colour). */
+/** The board's parts; their own addresses (/brand/colour) land on the part (/brand#colour). */
 const partIds = ["logo", "colour", "type", "voice", "imagery"] as const;
 type Part = (typeof partIds)[number];
 
@@ -79,13 +74,14 @@ function useFinds(view: BrandBoardView | undefined) {
   return { count: view.open + waiting.length, words };
 }
 
-/** /brand/update, /brand/rules and /brand/memory are pages of their own; a part's old page lands on the part. */
+/** /brand/voice, /brand/update, /brand/rules and /brand/memory are pages of their own; a part's address lands on the
+ *  part. */
 export function BrandBoardPage() {
   const { tab } = useParams<"tab">();
   if (tab === "update") return <BrandUpdatePage />;
   if (tab === "rules") return <BrandRules />;
   if (tab === "memory") return <MemoryPage />;
-  // Round 13 (#4): the voice has a page of its own again, the whole voice in five parts
+  // the whole voice, in five parts (voice.tsx)
   if (tab === "voice") return <VoicePage />;
   if (isPart(tab)) return <Navigate to={{ pathname: "/brand", hash: tab }} replace />;
   return <BrandTabs />;
@@ -208,7 +204,7 @@ function PartIndex() {
   const nav = useRef<HTMLElement>(null);
   // the part just jumped to: two parts abreast share a top, so the one picked stays lit until its row leaves
   const picked = useRef<{ id: string; at: number } | null>(null);
-  // a jump by address (/brand#colour, the old /brand/colour) lights its part too
+  // a jump by address (/brand#colour, or /brand/colour) lights its part too
   const { hash } = useLocation();
   useEffect(() => {
     const id = hash.slice(1);
@@ -268,8 +264,8 @@ function PartIndex() {
           onClick={(e) => {
             picked.current = { id: p.id, at: Date.now() };
             setCurrent(p.id);
-            // Round 13 (#40): the index scrolls to the part itself, so the address keeps no hash and the part is not
-            // marked as a jump target; focus moves to the part without a scroll of its own and without a ring
+            // The index scrolls to the part itself, so the address keeps no hash and the part is not marked as a jump
+            // target; focus moves to the part without a scroll of its own and without a ring.
             if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
             if (jumpTo(p.id, nav.current)) e.preventDefault();
           }}

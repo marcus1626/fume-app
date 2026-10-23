@@ -8,11 +8,11 @@
 // (--ui-tooltip-long-press) shows it for a moment and the tap that ends the press does not act, as tooltip.js does.
 // Radix writes data-state="delayed-open|instant-open"; the CSS animates on "open", so the content sets
 // data-state from the open state itself.
-// Round 9 (DWAY-9; PROPOSED 19 Oct 2026): every icon-only Button names itself in a tooltip (button.tsx wraps itself in
-// WithTooltip from its aria-label, with its shortcut); a Button already inside a TooltipTrigger does not wrap twice. A
-// shortcut is written the Mac way ("⌘B") and shown as this keyboard says it ("Ctrl+B" off a Mac). Focus opens the
-// tooltip only when it is keyboard focus (:focus-visible), so a dialog or menu that hands focus back to its opener after
-// a click does not leave a label hanging over it. Without a TooltipProvider above, WithTooltip brings its own.
+// Every icon-only Button names itself in a tooltip (button.tsx wraps itself in WithTooltip from its aria-label, with
+// its shortcut); a Button already inside a TooltipTrigger does not wrap twice. A shortcut is written the Mac way ("⌘B")
+// and shown as this keyboard says it ("Ctrl+B" off a Mac). Focus opens the tooltip only when it is keyboard focus
+// (:focus-visible), so a dialog or menu that hands focus back to its opener after a click does not leave a label
+// hanging over it. Without a TooltipProvider above, WithTooltip brings its own.
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import {
   createContext,

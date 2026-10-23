@@ -4,9 +4,9 @@
 // Wide: expanded <-> the icon rail. Narrow (the wrapper under 640 px; the CSS sets --sidebar-mode: drawer): a Smoke glass
 // drawer over the scrim; the page goes inert, focus moves in, Escape or the scrim closes it and focus returns to the
 // trigger; a link chosen in the drawer closes it. Cmd/Ctrl+B toggles (shortcut).
-// Round 9 (desktop review DWAY-9, DWAY-21; PROPOSED 19 Oct 2026): SidebarTrigger names itself in a tooltip with its
-// shortcut ("Show or hide the sidebar ⌘B", "Ctrl+B" off a Mac). `storageKey` remembers the rail on this computer
-// (localStorage, inside try/catch: a private window simply starts expanded), so a person who folds it keeps it folded.
+// SidebarTrigger names itself in a tooltip with its shortcut ("Show or hide the sidebar ⌘B", "Ctrl+B" off a Mac).
+// `storageKey` remembers the rail on this computer (localStorage, inside try/catch: a private window simply starts
+// expanded), so a person who folds it keeps it folded.
 import {
   Children,
   createContext,

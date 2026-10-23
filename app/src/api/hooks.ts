@@ -93,7 +93,6 @@ export const useStudioCampaigns = () => useQ(["studio", "campaigns"], (a) => a.s
 export const useQualityLog = () => useQ(["studio", "quality"], (a) => a.qualityLog());
 export const useTeamLoad = () => useQ(["studio", "team"], (a) => a.teamLoad());
 
-// ─── v2 (FLOWS.md) ───
 // Onboarding scan
 export const useBrandScan = () => useQ(["scan"], (a) => a.brandScan());
 export const useStartBrandScan = () => useM((a, v: Parameters<FumeApi["startBrandScan"]>[0]) => a.startBrandScan(v));
@@ -138,7 +137,6 @@ export const usePickGeneration = () =>
   useM((a, v: { sessionId: Id; generationId: Id }) => a.pickGeneration(v.sessionId, v.generationId));
 export const useSendToCheck = () => useM((a, sessionId: Id) => a.sendToCheck(sessionId));
 
-// ─── v3 (FLOWS §9–§14) ───
 // Studio documents
 export const useStudioModes = () => useQ(["studio", "modes"], (a) => a.studioModes());
 export const useDocuments = (workspaceId: Id | undefined) =>
@@ -179,11 +177,11 @@ export const useQaQueue = (workspaceId?: Id) =>
   useQ(["studio", "qa", workspaceId ?? "all"], (a) => a.qaQueue(workspaceId));
 export const useQaCheck = () => useM((a, itemId: Id) => a.qaCheck(itemId));
 export const useQaFeedback = () =>
-  useM((a, v: { itemId: Id; text: string; pins?: QaPin[] }) => a.qaFeedback(v.itemId, v.text, v.pins)); // r13 #51: pins
+  useM((a, v: { itemId: Id; text: string; pins?: QaPin[] }) => a.qaFeedback(v.itemId, v.text, v.pins));
 export const useQaEdit = () =>
   useM((a, v: { itemId: Id; layers: Parameters<FumeApi["qaEdit"]>[1] }) => a.qaEdit(v.itemId, v.layers));
 export const useQaToStudio = () => useM((a, itemId: Id) => a.qaToStudio(itemId));
-/** r13 #64: the designer takes the creative from the Engine (its fix stops). */
+/** The designer takes the creative from the Engine; its fix stops. */
 export const useQaTakeOver = () => useM((a, itemId: Id) => a.qaToStudio(itemId, true));
 // Review like frame.io
 export const useReviewComments = (creativeId: Id | undefined) =>
@@ -207,7 +205,6 @@ export const useBatches = (campaignId?: Id) =>
   useQ(["studio", "batches", campaignId ?? "all"], (a) => a.batches(campaignId));
 export const useStartBatch = () => useM((a, v: Parameters<FumeApi["startBatch"]>[0]) => a.startBatch(v));
 
-// ─── v4 (FLOWS §15–§21) ───
 // Placements and Make formats
 export const usePlacements = () => useQ(["placements"], (a) => a.placements());
 export const useMakeFormats = () =>
@@ -247,11 +244,11 @@ export const useSchedule = () => useM((a, v: Parameters<FumeApi["schedule"]>[0])
 export const useMoveEntry = () => useM((a, v: { entryId: Id; at: string }) => a.moveEntry(v.entryId, v.at));
 export const useRemoveEntry = () => useM((a, entryId: Id) => a.removeEntry(entryId));
 
-// v5: a campaign moodboard started on the spot (Marcus 15 Oct)
+// A campaign moodboard started on the spot
 export const useStartMoodboard = () =>
   useM((a, v: { campaignId: Id; images: string[] }) => a.startMoodboard(v.campaignId, v.images));
 
-// v6: product kinds and specs (round 6: a product category is a schema, like a Studio mode)
+// Product kinds and specs: a product category is a schema, like a Studio mode
 export const useProductKinds = () => useQ(["productKinds"], (a) => a.productKinds());
 export const useReadProduct = () => useM((a, v: Parameters<FumeApi["readProduct"]>[0]) => a.readProduct(v));
 export const useSaveProductSpecs = () =>
@@ -263,13 +260,13 @@ export const useUploadShot = () =>
 export const useUploadProductFile = () =>
   useM((a, v: { productId: Id } & Parameters<FumeApi["uploadProductFile"]>[1]) => a.uploadProductFile(v.productId, v));
 
-// The brief, line by line (walk-through 15 Oct, Must 12): a manual brief is finished where it is read.
+// The brief, line by line: a manual brief is finished where it is read.
 export const useChangeBrief = () =>
   useM((a, v: { campaignId: Id; change: Parameters<FumeApi["changeBrief"]>[1] }) =>
     a.changeBrief(v.campaignId, v.change),
   );
 
-// v9: Update the brand (round 7, PROPOSED 16 Oct 2026). The update is polled while the Engine reads.
+// Update the brand. The update is polled while the Engine reads.
 export const useBrandUpdate = () => {
   const api = useApi();
   return useQuery({
@@ -284,7 +281,7 @@ export const useDecideBrandFound = () =>
   useM((a, v: Parameters<FumeApi["decideBrandFound"]>[0]) => a.decideBrandFound(v));
 export const useApproveBrandUpdate = () => useM((a, updateId: Id) => a.approveBrandUpdate(updateId));
 
-// v8: Import products (round 7, worker W): the import under way polls until it has something to show.
+// Import products: the import under way polls until it has something to show.
 export const useProductImport = () => {
   const api = useApi();
   return useQuery({
@@ -306,35 +303,30 @@ export const useDecideFound = () =>
 export const useApproveImport = () => useM((a, jobId: Id) => a.approveImport(jobId));
 export const useDismissImport = () => useM((a, jobId: Id) => a.dismissImport(jobId));
 
-// ── round 8 HOME ──
 // One question, one sheet (features/questions/QuestionSheet.tsx): the open questions, and the one way to answer them.
 export const useQuestions = () => useQ(["questions"], (a) => a.questions());
 export const useAnswerQuestion = () => useM((a, v: Parameters<FumeApi["answerQuestion"]>[0]) => a.answerQuestion(v));
 
-// ── round 8 REVIEW ──
 // Approve with Undo, and one change request for a review set (features/review).
 export const useUnapprove = () => useM((a, versionIds: Id[]) => a.unapprove(versionIds));
 export const useRequestChangeRound = () =>
   useM((a, v: Parameters<FumeApi["requestChangeRound"]>[0]) => a.requestChangeRound(v));
 
-// ── round 8 ONB ──
 export const useOnboardingProgress = () => useQ(["onboarding"], (a) => a.onboardingProgress());
 export const useSaveOnboardingProgress = () =>
   useM((a, v: Parameters<FumeApi["saveOnboardingProgress"]>[0]) => a.saveOnboardingProgress(v));
 
-// ── round 9 VIEWER ──
-// Undo for a change request just sent (DTSK-15), and several campaigns at once so a collection's approved work gets the
-// same short names ("Feed A2") as on each campaign (DTSK-11, features/review/names.ts).
+// Undo for a change request just sent, and several campaigns at once so a collection's approved work gets the same
+// short names ("Feed A2") as on each campaign (features/review/names.ts).
 export const useWithdrawChangeRound = () =>
   useM((a, v: Parameters<FumeApi["withdrawChangeRound"]>[0]) => a.withdrawChangeRound(v));
 export const useCampaignViews = (ids: Id[]) =>
   useQ(["campaign-views", ...ids], (a) => Promise.all(ids.map((id) => a.campaign(id))), ids.length > 0);
 
-// ── round 9 CHAT ──
-// A brief half made in the Fume chat (DTSK-16): Home shows it as a Waiting row, "Christmas · Hand Balm · Fume asked who
-// it should reach", which opens the chat at that question. One per campaign started in the chat whose newest word is
-// Fume's open question (a brief that is complete waits on Home as the brief to approve instead). Composed from the
-// conversation the chat already reads, so the row and the chat never disagree.
+// A brief half made in the Fume chat: Home shows it as a Waiting row, "Christmas · Hand Balm · Fume asked who it should
+// reach", which opens the chat at that question. One per campaign started in the chat whose newest word is Fume's open
+// question (a brief that is complete waits on Home as the brief to approve instead). Composed from the conversation the
+// chat already reads, so the row and the chat never disagree.
 export interface DraftBrief {
   campaignId: Id;
   threadId: Id;
@@ -414,8 +406,7 @@ export function useDraftBriefs(): { data: DraftBrief[] | undefined; isPending: b
   return { data: drafts.sort((a, b) => b.at.localeCompare(a.at)), isPending: false };
 }
 
-// ── round 10 the plan ──
-// FLOWS §22: the plan Fume writes from the brief she sent; she approves it before the Engine makes anything.
+// The plan Fume writes from the brief she sent; she approves it before the Engine makes anything (FLOWS §22).
 export const usePlan = (campaignId: Id | undefined) =>
   useQ(["plan", campaignId], (a) => a.plan(campaignId!), Boolean(campaignId));
 export const useSendBrief = () => useM((a, campaignId: Id) => a.sendBrief(campaignId));
@@ -434,14 +425,13 @@ export const useAskPlanChanges = () =>
   useM((a, v: { campaignId: Id; note: string }) => a.askPlanChanges(v.campaignId, v.note));
 export const useCheckPlan = () => useM((a, campaignId: Id) => a.checkPlan(campaignId));
 
-// ── round 10 FLOW ──
-// The plans of several campaigns at once (⌘K, Home's plan rows), like useCampaignViews: one call per campaign, null
-// for a campaign whose brief is not sent yet. The staff side gets them whole; the customer gets the state until ready.
+// The plans of several campaigns at once (⌘K, Home's plan rows), like useCampaignViews: one call per campaign, null for
+// a campaign whose brief is not sent yet. The staff side gets them whole; the customer gets the state until ready.
 export const usePlans = (ids: Id[]) =>
   useQ(["plans", ...ids], (a) => Promise.all(ids.map((id) => a.plan(id))), ids.length > 0);
 
-// ── round 11 agencies ──
-// FLOWS §24: the agency's Home, its clients, campaigns across clients, team and licence; Send to client and the link.
+// The agency (FLOWS §24): its Home, its clients, campaigns across clients, team and licence; Send to client and the
+// client link.
 export const useAgencyHome = (enabled = true) => useQ(["agency", "home"], (a) => a.agencyHome(), enabled);
 export const useAgencyClients = (enabled = true) => useQ(["agency", "clients"], (a) => a.agencyClients(), enabled);
 export const useAgencyCampaigns = () => useQ(["agency", "campaigns"], (a) => a.agencyCampaigns());
@@ -460,13 +450,12 @@ export const useAnswerClientLink = () =>
 export const useAnswerClientPlan = () =>
   useM((a, v: Parameters<FumeApi["answerClientPlan"]>[0]) => a.answerClientPlan(v));
 
-// ── round 12 QA ──
+// Check
 export const useQaUncheck = () => useM((a, itemId: Id) => a.qaUncheck(itemId));
 export const useUndoDocumentToCheck = () => useM((a, documentId: Id) => a.undoDocumentToCheck(documentId));
 
-// ── round 13 campaign ──
-// Marcus's video comments (22 Oct 2026): skip the moodboard, ask the expert to check the plan (optional), the brief's
-// templates and Fume's alternatives.
+// The campaign: skip the moodboard, ask the expert to check the plan (optional), the brief's templates and Fume's
+// alternatives.
 export const useSkipMoodboard = () => useM((a, campaignId: Id) => a.skipMoodboard(campaignId));
 export const useAskPlanCheck = () => useM((a, campaignId: Id) => a.askPlanCheck(campaignId));
 export const useBriefTemplates = () => useQ(["brief-templates"], (a) => a.briefTemplates());
@@ -476,21 +465,19 @@ export const useBriefAlternatives = () => {
   return useMutation({ mutationFn: (v: Parameters<FumeApi["briefAlternatives"]>[0]) => api.briefAlternatives(v) });
 };
 
-// ── round 13 brand ──
-// Marcus's video comments (22 Oct 2026): a colour's uses, a picture's group, the voice's parts, "Neither" in a taste
-// pair, and her own profile changed in place.
+// Brand: a colour's uses, a picture's group, the voice's parts, "Neither" in a taste pair, and her own profile changed
+// in place.
 export const useSetColourUses = () => useM((a, v: Parameters<FumeApi["setColourUses"]>[0]) => a.setColourUses(v));
 export const useMoveImage = () => useM((a, v: Parameters<FumeApi["moveImage"]>[0]) => a.moveImage(v));
 export const useDecideVoicePart = () => useM((a, v: Parameters<FumeApi["decideVoicePart"]>[0]) => a.decideVoicePart(v));
 export const usePassTastePair = () => useM((a, v: Parameters<FumeApi["passTastePair"]>[0]) => a.passTastePair(v));
 export const useUpdateProfile = () => useM((a, v: Parameters<FumeApi["updateProfile"]>[0]) => a.updateProfile(v));
 
-// ── round 13 agency ──
-// Marcus's video comments #70, #71 (22 Oct 2026): the agency's Fume plan, and asking Fume for people or help.
+// The agency's Fume plan, and asking Fume for people or help.
 export const useAgencyPlan = (enabled = true) => useQ(["agency", "plan"], (a) => a.agencyPlan(), enabled);
 export const useAskFume = () => useM((a, v: Parameters<FumeApi["askFume"]>[0]) => a.askFume(v));
 
-// Round 13 CHAT (#11, #20; PROPOSED 22 Oct 2026)
+// Meeting topics
 export const useMeetingTopics = () => useQ(["meetings", "topics"], (a) => a.meetingTopics());
 export const useChangePlanWithFume = () =>
   useM((a, v: { campaignId: Id; text: string }) => a.changePlanWithFume(v.campaignId, v.text));

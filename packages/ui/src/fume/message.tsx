@@ -1,5 +1,4 @@
-// Message, bubble and message scroller (design-system/components/message.css, behaviour from message.js).
-// DECIDED 13 Oct, round 8. Three voices:
+// Message, bubble and message scroller (design-system/components/message.css, behaviour from message.js). Three voices:
 // - People (you, Anna) speak in a Bubble, with their avatar in the header. Yours sit at the end (align="end").
 // - The Engine has no bubble and no face: MessageText on a 64ch column under its mark (fi-fume-engine) and the
 //   word "Engine". It never says "I". What it makes (the run card, creatives) is the surface.
@@ -234,7 +233,7 @@ export const MessageReply = forwardRef<HTMLDivElement, MessageReplyProps>(functi
   );
 });
 
-/** span.ui-message-mention: "@Marcus" inside a bubble. */
+/** span.ui-message-mention: "@Anna" inside a bubble. */
 export function MessageMention({ children, className }: { children: ReactNode; className?: string }) {
   return <span className={cx("ui-message-mention", className)}>{children}</span>;
 }
@@ -389,10 +388,10 @@ export interface MessageScrollerHandle {
   /** Reads text out once through the polite live region ("Anna: The new one keeps the whole cap."). */
   announce: (text: string) => void;
   /**
-   * Shows an item from its top (round 8, PROPOSED 19 Oct 2026: Fume's answer comes into view from its question, not
-   * from its last button). The item's top goes to the viewport's top, less its scroll-margin and `offset`; when it fits
-   * with everything after it, this is the end. The scroller then stops following the end, and the "Jump to latest"
-   * pill stays away until she scrolls herself: what is below is the item she is reading.
+   * Shows an item from its top, so Fume's answer comes into view from its question, not from its last button. The
+   * item's top goes to the viewport's top, less its scroll-margin and `offset`; when it fits with everything after it,
+   * this is the end. The scroller then stops following the end, and the "Jump to latest" pill stays away until she
+   * scrolls herself: what is below is the item she is reading.
    */
   reveal: (item: HTMLElement, options?: RevealOptions) => void;
   /** The viewport element. */
@@ -405,10 +404,9 @@ export interface RevealOptions {
   /** More room above the item's top (px). */
   offset?: number;
   /**
-   * "end" (round 9, PROPOSED 19 Oct 2026, UX review DTSK-3): an item that carries actions and is taller than the
-   * viewport shows its foot instead, `gap` (default 16) above the viewport's bottom, so its buttons are never under
-   * the composer. An item that fits still comes in from its top. A sticky header inside the item keeps its question
-   * in view.
+   * "end": an item that carries actions and is taller than the viewport shows its foot instead, `gap` (default 16)
+   * above the viewport's bottom, so its buttons are never under the composer. An item that fits still comes in from its
+   * top. A sticky header inside the item keeps its question in view.
    */
   block?: "start" | "end";
   gap?: number;
@@ -525,7 +523,7 @@ export const MessageScroller = forwardRef<MessageScrollerHandle, MessageScroller
       const box = item.getBoundingClientRect();
       const origin = v.getBoundingClientRect().top - v.scrollTop;
       let top = box.top - origin - margin - (options?.offset ?? 0);
-      // Too tall to show whole: its foot (the action row) sits `gap` above the viewport's bottom instead (DTSK-3).
+      // Too tall to show whole: its foot (the action row) sits `gap` above the viewport's bottom instead.
       const gap = options?.gap ?? tokenPx("--ui-space-lg", 16);
       if (options?.block === "end" && box.bottom - origin - top > v.clientHeight - gap)
         top = box.bottom - origin - v.clientHeight + gap;

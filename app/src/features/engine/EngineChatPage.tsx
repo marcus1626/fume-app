@@ -1,15 +1,13 @@
-// The Engine chat (FLOWS §19, Marcus 15 Oct 14:28: "designerne snakker med Engine"). Fume's people talk to the Engine
-// the way customers talk to Fume: one conversation per brand, with the brand as context. "Take LYSNE's latest
-// catalogue" → the Engine shows the products to tick → asks what it needs, one question at a time → runs → each
-// creative lands in Check for the expert, and opens in the Studio for more control. Here the Engine talks (it never
-// talks to customers): its lines carry its mark and name. The look is the customer's Fume chat (chat.css,
-// message.css, composer.css) so both read as one product; the widgets are engine-chat.css.
-// Round 12 (UX review DLAY-13, DTASK-5, DWAY-13, DWAY-21; PROPOSED 20 Oct 2026): the Fume chat's desk layout, the
-// thread on the page's left edge and "The run" on the right (what the Engine has been told, each line changeable,
-// the progress and Open in Check at its foot); the header is the title with quiet links to Engine output and the
-// Studio, and the description moved into the thread's first line. A question gets an answer (what waits in Check,
-// what is due first), never a run; the run card says what is true ("Landing in Check · 2 of 4") and every picture
-// opens in the Studio. The composer has the focus on open and gets it back after every send and every answer.
+// The Engine chat (FLOWS §19): Fume's people talk to the Engine the way customers talk to Fume, one conversation per
+// brand, with the brand as context. "Take LYSNE's latest catalogue" → the Engine shows the products to tick → asks what
+// it needs, one question at a time → runs → each creative lands in Check for the expert, and opens in the Studio for
+// more control. Here the Engine talks (it never talks to customers): its lines carry its mark and name. The look is the
+// customer's Fume chat (chat.css, message.css, composer.css), so both read as one product; the widgets are
+// engine-chat.css.
+// On a desk the thread is on the left and "The run" on the right: what the Engine has been told, each line changeable,
+// the progress and Open in Check at its foot. A question gets an answer (what waits in Check, what is due first), never
+// a run; the run card says what is true ("Landing in Check · 2 of 4") and every picture opens in the Studio. The
+// composer has the focus on open and gets it back after every send and every answer.
 import {
   Bubble,
   Button,
@@ -102,7 +100,7 @@ const ofRun = (queue: QaView[] | undefined, runId: Id) =>
 export function EngineChatPage() {
   const { workspaceId = "" } = useParams();
   const session = useSession().data!;
-  const checkWords = useCheckWords(); // round 13 AGENCY: who checks, in the frame's words
+  const checkWords = useCheckWords(); // who checks, in the frame's words
   const chat = useEngineChat(workspaceId);
   const brand = useBrandWorkspace(workspaceId).data;
   const people = directory(usePeople().data);
@@ -143,8 +141,8 @@ export function EngineChatPage() {
   useEffect(() => {
     if (last?.author.kind === "engine") setWaiting(false);
   }, [last]);
-  // The chat opens at its latest line, once its widgets have their pictures; the shell has moved the focus to the
-  // page by then, and the composer takes it (DWAY-21).
+  // The chat opens at its latest line, once its widgets have their pictures; the shell has moved the focus to the page
+  // by then, and the composer takes it.
   const loaded = Boolean(chat.data);
   useEffect(() => {
     if (!loaded) return;
@@ -352,8 +350,8 @@ const QUESTION: Record<Exclude<LineKey, "products">, RegExp> = {
   format: /format/i,
 };
 
-/** "The run" (DLAY-13): what the Engine has been told for the run, line by line, the one it is asking about marked;
- *  a line can be changed in place until the run starts. Once it runs: its progress and Open in Check at its foot. */
+/** "The run": what the Engine has been told for the run, line by line, the one it is asking about marked; a line can be
+ *  changed in place until the run starts. Once it runs: its progress and Open in Check at its foot. */
 function RunPanel({
   message,
   messages,
@@ -633,8 +631,8 @@ function Widget({
   }
 }
 
-/** The answer to a question about the work (DTASK-5): the creatives in Check it is about, due first; each opens Check
- *  at that creative. */
+/** The answer to a question about the work: the creatives in Check it is about, due first; each opens Check at that
+ *  creative. */
 const ANSWER_ROWS = 5;
 function CheckAnswer({ itemIds, workspaceId }: { itemIds: Id[]; workspaceId: Id }) {
   const queue = useQaQueue(workspaceId).data;
@@ -684,9 +682,9 @@ function CheckAnswer({ itemIds, workspaceId }: { itemIds: Id[]; workspaceId: Id 
   );
 }
 
-/** The brand's products to tick (walk-through Must 9): products whose facts the customer has not confirmed are
- *  locked, never ticked, and say who confirms them. The card shows a few tiles; "View all products" opens the whole
- *  offer in the shared sheet. Once picked, the card keeps only the picked ones and reads as an answer. */
+/** The brand's products to tick: products whose facts the customer has not confirmed are locked, never ticked, and say
+ *  who confirms them. The card shows a few tiles; "View all products" opens the whole offer in the shared sheet. Once
+ *  picked, the card keeps only the picked ones and reads as an answer. */
 const INLINE = 8;
 function ProductsWidget({
   widget,

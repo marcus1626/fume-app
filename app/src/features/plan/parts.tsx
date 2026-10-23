@@ -1,19 +1,15 @@
-// The plan document's parts (design-system/components/plan.css): a line's source tag, a line with Change in place,
-// a master as a row with a placeholder in its own ratio, what follows the masters, a direction Fume also considered,
-// the steps. Words (FLOWS §22, round 10 brief): "Change" edits a line in place (Esc cancels, ⌘↵ saves); a line she
-// changed says "Changed by you"; "Use this direction" takes another direction; "Fume's pick" names the one Fume
-// recommends.
-// Round 12 (UX review DLAY-10, DLOAD-9, DWAY-18, DLOAD-17; PROPOSED 20 Oct 2026): set like a spec, not like prose. A line
-// is one row: its label with its one quiet source under it, the value, what it rests on, and Change as a pencil that
-// shows on the row's hover and keyboard focus (always on a touch screen), not fifteen pills at rest. A master is a
-// compact row with a small placeholder in its ratio. What follows the masters is a table of one line each; two that
-// would be the same creative are one row, "2 ×". A direction Fume also considered is one row: two pictures, its name,
-// its idea, "Use this direction". Change puts the caret at the end of the words; Save, Cancel and Esc give the focus
-// back to the pencil that opened it.
-// Round 13 (Marcus's comments #26, #28, #67; PROPOSED 22 Oct 2026): a creative can have its own look ("Own look": its
-// light, the light's direction, its camera) beside the plan's look, which still holds for every other creative; Change
-// edits it in place. A creative Fume changed as she asked says "Changed by Fume". A step the expert checks carries the
-// Focus pointer (Amber once checked).
+// The plan document's parts (design-system/components/plan.css), set like a spec, not like prose: a line's source tag;
+// a line as one row (its label with its one quiet source under it, the value, what it rests on, and Change as a pencil
+// that shows on the row's hover and keyboard focus, always on a touch screen); a master as a compact row with a small
+// placeholder in its own ratio; what follows the masters as a table of one line each (two that would be the same
+// creative are one row, "2 ×"); a direction Fume also considered as one row (two pictures, its name, its idea, "Use
+// this direction"); the steps.
+// Words (FLOWS §22): "Change" edits a line in place (Esc cancels, ⌘↵ saves; the caret starts at the end of the words,
+// and Save, Cancel and Esc give the focus back to the pencil); a line she changed says "Changed by you", one Fume
+// changed as she asked "Changed by Fume"; "Use this direction" takes another direction; "Fume's pick" names the one
+// Fume recommends. A creative can have its own look (its light, the light's direction, its camera) beside the plan's
+// look, which still holds for every other creative. A step the expert checks carries the Focus pointer (Amber once
+// checked).
 import { Button, Field, FieldLabel, Icon, Input, Textarea, submitOnModEnter, useToast } from "@fume/ui";
 import {
   useEffect,
@@ -87,7 +83,7 @@ function EditActions({ busy, onCancel }: { busy: boolean; onCancel: () => void }
   );
 }
 
-/** The caret after the last word (DWAY-18): a change adds to the line more often than it starts it again. */
+/** The caret after the last word: a change adds to the line more often than it starts it again. */
 function useCaretAtEnd<T extends HTMLTextAreaElement | HTMLInputElement>() {
   const ref = useRef<T>(null);
   useEffect(() => {
@@ -300,7 +296,7 @@ export function MasterCard({
   );
 }
 
-/** "Changed by you", "Changed by Anna", "Changed by Fume" (a change she asked Fume for, round 13). */
+/** "Changed by you", "Changed by Anna", "Changed by Fume" (a change she asked Fume for). */
 export function ChangedTag({ by, people }: { by: string; people: PlanPeople }) {
   return by === "fume" ? (
     <SourceTag source="fume" label="Changed by Fume" />
@@ -317,7 +313,7 @@ const LOOK_PARTS = [
 
 const hasLook = (look?: CreativeLook | null) => Boolean(look && LOOK_PARTS.some(([k]) => look[k]?.trim()));
 
-/** A creative's own look (#26): what differs from the plan's look for this one creative. Nothing when it has none. */
+/** A creative's own look: what differs from the plan's look for this one creative. Nothing when it has none. */
 export function OwnLook({ look, voice = (t) => t }: { look?: CreativeLook; voice?: (text: string) => string }) {
   if (!look || !hasLook(look)) return null;
   return (
@@ -356,7 +352,7 @@ function CreativeEdit({
         campaignId,
         creativeId: creative.id,
         creative: { scene: scene.trim(), text: text.trim() || undefined },
-        // its own look (#26): empty takes it back to the plan's look
+        // its own look: empty takes it back to the plan's look
         ...(hasLook(look)
           ? {
               look: {
@@ -407,9 +403,9 @@ function CreativeEdit({
   );
 }
 
-/** The variants and formats as a table of one line each: the creative's one name, the master it comes from, what changes
- *  and its words when they differ. Two that would be the same creative (the same master, format, scene and words) are
- *  one row, "2 ×" (DLOAD-17). */
+/** The variants and formats as a table of one line each: the creative's one name, the master it comes from, what
+ *  changes and its words when they differ. Two that would be the same creative (the same master, format, scene and
+ *  words) are one row, "2 ×". */
 export function FollowList({
   masters,
   variants,
@@ -519,7 +515,7 @@ export interface Step {
   when?: string;
   time?: string;
   state: "done" | "now" | "ahead";
-  /** The expert checks this step (round 13, #28): the Focus pointer, Amber once checked. */
+  /** The expert checks this step: the Focus pointer, Amber once checked. */
   check?: boolean;
 }
 

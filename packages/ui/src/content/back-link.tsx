@@ -1,8 +1,8 @@
-// Back link: the one way up from a page that sits under another (design-system/components/back-link.css, PROPOSED
-// 15 Oct 2026). It replaces the breadcrumb in the app (Marcus 15 Oct: "heller bare en pil tilbake knapp"): a rounded
-// square with the arrow and the parent's name small beside it, above the page title. It is a real <a href> to the
-// parent, so it opens in a new tab like any link; the app decides on click (onClick + preventDefault) whether going
-// back in history is the same as going to the parent, so a list keeps its place, its filters and its scroll.
+// Back link: the one way up from a page that sits under another (design-system/components/back-link.css). The app uses
+// it instead of a breadcrumb: a rounded square with the arrow and the parent's name small beside it, above the page
+// title. It is a real <a href> to the parent, so it opens in a new tab like any link; the app decides on click (onClick
+// + preventDefault) whether going back in history is the same as going to the parent, so a list keeps its place, its
+// filters and its scroll.
 import { forwardRef, type AnchorHTMLAttributes } from "react";
 import { cx } from "../cx";
 import { Icon } from "../icons";

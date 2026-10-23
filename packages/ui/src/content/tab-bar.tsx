@@ -1,7 +1,7 @@
-// Tab bar: a customer's few places at the foot of a phone screen (design-system/components/tab-bar.css, PROPOSED
-// 15 Oct 2026). A Smoke glass pill that floats over the page; each place is an icon over its label, the current one
-// on the glass's one white pill. It shows under 640 px only (the CSS hides it on a desk, where the sidebar holds the
-// same places in the same order). A count is for the one thing that waits on you (Home), nowhere else.
+// Tab bar: a customer's few places at the foot of a phone screen (design-system/components/tab-bar.css). A Smoke glass
+// pill that floats over the page; each place is an icon over its label, the current one on the glass's one white pill.
+// It shows under 640 px only (the CSS hides it on a desk, where the sidebar holds the same places in the same order). A
+// count is for the one thing that waits on you (Home), nowhere else.
 import {
   Children,
   forwardRef,

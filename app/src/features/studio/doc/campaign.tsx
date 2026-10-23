@@ -1,9 +1,8 @@
-// The creative's campaign in the Studio (Marcus 15 Oct: "Hvor i studio tenker du man velger kampanje? En kampanje kan
-// ha egen stil, farger, moodboard. F eks black friday"). The campaign is a chip in the desk's top bar, beside the
-// creative's name (round 12, DWAY-10: no breadcrumbs, so it is no longer a crumb that also changes data): it names the
-// campaign, or "No campaign", and opens the brand's campaigns with their covers to pick another. A campaign with a look
-// of its own shows a small "Black Friday look" chip beside it: its note, its colours, its light and its moodboard.
-// The Studio's start asks the same with a small select.
+// The creative's campaign in the Studio: a campaign can have its own style, colours and moodboard (Black Friday). The
+// campaign is a chip in the desk's top bar, beside the creative's name: it names the campaign, or "No campaign", and
+// opens the brand's campaigns with their covers to pick another. A campaign with a look of its own shows a small "Black
+// Friday look" chip beside it: its note, its colours, its light and its moodboard. The Studio's start asks the same
+// with a small select.
 import {
   Button,
   Icon,

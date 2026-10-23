@@ -1,12 +1,6 @@
-// Deliveries (FLOWS §3.2, §7 step 13): by campaign. Each campaign shows the deliveries it has, one row each, then
-// what is approved and in no delivery yet, offered as a delivery only once it is complete (round 8, TASK-16).
-// Since the UX review (15 Oct, §2.3) this is not a place of its own: a delivery is a campaign's last stage, Home
-// shows what is ready to download, and this page is "All deliveries", one quiet link from Campaigns.
-// Round 9 (desktop review 19 Oct, DLOAD-15; PROPOSED 19 Oct 2026): no heading per campaign over its rows; each row
-// already carries the campaign's name ("Autumn launch · Masters"), so the name was said twice.
-// Round 13 (Marcus #29; PROPOSED 22 Oct 2026): a place of its own again, "Deliveries" in the customer's sidebar between
-// Campaigns and Brand, so the page is named for the place and has no way back to Campaigns. Ready to download wears
-// Moss, the proposed state green (#39).
+// Deliveries (FLOWS §3.2), a place of its own in the customer's sidebar. By campaign: the deliveries it has, one row
+// each, then what is approved and in no delivery yet, offered as a delivery only once it is complete. No heading per
+// campaign: each row already carries the campaign's name ("Autumn launch · Masters"). Ready to download wears Moss.
 import { PageHeader } from "@fume/ui";
 import { useCampaigns, useDeliveries } from "../../api/hooks";
 import type { Campaign } from "../../contract";
@@ -35,8 +29,8 @@ export function DeliveriesPage() {
       />
       <Query query={deliveries}>
         {(list) => {
-          // One section per campaign, each delivery said once (TASK-16): the campaigns whose newest delivery is newest
-          // first, then the campaigns with approved work and no delivery yet.
+          // One section per campaign, each delivery said once: the campaigns whose newest delivery is newest first,
+          // then the campaigns with approved work and no delivery yet.
           const order = new Map<string, number>();
           list.forEach((d) => order.set(d.campaignId, Math.max(order.get(d.campaignId) ?? 0, Date.parse(d.createdAt))));
           for (const c of campaigns.data ?? []) if (hasWork(c) && !order.has(c.id)) order.set(c.id, 0);

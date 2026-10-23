@@ -1,19 +1,16 @@
-// The plan for Fume's expert (FLOWS §22.3, PROPOSED 20 Oct 2026): /studio/b/:workspaceId/campaigns/:campaignId/plan.
-// The same document the customer reads, whole while it is in check, every line and every creative changeable in place
-// (the expert may change any line), and the step footer's one Ink: "Mark checked", which sends it to the customer.
-// While Fume is still writing it, the same calm state the customer sees.
-// Round 12 (desktop review 20 Oct, DTASK-8, DLAY-11, DTASK-9, DLOAD-17; PROPOSED 20 Oct 2026):
+// The plan for Fume's expert (FLOWS §22.3): /studio/b/:workspaceId/campaigns/:campaignId/plan. The same document the
+// customer reads, every line and every creative changeable in place, and the step footer's one Ink: "Mark checked",
+// which sends it to the customer. A plan comes here in check only when the customer asks ("Ask Anna to check");
+// otherwise it goes to her as Fume wrote it (FLOWS §26.2). While Fume is still writing it, the same calm state the
+// customer sees.
 // - Mark checked has its key, ⌘↵ (Ctrl+↵ off a Mac), on the pill. The check waits 10 s before the customer sees the
-//   plan, with Undo in the toast and in the foot; leaving the page sends it at once. Then the foot stays and says
-//   where it stands and what comes next: "Checked by you · It waits on Maja", and "Next: 3 creatives in Check" (or
-//   "Nothing else waits on you").
+//   plan, with Undo in the toast and in the foot; leaving the page sends it at once. Then the foot says where it stands
+//   and what comes next: "Checked by you · It waits on Maja" (the Focus pointer in Amber, as Check marks it), and
+//   "Next: 3 creatives in Check" (or "Nothing else waits on you").
 // - The customer's brief sits in the sticky aside, beside the lines she checks against it (the facts fold to one line).
 // - The foot counts what she changed in her check ("You changed 1 line"); each line she changed reads "Changed by Anna"
 //   on both sides (the plan's mock keeps who changed it).
 // - The plan speaks of the customer by name on this page ("Maja's brief", PlanDocument's voice for staff).
-// Round 13 (Marcus's comments #20, #25, #28; PROPOSED 22 Oct 2026): the expert's check of a plan is optional. A plan
-// comes here in check only when the customer asks ("Ask Anna to check"); otherwise it goes to her as Fume wrote it. The
-// foot's "Checked by you" is the Focus pointer in Amber, as Check marks it.
 import { Button, CheckMark, Kbd, PageFooter, PageHeader, shortcutLabel, useToast } from "@fume/ui";
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -65,7 +62,7 @@ function StaffPlan({
   const brand = session?.workspaces.find((w) => w.id === workspaceId)?.brandName ?? "";
   const approver = people.name(view.campaign.approverId);
   const held = useHeldCheck(view.campaign.id, cap(approver));
-  // What waits on her next: this brand's creatives in Check, else any brand's (DTASK-8).
+  // What waits on her next: this brand's creatives in Check, else any brand's.
   const here = useQaWaiting(workspaceId);
   const all = useQaWaiting();
   const next = here.total || all.total;
@@ -101,7 +98,7 @@ function StaffPlan({
 
   const whole = plan.directions.length > 0;
   const mine = changedByMe(plan, people.me?.id);
-  // The customer's brief beside the lines she checks against it (DLAY-11).
+  // The customer's brief beside the lines she checks against it.
   const briefFrom = view.brief.approvedBy ? people.Name(view.brief.approvedBy) : cap(approver);
   const aside = (
     <>
@@ -166,7 +163,7 @@ function StaffPlan({
           className="ui-plandoc-foot"
           start={
             <>
-              {/* Round 13 (#28): the Focus pointer in Amber, as Check marks "Checked by you" */}
+              {/* the Focus pointer in Amber, as Check marks "Checked by you" */}
               <CheckMark state="checked" label={copy.checkedBy("you")} />
               {" · "}
               {[
@@ -194,8 +191,8 @@ function StaffPlan({
   );
 }
 
-/** The check, held 10 s so Undo can take it back before the customer sees anything (DTASK-8). Leaving the page sends a
- *  held check at once. */
+/** The check, held 10 s so Undo can take it back before the customer sees anything. Leaving the page sends a held check
+ *  at once. */
 function useHeldCheck(campaignId: Id, Approver: string) {
   const check = useCheckPlan();
   const toast = useToast();
@@ -243,7 +240,7 @@ function useHeldCheck(campaignId: Id, Approver: string) {
   return { held, sent, sending: check.isPending, mark, undo };
 }
 
-/** What she changed in this version of the plan: lines and creatives (DTASK-9), as "1 line", "2 lines and 1 creative". */
+/** What she changed in this version of the plan: lines and creatives, as "1 line", "2 lines and 1 creative". */
 function changedByMe(plan: CampaignPlan, me?: Id): string {
   const direction = chosenOf(plan);
   if (!direction || !me) return "";

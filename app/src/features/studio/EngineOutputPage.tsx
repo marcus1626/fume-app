@@ -1,9 +1,7 @@
-// Engine output for one brand (FLOWS §4.2): every run and its versions, best first by what the Engine's own
-// evaluation found (Product Truth, brand rules, artefacts). Open any version in the Studio to work on it there.
-// Round 12 (UX review DLOAD-18, DLAY-17, PROPOSED 20 Oct 2026): one noun for what the Engine made, "version" (as in
-// the Studio), and the filter hugs its content at the right of the first run's heading.
-// Round 13 (robot note 07): a run's "Open in the Studio" opens its best version (the document that holds it), never an
-// empty "Untitled creative" in Free; a run whose creatives all went to Check has no such button.
+// Engine output for one brand (FLOWS §4.2): every run and its versions, best first by what the Engine's own evaluation
+// found (Product Truth, brand rules, artefacts). Open any version in the Studio to work on it there. One noun for what
+// the Engine made, "version" (as in the Studio). A run's "Open in the Studio" opens its best version (the document that
+// holds it), never an empty "Untitled creative"; a run whose creatives all went to Check has no such button.
 import { Button, CreativeGrid, EngineRun, PageHeader, SegmentedControl, SegmentedOption } from "@fume/ui";
 import { useState } from "react";
 import { useParams } from "react-router-dom";

@@ -3,10 +3,10 @@
 //   > div.ui-popover-header (h3.ui-popover-title, p.ui-popover-description), div.ui-popover-row (input.ui-input + button).
 // No arrow: it opens --ui-overlay-offset (8) from its trigger, grows from it, flips when there is no room and
 // keeps --ui-overlay-margin (16) inside the screen. A small task in place, with one white button (ui-btn--glass-white).
-// Round 9 (DWAY-4, DWAY-8, DWAY-11; PROPOSED 19 Oct 2026): solid over the light app (glass.css). A popover that holds a
-// whole list takes className "ui-popover--list" (popover.css: a head, .ui-popover-tabs, a .ui-popover-scroll that
-// scrolls on its own, up to 70 % of the screen); the bell's notifications use it. A link inside that goes to another
-// page does not hand focus back to the trigger, so the new page's title can take it.
+// It is solid over the light app (glass.css). A popover that holds a whole list takes className "ui-popover--list"
+// (popover.css: a head, .ui-popover-tabs, a .ui-popover-scroll that scrolls on its own, up to 70 % of the screen); the
+// bell's notifications use it. A link inside that goes to another page does not hand focus back to the trigger, so the
+// new page's title can take it.
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { forwardRef, useRef, type ComponentPropsWithoutRef, type ElementRef, type HTMLAttributes } from "react";
 import { cx } from "../cx";
@@ -42,7 +42,7 @@ export const PopoverContent = forwardRef<ElementRef<typeof PopoverPrimitive.Cont
     },
     ref,
   ) => {
-    // a link inside that went to another page leaves focus to that page's title, not to the trigger (DWAY-8)
+    // a link inside that went to another page leaves focus to that page's title, not to the trigger
     const openedOn = useRef(pagePath());
     return (
       <PopoverPrimitive.Portal container={container}>

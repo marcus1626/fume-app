@@ -1,9 +1,7 @@
-// One Team table for Fume's studio and an agency (UX review DLAY-14, DTASK-7, DLOAD-20, PROPOSED 20 Oct 2026; Marcus 20
-// Oct: "Agency dashboard blir strengt tatt lik som vår"). The agency's table: the person, their role, the brands or
-// clients they work on, this week's load as a quiet bar with its number, and what they do now. Fume's studio adds
-// today's checks and their time. An admin follows and carries no load ("Follows"), so the totals count only the
-// people who carry work. Said once: no chart and no tiles beside it; the totals are the line under the page title.
-// On the phone, rows.
+// One Team table for Fume's studio and an agency: the person, their role, the brands or clients they work on, this
+// week's load as a quiet bar with its number, and what they do now. Fume's studio adds today's checks and their time.
+// An admin follows and carries no load ("Follows"), so the totals count only the people who carry work. Said once: no
+// chart and no tiles beside it; the totals are the line under the page title. On the phone, rows.
 import {
   Avatar,
   Badge,

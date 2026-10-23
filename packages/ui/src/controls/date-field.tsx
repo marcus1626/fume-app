@@ -1,7 +1,6 @@
-// DateField and TimeField (design-system/components/date-field.css; the month is calendar.css's glass calendar).
-// Round 13 (Marcus's comment #37, "Feil tekst markerings farge"; PROPOSED 22 Oct 2026): the browser's own date and
-// time inputs lit the part being edited in the system's blue (no author CSS reaches it) and wrote US dates and 12-hour
-// times. These replace them everywhere in the app:
+// DateField and TimeField (design-system/components/date-field.css; the month is calendar.css's glass calendar). The
+// app uses these everywhere, never the browser's own date and time inputs, which light the part being edited in the
+// system's blue (no author CSS reaches it) and write US dates and 12-hour times.
 // - DateField: a button with the field's look (.ui-input) that shows the day in words, "Sat 17 Oct 2026", with the
 //   calendar icon at the end. It opens the month in a Smoke glass popover: Monday first, today a small dot (never
 //   Amber), the chosen day the white pill of glass, days outside min/max faded. Arrows move by day and week,
