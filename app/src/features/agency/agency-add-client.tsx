@@ -95,7 +95,7 @@ export function AddClientPanel({ open, onOpenChange, onAdded }: { open: boolean;
     setMarket(marketKey(MARKETS[0]));
     setPeople([blank("owner")]);
     setTried(false);
-  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [open]);  
 
   const filled = (p: Person) => Boolean(p.name.trim() || p.email.trim());
   const emailProblem = (p: Person) => (filled(p) && !EMAIL.test(p.email.trim()) ? (p.email.trim() ? "That is not an email address yet." : "Write their email; the invitation goes there.") : undefined);

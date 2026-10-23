@@ -72,7 +72,11 @@ export function categoryAndChildren(categories: Category[], id: string): Set<str
   let grew = true;
   while (grew) {
     grew = false;
-    for (const c of categories) if (c.parentId && ids.has(c.parentId) && !ids.has(c.id)) ids.add(c.id), (grew = true);
+    for (const c of categories)
+      if (c.parentId && ids.has(c.parentId) && !ids.has(c.id)) {
+        ids.add(c.id);
+        grew = true;
+      }
   }
   return ids;
 }

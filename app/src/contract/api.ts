@@ -631,7 +631,7 @@ export interface ProductImportApi {
   /** Close the result (or cancel an import under way). */
   dismissImport(jobId: Id): Promise<void>;
 }
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+ 
 export interface FumeApi extends ProductImportApi {}
 
 // ── round 8 HOME ──

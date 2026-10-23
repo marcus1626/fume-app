@@ -427,7 +427,7 @@ export function FumePage() {
       window.clearTimeout(unmark);
       marked?.removeAttribute("data-ui-target");
     };
-  }, [target, fold]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [target, fold]);  
 
   // Fume's answer to what she just did comes into view: its question, and its buttons above the composer.
   const newest = last;

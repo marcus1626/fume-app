@@ -56,13 +56,13 @@ export function useSlidingIndicator(
       cancelAnimationFrame(a);
       cancelAnimationFrame(b);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   // A new selection: slide to it.
   useIsoLayoutEffect(() => {
     place();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [selectedKey]);
 
   // While placing (after a resize), move without the slide, then let it slide again.
@@ -71,7 +71,7 @@ export function useSlidingIndicator(
     place();
     const f = requestAnimationFrame(() => setPlacing(false));
     return () => cancelAnimationFrame(f);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [placing, ready]);
 
   // Resizes (fonts arriving, a narrower window, a label that changes) re-place it without motion.
