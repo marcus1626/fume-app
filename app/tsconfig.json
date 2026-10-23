@@ -23,5 +23,5 @@
       "@radix-ui/*": ["./node_modules/@radix-ui/*"]
     }
   },
-  "include": ["src", "test", "../packages/ui/src"]
+  "include": ["src", "test", "e2e", "playwright.config.ts", "../packages/ui/src"]
 }
