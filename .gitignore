@@ -10,3 +10,6 @@ dist-check/
 **/GT-*.woff
 **/GT-*.woff2
 **/GT*.ttf
+# Playwright's output (app/test-results, app/playwright-report)
+test-results/
+playwright-report/
