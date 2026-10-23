@@ -9,7 +9,7 @@ propose. Docs and UI copy are in English; Marcus talks to agents in Norwegian.
 3. `app/src/contract/`: the seam between the screens and everything behind them.
 
 ## The seam
-- Screens read and write only through the hooks in `app/src/api/hooks.ts`, which call `FumeApi` (`app/src/contract/api.ts`).
+- Screens read and write only through the hooks in `app/src/api/hooks.ts`, which call `FumeApi` (`app/src/contract/api/`, one interface per domain).
   No screen imports from `app/src/mock/`. Keep it that way.
 - The mock (`app/src/mock/`) holds the rules the real backend must keep (who may approve what, and when). Read it as
   the backend's specification; `app/test/mock.test.ts` tests those rules.
