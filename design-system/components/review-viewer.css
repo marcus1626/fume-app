@@ -1,0 +1,329 @@
+/* Review viewer: the customer's full-screen review of one creative, like frame.io (app v3, FLOWS §11). PROPOSED
+   15 Oct 2026. Composed from viewer.css (the Ink ground, its tokens and the status line), qg-review.css (the
+   numbered pin, .ui-qg-pin, placed with --x and --y), button.css (glass buttons on Ink), kbd.css, avatar.css,
+   field.css and choice.css.
+   Markup: <div class="ui-rv"> (the layer: it stays while she moves through the set)
+             <div class="ui-rv-screen" data-sheet="open|closed">
+             <header class="ui-rv-bar"> close (glass-clear) <div class="ui-rv-title"><h1/>
+                 <span class="ui-rv-sub"><span/> | <span class="ui-rv-file"/> <span class="ui-rv-checked"><svg fume-check/>Checked by Anna</span></span></div>
+               <div class="ui-rv-tools"> Compare versions (.ui-viewer-tool, aria-pressed)
+                 <div class="ui-rv-nav"> <span class="ui-rv-nav-keys ui-keys-hint"><kbd>←</kbd><kbd>→</kbd></span> ‹ <span class="ui-rv-count">3 of 6</span> › </div></div></header>
+             <main class="ui-rv-stage" [data-compare]><figure class="ui-rv-frame" data-format="feed" style="--real-w: 1080px">
+               <button class="ui-rv-media" data-pinnable><img/></button> <button class="ui-qg-pin" style="--x;--y">1</button>
+               <form class="ui-rv-pinbox" style="--x;--y" [data-flip-x] [data-flip-y]> textarea <div class="ui-rv-pinbox-foot"> keys · Add </div></form>
+               <figcaption class="ui-rv-caption"/> (compare)</figure></main>
+             <div class="ui-rv-decide"><p class="ui-rv-hint" data-ui-toast-anchor> words <span class="ui-keys-hint"> · <kbd>C</kbd> to write one</span></p>
+               <div class="ui-rv-decision"> <p class="ui-viewer-status ui-rv-status"/>
+                 <button class="ui-btn ui-btn--glass-clear ui-rv-keyed" aria-pressed> Needs changes <kbd class="ui-kbd ui-rv-btn-key">N</kbd></button>
+                 <button class="ui-btn ui-btn--glass-white ui-rv-keyed"> Approve <kbd class="ui-kbd ui-rv-btn-key">A</kbd></button> | Download (white) </div></div>
+             <aside class="ui-rv-panel"><div class="ui-rv-panel-head"/> <button class="ui-rv-handle"/> (phone)
+               <div class="ui-rv-marked"><p class="ui-rv-marked-title"><svg/>Needs changes</p><p class="ui-rv-marked-text"/> choice </div>
+               <div class="ui-rv-panel-body"><ol class="ui-rv-comments"><li class="ui-rv-comment" data-active data-resolved>
+                 <div class="ui-rv-comment-head"><span class="ui-rv-num">1</span> avatar <span class="ui-rv-comment-who"/> <time class="ui-rv-comment-time"/></div>
+                 <p class="ui-rv-comment-text"/> <ul class="ui-rv-replies"><li class="ui-rv-reply"/></ul> <div class="ui-rv-comment-actions"/></li></ol></div>
+               <form class="ui-rv-compose"><span class="ui-rv-draft"/><div class="ui-rv-compose-row"> textarea · send </div></form>
+               <div class="ui-rv-panel-foot ui-rv-tray" [data-answered]><span class="ui-rv-tray-count">2 creatives need changes.</span> Start the changes (clear, or white once every creative has an answer)</div>
+             </aside></div></div>
+   Fume decisions: the creative is judged on Ink with nothing else in view (as the viewer, F-D round 8); the comments
+   are a step up from Ink (--ui-viewer-surface), not glass. Pins are the expert's pin from the Quality Gate: one shape
+   for "something here" across the app; Ink while its comment is open. Comments are separated by space, never by
+   lines; the open comment lifts onto the clear veil. The one white button is the decision (Approve, or Ask for
+   changes when you may not approve; Download once it is approved). No rating (UX review 19 Oct, LOAD-17): two
+   decisions are enough. Fields on Ink take the glass field's veil.
+   Round 8 (PROPOSED 19 Oct 2026): the viewer is a modal layer over the page that opened it (ViewerLayer, z modal),
+   so the page and its selection stay underneath. Once approved, the file name sits under the title in the data face,
+   since that is what lands on her disk.
+   Round 9, the desktop (PROPOSED 19 Oct 2026, UX review DLAY-1, DTSK-1, DWAY-3, DTSK-8, DTSK-2, DWAY-16):
+   - A fixed frame. The bar is pinned at the top (✕ 24 from the left, the title one line, "3 of 6" with ‹ › at the
+     right edge of the stage, Compare versions to their left), the panel is 360 wide on the right at full height, and
+     the decision row is one height at the foot of the stage. Nothing in the frame moves between creatives or states.
+   - The creative fills what is left: by the stage's height (container query units), with 32 of Ink round it
+     (--ui-viewer-pad), never wider than its own pixels (--real-w, a data value from the version). Feed 4:5 is about
+     460 × 576 at 1280 × 800, 540 × 676 at 1440 × 900 and 685 × 856 at 1920 × 1080. Round 8 drew it 331 × 413 at
+     every width: the loading rule .ui-rv[data-state] matched Radix's data-state="open" and centred the screen at its
+     content's width. Loading has its own attribute now (data-loading).
+   - The decision: what the creative is on the left (the pin hint, or who checked it), the pills on the right, Approve
+     always last at the same place, each pill with its key under it (A, C; touch screens hide keys). The set's change
+     request is a line at the panel's foot, with its Send.
+   - Ask for changes turns the panel into the change form, in place (data-panel="change"): solid, readable words on
+     the panel's surface, the creative in full view beside it; a click on the creative marks a spot for the change.
+   - A pin's comment is written beside the pin (.ui-rv-pinbox, 280 wide, a step up from Ink like the panel), on its
+     right, or on its left near the stage's edge (data-flip-x), above it near the foot (data-flip-y).
+   Phone (narrower than 720, a container query): the bar, the creative, the decision, and the comments as a sheet
+   from the bottom that opens when you pin, tap the handle, start to write or ask for changes; the page itself never
+   scrolls. A pin's comment is written in the sheet, not beside the pin.
+   Rule gate: few-strokes, air, proximity, space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data,
+   actions-are-pills, amber-is-a-point, glass-only-floating, touch-target, touch-feedback, hover-needs-hover,
+   reduced-motion, contrast.
+   Round 13 (Marcus #28, #31, #32, #33, #34, robot notes 04; PROPOSED 21 Oct 2026):
+   - One place to write: the change form is gone. The decision is Needs changes or Approve; Needs changes is a pill
+     that stays pressed (aria-pressed, the clear veil one step up) while the creative is marked, and the panel says at
+     its top what that means (.ui-rv-marked: "Needs changes", its open comments are the change list, the product tick),
+     on the panel's surface, words in Porcelain. The foot's line offers "Start the changes"; once every creative in the
+     set has an answer the line says so and the pill is the white one.
+   - Keys read as shortcuts: the key is a keycap inside its pill, after the words ("Approve  A"), in the key's own
+     colours for that pill (on white: the sunken key; on the clear veil: the glass key), with a tooltip; touch screens
+     hide it (kbd.css). "← →" sits as two keycaps beside the counter.
+   - Whoever checked the creative is named under the title with the Amber pointer (rule check-states, #28).
+   - Toasts: on a desk the hint is the toast anchor (toast.tsx), so they land at the stage's foot over the hint and
+     never over the panel; the decision row is no foot there. */
+
+.ui-rv {
+  container: ui-rv / inline-size;
+  position: fixed; inset: 0; z-index: var(--ui-overlay-z-modal); overflow: hidden;
+  background: var(--ui-viewer-ground); color: var(--ui-viewer-fg); outline: none;
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.45;
+}
+/* while it loads: one spinner in the middle (data-loading, never Radix's data-state) */
+.ui-rv[data-loading] { display: grid; place-items: center; padding: var(--ui-inset-panel); }
+.ui-rv[data-loading] .ui-app-loading { color: var(--ui-viewer-fg-secondary); }
+
+.ui-rv-screen {
+  display: grid; width: 100%; height: 100%; min-width: 0; min-height: 0;
+  grid-template-columns: minmax(0, 1fr) calc(var(--ui-qg-panel-width) + var(--ui-space-lg));
+  grid-template-rows: calc(var(--ui-space-lg) + var(--ui-size-hit)) minmax(0, 1fr) auto;
+  grid-template-areas: "bar panel" "stage panel" "decide panel";
+}
+
+/* ---------- the bar: one height, the count and arrows at a fixed place ---------- */
+.ui-rv-bar { grid-area: bar; display: flex; align-items: center; gap: var(--ui-space-md); min-width: 0; padding: var(--ui-space-lg) var(--ui-space-lg) 0; }
+.ui-rv-title { display: grid; flex: 1 1 auto; min-width: 0; }
+.ui-rv-title h1 {
+  margin: 0; overflow: hidden; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.35;
+  white-space: nowrap; text-overflow: ellipsis;
+}
+.ui-rv-title span { overflow: hidden; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-viewer-fg-secondary); white-space: nowrap; text-overflow: ellipsis; }
+.ui-rv-title .ui-rv-file { font-family: var(--ui-type-family-data); font-weight: var(--ui-type-weight-regular); } /* gate-allow:mono-is-data the file name that lands on her disk is a code (lysne_autumn_a_m1_feed_v2) */
+.ui-rv-tools { display: flex; flex: none; align-items: center; gap: var(--ui-space-md); }
+.ui-rv-nav { display: flex; align-items: center; gap: var(--ui-space-xs); }
+.ui-rv-count { min-width: calc(var(--ui-size-hit) * 1.5); font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-viewer-fg-secondary); font-variant-numeric: tabular-nums; text-align: center; white-space: nowrap; }
+/* the arrow keys beside the counter (round 13, #31) */
+.ui-rv-nav-keys { display: inline-flex; align-items: center; margin-inline-end: var(--ui-space-xs); }
+/* under the title: the shape (or the file name), then who checked it with the Amber pointer (#28) */
+.ui-rv-title .ui-rv-sub { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-rv-title .ui-rv-sub > span { flex: none; }
+.ui-rv-title .ui-rv-checked { display: inline-flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; overflow: hidden; color: var(--ui-viewer-fg); text-overflow: ellipsis; }
+.ui-rv-checked svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex: none; color: var(--ui-check); } /* gate-allow:amber-is-a-point the Amber pointer beside the expert who checked it (rule check-states) */
+.ui-rv svg.ui-rv-check-icon { color: var(--ui-check); } /* gate-allow:amber-is-a-point the same pointer in the status line and the compare captions, wherever it says who checked it */
+
+/* ---------- the stage: the creative at its format, as large as the stage allows, never past its own pixels ---------- */
+.ui-rv-stage {
+  --pad: var(--ui-viewer-pad);
+  grid-area: stage; position: relative; container: ui-rv-stage / size;
+  display: flex; align-items: center; justify-content: center; gap: var(--pad); min-width: 0; min-height: 0;
+}
+.ui-rv-frame {
+  --ratio: var(--ui-creative-ratio-feed);
+  position: relative; flex: none; margin: 0; aspect-ratio: var(--ratio);
+  width: min(100cqw - 2 * var(--pad), (100cqh - 2 * var(--pad)) * (var(--ratio)), var(--real-w, 100cqw));
+}
+.ui-rv-frame[data-format="story"] { --ratio: var(--ui-creative-ratio-story); }
+.ui-rv-frame[data-format="banner"] { --ratio: var(--ui-creative-ratio-banner); }
+.ui-rv-frame[data-format="square"] { --ratio: var(--ui-creative-ratio-square); }
+.ui-rv-stage[data-compare] .ui-rv-frame { width: min((100cqw - 3 * var(--pad)) / 2, (100cqh - 2 * var(--pad)) * (var(--ratio)), var(--real-w, 100cqw)); }
+.ui-rv-media {
+  position: absolute; inset: 0; display: block; width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+  border: 0; border-radius: var(--ui-radius-card); background: var(--ui-creative-bg);
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+}
+.ui-rv-media > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; user-select: none; }
+.ui-rv-media[data-pinnable] { cursor: crosshair; }
+.ui-rv-media:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-size-ring-offset); }
+.ui-rv-caption {
+  position: absolute; top: 100%; left: 0; right: 0; margin-top: var(--ui-space-sm);
+  overflow: hidden; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4;
+  color: var(--ui-viewer-fg-secondary); text-align: center; white-space: nowrap; text-overflow: ellipsis;
+}
+.ui-rv-caption b { margin-inline-end: var(--ui-space-xs); font-weight: var(--ui-type-weight-medium); color: var(--ui-viewer-fg); }
+
+/* ---------- a pin's comment, written beside the pin (desk) ---------- */
+.ui-rv-pinbox {
+  position: absolute; z-index: 3; left: var(--x); top: var(--y);
+  display: grid; gap: var(--ui-space-sm); width: 280px; /* gate-allow:space-from-tokens the comment box beside a pin, a layout width (DWAY-16) */
+  margin: 0; padding: var(--ui-inset-tight);
+  border-radius: var(--ui-radius-float); background: var(--ui-viewer-surface); color: var(--ui-viewer-fg); box-shadow: var(--ui-glass-shadow-small);
+  translate: calc(var(--ui-qg-pin) + var(--ui-space-sm)) calc(-1 * var(--ui-qg-pin));
+  animation: ui-rv-in var(--ui-motion-base) var(--ui-motion-ease) both;
+}
+.ui-rv-pinbox[data-flip-x] { translate: calc(-100% - var(--ui-space-sm)) calc(-1 * var(--ui-qg-pin)); }
+.ui-rv-pinbox[data-flip-y] { translate: calc(var(--ui-qg-pin) + var(--ui-space-sm)) -100%; }
+.ui-rv-pinbox[data-flip-x][data-flip-y] { translate: calc(-100% - var(--ui-space-sm)) -100%; }
+.ui-rv-pinbox .ui-textarea { min-height: calc(var(--ui-field-height) * 1.5); }
+.ui-rv-pinbox-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); min-width: 0; }
+.ui-rv-pinbox-keys { display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-viewer-fg-secondary); white-space: nowrap; }
+.ui-rv-pinbox-keys .ui-kbd + .ui-kbd, .ui-rv-pinbox-keys .ui-kbd:not(:first-child) { margin-inline-start: var(--ui-space-sm); }
+
+/* ---------- the decision: one height, the pills on the right with their keys in them (round 13) ---------- */
+.ui-rv-decide {
+  grid-area: decide; display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ui-space-xl);
+  height: calc(var(--ui-size-control-md) + var(--ui-space-lg) + var(--ui-space-lg));
+  min-width: 0; padding: 0 var(--ui-space-lg) var(--ui-space-lg);
+}
+.ui-rv-hint {
+  display: flex; align-items: center; flex: 1 1 auto; min-width: 0; height: var(--ui-size-control-md); margin: 0;
+  overflow: hidden; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4;
+  color: var(--ui-viewer-fg-secondary); white-space: nowrap; text-overflow: ellipsis;
+}
+.ui-rv-hint .ui-keys-hint { white-space: pre; }
+.ui-rv-hint .ui-kbd { margin-inline-end: var(--ui-space-xs); }
+/* A toast lands on the hint (robot note 04: never on the comments panel); the hint steps aside while it shows */
+@media (min-width: 1024px) {
+  body:has(.ui-toaster .ui-toast) .ui-rv-hint { visibility: hidden; }
+}
+.ui-rv-decision { display: flex; flex: none; align-items: center; justify-content: flex-end; gap: var(--ui-space-sm); }
+.ui-rv-decision .ui-viewer-status { flex-wrap: nowrap; height: var(--ui-size-control-md); margin-inline-end: var(--ui-space-sm); color: var(--ui-viewer-fg); white-space: nowrap; }
+.ui-rv-status { margin: 0; }
+.ui-rv-act { display: grid; justify-items: center; gap: var(--ui-space-sm); }
+/* keys on Ink take the glass key's colours */
+.ui-rv :is(.ui-rv-key, .ui-rv-pinbox-keys .ui-kbd, .ui-rv-hint .ui-kbd, .ui-rv-nav-keys .ui-kbd) { background: var(--ui-kbd-glass-bg); color: var(--ui-kbd-glass-fg); }
+/* a decision pill with its key inside, after its words ("Approve  A", round 13, #32): the key keeps the pill's end air */
+.ui-rv-keyed { gap: var(--ui-space-sm); padding-inline-end: var(--ui-inset-ring); }
+.ui-rv-keyed .ui-rv-btn-key { margin-inline-start: var(--ui-space-xs); }
+.ui-btn--glass-white.ui-rv-keyed .ui-rv-btn-key { background: var(--ui-kbd-bg); color: var(--ui-kbd-fg); }
+.ui-btn--glass-clear.ui-rv-keyed .ui-rv-btn-key { background: var(--ui-kbd-glass-bg); color: var(--ui-kbd-glass-fg); }
+/* Needs changes while the creative is marked: the clear veil one step up and a check before the word, as a format that
+   is on in the glass composer */
+.ui-rv-decision .ui-btn--glass-clear[aria-pressed="true"] { --bg: var(--ui-glass-button-clear-hover); }
+@media (hover: none), (pointer: coarse) {
+  .ui-rv-keyed { padding-inline-end: var(--px); }
+}
+
+/* ---------- the panel: a step up from Ink, full height ---------- */
+.ui-rv-panel {
+  grid-area: panel; display: flex; flex-direction: column; min-height: 0; min-width: 0; overflow: hidden;
+  margin: var(--ui-space-lg) var(--ui-space-lg) var(--ui-space-lg) 0; padding: var(--ui-inset-float) 0 0;
+  border-radius: var(--ui-radius-card); background: var(--ui-viewer-surface); color: var(--ui-viewer-fg);
+}
+.ui-rv-panel-head { display: flex; align-items: baseline; gap: var(--ui-space-sm); padding: 0 var(--ui-inset-float) var(--ui-space-lg); }
+.ui-rv-panel-title { margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.35; }
+.ui-rv-panel-meta { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-viewer-fg-secondary); font-variant-numeric: tabular-nums; }
+.ui-rv-handle { display: none; }
+.ui-rv-panel-body { flex: 1 1 auto; min-height: 0; padding: 0 var(--ui-space-sm); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.ui-rv-panel-body::-webkit-scrollbar { display: none; }
+.ui-rv-empty { margin: 0; padding: 0 var(--ui-space-sm); font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-viewer-fg-secondary); text-wrap: pretty; }
+.ui-rv-comments { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
+.ui-rv-comment {
+  display: grid; gap: var(--ui-space-sm); padding: var(--ui-space-md) var(--ui-space-sm); border-radius: var(--ui-radius-item);
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-rv-comment[data-active] { background: var(--ui-glass-button-clear); }
+.ui-rv-comment[data-resolved] .ui-rv-comment-text { color: var(--ui-viewer-fg-secondary); }
+.ui-rv-comment-head { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-rv-comment-who { min-width: 0; overflow: hidden; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); white-space: nowrap; text-overflow: ellipsis; }
+.ui-rv-comment-time { margin-inline-start: auto; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-viewer-fg-secondary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ui-rv-comment-text { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-rv-replies { display: grid; gap: var(--ui-space-md); margin: 0; padding: 0 0 0 var(--ui-space-2xl); list-style: none; }
+.ui-rv-reply { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--ui-space-xs) var(--ui-space-sm); }
+.ui-rv-reply .ui-rv-comment-text { grid-column: 1 / -1; }
+.ui-rv-comment-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); }
+/* the comment's actions come forward with a mouse on it, with focus in it, or while it is open; always on touch */
+@media (hover: hover) {
+  .ui-rv-comment-actions { opacity: 0; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+  .ui-rv-comment:is(:hover, :focus-within, [data-active]) .ui-rv-comment-actions { opacity: 1; }
+}
+.ui-rv-resolved { display: grid; gap: var(--ui-space-sm); justify-items: start; margin-top: var(--ui-space-lg); padding: 0 var(--ui-space-sm); }
+.ui-rv-resolved .ui-rv-comments { justify-self: stretch; }
+/* the pin's number beside its comment: the same drop as on the creative, smaller */
+.ui-rv-num {
+  display: inline-grid; place-items: center; flex: none; width: var(--ui-qg-marker); height: var(--ui-qg-marker);
+  border-radius: 50%; border-bottom-left-radius: 0; background: var(--ui-qg-pin-bg); color: var(--ui-text);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; font-variant-numeric: tabular-nums;
+}
+.ui-rv-comment[data-active] .ui-rv-num { background: var(--ui-qg-pin-active); color: var(--ui-action-primary-fg); }
+
+/* ---------- writing ---------- */
+.ui-rv-compose { display: grid; gap: var(--ui-space-sm); padding: var(--ui-space-lg) var(--ui-inset-float) var(--ui-inset-float); }
+.ui-rv-draft { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-viewer-fg-secondary); }
+.ui-rv-num[data-state="draft"] { background: var(--ui-qg-pin-active); color: var(--ui-action-primary-fg); }
+.ui-rv-draft .ui-btn { margin-inline-start: auto; }
+.ui-rv-compose-row { display: flex; align-items: flex-end; gap: var(--ui-space-sm); min-width: 0; }
+.ui-rv-compose-row .ui-textarea { flex: 1 1 auto; min-height: var(--ui-field-height); padding-block: var(--ui-space-sm); }
+.ui-rv :is(.ui-input, .ui-textarea) { --edge: transparent; --ring: var(--ui-focus-ring-on-glass); background: var(--ui-field-glass-bg); color: var(--ui-field-glass-fg); }
+.ui-rv :is(.ui-input, .ui-textarea)::placeholder { color: var(--ui-field-glass-placeholder); }
+@media (hover: hover) { .ui-rv :is(.ui-input, .ui-textarea):hover { --edge: transparent; } }
+
+/* ---------- the panel's foot: the set's change request and its Send, or the change form's two buttons ---------- */
+.ui-rv-panel-foot {
+  display: flex; flex: none; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--ui-space-sm) var(--ui-space-md);
+  min-width: 0; padding: var(--ui-space-md) var(--ui-inset-float) var(--ui-inset-float);
+}
+.ui-rv-tray { align-items: center; }
+.ui-rv-tray-count { flex: 1 1 12em; min-width: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-viewer-fg-secondary); text-wrap: pretty; }
+.ui-rv-tray[data-answered] .ui-rv-tray-count { color: var(--ui-viewer-fg); }
+
+/* ---------- Needs changes: what it means, at the top of the panel (round 13) ---------- */
+.ui-rv-marked {
+  display: grid; gap: var(--ui-space-sm); margin: 0 var(--ui-space-sm) var(--ui-space-md); padding: var(--ui-space-md) var(--ui-space-sm);
+  border-radius: var(--ui-radius-item); background: var(--ui-glass-button-clear);
+}
+.ui-rv-marked-title { display: flex; align-items: center; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; }
+.ui-rv-marked-title svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex: none; }
+.ui-rv-marked-text { margin: 0 0 var(--ui-space-xs); font-size: var(--ui-type-label); line-height: 1.5; color: var(--ui-viewer-fg-secondary); text-wrap: pretty; }
+
+/* words on the panel are the panel's: Porcelain, and Porcelain at 72 % for hints (never Ink on Ink) */
+.ui-rv-panel :is(.ui-label, .ui-field-label, .ui-choice-label) { color: var(--ui-viewer-fg); }
+.ui-rv-panel :is(.ui-field-description, .ui-field-optional, .ui-choice-hint) { color: var(--ui-viewer-fg-secondary); }
+/* a ticked box on Ink is Porcelain with an Ink check (Ink on Ink would vanish) */
+.ui-rv-panel .ui-checkbox:is([aria-checked="true"], [data-state="checked"]) {
+  --bg: var(--ui-viewer-fg); --edge: var(--ui-viewer-fg); --bg-hover: var(--ui-viewer-fg); --edge-hover: var(--ui-viewer-fg);
+  --bg-pressed: var(--ui-viewer-fg-secondary); --edge-pressed: var(--ui-viewer-fg-secondary); color: var(--ui-viewer-ground);
+}
+.ui-rv-panel .ui-checkbox:focus-visible { outline-color: var(--ui-focus-ring-on-glass); }
+
+/* the list of what goes to Fume, inside a dialog (glass) */
+.ui-rv-sendlist { display: grid; gap: var(--ui-space-md); margin: 0; padding: 0; list-style: none; }
+.ui-rv-sendlist li { display: flex; align-items: flex-start; gap: var(--ui-space-sm); font-size: var(--ui-type-control); line-height: 1.5; }
+.ui-rv-sendlist li > svg { flex: none; width: var(--ui-size-icon); height: var(--ui-size-icon); margin-top: var(--ui-space-xs); }
+.ui-rv-sendlist b { font-weight: var(--ui-type-weight-medium); }
+
+/* touch screens have no keys: the key rows take no room */
+@media (hover: none), (pointer: coarse) {
+  .ui-rv-decide { height: auto; }
+}
+
+/* ---------- phone: the comments rise from the bottom ---------- */
+@container ui-rv (max-width: 719.98px) {
+  .ui-rv-screen { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto auto; grid-template-areas: "bar" "stage" "decide" "panel"; }
+  .ui-rv-bar { gap: var(--ui-space-sm); padding: var(--ui-space-md) var(--ui-space-md) 0; }
+  .ui-rv-title h1 { display: -webkit-box; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow-wrap: anywhere; } /* the title wraps to two lines rather than cut the format off (MOB-20) */
+  .ui-rv-tools { gap: var(--ui-space-xs); }
+  .ui-rv-count { min-width: calc(var(--ui-size-hit) * 1.25); }
+  .ui-rv-compare-label { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } /* gate-allow:space-from-tokens the visually-hidden pattern: the button keeps its name, shows only the icon */
+  .ui-rv-compare { width: var(--ui-size-control-sm); padding-inline: 0; }
+  .ui-rv-stage { --pad: var(--ui-space-xl); }
+  .ui-rv-stage[data-compare] { --pad: var(--ui-space-md); }
+  .ui-rv-decide { flex-direction: column; align-items: center; justify-content: flex-start; gap: var(--ui-space-sm); height: auto; padding: 0 var(--ui-space-md) var(--ui-space-md); }
+  .ui-rv-hint { flex: none; justify-content: center; height: auto; max-width: 100%; }
+  .ui-rv-decision { flex-wrap: wrap; justify-content: center; }
+  .ui-rv-decision .ui-viewer-status { flex-basis: 100%; justify-content: center; height: auto; margin: 0; }
+  .ui-rv-panel {
+    position: relative; z-index: 2; margin: 0; padding: 0;
+    border-radius: var(--ui-radius-panel); border-end-start-radius: 0; border-end-end-radius: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .ui-rv-panel-head { display: none; }
+  .ui-rv-handle {
+    display: flex; align-items: center; gap: var(--ui-space-sm); width: 100%; min-height: calc(var(--ui-size-hit) + var(--ui-space-md));
+    margin: 0; padding: var(--ui-space-sm) var(--ui-inset-panel); border: 0; border-radius: inherit; background: transparent; color: inherit;
+    font: inherit; text-align: start; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  }
+  .ui-rv-handle > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); margin-inline-start: auto; color: var(--ui-viewer-fg-secondary); }
+  .ui-rv-handle:active { background: var(--ui-glass-button-clear); }
+  .ui-rv-handle:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: calc(var(--ui-size-ring-offset) * -2); }
+  .ui-rv-screen[data-sheet="closed"] :is(.ui-rv-panel-body, .ui-rv-compose, .ui-rv-marked) { display: none; }
+  .ui-rv-screen[data-sheet="open"] .ui-rv-panel {
+    position: absolute; inset: auto 0 0; max-height: 72%; padding-bottom: calc(var(--ui-space-lg) + env(safe-area-inset-bottom));
+    box-shadow: var(--ui-glass-shadow); animation: ui-rv-rise var(--ui-motion-base) var(--ui-motion-ease) both;
+  }
+  .ui-rv-panel-body { padding: 0 var(--ui-space-md); }
+  .ui-rv-compose, .ui-rv-panel-foot { padding-inline: var(--ui-inset-panel); }
+  .ui-rv-screen[data-sheet="closed"] .ui-rv-tray { padding-top: 0; }
+}
+
+@keyframes ui-rv-rise { from { translate: 0 var(--ui-space-2xl); opacity: 0; } to { translate: 0 0; opacity: 1; } }
+@keyframes ui-rv-in { from { opacity: 0; scale: var(--ui-motion-enter-scale); } to { opacity: 1; scale: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-rv-comment, .ui-rv-comment-actions { transition: none; }
+  .ui-rv-screen[data-sheet="open"] .ui-rv-panel, .ui-rv-pinbox { animation: none; }
+}

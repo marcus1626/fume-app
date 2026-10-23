@@ -1,0 +1,14 @@
+/* Separator. DECIDED 13 Oct, from round 7. Built on shadcn's separator (one part; Radix data-orientation
+   horizontal|vertical, decorative), redesigned for Fume: Fume has no lines (few-strokes, Marcus 13 Oct),
+   so a separator is space. It keeps shadcn's API, so <Separator /> in code parts things with air instead
+   of a hairline: --ui-space-lg by default (between groups inside a surface), .ui-separator--sm
+   --ui-space-sm (between groups in a menu or list), .ui-separator--lg --ui-space-2xl (between sections).
+   Stronger parting comes from a surface step or depth, never from a line.
+   The only hairlines Fume allows are where an element would vanish without one (the edge of a field,
+   the white secondary button, the edge of the customer's creative) and focus and selection rings.
+   Rule gate: few-strokes, space-from-tokens. */
+
+.ui-separator { --sep: var(--ui-space-lg); display: block; flex: none; align-self: stretch; block-size: var(--sep); inline-size: auto; margin: 0; border: 0; background: none; }
+.ui-separator[data-orientation="vertical"], .ui-separator--vertical { block-size: auto; inline-size: var(--sep); }
+.ui-separator--sm { --sep: var(--ui-space-sm); }
+.ui-separator--lg { --sep: var(--ui-space-2xl); }

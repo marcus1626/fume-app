@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Audit fixture: should fail</title>
+<!-- Used by tools/gate/audit-test.mjs. One violation per measured rule. Literal values on purpose: this page is not checked by the gate. -->
+<style>
+:root { --ui-inset-float: 16px; }
+body { margin: 0; padding: 24px; font: 14px system-ui; }
+.small { width: 24px; height: 24px; -webkit-tap-highlight-color: transparent; }
+.flash { width: 48px; height: 48px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0.4); }
+.field { height: 44px; font-size: 14px; -webkit-tap-highlight-color: transparent; }
+.field:focus-visible { outline: 2px solid #1b1410; }
+.ui-glass { width: 300px; padding: 12px; border-radius: 32px; background: #333; color: #fff; }
+</style></head><body>
+<button class="small" type="button">x</button>
+<button class="flash" type="button">Flash</button>
+<input class="field" aria-label="Brief">
+<div class="ui-glass"><p>Delete 3 creatives? They leave the campaign.</p></div>
+</body></html>

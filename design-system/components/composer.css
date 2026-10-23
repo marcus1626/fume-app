@@ -1,0 +1,175 @@
+/* Brief composer: where a marketer writes a brief to the Engine. DECIDED 13 Oct, from round 8. Fume's own, on the
+   anatomy of shadcn's input-group and textarea (one field with a textarea, block-end addons and a send
+   button), composed from button.css (quiet circles, the Ink send circle), toggle.css (the formats),
+   avatar.css (the brand), kbd.css (the keys), attachment.css and field.css (the error line).
+   Behaviour in composer.js (window.fumeComposer).
+   Decisions:
+   - The composer is a field, so it is white with the field's hairline, and the whole of it takes one
+     sharp Ink focus ring. It is the one field that floats (it stays at the bottom of the conversation),
+     so it takes the floating radius, 22 (--ui-radius-float), 12 of air (--ui-inset-tight) round its
+     controls and the brief's text 16 in.
+   - The brief is 16 px text in a textarea that grows from two lines to ten, then scrolls.
+   - Under it, the brief's settings as chips: the Brand DNA that is applied (the brand's circle 4 in,
+     so the chip's curve follows it), the formats Feed, Story and Banner as toggle pills (Ink when on,
+     the sunken step when off) and the number of creatives. Attach a brief (paperclip), add a reference
+     image (image-plus) and mention someone (at-sign) are quiet circles.
+   - Send is the Ink circle with arrow-up. While the Engine runs it turns into stop (square), in place,
+     so the hand never moves. Empty: send is disabled. Over the limit: a Rouge edge, the count in Rouge
+     and a sentence that says how much to cut; send is disabled.
+   - Keys in words under it: Enter sends, Shift + Enter makes a new line (kbd.css). Not on touch screens.
+   - Narrow (under 640 wide) the settings take their own row above attach and send.
+   - On the phone it docks at the bottom (.ui-composer-dock--sticky), on the page's own ground with no
+     line above it, and keeps clear of the home indicator (--ui-composer-safe, the safe-area inset).
+   - Inline (.ui-composer--inline, PROPOSED 19 Oct 2026, UX review MOB-2): the Fume chat on a phone. One line that
+     grows as she types (to the same ten lines), the attach circles and send inside it on the right, 48 tall: a pill
+     on the page, so the conversation keeps the room. No settings chips in this form.
+   - On glass (.ui-glass on the same element, over a creative): no stroke, the brief in Porcelain, chips
+     and tools on the clear veil, a format that is on gets a check and one veil step, and send is the
+     one white button on the glass.
+   Touch: every control is 44 px to a finger; the brief is 16 px text everywhere, so iOS never zooms.
+   Rule gate: few-strokes (allowed: the composer is a field, its hairline), focus-is-sharp, air,
+   radius-from-tokens, actions-are-pills, space-from-tokens, type-from-tokens, mono-is-data, touch-target,
+   touch-feedback, hover-needs-hover, fields-16-on-touch, reduced-motion. */
+
+.ui-composer {
+  --edge: var(--ui-composer-edge); --ring: var(--ui-focus-ring);
+  --chip: var(--ui-composer-chip); --chip-hover: var(--ui-composer-chip-hover); --chip-pressed: var(--ui-composer-chip-pressed);
+  --chip-fg: var(--ui-text); --muted: var(--ui-text-tertiary); --placeholder: var(--ui-field-placeholder);
+  container: ui-composer / inline-size;
+  position: relative; display: flex; flex-direction: column; gap: var(--ui-space-sm); width: 100%; min-width: 0; margin: 0;
+  padding: var(--ui-inset-tight);
+  border-radius: var(--ui-radius-float); color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.4;
+  transition: box-shadow var(--ui-motion-fast) var(--ui-motion-ease), background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-composer:not(.ui-glass) {
+  background: var(--ui-composer-bg);
+  box-shadow: inset 0 0 0 1px var(--edge); /* gate-allow:few-strokes  the composer is a field: a white field vanishes on Porcelain without its hairline */
+}
+@media (hover: hover) { .ui-composer:not(.ui-glass):hover { --edge: var(--ui-composer-edge-hover); } }
+.ui-composer.is-hover { --edge: var(--ui-composer-edge-hover); }
+.ui-composer:has(.ui-composer-input:focus-visible), .ui-composer.is-focus { outline: var(--ui-size-ring) solid var(--ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-composer:has(.ui-composer-input[data-ui-focus="pointer"]) { outline: none; } /* clicked or tapped in: the caret shows where you type; the ring is for the keyboard (focus.js, Marcus 13 Oct) */
+
+/* the brief */
+.ui-composer-input {
+  display: block; width: 100%; min-width: 0; min-height: calc(var(--ui-composer-input-min) + 2 * var(--ui-space-xs)); max-height: var(--ui-composer-input-max);
+  margin: 0; padding: var(--ui-space-xs);
+  border: 0; border-radius: 0; background: transparent; color: inherit; box-shadow: none; outline: none; appearance: none; -webkit-appearance: none;
+  font-family: var(--ui-type-family); font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-regular); line-height: 1.5;
+  resize: none; overflow-y: auto; field-sizing: content;
+}
+.ui-composer-input::placeholder { color: var(--placeholder); opacity: 1; }
+
+/* attachments inside the composer, above the brief */
+.ui-composer-attachments:empty { display: none; }
+
+/* toolbar: tools, the brief's settings, then count and send */
+.ui-composer-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-composer-tools { display: flex; align-items: center; gap: var(--ui-space-xs); flex: none; }
+.ui-composer-options { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-composer-submit { display: flex; align-items: center; gap: var(--ui-space-sm); flex: none; margin-inline-start: auto; }
+@container ui-composer (max-width: 639.98px) {
+  .ui-composer-toolbar { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "options options options" "tools . submit"; }
+  .ui-composer-options { grid-area: options; }
+  .ui-composer-tools { grid-area: tools; }
+  .ui-composer-submit { grid-area: submit; }
+}
+
+/* chips: Brand DNA and the count. The real select lies invisibly over the chip (44 tall), so the whole
+   chip opens it and the system picker shows on a phone; composer.js writes the chosen value. */
+.ui-composer-chip {
+  position: relative; display: inline-flex; align-items: center; gap: var(--ui-space-sm); flex: none; min-width: 0;
+  height: var(--ui-size-control-sm); padding-inline: var(--ui-space-md);
+  border-radius: var(--ui-radius-action); background: var(--chip); color: var(--chip-fg);
+  font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1; white-space: nowrap;
+  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-composer-chip:has(> .ui-avatar) { padding-inline-start: var(--ui-space-xs); }
+/* the brand's circle is a light disc cut into the chip (Porcelain), so the toolbar keeps its Ink for the
+   formats that are on and for send */
+.ui-composer-chip > .ui-avatar { background: var(--ui-ground); color: var(--chip-fg); }
+.ui-composer-chip > svg { flex: none; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--muted); pointer-events: none; }
+.ui-composer-chip-value { min-width: 0; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
+.ui-composer-num { font-variant-numeric: tabular-nums; }
+.ui-composer-chip > .ui-composer-chip-select {
+  position: absolute; inset-inline: 0; inset-block: min(0px, calc(50% - var(--ui-size-hit) / 2)); width: 100%; margin: 0; padding: 0;
+  border: 0; border-radius: var(--ui-radius-action); background: transparent; color: transparent; opacity: 0;
+  font-size: var(--ui-type-body); cursor: pointer; appearance: none; -webkit-appearance: none; -webkit-tap-highlight-color: transparent;
+}
+.ui-composer-chip-select:active { background: transparent; }
+@media (hover: hover) { .ui-composer-chip:hover { background: var(--chip-hover); } }
+.ui-composer-chip.is-hover { background: var(--chip-hover); }
+.ui-composer-chip:active, .ui-composer-chip.is-pressed { background: var(--chip-pressed); transform: scale(var(--ui-motion-press-scale)); }
+.ui-composer-chip:has(.ui-composer-chip-select:focus-visible), .ui-composer-chip.is-focus { outline: var(--ui-size-ring) solid var(--ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-composer-chip:has(.ui-composer-chip-select:disabled) { background: transparent; color: var(--ui-text-disabled); cursor: default; pointer-events: none; }
+
+/* formats: toggle pills (toggle.css); off is the sunken step on the white field, on is Ink */
+.ui-toggle.ui-composer-format { --bg: var(--chip); --bg-hover: var(--chip-hover); --bg-pressed: var(--chip-pressed); --fg: var(--chip-fg); --fg-hover: var(--chip-fg); }
+.ui-composer-format-check { display: none; }
+
+/* send, and stop while the Engine runs: two icons in one Ink circle, crossing in place */
+.ui-composer-send > svg { transition: opacity var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-composer-send > .ui-composer-stop-icon { position: absolute; inset: 0; margin: auto; opacity: 0; transform: scale(var(--ui-composer-swap-scale)); }
+.ui-composer[data-state="running"] .ui-composer-send > .ui-composer-send-icon { opacity: 0; transform: scale(var(--ui-composer-swap-scale)); }
+.ui-composer[data-state="running"] .ui-composer-send > .ui-composer-stop-icon { opacity: 1; transform: none; }
+
+/* states */
+.ui-composer[data-invalid="true"], .ui-composer:has(.ui-composer-input[aria-invalid="true"]) { --edge: var(--ui-composer-edge-invalid); }
+@media (hover: hover) { .ui-composer[data-invalid="true"]:not(.ui-glass):hover, .ui-composer:not(.ui-glass):has(.ui-composer-input[aria-invalid="true"]):hover { --edge: var(--ui-composer-edge-invalid); } }
+.ui-composer[data-disabled="true"], .ui-composer:has(.ui-composer-input:disabled) {
+  --edge: transparent; --chip: transparent; --chip-fg: var(--ui-text-disabled); --muted: var(--ui-text-disabled); --placeholder: var(--ui-text-secondary);
+  color: var(--ui-text-disabled);
+}
+.ui-composer[data-disabled="true"]:not(.ui-glass), .ui-composer:not(.ui-glass):has(.ui-composer-input:disabled) { background: var(--ui-composer-bg-disabled); }
+.ui-composer[data-disabled="true"] .ui-composer-chip > .ui-avatar, .ui-composer:has(.ui-composer-input:disabled) .ui-composer-chip > .ui-avatar { background: transparent; }
+.ui-composer-input:disabled { cursor: not-allowed; }
+
+/* under the composer: the keys, and the count when it matters */
+.ui-composer-dock { display: grid; gap: var(--ui-space-sm); width: 100%; max-width: var(--ui-composer-width); min-width: 0; margin-inline: auto; }
+.ui-composer-foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-lg); min-width: 0; padding-inline: var(--ui-inset-float); font-size: var(--ui-type-label); line-height: 1.5; color: var(--ui-text-tertiary); }
+.ui-composer-foot:not(:has(> :not([hidden]))) { display: none; }
+.ui-composer-hint { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-lg); }
+.ui-composer-hint > span { display: inline-flex; align-items: center; gap: var(--ui-space-xs); }
+.ui-composer-count { margin-inline-start: auto; font-family: var(--ui-type-family-data); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ui-composer-count[data-near] { color: var(--ui-text); }
+.ui-composer-count[data-over] { color: var(--ui-danger); }
+.ui-composer-foot > .ui-field-error { flex: 1 1 100%; order: -1; }
+
+/* docked at the bottom of a phone screen, clear of the home indicator; no line above it */
+.ui-composer-dock--sticky {
+  position: sticky; bottom: 0; z-index: 2; max-width: none;
+  padding: var(--ui-space-sm) var(--ui-space-sm) max(var(--ui-space-sm), var(--ui-composer-safe));
+  background: var(--ui-ground);
+}
+.ui-composer-dock--sticky > * { width: 100%; max-width: var(--ui-composer-width); margin-inline: auto; }
+
+/* ---------- inline: one line that grows, the circles on its right (PROPOSED 19 Oct 2026) ---------- */
+.ui-composer--inline {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: var(--ui-space-sm) var(--ui-space-xs);
+  padding: var(--ui-space-sm) var(--ui-space-sm) var(--ui-space-sm) var(--ui-space-md);
+}
+.ui-composer--inline > .ui-composer-attachments { grid-column: 1 / -1; }
+.ui-composer--inline > .ui-composer-input { min-height: calc(var(--ui-composer-input-min) / 2 + 2 * var(--ui-space-xs)); padding-inline: 0; }
+.ui-composer--inline > .ui-composer-toolbar { display: flex; flex-wrap: nowrap; gap: var(--ui-space-xs); }
+.ui-composer--inline .ui-composer-submit { margin-inline-start: 0; }
+
+/* ---------- on glass ---------- */
+.ui-composer.ui-glass { --edge: transparent; --ring: var(--ui-focus-ring-on-glass); --chip: var(--ui-composer-chip-glass); --chip-hover: var(--ui-composer-chip-glass-on); --chip-pressed: var(--ui-composer-chip-glass); --chip-fg: var(--ui-glass-fg); --muted: var(--ui-glass-fg-secondary); --placeholder: var(--ui-glass-fg-secondary); color: var(--ui-glass-fg); }
+.ui-composer.ui-glass .ui-composer-input { font-weight: var(--ui-type-weight-medium); }
+.ui-composer.ui-glass .ui-composer-chip > .ui-avatar { background: var(--ui-composer-chip-glass-on); color: var(--ui-glass-fg); }
+.ui-composer.ui-glass .ui-toggle.ui-composer-format { --bg: transparent; --bg-hover: var(--ui-composer-chip-glass); --bg-pressed: var(--ui-composer-chip-glass); --fg: var(--ui-glass-fg-secondary); --fg-hover: var(--ui-glass-fg); }
+.ui-composer.ui-glass .ui-toggle.ui-composer-format:is([aria-pressed="true"], [data-state="on"]) { --bg: var(--ui-composer-chip-glass-on); --bg-hover: var(--ui-composer-chip-glass-on); --bg-pressed: var(--ui-composer-chip-glass); --fg: var(--ui-glass-fg); --fg-hover: var(--ui-glass-fg); }
+.ui-composer.ui-glass .ui-toggle.ui-composer-format:is([aria-pressed="true"], [data-state="on"]) .ui-composer-format-check { display: block; }
+.ui-composer.ui-glass .ui-toggle.ui-composer-format:focus-visible, .ui-composer.ui-glass .ui-toggle.ui-composer-format.is-focus { outline-color: var(--ui-focus-ring-on-glass); }
+
+/* ---------- touch ---------- */
+@media (hover: none), (pointer: coarse) {
+  .ui-composer-hint { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-composer, .ui-composer-chip, .ui-composer-send > svg { transition: none; }
+  .ui-composer-chip:active, .ui-composer-chip.is-pressed { transform: none; }
+}

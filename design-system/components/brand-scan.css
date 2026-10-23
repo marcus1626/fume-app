@@ -1,0 +1,207 @@
+/* Brand onboarding: step 1 Your brand, step 2 Fume reads it (the reading's status) and the frame every step shares
+   (app v2, FLOWS §0.10, §7). PROPOSED 15 Oct 2026; round 8 PROPOSED 19 Oct 2026 (UX review ONB-1, ONB-2, ONB-4,
+   ONB-12, MOB-12): app-size titles, the main action directly under the website, upload as a compact row under it,
+   and "Continue" once a reading exists. Step 3 and the last card are onboard-check.css; the progress is
+   welcome-progress.css; the mind map is mind-map.css.
+   Markup: <div class="ui-welcome"> bar, then <div class="ui-app-page"><div class="ui-welcome-screen"> progress ·
+             <header class="ui-welcome-head"><p class="ui-welcome-eyebrow"/><h1 class="ui-welcome-title" tabindex="-1"/><p class="ui-welcome-lede"/></header>
+             <form class="ui-welcome-form"><div class="ui-welcome-way"> website field · <div class="ui-welcome-go"> Build · note </div></div>
+               <div class="ui-welcome-way ui-welcome-more"><p class="ui-welcome-more-label"/> dropzone (compact on a phone) · note </div></form>
+           or, once a reading exists: <section class="ui-welcome-continue"><p class="ui-welcome-continue-label"/>
+             <h2 class="ui-welcome-continue-title"/><p class="ui-welcome-continue-text"/> quiet "Read my website again" </section>
+           The reading: <div class="ui-scan" data-state="reading|done"><p class="ui-scan-reading"><svg/> status </p> mind map </div>
+           (the older board markup, .ui-scan-sources / .ui-scan-board / .ui-scan-find, is kept for Update the brand.)
+   Fume decisions: the onboarding lies on Paper with Porcelain cards, like the first run (onboard.css). Titles are
+   the app's own (title-large, title on a phone): the display size is for marketing only. Motion is "Soft to sharp"
+   (blur and focus v1, Register board 16): the pages wait soft and breathe (blur 8 → 10 px, about 4 s, the one idle
+   loop: Fume at work); the Focus frame (focus-frame.css) moves to the page being read in --ui-motion-slow; a find
+   lifts out and settles while its colour, picture or specimen comes from 12 px blur to sharp over 2.4 s (the brand
+   duration, 5 × --ui-motion-slow). Words are never blurred: only the thing itself. What Fume is not sure of stays
+   soft and carries a "?". What the customer gave lands solid ("You added this"); what Fume read lands flat and
+   sunken as a proposal (proposal.css). Reduced motion: nothing moves or blurs; a find appears with a short fade.
+   No Amber anywhere: setting up is not a check. The heading that takes focus on a new step shows no ring: it is
+   not a control, and the ring would read as one.
+   Round 9 (desktop review DLAY-11, DTSK-22, PROPOSED 19 Oct 2026): on a desk (≥ 1024 px) the two ways in sit side
+   by side with equal weight under the welcome text: the website (a field no wider than 480, its words, Build) and
+   the brand material (a 480 × 200 box to aim a drop at, its limits inside it); each way has its label on the same
+   line. While files are dragged anywhere over the page, the box lights up and the page takes the drop. On a phone
+   the material stays a compact row under Build.
+   Rule gate: amber-is-a-point (none), few-strokes (the customer's colour edge, marked), air, proximity,
+   space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data (hex only), motion-from-tokens,
+   reduced-motion, card-never-matches-ground, tokens-only-color. */
+
+/* ─── Welcome ─────────────────────────────────────────────────────────── */
+.ui-welcome { min-height: 100%; background: var(--ui-onboard-ground); color: var(--ui-text); }
+.ui-welcome .ui-card { --card-bg: var(--ui-onboard-card); }
+.ui-welcome .ui-empty--surface { background: var(--ui-onboard-card); }
+.ui-welcome-screen { display: grid; gap: calc(var(--ui-space-2xl) * 1.5); min-width: 0; }
+.ui-welcome-head { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-welcome-eyebrow { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); }
+.ui-welcome-title { margin: 0; font-size: var(--ui-type-title-large); font-weight: var(--ui-type-weight-medium); line-height: 1.2; letter-spacing: -.01em; text-wrap: balance; }
+.ui-welcome-title[tabindex="-1"]:focus { outline: none; }
+.ui-welcome-lede { max-width: var(--ui-onboard-measure); margin: 0; font-size: var(--ui-type-body-large); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-welcome-form { display: grid; gap: var(--ui-space-xl); min-width: 0; }
+.ui-welcome-way { display: grid; align-content: start; gap: var(--ui-space-xl); min-width: 0; }
+.ui-welcome-go { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-md) var(--ui-space-xl); }
+.ui-welcome-note { max-width: var(--ui-onboard-measure); margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); }
+.ui-welcome-note a { color: var(--ui-text); font-weight: var(--ui-type-weight-medium); }
+/* upload: a compact row under the website, with or instead of it */
+.ui-welcome-more { gap: var(--ui-space-sm); margin-top: var(--ui-space-lg); }
+.ui-welcome-more-label { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text); }
+/* a desk: the two ways side by side, equal weight; the field no wider than its address needs, the box to aim at */
+@media (min-width: 1024px) {
+  .ui-welcome-form { grid-template-columns: repeat(2, minmax(0, calc(var(--ui-space-2xl) * 15))); align-items: start; gap: calc(var(--ui-space-2xl) * 2); }
+  .ui-welcome-more { margin-top: 0; }
+  .ui-welcome-more .ui-dropzone-area { min-height: calc(var(--ui-dropzone-height) + var(--ui-space-lg)); }
+}
+/* where she left off: one card, the step and part in words, and Continue pinned to the foot */
+.ui-welcome-continue { display: grid; justify-items: start; gap: var(--ui-space-sm); min-width: 0; padding: var(--ui-inset-panel); border-radius: var(--ui-radius-card); background: var(--ui-onboard-card); box-shadow: var(--ui-depth-raised); }
+.ui-welcome-continue-label { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-tertiary); }
+.ui-welcome-continue-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.3; }
+.ui-welcome-continue-text { max-width: var(--ui-onboard-measure); margin: 0 0 var(--ui-space-sm); font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+
+@media (max-width: 639.98px) {
+  .ui-welcome-screen { gap: var(--ui-space-xl); }
+  .ui-welcome-title { font-size: var(--ui-type-title); line-height: 1.25; }
+  .ui-welcome-lede { font-size: var(--ui-type-body); }
+  .ui-welcome-continue { padding: var(--ui-inset-float); }
+}
+
+/* ─── Building your Brand DNA ─────────────────────────────────────────── */
+.ui-scan { display: grid; gap: calc(var(--ui-space-2xl) * 1.5); min-width: 0; }
+.ui-scan-status { display: grid; gap: var(--ui-space-lg); min-width: 0; }
+.ui-scan-reading { display: flex; align-items: center; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-body-large); font-weight: var(--ui-type-weight-medium); }
+.ui-scan-reading > svg { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); flex-shrink: 0; }
+.ui-scan-summary { max-width: var(--ui-onboard-measure); margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.35; text-wrap: pretty; }
+
+/* the pages and files, in reading order */
+.ui-scan-sources { position: relative; min-width: 0; }
+.ui-scan-source-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--ui-space-2xl) * 4.5)), 1fr)); gap: var(--ui-space-xl) var(--ui-space-lg); margin: 0; padding: 0; list-style: none; }
+.ui-scan-source { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-scan-source-sheet {
+  position: relative; overflow: hidden; aspect-ratio: 4 / 5; margin-bottom: var(--ui-space-xs); padding: var(--ui-inset-tight);
+  border-radius: var(--ui-radius-card); background: var(--ui-onboard-card); box-shadow: var(--ui-depth-raised);
+  transition: filter var(--ui-motion-slow) var(--ui-motion-ease), opacity var(--ui-motion-slow) var(--ui-motion-ease);
+}
+.ui-scan-source[data-state="waiting"] .ui-scan-source-sheet { opacity: .72; animation: ui-scan-breathe calc(var(--ui-motion-slow) * 4) var(--ui-motion-ease) infinite alternate both; }
+.ui-scan-source[data-state="read"] .ui-scan-source-sheet { opacity: .8; }
+.ui-scan-source[data-kind="file"] .ui-scan-source-sheet { animation: ui-scan-drop calc(var(--ui-motion-slow) * 2) var(--ui-motion-ease) both; }
+.ui-scan-source[data-kind="file"][data-state="waiting"] .ui-scan-source-sheet {
+  animation: ui-scan-drop calc(var(--ui-motion-slow) * 2) var(--ui-motion-ease) both, ui-scan-breathe calc(var(--ui-motion-slow) * 4) var(--ui-motion-ease) calc(var(--ui-motion-slow) * 2) infinite alternate both;
+}
+.ui-scan-page { display: grid; grid-template-rows: auto 1fr auto auto; gap: var(--ui-space-sm); height: 100%; }
+.ui-scan-page-bar, .ui-scan-page-line { display: block; height: var(--ui-space-sm); border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-scan-page-bar { width: 40%; }
+.ui-scan-page-line--short { width: 64%; }
+.ui-scan-page-block, .ui-scan-page-picture { display: block; width: 100%; height: 100%; min-height: 0; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); object-fit: cover; }
+.ui-scan-file { display: grid; place-items: center; height: 100%; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); color: var(--ui-text-secondary); }
+.ui-scan-file > svg { width: calc(var(--ui-size-icon) * 2.5); height: calc(var(--ui-size-icon) * 2.5); }
+.ui-scan-source-label { min-width: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; overflow-wrap: anywhere; }
+.ui-scan-source-state { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-scan-source[data-state="reading"] .ui-scan-source-state { color: var(--ui-text); }
+
+/* the Focus frame moves to the page being read */
+.ui-scan-frame {
+  position: absolute; top: 0; left: 0; z-index: 1; pointer-events: none;
+  width: calc(var(--fw) + var(--ui-space-sm) * 2); height: calc(var(--fh) + var(--ui-space-sm) * 2);
+  transform: translate(calc(var(--fx) - var(--ui-space-sm)), calc(var(--fy) - var(--ui-space-sm)));
+  transition: transform var(--ui-motion-slow) var(--ui-motion-ease), width var(--ui-motion-slow) var(--ui-motion-ease), height var(--ui-motion-slow) var(--ui-motion-ease);
+}
+
+/* the empty Brand DNA board and its slots */
+.ui-scan-board { display: grid; gap: var(--ui-space-2xl); min-width: 0; padding: var(--ui-inset-panel); border-radius: var(--ui-radius-card); background: var(--ui-onboard-card); box-shadow: var(--ui-depth-sheet); }
+.ui-scan-board-title { margin: 0; font-size: var(--ui-type-title-large); font-weight: var(--ui-type-weight-medium); letter-spacing: -.01em; }
+.ui-scan-group { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-scan-group-title { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); }
+.ui-scan-slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--ui-space-2xl) * 4.5)), 1fr)); gap: var(--ui-space-lg); margin: 0; padding: 0; list-style: none; }
+.ui-scan-slots[data-kind="logo"], .ui-scan-slots[data-kind="voice"] { grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--ui-space-2xl) * 9)), 1fr)); }
+.ui-scan-slot { display: grid; min-width: 0; min-height: calc(var(--ui-space-2xl) * 4); border-radius: var(--ui-radius-card); }
+.ui-scan-slot[data-state="empty"] { background: var(--ui-surface-sunken); }
+.ui-scan[data-state="reading"] .ui-scan-slot[data-state="empty"] { animation: ui-scan-wait calc(var(--ui-motion-slow) * 4) var(--ui-motion-ease) infinite alternate both; }
+
+/* a find: it lifts out and settles; the thing itself comes from soft to sharp */
+.ui-scan-find { height: 100%; animation: ui-scan-lift calc(var(--ui-motion-slow) * 2) var(--ui-motion-ease) both; }
+.ui-scan-find[data-confidence="low"] { --scan-end-blur: calc(var(--ui-motion-enter-blur) / 2); }
+.ui-scan-find-media { position: relative; display: grid; min-width: 0; }
+.ui-scan-find-colour, .ui-scan-find-picture, .ui-scan-find-logo, .ui-scan-find-aa { animation: ui-scan-sharpen calc(var(--ui-motion-slow) * 5) var(--ui-motion-ease) both; }
+.ui-scan-find-colour, .ui-scan-find-picture, .ui-scan-find-logo { position: relative; overflow: hidden; border-radius: var(--ui-radius-item); }
+.ui-scan-find-colour::after, .ui-scan-find-picture::after, .ui-scan-find-logo::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); pointer-events: none; } /* gate-allow:few-strokes  the edge of the customer's own colour and picture, so a light one never vanishes */
+.ui-scan-find-colour { aspect-ratio: 1; background: var(--swatch, var(--ui-surface-sunken)); }
+.ui-scan-find-picture { aspect-ratio: 1; background: var(--ui-surface-sunken); }
+.ui-scan-find-picture > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* A product found without a picture of its own (PROPOSED 15 Oct 2026): the sunken tile with the package icon, never another product's picture. */
+.ui-scan-find-picture--none { display: grid; place-items: center; color: var(--ui-text-tertiary); }
+.ui-scan-find-picture--none > svg { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); }
+.ui-scan-find-logo { display: grid; place-items: center; aspect-ratio: 16 / 7; background: var(--brand-ground, var(--ui-surface-sunken)); color: var(--brand-ink, var(--ui-text)); font-family: var(--brand-display, var(--ui-type-family)); font-size: var(--ui-type-display); letter-spacing: .24em; }
+.ui-scan-find-type { display: grid; gap: var(--ui-space-sm); font-family: var(--brand-font, var(--ui-type-family)); }
+.ui-scan-find-aa { font-size: var(--ui-type-display); line-height: 1; }
+.ui-scan-find-sample { font-size: var(--ui-type-body); line-height: 1.4; }
+.ui-scan-find-voice { margin: 0; font-size: var(--ui-type-body-large); line-height: 1.45; text-wrap: pretty; }
+.ui-scan-unsure {
+  position: absolute; top: var(--ui-space-sm); right: var(--ui-space-sm); display: grid; place-items: center;
+  width: var(--ui-size-control-sm); height: var(--ui-size-control-sm); border-radius: 50%;
+  background: var(--ui-surface); box-shadow: var(--ui-depth-raised); color: var(--ui-text);
+  font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium);
+}
+.ui-scan-find-text { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--ui-space-xs) var(--ui-space-sm); min-width: 0; }
+.ui-scan-find-label { min-width: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; }
+.ui-scan-find-hex { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-secondary); } /* gate-allow:mono-is-data  a hex code is data */
+
+@keyframes ui-scan-breathe { from { filter: blur(var(--ui-motion-enter-blur)); } to { filter: blur(calc(var(--ui-motion-enter-blur) * 1.25)); } }
+@keyframes ui-scan-wait { from { opacity: .45; } to { opacity: 1; } }
+@keyframes ui-scan-drop { from { opacity: 0; transform: translateY(calc(var(--ui-space-xl) * -1)) scale(var(--ui-motion-enter-scale)); filter: blur(calc(var(--ui-motion-enter-blur) * 1.5)); } to { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes ui-scan-lift { from { opacity: 0; transform: translateY(calc(var(--ui-space-lg) * -1)) scale(var(--ui-motion-enter-scale)); } to { opacity: 1; transform: none; } }
+@keyframes ui-scan-sharpen { from { filter: blur(calc(var(--ui-motion-enter-blur) * 1.5)); } to { filter: blur(var(--scan-end-blur, 0)); } }
+@keyframes ui-scan-fade { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-scan-source-sheet, .ui-scan-frame { transition: none; }
+  .ui-scan-source[data-state] .ui-scan-source-sheet, .ui-scan-source[data-kind="file"][data-state="waiting"] .ui-scan-source-sheet { animation: none; filter: none; }
+  .ui-scan[data-state="reading"] .ui-scan-slot[data-state="empty"] { animation: none; }
+  .ui-scan-find { animation: ui-scan-fade var(--ui-motion-base) var(--ui-motion-ease) both; }
+  .ui-scan-find-colour, .ui-scan-find-picture, .ui-scan-find-logo, .ui-scan-find-aa { animation: none; filter: blur(var(--scan-end-blur, 0)); }
+}
+
+/* Round 9 (desktop review DLAY-12, PROPOSED 19 Oct 2026): the node Fume is reading is followed down and stops above
+   the pinned foot (the foot, 72 px, and a little air); on a desk the status line sits close over the map. */
+.ui-welcome .ui-mind-map-node, .ui-welcome .ui-mind-map-stage { scroll-margin-bottom: calc(var(--ui-space-2xl) * 3); }
+@media (min-width: 1024px) {
+  .ui-scan { gap: var(--ui-space-lg); }
+}
+
+/* Round 9 (desktop review DLAY-13, PROPOSED 19 Oct 2026): the way forward has one place on every step, the bottom
+   right of the screen. A short step fills the screen, so its foot sits where a long step's foot sticks; the page's
+   own bottom padding gives way to the foot's, so the foot never rises at the end of a scroll. */
+.ui-welcome:has(.ui-welcome-foot[data-ui-foot]) { display: flex; flex-direction: column; min-height: 100dvh; }
+.ui-welcome:has(.ui-welcome-foot[data-ui-foot]) > .ui-app-page { flex: 1 0 auto; grid-template-rows: minmax(0, 1fr); padding-bottom: 0; }
+.ui-welcome-screen:has(> .ui-welcome-foot[data-ui-foot]) { display: flex; flex-direction: column; }
+.ui-welcome-screen > .ui-welcome-foot[data-ui-foot] { margin-top: auto; margin-bottom: 0; }
+
+/* Round 13 (walk-through 21 Oct, #1; PROPOSED 22 Oct 2026): on a desk the whole map fits the screen from the start,
+   at 1440 × 900 and at 1280 × 800, so nothing scrolls and nothing is followed down: the status line sits in the
+   header's place, the rows are tighter, the pictures and the product tiles a size down and the logo smaller. */
+@media (min-width: 1024px) {
+  .ui-welcome-screen[data-step="scan"] { gap: var(--ui-space-lg); }
+  .ui-welcome-screen[data-step="scan"] .ui-welcome-head { gap: var(--ui-space-xs); }
+  .ui-welcome-screen[data-step="scan"] .ui-welcome-lede { max-width: none; font-size: var(--ui-type-body); }
+  .ui-scan { gap: var(--ui-space-xs); }
+  .ui-scan-reading { font-size: var(--ui-type-body); }
+  .ui-scan .ui-mind-map-stage { gap: var(--ui-space-md) var(--ui-space-2xl); padding-block: var(--ui-space-sm); }
+  .ui-scan .ui-mind-map-node { gap: var(--ui-space-xs); padding: var(--ui-inset-tight) var(--ui-inset-float); }
+  .ui-scan .ui-mind-map-node-body { gap: var(--ui-space-xs); }
+  .ui-scan .ui-mind-map-logo { width: min(100%, calc(var(--ui-space-2xl) * 7)); font-size: var(--ui-type-title-large); }
+  .ui-scan .ui-mind-map-swatch { width: var(--ui-size-control-sm); height: var(--ui-size-control-sm); }
+  .ui-scan .ui-mind-map-specimen-aa { font-size: var(--ui-type-title); }
+  .ui-scan .ui-mind-map-pictures { grid-template-columns: repeat(4, minmax(0, calc(var(--ui-space-2xl) * 2))); }
+  .ui-scan .ui-mind-map-tiles { grid-template-columns: repeat(auto-fill, minmax(0, calc(var(--ui-space-2xl) * 1.75))); gap: var(--ui-space-xs) var(--ui-space-sm); }
+  .ui-scan .ui-mind-map-list { gap: var(--ui-space-xs); }
+}
+/* a taller desk (900 px and up) has room for the pictures and the product names at their own size */
+@media (min-width: 1024px) and (min-height: 880px) {
+  .ui-welcome-screen[data-step="scan"] { gap: var(--ui-space-xl); }
+  .ui-scan .ui-mind-map-stage { gap: var(--ui-space-xl) var(--ui-space-2xl); }
+  .ui-scan .ui-mind-map-node { gap: var(--ui-space-sm); padding: var(--ui-inset-float); }
+  .ui-scan .ui-mind-map-swatch { width: var(--ui-size-control-md); height: var(--ui-size-control-md); }
+  .ui-scan .ui-mind-map-pictures { grid-template-columns: repeat(4, minmax(0, calc(var(--ui-space-2xl) * 2.5))); }
+  .ui-scan .ui-mind-map-tiles { grid-template-columns: repeat(auto-fill, minmax(0, calc(var(--ui-space-2xl) * 2.25))); }
+}

@@ -1,0 +1,29 @@
+/* Brand switcher: the top of the studio's sidebar (app v2, FLOWS §0 row 8, §4.2). PROPOSED 15 Oct 2026.
+   Markup: <button class="ui-sidebar-menu-button ui-sidebar-menu-button--lg">          the switcher row (sidebar.css)
+             <span class="ui-sidebar-mark ui-switcher-fume"><svg Fume mark/></span>   All brands; a brand: its initials
+             <span class="ui-sidebar-label">All brands <small>2 brands</small></span> chevrons-up-down </button>
+           In its glass menu: <div class="ui-menu-item"><span class="ui-switcher-mark">L</span>
+             <span class="ui-switcher-name">LYSNE</span><span class="ui-switcher-here">Here</span></div>
+   Fume decisions: the switcher replaces the old Workspaces list. It sits where the logo sat, as a large sidebar row:
+   a brand shows its mark (initials on an Ink soft square, as the customer's own switcher does); All brands shows
+   the Fume mark on Porcelain, lifted with depth, so the two levels never look alike. On the rail it folds to the
+   mark alone (sidebar.css). In the Smoke glass menu each brand carries a small white mark, and the place you are
+   says "Here" in words, not with a colour. No Amber, no strokes.
+   Round 12 (desktop review 20 Oct, DWAY-5, DWAY-1, DWAY-20; PROPOSED 20 Oct 2026): ONE picker for Fume's studio and an
+   agency, the agency's (agency-nav.css): "All brands · 2 brands" or "All clients · 4 clients", or the brand's mark and
+   its market; in the menu each brand or client A to Z (a fixed order, never recent first), a quiet dot where something
+   waits on you (.ui-agency-dot), "Here" on the one you are in, and from 8 up a search and a Recent group.
+   Rule gate: few-strokes, radius-from-tokens, type-from-tokens, space-from-tokens, glass-no-stroke. */
+
+.ui-sidebar-mark.ui-switcher-fume { background: var(--ui-surface); color: var(--ui-text); box-shadow: var(--ui-depth-raised); }
+.ui-sidebar-mark.ui-switcher-fume > svg { display: block; width: 62%; height: 62%; }
+
+.ui-switcher-menu { min-width: var(--ui-sidebar-width); }
+.ui-switcher-mark {
+  display: grid; place-items: center; flex-shrink: 0; width: var(--ui-space-lg); height: var(--ui-space-lg);
+  border-radius: var(--ui-radius-check); background: var(--ui-glass-button-white); color: var(--ui-glass-button-white-fg);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1;
+}
+.ui-menu-item .ui-switcher-mark > svg { width: 70%; height: 70%; }
+.ui-switcher-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-switcher-here { flex-shrink: 0; font-size: var(--ui-type-label); color: var(--ui-glass-fg-secondary); }

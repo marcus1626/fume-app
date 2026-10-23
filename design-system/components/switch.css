@@ -1,0 +1,77 @@
+/* Switch. DECIDED 13 Oct, from round 7. Built on shadcn's switch (Radix Switch: a <button role="switch"> with
+   aria-checked, data-state="checked|unchecked" on the root and its Thumb part, size default | sm),
+   redesigned for Fume. Markup:
+     <button class="ui-switch" type="button" role="switch" aria-checked="false" data-state="unchecked">
+       <span class="ui-switch-thumb" data-state="unchecked"></span></button>
+   switch.js flips it on click, Enter and Space. Pair it with words in a .ui-choice row (choice.css).
+   Fume decisions: a pill track. Off is the sunken surface, on is Ink (never Amber). The thumb is white,
+   lifted by --ui-depth-raised instead of an edge, so the switch needs no stroke at all. The thumb slides
+   with the shared ease in --ui-motion-base; pressed, it stretches 4 px toward where it is going, the
+   moment the finger lands. Sizes: default 40 x 24, sm 32 x 20 (.ui-switch--sm or data-size="sm").
+   On glass (.ui-switch--glass): off is a Porcelain veil with a Porcelain thumb, on is the glass white
+   with an Ink thumb; no shadow on glass. Disabled: flat thumb, sunken track; on and disabled, Focus 300.
+   Invalid (aria-invalid): a Rouge edge, beside a Rouge message.
+   Touch: an invisible 44 px hit area; a row's words switch it too; hover only with a mouse.
+   Rule gate: few-strokes, focus-is-sharp, touch-target, touch-feedback, hover-needs-hover, reduced-motion. */
+
+.ui-switch {
+  --w: var(--ui-switch-width); --h: var(--ui-switch-height); --t: var(--ui-switch-thumb);
+  --pad: calc((var(--h) - var(--t)) / 2); --stretch: 0px; --x: 0px;
+  --track: var(--ui-switch-track); --track-hover: var(--ui-switch-track-hover);
+  --thumb: var(--ui-switch-thumb-bg); --thumb-on: var(--ui-switch-thumb-bg); --thumb-depth: var(--ui-depth-raised);
+  --ring: var(--ui-focus-ring);
+  position: relative; display: inline-block; flex-shrink: 0; vertical-align: middle;
+  width: var(--w); height: var(--h); margin: 0; padding: 0;
+  border: 0; border-radius: var(--ui-radius-action); background: var(--track);
+  cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-switch::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: var(--ui-radius-action); }
+.ui-switch-thumb {
+  position: absolute; top: var(--pad); left: var(--pad); display: block;
+  width: calc(var(--t) + var(--stretch)); height: var(--t); border-radius: var(--ui-radius-action);
+  background: var(--thumb); box-shadow: var(--thumb-depth); pointer-events: none;
+  transform: translateX(var(--x));
+  transition: transform var(--ui-motion-base) var(--ui-motion-ease), width var(--ui-motion-base) var(--ui-motion-ease),
+              background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+
+/* on: Ink, the thumb at the far end (it keeps its right edge when it stretches) */
+.ui-switch[aria-checked="true"], .ui-switch[data-state="checked"] {
+  --track: var(--ui-switch-track-on); --track-hover: var(--ui-switch-track-on-hover); --thumb: var(--thumb-on);
+  --x: calc(var(--w) - var(--t) - 2 * var(--pad) - var(--stretch));
+}
+
+@media (hover: hover) {
+  .ui-switch:hover, .ui-choice:hover > .ui-switch { background: var(--track-hover); }
+}
+.ui-switch.is-hover { background: var(--track-hover); }
+/* pressed: the thumb stretches toward where it is going, on pointer-down */
+.ui-switch:active, .ui-switch.is-pressed, .ui-choice:active > .ui-switch { --stretch: var(--ui-switch-stretch); background: var(--track-hover); }
+.ui-switch:focus-visible, .ui-switch.is-focus { outline: var(--ui-size-ring) solid var(--ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-switch[aria-invalid="true"] { box-shadow: inset 0 0 0 1px var(--ui-danger); } /* gate-allow:few-strokes  the error edge, beside a Rouge message; colour is never the only signal */
+
+/* sizes */
+.ui-switch--sm, .ui-switch[data-size="sm"] { --w: var(--ui-switch-width-sm); --h: var(--ui-switch-height-sm); --t: var(--ui-switch-thumb-sm); }
+
+/* on glass: a Porcelain veil off, glass white on with an Ink thumb; no shadow on glass */
+.ui-switch--glass {
+  --track: var(--ui-switch-glass-track); --track-hover: var(--ui-switch-glass-track-hover);
+  --thumb: var(--ui-switch-glass-thumb); --thumb-on: var(--ui-switch-glass-thumb-on); --thumb-depth: none;
+  --ring: var(--ui-focus-ring-on-glass);
+}
+.ui-switch--glass[aria-checked="true"], .ui-switch--glass[data-state="checked"] { --track: var(--ui-switch-glass-track-on); --track-hover: var(--ui-glass-button-white-hover); }
+
+/* disabled: a flat thumb on the sunken track; on and disabled, Focus 300 */
+.ui-switch:disabled, .ui-switch[data-disabled] {
+  --track: var(--ui-action-disabled); --track-hover: var(--track); --thumb: var(--ui-switch-thumb-disabled); --thumb-on: var(--thumb); --thumb-depth: none; --stretch: 0px;
+  cursor: default; pointer-events: none;
+}
+.ui-switch:disabled[aria-checked="true"], .ui-switch[data-disabled][data-state="checked"] { --track: var(--ui-switch-track-on-disabled); --track-hover: var(--track); }
+.ui-switch--glass:disabled, .ui-switch--glass[data-disabled] { --track: var(--ui-glass-button-disabled); --thumb: var(--ui-glass-button-disabled-fg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-switch { transition: background-color var(--ui-motion-fast) linear; }
+  .ui-switch-thumb { transition: background-color var(--ui-motion-fast) linear; }
+  .ui-switch:active, .ui-switch.is-pressed, .ui-choice:active > .ui-switch { --stretch: 0px; }
+}

@@ -1,0 +1,275 @@
+/* Check: where Fume's experts and an agency's creatives check what the Engine made (app v3, FLOWS §10, §24.3).
+   PROPOSED 15 Oct 2026; round 12 (desktop review 20 Oct, DLAY-1, DLAY-2, DTASK-2, DWAY-11, DTASK-11) PROPOSED 20 Oct 2026.
+   Markup: <div class="ui-app-page ui-app-page--fill ui-qa-page"> <header class="ui-page-header ui-qa-header"> Check · meta </header>
+             <div class="ui-qa" data-end>
+               <nav class="ui-qa-list"> ItemGroup per campaign (item.css) of <button class="ui-item ui-qa-row" aria-current="true"
+                 data-state="waiting|fixing|in_studio|checked" tabindex="0|-1"> … </nav>
+               <section class="ui-qa-stage" data-ui-toast-anchor><div class="ui-qa-stage-bar"><div class="ui-qa-stage-start"> Before | After, or
+                   <span class="ui-qa-stage-meta">Feed 4:5 · V1</span></div><div class="ui-qa-stage-end"><span class="ui-qa-pos">2 of 7</span> ‹ › </div></div>
+                 <div class="ui-qa-fit"><figure class="ui-qa-creative" data-format="feed"><img/>
+                   <span class="ui-qa-layer" data-style="headline" style="--x:.08;--y:.72;--w:.84;--h:.1">For the hour before sleep.</span></figure></div></section>
+               <aside class="ui-qa-panel">
+                 <div class="ui-qa-panel-body">
+                   <header class="ui-qa-head"><h2 class="ui-qa-title"/><p class="ui-qa-sub"/><p class="ui-qa-state"> one line </p>
+                     <div class="ui-qa-badges"/></header>
+                   <section class="ui-qa-part"><h3 class="ui-qa-part-title">What the Engine found</h3><ul class="ui-qa-notes">
+                     <li class="ui-qa-note" data-result="pass|flag"/></ul>
+                     <div class="ui-collapsible ui-qa-against"> trigger · <dl class="ui-qa-against-list"><div class="ui-qa-against-row">
+                       <dt/><dd/></div></dl></div></section>
+                   words · Tell the Engine (textarea, .ui-qa-tell-foot) · <ol class="ui-qa-history"><li class="ui-qa-said"/></ol></div>
+                 <footer class="ui-qa-foot" data-ui-foot><button class="ui-btn ui-btn--primary ui-qa-foot-main">Mark checked
+                   <kbd class="ui-kbd ui-qa-key">C</kbd></button><div class="ui-qa-foot-row"> Tell the Engine F · Open in Studio S </div>
+                 </footer></aside>
+               or, past the last one, <section class="ui-qa-end"> icon · title · text · <ul class="ui-qa-end-next"><li
+                 class="ui-qa-end-first"> Next · name · line · the one Ink </li></ul> · the rest as rows </section></div>
+           On a phone the creative and its panel are <div class="ui-qa-sheet" role="dialog"> (a full screen layer on the page ground).
+   Fume decisions: on a desk (1024 and wider) a fixed-height workspace, never a scrolling page: the list | the creative
+   fitted to the screen | a 288–340 panel, each column scrolling on its own, the decision pinned at the panel's foot at
+   the same place for every creative (Mark checked, the one Ink; Tell the Engine secondary; Open in Studio quiet; each
+   pill carries its key). The creative is fitted by width and by height in the Quality Gate's well (--ui-qg-well),
+   white with its hairline, up to its real pixels. The list sits on the page ground; the selected row lifts onto the
+   surface with depth (never a line, never Amber); an answered row stays in place. The panel lies on the surface; the
+   toasts rise at the foot of the well, beside the decision and wide enough to read (data-ui-toast-anchor), never over
+   the list. A Design creative's words sit on the creative at
+   their own place and size (the layer's box reaches the stylesheet as --x --y --w --h, data). Amber only as the
+   checked triangle on a checked creative (badge.css, creative.css). The end card sits in the well where the creative
+   was. The phone sheet is the page ground, not glass: it is a page of its own, not a floating panel.
+   Rule gate: few-strokes (the creative's hairline only), amber-is-a-point (none here), air, proximity,
+   space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data, touch-target, reduced-motion. */
+
+/* ---------- the frame: a phone and a narrow window first (the list, then the sheet) ---------- */
+.ui-qa { display: grid; gap: var(--ui-space-2xl); min-width: 0; align-items: start; }
+
+/* the list: groups by campaign, 32 apart; rows 4 apart */
+.ui-qa-list { display: grid; gap: var(--ui-space-xl); min-width: 0; align-content: start; }
+.ui-qa-row { width: 100%; flex-wrap: nowrap; }
+.ui-qa-row .ui-item-content { min-width: 0; }
+.ui-qa-row .ui-item-actions { flex-wrap: wrap; justify-content: flex-end; }
+.ui-qa-row[aria-current="true"] { --item-bg: var(--ui-surface); box-shadow: var(--ui-depth-raised); }
+
+/* the stage: the creative in the well */
+.ui-qa-stage {
+  display: grid; gap: var(--ui-space-md); min-width: 0;
+  padding: var(--ui-inset-float); border-radius: var(--ui-radius-card); background: var(--ui-qg-well);
+}
+.ui-qa-stage-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); min-width: 0; min-height: var(--ui-size-control-sm); }
+.ui-qa-stage-start, .ui-qa-stage-end { display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; }
+.ui-qa-stage-meta, .ui-qa-pos { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; white-space: nowrap; } /* gate-allow:mono-is-data  a format, a version and a position are data */
+.ui-qa-stage-meta { padding-inline-start: var(--ui-space-xs); }
+.ui-qa-pos { padding-inline-end: var(--ui-space-xs); }
+.ui-qa-fit { display: grid; place-items: center; min-width: 0; }
+
+.ui-qa-creative {
+  --ratio: var(--ui-creative-ratio-feed); --qa-media: var(--ui-qg-media-feed);
+  position: relative; container: ui-qa-creative / inline-size; width: min(100%, var(--qa-media)); aspect-ratio: var(--ratio);
+  margin: 0; overflow: hidden; border-radius: var(--ui-radius-card); background: var(--ui-creative-bg);
+}
+.ui-qa-creative[data-format="story"] { --ratio: var(--ui-creative-ratio-story); --qa-media: var(--ui-qg-media-story); }
+.ui-qa-creative[data-format="square"] { --ratio: var(--ui-creative-ratio-square); --qa-media: var(--ui-qg-media-feed); }
+.ui-qa-creative::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); pointer-events: none; } /* gate-allow:few-strokes  the edge of the customer's creative */
+.ui-qa-creative > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* a Design creative's words, drawn at their place on the creative in the brand's ink (data) */
+.ui-qa-layer {
+  position: absolute; left: calc(var(--x) * 100%); top: calc(var(--y) * 100%); width: calc(var(--w) * 100%); min-height: calc(var(--h) * 100%);
+  display: flex; align-items: flex-start; margin: 0; color: var(--layer-ink, var(--ui-text)); font-family: var(--ui-type-family);
+  line-height: 1.15; overflow-wrap: anywhere; pointer-events: none;
+}
+.ui-qa-layer[data-style="headline"] { font-size: 7cqi; font-weight: var(--ui-type-weight-medium); } /* gate-allow:type-from-tokens  the customer's words at the creative's own scale: data, not UI type */
+.ui-qa-layer[data-style="body"] { font-size: 4.2cqi; } /* gate-allow:type-from-tokens  the customer's words at the creative's own scale */
+.ui-qa-layer[data-style="small"] { font-size: 3.4cqi; } /* gate-allow:type-from-tokens  the customer's words at the creative's own scale */
+.ui-qa-layer[data-kind="logo"] { font-size: 4.2cqi; font-weight: var(--ui-type-weight-medium); letter-spacing: .24em; } /* gate-allow:type-from-tokens  the brand's logo word at the creative's scale */
+.ui-qa-layer[data-active] { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); } /* gate-allow:few-strokes  the words being edited, marked on the creative like a selection box */
+
+/* the panel: where it stands, what the Engine found, what to tell it; the decision at its foot */
+.ui-qa-panel { display: grid; gap: var(--ui-space-xl); min-width: 0; }
+.ui-qa-panel-body { display: grid; align-content: start; gap: var(--ui-space-xl); min-width: 0; }
+.ui-qa-head { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-qa-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.3; color: var(--ui-text); overflow-wrap: anywhere; text-wrap: balance; }
+.ui-qa-sub { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); }
+.ui-qa-state { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs); min-height: 1.5em; margin: 0; padding-top: var(--ui-space-xs); font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); }
+.ui-qa-badges { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); padding-top: var(--ui-space-xs); }
+
+/* parts: 24 apart, 8 inside */
+.ui-qa-part { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qa-part-title { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-qa-notes, .ui-qa-history { display: grid; gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.ui-qa-note { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--ui-space-sm); font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); }
+.ui-qa-note > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-tertiary); }
+.ui-qa-note[data-result="flag"] > svg { color: var(--ui-text); }
+.ui-qa-against { justify-items: start; }
+/* the fold's trigger and the chip are quiet pills: their words line up with the column, the pill reaches past it */
+.ui-qa-against > .ui-collapsible-trigger, .ui-qa-chip { justify-self: start; max-width: calc(100% + var(--ui-size-pad-sm)); margin-inline-start: calc(var(--ui-size-pad-sm) * -1); }
+.ui-qa-against > .ui-collapsible-trigger { white-space: normal; text-align: start; }
+.ui-qa-against-list { display: grid; gap: var(--ui-space-md); margin: 0; padding: var(--ui-space-sm) 0 0; }
+.ui-qa-against-row { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-qa-against-row > dt { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-qa-against-row > dd { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); overflow-wrap: anywhere; }
+.ui-qa-against .ui-qa-history { padding-top: var(--ui-space-sm); } /* what was said to the Engine, folded under the findings (round 13) */
+.ui-qa-tell-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); }
+.ui-qa-said {
+  display: grid; gap: var(--ui-space-xs); min-width: 0; padding: var(--ui-space-md) var(--ui-inset-float);
+  border-radius: var(--ui-radius-item); background: var(--ui-surface);
+}
+.ui-qa-said > p { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); overflow-wrap: anywhere; }
+.ui-qa-said-who { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-qa-said-state { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-qa-said-who time { font-family: var(--ui-type-family-data); } /* gate-allow:mono-is-data  a time is data */
+
+/* the decision: Mark checked across the foot, the two others under it; each pill carries its key (.ui-qa-key, also the
+   ⌘↵ on the expert's Mark checked under a plan) */
+.ui-qa-foot { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qa-foot-main { width: 100%; }
+.ui-qa-foot-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qa-foot-row > .ui-btn { flex: 1 1 auto; }
+.ui-qa-foot-note { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); text-align: center; }
+.ui-qa-key { margin-inline-start: var(--ui-space-xs); }
+.ui-btn--primary .ui-qa-key { background: var(--ui-qg-key-on-ink); color: var(--ui-qg-key-on-ink-fg); }
+
+/* the end of the queue: what comes next, in the well where the creative was */
+.ui-qa-end {
+  display: grid; align-content: center; justify-items: start; gap: var(--ui-space-md); min-width: 0;
+  padding: var(--ui-space-2xl) var(--ui-inset-panel); border-radius: var(--ui-radius-card); background: var(--ui-qg-well);
+}
+.ui-qa-end > * { width: min(100%, var(--ui-book-measure)); }
+.ui-qa-end-icon { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); color: var(--ui-text-tertiary); }
+.ui-qa-end-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.3; color: var(--ui-text); }
+.ui-qa-end-title:focus { outline: none; }
+.ui-qa-end-text { margin: 0; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-qa-end-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-sm); padding-top: var(--ui-space-md); }
+.ui-qa-end-next { display: grid; gap: var(--ui-space-sm); margin: var(--ui-space-lg) 0 0; padding: 0; list-style: none; }
+.ui-qa-end-first {
+  display: grid; justify-items: start; gap: var(--ui-space-xs); min-width: 0;
+  padding: var(--ui-inset-float); border-radius: var(--ui-radius-card); background: var(--ui-surface); box-shadow: var(--ui-depth-raised);
+}
+.ui-qa-end-first > .ui-btn { margin-top: var(--ui-space-md); }
+.ui-qa-end-eyebrow { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-qa-end-name { font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text); }
+.ui-qa-end-line { font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); }
+
+/* ---------- round 13 (Marcus's video comments #50–#54, PROPOSED 22 Oct 2026) ---------- */
+/* #53 the tabs (Plans · Images · Designs · Video later) and #54 the filter, one row under the title: the filter is a
+   pill with its remove circle (filter-bar.css) and Show all a quiet link, so it never reads as an action on the creatives */
+.ui-qa-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-sm) var(--ui-space-lg); min-width: 0; }
+.ui-qa-filter { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qa-filter-all { padding: 0; border: 0; background: none; font: inherit; font-size: var(--ui-type-control); } /* a button that reads as a quiet link */
+.ui-qa-kinds .ui-desk-later { margin-inline-start: var(--ui-space-xs); }
+
+/* #51 pins: the creative and its pins share one box (.ui-qa-shot), so a pin and its note can reach past the creative's
+   rounded edge; a click on the creative drops a pin (crosshair), the note is written beside it on Smoke glass */
+.ui-qa-shot { position: relative; display: grid; min-width: 0; }
+.ui-qa-creative[data-pinnable] { cursor: crosshair; }
+.ui-qa-creative > img { user-select: none; -webkit-user-drag: none; }
+.ui-qa-pinbox {
+  position: absolute; z-index: 3; left: var(--x); top: var(--y);
+  display: grid; gap: var(--ui-space-sm); width: var(--ui-qa-pin-box-width); padding: var(--ui-inset-float); border-radius: var(--ui-radius-float);
+  translate: calc(var(--ui-qg-pin) + var(--ui-space-sm)) calc(-1 * var(--ui-qg-pin));
+}
+.ui-qa-pinbox[data-side="left"] { translate: calc(-100% - var(--ui-space-sm)) calc(-1 * var(--ui-qg-pin)); }
+.ui-qa-pinbox[data-flip-y] { translate: calc(var(--ui-qg-pin) + var(--ui-space-sm)) -100%; }
+.ui-qa-pinbox[data-side="left"][data-flip-y] { translate: calc(-100% - var(--ui-space-sm)) -100%; }
+.ui-qa-pinbox[data-side="center"] { translate: -50% var(--ui-space-sm); }
+.ui-qa-pinbox[data-side="center"][data-flip-y] { translate: -50% calc(-100% - var(--ui-qg-pin) - var(--ui-space-sm)); }
+.ui-qa-pinbox-foot { display: flex; justify-content: flex-end; gap: var(--ui-space-sm); }
+
+/* the pinned notes in the panel: the pin's number as the same drop, smaller, then the note */
+.ui-qa-pins { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.ui-qa-pin-row {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--ui-space-sm); min-width: 0;
+  padding-inline-start: var(--ui-space-sm); border-radius: var(--ui-radius-item); background: var(--ui-ground);
+  font-size: var(--ui-type-control); line-height: 1.4; color: var(--ui-text);
+}
+.ui-qa-pin-row[data-active] { background: var(--ui-surface-sunken); }
+.ui-qa-pin-text { min-width: 0; overflow-wrap: anywhere; }
+.ui-qa-pin-num {
+  display: inline-grid; place-items: center; flex: none; width: var(--ui-qg-marker); height: var(--ui-qg-marker);
+  border-radius: 50%; border-bottom-left-radius: 0; background: var(--ui-action-primary); color: var(--ui-action-primary-fg);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; font-variant-numeric: tabular-nums;
+}
+.ui-qa-said-pin { display: flex; align-items: center; gap: var(--ui-space-sm); }
+
+/* #52 the expert's check on Mark checked: the Focus pointer in Amber (the check); once checked, the head's state line
+   carries the Amber pointer and "Checked by …" (CheckMark), and the foot keeps only Undo */
+.ui-qa-mark > .ico:first-child { color: var(--ui-check); } /* gate-allow:amber-is-a-point  the Amber checked triangle (fume-check) on the expert's Mark checked, beside its label (Marcus #52) */
+
+/* the Plans tab: the plan picked, in the well */
+.ui-qa-plan .ui-qa-end-title { overflow-wrap: anywhere; }
+
+/* ---------- a desk: the fixed-height workspace (DLAY-1, DTASK-2) ---------- */
+@media (min-width: 1024px) {
+  .ui-qa-page { container: ui-qa-page / inline-size; }
+  /* one line: Check and its count */
+  .ui-qa-page > .ui-qa-header { flex: none; padding: var(--ui-space-lg) var(--ui-space-xl) 0; }
+  .ui-qa-header .ui-page-header-heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--ui-space-xs) var(--ui-space-lg); }
+  .ui-qa-header .ui-page-header-main { align-items: center; }
+  .ui-qa-page > .ui-empty, .ui-qa-page > .ui-app-loading { margin: var(--ui-space-xl); }
+
+  .ui-qa-page > .ui-qa {
+    --qa-list: 256px; --qa-panel: 288px; /* gate-allow:space-from-tokens  the list's and the panel's widths, layout widths */
+    flex: 1 1 0; min-height: 0; grid-template-columns: var(--qa-list) minmax(0, 1fr) var(--qa-panel); grid-template-rows: minmax(0, 1fr);
+    align-items: stretch; gap: var(--ui-space-xl); padding: var(--ui-space-xl);
+  }
+  .ui-qa-page > .ui-qa[data-end] { grid-template-columns: var(--qa-list) minmax(0, 1fr); }
+
+  /* each column scrolls on its own; the list keeps room for the selected row's depth */
+  .ui-qa-page .ui-qa-list { min-height: 0; overflow-y: auto; overscroll-behavior: contain; margin: calc(-1 * var(--ui-space-xs)); padding: var(--ui-space-xs); scrollbar-width: thin; }
+
+  .ui-qa-page .ui-qa-stage { display: flex; flex-direction: column; min-height: 0; }
+  .ui-qa-page .ui-qa-fit { flex: 1 1 0; min-height: 0; container: ui-qa-fit / size; }
+  /* the creative fills the well by width or by height, whichever runs out first, up to its real pixels */
+  .ui-qa-page .ui-qa-creative {
+    --qa-fit: calc(4 / 5); --qa-real: 1080px; /* gate-allow:space-from-tokens  a creative's real width in pixels: data, not a space */
+    width: min(100cqw, calc(100cqh * var(--qa-fit)), var(--qa-real));
+  }
+  .ui-qa-page .ui-qa-creative[data-format="story"] { --qa-fit: calc(9 / 16); }
+  .ui-qa-page .ui-qa-creative[data-format="square"] { --qa-fit: 1; }
+
+  .ui-qa-page .ui-qa-panel {
+    display: flex; flex-direction: column; gap: 0; min-height: 0;
+    border-radius: var(--ui-radius-card); background: var(--ui-surface);
+  }
+  /* the body scrolls on its own above the decision (no gradient: the scrollbar says there is more); the last line
+     scrolls clear of the decision on the body's foot padding */
+  .ui-qa-page .ui-qa-panel-body {
+    flex: 1 1 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: var(--ui-inset-float) var(--ui-inset-float) var(--ui-space-lg); scrollbar-width: thin;
+  }
+  .ui-qa-page .ui-qa-panel .ui-qa-said { background: var(--ui-ground); }
+  .ui-qa-page .ui-qa-foot { flex: none; padding: 0 var(--ui-inset-float) var(--ui-inset-float); }
+
+  .ui-qa-page .ui-qa-end { align-self: stretch; }
+}
+/* a narrow desk (a window under about 1250 with the sidebar open): the list folds to a rail of the creatives, so the creative
+   keeps its room; each row keeps its words for the keyboard and a screen reader, and the panel says where it stands */
+@container ui-qa-page (max-width: 999.98px) {
+  .ui-qa-page > .ui-qa { --qa-list: calc(var(--ui-item-media) + 2 * var(--ui-inset-float)); }
+  .ui-qa-page .ui-qa-list .ui-item-group-label,
+  .ui-qa-page .ui-qa-row .ui-item-content,
+  .ui-qa-page .ui-qa-row .ui-item-actions { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } /* gate-allow:space-from-tokens  the visually-hidden pattern (base.css .ui-sr-only) */
+  .ui-qa-page .ui-qa-list { gap: var(--ui-space-lg); }
+  .ui-qa-page .ui-qa-row { justify-content: center; }
+}
+@container ui-qa-page (min-width: 1100px) {
+  .ui-qa-page > .ui-qa { --qa-list: 272px; --qa-panel: 300px; } /* gate-allow:space-from-tokens  layout widths */
+}
+@container ui-qa-page (min-width: 1500px) {
+  .ui-qa-page > .ui-qa { --qa-list: 304px; --qa-panel: 340px; } /* gate-allow:space-from-tokens  layout widths */
+}
+
+/* ---------- the phone: the creative and its panel as a full screen sheet on the page ground ---------- */
+.ui-qa-sheet {
+  position: fixed; inset: 0; z-index: var(--ui-overlay-z-modal); overflow-y: auto; overscroll-behavior: contain;
+  display: grid; align-content: start; gap: var(--ui-space-lg);
+  padding: var(--ui-space-md) var(--ui-space-lg) 0;
+  background: var(--ui-ground); color: var(--ui-text);
+  animation: ui-qa-sheet-in var(--ui-motion-base) var(--ui-motion-ease);
+}
+.ui-qa-sheet-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qa-sheet .ui-qa-stage-end { display: none; }
+/* the decision stays under the thumb */
+.ui-qa-sheet .ui-qa-foot {
+  position: sticky; bottom: 0; z-index: 1; margin-inline: calc(-1 * var(--ui-space-lg));
+  padding: var(--ui-space-md) var(--ui-space-lg) calc(var(--ui-space-md) + env(safe-area-inset-bottom, 0px)); background: var(--ui-ground);
+}
+@keyframes ui-qa-sheet-in { from { opacity: 0; transform: translateY(var(--ui-space-xl)); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) { .ui-qa-sheet { animation: none; } }

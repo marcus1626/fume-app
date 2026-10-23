@@ -1,0 +1,53 @@
+/* Pagination. DECIDED 13 Oct, from round 7. Built on shadcn's pagination (same parts: pagination, content, item, link
+   with isActive / aria-current="page", previous, next, ellipsis), redesigned for Fume.
+   Pills, like every action (DECIDED 12 Oct): page numbers are 40 px circles in GT Standard with tabular
+   figures; the current page is Ink (it decides), the rest are quiet and step toward Ink on hover. Previous
+   and Next are quiet pills with chevrons. The ellipsis is a quiet mark, not a button.
+   Narrow (a container query, under 440 px) turns compact: two chevron circles around "Page 2 of 9".
+   Touch: every button is 44 px to a finger (an invisible ::after on the 40 px circles); a press shrinks
+   it 3 %; hover only with a mouse. Disabled (aria-disabled) at the first and last page.
+   Rule gate: actions-are-pills, few-strokes, touch-target, touch-feedback, hover-needs-hover, reduced-motion. */
+
+.ui-pagination { container: ui-pagination / inline-size; display: flex; justify-content: center; width: 100%; font-family: var(--ui-type-family); }
+.ui-pagination-content { display: flex; align-items: center; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
+.ui-pagination-link {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--ui-space-xs);
+  min-width: var(--ui-pagination-size); height: var(--ui-pagination-size); padding-inline: 0;
+  border: 0; border-radius: var(--ui-radius-action); background: transparent; color: var(--ui-text-secondary);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); font-variant-numeric: tabular-nums; line-height: 1;
+  white-space: nowrap; text-decoration: none; cursor: pointer; user-select: none; outline: none;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-pagination-link > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; }
+.ui-pagination-link::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: inherit; }
+@media (hover: hover) { .ui-pagination-link:hover { background: var(--ui-action-quiet-hover); color: var(--ui-text); } }
+.ui-pagination-link.is-hover { background: var(--ui-action-quiet-hover); color: var(--ui-text); }
+.ui-pagination-link:active, .ui-pagination-link.is-pressed { background: var(--ui-action-quiet-pressed); color: var(--ui-text); transform: scale(var(--ui-motion-press-scale)); }
+/* The current page decides: Ink. It lifts one step on hover and returns when pressed, like the primary button. */
+.ui-pagination-link[aria-current="page"], .ui-pagination-link[data-active="true"] { background: var(--ui-action-primary); color: var(--ui-action-primary-fg); }
+@media (hover: hover) { .ui-pagination-link[aria-current="page"]:hover, .ui-pagination-link[data-active="true"]:hover { background: var(--ui-action-primary-hover); color: var(--ui-action-primary-fg); } }
+.ui-pagination-link[aria-current="page"]:active { background: var(--ui-action-primary-pressed); color: var(--ui-action-primary-fg); }
+.ui-pagination-link:focus-visible, .ui-pagination-link.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-pagination-link[aria-disabled="true"] { background: transparent; color: var(--ui-text-disabled); cursor: default; pointer-events: none; transform: none; }
+
+.ui-pagination-previous { padding-inline: var(--ui-space-md) var(--ui-size-pad-sm); }
+.ui-pagination-next { padding-inline: var(--ui-size-pad-sm) var(--ui-space-md); }
+.ui-pagination-ellipsis { display: inline-flex; align-items: center; justify-content: center; width: var(--ui-pagination-size); height: var(--ui-pagination-size); color: var(--ui-text-tertiary); }
+.ui-pagination-ellipsis > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-pagination-summary { display: none; padding-inline: var(--ui-space-md); font-size: var(--ui-type-control); font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ui-text-secondary); }
+.ui-pagination-summary b { font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-pagination-label { display: inline; }
+
+@container ui-pagination (max-width: 439.98px) {
+  .ui-pagination-content > li:has(> .ui-pagination-link:not(.ui-pagination-previous, .ui-pagination-next)),
+  .ui-pagination-content > li:has(> .ui-pagination-ellipsis) { display: none; }
+  .ui-pagination-summary { display: inline-flex; }
+  .ui-pagination-previous, .ui-pagination-next { width: var(--ui-pagination-size); padding-inline: 0; }
+  .ui-pagination-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-pagination-link { transition: none; }
+  .ui-pagination-link:active, .ui-pagination-link.is-pressed { transform: none; }
+}

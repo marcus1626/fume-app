@@ -1,0 +1,239 @@
+{
+  "$description": "Fume screens: the moments that make Fume Fume, composed from the round 7 components. The Quality Gate review (Anna's screen), the creative viewer, notifications, the share dialog and the first run. DECIDED 13 Oct 2026 (approved on the review board, F-D072 to F-D075), first shown in round 8, 13 Oct 2026. Component files: qg-review.css + qg-review.js, viewer.css + viewer.js, notify.css + notify.js, share.css + share.js, onboard.css. Every value points at a brand primitive or an existing UI role; no new colours. Build: node tools/tokens/build.mjs",
+  "$status": "PROPOSED",
+  "qg": {
+    "panel-width": {
+      "value": "360px",
+      "status": "DECIDED",
+      "description": "Anna's side panel on a wide screen: the Brand DNA checklist, her notes and the decision. Under 720 px of screen it becomes a glass sheet at the bottom."
+    },
+    "well": {
+      "value": "{color.surface-sunken}",
+      "status": "DECIDED",
+      "description": "The well the creative sits in: one step below the page, so the white creative and its hairline come forward. The work is the brightest thing on the screen."
+    },
+    "media-feed": {
+      "value": "400px",
+      "status": "DECIDED",
+      "description": "Widest a Feed creative (4:5) shows in the well; a Story (9:16) shows narrower and a Banner (1.91:1) wider, so all three read at about the same weight."
+    },
+    "media-story": {
+      "value": "288px",
+      "status": "DECIDED",
+      "description": "Widest a Story creative (9:16) shows in the well."
+    },
+    "media-banner": {
+      "value": "640px",
+      "status": "DECIDED",
+      "description": "Widest a Banner creative (1.91:1) shows in the well."
+    },
+    "pin": {
+      "value": "28px",
+      "status": "DECIDED",
+      "description": "Anna's numbered pin on the creative: a 28 px drop whose point (the square corner) sits on the spot. Its hit area is 44."
+    },
+    "pin-bg": {
+      "value": "{color.glass.button-white}",
+      "status": "DECIDED",
+      "description": "A pin at rest: Porcelain at 94 %, the white of the main glass button, with an Ink number and the small glass shadow, so it reads on any photo without a ring."
+    },
+    "pin-active": {
+      "value": "{color.action.primary}",
+      "status": "DECIDED",
+      "description": "The pin whose note is open, hovered or focused: Ink with a Paper number. Ink decides; never Amber, which is only the check."
+    },
+    "marker": {
+      "value": "20px",
+      "status": "DECIDED",
+      "description": "The checklist's marks: the Ink check on an item that passed, and the small pin (the same drop as on the creative) on an item with a note."
+    },
+    "note-bg": {
+      "value": "{color.surface}",
+      "status": "DECIDED",
+      "description": "A checklist item with a note, and Anna's comment: one surface step off the page. Changes are told in words, never in red."
+    },
+    "key-on-ink": {
+      "value": "alpha({fume.porcelain}, 0.16)",
+      "status": "DECIDED",
+      "description": "The shortcut key inside the Ink Approve button (A): a Porcelain veil, like a clear glass button, so the key reads without a stroke."
+    },
+    "key-on-ink-fg": {
+      "value": "alpha({fume.porcelain}, 0.86)",
+      "status": "DECIDED",
+      "description": "The letter on that key: Porcelain at 86 %, 13:1 on Ink."
+    },
+    "seal-height": {
+      "value": "{size.control-sm}",
+      "status": "DECIDED",
+      "description": "The status seal on the creative (In check, Checked, Changes requested): a white 32 px pill lifted by depth, in the creative's bottom-left corner."
+    },
+    "land-scale": {
+      "value": "1.8",
+      "status": "DECIDED",
+      "description": "The check moment: the checked triangle lands from 1.8 times its size and from blur to sharp (soft to sharp), over --ui-motion-slow. Calm, once, no bounce."
+    },
+    "land-blur": {
+      "value": "6px",
+      "status": "DECIDED",
+      "description": "How soft the checked triangle starts before it lands sharp."
+    },
+    "peek": {
+      "value": "188px",
+      "status": "DECIDED",
+      "description": "On a phone the sheet first shows only the summary and the decision: this much of the screen's foot is kept clear for it, so the creative above stays whole."
+    },
+    "phone-height": {
+      "value": "720px",
+      "status": "DECIDED",
+      "description": "Height of the review screen in its phone layout on the board (the app uses the whole screen)."
+    }
+  },
+  "viewer": {
+    "ground": {
+      "value": "{fume.focus-900}",
+      "status": "DECIDED",
+      "description": "The viewer's ground: Ink. Allowed here only, because a creative is judged best on dark, with nothing else in view."
+    },
+    "fg": {
+      "value": "{fume.porcelain}",
+      "status": "DECIDED",
+      "description": "Text and icons on the Ink ground, 17.9:1."
+    },
+    "fg-secondary": {
+      "value": "alpha({fume.porcelain}, 0.72)",
+      "status": "DECIDED",
+      "description": "Secondary text on Ink and on the info panel: Porcelain at 72 %, 9:1 or better."
+    },
+    "surface": {
+      "value": "{fume.focus-800}",
+      "status": "DECIDED",
+      "description": "The info panel on the Ink ground: one step lighter, no stroke. Glass would vanish on Ink, so the panel steps up instead of blurring."
+    },
+    "tool-on": {
+      "value": "alpha({fume.porcelain}, 0.2)",
+      "status": "DECIDED",
+      "description": "A tool on the Ink ground that is on (the info panel shown): the clear veil (Porcelain at 10 %, the glass-clear button) doubled. The tools themselves are .ui-btn--glass-clear: on Ink the veil reads as it does on Smoke."
+    },
+    "panel-width": {
+      "value": "320px",
+      "status": "DECIDED",
+      "description": "The info panel beside the creative on a wide screen; on a phone it rises from the bottom."
+    },
+    "pad": {
+      "value": "{space.2xl}",
+      "status": "DECIDED",
+      "description": "Least air between the creative and the edge of the viewer's stage (32), so the creative never touches the tools."
+    },
+    "zoom-max": {
+      "value": "3",
+      "status": "DECIDED",
+      "description": "Zoom steps: fit, 1.5, 2 and 3 times. Past fit the creative pans with a drag."
+    },
+    "swipe": {
+      "value": "{fume.space-7}",
+      "status": "DECIDED",
+      "description": "48px. A swipe this far sideways moves to the next or previous creative; shorter, the creative springs back."
+    }
+  },
+  "notify": {
+    "width": {
+      "value": "380px",
+      "status": "DECIDED",
+      "description": "The bell's popover: a glass float wide enough for two lines of a notification beside its avatar."
+    },
+    "row": {
+      "value": "68px",
+      "status": "DECIDED",
+      "description": "One notification in the popover: every row the same height (two lines of text), so the list can stop on half a row."
+    },
+    "label": {
+      "value": "{size.control-sm}",
+      "status": "DECIDED",
+      "description": "A group label (Today, Yesterday) in the popover list."
+    },
+    "rows-visible": {
+      "value": "3.5",
+      "status": "DECIDED",
+      "description": "The popover list stops after three and a half rows: the half row says there is more below (never a sliver)."
+    },
+    "dot": {
+      "value": "{badge.dot}",
+      "status": "DECIDED",
+      "description": "Unread: a 6 px dot in front of the row, Ink on the page and Porcelain on glass, with the words at full strength. Never blue, never Amber."
+    },
+    "dot-on-page": {
+      "value": "{color.text}",
+      "status": "DECIDED",
+      "description": "The unread dot on the page: Ink."
+    },
+    "dot-on-glass": {
+      "value": "{color.glass.fg}",
+      "status": "DECIDED",
+      "description": "The unread dot on glass: Porcelain."
+    },
+    "count": {
+      "value": "18px",
+      "status": "DECIDED",
+      "description": "The unread count on the bell: an 18 px Ink pill with Paper numbers, cut out of the bar with the ground colour."
+    },
+    "inbox-width": {
+      "value": "760px",
+      "status": "DECIDED",
+      "description": "The inbox page's column: a calm reading width, centred on a wide screen."
+    },
+    "thumb": {
+      "value": "{size.control-sm}",
+      "status": "DECIDED",
+      "description": "A creative thumbnail in an inbox row (32 wide, 4:5), with the creative's hairline."
+    }
+  },
+  "share": {
+    "width": {
+      "value": "560px",
+      "status": "DECIDED",
+      "description": "The share dialog: wide enough for the email, the role and Invite on one line, and a person's name and role side by side. On a phone it is a sheet at the bottom."
+    },
+    "role-width": {
+      "value": "152px",
+      "status": "DECIDED",
+      "description": "The role select beside the email field (Viewer, Can comment, Can approve)."
+    },
+    "copied": {
+      "value": "2000ms",
+      "status": "DECIDED",
+      "description": "How long Copy link says Copied before it turns back."
+    },
+    "list-max": {
+      "value": "236px",
+      "status": "DECIDED",
+      "description": "People with access scroll inside this height: four rows and half of the fifth."
+    }
+  },
+  "onboard": {
+    "measure": {
+      "value": "52ch",
+      "status": "DECIDED",
+      "description": "Line length of the welcome text."
+    },
+    "step-min": {
+      "value": "232px",
+      "status": "DECIDED",
+      "description": "Narrowest step card: three side by side on a wide screen, one under the other on a phone."
+    },
+    "mark": {
+      "value": "28px",
+      "status": "DECIDED",
+      "description": "The step's mark: its number on the sunken step, and an Ink circle with a Paper check once it is done. Never Amber: Amber is only a creative Anna checked."
+    },
+    "ground": {
+      "value": "{color.ground-warm}",
+      "status": "DECIDED",
+      "description": "The first run lies on Paper: a brand moment, the welcome, edge to edge like a Paper section (decided with Warmer, Marcus 13 Oct; round 9; round 8 had Porcelain)."
+    },
+    "card": {
+      "value": "{color.ground}",
+      "status": "DECIDED",
+      "description": "On Paper the step cards and the empty campaigns are Porcelain, so a card never matches its ground."
+    }
+  }
+}

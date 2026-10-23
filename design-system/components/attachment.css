@@ -1,0 +1,118 @@
+/* Attachment: a creative or a brief attached to a message or a brief. DECIDED 13 Oct, from round 8. Built on shadcn's
+   attachment (Attachment with data-state idle | uploading | processing | error | done, data-size default |
+   sm, data-orientation horizontal | vertical; AttachmentMedia with data-variant icon | image;
+   AttachmentContent, AttachmentTitle, AttachmentDescription, AttachmentActions, AttachmentAction,
+   AttachmentTrigger, AttachmentGroup), same parts and attributes, redesigned for Fume.
+   Decisions:
+   - An attachment is a small card: one surface step off its ground (--ui-attachment-bg), radius 16, no
+     border and no dashes (few-strokes). Inside a card, a run or a bubble it steps once more
+     (--ui-attachment-bg-on-surface), so it never matches its ground. On glass it is the clear veil.
+   - The thumbnail sits 6 in (--ui-inset-ring) with radius 10, so its corner follows the attachment's 16.
+     A creative keeps the hairline round its edge (--ui-creative-edge, over the image): the one content
+     stroke Fume allows. A brief (a document) is the file-text icon on a sunken tile.
+   - Name in medium; under it a data line in the data face: format and size ("PNG · 2.4 MB").
+     Long names end in an ellipsis; the full name is in the title attribute and read by screen readers.
+   - Vertical: the creative at its own format on top (data-format on the media: feed, story, banner),
+     the name and data under it, the remove circle over the image on its own bit of Smoke glass.
+   - States: uploading shows an Ink progress bar in place of the data line (progress.css) and the image
+     dims; processing shows the spinner and words; error shows the circle-alert and the reason in Rouge,
+     with try again (refresh-cw) and remove; idle (queued) dims and says Waiting. Never Amber.
+   - The whole attachment can open (AttachmentTrigger, a button over it): hover one step toward Ink,
+     pressed the half shrink of a card, focus the sharp Ink ring. Remove is a quiet 32 px circle with a
+     44 px hit area (button.css).
+   Rule gate: few-strokes (allowed: the creative's hairline), radius-from-tokens, air, space-from-tokens,
+   type-from-tokens, mono-is-data, touch-target, touch-feedback, hover-needs-hover, reduced-motion. */
+
+.ui-attachment {
+  --att-bg: var(--ui-attachment-bg); --att-bg-hover: var(--ui-attachment-bg-hover); --att-bg-pressed: var(--ui-attachment-bg-pressed);
+  --att-fg: var(--ui-text); --att-muted: var(--ui-text-tertiary); --att-tile: var(--ui-attachment-media-tile);
+  --att-media: var(--ui-attachment-media);
+  position: relative; display: flex; align-items: center; gap: var(--ui-space-md); flex: none;
+  width: fit-content; min-width: 0; max-width: min(100%, var(--ui-attachment-max));
+  margin: 0; padding: var(--ui-space-md) var(--ui-inset-float);
+  border-radius: var(--ui-radius-card); background: var(--att-bg); color: var(--att-fg);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.35; text-align: left;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+/* with a thumbnail: 6 all round it, so its corner follows the attachment's */
+.ui-attachment:has(> .ui-attachment-media) { padding: var(--ui-inset-ring) var(--ui-inset-float) var(--ui-inset-ring) var(--ui-inset-ring); }
+/* with a remove circle at the end: as far from the side as from the top and bottom */
+.ui-attachment:has(> .ui-attachment-actions) { padding-inline-end: calc((var(--att-media) + 2 * var(--ui-inset-ring) - var(--ui-size-control-sm)) / 2); }
+.ui-attachment[data-size="sm"] { --att-media: var(--ui-size-control-sm); gap: var(--ui-space-sm); font-size: var(--ui-type-label); }
+
+/* media */
+.ui-attachment-media {
+  position: relative; display: grid; place-items: center; flex: none; width: var(--att-media); aspect-ratio: 1; overflow: hidden;
+  border-radius: var(--ui-radius-item); background: var(--att-tile); color: var(--att-fg);
+  transition: opacity var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-attachment-media svg { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); pointer-events: none; }
+.ui-attachment[data-size="sm"] .ui-attachment-media svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-attachment-media[data-variant="image"] { background: var(--ui-creative-bg); }
+.ui-attachment-media > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+.ui-attachment-media[data-variant="image"]::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); pointer-events: none; } /* gate-allow:few-strokes  the edge of the customer's creative, over the image */
+
+/* words */
+.ui-attachment-content { display: grid; flex: 1 1 auto; min-width: 0; max-width: 100%; }
+.ui-attachment-title { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--ui-type-weight-medium); color: var(--att-fg); }
+.ui-attachment-description { display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; overflow: hidden; white-space: nowrap; font-size: var(--ui-type-label); line-height: 1.5; color: var(--att-muted); }
+.ui-attachment-description > svg { flex: none; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-attachment-meta { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-family: var(--ui-type-family-data); font-variant-numeric: tabular-nums; }
+.ui-attachment-description { min-height: 1lh; }
+.ui-attachment-description > .ui-progress { flex: 1 1 auto; min-width: 0; }
+.ui-attachment-description > .ui-progress ~ .ui-attachment-meta { flex: none; overflow: visible; }
+.ui-attachment-description > span:not(.ui-attachment-meta, .ui-progress) { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+
+/* actions */
+.ui-attachment-actions { position: relative; z-index: 2; display: flex; flex: none; align-items: center; gap: var(--ui-space-xs); }
+
+/* the whole attachment as a target: a button laid over it */
+.ui-attachment-trigger {
+  position: absolute; inset: 0; z-index: 1; min-width: var(--ui-size-hit); min-height: var(--ui-size-hit); margin: 0; padding: 0;
+  border: 0; border-radius: inherit; background: transparent; color: inherit; font: inherit;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+}
+@media (hover: hover) {
+  .ui-attachment:has(> .ui-attachment-trigger:hover) { background: var(--att-bg-hover); }
+  .ui-attachment-trigger:hover ~ .ui-attachment-media[data-variant="icon"] { background: var(--ui-ground); }
+}
+.ui-attachment.is-hover { background: var(--att-bg-hover); }
+.ui-attachment:has(> .ui-attachment-trigger:active), .ui-attachment.is-pressed { background: var(--att-bg-pressed); transform: scale(var(--ui-card-press-scale)); }
+.ui-attachment-trigger:active { background: transparent; }
+.ui-attachment:has(> .ui-attachment-trigger:focus-visible), .ui-attachment.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* states */
+.ui-attachment:is([data-state="uploading"], [data-state="processing"], [data-state="idle"]) .ui-attachment-media { opacity: .6; }
+.ui-attachment[data-state="uploading"] .ui-attachment-content { min-width: calc(var(--att-media) * 3); }
+.ui-attachment[data-state="error"] .ui-attachment-description { align-items: flex-start; white-space: normal; color: var(--ui-danger); }
+.ui-attachment[data-state="error"] .ui-attachment-description > svg { height: 1lh; }
+.ui-attachment[data-state="error"] .ui-attachment-media { color: var(--ui-danger); }
+
+/* vertical: the creative at its own format on top */
+.ui-attachment[data-orientation="vertical"] {
+  flex-direction: column; align-items: stretch; gap: var(--ui-space-sm);
+  width: var(--ui-attachment-card); max-width: 100%; padding: var(--ui-inset-ring);
+}
+.ui-attachment[data-orientation="vertical"] .ui-attachment-media { width: 100%; aspect-ratio: var(--ratio, 1); }
+.ui-attachment[data-orientation="vertical"] .ui-attachment-content { padding: 0 var(--ui-inset-ring) var(--ui-inset-ring); }
+.ui-attachment[data-orientation="vertical"] .ui-attachment-actions { position: absolute; top: var(--ui-space-md); right: var(--ui-space-md); border-radius: var(--ui-radius-action); }
+
+/* group: attachments wrap, 8 apart; --scroll keeps them on one line that scrolls */
+.ui-attachment-group { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--ui-space-sm); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-message[data-align="end"] .ui-attachment-group { justify-content: flex-end; }
+.ui-attachment-group--scroll { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.ui-attachment-group--scroll::-webkit-scrollbar { display: none; }
+.ui-attachment-group--scroll > .ui-attachment { scroll-snap-align: start; }
+
+/* inside a card, a run or a bubble: one step deeper */
+:is(.ui-card, .ui-bubble-content) .ui-attachment, .ui-attachment--on-surface { --att-bg: var(--ui-attachment-bg-on-surface); --att-bg-hover: var(--ui-attachment-bg-pressed); --att-tile: var(--ui-attachment-bg-pressed); }
+
+/* on glass: the clear veil, Porcelain words */
+.ui-glass .ui-attachment { --att-bg: var(--ui-attachment-bg-glass); --att-bg-hover: var(--ui-glass-button-clear-hover); --att-bg-pressed: var(--ui-attachment-bg-glass); --att-fg: var(--ui-glass-fg); --att-muted: var(--ui-glass-fg-secondary); --att-tile: var(--ui-glass-button-clear); }
+.ui-glass .ui-attachment-description { font-weight: var(--ui-type-weight-medium); }
+.ui-glass .ui-attachment:has(> .ui-attachment-trigger:focus-visible) { outline-color: var(--ui-focus-ring-on-glass); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-attachment, .ui-attachment-media { transition: none; }
+  .ui-attachment:has(> .ui-attachment-trigger:active), .ui-attachment.is-pressed { transform: none; }
+}

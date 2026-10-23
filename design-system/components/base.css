@@ -1,0 +1,49 @@
+/* Base: page-level defaults every Fume surface loads before the components. DECIDED 13 Oct, from round 7.
+   Touch (Marcus 13 Oct: the hit boxes looked bad on a phone). A tap never shows the browser's grey tap
+   flash, which draws a hard rectangle over pills and whole sections; the control's own pressed state is
+   the feedback. Controls skip the double-tap zoom delay. Load components/touch.js once so iOS shows the
+   pressed state on tap.
+   Field components set 16 px text on touch screens themselves (rule fields-16-on-touch), or iOS zooms the
+   page when a field gets focus; the element defaults below cover plain inputs.
+   Touch sizes: on a coarse pointer the small and default control tokens become --ui-size-hit (PROPOSED 15 Oct 2026).
+   Rule gate: touch-feedback, touch-target, hover-needs-hover, fields-16-on-touch. */
+
+:root { -webkit-tap-highlight-color: transparent; }
+
+:where(a, button, input, select, textarea, label, summary, [role="button"], [role="tab"], [role="menuitem"], [role="option"], [role="switch"], [role="checkbox"]) {
+  touch-action: manipulation;
+}
+
+@media (pointer: coarse) {
+  :where(input, select, textarea) { font-size: var(--ui-type-body); }
+}
+
+/* Touch sizes at the root (PROPOSED 15 Oct 2026, walk-through "tap targets under 44 px"): on a touch screen the small
+   and default controls are as tall as the smallest touch target, so a small button, a segmented option and a field
+   are 44 px tall where a finger taps, not only in their invisible ::after hit area. With a mouse nothing changes
+   (32 px small buttons, 30 px segment pills). Every component that sizes from these tokens follows. */
+@media (pointer: coarse) {
+  :root {
+    --ui-size-control-sm: var(--ui-size-hit);
+    --ui-size-control-md: var(--ui-size-hit);
+    --ui-size-seg: calc(var(--ui-size-hit) + 2 * var(--ui-inset-seg));
+    /* A calendar day keeps its 40 px circle: its cell is already the 44 px hit area, and 7 bigger days no longer fit a phone. */
+    --ui-calendar-day: calc(var(--ui-size-hit) - var(--ui-space-xs));
+  }
+}
+
+/* hidden means hidden, whatever display a component sets (round 7). */
+[hidden] { display: none !important; }
+
+/* Icons from the sprite (<svg class="ico"><use href="#fi-…"/></svg>) take the icon size unless a component sizes them.
+   It lived only on the review board; the app needs it too (PROPOSED, 14 Oct 2026, with the app). */
+.ico { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; }
+
+/* Hidden from the eye, read by screen readers (PROPOSED, 14 Oct 2026, with the app). */
+.ui-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; /* gate-allow:space-from-tokens the standard visually-hidden pattern */ overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* React (Radix) places floating layers in its own positioned wrapper; inside it the layer sits in the flow instead of
+   at the page's top left, as the vanilla scripts place it (PROPOSED, 14 Oct 2026, with the app). */
+[data-radix-popper-content-wrapper] { z-index: var(--ui-overlay-z-float) !important; }
+[data-radix-popper-content-wrapper] > :is(.ui-popover, .ui-tooltip, .ui-menu, .ui-select-content) { position: relative; top: auto; left: auto; }
+[data-radix-popper-content-wrapper]:has(> .ui-tooltip) { z-index: var(--ui-overlay-z-tooltip) !important; }

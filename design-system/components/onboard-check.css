@@ -1,0 +1,195 @@
+/* Onboarding check: step 3 "Confirm what Fume found", one row per find (BRAND's ConfirmRow, the same as the Brand DNA
+   board), the pictures as a grid, the pinned way forward, and "What Fume understood", the view that replaces the taste
+   deck once it is done (app round 8, UX review ONB-6, ONB-9, ONB-14, ONB-19, LOAD-15; round 9). PROPOSED 19 Oct 2026.
+   Composed with brand-board.css (.ui-brand-confirm), button.css, toggle.css, field.css and proposal.css (its tag);
+   brand-scan.css holds the Welcome frame.
+   Markup: <section class="ui-ob-part">  (a container named ui-ob and ui-brand-part, so the row's own narrow rules apply)
+             a colour with two values: <div class="ui-ob-ask" data-state>
+               <span class="ui-ob-media" data-kind="colour" style="--swatch"/>
+               <div class="ui-ob-text"><p class="ui-ob-ask-eyebrow"/><p class="ui-ob-ask-title"/><p class="ui-ob-ask-why"/></div>
+               <div class="ui-ob-actions"> the two values | Confirmed </div></div>
+             Logo, Colour, Type, Voice: <ul class="ui-ob-finds"><li class="ui-ob-find">
+               <div class="ui-brand-confirm" data-state> (ConfirmRow: media · title, meta · line, tags · Confirm · Change · Remove)
+               </li></ul>; what the brand already had is the same row, still, its tag "Found on lysne.no".
+             Imagery: <ul class="ui-ob-tiles"><li class="ui-ob-tile" data-state><span class="ui-ob-media" data-kind="image"><img/></span>
+               <div class="ui-ob-text"><p class="ui-ob-name"/><p class="ui-ob-source"> tags </p></div>
+               <div class="ui-ob-actions"> Confirm · Remove | <span class="ui-ob-kept"><svg/> Confirmed</span> | Put back </div></li></ul>
+             </section>
+           The way forward: <div class="ui-welcome-foot" data-ui-foot> ← back pill · <div class="ui-welcome-foot-go"> Skip for now
+             (quiet) · Confirm all and go to Type (Ink) </div></div> (at the bottom of the screen on every part).
+           What Fume understood: <section class="ui-ob-understood"><ul class="ui-ob-lines"><li class="ui-ob-line" data-verdict="right|not_quite">
+               <div class="ui-ob-line-text"><p class="ui-ob-line-label"/><p class="ui-ob-line-words"/></div>
+               <div class="ui-ob-line-actions"> Confirm · Change (ui-toggle--outline sm) </div> [field: What is right?]</li></ul>
+             <p class="ui-ob-note"/> <div class="ui-ob-open"><p class="ui-ob-open-text"/> Confirm them now </div>
+             <div class="ui-ob-understood-foot"> Back one (quiet) · Approve and start (Ink) </div></section>
+   Fume decisions: a find is a row, not a page (ONB-19), and the same row as on the Brand DNA board (round 9, DLAY-19):
+   the thing small and sharp, its name and value, where Fume found it, and Confirm · Change · Remove right after the
+   words, Remove last and set apart. Confirm is the white pill, so the page keeps one Ink action: the way forward.
+   What Fume is not sure of says "Fume is not sure", comes first and is never blurred (ONB-21, DLAY-19). Decided here, a
+   row stays in its place with its new tag; a removed one stays dimmed with "Put back" (ONB-9). No Amber: setting up
+   is not a check. No strokes but the customer's own colour edge.
+   Round 9 (desktop review DTSK-5, DTSK-7, DLAY-12, DLAY-13, DLOAD-17, DTSK-22; PROPOSED 19 Oct 2026):
+   - One way forward per part, at the bottom right of the screen on every part: "Confirm all and go to Type" (Ink), a
+     quiet "Skip for now" to its left; "Next: Type" once nothing is open. No "Keep all" at the top.
+   - The lists keep the reading measure (about 760 px, DLAY-7), so each row's answers sit close to its words.
+   - Imagery is a grid of pictures to judge: 240 px at the least on a desk (square there, so a row and its answers fit
+     above the foot on a laptop), the name and source under each and Confirm · Remove under that; two across on a phone.
+   - What Fume understood is its own view at the reading measure, on the page's left edge: the lines, the products in
+     one sentence, the finds not confirmed yet on a sunken band with "Confirm them now", and its foot (Back one ·
+     Approve and start) at its end, not pinned, so it is reached by reading down.
+   Rule gate: few-strokes (the customer's colour edge, marked), air, proximity, space-from-tokens, radius-from-tokens,
+   type-from-tokens, actions-are-pills, touch-target, reduced-motion, amber-is-a-point, card-never-matches-ground. */
+
+.ui-ob-part { container-type: inline-size; container-name: ui-ob ui-brand-part; display: grid; gap: var(--ui-space-xl); min-width: 0; }
+
+/* the thing itself: a colour with two values, a logo on its ground, a picture */
+.ui-ob-media {
+  position: relative; display: grid; place-items: center; flex-shrink: 0; width: calc(var(--ui-space-2xl) + var(--ui-space-lg)); aspect-ratio: 1;
+  overflow: hidden; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); color: var(--ui-text);
+}
+.ui-ob-media::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); pointer-events: none; } /* gate-allow:few-strokes  the edge of the customer's own colour, logo and picture */
+.ui-ob-media[data-kind="colour"] { background: var(--swatch, var(--ui-surface-sunken)); }
+.ui-ob-media[data-kind="logo"] { aspect-ratio: 16 / 9; width: 100%; background: var(--brand-ground, var(--ui-surface-sunken)); color: var(--brand-ink, var(--ui-text)); font-family: var(--brand-display, var(--ui-type-family)); font-size: var(--ui-type-control); letter-spacing: .24em; text-indent: .24em; }
+.ui-ob-media[data-kind="image"] { aspect-ratio: 4 / 5; }
+.ui-ob-media > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* the finds of a list part: one row each, one under the other, at the reading measure */
+.ui-ob-finds { display: grid; gap: var(--ui-space-sm); width: 100%; max-width: calc(var(--ui-space-2xl) * 23.75); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-ob-find { min-width: 0; }
+.ui-ob-find:empty { display: none; }
+/* a logo is wider than it is tall: its box in the row takes the logo's shape */
+.ui-ob-find .ui-brand-confirm-media:has(> .ui-ob-media[data-kind="logo"]) { width: calc(var(--ui-space-2xl) * 3); height: auto; background: none; }
+
+.ui-ob-text { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-ob-name { margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.35; overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-ob-source { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-md); margin: 0; min-width: 0; }
+.ui-ob-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--ui-space-xs); min-width: 0; }
+.ui-ob-actions .ui-proposal-actions { margin: 0; flex-wrap: nowrap; }
+.ui-ob-kept { display: inline-flex; align-items: center; gap: var(--ui-space-xs); padding-inline: var(--ui-space-sm); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); white-space: nowrap; }
+.ui-ob-kept > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+/* Change opens in place, under the item, across its whole width */
+.ui-ob-change { grid-column: 1 / -1; min-width: 0; padding-top: var(--ui-space-lg); }
+/* Remove is last and set apart from Confirm, so a dozen Confirms never land on it (decide.tsx DecisionActions) */
+.ui-proposal-actions .ui-decide-remove { margin-inline-start: var(--ui-space-md); }
+/* a removed item on a Brand part page stays where it was, dimmed, with Put back (decide.tsx Provenanced) */
+.ui-proposal[data-removed] > :not(.ui-proposal-foot) { opacity: .4; }
+.ui-proposal[data-removed] .ui-decide-putback { margin-inline-start: auto; }
+
+/* a colour with two values: on its own card, both shown plainly, her pick on the right in line with the rows' answers */
+.ui-ob-ask {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "media text actions"; align-items: center; gap: 0 var(--ui-space-lg);
+  width: 100%; max-width: calc(var(--ui-space-2xl) * 23.75); min-width: 0; padding: var(--ui-space-lg) calc(var(--ui-space-md) + var(--ui-space-sm)) var(--ui-space-lg) var(--ui-space-lg);
+  border-radius: var(--ui-radius-card); background: var(--ui-onboard-card); box-shadow: var(--ui-depth-raised);
+}
+.ui-ob-ask > .ui-ob-media { grid-area: media; align-self: start; }
+.ui-ob-ask > .ui-ob-text { grid-area: text; }
+.ui-ob-ask > .ui-ob-actions { grid-area: actions; gap: var(--ui-space-sm); }
+.ui-ob-ask-eyebrow { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); }
+.ui-ob-ask-title { margin: 0; font-size: var(--ui-type-body-large); font-weight: var(--ui-type-weight-medium); line-height: 1.4; text-wrap: pretty; overflow-wrap: anywhere; }
+.ui-ob-ask-why { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-ob-choice-swatch { position: relative; display: inline-block; width: var(--ui-size-icon); height: var(--ui-size-icon); border-radius: 50%; background: var(--swatch, var(--ui-surface-sunken)); }
+.ui-ob-choice-swatch::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); } /* gate-allow:few-strokes  the edge of the customer's own colour */
+
+/* Imagery: pictures big enough to judge, Confirm · Remove under each */
+.ui-ob-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-2xl) var(--ui-space-lg); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-ob-tile { display: grid; align-content: start; gap: var(--ui-space-md); min-width: 0; transition: opacity var(--ui-motion-base) var(--ui-motion-ease); }
+.ui-ob-tile > .ui-ob-media[data-kind="image"] { width: 100%; border-radius: var(--ui-radius-card); }
+.ui-ob-tile > .ui-ob-actions { justify-content: flex-start; }
+/* a narrow tile: Remove goes under Confirm rather than past the picture's edge */
+.ui-ob-tile > .ui-ob-actions .ui-proposal-actions { flex-wrap: wrap; row-gap: var(--ui-space-xs); }
+.ui-ob-tile > .ui-ob-actions .ui-ob-kept { padding-inline: 0; }
+.ui-ob-tile[data-state="removed"] > :is(.ui-ob-media, .ui-ob-text) { opacity: .4; }
+@container ui-ob (min-width: 560px) {
+  .ui-ob-tiles { grid-template-columns: repeat(auto-fill, minmax(calc(var(--ui-space-2xl) * 7.5), 1fr)); }
+}
+@media (min-width: 1024px) {
+  /* a desk: square pictures, so a row of four and their Confirm · Remove fit above the foot on a laptop */
+  .ui-ob-tile > .ui-ob-media[data-kind="image"] { aspect-ratio: 1; }
+}
+
+@container ui-ob (max-width: 559.98px) {
+  .ui-ob-tile .ui-proposal-actions .ui-decide-remove { margin-inline-start: 0; }
+  .ui-ob-ask { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "media text" ". actions"; align-items: start; gap: var(--ui-space-sm) var(--ui-space-md); padding: var(--ui-inset-float); }
+  .ui-ob-actions { justify-content: flex-start; }
+  .ui-ob-actions .ui-ob-kept { padding-inline: 0; }
+}
+
+/* ─── The way forward, pinned to the bottom of the screen ─── */
+.ui-welcome-foot {
+  position: sticky; bottom: 0; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-sm) var(--ui-space-md);
+  margin-block: calc(var(--ui-space-md) * -1); padding: var(--ui-space-md) 0 calc(var(--ui-space-md) + env(safe-area-inset-bottom, 0px));
+  background: var(--ui-onboard-ground);
+}
+/* Pinned, it looks like the app's step footer (PageFooter, DLAY-13; round 9): the column's full width with the same
+   soft depth above it, on the onboarding's own Paper ground. It stays pinned on a phone, where the forward pill is
+   under the thumb. */
+.ui-welcome-foot[data-ui-foot] {
+  margin-inline: calc(-1 * var(--ui-space-xl)); padding-inline: var(--ui-space-xl);
+  box-shadow: 0 -1px 0 var(--ui-depth-near), 0 calc(var(--ui-space-md) * -1) var(--ui-space-xl) calc(var(--ui-space-lg) * -1.25) var(--ui-depth-far);
+}
+@media (max-width: 639.98px) {
+  .ui-welcome-foot[data-ui-foot] { margin-inline: calc(-1 * var(--ui-space-lg)); padding-inline: var(--ui-space-lg); }
+}
+.ui-welcome-foot--end { justify-content: flex-end; }
+.ui-welcome-foot--center { justify-content: center; }
+/* the forward group: the quiet "Skip for now" just left of the one Ink pill */
+.ui-welcome-foot-go { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--ui-space-sm); margin-inline-start: auto; min-width: 0; }
+/* While the taste deck runs, its foot is the deck's own (the answers): the way back sits after it, not pinned. */
+.ui-welcome-foot--static { position: static; }
+/* The taste deck in the frame: the bar, the progress, the title and the foot share the screen with the picture. */
+.ui-welcome .ui-td { --td-chrome: calc(var(--ui-space-2xl) * 16); }
+@media (min-width: 1024px) {
+  /* a desk: the question stands beside the picture, so only the bar, the progress and the title are above it */
+  .ui-welcome .ui-td { --td-chrome: calc(var(--ui-space-2xl) * 10.5); }
+}
+@media (max-width: 639.98px) {
+  /* a phone: the way back and "Skip for now" share one line, the Ink pill takes the full width under them */
+  .ui-welcome-foot .ui-btn--primary { flex: 1 1 auto; }
+  .ui-welcome-foot-go { display: contents; }
+  .ui-welcome-foot-go > .ui-btn:not(.ui-btn--primary) { margin-inline-start: auto; }
+  .ui-welcome-foot-go > .ui-btn--primary { flex: 1 1 100%; }
+  .ui-welcome .ui-td { --td-chrome: calc(var(--ui-space-2xl) * 14.5); }
+}
+
+/* ─── What Fume understood: its own view once the taste deck is done ─── */
+.ui-ob-understood {
+  display: grid; gap: var(--ui-space-xl); width: 100%; max-width: calc(var(--ui-space-2xl) * 24); min-width: 0; padding: var(--ui-inset-panel);
+  border-radius: var(--ui-radius-card); background: var(--ui-onboard-card); box-shadow: var(--ui-depth-raised);
+  animation: ui-ob-in var(--ui-motion-slow) var(--ui-motion-ease) both;
+}
+.ui-ob-understood-head { display: grid; gap: var(--ui-space-sm); }
+.ui-ob-understood-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.25; letter-spacing: -.01em; }
+.ui-ob-understood-lede { margin: 0; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-ob-lines { container: ui-ob-lines / inline-size; display: grid; gap: var(--ui-space-lg); margin: 0; padding: 0; list-style: none; }
+.ui-ob-line { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: var(--ui-space-sm) var(--ui-space-lg); min-width: 0; }
+.ui-ob-line-text { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-ob-line-label { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-tertiary); }
+.ui-ob-line-words { margin: 0; font-size: var(--ui-type-body); line-height: 1.45; text-wrap: pretty; }
+.ui-ob-line-actions { display: flex; gap: var(--ui-space-xs); }
+.ui-ob-line > .ui-field { grid-column: 1 / -1; }
+.ui-ob-note { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+/* what is not confirmed yet: said once, on a sunken band, with the way to it */
+.ui-ob-open { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-sm) var(--ui-space-lg); padding: var(--ui-space-md) var(--ui-space-md) var(--ui-space-md) var(--ui-space-lg); border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-ob-open-text { flex: 1 1 calc(var(--ui-space-2xl) * 8); margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.45; text-wrap: pretty; }
+/* its foot: Back one, and the one Ink action at the end of what she read */
+.ui-ob-understood-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-sm) var(--ui-space-md); padding-top: var(--ui-space-sm); }
+.ui-ob-understood-foot > .ui-btn--quiet { margin-inline-start: calc(var(--ui-size-pad-md) * -1); }
+
+@container ui-td (max-width: 479.98px) {
+  .ui-ob-understood { padding: var(--ui-inset-float); gap: var(--ui-space-lg); }
+}
+@media (max-width: 639.98px) {
+  .ui-ob-understood { padding: var(--ui-inset-float); gap: var(--ui-space-lg); }
+  .ui-ob-understood-foot .ui-btn--primary { flex: 1 1 auto; }
+}
+/* narrow (the summary on a phone, Brand › What Fume understood on a phone): Confirm · Change go under the line */
+@container ui-ob-lines (max-width: 479.98px) {
+  .ui-ob-line { grid-template-columns: minmax(0, 1fr); }
+}
+
+@keyframes ui-ob-in { from { opacity: 0; filter: blur(var(--ui-motion-enter-blur)); scale: var(--ui-motion-enter-scale); } to { opacity: 1; filter: none; scale: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-ob-tile { transition: none; }
+  .ui-ob-understood { animation: none; }
+}

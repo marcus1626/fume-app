@@ -1,0 +1,71 @@
+/* Tabs. DECIDED 13 Oct, from round 7. shadcn's tabs API (Tabs, TabsList, TabsTrigger, TabsContent; Radix attributes:
+   data-orientation, data-state="active|inactive", aria-selected, aria-controls), built on Fume's segmented
+   control. Fume's tabs ARE the segmented control (segmented.css, approved look): a sunken pill track and one
+   white pill that slides to the chosen tab (Marcus 12 Oct). There is no underline variant: an underline is
+   a line, and Fume separates with surface, not strokes (few-strokes).
+   Horizontal: <div class="ui-tabs"> + a .ui-seg.ui-tabs-list (segmented.js slides the pill) + panels.
+   Vertical, for settings pages: the same material turned upright, a sunken track (radius float, concentric
+   with the 36 px pills inside it) and one white pill that slides between rows. The list and its panel sit
+   side by side and wrap to one column when there is no room.
+   Panels switch with a short fade; focus lands on the panel with the sharp ring. tabs.js keeps the panels
+   in step with the selected trigger (whoever moves the pill), and runs the vertical list.
+   Touch: rows are 44 px to a finger (hit area), a press shrinks the label 3 %, hover only with a mouse.
+   Rule gate: few-strokes, actions-are-pills, touch-target, touch-feedback, hover-needs-hover, reduced-motion. */
+
+.ui-tabs { display: flex; flex-direction: column; gap: var(--ui-tabs-gap); min-width: 0; font-family: var(--ui-type-family); }
+/* A long tab list scrolls sideways on a phone, with room for the 44 px hit areas. The scroller is itself a
+   pill, so where the track runs on past the edge it is cut by a round end, not a square one. */
+.ui-tabs-scroll {
+  max-width: 100%; min-width: 0; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain;
+  padding-block: var(--ui-space-xs); margin-block: calc(var(--ui-space-xs) * -1); border-radius: var(--ui-radius-action);
+}
+.ui-tabs-scroll::-webkit-scrollbar { display: none; }
+.ui-tabs-content { min-width: 0; border-radius: var(--ui-radius-card); outline: none; }
+.ui-tabs-content[data-state="inactive"], .ui-tabs-content[hidden] { display: none; }
+.ui-tabs-content[data-state="active"] { animation: ui-tabs-in var(--ui-motion-base) var(--ui-motion-ease) backwards; } /* backwards, not both: a filled opacity animation would make the panel a backdrop root and glass inside it would lose its blur */
+.ui-tabs-content:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+@keyframes ui-tabs-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* Vertical: settings pages. */
+.ui-tabs[data-orientation="vertical"] { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: var(--ui-space-xl); }
+.ui-tabs[data-orientation="vertical"] > .ui-tabs-content { flex: 999 1 280px; }
+.ui-tabs-list--vertical {
+  position: relative; isolation: isolate; flex: 1 0 var(--ui-tabs-vertical-width); max-width: 100%;
+  display: flex; flex-direction: column; gap: var(--ui-inset-seg); padding: var(--ui-inset-seg);
+  border-radius: var(--ui-radius-float); background: var(--ui-surface-sunken);
+}
+.ui-tabs-trigger {
+  position: relative; z-index: 1; display: flex; align-items: center; gap: var(--ui-space-md); width: 100%; height: var(--ui-size-seg); padding-inline: var(--ui-size-pad-sm);
+  border: 0; border-radius: var(--ui-radius-action); background: transparent; color: var(--ui-text-secondary);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.25;
+  text-align: left; white-space: nowrap; cursor: pointer; user-select: none; outline: none;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-tabs-trigger > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; }
+.ui-tabs-trigger::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-tabs-trigger .ui-tabs-hint { margin-inline-start: auto; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-tertiary); }
+@media (hover: hover) { .ui-tabs-trigger:hover { color: var(--ui-text); } }
+.ui-tabs-trigger.is-hover { color: var(--ui-text); }
+.ui-tabs-trigger:active, .ui-tabs-trigger.is-pressed { transform: scale(var(--ui-motion-press-scale)); }
+.ui-tabs-trigger[aria-selected="true"], .ui-tabs-trigger[data-state="active"] { color: var(--ui-text); }
+.ui-tabs-trigger:focus-visible, .ui-tabs-trigger.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-tabs-trigger:disabled, .ui-tabs-trigger[data-disabled] { color: var(--ui-text-disabled); cursor: default; pointer-events: none; }
+@media (pointer: coarse) { .ui-tabs-trigger { height: var(--ui-size-hit); } }
+/* The white pill: tabs.js places it (--y, --h) and adds .is-ready; without it the selected row shows its own pill. */
+.ui-tabs-indicator {
+  position: absolute; z-index: 0; top: 0; left: var(--ui-inset-seg); right: var(--ui-inset-seg); height: var(--h, 0px);
+  transform: translateY(var(--y, 0px)); border-radius: var(--ui-radius-action);
+  background: var(--ui-action-secondary); box-shadow: var(--ui-depth-raised);
+  opacity: 0; pointer-events: none;
+  transition: transform var(--ui-motion-slide) var(--ui-motion-ease), height var(--ui-motion-slide) var(--ui-motion-ease);
+}
+.ui-tabs-list--vertical.is-ready .ui-tabs-indicator { opacity: 1; }
+.ui-tabs-list--vertical.is-placing .ui-tabs-indicator { transition: none; }
+.ui-tabs-list--vertical:not(.is-ready) .ui-tabs-trigger[aria-selected="true"] { background: var(--ui-action-secondary); box-shadow: var(--ui-depth-raised); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-tabs-trigger, .ui-tabs-indicator { transition: none; }
+  .ui-tabs-trigger:active, .ui-tabs-trigger.is-pressed { transform: none; }
+  .ui-tabs-content[data-state="active"] { animation: none; }
+}

@@ -1,0 +1,32 @@
+/* Proposal: what Fume found and proposed and what the customer approved (app v2, FLOWS §2). PROPOSED 15 Oct 2026;
+   round 9 words PROPOSED 19 Oct 2026 (DLOAD-7: Fume reads and proposes, the Engine only makes creatives; DLOAD-1:
+   Confirm, the verb of facts).
+   Markup: <div class="ui-proposal" data-state="proposed">  the thing itself (a swatch, a fact, a product) …
+             <div class="ui-proposal-foot"><span class="ui-proposal-tag"><svg/> Fume found this on lysne.no/about</span>
+               <div class="ui-proposal-actions"> Confirm (secondary) · Change · Remove (quiet; ui-btn sm) </div></div></div>
+   Fume decisions: one rule across the app: Fume proposes, only the customer approves (F-D077). A proposal
+   lies flat on the sunken surface; once kept or changed it lifts onto the sheet with depth, so the difference is
+   depth and words, never a stroke (few-strokes) and never Amber (Amber is for checked creatives only, F-D069).
+   The tag always says who and where: "Fume found this on lysne.no/about", "You added this", "Maja approved · 14 Oct",
+   "Maja changed this". Removed items leave the view. Rule gate: few-strokes, amber-is-a-point, air,
+   space-from-tokens, type-from-tokens. */
+
+.ui-proposal {
+  display: flex; flex-direction: column; gap: var(--ui-space-sm); min-width: 0;
+  padding: var(--ui-space-md); border-radius: var(--ui-radius-card);
+  background: var(--ui-surface); box-shadow: var(--ui-depth-raised);
+  transition: background var(--ui-motion-base) var(--ui-motion-ease), box-shadow var(--ui-motion-base) var(--ui-motion-ease);
+}
+.ui-proposal[data-state="proposed"] { background: var(--ui-surface-sunken); box-shadow: none; }
+.ui-proposal--bare { padding: 0; background: transparent; box-shadow: none; }
+.ui-proposal--bare[data-state="proposed"] { background: transparent; }
+.ui-proposal-foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-sm); min-width: 0; }
+.ui-proposal-tag {
+  display: inline-flex; align-items: center; gap: var(--ui-space-xs); min-width: 0;
+  font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary);
+}
+.ui-proposal-tag > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; }
+.ui-proposal[data-state="proposed"] .ui-proposal-tag { color: var(--ui-text-secondary); }
+.ui-proposal-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); margin-inline-start: auto; }
+
+@media (prefers-reduced-motion: reduce) { .ui-proposal { transition: none; } }

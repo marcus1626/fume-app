@@ -1,0 +1,77 @@
+/* Button. DECIDED 13 Oct, from round 6. Built on shadcn's button (same API: variant + size),
+   redesigned for Fume. Always a pill (DECIDED 12 Oct 2026, rule actions-are-pills).
+   Variants on light ground: primary (Ink), secondary (white + hairline), quiet (ghost), link, danger.
+   Variants on glass: glass-white (white, 94 %), glass-clear (faint veil), glass-danger (Rouge at 80 %).
+   Buttons on glass have no shadow and no stroke (Marcus 13 Oct): the veil alone gives them presence.
+   Coloured buttons on glass are their colour with its own transparency, so the glass shows through.
+   Touch: the hit area is never under 44 px (an invisible ::after grows small buttons), a tap shows the
+   pressed state and no grey flash, and hover only applies where there is a mouse.
+   Icons are filled (design-system/icons); line-only icons carry their own stroke.
+   States: hover one step toward Ink (on Ink and glass: lifts one step), pressed two steps (on Ink and
+   glass: returns) plus scale 0.97 on pointer-down, focus = sharp 2px ring, disabled = sunken surface,
+   loading = spinner + aria-busy. */
+
+.ui-btn {
+  --bg: transparent; --bg-hover: transparent; --bg-pressed: transparent;
+  --fg: var(--ui-text); --edge: transparent; --edge-hover: var(--edge);
+  --h: var(--ui-size-control-md); --px: var(--ui-size-pad-md); --icon: var(--ui-size-icon);
+  --ring: var(--ui-focus-ring);
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--ui-space-sm); flex-shrink: 0;
+  height: var(--h); padding-inline: var(--px);
+  border: 0; border-radius: var(--ui-radius-action);
+  background: var(--bg); color: var(--fg);
+  box-shadow: inset 0 0 0 1px var(--edge); /* gate-allow:few-strokes: --edge is transparent except on the white secondary button */
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium);
+  line-height: 1; letter-spacing: 0; white-space: nowrap; text-decoration: none;
+  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease),
+              box-shadow var(--ui-motion-fast) var(--ui-motion-ease),
+              transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-btn svg { width: var(--icon); height: var(--icon); flex-shrink: 0; }
+/* Hit area: at least --ui-size-hit (44 px) tall and wide, centred on the button; 0 where the button is bigger. */
+.ui-btn::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: inherit; }
+@media (hover: hover) {
+  .ui-btn:hover { background: var(--bg-hover); box-shadow: inset 0 0 0 1px var(--edge-hover); } /* gate-allow:few-strokes: as above */
+}
+.ui-btn.is-hover { background: var(--bg-hover); box-shadow: inset 0 0 0 1px var(--edge-hover); } /* gate-allow:few-strokes: as above */
+.ui-btn:active, .ui-btn.is-pressed { background: var(--bg-pressed); transform: scale(var(--ui-motion-press-scale)); }
+.ui-btn:focus-visible, .ui-btn.is-focus { outline: var(--ui-size-ring) solid var(--ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-btn:disabled, .ui-btn[aria-disabled="true"] {
+  --bg: var(--ui-action-disabled); --bg-hover: var(--bg); --bg-pressed: var(--bg); --fg: var(--ui-action-disabled-fg); --edge: transparent;
+  cursor: default; pointer-events: none; transform: none;
+}
+.ui-btn[aria-busy="true"] { cursor: progress; pointer-events: none; }
+.ui-btn[aria-busy="true"] svg.ui-spin { animation: ui-spin var(--ui-motion-spin) linear infinite; }
+@keyframes ui-spin { to { transform: rotate(360deg); } }
+
+/* light ground */
+.ui-btn--primary   { --bg: var(--ui-action-primary); --bg-hover: var(--ui-action-primary-hover); --bg-pressed: var(--ui-action-primary-pressed); --fg: var(--ui-action-primary-fg); }
+.ui-btn--secondary { --bg: var(--ui-action-secondary); --bg-hover: var(--ui-action-secondary-hover); --bg-pressed: var(--ui-action-secondary-pressed); --fg: var(--ui-action-secondary-fg); --edge: var(--ui-action-secondary-edge); --edge-hover: var(--ui-action-secondary-edge-hover); }
+.ui-btn--quiet     { --bg: var(--ui-action-quiet); --bg-hover: var(--ui-action-quiet-hover); --bg-pressed: var(--ui-action-quiet-pressed); --fg: var(--ui-action-quiet-fg); }
+.ui-btn--danger    { --bg: var(--ui-danger); --bg-hover: var(--ui-danger-hover); --bg-pressed: var(--ui-danger-hover); --fg: var(--ui-text-on-ink); } /* Rouge, DECIDED 13 Oct */
+.ui-btn--link      { --fg: var(--ui-text); height: auto; padding-inline: 0; border-radius: var(--ui-radius-item); text-decoration: underline; text-decoration-color: var(--ui-hairline-strong); text-underline-offset: 4px; }
+@media (hover: hover) { .ui-btn--link:hover { text-decoration-color: currentColor; } }
+.ui-btn--link.is-hover { text-decoration-color: currentColor; }
+.ui-btn--link:focus-visible, .ui-btn--link.is-focus { outline-offset: calc(var(--ui-size-ring-offset) * 2); }
+.ui-btn--link:active, .ui-btn--link.is-pressed { transform: none; color: var(--ui-text-secondary); }
+
+/* on glass: at most one white or coloured button per glass surface */
+.ui-btn--glass-white { --bg: var(--ui-glass-button-white); --bg-hover: var(--ui-glass-button-white-hover); --bg-pressed: var(--ui-glass-button-white-pressed); --fg: var(--ui-glass-button-white-fg); --ring: var(--ui-focus-ring-on-glass); }
+/* coloured on glass: the colour at 80 %, 90 % on hover, back to 80 % when pressed; Porcelain label */
+.ui-btn--glass-danger { --bg: var(--ui-glass-button-danger); --bg-hover: var(--ui-glass-button-danger-hover); --bg-pressed: var(--ui-glass-button-danger-pressed); --fg: var(--ui-glass-button-danger-fg); --ring: var(--ui-focus-ring-on-glass); }
+.ui-btn--glass-clear { --bg: var(--ui-glass-button-clear); --bg-hover: var(--ui-glass-button-clear-hover); --bg-pressed: var(--ui-glass-button-clear-pressed); --fg: var(--ui-glass-button-clear-fg); --ring: var(--ui-focus-ring-on-glass); }
+.ui-btn--glass-white:disabled, .ui-btn--glass-white[aria-disabled="true"],
+.ui-btn--glass-danger:disabled, .ui-btn--glass-danger[aria-disabled="true"],
+.ui-btn--glass-clear:disabled, .ui-btn--glass-clear[aria-disabled="true"] { --bg: var(--ui-glass-button-disabled); --fg: var(--ui-glass-button-disabled-fg); }
+
+/* sizes */
+.ui-btn--sm { --h: var(--ui-size-control-sm); --px: var(--ui-size-pad-sm); --icon: var(--ui-size-icon-sm); }
+.ui-btn--lg { --h: var(--ui-size-control-lg); --px: var(--ui-size-pad-lg); --icon: var(--ui-size-icon-lg); font-size: var(--ui-type-body); }
+.ui-btn--icon { width: var(--h); padding-inline: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-btn { transition: background-color var(--ui-motion-fast) linear; }
+  .ui-btn:active, .ui-btn.is-pressed { transform: none; }
+  .ui-btn[aria-busy="true"] svg.ui-spin { animation-duration: var(--ui-motion-spin-reduced); }
+}

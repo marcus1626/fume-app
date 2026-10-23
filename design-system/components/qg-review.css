@@ -1,0 +1,253 @@
+/* Quality Gate review: Anna's screen. DECIDED 13 Oct, from round 8. Fume's own screen (no shadcn counterpart),
+   composed from button.css, segmented.css (the format switch), kbd.css, avatar.css, toast.js and the
+   creative's hairline from creative.css. Behaviour: qg-review.js.
+   Anna checks every creative the Engine makes before it goes to the customer. The screen has three parts:
+   - The well (--ui-qg-well, one step below the page): the creative large, white with its hairline, the
+     brightest thing on the screen. The format switch (Feed, Story, Banner) changes its shape. Anna's
+     notes are numbered pins on the image: a Porcelain drop whose square corner sits on the spot, Ink
+     while its note is open. Press the creative to pin a new note.
+   - The panel: the Brand DNA checklist for this creative, one row per item with an Ink check, or the
+     note when something is off (logo clear space, palette, type, claims against the brief). A note is
+     told in words on a surface step, never in red. Her note sits on the row it belongs to.
+   - The decision: Mark checked (Ink) and Request changes (white), with their keys (C, R) inside the buttons;
+     arrow keys move between creatives (shown with kbd).
+   The check (rule check-states): the seal on the creative says In check with the grey triangle
+   (--ui-check-waiting) while it waits. On Mark checked the Amber triangle lands on the creative from blur to
+   sharp (soft to sharp, --ui-motion-slow, calm, once) beside "Checked · Anna" and the time, and the toast
+   says "Checked. Marcus can approve it now." The expert checks; only the customer approves. Changes requested is words on the seal, never red.
+   Amber appears nowhere else on the screen.
+   Phone (the screen narrower than 720, a container query, so it works in any frame): the creative on top,
+   and the checklist and the decision in a Smoke glass sheet at the bottom that first shows the summary
+   and the decision, and opens to the whole checklist with its handle (a short pill, not a line). Open, it
+   stops under the bar and the checklist scrolls between the summary and the decision, so Mark checked stays
+   under the thumb. On the sheet Mark checked is the one white button and Request changes is clear.
+   Touch: pins, rows and the handle are 44 to a finger; hover only with a mouse; a press shrinks 3 %.
+   Rule gate: amber-is-a-point (the Amber check only), check-states, few-strokes (the creative's
+   hairline), air, space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data, touch-target,
+   touch-feedback, hover-needs-hover, glass-only-floating (the phone sheet floats), reduced-motion,
+   reduced-transparency. */
+
+.ui-qg { container: ui-qg / inline-size; min-width: 0; font-family: var(--ui-type-family); color: var(--ui-text); }
+.ui-qg-screen {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) var(--ui-qg-panel-width);
+  grid-template-areas: "bar bar" "stage sheet"; gap: var(--ui-space-xl) var(--ui-space-2xl); align-items: stretch;
+  min-width: 0; padding: var(--ui-inset-panel); background: var(--ui-ground); outline: none;
+}
+
+/* ---------- bar: back, campaign, format, position ---------- */
+.ui-qg-bar { grid-area: bar; display: flex; align-items: center; gap: var(--ui-space-md); min-width: 0; }
+.ui-qg-title { display: grid; flex: 1 1 auto; min-width: 0; }
+.ui-qg-eyebrow { overflow: hidden; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; letter-spacing: .01em; color: var(--ui-text-tertiary); white-space: nowrap; text-overflow: ellipsis; }
+.ui-qg-name { margin: 0; overflow: hidden; font-size: var(--ui-type-body-large); font-weight: var(--ui-type-weight-medium); line-height: 1.3; letter-spacing: -.01em; white-space: nowrap; text-overflow: ellipsis; }
+.ui-qg-format { display: flex; flex: none; }
+.ui-qg-nav { display: flex; flex: none; align-items: center; gap: var(--ui-space-xs); }
+.ui-qg-count { min-width: calc(var(--ui-size-hit) * 1.5); font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-secondary); font-variant-numeric: tabular-nums; text-align: center; white-space: nowrap; }
+
+/* ---------- the well and the creative ---------- */
+.ui-qg-stage {
+  grid-area: stage; position: relative; display: grid; place-items: center; align-content: center; gap: var(--ui-space-md);
+  min-width: 0; min-height: calc(var(--ui-qg-media-feed) * 1.25 + var(--ui-space-2xl) * 3);
+  padding: var(--ui-space-2xl); border-radius: var(--ui-radius-card); background: var(--ui-qg-well);
+}
+.ui-qg-creative { --ratio: var(--ui-creative-ratio-feed); --w: var(--ui-qg-media-feed); display: grid; gap: var(--ui-space-sm); width: min(100%, var(--w)); min-width: 0; margin: 0; }
+.ui-qg-creative[data-format="story"] { --ratio: var(--ui-creative-ratio-story); --w: var(--ui-qg-media-story); }
+.ui-qg-creative[data-format="banner"] { --ratio: var(--ui-creative-ratio-banner); --w: var(--ui-qg-media-banner); }
+.ui-qg-media { position: relative; width: 100%; aspect-ratio: var(--ratio); border-radius: var(--ui-radius-card); background: var(--ui-creative-bg); cursor: crosshair; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.ui-qg-media > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+.ui-qg-media.is-changing > img { animation: ui-qg-fade var(--ui-motion-base) var(--ui-motion-ease) both; }
+.ui-qg-media::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); pointer-events: none; } /* gate-allow:few-strokes  the edge of the customer's creative, the one content hairline */
+.ui-qg-caption { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--ui-space-xs) var(--ui-space-sm); min-width: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-qg-caption-size { font-family: var(--ui-type-family-data); color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; }
+
+/* Anna's pin: a drop whose square corner sits on the spot */
+.ui-qg-pin {
+  position: absolute; z-index: 2; left: var(--x, 50%); top: var(--y, 50%);
+  display: grid; place-items: center; width: var(--ui-qg-pin); height: var(--ui-qg-pin); margin: 0; padding: 0;
+  border: 0; border-radius: 50%; border-bottom-left-radius: 0;
+  background: var(--ui-qg-pin-bg); color: var(--ui-text); box-shadow: var(--ui-glass-shadow-small);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; font-variant-numeric: tabular-nums;
+  translate: 0 -100%; transform-origin: bottom left;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none; user-select: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-qg-pin::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: 50%; }
+@media (hover: hover) { .ui-qg-pin:hover { background: var(--ui-glass-button-white-hover); } }
+.ui-qg-pin.is-hover { background: var(--ui-glass-button-white-hover); }
+.ui-qg-pin.is-active, .ui-qg-pin[data-state="draft"], .ui-qg-pin[aria-expanded="true"] { background: var(--ui-qg-pin-active); color: var(--ui-action-primary-fg); }
+.ui-qg-pin:active, .ui-qg-pin.is-pressed { transform: scale(var(--ui-motion-press-scale)); }
+.ui-qg-pin:focus-visible, .ui-qg-pin.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-qg-pin.is-new { animation: ui-qg-pin-in var(--ui-motion-base) var(--ui-motion-ease) both; }
+
+/* the seal: In check, Checked, Changes requested, on the creative's bottom-left corner */
+.ui-qg-seal {
+  position: absolute; z-index: 1; left: var(--ui-space-md); bottom: var(--ui-space-md);
+  display: inline-flex; align-items: center; gap: var(--ui-space-sm); max-width: calc(100% - var(--ui-space-md) * 2);
+  height: var(--ui-qg-seal-height); padding-inline: var(--ui-space-md) var(--ui-inset-float);
+  border-radius: var(--ui-radius-action); background: var(--ui-action-secondary); color: var(--ui-text); box-shadow: var(--ui-depth-raised);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; white-space: nowrap; pointer-events: none;
+}
+.ui-qg-seal svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; color: var(--ui-check-waiting); }
+.ui-qg-seal[data-check="approved"] svg { color: var(--ui-check); } /* gate-allow:amber-is-a-point  the Amber checked triangle lands on the creative Anna checked, beside her name and the time (rule check-states) */
+.ui-qg-seal[data-check="waiting"] { color: var(--ui-text-secondary); }
+.ui-qg-seal[data-check="changes"] svg { display: none; }
+.ui-qg-seal-text { overflow: hidden; text-overflow: ellipsis; }
+.ui-qg-seal-time { font-family: var(--ui-type-family-data); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; }
+.ui-qg-seal-time:empty { display: none; }
+.ui-qg-seal.is-landing svg { animation: ui-qg-land var(--ui-motion-slow) var(--ui-motion-ease) both; }
+.ui-qg-seal.is-landing > span { animation: ui-qg-fade var(--ui-motion-base) var(--ui-motion-ease) var(--ui-motion-fast) both; }
+
+/* ---------- the panel (a glass sheet on a phone) ---------- */
+.ui-qg-sheet {
+  --qg-fg: var(--ui-text); --qg-fg-2: var(--ui-text-secondary); --qg-fg-3: var(--ui-text-tertiary);
+  --qg-mark: var(--ui-action-primary); --qg-mark-fg: var(--ui-action-primary-fg); --qg-tile: var(--ui-surface-sunken);
+  --qg-note: var(--ui-qg-note-bg); --qg-note-hover: var(--ui-surface-sunken); --qg-note-pressed: var(--ui-surface-sunken-hover); --qg-ring: var(--ui-focus-ring);
+  grid-area: sheet; display: flex; flex-direction: column; gap: var(--ui-space-xl); min-width: 0; color: var(--qg-fg);
+}
+.ui-qg-handle { display: none; }
+.ui-qg-head { display: grid; gap: var(--ui-space-xs); padding-inline: var(--ui-space-md); }
+.ui-qg-sheet-title { margin: 0; font-size: var(--ui-type-body-large); font-weight: var(--ui-type-weight-medium); line-height: 1.3; letter-spacing: -.01em; }
+.ui-qg-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-sm); font-size: var(--ui-type-label); line-height: 1.5; color: var(--qg-fg-3); }
+.ui-qg-meta svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; color: var(--qg-fg-2); }
+.ui-qg-meta-item { display: inline-flex; align-items: center; gap: var(--ui-space-xs); }
+.ui-qg-meta-data { font-family: var(--ui-type-family-data); font-variant-numeric: tabular-nums; }
+.ui-qg-summary { display: none; }
+.ui-qg-more { display: flex; flex-direction: column; gap: var(--ui-space-xl); min-width: 0; }
+
+/* the Brand DNA checklist */
+.ui-qg-section { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qg-section-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--ui-space-sm); padding-inline: var(--ui-space-md); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--qg-fg-3); }
+.ui-qg-section-count { font-family: var(--ui-type-family-data); font-weight: var(--ui-type-weight-regular); font-variant-numeric: tabular-nums; }
+.ui-qg-list { display: grid; gap: var(--ui-space-xs); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-qg-row {
+  position: relative; display: grid; grid-template-columns: var(--ui-qg-marker) minmax(0, 1fr); align-items: start; gap: var(--ui-space-xs) var(--ui-space-md);
+  width: 100%; min-width: 0; min-height: var(--ui-size-hit); margin: 0; padding: var(--ui-space-sm) var(--ui-space-md);
+  border: 0; border-radius: var(--ui-radius-item); background: transparent; color: var(--qg-fg);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.4; text-align: left;
+}
+.ui-qg-row > :not(.ui-qg-mark) { grid-column: 2; min-width: 0; }
+.ui-qg-row > .ui-qg-mark { grid-row: 1; }
+.ui-qg-row-title { font-weight: var(--ui-type-weight-medium); }
+.ui-qg-row-text { font-size: var(--ui-type-label); line-height: 1.5; color: var(--qg-fg-3); text-wrap: pretty; }
+/* a row with a note: a surface step, the note in words, Anna under it */
+.ui-qg-row[data-result="note"] { gap: var(--ui-space-sm) var(--ui-space-md); padding-block: var(--ui-space-md); background: var(--qg-note); }
+.ui-qg-row[data-result="note"] .ui-qg-row-title { margin-block-end: calc(var(--ui-space-xs) * -1); }
+.ui-qg-row[data-result="note"] .ui-qg-row-text { font-size: var(--ui-type-control); color: var(--qg-fg-2); }
+.ui-qg-by { display: flex; align-items: center; gap: var(--ui-space-sm); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--qg-fg-2); }
+.ui-qg-by-time { font-family: var(--ui-type-family-data); font-weight: var(--ui-type-weight-regular); color: var(--qg-fg-3); font-variant-numeric: tabular-nums; }
+button.ui-qg-row {
+  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+@media (hover: hover) { button.ui-qg-row:hover { background: var(--qg-note-hover); } }
+button.ui-qg-row.is-hover, button.ui-qg-row.is-active { background: var(--qg-note-hover); }
+button.ui-qg-row:active, .ui-qg-row.is-pressed { background: var(--qg-note-pressed); transform: scale(var(--ui-card-press-scale)); }
+.ui-qg-row:focus-visible, .ui-qg-row.is-focus { outline: var(--ui-size-ring) solid var(--qg-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* marks: the Ink check on a pass; the small pin on a note */
+.ui-qg-mark { display: grid; place-items: center; width: var(--ui-qg-marker); height: var(--ui-qg-marker); margin-block-start: calc((1lh - var(--ui-qg-marker)) / 2); border-radius: 50%; background: var(--qg-mark); color: var(--qg-mark-fg); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; font-variant-numeric: tabular-nums; }
+.ui-qg-mark svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-qg-mark--note { border-bottom-left-radius: 0; background: var(--qg-tile); color: var(--qg-fg); transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), color var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-qg-mark--note.is-active, .is-active > .ui-qg-mark--note { background: var(--qg-mark); color: var(--qg-mark-fg); }
+
+/* notes Anna adds, and the field she writes them in */
+.ui-qg-notes { display: grid; gap: var(--ui-space-xs); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-qg-compose { display: grid; gap: var(--ui-space-sm); min-width: 0; padding-inline: var(--ui-space-md); }
+.ui-qg-compose-label { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--qg-fg-3); }
+.ui-qg-compose-row { display: flex; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qg-compose-row > .ui-input { flex: 1 1 auto; }
+.ui-qg-compose-hint { margin: calc(var(--ui-space-xs) * -1) 0 0; font-size: var(--ui-type-label); line-height: 1.5; color: var(--qg-fg-3); }
+
+/* the decision, at the foot of the panel */
+.ui-qg-decision { display: flex; flex-wrap: wrap; gap: var(--ui-space-sm); margin-top: auto; }
+.ui-qg-decision > .ui-btn { flex: 1 1 0; }
+.ui-qg-screen[data-state="waiting"] .ui-qg-decision--done, .ui-qg-screen:not([data-state="waiting"]) .ui-qg-decision--waiting { display: none; }
+.ui-qg-outcome { flex-basis: 100%; margin: 0 0 var(--ui-space-xs); padding-inline: var(--ui-space-md); font-size: var(--ui-type-control); line-height: 1.5; color: var(--qg-fg-2); }
+.ui-qg-key { margin-inline-start: var(--ui-space-xs); }
+.ui-btn--primary .ui-qg-key { background: var(--ui-qg-key-on-ink); color: var(--ui-qg-key-on-ink-fg); }
+.ui-qg-keys { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-sm); margin-top: calc(var(--ui-space-sm) * -1); padding-inline: var(--ui-space-md); font-size: var(--ui-type-label); line-height: 1.5; color: var(--qg-fg-3); }
+.ui-qg-keys > span { display: inline-flex; align-items: center; gap: var(--ui-space-xs); white-space: nowrap; } /* a key stays with its words; pairs wrap whole */
+
+/* ---------- phone: the creative on top, the panel a glass sheet at the bottom ---------- */
+@container ui-qg (max-width: 719.98px) {
+  .ui-qg-screen {
+    grid-template-columns: minmax(0, 1fr); grid-template-areas: "bar" "stage"; align-content: start; gap: var(--ui-space-lg);
+    min-height: var(--ui-qg-phone-height); overflow: hidden;
+    padding: var(--ui-space-lg) var(--ui-space-lg) calc(var(--ui-qg-peek) + var(--ui-space-lg));
+  }
+  /* the bar in two lines: back, the name, previous and next; then the format and the position */
+  .ui-qg-bar { flex-wrap: wrap; gap: var(--ui-space-sm); }
+  .ui-qg-bar > :first-child { order: 1; }
+  .ui-qg-title { order: 2; flex: 1 1 0; }
+  .ui-qg-nav { display: contents; }
+  .ui-qg-nav > :first-child { order: 3; }
+  .ui-qg-nav > :last-child { order: 4; }
+  .ui-qg-bar::after { content: ""; order: 5; flex: 0 0 100%; height: 0; }
+  .ui-qg-format { order: 6; flex: 1 1 auto; }
+  .ui-qg-count { order: 7; min-width: 0; padding-inline-end: var(--ui-space-sm); }
+  .ui-qg-name { font-size: var(--ui-type-body); letter-spacing: 0; }
+  .ui-qg-crumb { display: none; } /* the campaign is the screen around it; the gate is what this is */
+  .ui-qg-stage { min-height: 0; padding: var(--ui-space-lg); }
+  .ui-qg-creative { --w: 100%; }
+  .ui-qg-creative[data-format="story"] { --w: 62%; }
+  .ui-qg-creative[data-format="banner"] { --w: 100%; }
+
+  .ui-qg-sheet {
+    --qg-fg: var(--ui-glass-fg); --qg-fg-2: var(--ui-glass-fg-secondary); --qg-fg-3: var(--ui-glass-fg-secondary);
+    --qg-mark: var(--ui-glass-fg); --qg-mark-fg: var(--ui-glass-button-white-fg); --qg-tile: var(--ui-glass-button-clear-hover);
+    --qg-note: var(--ui-glass-button-clear); --qg-note-hover: var(--ui-glass-button-clear-hover); --qg-note-pressed: var(--ui-glass-button-clear); --qg-ring: var(--ui-focus-ring-on-glass);
+    position: absolute; z-index: 3; left: var(--ui-drawer-margin); right: var(--ui-drawer-margin); bottom: var(--ui-drawer-margin);
+    max-height: calc(100% - var(--qg-top, var(--ui-drawer-top)) - 2 * var(--ui-drawer-margin)); overflow: hidden; /* open, it stops under the bar (--qg-top, set by qg-review.js): the creative's name stays in view */
+    gap: var(--ui-space-xl); padding: 0 var(--ui-inset-panel) var(--ui-inset-panel);
+    border-radius: var(--ui-radius-panel); background: var(--ui-glass-bg); box-shadow: var(--ui-glass-shadow);
+    -webkit-backdrop-filter: var(--ui-glass-filter); backdrop-filter: var(--ui-glass-filter);
+    font-weight: var(--ui-type-weight-medium);
+  }
+  /* open, the checklist scrolls between the summary and the decision, so Mark checked never leaves the thumb */
+  .ui-qg-sheet > * { flex-shrink: 0; }
+  .ui-qg-more {
+    flex-shrink: 1; min-height: 0; margin: calc(var(--ui-space-xs) * -1) calc(var(--ui-inset-panel) * -1); padding: var(--ui-space-xs) var(--ui-inset-panel);
+    overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+  }
+  .ui-qg-more::-webkit-scrollbar { display: none; }
+  .ui-qg-handle {
+    position: relative; display: block; flex-shrink: 0; align-self: center;
+    width: var(--ui-drawer-handle-width); height: var(--ui-drawer-handle-height); margin: var(--ui-space-md) 0 calc(var(--ui-space-sm) - var(--ui-space-xl)); padding: 0;
+    border: 0; border-radius: var(--ui-radius-action); background: var(--ui-drawer-handle);
+    cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+    transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+  }
+  .ui-qg-handle::after { content: ""; position: absolute; inset: calc(-1 * var(--ui-space-md)) min(0px, calc(50% - var(--ui-size-hit) / 2)) auto; height: var(--ui-size-hit); }
+  .ui-qg-head { padding-inline: 0; }
+  .ui-qg-sheet-title { font-size: var(--ui-type-body); letter-spacing: 0; }
+  .ui-qg-meta, .ui-qg-keys, .ui-qg-key { display: none; }
+  .ui-qg-summary { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-sm); font-size: var(--ui-type-label); line-height: 1.5; color: var(--qg-fg-2); }
+  .ui-qg-sheet:not([data-snap="full"]) .ui-qg-more { display: none; }
+  .ui-qg-sheet[data-snap="full"] .ui-qg-more { animation: ui-qg-fade var(--ui-motion-base) var(--ui-motion-ease) both; }
+  .ui-qg-section-head, .ui-qg-compose, .ui-qg-outcome { padding-inline: 0; }
+  .ui-qg-row { padding-inline: 0; }
+  .ui-qg-row[data-result="note"] { margin-inline: calc(var(--ui-space-md) * -1); padding-inline: var(--ui-space-md); }
+  .ui-qg-row-text { color: var(--qg-fg-2); }
+  .ui-qg-decision > .ui-btn { --h: var(--ui-size-hit); --px: var(--ui-size-pad-sm); } /* Request changes and Mark checked side by side, 44 tall */
+  /* on glass: Mark checked is the one white button, the rest clear; no shadow, no stroke */
+  .ui-qg-sheet .ui-btn--primary { --bg: var(--ui-glass-button-white); --bg-hover: var(--ui-glass-button-white-hover); --bg-pressed: var(--ui-glass-button-white-pressed); --fg: var(--ui-glass-button-white-fg); --ring: var(--ui-focus-ring-on-glass); }
+  .ui-qg-sheet .ui-btn--secondary, .ui-qg-sheet .ui-btn--quiet { --bg: var(--ui-glass-button-clear); --bg-hover: var(--ui-glass-button-clear-hover); --bg-pressed: var(--ui-glass-button-clear-pressed); --fg: var(--ui-glass-button-clear-fg); --edge: transparent; --edge-hover: transparent; --ring: var(--ui-focus-ring-on-glass); }
+}
+@media (hover: hover) { .ui-qg-handle:hover { background: var(--ui-drawer-handle-active); } }
+.ui-qg-handle:active, .ui-qg-handle.is-pressed { background: var(--ui-drawer-handle-active); transform: scale(var(--ui-motion-press-scale)); }
+.ui-qg-handle:focus-visible, .ui-qg-handle.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-size-ring-offset); }
+
+@keyframes ui-qg-land { from { opacity: 0; transform: scale(var(--ui-qg-land-scale)); filter: blur(var(--ui-qg-land-blur)); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes ui-qg-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ui-qg-pin-in { from { opacity: 0; scale: var(--ui-motion-enter-scale); filter: blur(var(--ui-motion-enter-blur)); } to { opacity: 1; scale: 1; filter: none; } }
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  @container ui-qg (max-width: 719.98px) { .ui-qg-sheet { background: var(--ui-glass-bg-solid); } }
+}
+@media (prefers-reduced-transparency: reduce) {
+  @container ui-qg (max-width: 719.98px) { .ui-qg-sheet { background: var(--ui-glass-bg-solid); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ui-qg-pin, button.ui-qg-row, .ui-qg-mark--note, .ui-qg-handle { transition: none; }
+  .ui-qg-pin:active, .ui-qg-pin.is-pressed, button.ui-qg-row:active, .ui-qg-row.is-pressed, .ui-qg-handle:active { transform: none; }
+  .ui-qg-seal.is-landing svg, .ui-qg-seal.is-landing > span, .ui-qg-pin.is-new, .ui-qg-media.is-changing > img, .ui-qg-sheet[data-snap="full"] .ui-qg-more { animation: none; }
+}

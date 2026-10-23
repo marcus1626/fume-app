@@ -1,0 +1,117 @@
+/* Input group: one field with things inside it. DECIDED 13 Oct, from round 7; round 8: invalid on glass (field.css).
+   Built on shadcn's input-group (InputGroup, InputGroupAddon with data-align inline-start |
+   inline-end | block-start | block-end, InputGroupButton, InputGroupText, InputGroupInput,
+   InputGroupTextarea), same parts and attributes, redesigned for Fume.
+   The whole group is the field: one white surface, one hairline, one radius (12), one focus ring
+   around all of it. The input inside has no edge of its own. Inside sit a leading icon (search), a
+   text addon in tertiary (https://, kr), a key hint (kbd), or a small button: a quiet circle (clear,
+   with circle-x) or the Ink circle (send). A button sits as far from the field's edge as from its
+   top and bottom, so it follows the corner.
+   Clear shows only when the field holds text (needs a placeholder: :placeholder-shown); a key hint
+   gives way to it and is hidden on touch screens, where there is no keyboard to press it on.
+   On glass the group is the glass field veil with no stroke and the Porcelain ring; inside a pill
+   bar it is a pill.
+   Touch: 44 tall with 16 px text on touch screens; buttons inside keep their 44 px hit area
+   (button.css). Hover only with a mouse.
+   Rule gate: few-strokes (one hairline: the field's), focus-is-sharp, radius-from-tokens,
+   space-from-tokens, type-from-tokens, fields-16-on-touch, hover-needs-hover, reduced-motion. */
+
+.ui-input-group {
+  --h: var(--ui-field-height); --px: var(--ui-field-pad); --edge: var(--ui-field-edge); --ring: var(--ui-focus-ring);
+  --addon: var(--ui-field-placeholder);
+  position: relative; display: flex; align-items: center; width: 100%; min-width: 0; min-height: var(--h);
+  border-radius: var(--ui-radius-field); background: var(--ui-field-bg); color: var(--ui-field-fg);
+  box-shadow: inset 0 0 0 1px var(--edge); /* gate-allow:few-strokes  the field's hairline, around the whole group */
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.4;
+  transition: box-shadow var(--ui-motion-fast) var(--ui-motion-ease), background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-input-group:has(> .ui-input-group-textarea), .ui-input-group:has(> [data-align^="block"]) { flex-direction: column; align-items: stretch; }
+
+/* the control inside: no edge, no fill, no ring of its own */
+.ui-input-group-input, .ui-input-group-textarea {
+  flex: 1 1 auto; align-self: stretch; width: 100%; min-width: 0; margin: 0; padding: 0 var(--px);
+  border: 0; border-radius: 0; background: transparent; box-shadow: none; outline: none; appearance: none; -webkit-appearance: none;
+  color: inherit; font: inherit; font-weight: var(--ui-type-weight-regular); text-overflow: ellipsis;
+}
+.ui-input-group-input { height: var(--h); }
+.ui-input-group-input::placeholder, .ui-input-group-textarea::placeholder { color: var(--ui-field-placeholder); opacity: 1; }
+.ui-input-group-input::-webkit-search-cancel-button { display: none; }
+.ui-input-group-input[inputmode="numeric"], .ui-input-group-input[inputmode="decimal"] { font-variant-numeric: tabular-nums; }
+.ui-input-group-textarea {
+  min-height: var(--ui-field-textarea-min); max-height: var(--ui-field-textarea-max); padding-block: var(--ui-field-pad-block);
+  line-height: 1.5; resize: none; overflow-y: auto; field-sizing: content; text-overflow: clip;
+}
+
+/* addons */
+.ui-input-group-addon {
+  display: flex; flex-shrink: 0; align-items: center; justify-content: center; gap: var(--ui-space-sm); align-self: stretch;
+  color: var(--addon); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-regular); white-space: nowrap;
+  cursor: text; user-select: none;
+}
+.ui-input-group-addon > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; }
+.ui-input-group-addon[data-align="inline-start"], .ui-input-group-addon:not([data-align]) { order: -1; padding-left: var(--px); }
+.ui-input-group-addon[data-align="inline-end"] { order: 1; padding-right: var(--px); }
+/* the input moves in to meet an addon: 8 from an icon or a word */
+.ui-input-group:has(> .ui-input-group-addon[data-align="inline-start"], > .ui-input-group-addon:not([data-align])) > .ui-input-group-input { padding-left: var(--ui-space-sm); }
+.ui-input-group:has(> .ui-input-group-addon[data-align="inline-end"]) > .ui-input-group-input { padding-right: var(--ui-space-sm); }
+/* a button or a key sits as far from the edge as from the top and bottom */
+.ui-input-group-addon[data-align="inline-end"]:has(> .ui-input-group-button, > .ui-btn) { padding-right: calc((var(--h) - var(--ui-size-control-sm)) / 2); gap: var(--ui-space-xs); }
+.ui-input-group-addon[data-align="inline-start"]:has(> .ui-input-group-button, > .ui-btn) { padding-left: calc((var(--h) - var(--ui-size-control-sm)) / 2); }
+.ui-input-group-addon[data-align="inline-end"]:has(> .ui-kbd:only-child, > .ui-kbd-group:only-child) { padding-right: calc((var(--h) - var(--ui-kbd-height)) / 2); }
+/* a key that shares its place with a button keeps the key's own inset: as far from the side as from the top */
+.ui-input-group-addon:has(> .ui-input-group-button) > :is(.ui-kbd, .ui-kbd-group) { margin-inline: calc((var(--ui-size-control-sm) - var(--ui-kbd-height)) / 2); }
+.ui-input-group-addon[data-align="block-start"] { order: -1; justify-content: flex-start; padding: var(--ui-field-pad-block) var(--px) 0; }
+.ui-input-group-addon[data-align="block-end"] { order: 1; justify-content: flex-start; padding: 0 calc((var(--h) - var(--ui-size-control-sm)) / 2) calc((var(--h) - var(--ui-size-control-sm)) / 2); }
+.ui-input-group-addon[data-align^="block"] > .ui-input-group-text:first-child { padding-left: calc(var(--px) - (var(--h) - var(--ui-size-control-sm)) / 2); }
+.ui-input-group-addon[data-align^="block"] > :last-child:not(:first-child) { margin-left: auto; }
+.ui-input-group-text { display: flex; align-items: center; gap: var(--ui-space-sm); color: var(--addon); font-size: var(--ui-type-control); }
+.ui-input-group-text svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; pointer-events: none; }
+
+/* a button inside: a quiet circle by default; .ui-btn--primary for the Ink send button */
+.ui-input-group-button.ui-btn { --h: var(--ui-size-control-sm); --px: var(--ui-space-md); --icon: var(--ui-size-icon); border-radius: var(--ui-radius-action); }
+.ui-input-group-button.ui-btn--quiet { --fg: var(--ui-field-icon); }
+@media (hover: hover) { .ui-input-group-button.ui-btn--quiet:hover { --fg: var(--ui-text); } }
+.ui-input-group-button.ui-btn--quiet.is-hover { --fg: var(--ui-text); }
+/* clear: only when there is something to clear */
+.ui-input-group:has(.ui-input-group-input:placeholder-shown) [data-ui-clear] { display: none; }
+/* a key hint gives way to the clear button once there is text, and is not shown on touch screens */
+.ui-input-group:has(.ui-input-group-input:not(:placeholder-shown)):has([data-ui-clear]) .ui-input-group-addon > :is(.ui-kbd, .ui-kbd-group) { display: none; }
+
+/* states */
+@media (hover: hover) { .ui-input-group:hover { --edge: var(--ui-field-edge-hover); } }
+.ui-input-group.is-hover { --edge: var(--ui-field-edge-hover); }
+.ui-input-group:has(:is(.ui-input-group-input, .ui-input-group-textarea):focus-visible), .ui-input-group.is-focus { outline: var(--ui-size-ring) solid var(--ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-input-group:has(:is(.ui-input-group-input, .ui-input-group-textarea)[data-ui-focus="pointer"]) { outline: none; } /* clicked or tapped in: the caret shows where you type; the ring is for the keyboard (focus.js, Marcus 13 Oct) */
+.ui-input-group:has([aria-invalid="true"]), .ui-input-group[data-invalid="true"] { --edge: var(--ui-field-edge-invalid); }
+.ui-input-group:has(:is(.ui-input-group-input, .ui-input-group-textarea)[readonly]) { --edge: transparent; background: var(--ui-field-bg-readonly); }
+.ui-input-group:has(:is(.ui-input-group-input, .ui-input-group-textarea):disabled), .ui-input-group[data-disabled="true"] {
+  --edge: transparent; --addon: var(--ui-field-fg-disabled); background: var(--ui-field-bg-disabled); color: var(--ui-field-fg-disabled);
+}
+.ui-input-group:has(:disabled) .ui-input-group-input::placeholder { color: var(--ui-field-fg-disabled); }
+
+/* sizes */
+.ui-input-group--sm, .ui-input-group[data-size="sm"] { --h: var(--ui-field-height-sm); --px: var(--ui-field-pad-sm); }
+.ui-input-group--lg, .ui-input-group[data-size="lg"] { --h: var(--ui-field-height-lg); --px: var(--ui-field-pad-lg); font-size: var(--ui-type-body); }
+
+/* on glass: the veil, no stroke, the Porcelain ring; in a pill bar, a pill */
+.ui-glass .ui-input-group { --edge: transparent; --ring: var(--ui-focus-ring-on-glass); --addon: var(--ui-field-glass-placeholder); background: var(--ui-field-glass-bg); color: var(--ui-field-glass-fg); }
+.ui-glass .ui-input-group-input, .ui-glass .ui-input-group-textarea { font-weight: var(--ui-type-weight-medium); }
+.ui-glass :is(.ui-input-group-input, .ui-input-group-textarea)::placeholder { color: var(--ui-field-glass-placeholder); }
+.ui-glass .ui-input-group-addon { font-weight: var(--ui-type-weight-medium); }
+.ui-glass .ui-input-group-button.ui-btn--quiet { --fg: var(--ui-field-glass-placeholder); --bg-hover: var(--ui-glass-button-clear-hover); --bg-pressed: var(--ui-glass-button-clear); --ring: var(--ui-focus-ring-on-glass); }
+@media (hover: hover) { .ui-glass .ui-input-group:hover { --edge: transparent; } .ui-glass .ui-input-group-button.ui-btn--quiet:hover { --fg: var(--ui-glass-fg); } }
+.ui-glass--bar .ui-input-group { border-radius: var(--ui-radius-action); }
+/* invalid on glass (round 8): the 2 px Rouge ring inside the veil; the words under it turn Porcelain (field.css) */
+.ui-glass .ui-input-group:is(:has([aria-invalid="true"]), [data-invalid="true"]) { box-shadow: inset 0 0 0 1px var(--ui-field-glass-edge-invalid-rim), inset 0 0 0 calc(1px + var(--ui-size-ring)) var(--ui-field-glass-edge-invalid); } /* gate-allow:few-strokes  the invalid edge on a glass field: Porcelain rim, Rouge band (field.css) */
+
+/* touch: 44 tall, 16 px text, no key hints */
+@media (pointer: coarse) {
+  .ui-input-group { --h: max(var(--ui-field-height), var(--ui-size-hit)); font-size: var(--ui-type-body); }
+  .ui-input-group--lg, .ui-input-group[data-size="lg"] { --h: var(--ui-field-height-lg); }
+  .ui-input-group-addon:has(> .ui-kbd:only-child, > .ui-kbd-group:only-child), .ui-input-group-addon > :is(.ui-kbd, .ui-kbd-group) { display: none; }
+  .ui-input-group:has(> .ui-input-group-addon[data-align="inline-end"] > .ui-kbd:only-child) > .ui-input-group-input { padding-right: var(--px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-input-group { transition: none; }
+}

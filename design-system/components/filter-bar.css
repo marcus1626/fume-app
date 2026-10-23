@@ -1,0 +1,133 @@
+/* Filter bar: search, filter chips, sort, the active filters and the result count over a set of creatives.
+   DECIDED 13 Oct, from round 8. shadcn has no filter bar; it composes shadcn's input-group (search with its key hint),
+   button (the chips are buttons), dropdown menu with checkbox items (menu.css, opened by nav.js), select
+   (the sort) and drawer (the phone's filter sheet, sheet.css + dialog.js). filter-bar.js runs it.
+   Markup: <div class="ui-filter-bar" id="fb" data-ui-filter-bar data-ui-filter-target="#grid" data-noun="creative,creatives">
+             <div class="ui-filter-bar-controls">
+               <div class="ui-input-group ui-filter-bar-search" role="search"> … <input data-ui-filter-search> … </div>
+               <div class="ui-filter-bar-chips"><div class="ui-filter-chip-wrap">
+                 <button class="ui-btn ui-btn--secondary ui-filter-chip" data-ui-filter-chip="status" data-label="Status"
+                   data-ui-nav-trigger aria-controls="fb-status" aria-haspopup="menu">Status <span class="ui-filter-chip-count" hidden></span> …</button>
+                 <div class="ui-glass ui-menu ui-filter-menu" id="fb-status" role="menu" hidden>
+                   <button class="ui-menu-item ui-filter-option" role="menuitemcheckbox" aria-checked="false"
+                     data-ui-filter-option data-filter="status" data-value="waiting">Waiting for Anna …</button> …</div></div> …</div>
+               <div class="ui-filter-bar-sort" data-ui-filter-sort> a select whose values are "attribute:asc|desc" </div>
+               <button class="ui-btn ui-btn--secondary ui-filter-bar-sheet-btn" data-ui-dialog-open="fb-sheet">Filters …</button></div>
+             <div class="ui-filter-bar-applied"><p class="ui-filter-bar-count" data-ui-filter-count></p>
+               <ul class="ui-filter-bar-pills" data-ui-filter-pills></ul><button … data-ui-filter-clear>Clear all</button></div></div>
+           Items to filter: <li data-ui-filter-item data-status="approved" data-format="feed" data-time="14:02">…</li>
+   Fume decisions: one calm row. The search is a field (white, its hairline, radius 12) with "/" as its key;
+   the chips are white pills with a chevron, and a chip that filters turns Ink and says how many values it
+   holds: Ink decides. A chip opens a glass menu of checkbox rows (the check in Porcelain, never Amber;
+   a status row may carry the check triangle, but only the checked creative itself is ever Amber). The
+   sort is a field at the row's end. Under the row, 12 below: the result count in the data face ("3 of 8
+   creatives"), then each active filter as a sunken pill, its key in tertiary and its value in Ink, with
+   a remove circle (44 to touch), and Clear all; the creatives follow 24 below.
+   Narrow (the bar under 640 px, a container query): search and a Filters button with the count; the chips
+   and the sort move into a glass drawer with the same options as rows, and its one white button shows
+   how many creatives are left ("Show 3 creatives").
+   Rule gate: few-strokes (the field's and the white chip's hairline), actions-are-pills, amber-is-a-point,
+   mono-is-data, menu-rows-fill, air, touch-target, touch-feedback, hover-needs-hover, reduced-motion. */
+
+.ui-filter-bar { container: ui-filter-bar / inline-size; display: grid; gap: var(--ui-filterbar-row-gap); min-width: 0; font-family: var(--ui-type-family); color: var(--ui-text); }
+.ui-filter-bar-controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-filterbar-gap); min-width: 0; }
+.ui-filter-bar .ui-filter-bar-search { flex: 1 1 var(--ui-filterbar-search-min); width: auto; min-width: 0; max-width: var(--ui-filterbar-search); }
+.ui-filter-bar-chips { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-filterbar-gap); min-width: 0; }
+.ui-filter-bar-sort { flex: 0 0 var(--ui-filterbar-sort); min-width: 0; margin-inline-start: auto; }
+.ui-filter-bar-sheet-btn { display: none; }
+
+/* a chip: the white pill; Ink once it filters */
+.ui-filter-chip-wrap { position: relative; display: inline-flex; }
+.ui-filter-chip[data-active] {
+  --bg: var(--ui-action-primary); --bg-hover: var(--ui-action-primary-hover); --bg-pressed: var(--ui-action-primary-pressed);
+  --fg: var(--ui-action-primary-fg); --edge: transparent; --edge-hover: transparent;
+}
+.ui-filter-chip .ui-filter-chip-chevron { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: currentColor; transition: rotate var(--ui-motion-base) var(--ui-motion-ease); }
+.ui-filter-chip[aria-expanded="true"] .ui-filter-chip-chevron { rotate: 180deg; }
+.ui-filter-chip-count {
+  display: inline-grid; place-items: center; min-width: var(--ui-badge-height-sm); height: var(--ui-badge-height-sm); padding-inline: var(--ui-space-xs);
+  border-radius: var(--ui-radius-action); background: var(--ui-surface-sunken); color: var(--ui-text);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; font-variant-numeric: tabular-nums;
+}
+.ui-filter-chip-count[hidden] { display: none; }
+.ui-filter-chip[data-active] .ui-filter-chip-count { background: var(--ui-action-primary-hover); color: var(--ui-action-primary-fg); }
+
+/* a chip's menu: glass, checkbox rows, the check at the end */
+.ui-menu.ui-filter-menu { position: absolute; z-index: var(--ui-overlay-z-float); top: calc(100% + var(--ui-overlay-offset)); left: 0; min-width: var(--ui-filterbar-menu); transform-origin: top left; }
+.ui-menu.ui-filter-menu--end { left: auto; right: 0; transform-origin: top right; }
+.ui-filter-menu[hidden] { display: none; }
+.ui-filter-option-meta { margin-inline-start: auto; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-glass-fg-secondary); font-variant-numeric: tabular-nums; }
+.ui-filter-option-meta + .ui-menu-check { margin-inline-start: 0; }
+
+/* the active filters and the count */
+.ui-filter-bar-applied { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); min-width: 0; min-height: var(--ui-filterbar-pill); }
+.ui-filter-bar-count { margin: 0 var(--ui-space-sm) 0 0; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); line-height: 1.4; color: var(--ui-text-secondary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ui-filter-bar-pills { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-filter-bar-pills:empty { display: none; }
+.ui-filter-pill {
+  display: inline-flex; align-items: center; gap: var(--ui-space-xs); height: var(--ui-filterbar-pill); min-width: 0; max-width: 100%;
+  padding-inline: var(--ui-space-md) var(--ui-space-xs); border-radius: var(--ui-radius-action); background: var(--ui-filterbar-pill-bg);
+  font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1; white-space: nowrap;
+}
+.ui-filter-pill-key { color: var(--ui-text-tertiary); }
+.ui-filter-pill-value { min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--ui-text); }
+.ui-filter-pill-remove {
+  position: relative; display: inline-grid; place-items: center; flex: none; width: var(--ui-filterbar-remove); height: var(--ui-filterbar-remove);
+  margin: 0; margin-inline-start: var(--ui-space-xs); padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--ui-text-secondary);
+  cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-filter-pill-remove > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-filter-pill-remove::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: 50%; }
+@media (hover: hover) { .ui-filter-pill-remove:hover { background: var(--ui-filterbar-pill-bg-hover); color: var(--ui-text); } }
+.ui-filter-pill-remove.is-hover { background: var(--ui-filterbar-pill-bg-hover); color: var(--ui-text); }
+.ui-filter-pill-remove:active, .ui-filter-pill-remove.is-pressed { background: var(--ui-filterbar-pill-bg-hover); color: var(--ui-text); transform: scale(var(--ui-motion-press-scale)); }
+/* the ring sits right on the circle: it stays inside the pill and clear of the value */
+.ui-filter-pill-remove:focus-visible, .ui-filter-pill-remove.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+.ui-filter-bar-clear[hidden] { display: none; }
+/* what the bar filters, 24 below it */
+.ui-filter-bar-results { margin-top: var(--ui-filterbar-results-gap); }
+[data-ui-filter-item][hidden], [data-ui-filter-empty][hidden] { display: none; }
+
+/* narrow: search and Filters; chips and sort live in the sheet */
+@container ui-filter-bar (max-width: 639.98px) {
+  .ui-filter-bar-controls { flex-wrap: nowrap; }
+  .ui-filter-bar .ui-filter-bar-search { flex: 1 1 auto; max-width: none; }
+  .ui-filter-bar-chips, .ui-filter-bar-sort { display: none; }
+  .ui-filter-bar-sheet-btn { display: inline-flex; }
+  /* the "/" key means nothing without a keyboard; the placeholder gets its room back */
+  .ui-filter-bar-search > .ui-input-group-addon[data-align="inline-end"] { display: none; }
+  /* the count and Clear all share the first line; the pills take the next */
+  .ui-filter-bar-pills { order: 1; flex-basis: 100%; }
+  .ui-filter-bar-clear { margin-inline-start: auto; }
+}
+/* very narrow (under 320): Filters keeps its icon and count, its word kept for screen readers, so the search keeps its words */
+@container ui-filter-bar (max-width: 319.98px) {
+  .ui-filter-bar-sheet-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+@media (pointer: coarse) { .ui-filter-bar-sheet-btn { --h: var(--ui-size-hit); } }
+
+/* the phone's filter sheet: a glass drawer; options are rows edge to edge, the check at the end */
+.ui-filter-sheet .ui-drawer-body { gap: var(--ui-space-xl); }
+.ui-filter-sheet-group { display: grid; gap: var(--ui-space-xs); min-width: 0; margin: 0; padding: 0; border: 0; }
+.ui-filter-sheet-label { margin: 0; padding: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-glass-fg-secondary); }
+.ui-filter-sheet-options { display: grid; margin-inline: calc(var(--ui-inset-panel) * -1); }
+.ui-filter-sheet-option {
+  position: relative; display: flex; align-items: center; gap: var(--ui-space-md); width: 100%; min-height: var(--ui-size-hit); margin: 0;
+  padding: 0 var(--ui-inset-panel); border: 0; border-radius: 0; background: transparent; color: var(--ui-glass-fg);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); text-align: left;
+  cursor: pointer; user-select: none; outline: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-filter-sheet-option > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex: none; }
+.ui-filter-sheet-option .ui-filter-option-meta + .ui-filter-sheet-check { margin-inline-start: 0; }
+.ui-filter-sheet-check { margin-inline-start: auto; }
+.ui-filter-sheet-option[aria-pressed="false"] .ui-filter-sheet-check { visibility: hidden; }
+@media (hover: hover) { .ui-filter-sheet-option:hover { background: var(--ui-glass-item-hover); } }
+.ui-filter-sheet-option.is-hover, .ui-filter-sheet-option:active { background: var(--ui-glass-item-hover); }
+.ui-filter-sheet-option:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: calc(var(--ui-size-ring) * -1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-filter-chip .ui-filter-chip-chevron, .ui-filter-pill-remove, .ui-filter-sheet-option { transition: none; }
+  .ui-filter-pill-remove:active, .ui-filter-pill-remove.is-pressed { transform: none; }
+}

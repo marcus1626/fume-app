@@ -1,0 +1,122 @@
+/* Product fix: detail tokens and fixing the product on a creative (app v4, FLOWS §17). PROPOSED 15 Oct 2026.
+   The Engine masks the product on every render and reads its details against the product's detail tokens (real
+   cut-outs of the real product). On the Studio board the details it masked lie over the creative as quiet regions;
+   one that reads wrong carries a marker. Tap a region: what the Engine read beside the real cut-out, and Fix with
+   the real product. Brush a fix draws a box on the creative and asks what to change. The left panel keeps the
+   fixes as history; the customer's product page shows the tokens as "Details we protect".
+   Markup: <span class="ui-pfix" data-brushing>
+             <button class="ui-pfix-region" data-ok style="--x --y --w --h"><span class="ui-pfix-marker"><svg/>
+               Reads 200 ml · should be 100 ml</span></button>
+             <span class="ui-pfix-region" data-fixing><span class="ui-pfix-marker" data-fixing><span class="ui-text-shimmer">
+               Fixing with the real product</span></span></span>
+             <span class="ui-pfix-brush"><span class="ui-pfix-hint"/><span class="ui-pfix-region" data-brush/>
+               <div class="ui-glass ui-pfix-brush-form" data-above style="--x --y --w --h"><form class="ui-pfix-brush-row">
+               input · cancel · Fix </form></div></span></span>
+           <div class="ui-glass ui-popover ui-pfix-popover"> header <div class="ui-pfix-compare"><figure class="ui-pfix-figure">
+             <span class="ui-pfix-crop" style="--cx --cy --cw --ch --ar"><img/></span><figcaption class="ui-pfix-caption">
+             On the creative <span class="ui-pfix-value">200 ml</span></figcaption></figure> … </div>
+             <p class="ui-pfix-note"/><div class="ui-pfix-actions"> Fix with the real product (glass-white) </div></div>
+           <ul class="ui-pfix-history"><li class="ui-pfix-fix" data-auto><svg class="ui-pfix-fix-icon"/><span class="ui-pfix-fix-text">
+             <span class="ui-pfix-fix-words"/><span class="ui-pfix-fix-meta"/></span></li></ul>
+           <ul class="ui-pfix-tokens"><li><div class="ui-proposal ui-pfix-token"> cut-out · label · value · tag </div></li></ul>
+   Fume decisions: a masked region is the one line drawn on the creative, as a selection has no surface to step: a
+   hairline of light, a little stronger for a detail that reads wrong, with a white chip under it that says what it
+   reads and what it should read (never Amber, never red: the words carry it). While the Engine fixes a region the
+   region breathes white and its chip carries the design system's white text shimmer. The real cut-out is the
+   product's own packshot cropped to the token's region through custom properties, so there is one image and no
+   copies. The popover is Smoke glass with one white action. History rows are the panel's quiet rows: the Engine's
+   automatic fixes carry its mark, a person's carry a pencil.
+   Rule gate: few-strokes, air, proximity, space-from-tokens, radius-from-tokens, type-from-tokens, amber-is-a-point,
+   glass-only-floating, glass-no-stroke, glass-one-white, reduced-transparency, touch-target, touch-feedback,
+   hover-needs-hover, focus-is-sharp, reduced-motion, tokens-only-color, no-gradient. */
+
+/* ---------- on the board ---------- */
+
+.ui-pfix { position: absolute; inset: 0; pointer-events: none; }
+.ui-pfix > * { pointer-events: auto; }
+.ui-pfix-region {
+  position: absolute; left: calc(var(--x) * 100%); top: calc(var(--y) * 100%); width: calc(var(--w) * 100%); height: calc(var(--h) * 100%);
+  margin: 0; padding: 0; border: 0; border-radius: var(--ui-radius-check);
+  background: color-mix(in oklab, var(--ui-text-on-ink) 10%, transparent);
+  outline: 1px solid var(--ui-glass-fg-secondary); outline-offset: var(--ui-space-xs); /* gate-allow:few-strokes a masked detail on a creative has no surface to step */
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+span.ui-pfix-region { cursor: default; }
+button.ui-pfix-region::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-pfix-region:not([data-ok]) { outline: var(--ui-size-ring) solid var(--ui-text-on-ink); /* gate-allow:few-strokes a detail that reads wrong, on a creative */ }
+@media (hover: hover) { button.ui-pfix-region:hover { background: color-mix(in oklab, var(--ui-text-on-ink) 28%, transparent); } }
+button.ui-pfix-region:active { background: color-mix(in oklab, var(--ui-text-on-ink) 40%, transparent); }
+button.ui-pfix-region:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); }
+button.ui-pfix-region[data-state="open"] { background: color-mix(in oklab, var(--ui-text-on-ink) 28%, transparent); }
+.ui-pfix-region[data-fixing] { outline: 0; animation: ui-pfix-breathe var(--ui-text-shimmer-duration) var(--ui-motion-ease) infinite; }
+.ui-pfix-region[data-brush] { background: color-mix(in oklab, var(--ui-text-on-ink) 16%, transparent); outline: var(--ui-size-ring) dashed var(--ui-text-on-ink); outline-offset: 0; pointer-events: none; /* gate-allow:few-strokes the box being drawn */ }
+@keyframes ui-pfix-breathe {
+  0%, 100% { background-color: color-mix(in oklab, var(--ui-text-on-ink) 16%, transparent); }
+  50% { background-color: color-mix(in oklab, var(--ui-text-on-ink) 56%, transparent); }
+}
+
+.ui-pfix-marker {
+  position: absolute; left: 50%; top: calc(100% + var(--ui-space-sm)); transform: translateX(-50%);
+  display: inline-flex; align-items: center; gap: var(--ui-space-xs); padding: 0 var(--ui-space-sm);
+  border-radius: var(--ui-radius-action); background: var(--ui-surface); color: var(--ui-text); box-shadow: var(--ui-depth-raised);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.8; white-space: nowrap; pointer-events: none;
+}
+.ui-desk-canvas[data-compare] .ui-pfix-should { display: none; } /* compare: narrow pictures; the real product beside it shows what it should be */
+.ui-pfix-marker > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-secondary); }
+
+/* Brush a fix: the creative takes a crosshair; draw a box, then say what to change. */
+.ui-pfix-brush { position: absolute; inset: 0; cursor: crosshair; touch-action: none; user-select: none; -webkit-user-select: none; }
+.ui-pfix-hint {
+  position: absolute; max-width: calc(100% - var(--ui-space-lg)); overflow: hidden; text-overflow: ellipsis; left: 50%; top: var(--ui-space-md); transform: translateX(-50%); padding: 0 var(--ui-space-sm);
+  border-radius: var(--ui-radius-action); background: var(--ui-surface); color: var(--ui-text); box-shadow: var(--ui-depth-raised);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.8; white-space: nowrap; pointer-events: none;
+}
+.ui-pfix-brush-form {
+  position: absolute; z-index: 1; left: 50%; top: calc((var(--y) + var(--h)) * 100% + var(--ui-space-sm)); transform: translateX(-50%);
+  width: min(calc(var(--ui-size-hit) * 8), calc(100% - var(--ui-space-md))); padding: var(--ui-inset-ring); border-radius: var(--ui-radius-float); cursor: default;
+}
+.ui-pfix-brush-form[data-above] { top: auto; bottom: calc((1 - var(--y)) * 100% + var(--ui-space-sm)); }
+.ui-pfix-brush-row { display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; }
+.ui-pfix-brush-input { flex: 1 1 auto; min-width: 0; border-radius: var(--ui-radius-action); }
+
+/* ---------- the popover: what the Engine read beside the real cut-out ---------- */
+
+.ui-popover.ui-pfix-popover { width: calc(var(--ui-size-hit) * 8); }
+.ui-pfix-compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-sm); min-width: 0; }
+.ui-pfix-figure { display: grid; gap: var(--ui-space-sm); min-width: 0; margin: 0; }
+.ui-pfix-caption { display: grid; min-width: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-glass-fg-secondary); }
+.ui-pfix-value { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-glass-fg); }
+.ui-pfix-note { margin: 0; font-size: var(--ui-type-label); line-height: 1.5; color: var(--ui-glass-fg-secondary); text-wrap: pretty; }
+.ui-pfix-actions { display: flex; justify-content: flex-end; gap: var(--ui-space-sm); }
+
+/* An image cropped to a region: the frame takes the crop's aspect; the image is scaled and moved behind it. */
+.ui-pfix-crop { position: relative; display: block; width: 100%; aspect-ratio: var(--ar); overflow: hidden; border-radius: var(--ui-radius-item); background: var(--ui-surface-creative); }
+.ui-pfix-crop > img {
+  position: absolute; max-width: none; width: calc(100% / var(--cw)); height: calc(100% / var(--ch));
+  left: calc(var(--cx) / var(--cw) * -100%); top: calc(var(--cy) / var(--ch) * -100%); user-select: none; -webkit-user-select: none;
+}
+
+/* ---------- the history, in the desk's product section ---------- */
+
+.ui-pfix-history { display: grid; gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.ui-pfix-fix { display: grid; grid-template-columns: var(--ui-size-icon-sm) minmax(0, 1fr); gap: var(--ui-space-sm); align-items: start; min-width: 0; padding-inline: var(--ui-space-sm); }
+.ui-pfix-fix-icon { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); margin-block-start: 1px; color: var(--ui-text-tertiary); } /* gate-allow:space-from-tokens the icon on the first line's x-height */
+.ui-pfix-fix-text { display: grid; min-width: 0; }
+.ui-pfix-fix-words { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text); }
+.ui-pfix-fix-meta { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+
+/* ---------- Details we protect (the customer's product page) ---------- */
+
+.ui-pfix-tokens { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr)); gap: var(--ui-space-lg); margin: 0; padding: 0; list-style: none; } /* gate-allow:space-from-tokens the card's least width */
+.ui-pfix-tokens > li { display: grid; min-width: 0; }
+.ui-pfix-token { gap: var(--ui-space-md); }
+.ui-pfix-token-text { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-pfix-region { transition: none; }
+  .ui-pfix-region[data-fixing] { animation: none; background: color-mix(in oklab, var(--ui-text-on-ink) 40%, transparent); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .ui-pfix-brush-form { background: var(--ui-glass-bg-solid); }
+}

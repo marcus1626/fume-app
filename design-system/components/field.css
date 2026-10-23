@@ -1,0 +1,255 @@
+/* Field: input, textarea, file input, label and the anatomy of a form row. DECIDED 13 Oct, from round 7; round 8:
+   invalid on glass (Porcelain words, a Porcelain rim with a Rouge band, the Rouge disc cut to Porcelain).
+   Built on shadcn's input, textarea, label and field (Field, FieldLabel, FieldContent, FieldTitle,
+   FieldDescription, FieldError, FieldGroup, FieldSet, FieldLegend, FieldSeparator), with the same
+   parts and attributes (data-orientation, data-invalid, data-disabled, aria-invalid, data-size),
+   redesigned for Fume.
+   A field is one of the three white things in Fume (with the creative and the secondary button):
+   white with one hairline, the same edge as the white button, radius 12 (--ui-radius-field).
+   Hover steps the hairline toward Ink; focus is the sharp 2 px Ink ring, never a halo; an error is a
+   Rouge edge plus a message in words under the field; disabled sinks like a disabled button;
+   read-only sits in the page with no edge and keeps its Ink text. On glass a field is a faint
+   Porcelain veil with no stroke and the Porcelain ring.
+   Proximity (Marcus 13 Oct): a label sits 8 above its control, a description or error 4 under it,
+   fields 24 apart, field sets 32 apart (--ui-field-gap-*).
+   Sizes sm 32, md 40, lg 48 (lg with 16 px text). Touch: every field is 44 tall with 16 px text on a
+   touch screen, so iOS does not zoom the page; hover only with a mouse.
+   The file input keeps the real <input type="file"> invisible over a field-shaped row, so the
+   browser's own "Choose File" text never shows; field.js writes the creative's name and size.
+   A choice card (shadcn's FieldLabel around a Field with a checkbox) is a white field that takes
+   the Ink selection ring and an Ink check when chosen. Never Amber.
+   Rule gate: few-strokes (the hairline is the allowed field edge; selection and focus rings),
+   focus-is-sharp, radius-from-tokens, space-from-tokens, type-from-tokens, mono-is-data,
+   fields-16-on-touch, touch-target, touch-feedback, hover-needs-hover, reduced-motion. */
+
+/* ---------- input and textarea ---------- */
+.ui-input, .ui-textarea {
+  --h: var(--ui-field-height); --px: var(--ui-field-pad); --edge: var(--ui-field-edge); --ring: var(--ui-focus-ring);
+  display: block; width: 100%; min-width: 0; height: var(--h); margin: 0; padding: 0 var(--px);
+  border: 0; border-radius: var(--ui-radius-field);
+  background: var(--ui-field-bg); color: var(--ui-field-fg);
+  box-shadow: inset 0 0 0 1px var(--edge); /* gate-allow:few-strokes  the field's hairline: a white field vanishes on Porcelain without it */
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-regular);
+  line-height: 1.4; letter-spacing: 0; text-overflow: ellipsis;
+  outline: none; appearance: none; -webkit-appearance: none;
+  transition: box-shadow var(--ui-motion-fast) var(--ui-motion-ease), background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-input::placeholder, .ui-textarea::placeholder { color: var(--ui-field-placeholder); opacity: 1; }
+.ui-input[type="number"] { font-variant-numeric: tabular-nums; }
+.ui-input[type="search"]::-webkit-search-cancel-button { display: none; }
+@media (hover: hover) {
+  .ui-input:hover, .ui-textarea:hover { --edge: var(--ui-field-edge-hover); }
+}
+.ui-input.is-hover, .ui-textarea.is-hover { --edge: var(--ui-field-edge-hover); }
+.ui-input:focus-visible, .ui-input.is-focus,
+.ui-textarea:focus-visible, .ui-textarea.is-focus { outline: var(--ui-size-ring) solid var(--ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-input[data-ui-focus="pointer"], .ui-textarea[data-ui-focus="pointer"] { outline: none; } /* clicked or tapped in: the caret shows where you type; the ring is for the keyboard (focus.js, Marcus 13 Oct) */
+
+/* invalid: a Rouge edge; the message under the field says what is wrong (.ui-field-error) */
+.ui-input[aria-invalid="true"], .ui-textarea[aria-invalid="true"],
+.ui-field[data-invalid="true"] :is(.ui-input, .ui-textarea) { --edge: var(--ui-field-edge-invalid); }
+
+/* read-only: sits in the page, no edge, the value stays Ink and selectable */
+.ui-input[readonly], .ui-textarea[readonly] { --edge: transparent; background: var(--ui-field-bg-readonly); }
+/* disabled: sunken like a disabled button, no edge */
+.ui-input:disabled, .ui-textarea:disabled, .ui-input[data-disabled], .ui-textarea[data-disabled] {
+  --edge: transparent; background: var(--ui-field-bg-disabled); color: var(--ui-field-fg-disabled); cursor: not-allowed;
+}
+.ui-input:disabled::placeholder, .ui-textarea:disabled::placeholder { color: var(--ui-field-fg-disabled); }
+
+/* sizes (shadcn's input has one size; Fume adds sm and lg, as data-size or a modifier) */
+.ui-input--sm, .ui-input[data-size="sm"] { --h: var(--ui-field-height-sm); --px: var(--ui-field-pad-sm); }
+.ui-input--lg, .ui-input[data-size="lg"] { --h: var(--ui-field-height-lg); --px: var(--ui-field-pad-lg); font-size: var(--ui-type-body); }
+
+/* textarea: same material; starts at three lines and grows with its text (field-sizing, or field.js) */
+.ui-textarea {
+  height: auto; min-height: var(--ui-field-textarea-min); max-height: var(--ui-field-textarea-max);
+  padding: var(--ui-field-pad-block) var(--px); line-height: 1.5;
+  resize: none; overflow-y: auto; field-sizing: content; text-overflow: clip;
+}
+
+/* ---------- file input: the real input lies invisibly over a field-shaped row ---------- */
+.ui-input-file {
+  --h: var(--ui-field-height); --edge: var(--ui-field-edge);
+  position: relative; display: flex; align-items: center; gap: var(--ui-space-md); width: 100%; min-width: 0; height: var(--h);
+  padding: 0 calc((var(--h) - var(--ui-kbd-height)) / 2) 0 var(--ui-field-pad);
+  border-radius: var(--ui-radius-field); background: var(--ui-field-bg); color: var(--ui-field-fg);
+  box-shadow: inset 0 0 0 1px var(--edge); /* gate-allow:few-strokes  the field's hairline */
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.4;
+  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: box-shadow var(--ui-motion-fast) var(--ui-motion-ease), background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-input-file > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; color: var(--ui-field-icon); }
+.ui-input-file-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-input-file-name[data-placeholder] { color: var(--ui-field-placeholder); }
+.ui-input-file-meta { flex-shrink: 0; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-field-placeholder); white-space: nowrap; }
+.ui-input-file-action {
+  flex-shrink: 0; display: inline-flex; align-items: center; height: var(--ui-kbd-height); padding: 0 var(--ui-space-sm);
+  border-radius: var(--ui-radius-action); background: var(--ui-kbd-bg); color: var(--ui-text);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); white-space: nowrap;
+}
+.ui-input-file-control {
+  position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; opacity: 0;
+  font-size: var(--ui-type-body); cursor: inherit;
+}
+@media (hover: hover) { .ui-input-file:hover { --edge: var(--ui-field-edge-hover); } }
+.ui-input-file.is-hover { --edge: var(--ui-field-edge-hover); }
+.ui-input-file:active, .ui-input-file.is-pressed { background: var(--ui-field-bg-pressed); }
+.ui-input-file:has(.ui-input-file-control:focus-visible), .ui-input-file.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-input-file:has(.ui-input-file-control[aria-invalid="true"]) { --edge: var(--ui-field-edge-invalid); }
+.ui-input-file:has(.ui-input-file-control:disabled) { --edge: transparent; background: var(--ui-field-bg-disabled); color: var(--ui-field-fg-disabled); cursor: not-allowed; }
+
+/* the plain <input type="file" class="ui-input"> (shadcn parity): the browser's button as a sunken pill */
+.ui-input[type="file"] { display: flex; align-items: center; padding-left: calc((var(--h) - var(--ui-kbd-height)) / 2); color: var(--ui-field-placeholder); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.ui-input[type="file"]:active { background: var(--ui-field-bg-pressed); }
+.ui-input[type="file"]::file-selector-button {
+  height: var(--ui-kbd-height); margin: 0 var(--ui-space-md) 0 0; padding: 0 var(--ui-space-sm);
+  border: 0; border-radius: var(--ui-radius-action); background: var(--ui-kbd-bg); color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- label ---------- */
+.ui-label, .ui-field-label, .ui-field-title {
+  display: flex; align-items: center; gap: var(--ui-space-sm); width: fit-content; max-width: 100%;
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium);
+  line-height: 1.4; color: var(--ui-text); user-select: none;
+}
+.ui-label svg, .ui-field-label svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; }
+/* "Optional" beside a label: say what may be left out instead of starring what may not */
+.ui-field-optional { font-weight: var(--ui-type-weight-regular); color: var(--ui-text-tertiary); }
+.ui-field[data-disabled="true"] :is(.ui-label, .ui-field-label, .ui-field-title, .ui-field-description) { color: var(--ui-field-fg-disabled); }
+
+/* ---------- field: the anatomy of a form row ---------- */
+/* Vertical (default): label, 8, control, 4, description or error. Each child after the first sits
+   8 below the one before; descriptions and errors sit 4 under what they describe. */
+.ui-field { --row-h: var(--ui-field-height); display: flex; flex-direction: column; width: 100%; min-width: 0; }
+.ui-field > * + * { margin-top: var(--ui-field-gap-label); }
+.ui-field > * + :is(.ui-field-description, .ui-field-error) { margin-top: var(--ui-field-gap-hint); }
+.ui-field-content { display: flex; flex-direction: column; gap: var(--ui-field-gap-hint); flex: 1 1 0; min-width: 0; font-size: var(--ui-type-control); line-height: 1.4; }
+
+.ui-field-description { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); line-height: 1.5; color: var(--ui-text-tertiary); text-wrap: pretty; }
+.ui-field-description a { color: var(--ui-text); text-decoration: underline; text-decoration-color: var(--ui-hairline-strong); text-underline-offset: 3px; }
+/* the error: Rouge words after the circle-alert icon (colour is never the only signal) */
+.ui-field-error {
+  display: flex; align-items: flex-start; gap: var(--ui-space-xs); margin: 0;
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.5; color: var(--ui-field-error);
+}
+.ui-field-error svg { width: var(--ui-size-icon-sm); height: 1lh; flex-shrink: 0; }
+.ui-field-error:empty { display: none; }
+.ui-field-error ul { margin: 0; padding-left: var(--ui-space-lg); }
+
+/* a character count or a size under a field, in the data face, at the end of the line */
+.ui-field-count { margin-left: auto; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); line-height: 1.5; color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; white-space: nowrap; } /* gate-allow:mono-is-data  a character count is data */
+.ui-field-count[data-near] { color: var(--ui-text); }
+.ui-field-foot { display: flex; align-items: baseline; gap: var(--ui-space-lg); }
+.ui-field > * + .ui-field-foot { margin-top: var(--ui-field-gap-hint); }
+.ui-field-foot > .ui-field-description, .ui-field-foot > .ui-field-error { flex: 1; min-width: 0; }
+
+/* Horizontal: the label (or label and description in .ui-field-content) beside the control, in DOM
+   order, like shadcn. Beside a field the label column takes two fifths and the control the rest, and
+   the label's first line centres on the field. Beside a small control (a switch, a checkbox) the label
+   simply fills the row. */
+.ui-field[data-orientation="horizontal"] { flex-direction: row; align-items: flex-start; gap: var(--ui-space-xl); }
+.ui-field[data-orientation="horizontal"] > * { margin-top: 0; }
+.ui-field[data-orientation="horizontal"] > :is(.ui-field-label, .ui-label, .ui-field-content) { flex: 1 1 auto; }
+.ui-field[data-orientation="horizontal"]:has(> :is(.ui-input, .ui-textarea, .ui-input-group, .ui-input-file, .ui-select, .ui-native-select-wrap, .ui-field-choices, .ui-field-control)) > :is(.ui-field-label, .ui-label, .ui-field-content) { flex: 0 0 calc(40% - var(--ui-space-xl) * 0.4); }
+.ui-field[data-orientation="horizontal"] > :is(.ui-input, .ui-textarea, .ui-input-group, .ui-input-file, .ui-select, .ui-native-select-wrap, .ui-field-choices, .ui-field-control) { flex: 1 1 0; min-width: 0; }
+.ui-field[data-orientation="horizontal"]:has(> :is(.ui-input, .ui-textarea, .ui-input-group, .ui-input-file, .ui-select, .ui-native-select-wrap, .ui-field-control)) > :is(.ui-field-label, .ui-label, .ui-field-content) { padding-top: calc((var(--row-h) - 1lh) / 2); }
+/* a control with its error under it, in the right column */
+.ui-field-control { display: flex; flex-direction: column; gap: var(--ui-field-gap-hint); min-width: 0; }
+
+/* Responsive: vertical in a narrow form, horizontal once the field group is 560 wide */
+@container ui-field-group (min-width: 560px) {
+  .ui-field[data-orientation="responsive"] { flex-direction: row; align-items: flex-start; gap: var(--ui-space-xl); }
+  .ui-field[data-orientation="responsive"] > * { margin-top: 0; }
+  .ui-field[data-orientation="responsive"] > :is(.ui-field-label, .ui-label, .ui-field-content) { flex: 1 1 auto; }
+  .ui-field[data-orientation="responsive"]:has(> :is(.ui-input, .ui-textarea, .ui-input-group, .ui-input-file, .ui-select, .ui-native-select-wrap, .ui-field-choices, .ui-field-control)) > :is(.ui-field-label, .ui-label, .ui-field-content) { flex: 0 0 calc(40% - var(--ui-space-xl) * 0.4); }
+  .ui-field[data-orientation="responsive"] > :is(.ui-input, .ui-textarea, .ui-input-group, .ui-input-file, .ui-select, .ui-native-select-wrap, .ui-field-choices, .ui-field-control) { flex: 1 1 0; min-width: 0; }
+  .ui-field[data-orientation="responsive"]:has(> :is(.ui-input, .ui-textarea, .ui-input-group, .ui-input-file, .ui-select, .ui-native-select-wrap, .ui-field-control)) > :is(.ui-field-label, .ui-label, .ui-field-content) { padding-top: calc((var(--row-h) - 1lh) / 2); }
+}
+
+/* ---------- field group, field set, legend, separator ---------- */
+.ui-field-group { container: ui-field-group / inline-size; display: flex; flex-direction: column; gap: var(--ui-field-gap); width: 100%; min-width: 0; }
+.ui-field-group > :is(.ui-field-set, .ui-field-group) + *, .ui-field-group > * + :is(.ui-field-set, .ui-field-group) { margin-top: calc(var(--ui-field-gap-group) - var(--ui-field-gap)); }
+.ui-field-set { display: flex; flex-direction: column; gap: var(--ui-field-gap); min-width: 0; margin: 0; padding: 0; border: 0; }
+/* floated, so it is an ordinary flex item and not the fieldset's drawn-in-the-border legend */
+.ui-field-legend {
+  float: left; width: 100%; margin: 0 0 calc(var(--ui-field-gap-legend) - var(--ui-field-gap)); padding: 0;
+  font-family: var(--ui-type-family); font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text);
+}
+.ui-field-legend[data-variant="label"] { font-size: var(--ui-type-control); }
+.ui-field-legend + .ui-field-description { margin: calc(var(--ui-field-gap-hint) - var(--ui-field-gap-legend)) 0 calc(var(--ui-field-gap-legend) - var(--ui-field-gap)); }
+/* shadcn draws a line here; Fume separates with space, and words when there are any */
+.ui-field-separator { display: flex; justify-content: center; font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+
+/* ---------- choice card: a field you choose (FieldLabel around a Field with a checkbox) ---------- */
+.ui-field-choices { container: ui-field-choices / inline-size; display: flex; flex-wrap: wrap; gap: var(--ui-space-sm); min-width: 0; }
+.ui-field-choice {
+  --edge: var(--ui-field-edge);
+  position: relative; flex: 1 1 100%; min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--ui-space-md);
+  min-height: var(--ui-size-hit); padding: var(--ui-space-md) var(--ui-inset-float) var(--ui-space-md) var(--ui-space-md);
+  border-radius: var(--ui-radius-field); background: var(--ui-field-bg); color: var(--ui-text);
+  box-shadow: inset 0 0 0 1px var(--edge); /* gate-allow:few-strokes  a choice is a field: its hairline */
+  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: box-shadow var(--ui-motion-fast) var(--ui-motion-ease), background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-field-choice > .ui-field-content { gap: 0; }
+.ui-field-choice .ui-field-description { font-family: var(--ui-type-family-data); } /* gate-allow:mono-is-data  the format's size in pixels is data */
+.ui-field-choice-input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: inherit; }
+/* the format's shape, at its own aspect ratio (--ratio on the element) */
+.ui-field-choice-media { display: grid; place-items: center; width: var(--ui-size-control-sm); height: var(--ui-size-control-sm); }
+.ui-field-choice-media::before { content: ""; max-width: 100%; max-height: 100%; width: 100%; aspect-ratio: var(--ratio, 1); background: var(--ui-surface-sunken); transition: background-color var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-field-choice-media[data-tall]::before { width: auto; height: 100%; }
+.ui-field-choice-mark { display: grid; place-items: center; width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); border-radius: 50%; color: var(--ui-action-primary-fg); background: var(--ui-action-primary); opacity: 0; transform: scale(var(--ui-motion-enter-scale)); transition: opacity var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-field-choice-mark svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+@media (hover: hover) { .ui-field-choice:hover { --edge: var(--ui-field-edge-hover); } }
+.ui-field-choice.is-hover { --edge: var(--ui-field-edge-hover); }
+.ui-field-choice:active, .ui-field-choice.is-pressed { background: var(--ui-field-bg-pressed); transform: scale(var(--ui-motion-press-scale)); }
+/* chosen: the Ink selection ring and the Ink check; the shape steps toward Ink */
+.ui-field-choice:has(.ui-field-choice-input:checked), .ui-field-choice[data-state="checked"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); } /* gate-allow:few-strokes  selection ring */
+.ui-field-choice:has(.ui-field-choice-input:checked) .ui-field-choice-mark, .ui-field-choice[data-state="checked"] .ui-field-choice-mark { opacity: 1; transform: none; }
+.ui-field-choice:has(.ui-field-choice-input:checked) .ui-field-choice-media::before, .ui-field-choice[data-state="checked"] .ui-field-choice-media::before { background: var(--ui-hairline-strong); }
+.ui-field-choice:has(.ui-field-choice-input:focus-visible), .ui-field-choice.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-field-choice:has(.ui-field-choice-input:disabled) { --edge: transparent; background: var(--ui-field-bg-disabled); color: var(--ui-field-fg-disabled); cursor: not-allowed; transform: none; }
+/* side by side as cards once there is room: the shape on top, the check in the corner */
+@container ui-field-choices (min-width: 420px) {
+  .ui-field-choice { flex: 1 1 0; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "media mark" "content content"; align-items: start; row-gap: var(--ui-space-md); padding: var(--ui-space-md) var(--ui-space-md) var(--ui-space-md) var(--ui-inset-float); }
+  .ui-field-choice-media { grid-area: media; justify-items: start; }
+  .ui-field-choice-mark { grid-area: mark; }
+  .ui-field-choice > .ui-field-content { grid-area: content; }
+}
+
+/* ---------- on glass: a veil, no stroke, the Porcelain ring ---------- */
+.ui-glass :is(.ui-input, .ui-textarea) { --edge: transparent; --ring: var(--ui-focus-ring-on-glass); background: var(--ui-field-glass-bg); color: var(--ui-field-glass-fg); font-weight: var(--ui-type-weight-medium); }
+.ui-glass :is(.ui-input, .ui-textarea)::placeholder { color: var(--ui-field-glass-placeholder); }
+.ui-glass :is(.ui-label, .ui-field-label, .ui-field-legend) { color: var(--ui-glass-fg); }
+.ui-glass .ui-field-description { color: var(--ui-glass-fg-secondary); font-weight: var(--ui-type-weight-medium); }
+.ui-glass :is(.ui-input, .ui-textarea):disabled { background: var(--ui-glass-button-disabled); color: var(--ui-glass-button-disabled-fg); }
+@media (hover: hover) { .ui-glass :is(.ui-input, .ui-textarea):hover { --edge: transparent; } }
+/* invalid on glass (round 8). Measured on the board: Rouge words on Smoke 1.3:1 over a white page behind
+   the glass and 1.6 to 3.2:1 over the photo, so on glass the words are Porcelain (6.4:1 over a white page,
+   8.0:1 over the photo). Rouge marks the state without carrying the words, always cut with Porcelain: the
+   field's edge is a 1 px Porcelain rim with a 2 px Rouge band inside it (a Rouge ring alone measured 1.3:1
+   against the glass; the rim reads 6.4:1 against it and the Rouge 4.9:1 against the rim), and the alert is
+   the solid Rouge disc with its exclamation cut through to Porcelain (4.9:1). */
+.ui-glass :is(.ui-input, .ui-textarea)[aria-invalid="true"], .ui-glass .ui-field[data-invalid="true"] :is(.ui-input, .ui-textarea) { box-shadow: inset 0 0 0 1px var(--ui-field-glass-edge-invalid-rim), inset 0 0 0 calc(1px + var(--ui-size-ring)) var(--ui-field-glass-edge-invalid); } /* gate-allow:few-strokes  the invalid edge on a glass field: Porcelain rim, Rouge band */
+.ui-glass .ui-field-error { color: var(--ui-field-glass-error); }
+.ui-glass .ui-field-error svg {
+  height: var(--ui-size-icon-sm); margin-block: calc((1lh - var(--ui-size-icon-sm)) / 2);
+  border-radius: 50%; color: var(--ui-field-glass-error-mark); background: var(--ui-field-glass-error-cut);
+  box-shadow: inset 0 0 0 1px var(--ui-field-glass-error-mark); /* gate-allow:few-strokes  fills the sub-pixel rim between the drawn disc and its box, so no Porcelain halo shows: not a line */
+}
+/* inside a pill bar a field follows the bar: a pill, 6 in from the bar's edge */
+.ui-glass--bar :is(.ui-input, .ui-input-file) { border-radius: var(--ui-radius-action); }
+
+/* ---------- touch: 44 tall, 16 px text ---------- */
+@media (pointer: coarse) {
+  .ui-field { --row-h: var(--ui-size-hit); }
+  .ui-input, .ui-input-file { height: max(var(--h), var(--ui-size-hit)); }
+  .ui-input, .ui-textarea, .ui-input-file, .ui-input-file-control { font-size: var(--ui-type-body); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-input, .ui-textarea, .ui-input-file, .ui-field-choice, .ui-field-choice-mark, .ui-field-choice-media::before { transition: none; }
+  .ui-field-choice:active, .ui-field-choice.is-pressed { transform: none; }
+}

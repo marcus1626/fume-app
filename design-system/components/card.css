@@ -1,0 +1,76 @@
+/* Card. DECIDED 13 Oct, from round 7. Built on shadcn's card (same parts: card, header, title, description, action,
+   content, footer), redesigned for Fume.
+   A card is one surface step off its ground and never the same colour (rule card-never-matches-ground):
+   --ui-card-bg (surface) on Porcelain; on the layer behind the page it comes forward to Porcelain
+   (.ui-card--behind). No border and no shadow at rest (few-strokes): the step is the edge.
+   Shape and air: --ui-radius-card (16), padding --ui-inset-float (16), --ui-inset-panel (24) for a large
+   card (.ui-card--lg). Header to content to footer: --ui-space-lg; title to description: --ui-space-xs.
+   Interactive card (a.ui-card, button.ui-card or .ui-card--interactive): hover steps one surface toward Ink
+   (on the layer behind it lifts with depth instead), pressed shrinks on pointer-down (--ui-card-press-scale,
+   half a button's shrink because a card is wide), focus is the sharp 2 px Ink ring. A selectable card
+   (data-state="checked" or aria-pressed) takes the Ink selection ring.
+   Campaign card: the approvals are a progress bar (progress.css, Ink on a track one step deeper than the
+   card, --ui-card-progress-track). Amber never fills it: Amber is only the check on a checked creative.
+   Rule gate: card-never-matches-ground, few-strokes, air, space-from-tokens, radius-from-tokens,
+   touch-target, touch-feedback, hover-needs-hover, reduced-motion. */
+
+.ui-card {
+  --card-bg: var(--ui-card-bg); --card-bg-hover: var(--ui-card-bg-hover); --card-bg-pressed: var(--ui-card-bg-pressed);
+  --card-depth-hover: none; --card-now: var(--card-bg);
+  --avatar-ground: var(--card-now); /* avatars inside cut their gap out of the card, not the page */
+  position: relative; display: flex; flex-direction: column; gap: var(--ui-space-lg); min-width: 0;
+  padding: var(--ui-inset-float); border: 0; border-radius: var(--ui-radius-card);
+  background: var(--card-now); color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.5; text-align: left;
+}
+.ui-card--lg { gap: var(--ui-space-xl); padding: var(--ui-inset-panel); }
+.ui-card--behind { --card-bg: var(--ui-card-bg-behind); --card-bg-hover: var(--ui-card-bg-behind); --card-bg-pressed: var(--ui-card-bg-behind); --card-depth-hover: var(--ui-card-depth-behind-hover); }
+
+.ui-card-header { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: var(--ui-space-xs) var(--ui-space-md); min-width: 0; }
+.ui-card-header:has(> .ui-card-action) { grid-template-columns: minmax(0, 1fr) auto; }
+.ui-card-title { margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.3; letter-spacing: -.005em; color: var(--ui-text); text-wrap: balance; }
+.ui-card--lg .ui-card-title { font-size: var(--ui-type-body-large); letter-spacing: -.01em; }
+.ui-card-description { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+/* The action sits beside the title: an icon button or another short control, never a worded button that
+   would squeeze the title on a phone (put that in the footer). An icon button is pulled up and out by its
+   own air, so its glyph lines up with the title and with the card's inset instead of floating 8 px further in. */
+.ui-card-action { grid-column: 2; grid-row: 1 / span 2; align-self: start; justify-self: end; display: flex; align-items: center; gap: var(--ui-space-xs); }
+.ui-card-action > .ui-btn--icon.ui-btn--sm { margin-block-start: calc(var(--ui-space-xs) * -1.5); margin-inline-end: calc(var(--ui-space-sm) * -1); }
+.ui-card-content { display: grid; gap: var(--ui-space-md); min-width: 0; color: var(--ui-text-secondary); }
+.ui-card-content > p { margin: 0; text-wrap: pretty; }
+.ui-card-footer { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); min-width: 0; margin-block-start: auto; } /* in a row of cards stretched to one height, footers line up at the bottom */
+.ui-card-footer-end { margin-inline-start: auto; display: flex; align-items: center; gap: var(--ui-space-sm); }
+.ui-card-meta { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; }
+.ui-card-time { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+
+/* Media: creatives at the top of a card keep the card's inset; the card's radius is not cut. */
+.ui-card-media { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: var(--ui-space-sm); min-width: 0; }
+.ui-card-media > .ui-creative-media { border-radius: var(--ui-radius-item); } /* small creatives: the row radius, so a 70 px thumbnail is not a pebble */
+
+/* A progress bar in a card (progress.css) steps its track one deeper, so it reads on the card surface. */
+.ui-card .ui-progress:not(.ui-progress--glass) { --track: var(--ui-card-progress-track); }
+
+/* Interactive card: the whole card is one target. */
+.ui-card--interactive, a.ui-card, button.ui-card {
+  min-height: var(--ui-size-hit); width: 100%;
+  font: inherit; font-family: var(--ui-type-family); font-size: var(--ui-type-control); color: var(--ui-text); text-decoration: none;
+  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease),
+              box-shadow var(--ui-motion-fast) var(--ui-motion-ease),
+              transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+@media (hover: hover) {
+  .ui-card--interactive:hover, a.ui-card:hover, button.ui-card:hover { --card-now: var(--card-bg-hover); box-shadow: var(--card-depth-hover); }
+}
+.ui-card--interactive.is-hover, a.ui-card.is-hover, button.ui-card.is-hover { --card-now: var(--card-bg-hover); box-shadow: var(--card-depth-hover); }
+.ui-card--interactive:active, a.ui-card:active, button.ui-card:active, .ui-card--interactive.is-pressed, a.ui-card.is-pressed, button.ui-card.is-pressed { --card-now: var(--card-bg-pressed); transform: scale(var(--ui-card-press-scale)); }
+.ui-card--interactive:focus-visible, a.ui-card:focus-visible, button.ui-card:focus-visible, .ui-card.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+/* Selectable card: chosen = the Ink selection ring, like a selected creative. */
+.ui-card[data-state="checked"], .ui-card[aria-pressed="true"], .ui-card.is-selected { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-card[aria-disabled="true"] { --card-now: var(--card-bg); color: var(--ui-text-disabled); cursor: default; pointer-events: none; box-shadow: none; transform: none; }
+.ui-card[aria-disabled="true"] .ui-card-title, .ui-card[aria-disabled="true"] .ui-card-description { color: var(--ui-text-disabled); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-card--interactive, a.ui-card, button.ui-card { transition: background-color var(--ui-motion-fast) linear; }
+  .ui-card--interactive:active, a.ui-card:active, button.ui-card:active, .ui-card--interactive.is-pressed, a.ui-card.is-pressed, button.ui-card.is-pressed { transform: none; }
+}

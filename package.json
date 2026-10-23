@@ -1,0 +1,11 @@
+{
+  "name": "fume-app-repo",
+  "private": true,
+  "description": "Checks for the whole repository. The app itself is in app/.",
+  "scripts": {
+    "check": "npm --prefix app run typecheck && npm --prefix app test && npm run gate",
+    "gate": "node tools/gate/gate.mjs design-system/components design-system/theme packages",
+    "gate:test": "node tools/gate/test.mjs",
+    "sync:design-system": "node tools/sync-design-system.mjs"
+  }
+}

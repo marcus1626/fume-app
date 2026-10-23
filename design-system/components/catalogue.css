@@ -1,0 +1,112 @@
+/* Catalogue: the customer's products and collections (app v2, FLOWS §3.1, §7 step 5). PROPOSED 15 Oct 2026.
+   Markup: <div class="ui-catalogue-filters">
+             <div class="ui-catalogue-filter"><span class="ui-catalogue-filter-label">Category</span> ui-toggle-group </div></div>
+           <ul class="ui-catalogue-grid">
+             <li><div class="ui-product-card" data-state="needs_you|verified|draft">
+               <div class="ui-product-card-media"><img/> (or an icon: the quiet empty image)</div>
+               <div class="ui-product-card-body"><a class="ui-product-card-link">Pillow Mist</a>
+                 ui-badge "To confirm" (only while it needs the customer) </div></div></li></ul>
+           <div class="ui-proposal ui-collection-card" data-state="approved">
+             <div class="ui-collection-card-cover"><img/></div>
+             <div class="ui-product-card-body"><a class="ui-collection-card-link">SS27</a><p class="ui-product-card-meta">…</p></div>
+             <div class="ui-proposal-foot"> tag · Confirm · Change · Remove </div></div>
+           <div class="ui-collection-hero"><img/></div>   the cover at the top of a collection's page
+   Fume decisions: the catalogue is image-led and calm. Round 8 (walk-through 19 Oct, LOAD-14; PROPOSED 19 Oct 2026):
+   a product card is its picture and its name, nothing else, plus a "To confirm" chip only while it needs the customer
+   (kind, category, collections and provenance live on the product's page); no surface of its own, so the grid
+   reads as pictures. A collection card is a Proposal (proposal.css): Fume's proposal lies flat on the sunken
+   surface, a confirmed one lifts onto the sheet, never a stroke and never Amber.
+   A product with no image shows a quiet empty image (the image icon on a sunken square), never a placeholder
+   photo. The whole card opens the product (the name is a link stretched over the card); a collection's Confirm,
+   Change, Remove pills sit above that link. Two columns on a phone, at least 200 wide
+   from there. Filters are rows of toggle pills, each with its quiet label; a category's children open as a
+   second row under it.
+   Round 9 (desktop review 19 Oct, DLAY-13, DLOAD-1; PROPOSED 19 Oct 2026): "Confirm 7 products" is the page's one
+   action, last in the section head on the right, with Import and Add a product as quiet pills to its left
+   (.ui-import-entry, product-import.css); the products' word is "To confirm", the verb Confirm.
+   Rule gate: few-strokes, amber-is-a-point, air, space-from-tokens, radius-from-tokens, type-from-tokens,
+   touch-target, touch-feedback, hover-needs-hover, focus-is-sharp, reduced-motion. */
+
+/* ─── Filters ─────────────────────────────────────────────────────────────── */
+.ui-catalogue-filters { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-catalogue-filter { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm) var(--ui-space-md); min-width: 0; }
+.ui-catalogue-filter-label { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-catalogue-search { max-width: var(--ui-book-measure); }
+
+/* Round 9 (DLAY-13): the round 8 pill above the grid (.ui-catalogue-check) is gone; "Confirm 7 products" is the page
+   action in the section head (.ui-import-entry). */
+
+/* ─── The grid ────────────────────────────────────────────────────────────── */
+.ui-catalogue-grid {
+  display: grid; gap: var(--ui-space-lg); margin: 0; padding: 0; list-style: none; min-width: 0;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); /* gate-allow:space-from-tokens a product card's least width */
+}
+.ui-catalogue-grid--collections { grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); } /* gate-allow:space-from-tokens a collection card's least width */
+.ui-catalogue-grid > li { display: grid; min-width: 0; }
+/* Round 9 (DLAY-15): a product just added is scrolled to and marked; it stops clear of the sticky tabs, as on the board */
+.ui-catalogue-grid > * { scroll-margin-block-start: calc(var(--ui-size-control-lg) + var(--ui-space-lg)); }
+@media (max-width: 639px) {
+  .ui-catalogue-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-md); }
+  .ui-catalogue-grid--collections { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ─── Product card (round 8: picture and name) and collection card ───────── */
+.ui-product-card {
+  position: relative; display: grid; align-content: start; gap: var(--ui-space-sm); min-width: 0; border-radius: var(--ui-radius-item);
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-proposal.ui-collection-card {
+  position: relative; gap: var(--ui-space-md); padding: var(--ui-inset-tight);
+  transition: background var(--ui-motion-base) var(--ui-motion-ease), box-shadow var(--ui-motion-base) var(--ui-motion-ease),
+              transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-product-card-media, .ui-collection-card-cover {
+  position: relative; display: grid; place-items: center; overflow: hidden; aspect-ratio: 1;
+  border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); color: var(--ui-text-tertiary);
+  transition: background var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-collection-card-cover { aspect-ratio: 16 / 9; }
+.ui-proposal[data-state="proposed"] .ui-collection-card-cover { background: var(--ui-surface); }
+:is(.ui-product-card-media, .ui-collection-card-cover) > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+:is(.ui-product-card-media, .ui-collection-card-cover) > svg { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); }
+
+.ui-product-card-body { display: grid; gap: var(--ui-space-xs); justify-items: start; min-width: 0; padding-inline: var(--ui-space-xs); }
+.ui-product-card-link, .ui-collection-card-link { /* gate-allow:touch-target its ::after stretches over the whole card, which is far larger than 44 px */
+  color: var(--ui-text); text-decoration: none; outline: none; cursor: pointer;
+  font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.3; letter-spacing: -.005em;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation; overflow-wrap: anywhere;
+}
+.ui-collection-card-link { font-size: var(--ui-type-body-large); letter-spacing: -.01em; }
+/* The name opens the product, and its hit area is the whole card. */
+.ui-product-card-link::after, .ui-collection-card-link::after { content: ""; position: absolute; inset: 0; z-index: 0; border-radius: inherit; }
+.ui-product-card-link:active, .ui-collection-card-link:active { color: var(--ui-text); }
+.ui-product-card-meta { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); overflow-wrap: anywhere; }
+.ui-collection-card .ui-proposal-foot { padding-inline: var(--ui-space-xs); margin-block-start: auto; }
+/* What you can press inside the card sits above the stretched link. */
+.ui-collection-card :is(.ui-proposal-actions, .ui-badge) { position: relative; z-index: 1; }
+
+@media (hover: hover) {
+  .ui-product-card:has(.ui-product-card-link:hover) .ui-product-card-media { background: var(--ui-surface-sunken-hover); }
+  .ui-collection-card:has(.ui-collection-card-link:hover) { background: var(--ui-card-bg-hover); }
+  .ui-proposal[data-state="proposed"].ui-collection-card:has(.ui-collection-card-link:hover) { background: var(--ui-surface-sunken-hover); }
+}
+.ui-product-card:has(.ui-product-card-link:active), .ui-collection-card:has(.ui-collection-card-link:active) { transform: scale(var(--ui-card-press-scale)); }
+.ui-product-card:has(.ui-product-card-link:focus-visible), .ui-collection-card:has(.ui-collection-card-link:focus-visible) {
+  outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset);
+}
+
+/* ─── Picking products in a dialog ───────────────────────────────────────────
+   choice.css has no glass words yet; inside the catalogue's glass dialogs the rows read in the glass's own text
+   colours (the lead may move this into choice.css for every dialog). */
+.ui-glass .ui-catalogue-pick :is(.ui-choice-label, .ui-choice-legend) { color: var(--ui-glass-fg); }
+.ui-glass .ui-catalogue-pick .ui-choice-hint { color: var(--ui-glass-fg-secondary); font-weight: var(--ui-type-weight-medium); }
+
+/* ─── A collection's cover, at the top of its page ────────────────────────── */
+.ui-collection-hero { position: relative; overflow: hidden; aspect-ratio: 3 / 1; border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); }
+.ui-collection-hero > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+@media (max-width: 639px) { .ui-collection-hero { aspect-ratio: 16 / 9; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-product-card, .ui-product-card-media, .ui-proposal.ui-collection-card { transition: none; }
+  .ui-product-card:has(.ui-product-card-link:active), .ui-collection-card:has(.ui-collection-card-link:active) { transform: none; }
+}

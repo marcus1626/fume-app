@@ -1,0 +1,101 @@
+/* Toolbar and floating action bar. DECIDED 13 Oct, from round 8. shadcn has no toolbar of its own; this follows Radix
+   Toolbar (root role="toolbar" with aria-orientation, buttons, toggle groups, separator, roving focus) and
+   composes shadcn's button and toggle-group (toggle.css) inside it, redesigned for Fume.
+   Toolbar markup: <div class="ui-toolbar" role="toolbar" aria-label="Edit creative" data-ui-toolbar>
+                     <div class="ui-toolbar-group"> icon buttons (.ui-btn--quiet.ui-btn--icon) </div>
+                     <div class="ui-toggle-group ui-toolbar-group" data-type="single"> icon toggles </div>
+                     <div class="ui-toolbar-group"> zoom out, <output class="ui-toolbar-num">100 %</output>, zoom in </div></div>
+   Action bar markup: <div class="ui-action-bar-dock"><div class="ui-glass ui-glass--bar ui-action-bar"
+                        role="toolbar" aria-label="3 creatives selected" data-state="open"> … </div></div>
+   Toolbar decisions: the tools sit in one tray, a pill one step toward Ink on Porcelain (--ui-toolbar-tray)
+   with 6 px around the 40 px circles, so the curves are concentric. Icon buttons are quiet circles; a tool
+   that stays on (Crop, Type, Compare) is a toggle and turns Ink. Groups are parted by space (12, three
+   times the 4 inside a group), never a line; Radix's separator is that space. Undo and redo are disabled
+   until there is something to undo. The zoom readout is data, in the mono face, at a fixed width so the
+   buttons never move. Every icon button has a tooltip with its shortcut in keys. toolbar.js gives the
+   tray one tab stop and moves along it with the arrow keys (Home, End), skipping disabled tools.
+   On a phone (under 600 px) the zoom group steps away: a pinch zooms there.
+   Action bar decisions: the floating bar that appears when creatives are selected ("3 selected · Send to
+   Anna · Download · Delete"). Smoke glass, a pill, 6 px ring around its pills; the one white button is the
+   action that moves the work on (Send to Anna), everything else is glass-clear, Delete included (its
+   Rouge comes in the confirm dialog, which is the glass-danger moment). It floats 24 above the bottom of
+   the screen plus the phone's safe area, centred, never wider than the screen minus 8 a side. It slides in
+   from below and comes into focus from blur (--ui-motion-slow), and leaves faster (--ui-motion-base). On
+   a narrow screen (the dock under 480 px, a container query) Download and Delete fold into a More circle
+   with a glass menu above the bar, so the bar stays one line; under 360 the label keeps only its count
+   (<span class="ui-action-bar-count">3</span><span class="ui-action-bar-label-text"> selected</span>).
+   Touch: every tool is 44 to a finger (button.css, toggle.css); hover only with a mouse.
+   Rule gate: few-strokes, air, actions-are-pills, glass-one-white, glass-no-stroke, mono-is-data,
+   space-from-tokens, glass-only-floating, reduced-motion. */
+
+/* ---------- toolbar ---------- */
+.ui-toolbar {
+  display: inline-flex; align-items: center; gap: var(--ui-toolbar-group-gap); max-width: 100%; min-width: 0;
+  padding: var(--ui-inset-ring); border-radius: var(--ui-radius-action); background: var(--ui-toolbar-tray);
+  font-family: var(--ui-type-family); color: var(--ui-text);
+}
+.ui-toolbar[aria-orientation="vertical"] { flex-direction: column; }
+.ui-toolbar--bare { padding: 0; background: transparent; }
+.ui-toolbar-group, .ui-toolbar .ui-toggle-group { display: inline-flex; flex-wrap: nowrap; align-items: center; gap: var(--ui-space-xs); }
+.ui-toolbar[aria-orientation="vertical"] .ui-toolbar-group { flex-direction: column; }
+/* Radix's separator: the space between groups, never a line (it adds nothing to the gap around it) */
+.ui-toolbar-separator { flex: none; align-self: stretch; width: 0; margin-inline: calc(var(--ui-toolbar-group-gap) / -2); }
+/* a tool that cannot act yet (Undo before the first change) only dims: no circle of its own in the tray */
+.ui-toolbar .ui-btn--quiet:disabled, .ui-toolbar .ui-btn--quiet[aria-disabled="true"] { --bg: transparent; }
+/* the zoom readout: data */
+.ui-toolbar-num {
+  display: inline-flex; align-items: center; justify-content: center; min-width: var(--ui-toolbar-readout);
+  font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular);
+  color: var(--ui-text-secondary); font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+@media (max-width: 600px) { .ui-toolbar-group--wide { display: none; } }
+
+/* ---------- floating action bar ---------- */
+.ui-action-bar-dock {
+  position: fixed; z-index: var(--ui-toolbar-bar-z); left: 0; right: 0; bottom: calc(var(--ui-toolbar-bar-bottom) + env(safe-area-inset-bottom, 0px));
+  display: flex; justify-content: center; padding-inline: var(--ui-toolbar-bar-margin); pointer-events: none;
+  container: ui-action-bar / inline-size;
+}
+.ui-action-bar-dock--contained { position: absolute; bottom: var(--ui-toolbar-bar-bottom); }
+.ui-action-bar {
+  position: relative; display: flex; align-items: center; gap: var(--ui-space-xs); max-width: 100%; min-width: 0;
+  padding: var(--ui-inset-ring); pointer-events: auto;
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); color: var(--ui-glass-fg);
+}
+.ui-action-bar[hidden] { display: none; }
+.ui-action-bar-label { flex: 0 1 auto; min-width: 0; padding-inline: var(--ui-inset-float) var(--ui-space-md); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--ui-type-weight-medium); font-variant-numeric: tabular-nums; }
+.ui-action-bar-clear + .ui-action-bar-label { padding-inline-start: var(--ui-space-sm); }
+.ui-action-bar-actions { display: flex; flex: none; align-items: center; gap: var(--ui-space-xs); margin-inline-start: auto; }
+.ui-action-bar-actions > .ui-btn--glass-white, .ui-action-bar-actions > .ui-btn--glass-danger { margin-inline-start: var(--ui-space-xs); }
+.ui-action-bar-more { display: none; }
+.ui-action-bar-menu { position: absolute; z-index: 1; bottom: calc(100% + var(--ui-overlay-offset)); left: 50%; translate: -50% 0; min-width: var(--ui-popover-width); max-width: calc(100% - 2 * var(--ui-toolbar-bar-margin)); pointer-events: auto; transform-origin: bottom center; }
+.ui-action-bar-menu[hidden] { display: none; }
+@container ui-action-bar (max-width: 479.98px) {
+  .ui-action-bar-wide { display: none; }
+  .ui-action-bar-more { display: inline-flex; }
+}
+/* narrower still (under 360): only the count stays beside the x ("x 3", as in a phone's own selection
+   mode), its words kept for screen readers, so Send to Anna keeps its words */
+@container ui-action-bar (max-width: 359.98px) {
+  .ui-action-bar-label-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  /* a label that only says what the bar is ("Unsaved changes") steps aside for the buttons; the bar keeps it as its name */
+  .ui-action-bar-label--optional { display: none; }
+}
+
+/* in and out: slides up from below the screen's edge and comes into focus from blur */
+.ui-glass.ui-action-bar[data-state="open"] { animation: ui-action-bar-in var(--ui-motion-slow) var(--ui-motion-ease) both; }
+.ui-glass.ui-action-bar[data-state="closed"] { animation: ui-action-bar-out var(--ui-motion-base) var(--ui-motion-ease) both; pointer-events: none; }
+@keyframes ui-action-bar-in {
+  from { opacity: 0; transform: translateY(calc(100% + var(--ui-toolbar-bar-bottom))); filter: blur(var(--ui-motion-enter-blur)); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes ui-action-bar-out {
+  to { opacity: 0; transform: translateY(calc(100% + var(--ui-toolbar-bar-bottom))); filter: blur(var(--ui-motion-enter-blur)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-glass.ui-action-bar[data-state="open"] { animation: ui-action-bar-fade-in var(--ui-motion-fast) linear both; }
+  .ui-glass.ui-action-bar[data-state="closed"] { animation: ui-action-bar-fade-out var(--ui-motion-fast) linear both; }
+  @keyframes ui-action-bar-fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes ui-action-bar-fade-out { to { opacity: 0; } }
+}

@@ -1,0 +1,40 @@
+/* Marker: a place in a conversation. DECIDED 13 Oct, from round 8. Built on shadcn's marker (Marker with data-variant
+   default | separator | border, MarkerIcon, MarkerContent; asChild for a link), same parts and
+   attributes, redesigned for Fume.
+   A marker is made of space and a label, never a line (few-strokes): shadcn draws rules on both sides of
+   the separator and a border under the border variant; Fume gives them air instead. 32 above and 16
+   below in a conversation (--ui-marker-before, --ui-marker-after), so a marker belongs to what follows
+   (rule proximity).
+   - default: an icon and words at the start of the column, in tertiary (read up to here, a run done).
+   - separator: the words alone in the middle: a day ("Today", "Monday 12 October").
+   - border: space under the words instead of a border.
+   - new (.ui-marker--new): new since you left, in Ink: an Ink dot, the words and the count as an Ink
+     count badge (badge.css). Never Rouge (nothing is wrong) and never Amber (nothing is checked).
+   Times and counts are data (mono, tabular).
+   Rule gate: few-strokes, space-from-tokens, type-from-tokens, mono-is-data. */
+
+.ui-marker {
+  position: relative; display: flex; align-items: center; gap: var(--ui-space-sm); width: 100%; min-width: 0; min-height: var(--ui-size-icon); margin: 0;
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; letter-spacing: .01em;
+  color: var(--ui-marker-fg); text-align: left;
+}
+.ui-marker-icon { display: inline-grid; flex: none; place-items: center; width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-marker-icon svg, .ui-marker > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex: none; }
+.ui-marker-content { min-width: 0; overflow-wrap: break-word; }
+.ui-marker a { color: var(--ui-text-secondary); text-decoration: underline; text-decoration-color: var(--ui-hairline-strong); text-underline-offset: 3px; }
+.ui-marker-time, .ui-marker-count { font-family: var(--ui-type-family-data); font-weight: var(--ui-type-weight-regular); font-variant-numeric: tabular-nums; letter-spacing: 0; }
+
+/* separator: the words in the middle, space on both sides instead of rules */
+.ui-marker[data-variant="separator"] { justify-content: center; text-align: center; }
+.ui-marker[data-variant="separator"] .ui-marker-content { flex: none; }
+/* border: space instead of a border */
+.ui-marker[data-variant="border"] { padding-block-end: var(--ui-space-sm); }
+
+/* new since you left */
+.ui-marker--new { color: var(--ui-marker-fg-new); }
+.ui-marker-dot { width: var(--ui-marker-dot-size); height: var(--ui-marker-dot-size); border-radius: 50%; background: var(--ui-marker-dot); }
+
+/* in a conversation: more air above than below */
+:is(.ui-message-scroller-content, .ui-message-list) > .ui-marker { margin-block-start: var(--ui-marker-before); }
+:is(.ui-message-scroller-content, .ui-message-list) > .ui-marker:first-child { margin-block-start: 0; }
+:is(.ui-message-scroller-content, .ui-message-list) > .ui-marker + * { margin-block-start: var(--ui-marker-after); }

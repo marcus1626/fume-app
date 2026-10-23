@@ -1,0 +1,53 @@
+/* People and meetings in the one Fume chat (app v4, FLOWS §21). PROPOSED 15 Oct 2026.
+   Markup: <div class="ui-handover" role="note"><span class="ui-avatar ui-avatar--sm"/>
+             <div class="ui-handover-text"><p class="ui-handover-title">Sander at Fume will answer you here</p>
+               <p class="ui-handover-why">Invoices are handled by people at Fume. <time class="ui-handover-time">14:12</time></p></div></div>
+           <article class="ui-message ui-chat-staff"><div class="ui-message-header"> avatar · name · <span class="ui-badge ui-chat-staff-tag">Fume</span> · role · time </div> … </article>
+           <div class="ui-card ui-meeting-card"><form class="ui-meeting-form"> ui-field: <div class="ui-toggle-group ui-meeting-slots">
+             <button class="ui-toggle ui-toggle--outline"><span class="ui-meeting-slot-day">Fri 17 Oct</span><time class="ui-meeting-slot-time">10:00</time></button> … </div>
+             ui-field topic · Book (ui-btn) </form></div>
+           <p class="ui-meeting-note">You booked Fri 17 Oct, 10:00. <a>See it in the calendar</a></p>
+   Fume decisions: Fume answers first; when it hands over, the conversation says so in one quiet line with the
+   person's face and the reason, not as a speech from Fume (Marcus 15 Oct: "Hvis det er noe Fume ikke kan svare på,
+   blir hendvendelsen videresendt"). A person at Fume who answers in the chat carries a "Fume" tag beside their
+   name, so it is clear a human answered and who. Meeting times are pills: the day in words, the time in the data
+   face. No Amber: a meeting is not a creative.
+   Rule gate: few-strokes, air, proximity, space-from-tokens, type-from-tokens, mono-is-data, actions-are-pills,
+   amber-is-a-point. */
+
+.ui-handover {
+  display: flex; align-items: flex-start; gap: var(--ui-space-md); min-width: 0;
+  padding-block: var(--ui-space-sm); padding-inline: var(--ui-space-xs);
+}
+.ui-handover > .ui-avatar { flex: none; }
+.ui-handover-text { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-handover-title, .ui-handover-why { margin: 0; line-height: 1.4; }
+.ui-handover-title { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-handover-why { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); text-wrap: pretty; }
+.ui-handover-time { margin-inline-start: var(--ui-space-xs); font-family: var(--ui-type-family-data); }
+
+.ui-chat-staff-tag { flex: none; }
+
+/* Fume offers times. */
+.ui-meeting-card { align-self: stretch; max-width: var(--ui-message-measure); }
+.ui-meeting-form { display: grid; gap: var(--ui-space-xl); min-width: 0; }
+.ui-meeting-slots { flex-wrap: wrap; }
+.ui-meeting-slots > .ui-toggle { gap: var(--ui-space-sm); }
+.ui-meeting-slot-time { font-family: var(--ui-type-family-data); font-variant-numeric: tabular-nums; }
+.ui-meeting-note { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); }
+.ui-meeting-note a { color: var(--ui-text); text-underline-offset: 3px; text-decoration-color: var(--ui-hairline-strong); }
+.ui-meeting-note a:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); border-radius: var(--ui-radius-check); }
+.ui-meeting-wait { display: grid; place-items: center; min-height: calc(2 * var(--ui-size-hit)); color: var(--ui-text-tertiary); }
+
+/* In a glass dialog (person menu, ⌘K, Settings) the times are clear glass pills, and the chosen one turns
+   Porcelain with an Ink label, as a chosen day does in the glass date picker (calendar.css). */
+.ui-glass .ui-meeting-slots > .ui-toggle {
+  --bg: var(--ui-glass-button-clear); --bg-hover: var(--ui-glass-button-clear-hover); --bg-pressed: var(--ui-glass-button-clear-pressed);
+  --fg: var(--ui-glass-button-clear-fg); --fg-hover: var(--fg); --edge: transparent; --edge-hover: transparent;
+}
+.ui-glass .ui-meeting-slots > .ui-toggle[aria-checked="true"] {
+  --bg: var(--ui-glass-button-white); --bg-hover: var(--ui-glass-button-white-hover); --bg-pressed: var(--ui-glass-button-white-pressed);
+  --fg: var(--ui-glass-button-white-fg);
+}
+.ui-glass .ui-meeting-slots > .ui-toggle:focus-visible { outline-color: var(--ui-focus-ring-on-glass); }
+.ui-glass .ui-meeting-form .ui-field-description { color: var(--ui-glass-fg-secondary); }

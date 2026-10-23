@@ -1,0 +1,95 @@
+/* Onboarding: the first run. DECIDED 13 Oct, from round 8. Fume's own; composed from the card (card.css), the
+   progress bar (progress.css), the buttons and the empty state (empty.css). No script of its own: a step
+   is done when its work is (the board demo moves the steps along).
+   Decisions:
+   - Welcome by name ("Welcome to Fume, LYSNE"), then one sentence on what happens next, on a short measure.
+   - Three steps, in order: Add your Brand DNA, Invite your team, Write your first brief. Each is a card with
+     one action. The step to do now carries the only Ink button on the screen; the next ones are white
+     (secondary); a finished one keeps a quiet way back in.
+   - A finished step's mark is an Ink circle with a Paper check. Never Amber: Amber is only the check on a
+     creative Anna checked, and setting up is not that. The words say Done too, so colour is never the
+     only signal.
+   - Progress is the Ink bar on its sunken track with the count as data (1 / 3), and words beside it.
+   - Below, the campaigns are empty, and the empty state points at the first brief: the Engine's mark,
+     one line on what happens, one white button.
+   - The first run lies on Paper (--ui-onboard-ground, round 9): the welcome is a brand moment, a whole
+     Paper page with Porcelain cards on it (--ui-onboard-card). Round 8 had Porcelain and the surface step.
+   - The layout follows its own width (container ui-onboard): three cards side by side when there is room
+     (--ui-onboard-step-min each), one under the other on a phone, where a finished step folds to one line.
+   Rule gate: card-never-matches-ground, few-strokes, amber-is-a-point (no Amber), air, proximity,
+   space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data, reduced-motion. */
+
+.ui-onboard { container: ui-onboard / inline-size; min-width: 0; font-family: var(--ui-type-family); color: var(--ui-text); background: var(--ui-onboard-ground); }
+.ui-onboard-screen { display: grid; gap: var(--ui-space-2xl); min-width: 0; padding: var(--ui-inset-panel); }
+/* on Paper the cards are Porcelain: a card never matches its ground */
+.ui-onboard .ui-card { --card-bg: var(--ui-onboard-card); }
+.ui-onboard .ui-empty--surface { background: var(--ui-onboard-card); }
+.ui-onboard .ui-empty--surface .ui-empty-media--icon { background: var(--ui-onboard-ground); }
+
+/* welcome */
+.ui-onboard-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: var(--ui-space-xl) var(--ui-space-2xl); min-width: 0; }
+.ui-onboard-hello { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-onboard-eyebrow { display: flex; align-items: center; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); }
+.ui-onboard-title { margin: 0; font-size: var(--ui-type-title-large); font-weight: var(--ui-type-weight-medium); line-height: 1.12; letter-spacing: -.02em; text-wrap: balance; }
+.ui-onboard-lede { max-width: var(--ui-onboard-measure); margin: 0; font-size: var(--ui-type-body); line-height: 1.55; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-onboard-progress { width: min(100%, calc(var(--ui-onboard-step-min) * 1.5)); }
+
+/* steps: three cards with one action each */
+.ui-onboard-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--ui-onboard-step-min)), 1fr)); gap: var(--ui-space-lg); min-width: 0; margin: 0; padding: 0; list-style: none; counter-reset: ui-onboard; }
+.ui-onboard-step { display: grid; grid-template-rows: auto auto 1fr auto; gap: var(--ui-space-md); padding: var(--ui-inset-panel); }
+.ui-onboard-step-top { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-md); min-height: var(--ui-onboard-mark); margin-bottom: var(--ui-space-xs); }
+.ui-onboard-mark {
+  display: grid; place-items: center; flex: none; width: var(--ui-onboard-mark); height: var(--ui-onboard-mark); border-radius: 50%;
+  background: var(--ui-surface-sunken); color: var(--ui-text-secondary);
+  font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); font-variant-numeric: tabular-nums; /* gate-allow:mono-is-data  the step's number is a count, data */
+  transition: background-color var(--ui-motion-base) var(--ui-motion-ease), color var(--ui-motion-base) var(--ui-motion-ease);
+}
+.ui-onboard-mark svg { display: none; width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-onboard-state { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-tertiary); }
+.ui-onboard-step-title { margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.35; }
+.ui-onboard-step-text { margin: 0; font-size: var(--ui-type-control); line-height: 1.55; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-onboard-step-action { display: flex; flex-wrap: wrap; gap: var(--ui-space-sm); padding-top: var(--ui-space-md); }
+/* a quiet action keeps its icon on the text's edge (its fill shows only on hover) */
+.ui-onboard-step-action > .ui-btn--quiet { margin-inline-start: calc(var(--ui-size-pad-md) * -1); }
+
+.ui-onboard-step[data-state="current"] .ui-onboard-mark { background: var(--ui-surface-sunken-hover); color: var(--ui-text); }
+.ui-onboard-step[data-state="current"] .ui-onboard-state { color: var(--ui-text); }
+.ui-onboard-step[data-state="done"] .ui-onboard-mark { background: var(--ui-action-primary); color: var(--ui-action-primary-fg); }
+.ui-onboard-step[data-state="done"] .ui-onboard-mark span { display: none; }
+.ui-onboard-step[data-state="done"] .ui-onboard-mark svg { display: block; animation: ui-onboard-done var(--ui-motion-slow) var(--ui-motion-ease) both; }
+.ui-onboard-step[data-state="done"] .ui-onboard-state { color: var(--ui-text); }
+.ui-onboard-step[data-state="done"] .ui-onboard-step-text { color: var(--ui-text-tertiary); }
+
+/* the campaigns, empty: the way to the first brief */
+.ui-onboard-section { display: grid; gap: var(--ui-space-lg); min-width: 0; }
+.ui-onboard-section-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--ui-space-md); margin: 0; }
+.ui-onboard-section-title { margin: 0; font-size: var(--ui-type-body-large); font-weight: var(--ui-type-weight-medium); line-height: 1.3; letter-spacing: -.01em; }
+.ui-onboard-section-meta { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; } /* a count: data */
+
+/* ---------- narrow: one column; a finished step folds to one line ---------- */
+@container ui-onboard (max-width: 559.98px) {
+  .ui-onboard-screen { padding: var(--ui-space-lg); }
+  .ui-onboard-head { grid-template-columns: minmax(0, 1fr); }
+  .ui-onboard-progress { width: 100%; }
+  .ui-onboard-title { font-size: var(--ui-type-title); line-height: 1.2; letter-spacing: -.015em; }
+  .ui-onboard-steps { gap: var(--ui-space-sm); }
+  .ui-onboard-step { padding: var(--ui-inset-float) var(--ui-inset-float) var(--ui-inset-float); gap: var(--ui-space-sm); }
+  .ui-onboard-step-action > .ui-btn { flex: 1 1 auto; --h: var(--ui-size-hit); }
+  .ui-onboard-step[data-state="done"] { grid-template-columns: var(--ui-onboard-mark) minmax(0, 1fr) auto; grid-template-rows: auto; align-items: center; gap: var(--ui-space-md); }
+  .ui-onboard-step[data-state="done"] .ui-onboard-step-top { display: contents; }
+  .ui-onboard-step[data-state="done"] .ui-onboard-mark { grid-column: 1; grid-row: 1; }
+  .ui-onboard-step[data-state="done"] .ui-onboard-state { display: none; }
+  .ui-onboard-step[data-state="done"] .ui-onboard-step-title { grid-column: 2; grid-row: 1; font-size: var(--ui-type-control); } /* done steps back: the line is the record, not the task */
+  .ui-onboard-step[data-state="done"] .ui-onboard-step-text { display: none; }
+  .ui-onboard-step[data-state="done"] .ui-onboard-step-action { grid-column: 3; grid-row: 1; padding: 0; }
+  .ui-onboard-step[data-state="done"] .ui-onboard-step-action > .ui-btn { --h: var(--ui-size-control-sm); --px: var(--ui-size-pad-sm); flex: none; margin-inline-start: 0; }
+  .ui-onboard-step[data-state="done"] .ui-onboard-step-action svg { display: none; } /* the word is enough on one line; the title keeps its width */
+  .ui-onboard-more { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+
+@keyframes ui-onboard-done { from { opacity: 0; transform: scale(.6); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-onboard-mark { transition: none; }
+  .ui-onboard-step[data-state="done"] .ui-onboard-mark svg { animation: none; }
+}

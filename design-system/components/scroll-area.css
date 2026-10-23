@@ -1,0 +1,55 @@
+/* Scroll area. DECIDED 13 Oct, from round 7. Built on shadcn's scroll-area (parts: scroll-area, viewport, scrollbar
+   with data-orientation vertical|horizontal, thumb; Radix data-state visible|hidden), redesigned for Fume.
+   Behaviour: scroll-area.js places the thumb and lets you drag it.
+   Decisions:
+   - No track and no line: a thin overlay pill (--ui-scroll-size, 6) of Ink at low alpha (--ui-scroll-thumb)
+     floats over the content's edge, and only while you scroll or point at the area. It grows to
+     --ui-scroll-size-hover and one step more Ink under the pointer, easier to grab.
+   - The native scrollbar is hidden, so a horizontal strip of creatives keeps its air and nothing sits
+     in a grey gutter. Touch and trackpads scroll as always; the viewport scrolls with the keyboard when
+     it has focus (sharp 2 px Ink ring).
+   - Without the script the area still scrolls natively, with a thin Ink scrollbar.
+   Rule gate: few-strokes, radius-from-tokens, motion-from-tokens, reduced-motion, hover-needs-hover. */
+
+.ui-scroll-area { position: relative; min-width: 0; }
+.ui-scroll-area-viewport {
+  width: 100%; height: 100%; max-height: inherit; overflow: auto; overscroll-behavior-x: contain;
+  border-radius: inherit; outline: none;
+  scrollbar-width: thin; scrollbar-color: var(--ui-scroll-thumb) transparent;
+}
+.ui-scroll-area.is-ready > .ui-scroll-area-viewport { scrollbar-width: none; }
+.ui-scroll-area.is-ready > .ui-scroll-area-viewport::-webkit-scrollbar { display: none; }
+.ui-scroll-area-viewport:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+.ui-scroll-area-scrollbar {
+  position: absolute; z-index: 2; display: none; padding: var(--ui-space-xs); box-sizing: border-box;
+  touch-action: none; user-select: none; opacity: 0; pointer-events: none;
+  transition: opacity var(--ui-motion-base) var(--ui-motion-ease);
+}
+.ui-scroll-area.is-ready > .ui-scroll-area-scrollbar[data-overflow="true"] { display: flex; }
+.ui-scroll-area-scrollbar[data-orientation="vertical"] { top: 0; right: 0; bottom: 0; width: calc(var(--ui-scroll-size-hover) + var(--ui-space-xs) * 2); justify-content: flex-end; }
+.ui-scroll-area-scrollbar[data-orientation="horizontal"] { left: 0; right: 0; bottom: 0; height: calc(var(--ui-scroll-size-hover) + var(--ui-space-xs) * 2); flex-direction: column; justify-content: flex-end; }
+.ui-scroll-area-scrollbar[data-state="visible"] { opacity: 1; pointer-events: auto; }
+@media (hover: hover) {
+  .ui-scroll-area:hover > .ui-scroll-area-scrollbar { opacity: 1; pointer-events: auto; }
+  .ui-scroll-area-scrollbar:hover .ui-scroll-area-thumb { background: var(--ui-scroll-thumb-hover); }
+  .ui-scroll-area-scrollbar[data-orientation="vertical"]:hover .ui-scroll-area-thumb { width: var(--ui-scroll-size-hover); }
+  .ui-scroll-area-scrollbar[data-orientation="horizontal"]:hover .ui-scroll-area-thumb { height: var(--ui-scroll-size-hover); }
+}
+
+.ui-scroll-area-thumb {
+  position: relative; flex: none; border-radius: var(--ui-radius-action); background: var(--ui-scroll-thumb);
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), width var(--ui-motion-fast) var(--ui-motion-ease), height var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-scroll-area-scrollbar[data-orientation="vertical"] .ui-scroll-area-thumb { width: var(--ui-scroll-size); height: var(--thumb-size, 0px); transform: translateY(var(--thumb-pos, 0px)); align-self: flex-start; }
+.ui-scroll-area-scrollbar[data-orientation="horizontal"] .ui-scroll-area-thumb { height: var(--ui-scroll-size); width: var(--thumb-size, 0px); transform: translateX(var(--thumb-pos, 0px)); align-self: flex-start; }
+.ui-scroll-area-thumb[data-dragging], .ui-scroll-area-thumb.is-hover { background: var(--ui-scroll-thumb-hover); }
+.ui-scroll-area-scrollbar[data-orientation="vertical"] .ui-scroll-area-thumb[data-dragging] { width: var(--ui-scroll-size-hover); }
+.ui-scroll-area-scrollbar[data-orientation="horizontal"] .ui-scroll-area-thumb[data-dragging] { height: var(--ui-scroll-size-hover); }
+
+/* on touch the thumb only shows where you are; it never catches a finger meant for the content */
+@media (pointer: coarse) { .ui-scroll-area-scrollbar, .ui-scroll-area-scrollbar[data-state="visible"] { pointer-events: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-scroll-area-scrollbar, .ui-scroll-area-thumb { transition: none; }
+}

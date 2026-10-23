@@ -1,0 +1,149 @@
+/* Notifications: the bell, its popover and the inbox page. DECIDED 13 Oct, from round 8. Fume's own (shadcn has no
+   notification centre); the popover is shadcn's popover (popover.css, popover.js: glass, radius float,
+   placed 8 from the bell), the rows follow shadcn's item, the empty inbox is shadcn's empty (empty.css),
+   the filter is the segmented control. Behaviour: notify.js.
+   Decisions:
+   - What happened, in Fume's words: "Anna checked 6 creatives in Autumn launch", "The Engine finished 12
+     creatives", "Anna asked for changes on creative 3", "Marcus mentioned you". People are their avatars
+     (Anna, who decides, in Ink); the Engine is its own icon. No Amber here: Amber is only the check on a
+     checked creative, and a notification is not one.
+   - Unread is never a blue dot: the words come to full strength (Ink, names in medium) and a small dot
+     follows the time, Ink on the page and Porcelain on glass (--ui-notify-dot). Read rows step back to
+     secondary text. The bell carries the count in an Ink pill, cut out of the bar in the ground colour.
+   - Grouped by Today, Yesterday and Earlier with space, never a line: rows 4 apart, groups 32.
+   - The popover is Smoke glass with 16 inside; its rows fill it edge to edge like menu rows, every one the
+     same height, so the list stops on half a row (--ui-notify-rows-visible) and says it scrolls. On glass
+     all text is weight 500 and the hover is the clear veil.
+   - Mark all read is a clear button in the popover and a white one on the page; when nothing is left the
+     empty state says so calmly ("You are all caught up").
+   Touch: rows are 44 or taller; the bell is 44 to a finger; hover only with a mouse; a press steps the
+   row two steps toward Ink (or the veil on glass).
+   Rule gate: few-strokes, air, space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data,
+   amber-is-a-point (no Amber), touch-target, touch-feedback, hover-needs-hover, reduced-motion. */
+
+.ui-notify {
+  --nt-fg: var(--ui-text); --nt-fg-2: var(--ui-text-secondary); --nt-fg-3: var(--ui-text-tertiary); --nt-dot: var(--ui-notify-dot-on-page);
+  --nt-hover: var(--ui-item-bg-hover); --nt-pressed: var(--ui-item-bg-pressed); --nt-tile: var(--ui-surface-sunken); --nt-tile-fg: var(--ui-text);
+  --nt-ring: var(--ui-focus-ring); --nt-weight: var(--ui-type-weight-regular);
+  display: grid; gap: var(--ui-space-2xl); min-width: 0; font-family: var(--ui-type-family); color: var(--nt-fg);
+}
+.ui-glass .ui-notify, .ui-notify--glass {
+  --nt-fg: var(--ui-glass-fg); --nt-fg-2: var(--ui-glass-fg-secondary); --nt-fg-3: var(--ui-glass-fg-secondary); --nt-dot: var(--ui-notify-dot-on-glass);
+  --nt-hover: var(--ui-glass-item-hover); --nt-pressed: var(--ui-glass-button-clear); --nt-tile: var(--ui-glass-button-clear-hover); --nt-tile-fg: var(--ui-glass-fg);
+  --nt-ring: var(--ui-focus-ring-on-glass); --nt-weight: var(--ui-type-weight-medium);
+}
+/* on glass the rows fill the float edge to edge, like menu rows: no radius of their own */
+.ui-glass .ui-notify-item, .ui-notify--glass .ui-notify-item { border-radius: 0; }
+
+/* ---------- groups and rows ---------- */
+.ui-notify-section { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-notify-group { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--ui-space-sm); margin: 0; padding: 0 var(--ui-inset-float) var(--ui-space-xs); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--nt-fg-3); }
+.ui-notify-rows { display: grid; gap: var(--ui-space-xs); min-width: 0; margin: 0; padding: 0; list-style: none; }
+
+.ui-notify-item {
+  position: relative; display: grid; grid-template-columns: var(--ui-avatar-size) minmax(0, 1fr) auto; align-items: start; gap: var(--ui-space-sm) var(--ui-space-md);
+  width: 100%; min-width: 0; min-height: var(--ui-size-hit); margin: 0; padding: var(--ui-space-md) var(--ui-inset-float);
+  border: 0; border-radius: var(--ui-radius-item); background: transparent; color: var(--nt-fg-2);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--nt-weight); line-height: 1.45; text-align: left; text-decoration: none;
+  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+@media (hover: hover) { .ui-notify-item:hover { background: var(--nt-hover); } }
+.ui-notify-item.is-hover { background: var(--nt-hover); }
+.ui-notify-item:active, .ui-notify-item.is-pressed { background: var(--nt-pressed); }
+.ui-notify-item:focus-visible, .ui-notify-item.is-focus { outline: var(--ui-size-ring) solid var(--nt-ring); outline-offset: calc(var(--ui-size-ring) * -1); }
+.ui-notify-item > :not(.ui-notify-media):not(.ui-notify-meta) { grid-column: 2; min-width: 0; }
+.ui-notify-item > .ui-notify-media { grid-row: 1 / span 3; }
+.ui-notify-item > .ui-notify-meta { grid-column: 3; grid-row: 1; }
+
+.ui-notify-media { display: grid; place-items: center; width: var(--ui-avatar-size); height: var(--ui-avatar-size); border-radius: 50%; background: var(--nt-tile); color: var(--nt-tile-fg); }
+.ui-notify-media svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-notify-media.ui-avatar { background: var(--nt-tile); color: var(--nt-tile-fg); }
+.ui-notify-media.ui-avatar--ink { background: var(--ui-avatar-bg-ink); color: var(--ui-avatar-fg-ink); }
+.ui-glass .ui-notify-media.ui-avatar--ink, .ui-notify--glass .ui-notify-media.ui-avatar--ink { background: var(--nt-tile); color: var(--nt-tile-fg); } /* on glass every face is the calm veil: no white circles competing with the one white button */
+
+.ui-notify-text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin: 0; text-wrap: pretty; }
+.ui-notify-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } /* "Unread." for screen readers: the dot and the weight do not speak */
+.ui-notify-text b { font-weight: var(--ui-type-weight-medium); color: inherit; }
+.ui-notify-quote { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--nt-fg-3); text-wrap: pretty; }
+.ui-notify-meta { display: flex; align-items: center; gap: var(--ui-space-sm); padding-top: calc((1lh - var(--ui-size-icon)) / 2); }
+.ui-notify-time { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); line-height: var(--ui-size-icon); color: var(--nt-fg-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ui-glass .ui-notify-time, .ui-notify--glass .ui-notify-time { font-weight: var(--ui-type-weight-medium); }
+.ui-notify-dot { width: var(--ui-notify-dot); height: var(--ui-notify-dot); flex-shrink: 0; border-radius: 50%; background: var(--nt-dot); opacity: 0; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+
+/* unread: full strength, names in medium, the dot after the time.
+   Round 13 (#9, Marcus 21 Oct: "tydeligere indikasjon på lest og ikke lest"; PROPOSED): an unread row also rests on a
+   surface, the card surface on the page and the clear veil on glass, and its dot is 8; a read row is the bare ground.
+   So unread reads as a block before a word is read; on glass the words cannot step back further (88 % is the floor). */
+.ui-notify { --nt-unread: var(--ui-notify-state-unread-bg-on-page); }
+.ui-glass .ui-notify, .ui-notify--glass { --nt-unread: var(--ui-notify-state-unread-bg-on-glass); }
+.ui-notify-item[data-state="unread"] { color: var(--nt-fg); background: var(--nt-unread); }
+@media (hover: hover) { .ui-notify-item[data-state="unread"]:hover { background: var(--nt-hover); } }
+.ui-notify-item[data-state="unread"]:active, .ui-notify-item[data-state="unread"].is-pressed { background: var(--nt-pressed); }
+.ui-notify-item[data-state="unread"] .ui-notify-dot { opacity: 1; }
+.ui-notify-item[data-state="read"] .ui-notify-text b { color: var(--nt-fg-2); }
+.ui-notify-dot { width: var(--ui-notify-state-dot); height: var(--ui-notify-state-dot); }
+/* in the popover the rows touch, so the unread ones together are one band at the top of the day; on the page the rows
+   keep their radius and sit 4 apart */
+
+/* creatives under a row: 4:5 thumbnails with the creative's hairline, and the count of the rest */
+.ui-notify-thumbs { display: flex; align-items: center; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
+.ui-notify-thumb { position: relative; flex: none; width: var(--ui-notify-thumb); overflow: hidden; border-radius: var(--ui-radius-check); background: var(--ui-creative-bg); }
+.ui-notify-thumb img { display: block; width: 100%; height: auto; aspect-ratio: var(--ui-creative-ratio-feed); object-fit: cover; } /* the ratio on the image, not the wrapper (board lesson, round 7) */
+.ui-notify-thumb::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); } /* gate-allow:few-strokes  the edge of the customer's creative */
+.ui-notify-more { padding-inline: var(--ui-space-xs); font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--nt-fg-3); font-variant-numeric: tabular-nums; } /* gate-allow:mono-is-data  the count of the creatives not shown */
+
+/* ---------- the bell and its count ---------- */
+.ui-notify-bell { position: relative; display: inline-flex; flex: none; }
+.ui-notify-count {
+  position: absolute; z-index: 1; top: 0; right: 0; display: grid; place-items: center;
+  min-width: var(--ui-notify-count); height: var(--ui-notify-count); padding-inline: var(--ui-space-xs);
+  border-radius: var(--ui-radius-action); background: var(--ui-action-primary); color: var(--ui-action-primary-fg);
+  box-shadow: 0 0 0 var(--ui-avatar-cutout) var(--nt-ground, var(--ui-ground)); /* the cut-out: ground colour, reads as space (as avatar.css) */
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; font-variant-numeric: tabular-nums;
+  translate: 25% -25%; pointer-events: none;
+}
+.ui-notify-count[hidden], .ui-notify-count:empty { display: none; }
+/* on a glass bar: the glass white with Ink numbers, no cut-out (there is no solid ground to cut from) */
+.ui-glass .ui-notify-count { background: var(--ui-glass-button-white); color: var(--ui-glass-button-white-fg); box-shadow: none; }
+
+/* ---------- the popover: glass, rows edge to edge, half a row at the cut ---------- */
+.ui-notify-pop, .ui-popover.ui-notify-pop { width: var(--ui-notify-width); gap: 0; padding: 0; overflow: hidden; } /* over popover.css (it loads later): the rows fill the float edge to edge */
+.ui-notify-head { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-md); min-width: 0; padding: var(--ui-inset-float) var(--ui-inset-float) var(--ui-space-sm); }
+.ui-notify-title { margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.35; }
+.ui-notify-scroll { container: ui-notify-pop / inline-size; max-height: calc(var(--ui-notify-label) + var(--ui-notify-row) * var(--ui-notify-rows-visible)); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.ui-notify-scroll::-webkit-scrollbar { display: none; }
+.ui-notify-pop .ui-notify { gap: 0; }
+.ui-notify-pop .ui-notify-section, .ui-notify-pop .ui-notify-rows { gap: 0; }
+.ui-notify-pop .ui-notify-group { height: var(--ui-notify-label); }
+.ui-notify-pop .ui-notify-item { height: var(--ui-notify-row); align-items: center; }
+.ui-notify-pop .ui-notify-meta { align-self: start; }
+/* a narrow popover (a phone): the time goes under the words, so they keep the width and say it all */
+@container ui-notify-pop (max-width: 359.98px) {
+  .ui-notify-pop .ui-notify-item { grid-template-columns: var(--ui-avatar-size) minmax(0, 1fr); height: auto; min-height: var(--ui-notify-row); align-items: start; row-gap: var(--ui-space-xs); }
+  .ui-notify-pop .ui-notify-item > .ui-notify-meta { grid-column: 2; grid-row: auto; padding-top: 0; }
+}
+.ui-notify-foot { display: grid; padding: var(--ui-space-sm) var(--ui-inset-float) var(--ui-inset-float); }
+.ui-notify-foot > .ui-btn { width: 100%; }
+
+/* empty: calm, one line of words */
+.ui-notify-empty { display: grid; justify-items: center; gap: var(--ui-space-sm); padding: var(--ui-space-xl) var(--ui-inset-float); text-align: center; }
+.ui-notify-empty[hidden] { display: none; }
+.ui-notify-empty-icon { display: grid; place-items: center; width: var(--ui-size-hit); height: var(--ui-size-hit); margin-block-end: var(--ui-space-sm); border-radius: 50%; background: var(--nt-tile); color: var(--nt-tile-fg); }
+.ui-notify-empty-icon svg { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); }
+.ui-notify-empty-title { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--nt-fg); }
+.ui-notify-empty-text { margin: 0; max-width: 30ch; font-size: var(--ui-type-label); line-height: 1.5; color: var(--nt-fg-3); }
+
+/* ---------- the inbox page ---------- */
+.ui-inbox { display: grid; gap: var(--ui-space-xl); width: 100%; max-width: var(--ui-notify-inbox-width); min-width: 0; margin-inline: auto; font-family: var(--ui-type-family); color: var(--ui-text); }
+.ui-inbox-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--ui-space-lg); min-width: 0; padding-inline: var(--ui-inset-float); }
+.ui-inbox-title { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-inbox-title h3 { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.2; letter-spacing: -.015em; }
+.ui-inbox-title p { margin: 0; font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+.ui-inbox-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-md); min-width: 0; padding-inline: var(--ui-inset-float); }
+.ui-inbox .ui-notify-item { padding-block: var(--ui-space-sm); } /* rows 20 apart in words, groups 40: the groups read first (proximity) */
+.ui-inbox .ui-notify-text { -webkit-line-clamp: 3; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-notify-item, .ui-notify-dot { transition: none; }
+}

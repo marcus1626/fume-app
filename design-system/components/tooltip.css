@@ -1,0 +1,33 @@
+/* Tooltip. DECIDED 13 Oct, from round 7. Built on shadcn's tooltip (provider, trigger, content; Radix data-state,
+   data-side), redesigned for Fume: small Smoke glass (.ui-glass.ui-glass--small) at the floating radius,
+   which on one short line reads as a pill. 6 above and below (--ui-inset-ring), 12 at the sides
+   (--ui-inset-tight), as on the board's first tooltip; label type, 12 medium; a shortcut beside it in the
+   data type. No arrow: it sits 8 from its trigger.
+   It names a control; it never carries information that is not also there another way (the trigger's
+   own label or aria-label). tooltip.js shows it after a short rest (--ui-tooltip-delay), at once between
+   triggers in a row and at once on keyboard focus; Escape, a press or leaving hides it. On a touch screen
+   a long press shows it and a tap acts as usual.
+   One line only: it never wraps, so it stays a label and keeps its air (rule air measures it).
+   Rule gate: air, space-from-tokens, type-from-tokens, mono-is-data, reduced-motion. */
+
+.ui-tooltip {
+  position: fixed; z-index: var(--ui-overlay-z-tooltip); top: 0; left: 0;
+  display: inline-flex; align-items: center; gap: var(--ui-space-sm);
+  max-width: calc(100vw - 2 * var(--ui-overlay-margin));
+  padding: var(--ui-inset-ring) var(--ui-inset-tight);
+  color: var(--ui-glass-fg); font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium);
+  line-height: 1.5; letter-spacing: .01em; white-space: nowrap; pointer-events: none; user-select: none;
+}
+.ui-tooltip[hidden] { display: none; }
+.ui-tooltip[data-state="open"] { animation-duration: var(--ui-motion-fast); }
+.ui-tooltip[data-state="closed"] { animation: ui-tooltip-out var(--ui-motion-instant) var(--ui-motion-ease) both; }
+.ui-tooltip-kbd { font-family: var(--ui-type-family-data); font-weight: var(--ui-type-weight-regular); letter-spacing: .04em; color: var(--ui-glass-fg-secondary); }
+.ui-tooltip-kbd:empty { display: none; }
+/* a long press shows the tooltip on touch, so the trigger must not open the system's callout */
+[data-ui-tooltip] { -webkit-touch-callout: none; }
+
+@keyframes ui-tooltip-out { to { opacity: 0; transform: scale(var(--ui-motion-enter-scale)); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-tooltip[data-state] { animation: none; }
+}

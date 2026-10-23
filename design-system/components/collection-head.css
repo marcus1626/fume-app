@@ -1,0 +1,26 @@
+/* Collection head: a collection's cover as a quiet band under its header, and its delivery rows in the rail
+   (app, FLOWS §3.1). PROPOSED 19 Oct 2026.
+   Markup: <header class="ui-page-header"> AW26 · Season · 2 products </header>
+           <div class="ui-collection-band"><img src="cover.jpg" alt=""/></div>
+           … in the rail: <a class="ui-item" title="Autumn launch · Masters"><div class="ui-item-content ui-collection-delivery">
+             <div class="ui-item-title">Autumn launch · Masters</div><p class="ui-item-description"><span>2 creatives</span><span> · Feed</span><span> · 9.6 MB</span><span> · 12 Oct</span></p></div> badge</a>
+   Fume decisions: round 9 (desktop review 19 Oct, DLAY-17; PROPOSED 19 Oct 2026). The collection's page is its
+   products, so the cover is a 160 px band at the page's width, cropped to the middle, on the card radius, never a
+   376 px hero that pushes the products under the fold (catalogue.css's .ui-collection-hero is no longer used here).
+   On a phone the band is 120 px. In the 320 px rail a delivery's name stays on one line, cut with an ellipsis (its
+   whole name in the tooltip), and its data line never breaks inside a value ("9.6 MB" stays together).
+   Rule gate: few-strokes, air, space-from-tokens, radius-from-tokens, type-from-tokens. */
+
+.ui-collection-band {
+  position: relative; overflow: hidden; height: 160px; /* gate-allow:space-from-tokens the band's height, a layout size (DLAY-17) */
+  border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken);
+}
+.ui-collection-band > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+
+.ui-collection-delivery { min-width: 0; }
+.ui-collection-delivery > .ui-item-title { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-collection-delivery > .ui-item-description > span { white-space: nowrap; }
+
+@media (max-width: 639px) {
+  .ui-collection-band { height: 120px; } /* gate-allow:space-from-tokens the band's height on a phone */
+}

@@ -1,0 +1,568 @@
+{
+  "$description": "Fume UI tokens (semantic layer). DECIDED 13 Oct 2026 (approved on the review board, F-D072 to F-D075), first shown in round 6, 13 Oct 2026. Every value points at a brand primitive in tokens/fume-tokens.json ({fume.<name>}) or uses alpha({fume.<name>}, a). Components use only these tokens (--ui-*), never primitives or literal values. Build: node tools/tokens/build.mjs",
+  "$status": "DECIDED",
+  "$principles": [
+    "Calm ground, sharp decisions: Porcelain carries the page, Paper lies behind it, Ink makes the decisions.",
+    "States come into focus: on light surfaces hover moves one step toward Ink on the Focus ramp and pressed moves two; on glass, hover lifts the veil one step and pressed returns.",
+    "Floating layers are Smoke glass (DECIDED 13 Oct): no stroke, a soft Ink shadow under the glass, no shadow on the buttons that sit on it.",
+    "As few strokes as possible. Separate with surface, depth and space, never with lines: a sidebar sits behind the page, not beside it behind a hairline. A hairline only where an element would otherwise vanish (inputs, the white secondary button, the edge of the customer's creative).",
+    "GT Standard for all UI. GT Canon only for marketing titles (website, posts, decks).",
+    "Pills for actions (DECIDED 12 Oct), soft rectangles for content. Rows in a menu fill the menu edge to edge.",
+    "Touch is first class: every target is at least 44 px (--ui-size-hit), a tap shows the pressed state and never the browser's grey flash, and hover exists only where there is a mouse.",
+    "Air before ornament: every surface keeps its inset (--ui-inset-*), so text never crowds an edge or sits in a corner's curve. Padding, margins and gaps come from the space and inset tokens, never from loose numbers.",
+    "High end: fewer, larger, quieter things. Every element earns its place; nothing is decorative.",
+    "Warmth is light, not fill (rounds 10 and 11): Paper behind the page and under the first run, Cream for people, full Amber for checked work; no beige surfaces. Shimmer text is white light through dark words, the Engine's too (Amber shimmer taken out 15 Oct). Ink still makes every decision."
+  ],
+  "color": {
+    "ground": {
+      "value": "{fume.porcelain}",
+      "description": "Default page ground."
+    },
+    "ground-warm": {
+      "value": "{fume.paper}",
+      "description": "Whole sections only, never two in a row."
+    },
+    "surface": {
+      "value": "{fume.focus-50}",
+      "description": "Cards and grouped content on Porcelain. A card never matches its ground."
+    },
+    "surface-sunken": {
+      "value": "{fume.focus-100}",
+      "description": "Wells, inactive tracks, skeletons."
+    },
+    "surface-sunken-hover": {
+      "value": "{fume.focus-200}",
+      "description": "Hover on a sunken surface (a switch track, a sunken badge): one step toward Ink. PROPOSED, round 7.",
+      "status": "DECIDED"
+    },
+    "surface-creative": {
+      "value": "#FFFFFF",
+      "description": "Pure white: only the customer's creative, inputs and the secondary button, always with a hairline (one of the few places a stroke is allowed)."
+    },
+    "text": {
+      "value": "{fume.focus-900}",
+      "description": "Primary text, 17.9:1 on Porcelain."
+    },
+    "text-secondary": {
+      "value": "{fume.focus-700}",
+      "description": "Body and secondary text, 10.3:1."
+    },
+    "text-tertiary": {
+      "value": "{fume.text-tertiary}",
+      "description": "Captions and meta, 5.8:1. Never lighter."
+    },
+    "text-on-ink": {
+      "value": "{fume.paper}",
+      "description": "Text on Ink, 16.9:1."
+    },
+    "text-disabled": {
+      "value": "{fume.focus-400}",
+      "description": "Disabled labels only."
+    },
+    "hairline": {
+      "value": "{fume.border}",
+      "description": "Only where an element would otherwise vanish: input edges, the white secondary button, the edge of the customer's creative. Never between regions, panels, rows or a sidebar and the page (rule few-strokes)."
+    },
+    "hairline-strong": {
+      "value": "{fume.focus-300}",
+      "description": "Input edges on hover, secondary button on hover."
+    },
+    "focus-ring": {
+      "value": "{fume.focus-900}",
+      "description": "Keyboard focus: a sharp 2px Ink ring, 2px off the edge. Never a soft halo."
+    },
+    "focus-ring-on-glass": {
+      "value": "{fume.porcelain}",
+      "description": "Keyboard focus on glass."
+    },
+    "check": {
+      "value": "{fume.amber}",
+      "description": "The Amber check. The checked triangle on work an expert has checked (each checked creative carries one), or a point beside a label. Never a fill, a button, text or an area bigger than a chip."
+    },
+    "check-waiting": {
+      "value": "{fume.focus-500}",
+      "status": "DECIDED",
+      "description": "The checked triangle on work that is still in check: the same shape as the Amber check, in grey (Marcus 13 Oct: Amber only when checked; the expert checks, only the customer approves). Always beside a text label, so colour is never the only signal."
+    },
+    "selection": {
+      "value": "{fume.focus-200}",
+      "description": "Text selection highlight: a neutral grey under Ink text. Round 13 (Marcus 21 Oct, #37: \"Feil tekst markerings farge\"; PROPOSED): Amber 100 read as checked, and Amber only means checked by an expert."
+    },
+    "selection-on-glass": {
+      "value": "alpha({fume.porcelain}, 0.28)",
+      "description": "Text selection on Smoke glass: a light veil under the light glass text. Round 13 (#37; PROPOSED)."
+    },
+    "selected": {
+      "value": "alpha({fume.amber}, 0.1)",
+      "status": "DECIDED",
+      "description": "Light on what you chose: a selected row, a date range. A faint wash of Amber, 10 % over the ground (#FEF4E9 on Porcelain), never full Amber and never a button; the control that chose it (the checkbox, the ends of the range) stays Ink. Round 10 (Marcus 13 Oct: Amber 50 was too much here); round 9 had Amber 50, round 8 Focus 100. The other candidate, Focus 100, is under $options.selection."
+    },
+    "depth-near": {
+      "value": "alpha({fume.focus-900}, 0.06)",
+      "description": "Contact shadow for raised surfaces on light ground."
+    },
+    "depth-far": {
+      "value": "alpha({fume.focus-900}, 0.08)",
+      "description": "Soft spread shadow for raised surfaces on light ground."
+    },
+    "ground-behind": {
+      "value": "{fume.paper}",
+      "status": "DECIDED",
+      "description": "The layer behind the page: app sidebars and rails sit on it, and the page lies on top as a Porcelain sheet. Paper, the warm ground the work lies on (DECIDED: Marcus chose Warmer, 13 Oct, round 9; round 8 had Focus 100). No stroke between them. Tertiary text 5.5:1."
+    },
+    "behind-hover": {
+      "value": "{fume.cream}",
+      "status": "DECIDED",
+      "description": "Rows on the layer behind (sidebar navigation): hover, one step warmer, Cream (DECIDED with Warmer, 13 Oct; round 8 had Focus 200). Tertiary text 4.9:1."
+    },
+    "behind-active": {
+      "value": "{fume.porcelain}",
+      "status": "DECIDED",
+      "description": "The current place in the sidebar comes forward to the page's own Porcelain, lifted with depth-raised."
+    },
+    "danger": {
+      "value": "{fume.rouge}",
+      "status": "DECIDED",
+      "description": "Rouge (Marcus, 13 Oct 2026, F-D067). Delete and errors. Paper label 4.7:1, as text on Porcelain 4.9:1."
+    },
+    "danger-hover": {
+      "value": "{fume.rouge-deep}",
+      "status": "DECIDED",
+      "description": "One step toward Ink. Paper label 5.7:1."
+    },
+    "state-ready": {
+      "value": "{fume.moss}",
+      "status": "PROPOSED",
+      "description": "PROPOSED 22 Oct 2026 (round 13, Marcus #39): Moss, the colour of ready. The label and dot of a Ready or Delivered badge, never anything else. 5.4:1 on its ground, 6.2:1 on Porcelain."
+    },
+    "state-ready-ground": {
+      "value": "{fume.moss-50}",
+      "status": "PROPOSED",
+      "description": "PROPOSED with state-ready: the light ground of a Ready or Delivered badge."
+    },
+    "action": {
+      "primary": {
+        "value": "{fume.focus-900}",
+        "description": "Ink: the first button."
+      },
+      "primary-hover": {
+        "value": "{fume.focus-800}",
+        "description": "Ink lifts one step."
+      },
+      "primary-pressed": {
+        "value": "{fume.focus-900}",
+        "description": "Returns to Ink; the press is carried by scale."
+      },
+      "primary-fg": {
+        "value": "{fume.paper}"
+      },
+      "secondary": {
+        "value": "#FFFFFF",
+        "description": "White: the second button, with a hairline."
+      },
+      "secondary-hover": {
+        "value": "{fume.focus-50}",
+        "description": "One step toward Ink."
+      },
+      "secondary-pressed": {
+        "value": "{fume.focus-100}",
+        "description": "Two steps toward Ink."
+      },
+      "secondary-edge": {
+        "value": "{fume.focus-200}"
+      },
+      "secondary-edge-hover": {
+        "value": "{fume.focus-300}"
+      },
+      "secondary-fg": {
+        "value": "{fume.focus-900}"
+      },
+      "quiet": {
+        "value": "transparent",
+        "description": "Ghost: no surface at rest."
+      },
+      "quiet-hover": {
+        "value": "{fume.focus-100}",
+        "description": "One step."
+      },
+      "quiet-pressed": {
+        "value": "{fume.focus-200}",
+        "description": "Two steps."
+      },
+      "quiet-fg": {
+        "value": "{fume.focus-900}"
+      },
+      "disabled": {
+        "value": "{fume.focus-100}"
+      },
+      "disabled-fg": {
+        "value": "{fume.focus-400}"
+      }
+    },
+    "glass": {
+      "bg": {
+        "value": "alpha({fume.focus-900}, 0.28)",
+        "status": "DECIDED",
+        "description": "Smoke (Marcus, 13 Oct 2026: Smoke, a little lighter). Ink at 28 % over a softened, dimmed backdrop: neutral warm grey, lighter and clearer than round 3."
+      },
+      "bg-solid": {
+        "value": "alpha({fume.focus-900}, 0.94)",
+        "description": "Fallback when blur is unsupported or transparency is reduced: solid Ink, never solid Brown."
+      },
+      "fg": {
+        "value": "{fume.porcelain}",
+        "description": "Text on glass."
+      },
+      "fg-secondary": {
+        "value": "alpha({fume.porcelain}, 0.88)",
+        "description": "Secondary text on glass, weight 500. 5.4:1 over the worst backdrop (a white page). Never thinner or fainter."
+      },
+      "scrim": {
+        "value": "alpha({fume.focus-900}, 0.28)",
+        "description": "Dims the page behind a modal (dim to focus)."
+      },
+      "shadow-color": {
+        "value": "alpha({fume.focus-900}, 0.42)"
+      },
+      "shadow-color-near": {
+        "value": "alpha({fume.focus-900}, 0.2)"
+      },
+      "button-white": {
+        "value": "alpha({fume.porcelain}, 0.94)",
+        "description": "White button: the main action on glass. At least 90 % white so it reads solid. Ink label, 15:1. No shadow."
+      },
+      "button-white-hover": {
+        "value": "{fume.porcelain}",
+        "description": "Lifts to solid Porcelain."
+      },
+      "button-white-pressed": {
+        "value": "alpha({fume.porcelain}, 0.86)",
+        "description": "Sinks a little, with the 3 % shrink."
+      },
+      "button-white-fg": {
+        "value": "{fume.focus-900}"
+      },
+      "button-clear": {
+        "value": "alpha({fume.porcelain}, 0.1)",
+        "description": "Clear button: a faint Porcelain veil, so it is visibly there without a shadow or a stroke. Porcelain label 5.0:1 over the worst backdrop. Secondary actions on glass."
+      },
+      "button-clear-hover": {
+        "value": "alpha({fume.porcelain}, 0.14)",
+        "description": "Lifts one step. Porcelain label 4.6:1 over the worst backdrop."
+      },
+      "button-clear-pressed": {
+        "value": "{color.glass.button-clear}",
+        "description": "Returns to rest, with the 3 % shrink."
+      },
+      "button-clear-fg": {
+        "value": "{fume.porcelain}"
+      },
+      "button-danger": {
+        "value": "alpha({fume.rouge}, 0.8)",
+        "status": "DECIDED",
+        "description": "Coloured buttons on glass have their own transparency: the colour at 80 %, so the glass shows through (Marcus 13 Oct). Danger is the only coloured button; Amber is never one. Porcelain label. No shadow, no stroke."
+      },
+      "button-danger-hover": {
+        "value": "alpha({fume.rouge}, 0.9)",
+        "status": "DECIDED",
+        "description": "Lifts to 90 %."
+      },
+      "button-danger-pressed": {
+        "value": "{color.glass.button-danger}",
+        "status": "DECIDED",
+        "description": "Returns to rest, with the 3 % shrink."
+      },
+      "button-danger-fg": {
+        "value": "{fume.porcelain}"
+      },
+      "button-disabled": {
+        "value": "alpha({fume.porcelain}, 0.06)",
+        "description": "Disabled button on glass, either variant."
+      },
+      "button-disabled-fg": {
+        "value": "alpha({fume.porcelain}, 0.45)"
+      },
+      "item-hover": {
+        "value": "{color.glass.button-clear-hover}",
+        "description": "Menu rows on glass: hover and keyboard highlight. The row fills the menu edge to edge."
+      },
+      "field": {
+        "value": "alpha({fume.porcelain}, 0.12)",
+        "description": "Text fields on glass. No stroke; focus shows the ring. Label 4.8:1."
+      }
+    }
+  },
+  "glass": {
+    "filter": {
+      "value": "blur(20px) saturate(1.5) contrast(0.65) brightness(0.58)",
+      "status": "DECIDED",
+      "description": "Smoke, lighter: the backdrop is softened (contrast 0.65) so dark images lift and light pages stay readable. Over a white page Porcelain text is 6.3:1, secondary text 5.4:1."
+    },
+    "filter-small": {
+      "value": "blur(14px) saturate(1.5) contrast(0.65) brightness(0.58)",
+      "description": "Small glass (tooltips, chips): the same material, thinner blur."
+    },
+    "shadow": {
+      "value": "0 24px 48px -18px {color.glass.shadow-color}, 0 6px 14px -6px {color.glass.shadow-color-near}",
+      "description": "Under the glass only: offset, Ink-tinted. No glow, no stroke, never on the buttons."
+    },
+    "shadow-small": {
+      "value": "0 10px 24px -10px {color.glass.shadow-color}, 0 2px 6px -2px {color.glass.shadow-color-near}"
+    }
+  },
+  "depth": {
+    "raised": {
+      "value": "0 1px 2px {color.depth-near}, 0 2px 8px -2px {color.depth-far}",
+      "status": "DECIDED",
+      "description": "A surface lifted a little off its ground (the selected pill in a segmented control, a popover handle). Replaces a hairline."
+    },
+    "sheet": {
+      "value": "0 1px 3px {color.depth-near}, 0 16px 40px -16px {color.depth-far}",
+      "status": "DECIDED",
+      "description": "The page as a sheet lying on the layer behind it (ground-behind). Replaces the stroke between a sidebar and the page."
+    }
+  },
+  "radius": {
+    "action": {
+      "value": "999px",
+      "description": "Pill: buttons, chips, badges, segmented controls, toolbars. DECIDED 12 Oct 2026 (Marcus).",
+      "status": "DECIDED"
+    },
+    "field": {
+      "value": "12px",
+      "description": "Inputs, selects, textareas."
+    },
+    "item": {
+      "value": "10px",
+      "description": "Rows in lists on light surfaces. Menu rows on glass have no radius of their own: they fill the menu and its corners clip them."
+    },
+    "check": {
+      "value": "6px",
+      "description": "Checkboxes: a 20 px box with a soft corner, half the field radius, so it keeps the softness of a field without turning into a circle. PROPOSED, round 7.",
+      "status": "DECIDED"
+    },
+    "card": {
+      "value": "{fume.radius-card}",
+      "description": "Cards and creative tiles: 16px."
+    },
+    "float": {
+      "value": "22px",
+      "description": "Menus, selects, popovers and tooltips: floating glass that is not a dialog. Rounder than cards. DECIDED 13 Oct 2026 (Marcus chose Rounder).",
+      "status": "DECIDED"
+    },
+    "panel": {
+      "value": "32px",
+      "description": "Dialogs, sheets, large glass panels. DECIDED 13 Oct 2026 (Marcus chose Rounder).",
+      "status": "DECIDED"
+    }
+  },
+  "space": {
+    "$description": "Spacing on the 4 px grid, for gaps and margins in components. Padding inside a surface uses the inset tokens below.",
+    "xs": {
+      "value": "{fume.space-1}",
+      "description": "4px. Between a label and its hint."
+    },
+    "sm": {
+      "value": "{fume.space-2}",
+      "description": "8px. Icon to label in buttons; between buttons in a row."
+    },
+    "md": {
+      "value": "{fume.space-3}",
+      "description": "12px. Icon to label in menu rows; between a title and its text."
+    },
+    "lg": {
+      "value": "{fume.space-4}",
+      "description": "16px. Between groups inside a surface."
+    },
+    "xl": {
+      "value": "{fume.space-5}",
+      "description": "24px. Between a dialog's text and its buttons."
+    },
+    "2xl": {
+      "value": "{fume.space-6}",
+      "description": "32px. Between sections."
+    }
+  },
+  "inset": {
+    "$description": "Padding inside a surface: the air between its edge and what it holds. At least three quarters of the surface's corner radius, so nothing sits in the curve. Gate rule air; measured on the rendered board in CI.",
+    "panel": {
+      "value": "{fume.space-5}",
+      "status": "DECIDED",
+      "description": "24px. Dialogs, sheets and glass panels with text (radius.panel 32)."
+    },
+    "float": {
+      "value": "{fume.space-4}",
+      "status": "DECIDED",
+      "description": "16px. Popovers, cards and toasts with text, and sideways in menu and list rows (radius.float 22)."
+    },
+    "tight": {
+      "value": "{fume.space-3}",
+      "status": "DECIDED",
+      "description": "12px. Sideways in tooltips and small glass labels."
+    },
+    "ring": {
+      "value": "6px",
+      "status": "DECIDED",
+      "description": "The even gap between a pill bar and the pills inside it, so the inner pill follows the outer one."
+    },
+    "seg": {
+      "value": "3px",
+      "status": "DECIDED",
+      "description": "Gap between a segmented track and its white pill. Round 6 choice: inset (3px) or fill (0, the pill fills the track); see $options.segmented."
+    }
+  },
+  "type": {
+    "family": {
+      "value": "{fume.font-text}",
+      "description": "GT Standard. The only UI face."
+    },
+    "family-data": {
+      "value": "{fume.font-mono}",
+      "description": "GT Standard Mono: timestamps, sizes, codes, keyboard keys. Never as decoration."
+    },
+    "label": {
+      "value": "{fume.type-label}",
+      "description": "12px, weight 500, +0.01em."
+    },
+    "control": {
+      "value": "{fume.type-small}",
+      "description": "14px: buttons, inputs, menu items."
+    },
+    "body": {
+      "value": "{fume.type-body}",
+      "description": "16px."
+    },
+    "body-large": {
+      "value": "{fume.type-body-l}",
+      "description": "18px."
+    },
+    "title": {
+      "value": "{fume.type-heading}",
+      "description": "24px, weight 500, -0.015em. GT Standard, not Canon."
+    },
+    "title-large": {
+      "value": "{fume.type-title}",
+      "description": "32px, weight 500, -0.02em. GT Standard, not Canon."
+    },
+    "display": {
+      "value": "{fume.type-display-m}",
+      "description": "52px, GT Canon, weight 500, -0.02em. Marketing titles only (the brand book's page titles, the website, decks); never in the product. Each use marks gate-allow:canon-not-in-ui.",
+      "status": "PROPOSED"
+    },
+    "display-hero": {
+      "value": "{fume.type-display-l}",
+      "description": "72px, GT Canon, weight 400, -0.02em. The one title that leads the first view of a web page (kit/web.css .web-display--hero). Marketing only; each use marks gate-allow:canon-not-in-ui.",
+      "status": "PROPOSED"
+    },
+    "display-small": {
+      "value": "{fume.type-title}",
+      "description": "32px, GT Canon. Marketing titles on a phone (under 760 px), so a title keeps to three or four lines at 390 px (kit/web.css).",
+      "status": "PROPOSED"
+    },
+    "display-family": {
+      "value": "{fume.font-display}",
+      "description": "GT Canon (Newsreader stands in on trial licences). Only with --ui-type-display, for marketing titles; the gate flags every use (canon-not-in-ui) so each one is marked.",
+      "status": "PROPOSED"
+    },
+    "weight-regular": {
+      "value": "400"
+    },
+    "weight-medium": {
+      "value": "500"
+    }
+  },
+  "size": {
+    "control-sm": {
+      "value": "32px"
+    },
+    "control-md": {
+      "value": "40px"
+    },
+    "control-lg": {
+      "value": "48px",
+      "description": "Touch and marketing."
+    },
+    "seg": {
+      "value": "36px",
+      "status": "DECIDED",
+      "description": "Height of a segmented track (tabs, filters). The options are this minus twice inset.seg."
+    },
+    "hit": {
+      "value": "44px",
+      "status": "DECIDED",
+      "description": "The smallest touch target (Apple HIG 44 pt, WCAG 2.5.5). A control may look smaller (32 px small buttons, 30 px tab pills) but its hit area is never under this."
+    },
+    "icon-sm": {
+      "value": "14px"
+    },
+    "icon": {
+      "value": "16px"
+    },
+    "icon-lg": {
+      "value": "18px"
+    },
+    "icon-stroke": {
+      "value": "2.25",
+      "description": "Line-only icons (check, plus, x, arrows, search). Every other icon is filled (DECIDED 13 Oct). Built in design-system/icons."
+    },
+    "pad-sm": {
+      "value": "14px"
+    },
+    "pad-md": {
+      "value": "18px"
+    },
+    "pad-lg": {
+      "value": "24px"
+    },
+    "ring": {
+      "value": "2px"
+    },
+    "ring-offset": {
+      "value": "2px"
+    }
+  },
+  "motion": {
+    "instant": {
+      "value": "100ms",
+      "description": "Press feedback, on pointer-down."
+    },
+    "fast": {
+      "value": "160ms",
+      "description": "Hover and colour changes."
+    },
+    "base": {
+      "value": "240ms",
+      "description": "Glass materialising, small layout changes."
+    },
+    "slow": {
+      "value": "480ms",
+      "description": "Large surfaces."
+    },
+    "ease": {
+      "value": "cubic-bezier(.2, 0, 0, 1)",
+      "description": "ease.focus: soft to sharp."
+    },
+    "press-scale": {
+      "value": "0.97"
+    },
+    "enter-blur": {
+      "value": "8px",
+      "description": "Glass arrives from blur to sharp."
+    },
+    "enter-scale": {
+      "value": "0.98"
+    },
+    "spin": {
+      "value": "900ms",
+      "description": "One turn of the loading spinner."
+    },
+    "spin-reduced": {
+      "value": "2400ms",
+      "description": "Spinner under reduced motion."
+    },
+    "slide": {
+      "value": "280ms",
+      "description": "Tabs and segmented controls: the selection slides to the new option. Easing gets its own round."
+    }
+  }
+}

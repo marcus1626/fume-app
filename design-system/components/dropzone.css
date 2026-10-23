@@ -1,0 +1,200 @@
+/* Upload box (dropzone). DECIDED 13 Oct, from round 8 (Marcus 13 Oct: "we need an upload box too").
+   shadcn has no dropzone; this follows the shape people know from uploaders (react-dropzone and the
+   community dropzones built on it: a box you drop on or press, a row per upload with its progress, a
+   thumbnail per creative that made it, a way to add more), with Fume's parts and attributes:
+     .ui-dropzone            the upload, and the drop target (data-ui-dropzone on it for dropzone.js);
+                             data-filled once it holds creatives, data-drag while creatives are over it,
+                             data-disabled. .ui-dropzone--compact: one row in a form.
+     .ui-dropzone-area       the box: a real <button> that opens the picker (Enter or Space with keys);
+                             .ui-dropzone-icon (the seat of the upload icon), .ui-dropzone-title with one
+                             line for each situation (.ui-dropzone-copy with a mouse, -copy-touch on a
+                             touch screen, -copy-more once creatives are in), .ui-dropzone-meta (the limits,
+                             in the data face; aria-describedby points at it)
+     .ui-dropzone-input      the real <input type="file" multiple accept>, hidden
+     .ui-dropzone-list       rows (.ui-dropzone-row on .ui-item) for creatives on their way in, or that could
+                             not be added: name, size, progress (progress.css), cancel / retry / remove
+     .ui-dropzone-grid       the creatives that made it: creative tiles (creative.css) with their hairline,
+                             a remove circle on each
+     .ui-dropzone-overlay    what shows while creatives are dragged over: the seat turns Ink and the
+                             words say where they go ("Drop to add to Autumn launch"). No shimmer and no
+                             Amber here (Marcus 13 Oct, round 10: "verken orange eller shimmer på where
+                             creatives land"). Inside any .ui-dropzone-panel it covers a whole panel.
+     .ui-dropzone-status     the live region ("3 creatives added to Autumn launch")
+   Decisions:
+   - No dashed border, no stroke at all (rule few-strokes): the box is one step of sunken surface, a well
+     in the page. Radius card (16), not field (12): it is a region that receives creatives and turns into
+     a grid of them, and the creatives in it are 16 too, so the shapes stay concentric; at 176 px tall a
+     12 px corner reads as a big input. The one-row variant sits among fields in a form, so it takes the
+     field radius (12) and lines up with them.
+   - Hover one step toward Ink, pressed stays on it and shrinks like a card (0.985), focus is the sharp
+     2 px Ink ring, drag-over keeps the resting well and the icon's seat turns Ink, so the one dark thing in the box says where to aim (round 11: Amber 50 read as beige in round 9, the Amber seat and shimmer were wrong here in round 10). Disabled greys the
+     words and drops the seat.
+   - One line of copy says what to do and one quieter line gives the limits as data. Always "creatives".
+     On a touch screen there is nothing to drag, so the copy says "Tap to choose creatives".
+   - Errors are words: Rouge words on the row with the circle-alert (never a red box, never colour alone);
+     on glass the words turn Porcelain (field.css).
+   - On glass (.ui-glass around it): the clear veil instead of the well, Porcelain words, rows on the glass,
+     the Porcelain ring; drag-over deepens toward Ink. No white in it: the glass surface's one white
+     button stays the main action ("Add 3 creatives").
+   Touch: the box and rows are at least 44 tall; small buttons keep their 44 px hit area (button.css), with
+   12 between two of them so their hit areas never overlap. Hover only with a mouse.
+   Rule gate: few-strokes (no stroke; the creative's hairline is creative.css's), focus-is-sharp,
+   radius-from-tokens, space-from-tokens, type-from-tokens, mono-is-data, touch-target, touch-feedback,
+   hover-needs-hover, reduced-motion, say-creative. */
+
+/* the zone's colours, shared by the box and by a panel that takes drops (a brief, a campaign) */
+.ui-dropzone, .ui-dropzone-panel {
+  --dz-bg: var(--ui-dropzone-bg); --dz-bg-hover: var(--ui-dropzone-bg-hover); --dz-bg-pressed: var(--ui-dropzone-bg-pressed); --dz-bg-drag: var(--ui-dropzone-bg-drag);
+  --dz-fg: var(--ui-dropzone-fg); --dz-meta: var(--ui-dropzone-meta); --dz-sub: var(--ui-text-tertiary);
+  --dz-disc: var(--ui-dropzone-disc); --dz-disc-fg: var(--ui-dropzone-fg); --dz-disc-depth: var(--ui-depth-raised);
+  --dz-disc-drag: var(--ui-dropzone-disc-drag); --dz-disc-drag-fg: var(--ui-dropzone-disc-drag-fg);
+  --ring: var(--ui-focus-ring);
+}
+.ui-dropzone {
+  position: relative; display: grid; gap: var(--ui-dropzone-gap); width: 100%; min-width: 0;
+  border-radius: var(--ui-radius-card); color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.4;
+}
+.ui-dropzone--compact, .ui-dropzone--compact > .ui-dropzone-area { border-radius: var(--ui-radius-field); }
+.ui-dropzone--compact { gap: var(--ui-space-sm); } /* in a form the rows sit close to the row that added them */
+/* a panel that takes drops anywhere: the overlay covers it at its own radius */
+.ui-dropzone-panel { position: relative; }
+
+/* ---------- the box ---------- */
+.ui-dropzone-area {
+  --bg: var(--dz-bg);
+  position: relative; display: grid; justify-items: center; align-content: center; gap: var(--ui-space-md);
+  width: 100%; min-width: 0; min-height: max(var(--ui-dropzone-height), var(--ui-size-hit)); margin: 0; padding: var(--ui-inset-panel);
+  border: 0; border-radius: var(--ui-radius-card); background: var(--bg); color: var(--dz-fg);
+  font: inherit; text-align: center;
+  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-dropzone-icon {
+  display: grid; place-items: center; flex: none; width: var(--ui-dropzone-disc-size); height: var(--ui-dropzone-disc-size);
+  border-radius: 50%; background: var(--dz-disc); color: var(--dz-disc-fg); box-shadow: var(--dz-disc-depth);
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-dropzone-icon svg { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); }
+.ui-dropzone-text { display: grid; justify-items: center; gap: var(--ui-space-xs); min-width: 0; }
+.ui-dropzone-title { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--dz-fg); text-wrap: balance; }
+/* "choose" reads as the link it is; the whole box is the target */
+.ui-dropzone-choose { text-decoration: underline; text-decoration-color: var(--ui-hairline-strong); text-decoration-thickness: from-font; text-underline-offset: 3px; transition: text-decoration-color var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-dropzone-meta { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); line-height: 1.5; color: var(--dz-meta); font-variant-numeric: tabular-nums; } /* the limits are data: types and a size */
+
+/* one line for each situation: a mouse, a touch screen, creatives already in. .is-touch and .is-pointer
+   freeze one of the first two for a demo, whatever the screen it is seen on. */
+.ui-dropzone-copy-touch, .ui-dropzone-copy-more { display: none; }
+@media (pointer: coarse) {
+  .ui-dropzone:not(.is-pointer, [data-filled]) .ui-dropzone-copy { display: none; }
+  .ui-dropzone:not(.is-pointer, [data-filled]) .ui-dropzone-copy-touch { display: inline; }
+}
+.ui-dropzone.is-touch:not([data-filled]) .ui-dropzone-copy { display: none; }
+.ui-dropzone.is-touch:not([data-filled]) .ui-dropzone-copy-touch { display: inline; }
+.ui-dropzone[data-filled]:has(.ui-dropzone-copy-more) :is(.ui-dropzone-copy, .ui-dropzone-copy-touch) { display: none; }
+.ui-dropzone[data-filled] .ui-dropzone-copy-more { display: inline; }
+
+/* states */
+@media (hover: hover) {
+  .ui-dropzone-area:not(:disabled):hover { --bg: var(--dz-bg-hover); }
+  .ui-dropzone-area:not(:disabled):hover .ui-dropzone-choose { text-decoration-color: currentColor; }
+}
+.ui-dropzone-area.is-hover { --bg: var(--dz-bg-hover); }
+.ui-dropzone-area.is-hover .ui-dropzone-choose { text-decoration-color: currentColor; }
+.ui-dropzone-area:active, .ui-dropzone-area.is-pressed { --bg: var(--dz-bg-pressed); transform: scale(var(--ui-dropzone-press-scale)); }
+.ui-dropzone-area:focus-visible, .ui-dropzone-area.is-focus { outline: var(--ui-size-ring) solid var(--ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-dropzone-area:disabled, .ui-dropzone[data-disabled] .ui-dropzone-area {
+  --bg: var(--dz-bg); --dz-fg: var(--ui-text-disabled); --dz-meta: var(--ui-text-disabled);
+  --dz-disc: transparent; --dz-disc-fg: var(--ui-text-disabled); --dz-disc-depth: none;
+  cursor: not-allowed; transform: none;
+}
+.ui-dropzone-area:disabled .ui-dropzone-choose { text-decoration-color: transparent; }
+
+/* ---------- one row: the compact variant, and the Add more row once creatives are in ---------- */
+.ui-dropzone--compact > .ui-dropzone-area, .ui-dropzone[data-filled] > .ui-dropzone-area {
+  display: flex; align-items: center; gap: var(--ui-space-md); text-align: left;
+  min-height: max(var(--ui-dropzone-height-compact), var(--ui-size-hit)); padding: var(--ui-space-md) var(--ui-inset-float) var(--ui-space-md) var(--ui-space-md);
+}
+:is(.ui-dropzone--compact, .ui-dropzone[data-filled]) > .ui-dropzone-area .ui-dropzone-icon { width: var(--ui-dropzone-disc-size-compact); height: var(--ui-dropzone-disc-size-compact); }
+:is(.ui-dropzone--compact, .ui-dropzone[data-filled]) > .ui-dropzone-area .ui-dropzone-icon svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+/* the limits sit at the end of the row, and under the words when the row is narrow */
+:is(.ui-dropzone--compact, .ui-dropzone[data-filled]) > .ui-dropzone-area .ui-dropzone-text { display: flex; flex: 1 1 auto; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0 var(--ui-space-md); }
+:is(.ui-dropzone--compact, .ui-dropzone[data-filled]) > .ui-dropzone-area .ui-dropzone-title { text-wrap: pretty; }
+
+/* ---------- drag-over: the surface steps toward Ink and says where the creatives go ---------- */
+.ui-dropzone-overlay {
+  --dz-disc: var(--dz-disc-drag); --dz-disc-fg: var(--dz-disc-drag-fg);
+  position: absolute; inset: 0; z-index: 2; display: grid; place-content: center; justify-items: center; gap: var(--ui-space-md);
+  padding: var(--ui-inset-panel); border-radius: inherit; background: var(--dz-bg-drag); color: var(--dz-fg); text-align: center;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity var(--ui-motion-fast) var(--ui-motion-ease), visibility var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-dropzone-overlay .ui-dropzone-icon { transform: scale(var(--ui-motion-enter-scale)); transition: transform var(--ui-motion-base) var(--ui-motion-ease); }
+:is(.ui-dropzone, .ui-dropzone-panel):is([data-drag], .is-drag) > .ui-dropzone-overlay { opacity: 1; visibility: visible; }
+:is(.ui-dropzone, .ui-dropzone-panel):is([data-drag], .is-drag) > .ui-dropzone-overlay .ui-dropzone-icon { transform: none; }
+/* in one row the overlay is a row too */
+.ui-dropzone--compact > .ui-dropzone-overlay { grid-auto-flow: column; align-items: center; padding: 0 var(--ui-inset-float); }
+.ui-dropzone--compact > .ui-dropzone-overlay .ui-dropzone-icon { width: var(--ui-dropzone-disc-size-compact); height: var(--ui-dropzone-disc-size-compact); }
+.ui-dropzone--compact > .ui-dropzone-overlay .ui-dropzone-icon svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-dropzone--compact > .ui-dropzone-overlay .ui-dropzone-meta { display: none; }
+
+/* ---------- rows: a creative on its way in, or one that could not be added ---------- */
+.ui-dropzone-list { display: grid; gap: var(--ui-space-xs); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-dropzone-list:empty, .ui-dropzone-grid:empty { display: none; }
+/* a row is a line of the list, not a box: no fill, flush with the box's edges (item.css gives the rest) */
+.ui-item.ui-dropzone-row { --item-bg: transparent; flex-wrap: nowrap; align-items: flex-start; padding-inline: 0; color: var(--dz-fg); } /* the thumbnail and the buttons line up with the name, however long the reason under it */
+.ui-dropzone-row > .ui-item-content { gap: var(--ui-space-sm); }
+.ui-dropzone-row > .ui-item-media--creative > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-tertiary); }
+.ui-dropzone-row > .ui-item-media--creative > video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ui-dropzone-row-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--ui-space-md); min-width: 0; } /* a narrow row puts the size under the name before it cuts the name short */
+.ui-dropzone-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--ui-type-weight-medium); }
+.ui-dropzone-size { flex: none; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--dz-sub); font-variant-numeric: tabular-nums; white-space: nowrap; } /* a size is data */
+.ui-dropzone-row .ui-progress:not(.ui-progress--glass) { --track: var(--ui-card-progress-track); } /* on the row's surface the track steps one deeper, like a progress bar in a card */
+.ui-dropzone-row > .ui-item-content > .ui-field-error { margin: 0; }
+.ui-dropzone-row[data-state="done"] .ui-progress, .ui-dropzone-row[data-state="error"] .ui-progress { display: none; }
+.ui-dropzone-row .ui-item-actions { gap: var(--ui-space-md); } /* two 32 px buttons 12 apart: their 44 px hit areas meet, never overlap */
+
+/* ---------- tiles: the creatives that made it ---------- */
+.ui-dropzone-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, max(var(--ui-dropzone-tile-min), 14%)), 1fr)); /* 88 at the least, about a seventh of a wide box: three across on a phone, six on a desktop or in a 640 dialog */
+  gap: var(--ui-space-xl) var(--ui-space-md); align-items: start; min-width: 0; margin: 0; padding: 0; list-style: none;
+}
+.ui-dropzone-grid .ui-creative-caption { color: var(--dz-fg); }
+/* a long name stops at the tile's edge with an ellipsis: one line, cut at any letter, so the line fills the
+   tile instead of ending early at a hyphen */
+.ui-dropzone-grid .ui-creative-format {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; line-clamp: 1;
+  max-width: 100%; overflow: hidden; white-space: normal; word-break: break-all; font-weight: var(--ui-type-weight-medium);
+}
+.ui-dropzone.is-touch .ui-creative-actions { opacity: 1; } /* a touch screen has no hover: remove always shows */
+
+/* the live region: read, not seen */
+.ui-dropzone-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ---------- on glass: the clear veil, Porcelain words, the Porcelain ring ---------- */
+.ui-glass :is(.ui-dropzone, .ui-dropzone-panel) {
+  --dz-bg: var(--ui-dropzone-glass-bg); --dz-bg-hover: var(--ui-dropzone-glass-bg-hover); --dz-bg-pressed: var(--ui-dropzone-glass-bg-hover); --dz-bg-drag: var(--ui-dropzone-glass-bg-drag);
+  --dz-fg: var(--ui-glass-fg); --dz-meta: var(--ui-glass-fg-secondary); --dz-sub: var(--ui-glass-fg-secondary);
+  --dz-disc: var(--ui-dropzone-glass-disc); --dz-disc-fg: var(--ui-glass-fg); --dz-disc-depth: none;
+  --dz-disc-drag: var(--ui-glass-button-clear-hover); --dz-disc-drag-fg: var(--ui-glass-fg);
+  --ring: var(--ui-focus-ring-on-glass);
+}
+.ui-glass .ui-dropzone { color: var(--ui-glass-fg); }
+.ui-glass :is(.ui-dropzone-meta, .ui-dropzone-size) { font-weight: var(--ui-type-weight-medium); }
+.ui-glass .ui-dropzone-choose { text-decoration-color: var(--ui-glass-fg-secondary); }
+/* a creative with nothing to show yet sits on the veil, not on white: the one white thing is the main button */
+.ui-glass .ui-dropzone-row > .ui-item-media--creative:not(:has(img, video)) { background: var(--ui-dropzone-glass-disc); }
+.ui-glass .ui-dropzone-row > .ui-item-media--creative > svg { color: var(--ui-glass-fg); }
+.ui-glass :is(.ui-dropzone, .ui-dropzone-panel) .ui-progress { --track: var(--ui-progress-glass-track); --fill: var(--ui-progress-glass-fill); }
+.ui-glass :is(.ui-dropzone, .ui-dropzone-panel) .ui-btn--quiet { --fg: var(--ui-glass-fg-secondary); --bg-hover: var(--ui-glass-button-clear-hover); --bg-pressed: var(--ui-glass-button-clear); --ring: var(--ui-focus-ring-on-glass); }
+@media (hover: hover) { .ui-glass :is(.ui-dropzone, .ui-dropzone-panel) .ui-btn--quiet:hover { --fg: var(--ui-glass-fg); } }
+/* the drag-over well on glass is see-through (Ink 24 % over the glass), so what it covers steps out of sight:
+   no words show through the words "Drop to add to Autumn launch" */
+.ui-glass :is(.ui-dropzone, .ui-dropzone-panel):is([data-drag], .is-drag) > :not(.ui-dropzone-overlay) { opacity: 0; }
+.ui-glass .ui-dropzone-area:disabled, .ui-glass .ui-dropzone[data-disabled] .ui-dropzone-area { --dz-fg: var(--ui-glass-button-disabled-fg); --dz-meta: var(--ui-glass-button-disabled-fg); --dz-disc-fg: var(--ui-glass-button-disabled-fg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-dropzone-area, .ui-dropzone-icon, .ui-dropzone-choose, .ui-dropzone-overlay, .ui-dropzone-overlay .ui-dropzone-icon { transition: none; }
+  .ui-dropzone-area:active, .ui-dropzone-area.is-pressed { transform: none; }
+  .ui-dropzone-overlay .ui-dropzone-icon { transform: none; }
+}

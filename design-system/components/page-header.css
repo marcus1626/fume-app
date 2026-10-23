@@ -1,0 +1,115 @@
+/* Page header: the top of a page in the app (a campaign, settings). DECIDED 13 Oct, from round 8. shadcn has no page
+   header; it composes shadcn's breadcrumb (breadcrumb.css), button (button.css), dropdown menu (menu.css,
+   opened by nav.js) and tabs (tabs.css on the segmented control).
+   Markup: <header class="ui-page-header">
+             <nav class="ui-breadcrumb ui-page-header-crumbs" aria-label="Breadcrumb">…</nav>
+             <div class="ui-page-header-main">
+               <div class="ui-page-header-heading"><h1 class="ui-page-header-title">Autumn launch</h1>
+                 <p class="ui-page-header-meta"><span>12 creatives</span><span>9 approved</span><span>updated 14:32</span></p></div>
+               <div class="ui-page-header-actions">
+                 <button class="ui-btn ui-btn--secondary ui-page-header-fold">Edit brief</button>
+                 <button class="ui-btn ui-btn--primary"><svg…/><span class="ui-page-header-label">Generate more</span></button>
+                 <div class="ui-page-header-more"><button class="ui-btn ui-btn--quiet ui-btn--icon" data-ui-nav-trigger
+                   aria-controls="more" aria-label="More for Autumn launch">…ellipsis…</button>
+                   <div class="ui-glass ui-menu ui-page-header-menu" id="more" role="menu" hidden>
+                     <button class="ui-menu-item ui-page-header-folded" role="menuitem">Edit brief</button> …</div></div></div></div>
+             <div class="ui-page-header-tabs"> tabs </div></header>
+   Fume decisions: the title is GT Standard at the title sizes (32, and 24 on a phone), never GT Canon, which
+   is for marketing only. Under it a quiet meta line in the data face (counts and the time), 8 from the
+   title it belongs to; the breadcrumb sits 12 above. The actions sit on the title's line: secondary
+   actions are white pills, the one Ink button is the page's main action, and More (a quiet circle) holds
+   the rest in a glass menu. No line under the header and no Amber: the tabs (24 below) and space part it
+   from the page.
+   Narrow (the header under 640 px, a container query): the secondary actions fold into the More menu
+   (their rows there show only then). The page's main action (.ui-page-header-primary) keeps its words: it
+   moves under the title and the meta line as a full-width labelled Ink pill, with More beside the title
+   (walk-through 19 Oct, MOB-6; PROPOSED 19 Oct 2026). A button in the actions slot with a
+   .ui-page-header-label (New campaign's +) stays an Ink circle with its icon, its words kept for screen
+   readers, the same on every top-level page.
+   Round 9 (desktop review 19 Oct; PROPOSED 19 Oct 2026):
+   - DLAY-13: the primary action has two homes. A page's action sits here, right, on the title's line (as before). A
+     step's or a decision's actions sit in the step footer (.ui-page-footer), pinned to the bottom right of the content
+     column while the page scrolls, on the page's own ground with a soft depth above it instead of a line; on a phone
+     it is simply the end of the page, its buttons full width.
+   - DLAY-16, DWAY-6: on a desk (1024 px and wider) the app bar carries the way back with its target's name, so the
+     header leaves out its own back row there ([data-bar-back] on the inset, set by the app) and the title starts
+     higher. The phone keeps the row.
+   - DWAY-8: the title takes the focus on a change of page (the app gives it tabindex -1); it shows no ring for that.
+   Markup: <div class="ui-app-page"> … <div class="ui-page-footer" data-ui-foot>
+             <div class="ui-page-footer-start">3 of 7</div>
+             <div class="ui-page-footer-actions"><button class="ui-btn ui-btn--quiet">Later</button>
+               <button class="ui-btn ui-btn--primary">Confirm</button></div></div></div>
+   Rule gate: canon-not-in-ui, few-strokes, mono-is-data, type-from-tokens, space-from-tokens, air,
+   actions-are-pills. */
+
+.ui-page-header { container: ui-page-header / inline-size; display: grid; min-width: 0; font-family: var(--ui-type-family); color: var(--ui-text); }
+.ui-page-header-crumbs { margin-block-end: var(--ui-pagehead-crumb-gap); }
+.ui-page-header-main { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--ui-space-lg) var(--ui-space-xl); min-width: 0; }
+.ui-page-header-heading { display: grid; gap: var(--ui-pagehead-meta-gap); flex: 1 1 0; min-width: min(100%, var(--ui-pagehead-heading-min)); }
+.ui-page-header-title {
+  margin: 0; min-width: 0; font-family: var(--ui-type-family); font-size: var(--ui-type-title-large); font-weight: var(--ui-type-weight-medium);
+  line-height: 1.15; letter-spacing: -.02em; color: var(--ui-text); text-wrap: balance;
+}
+.ui-page-header-description { margin: 0; max-width: 60ch; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+/* the meta line: each part after a quiet dot; the line starts one dot to the left and clips it, so a dot
+   never starts or ends a wrapped line */
+.ui-page-header-meta {
+  display: flex; flex-wrap: wrap; align-items: center; row-gap: var(--ui-space-xs); margin: 0;
+  margin-inline-start: calc(var(--ui-pagehead-meta-separator) * -1); clip-path: inset(0 0 0 var(--ui-pagehead-meta-separator));
+  font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); line-height: 1.4;
+  color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums;
+}
+.ui-page-header-meta > * { white-space: nowrap; }
+.ui-page-header-meta > *::before { content: "·" / ""; display: inline-block; width: var(--ui-pagehead-meta-separator); text-align: center; }
+.ui-page-header-actions { display: flex; flex: none; align-items: center; gap: var(--ui-pagehead-actions-gap); }
+.ui-page-header-more { position: relative; display: inline-flex; }
+.ui-page-header-menu { position: absolute; z-index: var(--ui-overlay-z-float); top: calc(100% + var(--ui-overlay-offset)); right: 0; min-width: var(--ui-popover-width); transform-origin: top right; }
+.ui-page-header-menu[hidden] { display: none; }
+.ui-page-header-folded { display: none; }
+/* More that only holds the folded copies of the secondary actions is empty on a desk, so it shows only when they fold */
+.ui-page-header-more[data-folded-only] { display: none; }
+.ui-page-header-tabs { margin-block-start: var(--ui-pagehead-tabs-gap); min-width: 0; }
+
+@container ui-page-header (max-width: 639.98px) {
+  .ui-page-header-main { flex-wrap: nowrap; align-items: flex-start; gap: var(--ui-space-md); }
+  .ui-page-header-heading { min-width: 0; }
+  .ui-page-header-title { display: flex; align-items: center; min-height: var(--ui-size-control-md); font-size: var(--ui-type-title); line-height: 1.2; letter-spacing: -.015em; }
+  .ui-page-header-fold { display: none; }
+  .ui-page-header-folded { display: flex; }
+  .ui-page-header-more[data-folded-only] { display: inline-flex; }
+  .ui-page-header-actions .ui-btn:not(.ui-page-header-primary):has(.ui-page-header-label) { width: var(--h); padding-inline: 0; }
+  .ui-page-header-actions .ui-btn:not(.ui-page-header-primary) .ui-page-header-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  /* the main action keeps its words, on its own line under the title and meta; More stays beside the title */
+  .ui-page-header-main:has(.ui-page-header-primary) { flex-wrap: wrap; }
+  .ui-page-header-main:has(.ui-page-header-primary) > .ui-page-header-actions { display: contents; }
+  .ui-page-header-main:has(.ui-page-header-primary) > .ui-page-header-heading { order: 0; flex: 1 1 0; }
+  .ui-page-header-main:has(.ui-page-header-primary) > .ui-page-header-actions > * { order: 1; }
+  .ui-page-header-main > .ui-page-header-actions > .ui-page-header-primary { --h: var(--ui-size-hit); order: 2; flex: 1 0 100%; }
+}
+
+/* the title takes the focus on a change of page (DWAY-8): a heading is not a control, so no ring */
+.ui-page-header-title:focus { outline: none; }
+
+/* on a desk the app bar carries the way back (DLAY-16): the header leaves out its own row */
+@media (min-width: 1024px) {
+  [data-bar-back] .ui-page-header > .ui-page-header-back { display: none; }
+}
+
+/* ---------- the step footer (DLAY-13) ---------- */
+.ui-page-footer {
+  position: sticky; bottom: 0; z-index: 2;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--ui-space-sm) var(--ui-space-lg);
+  min-width: 0; margin-inline: calc(-1 * var(--ui-space-xl)); padding: var(--ui-space-lg) var(--ui-space-xl);
+  background: var(--ui-ground); box-shadow: 0 -1px 0 var(--ui-depth-near), 0 -12px 24px -20px var(--ui-depth-far);
+  font-family: var(--ui-type-family); color: var(--ui-text);
+}
+.ui-page-footer-start { flex: 1 1 auto; min-width: 0; font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+.ui-page-footer-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--ui-space-sm); margin-inline-start: auto; }
+/* a page that ends in a step footer needs no room under it */
+.ui-app-page:has(> .ui-page-footer) { padding-bottom: 0; }
+@media (max-width: 639.98px) {
+  .ui-page-footer { position: static; margin-inline: 0; padding-inline: 0; background: none; box-shadow: none; }
+  .ui-page-footer-actions { flex: 1 1 100%; flex-direction: column; align-items: stretch; }
+  .ui-page-footer-actions > .ui-btn { --h: var(--ui-size-hit); width: 100%; }
+  .ui-app-page:has(> .ui-page-footer) { padding-bottom: calc(2.5 * var(--ui-space-2xl)); }
+}

@@ -1,0 +1,55 @@
+/* Skeleton. DECIDED 13 Oct, from round 7; glass and the Engine at work added in round 8; back to round 7's breath in
+   round 9 (Marcus 13 Oct: the round 8 shimmer, a sweep of warm light, felt artificial; he liked round 7's
+   better). Built on shadcn's skeleton (one part), redesigned for Fume.
+   Decisions:
+   - Placeholders are the sunken step (--ui-skeleton-bg) in the exact shape and size of what is coming:
+     a 4:5 creative with its caption, a list row with its media and two lines, a card. Shapes take the
+     radius of the real thing (creative and card 16, row media 10, text lines and buttons pills).
+   - The shimmer is slow and flat: the shape breathes from the sunken step to the surface step and back
+     (calc(--ui-motion-slow * 3) each way). No gradient sweep (rule no-gradient). Neighbours start one
+     --ui-motion-instant apart (style="--i: n"), so the breath travels across a grid like light.
+   - Inside a card the pair moves one step deeper (--ui-skeleton-bg-on-surface), so a shape never
+     vanishes into its card.
+   - On glass (a sheet or popover while it loads) the shape is the clear button's Porcelain veil and
+     breathes to a lighter veil and back (--ui-skeleton-bg-glass, --ui-skeleton-bg-pulse-glass). Never
+     Amber on Smoke (rule no-amber-on-dark).
+   - The Engine at work (.ui-skeleton-engine): a creative being generated keeps its skeleton, with the
+     Engine and its progress at the centre, the progress in the data face ("Generating · 4 of 12").
+   - Reduced motion: static sunken shapes. Screen readers hear the container's aria-busy and its label,
+     not the shapes (aria-hidden); the Engine's progress is real text and is read.
+   Rule gate: no-gradient, motion-from-tokens, reduced-motion, radius-from-tokens, mono-is-data,
+   no-amber-on-dark. */
+
+.ui-skeleton {
+  --sk: var(--ui-skeleton-bg); --sk-pulse: var(--ui-skeleton-bg-pulse);
+  display: block; flex: none; min-width: 0; border-radius: var(--ui-radius-item); background-color: var(--sk);
+  animation: ui-skeleton calc(var(--ui-motion-slow) * 3) var(--ui-motion-ease) infinite alternate both;
+  animation-delay: calc(var(--i, 0) * var(--ui-motion-instant));
+}
+@keyframes ui-skeleton { from { background-color: var(--sk); } to { background-color: var(--sk-pulse); } }
+.ui-card .ui-skeleton, .ui-skeleton--on-surface, .ui-empty--surface .ui-skeleton { --sk: var(--ui-skeleton-bg-on-surface); --sk-pulse: var(--ui-skeleton-bg-pulse-on-surface); }
+.ui-glass .ui-skeleton, .ui-skeleton--on-glass { --sk: var(--ui-skeleton-bg-glass); --sk-pulse: var(--ui-skeleton-bg-pulse-glass); }
+
+/* shapes */
+/* a line of text fills one line box (1lh): put it inside the real text element (card title, row description,
+   caption) and it takes that element's line height, so nothing moves when the words arrive */
+.ui-skeleton--text { height: var(--ui-space-md); width: var(--w, 100%); margin-block: calc((1lh - var(--ui-space-md)) / 2); border-radius: var(--ui-radius-action); }
+.ui-skeleton--title { height: var(--ui-space-lg); width: var(--w, 60%); margin-block: calc((1lh - var(--ui-space-lg)) / 2); border-radius: var(--ui-radius-action); }
+.ui-skeleton--pill { height: var(--ui-size-control-sm); width: var(--w, calc(var(--ui-size-control-lg) * 2)); border-radius: var(--ui-radius-action); }
+.ui-skeleton--circle { width: var(--s, var(--ui-avatar-size)); height: var(--s, var(--ui-avatar-size)); border-radius: 50%; }
+.ui-skeleton--media { width: var(--s, var(--ui-item-media)); height: var(--s, var(--ui-item-media)); border-radius: var(--ui-radius-item); }
+.ui-skeleton--creative { width: 100%; aspect-ratio: var(--ratio, var(--ui-creative-ratio-feed)); border-radius: var(--ui-radius-card); }
+.ui-skeleton--thumb { width: var(--s, var(--ui-item-media)); aspect-ratio: var(--ui-creative-ratio-feed); border-radius: var(--ui-radius-item); }
+.ui-skeleton--card { width: 100%; height: var(--h, calc(var(--ui-size-control-lg) * 3)); border-radius: var(--ui-radius-card); }
+
+/* The Engine at work: the creative keeps its skeleton and keeps breathing; the Engine and its progress sit
+   at the centre, the progress in the data face. */
+.ui-skeleton:has(> .ui-skeleton-engine) { display: grid; place-content: center; }
+.ui-skeleton-engine { display: grid; justify-items: center; gap: var(--ui-space-sm); min-width: 0; padding: var(--ui-space-md); color: var(--ui-text-tertiary); text-align: center; }
+.ui-skeleton-engine svg { width: var(--ui-empty-icon); height: var(--ui-empty-icon); flex-shrink: 0; }
+.ui-skeleton-meta { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; text-wrap: balance; }
+.ui-glass .ui-skeleton-engine, .ui-glass .ui-skeleton-meta { color: var(--ui-glass-fg-secondary); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-skeleton { animation: none; }
+}

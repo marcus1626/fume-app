@@ -1,0 +1,69 @@
+/* Badge. DECIDED 13 Oct, from round 7. Built on shadcn's badge (a <span data-slot="badge" data-variant>, or a link
+   through asChild; variants default, secondary, destructive, outline, ghost), redesigned for Fume.
+   Markup: <span class="ui-badge ui-badge--ink">Brief v2</span>
+   Fume decisions: always a pill (DECIDED 12 Oct), 24 px with 12 px label text and 12 px of air at the
+   ends. Variants: neutral (the default, sunken surface; shadcn secondary), ink (shadcn default),
+   secondary (white, lifted by depth instead of shadcn's outline: no stroke; reads on a creative too),
+   danger (Rouge, for errors only). Status badges for the Quality Gate: "In check" carries the checked
+   triangle in grey (--ui-check-waiting); "Checked" carries it in Amber (--ui-check). That Amber triangle
+   is the only Amber in this family and the only Amber a badge may hold: never the pill, never the
+   label (rule amber-is-a-point, check-states); the label always says the state, so colour is never the
+   only signal. Counts (.ui-badge--count) are 20 px with tabular numbers. A dot (.ui-badge-dot) goes
+   before a label for a live state (Ink), an idle one (grey) or an error (Rouge); .ui-badge--dot is a dot
+   on its own, on an icon or an avatar.
+   A badge that is a link or a button gets a 44 px hit area, hover one step toward Ink, the 3 % shrink
+   when pressed and the focus ring.
+   Status never looks like a button (walk-through 19 Oct, MOB-9; PROPOSED 19 Oct 2026): only an Ink badge that is a
+   link or a button keeps the Ink fill. A static Ink badge ("Waiting on you") is a quiet chip, the sunken
+   surface with an Ink dot before its words, so the one Ink pill on a tile or a header is the thing to tap. A count
+   keeps its Ink. Rule gate: actions-are-pills, amber-is-a-point (allowed: the
+   Amber check), touch-target, touch-feedback, hover-needs-hover, reduced-motion. */
+
+.ui-badge {
+  --bg: var(--ui-surface-sunken); --bg-hover: var(--ui-badge-hover); --bg-pressed: var(--ui-badge-pressed); --fg: var(--ui-text); --dot: currentColor;
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--ui-space-xs); flex-shrink: 0;
+  width: max-content; height: var(--ui-badge-height); padding-inline: var(--ui-space-md); margin: 0;
+  border: 0; border-radius: var(--ui-radius-action); background: var(--bg); color: var(--fg);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium);
+  line-height: 1; letter-spacing: .01em; white-space: nowrap; text-decoration: none; vertical-align: middle;
+}
+.ui-badge svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; }
+.ui-badge--ink { --bg: var(--ui-action-primary); --bg-hover: var(--ui-action-primary-hover); --bg-pressed: var(--ui-action-primary-pressed); --fg: var(--ui-action-primary-fg); }
+.ui-badge--secondary { --bg: var(--ui-action-secondary); --bg-hover: var(--ui-action-secondary-hover); --bg-pressed: var(--ui-action-secondary-pressed); --fg: var(--ui-action-secondary-fg); box-shadow: var(--ui-depth-raised); }
+/* a static Ink badge is status, not an action: the quiet chip with an Ink dot (MOB-9) */
+span.ui-badge--ink:not(.ui-badge--count) { --bg: var(--ui-surface-sunken); --fg: var(--ui-text); --dot: var(--ui-action-primary); }
+span.ui-badge--ink:not(.ui-badge--count):not(:has(> svg, > .ui-badge-dot))::before {
+  content: ""; width: var(--ui-badge-dot); height: var(--ui-badge-dot); flex-shrink: 0; border-radius: 50%; background: var(--dot);
+}
+.ui-badge--danger { --bg: var(--ui-danger); --bg-hover: var(--ui-danger-hover); --bg-pressed: var(--ui-danger-hover); --fg: var(--ui-text-on-ink); }
+
+/* Quality Gate states: the checked triangle beside the words */
+.ui-badge--check { --fg: var(--ui-text-secondary); }
+.ui-badge--check svg { color: var(--ui-check-waiting); }
+.ui-badge--approved svg { color: var(--ui-check); } /* gate-allow:amber-is-a-point  the checked triangle on a creative the expert checked is the Amber check itself (Marcus 13 Oct) */
+
+/* counts */
+.ui-badge--count { height: var(--ui-badge-height-sm); min-width: var(--ui-badge-height-sm); padding-inline: var(--ui-space-sm); font-variant-numeric: tabular-nums; letter-spacing: 0; }
+
+/* dots */
+.ui-badge-dot { width: var(--ui-badge-dot); height: var(--ui-badge-dot); flex-shrink: 0; border-radius: 50%; background: var(--dot); }
+.ui-badge-dot--idle { --dot: var(--ui-text-tertiary); }
+.ui-badge-dot--danger { --dot: var(--ui-danger); }
+.ui-badge-dot--live { animation: ui-badge-live var(--ui-motion-spin-reduced) var(--ui-motion-ease) infinite alternate; }
+@keyframes ui-badge-live { from { opacity: 1; } to { opacity: .35; } }
+.ui-badge--dot { position: absolute; top: 0; right: 0; width: var(--ui-badge-dot); height: var(--ui-badge-dot); min-width: 0; padding: 0; background: var(--dot, var(--ui-text)); pointer-events: none; }
+
+/* a badge that is a link or a button */
+a.ui-badge, button.ui-badge { cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease); }
+a.ui-badge::after, button.ui-badge::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: inherit; }
+@media (hover: hover) { a.ui-badge:hover, button.ui-badge:hover { background: var(--bg-hover); } }
+a.ui-badge.is-hover, button.ui-badge.is-hover { background: var(--bg-hover); }
+a.ui-badge:active, button.ui-badge:active, .ui-badge.is-pressed { background: var(--bg-pressed); transform: scale(var(--ui-motion-press-scale)); }
+a.ui-badge:focus-visible, button.ui-badge:focus-visible, .ui-badge.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+@media (prefers-reduced-motion: reduce) {
+  a.ui-badge, button.ui-badge { transition: background-color var(--ui-motion-fast) linear; }
+  a.ui-badge:active, button.ui-badge:active, .ui-badge.is-pressed { transform: none; }
+  .ui-badge-dot--live { animation: none; }
+}

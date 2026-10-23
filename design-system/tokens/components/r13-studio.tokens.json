@@ -1,0 +1,39 @@
+{
+  "$description": "Round 13 STUDIO (Marcus's video comments, 22 Oct 2026): the pin's note in Check, the segmented control on Smoke glass and the staff campaign board's columns. All PROPOSED.",
+  "qa-pin": {
+    "box-width": {
+      "value": "260px",
+      "status": "PROPOSED",
+      "description": "The note written beside a pin on a creative in Check (#51): a small Smoke glass box, like the customer's review viewer's."
+    }
+  },
+  "seg-glass": {
+    "track": {
+      "value": "{color.glass.button-clear}",
+      "status": "PROPOSED",
+      "description": "A segmented control on Smoke glass (#66): the track is the clear veil, never the page's sunken white."
+    },
+    "pill": {
+      "value": "rgb(255 253 249 / 0.24)",
+      "status": "PROPOSED",
+      "description": "The chosen option's pill on glass: Porcelain at 24 %, a clear step above the veil, never the 94 % white of the one main button on the glass."
+    },
+    "fg": {
+      "value": "{color.glass.fg-secondary}",
+      "status": "PROPOSED",
+      "description": "An option's words on glass: secondary Porcelain, weight 500."
+    },
+    "fg-on": {
+      "value": "{color.glass.fg}",
+      "status": "PROPOSED",
+      "description": "The chosen option's words on glass: Porcelain."
+    }
+  },
+  "stage-board": {
+    "column": {
+      "value": "152px",
+      "status": "PROPOSED",
+      "description": "The narrowest column of the staff campaign board (#68): a stage (Brief … Delivery, then Done) with its campaigns as cards. Seven columns share the page's width and scroll sideways only when it is narrower than seven of these."
+    }
+  }
+}

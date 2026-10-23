@@ -1,0 +1,439 @@
+/* Plan: the creative plan Fume writes from her brief, checked by the expert and approved by her before the Engine
+   makes anything (app, FLOWS §22). PROPOSED 20 Oct 2026. Marcus, 20 Oct: "hvor er planen som blir lagd før Engine
+   genererer? Kunden må jo godkjenne det før Engine begynner å generere."
+   Round 12 (UX review DLAY-10, DLOAD-9, DLOAD-10, DWAY-12, DWAY-18, DLAY-19; PROPOSED 20 Oct 2026): the same plan,
+   tighter (about 4.5 screens at 1440, from 6). The index of the parts is in the sticky aside, "In this plan", beside
+   what it indexes; the lines are a dense spec; the masters are small placeholders on one baseline; what follows them
+   is a table; the other directions are rows; Change is a pencil on the row's hover and keyboard focus.
+   Markup (the document, on the campaign's Plan tab and on the expert's plan page):
+     <div class="ui-plandoc-wrap">                                          the container the layout asks
+       <div class="ui-plandoc" data-mode="ready|approved|previous|staff" [data-aside="more"]>
+         [<header class="ui-plandoc-head"> only for what the aside cannot say: the version she asked to change, the
+           expert's status line, the client's "Brygga Studio approves the plan; you approve the creatives.", Fume's
+           note on a new version: <div class="ui-plandoc-title-row"><h2 class="ui-plandoc-title">The plan</h2>
+           <span class="ui-plandoc-version-meta">version 1</span></div><p class="ui-plandoc-status">…</p>
+           <p class="ui-plandoc-note"><svg/> <span>Version 2 · Changed as you asked: “…”</span></p></header>]
+         <aside class="ui-plandoc-aside">
+           <nav class="ui-plandoc-index"><p class="ui-plandoc-index-title">In this plan</p><ul class="ui-plandoc-index-list">
+             <li><a class="ui-plandoc-index-link" aria-current="location">The brief</a></li> …</ul></nav>
+           <dl class="ui-plandoc-facts"><div class="ui-plandoc-fact"><dt>Direction</dt><dd>A · Window light
+             <span class="ui-plandoc-fact-sub">Fume's pick</span></dd></div> …</dl>   or <p class="ui-plandoc-facts-line">
+           <p class="ui-plandoc-checked"><span class="ui-avatar …">A</span><span>Checked by Anna
+             <span class="ui-plandoc-checked-sub">Since then you changed 1 line</span></span></p>
+           [<div class="ui-plandoc-aside-more"> the expert's page: the customer's brief </div>]</aside>
+         <div class="ui-plandoc-body">
+           <section class="ui-plandoc-part" id="plan-brief"><h2 class="ui-plandoc-part-title">The brief</h2>
+             <p class="ui-plandoc-summary">…</p> collapsible "Your brief, sent 13 Oct" (data-list.css) </section>
+           <section class="ui-plandoc-part" id="plan-direction"><div class="ui-plandoc-direction-head">
+               <p class="ui-plandoc-eyebrow">Direction A · Fume's pick</p><h2 class="ui-plandoc-direction-name">Window light</h2></div>
+             <p class="ui-plandoc-idea">…</p>
+             <div class="ui-plandoc-hook"><p class="ui-plandoc-label">The idea in one line</p><p class="ui-plandoc-hook-line">“…”</p></div>
+             <div class="ui-plandoc-group"><h3 class="ui-plandoc-group-title">Why it fits</h3><ul class="ui-plandoc-why">
+               <li class="ui-plandoc-why-item"><span>…</span><span class="ui-plandoc-source"><svg/> Your taste</span></li></ul></div>
+             <ul class="ui-plandoc-refs"><li><figure class="ui-plandoc-ref"><img class="ui-plandoc-ref-media"/>
+               <figcaption class="ui-plandoc-ref-caption"><span>…</span> <span class="ui-plandoc-source">…</span></figcaption></figure></li></ul>
+             <ul class="ui-plandoc-alts"><li class="ui-plandoc-alt"><div class="ui-plandoc-alt-pictures"><img/><img/></div>
+               <div class="ui-plandoc-alt-text"><p class="ui-plandoc-alt-name">B · Linen and glass
+               [<span class="ui-plandoc-alt-pick">Fume's pick</span>]</p><p class="ui-plandoc-alt-idea">…</p></div>
+               Use this direction (secondary)</li></ul></section>
+           <section class="ui-plandoc-part" id="plan-variables"> … <ul class="ui-plandoc-lines"><li class="ui-plandoc-line" [data-changed]>
+               <div class="ui-plandoc-line-head"><span class="ui-plandoc-line-label">Light</span><span class="ui-plandoc-source">…</span></div>
+               <div class="ui-plandoc-line-body"><p class="ui-plandoc-line-value">…</p><p class="ui-plandoc-line-why">…</p>
+               [<p class="ui-plandoc-line-ask"><svg/><span>Evening Candle waits for you to confirm …</span> Confirm Evening Candle</p>]</div>
+               <button class="ui-btn … ui-plandoc-change" aria-label="Change the light"> (quiet, a pencil) </li></ul>
+               editing: <form class="ui-plandoc-edit"> field · Save · Cancel </form></section>
+           <section class="ui-plandoc-part" id="plan-creatives"> <ul class="ui-plandoc-masters"><li class="ui-plandoc-master">
+               <div class="ui-plandoc-stage"><div class="ui-plandoc-frame" data-format="feed|story|square">
+                 <span class="ui-plandoc-frame-products"><img/></span></div></div>
+               <div class="ui-plandoc-master-text"><p class="ui-plandoc-master-name">Master 1 · Feed 4:5</p><p class="ui-plandoc-scene">…</p>
+                 <p class="ui-plandoc-master-meta"><span class="ui-plandoc-words">“…”</span><span class="ui-plandoc-people"><svg/> No people</span></p></div>
+               pencil "Change Master 1" </li></ul>
+             <ul class="ui-plandoc-follows"><li class="ui-plandoc-follow"><span class="ui-plandoc-follow-name">
+               [<span class="ui-plandoc-follow-count">2 × </span>]Master 1 in Story · Story 9:16</span>
+               <span class="ui-plandoc-follow-from">from Master 1</span><span class="ui-plandoc-follow-what">…
+               <span class="ui-plandoc-follow-words">“…”</span></span></li></ul></section>
+           <section class="ui-plandoc-part" id="plan-rules"><div class="ui-plandoc-rules"><div class="ui-plandoc-group">
+               <h3 class="ui-plandoc-group-title">Always</h3><ul class="ui-plandoc-rule-list"><li class="ui-plandoc-rule">…</li></ul></div>…</div></section>
+           <section class="ui-plandoc-part" id="plan-when"><ol class="ui-plandoc-when"><li class="ui-plandoc-step" data-state="now|done|ahead">
+               <span class="ui-plandoc-step-dot"></span><span class="ui-plandoc-step-label">You approve the plan</span>
+               <span class="ui-plandoc-step-time">Mon 19 Oct</span></li>…</ol><p class="ui-plandoc-included"><svg/> 2 change requests included, for the creatives</p></section>
+         </div></div></div>
+       <div class="ui-page-footer ui-plandoc-foot" data-ui-foot> (page-header.css) the line · Ask for changes · Approve the plan </div>
+     While Fume writes or the expert checks (and while Fume changes it):
+       <div class="ui-plandoc-waiting" [data-brief]><section class="ui-plandoc-state"><p class="ui-plandoc-eyebrow">The plan · version 1</p>
+         <h2 class="ui-plandoc-state-title"><span class="ui-text-shimmer">Fume is writing the plan</span></h2>
+         <p class="ui-plandoc-state-by">Ready by Thu 15 Oct …</p><blockquote class="ui-plandoc-quote">…</blockquote>
+         <ol class="ui-plandoc-steps"><li class="ui-plandoc-steps-item" data-state="done|now|ahead"><svg/> …</li></ol>
+         <p class="ui-plandoc-tocome"><span class="ui-plandoc-label">The plan will hold</span><span class="ui-plandoc-tocome-text">…</span></p></section>
+         <aside class="ui-plandoc-waiting-brief"> "Your brief, sent 13 Oct", read-only </aside></div>
+     The expert's page's own index row (.ui-plandoc-bar) is gone: the aside carries the index there too.
+   Fume decisions: the plan reads like an agency's treatment and shot list: one calm document in the order she decides
+   in (brief, direction, how it looks, every creative, rules, when), the parts parted by space alone (64 between parts,
+   24 to 32 between groups, 4 to 16 inside a group: proximity), never by lines. Words lead: Fume's paragraph at the
+   larger reading size, the direction's name large, its one line set apart, every reason and every line carrying its
+   one source as a small quiet tag (an icon and words, never a fill, never only in a tooltip). The spec is a table:
+   the label in its own column with its source under it, the value, what it rests on. The references are 3 abreast on
+   a desk, 2 on a phone. The directions Fume also considered lie flat on the sunken surface, one row each: they are
+   proposals, not the plan. A creative not made yet is a placeholder in its own ratio on the sunken surface (180 high
+   at most, the masters on one baseline) with the product's packshot small in the middle, never a fake finished
+   picture. The steps are dots without a line between them, the step that waits an Ink ring (as the campaign's own
+   dots). From a 960 px column the summary is an aside that stays in view (sticky, Fume's surface, no shadow) and
+   holds the index; narrower it is a strip of facts above the parts, without the index. No Amber anywhere on the
+   plan: "Checked by Anna" is words with her avatar; Amber stays on checked creatives. The decision is the step
+   footer's (page-header.css).
+   Rule gate: few-strokes (the step ring, marked), air, proximity, space-from-tokens, radius-from-tokens,
+   type-from-tokens, mono-is-data (the version and the dates), amber-is-a-point (none), canon-not-in-ui,
+   touch-target, touch-feedback, hover-needs-hover, reduced-motion, tokens-only-color. */
+
+/* ---------- the frame: a container, so the document lays itself out by the room it has ---------- */
+.ui-plandoc-wrap { container: ui-plandoc / inline-size; min-width: 0; }
+.ui-plandoc {
+  --ui-plandoc-measure: 760px; /* gate-allow:space-from-tokens the reading measure, a layout width (DLAY-7) */
+  --ui-plandoc-aside: 240px; /* gate-allow:space-from-tokens the summary aside's width, a layout width */
+  --ui-plandoc-frame: 180px; /* gate-allow:space-from-tokens a planned master's height at most, a layout size (DLAY-10) */
+  --ui-plandoc-label-col: 128px; /* gate-allow:space-from-tokens the spec's label column, a layout width */
+  --ui-plandoc-stick: calc(2 * (var(--ui-size-control-md) + 2 * var(--ui-space-sm)) + var(--ui-space-lg));
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ui-space-xl); min-width: 0;
+  font-family: var(--ui-type-family); color: var(--ui-text);
+}
+/* the expert's page has one sticky row (its bar), not two: the parts and the aside sit clear of that one */
+.ui-app-page:has(.ui-plandoc-bar) .ui-plandoc { --ui-plandoc-stick: calc(var(--ui-size-control-md) + 2 * var(--ui-space-sm) + var(--ui-space-lg)); }
+.ui-plandoc-head { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-plandoc-body { display: grid; gap: calc(2 * var(--ui-space-2xl)); min-width: 0; }
+.ui-plandoc:has(> .ui-plandoc-head) > .ui-plandoc-body { margin-block-start: var(--ui-space-lg); }
+@container ui-plandoc (min-width: 960px) {
+  .ui-plandoc {
+    grid-template-columns: minmax(0, var(--ui-plandoc-measure)) var(--ui-plandoc-aside);
+    justify-content: space-between; column-gap: calc(1.5 * var(--ui-space-2xl)); row-gap: 0;
+  }
+  .ui-plandoc-head { grid-column: 1; grid-row: 1; }
+  .ui-plandoc-body { grid-column: 1; grid-row: 2; }
+  .ui-plandoc:has(> .ui-plandoc-head) > .ui-plandoc-body { margin-block-start: var(--ui-space-2xl); }
+  .ui-plandoc-aside {
+    grid-column: 2; grid-row: 1 / span 2; align-self: start; position: sticky; top: var(--ui-plandoc-stick);
+    /* it never runs under the step footer: past the room it has, the aside scrolls on its own */
+    max-height: calc(100dvh - var(--ui-plandoc-stick) - 2 * var(--ui-size-control-lg) - var(--ui-space-2xl));
+    overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
+  }
+}
+/* without the aside (the brief part alone, or a column too narrow for one) the document keeps the reading measure */
+.ui-plandoc-solo { display: grid; grid-template-columns: minmax(0, var(--ui-plandoc-measure, 760px)); gap: calc(2 * var(--ui-space-2xl)); min-width: 0; } /* gate-allow:space-from-tokens the reading measure */
+
+/* ---------- the head: only what the aside cannot say ---------- */
+.ui-plandoc-title-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--ui-space-xs) var(--ui-space-md); min-width: 0; }
+.ui-plandoc-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.25; letter-spacing: -.01em; }
+.ui-plandoc-version-meta { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-plandoc-status { margin: 0; max-width: var(--ui-book-measure); font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-plandoc-note {
+  display: flex; align-items: baseline; gap: var(--ui-space-sm); margin: 0; max-width: var(--ui-book-measure);
+  padding: var(--ui-inset-tight) var(--ui-inset-float); border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken);
+  font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); text-wrap: pretty;
+}
+.ui-plandoc-note > svg { position: relative; inset-block-start: .15em; width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; }
+
+/* ---------- the summary: the index, the facts and who checked it; in view on a desk, a strip above the parts narrower ---------- */
+.ui-plandoc-aside {
+  display: grid; gap: var(--ui-space-lg); align-content: start; min-width: 0;
+  padding: var(--ui-inset-float) var(--ui-inset-panel); border-radius: var(--ui-radius-card); background: var(--ui-surface);
+}
+.ui-plandoc-index { display: none; }
+.ui-plandoc-index-title { margin: 0 0 var(--ui-space-xs); font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-plandoc-index-list { display: grid; min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-plandoc-index-link {
+  position: relative; display: flex; align-items: center; min-height: var(--ui-size-control-sm); min-width: 0;
+  font-size: var(--ui-type-control); line-height: 1.3; color: var(--ui-text-secondary); text-decoration: none; overflow-wrap: anywhere;
+  border-radius: var(--ui-radius-item); cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+/* 32 high to the eye, a 44 hit (the rows overlap their neighbours' edge, as the brand board's index does) */
+.ui-plandoc-index-link::after { content: ""; position: absolute; inset: 50% 0 auto; height: var(--ui-size-hit); transform: translateY(-50%); }
+.ui-plandoc-index-link[aria-current] { color: var(--ui-text); font-weight: var(--ui-type-weight-medium); }
+.ui-plandoc-index-link:active { color: var(--ui-text); }
+.ui-plandoc-index-link:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+@media (hover: hover) { .ui-plandoc-index-link:hover { color: var(--ui-text); } }
+
+.ui-plandoc-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 148px), 1fr)); gap: var(--ui-space-md) var(--ui-space-lg); min-width: 0; margin: 0; }
+.ui-plandoc-fact { display: grid; gap: 0; align-content: start; min-width: 0; }
+.ui-plandoc-fact > dt { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-plandoc-fact > dd { margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text); overflow-wrap: anywhere; }
+.ui-plandoc-fact-sub { display: block; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-plandoc-facts-line { margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text); text-wrap: pretty; }
+.ui-plandoc-checked { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; margin: 0; font-size: var(--ui-type-control); line-height: 1.4; color: var(--ui-text); }
+.ui-plandoc-checked > span { display: grid; min-width: 0; }
+.ui-plandoc-checked-sub { display: block; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-plandoc-aside-more { display: grid; gap: var(--ui-space-md); min-width: 0; }
+/* the expert's page holds the customer's brief in the aside (DLAY-11): a wider aside, a narrower label column */
+.ui-plandoc[data-aside="more"] { --ui-plandoc-aside: 320px; } /* gate-allow:space-from-tokens the aside's width with the brief in it, a layout width */
+.ui-plandoc-aside-more .ui-datalist { --ui-datalist-label-width: 88px; column-gap: var(--ui-space-md); } /* gate-allow:space-from-tokens the brief's label column in the aside */
+@container ui-plandoc (min-width: 960px) {
+  .ui-plandoc-aside { padding: var(--ui-inset-panel); gap: var(--ui-space-xl); }
+  .ui-plandoc-index { display: grid; min-width: 0; }
+  .ui-plandoc-facts { grid-template-columns: minmax(0, 1fr); gap: var(--ui-space-md); }
+}
+
+/* ---------- a part: its title, its lead line, its groups ---------- */
+.ui-plandoc-part { display: grid; gap: var(--ui-space-xl); align-content: start; min-width: 0; scroll-margin-top: var(--ui-plandoc-stick); }
+/* a part the index jumped to takes the focus from code, so the keyboard goes on from there; it is a place, not a control */
+.ui-plandoc-part:focus { outline: none; }
+.ui-plandoc-part-head { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-plandoc-part-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.25; letter-spacing: -.01em; }
+.ui-plandoc-part-lead { margin: 0; max-width: var(--ui-book-measure); font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-plandoc-eyebrow { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-plandoc-label { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-plandoc-group { display: grid; gap: var(--ui-space-md); align-content: start; min-width: 0; }
+.ui-plandoc-group-title { margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.4; }
+
+/* the source of a line, a reason or a picture: an icon and words, quiet; a line someone changed says so in Ink */
+.ui-plandoc-source { display: inline-flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); white-space: nowrap; }
+.ui-plandoc-source > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; }
+.ui-plandoc-source[data-source="you"] { color: var(--ui-text); font-weight: var(--ui-type-weight-medium); }
+
+/* ---------- the brief, in words ---------- */
+.ui-plandoc-summary { margin: 0; max-width: var(--ui-book-measure); font-size: var(--ui-type-body-large); line-height: 1.6; color: var(--ui-text); text-wrap: pretty; }
+.ui-plandoc-brief { display: grid; gap: var(--ui-space-md); justify-items: start; min-width: 0; margin-block-start: calc(var(--ui-space-sm) - var(--ui-space-xl)); }
+.ui-plandoc-brief > .ui-collapsible-content { justify-self: stretch; }
+/* the disclosure sits flush with the text above it: the quiet button's padding hangs outside */
+.ui-plandoc-brief > .ui-collapsible-trigger { margin-inline-start: calc(var(--ui-size-pad-sm) * -1); }
+.ui-plandoc-brief .ui-datalist { padding-block: var(--ui-space-sm) var(--ui-space-xs); }
+/* the brief's lines: a line's Change (32 high) sits in the line's height, so the value keeps its label's baseline */
+.ui-plandoc-brieflist dd > .ui-app-row { margin-block: calc((var(--ui-type-control) * 1.5 - var(--ui-size-control-sm)) / 2); }
+
+/* ---------- the direction ---------- */
+.ui-plandoc-direction-head { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-plandoc-direction-name { margin: 0; font-size: var(--ui-type-title-large); font-weight: var(--ui-type-weight-regular); line-height: 1.15; letter-spacing: -.02em; text-wrap: balance; }
+.ui-plandoc-idea { margin: calc(var(--ui-space-sm) - var(--ui-space-xl)) 0 0; max-width: var(--ui-book-measure); font-size: var(--ui-type-body-large); line-height: 1.6; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-plandoc-hook { display: grid; gap: var(--ui-space-xs); min-width: 0; margin: 0; padding-inline-start: var(--ui-space-xl); }
+.ui-plandoc-hook-line { margin: 0; max-width: 36ch; font-size: var(--ui-type-body-large); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text); text-wrap: balance; }
+.ui-plandoc-why { display: grid; gap: var(--ui-space-xs); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-plandoc-why-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 0 var(--ui-space-xl); min-width: 0; font-size: var(--ui-type-control); line-height: 1.6; text-wrap: pretty; }
+
+.ui-plandoc-refs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ui-space-lg); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-plandoc-ref { display: grid; gap: var(--ui-space-sm); align-content: start; min-width: 0; margin: 0; }
+.ui-plandoc-ref-media { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); }
+.ui-plandoc-ref-caption { min-width: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-plandoc-ref-caption > .ui-plandoc-source { white-space: normal; display: inline; }
+.ui-plandoc-ref-caption > .ui-plandoc-source > svg { display: none; }
+.ui-plandoc-ref-caption > .ui-plandoc-source::before { content: "· "; }
+
+.ui-plandoc-alts { display: grid; gap: var(--ui-space-sm); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-plandoc-alt {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--ui-space-lg); min-width: 0;
+  padding: var(--ui-inset-tight); border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken);
+}
+.ui-plandoc-alt-pictures { display: grid; grid-template-columns: repeat(2, var(--ui-size-control-lg)); gap: var(--ui-space-xs); align-self: start; }
+.ui-plandoc-alt-pictures > img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: var(--ui-radius-item); }
+.ui-plandoc-alt-text { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-plandoc-alt-name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--ui-space-sm); margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.4; }
+.ui-plandoc-alt-pick { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-secondary); }
+.ui-plandoc-alt-idea { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+
+/* ---------- how every creative looks: a spec, one row a line: label and its source, value and why, a pencil ---------- */
+.ui-plandoc-lines { display: grid; gap: var(--ui-space-md); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-plandoc-line {
+  display: grid; grid-template-columns: minmax(0, var(--ui-plandoc-label-col)) minmax(0, 1fr) var(--ui-size-control-sm);
+  align-items: start; gap: var(--ui-space-xs) var(--ui-space-lg); min-width: 0;
+}
+.ui-plandoc-line-head { display: grid; gap: 0; justify-items: start; align-content: start; min-width: 0; }
+.ui-plandoc-line-label { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.5; color: var(--ui-text); }
+.ui-plandoc-line-head > .ui-plandoc-source { white-space: normal; }
+.ui-plandoc-line-body { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-plandoc-line-value { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); text-wrap: pretty; }
+.ui-plandoc-line-why { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+/* a product the plan shows that still waits to be confirmed: said on its line, with the way to do it */
+.ui-plandoc-line-ask {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-sm); min-width: 0; margin: var(--ui-space-xs) 0 0;
+  font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text); text-wrap: pretty;
+}
+.ui-plandoc-line-ask > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; }
+.ui-plandoc-line-ask > span { flex: 1 1 16em; min-width: 0; }
+.ui-plandoc-line:has(.ui-plandoc-edit) > .ui-plandoc-line-body { grid-column: 2 / -1; }
+.ui-plandoc-edit { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-plandoc-edit-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); }
+
+/* Change: a pencil, at rest only where there is no hover (a touch screen); on a desk on the row's hover or focus */
+.ui-plandoc-change { justify-self: end; align-self: start; margin-block-start: calc((var(--ui-type-control) * 1.5 - var(--ui-size-control-sm)) / 2); }
+@media (hover: hover) and (pointer: fine) {
+  .ui-plandoc-change { opacity: 0; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+  .ui-plandoc-line:hover .ui-plandoc-change, .ui-plandoc-master:hover .ui-plandoc-change,
+  .ui-plandoc-line:focus-within .ui-plandoc-change, .ui-plandoc-master:focus-within .ui-plandoc-change,
+  .ui-plandoc-change:focus-visible { opacity: 1; }
+}
+
+/* ---------- the creatives: the masters on one baseline, small placeholders; then what follows them, a table ---------- */
+.ui-plandoc-masters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ui-space-xl) var(--ui-space-lg); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-plandoc-master { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto 1fr; gap: var(--ui-space-md) var(--ui-space-xs); min-width: 0; }
+.ui-plandoc-stage { grid-column: 1 / -1; display: flex; align-items: flex-end; justify-content: flex-start; height: var(--ui-plandoc-frame); min-width: 0; }
+.ui-plandoc-frame {
+  position: relative; display: grid; place-items: center; height: 100%; max-width: 100%; aspect-ratio: var(--ui-creative-ratio-feed);
+  border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken);
+}
+.ui-plandoc-frame[data-format="story"] { aspect-ratio: var(--ui-creative-ratio-story); }
+.ui-plandoc-frame[data-format="square"] { aspect-ratio: var(--ui-creative-ratio-square); }
+.ui-plandoc-frame-products { display: flex; align-items: flex-end; justify-content: center; gap: var(--ui-space-xs); width: 56%; min-width: 0; }
+.ui-plandoc-frame-products:has(> img + img) { width: 78%; }
+.ui-plandoc-frame[data-format="story"] .ui-plandoc-frame-products { width: 72%; }
+.ui-plandoc-frame[data-format="story"] .ui-plandoc-frame-products:has(> img + img) { width: 88%; }
+.ui-plandoc-frame-products > img { display: block; flex: 1 1 0; min-width: 0; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: var(--ui-radius-item); }
+.ui-plandoc-master-text { display: grid; gap: var(--ui-space-xs); align-content: start; justify-items: start; min-width: 0; }
+.ui-plandoc-master-name { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.5; color: var(--ui-text); }
+.ui-plandoc-scene { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-plandoc-master-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--ui-space-xs) var(--ui-space-md); min-width: 0; margin: 0; }
+.ui-plandoc-words { font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text); text-wrap: balance; }
+.ui-plandoc-people { display: inline-flex; align-items: center; gap: var(--ui-space-xs); font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-plandoc-people > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; }
+.ui-plandoc-master .ui-plandoc-edit { justify-self: stretch; }
+.ui-plandoc-master:has(.ui-plandoc-edit) > .ui-plandoc-master-text { grid-column: 1 / -1; justify-items: stretch; }
+
+.ui-plandoc-follows { display: grid; gap: var(--ui-space-sm); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-plandoc-follow {
+  display: grid; grid-template-columns: minmax(0, 13.5em) minmax(0, 7.5em) minmax(0, 1fr); align-items: baseline;
+  gap: var(--ui-space-xs) var(--ui-space-lg); min-width: 0; font-size: var(--ui-type-control); line-height: 1.5;
+}
+.ui-plandoc-follow-name { min-width: 0; font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-plandoc-follow-count { font-family: var(--ui-type-family-data); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-secondary); }
+.ui-plandoc-follow-from { min-width: 0; color: var(--ui-text-tertiary); }
+.ui-plandoc-follow-what { min-width: 0; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-plandoc-follow-words { color: var(--ui-text); }
+
+/* ---------- the rules ---------- */
+.ui-plandoc-rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: var(--ui-space-xl); min-width: 0; } /* gate-allow:space-from-tokens a column's least width */
+.ui-plandoc-rule-list { display: grid; gap: var(--ui-space-sm); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-plandoc-rule { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--ui-space-sm); min-width: 0; font-size: var(--ui-type-control); line-height: 1.5; text-wrap: pretty; }
+
+/* ---------- when: quiet steps, dots without a line between them ---------- */
+.ui-plandoc-when { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: var(--ui-space-lg); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-plandoc-step { display: grid; gap: var(--ui-space-sm); align-content: start; min-width: 0; }
+.ui-plandoc-step-dot { display: block; box-sizing: border-box; width: var(--ui-space-md); height: var(--ui-space-md); border-radius: 50%; background: var(--ui-surface-sunken); }
+.ui-plandoc-step[data-state="done"] .ui-plandoc-step-dot { background: var(--ui-text); }
+.ui-plandoc-step[data-state="now"] .ui-plandoc-step-dot { background: transparent; box-shadow: inset 0 0 0 2px var(--ui-text); } /* gate-allow:few-strokes the step that waits is an Ink ring, a status mark the size of a dot, as the campaign's own dots */
+.ui-plandoc-step-label { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; color: var(--ui-text); text-wrap: balance; }
+.ui-plandoc-step-time { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-plandoc-step-words { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-plandoc-step[data-state="ahead"] .ui-plandoc-step-label { color: var(--ui-text-secondary); }
+.ui-plandoc-included { display: flex; align-items: center; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-control); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-plandoc-included > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; }
+
+/* ---------- while Fume writes, the expert checks, or Fume changes it: one calm screen, her brief beside it ---------- */
+.ui-plandoc-waiting { display: grid; grid-template-columns: minmax(0, 760px); gap: calc(2 * var(--ui-space-2xl)); align-items: start; min-width: 0; } /* gate-allow:space-from-tokens the reading measure */
+.ui-plandoc-state {
+  display: grid; gap: var(--ui-space-lg); justify-items: start; min-width: 0;
+  padding: var(--ui-inset-panel); border-radius: var(--ui-radius-card); background: var(--ui-surface);
+}
+.ui-plandoc-state-title { margin: 0; font-size: var(--ui-type-title-large); font-weight: var(--ui-type-weight-regular); line-height: 1.15; letter-spacing: -.02em; color: var(--ui-text); text-wrap: balance; }
+.ui-plandoc-state-by { margin: 0; max-width: var(--ui-book-measure); font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-plandoc-quote { display: grid; gap: var(--ui-space-xs); margin: 0; padding-inline-start: var(--ui-space-xl); }
+.ui-plandoc-quote-text { margin: 0; max-width: var(--ui-book-measure); font-size: var(--ui-type-body-large); line-height: 1.5; color: var(--ui-text); text-wrap: pretty; }
+.ui-plandoc-steps { display: grid; gap: var(--ui-space-sm); min-width: 0; margin: var(--ui-space-sm) 0 0; padding: 0; list-style: none; }
+.ui-plandoc-steps-item { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; font-size: var(--ui-type-control); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-plandoc-steps-item > svg, .ui-plandoc-steps-item > .ui-plandoc-step-dot { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; }
+.ui-plandoc-steps-item > .ui-plandoc-step-dot { width: var(--ui-space-md); height: var(--ui-space-md); margin-inline: calc((var(--ui-size-icon) - var(--ui-space-md)) / 2); }
+.ui-plandoc-steps-item[data-state="done"] { color: var(--ui-text-secondary); }
+.ui-plandoc-steps-item[data-state="done"] > svg { color: var(--ui-text); }
+.ui-plandoc-steps-item[data-state="now"] { color: var(--ui-text); font-weight: var(--ui-type-weight-medium); }
+.ui-plandoc-steps-item[data-state="now"] > .ui-plandoc-step-dot { background: transparent; box-shadow: inset 0 0 0 2px var(--ui-text); } /* gate-allow:few-strokes the step under way is an Ink ring, a status mark the size of a dot */
+.ui-plandoc-tocome { display: grid; gap: var(--ui-space-xs); max-width: var(--ui-book-measure); min-width: 0; margin: var(--ui-space-sm) 0 0; }
+.ui-plandoc-tocome-text { font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-plandoc-waiting-brief { display: grid; gap: var(--ui-space-md); align-content: start; min-width: 0; }
+.ui-plandoc-waiting-brief > .ui-plandoc-part-head { gap: var(--ui-space-xs); }
+/* her reference pictures beside the state are thumbnails, four abreast: the page says "wait" in one screen */
+.ui-plandoc-waiting-brief .ui-app-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ui-space-sm); }
+@media (min-width: 1024px) {
+  /* her brief in the ready plan's aside place, beside the state: one screen to say "wait" (DLAY-19) */
+  .ui-plandoc-waiting[data-brief] {
+    grid-template-columns: minmax(0, 640px) minmax(0, 400px); /* gate-allow:space-from-tokens the state's measure and the brief's column, layout widths */
+    justify-content: space-between; column-gap: calc(1.5 * var(--ui-space-2xl));
+  }
+  .ui-plandoc-waiting[data-brief] > .ui-plandoc-waiting-brief { position: sticky; top: calc(2 * (var(--ui-size-control-md) + 2 * var(--ui-space-sm)) + var(--ui-space-lg)); }
+}
+
+/* ---------- the expert's page: its index lives in the aside now, so its own sticky row is gone (DLAY-10, DWAY-12) ---------- */
+.ui-plandoc-bar { display: none; }
+
+/* ---------- the step footer: the page ends with it, so no room under it ---------- */
+.ui-app-page:has(.ui-plandoc-foot) { padding-bottom: 0; }
+
+/* ---------- a phone: one column, the references two abreast, each master a row, the steps down the page ---------- */
+@container ui-plandoc (max-width: 639.98px) {
+  .ui-plandoc { --ui-plandoc-frame: 112px; } /* gate-allow:space-from-tokens a planned master's height on a phone */
+  .ui-plandoc-body { gap: calc(1.5 * var(--ui-space-2xl)); }
+  .ui-plandoc-part { gap: var(--ui-space-lg); }
+  .ui-plandoc-brief, .ui-plandoc-idea { margin-block-start: calc(var(--ui-space-sm) - var(--ui-space-lg)); }
+  .ui-plandoc-aside { padding: var(--ui-inset-float); gap: var(--ui-space-md); }
+  .ui-plandoc-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-md); }
+  .ui-plandoc-direction-name { font-size: var(--ui-type-title); }
+  .ui-plandoc-hook { padding-inline-start: var(--ui-space-lg); }
+  .ui-plandoc-why-item { grid-template-columns: minmax(0, 1fr); }
+  .ui-plandoc-refs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-lg) var(--ui-space-md); }
+  .ui-plandoc-alt { grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: var(--ui-space-md); }
+  .ui-plandoc-alt > .ui-btn { grid-column: 1 / -1; justify-self: start; }
+  .ui-plandoc-line { grid-template-columns: minmax(0, 1fr) var(--ui-size-control-sm); }
+  .ui-plandoc-line-head { grid-column: 1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--ui-space-sm); }
+  .ui-plandoc-line-body { grid-column: 1 / -1; grid-row: 2; }
+  .ui-plandoc-lines { gap: var(--ui-space-lg); }
+  /* the pencil sits in the label's line, so the value stays close under its label */
+  .ui-plandoc-line > .ui-plandoc-change { grid-column: 2; grid-row: 1; margin-block: calc((var(--ui-type-control) * 1.5 - var(--ui-size-control-sm)) / 2); }
+  .ui-plandoc-masters { grid-template-columns: minmax(0, 1fr); gap: var(--ui-space-lg); }
+  .ui-plandoc-master { grid-template-columns: var(--ui-plandoc-frame) minmax(0, 1fr) auto; grid-template-rows: none; align-items: start; gap: var(--ui-space-md); }
+  .ui-plandoc-stage { grid-column: 1; justify-content: center; align-items: center; height: auto; aspect-ratio: 1; }
+  .ui-plandoc-frame { height: auto; width: auto; max-height: 100%; max-width: 100%; }
+  .ui-plandoc-frame[data-format="feed"] { height: 100%; }
+  .ui-plandoc-frame[data-format="story"] { height: 100%; }
+  .ui-plandoc-frame[data-format="square"] { width: 100%; }
+  .ui-plandoc-master > .ui-plandoc-master-text { grid-column: 2; grid-row: 1; }
+  .ui-plandoc-master > .ui-plandoc-change { grid-column: 3; grid-row: 1; }
+  .ui-plandoc-master:has(.ui-plandoc-edit) > .ui-plandoc-master-text { grid-column: 2 / -1; }
+  .ui-plandoc-when { grid-auto-flow: row; grid-auto-columns: auto; gap: var(--ui-space-md); }
+  .ui-plandoc-step { grid-template-columns: var(--ui-space-md) minmax(0, 1fr); align-items: baseline; column-gap: var(--ui-space-md); row-gap: 0; }
+  .ui-plandoc-step > :not(.ui-plandoc-step-dot) { grid-column: 2; }
+  .ui-plandoc-step-dot { grid-row: 1; align-self: center; }
+}
+/* narrower than the aside's room: what follows is a list, the name on its line, where it comes from and what changes after */
+@container ui-plandoc (max-width: 959.98px) {
+  .ui-plandoc-follow { display: block; }
+  .ui-plandoc-follow-name { display: block; }
+  .ui-plandoc-follow-from:not(:empty)::after { content: " · "; }
+}
+/* ---------- round 13 (Marcus's comments #25, #26, #28, #67; PROPOSED 22 Oct 2026) ----------
+   A creative's own look under its scene (<dl class="ui-plandoc-own-look"><dt>Own look</dt><dd><span label>Light</span> …</dd></dl>)
+   and its three fields in Change (<fieldset class="ui-plandoc-look-fields">). "Checked by Anna" is the Focus pointer in
+   Amber (.ui-creative-check[data-check="approved"], creative.css), on the aside and on a step the expert checks. What a
+   new version changed is a short list in the head's note. When: a calendar strip of the days the creatives go live
+   (<ol class="ui-plandoc-strip"><li class="ui-plandoc-strip-day" [data-on]>), then each creative with its day. */
+.ui-plandoc-own-look { display: grid; gap: var(--ui-space-xs); min-width: 0; margin: var(--ui-space-xs) 0 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-plandoc-own-look > dt { font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-plandoc-own-look > dd { margin: 0; min-width: 0; text-wrap: pretty; }
+.ui-plandoc-own-look-label { color: var(--ui-text-tertiary); }
+.ui-plandoc-follow-what > .ui-plandoc-own-look { margin-top: var(--ui-space-xs); }
+.ui-plandoc-look-fields { display: grid; gap: var(--ui-space-sm); min-width: 0; margin: 0; padding: 0; border: 0; }
+.ui-plandoc-look-legend { margin-bottom: var(--ui-space-xs); padding: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-plandoc-checked-mark { flex-shrink: 0; align-self: flex-start; }
+.ui-plandoc-checked-mark svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-plandoc-checked-sub.ui-creative-check { display: inline-flex; font-weight: var(--ui-type-weight-regular); color: var(--ui-text-secondary); white-space: normal; }
+.ui-plandoc-step-label > .ui-plandoc-step-check { margin-inline-end: var(--ui-space-xs); vertical-align: -.1em; }
+.ui-plandoc-note-changes { margin: var(--ui-space-xs) 0 0; padding-inline-start: var(--ui-space-lg); color: var(--ui-text-secondary); }
+.ui-plandoc-golive { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-plandoc-golive-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-xs) var(--ui-space-md); min-width: 0; }
+.ui-plandoc-strip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(var(--ui-size-control-lg), 1fr); gap: var(--ui-space-xs); min-width: 0; margin: 0; padding: 0; list-style: none; overflow-x: auto; scrollbar-width: none; }
+.ui-plandoc-strip-day { display: grid; justify-items: center; gap: var(--ui-space-xs); padding: var(--ui-space-sm) var(--ui-space-xs); border-radius: var(--ui-radius-item); background: transparent; color: var(--ui-text-tertiary); }
+.ui-plandoc-strip-day[data-on] { background: var(--ui-surface); color: var(--ui-text); }
+.ui-plandoc-strip-dow { font-size: var(--ui-type-label); line-height: 1.2; }
+.ui-plandoc-strip-date { font-family: var(--ui-type-family-data); font-size: var(--ui-type-control); line-height: 1.2; white-space: nowrap; }
+.ui-plandoc-strip-month { font-size: var(--ui-type-label); }
+.ui-plandoc-strip-count {
+  display: inline-grid; place-items: center; min-width: var(--ui-space-lg); height: var(--ui-space-lg); border-radius: var(--ui-radius-action);
+  font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); line-height: 1;
+}
+.ui-plandoc-strip-day[data-on] .ui-plandoc-strip-count { background: var(--ui-text); color: var(--ui-surface); }
+.ui-plandoc-golive-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: var(--ui-space-xs) var(--ui-space-xl); min-width: 0; margin: 0; padding: 0; list-style: none; } /* gate-allow:space-from-tokens a row's least width, a creative's name and its day */
+.ui-plandoc-golive-row { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-md); min-width: 0; min-height: var(--ui-size-control-md); font-size: var(--ui-type-control); line-height: 1.4; }
+.ui-plandoc-golive-name { min-width: 0; color: var(--ui-text); }
+.ui-plandoc-golive-when { flex-shrink: 0; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+.ui-plandoc-golive-date { flex-shrink: 0; width: auto; }
+@media (max-width: 639.98px) {
+  .ui-app-page:has(.ui-plandoc-foot) { padding-bottom: calc(2.5 * var(--ui-space-2xl)); }
+  .ui-plandoc-state { padding: var(--ui-inset-float) var(--ui-inset-float) var(--ui-inset-panel); }
+  .ui-plandoc-state-title { font-size: var(--ui-type-title); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ui-plandoc-index-link, .ui-plandoc-change { transition: none; }
+}

@@ -1,0 +1,37 @@
+/* Option menu: one button that opens a few ways to do one thing, each with one line on what it means. PROPOSED
+   15 Oct 2026, for "New campaign" (Marcus 15 Oct: "Write the brief yourself" and "Start with Fume" become one New
+   campaign button; you choose one of the two in its menu).
+   Markup (desk, the glass dropdown menu):
+           <div class="ui-glass ui-menu ui-option-menu" role="menu" aria-label="New campaign">
+             <div class="ui-menu-item ui-option-menu-item" role="menuitem">
+               <span class="ui-option-menu-icon"><svg/></span>
+               <span class="ui-option-menu-text"><span class="ui-option-menu-label">With Fume</span>
+                 <span class="ui-option-menu-description">Talk it through. Fume writes the brief.</span></span></div> …</div>
+   Markup (phone, the drawer): <div class="ui-glass ui-drawer ui-option-menu-drawer"> header (title), body >
+             <div class="ui-option-menu-list"><button class="ui-menu-item ui-option-menu-item">…</button> …</div></div>
+   Fume decisions: one primary button, the ways inside it (one decision at a time). Each way is a menu row that
+   grows to two lines: the name in the control type, one line under it in the glass's secondary text, the icon in
+   a 32 px rounded square on the glass's clear veil. Rows fill the menu (and the drawer) edge to edge, with no
+   radius and no line between them (menu-rows-fill, few-strokes); hover and the keyboard light the whole row. On a
+   phone the same rows sit in the drawer from the bottom, in reach of the thumb, each at least 64 px tall.
+   Rule gate: menu-rows-fill, few-strokes, glass-only-floating, air, touch-target, hover-needs-hover,
+   space-from-tokens, type-from-tokens, tokens-only-color. */
+
+.ui-option-menu { width: min(320px, calc(100vw - 2 * var(--ui-overlay-margin))); } /* gate-allow:space-from-tokens the menu's width, a layout width */
+.ui-option-menu-item.ui-menu-item {
+  height: auto; min-height: var(--ui-size-hit); align-items: flex-start; gap: var(--ui-space-md);
+  padding-block: var(--ui-space-md); white-space: normal;
+}
+.ui-option-menu-icon {
+  display: inline-grid; place-items: center; flex: none; width: var(--ui-size-control-sm); height: var(--ui-size-control-sm);
+  border-radius: var(--ui-radius-item); background: var(--ui-glass-button-clear); color: var(--ui-glass-fg);
+}
+.ui-option-menu-icon > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-option-menu-text { display: grid; gap: var(--ui-space-xs); min-width: 0; padding-block-start: var(--ui-space-xs); }
+.ui-option-menu-label { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.3; color: var(--ui-glass-fg); }
+.ui-option-menu-description { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-glass-fg-secondary); text-wrap: pretty; }
+
+/* The drawer on a phone: the rows fill its width, under its title. */
+.ui-option-menu-list { display: grid; margin-inline: calc(-1 * var(--ui-inset-panel)); }
+.ui-option-menu-list > .ui-option-menu-item { padding-inline: var(--ui-inset-panel); min-height: calc(var(--ui-size-hit) + var(--ui-space-lg)); }
+.ui-option-menu-drawer .ui-drawer-body { margin-block: var(--ui-space-lg) var(--ui-space-2xl); }

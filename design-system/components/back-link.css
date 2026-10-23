@@ -1,0 +1,56 @@
+/* Back link: the one way up from a page that sits under another (a product under Products, a campaign under
+   Campaigns). PROPOSED 15 Oct 2026, replacing the breadcrumb in the app (Marcus 15 Oct: "Ikke så fan av sånn her,
+   heller bare en pil tilbake knapp").
+   Markup: <header class="ui-page-header">
+             <a class="ui-back ui-page-header-back" href="/brand/products">
+               <span class="ui-back-icon" aria-hidden="true"><svg/> arrow-left</span>
+               <span class="ui-back-label"><span class="ui-sr-only">Back to </span>Products</span></a>
+             <div class="ui-page-header-main"> title … </div></header>
+   Fume decisions: one step up, never a path: the arrow sits in a 32 px rounded square (the rail's shape, radius
+   item, on the sunken surface; no stroke), the parent's name small beside it in secondary text, 12 above the
+   title where the breadcrumb was. It is a link, not an action, so it is not a pill; the square says "button"
+   without shouting. The whole link is the hit area (44 px at least); hover steps the square one step toward Ink and
+   the name to Ink. On click the app goes back in history when the page before was the parent (a list keeps its
+   place, filters and scroll), otherwise to the parent itself. Full-screen pages (the Studio document, the viewer,
+   swipe) keep their own close and back in their bars.
+   Rule gate: few-strokes, touch-target, touch-feedback, hover-needs-hover, focus-is-sharp, space-from-tokens,
+   type-from-tokens, tokens-only-color, reduced-motion. */
+
+.ui-back {
+  position: relative; display: inline-flex; align-items: center; gap: var(--ui-space-sm); justify-self: start; max-width: 100%; min-width: 0;
+  border-radius: var(--ui-radius-item); color: var(--ui-text-secondary); text-decoration: none; outline: none;
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+/* the hit area: 44 px tall at least, centred on the square */
+.ui-back::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+.ui-back-icon {
+  display: inline-grid; place-items: center; flex: none; width: var(--ui-size-control-sm); height: var(--ui-size-control-sm);
+  border-radius: var(--ui-radius-item); /* gate-allow:actions-are-pills  the back link is navigation, a rounded square like the rail's rows, not an action pill (Marcus 15 Oct) */
+  background: var(--ui-surface-sunken); color: var(--ui-text);
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-back-icon > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-back-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (hover: hover) {
+  .ui-back:hover { color: var(--ui-text); }
+  .ui-back:hover .ui-back-icon { background: var(--ui-action-quiet-pressed); }
+}
+.ui-back.is-hover { color: var(--ui-text); }
+.ui-back.is-hover .ui-back-icon { background: var(--ui-action-quiet-pressed); }
+.ui-back:active, .ui-back.is-pressed { color: var(--ui-text); }
+.ui-back:active .ui-back-icon, .ui-back.is-pressed .ui-back-icon { background: var(--ui-action-quiet-pressed); transform: scale(var(--ui-motion-press-scale)); }
+.ui-back:focus-visible, .ui-back.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* In the page header: where the breadcrumb was, 12 above the title. */
+.ui-page-header-back { margin-block-end: var(--ui-pagehead-crumb-gap); }
+/* A back that only changes the view, not the address (a settings page on a phone, WAY-21; PROPOSED 19 Oct 2026):
+   the same look on a button. */
+button.ui-back { padding: 0; border: 0; background: none; }
+.ui-back.ui-settings-back { margin-inline-start: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-back, .ui-back-icon { transition: none; }
+  .ui-back:active .ui-back-icon, .ui-back.is-pressed .ui-back-icon { transform: none; }
+}

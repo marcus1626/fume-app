@@ -1,0 +1,152 @@
+/* Dialog and alert dialog. DECIDED 13 Oct, from round 7. Built on shadcn's dialog and alert-dialog (same parts:
+   overlay, content, header, title, description, footer, close; AlertDialog's data-size="sm"; Radix
+   data-state="open|closed", role="dialog" or "alertdialog", aria-modal), redesigned for Fume.
+   A dialog is Smoke glass (.ui-glass on the same element) at the panel radius, 32 (DECIDED 13 Oct),
+   over the glass scrim: the page dims so the decision comes into focus.
+   Air (Marcus, round 5: the delete dialog felt cramped): 24 all round (--ui-inset-panel), so nothing comes
+   closer to the edge than three quarters of the corner. Title and description are one group (8 apart);
+   the actions sit 24 under them, right-aligned, at most one white (glass-white) or coloured (glass-danger)
+   button and the rest clear. On a phone the actions stack full width, 44 tall, the main one last, nearest
+   the thumb. Title 18 medium (GT Standard, never Canon); description Porcelain 88 % at weight 500.
+   Close: a clear glass circle with fi-x, top right inside the inset, centred on the title's first line
+   (the header leaves room for it). An alert dialog has no close button and the scrim does not close it:
+   the person chooses (Escape still cancels).
+   Sizes (shadcn sizes, Fume widths): sm 400 for confirmations and alert dialogs, md 480 default,
+   lg 640 when the work has to be in view.
+   Motion: arrives from blur to sharp (glass.css), leaves the same way, faster. dialog.js does the rest:
+   focus trap, Escape, scrim click, focus back to the trigger, scroll lock, sheets and drawers.
+   Phone (round 8, walk-through 19 Oct, MOB-13 and MOB-15; PROPOSED 19 Oct 2026): under 640 px every dialog of
+   size md or lg ([data-phone="sheet"], set by dialog.tsx) is the bottom sheet the drawer already is: 8 off the
+   sides and the bottom, up to 48 below the top, rising from the bottom; a grab handle (the drawer's 40 x 6 pill,
+   a 44 px hit area) instead of the close circle; the body scrolls on its own between the header and the footer,
+   which stays at the foot, the actions stacked full width with the main one last. Drag the handle or the header
+   down to close. Size sm (a confirmation) stays centred. The scrim is darker on a phone
+   (--ui-dialog-scrim-phone), so the page's words no longer read through the glass between the dialog's labels.
+   Markup (phone sheet): <div class="ui-glass ui-dialog" data-phone="sheet" data-size="md">
+     <button class="ui-dialog-handle" aria-label="Close"></button> header · body · footer · close </div>
+   Desk (round 9, DWAY-4 and DLAY-15, desktop review 19 Oct; PROPOSED 19 Oct 2026): a dialog is for a short
+   confirmation; a form or anything longer opens as the right panel (sheet.css). The dialog is the Smoke glass (glass.css),
+   at most the window less 48 px tall (24 above and below), and when it holds a body the body scrolls on its own while
+   the header and the footer stay; the footer sits under a hairline in the faint Porcelain veil, so the buttons that
+   finish the task never share their line with a scrolled field. A form around body and footer takes no box.
+   Markup: <div class="ui-glass ui-dialog"> header · <form> <div class="ui-dialog-body">…</div>
+             <div class="ui-dialog-footer">…</div> </form> · close </div>
+   Rule gate: air, space-from-tokens, glass-one-white, few-strokes, type-from-tokens, reduced-motion,
+   touch-target (the close button is a .ui-btn with its 44 px hit area; the handle has its own 44 px hit area). */
+
+.ui-dialog-overlay { position: fixed; inset: 0; z-index: var(--ui-overlay-z-modal); background: var(--ui-glass-scrim); -webkit-tap-highlight-color: transparent; }
+.ui-dialog-overlay[data-state="open"] { animation: ui-dialog-scrim-in var(--ui-motion-base) var(--ui-motion-ease) both; }
+.ui-dialog-overlay[data-state="closed"] { animation: ui-dialog-scrim-out var(--ui-motion-fast) var(--ui-motion-ease) both; }
+
+.ui-dialog {
+  --dialog-w: var(--ui-dialog-width-md);
+  position: fixed; inset: 0; z-index: var(--ui-overlay-z-modal);
+  display: grid; gap: var(--ui-space-xl); align-content: start;
+  width: min(var(--dialog-w), calc(100% - 2 * var(--ui-overlay-margin)));
+  height: fit-content; max-height: calc(100% - 2 * var(--ui-overlay-margin));
+  margin: auto; padding: var(--ui-inset-panel); overflow: auto; overscroll-behavior: contain;
+  border-radius: var(--ui-radius-panel);
+  color: var(--ui-glass-fg); font-family: var(--ui-type-family); font-size: var(--ui-type-control);
+  outline: none; transform-origin: center;
+}
+.ui-dialog[hidden], .ui-dialog-overlay[hidden] { display: none; }
+.ui-dialog--sm, .ui-dialog[data-size="sm"] { --dialog-w: var(--ui-dialog-width-sm); }
+.ui-dialog--lg, .ui-dialog[data-size="lg"] { --dialog-w: var(--ui-dialog-width-lg); }
+.ui-dialog[data-state="closed"] { animation: ui-dialog-out var(--ui-motion-fast) var(--ui-motion-ease) both; }
+
+/* text: one group, 8 apart */
+.ui-dialog-header { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-dialog-title { margin: 0; font-size: var(--ui-type-body-large); font-weight: var(--ui-type-weight-medium); line-height: 1.3; letter-spacing: -.01em; text-wrap: balance; }
+.ui-dialog-description { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.5; color: var(--ui-glass-fg-secondary); text-wrap: pretty; }
+.ui-dialog-body { display: grid; gap: var(--ui-space-lg); min-width: 0; }
+
+/* actions: right-aligned on a desk, stacked full width on a phone with the main action last */
+.ui-dialog-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--ui-space-sm); }
+
+/* ---------- desk: never taller than the window less 48; the body scrolls, header and footer stay (round 9) ---------- */
+@media (min-width: 640px) {
+  .ui-dialog { max-height: calc(100% - 2 * var(--ui-space-xl)); }
+  .ui-dialog:is(:has(> .ui-dialog-body), :has(> form > .ui-dialog-body)) { display: flex; flex-direction: column; overflow: hidden; }
+  .ui-dialog > form:has(> .ui-dialog-body) { display: contents; }
+  .ui-dialog > .ui-dialog-body, .ui-dialog > form > .ui-dialog-body {
+    flex: 0 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+    /* room for a focus ring at the scroll's edge */
+    margin: calc(-1 * var(--ui-space-xs)); padding: var(--ui-space-xs);
+  }
+  .ui-dialog > :is(.ui-dialog-header, .ui-dialog-footer), .ui-dialog > form > :is(.ui-dialog-header, .ui-dialog-footer) { flex: none; }
+  /* the flex column keeps the grid's air between the parts */
+  .ui-dialog:is(:has(> .ui-dialog-body), :has(> form > .ui-dialog-body)) { gap: var(--ui-space-xl); }
+  .ui-dialog:is(:has(> .ui-dialog-body), :has(> form > .ui-dialog-body)) > form { gap: var(--ui-space-xl); }
+}
+/* the footer of a dialog whose body scrolls sits under a hairline (DWAY-4) */
+.ui-dialog:is(:has(> .ui-dialog-body), :has(> form > .ui-dialog-body)) .ui-dialog-footer {
+  margin-inline: calc(-1 * var(--ui-inset-panel)); padding: var(--ui-space-lg) var(--ui-inset-panel) 0;
+  box-shadow: inset 0 1px 0 var(--ui-glass-button-clear); /* gate-allow:few-strokes  the one line on the panel: it parts the pinned buttons from the scrolled body, so a field's words never sit under a button (DWAY-4) */
+}
+@media (max-width: 639.98px) {
+  .ui-dialog-footer { flex-direction: column; align-items: stretch; }
+  .ui-dialog-footer > .ui-btn { --h: var(--ui-size-hit); width: 100%; }
+}
+
+/* close: a clear glass circle in the top-right corner of the inset, on the title's first line */
+.ui-dialog-close { position: absolute; top: var(--ui-inset-panel); right: var(--ui-inset-panel); }
+.ui-dialog:has(> .ui-dialog-close) > .ui-dialog-header { padding-inline-end: calc(var(--ui-size-control-sm) + var(--ui-space-md)); }
+.ui-dialog:has(> .ui-dialog-close) .ui-dialog-title { display: flex; align-items: center; min-height: var(--ui-size-control-sm); }
+
+/* ---------- phone: a dialog of size md or lg is a bottom sheet ---------- */
+.ui-dialog-handle { display: none; }
+@media (max-width: 639.98px) {
+  .ui-dialog-overlay { background: var(--ui-dialog-scrim-phone); }
+  .ui-dialog[data-phone="sheet"] {
+    inset: auto var(--ui-drawer-margin) calc(var(--ui-drawer-margin) + env(safe-area-inset-bottom, 0px));
+    width: auto; max-width: var(--ui-drawer-width); margin: 0 auto;
+    max-height: calc(100% - var(--ui-drawer-top) - var(--ui-drawer-margin) - env(safe-area-inset-bottom, 0px));
+    padding-top: calc(var(--ui-space-md) + var(--ui-drawer-handle-height) + var(--ui-space-lg));
+    translate: 0 var(--dialog-y, 0px); transform-origin: center bottom;
+    transition: translate var(--ui-motion-base) var(--ui-motion-ease);
+  }
+  .ui-dialog[data-phone="sheet"][data-dragging] { transition: none; user-select: none; }
+  .ui-dialog[data-phone="sheet"][data-state="open"] { animation: ui-dialog-rise var(--ui-motion-slow) var(--ui-motion-ease) both; }
+  .ui-dialog[data-phone="sheet"][data-state="closed"] { animation: ui-dialog-sink var(--ui-motion-base) var(--ui-motion-ease) both; }
+  /* the body scrolls between the header and the footer, which stay put; a form around them takes no box */
+  .ui-dialog[data-phone="sheet"]:is(:has(> .ui-dialog-body), :has(> form > .ui-dialog-body)) { display: flex; flex-direction: column; overflow: hidden; }
+  .ui-dialog[data-phone="sheet"] > form:has(> .ui-dialog-body) { display: contents; }
+  .ui-dialog[data-phone="sheet"] > .ui-dialog-body, .ui-dialog[data-phone="sheet"] > form > .ui-dialog-body {
+    flex: 0 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+    /* room for a focus ring at the scroll's edge */
+    margin: calc(-1 * var(--ui-space-xs)); padding: var(--ui-space-xs);
+  }
+  .ui-dialog[data-phone="sheet"] > :is(.ui-dialog-header, .ui-dialog-footer), .ui-dialog[data-phone="sheet"] > form > :is(.ui-dialog-header, .ui-dialog-footer) { flex: none; }
+  .ui-dialog[data-phone="sheet"] .ui-dialog-header { touch-action: none; }
+  /* the handle takes the close circle's place */
+  .ui-dialog[data-phone="sheet"] > .ui-dialog-close { display: none; }
+  .ui-dialog[data-phone="sheet"]:has(> .ui-dialog-close) > .ui-dialog-header { padding-inline-end: 0; }
+  .ui-dialog[data-phone="sheet"] > .ui-dialog-handle {
+    position: absolute; top: var(--ui-space-md); left: 50%; translate: -50% 0; display: block;
+    width: var(--ui-drawer-handle-width); height: var(--ui-drawer-handle-height); padding: 0; border: 0;
+    border-radius: var(--ui-radius-action); background: var(--ui-drawer-handle);
+    cursor: grab; touch-action: none; outline: none; -webkit-tap-highlight-color: transparent;
+    transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+  }
+  .ui-dialog[data-phone="sheet"] > .ui-dialog-handle::after {
+    content: ""; position: absolute; inset: calc(-1 * var(--ui-space-md)) min(0px, calc(50% - var(--ui-size-hit) / 2)) auto; height: var(--ui-size-hit);
+  }
+  .ui-dialog[data-phone="sheet"] > .ui-dialog-handle:active, .ui-dialog[data-phone="sheet"][data-dragging] > .ui-dialog-handle { background: var(--ui-drawer-handle-active); cursor: grabbing; }
+  .ui-dialog[data-phone="sheet"] > .ui-dialog-handle:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-size-ring-offset); }
+}
+/* the title takes the first focus on a touch screen (dialog.tsx); it shows no ring for a tap */
+.ui-dialog-title:focus:not(:focus-visible) { outline: none; }
+
+/* the page behind does not scroll while a dialog, sheet or drawer is open */
+:root.ui-scroll-lock { overflow: hidden; scrollbar-gutter: stable; }
+
+@keyframes ui-dialog-scrim-in { from { opacity: 0; } }
+@keyframes ui-dialog-scrim-out { to { opacity: 0; } }
+@keyframes ui-dialog-out { to { opacity: 0; transform: scale(var(--ui-motion-enter-scale)); filter: blur(var(--ui-motion-enter-blur)); } }
+@keyframes ui-dialog-rise { from { transform: translateY(calc(100% + var(--ui-drawer-margin))); filter: blur(var(--ui-motion-enter-blur)); } to { transform: none; filter: none; } }
+@keyframes ui-dialog-sink { to { transform: translateY(calc(100% + var(--ui-drawer-margin))); filter: blur(var(--ui-motion-enter-blur)); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-dialog[data-state], .ui-dialog-overlay[data-state], .ui-dialog[data-phone="sheet"][data-state] { animation: none; }
+  .ui-dialog[data-phone="sheet"], .ui-dialog[data-phone="sheet"] > .ui-dialog-handle { transition: none; }
+}

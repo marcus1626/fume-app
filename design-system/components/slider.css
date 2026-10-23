@@ -1,0 +1,90 @@
+/* Slider. DECIDED 13 Oct, from round 7. Built on shadcn's slider (Radix Slider: root, Track, Range and one Thumb per
+   value with role="slider", aria-valuenow/min/max, data-orientation, data-disabled), redesigned for Fume.
+   Markup (one thumb; add a second thumb for a range):
+     <div class="ui-slider" data-min="1" data-max="24" data-step="1">
+       <span class="ui-slider-track"><span class="ui-slider-range"></span></span>
+       <span class="ui-slider-thumb" role="slider" tabindex="0" aria-label="Creatives per format"
+         aria-valuemin="1" aria-valuemax="24" aria-valuenow="12"><span class="ui-slider-value ui-glass ui-glass--small">12</span></span>
+     </div>
+   slider.js (fumeSlider) places the thumbs and the range from the values, drags with a pointer (the
+   nearest thumb follows), and takes the keyboard: arrows one step, Page Up/Down ten, Home/End.
+   Fume decisions: a thin 4 px pill track, sunken; the chosen range is Ink (never Amber); the thumb is
+   white and lifted by --ui-depth-raised, with no edge. The value shows in a small glass bubble above the
+   thumb while it is pressed, dragged, focused or hovered, set in the data face with tabular numbers
+   (the bubble is a tooltip, so it is Smoke glass, glass.css). A range keeps its two thumbs from crossing.
+   States: hover one step toward Ink on the thumb, pressed two steps plus the 3 % shrink, focus a sharp
+   2 px Ink ring around the thumb, disabled: flat thumb and a Focus 300 range. On glass
+   (.ui-slider--glass): a Porcelain veil track, Porcelain range and thumb, no shadow.
+   Touch: each thumb has a 44 px hit area and the whole track takes a drag; vertical page scroll still
+   works through it (touch-action: pan-y). Hover only with a mouse.
+   Rule gate: few-strokes, focus-is-sharp, touch-target, touch-feedback, hover-needs-hover, reduced-motion. */
+
+.ui-slider {
+  --t: var(--ui-slider-thumb); --a: 0; --b: 0;
+  --track: var(--ui-slider-track); --range: var(--ui-slider-range);
+  --thumb: var(--ui-slider-thumb-bg); --thumb-hover: var(--ui-action-secondary-hover); --thumb-pressed: var(--ui-action-secondary-pressed);
+  --thumb-depth: var(--ui-depth-raised); --ring: var(--ui-focus-ring);
+  position: relative; display: flex; align-items: center; width: 100%; min-width: 0; height: var(--t);
+  cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; touch-action: pan-y;
+}
+/* the track takes a drag anywhere along it: 44 px tall to a finger */
+.ui-slider::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: var(--ui-size-hit); transform: translateY(-50%); }
+.ui-slider:active { cursor: grabbing; }
+.ui-slider-track { position: relative; flex: 1; height: var(--ui-slider-track-height); border-radius: var(--ui-radius-action); background: var(--track); pointer-events: none; }
+/* from the start (one thumb) or from thumb to thumb (a range), centre to centre */
+.ui-slider-range {
+  position: absolute; top: 0; bottom: 0; border-radius: var(--ui-radius-action); background: var(--range);
+  left: calc(var(--t) / 2 + (100% - var(--t)) * var(--a));
+  right: calc(100% - var(--t) / 2 - (100% - var(--t)) * var(--b));
+}
+.ui-slider[data-thumbs="1"] .ui-slider-range { left: 0; }
+.ui-slider-thumb {
+  --p: 0;
+  position: absolute; top: 50%; left: calc((100% - var(--t)) * var(--p)); z-index: 1;
+  width: var(--t); height: var(--t); margin-top: calc(var(--t) / -2);
+  border-radius: 50%; background: var(--thumb); box-shadow: var(--thumb-depth);
+  cursor: grab; outline: none; -webkit-tap-highlight-color: transparent; touch-action: pan-y;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-slider-thumb::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: 50%; }
+.ui-slider-thumb:focus-visible, .ui-slider-thumb.is-focus { outline: var(--ui-size-ring) solid var(--ring); outline-offset: var(--ui-size-ring-offset); z-index: 2; }
+@media (hover: hover) { .ui-slider-thumb:hover { background: var(--thumb-hover); } }
+.ui-slider-thumb.is-hover { background: var(--thumb-hover); }
+.ui-slider-thumb:active, .ui-slider-thumb.is-pressed, .ui-slider-thumb[data-dragging] { background: var(--thumb-pressed); transform: scale(var(--ui-motion-press-scale)); cursor: grabbing; z-index: 2; }
+/* the value: a small glass bubble above the thumb, in the data face */
+.ui-slider-value {
+  position: absolute; left: 50%; bottom: calc(100% + var(--ui-space-sm)); z-index: 3;
+  padding: var(--ui-space-xs) var(--ui-inset-tight); border-radius: var(--ui-radius-action);
+  font-family: var(--ui-type-family-data); /* gate-allow:mono-is-data  the value is data: a count or a measure */
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); line-height: 1.4; font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none;
+  opacity: 0; transform: translate(-50%, var(--ui-space-xs));
+  transition: opacity var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-fast) var(--ui-motion-ease);
+}
+@media (hover: hover) { .ui-slider-thumb:hover .ui-slider-value { opacity: 1; transform: translate(-50%, 0); } }
+.ui-slider-thumb:focus-visible .ui-slider-value, .ui-slider-thumb[data-dragging] .ui-slider-value, .ui-slider-thumb:active .ui-slider-value,
+.ui-slider-thumb.is-hover .ui-slider-value, .ui-slider-thumb.is-focus .ui-slider-value, .ui-slider-thumb.is-pressed .ui-slider-value,
+.ui-slider--value .ui-slider-value { opacity: 1; transform: translate(-50%, 0); }
+
+/* vertical (data-orientation="vertical"): the same parts turned upright, the value grows upward */
+.ui-slider[data-orientation="vertical"] { flex-direction: column; width: var(--t); height: 100%; min-height: calc(var(--ui-size-hit) * 4); touch-action: pan-x; }
+.ui-slider[data-orientation="vertical"]::before { left: 50%; right: auto; top: 0; bottom: 0; width: var(--ui-size-hit); height: auto; transform: translateX(-50%); }
+.ui-slider[data-orientation="vertical"] .ui-slider-track { width: var(--ui-slider-track-height); height: auto; }
+.ui-slider[data-orientation="vertical"] .ui-slider-range { left: 0; right: 0; bottom: calc(var(--t) / 2 + (100% - var(--t)) * var(--a)); top: calc(100% - var(--t) / 2 - (100% - var(--t)) * var(--b)); }
+.ui-slider[data-orientation="vertical"][data-thumbs="1"] .ui-slider-range { bottom: 0; }
+.ui-slider[data-orientation="vertical"] .ui-slider-thumb { top: auto; left: 50%; bottom: calc((100% - var(--t)) * var(--p)); margin: 0 0 0 calc(var(--t) / -2); }
+.ui-slider[data-orientation="vertical"] .ui-slider-value { left: calc(100% + var(--ui-space-sm)); bottom: 50%; transform: translate(var(--ui-space-xs), 50%); }
+.ui-slider[data-orientation="vertical"] .ui-slider-thumb:is(:focus-visible, [data-dragging], :active, .is-hover, .is-focus, .is-pressed) .ui-slider-value,
+.ui-slider--value[data-orientation="vertical"] .ui-slider-value { transform: translate(0, 50%); }
+
+/* on glass: Porcelain on a Porcelain veil, no shadow */
+.ui-slider--glass { --track: var(--ui-slider-glass-track); --range: var(--ui-slider-glass-range); --thumb: var(--ui-slider-glass-range); --thumb-hover: var(--ui-glass-button-white-hover); --thumb-pressed: var(--ui-glass-button-white-pressed); --thumb-depth: none; --ring: var(--ui-focus-ring-on-glass); }
+
+/* disabled */
+.ui-slider[data-disabled], .ui-slider[aria-disabled="true"] { --range: var(--ui-slider-range-disabled); --thumb: var(--ui-surface); --thumb-hover: var(--thumb); --thumb-pressed: var(--thumb); --thumb-depth: none; cursor: default; pointer-events: none; }
+.ui-slider--glass[data-disabled] { --range: var(--ui-glass-button-disabled-fg); --thumb: var(--ui-glass-button-disabled-fg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-slider-thumb { transition: background-color var(--ui-motion-fast) linear; }
+  .ui-slider-thumb:active, .ui-slider-thumb.is-pressed, .ui-slider-thumb[data-dragging] { transform: none; }
+  .ui-slider-value { transition: opacity var(--ui-motion-fast) linear; }
+}

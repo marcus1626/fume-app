@@ -1,0 +1,33 @@
+/* Empty state. DECIDED 13 Oct, from round 7. Built on shadcn's empty (same parts: empty, empty-header, empty-media
+   with variant icon, empty-title, empty-description, empty-content), redesigned for Fume.
+   Decisions:
+   - Calm and centred, with generous air: --ui-space-2xl above and below, --ui-inset-panel at the sides,
+     text on a short measure (--ui-empty-measure). No dashed outline (few-strokes): on the page it sits
+     on the ground itself; inside a panel it can take a surface step (.ui-empty--surface).
+   - One icon at display size (24) in a soft square on the sunken step: the Engine (fi-fume-engine) where
+     the next step is to generate, the grey checked triangle (--ui-check-waiting) for an empty check queue.
+     Never Amber: nothing is checked here.
+   - One clear next step: an Ink primary button, at most one quiet or secondary beside it.
+   - Proximity: icon 16 above the title, title 8 above its text, text 24 above the actions.
+   Rule gate: few-strokes, radius-from-tokens, space-from-tokens, type-from-tokens. */
+
+.ui-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--ui-space-xl);
+  min-width: 0; padding: var(--ui-space-2xl) var(--ui-inset-panel);
+  border-radius: var(--ui-radius-card); text-align: center;
+  font-family: var(--ui-type-family); color: var(--ui-text);
+}
+.ui-empty--surface { background: var(--ui-surface); }
+.ui-empty--sm { gap: var(--ui-space-lg); padding: var(--ui-space-xl) var(--ui-inset-float); }
+
+.ui-empty-header { display: grid; justify-items: center; gap: var(--ui-space-sm); max-width: var(--ui-empty-measure); min-width: 0; }
+.ui-empty-media { display: grid; place-items: center; margin-block-end: var(--ui-space-sm); color: var(--ui-text); }
+.ui-empty-media svg { width: var(--ui-empty-icon); height: var(--ui-empty-icon); }
+.ui-empty-media--icon { width: var(--ui-empty-media); height: var(--ui-empty-media); border-radius: var(--ui-radius-card); background: var(--ui-empty-media-bg); }
+.ui-empty--surface .ui-empty-media--icon { background: var(--ui-ground); }
+.ui-empty-media--waiting svg { color: var(--ui-check-waiting); }
+.ui-empty-title { margin: 0; font-size: var(--ui-type-body-large); font-weight: var(--ui-type-weight-medium); line-height: 1.3; letter-spacing: -.01em; text-wrap: balance; }
+.ui-empty--sm .ui-empty-title { font-size: var(--ui-type-body); letter-spacing: 0; }
+.ui-empty-description { margin: 0; font-size: var(--ui-type-control); line-height: 1.55; color: var(--ui-text-secondary); text-wrap: balance; }
+.ui-empty-description a { color: var(--ui-text); text-decoration: underline; text-decoration-color: var(--ui-hairline-strong); text-underline-offset: 3px; }
+.ui-empty-content { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--ui-space-sm); max-width: var(--ui-empty-measure); min-width: 0; }

@@ -1,0 +1,65 @@
+/* Carousel: a strip of creatives. DECIDED 13 Oct, from round 7. Built on shadcn's carousel (same parts: carousel with
+   role="region" and aria-roledescription="carousel", content, item with aria-roledescription="slide",
+   previous, next; arrow keys move it), redesigned for Fume and dependency-free: native scroll with snap
+   instead of Embla, so it follows a finger, a trackpad and the keyboard.
+   Creatives are 4:5 soft rectangles (radius card 16) with the creative's hairline edge, each with its name
+   and its check state under it (the Amber checked triangle only when checked, grey In check).
+   Previous and next are small Smoke glass circles over the images (.ui-glass + .ui-btn--glass-clear: the
+   blur and dim of glass under a clear veil, no shadow, no stroke), centred on the image, and they fade out
+   at the ends. Under the strip, the position as small pills: a dot per stop, the current one a longer Ink
+   pill that slides. They only show the position (the strip itself is the control), so they carry no
+   hit area.
+   One slide and a peek on a phone, two and a half from 540 px, three and a half from 760 px (container
+   queries). carousel.js runs the buttons, the dots and the keys.
+   Rule gate: few-strokes (the creative's edge is the allowed one), actions-are-pills, touch-target,
+   touch-feedback, amber-is-a-point, reduced-motion. */
+
+.ui-carousel { position: relative; container: ui-carousel / inline-size; display: grid; gap: var(--ui-space-lg); min-width: 0; font-family: var(--ui-type-family); }
+.ui-carousel-viewport { --slide: 76; position: relative; min-width: 0; }
+@container ui-carousel (min-width: 540px) { .ui-carousel-viewport { --slide: 37; } }
+@container ui-carousel (min-width: 760px) { .ui-carousel-viewport { --slide: 26.5; } }
+.ui-carousel-content {
+  display: flex; gap: var(--ui-space-lg); overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; scrollbar-width: none; outline: none;
+}
+.ui-carousel-content::-webkit-scrollbar { display: none; }
+/* the focus ring goes round the viewport: a rounded scroller would clip the captions at its corners */
+.ui-carousel-viewport { border-radius: var(--ui-radius-card); }
+.ui-carousel-viewport:has(> .ui-carousel-content:focus-visible) { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-carousel-item { flex: 0 0 calc(var(--slide) * 1%); min-width: 0; scroll-snap-align: start; } /* a share of the strip, in % (cqi here made Chrome lay the page out again and again) */
+.ui-carousel-creative { display: grid; gap: var(--ui-space-sm); margin: 0; }
+.ui-carousel-creative img {
+  display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken);
+  outline: 1px solid var(--ui-hairline); outline-offset: -1px; /* the creative's edge: the one stroke few-strokes allows */
+  user-select: none; -webkit-user-drag: none;
+}
+.ui-carousel-caption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-xs) var(--ui-space-sm); font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-carousel-state { display: inline-flex; align-items: center; gap: var(--ui-space-xs); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); white-space: nowrap; }
+.ui-carousel-state > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-carousel-state[data-status="approved"] > svg { color: var(--ui-check); } /* gate-allow:amber-is-a-point  the checked triangle on an approved creative, beside its label */
+.ui-carousel-state[data-status="waiting"] { color: var(--ui-text-tertiary); }
+.ui-carousel-state[data-status="waiting"] > svg { color: var(--ui-check-waiting); }
+.ui-carousel-time { font-family: var(--ui-type-family-data); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-tertiary); }
+
+/* Previous and next: glass circles over the images, centred on the image. The image is 4:5, so its middle is
+   0.625 of the slide width down; a percentage margin-top is a share of the strip's width, which is what we need. */
+.ui-carousel-previous, .ui-carousel-next {
+  position: absolute; z-index: 2; top: 0; margin-top: calc(var(--slide) * 0.625%); translate: 0 -50%;
+  transition: opacity var(--ui-motion-base) var(--ui-motion-ease), background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-carousel-previous { left: var(--ui-space-md); }
+.ui-carousel-next { right: var(--ui-space-md); }
+.ui-carousel-previous:disabled, .ui-carousel-next:disabled { opacity: 0; }
+
+/* Position: small pills, the current one a longer Ink pill. */
+.ui-carousel-dots { display: flex; justify-content: center; align-items: center; gap: var(--ui-space-sm); min-height: var(--ui-space-sm); }
+.ui-carousel-dot {
+  display: block; width: var(--ui-space-sm); height: var(--ui-space-sm); border-radius: var(--ui-radius-action); background: var(--ui-hairline-strong);
+  transition: width var(--ui-motion-slide) var(--ui-motion-ease), background-color var(--ui-motion-slide) var(--ui-motion-ease);
+}
+.ui-carousel-dot[data-active] { width: var(--ui-space-xl); background: var(--ui-action-primary); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-carousel-previous, .ui-carousel-next, .ui-carousel-dot { transition: none; }
+  .ui-carousel-content { scroll-behavior: auto; }
+}

@@ -1,0 +1,193 @@
+/* Taste deck: one card at a time, saved on the tap (app round 8, UX review ONB-11, MOB-11, LOAD-12). PROPOSED 19 Oct
+   2026. The same deck in the onboarding (step 4, "Your taste") and on Brand › Taste ("Teach Fume your taste", on its
+   own full screen). Uses the look of swipe.css on the light ground; composed with button.css, toggle.css (the why
+   chips), field.css (the written why) and kbd.css.
+   Markup: <div class="ui-td" role="group" aria-label [data-done]>
+             <div class="ui-td-head"><ol class="ui-td-dots"><li class="ui-td-dot" data-state="done|current|todo"/>…</ol>
+               <span class="ui-td-count">2 of 6</span></div>
+             <div class="ui-td-card" data-kind="pair|single"><p class="ui-td-eyebrow"/><h2 class="ui-td-question"/>
+               pair:   <div class="ui-td-pair" data-dragging? style="--dx: -40"><button class="ui-td-pick" [data-chosen] aria-pressed><span class="ui-td-media"><img/>
+                         <span class="ui-td-check"><svg/></span></span><span class="ui-td-pick-label"><kbd class="ui-kbd ui-td-key">1</kbd> This one</span></button> ×2</div>
+               single: <div class="ui-td-single" data-dragging? data-leaving="left|right"? data-hint="yes|no"? style="--dx: 40"><img/>
+                         <span class="ui-td-stamp">This is us</span></div>
+                       <div class="ui-td-answers"> Not us (secondary) · This is us (primary), each with its key </div></div>
+             or the end: <div class="ui-td-end"> the page's own last card </div>
+             <div class="ui-td-foot"><div class="ui-td-why"><span class="ui-td-why-label"><img class="ui-td-why-thumb"/> Why?</span>
+               button.ui-toggle.ui-toggle--outline.ui-toggle--sm × n · Write… (input.ui-input.ui-input--sm.ui-td-write)</div>
+               or <p class="ui-td-hint"><span class="ui-td-hint-touch"/><span class="ui-td-hint-keys"/></p>
+               <button class="ui-btn ui-btn--quiet ui-btn--sm ui-td-back">Back one</button></div></div>
+           The stage (Brand › Taste): <div class="ui-td-stage" role="dialog"><header class="ui-td-stage-bar"><h2 class="ui-td-stage-title"/>
+             Done (secondary pill)</header><div class="ui-td-stage-body"> the deck </div></div>
+   Fume decisions: quick and calm, never a game: one card, the picture the biggest thing on the screen, one tap or one
+   swipe answers and the answer is saved at once. A single picture follows the finger a little turned (a degree per
+   30 px) and glides back on the motion ease when let go short of 30 % of its width: no bounce, no spring. A Porcelain
+   stamp names what a let-go would do, in words ("This is us" top left, "Not us" top right), never green or red. A
+   pair is two pictures side by side, 8 apart; the pick is an Ink ring and an Ink check, and the next card comes in
+   from soft to sharp. The dots and "2 of 6" say where she is. Why comes after the pick, as quiet chips about the card
+   just answered (its thumbnail beside "Why?"). Keys show only where there is a keyboard, the swipe line only on
+   touch. No Amber: taste is not a check.
+   Round 9 (desktop review DLAY-12, DTSK-22, DWAY-2; PROPOSED 19 Oct 2026): a desk (≥ 1024 px) uses its width. The
+   picture (or the pair) stands on the left, sized from the screen: min(55vh, 560 px), never taller than the room the
+   page leaves it (--td-chrome), and never so wide that the question's column drops under 304 px. The question, the
+   answers with their keys, "Why?" and Back one stand beside it, top-aligned, all on screen at once: one left edge
+   for the heading and the picture under it. Each card's parts come in from soft to sharp as the card did. Arrow
+   keys answer nothing. Once the last card is answered the deck is gone and only the page's end shows.
+   Rule gate: few-strokes (the picture's edge and the pick's Ink ring, marked), air, proximity, space-from-tokens,
+   radius-from-tokens, type-from-tokens, motion-from-tokens, reduced-motion, actions-are-pills, touch-target,
+   touch-feedback, hover-needs-hover, amber-is-a-point, card-never-matches-ground. */
+
+.ui-td {
+  --td-width: calc(var(--ui-space-2xl) * 17);
+  /* The picture is as tall as the screen allows once everything else on it is counted (--td-chrome), so the answers
+     are always on screen without scrolling (MOB-11). A page sets --td-chrome for its own header and foot. */
+  --td-chrome: calc(var(--ui-space-2xl) * 11);
+  --td-media-h: max(calc(100dvh - var(--td-chrome)), calc(var(--ui-space-2xl) * 7));
+  container: ui-td / inline-size; display: grid; justify-items: center; gap: var(--ui-space-xl); width: 100%; min-width: 0;
+}
+
+/* where she is: a dot per card and "2 of 6" */
+.ui-td-head { display: flex; align-items: center; gap: var(--ui-space-md); width: min(100%, var(--td-width)); }
+.ui-td-dots { display: flex; flex: 1; gap: var(--ui-space-xs); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-td-dot { flex: 1; height: var(--ui-space-xs); border-radius: var(--ui-radius-action); background: var(--ui-surface-sunken); transition: background-color var(--ui-motion-base) var(--ui-motion-ease); }
+.ui-td-dot[data-state="done"] { background: var(--ui-text); }
+.ui-td-dot[data-state="current"] { background: var(--ui-text-tertiary); }
+.ui-td-count { flex-shrink: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); font-variant-numeric: tabular-nums; color: var(--ui-text-secondary); }
+
+/* the card */
+.ui-td-card { display: grid; justify-items: center; gap: var(--ui-space-lg); width: min(100%, var(--td-width)); min-width: 0; animation: ui-td-in var(--ui-motion-slow) var(--ui-motion-ease) both; }
+.ui-td-eyebrow { margin: 0 0 calc(var(--ui-space-md) * -1); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-tertiary); }
+.ui-td-question { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.25; letter-spacing: -.01em; text-align: center; text-wrap: balance; }
+
+/* a pair: tap the one that is more you, or swipe toward it */
+.ui-td-pair {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--ui-space-sm); width: min(100%, calc(var(--td-media-h) * 8 / 5 + var(--ui-space-sm))); min-width: 0;
+  /* swiped toward the picture that is more you (Marcus 19 Oct): it follows the finger a quarter of the way, no turn */
+  transform: translateX(calc(var(--dx, 0) * .25px)); transition: transform var(--ui-motion-base) var(--ui-motion-ease);
+  touch-action: pan-y; user-select: none; -webkit-user-select: none;
+}
+.ui-td-pair[data-dragging] { transition: none; cursor: grabbing; }
+.ui-td-pick {
+  position: relative; display: grid; gap: var(--ui-space-sm); min-width: 0; min-height: var(--ui-size-hit); margin: 0; padding: 0; border: 0; border-radius: var(--ui-radius-card);
+  background: transparent; color: var(--ui-text); font: inherit; text-align: center;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-td-pick:disabled { cursor: default; }
+.ui-td-pick:active:not(:disabled) { transform: scale(var(--ui-motion-press-scale)); }
+.ui-td-pick:focus-visible .ui-td-media { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-td-media { position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); }
+.ui-td-media > img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; user-select: none; }
+.ui-td-media::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); pointer-events: none; } /* gate-allow:few-strokes  the edge of the picture, so a light one never vanishes */
+.ui-td-pick[data-chosen] .ui-td-media { outline: var(--ui-size-ring) solid var(--ui-text); outline-offset: var(--ui-size-ring-offset); } /* gate-allow:few-strokes  the Ink ring is the pick */
+.ui-td-check {
+  position: absolute; top: var(--ui-space-sm); right: var(--ui-space-sm); display: grid; place-items: center;
+  width: var(--ui-size-control-sm); height: var(--ui-size-control-sm); border-radius: 50%;
+  background: var(--ui-action-primary); color: var(--ui-action-primary-fg); opacity: 0; scale: .8;
+  transition: opacity var(--ui-motion-fast) var(--ui-motion-ease), scale var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-td-check > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-td-pick[data-chosen] .ui-td-check { opacity: 1; scale: 1; }
+.ui-td-pick-label { display: inline-flex; align-items: center; justify-content: center; gap: var(--ui-space-sm); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); }
+@media (hover: hover) { .ui-td-pick:hover:not(:disabled) .ui-td-media > img { scale: 1.02; transition: scale var(--ui-motion-base) var(--ui-motion-ease); } }
+
+/* a single picture: swipe it, or the pills */
+.ui-td-single {
+  position: relative; aspect-ratio: 4 / 5; width: min(100%, calc(var(--ui-space-2xl) * 12), calc(var(--td-media-h) * 4 / 5)); overflow: hidden;
+  border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); box-shadow: var(--ui-depth-raised);
+  transform: translateX(calc(var(--dx, 0) * 1px)) rotate(calc(var(--dx, 0) * 1deg / 30));
+  transition: transform var(--ui-motion-base) var(--ui-motion-ease), opacity var(--ui-motion-base) var(--ui-motion-ease);
+  touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; -webkit-tap-highlight-color: transparent;
+}
+.ui-td-single > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
+.ui-td-single[data-dragging] { transition: none; cursor: grabbing; }
+.ui-td-single[data-leaving="right"] { transform: translateX(100cqw) rotate(6deg); opacity: 0; }
+.ui-td-single[data-leaving="left"] { transform: translateX(-100cqw) rotate(-6deg); opacity: 0; }
+.ui-td-stamp {
+  position: absolute; top: var(--ui-space-lg); z-index: 1; display: inline-flex; align-items: center; height: var(--ui-size-control-md);
+  padding: 0 var(--ui-size-pad-md); border-radius: var(--ui-radius-action); background: var(--ui-surface); color: var(--ui-text); box-shadow: var(--ui-depth-raised);
+  font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1; white-space: nowrap;
+  opacity: 0; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); pointer-events: none;
+}
+.ui-td-stamp:empty { visibility: hidden; }
+.ui-td-single[data-hint] .ui-td-stamp { opacity: 1; }
+.ui-td-single[data-hint="yes"] .ui-td-stamp { left: var(--ui-space-lg); }
+.ui-td-single[data-hint="no"] .ui-td-stamp { right: var(--ui-space-lg); }
+.ui-td-answers { display: flex; gap: var(--ui-space-sm); width: min(100%, calc(var(--ui-space-2xl) * 12)); }
+.ui-td-answers .ui-btn { flex: 1 1 0; }
+.ui-td-answers .ui-kbd { margin-inline-start: var(--ui-space-xs); }
+.ui-td-answers .ui-btn--primary .ui-kbd { background: var(--ui-qg-key-on-ink); color: var(--ui-qg-key-on-ink-fg); }
+
+/* under the card: why (about the card just answered), or how to answer; and Back one */
+.ui-td-foot { display: grid; justify-items: center; gap: var(--ui-space-md); width: min(100%, var(--td-width)); min-height: var(--ui-size-hit); }
+.ui-td-why { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-td-why-label { display: inline-flex; align-items: center; gap: var(--ui-space-sm); margin-inline-end: var(--ui-space-xs); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); }
+.ui-td-why-thumb { width: var(--ui-size-control-sm); height: var(--ui-size-control-sm); border-radius: var(--ui-radius-item); object-fit: cover; }
+.ui-td-write { width: calc(var(--ui-space-2xl) * 6); }
+.ui-td-hint { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--ui-space-xs) var(--ui-space-sm); margin: 0; font-size: var(--ui-type-label); color: var(--ui-text-secondary); text-align: center; }
+.ui-td-hint-keys { display: none; align-items: center; gap: var(--ui-space-xs); }
+@media (hover: hover) and (pointer: fine) {
+  .ui-td-hint-keys { display: inline-flex; }
+  .ui-td-hint-touch { display: none; }
+}
+@media (pointer: coarse) { .ui-td-key { display: none; } }
+.ui-td-live { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } /* gate-allow:space-from-tokens  the visually-hidden pattern: what was answered, said once */
+
+/* the page's own last card */
+.ui-td-end { width: min(100%, calc(var(--ui-space-2xl) * 20)); min-width: 0; animation: ui-td-in var(--ui-motion-slow) var(--ui-motion-ease) both; }
+
+/* ─── The stage: the deck on its own full screen (Brand › Taste) ─── */
+.ui-td-stage {
+  position: fixed; inset: 0; z-index: var(--ui-overlay-z-modal); display: grid; grid-template-rows: auto minmax(0, 1fr);
+  background: var(--ui-onboard-ground); color: var(--ui-text); outline: none;
+  animation: ui-td-fade var(--ui-motion-base) var(--ui-motion-ease) both;
+}
+.ui-td-stage-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-md); padding: var(--ui-space-lg) var(--ui-space-xl); }
+.ui-td-stage-title { margin: 0; font-size: var(--ui-type-body-large); font-weight: var(--ui-type-weight-medium); }
+.ui-td-stage-body { display: grid; align-content: start; min-height: 0; padding: var(--ui-space-md) var(--ui-space-xl) var(--ui-space-2xl); overflow-y: auto; overscroll-behavior: contain; }
+
+@container ui-td (max-width: 479.98px) {
+  .ui-td { gap: var(--ui-space-lg); }
+  .ui-td-question { font-size: var(--ui-type-body-large); }
+}
+@media (max-width: 639.98px) {
+  .ui-td-stage-bar { padding: var(--ui-space-md) var(--ui-space-lg); }
+  .ui-td-stage-body { padding: var(--ui-space-sm) var(--ui-space-lg) var(--ui-space-xl); }
+}
+
+/* ─── A desk: the picture beside its question ─── */
+@media (min-width: 1024px) {
+  .ui-td {
+    --td-side: calc(var(--ui-space-2xl) * 9.5); /* the question's column at the least */
+    --td-media-h: min(55vh, calc(var(--ui-space-2xl) * 17.5), calc(100dvh - var(--td-chrome)), calc((100cqw - var(--td-side) - var(--ui-space-2xl) - var(--ui-space-sm)) * 5 / 8));
+  }
+  .ui-td:not([data-done]) {
+    grid-template-columns: auto minmax(0, 1fr); grid-template-rows: repeat(5, auto) minmax(0, 1fr);
+    grid-template-areas: "media head" "media eyebrow" "media question" "media answers" "media foot" "media .";
+    justify-items: start; align-items: start; gap: var(--ui-space-lg) var(--ui-space-2xl);
+  }
+  .ui-td:not([data-done]) > .ui-td-card { display: contents; animation: none; }
+  .ui-td:not([data-done]) > .ui-td-card > * { animation: ui-td-in var(--ui-motion-slow) var(--ui-motion-ease) both; }
+  .ui-td:not([data-done]) > .ui-td-head { grid-area: head; width: min(100%, calc(var(--ui-space-2xl) * 12)); }
+  .ui-td:not([data-done]) .ui-td-eyebrow { grid-area: eyebrow; margin: 0; }
+  .ui-td:not([data-done]) .ui-td-question { grid-area: question; text-align: start; }
+  .ui-td:not([data-done]) :is(.ui-td-pair, .ui-td-single) { grid-area: media; }
+  .ui-td:not([data-done]) .ui-td-pair { width: calc(var(--td-media-h) * 8 / 5 + var(--ui-space-sm)); }
+  .ui-td:not([data-done]) .ui-td-single { width: calc(var(--td-media-h) * 4 / 5); }
+  .ui-td:not([data-done]) .ui-td-answers { grid-area: answers; width: min(100%, calc(var(--ui-space-2xl) * 12)); }
+  .ui-td:not([data-done]) > .ui-td-foot { grid-area: foot; justify-items: start; width: 100%; }
+  .ui-td:not([data-done]) :is(.ui-td-why, .ui-td-hint) { justify-content: flex-start; text-align: start; }
+  /* the deck on its own screen (Brand › Taste): the app's measure, in the middle of the stage */
+  .ui-td-stage-body > .ui-td { justify-self: center; max-width: calc(var(--ui-space-2xl) * 37.5); }
+}
+
+@keyframes ui-td-in { from { opacity: 0; filter: blur(var(--ui-motion-enter-blur)); scale: var(--ui-motion-enter-scale); } to { opacity: 1; filter: none; scale: 1; } }
+@keyframes ui-td-fade { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-td-card, .ui-td:not([data-done]) > .ui-td-card > *, .ui-td-end, .ui-td-stage { animation: none; }
+  .ui-td-single { transition: opacity var(--ui-motion-fast) linear; transform: none; }
+  .ui-td-single[data-leaving] { transform: none; }
+  .ui-td-pair { transition: none; transform: none; }
+  .ui-td-pick, .ui-td-check, .ui-td-dot, .ui-td-stamp { transition: none; }
+  .ui-td-pick:active:not(:disabled) { transform: none; }
+}

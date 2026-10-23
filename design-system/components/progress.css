@@ -1,0 +1,59 @@
+/* Progress. DECIDED 13 Oct, from round 7. Built on shadcn's progress (Radix Progress: a root with role="progressbar",
+   aria-valuemin/max/now, data-state="loading|complete|indeterminate", data-value, data-max, and an
+   Indicator part moved by translateX), redesigned for Fume. Markup:
+     <div class="ui-progress" role="progressbar" aria-valuemin="0" aria-valuemax="12" aria-valuenow="7"
+       aria-label="Generating creatives" data-state="loading" style="--value: 58">
+       <span class="ui-progress-indicator"></span></div>
+   --value is a percentage without the unit (React: set the Indicator's transform as shadcn does).
+   Fume decisions: a thin 4 px pill track on the sunken surface and an Ink fill, never Amber: progress is
+   work under way, Amber is work checked. The fill moves with the shared ease in --ui-motion-slow.
+   With a label (.ui-progress-head) the value is data, in the data face with tabular numbers: "7 / 12".
+   Indeterminate: a short Ink segment sweeps across in --ui-progress-sweep; with reduced motion it stops
+   moving and the whole track breathes slowly instead. Stepped (.ui-steps): the four stages of a
+   campaign, Brief, Generate, Quality Gate, Delivered, as segments 4 apart, done in Ink, the current one
+   filling, the rest sunken; the words under each say the state, so colour is never the only signal.
+   On glass (.ui-progress--glass): a Porcelain veil track and a Porcelain fill.
+   Rule gate: motion-from-tokens, reduced-motion, mono-is-data, few-strokes. */
+
+.ui-progress {
+  --value: 0; --track: var(--ui-progress-track); --fill: var(--ui-progress-fill);
+  position: relative; display: block; width: 100%; height: var(--ui-progress-height); overflow: hidden;
+  border-radius: var(--ui-radius-action); background: var(--track);
+}
+.ui-progress-indicator {
+  display: block; width: 100%; height: 100%; border-radius: var(--ui-radius-action); background: var(--fill);
+  transform: translateX(calc((var(--value) - 100) * (1% + 0.01px))); /* 0.01px more per point: an empty track sits 1px further out, so no sliver shows at its start; a full one is exact */
+  transition: transform var(--ui-motion-slow) var(--ui-motion-ease);
+}
+.ui-progress[data-state="complete"] .ui-progress-indicator { transform: none; }
+.ui-progress[data-state="indeterminate"] .ui-progress-indicator { width: 32%; transform: translateX(-100%); transition: none; animation: ui-progress-sweep var(--ui-progress-sweep) linear infinite; }
+@keyframes ui-progress-sweep { from { transform: translateX(-100%); } to { transform: translateX(312.5%); } }
+@keyframes ui-progress-breathe { from { opacity: .2; } to { opacity: .6; } }
+
+/* label and value above the track: 8 apart; the value is data */
+.ui-progress-field { display: grid; gap: var(--ui-space-sm); width: 100%; min-width: 0; }
+.ui-progress-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--ui-space-md); min-width: 0; font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-progress-num { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-secondary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ui-progress-hint { font-family: var(--ui-type-family); font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+
+/* on glass */
+.ui-progress--glass { --track: var(--ui-progress-glass-track); --fill: var(--ui-progress-glass-fill); }
+.ui-progress-field--glass .ui-progress-head { color: var(--ui-glass-fg); }
+.ui-progress-field--glass .ui-progress-num, .ui-progress-field--glass .ui-progress-hint { color: var(--ui-glass-fg-secondary); font-weight: var(--ui-type-weight-medium); }
+
+/* stepped: Brief, Generate, Quality Gate, Delivered */
+.ui-steps { display: grid; grid-template-columns: repeat(var(--steps, 4), minmax(0, 1fr)); gap: var(--ui-space-xs); width: 100%; min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-steps-item { display: grid; gap: var(--ui-space-sm); align-content: start; min-width: 0; }
+.ui-steps-item .ui-progress { --value: 0; }
+.ui-steps-item[data-state="complete"] .ui-progress { --value: 100; }
+.ui-steps-label { display: flex; align-items: flex-start; gap: var(--ui-space-xs); min-width: 0; font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.35; color: var(--ui-text-tertiary); }
+.ui-steps-label svg { width: var(--ui-size-icon-sm); height: 1.35em; flex-shrink: 0; } /* one line tall, so the check sits centred on the first line when a name wraps */
+.ui-steps-item[data-state="complete"] .ui-steps-label, .ui-steps-item[data-state="active"] .ui-steps-label { color: var(--ui-text); }
+.ui-steps-num { font-family: var(--ui-type-family-data); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-secondary); font-variant-numeric: tabular-nums; }
+/* a stage name never gets cut: on a narrow screen it wraps (Quality / Gate) */
+.ui-steps-label > span { min-width: 0; overflow-wrap: break-word; text-wrap: balance; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-progress-indicator { transition: none; }
+  .ui-progress[data-state="indeterminate"] .ui-progress-indicator { width: 100%; transform: none; animation: ui-progress-breathe var(--ui-motion-spin-reduced) var(--ui-motion-ease) infinite alternate; }
+}

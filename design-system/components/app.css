@@ -1,0 +1,191 @@
+/* App layout: the page inside the app's sidebar inset. PROPOSED 14 Oct 2026, with the Fume app (app/). The review
+   board lays its specimens out with review-only classes (sx-app-head and the like); the app needs the same frame
+   from the design system, so the look stays in one place and app/ adds no CSS of its own.
+   Markup: <div class="ui-app">                                        the document root (#root)
+             <div class="ui-sidebar-wrapper"> <aside class="ui-sidebar">…</aside>
+               <main class="ui-sidebar-inset">
+                 <div class="ui-app-bar"> trigger · breadcrumb · <div class="ui-app-bar-end">search, bell</div></div>
+                 <div class="ui-app-page"> PageHeader, then sections </div></main></div></div>
+           <section class="ui-app-section"><div class="ui-app-section-head"><h2 class="ui-app-section-title">Waiting on you</h2>
+             <span class="ui-app-section-meta">3</span> <a class="ui-btn ui-btn--quiet ui-btn--sm">See all</a></div> … </section>
+   Fume decisions: no line under the bar or between sections (rule few-strokes): space parts them, 32 between
+   sections, 16 inside one. The page is 1200 wide at most and reading pages (a brief, settings, a form) keep to
+   the reading measure. Two columns from 1024 px: the work on the left, what supports it in a 320 aside. Section
+   titles are GT Standard at the heading size, never GT Canon. A full-height page (the conversation with Fume)
+   drops the padding and lets its own scroller fill the inset.
+   Round 8 (walk-through 19 Oct; PROPOSED 19 Oct 2026): once a sub-page's own title has scrolled up under the bar,
+   the bar shows the page's way back and its one-line title (.ui-app-bar-back: the back link's square, arrow only,
+   and .ui-app-bar-title), so the arrow is never ten screens away (MOB-7). An address with a #hash scrolls its item
+   into view under the bar and marks it for a moment ([data-ui-target]): an Ink outline that fades, no glow, no
+   Amber (WAY-14).
+   Markup: <div class="ui-app-bar"> … <div class="ui-app-bar-back" data-shown>
+             <a class="ui-back" href="/brand/products"><span class="ui-back-icon">←</span><span class="ui-sr-only">Back to Products</span></a>
+             <span class="ui-app-bar-title">Hand Balm 50 ml</span></div> <div class="ui-app-bar-end">…</div></div>
+   Round 9 (desktop review 19 Oct; PROPOSED 19 Oct 2026):
+   - DWAY-6, DLAY-16: on a desk (1024 px and wider) the bar always carries the way back with its target's name
+     ("← Home", the back link as in the page header), beside the sidebar button; once the page's own title has scrolled
+     away, a thin divider and the page's title follow it. A top-level page (no way back) shows its title alone once
+     scrolled. The page header leaves its own back row out on a desk (page-header.css), so the content starts higher.
+     Under 1024 the bar keeps round 8: the arrow alone and the title, once scrolled.
+   - DLAY-8, DLAY-7: one left edge. Every page sits in the 1200 container; a reading page (a form, a list of statements,
+     notifications) keeps to the 760 reading measure, left-aligned in that container, never centred.
+   - DWAY-8: "Skip to content" is the first stop of the Tab key (.ui-skip-link): out of sight until it has focus.
+   Markup: <a class="ui-skip-link" href="#main">Skip to content</a>
+           <div class="ui-app-bar"> trigger · <div class="ui-app-bar-back" data-shown>
+             <a class="ui-back">← <span class="ui-back-label">Home</span></a>
+             <span class="ui-app-bar-divider"></span><span class="ui-app-bar-title">Autumn launch</span></div> · end </div>
+   Round 12 (desktop review 20 Oct, DLAY-4, DWAY-5, DWAY-8; PROPOSED 20 Oct 2026): Fume's studio and an agency have this
+   frame too, so the bar is one bar in every frame: 56 px (--ui-app-bar-height), the way back by name and the title once
+   the header has scrolled away, then Search (⌘K) and the bell.
+   Rule gate: few-strokes, air, space-from-tokens, type-from-tokens, canon-not-in-ui, reduced-motion. */
+
+/* Page defaults the components are drawn for, as on the review board and in the brand book: border-box sizing (a row
+   at width 100% keeps its padding inside), the UI face on the body, the selection colour. */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; background: var(--ui-ground-behind); }
+body { font-family: var(--ui-type-family); font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text); -webkit-font-smoothing: antialiased; }
+::selection { background: var(--ui-selection); color: var(--ui-text); }
+img { max-width: 100%; }
+.ui-app, #root { height: 100%; }
+/* The frame is the window, never the page: the sidebar stands still at the window's height and only the page
+   scrolls, inside its own sheet (Marcus 14 Oct: the menu is separate and not as long as the page). */
+.ui-app > .ui-sidebar-wrapper, #root > .ui-sidebar-wrapper { height: 100vh; height: 100dvh; min-height: 0; overflow: hidden; }
+/* Tabs that don't jump (Marcus 15 Oct: "siden hopper litt" between List and Calendar): the page's scroller keeps
+   the scrollbar's room whether the page is long or short, so nothing moves sideways when a tab is shorter. */
+.ui-app .ui-sidebar-inset, #root .ui-sidebar-inset { scrollbar-gutter: stable; }
+
+/* The bar's height, one for every frame (round 12, DLAY-4): a 40 px control and the bar's 8 px above and below. A sticky
+   row under the bar (the plan's index) sits at this offset, so nothing scrolls through a strip between them. PROPOSED
+   as a navigation token; until the token build carries it, the app's frame defines it here. */
+:root { --ui-app-bar-height: calc(var(--ui-size-control-md) + 2 * var(--ui-space-sm)); }
+
+/* The inset's top line: the drawer button on a phone, where you are, and search and the bell at the end. */
+.ui-app-bar {
+  /* flex none: the inset is a column, and a long page squeezed the bar to its min-height while a short one (a tab
+     still loading) let it grow, so the whole page moved 8 px on every tab change */
+  position: sticky; top: 0; z-index: 3; flex: none; display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0;
+  min-height: var(--ui-app-bar-height); padding: var(--ui-space-sm) var(--ui-space-xl);
+  background: var(--ui-ground); font-family: var(--ui-type-family); color: var(--ui-text);
+}
+.ui-app-bar > .ui-breadcrumb { flex: 1 1 auto; min-width: 0; }
+.ui-app-bar-end { display: flex; align-items: center; gap: var(--ui-space-xs); margin-inline-start: auto; }
+
+/* The way back and the title (MOB-7; round 9 DWAY-6, DLAY-16) */
+.ui-app-bar-back { display: flex; flex: 1 1 auto; align-items: center; gap: var(--ui-space-sm) var(--ui-space-md); min-width: 0; }
+.ui-app-bar-back > .ui-back { flex: none; max-width: 40%; }
+.ui-app-bar-title {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.3; letter-spacing: -.01em; color: var(--ui-text);
+}
+/* a thin divider between the way back and the page's title: the way back is not the page you are on (DWAY-6) */
+.ui-app-bar-divider {
+  flex: none; width: 1px; height: var(--ui-space-lg); background: var(--ui-hairline-strong); /* gate-allow:few-strokes  one short divider in the bar: "← Home | Autumn launch" reads as two things, the way back and where you are (DWAY-6) */
+}
+/* Under 1024: the arrow alone and the title, once the page's header has scrolled away (round 8, MOB-7) */
+@media (max-width: 1023.98px) {
+  .ui-app-bar-back {
+    opacity: 0; visibility: hidden; translate: 0 var(--ui-space-xs);
+    transition: opacity var(--ui-motion-base) var(--ui-motion-ease), translate var(--ui-motion-base) var(--ui-motion-ease), visibility 0s linear var(--ui-motion-base);
+  }
+  .ui-app-bar-back[data-shown] { opacity: 1; visibility: visible; translate: none; transition-delay: 0s; }
+  .ui-app-bar-back .ui-back-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .ui-app-bar-divider { display: none; }
+}
+/* A desk: the way back always, by name; the divider and the title once the header has scrolled away */
+@media (min-width: 1024px) {
+  .ui-app-bar-back > :is(.ui-app-bar-divider, .ui-app-bar-title) {
+    opacity: 0; visibility: hidden; translate: 0 var(--ui-space-xs);
+    transition: opacity var(--ui-motion-base) var(--ui-motion-ease), translate var(--ui-motion-base) var(--ui-motion-ease), visibility 0s linear var(--ui-motion-base);
+  }
+  .ui-app-bar-back[data-shown] > :is(.ui-app-bar-divider, .ui-app-bar-title) { opacity: 1; visibility: visible; translate: none; transition-delay: 0s; }
+}
+
+/* "Skip to content": the first Tab stop, out of sight until it has focus (DWAY-8) */
+.ui-skip-link {
+  position: fixed; z-index: var(--ui-overlay-z-toast); top: var(--ui-space-sm); left: var(--ui-space-sm);
+  display: inline-flex; align-items: center; min-height: var(--ui-size-control-md); padding-inline: var(--ui-size-pad-sm);
+  border-radius: var(--ui-radius-action); background: var(--ui-action-primary); color: var(--ui-action-primary-fg);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); text-decoration: none;
+  translate: 0 calc(-100% - var(--ui-space-lg)); outline: none;
+}
+/* the page's title takes focus from code on a change of page (Root.tsx): no ring on it */
+main h1[tabindex="-1"]:focus, main[tabindex="-1"]:focus { outline: none; }
+.ui-skip-link:focus, .ui-skip-link:focus-visible { translate: none; outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* The item an address's #hash points at, marked for a moment once it is in view (WAY-14): an Ink outline that
+   fades. It follows the item's own corners. */
+[data-ui-target] {
+  outline: var(--ui-size-ring) solid transparent; outline-offset: var(--ui-space-xs); /* gate-allow:few-strokes  a passing mark on the item a link pointed at, gone in two seconds, like a focus ring */
+  animation: ui-app-target calc(5 * var(--ui-motion-slow)) var(--ui-motion-ease) both;
+}
+@keyframes ui-app-target { 0%, 55% { outline-color: var(--ui-action-primary); } 100% { outline-color: transparent; } }
+
+.ui-app-page {
+  display: grid; align-content: start; gap: var(--ui-space-2xl); width: 100%; max-width: 1200px; /* gate-allow:space-from-tokens the page's widest measure, a layout width, not a space */
+  margin-inline: auto; padding: var(--ui-space-lg) var(--ui-space-xl) calc(2 * var(--ui-space-2xl)); box-sizing: border-box;
+  font-family: var(--ui-type-family); color: var(--ui-text);
+}
+/* the reading measure, left-aligned on the one left edge (DLAY-7, DLAY-8): the page stays in the 1200 container and its
+   column stops at 760 */
+.ui-app-page--reading { grid-template-columns: minmax(0, 760px); } /* gate-allow:space-from-tokens the reading measure, a layout width (DLAY-7) */
+/* While the next tab loads, the page keeps the height it had (Page.tsx sets the hold), so the scroller never
+   clamps its scroll to a page that is only a header and a spinner. */
+.ui-app-page[data-hold] { min-height: var(--ui-app-page-hold); }
+.ui-app-page--fill { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; max-width: none; padding: 0; gap: 0; }
+
+.ui-app-section { display: grid; gap: var(--ui-space-lg); min-width: 0; }
+.ui-app-section-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--ui-space-sm) var(--ui-space-md); min-width: 0; }
+.ui-app-section-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.25; letter-spacing: -.01em; color: var(--ui-text); }
+.ui-app-section-meta { font-family: var(--ui-type-family-data); font-size: var(--ui-type-control); color: var(--ui-text-tertiary); }
+.ui-app-section-head > :last-child:not(:first-child):not(.ui-app-section-meta) { margin-inline-start: auto; }
+.ui-app-section-text { margin: 0; max-width: var(--ui-book-measure); font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+
+/* Two columns: the work, then a 320 aside that drops under it on a narrow page. */
+.ui-app-cols { display: grid; gap: var(--ui-space-2xl); min-width: 0; container: ui-app-cols / inline-size; }
+@container ui-sidebar (min-width: 1024px) {
+  .ui-app-cols { grid-template-columns: minmax(0, 1fr) 320px; align-items: start; } /* gate-allow:space-from-tokens the aside's width, a layout width */
+}
+.ui-app-stack { display: grid; gap: var(--ui-space-lg); min-width: 0; align-content: start; }
+.ui-app-stack--tight { gap: var(--ui-space-sm); }
+
+/* A grid of cards, 240 at least each. */
+/* What the Engine made, on a brand's Home (round 12, DLAY-8): one row of six on a desk, two rows of three, three of two. */
+.ui-creative-grid.ui-app-made { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-lg) var(--ui-space-md); }
+@media (min-width: 640px) { .ui-creative-grid.ui-app-made { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .ui-creative-grid.ui-app-made { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+.ui-app-grid { display: grid; gap: var(--ui-space-lg); grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); } /* gate-allow:space-from-tokens the card's least width */
+.ui-app-grid--wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); } /* gate-allow:space-from-tokens the wide card's least width */
+
+.ui-app-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-app-row--end { justify-content: flex-end; }
+.ui-app-row--between { justify-content: space-between; }
+
+/* The page while it loads: one display spinner in the middle, nothing else. */
+.ui-app-loading { display: grid; place-items: center; min-height: 240px; color: var(--ui-text-tertiary); } /* gate-allow:space-from-tokens the loading area's height */
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-app-bar-back, .ui-app-bar-back > * { transition: none !important; translate: none !important; }
+  [data-ui-target] { animation-timing-function: steps(1, end); }
+}
+
+@media (max-width: 639px) {
+  .ui-app-bar { padding-inline: var(--ui-space-lg); }
+  .ui-app-page { padding: var(--ui-space-md) var(--ui-space-lg) calc(2.5 * var(--ui-space-2xl)); gap: var(--ui-space-xl); }
+  .ui-app-page--fill { padding: 0; }
+}
+
+/* The conversation fills a full-height page: the message scroller takes the room the page has left (the token's
+   560 is the review board's height; "in the product it fills its pane"). */
+.ui-app-page--fill .ui-message-scroller { flex: 1 1 auto; height: auto; }
+
+/* A message hugs its words, but a grid of creatives in it takes the message's whole width, or it collapses to one
+   column (PROPOSED, 14 Oct 2026, with the app). */
+.ui-message > :is(.ui-app-stack, .ui-creative-grid) { align-self: stretch; }
+
+/* A name in a table that opens its page reads as the name, in the text colour; a mouse shows the underline
+   (PROPOSED, 14 Oct 2026, with the app). */
+.ui-table a:not([class]) { color: inherit; text-decoration: none; }
+@media (hover: hover) {
+  .ui-table a:not([class]):hover { text-decoration: underline; text-decoration-color: var(--ui-hairline-strong); text-underline-offset: 3px; }
+}
+.ui-table a:not([class]):focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }

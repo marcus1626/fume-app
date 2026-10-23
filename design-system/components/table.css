@@ -1,0 +1,147 @@
+/* Table and data table. DECIDED 13 Oct, from round 7. Built on shadcn's table (same parts: container, table, header,
+   body, footer, row, head, cell, caption; data-state="selected" on a row) and its data-table pattern
+   (sortable headers with aria-sort, a select column, a row actions column), redesigned for Fume.
+   No row lines and no column lines (few-strokes): rows are separated by 4 px of space, and the hover and
+   selected surfaces step toward Ink (Focus 50, then 100) as soft rows with radius 10. The header is label
+   type in tertiary and sticks to the top of a scrolling container on Porcelain.
+   Numbers and sizes are data: GT Standard Mono, right-aligned, tabular (.ui-table-cell--data / --num).
+   The creative's thumbnail (a media cell) carries the creative's hairline (the one stroke the rule allows).
+   Status uses the check states: the Amber checked triangle only on a checked creative, the grey one
+   while it is In check, always beside the word.
+   Select: the Fume checkbox (checkbox.css, .ui-checkbox) in a select column; a selected row steps two
+   toward Ink. The header box selects all and shows the dash while some are selected.
+   Narrow containers (under 600 px) stack each row: select, thumbnail, then the cells as lines, the trail
+   cell (time) top right and the actions bottom right. Decided over sideways scrolling: on a phone you see
+   every creative's status without dragging the table.
+   table.js sorts (click a header: ascending, descending) and selects (rows, select all, Shift-click range).
+   Touch: the checkbox, sort headers and row actions are 44 px to a finger; hover only with a mouse.
+   Rule gate: few-strokes, mono-is-data, amber-is-a-point, touch-target, touch-feedback, hover-needs-hover,
+   radius-from-tokens, reduced-motion. */
+
+.ui-table-container { position: relative; width: 100%; min-width: 0; overflow: auto; container: ui-table / inline-size; overscroll-behavior: contain; }
+.ui-table {
+  width: 100%; border-collapse: separate; border-spacing: 0 var(--ui-table-row-gap); margin-block: calc(var(--ui-table-row-gap) * -1);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.4; color: var(--ui-text); font-variant-numeric: tabular-nums;
+}
+.ui-table-caption { caption-side: bottom; padding-top: var(--ui-space-md); text-align: left; font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+
+/* header */
+.ui-table-head {
+  position: sticky; top: 0; z-index: 2; height: var(--ui-table-head); padding: 0 var(--ui-table-cell-x);
+  background: var(--ui-ground); text-align: left; vertical-align: middle; white-space: nowrap;
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); letter-spacing: .01em; color: var(--ui-text-tertiary);
+}
+.ui-table-head:first-child { padding-inline-start: var(--ui-inset-float); }
+.ui-table-head:last-child { padding-inline-end: var(--ui-inset-float); }
+.ui-table-head[aria-sort="ascending"], .ui-table-head[aria-sort="descending"] { color: var(--ui-text); }
+.ui-table-sort {
+  position: relative; display: inline-flex; align-items: center; gap: var(--ui-space-xs); height: var(--ui-size-control-sm); padding: 0;
+  border: 0; border-radius: var(--ui-radius-item); background: transparent; color: inherit;
+  font: inherit; letter-spacing: inherit; white-space: nowrap; cursor: pointer; outline: none;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-table-sort::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-table-sort > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; color: var(--ui-text-tertiary); }
+.ui-table-head[aria-sort="ascending"] .ui-table-sort > svg, .ui-table-head[aria-sort="descending"] .ui-table-sort > svg { color: var(--ui-text); }
+@media (hover: hover) { .ui-table-sort:hover { color: var(--ui-text); } }
+.ui-table-sort.is-hover { color: var(--ui-text); }
+.ui-table-sort:active { color: var(--ui-text); opacity: .72; }
+.ui-table-sort:focus-visible, .ui-table-sort.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* rows and cells: space between rows, a soft surface on hover and selection, no lines */
+.ui-table-cell { padding: var(--ui-table-cell-y) var(--ui-table-cell-x); vertical-align: middle; white-space: nowrap; background: transparent; transition: background-color var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-table-row > .ui-table-cell:first-child { padding-inline-start: var(--ui-inset-float); border-start-start-radius: var(--ui-radius-item); border-end-start-radius: var(--ui-radius-item); }
+.ui-table-row > .ui-table-cell:last-child { padding-inline-end: var(--ui-inset-float); border-start-end-radius: var(--ui-radius-item); border-end-end-radius: var(--ui-radius-item); }
+@media (hover: hover) { .ui-table-body .ui-table-row:hover > .ui-table-cell { background: var(--ui-table-row-hover); } }
+.ui-table-row.is-hover > .ui-table-cell { background: var(--ui-table-row-hover); }
+.ui-table-row[data-state="selected"] > .ui-table-cell { background: var(--ui-table-row-selected); }
+.ui-table-footer .ui-table-cell { color: var(--ui-text-secondary); }
+
+.ui-table-cell--num, .ui-table-head--num { text-align: right; }
+.ui-table-cell--data { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+.ui-table-cell--select, .ui-table-cell--actions { width: 1%; }
+.ui-table-head.ui-table-cell--select { padding-inline-end: 0; }
+.ui-table-row > .ui-table-cell--select { padding-inline-end: 0; }
+.ui-table-cell--select .ui-checkbox { vertical-align: middle; }
+.ui-table-cell--actions { text-align: right; }
+.ui-table-muted { color: var(--ui-text-tertiary); }
+
+/* the creative: a thumbnail cell (media) and its name */
+.ui-table-cell--media { width: 1%; padding-inline-end: 0; }
+.ui-table-creative-thumb {
+  display: block; flex-shrink: 0; width: var(--ui-table-thumb); max-width: none; aspect-ratio: 4 / 5; object-fit: cover; /* max-width none: a page-wide img { max-width: 100% } would fold it to 0 in a shrink-wrapped cell */
+  border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken);
+  outline: 1px solid var(--ui-hairline); outline-offset: -1px; /* the creative's edge: the one stroke few-strokes allows */
+}
+.ui-table-title { display: block; font-weight: var(--ui-type-weight-medium); }
+.ui-table-title small { display: block; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-tertiary); }
+
+/* status: the check states */
+.ui-table-status { display: inline-flex; align-items: center; vertical-align: middle; gap: var(--ui-space-sm); font-weight: var(--ui-type-weight-medium); white-space: nowrap; }
+.ui-table-status > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; }
+.ui-table-status[data-status="approved"] > svg { color: var(--ui-check); } /* gate-allow:amber-is-a-point  the checked triangle on an approved creative, beside its label */
+.ui-table-status[data-status="waiting"] { color: var(--ui-text-tertiary); }
+.ui-table-status[data-status="waiting"] > svg { color: var(--ui-check-waiting); }
+.ui-table-status[data-status="draft"] { color: var(--ui-text-tertiary); }
+
+/* Narrow: each row stacks into a list row. */
+@container ui-table (max-width: 599.98px) {
+  .ui-table, .ui-table-body { display: block; margin: 0; }
+  .ui-table-row {
+    display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; align-items: center; column-gap: var(--ui-space-md); row-gap: 0;
+    margin-block-end: var(--ui-table-row-gap); padding: var(--ui-space-sm) var(--ui-space-md); border-radius: var(--ui-radius-item);
+    transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+  }
+  .ui-table-row > .ui-table-cell, .ui-table-row > .ui-table-cell:first-child, .ui-table-row > .ui-table-cell:last-child { display: block; grid-column: 3; width: auto; padding: 0; border-radius: 0; background: none; text-align: left; }
+  .ui-table-row > .ui-table-cell.ui-table-cell--select { grid-column: 1; grid-row: 1 / span 3; }
+  .ui-table-row > .ui-table-cell.ui-table-cell--media { grid-column: 2; grid-row: 1 / span 3; }
+  .ui-table-row > .ui-table-cell.ui-table-cell--trail { grid-column: 4; grid-row: 1; text-align: right; }
+  .ui-table-row > .ui-table-cell.ui-table-cell--actions { grid-column: 4; grid-row: 2 / span 2; justify-self: end; }
+  .ui-table-row > .ui-table-cell.ui-table-cell--hide-stacked { display: none; }
+  /* stacked, the words in the middle column wrap instead of running under the trail (PROPOSED, 14 Oct 2026, with the app) */
+  .ui-table-row > .ui-table-cell:not(.ui-table-cell--trail) { white-space: normal; }
+  /* the header becomes one sticky line of controls: select all, then the sorts of the columns still shown */
+  .ui-table-header { display: block; position: sticky; top: 0; z-index: 2; background: var(--ui-ground); }
+  .ui-table-header > .ui-table-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--ui-space-sm); padding-block: var(--ui-space-sm); }
+  .ui-table-header .ui-table-head { display: none; }
+  .ui-table-header .ui-table-head[data-sort], .ui-table-header .ui-table-head.ui-table-cell--select { display: flex; align-items: center; position: static; width: auto; height: var(--ui-table-head); padding: 0; }
+  .ui-table-header .ui-table-head.ui-table-cell--select { margin-inline-end: var(--ui-space-sm); }
+  .ui-table-header .ui-table-head.ui-table-cell--hide-stacked { display: none; }
+  .ui-table-row > .ui-table-cell--media .ui-table-creative-thumb { width: calc(var(--ui-table-thumb) * 1.2); }
+  @media (hover: hover) { .ui-table-body .ui-table-row:hover { background: var(--ui-table-row-hover); } .ui-table-body .ui-table-row:hover > .ui-table-cell { background: none; } }
+  .ui-table-row[data-state="selected"] { background: var(--ui-table-row-selected); }
+  .ui-table-row[data-state="selected"] > .ui-table-cell { background: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-table-cell, .ui-table-sort, .ui-table-row { transition: none; }
+}
+
+/* ── Records table (PROPOSED 20 Oct 2026, round 12, UX review DLAY-9, DLAY-14, DLAY-15, DLOAD-16) ──────────────────
+   One table for a record across frames: the studio's and the agency's Campaigns, Team and Deliveries are the same
+   table (Marcus 20 Oct: "Agency dashboard blir strengt tatt lik som vår"). The first text column takes what is left;
+   the others are set widths, so the name column no longer runs 530 px with the rest crowded at the right.
+   Markup: <table class="ui-table ui-records-table"> <th class="ui-records-col-sm|md|lg"> …
+     <td><span class="ui-table-title">Autumn launch<small>3 creatives to check</small></span>
+         <span class="ui-records-line">9 of 9 made · 6 of 9 checked</span></td>
+     <td class="ui-table-cell--num"><a class="ui-link ui-records-cell-link">3</a></td>
+     <td><span class="ui-records-bar"><span class="ui-records-data">2 of 11</span><progress …></span></td>
+   Fume decisions: a quiet third line (label size, tertiary) for what only an expert needs, never a fourth; a link in
+   a cell sits above the row's own link so both work; a bar in a cell is 80 px with its number beside it, the number
+   as data. No lines, no stat tiles: counts go in the mono line under the page title.
+   Rule gate: few-strokes, mono-is-data, space-from-tokens, touch-target. */
+.ui-records-table { table-layout: fixed; }
+.ui-records-table .ui-table-cell { white-space: normal; overflow-wrap: break-word; }
+.ui-records-table .ui-table-cell:is(.ui-table-cell--data, .ui-table-cell--num) { white-space: nowrap; }
+.ui-records-col-sm { width: 96px; } /* gate-allow:space-from-tokens a column's width */
+.ui-records-col-md { width: 136px; } /* gate-allow:space-from-tokens a column's width */
+.ui-records-col-lg { width: 192px; } /* gate-allow:space-from-tokens a column's width */
+.ui-records-line { display: block; margin-block-start: var(--ui-space-xs); font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-records-cell-link { position: relative; z-index: 2; } /* gate-allow:touch-target a number in a table row; the row itself is the 44 px target */
+.ui-records-data { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-secondary); white-space: nowrap; }
+.ui-records-bar { display: inline-flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-records-bar > .ui-progress { width: 80px; flex: none; } /* gate-allow:space-from-tokens the bar's set length, so bars compare */
+@container ui-table (max-width: 599.98px) { .ui-records-bar > .ui-progress { width: 64px; } } /* gate-allow:space-from-tokens */
+/* A chart that goes with a records table sits below it at the compact height (DLAY-16): the record first. */
+.ui-records-chart .ui-chart { --chart-h: var(--ui-chart-height-compact); }

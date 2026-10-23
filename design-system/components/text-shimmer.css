@@ -1,0 +1,48 @@
+/* Shimmer text. DECIDED 13 Oct, from round 11 (Marcus 13 Oct: "Shimmer tekst", then on round 10: "Shimmer skal være
+   hvit på mørk tekst"). The pattern people know from AI tools, where a line of words says something is under way
+   and a band of light passes through it.
+     .ui-text-shimmer          on any inline or block element that holds dark words. The words keep their own
+                               colour (currentColor) and a band of white light passes through them, left to
+                               right, then they rest. The Engine's own words take the same white light.
+   Decisions:
+   - White light on dark words. At the middle of the band the words are three quarters of the way to white
+     (text-shimmer.strength), so the light reads as a gleam and the words never vanish into the page.
+   - Only on dark words. On glass and on Ink the words are already light, so the light has nothing to show:
+     there the words stay still, and so does anything inside .ui-glass.
+   - One pass then a rest (2.6 s, the light crosses in the first 70 %), linear, so it reads as light moving
+     and not as a pulse. The band leans 100 deg and is about 40 % of a short line.
+   - Only for words that say something is under way right now: the Engine's step in words ("Writing
+     captions"), a run step that is moving, creatives on their way in. Never on a decision, a status that
+     waits for a person, the Quality Gate, a check or the upload box (round 11, Marcus: "verken orange eller
+     shimmer på where creatives land"). At most one line shimmers in a view.
+   - No Amber light, the Engine included. Round 11 had an Amber variant for the Engine's words
+     (.ui-text-shimmer--engine); Marcus took it out on 15 Oct ("Bytt Engine shimmer teksten til vanlig shimmer,
+     amber shimmer var ikke fint"). Amber stays the colour of the check (F-D069) and of light in photography.
+   - The gradient is the one the gate allows, each line marked gate-allow:no-gradient (Marcus asked for
+     shimmer text, 13 Oct, after the skeleton shimmer was taken out as too artificial). */
+
+.ui-text-shimmer {
+  --ts-light: var(--ui-text-shimmer-light);
+  --ts-strength: var(--ui-text-shimmer-strength);
+  --ts-peak: color-mix(in oklab, currentColor, var(--ts-light) var(--ts-strength));
+  --ts-edge: calc(50% - var(--ui-text-shimmer-band) / 2);
+  background-image: linear-gradient(var(--ui-text-shimmer-angle), currentColor 0 var(--ts-edge), var(--ts-peak) 50%, currentColor calc(100% - var(--ts-edge)) 100%); /* gate-allow:no-gradient: shimmer text, Marcus 13 Oct */
+  background-size: 250% 100%;
+  background-repeat: no-repeat;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: ui-text-shimmer var(--ui-text-shimmer-duration) linear infinite;
+}
+
+@keyframes ui-text-shimmer {
+  0% { background-position: 100% 0; }
+  70%, 100% { background-position: 0 0; }
+}
+
+/* Light words (glass, Ink), reduced motion and forced colours: the words rest in their own colour. */
+.ui-glass .ui-text-shimmer { animation: none; background-image: none; -webkit-text-fill-color: currentColor; }
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .ui-text-shimmer { animation: none; background-image: none; -webkit-text-fill-color: currentColor; }
+}

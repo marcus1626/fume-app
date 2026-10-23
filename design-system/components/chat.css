@@ -1,0 +1,273 @@
+/* Chat: the one conversation with Fume (app v3, FLOWS §12). PROPOSED 15 Oct 2026; round 8 changes PROPOSED 19 Oct 2026.
+   Markup: <div class="ui-app-page ui-chat-page"> PageHeader (Jump to a campaign · New campaign)
+             <div class="ui-chat">
+               <div class="ui-message-scroller"> AI line · day markers · <div class="ui-marker ui-chat-turn">Autumn launch</div> · messages </div>
+               <div class="ui-chat-foot">
+                 <div class="ui-chat-chips"> Cancel · Write it yourself instead (only while a campaign is started) </div>
+                 <div class="ui-composer-dock"> … </div></div></div></div>
+   Fume decisions: there is no list of chats (Marcus 15 Oct: "Fume husker alt, så kunden forholder seg bare til en
+   chat"). The conversation takes the page's whole height and scrolls on its own; the composer stays under it. A
+   campaign is named by a quiet marker where the talk turns to it, never by a thread. Round 8 (UX review MOB-2,
+   WAY-19, LOAD-19): the campaign chips over the composer move into one "Jump to a campaign" menu in the header, and
+   it lands on the latest card of that campaign; the marker names a campaign once, when the talk turns to it. On a
+   phone the composer is one line, the page keeps only the tab bar's room under it, and while she writes the tab bar
+   steps away, so the conversation keeps the screen. A new answer from Fume comes into view from its top.
+   Round 9 (desktop first, PROPOSED 19 Oct 2026; UX review DLAY-5, DTSK-13, DTSK-4) and round 10 (PROPOSED 20 Oct
+   2026; FLOWS §22–§23, Marcus's card "Én samtale"): ONE conversation on every screen; round 9's list of conversations
+   is gone. From 1024 px (data-desk on the page):
+     <div class="ui-app-page ui-chat-page" data-desk [data-panel]>
+       <div class="ui-chat"> <header class="ui-chat-head"><h1 class="ui-chat-head-title">Fume</h1>
+           <div class="ui-chat-head-actions"> Jump to a campaign · New campaign (quiet) </div></header>
+         scroller (the campaign markers: <div class="ui-marker ui-chat-turn">Winter gifting</div>)
+         <div class="ui-chat-foot"> [<div class="ui-chat-to"><p class="ui-chat-to-text">Your reply is about
+           <span class="ui-chat-to-name">Christmas · Evening Candle</span></p> Change </div>] composer </div></div>
+       <aside class="ui-chat-brief"> <div class="ui-chat-brief-head">The brief · name · <p class="ui-chat-brief-lead">
+           Fume writes the plan from it…</p></div> <div class="ui-chat-brief-body"> lines | the plan </div>
+         <div class="ui-chat-brief-foot"> note · Send to Fume | Open the plan </div></aside></div>
+   The plan, in the panel and in its card in the conversation:
+     <div class="ui-chat-plan-state" role="status"><span class="ui-text-shimmer ui-chat-plan-working">Fume is writing
+       the plan</span><span class="ui-chat-plan-meta">Ready by Thu 22 Oct</span></div>
+     <div class="ui-chat-plan"><div class="ui-chat-plan-direction"><p class="ui-chat-plan-eyebrow">Direction A ·
+       Fume's pick</p><p class="ui-chat-plan-name">Window light</p><p class="ui-chat-plan-idea">…</p></div>
+       <p class="ui-chat-plan-facts">9 creatives: 3 masters, 6 variants and formats · Masters by Thu 22 Oct</p>
+       <p class="ui-chat-plan-checked"> avatar · Checked by Anna </p></div>
+   Fume decisions: the conversation sits at the 720 measure, left-aligned on the page's one left edge, its name over it
+   at the same edge, small (title size, one line) so the conversation keeps the height; its two quiet actions on the
+   same line, right. A campaign is named by a quiet marker where the talk turns to it, never a heading per message;
+   talk about no campaign gets the same quiet marker when the talk turns back to it. The panel is a card (one surface
+   step), the height of the column, scrolling inside; its foot is pinned at the bottom of the card on the card's own
+   surface, no line, the note on the left and the one action on the right (DLAY-13). It is "The brief" (Send to Fume,
+   Ink) while a brief is written, then "The plan" (Open the plan, secondary: the composer's Send is the chat's
+   primary). The plan's state shimmers in white (the design system's text shimmer); "Checked by Anna" is words with
+   her face, never Amber (Amber stays on checked creatives). Widths step with the screen: the panel 360 / 400 / 440 at
+   1280 / 1440 / 1920; with it the page keeps its left edge and takes the room to the right. A phone and a tablet
+   keep the one stream and the cards.
+   Rule gate: few-strokes, air, space-from-tokens, type-from-tokens, pills-for-actions. */
+
+.ui-chat-page { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; padding-block-end: var(--ui-space-lg); }
+.ui-chat-page > .ui-page-header { flex-shrink: 0; }
+.ui-chat {
+  display: flex; flex-direction: column; flex: 1 1 auto; gap: var(--ui-space-md); min-height: 0; min-width: 0;
+  width: 100%; max-width: var(--ui-composer-width); margin-inline: auto;
+}
+.ui-chat > .ui-message-scroller { flex: 1 1 auto; height: auto; min-height: 0; }
+.ui-chat > .ui-message-scroller .ui-message-scroller-content { padding-inline: 0; }
+/* Creatives Fume shows in a message take the message's whole width (a grid that hugs collapses to one column). */
+.ui-chat .ui-message-content > .ui-app-stack { align-self: stretch; }
+.ui-chat-foot { display: grid; gap: var(--ui-space-sm); min-width: 0; flex-shrink: 0; }
+
+/* Where the talk turns to a campaign: the marker's words are the campaign's name, a link to it. */
+.ui-chat-turn { scroll-margin-block-start: var(--ui-space-lg); }
+.ui-chat-turn a { color: var(--ui-text); text-decoration: none; font-weight: var(--ui-type-weight-medium); }
+@media (hover: hover) {
+  .ui-chat-turn a:hover { text-decoration: underline; text-decoration-color: var(--ui-hairline-strong); text-underline-offset: 3px; }
+}
+.ui-chat-turn a:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); border-radius: var(--ui-radius-check); }
+
+/* The campaign chips: one line that scrolls sideways; the focus ring keeps its room. */
+.ui-chat-chips {
+  display: flex; gap: var(--ui-space-xs); min-width: 0; overflow-x: auto; overscroll-behavior-x: contain;
+  padding: var(--ui-size-ring-offset) var(--ui-inset-float); scrollbar-width: none;
+}
+.ui-chat-chips::-webkit-scrollbar { display: none; }
+.ui-chat-chips > * { flex-shrink: 0; }
+
+/* An open question keeps its heading in view while she looks through its products (MOB-2): the card's header sticks
+   to the top of the conversation, on the card's own surface, until the question is answered. */
+.ui-chat .ui-chat-ask > .ui-card-header {
+  position: sticky; top: 0; z-index: 1;
+  margin-block: calc(-1 * var(--ui-space-sm)); padding-block: var(--ui-space-sm);
+  background: var(--card-now);
+}
+
+/* What Fume reveals from its top (a new answer, the card she came back to) keeps a little air above it. */
+.ui-chat .ui-message, .ui-chat .ui-marker { scroll-margin-block-start: var(--ui-space-sm); }
+
+@media (max-width: 639px) {
+  .ui-chat-page { padding-block-end: 0; }
+  .ui-chat-chips { padding-inline: 0; }
+}
+@media (max-width: 639.98px) {
+  /* Only the tab bar's room under the composer, not a reading page's 2 × 2xl of air (MOB-2). */
+  :root:has(.ui-tab-bar-dock) .ui-app-page.ui-chat-page { padding-bottom: var(--ui-tab-bar-room); }
+  /* While she writes (the field or its own circles have the focus), the tab bar steps away and the field sits at the
+     foot of the screen. It comes back a moment after she leaves the field, so a tap that moved the focus lands where
+     it was aimed before anything moves. Delays only, no movement. */
+  :root:has(.ui-chat-page) .ui-tab-bar-dock { transition: visibility 0s linear var(--ui-motion-base), opacity 0s linear var(--ui-motion-base); }
+  :root:has(.ui-tab-bar-dock) .ui-app-page.ui-chat-page { transition: padding-bottom 0s linear var(--ui-motion-base); }
+  :root:has(.ui-chat-page .ui-composer:focus-within) .ui-tab-bar-dock { visibility: hidden; opacity: 0; transition: none; }
+  :root:has(.ui-chat-page .ui-composer:focus-within) .ui-app-page.ui-chat-page { padding-bottom: 0; transition: none; }
+  /* The page's own padding holds the bar's room, so the docked composer never lifts itself over the bar's place:
+     lifting it at once while the room comes back later would slide it over what she is tapping. */
+  :root:has(.ui-tab-bar-dock) .ui-chat-page .ui-composer-dock--sticky { bottom: 0; }
+}
+/* The tab bar's return is a delay, not a movement, so reduced motion keeps it as it is. */
+@media (prefers-reduced-motion: reduce) {
+  .ui-chat .ui-chat-ask > .ui-card-header { transition: none; }
+}
+
+/* ---------- The desk (from 1024 px): the one conversation, and the panel on the right from 1280 ---------- */
+@media (min-width: 1024px) {
+  .ui-chat-page[data-desk] {
+    --chat-panel: 360px; /* gate-allow:space-from-tokens the panel's width at 1280, a layout width */
+    display: grid; grid-template-columns: minmax(0, var(--ui-composer-width)); grid-template-rows: minmax(0, 1fr);
+    justify-content: start; align-items: stretch; column-gap: var(--ui-space-xl);
+    padding-block-start: var(--ui-space-lg);
+  }
+  .ui-chat-page[data-desk][data-panel] {
+    grid-template-columns: minmax(0, var(--ui-composer-width)) var(--chat-panel);
+    /* wider than the 1200 page, the two columns keep the page's left edge and take the room to the right */
+    width: auto; max-width: none; margin-inline: max(0px, calc((100% - 1200px) / 2)) 0; /* gate-allow:space-from-tokens the 1200 page's left edge, a layout width */
+  }
+  /* the conversation: its own column on the page's one left edge (DLAY-8) */
+  .ui-chat-page[data-desk] > .ui-chat { max-width: none; margin-inline: 0; gap: var(--ui-space-md); }
+  .ui-chat-page[data-desk] .ui-composer-dock { max-width: none; }
+}
+@media (min-width: 1440px) {
+  .ui-chat-page[data-desk] {
+    --chat-panel: 400px; /* gate-allow:space-from-tokens the panel's width, a layout width */
+    column-gap: var(--ui-space-2xl);
+  }
+}
+@media (min-width: 1900px) {
+  .ui-chat-page[data-desk] { --chat-panel: 440px; } /* gate-allow:space-from-tokens the panel's widest, a layout width */
+}
+
+/* The conversation's head: its name on the left, its quiet actions on the right of the same line */
+.ui-chat-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-xs) var(--ui-space-lg); min-width: 0; min-height: var(--ui-size-control-md); flex-shrink: 0; }
+.ui-chat-head-title { margin: 0; min-width: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.25; letter-spacing: -.015em; color: var(--ui-text); outline: none; }
+.ui-chat-head-title:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); border-radius: var(--ui-radius-check); }
+.ui-chat-head-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs); margin-inline-start: auto; }
+
+/* Talk about no campaign: the marker's words stay quiet, as a place in the talk, not a link */
+.ui-chat-turn:not(:has(a)) .ui-marker-content { color: var(--ui-text-secondary); }
+
+/* The message an address pointed at (/fume/:thread), marked for a moment (app.css [data-ui-target]): the mark
+   follows a card's corners, so a message without a box gets them too */
+.ui-chat .ui-message[data-ui-target] { border-radius: var(--ui-radius-card); }
+
+/* Where her reply goes, over the composer, when more than one thing is open: one quiet line and Change */
+.ui-chat-to { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-sm); min-width: 0; padding-inline: var(--ui-inset-float); }
+.ui-chat-to-text { margin: 0; min-width: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); }
+.ui-chat-to-name { color: var(--ui-text); font-weight: var(--ui-type-weight-medium); }
+
+/* A card's own short note over its actions ("Fume writes the plan from it…") */
+.ui-chat-card-note { margin: 0; font-size: var(--ui-type-label); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+
+/* The panel beside the conversation: a card the column's height, its body scrolling, its one action pinned at its foot */
+.ui-chat-brief {
+  display: grid; grid-template-rows: auto minmax(0, 1fr) auto; min-height: 0; min-width: 0;
+  border-radius: var(--ui-radius-card); background: var(--ui-card-bg); color: var(--ui-text);
+}
+.ui-chat-brief-head { display: grid; gap: var(--ui-space-xs); padding: var(--ui-inset-panel) var(--ui-inset-panel) var(--ui-space-lg); }
+.ui-chat-brief-title { margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.3; outline: none; }
+.ui-chat-brief-meta { margin: 0; font-size: var(--ui-type-control); line-height: 1.4; color: var(--ui-text-secondary); }
+/* what sending does, under the name, with a little air before it */
+.ui-chat-brief-lead { margin: var(--ui-space-sm) 0 0; font-size: var(--ui-type-label); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-chat-brief-body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--ui-inset-panel) var(--ui-space-lg); scrollbar-width: thin; }
+.ui-chat-brief-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--ui-space-md); padding: var(--ui-space-lg) var(--ui-inset-panel) var(--ui-inset-panel); }
+.ui-chat-brief-note { flex: 1 1 12em; margin: 0; font-size: var(--ui-type-label); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+/* a line: the value with its note under it, the pencil at the row's end beside the value's first line */
+.ui-chat-brief-lines { row-gap: var(--ui-space-md); }
+.ui-datalist.ui-chat-brief-lines dd { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; column-gap: var(--ui-space-sm); }
+.ui-datalist.ui-chat-brief-lines dd > .ui-datalist-note { grid-column: 1; }
+.ui-datalist.ui-chat-brief-lines dd > form { grid-column: 1 / -1; }
+.ui-chat-brief-value { grid-column: 1; min-width: 0; }
+.ui-chat-brief-edit { grid-column: 2; grid-row: 1 / span 2; margin-block: calc(-1 * var(--ui-space-xs)); }
+.ui-chat-brief-empty { color: var(--ui-text-tertiary); }
+.ui-chat-brief-asking { color: var(--ui-text); font-weight: var(--ui-type-weight-medium); }
+.ui-chat-brief-asking::before { content: ""; display: inline-block; width: var(--ui-badge-dot); height: var(--ui-badge-dot); margin-inline-end: var(--ui-space-sm); border-radius: 50%; background: var(--ui-text); vertical-align: middle; animation: ui-badge-live var(--ui-motion-spin-reduced) var(--ui-motion-ease) infinite alternate; }
+
+/* The plan: its state while Fume writes it and the expert checks it, then its summary (panel and card) */
+.ui-chat-plan-state { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-chat-plan-working { justify-self: start; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.4; }
+.ui-chat-plan-meta { font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); }
+.ui-chat-plan-wait { display: grid; gap: var(--ui-space-2xl); min-width: 0; }
+.ui-chat-plan-holds { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-chat-plan-parts { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); }
+.ui-chat-plan { display: grid; gap: var(--ui-space-lg); min-width: 0; }
+.ui-chat-plan-direction { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-chat-plan-eyebrow { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; letter-spacing: .01em; color: var(--ui-text-tertiary); }
+.ui-chat-plan-name { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.25; letter-spacing: -.01em; color: var(--ui-text); }
+.ui-chat-plan-idea {
+  margin: var(--ui-space-xs) 0 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden;
+}
+.ui-chat-plan-facts { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); text-wrap: pretty; }
+.ui-chat-plan-checked { display: flex; align-items: center; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-chat-plan-note { margin: 0; font-size: var(--ui-type-label); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-chat-brief-asking::before { animation: none; }
+}
+
+/* ---------- Round 13 (Marcus's video comments of 21 Oct, #13 to #19; PROPOSED 22 Oct 2026) ----------
+   #13 The panel hides and shows like Claude's artifact panel: <button class="ui-chat-panel-toggle"> in the head (the
+       panel's icon, mirrored: the panel is on the right). Without the panel the conversation is one calm column in
+       the middle of the page, the composer pinned at its foot.
+   #15 The panel shows what the chat links to: <aside class="ui-chat-brief ui-chat-link-panel"> whose head starts
+       with <div class="ui-chat-panel-top"><p class="ui-chat-plan-eyebrow">Campaign</p><div
+       class="ui-chat-panel-actions"> Open full page · ✕ </div></div>. A page opened from the chat has one Smoke glass
+       pill at its foot, <div class="ui-glass ui-glass--bar ui-chat-return"> ← Back to the conversation </div>.
+   #14 Creatives in a message are small tiles: <ul class="ui-chat-thumbs"><li><button class="ui-chat-thumb"
+       data-format="feed"><img/></button></li> … <li><button class="ui-chat-thumb ui-chat-thumb-more">+3</button></li></ul>
+   #16 "@" opens <div class="ui-glass ui-glass--small ui-mention" role="listbox"> over the composer, its rows
+       <div class="ui-mention-row" role="option"> picture · name · kind; an empty composer has <div class="ui-chat-chips
+       ui-chat-asks"> questions to ask.
+   #19 The product she picked shows on Fume's side, in the question's card: <ul class="ui-chat-picked"> items. */
+@media (min-width: 1024px) {
+  .ui-chat-page[data-desk]:not([data-panel]) { justify-content: center; }
+}
+.ui-chat-panel-toggle svg { transform: scaleX(-1); }
+.ui-chat-panel-top { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); min-width: 0; margin-block-start: calc(-1 * var(--ui-space-sm)); }
+.ui-chat-panel-actions { display: flex; align-items: center; gap: var(--ui-space-xs); margin-inline-end: calc(-1 * var(--ui-space-sm)); }
+.ui-chat-panel-photo { display: block; width: calc(2 * var(--ui-chat-thumb-size)); height: auto; aspect-ratio: var(--ui-creative-ratio-feed); object-fit: cover; border-radius: var(--ui-radius-card); background: var(--ui-creative-bg); }
+.ui-chat-panel-creative { max-width: calc(4 * var(--ui-chat-thumb-size)); }
+
+.ui-chat-thumbs { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--ui-space-sm); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-chat-thumb {
+  position: relative; display: block; width: var(--ui-chat-thumb-size); min-height: var(--ui-size-hit); margin: 0; padding: 0; overflow: hidden;
+  border: 0; border-radius: var(--ui-radius-check); background: var(--ui-creative-bg); cursor: pointer;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: scale var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-chat-thumb img { display: block; width: 100%; height: auto; aspect-ratio: var(--ui-creative-ratio-feed); object-fit: cover; } /* the ratio on the image, not the wrapper (board lesson, round 7) */
+.ui-chat-thumb[data-format="story"] img { aspect-ratio: var(--ui-creative-ratio-story); }
+.ui-chat-thumb[data-format="square"] img { aspect-ratio: var(--ui-creative-ratio-square); }
+.ui-chat-thumb::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); pointer-events: none; } /* gate-allow:few-strokes  the edge of the customer's creative */
+.ui-chat-thumb:active { scale: var(--ui-motion-press-scale); }
+.ui-chat-thumb:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-chat-thumb-more {
+  display: grid; place-items: center; aspect-ratio: var(--ui-creative-ratio-feed); background: var(--ui-surface-sunken); color: var(--ui-text-secondary);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); font-variant-numeric: tabular-nums;
+}
+.ui-chat-thumb-more::after { content: none; }
+@media (hover: hover) { .ui-chat-thumb-more:hover { background: var(--ui-surface-sunken-hover); color: var(--ui-text); } }
+
+.ui-chat-foot { position: relative; }
+.ui-mention {
+  position: absolute; z-index: var(--ui-overlay-z-float); left: 0; bottom: calc(100% + var(--ui-space-sm));
+  width: min(var(--ui-mention-width), 100%); max-height: calc(var(--ui-size-hit) * var(--ui-mention-rows-visible)); overflow-y: auto; overscroll-behavior: contain;
+  padding-block: var(--ui-space-sm); scrollbar-width: none;
+}
+.ui-mention::-webkit-scrollbar { display: none; }
+.ui-mention-row {
+  display: grid; grid-template-columns: var(--ui-avatar-size) minmax(0, 1fr) auto; align-items: center; gap: var(--ui-space-md);
+  min-height: var(--ui-size-hit); padding-inline: var(--ui-inset-float); cursor: pointer; color: var(--ui-glass-fg); -webkit-tap-highlight-color: transparent;
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35;
+}
+.ui-mention-row[aria-selected="true"], .ui-mention-row:active { background: var(--ui-glass-item-hover); }
+.ui-mention-media { display: grid; place-items: center; width: var(--ui-avatar-size); height: var(--ui-avatar-size); overflow: hidden; border-radius: var(--ui-radius-check); background: var(--ui-glass-button-clear); }
+.ui-mention-media img { width: 100%; height: 100%; object-fit: cover; }
+.ui-mention-media svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-mention-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-mention-meta { font-size: var(--ui-type-label); color: var(--ui-glass-fg-secondary); white-space: nowrap; }
+
+.ui-chat-picked { display: grid; gap: var(--ui-space-xs); min-width: 0; margin: 0; padding: 0; list-style: none; }
+
+.ui-chat-return { position: fixed; z-index: var(--ui-overlay-z-float); left: 50%; bottom: var(--ui-space-xl); translate: -50% 0; padding: var(--ui-inset-ring); }
+/* a page with its own floating action bar (the plan): the pill sits above the bar, never over its words (round 13) */
+@media (min-width: 640px) { :root:has(.ui-page-footer) .ui-chat-return { bottom: calc(var(--ui-space-sm) + var(--ui-space-lg) * 2 + var(--ui-size-control-md) + var(--ui-space-md)); } } /* above a page's step footer (the plan) */
+:root:has(.ui-action-bar-dock) .ui-chat-return { bottom: calc(var(--ui-toolbar-bar-bottom) + var(--ui-size-control-md) + var(--ui-inset-ring) * 2 + var(--ui-space-sm)); }
+@media (max-width: 1023.98px) { :root:has(.ui-tab-bar-dock) .ui-chat-return { bottom: var(--ui-toolbar-bar-bottom, var(--ui-space-xl)); } }
+
+@media (prefers-reduced-motion: reduce) { .ui-chat-thumb { transition: none; } .ui-chat-thumb:active { scale: none; } }

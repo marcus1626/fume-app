@@ -1,0 +1,63 @@
+/* Stat tile: one number with its comparison and a sparkline. DECIDED 13 Oct, from round 8. shadcn has no stat
+   component; its dashboard blocks build one from Card (CardHeader, CardDescription, CardTitle, CardAction
+   with a trend Badge, CardFooter with "Trending up this month"). Fume composes it from card.css and
+   chart.css: <div class="ui-card ui-stat"> with a label, the value, the comparison and a sparkline
+   (<div class="ui-stat-spark" data-ui-chart> with type "spark").
+   Fume decisions:
+   - The number leads: GT Standard at 500 with tabular figures, 32 on a wide tile and 24 on a narrow one
+     (container queries: the tile's own width alone, the grid's width in a .ui-stat-grid, since a
+     subgrid cannot be a size container), so a phone's two by two still fits "3 h 40 min". Not the data
+     type: at title sizes mono reads like a terminal; it stays small (ticks, dates, tooltip values). Units
+     are words beside it, smaller and secondary. Label above in secondary, 4 apart: they belong together.
+   - The comparison is words and the trending icon in Ink ("18% more than 1–13 Sep", "50 min faster than
+     September"), never red or green: a drop in time to approval is good news, and colour cannot say that.
+   - The sparkline is Ink with its 8 % wash (--ui-stat-spark-line), 16 below the words, ending in a dot on
+     the value the tile shows; on a tile that counts approvals it is Amber (--ui-chart-approved, round 9). It has no axis and no tooltip; its aria-label says the trend in words.
+   - Approvals: at most the small checked triangle beside the label, Amber because it marks checked
+     work; the number stays Ink. Nowhere else is a tile coloured.
+   - States: loading uses skeleton.css in the tile's own shapes; empty shows 0 in tertiary with what starts
+     the count and a flat Focus 200 line where the sparkline will be (--ui-stat-empty); error says so in
+     words beside a Rouge circle-alert, with a quiet Try again.
+   - In a .ui-stat-grid the tiles of a row line up part by part (CSS subgrid): a label that wraps to two
+     lines on a phone pushes its neighbours' numbers down with its own, so numbers, comparisons and
+     sparklines stay level. Labels wrap; they are never cut off.
+   - No border and no shadow: a tile is the card's surface step on Porcelain (few-strokes).
+   Rule gate: few-strokes, type-from-tokens, space-from-tokens, amber-is-a-point (allowed: the
+   Amber check beside its label), card-never-matches-ground. */
+
+.ui-stat-grid { container: ui-stat-grid / inline-size; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--ui-stat-min)), 1fr)); gap: var(--ui-stat-gap); min-width: 0; }
+
+.ui-card.ui-stat { container: ui-stat / inline-size; display: grid; grid-template-rows: auto 1fr; gap: var(--ui-space-lg); align-content: start; }
+.ui-stat-head { display: grid; gap: var(--ui-space-xs); align-content: start; min-width: 0; }
+.ui-stat-label { display: flex; align-items: flex-start; gap: var(--ui-space-xs); min-width: 0; margin: 0; font-size: var(--ui-type-control); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-stat-label > span { min-width: 0; text-wrap: balance; }
+.ui-stat-label svg { width: var(--ui-size-icon-sm); height: 1.4em; flex-shrink: 0; } /* one line tall: the icon stays on the first line when the label wraps */
+.ui-stat-label .ui-stat-approved { color: var(--ui-check); } /* gate-allow:amber-is-a-point  the checked triangle beside the first-time pass label: checked work, the one Amber point a dashboard holds */
+.ui-stat-value { display: flex; flex-wrap: wrap; align-items: baseline; min-width: 0; margin: 0; font-size: var(--ui-type-title); line-height: 1.2; color: var(--ui-text); }
+@container ui-stat (min-width: 180px) { .ui-stat-value { font-size: var(--ui-type-title-large); line-height: 1.15; } }
+.ui-stat-num { font-family: var(--ui-type-family); font-weight: var(--ui-type-weight-medium); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.ui-stat-unit { margin-inline: var(--ui-space-xs) var(--ui-space-sm); font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); letter-spacing: 0; color: var(--ui-text-secondary); }
+.ui-stat-unit:last-child { margin-inline-end: 0; }
+.ui-stat-delta { display: flex; align-items: flex-start; gap: var(--ui-space-xs); min-width: 0; margin: 0; font-size: var(--ui-type-label); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-stat-delta svg { width: var(--ui-size-icon-sm); height: 1.5em; flex-shrink: 0; color: var(--ui-text); } /* one line tall: the icon sits on the first line when the words wrap */
+.ui-stat-delta-num { font-weight: var(--ui-type-weight-medium); font-variant-numeric: tabular-nums; color: var(--ui-text); } /* the figure in the sentence, in the sentence's own type */
+
+.ui-stat-spark { position: relative; align-self: end; height: var(--ui-stat-spark); min-width: 0; }
+
+/* in a grid, every tile's label, number, comparison and sparkline sit on shared rows */
+.ui-stat-grid > .ui-stat { container: none; grid-row: span 4; grid-template-rows: subgrid; row-gap: 0; } /* a size container cannot be a subgrid */
+@container ui-stat-grid (min-width: 768px) { .ui-stat-grid > .ui-stat .ui-stat-value { font-size: var(--ui-type-title-large); line-height: 1.15; } }
+.ui-stat-grid > .ui-stat > .ui-stat-head { grid-row: span 3; grid-template-rows: subgrid; row-gap: 0; }
+.ui-stat-grid > .ui-stat .ui-stat-label { align-self: end; } /* a one-line label sits on its number; the spare line goes above it */
+.ui-stat-grid > .ui-stat .ui-stat-value, .ui-stat-grid > .ui-stat .ui-stat-delta { margin-block-start: var(--ui-space-xs); }
+.ui-stat-grid > .ui-stat > .ui-stat-spark { margin-block-start: var(--ui-space-lg); }
+.ui-card .ui-stat-spark { --chart-ground: var(--card-now, var(--ui-card-bg)); }
+
+/* states */
+.ui-stat[aria-busy="true"] .ui-stat-value .ui-skeleton--title { height: var(--ui-space-xl); margin-block: calc((1lh - var(--ui-space-xl)) / 2); }
+.ui-stat-spark > .ui-skeleton { width: 100%; height: 100%; }
+.ui-stat--empty .ui-stat-value { color: var(--ui-text-tertiary); }
+.ui-stat-flat { position: absolute; inset-inline: 0; bottom: 0; height: var(--ui-chart-line); border-radius: var(--ui-radius-action); background: var(--ui-stat-empty); }
+.ui-stat-error { display: flex; align-items: flex-start; gap: var(--ui-space-sm); min-width: 0; margin: 0; font-size: var(--ui-type-control); line-height: 1.4; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-stat-error > svg { width: var(--ui-size-icon); height: 1.4em; flex-shrink: 0; color: var(--ui-danger); } /* Rouge: an error, the only colour a tile takes */
+.ui-stat-retry { justify-self: start; align-self: end; margin-inline-start: calc(var(--ui-space-md) * -1); } /* a quiet button, its label lined up with the words above it */

@@ -1,0 +1,125 @@
+/* Product check: a product's page in two layers, the check on top and all details folded (app round 8, walk-through
+   19 Oct: LOAD-1, LOAD-2, LOAD-9, LOAD-16, MOB-4, MOB-8, TASK-14). PROPOSED 19 Oct 2026. Extends product-spec.css
+   and product-data.css.
+   Markup: <header class="ui-page-header"> … <div class="ui-page-header-actions">
+             <button class="ui-pcheck-photo"><img/></button></div></header>     the photo beside the name, phone only
+           <div class="ui-pcheck">
+             <div class="ui-pcheck-media"> ui-pspec-gallery </div>                    the photo, big, desk only
+             <div class="ui-pcheck-body">
+               <section class="ui-pcheck-needs" id="needs"><h2 class="ui-pcheck-needs-title">Fume needs this from you
+                 <span class="ui-pcheck-count">2</span></h2>
+                 <div class="ui-pcheck-ask"><p class="ui-pcheck-ask-q">Which claims may we use?</p>
+                   <p class="ui-pcheck-ask-why">…</p> the shared answer (question-sheet's ui-qs-inline), or
+                   <form class="ui-pcheck-ask-form"> ui-field textarea <div class="ui-pcheck-ask-actions"> ui-btn primary sm
+                   "Answer" </div></form></div><p class="ui-pcheck-then">Then: Is this the Hand Balm packshot?</p></section>
+               <section class="ui-pcheck-truth"><header class="ui-pcheck-truth-head"><h2 class="ui-pcheck-truth-title">
+                 Product Truth</h2><p class="ui-pcheck-truth-text">What every creative must keep true.</p></header>
+                 <ul class="ui-pcheck-lines"><li class="ui-pcheck-line" [data-open]>
+                   <span class="ui-pcheck-label">Tube</span><p class="ui-pcheck-text">Soft cream tube, 50 ml.</p>
+                   <span class="ui-pcheck-source"><svg/> Fume read this on lysne.no/hand-balm</span>
+                   <div class="ui-pcheck-change"><p class="ui-pcheck-change-text"><span class="ui-pcheck-source">Anna
+                     proposes</span> …</p><div class="ui-pcheck-line-actions"> Use it · Keep yours </div></div></li></ul>
+                 <div class="ui-pcheck-confirm"> ui-btn primary "Confirm Hand Balm" · ui-btn quiet sm "Fix a line" (a menu) </div>
+                 <p class="ui-pcheck-confirm-note">It keeps what Fume read and confirms every line.</p></section></div></div>
+           <section class="ui-pdetails"> ui-accordion (one item "All details") > ui-accordion--flush (a section each)
+             <div class="ui-pdetails-body"><div class="ui-pdetails-keep"> ui-btn secondary sm "Keep all 3" · words </div>
+               ui-pspec-rows … <div class="ui-pdetails-group"><h4 class="ui-pdetails-sub">Factory data</h4> …</div></div>
+           </section>
+   Fume decisions: one thing at a time. The top of the page answers "is this right about my product?" and nothing
+   else: what Fume needs from her first, on a raised card with the page's one Ink action ("Answer"), one question at a
+   time (the next one is named quietly under it); then the Product
+   Truth as plain lines, label over words, no box and no stroke. A line Fume read and she has not confirmed lies on the
+   sunken surface (the Proposal language) with where Fume read it in tertiary; a confirmed line lies flat and says
+   only its words. A change Fume's designer proposed sits on the line it changes. The list ends with one Ink pill,
+   "Confirm <product>", once nothing is asked, and one quiet "Fix a line" (a menu of the lines), never a button on
+   every line; while a question is open the answer is the Ink action and the pill waits. Status is a sentence under the title, never a badge that looks like a button. On a phone the photo is a
+   64 px rounded square on the title's line (a tap opens every picture in a sheet), so the check starts on the first
+   screen; on a desk the photo stands big beside the check. Everything else is folded under one "All details" row,
+   each section its own quiet row with what waits in it ("3 to check"); a section keeps all its proposals with one
+   labelled secondary pill, never an Ink Keep per value. Groups 32 apart, rows 8 apart (air).
+   Rule gate: few-strokes, amber-is-a-point, no-gradient, no-glow, air, radius-from-tokens, space-from-tokens,
+   type-from-tokens, mono-is-data, touch-target, touch-feedback, press-on-pointer-down, hover-needs-hover,
+   focus-is-sharp, reduced-motion, actions-are-pills. */
+
+/* ─── The photo: beside the name on a phone, big on a desk ──────────────── */
+.ui-pcheck-photo {
+  position: relative; display: grid; place-items: center; flex: none; width: 4rem; height: 4rem; min-width: var(--ui-size-hit); min-height: var(--ui-size-hit); /* gate-allow:space-from-tokens the product's thumbnail, a picture size */
+  padding: 0; border: 0; overflow: hidden; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); color: var(--ui-text-tertiary);
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-pcheck-photo > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ui-pcheck-photo > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-pcheck-photo:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-pcheck-photo:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+.ui-pcheck { display: grid; gap: var(--ui-space-2xl); min-width: 0; align-items: start; }
+.ui-pcheck-media { display: none; min-width: 0; }
+.ui-pcheck-body { display: grid; gap: var(--ui-space-2xl); min-width: 0; }
+@media (min-width: 60rem) {
+  .ui-pcheck { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+  .ui-pcheck-media { display: block; position: sticky; top: var(--ui-space-lg); }
+  .ui-pcheck-photo { display: none; }
+}
+
+/* ─── Fume needs this from you: the first card ──────────────────────────── */
+.ui-pcheck-needs {
+  display: grid; gap: var(--ui-space-xl); min-width: 0; scroll-margin-top: var(--ui-space-2xl);
+  padding: var(--ui-inset-panel); border-radius: var(--ui-radius-card); background: var(--ui-surface); box-shadow: var(--ui-depth-raised);
+}
+.ui-pcheck-needs-title {
+  display: flex; align-items: center; gap: var(--ui-space-sm); margin: 0;
+  font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.35; color: var(--ui-text-secondary);
+}
+.ui-pcheck-count { font-variant-numeric: tabular-nums; color: var(--ui-text-tertiary); font-weight: var(--ui-type-weight-regular); }
+.ui-pcheck-ask { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-pcheck-ask-q { margin: 0; font-size: var(--ui-type-body-large); font-weight: var(--ui-type-weight-medium); line-height: 1.35; color: var(--ui-text); text-wrap: pretty; }
+.ui-pcheck-ask-why { margin: 0; max-width: 60ch; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-pcheck-ask-form { display: grid; gap: var(--ui-space-sm); min-width: 0; margin-top: var(--ui-space-xs); }
+.ui-pcheck-ask-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-sm); min-width: 0; }
+.ui-pcheck-then { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-tertiary); }
+
+/* ─── Product Truth: the lines ──────────────────────────────────────────── */
+.ui-pcheck-truth { display: grid; gap: var(--ui-space-lg); min-width: 0; }
+.ui-pcheck-truth-head { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-pcheck-truth-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.25; color: var(--ui-text); }
+.ui-pcheck-truth-text { margin: 0; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text-secondary); }
+.ui-pcheck-lines { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.ui-pcheck-line {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--ui-space-xs) var(--ui-space-md); align-items: start; min-width: 0;
+  padding: var(--ui-space-sm) var(--ui-space-md); border-radius: var(--ui-radius-item);
+}
+.ui-pcheck-line[data-open] { background: var(--ui-surface-sunken); }
+.ui-pcheck-line > * { grid-column: 1; min-width: 0; }
+.ui-pcheck-label { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-pcheck-text { margin: 0; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text); overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-pcheck-source { display: inline-flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-pcheck-source > svg { flex: none; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-pcheck-line > .ui-pcheck-line-actions { grid-column: 2; grid-row: 1 / span 3; align-self: center; }
+.ui-pcheck-line-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--ui-space-xs); }
+/* A proposed change sits on the line it changes, under its words. */
+.ui-pcheck-line > .ui-pcheck-change { grid-column: 1 / -1; }
+.ui-pcheck-change { display: grid; gap: var(--ui-space-sm); min-width: 0; margin-top: var(--ui-space-sm); }
+.ui-pcheck-change-text { display: grid; gap: var(--ui-space-xs); margin: 0; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text); overflow-wrap: anywhere; }
+.ui-pcheck-change > .ui-pcheck-line-actions { justify-content: flex-start; }
+@media (max-width: 30rem) {
+  .ui-pcheck-line { grid-template-columns: minmax(0, 1fr); }
+  .ui-pcheck-line > .ui-pcheck-line-actions { grid-column: 1; grid-row: auto; justify-content: flex-start; }
+}
+
+/* One pill for the whole product, and its one line. */
+.ui-pcheck-confirm { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm) var(--ui-space-md); min-width: 0; margin-top: var(--ui-space-sm); }
+.ui-pcheck-confirm-note { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); }
+
+/* ─── All details: one closed row, a section each inside ────────────────── */
+.ui-pdetails { min-width: 0; margin-top: var(--ui-space-xl); scroll-margin-top: var(--ui-space-2xl); }
+.ui-pdetails .ui-accordion-item { scroll-margin-top: var(--ui-space-2xl); }
+.ui-pdetails-body { display: grid; gap: var(--ui-space-lg); min-width: 0; padding-block-end: var(--ui-space-md); }
+.ui-pdetails-keep { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-md); min-width: 0; }
+.ui-pdetails-group { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-pdetails-sub { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-pcheck-photo { transition: none; }
+  .ui-pcheck-photo:active { transform: none; }
+}

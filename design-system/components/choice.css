@@ -1,0 +1,31 @@
+/* Choice row: the label that pairs a checkbox, radio or switch with its words. DECIDED 13 Oct, from round 7.
+   Maps to shadcn's pattern <Checkbox id> + <Label htmlFor> (the same for RadioGroupItem and Switch):
+   a <label class="ui-choice"> around the control, or a label with for= beside it, so a click on the
+   words toggles the control. The row is not a control of its own: hovering or pressing it shows the
+   control's own hover and pressed state (checkbox.css, radio.css, switch.css).
+   Fume decisions: the label's first line is exactly as tall as the 20 px box (line-height
+   --ui-check-size), so box and words share one centre line without nudging. The hint sits 4 under its
+   label, rows sit 12 apart and a group's title 8 above its rows (rule proximity). No lines between rows.
+   .ui-choice--end puts the control at the end of the row (switches in settings lists).
+   Touch: the control carries its own 44 px hit area and the words add to it.
+   Rule gate: air, space-from-tokens, type-from-tokens. */
+
+.ui-choice {
+  display: flex; align-items: flex-start; gap: var(--ui-space-md); min-width: 0;
+  color: var(--ui-text); user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.ui-choice--end { justify-content: space-between; }
+.ui-choice--end > .ui-choice-text { order: -1; flex: 1; }
+.ui-choice-text { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-choice-label { font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: var(--ui-check-size); color: var(--ui-text); }
+.ui-choice-hint { font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); line-height: 1.45; color: var(--ui-text-tertiary); text-wrap: pretty; }
+/* on glass (a right panel, round 9): the label and hint read on the dark ground, as a field's label does (field.css) */
+.ui-glass .ui-choice-label { color: var(--ui-glass-fg); }
+.ui-glass .ui-choice-hint { color: var(--ui-glass-fg-secondary); }
+.ui-choice-error { display: flex; align-items: center; gap: var(--ui-space-xs); font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.45; color: var(--ui-danger); }
+.ui-choice-error svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; }
+/* A group of rows (<div role="group" aria-labelledby>): rows 12 apart, the group's title 8 above them. */
+.ui-choice-group { display: grid; gap: var(--ui-space-md); min-width: 0; margin: 0; padding: 0; border: 0; }
+.ui-choice-legend { padding: 0; margin-bottom: calc(var(--ui-space-sm) - var(--ui-space-md)); font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+/* A row whose control is disabled reads disabled. */
+.ui-choice[data-disabled] .ui-choice-label, .ui-choice:has(> :disabled) .ui-choice-label { color: var(--ui-text-disabled); }

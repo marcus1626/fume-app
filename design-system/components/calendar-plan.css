@@ -1,0 +1,318 @@
+/* Content calendar: what runs where and when (app v4, FLOWS §21). PROPOSED 15 Oct 2026.
+   Not the date picker (calendar.css, .ui-calendar): this is the page-size plan of campaigns, drops, deliveries,
+   meetings and planned posts, with the "Ready to plan" tray beside it.
+   Markup: <div class="ui-plan">
+             <div class="ui-plan-main">
+               <div class="ui-plan-bar"><h2 class="ui-plan-period">October 2026</h2> <div class="ui-plan-nav">‹ Today ›</div> ui-seg </div>
+               <div class="ui-plan-cal" data-view="month|week">
+                 <div class="ui-plan-weekdays"><span>Mon</span>…</div>
+                 <div class="ui-plan-week" style="--plan-rows; --plan-items-row">
+                   <div class="ui-plan-day" data-day="2026-10-15" data-today data-outside data-over style="--plan-col"/> ×7 (the cell, the drop target)
+                   <div class="ui-plan-date" style="--plan-col">15</div> ×7
+                   <a class="ui-plan-span" style="--plan-from; --plan-to; --plan-lane" data-cut-start data-cut-end>Autumn launch</a>
+                   <div class="ui-plan-items" style="--plan-col"><ul><li> button.ui-plan-post | span.ui-plan-event[data-kind] </li></ul>
+                     <button class="ui-plan-more">2 more</button></div></div></div>
+               or <div class="ui-plan-agenda"><section class="ui-plan-agenda-day"><h3 class="ui-plan-agenda-title">…</h3> ui-item rows</section></div>
+             </div>
+             <aside class="ui-plan-tray"> head · <section class="ui-plan-tray-group"><div class="ui-collapsible">
+               <h3 class="ui-plan-tray-campaign"><button class="ui-plan-tray-toggle ui-collapsible-trigger" aria-expanded>
+                 <span class="ui-plan-tray-toggle-name">Autumn launch</span><span class="ui-plan-tray-toggle-meta">2 to plan</span> chevron</button></h3>
+               <div class="ui-collapsible-content"><div><ul class="ui-plan-tray-list"><li class="ui-plan-tray-entry">
+               <button class="ui-plan-item" data-draggable><img class="ui-plan-item-media"/> title · meta</button></li></ul></div></div></div></section>
+               <p class="ui-plan-later">…</p></aside></div>
+           A planned post: <button class="ui-plan-post" title="Night Body Oil · Feed A2, Instagram feed"><img class="ui-plan-post-media"/>
+             <span class="ui-plan-post-text"><span class="ui-plan-post-title">Feed A2</span><span class="ui-plan-post-subject">Night Body Oil</span>
+             <span class="ui-plan-post-meta"><time class="ui-plan-post-time">09:00</time></span></span></button>
+           Campaigns gives its page .ui-plan-page while it shows the calendar (the inset's full width).
+           <div class="ui-plan-ghost" style="--plan-x; --plan-y"><img/><span class="ui-plan-ghost-day">17 Oct</span></div>
+   Fume decisions: calm and few strokes: the days are surface tiles 4 apart on the Porcelain page, days outside the
+   month are left bare, and nothing draws a grid line. Today is the date in Ink with a small Ink dot under it (as in
+   the date picker), never a ring or a fill. A campaign is a quiet sunken pill across its days; where it continues
+   past the week its end is square. Posts show the creative itself (its thumbnail) with the placement and the time;
+   meetings, drops and deliveries are a quiet icon and words. No Amber anywhere here: approved is not checked, and
+   the calendar is not a creative. The day under a drag steps one tone toward Ink. The tray lies on the surface
+   beside the month and drops under it on a narrow page, where its rows scroll sideways as cards with "Plan".
+   Every value that is data (column, lane, the pointer) comes in as a custom property.
+   Round 8 (UX review 19 Oct, LOAD-18; PROPOSED 19 Oct 2026): the bar has no view switch of its own (Campaigns' one
+   control picks List, Month or Week), and each campaign in the tray sits behind one white "Plan 6 creatives" pill
+   beside its name, open from the start on a desk that drags, closed on a phone, so the tray is never a wall of Plan
+   buttons. Each creative is named as she approved it ("Night Body Oil · Feed"), the shape under it.
+   Round 9 (desktop review 19 Oct, DLAY-14, DLOAD-16; PROPOSED 19 Oct 2026): a calendar is a workspace, not a reading
+   page: on Campaigns it takes the inset's full width (.ui-app-page.ui-plan-page, no 1200 cap), so at 1920 a day is
+   about 200 px wide. "Ready to plan" is a 300 px panel on the right that sticks under the app bar and scrolls by
+   itself, so the grid stays still while she drags. A post on a day is its thumbnail, its short unique label first
+   ("Feed A2"), what it shows under it ("Night Body Oil", up to two lines, never cut to "Instagr…") and the time; the
+   whole name and the placement are in its tooltip (the placement is named in the week). The tray
+   has no Plan pill per creative: each campaign starts closed as one quiet row ("Autumn launch · 2 to plan"); a
+   creative is dragged onto a day, or clicked to pick its day.
+   Rule gate: few-strokes, air, proximity, space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data,
+   amber-is-a-point, actions-are-pills, touch-target, touch-feedback, hover-needs-hover, reduced-motion,
+   state-tokens-in-state. */
+
+/* the calendar on Campaigns: the inset's full width (DLAY-14) */
+.ui-app-page.ui-plan-page { max-width: none; }
+
+.ui-plan { display: grid; gap: var(--ui-space-xl); min-width: 0; align-items: start; }
+@container ui-sidebar (min-width: 1024px) {
+  .ui-plan { grid-template-columns: minmax(0, 1fr) 300px; } /* gate-allow:space-from-tokens the tray's width, a layout width */
+}
+.ui-plan-main { display: grid; gap: var(--ui-space-lg); min-width: 0; }
+
+/* The period and the ways through it. */
+.ui-plan-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm) var(--ui-space-lg); min-width: 0; }
+.ui-plan-period {
+  flex: 1 1 auto; margin: 0; min-width: 0; font-size: var(--ui-type-body-large); font-weight: var(--ui-type-weight-medium);
+  line-height: 1.3; color: var(--ui-text);
+}
+.ui-plan-nav { display: flex; align-items: center; gap: var(--ui-space-xs); }
+
+/* ─── Month and week ─── */
+.ui-plan-cal { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-plan-weekdays { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--ui-space-xs); }
+.ui-plan-weekdays > span {
+  padding-inline: var(--ui-space-sm); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium);
+  line-height: 1.4; color: var(--ui-text-tertiary);
+}
+.ui-plan-week {
+  display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); grid-auto-rows: auto;
+  column-gap: var(--ui-space-xs); row-gap: var(--ui-space-xs); min-width: 0;
+}
+.ui-plan-day {
+  grid-column: var(--plan-col); grid-row: 1 / span var(--plan-rows);
+  border-radius: var(--ui-radius-item); background: var(--ui-surface);
+  transition: background var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-plan-day[data-outside] { background: transparent; }
+.ui-plan-day[data-over] { background: var(--ui-surface-sunken); }
+
+.ui-plan-date {
+  grid-column: var(--plan-col); grid-row: 1; position: relative; display: flex; align-items: baseline; gap: var(--ui-space-xs);
+  padding: var(--ui-space-sm) var(--ui-space-sm) 0; pointer-events: none;
+  font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+.ui-plan-date-day { font-family: var(--ui-type-family); }
+.ui-plan-date[data-outside] { color: var(--ui-text-disabled); }
+.ui-plan-date[data-today] { color: var(--ui-text); font-weight: var(--ui-type-weight-medium); }
+.ui-plan-date[data-today] .ui-plan-date-number { position: relative; }
+.ui-plan-date[data-today] .ui-plan-date-number::after {
+  content: ""; position: absolute; inset-block-start: 100%; inset-inline-start: 50%; translate: -50% 0;
+  width: var(--ui-calendar-today); height: var(--ui-calendar-today); border-radius: 50%; background: var(--ui-text);
+}
+.ui-plan-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* A campaign across its days: a quiet sunken pill, square where it runs on past the week. */
+.ui-plan-span {
+  grid-column: var(--plan-from) / var(--plan-to); grid-row: var(--plan-lane); position: relative; z-index: 1;
+  display: flex; align-items: center; min-width: 0; min-height: var(--ui-badge-height); margin-inline: var(--ui-space-xs);
+  padding-inline: var(--ui-space-sm); border-radius: var(--ui-radius-action); background: var(--ui-surface-sunken);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.3; color: var(--ui-text-secondary);
+  text-decoration: none; -webkit-tap-highlight-color: transparent;
+  transition: background var(--ui-motion-fast) var(--ui-motion-ease), scale var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-plan-span > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-plan-span[data-cut-start] { margin-inline-start: 0; border-start-start-radius: 0; border-end-start-radius: 0; }
+.ui-plan-span[data-cut-end] { margin-inline-end: 0; border-start-end-radius: 0; border-end-end-radius: 0; }
+.ui-plan-span:first-of-type { margin-block-start: var(--ui-space-xs); }
+@media (hover: hover) { .ui-plan-span:hover { background: var(--ui-surface-sunken-hover); color: var(--ui-text); } }
+.ui-plan-span:active { scale: var(--ui-motion-press-scale); }
+.ui-plan-span:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* What is on a day. */
+.ui-plan-items {
+  grid-column: var(--plan-col); grid-row: var(--plan-items-row); position: relative; z-index: 1;
+  display: grid; align-content: start; gap: var(--ui-space-xs); min-width: 0; min-height: 72px; /* gate-allow:space-from-tokens a month day's least room for posts, a layout size */
+  padding: var(--ui-space-xs) var(--ui-space-xs) var(--ui-space-sm);
+}
+.ui-plan-cal[data-view="week"] .ui-plan-items { min-height: 400px; } /* gate-allow:space-from-tokens a week day's least room, a layout size */
+.ui-plan-items > ul { display: grid; gap: var(--ui-space-xs); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-plan-items li { min-width: 0; }
+
+/* A planned post: the creative's thumbnail, the placement, the time. */
+.ui-plan-post {
+  position: relative; display: flex; align-items: flex-start; gap: var(--ui-space-xs); width: 100%; min-width: 0;
+  padding: var(--ui-space-xs); border: 0; border-radius: var(--ui-radius-item); background: transparent;
+  font: inherit; font-size: var(--ui-type-label); line-height: 1.3; color: var(--ui-text); text-align: start;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--ui-motion-fast) var(--ui-motion-ease), opacity var(--ui-motion-fast) var(--ui-motion-ease), scale var(--ui-motion-fast) var(--ui-motion-ease);
+}
+button.ui-plan-post { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+button.ui-plan-post[data-draggable] { cursor: grab; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+@media (hover: hover) { button.ui-plan-post:hover { background: var(--ui-item-bg-hover); } }
+button.ui-plan-post:active { background: var(--ui-item-bg-pressed); scale: var(--ui-motion-press-scale); }
+button.ui-plan-post:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+.ui-plan-post[data-dragging] { opacity: .4; }
+.ui-plan-post::after { content: ""; position: absolute; inset: 50% auto auto 50%; width: max(100%, var(--ui-size-hit)); height: max(100%, var(--ui-size-hit)); translate: -50% -50%; }
+.ui-plan-post-media {
+  flex: none; width: var(--ui-size-control-sm); aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--ui-radius-check);
+  background: var(--ui-surface-creative);
+}
+.ui-plan-post-text { display: grid; min-width: 0; }
+/* the part of the name that tells it apart first ("Feed A2"), what it shows under it, never cut to "Instagr…" (DLOAD-16) */
+.ui-plan-post-title { min-width: 0; overflow-wrap: break-word; font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-plan-post-subject {
+  display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2;
+  min-width: 0; overflow-wrap: break-word; color: var(--ui-text-secondary);
+}
+.ui-plan-post-meta { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ui-text-tertiary); }
+.ui-plan-post-time { font-family: var(--ui-type-family-data); color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; }
+/* In the week the creative leads: the thumbnail takes the day's width, the words go under it. */
+.ui-plan-post[data-size="lg"] { flex-direction: column; align-items: stretch; gap: var(--ui-space-sm); padding: var(--ui-space-xs); }
+.ui-plan-post[data-size="lg"] .ui-plan-post-media { width: 100%; border-radius: var(--ui-radius-item); }
+.ui-plan-post[data-size="lg"] .ui-plan-post-media[data-ratio="story"] { aspect-ratio: 9 / 16; }
+.ui-plan-post[data-size="lg"] .ui-plan-post-media[data-ratio="square"] { aspect-ratio: 1; }
+
+/* A meeting, a drop, a delivery: an icon and words, no box. */
+.ui-plan-event {
+  position: relative; display: flex; align-items: flex-start; gap: var(--ui-space-xs); min-width: 0; padding: var(--ui-space-xs);
+  border-radius: var(--ui-radius-item); font-size: var(--ui-type-label); line-height: 1.3; color: var(--ui-text-secondary); text-decoration: none;
+}
+.ui-plan-event > svg { flex: none; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); margin-block-start: 1px; color: var(--ui-text-tertiary); } /* gate-allow:space-from-tokens optical alignment of a 14 px icon with 12 px text */
+.ui-plan-event-text { display: grid; min-width: 0; }
+.ui-plan-event-title { min-width: 0; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; }
+.ui-plan-event-time { font-family: var(--ui-type-family-data); color: var(--ui-text-tertiary); }
+.ui-plan-event[data-kind="meeting"] { color: var(--ui-text); }
+a.ui-plan-event { -webkit-tap-highlight-color: transparent; transition: background var(--ui-motion-fast) var(--ui-motion-ease); }
+@media (hover: hover) { a.ui-plan-event:hover { background: var(--ui-item-bg-hover); } }
+a.ui-plan-event:active { background: var(--ui-item-bg-pressed); }
+a.ui-plan-event:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+
+.ui-plan-more {
+  justify-self: start; position: relative; padding: 0 var(--ui-space-xs); border: 0; border-radius: var(--ui-radius-action); background: transparent;
+  font: inherit; font-size: var(--ui-type-label); line-height: 1.6; color: var(--ui-text-tertiary); cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.ui-plan-more::after { content: ""; position: absolute; inset: 50% auto auto 50%; width: max(100%, var(--ui-size-hit)); height: var(--ui-size-hit); translate: -50% -50%; }
+@media (hover: hover) { .ui-plan-more:hover { color: var(--ui-text); background: var(--ui-action-quiet-hover); } }
+.ui-plan-more:active { background: var(--ui-action-quiet-pressed); }
+.ui-plan-more:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* ─── Agenda ─── */
+.ui-plan-agenda { display: grid; gap: var(--ui-space-2xl); min-width: 0; }
+.ui-plan-agenda-day { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-plan-agenda-title {
+  display: flex; align-items: baseline; gap: var(--ui-space-sm); margin: 0; padding-inline: var(--ui-space-sm);
+  font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text);
+}
+.ui-plan-agenda-today { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-item.ui-plan-agenda-row { padding: 0; }
+.ui-plan-agenda-open {
+  display: flex; align-items: center; gap: inherit; width: 100%; min-width: 0; min-height: var(--ui-size-hit); padding: inherit;
+  border: 0; border-radius: inherit; background: transparent; font: inherit; color: inherit; text-align: start; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ui-plan-agenda-open { padding: var(--ui-space-sm) var(--ui-inset-float); }
+@media (hover: hover) { .ui-plan-agenda-open:hover { background: var(--ui-item-bg-hover); } }
+.ui-plan-agenda-open:active { background: var(--ui-item-bg-pressed); }
+.ui-plan-agenda-open:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+.ui-plan-agenda-open > .ui-item-actions { margin-inline-start: auto; color: var(--ui-text-tertiary); }
+
+/* ─── Ready to plan ─── */
+.ui-plan-tray {
+  display: grid; gap: var(--ui-space-xl); min-width: 0; padding: var(--ui-inset-float);
+  border-radius: var(--ui-radius-card); background: var(--ui-surface);
+}
+@container ui-sidebar (min-width: 1024px) {
+  /* its own scroll, under the app bar, so the grid stays still while she drags (DLAY-14) */
+  .ui-plan-tray {
+    --plan-tray-top: calc(var(--ui-size-control-md) + 2 * var(--ui-space-sm) + var(--ui-space-lg));
+    position: sticky; top: var(--plan-tray-top); max-height: calc(100dvh - var(--plan-tray-top) - var(--ui-space-lg));
+    overflow-y: auto; overscroll-behavior: contain; align-content: start;
+  }
+}
+.ui-plan-tray-head { display: grid; gap: var(--ui-space-xs); }
+.ui-plan-tray-title { margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text); }
+.ui-plan-tray-text { margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); }
+.ui-plan-tray-group { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-plan-tray-group .ui-collapsible-content > div { min-width: 0; }
+.ui-plan-tray-group .ui-collapsible-content .ui-plan-tray-list { padding-block-start: var(--ui-space-xs); }
+.ui-plan-tray-campaign { margin: 0; min-width: 0; }
+/* a campaign, closed to one quiet row: its name, how many are left to plan, the chevron */
+.ui-plan-tray-toggle {
+  display: flex; align-items: center; gap: var(--ui-space-sm); width: 100%; min-width: 0; min-height: var(--ui-size-hit);
+  margin: 0; padding: 0 var(--ui-space-md); border: 0; border-radius: var(--ui-radius-action); background: transparent;
+  font: inherit; font-size: var(--ui-type-control); line-height: 1.4; color: var(--ui-text); text-align: start; cursor: pointer;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: background var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-plan-tray-toggle-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--ui-type-weight-medium); }
+.ui-plan-tray-toggle-meta { flex: none; font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-plan-tray-toggle > svg { flex: none; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-tertiary); transition: rotate var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-plan-tray-toggle[aria-expanded="true"] > svg { rotate: 180deg; }
+@media (hover: hover) { .ui-plan-tray-toggle:hover { background: var(--ui-item-bg-hover); } }
+.ui-plan-tray-toggle:active { background: var(--ui-item-bg-pressed); }
+.ui-plan-tray-toggle:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+.ui-plan-tray-list { display: grid; gap: var(--ui-space-xs); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-plan-tray-entry { min-width: 0; }
+/* one approved creative: the whole row drags, or a click picks its day */
+.ui-plan-item {
+  display: flex; align-items: center; gap: var(--ui-space-md); width: 100%; min-width: 0; min-height: var(--ui-size-hit); margin: 0; padding: var(--ui-space-xs);
+  border: 0; border-radius: var(--ui-radius-item); background: transparent; font: inherit; color: inherit; text-align: start; cursor: pointer;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: background var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-plan-item[data-draggable] { cursor: grab; user-select: none; -webkit-user-select: none; }
+@media (hover: hover) { .ui-plan-item:hover { background: var(--ui-item-bg-hover); } }
+.ui-plan-item:active { background: var(--ui-item-bg-pressed); }
+.ui-plan-item:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+.ui-plan-item-media {
+  flex: none; width: var(--ui-item-media); aspect-ratio: 4 / 5; object-fit: cover;
+  border-radius: var(--ui-radius-check); background: var(--ui-surface-creative);
+}
+.ui-plan-item-text { display: grid; flex: 1 1 auto; min-width: 0; }
+.ui-plan-item-title { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow-wrap: anywhere; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text); } /* two lines, so the format that tells two creatives apart is never cut */
+.ui-plan-item-meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-plan-later {
+  display: flex; align-items: flex-start; gap: var(--ui-space-sm); margin: 0;
+  font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-tertiary);
+}
+.ui-plan-later > svg { flex: none; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+
+/* The creative under the pointer. */
+.ui-plan-ghost {
+  position: fixed; inset-block-start: var(--plan-y); inset-inline-start: var(--plan-x); z-index: var(--ui-overlay-z-float);
+  display: grid; justify-items: center; gap: var(--ui-space-xs); translate: -50% -50%; pointer-events: none;
+}
+.ui-plan-ghost > img, .ui-plan-ghost > svg {
+  width: calc(1.5 * var(--ui-item-media)); aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--ui-radius-item);
+  background: var(--ui-surface-creative); box-shadow: var(--ui-depth-sheet); rotate: -2deg;
+}
+.ui-plan-ghost-day {
+  padding: 0 var(--ui-space-sm); border-radius: var(--ui-radius-action); background: var(--ui-action-primary);
+  font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); line-height: 1.8; color: var(--ui-action-primary-fg);
+}
+html[data-ui-dragging], html[data-ui-dragging] * { cursor: grabbing !important; user-select: none; -webkit-user-select: none; }
+
+/* A narrow page: the tray goes under the plan and its creatives scroll sideways as small cards. */
+@container ui-sidebar (max-width: 1023px) {
+  .ui-plan-tray { padding: var(--ui-inset-float) 0; background: transparent; gap: var(--ui-space-lg); }
+  .ui-plan-tray-head, .ui-plan-later { padding-inline: 0; }
+  .ui-plan-tray-entry { flex: none; display: flex; }
+  .ui-plan-tray-list {
+    display: flex; gap: var(--ui-space-sm); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none;
+    padding-block-end: var(--ui-space-xs);
+  }
+  .ui-plan-tray-list::-webkit-scrollbar { display: none; }
+  .ui-plan-item {
+    flex: none; flex-direction: column; align-items: stretch; gap: var(--ui-space-sm); width: 136px; /* gate-allow:space-from-tokens a tray card's width, a layout size */
+    padding: var(--ui-space-sm); background: var(--ui-surface); border-radius: var(--ui-radius-card);
+  }
+  .ui-plan-item-media { width: 100%; border-radius: var(--ui-radius-item); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-plan-day, .ui-plan-span, .ui-plan-post, a.ui-plan-event, .ui-plan-item, .ui-plan-tray-toggle, .ui-plan-tray-toggle > svg { transition: none; }
+  .ui-plan-span:active, button.ui-plan-post:active { scale: none; }
+  .ui-plan-ghost > img, .ui-plan-ghost > svg { rotate: none; }
+}
+
+/* The plan dialog: the creative small at the start, the day and time side by side, then the placement. */
+.ui-plan-form { display: grid; grid-template-columns: var(--ui-item-media) minmax(0, 1fr); gap: var(--ui-space-lg); align-items: start; min-width: 0; }
+.ui-plan-form:not(:has(> .ui-plan-form-media)) { grid-template-columns: minmax(0, 1fr); }
+.ui-plan-form-media { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--ui-radius-check); background: var(--ui-surface-creative); }
+.ui-plan-form-when { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-md); min-width: 0; }
+/* Round 13 (#37): the day reads in full ("Sat 17 Oct 2026", DateField); the time ("20:00", TimeField) takes what it needs */
+@media (min-width: 480px) { .ui-plan-form-when { grid-template-columns: minmax(0, 1fr) auto; } }
+@media (max-width: 479px) { .ui-plan-form-when { grid-template-columns: minmax(0, 1fr); } }
+
+/* Round 13 (Marcus's comment #38; PROPOSED 22 Oct 2026): a channel the brand has not connected, under the Channel select
+   in the plan dialog (Smoke glass): <div class="ui-plan-form-connect"> its line · Connect TikTok </div>. */
+.ui-plan-form-connect { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-sm) var(--ui-space-md); min-width: 0; }
+.ui-plan-form-connect > .ui-field-description { flex: 1 1 12rem; margin: 0; } /* gate-allow:space-from-tokens the line's least width before Connect wraps under it */

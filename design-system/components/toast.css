@@ -1,0 +1,96 @@
+/* Toast (sonner). DECIDED 13 Oct, from round 7. Built on shadcn's sonner (Toaster; toast types success, error,
+   loading, with an action), redesigned for Fume.
+   A toast is a pill bar of Smoke glass (.ui-glass.ui-glass--bar) at the bottom centre, every one the same
+   width (--ui-toast-width) so a stack lines up. Air as in every pill bar: text starts 22 in (the 6 ring
+   plus 16), a button sits in the 6 px ring at the end. One line: icon, words, an optional count in the
+   data type and an optional clear button (Undo).
+   Types: done (fi-circle-check, Porcelain), error (fi-circle-alert, the icon alone in Rouge: the words
+   stay Porcelain and say what went wrong), loading (a turning fi-loader-circle, Generating 12 creatives),
+   and any of them with an action. Never Amber, never a green.
+   A stack shows up to three: each older toast sits 8 higher and 5 % smaller behind the newest
+   (--ui-toast-peek, --ui-toast-depth-scale), its words hidden, so depth does the work of a line. With a
+   mouse over the stack, or focus in it, the stack opens into a column and every timer pauses.
+   toast.js: window.fumeToast(); a toast leaves on its own (--ui-toast-duration, longer with an action
+   or an error), and swipes away sideways or down (--ui-toast-swipe). Announced politely (aria-live).
+   Round 8 (walk-through 19 Oct, MOB-19 and ONB-17; PROPOSED 19 Oct 2026): a toast is for what happens out of sight
+   or can be undone, never for a change the item itself shows. 4 s (8 s with Undo or for an error); it leaves when
+   the page changes; its whole sentence shows, wrapping as far as it needs (never cut with an ellipsis); and it rises
+   above whatever sits at the foot of the screen (the tab bar, a floating action bar, a docked composer, a sheet's
+   footer, anything marked [data-ui-foot]): toast.tsx measures them into --ui-toast-clear and sets [data-clear].
+   Round 9 (desktop review DTSK-19, DWAY-4; PROPOSED 19 Oct 2026): on a desk (1024 px and wider) toasts sit at the bottom
+   left of the main column, 24 in ([data-place="start"]; toast.tsx measures the column into --ui-toast-x and
+   --ui-toast-w), so they never land on the composer's send or the viewer's Approve at the centre. A column marked
+   [data-ui-toast-anchor="top"] (the viewer's comments panel) takes them at its top left ([data-place="top"]), the
+   stack opening downward. A toast is the Smoke glass (glass.css). Up to three; the same message raised again
+   refreshes the one that shows.
+   Rule gate: air, space-from-tokens, type-from-tokens, mono-is-data, few-strokes, reduced-motion. */
+
+.ui-toaster {
+  position: fixed; z-index: var(--ui-overlay-z-toast); left: 0; right: 0;
+  bottom: calc(var(--ui-toast-bottom) + env(safe-area-inset-bottom, 0px));
+  display: flex; justify-content: center; pointer-events: none; outline: none;
+}
+.ui-toaster-list {
+  position: relative; width: min(var(--ui-toast-width), calc(100vw - 2 * var(--ui-overlay-margin)));
+  height: var(--ui-size-hit); margin: 0; padding: 0; list-style: none;
+}
+.ui-toast {
+  --i: 0; --lift: calc(var(--i) * var(--ui-toast-peek));
+  position: absolute; left: 0; right: 0; bottom: 0;
+  display: flex; align-items: center; gap: var(--ui-space-md);
+  min-height: var(--ui-size-hit);
+  padding: var(--ui-inset-ring) var(--ui-inset-ring) var(--ui-inset-ring) calc(var(--ui-inset-ring) + var(--ui-inset-float));
+  color: var(--ui-glass-fg); font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.3;
+  pointer-events: auto; touch-action: none; user-select: none; transform-origin: center bottom;
+  translate: var(--swipe-x, 0px) calc(var(--swipe-y, 0px) - var(--lift));
+  scale: calc(1 - var(--i) * var(--ui-toast-depth-scale));
+  transition: translate var(--ui-motion-base) var(--ui-motion-ease), scale var(--ui-motion-base) var(--ui-motion-ease), opacity var(--ui-motion-base) var(--ui-motion-ease);
+}
+.ui-toast:not(:has(> .ui-toast-action)) { padding-right: calc(var(--ui-inset-ring) + var(--ui-inset-float)); }
+.ui-toast[data-swiping] { transition: none; }
+.ui-toast[data-index="3"] { opacity: 0; }
+/* bridge the gaps of an open stack, so the pointer can travel from toast to toast */
+.ui-toast::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: var(--ui-toast-peek); }
+
+.ui-toast-icon { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; }
+.ui-toast[data-type="error"] .ui-toast-icon { color: var(--ui-danger); }
+.ui-toast[data-type="loading"] .ui-toast-icon { animation: ui-toast-spin var(--ui-motion-spin) linear infinite; }
+/* a longer message wraps and is never cut (walk-through 19 Oct: "made and…" was cut off; PROPOSED 19 Oct 2026) */
+.ui-toast-title { flex: 1 1 auto; min-width: 0; white-space: normal; overflow-wrap: anywhere; text-wrap: pretty; }
+/* on a phone with the tab bar, a toast rises above the bar instead of covering it (PROPOSED 15 Oct 2026) */
+@media (max-width: 639.98px) {
+  :root:has(.ui-tab-bar-dock) .ui-toaster { bottom: calc(var(--ui-tab-bar-room) + var(--ui-space-sm) + env(safe-area-inset-bottom, 0px)); }
+}
+/* above what sits at the foot of the screen, as measured (the measure already holds the safe area) */
+:root .ui-toaster[data-clear], :root:has(.ui-tab-bar-dock) .ui-toaster[data-clear] { bottom: calc(max(var(--ui-toast-clear), var(--ui-toast-bottom)) + var(--ui-space-sm)); }
+/* a desk: the bottom left of the main column, or the top left of the column that asks for them (DTSK-19) */
+.ui-toaster[data-place] { left: var(--ui-toast-x); right: auto; justify-content: flex-start; }
+.ui-toaster[data-place] .ui-toaster-list { width: var(--ui-toast-w, var(--ui-toast-width)); }
+.ui-toaster[data-place="top"], :root .ui-toaster[data-place="top"][data-clear] { top: var(--ui-toast-y); bottom: auto; }
+.ui-toaster[data-place="top"] .ui-toast { top: 0; bottom: auto; transform-origin: center top; translate: var(--swipe-x, 0px) calc(var(--swipe-y, 0px) + var(--lift)); }
+.ui-toaster[data-place="top"] .ui-toast::before { top: 100%; bottom: auto; }
+.ui-toaster[data-place="top"] .ui-toast[data-state="open"] { animation-name: ui-toast-in-top; }
+@keyframes ui-toast-in-top { from { opacity: 0; transform: translateY(-50%); filter: blur(var(--ui-motion-enter-blur)); } to { opacity: 1; transform: none; filter: none; } }
+.ui-toast-meta { flex-shrink: 0; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-glass-fg-secondary); font-variant-numeric: tabular-nums; }
+.ui-toast-action { flex-shrink: 0; }
+
+/* a stack: older toasts sit behind the newest with their words hidden; open with a mouse or focus */
+.ui-toast > * { transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-toaster:not(.is-expanded) .ui-toast:not([data-index="0"]) > * { opacity: 0; }
+.ui-toaster.is-expanded .ui-toast { --lift: calc(var(--i) * (var(--ui-size-hit) + var(--ui-space-sm))); scale: 1; }
+
+.ui-toast[data-state="open"] { animation: ui-toast-in var(--ui-motion-base) var(--ui-motion-ease) both; }
+.ui-toast[data-state="closed"] { animation: ui-toast-out var(--ui-motion-base) var(--ui-motion-ease) both; pointer-events: none; }
+
+@keyframes ui-toast-in { from { opacity: 0; transform: translateY(100%); filter: blur(var(--ui-motion-enter-blur)); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes ui-toast-out { to { opacity: 0; transform: translate(var(--exit-x, 0px), var(--exit-y, 50%)); filter: blur(var(--ui-motion-enter-blur)); } }
+@keyframes ui-toast-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-toast, .ui-toast > * { transition: opacity var(--ui-motion-fast) linear; }
+  .ui-toast[data-state="open"] { animation: ui-toast-fade var(--ui-motion-fast) linear both; }
+  .ui-toast[data-state="closed"] { animation: ui-toast-fade var(--ui-motion-fast) linear reverse both; }
+  .ui-toaster[data-place="top"] .ui-toast[data-state="open"] { animation-name: ui-toast-fade; }
+  .ui-toast[data-type="loading"] .ui-toast-icon { animation-duration: var(--ui-motion-spin-reduced); }
+}
+@keyframes ui-toast-fade { from { opacity: 0; } }

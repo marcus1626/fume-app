@@ -1,0 +1,256 @@
+{
+  "$description": "Choices and status: checkbox and radio (group check), switch, slider, progress, badge and spinner. DECIDED 13 Oct 2026 (approved on the review board, F-D072 to F-D075), first shown in round 7. Component tokens, merged into the --ui-* layer by node tools/tokens/build.mjs. Every colour is a palette primitive or an existing role. Ink decides: checked, on, the slider's range and the progress fill are Ink, never Amber. Group check is the checkbox control (--ui-check-*), not the Amber Quality Gate check (--ui-check).",
+  "check": {
+    "size": {
+      "value": "20px",
+      "status": "DECIDED",
+      "description": "The checkbox and the radio: a 20 px box, centred in a 44 px hit area (size.hit)."
+    },
+    "bg": {
+      "value": "{color.surface-creative}",
+      "status": "DECIDED",
+      "description": "Unchecked checkbox and radio: white, like an input, with the edge below."
+    },
+    "edge": {
+      "value": "alpha({fume.focus-900}, 0.48)",
+      "status": "DECIDED",
+      "description": "The hairline of an unchecked box or circle: Ink at 48 %, 3.2:1 on white and 3.0:1 against a card, so the 20 px control passes the 3:1 for UI parts. Lighter hairlines (Border, Focus 300) vanish at this size. One of the few strokes the system allows: without it the box disappears."
+    },
+    "edge-hover": {
+      "value": "alpha({fume.focus-900}, 0.72)",
+      "status": "DECIDED",
+      "description": "Hover: the edge comes one step toward Ink."
+    },
+    "on": {
+      "value": "{color.action.primary}",
+      "status": "DECIDED",
+      "description": "Checked, indeterminate and selected: Ink. Never Amber."
+    },
+    "on-hover": {
+      "value": "{color.action.primary-hover}",
+      "status": "DECIDED",
+      "description": "Checked under the pointer: Ink lifts one step, like the primary button."
+    },
+    "mark": {
+      "value": "{fume.porcelain}",
+      "status": "DECIDED",
+      "description": "The check, the dash and the radio's centre on Ink: Porcelain, 17.9:1."
+    },
+    "ring": {
+      "value": "6px",
+      "status": "DECIDED",
+      "description": "A selected radio: the edge thickens into a 6 px Ink ring around an 8 px Porcelain centre."
+    },
+    "disabled": {
+      "value": "{color.action.disabled}",
+      "status": "DECIDED",
+      "description": "Disabled box or circle, checked or not: the sunken disabled surface, no edge."
+    },
+    "disabled-mark": {
+      "value": "{color.action.disabled-fg}",
+      "status": "DECIDED",
+      "description": "The check, dash or centre on a disabled control."
+    }
+  },
+  "switch": {
+    "width": {
+      "value": "40px",
+      "status": "DECIDED",
+      "description": "Default switch track: 40 x 24, a pill. The hit area is 44 either way."
+    },
+    "height": {
+      "value": "24px",
+      "status": "DECIDED"
+    },
+    "thumb": {
+      "value": "20px",
+      "status": "DECIDED",
+      "description": "The white thumb, 2 px inside the track."
+    },
+    "width-sm": {
+      "value": "32px",
+      "status": "DECIDED",
+      "description": "Small switch, for dense rows and glass: 32 x 20."
+    },
+    "height-sm": {
+      "value": "20px",
+      "status": "DECIDED"
+    },
+    "thumb-sm": {
+      "value": "16px",
+      "status": "DECIDED"
+    },
+    "stretch": {
+      "value": "4px",
+      "status": "DECIDED",
+      "description": "Pressed: the thumb stretches 4 px toward where it will go, the moment the finger lands."
+    },
+    "track": {
+      "value": "{color.surface-sunken}",
+      "status": "DECIDED",
+      "description": "Off: the sunken surface. The white thumb, lifted by depth, carries the shape."
+    },
+    "track-hover": {
+      "value": "{color.surface-sunken-hover}",
+      "status": "DECIDED",
+      "description": "Off under the pointer: one step toward Ink."
+    },
+    "track-on": {
+      "value": "{color.action.primary}",
+      "status": "DECIDED",
+      "description": "On: Ink decides. Never Amber."
+    },
+    "track-on-hover": {
+      "value": "{color.action.primary-hover}",
+      "status": "DECIDED",
+      "description": "On under the pointer: Ink lifts one step."
+    },
+    "track-on-disabled": {
+      "value": "{fume.focus-300}",
+      "status": "DECIDED",
+      "description": "On and disabled: Ink falls back to Focus 300, so on and off stay apart without looking active."
+    },
+    "thumb-bg": {
+      "value": "{color.action.secondary}",
+      "status": "DECIDED",
+      "description": "The thumb: white, lifted with depth.raised instead of an edge."
+    },
+    "thumb-disabled": {
+      "value": "{color.surface}",
+      "status": "DECIDED",
+      "description": "Disabled thumb: Focus 50, flat."
+    },
+    "glass-track": {
+      "value": "alpha({fume.porcelain}, 0.18)",
+      "status": "DECIDED",
+      "description": "Off on glass: a Porcelain veil, a little stronger than the clear button's so the track reads at 20 px."
+    },
+    "glass-track-hover": {
+      "value": "alpha({fume.porcelain}, 0.26)",
+      "status": "DECIDED",
+      "description": "Off on glass under the pointer: the veil lifts one step."
+    },
+    "glass-track-on": {
+      "value": "{color.glass.button-white}",
+      "status": "DECIDED",
+      "description": "On on glass: the white of the main glass button. The thumb turns Ink, so on reads at a glance over any photo."
+    },
+    "glass-thumb": {
+      "value": "{fume.porcelain}",
+      "status": "DECIDED",
+      "description": "The thumb on glass when off. No shadow on glass."
+    },
+    "glass-thumb-on": {
+      "value": "{color.action.primary}",
+      "status": "DECIDED",
+      "description": "The thumb on glass when on: Ink on white."
+    }
+  },
+  "slider": {
+    "track-height": {
+      "value": "4px",
+      "status": "DECIDED",
+      "description": "A thin pill track."
+    },
+    "thumb": {
+      "value": "20px",
+      "status": "DECIDED",
+      "description": "The white thumb, lifted with depth.raised; its hit area is 44."
+    },
+    "track": {
+      "value": "{color.surface-sunken}",
+      "status": "DECIDED",
+      "description": "The track outside the range."
+    },
+    "range": {
+      "value": "{color.action.primary}",
+      "status": "DECIDED",
+      "description": "The chosen range: Ink. Never Amber."
+    },
+    "range-disabled": {
+      "value": "{fume.focus-300}",
+      "status": "DECIDED",
+      "description": "The range on a disabled slider."
+    },
+    "thumb-bg": {
+      "value": "{color.action.secondary}",
+      "status": "DECIDED",
+      "description": "White, like the switch thumb."
+    },
+    "glass-track": {
+      "value": "alpha({fume.porcelain}, 0.2)",
+      "status": "DECIDED",
+      "description": "The track on glass: a Porcelain veil."
+    },
+    "glass-range": {
+      "value": "{fume.porcelain}",
+      "status": "DECIDED",
+      "description": "The range and the thumb on glass: Porcelain. No shadow on glass."
+    }
+  },
+  "progress": {
+    "height": {
+      "value": "4px",
+      "status": "DECIDED",
+      "description": "A thin pill track, the same weight as the slider's."
+    },
+    "track": {
+      "value": "{color.surface-sunken}",
+      "status": "DECIDED"
+    },
+    "fill": {
+      "value": "{color.action.primary}",
+      "status": "DECIDED",
+      "description": "Ink. Never Amber: progress is work under way, Amber is work checked."
+    },
+    "sweep": {
+      "value": "calc({motion.spin} * 2)",
+      "status": "DECIDED",
+      "description": "1800 ms: one pass of the indeterminate bar, two spinner turns."
+    },
+    "glass-track": {
+      "value": "alpha({fume.porcelain}, 0.2)",
+      "status": "DECIDED",
+      "description": "The track on glass: a Porcelain veil."
+    },
+    "glass-fill": {
+      "value": "{fume.porcelain}",
+      "status": "DECIDED",
+      "description": "The fill on glass: Porcelain."
+    }
+  },
+  "badge": {
+    "height": {
+      "value": "24px",
+      "status": "DECIDED",
+      "description": "A badge: a 24 px pill with 12 px label text and 12 px air at the ends."
+    },
+    "height-sm": {
+      "value": "20px",
+      "status": "DECIDED",
+      "description": "Counts beside a label or in a row."
+    },
+    "dot": {
+      "value": "6px",
+      "status": "DECIDED",
+      "description": "The status dot beside a badge label, and the dot on an icon."
+    },
+    "hover": {
+      "value": "{color.surface-sunken-hover}",
+      "status": "DECIDED",
+      "description": "A neutral badge that is a link or a button, under the pointer: one step toward Ink from the sunken surface."
+    },
+    "pressed": {
+      "value": "{fume.focus-300}",
+      "status": "DECIDED",
+      "description": "The same badge pressed: two steps, with the 3 % shrink."
+    }
+  },
+  "spinner": {
+    "size-xl": {
+      "value": "24px",
+      "status": "DECIDED",
+      "description": "The display spinner, for a page or a panel that is loading. Controls use the icon sizes (14, 16, 18)."
+    }
+  }
+}

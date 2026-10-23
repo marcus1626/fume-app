@@ -1,0 +1,170 @@
+/* Mind map: Fume reading a brand for the first time (app round 7, FLOWS §7 step 3). PROPOSED 16 Oct 2026.
+   Markup: <div class="ui-mind-map" role="group" aria-label data-settled?>
+             <div class="ui-mind-map-stage [ui-mind-map-stage--leaving]">
+               <svg class="ui-mind-map-lines"> <pattern> <circle class="ui-mind-map-dot"/> </pattern> <rect class="ui-mind-map-grid"/>
+                 <g class="ui-mind-map-link" data-state="waiting|reading|landed"><path pathLength="1"/><circle/></g> … </svg>
+               <div class="ui-mind-map-center" data-state="waiting|landed"> <div class="ui-mind-map-logo" style="--brand-ground --brand-ink --brand-display"/> </div>
+               <ol class="ui-mind-map-nodes"><li class="ui-mind-map-node" data-state data-place="nw|n|ne|w|e|sw|s|se" data-wide?>
+                 <div class="ui-mind-map-node-head"><svg/> <h3 class="ui-mind-map-node-title"/> <span class="ui-mind-map-node-meta"/></div>
+                 <div class="ui-mind-map-node-body"> .ui-mind-map-swatches | -specimens | -pictures | -tiles | -quote | -list,
+                   each thing a .ui-mind-map-item </div>
+                 <p class="ui-mind-map-node-source"><span class="ui-text-shimmer">Reading lysne.no/about</span></p></li></ol></div>
+             <div class="ui-mind-map-board"> the board it settles into, parts marked data-mind-map-part </div></div>
+           React: MindMap in packages/ui/src/fume/mind-map.tsx (connectors are measured and drawn there; the settle is FLIP with WAAPI).
+   Fume decisions (Marcus 16 Oct, round 7: "en blank grid, der logoen dems kommer i midten, også ser man ting kobles på
+   som et mind map"): a calm Paper ground with a faint dot grid (an SVG pattern, never a CSS gradient). The logo lands
+   first in the middle, coming from soft to sharp. Then one node at a time: its connector draws out from the logo
+   (one thin line, the only strokes on the screen: they are the content, the map itself), the node card rises a
+   little and its words are sharp at once, while the things in it (swatches, specimens, pictures, products) wait
+   soft at half strength, then pull into focus one after the other when the node lands (a lens focus pull, blur to
+   sharp, never a crossfade). Slow and overlapping: a node takes about 2 s to land and the next one starts while it
+   does; no bounce, one ease (--ui-motion-ease). One line shimmers at a time: the node being read says what the
+   Fume reads ("Reading lysne.no/about", the design system's white shimmer); a landed node says where it was read.
+   A node being read below the fold is followed down, gently and only forward; a page with a pinned foot gives the
+   nodes a scroll-margin-bottom so the followed node stops above it.
+   Done, the map hands over to the board when the page gives one: each part flies in from its node and comes sharp
+   while the map blurs away. Without a board the settled map stays as the result (round 8, ONB-3, PROPOSED 19 Oct
+   2026): the onboarding shows the map she watched, then "Check what Fume found". Products beyond five are one
+   "+6 more" tile (.ui-mind-map-more), so the count matches the rest of the onboarding.
+   On a narrow container (a phone) the map stacks: the logo on top, nodes below on one spine at the left with a
+   short arm into each, so it still reads as connected. Reduced motion: a static map; nodes and the board fade in,
+   nothing moves or blurs. No Amber (reading a brand is not a check), no glow, no gradient.
+   Rule gate: few-strokes (connectors and the customer's colour edge, marked), amber-is-a-point (none), air,
+   proximity, space-from-tokens, radius-from-tokens, type-from-tokens, motion-from-tokens, reduced-motion,
+   card-never-matches-ground, tokens-only-color. */
+
+.ui-mind-map { container: ui-mind-map / inline-size; position: relative; min-width: 0; color: var(--ui-text); }
+
+/* ─── The stage: Paper, dots, the center and the nodes around it ─── */
+.ui-mind-map-stage {
+  --mind-map-stacked: 0;
+  --mind-map-gutter: var(--ui-space-2xl);
+  position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-areas: "nw n ne" "w c e" "sw s se";
+  align-items: center; gap: calc(var(--ui-space-2xl) * 1.5) calc(var(--ui-space-2xl) * 1.5);
+  min-width: 0; padding: var(--ui-space-2xl) 0;
+}
+.ui-mind-map-lines { position: absolute; top: 0; left: 0; z-index: 0; overflow: visible; pointer-events: none; }
+.ui-mind-map-dot { fill: var(--ui-text-disabled); }
+.ui-mind-map-grid { opacity: .55; animation: ui-mind-map-fade calc(var(--ui-motion-slow) * 3) var(--ui-motion-ease) both; }
+.ui-mind-map-nodes { display: contents; margin: 0; padding: 0; list-style: none; }
+
+/* the center: the brand's logo lands first, from soft to sharp */
+.ui-mind-map-center {
+  position: relative; z-index: 1; grid-area: c; justify-self: center; min-width: 0;
+  transition: opacity calc(var(--ui-motion-slow) * 3) var(--ui-motion-ease), filter calc(var(--ui-motion-slow) * 5) var(--ui-motion-ease), transform calc(var(--ui-motion-slow) * 5) var(--ui-motion-ease);
+}
+.ui-mind-map-center[data-state="waiting"] { opacity: 0; filter: blur(calc(var(--ui-motion-enter-blur) * 2.5)); transform: scale(calc(var(--ui-motion-enter-scale) - .04)); }
+.ui-mind-map-logo {
+  display: grid; place-items: center; width: min(100%, calc(var(--ui-space-2xl) * 9)); aspect-ratio: 16 / 9; padding: var(--ui-inset-float); text-indent: .24em;
+  border-radius: var(--ui-radius-card); background: var(--brand-ground, var(--ui-onboard-card)); color: var(--brand-ink, var(--ui-text)); box-shadow: var(--ui-depth-sheet);
+  font-family: var(--brand-display, var(--ui-type-family)); font-size: var(--ui-type-display); letter-spacing: .24em; line-height: 1;
+}
+
+/* a node: the card rises, its words sharp at once; the things in it wait soft, then pull into focus */
+.ui-mind-map-node {
+  position: relative; z-index: 1; display: grid; align-content: start; gap: var(--ui-space-md); min-width: 0;
+  padding: var(--ui-inset-float); border-radius: var(--ui-radius-card); background: var(--ui-onboard-card); box-shadow: var(--ui-depth-raised);
+  opacity: 0; transform: translateY(var(--ui-space-md)) scale(var(--ui-motion-enter-scale));
+  transition: opacity calc(var(--ui-motion-slow) * 3) var(--ui-motion-ease), transform calc(var(--ui-motion-slow) * 4) var(--ui-motion-ease);
+}
+.ui-mind-map-node[data-state="reading"], .ui-mind-map-node[data-state="landed"] { opacity: 1; transform: none; }
+.ui-mind-map-node[data-place="nw"] { grid-area: nw; }
+.ui-mind-map-node[data-place="n"] { grid-area: n; }
+.ui-mind-map-node[data-place="ne"] { grid-area: ne; }
+.ui-mind-map-node[data-place="w"] { grid-area: w; }
+.ui-mind-map-node[data-place="e"] { grid-area: e; }
+.ui-mind-map-node[data-place="sw"] { grid-area: sw; }
+.ui-mind-map-node[data-place="s"] { grid-area: s; }
+.ui-mind-map-node[data-place="se"] { grid-area: se; }
+.ui-mind-map-node[data-place="sw"][data-wide] { grid-area: auto; grid-row: 3; grid-column: 1 / span 2; }
+.ui-mind-map-node[data-place="s"][data-wide] { grid-area: auto; grid-row: 3; grid-column: 2 / span 2; }
+.ui-mind-map-node-head { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-mind-map-node-head > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; color: var(--ui-text-secondary); }
+.ui-mind-map-node-title { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; }
+.ui-mind-map-node-meta { margin-inline-start: auto; font-size: var(--ui-type-label); color: var(--ui-text-tertiary); white-space: nowrap; }
+.ui-mind-map-node-body { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-mind-map-node-source { min-width: 0; margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); overflow-wrap: anywhere; }
+.ui-mind-map-node[data-state="reading"] .ui-mind-map-node-source { color: var(--ui-text-secondary); }
+
+.ui-mind-map-item {
+  --mind-map-i: 0;
+  min-width: 0; opacity: 0; filter: blur(calc(var(--ui-motion-enter-blur) * 2)); transform: scale(var(--ui-motion-enter-scale));
+  transition: opacity calc(var(--ui-motion-slow) * 3) var(--ui-motion-ease), filter calc(var(--ui-motion-slow) * 4) var(--ui-motion-ease), transform calc(var(--ui-motion-slow) * 4) var(--ui-motion-ease);
+  transition-delay: calc(var(--mind-map-i) * var(--ui-motion-base));
+}
+.ui-mind-map-node[data-state="reading"] .ui-mind-map-item { opacity: .5; filter: blur(calc(var(--ui-motion-enter-blur) * 1.25)); }
+.ui-mind-map-node[data-state="landed"] .ui-mind-map-item { opacity: 1; filter: blur(0); transform: none; }
+.ui-mind-map-item:nth-child(2) { --mind-map-i: 1; }
+.ui-mind-map-item:nth-child(3) { --mind-map-i: 2; }
+.ui-mind-map-item:nth-child(4) { --mind-map-i: 3; }
+.ui-mind-map-item:nth-child(5) { --mind-map-i: 4; }
+.ui-mind-map-item:nth-child(6) { --mind-map-i: 5; }
+.ui-mind-map-item:nth-child(n + 7) { --mind-map-i: 6; }
+
+/* the connectors: drawn out from the logo as a node opens; a small point where it meets the node */
+.ui-mind-map-link > path {
+  fill: none; stroke: var(--ui-text-tertiary); stroke-width: 1; stroke-linecap: round; /* gate-allow:few-strokes  the connectors are the mind map itself (Marcus 16 Oct) */
+  stroke-dasharray: 1; stroke-dashoffset: 1; opacity: .7;
+  transition: stroke-dashoffset calc(var(--ui-motion-slow) * 4) var(--ui-motion-ease);
+}
+.ui-mind-map-link[data-state="reading"] > path, .ui-mind-map-link[data-state="landed"] > path { stroke-dashoffset: 0; }
+.ui-mind-map-link > circle { fill: var(--ui-text-tertiary); opacity: 0; transition: opacity calc(var(--ui-motion-slow) * 2) var(--ui-motion-ease); }
+.ui-mind-map-link[data-state="landed"] > circle { opacity: 1; }
+
+/* the settle: the map blurs away over the board while the board's parts fly in from their nodes */
+.ui-mind-map-stage--leaving { position: absolute; top: 0; right: 0; left: 0; z-index: 2; pointer-events: none; animation: ui-mind-map-leave calc(var(--ui-motion-slow) * 3) var(--ui-motion-ease) both; }
+.ui-mind-map-board { min-width: 0; }
+
+/* ─── What a node holds ─── */
+.ui-mind-map-swatches { display: flex; flex-wrap: wrap; gap: var(--ui-space-sm); }
+.ui-mind-map-swatch { position: relative; width: var(--ui-size-control-md); height: var(--ui-size-control-md); border-radius: 50%; background: var(--swatch, var(--ui-surface-sunken)); }
+.ui-mind-map-swatch::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); } /* gate-allow:few-strokes  the edge of the customer's own colour, so a light one never vanishes */
+.ui-mind-map-specimens { display: grid; grid-template-columns: repeat(auto-fit, minmax(calc(var(--ui-space-2xl) * 2.5), 1fr)); gap: var(--ui-space-md); }
+.ui-mind-map-specimen { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-mind-map-specimen-aa { font-family: var(--brand-font, var(--ui-type-family)); font-size: var(--ui-type-display); line-height: 1; }
+.ui-mind-map-specimen-name { font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+.ui-mind-map-pictures { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ui-space-xs); }
+.ui-mind-map-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(calc(var(--ui-space-2xl) * 2.25), 1fr)); gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; }
+.ui-mind-map-picture { position: relative; display: block; overflow: hidden; aspect-ratio: 1; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-mind-map-picture > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ui-mind-map-tiles .ui-mind-map-picture { background: var(--ui-surface-creative); }
+.ui-mind-map-picture::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); pointer-events: none; } /* gate-allow:few-strokes  the edge of the customer's own picture */
+.ui-mind-map-tile { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-mind-map-tile-name { overflow: hidden; font-size: var(--ui-type-label); line-height: 1.3; color: var(--ui-text-secondary); text-overflow: ellipsis; white-space: nowrap; }
+/* the products beyond the first five, as one tile: "+6 more" (round 8, ONB-3; PROPOSED 19 Oct 2026) */
+.ui-mind-map-tiles .ui-mind-map-more { display: grid; place-items: center; background: var(--ui-surface-sunken); color: var(--ui-text-secondary); font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); }
+.ui-mind-map-more::after { content: none; }
+.ui-mind-map-quote { margin: 0; font-size: var(--ui-type-body-large); line-height: 1.45; text-wrap: pretty; }
+.ui-mind-map-quote-note { margin: 0; font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+.ui-mind-map-list { display: grid; gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; font-size: var(--ui-type-control); line-height: 1.45; text-wrap: pretty; }
+
+/* ─── A desk (round 9, desktop review DLAY-12, PROPOSED 19 Oct 2026): the nodes span the whole canvas and the map
+   is never taller than the screen above a pinned foot (about 580 px): tighter rows, wider columns, the specimens a
+   size down and the voice quote at body size. The node being read is followed down, never under the foot. ─── */
+@media (min-width: 1024px) {
+  .ui-mind-map-stage { gap: var(--ui-space-xl) var(--ui-space-2xl); padding-block: var(--ui-space-lg); }
+  .ui-mind-map-node { gap: var(--ui-space-sm); }
+  .ui-mind-map-specimen-aa { font-size: var(--ui-type-title-large); }
+  .ui-mind-map-quote { font-size: var(--ui-type-body); }
+}
+
+/* ─── Narrow: the map stacks on one spine ─── */
+@container ui-mind-map (max-width: 759px) {
+  .ui-mind-map-stage { --mind-map-stacked: 1; display: flex; flex-direction: column; align-items: stretch; gap: var(--ui-space-xl); padding: var(--ui-space-lg) 0; }
+  .ui-mind-map-center { align-self: center; margin-bottom: var(--ui-space-lg); }
+  .ui-mind-map-node { margin-inline-start: var(--mind-map-gutter); }
+  .ui-mind-map-logo { width: calc(var(--ui-space-2xl) * 7); font-size: var(--ui-type-title-large); }
+}
+
+@keyframes ui-mind-map-fade { from { opacity: 0; } }
+@keyframes ui-mind-map-leave { to { opacity: 0; filter: blur(calc(var(--ui-motion-enter-blur) * 1.5)); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-mind-map-node, .ui-mind-map-center, .ui-mind-map-item { transform: none; filter: none; transition: opacity var(--ui-motion-base) var(--ui-motion-ease); transition-delay: 0s; }
+  .ui-mind-map-node[data-state="reading"] .ui-mind-map-item { opacity: 1; filter: none; }
+  .ui-mind-map-center[data-state="waiting"] { filter: none; transform: none; }
+  .ui-mind-map-link > path { stroke-dashoffset: 0; opacity: 0; transition: opacity var(--ui-motion-base) var(--ui-motion-ease); }
+  .ui-mind-map-link[data-state="reading"] > path, .ui-mind-map-link[data-state="landed"] > path { opacity: .7; }
+  .ui-mind-map-grid, .ui-mind-map-stage--leaving { animation: none; }
+}

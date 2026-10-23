@@ -1,0 +1,26 @@
+/* Data list: metadata without a table. DECIDED 13 Oct, from round 7. Fume's answer to shadcn's table for
+   key-value facts (a creative's format, size, Engine run, checker): a <dl>, not a grid of cells.
+   Decisions:
+   - No lines and no zebra stripes (few-strokes): rows are aligned on two edges and parted by space
+     (--ui-space-sm between rows, the label column --ui-datalist-label-width wide).
+   - The label is tertiary and regular, the value is Ink: the value leads. Data (sizes, times, codes)
+     takes the data face (.ui-datalist-data), words do not.
+   - .ui-datalist--stacked puts each label above its value (narrow panels); .ui-datalist--grid lays the
+     facts out as cells that wrap (a strip of stats under a creative).
+   Markup: <dl class="ui-datalist"><div><dt>Format</dt><dd>Feed · 4:5</dd></div>…</dl>
+   Rule gate: few-strokes, mono-is-data, space-from-tokens, type-from-tokens. */
+
+.ui-datalist { display: grid; grid-template-columns: minmax(0, var(--ui-datalist-label-width)) minmax(0, 1fr); gap: var(--ui-space-sm) var(--ui-space-lg); min-width: 0; margin: 0; font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.5; }
+.ui-datalist > div { display: contents; }
+.ui-datalist dt { min-width: 0; margin: 0; font-weight: var(--ui-type-weight-regular); color: var(--ui-datalist-label); }
+.ui-datalist dd { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--ui-space-sm); min-width: 0; margin: 0; color: var(--ui-datalist-text); overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.ui-datalist .ui-datalist-data { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); }
+.ui-datalist-note { color: var(--ui-text-tertiary); }
+/* a value edited in place takes the whole value column (PROPOSED 15 Oct 2026, the brief's lines, walk-through Must 12) */
+.ui-datalist dd > form { flex: 1 1 100%; min-width: 0; }
+
+.ui-datalist--stacked { grid-template-columns: minmax(0, 1fr); row-gap: var(--ui-space-lg); }
+.ui-datalist--stacked > div { display: grid; gap: var(--ui-space-xs); }
+.ui-datalist--grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--ui-datalist-cell)), 1fr)); gap: var(--ui-space-lg) var(--ui-space-xl); }
+.ui-datalist--grid > div { display: grid; gap: var(--ui-space-xs); align-content: start; }
+.ui-datalist--grid dd { font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); }

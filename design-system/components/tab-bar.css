@@ -1,0 +1,95 @@
+/* Tab bar: a customer's four places at the foot of a phone screen (UX review 15 Oct, 2.4 and H9). PROPOSED 15 Oct 2026.
+   Markup: <div class="ui-tab-bar-dock">
+             <nav class="ui-tab-bar ui-glass ui-glass--bar" aria-label="LYSNE in Fume">
+               <a class="ui-tab-bar-item" href="/" aria-current="page">
+                 <span class="ui-tab-bar-icon"><svg/><span class="ui-tab-bar-count">3</span></span>
+                 <span class="ui-tab-bar-label">Home</span></a>
+               … Campaigns · Brand · Fume </nav></div>
+   Fume decisions: on a phone the customer's places sit at the bottom, in reach of the thumb, in the same order as
+   the desk sidebar (Home, Campaigns, Brand, Fume); settings and the account move under the avatar in the bar at the
+   top. This replaces the drawer for customers only (sidebar.css chose the drawer on 13 Oct when the customer had
+   eight places; four fit a bar, and a bar is one tap where the drawer was two). Staff keep the drawer.
+   The bar floats, so it is Smoke glass, a pill, with no stroke; the current place is the glass's one white pill
+   (glass-one-white), never Amber. Every place is an icon over its label (never icon only), 48 px tall, the whole
+   cell is the hit area. The one count in the app (what waits on you, on Home) is a small pill on the icon.
+   It sits 8 px above the safe area. The floating action bar (Approve 3) and a docked composer rise above it, and
+   the page gets room under its last line, so nothing hides behind the bar. Hidden from 640 px up. While a dialog, sheet or drawer is open the bar hides.
+   Round 8 (walk-through 19 Oct; PROPOSED 19 Oct 2026): a full-height moodboard ends above the bar, so its floating
+   toolbar and side panel are never under it (MOB-3, WAY-13). While a selection's action bar takes the bar's place
+   (the review's Approve bar marks its dock [data-tab-bar="replace"], MOB-10) the tab bar steps away and the action
+   bar comes down into its slot; the tab bar comes back when the selection clears.
+   Rule gate: glass-only-floating, glass-no-stroke, glass-one-white, actions-are-pills, amber-is-a-point,
+   touch-target, touch-feedback, hover-needs-hover, focus-is-sharp, few-strokes, space-from-tokens,
+   type-from-tokens, tokens-only-color, reduced-motion. */
+
+.ui-tab-bar-dock { display: none; }
+
+.ui-tab-bar {
+  display: flex; align-items: stretch; gap: var(--ui-space-xs); width: 100%; min-width: 0;
+  padding: var(--ui-inset-ring); box-sizing: border-box; pointer-events: auto;
+  font-family: var(--ui-type-family); color: var(--ui-glass-fg);
+}
+
+.ui-tab-bar-item {
+  position: relative; flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--ui-space-xs);
+  min-height: var(--ui-size-control-lg); padding-inline: var(--ui-space-xs);
+  border-radius: var(--ui-radius-action);
+  color: var(--ui-glass-fg-secondary); text-decoration: none;
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1;
+  cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; user-select: none;
+  transition: background var(--ui-motion-fast) var(--ui-motion-ease), color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+/* the whole cell is the hit area; it is 48 tall, and never under 44 */
+.ui-tab-bar-item::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+.ui-tab-bar-item:visited { color: var(--ui-glass-fg-secondary); }
+@media (hover: hover) {
+  .ui-tab-bar-item:hover { background: var(--ui-glass-item-hover); color: var(--ui-glass-fg); }
+}
+.ui-tab-bar-item:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-tab-bar-item:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: calc(-1 * var(--ui-size-ring)); }
+.ui-tab-bar-item[aria-current="page"], .ui-tab-bar-item[aria-current="page"]:visited { background: var(--ui-glass-button-white); color: var(--ui-glass-button-white-fg); }
+
+.ui-tab-bar-icon { position: relative; display: inline-flex; }
+.ui-tab-bar-icon > svg { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); flex-shrink: 0; }
+.ui-tab-bar-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* the one count: a small pill on the icon's shoulder, white on the glass, Ink on the white pill */
+.ui-tab-bar-count {
+  position: absolute; inset-block-start: calc(-1 * var(--ui-space-sm)); inset-inline-start: calc(100% - var(--ui-space-xs));
+  display: inline-grid; place-items: center; min-width: var(--ui-size-icon); height: var(--ui-size-icon); padding-inline: var(--ui-space-xs); box-sizing: border-box;
+  border-radius: var(--ui-radius-action);
+  background: var(--ui-glass-button-white); color: var(--ui-glass-button-white-fg);
+  font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; line-height: 1;
+}
+.ui-tab-bar-item[aria-current="page"] .ui-tab-bar-count { background: var(--ui-action-primary); color: var(--ui-action-primary-fg); }
+
+@media (max-width: 639.98px) {
+  .ui-tab-bar-dock {
+    position: fixed; z-index: var(--ui-toolbar-bar-z); left: 0; right: 0; bottom: calc(var(--ui-space-sm) + env(safe-area-inset-bottom, 0px));
+    display: flex; justify-content: center; padding-inline: var(--ui-toolbar-bar-margin); pointer-events: none;
+  }
+  /* A dialog, sheet or drawer covers the whole screen and its scrim (z modal 50) already lies over the bar (z 40),
+     but modal glass is translucent: the bar showed through it, over the footer's buttons (Q, 15 Oct). While any
+     modal is open the bar steps out of the way, and comes back when it closes. */
+  :root:has(.ui-dialog-overlay) .ui-tab-bar-dock { visibility: hidden; opacity: 0; }
+  /* the room the bar takes at the foot of the screen, for everything that would sit under it */
+  :root:has(.ui-tab-bar-dock) {
+    --ui-tab-bar-room: calc(var(--ui-size-control-lg) + 2 * var(--ui-inset-ring) + var(--ui-space-sm));
+    --ui-toolbar-bar-bottom: calc(var(--ui-tab-bar-room) + var(--ui-space-md));
+  }
+  :root:has(.ui-tab-bar-dock) .ui-app-page { padding-bottom: calc(var(--ui-tab-bar-room) + 2 * var(--ui-space-2xl) + env(safe-area-inset-bottom, 0px)); }
+  :root:has(.ui-tab-bar-dock) .ui-app-page--fill { padding-bottom: 0; }
+  :root:has(.ui-tab-bar-dock) .ui-composer-dock--sticky { bottom: calc(var(--ui-tab-bar-room) + env(safe-area-inset-bottom, 0px)); }
+  /* on a phone the bar holds the places, so the drawer's trigger goes */
+  :root:has(.ui-tab-bar-dock) .ui-app-bar [data-slot="sidebar-trigger"] { display: none; }
+  /* a full-height board ends above the bar: its toolbar and side panel stay in reach (MOB-3) */
+  :root:has(.ui-tab-bar-dock) .ui-app-page--fill .ui-board-frame { padding-bottom: calc(var(--ui-tab-bar-room) + var(--ui-space-sm) + env(safe-area-inset-bottom, 0px)); }
+  /* a selection's action bar takes the bar's place while it is open (MOB-10) */
+  :root:has([data-tab-bar="replace"]) .ui-tab-bar-dock { visibility: hidden; opacity: 0; }
+  :root:has([data-tab-bar="replace"]) { --ui-toolbar-bar-bottom: var(--ui-space-sm); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-tab-bar-item { transition: none; }
+  .ui-tab-bar-item:active { transform: none; }
+}

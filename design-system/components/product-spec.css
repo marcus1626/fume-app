@@ -1,0 +1,187 @@
+/* Product spec: a product read against its kind, what the Engine needs for fidelity (app round 6). PROPOSED 15 Oct 2026.
+   Markup: <div class="ui-pspec-hero">
+             <div class="ui-pspec-gallery"><div class="ui-pspec-media"><img/></div>
+               <ul class="ui-pspec-thumbs"><li><button class="ui-pspec-thumb" aria-pressed><img/></button></li></ul></div>
+             <div class="ui-fidelity" data-ready> <p class="ui-fidelity-kind">Skincare and body</p>
+               <div class="ui-fidelity-head"><span class="ui-fidelity-title">Ready for the Engine</span>
+                 <span class="ui-fidelity-num">86 %</span></div> ui-progress <p class="ui-fidelity-text">…</p>
+               <ul class="ui-fidelity-gaps"><li><span class="ui-fidelity-gap">Back photo</span> ui-btn sm </li></ul></div></div>
+           <div class="ui-pspec-split"> <svg class="ui-dims"> … </svg> <dl class="ui-pspec-rows"> … </dl> </div>
+           <dl class="ui-pspec-rows"><div class="ui-pspec-row" data-state="proposed|approved|changed" [data-missing]>
+             <dt class="ui-pspec-label">Net content</dt><dd class="ui-pspec-value"> ui-pswatch? 100 ml </dd>
+             <dd class="ui-pspec-foot"> ui-proposal-tag · ui-btn sm Keep · Change </dd></div></dl>
+           <span class="ui-pswatch" data-finish="gloss|matte|frosted|metallic|…" style="--swatch: #5B1E2A"></span>
+           <ul class="ui-pparts"><li class="ui-pparts-item" data-state> ui-pswatch--lg · name · material, finish · tag </li></ul>
+           <ul class="ui-shots"><li class="ui-shot" [data-empty] [data-required]>
+             <button class="ui-shot-media"><img/> | <span class="ui-shot-empty"><svg camera/> Needed</span></button>
+             <span class="ui-shot-label">Front</span><span class="ui-shot-help">Straight on …</span></li></ul>
+   Fume decisions: calm and image-led. The product's own picture is the biggest thing on its page; beside it one
+   meter answers "can the Engine make this true?", with one action per gap and nothing else. Every value says where it
+   came from (Proposal language: an Engine proposal lies on the sunken surface, an approved value lies flat on the
+   page), so a row needs no box, no stroke and no Amber. Colours show as round swatches; a finish shows on the swatch
+   itself (gloss: a small solid highlight; frosted: a veil; metallic: a band), never as a gradient. The dimensions
+   drawing is a quiet silhouette with measure lines in the tertiary text colour. An empty shot slot is the sunken
+   square with the camera and the angle's name; a needed one says "Needed". Separation by space: groups 32 apart,
+   rows 8 apart. Round 9 (desktop review 19 Oct, DLAY-20; PROPOSED 19 Oct 2026): from 1024 px the picture strip wraps to
+   a second row, so no picture hides past the edge with no sign of it.
+   Rule gate: few-strokes, amber-is-a-point, no-gradient, no-glow, radius-from-tokens, space-from-tokens,
+   type-from-tokens, touch-target, touch-feedback, press-on-pointer-down, hover-needs-hover, focus-is-sharp,
+   reduced-motion, mono-is-data. */
+
+/* ─── Hero: the picture and the meter ───────────────────────────────────── */
+.ui-pspec-hero { display: grid; gap: var(--ui-space-xl); min-width: 0; align-items: start; }
+@media (min-width: 60rem) { .ui-pspec-hero { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: var(--ui-space-2xl); } }
+
+.ui-pspec-gallery { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-pspec-media {
+  position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--ui-radius-card);
+  background: var(--ui-surface-sunken); color: var(--ui-text-tertiary);
+}
+.ui-pspec-media > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ui-pspec-media > svg { position: absolute; inset: 0; margin: auto; width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); }
+@media (min-width: 60rem) { .ui-pspec-media { aspect-ratio: 1; } }
+
+.ui-pspec-thumbs { display: flex; gap: var(--ui-space-sm); margin-block: calc(-1 * var(--ui-space-xs)); padding: var(--ui-space-xs); list-style: none; overflow-x: auto; scrollbar-width: none; }
+.ui-pspec-thumbs::-webkit-scrollbar { display: none; }
+/* Round 9 (DLAY-20): on a desk every picture shows; the strip wraps to a second row instead of hiding the rest past the edge */
+@media (min-width: 1024px) { .ui-pspec-thumbs { flex-wrap: wrap; overflow: visible; } }
+.ui-pspec-thumb {
+  display: block; width: var(--ui-size-control-lg); height: var(--ui-size-control-lg); min-width: var(--ui-size-hit); min-height: var(--ui-size-hit);
+  padding: 0; border: 0; overflow: hidden; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken);
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none; opacity: .72;
+  transition: opacity var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-pspec-thumb > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ui-pspec-thumb[aria-pressed="true"] { opacity: 1; outline: var(--ui-size-ring) solid var(--ui-creative-ring); outline-offset: var(--ui-size-ring-offset); } /* gate-allow:few-strokes the picked ring, as on a picked creative or product tile */
+.ui-pspec-thumb:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-pspec-thumb:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+@media (hover: hover) { .ui-pspec-thumb:hover { opacity: 1; } }
+
+/* The meter: one question, one number, one action per gap. */
+.ui-fidelity {
+  display: grid; gap: var(--ui-space-md); min-width: 0; align-content: start;
+  padding: var(--ui-inset-panel); border-radius: var(--ui-radius-card); background: var(--ui-surface); box-shadow: var(--ui-depth-raised);
+}
+.ui-fidelity-kind { margin: 0; font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-fidelity-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--ui-space-md); min-width: 0; }
+.ui-fidelity-title { font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-fidelity-num { font-family: var(--ui-type-family-data); font-size: var(--ui-type-title); color: var(--ui-text); white-space: nowrap; }
+.ui-fidelity-text { margin: 0; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text-secondary); }
+.ui-fidelity-gaps { display: grid; gap: var(--ui-space-xs); margin: var(--ui-space-sm) 0 0; padding: 0; list-style: none; }
+.ui-fidelity-gaps > li {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); min-width: 0; min-height: var(--ui-size-hit);
+  padding: var(--ui-space-xs) var(--ui-space-xs) var(--ui-space-xs) var(--ui-space-md); border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken);
+}
+.ui-fidelity-gap { min-width: 0; font-size: var(--ui-type-body); color: var(--ui-text); overflow-wrap: anywhere; }
+.ui-fidelity-gaps > li > .ui-btn { flex-shrink: 0; }
+
+/* ─── Rows: one value each, with where it came from ─────────────────────── */
+.ui-pspec-rows { display: grid; gap: var(--ui-space-sm); margin: 0; min-width: 0; }
+.ui-pspec-rows--two { grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); column-gap: var(--ui-space-lg); } /* gate-allow:space-from-tokens a row's least width, a layout width */
+.ui-pspec-row {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--ui-space-xs) var(--ui-space-md); align-items: start; min-width: 0;
+  padding: var(--ui-space-sm) var(--ui-space-md); border-radius: var(--ui-radius-item);
+}
+.ui-pspec-row[data-state="proposed"] { background: var(--ui-surface-sunken); }
+.ui-pspec-row > * { margin: 0; min-width: 0; }
+.ui-pspec-label { grid-column: 1; font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-pspec-value {
+  grid-column: 1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-sm);
+  font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text); overflow-wrap: anywhere; white-space: pre-line;
+}
+.ui-pspec-row[data-missing] .ui-pspec-value { color: var(--ui-text-tertiary); }
+.ui-pspec-foot { grid-column: 1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-sm); }
+.ui-pspec-actions { grid-column: 2; grid-row: 1 / span 3; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--ui-space-xs); align-self: center; }
+/* Round 8: the one quiet "Change" stays on the value's right on every width (a phone too), so a row stays one block;
+   a rich value (a blend, a table, parts) takes the whole width and its Change sits under it. */
+.ui-pspec-row[data-rich] { grid-template-columns: minmax(0, 1fr); }
+.ui-pspec-row[data-rich] > .ui-pspec-actions { grid-column: 1; grid-row: auto; justify-content: flex-start; }
+.ui-pspec-need { font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+
+/* Size and shape: the drawing beside the rows. */
+.ui-pspec-split { display: grid; gap: var(--ui-space-lg); min-width: 0; align-items: center; }
+@media (min-width: 48rem) { .ui-pspec-split { grid-template-columns: minmax(0, 14rem) minmax(0, 1fr); } } /* gate-allow:space-from-tokens the drawing's width, a layout width */
+.ui-dims { display: block; width: 100%; max-width: 14rem; height: auto; margin-inline: auto; overflow: visible; } /* gate-allow:space-from-tokens the drawing's width */
+.ui-dims-body { fill: var(--ui-surface-sunken); }
+.ui-dims-line { stroke: var(--ui-text-tertiary); stroke-width: 1; fill: none; vector-effect: non-scaling-stroke; }
+.ui-dims-text { fill: var(--ui-text-secondary); font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); }
+
+/* ─── Swatches: colour and finish ───────────────────────────────────────── */
+.ui-pswatch {
+  position: relative; display: inline-block; flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); overflow: hidden;
+  border-radius: 50%; background: var(--swatch); box-shadow: inset 0 0 0 1px var(--ui-hairline);
+}
+.ui-pswatch--lg { width: var(--ui-size-control-lg); height: var(--ui-size-control-lg); border-radius: var(--ui-radius-item); }
+.ui-pswatch::after { content: ""; position: absolute; pointer-events: none; }
+.ui-pswatch[data-finish="gloss"]::after { top: 16%; left: 22%; width: 26%; height: 16%; border-radius: 50%; background: var(--ui-surface-creative); opacity: .6; }
+.ui-pswatch[data-finish="satin"]::after { top: 16%; left: 18%; width: 40%; height: 22%; border-radius: 50%; background: var(--ui-surface-creative); opacity: .22; }
+.ui-pswatch[data-finish="frosted"]::after { inset: 0; background: var(--ui-surface-creative); opacity: .38; }
+.ui-pswatch[data-finish="metallic"]::after { top: 0; bottom: 0; left: 30%; width: 18%; background: var(--ui-surface-creative); opacity: .4; transform: skewX(-18deg); }
+.ui-pswatch[data-finish="brushed"]::after { top: 30%; left: 0; right: 0; height: 8%; background: var(--ui-surface-creative); opacity: .3; box-shadow: 0 6px 0 var(--ui-surface-creative); }
+.ui-pswatch-row { display: inline-flex; flex-wrap: wrap; gap: var(--ui-space-xs); }
+
+/* ─── Packaging parts ───────────────────────────────────────────────────── */
+.ui-pparts { display: grid; gap: var(--ui-space-md); grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); margin: 0; padding: 0; list-style: none; } /* gate-allow:space-from-tokens a part card's least width */
+.ui-pparts-item {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--ui-space-sm) var(--ui-space-md); align-content: start; min-width: 0;
+  padding: var(--ui-inset-float); border-radius: var(--ui-radius-card); background: var(--ui-surface); box-shadow: var(--ui-depth-raised);
+}
+.ui-pparts-item[data-state="proposed"] { background: var(--ui-surface-sunken); box-shadow: none; }
+.ui-pparts-text { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-pparts-name { font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-pparts-line { font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); overflow-wrap: anywhere; }
+.ui-pparts-item > .ui-proposal-foot { grid-column: 1 / -1; }
+
+/* ─── Reference shots: one slot per angle ───────────────────────────────── */
+.ui-shots { display: grid; gap: var(--ui-space-lg) var(--ui-space-md); grid-template-columns: repeat(auto-fill, minmax(min(100%, 8.5rem), 1fr)); margin: 0; padding: 0; list-style: none; } /* gate-allow:space-from-tokens a slot's least width */
+.ui-shot { display: grid; gap: var(--ui-space-xs); align-content: start; min-width: 0; }
+.ui-shot-media {
+  position: relative; display: block; width: 100%; aspect-ratio: 1; margin: 0 0 var(--ui-space-xs); padding: 0; border: 0; overflow: hidden;
+  border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); color: var(--ui-text-tertiary); font: inherit; outline: none;
+}
+.ui-shot-media > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+button.ui-shot-media {
+  min-height: var(--ui-size-hit); cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease), background var(--ui-motion-fast) var(--ui-motion-ease);
+}
+button.ui-shot-media:active { transform: scale(var(--ui-motion-press-scale)); }
+button.ui-shot-media:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+@media (hover: hover) { button.ui-shot-media:hover { background: var(--ui-surface-sunken-hover); } }
+.ui-shot-empty { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: var(--ui-space-xs); font-size: var(--ui-type-label); }
+.ui-shot-empty > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-shot[data-required][data-empty] .ui-shot-empty { color: var(--ui-text-secondary); }
+.ui-shot-label { font-size: var(--ui-type-body); color: var(--ui-text); }
+.ui-shot-help { font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-tertiary); }
+.ui-shot .ui-proposal-tag { font-size: var(--ui-type-label); }
+
+/* On glass (the add-product dialog). */
+.ui-glass .ui-shot-media { background: var(--ui-glass-button-clear); color: var(--ui-glass-fg-secondary); }
+@media (hover: hover) { .ui-glass button.ui-shot-media:hover { background: var(--ui-glass-button-clear-hover); } }
+.ui-glass button.ui-shot-media:focus-visible { outline-color: var(--ui-focus-ring-on-glass); }
+.ui-glass .ui-shot[data-required][data-empty] .ui-shot-empty, .ui-glass .ui-shot-label { color: var(--ui-glass-fg); }
+.ui-glass .ui-shot-help { color: var(--ui-glass-fg-secondary); }
+.ui-glass .ui-pspec-row[data-state="proposed"] { background: var(--ui-glass-button-clear); }
+.ui-glass :is(.ui-pspec-label, .ui-pspec-need) { color: var(--ui-glass-fg-secondary); }
+.ui-glass .ui-pspec-value { color: var(--ui-glass-fg); }
+
+/* The add flow's small heading between groups of slots or fields. */
+.ui-pspec-sub { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); }
+.ui-glass .ui-pspec-sub { color: var(--ui-glass-fg-secondary); }
+.ui-pspec-step { display: grid; gap: var(--ui-space-xl); min-width: 0; }
+/* Round 8 (TASK-13): the kind Fume proposes from the name, on one line with its Change. */
+.ui-pspec-kind { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-xs) var(--ui-space-sm); min-width: 0; }
+.ui-pspec-group { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-pspec-thumb, button.ui-shot-media { transition: none; }
+  .ui-pspec-thumb:active, button.ui-shot-media:active { transform: none; }
+}
+
+/* Inputs side by side (a number and its unit, the three measures); they wrap on a phone. */
+.ui-pspec-inline { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--ui-space-sm); min-width: 0; }
+.ui-pspec-inline > * { flex: 1 1 6rem; min-width: 0; } /* gate-allow:space-from-tokens an input's least width */
+.ui-pspec-inline > .ui-pswatch { flex: 0 0 auto; align-self: center; }
+.ui-glass .ui-pspec-row .ui-proposal-tag { color: var(--ui-glass-fg-secondary); }
+/* At a glance beside the meter: only where there is room beside the picture; on a phone the sections follow at once. */
+.ui-pspec-glance { display: none; }
+@media (min-width: 60rem) { .ui-pspec-glance { display: grid; } }

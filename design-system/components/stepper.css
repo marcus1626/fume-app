@@ -1,0 +1,89 @@
+/* Stepper: where you are in a flow (new campaign: Brief, Brand DNA, Formats, Generate, Quality Gate).
+   DECIDED 13 Oct, from round 8. shadcn has no stepper; the parts follow the common pattern (root, list, item,
+   trigger, indicator, title, description, content) with data-state="complete|current|upcoming" on each
+   item, aria-current="step" on the current one and data-orientation on the root. No JS: the page that
+   owns the flow sets the states; a finished step is a <button> that goes back to it.
+   Markup: <nav class="ui-stepper" aria-label="New campaign" data-orientation="horizontal">
+             <p class="ui-stepper-summary"><span class="ui-stepper-count">Step 2 of 5</span> Brand DNA</p>
+             <ol class="ui-stepper-list">
+               <li class="ui-stepper-item" data-state="complete"><button class="ui-stepper-trigger" type="button">
+                 <span class="ui-stepper-marker"><svg class="ico"><use href="#fi-check"/></svg></span>
+                 <span class="ui-stepper-text"><span class="ui-stepper-title">Brief</span>
+                   <span class="ui-stepper-description">…</span></span></button></li>
+               <li class="ui-stepper-item" data-state="current" aria-current="step"><div class="ui-stepper-trigger">…</div></li>
+               …</ol></nav>
+   Fume decisions: no connector lines. Steps are told apart by space (32 between them, 12 inside) and by
+   their numbers in 24 px circles. A finished step shows the check in Ink on a sunken circle, never Amber
+   (Amber is only the Quality Gate check on a checked creative); the current step is the one Ink circle
+   with a Porcelain number and its title in Ink; steps still to come keep their number in tertiary on the
+   quietest circle. A step that is working (Generate) carries the spinner in its Ink circle.
+   Upright (data-orientation="vertical") the steps stack 24 apart and the current one can hold its content
+   (.ui-stepper-content) under its title. Narrow (the stepper under 560 px, a container query) a sideways
+   stepper turns compact: one line, "Step 2 of 5" in the data face and the step's title, over a row of
+   dots (done Ink, current a 20 px Ink pill, still to come sunken); the list stays for screen readers.
+   Touch: a finished step is a 44 px target (its padding reaches out, the layout does not move), a press
+   shows the pressed state, hover only with a mouse.
+   Rule gate: few-strokes, amber-is-a-point, mono-is-data, radius-from-tokens, space-from-tokens,
+   touch-target, touch-feedback, hover-needs-hover, reduced-motion. */
+
+.ui-stepper { container: ui-stepper / inline-size; display: grid; gap: var(--ui-space-md); min-width: 0; font-family: var(--ui-type-family); color: var(--ui-text); }
+.ui-stepper-list { display: flex; gap: var(--ui-stepper-step-gap); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-stepper[data-orientation="vertical"] .ui-stepper-list { flex-direction: column; gap: var(--ui-stepper-row-gap); }
+.ui-stepper-item { --marker-bg: var(--ui-stepper-marker-upcoming); --marker-fg: var(--ui-text-tertiary); --title: var(--ui-text-tertiary);
+  flex: 1 1 0; display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-stepper-item[data-state="complete"] { --marker-bg: var(--ui-stepper-marker-done); --marker-fg: var(--ui-text); --title: var(--ui-text-secondary); }
+.ui-stepper-item[data-state="current"] { --marker-bg: var(--ui-action-primary); --marker-fg: var(--ui-action-primary-fg); --title: var(--ui-text); }
+
+/* a step: the marker, then its title and a line of description */
+.ui-stepper-trigger {
+  position: relative; display: flex; align-items: flex-start; gap: var(--ui-stepper-marker-gap); width: 100%; min-width: 0;
+  margin: 0; padding: 0; border: 0; border-radius: var(--ui-radius-item); background: transparent; color: inherit;
+  font: inherit; text-align: left; text-decoration: none;
+}
+button.ui-stepper-trigger, a.ui-stepper-trigger {
+  cursor: pointer; user-select: none; outline: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+/* the target reaches 8 past the step on every side and is never under 44 */
+button.ui-stepper-trigger::after, a.ui-stepper-trigger::after { content: ""; position: absolute; inset: calc(var(--ui-space-sm) * -1); min-height: var(--ui-size-hit); border-radius: inherit; }
+.ui-stepper-marker {
+  display: inline-grid; place-items: center; flex: none; width: var(--ui-stepper-marker); height: var(--ui-stepper-marker);
+  border-radius: 50%; background: var(--marker-bg); color: var(--marker-fg);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; font-variant-numeric: tabular-nums;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-stepper-marker > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-stepper-text { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-stepper-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: var(--ui-stepper-marker); color: var(--title); transition: color var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-stepper-description { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); line-height: 1.45; color: var(--ui-text-tertiary); text-wrap: balance; }
+.ui-stepper-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* a finished step can be pressed to go back to it */
+@media (hover: hover) {
+  button.ui-stepper-trigger:hover, a.ui-stepper-trigger:hover { --marker-bg: var(--ui-surface-sunken-hover); --title: var(--ui-text); }
+}
+.ui-stepper-trigger.is-hover { --marker-bg: var(--ui-surface-sunken-hover); --title: var(--ui-text); }
+button.ui-stepper-trigger:active, a.ui-stepper-trigger:active, .ui-stepper-trigger.is-pressed { --marker-bg: var(--ui-surface-sunken-hover); --title: var(--ui-text); transform: scale(var(--ui-motion-press-scale)); }
+.ui-stepper-trigger:focus-visible, .ui-stepper-trigger.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-space-xs); }
+.ui-stepper-trigger:disabled, .ui-stepper-trigger[aria-disabled="true"] { cursor: default; pointer-events: none; }
+
+/* the current step's content, upright: lined up under its title */
+.ui-stepper-content { min-width: 0; padding-inline-start: calc(var(--ui-stepper-marker) + var(--ui-stepper-marker-gap)); }
+.ui-stepper-content[hidden] { display: none; }
+
+/* compact: "Step 2 of 5", the title, and a row of dots */
+.ui-stepper-summary { display: none; margin: 0; align-items: baseline; gap: var(--ui-space-sm); min-width: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text); }
+.ui-stepper-count { flex: none; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; }
+@container ui-stepper (max-width: 559.98px) {
+  .ui-stepper:not([data-orientation="vertical"]) .ui-stepper-summary { display: flex; }
+  .ui-stepper:not([data-orientation="vertical"]) .ui-stepper-list { gap: var(--ui-space-xs); align-items: center; }
+  .ui-stepper:not([data-orientation="vertical"]) .ui-stepper-item { flex: none; width: var(--ui-stepper-dot); height: var(--ui-stepper-dot); border-radius: var(--ui-radius-action); background: var(--ui-surface-sunken-hover); transition: width var(--ui-motion-base) var(--ui-motion-ease), background-color var(--ui-motion-fast) var(--ui-motion-ease); } /* gate-allow:state-tokens-in-state: a step not reached yet is a dot one step darker than the sunken track */
+  .ui-stepper:not([data-orientation="vertical"]) .ui-stepper-item[data-state="complete"] { background: var(--ui-action-primary); }
+  .ui-stepper:not([data-orientation="vertical"]) .ui-stepper-item[data-state="current"] { width: var(--ui-stepper-dot-current); background: var(--ui-action-primary); }
+  .ui-stepper:not([data-orientation="vertical"]) .ui-stepper-item > * { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-stepper-trigger, .ui-stepper-marker, .ui-stepper-title, .ui-stepper-item { transition: none; }
+  button.ui-stepper-trigger:active, a.ui-stepper-trigger:active, .ui-stepper-trigger.is-pressed { transform: none; }
+}

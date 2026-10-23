@@ -1,0 +1,135 @@
+/* Product pick: products (and collections, and campaigns) picked as a grid of pictures, never a list of names.
+   PROPOSED 15 Oct 2026 (Marcus 15 Oct: "både på studio, og når kunde velger produkt, så ser man produktene som grid,
+   ikke liste med navn"). One tile everywhere someone picks: the customer's campaign scope, the manual brief, the
+   Studio's product picker, the Fume chat's product card, the batch dialog, the Studio's campaign picker.
+   Markup: <ul class="ui-pick-grid [ui-pick-grid--sm]">
+             <li class="ui-pick" data-state="checked|unchecked|included" [data-flag]>
+               <div class="ui-pick-frame">
+                 <button class="ui-pick-media" aria-pressed="true"> <img/> | <span class="ui-pick-mosaic" data-count="3">
+                   <img/>… </span> | <span class="ui-pick-empty"><svg/></span> </button>      (a div when it is not a target)
+                 <span class="ui-pick-badge"><svg check/></span>
+                 <span class="ui-pick-flag"><svg/> Verify first</span> </div>
+               <div class="ui-pick-text"><span class="ui-pick-title">Night Body Oil</span>
+                 <span class="ui-pick-line">100 ml</span> <span class="ui-pick-note">In AW26</span></div>
+               <div class="ui-pick-action"> a small secondary pill (Verify its facts) </div></li></ul>
+           <button class="ui-pick-trigger"> <span class="ui-pick-trigger-media"><img/></span> <span class="ui-pick-trigger-text">
+             <span class="ui-pick-trigger-label">Product</span> <span class="ui-pick-trigger-name">Night Body Oil · 100 ml</span>
+             </span> <svg/> </button>                                   (opens a grid of tiles in a popover)
+   Fume decisions: the picture is the target: a whole square tile, the name and variant under it. Picked = the Ink
+   ring 2 px off the picture and the round Ink badge with a Paper check, the same as a picked creative, never Amber
+   and never a checkbox row. A product that came in with a collection shows the badge on the quiet surface and says
+   which collection; it is not a target of its own. A product whose facts the customer has not verified yet looks
+   like the others, with a calm "Verify first" label on its picture and a small secondary pill under its name (a
+   button, never a blue link). No picture yet: the package icon on the sunken surface. A collection shows up to four
+   of its products' pictures as one mosaic. Separation is space and the picture's own edge: no strokes. On glass (a
+   popover, a dialog) the words take the glass's colours and the ring is Porcelain. Grid air: 8 inside a tile, 24
+   down and 16 across between tiles.
+   Rule gate: few-strokes, amber-is-a-point, radius-from-tokens, space-from-tokens, type-from-tokens, touch-target,
+   touch-feedback, press-on-pointer-down, hover-needs-hover, focus-is-sharp, reduced-motion. */
+
+.ui-pick-grid {
+  --pick-min: var(--ui-creative-tile-min);
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--pick-min)), 1fr)); gap: var(--ui-space-xl) var(--ui-space-md);
+  align-items: start; min-width: 0; margin: 0; padding: 0; list-style: none;
+}
+.ui-pick-grid--sm { --pick-min: var(--ui-dropzone-tile-min); gap: var(--ui-space-lg) var(--ui-space-sm); }
+
+.ui-pick { position: relative; display: grid; gap: var(--ui-space-sm); align-content: start; min-width: 0; margin: 0; }
+.ui-pick-frame { position: relative; min-width: 0; }
+.ui-pick-media {
+  position: relative; display: block; width: 100%; aspect-ratio: 1; margin: 0; padding: 0; border: 0; overflow: hidden;
+  border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); color: var(--ui-text-tertiary); font: inherit;
+}
+.ui-pick-media > img, .ui-pick-mosaic > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ui-pick-media > img { position: absolute; inset: 0; }
+button.ui-pick-media {
+  min-height: var(--ui-size-hit); cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease), opacity var(--ui-motion-fast) var(--ui-motion-ease);
+}
+button.ui-pick-media:active { transform: scale(var(--ui-motion-press-scale)); }
+@media (hover: hover) { button.ui-pick-media:hover > :is(img, .ui-pick-mosaic, .ui-pick-empty) { opacity: .88; } }
+.ui-pick-media:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-pick[data-state="checked"] .ui-pick-media { outline: var(--ui-size-ring) solid var(--ui-creative-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* A collection: up to four of its products as one picture. */
+.ui-pick-mosaic { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: var(--ui-space-xs); }
+.ui-pick-mosaic[data-count="1"] { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+.ui-pick-mosaic[data-count="2"] { grid-template-rows: 1fr; }
+.ui-pick-mosaic[data-count="3"] > img:first-child { grid-row: span 2; }
+.ui-pick-mosaic > img { min-height: 0; }
+
+/* No picture yet: the icon, centred on the sunken surface. */
+.ui-pick-empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ui-text-tertiary); }
+.ui-pick-empty > svg { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); }
+
+/* Picked (the Ink badge) or in through a collection (the badge on the quiet surface). */
+.ui-pick-badge {
+  position: absolute; z-index: 1; top: var(--ui-space-sm); left: var(--ui-space-sm);
+  display: grid; place-items: center; width: var(--ui-creative-badge-size); height: var(--ui-creative-badge-size);
+  border-radius: 50%; background: var(--ui-creative-badge); color: var(--ui-creative-badge-fg);
+  opacity: 0; transform: scale(var(--ui-motion-enter-scale)); pointer-events: none;
+  transition: opacity var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-pick-badge > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-pick:is([data-state="checked"], [data-state="included"]) .ui-pick-badge { opacity: 1; transform: none; }
+.ui-pick[data-state="included"] .ui-pick-badge { background: var(--ui-surface); color: var(--ui-text); box-shadow: var(--ui-depth-raised); }
+
+/* Verify first: the picture stays, quieter, with a calm label on it. */
+.ui-pick[data-flag] .ui-pick-media > :is(img, .ui-pick-mosaic) { opacity: .64; }
+.ui-pick-flag {
+  position: absolute; z-index: 1; left: var(--ui-space-sm); bottom: var(--ui-space-sm); max-width: calc(100% - 2 * var(--ui-space-sm));
+  display: inline-flex; align-items: center; gap: var(--ui-space-xs); padding: var(--ui-space-xs) var(--ui-space-sm);
+  border-radius: var(--ui-radius-action); background: var(--ui-surface); box-shadow: var(--ui-depth-raised); color: var(--ui-text);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  pointer-events: none;
+}
+.ui-pick-flag > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-secondary); }
+
+.ui-pick-text { display: grid; min-width: 0; }
+.ui-pick-title { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; color: var(--ui-text); overflow-wrap: anywhere; }
+.ui-pick-line { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); overflow-wrap: anywhere; }
+.ui-pick-note { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); overflow-wrap: anywhere; }
+.ui-pick-action { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); min-width: 0; }
+.ui-pick-grid--sm .ui-pick-title { font-size: var(--ui-type-label); }
+
+/* On glass (a popover, a dialog). */
+.ui-glass .ui-pick-media { background: var(--ui-glass-button-clear); color: var(--ui-glass-fg-secondary); }
+.ui-glass .ui-pick-empty { color: var(--ui-glass-fg-secondary); }
+.ui-glass .ui-pick-title { color: var(--ui-glass-fg); }
+.ui-glass :is(.ui-pick-line, .ui-pick-note) { color: var(--ui-glass-fg-secondary); }
+.ui-glass .ui-pick[data-state="checked"] .ui-pick-media { outline-color: var(--ui-glass-fg); }
+.ui-glass .ui-pick-media:focus-visible { outline-color: var(--ui-focus-ring-on-glass); }
+.ui-glass .ui-pick-badge { background: var(--ui-glass-button-white); color: var(--ui-glass-button-white-fg); }
+
+/* The trigger that opens a grid of tiles (the Studio's product): the picture, what it is, the grid icon. */
+.ui-pick-trigger {
+  position: relative; display: flex; align-items: center; gap: var(--ui-space-sm); width: 100%; min-width: 0; min-height: var(--ui-size-control-lg);
+  margin: 0; padding: var(--ui-space-xs) var(--ui-space-md) var(--ui-space-xs) var(--ui-space-xs); border: 0; border-radius: var(--ui-radius-field);
+  background: var(--ui-surface-sunken); color: var(--ui-text); font-family: var(--ui-type-family); text-align: start;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-pick-trigger::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+@media (hover: hover) { .ui-pick-trigger:hover { background: var(--ui-surface-sunken-hover); } }
+.ui-pick-trigger:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-pick-trigger:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-pick-trigger:disabled { cursor: default; color: var(--ui-text-disabled); transform: none; }
+.ui-pick-trigger-media {
+  position: relative; display: grid; place-items: center; flex-shrink: 0; width: var(--ui-size-control-md); height: var(--ui-size-control-md);
+  overflow: hidden; border-radius: var(--ui-radius-item); background: var(--ui-surface); color: var(--ui-text-tertiary);
+}
+.ui-pick-trigger-media > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ui-pick-trigger-media > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-pick-trigger-text { display: grid; flex: 1 1 auto; min-width: 0; }
+.ui-pick-trigger-label { font-size: var(--ui-type-label); line-height: 1.3; color: var(--ui-text-tertiary); }
+.ui-pick-trigger-name { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-pick-trigger-icon { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-secondary); }
+
+/* A grid of tiles in a popover: wide enough for three across, its own scroller when the list is long. */
+.ui-popover.ui-pick-popover { width: min(calc(var(--ui-size-hit) * 11), calc(100vw - 2 * var(--ui-overlay-margin))); max-height: min(calc(var(--ui-size-hit) * 13), calc(100vh - 2 * var(--ui-overlay-margin))); overflow: auto; overscroll-behavior: contain; }
+.ui-pick-popover .ui-pick-grid { --pick-min: var(--ui-dropzone-tile-min); gap: var(--ui-space-md) var(--ui-space-sm); }
+
+@media (prefers-reduced-motion: reduce) {
+  button.ui-pick-media, .ui-pick-badge, .ui-pick-trigger { transition: none; }
+  button.ui-pick-media:active, .ui-pick-trigger:active { transform: none; }
+}

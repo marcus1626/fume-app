@@ -1,0 +1,279 @@
+/* Check card: one thing at a time to confirm (app round 8, UX review LOAD-3, TASK-6, WAY-6, LOAD-6), the one queue
+   frame and the product's right panel (round 9, desktop review DLAY-10, DLOAD-13, DWAY-5, DWAY-13, DTSK-6, DTSK-14),
+   and the one question sheet's parts (WAY-3, LOAD-4). PROPOSED 19 Oct 2026.
+   Markup (the queue, inside the app's page):
+     <div class="ui-check-queue" data-list style="--ui-check-queue-room: 640px">
+       <nav class="ui-check-queue-list"><ol class="ui-check-queue-items"><li><button class="ui-check-queue-item"
+         aria-current="step" data-done><span class="ui-check-queue-media"><img/></span><span class="ui-check-queue-words">
+         <span class="ui-check-queue-title"/><span class="ui-check-queue-detail"/></span><svg class="ui-check-queue-tick"/>
+         </button></li></ol></nav>
+       <div class="ui-check-queue-main"><div class="ui-check-queue-stage"> the card, or the end </div>
+         <div class="ui-page-footer ui-check-queue-foot" data-ui-foot data-tab-bar="replace"><div class="ui-page-footer-start">
+           <div class="ui-check-queue-step"> ‹ 2 of 7 › </div></div><div class="ui-page-footer-actions"> Later (quiet) · Confirm (Ink)
+           </div></div></div></div>
+   The card (a product): <article class="ui-check-card ui-check-card--product" data-media data-leaving>
+       <div class="ui-check-product-head"><figure class="ui-check-media" data-dropping><img/><span class="ui-check-drop"/></figure>
+         <div class="ui-check-head"><h2 class="ui-check-name"> name <span class="ui-check-name-variant"/></h2>
+           <p class="ui-check-lead"/><p class="ui-check-media-caption"> words · Add a better one (quiet sm) </p></div></div>
+       <div class="ui-check-body"><section class="ui-check-ask"><div class="ui-check-ask-head"><p class="ui-check-ask-eyebrow">Fume
+         needs this from you</p><h3 class="ui-check-ask-title"/><p class="ui-check-ask-why"/></div> .ui-qs-suggest · field </section>
+         <ul class="ui-check-lines"><li class="ui-check-line" data-editing><span class="ui-check-line-label"> label
+           <span class="ui-check-line-note"/></span><span class="ui-check-line-text"/> or <div class="ui-check-line-field"/>
+           <span class="ui-check-line-act"> Change (quiet sm) </span></li></ul></div></article>
+     A brand item: <article class="ui-check-card" data-media><figure class="ui-check-media"> the thing </figure>
+       <div class="ui-check-body"> head · .ui-check-facts · .ui-check-actions (Change, Remove: quiet) </div></article>
+     The thing itself: <div class="ui-check-swatch" style="--swatch: #5C1F2A"/>, <div class="ui-check-specimen" style="--specimen-family: …"/>,
+       <div class="ui-check-logo" style="--brand-ground; --brand-ink; --brand-display"/>, <blockquote class="ui-check-quote"/>.
+   The product's panel: <div class="ui-glass ui-sheet ui-check-panel"> header: .ui-check-product-head · body: .ui-check-body ·
+     footer: <span class="ui-check-panel-hint"><kbd>⌘</kbd><kbd>↵</kbd> confirms</span> Later (glass-clear) · Confirm (glass-white)
+   The end: <section class="ui-check-end"><h2 class="ui-check-end-title"/><p class="ui-check-end-text"/><div class="ui-check-end-actions"/></section>
+   The question sheet: <form class="ui-qs-form"> .ui-qs-suggest (pills) · field | <figure class="ui-qs-picture"><img/><figcaption/></figure>,
+     <p class="ui-qs-about"><img class="ui-qs-about-thumb"/><span class="ui-qs-about-name"/><span class="ui-qs-about-count"/></p>;
+     inline: <div class="ui-qs-inline"> form · <div class="ui-qs-actions"/></div>.
+   Fume decisions: confirming is ONE card everywhere: the photo, the name and why it waits, Fume's one question on the
+   sunken well first, then the lines, label over words, space between them and never a rule; a line is changed in
+   place. On a desk the queue is master and detail, like a triage list: the items on the left (the current one lifted
+   onto the sheet with depth, never Amber; a done one keeps a quiet tick), the card on the right at a 760 measure, and
+   the foot pinned to the bottom of the window so Later and Confirm sit at the same place for every item (Fitts).
+   Asked from any other page, the same card opens in the right panel on the Smoke glass, the page still in view, the
+   photo beside the name so the question is on the first screen. A field Fume needs never carries a placeholder that
+   could read as an answer; what a good answer looks like is said under it. The photo is a drop target. A card moves on
+   slowly to the left and the next one comes in (motion tokens, no bounce; still with reduced motion). On a phone the
+   list goes, the photo is a short band beside the name and the foot takes the tab bar's place, pills full width.
+   Rule gate: few-strokes, air, proximity, space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data,
+   actions-are-pills, amber-is-a-point, card-never-matches-ground, glass-one-white, motion-from-tokens, reduced-motion,
+   touch-target, hover-needs-hover. */
+
+/* ---------- the round 8 full-screen stage (kept for old callers) ---------- */
+.ui-check {
+  container: ui-check / inline-size;
+  position: fixed; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr) auto; min-width: 0;
+  background: var(--ui-ground); color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.45;
+}
+.ui-check-bar { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; padding: var(--ui-space-sm) var(--ui-space-lg); }
+.ui-check-title { flex: 1 1 auto; min-width: 0; margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-check-count { flex: none; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; color: var(--ui-text-secondary); }
+.ui-check > .ui-check-progress { width: auto; margin: 0 var(--ui-space-lg); }
+.ui-check-stage { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; align-content: start; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: var(--ui-space-xl) var(--ui-space-lg); }
+.ui-check-foot { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--ui-space-sm); padding: var(--ui-space-md) var(--ui-space-lg) calc(var(--ui-space-lg) + env(safe-area-inset-bottom, 0px)); }
+.ui-check-foot:empty { display: none; }
+
+/* ---------- the queue frame ---------- */
+.ui-check-queue { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ui-space-2xl); min-width: 0; align-items: start; }
+.ui-check-queue-list { display: none; min-width: 0; }
+/* the card column runs down to the window's foot (measured: --ui-check-queue-room), so the foot is always at the bottom */
+.ui-check-queue-main { display: flex; flex-direction: column; min-width: 0; min-height: var(--ui-check-queue-room, auto); }
+.ui-check-queue-stage { container: ui-check-stage / inline-size; flex: 1 0 auto; display: grid; align-content: start; min-width: 0; padding-bottom: var(--ui-space-xl); }
+/* the foot is the app's step footer (.ui-page-footer, page-header.css): sticky at the window's foot, the page's ground,
+   a soft depth above; here it spans the card's column, its words and pills on the card's edges */
+.ui-page-footer.ui-check-queue-foot { justify-content: space-between; }
+.ui-check-queue-step { display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; }
+.ui-check-queue-count { min-width: 4.5em; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; text-align: center; color: var(--ui-text-secondary); } /* gate-allow:space-from-tokens room for "12 of 12", so ‹ › stand still */
+.ui-check-queue-foot .ui-page-footer-start { flex: 0 1 auto; }
+
+/* the list of items: whole-row buttons, the current one lifted onto the sheet */
+.ui-check-queue-items { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
+.ui-check-queue-item {
+  display: flex; align-items: center; gap: var(--ui-space-md); width: 100%; min-width: 0; min-height: var(--ui-size-hit);
+  padding: var(--ui-space-sm) var(--ui-space-md) var(--ui-space-sm) var(--ui-space-sm); border: 0; border-radius: var(--ui-radius-item);
+  background: transparent; color: var(--ui-text); font: inherit; font-size: var(--ui-type-control); text-align: start; cursor: pointer; outline: none;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), box-shadow var(--ui-motion-fast) var(--ui-motion-ease);
+}
+@media (hover: hover) { .ui-check-queue-item:hover { background: var(--ui-item-bg-hover); } }
+.ui-check-queue-item:active { background: var(--ui-item-bg-pressed); }
+.ui-check-queue-item:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: calc(-1 * var(--ui-size-ring)); }
+.ui-check-queue-item[aria-current] { background: var(--ui-surface); box-shadow: var(--ui-depth-raised); }
+.ui-check-queue-media {
+  position: relative; display: grid; place-items: center; flex: none; width: var(--ui-item-media); height: var(--ui-item-media); overflow: hidden;
+  border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); color: var(--ui-text-secondary); font-size: var(--ui-type-label);
+}
+.ui-check-queue-media > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ui-check-queue-media > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-check-queue-swatch { position: absolute; inset: 0; background: var(--swatch, var(--ui-surface-sunken)); }
+.ui-check-queue-words { display: grid; gap: var(--ui-space-xs); flex: 1 1 auto; min-width: 0; }
+.ui-check-queue-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--ui-type-weight-medium); line-height: 1.3; }
+.ui-check-queue-detail { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); line-height: 1.35; color: var(--ui-text-secondary); }
+.ui-check-queue-item[data-done] .ui-check-queue-title { color: var(--ui-text-secondary); }
+.ui-check-queue-tick { flex: none; width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-tertiary); }
+
+/* a desk: the list beside the card, the card column down to the window's foot */
+@container ui-sidebar (min-width: 1024px) {
+  .ui-app-page:has(> .ui-check-queue) { padding-bottom: 0; }
+  .ui-check-queue[data-list] { grid-template-columns: 260px minmax(0, 760px); } /* gate-allow:space-from-tokens the list's width and the card's measure, layout widths */
+  .ui-check-queue:not([data-list]) { grid-template-columns: minmax(0, 760px); } /* gate-allow:space-from-tokens the card's measure */
+  .ui-check-queue-list {
+    display: block; position: sticky; top: calc(var(--ui-size-control-lg) + 2 * var(--ui-space-sm) + var(--ui-space-lg));
+    max-height: calc(var(--ui-check-queue-room, 100dvh) - 2 * var(--ui-space-xl)); overflow-y: auto; overscroll-behavior: contain;
+    padding: var(--ui-space-xs); margin: calc(-1 * var(--ui-space-xs));
+  }
+}
+
+/* ---------- the card ---------- */
+.ui-check-card {
+  display: grid; gap: var(--ui-space-xl); width: min(100%, 880px); min-width: 0; /* gate-allow:space-from-tokens the card's widest measure */
+  padding: var(--ui-inset-panel); border-radius: var(--ui-radius-card);
+  background: var(--ui-surface); box-shadow: var(--ui-depth-raised);
+  animation: ui-check-in var(--ui-motion-slow) var(--ui-motion-ease) both;
+  transition: transform var(--ui-motion-slow) var(--ui-motion-ease), opacity var(--ui-motion-slow) var(--ui-motion-ease);
+}
+/* Esc out of a field puts the focus on the card itself (tabindex -1): it holds the keys, it is not a control to ring */
+.ui-check-card[tabindex="-1"]:focus { outline: none; }
+.ui-check-card[data-leaving] { transform: translateX(calc(-1 * var(--ui-space-2xl))); opacity: 0; }
+.ui-check-card--page { width: 100%; max-width: 880px; } /* gate-allow:space-from-tokens the card's widest measure */
+.ui-check-queue-stage > .ui-check-card { width: 100%; }
+@container ui-check (min-width: 720px) {
+  .ui-check-card { grid-template-columns: minmax(0, 320px) minmax(0, 1fr); align-items: start; } /* gate-allow:space-from-tokens the photo column */
+}
+/* in the queue: the picture beside the words once the card has the room */
+@container ui-check-stage (min-width: 600px) {
+  .ui-check-card[data-media] { grid-template-columns: minmax(0, 280px) minmax(0, 1fr); align-items: start; } /* gate-allow:space-from-tokens the picture column */
+}
+@keyframes ui-check-in { from { opacity: 0; transform: translateY(var(--ui-space-sm)); } to { opacity: 1; transform: none; } }
+
+.ui-check-media { position: relative; display: grid; gap: var(--ui-space-xs); margin: 0; min-width: 0; }
+.ui-check-media > img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-check-media-caption { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-sm); margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-check-media-empty { display: grid; place-items: center; aspect-ratio: 1; padding: var(--ui-space-sm); border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); font-size: var(--ui-type-label); text-align: center; color: var(--ui-text-secondary); }
+/* the photo takes a better one dropped on it */
+.ui-check-drop {
+  position: absolute; inset: 0; display: grid; place-items: center; padding: var(--ui-space-sm); border-radius: var(--ui-radius-item);
+  background: var(--ui-glass-bg-solid); color: var(--ui-glass-fg); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); text-align: center;
+  opacity: 0; pointer-events: none; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-check-media[data-dropping] > .ui-check-drop { opacity: 1; }
+
+.ui-check-body { display: grid; gap: var(--ui-space-xl); min-width: 0; align-content: start; }
+.ui-check-head { display: grid; gap: var(--ui-space-xs); min-width: 0; align-content: start; }
+.ui-check-name { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.2; letter-spacing: -.015em; text-wrap: balance; }
+.ui-check-name-variant { font-weight: var(--ui-type-weight-regular); color: var(--ui-text-secondary); }
+.ui-check-lead { margin: 0; max-width: var(--ui-book-measure); font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-check-head > .ui-check-media-caption { margin-top: var(--ui-space-xs); }
+
+/* ---------- a product: the photo beside the name, Fume's question first ---------- */
+/* Narrow (the panel, a phone): the photo is a square beside the name and why; the question and the lines below. */
+.ui-check-card--product { grid-template-columns: minmax(0, 1fr); }
+.ui-check-product-head { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: var(--ui-space-lg); align-items: start; min-width: 0; } /* gate-allow:space-from-tokens the photo's size beside the name */
+.ui-check-product-head > .ui-check-media > img, .ui-check-product-head > .ui-check-media > .ui-check-media-empty { aspect-ratio: 1; }
+.ui-check-product-head .ui-check-name { font-size: var(--ui-type-body-large); line-height: 1.3; letter-spacing: -.01em; }
+.ui-check-product-head .ui-check-lead { font-size: var(--ui-type-control); }
+.ui-check-product-head .ui-check-media-caption > span { flex: 1 1 100%; }
+/* Wide (the queue's card): the photo stands big on the left beside the name, the question and the lines. */
+@container ui-check-stage (min-width: 600px) {
+  .ui-check-card--product { grid-template-columns: minmax(0, 280px) minmax(0, 1fr); grid-template-rows: auto 1fr; gap: var(--ui-space-xl) var(--ui-space-2xl); align-items: start; } /* gate-allow:space-from-tokens the photo column */
+  .ui-check-card--product > .ui-check-product-head { display: contents; }
+  .ui-check-card--product .ui-check-media { grid-column: 1; grid-row: 1 / span 2; }
+  .ui-check-card--product .ui-check-head { grid-column: 2; grid-row: 1; }
+  .ui-check-card--product > .ui-check-body { grid-column: 2; grid-row: 2; }
+  .ui-check-card--product .ui-check-name { font-size: var(--ui-type-title); line-height: 1.2; letter-spacing: -.015em; }
+  .ui-check-card--product .ui-check-lead { font-size: var(--ui-type-body); }
+}
+
+/* ---------- the lines (Product Truth) ---------- */
+.ui-check-lines { display: grid; gap: var(--ui-space-lg); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.ui-check-line { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--ui-space-xs) var(--ui-space-md); align-items: start; min-width: 0; }
+.ui-check-line-label { grid-column: 1; display: flex; flex-wrap: wrap; gap: var(--ui-space-xs) var(--ui-space-sm); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-tertiary); }
+.ui-check-line-note { font-weight: var(--ui-type-weight-regular); color: var(--ui-text-secondary); }
+.ui-check-line-text { grid-column: 1; min-width: 0; font-size: var(--ui-type-body); line-height: 1.45; color: var(--ui-text); overflow-wrap: anywhere; }
+.ui-check-line-field { grid-column: 1 / -1; min-width: 0; }
+.ui-check-line-act { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+
+/* ---------- the one question, on the card ---------- */
+.ui-check-ask { display: grid; gap: var(--ui-space-md); min-width: 0; padding: var(--ui-inset-float); border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-check-ask-head { display: grid; gap: var(--ui-space-xs); }
+.ui-check-ask-eyebrow { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); }
+.ui-check-ask-title { margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.35; }
+.ui-check-ask-why { margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+
+/* ---------- the product's right panel (on the Smoke glass) ---------- */
+.ui-check-panel .ui-check-product-head { padding-inline-end: var(--ui-space-sm); }
+.ui-check-panel .ui-check-name { color: var(--ui-glass-fg); }
+.ui-check-panel :is(.ui-check-name-variant, .ui-check-lead, .ui-check-media-caption, .ui-check-ask-eyebrow, .ui-check-ask-why, .ui-check-line-note) { color: var(--ui-glass-fg-secondary); }
+.ui-check-panel .ui-check-line-label, .ui-check-panel .ui-check-line-text, .ui-check-panel .ui-check-ask-title { color: var(--ui-glass-fg); }
+.ui-check-panel .ui-check-line-label { font-weight: var(--ui-type-weight-regular); }
+.ui-check-panel .ui-check-ask { background: var(--ui-glass-button-clear); }
+.ui-check-panel .ui-check-media > img, .ui-check-panel .ui-check-media-empty { background: var(--ui-glass-field); }
+.ui-check-panel .ui-check-media-empty { color: var(--ui-glass-fg-secondary); }
+.ui-check-panel-hint { display: inline-flex; align-items: center; gap: var(--ui-space-sm); margin-inline-end: auto; font-size: var(--ui-type-label); color: var(--ui-glass-fg-secondary); }
+@media (hover: none), (pointer: coarse) { .ui-check-panel-hint { display: none; } }
+
+/* ---------- a brand item, as the thing itself ---------- */
+.ui-check-swatch { position: relative; width: 100%; aspect-ratio: 4 / 3; border-radius: var(--ui-radius-item); background: var(--swatch, var(--ui-surface-sunken)); }
+.ui-check-swatch::after, .ui-check-logo::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); pointer-events: none; } /* gate-allow:few-strokes  the edge of the customer's own colour and logo ground, so a light one never vanishes */
+.ui-check-specimen { display: grid; gap: var(--ui-space-sm); align-content: center; min-height: calc(6 * var(--ui-space-2xl)); padding: var(--ui-inset-panel); border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); font-family: var(--specimen-family, var(--ui-type-family)); overflow-wrap: anywhere; } /* gate-allow:canon-not-in-ui the customer's own face, drawn as a specimen */
+.ui-check-specimen-big { font-size: var(--ui-type-title-large); line-height: 1.1; }
+.ui-check-specimen-line { font-size: var(--ui-type-body-large); line-height: 1.35; }
+.ui-check-logo { position: relative; display: grid; place-items: center; min-height: calc(6 * var(--ui-space-2xl)); padding: var(--ui-inset-panel); border-radius: var(--ui-radius-item); background: var(--brand-ground, var(--ui-surface-sunken)); color: var(--brand-ink, var(--ui-text)); font-family: var(--brand-display, var(--ui-type-family)); font-size: var(--ui-type-title-large); letter-spacing: .2em; overflow-wrap: anywhere; } /* gate-allow:canon-not-in-ui the customer's wordmark as it is */
+.ui-check-logo > img { display: block; max-width: 80%; max-height: calc(4 * var(--ui-space-2xl)); object-fit: contain; }
+.ui-check-quote { margin: 0; padding: var(--ui-inset-panel); border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); font-size: var(--ui-type-body-large); line-height: 1.4; text-wrap: balance; }
+.ui-check-quote-example { display: block; margin-top: var(--ui-space-sm); font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+.ui-check-picture { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-check-facts { display: grid; gap: var(--ui-space-xs); margin: 0; }
+.ui-check-fact { display: grid; grid-template-columns: minmax(0, 11em) minmax(0, 1fr); gap: var(--ui-space-xs) var(--ui-space-md); margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); }
+.ui-check-fact > dt, .ui-check-fact > dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.ui-check-fact-value { color: var(--ui-text); }
+.ui-check-fact-data { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text); }
+
+/* ---------- actions inside a card ---------- */
+.ui-check-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-check-actions-end { margin-inline-start: auto; padding-inline-start: var(--ui-space-xl); }
+.ui-check-change { display: grid; gap: var(--ui-space-md); min-width: 0; }
+
+/* ---------- the end ---------- */
+.ui-check-end { display: grid; gap: var(--ui-space-lg); justify-items: start; width: min(100%, 640px); padding: var(--ui-inset-panel); border-radius: var(--ui-radius-card); background: var(--ui-surface); box-shadow: var(--ui-depth-raised); animation: ui-check-in var(--ui-motion-slow) var(--ui-motion-ease) both; } /* gate-allow:space-from-tokens the end card's measure */
+.ui-check-end-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.2; letter-spacing: -.015em; text-wrap: balance; }
+.ui-check-end-text { margin: 0; max-width: var(--ui-book-measure); font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-check-end-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-sm); }
+.ui-check-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } /* gate-allow:space-from-tokens visually hidden, read aloud */
+
+/* ---------- the question sheet ---------- */
+.ui-qs-form { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-qs-suggest { display: flex; flex-wrap: wrap; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qs-picture { display: grid; gap: var(--ui-space-xs); margin: 0; }
+.ui-qs-picture > img { display: block; width: 100%; max-height: calc(8 * var(--ui-space-2xl)); aspect-ratio: 1; object-fit: cover; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-qs-picture-caption, .ui-qs-note { margin: 0; font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+.ui-qs-about { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; margin: 0; font-size: var(--ui-type-control); }
+.ui-qs-about-thumb { flex: none; width: var(--ui-item-media); height: var(--ui-item-media); object-fit: cover; border-radius: var(--ui-radius-item); }
+.ui-qs-about-name { flex: 1 1 auto; min-width: 0; font-weight: var(--ui-type-weight-medium); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-qs-about-count { flex: none; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; opacity: .8; }
+.ui-qs-inline { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-qs-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); }
+.ui-glass :is(.ui-qs-picture-caption, .ui-qs-note) { color: var(--ui-glass-fg-secondary); }
+
+/* ---------- a phone ---------- */
+@container ui-check (max-width: 719px) {
+  .ui-check-stage { padding: var(--ui-space-md) var(--ui-space-lg); }
+  .ui-check-card { gap: var(--ui-space-lg); padding: var(--ui-inset-float); }
+  .ui-check-media > img { aspect-ratio: 16 / 9; max-height: 32vh; }
+  .ui-check-name { font-size: var(--ui-type-body-large); }
+  .ui-check-body { gap: var(--ui-space-lg); }
+  .ui-check-foot > * { flex: 1 1 0; }
+}
+@media (max-width: 639px) {
+  .ui-check-card, .ui-check-card--page { gap: var(--ui-space-lg); padding: var(--ui-inset-float); }
+  .ui-check-card--page .ui-check-swatch, .ui-check-queue .ui-check-swatch { aspect-ratio: 16 / 9; }
+  .ui-check-card--page .ui-check-picture, .ui-check-queue .ui-check-picture { aspect-ratio: 4 / 3; max-height: 40vh; }
+  .ui-check-product-head { grid-template-columns: 5.5rem minmax(0, 1fr); gap: var(--ui-space-md); } /* gate-allow:space-from-tokens the photo's size beside the name on a phone */
+  .ui-check-body { gap: var(--ui-space-lg); }
+  .ui-check-end { padding: var(--ui-inset-float); }
+  .ui-check-end-title { font-size: var(--ui-type-body-large); }
+  .ui-check-actions-end { padding-inline-start: var(--ui-space-sm); }
+  .ui-check-fact { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  /* the step footer is the end of the page on a phone; in a queue it stays pinned, where the tab bar was */
+  .ui-page-footer.ui-check-queue-foot {
+    position: sticky; flex-wrap: nowrap; gap: var(--ui-space-sm); margin-inline: 0;
+    padding: var(--ui-space-md) 0 calc(var(--ui-space-md) + env(safe-area-inset-bottom, 0px)); background: var(--ui-ground);
+  }
+  .ui-check-queue-step > .ui-btn { display: none; }
+  .ui-check-queue-count { min-width: 0; text-align: start; }
+  .ui-check-queue-foot .ui-page-footer-actions { flex: 1 1 auto; flex-direction: row; align-items: center; }
+  .ui-check-queue-foot .ui-page-footer-actions > .ui-btn { --h: var(--ui-size-hit); flex: 1 1 0; width: auto; }
+  :root:has(.ui-check-queue) .ui-app-page:has(> .ui-check-queue) { padding-bottom: 0; } /* the bar steps aside: the foot is where it was */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-check-card, .ui-check-end { animation: none; transition: none; }
+  .ui-check-card[data-leaving] { transform: none; }
+  .ui-check-queue-item, .ui-check-drop { transition: none; }
+}

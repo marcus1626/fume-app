@@ -1,0 +1,110 @@
+/* Menubar: the creative editor's menus (Campaign, Creative, View, Help). DECIDED 13 Oct, from round 8. Built on
+   shadcn's menubar (Radix Menubar: root role="menubar", menu, trigger role="menuitem" with aria-expanded and
+   data-state="open|closed", content role="menu", item, checkbox item and radio item with data-state
+   "checked|unchecked", sub-trigger and sub-content, label, separator, shortcut; data-highlighted and
+   data-disabled on rows; data-slot names kept), redesigned for Fume.
+   Markup: <div class="ui-menubar" role="menubar" data-ui-menubar aria-label="Creative editor">
+             <div class="ui-menubar-menu"><button class="ui-menubar-trigger" role="menuitem" aria-haspopup="menu"
+               aria-controls="m-file" aria-expanded="false">Campaign</button>
+               <div class="ui-glass ui-menu ui-menubar-content" id="m-file" role="menu" hidden> rows </div></div> …
+             <button class="ui-btn ui-btn--quiet ui-btn--icon ui-menubar-fold" data-ui-dialog-open="drawer">…</button></div>
+   Rows are menu.css rows (.ui-menu-item) with a leading slot (.ui-menubar-indicator: the icon, the check of a
+   checkbox row or the dot of a radio row) so every label in a menu starts on one line, and the shortcut at
+   the end in keys (kbd.css; on glass the clear veil). menubar.js runs it.
+   Fume decisions: no bar, no line under it: the menu names are quiet pills, 36 tall and 44 to touch, in
+   secondary text; the open one sits on the quiet hover surface in Ink. Menus are Smoke glass (glass.css +
+   menu.css: rows edge to edge, groups parted by space, radius float 22), 8 under their name. A submenu
+   (Export as) is its own glass beside the menu, never glass inside glass (a nested backdrop would only
+   blur the menu under it). Checks are Porcelain on the glass, never Amber; Delete turns Rouge at 80 %.
+   On a phone (the bar under 320 px, a container query) the names fold into one Menu circle (fi-menu) that
+   opens the same commands as a glass drawer, grouped under the menu names; shortcuts are left out there,
+   since a phone has no keys.
+   Touch: names and the fold circle carry a 44 px hit area; rows grow to 44 on touch screens (menu.css); a
+   press shows the pressed state, never the grey flash; hover only with a mouse.
+   Rule gate: few-strokes, air, menu-rows-fill, actions-are-pills, amber-is-a-point, mono-is-data,
+   touch-target, touch-feedback, hover-needs-hover, glass-only-floating, reduced-motion. */
+
+.ui-menubar {
+  position: relative; z-index: 5; container: ui-menubar / inline-size;
+  display: flex; align-items: center; gap: var(--ui-menubar-gap); min-width: 0;
+  font-family: var(--ui-type-family); color: var(--ui-text);
+}
+.ui-menubar-menu { position: relative; display: flex; flex: none; }
+
+/* a menu name: a quiet pill */
+.ui-menubar-trigger {
+  position: relative; display: inline-flex; align-items: center; height: var(--ui-menubar-trigger); padding-inline: var(--ui-size-pad-sm); margin: 0;
+  border: 0; border-radius: var(--ui-radius-action); background: transparent; color: var(--ui-text-secondary);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1;
+  white-space: nowrap; cursor: pointer; user-select: none; outline: none;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-menubar-trigger::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: inherit; }
+@media (hover: hover) { .ui-menubar-trigger:hover { background: var(--ui-action-quiet-hover); color: var(--ui-text); } }
+.ui-menubar-trigger.is-hover, .ui-menubar-trigger[data-state="open"], .ui-menubar-trigger[aria-expanded="true"] { background: var(--ui-action-quiet-hover); color: var(--ui-text); }
+.ui-menubar-trigger:active, .ui-menubar-trigger.is-pressed { background: var(--ui-action-quiet-pressed); color: var(--ui-text); transform: scale(var(--ui-motion-press-scale)); }
+.ui-menubar-trigger:focus-visible, .ui-menubar-trigger.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-menubar-trigger:disabled, .ui-menubar-trigger[data-disabled] { color: var(--ui-text-disabled); background: transparent; cursor: default; pointer-events: none; }
+
+/* a menu: glass, 8 under its name, at least wide enough for the shortcuts */
+.ui-menubar-content, .ui-menubar-sub-content {
+  position: absolute; z-index: var(--ui-overlay-z-float); top: calc(100% + var(--ui-overlay-offset)); left: 0;
+  min-width: var(--ui-menubar-content-width); max-width: calc(100vw - 2 * var(--ui-overlay-margin)); transform-origin: top left;
+}
+.ui-menubar-content--end { left: auto; right: 0; transform-origin: top right; }
+.ui-menubar-sub-content { top: 0; transform-origin: top left; } /* menubar.js places it beside its row */
+.ui-menubar-content[hidden], .ui-menubar-sub-content[hidden] { display: none; }
+
+/* rows: the leading slot, the words, the shortcut or the submenu chevron at the end */
+.ui-menubar-item { justify-content: flex-start; }
+.ui-menubar-indicator { display: inline-grid; place-items: center; flex: none; width: var(--ui-menubar-indicator); height: var(--ui-menubar-indicator); }
+.ui-menubar-indicator > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-menubar-label-text { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ui-menubar-shortcut { margin-inline-start: auto; padding-inline-start: var(--ui-space-lg); }
+.ui-menubar-hint { margin-inline-start: auto; padding-inline-start: var(--ui-space-lg); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-glass-fg-secondary); white-space: nowrap; }
+/* a hint that is data (a size, a count) takes the data face */
+.ui-menubar-hint--data { font-family: var(--ui-type-family-data); font-variant-numeric: tabular-nums; }
+.ui-menubar-sub-icon { margin-inline-start: auto; color: var(--ui-glass-fg-secondary); }
+.ui-menu-item > .ui-menubar-sub-icon { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-menubar-sub-trigger[data-state="open"], .ui-menubar-sub-trigger[aria-expanded="true"] { background: var(--ui-glass-item-hover); }
+.ui-menu-item:disabled .ui-kbd, .ui-menu-item[data-disabled] .ui-kbd { color: var(--ui-glass-button-disabled-fg); background: var(--ui-glass-button-disabled); }
+.ui-menu-item:disabled .ui-menubar-hint, .ui-menu-item[data-disabled] .ui-menubar-hint { color: var(--ui-glass-button-disabled-fg); }
+
+/* checkbox rows show the check, radio rows a dot, in the leading slot; Porcelain on the glass, never Amber */
+.ui-menubar-item[role="menuitemcheckbox"] .ui-menubar-indicator > *, .ui-menubar-item[role="menuitemradio"] .ui-menubar-indicator > * { visibility: hidden; }
+.ui-menubar-item[aria-checked="true"] .ui-menubar-indicator > *, .ui-menubar-item[data-state="checked"] .ui-menubar-indicator > * { visibility: visible; }
+.ui-menubar-dot { width: var(--ui-menubar-radio-dot); height: var(--ui-menubar-radio-dot); border-radius: 50%; background: currentColor; }
+
+/* the fold: one Menu circle on a narrow bar */
+.ui-menubar-fold { display: none; }
+@container ui-menubar (max-width: 319.98px) {
+  .ui-menubar-menu { display: none; }
+  .ui-menubar-fold { display: inline-flex; }
+}
+
+/* the folded menus on a phone: a glass drawer (sheet.css) with the commands grouped under the menu names */
+.ui-menubar-drawer .ui-drawer-body { gap: var(--ui-space-xl); }
+.ui-menubar-group { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-menubar-group-label { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-glass-fg-secondary); }
+.ui-menubar-group-items { display: grid; margin-inline: calc(var(--ui-inset-panel) * -1); }
+.ui-menubar-row {
+  position: relative; display: flex; align-items: center; gap: var(--ui-space-md); width: 100%; min-height: var(--ui-size-hit); margin: 0;
+  padding: 0 var(--ui-inset-panel); border: 0; border-radius: 0; background: transparent; color: var(--ui-glass-fg);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); text-align: left;
+  cursor: pointer; user-select: none; outline: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-menubar-row > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex: none; }
+.ui-menubar-row .ui-menubar-row-end { margin-inline-start: auto; color: var(--ui-glass-fg-secondary); }
+.ui-menubar-row[aria-pressed="false"] .ui-menubar-row-end { visibility: hidden; }
+@media (hover: hover) { .ui-menubar-row:hover { background: var(--ui-glass-item-hover); } }
+.ui-menubar-row.is-hover, .ui-menubar-row:active { background: var(--ui-glass-item-hover); }
+.ui-menubar-row:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: calc(var(--ui-size-ring) * -1); }
+.ui-menubar-row--danger:active { background: var(--ui-glass-button-danger); }
+@media (hover: hover) { .ui-menubar-row--danger:hover { background: var(--ui-glass-button-danger); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-menubar-trigger, .ui-menubar-row { transition: none; }
+  .ui-menubar-trigger:active, .ui-menubar-trigger.is-pressed { transform: none; }
+}

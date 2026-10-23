@@ -1,0 +1,51 @@
+/* Segmented control and tabs. DECIDED 13 Oct, from round 6. Built on shadcn's tabs and toggle-group, redesigned
+   for Fume: a sunken pill track and one white pill that slides to the chosen option (Marcus 12 Oct).
+   The pill is lifted by depth, not outlined (few-strokes). The track is --ui-size-seg tall; the pill sits
+   --ui-inset-seg inside it (round 6 choice: inset 3 px, or fill at 0 so the pill fills the track).
+   segmented.js places the indicator (--x, --w) and adds .is-ready; without it, the chosen option shows
+   its own pill and nothing slides. Easing is the shared --ui-motion-ease until motion gets its own round.
+   Touch: each option's hit area is 44 px tall (::after) though the pill is 30; hover only with a mouse;
+   a press shrinks the label 3 %. */
+
+.ui-seg { position: relative; isolation: isolate; display: inline-flex; gap: var(--ui-inset-seg); padding: var(--ui-inset-seg); border-radius: var(--ui-radius-action); background: var(--ui-surface-sunken); }
+.ui-seg-option {
+  position: relative; z-index: 1; display: inline-flex; align-items: center; gap: var(--ui-space-sm); height: calc(var(--ui-size-seg) - 2 * var(--ui-inset-seg)); padding-inline: var(--ui-size-pad-sm);
+  border: 0; border-radius: var(--ui-radius-action); background: transparent; color: var(--ui-text-secondary);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium);
+  white-space: nowrap; cursor: pointer; outline: none; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-seg-option::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+@media (hover: hover) { .ui-seg-option:hover { color: var(--ui-text); } }
+.ui-seg-option:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-seg-option[aria-selected="true"], .ui-seg-option[aria-pressed="true"], .ui-seg-option[data-state="active"] { color: var(--ui-text); }
+.ui-seg-option:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-seg-option .ui-seg-count { color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; }
+.ui-seg-indicator {
+  position: absolute; z-index: 0; top: var(--ui-inset-seg); bottom: var(--ui-inset-seg); left: 0; width: var(--w, 0px);
+  transform: translateX(var(--x, 0px)); border-radius: var(--ui-radius-action);
+  background: var(--ui-action-secondary); box-shadow: var(--ui-depth-raised);
+  opacity: 0; pointer-events: none;
+  transition: transform var(--ui-motion-slide) var(--ui-motion-ease), width var(--ui-motion-slide) var(--ui-motion-ease);
+}
+.ui-seg.is-ready .ui-seg-indicator { opacity: 1; }
+.ui-seg:not(.is-ready) .ui-seg-option[aria-selected="true"], .ui-seg:not(.is-ready) .ui-seg-option[aria-pressed="true"] { background: var(--ui-action-secondary); box-shadow: var(--ui-depth-raised); }
+.ui-seg.is-placing .ui-seg-indicator { transition: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-seg-option, .ui-seg-indicator { transition: none; }
+}
+
+/* Round 13 (Marcus #65, #66, PROPOSED 22 Oct 2026): on Smoke glass (a dialog, a popover) the control is glass too: the
+   track is the clear veil, the chosen pill a light step above it, the words light; no white pill, no depth. And a
+   control that should not fill its row hugs its options (.ui-seg-hug), so two tabs are as wide as two tabs. */
+.ui-glass .ui-seg { background: var(--ui-seg-glass-track); }
+.ui-glass .ui-seg-option { color: var(--ui-seg-glass-fg); }
+@media (hover: hover) { .ui-glass .ui-seg-option:hover { color: var(--ui-seg-glass-fg-on); } }
+.ui-glass .ui-seg-option[aria-selected="true"], .ui-glass .ui-seg-option[aria-pressed="true"], .ui-glass .ui-seg-option[data-state="active"] { color: var(--ui-seg-glass-fg-on); }
+.ui-glass .ui-seg-option .ui-seg-count { color: var(--ui-seg-glass-fg); }
+.ui-glass .ui-seg-option:focus-visible { outline-color: var(--ui-focus-ring-on-glass); }
+.ui-glass .ui-seg-indicator,
+.ui-glass .ui-seg:not(.is-ready) .ui-seg-option[aria-selected="true"],
+.ui-glass .ui-seg:not(.is-ready) .ui-seg-option[aria-pressed="true"] { background: var(--ui-seg-glass-pill); box-shadow: none; }
+.ui-seg.ui-seg-hug { justify-self: start; align-self: start; width: max-content; max-width: 100%; }

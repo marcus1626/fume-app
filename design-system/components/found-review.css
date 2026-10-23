@@ -1,0 +1,141 @@
+/* What Fume found: one review for everything Fume reads in (products from a website, a CSV or an unsorted
+   zip; the brand read again). PROPOSED 16 Oct 2026, round 7 (Marcus 16 Oct, decided point 3: both reviews look and
+   work the same).
+   Markup: <section class="ui-found">
+             <header class="ui-found-head"><div class="ui-found-head-words"><h2 class="ui-found-title"/>
+               <p class="ui-found-summary"/></div> <button class="ui-btn ui-btn--primary ui-found-approve">Approve all (5)</button></header>
+             <div class="ui-seg ui-found-filter"> All 6 · New 2 · Changed 1 · Unsure 1 </div>
+             <div class="ui-found-group"><h3 class="ui-found-group-title">Products</h3>
+               <ul class="ui-found-grid">
+                 <li class="ui-found-tile" data-status="new|changed|unsure" [data-selected] [data-kept]>
+                   <div class="ui-found-frame"><button class="ui-found-media" aria-expanded> <img/> | <span class="ui-found-mosaic"
+                     data-count="3"><img/>…</span> | <span class="ui-found-empty"><svg/></span> </button>
+                     <span class="ui-found-flag"><svg/> New</span></div>
+                   <div class="ui-found-text"><span class="ui-found-name"/><span class="ui-found-line"/><span class="ui-found-note"/></div></li>
+                 <li class="ui-found-panel">  the open item, across the whole grid, right after its tile:
+                   head (picture, flag, title, where it was read, how sure), Fume's note,
+                   <div class="ui-found-compare"><section class="ui-found-side" data-side="before"/> <section data-side="after"/></div>,
+                   detail, <div class="ui-found-actions"> Keep · Fix · Merge · Split · Remove </div></li></ul></div>
+             <div class="ui-found-footer"/></section>
+   Fume decisions: the picture is the item; New, Changed and Unsure are calm white labels on the picture, in words with
+   an icon, never colour-coded and never Amber (Amber is for checked creatives only). Unsure is the only one that looks
+   different: its picture rests a little quieter until someone answers it. A tile opens in place across the grid (the
+   grid packs densely, so the tiles after it fill the row) with a slow lens-like focus pull from blur to sharp, never a
+   crossfade; Changed shows Now and Fume read side by side (stacked on a phone), separated by space and depth,
+   no strokes. One main action per view: Approve all with its count; Keep, Fix, Remove per item. Changed rows in the
+   field list are marked by weight, not colour. Grid air as product pick: 24 down, 16 across, 8 inside.
+   Rule gate: few-strokes, amber-is-a-point, no-gradient, radius-from-tokens, space-from-tokens, type-from-tokens,
+   touch-target, touch-feedback, press-on-pointer-down, hover-needs-hover, focus-is-sharp, reduced-motion. */
+
+.ui-found { display: grid; gap: var(--ui-space-xl); min-width: 0; }
+
+.ui-found-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--ui-space-md) var(--ui-space-xl); min-width: 0; }
+.ui-found-head-words { display: grid; gap: var(--ui-space-xs); flex: 1 1 calc(var(--ui-size-hit) * 7); min-width: 0; }
+.ui-found-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.25; color: var(--ui-text); }
+.ui-found-summary { margin: 0; max-width: 62ch; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text-secondary); }
+.ui-found-approve { flex-shrink: 0; }
+
+.ui-found-filter { justify-self: start; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.ui-found-filter::-webkit-scrollbar { display: none; }
+.ui-found-count { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; color: var(--ui-text-tertiary); }
+
+.ui-found-group { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-found-group-title { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-found-none, .ui-found-footer { margin: 0; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text-secondary); }
+.ui-found-footer { display: grid; gap: var(--ui-space-sm); }
+
+.ui-found-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--ui-size-hit) * 3)), 1fr)); grid-auto-flow: row dense;
+  gap: var(--ui-space-xl) var(--ui-space-md); align-items: start; min-width: 0; margin: 0; padding: 0; list-style: none;
+}
+@media (min-width: 640px) { .ui-found-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--ui-size-hit) * 4)), 1fr)); } }
+
+/* The tile */
+.ui-found-tile { position: relative; display: grid; gap: var(--ui-space-sm); align-content: start; min-width: 0; margin: 0; }
+.ui-found-frame { position: relative; min-width: 0; }
+.ui-found-media {
+  position: relative; display: block; width: 100%; aspect-ratio: 1; min-height: var(--ui-size-hit); margin: 0; padding: 0; border: 0; overflow: hidden;
+  border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); color: var(--ui-text-tertiary); font: inherit;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease), box-shadow var(--ui-motion-base) var(--ui-motion-ease);
+}
+.ui-found-media > img, .ui-found-mosaic > img, .ui-found-panel-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ui-found-media > img { position: absolute; inset: 0; transition: opacity var(--ui-motion-base) var(--ui-motion-ease); }
+.ui-found-media:active { transform: scale(var(--ui-motion-press-scale)); }
+@media (hover: hover) { .ui-found-media:hover > :is(img, .ui-found-mosaic, .ui-found-empty) { opacity: .88; } }
+.ui-found-media:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-found-tile[data-selected] .ui-found-media { outline: var(--ui-size-ring) solid var(--ui-creative-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-found-tile[data-status="unsure"]:not([data-kept]) .ui-found-media > :is(img, .ui-found-mosaic) { opacity: .72; }
+
+.ui-found-mosaic { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: var(--ui-space-xs); }
+.ui-found-mosaic[data-count="2"] { grid-template-rows: 1fr; }
+.ui-found-mosaic[data-count="3"] > img:first-child { grid-row: span 2; }
+.ui-found-mosaic > img { min-height: 0; }
+.ui-found-empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ui-text-tertiary); }
+.ui-found-empty > svg { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); }
+
+.ui-found-flag {
+  display: inline-flex; align-items: center; gap: var(--ui-space-xs); max-width: 100%; padding: var(--ui-space-xs) var(--ui-space-sm);
+  border-radius: var(--ui-radius-action); background: var(--ui-surface); box-shadow: var(--ui-depth-raised); color: var(--ui-text);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ui-found-flag > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-secondary); }
+.ui-found-frame > .ui-found-flag { position: absolute; z-index: 1; left: var(--ui-space-sm); top: var(--ui-space-sm); max-width: calc(100% - 2 * var(--ui-space-sm)); pointer-events: none; }
+.ui-found-flag[data-kept] { background: var(--ui-surface-sunken); box-shadow: none; color: var(--ui-text-secondary); }
+
+.ui-found-text { display: grid; min-width: 0; }
+.ui-found-name { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; color: var(--ui-text); overflow-wrap: anywhere; }
+.ui-found-line { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); overflow-wrap: anywhere; }
+.ui-found-note { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); overflow-wrap: anywhere; }
+
+/* The open item: across the grid, raised on the sheet, in focus from blur. */
+.ui-found-panel {
+  grid-column: 1 / -1; display: grid; gap: var(--ui-space-lg); min-width: 0; margin: 0; padding: var(--ui-inset-panel);
+  border-radius: var(--ui-radius-card); background: var(--ui-surface); box-shadow: var(--ui-depth-raised);
+  animation: ui-found-focus var(--ui-motion-slow) var(--ui-motion-ease) both;
+}
+@keyframes ui-found-focus {
+  from { opacity: 0; filter: blur(var(--ui-motion-enter-blur)); transform: scale(var(--ui-motion-enter-scale)); }
+  to { opacity: 1; filter: none; transform: none; }
+}
+.ui-found-panel-head { display: flex; align-items: flex-start; gap: var(--ui-space-md); min-width: 0; }
+.ui-found-panel-media {
+  position: relative; flex-shrink: 0; width: calc(var(--ui-size-hit) * 1.5); aspect-ratio: 1; overflow: hidden;
+  border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); color: var(--ui-text-tertiary);
+}
+.ui-found-panel-media > img { position: absolute; inset: 0; }
+.ui-found-panel-words { display: grid; gap: var(--ui-space-xs); flex: 1 1 auto; min-width: 0; justify-items: start; }
+.ui-found-panel-words > .ui-found-flag { box-shadow: none; background: var(--ui-surface-sunken); }
+.ui-found-panel-title { margin: 0; font-size: var(--ui-type-body-large); font-weight: var(--ui-type-weight-medium); line-height: 1.3; color: var(--ui-text); overflow-wrap: anywhere; }
+.ui-found-panel-line { margin: 0; font-size: var(--ui-type-body); line-height: 1.45; color: var(--ui-text-secondary); overflow-wrap: anywhere; }
+.ui-found-panel-facts { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); overflow-wrap: anywhere; }
+.ui-found-panel-close { flex-shrink: 0; margin-inline-start: auto; }
+.ui-found-panel-note {
+  display: flex; align-items: flex-start; gap: var(--ui-space-sm); margin: 0; max-width: 62ch;
+  font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text);
+}
+.ui-found-panel-note > svg { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-secondary); }
+
+.ui-found-compare { display: grid; grid-template-columns: 1fr; gap: var(--ui-space-md); min-width: 0; }
+@media (min-width: 640px) { .ui-found-compare { grid-template-columns: 1fr 1fr; } }
+.ui-found-side { display: grid; align-content: start; gap: var(--ui-space-sm); min-width: 0; padding: var(--ui-inset-float); border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-found-side[data-side="after"] { background: var(--ui-surface); box-shadow: var(--ui-depth-raised); }
+.ui-found-side-label { display: inline-flex; align-items: center; gap: var(--ui-space-xs); margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-found-side-label > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-found-side-body, .ui-found-read, .ui-found-detail { min-width: 0; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text); overflow-wrap: anywhere; }
+.ui-found-side[data-side="before"] .ui-found-side-body { color: var(--ui-text-secondary); }
+.ui-found-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-sm); min-width: 0; }
+
+/* Field rows inside before and after (FoundFields): label over value; a changed row is set in medium weight. */
+.ui-found-fields { display: grid; gap: var(--ui-space-sm); margin: 0; }
+.ui-found-field { display: grid; gap: 0; min-width: 0; }
+.ui-found-field > dt { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-found-field > dd { margin: 0; font-size: var(--ui-type-body); line-height: 1.45; overflow-wrap: anywhere; }
+.ui-found-field--picture > dd > img { display: block; width: calc(var(--ui-size-hit) * 2); aspect-ratio: 1; object-fit: cover; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-found-field[data-changed] > dd { font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-found-media, .ui-found-media > img { transition: none; }
+  .ui-found-media:active { transform: none; }
+  .ui-found-panel { animation: none; }
+}

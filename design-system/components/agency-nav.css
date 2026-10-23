@@ -1,0 +1,71 @@
+/* Agency navigation: the agency's one sidebar, its client picker, and the preview notice of an example client (app
+   round 11, FLOWS §24.3–24.4). PROPOSED 20 Oct 2026; the picker, built like Fume's own studio, chosen by Marcus 20 Oct.
+   Markup: the picker (switcher.css: the top of the sidebar is a large row, its glass menu lists the clients):
+             <div class="ui-menu-item"><span class="ui-switcher-mark">L</span><span class="ui-switcher-name">LYSNE</span>
+               <span class="ui-agency-dot"></span><span class="ui-switcher-here">Here</span></div>
+           A search veil at the top of that menu once there are 8 clients or more:
+             <div class="ui-agency-picker-search"><svg search/><input placeholder="Find a client"></div>
+           On a phone the picker sits in the app bar as a quiet pill:
+             <button class="ui-btn ui-btn--quiet ui-btn--sm ui-agency-bar-picker"><span class="ui-agency-mark">L</span>
+               LYSNE <svg chevrons-up-down/></button>
+           The example client's notice (a page in the shell): <span class="ui-agency-notice-name">
+             <span class="ui-agency-mark ui-agency-mark--lg">A</span>AURÉA</span> in the page header's title.
+   Fume decisions: the picker is the studio's switcher (the Fume mark at All clients, the client's mark in a client).
+   A client's small mark is its initial on a rounded square the size of a row's icon, lifted with depth (never a
+   stroke). What waits on the agency is a quiet white dot in the picker's glass menu; never Amber. The phone's bar
+   picker is a quiet pill with the client's mark, so the scope is always in sight.
+   Round 12 (desktop review 20 Oct, DWAY-5; PROPOSED 20 Oct 2026): Fume's studio has the same frame, so these parts are
+   the one picker's in both: its dot, its search veil from 8 up, the phone's bar pill, and the drawer's button on a
+   phone (the staff frames have more places than the tab bar holds).
+   Rule gate: few-strokes, radius-from-tokens, type-from-tokens, space-from-tokens, amber-is-a-point, touch-target,
+   hover-needs-hover, fields-16-on-touch, motion-from-tokens, reduced-motion. */
+
+/* A client's mark: the initial on a small square, the size of a row's icon (16), so the names line up. */
+.ui-agency-mark {
+  display: grid; place-items: center; flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon);
+  border-radius: var(--ui-radius-check); background: var(--ui-surface); color: var(--ui-text-secondary); box-shadow: var(--ui-depth-raised);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1;
+  transition: background-color var(--ui-motion-base) var(--ui-motion-ease), color var(--ui-motion-base) var(--ui-motion-ease);
+}
+/* the example client's notice: a large mark beside the name in the page title */
+.ui-agency-mark--lg {
+  width: var(--ui-size-control-md); height: var(--ui-size-control-md); border-radius: var(--ui-radius-item);
+  background: var(--ui-action-primary); color: var(--ui-action-primary-fg); box-shadow: none;
+  font-size: var(--ui-type-body);
+}
+.ui-agency-notice-name { display: inline-flex; align-items: center; gap: var(--ui-space-md); min-width: 0; }
+
+/* What waits on the agency, a quiet dot in the picker's glass menu (the row's words say it to a screen reader) */
+.ui-agency-dot { flex-shrink: 0; width: var(--ui-badge-dot); height: var(--ui-badge-dot); border-radius: 50%; background: var(--ui-glass-fg-secondary); }
+.ui-agency-picker-none { margin: 0; padding: var(--ui-space-sm) var(--ui-inset-float) var(--ui-space-md); font-size: var(--ui-type-control); color: var(--ui-glass-fg-secondary); }
+/* the search veil, from 8 clients up: no stroke, on the glass */
+.ui-agency-picker-search {
+  display: flex; align-items: center; gap: var(--ui-space-sm); height: var(--ui-size-control-md);
+  margin: var(--ui-space-xs) var(--ui-space-sm) var(--ui-space-sm); padding-inline: var(--ui-space-md);
+  border-radius: var(--ui-radius-field); background: var(--ui-glass-field); color: var(--ui-glass-fg-secondary);
+}
+.ui-agency-picker-search > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; }
+.ui-agency-picker-search > input {
+  flex: 1 1 auto; min-width: 0; height: 100%; margin: 0; padding: 0; border: 0; background: transparent; outline: none;
+  color: var(--ui-glass-fg); caret-color: var(--ui-glass-fg); font-family: var(--ui-type-family); font-size: var(--ui-type-control);
+  appearance: none; -webkit-appearance: none;
+}
+.ui-agency-picker-search > input::placeholder { color: var(--ui-glass-fg-secondary); }
+@media (pointer: coarse) { .ui-agency-picker-search > input { font-size: var(--ui-type-body); } }
+
+/* On a phone the agency has more places than the tab bar holds (Team; a client's Studio and Check),
+   so its drawer's button stays in the bar (tab-bar.css hides it for a customer, whose four places all fit) */
+@media (max-width: 639.98px) {
+  :root:has(.ui-tab-bar-dock) .ui-app-bar [data-slot="sidebar-trigger"][data-agency-drawer] { display: inline-flex; }
+  /* while the drawer is open the tab bar steps away, as it does for a dialog (tab-bar.css), so the drawer's foot shows */
+  :root:has(.ui-sidebar-wrapper[data-open-mobile="true"]) .ui-tab-bar-dock { visibility: hidden; opacity: 0; }
+}
+
+/* On a phone: the picker in the app bar, a quiet pill with the client's mark */
+.ui-agency-bar-picker { min-width: 0; max-width: 50%; }
+.ui-agency-bar-picker > .ui-agency-mark { box-shadow: none; background: var(--ui-action-primary); color: var(--ui-action-primary-fg); }
+.ui-agency-bar-picker > .ui-agency-bar-picker-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-agency-mark { transition: none; }
+}

@@ -1,0 +1,110 @@
+{
+  "$description": "The web kit (kit/): brand sections, marketing titles and page rhythm for websites, landing pages and other Fume pages in HTML. PROPOSED, 13 Oct 2026 (Marcus: pages made with the connector came out off brand: square buttons, the wrong type). Every colour points at the palette; Brown and Paper are their own family (F-D079). Component file: kit/web.css. Built into --ui-web-<key> by node tools/tokens/build.mjs.",
+  "web": {
+    "ground-brand": {
+      "value": "{fume.brown}",
+      "description": "A dark brand section: Brown, with Paper text. Website, decks and social only; never a card, a button or product UI, where Ink makes every decision (RULES Colour, F-D079). Never two in a row.",
+      "status": "PROPOSED"
+    },
+    "text-on-brand": {
+      "value": "{fume.paper}",
+      "description": "Text and the logo on a Brown section, 12.2:1. Never Ink on Brown (1.4:1).",
+      "status": "PROPOSED"
+    },
+    "text-on-brand-secondary": {
+      "value": "{fume.sand}",
+      "description": "Quieter text on Brown (a label over a title), 9.1:1.",
+      "status": "PROPOSED"
+    },
+    "frame": {
+      "value": "{fume.paper}",
+      "description": "The Focus frame's corners and point on a photograph, on a light image or a dark one (F-D082). On a flat ground the frame is Paper on Ink or Brown and Ink on Paper or Porcelain. Amber only where the check lands (--ui-check).",
+      "status": "PROPOSED"
+    },
+    "title-on-warm": {
+      "value": "{fume.brown}",
+      "description": "A marketing title on a Paper section: Brown, 12.2:1, as on the deck's cover, dividers and contact slide. Running text on Paper stays Ink.",
+      "status": "PROPOSED"
+    },
+    "point": {
+      "value": "{fume.amber}",
+      "description": "The Amber point that ends a statement on Brown (deck D5; Amber point on dark, F-O020). A point, never text, a surface or light on Brown. One per page.",
+      "status": "PROPOSED"
+    },
+    "light-ground": {
+      "value": "{fume.paper}",
+      "description": "The ground the brand light sits on (Light board L1, L2, L5). Light only on Paper or Cream, never on Ink or Brown, never behind small text.",
+      "status": "PROPOSED"
+    },
+    "light-ground-cream": {
+      "value": "{fume.cream}",
+      "description": "The ground for light L3.",
+      "status": "PROPOSED"
+    },
+    "light-soft": {
+      "value": "{fume.amber-100}",
+      "description": "The light's soft wash (L1, L5): Amber 100, blurred wide, so it reads as light, never as a colour block.",
+      "status": "PROPOSED"
+    },
+    "light-warm": {
+      "value": "{fume.amber-200}",
+      "description": "The light's warm body (L2, L3).",
+      "status": "PROPOSED"
+    },
+    "light-core": {
+      "value": "{fume.amber}",
+      "description": "The light's core (L2, L3, L5), blurred so far it is light, not a shape. Never a fill anyone could read as an Amber surface.",
+      "status": "PROPOSED"
+    },
+    "page": {
+      "value": "1120px",
+      "description": "Widest the page's content gets, the same as the brand book.",
+      "status": "PROPOSED"
+    },
+    "measure": {
+      "value": "60ch",
+      "description": "Running text and ledes never run wider than this.",
+      "status": "PROPOSED"
+    },
+    "gutter": {
+      "value": "{space.xl}",
+      "description": "Space between the content and the window's edge: 24 px, 16 on a phone (gutter-phone).",
+      "status": "PROPOSED"
+    },
+    "gutter-phone": {
+      "value": "{space.lg}",
+      "description": "The gutter under 760 px: 16 px.",
+      "status": "PROPOSED"
+    },
+    "section": {
+      "value": "{fume.space-10}",
+      "description": "Space above and below the content of a section: 96 px, 64 on a phone (section-phone). Sections are told apart by their ground and this space, never by lines.",
+      "status": "PROPOSED"
+    },
+    "section-phone": {
+      "value": "{fume.space-8}",
+      "description": "The section space under 760 px: 64 px.",
+      "status": "PROPOSED"
+    },
+    "title-gap": {
+      "value": "{space.xl}",
+      "description": "Between a title and the lede or text under it: 24 px. The next group sits at least twice as far away (rule proximity).",
+      "status": "PROPOSED"
+    },
+    "group-gap": {
+      "value": "{fume.space-7}",
+      "description": "Between groups in a section (a lede and its buttons, a title and its cards): 48 px.",
+      "status": "PROPOSED"
+    },
+    "header": {
+      "value": "{size.control-lg}",
+      "description": "Height of the page header's row: the logo on the left, one action on the right.",
+      "status": "PROPOSED"
+    },
+    "logo": {
+      "value": "120px",
+      "description": "Width of the horizontal logo lockup in the page header (the official file, never redrawn).",
+      "status": "PROPOSED"
+    }
+  }
+}

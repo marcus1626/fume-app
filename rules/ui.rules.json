@@ -1,0 +1,449 @@
+{
+  "$description": "Fume UI and design rules. The gate (node tools/gate/gate.mjs) enforces every rule marked check:auto on CSS and HTML; rules marked measured:true are also measured on the rendered page by the render audit (node tools/gate/audit.mjs, in CI on the built review board). Rules marked check:review are checked by a person or an agent before showing work. Source of each rule in 'source'. PROPOSED rules wait for Marcus.",
+  "version": "0.8.0",
+  "rules": [
+    {
+      "id": "tokens-only-color",
+      "level": "error",
+      "check": "auto",
+      "area": "colour",
+      "rule": "No literal colours (hex, rgb, hsl, oklch) in components, pages or themes. Use a --ui-* token.",
+      "why": "Colours come only from the palette, through tokens, so nothing drifts.",
+      "fix": "Pick the --ui-* token for the role; if none fits, propose a new token in design-system/tokens/ui.tokens.json.",
+      "source": "Visual Identity v1.1 §4; tokens v1.3"
+    },
+    {
+      "id": "ui-tokens-not-primitives",
+      "level": "error",
+      "check": "auto",
+      "area": "colour",
+      "rule": "Components use --ui-* tokens, never --fume-* primitives directly.",
+      "why": "The UI layer carries roles and states; primitives carry values.",
+      "fix": "Replace var(--fume-x) with the --ui-* role token.",
+      "source": "Design system architecture"
+    },
+    {
+      "id": "palette-only-tokens",
+      "level": "error",
+      "check": "auto",
+      "area": "colour",
+      "rule": "Every colour in ui.tokens.json is a palette primitive (or white). A new colour must carry status PROPOSED until Marcus approves it.",
+      "why": "The palette is approved; UI may not invent colours.",
+      "fix": "Reference {fume.<name>} or mark the token PROPOSED.",
+      "source": "Visual Identity v1.1 §4"
+    },
+    {
+      "id": "no-gradient",
+      "level": "error",
+      "check": "auto",
+      "area": "colour",
+      "rule": "No gradients in UI, with one exception: shimmer text (text-shimmer.css), the band of white light that passes through dark words while something is under way, the Engine's included (no Amber shimmer since 15 Oct), each line marked gate-allow:no-gradient (rounds 10 and 11, Marcus 13 Oct asked for it). The round 8 skeleton shimmer stays out (round 9: it felt artificial).",
+      "why": "Warmth and light live in photography, not in UI chrome. A sweep of light on a skeleton looked artificial next to the breath of round 7; light passing through words that are under way is the one place Marcus wants it.",
+      "fix": "Use a flat token surface. A skeleton breathes between two flat steps (skeleton.css). For words that are under way, add .ui-text-shimmer instead of writing a gradient.",
+      "source": "Brand rules, design skills (Marcus 5 Oct); skeleton shimmer removed (Marcus 13 Oct, round 9); shimmer text allowed (Marcus 13 Oct, round 10), white on dark words (round 11), the Engine's Amber shimmer taken out (Marcus 15 Oct)"
+    },
+    {
+      "id": "no-glow",
+      "level": "error",
+      "check": "auto",
+      "area": "depth",
+      "rule": "No glow: no shadow with zero offset and blur, no coloured halo. Shadows are offset and Ink-tinted.",
+      "why": "Glow reads as AI slop; Fume depth is real light.",
+      "fix": "Use --ui-glass-shadow or an offset Ink-tinted shadow token.",
+      "source": "Brand rules; impeccable craft floor"
+    },
+    {
+      "id": "focus-is-sharp",
+      "level": "warn",
+      "check": "auto",
+      "area": "states",
+      "rule": "Keyboard focus is a sharp 2px outline (--ui-focus-ring), not a spread-only box-shadow halo.",
+      "why": "Focus is the brand's idea: soft to sharp.",
+      "fix": "outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset).",
+      "source": "Round 2, approved with the design system 13 Oct 2026"
+    },
+    {
+      "id": "ring-from-keyboard",
+      "level": "error",
+      "check": "review",
+      "measured": true,
+      "area": "states",
+      "rule": "The focus ring is for the keyboard. A field you click or tap into shows its caret, not the ring; Tab to it and the ring is there. Browsers always match :focus-visible on a text field (Chromium on a native select too), so design-system/components/focus.js marks pointer focus with data-ui-focus=\"pointer\" and every field component turns its ring off for it. The render audit clicks fields with the mouse and fails on a ring.",
+      "why": "A ring around a field you just clicked shouts about something you already know: you are typing there, and the caret says so. The ring is for people moving with the keyboard, who need to see where they landed.",
+      "fix": "Load focus.js, and next to a field's :focus-visible ring add [data-ui-focus=\"pointer\"] { outline: none; } (or the :has() form on the field around it).",
+      "source": "Marcus 13 Oct 2026: \"Når jeg trykker på et field, kommer den i fokus ... fokus kommer fra tab eller sånt.\""
+    },
+    {
+      "id": "radius-from-tokens",
+      "level": "error",
+      "check": "auto",
+      "area": "shape",
+      "rule": "border-radius uses --ui-radius-* (action, field, item, card, float, panel), 0 or 50%.",
+      "why": "Concentric, consistent shapes: pills for actions, soft rectangles for content.",
+      "fix": "Pick the radius token for the element's role.",
+      "source": "Round 2, approved with the design system 13 Oct 2026"
+    },
+    {
+      "id": "air",
+      "level": "error",
+      "check": "auto",
+      "measured": true,
+      "area": "shape",
+      "rule": "Every surface keeps its air: padding comes from the inset tokens, panel 24 (dialogs, sheets, glass panels), float 16 (popovers, cards, toasts, sideways in menu and list rows), tight 12 (tooltips, small labels), ring 6 (the gap around pills in a pill bar; text in a pill bar starts at ring + float, 22). Text and icons never sit closer to an edge than three quarters of the corner radius, so nothing crowds the curve. Menu rows are the one exception top and bottom: they fill the menu. The gate checks the padding of every glass surface; the render audit measures the air.",
+      "why": "Air is what makes a surface feel designed and expensive. Round 5's delete dialog had 14 px inside a 32 px corner and felt cramped.",
+      "fix": "padding: var(--ui-inset-panel) on a dialog; var(--ui-inset-ring) var(--ui-inset-ring) var(--ui-inset-ring) calc(var(--ui-inset-ring) + var(--ui-inset-float)) on a pill bar with a label.",
+      "source": "Marcus 13 Oct 2026 (the delete dialog had too little air between text and edges)"
+    },
+    {
+      "id": "space-from-tokens",
+      "level": "error",
+      "check": "auto",
+      "area": "shape",
+      "rule": "Padding, margin and gaps in components come from tokens: --ui-space-* (4, 8, 12, 16, 24, 32), --ui-inset-* or --ui-size-*. No loose numbers, so every component sits on the same 4 px grid.",
+      "why": "Loose numbers drift: 10 here, 14 there, and the system stops looking like one hand made it.",
+      "fix": "Pick the space token for the gap's role; add a token (PROPOSED) if none fits.",
+      "source": "Round 6, 13 Oct 2026 (from Marcus's note on air and margins)"
+    },
+    {
+      "id": "proximity",
+      "level": "warn",
+      "check": "review",
+      "area": "shape",
+      "status": "DECIDED",
+      "rule": "Things that belong together sit closer than things that do not: the space between groups is at least twice the space inside a group. A label sits 8 above its field and fields sit 24 apart; a caption sits 8 from its example and examples sit 32 apart; a title sits 12 above its text and sections sit 32 or more apart. A caption that is as close to the next example as to its own reads as belonging to both.",
+      "why": "Equal spacing everywhere makes the eye guess what belongs to what. On the round 6 board the option captions sat as close to the next example as to their own, and the air looked wrong.",
+      "fix": "Group with gap: var(--ui-space-sm) inside and var(--ui-space-2xl) between (board: .specimen inside .specimens).",
+      "source": "Marcus 13 Oct 2026 (round 6: 'something was weird with the air again')"
+    },
+    {
+      "id": "actions-are-pills",
+      "level": "error",
+      "check": "auto",
+      "area": "shape",
+      "rule": "Buttons, chips, badges, segmented controls and toggles are pills: border-radius is --ui-radius-action, or 50% for a round icon-only control. Links are the only exception.",
+      "why": "Pills act, rectangles hold. Marcus chose pills on 12 Oct 2026.",
+      "fix": "Use border-radius: var(--ui-radius-action).",
+      "source": "Marcus 12 Oct 2026 (F-D063)"
+    },
+    {
+      "id": "type-from-tokens",
+      "level": "error",
+      "check": "auto",
+      "area": "type",
+      "rule": "font-size uses --ui-type-* tokens (or inherit, 1em, 100%).",
+      "why": "One type scale.",
+      "fix": "Use --ui-type-control, -body, -title and so on.",
+      "source": "tokens v1.3 type scale"
+    },
+    {
+      "id": "canon-not-in-ui",
+      "level": "error",
+      "check": "auto",
+      "area": "type",
+      "rule": "GT Canon (and its stand-in Newsreader) never appears in UI: not in menus, controls, app chrome or product screens. Only marketing titles: website, social posts, decks.",
+      "why": "Canon is a special display element.",
+      "fix": "Use --ui-type-family (GT Standard). Marketing pages mark the exception with gate-allow:canon-not-in-ui.",
+      "source": "Visual Identity v1.1 §5; Marcus 12 Oct"
+    },
+    {
+      "id": "mono-is-data",
+      "level": "warn",
+      "check": "auto",
+      "area": "type",
+      "rule": "GT Standard Mono only for data: timestamps, sizes, codes, keyboard keys.",
+      "why": "Mono as costume is a generic tell.",
+      "fix": "Use --ui-type-family unless the content is data.",
+      "source": "Visual Identity v1.1 §5; impeccable craft floor"
+    },
+    {
+      "id": "motion-from-tokens",
+      "level": "error",
+      "check": "auto",
+      "area": "motion",
+      "rule": "Durations and easing come from --ui-motion-* tokens.",
+      "why": "One motion language: soft to sharp.",
+      "fix": "Use --ui-motion-instant, -fast, -base, -slow and --ui-motion-ease.",
+      "source": "Motion v0.1 (board 16)"
+    },
+    {
+      "id": "reduced-motion",
+      "level": "error",
+      "check": "auto",
+      "area": "motion",
+      "rule": "Any file with transitions or animations handles prefers-reduced-motion.",
+      "why": "Accessibility.",
+      "fix": "Add an @media (prefers-reduced-motion: reduce) block.",
+      "source": "apple-design §14"
+    },
+    {
+      "id": "glass-only-floating",
+      "level": "error",
+      "check": "auto",
+      "area": "glass",
+      "rule": "backdrop-filter (glass) only on floating layers: dialog, sheet, popover, menu, tooltip, toast, floating toolbar.",
+      "why": "Glass marks the highest layer; on flat things it is decoration.",
+      "fix": "Use .ui-glass on the floating element only.",
+      "source": "Blur and Focus v1 (frosted glass is a UI material only); Marcus 12 Oct"
+    },
+    {
+      "id": "glass-no-stroke",
+      "level": "error",
+      "check": "auto",
+      "area": "glass",
+      "rule": "Glass has no stroke: no border, no inset edge, no outline on the glass surface.",
+      "why": "Marcus 12 Oct: no stroke, a little shadow.",
+      "fix": "Remove the border; depth comes from --ui-glass-shadow.",
+      "source": "Marcus 12 Oct"
+    },
+    {
+      "id": "glass-one-white",
+      "level": "error",
+      "check": "review",
+      "area": "glass",
+      "rule": "At most one white or coloured button (glass-white or glass-danger) per glass surface. Every other action on glass is clear.",
+      "source": "Marcus 12 Oct 2026; coloured buttons Marcus 13 Oct 2026"
+    },
+    {
+      "id": "menu-rows-fill",
+      "level": "warn",
+      "check": "review",
+      "area": "glass",
+      "rule": "Rows in menus and selects fill the menu edge to edge: no side inset, no radius of their own. Hover, keyboard highlight and press fill the whole row, so the row and the menu read as one thing.",
+      "source": "Marcus 12 Oct 2026; design-system/components/menu.css"
+    },
+    {
+      "id": "reduced-transparency",
+      "level": "error",
+      "check": "auto",
+      "area": "glass",
+      "rule": "Any file that uses backdrop-filter handles prefers-reduced-transparency with the solid fallback.",
+      "why": "Legibility.",
+      "fix": "Swap to --ui-glass-bg-solid and drop the filter.",
+      "source": "apple-design §14"
+    },
+    {
+      "id": "amber-is-a-point",
+      "level": "error",
+      "check": "auto",
+      "area": "colour",
+      "rule": "Amber (--ui-check) is never text, never a button, never a surface bigger than a chip. Only as the check: the checked triangle on checked work, or a point beside a text label.",
+      "why": "Amber is the check; used anywhere else it means nothing.",
+      "fix": "Use Ink for actions; show a check as the Amber checked triangle or an Amber point beside its label.",
+      "source": "Palette rules 7 Oct; Focus System v1.3"
+    },
+    {
+      "id": "icons-lucide",
+      "level": "error",
+      "check": "review",
+      "area": "icons",
+      "rule": "Icons are filled Lucide, built into design-system/icons (DECIDED 13 Oct 2026): closed shapes filled, inner details cut out, line-only icons (check, plus, x, arrows, search, spinner) kept as lines at --ui-size-icon-stroke (2.25). 14, 16 or 18 px in UI, 24 px for display. Fume's own icons are drawn on the same 24 px grid: fume-check (the checked triangle) and fume-engine (AI, DECIDED 13 Oct). Never stroke-only Lucide next to filled icons, never a second icon set, never emoji or sparkle stars for AI.",
+      "why": "One solid, calm set reads as designed; mixed outline and solid icons read as assembled.",
+      "fix": "Use <use href=\"#fi-<name>\"> from design-system/icons/sprite.svg; add missing icons in tools/icons/icons.mjs and run node tools/icons/build.mjs.",
+      "source": "F-D060 (Lucide, 8 Oct); filled F-D065; Engine icon F-D068; icon set approved on the board 13 Oct 2026"
+    },
+    {
+      "id": "few-strokes",
+      "level": "error",
+      "check": "auto",
+      "area": "depth",
+      "rule": "As few strokes as possible. Separate regions with surface, depth and space, never with lines: a sidebar sits behind the page as its own layer and the page lies on it as a sheet. A stroke is allowed only where an element would otherwise vanish (inputs and fields, the white secondary button, the edge of the customer's creative or a white swatch) and for focus and selection rings.",
+      "why": "Lines between everything read as generic, AI-made SaaS. Fume must feel high end, luxury, designed (Marcus 13 Oct 2026).",
+      "fix": "Remove the line. Use a surface step (--ui-surface, --ui-ground-behind), depth (--ui-depth-raised, --ui-depth-sheet) or space. If the element truly vanishes without it, add gate-allow:few-strokes with the reason.",
+      "source": "Marcus 13 Oct 2026"
+    },
+    {
+      "id": "say-creative",
+      "level": "error",
+      "check": "auto",
+      "area": "words",
+      "rule": "Say \"creative\", never \"file\", in any copy the customer reads.",
+      "why": "Gate 3.",
+      "fix": "Replace \"file\" with \"creative\".",
+      "source": "Gate 3 (3 Oct)"
+    },
+    {
+      "id": "expert-checks",
+      "level": "error",
+      "check": "auto",
+      "area": "words",
+      "rule": "The expert checks; only the customer approves. On screen the expert's work reads \"In check\" while it waits and \"Checked by Anna\" or \"Checked · Anna\" when done, and her action is \"Mark checked\". \"Approve\" is the customer's word and button, and Marcus's on brand work.",
+      "why": "Verbal Identity: \"approve\" is only ever the customer's action; Fume's own check is the Quality Gate. Marcus chose \"Checked by Anna\" on 13 Oct 2026.",
+      "fix": "Write \"Checked by <name>\" or \"<name> checked\"; keep \"approve\" for the customer. Code state names (data-check=\"approved\") stay as they are.",
+      "source": "Verbal Identity v0.1 · Marcus 13 Oct 2026 (F-D077)"
+    },
+    {
+      "id": "words-avoid",
+      "level": "error",
+      "check": "auto",
+      "area": "words",
+      "rule": "Copy never uses the words Fume avoids: hype (magic, 10x, in seconds, unlimited, seamless, unlock), filler (supercharge, leverage, elevate, stunning), synthetic people (hyper-realistic, AI actors), claims Fume never makes (guaranteed, compliant, zero errors, fully autonomous), Ember's words (ember, spark, ignite) and internal names (Brand Brain, Operator Studio, Fume Agent, Stolon, Rhizome). Words that depend on context (authentic, legal, prompt, options, variations, avatars, smoke, fumes) are flagged to read again.",
+      "why": "They are hype, read as AI-written, point at synthetic people, promise what Fume cannot prove, or belong to someone else.",
+      "fix": "Say what actually happens, in one plain sentence; see the vocabulary in the fume-communication skill for what to say instead.",
+      "source": "Verbal Identity v0.1 (approved 3 Oct) · brand book, How Fume writes · fume-communication vocabulary",
+      "scope": "Copy checked with fume_check and template content (decks); not the repository's own pages, which quote these words to explain them."
+    },
+    {
+      "id": "name-the-actor",
+      "level": "error",
+      "check": "auto",
+      "area": "words",
+      "rule": "Every sentence about the work names who acts: you, Fume (we), the Engine or a named person. Never \"the AI\" or \"the system\".",
+      "why": "Hiding who acts is what Fume's candour is against.",
+      "fix": "Write who does it: \"The Engine produces three directions\", \"Anna checks every creative\".",
+      "source": "Verbal Identity v0.1 (approved 3 Oct)",
+      "scope": "Copy checked with fume_check and template content."
+    },
+    {
+      "id": "no-exclamation",
+      "level": "error",
+      "check": "auto",
+      "area": "words",
+      "rule": "No exclamation marks and no emoji in brand or product copy. Warmth comes from people and specifics.",
+      "why": "A calm expert does not shout.",
+      "fix": "Drop the mark; add a name or a specific instead.",
+      "source": "Verbal Identity v0.1 · brand book, How Fume writes",
+      "scope": "Copy checked with fume_check and template content. Founders' personal posts are their own voice."
+    },
+    {
+      "id": "one-amber-per-view",
+      "level": "error",
+      "check": "review",
+      "area": "colour",
+      "rule": "In brand compositions (photography, social, decks, the logo) at most one Amber point in view; the logo's Signature point counts. In the product, Amber marks checked work, so a grid can show one Amber check per checked creative (see check-states).",
+      "why": "One signature per view.",
+      "source": "Visual Identity v1.1 §4 rule 1; product UI: Marcus 13 Oct 2026"
+    },
+    {
+      "id": "state-tokens-in-state",
+      "level": "error",
+      "check": "auto",
+      "area": "colour",
+      "rule": "A hover, pressed or active token colours only that state. Never use one as the resting colour of a surface, text or line.",
+      "why": "Each --ui-*-hover, -pressed and -active token is made for one moment of one component (for example --ui-behind-hover is the sidebar row under the pointer, in Cream). Used as a resting fill it brings a colour the system never chose for a surface: the beige box Marcus rejected (warmth is light, not fill).",
+      "fix": "Use the resting token for the role (--ui-surface-*, --ui-ground*, --ui-card-*), or move the declaration into the :hover, :active or [aria-pressed] state it belongs to.",
+      "source": "Design system v1 (F-D075); Warmer, round 9 (F-D074)"
+    },
+    {
+      "id": "use-the-component",
+      "level": "warn",
+      "check": "auto",
+      "area": "components",
+      "rule": "Use the design system's component for the job. A row of buttons that switch one view on and off is a segmented control (.ui-seg) or tabs, not buttons with aria-pressed.",
+      "why": "Rebuilt controls drift: a pressed button painted like the primary action competes with the real call to action, and it misses the sliding indicator, the keyboard pattern and the phone layout the component already has.",
+      "fix": "Build it from the component (fume_get_component segmented, or tabs) and its classes.",
+      "source": "Design system v1 (F-D075): tabs slide, round 2"
+    },
+    {
+      "id": "card-never-matches-ground",
+      "level": "error",
+      "check": "review",
+      "area": "colour",
+      "rule": "A card never has the same colour as its ground. Pure white only for the customer's creative, inputs and the secondary button, always with a hairline.",
+      "why": "Clear layers.",
+      "source": "Visual Identity v1.1 §4"
+    },
+    {
+      "id": "no-amber-on-dark",
+      "level": "error",
+      "check": "review",
+      "area": "colour",
+      "rule": "No Amber fills, text or light on Ink, dark glass or Brown. Only the point, at 3:1 or better.",
+      "source": "Visual Identity v1.1 §4 rule 3"
+    },
+    {
+      "id": "contrast",
+      "level": "error",
+      "check": "review",
+      "area": "accessibility",
+      "rule": "Text 4.5:1, large text and UI parts 3:1, including text on glass over the busiest background it can sit on.",
+      "source": "impeccable craft floor; WCAG"
+    },
+    {
+      "id": "focus-frame-geometry",
+      "level": "error",
+      "check": "review",
+      "area": "focus-system",
+      "rule": "Any Focus frame in UI follows Focus System v1.3 exactly (tools/canvas/tools/geo.py): two corners, one point, sizes from the short side and √(w×h).",
+      "source": "Focus System v1.3, F-D059"
+    },
+    {
+      "id": "grain-not-on-ui",
+      "level": "error",
+      "check": "review",
+      "area": "light",
+      "rule": "Grain only on photo and blur, never over text, UI, glass or the focus frame.",
+      "source": "Blur, Grain & Light Rules v0.1"
+    },
+    {
+      "id": "press-on-pointer-down",
+      "level": "warn",
+      "check": "review",
+      "area": "states",
+      "rule": "Pressed feedback shows on pointer-down (scale --ui-motion-press-scale), never only on release.",
+      "source": "apple-design §1"
+    },
+    {
+      "id": "check-states",
+      "level": "error",
+      "check": "review",
+      "area": "colour",
+      "rule": "The checked triangle has two states. Checked: Amber (--ui-check). In check and not checked yet: the same triangle in grey (--ui-check-waiting). Always beside a text label (the checker's name and time, or In check), so colour is never the only signal.",
+      "why": "Amber means an expert checked this. A creative that is still waiting must not look checked.",
+      "fix": "Swap the icon colour with the creative's state: color: var(--ui-check) only when checked.",
+      "source": "Marcus 13 Oct 2026"
+    },
+    {
+      "id": "glass-colour-buttons",
+      "level": "error",
+      "check": "review",
+      "area": "glass",
+      "rule": "A coloured button on glass (only danger today; Amber is never a button) uses its glass token: the colour at 80 %, 90 % on hover, back to 80 % when pressed (--ui-glass-button-danger), with a Porcelain label. Never the solid colour, never a shadow or a stroke.",
+      "why": "The glass shows through, so the button belongs to the glass instead of sitting on it like a sticker.",
+      "fix": "Use .ui-btn--glass-danger.",
+      "source": "Marcus 13 Oct 2026"
+    },
+    {
+      "id": "hover-needs-hover",
+      "level": "error",
+      "check": "auto",
+      "area": "states",
+      "rule": ":hover styles live inside @media (hover: hover). On a touch screen a hover style sticks after the tap and the control looks stuck.",
+      "why": "Touch has no hover; a tap must show the pressed state and then let go.",
+      "fix": "Wrap the rule: @media (hover: hover) { .x:hover { ... } }. Demo classes such as .is-hover stay outside.",
+      "source": "Marcus 13 Oct 2026 (hit boxes on a phone)"
+    },
+    {
+      "id": "touch-target",
+      "level": "error",
+      "check": "auto",
+      "area": "accessibility",
+      "rule": "Every control is at least 44 x 44 px to touch (--ui-size-hit), whatever it looks like. A small control gets an invisible hit area (::after with --ui-size-hit); dense rows grow to 44 px on touch screens (@media (pointer: coarse)). The gate checks every .ui-* component with cursor: pointer; the render audit measures every visible control on a 390 px phone, hit area included, and fails the build on anything under 44 x 44.",
+      "why": "Apple HIG 44 pt and WCAG 2.5.5: a target smaller than a fingertip makes people miss and tap twice.",
+      "fix": ".x::after { content: \"\"; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); } on a position: relative control, or @media (pointer: coarse) { .x { height: var(--ui-size-hit); } }.",
+      "source": "Marcus 13 Oct 2026; Apple HIG; WCAG 2.5.5; measured in round 6 (Marcus: make sure hit boxes and such are enforced)",
+      "measured": true
+    },
+    {
+      "id": "touch-feedback",
+      "level": "error",
+      "check": "auto",
+      "area": "states",
+      "rule": "A tap shows the control's own pressed state, never the browser's grey tap flash. Every .ui-* control with cursor: pointer sets -webkit-tap-highlight-color: transparent and has an :active state. Pages load components/base.css and components/touch.js (iOS shows :active only when the page listens for touches). The render audit checks the tap flash on every visible control.",
+      "why": "The grey flash draws a hard rectangle over pills and whole sections; it looks like a bug and not like Fume.",
+      "fix": "Add -webkit-tap-highlight-color: transparent and an :active rule (two steps toward Ink, or the 3 % shrink).",
+      "source": "Marcus 13 Oct 2026 (hit boxes on a phone); measured in round 6 (Marcus: make sure hit boxes and such are enforced)",
+      "measured": true
+    },
+    {
+      "id": "fields-16-on-touch",
+      "level": "error",
+      "check": "auto",
+      "area": "accessibility",
+      "rule": "Text in fields is 16 px on touch screens (@media (pointer: coarse) with --ui-type-body), so iOS does not zoom the page when a field gets focus. 14 px is fine with a mouse. The render audit measures every field on a phone.",
+      "why": "The zoom pushes the layout off screen and the person has to pinch back out.",
+      "fix": "@media (pointer: coarse) { .field { font-size: var(--ui-type-body); } }",
+      "source": "Round 5, 13 Oct 2026; enforced in round 6 (Marcus: make sure hit boxes and such are enforced)",
+      "measured": true
+    }
+  ]
+}

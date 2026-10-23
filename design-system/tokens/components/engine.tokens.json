@@ -1,0 +1,253 @@
+{
+  "$description": "Engine and chat: messages and bubbles, the message scroller, the brief composer, the Engine's run card, attachments and markers. DECIDED 13 Oct 2026 (approved on the review board, F-D072 to F-D075), first shown in round 8. Every value points at a brand primitive or an existing UI role; no new colours. Built into --ui-<group>-<key> by node tools/tokens/build.mjs.",
+  "message": {
+    "bubble": {
+      "value": "{color.surface-sunken}",
+      "status": "DECIDED",
+      "description": "A person's message sits in a bubble one surface step toward Ink. The Engine has no bubble: it speaks as plain text on the page with its mark, so a person and the Engine never look alike."
+    },
+    "bubble-fg": {
+      "value": "{color.text}",
+      "status": "DECIDED",
+      "description": "Text in a bubble and the Engine's text: Ink, 16 px, for reading."
+    },
+    "mention": {
+      "value": "{fume.focus-200}",
+      "status": "DECIDED",
+      "description": "An @mention inside a bubble: one more step toward Ink than the bubble, Ink text in medium weight. No colour of its own."
+    },
+    "measure": {
+      "value": "64ch",
+      "status": "DECIDED",
+      "description": "The longest line in a message, so the Engine's text reads like a column, never a banner."
+    },
+    "bubble-max": {
+      "value": "85%",
+      "status": "DECIDED",
+      "description": "A bubble never runs the full width: it leaves room on the other side, so who said it reads at a glance."
+    },
+    "gap": {
+      "value": "{space.xl}",
+      "status": "DECIDED",
+      "description": "Between messages from different senders (24)."
+    },
+    "group-gap": {
+      "value": "{space.xs}",
+      "status": "DECIDED",
+      "description": "Between consecutive messages from one sender (4): they read as one turn (rule proximity: 4 inside, 24 between)."
+    },
+    "head-gap": {
+      "value": "{space.sm}",
+      "status": "DECIDED",
+      "description": "From a sender's name to what they said (8)."
+    },
+    "sign": {
+      "value": "24px",
+      "status": "DECIDED",
+      "description": "The sender's sign beside the name: a 24 px avatar for a person, the Engine mark at 18 in the same box. It sits in the header, so bubbles and the Engine's text share one left edge."
+    },
+    "caret": {
+      "value": "{color.text}",
+      "status": "DECIDED",
+      "description": "The quiet caret after text that is still arriving: an Ink bar, 2 px wide, one line tall, fading slowly in and out."
+    },
+    "caret-width": {
+      "value": "2px",
+      "status": "DECIDED"
+    },
+    "think-scale": {
+      "value": "0.72",
+      "status": "DECIDED",
+      "description": "Thinking: the Engine mark's focal point breathes between this size and full size inside its still frame corners (soft to sharp). No shimmer, no gradient."
+    },
+    "scroller-height": {
+      "value": "560px",
+      "status": "DECIDED",
+      "description": "Default height of a message scroller on the board. In the product it fills its pane."
+    },
+    "scroller-pill-offset": {
+      "value": "{space.lg}",
+      "status": "DECIDED",
+      "description": "The jump-to-latest pill floats this far above the bottom of the conversation."
+    }
+  },
+  "composer": {
+    "bg": {
+      "value": "{field.bg}",
+      "status": "DECIDED",
+      "description": "The brief composer is a field: white with the field's hairline."
+    },
+    "edge": {
+      "value": "{field.edge}",
+      "status": "DECIDED"
+    },
+    "edge-hover": {
+      "value": "{field.edge-hover}",
+      "status": "DECIDED"
+    },
+    "edge-invalid": {
+      "value": "{field.edge-invalid}",
+      "status": "DECIDED",
+      "description": "Over the limit: a Rouge edge, the count in Rouge and a sentence that says how much to cut."
+    },
+    "bg-disabled": {
+      "value": "{field.bg-disabled}",
+      "status": "DECIDED"
+    },
+    "chip": {
+      "value": "{color.surface-sunken}",
+      "status": "DECIDED",
+      "description": "Chips inside the white composer (Brand DNA, the count, formats that are off): the sunken step. Formats that are on are Ink."
+    },
+    "chip-hover": {
+      "value": "{color.surface-sunken-hover}",
+      "status": "DECIDED"
+    },
+    "chip-pressed": {
+      "value": "{fume.focus-300}",
+      "status": "DECIDED"
+    },
+    "chip-glass": {
+      "value": "{color.glass.button-clear}",
+      "status": "DECIDED",
+      "description": "Chips on the glass composer: the clear veil. The send button is the one white thing on the glass."
+    },
+    "chip-glass-on": {
+      "value": "{color.glass.button-clear-hover}",
+      "status": "DECIDED",
+      "description": "A format that is on, on glass: one veil step up and a check before the word, so it never needs a second white pill."
+    },
+    "input-min": {
+      "value": "48px",
+      "status": "DECIDED",
+      "description": "The brief starts two lines tall (16 px text) and grows with what is written."
+    },
+    "input-max": {
+      "value": "240px",
+      "status": "DECIDED",
+      "description": "After ten lines the brief scrolls inside the composer, so the conversation stays in view."
+    },
+    "width": {
+      "value": "720px",
+      "status": "DECIDED",
+      "description": "The widest a composer gets on a desktop: the conversation's column."
+    },
+    "swap-scale": {
+      "value": "0.6",
+      "status": "DECIDED",
+      "description": "Send turns into stop in place: one icon shrinks and fades as the other grows in, inside the same Ink circle."
+    },
+    "safe": {
+      "value": "env(safe-area-inset-bottom, 0px)",
+      "status": "DECIDED",
+      "description": "The phone's safe area under a docked composer (the home indicator). The dock keeps at least 8 below the composer, or this, whichever is more."
+    }
+  },
+  "run": {
+    "indicator": {
+      "value": "20px",
+      "status": "DECIDED",
+      "description": "The column of step signs: a check when done, the spinner while running, a grey checked triangle while it waits for Anna. No line joins them: steps are parted by space."
+    },
+    "pending": {
+      "value": "{fume.focus-300}",
+      "status": "DECIDED",
+      "description": "The small dot of a step that has not started."
+    },
+    "slot": {
+      "value": "{color.ground}",
+      "status": "DECIDED",
+      "description": "A creative that is not made yet: a still Porcelain slot in the run card, lighter than the card and quieter than the one being made (which breathes on the sunken step), in the shape of the creative to come."
+    },
+    "tile-cols": {
+      "value": "6",
+      "status": "DECIDED",
+      "description": "Creatives per row in the run card (12 in two rows)."
+    },
+    "tile-cols-narrow": {
+      "value": "4",
+      "status": "DECIDED",
+      "description": "Creatives per row on a phone (12 in three rows)."
+    },
+    "step-gap": {
+      "value": "{space.lg}",
+      "status": "DECIDED",
+      "description": "Between steps (16); inside a step its parts sit 4 to 8 apart."
+    }
+  },
+  "attachment": {
+    "bg": {
+      "value": "{color.surface}",
+      "status": "DECIDED",
+      "description": "An attachment is one surface step off its ground, like a small card: no border, no dashes."
+    },
+    "bg-hover": {
+      "value": "{fume.focus-100}",
+      "status": "DECIDED"
+    },
+    "bg-pressed": {
+      "value": "{fume.focus-200}",
+      "status": "DECIDED"
+    },
+    "bg-on-surface": {
+      "value": "{color.surface-sunken}",
+      "status": "DECIDED",
+      "description": "Inside a card, a run or a bubble it steps once more, so it never matches its ground."
+    },
+    "bg-glass": {
+      "value": "{color.glass.button-clear}",
+      "status": "DECIDED",
+      "description": "On the glass composer: the clear veil, Porcelain text."
+    },
+    "media": {
+      "value": "40px",
+      "status": "DECIDED",
+      "description": "Thumbnail in a horizontal attachment, 6 in from the edge (inset.ring) with radius 10, so its corner follows the attachment's 16."
+    },
+    "media-tile": {
+      "value": "{color.surface-sunken}",
+      "status": "DECIDED",
+      "description": "The tile behind a brief's page icon (file-text)."
+    },
+    "max": {
+      "value": "320px",
+      "status": "DECIDED",
+      "description": "The widest a horizontal attachment gets; a long name is cut with an ellipsis and read in full by screen readers."
+    },
+    "card": {
+      "value": "120px",
+      "status": "DECIDED",
+      "description": "Width of a vertical attachment: the creative at its own format on top, name and data under it."
+    }
+  },
+  "marker": {
+    "fg": {
+      "value": "{color.text-tertiary}",
+      "status": "DECIDED",
+      "description": "A quiet marker (read up to here, a day, done): tertiary words with space around them, never a line."
+    },
+    "fg-new": {
+      "value": "{color.text}",
+      "status": "DECIDED",
+      "description": "New since you left: Ink words, an Ink dot and the count."
+    },
+    "dot": {
+      "value": "{color.text}",
+      "status": "DECIDED"
+    },
+    "dot-size": {
+      "value": "{badge.dot}",
+      "status": "DECIDED"
+    },
+    "before": {
+      "value": "{space.2xl}",
+      "status": "DECIDED",
+      "description": "Space above a marker (32): more than below it, so the marker belongs to what follows."
+    },
+    "after": {
+      "value": "{space.lg}",
+      "status": "DECIDED",
+      "description": "Space below a marker (16)."
+    }
+  }
+}

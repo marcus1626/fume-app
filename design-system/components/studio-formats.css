@@ -1,0 +1,150 @@
+/* Studio formats: the format picker, safe zones on the board and Make formats (app v4, FLOWS §15–§16). PROPOSED 15 Oct 2026.
+   A format is a placement (Instagram story, Email header, Product page); its ratio follows. The picker sits in the
+   desk's Output section; the chosen placement's safe zones can lie over the creative on the board; Make formats is a
+   strip over the versions with one tile per target placement.
+   Markup: <button class="ui-fmt-pick"><span class="ui-fmt-ratio" style="--fw; --fh"/><span class="ui-fmt-pick-text">
+             <span class="ui-fmt-pick-name">Instagram story</span><span class="ui-fmt-pick-ratio">9:16</span></span>
+             <svg class="ui-fmt-pick-icon"/></button>   help line: "Rendered at 9:16" <span class="ui-fmt-limit"/>
+           <div class="ui-glass ui-popover ui-fmt-popover"> header <div class="ui-fmt-groups"><div class="ui-fmt-group">
+             <p class="ui-fmt-group-title">Instagram</p><ul class="ui-fmt-options"><li><button class="ui-fmt-option"
+             aria-current> frame · name · ratio </button></li></ul></div></div></div>
+           <span class="ui-fmt-safe" style="--x --y --w --h --st --sb --sl --sr"><span class="ui-fmt-safe-out"/>
+             <span class="ui-fmt-safe-window"><span class="ui-fmt-safe-band"/><span class="ui-fmt-safe-label"/></span></span>
+           <section class="ui-fmt-strip"><header class="ui-fmt-strip-head"><h2 class="ui-fmt-strip-title"> Make formats
+             <span class="ui-fmt-strip-sub"/></h2><div class="ui-fmt-strip-actions"/></header>
+             <div class="ui-toggle-group ui-fmt-targets"> chips <span class="ui-fmt-chip-ratio"/> </div>   (choosing)
+             <ol class="ui-fmt-tiles"><li class="ui-fmt-tile" data-state="making|done"><span class="ui-fmt-preview">
+               <span class="ui-fmt-frame" style="--fw --fh"><img/><span class="ui-fmt-crop-out"/><button class="ui-fmt-crop"
+               style="--x --y --w --h"/></span></span><div class="ui-fmt-tile-text"><p class="ui-fmt-tile-name"/>
+               <div class="ui-seg ui-fmt-method"> Crop · Expand </div><p class="ui-fmt-tile-why"/></div></li></ol></section>
+   Fume decisions: a ratio is drawn as a small filled frame in the text's tertiary colour, never an outline, so the
+   picker reads like a list of shapes. The picker's row is the sunken row of the desk's mode picker. Safe zones dim
+   what the platform covers with a veil of Ink and leave the safe area clear; what a crop cuts away is dimmed
+   more. The Make formats strip lies on the desk like the versions: tiles are Porcelain cards with depth, no
+   strokes. The crop window is the one line drawn, as a selection on a creative has no surface to step. A tile
+   being made shows the design system's white text shimmer, never Amber. The ratio is data (mono, tabular).
+   Rule gate: few-strokes, air, proximity, space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data,
+   actions-are-pills, amber-is-a-point, glass-no-stroke, touch-target, touch-feedback, hover-needs-hover,
+   focus-is-sharp, reduced-motion, tokens-only-color, no-gradient. */
+
+/* ---------- a ratio as a small frame ---------- */
+
+.ui-fmt-ratio { position: relative; display: inline-grid; place-items: center; flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-tertiary); }
+.ui-fmt-ratio::before { content: ""; display: block; width: calc(var(--fw) * 100%); height: calc(var(--fh) * 100%); border-radius: 0; background: currentColor; }
+
+/* ---------- the picker ---------- */
+
+.ui-fmt-pick {
+  position: relative; display: flex; align-items: center; gap: var(--ui-space-sm); width: 100%; min-height: var(--ui-size-control-sm);
+  margin: 0; padding: var(--ui-space-xs) var(--ui-space-sm); border: 0; border-radius: var(--ui-radius-field);
+  background: var(--ui-surface-sunken); color: var(--ui-text); font-family: var(--ui-type-family); text-align: start;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-fmt-pick::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+@media (hover: hover) { .ui-fmt-pick:hover { background: var(--ui-surface-sunken-hover); } }
+.ui-fmt-pick:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-fmt-pick:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-fmt-pick .ui-fmt-ratio { color: var(--ui-text-secondary); }
+.ui-fmt-pick-text { display: flex; align-items: baseline; gap: var(--ui-space-sm); flex: 1 1 auto; min-width: 0; }
+.ui-fmt-pick-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; }
+.ui-fmt-pick-ratio, .ui-fmt-option-ratio, .ui-fmt-chip-ratio, .ui-fmt-tile-ratio {
+  flex-shrink: 0; font-family: var(--ui-type-family-data); /* gate-allow:mono-is-data  a ratio is a measure */
+  font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; color: var(--ui-text-tertiary);
+}
+.ui-fmt-pick-icon { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-tertiary); }
+.ui-fmt-limit { display: block; margin-block-start: var(--ui-space-xs); }
+
+.ui-popover.ui-fmt-popover { width: calc(var(--ui-size-hit) * 10); }
+.ui-fmt-groups { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-fmt-group { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-fmt-group-title { margin: 0; padding-inline: var(--ui-space-sm); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-glass-fg-secondary); }
+.ui-fmt-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--ui-space-xs); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.ui-fmt-options > li { display: grid; min-width: 0; }
+.ui-fmt-option {
+  position: relative; display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; min-height: var(--ui-size-control-sm);
+  margin: 0; padding: 0 var(--ui-space-sm); border: 0; border-radius: var(--ui-radius-item); background: transparent; color: var(--ui-glass-fg);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); text-align: start;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-fmt-option::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+.ui-fmt-option .ui-fmt-ratio, .ui-fmt-option .ui-fmt-option-ratio { color: var(--ui-glass-fg-secondary); }
+.ui-fmt-option-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (hover: hover) { .ui-fmt-option:hover { background: var(--ui-glass-item-hover); } }
+.ui-fmt-option:active { background: var(--ui-glass-button-clear-pressed); }
+.ui-fmt-option[aria-current="true"] { background: var(--ui-glass-button-clear); font-weight: var(--ui-type-weight-medium); }
+.ui-fmt-option:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: calc(var(--ui-size-ring) * -1); }
+
+/* ---------- safe zones over the creative ---------- */
+
+.ui-fmt-safe { position: absolute; inset: 0; overflow: hidden; border-radius: var(--ui-radius-item); pointer-events: none; }
+.ui-fmt-safe-out {
+  position: absolute; inset: 0;
+  --x1: calc(var(--x) * 100%); --y1: calc(var(--y) * 100%); --x2: calc((var(--x) + var(--w)) * 100%); --y2: calc((var(--y) + var(--h)) * 100%);
+  clip-path: polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, var(--x1) var(--y1), var(--x2) var(--y1), var(--x2) var(--y2), var(--x1) var(--y2), var(--x1) var(--y1));
+}
+.ui-fmt-safe-out::before { content: ""; position: absolute; inset: 0; background: color-mix(in oklab, var(--ui-text) 64%, transparent); }
+.ui-fmt-safe-window { position: absolute; left: calc(var(--x) * 100%); top: calc(var(--y) * 100%); width: calc(var(--w) * 100%); height: calc(var(--h) * 100%); }
+.ui-fmt-safe-band {
+  position: absolute; inset: 0; background: color-mix(in oklab, var(--ui-text) 40%, transparent);
+  --l: calc(var(--sl) * 100%); --t: calc(var(--st) * 100%); --r: calc(100% - var(--sr) * 100%); --b: calc(100% - var(--sb) * 100%);
+  clip-path: polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, var(--l) var(--t), var(--r) var(--t), var(--r) var(--b), var(--l) var(--b), var(--l) var(--t));
+}
+.ui-fmt-safe-label {
+  position: absolute; left: calc(var(--sl) * 100% + var(--ui-space-sm)); top: calc(var(--st) * 100% + var(--ui-space-sm)); max-width: calc(100% - var(--ui-space-md));
+  padding: 0 var(--ui-space-sm); border-radius: var(--ui-radius-action); background: var(--ui-surface); color: var(--ui-text); box-shadow: var(--ui-depth-raised);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.6; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ---------- Make formats: a strip over the versions ---------- */
+
+.ui-fmt-strip { display: grid; flex-shrink: 0; gap: var(--ui-space-sm); min-width: 0; padding: var(--ui-space-xs); }
+.ui-fmt-strip-head { display: flex; align-items: center; gap: var(--ui-space-md); min-width: 0; padding-inline-start: var(--ui-space-sm); }
+.ui-fmt-strip-title { display: flex; align-items: baseline; gap: var(--ui-space-sm); flex: 1 1 auto; min-width: 0; margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; white-space: nowrap; }
+.ui-fmt-strip-sub { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-secondary); }
+.ui-fmt-strip-actions { display: flex; align-items: center; gap: var(--ui-space-xs); flex-shrink: 0; }
+.ui-fmt-targets { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); min-width: 0; padding-inline: var(--ui-space-sm); }
+.ui-fmt-targets .ui-toggle { font-size: var(--ui-type-label); }
+.ui-fmt-chip-ratio { margin-inline-start: var(--ui-space-xs); }
+
+.ui-fmt-tiles {
+  display: flex; gap: var(--ui-space-sm); min-width: 0; margin: 0; padding: 0; list-style: none;
+  overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; scrollbar-color: var(--ui-scroll-thumb) transparent;
+}
+.ui-fmt-tile {
+  display: grid; grid-template-columns: calc(var(--ui-size-hit) * 1.75) minmax(0, 1fr); align-items: center; gap: var(--ui-space-md); flex-shrink: 0;
+  width: calc(var(--ui-size-hit) * 5.75); padding: var(--ui-space-xs); border-radius: var(--ui-radius-card); background: var(--ui-ground); box-shadow: var(--ui-depth-raised);
+}
+.ui-fmt-preview { display: grid; place-items: center; aspect-ratio: 1; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); overflow: hidden; }
+.ui-fmt-frame { position: relative; display: block; width: calc(var(--fw) * 100%); height: calc(var(--fh) * 100%); overflow: hidden; background: var(--ui-surface-creative); box-shadow: var(--ui-depth-raised); }
+.ui-fmt-frame > img { display: block; width: 100%; height: 100%; object-fit: cover; user-select: none; -webkit-user-select: none; }
+.ui-fmt-skeleton { display: block; width: 100%; height: 100%; border-radius: 0; }
+.ui-fmt-crop-out {
+  position: absolute; inset: 0; background: color-mix(in oklab, var(--ui-text) 56%, transparent); pointer-events: none;
+  --x1: calc(var(--x) * 100%); --y1: calc(var(--y) * 100%); --x2: calc((var(--x) + var(--w)) * 100%); --y2: calc((var(--y) + var(--h)) * 100%);
+  clip-path: polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, var(--x1) var(--y1), var(--x2) var(--y1), var(--x2) var(--y2), var(--x1) var(--y2), var(--x1) var(--y1));
+}
+.ui-fmt-crop {
+  position: absolute; left: calc(var(--x) * 100%); top: calc(var(--y) * 100%); width: calc(var(--w) * 100%); height: calc(var(--h) * 100%);
+  margin: 0; padding: 0; border: 0; background: transparent; cursor: grab; touch-action: none; -webkit-tap-highlight-color: transparent;
+  outline: var(--ui-size-ring) solid var(--ui-text-on-ink); outline-offset: calc(var(--ui-size-ring) * -1); /* gate-allow:few-strokes the crop window over a creative has no surface to step */
+}
+.ui-fmt-crop:active { cursor: grabbing; }
+.ui-fmt-crop:focus-visible { outline-color: var(--ui-focus-ring-on-glass); }
+.ui-fmt-tile-text { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-fmt-tile-name { display: flex; align-items: baseline; gap: var(--ui-space-sm); min-width: 0; margin: 0; }
+.ui-fmt-tile-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; }
+.ui-fmt-method { --ui-size-seg: var(--ui-size-control-sm); width: 100%; }
+.ui-fmt-method .ui-seg-option { flex: 1 1 0; justify-content: center; font-size: var(--ui-type-label); }
+.ui-fmt-tile-native { display: flex; align-items: center; gap: var(--ui-space-xs); min-height: var(--ui-size-control-sm); margin: 0; font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+.ui-fmt-tile-native > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-tertiary); }
+.ui-fmt-tile-why {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-width: 0; margin: 0;
+  font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); text-wrap: pretty;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-fmt-pick, .ui-fmt-option { transition: none; }
+  .ui-fmt-pick:active { transform: none; }
+}

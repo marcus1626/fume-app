@@ -1,0 +1,170 @@
+/* Studio controls: the Studio's small control library (app v3, FLOWS §9.3). PROPOSED 15 Oct 2026.
+   A mode is a JSON schema of variables; each variable names one control kind, and the Studio renders it through
+   ModeControl (packages/ui/src/studio). The kinds: slider (with unit), segmented, select, swatch (the brand's chosen
+   colours first), toggle, angle (a light direction dial), lens (focal length, camera height, tilt), chips, text,
+   number; lightboard (advanced light) lives in studio-light.css. Also here: the folding sections of a desk panel and the mode grid.
+   Markup: <div class="ui-sc">                                                   one control's row
+             <div class="ui-sc-head"><label class="ui-sc-label">Softness</label><span class="ui-sc-readout">60 %</span></div>
+             <div class="ui-slider ui-sc-slider" data-thumbs="1" style="--b: .6"> … slider.css … </div>
+             <p class="ui-sc-help">0 is everything sharp.</p></div>
+           <div class="ui-sc-swatches" role="radiogroup"><span class="ui-sc-swatch-group" data-brand>
+             <span class="ui-sc-swatch-brand">LYSNE</span><button class="ui-sc-swatch" role="radio" style="--swatch: #F4EFE8"></button>
+             </span><span class="ui-sc-swatch-group"> … </span></div>
+           <div class="ui-sc-angle"><div class="ui-sc-dial" style="--dx: .94; --dy: .34"><span class="ui-sc-dial-subject"></span>
+             <svg class="ui-sc-dial-camera"/><span class="ui-sc-dial-point" role="slider"></span></div>
+             <div class="ui-sc-angle-height"> label · slider · readout </div></div>
+           <div class="ui-sc-folds"><section class="ui-sc-fold" data-state="open"><h3 class="ui-sc-fold-head">
+             <button class="ui-sc-fold-trigger" aria-expanded> title · meta · chevron </button></h3>
+             <div class="ui-sc-fold-body"> rows </div></section></div>
+           <ul class="ui-sc-modes"><li><button class="ui-sc-mode" aria-current> icon · name · line </button></li></ul>
+   Fume decisions: compact like Photoshop's panels but calm: 12 px labels in secondary, the value as data (the mono
+   face, tabular) at the end of the label line, 8 from a label to its control and 16 between rows. Controls are the
+   design system's own (slider.css, segmented.css, select.css, switch.css, toggle.css, field.css), made full width.
+   No strokes: a swatch has only the hairline it needs not to vanish on its ground; the chosen swatch carries an Ink
+   ring. The brand's own colours sit first in a sunken pill named by the brand. The light dial is a sunken disc seen
+   from above (subject in the middle, camera at the foot) with an Ink light point you drag round it. Never Amber.
+   Folding sections are rows on the panel, parted by space; the panel never scrolls (studio-desk.css).
+   Rule gate: few-strokes, air, proximity, space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data,
+   actions-are-pills, amber-is-a-point, touch-target, touch-feedback, hover-needs-hover, focus-is-sharp,
+   reduced-motion, tokens-only-color. */
+
+/* ---------- a control's row ---------- */
+
+.ui-sc { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-sc-head { display: flex; align-items: baseline; gap: var(--ui-space-sm); min-width: 0; }
+.ui-sc-label { flex-shrink: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-sc-readout {
+  min-width: 0; margin-inline-start: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-family: var(--ui-type-family-data); /* gate-allow:mono-is-data  the readout is the value: a measure or a count */
+  font-size: var(--ui-type-label); line-height: 1.4; font-variant-numeric: tabular-nums; color: var(--ui-text-tertiary);
+}
+.ui-sc-help { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-sc--inline .ui-sc-head { align-items: center; }
+.ui-sc--inline .ui-sc-head > .ui-switch { margin-inline-start: auto; }
+.ui-sc[data-disabled] { opacity: .56; }
+
+/* the design system's controls, made to fill the panel's width */
+.ui-sc-slider { margin-block: var(--ui-space-xs); }
+.ui-sc-seg { display: flex; width: 100%; min-width: 0; }
+.ui-sc-seg .ui-seg-option { flex: 1 1 0; justify-content: center; min-width: 0; padding-inline: var(--ui-space-sm); font-size: var(--ui-type-label); overflow: hidden; text-overflow: ellipsis; }
+.ui-sc-select, .ui-sc-select .ui-select-trigger { width: 100%; min-width: 0; }
+.ui-sc-field { width: 100%; min-width: 0; }
+.ui-sc-textarea { min-height: calc(var(--ui-size-control-lg) + var(--ui-space-lg)); resize: none; }
+.ui-sc-chips { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); min-width: 0; }
+.ui-sc-chips .ui-toggle { font-size: var(--ui-type-label); }
+.ui-sc-number { display: flex; align-items: center; gap: var(--ui-space-xs); }
+.ui-sc-number-field { flex: 1 1 auto; text-align: center; font-variant-numeric: tabular-nums; }
+
+/* ---------- swatches: the brand's chosen colours first ---------- */
+
+.ui-sc-swatches { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm) var(--ui-space-md); min-width: 0; }
+.ui-sc-swatch-group { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs); min-width: 0; }
+.ui-sc-swatch-group[data-brand] { padding: var(--ui-space-xs); padding-inline-start: var(--ui-space-md); border-radius: var(--ui-radius-action); background: var(--ui-surface-sunken); }
+.ui-sc-swatch-brand { margin-inline-end: var(--ui-space-xs); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; color: var(--ui-text-secondary); }
+.ui-sc-swatch {
+  --s: calc(var(--ui-size-control-sm) - var(--ui-space-xs));
+  position: relative; flex-shrink: 0; width: var(--s); height: var(--s); margin: 0; padding: 0; border: 0; border-radius: 50%;
+  background: var(--swatch); box-shadow: inset 0 0 0 1px var(--ui-hairline); /* the hairline a pale swatch needs not to vanish */
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease), box-shadow var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-sc-swatch::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: 50%; }
+.ui-sc-swatch[aria-checked="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary), inset 0 0 0 calc(var(--ui-size-ring) * 2) var(--ui-surface); }
+@media (hover: hover) { .ui-sc-swatch:hover { transform: scale(1.08); } }
+.ui-sc-swatch:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-sc-swatch:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-sc-swatch:disabled { cursor: default; }
+
+/* ---------- the light direction dial ---------- */
+
+.ui-sc-angle { --dial: calc(var(--ui-size-control-lg) * 2); --pt: var(--ui-slider-thumb); display: grid; grid-template-columns: var(--dial) minmax(0, 1fr); align-items: center; gap: var(--ui-space-lg); min-width: 0; }
+.ui-sc-dial {
+  position: relative; width: var(--dial); height: var(--dial); border-radius: 50%; background: var(--ui-surface-sunken);
+  cursor: pointer; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.ui-sc-dial::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: 50%; pointer-events: none; } /* the dial is 96, larger than a hit area */
+.ui-sc-dial[data-disabled] { cursor: default; pointer-events: none; }
+.ui-sc-dial-subject {
+  position: absolute; left: 50%; top: 50%; width: var(--ui-space-sm); height: var(--ui-space-sm); border-radius: 50%;
+  transform: translate(-50%, -50%); background: var(--ui-text-tertiary);
+}
+.ui-sc-dial-camera { position: absolute; left: 50%; bottom: var(--ui-space-xs); width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); transform: translateX(-50%); color: var(--ui-text-tertiary); pointer-events: none; }
+.ui-sc-dial-point {
+  --r: calc(var(--dial) / 2 - var(--pt) / 2 - var(--ui-space-xs));
+  position: absolute; left: calc(50% + var(--dx) * var(--r)); top: calc(50% + var(--dy) * var(--r));
+  width: var(--pt); height: var(--pt); border-radius: 50%; transform: translate(-50%, -50%);
+  background: var(--ui-action-primary); box-shadow: var(--ui-depth-raised); outline: none; cursor: grab;
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-sc-dial-point::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: 50%; }
+.ui-sc-dial:active .ui-sc-dial-point { cursor: grabbing; transform: translate(-50%, -50%) scale(var(--ui-motion-press-scale)); }
+.ui-sc-dial-point:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-sc-angle-height, .ui-sc-lens-part { display: grid; grid-template-columns: var(--ui-size-hit) minmax(0, 1fr) calc(var(--ui-size-control-lg) + var(--ui-space-xs)); align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-sc-angle-height .ui-sc-readout, .ui-sc-lens-part .ui-sc-readout { margin: 0; text-align: end; }
+
+/* ---------- the lens: three small sliders under one label ---------- */
+
+.ui-sc-lens { display: grid; gap: var(--ui-space-md); min-width: 0; }
+
+/* ---------- a desk panel's folding sections ---------- */
+
+.ui-sc-folds { display: flex; flex-direction: column; gap: var(--ui-space-xs); flex: 1 1 auto; min-height: 0; min-width: 0; overflow: hidden; }
+.ui-sc-fold { display: grid; min-width: 0; flex-shrink: 0; }
+.ui-sc-fold-head { margin: 0; font: inherit; }
+.ui-sc-fold-trigger {
+  position: relative; display: flex; align-items: center; gap: var(--ui-space-sm); width: 100%; min-height: var(--ui-size-control-sm);
+  margin: 0; padding: 0 var(--ui-space-sm); border: 0; border-radius: var(--ui-radius-item); background: transparent; color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.3; text-align: start;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-sc-fold-trigger::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+@media (hover: hover) { .ui-sc-fold-trigger:hover { background: var(--ui-item-bg-hover); } }
+.ui-sc-fold-trigger:active { background: var(--ui-item-bg-pressed); }
+.ui-sc-fold-trigger:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: calc(var(--ui-size-ring) * -1); }
+.ui-sc-fold-title { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-sc-fold-meta { flex-shrink: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-tertiary); }
+.ui-sc-fold-chevron { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-tertiary); transform: rotate(-90deg); transition: transform var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-sc-fold[data-state="open"] .ui-sc-fold-chevron { transform: none; }
+.ui-sc-fold-body { display: grid; gap: var(--ui-space-lg); min-width: 0; padding: var(--ui-space-sm) var(--ui-space-sm) var(--ui-space-lg); }
+
+/* ---------- the mode grid ---------- */
+
+.ui-sc-modes { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--ui-size-hit) * 5)), 1fr)); gap: var(--ui-space-md); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.ui-sc-modes--compact { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-xs); }
+.ui-sc-modes--large { grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--ui-size-hit) * 5)), 1fr)); gap: var(--ui-space-lg); }
+.ui-sc-modes > li { display: grid; min-width: 0; }
+.ui-sc-mode {
+  position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); align-content: start; gap: var(--ui-space-xs) var(--ui-space-sm);
+  min-width: 0; min-height: var(--ui-size-hit); margin: 0; padding: var(--ui-space-md); border: 0; border-radius: var(--ui-radius-card);
+  background: var(--ui-surface); box-shadow: var(--ui-depth-raised); color: var(--ui-text); font-family: var(--ui-type-family); text-align: start;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-sc-mode-icon { width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-secondary); }
+.ui-sc-mode-name { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; }
+.ui-sc-mode-text { grid-column: 2; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); text-wrap: pretty; }
+@media (hover: hover) { .ui-sc-mode:hover { background: var(--ui-action-secondary-hover); } }
+.ui-sc-modes--large .ui-sc-mode { gap: var(--ui-space-sm) var(--ui-space-md); padding: var(--ui-inset-float); }
+.ui-sc-modes--large .ui-sc-mode-icon { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); }
+.ui-sc-modes--large .ui-sc-mode-name { font-size: var(--ui-type-body); }
+.ui-sc-modes--large .ui-sc-mode-text { font-size: var(--ui-type-control); }
+.ui-sc-mode:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-sc-mode:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-sc-mode[aria-current="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); }
+.ui-sc-mode[aria-disabled="true"] { background: var(--ui-surface-sunken); box-shadow: none; color: var(--ui-text-tertiary); cursor: default; transform: none; }
+.ui-sc-mode[aria-disabled="true"] :is(.ui-sc-mode-icon, .ui-sc-mode-text) { color: var(--ui-text-tertiary); }
+.ui-sc-mode:disabled { cursor: progress; }
+/* in a glass popover: rows of the glass, a veil on the one in use */
+.ui-glass .ui-sc-mode { padding: var(--ui-space-sm) var(--ui-space-md); border-radius: var(--ui-radius-item); background: transparent; box-shadow: none; color: var(--ui-glass-fg); }
+.ui-glass .ui-sc-mode :is(.ui-sc-mode-icon, .ui-sc-mode-text) { color: var(--ui-glass-fg-secondary); }
+@media (hover: hover) { .ui-glass .ui-sc-mode:hover { background: var(--ui-glass-item-hover); } }
+.ui-glass .ui-sc-mode[aria-current="true"] { background: var(--ui-glass-button-clear); box-shadow: none; }
+.ui-glass .ui-sc-mode[aria-disabled="true"] { background: transparent; opacity: .6; }
+.ui-glass .ui-sc-mode:focus-visible { outline-color: var(--ui-focus-ring-on-glass); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-sc-swatch, .ui-sc-dial-point, .ui-sc-fold-trigger, .ui-sc-fold-chevron, .ui-sc-mode { transition: none; }
+  .ui-sc-swatch:active, .ui-sc-mode:active { transform: none; }
+  .ui-sc-dial:active .ui-sc-dial-point { transform: translate(-50%, -50%); }
+}

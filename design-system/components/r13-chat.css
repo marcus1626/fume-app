@@ -1,0 +1,71 @@
+/* Round 13, builder A (chat). PROPOSED 22 Oct 2026; Marcus's walkthrough comments of 21 Oct.
+
+   1. The focus ring only from Tab (#10, #12, #40; focus.js). While the page is not in keyboard mode, focus.js marks
+      whatever takes the focus data-ui-focus="pointer": after a click, after Esc or Enter closed a popover or a menu
+      and gave the focus back to its trigger, after a link moved the focus to a section. Its ring goes, on itself, on
+      its ::before/::after (rows that draw the ring on a pseudo-element) and on the few wrappers that draw it around
+      their control (:has). Tab and the ring is there; every component keeps its own ring rule as it is.
+      !important: this overrides every component's own :focus-visible ring, whatever its specificity. */
+[data-ui-focus="pointer"]:focus-visible,
+[data-ui-focus="pointer"]:focus-visible::before,
+[data-ui-focus="pointer"]:focus-visible::after { outline: none !important; }
+.ui-attachment:has(> .ui-attachment-trigger[data-ui-focus="pointer"]),
+.ui-carousel-viewport:has(> .ui-carousel-content[data-ui-focus="pointer"]),
+.ui-product-card:has(.ui-product-card-link[data-ui-focus="pointer"]),
+.ui-collection-card:has(.ui-collection-card-link[data-ui-focus="pointer"]),
+.ui-combobox-field:has([data-ui-focus="pointer"]),
+.ui-composer-chip:has(.ui-composer-chip-select[data-ui-focus="pointer"]),
+.ui-input-file:has(.ui-input-file-control[data-ui-focus="pointer"]),
+.ui-field-choice:has(.ui-field-choice-input[data-ui-focus="pointer"]),
+.ui-radio-card:has(.ui-radio[data-ui-focus="pointer"]) { outline: none !important; }
+
+/* 2. Text selection is neutral (#37, "Feil tekst markerings farge"): Amber only means checked by an expert. app.css
+      gives ::selection --ui-selection (now Focus 200 under Ink); on Smoke glass the text is light, so a light veil under
+      it. A native date or time field marks the part being typed (the day, the hour) with the system's blue: the same
+      neutral here. */
+.ui-glass ::selection { background: var(--ui-selection-on-glass); color: var(--ui-glass-fg); }
+input::-webkit-datetime-edit-day-field:focus,
+input::-webkit-datetime-edit-month-field:focus,
+input::-webkit-datetime-edit-year-field:focus,
+input::-webkit-datetime-edit-hour-field:focus,
+input::-webkit-datetime-edit-minute-field:focus,
+input::-webkit-datetime-edit-ampm-field:focus { background: var(--ui-selection); color: var(--ui-text); border-radius: var(--ui-radius-check); }
+.ui-glass input::-webkit-datetime-edit-day-field:focus,
+.ui-glass input::-webkit-datetime-edit-month-field:focus,
+.ui-glass input::-webkit-datetime-edit-year-field:focus,
+.ui-glass input::-webkit-datetime-edit-hour-field:focus,
+.ui-glass input::-webkit-datetime-edit-minute-field:focus,
+.ui-glass input::-webkit-datetime-edit-ampm-field:focus { background: var(--ui-selection-on-glass); color: var(--ui-glass-fg); }
+
+/* 3. Fume's help under a question (#6, #7; app/src/features/questions/Suggestions.tsx): a suggestion shows its words
+      under its name, so "The same as Night Body Oil" says what Night Body Oil says; pressed, its words go in the field
+      and it shows the check. Under it, when the brand's website did not say, one line says so and the pills offer
+      what this kind of product usually says, each with its own words, one claim per pill.
+      <div class="ui-qs-help"><div class="ui-qs-choices"><button class="ui-qs-choice" aria-pressed>
+        <span class="ui-qs-choice-label">The same as Night Body Oil</span><span class="ui-qs-choice-text">…</span></button></div>
+        <div class="ui-qs-templates"><p class="ui-qs-templates-why">lysne.no says nothing about…</p>
+        <div class="ui-qs-suggest"> pills </div></div></div> */
+.ui-qs-help { display: grid; gap: var(--ui-space-lg); min-width: 0; }
+.ui-qs-choices { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-qs-choice {
+  --bg: var(--ui-surface-sunken); --bg-hover: var(--ui-surface-sunken-hover); --fg: var(--ui-text); --fg-2: var(--ui-text-secondary); --ring: var(--ui-focus-ring);
+  display: grid; gap: var(--ui-space-xs); width: 100%; min-width: 0; min-height: var(--ui-size-hit); margin: 0;
+  padding: var(--ui-space-sm) var(--ui-space-md); border: 0; border-radius: var(--ui-radius-item); background: var(--bg); color: var(--fg);
+  font-family: var(--ui-type-family); text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), scale var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-glass .ui-qs-choice, .ui-qs-help[data-glass] .ui-qs-choice {
+  --bg: var(--ui-glass-button-clear); --bg-hover: var(--ui-glass-button-clear-hover); --fg: var(--ui-glass-fg); --fg-2: var(--ui-glass-fg-secondary); --ring: var(--ui-focus-ring-on-glass);
+}
+@media (hover: hover) { .ui-qs-choice:hover { background: var(--bg-hover); } }
+.ui-qs-choice:active { scale: var(--ui-card-press-scale); } /* wide, so it shrinks like a card */
+.ui-qs-choice[aria-pressed="true"] { background: var(--bg-hover); }
+.ui-qs-choice:focus-visible { outline: var(--ui-size-ring) solid var(--ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-qs-choice-label { display: flex; align-items: center; gap: var(--ui-space-sm); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; }
+.ui-qs-choice-label svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex: none; }
+.ui-qs-choice-text { font-size: var(--ui-type-control); line-height: 1.5; color: var(--fg-2); text-wrap: pretty; }
+.ui-glass .ui-qs-choice-text, .ui-qs-help[data-glass] .ui-qs-choice-text { font-weight: var(--ui-type-weight-medium); }
+.ui-qs-templates { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qs-templates-why { margin: 0; font-size: var(--ui-type-label); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-glass .ui-qs-templates-why, .ui-qs-help[data-glass] .ui-qs-templates-why { color: var(--ui-glass-fg-secondary); font-weight: var(--ui-type-weight-medium); }
+@media (prefers-reduced-motion: reduce) { .ui-qs-choice { transition: none; } .ui-qs-choice:active { scale: none; } }

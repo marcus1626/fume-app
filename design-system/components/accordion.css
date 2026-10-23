@@ -1,0 +1,68 @@
+/* Accordion and collapsible. DECIDED 13 Oct, from round 7. Built on shadcn's accordion (parts: accordion,
+   accordion-item, accordion-trigger, accordion-content; Radix type single or multiple, collapsible,
+   data-state open|closed, data-disabled, data-orientation) and collapsible (collapsible,
+   collapsible-trigger, collapsible-content), redesigned for Fume. Behaviour: accordion.js.
+   Decisions:
+   - Sections are separated by space, never lines (few-strokes): each section is its own surface step
+     (--ui-accordion-bg, radius card) with --ui-accordion-gap between. Inside a card or panel,
+     .ui-accordion--flush drops the surfaces: rows on the card, hover as a row step, space between.
+   - The trigger is a calm 56 px row (--ui-accordion-row), the title in body size, medium; an optional
+     meta (count, status) in tertiary before the chevron. Hover steps the whole section toward Ink (with a
+     mouse), a tap shows the same step; focus is the sharp 2 px Ink ring.
+   - The chevron turns 180 degrees and the height opens with the motion tokens (--ui-motion-base,
+     --ui-motion-ease) by animating the content's grid row from 0fr to 1fr, so no height is measured.
+     A closed section is visibility: hidden, out of the tab order. With Radix, mount the content
+     (forceMount) and let data-state drive it.
+   - Text in an open section starts on the title's edge (--ui-inset-float) and keeps that air at the end.
+   Rule gate: few-strokes, air, radius-from-tokens, space-from-tokens, motion-from-tokens, reduced-motion,
+   touch-target, touch-feedback, hover-needs-hover. */
+
+.ui-accordion { display: grid; gap: var(--ui-accordion-gap); min-width: 0; }
+.ui-accordion-item { --acc-bg: var(--ui-accordion-bg); --acc-bg-hover: var(--ui-accordion-bg-hover); min-width: 0; border-radius: var(--ui-radius-card); background: var(--acc-bg); transition: background-color var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-accordion--flush { gap: var(--ui-space-xs); }
+.ui-accordion--flush .ui-accordion-item { --acc-bg: transparent; --acc-bg-hover: var(--ui-item-bg-hover); border-radius: var(--ui-radius-item); }
+
+.ui-accordion-header { display: flex; margin: 0; font: inherit; }
+.ui-accordion-trigger, .ui-collapsible-trigger.ui-accordion-trigger {
+  position: relative; display: flex; flex: 1; align-items: center; gap: var(--ui-space-md); min-width: 0; min-height: var(--ui-accordion-row);
+  margin: 0; padding: var(--ui-space-md) var(--ui-inset-float); border: 0; border-radius: var(--ui-radius-card); background: transparent; color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.35; text-align: left;
+  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+}
+.ui-accordion--flush .ui-accordion-trigger { min-height: var(--ui-size-hit); border-radius: var(--ui-radius-item); font-size: var(--ui-type-control); }
+.ui-accordion-label { flex: 1; min-width: 0; }
+.ui-accordion-meta { flex: none; margin-inline-start: auto; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; }
+.ui-accordion-chevron { flex: none; width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-secondary); transition: transform var(--ui-motion-base) var(--ui-motion-ease); }
+.ui-accordion-label + .ui-accordion-chevron { margin-inline-start: auto; }
+.ui-accordion-trigger[data-state="open"] .ui-accordion-chevron, .ui-accordion-trigger[aria-expanded="true"] .ui-accordion-chevron { transform: rotate(180deg); }
+
+/* hover and press step the whole section; the trigger keeps the focus ring */
+@media (hover: hover) {
+  .ui-accordion-item:has(> .ui-accordion-header > .ui-accordion-trigger:hover:not(:disabled)) { background: var(--acc-bg-hover); }
+}
+.ui-accordion-item.is-hover, .ui-accordion-item:has(> .ui-accordion-header > .ui-accordion-trigger:active:not(:disabled)) { background: var(--acc-bg-hover); }
+.ui-accordion-trigger:focus-visible, .ui-accordion-trigger.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-accordion-trigger:disabled, .ui-accordion-trigger[data-disabled] { color: var(--ui-text-disabled); cursor: default; }
+.ui-accordion-trigger:disabled .ui-accordion-chevron, .ui-accordion-trigger[data-disabled] .ui-accordion-chevron, .ui-accordion-trigger:disabled .ui-accordion-meta { color: var(--ui-text-disabled); }
+
+/* content: the grid row opens from 0fr to 1fr; closed content is hidden from focus and screen readers */
+.ui-accordion-content, .ui-collapsible-content {
+  display: grid; grid-template-rows: 0fr; min-width: 0; visibility: hidden;
+  transition: grid-template-rows var(--ui-motion-base) var(--ui-motion-ease), visibility 0s linear var(--ui-motion-base);
+}
+.ui-accordion-content[data-state="open"], .ui-collapsible-content[data-state="open"] { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows var(--ui-motion-base) var(--ui-motion-ease), visibility 0s; }
+.ui-accordion-content > *, .ui-collapsible-content > * { min-height: 0; overflow: hidden; }
+.ui-accordion-body { padding: 0 var(--ui-inset-float) var(--ui-inset-float); font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.6; color: var(--ui-text-secondary); }
+.ui-accordion-body > * + * { margin-block-start: var(--ui-space-md); }
+.ui-accordion-body p { margin-block-end: 0; text-wrap: pretty; }
+.ui-accordion--flush .ui-accordion-body { padding-block-end: var(--ui-space-md); }
+
+/* collapsible: any trigger (a quiet button) whose chevron turns */
+.ui-collapsible { display: grid; gap: 0; min-width: 0; }
+.ui-collapsible-trigger[data-state="open"] .ui-accordion-chevron, .ui-collapsible-trigger[aria-expanded="true"] .ui-accordion-chevron { transform: rotate(180deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-accordion-item, .ui-accordion-chevron { transition: none; }
+  .ui-accordion-content, .ui-collapsible-content { transition: visibility 0s; }
+  .ui-accordion-content[data-state="open"], .ui-collapsible-content[data-state="open"] { transition: none; }
+}

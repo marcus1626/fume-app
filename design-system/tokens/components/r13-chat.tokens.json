@@ -1,0 +1,40 @@
+{
+  "$description": "Round 13 CHAT (Marcus's video comments of 21 Oct, PROPOSED 22 Oct 2026): read and unread in the bell, the creatives in a chat message as small tiles, the @ list over the composer and the panel beside the conversation. Every value points at a brand primitive or an existing UI role; no new colours. Build: node tools/tokens/build.mjs",
+  "$status": "PROPOSED",
+  "notify-state": {
+    "unread-bg-on-page": {
+      "value": "{color.surface}",
+      "status": "PROPOSED",
+      "description": "#9: an unread notification on the page rests on the card surface (Focus 50), so unread rows read as a block before any word is read; a read row is the bare page. Hover is still one step toward Ink."
+    },
+    "unread-bg-on-glass": {
+      "value": "{color.glass.button-clear}",
+      "status": "PROPOSED",
+      "description": "#9: an unread notification on Smoke glass rests on the clear veil; a read row is the bare glass. On glass the words cannot step back (secondary Porcelain is never fainter than 88 %), so the veil and the dot carry it."
+    },
+    "dot": {
+      "value": "8px",
+      "status": "PROPOSED",
+      "description": "#9: the unread dot, two pixels larger than a badge's, Ink on the page and Porcelain on glass. Never blue, never Amber."
+    }
+  },
+  "chat-thumb": {
+    "size": {
+      "value": "64px",
+      "status": "PROPOSED",
+      "description": "#14: a creative shown in a chat message is a small tile (64 wide, its own ratio), at most four in a row and then +N; opened, it shows in the panel beside the conversation. The conversation is talk, not a gallery."
+    }
+  },
+  "mention": {
+    "width": {
+      "value": "360px",
+      "status": "PROPOSED",
+      "description": "#16: the @ list over the composer (products, collections, campaigns, creatives): a glass float wide enough for a name and its kind on one line."
+    },
+    "rows-visible": {
+      "value": "6.5",
+      "status": "PROPOSED",
+      "description": "#16: the @ list stops after six and a half rows: the half row says there is more below."
+    }
+  }
+}

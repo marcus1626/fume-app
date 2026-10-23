@@ -1,0 +1,73 @@
+/* Campaign look in the Studio: the creative's campaign in the desk's breadcrumb and its own look. PROPOSED 15 Oct 2026
+   (Marcus 15 Oct: "Hvor i studio tenker du man velger kampanje? En kampanje kan ha egen stil, farger, moodboard. F eks
+   black friday har helt andre farger enn vanlig").
+   Markup: <nav class="ui-desk-crumbs"> brand › <button class="ui-desk-crumb-pick" [data-empty]><span
+             class="ui-desk-crumb-pick-name">Black Friday</span><svg chevron-down/></button> › title </nav>
+           <button class="ui-desk-look"><span class="ui-desk-look-dots"><span class="ui-desk-look-dot" style="--swatch"/>…
+             </span><span class="ui-desk-look-name">Black Friday look</span></button>
+           <div class="ui-popover ui-desk-look-popover"> header (name, note) · <ul class="ui-desk-look-colours"><li>
+             <span class="ui-desk-look-swatch" style="--swatch"/> name · <span class="ui-desk-look-hex">#141110</span></li></ul>
+             <p class="ui-desk-look-light"><svg/> the light in words</p> · Open the moodboard (glass-white) </div>
+   Fume decisions: the campaign is where you are, so it is a crumb, not a field: the crumb reads like its neighbours
+   and shows it can change with a small chevron; "No campaign" is quieter. It opens the campaign grid (product-pick.css
+   tiles with covers). A campaign with a look of its own carries a small pill beside the crumbs: up to three of its
+   colours as dots (the colours are data, through --swatch) and "Black Friday look" ("Look" under 1400 px, so the
+   crumbs keep their words); with a campaign the right panel's look sources are five, each as wide as its word; it opens the look: the note, the
+   colours with their values in the data face, the light, and the moodboard. No strokes: a dot sits on its own depth.
+   Rule gate: few-strokes, actions-are-pills, radius-from-tokens, space-from-tokens, type-from-tokens, mono-is-data,
+   touch-target, touch-feedback, hover-needs-hover, focus-is-sharp, reduced-motion. */
+
+.ui-desk-crumb-pick {
+  position: relative; display: inline-flex; align-items: center; gap: var(--ui-space-xs); flex-shrink: 1; min-width: 0;
+  margin: 0; padding: 0; border: 0; border-radius: var(--ui-radius-item); background: transparent;
+  color: inherit; font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-desk-crumb-pick::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+.ui-desk-crumb-pick-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-desk-crumb-pick > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-tertiary); }
+.ui-desk-crumb-pick[data-empty] { color: var(--ui-text-tertiary); }
+@media (hover: hover) { .ui-desk-crumb-pick:hover { color: var(--ui-text); } }
+.ui-desk-crumb-pick:active { opacity: .72; }
+.ui-desk-crumb-pick:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-desk-crumb-pick:disabled { cursor: default; }
+
+.ui-desk-look {
+  position: relative; display: inline-flex; align-items: center; gap: var(--ui-space-sm); flex-shrink: 0; height: var(--ui-size-control-sm);
+  margin: 0; padding: 0 var(--ui-space-md) 0 var(--ui-space-sm); border: 0; border-radius: var(--ui-radius-action);
+  background: var(--ui-surface-sunken); color: var(--ui-text); font-family: var(--ui-type-family); font-size: var(--ui-type-label);
+  font-weight: var(--ui-type-weight-medium); line-height: 1; white-space: nowrap;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-desk-look::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+@media (hover: hover) { .ui-desk-look:hover { background: var(--ui-surface-sunken-hover); } }
+.ui-desk-look:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-desk-look:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-desk-look-dots { display: inline-flex; }
+/* A narrower desk keeps the crumbs readable: the pill says only "Look" (the campaign is the crumb beside it). */
+.ui-desk-look-short { display: none; }
+@media (max-width: 1399px) { .ui-desk-look-name { display: none; } .ui-desk-look-short { display: inline; } }
+
+/* With a campaign the look sources are five: each option takes the width its word needs. */
+.ui-sc-seg.ui-sl-source--five .ui-seg-option { flex: 1 1 auto; padding-inline: var(--ui-space-xs); }
+.ui-desk-look-dot {
+  width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); border-radius: 50%; background: var(--swatch);
+  box-shadow: var(--ui-depth-raised);
+}
+.ui-desk-look-dot + .ui-desk-look-dot { margin-inline-start: calc(var(--ui-space-xs) * -1); }
+
+.ui-popover.ui-desk-look-popover { width: min(calc(var(--ui-size-hit) * 8), calc(100vw - 2 * var(--ui-overlay-margin))); }
+.ui-desk-look-colours { display: grid; gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; }
+.ui-desk-look-colours > li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--ui-space-sm); min-width: 0; font-size: var(--ui-type-control); }
+.ui-desk-look-swatch { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); border-radius: 50%; background: var(--swatch); box-shadow: var(--ui-glass-shadow-small); }
+.ui-desk-look-colour-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-desk-look-hex { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-glass-fg-secondary); }
+.ui-desk-look-light { display: flex; align-items: flex-start; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-glass-fg-secondary); text-wrap: pretty; }
+.ui-desk-look-light > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); margin-top: var(--ui-space-xs); }
+.ui-desk-look-popover > .ui-btn { justify-self: start; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-desk-crumb-pick, .ui-desk-look { transition: none; }
+  .ui-desk-look:active { transform: none; }
+}

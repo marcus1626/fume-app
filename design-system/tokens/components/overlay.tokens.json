@@ -1,0 +1,205 @@
+{
+  "$description": "Glass layers: everything that floats over the page. Dialogs and alert dialogs, sheets and drawers, popovers and hover cards, tooltips, toasts, the command palette and the stacking order between them. All of it is Smoke glass (.ui-glass, glass.css). DECIDED 13 Oct 2026 (approved on the review board, F-D072 to F-D075), first shown in round 7, 13 Oct 2026. Component files: dialog.css, sheet.css, popover.css, tooltip.css, toast.css, context-menu.css, command.css, combobox.css and their .js. Build: node tools/tokens/build.mjs",
+  "$status": "PROPOSED",
+  "overlay": {
+    "z-modal": {
+      "value": "50",
+      "status": "DECIDED",
+      "description": "Stacking: dialogs, alert dialogs, sheets, drawers, the command palette and their scrims."
+    },
+    "z-float": {
+      "value": "60",
+      "status": "DECIDED",
+      "description": "Stacking: popovers, hover cards, context menus and listboxes, above a dialog they open from."
+    },
+    "z-tooltip": {
+      "value": "70",
+      "status": "DECIDED",
+      "description": "Stacking: tooltips, above everything they describe."
+    },
+    "z-toast": {
+      "value": "80",
+      "status": "DECIDED",
+      "description": "Stacking: toasts, the top layer, still readable while a dialog is open."
+    },
+    "margin": {
+      "value": "{space.lg}",
+      "status": "DECIDED",
+      "description": "16px. The least space between a floating layer and the edge of the screen: a dialog on a phone sits 16 in, a popover flips or shifts before it comes closer."
+    },
+    "offset": {
+      "value": "{space.sm}",
+      "status": "DECIDED",
+      "description": "8px. The gap between a trigger and the popover, hover card, menu, listbox or tooltip it opens. No arrow: the gap and the shadow say where it came from."
+    }
+  },
+  "dialog": {
+    "width-sm": {
+      "value": "400px",
+      "status": "DECIDED",
+      "description": "Small dialog: confirmations and alert dialogs (Delete 3 creatives?)."
+    },
+    "width-md": {
+      "value": "480px",
+      "status": "DECIDED",
+      "description": "Default dialog: a question with a short body (Send 12 creatives to the Quality Gate?)."
+    },
+    "width-lg": {
+      "value": "640px",
+      "status": "DECIDED",
+      "description": "Large dialog: a decision that needs the work in view (the 12 creatives before they go to Anna)."
+    },
+    "scrim-phone": {
+      "value": "alpha({fume.focus-900}, 0.6)",
+      "status": "PROPOSED",
+      "description": "The scrim under a dialog or sheet on a phone: dark enough that the page's text no longer reads through the glass between the dialog's labels (walk-through 19 Oct, MOB-15). PROPOSED 19 Oct 2026."
+    }
+  },
+  "sheet": {
+    "width": {
+      "value": "400px",
+      "status": "DECIDED",
+      "description": "A side sheet (creative details). On a phone the same content opens as a drawer from the bottom."
+    },
+    "margin": {
+      "value": "{space.md}",
+      "status": "DECIDED",
+      "description": "12px. The sheet floats this far from the top, side and bottom of the screen, so its 32 px corners show: a panel lying on the page, not a slab glued to the edge."
+    }
+  },
+  "drawer": {
+    "width": {
+      "value": "480px",
+      "status": "DECIDED",
+      "description": "On a wide screen a drawer keeps a phone-like width, centred at the bottom. On a phone it spans the screen minus its margin."
+    },
+    "margin": {
+      "value": "{space.sm}",
+      "status": "DECIDED",
+      "description": "8px. The drawer floats this far from the sides and the bottom of a phone, so all four 32 px corners show."
+    },
+    "top": {
+      "value": "{fume.space-7}",
+      "status": "DECIDED",
+      "description": "48px. Fully open, the drawer stops this far below the top of the screen: the page stays in view, so it reads as a layer that can go away."
+    },
+    "snap": {
+      "value": "0.6",
+      "status": "DECIDED",
+      "description": "The first snap point, as a share of the screen height. A drawer opens there and snaps to it, to fully open, or away when dragged below it."
+    },
+    "handle-width": {
+      "value": "40px",
+      "status": "DECIDED",
+      "description": "The grab handle is a short pill, not a line."
+    },
+    "handle-height": {
+      "value": "6px",
+      "status": "DECIDED",
+      "description": "Grab handle height: thick enough to read as a pill and to be found by a thumb. Its hit area is 44 x 44."
+    },
+    "handle": {
+      "value": "alpha({fume.porcelain}, 0.42)",
+      "status": "DECIDED",
+      "description": "Grab handle on glass: Porcelain at 42 %, quieter than text and clearer than the clear-button veil."
+    },
+    "handle-active": {
+      "value": "alpha({fume.porcelain}, 0.7)",
+      "status": "DECIDED",
+      "description": "Grab handle while dragged or pressed: it lifts toward Porcelain."
+    }
+  },
+  "popover": {
+    "width": {
+      "value": "288px",
+      "status": "DECIDED",
+      "description": "A popover with a short task (Share with Anna: a note and one white button)."
+    },
+    "hover-width": {
+      "value": "288px",
+      "status": "DECIDED",
+      "description": "A hover card: the preview of a person or a creative."
+    },
+    "hover-delay": {
+      "value": "500ms",
+      "status": "DECIDED",
+      "description": "A hover card waits this long before it opens, so a pointer passing over a name does not flash cards."
+    },
+    "hover-close-delay": {
+      "value": "240ms",
+      "status": "DECIDED",
+      "description": "A hover card stays this long after the pointer leaves, so the pointer can travel into it."
+    }
+  },
+  "tooltip": {
+    "delay": {
+      "value": "500ms",
+      "status": "DECIDED",
+      "description": "A tooltip waits this long under a resting pointer. Keyboard focus shows it at once."
+    },
+    "skip-delay": {
+      "value": "300ms",
+      "status": "DECIDED",
+      "description": "Moving from one trigger to the next within this time shows the next tooltip at once, as in a toolbar."
+    },
+    "long-press": {
+      "value": "500ms",
+      "status": "DECIDED",
+      "description": "On a touch screen a press this long shows the tooltip (and a context menu). A tap acts as usual."
+    }
+  },
+  "toast": {
+    "width": {
+      "value": "400px",
+      "status": "DECIDED",
+      "description": "Every toast is the same pill, so a stack lines up and the depth reads cleanly. On a phone: the screen minus 16 each side."
+    },
+    "bottom": {
+      "value": "{space.xl}",
+      "status": "DECIDED",
+      "description": "24px. Toasts sit this far above the bottom of the screen (plus the safe area), centred."
+    },
+    "peek": {
+      "value": "{space.sm}",
+      "status": "DECIDED",
+      "description": "8px. How far each older toast shows above the one in front of it in a stack of up to three."
+    },
+    "depth-scale": {
+      "value": "0.05",
+      "status": "DECIDED",
+      "description": "Each older toast in the stack is 5 % smaller: depth without a line or a second shadow colour."
+    },
+    "duration": {
+      "value": "4000ms",
+      "status": "PROPOSED",
+      "description": "A toast leaves on its own after this time; the timer pauses while the pointer or focus is on the stack. 4 s, PROPOSED 19 Oct 2026 (walk-through MOB-19, ONB-17: toasts stayed on the next page; was 5 s, DECIDED 13 Oct)."
+    },
+    "duration-long": {
+      "value": "8000ms",
+      "status": "DECIDED",
+      "description": "Errors and toasts with an action (Undo) stay longer, so the action can be reached."
+    },
+    "swipe": {
+      "value": "{fume.space-7}",
+      "status": "DECIDED",
+      "description": "48px. A swipe this far (sideways or down) dismisses a toast; shorter, it springs back."
+    }
+  },
+  "command": {
+    "width": {
+      "value": "560px",
+      "status": "DECIDED",
+      "description": "The command palette (⌘K). On a phone: the screen minus 16 each side."
+    },
+    "list-height": {
+      "value": "360px",
+      "status": "DECIDED",
+      "description": "The results scroll inside this height; the search field and the key hints stay put."
+    },
+    "top": {
+      "value": "12vh",
+      "status": "DECIDED",
+      "description": "The palette opens high on the screen, not centred, so the list can grow downward without the field jumping."
+    }
+  }
+}

@@ -1,0 +1,128 @@
+/* Swipe mode: the customer goes through what waits for them one creative at a time, Yes · No · Comment (app v3,
+   FLOWS §11). PROPOSED 15 Oct 2026. Sits inside review-viewer.css's .ui-rv (the Ink ground, the bar, the count, the
+   field on Ink) and uses the pin from qg-review.css, glass buttons from button.css, progress.css (glass) and kbd.css.
+   Markup: <div class="ui-rv ui-sw"><div class="ui-sw-screen">
+             <header class="ui-rv-bar"> close · title · <span class="ui-rv-count">3 of 6</span></header>
+             <div class="ui-progress ui-progress--glass ui-sw-progress"/>
+             <main class="ui-sw-stage"><div class="ui-sw-card" data-format data-hint="yes|no|comment" data-leaving="right|left|up"
+               data-asking data-dragging style="--dx: 40; --dy: 0"><img/> <span class="ui-qg-pin"/> <span class="ui-sw-stamp">Yes</span></div></main>
+             <div class="ui-sw-foot"><div class="ui-sw-pills"> No · Comment · Yes (glass-white) </div>
+               <p class="ui-sw-keys"><kbd/> No …</p><p class="ui-sw-touch"/>
+               or <form class="ui-sw-ask"><label class="ui-sw-ask-label"/><div class="ui-rv-compose-row"> input · Next </div></form></div>
+             the end: <main class="ui-sw-summary"><div class="ui-sw-summary-head"><h2 class="ui-sw-summary-title">4 yes, 1 no</h2>
+               <p class="ui-sw-summary-text"/></div><ol class="ui-sw-grid"><li><button class="ui-sw-tile" data-verdict>
+               <span class="ui-sw-tile-media" data-format><img/></span><span class="ui-sw-tile-verdict"/><span class="ui-sw-tile-text"/></button></li></ol></main>
+             <div class="ui-sw-foot ui-sw-send"> Go through again · Send to Fume (glass-white) </div></div></div>
+   Fume decisions: one creative, one decision, nothing else in view. The creative follows the finger a little turned
+   (a degree per 30 px), and glides back on the motion ease when you let go short of the threshold: calm, no bounce,
+   no spring. Past half the threshold a Porcelain stamp names what you are about to do (Yes on the left top, No on
+   the right top, Comment at the top); words, never green or red. Yes is the one white pill; No and Comment are
+   clear. Keys show only where there is a keyboard; the swipe line only on touch. The progress line is the glass
+   progress on Ink. Nothing is sent until Send to Fume at the end, the one white action of the summary.
+   Rule gate: few-strokes, air, proximity, space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data,
+   actions-are-pills, amber-is-a-point, motion-from-tokens, reduced-motion, touch-target, touch-feedback,
+   hover-needs-hover, contrast. */
+
+.ui-sw-screen {
+  display: grid; height: 100%; min-height: 0;
+  grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr) auto;
+}
+.ui-sw-screen > .ui-rv-bar { grid-area: auto; }
+.ui-sw-progress { width: auto; margin: var(--ui-space-md) var(--ui-space-lg) 0; } /* auto, not 100 %: with its margins a full width ran off the screen (walk-through 15 Oct) */
+
+/* ---------- the stage and the card ---------- */
+.ui-sw-stage { --pad: var(--ui-viewer-pad); position: relative; container: ui-sw-stage / size; display: grid; place-items: center; min-height: 0; overflow: hidden; }
+.ui-sw-card {
+  --ratio: var(--ui-creative-ratio-feed);
+  position: relative; aspect-ratio: var(--ratio); width: min(100cqw - 2 * var(--pad), (100cqh - 2 * var(--pad)) * (var(--ratio)));
+  border-radius: var(--ui-radius-card); background: var(--ui-creative-bg);
+  transform: translate(calc(var(--dx, 0) * 1px), calc(var(--dy, 0) * 1px)) rotate(calc(var(--dx, 0) * 1deg / 30));
+  transition: transform var(--ui-motion-base) var(--ui-motion-ease), opacity var(--ui-motion-base) var(--ui-motion-ease);
+  touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab; -webkit-tap-highlight-color: transparent;
+  animation: ui-sw-in var(--ui-motion-base) var(--ui-motion-ease) both;
+}
+.ui-sw-card[data-format="story"] { --ratio: var(--ui-creative-ratio-story); }
+.ui-sw-card[data-format="banner"] { --ratio: var(--ui-creative-ratio-banner); }
+.ui-sw-card[data-format="square"] { --ratio: var(--ui-creative-ratio-square); }
+.ui-sw-card > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; pointer-events: none; -webkit-user-drag: none; }
+.ui-sw-card[data-dragging] { transition: none; cursor: grabbing; }
+.ui-sw-card[data-asking] { cursor: default; }
+.ui-sw-card[data-asking="comment"] { cursor: crosshair; }
+.ui-sw-card[data-leaving="right"] { transform: translate(100cqw, 0) rotate(6deg); opacity: 0; }
+.ui-sw-card[data-leaving="left"] { transform: translate(-100cqw, 0) rotate(-6deg); opacity: 0; }
+.ui-sw-card[data-leaving="up"] { transform: translate(0, -100cqh); opacity: 0; }
+
+/* the stamp: what a let-go would do, in words */
+.ui-sw-stamp {
+  position: absolute; top: var(--ui-space-lg); z-index: 1; display: inline-flex; align-items: center; height: var(--ui-size-control-md);
+  padding: 0 var(--ui-size-pad-md); border-radius: var(--ui-radius-action);
+  background: var(--ui-qg-pin-bg); color: var(--ui-text); box-shadow: var(--ui-glass-shadow-small);
+  font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1;
+  opacity: 0; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); pointer-events: none;
+}
+.ui-sw-stamp:empty { visibility: hidden; }
+.ui-sw-card[data-hint] .ui-sw-stamp { opacity: 1; }
+.ui-sw-card[data-hint="yes"] .ui-sw-stamp { left: var(--ui-space-lg); }
+.ui-sw-card[data-hint="no"] .ui-sw-stamp { right: var(--ui-space-lg); }
+.ui-sw-card[data-hint="comment"] .ui-sw-stamp { left: 50%; translate: -50% 0; }
+
+/* ---------- the foot: the three pills, or the one-line question ---------- */
+.ui-sw-foot { display: grid; justify-items: center; gap: var(--ui-space-md); min-width: 0; padding: 0 var(--ui-space-lg) var(--ui-space-xl); }
+.ui-sw-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--ui-space-md); }
+.ui-sw-keys, .ui-sw-touch { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--ui-space-xs) var(--ui-space-sm); margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-viewer-fg-secondary); }
+.ui-sw-keys .ui-kbd { background: var(--ui-kbd-glass-bg); color: var(--ui-kbd-glass-fg); }
+.ui-sw-keys .ui-kbd:not(:first-child) { margin-inline-start: var(--ui-space-md); }
+.ui-sw-touch { display: none; }
+@media (hover: none), (pointer: coarse) {
+  .ui-sw-keys { display: none; }
+  .ui-sw-touch { display: flex; }
+}
+.ui-sw-ask { display: grid; gap: var(--ui-space-sm); justify-items: center; width: min(100%, var(--ui-dialog-width-md)); }
+.ui-sw-ask .ui-rv-compose-row { width: 100%; align-items: center; }
+.ui-sw-ask-label { justify-self: start; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-viewer-fg); }
+
+/* ---------- the summary ---------- */
+.ui-sw-summary {
+  display: grid; align-content: start; gap: var(--ui-space-xl); min-height: 0; width: min(100%, var(--ui-composer-width)); margin: 0 auto;
+  padding: var(--ui-space-2xl) var(--ui-space-lg); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+}
+.ui-sw-summary::-webkit-scrollbar { display: none; }
+.ui-sw-summary-head { display: grid; gap: var(--ui-space-sm); }
+.ui-sw-summary-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.25; letter-spacing: -.01em; }
+.ui-sw-summary-text { margin: 0; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-viewer-fg-secondary); }
+.ui-sw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--ui-space-2xl) * 3)), 1fr)); gap: var(--ui-space-xl) var(--ui-space-md); margin: 0; padding: 0; list-style: none; }
+.ui-sw-tile {
+  display: grid; align-content: start; gap: var(--ui-space-xs); width: 100%; margin: 0; padding: 0; border: 0; background: transparent; color: inherit;
+  font: inherit; text-align: start; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-sw-tile:active { transform: scale(var(--ui-motion-press-scale)); }
+@media (pointer: coarse) { .ui-sw-tile { min-height: var(--ui-size-hit); } }
+.ui-sw-tile:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-size-ring-offset); border-radius: var(--ui-radius-item); }
+.ui-sw-tile-media { --ratio: var(--ui-creative-ratio-feed); position: relative; display: block; aspect-ratio: var(--ratio); margin-bottom: var(--ui-space-xs); overflow: hidden; border-radius: var(--ui-radius-item); background: var(--ui-creative-bg); }
+.ui-sw-tile-media[data-format="story"] { --ratio: var(--ui-creative-ratio-story); }
+.ui-sw-tile-media[data-format="banner"] { --ratio: var(--ui-creative-ratio-banner); }
+.ui-sw-tile-media[data-format="square"] { --ratio: var(--ui-creative-ratio-square); }
+.ui-sw-tile-media > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ui-sw-tile[data-verdict="no"] .ui-sw-tile-media > img, .ui-sw-tile[data-verdict="open"] .ui-sw-tile-media > img { opacity: .5; }
+.ui-sw-tile-verdict { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); }
+.ui-sw-tile-text { display: -webkit-box; overflow: hidden; -webkit-line-clamp: 2; -webkit-box-orient: vertical; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-viewer-fg-secondary); }
+.ui-sw-send { grid-auto-flow: column; justify-content: center; padding-top: var(--ui-space-lg); }
+
+@container ui-rv (max-width: 719.98px) {
+  .ui-sw-progress { margin-inline: var(--ui-space-md); }
+  .ui-sw-stage { --pad: var(--ui-space-lg); }
+  .ui-sw-foot { padding: 0 var(--ui-space-md) var(--ui-space-lg); }
+  .ui-sw-pills .ui-btn { flex: 1 1 0; padding-inline: var(--ui-space-md); }
+  .ui-sw-pills { flex-wrap: nowrap; width: 100%; gap: var(--ui-space-sm); }
+  .ui-sw-summary { padding: var(--ui-space-xl) var(--ui-space-md); }
+}
+
+@keyframes ui-sw-in { from { opacity: 0; scale: var(--ui-motion-enter-scale); } to { opacity: 1; scale: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-sw-card { transition: opacity var(--ui-motion-fast) linear; animation: none; transform: none; }
+  .ui-sw-card[data-leaving] { transform: none; }
+  .ui-sw-stamp, .ui-sw-tile { transition: none; }
+  .ui-sw-tile:active { transform: none; }
+}

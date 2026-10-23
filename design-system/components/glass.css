@@ -1,0 +1,46 @@
+/* Glass: the material of the highest layer. Smoke DECIDED 13 Oct 2026 (Marcus: Smoke, a little lighter).
+   Use only on floating elements: dialogs, sheets, popovers, menus, tooltips, toasts, floating toolbars.
+   Radius: dialogs and sheets --ui-radius-panel, menus, popovers and tooltips --ui-radius-float, bars pills.
+   Smoke: a thin Ink tint over a softened, dimmed backdrop, no stroke, an Ink-tinted offset shadow under
+   the glass and none on the buttons on it. Never on cards, pages or anything flat.
+   The material itself lives in tokens (--ui-glass-bg, --ui-glass-filter).
+   Round 10 (Marcus 20 Oct 2026, "Hvorfor var glass plutselig svart?"): every floating layer is the Smoke again, over
+   pictures and over the light app alike. Round 9 had turned menus, popovers, dialogs, sheets, toasts and tooltips into
+   the solid fallback (Ink at 94 %), which broke the DECIDED material; that is undone. --ui-glass-bg-solid is only the
+   fallback below (no blur, or reduced transparency) and the few places that sit on a busy picture by their own rule.
+   Rule gate: glass-only-floating, glass-no-stroke, glass-one-white. */
+
+.ui-glass {
+  background: var(--ui-glass-bg);
+  color: var(--ui-glass-fg);
+  -webkit-backdrop-filter: var(--ui-glass-filter);
+  backdrop-filter: var(--ui-glass-filter);
+  box-shadow: var(--ui-glass-shadow);
+  border-radius: var(--ui-radius-panel);
+}
+.ui-glass--small {
+  -webkit-backdrop-filter: var(--ui-glass-filter-small);
+  backdrop-filter: var(--ui-glass-filter-small);
+  box-shadow: var(--ui-glass-shadow-small);
+  border-radius: var(--ui-radius-float);
+}
+.ui-glass--bar { border-radius: var(--ui-radius-action); }
+
+/* Arrives from blur to sharp (soft to sharp). Set transform-origin to the trigger. */
+.ui-glass[data-state="open"] { animation: ui-glass-in var(--ui-motion-base) var(--ui-motion-ease) both; }
+@keyframes ui-glass-in {
+  from { opacity: 0; transform: scale(var(--ui-motion-enter-scale)); filter: blur(var(--ui-motion-enter-blur)); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+
+.ui-scrim { background: var(--ui-glass-scrim); }
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .ui-glass { background: var(--ui-glass-bg-solid); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .ui-glass { background: var(--ui-glass-bg-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ui-glass[data-state="open"] { animation: none; }
+}

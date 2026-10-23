@@ -1,0 +1,96 @@
+/* Popover and hover card. DECIDED 13 Oct, from round 7. Built on shadcn's popover (content, anchor, header, title,
+   description) and hover-card (content), with Radix's data-state="open|closed", data-side and data-align,
+   redesigned for Fume.
+   Both are Smoke glass at the floating radius, 22 (DECIDED 13 Oct), with 16 inside (--ui-inset-float):
+   three quarters of the corner, so no text sits in the curve. No arrow: they open 8 from their trigger
+   (--ui-overlay-offset) and grow from it; the gap and the soft shadow say where they came from.
+   popover.js places them (side bottom|top|start|end, align start|center|end), flips them to the other
+   side when they do not fit and keeps them 16 inside the screen.
+   Popover: a small task in place (Share with Anna: a note and one white button). Title 16 medium,
+   description Porcelain 88 % at 500. Fields inside are the glass field (field.css: a veil, no stroke).
+   Hover card: a preview of a person or a creative, for people with a mouse. It opens after a short rest
+   (--ui-popover-hover-delay), stays while the pointer travels into it, opens on keyboard focus too, and on
+   a touch screen opens on the first tap. It only previews: what it shows is also one tap away.
+   The trigger of a hover card is a quiet link: underlined with the hairline, Ink or Porcelain.
+   Rule gate: air, space-from-tokens, radius-from-tokens, glass-one-white, type-from-tokens, touch-target,
+   touch-feedback, hover-needs-hover, reduced-motion.
+   Round 9 (desktop review DWAY-4, DWAY-11; PROPOSED 19 Oct 2026):
+   - A popover is the Smoke glass like every floating layer (round 10 undid round 9's solid fill).
+   - The list popover (.ui-popover--list): a popover that holds a whole list, the bell's notifications. A head, its own
+     tabs (All · Unread), then the list, which scrolls on its own; the popover grows to the list, up to 70 % of the
+     screen's height (and never past the room Radix measures under its trigger). No foot: the list is the whole inbox.
+   Markup: div.ui-glass.ui-popover.ui-popover--list
+             > div.ui-popover-head (h2.ui-popover-title, button.ui-btn--glass-clear)
+             > div.ui-popover-tabs[role=tablist] > button.ui-popover-tab[role=tab][aria-selected]
+             > div.ui-popover-scroll[role=tabpanel] (the list, or the empty state) */
+
+.ui-popover, .ui-hover-card {
+  position: fixed; z-index: var(--ui-overlay-z-float); top: 0; left: 0;
+  display: grid; gap: var(--ui-space-lg); align-content: start;
+  width: var(--ui-popover-width); max-width: calc(100vw - 2 * var(--ui-overlay-margin));
+  padding: var(--ui-inset-float);
+  border-radius: var(--ui-radius-float);
+  color: var(--ui-glass-fg); font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.45;
+  outline: none;
+}
+.ui-hover-card { width: var(--ui-popover-hover-width); gap: var(--ui-space-md); }
+.ui-popover[hidden], .ui-hover-card[hidden] { display: none; }
+.ui-popover[data-state="closed"], .ui-hover-card[data-state="closed"] { animation: ui-popover-out var(--ui-motion-fast) var(--ui-motion-ease) both; }
+
+.ui-popover-header { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-popover-title { margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.35; }
+.ui-popover-description { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.5; color: var(--ui-glass-fg-secondary); text-wrap: pretty; }
+/* a field and its button on one line; on a touch screen the button matches the 44 px field */
+.ui-popover-row { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-popover-row > .ui-input { flex: 1 1 auto; }
+@media (pointer: coarse) { .ui-popover-row > .ui-btn { --h: var(--ui-size-hit); } }
+
+/* the hover card's trigger: a quiet link in running text */
+.ui-hover-card-trigger {
+  position: relative; color: inherit; font-weight: var(--ui-type-weight-medium);
+  text-decoration: underline; text-decoration-color: var(--ui-hairline-strong); text-decoration-thickness: 1px; text-underline-offset: 4px;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none; border-radius: var(--ui-radius-item);
+  transition: text-decoration-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-hover-card-trigger::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+@media (hover: hover) { .ui-hover-card-trigger:hover { text-decoration-color: currentColor; } }
+.ui-hover-card-trigger.is-hover, .ui-hover-card-trigger[data-state="open"] { text-decoration-color: currentColor; }
+.ui-hover-card-trigger:active, .ui-hover-card-trigger.is-pressed { text-decoration-color: currentColor; opacity: .72; }
+.ui-hover-card-trigger:focus-visible, .ui-hover-card-trigger.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-glass .ui-hover-card-trigger { text-decoration-color: var(--ui-glass-fg-secondary); }
+.ui-glass .ui-hover-card-trigger:focus-visible { outline-color: var(--ui-focus-ring-on-glass); }
+
+/* The list popover (DWAY-11): head, tabs, and a list that scrolls on its own, up to 70 % of the screen */
+.ui-popover.ui-popover--list {
+  display: flex; flex-direction: column; gap: 0; padding: 0; overflow: hidden;
+  max-height: min(70vh, var(--radix-popover-content-available-height, 70vh));
+}
+.ui-popover-head {
+  display: flex; flex: none; align-items: center; justify-content: space-between; gap: var(--ui-space-md); min-width: 0;
+  padding: var(--ui-inset-float) var(--ui-inset-float) var(--ui-space-sm);
+}
+.ui-popover-tabs { display: flex; flex: none; gap: var(--ui-space-xs); padding: 0 var(--ui-inset-float) var(--ui-space-sm); }
+.ui-popover-tab {
+  appearance: none; display: inline-flex; align-items: center; height: var(--ui-size-control-sm); padding: 0 var(--ui-space-md);
+  border: 0; border-radius: var(--ui-radius-action); background: transparent; color: var(--ui-glass-fg-secondary);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-popover-tab[aria-selected="true"] { background: var(--ui-glass-button-clear); color: var(--ui-glass-fg); }
+@media (hover: hover) { .ui-popover-tab:hover { background: var(--ui-glass-button-clear-hover); color: var(--ui-glass-fg); } }
+.ui-popover-tab:active { background: var(--ui-glass-button-clear-pressed); }
+.ui-popover-tab:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-size-ring-offset); }
+@media (pointer: coarse) { .ui-popover-tab { height: var(--ui-size-hit); } }
+.ui-popover-scroll {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+  padding-block-end: var(--ui-space-sm); scrollbar-width: thin; scrollbar-color: var(--ui-glass-button-clear) transparent;
+}
+.ui-popover-scroll:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: calc(-1 * var(--ui-size-ring)); }
+
+@keyframes ui-popover-out { to { opacity: 0; transform: scale(var(--ui-motion-enter-scale)); filter: blur(var(--ui-motion-enter-blur)); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-popover[data-state], .ui-hover-card[data-state] { animation: none; }
+  .ui-hover-card-trigger, .ui-popover-tab { transition: none; }
+}

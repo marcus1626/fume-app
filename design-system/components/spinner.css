@@ -1,0 +1,28 @@
+/* Spinner. DECIDED 13 Oct, from round 7. Built on shadcn's spinner (an svg with role="status", aria-label="Loading"
+   and a spin animation), redesigned for Fume. Markup:
+     <svg class="ui-spinner" role="status" aria-label="Loading"><use href="#fi-loader-circle"/></svg>
+   Fume decisions: the line-only Lucide loader circle from the Fume set (stroke 2.25), in the colour of
+   the words beside it, never Amber. One turn takes --ui-motion-spin (900 ms) at a constant speed; with
+   reduced motion it turns slowly (--ui-motion-spin-reduced, 2400 ms) instead of stopping, so it still
+   says "working". Sizes follow the icons: sm 14, default 16, lg 18, xl 24 for a panel that is loading.
+   In a busy button it replaces the icon and the label stays, so the width never jumps (button.css,
+   aria-busy). With words (.ui-spinner-label) it says what is happening: "Generating 12 creatives".
+   Rule gate: motion-from-tokens, reduced-motion. */
+
+.ui-spinner {
+  display: inline-block; flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon);
+  color: inherit; transform-origin: 50% 50%; animation: ui-spinner-turn var(--ui-motion-spin) linear infinite;
+}
+.ui-spinner--sm { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-spinner--lg { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); }
+.ui-spinner--xl { width: var(--ui-spinner-size-xl); height: var(--ui-spinner-size-xl); }
+@keyframes ui-spinner-turn { to { transform: rotate(360deg); } }
+
+/* spinner and words: what is being done, in the secondary text colour */
+.ui-spinner-label { display: inline-flex; align-items: center; gap: var(--ui-space-sm); font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); }
+.ui-spinner-label .ui-spinner { color: var(--ui-text); }
+.ui-spinner-label--stack { flex-direction: column; gap: var(--ui-space-md); text-align: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-spinner { animation-duration: var(--ui-motion-spin-reduced); }
+}

@@ -1,0 +1,64 @@
+/* Home: the one inbox (app round 8, UX review LOAD-3, MOB-16, TASK-15, ONB-8; round 9 DLOAD-4, DLOAD-14, DTSK-21, DLAY-18,
+   DLOAD-22, DLOAD-10). PROPOSED 19 Oct 2026.
+   Markup: <div class="ui-app-stack ui-home-main"> sections </div>
+           <li><a class="ui-item" data-variant="muted"> <span class="ui-item-media ui-home-stack" data-count="3"><img/><img/><img/></span>
+             <span class="ui-item-content"><span class="ui-item-title">Autumn launch <span class="ui-home-due">live Sat 17 Oct</span></span>
+             <span class="ui-item-description">6 creatives to approve · 3 more in check</span></span> … </a></li>
+           <p class="ui-home-quiet">7 products to confirm, none holds up a campaign. Confirm them … or <a class="ui-link">now</a>.</p>
+           <ul class="ui-item-group ui-home-making"> the same rows, default variant (no fill) </ul>
+           <div class="ui-card ui-home-first"> h2.ui-card-title · p.ui-card-description · p.ui-home-quiet · .ui-card-footer </div>
+           <aside class="ui-app-stack ui-home-aside"> This month · <p class="ui-home-learned">Fume learned 3 things … · <a class="ui-link">All lessons</a></p> </aside>
+   Fume decisions: "Waiting on you" is at most five rows, one per subject; a row that holds several things
+   (seven products) shows them as a small stack of up to three thumbnails, each lifted by depth, never a stroke. A
+   deadline sits on the title line in the text colour, so a dated row weighs more than one without (MOB-16); it is
+   words, never a badge and never Amber. The first visit after onboarding leads with one large card (ONB-8): the
+   title at the title size, two pills, the Ink one first, and the header's New campaign steps aside (one Ink). Products
+   nothing waits on are one quiet line in the secondary text, never a row (DLOAD-14). "Being made" uses the same row
+   as the inbox without its fill, so the two lists read as one style and the inbox weighs more (DLAY-18). On a phone
+   Home is the inbox only: the aside (this month, then one line on what Fume learned) shows beside the work on a desk
+   and is gone below 1024 (LOAD-7).
+   Rule gate: few-strokes, air, proximity, space-from-tokens, radius-from-tokens, type-from-tokens, amber-is-a-point,
+   card-never-matches-ground, reduced-motion. */
+
+/* ---------- the stack of pictures in a row ---------- */
+.ui-home-stack { position: relative; display: flex; flex: none; align-items: center; width: var(--ui-item-media); height: var(--ui-item-media); }
+.ui-home-stack > img {
+  display: block; flex: none; width: var(--ui-item-media); height: var(--ui-item-media); object-fit: cover;
+  border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); box-shadow: var(--ui-depth-near);
+}
+/* the first picture in front, at the bottom right; the others behind it, up and to the left */
+.ui-home-stack[data-count="2"] > img, .ui-home-stack[data-count="3"] > img { position: absolute; width: calc(var(--ui-item-media) * .78); height: calc(var(--ui-item-media) * .78); }
+.ui-home-stack > img:nth-child(1) { z-index: 3; right: 0; bottom: 0; }
+.ui-home-stack[data-count="2"] > img:nth-child(2) { z-index: 2; left: 0; top: 0; }
+.ui-home-stack[data-count="3"] > img:nth-child(2) { z-index: 2; left: calc(var(--ui-item-media) * .11); top: calc(var(--ui-item-media) * .11); }
+.ui-home-stack[data-count="3"] > img:nth-child(3) { z-index: 1; left: 0; top: 0; }
+
+/* the inbox and what is being made: two groups, far apart */
+.ui-home-main { gap: var(--ui-space-2xl); }
+
+/* ---------- the quiet line: products nothing waits on yet ---------- */
+.ui-home-quiet { margin: 0; padding-inline: var(--ui-inset-float); max-width: var(--ui-book-measure); font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-home-first .ui-home-quiet { padding-inline: 0; margin-top: var(--ui-space-xs); }
+
+/* ---------- the go-live on the title line ---------- */
+.ui-home-due { margin-inline-start: var(--ui-space-sm); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-secondary); white-space: nowrap; }
+
+/* ---------- the first campaign ---------- */
+.ui-home-first { gap: var(--ui-space-xl); padding: var(--ui-inset-panel); }
+.ui-home-first .ui-card-title { font-size: var(--ui-type-title); line-height: 1.2; letter-spacing: -.015em; }
+.ui-home-first .ui-card-description { max-width: var(--ui-book-measure); font-size: var(--ui-type-body); }
+.ui-home-first .ui-card-footer { display: flex; flex-wrap: wrap; gap: var(--ui-space-sm); }
+@media (max-width: 639px) {
+  .ui-home-first { padding: var(--ui-inset-float); gap: var(--ui-space-lg); }
+  .ui-home-first .ui-card-title { font-size: var(--ui-type-body-large); }
+  .ui-home-first .ui-card-footer > * { flex: 1 1 100%; }
+}
+
+/* ---------- the aside: a desk only ---------- */
+/* what Fume learned: one line at the body size, on the column's left edge */
+.ui-home-learned { margin: 0; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+@container ui-sidebar (max-width: 1023px) {
+  .ui-home-aside { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) { .ui-home-stack > img { transition: none; } }

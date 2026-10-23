@@ -1,0 +1,24 @@
+/* Brand models: the brand's AI people on the Brand DNA board (app v3, FLOWS §9.6). PROPOSED 15 Oct 2026.
+   Composed from brand-board.css (.ui-brand-images, .ui-brand-image, its media and caption) and proposal.css.
+   Markup: <div class="ui-brand-images ui-brand-models" data-mode="board"> <div class="ui-proposal ui-proposal--bare ui-brand-image" data-state="proposed|approved">
+             <div class="ui-brand-image-media"><img/></div> <span class="ui-brand-caption-title">Leo</span>
+             <p class="ui-brand-caption-text">look</p> <div class="ui-proposal-foot"> Anna made Leo for your brand · Confirm · Remove </div></div></div>
+   Fume decisions: a model is a portrait, so it keeps a portrait's size however few there are: the grid fills with
+   tiles of at least 224 instead of stretching two across the board. Round 8 (19 Oct, PROPOSED): the board is
+   read-only, so every model is bare like the board's pictures; a saved one says "To check · from Anna" and is
+   approved or declined in the check flow (/brand/check), an approved one shows only itself. Always labelled AI
+   person (F-D041). Never Amber: approving a model is not a check.
+   Round 9 (desktop review DWAY-14, DLOAD-5; PROPOSED 19 Oct 2026): the part is called "AI models" once, so no badge
+   on each card; a model that waits carries Confirm · Remove under its portrait, which stays square at 192 so
+   it can be judged without swelling across a column.
+   Rule gate: air, proximity, space-from-tokens, few-strokes, amber-is-a-point. */
+
+.ui-brand-models { grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--ui-space-2xl) * 7)), 1fr)); }
+@container ui-brand (min-width: 480px) {
+  .ui-brand-images.ui-brand-models[data-mode="board"] { grid-template-columns: repeat(auto-fill, calc(var(--ui-space-2xl) * 6)); }
+  .ui-brand-images.ui-brand-models[data-mode="board"] .ui-brand-image-media { aspect-ratio: 1; }
+}
+.ui-brand-models .ui-proposal-actions { margin-inline-start: 0; }
+@container ui-brand (max-width: 479.98px) {
+  .ui-brand-models { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-lg) var(--ui-space-md); }
+}

@@ -1,0 +1,427 @@
+/* Studio desk: the full-screen Studio, strictly like Photoshop (app v3, FLOWS §9.1). PROPOSED 15 Oct 2026.
+   One creative document per creative: specs on the left, the board in the middle with the Engine bar floating on it
+   and the versions under it, the mode's variables on the right. The page never scrolls, and neither do the panels:
+   their sections fold (studio-controls.css .ui-sc-folds). Desktop first; under 900 px the board and the versions
+   show read-only with a note.
+   Markup: <div class="ui-desk" data-studio="render|design" data-readonly data-bare>
+             <header class="ui-desk-bar"><div class="ui-desk-bar-start"><a class="ui-back ui-desk-back"> ← Check </a>
+               <div class="ui-desk-title"><h1 class="ui-desk-title-name">Master 3 · Feed 4:5</h1><p class="ui-desk-title-meta">
+               LYSNE · Product in scene</p></div> <button class="ui-desk-campaign"><svg megaphone/><span
+               class="ui-desk-campaign-name">Autumn launch</span><svg chevron/></button> [look chip] </div>
+               <div class="ui-seg ui-desk-studios"> Render · Design · Video </div>
+               <div class="ui-desk-bar-end"> undo · redo · Make formats · the action </div></header>
+             <p class="ui-desk-phone-note"> (phone only) </p>
+             <aside class="ui-desk-panel ui-desk-specs"><button class="ui-desk-mode"> Mode · name </button> folds </aside>
+             <main class="ui-desk-centre">
+               <section class="ui-desk-canvas" data-zoom="fit|full" data-compare>
+                 <div class="ui-glass ui-desk-rail" role="toolbar" aria-orientation="vertical"> 100 % · Compare · Safe zones ·
+                   Product details · Brush a fix · <span class="ui-desk-rail-gap"/> Hide the panels </div>
+                 <div class="ui-desk-stage"><figure class="ui-desk-figure"><span class="ui-desk-shot" style="--ratio">
+                   <img/><span class="ui-desk-layers" style="--layer-ink"><button class="ui-desk-layer" data-kind
+                   style="--x --y --w --h"></button></span></span>[<figcaption class="ui-desk-caption"/> comparing]</figure></div>
+               </section>
+               <div class="ui-desk-engine" data-proposed><div class="ui-desk-engine-change"><div class="ui-desk-engine-words">
+                 <p class="ui-desk-engine-line"> The Engine changed … </p> | <ul class="ui-desk-engine-parts"><li
+                 class="ui-desk-engine-part" data-read><svg/><span class="ui-desk-engine-part-text"><span
+                 class="ui-desk-engine-said">"…"</span><span class="ui-desk-engine-what"/><span class="ui-desk-engine-note"/>
+                 </span> Yes </li></ul></div><div class="ui-desk-engine-actions"> Undo · Keep and render </div></div>
+                 <form class="ui-desk-engine-form"><svg class="ui-desk-engine-mark"/> input · Send · Render </form></div>
+               <ol class="ui-desk-versions"><li><button class="ui-desk-version" aria-current> thumb · V3 · line · flags
+               </button></li></ol></main>
+             <aside class="ui-desk-panel ui-desk-vars"><h2 class="ui-desk-panel-title"/> folds </aside></div>
+   Round 12 (UX review DLAY-3, DLAY-6, DWAY-10, DLOAD-15; PROPOSED 20 Oct 2026): no breadcrumb: the back arrow names
+   where she came from, the creative's name is plain text with the brand and mode quiet under it, and the campaign is
+   a chip. The board belongs to the creative: its view tools sit on a narrow glass rail at its left edge (their names
+   in tooltips), the Engine bar is docked in its own row under the board on the panels' surface, and nothing floats
+   over the picture; the stage keeps 16 of air. ⌘\ (and the rail's last tool) hides both panels (data-bare). Under
+   1440 the panels are 248 and 288. A panel scrolls on its own when its one open part is taller than it, so nothing
+   is ever cut off; the page itself never scrolls. A control the Engine proposes to change sits on the sunken step
+   until she keeps or undoes it.
+   Fume decisions: the app's own surfaces, not a dark desk: the desk is the layer behind (Paper) and the two panels
+   lie on it as Porcelain sheets with depth, so there is no stroke between panels (few-strokes). The board is the
+   sunken step so the creative is the brightest thing on screen. Smoke glass only where something floats on the
+   board: the view rail. The Engine never talks in its bar: it shows what it changed, with Undo
+   and one white Keep and render (glass-one-white). A version being rendered shows the design system's white text
+   shimmer, never Amber; Amber appears only as the checked triangle (a Checked badge). Labels are 12 and 13 px;
+   actions are pills; a picked version and a chosen thumb carry an Ink ring. The AI-person label is always on a
+   model (F-D041).
+   Rule gate: few-strokes, air, space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data,
+   amber-is-a-point, glass-only-floating, glass-no-stroke, glass-one-white, reduced-transparency, touch-target,
+   touch-feedback, hover-needs-hover, focus-is-sharp, reduced-motion, no-gradient, tokens-only-color. */
+
+.ui-desk {
+  --desk-left: 248px; /* gate-allow:space-from-tokens the specs panel's width under 1440, a layout width (DLAY-6) */
+  --desk-right: 288px; /* gate-allow:space-from-tokens the variables panel's width under 1440, a layout width (DLAY-6) */
+  display: grid; height: 100vh; height: 100dvh; min-height: 0; min-width: 0; overflow: hidden;
+  grid-template-columns: var(--desk-left) minmax(0, 1fr) var(--desk-right);
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas: "bar bar bar" "specs centre vars";
+  gap: var(--ui-space-sm);
+  padding: 0 var(--ui-space-sm) var(--ui-space-sm);
+  background: var(--ui-ground-behind); color: var(--ui-text); font-family: var(--ui-type-family);
+}
+.ui-desk--state { display: grid; place-items: center; grid-template: none; padding: var(--ui-space-xl); }
+@media (min-width: 1440px) {
+  .ui-desk {
+    --desk-left: 280px; /* gate-allow:space-from-tokens the specs panel's width, a layout width (FLOWS §9.1) */
+    --desk-right: 320px; /* gate-allow:space-from-tokens the variables panel's width, a layout width (FLOWS §9.1) */
+  }
+}
+/* both panels hidden (⌘\): the board takes the width */
+.ui-desk[data-bare] { grid-template-columns: minmax(0, 1fr); grid-template-areas: "bar" "centre"; }
+
+/* ---------- the top bar ---------- */
+
+.ui-desk-bar {
+  grid-area: bar; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: var(--ui-space-md);
+  min-width: 0; min-height: calc(var(--ui-size-control-lg) + var(--ui-space-sm)); padding-inline: var(--ui-space-xs);
+}
+.ui-desk-bar-start { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-desk-bar-end { display: flex; align-items: center; justify-content: flex-end; gap: var(--ui-space-sm); min-width: 0; }
+.ui-desk-bar-end > * { flex-shrink: 0; }
+.ui-desk-back { flex: none; max-width: 30%; }
+.ui-desk-title { display: grid; min-width: 0; flex: 0 1 auto; }
+.ui-desk-title-name {
+  margin: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; color: var(--ui-text);
+}
+.ui-desk-title-meta { margin: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); line-height: 1.35; color: var(--ui-text-tertiary); }
+/* the campaign: a chip on the sunken step, with a chevron because it changes; "No campaign" is quieter */
+.ui-desk-campaign {
+  position: relative; display: inline-flex; align-items: center; gap: var(--ui-space-xs); flex: 0 1 auto; min-width: 0; height: var(--ui-size-control-sm);
+  margin: 0; padding: 0 var(--ui-space-sm) 0 var(--ui-space-md); border: 0; border-radius: var(--ui-radius-action);
+  background: var(--ui-surface-sunken); color: var(--ui-text); font-family: var(--ui-type-family); font-size: var(--ui-type-label);
+  font-weight: var(--ui-type-weight-medium); line-height: 1; white-space: nowrap;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-desk-campaign::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+.ui-desk-campaign > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-secondary); }
+.ui-desk-campaign > .ui-desk-campaign-chevron { color: var(--ui-text-tertiary); }
+.ui-desk-campaign-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ui-desk-campaign[data-empty] { color: var(--ui-text-secondary); }
+@media (hover: hover) { .ui-desk-campaign:hover:not(:disabled) { background: var(--ui-surface-sunken-hover); } }
+.ui-desk-campaign:active:not(:disabled) { transform: scale(var(--ui-motion-press-scale)); }
+.ui-desk-campaign:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-desk-campaign:disabled { cursor: default; }
+.ui-desk-studios .ui-seg-option { font-size: var(--ui-type-control); }
+.ui-desk-studios .ui-seg-option:disabled { color: var(--ui-text-disabled); cursor: default; transform: none; }
+.ui-desk-later { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-tertiary); }
+.ui-desk-undo { display: inline-flex; gap: var(--ui-space-xs); }
+.ui-desk-phone-note { display: none; }
+
+/* ---------- the panels: Porcelain sheets on the desk; the folds scroll when the one open part is taller ---------- */
+
+.ui-desk-panel {
+  display: flex; flex-direction: column; gap: var(--ui-space-md); min-height: 0; min-width: 0; overflow: hidden;
+  padding: var(--ui-space-md) var(--ui-space-sm); border-radius: var(--ui-radius-card);
+  background: var(--ui-ground); box-shadow: var(--ui-depth-sheet);
+}
+.ui-desk-panel > .ui-sc-folds { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--ui-scroll-thumb) transparent; }
+.ui-desk-specs { grid-area: specs; }
+.ui-desk-vars { grid-area: vars; }
+/* r13 (robot note 07): a long readout ("120° from the right · 20° up") wraps under itself instead of being cut off */
+.ui-desk-vars .ui-sc-readout { white-space: normal; text-align: end; }
+.ui-desk-panel-title { margin: 0; padding-inline: var(--ui-space-sm); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text-tertiary); }
+
+/* The mode picker: a sunken row that opens the grid menu. */
+.ui-desk-mode {
+  position: relative; display: flex; align-items: center; gap: var(--ui-space-sm); flex-shrink: 0; width: 100%; min-height: var(--ui-size-control-lg);
+  margin: 0; padding: var(--ui-space-sm) var(--ui-space-md); border: 0; border-radius: var(--ui-radius-field);
+  background: var(--ui-surface-sunken); color: var(--ui-text); font-family: var(--ui-type-family); text-align: start;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-desk-mode::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+@media (hover: hover) { .ui-desk-mode:hover { background: var(--ui-surface-sunken-hover); } }
+.ui-desk-mode:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-desk-mode:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-desk-mode-text { display: grid; flex: 1 1 auto; min-width: 0; }
+.ui-desk-mode-label { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); line-height: 1.3; }
+.ui-desk-mode-name { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-desk-mode-icon { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-secondary); }
+.ui-popover.ui-desk-mode-popover { width: calc(var(--ui-size-hit) * 10); }
+/* r13 #60: a mode switch asks first, in the same popover: what carries over, what is set aside; Cancel · Switch */
+.ui-desk-mode-ask { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: var(--ui-space-sm); }
+.ui-popover.ui-desk-fact-popover { width: calc(var(--ui-size-hit) * 8); }
+
+/* Product data: one line per fact; a changed fact names who changed it and for what (FLOWS §9.5). */
+.ui-desk-facts { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.ui-desk-facts > li { display: grid; min-width: 0; }
+.ui-desk-fact {
+  position: relative; display: grid; grid-template-columns: calc(var(--ui-size-hit) + var(--ui-space-sm)) minmax(0, 1fr) auto; align-items: baseline; gap: var(--ui-space-sm);
+  width: 100%; min-height: var(--ui-size-control-sm); margin: 0; padding: var(--ui-space-xs) var(--ui-space-sm); border: 0; border-radius: var(--ui-radius-item);
+  background: transparent; color: var(--ui-text); font-family: var(--ui-type-family); text-align: start;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-desk-fact::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+@media (hover: hover) { .ui-desk-fact:hover { background: var(--ui-item-bg-hover); } }
+.ui-desk-fact:active { background: var(--ui-item-bg-pressed); }
+.ui-desk-fact:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: calc(var(--ui-size-ring) * -1); }
+.ui-desk-fact[data-changed] { background: var(--ui-surface-sunken); }
+.ui-desk-fact-label { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-desk-fact-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); color: var(--ui-text); }
+.ui-desk-fact-icon { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-tertiary); opacity: 0; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+@media (hover: hover) { .ui-desk-fact:hover .ui-desk-fact-icon { opacity: 1; } }
+.ui-desk-fact:focus-visible .ui-desk-fact-icon { opacity: 1; }
+.ui-desk-fact-who { display: flex; align-items: center; gap: var(--ui-space-xs); margin: 0; padding: var(--ui-space-xs) var(--ui-space-sm) 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-desk-fact-who > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-tertiary); }
+.ui-desk-fact-field { width: 100%; resize: none; }
+.ui-desk-fact-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--ui-space-sm); }
+
+/* References: small squares you switch on and off; a draft is marked. */
+.ui-desk-thumbs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; }
+.ui-desk-thumb {
+  position: relative; display: block; width: 100%; margin: 0; padding: 0; border: 0; overflow: hidden; border-radius: var(--ui-radius-item);
+  background: var(--ui-surface-sunken); cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-desk-thumb::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-desk-thumb > img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; opacity: .64; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-desk-thumb[aria-pressed="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); }
+.ui-desk-thumb[aria-pressed="true"] > img { opacity: 1; }
+@media (hover: hover) { .ui-desk-thumb:hover > img { opacity: 1; } }
+.ui-desk-thumb:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-desk-thumb:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-desk-thumb-check {
+  position: absolute; inset-inline-end: var(--ui-space-xs); inset-block-start: var(--ui-space-xs); width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm);
+  padding: var(--ui-space-xs); box-sizing: content-box; border-radius: 50%; background: var(--ui-action-primary); color: var(--ui-action-primary-fg);
+}
+.ui-desk-thumb-tag, .ui-desk-ai {
+  position: absolute; inset-inline-start: var(--ui-space-xs); inset-block-end: var(--ui-space-xs); max-width: calc(100% - var(--ui-space-sm));
+  padding: 0 var(--ui-space-xs); border-radius: var(--ui-radius-action); background: var(--ui-surface); color: var(--ui-text); box-shadow: var(--ui-depth-raised);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.5; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ui-desk-row-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); }
+
+/* Models: the brand's AI people with their state; only approved and saved ones can be picked. */
+.ui-desk-models { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
+.ui-desk-model {
+  position: relative; display: grid; grid-template-columns: var(--ui-size-hit) minmax(0, 1fr) auto; align-items: center; gap: var(--ui-space-sm);
+  width: 100%; margin: 0; padding: var(--ui-space-xs); border: 0; border-radius: var(--ui-radius-item); background: transparent; color: var(--ui-text);
+  font-family: var(--ui-type-family); text-align: start; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+@media (hover: hover) { .ui-desk-model:hover:not(:disabled) { background: var(--ui-item-bg-hover); } }
+.ui-desk-model:active:not(:disabled) { background: var(--ui-item-bg-pressed); }
+.ui-desk-model:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: calc(var(--ui-size-ring) * -1); }
+.ui-desk-model[aria-pressed="true"] { background: var(--ui-surface-sunken); }
+.ui-desk-model:disabled { cursor: default; }
+.ui-desk-model:disabled .ui-desk-model-img > img { opacity: .5; }
+.ui-desk-model-img { position: relative; display: block; overflow: hidden; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-desk-model-img > img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+.ui-desk-model-img .ui-desk-ai { inset: auto 0 0; max-width: none; border-radius: 0; box-shadow: none; text-align: center; font-size: var(--ui-type-label); line-height: 1.3; }
+.ui-desk-model-text { display: grid; min-width: 0; }
+.ui-desk-model-name { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; }
+.ui-desk-model-state { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-desk-model-check { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); margin-inline-end: var(--ui-space-xs); }
+
+/* Layers (Design): rows, newest on top; the selected one is the sunken row. */
+.ui-desk-layer-list { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
+.ui-desk-layer-row { display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; border-radius: var(--ui-radius-item); }
+.ui-desk-layer-row[aria-current="true"] { background: var(--ui-surface-sunken); }
+.ui-desk-layer-pick {
+  position: relative; display: flex; align-items: center; gap: var(--ui-space-sm); flex: 1 1 auto; min-width: 0; min-height: var(--ui-size-control-sm);
+  margin: 0; padding: 0 var(--ui-space-sm); border: 0; border-radius: var(--ui-radius-item); background: transparent; color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); text-align: start; cursor: pointer; -webkit-tap-highlight-color: transparent; outline: none;
+}
+.ui-desk-layer-pick::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+.ui-desk-layer-pick > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-tertiary); }
+.ui-desk-layer-pick:disabled { cursor: default; color: var(--ui-text-secondary); }
+@media (hover: hover) { .ui-desk-layer-pick:hover:not(:disabled) { background: var(--ui-item-bg-hover); } }
+.ui-desk-layer-pick:active:not(:disabled) { background: var(--ui-item-bg-pressed); }
+.ui-desk-layer-pick:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: calc(var(--ui-size-ring) * -1); }
+.ui-desk-layer-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-desk-layer-eye[data-hidden] { opacity: .4; }
+
+/* ---------- the middle: board, Engine bar, versions ---------- */
+
+.ui-desk-centre { grid-area: centre; display: flex; flex-direction: column; gap: var(--ui-space-sm); min-width: 0; min-height: 0; }
+.ui-desk-canvas {
+  position: relative; display: flex; flex: 1 1 auto; min-width: 0; min-height: 0; overflow: hidden;
+  border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken);
+}
+/* The view rail: a narrow Smoke glass column at the board's left edge, the tools as icons (their names in tooltips) */
+.ui-desk-rail {
+  position: absolute; z-index: 2; inset-block-start: 50%; inset-inline-start: var(--ui-space-md); transform: translateY(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: var(--ui-space-xs); padding: var(--ui-inset-ring);
+  border-radius: var(--ui-radius-float);
+}
+.ui-desk-rail-gap { display: block; height: var(--ui-space-sm); }
+/* The rail's tools take the glass's colours: off clear with a Porcelain icon, on the white glass button */
+.ui-desk-rail .ui-toggle.ui-desk-rail-tool {
+  --bg: transparent; --bg-hover: var(--ui-glass-button-clear-hover); --bg-pressed: var(--ui-glass-button-clear-pressed);
+  --fg: var(--ui-glass-fg-secondary); --fg-hover: var(--ui-glass-fg);
+}
+.ui-desk-rail .ui-toggle.ui-desk-rail-tool[aria-pressed="true"] {
+  --bg: var(--ui-glass-button-white); --bg-hover: var(--ui-glass-button-white-hover); --bg-pressed: var(--ui-glass-button-white-pressed);
+  --fg: var(--ui-glass-button-white-fg); --fg-hover: var(--ui-glass-button-white-fg);
+}
+.ui-desk-rail .ui-toggle.ui-desk-rail-tool:focus-visible { outline-color: var(--ui-focus-ring-on-glass); }
+
+.ui-desk-stage {
+  --desk-rail-room: calc(var(--ui-size-control-sm) + 2 * var(--ui-inset-ring) + 2 * var(--ui-space-md));
+  container: ui-desk-stage / size; flex: 1 1 auto; min-width: 0; min-height: 0;
+  display: flex; align-items: center; justify-content: center; gap: var(--ui-space-lg);
+  padding: var(--ui-space-lg) var(--desk-rail-room);
+  overflow: hidden;
+}
+.ui-desk-figure { display: grid; justify-items: center; gap: var(--ui-space-sm); min-width: 0; margin: 0; }
+.ui-desk-shot { position: relative; display: block; user-select: none; }
+.ui-desk-shot > img {
+  display: block; max-width: 100cqw; max-height: 100cqh; width: auto; height: auto;
+  border-radius: var(--ui-radius-item); background: var(--ui-surface-creative); box-shadow: var(--ui-depth-raised);
+}
+.ui-desk-skeleton { width: min(100cqw, calc((100cqh - var(--ui-space-xl)) * var(--ratio))); }
+.ui-desk-canvas[data-compare] .ui-desk-shot > img { max-height: calc(100cqh - var(--ui-space-xl)); }
+.ui-desk[data-readonly] .ui-desk-skeleton { width: 100%; }
+.ui-desk-canvas[data-compare] .ui-desk-shot > img { max-width: calc(100cqw / var(--compare-n, 2) - var(--ui-space-lg)); } /* r13 #59: two to five side by side */
+.ui-desk-canvas[data-zoom="full"] .ui-desk-stage { overflow: auto; align-items: flex-start; justify-content: flex-start; scrollbar-width: thin; scrollbar-color: var(--ui-scroll-thumb) transparent; }
+.ui-desk-canvas[data-zoom="full"] .ui-desk-shot > img { max-width: none; max-height: none; }
+.ui-desk-caption { font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+.ui-desk-empty { margin: 0; max-width: calc(var(--ui-size-hit) * 8); text-align: center; font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+
+/* Design: the layers drawn over the render, each a box you can select. Their type is the creative's own, scaled
+   to the frame. */
+.ui-desk-layers { position: absolute; inset: 0; container-type: size; color: var(--layer-ink, var(--ui-text-on-ink)); }
+.ui-desk-layer {
+  position: absolute; left: calc(var(--x) * 100%); top: calc(var(--y) * 100%); width: calc(var(--w) * 100%); min-height: calc(var(--h) * 100%);
+  display: flex; align-items: center; margin: 0; padding: 0; border: 0; border-radius: var(--ui-radius-check); background: transparent; color: inherit;
+  font-family: var(--ui-type-family); font-weight: var(--ui-type-weight-medium); line-height: 1.1; text-align: start;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; outline: none;
+}
+.ui-desk-layer[data-style="headline"] { font-size: 6.4cqi; /* gate-allow:type-from-tokens the creative's headline, scaled to the frame */ }
+.ui-desk-layer[data-style="body"] { font-size: 4cqi; /* gate-allow:type-from-tokens the creative's body line, scaled to the frame */ }
+.ui-desk-layer[data-style="small"] { font-size: 3.2cqi; font-weight: var(--ui-type-weight-regular); /* gate-allow:type-from-tokens scaled to the frame */ }
+.ui-desk-layer[data-kind="logo"] { font-size: 4cqi; letter-spacing: .24em; /* gate-allow:type-from-tokens the brand's mark, scaled to the frame */ }
+/* the selection box: the one place the desk draws a line, as Photoshop does, because a selection has no surface */
+.ui-desk-layer::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+@media (hover: hover) { .ui-desk-layer:hover:not(:disabled) { outline: var(--ui-size-ring) dashed var(--ui-glass-fg-secondary); outline-offset: var(--ui-space-xs); /* gate-allow:few-strokes a selection box over a creative has no surface to step */ } }
+.ui-desk-layer:active:not(:disabled) { opacity: .8; }
+.ui-desk-layer[aria-pressed="true"] { outline: var(--ui-size-ring) solid var(--ui-action-primary-fg); outline-offset: var(--ui-space-xs); /* gate-allow:few-strokes the selected layer's box, as in Photoshop */ }
+.ui-desk-layer:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-space-xs); }
+.ui-desk-layer:disabled { cursor: default; }
+
+/* The Engine bar: docked in its own row under the board, on the panels' Porcelain, so nothing floats over the
+   creative. The change card sits over the field, part by part; Send and Render say what they do. */
+.ui-desk-engine {
+  display: grid; flex-shrink: 0; gap: var(--ui-space-sm); min-width: 0; padding: var(--ui-space-sm);
+  border-radius: var(--ui-radius-card); background: var(--ui-ground); box-shadow: var(--ui-depth-sheet);
+}
+.ui-desk-engine-change {
+  display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--ui-space-sm) var(--ui-space-lg); min-width: 0;
+  padding: var(--ui-space-sm) var(--ui-space-sm) var(--ui-space-xs) var(--ui-space-md); outline: none;
+}
+.ui-desk-engine-words { flex: 1 1 calc(var(--ui-size-hit) * 6); min-width: 0; }
+.ui-desk-engine-line { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.45; color: var(--ui-text-secondary); }
+.ui-desk-engine-what { color: var(--ui-text); font-weight: var(--ui-type-weight-medium); }
+.ui-desk-engine-parts { display: grid; gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.ui-desk-engine-part { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); }
+.ui-desk-engine-part-icon { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-tertiary); }
+.ui-desk-engine-part[data-read] .ui-desk-engine-part-icon { color: var(--ui-text); }
+.ui-desk-engine-part-text { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--ui-space-sm); flex: 1 1 auto; min-width: 0; }
+.ui-desk-engine-said { color: var(--ui-text-secondary); }
+.ui-desk-engine-note { color: var(--ui-text-tertiary); }
+.ui-desk-engine-actions { display: flex; align-items: center; gap: var(--ui-space-xs); margin-inline-start: auto; }
+.ui-desk-engine-form { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; padding-inline-start: var(--ui-space-sm); }
+.ui-desk-engine-mark { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-secondary); }
+.ui-desk-engine-input { flex: 1 1 auto; min-width: 0; border-radius: var(--ui-radius-action); }
+
+/* A control the Engine proposes to change waits on the sunken step until she keeps or undoes it */
+.ui-desk-var { min-width: 0; border-radius: var(--ui-radius-item); transition: background-color var(--ui-motion-slow) var(--ui-motion-ease); }
+.ui-desk-var[data-proposed] { margin: calc(-1 * var(--ui-space-sm)); padding: var(--ui-space-sm); background: var(--ui-surface-sunken); }
+.ui-desk-source-help { margin-block-start: calc(-1 * var(--ui-space-sm)); }
+
+/* The product under its picker: how ready it is, what needs a look, and the way to all of it */
+.ui-desk-product-ready { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-desk-flag { display: flex; align-items: flex-start; gap: var(--ui-space-sm); margin: 0; padding: var(--ui-space-xs) var(--ui-space-sm); font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text); }
+.ui-desk-flag > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); margin-block-start: 1px; } /* gate-allow:space-from-tokens the icon sits on the first line's x-height */
+.ui-desk-flag-note { color: var(--ui-text-tertiary); }
+.ui-desk-all-facts { justify-self: start; }
+
+/* All the facts, in the right panel over the board (Smoke glass): the rows take the glass's own colours */
+.ui-desk-sheet .ui-sheet-body { display: grid; align-content: start; gap: var(--ui-space-xl); }
+.ui-desk-sheet-ready { display: grid; gap: var(--ui-space-sm); font-size: var(--ui-type-label); color: var(--ui-glass-fg-secondary); }
+.ui-desk-sheet-part { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-desk-sheet-head { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-glass-fg-secondary); }
+.ui-desk-sheet .ui-desk-fact, .ui-desk-sheet .ui-desk-fact-text { color: var(--ui-glass-fg); } /* r13 #62: every word on the glass is light */
+.ui-desk-sheet .ui-desk-fact-label, .ui-desk-sheet .ui-desk-fact-icon { color: var(--ui-glass-fg-secondary); }
+@media (hover: hover) { .ui-desk-sheet .ui-desk-fact:hover { background: var(--ui-glass-item-hover); } }
+.ui-desk-sheet .ui-desk-fact[data-changed] { background: var(--ui-glass-button-clear); }
+.ui-desk-sheet .ui-desk-fact:focus-visible { outline-color: var(--ui-focus-ring-on-glass); }
+.ui-desk-sheet .ui-desk-fact-who { color: var(--ui-glass-fg-secondary); }
+.ui-desk-sheet .ui-desk-fact-who > svg { color: var(--ui-glass-fg-secondary); }
+.ui-desk-sheet-rows { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: var(--ui-space-sm) var(--ui-space-lg); margin: 0; padding-inline: var(--ui-space-sm); font-size: var(--ui-type-label); line-height: 1.45; }
+.ui-desk-sheet-rows > div { display: contents; }
+.ui-desk-sheet-rows dt { margin: 0; min-width: 0; color: var(--ui-glass-fg-secondary); }
+.ui-desk-sheet-rows dd { display: flex; align-items: center; gap: var(--ui-space-sm); margin: 0; min-width: 0; color: var(--ui-glass-fg); overflow-wrap: anywhere; }
+
+/* The versions strip: every render, newest right; the picked one carries an Ink ring. */
+.ui-desk-versions {
+  display: flex; flex-shrink: 0; gap: var(--ui-space-sm); min-width: 0; margin: 0; padding: var(--ui-space-xs); list-style: none;
+  overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; scrollbar-color: var(--ui-scroll-thumb) transparent;
+}
+.ui-desk-versions--empty { display: block; padding: var(--ui-space-md); font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+.ui-desk-versions > li { display: flex; flex-shrink: 0; }
+.ui-desk-version {
+  position: relative; display: grid; grid-template-columns: calc(var(--ui-size-hit) + var(--ui-space-md)) minmax(0, 1fr); align-items: center; gap: var(--ui-space-sm);
+  width: calc(var(--ui-size-hit) * 5); margin: 0; padding: var(--ui-space-xs); border: 0; border-radius: var(--ui-radius-card);
+  background: var(--ui-ground); box-shadow: var(--ui-depth-raised); color: var(--ui-text); font-family: var(--ui-type-family); text-align: start;
+  outline: none; -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+button.ui-desk-version { cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+@media (hover: hover) { button.ui-desk-version:hover:not(:disabled) { background: var(--ui-action-secondary-hover); } }
+button.ui-desk-version:active:not(:disabled) { transform: scale(var(--ui-motion-press-scale)); }
+.ui-desk-version:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-desk-version[aria-current="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); }
+/* r13 #59: while comparing, the versions on the board carry the ring; the picked one keeps its bookmark */
+.ui-desk-versions[data-comparing] .ui-desk-version[aria-current="true"]:not([aria-pressed="true"]) { box-shadow: none; }
+.ui-desk-version[aria-pressed="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); }
+button.ui-desk-version:disabled { cursor: default; }
+.ui-desk-version-thumb { display: block; overflow: hidden; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-desk-version-thumb > img, .ui-desk-version-thumb > .ui-skeleton { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+.ui-desk-version-text { display: grid; gap: 1px; min-width: 0; } /* gate-allow:space-from-tokens a hairline of air between three 12 px lines */
+.ui-desk-version-head { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-desk-version-num {
+  font-family: var(--ui-type-family-data); /* gate-allow:mono-is-data  the version number is data */
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); font-variant-numeric: tabular-nums;
+}
+.ui-desk-version-picked { display: inline-flex; align-items: center; gap: var(--ui-space-xs); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); }
+.ui-desk-version-picked > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-desk-version-when { margin-inline-start: auto; font-size: var(--ui-type-label); color: var(--ui-text-tertiary); white-space: nowrap; }
+.ui-desk-version-line, .ui-desk-version-flags { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-desk-version-flags { display: flex; align-items: center; gap: var(--ui-space-xs); color: var(--ui-text); }
+.ui-desk-version-flags[data-clean] { color: var(--ui-text-tertiary); }
+.ui-desk-version-flags > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+
+/* ---------- a phone: the board and the versions, read-only ---------- */
+
+@media (max-width: 899px) {
+  .ui-desk {
+    display: flex; flex-direction: column; height: auto; min-height: 100vh; min-height: 100dvh; overflow: visible;
+    gap: var(--ui-space-md); padding: 0 var(--ui-space-lg) var(--ui-space-lg);
+  }
+  .ui-desk--state { display: grid; }
+  .ui-desk-bar { display: flex; padding-inline: 0; }
+  .ui-desk-bar-start { flex: 1 1 auto; flex-wrap: wrap; }
+  .ui-desk-title { flex: 1 1 calc(var(--ui-size-hit) * 4); }
+  .ui-desk-title-name { white-space: normal; }
+  .ui-desk-phone-note { display: block; margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+  .ui-desk-centre { gap: var(--ui-space-md); }
+  .ui-desk-canvas { flex: none; }
+  .ui-desk-stage { container-type: inline-size; padding: var(--ui-space-lg); }
+  .ui-desk-shot { width: 100%; }
+  .ui-desk-shot > img { width: 100%; max-width: 100%; max-height: none; }
+  .ui-desk-versions { flex-direction: column; overflow: visible; padding: 0; }
+  .ui-desk-versions > li, .ui-desk-version { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-desk-mode, .ui-desk-fact, .ui-desk-fact-icon, .ui-desk-thumb, .ui-desk-thumb > img, .ui-desk-model, .ui-desk-version, .ui-desk-campaign, .ui-desk-var { transition: none; }
+  .ui-desk-mode:active, .ui-desk-thumb:active, button.ui-desk-version:active, .ui-desk-campaign:active { transform: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .ui-desk-rail { background: var(--ui-glass-bg-solid); }
+}

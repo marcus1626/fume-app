@@ -1,0 +1,23 @@
+/* Review swipe: what Swipe through adds to swipe.css for the customer's review (app round 8, UX review 19 Oct,
+   TASK-4, TASK-21). PROPOSED 19 Oct 2026. swipe.css (ONB's) draws the deck; this file only fits its three choices
+   on a phone. Loaded before swipe.css (the glob is alphabetical), so each rule is scoped under .ui-rv.
+   Markup: <div class="ui-sw-pills" role="group">
+             <button class="ui-btn ui-btn--glass-clear ui-btn--lg"><svg/>Ask for changes</button>
+             <button class="ui-btn ui-btn--glass-clear ui-btn--lg ui-sw-pill-icon"><svg/><span class="ui-sw-pill-word">Comment</span></button>
+             <button class="ui-btn ui-btn--glass-white ui-btn--lg"><svg/>Approve</button></div>
+           the foot that holds them is marked data-ui-foot, so the Approve toast with its Undo rises above the choices
+           instead of covering them.
+   Fume decisions: Approve acts at once (Undo in the toast), so the three choices must all be in reach with a thumb
+   and none may be cut at the edge of a 390 px phone. Words stay on the two that decide (Ask for changes, Approve);
+   Comment, which decides nothing, keeps its pencil and becomes a round icon pill on a phone, its word kept for
+   screen readers. On a desk all three keep their words.
+   Rule gate: actions-are-pills, touch-target, space-from-tokens, type-from-tokens, few-strokes. */
+
+@container ui-rv (max-width: 719.98px) {
+  .ui-rv .ui-sw-pills .ui-sw-pill-icon { flex: none; width: var(--h); padding-inline: 0; }
+  .ui-rv .ui-sw-pill-icon .ui-sw-pill-word {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+  .ui-rv .ui-sw-pills .ui-btn:not(.ui-sw-pill-icon) { min-width: 0; padding-inline: var(--ui-space-sm); }
+  .ui-rv .ui-sw-touch { text-align: center; text-wrap: balance; }
+}

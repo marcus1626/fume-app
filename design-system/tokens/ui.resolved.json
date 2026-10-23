@@ -1,0 +1,3445 @@
+{
+  "$description": "Generated. Every Fume UI token with its CSS variable and final value.",
+  "$principles": [
+    "Calm ground, sharp decisions: Porcelain carries the page, Paper lies behind it, Ink makes the decisions.",
+    "States come into focus: on light surfaces hover moves one step toward Ink on the Focus ramp and pressed moves two; on glass, hover lifts the veil one step and pressed returns.",
+    "Floating layers are Smoke glass (DECIDED 13 Oct): no stroke, a soft Ink shadow under the glass, no shadow on the buttons that sit on it.",
+    "As few strokes as possible. Separate with surface, depth and space, never with lines: a sidebar sits behind the page, not beside it behind a hairline. A hairline only where an element would otherwise vanish (inputs, the white secondary button, the edge of the customer's creative).",
+    "GT Standard for all UI. GT Canon only for marketing titles (website, posts, decks).",
+    "Pills for actions (DECIDED 12 Oct), soft rectangles for content. Rows in a menu fill the menu edge to edge.",
+    "Touch is first class: every target is at least 44 px (--ui-size-hit), a tap shows the pressed state and never the browser's grey flash, and hover exists only where there is a mouse.",
+    "Air before ornament: every surface keeps its inset (--ui-inset-*), so text never crowds an edge or sits in a corner's curve. Padding, margins and gaps come from the space and inset tokens, never from loose numbers.",
+    "High end: fewer, larger, quieter things. Every element earns its place; nothing is decorative.",
+    "Warmth is light, not fill (rounds 10 and 11): Paper behind the page and under the first run, Cream for people, full Amber for checked work; no beige surfaces. Shimmer text is white light through dark words, the Engine's too (Amber shimmer taken out 15 Oct). Ink still makes every decision."
+  ],
+  "tokens": {
+    "color.ground": {
+      "css": "var(--ui-ground)",
+      "value": "#FFFDF9",
+      "description": "Default page ground."
+    },
+    "color.ground-warm": {
+      "css": "var(--ui-ground-warm)",
+      "value": "#FCF6EB",
+      "description": "Whole sections only, never two in a row."
+    },
+    "color.surface": {
+      "css": "var(--ui-surface)",
+      "value": "#F8F6F4",
+      "description": "Cards and grouped content on Porcelain. A card never matches its ground."
+    },
+    "color.surface-sunken": {
+      "css": "var(--ui-surface-sunken)",
+      "value": "#EDE9E4",
+      "description": "Wells, inactive tracks, skeletons."
+    },
+    "color.surface-sunken-hover": {
+      "css": "var(--ui-surface-sunken-hover)",
+      "value": "#DCD6D0",
+      "description": "Hover on a sunken surface (a switch track, a sunken badge): one step toward Ink. PROPOSED, round 7.",
+      "status": "DECIDED"
+    },
+    "color.surface-creative": {
+      "css": "var(--ui-surface-creative)",
+      "value": "#FFFFFF",
+      "description": "Pure white: only the customer's creative, inputs and the secondary button, always with a hairline (one of the few places a stroke is allowed)."
+    },
+    "color.text": {
+      "css": "var(--ui-text)",
+      "value": "#1B1410",
+      "description": "Primary text, 17.9:1 on Porcelain."
+    },
+    "color.text-secondary": {
+      "css": "var(--ui-text-secondary)",
+      "value": "#463E39",
+      "description": "Body and secondary text, 10.3:1."
+    },
+    "color.text-tertiary": {
+      "css": "var(--ui-text-tertiary)",
+      "value": "#6E6259",
+      "description": "Captions and meta, 5.8:1. Never lighter."
+    },
+    "color.text-on-ink": {
+      "css": "var(--ui-text-on-ink)",
+      "value": "#FCF6EB",
+      "description": "Text on Ink, 16.9:1."
+    },
+    "color.text-disabled": {
+      "css": "var(--ui-text-disabled)",
+      "value": "#A49D97",
+      "description": "Disabled labels only."
+    },
+    "color.hairline": {
+      "css": "var(--ui-hairline)",
+      "value": "#E6DDD2",
+      "description": "Only where an element would otherwise vanish: input edges, the white secondary button, the edge of the customer's creative. Never between regions, panels, rows or a sidebar and the page (rule few-strokes)."
+    },
+    "color.hairline-strong": {
+      "css": "var(--ui-hairline-strong)",
+      "value": "#C6C0B9",
+      "description": "Input edges on hover, secondary button on hover."
+    },
+    "color.focus-ring": {
+      "css": "var(--ui-focus-ring)",
+      "value": "#1B1410",
+      "description": "Keyboard focus: a sharp 2px Ink ring, 2px off the edge. Never a soft halo."
+    },
+    "color.focus-ring-on-glass": {
+      "css": "var(--ui-focus-ring-on-glass)",
+      "value": "#FFFDF9",
+      "description": "Keyboard focus on glass."
+    },
+    "color.check": {
+      "css": "var(--ui-check)",
+      "value": "#F59E56",
+      "description": "The Amber check. The checked triangle on work an expert has checked (each checked creative carries one), or a point beside a label. Never a fill, a button, text or an area bigger than a chip."
+    },
+    "color.check-waiting": {
+      "css": "var(--ui-check-waiting)",
+      "value": "#807973",
+      "description": "The checked triangle on work that is still in check: the same shape as the Amber check, in grey (Marcus 13 Oct: Amber only when checked; the expert checks, only the customer approves). Always beside a text label, so colour is never the only signal.",
+      "status": "DECIDED"
+    },
+    "color.selection": {
+      "css": "var(--ui-selection)",
+      "value": "#DCD6D0",
+      "description": "Text selection highlight: a neutral grey under Ink text. Round 13 (Marcus 21 Oct, #37: \"Feil tekst markerings farge\"; PROPOSED): Amber 100 read as checked, and Amber only means checked by an expert."
+    },
+    "color.selection-on-glass": {
+      "css": "var(--ui-selection-on-glass)",
+      "value": "rgb(255 253 249 / 0.28)",
+      "description": "Text selection on Smoke glass: a light veil under the light glass text. Round 13 (#37; PROPOSED)."
+    },
+    "color.selected": {
+      "css": "var(--ui-selected)",
+      "value": "rgb(245 158 86 / 0.1)",
+      "description": "Light on what you chose: a selected row, a date range. A faint wash of Amber, 10 % over the ground (#FEF4E9 on Porcelain), never full Amber and never a button; the control that chose it (the checkbox, the ends of the range) stays Ink. Round 10 (Marcus 13 Oct: Amber 50 was too much here); round 9 had Amber 50, round 8 Focus 100. The other candidate, Focus 100, is under $options.selection.",
+      "status": "DECIDED"
+    },
+    "color.depth-near": {
+      "css": "var(--ui-depth-near)",
+      "value": "rgb(27 20 16 / 0.06)",
+      "description": "Contact shadow for raised surfaces on light ground."
+    },
+    "color.depth-far": {
+      "css": "var(--ui-depth-far)",
+      "value": "rgb(27 20 16 / 0.08)",
+      "description": "Soft spread shadow for raised surfaces on light ground."
+    },
+    "color.ground-behind": {
+      "css": "var(--ui-ground-behind)",
+      "value": "#FCF6EB",
+      "description": "The layer behind the page: app sidebars and rails sit on it, and the page lies on top as a Porcelain sheet. Paper, the warm ground the work lies on (DECIDED: Marcus chose Warmer, 13 Oct, round 9; round 8 had Focus 100). No stroke between them. Tertiary text 5.5:1.",
+      "status": "DECIDED"
+    },
+    "color.behind-hover": {
+      "css": "var(--ui-behind-hover)",
+      "value": "#F5E8D2",
+      "description": "Rows on the layer behind (sidebar navigation): hover, one step warmer, Cream (DECIDED with Warmer, 13 Oct; round 8 had Focus 200). Tertiary text 4.9:1.",
+      "status": "DECIDED"
+    },
+    "color.behind-active": {
+      "css": "var(--ui-behind-active)",
+      "value": "#FFFDF9",
+      "description": "The current place in the sidebar comes forward to the page's own Porcelain, lifted with depth-raised.",
+      "status": "DECIDED"
+    },
+    "color.danger": {
+      "css": "var(--ui-danger)",
+      "value": "#BA4A52",
+      "description": "Rouge (Marcus, 13 Oct 2026, F-D067). Delete and errors. Paper label 4.7:1, as text on Porcelain 4.9:1.",
+      "status": "DECIDED"
+    },
+    "color.danger-hover": {
+      "css": "var(--ui-danger-hover)",
+      "value": "#AB3C45",
+      "description": "One step toward Ink. Paper label 5.7:1.",
+      "status": "DECIDED"
+    },
+    "color.state-ready": {
+      "css": "var(--ui-state-ready)",
+      "value": "#2F6B45",
+      "description": "PROPOSED 22 Oct 2026 (round 13, Marcus #39): Moss, the colour of ready. The label and dot of a Ready or Delivered badge, never anything else. 5.4:1 on its ground, 6.2:1 on Porcelain.",
+      "status": "PROPOSED"
+    },
+    "color.state-ready-ground": {
+      "css": "var(--ui-state-ready-ground)",
+      "value": "#E6EFE2",
+      "description": "PROPOSED with state-ready: the light ground of a Ready or Delivered badge.",
+      "status": "PROPOSED"
+    },
+    "color.action.primary": {
+      "css": "var(--ui-action-primary)",
+      "value": "#1B1410",
+      "description": "Ink: the first button."
+    },
+    "color.action.primary-hover": {
+      "css": "var(--ui-action-primary-hover)",
+      "value": "#2C2520",
+      "description": "Ink lifts one step."
+    },
+    "color.action.primary-pressed": {
+      "css": "var(--ui-action-primary-pressed)",
+      "value": "#1B1410",
+      "description": "Returns to Ink; the press is carried by scale."
+    },
+    "color.action.primary-fg": {
+      "css": "var(--ui-action-primary-fg)",
+      "value": "#FCF6EB"
+    },
+    "color.action.secondary": {
+      "css": "var(--ui-action-secondary)",
+      "value": "#FFFFFF",
+      "description": "White: the second button, with a hairline."
+    },
+    "color.action.secondary-hover": {
+      "css": "var(--ui-action-secondary-hover)",
+      "value": "#F8F6F4",
+      "description": "One step toward Ink."
+    },
+    "color.action.secondary-pressed": {
+      "css": "var(--ui-action-secondary-pressed)",
+      "value": "#EDE9E4",
+      "description": "Two steps toward Ink."
+    },
+    "color.action.secondary-edge": {
+      "css": "var(--ui-action-secondary-edge)",
+      "value": "#DCD6D0"
+    },
+    "color.action.secondary-edge-hover": {
+      "css": "var(--ui-action-secondary-edge-hover)",
+      "value": "#C6C0B9"
+    },
+    "color.action.secondary-fg": {
+      "css": "var(--ui-action-secondary-fg)",
+      "value": "#1B1410"
+    },
+    "color.action.quiet": {
+      "css": "var(--ui-action-quiet)",
+      "value": "transparent",
+      "description": "Ghost: no surface at rest."
+    },
+    "color.action.quiet-hover": {
+      "css": "var(--ui-action-quiet-hover)",
+      "value": "#EDE9E4",
+      "description": "One step."
+    },
+    "color.action.quiet-pressed": {
+      "css": "var(--ui-action-quiet-pressed)",
+      "value": "#DCD6D0",
+      "description": "Two steps."
+    },
+    "color.action.quiet-fg": {
+      "css": "var(--ui-action-quiet-fg)",
+      "value": "#1B1410"
+    },
+    "color.action.disabled": {
+      "css": "var(--ui-action-disabled)",
+      "value": "#EDE9E4"
+    },
+    "color.action.disabled-fg": {
+      "css": "var(--ui-action-disabled-fg)",
+      "value": "#A49D97"
+    },
+    "color.glass.bg": {
+      "css": "var(--ui-glass-bg)",
+      "value": "rgb(27 20 16 / 0.28)",
+      "description": "Smoke (Marcus, 13 Oct 2026: Smoke, a little lighter). Ink at 28 % over a softened, dimmed backdrop: neutral warm grey, lighter and clearer than round 3.",
+      "status": "DECIDED"
+    },
+    "color.glass.bg-solid": {
+      "css": "var(--ui-glass-bg-solid)",
+      "value": "rgb(27 20 16 / 0.94)",
+      "description": "Fallback when blur is unsupported or transparency is reduced: solid Ink, never solid Brown."
+    },
+    "color.glass.fg": {
+      "css": "var(--ui-glass-fg)",
+      "value": "#FFFDF9",
+      "description": "Text on glass."
+    },
+    "color.glass.fg-secondary": {
+      "css": "var(--ui-glass-fg-secondary)",
+      "value": "rgb(255 253 249 / 0.88)",
+      "description": "Secondary text on glass, weight 500. 5.4:1 over the worst backdrop (a white page). Never thinner or fainter."
+    },
+    "color.glass.scrim": {
+      "css": "var(--ui-glass-scrim)",
+      "value": "rgb(27 20 16 / 0.28)",
+      "description": "Dims the page behind a modal (dim to focus)."
+    },
+    "color.glass.shadow-color": {
+      "css": "var(--ui-glass-shadow-color)",
+      "value": "rgb(27 20 16 / 0.42)"
+    },
+    "color.glass.shadow-color-near": {
+      "css": "var(--ui-glass-shadow-color-near)",
+      "value": "rgb(27 20 16 / 0.2)"
+    },
+    "color.glass.button-white": {
+      "css": "var(--ui-glass-button-white)",
+      "value": "rgb(255 253 249 / 0.94)",
+      "description": "White button: the main action on glass. At least 90 % white so it reads solid. Ink label, 15:1. No shadow."
+    },
+    "color.glass.button-white-hover": {
+      "css": "var(--ui-glass-button-white-hover)",
+      "value": "#FFFDF9",
+      "description": "Lifts to solid Porcelain."
+    },
+    "color.glass.button-white-pressed": {
+      "css": "var(--ui-glass-button-white-pressed)",
+      "value": "rgb(255 253 249 / 0.86)",
+      "description": "Sinks a little, with the 3 % shrink."
+    },
+    "color.glass.button-white-fg": {
+      "css": "var(--ui-glass-button-white-fg)",
+      "value": "#1B1410"
+    },
+    "color.glass.button-clear": {
+      "css": "var(--ui-glass-button-clear)",
+      "value": "rgb(255 253 249 / 0.1)",
+      "description": "Clear button: a faint Porcelain veil, so it is visibly there without a shadow or a stroke. Porcelain label 5.0:1 over the worst backdrop. Secondary actions on glass."
+    },
+    "color.glass.button-clear-hover": {
+      "css": "var(--ui-glass-button-clear-hover)",
+      "value": "rgb(255 253 249 / 0.14)",
+      "description": "Lifts one step. Porcelain label 4.6:1 over the worst backdrop."
+    },
+    "color.glass.button-clear-pressed": {
+      "css": "var(--ui-glass-button-clear-pressed)",
+      "value": "rgb(255 253 249 / 0.1)",
+      "description": "Returns to rest, with the 3 % shrink."
+    },
+    "color.glass.button-clear-fg": {
+      "css": "var(--ui-glass-button-clear-fg)",
+      "value": "#FFFDF9"
+    },
+    "color.glass.button-danger": {
+      "css": "var(--ui-glass-button-danger)",
+      "value": "rgb(186 74 82 / 0.8)",
+      "description": "Coloured buttons on glass have their own transparency: the colour at 80 %, so the glass shows through (Marcus 13 Oct). Danger is the only coloured button; Amber is never one. Porcelain label. No shadow, no stroke.",
+      "status": "DECIDED"
+    },
+    "color.glass.button-danger-hover": {
+      "css": "var(--ui-glass-button-danger-hover)",
+      "value": "rgb(186 74 82 / 0.9)",
+      "description": "Lifts to 90 %.",
+      "status": "DECIDED"
+    },
+    "color.glass.button-danger-pressed": {
+      "css": "var(--ui-glass-button-danger-pressed)",
+      "value": "rgb(186 74 82 / 0.8)",
+      "description": "Returns to rest, with the 3 % shrink.",
+      "status": "DECIDED"
+    },
+    "color.glass.button-danger-fg": {
+      "css": "var(--ui-glass-button-danger-fg)",
+      "value": "#FFFDF9"
+    },
+    "color.glass.button-disabled": {
+      "css": "var(--ui-glass-button-disabled)",
+      "value": "rgb(255 253 249 / 0.06)",
+      "description": "Disabled button on glass, either variant."
+    },
+    "color.glass.button-disabled-fg": {
+      "css": "var(--ui-glass-button-disabled-fg)",
+      "value": "rgb(255 253 249 / 0.45)"
+    },
+    "color.glass.item-hover": {
+      "css": "var(--ui-glass-item-hover)",
+      "value": "rgb(255 253 249 / 0.14)",
+      "description": "Menu rows on glass: hover and keyboard highlight. The row fills the menu edge to edge."
+    },
+    "color.glass.field": {
+      "css": "var(--ui-glass-field)",
+      "value": "rgb(255 253 249 / 0.12)",
+      "description": "Text fields on glass. No stroke; focus shows the ring. Label 4.8:1."
+    },
+    "glass.filter": {
+      "css": "var(--ui-glass-filter)",
+      "value": "blur(20px) saturate(1.5) contrast(0.65) brightness(0.58)",
+      "description": "Smoke, lighter: the backdrop is softened (contrast 0.65) so dark images lift and light pages stay readable. Over a white page Porcelain text is 6.3:1, secondary text 5.4:1.",
+      "status": "DECIDED"
+    },
+    "glass.filter-small": {
+      "css": "var(--ui-glass-filter-small)",
+      "value": "blur(14px) saturate(1.5) contrast(0.65) brightness(0.58)",
+      "description": "Small glass (tooltips, chips): the same material, thinner blur."
+    },
+    "glass.shadow": {
+      "css": "var(--ui-glass-shadow)",
+      "value": "0 24px 48px -18px rgb(27 20 16 / 0.42), 0 6px 14px -6px rgb(27 20 16 / 0.2)",
+      "description": "Under the glass only: offset, Ink-tinted. No glow, no stroke, never on the buttons."
+    },
+    "glass.shadow-small": {
+      "css": "var(--ui-glass-shadow-small)",
+      "value": "0 10px 24px -10px rgb(27 20 16 / 0.42), 0 2px 6px -2px rgb(27 20 16 / 0.2)"
+    },
+    "depth.raised": {
+      "css": "var(--ui-depth-raised)",
+      "value": "0 1px 2px rgb(27 20 16 / 0.06), 0 2px 8px -2px rgb(27 20 16 / 0.08)",
+      "description": "A surface lifted a little off its ground (the selected pill in a segmented control, a popover handle). Replaces a hairline.",
+      "status": "DECIDED"
+    },
+    "depth.sheet": {
+      "css": "var(--ui-depth-sheet)",
+      "value": "0 1px 3px rgb(27 20 16 / 0.06), 0 16px 40px -16px rgb(27 20 16 / 0.08)",
+      "description": "The page as a sheet lying on the layer behind it (ground-behind). Replaces the stroke between a sidebar and the page.",
+      "status": "DECIDED"
+    },
+    "radius.action": {
+      "css": "var(--ui-radius-action)",
+      "value": "999px",
+      "description": "Pill: buttons, chips, badges, segmented controls, toolbars. DECIDED 12 Oct 2026 (Marcus).",
+      "status": "DECIDED"
+    },
+    "radius.field": {
+      "css": "var(--ui-radius-field)",
+      "value": "12px",
+      "description": "Inputs, selects, textareas."
+    },
+    "radius.item": {
+      "css": "var(--ui-radius-item)",
+      "value": "10px",
+      "description": "Rows in lists on light surfaces. Menu rows on glass have no radius of their own: they fill the menu and its corners clip them."
+    },
+    "radius.check": {
+      "css": "var(--ui-radius-check)",
+      "value": "6px",
+      "description": "Checkboxes: a 20 px box with a soft corner, half the field radius, so it keeps the softness of a field without turning into a circle. PROPOSED, round 7.",
+      "status": "DECIDED"
+    },
+    "radius.card": {
+      "css": "var(--ui-radius-card)",
+      "value": "16px",
+      "description": "Cards and creative tiles: 16px."
+    },
+    "radius.float": {
+      "css": "var(--ui-radius-float)",
+      "value": "22px",
+      "description": "Menus, selects, popovers and tooltips: floating glass that is not a dialog. Rounder than cards. DECIDED 13 Oct 2026 (Marcus chose Rounder).",
+      "status": "DECIDED"
+    },
+    "radius.panel": {
+      "css": "var(--ui-radius-panel)",
+      "value": "32px",
+      "description": "Dialogs, sheets, large glass panels. DECIDED 13 Oct 2026 (Marcus chose Rounder).",
+      "status": "DECIDED"
+    },
+    "space.xs": {
+      "css": "var(--ui-space-xs)",
+      "value": "4px",
+      "description": "4px. Between a label and its hint."
+    },
+    "space.sm": {
+      "css": "var(--ui-space-sm)",
+      "value": "8px",
+      "description": "8px. Icon to label in buttons; between buttons in a row."
+    },
+    "space.md": {
+      "css": "var(--ui-space-md)",
+      "value": "12px",
+      "description": "12px. Icon to label in menu rows; between a title and its text."
+    },
+    "space.lg": {
+      "css": "var(--ui-space-lg)",
+      "value": "16px",
+      "description": "16px. Between groups inside a surface."
+    },
+    "space.xl": {
+      "css": "var(--ui-space-xl)",
+      "value": "24px",
+      "description": "24px. Between a dialog's text and its buttons."
+    },
+    "space.2xl": {
+      "css": "var(--ui-space-2xl)",
+      "value": "32px",
+      "description": "32px. Between sections."
+    },
+    "inset.panel": {
+      "css": "var(--ui-inset-panel)",
+      "value": "24px",
+      "description": "24px. Dialogs, sheets and glass panels with text (radius.panel 32).",
+      "status": "DECIDED"
+    },
+    "inset.float": {
+      "css": "var(--ui-inset-float)",
+      "value": "16px",
+      "description": "16px. Popovers, cards and toasts with text, and sideways in menu and list rows (radius.float 22).",
+      "status": "DECIDED"
+    },
+    "inset.tight": {
+      "css": "var(--ui-inset-tight)",
+      "value": "12px",
+      "description": "12px. Sideways in tooltips and small glass labels.",
+      "status": "DECIDED"
+    },
+    "inset.ring": {
+      "css": "var(--ui-inset-ring)",
+      "value": "6px",
+      "description": "The even gap between a pill bar and the pills inside it, so the inner pill follows the outer one.",
+      "status": "DECIDED"
+    },
+    "inset.seg": {
+      "css": "var(--ui-inset-seg)",
+      "value": "3px",
+      "description": "Gap between a segmented track and its white pill. Round 6 choice: inset (3px) or fill (0, the pill fills the track); see $options.segmented.",
+      "status": "DECIDED"
+    },
+    "type.family": {
+      "css": "var(--ui-type-family)",
+      "value": "'GT Standard', 'Geist', 'Helvetica Neue', Arial, sans-serif",
+      "description": "GT Standard. The only UI face."
+    },
+    "type.family-data": {
+      "css": "var(--ui-type-family-data)",
+      "value": "'GT Standard Mono', 'Geist Mono', ui-monospace, monospace",
+      "description": "GT Standard Mono: timestamps, sizes, codes, keyboard keys. Never as decoration."
+    },
+    "type.label": {
+      "css": "var(--ui-type-label)",
+      "value": "12px",
+      "description": "12px, weight 500, +0.01em."
+    },
+    "type.control": {
+      "css": "var(--ui-type-control)",
+      "value": "14px",
+      "description": "14px: buttons, inputs, menu items."
+    },
+    "type.body": {
+      "css": "var(--ui-type-body)",
+      "value": "16px",
+      "description": "16px."
+    },
+    "type.body-large": {
+      "css": "var(--ui-type-body-large)",
+      "value": "18px",
+      "description": "18px."
+    },
+    "type.title": {
+      "css": "var(--ui-type-title)",
+      "value": "24px",
+      "description": "24px, weight 500, -0.015em. GT Standard, not Canon."
+    },
+    "type.title-large": {
+      "css": "var(--ui-type-title-large)",
+      "value": "32px",
+      "description": "32px, weight 500, -0.02em. GT Standard, not Canon."
+    },
+    "type.display": {
+      "css": "var(--ui-type-display)",
+      "value": "52px",
+      "description": "52px, GT Canon, weight 500, -0.02em. Marketing titles only (the brand book's page titles, the website, decks); never in the product. Each use marks gate-allow:canon-not-in-ui.",
+      "status": "PROPOSED"
+    },
+    "type.display-hero": {
+      "css": "var(--ui-type-display-hero)",
+      "value": "72px",
+      "description": "72px, GT Canon, weight 400, -0.02em. The one title that leads the first view of a web page (kit/web.css .web-display--hero). Marketing only; each use marks gate-allow:canon-not-in-ui.",
+      "status": "PROPOSED"
+    },
+    "type.display-small": {
+      "css": "var(--ui-type-display-small)",
+      "value": "32px",
+      "description": "32px, GT Canon. Marketing titles on a phone (under 760 px), so a title keeps to three or four lines at 390 px (kit/web.css).",
+      "status": "PROPOSED"
+    },
+    "type.display-family": {
+      "css": "var(--ui-type-display-family)",
+      "value": "'GT Canon', 'Newsreader', Georgia, serif",
+      "description": "GT Canon (Newsreader stands in on trial licences). Only with --ui-type-display, for marketing titles; the gate flags every use (canon-not-in-ui) so each one is marked.",
+      "status": "PROPOSED"
+    },
+    "type.weight-regular": {
+      "css": "var(--ui-type-weight-regular)",
+      "value": "400"
+    },
+    "type.weight-medium": {
+      "css": "var(--ui-type-weight-medium)",
+      "value": "500"
+    },
+    "size.control-sm": {
+      "css": "var(--ui-size-control-sm)",
+      "value": "32px"
+    },
+    "size.control-md": {
+      "css": "var(--ui-size-control-md)",
+      "value": "40px"
+    },
+    "size.control-lg": {
+      "css": "var(--ui-size-control-lg)",
+      "value": "48px",
+      "description": "Touch and marketing."
+    },
+    "size.seg": {
+      "css": "var(--ui-size-seg)",
+      "value": "36px",
+      "description": "Height of a segmented track (tabs, filters). The options are this minus twice inset.seg.",
+      "status": "DECIDED"
+    },
+    "size.hit": {
+      "css": "var(--ui-size-hit)",
+      "value": "44px",
+      "description": "The smallest touch target (Apple HIG 44 pt, WCAG 2.5.5). A control may look smaller (32 px small buttons, 30 px tab pills) but its hit area is never under this.",
+      "status": "DECIDED"
+    },
+    "size.icon-sm": {
+      "css": "var(--ui-size-icon-sm)",
+      "value": "14px"
+    },
+    "size.icon": {
+      "css": "var(--ui-size-icon)",
+      "value": "16px"
+    },
+    "size.icon-lg": {
+      "css": "var(--ui-size-icon-lg)",
+      "value": "18px"
+    },
+    "size.icon-stroke": {
+      "css": "var(--ui-size-icon-stroke)",
+      "value": "2.25",
+      "description": "Line-only icons (check, plus, x, arrows, search). Every other icon is filled (DECIDED 13 Oct). Built in design-system/icons."
+    },
+    "size.pad-sm": {
+      "css": "var(--ui-size-pad-sm)",
+      "value": "14px"
+    },
+    "size.pad-md": {
+      "css": "var(--ui-size-pad-md)",
+      "value": "18px"
+    },
+    "size.pad-lg": {
+      "css": "var(--ui-size-pad-lg)",
+      "value": "24px"
+    },
+    "size.ring": {
+      "css": "var(--ui-size-ring)",
+      "value": "2px"
+    },
+    "size.ring-offset": {
+      "css": "var(--ui-size-ring-offset)",
+      "value": "2px"
+    },
+    "motion.instant": {
+      "css": "var(--ui-motion-instant)",
+      "value": "100ms",
+      "description": "Press feedback, on pointer-down."
+    },
+    "motion.fast": {
+      "css": "var(--ui-motion-fast)",
+      "value": "160ms",
+      "description": "Hover and colour changes."
+    },
+    "motion.base": {
+      "css": "var(--ui-motion-base)",
+      "value": "240ms",
+      "description": "Glass materialising, small layout changes."
+    },
+    "motion.slow": {
+      "css": "var(--ui-motion-slow)",
+      "value": "480ms",
+      "description": "Large surfaces."
+    },
+    "motion.ease": {
+      "css": "var(--ui-motion-ease)",
+      "value": "cubic-bezier(.2, 0, 0, 1)",
+      "description": "ease.focus: soft to sharp."
+    },
+    "motion.press-scale": {
+      "css": "var(--ui-motion-press-scale)",
+      "value": "0.97"
+    },
+    "motion.enter-blur": {
+      "css": "var(--ui-motion-enter-blur)",
+      "value": "8px",
+      "description": "Glass arrives from blur to sharp."
+    },
+    "motion.enter-scale": {
+      "css": "var(--ui-motion-enter-scale)",
+      "value": "0.98"
+    },
+    "motion.spin": {
+      "css": "var(--ui-motion-spin)",
+      "value": "900ms",
+      "description": "One turn of the loading spinner."
+    },
+    "motion.spin-reduced": {
+      "css": "var(--ui-motion-spin-reduced)",
+      "value": "2400ms",
+      "description": "Spinner under reduced motion."
+    },
+    "motion.slide": {
+      "css": "var(--ui-motion-slide)",
+      "value": "280ms",
+      "description": "Tabs and segmented controls: the selection slides to the new option. Easing gets its own round."
+    },
+    "book.page": {
+      "css": "var(--ui-book-page)",
+      "value": "1120px",
+      "description": "Widest the page content gets beside the contents rail: figures and specimens use it all.",
+      "status": "PROPOSED"
+    },
+    "book.measure": {
+      "css": "var(--ui-book-measure)",
+      "value": "68ch",
+      "description": "The reading column: running text never runs wider than 68 characters.",
+      "status": "PROPOSED"
+    },
+    "book.lede": {
+      "css": "var(--ui-book-lede)",
+      "value": "56ch",
+      "description": "The page's opening line under its title.",
+      "status": "PROPOSED"
+    },
+    "book.toc": {
+      "css": "var(--ui-book-toc)",
+      "value": "200px",
+      "description": "The contents rail on the right (On this page), shown from 1280 px.",
+      "status": "PROPOSED"
+    },
+    "book.bar": {
+      "css": "var(--ui-book-bar)",
+      "value": "48px",
+      "description": "Height of the bar at the top of the page sheet: the drawer button on a phone, where you are, Search.",
+      "status": "PROPOSED"
+    },
+    "book.figure-min": {
+      "css": "var(--ui-book-figure-min)",
+      "value": "240px",
+      "description": "Smallest a specimen tile gets before the grid drops a column.",
+      "status": "PROPOSED"
+    },
+    "book.swatch": {
+      "css": "var(--ui-book-swatch)",
+      "value": "96px",
+      "description": "Height of a colour swatch's colour field.",
+      "status": "PROPOSED"
+    },
+    "book.logo-stage": {
+      "css": "var(--ui-book-logo-stage)",
+      "value": "280px",
+      "description": "Height of a logo stage: the logo sits in the middle with its clear space around it.",
+      "status": "PROPOSED"
+    },
+    "chart.series-1": {
+      "css": "var(--ui-chart-series-1)",
+      "value": "#1B1410",
+      "description": "The first series: Ink. 17.9:1 on Porcelain, 16.9:1 on a card. Series take their colour in this fixed order and keep it when others are hidden (colour follows the series, never its rank). Never Amber.",
+      "status": "DECIDED"
+    },
+    "chart.series-2": {
+      "css": "var(--ui-chart-series-2)",
+      "value": "#615953",
+      "description": "The second series: Focus 600. 6.8:1 on Porcelain, 6.4:1 on a card; 27 apart from Ink (OKLab x100), so the two read apart at a glance and in greyscale.",
+      "status": "DECIDED"
+    },
+    "chart.series-3": {
+      "css": "var(--ui-chart-series-3)",
+      "value": "#A49D97",
+      "description": "The third series: Focus 400. 2.6:1 on Porcelain, under 3:1, so it never stands alone: it sits beside a darker series behind a 2 px gap, and the legend, a direct label and the table name it. 23 apart from Focus 600.",
+      "status": "DECIDED"
+    },
+    "chart.series-4": {
+      "css": "var(--ui-chart-series-4)",
+      "value": "#DCD6D0",
+      "description": "The fourth and last series: Focus 200 (1.4:1), for an Other slice or the rest of a whole, always labelled. A fifth series folds into Other; Fume never makes up a fifth colour.",
+      "status": "DECIDED"
+    },
+    "chart.approved": {
+      "css": "var(--ui-chart-approved)",
+      "value": "#F59E56",
+      "description": "Checked work in a chart: full Amber, the colour of the check (decided with Warmer, Marcus 13 Oct; round 9, Marcus 13 Oct: more Amber). Only for a series that counts approvals (approved per week, first-pass approval), never for any other series; Generated beside it stays Ink. 2.1:1 on Porcelain, so like series 3 it never stands alone: it is named in the legend and at the end of its line, and its values are in words and in the tooltip.",
+      "status": "DECIDED"
+    },
+    "chart.area-opacity": {
+      "css": "var(--ui-chart-area-opacity)",
+      "value": "0.08",
+      "description": "An area is its series colour at 8 %, flat: a wash under the line, never a gradient and never a block. Where two areas overlap the wash doubles, so the band between Generated and Approved reads on its own.",
+      "status": "DECIDED"
+    },
+    "chart.tick": {
+      "css": "var(--ui-chart-tick)",
+      "value": "#6E6259",
+      "description": "Axis ticks, dates and category names: tertiary text, 5.8:1. Ticks are words only: no axis line, no tick marks, no gridlines.",
+      "status": "DECIDED"
+    },
+    "chart.label": {
+      "css": "var(--ui-chart-label)",
+      "value": "#463E39",
+      "description": "Direct labels on the marks (the last value of a line, the total on a column): secondary text, 10.3:1. Text never wears a series colour.",
+      "status": "DECIDED"
+    },
+    "chart.baseline": {
+      "css": "var(--ui-chart-baseline)",
+      "value": "#E6DDD2",
+      "description": "The one line a chart may draw: a hairline at zero under vertical bars, because columns of different heights otherwise float as loose blocks above their names, and a zero (Travel Minis has no Banners) needs a floor to read as zero. Lines, areas, rows and donuts have none.",
+      "status": "DECIDED"
+    },
+    "chart.cursor": {
+      "css": "var(--ui-chart-cursor)",
+      "value": "rgb(27 20 16 / 0.05)",
+      "description": "The point under the pointer or the keyboard: a soft band behind that week or that column (Ink at 5 %), radius item. A surface, not a crosshair line. With the keyboard it carries the 2 px focus ring.",
+      "status": "DECIDED"
+    },
+    "chart.dim": {
+      "css": "var(--ui-chart-dim)",
+      "value": "0.32",
+      "description": "Opacity of the other slices while one donut slice is active, so the active one comes into focus.",
+      "status": "DECIDED"
+    },
+    "chart.gap": {
+      "css": "var(--ui-chart-gap)",
+      "value": "2px",
+      "description": "The surface gap between touching marks: stacked segments, bars side by side in a group and donut slices. Space separates them, never a stroke around a mark.",
+      "status": "DECIDED"
+    },
+    "chart.bar-max": {
+      "css": "var(--ui-chart-bar-max)",
+      "value": "24px",
+      "description": "The widest a column gets. The rest of its slot stays air.",
+      "status": "DECIDED"
+    },
+    "chart.bar-grouped": {
+      "css": "var(--ui-chart-bar-grouped)",
+      "value": "16px",
+      "description": "Each column in a group of three: 16 + 2 + 16 + 2 + 16, so a group is about twice a stacked column.",
+      "status": "DECIDED"
+    },
+    "chart.bar-row": {
+      "css": "var(--ui-chart-bar-row)",
+      "value": "12px",
+      "description": "A bar in the row layout (ranking, and every bar chart on a phone): 12 tall under its name, 8 below it. A ranking bar is a pill on a sunken track that runs to 100 %.",
+      "status": "DECIDED"
+    },
+    "chart.bar-radius": {
+      "css": "var(--ui-chart-bar-radius)",
+      "value": "4px",
+      "description": "The data end of a bar is rounded 4 px; the end at the baseline stays square, so every bar visibly grows from the same zero. Only the top segment of a stack is rounded.",
+      "status": "DECIDED"
+    },
+    "chart.track": {
+      "css": "var(--ui-chart-track)",
+      "value": "#EDE9E4",
+      "description": "The track behind a ranking bar, to 100 %. Inside a card it steps one deeper (track-on-surface), like a progress bar in a card.",
+      "status": "DECIDED"
+    },
+    "chart.track-on-surface": {
+      "css": "var(--ui-chart-track-on-surface)",
+      "value": "#DCD6D0",
+      "description": "The ranking track inside a card: Focus 200, so it reads on the card surface without a line.",
+      "status": "DECIDED"
+    },
+    "chart.line": {
+      "css": "var(--ui-chart-line)",
+      "value": "2px",
+      "description": "A line is 2 px, round caps and joins, drawn on a monotone curve (it never overshoots a value).",
+      "status": "DECIDED"
+    },
+    "chart.point": {
+      "css": "var(--ui-chart-point)",
+      "value": "8px",
+      "description": "A point (the last value of a line, the point under the pointer): an 8 px dot in the series colour with a 2 px ring in the ground colour, so it stays clear where it crosses a line.",
+      "status": "DECIDED"
+    },
+    "chart.height": {
+      "css": "var(--ui-chart-height)",
+      "value": "240px",
+      "description": "The default chart height, axis band included, so a card never needs its own scroll.",
+      "status": "DECIDED"
+    },
+    "chart.height-compact": {
+      "css": "var(--ui-chart-height-compact)",
+      "value": "200px",
+      "description": "The height on a phone and in a half-width card.",
+      "status": "DECIDED"
+    },
+    "chart.tick-gap": {
+      "css": "var(--ui-chart-tick-gap)",
+      "value": "8px",
+      "description": "8 px between the plot and its tick labels, and between a mark and its direct label.",
+      "status": "DECIDED"
+    },
+    "chart.donut": {
+      "css": "var(--ui-chart-donut)",
+      "value": "176px",
+      "description": "The donut's diameter. The total sits in the middle in the data type.",
+      "status": "DECIDED"
+    },
+    "chart.donut-ring": {
+      "css": "var(--ui-chart-donut-ring)",
+      "value": "20px",
+      "description": "The donut's ring: thin enough to read as a whole, with 2 px gaps between slices.",
+      "status": "DECIDED"
+    },
+    "chart.draw": {
+      "css": "var(--ui-chart-draw)",
+      "value": "480ms",
+      "description": "The draw-in when a chart first comes into view: lines draw from the left, bars grow from the baseline, the donut sweeps round, in 480 ms. With reduced motion the chart is simply there.",
+      "status": "DECIDED"
+    },
+    "chart.stagger": {
+      "css": "var(--ui-chart-stagger)",
+      "value": "calc(100ms / 4)",
+      "description": "25 ms between columns as they grow, so the draw-in travels across the chart like light.",
+      "status": "DECIDED"
+    },
+    "chart.tooltip-width": {
+      "css": "var(--ui-chart-tooltip-width)",
+      "value": "168px",
+      "description": "The least width of the chart tooltip: Smoke glass at radius float with 16 px air (it holds several lines, so it is a small panel, not tooltip.css's one-line pill). The date on top, then one row per series: the name in secondary, the value in the data type. No colour keys: on Smoke glass every Focus step but Ink sinks into the glass, so the names carry identity and the chart's active points carry the colour.",
+      "status": "DECIDED"
+    },
+    "stat.min": {
+      "css": "var(--ui-stat-min)",
+      "value": "132px",
+      "description": "The narrowest a stat tile gets: a row of four on a desktop, two by two on a phone.",
+      "status": "DECIDED"
+    },
+    "stat.gap": {
+      "css": "var(--ui-stat-gap)",
+      "value": "16px",
+      "description": "16 px between tiles in a row.",
+      "status": "DECIDED"
+    },
+    "stat.spark": {
+      "css": "var(--ui-stat-spark)",
+      "value": "40px",
+      "description": "The height of a tile's sparkline. It spans the tile, 16 below the comparison, and ends in a dot on the latest value.",
+      "status": "DECIDED"
+    },
+    "stat.spark-line": {
+      "css": "var(--ui-stat-spark-line)",
+      "value": "#1B1410",
+      "description": "The sparkline is Ink, 2 px, with its area wash. Never a trend colour: up and down are said in words beside the trend icon.",
+      "status": "DECIDED"
+    },
+    "stat.empty": {
+      "css": "var(--ui-stat-empty)",
+      "value": "#DCD6D0",
+      "description": "An empty tile draws its sparkline as a flat line in Focus 200 along zero: the shape of nothing yet, not a missing chart.",
+      "status": "DECIDED"
+    },
+    "legend.swatch": {
+      "css": "var(--ui-legend-swatch)",
+      "value": "8px",
+      "description": "The key beside a series name: an 8 px dot, the same as the chart's points.",
+      "status": "DECIDED"
+    },
+    "legend.height": {
+      "css": "var(--ui-legend-height)",
+      "value": "32px",
+      "description": "A legend item is a 32 px pill toggle with a 44 px hit area. At rest it has no surface (dot and name only); hover and press bring up the quiet pill.",
+      "status": "DECIDED"
+    },
+    "legend.off": {
+      "css": "var(--ui-legend-off)",
+      "value": "#DCD6D0",
+      "description": "The key of a hidden series turns Focus 200 and its name tertiary; aria-pressed says it, so colour is never the only signal. The axis never moves when a series is hidden.",
+      "status": "DECIDED"
+    },
+    "check.size": {
+      "css": "var(--ui-check-size)",
+      "value": "20px",
+      "description": "The checkbox and the radio: a 20 px box, centred in a 44 px hit area (size.hit).",
+      "status": "DECIDED"
+    },
+    "check.bg": {
+      "css": "var(--ui-check-bg)",
+      "value": "#FFFFFF",
+      "description": "Unchecked checkbox and radio: white, like an input, with the edge below.",
+      "status": "DECIDED"
+    },
+    "check.edge": {
+      "css": "var(--ui-check-edge)",
+      "value": "rgb(27 20 16 / 0.48)",
+      "description": "The hairline of an unchecked box or circle: Ink at 48 %, 3.2:1 on white and 3.0:1 against a card, so the 20 px control passes the 3:1 for UI parts. Lighter hairlines (Border, Focus 300) vanish at this size. One of the few strokes the system allows: without it the box disappears.",
+      "status": "DECIDED"
+    },
+    "check.edge-hover": {
+      "css": "var(--ui-check-edge-hover)",
+      "value": "rgb(27 20 16 / 0.72)",
+      "description": "Hover: the edge comes one step toward Ink.",
+      "status": "DECIDED"
+    },
+    "check.on": {
+      "css": "var(--ui-check-on)",
+      "value": "#1B1410",
+      "description": "Checked, indeterminate and selected: Ink. Never Amber.",
+      "status": "DECIDED"
+    },
+    "check.on-hover": {
+      "css": "var(--ui-check-on-hover)",
+      "value": "#2C2520",
+      "description": "Checked under the pointer: Ink lifts one step, like the primary button.",
+      "status": "DECIDED"
+    },
+    "check.mark": {
+      "css": "var(--ui-check-mark)",
+      "value": "#FFFDF9",
+      "description": "The check, the dash and the radio's centre on Ink: Porcelain, 17.9:1.",
+      "status": "DECIDED"
+    },
+    "check.ring": {
+      "css": "var(--ui-check-ring)",
+      "value": "6px",
+      "description": "A selected radio: the edge thickens into a 6 px Ink ring around an 8 px Porcelain centre.",
+      "status": "DECIDED"
+    },
+    "check.disabled": {
+      "css": "var(--ui-check-disabled)",
+      "value": "#EDE9E4",
+      "description": "Disabled box or circle, checked or not: the sunken disabled surface, no edge.",
+      "status": "DECIDED"
+    },
+    "check.disabled-mark": {
+      "css": "var(--ui-check-disabled-mark)",
+      "value": "#A49D97",
+      "description": "The check, dash or centre on a disabled control.",
+      "status": "DECIDED"
+    },
+    "switch.width": {
+      "css": "var(--ui-switch-width)",
+      "value": "40px",
+      "description": "Default switch track: 40 x 24, a pill. The hit area is 44 either way.",
+      "status": "DECIDED"
+    },
+    "switch.height": {
+      "css": "var(--ui-switch-height)",
+      "value": "24px",
+      "status": "DECIDED"
+    },
+    "switch.thumb": {
+      "css": "var(--ui-switch-thumb)",
+      "value": "20px",
+      "description": "The white thumb, 2 px inside the track.",
+      "status": "DECIDED"
+    },
+    "switch.width-sm": {
+      "css": "var(--ui-switch-width-sm)",
+      "value": "32px",
+      "description": "Small switch, for dense rows and glass: 32 x 20.",
+      "status": "DECIDED"
+    },
+    "switch.height-sm": {
+      "css": "var(--ui-switch-height-sm)",
+      "value": "20px",
+      "status": "DECIDED"
+    },
+    "switch.thumb-sm": {
+      "css": "var(--ui-switch-thumb-sm)",
+      "value": "16px",
+      "status": "DECIDED"
+    },
+    "switch.stretch": {
+      "css": "var(--ui-switch-stretch)",
+      "value": "4px",
+      "description": "Pressed: the thumb stretches 4 px toward where it will go, the moment the finger lands.",
+      "status": "DECIDED"
+    },
+    "switch.track": {
+      "css": "var(--ui-switch-track)",
+      "value": "#EDE9E4",
+      "description": "Off: the sunken surface. The white thumb, lifted by depth, carries the shape.",
+      "status": "DECIDED"
+    },
+    "switch.track-hover": {
+      "css": "var(--ui-switch-track-hover)",
+      "value": "#DCD6D0",
+      "description": "Off under the pointer: one step toward Ink.",
+      "status": "DECIDED"
+    },
+    "switch.track-on": {
+      "css": "var(--ui-switch-track-on)",
+      "value": "#1B1410",
+      "description": "On: Ink decides. Never Amber.",
+      "status": "DECIDED"
+    },
+    "switch.track-on-hover": {
+      "css": "var(--ui-switch-track-on-hover)",
+      "value": "#2C2520",
+      "description": "On under the pointer: Ink lifts one step.",
+      "status": "DECIDED"
+    },
+    "switch.track-on-disabled": {
+      "css": "var(--ui-switch-track-on-disabled)",
+      "value": "#C6C0B9",
+      "description": "On and disabled: Ink falls back to Focus 300, so on and off stay apart without looking active.",
+      "status": "DECIDED"
+    },
+    "switch.thumb-bg": {
+      "css": "var(--ui-switch-thumb-bg)",
+      "value": "#FFFFFF",
+      "description": "The thumb: white, lifted with depth.raised instead of an edge.",
+      "status": "DECIDED"
+    },
+    "switch.thumb-disabled": {
+      "css": "var(--ui-switch-thumb-disabled)",
+      "value": "#F8F6F4",
+      "description": "Disabled thumb: Focus 50, flat.",
+      "status": "DECIDED"
+    },
+    "switch.glass-track": {
+      "css": "var(--ui-switch-glass-track)",
+      "value": "rgb(255 253 249 / 0.18)",
+      "description": "Off on glass: a Porcelain veil, a little stronger than the clear button's so the track reads at 20 px.",
+      "status": "DECIDED"
+    },
+    "switch.glass-track-hover": {
+      "css": "var(--ui-switch-glass-track-hover)",
+      "value": "rgb(255 253 249 / 0.26)",
+      "description": "Off on glass under the pointer: the veil lifts one step.",
+      "status": "DECIDED"
+    },
+    "switch.glass-track-on": {
+      "css": "var(--ui-switch-glass-track-on)",
+      "value": "rgb(255 253 249 / 0.94)",
+      "description": "On on glass: the white of the main glass button. The thumb turns Ink, so on reads at a glance over any photo.",
+      "status": "DECIDED"
+    },
+    "switch.glass-thumb": {
+      "css": "var(--ui-switch-glass-thumb)",
+      "value": "#FFFDF9",
+      "description": "The thumb on glass when off. No shadow on glass.",
+      "status": "DECIDED"
+    },
+    "switch.glass-thumb-on": {
+      "css": "var(--ui-switch-glass-thumb-on)",
+      "value": "#1B1410",
+      "description": "The thumb on glass when on: Ink on white.",
+      "status": "DECIDED"
+    },
+    "slider.track-height": {
+      "css": "var(--ui-slider-track-height)",
+      "value": "4px",
+      "description": "A thin pill track.",
+      "status": "DECIDED"
+    },
+    "slider.thumb": {
+      "css": "var(--ui-slider-thumb)",
+      "value": "20px",
+      "description": "The white thumb, lifted with depth.raised; its hit area is 44.",
+      "status": "DECIDED"
+    },
+    "slider.track": {
+      "css": "var(--ui-slider-track)",
+      "value": "#EDE9E4",
+      "description": "The track outside the range.",
+      "status": "DECIDED"
+    },
+    "slider.range": {
+      "css": "var(--ui-slider-range)",
+      "value": "#1B1410",
+      "description": "The chosen range: Ink. Never Amber.",
+      "status": "DECIDED"
+    },
+    "slider.range-disabled": {
+      "css": "var(--ui-slider-range-disabled)",
+      "value": "#C6C0B9",
+      "description": "The range on a disabled slider.",
+      "status": "DECIDED"
+    },
+    "slider.thumb-bg": {
+      "css": "var(--ui-slider-thumb-bg)",
+      "value": "#FFFFFF",
+      "description": "White, like the switch thumb.",
+      "status": "DECIDED"
+    },
+    "slider.glass-track": {
+      "css": "var(--ui-slider-glass-track)",
+      "value": "rgb(255 253 249 / 0.2)",
+      "description": "The track on glass: a Porcelain veil.",
+      "status": "DECIDED"
+    },
+    "slider.glass-range": {
+      "css": "var(--ui-slider-glass-range)",
+      "value": "#FFFDF9",
+      "description": "The range and the thumb on glass: Porcelain. No shadow on glass.",
+      "status": "DECIDED"
+    },
+    "progress.height": {
+      "css": "var(--ui-progress-height)",
+      "value": "4px",
+      "description": "A thin pill track, the same weight as the slider's.",
+      "status": "DECIDED"
+    },
+    "progress.track": {
+      "css": "var(--ui-progress-track)",
+      "value": "#EDE9E4",
+      "status": "DECIDED"
+    },
+    "progress.fill": {
+      "css": "var(--ui-progress-fill)",
+      "value": "#1B1410",
+      "description": "Ink. Never Amber: progress is work under way, Amber is work checked.",
+      "status": "DECIDED"
+    },
+    "progress.sweep": {
+      "css": "var(--ui-progress-sweep)",
+      "value": "calc(900ms * 2)",
+      "description": "1800 ms: one pass of the indeterminate bar, two spinner turns.",
+      "status": "DECIDED"
+    },
+    "progress.glass-track": {
+      "css": "var(--ui-progress-glass-track)",
+      "value": "rgb(255 253 249 / 0.2)",
+      "description": "The track on glass: a Porcelain veil.",
+      "status": "DECIDED"
+    },
+    "progress.glass-fill": {
+      "css": "var(--ui-progress-glass-fill)",
+      "value": "#FFFDF9",
+      "description": "The fill on glass: Porcelain.",
+      "status": "DECIDED"
+    },
+    "badge.height": {
+      "css": "var(--ui-badge-height)",
+      "value": "24px",
+      "description": "A badge: a 24 px pill with 12 px label text and 12 px air at the ends.",
+      "status": "DECIDED"
+    },
+    "badge.height-sm": {
+      "css": "var(--ui-badge-height-sm)",
+      "value": "20px",
+      "description": "Counts beside a label or in a row.",
+      "status": "DECIDED"
+    },
+    "badge.dot": {
+      "css": "var(--ui-badge-dot)",
+      "value": "6px",
+      "description": "The status dot beside a badge label, and the dot on an icon.",
+      "status": "DECIDED"
+    },
+    "badge.hover": {
+      "css": "var(--ui-badge-hover)",
+      "value": "#DCD6D0",
+      "description": "A neutral badge that is a link or a button, under the pointer: one step toward Ink from the sunken surface.",
+      "status": "DECIDED"
+    },
+    "badge.pressed": {
+      "css": "var(--ui-badge-pressed)",
+      "value": "#C6C0B9",
+      "description": "The same badge pressed: two steps, with the 3 % shrink.",
+      "status": "DECIDED"
+    },
+    "spinner.size-xl": {
+      "css": "var(--ui-spinner-size-xl)",
+      "value": "24px",
+      "description": "The display spinner, for a page or a panel that is loading. Controls use the icon sizes (14, 16, 18).",
+      "status": "DECIDED"
+    },
+    "card.bg": {
+      "css": "var(--ui-card-bg)",
+      "value": "#F8F6F4",
+      "description": "A card is one surface step off its Porcelain ground, never the same colour (card-never-matches-ground). No border and no shadow at rest: the step is the edge.",
+      "status": "DECIDED"
+    },
+    "card.bg-hover": {
+      "css": "var(--ui-card-bg-hover)",
+      "value": "#EDE9E4",
+      "description": "Interactive card, hover: one more step toward Ink.",
+      "status": "DECIDED"
+    },
+    "card.bg-pressed": {
+      "css": "var(--ui-card-bg-pressed)",
+      "value": "#EDE9E4",
+      "description": "Interactive card, pressed: stays on the hover step and shrinks (card.press-scale), so a large surface never flashes dark.",
+      "status": "DECIDED"
+    },
+    "card.bg-behind": {
+      "css": "var(--ui-card-bg-behind)",
+      "value": "#FFFDF9",
+      "description": "On the layer behind the page (ground-behind) a card comes forward to Porcelain, like the page sheet itself.",
+      "status": "DECIDED"
+    },
+    "card.depth-behind-hover": {
+      "css": "var(--ui-card-depth-behind-hover)",
+      "value": "0 1px 2px rgb(27 20 16 / 0.06), 0 2px 8px -2px rgb(27 20 16 / 0.08)",
+      "description": "On the layer behind, Porcelain is already the top step, so an interactive card lifts with depth instead of a darker surface.",
+      "status": "DECIDED"
+    },
+    "card.press-scale": {
+      "css": "var(--ui-card-press-scale)",
+      "value": "0.985",
+      "description": "A card is wide, so it shrinks half as much as a button (0.97) for the press to read the same.",
+      "status": "DECIDED"
+    },
+    "card.progress-track": {
+      "css": "var(--ui-card-progress-track)",
+      "value": "#DCD6D0",
+      "description": "Track of a progress bar inside a card (the campaign card's approvals): one step deeper than progress.track, so it reads on the card surface without a line. The fill stays Ink (progress.css); never Amber.",
+      "status": "DECIDED"
+    },
+    "creative.bg": {
+      "css": "var(--ui-creative-bg)",
+      "value": "#FFFFFF",
+      "description": "The customer's creative sits on pure white: the one content surface allowed to be white.",
+      "status": "DECIDED"
+    },
+    "creative.edge": {
+      "css": "var(--ui-creative-edge)",
+      "value": "rgb(27 20 16 / 0.1)",
+      "description": "The creative's hairline, drawn over the image: Ink at 10 %, so a white creative keeps its edge on Porcelain and a dark one gets no light rim. The one content stroke Fume allows (few-strokes).",
+      "status": "DECIDED"
+    },
+    "creative.ratio-feed": {
+      "css": "var(--ui-creative-ratio-feed)",
+      "value": "4 / 5",
+      "description": "Feed format.",
+      "status": "DECIDED"
+    },
+    "creative.ratio-story": {
+      "css": "var(--ui-creative-ratio-story)",
+      "value": "9 / 16",
+      "description": "Story format.",
+      "status": "DECIDED"
+    },
+    "creative.ratio-banner": {
+      "css": "var(--ui-creative-ratio-banner)",
+      "value": "1.91 / 1",
+      "description": "Banner format (link and display ads).",
+      "status": "DECIDED"
+    },
+    "creative.ratio-square": {
+      "css": "var(--ui-creative-ratio-square)",
+      "value": "1 / 1",
+      "description": "Square format (1:1, the package's third format). PROPOSED 14 Oct 2026, with the app.",
+      "status": "PROPOSED"
+    },
+    "creative.ring": {
+      "css": "var(--ui-creative-ring)",
+      "value": "#1B1410",
+      "description": "Selected creative: an Ink ring, 2 px, 2 px off the creative (Ink decides). Never Amber.",
+      "status": "DECIDED"
+    },
+    "creative.badge": {
+      "css": "var(--ui-creative-badge)",
+      "value": "#1B1410",
+      "description": "The round select badge on a selected creative: Ink with a Paper check.",
+      "status": "DECIDED"
+    },
+    "creative.badge-fg": {
+      "css": "var(--ui-creative-badge-fg)",
+      "value": "#FCF6EB",
+      "status": "DECIDED"
+    },
+    "creative.badge-size": {
+      "css": "var(--ui-creative-badge-size)",
+      "value": "24px",
+      "description": "Select badge diameter.",
+      "status": "DECIDED"
+    },
+    "creative.tile-min": {
+      "css": "var(--ui-creative-tile-min)",
+      "value": "128px",
+      "description": "Smallest tile in a creative grid; the grid fills the row with as many as fit (two on a phone, even inside a padded panel).",
+      "status": "DECIDED"
+    },
+    "item.bg-hover": {
+      "css": "var(--ui-item-bg-hover)",
+      "value": "#EDE9E4",
+      "description": "A row you can press: hover is one step toward Ink, like a quiet button. No lines between rows; rows are grouped by space.",
+      "status": "DECIDED"
+    },
+    "item.bg-pressed": {
+      "css": "var(--ui-item-bg-pressed)",
+      "value": "#DCD6D0",
+      "description": "Two steps toward Ink.",
+      "status": "DECIDED"
+    },
+    "item.bg-muted": {
+      "css": "var(--ui-item-bg-muted)",
+      "value": "#F8F6F4",
+      "description": "The muted row (shadcn variant muted, and outline, which Fume draws as a surface instead of a border).",
+      "status": "DECIDED"
+    },
+    "item.media": {
+      "css": "var(--ui-item-media)",
+      "value": "40px",
+      "description": "Media width in a default row: icon tile, avatar or a creative thumbnail (4:5, so 50 tall).",
+      "status": "DECIDED"
+    },
+    "item.media-sm": {
+      "css": "var(--ui-item-media-sm)",
+      "value": "32px",
+      "description": "Media width in a small row.",
+      "status": "DECIDED"
+    },
+    "avatar.size-sm": {
+      "css": "var(--ui-avatar-size-sm)",
+      "value": "24px",
+      "status": "DECIDED"
+    },
+    "avatar.size": {
+      "css": "var(--ui-avatar-size)",
+      "value": "32px",
+      "status": "DECIDED"
+    },
+    "avatar.size-lg": {
+      "css": "var(--ui-avatar-size-lg)",
+      "value": "40px",
+      "status": "DECIDED"
+    },
+    "avatar.bg": {
+      "css": "var(--ui-avatar-bg)",
+      "value": "#F5E8D2",
+      "description": "Initials on Cream, Ink text in medium weight (15.0:1): people are the real, the Material family (decided with Warmer, Marcus 13 Oct; round 9; round 8 had the sunken step).",
+      "status": "DECIDED"
+    },
+    "avatar.fg": {
+      "css": "var(--ui-avatar-fg)",
+      "value": "#1B1410",
+      "status": "DECIDED"
+    },
+    "avatar.bg-ink": {
+      "css": "var(--ui-avatar-bg-ink)",
+      "value": "#1B1410",
+      "description": "The person you are (or the one who decides, Anna on a check): Ink with Paper initials.",
+      "status": "DECIDED"
+    },
+    "avatar.fg-ink": {
+      "css": "var(--ui-avatar-fg-ink)",
+      "value": "#FCF6EB",
+      "status": "DECIDED"
+    },
+    "avatar.cutout": {
+      "css": "var(--ui-avatar-cutout)",
+      "value": "2px",
+      "description": "The gap that separates overlapping avatars and the status dot from the avatar under them. Painted in the ground colour, so it reads as space cut out of the circle, not as a line.",
+      "status": "DECIDED"
+    },
+    "avatar.status": {
+      "css": "var(--ui-avatar-status)",
+      "value": "#1B1410",
+      "description": "Status dot: here now, in Ink. No green; Fume has no success colour.",
+      "status": "DECIDED"
+    },
+    "avatar.status-away": {
+      "css": "var(--ui-avatar-status-away)",
+      "value": "#A49D97",
+      "description": "Status dot: away.",
+      "status": "DECIDED"
+    },
+    "alert.bg": {
+      "css": "var(--ui-alert-bg)",
+      "value": "#F8F6F4",
+      "description": "An inline alert is a surface step on its ground, never a bordered box. Info, success and warning differ by icon and words, not by colour.",
+      "status": "DECIDED"
+    },
+    "alert.bg-on-surface": {
+      "css": "var(--ui-alert-bg-on-surface)",
+      "value": "#EDE9E4",
+      "description": "Inside a card the alert steps one further, so it never matches its ground.",
+      "status": "DECIDED"
+    },
+    "alert.danger": {
+      "css": "var(--ui-alert-danger)",
+      "value": "#BA4A52",
+      "description": "Error alerts: Rouge on the icon and the title only. The text stays secondary.",
+      "status": "DECIDED"
+    },
+    "alert.bg-glass": {
+      "css": "var(--ui-alert-bg-glass)",
+      "value": "rgb(255 253 249 / 0.1)",
+      "description": "An alert on glass (inside a dialog or sheet): the faint Porcelain veil, no stroke.",
+      "status": "DECIDED"
+    },
+    "alert.bg-glass-danger": {
+      "css": "var(--ui-alert-bg-glass-danger)",
+      "value": "rgb(186 74 82 / 0.8)",
+      "description": "An error alert on glass is Rouge at 80 %, like the delete button on glass: Rouge as an icon colour disappears on Smoke (1.3:1). Porcelain text 5:1.",
+      "status": "DECIDED"
+    },
+    "empty.media": {
+      "css": "var(--ui-empty-media)",
+      "value": "56px",
+      "description": "The soft square that holds the empty state's 24 px icon.",
+      "status": "DECIDED"
+    },
+    "empty.media-bg": {
+      "css": "var(--ui-empty-media-bg)",
+      "value": "#EDE9E4",
+      "status": "DECIDED"
+    },
+    "empty.measure": {
+      "css": "var(--ui-empty-measure)",
+      "value": "38ch",
+      "description": "Line length of the empty state's text: short lines, centred.",
+      "status": "DECIDED"
+    },
+    "empty.icon": {
+      "css": "var(--ui-empty-icon)",
+      "value": "24px",
+      "description": "The empty state's icon at display size (icons-lucide: 24 px for display).",
+      "status": "DECIDED"
+    },
+    "skeleton.bg": {
+      "css": "var(--ui-skeleton-bg)",
+      "value": "#EDE9E4",
+      "description": "Placeholder shapes on Porcelain: the sunken step, in the shape and size of what is coming.",
+      "status": "DECIDED"
+    },
+    "skeleton.bg-pulse": {
+      "css": "var(--ui-skeleton-bg-pulse)",
+      "value": "#F8F6F4",
+      "description": "The shimmer lifts the shape to the surface step and back, slowly. A flat colour change, never a gradient sweep (round 7; restored in round 9 after Marcus found the round 8 sweep artificial).",
+      "status": "DECIDED"
+    },
+    "skeleton.bg-on-surface": {
+      "css": "var(--ui-skeleton-bg-on-surface)",
+      "value": "#EDE9E4",
+      "description": "Inside a card (surface) the shape starts one step deeper...",
+      "status": "DECIDED"
+    },
+    "skeleton.bg-pulse-on-surface": {
+      "css": "var(--ui-skeleton-bg-pulse-on-surface)",
+      "value": "#DCD6D0",
+      "description": "...and pulses a step toward Ink, so it never vanishes into the card.",
+      "status": "DECIDED"
+    },
+    "skeleton.bg-glass": {
+      "css": "var(--ui-skeleton-bg-glass)",
+      "value": "rgb(255 253 249 / 0.1)",
+      "description": "A shape on glass (a sheet or popover while it loads): the faint Porcelain veil of the clear button, no stroke.",
+      "status": "DECIDED"
+    },
+    "skeleton.bg-pulse-glass": {
+      "css": "var(--ui-skeleton-bg-pulse-glass)",
+      "value": "rgb(255 253 249 / 0.18)",
+      "description": "On glass the shape breathes from the 10 % veil to Porcelain at 18 % and back: one step lighter, never Amber on Smoke.",
+      "status": "DECIDED"
+    },
+    "accordion.bg": {
+      "css": "var(--ui-accordion-bg)",
+      "value": "#F8F6F4",
+      "description": "Each section is its own surface; sections are separated by space (accordion.gap), never a line.",
+      "status": "DECIDED"
+    },
+    "accordion.bg-hover": {
+      "css": "var(--ui-accordion-bg-hover)",
+      "value": "#EDE9E4",
+      "description": "Hover on a section's trigger steps the whole section toward Ink.",
+      "status": "DECIDED"
+    },
+    "accordion.gap": {
+      "css": "var(--ui-accordion-gap)",
+      "value": "8px",
+      "description": "Space between sections.",
+      "status": "DECIDED"
+    },
+    "accordion.row": {
+      "css": "var(--ui-accordion-row)",
+      "value": "56px",
+      "description": "Height of a trigger row: a calm, generous target (44 px at least, rule touch-target).",
+      "status": "DECIDED"
+    },
+    "scroll.thumb": {
+      "css": "var(--ui-scroll-thumb)",
+      "value": "rgb(27 20 16 / 0.2)",
+      "description": "Scroll-area thumb at rest: a thin pill of Ink at 20 %, laid over the content's edge. No track, no line.",
+      "status": "DECIDED"
+    },
+    "scroll.thumb-hover": {
+      "css": "var(--ui-scroll-thumb-hover)",
+      "value": "rgb(27 20 16 / 0.36)",
+      "description": "Thumb under the pointer or while dragged: one step more Ink.",
+      "status": "DECIDED"
+    },
+    "scroll.size": {
+      "css": "var(--ui-scroll-size)",
+      "value": "6px",
+      "description": "Thumb thickness.",
+      "status": "DECIDED"
+    },
+    "scroll.size-hover": {
+      "css": "var(--ui-scroll-size-hover)",
+      "value": "8px",
+      "description": "Thumb thickness under the pointer, easier to grab.",
+      "status": "DECIDED"
+    },
+    "datalist.label": {
+      "css": "var(--ui-datalist-label)",
+      "value": "#6E6259",
+      "description": "Metadata label (Format, Size, Checked by): tertiary, so the value leads.",
+      "status": "DECIDED"
+    },
+    "datalist.text": {
+      "css": "var(--ui-datalist-text)",
+      "value": "#1B1410",
+      "description": "Metadata value. (Named text: a group key called value would read as a token.)",
+      "status": "DECIDED"
+    },
+    "datalist.label-width": {
+      "css": "var(--ui-datalist-label-width)",
+      "value": "112px",
+      "description": "Label column in the side-by-side data list; values align on one edge. Below 320 px the label goes above its value.",
+      "status": "DECIDED"
+    },
+    "datalist.cell": {
+      "css": "var(--ui-datalist-cell)",
+      "value": "80px",
+      "description": "Smallest cell in the grid data list (.ui-datalist--grid): a stat strip wraps to two columns on a phone and four in a wide card.",
+      "status": "DECIDED"
+    },
+    "text-shimmer.light": {
+      "css": "var(--ui-text-shimmer-light)",
+      "value": "#FFFFFF",
+      "description": "White light passing through dark words while something is under way. It only ever passes; the words rest in their own colour. Round 11 (Marcus 13 Oct: 'Shimmer skal være hvit på mørk tekst'); round 10 had Amber. The Engine's words take the same white light since 15 Oct (Marcus: 'amber shimmer var ikke fint').",
+      "status": "DECIDED"
+    },
+    "text-shimmer.strength": {
+      "css": "var(--ui-text-shimmer-strength)",
+      "value": "75%",
+      "description": "How far the words go toward the light at the middle of the band: three quarters of the way to white, a gleam, so Ink words never vanish into the Porcelain page.",
+      "status": "DECIDED"
+    },
+    "text-shimmer.band": {
+      "css": "var(--ui-text-shimmer-band)",
+      "value": "16%",
+      "description": "Width of the band of light, as a share of the gradient strip (2.5 × the text), so about 40 % of a short line.",
+      "status": "DECIDED"
+    },
+    "text-shimmer.duration": {
+      "css": "var(--ui-text-shimmer-duration)",
+      "value": "2600ms",
+      "description": "One pass and a rest: the light crosses in the first 70 % and the words rest for the last 30 %.",
+      "status": "DECIDED"
+    },
+    "text-shimmer.angle": {
+      "css": "var(--ui-text-shimmer-angle)",
+      "value": "100deg",
+      "description": "The band leans a little, like light through a window, not a vertical bar.",
+      "status": "DECIDED"
+    },
+    "message.bubble": {
+      "css": "var(--ui-message-bubble)",
+      "value": "#EDE9E4",
+      "description": "A person's message sits in a bubble one surface step toward Ink. The Engine has no bubble: it speaks as plain text on the page with its mark, so a person and the Engine never look alike.",
+      "status": "DECIDED"
+    },
+    "message.bubble-fg": {
+      "css": "var(--ui-message-bubble-fg)",
+      "value": "#1B1410",
+      "description": "Text in a bubble and the Engine's text: Ink, 16 px, for reading.",
+      "status": "DECIDED"
+    },
+    "message.mention": {
+      "css": "var(--ui-message-mention)",
+      "value": "#DCD6D0",
+      "description": "An @mention inside a bubble: one more step toward Ink than the bubble, Ink text in medium weight. No colour of its own.",
+      "status": "DECIDED"
+    },
+    "message.measure": {
+      "css": "var(--ui-message-measure)",
+      "value": "64ch",
+      "description": "The longest line in a message, so the Engine's text reads like a column, never a banner.",
+      "status": "DECIDED"
+    },
+    "message.bubble-max": {
+      "css": "var(--ui-message-bubble-max)",
+      "value": "85%",
+      "description": "A bubble never runs the full width: it leaves room on the other side, so who said it reads at a glance.",
+      "status": "DECIDED"
+    },
+    "message.gap": {
+      "css": "var(--ui-message-gap)",
+      "value": "24px",
+      "description": "Between messages from different senders (24).",
+      "status": "DECIDED"
+    },
+    "message.group-gap": {
+      "css": "var(--ui-message-group-gap)",
+      "value": "4px",
+      "description": "Between consecutive messages from one sender (4): they read as one turn (rule proximity: 4 inside, 24 between).",
+      "status": "DECIDED"
+    },
+    "message.head-gap": {
+      "css": "var(--ui-message-head-gap)",
+      "value": "8px",
+      "description": "From a sender's name to what they said (8).",
+      "status": "DECIDED"
+    },
+    "message.sign": {
+      "css": "var(--ui-message-sign)",
+      "value": "24px",
+      "description": "The sender's sign beside the name: a 24 px avatar for a person, the Engine mark at 18 in the same box. It sits in the header, so bubbles and the Engine's text share one left edge.",
+      "status": "DECIDED"
+    },
+    "message.caret": {
+      "css": "var(--ui-message-caret)",
+      "value": "#1B1410",
+      "description": "The quiet caret after text that is still arriving: an Ink bar, 2 px wide, one line tall, fading slowly in and out.",
+      "status": "DECIDED"
+    },
+    "message.caret-width": {
+      "css": "var(--ui-message-caret-width)",
+      "value": "2px",
+      "status": "DECIDED"
+    },
+    "message.think-scale": {
+      "css": "var(--ui-message-think-scale)",
+      "value": "0.72",
+      "description": "Thinking: the Engine mark's focal point breathes between this size and full size inside its still frame corners (soft to sharp). No shimmer, no gradient.",
+      "status": "DECIDED"
+    },
+    "message.scroller-height": {
+      "css": "var(--ui-message-scroller-height)",
+      "value": "560px",
+      "description": "Default height of a message scroller on the board. In the product it fills its pane.",
+      "status": "DECIDED"
+    },
+    "message.scroller-pill-offset": {
+      "css": "var(--ui-message-scroller-pill-offset)",
+      "value": "16px",
+      "description": "The jump-to-latest pill floats this far above the bottom of the conversation.",
+      "status": "DECIDED"
+    },
+    "composer.bg": {
+      "css": "var(--ui-composer-bg)",
+      "value": "#FFFFFF",
+      "description": "The brief composer is a field: white with the field's hairline.",
+      "status": "DECIDED"
+    },
+    "composer.edge": {
+      "css": "var(--ui-composer-edge)",
+      "value": "#DCD6D0",
+      "status": "DECIDED"
+    },
+    "composer.edge-hover": {
+      "css": "var(--ui-composer-edge-hover)",
+      "value": "#C6C0B9",
+      "status": "DECIDED"
+    },
+    "composer.edge-invalid": {
+      "css": "var(--ui-composer-edge-invalid)",
+      "value": "#BA4A52",
+      "description": "Over the limit: a Rouge edge, the count in Rouge and a sentence that says how much to cut.",
+      "status": "DECIDED"
+    },
+    "composer.bg-disabled": {
+      "css": "var(--ui-composer-bg-disabled)",
+      "value": "#EDE9E4",
+      "status": "DECIDED"
+    },
+    "composer.chip": {
+      "css": "var(--ui-composer-chip)",
+      "value": "#EDE9E4",
+      "description": "Chips inside the white composer (Brand DNA, the count, formats that are off): the sunken step. Formats that are on are Ink.",
+      "status": "DECIDED"
+    },
+    "composer.chip-hover": {
+      "css": "var(--ui-composer-chip-hover)",
+      "value": "#DCD6D0",
+      "status": "DECIDED"
+    },
+    "composer.chip-pressed": {
+      "css": "var(--ui-composer-chip-pressed)",
+      "value": "#C6C0B9",
+      "status": "DECIDED"
+    },
+    "composer.chip-glass": {
+      "css": "var(--ui-composer-chip-glass)",
+      "value": "rgb(255 253 249 / 0.1)",
+      "description": "Chips on the glass composer: the clear veil. The send button is the one white thing on the glass.",
+      "status": "DECIDED"
+    },
+    "composer.chip-glass-on": {
+      "css": "var(--ui-composer-chip-glass-on)",
+      "value": "rgb(255 253 249 / 0.14)",
+      "description": "A format that is on, on glass: one veil step up and a check before the word, so it never needs a second white pill.",
+      "status": "DECIDED"
+    },
+    "composer.input-min": {
+      "css": "var(--ui-composer-input-min)",
+      "value": "48px",
+      "description": "The brief starts two lines tall (16 px text) and grows with what is written.",
+      "status": "DECIDED"
+    },
+    "composer.input-max": {
+      "css": "var(--ui-composer-input-max)",
+      "value": "240px",
+      "description": "After ten lines the brief scrolls inside the composer, so the conversation stays in view.",
+      "status": "DECIDED"
+    },
+    "composer.width": {
+      "css": "var(--ui-composer-width)",
+      "value": "720px",
+      "description": "The widest a composer gets on a desktop: the conversation's column.",
+      "status": "DECIDED"
+    },
+    "composer.swap-scale": {
+      "css": "var(--ui-composer-swap-scale)",
+      "value": "0.6",
+      "description": "Send turns into stop in place: one icon shrinks and fades as the other grows in, inside the same Ink circle.",
+      "status": "DECIDED"
+    },
+    "composer.safe": {
+      "css": "var(--ui-composer-safe)",
+      "value": "env(safe-area-inset-bottom, 0px)",
+      "description": "The phone's safe area under a docked composer (the home indicator). The dock keeps at least 8 below the composer, or this, whichever is more.",
+      "status": "DECIDED"
+    },
+    "run.indicator": {
+      "css": "var(--ui-run-indicator)",
+      "value": "20px",
+      "description": "The column of step signs: a check when done, the spinner while running, a grey checked triangle while it waits for Anna. No line joins them: steps are parted by space.",
+      "status": "DECIDED"
+    },
+    "run.pending": {
+      "css": "var(--ui-run-pending)",
+      "value": "#C6C0B9",
+      "description": "The small dot of a step that has not started.",
+      "status": "DECIDED"
+    },
+    "run.slot": {
+      "css": "var(--ui-run-slot)",
+      "value": "#FFFDF9",
+      "description": "A creative that is not made yet: a still Porcelain slot in the run card, lighter than the card and quieter than the one being made (which breathes on the sunken step), in the shape of the creative to come.",
+      "status": "DECIDED"
+    },
+    "run.tile-cols": {
+      "css": "var(--ui-run-tile-cols)",
+      "value": "6",
+      "description": "Creatives per row in the run card (12 in two rows).",
+      "status": "DECIDED"
+    },
+    "run.tile-cols-narrow": {
+      "css": "var(--ui-run-tile-cols-narrow)",
+      "value": "4",
+      "description": "Creatives per row on a phone (12 in three rows).",
+      "status": "DECIDED"
+    },
+    "run.step-gap": {
+      "css": "var(--ui-run-step-gap)",
+      "value": "16px",
+      "description": "Between steps (16); inside a step its parts sit 4 to 8 apart.",
+      "status": "DECIDED"
+    },
+    "attachment.bg": {
+      "css": "var(--ui-attachment-bg)",
+      "value": "#F8F6F4",
+      "description": "An attachment is one surface step off its ground, like a small card: no border, no dashes.",
+      "status": "DECIDED"
+    },
+    "attachment.bg-hover": {
+      "css": "var(--ui-attachment-bg-hover)",
+      "value": "#EDE9E4",
+      "status": "DECIDED"
+    },
+    "attachment.bg-pressed": {
+      "css": "var(--ui-attachment-bg-pressed)",
+      "value": "#DCD6D0",
+      "status": "DECIDED"
+    },
+    "attachment.bg-on-surface": {
+      "css": "var(--ui-attachment-bg-on-surface)",
+      "value": "#EDE9E4",
+      "description": "Inside a card, a run or a bubble it steps once more, so it never matches its ground.",
+      "status": "DECIDED"
+    },
+    "attachment.bg-glass": {
+      "css": "var(--ui-attachment-bg-glass)",
+      "value": "rgb(255 253 249 / 0.1)",
+      "description": "On the glass composer: the clear veil, Porcelain text.",
+      "status": "DECIDED"
+    },
+    "attachment.media": {
+      "css": "var(--ui-attachment-media)",
+      "value": "40px",
+      "description": "Thumbnail in a horizontal attachment, 6 in from the edge (inset.ring) with radius 10, so its corner follows the attachment's 16.",
+      "status": "DECIDED"
+    },
+    "attachment.media-tile": {
+      "css": "var(--ui-attachment-media-tile)",
+      "value": "#EDE9E4",
+      "description": "The tile behind a brief's page icon (file-text).",
+      "status": "DECIDED"
+    },
+    "attachment.max": {
+      "css": "var(--ui-attachment-max)",
+      "value": "320px",
+      "description": "The widest a horizontal attachment gets; a long name is cut with an ellipsis and read in full by screen readers.",
+      "status": "DECIDED"
+    },
+    "attachment.card": {
+      "css": "var(--ui-attachment-card)",
+      "value": "120px",
+      "description": "Width of a vertical attachment: the creative at its own format on top, name and data under it.",
+      "status": "DECIDED"
+    },
+    "marker.fg": {
+      "css": "var(--ui-marker-fg)",
+      "value": "#6E6259",
+      "description": "A quiet marker (read up to here, a day, done): tertiary words with space around them, never a line.",
+      "status": "DECIDED"
+    },
+    "marker.fg-new": {
+      "css": "var(--ui-marker-fg-new)",
+      "value": "#1B1410",
+      "description": "New since you left: Ink words, an Ink dot and the count.",
+      "status": "DECIDED"
+    },
+    "marker.dot": {
+      "css": "var(--ui-marker-dot)",
+      "value": "#1B1410",
+      "status": "DECIDED"
+    },
+    "marker.dot-size": {
+      "css": "var(--ui-marker-dot-size)",
+      "value": "6px",
+      "status": "DECIDED"
+    },
+    "marker.before": {
+      "css": "var(--ui-marker-before)",
+      "value": "32px",
+      "description": "Space above a marker (32): more than below it, so the marker belongs to what follows.",
+      "status": "DECIDED"
+    },
+    "marker.after": {
+      "css": "var(--ui-marker-after)",
+      "value": "16px",
+      "description": "Space below a marker (16).",
+      "status": "DECIDED"
+    },
+    "field.bg": {
+      "css": "var(--ui-field-bg)",
+      "value": "#FFFFFF",
+      "description": "White. A field is one of the three white things in Fume (with the creative and the secondary button), always with its hairline.",
+      "status": "DECIDED"
+    },
+    "field.edge": {
+      "css": "var(--ui-field-edge)",
+      "value": "#DCD6D0",
+      "description": "The hairline at rest: the same edge as the white secondary button, so a field and the button beside it read as one family. The only stroke a field has (rule few-strokes allows it: without it a white field vanishes on Porcelain).",
+      "status": "DECIDED"
+    },
+    "field.edge-hover": {
+      "css": "var(--ui-field-edge-hover)",
+      "value": "#C6C0B9",
+      "description": "Hover with a mouse: the hairline steps toward Ink. Never a fill change.",
+      "status": "DECIDED"
+    },
+    "field.edge-invalid": {
+      "css": "var(--ui-field-edge-invalid)",
+      "value": "#BA4A52",
+      "description": "Rouge edge on a field that holds an error, always with a message in words under it.",
+      "status": "DECIDED"
+    },
+    "field.fg": {
+      "css": "var(--ui-field-fg)",
+      "value": "#1B1410",
+      "description": "The value: Ink.",
+      "status": "DECIDED"
+    },
+    "field.placeholder": {
+      "css": "var(--ui-field-placeholder)",
+      "value": "#6E6259",
+      "description": "Placeholder and addon text (https://, kr): 5.8:1, never lighter.",
+      "status": "DECIDED"
+    },
+    "field.icon": {
+      "css": "var(--ui-field-icon)",
+      "value": "#6E6259",
+      "description": "Icons inside a field (search, chevrons, paperclip).",
+      "status": "DECIDED"
+    },
+    "field.bg-pressed": {
+      "css": "var(--ui-field-bg-pressed)",
+      "value": "#F8F6F4",
+      "description": "A select trigger or a choice card while it is pressed: one step toward Ink, like the white button.",
+      "status": "DECIDED"
+    },
+    "field.bg-readonly": {
+      "css": "var(--ui-field-bg-readonly)",
+      "value": "#F8F6F4",
+      "description": "Read-only: the value sits in the page instead of on it. No hairline, full Ink text, still selectable and focusable.",
+      "status": "DECIDED"
+    },
+    "field.bg-disabled": {
+      "css": "var(--ui-field-bg-disabled)",
+      "value": "#EDE9E4",
+      "description": "Disabled: sunken like a disabled button, no hairline.",
+      "status": "DECIDED"
+    },
+    "field.fg-disabled": {
+      "css": "var(--ui-field-fg-disabled)",
+      "value": "#A49D97",
+      "description": "Text in a disabled field and its label.",
+      "status": "DECIDED"
+    },
+    "field.error": {
+      "css": "var(--ui-field-error)",
+      "value": "#BA4A52",
+      "description": "The error message under a field: Rouge, weight 500, after the circle-alert icon. 4.9:1 on Porcelain.",
+      "status": "DECIDED"
+    },
+    "field.height-sm": {
+      "css": "var(--ui-field-height-sm)",
+      "value": "32px",
+      "description": "32 px. Dense tables and toolbars, with a mouse only: 44 on touch screens.",
+      "status": "DECIDED"
+    },
+    "field.height": {
+      "css": "var(--ui-field-height)",
+      "value": "40px",
+      "description": "40 px, the default field. On touch screens every field is --ui-size-hit (44) tall with 16 px text (rules touch-target, fields-16-on-touch).",
+      "status": "DECIDED"
+    },
+    "field.height-lg": {
+      "css": "var(--ui-field-height-lg)",
+      "value": "48px",
+      "description": "48 px, with 16 px text: sign-in and marketing forms.",
+      "status": "DECIDED"
+    },
+    "field.pad": {
+      "css": "var(--ui-field-pad)",
+      "value": "14px",
+      "description": "14 px from the field's edge to its text, more than three quarters of the 12 px corner.",
+      "status": "DECIDED"
+    },
+    "field.pad-sm": {
+      "css": "var(--ui-field-pad-sm)",
+      "value": "12px",
+      "description": "12 px in the small field.",
+      "status": "DECIDED"
+    },
+    "field.pad-lg": {
+      "css": "var(--ui-field-pad-lg)",
+      "value": "16px",
+      "description": "16 px in the large field.",
+      "status": "DECIDED"
+    },
+    "field.pad-block": {
+      "css": "var(--ui-field-pad-block)",
+      "value": "12px",
+      "description": "12 px above and below the text in a textarea.",
+      "status": "DECIDED"
+    },
+    "field.textarea-min": {
+      "css": "var(--ui-field-textarea-min)",
+      "value": "96px",
+      "description": "A textarea starts at three lines and grows with its text.",
+      "status": "DECIDED"
+    },
+    "field.textarea-max": {
+      "css": "var(--ui-field-textarea-max)",
+      "value": "280px",
+      "description": "Where a growing textarea stops and scrolls.",
+      "status": "DECIDED"
+    },
+    "field.list-max": {
+      "css": "var(--ui-field-list-max)",
+      "value": "320px",
+      "description": "The tallest an open select listbox gets before it scrolls (less when the window is shorter): about seven rows.",
+      "status": "DECIDED"
+    },
+    "field.gap-label": {
+      "css": "var(--ui-field-gap-label)",
+      "value": "8px",
+      "description": "8 px from a label down to its control (rule proximity).",
+      "status": "DECIDED"
+    },
+    "field.gap-hint": {
+      "css": "var(--ui-field-gap-hint)",
+      "value": "4px",
+      "description": "4 px from a control down to its description or error: they belong to it.",
+      "status": "DECIDED"
+    },
+    "field.gap": {
+      "css": "var(--ui-field-gap)",
+      "value": "24px",
+      "description": "24 px between fields: three times the label gap, so every label clearly belongs to the field under it.",
+      "status": "DECIDED"
+    },
+    "field.gap-group": {
+      "css": "var(--ui-field-gap-group)",
+      "value": "32px",
+      "description": "32 px between field sets (groups of fields).",
+      "status": "DECIDED"
+    },
+    "field.gap-legend": {
+      "css": "var(--ui-field-gap-legend)",
+      "value": "16px",
+      "description": "16 px from a field set's legend (and its description) to its first field.",
+      "status": "DECIDED"
+    },
+    "field.glass-bg": {
+      "css": "var(--ui-field-glass-bg)",
+      "value": "rgb(255 253 249 / 0.12)",
+      "description": "A field on glass: a faint Porcelain veil, no stroke. Focus shows the Porcelain ring.",
+      "status": "DECIDED"
+    },
+    "field.glass-fg": {
+      "css": "var(--ui-field-glass-fg)",
+      "value": "#FFFDF9",
+      "description": "The value on glass.",
+      "status": "DECIDED"
+    },
+    "field.glass-placeholder": {
+      "css": "var(--ui-field-glass-placeholder)",
+      "value": "rgb(255 253 249 / 0.88)",
+      "description": "Placeholder, icons and addons on glass: 88 % Porcelain, weight 500.",
+      "status": "DECIDED"
+    },
+    "field.glass-edge-invalid": {
+      "css": "var(--ui-field-glass-edge-invalid)",
+      "value": "#BA4A52",
+      "description": "Round 8. A field on glass that holds an error: a 2 px band of solid Rouge just inside a 1 px Porcelain rim (--ui-field-glass-edge-invalid-rim). Rouge alone against Smoke measured 1.3:1 over a white page and 2.5:1 over the photo, too weak to read as an edge; the rim draws the edge (6.4:1 or more against the glass) and the Rouge reads against the rim at 4.9:1. The words under the field stay the first signal.",
+      "status": "DECIDED"
+    },
+    "field.glass-edge-invalid-rim": {
+      "css": "var(--ui-field-glass-edge-invalid-rim)",
+      "value": "#FFFDF9",
+      "description": "Round 8. The 1 px Porcelain rim outside the Rouge band of an invalid field on glass: the same Rouge cut with Porcelain as the alert disc beside the words.",
+      "status": "DECIDED"
+    },
+    "field.glass-error": {
+      "css": "var(--ui-field-glass-error)",
+      "value": "#FFFDF9",
+      "description": "Round 8. The error message on glass is Porcelain, weight 500, never Rouge. Measured on the board: Rouge words on Smoke 1.3:1 over a white page and 1.6 to 3.2:1 over the photo; Porcelain words 6.4:1 over a white page and 8.0:1 or more over the photo.",
+      "status": "DECIDED"
+    },
+    "field.glass-error-mark": {
+      "css": "var(--ui-field-glass-error-mark)",
+      "value": "#BA4A52",
+      "description": "Round 8. The circle-alert before an error on glass: the same solid Rouge disc as on light ground, its exclamation cut through to Porcelain (--ui-field-glass-error-cut) instead of to the glass, so the mark reads 4.9:1 over any backdrop.",
+      "status": "DECIDED"
+    },
+    "field.glass-error-cut": {
+      "css": "var(--ui-field-glass-error-cut)",
+      "value": "#FFFDF9",
+      "description": "Round 8. What shows through the exclamation of the Rouge alert disc on glass: Porcelain.",
+      "status": "DECIDED"
+    },
+    "otp.slot-width": {
+      "css": "var(--ui-otp-slot-width)",
+      "value": "48px",
+      "description": "One slot of a sign-in code at full size. Slots narrow evenly on a phone; the code stays one line.",
+      "status": "DECIDED"
+    },
+    "otp.slot-height": {
+      "css": "var(--ui-otp-slot-height)",
+      "value": "56px",
+      "description": "Taller than a field: the code is the one thing on its screen.",
+      "status": "DECIDED"
+    },
+    "otp.gap": {
+      "css": "var(--ui-otp-gap)",
+      "value": "8px",
+      "description": "8 px between slots in a group.",
+      "status": "DECIDED"
+    },
+    "otp.separator": {
+      "css": "var(--ui-otp-separator)",
+      "value": "8px",
+      "description": "The separator between groups of three is space, not a line: 8 more, so groups sit 24 apart, three times the gap inside a group.",
+      "status": "DECIDED"
+    },
+    "otp.caret": {
+      "css": "var(--ui-otp-caret)",
+      "value": "#1B1410",
+      "description": "The caret in the active empty slot: Ink.",
+      "status": "DECIDED"
+    },
+    "kbd.height": {
+      "css": "var(--ui-kbd-height)",
+      "value": "22px",
+      "description": "A key: a soft sunken pill, 22 px, a circle for one character.",
+      "status": "DECIDED"
+    },
+    "kbd.pad": {
+      "css": "var(--ui-kbd-pad)",
+      "value": "6px",
+      "description": "6 px at each end of a key, past half its radius, so a one-character key stays a circle and Esc a short pill.",
+      "status": "DECIDED"
+    },
+    "kbd.bg": {
+      "css": "var(--ui-kbd-bg)",
+      "value": "#EDE9E4",
+      "description": "Sunken, no stroke: the key is pressed into the surface, not drawn on it.",
+      "status": "DECIDED"
+    },
+    "kbd.fg": {
+      "css": "var(--ui-kbd-fg)",
+      "value": "#463E39",
+      "description": "Key labels, in the data face.",
+      "status": "DECIDED"
+    },
+    "kbd.glass-bg": {
+      "css": "var(--ui-kbd-glass-bg)",
+      "value": "rgb(255 253 249 / 0.1)",
+      "description": "A key on glass (tooltips, menus, the command bar): the clear veil.",
+      "status": "DECIDED"
+    },
+    "kbd.glass-fg": {
+      "css": "var(--ui-kbd-glass-fg)",
+      "value": "rgb(255 253 249 / 0.88)",
+      "description": "Key labels on glass.",
+      "status": "DECIDED"
+    },
+    "dropzone.bg": {
+      "css": "var(--ui-dropzone-bg)",
+      "value": "#EDE9E4",
+      "description": "Round 8. The upload box: one step of sunken surface, a well pressed into the page. No dashed border and no stroke at all (rule few-strokes): the step is the edge.",
+      "status": "DECIDED"
+    },
+    "dropzone.bg-hover": {
+      "css": "var(--ui-dropzone-bg-hover)",
+      "value": "#DCD6D0",
+      "description": "Hover with a mouse: one step toward Ink.",
+      "status": "DECIDED"
+    },
+    "dropzone.bg-pressed": {
+      "css": "var(--ui-dropzone-bg-pressed)",
+      "value": "#DCD6D0",
+      "description": "Pressed: stays on the hover step and shrinks (dropzone.press-scale), so a large surface never flashes dark.",
+      "status": "DECIDED"
+    },
+    "dropzone.bg-drag": {
+      "css": "var(--ui-dropzone-bg-drag)",
+      "value": "#EDE9E4",
+      "description": "Drag-over: the well keeps its resting Fog; the seat turning Ink is the sign, with the words that say where creatives go. No fill, no Amber and no shimmer here (round 11, Marcus 13 Oct: 'verken orange eller shimmer på where creatives land'); round 9 had Amber 50 (beige), round 8 Focus 300.",
+      "status": "DECIDED"
+    },
+    "dropzone.fg": {
+      "css": "var(--ui-dropzone-fg)",
+      "value": "#1B1410",
+      "description": "The line that says what to do: Ink, weight 500.",
+      "status": "DECIDED"
+    },
+    "dropzone.meta": {
+      "css": "var(--ui-dropzone-meta)",
+      "value": "#463E39",
+      "description": "The limits line (JPG, PNG or MP4 · up to 200 MB) in the data face: secondary, not tertiary, so it keeps 7.3:1 on the hover step and 5.8:1 on the drag step.",
+      "status": "DECIDED"
+    },
+    "dropzone.disc": {
+      "css": "var(--ui-dropzone-disc)",
+      "value": "#FFFDF9",
+      "description": "The round seat of the upload icon: Porcelain, lifted off the well with depth.raised. It is the one raised thing in the box.",
+      "status": "DECIDED"
+    },
+    "dropzone.disc-drag": {
+      "css": "var(--ui-dropzone-disc-drag)",
+      "value": "#1B1410",
+      "description": "The seat of the upload icon while creatives are over the box: Ink, the one dark thing in the box, so it reads as the place to aim (round 11; round 10's Amber seat was wrong here).",
+      "status": "DECIDED"
+    },
+    "dropzone.disc-drag-fg": {
+      "css": "var(--ui-dropzone-disc-drag-fg)",
+      "value": "#FCF6EB",
+      "description": "The upload icon on the Ink seat: Porcelain.",
+      "status": "DECIDED"
+    },
+    "dropzone.disc-size": {
+      "css": "var(--ui-dropzone-disc-size)",
+      "value": "40px",
+      "description": "40 px seat in the box.",
+      "status": "DECIDED"
+    },
+    "dropzone.disc-size-compact": {
+      "css": "var(--ui-dropzone-disc-size-compact)",
+      "value": "32px",
+      "description": "32 px seat in the one-row variant and in the Add more row.",
+      "status": "DECIDED"
+    },
+    "dropzone.height": {
+      "css": "var(--ui-dropzone-height)",
+      "value": "176px",
+      "description": "The empty box: tall enough to aim a drop at, short enough to sit above a form. Content centred, 24 inset all round.",
+      "status": "DECIDED"
+    },
+    "dropzone.height-compact": {
+      "css": "var(--ui-dropzone-height-compact)",
+      "value": "56px",
+      "description": "The one-row variant (Reference images in a form) and the Add more row under added creatives: taller than a 40 px field so it reads as a place to drop, not a field to type in.",
+      "status": "DECIDED"
+    },
+    "dropzone.press-scale": {
+      "css": "var(--ui-dropzone-press-scale)",
+      "value": "0.985",
+      "description": "A box is wide, so it shrinks like a card (0.985), half a button's 3 %.",
+      "status": "DECIDED"
+    },
+    "dropzone.tile-min": {
+      "css": "var(--ui-dropzone-tile-min)",
+      "value": "88px",
+      "description": "Smallest thumbnail of an added creative: three across on a phone, also inside a dialog on a phone (310 px inside). In a wider box a tile is at least 14 % of it (dropzone.css), so a desktop box or a 640 px dialog shows six across.",
+      "status": "DECIDED"
+    },
+    "dropzone.gap": {
+      "css": "var(--ui-dropzone-gap)",
+      "value": "24px",
+      "description": "24 px between the groups inside an upload: added creatives, rows still uploading, the Add more row. Rows inside a group sit 4 apart, tiles 24 down and 12 across with their caption 8 under them.",
+      "status": "DECIDED"
+    },
+    "dropzone.glass-bg": {
+      "css": "var(--ui-dropzone-glass-bg)",
+      "value": "rgb(255 253 249 / 0.1)",
+      "description": "The box on glass: the clear veil, no stroke. Porcelain text on it is 5.0:1 over the worst backdrop.",
+      "status": "DECIDED"
+    },
+    "dropzone.glass-bg-hover": {
+      "css": "var(--ui-dropzone-glass-bg-hover)",
+      "value": "rgb(255 253 249 / 0.14)",
+      "description": "Hover on glass: the veil lifts like a clear button.",
+      "status": "DECIDED"
+    },
+    "dropzone.glass-bg-drag": {
+      "css": "var(--ui-dropzone-glass-bg-drag)",
+      "value": "rgb(27 20 16 / 0.24)",
+      "description": "Creatives dragged over the box on glass: the well deepens toward Ink instead of lighting up, so Porcelain text gains contrast while you aim.",
+      "status": "DECIDED"
+    },
+    "dropzone.glass-disc": {
+      "css": "var(--ui-dropzone-glass-disc)",
+      "value": "rgb(255 253 249 / 0.1)",
+      "description": "The icon's seat on glass, and the tile of a row's creative that has nothing to show yet: a clear veil, never white (the one white thing on a glass surface is its main button).",
+      "status": "DECIDED"
+    },
+    "menubar.trigger": {
+      "css": "var(--ui-menubar-trigger)",
+      "value": "36px",
+      "description": "A menu name in the bar (Campaign, Creative, View, Help): a 36 px quiet pill, 44 to touch. Open, it sits on the quiet hover surface in Ink.",
+      "status": "DECIDED"
+    },
+    "menubar.gap": {
+      "css": "var(--ui-menubar-gap)",
+      "value": "4px",
+      "description": "Between the menu names (4 px): they read as one bar, without a container or a line under it.",
+      "status": "DECIDED"
+    },
+    "menubar.content-width": {
+      "css": "var(--ui-menubar-content-width)",
+      "value": "264px",
+      "description": "Least width of a menubar menu (glass, radius float): room for an icon, the words and a shortcut in keys at the end.",
+      "status": "DECIDED"
+    },
+    "menubar.sub-gap": {
+      "css": "var(--ui-menubar-sub-gap)",
+      "value": "8px",
+      "description": "A submenu (Export as) opens 8 px beside its menu, so the two glasses read as two layers; its first row level with the row that opened it.",
+      "status": "DECIDED"
+    },
+    "menubar.indicator": {
+      "css": "var(--ui-menubar-indicator)",
+      "value": "16px",
+      "description": "The leading slot of a menubar row (16 px): the icon, or the check of a checkbox row, or the dot of a radio row, so every label in a menu starts on one line.",
+      "status": "DECIDED"
+    },
+    "menubar.radio-dot": {
+      "css": "var(--ui-menubar-radio-dot)",
+      "value": "6px",
+      "description": "The dot of the chosen radio row (6 px, Porcelain on the glass). A checkbox row shows the check; neither is ever Amber.",
+      "status": "DECIDED"
+    },
+    "toolbar.tray": {
+      "css": "var(--ui-toolbar-tray)",
+      "value": "#F8F6F4",
+      "description": "The tray the editor tools sit in: one step toward Ink on Porcelain, a pill with 6 px around the 40 px circles, so the tools read as one object without a stroke.",
+      "status": "DECIDED"
+    },
+    "toolbar.group-gap": {
+      "css": "var(--ui-toolbar-group-gap)",
+      "value": "12px",
+      "description": "Between groups of tools (12 px), three times the 4 px inside a group: the separator is space, never a line.",
+      "status": "DECIDED"
+    },
+    "toolbar.readout": {
+      "css": "var(--ui-toolbar-readout)",
+      "value": "56px",
+      "description": "The zoom readout (100 %) between zoom out and zoom in, in the data face; a fixed width, so the buttons never move when the number changes.",
+      "status": "DECIDED"
+    },
+    "toolbar.bar-bottom": {
+      "css": "var(--ui-toolbar-bar-bottom)",
+      "value": "24px",
+      "description": "The floating action bar sits 24 px above the bottom of the screen, plus the phone's safe area (env(safe-area-inset-bottom)).",
+      "status": "DECIDED"
+    },
+    "toolbar.bar-margin": {
+      "css": "var(--ui-toolbar-bar-margin)",
+      "value": "8px",
+      "description": "Least room beside the floating action bar on a narrow screen (8 px, like the drawer), so the glass pill never touches the screen's edge.",
+      "status": "DECIDED"
+    },
+    "toolbar.bar-z": {
+      "css": "var(--ui-toolbar-bar-z)",
+      "value": "40",
+      "description": "Stacking of the floating action bar and the settings save bar: over the page, under dialogs and drawers (50), so a confirm dialog's scrim covers the bar it came from.",
+      "status": "DECIDED"
+    },
+    "resizable.gap": {
+      "css": "var(--ui-resizable-gap)",
+      "value": "12px",
+      "description": "The handle between two panels is this space (12 px), not a line. Its hit area is 44 px wide all the same.",
+      "status": "DECIDED"
+    },
+    "resizable.grip-thickness": {
+      "css": "var(--ui-resizable-grip-thickness)",
+      "value": "4px",
+      "description": "The grip: a small pill in the middle of the gap, 4 px across.",
+      "status": "DECIDED"
+    },
+    "resizable.grip-length": {
+      "css": "var(--ui-resizable-grip-length)",
+      "value": "32px",
+      "description": "The grip's length at hover and focus.",
+      "status": "DECIDED"
+    },
+    "resizable.grip-length-active": {
+      "css": "var(--ui-resizable-grip-length-active)",
+      "value": "48px",
+      "description": "The grip's length while dragging: it stretches, so the hand feels it took hold.",
+      "status": "DECIDED"
+    },
+    "resizable.grip-touch": {
+      "css": "var(--ui-resizable-grip-touch)",
+      "value": "#DCD6D0",
+      "description": "The grip at rest where there is no hover (touch screens): always faintly there, one step above the layer behind. With a mouse it is hidden until hover or focus.",
+      "status": "DECIDED"
+    },
+    "resizable.grip-hover": {
+      "css": "var(--ui-resizable-grip-hover)",
+      "value": "#C6C0B9",
+      "description": "The grip under the pointer or with keyboard focus (focus also draws the Ink ring around it).",
+      "status": "DECIDED"
+    },
+    "resizable.grip-active": {
+      "css": "var(--ui-resizable-grip-active)",
+      "value": "#1B1410",
+      "description": "The grip while dragging: Ink, the colour that decides.",
+      "status": "DECIDED"
+    },
+    "resizable.step": {
+      "css": "var(--ui-resizable-step)",
+      "value": "5",
+      "description": "Percent a panel grows or shrinks per arrow key (Shift: twice that); Home and End go to the panel's least and most size.",
+      "status": "DECIDED"
+    },
+    "stepper.marker": {
+      "css": "var(--ui-stepper-marker)",
+      "value": "24px",
+      "description": "The step marker: a 24 px circle with the step number, the size of the selected creative's badge.",
+      "status": "DECIDED"
+    },
+    "stepper.marker-gap": {
+      "css": "var(--ui-stepper-marker-gap)",
+      "value": "12px",
+      "description": "From the marker to its label (12 px); label to its description 4.",
+      "status": "DECIDED"
+    },
+    "stepper.step-gap": {
+      "css": "var(--ui-stepper-step-gap)",
+      "value": "24px",
+      "description": "Between steps side by side (24 px, twice the 12 from a marker to its words). Steps are told apart by space and their numbers; there is no connector line.",
+      "status": "DECIDED"
+    },
+    "stepper.row-gap": {
+      "css": "var(--ui-stepper-row-gap)",
+      "value": "24px",
+      "description": "Between steps stacked upright (24 px), twice the air inside a step.",
+      "status": "DECIDED"
+    },
+    "stepper.marker-done": {
+      "css": "var(--ui-stepper-marker-done)",
+      "value": "#EDE9E4",
+      "description": "A finished step: the Ink check on the sunken circle. Never Amber: Amber is only the Quality Gate check on a checked creative.",
+      "status": "DECIDED"
+    },
+    "stepper.marker-upcoming": {
+      "css": "var(--ui-stepper-marker-upcoming)",
+      "value": "#F8F6F4",
+      "description": "A step still to come: its number in tertiary on the quietest circle, so the eye goes to the current step in Ink.",
+      "status": "DECIDED"
+    },
+    "stepper.dot": {
+      "css": "var(--ui-stepper-dot)",
+      "value": "6px",
+      "description": "The compact stepper on a phone (Step 2 of 5): one 6 px dot per step, Ink when done, sunken when still to come.",
+      "status": "DECIDED"
+    },
+    "stepper.dot-current": {
+      "css": "var(--ui-stepper-dot-current)",
+      "value": "20px",
+      "description": "The current step in the compact stepper: the dot stretched to a 20 px pill in Ink.",
+      "status": "DECIDED"
+    },
+    "pagehead.crumb-gap": {
+      "css": "var(--ui-pagehead-crumb-gap)",
+      "value": "12px",
+      "description": "From the breadcrumb to the title (12 px).",
+      "status": "DECIDED"
+    },
+    "pagehead.meta-gap": {
+      "css": "var(--ui-pagehead-meta-gap)",
+      "value": "8px",
+      "description": "From the title to its quiet meta line in the data face (8 px): they belong together.",
+      "status": "DECIDED"
+    },
+    "pagehead.heading-min": {
+      "css": "var(--ui-pagehead-heading-min)",
+      "value": "320px",
+      "description": "The title keeps at least this much of its line before the actions wrap under it; below it they move to the next line instead of crushing the title.",
+      "status": "DECIDED"
+    },
+    "pagehead.meta-separator": {
+      "css": "var(--ui-pagehead-meta-separator)",
+      "value": "16px",
+      "description": "The room each quiet dot takes between parts of the meta line (16 px, the dot centred). A dot that would start a line is clipped away.",
+      "status": "DECIDED"
+    },
+    "pagehead.tabs-gap": {
+      "css": "var(--ui-pagehead-tabs-gap)",
+      "value": "24px",
+      "description": "From the header to its tabs (24 px), three times the title-to-meta gap.",
+      "status": "DECIDED"
+    },
+    "pagehead.actions-gap": {
+      "css": "var(--ui-pagehead-actions-gap)",
+      "value": "8px",
+      "description": "Between the header's actions (8 px). The primary action is the one Ink button, last in the row.",
+      "status": "DECIDED"
+    },
+    "settings.page-max": {
+      "css": "var(--ui-settings-page-max)",
+      "value": "640px",
+      "description": "The widest a settings page runs beside its navigation, so a form keeps a calm measure.",
+      "status": "DECIDED"
+    },
+    "settings.gap": {
+      "css": "var(--ui-settings-gap)",
+      "value": "32px",
+      "description": "Between the settings navigation and its page (32 px).",
+      "status": "DECIDED"
+    },
+    "settings.section-gap": {
+      "css": "var(--ui-settings-section-gap)",
+      "value": "48px",
+      "description": "Between sections of a settings page (48 px), twice the 24 px between fields: sections are parted by space, never a line.",
+      "status": "DECIDED"
+    },
+    "settings.savebar-bottom": {
+      "css": "var(--ui-settings-savebar-bottom)",
+      "value": "16px",
+      "description": "The save bar floats 16 px above the bottom of the page (plus the safe area) once something has changed.",
+      "status": "DECIDED"
+    },
+    "filterbar.search-min": {
+      "css": "var(--ui-filterbar-search-min)",
+      "value": "200px",
+      "description": "The search's starting width in the row: chips and sort take their room first, then the search grows up to its full width; only when even this does not fit does the row wrap.",
+      "status": "DECIDED"
+    },
+    "filterbar.search": {
+      "css": "var(--ui-filterbar-search)",
+      "value": "280px",
+      "description": "The search field in a wide filter bar; on a phone it takes the whole row.",
+      "status": "DECIDED"
+    },
+    "filterbar.sort": {
+      "css": "var(--ui-filterbar-sort)",
+      "value": "200px",
+      "description": "The sort select at the end of a wide filter bar (a field, radius 12, its listbox glass). On a phone sorting moves into the filter sheet.",
+      "status": "DECIDED"
+    },
+    "filterbar.menu": {
+      "css": "var(--ui-filterbar-menu)",
+      "value": "264px",
+      "description": "Least width of a filter chip's glass menu: room for the option, its data hint and the check.",
+      "status": "DECIDED"
+    },
+    "filterbar.gap": {
+      "css": "var(--ui-filterbar-gap)",
+      "value": "8px",
+      "description": "Between the controls of the filter bar (8 px).",
+      "status": "DECIDED"
+    },
+    "filterbar.row-gap": {
+      "css": "var(--ui-filterbar-row-gap)",
+      "value": "12px",
+      "description": "From the controls to the row of active filters and the result count (12 px).",
+      "status": "DECIDED"
+    },
+    "filterbar.results-gap": {
+      "css": "var(--ui-filterbar-results-gap)",
+      "value": "24px",
+      "description": "From the filter bar to the creatives it filters (24 px), twice the gap inside the bar.",
+      "status": "DECIDED"
+    },
+    "filterbar.pill": {
+      "css": "var(--ui-filterbar-pill)",
+      "value": "32px",
+      "description": "An active filter (Status: Waiting for Anna): a 32 px pill with its remove circle, 44 to touch.",
+      "status": "DECIDED"
+    },
+    "filterbar.pill-bg": {
+      "css": "var(--ui-filterbar-pill-bg)",
+      "value": "#EDE9E4",
+      "description": "An active filter pill: the sunken surface, the key in tertiary and the value in Ink. No stroke.",
+      "status": "DECIDED"
+    },
+    "filterbar.pill-bg-hover": {
+      "css": "var(--ui-filterbar-pill-bg-hover)",
+      "value": "#DCD6D0",
+      "description": "The remove circle in a filter pill under the pointer, and pressed.",
+      "status": "DECIDED"
+    },
+    "filterbar.remove": {
+      "css": "var(--ui-filterbar-remove)",
+      "value": "24px",
+      "description": "The remove circle (x) at the end of a filter pill; its hit area is 44.",
+      "status": "DECIDED"
+    },
+    "sidebar.width": {
+      "css": "var(--ui-sidebar-width)",
+      "value": "240px",
+      "description": "The expanded app sidebar on the layer behind the page.",
+      "status": "DECIDED"
+    },
+    "sidebar.width-icon": {
+      "css": "var(--ui-sidebar-width-icon)",
+      "value": "calc(44px + 2 * 12px)",
+      "description": "The collapsed icon rail: 44 px rounded squares (radius item) with 12 px of the layer behind on each side (68 px). Square, not round: Fume's rail (Marcus, 13 Oct).",
+      "status": "DECIDED"
+    },
+    "sidebar.width-mobile": {
+      "css": "var(--ui-sidebar-width-mobile)",
+      "value": "288px",
+      "description": "The sidebar as a glass drawer on a phone; never wider than the screen minus 56 px, so the page stays in view behind the scrim.",
+      "status": "DECIDED"
+    },
+    "sidebar.row": {
+      "css": "var(--ui-sidebar-row)",
+      "value": "40px",
+      "description": "A navigation row, 40 px; 44 on touch screens. The current row comes forward to Porcelain (--ui-behind-active) with --ui-depth-raised.",
+      "status": "DECIDED"
+    },
+    "sidebar.gap": {
+      "css": "var(--ui-sidebar-gap)",
+      "value": "8px",
+      "description": "The layer behind that shows around the page sheet (8 px). No stroke between the sidebar and the page: the sheet lies on the layer with --ui-depth-sheet.",
+      "status": "DECIDED"
+    },
+    "sidebar.logo": {
+      "css": "var(--ui-sidebar-logo)",
+      "value": "26px",
+      "description": "Height of the Fume logo (the lockup) in the sidebar header: 103 px wide, above the 96 px minimum, the word as large as the old 18 px wordmark. Logo before mark before wordmark (F-D080).",
+      "status": "DECIDED"
+    },
+    "sidebar.logo-mark": {
+      "css": "var(--ui-sidebar-logo-mark)",
+      "value": "24px",
+      "description": "Height of the mark alone when the sidebar folds to the rail: the logo becomes its icon.",
+      "status": "DECIDED"
+    },
+    "nav.height": {
+      "css": "var(--ui-nav-height)",
+      "value": "calc(40px + 2 * 12px)",
+      "description": "The site top bar: 40 px controls with 12 px of air above and below (64 px).",
+      "status": "DECIDED"
+    },
+    "nav.link": {
+      "css": "var(--ui-nav-link)",
+      "value": "36px",
+      "description": "A link in the top bar: a 36 px quiet pill, 44 to touch.",
+      "status": "DECIDED"
+    },
+    "nav.logo": {
+      "css": "var(--ui-nav-logo)",
+      "value": "26px",
+      "description": "Height of the Fume logo (the lockup) in the top bar: 103 px wide, above the 96 px minimum. Logo before mark before wordmark (F-D080).",
+      "status": "DECIDED"
+    },
+    "nav.panel": {
+      "css": "var(--ui-nav-panel)",
+      "value": "340px",
+      "description": "Width of a top-bar dropdown: glass, radius float, rows with a title and one line of text.",
+      "status": "DECIDED"
+    },
+    "breadcrumb.gap": {
+      "css": "var(--ui-breadcrumb-gap)",
+      "value": "4px",
+      "description": "Between a crumb and its chevron separator (4 px); the chevron is the only divider, never a slash or a line.",
+      "status": "DECIDED"
+    },
+    "pagination.size": {
+      "css": "var(--ui-pagination-size)",
+      "value": "40px",
+      "description": "A page button: a 40 px circle (two digits stay round), 44 to touch. The current page is Ink.",
+      "status": "DECIDED"
+    },
+    "table.row-gap": {
+      "css": "var(--ui-table-row-gap)",
+      "value": "4px",
+      "description": "Space between rows (4 px). Rows are told apart by space and the hover surface, never by lines (few-strokes).",
+      "status": "DECIDED"
+    },
+    "table.row-hover": {
+      "css": "var(--ui-table-row-hover)",
+      "value": "#F8F6F4",
+      "description": "A row under the pointer: one step toward Ink on Porcelain.",
+      "status": "DECIDED"
+    },
+    "table.row-selected": {
+      "css": "var(--ui-table-row-selected)",
+      "value": "rgb(245 158 86 / 0.1)",
+      "description": "A selected row: the faint Amber wash of color.selected, light on what you chose (round 10; round 9 had Amber 50, round 8 two steps toward Ink). The checkbox itself is Ink.",
+      "status": "DECIDED"
+    },
+    "table.cell-x": {
+      "css": "var(--ui-table-cell-x)",
+      "value": "12px",
+      "description": "Air sideways in a cell (12 px); the first and last cell keep --ui-inset-float (16) from the row's rounded ends.",
+      "status": "DECIDED"
+    },
+    "table.cell-y": {
+      "css": "var(--ui-table-cell-y)",
+      "value": "8px",
+      "description": "Air above and below a cell (8 px).",
+      "status": "DECIDED"
+    },
+    "table.head": {
+      "css": "var(--ui-table-head)",
+      "value": "32px",
+      "description": "Header row height (32 px): label type in tertiary, sticky on scroll.",
+      "status": "DECIDED"
+    },
+    "table.thumb": {
+      "css": "var(--ui-table-thumb)",
+      "value": "40px",
+      "description": "Width of the creative thumbnail in a row (40 px, 4:5, so 50 tall), with the creative's hairline edge.",
+      "status": "DECIDED"
+    },
+    "calendar.day": {
+      "css": "var(--ui-calendar-day)",
+      "value": "40px",
+      "description": "A day: a 40 px circle. Selected is an Ink circle; on glass a Porcelain one.",
+      "status": "DECIDED"
+    },
+    "calendar.cell": {
+      "css": "var(--ui-calendar-cell)",
+      "value": "44px",
+      "description": "A day's cell and hit area, 44 px. Narrow screens let the cells shrink and keep the 44 px hit area.",
+      "status": "DECIDED"
+    },
+    "calendar.range": {
+      "css": "var(--ui-calendar-range)",
+      "value": "rgb(245 158 86 / 0.1)",
+      "description": "The band between the two Ink ends of a range: the faint Amber wash of color.selected (round 10; round 9 had Amber 50, round 8 the sunken step); no outline.",
+      "status": "DECIDED"
+    },
+    "calendar.range-on-glass": {
+      "css": "var(--ui-calendar-range-on-glass)",
+      "value": "rgb(255 253 249 / 0.14)",
+      "description": "The band of a range on glass: the clear veil, one step up.",
+      "status": "DECIDED"
+    },
+    "calendar.today": {
+      "css": "var(--ui-calendar-today)",
+      "value": "4px",
+      "description": "Today: a small Ink dot under the date (Porcelain on a selected day). A dot, not a ring, so nothing draws a line.",
+      "status": "DECIDED"
+    },
+    "tabs.gap": {
+      "css": "var(--ui-tabs-gap)",
+      "value": "16px",
+      "description": "Between the tab list and its panel (16 px).",
+      "status": "DECIDED"
+    },
+    "tabs.vertical-width": {
+      "css": "var(--ui-tabs-vertical-width)",
+      "value": "220px",
+      "description": "The vertical tab list on a settings page: a sunken track with one white pill that slides, like the segmented control.",
+      "status": "DECIDED"
+    },
+    "overlay.z-modal": {
+      "css": "var(--ui-overlay-z-modal)",
+      "value": "50",
+      "description": "Stacking: dialogs, alert dialogs, sheets, drawers, the command palette and their scrims.",
+      "status": "DECIDED"
+    },
+    "overlay.z-float": {
+      "css": "var(--ui-overlay-z-float)",
+      "value": "60",
+      "description": "Stacking: popovers, hover cards, context menus and listboxes, above a dialog they open from.",
+      "status": "DECIDED"
+    },
+    "overlay.z-tooltip": {
+      "css": "var(--ui-overlay-z-tooltip)",
+      "value": "70",
+      "description": "Stacking: tooltips, above everything they describe.",
+      "status": "DECIDED"
+    },
+    "overlay.z-toast": {
+      "css": "var(--ui-overlay-z-toast)",
+      "value": "80",
+      "description": "Stacking: toasts, the top layer, still readable while a dialog is open.",
+      "status": "DECIDED"
+    },
+    "overlay.margin": {
+      "css": "var(--ui-overlay-margin)",
+      "value": "16px",
+      "description": "16px. The least space between a floating layer and the edge of the screen: a dialog on a phone sits 16 in, a popover flips or shifts before it comes closer.",
+      "status": "DECIDED"
+    },
+    "overlay.offset": {
+      "css": "var(--ui-overlay-offset)",
+      "value": "8px",
+      "description": "8px. The gap between a trigger and the popover, hover card, menu, listbox or tooltip it opens. No arrow: the gap and the shadow say where it came from.",
+      "status": "DECIDED"
+    },
+    "dialog.width-sm": {
+      "css": "var(--ui-dialog-width-sm)",
+      "value": "400px",
+      "description": "Small dialog: confirmations and alert dialogs (Delete 3 creatives?).",
+      "status": "DECIDED"
+    },
+    "dialog.width-md": {
+      "css": "var(--ui-dialog-width-md)",
+      "value": "480px",
+      "description": "Default dialog: a question with a short body (Send 12 creatives to the Quality Gate?).",
+      "status": "DECIDED"
+    },
+    "dialog.width-lg": {
+      "css": "var(--ui-dialog-width-lg)",
+      "value": "640px",
+      "description": "Large dialog: a decision that needs the work in view (the 12 creatives before they go to Anna).",
+      "status": "DECIDED"
+    },
+    "dialog.scrim-phone": {
+      "css": "var(--ui-dialog-scrim-phone)",
+      "value": "rgb(27 20 16 / 0.6)",
+      "description": "The scrim under a dialog or sheet on a phone: dark enough that the page's text no longer reads through the glass between the dialog's labels (walk-through 19 Oct, MOB-15). PROPOSED 19 Oct 2026.",
+      "status": "PROPOSED"
+    },
+    "sheet.width": {
+      "css": "var(--ui-sheet-width)",
+      "value": "400px",
+      "description": "A side sheet (creative details). On a phone the same content opens as a drawer from the bottom.",
+      "status": "DECIDED"
+    },
+    "sheet.margin": {
+      "css": "var(--ui-sheet-margin)",
+      "value": "12px",
+      "description": "12px. The sheet floats this far from the top, side and bottom of the screen, so its 32 px corners show: a panel lying on the page, not a slab glued to the edge.",
+      "status": "DECIDED"
+    },
+    "drawer.width": {
+      "css": "var(--ui-drawer-width)",
+      "value": "480px",
+      "description": "On a wide screen a drawer keeps a phone-like width, centred at the bottom. On a phone it spans the screen minus its margin.",
+      "status": "DECIDED"
+    },
+    "drawer.margin": {
+      "css": "var(--ui-drawer-margin)",
+      "value": "8px",
+      "description": "8px. The drawer floats this far from the sides and the bottom of a phone, so all four 32 px corners show.",
+      "status": "DECIDED"
+    },
+    "drawer.top": {
+      "css": "var(--ui-drawer-top)",
+      "value": "48px",
+      "description": "48px. Fully open, the drawer stops this far below the top of the screen: the page stays in view, so it reads as a layer that can go away.",
+      "status": "DECIDED"
+    },
+    "drawer.snap": {
+      "css": "var(--ui-drawer-snap)",
+      "value": "0.6",
+      "description": "The first snap point, as a share of the screen height. A drawer opens there and snaps to it, to fully open, or away when dragged below it.",
+      "status": "DECIDED"
+    },
+    "drawer.handle-width": {
+      "css": "var(--ui-drawer-handle-width)",
+      "value": "40px",
+      "description": "The grab handle is a short pill, not a line.",
+      "status": "DECIDED"
+    },
+    "drawer.handle-height": {
+      "css": "var(--ui-drawer-handle-height)",
+      "value": "6px",
+      "description": "Grab handle height: thick enough to read as a pill and to be found by a thumb. Its hit area is 44 x 44.",
+      "status": "DECIDED"
+    },
+    "drawer.handle": {
+      "css": "var(--ui-drawer-handle)",
+      "value": "rgb(255 253 249 / 0.42)",
+      "description": "Grab handle on glass: Porcelain at 42 %, quieter than text and clearer than the clear-button veil.",
+      "status": "DECIDED"
+    },
+    "drawer.handle-active": {
+      "css": "var(--ui-drawer-handle-active)",
+      "value": "rgb(255 253 249 / 0.7)",
+      "description": "Grab handle while dragged or pressed: it lifts toward Porcelain.",
+      "status": "DECIDED"
+    },
+    "popover.width": {
+      "css": "var(--ui-popover-width)",
+      "value": "288px",
+      "description": "A popover with a short task (Share with Anna: a note and one white button).",
+      "status": "DECIDED"
+    },
+    "popover.hover-width": {
+      "css": "var(--ui-popover-hover-width)",
+      "value": "288px",
+      "description": "A hover card: the preview of a person or a creative.",
+      "status": "DECIDED"
+    },
+    "popover.hover-delay": {
+      "css": "var(--ui-popover-hover-delay)",
+      "value": "500ms",
+      "description": "A hover card waits this long before it opens, so a pointer passing over a name does not flash cards.",
+      "status": "DECIDED"
+    },
+    "popover.hover-close-delay": {
+      "css": "var(--ui-popover-hover-close-delay)",
+      "value": "240ms",
+      "description": "A hover card stays this long after the pointer leaves, so the pointer can travel into it.",
+      "status": "DECIDED"
+    },
+    "tooltip.delay": {
+      "css": "var(--ui-tooltip-delay)",
+      "value": "500ms",
+      "description": "A tooltip waits this long under a resting pointer. Keyboard focus shows it at once.",
+      "status": "DECIDED"
+    },
+    "tooltip.skip-delay": {
+      "css": "var(--ui-tooltip-skip-delay)",
+      "value": "300ms",
+      "description": "Moving from one trigger to the next within this time shows the next tooltip at once, as in a toolbar.",
+      "status": "DECIDED"
+    },
+    "tooltip.long-press": {
+      "css": "var(--ui-tooltip-long-press)",
+      "value": "500ms",
+      "description": "On a touch screen a press this long shows the tooltip (and a context menu). A tap acts as usual.",
+      "status": "DECIDED"
+    },
+    "toast.width": {
+      "css": "var(--ui-toast-width)",
+      "value": "400px",
+      "description": "Every toast is the same pill, so a stack lines up and the depth reads cleanly. On a phone: the screen minus 16 each side.",
+      "status": "DECIDED"
+    },
+    "toast.bottom": {
+      "css": "var(--ui-toast-bottom)",
+      "value": "24px",
+      "description": "24px. Toasts sit this far above the bottom of the screen (plus the safe area), centred.",
+      "status": "DECIDED"
+    },
+    "toast.peek": {
+      "css": "var(--ui-toast-peek)",
+      "value": "8px",
+      "description": "8px. How far each older toast shows above the one in front of it in a stack of up to three.",
+      "status": "DECIDED"
+    },
+    "toast.depth-scale": {
+      "css": "var(--ui-toast-depth-scale)",
+      "value": "0.05",
+      "description": "Each older toast in the stack is 5 % smaller: depth without a line or a second shadow colour.",
+      "status": "DECIDED"
+    },
+    "toast.duration": {
+      "css": "var(--ui-toast-duration)",
+      "value": "4000ms",
+      "description": "A toast leaves on its own after this time; the timer pauses while the pointer or focus is on the stack. 4 s, PROPOSED 19 Oct 2026 (walk-through MOB-19, ONB-17: toasts stayed on the next page; was 5 s, DECIDED 13 Oct).",
+      "status": "PROPOSED"
+    },
+    "toast.duration-long": {
+      "css": "var(--ui-toast-duration-long)",
+      "value": "8000ms",
+      "description": "Errors and toasts with an action (Undo) stay longer, so the action can be reached.",
+      "status": "DECIDED"
+    },
+    "toast.swipe": {
+      "css": "var(--ui-toast-swipe)",
+      "value": "48px",
+      "description": "48px. A swipe this far (sideways or down) dismisses a toast; shorter, it springs back.",
+      "status": "DECIDED"
+    },
+    "command.width": {
+      "css": "var(--ui-command-width)",
+      "value": "560px",
+      "description": "The command palette (⌘K). On a phone: the screen minus 16 each side.",
+      "status": "DECIDED"
+    },
+    "command.list-height": {
+      "css": "var(--ui-command-list-height)",
+      "value": "360px",
+      "description": "The results scroll inside this height; the search field and the key hints stay put.",
+      "status": "DECIDED"
+    },
+    "command.top": {
+      "css": "var(--ui-command-top)",
+      "value": "12vh",
+      "description": "The palette opens high on the screen, not centred, so the list can grow downward without the field jumping.",
+      "status": "DECIDED"
+    },
+    "qg.panel-width": {
+      "css": "var(--ui-qg-panel-width)",
+      "value": "360px",
+      "description": "Anna's side panel on a wide screen: the Brand DNA checklist, her notes and the decision. Under 720 px of screen it becomes a glass sheet at the bottom.",
+      "status": "DECIDED"
+    },
+    "qg.well": {
+      "css": "var(--ui-qg-well)",
+      "value": "#EDE9E4",
+      "description": "The well the creative sits in: one step below the page, so the white creative and its hairline come forward. The work is the brightest thing on the screen.",
+      "status": "DECIDED"
+    },
+    "qg.media-feed": {
+      "css": "var(--ui-qg-media-feed)",
+      "value": "400px",
+      "description": "Widest a Feed creative (4:5) shows in the well; a Story (9:16) shows narrower and a Banner (1.91:1) wider, so all three read at about the same weight.",
+      "status": "DECIDED"
+    },
+    "qg.media-story": {
+      "css": "var(--ui-qg-media-story)",
+      "value": "288px",
+      "description": "Widest a Story creative (9:16) shows in the well.",
+      "status": "DECIDED"
+    },
+    "qg.media-banner": {
+      "css": "var(--ui-qg-media-banner)",
+      "value": "640px",
+      "description": "Widest a Banner creative (1.91:1) shows in the well.",
+      "status": "DECIDED"
+    },
+    "qg.pin": {
+      "css": "var(--ui-qg-pin)",
+      "value": "28px",
+      "description": "Anna's numbered pin on the creative: a 28 px drop whose point (the square corner) sits on the spot. Its hit area is 44.",
+      "status": "DECIDED"
+    },
+    "qg.pin-bg": {
+      "css": "var(--ui-qg-pin-bg)",
+      "value": "rgb(255 253 249 / 0.94)",
+      "description": "A pin at rest: Porcelain at 94 %, the white of the main glass button, with an Ink number and the small glass shadow, so it reads on any photo without a ring.",
+      "status": "DECIDED"
+    },
+    "qg.pin-active": {
+      "css": "var(--ui-qg-pin-active)",
+      "value": "#1B1410",
+      "description": "The pin whose note is open, hovered or focused: Ink with a Paper number. Ink decides; never Amber, which is only the check.",
+      "status": "DECIDED"
+    },
+    "qg.marker": {
+      "css": "var(--ui-qg-marker)",
+      "value": "20px",
+      "description": "The checklist's marks: the Ink check on an item that passed, and the small pin (the same drop as on the creative) on an item with a note.",
+      "status": "DECIDED"
+    },
+    "qg.note-bg": {
+      "css": "var(--ui-qg-note-bg)",
+      "value": "#F8F6F4",
+      "description": "A checklist item with a note, and Anna's comment: one surface step off the page. Changes are told in words, never in red.",
+      "status": "DECIDED"
+    },
+    "qg.key-on-ink": {
+      "css": "var(--ui-qg-key-on-ink)",
+      "value": "rgb(255 253 249 / 0.16)",
+      "description": "The shortcut key inside the Ink Approve button (A): a Porcelain veil, like a clear glass button, so the key reads without a stroke.",
+      "status": "DECIDED"
+    },
+    "qg.key-on-ink-fg": {
+      "css": "var(--ui-qg-key-on-ink-fg)",
+      "value": "rgb(255 253 249 / 0.86)",
+      "description": "The letter on that key: Porcelain at 86 %, 13:1 on Ink.",
+      "status": "DECIDED"
+    },
+    "qg.seal-height": {
+      "css": "var(--ui-qg-seal-height)",
+      "value": "32px",
+      "description": "The status seal on the creative (In check, Checked, Changes requested): a white 32 px pill lifted by depth, in the creative's bottom-left corner.",
+      "status": "DECIDED"
+    },
+    "qg.land-scale": {
+      "css": "var(--ui-qg-land-scale)",
+      "value": "1.8",
+      "description": "The check moment: the checked triangle lands from 1.8 times its size and from blur to sharp (soft to sharp), over --ui-motion-slow. Calm, once, no bounce.",
+      "status": "DECIDED"
+    },
+    "qg.land-blur": {
+      "css": "var(--ui-qg-land-blur)",
+      "value": "6px",
+      "description": "How soft the checked triangle starts before it lands sharp.",
+      "status": "DECIDED"
+    },
+    "qg.peek": {
+      "css": "var(--ui-qg-peek)",
+      "value": "188px",
+      "description": "On a phone the sheet first shows only the summary and the decision: this much of the screen's foot is kept clear for it, so the creative above stays whole.",
+      "status": "DECIDED"
+    },
+    "qg.phone-height": {
+      "css": "var(--ui-qg-phone-height)",
+      "value": "720px",
+      "description": "Height of the review screen in its phone layout on the board (the app uses the whole screen).",
+      "status": "DECIDED"
+    },
+    "viewer.ground": {
+      "css": "var(--ui-viewer-ground)",
+      "value": "#1B1410",
+      "description": "The viewer's ground: Ink. Allowed here only, because a creative is judged best on dark, with nothing else in view.",
+      "status": "DECIDED"
+    },
+    "viewer.fg": {
+      "css": "var(--ui-viewer-fg)",
+      "value": "#FFFDF9",
+      "description": "Text and icons on the Ink ground, 17.9:1.",
+      "status": "DECIDED"
+    },
+    "viewer.fg-secondary": {
+      "css": "var(--ui-viewer-fg-secondary)",
+      "value": "rgb(255 253 249 / 0.72)",
+      "description": "Secondary text on Ink and on the info panel: Porcelain at 72 %, 9:1 or better.",
+      "status": "DECIDED"
+    },
+    "viewer.surface": {
+      "css": "var(--ui-viewer-surface)",
+      "value": "#2C2520",
+      "description": "The info panel on the Ink ground: one step lighter, no stroke. Glass would vanish on Ink, so the panel steps up instead of blurring.",
+      "status": "DECIDED"
+    },
+    "viewer.tool-on": {
+      "css": "var(--ui-viewer-tool-on)",
+      "value": "rgb(255 253 249 / 0.2)",
+      "description": "A tool on the Ink ground that is on (the info panel shown): the clear veil (Porcelain at 10 %, the glass-clear button) doubled. The tools themselves are .ui-btn--glass-clear: on Ink the veil reads as it does on Smoke.",
+      "status": "DECIDED"
+    },
+    "viewer.panel-width": {
+      "css": "var(--ui-viewer-panel-width)",
+      "value": "320px",
+      "description": "The info panel beside the creative on a wide screen; on a phone it rises from the bottom.",
+      "status": "DECIDED"
+    },
+    "viewer.pad": {
+      "css": "var(--ui-viewer-pad)",
+      "value": "32px",
+      "description": "Least air between the creative and the edge of the viewer's stage (32), so the creative never touches the tools.",
+      "status": "DECIDED"
+    },
+    "viewer.zoom-max": {
+      "css": "var(--ui-viewer-zoom-max)",
+      "value": "3",
+      "description": "Zoom steps: fit, 1.5, 2 and 3 times. Past fit the creative pans with a drag.",
+      "status": "DECIDED"
+    },
+    "viewer.swipe": {
+      "css": "var(--ui-viewer-swipe)",
+      "value": "48px",
+      "description": "48px. A swipe this far sideways moves to the next or previous creative; shorter, the creative springs back.",
+      "status": "DECIDED"
+    },
+    "notify.width": {
+      "css": "var(--ui-notify-width)",
+      "value": "380px",
+      "description": "The bell's popover: a glass float wide enough for two lines of a notification beside its avatar.",
+      "status": "DECIDED"
+    },
+    "notify.row": {
+      "css": "var(--ui-notify-row)",
+      "value": "68px",
+      "description": "One notification in the popover: every row the same height (two lines of text), so the list can stop on half a row.",
+      "status": "DECIDED"
+    },
+    "notify.label": {
+      "css": "var(--ui-notify-label)",
+      "value": "32px",
+      "description": "A group label (Today, Yesterday) in the popover list.",
+      "status": "DECIDED"
+    },
+    "notify.rows-visible": {
+      "css": "var(--ui-notify-rows-visible)",
+      "value": "3.5",
+      "description": "The popover list stops after three and a half rows: the half row says there is more below (never a sliver).",
+      "status": "DECIDED"
+    },
+    "notify.dot": {
+      "css": "var(--ui-notify-dot)",
+      "value": "6px",
+      "description": "Unread: a 6 px dot in front of the row, Ink on the page and Porcelain on glass, with the words at full strength. Never blue, never Amber.",
+      "status": "DECIDED"
+    },
+    "notify.dot-on-page": {
+      "css": "var(--ui-notify-dot-on-page)",
+      "value": "#1B1410",
+      "description": "The unread dot on the page: Ink.",
+      "status": "DECIDED"
+    },
+    "notify.dot-on-glass": {
+      "css": "var(--ui-notify-dot-on-glass)",
+      "value": "#FFFDF9",
+      "description": "The unread dot on glass: Porcelain.",
+      "status": "DECIDED"
+    },
+    "notify.count": {
+      "css": "var(--ui-notify-count)",
+      "value": "18px",
+      "description": "The unread count on the bell: an 18 px Ink pill with Paper numbers, cut out of the bar with the ground colour.",
+      "status": "DECIDED"
+    },
+    "notify.inbox-width": {
+      "css": "var(--ui-notify-inbox-width)",
+      "value": "760px",
+      "description": "The inbox page's column: a calm reading width, centred on a wide screen.",
+      "status": "DECIDED"
+    },
+    "notify.thumb": {
+      "css": "var(--ui-notify-thumb)",
+      "value": "32px",
+      "description": "A creative thumbnail in an inbox row (32 wide, 4:5), with the creative's hairline.",
+      "status": "DECIDED"
+    },
+    "share.width": {
+      "css": "var(--ui-share-width)",
+      "value": "560px",
+      "description": "The share dialog: wide enough for the email, the role and Invite on one line, and a person's name and role side by side. On a phone it is a sheet at the bottom.",
+      "status": "DECIDED"
+    },
+    "share.role-width": {
+      "css": "var(--ui-share-role-width)",
+      "value": "152px",
+      "description": "The role select beside the email field (Viewer, Can comment, Can approve).",
+      "status": "DECIDED"
+    },
+    "share.copied": {
+      "css": "var(--ui-share-copied)",
+      "value": "2000ms",
+      "description": "How long Copy link says Copied before it turns back.",
+      "status": "DECIDED"
+    },
+    "share.list-max": {
+      "css": "var(--ui-share-list-max)",
+      "value": "236px",
+      "description": "People with access scroll inside this height: four rows and half of the fifth.",
+      "status": "DECIDED"
+    },
+    "onboard.measure": {
+      "css": "var(--ui-onboard-measure)",
+      "value": "52ch",
+      "description": "Line length of the welcome text.",
+      "status": "DECIDED"
+    },
+    "onboard.step-min": {
+      "css": "var(--ui-onboard-step-min)",
+      "value": "232px",
+      "description": "Narrowest step card: three side by side on a wide screen, one under the other on a phone.",
+      "status": "DECIDED"
+    },
+    "onboard.mark": {
+      "css": "var(--ui-onboard-mark)",
+      "value": "28px",
+      "description": "The step's mark: its number on the sunken step, and an Ink circle with a Paper check once it is done. Never Amber: Amber is only a creative Anna checked.",
+      "status": "DECIDED"
+    },
+    "onboard.ground": {
+      "css": "var(--ui-onboard-ground)",
+      "value": "#FCF6EB",
+      "description": "The first run lies on Paper: a brand moment, the welcome, edge to edge like a Paper section (decided with Warmer, Marcus 13 Oct; round 9; round 8 had Porcelain).",
+      "status": "DECIDED"
+    },
+    "onboard.card": {
+      "css": "var(--ui-onboard-card)",
+      "value": "#FFFDF9",
+      "description": "On Paper the step cards and the empty campaigns are Porcelain, so a card never matches its ground.",
+      "status": "DECIDED"
+    },
+    "notify-state.unread-bg-on-page": {
+      "css": "var(--ui-notify-state-unread-bg-on-page)",
+      "value": "#F8F6F4",
+      "description": "#9: an unread notification on the page rests on the card surface (Focus 50), so unread rows read as a block before any word is read; a read row is the bare page. Hover is still one step toward Ink.",
+      "status": "PROPOSED"
+    },
+    "notify-state.unread-bg-on-glass": {
+      "css": "var(--ui-notify-state-unread-bg-on-glass)",
+      "value": "rgb(255 253 249 / 0.1)",
+      "description": "#9: an unread notification on Smoke glass rests on the clear veil; a read row is the bare glass. On glass the words cannot step back (secondary Porcelain is never fainter than 88 %), so the veil and the dot carry it.",
+      "status": "PROPOSED"
+    },
+    "notify-state.dot": {
+      "css": "var(--ui-notify-state-dot)",
+      "value": "8px",
+      "description": "#9: the unread dot, two pixels larger than a badge's, Ink on the page and Porcelain on glass. Never blue, never Amber.",
+      "status": "PROPOSED"
+    },
+    "chat-thumb.size": {
+      "css": "var(--ui-chat-thumb-size)",
+      "value": "64px",
+      "description": "#14: a creative shown in a chat message is a small tile (64 wide, its own ratio), at most four in a row and then +N; opened, it shows in the panel beside the conversation. The conversation is talk, not a gallery.",
+      "status": "PROPOSED"
+    },
+    "mention.width": {
+      "css": "var(--ui-mention-width)",
+      "value": "360px",
+      "description": "#16: the @ list over the composer (products, collections, campaigns, creatives): a glass float wide enough for a name and its kind on one line.",
+      "status": "PROPOSED"
+    },
+    "mention.rows-visible": {
+      "css": "var(--ui-mention-rows-visible)",
+      "value": "6.5",
+      "description": "#16: the @ list stops after six and a half rows: the half row says there is more below.",
+      "status": "PROPOSED"
+    },
+    "qa-pin.box-width": {
+      "css": "var(--ui-qa-pin-box-width)",
+      "value": "260px",
+      "description": "The note written beside a pin on a creative in Check (#51): a small Smoke glass box, like the customer's review viewer's.",
+      "status": "PROPOSED"
+    },
+    "seg-glass.track": {
+      "css": "var(--ui-seg-glass-track)",
+      "value": "rgb(255 253 249 / 0.1)",
+      "description": "A segmented control on Smoke glass (#66): the track is the clear veil, never the page's sunken white.",
+      "status": "PROPOSED"
+    },
+    "seg-glass.pill": {
+      "css": "var(--ui-seg-glass-pill)",
+      "value": "rgb(255 253 249 / 0.24)",
+      "description": "The chosen option's pill on glass: Porcelain at 24 %, a clear step above the veil, never the 94 % white of the one main button on the glass.",
+      "status": "PROPOSED"
+    },
+    "seg-glass.fg": {
+      "css": "var(--ui-seg-glass-fg)",
+      "value": "rgb(255 253 249 / 0.88)",
+      "description": "An option's words on glass: secondary Porcelain, weight 500.",
+      "status": "PROPOSED"
+    },
+    "seg-glass.fg-on": {
+      "css": "var(--ui-seg-glass-fg-on)",
+      "value": "#FFFDF9",
+      "description": "The chosen option's words on glass: Porcelain.",
+      "status": "PROPOSED"
+    },
+    "stage-board.column": {
+      "css": "var(--ui-stage-board-column)",
+      "value": "152px",
+      "description": "The narrowest column of the staff campaign board (#68): a stage (Brief … Delivery, then Done) with its campaigns as cards. Seven columns share the page's width and scroll sideways only when it is narrower than seven of these.",
+      "status": "PROPOSED"
+    },
+    "web.ground-brand": {
+      "css": "var(--ui-web-ground-brand)",
+      "value": "#4A2814",
+      "description": "A dark brand section: Brown, with Paper text. Website, decks and social only; never a card, a button or product UI, where Ink makes every decision (RULES Colour, F-D079). Never two in a row.",
+      "status": "PROPOSED"
+    },
+    "web.text-on-brand": {
+      "css": "var(--ui-web-text-on-brand)",
+      "value": "#FCF6EB",
+      "description": "Text and the logo on a Brown section, 12.2:1. Never Ink on Brown (1.4:1).",
+      "status": "PROPOSED"
+    },
+    "web.text-on-brand-secondary": {
+      "css": "var(--ui-web-text-on-brand-secondary)",
+      "value": "#EAD4B5",
+      "description": "Quieter text on Brown (a label over a title), 9.1:1.",
+      "status": "PROPOSED"
+    },
+    "web.frame": {
+      "css": "var(--ui-web-frame)",
+      "value": "#FCF6EB",
+      "description": "The Focus frame's corners and point on a photograph, on a light image or a dark one (F-D082). On a flat ground the frame is Paper on Ink or Brown and Ink on Paper or Porcelain. Amber only where the check lands (--ui-check).",
+      "status": "PROPOSED"
+    },
+    "web.title-on-warm": {
+      "css": "var(--ui-web-title-on-warm)",
+      "value": "#4A2814",
+      "description": "A marketing title on a Paper section: Brown, 12.2:1, as on the deck's cover, dividers and contact slide. Running text on Paper stays Ink.",
+      "status": "PROPOSED"
+    },
+    "web.point": {
+      "css": "var(--ui-web-point)",
+      "value": "#F59E56",
+      "description": "The Amber point that ends a statement on Brown (deck D5; Amber point on dark, F-O020). A point, never text, a surface or light on Brown. One per page.",
+      "status": "PROPOSED"
+    },
+    "web.light-ground": {
+      "css": "var(--ui-web-light-ground)",
+      "value": "#FCF6EB",
+      "description": "The ground the brand light sits on (Light board L1, L2, L5). Light only on Paper or Cream, never on Ink or Brown, never behind small text.",
+      "status": "PROPOSED"
+    },
+    "web.light-ground-cream": {
+      "css": "var(--ui-web-light-ground-cream)",
+      "value": "#F5E8D2",
+      "description": "The ground for light L3.",
+      "status": "PROPOSED"
+    },
+    "web.light-soft": {
+      "css": "var(--ui-web-light-soft)",
+      "value": "#FADDC1",
+      "description": "The light's soft wash (L1, L5): Amber 100, blurred wide, so it reads as light, never as a colour block.",
+      "status": "PROPOSED"
+    },
+    "web.light-warm": {
+      "css": "var(--ui-web-light-warm)",
+      "value": "#F8CAA0",
+      "description": "The light's warm body (L2, L3).",
+      "status": "PROPOSED"
+    },
+    "web.light-core": {
+      "css": "var(--ui-web-light-core)",
+      "value": "#F59E56",
+      "description": "The light's core (L2, L3, L5), blurred so far it is light, not a shape. Never a fill anyone could read as an Amber surface.",
+      "status": "PROPOSED"
+    },
+    "web.page": {
+      "css": "var(--ui-web-page)",
+      "value": "1120px",
+      "description": "Widest the page's content gets, the same as the brand book.",
+      "status": "PROPOSED"
+    },
+    "web.measure": {
+      "css": "var(--ui-web-measure)",
+      "value": "60ch",
+      "description": "Running text and ledes never run wider than this.",
+      "status": "PROPOSED"
+    },
+    "web.gutter": {
+      "css": "var(--ui-web-gutter)",
+      "value": "24px",
+      "description": "Space between the content and the window's edge: 24 px, 16 on a phone (gutter-phone).",
+      "status": "PROPOSED"
+    },
+    "web.gutter-phone": {
+      "css": "var(--ui-web-gutter-phone)",
+      "value": "16px",
+      "description": "The gutter under 760 px: 16 px.",
+      "status": "PROPOSED"
+    },
+    "web.section": {
+      "css": "var(--ui-web-section)",
+      "value": "96px",
+      "description": "Space above and below the content of a section: 96 px, 64 on a phone (section-phone). Sections are told apart by their ground and this space, never by lines.",
+      "status": "PROPOSED"
+    },
+    "web.section-phone": {
+      "css": "var(--ui-web-section-phone)",
+      "value": "64px",
+      "description": "The section space under 760 px: 64 px.",
+      "status": "PROPOSED"
+    },
+    "web.title-gap": {
+      "css": "var(--ui-web-title-gap)",
+      "value": "24px",
+      "description": "Between a title and the lede or text under it: 24 px. The next group sits at least twice as far away (rule proximity).",
+      "status": "PROPOSED"
+    },
+    "web.group-gap": {
+      "css": "var(--ui-web-group-gap)",
+      "value": "48px",
+      "description": "Between groups in a section (a lede and its buttons, a title and its cards): 48 px.",
+      "status": "PROPOSED"
+    },
+    "web.header": {
+      "css": "var(--ui-web-header)",
+      "value": "48px",
+      "description": "Height of the page header's row: the logo on the left, one action on the right.",
+      "status": "PROPOSED"
+    },
+    "web.logo": {
+      "css": "var(--ui-web-logo)",
+      "value": "120px",
+      "description": "Width of the horizontal logo lockup in the page header (the official file, never redrawn).",
+      "status": "PROPOSED"
+    }
+  }
+}

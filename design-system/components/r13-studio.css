@@ -1,0 +1,59 @@
+/* Round 13, builder E (studio). PROPOSED 22 Oct 2026; Marcus's walkthrough comments of 21 Oct.
+   Rule gate: tokens-only-color, space-from-tokens, type-from-tokens, glass-only-floating, glass-one-white, actions-are-pills. */
+
+/* 1. The scene library (#57, #63): the desk's Scene section is a short row per variable (the picture thumbs the
+      references use, the props as chips) with "More…" at the end of the row's label line; the library itself is the
+      product sheet's frame, its search beside "Upload a background". */
+.ui-scene-lib-row .ui-sc-head { align-items: center; }
+.ui-scene-lib-more { margin-inline-start: auto; }
+.ui-scene-lib-row .ui-sc-readout + .ui-scene-lib-more { margin-inline-start: 0; }
+.ui-scene-lib-top { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-scene-lib-top > .ui-product-sheet-search { flex: 1 1 auto; min-width: 0; }
+.ui-scene-lib-top > .ui-btn { flex-shrink: 0; }
+
+/* 2. One creative, one worker (#64): while the Engine works on the creative, its bar takes the Engine bar's place
+      under the board, and the panels, the strip and the top bar's actions are inert and quieter. */
+.ui-desk-lockable { display: contents; }
+.ui-desk-lockable[inert] > *, .ui-desk-bar-end[inert], .ui-desk-studios[inert] { opacity: .56; }
+.ui-desk-lock {
+  display: flex; flex-shrink: 0; align-items: center; gap: var(--ui-space-sm); min-width: 0; padding: var(--ui-space-sm) var(--ui-space-md);
+  border-radius: var(--ui-radius-card); background: var(--ui-ground); box-shadow: var(--ui-depth-sheet);
+}
+.ui-desk-lock-icon { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-secondary); }
+.ui-desk-lock-text { display: grid; flex: 1 1 auto; min-width: 0; margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text); }
+.ui-desk-lock-note { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-secondary); }
+
+/* 3. The staff campaign board (#68): a column per stage (campaigns/stages.ts) and Done, each headed by its name and
+      count; a card per campaign holds the cover and name, the brand, the one status sentence and the next date. The
+      columns share the width; the board scrolls sideways only below seven narrowest columns. */
+.ui-stage-board {
+  display: grid; grid-template-columns: repeat(7, minmax(var(--ui-stage-board-column), 1fr)); gap: var(--ui-space-md);
+  overflow-x: auto; overscroll-behavior-x: contain; padding-block-end: var(--ui-space-xs);
+}
+.ui-stage-col { display: flex; flex-direction: column; gap: var(--ui-space-sm); min-width: 0; }
+.ui-stage-col-head {
+  display: flex; align-items: baseline; gap: var(--ui-space-sm); margin: 0; padding-block-end: var(--ui-space-xs);
+  font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text);
+}
+.ui-stage-col-count { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-tertiary); }
+.ui-stage-cards { display: flex; flex-direction: column; gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; }
+.ui-stage-col-none { margin: 0; font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-stage-card {
+  display: flex; flex-direction: column; gap: var(--ui-space-xs); min-width: 0; padding: var(--ui-space-sm);
+  border-radius: var(--ui-radius-item); background: var(--ui-card-bg); color: var(--ui-text); text-decoration: none;
+  font-size: var(--ui-type-label); line-height: 1.4; outline: none; -webkit-tap-highlight-color: transparent;
+}
+a.ui-stage-card, button.ui-stage-card {
+  width: 100%; min-height: var(--ui-size-hit); border: 0; font-family: inherit; text-align: start; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+@media (hover: hover) { a.ui-stage-card:hover, button.ui-stage-card:hover { background: var(--ui-card-bg-hover); } }
+a.ui-stage-card:active, button.ui-stage-card:active { background: var(--ui-card-bg-pressed); }
+.ui-stage-card:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring); }
+.ui-stage-card-head { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-stage-card-head > .ui-campaign-cover { flex-shrink: 0; }
+.ui-stage-card-name { min-width: 0; overflow-wrap: anywhere; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-stage-card-brand { color: var(--ui-text-secondary); }
+.ui-stage-card-status { color: var(--ui-text-secondary); }
+.ui-stage-card-status[data-on] { color: var(--ui-text); font-weight: var(--ui-type-weight-medium); }
+.ui-stage-card-date { font-family: var(--ui-type-family-data); color: var(--ui-text-tertiary); }
+.ui-stage-view { justify-self: end; }

@@ -1,0 +1,341 @@
+{
+  "$description": "Field family tokens: input, textarea, label and field anatomy, input group, native select and select, input OTP, kbd; round 8: the upload box (dropzone) and fields on glass when invalid. DECIDED 13 Oct 2026 (approved on the review board, F-D072 to F-D075), first shown in round 7, 13 Oct 2026. Fields are one of the few white things in Fume, with a hairline so they do not vanish; everything else is a role from ui.tokens.json. Build: node tools/tokens/build.mjs",
+  "field": {
+    "bg": {
+      "value": "{color.surface-creative}",
+      "status": "DECIDED",
+      "description": "White. A field is one of the three white things in Fume (with the creative and the secondary button), always with its hairline."
+    },
+    "edge": {
+      "value": "{color.action.secondary-edge}",
+      "status": "DECIDED",
+      "description": "The hairline at rest: the same edge as the white secondary button, so a field and the button beside it read as one family. The only stroke a field has (rule few-strokes allows it: without it a white field vanishes on Porcelain)."
+    },
+    "edge-hover": {
+      "value": "{color.hairline-strong}",
+      "status": "DECIDED",
+      "description": "Hover with a mouse: the hairline steps toward Ink. Never a fill change."
+    },
+    "edge-invalid": {
+      "value": "{color.danger}",
+      "status": "DECIDED",
+      "description": "Rouge edge on a field that holds an error, always with a message in words under it."
+    },
+    "fg": {
+      "value": "{color.text}",
+      "status": "DECIDED",
+      "description": "The value: Ink."
+    },
+    "placeholder": {
+      "value": "{color.text-tertiary}",
+      "status": "DECIDED",
+      "description": "Placeholder and addon text (https://, kr): 5.8:1, never lighter."
+    },
+    "icon": {
+      "value": "{color.text-tertiary}",
+      "status": "DECIDED",
+      "description": "Icons inside a field (search, chevrons, paperclip)."
+    },
+    "bg-pressed": {
+      "value": "{color.action.secondary-hover}",
+      "status": "DECIDED",
+      "description": "A select trigger or a choice card while it is pressed: one step toward Ink, like the white button."
+    },
+    "bg-readonly": {
+      "value": "{color.surface}",
+      "status": "DECIDED",
+      "description": "Read-only: the value sits in the page instead of on it. No hairline, full Ink text, still selectable and focusable."
+    },
+    "bg-disabled": {
+      "value": "{color.action.disabled}",
+      "status": "DECIDED",
+      "description": "Disabled: sunken like a disabled button, no hairline."
+    },
+    "fg-disabled": {
+      "value": "{color.text-disabled}",
+      "status": "DECIDED",
+      "description": "Text in a disabled field and its label."
+    },
+    "error": {
+      "value": "{color.danger}",
+      "status": "DECIDED",
+      "description": "The error message under a field: Rouge, weight 500, after the circle-alert icon. 4.9:1 on Porcelain."
+    },
+    "height-sm": {
+      "value": "{size.control-sm}",
+      "status": "DECIDED",
+      "description": "32 px. Dense tables and toolbars, with a mouse only: 44 on touch screens."
+    },
+    "height": {
+      "value": "{size.control-md}",
+      "status": "DECIDED",
+      "description": "40 px, the default field. On touch screens every field is --ui-size-hit (44) tall with 16 px text (rules touch-target, fields-16-on-touch)."
+    },
+    "height-lg": {
+      "value": "{size.control-lg}",
+      "status": "DECIDED",
+      "description": "48 px, with 16 px text: sign-in and marketing forms."
+    },
+    "pad": {
+      "value": "{size.pad-sm}",
+      "status": "DECIDED",
+      "description": "14 px from the field's edge to its text, more than three quarters of the 12 px corner."
+    },
+    "pad-sm": {
+      "value": "{space.md}",
+      "status": "DECIDED",
+      "description": "12 px in the small field."
+    },
+    "pad-lg": {
+      "value": "{inset.float}",
+      "status": "DECIDED",
+      "description": "16 px in the large field."
+    },
+    "pad-block": {
+      "value": "{space.md}",
+      "status": "DECIDED",
+      "description": "12 px above and below the text in a textarea."
+    },
+    "textarea-min": {
+      "value": "96px",
+      "status": "DECIDED",
+      "description": "A textarea starts at three lines and grows with its text."
+    },
+    "textarea-max": {
+      "value": "280px",
+      "status": "DECIDED",
+      "description": "Where a growing textarea stops and scrolls."
+    },
+    "list-max": {
+      "value": "320px",
+      "status": "DECIDED",
+      "description": "The tallest an open select listbox gets before it scrolls (less when the window is shorter): about seven rows."
+    },
+    "gap-label": {
+      "value": "{space.sm}",
+      "status": "DECIDED",
+      "description": "8 px from a label down to its control (rule proximity)."
+    },
+    "gap-hint": {
+      "value": "{space.xs}",
+      "status": "DECIDED",
+      "description": "4 px from a control down to its description or error: they belong to it."
+    },
+    "gap": {
+      "value": "{space.xl}",
+      "status": "DECIDED",
+      "description": "24 px between fields: three times the label gap, so every label clearly belongs to the field under it."
+    },
+    "gap-group": {
+      "value": "{space.2xl}",
+      "status": "DECIDED",
+      "description": "32 px between field sets (groups of fields)."
+    },
+    "gap-legend": {
+      "value": "{space.lg}",
+      "status": "DECIDED",
+      "description": "16 px from a field set's legend (and its description) to its first field."
+    },
+    "glass-bg": {
+      "value": "{color.glass.field}",
+      "status": "DECIDED",
+      "description": "A field on glass: a faint Porcelain veil, no stroke. Focus shows the Porcelain ring."
+    },
+    "glass-fg": {
+      "value": "{color.glass.fg}",
+      "status": "DECIDED",
+      "description": "The value on glass."
+    },
+    "glass-placeholder": {
+      "value": "{color.glass.fg-secondary}",
+      "status": "DECIDED",
+      "description": "Placeholder, icons and addons on glass: 88 % Porcelain, weight 500."
+    },
+    "glass-edge-invalid": {
+      "value": "{color.danger}",
+      "status": "DECIDED",
+      "description": "Round 8. A field on glass that holds an error: a 2 px band of solid Rouge just inside a 1 px Porcelain rim (--ui-field-glass-edge-invalid-rim). Rouge alone against Smoke measured 1.3:1 over a white page and 2.5:1 over the photo, too weak to read as an edge; the rim draws the edge (6.4:1 or more against the glass) and the Rouge reads against the rim at 4.9:1. The words under the field stay the first signal."
+    },
+    "glass-edge-invalid-rim": {
+      "value": "{color.glass.fg}",
+      "status": "DECIDED",
+      "description": "Round 8. The 1 px Porcelain rim outside the Rouge band of an invalid field on glass: the same Rouge cut with Porcelain as the alert disc beside the words."
+    },
+    "glass-error": {
+      "value": "{color.glass.fg}",
+      "status": "DECIDED",
+      "description": "Round 8. The error message on glass is Porcelain, weight 500, never Rouge. Measured on the board: Rouge words on Smoke 1.3:1 over a white page and 1.6 to 3.2:1 over the photo; Porcelain words 6.4:1 over a white page and 8.0:1 or more over the photo."
+    },
+    "glass-error-mark": {
+      "value": "{color.danger}",
+      "status": "DECIDED",
+      "description": "Round 8. The circle-alert before an error on glass: the same solid Rouge disc as on light ground, its exclamation cut through to Porcelain (--ui-field-glass-error-cut) instead of to the glass, so the mark reads 4.9:1 over any backdrop."
+    },
+    "glass-error-cut": {
+      "value": "{color.glass.fg}",
+      "status": "DECIDED",
+      "description": "Round 8. What shows through the exclamation of the Rouge alert disc on glass: Porcelain."
+    }
+  },
+  "otp": {
+    "slot-width": {
+      "value": "48px",
+      "status": "DECIDED",
+      "description": "One slot of a sign-in code at full size. Slots narrow evenly on a phone; the code stays one line."
+    },
+    "slot-height": {
+      "value": "56px",
+      "status": "DECIDED",
+      "description": "Taller than a field: the code is the one thing on its screen."
+    },
+    "gap": {
+      "value": "{space.sm}",
+      "status": "DECIDED",
+      "description": "8 px between slots in a group."
+    },
+    "separator": {
+      "value": "{space.sm}",
+      "status": "DECIDED",
+      "description": "The separator between groups of three is space, not a line: 8 more, so groups sit 24 apart, three times the gap inside a group."
+    },
+    "caret": {
+      "value": "{color.text}",
+      "status": "DECIDED",
+      "description": "The caret in the active empty slot: Ink."
+    }
+  },
+  "kbd": {
+    "height": {
+      "value": "22px",
+      "status": "DECIDED",
+      "description": "A key: a soft sunken pill, 22 px, a circle for one character."
+    },
+    "pad": {
+      "value": "6px",
+      "status": "DECIDED",
+      "description": "6 px at each end of a key, past half its radius, so a one-character key stays a circle and Esc a short pill."
+    },
+    "bg": {
+      "value": "{color.surface-sunken}",
+      "status": "DECIDED",
+      "description": "Sunken, no stroke: the key is pressed into the surface, not drawn on it."
+    },
+    "fg": {
+      "value": "{color.text-secondary}",
+      "status": "DECIDED",
+      "description": "Key labels, in the data face."
+    },
+    "glass-bg": {
+      "value": "{color.glass.button-clear}",
+      "status": "DECIDED",
+      "description": "A key on glass (tooltips, menus, the command bar): the clear veil."
+    },
+    "glass-fg": {
+      "value": "{color.glass.fg-secondary}",
+      "status": "DECIDED",
+      "description": "Key labels on glass."
+    }
+  },
+  "dropzone": {
+    "bg": {
+      "value": "{color.surface-sunken}",
+      "status": "DECIDED",
+      "description": "Round 8. The upload box: one step of sunken surface, a well pressed into the page. No dashed border and no stroke at all (rule few-strokes): the step is the edge."
+    },
+    "bg-hover": {
+      "value": "{color.surface-sunken-hover}",
+      "status": "DECIDED",
+      "description": "Hover with a mouse: one step toward Ink."
+    },
+    "bg-pressed": {
+      "value": "{color.surface-sunken-hover}",
+      "status": "DECIDED",
+      "description": "Pressed: stays on the hover step and shrinks (dropzone.press-scale), so a large surface never flashes dark."
+    },
+    "bg-drag": {
+      "value": "{fume.focus-100}",
+      "status": "DECIDED",
+      "description": "Drag-over: the well keeps its resting Fog; the seat turning Ink is the sign, with the words that say where creatives go. No fill, no Amber and no shimmer here (round 11, Marcus 13 Oct: 'verken orange eller shimmer på where creatives land'); round 9 had Amber 50 (beige), round 8 Focus 300."
+    },
+    "fg": {
+      "value": "{color.text}",
+      "status": "DECIDED",
+      "description": "The line that says what to do: Ink, weight 500."
+    },
+    "meta": {
+      "value": "{color.text-secondary}",
+      "status": "DECIDED",
+      "description": "The limits line (JPG, PNG or MP4 · up to 200 MB) in the data face: secondary, not tertiary, so it keeps 7.3:1 on the hover step and 5.8:1 on the drag step."
+    },
+    "disc": {
+      "value": "{color.ground}",
+      "status": "DECIDED",
+      "description": "The round seat of the upload icon: Porcelain, lifted off the well with depth.raised. It is the one raised thing in the box."
+    },
+    "disc-drag": {
+      "value": "{color.action.primary}",
+      "status": "DECIDED",
+      "description": "The seat of the upload icon while creatives are over the box: Ink, the one dark thing in the box, so it reads as the place to aim (round 11; round 10's Amber seat was wrong here)."
+    },
+    "disc-drag-fg": {
+      "value": "{color.action.primary-fg}",
+      "status": "DECIDED",
+      "description": "The upload icon on the Ink seat: Porcelain."
+    },
+    "disc-size": {
+      "value": "{size.control-md}",
+      "status": "DECIDED",
+      "description": "40 px seat in the box."
+    },
+    "disc-size-compact": {
+      "value": "{size.control-sm}",
+      "status": "DECIDED",
+      "description": "32 px seat in the one-row variant and in the Add more row."
+    },
+    "height": {
+      "value": "176px",
+      "status": "DECIDED",
+      "description": "The empty box: tall enough to aim a drop at, short enough to sit above a form. Content centred, 24 inset all round."
+    },
+    "height-compact": {
+      "value": "56px",
+      "status": "DECIDED",
+      "description": "The one-row variant (Reference images in a form) and the Add more row under added creatives: taller than a 40 px field so it reads as a place to drop, not a field to type in."
+    },
+    "press-scale": {
+      "value": "{card.press-scale}",
+      "status": "DECIDED",
+      "description": "A box is wide, so it shrinks like a card (0.985), half a button's 3 %."
+    },
+    "tile-min": {
+      "value": "88px",
+      "status": "DECIDED",
+      "description": "Smallest thumbnail of an added creative: three across on a phone, also inside a dialog on a phone (310 px inside). In a wider box a tile is at least 14 % of it (dropzone.css), so a desktop box or a 640 px dialog shows six across."
+    },
+    "gap": {
+      "value": "{space.xl}",
+      "status": "DECIDED",
+      "description": "24 px between the groups inside an upload: added creatives, rows still uploading, the Add more row. Rows inside a group sit 4 apart, tiles 24 down and 12 across with their caption 8 under them."
+    },
+    "glass-bg": {
+      "value": "{color.glass.button-clear}",
+      "status": "DECIDED",
+      "description": "The box on glass: the clear veil, no stroke. Porcelain text on it is 5.0:1 over the worst backdrop."
+    },
+    "glass-bg-hover": {
+      "value": "{color.glass.button-clear-hover}",
+      "status": "DECIDED",
+      "description": "Hover on glass: the veil lifts like a clear button."
+    },
+    "glass-bg-drag": {
+      "value": "alpha({fume.focus-900}, 0.24)",
+      "status": "DECIDED",
+      "description": "Creatives dragged over the box on glass: the well deepens toward Ink instead of lighting up, so Porcelain text gains contrast while you aim."
+    },
+    "glass-disc": {
+      "value": "{color.glass.button-clear}",
+      "status": "DECIDED",
+      "description": "The icon's seat on glass, and the tile of a row's creative that has nothing to show yet: a clear veil, never white (the one white thing on a glass surface is its main button)."
+    }
+  }
+}

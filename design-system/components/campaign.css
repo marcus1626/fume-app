@@ -1,0 +1,130 @@
+/* Campaign: one campaign's header and tabs, and the Campaigns list (app v3, FLOWS §13). PROPOSED 19 Oct 2026.
+   Round 9 (desktop review 19 Oct, DLAY-3, DWAY-7, DLOAD-9, DLOAD-10, DLAY-6, DWAY-20; PROPOSED 19 Oct 2026) replaces
+   round 8's "Now" block (.ui-campaign-now, its step bar and the brief's gaps inside it): the block made the tabs sit
+   80 px lower on Creatives than on the other tabs, and pushed the first creative to 79 % of the first screen.
+   Markup (the campaign):
+     <header class="ui-page-header ui-campaign-header"> … <h1>Autumn launch</h1>
+       <p class="ui-page-header-description"><span class="ui-campaign-meta">
+         <span class="ui-campaign-meta-part"><span class="ui-campaign-meta-sep" aria-hidden="true"></span>
+           <span class="ui-campaign-meta-status" data-waiting>6 creatives to approve</span></span>
+         <span class="ui-campaign-meta-part"><span class="ui-campaign-meta-sep" aria-hidden="true"> · </span>
+         <span class="ui-campaign-steps" title="Step 4 of 5, Variants and formats"><span class="ui-campaign-sr">Step 4 of 5, Variants and formats</span>
+           <span class="ui-campaign-dots" aria-hidden="true">
+           <span class="ui-campaign-dot" data-state="done"></span>… <span class="ui-campaign-dot" data-state="current"></span>
+           <span class="ui-campaign-dot"></span></span></span></span>   (the header leaves out the stage word: the sentence says it)
+         <span class="ui-campaign-meta-part"><span class="ui-campaign-meta-sep" aria-hidden="true"> · </span><span>Live from Sat 17 Oct</span></span></span></p>
+     In the Campaigns table the Stage column shows the word: <span class="ui-campaign-sr">Step 4 of 5, </span> dots
+       <span class="ui-campaign-steps-word">Variants</span>
+       actions: a quiet History pill, then the one Ink action ("Review 6") </header>
+     <div class="ui-tabs ui-campaign-body"><div class="ui-campaign-tabs"> the tab list </div>
+       <div role="tabpanel"><div class="ui-campaign-tab"> sections </div></div></div>
+     A creative the expert still checks, in a ul.ui-creative-grid:
+       <li class="ui-campaign-slot"><span class="ui-campaign-slot-media" aria-hidden="true"></span>
+         <span class="ui-campaign-slot-caption">In check</span></li>
+   Markup (the list, 1024 px and wider): <table class="ui-table ui-campaign-table"> … <tr class="ui-table-row ui-campaign-row">
+       <td class="ui-table-cell--media"><img class="ui-campaign-cover"></td>
+       <td><span class="ui-table-title"><a class="ui-campaign-row-link">Autumn launch</a><small>6 creatives to approve</small></span></td>
+       <td> step dots </td><td>You</td><td class="ui-table-cell--data">Sat 17 Oct</td><td class="ui-table-cell--data">2 of 11</td></tr>
+   Markup (History, the right panel): <div class="ui-app-stack ui-campaign-history"> ui-item rows </div>
+   Fume decisions: Marcus 15 Oct: "følte at Campaigns siden ble litt kaotisk hierarki-messig". One compact header, the
+   same on all four tabs: the title with the one Ink action on its line, and under it ONE meta line: where the campaign
+   stands in one sentence (Ink while it waits on you, secondary while Fume works), where it is as five small dots (a
+   status, never a button: Ink dots done, an Ink ring for the step under way, grey ahead; never a second stage word
+   beside a sentence that already says it), and the go-live, each part after a quiet dot.
+   The tabs sit 16 under it at the same height on every tab and stick under the app bar on the page's own ground, with
+   no line. What waits (directions, creatives to approve, the run) is the body of Creatives. A creative still in
+   check is a grey place in the grid, flat on the sunken surface with "In check" under it, never a picture.
+   The Campaigns list on a desk is a table (table.css): rows parted by space, the hover a soft row; the campaign's
+   name is the row's link, stretched over the whole row. A 48 px cover, the stage as dots and a word, the go-live and
+   the approved count in the data face. The phone keeps the list of rows. The groups are parted by space alone; the
+   brief written by hand (form.ui-campaign-form) keeps the same rhythm.
+   Rule gate: few-strokes, air, amber-is-a-point, space-from-tokens, type-from-tokens, one-primary, mono-is-data,
+   touch-target, hover-needs-hover. */
+
+/* ---------- the header's meta line ---------- */
+.ui-campaign-header .ui-page-header-description { max-width: none; }
+/* each part after a quiet dot of its own; the line starts one dot to the left and clips it, so a dot never starts or
+   ends a wrapped line (the same as .ui-page-header-meta) */
+.ui-campaign-meta {
+  display: flex; flex-wrap: wrap; align-items: center; row-gap: var(--ui-space-xs); min-width: 0;
+  margin-inline-start: calc(-1 * var(--ui-pagehead-meta-separator)); clip-path: inset(0 0 0 var(--ui-pagehead-meta-separator));
+  font-size: var(--ui-type-control); line-height: 1.4; color: var(--ui-text-tertiary);
+}
+.ui-campaign-meta-status { font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); white-space: normal; }
+.ui-campaign-meta-status[data-waiting] { color: var(--ui-text); }
+/* the dot is real text, so the line reads as words when copied; a dot and its part wrap together */
+.ui-campaign-meta-part { display: inline-flex; align-items: center; min-width: 0; white-space: nowrap; }
+.ui-campaign-meta-part:first-child { white-space: normal; }
+.ui-campaign-meta-sep { display: inline-block; flex: none; width: var(--ui-pagehead-meta-separator); text-align: center; color: var(--ui-text-tertiary); }
+
+/* ---------- where it is: five dots and the stage's word ---------- */
+.ui-campaign-steps { display: inline-flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; white-space: nowrap; }
+.ui-campaign-dots { display: inline-flex; align-items: center; gap: var(--ui-space-xs); flex: none; }
+.ui-campaign-dot {
+  box-sizing: border-box; width: var(--ui-space-sm); height: var(--ui-space-sm); border-radius: 50%;
+  background: var(--ui-surface-sunken);
+}
+.ui-campaign-dot[data-state="done"] { background: var(--ui-text); }
+.ui-campaign-dot[data-state="current"] { background: transparent; box-shadow: inset 0 0 0 2px var(--ui-text); } /* gate-allow:few-strokes  the step under way is an Ink ring, a status mark the size of a dot, not a line */
+.ui-campaign-steps-word { font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+
+/* ---------- the tabs: 16 under the header, the same height on every tab, sticky under the app bar ---------- */
+.ui-campaign-header + .ui-campaign-body { margin-block-start: calc(var(--ui-space-lg) - var(--ui-space-2xl)); }
+.ui-campaign-body { gap: var(--ui-space-xl); }
+.ui-campaign-tabs {
+  position: sticky; top: calc(var(--ui-size-control-md) + 2 * var(--ui-space-sm)); z-index: 2;
+  margin-inline: calc(-1 * var(--ui-space-xs)); padding: var(--ui-space-sm) var(--ui-space-xs);
+  background: var(--ui-ground);
+}
+.ui-campaign-tab { display: grid; gap: var(--ui-space-2xl); min-width: 0; }
+/* Round 13 (#21, #27, #36; PROPOSED 22 Oct 2026): the tabs are the six stages. A stage behind the campaign carries its
+   check before its word (Ink, never Amber: done is not checked by an expert); a later stage is quiet, in the tertiary
+   text, and still opens. The stage the campaign is in reads as any tab. */
+.ui-campaign-tabs .ui-seg-option[data-stage="later"]:not([data-state="active"]) { color: var(--ui-text-tertiary); }
+.ui-campaign-tabs .ui-seg-option[data-stage="done"] > svg { color: var(--ui-text-secondary); }
+@media (hover: hover) { .ui-campaign-tabs .ui-seg-option[data-stage="later"]:hover { color: var(--ui-text); } }
+/* the row of six scrolls sideways on a narrow screen rather than wrap */
+.ui-campaign-tabs { overflow-x: auto; scrollbar-width: none; }
+.ui-campaign-tabs::-webkit-scrollbar { display: none; }
+/* History: the expert's check is the Amber checked triangle, the same mark as Check's "Checked by you" (#28) */
+.ui-item-media.ui-campaign-history-checked { color: var(--ui-check); } /* gate-allow:amber-is-a-point the Amber checked triangle on an expert's check (rule check-states) */
+
+/* ---------- a creative still in check: a grey place ---------- */
+.ui-campaign-slot { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-campaign-slot-media { display: block; width: 100%; aspect-ratio: var(--ui-creative-ratio-feed); border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); }
+.ui-campaign-slot-caption { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+
+/* ---------- History, in the right panel (Smoke glass): its rows read in the glass's own text ---------- */
+.ui-campaign-history .ui-item-title { color: var(--ui-glass-fg); }
+.ui-campaign-history .ui-item-description, .ui-campaign-history-empty { color: var(--ui-glass-fg-secondary); }
+.ui-campaign-history-empty { margin: 0; font-size: var(--ui-type-control); line-height: 1.45; }
+
+/* ---------- the Campaigns list, and the brief written by hand ---------- */
+.ui-campaign-list, .ui-campaign-form { display: grid; gap: var(--ui-space-2xl); min-width: 0; }
+
+.ui-campaign-table { --ui-table-thumb: var(--ui-size-control-lg); table-layout: fixed; }
+.ui-campaign-col-cover { width: calc(var(--ui-table-thumb) + var(--ui-inset-float)); } /* the cell's width holds its padding */
+.ui-campaign-col-stage { width: 168px; } /* gate-allow:space-from-tokens a column's width, the same in both groups */
+.ui-campaign-col-who { width: 112px; } /* gate-allow:space-from-tokens a column's width */
+.ui-campaign-col-live { width: 120px; } /* gate-allow:space-from-tokens a column's width */
+.ui-campaign-col-made { width: 96px; } /* gate-allow:space-from-tokens a column's width */
+.ui-campaign-row { position: relative; }
+.ui-campaign-cell-name { white-space: normal; }
+.ui-campaign-cell-name .ui-table-title { overflow: hidden; text-overflow: ellipsis; }
+.ui-campaign-cover {
+  display: grid; place-items: center; width: var(--ui-table-thumb); max-width: none; aspect-ratio: 1; object-fit: cover;
+  border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); color: var(--ui-text-tertiary);
+}
+.ui-campaign-cover svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+/* the name is the row's one link, stretched over the whole row */
+.ui-campaign-row-link { color: inherit; text-decoration: none; outline: none; -webkit-tap-highlight-color: transparent; }
+.ui-campaign-row-link::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: var(--ui-radius-item); }
+.ui-campaign-row-link:focus-visible::after { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: calc(-1 * var(--ui-size-ring)); }
+.ui-campaign-row:has(.ui-campaign-row-link:active) > .ui-table-cell { background: var(--ui-item-bg-pressed); }
+
+/* words for screen readers only (the step's words beside its dots, the cover column's header) */
+.ui-campaign-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+@media (max-width: 639px) {
+  .ui-campaign-tabs { margin-inline: calc(-1 * var(--ui-space-lg)); padding-inline: var(--ui-space-lg); }
+}

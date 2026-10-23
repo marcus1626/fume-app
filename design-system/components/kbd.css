@@ -1,0 +1,31 @@
+/* Kbd: keyboard keys. DECIDED 13 Oct, from round 7. Built on shadcn's kbd (Kbd, KbdGroup), same parts,
+   redesigned for Fume.
+   A key is a soft sunken pill pressed into the surface, with no stroke (few-strokes): 22 px tall, a
+   circle for one character, a short pill for Esc or Ctrl. The label is data, so it is set in the mono
+   face (mono-is-data), 12 px, in secondary text. A group of keys sits 4 apart, closer than anything
+   around it. On glass (tooltips, menus, the command bar) a key is the clear veil with secondary
+   Porcelain text. A key is never a button: it shows a shortcut, it is not pressed.
+   Touch screens (hover: none or a coarse pointer) have no keys to press, so a key hint never shows there
+   (UX review M8, PROPOSED 15 Oct 2026): the key hides, and a line that is only a key hint carries
+   .ui-keys-hint so it hides whole.
+   Rule gate: few-strokes, actions-are-pills (a key is shaped like one), radius-from-tokens,
+   space-from-tokens, type-from-tokens, mono-is-data. */
+
+.ui-kbd {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--ui-space-xs); flex-shrink: 0;
+  min-width: var(--ui-kbd-height); height: var(--ui-kbd-height); margin: 0; padding: 0 var(--ui-kbd-pad);
+  border-radius: var(--ui-radius-action); background: var(--ui-kbd-bg); color: var(--ui-kbd-fg);
+  font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular);
+  font-style: normal; line-height: 1; letter-spacing: 0; white-space: nowrap; vertical-align: middle;
+  user-select: none; pointer-events: none;
+}
+.ui-kbd svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; }
+.ui-kbd-group { display: inline-flex; align-items: center; gap: var(--ui-space-xs); margin: 0; font: inherit; vertical-align: middle; }
+
+/* on glass */
+.ui-glass .ui-kbd { background: var(--ui-kbd-glass-bg); color: var(--ui-kbd-glass-fg); }
+
+/* touch: no keyboard, no key hints (PROPOSED 15 Oct 2026) */
+@media (hover: none), (pointer: coarse) {
+  .ui-kbd, .ui-kbd-group, .ui-keys-hint { display: none; }
+}

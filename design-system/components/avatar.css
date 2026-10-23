@@ -1,0 +1,45 @@
+/* Avatar. DECIDED 13 Oct, from round 7. Built on shadcn's avatar (same parts: avatar, avatar-image, avatar-fallback,
+   avatar-badge, avatar-group, avatar-group-count; sizes sm 24, default 32, lg 40), redesigned for Fume.
+   Decisions:
+   - Circles. Initials in medium weight, Ink on the sunken step (--ui-avatar-bg); the person who decides
+     (you, or Anna on a check) can be Ink with Paper initials (.ui-avatar--ink). Images fill the circle.
+     People in Fume are real people; never an AI face as an avatar. A brand avatar can show the brand.
+   - Group: avatars overlap by --ui-space-sm (--ui-space-xs at 24, so initials stay whole) and are parted by a 2 px gap (--ui-avatar-cutout) painted in
+     the colour of the ground they sit on (--avatar-ground: Porcelain on the page, the card's surface in a
+     card, set by card.css). It is a cut-out, not a stroke: it has the ground's colour, so the eye reads
+     space between two circles, never an outline (few-strokes). The status dot is cut out the same way.
+   - Status dot: Ink for here now, grey for away. No green: Fume has no success colour, and never Amber.
+   An avatar is not a control; put it inside a button or a row when it should be pressed.
+   Rule gate: few-strokes (the cut-out is ground colour), radius-from-tokens, type-from-tokens. */
+
+.ui-avatar {
+  --size: var(--ui-avatar-size);
+  position: relative; display: inline-grid; place-items: center; flex: none;
+  width: var(--size); height: var(--size); border-radius: 50%;
+  background: var(--ui-avatar-bg); color: var(--ui-avatar-fg);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium);
+  line-height: 1; letter-spacing: .01em; white-space: nowrap; user-select: none; vertical-align: middle;
+}
+.ui-avatar--sm, .ui-avatar[data-size="sm"] { --size: var(--ui-avatar-size-sm); }
+.ui-avatar--lg, .ui-avatar[data-size="lg"] { --size: var(--ui-avatar-size-lg); font-size: var(--ui-type-control); }
+.ui-avatar--ink { background: var(--ui-avatar-bg-ink); color: var(--ui-avatar-fg-ink); }
+.ui-avatar-fallback { grid-area: 1 / 1; }
+.ui-avatar-image { position: absolute; inset: 0; display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; } /* covers the fallback once it loads */
+.ui-avatar-fallback { display: grid; place-items: center; width: 100%; height: 100%; border-radius: 50%; }
+
+/* status dot, cut out of the avatar with the ground colour */
+.ui-avatar-badge {
+  position: absolute; z-index: 1; right: 0; bottom: 0; width: calc(var(--size) / 4); height: calc(var(--size) / 4);
+  border-radius: 50%; background: var(--ui-avatar-status);
+  box-shadow: 0 0 0 var(--ui-avatar-cutout) var(--avatar-ground, var(--ui-ground)); /* the cut-out: ground colour, reads as space (see header) */
+}
+.ui-avatar-badge[data-status="away"] { background: var(--ui-avatar-status-away); }
+
+/* group: overlap, each circle cut out of the one before it */
+.ui-avatar-group { display: inline-flex; align-items: center; isolation: isolate; min-width: 0; }
+.ui-avatar-group > .ui-avatar, .ui-avatar-group > .ui-avatar-group-count { box-shadow: 0 0 0 var(--ui-avatar-cutout) var(--avatar-ground, var(--ui-ground)); } /* the cut-out, as above */
+.ui-avatar-group > * + * { margin-inline-start: calc(var(--ui-space-sm) * -1); }
+.ui-avatar-group:has(> .ui-avatar--sm) > * + *, .ui-avatar-group:has(> [data-size="sm"]) > * + * { margin-inline-start: calc(var(--ui-space-xs) * -1); }
+.ui-avatar-group-count { --size: var(--ui-avatar-size); display: inline-grid; place-items: center; flex: none; width: var(--size); height: var(--size); border-radius: 50%; background: var(--ui-surface-sunken); color: var(--ui-text-secondary); font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); font-variant-numeric: tabular-nums; line-height: 1; }
+.ui-avatar-group:has(> .ui-avatar--sm) > .ui-avatar-group-count { --size: var(--ui-avatar-size-sm); }
+.ui-avatar-group:has(> .ui-avatar--lg) > .ui-avatar-group-count { --size: var(--ui-avatar-size-lg); font-size: var(--ui-type-control); }

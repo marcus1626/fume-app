@@ -1,0 +1,187 @@
+/* Round 13 BRAND (Marcus's video comments #2–#5, #41–#49, 22 Oct 2026; PROPOSED): the brand screens' new parts.
+   - A colour picker beside a hex field (#2): a 44 px swatch of the colour as typed, the system picker behind it.
+   - A colour's uses as chips (#42): outline toggles, Ink when on, a label 8 above them.
+   - Imagery in groups (#3): a group's title and line over its pictures; each picture says its group and moves.
+   - The voice in five parts (#4): a part as a card (what Fume found, Confirm · Change) in the onboarding; on its own
+     page a section per part, tone traits as do / don't pairs, words to use and avoid as quiet pills.
+   - Rules as Do or Don't (#43): a filter over the list, the word on each rule.
+   - The AI model's page (#41): the sheet (front, three-quarter, profile, back, face), the "AI model" label always on
+     the picture, the specs beside it.
+   - Products (#44): New, Not confirmed yet and Confirmed as groups with their own titles.
+   - Settings: air under the brand's name (#48), the profile edited in place (#49).
+   Rule gate: tokens-only-color, space-from-tokens, radius-from-tokens, type-from-tokens, air, proximity,
+   amber-is-a-point (none here), few-strokes (the customer's own colour edge, marked). */
+
+/* ─── #2 the colour picker beside the hex ─── */
+.ui-colour-hex { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-colour-hex > .ui-input, .ui-colour-hex > input { flex: 1 1 auto; min-width: 0; }
+.ui-colour-picker {
+  position: relative; flex: 0 0 auto; display: block; overflow: hidden;
+  width: var(--ui-field-height); height: var(--ui-field-height); border-radius: var(--ui-radius-field);
+  background: var(--swatch, var(--ui-surface-sunken)); cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-colour-picker:active { transform: scale(var(--ui-motion-press-scale)); }
+@media (pointer: coarse) { .ui-colour-picker { width: var(--ui-size-hit); height: var(--ui-size-hit); } }
+@media (prefers-reduced-motion: reduce) { .ui-colour-picker { transition: none; } .ui-colour-picker:active { transform: none; } }
+.ui-colour-picker::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); pointer-events: none; } /* gate-allow:few-strokes  the edge of the customer's own colour, so a light one never vanishes */
+.ui-colour-picker > input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.ui-colour-picker[data-disabled] { cursor: default; opacity: .5; }
+.ui-colour-picker:has(> input:focus-visible) { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-colour-picker:has(> input[data-ui-focus="pointer"]) { outline: none; }
+
+/* ─── #42 a colour's uses ─── */
+.ui-colour-uses { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-colour-uses-label { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-colour-uses .ui-toggle-group { flex-wrap: wrap; }
+
+/* ─── #3 imagery in groups ─── */
+.ui-image-group { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-image-group + .ui-image-group { margin-top: var(--ui-space-xl); }
+.ui-image-group-head { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-image-group-title { display: flex; align-items: baseline; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.35; }
+.ui-image-group-count { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-tertiary); }
+.ui-image-group-line { margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-ob-campaign { margin: 0; font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+.ui-image-move { display: flex; margin-inline-start: calc(-1 * var(--ui-space-sm)); }
+/* a group's pictures keep the board's size (four abreast on a desk), so a group of two is not drawn twice as big */
+@container ui-brand-part (min-width: 760px) {
+  .ui-image-group .ui-brand-images[data-mode="board"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* ─── #4 the voice in five parts ─── */
+/* the onboarding's card: the part, what Fume found in one line, a few chips */
+.ui-voice-card .ui-brand-confirm-body { gap: var(--ui-space-sm); }
+.ui-voice-found { margin: 0; font-size: var(--ui-type-body); line-height: 1.45; color: var(--ui-text); text-wrap: pretty; }
+.ui-voice-chips { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); margin: 0; }
+.ui-voice-note { margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); }
+.ui-voice-lines { display: grid; gap: var(--ui-space-md); margin: 0; padding: 0; list-style: none; }
+.ui-voice-lines[data-size="small"] { gap: var(--ui-space-xs); }
+.ui-voice-lines > li { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-voice-lines[data-size="small"] > li { display: block; font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+.ui-voice-line-text { font-size: var(--ui-type-body-large); line-height: 1.4; color: var(--ui-text); text-wrap: pretty; }
+.ui-voice-lines[data-size="small"] .ui-voice-line-text { font-size: var(--ui-type-control); }
+.ui-voice-line-meta { font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+.ui-voice-line-lang { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-tertiary); }
+
+/* the page: a section per part, 2xl apart */
+.ui-voice-book { display: grid; gap: var(--ui-space-2xl); min-width: 0; }
+.ui-voice-part { display: grid; gap: var(--ui-space-lg); min-width: 0; scroll-margin-top: var(--ui-space-2xl); }
+.ui-voice-part-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ui-space-lg); flex-wrap: wrap; }
+.ui-voice-part-words { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-voice-part-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.2; color: var(--ui-text); }
+.ui-voice-part-line { margin: 0; font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+.ui-voice-part-words .ui-brand-confirm-tags { margin: 0; }
+.ui-voice-lead { margin: 0; font-size: var(--ui-type-body-large); line-height: 1.45; color: var(--ui-text); text-wrap: pretty; }
+.ui-voice-text { margin: 0; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text); }
+.ui-voice-cols { display: grid; gap: var(--ui-space-lg) var(--ui-space-xl); grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+.ui-voice-block { display: grid; gap: var(--ui-space-sm); align-content: start; min-width: 0; }
+.ui-voice-sub { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); }
+.ui-voice-list { display: grid; gap: var(--ui-space-xs); margin: 0; padding-inline-start: var(--ui-space-lg); font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text); }
+/* tone: one card per trait, what it means, a line to say and one never to say */
+.ui-voice-traits { display: grid; gap: var(--ui-space-md); margin: 0; padding: 0; list-style: none; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+.ui-voice-trait { display: grid; gap: var(--ui-space-sm); align-content: start; padding: var(--ui-inset-float); border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); min-width: 0; }
+.ui-voice-trait-name { margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-voice-trait-means { margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); }
+.ui-voice-say { display: grid; gap: var(--ui-space-xs); margin: 0; font-size: var(--ui-type-body); line-height: 1.45; color: var(--ui-text); text-wrap: pretty; }
+.ui-voice-say { gap: 0; }
+.ui-voice-say[data-say="dont"] { color: var(--ui-text-secondary); }
+.ui-voice-say-label { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-tertiary); }
+.ui-voice-facts { margin: 0; }
+
+/* ─── #5, #47 the taste deck in two named parts, and "Neither" in a pair ─── */
+.ui-td-part { flex-shrink: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-td-line { margin: calc(var(--ui-space-md) * -1) 0 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); text-align: center; }
+.ui-td-answers[data-kind="pair"] { justify-content: center; }
+.ui-td-answers[data-kind="pair"] .ui-btn { flex: 0 1 auto; }
+@media (min-width: 1024px) {
+  .ui-td:not([data-done]):has(.ui-td-line) {
+    grid-template-rows: repeat(6, auto) minmax(0, 1fr);
+    grid-template-areas: "media head" "media eyebrow" "media question" "media line" "media answers" "media foot" "media .";
+  }
+  .ui-td:not([data-done]) .ui-td-line { grid-area: line; text-align: start; }
+  .ui-td:not([data-done]) .ui-td-answers[data-kind="pair"] { justify-content: flex-start; }
+}
+
+/* ─── #40 the Brand DNA index: the part it jumps to takes focus, never a ring ─── */
+.ui-brand-part[tabindex="-1"]:focus, .ui-brand-part[tabindex="-1"]:focus-visible { outline: none; }
+
+/* ─── #41 the AI model: the label on every picture, the card's link, the model's page ─── */
+/* "AI model": a small pill of Smoke glass over the picture's lower corner, always there */
+.ui-ai-label {
+  display: inline-flex; align-items: center; height: var(--ui-size-control-sm); padding: 0 var(--ui-space-md); border-radius: var(--ui-radius-action);
+  background: var(--ui-glass-bg); color: var(--ui-glass-fg); -webkit-backdrop-filter: var(--ui-glass-filter-small); backdrop-filter: var(--ui-glass-filter-small); /* gate-allow:glass-only-floating  it floats over the picture's corner (positioned below) */
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; white-space: nowrap; pointer-events: none;
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .ui-ai-label { background: var(--ui-glass-bg-solid); } }
+@media (prefers-reduced-transparency: reduce) { .ui-ai-label { background: var(--ui-glass-bg-solid); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+:is(.ui-brand-image-media, .ui-model-shot-media) > .ui-ai-label { position: absolute; left: var(--ui-space-sm); bottom: var(--ui-space-sm); z-index: 1; }
+.ui-model-card-media { display: block; }
+.ui-model-card-name { color: inherit; text-decoration: none; }
+@media (hover: hover) { .ui-model-card-name:hover { text-decoration: underline; text-underline-offset: var(--ui-space-xs); } }
+
+/* the page: the sheet on the left, the specs beside it on a desk */
+.ui-model-page { display: grid; gap: var(--ui-space-2xl); align-items: start; min-width: 0; }
+@media (min-width: 1024px) { .ui-model-page { grid-template-columns: minmax(0, 1fr) calc(var(--ui-space-2xl) * 11); } }
+.ui-model-sheet { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-model-row { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-model-row[data-kind="body"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.ui-model-row[data-kind="face"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ui-model-shot { display: grid; gap: var(--ui-space-xs); margin: 0; min-width: 0; }
+.ui-model-shot-media { position: relative; display: block; overflow: hidden; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-model-shot[data-angle^="face"] .ui-model-shot-media { aspect-ratio: 448 / 752; }
+.ui-model-shot:not([data-angle^="face"]) .ui-model-shot-media { aspect-ratio: 1 / 2; }
+.ui-model-shot-media::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); pointer-events: none; } /* gate-allow:few-strokes  the edge of the white studio picture, so it never melts into the page */
+.ui-model-shot-media > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ui-model-shot-caption { font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+.ui-model-note { margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); }
+@media (max-width: 639.98px) {
+  .ui-model-row[data-kind="body"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ui-model-row[data-kind="face"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.ui-model-specs { display: grid; gap: var(--ui-space-xl); min-width: 0; }
+.ui-model-ai { display: grid; justify-items: start; gap: var(--ui-space-sm); }
+.ui-model-ai > .ui-ai-label { background: var(--ui-action-primary); color: var(--ui-action-primary-fg); -webkit-backdrop-filter: none; backdrop-filter: none; }
+.ui-model-ai-text, .ui-model-decide-text { margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-model-decide { display: grid; gap: var(--ui-space-sm); padding: var(--ui-inset-float); border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); }
+.ui-model-block { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-model-block-title { margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-model-block-sub { margin: var(--ui-space-xs) 0 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); }
+.ui-model-list { display: grid; gap: var(--ui-space-xs); margin: 0; padding-inline-start: var(--ui-space-lg); font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text); }
+
+/* ─── #43 rules as Do or Don't: the word before the rule, a filter over the list ─── */
+.ui-rules-filter { justify-self: start; flex-wrap: wrap; }
+.ui-rule-polarity {
+  display: inline-flex; align-items: center; height: var(--ui-space-lg); margin-inline-end: var(--ui-space-sm); padding: 0 var(--ui-space-sm);
+  border-radius: var(--ui-radius-action); background: var(--ui-surface); vertical-align: text-bottom;
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; color: var(--ui-text);
+}
+[data-polarity="dont"] .ui-rule-polarity { background: var(--ui-action-primary); color: var(--ui-action-primary-fg); }
+
+/* ─── #44 products: New, Not confirmed yet, Confirmed ─── */
+.ui-product-group { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-product-group + .ui-product-group { margin-top: var(--ui-space-xl); }
+.ui-product-card-badges { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); }
+
+/* ─── #45 a measure: its number and its unit, chosen, never typed ─── */
+.ui-measure { display: flex; gap: var(--ui-space-sm); min-width: 0; }
+.ui-measure > .ui-input, .ui-measure > input { flex: 1 1 auto; min-width: 0; }
+.ui-measure > :is(.ui-native-select, select, .ui-select) { flex: 0 0 calc(var(--ui-space-2xl) * 4); width: auto; min-width: 0; }
+.ui-measure > :only-child { flex: 1 1 auto; }
+
+/* ─── #46 everything Fume holds about a product: six blocks and its sources ─── */
+.ui-truth { display: grid; gap: var(--ui-space-lg); min-width: 0; margin-top: var(--ui-space-2xl); }
+.ui-check-body .ui-truth { margin-top: var(--ui-space-xl); }
+.ui-truth-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.2; color: var(--ui-text); }
+.ui-check-body .ui-truth-title { font-size: var(--ui-type-body-large); }
+.ui-truth-blocks { display: grid; gap: var(--ui-space-xl) var(--ui-space-2xl); grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--ui-space-2xl) * 9)), 1fr)); align-items: start; }
+.ui-truth-block { display: grid; gap: var(--ui-space-sm); align-content: start; min-width: 0; }
+.ui-truth-block-title { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); }
+.ui-truth-colours { display: grid; gap: var(--ui-space-xs); }
+.ui-truth-colour { display: inline-flex; align-items: center; flex-wrap: wrap; gap: var(--ui-space-sm); }
+.ui-truth-swatch { position: relative; width: var(--ui-space-lg); height: var(--ui-space-lg); border-radius: var(--ui-radius-item); background: var(--swatch); }
+.ui-truth-swatch::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); } /* gate-allow:few-strokes  the edge of the product's own colour, so a light one never vanishes */
+.ui-truth-code { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+
+/* ─── #48 Settings: air under the brand's name, before the list and the page ─── */
+.ui-settings > .ui-page-header { margin-bottom: var(--ui-space-xl); }

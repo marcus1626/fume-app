@@ -1,0 +1,84 @@
+/* Command palette (cmdk). DECIDED 13 Oct, from round 7. Built on shadcn's command and command dialog (command,
+   input, list, empty, group with heading, item, shortcut, separator; cmdk's data-selected and
+   data-disabled, aria-selected), redesigned for Fume.
+   ⌘K (Ctrl+K) opens it: a Smoke glass panel at the panel radius, 32, high on the screen
+   (--ui-command-top) so the list grows downward and the field never jumps. The search field sits on the
+   glass at the top, 24 in: a veil with no stroke (--ui-glass-field), 48 tall, 16 px text. The field
+   keeps focus the whole time; the arrow keys move the highlight (aria-activedescendant), so its caret is
+   the focus and it carries no ring.
+   Results come in groups (Creatives, Campaigns, Actions), each with a label in the label type. Rows fill
+   the panel edge to edge like menu rows, 44 tall, with their text 24 in, on the panel's own inset, so the
+   field, the group labels and every row share one left edge; the highlight fills the whole row.
+   Shortcuts are keys (kbd.css: the clear veil on glass, mono). Groups are parted by space, never a line. Nothing found says so in words
+   and offers a next step. The key hints at the foot sit inside the 24 px inset.
+   command.js: filtering (accents ignored), arrow keys, Enter, Home/End, ⌘K. The palette is a dialog
+   (dialog.js): focus trap, Escape, scrim, focus back where it was.
+   Rule gate: air (the panel's 24 on every side), space-from-tokens, type-from-tokens, mono-is-data,
+   few-strokes, touch-target, touch-feedback, hover-needs-hover, reduced-motion.
+   Round 9 (desktop review DWAY-4, DWAY-8, DWAY-10; PROPOSED 19 Oct 2026): the palette is the Smoke glass like every
+   floating layer (round 10 undid round 9's solid fill); on a desk the results get min(600 px, 70 % of the screen), nine or ten rows
+   on a laptop instead of five; it now finds creatives, the Brand DNA's parts and the conversations; and focus goes
+   back to what had it when it opened, unless a choice took you to another page (that page's title takes it). */
+
+/* as a dialog: high on the screen, the parts carry the inset */
+.ui-dialog.ui-command-dialog { --dialog-w: var(--ui-command-width); inset: var(--ui-command-top) 0 auto; margin: 0 auto; max-height: calc(100% - var(--ui-command-top) - var(--ui-overlay-margin)); gap: 0; padding: 0; overflow: hidden; }
+@media (max-width: 600px) { .ui-dialog.ui-command-dialog { inset: var(--ui-overlay-margin) 0 auto; max-height: calc(100% - 2 * var(--ui-overlay-margin)); } }
+
+.ui-command { display: flex; flex-direction: column; min-width: 0; min-height: 0; color: var(--ui-glass-fg); font-family: var(--ui-type-family); font-size: var(--ui-type-control); }
+
+/* the search field: a veil on the glass */
+.ui-command-input-wrapper {
+  flex-shrink: 0; display: flex; align-items: center; gap: var(--ui-space-md);
+  height: var(--ui-size-control-lg); margin: var(--ui-inset-panel) var(--ui-inset-panel) var(--ui-space-sm); padding: 0 var(--ui-size-pad-sm);
+  border-radius: var(--ui-radius-field); background: var(--ui-glass-field);
+}
+.ui-command-input-wrapper > svg { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); flex-shrink: 0; color: var(--ui-glass-fg-secondary); }
+.ui-command-input {
+  flex: 1 1 auto; min-width: 0; height: 100%; margin: 0; padding: 0; border: 0; background: transparent;
+  color: var(--ui-glass-fg); font-family: var(--ui-type-family); font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium);
+  outline: none; appearance: none; -webkit-appearance: none; caret-color: var(--ui-glass-fg);
+}
+.ui-command-input::placeholder { color: var(--ui-glass-fg-secondary); opacity: 1; }
+.ui-command-input::-webkit-search-cancel-button { display: none; }
+
+/* the results */
+.ui-command-list { flex: 1 1 auto; min-height: 0; max-height: var(--ui-command-list-height); overflow-y: auto; overscroll-behavior: contain; padding-bottom: var(--ui-space-sm); scroll-padding-block: var(--ui-space-sm); }
+/* a desk: nine or ten rows at 800 px high (DWAY-10) */
+@media (min-width: 601px) and (min-height: 560px) { .ui-command-list { max-height: min(600px, 70vh); } }
+.ui-command-group { padding-top: var(--ui-space-md); }
+.ui-command-group[hidden], .ui-command-item[hidden], .ui-command-empty[hidden] { display: none; }
+.ui-command-group-heading { padding: 0 var(--ui-inset-panel) var(--ui-space-xs); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.8; color: var(--ui-glass-fg-secondary); }
+.ui-command-separator { height: var(--ui-space-sm); }
+.ui-command-item {
+  display: flex; align-items: center; gap: var(--ui-space-md); min-height: var(--ui-size-hit); padding-inline: var(--ui-inset-panel);
+  color: var(--ui-glass-fg); font-weight: var(--ui-type-weight-medium); line-height: 1.3; white-space: nowrap;
+  cursor: pointer; user-select: none; outline: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-command-item > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; }
+.ui-command-item-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ui-command-item[data-selected="true"], .ui-command-item[aria-selected="true"], .ui-command-item.is-hover, .ui-command-item:active { background: var(--ui-glass-item-hover); }
+.ui-command-item[data-disabled="true"], .ui-command-item[aria-disabled="true"] { color: var(--ui-glass-button-disabled-fg); background: transparent; cursor: default; }
+/* shortcuts: keys from kbd.css (.ui-kbd, the clear veil on glass) or plain data text */
+.ui-command-shortcut { display: inline-flex; align-items: center; gap: var(--ui-space-xs); margin-left: auto; padding-left: var(--ui-space-lg); font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-glass-fg-secondary); }
+.ui-command-meta { margin-left: auto; padding-left: var(--ui-space-lg); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-glass-fg-secondary); }
+.ui-command-item[data-disabled="true"] :is(.ui-command-shortcut, .ui-command-meta) { color: var(--ui-glass-button-disabled-fg); }
+
+/* nothing found: words and a next step, centred in the list */
+.ui-command-empty { display: grid; gap: var(--ui-space-xs); justify-items: center; padding: var(--ui-space-xl) var(--ui-inset-panel) var(--ui-space-lg); text-align: center; line-height: 1.5; }
+.ui-command-empty-title { font-weight: var(--ui-type-weight-medium); }
+.ui-command-empty-hint { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-glass-fg-secondary); }
+
+/* key hints, inside the inset */
+.ui-command-footer { flex-shrink: 0; display: flex; flex-wrap: wrap; gap: var(--ui-space-xs) var(--ui-space-lg); padding: var(--ui-space-md) var(--ui-inset-panel) var(--ui-inset-panel); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.5; color: var(--ui-glass-fg-secondary); }
+.ui-command-footer > span { display: inline-flex; align-items: center; gap: var(--ui-space-sm); }
+
+/* on touch there are no keys to hint at: the list stops on the panel's own 24 px inset, so a row cut by
+   the scroll never runs into the 32 px corner */
+@media (pointer: coarse) {
+  .ui-command-footer { display: none; }
+  .ui-command-list { padding-bottom: 0; margin-bottom: var(--ui-inset-panel); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ui-command-item { transition: none; }
+}

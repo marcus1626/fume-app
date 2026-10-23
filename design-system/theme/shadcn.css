@@ -1,0 +1,30 @@
+/* shadcn/ui bridge. PROPOSED, round 2.
+   Maps shadcn's variable names onto Fume UI tokens so shadcn components (React, Tailwind)
+   pick up the brand. Load tokens/fume-tokens.css, then design-system/tokens/ui.css, then this.
+   Note: shadcn's --accent is only a hover surface. Fume's Amber is --ui-check and is never mapped to --accent. */
+:root {
+  --radius: var(--ui-radius-field);
+  --background: var(--ui-ground);
+  --foreground: var(--ui-text);
+  --card: var(--ui-surface);
+  --card-foreground: var(--ui-text);
+  --popover: var(--ui-glass-bg);
+  --popover-foreground: var(--ui-glass-fg);
+  --primary: var(--ui-action-primary);
+  --primary-foreground: var(--ui-action-primary-fg);
+  --secondary: var(--ui-action-secondary);
+  --secondary-foreground: var(--ui-action-secondary-fg);
+  --muted: var(--ui-surface-sunken);
+  --muted-foreground: var(--ui-text-tertiary);
+  --accent: var(--ui-action-quiet-hover);
+  --accent-foreground: var(--ui-text);
+  --destructive: var(--ui-danger);
+  --border: var(--ui-hairline);
+  --input: var(--ui-hairline-strong);
+  --ring: var(--ui-focus-ring);
+  /* charts (round 8, PROPOSED): Ink and the Focus ramp, never Amber; a fifth series folds into "Other" */
+  --chart-1: var(--ui-chart-series-1);
+  --chart-2: var(--ui-chart-series-2);
+  --chart-3: var(--ui-chart-series-3);
+  --chart-4: var(--ui-chart-series-4);
+}

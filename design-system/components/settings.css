@@ -1,0 +1,69 @@
+/* Settings layout. DECIDED 13 Oct, from round 8. shadcn has no settings page; it composes shadcn's tabs (vertical,
+   tabs.css: the sunken track with the white pill), item (item.css, the phone list), field and switch, and
+   this round's floating action bar (toolbar.css) as the save bar. settings.js runs the phone list, the
+   pages and the save bar.
+   Markup: <div class="ui-settings" data-ui-settings data-view="list">
+             <div class="ui-tabs ui-settings-layout" data-ui-tabs data-orientation="vertical">
+               <div class="ui-tabs-list ui-tabs-list--vertical ui-settings-nav" role="tablist" …>
+                 <span class="ui-tabs-indicator"></span><button class="ui-tabs-trigger" role="tab" aria-controls="p-dna" …>Brand DNA</button>…</div>
+               <section class="ui-tabs-content ui-settings-page" role="tabpanel" id="p-dna">
+                 <div class="ui-settings-page-head"><button class="ui-btn ui-btn--quiet ui-btn--sm ui-settings-back" data-ui-settings-back>Settings</button>
+                   <h2 class="ui-settings-page-title" tabindex="-1">Brand DNA</h2><p class="ui-settings-page-description">…</p></div>
+                 <form class="ui-settings-form"> <section class="ui-settings-section">…fields…</section> …
+                   <div class="ui-settings-savebar"><div class="ui-glass ui-glass--bar ui-action-bar" hidden>…</div></div></form></section> …
+               <div class="ui-item-group ui-settings-list"> <button class="ui-item" data-ui-settings-open="p-dna">…</button> …</div></div></div>
+   Fume decisions: navigation on the left (the vertical tabs, 220 wide), the page beside it at a calm
+   measure (640). Sections are parted by space alone: 48 between sections, twice the 24 between fields,
+   never a line or a bordered card; a section has a title and one line that says what it is for. The save
+   bar only exists once something changed: the Smoke glass pill floats 16 above the bottom of the screen
+   (sticky, plus the safe area) with "Unsaved changes", Discard (glass-clear) and Save changes, the one
+   white button. Saved, it slides away and a toast says so.
+   Narrow (under 640 px, a container query): list then page, as on a phone. The list is item rows with an
+   icon tile, a line of description and a chevron; a row opens its page full width, with a Settings back
+   pill above the title (the chevron lines up with the text edge).
+   Rule gate: few-strokes, space-from-tokens, type-from-tokens, air, glass-one-white, touch-target,
+   touch-feedback, reduced-motion. */
+
+.ui-settings { container: ui-settings / inline-size; min-width: 0; font-family: var(--ui-type-family); color: var(--ui-text); }
+.ui-settings .ui-settings-layout { display: grid; grid-template-columns: var(--ui-tabs-vertical-width) minmax(0, var(--ui-settings-page-max)); align-items: start; gap: var(--ui-settings-gap); }
+.ui-settings .ui-settings-nav { position: sticky; top: var(--ui-space-lg); flex: none; width: auto; }
+.ui-settings-list { display: none; margin-inline: calc(var(--ui-inset-float) * -1); } /* the rows' icons line up with the title */
+
+/* a page */
+.ui-settings-page { display: grid; gap: var(--ui-space-2xl); align-content: start; min-width: 0; }
+/* the page fades in (tabs.css) but must not keep the fade once done: a filling opacity animation makes the
+   page a backdrop root, and the save bar's glass would see nothing behind it (no blur, text shows through) */
+.ui-settings .ui-settings-page[data-state="active"] { animation-fill-mode: backwards; }
+.ui-settings-page-head { display: grid; justify-items: start; gap: var(--ui-space-sm); min-width: 0; }
+.ui-settings-back { display: none; margin-inline-start: calc(var(--ui-size-pad-sm) * -1); }
+.ui-settings-page-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.2; letter-spacing: -.015em; outline: none; }
+.ui-settings-page-title:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); border-radius: var(--ui-radius-item); }
+.ui-settings-page-description { margin: 0; max-width: 56ch; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+
+/* sections: parted by space, never a line */
+.ui-settings-form { display: grid; gap: var(--ui-settings-section-gap); min-width: 0; margin: 0; }
+.ui-settings-section { display: grid; gap: var(--ui-field-gap); min-width: 0; margin: 0; padding: 0; border: 0; }
+.ui-settings-section-head { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-settings-section-title { margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text); }
+.ui-settings-section-description { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-tertiary); text-wrap: pretty; }
+.ui-settings-section-body { display: grid; gap: var(--ui-field-gap); min-width: 0; }
+
+/* the save bar: sticky at the foot of the page, only once something changed */
+.ui-settings-savebar {
+  container: ui-action-bar / inline-size; /* the save bar folds like the action bar (toolbar.css) */
+  position: sticky; z-index: var(--ui-toolbar-bar-z); bottom: calc(var(--ui-settings-savebar-bottom) + env(safe-area-inset-bottom, 0px));
+  display: flex; justify-content: center; min-width: 0; margin-top: calc(var(--ui-settings-section-gap) * -1 + var(--ui-field-gap)); pointer-events: none;
+}
+.ui-settings-savebar:has(> .ui-action-bar[hidden]) { display: none; }
+/* Save carries its spinner only while it saves (aria-busy, set by settings.js) */
+.ui-settings-savebar .ui-btn:not([aria-busy="true"]) > .ui-spin { display: none; }
+
+@container ui-settings (max-width: 639.98px) {
+  .ui-settings .ui-settings-layout { display: block; }
+  .ui-settings .ui-settings-nav { display: none; }
+  .ui-settings-back { display: inline-flex; }
+  .ui-settings[data-view="list"] .ui-settings-list { display: grid; }
+  .ui-settings[data-view="list"] .ui-settings-page { display: none; }
+  /* a page replaces the list, its header too: the Settings pill above the page's title says where you are */
+  .ui-settings[data-view="page"] > .ui-page-header { display: none; }
+}

@@ -1,0 +1,235 @@
+/* Client flow: what the agency sends the client and what the client answers (app round 11, FLOWS §24.2, §24.5).
+   PROPOSED 20 Oct 2026. Composed from the sheet (sheet.css), the creative tile (creative.css), fields, items and the
+   page (app.css); this file only adds how they sit together.
+   Markup: Send to client and Record an approval, right panels on Smoke glass:
+             <fieldset><legend class="ui-field-legend ui-client-legend"><span>Creatives</span>
+               <span class="ui-client-pick-count"><span>6 of 6 chosen</span> <button class="ui-btn ui-btn--glass-clear ui-btn--sm">Choose none</button></span></legend>
+               <ul class="ui-creative-grid ui-client-pick"> <li class="ui-creative" data-state="checked"> … </li></ul></fieldset>
+             <div class="ui-client-linkbox"> the client link: a read-only field, then Copy the link (glass-white) · Open the link </div>
+           The review, for the agency: <div class="ui-app-stack ui-client-review"> Ready for Maja · Changes asked for · Approved </div>,
+             each tile's check line <span class="ui-creative-check ui-client-check"><svg/>Waiting on Maja</span>, and
+             beside it <ul class="ui-item-group ui-client-sends"> one row per send </ul>
+           The client link, /c/:token, outside the shells:
+             <div class="ui-client-link" data-preview>
+               signed in as the agency only (round 12): <div class="ui-client-link-preview" role="note">
+                 <p class="ui-client-link-preview-text"><svg/><span>Preview of what Maja sees. Nothing you do here counts.</span></p>
+                 <button class="ui-btn ui-btn--secondary ui-btn--sm">Close the preview</button></div>
+               <header class="ui-client-link-bar"><span class="ui-client-link-agency">Brygga Studio</span></header>
+               <main class="ui-client-link-main"><div class="ui-app-page ui-client-link-page">
+                 <div class="ui-client-link-head"> eyebrow · <h1 class="ui-client-link-title"> · lede ·
+                   <figure class="ui-client-link-note"><blockquote/><figcaption/></figure>
+                   <div class="ui-client-link-who"> the name field (.ui-client-link-reviewer) or "You answer as Anna" · <p class="ui-client-link-count"/> </div></div>
+                 <ol class="ui-client-link-list"><li class="ui-client-link-item" data-state="open|asking|approved|changes|remaking">
+                   <div class="ui-creative-media ui-client-link-picture" data-format="feed"><img/></div>
+                   <div class="ui-client-link-side"><div class="ui-client-link-what"><h2 class="ui-client-link-name"/><p class="ui-client-link-meta"/></div>
+                     <div class="ui-client-link-actions"> Approve (primary) · Ask for changes (secondary) </div>
+                     or <form class="ui-client-link-ask"> the changes field · Send the changes · Cancel </form>
+                     or <p class="ui-client-link-answer" data-answer="approved|changes|remaking"><svg/>You approved this</p></div></li></ol>
+                 <section class="ui-client-link-done"><svg/><h2 class="ui-client-link-done-title"/><p class="ui-client-link-done-text"/></section>
+               </div></main>
+               <footer class="ui-client-link-foot"><svg class="ui-client-link-mark"/> Made with Fume</footer></div>
+   Fume decisions:
+   - Only the client approves a creative. The agency's panels choose creatives as tiles with the round corner
+     checkbox, all chosen by default; on the panel's Smoke glass a tile's words take the glass's colours, the selected
+     ring is Porcelain and the corner badge white, never Amber (Amber stays on the checked triangle).
+   - The client link is the client's own calm page: the app's Porcelain ground, no sidebar and no app bar, the
+     agency's name as plain words at the top left and Fume only as a small mark and "Made with Fume" at the foot.
+     The title says who sent what, in the person's own words; the sender's note is a card one surface step up from
+     the ground, with the sender's name and date under it.
+   - Each creative is shown big enough to judge: on a desk as tall as the screen allows (up to 680, 72 % of its
+     height) beside its name and its two answers, on a phone the column's full width with the answers under it. The
+     creatives are far apart (twice the page's section space) so each reads as one decision.
+   - One answer per creative: Approve (Ink, the one action of each creative) and Ask for changes (white). Asking
+     opens a text field in place. Once answered, the actions give way to the answer in words with its icon (a filled
+     circle check, a speech bubble), never colour alone, never Amber.
+   - The reviewer's name is asked once, in the head above the first creative, and only checked before the first
+     answer; then it reads "You answer as Anna" with a quiet way to change it.
+   - When every creative has an answer the page closes with one card under the last creative: what was said and that
+     the page can be closed. An expired or unknown link is one calm sentence.
+   - Round 12 (UX review DWAY-4, DWAY-16; PROPOSED 20 Oct 2026): the agency's own people see the link as a preview. A
+     full-width line above the page, one surface step up from the ground and no stroke (never Amber, never glass: it
+     is part of the page, not a layer), says whose view it is and that nothing counts, with "Close the
+     preview" (white) at its end. Approve and Ask for changes stay in place, switched off, and the name field is left
+     out, so the page reads as the client's and no one answers for her.
+   - Round 13 (Marcus's card, 23 Oct 2026, DECIDED "Klienten godkjenner"): the agency checks the plan and sends it;
+     the client approves it in the same link where she approves the creatives (one link per campaign). The plan comes
+     first, as one card one surface step up from the ground: its version and the agency's check (the checked
+     triangle in Amber, the one point of it here), the brief in words, the direction with its idea and up to four
+     pictures, the masters Fume makes (name, shape, scene, words) and how many follow them, and when. Under the card
+     the same two answers as a creative: Approve the plan (Ink) and Ask for changes (white), then the answer in words.
+     Markup: <section class="ui-client-link-plan" data-state="open|asking|approved|changes|remaking">
+               <div class="ui-client-link-plan-card"> head (eyebrow, .ui-client-link-name, .ui-client-link-plan-check) ·
+                 <p class="ui-client-link-plan-text"/> · <ul class="ui-client-link-plan-refs"/> ·
+                 <div class="ui-client-link-plan-part"><h3 class="ui-client-link-plan-label"/> <ol class="ui-client-link-plan-list"/></div> </div>
+               the answers (.ui-client-link-actions, .ui-client-link-ask, .ui-client-link-answer) </section>
+   Rule gate: air, proximity, few-strokes (only the creative's own edge), amber-is-a-point (Amber only on the plan's check),
+   glass-one-white, card-never-matches-ground, space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data,
+   touch-target, hover-needs-hover, reduced-motion. */
+
+/* ─── The panels, on Smoke glass ───────────────────────────────────────── */
+
+.ui-client-legend { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-xs) var(--ui-space-md); width: 100%; }
+.ui-client-pick-count { display: inline-flex; align-items: center; gap: var(--ui-space-sm); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); font-variant-numeric: tabular-nums; color: var(--ui-text-secondary); }
+.ui-glass .ui-client-pick-count { color: var(--ui-glass-fg-secondary); }
+
+/* a panel's tiles: three across in the wide panel, two on a phone; the words on glass take the glass's colours */
+.ui-creative-grid.ui-client-pick { --ui-creative-tile-min: calc(var(--ui-space-2xl) * 4); gap: var(--ui-space-lg) var(--ui-space-md); } /* 128: the panel's own tile, a layout size from the spacing scale */
+.ui-glass .ui-client-pick .ui-creative-caption { color: var(--ui-glass-fg-secondary); }
+.ui-glass .ui-client-pick .ui-creative[data-state="checked"] .ui-creative-media { outline-color: var(--ui-glass-fg); }
+.ui-glass .ui-client-pick .ui-creative-media:focus-visible,
+.ui-glass .ui-client-pick .ui-creative-pick:focus-visible { outline-color: var(--ui-focus-ring-on-glass); }
+.ui-glass .ui-client-pick .ui-creative-badge { background: var(--ui-glass-button-white); color: var(--ui-glass-button-white-fg); }
+
+.ui-client-linkbox { display: grid; gap: var(--ui-space-lg); min-width: 0; }
+
+/* a tile's longer check line ("Maja approved · recorded by Nora") wraps under a narrow tile instead of running out */
+.ui-creative-check.ui-client-check { align-items: flex-start; min-width: 0; white-space: normal; text-wrap: pretty; }
+/* the icon's box is the first line's height (the caption's 1.4), so the mark centres on that line however many follow */
+.ui-creative-check.ui-client-check svg { height: 1.4em; }
+
+/* ─── The review, for the agency ───────────────────────────────────────── */
+
+.ui-app-stack.ui-client-review { gap: var(--ui-space-2xl); }
+.ui-item-group.ui-client-sends { gap: var(--ui-space-sm); }
+
+/* ─── The client link ──────────────────────────────────────────────────── */
+
+.ui-client-link {
+  --client-link-picture: min(72dvh, 680px); /* gate-allow:space-from-tokens  how tall a creative stands on a desk: a layout size */
+  --client-link-measure: 60ch; /* gate-allow:space-from-tokens  the head's reading measure, a layout width */
+  display: flex; flex-direction: column; min-height: 100dvh; min-width: 0;
+  background: var(--ui-ground); color: var(--ui-text); font-family: var(--ui-type-family);
+}
+.ui-client-link-bar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-sm) var(--ui-space-lg);
+  width: 100%; max-width: 1200px; /* gate-allow:space-from-tokens  the page's widest measure (app.css), a layout width */
+  margin-inline: auto; padding: var(--ui-space-xl) var(--ui-space-xl) 0; box-sizing: border-box;
+}
+.ui-client-link-agency { margin-inline-end: auto; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.3; letter-spacing: -.005em; }
+/* the agency's preview (round 12): a full-width line above the page; its words, then Close the preview */
+.ui-client-link-preview {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-sm) var(--ui-space-lg);
+  padding: var(--ui-space-md) max(var(--ui-space-xl), calc((100% - 1200px) / 2 + var(--ui-space-xl))); /* gate-allow:space-from-tokens  lines its words up with the page's widest measure (app.css) */
+  background: var(--ui-surface);
+}
+.ui-client-link-preview-text { display: inline-flex; align-items: flex-start; gap: var(--ui-space-sm); min-width: 0; margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.5; color: var(--ui-text); }
+.ui-client-link-preview-text > svg { flex: none; width: var(--ui-size-icon); height: 1.5em; color: var(--ui-text-secondary); }
+.ui-client-link-main { flex: 1 0 auto; min-width: 0; }
+.ui-app-page.ui-client-link-page { gap: calc(var(--ui-space-2xl) * 1.5); padding-top: calc(var(--ui-space-2xl) * 1.5); }
+
+/* the head: who sent what, the note, the name */
+.ui-client-link-head { display: grid; justify-items: start; gap: var(--ui-space-lg); max-width: var(--client-link-measure); min-width: 0; }
+.ui-client-link-eyebrow { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); }
+.ui-client-link-title { margin: 0; font-size: var(--ui-type-title-large); font-weight: var(--ui-type-weight-medium); line-height: 1.15; letter-spacing: -.02em; text-wrap: balance; }
+.ui-client-link-title[tabindex="-1"]:focus { outline: none; }
+.ui-client-link-lede { margin: 0; font-size: var(--ui-type-body-large); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-client-link-note {
+  display: grid; gap: var(--ui-space-sm); margin: var(--ui-space-sm) 0 0; padding: var(--ui-space-lg) var(--ui-inset-panel);
+  border-radius: var(--ui-radius-card); background: var(--ui-surface);
+}
+.ui-client-link-note blockquote { margin: 0; font-size: var(--ui-type-body); line-height: 1.55; color: var(--ui-text); text-wrap: pretty; }
+.ui-client-link-note figcaption { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-client-link-who { display: grid; justify-items: start; gap: var(--ui-space-md); width: 100%; margin-top: var(--ui-space-sm); }
+.ui-field.ui-client-link-reviewer { width: min(100%, calc(var(--ui-space-2xl) * 11)); } /* 352: a name's field, from the spacing scale */
+.ui-client-link-as { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--ui-space-xs) var(--ui-space-sm); margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); }
+.ui-client-link-count { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); }
+.ui-client-link-num { font-family: var(--ui-type-family-data); font-variant-numeric: tabular-nums; color: var(--ui-text); } /* a count: data */
+
+/* the creatives, one decision each */
+.ui-client-link-list { display: grid; gap: calc(var(--ui-space-2xl) * 2); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-client-link-item { display: flex; align-items: flex-start; gap: calc(var(--ui-space-2xl) * 1.5); min-width: 0; }
+.ui-client-link-item > .ui-client-link-picture { flex: none; width: min(calc(var(--client-link-picture) * (var(--ratio, var(--ui-creative-ratio-feed)))), 62%); }
+.ui-client-link-side { display: grid; align-content: start; gap: var(--ui-space-xl); flex: 1 1 0; min-width: 0; padding-top: var(--ui-space-sm); }
+.ui-client-link-what { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-client-link-name { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.25; letter-spacing: -.015em; overflow-wrap: anywhere; }
+.ui-client-link-meta { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-tertiary); }
+.ui-client-link-meta .ui-client-link-num { color: inherit; }
+.ui-client-link-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); }
+.ui-client-link-ask { display: grid; gap: var(--ui-space-lg); max-width: calc(var(--ui-space-2xl) * 14); min-width: 0; } /* 448: a short note's measure */
+.ui-client-link-said { display: grid; gap: var(--ui-space-sm); min-width: 0; animation: ui-client-link-in var(--ui-motion-slow) var(--ui-motion-ease) both; }
+.ui-client-link-answer {
+  display: inline-flex; align-items: center; gap: var(--ui-space-sm); margin: 0;
+  font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text);
+  animation: ui-client-link-in var(--ui-motion-slow) var(--ui-motion-ease) both;
+}
+.ui-client-link-said .ui-client-link-answer { animation: none; }
+.ui-client-link-answer > svg { flex: none; width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-client-link-answer[data-answer="remaking"] { font-weight: var(--ui-type-weight-regular); color: var(--ui-text-secondary); }
+.ui-client-link-quote { max-width: calc(var(--ui-space-2xl) * 14); margin: 0; font-size: var(--ui-type-body); line-height: 1.55; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-client-link-next { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-tertiary); }
+
+/* the plan (round 13): one card, then its two answers */
+.ui-client-link-plan { display: grid; justify-items: start; gap: var(--ui-space-xl); max-width: calc(var(--ui-space-2xl) * 24); min-width: 0; } /* 768: the plan's reading width, from the spacing scale */
+.ui-client-link-plan-card {
+  display: grid; gap: var(--ui-space-xl); width: 100%; min-width: 0; box-sizing: border-box;
+  padding: var(--ui-inset-panel); border-radius: var(--ui-radius-card); background: var(--ui-surface);
+}
+.ui-client-link-plan-head { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-client-link-plan-check { display: inline-flex; align-items: center; gap: var(--ui-space-sm); margin: var(--ui-space-xs) 0 0; font-size: var(--ui-type-control); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-client-link-plan-text { margin: 0; font-size: var(--ui-type-body); line-height: 1.6; color: var(--ui-text); text-wrap: pretty; }
+.ui-client-link-plan-text + .ui-client-link-plan-text { margin-top: calc(var(--ui-space-sm) * -1); color: var(--ui-text-secondary); }
+.ui-client-link-plan-refs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ui-space-md); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-client-link-plan-refs img { display: block; width: 100%; aspect-ratio: var(--ui-creative-ratio-feed); object-fit: cover; border-radius: var(--ui-radius-item); background: var(--ui-creative-bg); }
+.ui-client-link-plan-part { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-client-link-plan-label { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-client-link-plan-list { display: grid; gap: var(--ui-space-lg); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-client-link-plan-row { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-client-link-plan-row-name { margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.4; }
+.ui-client-link-plan-row-text { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-client-link-plan-dates { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--ui-space-sm) var(--ui-space-xl); min-width: 0; margin: 0; font-size: var(--ui-type-control); line-height: 1.5; }
+.ui-client-link-plan-date { display: contents; }
+.ui-client-link-plan-dates dt { color: var(--ui-text); }
+.ui-client-link-plan-dates dd { margin: 0; color: var(--ui-text-secondary); font-variant-numeric: tabular-nums; }
+
+/* the close: what was said, and that the page can be closed */
+.ui-client-link-done {
+  display: grid; justify-items: start; gap: var(--ui-space-md); max-width: var(--client-link-measure); min-width: 0;
+  padding: var(--ui-inset-panel); border-radius: var(--ui-radius-card); background: var(--ui-surface); outline: none;
+  animation: ui-client-link-in var(--ui-motion-slow) var(--ui-motion-ease) both;
+}
+.ui-client-link-done > svg { width: var(--ui-size-icon-lg, var(--ui-size-icon)); height: var(--ui-size-icon-lg, var(--ui-size-icon)); color: var(--ui-text); }
+.ui-client-link-done:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-client-link-done-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.25; letter-spacing: -.015em; }
+.ui-client-link-done-text { margin: 0; font-size: var(--ui-type-body); line-height: 1.55; color: var(--ui-text-secondary); text-wrap: pretty; }
+
+/* an expired or unknown link: one calm sentence */
+.ui-client-link-gone { max-width: var(--client-link-measure); margin: calc(var(--ui-space-2xl) * 2) 0 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.3; letter-spacing: -.015em; text-wrap: balance; }
+.ui-client-link-gone[tabindex="-1"]:focus { outline: none; }
+
+/* Made with Fume */
+.ui-client-link-foot {
+  display: flex; align-items: center; justify-content: center; gap: var(--ui-space-sm);
+  padding: var(--ui-space-2xl) var(--ui-space-xl) calc(var(--ui-space-2xl) + env(safe-area-inset-bottom, 0px));
+  font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary);
+}
+.ui-client-link-foot > span { display: inline-flex; }
+.ui-client-link-mark { display: block; width: auto; height: var(--ui-size-icon); }
+
+@keyframes ui-client-link-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* a phone: the creative the column's full width, its answers under it, pills a full touch target */
+@media (max-width: 759.98px) {
+  .ui-client-link-bar { padding: var(--ui-space-lg) var(--ui-space-lg) 0; }
+  .ui-client-link-preview { padding: var(--ui-space-md) var(--ui-space-lg); }
+  .ui-client-link-preview > .ui-btn { --h: var(--ui-size-hit); }
+  .ui-app-page.ui-client-link-page { gap: calc(var(--ui-space-2xl) * 1.25); padding-top: var(--ui-space-xl); }
+  .ui-client-link-title { font-size: var(--ui-type-title); line-height: 1.25; letter-spacing: -.015em; }
+  .ui-client-link-lede { font-size: var(--ui-type-body); }
+  .ui-client-link-note { padding: var(--ui-space-lg); }
+  .ui-client-link-list { gap: calc(var(--ui-space-2xl) * 1.5); }
+  .ui-client-link-item { flex-direction: column; align-items: stretch; gap: var(--ui-space-lg); }
+  .ui-client-link-item > .ui-client-link-picture { width: 100%; }
+  .ui-client-link-side { gap: var(--ui-space-lg); padding-top: 0; }
+  .ui-client-link-name { font-size: var(--ui-type-body-large); line-height: 1.3; letter-spacing: -.01em; }
+  .ui-client-link-actions > .ui-btn { flex: 1 1 auto; --h: var(--ui-size-hit); }
+  .ui-field.ui-client-link-reviewer, .ui-client-link-ask, .ui-client-link-quote { width: 100%; max-width: none; }
+  .ui-client-link-done { padding: var(--ui-space-lg); }
+  .ui-client-link-plan, .ui-client-link-plan-card { max-width: none; }
+  .ui-client-link-plan-card { padding: var(--ui-space-lg); }
+  .ui-client-link-plan-refs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ui-client-link-gone { margin-top: var(--ui-space-2xl); font-size: var(--ui-type-body-large); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-client-link-said, .ui-client-link-answer, .ui-client-link-done { animation: none; }
+}

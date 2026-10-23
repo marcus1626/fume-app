@@ -1,0 +1,65 @@
+/* Date field and time field. PROPOSED 22 Oct 2026.
+   Round 13 (Marcus's comment #37, "Feil tekst markerings farge"): the browser's own <input type="date"> and "time" lit
+   the part being edited in the system's blue (Chromium ignores author CSS on ::-webkit-datetime-edit-*-field:focus)
+   and wrote US dates and 12-hour times. @fume/ui's DateField and TimeField replace them
+   (packages/ui/src/controls/date-field.tsx); this file only adds what the field and the calendar do not have.
+   - DateField: a button with the field's own look (.ui-input in field.css: white with its hairline on the page, the
+     veil on glass, radius 12, 44 tall with 16 px text on touch), the day in words ("Sat 17 Oct 2026") and the calendar
+     icon at the end, like the select's chevrons. A press steps the fill toward Ink like the select trigger; open, it
+     keeps the hover edge. It opens the month in a Smoke glass popover (.ui-popover), as wide as seven 44 px day cells
+     and its 16 of air, holding calendar.css's glass calendar (.ui-calendar--glass: Monday first, today a small dot,
+     the chosen day the white pill of glass, days outside min/max faded). Nothing here is Amber.
+   - TimeField: the Select (select.css) with 24-hour slots; here only tabular figures.
+   Markup: button.ui-input.ui-date-field-trigger[aria-haspopup=dialog][aria-expanded][data-state][data-placeholder]
+             > span.ui-date-field-value (> span the day, span.ui-date-field-sizer), svg.ui-date-field-icon
+           div.ui-glass.ui-popover.ui-date-field-popover[role=dialog] > div.ui-calendar.ui-calendar--glass
+             > div.ui-calendar-header, table.ui-calendar-grid[role=grid], div.ui-calendar-footer (Clear, optional fields)
+   Rule gate: few-strokes (the field's hairline is field.css's), touch-target (days 40 in 44 cells, calendar.css),
+   touch-feedback, hover-needs-hover, glass-no-stroke, air, reduced-motion. */
+
+/* ---------- the trigger: a field that is a button ---------- */
+.ui-input.ui-date-field-trigger {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-sm);
+  text-align: left; white-space: nowrap; font-variant-numeric: tabular-nums;
+  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+/* the day and an unseen sizer (the longest day) in one cell: as wide as a native date input, never jumping */
+.ui-date-field-value { flex: 1 1 auto; display: grid; grid-template-columns: minmax(0, auto); min-width: 0; }
+.ui-date-field-value > * { grid-area: 1 / 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ui-date-field-sizer { visibility: hidden; }
+.ui-date-field-trigger[data-placeholder] .ui-date-field-value { color: var(--ui-field-placeholder); }
+.ui-date-field-icon { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; color: var(--ui-field-icon); transition: color var(--ui-motion-fast) var(--ui-motion-ease); }
+@media (hover: hover) { .ui-date-field-trigger:hover .ui-date-field-icon { color: var(--ui-text); } }
+.ui-date-field-trigger.is-hover .ui-date-field-icon { color: var(--ui-text); }
+.ui-input.ui-date-field-trigger:active, .ui-input.ui-date-field-trigger.is-pressed { background: var(--ui-field-bg-pressed); }
+.ui-input.ui-date-field-trigger[data-state="open"] { --edge: var(--ui-field-edge-hover); }
+.ui-date-field-trigger[data-state="open"] .ui-date-field-icon { color: var(--ui-text); }
+.ui-date-field-trigger:disabled :is(.ui-date-field-value, .ui-date-field-icon) { color: var(--ui-field-fg-disabled); }
+
+/* on glass: the veil; hover lifts it one step, as the select trigger does */
+.ui-glass .ui-date-field-trigger[data-placeholder] .ui-date-field-value { color: var(--ui-field-glass-placeholder); }
+.ui-glass .ui-date-field-icon { color: var(--ui-field-glass-placeholder); }
+@media (hover: hover) {
+  .ui-glass .ui-input.ui-date-field-trigger:hover { background: var(--ui-glass-button-clear-hover); }
+  .ui-glass .ui-date-field-trigger:hover .ui-date-field-icon { color: var(--ui-glass-fg); }
+}
+.ui-glass .ui-input.ui-date-field-trigger.is-hover { background: var(--ui-glass-button-clear-hover); }
+.ui-glass .ui-input.ui-date-field-trigger:active, .ui-glass .ui-input.ui-date-field-trigger.is-pressed { background: var(--ui-field-glass-bg); }
+.ui-glass .ui-date-field-trigger[data-state="open"] .ui-date-field-icon { color: var(--ui-glass-fg); }
+.ui-glass .ui-date-field-trigger:disabled :is(.ui-date-field-value, .ui-date-field-icon) { color: var(--ui-glass-button-disabled-fg); }
+
+/* ---------- the month in its popover ---------- */
+.ui-popover.ui-date-field-popover { width: calc(7 * var(--ui-calendar-cell) + 2 * var(--ui-inset-float)); gap: var(--ui-space-md); }
+.ui-date-field-popover .ui-calendar-footer { justify-content: flex-end; }
+
+/* ---------- the time field: figures in columns ---------- */
+.ui-time-field-trigger, .ui-time-field-list .ui-select-item { font-variant-numeric: tabular-nums; }
+
+/* ---------- touch: 44 tall with 16 px text, as every field (field.css) ---------- */
+@media (pointer: coarse) {
+  .ui-input.ui-date-field-trigger { height: max(var(--h), var(--ui-size-hit)); font-size: var(--ui-type-body); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-date-field-icon { transition: none; }
+}

@@ -1,0 +1,305 @@
+// Architecture v3 seed (FLOWS.md §9–§14, PROPOSED 15 Oct 2026): the Studio's modes (schemas the Engine prompts from),
+// creative documents with versions, LYSNE's chosen presets, models and references, the QA queue, frame.io-like
+// review comments, taste training and a batch. Same demo brand and clock as seed.ts.
+
+import type {
+  Batch,
+  BrandModel,
+  BrandPreset,
+  BrandReference,
+  CreativeDocument,
+  Evaluation,
+  Layer,
+  ModeVariable,
+  QaItem,
+  Rating,
+  RenderVersion,
+  ReviewComment,
+  Specs,
+  StudioMode,
+  TasteCard,
+  TasteState,
+  Variables,
+} from "../contract";
+import { at, gen, img, inDays } from "./seed";
+import { defaultRig } from "./seed4";
+
+// ─── Modes: each is a schema of variables, edited with the Studio's control library ─────────────────────────
+
+const light: ModeVariable[] = [
+  { key: "lightAngle", label: "Light direction", control: "angle", section: "Light", default: { azimuth: 70, elevation: 20 } },
+  { key: "softness", label: "Softness", control: "slider", section: "Light", default: 60, min: 0, max: 100, unit: "%" },
+  { key: "warmth", label: "Warmth", control: "slider", section: "Light", default: 2700, min: 2000, max: 6500, step: 100, unit: "K" },
+  { key: "lightPreset", label: "Brand light", control: "select", section: "Light", default: "evening", brandPreset: "light",
+    options: [{ value: "evening", label: "Low evening light" }, { value: "window", label: "Soft window light" }, { value: "lamp", label: "One amber lamp" }] },
+  // v4: the advanced light board (FLOWS §18); the panel shows it when Light is set to Advanced.
+  { key: "rig", label: "Lights", control: "lightboard", section: "Light", default: defaultRig },
+];
+const camera: ModeVariable[] = [
+  { key: "lens", label: "Lens", control: "lens", section: "Camera", default: { focal: 50, height: 30, tilt: -8 } },
+  { key: "depth", label: "Depth of field", control: "slider", section: "Camera", default: 40, min: 0, max: 100, unit: "%", help: "0 is everything sharp." },
+];
+const background: ModeVariable = {
+  key: "background", label: "Background", control: "swatch", section: "Ground", default: "#F4EFE8", brandPreset: "background",
+  options: [{ value: "#F4EFE8", label: "LYSNE packshot white", hex: "#F4EFE8" }, { value: "#EFE6DA", label: "Linen", hex: "#EFE6DA" }, { value: "#B5A691", label: "Evening stone", hex: "#B5A691" }, { value: "#2B1D17", label: "Night brown", hex: "#2B1D17" }],
+};
+
+export const modes: StudioMode[] = [
+  {
+    id: "m-free", studio: "render", name: "Free", description: "Say what you want; the variables follow.", output: "creative",
+    sections: ["Direction", "Light", "Camera"], available: true, uses: ["product", "model", "reference", "count"],
+    variables: [
+      { key: "direction", label: "Direction", control: "text", section: "Direction", default: "" },
+      { key: "mood", label: "Mood", control: "chips", section: "Direction", default: ["calm"], options: [{ value: "calm", label: "Calm" }, { value: "close", label: "Close" }, { value: "warm", label: "Warm" }, { value: "airy", label: "Airy" }, { value: "quiet", label: "Quiet" }] },
+      ...light, ...camera,
+    ],
+  },
+  {
+    id: "m-packshot", studio: "render", name: "Packshot", description: "The product alone on the brand's chosen ground.", output: "creative",
+    sections: ["Ground", "Product", "Light", "Camera"], available: true, uses: ["product", "reference", "count"],
+    variables: [
+      background,
+      { key: "shadow", label: "Shadow", control: "segmented", section: "Ground", default: "soft", options: [{ value: "none", label: "None" }, { value: "soft", label: "Soft" }, { value: "hard", label: "Hard" }] },
+      { key: "angle", label: "Product angle", control: "segmented", section: "Product", default: "front", options: [{ value: "front", label: "Front" }, { value: "three_quarter", label: "¾" }, { value: "side", label: "Side" }, { value: "top", label: "Top" }] },
+      { key: "padding", label: "Air around", control: "slider", section: "Product", default: 18, min: 5, max: 40, unit: "%" },
+      ...light.slice(0, 3), light[4], ...camera.slice(0, 1),
+    ],
+  },
+  {
+    id: "m-scene", studio: "render", name: "Product in scene", description: "The product in a place and a light from the brand world.", output: "creative",
+    sections: ["Scene", "Product", "Light", "Camera"], available: true, uses: ["product", "reference", "count"],
+    variables: [
+      { key: "scene", label: "Scene", control: "select", section: "Scene", default: "stone", options: [{ value: "stone", label: "Evening stone" }, { value: "linen", label: "Linen and water" }, { value: "bath", label: "Bathroom shelf" }] },
+      { key: "surface", label: "Surface", control: "segmented", section: "Scene", default: "stone", options: [{ value: "stone", label: "Stone" }, { value: "plaster", label: "Plaster" }, { value: "wood", label: "Wood" }, { value: "linen", label: "Linen" }] },
+      { key: "props", label: "Props", control: "chips", section: "Scene", default: ["towel"], options: [{ value: "towel", label: "Towel" }, { value: "glass", label: "Water glass" }, { value: "branch", label: "Branch" }, { value: "lamp", label: "Lamp" }] },
+      { key: "productSize", label: "Product in frame", control: "slider", section: "Product", default: 32, min: 10, max: 80, unit: "%" },
+      { key: "productPlace", label: "Placement", control: "segmented", section: "Product", default: "low", options: [{ value: "low", label: "Low" }, { value: "centre", label: "Centre" }, { value: "high", label: "High" }] },
+      ...light, ...camera,
+    ],
+  },
+  {
+    id: "m-model", studio: "render", name: "Model", description: "Make an AI model for the brand: every variable it takes. Always labelled as an AI model.", output: "model",
+    sections: ["Person", "Hair", "Face", "Styling", "Light"], available: true, uses: ["reference"],
+    variables: [
+      { key: "gender", label: "Gender presentation", control: "segmented", section: "Person", default: "woman", options: [{ value: "woman", label: "Woman" }, { value: "man", label: "Man" }, { value: "androgynous", label: "Androgynous" }] },
+      { key: "age", label: "Age", control: "slider", section: "Person", default: 32, min: 18, max: 80, unit: "years" },
+      { key: "skin", label: "Skin tone", control: "swatch", section: "Person", default: "#C99B7A", options: [{ value: "#F1D3BD", label: "I", hex: "#F1D3BD" }, { value: "#E2B796", label: "II", hex: "#E2B796" }, { value: "#C99B7A", label: "III", hex: "#C99B7A" }, { value: "#A47452", label: "IV", hex: "#A47452" }, { value: "#7A5035", label: "V", hex: "#7A5035" }, { value: "#4B3022", label: "VI", hex: "#4B3022" }] },
+      { key: "build", label: "Build", control: "segmented", section: "Person", default: "slim", options: [{ value: "slim", label: "Slim" }, { value: "average", label: "Average" }, { value: "athletic", label: "Athletic" }, { value: "curvy", label: "Curvy" }] },
+      { key: "hairColour", label: "Hair colour", control: "swatch", section: "Hair", default: "#3B2A20", options: [{ value: "#E8D3A6", label: "Blonde", hex: "#E8D3A6" }, { value: "#8B5A35", label: "Auburn", hex: "#8B5A35" }, { value: "#3B2A20", label: "Dark brown", hex: "#3B2A20" }, { value: "#151110", label: "Black", hex: "#151110" }, { value: "#B9B4AE", label: "Grey", hex: "#B9B4AE" }] },
+      { key: "hairLength", label: "Hair length", control: "slider", section: "Hair", default: 40, min: 0, max: 100, help: "0 is shaved, 100 is waist long." },
+      { key: "hairTexture", label: "Texture", control: "segmented", section: "Hair", default: "wavy", options: [{ value: "straight", label: "Straight" }, { value: "wavy", label: "Wavy" }, { value: "curly", label: "Curly" }, { value: "coily", label: "Coily" }] },
+      { key: "eyes", label: "Eyes", control: "swatch", section: "Face", default: "#5B4636", options: [{ value: "#5B4636", label: "Brown", hex: "#5B4636" }, { value: "#6F7B57", label: "Green", hex: "#6F7B57" }, { value: "#6C819A", label: "Blue", hex: "#6C819A" }, { value: "#8A8070", label: "Grey", hex: "#8A8070" }] },
+      { key: "freckles", label: "Freckles", control: "slider", section: "Face", default: 30, min: 0, max: 100 },
+      { key: "expression", label: "Expression", control: "segmented", section: "Face", default: "calm", options: [{ value: "calm", label: "Calm" }, { value: "soft_smile", label: "Soft smile" }, { value: "serious", label: "Serious" }] },
+      { key: "styling", label: "Styling", control: "chips", section: "Styling", default: ["wool", "bare_shoulders"], options: [{ value: "wool", label: "Wool" }, { value: "linen", label: "Linen" }, { value: "bare_shoulders", label: "Bare shoulders" }, { value: "robe", label: "Robe" }] },
+      { key: "makeup", label: "Make-up", control: "slider", section: "Styling", default: 15, min: 0, max: 100 },
+      ...light.slice(0, 2),
+    ],
+  },
+  {
+    id: "m-lifestyle", studio: "render", name: "Lifestyle with a model", description: "A brand model with the product, in a scene.", output: "creative",
+    sections: ["Model", "Scene", "Light", "Camera"], available: true, uses: ["product", "model", "reference", "count"],
+    variables: [
+      { key: "pose", label: "Pose", control: "segmented", section: "Model", default: "seated", options: [{ value: "standing", label: "Standing" }, { value: "seated", label: "Seated" }, { value: "lying", label: "Lying" }] },
+      { key: "action", label: "Action", control: "select", section: "Model", default: "apply", options: [{ value: "apply", label: "Applying the oil" }, { value: "hold", label: "Holding the bottle" }, { value: "rest", label: "Resting, bottle near" }] },
+      { key: "crop", label: "Crop", control: "segmented", section: "Model", default: "shoulders", options: [{ value: "hands", label: "Hands" }, { value: "shoulders", label: "Shoulders" }, { value: "half", label: "Half" }, { value: "full", label: "Full" }] },
+      { key: "scene", label: "Scene", control: "select", section: "Scene", default: "linen", options: [{ value: "stone", label: "Evening stone" }, { value: "linen", label: "Linen and water" }, { value: "bath", label: "Bathroom shelf" }] },
+      ...light, ...camera,
+    ],
+  },
+  {
+    id: "m-reference", studio: "render", name: "Reference maker", description: "Make a reference (a lamp, a chair, a surface) for the library, then use it in a creative.", output: "reference",
+    sections: ["Object", "Look", "Light"], available: true, uses: ["reference"],
+    variables: [
+      { key: "object", label: "What to make", control: "text", section: "Object", default: "A small table lamp" },
+      { key: "material", label: "Material", control: "chips", section: "Object", default: ["linen", "brass"], options: [{ value: "linen", label: "Linen" }, { value: "brass", label: "Brass" }, { value: "stone", label: "Stone" }, { value: "oak", label: "Oak" }, { value: "glass", label: "Glass" }] },
+      { key: "era", label: "Era", control: "segmented", section: "Look", default: "modern", options: [{ value: "classic", label: "Classic" }, { value: "modern", label: "Modern" }, { value: "seventies", label: "1970s" }] },
+      { key: "isolate", label: "On a plain ground", control: "toggle", section: "Look", default: true },
+      ...light.slice(0, 2),
+    ],
+  },
+  {
+    id: "m-3d", studio: "render", name: "3D object", description: "References from 3D and CAD: a turntable of any angle. Coming later.", output: "reference",
+    sections: ["Object"], available: false, uses: ["reference"],
+    variables: [{ key: "turn", label: "Turntable", control: "slider", section: "Object", default: 0, min: 0, max: 360, unit: "°" }],
+  },
+  {
+    id: "m-layout", studio: "design", name: "Layout", description: "Words and the logo on a picked render, built from the brand's own components.", output: "creative",
+    sections: ["Layout", "Words"], available: true, uses: ["product"],
+    variables: [
+      { key: "template", label: "Template", control: "select", section: "Layout", default: "quiet", options: [{ value: "quiet", label: "Quiet headline" }, { value: "offer", label: "Offer" }, { value: "product", label: "Product page" }] },
+      { key: "align", label: "Align", control: "segmented", section: "Layout", default: "bottom", options: [{ value: "top", label: "Top" }, { value: "centre", label: "Centre" }, { value: "bottom", label: "Bottom" }] },
+      { key: "logo", label: "Show the logo", control: "toggle", section: "Layout", default: true },
+      { key: "textColour", label: "Text colour", control: "swatch", section: "Words", default: "#EFE6DA", brandPreset: "colour", options: [{ value: "#EFE6DA", label: "Linen", hex: "#EFE6DA" }, { value: "#2B1D17", label: "Night brown", hex: "#2B1D17" }] },
+    ],
+  },
+  {
+    id: "m-video", studio: "video", name: "Motion", description: "A slow move on a picked render. Coming later.", output: "creative",
+    sections: ["Motion"], available: false, uses: ["product"],
+    variables: [
+      { key: "move", label: "Camera move", control: "segmented", section: "Motion", default: "push", options: [{ value: "push", label: "Push in" }, { value: "orbit", label: "Orbit" }, { value: "still", label: "Still" }] },
+      { key: "seconds", label: "Length", control: "slider", section: "Motion", default: 6, min: 3, max: 15, unit: "s" },
+    ],
+  },
+];
+
+/** A mode's variables at their defaults. */
+export const defaults = (modeId: string): Variables =>
+  Object.fromEntries(modes.find((m) => m.id === modeId)!.variables.map((v) => [v.key, structuredClone(v.default)]));
+
+// ─── Brand presets, models and references ────────────────────────────────────
+
+const decided = (evidence: string): BrandPreset["provenance"] => ({ origin: "customer", state: "approved", evidence, by: "u-maja", at: at(60 * 24 * 9) });
+
+export const presets: BrandPreset[] = [
+  { id: "bp-white", workspaceId: "w-lysne", kind: "background", name: "LYSNE packshot white", hex: "#F4EFE8", use: "Packshot background", provenance: decided("LYSNE brand guide 2026.pdf, page 9") },
+  { id: "bp-linen", workspaceId: "w-lysne", kind: "background", name: "Linen", hex: "#EFE6DA", use: "Product page grounds", provenance: decided("LYSNE brand guide 2026.pdf, page 6") },
+  { id: "bp-stone", workspaceId: "w-lysne", kind: "background", name: "Evening stone", hex: "#B5A691", use: "Scenes and surfaces", provenance: { origin: "engine", state: "proposed", evidence: "Spring relaunch", confidence: "medium" } },
+  { id: "bp-night", workspaceId: "w-lysne", kind: "colour", name: "Night brown", hex: "#2B1D17", use: "Words on light grounds", provenance: decided("LYSNE brand guide 2026.pdf, page 6") },
+  { id: "bp-evening", workspaceId: "w-lysne", kind: "light", name: "Low evening light", value: "Low side light, warm, 2700 K", use: "Every scene", provenance: decided("Brand DNA v3, Light") },
+];
+
+export const models: BrandModel[] = [
+  { id: "bm-ane", workspaceId: "w-lysne", name: "Ane", image: gen("model-ane"), sheet: [gen("model-ane")], look: "30s, ash-blonde hair, freckles, calm",
+    variables: { gender: "woman", age: 34, skin: "#E2B796", hairColour: "#3B2A20", hairLength: 45, hairTexture: "wavy", eyes: "#5B4636", freckles: 55, expression: "calm" },
+    state: "approved", isAiPerson: true, madeBy: "u-anna", savedBy: "u-anna", decidedBy: "u-maja", at: at(60 * 24 * 8), usedIn: 6 },
+  { id: "bm-leo", workspaceId: "w-lysne", name: "Leo", image: gen("model-leo"), sheet: [gen("model-leo")], look: "late 20s, dark-blond hair, light stubble",
+    variables: { gender: "man", age: 44, skin: "#F1D3BD", hairColour: "#B9B4AE", hairLength: 15, hairTexture: "straight", eyes: "#6C819A", freckles: 0, expression: "serious" },
+    state: "saved", isAiPerson: true, madeBy: "u-tuva", savedBy: "u-anna", at: at(60 * 26), usedIn: 0, documentId: "doc-model-leo" },
+  { id: "bm-mia", workspaceId: "w-lysne", name: "Mia", image: gen("model-mia"), sheet: [gen("model-mia")], look: "20s, long brown hair, linen shirt",
+    variables: { gender: "woman", age: 26, skin: "#A47452", hairColour: "#151110", hairLength: 20, hairTexture: "curly", eyes: "#5B4636", freckles: 0, expression: "soft_smile" },
+    state: "draft", isAiPerson: true, madeBy: "u-anna", at: at(90), usedIn: 0, documentId: "doc-model-mia" },
+];
+
+export const references: BrandReference[] = [
+  { id: "rf-lamp", workspaceId: "w-lysne", name: "Linen lamp", image: img("02-04", "square"), origin: "made", state: "saved", madeBy: "u-anna", at: at(60 * 5), documentId: "doc-ref-lamp" },
+  { id: "rf-stone", workspaceId: "w-lysne", name: "Evening stone", image: img("05-06", "square"), origin: "brand", state: "saved", madeBy: "u-maja", at: at(60 * 24 * 10) },
+  { id: "rf-towel", workspaceId: "w-lysne", name: "Folded towel", image: img("09-13", "square"), origin: "upload", state: "saved", madeBy: "u-maja", at: at(60 * 24 * 6) },
+  { id: "rf-branch", workspaceId: "w-lysne", name: "Dry branch", image: img("01-07", "square"), origin: "made", state: "draft", madeBy: "u-anna", at: at(40) },
+];
+
+// ─── Creative documents ──────────────────────────────────────────────────────
+
+const ok: Evaluation = { productTruth: "pass", brandRules: "pass", artefacts: "none", notes: [] };
+const specs = (extra: Partial<Specs> = {}): Specs => ({ format: "feed", count: 4, imageModel: "Nano Banana Pro", referenceIds: ["rf-stone"], productId: "pr-oil", variantId: "va-oil-100", modelIds: [], ...extra });
+const version = (id: string, n: number, tile: string, minutesAgo: number, variables: Variables, extra: Partial<RenderVersion> = {}): RenderVersion => ({
+  id, number: n, image: img(tile), at: at(minutesAgo), by: "u-anna", state: "done", variables, specs: specs(), evaluation: ok, cost: 0.12, ...extra,
+});
+
+const sceneVars = { ...defaults("m-scene") };
+const layoutLayers: Layer[] = [
+  { id: "ly-img", kind: "image", name: "Image v3", x: 0, y: 0, w: 1, h: 1, image: img("05-01"), visible: true, locked: true },
+  { id: "ly-head", kind: "text", name: "Headline", x: 0.08, y: 0.72, w: 0.84, h: 0.1, text: "For the hour before sleep.", style: "headline", visible: true },
+  { id: "ly-body", kind: "text", name: "Line", x: 0.08, y: 0.83, w: 0.6, h: 0.05, text: "Night Body Oil · 100 ml", style: "small", visible: true },
+  { id: "ly-logo", kind: "logo", name: "LYSNE logo", x: 0.08, y: 0.07, w: 0.2, h: 0.05, visible: true },
+];
+
+export const documents: CreativeDocument[] = [
+  {
+    id: "doc-autumn-m3", workspaceId: "w-lysne", campaignId: "c-autumn", title: "Master 3", slot: "Master 3 · feed", studio: "render", modeId: "m-scene",
+    variables: { ...sceneVars, productSize: 28, productPlace: "low" }, specs: specs(),
+    overrides: [{ id: "ov-1", productId: "pr-oil", field: "Cap", value: "Burgundy, matte, with a soft sheen in low light", was: "Burgundy, matte. Never glossy, never black.", scope: "this_render", by: "u-anna", at: at(30), state: "applied" },
+      { id: "ov-2", productId: "pr-oil", field: "Oil", value: "Reads golden, warmer in low evening light; never orange.", was: "Reads golden, never orange.", scope: "product", by: "u-anna", at: at(25), state: "proposed" }],
+    layers: [],
+    versions: [
+      version("rv-1", 1, "05-08", 90, sceneVars, { evaluation: { ...ok, productTruth: "flag", notes: ["Cap reads glossy"] } }),
+      version("rv-2", 2, "04-06", 60, { ...sceneVars, productSize: 34 }, { instruction: "Make the bottle a little bigger" }),
+      version("rv-3", 3, "05-01", 20, { ...sceneVars, productSize: 28, productPlace: "low" }, { instruction: "Move the bottle lower, more air above" }),
+    ],
+    pickedVersionId: "rv-3",
+    edits: [
+      { id: "ed-1", text: "Make the bottle a little bigger", changes: [{ key: "productSize", label: "Product in frame", from: 32, to: 34 }], by: "u-anna", at: at(62), state: "kept" },
+      { id: "ed-2", text: "Move the bottle lower, more air above", changes: [{ key: "productSize", label: "Product in frame", from: 34, to: 28 }, { key: "productPlace", label: "Placement", from: "centre", to: "low" }], by: "u-anna", at: at(22), state: "kept" },
+    ],
+    state: "draft", by: "u-anna", updatedAt: at(20),
+  },
+  {
+    id: "doc-model-mia", workspaceId: "w-lysne", title: "Mia", studio: "render", modeId: "m-model", variables: { ...defaults("m-model"), ...models[2].variables }, specs: specs({ format: "square", count: 3, productId: undefined, variantId: undefined, referenceIds: [] }),
+    overrides: [], layers: [], edits: [],
+    versions: [version("rv-mia-1", 1, "07-10", 90, models[2].variables)], pickedVersionId: "rv-mia-1", state: "draft", by: "u-anna", updatedAt: at(90),
+  },
+  {
+    id: "doc-model-leo", workspaceId: "w-lysne", title: "Leo", studio: "render", modeId: "m-model", variables: { ...defaults("m-model"), ...models[1].variables }, specs: specs({ format: "square", count: 3, productId: undefined, variantId: undefined, referenceIds: [] }),
+    overrides: [], layers: [], edits: [],
+    versions: [version("rv-leo-1", 1, "07-11", 60 * 27, models[1].variables, { by: "u-tuva" })], pickedVersionId: "rv-leo-1", state: "draft", by: "u-tuva", updatedAt: at(60 * 26),
+  },
+  {
+    id: "doc-ref-lamp", workspaceId: "w-lysne", title: "Linen lamp", studio: "render", modeId: "m-reference", variables: defaults("m-reference"), specs: specs({ format: "square", count: 2, productId: undefined, variantId: undefined, referenceIds: [] }),
+    overrides: [], layers: [], edits: [],
+    versions: [version("rv-lamp-1", 1, "02-04", 60 * 5, defaults("m-reference"))], pickedVersionId: "rv-lamp-1", state: "draft", by: "u-anna", updatedAt: at(60 * 5),
+  },
+  {
+    // v5: a Black Friday packshot; the campaign's look (Night black, one hard top light) leads its look sections.
+    id: "doc-bf-1", workspaceId: "w-lysne", campaignId: "c-bf", title: "Night Body Oil on black", slot: "Packshot · square", studio: "render", modeId: "m-packshot",
+    variables: { ...defaults("m-packshot"), background: "#141110", shadow: "hard", softness: 15, warmth: 4300, lightAngle: { azimuth: 0, elevation: 80 } },
+    specs: specs({ format: "square", count: 4, referenceIds: [] }),
+    overrides: [], layers: [], edits: [],
+    versions: [version("rv-bf-1", 1, "10-06", 40, { ...defaults("m-packshot"), background: "#141110" }, { specs: specs({ format: "square" }) })],
+    pickedVersionId: "rv-bf-1", state: "draft", by: "u-anna", updatedAt: at(10),
+    sources: { Ground: "campaign", Light: "campaign", Camera: "brand" },
+  },
+  {
+    id: "doc-autumn-email", workspaceId: "w-lysne", campaignId: "c-autumn", title: "Email header", slot: "Email · header", studio: "design", modeId: "m-layout", variables: defaults("m-layout"), specs: specs({ format: "story", count: 1 }),
+    overrides: [], layers: layoutLayers, edits: [],
+    versions: [version("rv-email-1", 1, "05-01", 15, defaults("m-layout"), { specs: specs({ format: "story" }) })], pickedVersionId: "rv-email-1", state: "draft", by: "u-anna", updatedAt: at(15),
+  },
+];
+
+// ─── QA: what the Engine made, waiting for a designer ────────────────────────
+
+// Round 12 (DLOAD-8): the title is the creative's one name ("Feed 6", as on its campaign); the slot keeps its lineage.
+const qa = (id: string, creativeId: string, title: string, tile: string, minutesAgo: number, extra: Partial<QaItem> = {}): QaItem => ({
+  id, workspaceId: "w-lysne", campaignId: "c-autumn", creativeId, title, slot: title, studio: "render", image: img(tile), format: "feed",
+  madeAt: at(minutesAgo), dueAt: inDays(1), risk: "normal", state: "waiting", evaluation: ok, feedback: [], ...extra,
+});
+
+export const qaItems: QaItem[] = [
+  qa("qa-1", "cr-a-v7", "Feed 6", "09-07", 8, { slot: "Master 2 · Variant 2" }),
+  qa("qa-2", "cr-a-v8", "Square 2", "09-07", 7, { slot: "Master 2 · Variant 2 · square", format: "square", image: img("09-07", "square") }),
+  qa("qa-3", "cr-a-v9", "Feed 7", "06-10", 12, { slot: "Master 2 · Variant 3", risk: "high", evaluation: { ...ok, productTruth: "flag", notes: ["The cap reads glossy"] },
+    feedback: [{ id: "fb-1", text: "The cap must be matte burgundy, as in the Product Truth.", by: "u-anna", at: at(11), state: "sent" }], state: "fixing" }),
+  qa("qa-4", "cr-doc-autumn-email", "Email header", "05-01", 15, { studio: "design", documentId: "doc-autumn-email", format: "story", image: img("05-01", "story"), layers: structuredClone(layoutLayers) }),
+  { ...qa("qa-5", "cr-solv-1", "Feed 1", "10-08", 30, { slot: "Master 1" }), workspaceId: "w-solv", campaignId: "c-solv" },
+  { ...qa("qa-6", "cr-solv-2", "Feed 2", "10-06", 28, { slot: "Master 2", evaluation: { ...ok, artefacts: "minor", notes: ["A soft edge on the left cup"] } }), workspaceId: "w-solv", campaignId: "c-solv" },
+];
+
+// ─── Review like frame.io ────────────────────────────────────────────────────
+
+export const reviewComments: ReviewComment[] = [
+  { id: "rc-1", creativeId: "cr-a-v1", versionId: "v-cr-a-v1", by: "u-jonas", text: "Could the oil catch a little more light here?", pin: { x: 0.52, y: 0.58 }, at: at(30), replies: [{ id: "rc-1r", by: "u-maja", text: "Agree, a touch warmer.", at: at(25) }] },
+  { id: "rc-2", creativeId: "cr-a-v1", versionId: "v-cr-a-v1", by: "u-maja", text: "Love the stone. This is the autumn feeling.", at: at(28), replies: [] },
+  { id: "rc-3", creativeId: "cr-a-v3", versionId: "v-cr-a-v3", by: "u-jonas", text: "Too much empty space on the right for paid social.", pin: { x: 0.8, y: 0.4 }, at: at(20), replies: [] },
+];
+
+export const ratings: Rating[] = [
+  { creativeId: "cr-a-v1", versionId: "v-cr-a-v1", by: "u-jonas", stars: 4, at: at(30) },
+  { creativeId: "cr-a-v3", versionId: "v-cr-a-v3", by: "u-jonas", stars: 3, at: at(20) },
+];
+
+// ─── Taste keeps learning ────────────────────────────────────────────────────
+
+export const tasteCards: TasteCard[] = [
+  { id: "tc-1", kind: "pair", area: "light", question: "Which light is more LYSNE?", a: gen("taste-bedroom"), b: gen("taste-clinical") },
+  { id: "tc-2", kind: "single", area: "people", question: "Is this person LYSNE?", a: gen("model-ane") },
+  { id: "tc-3", kind: "pair", area: "composition", question: "Which has the right amount of air?", a: img("04-05", "square"), b: img("03-12", "square") },
+  { id: "tc-4", kind: "single", area: "colour", question: "Is this colour world LYSNE?", a: gen("taste-pink") },
+  { id: "tc-5", kind: "pair", area: "styling", question: "Which styling fits the night oil?", a: img("09-13", "square"), b: img("02-01", "square") },
+  { id: "tc-6", kind: "single", area: "light", question: "Is this light LYSNE?", a: gen("taste-hands") },
+  { id: "tc-7", kind: "pair", area: "people", question: "Which feels more like your customer?", a: gen("model-mia"), b: gen("model-leo") },
+  { id: "tc-8", kind: "single", area: "composition", question: "Is this crop LYSNE?", a: gen("taste-stone") },
+];
+
+export const tasteState: TasteState = {
+  confidence: { light: 0.82, colour: 0.74, people: 0.46, composition: 0.63, styling: 0.38 },
+  answered: 64,
+  lastLesson: "Warm side light over flat front light, 9 times out of 10.",
+  updatedAt: at(60 * 24 * 2),
+};
+
+// ─── Batches ─────────────────────────────────────────────────────────────────
+
+export const batches: Batch[] = [
+  // Round 12 (DLOAD-3a): packshots for the product page, no campaign; Winter gifting has no run before its plan is approved.
+  { id: "bt-1", workspaceId: "w-lysne", campaignId: "", modeId: "m-packshot", productIds: ["pr-oil"], perProduct: 4, format: "square",
+    state: "done", made: 4, total: 4, previews: ["03-08", "03-02", "03-05", "03-12"].map((t) => img(t, "square")), by: "u-anna", at: at(60 * 6) },
+];

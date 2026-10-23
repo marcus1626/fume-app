@@ -1,0 +1,126 @@
+/* Creative tile and aspect ratio. DECIDED 13 Oct, from round 7. The customer's creative, the thing Fume exists for.
+   Built on shadcn's aspect-ratio (.ui-aspect-ratio keeps the format: Feed 4:5, Story 9:16, Banner 1.91:1,
+   from the --ui-creative-ratio-* tokens) plus Fume's own tile: media, caption, check state, selection.
+   Decisions:
+   - The creative is the one content surface allowed to be pure white, always with its hairline
+     (--ui-creative-edge, Ink at 10 %, drawn over the image so dark creatives get no light rim). It is the
+     one stroke on content that few-strokes allows. Radius --ui-radius-card.
+   - The check (rule check-states): checked (data-check="approved") = fi-fume-check in Amber (--ui-check) beside the checker's
+     name and time (time in the data face); in check = the same triangle in --ui-check-waiting beside
+     "In check". Colour is never the only signal. Amber appears nowhere else on the tile.
+   - Selected (data-state="checked", aria-pressed="true" on the media): the Ink ring, 2 px, 2 px off the
+     creative, and a round Ink badge with a Paper check. Never Amber.
+   - Hover reveals the "more" button: a glass-clear circle on its own bit of Smoke glass
+     (.ui-creative-actions.ui-glass.ui-glass--small), so it reads over any image. Where there is no hover
+     (touch) it is always there. Nothing else moves; the work stays still.
+   Open and select (PROPOSED 15 Oct 2026): a tile that both opens and selects opens on the media and selects with a
+   round corner checkbox (.ui-creative-pick), always shown.
+   Touch: the media is the target (a whole tile); the more button is a 32 px circle with a 44 px hit area,
+   kept 8 px inside the tile so the tile's clip never cuts it.
+   Round 9, the desktop (PROPOSED 19 Oct 2026, UX review DLAY-2, DTSK-10): from 1024 px up a creative grid's smallest
+   tile is 240 (--ui-creative-tile-min, set once here; 128 on a phone), so a bigger screen shows bigger creatives, not
+   more stamps: 3 tiles of about 300 at 1280, 4 of about 270 at 1440 and 1920. Each row's tiles stand on one line, so
+   their captions share a baseline whatever their formats. A tile that opens shows a quiet "Open" on its picture
+   under a mouse (.ui-creative-open, Smoke over the picture), so a click's result is clear before it.
+   Markup (round 9): <button class="ui-creative-media"> <img/> <span class="ui-creative-open ui-glass ui-glass--small">
+     <svg/>Open</span></button>
+   Rule gate: few-strokes (creative edge), amber-is-a-point, check-states, radius-from-tokens,
+   touch-target, touch-feedback, hover-needs-hover, reduced-motion. */
+
+.ui-aspect-ratio { position: relative; width: 100%; aspect-ratio: var(--ratio, var(--ui-creative-ratio-feed)); }
+.ui-aspect-ratio--feed, [data-format="feed"] { --ratio: var(--ui-creative-ratio-feed); }
+.ui-aspect-ratio--story, [data-format="story"] { --ratio: var(--ui-creative-ratio-story); }
+.ui-aspect-ratio--banner, [data-format="banner"] { --ratio: var(--ui-creative-ratio-banner); }
+.ui-aspect-ratio--square, [data-format="square"] { --ratio: var(--ui-creative-ratio-square); } /* PROPOSED 14 Oct 2026, with the app */
+.ui-aspect-ratio > img, .ui-aspect-ratio > video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* grid of creatives: tight inside a tile (caption 8 from its creative), wide between tiles (24 down) */
+.ui-creative-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--ui-creative-tile-min)), 1fr)); gap: var(--ui-space-xl) var(--ui-space-lg); align-items: start; min-width: 0; margin: 0; padding: 0; list-style: none; }
+
+.ui-creative { position: relative; display: grid; gap: var(--ui-space-sm); align-content: start; min-width: 0; margin: 0; container: ui-creative / inline-size; } /* give it a width (grid track, strip width) */
+.ui-creative-frame { position: relative; min-width: 0; }
+.ui-creative-media {
+  position: relative; display: block; width: 100%; margin: 0; padding: 0; border: 0;
+  aspect-ratio: var(--ratio, var(--ui-creative-ratio-feed)); overflow: hidden;
+  border-radius: var(--ui-radius-card); background: var(--ui-creative-bg); color: inherit;
+}
+.ui-creative-media > img, .ui-creative-media > video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+/* the creative's hairline, over the image */
+.ui-creative-media::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); pointer-events: none; } /* gate-allow:few-strokes  the edge of the customer's creative, the one content hairline */
+
+/* the media as a target: open it, or toggle it in a selection */
+button.ui-creative-media, a.ui-creative-media {
+  min-height: var(--ui-size-hit);
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease), outline-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+button.ui-creative-media:active, a.ui-creative-media:active, .ui-creative-media.is-pressed { transform: scale(var(--ui-motion-press-scale)); }
+.ui-creative-media:focus-visible, .ui-creative-media.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* selected: the Ink ring and the round Ink badge */
+.ui-creative[data-state="checked"] .ui-creative-media, .ui-creative.is-selected .ui-creative-media { outline: var(--ui-size-ring) solid var(--ui-creative-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-creative-badge {
+  position: absolute; z-index: 1; top: var(--ui-space-sm); left: var(--ui-space-sm);
+  display: grid; place-items: center; width: var(--ui-creative-badge-size); height: var(--ui-creative-badge-size);
+  border-radius: 50%; background: var(--ui-creative-badge); color: var(--ui-creative-badge-fg);
+  opacity: 0; transform: scale(var(--ui-motion-enter-scale)); pointer-events: none;
+  transition: opacity var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-creative-badge svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-creative[data-state="checked"] .ui-creative-badge, .ui-creative.is-selected .ui-creative-badge { opacity: 1; transform: none; }
+/* open and select at once (PROPOSED 15 Oct 2026, walk-through Must 8): a tap on the media opens the creative; the
+   corner badge is its own checkbox (button.ui-creative-pick[role=checkbox]), always there. Unselected it is an empty
+   circle on its own bit of Smoke glass, like the more button; selected it is the round Ink badge. 44 px hit area. */
+.ui-creative-pick { opacity: 1; transform: none; pointer-events: auto; margin: 0; padding: 0; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none; }
+.ui-creative-pick:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-creative-pick::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: 50%; }
+.ui-creative-pick[aria-checked="false"] { background: var(--ui-glass-bg); color: transparent; border-radius: 50%; }
+.ui-creative-pick:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* the "more" circle: glass-clear on its own Smoke, revealed on hover, always there on touch */
+.ui-creative-actions { position: absolute; z-index: 1; top: var(--ui-space-sm); right: var(--ui-space-sm); display: flex; gap: 0; padding: 0; border-radius: var(--ui-radius-action); }
+@media (hover: hover) {
+  .ui-creative-actions { opacity: 0; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+  .ui-creative:hover .ui-creative-actions, .ui-creative:focus-within .ui-creative-actions { opacity: 1; }
+}
+.ui-creative.is-hover .ui-creative-actions, .ui-creative.is-focus .ui-creative-actions { opacity: 1; }
+
+/* "Open" on the picture of a tile that opens, with a mouse on it (round 9): Smoke over the picture, never a target of
+   its own (the whole picture is the target) */
+.ui-creative-open {
+  position: absolute; z-index: 1; right: var(--ui-space-sm); bottom: var(--ui-space-sm);
+  display: inline-flex; align-items: center; gap: var(--ui-space-xs); height: var(--ui-size-control-sm); padding: 0 var(--ui-space-md);
+  border-radius: var(--ui-radius-action); color: var(--ui-glass-fg);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1;
+  opacity: 0; pointer-events: none; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-creative-open svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+@media (hover: hover) and (pointer: fine) {
+  .ui-creative-media:hover .ui-creative-open, .ui-creative-media:focus-visible .ui-creative-open { opacity: 1; }
+}
+
+/* caption: format on the left, the check on the right */
+.ui-creative-caption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-xs) var(--ui-space-sm); min-width: 0; font-family: var(--ui-type-family); font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+/* a narrow tile stacks format over check in every tile alike, so a row of captions never mixes one line and two */
+@container ui-creative (max-width: 151.98px) { .ui-creative-caption { flex-direction: column; align-items: flex-start; gap: 0; } }
+.ui-creative-format { min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-creative-check { display: inline-flex; align-items: center; gap: var(--ui-space-xs); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); white-space: nowrap; }
+.ui-creative-check svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; }
+.ui-creative-check[data-check="approved"] svg { color: var(--ui-check); } /* gate-allow:amber-is-a-point  the Amber checked triangle on a checked creative (rule check-states) */
+.ui-creative-check[data-check="waiting"] { color: var(--ui-text-tertiary); }
+.ui-creative-check[data-check="waiting"] svg { color: var(--ui-check-waiting); }
+.ui-creative-check[data-check="generating"] { font-weight: var(--ui-type-weight-regular); color: var(--ui-text-tertiary); }
+.ui-creative-time { font-family: var(--ui-type-family-data); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; }
+
+/* the desktop (round 9, DLAY-2): tiles of at least 240, every row standing on one line so the captions share a baseline */
+@media (min-width: 1024px) {
+  /* html:root, not :root: the built stylesheet can put the tokens after the components, and the token's 128 would win */
+  html:root { --ui-creative-tile-min: 240px; } /* gate-allow:space-from-tokens the smallest creative tile on a desk, a layout size (DLAY-2) */
+  .ui-creative-grid { align-items: end; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button.ui-creative-media, a.ui-creative-media, .ui-creative-badge, .ui-creative-actions, .ui-creative-open { transition: none; }
+  button.ui-creative-media:active, a.ui-creative-media:active, .ui-creative-media.is-pressed { transform: none; }
+  .ui-creative-badge { transform: none; }
+}

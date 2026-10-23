@@ -1,0 +1,12 @@
+/* Should fail: one violation per rule. Used by tools/gate/test.mjs. */
+.card { background: #F8F6F4; border-radius: 9px; font-size: 15px; font-family: var(--fume-font-display); }
+.hero { background: linear-gradient(red, blue); box-shadow: 0 0 24px var(--ui-check); }
+.panel { backdrop-filter: blur(20px); border: 1px solid var(--ui-hairline); transition: opacity 300ms ease; }
+.btn-amber { background: var(--ui-check); color: var(--ui-check); }
+.ui-btn--square { border-radius: var(--ui-radius-field); }
+.app-sidebar { border-right: 1px solid var(--ui-hairline); }
+.ui-tag { cursor: pointer; border-radius: var(--ui-radius-action); }
+.nav-link:hover { background: var(--ui-surface); }
+.ui-dialog { padding: 14px; }
+.ui-tag-row { display: flex; gap: 10px; }
+.x-panel { background: var(--ui-behind-hover); }

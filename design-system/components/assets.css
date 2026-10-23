@@ -1,0 +1,22 @@
+/* Models and references: the brand's presets as compact swatches on the staff page (app v3, FLOWS §9.4, §9.6).
+   PROPOSED 15 Oct 2026.
+   Markup: <div class="ui-brand-swatches ui-assets-swatches"> <div class="ui-proposal ui-brand-swatch" data-state="approved">
+             <div class="ui-brand-swatch-colour" style="--swatch: #F4EFE8"></div> caption, meta, ui-proposal-foot </div></div>
+   Fume decisions: the presets reuse the Brand DNA swatch (brand-board.css) and its Proposal (proposal.css), but on a
+   working page they are reference, not the show: a low swatch (16:9) and two side by side on a phone, so the
+   models and references below stay in reach. No Amber: a preset the customer approved is not a check.
+   Round 12 (PROPOSED 20 Oct 2026, UX review DLAY-5): the presets are a list of rows in two columns at desktop, not
+   148 px cards in a seven-column grid: a 48 px swatch, the name with its hex, kind and use, then where it comes from.
+   <ul class="ui-assets-presets"><li><div class="ui-proposal ui-assets-preset"> swatch · .ui-assets-preset-text · foot
+   Rule gate: few-strokes, air, space-from-tokens, amber-is-a-point. */
+
+.ui-assets-swatches { grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--ui-space-2xl) * 3.25)), 1fr)); gap: var(--ui-space-md); }
+.ui-assets-swatches .ui-brand-swatch-colour { aspect-ratio: 16 / 9; }
+.ui-assets-swatches .ui-brand-caption { flex-direction: column; align-items: flex-start; gap: var(--ui-space-xs); }
+
+.ui-assets-presets { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ui-space-sm) var(--ui-space-xl); margin: 0; padding: 0; list-style: none; }
+@media (min-width: 1024px) { .ui-assets-presets { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.ui-proposal.ui-assets-preset { display: grid; justify-items: start; text-align: start; grid-template-columns: var(--ui-size-control-lg) minmax(0, 1fr); align-items: center; gap: var(--ui-space-xs) var(--ui-space-md); }
+.ui-proposal.ui-assets-preset > .ui-brand-swatch-colour { grid-row: span 2; width: var(--ui-size-control-lg); aspect-ratio: 1; }
+.ui-assets-preset-text { display: grid; gap: 0; min-width: 0; }
+.ui-proposal.ui-assets-preset > .ui-proposal-foot { grid-column: 2; }

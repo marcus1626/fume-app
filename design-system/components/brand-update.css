@@ -1,0 +1,62 @@
+/* Update the brand: read the website again or upload a zip, and see only what is new or changed (app round 7,
+   decided points 2, 3, 5). PROPOSED 16 Oct 2026.
+   Markup: <div class="ui-brand-update">
+             <div class="ui-brand-update-ways"> two cards (.ui-card): Read the website again · Upload a zip </div>
+             <p class="ui-brand-update-note"/>
+           Reading: <div class="ui-brand-update-reading"><p class="ui-brand-update-now"><svg/> <span class="ui-text-shimmer">Reading lysne.no/about</span></p>
+             <ol class="ui-brand-update-sources"><li class="ui-brand-update-source" data-state="waiting|reading|read"> label · state </li></ol></div>
+           In the review (FoundReview's before and after):
+             <div class="ui-brand-update-swatch" style="--swatch"><span class="ui-brand-update-colour"/><span class="ui-brand-update-hex"/></div>
+             <div class="ui-brand-update-type" style="--brand-font"><span class="ui-brand-update-aa">Aa</span><span/></div>
+             <p class="ui-brand-update-quote"/>
+           The quiet entry on the board: <div class="ui-brand-update-entry"><p/> <a class="ui-btn ui-btn--quiet"/></div>
+   Fume decisions: the brand page stays calm; updating is a quiet action (the "…" menu and one quiet line on the board),
+   never a banner. Reading shows one shimmering line (what the Engine reads now) and the pages in order, nothing else.
+   The review is the shared "What the Engine found" (found-review.css); here only the customer's own values are drawn:
+   a colour as a big swatch with its hex (data, so mono), a typeface in its own face, a voice line in the brand's
+   words. Products the Engine saw are only a link to Products (point 5). No Amber, no strokes but the edge of the
+   customer's own colour.
+   Rule gate: few-strokes (the colour's edge, marked), amber-is-a-point (none), air, proximity, space-from-tokens,
+   radius-from-tokens, type-from-tokens, mono-is-data (hex), motion-from-tokens, reduced-motion, tokens-only-color. */
+
+.ui-brand-update { display: grid; gap: calc(var(--ui-space-2xl) * 1.5); min-width: 0; }
+.ui-brand-update-ways { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--ui-space-2xl) * 10)), 1fr)); gap: var(--ui-space-lg); align-items: stretch; min-width: 0; }
+.ui-brand-update-note { max-width: var(--ui-onboard-measure); margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); }
+
+/* reading */
+.ui-brand-update-reading { display: grid; gap: var(--ui-space-xl); min-width: 0; animation: ui-brand-update-in calc(var(--ui-motion-slow) * 2) var(--ui-motion-ease) both; }
+.ui-brand-update-now { display: flex; align-items: center; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-body-large); font-weight: var(--ui-type-weight-medium); }
+.ui-brand-update-now > svg { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); flex-shrink: 0; }
+.ui-brand-update-sources { display: grid; gap: var(--ui-space-sm); max-width: var(--ui-onboard-measure); margin: 0; padding: 0; list-style: none; }
+.ui-brand-update-source {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-md); min-width: 0;
+  padding: var(--ui-inset-tight) var(--ui-inset-float); border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken);
+  font-size: var(--ui-type-control); color: var(--ui-text-secondary);
+  transition: background var(--ui-motion-slow) var(--ui-motion-ease), color var(--ui-motion-slow) var(--ui-motion-ease), box-shadow var(--ui-motion-slow) var(--ui-motion-ease);
+}
+.ui-brand-update-source[data-state="reading"] { background: var(--ui-surface); box-shadow: var(--ui-depth-raised); color: var(--ui-text); }
+.ui-brand-update-source[data-state="read"] { color: var(--ui-text); }
+.ui-brand-update-source-label { min-width: 0; overflow-wrap: anywhere; }
+.ui-brand-update-source-state { flex-shrink: 0; font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+
+/* the customer's own values, inside the review */
+.ui-brand-update-swatch { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-brand-update-colour { position: relative; display: block; aspect-ratio: 3 / 1; border-radius: var(--ui-radius-item); background: var(--swatch, var(--ui-surface-sunken)); }
+.ui-brand-update-colour::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); } /* gate-allow:few-strokes  the edge of the customer's own colour */
+.ui-brand-update-hex { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-secondary); } /* gate-allow:mono-is-data  a hex code is data */
+.ui-brand-update-type { display: grid; gap: var(--ui-space-xs); min-width: 0; font-family: var(--brand-font, var(--ui-type-family)); }
+.ui-brand-update-aa { font-size: var(--ui-type-display); line-height: 1; }
+.ui-brand-update-type-name { font-family: var(--ui-type-family); font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+.ui-brand-update-quote { margin: 0; font-size: var(--ui-type-body-large); line-height: 1.45; text-wrap: pretty; }
+.ui-brand-update-quote-example { margin: var(--ui-space-xs) 0 0; font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+
+/* the quiet entry on the board */
+.ui-brand-update-entry { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-md); min-width: 0; }
+.ui-brand-update-entry-text { margin: 0; font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+
+@keyframes ui-brand-update-in { from { opacity: 0; filter: blur(var(--ui-motion-enter-blur)); } to { opacity: 1; filter: blur(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-brand-update-reading { animation: none; }
+  .ui-brand-update-source { transition: none; }
+}

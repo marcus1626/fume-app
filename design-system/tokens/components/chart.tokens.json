@@ -1,0 +1,189 @@
+{
+  "$description": "Charts and numbers: chart (area, line, bar, donut, sparkline, tooltip), stat (the number tile) and legend. DECIDED 13 Oct 2026 (approved on the review board, F-D072 to F-D075), first shown in round 8. Series come from Ink and the Focus ramp only, in a fixed order; Amber is never a series, a fill or a line; Rouge only for an error state. Every value points at a brand primitive or an existing UI role; no new colours. Built into --ui-<group>-<key> by node tools/tokens/build.mjs.",
+  "chart": {
+    "series-1": {
+      "value": "{fume.focus-900}",
+      "status": "DECIDED",
+      "description": "The first series: Ink. 17.9:1 on Porcelain, 16.9:1 on a card. Series take their colour in this fixed order and keep it when others are hidden (colour follows the series, never its rank). Never Amber."
+    },
+    "series-2": {
+      "value": "{fume.focus-600}",
+      "status": "DECIDED",
+      "description": "The second series: Focus 600. 6.8:1 on Porcelain, 6.4:1 on a card; 27 apart from Ink (OKLab x100), so the two read apart at a glance and in greyscale."
+    },
+    "series-3": {
+      "value": "{fume.focus-400}",
+      "status": "DECIDED",
+      "description": "The third series: Focus 400. 2.6:1 on Porcelain, under 3:1, so it never stands alone: it sits beside a darker series behind a 2 px gap, and the legend, a direct label and the table name it. 23 apart from Focus 600."
+    },
+    "series-4": {
+      "value": "{fume.focus-200}",
+      "status": "DECIDED",
+      "description": "The fourth and last series: Focus 200 (1.4:1), for an Other slice or the rest of a whole, always labelled. A fifth series folds into Other; Fume never makes up a fifth colour."
+    },
+    "approved": {
+      "value": "{fume.amber}",
+      "status": "DECIDED",
+      "description": "Checked work in a chart: full Amber, the colour of the check (decided with Warmer, Marcus 13 Oct; round 9, Marcus 13 Oct: more Amber). Only for a series that counts approvals (approved per week, first-pass approval), never for any other series; Generated beside it stays Ink. 2.1:1 on Porcelain, so like series 3 it never stands alone: it is named in the legend and at the end of its line, and its values are in words and in the tooltip."
+    },
+    "area-opacity": {
+      "value": "0.08",
+      "status": "DECIDED",
+      "description": "An area is its series colour at 8 %, flat: a wash under the line, never a gradient and never a block. Where two areas overlap the wash doubles, so the band between Generated and Approved reads on its own."
+    },
+    "tick": {
+      "value": "{color.text-tertiary}",
+      "status": "DECIDED",
+      "description": "Axis ticks, dates and category names: tertiary text, 5.8:1. Ticks are words only: no axis line, no tick marks, no gridlines."
+    },
+    "label": {
+      "value": "{color.text-secondary}",
+      "status": "DECIDED",
+      "description": "Direct labels on the marks (the last value of a line, the total on a column): secondary text, 10.3:1. Text never wears a series colour."
+    },
+    "baseline": {
+      "value": "{color.hairline}",
+      "status": "DECIDED",
+      "description": "The one line a chart may draw: a hairline at zero under vertical bars, because columns of different heights otherwise float as loose blocks above their names, and a zero (Travel Minis has no Banners) needs a floor to read as zero. Lines, areas, rows and donuts have none."
+    },
+    "cursor": {
+      "value": "alpha({fume.focus-900}, 0.05)",
+      "status": "DECIDED",
+      "description": "The point under the pointer or the keyboard: a soft band behind that week or that column (Ink at 5 %), radius item. A surface, not a crosshair line. With the keyboard it carries the 2 px focus ring."
+    },
+    "dim": {
+      "value": "0.32",
+      "status": "DECIDED",
+      "description": "Opacity of the other slices while one donut slice is active, so the active one comes into focus."
+    },
+    "gap": {
+      "value": "2px",
+      "status": "DECIDED",
+      "description": "The surface gap between touching marks: stacked segments, bars side by side in a group and donut slices. Space separates them, never a stroke around a mark."
+    },
+    "bar-max": {
+      "value": "24px",
+      "status": "DECIDED",
+      "description": "The widest a column gets. The rest of its slot stays air."
+    },
+    "bar-grouped": {
+      "value": "16px",
+      "status": "DECIDED",
+      "description": "Each column in a group of three: 16 + 2 + 16 + 2 + 16, so a group is about twice a stacked column."
+    },
+    "bar-row": {
+      "value": "12px",
+      "status": "DECIDED",
+      "description": "A bar in the row layout (ranking, and every bar chart on a phone): 12 tall under its name, 8 below it. A ranking bar is a pill on a sunken track that runs to 100 %."
+    },
+    "bar-radius": {
+      "value": "4px",
+      "status": "DECIDED",
+      "description": "The data end of a bar is rounded 4 px; the end at the baseline stays square, so every bar visibly grows from the same zero. Only the top segment of a stack is rounded."
+    },
+    "track": {
+      "value": "{color.surface-sunken}",
+      "status": "DECIDED",
+      "description": "The track behind a ranking bar, to 100 %. Inside a card it steps one deeper (track-on-surface), like a progress bar in a card."
+    },
+    "track-on-surface": {
+      "value": "{card.progress-track}",
+      "status": "DECIDED",
+      "description": "The ranking track inside a card: Focus 200, so it reads on the card surface without a line."
+    },
+    "line": {
+      "value": "2px",
+      "status": "DECIDED",
+      "description": "A line is 2 px, round caps and joins, drawn on a monotone curve (it never overshoots a value)."
+    },
+    "point": {
+      "value": "8px",
+      "status": "DECIDED",
+      "description": "A point (the last value of a line, the point under the pointer): an 8 px dot in the series colour with a 2 px ring in the ground colour, so it stays clear where it crosses a line."
+    },
+    "height": {
+      "value": "240px",
+      "status": "DECIDED",
+      "description": "The default chart height, axis band included, so a card never needs its own scroll."
+    },
+    "height-compact": {
+      "value": "200px",
+      "status": "DECIDED",
+      "description": "The height on a phone and in a half-width card."
+    },
+    "tick-gap": {
+      "value": "{space.sm}",
+      "status": "DECIDED",
+      "description": "8 px between the plot and its tick labels, and between a mark and its direct label."
+    },
+    "donut": {
+      "value": "176px",
+      "status": "DECIDED",
+      "description": "The donut's diameter. The total sits in the middle in the data type."
+    },
+    "donut-ring": {
+      "value": "20px",
+      "status": "DECIDED",
+      "description": "The donut's ring: thin enough to read as a whole, with 2 px gaps between slices."
+    },
+    "draw": {
+      "value": "{motion.slow}",
+      "status": "DECIDED",
+      "description": "The draw-in when a chart first comes into view: lines draw from the left, bars grow from the baseline, the donut sweeps round, in 480 ms. With reduced motion the chart is simply there."
+    },
+    "stagger": {
+      "value": "calc({motion.instant} / 4)",
+      "status": "DECIDED",
+      "description": "25 ms between columns as they grow, so the draw-in travels across the chart like light."
+    },
+    "tooltip-width": {
+      "value": "168px",
+      "status": "DECIDED",
+      "description": "The least width of the chart tooltip: Smoke glass at radius float with 16 px air (it holds several lines, so it is a small panel, not tooltip.css's one-line pill). The date on top, then one row per series: the name in secondary, the value in the data type. No colour keys: on Smoke glass every Focus step but Ink sinks into the glass, so the names carry identity and the chart's active points carry the colour."
+    }
+  },
+  "stat": {
+    "min": {
+      "value": "132px",
+      "status": "DECIDED",
+      "description": "The narrowest a stat tile gets: a row of four on a desktop, two by two on a phone."
+    },
+    "gap": {
+      "value": "{space.lg}",
+      "status": "DECIDED",
+      "description": "16 px between tiles in a row."
+    },
+    "spark": {
+      "value": "40px",
+      "status": "DECIDED",
+      "description": "The height of a tile's sparkline. It spans the tile, 16 below the comparison, and ends in a dot on the latest value."
+    },
+    "spark-line": {
+      "value": "{chart.series-1}",
+      "status": "DECIDED",
+      "description": "The sparkline is Ink, 2 px, with its area wash. Never a trend colour: up and down are said in words beside the trend icon."
+    },
+    "empty": {
+      "value": "{color.surface-sunken-hover}",
+      "status": "DECIDED",
+      "description": "An empty tile draws its sparkline as a flat line in Focus 200 along zero: the shape of nothing yet, not a missing chart."
+    }
+  },
+  "legend": {
+    "swatch": {
+      "value": "{chart.point}",
+      "status": "DECIDED",
+      "description": "The key beside a series name: an 8 px dot, the same as the chart's points."
+    },
+    "height": {
+      "value": "{size.control-sm}",
+      "status": "DECIDED",
+      "description": "A legend item is a 32 px pill toggle with a 44 px hit area. At rest it has no surface (dot and name only); hover and press bring up the quiet pill."
+    },
+    "off": {
+      "value": "{color.surface-sunken-hover}",
+      "status": "DECIDED",
+      "description": "The key of a hidden series turns Focus 200 and its name tertiary; aria-pressed says it, so colour is never the only signal. The axis never moves when a series is hidden."
+    }
+  }
+}

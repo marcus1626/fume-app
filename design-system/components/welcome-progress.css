@@ -1,0 +1,104 @@
+/* Welcome progress: where she is in the brand onboarding, held at the top of the screen (app round 8, UX review
+   ONB-12, ONB-16, MOB-5, WAY-15). PROPOSED 19 Oct 2026. Replaces the stepper and the part tabs in /welcome.
+   Markup: <nav class="ui-wp" aria-label="Your onboarding" [data-parts]>
+             <p class="ui-wp-line"><span class="ui-wp-count">Step 3 of 4</span> <span class="ui-wp-title">Check what Fume found</span>
+               <span class="ui-wp-part">Colour, 2 of 5</span></p>
+             <ol class="ui-wp-steps"><li class="ui-wp-step" data-state="done|current|todo" [data-open]>
+               <button class="ui-wp-step-btn"> (or a span when it cannot be opened)
+                 <span class="ui-wp-marker">1 | svg check</span><span class="ui-wp-step-title">Your brand</span><span class="ui-wp-bar"/></button></li> …</ol>
+             <ol class="ui-wp-parts"><li><button class="ui-wp-seg" data-state="done|current|todo" aria-current?>
+               <span class="ui-wp-seg-label"><svg check/> Logo</span><span class="ui-wp-seg-bar"/></button></li> ×5</ol></nav>
+   React: WelcomeProgress in packages/ui/src/fume/onboard.tsx.
+   Fume decisions: one progress, not three. On a wide screen the four steps are named in a row like the stepper (the
+   current one the only Ink circle, a finished one the Ink check on the sunken circle, never Amber); any step she has
+   visited stays a button, also one after the step she is on. A step with parts adds equal segments under it, one per
+   part, that fit the width without scrolling: the part she is on reads in Ink over an Ink bar, a part that is done
+   carries a check, the rest wait sunken. On a phone it folds to one line ("Step 3 of 4 · Check what Fume found ·
+   Colour, 2 of 5") over one thin bar: the parts in a step with parts, else the steps. It sticks to the top of the
+   screen on the Paper ground (solid, not glass: it is the page's own header, not a floating layer), so where she is
+   never scrolls away. No lines; space and the Ink bars carry it.
+   Round 9 (desktop review DTSK-5, PROPOSED 19 Oct 2026): a step with open finds says so after its title
+   (<span class="ui-wp-left">12 left</span>, li[data-left]) and keeps its number instead of the tick, so it never
+   reads as done while something waits; the words are secondary, the count is tabular.
+   Rule gate: few-strokes, air, proximity, space-from-tokens, radius-from-tokens, type-from-tokens, touch-target,
+   touch-feedback, hover-needs-hover, reduced-motion, amber-is-a-point, focus-is-sharp. */
+
+.ui-wp {
+  container: ui-wp / inline-size; position: sticky; top: 0; z-index: 4; display: grid; gap: var(--ui-space-lg); min-width: 0;
+  margin-block: calc(var(--ui-space-sm) * -1); padding-block: var(--ui-space-sm); background: var(--ui-onboard-ground);
+  font-family: var(--ui-type-family); color: var(--ui-text);
+}
+.ui-wp-line { display: none; flex-wrap: wrap; align-items: baseline; gap: 0 var(--ui-space-sm); margin: 0; font-size: var(--ui-type-control); line-height: 1.4; }
+.ui-wp-count { font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); font-variant-numeric: tabular-nums; }
+.ui-wp-title { font-weight: var(--ui-type-weight-medium); }
+.ui-wp-part { color: var(--ui-text-secondary); }
+.ui-wp-part::before { content: "·"; margin-inline-end: var(--ui-space-sm); color: var(--ui-text-tertiary); }
+
+/* the steps, named */
+.ui-wp-steps { display: flex; gap: var(--ui-space-2xl); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-wp-step { min-width: 0; }
+.ui-wp-step-btn {
+  position: relative; display: inline-flex; align-items: center; gap: var(--ui-space-md); min-width: 0; margin: 0; padding: 0; border: 0;
+  border-radius: var(--ui-radius-action); background: none; color: var(--ui-text-secondary); font: inherit; font-size: var(--ui-type-control); line-height: 1.35; text-align: start;
+}
+button.ui-wp-step-btn { cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none; transition: color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease); }
+button.ui-wp-step-btn::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) calc(var(--ui-space-sm) * -1); border-radius: inherit; }
+@media (hover: hover) { button.ui-wp-step-btn:hover { color: var(--ui-text); } }
+button.ui-wp-step-btn:active { transform: scale(var(--ui-motion-press-scale)); }
+button.ui-wp-step-btn:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-wp-marker {
+  display: grid; place-items: center; flex-shrink: 0; width: var(--ui-stepper-marker); height: var(--ui-stepper-marker); border-radius: 50%;
+  background: var(--ui-stepper-marker-upcoming); color: var(--ui-text-tertiary); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); font-variant-numeric: tabular-nums;
+}
+.ui-wp-marker > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-wp-step[data-state="done"] .ui-wp-marker { background: var(--ui-stepper-marker-done); color: var(--ui-text); }
+.ui-wp-step[data-state="current"] .ui-wp-marker { background: var(--ui-action-primary); color: var(--ui-action-primary-fg); }
+.ui-wp-step[data-state="current"] .ui-wp-step-btn { color: var(--ui-text); font-weight: var(--ui-type-weight-medium); }
+.ui-wp-step[data-state="todo"]:not([data-open]) .ui-wp-step-btn { color: var(--ui-text-tertiary); }
+.ui-wp-step-title { min-width: 0; white-space: nowrap; }
+/* what is still open in a step: "12 left", after its title */
+.ui-wp-left { margin-inline-start: calc(var(--ui-space-sm) - var(--ui-space-md)); color: var(--ui-text-secondary); font-weight: var(--ui-type-weight-regular); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ui-wp-left::before { content: "·"; margin-inline-end: var(--ui-space-sm); color: var(--ui-text-tertiary); }
+.ui-wp-step[data-left][data-state="done"] .ui-wp-marker { background: var(--ui-stepper-marker-upcoming); color: var(--ui-text-secondary); }
+.ui-wp-bar { display: none; }
+
+/* the parts: equal segments that fit the width */
+.ui-wp-parts { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: var(--ui-space-sm); max-width: calc(var(--ui-space-2xl) * 22); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-wp-parts > li { min-width: 0; }
+.ui-wp-seg {
+  position: relative; display: grid; gap: var(--ui-space-sm); width: 100%; min-width: 0; min-height: var(--ui-size-hit); align-content: end; margin: 0; padding: 0; border: 0; border-radius: var(--ui-radius-action);
+  background: none; color: var(--ui-text-tertiary); font: inherit; font-size: var(--ui-type-label); line-height: 1.3; text-align: start;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+@media (hover: hover) { .ui-wp-seg:hover { color: var(--ui-text); } }
+.ui-wp-seg:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-wp-seg:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-wp-seg-label { display: inline-flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; overflow: hidden; font-weight: var(--ui-type-weight-medium); white-space: nowrap; text-overflow: ellipsis; }
+.ui-wp-seg-label > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; }
+.ui-wp-seg-bar { display: block; height: var(--ui-space-xs); border-radius: var(--ui-radius-action); background: var(--ui-surface-sunken); transition: background-color var(--ui-motion-base) var(--ui-motion-ease); }
+.ui-wp-seg[data-state="done"] { color: var(--ui-text-secondary); }
+.ui-wp-seg[data-state="done"] .ui-wp-seg-bar { background: var(--ui-text-tertiary); }
+.ui-wp-seg[data-state="current"] { color: var(--ui-text); }
+.ui-wp-seg[data-state="current"] .ui-wp-seg-bar { background: var(--ui-text); }
+
+/* a phone: one line over one thin bar */
+@container ui-wp (max-width: 639.98px) {
+  .ui-wp { gap: var(--ui-space-sm); }
+  .ui-wp-line { display: flex; }
+  .ui-wp-steps { gap: var(--ui-space-xs); }
+  .ui-wp-step { flex: 1; }
+  .ui-wp-step-btn { display: block; width: 100%; padding-block: var(--ui-space-sm); }
+  .ui-wp-marker, .ui-wp-step-title, .ui-wp-left { display: none; }
+  .ui-wp-bar { display: block; height: var(--ui-space-xs); border-radius: var(--ui-radius-action); background: var(--ui-surface-sunken); }
+  .ui-wp-step[data-state="done"] .ui-wp-bar { background: var(--ui-text-tertiary); }
+  .ui-wp-step[data-state="current"] .ui-wp-bar { background: var(--ui-text); }
+  .ui-wp[data-parts] .ui-wp-steps { display: none; }
+  .ui-wp-parts { gap: var(--ui-space-xs); }
+  .ui-wp-seg { gap: var(--ui-space-xs); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button.ui-wp-step-btn, .ui-wp-seg, .ui-wp-seg-bar { transition: none; }
+  button.ui-wp-step-btn:active, .ui-wp-seg:active { transform: none; }
+}

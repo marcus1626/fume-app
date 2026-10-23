@@ -1,0 +1,112 @@
+/* Calendar and date picker. DECIDED 13 Oct, from round 7. Built on shadcn's calendar (react-day-picker: month caption,
+   previous/next, weekdays, day buttons with data-selected-single, data-range-start/-middle/-end, today,
+   disabled) and the date-picker pattern (a field trigger + a popover), redesigned for Fume.
+   Days are 40 px circles in 44 px cells (the hit area). Today carries a small Ink dot under the date, not a
+   ring. Selected is an Ink circle (Ink decides). A range is a sunken band between two Ink ends, with no
+   outline; where the band meets the edge of a week it ends in a round cap. Disabled days fade to the
+   disabled text colour. Days outside the month are left out: fewer things, each one placed.
+   The month moves with two chevron circles, the white secondary button on light ground.
+   Date picker: a field (white, its hairline, radius 12) opens the calendar in a Smoke glass popover
+   (radius float 22, 16 px of air). On glass the selection is Porcelain with an Ink date, the band is the
+   clear veil, the month buttons are clear.
+   In a narrow container the cells shrink from 44 px down to the 40 px circle, and each day keeps its 44 px
+   hit area. (Fixed sizes on purpose: a percentage width with aspect-ratio here made Chrome lay out pages
+   with container queries over and over.)
+   calendar.js renders the month from data attributes and runs selection, keyboard (arrows, Home/End,
+   PageUp/PageDown, Enter) and the popover (Escape and a click outside close it, focus returns).
+   Rule gate: few-strokes (the field's hairline is the allowed one), touch-target, touch-feedback,
+   hover-needs-hover, fields-16-on-touch, glass-no-stroke, air, reduced-motion. */
+
+.ui-calendar {
+  --cal-fg: var(--ui-text); --cal-fg-quiet: var(--ui-text-tertiary); --cal-disabled: var(--ui-text-disabled);
+  --cal-hover: var(--ui-action-quiet-hover); --cal-hover-band: var(--ui-action-quiet-pressed);
+  --cal-sel: var(--ui-action-primary); --cal-sel-hover: var(--ui-action-primary-hover); --cal-sel-fg: var(--ui-action-primary-fg);
+  --cal-band: var(--ui-calendar-range); --cal-dot: var(--ui-text); --cal-ring: var(--ui-focus-ring);
+  --cal-edge: calc((var(--ui-calendar-cell) - var(--ui-calendar-day)) / 2);
+  display: grid; gap: var(--ui-space-sm); width: 100%; max-width: calc(7 * var(--ui-calendar-cell)); min-width: calc(7 * var(--ui-calendar-day));
+  font-family: var(--ui-type-family); color: var(--cal-fg); font-variant-numeric: tabular-nums;
+}
+.ui-calendar--glass {
+  --cal-fg: var(--ui-glass-fg); --cal-fg-quiet: var(--ui-glass-fg-secondary); --cal-disabled: var(--ui-glass-button-disabled-fg);
+  --cal-hover: var(--ui-glass-item-hover); --cal-hover-band: var(--ui-glass-item-hover);
+  --cal-sel: var(--ui-glass-button-white); --cal-sel-hover: var(--ui-glass-button-white-hover); --cal-sel-fg: var(--ui-glass-button-white-fg);
+  --cal-band: var(--ui-calendar-range-on-glass); --cal-dot: var(--ui-glass-fg); --cal-ring: var(--ui-focus-ring-on-glass);
+}
+.ui-calendar-header { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); padding-inline: var(--cal-edge); }
+.ui-calendar-caption { font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.3; letter-spacing: -.005em; }
+.ui-calendar-nav { display: flex; gap: var(--ui-space-sm); }
+.ui-calendar-grid { width: 100%; border-collapse: collapse; border-spacing: 0; table-layout: fixed; }
+.ui-calendar-weekday { height: var(--ui-size-control-sm); padding: 0; text-align: center; vertical-align: middle; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--cal-fg-quiet); }
+.ui-calendar-weekday abbr { text-decoration: none; }
+.ui-calendar-cell { position: relative; height: var(--ui-calendar-cell); padding: 0; text-align: center; vertical-align: middle; }
+
+/* The range band: behind the circles, full cell width so it runs on; caps where a week or the range ends. */
+.ui-calendar-cell[data-range]::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 50%; height: var(--ui-calendar-day); transform: translateY(-50%); background: var(--cal-band);
+}
+.ui-calendar-cell[data-range="start"]::before { left: 50%; }
+.ui-calendar-cell[data-range="end"]::before { right: 50%; }
+.ui-calendar-cell[data-range="single"]::before { content: none; }
+.ui-calendar-cell[data-cap~="start"]::before { border-start-start-radius: var(--ui-radius-action); border-end-start-radius: var(--ui-radius-action); }
+.ui-calendar-cell[data-cap~="end"]::before { border-start-end-radius: var(--ui-radius-action); border-end-end-radius: var(--ui-radius-action); }
+
+.ui-calendar-day {
+  position: relative; z-index: 1; display: inline-grid; place-items: center; width: var(--ui-calendar-day); height: var(--ui-calendar-day); padding: 0; vertical-align: middle;
+  border: 0; border-radius: 50%; background: transparent; color: var(--cal-fg);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-regular); line-height: 1; font-variant-numeric: tabular-nums;
+  cursor: pointer; user-select: none; outline: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-calendar-day::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: 50%; }
+/* today: a small dot under the date */
+.ui-calendar-day[data-today]::before {
+  content: ""; position: absolute; left: 50%; bottom: calc(var(--ui-space-xs) + var(--ui-calendar-today) / 2); width: var(--ui-calendar-today); height: var(--ui-calendar-today);
+  border-radius: 50%; background: var(--cal-dot); transform: translateX(-50%);
+}
+.ui-calendar-day[data-today] { font-weight: var(--ui-type-weight-medium); }
+@media (hover: hover) {
+  .ui-calendar-day:hover { background: var(--cal-hover); }
+  .ui-calendar-cell[data-range] .ui-calendar-day:hover { background: var(--cal-hover-band); }
+  .ui-calendar-cell .ui-calendar-day[data-selected]:hover { background: var(--cal-sel-hover); } /* outranks the band hover above */
+}
+.ui-calendar-day.is-hover { background: var(--cal-hover); }
+.ui-calendar-day:active, .ui-calendar-day.is-pressed { transform: scale(var(--ui-motion-press-scale)); }
+.ui-calendar-day[data-selected] { background: var(--cal-sel); color: var(--cal-sel-fg); font-weight: var(--ui-type-weight-medium); }
+.ui-calendar-day[data-selected][data-today]::before { background: var(--cal-sel-fg); }
+.ui-calendar-day:focus-visible, .ui-calendar-day.is-focus { outline: var(--ui-size-ring) solid var(--cal-ring); outline-offset: var(--ui-size-ring-offset); z-index: 2; }
+.ui-calendar-day:disabled, .ui-calendar-day[aria-disabled="true"] { background: transparent; color: var(--cal-disabled); cursor: default; pointer-events: none; }
+
+/* Date picker: a field that opens the calendar in a glass popover. */
+.ui-date-picker { position: relative; display: grid; justify-items: start; gap: var(--ui-space-sm); min-width: 0; font-family: var(--ui-type-family); }
+.ui-date-picker-label { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-date-field {
+  position: relative; display: inline-flex; align-items: center; gap: var(--ui-space-sm); max-width: 100%; height: var(--ui-size-control-md); padding-inline: var(--ui-space-md);
+  border: 0; border-radius: var(--ui-radius-field); background: var(--ui-surface-creative); color: var(--ui-text);
+  box-shadow: inset 0 0 0 1px var(--ui-action-secondary-edge); /* a white field needs its hairline */
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-regular); line-height: 1; text-align: left; white-space: nowrap;
+  cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: box-shadow var(--ui-motion-fast) var(--ui-motion-ease), background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-date-field > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; color: var(--ui-text-tertiary); }
+.ui-date-field .ui-date-chevron { margin-inline-start: var(--ui-space-sm); transition: rotate var(--ui-motion-base) var(--ui-motion-ease); }
+.ui-date-field[aria-expanded="true"] .ui-date-chevron { rotate: 180deg; }
+.ui-date-value[data-empty] { color: var(--ui-text-tertiary); }
+@media (hover: hover) { .ui-date-field:hover { box-shadow: inset 0 0 0 1px var(--ui-hairline-strong); } }
+.ui-date-field.is-hover, .ui-date-field[aria-expanded="true"] { box-shadow: inset 0 0 0 1px var(--ui-hairline-strong); }
+.ui-date-field:active { background: var(--ui-action-secondary-hover); }
+.ui-date-field:focus-visible, .ui-date-field.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+@media (pointer: coarse) { .ui-date-field { height: var(--ui-size-hit); font-size: var(--ui-type-body); } }
+
+.ui-calendar-popover {
+  position: absolute; top: calc(100% + var(--ui-space-sm)); left: 0; z-index: 20;
+  display: grid; gap: var(--ui-space-md); width: calc(7 * var(--ui-calendar-cell) + 2 * var(--ui-inset-float)); max-width: 100%;
+  padding: var(--ui-inset-float); border-radius: var(--ui-radius-float); transform-origin: top left;
+}
+.ui-calendar-popover[hidden], .ui-calendar-popover[data-state="closed"] { display: none; }
+.ui-calendar-footer { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-md); padding-inline-start: var(--cal-edge, 0px); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-glass-fg-secondary); }
+.ui-calendar-popover > .ui-calendar-footer { --cal-edge: calc((var(--ui-calendar-cell) - var(--ui-calendar-day)) / 2); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-calendar-day, .ui-date-field, .ui-date-field .ui-date-chevron { transition: none; }
+  .ui-calendar-day:active, .ui-calendar-day.is-pressed { transform: none; }
+}

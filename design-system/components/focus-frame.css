@@ -1,0 +1,20 @@
+/* Focus frame in UI: Fume's own sign over what is in focus, two corners and one point. PROPOSED 15 Oct 2026, with the
+   brand onboarding (app v2, FLOWS §7 step 3: "a focus frame moves over each page").
+   Markup: <span class="ui-focus-frame" data-tone="ink" aria-hidden="true">
+             <svg><path class="ui-focus-frame-corner"/> <path class="ui-focus-frame-corner"/> <path class="ui-focus-frame-point"/></svg></span>
+           inside a positioned parent; it fills the parent. Drawn by FocusFrame (packages/ui/src/fume/focus-frame.tsx)
+           with the Focus System v1.3 geometry, never by hand.
+   Fume decisions: two corners, top-left and bottom-right, and exactly one point (Focus System v1.3, F-D059). Corners
+   and point always share one colour: Ink on light UI grounds, Paper (data-tone="paper") on photographs and dark
+   grounds. The point at rest in the centre is the Engine at work, so it breathes (the one idle loop, blur and focus
+   v1); it is never Amber (Amber is only the check landing). Under reduced motion the point stands still.
+   Rule gate: focus-frame-geometry, amber-is-a-point, motion-from-tokens, reduced-motion, tokens-only-color. */
+
+.ui-focus-frame { position: absolute; inset: 0; display: block; pointer-events: none; color: var(--ui-text); }
+.ui-focus-frame[data-tone="paper"] { color: var(--ui-text-on-ink); }
+.ui-focus-frame > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.ui-focus-frame-corner, .ui-focus-frame-point { fill: currentColor; }
+.ui-focus-frame-point { animation: ui-focus-frame-breathe calc(var(--ui-motion-slow) * 4) var(--ui-motion-ease) infinite alternate both; }
+@keyframes ui-focus-frame-breathe { from { opacity: .45; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) { .ui-focus-frame-point { animation: none; } }

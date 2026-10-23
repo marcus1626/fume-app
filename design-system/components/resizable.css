@@ -1,0 +1,73 @@
+/* Resizable panels. DECIDED 13 Oct, from round 8. Built on shadcn's resizable (react-resizable-panels: PanelGroup with
+   data-panel-group-direction, Panel with data-panel-size, PanelResizeHandle role="separator" with
+   aria-orientation, aria-valuenow/min/max, aria-controls and data-resize-handle-state="hover|drag|inactive";
+   withHandle adds the grip), same parts and attributes, redesigned for Fume.
+   Markup: <div class="ui-resizable" data-ui-resizable data-orientation="horizontal">
+             <section class="ui-resizable-panel" id="brief" data-default-size="38" data-min-size="28" data-max-size="56">…</section>
+             <div class="ui-resizable-handle" role="separator" tabindex="0" aria-label="Resize the brief" aria-controls="brief">
+               <span class="ui-resizable-grip"></span></div>
+             <section class="ui-resizable-panel">…</section></div>
+   resizable.js sizes the panels (percent, as flex-grow) and runs the handle.
+   Fume decisions: the handle is NOT a line. It is the space between two panels (12 px, --ui-resizable-gap)
+   with a small grip pill in the middle (4 x 32) that appears under the pointer, with keyboard focus (and
+   the sharp Ink ring around it) and while dragging, when it stretches to 48 and turns Ink: the colour that
+   decides. Where there is no hover (touch) the grip is always faintly there. The panels themselves are
+   told apart by surface and depth (two sheets on the layer behind), never by a stroke.
+   The handle is 44 px wide to a finger and to the mouse (an invisible hit area over the gap and the panel
+   edges). Keys: the arrows grow or shrink the first panel by --ui-resizable-step (5 %, Shift 10 %), Home
+   and End go to its least and most size; a double click puts the default back.
+   On a narrow container (under 600 px) the panels stack, each full width, and the handle steps away.
+   Rule gate: few-strokes, focus-is-sharp, touch-target, touch-feedback, hover-needs-hover, reduced-motion. */
+
+.ui-resizable {
+  container: ui-resizable / inline-size;
+  display: flex; flex-wrap: wrap; align-items: stretch; width: 100%; min-width: 0; min-height: 0;
+}
+.ui-resizable[data-orientation="vertical"], .ui-resizable[data-panel-group-direction="vertical"] { flex-direction: column; flex-wrap: nowrap; }
+.ui-resizable[data-resizing] { user-select: none; }
+.ui-resizable-panel { position: relative; flex: var(--panel-size, 1) 1 0px; min-width: 0; min-height: 0; }
+
+/* the handle: space, with the grip in the middle */
+.ui-resizable-handle {
+  position: relative; z-index: 1; display: flex; flex: 0 0 var(--ui-resizable-gap); align-items: center; justify-content: center; align-self: stretch;
+  margin: 0; padding: 0; border: 0; background: transparent; color: inherit;
+  cursor: col-resize; touch-action: none; user-select: none; outline: none; -webkit-tap-highlight-color: transparent;
+}
+.ui-resizable-handle::after { content: ""; position: absolute; inset: 0 min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-resizable-grip {
+  display: block; flex: none; width: var(--ui-resizable-grip-thickness); height: var(--ui-resizable-grip-length);
+  border-radius: var(--ui-radius-action); background: var(--ui-resizable-grip-touch); pointer-events: none;
+  transition: opacity var(--ui-motion-fast) var(--ui-motion-ease), background-color var(--ui-motion-fast) var(--ui-motion-ease),
+              width var(--ui-motion-base) var(--ui-motion-ease), height var(--ui-motion-base) var(--ui-motion-ease);
+}
+@media (hover: hover) {
+  .ui-resizable-grip { opacity: 0; }
+  .ui-resizable-handle:hover .ui-resizable-grip { opacity: 1; background: var(--ui-resizable-grip-hover); }
+}
+.ui-resizable-handle.is-hover .ui-resizable-grip, .ui-resizable-handle[data-resize-handle-state="hover"] .ui-resizable-grip { opacity: 1; background: var(--ui-resizable-grip-hover); }
+.ui-resizable-handle:focus-visible .ui-resizable-grip, .ui-resizable-handle.is-focus .ui-resizable-grip {
+  opacity: 1; background: var(--ui-resizable-grip-hover);
+  outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset);
+}
+.ui-resizable-handle:active .ui-resizable-grip, .ui-resizable-handle.is-pressed .ui-resizable-grip, .ui-resizable-handle[data-resize-handle-state="drag"] .ui-resizable-grip {
+  opacity: 1; height: var(--ui-resizable-grip-length-active); background: var(--ui-resizable-grip-active);
+}
+.ui-resizable-handle[data-disabled] { cursor: default; pointer-events: none; }
+.ui-resizable-handle[data-disabled] .ui-resizable-grip { opacity: 0; }
+
+/* upright: panels above and below, the grip lies down */
+:is(.ui-resizable[data-orientation="vertical"], .ui-resizable[data-panel-group-direction="vertical"]) > .ui-resizable-handle { cursor: row-resize; }
+:is(.ui-resizable[data-orientation="vertical"], .ui-resizable[data-panel-group-direction="vertical"]) > .ui-resizable-handle::after { inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+:is(.ui-resizable[data-orientation="vertical"], .ui-resizable[data-panel-group-direction="vertical"]) > .ui-resizable-handle .ui-resizable-grip { width: var(--ui-resizable-grip-length); height: var(--ui-resizable-grip-thickness); }
+:is(.ui-resizable[data-orientation="vertical"], .ui-resizable[data-panel-group-direction="vertical"]) > .ui-resizable-handle:is(:active, .is-pressed, [data-resize-handle-state="drag"]) .ui-resizable-grip { width: var(--ui-resizable-grip-length-active); height: var(--ui-resizable-grip-thickness); }
+
+/* narrow: the panels stack, full width, in their order; the gap between them stays */
+@container ui-resizable (max-width: 599.98px) {
+  .ui-resizable:not([data-orientation="vertical"], [data-panel-group-direction="vertical"]) > .ui-resizable-panel { flex: 1 1 100%; }
+  .ui-resizable:not([data-orientation="vertical"], [data-panel-group-direction="vertical"]) > .ui-resizable-handle { display: none; }
+  .ui-resizable:not([data-orientation="vertical"], [data-panel-group-direction="vertical"]) > .ui-resizable-handle + .ui-resizable-panel { margin-top: var(--ui-resizable-gap); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-resizable-grip { transition: opacity var(--ui-motion-fast) linear, background-color var(--ui-motion-fast) linear; }
+}

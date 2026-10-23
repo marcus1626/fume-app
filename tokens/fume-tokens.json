@@ -1,0 +1,244 @@
+{
+  "$description": "Fume design tokens v1.3, 8 Oct 2026 (Visual Identity v1.1, Focus System v1.3, F-D059), plus Rouge for delete and errors (13 Oct 2026, F-D067). Colour, type, space and radius values; the Focus System sizes are formulas, see fume-tokens.css.",
+  "color": {
+    "focus-50": {
+      "value": "#F8F6F4"
+    },
+    "focus-100": {
+      "value": "#EDE9E4"
+    },
+    "focus-200": {
+      "value": "#DCD6D0"
+    },
+    "focus-300": {
+      "value": "#C6C0B9"
+    },
+    "focus-400": {
+      "value": "#A49D97"
+    },
+    "focus-500": {
+      "value": "#807973"
+    },
+    "focus-600": {
+      "value": "#615953"
+    },
+    "focus-700": {
+      "value": "#463E39"
+    },
+    "focus-800": {
+      "value": "#2C2520"
+    },
+    "focus-900": {
+      "value": "#1B1410"
+    },
+    "porcelain": {
+      "value": "#FFFDF9"
+    },
+    "paper": {
+      "value": "#FCF6EB"
+    },
+    "cream": {
+      "value": "#F5E8D2"
+    },
+    "sand": {
+      "value": "#EAD4B5"
+    },
+    "brown": {
+      "value": "#4A2814"
+    },
+    "amber": {
+      "value": "#F59E56"
+    },
+    "amber-50": {
+      "value": "#FBEBD9"
+    },
+    "amber-100": {
+      "value": "#FADDC1"
+    },
+    "amber-200": {
+      "value": "#F8CAA0"
+    },
+    "rouge": {
+      "value": "#BA4A52",
+      "description": "Functional colour for delete and errors, UI only. Added 13 Oct 2026 (Marcus chose Rouge on the design-system board, register F-D067)."
+    },
+    "rouge-deep": {
+      "value": "#AB3C45",
+      "description": "Rouge one step toward Ink: hover on danger buttons."
+    },
+    "moss": {
+      "value": "#2F6B45",
+      "description": "PROPOSED 22 Oct 2026 (round 13, Marcus #39), not yet approved: a muted warm green for ready and delivered, UI only, like Rouge (F-D067). Never on a creative, never a button. 6.2:1 on Porcelain."
+    },
+    "moss-50": {
+      "value": "#E6EFE2",
+      "description": "PROPOSED with Moss: the light ground of a ready badge. Moss on it 5.4:1."
+    },
+    "ground": {
+      "value": "#FFFDF9",
+      "ref": "fume-porcelain"
+    },
+    "ground-warm": {
+      "value": "#FCF6EB",
+      "ref": "fume-paper"
+    },
+    "surface": {
+      "value": "#F5E8D2",
+      "ref": "fume-cream"
+    },
+    "surface-on-warm": {
+      "value": "#FFFDF9",
+      "ref": "fume-porcelain"
+    },
+    "surface-muted": {
+      "value": "#EDE9E4",
+      "ref": "fume-focus-100"
+    },
+    "surface-creative": {
+      "value": "#FFFFFF"
+    },
+    "surface-dark": {
+      "value": "#1B1410",
+      "ref": "fume-focus-900"
+    },
+    "text": {
+      "value": "#1B1410",
+      "ref": "fume-focus-900"
+    },
+    "text-secondary": {
+      "value": "#463E39",
+      "ref": "fume-focus-700"
+    },
+    "text-tertiary": {
+      "value": "#6E6259"
+    },
+    "text-on-dark": {
+      "value": "#FCF6EB",
+      "ref": "fume-paper"
+    },
+    "border": {
+      "value": "#E6DDD2"
+    },
+    "action-primary": {
+      "value": "#1B1410",
+      "ref": "fume-focus-900"
+    },
+    "action-secondary": {
+      "value": "#FFFFFF"
+    },
+    "accent-check": {
+      "value": "#F59E56",
+      "ref": "fume-amber"
+    },
+    "selection": {
+      "value": "#DCD6D0",
+      "ref": "fume-focus-200"
+    },
+    "signature-dark": {
+      "value": "#4A2814",
+      "ref": "fume-brown"
+    }
+  },
+  "font": {
+    "font-display": {
+      "value": "'GT Canon', 'Newsreader', Georgia, serif"
+    },
+    "font-text": {
+      "value": "'GT Standard', 'Geist', 'Helvetica Neue', Arial, sans-serif"
+    },
+    "font-mono": {
+      "value": "'GT Standard Mono', 'Geist Mono', ui-monospace, monospace"
+    }
+  },
+  "type": {
+    "type-display-xl": {
+      "value": "96px"
+    },
+    "type-display-l": {
+      "value": "72px"
+    },
+    "type-display-m": {
+      "value": "52px"
+    },
+    "type-title": {
+      "value": "32px"
+    },
+    "type-heading": {
+      "value": "24px"
+    },
+    "type-body-l": {
+      "value": "18px"
+    },
+    "type-body": {
+      "value": "16px"
+    },
+    "type-small": {
+      "value": "14px"
+    },
+    "type-label": {
+      "value": "12px"
+    }
+  },
+  "space": {
+    "space-0": {
+      "value": "0px"
+    },
+    "space-1": {
+      "value": "4px"
+    },
+    "space-2": {
+      "value": "8px"
+    },
+    "space-3": {
+      "value": "12px"
+    },
+    "space-4": {
+      "value": "16px"
+    },
+    "space-5": {
+      "value": "24px"
+    },
+    "space-6": {
+      "value": "32px"
+    },
+    "space-7": {
+      "value": "48px"
+    },
+    "space-8": {
+      "value": "64px"
+    },
+    "space-9": {
+      "value": "80px"
+    },
+    "space-10": {
+      "value": "96px"
+    },
+    "space-11": {
+      "value": "128px"
+    }
+  },
+  "radius": {
+    "radius-chip": {
+      "value": "999px"
+    },
+    "radius-control": {
+      "value": "10px"
+    },
+    "radius-card": {
+      "value": "16px"
+    },
+    "radius-tile": {
+      "value": "18px"
+    }
+  },
+  "focus": {
+    "u": "5% of the frame short side / 3",
+    "corner": "11u",
+    "arm": "2.5u",
+    "point": "5% of sqrt(frame width x height)",
+    "pointer-offset": "point / 3",
+    "point-docked": "3u",
+    "logo-arm": "3u",
+    "logo-gap": "1u"
+  }
+}

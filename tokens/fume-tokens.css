@@ -1,0 +1,101 @@
+:root {
+  /* Fume design tokens v1.3 — 8 Oct 2026. Source: Visual Identity v1.1, Focus System v1.3 (register F-D059). */
+  --fume-focus-50: #F8F6F4;
+  --fume-focus-100: #EDE9E4;
+  --fume-focus-200: #DCD6D0;
+  --fume-focus-300: #C6C0B9;
+  --fume-focus-400: #A49D97;
+  --fume-focus-500: #807973;
+  --fume-focus-600: #615953;
+  --fume-focus-700: #463E39;
+  --fume-focus-800: #2C2520;
+  --fume-focus-900: #1B1410;
+  --fume-porcelain: #FFFDF9;
+  --fume-paper: #FCF6EB;
+  --fume-cream: #F5E8D2;
+  --fume-sand: #EAD4B5;
+  --fume-brown: #4A2814;
+  --fume-amber: #F59E56;
+  --fume-amber-50: #FBEBD9;
+  --fume-amber-100: #FADDC1;
+  --fume-amber-200: #F8CAA0;
+  --fume-rouge: #BA4A52; /* delete and errors, UI only. Added 13 Oct 2026, F-D067 */
+  --fume-rouge-deep: #AB3C45;
+  --fume-moss: #2F6B45; /* PROPOSED 22 Oct 2026 (round 13, Marcus #39): ready and delivered, UI only, like Rouge. 6.2:1 on Porcelain */
+  --fume-moss-50: #E6EFE2; /* PROPOSED: the ground of a ready badge. Moss on it 5.4:1 */
+  /* roles */
+  --fume-ground: var(--fume-porcelain);
+  --fume-ground-warm: var(--fume-paper);
+  --fume-surface: var(--fume-cream);
+  --fume-surface-on-warm: var(--fume-porcelain);
+  --fume-surface-muted: var(--fume-focus-100);
+  --fume-surface-creative: #FFFFFF;
+  --fume-surface-dark: var(--fume-focus-900);
+  --fume-text: var(--fume-focus-900);
+  --fume-text-secondary: var(--fume-focus-700);
+  --fume-text-tertiary: #6E6259;
+  --fume-text-on-dark: var(--fume-paper);
+  --fume-border: #E6DDD2;
+  --fume-action-primary: var(--fume-focus-900);
+  --fume-action-secondary: #FFFFFF;
+  --fume-accent-check: var(--fume-amber);
+  --fume-selection: var(--fume-focus-200); /* round 13 (#37, PROPOSED): neutral; Amber only means checked */
+  --fume-signature-dark: var(--fume-brown);
+  /* type */
+  --fume-font-display: 'GT Canon', 'Newsreader', Georgia, serif;
+  --fume-font-text: 'GT Standard', 'Geist', 'Helvetica Neue', Arial, sans-serif;
+  --fume-font-mono: 'GT Standard Mono', 'Geist Mono', ui-monospace, monospace;
+  --fume-type-display-xl: 96px;
+  --fume-type-display-l: 72px;
+  --fume-type-display-m: 52px;
+  --fume-type-title: 32px;
+  --fume-type-heading: 24px;
+  --fume-type-body-l: 18px;
+  --fume-type-body: 16px;
+  --fume-type-small: 14px;
+  --fume-type-label: 12px;
+  /* space (4pt) */
+  --fume-space-0: 0px;
+  --fume-space-1: 4px;
+  --fume-space-2: 8px;
+  --fume-space-3: 12px;
+  --fume-space-4: 16px;
+  --fume-space-5: 24px;
+  --fume-space-6: 32px;
+  --fume-space-7: 48px;
+  --fume-space-8: 64px;
+  --fume-space-9: 80px;
+  --fume-space-10: 96px;
+  --fume-space-11: 128px;
+  --fume-radius-chip: 999px;
+  --fume-radius-control: 10px;
+  --fume-radius-card: 16px;
+  --fume-radius-tile: 18px;
+}
+
+/* Focus System v1.3 (8 Oct 2026, DECIDED F-D059). Give the frame element class="fume-frame" and set two values on it, in px:
+     --fume-frame-short = the frame's short side; --fume-frame-root = √(width × height).
+     Corners from the short side: u = 5% of it ÷ 3, corner 11u, arms 2.5u. Two corners: top-left + bottom-right.
+     Point from the area: 5% of √(width × height); the pointer's tip sits point/3 right of and below its target.
+     Docked in the corner, the point takes the logo size (3u). No target dot.
+     Frame colour (F-D082, Marcus 13 Oct): on a photograph corners and point are Paper, light image or dark; on a flat
+     ground Paper on Ink or Brown, Ink on Paper or Porcelain. Never mixed; the logo reveals in the corners' colour.
+     The tokens are declared on .fume-frame as well as :root so they recompute from each frame's own size. */
+:root, .fume-frame {
+  --fume-focus-u: calc(var(--fume-frame-short, 300px) * 0.05 / 3);
+  --fume-focus-corner: calc(var(--fume-focus-u) * 11);
+  --fume-focus-arm: calc(var(--fume-focus-u) * 2.5);
+  --fume-focus-gap: calc(var(--fume-focus-u) * 2.5 / 3);
+  --fume-focus-radius: calc(var(--fume-focus-u) * 0.25);
+  --fume-focus-point: calc(var(--fume-frame-root, var(--fume-frame-short, 300px)) * 0.05);
+  --fume-focus-pointer-offset: calc(var(--fume-focus-point) / 3);
+  --fume-focus-point-docked: calc(var(--fume-focus-u) * 3);
+  /* Logo state (the check): arm 3u, gap 1u, radius 0.4u; corner length unchanged */
+  --fume-focus-logo-arm: calc(var(--fume-focus-u) * 3);
+  --fume-focus-logo-gap: var(--fume-focus-u);
+  /* The lift, an option and not a rule (Marcus 13 Oct): one barely visible Ink shadow under a Paper point on a light
+     area, when Paper reaches less than 3:1 against the colour under it. Only the point, only on still images; never
+     the corners or the Amber check. CSS blur = 2 x the SVG stdDeviation (1u in templates/lib/focus.mjs).
+     filter: var(--fume-focus-lift) on the point only. */
+  --fume-focus-lift: drop-shadow(0 calc(var(--fume-focus-u) * 0.2) calc(var(--fume-focus-u) * 2) rgb(27 20 16 / 0.35));
+}

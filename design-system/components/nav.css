@@ -1,0 +1,129 @@
+/* Navigation menu: the site top bar. DECIDED 13 Oct, from round 7. Built on shadcn's navigation-menu (same parts: root,
+   list, item, trigger, content, link; same data attributes: data-state="open|closed" on the trigger and the
+   content, aria-current on the current link), redesigned for Fume.
+   Two variants. The top bar on Porcelain (.ui-nav): the logo (the lockup), links as quiet pills, a pill CTA in Ink;
+   no line under the bar (few-strokes), it simply sits on the page. The floating bar (.ui-nav--floating): a
+   Smoke glass pill, like the app's floating action bar, with a 6 px ring around the pills inside it and the
+   logo starting 22 in (ring + float); its CTA is the one white button on that glass.
+   Links: quiet pills, 36 tall, 44 to touch. The current page sits on a sunken pill; hover previews it.
+   Dropdowns (trigger + content) are glass, radius float 22, 6 px around rows that are radius 16 (concentric).
+   Narrow bars (under 720 px, a container query) fold the links into a Menu button that opens the same glass
+   panel; there is no hamburger icon in the set, and the word reads calmer. nav.js opens and closes it
+   (click, Escape, click outside, arrow keys) and is shared with the breadcrumb's ellipsis menu.
+   Rule gate: few-strokes, air, actions-are-pills, touch-target, touch-feedback, hover-needs-hover,
+   glass-only-floating, reduced-motion, reduced-transparency. */
+
+.ui-nav { position: relative; z-index: 5; container: ui-nav / inline-size; font-family: var(--ui-type-family); color: var(--ui-text); }
+.ui-nav-bar {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: var(--ui-space-lg);
+  height: var(--ui-nav-height); padding-inline: var(--ui-space-xl);
+}
+.ui-nav-brand {
+  position: relative; display: inline-flex; align-items: center; justify-self: start; height: var(--ui-size-hit);
+  border-radius: var(--ui-radius-item); color: inherit; text-decoration: none; outline: none;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: opacity var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-nav-brand > svg { display: block; width: auto; height: var(--ui-nav-logo); margin: 0; color: inherit; }
+/* The logo is the lockup (F-D080). Give the brand link the mark as well (.ui-logo-full + .ui-logo-mark) and a
+   bar too narrow for the lockup beside Menu and the CTA folds it to the mark, as the sidebar rail does. */
+.ui-nav-brand > .ui-logo-mark { display: none; }
+.ui-nav-brand:active { opacity: .72; }
+.ui-nav-brand:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+.ui-nav-list { display: flex; align-items: center; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
+.ui-nav-item { position: relative; }
+.ui-nav-actions { display: flex; align-items: center; justify-content: flex-end; gap: var(--ui-space-sm); }
+
+/* Links and triggers: quiet pills. */
+.ui-nav-link, .ui-nav-trigger {
+  --nl-fg: var(--ui-text-secondary); --nl-fg-on: var(--ui-text); --nl-hover: var(--ui-action-quiet-hover); --nl-pressed: var(--ui-action-quiet-pressed); --nl-current: var(--ui-surface-sunken); --nl-ring: var(--ui-focus-ring);
+  position: relative; display: inline-flex; align-items: center; gap: var(--ui-space-xs); height: var(--ui-nav-link); padding-inline: var(--ui-size-pad-sm);
+  border: 0; border-radius: var(--ui-radius-action); background: transparent; color: var(--nl-fg);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1;
+  white-space: nowrap; text-decoration: none; cursor: pointer; user-select: none; outline: none;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-nav-link::after, .ui-nav-trigger::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: inherit; }
+.ui-nav-trigger > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: currentColor; transition: rotate var(--ui-motion-base) var(--ui-motion-ease); }
+@media (hover: hover) { .ui-nav-link:hover, .ui-nav-trigger:hover { background: var(--nl-hover); color: var(--nl-fg-on); } }
+.ui-nav-link.is-hover, .ui-nav-trigger.is-hover { background: var(--nl-hover); color: var(--nl-fg-on); }
+.ui-nav-link[aria-current="page"], .ui-nav-link[data-active="true"] { background: var(--nl-current); color: var(--nl-fg-on); }
+.ui-nav-trigger[data-state="open"], .ui-nav-trigger[aria-expanded="true"] { background: var(--nl-hover); color: var(--nl-fg-on); }
+.ui-nav-trigger[data-state="open"] > svg, .ui-nav-trigger[aria-expanded="true"] > svg { rotate: 180deg; }
+.ui-nav-link:active, .ui-nav-trigger:active, .ui-nav-link.is-pressed, .ui-nav-trigger.is-pressed { background: var(--nl-pressed); color: var(--nl-fg-on); transform: scale(var(--ui-motion-press-scale)); }
+.ui-nav-link:focus-visible, .ui-nav-trigger:focus-visible, .ui-nav-link.is-focus, .ui-nav-trigger.is-focus { outline: var(--ui-size-ring) solid var(--nl-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* The dropdown: glass, rows radius 16 inside a 6 px ring, so the curves are concentric. */
+.ui-nav-content {
+  position: absolute; top: calc(100% + var(--ui-space-sm)); left: 0; z-index: 10;
+  display: grid; width: var(--ui-nav-panel); max-width: calc(100vw - 2 * var(--ui-space-lg));
+  padding: var(--ui-inset-ring); border-radius: var(--ui-radius-float); transform-origin: top left;
+}
+.ui-nav-content[hidden], .ui-nav-content[data-state="closed"] { display: none; }
+.ui-nav-content--end { left: auto; right: 0; transform-origin: top right; }
+.ui-nav-content-link {
+  position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: var(--ui-space-xs) var(--ui-space-md);
+  padding: var(--ui-space-md); border-radius: var(--ui-radius-card);
+  color: var(--ui-glass-fg); text-decoration: none; outline: none; cursor: pointer;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-nav-content-link > svg { grid-row: span 2; width: var(--ui-size-icon); height: var(--ui-size-icon); margin-top: var(--ui-space-xs); }
+.ui-nav-content-link b { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.5; }
+.ui-nav-content-link span { grid-column: 2; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.45; color: var(--ui-glass-fg-secondary); }
+@media (pointer: coarse) { .ui-nav-content-link { min-height: var(--ui-size-hit); } }
+@media (hover: hover) { .ui-nav-content-link:hover { background: var(--ui-glass-item-hover); } }
+.ui-nav-content-link.is-hover, .ui-nav-content-link[aria-current="page"] { background: var(--ui-glass-item-hover); }
+.ui-nav-content-link:active { background: var(--ui-glass-item-hover); transform: scale(var(--ui-motion-press-scale)); }
+.ui-nav-content-link:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: calc(var(--ui-size-ring) * -1); }
+/* a single-line row (the folded menu on a phone) */
+.ui-nav-content-link--plain { grid-template-columns: auto minmax(0, 1fr); align-items: center; }
+.ui-nav-content-link--plain > svg { grid-row: auto; margin-top: 0; }
+
+/* Menu: the folded links on a narrow bar. Hidden on wide bars. */
+.ui-nav-toggle { display: none; }
+.ui-nav-toggle > svg { transition: rotate var(--ui-motion-base) var(--ui-motion-ease); }
+.ui-nav-toggle[aria-expanded="true"] > svg { rotate: 180deg; }
+.ui-nav-sheet { left: var(--ui-space-lg); right: var(--ui-space-lg); width: auto; max-width: none; transform-origin: top right; }
+.ui-nav--floating .ui-nav-sheet { left: 0; right: 0; }
+
+/* Floating: a Smoke glass pill bar (put .ui-glass .ui-glass--bar on .ui-nav-bar). */
+.ui-nav--floating .ui-nav-bar {
+  display: flex; gap: var(--ui-space-xs); width: max-content; max-width: 100%; height: auto; margin-inline: auto;
+  padding: var(--ui-inset-ring) var(--ui-inset-ring) var(--ui-inset-ring) calc(var(--ui-inset-ring) + var(--ui-inset-float));
+}
+.ui-nav--floating .ui-nav-brand { margin-inline-end: var(--ui-space-md); }
+.ui-nav--floating .ui-nav-link, .ui-nav--floating .ui-nav-trigger {
+  --nl-fg: var(--ui-glass-fg); --nl-fg-on: var(--ui-glass-fg); --nl-hover: var(--ui-glass-item-hover); --nl-pressed: var(--ui-glass-item-hover); --nl-current: var(--ui-glass-button-clear-hover); --nl-ring: var(--ui-focus-ring-on-glass);
+  height: var(--ui-size-control-md);
+}
+.ui-nav--floating .ui-nav-actions { margin-inline-start: var(--ui-space-sm); }
+.ui-nav--floating .ui-nav-brand:focus-visible { outline-color: var(--ui-focus-ring-on-glass); }
+/* On the glass bar the dropdown goes after the bar, as shadcn's viewport does, centred under it: glass inside
+   glass sees only the bar, not the photo, so it would lose its blur. */
+.ui-nav--floating > .ui-nav-content:not(.ui-nav-sheet) { left: 50%; translate: -50% 0; transform-origin: top center; }
+
+@container ui-nav (max-width: 719.98px) {
+  .ui-nav-bar { grid-template-columns: max-content minmax(0, 1fr); padding-inline: var(--ui-space-lg); }
+  .ui-nav-bar > .ui-nav-actions { justify-self: end; }
+  .ui-nav-menu, .ui-nav-actions .ui-nav-link { display: none; }
+  .ui-nav-toggle { display: inline-flex; }
+  /* a phone bar keeps to one line: Menu and the CTA step down to the small size (44 to touch all the same;
+     on the floating pill the ring stays 6) */
+  .ui-nav-actions .ui-btn { --h: var(--ui-size-control-sm); --px: var(--ui-size-pad-sm); }
+}
+@container ui-nav (max-width: 419.98px) {
+  .ui-nav-brand:has(> .ui-logo-mark) { min-width: var(--ui-size-hit); } /* the mark alone still gets a 44 px hit area */
+  .ui-nav-brand:has(> .ui-logo-mark) > .ui-logo-full { display: none; }
+  .ui-nav-brand > .ui-logo-mark { display: block; }
+}
+@container ui-nav (min-width: 720px) {
+  .ui-nav-sheet { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-nav-brand, .ui-nav-link, .ui-nav-trigger, .ui-nav-content-link, .ui-nav-trigger > svg, .ui-nav-toggle > svg { transition: none; }
+  .ui-nav-link:active, .ui-nav-trigger:active, .ui-nav-content-link:active { transform: none; }
+}

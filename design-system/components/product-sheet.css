@@ -1,0 +1,66 @@
+/* All products: one sheet with every product, for every product picker. PROPOSED 15 Oct 2026 (Marcus 15 Oct: "når
+   man velger produkt i studio er det logisk at det er en view all product knapp til å få opp popup siden en kunde
+   kan ha mange produkter"). Used by the Studio's product picker, the Fume chat's tick grid, the manual brief and
+   Fume's product question in the chat.
+   Markup: <div class="ui-glass ui-dialog ui-product-sheet" role="dialog">   (the Drawer on a phone: ui-drawer ui-product-sheet)
+             <div class="ui-dialog-header"> title, description </div>
+             <div class="ui-dialog-body"><div class="ui-product-sheet-body">
+               <div class="ui-input-group ui-product-sheet-search" role="search"> search icon, input, clear </div>
+               <div class="ui-product-sheet-chips" role="group"> ui-btn sm glass-clear chips [aria-pressed]
+                 (All · the kinds · the collections · Needs facts · 3) </div>
+               <p class="ui-product-sheet-count">4 of 9 products · 2 ticked</p>
+               <ul class="ui-pick-grid ui-pick-grid--sm ui-product-sheet-grid"> ProductTile … (locked: data-flag, the lock) </ul>
+             </div></div>
+             <div class="ui-dialog-footer"> Cancel (glass-clear) · Use 3 products (the one glass-white) </div></div>
+           A picker shows its few tiles and <button class="ui-btn ui-btn--secondary ui-btn--sm ui-product-sheet-open">
+           View all products (12)</button> under them.
+   Fume decisions: the sheet is opaque (the glass's solid fill, --ui-glass-bg-solid) so product pictures behind it
+   never show through the words (walk-through 15 Oct). It is wider than a large dialog so four tiles sit across on a
+   desk, and only its body scrolls: the title and the main button stay in view. Chips are clear glass pills; the
+   one that filters carries a check (the footer keeps the one white button). Products whose facts are not confirmed
+   stay in the grid, quieter, with the lock and "Needs facts", and the way forward under them; they are never
+   pickable. Space parts the regions, no strokes.
+   Rule gate: glass-only-floating, glass-one-white, glass-no-stroke, few-strokes, air, space-from-tokens,
+   type-from-tokens, touch-target, reduced-transparency. */
+
+.ui-dialog.ui-product-sheet {
+  --dialog-w: calc(var(--ui-dialog-width-lg) * 1.375);
+  display: flex; flex-direction: column; overflow: hidden;
+  height: min(calc(var(--ui-size-hit) * 17), calc(100% - 2 * var(--ui-overlay-margin)));
+  background: var(--ui-glass-bg-solid);
+}
+.ui-dialog.ui-product-sheet > .ui-dialog-header, .ui-dialog.ui-product-sheet > .ui-dialog-footer { flex-shrink: 0; }
+.ui-dialog.ui-product-sheet > .ui-dialog-body {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+  margin-inline: calc(-1 * var(--ui-inset-panel)); padding-inline: var(--ui-inset-panel);
+}
+.ui-drawer.ui-product-sheet { background: var(--ui-glass-bg-solid); }
+
+.ui-product-sheet-body { display: grid; gap: var(--ui-space-lg); align-content: start; min-width: 0; padding-block: var(--ui-space-xs); }
+.ui-product-sheet-search { width: 100%; }
+.ui-product-sheet-chips, .ui-product-sheet-chip-group { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-product-sheet-chip-group { display: contents; }
+.ui-product-sheet-chips .ui-btn[aria-pressed="true"] { --bg: var(--ui-glass-button-clear-pressed); }
+.ui-product-sheet-count { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-glass-fg-secondary); font-variant-numeric: tabular-nums; }
+.ui-product-sheet-grid { margin-top: var(--ui-space-xs); }
+.ui-product-sheet-grid .ui-pick-action .ui-btn { max-width: 100%; }
+.ui-product-sheet-empty { display: grid; justify-items: start; gap: var(--ui-space-md); padding-block: var(--ui-space-xl); }
+.ui-product-sheet-empty > p { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-glass-fg-secondary); }
+
+/* On a phone the chips are one row that scrolls sideways, so the products come into view sooner. */
+@media (max-width: 600px) {
+  .ui-product-sheet-chips {
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain;
+    margin-inline: calc(-1 * var(--ui-inset-panel)); padding-inline: var(--ui-inset-panel);
+  }
+  .ui-product-sheet-chips::-webkit-scrollbar { display: none; }
+  .ui-product-sheet-chips .ui-btn { flex-shrink: 0; }
+}
+
+/* On a phone the chips and buttons are 44 to touch. */
+@media (pointer: coarse) {
+  .ui-product-sheet-chips .ui-btn, .ui-product-sheet-open { --h: var(--ui-size-hit); }
+}
+
+/* Under a picker's tiles: the way to all of them. */
+.ui-product-sheet-open { justify-self: start; }

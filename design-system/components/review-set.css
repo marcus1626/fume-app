@@ -1,0 +1,67 @@
+/* Review set: the parts the customer's review page adds to the creative grid and the dialogs (app round 8, UX review
+   19 Oct, TASK-5, MOB-21). PROPOSED 19 Oct 2026. Composed from creative.css (the tile, its round corner checkbox),
+   item.css (row rhythm), dialog.css (glass) and button.css.
+   Markup: the change request, on the page or in its glass dialog:
+             <ul class="ui-review-tray-list"><li class="ui-review-tray-item">
+               <button class="ui-review-tray-open"> (or the parts straight in the li, in the dialog)
+                 <span class="ui-review-tray-thumb" data-format="feed"><img/></span>
+                 <span class="ui-review-tray-text"><b>Night Body Oil · Feed</b><span>The product sits too high</span></span></button>
+               remove (quiet or glass-clear icon button) </li></ul>
+           the grid: <ul class="ui-creative-grid ui-review-grid"> creative tiles with .ui-creative-pick </ul>
+   Fume decisions: what she asks on one set travels as ONE change request, so it is collected in one quiet list:
+   each creative small, beside the words she wrote, nothing else. Rows are parted by space, never lines; the
+   thumbnail keeps the creative's own ratio and hairline. On the light page the list sits on the sunken surface
+   like an open item group; in the glass dialog it takes the glass's words.
+   Round 13 (PROPOSED 21 Oct 2026):
+   - The list is the creatives she marked "Needs changes", each with its change list in short (its open comments);
+     the change request's own words and the "Send these comments with it" choices are gone (Marcus #33, #34).
+   - The corner checkbox answers to the circle itself, 44 px to a finger (creative.css), and nowhere else: a press
+     anywhere else on the creative opens it (robot notes 04 and 12: round 8's top-left quarter took presses near the
+     top middle).
+   - One calm grid (Marcus #30): every tile of a row is one height. Each creative sits contained and centred in a
+     well of the Feed's shape, so a Story fills its height and a Square or a Banner its width, and the format line sits
+     under the well, on one line with its neighbours'. The well is no surface of its own: only the creative shows.
+   Rule gate: few-strokes, air, proximity, space-from-tokens, radius-from-tokens, type-from-tokens,
+   touch-target, touch-feedback, hover-needs-hover, focus-is-sharp, reduced-motion. */
+
+.ui-review-tray-list { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
+.ui-review-tray-item { display: flex; align-items: center; gap: var(--ui-space-md); min-width: 0; }
+.ui-review-tray-open {
+  display: flex; flex: 1 1 auto; align-items: center; gap: var(--ui-space-md); min-width: 0; min-height: var(--ui-size-hit);
+  margin: 0; padding: var(--ui-space-sm); border: 0; border-radius: var(--ui-radius-item); background: transparent; color: inherit;
+  font: inherit; text-align: start; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+@media (hover: hover) { .ui-review-tray-open:hover { background: var(--ui-item-bg-hover); } }
+.ui-review-tray-open:active { background: var(--ui-item-bg-pressed); }
+.ui-review-tray-open:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: calc(var(--ui-size-ring) * -1); }
+.ui-review-tray-thumb {
+  --ratio: var(--ui-creative-ratio-feed);
+  position: relative; flex: none; width: var(--ui-item-media); aspect-ratio: var(--ratio); overflow: hidden;
+  border-radius: var(--ui-radius-item); background: var(--ui-creative-bg);
+}
+.ui-review-tray-thumb > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ui-review-tray-thumb::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); pointer-events: none; } /* gate-allow:few-strokes  the creative's own hairline, as on its tile */
+.ui-review-tray-text { display: grid; flex: 1 1 auto; gap: var(--ui-space-xs); min-width: 0; }
+.ui-review-tray-text b { overflow: hidden; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; white-space: nowrap; text-overflow: ellipsis; }
+.ui-review-tray-text span { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); overflow-wrap: anywhere; }
+/* in the glass dialog the words are the glass's */
+.ui-dialog .ui-review-tray-item { padding-block: var(--ui-space-xs); }
+.ui-dialog .ui-review-tray-text span { color: var(--ui-glass-fg-secondary); }
+
+/* the review grid (round 13, #30): one height per row. The tile is an inline-size container (creative.css), so 100cqi
+   is its width; the well is a Feed's height at that width, and the creative is contained and centred in it. */
+.ui-creative-grid.ui-review-grid { align-items: start; }
+.ui-review-grid .ui-creative-frame {
+  --r: var(--ui-creative-ratio-feed);
+  --well: calc(100cqi / (var(--ui-creative-ratio-feed)));
+  --w: min(100cqi, var(--well) * (var(--r)));
+  width: var(--w); margin: calc((var(--well) - var(--w) / (var(--r))) / 2) auto;
+}
+.ui-review-grid .ui-creative-frame:has(> [data-format="story"]) { --r: var(--ui-creative-ratio-story); }
+.ui-review-grid .ui-creative-frame:has(> [data-format="square"]) { --r: var(--ui-creative-ratio-square); }
+.ui-review-grid .ui-creative-frame:has(> [data-format="banner"]) { --r: var(--ui-creative-ratio-banner); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-review-tray-open { transition: none; }
+}

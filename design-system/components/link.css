@@ -1,0 +1,35 @@
+/* Text link: a link inside running words. PROPOSED 15 Oct 2026, with the app (Marcus 15 Oct: "lenke tekst i blå"
+   on the manual brief: the browser's own blue underlined link).
+   Markup: <a class="ui-link" href="…">Open Hand Balm</a>                  a link in a sentence
+           <a href="…">…</a>                                             any link without a class of its own
+   Fume decisions: a link never shows the browser's blue or its purple once visited. It is the text colour (Ink)
+   with a thin underline in the tertiary text colour, a little off the words; a mouse darkens the underline to Ink.
+   Every link without a class takes this look at zero specificity (:where), so any component that styles its own
+   links (a table's names, the breadcrumb, a button made from a link) wins without a fight. Actions are still
+   buttons (pills): a link is only for words that take you somewhere. On glass it is the glass's text colour.
+   Keyboard focus is the sharp 2 px ring. On touch the hit area grows to 44 px tall without moving the words.
+   Rule gate: tokens-only-color, focus-is-sharp, touch-target, touch-feedback, hover-needs-hover, actions-are-pills
+   (links are the one exception), reduced-motion. */
+
+:where(a:not([class])), .ui-link {
+  position: relative;
+  color: var(--ui-text); font-weight: inherit;
+  text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; /* gate-allow:space-from-tokens the underline's distance from the words, a type detail */
+  text-decoration-color: var(--ui-text-tertiary);
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  border-radius: var(--ui-radius-item);
+  transition: text-decoration-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+:where(a:not([class])):visited, .ui-link:visited { color: var(--ui-text); }
+@media (hover: hover) {
+  :where(a:not([class])):hover, .ui-link:hover { text-decoration-color: var(--ui-text); }
+}
+:where(a:not([class])):active, .ui-link:active { opacity: .72; }
+:where(a:not([class])):focus-visible, .ui-link:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+@media (pointer: coarse) {
+  :where(a:not([class]))::after, .ui-link::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+}
+:where(.ui-glass) :where(a:not([class])), .ui-glass .ui-link { color: var(--ui-glass-fg); text-decoration-color: var(--ui-glass-fg-secondary); }
+:where(.ui-glass) :where(a:not([class])):focus-visible, .ui-glass .ui-link:focus-visible { outline-color: var(--ui-focus-ring-on-glass); }
+
+@media (prefers-reduced-motion: reduce) { :where(a:not([class])), .ui-link { transition: none; } }

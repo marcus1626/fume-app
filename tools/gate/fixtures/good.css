@@ -1,0 +1,17 @@
+/* Should pass. Used by tools/gate/test.mjs. */
+.ui-menu { background: var(--ui-glass-bg); backdrop-filter: var(--ui-glass-filter); box-shadow: var(--ui-glass-shadow); border-radius: var(--ui-radius-card); transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+.status-point { background: var(--ui-check); border-radius: 50%; }
+@media (prefers-reduced-motion: reduce) { .ui-menu { transition: none; } }
+@media (prefers-reduced-transparency: reduce) { .ui-menu { background: var(--ui-glass-bg-solid); backdrop-filter: none; } }
+.ui-btn--icon { border-radius: 50%; }
+.ui-btn--link { border-radius: var(--ui-radius-item); }
+.app-sidebar { background: var(--ui-ground-behind); }
+.app-page { background: var(--ui-ground); box-shadow: var(--ui-depth-sheet); border-radius: var(--ui-radius-panel); }
+.ui-field { box-shadow: inset 0 0 0 1px var(--ui-hairline-strong); border-radius: var(--ui-radius-field); }
+.ui-field:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); }
+.ui-tag { position: relative; cursor: pointer; -webkit-tap-highlight-color: transparent; border-radius: var(--ui-radius-action); }
+.ui-tag::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-tag:active { transform: scale(var(--ui-motion-press-scale)); }
+@media (hover: hover) { .ui-tag:hover { background: var(--ui-surface); } }
+.ui-dialog { padding: var(--ui-inset-panel); border-radius: var(--ui-radius-panel); }
+.ui-tag-row { display: flex; gap: var(--ui-space-sm); }

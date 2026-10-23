@@ -1,0 +1,138 @@
+/* Agency: the agency's places across its clients (app round 11, FLOWS §24.3). PROPOSED 20 Oct 2026.
+   Markup: <ul class="ui-agency-tiles">                         the overview: the brands or clients as compact tiles
+             <li><a class="ui-card ui-agency-tile"><span class="ui-studio-mark">L</span>
+               <span class="ui-agency-tile-body"><span class="ui-agency-tile-head"><span class="ui-agency-tile-name">LYSNE</span>
+                 <span class="ui-agency-dot"><span class="ui-badge-dot"></span></span>
+                 <span class="ui-agency-data ui-agency-tile-at">Sat, 24 Oct</span></span>
+               <span class="ui-agency-tile-status">Winter gifting: the plan waits for your check</span>
+               <div class="ui-progress ui-agency-tile-bar"/></span></a></li></ul>
+           <button class="ui-item ui-agency-need"> picture 56 · title · detail · one secondary pill </button>
+           <ul class="ui-agency-team"><li class="ui-agency-team-row"> avatar · <span class="ui-agency-team-text">
+             <span class="ui-agency-team-head"><span class="ui-agency-team-name">Nora<small>Creative lead · LYSNE</small></span>
+             <span class="ui-agency-data">82 %</span></span> <div class="ui-progress ui-agency-load"/>
+             <span class="ui-agency-team-week">…</span></span></li></ul>
+           <table class="ui-table ui-agency-table"> <tr class="ui-table-row ui-agency-row"> <td><span class="ui-agency-cell-client">
+             mark · <span class="ui-table-title"><button class="ui-agency-row-open">LYSNE</button><small>status</small></span></span></td> …
+           <div class="ui-agency-filter"> toggle pills: All clients · LYSNE · VEV · HALM </div>
+           <table class="ui-table ui-agency-table ui-usage-table"> Usage: <th class="ui-usage-col-num|-wide|-package"> …
+           <div class="ui-agency-form"> the right panel's fields; <fieldset class="ui-agency-people"><ul class="ui-agency-people-list">
+             <li class="ui-agency-person"> name · email · <div class="ui-agency-person-foot"> role · Remove </div></li></ul></fieldset></div>
+   Fume decisions: round 12 (desktop review 20 Oct, DLAY-7; PROPOSED 20 Oct 2026): the overview leads with the work, so
+   the brands or clients are compact tiles, 72 px tall and without a photo (the photos stay on Clients and on each
+   brand's Home): the mark, the name, the next delivery as data, the first thing that waits in one line, the current
+   campaign as a thin Ink bar. Two brands make two half-width tiles, four clients four (auto-fit, 260 px at least).
+   A client that waits on the agency carries one
+   small Ink dot after its name (the picker's dot), never a badge, never Amber (Amber stays on checked creatives).
+   The whole tile, the whole row of a table, opens the client, so a keyboard reaches one stop per client. Rows in Needs you take a larger picture (56) than an inbox row, so the work is seen
+   before it is read. The team's load is a quiet bar in the tertiary ink with the share as data: it informs, it does
+   not alarm. No lines anywhere: space and the card's step part things (few-strokes). On a phone the tiles stack.
+   Rule gate: few-strokes, air, proximity, amber-is-a-point, card-never-matches-ground, space-from-tokens,
+   radius-from-tokens, type-from-tokens, mono-is-data, touch-target, hover-needs-hover, focus-is-sharp,
+   reduced-motion, canon-not-in-ui. */
+
+/* ---------- the overview: the brands or clients as compact tiles (round 12, DLAY-7) ---------- */
+.ui-agency-tiles {
+  display: grid; gap: var(--ui-space-md); margin: 0; padding: 0; list-style: none;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); /* gate-allow:space-from-tokens the tile's least width: two brands make two halves, four clients four across from 1280 */
+}
+.ui-agency-tiles > li { display: grid; min-width: 0; }
+/* agency.css loads before card.css: the card's own padding, gap and direction need the compound selector */
+.ui-card.ui-agency-tile {
+  flex-direction: row; align-items: center; gap: var(--ui-space-md);
+  min-height: calc(var(--ui-size-hit) + 2 * var(--ui-space-md) + var(--ui-space-xs)); padding: var(--ui-space-md) var(--ui-inset-float);
+}
+.ui-agency-tile-body { display: grid; flex: 1 1 auto; gap: var(--ui-space-xs); min-width: 0; }
+.ui-agency-tile-head { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-agency-tile-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; color: var(--ui-text); }
+.ui-agency-tile-at { margin-inline-start: auto; }
+.ui-agency-tile-status { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); }
+.ui-agency-tile-bar { margin-block-start: var(--ui-space-xs); }
+
+/* The name is the card's one stop: a button stretched over the whole card. */
+.ui-agency-open, .ui-agency-row-open { /* gate-allow:touch-target its ::after stretches over the whole card or row, far larger than 44 px */
+  display: inline; min-width: 0; max-width: 100%; margin: 0; padding: 0; border: 0; background: none; color: inherit;
+  font: inherit; letter-spacing: inherit; text-align: left; text-decoration: none; cursor: pointer; outline: none;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+/* pressing it presses the card (card.css) or the row (below); the words themselves stay in the text colour */
+.ui-agency-open:active, .ui-agency-row-open:active { color: var(--ui-text); }
+.ui-agency-open::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: var(--ui-radius-card); }
+.ui-agency-open:focus-visible::after { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: calc(-1 * var(--ui-size-ring)); }
+
+/* The quiet dot: something waits on the agency in this client. Ink, small, after the name. */
+.ui-agency-dot { --dot: var(--ui-action-primary); display: inline-flex; flex: none; align-items: center; }
+
+/* Numbers beside words are data. */
+.ui-agency-data { flex: none; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ---------- Home: what needs you ---------- */
+.ui-agency-need { --ui-item-media: calc(var(--ui-size-hit) + var(--ui-space-md)); text-align: left; }
+
+/* ---------- the team this week ---------- */
+.ui-agency-team { display: grid; gap: var(--ui-space-xl); margin: 0; padding: 0; list-style: none; }
+.ui-agency-team-row { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: var(--ui-space-md); min-width: 0; }
+.ui-agency-team-text { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-agency-team-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ui-space-md); min-width: 0; }
+.ui-agency-team-name { min-width: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; color: var(--ui-text); }
+.ui-agency-team-name small { display: block; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-tertiary); }
+.ui-agency-team-week { font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+/* the week's load: quiet, it informs and does not alarm */
+.ui-progress.ui-agency-load { --fill: var(--ui-text-tertiary); }
+
+/* ---------- tables across the clients ---------- */
+.ui-agency-table { table-layout: fixed; }
+/* words wrap in these tables (a status sentence, what someone does); dates and numbers stay on one line */
+.ui-agency-table .ui-table-cell { white-space: normal; overflow-wrap: break-word; }
+.ui-agency-table .ui-table-cell:is(.ui-table-cell--data, .ui-table-cell--num) { white-space: nowrap; }
+.ui-agency-row { position: relative; }
+.ui-agency-row-open::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: var(--ui-radius-item); }
+.ui-agency-row-open:focus-visible::after { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: calc(-1 * var(--ui-size-ring)); }
+@media (hover: hover) { .ui-agency-row:has(.ui-agency-row-open:hover) .ui-agency-row-open { text-decoration: underline; text-decoration-color: var(--ui-hairline-strong); text-underline-offset: 3px; } }
+.ui-agency-row:has(.ui-agency-row-open:active) > .ui-table-cell { background: var(--ui-item-bg-pressed); }
+/* the row an address points at (?client=, the client just added): a sunken wash that fades, no line, no Amber */
+.ui-agency-row[data-marked] > .ui-table-cell, [data-agency-client][data-marked] > .ui-item { animation: ui-agency-mark calc(6 * var(--ui-motion-slow)) var(--ui-motion-ease) both; }
+@keyframes ui-agency-mark { 0%, 50% { background-color: var(--ui-surface-sunken); } 100% { background-color: transparent; } }
+/* a client without a picture yet: its initial on the sunken square, the size of a cover */
+.ui-studio-mark.ui-agency-cover-mark { width: var(--ui-table-thumb); background: var(--ui-surface-sunken); color: var(--ui-text-secondary); font-size: var(--ui-type-body); }
+.ui-agency-cell-client { display: flex; align-items: center; gap: var(--ui-space-md); min-width: 0; }
+.ui-agency-cell-client > .ui-table-title { min-width: 0; }
+.ui-agency-cell-client .ui-table-title small { white-space: normal; text-wrap: pretty; }
+.ui-agency-cell-who { display: inline-flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-agency-col-client { width: 30%; }
+.ui-agency-col-person { width: 26%; }
+.ui-agency-col-num { width: 96px; } /* gate-allow:space-from-tokens a column's width */
+.ui-agency-col-date { width: 120px; } /* gate-allow:space-from-tokens a column's width */
+.ui-agency-col-people { width: 120px; } /* gate-allow:space-from-tokens a column's width */
+.ui-agency-col-who { width: 128px; } /* gate-allow:space-from-tokens a column's width */
+.ui-agency-col-week { width: 160px; } /* gate-allow:space-from-tokens a column's width */
+.ui-agency-cell-week { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+
+/* Usage (round 12, UX review DTASK-6; PROPOSED 20 Oct 2026): the one Usage page's table, for Fume's admin and an
+   agency. A row per brand or client; its number columns are narrow and their heads may take two lines ("Approved by
+   the customer"), so the table fits a 1280 desk with the brand's name readable. */
+.ui-usage-table .ui-table-head { white-space: normal; text-wrap: balance; }
+.ui-usage-col-num { width: 104px; } /* gate-allow:space-from-tokens a column's width */
+.ui-usage-col-wide { width: 136px; } /* gate-allow:space-from-tokens a column's width */
+.ui-usage-col-package { width: 152px; } /* gate-allow:space-from-tokens a column's width */
+
+/* the client filter above a table: a row of pills that scrolls inside itself on a phone, never the page */
+.ui-agency-filter { max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.ui-agency-filter::-webkit-scrollbar { display: none; }
+
+/* ---------- the right panels ---------- */
+.ui-agency-form { display: grid; gap: var(--ui-space-2xl); min-width: 0; }
+.ui-agency-people-list { display: grid; gap: var(--ui-space-xl); margin: 0; padding: 0; list-style: none; }
+.ui-agency-person { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-md); min-width: 0; }
+.ui-agency-person-foot { grid-column: 1 / -1; display: flex; align-items: flex-end; gap: var(--ui-space-sm); min-width: 0; }
+.ui-agency-person-role { flex: 1 1 auto; min-width: 0; }
+.ui-agency-foot-note { margin-inline-end: auto; font-size: var(--ui-type-control); color: var(--ui-glass-fg-secondary); }
+@media (max-width: 479px) { .ui-agency-person { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- a phone ---------- */
+@media (max-width: 639px) {
+  .ui-agency-tiles { gap: var(--ui-space-sm); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-agency-row[data-marked] > .ui-table-cell, [data-agency-client][data-marked] > .ui-item { animation-timing-function: steps(1, end); }
+}

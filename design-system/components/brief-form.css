@@ -1,0 +1,95 @@
+/* Brief form: the brief written by hand, short (app round 8, UX review 19 Oct: LOAD-5, TASK-3, TASK-7). PROPOSED 19 Oct 2026.
+   Round 9 (desktop review 19 Oct: DTSK-12, DLOAD-10, DLOAD-20, DTSK-20, DLAY-13). PROPOSED 19 Oct 2026.
+   Markup: <form class="ui-brief-form">
+             <div class="ui-field-group"> Goal · Product (the pick grid, one row "6 more products to confirm",
+               <div class="ui-collapsible ui-brief-fold"> A whole collection </div>) · Audience · Message
+               (each empty one with <div class="ui-brief-suggest"> Fume suggests "…" · Use it </div> once the goal is
+               written) </div>
+             <div class="ui-field-group"> Channels (pills) · Formats (pills)
+               <div class="ui-brief-pair"> Creatives (a number, "16 left in your package") | Market (select) </div></div>
+             <div class="ui-accordion"> More details · Optional (name, goes live, must show, never, notes) </div>
+             [Still needed: pills that jump to each line]
+             <div class="ui-brief-foot" data-stuck>                          a desk
+               <p class="ui-brief-foot-note">8 creatives from your package · 8 left after this</p>
+               <div class="ui-brief-foot-actions"> Cancel · <kbd class="ui-kbd ui-brief-foot-key">⌘↵</kbd> · Send to Fume </div></div>
+             <span class="ui-brief-foot-end"></span>
+             <div class="ui-action-bar-dock"> on a phone: the floating bar "2 lines to go · Send to Fume" </div> </form>
+   Fume decisions: Marcus 19 Oct: "sykt lett", customers must not get tired; the web app on a desk comes first. The form
+   holds the whole brief, under the brief's own names (Goal, Product, Audience, Message, Channels, Formats, Creatives,
+   Market), so the one commit, "Send to Fume" (round 10), sends what she saw: Fume writes the plan, she approves that. It asks
+   only what Fume cannot read from the first line. Groups are parted by space alone (32 between the groups, the fold
+   and the foot; 24 between questions), never a line. Creatives and Market share a row from 640 px (the number is
+   short, the market a sentence). The commit is a step action, so on a desk it sits in a footer pinned to the foot of
+   the content column, the Ink pill last on the right, what it costs on the left; the footer is the page's own ground
+   and shows a hairline only while the form scrolls under it (data-stuck). On a phone it floats in the action bar
+   above the tab bar. The ⌘↵ key shows only where there is a keyboard.
+   Rule gate: few-strokes, air, space-from-tokens, glass-only-floating, one-primary, type-from-tokens, hover-needs-hover. */
+
+.ui-brief-form { display: grid; gap: var(--ui-space-2xl); min-width: 0; }
+
+/* the room for the tiles' rings sits inside the clipped box, so a closed fold takes no height at all */
+.ui-brief-fold > .ui-collapsible-content > div { padding-inline: var(--ui-space-xs); margin-inline: calc(var(--ui-space-xs) * -1); }
+.ui-brief-fold > .ui-collapsible-content > div > * { margin-block: var(--ui-space-md) var(--ui-space-xs); }
+
+/* "A whole collection": the quiet pill keeps its own width, its words on the form's left edge */
+.ui-brief-fold > .ui-collapsible-trigger { justify-self: start; margin-inline-start: calc(var(--ui-size-pad-sm) * -1); }
+
+/* Fume's suggestion under an empty line: its words, then Use it, on one line when they fit */
+.ui-brief-suggest { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm) var(--ui-space-md); min-width: 0; }
+
+/* Creatives and Market side by side from 640 px: the number takes a third, the market the rest */
+.ui-brief-pair { display: grid; gap: var(--ui-space-xl); min-width: 0; }
+@media (min-width: 640px) { .ui-brief-pair { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); align-items: start; } }
+
+/* The step's footer on a desk: pinned to the foot of the content column while the form runs on under it, as wide as
+   the column, so its line and its edges align with the fields above */
+.ui-brief-foot {
+  position: sticky; bottom: 0; z-index: 2;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-sm) var(--ui-space-lg);
+  padding-block: var(--ui-space-md);
+  background: var(--ui-ground);
+  transition: box-shadow var(--ui-motion-base) var(--ui-motion-ease);
+}
+.ui-brief-foot[data-stuck] { box-shadow: inset 0 1px 0 var(--ui-hairline); } /* gate-allow:few-strokes  the one line, only while the form scrolls under the pinned actions (DWAY-4, as on the right panel) */
+.ui-brief-foot-note { margin: 0; min-width: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); }
+.ui-brief-foot-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); margin-inline-start: auto; }
+.ui-brief-foot-key { margin-inline-start: var(--ui-space-sm); }
+/* the sentinel under the footer: when it is out of view the footer is pinned (NewBriefPage sets data-stuck) */
+.ui-brief-foot-end { display: block; height: 1px; margin-top: calc(-1 * var(--ui-space-2xl)); } /* gate-allow:space-from-tokens a one-pixel sentinel, no box to see */
+@media (hover: none) { .ui-brief-foot-key { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-brief-foot { transition: none; }
+}
+
+/* Round 13 (Marcus's video comments #22, #23, #24; PROPOSED 22 Oct 2026):
+   first, Start from (a select: Fume templates · Your templates); under Goal and under Message
+   <div class="ui-brief-alts-slot"> Alternatives (for the whole brief, for the message) </div>, which opens in place to
+   <div class="ui-brief-alts"> head (Three alternatives for the message · ×) · <ul class="ui-brief-alts-list"> one row each,
+   its words and Use this </ul> · <div class="ui-brief-alts-again"> Warmer · Shorter · Bolder | Or say what to change ·
+   New alternatives </div></div>. The panel sits in the form (not over it), so it is the sunken ground, not glass.
+   Inspiration is a fold beside More details: the moodboard picker, then links (<ul class="ui-brief-links">). */
+.ui-brief-alts-slot { display: flex; min-width: 0; }
+.ui-brief-alts-slot > .ui-button { margin-inline-start: calc(var(--ui-size-pad-sm) * -1); }
+.ui-brief-alts-slot > .ui-brief-alts { flex: 1; }
+.ui-brief-alts { display: grid; gap: var(--ui-space-md); min-width: 0; padding: var(--ui-inset-float); border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); }
+.ui-brief-alts-head { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-md); min-width: 0; }
+.ui-brief-alts-title { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-brief-alts-list { display: grid; gap: var(--ui-space-xs); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-brief-alt { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-md); min-width: 0; min-height: var(--ui-size-control-lg); padding: var(--ui-space-sm) var(--ui-space-md); border-radius: var(--ui-radius-item); background: var(--ui-surface); }
+.ui-brief-alt[data-loading] { background: var(--ui-surface); opacity: .6; }
+.ui-brief-alt[data-stale] { opacity: .6; }
+.ui-brief-alt-text { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-brief-alt-main { margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text); text-wrap: pretty; }
+.ui-brief-alt-sub { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-brief-alt > .ui-button { flex-shrink: 0; }
+.ui-brief-alts-again { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm) var(--ui-space-md); min-width: 0; }
+.ui-brief-alts-nudges { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); }
+.ui-brief-alts-say { display: flex; flex: 1 1 16rem; align-items: center; gap: var(--ui-space-sm); min-width: 0; } /* gate-allow:space-from-tokens the field's least width before it wraps */
+.ui-brief-alts-say > .ui-input { flex: 1; min-width: 0; }
+.ui-brief-link-add { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-brief-link-add > .ui-input { flex: 1; min-width: 0; }
+.ui-brief-links { display: grid; gap: var(--ui-space-xs); min-width: 0; margin: var(--ui-space-xs) 0 0; padding: 0; list-style: none; }
+.ui-brief-link { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); min-width: 0; font-size: var(--ui-type-control); }
+.ui-brief-link > a { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (prefers-reduced-motion: no-preference) { .ui-brief-alt { transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); } }

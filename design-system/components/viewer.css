@@ -1,0 +1,146 @@
+/* Creative viewer. DECIDED 13 Oct, from round 8. Fume's own (shadcn has no lightbox; it opens like shadcn's dialog,
+   with dialog.js: role="dialog", aria-modal, data-state="open|closed", focus trap, Escape, focus back to
+   the creative you opened it from). Behaviour: viewer.js. Composed from button.css (glass buttons),
+   glass.css (the action bar), data-list.css (the facts) and the creative's check from creative.css.
+   Decisions:
+   - Ink is the ground here and only here (--ui-viewer-ground): a creative is judged best on dark with
+     nothing else in view. Text is Porcelain, secondary Porcelain at 72 %.
+   - The creative fills the stage at its own format (Feed 4:5, Story 9:16, Banner 1.91:1) with at least
+     32 of Ink round it (--ui-viewer-pad); the tools stay off it.
+   - Download and Share sit over the image on one Smoke glass bar: Download is the one white button,
+     Share is clear (glass-one-white). Everything else on the Ink ground is a clear veil: close, zoom out,
+     the zoom level in the data type, zoom in, expand (the creative alone, the tools gone), info.
+   - Previous and next: arrows beside the creative, the arrow keys, and a swipe on touch. The position,
+     "3 of 12", is data. Past fit the creative pans with a drag; a double press zooms to 2x and back.
+   - The info panel (campaign, format, size, the Engine run, the check) is a step up from Ink
+     (--ui-viewer-surface), not glass: glass over Ink would vanish. The check is the Amber triangle beside
+     "Checked · Anna" and the time on a checked creative, grey beside "In check" while it waits.
+   Phone (the viewer narrower than 720, a container query): the zoom tools give way to pinch, previous,
+   the position and next sit at the foot, and the info rises from the bottom over the creative.
+   Rule gate: amber-is-a-point (the Amber check only), glass-one-white, air, space-from-tokens,
+   radius-from-tokens, type-from-tokens, mono-is-data, few-strokes, reduced-motion. */
+
+.ui-viewer {
+  container: ui-viewer / inline-size;
+  position: fixed; inset: 0; z-index: var(--ui-overlay-z-modal);
+  background: var(--ui-viewer-ground); color: var(--ui-viewer-fg);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.45;
+  outline: none; overscroll-behavior: contain;
+}
+.ui-viewer[hidden] { display: none; }
+.ui-viewer[data-state="open"] { animation: ui-viewer-in var(--ui-motion-base) var(--ui-motion-ease) both; }
+.ui-viewer[data-state="closed"] { animation: ui-viewer-out var(--ui-motion-fast) var(--ui-motion-ease) both; }
+/* in place on a page (the review board): the same viewer in a frame instead of over the page */
+.ui-viewer--inline { position: relative; inset: auto; z-index: auto; height: 100%; }
+
+.ui-viewer-screen {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas: "bar bar" "stage info"; height: 100%; min-height: 0;
+}
+
+/* ---------- the bar: close and title, position, tools ---------- */
+.ui-viewer-bar { grid-area: bar; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: var(--ui-space-lg); min-width: 0; padding: var(--ui-space-lg) var(--ui-space-lg) 0; }
+.ui-viewer-lead { display: flex; align-items: center; gap: var(--ui-space-md); min-width: 0; }
+.ui-viewer-title { display: grid; min-width: 0; }
+.ui-viewer-title b { overflow: hidden; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; white-space: nowrap; text-overflow: ellipsis; }
+.ui-viewer-title small { overflow: hidden; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-viewer-fg-secondary); white-space: nowrap; text-overflow: ellipsis; }
+.ui-viewer-count { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-viewer-fg-secondary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ui-viewer-tools { display: flex; align-items: center; justify-content: flex-end; gap: var(--ui-space-xs); min-width: 0; }
+.ui-viewer-zoom-num { min-width: calc(var(--ui-size-hit) + var(--ui-space-sm)); font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-viewer-fg-secondary); font-variant-numeric: tabular-nums; text-align: center; white-space: nowrap; }
+.ui-viewer-zoom { display: contents; }
+.ui-viewer-gap { width: var(--ui-space-md); flex: none; }
+/* a tool that is on (the info panel shown) */
+.ui-viewer-tool[aria-pressed="true"] { --bg: var(--ui-viewer-tool-on); --bg-hover: var(--ui-viewer-tool-on); --bg-pressed: var(--ui-glass-button-clear-hover); }
+
+/* ---------- the stage: the creative at its format, fitted with 32 of Ink round it ---------- */
+.ui-viewer-stage {
+  grid-area: stage; position: relative; container: ui-viewer-stage / size;
+  display: grid; place-items: center; min-width: 0; min-height: 0; overflow: hidden;
+  touch-action: pan-y pinch-zoom; user-select: none; -webkit-user-select: none;
+}
+.ui-viewer-frame {
+  --ratio: var(--ui-creative-ratio-feed); --gutter: calc(var(--ui-viewer-pad) + var(--ui-size-hit) + var(--ui-space-lg));
+  position: relative; width: min(100cqw - 2 * var(--gutter), (100cqh - 2 * var(--ui-viewer-pad)) * (var(--ratio))); aspect-ratio: var(--ratio);
+}
+.ui-viewer-frame[data-format="story"] { --ratio: var(--ui-creative-ratio-story); }
+.ui-viewer-frame[data-format="banner"] { --ratio: var(--ui-creative-ratio-banner); }
+.ui-viewer-media {
+  position: absolute; inset: 0; overflow: hidden; border-radius: var(--ui-radius-card); background: var(--ui-creative-bg);
+  transform: translate(calc(var(--pan-x, 0px) + var(--drag-x, 0px)), var(--pan-y, 0px)) scale(var(--zoom, 1));
+  transition: transform var(--ui-motion-base) var(--ui-motion-ease);
+  cursor: zoom-in;
+}
+.ui-viewer-media > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; }
+.ui-viewer[data-zoomed] .ui-viewer-media { cursor: grab; }
+.ui-viewer[data-dragging] .ui-viewer-media { cursor: grabbing; transition: none; }
+.ui-viewer-media.is-changing > img { animation: ui-viewer-swap var(--ui-motion-base) var(--ui-motion-ease) both; }
+
+/* previous and next beside the creative */
+.ui-viewer-prev, .ui-viewer-next { position: absolute; z-index: 2; grid-area: stage; align-self: center; }
+.ui-viewer-prev { justify-self: start; margin-inline-start: var(--ui-space-lg); }
+.ui-viewer-next { justify-self: end; margin-inline-end: var(--ui-space-lg); }
+
+/* Download and Share on one glass bar over the image: one white button, the other clear */
+.ui-viewer-actions { position: absolute; z-index: 2; left: 50%; bottom: var(--ui-space-lg); display: flex; gap: var(--ui-space-xs); padding: var(--ui-inset-ring); translate: -50% 0; white-space: nowrap; }
+
+/* ---------- the info panel: a step up from Ink, not glass ---------- */
+.ui-viewer-info {
+  grid-area: info; display: grid; align-content: start; gap: var(--ui-space-xl);
+  width: var(--ui-viewer-panel-width); min-height: 0; margin: var(--ui-space-lg) var(--ui-space-lg) var(--ui-space-lg) 0; padding: var(--ui-inset-panel);
+  overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+  border-radius: var(--ui-radius-card); background: var(--ui-viewer-surface); color: var(--ui-viewer-fg);
+}
+.ui-viewer-info::-webkit-scrollbar { display: none; }
+.ui-viewer[data-info="closed"] .ui-viewer-info { display: none; }
+.ui-viewer-info-head { display: grid; gap: var(--ui-space-xs); }
+.ui-viewer-info-head b { font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.35; }
+.ui-viewer-info-head span { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-viewer-fg-secondary); }
+.ui-viewer-status { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-sm); margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); }
+.ui-viewer-status svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; color: var(--ui-check-waiting); }
+.ui-viewer-status[data-check="approved"] svg { color: var(--ui-check); } /* gate-allow:amber-is-a-point  the Amber checked triangle on a checked creative, beside the checker's name and time (rule check-states); Amber on Ink is 8:1, a point, never a fill */
+.ui-viewer-status-time { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-viewer-fg-secondary); font-variant-numeric: tabular-nums; }
+.ui-viewer-info .ui-datalist dt { color: var(--ui-viewer-fg-secondary); font-weight: var(--ui-type-weight-medium); }
+.ui-viewer-info .ui-datalist dd { color: var(--ui-viewer-fg); }
+
+/* ---------- expanded: the creative alone, the tools gone ---------- */
+.ui-viewer-hide, .ui-viewer-prev, .ui-viewer-next, .ui-viewer-actions, .ui-viewer-count, .ui-viewer-title { transition: opacity var(--ui-motion-base) var(--ui-motion-ease), visibility 0s linear 0s; }
+.ui-viewer[data-chrome="hidden"] :is(.ui-viewer-hide, .ui-viewer-prev, .ui-viewer-next, .ui-viewer-actions, .ui-viewer-count, .ui-viewer-title) { opacity: 0; visibility: hidden; transition: opacity var(--ui-motion-base) var(--ui-motion-ease), visibility 0s linear var(--ui-motion-base); }
+.ui-viewer[data-chrome="hidden"] .ui-viewer-info { display: none; }
+.ui-viewer[data-chrome="hidden"] .ui-viewer-frame { --gutter: var(--ui-viewer-pad); }
+
+/* ---------- phone ---------- */
+@container ui-viewer (max-width: 719.98px) {
+  .ui-viewer-screen {
+    grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-areas: "lead lead tools" "stage stage stage" "prev count next";
+    gap: var(--ui-space-md) var(--ui-space-sm); padding: var(--ui-space-md) var(--ui-space-md) var(--ui-space-lg);
+  }
+  .ui-viewer-bar { display: contents; }
+  .ui-viewer-lead { grid-area: lead; }
+  .ui-viewer-tools { grid-area: tools; }
+  .ui-viewer-count { grid-area: count; justify-self: center; align-self: center; }
+  .ui-viewer-zoom, .ui-viewer-gap { display: none; }
+  .ui-viewer-frame { --gutter: 0px; width: min(100cqw, (100cqh - var(--ui-space-lg)) * (var(--ratio))); }
+  .ui-viewer-prev, .ui-viewer-next { position: relative; align-self: center; margin: 0; } /* relative, not static: the button holds its own 44 hit area */
+  .ui-viewer-prev { grid-area: prev; }
+  .ui-viewer-next { grid-area: next; }
+  .ui-viewer-info {
+    position: absolute; z-index: 3; grid-area: 1 / 1 / -1 / -1; align-self: end;
+    width: auto; max-height: 72%; margin: 0; inset: auto var(--ui-drawer-margin) var(--ui-drawer-margin);
+    border-radius: var(--ui-radius-panel); box-shadow: var(--ui-glass-shadow);
+  }
+  /* the info covers the thumb's bar: the arrows and the count step out until it closes (a swipe still moves) */
+  .ui-viewer[data-info="open"] :is(.ui-viewer-prev, .ui-viewer-next, .ui-viewer-count) { visibility: hidden; }
+}
+
+@keyframes ui-viewer-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ui-viewer-out { to { opacity: 0; } }
+@keyframes ui-viewer-swap { from { opacity: 0; filter: blur(var(--ui-motion-enter-blur)); } to { opacity: 1; filter: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-viewer[data-state] { animation: none; }
+  .ui-viewer-media { transition: none; }
+  .ui-viewer-media.is-changing > img { animation: none; }
+  .ui-viewer-hide, .ui-viewer-prev, .ui-viewer-next, .ui-viewer-actions, .ui-viewer-count, .ui-viewer-title,
+  .ui-viewer[data-chrome="hidden"] :is(.ui-viewer-hide, .ui-viewer-prev, .ui-viewer-next, .ui-viewer-actions, .ui-viewer-count, .ui-viewer-title) { transition: none; }
+}

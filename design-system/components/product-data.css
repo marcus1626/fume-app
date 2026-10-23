@@ -1,0 +1,162 @@
+/* Product data in three levels: short facts, fibre blend, measurement table, parts as data, files Fume read
+   (app round 7). PROPOSED 16 Oct 2026. Extends product-spec.css.
+   Markup: <dl class="ui-pshort"><div class="ui-pshort-item" [data-wide]><dt class="ui-pshort-label">Fit</dt>
+             <dd class="ui-pshort-value">Relaxed</dd></div></dl>
+           <header class="ui-plevel"><h2 class="ui-plevel-title">Product data</h2><p class="ui-plevel-text">…</p></header>
+           <span class="ui-blend"><span class="ui-blend-bar"><span class="ui-blend-seg" data-series="1" style="--share: 70%"/>…</span>
+             <span class="ui-blend-legend"><span class="ui-blend-key"><span class="ui-blend-dot" data-series="1"/>
+             <span class="ui-blend-pct">70 %</span> Merino wool</span></span></span>
+           <div class="ui-measure" role="region" tabindex="0"><table class="ui-measure-table"><caption class="ui-measure-caption"/>
+             <thead><tr><th class="ui-measure-pom">Point of measure</th><th data-base>M</th>…<th>±</th></tr></thead>
+             <tbody><tr><th class="ui-measure-pom"><span class="ui-measure-name"><span class="ui-measure-code">A</span>Chest</span>
+             <span class="ui-measure-how">…</span></th><td data-base>58</td>…<td class="ui-measure-tol">1</td></tr></tbody></table></div>
+           <ul class="ui-pparts ui-pparts--flat"> ui-pparts-item … </ul>
+           <ul class="ui-pfiles"><li class="ui-pfile" [data-missing]><span class="ui-pfile-icon"><svg/></span>
+             <div class="ui-pfile-body"><span class="ui-pfile-title">Tech pack</span><div class="ui-pfile-one">
+             <span class="ui-pfile-name">…</span><span class="ui-pfile-meta">…</span><div class="ui-pfile-read">
+             <span class="ui-pfile-read-title">What Fume read</span><ul class="ui-pfile-lines"><li/></ul></div></div></div>
+             <div class="ui-pfile-action"> ui-btn sm </div></li></ul>
+   Fume decisions: SHORT sits beside the picture on every screen size (on a phone right under it), as label over value
+   in a calm two-column grid, no box. FULL and TECHNICAL each start with a quiet level heading (title type, one line in
+   secondary), then their sections; a section shows the Engine-critical fields and what waits for the customer, and
+   one quiet "Show all N fields" pill opens the rest. A fibre blend is one bar of shares in the chart series (Ink,
+   Focus 600, 400, 200, in that order; a fifth fibre folds into Other, never a made-up colour), 2 px of surface
+   between segments and no stroke, with each fibre named beside its share. A measurement table is data: mono,
+   right-aligned, the base size column in medium weight on the sunken surface (never Amber), no row or column lines;
+   it scrolls sideways inside its own rounded box on a phone, never the page. Files lie on the sunken surface while
+   missing and lift onto the sheet once added, with what Fume read under each name.
+   Rule gate: few-strokes, amber-is-a-point, no-gradient, no-glow, radius-from-tokens, space-from-tokens,
+   type-from-tokens, mono-is-data, touch-target, focus-is-sharp, hover-needs-hover, reduced-motion, air. */
+
+/* ─── SHORT: at a glance, beside the picture ─────────────────────────────── */
+.ui-pshort { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-lg) var(--ui-space-lg); margin: 0; min-width: 0; }
+.ui-pshort-item { display: grid; gap: var(--ui-space-xs); align-content: start; min-width: 0; }
+.ui-pshort-item[data-wide] { grid-column: 1 / -1; }
+.ui-pshort-label { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-pshort-value { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-sm); margin: 0; min-width: 0; font-size: var(--ui-type-body); line-height: 1.45; color: var(--ui-text); overflow-wrap: anywhere; }
+.ui-pshort-missing { color: var(--ui-text-tertiary); }
+.ui-pshort-item[data-state="proposed"] .ui-pshort-value { color: var(--ui-text-secondary); }
+
+/* ─── Level headings: FULL and TECHNICAL ─────────────────────────────────── */
+.ui-plevel { display: grid; gap: var(--ui-space-xs); min-width: 0; margin-top: var(--ui-space-xl); }
+.ui-plevel-title { margin: 0; font-size: var(--ui-type-title-large); font-weight: var(--ui-type-weight-medium); line-height: 1.25; color: var(--ui-text); }
+.ui-plevel-text { margin: 0; max-width: 60ch; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text-secondary); }
+
+/* "Show all N fields": one quiet pill under the rows. */
+.ui-pspec-more { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-md); min-width: 0; }
+.ui-pspec-more > .ui-btn > svg { transition: transform var(--ui-motion-base) var(--ui-motion-ease); }
+.ui-pspec-more > .ui-btn[data-open] > svg { transform: rotate(180deg); }
+
+/* A blend, a table or parts take the row's whole width; in two columns they span both. */
+.ui-pspec-rows--two > .ui-pspec-row[data-rich] { grid-column: 1 / -1; }
+.ui-pspec-row[data-rich] > .ui-pspec-value { display: block; grid-column: 1 / -1; }
+.ui-pspec-row[data-rich][data-missing] > .ui-pspec-value { display: flex; }
+
+/* ─── Fibre blend ────────────────────────────────────────────────────────── */
+.ui-blend { display: grid; gap: var(--ui-space-sm); width: 100%; min-width: 0; }
+.ui-blend-bar { display: flex; gap: var(--ui-chart-gap); width: 100%; height: var(--ui-space-sm); overflow: hidden; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-blend-seg { flex: 0 0 var(--share); min-width: var(--ui-space-xs); height: 100%; transition: flex-basis var(--ui-motion-slow) var(--ui-motion-ease); }
+.ui-blend-seg[data-series="1"], .ui-blend-dot[data-series="1"] { background: var(--ui-chart-series-1); }
+.ui-blend-seg[data-series="2"], .ui-blend-dot[data-series="2"] { background: var(--ui-chart-series-2); }
+.ui-blend-seg[data-series="3"], .ui-blend-dot[data-series="3"] { background: var(--ui-chart-series-3); }
+.ui-blend-seg[data-series="4"], .ui-blend-dot[data-series="4"] { background: var(--ui-chart-series-4); }
+.ui-blend-legend { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs) var(--ui-space-lg); min-width: 0; }
+.ui-blend-key { display: inline-flex; align-items: center; gap: var(--ui-space-sm); font-size: var(--ui-type-body); color: var(--ui-text); }
+.ui-blend-dot { flex-shrink: 0; width: var(--ui-space-sm); height: var(--ui-space-sm); border-radius: 50%; }
+.ui-blend-pct { font-variant-numeric: tabular-nums; font-weight: var(--ui-type-weight-medium); }
+.ui-blend[data-compact] .ui-blend-key { font-size: var(--ui-type-body); }
+
+.ui-blend-rows { display: grid; gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; }
+.ui-blend-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 7rem) auto; align-items: center; gap: var(--ui-space-sm); min-width: 0; } /* gate-allow:space-from-tokens the per-cent input's width, a layout width */
+.ui-blend-pct-input { display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; font-family: var(--ui-type-family-data); color: var(--ui-text-secondary); } /* gate-allow:mono-is-data the per-cent input is data */
+.ui-blend-pct-input > .ui-input { min-width: 0; }
+.ui-blend-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); }
+.ui-blend-foot [data-ok] { color: var(--ui-text); }
+
+/* ─── Measurement table: scrolls inside its own box ──────────────────────── */
+.ui-measure {
+  display: block; width: 100%; max-width: 100%; min-width: 0; overflow-x: auto; overscroll-behavior-x: contain;
+  padding: var(--ui-space-sm) 0; border-radius: var(--ui-radius-item); outline: none; -webkit-overflow-scrolling: touch;
+}
+.ui-measure:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-measure-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: var(--ui-type-body); color: var(--ui-text); }
+.ui-measure-caption { caption-side: bottom; padding-top: var(--ui-space-sm); text-align: left; font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-measure-table th, .ui-measure-table td { padding: var(--ui-space-sm) var(--ui-space-md); text-align: right; vertical-align: top; white-space: nowrap; }
+.ui-measure-table thead th { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-tertiary); }
+.ui-measure-table td { font-family: var(--ui-type-family-data); font-variant-numeric: tabular-nums; } /* gate-allow:mono-is-data measures are data */
+.ui-measure-table [data-base] { background: var(--ui-surface-sunken); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-measure-table .ui-measure-pom { position: sticky; left: 0; z-index: 1; text-align: left; background: var(--ui-ground); }
+.ui-measure-table tbody .ui-measure-pom { font-weight: var(--ui-type-weight-regular); white-space: normal; width: 16rem; min-width: 9rem; } /* gate-allow:space-from-tokens the name column's width, a layout width */
+@media (max-width: 40rem) { .ui-measure-table tbody .ui-measure-pom { width: 9rem; } } /* gate-allow:space-from-tokens on a phone the names wrap so two sizes stay in view */
+.ui-measure-name { display: flex; align-items: baseline; gap: var(--ui-space-sm); color: var(--ui-text); }
+.ui-measure-code { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-measure-how { display: block; margin-top: var(--ui-space-xs); white-space: normal; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); } /* gate-allow:space-from-tokens a note's measure, a layout width */
+.ui-measure-tol { color: var(--ui-text-secondary); }
+/* Editing: inputs in the cells, a narrow width for the numbers. */
+.ui-measure--edit .ui-measure-table th, .ui-measure--edit .ui-measure-table td { padding: var(--ui-space-xs); }
+.ui-measure--edit td .ui-input { width: 3.5rem; padding-inline: var(--ui-space-sm); text-align: right; font-family: var(--ui-type-family-data); } /* gate-allow:mono-is-data a measure being typed is data */ /* gate-allow:space-from-tokens a number cell's width, a layout width */
+.ui-measure--edit .ui-measure-pom .ui-input { width: 10rem; } /* gate-allow:space-from-tokens the point-of-measure name's width */
+.ui-glass .ui-measure-pom { background: transparent; position: static; }
+.ui-glass .ui-measure-table, .ui-glass .ui-measure-name { color: var(--ui-glass-fg); }
+.ui-glass .ui-measure-table thead th, .ui-glass .ui-measure-caption, .ui-glass .ui-measure-how, .ui-glass .ui-measure-code { color: var(--ui-glass-fg-secondary); }
+.ui-glass .ui-measure-table [data-base] { background: var(--ui-glass-button-clear); color: var(--ui-glass-fg); }
+
+/* Round 8 (LOAD-20, PROPOSED 19 Oct 2026): on a phone the size table shows the base size only, one measure per line,
+   and "See all sizes" opens the whole table in a sheet that scrolls sideways. Markup: <div class="ui-measure-base">
+   <dl class="ui-measure-list"><div class="ui-measure-list-row"><dt>Chest width</dt><dd>58 cm</dd></div></dl>
+   <div class="ui-measure-base-foot"><span>Size M</span> ui-btn quiet sm </div></div> */
+.ui-measure-base { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-measure-list { display: grid; gap: 0; margin: 0; min-width: 0; }
+.ui-measure-list-row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--ui-space-md); min-width: 0; padding-block: var(--ui-space-xs); }
+.ui-measure-list-row > dt { min-width: 0; font-size: var(--ui-type-body); line-height: 1.4; color: var(--ui-text); overflow-wrap: anywhere; }
+.ui-measure-list-row > dd { flex: none; margin: 0; font-family: var(--ui-type-family-data); font-size: var(--ui-type-body); font-variant-numeric: tabular-nums; color: var(--ui-text); } /* gate-allow:mono-is-data measures are data */
+.ui-measure-base-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-xs) var(--ui-space-md); }
+
+/* ─── Parts as data (inside a row: flat, no depth of their own) ──────────── */
+.ui-pparts--flat { gap: var(--ui-space-sm) var(--ui-space-lg); }
+.ui-pparts--flat > .ui-pparts-item { padding: var(--ui-space-sm) 0; background: transparent; box-shadow: none; }
+.ui-part-edit-list { display: grid; gap: var(--ui-space-xl); margin: 0; padding: 0; list-style: none; }
+.ui-part-edit { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-part-edit-head { display: flex; align-items: flex-end; gap: var(--ui-space-sm); min-width: 0; }
+.ui-part-edit-head > .ui-field { flex: 1 1 auto; min-width: 0; }
+
+/* Choice list chips (decoration methods, certifications, care symbols). On glass they stay clear (one white per glass:
+   the Save button): off is the quiet secondary words, on is the clear glass button in full white words. */
+.ui-pspec-chips { flex-wrap: wrap; }
+.ui-glass .ui-pspec-chips .ui-toggle { background: transparent; color: var(--ui-glass-fg-secondary); }
+.ui-glass .ui-pspec-chips .ui-toggle[aria-pressed="true"] { background: var(--ui-glass-button-clear-pressed); color: var(--ui-glass-fg); }
+@media (hover: hover) { .ui-glass .ui-pspec-chips .ui-toggle:hover { background: var(--ui-glass-button-clear-hover); color: var(--ui-glass-fg); } }
+
+/* The blend on glass (the editor): the series turn to the glass's own whites. */
+.ui-glass .ui-blend-bar { background: var(--ui-glass-button-clear); }
+.ui-glass :is(.ui-blend-seg, .ui-blend-dot)[data-series="1"] { background: var(--ui-glass-fg); }
+.ui-glass :is(.ui-blend-seg, .ui-blend-dot)[data-series="2"] { background: var(--ui-glass-fg-secondary); }
+.ui-glass :is(.ui-blend-seg, .ui-blend-dot)[data-series="3"] { background: var(--ui-glass-fg); opacity: .5; }
+.ui-glass :is(.ui-blend-seg, .ui-blend-dot)[data-series="4"] { background: var(--ui-glass-fg); opacity: .3; }
+.ui-glass .ui-blend-key, .ui-glass .ui-blend-foot [data-ok] { color: var(--ui-glass-fg); }
+.ui-glass .ui-blend-pct-input { color: var(--ui-glass-fg-secondary); }
+
+/* ─── TECHNICAL: files and what Fume read ──────────────────────────── */
+.ui-pfiles { display: grid; gap: var(--ui-space-md); grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); margin: 0; padding: 0; list-style: none; } /* gate-allow:space-from-tokens a file card's least width */
+.ui-pfile {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--ui-space-sm) var(--ui-space-md); align-content: start; min-width: 0;
+  padding: var(--ui-inset-float); border-radius: var(--ui-radius-card); background: var(--ui-surface); box-shadow: var(--ui-depth-raised);
+}
+.ui-pfile[data-missing] { background: var(--ui-surface-sunken); box-shadow: none; }
+.ui-pfile-icon { display: grid; place-items: center; width: var(--ui-size-control-md); height: var(--ui-size-control-md); border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); color: var(--ui-text-secondary); }
+.ui-pfile[data-missing] .ui-pfile-icon { background: var(--ui-surface); color: var(--ui-text-tertiary); }
+.ui-pfile-icon > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-pfile-body { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-pfile-title { font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-pfile-help { font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); }
+.ui-pfile-one { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-pfile-name { font-size: var(--ui-type-body); color: var(--ui-text); overflow-wrap: anywhere; }
+.ui-pfile-meta { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-pfile-read { display: grid; gap: var(--ui-space-xs); margin-top: var(--ui-space-sm); min-width: 0; }
+.ui-pfile-read-title { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); }
+.ui-pfile-lines { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0 0 0 var(--ui-space-lg); font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text); }
+.ui-pfile-action { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-blend-seg, .ui-pspec-more > .ui-btn > svg { transition: none; }
+}

@@ -1,0 +1,12 @@
+node_modules/
+dist/
+dist-preview/
+dist-check/
+.vercel/
+.env*
+.DS_Store
+# GT Canon / GT Standard are trial licences: never commit the font files.
+**/GT-*.otf
+**/GT-*.woff
+**/GT-*.woff2
+**/GT*.ttf

@@ -1,0 +1,83 @@
+/* Import products: the import on the Products page while Fume reads, while it asks about a CSV's columns,
+   around "What Fume found" (found-review.css) and after approval. PROPOSED 16 Oct 2026, round 7 (Marcus 16 Oct,
+   decided points 2 and 3).
+   Markup: <section class="ui-import" data-state="reading|mapping|review|done">
+             <div class="ui-import-head"><h2 class="ui-import-title">Importing from lysne.no</h2> <button ui-btn quiet sm>Stop</button></div>
+             <p class="ui-import-now"><svg engine/><span class="ui-text-shimmer">Fume is reading the sitemap</span></p>
+             <div class="ui-progress"/>  <dl class="ui-import-counts"><div class="ui-import-count"><dt>Pages read</dt><dd>31</dd></div>…</dl>
+             <ol class="ui-import-log"><li data-age="0|1|2"><svg check/> Reading lysne.no/products/pillow-mist</li></ol>
+             <p class="ui-import-hint"/>
+             mapping: <p class="ui-import-text"/> <form class="ui-import-map"><div class="ui-import-map-row" [data-unsure]>
+               <div class="ui-import-map-column"><span class="ui-import-map-name">Str.</span><span class="ui-import-map-sample">100</span></div>
+               <svg class="ui-import-map-arrow"/> <div class="ui-select"/></div></form> <div class="ui-import-actions"/>
+             review: the FoundReview, with <div class="ui-import-files"> (a zip group's files) inside an open item.
+             done: the head, <p class="ui-import-text"/>, a small pick grid of the products with their fidelity,
+               <p class="ui-import-needs"><svg/> Still needs you: …</p></section>
+   Fume decisions: an import is one calm raised sheet at the top of Products, never a spinner wall: one line of
+   white shimmer words for what Fume reads now (the only line that shimmers), a thin progress bar, the counts
+   as big tabular figures with small labels, and the last three steps fading out behind it. The review lies flat on
+   the page (it is the page's main thing then). The column mapping shows only the columns Fume is unsure of,
+   with its guess filled in; the rest are one tap away. Separation by space and depth, no strokes, no Amber.
+   Rule gate: few-strokes, amber-is-a-point, no-gradient, radius-from-tokens, space-from-tokens, type-from-tokens,
+   air, reduced-motion. */
+
+.ui-import { display: grid; gap: var(--ui-space-lg); min-width: 0; }
+.ui-import:is([data-state="reading"], [data-state="mapping"], [data-state="done"]) {
+  padding: var(--ui-inset-panel); border-radius: var(--ui-radius-card); background: var(--ui-surface); box-shadow: var(--ui-depth-raised);
+  animation: ui-import-in var(--ui-motion-slow) var(--ui-motion-ease) both;
+}
+@keyframes ui-import-in { from { opacity: 0; filter: blur(var(--ui-motion-enter-blur)); } to { opacity: 1; filter: none; } }
+
+.ui-import-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ui-space-sm) var(--ui-space-md); min-width: 0; }
+.ui-import-title { flex: 1 1 auto; margin: 0; min-width: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.25; color: var(--ui-text); overflow-wrap: anywhere; }
+.ui-import-text, .ui-import-hint { margin: 0; max-width: 62ch; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text-secondary); }
+.ui-import-hint { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+
+.ui-import-now { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; margin: 0; font-size: var(--ui-type-body-large); line-height: 1.4; color: var(--ui-text); }
+.ui-import-now > svg { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-secondary); }
+.ui-import-now > .ui-text-shimmer { min-width: 0; overflow-wrap: anywhere; }
+
+.ui-import-counts { display: flex; flex-wrap: wrap; gap: var(--ui-space-md) var(--ui-space-2xl); margin: 0; }
+.ui-import-count { display: grid; gap: 0; min-width: 0; }
+.ui-import-count > dt { order: 2; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-import-count > dd { order: 1; margin: 0; font-size: var(--ui-type-title-large); font-weight: var(--ui-type-weight-medium); line-height: 1.15; font-variant-numeric: tabular-nums; color: var(--ui-text); }
+
+.ui-import-log { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
+.ui-import-log > li { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); overflow-wrap: anywhere; transition: opacity var(--ui-motion-slow) var(--ui-motion-ease); }
+.ui-import-log > li > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-tertiary); }
+.ui-import-log > li[data-age="1"] { opacity: .72; }
+.ui-import-log > li[data-age="2"] { opacity: .48; }
+
+/* CSV columns */
+.ui-import-map { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-import-map-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ui-space-sm); align-items: center; min-width: 0; padding: var(--ui-inset-tight); border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+@media (min-width: 640px) { .ui-import-map-row { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: var(--ui-space-md); } }
+.ui-import-map-column { display: grid; min-width: 0; }
+.ui-import-map-name { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; color: var(--ui-text); }
+.ui-import-map-why { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-import-map-sample { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-import-map-arrow { display: none; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-tertiary); }
+@media (min-width: 640px) { .ui-import-map-arrow { display: block; } }
+.ui-import-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+
+/* A zip group's files, inside an open found item */
+.ui-import-files { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-import-files-title { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-import-files > ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--ui-size-hit) * 6)), 1fr)); gap: var(--ui-space-xs) var(--ui-space-lg); margin: 0; padding: 0; list-style: none; }
+.ui-import-files li { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; font-size: var(--ui-type-label); line-height: 1.4; }
+.ui-import-files li > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-tertiary); }
+.ui-import-file-name { min-width: 0; color: var(--ui-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-import-file-kind { flex-shrink: 0; color: var(--ui-text-tertiary); }
+
+/* After approval */
+.ui-import-needs { display: flex; align-items: flex-start; gap: var(--ui-space-sm); margin: 0; max-width: 72ch; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text); }
+.ui-import-needs > svg { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-secondary); }
+
+/* The section head's actions (round 9, DLAY-13): Import and Add a product as quiet pills, then the page's one action,
+   "Confirm 7 products", last on the right */
+.ui-import-entry { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--ui-space-xs) var(--ui-space-sm); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-import:is([data-state="reading"], [data-state="mapping"], [data-state="done"]) { animation: none; }
+  .ui-import-log > li { transition: none; }
+}

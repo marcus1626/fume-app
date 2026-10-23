@@ -1,0 +1,262 @@
+{
+  "$description": "Layout and tools: menubar, toolbar and floating action bar, resizable panels, stepper, page header, settings layout and filter bar. DECIDED 13 Oct 2026 (approved on the review board, F-D072 to F-D075), first shown in round 8, 13 Oct 2026. Component files: menubar.css + menubar.js, toolbar.css + toolbar.js, resizable.css + resizable.js, stepper.css, page-header.css, settings.css + settings.js, filter-bar.css + filter-bar.js. Sizes and the few surface steps these need; every colour points at an existing role, no new colours. Built into --ui-<group>-<key> by node tools/tokens/build.mjs.",
+  "menubar": {
+    "trigger": {
+      "value": "{size.seg}",
+      "description": "A menu name in the bar (Campaign, Creative, View, Help): a 36 px quiet pill, 44 to touch. Open, it sits on the quiet hover surface in Ink.",
+      "status": "DECIDED"
+    },
+    "gap": {
+      "value": "{space.xs}",
+      "description": "Between the menu names (4 px): they read as one bar, without a container or a line under it.",
+      "status": "DECIDED"
+    },
+    "content-width": {
+      "value": "264px",
+      "description": "Least width of a menubar menu (glass, radius float): room for an icon, the words and a shortcut in keys at the end.",
+      "status": "DECIDED"
+    },
+    "sub-gap": {
+      "value": "{space.sm}",
+      "description": "A submenu (Export as) opens 8 px beside its menu, so the two glasses read as two layers; its first row level with the row that opened it.",
+      "status": "DECIDED"
+    },
+    "indicator": {
+      "value": "{size.icon}",
+      "description": "The leading slot of a menubar row (16 px): the icon, or the check of a checkbox row, or the dot of a radio row, so every label in a menu starts on one line.",
+      "status": "DECIDED"
+    },
+    "radio-dot": {
+      "value": "{badge.dot}",
+      "description": "The dot of the chosen radio row (6 px, Porcelain on the glass). A checkbox row shows the check; neither is ever Amber.",
+      "status": "DECIDED"
+    }
+  },
+  "toolbar": {
+    "tray": {
+      "value": "{color.surface}",
+      "description": "The tray the editor tools sit in: one step toward Ink on Porcelain, a pill with 6 px around the 40 px circles, so the tools read as one object without a stroke.",
+      "status": "DECIDED"
+    },
+    "group-gap": {
+      "value": "{space.md}",
+      "description": "Between groups of tools (12 px), three times the 4 px inside a group: the separator is space, never a line.",
+      "status": "DECIDED"
+    },
+    "readout": {
+      "value": "56px",
+      "description": "The zoom readout (100 %) between zoom out and zoom in, in the data face; a fixed width, so the buttons never move when the number changes.",
+      "status": "DECIDED"
+    },
+    "bar-bottom": {
+      "value": "{space.xl}",
+      "description": "The floating action bar sits 24 px above the bottom of the screen, plus the phone's safe area (env(safe-area-inset-bottom)).",
+      "status": "DECIDED"
+    },
+    "bar-margin": {
+      "value": "{space.sm}",
+      "description": "Least room beside the floating action bar on a narrow screen (8 px, like the drawer), so the glass pill never touches the screen's edge.",
+      "status": "DECIDED"
+    },
+    "bar-z": {
+      "value": "40",
+      "description": "Stacking of the floating action bar and the settings save bar: over the page, under dialogs and drawers (50), so a confirm dialog's scrim covers the bar it came from.",
+      "status": "DECIDED"
+    }
+  },
+  "resizable": {
+    "gap": {
+      "value": "{space.md}",
+      "description": "The handle between two panels is this space (12 px), not a line. Its hit area is 44 px wide all the same.",
+      "status": "DECIDED"
+    },
+    "grip-thickness": {
+      "value": "4px",
+      "description": "The grip: a small pill in the middle of the gap, 4 px across.",
+      "status": "DECIDED"
+    },
+    "grip-length": {
+      "value": "32px",
+      "description": "The grip's length at hover and focus.",
+      "status": "DECIDED"
+    },
+    "grip-length-active": {
+      "value": "48px",
+      "description": "The grip's length while dragging: it stretches, so the hand feels it took hold.",
+      "status": "DECIDED"
+    },
+    "grip-touch": {
+      "value": "{color.surface-sunken-hover}",
+      "description": "The grip at rest where there is no hover (touch screens): always faintly there, one step above the layer behind. With a mouse it is hidden until hover or focus.",
+      "status": "DECIDED"
+    },
+    "grip-hover": {
+      "value": "{color.hairline-strong}",
+      "description": "The grip under the pointer or with keyboard focus (focus also draws the Ink ring around it).",
+      "status": "DECIDED"
+    },
+    "grip-active": {
+      "value": "{color.action.primary}",
+      "description": "The grip while dragging: Ink, the colour that decides.",
+      "status": "DECIDED"
+    },
+    "step": {
+      "value": "5",
+      "description": "Percent a panel grows or shrinks per arrow key (Shift: twice that); Home and End go to the panel's least and most size.",
+      "status": "DECIDED"
+    }
+  },
+  "stepper": {
+    "marker": {
+      "value": "24px",
+      "description": "The step marker: a 24 px circle with the step number, the size of the selected creative's badge.",
+      "status": "DECIDED"
+    },
+    "marker-gap": {
+      "value": "{space.md}",
+      "description": "From the marker to its label (12 px); label to its description 4.",
+      "status": "DECIDED"
+    },
+    "step-gap": {
+      "value": "{space.xl}",
+      "description": "Between steps side by side (24 px, twice the 12 from a marker to its words). Steps are told apart by space and their numbers; there is no connector line.",
+      "status": "DECIDED"
+    },
+    "row-gap": {
+      "value": "{space.xl}",
+      "description": "Between steps stacked upright (24 px), twice the air inside a step.",
+      "status": "DECIDED"
+    },
+    "marker-done": {
+      "value": "{color.surface-sunken}",
+      "description": "A finished step: the Ink check on the sunken circle. Never Amber: Amber is only the Quality Gate check on a checked creative.",
+      "status": "DECIDED"
+    },
+    "marker-upcoming": {
+      "value": "{color.surface}",
+      "description": "A step still to come: its number in tertiary on the quietest circle, so the eye goes to the current step in Ink.",
+      "status": "DECIDED"
+    },
+    "dot": {
+      "value": "{badge.dot}",
+      "description": "The compact stepper on a phone (Step 2 of 5): one 6 px dot per step, Ink when done, sunken when still to come.",
+      "status": "DECIDED"
+    },
+    "dot-current": {
+      "value": "20px",
+      "description": "The current step in the compact stepper: the dot stretched to a 20 px pill in Ink.",
+      "status": "DECIDED"
+    }
+  },
+  "pagehead": {
+    "crumb-gap": {
+      "value": "{space.md}",
+      "description": "From the breadcrumb to the title (12 px).",
+      "status": "DECIDED"
+    },
+    "meta-gap": {
+      "value": "{space.sm}",
+      "description": "From the title to its quiet meta line in the data face (8 px): they belong together.",
+      "status": "DECIDED"
+    },
+    "heading-min": {
+      "value": "320px",
+      "description": "The title keeps at least this much of its line before the actions wrap under it; below it they move to the next line instead of crushing the title.",
+      "status": "DECIDED"
+    },
+    "meta-separator": {
+      "value": "{space.lg}",
+      "description": "The room each quiet dot takes between parts of the meta line (16 px, the dot centred). A dot that would start a line is clipped away.",
+      "status": "DECIDED"
+    },
+    "tabs-gap": {
+      "value": "{space.xl}",
+      "description": "From the header to its tabs (24 px), three times the title-to-meta gap.",
+      "status": "DECIDED"
+    },
+    "actions-gap": {
+      "value": "{space.sm}",
+      "description": "Between the header's actions (8 px). The primary action is the one Ink button, last in the row.",
+      "status": "DECIDED"
+    }
+  },
+  "settings": {
+    "page-max": {
+      "value": "640px",
+      "description": "The widest a settings page runs beside its navigation, so a form keeps a calm measure.",
+      "status": "DECIDED"
+    },
+    "gap": {
+      "value": "{space.2xl}",
+      "description": "Between the settings navigation and its page (32 px).",
+      "status": "DECIDED"
+    },
+    "section-gap": {
+      "value": "{fume.space-7}",
+      "description": "Between sections of a settings page (48 px), twice the 24 px between fields: sections are parted by space, never a line.",
+      "status": "DECIDED"
+    },
+    "savebar-bottom": {
+      "value": "{space.lg}",
+      "description": "The save bar floats 16 px above the bottom of the page (plus the safe area) once something has changed.",
+      "status": "DECIDED"
+    }
+  },
+  "filterbar": {
+    "search-min": {
+      "value": "200px",
+      "description": "The search's starting width in the row: chips and sort take their room first, then the search grows up to its full width; only when even this does not fit does the row wrap.",
+      "status": "DECIDED"
+    },
+    "search": {
+      "value": "280px",
+      "description": "The search field in a wide filter bar; on a phone it takes the whole row.",
+      "status": "DECIDED"
+    },
+    "sort": {
+      "value": "200px",
+      "description": "The sort select at the end of a wide filter bar (a field, radius 12, its listbox glass). On a phone sorting moves into the filter sheet.",
+      "status": "DECIDED"
+    },
+    "menu": {
+      "value": "264px",
+      "description": "Least width of a filter chip's glass menu: room for the option, its data hint and the check.",
+      "status": "DECIDED"
+    },
+    "gap": {
+      "value": "{space.sm}",
+      "description": "Between the controls of the filter bar (8 px).",
+      "status": "DECIDED"
+    },
+    "row-gap": {
+      "value": "{space.md}",
+      "description": "From the controls to the row of active filters and the result count (12 px).",
+      "status": "DECIDED"
+    },
+    "results-gap": {
+      "value": "{space.xl}",
+      "description": "From the filter bar to the creatives it filters (24 px), twice the gap inside the bar.",
+      "status": "DECIDED"
+    },
+    "pill": {
+      "value": "{size.control-sm}",
+      "description": "An active filter (Status: Waiting for Anna): a 32 px pill with its remove circle, 44 to touch.",
+      "status": "DECIDED"
+    },
+    "pill-bg": {
+      "value": "{color.surface-sunken}",
+      "description": "An active filter pill: the sunken surface, the key in tertiary and the value in Ink. No stroke.",
+      "status": "DECIDED"
+    },
+    "pill-bg-hover": {
+      "value": "{color.surface-sunken-hover}",
+      "description": "The remove circle in a filter pill under the pointer, and pressed.",
+      "status": "DECIDED"
+    },
+    "remove": {
+      "value": "24px",
+      "description": "The remove circle (x) at the end of a filter pill; its hit area is 44.",
+      "status": "DECIDED"
+    }
+  }
+}

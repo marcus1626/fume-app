@@ -1,0 +1,343 @@
+{
+  "$description": "Content and layout components: card, creative, item, avatar, alert, empty, skeleton, accordion, scroll area, data list. DECIDED 13 Oct 2026 (approved on the review board, F-D072 to F-D075), first shown in round 7; the skeleton on glass, round 8; shimmer text, round 10, white in round 11. Every value points at a brand primitive or an existing UI role; no new colours. Built into --ui-<group>-<key> by node tools/tokens/build.mjs.",
+  "card": {
+    "bg": {
+      "value": "{color.surface}",
+      "status": "DECIDED",
+      "description": "A card is one surface step off its Porcelain ground, never the same colour (card-never-matches-ground). No border and no shadow at rest: the step is the edge."
+    },
+    "bg-hover": {
+      "value": "{fume.focus-100}",
+      "status": "DECIDED",
+      "description": "Interactive card, hover: one more step toward Ink."
+    },
+    "bg-pressed": {
+      "value": "{fume.focus-100}",
+      "status": "DECIDED",
+      "description": "Interactive card, pressed: stays on the hover step and shrinks (card.press-scale), so a large surface never flashes dark."
+    },
+    "bg-behind": {
+      "value": "{color.ground}",
+      "status": "DECIDED",
+      "description": "On the layer behind the page (ground-behind) a card comes forward to Porcelain, like the page sheet itself."
+    },
+    "depth-behind-hover": {
+      "value": "{depth.raised}",
+      "status": "DECIDED",
+      "description": "On the layer behind, Porcelain is already the top step, so an interactive card lifts with depth instead of a darker surface."
+    },
+    "press-scale": {
+      "value": "0.985",
+      "status": "DECIDED",
+      "description": "A card is wide, so it shrinks half as much as a button (0.97) for the press to read the same."
+    },
+    "progress-track": {
+      "value": "{fume.focus-200}",
+      "status": "DECIDED",
+      "description": "Track of a progress bar inside a card (the campaign card's approvals): one step deeper than progress.track, so it reads on the card surface without a line. The fill stays Ink (progress.css); never Amber."
+    }
+  },
+  "creative": {
+    "bg": {
+      "value": "{color.surface-creative}",
+      "status": "DECIDED",
+      "description": "The customer's creative sits on pure white: the one content surface allowed to be white."
+    },
+    "edge": {
+      "value": "alpha({fume.focus-900}, 0.1)",
+      "status": "DECIDED",
+      "description": "The creative's hairline, drawn over the image: Ink at 10 %, so a white creative keeps its edge on Porcelain and a dark one gets no light rim. The one content stroke Fume allows (few-strokes)."
+    },
+    "ratio-feed": {
+      "value": "4 / 5",
+      "status": "DECIDED",
+      "description": "Feed format."
+    },
+    "ratio-story": {
+      "value": "9 / 16",
+      "status": "DECIDED",
+      "description": "Story format."
+    },
+    "ratio-banner": {
+      "value": "1.91 / 1",
+      "status": "DECIDED",
+      "description": "Banner format (link and display ads)."
+    },
+    "ratio-square": {
+      "value": "1 / 1",
+      "status": "PROPOSED",
+      "description": "Square format (1:1, the package's third format). PROPOSED 14 Oct 2026, with the app."
+    },
+    "ring": {
+      "value": "{color.action.primary}",
+      "status": "DECIDED",
+      "description": "Selected creative: an Ink ring, 2 px, 2 px off the creative (Ink decides). Never Amber."
+    },
+    "badge": {
+      "value": "{color.action.primary}",
+      "status": "DECIDED",
+      "description": "The round select badge on a selected creative: Ink with a Paper check."
+    },
+    "badge-fg": {
+      "value": "{color.action.primary-fg}",
+      "status": "DECIDED"
+    },
+    "badge-size": {
+      "value": "24px",
+      "status": "DECIDED",
+      "description": "Select badge diameter."
+    },
+    "tile-min": {
+      "value": "128px",
+      "status": "DECIDED",
+      "description": "Smallest tile in a creative grid; the grid fills the row with as many as fit (two on a phone, even inside a padded panel)."
+    }
+  },
+  "item": {
+    "bg-hover": {
+      "value": "{color.action.quiet-hover}",
+      "status": "DECIDED",
+      "description": "A row you can press: hover is one step toward Ink, like a quiet button. No lines between rows; rows are grouped by space."
+    },
+    "bg-pressed": {
+      "value": "{color.action.quiet-pressed}",
+      "status": "DECIDED",
+      "description": "Two steps toward Ink."
+    },
+    "bg-muted": {
+      "value": "{color.surface}",
+      "status": "DECIDED",
+      "description": "The muted row (shadcn variant muted, and outline, which Fume draws as a surface instead of a border)."
+    },
+    "media": {
+      "value": "40px",
+      "status": "DECIDED",
+      "description": "Media width in a default row: icon tile, avatar or a creative thumbnail (4:5, so 50 tall)."
+    },
+    "media-sm": {
+      "value": "32px",
+      "status": "DECIDED",
+      "description": "Media width in a small row."
+    }
+  },
+  "avatar": {
+    "size-sm": {
+      "value": "24px",
+      "status": "DECIDED"
+    },
+    "size": {
+      "value": "32px",
+      "status": "DECIDED"
+    },
+    "size-lg": {
+      "value": "40px",
+      "status": "DECIDED"
+    },
+    "bg": {
+      "value": "{fume.cream}",
+      "status": "DECIDED",
+      "description": "Initials on Cream, Ink text in medium weight (15.0:1): people are the real, the Material family (decided with Warmer, Marcus 13 Oct; round 9; round 8 had the sunken step)."
+    },
+    "fg": {
+      "value": "{color.text}",
+      "status": "DECIDED"
+    },
+    "bg-ink": {
+      "value": "{color.action.primary}",
+      "status": "DECIDED",
+      "description": "The person you are (or the one who decides, Anna on a check): Ink with Paper initials."
+    },
+    "fg-ink": {
+      "value": "{color.text-on-ink}",
+      "status": "DECIDED"
+    },
+    "cutout": {
+      "value": "2px",
+      "status": "DECIDED",
+      "description": "The gap that separates overlapping avatars and the status dot from the avatar under them. Painted in the ground colour, so it reads as space cut out of the circle, not as a line."
+    },
+    "status": {
+      "value": "{color.text}",
+      "status": "DECIDED",
+      "description": "Status dot: here now, in Ink. No green; Fume has no success colour."
+    },
+    "status-away": {
+      "value": "{color.text-disabled}",
+      "status": "DECIDED",
+      "description": "Status dot: away."
+    }
+  },
+  "alert": {
+    "bg": {
+      "value": "{color.surface}",
+      "status": "DECIDED",
+      "description": "An inline alert is a surface step on its ground, never a bordered box. Info, success and warning differ by icon and words, not by colour."
+    },
+    "bg-on-surface": {
+      "value": "{color.surface-sunken}",
+      "status": "DECIDED",
+      "description": "Inside a card the alert steps one further, so it never matches its ground."
+    },
+    "danger": {
+      "value": "{color.danger}",
+      "status": "DECIDED",
+      "description": "Error alerts: Rouge on the icon and the title only. The text stays secondary."
+    },
+    "bg-glass": {
+      "value": "{color.glass.button-clear}",
+      "status": "DECIDED",
+      "description": "An alert on glass (inside a dialog or sheet): the faint Porcelain veil, no stroke."
+    },
+    "bg-glass-danger": {
+      "value": "{color.glass.button-danger}",
+      "status": "DECIDED",
+      "description": "An error alert on glass is Rouge at 80 %, like the delete button on glass: Rouge as an icon colour disappears on Smoke (1.3:1). Porcelain text 5:1."
+    }
+  },
+  "empty": {
+    "media": {
+      "value": "56px",
+      "status": "DECIDED",
+      "description": "The soft square that holds the empty state's 24 px icon."
+    },
+    "media-bg": {
+      "value": "{color.surface-sunken}",
+      "status": "DECIDED"
+    },
+    "measure": {
+      "value": "38ch",
+      "status": "DECIDED",
+      "description": "Line length of the empty state's text: short lines, centred."
+    },
+    "icon": {
+      "value": "24px",
+      "status": "DECIDED",
+      "description": "The empty state's icon at display size (icons-lucide: 24 px for display)."
+    }
+  },
+  "skeleton": {
+    "bg": {
+      "value": "{color.surface-sunken}",
+      "status": "DECIDED",
+      "description": "Placeholder shapes on Porcelain: the sunken step, in the shape and size of what is coming."
+    },
+    "bg-pulse": {
+      "value": "{color.surface}",
+      "status": "DECIDED",
+      "description": "The shimmer lifts the shape to the surface step and back, slowly. A flat colour change, never a gradient sweep (round 7; restored in round 9 after Marcus found the round 8 sweep artificial)."
+    },
+    "bg-on-surface": {
+      "value": "{fume.focus-100}",
+      "status": "DECIDED",
+      "description": "Inside a card (surface) the shape starts one step deeper..."
+    },
+    "bg-pulse-on-surface": {
+      "value": "{fume.focus-200}",
+      "status": "DECIDED",
+      "description": "...and pulses a step toward Ink, so it never vanishes into the card."
+    },
+    "bg-glass": {
+      "value": "{color.glass.button-clear}",
+      "status": "DECIDED",
+      "description": "A shape on glass (a sheet or popover while it loads): the faint Porcelain veil of the clear button, no stroke."
+    },
+    "bg-pulse-glass": {
+      "value": "alpha({fume.porcelain}, 0.18)",
+      "status": "DECIDED",
+      "description": "On glass the shape breathes from the 10 % veil to Porcelain at 18 % and back: one step lighter, never Amber on Smoke."
+    }
+  },
+  "accordion": {
+    "bg": {
+      "value": "{color.surface}",
+      "status": "DECIDED",
+      "description": "Each section is its own surface; sections are separated by space (accordion.gap), never a line."
+    },
+    "bg-hover": {
+      "value": "{fume.focus-100}",
+      "status": "DECIDED",
+      "description": "Hover on a section's trigger steps the whole section toward Ink."
+    },
+    "gap": {
+      "value": "{space.sm}",
+      "status": "DECIDED",
+      "description": "Space between sections."
+    },
+    "row": {
+      "value": "56px",
+      "status": "DECIDED",
+      "description": "Height of a trigger row: a calm, generous target (44 px at least, rule touch-target)."
+    }
+  },
+  "scroll": {
+    "thumb": {
+      "value": "alpha({fume.focus-900}, 0.2)",
+      "status": "DECIDED",
+      "description": "Scroll-area thumb at rest: a thin pill of Ink at 20 %, laid over the content's edge. No track, no line."
+    },
+    "thumb-hover": {
+      "value": "alpha({fume.focus-900}, 0.36)",
+      "status": "DECIDED",
+      "description": "Thumb under the pointer or while dragged: one step more Ink."
+    },
+    "size": {
+      "value": "6px",
+      "status": "DECIDED",
+      "description": "Thumb thickness."
+    },
+    "size-hover": {
+      "value": "8px",
+      "status": "DECIDED",
+      "description": "Thumb thickness under the pointer, easier to grab."
+    }
+  },
+  "datalist": {
+    "label": {
+      "value": "{color.text-tertiary}",
+      "status": "DECIDED",
+      "description": "Metadata label (Format, Size, Checked by): tertiary, so the value leads."
+    },
+    "text": {
+      "value": "{color.text}",
+      "status": "DECIDED",
+      "description": "Metadata value. (Named text: a group key called value would read as a token.)"
+    },
+    "label-width": {
+      "value": "112px",
+      "status": "DECIDED",
+      "description": "Label column in the side-by-side data list; values align on one edge. Below 320 px the label goes above its value."
+    },
+    "cell": {
+      "value": "80px",
+      "status": "DECIDED",
+      "description": "Smallest cell in the grid data list (.ui-datalist--grid): a stat strip wraps to two columns on a phone and four in a wide card."
+    }
+  },
+  "text-shimmer": {
+    "light": {
+      "value": "#FFFFFF",
+      "status": "DECIDED",
+      "description": "White light passing through dark words while something is under way. It only ever passes; the words rest in their own colour. Round 11 (Marcus 13 Oct: 'Shimmer skal være hvit på mørk tekst'); round 10 had Amber. The Engine's words take the same white light since 15 Oct (Marcus: 'amber shimmer var ikke fint')."
+    },
+    "strength": {
+      "value": "75%",
+      "status": "DECIDED",
+      "description": "How far the words go toward the light at the middle of the band: three quarters of the way to white, a gleam, so Ink words never vanish into the Porcelain page."
+    },
+    "band": {
+      "value": "16%",
+      "status": "DECIDED",
+      "description": "Width of the band of light, as a share of the gradient strip (2.5 × the text), so about 40 % of a short line."
+    },
+    "duration": {
+      "value": "2600ms",
+      "status": "DECIDED",
+      "description": "One pass and a rest: the light crosses in the first 70 % and the words rest for the last 30 %."
+    },
+    "angle": {
+      "value": "100deg",
+      "status": "DECIDED",
+      "description": "The band leans a little, like light through a window, not a vertical bar."
+    }
+  }
+}

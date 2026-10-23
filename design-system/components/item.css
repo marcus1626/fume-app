@@ -1,0 +1,81 @@
+/* Item: list rows. DECIDED 13 Oct, from round 7. Built on shadcn's item (same parts: item-group, item, item-media,
+   item-content, item-title, item-description, item-actions, item-header, item-footer, item-separator;
+   variants default and muted, sizes default and sm, asChild for links), redesigned for Fume.
+   Decisions:
+   - No lines between rows (few-strokes). Rows are grouped by space: --ui-space-xs between rows, a group
+     label and an .ui-item-separator (space, not a line) between groups, so groups sit far wider apart
+     than rows (rule proximity). shadcn's outline variant is drawn as the muted surface, never a border.
+   - Radius --ui-radius-item (10); sideways air --ui-inset-float (16).
+   - A row you can press (a.ui-item, button.ui-item, .ui-item--interactive) behaves like a quiet button:
+     hover one step toward Ink, pressed two, focus the sharp 2 px Ink ring. Hover only with a mouse.
+   - Media: icon tile (sunken, radius item), avatar, or the customer's creative as a 4:5 thumbnail on
+     white with its hairline (the one stroke on content).
+   Touch: every row is at least --ui-size-hit tall.
+   Rule gate: few-strokes, radius-from-tokens, air, space-from-tokens, touch-target, touch-feedback,
+   hover-needs-hover, reduced-motion. */
+
+.ui-item-group { display: grid; gap: var(--ui-space-xs); min-width: 0; margin: 0; padding: 0; list-style: none; }
+/* a row in its own <li> may shrink to the group, so wide actions wrap instead of pushing past the page */
+.ui-item-group > li { min-width: 0; }
+.ui-item-group-label { display: flex; align-items: baseline; justify-content: space-between; gap: var(--ui-space-sm); padding: 0 var(--ui-inset-float) var(--ui-space-xs); font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-item-group-count { font-weight: var(--ui-type-weight-regular); font-variant-numeric: tabular-nums; }
+/* shadcn's ItemSeparator: space between groups, never a line */
+.ui-item-separator { display: block; flex: none; height: var(--ui-space-lg); margin: 0; border: 0; background: none; }
+
+.ui-item {
+  --item-bg: transparent; --item-bg-hover: var(--ui-item-bg-hover); --item-bg-pressed: var(--ui-item-bg-pressed); --item-media: var(--ui-item-media); --item-tile: var(--ui-surface-sunken);
+  position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm) var(--ui-space-lg);
+  min-width: 0; min-height: var(--ui-size-hit); margin: 0; padding: var(--ui-space-md) var(--ui-inset-float);
+  border: 0; border-radius: var(--ui-radius-item); background: var(--item-bg); color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.4; text-align: left; text-decoration: none;
+}
+.ui-item--muted, .ui-item[data-variant="muted"], .ui-item[data-variant="outline"] { --item-bg: var(--ui-item-bg-muted); }
+.ui-item--sm, .ui-item[data-size="sm"] { gap: var(--ui-space-xs) var(--ui-space-md); padding: var(--ui-space-sm) var(--ui-inset-float); --item-media: var(--ui-item-media-sm); }
+
+/* a row you can press */
+a.ui-item, button.ui-item, .ui-item--interactive {
+  width: 100%;
+  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+@media (hover: hover) {
+  a.ui-item:hover, button.ui-item:hover, .ui-item--interactive:hover { --item-tile: var(--ui-ground); background: var(--item-bg-hover); }
+}
+.ui-item.is-hover { --item-tile: var(--ui-ground); background: var(--item-bg-hover); }
+/* the icon tile never matches its row: when the row steps to the sunken colour, the tile comes forward to Porcelain */
+a.ui-item:active, button.ui-item:active, .ui-item--interactive:active, .ui-item.is-pressed { --item-tile: var(--ui-ground); background: var(--item-bg-pressed); }
+a.ui-item:focus-visible, button.ui-item:focus-visible, .ui-item--interactive:focus-visible, .ui-item.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-item[aria-disabled="true"], .ui-item[data-disabled] { color: var(--ui-text-disabled); background: var(--item-bg); cursor: default; pointer-events: none; }
+.ui-item[aria-disabled="true"] .ui-item-title, .ui-item[aria-disabled="true"] .ui-item-description, .ui-item[aria-disabled="true"] .ui-item-media { color: var(--ui-text-disabled); }
+.ui-item[aria-disabled="true"] .ui-item-media img { opacity: .5; }
+
+/* media */
+.ui-item-media { display: flex; flex: none; align-items: center; justify-content: center; gap: var(--ui-space-xs); color: var(--ui-text); }
+.ui-item-media svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; }
+.ui-item-media--icon { width: var(--item-media); height: var(--item-media); border-radius: var(--ui-radius-item); background: var(--item-tile); transition: background-color var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-item-media--icon svg { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); }
+.ui-item--sm .ui-item-media--icon svg, .ui-item[data-size="sm"] .ui-item-media--icon svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-item-media--image { width: var(--item-media); height: var(--item-media); overflow: hidden; border-radius: var(--ui-radius-item); }
+.ui-item-media--creative { position: relative; width: var(--item-media); aspect-ratio: var(--ui-creative-ratio-feed); overflow: hidden; border-radius: var(--ui-radius-item); background: var(--ui-creative-bg); }
+.ui-item-media--creative::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); pointer-events: none; } /* gate-allow:few-strokes  the edge of the customer's creative */
+.ui-item-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* text */
+/* the words keep at least three touch targets of width: on a phone a status or a worded button wraps to its
+   own line (pushed to the end) instead of squeezing the title into two lines; a chevron or a count still fits */
+.ui-item-content { display: grid; flex: 1 1 0; gap: var(--ui-space-xs); align-content: center; min-width: min(100%, calc(var(--ui-size-hit) * 3)); }
+.ui-item-content + .ui-item-content { flex: none; justify-items: end; text-align: right; }
+.ui-item-title { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text); }
+.ui-item-description { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-regular); line-height: 1.45; color: var(--ui-text-tertiary); text-wrap: pretty; }
+.ui-item--sm .ui-item-description, .ui-item[data-size="sm"] .ui-item-description { font-size: var(--ui-type-label); }
+.ui-item-description a { color: var(--ui-text-secondary); text-decoration: underline; text-decoration-color: var(--ui-hairline-strong); text-underline-offset: 3px; }
+.ui-item-time { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; }
+
+/* actions, header, footer */
+.ui-item-actions { display: flex; flex: none; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: var(--ui-space-sm); max-width: 100%; margin-inline-start: auto; color: var(--ui-text-tertiary); }
+.ui-item-actions > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-item-header, .ui-item-footer { display: flex; flex-basis: 100%; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); min-width: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  a.ui-item, button.ui-item, .ui-item--interactive, .ui-item-media--icon { transition: none; }
+}

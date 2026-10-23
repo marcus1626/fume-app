@@ -1,0 +1,208 @@
+/* Sidebar: the app's navigation. DECIDED 13 Oct, from round 7. Built on shadcn's sidebar (same parts: provider/wrapper,
+   sidebar, header, content, group, group-label, menu, menu-item, menu-button, menu-badge, footer, inset,
+   trigger; same data attributes: data-state="expanded|collapsed", data-collapsible="icon", data-active,
+   data-mobile), redesigned for Fume.
+   Layers, not lines (Marcus 13 Oct, rule few-strokes): the sidebar sits on the layer behind the page
+   (--ui-ground-behind) and the page lies on it as a Porcelain sheet (--ui-depth-sheet). There is no line
+   between them, no border, no separator: groups are told apart by space. This is shadcn's "inset" variant,
+   and it is Fume's only one.
+   Rows: icon, label and a count. The current row comes forward to the page's own Porcelain, lifted with
+   --ui-depth-raised; hover is one step toward Ink (--ui-behind-hover); a press shrinks the row 3 %.
+   Collapsed to an icon rail (data-state="collapsed"): every row becomes a 44 px rounded square (radius
+   item, never a circle: Marcus 13 Oct), the icon never moves, and the label turns into a small glass tooltip
+   on hover or keyboard focus. The logo (the lockup, F-D080) folds to the mark: give the header link both
+   (.ui-logo-full and .ui-logo-mark). Anything else in the header or footer that cannot
+   fold to one icon is hidden on the rail by the page that put it there.
+   On a phone (the wrapper narrower than 640 px, a container query, so it works inside any frame) the
+   sidebar becomes a Smoke glass drawer over the scrim. Decided over a bottom tab bar: the drawer keeps the
+   groups, counts, workspace and user, and the bottom of a phone screen belongs to Fume's floating action
+   bar (Approve 3). The page stays a full-bleed sheet.
+   sidebar.js toggles it (the trigger, Cmd/Ctrl+B with data-ui-sidebar-shortcut, Escape and the scrim close
+   the drawer, focus returns to the trigger).
+   Touch: rows are 44 px tall on touch screens; the rail's squares are 44; hover only with a mouse.
+   Round 12 (desktop review 20 Oct, DWAY-5, DWAY-21; PROPOSED 20 Oct 2026): Fume's studio and an agency share this
+   sidebar with the customer's (one frame, remembered folded or open on this computer), and a place can hold a place
+   or two inside it (.ui-sidebar-menu-button--sub, below), shown while it is the current place.
+   Rule gate: few-strokes, air, space-from-tokens, touch-target, touch-feedback, hover-needs-hover,
+   glass-only-floating (the drawer and the rail tooltips float), reduced-motion, reduced-transparency. */
+
+.ui-sidebar-wrapper {
+  position: relative; isolation: isolate; display: flex; width: 100%; min-height: 100%;
+  container: ui-sidebar / inline-size;
+  background: var(--ui-ground-behind); color: var(--ui-text);
+  font-family: var(--ui-type-family);
+}
+
+.ui-sidebar {
+  /* colours as local roles, so the drawer can swap them for glass in one place */
+  --sb-fg: var(--ui-text-secondary); --sb-fg-strong: var(--ui-text); --sb-fg-quiet: var(--ui-text-tertiary);
+  --sb-hover: var(--ui-behind-hover); --sb-active: var(--ui-behind-active); --sb-active-fg: var(--ui-text); --sb-active-quiet: var(--ui-text-secondary); --sb-active-depth: var(--ui-depth-raised);
+  --sb-mark: var(--ui-action-primary); --sb-mark-fg: var(--ui-action-primary-fg);
+  --sb-person: var(--ui-behind-active); --sb-person-fg: var(--ui-text);
+  --sb-ring: var(--ui-focus-ring);
+  --sidebar-mode: rail;
+  position: relative; z-index: 2; flex: 0 0 auto; display: flex; flex-direction: column; gap: var(--ui-space-xl);
+  width: var(--ui-sidebar-width); min-width: 0; padding: var(--ui-space-lg) var(--ui-space-md);
+  color: var(--sb-fg-strong);
+  transition: width var(--ui-motion-base) var(--ui-motion-ease);
+}
+
+.ui-sidebar-header, .ui-sidebar-footer { display: flex; flex-direction: column; gap: var(--ui-space-xs); }
+.ui-sidebar-content { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: var(--ui-space-xl); overflow-x: hidden; overflow-y: auto; scrollbar-width: none; }
+.ui-sidebar-content::-webkit-scrollbar { display: none; }
+.ui-sidebar-group { display: flex; flex-direction: column; gap: var(--ui-space-xs); min-width: 0; }
+.ui-sidebar-group-label {
+  display: flex; align-items: center; height: var(--ui-size-control-sm); padding-inline: var(--ui-size-pad-sm); overflow: hidden;
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); letter-spacing: .01em; white-space: nowrap; color: var(--sb-fg-quiet);
+  transition: height var(--ui-motion-base) var(--ui-motion-ease), opacity var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-sidebar-menu { display: flex; flex-direction: column; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
+.ui-sidebar-menu-item { position: relative; display: flex; min-width: 0; }
+
+/* The Fume logo, the lockup (or a workspace's own mark). It lines up with the row icons; on the rail it folds to the mark. */
+.ui-sidebar-logo {
+  position: relative; display: flex; align-items: center; height: var(--ui-size-hit); padding-inline: var(--ui-size-pad-sm);
+  border-radius: var(--ui-radius-item); color: var(--sb-fg-strong); text-decoration: none; outline: none;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: opacity var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-sidebar-logo > svg { display: block; width: auto; height: var(--ui-sidebar-logo); margin: 0; color: inherit; }
+.ui-sidebar-logo > .ui-logo-mark { display: none; height: var(--ui-sidebar-logo-mark); }
+.ui-sidebar-logo:active { opacity: .72; }
+.ui-sidebar-logo:focus-visible { outline: var(--ui-size-ring) solid var(--sb-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* A row. A list row (radius item), not an action pill; in the rail it becomes a 44 px square with the same radius. */
+.ui-sidebar-menu-button {
+  position: relative; display: flex; align-items: center; gap: var(--ui-space-md); flex: 1 1 auto; width: 100%; min-width: 0;
+  height: var(--ui-sidebar-row); padding-inline: var(--ui-size-pad-sm);
+  border: 0; border-radius: var(--ui-radius-item); /* gate-allow:actions-are-pills  a navigation row is a list row (radius item), not an action; in the rail it is a rounded square */
+  background: transparent; color: var(--sb-fg);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.25;
+  text-align: left; text-decoration: none; white-space: nowrap;
+  cursor: pointer; user-select: none; outline: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), color var(--ui-motion-fast) var(--ui-motion-ease),
+              box-shadow var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease),
+              width var(--ui-motion-base) var(--ui-motion-ease), height var(--ui-motion-base) var(--ui-motion-ease), border-radius var(--ui-motion-base) var(--ui-motion-ease);
+}
+.ui-sidebar-menu-button > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; }
+.ui-sidebar-label { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ui-sidebar-label small { display: block; overflow: hidden; text-overflow: ellipsis; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--sb-fg-quiet); }
+.ui-sidebar-menu-badge { margin-inline-start: auto; padding-inline-start: var(--ui-space-sm); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); font-variant-numeric: tabular-nums; color: var(--sb-fg-quiet); }
+.ui-sidebar-end { margin-inline-start: auto; color: var(--sb-fg-quiet); }
+
+/* A place inside the current one (round 12, DWAY-5, DWAY-6; PROPOSED 20 Oct 2026): Brand › Models and references and
+   Boards, Engine › Engine output. It shows under its place only while that place is the current one, its label lined
+   up with the place's label, one step quieter and a size lower; it lights up as any row does. On the rail it is
+   hidden: the place's square stands for it. 32 px with a mouse, 44 on touch screens (below). */
+.ui-sidebar-menu-button--sub {
+  height: var(--ui-size-control-sm); padding-inline-start: calc(var(--ui-size-pad-sm) + var(--ui-size-icon) + var(--ui-space-md));
+  font-weight: var(--ui-type-weight-regular); color: var(--sb-fg-quiet);
+}
+
+/* Large rows: the workspace switcher and the user, two lines beside a 28 px mark that lines up with the icons. */
+.ui-sidebar-menu-button--lg { height: var(--ui-size-control-lg); padding-inline: var(--ui-space-sm) var(--ui-space-md); }
+.ui-sidebar-mark, .ui-sidebar-avatar {
+  display: grid; place-items: center; flex-shrink: 0; width: calc(var(--ui-size-hit) - 2 * var(--ui-space-sm)); aspect-ratio: 1;
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1;
+}
+.ui-sidebar-mark { border-radius: var(--ui-radius-item); background: var(--sb-mark); color: var(--sb-mark-fg); } /* a workspace: a soft square */
+.ui-sidebar-avatar { border-radius: 50%; background: var(--sb-person); color: var(--sb-person-fg); box-shadow: var(--ui-depth-raised); } /* a person: a circle */
+
+/* Hit area: rows are 40 tall with a mouse and 44 on touch screens; the rail's squares are 44. */
+@media (pointer: coarse) {
+  .ui-sidebar-menu-button { height: var(--ui-size-hit); }
+  .ui-sidebar-menu-button--lg { height: var(--ui-size-control-lg); }
+}
+@media (hover: hover) {
+  .ui-sidebar-menu-button:hover { background: var(--sb-hover); color: var(--sb-fg-strong); }
+  .ui-sidebar-menu-button[data-active="true"]:hover, .ui-sidebar-menu-button[aria-current="page"]:hover { background: var(--sb-active); }
+}
+.ui-sidebar-menu-button.is-hover { background: var(--sb-hover); color: var(--sb-fg-strong); }
+.ui-sidebar-menu-button:active, .ui-sidebar-menu-button.is-pressed { background: var(--sb-hover); color: var(--sb-fg-strong); transform: scale(var(--ui-motion-press-scale)); }
+/* The current place comes forward to Porcelain, lifted with depth instead of a line. */
+.ui-sidebar-menu-button[data-active="true"], .ui-sidebar-menu-button[aria-current="page"] { background: var(--sb-active); color: var(--sb-active-fg); box-shadow: var(--sb-active-depth); }
+.ui-sidebar-menu-button[data-active="true"] .ui-sidebar-menu-badge, .ui-sidebar-menu-button[aria-current="page"] .ui-sidebar-menu-badge { color: var(--sb-active-quiet); }
+.ui-sidebar-menu-button:focus-visible, .ui-sidebar-menu-button.is-focus { outline: var(--ui-size-ring) solid var(--sb-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-sidebar-menu-button:disabled, .ui-sidebar-menu-button[aria-disabled="true"] { color: var(--ui-text-disabled); background: transparent; box-shadow: none; cursor: default; pointer-events: none; }
+
+/* The page: a Porcelain sheet lying on the layer behind. Depth, never a stroke. */
+.ui-sidebar-inset {
+  position: relative; z-index: 1; flex: 1 1 0; min-width: 0; display: flex; flex-direction: column;
+  margin: var(--ui-sidebar-gap) var(--ui-sidebar-gap) var(--ui-sidebar-gap) 0; overflow: auto;
+  border-radius: var(--ui-radius-card); background: var(--ui-ground); box-shadow: var(--ui-depth-sheet);
+}
+.ui-sidebar-scrim { display: none; }
+
+/* Collapsed to an icon rail (wide containers only). Rows become 44 px rounded squares; the icon stays put;
+   the logo folds to the mark. */
+@container ui-sidebar (min-width: 640px) {
+  .ui-sidebar[data-state="collapsed"] { width: var(--ui-sidebar-width-icon); }
+  .ui-sidebar[data-state="collapsed"] .ui-sidebar-content { overflow: visible; }
+  .ui-sidebar[data-state="collapsed"] .ui-sidebar-logo { display: none; }
+  .ui-sidebar[data-state="collapsed"] .ui-sidebar-logo:has(> .ui-logo-mark) { display: flex; justify-content: center; width: var(--ui-size-hit); padding-inline: 0; }
+  .ui-sidebar[data-state="collapsed"] .ui-sidebar-logo > .ui-logo-full { display: none; }
+  .ui-sidebar[data-state="collapsed"] .ui-sidebar-logo > .ui-logo-mark { display: block; }
+  .ui-sidebar[data-state="collapsed"] .ui-sidebar-group-label { height: 0; opacity: 0; }
+  .ui-sidebar[data-state="collapsed"] .ui-sidebar-menu-item--sub { display: none; }
+  .ui-sidebar[data-state="collapsed"] .ui-sidebar-menu-button { flex: 0 0 auto; width: var(--ui-size-hit); height: var(--ui-size-hit); border-radius: var(--ui-radius-item); } /* gate-allow:actions-are-pills  a folded navigation row is a list row: a rounded square, never a circle (Marcus 13 Oct) */
+  .ui-sidebar[data-state="collapsed"] .ui-sidebar-menu-button--lg { padding-inline: var(--ui-space-sm); }
+  .ui-sidebar[data-state="collapsed"] .ui-sidebar-menu-badge, .ui-sidebar[data-state="collapsed"] .ui-sidebar-end, .ui-sidebar[data-state="collapsed"] .ui-sidebar-label small { display: none; }
+  /* The label floats out as a small glass tooltip (shadcn's SidebarMenuButton tooltip). */
+  .ui-sidebar[data-state="collapsed"] .ui-sidebar-menu-button > .ui-sidebar-label {
+    position: absolute; top: 50%; left: calc(100% + var(--ui-space-md)); z-index: 5; flex: none; width: max-content; max-width: none;
+    padding: var(--ui-inset-ring) var(--ui-inset-tight); border-radius: var(--ui-radius-float); /* gate-allow:actions-are-pills  this is the folded row's tooltip, a float, not the button */
+    background: var(--ui-glass-bg); color: var(--ui-glass-fg); box-shadow: var(--ui-glass-shadow-small);
+    -webkit-backdrop-filter: var(--ui-glass-filter-small); backdrop-filter: var(--ui-glass-filter-small);
+    font-size: var(--ui-type-label); line-height: 1.5; transform: translateY(-50%);
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity var(--ui-motion-fast) var(--ui-motion-ease), visibility 0s linear var(--ui-motion-fast);
+  }
+  .ui-sidebar[data-state="collapsed"] .ui-sidebar-menu-button:focus-visible > .ui-sidebar-label,
+  .ui-sidebar[data-state="collapsed"] .ui-sidebar-menu-button.is-tip > .ui-sidebar-label { opacity: 1; visibility: visible; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+  @media (hover: hover) {
+    .ui-sidebar[data-state="collapsed"] .ui-sidebar-menu-button:hover > .ui-sidebar-label { opacity: 1; visibility: visible; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+  }
+}
+
+/* On a phone: a Smoke glass drawer over the scrim; the page is a full-bleed sheet. */
+@container ui-sidebar (max-width: 639.98px) {
+  .ui-sidebar {
+    --sidebar-mode: drawer;
+    --sb-fg: var(--ui-glass-fg); --sb-fg-strong: var(--ui-glass-fg); --sb-fg-quiet: var(--ui-glass-fg-secondary);
+    --sb-hover: var(--ui-glass-item-hover); --sb-active: var(--ui-glass-button-white); --sb-active-fg: var(--ui-glass-button-white-fg); --sb-active-quiet: var(--ui-glass-button-white-fg); --sb-active-depth: none;
+    --sb-mark: var(--ui-glass-button-clear-hover); --sb-mark-fg: var(--ui-glass-fg);
+    --sb-person: var(--ui-glass-button-clear-hover); --sb-person-fg: var(--ui-glass-fg);
+    --sb-ring: var(--ui-focus-ring-on-glass);
+    position: absolute; z-index: 3; top: var(--ui-sidebar-gap); bottom: var(--ui-sidebar-gap); left: var(--ui-sidebar-gap);
+    width: min(var(--ui-sidebar-width-mobile), calc(100% - var(--ui-size-hit) - var(--ui-space-md)));
+    padding: var(--ui-inset-panel) var(--ui-space-md);
+    border-radius: var(--ui-radius-panel);
+    background: var(--ui-glass-bg); box-shadow: var(--ui-glass-shadow);
+    -webkit-backdrop-filter: var(--ui-glass-filter); /* gate-allow:glass-only-floating  on a phone the sidebar is a floating drawer (shadcn renders it as a sheet) */
+    backdrop-filter: var(--ui-glass-filter); /* gate-allow:glass-only-floating  on a phone the sidebar is a floating drawer (shadcn renders it as a sheet) */
+    transform: translateX(calc(-100% - 2 * var(--ui-sidebar-gap))); visibility: hidden;
+    transition: transform var(--ui-motion-slow) var(--ui-motion-ease), visibility 0s linear var(--ui-motion-slow);
+  }
+  .ui-sidebar .ui-sidebar-avatar { box-shadow: none; }
+  .ui-sidebar-wrapper[data-open-mobile="true"] .ui-sidebar { transform: none; visibility: visible; transition: transform var(--ui-motion-slow) var(--ui-motion-ease); }
+  .ui-sidebar-scrim {
+    display: block; position: absolute; inset: 0; z-index: 2; background: var(--ui-glass-scrim);
+    opacity: 0; visibility: hidden; transition: opacity var(--ui-motion-base) var(--ui-motion-ease), visibility 0s linear var(--ui-motion-base);
+  }
+  .ui-sidebar-wrapper[data-open-mobile="true"] .ui-sidebar-scrim { opacity: 1; visibility: visible; transition: opacity var(--ui-motion-base) var(--ui-motion-ease); }
+  .ui-sidebar-inset { margin: 0; border-radius: 0; box-shadow: none; }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  @container ui-sidebar (max-width: 639.98px) { .ui-sidebar { background: var(--ui-glass-bg-solid); } }
+  .ui-sidebar[data-state="collapsed"] .ui-sidebar-menu-button > .ui-sidebar-label { background: var(--ui-glass-bg-solid); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  @container ui-sidebar (max-width: 639.98px) { .ui-sidebar { background: var(--ui-glass-bg-solid); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+  .ui-sidebar[data-state="collapsed"] .ui-sidebar-menu-button > .ui-sidebar-label { background: var(--ui-glass-bg-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ui-sidebar, .ui-sidebar-group-label, .ui-sidebar-logo, .ui-sidebar-menu-button { transition: none; }
+  .ui-sidebar-menu-button:active, .ui-sidebar-menu-button.is-pressed { transform: none; }
+  @container ui-sidebar (max-width: 639.98px) { .ui-sidebar, .ui-sidebar-scrim, .ui-sidebar-wrapper[data-open-mobile="true"] .ui-sidebar { transition: none; } }
+}

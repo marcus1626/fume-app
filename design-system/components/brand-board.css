@@ -1,0 +1,309 @@
+/* Brand DNA board: the customer's brand drawn as a guidelines page inside Fume (app v2, FLOWS §0.3, §2). PROPOSED
+   15 Oct 2026; round 8 changes PROPOSED 19 Oct 2026; round 9 (desktop) PROPOSED 19 Oct 2026.
+   Markup: <header class="ui-page-header"> … <div class="ui-page-header-actions"> Confirm 7 finds (Ink)
+             <span class="ui-brand-header-slot"> a tab's own page actions </span></div></header>
+           <div class="ui-brand-bar ui-page-header-tabs"> tabs (Brand DNA · Products · Taste)
+             <nav class="ui-brand-index"><a class="ui-brand-index-link" aria-current="location">Logo</a> …</nav></div>
+           <div class="ui-brand" data-layout="board">
+             <header class="ui-brand-hero"><p class="ui-brand-summary">…</p>
+               <p class="ui-brand-hero-line"><svg/> <span>To confirm: a logo, a colour …</span></p></header>
+             <div class="ui-brand-grid">
+               <section class="ui-brand-part" id="colour" data-span="full" data-open><div class="ui-brand-part-head">
+                 <h2 class="ui-brand-part-title">Colour</h2> <button class="ui-btn ui-btn--quiet ui-brand-part-more">How it is used</button></div>
+                 <div class="ui-brand-swatches" data-mode="board"> <div class="ui-proposal ui-proposal--bare ui-brand-swatch">
+                   <div class="ui-brand-swatch-colour" style="--swatch: #A8642B"></div>
+                   <span class="ui-brand-caption-title">Amber glass</span><span class="ui-brand-hex">#A8642B</span></div></div>
+                 <div class="ui-brand-confirm" data-state="proposed"> <div class="ui-brand-confirm-media"> swatch </div>
+                   <div class="ui-brand-confirm-body"><p class="ui-brand-confirm-title">Dusk blue <span class="ui-brand-confirm-meta">#3E4A5C</span></p>
+                     <div class="ui-brand-confirm-line"><p class="ui-brand-confirm-text">Support</p> <p class="ui-brand-confirm-tags"> tags </p></div>
+                     <form class="ui-brand-change"> field · <div class="ui-brand-change-actions"> Save · Cancel </div></form></div>
+                   <div class="ui-brand-confirm-actions"> Confirm · Change · Remove </div></div>
+                 <div class="ui-brand-part-details"> <ul class="ui-brand-colour-list"> … </ul> <div class="ui-brand-part-rules"> … </div></div>
+               </section> …</div></div>
+             .ui-brand-logos[data-mode] > .ui-brand-logo > .ui-brand-logo-tile[data-ground] (style --brand-ground, --brand-ink, --brand-display) > .ui-brand-logo-word
+             .ui-brand-types > .ui-brand-type > .ui-brand-type-face (style --brand-font) > .ui-brand-type-aa, .ui-brand-type-sample
+             .ui-brand-voice > .ui-brand-voice-line > .ui-brand-voice-statement, .ui-brand-voice-example
+             .ui-brand-images > .ui-brand-image > .ui-brand-image-media > img
+             .ui-brand-links > a.ui-brand-link > svg, .ui-brand-link-title, .ui-brand-link-text
+           /brand/rules: .ui-brand-rules > section.ui-brand-rules-area > h2.ui-brand-rules-label + ul.ui-item-group > li.ui-item
+   Fume decisions: a high-end guidelines page made of UI type only (GT Standard; never GT Canon). The customer's own
+   values are data: a swatch's hex, the logo's grounds and the customer's font family reach the stylesheet as custom
+   properties set on the element, so their brand is drawn in their colours and their face while Fume's chrome stays
+   Fume's. Lots of air: 32 to 48 between parts, 16 between items, 4 to 8 inside an item (proximity). No lines between
+   parts; a swatch, a logo tile and a picture keep the customer's creative edge (Ink 10 %) only so a light colour
+   never vanishes into the page. No Amber anywhere: confirming a brand item is not a check.
+   Round 9 (desktop review DLAY-9, DWAY-14, DLAY-19, DLOAD-5): from a 960 px board up the parts sit two abreast
+   (Logo | Colour, Type | Voice, Imagery across, AI models | More), each compact: two logo tiles at about 260 × 146,
+   the colours as one strip of 72 px swatches, specimens with a one-line sample on one baseline, four pictures at
+   3:2, the AI models at 192 px; the whole brand fits in two screens at 1440 × 900. The board acts in place: a find
+   lies flat on the sunken surface (proposal.css) with Confirm · Change · Remove right after its words: a colour, a
+   typeface or a voice line as one row (a sharp 64 px swatch or "Aa", where Fume found it, "Fume is not sure"; never
+   blur as a status); a logo or a picture keeps its size so it can be judged, its answers under it. Change opens one
+   field under the item. "How it is used" opens a part's details in place. From 1024 px the tab row sticks under
+   the app bar with an index of the parts; the part in view is lit by weight and colour, never a line or a fill.
+   A part jumped to from the index (/brand#colour, ⌘K) lands clear of both bars (Root's toHash measures them);
+   /brand#rules lands on the Rules link. On a phone everything stays one column, as in round 8.
+   Rule gate: few-strokes (the creative edge, marked), amber-is-a-point (none), air, proximity, space-from-tokens,
+   radius-from-tokens, type-from-tokens, mono-is-data (hex codes only), canon-not-in-ui, touch-target,
+   touch-feedback, hover-needs-hover, reduced-motion, tokens-only-color. */
+
+.ui-brand { container: ui-brand / inline-size; display: grid; gap: calc(var(--ui-space-2xl) * 2); min-width: 0; color: var(--ui-text); }
+.ui-brand[data-layout="board"] { gap: var(--ui-space-xl); }
+
+/* ---------- the header's place for a tab's own actions, and the tab row ---------- */
+
+.ui-brand-header-slot { display: contents; }
+
+.ui-brand-bar.ui-page-header-tabs {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm) var(--ui-space-xl); min-width: 0;
+  margin-block: calc(var(--ui-space-lg) - var(--ui-space-2xl)) 0;
+}
+.ui-brand-index { display: none; }
+/* a desk: the row sticks under the app bar, on the page's ground, and carries the index of the parts */
+@media (min-width: 1024px) {
+  .ui-brand-bar.ui-page-header-tabs {
+    position: sticky; top: calc(var(--ui-size-control-md) + 2 * var(--ui-space-sm)); z-index: 2;
+    min-height: var(--ui-size-control-lg); background: var(--ui-ground);
+  }
+  .ui-brand-index { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--ui-space-xs); min-width: 0; margin-inline-start: auto; }
+}
+.ui-brand-index-link {
+  position: relative; display: inline-flex; align-items: center; min-height: var(--ui-size-control-sm); padding-inline: var(--ui-space-sm);
+  border-radius: var(--ui-radius-action); font-size: var(--ui-type-control); line-height: 1.2; color: var(--ui-text-tertiary); text-decoration: none;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-brand-index-link::after { content: ""; position: absolute; inset: 50% auto auto 50%; width: max(100%, var(--ui-size-hit)); height: var(--ui-size-hit); transform: translate(-50%, -50%); }
+.ui-brand-index-link[aria-current] { color: var(--ui-text); font-weight: var(--ui-type-weight-medium); }
+.ui-brand-index-link:active { color: var(--ui-text); }
+.ui-brand-index-link:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+@media (hover: hover) { .ui-brand-index-link:hover { color: var(--ui-text); } }
+
+/* ---------- the hero: Fume's summary and what waits ---------- */
+
+.ui-brand-hero { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-brand-summary { max-width: var(--ui-book-measure); margin: 0; font-size: var(--ui-type-body-large); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-brand-hero-line { display: flex; align-items: baseline; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-brand-hero-line > svg { position: relative; inset-block-start: .15em; width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; color: var(--ui-text); }
+
+/* ---------- the parts: one column, two abreast on a wide board ---------- */
+
+.ui-brand-grid { display: grid; gap: calc(var(--ui-space-2xl) * 1.5); min-width: 0; }
+@container ui-brand (min-width: 960px) {
+  .ui-brand-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-2xl) calc(var(--ui-space-2xl) * 1.25); align-items: start; }
+  .ui-brand-part[data-span="full"] { grid-column: 1 / -1; }
+}
+
+/* a part jumped to (/brand#colour) lands under the app bar and the tab row that sticks under it: Root's toHash
+   measures both and adds the space before the item; the margin here is only the floor */
+.ui-brand-part { container: ui-brand-part / inline-size; display: grid; gap: var(--ui-space-md); min-width: 0; scroll-margin-block-start: var(--ui-space-lg); }
+.ui-brand-part-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--ui-space-xs) var(--ui-space-md); min-width: 0; }
+.ui-brand-part-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.25; letter-spacing: -.01em; }
+.ui-brand-part-meta { font-size: var(--ui-type-control); color: var(--ui-text-tertiary); }
+.ui-brand-part-more { margin-inline-start: auto; }
+.ui-brand-part-link {
+  position: relative; display: inline-flex; align-items: center; gap: var(--ui-space-xs); margin-inline-start: auto;
+  font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); text-decoration: none;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; transition: color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-brand-part-link::after { content: ""; position: absolute; inset: 50% auto auto 50%; width: max(100%, var(--ui-size-hit)); height: var(--ui-size-hit); transform: translate(-50%, -50%); }
+.ui-brand-part-link > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-brand-part-link:active { color: var(--ui-text); }
+.ui-brand-part-link:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); border-radius: var(--ui-radius-item); }
+@media (hover: hover) { .ui-brand-part-link:hover { color: var(--ui-text); } }
+.ui-brand-part-text { max-width: var(--ui-onboard-measure); margin: calc(var(--ui-space-sm) * -1) 0 0; font-size: var(--ui-type-body); line-height: 1.55; color: var(--ui-text-secondary); }
+
+/* a part's details: its rules, then the way to all of them */
+.ui-brand-part-details { display: grid; gap: var(--ui-space-lg); min-width: 0; }
+.ui-brand-part-details[hidden] { display: none; }
+.ui-brand-part-rules { display: grid; justify-items: start; gap: var(--ui-space-sm); min-width: 0; }
+.ui-brand-part-rules > .ui-item-group { width: 100%; }
+
+/* a list with nothing left in it takes no room */
+.ui-brand-logos:empty, .ui-brand-swatches:empty, .ui-brand-types:empty, .ui-brand-voice:empty, .ui-brand-images:empty { display: none; }
+
+/* ---------- captions under every item ---------- */
+
+.ui-brand-caption { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--ui-space-xs) var(--ui-space-sm); min-width: 0; }
+.ui-brand-caption-title { min-width: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.35; }
+.ui-brand-caption-meta { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-brand-caption-text { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-brand-hex { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); letter-spacing: .02em; color: var(--ui-text-secondary); } /* gate-allow:mono-is-data  a hex code is data */
+
+/* the customer's creative edge: only so a light colour, ground or picture never vanishes into the page */
+.ui-brand-swatch-colour, .ui-brand-logo-tile, .ui-brand-image-media { position: relative; overflow: hidden; border-radius: var(--ui-radius-item); }
+.ui-brand-swatch-colour::after, .ui-brand-logo-tile::after, .ui-brand-image-media::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); pointer-events: none; } /* gate-allow:few-strokes  the edge of the customer's own colour, logo ground and picture, so a light one never vanishes */
+
+/* a find on the board, under a logo or a picture: its tag, then its answers on their own line, close enough to fit
+   under a 264 px tile (the quiet answers carry their own padding, so they still read apart) */
+.ui-brand-logos[data-mode="board"] .ui-proposal-actions, .ui-brand-images[data-mode="board"] .ui-proposal-actions { gap: 0; margin-inline-start: 0; }
+.ui-brand-logos[data-mode="board"] .ui-decide-remove, .ui-brand-images[data-mode="board"] .ui-decide-remove { margin-inline-start: 0; }
+
+/* ---------- logo on light and dark ---------- */
+
+.ui-brand-logos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--ui-space-2xl) * 9)), 1fr)); gap: var(--ui-space-lg); min-width: 0; }
+.ui-brand-logos[data-mode="board"] { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+.ui-brand-logo-tile {
+  display: grid; place-items: center; aspect-ratio: 16 / 9; padding: var(--ui-inset-panel);
+  background: var(--brand-ground, var(--ui-surface-sunken)); color: var(--brand-ink, var(--ui-text));
+}
+.ui-brand-logos[data-mode="board"] .ui-brand-logo-tile { padding: var(--ui-space-lg); }
+.ui-brand-logo-tile > img { max-width: 60%; max-height: 50%; object-fit: contain; }
+.ui-brand-logo-word { font-family: var(--brand-display, var(--ui-type-family)); font-size: var(--ui-type-display-hero); line-height: 1; letter-spacing: .24em; white-space: nowrap; }
+/* the drawn wordmark steps down with its tile, so it never runs past the tile's edge */
+.ui-brand-logo-tile { container: ui-brand-logo / inline-size; }
+@container ui-brand-logo (max-width: 559.98px) { .ui-brand-logo-word { font-size: var(--ui-type-display); } }
+@container ui-brand-logo (max-width: 399.98px) { .ui-brand-logo-word { font-size: var(--ui-type-title-large); letter-spacing: .2em; } }
+@container ui-brand-logo (max-width: 259.98px) { .ui-brand-logo-word { font-size: var(--ui-type-title); } }
+/* a phone: the light and the dark logo side by side; with a find to answer, one under the other at 2:1, so its
+   answers fit under it and both tiles keep one size */
+@container ui-brand (max-width: 479.98px) {
+  .ui-brand-logos { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-xl) var(--ui-space-md); }
+  .ui-brand-logo-tile { aspect-ratio: 4 / 3; padding: var(--ui-space-md); }
+  .ui-brand-logos[data-mode="board"]:has(> .ui-proposal[data-state="proposed"]) { grid-template-columns: minmax(0, 1fr); gap: var(--ui-space-lg); }
+  .ui-brand-logos[data-mode="board"]:has(> .ui-proposal[data-state="proposed"]) .ui-brand-logo-tile { aspect-ratio: 2 / 1; }
+}
+
+/* ---------- colour: one strip of swatches on the board ---------- */
+
+.ui-brand-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--ui-space-2xl) * 4.25)), 1fr)); gap: var(--ui-space-lg); min-width: 0; }
+.ui-brand-swatch-colour { aspect-ratio: 1; background: var(--swatch, var(--ui-surface-sunken)); }
+@container ui-brand (min-width: 720px) { .ui-brand-swatch-colour { aspect-ratio: 4 / 5; } }
+/* the board: one strip; the swatches share the row (at least 80 each), so five still fit in a 1280 window's column */
+.ui-brand-swatches[data-mode="board"] { grid-template-columns: repeat(auto-fit, minmax(calc(var(--ui-space-2xl) * 2.5), 1fr)); gap: var(--ui-space-lg) var(--ui-space-sm); }
+.ui-brand-swatches[data-mode="board"] .ui-brand-swatch { gap: var(--ui-space-xs); }
+.ui-brand-swatches[data-mode="board"] .ui-brand-swatch-colour { aspect-ratio: auto; height: calc(var(--ui-space-2xl) * 2.25); margin-block-end: var(--ui-space-xs); }
+.ui-brand-swatches[data-mode="board"] .ui-brand-caption-title { font-size: var(--ui-type-control); }
+/* a phone: two colours abreast, each a short 96 px swatch (LOAD-20, MOB-22); the board's strip three abreast */
+@container ui-brand (max-width: 479.98px) {
+  .ui-brand-swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-xl) var(--ui-space-md); }
+  .ui-brand-swatch-colour { aspect-ratio: auto; height: calc(var(--ui-space-2xl) * 3); }
+  .ui-brand-swatches[data-mode="board"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* the details: each colour with its role and use, one row each */
+.ui-brand-colour-list { display: grid; gap: var(--ui-space-md); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.ui-brand-colour-row { display: grid; grid-template-columns: calc(var(--ui-space-2xl) * 1.5) minmax(0, 1fr); align-items: start; gap: var(--ui-space-md); min-width: 0; }
+.ui-brand-colour-row > .ui-brand-swatch-colour { aspect-ratio: 1; height: auto; }
+.ui-brand-colour-text { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-brand-colour-name { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--ui-space-xs) var(--ui-space-sm); margin: 0; }
+
+/* ---------- type: specimens in the customer's face ---------- */
+
+.ui-brand-types { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--ui-space-2xl) * 9)), 1fr)); gap: var(--ui-space-lg); min-width: 0; }
+.ui-brand-types[data-mode="board"] { grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--ui-space-2xl) * 5)), 1fr)); align-items: end; }
+.ui-brand-type-face { display: grid; gap: var(--ui-space-md); min-width: 0; padding-block: var(--ui-space-md); font-family: var(--brand-font, var(--ui-type-family)); }
+.ui-brand-types[data-mode="board"] .ui-brand-type-face { gap: var(--ui-space-sm); padding-block: 0; }
+.ui-brand-type-aa { font-family: var(--brand-font, var(--ui-type-family)); font-size: var(--ui-type-display-hero); line-height: 1; letter-spacing: -.02em; }
+.ui-brand-types[data-mode="board"] .ui-brand-type-aa { font-size: var(--ui-type-title-large); }
+.ui-brand-type-sample { margin: 0; font-size: var(--ui-type-title-large); line-height: 1.25; text-wrap: balance; overflow-wrap: anywhere; }
+/* on the board a sample is one line, so every specimen's label sits on one baseline */
+.ui-brand-types[data-mode="board"] .ui-brand-type-sample { font-size: var(--ui-type-body-large); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-wrap: nowrap; }
+.ui-brand-type-inline { font-family: var(--brand-font, var(--ui-type-family)); }
+/* a phone: the specimen one step smaller, so two faces fit in a screen; two abreast, a sample may take two lines */
+@container ui-brand (max-width: 479.98px) {
+  .ui-brand-type-aa { font-size: var(--ui-type-display); }
+  .ui-brand-type-sample { font-size: var(--ui-type-title); }
+  .ui-brand-types[data-mode="board"] .ui-brand-type-sample { font-size: var(--ui-type-body-large); white-space: normal; text-wrap: balance; }
+}
+
+/* ---------- voice: a line and its example ---------- */
+
+.ui-brand-voice { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--ui-space-2xl) * 9)), 1fr)); gap: var(--ui-space-lg); min-width: 0; }
+.ui-brand-voice[data-mode="board"] { grid-template-columns: minmax(0, 1fr); gap: var(--ui-space-md); }
+.ui-brand-voice-line { gap: var(--ui-space-xs); }
+.ui-brand-voice-statement { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.3; text-wrap: balance; }
+.ui-brand-voice[data-mode="board"] .ui-brand-voice-statement { font-size: var(--ui-type-body-large); }
+.ui-brand-voice-example { margin: 0; font-size: var(--ui-type-body-large); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-brand-voice[data-mode="board"] .ui-brand-voice-example { font-size: var(--ui-type-body); }
+
+/* ---------- imagery and the AI models ---------- */
+
+.ui-brand-images { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--ui-space-2xl) * 4.5)), 1fr)); gap: var(--ui-space-xl) var(--ui-space-lg); min-width: 0; }
+.ui-brand-image { gap: var(--ui-space-sm); }
+.ui-brand-image-media { aspect-ratio: 4 / 5; border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); }
+.ui-brand-image-media > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* a wide board: four pictures across at 3:2, each wide enough to judge (≥ 208, about 270 × 180 at 1440) */
+@container ui-brand (min-width: 480px) {
+  .ui-brand-images[data-mode="board"] { grid-template-columns: repeat(auto-fit, minmax(calc(var(--ui-space-2xl) * 6.5), 1fr)); align-items: start; }
+  .ui-brand-images[data-mode="board"] .ui-brand-image-media { aspect-ratio: 3 / 2; }
+  .ui-brand-images[data-mode="board"] .ui-brand-image { gap: var(--ui-space-xs); }
+  .ui-brand-images[data-mode="board"] .ui-brand-image-media { margin-block-end: var(--ui-space-xs); }
+}
+/* a phone: pictures two abreast, a lone one too (it never swells to the full width) */
+@container ui-brand (max-width: 479.98px) {
+  .ui-brand-images { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-xl) var(--ui-space-md); }
+}
+
+/* ---------- a find to confirm, as one row (DLAY-19) ---------- */
+
+.ui-brand-confirm {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--ui-space-sm) var(--ui-space-lg); min-width: 0;
+  padding: var(--ui-inset-tight); border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken);
+  transition: background var(--ui-motion-base) var(--ui-motion-ease), box-shadow var(--ui-motion-base) var(--ui-motion-ease);
+}
+.ui-brand-confirm:not([data-state="proposed"]) { background: var(--ui-surface); box-shadow: var(--ui-depth-raised); }
+.ui-brand-confirm[data-media="none"] { grid-template-columns: minmax(0, 1fr) auto; padding-inline-start: var(--ui-inset-float); }
+.ui-brand-confirm[data-removed] > :not(.ui-brand-confirm-actions) { opacity: .4; }
+.ui-brand-confirm-media { display: grid; place-items: center; width: calc(var(--ui-space-2xl) * 2); height: calc(var(--ui-space-2xl) * 2); flex-shrink: 0; border-radius: var(--ui-radius-item); background: var(--ui-surface); }
+.ui-brand-confirm-media > .ui-brand-swatch-colour { width: 100%; height: 100%; aspect-ratio: auto; }
+.ui-brand-confirm-media > .ui-brand-type-aa { font-size: var(--ui-type-title-large); }
+.ui-brand-confirm-body { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-brand-confirm-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--ui-space-xs) var(--ui-space-sm); margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.35; }
+.ui-brand-confirm-meta { font-weight: normal; }
+.ui-brand-confirm-text { margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-brand-confirm-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--ui-space-xs) var(--ui-space-md); min-width: 0; }
+.ui-brand-confirm-tags { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-md); margin: 0; }
+.ui-brand-confirm[data-state="proposed"] .ui-proposal-tag { color: var(--ui-text-secondary); }
+.ui-brand-confirm-actions { display: flex; min-width: 0; }
+.ui-brand-confirm-actions .ui-proposal-actions { margin-inline-start: 0; }
+/* a narrow part (a column of a wide board, a phone): the answers go under the words, in line with them */
+@container ui-brand-part (max-width: 599.98px) {
+  .ui-brand-confirm { grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+  .ui-brand-confirm-media { grid-row: 1 / span 2; }
+  .ui-brand-confirm-actions { grid-column: 2; }
+  .ui-brand-confirm[data-media="none"] { grid-template-columns: minmax(0, 1fr); }
+  .ui-brand-confirm[data-media="none"] .ui-brand-confirm-actions { grid-column: 1; }
+}
+/* a phone: the answers take the row's full width, under the swatch too */
+@container ui-brand-part (max-width: 479.98px) {
+  .ui-brand-confirm-media { grid-row: auto; }
+  .ui-brand-confirm-actions, .ui-brand-confirm[data-media="none"] .ui-brand-confirm-actions { grid-column: 1 / -1; }
+}
+
+/* Change, in place: one field under the item, Save and Cancel under it */
+.ui-brand-change { display: grid; gap: var(--ui-space-md); min-width: 0; max-width: var(--ui-book-measure); margin-block-start: var(--ui-space-sm); }
+.ui-brand-change-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); }
+
+/* ---------- Rules (/brand/rules, reading measure): each area a 120 px column left of its rules (DLAY-7) ---------- */
+
+.ui-brand-rules { container: ui-brand-rules / inline-size; display: grid; gap: var(--ui-space-xl); min-width: 0; }
+.ui-brand-rules-area { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-brand-rules-label { margin: 0; padding-inline: var(--ui-inset-float); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text-tertiary); }
+@container ui-brand-rules (min-width: 600px) {
+  .ui-brand-rules { gap: var(--ui-space-lg); }
+  .ui-brand-rules-area { grid-template-columns: calc(var(--ui-space-2xl) * 3.75) minmax(0, 1fr); align-items: start; gap: var(--ui-space-lg); }
+  .ui-brand-rules-label { padding: calc(var(--ui-space-md) + var(--ui-space-xs) / 2) 0 0; font-size: var(--ui-type-control); }
+}
+
+/* ---------- More about your Brand DNA: the ways into rules, lessons, the summary and an update ---------- */
+
+.ui-brand-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--ui-space-2xl) * 7)), 1fr)); gap: var(--ui-space-md); min-width: 0; }
+.ui-brand-link {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: var(--ui-space-xs) var(--ui-space-sm);
+  min-height: var(--ui-size-hit); padding: var(--ui-inset-float); border-radius: var(--ui-radius-card);
+  background: var(--ui-surface); box-shadow: var(--ui-depth-raised); color: var(--ui-text); text-decoration: none;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-brand-link > svg { grid-row: 1; width: var(--ui-size-icon); height: var(--ui-size-icon); align-self: center; color: var(--ui-text-secondary); }
+.ui-brand-link-title { font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); }
+.ui-brand-link-text { grid-column: 2; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); }
+.ui-brand-link:active { transform: scale(var(--ui-motion-press-scale)); background: var(--ui-surface-sunken); }
+.ui-brand-link:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+@media (hover: hover) { .ui-brand-link:hover { background: var(--ui-surface-sunken); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-brand-part-link, .ui-brand-link, .ui-brand-index-link, .ui-brand-confirm { transition: none; }
+  .ui-brand-link:active { transform: none; }
+}

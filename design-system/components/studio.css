@@ -1,0 +1,359 @@
+/* Studio: Fume's people's side of the app (app v2, FLOWS §4.2 and §5). PROPOSED 15 Oct 2026.
+   Two parts. (1) The switcher's screens (All brands, a brand's home, Engine output, boards, deliveries): a brand's
+   mark, the team's load rows, a group head inside a section and a board's cover. (2) The Studio desk, where the
+   designer makes and tweaks a slot: RECIPE left, CANVAS centre, INSPECTOR right, BRANCHES under the canvas.
+   Markup: <div class="ui-studio" data-mode="view|compare|repair">
+             <header class="ui-studio-bar"> trigger · <div class="ui-studio-bar-where"> crumbs · format </div>
+               <div class="ui-studio-bar-end"> Pick for the slot · Send to check </div></header>
+             <p class="ui-studio-phone-note"> (phone only) </p>
+             <aside class="ui-studio-recipe"><div class="ui-studio-panel-scroll"> fields </div>
+               <div class="ui-studio-make"> line · Make </div></aside>
+             <section class="ui-studio-canvas" data-zoom="1|2|4">
+               <div class="ui-glass ui-glass--bar ui-studio-tools" role="toolbar"> … </div>
+               <div class="ui-studio-stage"><figure class="ui-studio-figure"><span class="ui-studio-shot"> img ·
+                 <span class="ui-studio-region" style="--x --y --w --h"></span></span></figure></div>
+               <form class="ui-glass ui-studio-repair"> … </form></section>
+             <aside class="ui-studio-inspector"> blocks </aside>
+             <section class="ui-studio-branches"><div class="ui-studio-strip" role="listbox">
+               <div class="ui-studio-branch"><div class="ui-studio-branch-head"> … </div>
+                 <div class="ui-studio-frames"><button class="ui-studio-frame" role="option" data-state> … </button></div>
+               </div></div></section></div>
+   Fume decisions: a desk tool, desktop first (FLOWS §5.2); the sidebar folds to the rail while a session is open.
+   Regions are told apart by surface and space, never lines (few-strokes): the panels lie on the page's Porcelain,
+   the canvas is the sunken step so the creative is the brightest thing on screen. Smoke glass only where something
+   floats over the canvas (the tools and the repair box). A candidate being made breathes with the design system's
+   skeleton, never Amber; Amber appears only as the checked triangle (the Send to check action's own icon is the
+   triangle in the button's colour). The AI-person label is always on a cast card. A phone shows the work
+   read-only: the recipe and every action step away and a note says why.
+   Rule gate: few-strokes, air, space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data,
+   amber-is-a-point, glass-only-floating, glass-no-stroke, reduced-transparency, touch-target, touch-feedback,
+   hover-needs-hover, reduced-motion, no-gradient. */
+
+/* ---------- the switcher's screens ---------- */
+
+/* Sections stacked in a column keep the page's section rhythm (32), not the stack's 24. */
+.ui-studio-gap { gap: var(--ui-space-2xl); }
+
+/* A brand's mark: its initials on an Ink soft square, as in the switcher. */
+.ui-studio-mark {
+  display: grid; place-items: center; flex-shrink: 0; width: var(--ui-size-hit); aspect-ratio: 1;
+  border-radius: var(--ui-radius-item); background: var(--ui-action-primary); color: var(--ui-action-primary-fg);
+  font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1;
+}
+.ui-studio-mark--sm { width: var(--ui-size-control-sm); font-size: var(--ui-type-label); }
+.ui-studio-brand-head { display: flex; align-items: center; gap: var(--ui-space-md); min-width: 0; }
+.ui-studio-brand-name { display: grid; gap: var(--ui-space-xs); flex: 1 1 auto; min-width: 0; }
+
+/* A group inside a section: a brand's deliveries, one run's candidates. */
+.ui-studio-group-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm) var(--ui-space-md); min-width: 0; }
+.ui-studio-group-title { font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); text-decoration: none; }
+a.ui-studio-group-title { position: relative; border-radius: var(--ui-radius-item); -webkit-tap-highlight-color: transparent; cursor: pointer; }
+a.ui-studio-group-title::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+@media (hover: hover) { a.ui-studio-group-title:hover { text-decoration: underline; text-decoration-color: var(--ui-hairline-strong); text-underline-offset: 3px; } }
+a.ui-studio-group-title:active { opacity: .72; }
+a.ui-studio-group-title:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* The team's load: a name over its bar, the load as data at the end. */
+.ui-studio-load { display: grid; gap: var(--ui-space-lg); margin: 0; padding: 0; list-style: none; }
+.ui-studio-load-row { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-studio-load-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--ui-space-md); min-width: 0; }
+.ui-studio-load-name { min-width: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-studio-load-name small { display: block; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-tertiary); }
+.ui-studio-load-num, .ui-studio-data { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* A board's cover: up to four of its images, edge to edge in a soft rectangle. */
+.ui-studio-board-cover {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row; grid-auto-columns: auto; gap: var(--ui-space-xs);
+  aspect-ratio: 16 / 10; overflow: hidden; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); color: var(--ui-text-tertiary);
+}
+.ui-studio-board-cover > img { display: block; width: 100%; height: 100%; min-height: 0; object-fit: cover; }
+.ui-studio-board-cover[data-count="1"] { grid-template-columns: 1fr; }
+.ui-studio-board-cover[data-count="3"] > img:first-child { grid-row: span 2; }
+.ui-studio-board-cover[data-count="0"] { place-items: center; grid-template-columns: 1fr; }
+.ui-studio-board-cover > svg { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); }
+
+/* A row of options that may be wider than a phone: it scrolls sideways inside itself, never the page. */
+.ui-studio-seg-scroll { max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.ui-studio-seg-scroll::-webkit-scrollbar { display: none; }
+
+/* ---------- the Studio's start (round 12, DLAY-12 / DLOAD-19, PROPOSED 20 Oct 2026) ----------
+   Markup: <ul class="ui-creative-grid ui-studio-recent"> CreativeTile ratio 4/5, caption <span class="ui-studio-recent-name"/>
+             <span class="ui-studio-recent-meta"/> </ul>
+           <div class="ui-studio-new"><div class="ui-studio-new-bar"> Render · Design <button class="ui-select-trigger
+             ui-studio-new-campaign"/> <p class="ui-studio-new-help"/></div>
+             <ul class="ui-studio-new-modes"><li><button class="ui-studio-new-mode"><svg class="ui-studio-new-mode-icon"/>
+             <span class="ui-studio-new-mode-name"/></button></li></ul></div>
+   Carrying on comes first: one row of six, every tile the same 4:5 box with the creative contained on the sunken
+   step (a 9:16 story stands in it whole), so the row keeps one baseline. New is one block: a line of two choices,
+   then the modes as compact white tiles, icon and name; their line is in a tooltip. */
+.ui-creative-grid.ui-studio-recent { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--ui-space-lg); align-items: start; }
+.ui-studio-recent .ui-creative-caption { flex-wrap: nowrap; align-items: flex-start; }
+.ui-studio-recent .ui-creative-format { flex: 1 1 auto; }
+.ui-studio-recent .ui-creative-media { background: var(--ui-surface-sunken); }
+.ui-studio-recent .ui-creative-media > img { object-fit: contain; }
+.ui-studio-recent .ui-creative-format { display: grid; gap: 1px; } /* gate-allow:space-from-tokens a hairline of air between the name and its 12 px line */
+.ui-studio-recent-name, .ui-studio-recent-meta { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-studio-recent-name { font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-studio-recent-meta { color: var(--ui-text-tertiary); }
+.ui-studio-recent-all { margin-inline-start: auto; }
+
+.ui-studio-new { display: grid; gap: var(--ui-space-lg); min-width: 0; }
+.ui-studio-new-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm) var(--ui-space-md); min-width: 0; }
+.ui-studio-new-bar > .ui-select { flex: 0 1 auto; width: auto; min-width: 0; }
+.ui-studio-new-bar .ui-select-trigger.ui-studio-new-campaign { width: auto; min-width: calc(var(--ui-size-hit) * 4); max-width: 100%; }
+.ui-studio-new-help { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-studio-new-modes { display: grid; grid-template-columns: repeat(auto-fill, minmax(calc(var(--ui-size-hit) * 4.5), 1fr)); gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; }
+.ui-studio-new-modes > li { display: grid; min-width: 0; }
+.ui-studio-new-mode {
+  display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; min-height: var(--ui-size-hit); margin: 0;
+  padding: var(--ui-space-sm) var(--ui-space-md); border: 0; border-radius: var(--ui-radius-card);
+  background: var(--ui-surface); box-shadow: var(--ui-depth-raised); color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; text-align: start;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-studio-new-mode-icon { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-secondary); }
+.ui-studio-new-mode-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (hover: hover) { .ui-studio-new-mode:hover:not(:disabled) { background: var(--ui-action-secondary-hover); } }
+.ui-studio-new-mode:active:not(:disabled) { transform: scale(var(--ui-motion-press-scale)); }
+.ui-studio-new-mode:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-studio-new-mode:disabled { cursor: progress; }
+@media (max-width: 1099px) { .ui-creative-grid.ui-studio-recent { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 599px) { .ui-creative-grid.ui-studio-recent { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (prefers-reduced-motion: reduce) {
+  .ui-studio-new-mode { transition: none; }
+  .ui-studio-new-mode:active:not(:disabled) { transform: none; }
+}
+
+/* ---------- the Studio desk ---------- */
+
+.ui-studio {
+  --studio-side: 300px; /* gate-allow:space-from-tokens the recipe and inspector width, a layout width */
+  display: grid; flex: 1 1 auto; min-height: 0; min-width: 0;
+  grid-template-columns: var(--studio-side) minmax(0, 1fr) var(--studio-side);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas: "bar bar bar" "recipe canvas inspector" "recipe branches inspector";
+  gap: var(--ui-space-sm) var(--ui-space-lg);
+  padding: 0 var(--ui-space-lg) var(--ui-space-lg);
+  font-family: var(--ui-type-family); color: var(--ui-text);
+}
+
+/* The top line: the trigger, campaign › slot · format, and the two actions that move the work on. */
+.ui-studio-bar {
+  grid-area: bar; display: flex; align-items: center; gap: var(--ui-space-md); min-width: 0;
+  min-height: var(--ui-size-control-lg); padding-block: var(--ui-space-sm);
+}
+.ui-studio-bar-where { display: flex; align-items: center; gap: var(--ui-space-sm) var(--ui-space-md); flex: 1 1 auto; min-width: 0; }
+.ui-studio-bar-title { font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); }
+.ui-studio-bar-meta { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-tertiary); white-space: nowrap; }
+.ui-studio-bar-end { display: flex; align-items: center; gap: var(--ui-space-sm); margin-inline-start: auto; flex-shrink: 0; }
+.ui-studio-crumbs { display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; font-size: var(--ui-type-control); color: var(--ui-text-secondary); white-space: nowrap; }
+.ui-studio-crumbs > * { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ui-studio-crumbs > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-tertiary); }
+.ui-studio-crumbs > [aria-current] { font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-studio-crumbs > a {
+  position: relative; flex-shrink: 0; border-radius: var(--ui-radius-item); color: inherit; text-decoration: none; overflow: visible;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.ui-studio-crumbs > a::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+@media (hover: hover) { .ui-studio-crumbs > a:hover { color: var(--ui-text); } }
+.ui-studio-crumbs > a:active { opacity: .72; }
+.ui-studio-crumbs > a:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+.ui-studio-phone-note { display: none; }
+
+/* Recipe and inspector: columns on the page itself, each scrolling on its own. */
+.ui-studio-recipe { grid-area: recipe; }
+.ui-studio-inspector { grid-area: inspector; }
+.ui-studio-recipe, .ui-studio-inspector { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+.ui-studio-panel-scroll {
+  display: grid; align-content: start; gap: var(--ui-space-2xl); flex: 1 1 auto; min-height: 0;
+  padding: var(--ui-space-sm) var(--ui-space-xs) var(--ui-space-xl); overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--ui-scroll-thumb) transparent;
+}
+.ui-studio-panel-title { margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text); }
+.ui-studio-recipe .ui-field-group { gap: var(--ui-space-xl); }
+.ui-studio-recipe .ui-seg { display: flex; }
+.ui-studio-recipe .ui-seg-option { flex: 1 1 0; justify-content: center; min-width: 0; }
+.ui-studio-quiet { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+
+/* Picker cards (Creative Type, product, cast, scene): two to a row, the picture square. */
+.ui-studio-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ui-studio-cards .ui-radio-card-preview { display: block; }
+.ui-studio-card-shot { position: relative; display: block; }
+.ui-studio-card-img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+/* The AI-person label: always on, a quiet Porcelain chip on the picture, never optional (F-D041). */
+.ui-studio-ai-label {
+  position: absolute; inset-inline-start: var(--ui-space-xs); inset-block-end: var(--ui-space-xs);
+  padding: 0 var(--ui-space-sm); border-radius: var(--ui-radius-action);
+  background: var(--ui-surface); color: var(--ui-text); box-shadow: var(--ui-depth-raised);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: var(--ui-badge-height-sm); white-space: nowrap;
+}
+
+/* References from the boards: small squares you switch on and off; the chosen ones carry a check. */
+.ui-studio-refs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ui-space-sm); }
+.ui-studio-ref {
+  position: relative; display: block; min-height: var(--ui-size-hit); padding: 0; border: 0; overflow: hidden;
+  border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); cursor: pointer;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease), box-shadow var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-studio-ref > img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; opacity: .72; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-studio-ref[aria-checked="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-check-on); }
+.ui-studio-ref[aria-checked="true"] > img { opacity: 1; }
+.ui-studio-ref > svg {
+  position: absolute; inset-inline-end: var(--ui-space-xs); inset-block-start: var(--ui-space-xs);
+  width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); padding: var(--ui-space-xs); box-sizing: content-box;
+  border-radius: 50%; background: var(--ui-action-primary); color: var(--ui-action-primary-fg);
+}
+@media (hover: hover) { .ui-studio-ref:hover > img { opacity: 1; } }
+.ui-studio-ref:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-studio-ref:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* Make: the line says what will be made (or what is missing) and its cost; the button fills the column. */
+.ui-studio-make { display: grid; gap: var(--ui-space-sm); padding-block-start: var(--ui-space-md); }
+.ui-studio-make-line { display: flex; justify-content: space-between; gap: var(--ui-space-md); margin: 0; font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+.ui-studio-make-button { width: 100%; }
+
+/* The canvas: the sunken step, so the creative is the brightest thing on screen. */
+.ui-studio-canvas {
+  grid-area: canvas; position: relative; display: flex; min-width: 0; min-height: 0; overflow: hidden;
+  border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken);
+}
+.ui-studio-tools {
+  position: absolute; z-index: 2; inset-block-start: var(--ui-space-md); inset-inline-start: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: var(--ui-space-xs); max-width: calc(100% - 2 * var(--ui-space-md)); padding: var(--ui-inset-ring);
+  overflow-x: auto; scrollbar-width: none;
+}
+.ui-studio-tools::-webkit-scrollbar { display: none; }
+.ui-studio-tools > * { flex-shrink: 0; }
+.ui-studio-tools-gap { width: var(--ui-space-sm); }
+.ui-studio-zoom { min-width: calc(var(--ui-size-control-lg) + var(--ui-space-sm)); text-align: center; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-glass-fg); font-variant-numeric: tabular-nums; } /* gate-allow:mono-is-data the zoom readout is data (200 %), as in toolbar.css */
+
+.ui-studio-stage {
+  container: ui-studio-stage / size; flex: 1 1 auto; min-width: 0; min-height: 0;
+  display: flex; align-items: center; justify-content: center; gap: var(--ui-space-lg);
+  padding: calc(var(--ui-size-control-lg) + 2 * var(--ui-space-md)) var(--ui-space-xl) var(--ui-space-xl);
+  overflow: auto; scrollbar-width: thin;
+}
+.ui-studio-figure { display: grid; justify-items: center; gap: var(--ui-space-sm); min-width: 0; margin: 0; }
+.ui-studio-shot { position: relative; display: block; touch-action: none; user-select: none; }
+.ui-studio-shot > img {
+  display: block; max-width: 100cqw; max-height: calc(100cqh - var(--ui-space-xl)); width: auto; height: auto;
+  border-radius: var(--ui-radius-item); background: var(--ui-surface-creative); box-shadow: var(--ui-depth-raised);
+}
+.ui-studio-shot-skeleton { width: min(100cqw, calc((100cqh - var(--ui-space-xl)) * var(--studio-ratio, .8))); }
+.ui-studio-shot[data-format="square"] .ui-studio-shot-skeleton { --studio-ratio: 1; }
+.ui-studio-shot[data-format="story"] .ui-studio-shot-skeleton { --studio-ratio: .5625; }
+.ui-studio-canvas[data-zoom="2"] .ui-studio-shot > img { max-width: none; max-height: none; height: calc(200cqh - 2 * var(--ui-space-xl)); }
+.ui-studio-canvas[data-zoom="4"] .ui-studio-shot > img { max-width: none; max-height: none; height: calc(400cqh - 4 * var(--ui-space-xl)); }
+.ui-studio-canvas:is([data-zoom="2"], [data-zoom="4"]) .ui-studio-stage { align-items: flex-start; justify-content: flex-start; }
+.ui-studio-canvas:is([data-zoom="2"], [data-zoom="4"]) .ui-studio-figure { margin: auto; }
+/* Two side by side: each takes half the stage. */
+.ui-studio-stage[data-compare] .ui-studio-shot > img { max-width: calc(50cqw - var(--ui-space-lg)); max-height: calc(100cqh - 2 * var(--ui-space-xl)); }
+.ui-studio-figcaption { font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+/* Repair: a crosshair over the creative, and the region as an Ink frame with the rest dimmed (a stroke, because the
+   region would vanish into the picture without one). */
+.ui-studio-shot[data-drawing] { cursor: crosshair; }
+.ui-studio-region {
+  position: absolute; left: var(--x); top: var(--y); width: var(--w); height: var(--h); pointer-events: none;
+  border-radius: var(--ui-radius-item); box-shadow: 0 0 0 9999px var(--ui-glass-scrim), inset 0 0 0 var(--ui-size-ring) var(--ui-text-on-ink); /* gate-allow:few-strokes the region must show on any picture; gate-allow:no-glow gate-allow:focus-is-sharp a spread veil that dims outside the region, not a halo or a focus ring */
+}
+.ui-studio-empty, .ui-studio-hint { display: grid; justify-items: center; gap: var(--ui-space-md); max-width: var(--ui-empty-measure); margin: 0; text-align: center; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); }
+.ui-studio-empty > p { margin: 0; }
+.ui-studio-empty > svg { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); color: var(--ui-text-tertiary); }
+
+/* The repair box floats over the canvas's foot: Smoke glass, one white button. */
+.ui-studio-repair {
+  position: absolute; z-index: 2; inset-block-end: var(--ui-space-md); inset-inline-start: 50%; transform: translateX(-50%);
+  display: grid; gap: var(--ui-space-sm); width: min(calc(100% - 2 * var(--ui-space-md)), var(--ui-dialog-width-sm));
+  padding: var(--ui-inset-float); border-radius: var(--ui-radius-float);
+}
+.ui-studio-repair-actions { display: flex; justify-content: flex-end; gap: var(--ui-space-sm); }
+.ui-studio-repair-hint { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-glass-fg); }
+
+/* Inspector blocks: titled groups, 32 apart, their rows 8 apart. */
+.ui-studio-block { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-studio-block-head { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); }
+.ui-studio-notes { display: grid; gap: var(--ui-space-xs); margin: 0; padding-inline-start: var(--ui-space-lg); font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+.ui-studio-prompt { display: grid; gap: var(--ui-space-xs); padding: var(--ui-inset-tight); border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-studio-prompt-label { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-studio-prompt > p { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); overflow-wrap: anywhere; }
+
+/* Branches: a filmstrip under the canvas, one group per Make or repair, newest first. */
+.ui-studio-branches { grid-area: branches; min-width: 0; padding-block-start: var(--ui-space-xs); }
+.ui-studio-strip {
+  display: flex; gap: var(--ui-space-xl); min-width: 0; padding: var(--ui-space-xs) var(--ui-space-xs) var(--ui-space-sm);
+  overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--ui-scroll-thumb) transparent;
+}
+.ui-studio-branch { display: grid; align-content: start; gap: var(--ui-space-sm); flex-shrink: 0; max-width: 100%; }
+.ui-studio-branch-head { display: flex; align-items: baseline; gap: var(--ui-space-sm); min-width: calc(var(--ui-size-hit) * 3); contain: inline-size; } /* the head never widens its branch: the frames set the width */
+.ui-studio-branch-name { flex-shrink: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-studio-branch-what { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-studio-frames { display: flex; gap: var(--ui-space-sm); }
+.ui-studio-frame {
+  --frame-h: calc(var(--ui-size-hit) * 2);
+  position: relative; display: block; flex-shrink: 0; height: var(--frame-h); padding: 0; border: 0; overflow: hidden;
+  border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); cursor: pointer;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease), box-shadow var(--ui-motion-fast) var(--ui-motion-ease), opacity var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-studio-frame > img, .ui-studio-frame > .ui-skeleton { display: block; height: 100%; width: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+.ui-studio-frame[data-format="square"] > :is(img, .ui-skeleton) { aspect-ratio: 1; }
+.ui-studio-frame[data-format="story"] > :is(img, .ui-skeleton) { aspect-ratio: 9 / 16; }
+.ui-studio-frame[data-state="discarded"] > img { opacity: .4; }
+.ui-studio-frame[aria-selected="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-check-on); }
+.ui-studio-frame[aria-selected="true"] > img { opacity: 1; }
+.ui-studio-frame[data-compare] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-hairline-strong); }
+@media (hover: hover) { .ui-studio-frame:hover > img { opacity: .88; } .ui-studio-frame[aria-selected="true"]:hover > img { opacity: 1; } }
+.ui-studio-frame:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-studio-frame:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-studio-frame-tag, .ui-studio-frame-flag {
+  position: absolute; inset-block-start: var(--ui-space-xs); display: grid; place-items: center;
+  width: var(--ui-badge-height-sm); height: var(--ui-badge-height-sm); border-radius: 50%;
+  background: var(--ui-surface); color: var(--ui-text); box-shadow: var(--ui-depth-raised);
+}
+.ui-studio-frame-tag { inset-inline-start: var(--ui-space-xs); }
+.ui-studio-frame-flag { inset-inline-end: var(--ui-space-xs); }
+.ui-studio-frame-tag > svg, .ui-studio-frame-flag > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+
+/* ---------- narrower desks ---------- */
+@container ui-sidebar (min-width: 1440px) { .ui-studio { --studio-side: 320px; } } /* gate-allow:space-from-tokens the panel width at a wide desk */
+@container ui-sidebar (max-width: 1119px) {
+  .ui-studio { --studio-side: 280px; } /* gate-allow:space-from-tokens a narrower panel */
+}
+/* A small desk: the inspector goes under the work; the page scrolls. */
+@container ui-sidebar (max-width: 959px) {
+  .ui-studio {
+    grid-template-columns: var(--studio-side) minmax(0, 1fr);
+    grid-template-rows: auto minmax(calc(var(--ui-size-hit) * 10), 1fr) auto auto;
+    grid-template-areas: "bar bar" "recipe canvas" "recipe branches" "inspector inspector";
+  }
+  .ui-studio-inspector .ui-studio-panel-scroll { grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); overflow: visible; } /* gate-allow:space-from-tokens the block's least width */
+}
+/* A phone: read-only. The recipe and every action step away; the note says why. */
+@container ui-sidebar (max-width: 639px) {
+  .ui-studio {
+    display: flex; flex-direction: column; gap: var(--ui-space-lg); padding: 0 var(--ui-space-lg) var(--ui-space-2xl);
+  }
+  .ui-studio-recipe, .ui-studio-bar-end, .ui-studio-desk-only { display: none; }
+  .ui-studio-bar-meta, .ui-studio-crumbs > a, .ui-studio-crumbs > a + svg { display: none; }
+  .ui-studio-phone-note {
+    display: flex; gap: var(--ui-space-sm); margin: 0; padding: var(--ui-inset-tight); border-radius: var(--ui-radius-item);
+    background: var(--ui-surface-sunken); font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary);
+  }
+  .ui-studio-phone-note > svg { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-tertiary); }
+  .ui-studio-canvas { flex: none; height: calc(var(--ui-size-hit) * 11); }
+  .ui-studio-stage { padding: calc(var(--ui-size-control-lg) + 2 * var(--ui-space-sm)) var(--ui-space-md) var(--ui-space-md); }
+  .ui-studio-tools { inset-block-start: var(--ui-space-sm); }
+  .ui-studio-inspector .ui-studio-panel-scroll { overflow: visible; padding-inline: 0; }
+  .ui-studio-branches { order: 1; }
+  .ui-studio-inspector { order: 2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-studio-ref, .ui-studio-ref > img, .ui-studio-frame { transition: none; }
+  .ui-studio-ref:active, .ui-studio-frame:active { transform: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .ui-studio-tools, .ui-studio-repair { background: var(--ui-glass-bg-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}

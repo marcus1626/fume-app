@@ -1,0 +1,126 @@
+/* Select and native select. DECIDED 13 Oct, from round 7; round 8: invalid on glass (field.css).
+   Built on shadcn's select (Radix: SelectTrigger with data-state and data-placeholder, SelectValue,
+   SelectContent role=listbox with data-state and data-side, SelectGroup, SelectLabel, SelectItem
+   role=option with aria-selected, data-state checked|unchecked, data-highlighted, data-disabled,
+   SelectSeparator; sizes sm and default) and native-select (NativeSelect, its wrapper and icon,
+   option, optgroup), same parts and attributes, redesigned for Fume. Behaviour: select.js.
+   The trigger is a field: white, the field's hairline, radius 12, the value in Ink, the placeholder in
+   tertiary, and chevrons-up-down at the end (it opens both ways). Hover steps the hairline toward
+   Ink, a press steps the fill one step toward Ink like the white button, focus is the Ink ring, an
+   error is the Rouge edge, disabled sinks.
+   The open listbox is glass: .ui-glass .ui-menu on the same element (glass.css, menu.css), so a
+   select and a menu are one material. Rows fill the listbox edge to edge (Marcus 12 Oct), groups
+   are separated by space and a quiet label, never a line, and the chosen row carries the check
+   (check, in Porcelain on the glass). Never Amber: Amber is only the Quality Gate check. The listbox
+   opens 8 under the trigger, at least as wide as it, with the floating radius (22), and above the
+   trigger when there is no room below.
+   The native select keeps the browser's own list (best on phones) inside the same field.
+   Touch: 44 tall with 16 px text on touch screens; listbox rows grow to 44 (menu.css); a tap shows the
+   pressed state, no grey flash; hover only with a mouse.
+   Rule gate: few-strokes (the field's hairline), focus-is-sharp, radius-from-tokens, space-from-tokens,
+   menu-rows-fill, amber-is-a-point, touch-target, touch-feedback, hover-needs-hover,
+   fields-16-on-touch, reduced-motion. */
+
+/* ---------- native select ---------- */
+.ui-native-select-wrap { position: relative; display: block; width: 100%; min-width: 0; }
+.ui-native-select {
+  --h: var(--ui-field-height); --px: var(--ui-field-pad); --edge: var(--ui-field-edge);
+  display: block; width: 100%; min-width: 0; height: var(--h); margin: 0;
+  padding: 0 calc(var(--px) + var(--ui-size-icon) + var(--ui-space-sm)) 0 var(--px);
+  border: 0; border-radius: var(--ui-radius-field); background: var(--ui-field-bg); color: var(--ui-field-fg);
+  box-shadow: inset 0 0 0 1px var(--edge); /* gate-allow:few-strokes  the field's hairline */
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-regular); line-height: 1.4;
+  text-overflow: ellipsis; white-space: nowrap; appearance: none; -webkit-appearance: none; outline: none;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: box-shadow var(--ui-motion-fast) var(--ui-motion-ease), background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-native-select-icon {
+  position: absolute; top: 50%; right: var(--ui-field-pad); width: var(--ui-size-icon); height: var(--ui-size-icon);
+  transform: translateY(-50%); color: var(--ui-field-icon); pointer-events: none;
+}
+.ui-native-select:has(option[value=""]:checked) { color: var(--ui-field-placeholder); }
+.ui-native-select option, .ui-native-select optgroup { color: var(--ui-text); background: var(--ui-field-bg); }
+@media (hover: hover) { .ui-native-select:hover { --edge: var(--ui-field-edge-hover); } }
+.ui-native-select.is-hover { --edge: var(--ui-field-edge-hover); }
+.ui-native-select:active, .ui-native-select.is-pressed { background: var(--ui-field-bg-pressed); }
+.ui-native-select:focus-visible, .ui-native-select.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-native-select[data-ui-focus="pointer"] { outline: none; } /* clicked or tapped: the ring is for the keyboard (focus.js, Marcus 13 Oct) */
+.ui-native-select[aria-invalid="true"] { --edge: var(--ui-field-edge-invalid); }
+.ui-native-select:disabled { --edge: transparent; background: var(--ui-field-bg-disabled); color: var(--ui-field-fg-disabled); cursor: not-allowed; }
+.ui-native-select-wrap:has(.ui-native-select:disabled) .ui-native-select-icon { color: var(--ui-field-fg-disabled); }
+.ui-native-select--sm, .ui-native-select[data-size="sm"] { --h: var(--ui-field-height-sm); --px: var(--ui-field-pad-sm); }
+
+/* ---------- select trigger ---------- */
+.ui-select { position: relative; display: block; width: 100%; min-width: 0; }
+.ui-select-trigger {
+  --h: var(--ui-field-height); --px: var(--ui-field-pad); --edge: var(--ui-field-edge); --ring: var(--ui-focus-ring); --icon-fg: var(--ui-field-icon);
+  position: relative; display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-sm);
+  width: 100%; min-width: 0; height: var(--h); margin: 0; padding: 0 var(--px);
+  border: 0; border-radius: var(--ui-radius-field); background: var(--ui-field-bg); color: var(--ui-field-fg);
+  box-shadow: inset 0 0 0 1px var(--edge); /* gate-allow:few-strokes  the field's hairline */
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-regular); line-height: 1.4;
+  text-align: left; white-space: nowrap; outline: none; user-select: none;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: box-shadow var(--ui-motion-fast) var(--ui-motion-ease), background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-select-value { display: flex; align-items: center; gap: var(--ui-space-sm); flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ui-select-value > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; }
+.ui-select-trigger[data-placeholder] .ui-select-value { color: var(--ui-field-placeholder); }
+.ui-select-icon { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; color: var(--icon-fg); transition: color var(--ui-motion-fast) var(--ui-motion-ease); }
+@media (hover: hover) { .ui-select-trigger:hover { --edge: var(--ui-field-edge-hover); --icon-fg: var(--ui-text); } }
+.ui-select-trigger.is-hover { --edge: var(--ui-field-edge-hover); --icon-fg: var(--ui-text); }
+.ui-select-trigger:active, .ui-select-trigger.is-pressed { background: var(--ui-field-bg-pressed); }
+.ui-select-trigger[data-state="open"] { --edge: var(--ui-field-edge-hover); --icon-fg: var(--ui-text); }
+.ui-select-trigger:focus-visible, .ui-select-trigger.is-focus { outline: var(--ui-size-ring) solid var(--ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-select-trigger[aria-invalid="true"] { --edge: var(--ui-field-edge-invalid); }
+.ui-select-trigger:disabled, .ui-select-trigger[data-disabled] {
+  --edge: transparent; --icon-fg: var(--ui-field-fg-disabled); background: var(--ui-field-bg-disabled); color: var(--ui-field-fg-disabled); cursor: not-allowed;
+}
+.ui-select-trigger:disabled .ui-select-value, .ui-select-trigger[data-disabled] .ui-select-value { color: var(--ui-field-fg-disabled); }
+.ui-select-trigger--sm, .ui-select-trigger[data-size="sm"] { --h: var(--ui-field-height-sm); --px: var(--ui-field-pad-sm); }
+
+/* ---------- the open listbox: glass, a menu ---------- */
+.ui-select-content {
+  position: absolute; z-index: 60; top: calc(100% + var(--ui-space-sm)); left: 0; min-width: 100%;
+  max-height: var(--max-h, var(--ui-field-list-max)); overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+  transform-origin: top center; outline: none;
+}
+.ui-select-content::-webkit-scrollbar { display: none; }
+.ui-select-content[hidden] { display: none; }
+.ui-select-content[data-side="top"] { transform-origin: bottom center; }
+.ui-select > .ui-select-content[data-side="top"] { top: auto; bottom: calc(100% + var(--ui-space-sm)); }
+/* moved to <body> by select.js while open, placed in page coordinates */
+body > .ui-select-content { top: 0; bottom: auto; min-width: 0; }
+.ui-select-group { display: grid; }
+.ui-select-group + .ui-select-group { margin-top: var(--ui-space-sm); } /* space between groups; no line */
+.ui-select-item { position: relative; }
+.ui-select-item-text { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ui-select-item-text small { margin-left: var(--ui-space-sm); font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-glass-fg-secondary); } /* gate-allow:mono-is-data  sizes beside an option are data */
+/* r13 (robot note 07): the chosen option's meta comes into the trigger too ("Low evening light  LYSNE"): the same gap, on the page */
+.ui-select-trigger small { margin-left: var(--ui-space-sm); font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); color: var(--ui-text-tertiary); } /* gate-allow:mono-is-data  the meta beside the chosen option is data */
+.ui-select-item[aria-selected="true"], .ui-select-item[data-state="checked"] { color: var(--ui-glass-fg); }
+.ui-select-item[data-disabled], .ui-select-item[aria-disabled="true"] { color: var(--ui-glass-button-disabled-fg); background: transparent; cursor: default; }
+
+/* ---------- on glass and in a pill bar ---------- */
+.ui-glass .ui-select-trigger { --edge: transparent; --ring: var(--ui-focus-ring-on-glass); --icon-fg: var(--ui-field-glass-placeholder); background: var(--ui-field-glass-bg); color: var(--ui-field-glass-fg); font-weight: var(--ui-type-weight-medium); }
+.ui-glass .ui-select-trigger[data-placeholder] .ui-select-value { color: var(--ui-field-glass-placeholder); }
+@media (hover: hover) { .ui-glass .ui-select-trigger:hover { --edge: transparent; --icon-fg: var(--ui-glass-fg); background: var(--ui-glass-button-clear-hover); } }
+.ui-glass .ui-select-trigger.is-hover { --edge: transparent; --icon-fg: var(--ui-glass-fg); background: var(--ui-glass-button-clear-hover); }
+.ui-glass .ui-select-trigger:active, .ui-glass .ui-select-trigger.is-pressed { background: var(--ui-field-glass-bg); }
+.ui-glass .ui-select-trigger[data-state="open"] { --edge: transparent; --icon-fg: var(--ui-glass-fg); }
+.ui-glass .ui-native-select { --edge: transparent; background: var(--ui-field-glass-bg); color: var(--ui-field-glass-fg); font-weight: var(--ui-type-weight-medium); }
+.ui-glass .ui-native-select-icon { color: var(--ui-field-glass-placeholder); }
+.ui-glass .ui-native-select:focus-visible { outline-color: var(--ui-focus-ring-on-glass); }
+/* invalid on glass (round 8): the 2 px Rouge ring inside the veil, as on every field (field.css) */
+.ui-glass :is(.ui-select-trigger, .ui-native-select)[aria-invalid="true"] { box-shadow: inset 0 0 0 1px var(--ui-field-glass-edge-invalid-rim), inset 0 0 0 calc(1px + var(--ui-size-ring)) var(--ui-field-glass-edge-invalid); } /* gate-allow:few-strokes  the invalid edge on a glass field: Porcelain rim, Rouge band (field.css) */
+.ui-glass--bar .ui-select { width: auto; flex-shrink: 0; }
+.ui-glass--bar :is(.ui-select-trigger, .ui-native-select) { border-radius: var(--ui-radius-action); }
+
+/* ---------- touch: 44 tall, 16 px text ---------- */
+@media (pointer: coarse) {
+  .ui-native-select, .ui-select-trigger { height: max(var(--h), var(--ui-size-hit)); font-size: var(--ui-type-body); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-native-select, .ui-select-trigger, .ui-select-icon { transition: none; }
+}

@@ -1,0 +1,205 @@
+/* Chart: area, line, bar (grouped, stacked, rows), donut and sparkline, with legend and tooltip. DECIDED 13 Oct,
+   round 8. Built on shadcn's chart (ChartContainer with a config of series, each a label and a colour as a
+   CSS variable; ChartTooltip and ChartTooltipContent; ChartLegend and ChartLegendContent), redesigned for
+   Fume. chart.js draws dependency-free inline SVG from the data in the container; the classes below are
+   written so they can later sit under Recharts too: each series colour is --color-<key> on the container
+   (shadcn's ChartStyle), and every mark takes its colour from --c.
+   Fume decisions:
+   - Colour: series come from Ink and the Focus ramp, in a fixed order (--ui-chart-series-1..4: Ink,
+     Focus 600, 400, 200) and keep their colour when another is hidden. One exception (round 9, DECIDED with Warmer;
+     Marcus 13 Oct: more Amber): a series that counts checked work (checked per week, passed first time)
+     is full Amber (--ui-chart-approved), the colour of the check; never any other series. Rouge only for
+     the error state; up and down are
+     words and the trending icons in Ink, never red or green. No gradients: an area is its series colour at
+     8 % (--ui-chart-area-opacity), flat.
+   - As few strokes as possible: no gridlines, no axis lines, no tick marks. Ticks are words at round
+     values; values are labelled on the marks (the last value of a line, the total on a column). The one
+     line is the hairline baseline under vertical bars (--ui-chart-baseline), because columns otherwise
+     float as loose blocks and a zero needs a floor. Touching marks are kept apart by a 2 px gap of the
+     ground (--ui-chart-gap), never by a stroke; points carry a 2 px ring in the ground colour.
+   - To scale: one scale per chart for marks, ticks and labels, from zero; hiding a series never moves the
+     axis. Tick labels thin out before they would collide (a phone shows every third week). On a narrow
+     chart bars turn into rows: the name above, the value at the right, the bar under it.
+   - Numbers: the data type (--ui-type-family-data) with tabular figures where they are small: values on
+     the marks, ticks, dates, tooltip values, the donut list. Names stay in GT Standard, and so does a
+     big number (the donut's total): at title size mono reads like a terminal, so it is GT Standard at
+     500 with tabular figures. Sizes only --ui-type-*.
+   - The point under the pointer or the keyboard gets a soft band (--ui-chart-cursor, radius item), not a
+     crosshair line; the keyboard adds the 2 px focus ring to that band. The tooltip is Smoke glass
+     (.ui-glass.ui-glass--small) at radius float with 16 px air: the date in the data type, then one row
+     per series, the name in secondary and the value in the data type, in the legend's order (a stack adds
+     its total). It holds several lines, so it is a small panel, not tooltip.css's one-line pill. No colour
+     keys: on Smoke glass every Focus step but Ink sinks into the glass (a ringed key reads as a radio
+     button), so the names carry identity and the active points on the chart carry the colour. With a
+     pointer or the keyboard it sits beside the band, above or below the lines it would cover; on touch it
+     sits above the finger.
+   - Legend: pill toggles (ChartLegend) with a 44 px hit area; at rest only the dot and the name, hover
+     and press bring up the quiet pill; a hidden series turns its dot Focus 200 and its name tertiary.
+   - Motion: on first draw lines draw in from the left, areas and labels fade in after them, bars grow from
+     the baseline 25 ms apart and the donut sweeps round, in --ui-chart-draw (480 ms). Stacked and grouped
+     morph into each other. Reduced motion: everything is simply there.
+   Rule gate: tokens-only-color, no-gradient, few-strokes (allowed: the baseline and the focus ring on the
+   band), mono-is-data, type-from-tokens, space-from-tokens, air, radius-from-
+   tokens, actions-are-pills, touch-target, touch-feedback, hover-needs-hover, focus-is-sharp,
+   motion-from-tokens, reduced-motion, amber-is-a-point. */
+
+.ui-chart {
+  --chart-ground: var(--ui-ground); --chart-track: var(--ui-chart-track); --chart-h: var(--ui-chart-height);
+  container: ui-chart / inline-size;
+  position: relative; display: grid; gap: var(--ui-space-lg); min-width: 0;
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); line-height: 1.5; color: var(--ui-text);
+}
+/* inside a card the ground under the marks is the card itself (rings and gaps cut out of it) */
+.ui-card .ui-chart { --chart-ground: var(--card-now, var(--ui-card-bg)); --chart-track: var(--ui-chart-track-on-surface); }
+@container ui-chart (max-width: 520px) { .ui-chart-frame, .ui-chart > .ui-chart-state { --chart-h: var(--ui-chart-height-compact); } }
+
+.ui-chart-frame { position: relative; height: var(--chart-h); min-width: 0; -webkit-user-select: none; user-select: none; }
+/* --fill: in a card stretched to its row (a dashboard), the plot takes the height left over, never less than its own */
+.ui-chart--fill { flex: 1 1 auto; grid-template-rows: minmax(0, 1fr); }
+.ui-chart--fill:has(> .ui-chart-legend, > .ui-chart-toolbar) { grid-template-rows: auto minmax(0, 1fr); }
+.ui-chart--fill > .ui-chart-frame { height: auto; min-height: var(--chart-h); }
+.ui-chart-frame--rows { margin-inline: calc(var(--ui-space-sm) * -1); } /* the rows' band keeps 8 of air; names still line up with the card's text */
+.ui-chart-svg { position: absolute; inset: 0; z-index: 1; display: block; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+
+/* marks */
+.ui-chart-area { fill: var(--c); fill-opacity: var(--ui-chart-area-opacity); stroke: none; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-chart-line { fill: none; stroke: var(--c); stroke-width: var(--ui-chart-line); stroke-linecap: round; stroke-linejoin: round; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-chart-dot { fill: var(--c); stroke: var(--chart-ground); stroke-width: var(--ui-chart-gap); transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-chart-bar { fill: var(--c); transition: d var(--ui-motion-base) var(--ui-motion-ease), opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-chart-track { fill: var(--chart-track); }
+.ui-chart-arc { fill: none; stroke: var(--c); stroke-width: var(--ui-chart-donut-ring); transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-chart-baseline { stroke: var(--ui-chart-baseline); stroke-width: 1px; shape-rendering: crispEdges; } /* the one line a chart draws; see the header */
+.ui-chart-data { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); font-variant-numeric: tabular-nums; fill: var(--ui-chart-tick); }
+.ui-chart-data--label { fill: var(--ui-chart-label); }
+.ui-chart-data--total { transition: transform var(--ui-motion-base) var(--ui-motion-ease), opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-chart-name { font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); fill: var(--ui-chart-tick); }
+.ui-chart-name--strong { fill: var(--ui-text); }
+.ui-chart .is-off { opacity: 0; }
+.ui-chart .is-dim { opacity: var(--ui-chart-dim); }
+
+/* the band behind the active point, under the marks; the keyboard adds the focus ring to it */
+.ui-chart-cursor {
+  position: absolute; z-index: 0; top: 0; left: 0; width: var(--w, 0px); height: var(--h, 0px);
+  transform: translate(var(--x, 0px), var(--y, 0px)); border-radius: var(--ui-radius-item); background: var(--ui-chart-cursor);
+  opacity: 0; pointer-events: none;
+  transition: transform var(--ui-motion-fast) var(--ui-motion-ease), width var(--ui-motion-fast) var(--ui-motion-ease), height var(--ui-motion-fast) var(--ui-motion-ease), opacity var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-chart-frame[data-active] .ui-chart-cursor { opacity: 1; }
+.ui-chart-frame[data-focus="visible"] .ui-chart-cursor { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+.ui-chart--donut .ui-chart-cursor { display: none; } /* the donut marks its slice by dimming the others; the ring goes round the donut */
+
+/* the plot: one target for pointer, touch and keyboard, laid over the marks */
+.ui-chart-plot { position: absolute; z-index: 2; inset: 0; border-radius: var(--ui-radius-item); outline: none; touch-action: pan-y; -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
+.ui-chart--donut .ui-chart-plot { border-radius: 50%; }
+.ui-chart--donut .ui-chart-plot:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* tooltip: Smoke glass, a small panel (several lines), 16 of air at radius float */
+.ui-chart-tip { position: absolute; z-index: 3; top: 0; left: 0; transform: translate(var(--x, 0px), var(--y, 0px)); pointer-events: none; transition: transform var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-chart-tip.is-placing, .ui-chart.is-placing .ui-chart-cursor, .ui-chart.is-placing .ui-chart-bar, .ui-chart.is-placing .ui-chart-data--total { transition: none; }
+.ui-chart-tooltip {
+  display: grid; gap: var(--ui-space-sm); min-width: var(--ui-chart-tooltip-width);
+  padding: var(--ui-inset-float); border-radius: var(--ui-radius-float);
+  color: var(--ui-glass-fg); font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium);
+  line-height: 1.5; letter-spacing: .01em; white-space: nowrap;
+}
+.ui-chart-tooltip[data-state="open"] { animation-duration: var(--ui-motion-fast); }
+.ui-chart-tooltip-head { color: var(--ui-glass-fg); }
+.ui-chart-tooltip-time { font-family: var(--ui-type-family-data); font-weight: var(--ui-type-weight-regular); letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.ui-chart-tooltip-rows { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: var(--ui-space-xs) var(--ui-space-xl); }
+.ui-chart-tooltip-name { color: var(--ui-glass-fg-secondary); }
+.ui-chart-tooltip-num { font-family: var(--ui-type-family-data); font-weight: var(--ui-type-weight-regular); letter-spacing: 0; font-variant-numeric: tabular-nums; text-align: right; color: var(--ui-glass-fg); }
+.ui-chart-tooltip-rows > .ui-chart-tooltip-total { color: var(--ui-glass-fg); }
+.ui-chart-tooltip-rows > .is-total { margin-block-start: var(--ui-space-xs); } /* the total sits a little apart from the rows it adds up */
+
+/* the row above the plot: the legend, and a view switch (stacked or grouped) at the far end */
+.ui-chart-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-sm) var(--ui-space-lg); min-width: 0; }
+
+/* a trend under a chart, in words beside the trending icon in Ink: never red or green */
+.ui-chart-trend { display: flex; align-items: flex-start; gap: var(--ui-space-sm); min-width: 0; margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); text-wrap: pretty; }
+.ui-chart-trend > svg { width: var(--ui-size-icon); height: 1.5em; flex-shrink: 0; }
+.ui-chart-trend-note { color: var(--ui-text-secondary); }
+
+/* legend: pill toggles (shadcn ChartLegendContent) */
+.ui-chart-legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs); min-width: 0; margin-inline-start: calc(var(--ui-space-md) * -1); }
+.ui-chart-legend-item {
+  --bg: transparent;
+  position: relative; display: inline-flex; align-items: center; gap: var(--ui-space-sm); flex-shrink: 0;
+  height: var(--ui-legend-height); padding-inline: var(--ui-space-md); margin: 0;
+  border: 0; border-radius: var(--ui-radius-action); background: var(--bg); color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; letter-spacing: .01em; white-space: nowrap;
+  cursor: pointer; user-select: none; outline: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-chart-legend-item::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: inherit; }
+.ui-chart-legend-swatch { width: var(--ui-legend-swatch); height: var(--ui-legend-swatch); flex-shrink: 0; border-radius: 50%; background: var(--c); transition: background-color var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-chart-legend-item[aria-pressed="false"] { color: var(--ui-text-tertiary); }
+.ui-chart-legend-item[aria-pressed="false"] .ui-chart-legend-swatch { background: var(--ui-legend-off); }
+@media (hover: hover) { .ui-chart-legend-item:hover { --bg: var(--ui-action-quiet-hover); } }
+.ui-chart-legend-item.is-hover { --bg: var(--ui-action-quiet-hover); }
+.ui-chart-legend-item:active, .ui-chart-legend-item.is-pressed { --bg: var(--ui-action-quiet-pressed); transform: scale(var(--ui-motion-press-scale)); }
+.ui-chart-legend-item:focus-visible, .ui-chart-legend-item.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* the donut's legend is a list that holds every value (its direct labels) */
+.ui-chart-legend--list { display: grid; gap: var(--ui-space-xs); align-content: center; margin: 0; padding: 0; list-style: none; }
+.ui-chart-legend-row {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: var(--ui-space-sm) var(--ui-space-md);
+  min-height: var(--ui-legend-height); padding-inline: var(--ui-space-md); border-radius: var(--ui-radius-item);
+  font-size: var(--ui-type-control); color: var(--ui-text); transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-chart-legend-row.is-active { background: var(--ui-chart-cursor); }
+.ui-chart-legend-num { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; text-align: right; color: var(--ui-text); }
+.ui-chart-legend-num--share { min-width: 4ch; color: var(--ui-text-tertiary); }
+
+/* donut */
+.ui-chart-body { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--ui-space-xl); min-width: 0; }
+.ui-chart--donut .ui-chart-frame { width: var(--ui-chart-donut); height: var(--ui-chart-donut); }
+.ui-chart--donut .ui-chart-legend--list { margin-inline: calc(var(--ui-space-md) * -1) 0; }
+@container ui-chart (max-width: 400px) {
+  .ui-chart-body { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: var(--ui-space-lg); }
+  .ui-chart-body > .ui-chart-legend--list { justify-self: stretch; margin-inline: calc(var(--ui-space-md) * -1); }
+}
+.ui-chart-donut-center { position: absolute; inset: 0; z-index: 1; display: grid; place-content: center; justify-items: center; gap: 0; pointer-events: none; text-align: center; }
+.ui-chart-donut-num { font-family: var(--ui-type-family); font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.2; font-variant-numeric: tabular-nums; letter-spacing: -.02em; color: var(--ui-text); }
+.ui-chart-donut-caption { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-tertiary); }
+
+/* sparkline: no axes, no tooltip; the tile's words carry the value */
+.ui-chart--spark { display: block; }
+.ui-chart--spark .ui-chart-frame { height: 100%; }
+
+/* states, in the chart's own size so nothing jumps when the numbers arrive */
+.ui-chart-skeleton { position: absolute; inset: 0; display: flex; align-items: flex-end; gap: var(--ui-space-sm); padding-block: var(--ui-space-sm) var(--ui-space-xl); }
+.ui-chart-skeleton > .ui-skeleton { flex: 1; height: var(--h, 50%); max-width: var(--ui-chart-bar-max); margin-inline: auto; border-start-start-radius: var(--ui-radius-check); border-start-end-radius: var(--ui-radius-check); border-end-start-radius: 0; border-end-end-radius: 0; }
+.ui-chart--spark .ui-chart-skeleton { padding: 0; }
+.ui-chart--spark .ui-chart-skeleton > .ui-skeleton { max-width: none; height: 100%; border-radius: var(--ui-radius-item); }
+.ui-chart-skeleton--donut { place-items: center; display: grid; padding: 0; }
+.ui-chart-skeleton--donut > .ui-skeleton { width: 100%; height: 100%; max-width: none; margin: 0; border-radius: 50%; }
+.ui-chart-skeleton--donut::after { content: ""; position: absolute; inset: var(--ui-chart-donut-ring); border-radius: 50%; background: var(--chart-ground); }
+.ui-chart > .ui-chart-state { min-height: var(--chart-h); padding-block: 0; } /* the plot's own height holds it: no extra air above and below */
+.ui-chart:has(> .ui-chart-legend) > .ui-chart-state { min-height: calc(var(--chart-h) + var(--ui-legend-height) + var(--ui-space-lg)); margin-block-start: calc((var(--ui-legend-height) + var(--ui-space-lg)) * -1); } /* it takes the hidden legend's place too */
+.ui-chart-state--error .ui-empty-media svg { color: var(--ui-danger); } /* Rouge: an error, the one place a chart is coloured */
+.ui-chart[data-state] .ui-chart-legend { visibility: hidden; }
+.ui-chart[data-state] .ui-chart-legend:empty { display: none; }
+
+/* screen readers: the table of every value and the words for the active point */
+.ui-chart-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* draw-in, on first draw only (chart.js sets data-draw="run" for its length) */
+.ui-chart[data-draw="run"] .ui-chart-line { animation: ui-chart-draw var(--ui-chart-draw) var(--ui-motion-ease) both; }
+.ui-chart[data-draw="run"] .ui-chart-area { animation: ui-chart-fade var(--ui-chart-draw) var(--ui-motion-ease) both; animation-delay: calc(var(--ui-chart-draw) / 2); }
+.ui-chart[data-draw="run"] :is(.ui-chart-dot, .ui-chart-data--label, .ui-chart-data--total) { animation: ui-chart-fade var(--ui-motion-base) var(--ui-motion-ease) both; animation-delay: var(--ui-chart-draw); }
+.ui-chart[data-draw="run"] .ui-chart-grow { animation: ui-chart-grow-y var(--ui-chart-draw) var(--ui-motion-ease) both; animation-delay: calc(var(--i, 0) * var(--ui-chart-stagger)); transform-box: fill-box; transform-origin: 50% 100%; }
+.ui-chart[data-draw="run"] .ui-chart-grow--x { animation-name: ui-chart-grow-x; transform-origin: 0 50%; }
+.ui-chart[data-draw="run"] .ui-chart-arc { animation: ui-chart-draw calc(var(--ui-chart-draw) * var(--f, 1)) linear both; animation-delay: calc(var(--ui-chart-draw) * var(--d, 0)); }
+.ui-chart[data-draw="run"] .ui-chart-donut-center { animation: ui-chart-fade var(--ui-motion-base) var(--ui-motion-ease) both; animation-delay: calc(var(--ui-chart-draw) / 2); }
+@keyframes ui-chart-draw { from { stroke-dasharray: 1 1; stroke-dashoffset: 1; } to { stroke-dasharray: 1 1; stroke-dashoffset: 0; } }
+@keyframes ui-chart-fade { from { opacity: 0; } }
+@keyframes ui-chart-grow-y { from { transform: scaleY(0); } }
+@keyframes ui-chart-grow-x { from { transform: scaleX(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-chart[data-draw] :is(.ui-chart-line, .ui-chart-area, .ui-chart-dot, .ui-chart-data--label, .ui-chart-data--total, .ui-chart-grow, .ui-chart-arc, .ui-chart-donut-center) { animation: none; }
+  .ui-chart-area, .ui-chart-line, .ui-chart-dot, .ui-chart-bar, .ui-chart-arc, .ui-chart-data--total, .ui-chart-cursor, .ui-chart-tip, .ui-chart-legend-swatch, .ui-chart-legend-row { transition: none; }
+  .ui-chart-legend-item { transition: background-color var(--ui-motion-fast) linear, color var(--ui-motion-fast) linear; }
+  .ui-chart-legend-item:active, .ui-chart-legend-item.is-pressed { transform: none; }
+  .ui-chart-tooltip[data-state="open"] { animation: none; }
+}

@@ -1,0 +1,81 @@
+/* Train taste: the endless deck on Brand DNA › Taste (app v3, FLOWS §14). PROPOSED 15 Oct 2026. Composed from
+   button.css, kbd.css, field.css and progress.css (the confidence bars with their heads).
+   Markup: <div class="ui-tt"><div class="ui-tt-grid">
+             <div class="ui-tt-deck"><div class="ui-tt-card" [data-leaving]><p class="ui-tt-area">Light</p>
+               <h3 class="ui-tt-question">Which light is more LYSNE?</h3>
+               pair:   <div class="ui-tt-pair"><button class="ui-tt-pick"><span class="ui-tt-media"><img/></span>
+                         <span class="ui-tt-pick-label"><kbd class="ui-kbd">1</kbd> This one</span></button> ×2</div>
+               single: <span class="ui-tt-media ui-tt-media--single"><img/></span>
+                       <div class="ui-tt-answers"> Not LYSNE (secondary) · LYSNE (primary), each with its key </div>
+               <div class="ui-field ui-tt-why"> Why (optional) </div></div></div>
+             <aside class="ui-tt-learned"><h3 class="ui-tt-learned-title"/><div class="ui-tt-bars">
+               <div class="ui-progress-field ui-tt-bar" [data-current]> head · track </div> ×5</div>
+               <div class="ui-tt-lesson"><p class="ui-tt-lesson-label"/><p class="ui-tt-lesson-text"/></div></aside></div>
+   Fume decisions: quick and calm, never a game: one card at a time on the sheet, the picture is the biggest thing,
+   one tap answers and the next card comes in from soft to sharp. There is no end, no score and no streak; the
+   only number that moves is how sure the Engine is per area (light, colour, people, composition, styling), and
+   the area the card asks about reads at full strength while the others step back. What the Engine learned last
+   is said in words under the bars. Keys (1 and 2, Y and N) sit inside the answers, in the data face. No Amber:
+   learning taste is not a check.
+   Rule gate: few-strokes, air, proximity, space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data,
+   actions-are-pills, touch-target, touch-feedback, hover-needs-hover, reduced-motion, card-never-matches-ground. */
+
+.ui-tt { container: ui-tt / inline-size; min-width: 0; }
+.ui-tt-grid {
+  display: grid; grid-template-columns: minmax(0, 1fr) var(--ui-viewer-panel-width); gap: var(--ui-space-xl);
+  align-items: start; min-width: 0;
+}
+.ui-tt-deck { min-width: 0; padding: var(--ui-inset-panel); border-radius: var(--ui-radius-card); background: var(--ui-surface); box-shadow: var(--ui-depth-raised); }
+.ui-tt-card { display: grid; gap: var(--ui-space-lg); min-width: 0; animation: ui-tt-in var(--ui-motion-base) var(--ui-motion-ease) both; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-tt-card[data-leaving] { opacity: 0; }
+.ui-tt-area { margin: 0 0 calc(var(--ui-space-md) * -1); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-tertiary); }
+.ui-tt-question { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.25; letter-spacing: -.01em; color: var(--ui-text); }
+
+.ui-tt-pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ui-space-lg); width: min(100%, calc(var(--ui-space-2xl) * 17)); min-width: 0; }
+.ui-tt-pick {
+  position: relative; display: grid; gap: var(--ui-space-sm); min-width: 0; margin: 0; padding: 0; border: 0; border-radius: var(--ui-radius-card);
+  background: transparent; color: var(--ui-text); font: inherit; text-align: start;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-tt-pick:disabled { cursor: default; }
+@media (pointer: coarse) { .ui-tt-pick { min-height: var(--ui-size-hit); } }
+.ui-tt-pick:active:not(:disabled) { transform: scale(var(--ui-motion-press-scale)); }
+.ui-tt-pick:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-tt-media { position: relative; display: block; aspect-ratio: 1; overflow: hidden; border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); }
+.ui-tt-media > img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale var(--ui-motion-base) var(--ui-motion-ease); }
+.ui-tt-media::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); pointer-events: none; } /* gate-allow:few-strokes  the edge of the picture, so a light one never vanishes into the sheet */
+@media (hover: hover) { .ui-tt-pick:hover:not(:disabled) .ui-tt-media > img { scale: 1.02; } }
+.ui-tt-media--single { width: min(100%, calc(var(--ui-space-2xl) * 9)); }
+.ui-tt-pick-label { display: inline-flex; align-items: center; gap: var(--ui-space-sm); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); }
+.ui-tt-answers { display: flex; flex-wrap: wrap; gap: var(--ui-space-sm); }
+.ui-tt-answers .ui-kbd { margin-inline-start: var(--ui-space-xs); }
+.ui-tt-answers .ui-btn--primary .ui-kbd { background: var(--ui-qg-key-on-ink); color: var(--ui-qg-key-on-ink-fg); }
+@media (pointer: coarse) { .ui-tt .ui-kbd { display: none; } }
+.ui-tt-why { width: min(100%, calc(var(--ui-space-2xl) * 17)); margin-top: var(--ui-space-sm); }
+
+/* how sure the Engine is, and what it learned last */
+.ui-tt-learned { display: grid; gap: var(--ui-space-xl); min-width: 0; padding: var(--ui-space-sm) 0; }
+.ui-tt-learned-title { margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.35; color: var(--ui-text); }
+.ui-tt-bars { display: grid; gap: var(--ui-space-lg); }
+.ui-tt-bar { transition: opacity var(--ui-motion-base) var(--ui-motion-ease); }
+.ui-tt:has(.ui-tt-bar[data-current]) .ui-tt-bar:not([data-current]) { opacity: .56; }
+.ui-tt-lesson { display: grid; gap: var(--ui-space-xs); }
+.ui-tt-lesson-label { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-tertiary); }
+.ui-tt-lesson-text { margin: 0; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text); text-wrap: pretty; }
+
+@container ui-tt (max-width: 719.98px) {
+  .ui-tt-grid { grid-template-columns: minmax(0, 1fr); gap: var(--ui-space-2xl); }
+  .ui-tt-deck { padding: var(--ui-inset-float); }
+  .ui-tt-pair { gap: var(--ui-space-md); }
+  .ui-tt-question { font-size: var(--ui-type-body-large); }
+  .ui-tt-answers .ui-btn { flex: 1 1 0; }
+}
+
+@keyframes ui-tt-in { from { opacity: 0; filter: blur(var(--ui-motion-enter-blur)); } to { opacity: 1; filter: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-tt-card { animation: none; transition: none; }
+  .ui-tt-pick, .ui-tt-media > img, .ui-tt-bar { transition: none; }
+  .ui-tt-pick:active:not(:disabled) { transform: none; }
+}

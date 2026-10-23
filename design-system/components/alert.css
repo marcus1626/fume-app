@@ -1,0 +1,46 @@
+/* Alert: inline banner. DECIDED 13 Oct, from round 7. Built on shadcn's alert (same parts: alert, alert-title,
+   alert-description; variant default and destructive), plus Fume's alert-action and a dismiss button.
+   Decisions:
+   - An alert is a surface step on its ground (--ui-alert-bg; inside a card the sunken step), never a
+     bordered box and never a tinted panel (few-strokes, no-gradient). Radius --ui-radius-card, air
+     --ui-inset-float.
+   - Info (fi-info), success (fi-circle-check) and warning (fi-triangle-alert) differ by icon and words,
+     not by colour: Fume has no green or yellow, and Amber is only the check. Error (destructive) is the
+     one coloured alert: Rouge on the icon and the title (--ui-alert-danger), the text stays secondary.
+   - Title, description, then actions under the text, so it reads the same on a phone and a desktop.
+   - On glass (.ui-alert--glass, inside a dialog or sheet): the faint Porcelain veil, Porcelain text,
+     secondary text at weight 500. Rouge as an icon colour vanishes on Smoke, so an error on glass is
+     Rouge at 80 % (--ui-alert-bg-glass-danger, the delete button's glass colour) with Porcelain text.
+   Rule gate: few-strokes, air, space-from-tokens, radius-from-tokens, type-from-tokens. */
+
+.ui-alert {
+  --alert-bg: var(--ui-alert-bg); --alert-fg: var(--ui-text); --alert-text: var(--ui-text-secondary); --alert-icon: var(--ui-text); --alert-title: var(--alert-fg);
+  position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: var(--ui-space-md); row-gap: var(--ui-space-xs);
+  align-items: start; align-content: start; width: 100%; min-width: 0; padding: var(--ui-inset-float);
+  border-radius: var(--ui-radius-card); background: var(--alert-bg); color: var(--alert-fg);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.5;
+}
+/* the icon sits on the title's first line */
+.ui-alert > svg, .ui-alert-icon { grid-column: 1; grid-row: 1; width: var(--ui-size-icon); height: var(--ui-size-icon); margin-block-start: calc((1lh - var(--ui-size-icon)) / 2); color: var(--alert-icon); }
+.ui-alert-title, .ui-alert-description, .ui-alert-action { grid-column: 2; min-width: 0; }
+.ui-alert:not(:has(> svg, > .ui-alert-icon)) > :is(.ui-alert-title, .ui-alert-description, .ui-alert-action) { grid-column: 1 / span 2; }
+/* under a title the words run on beneath the close button, which needs only the first line */
+.ui-alert:has(> .ui-alert-title) > :is(.ui-alert-description, .ui-alert-action) { grid-column: 2 / -1; }
+.ui-alert:has(> .ui-alert-title):not(:has(> svg, > .ui-alert-icon)) > :is(.ui-alert-description, .ui-alert-action) { grid-column: 1 / -1; }
+.ui-alert-title { margin: 0; font-weight: var(--ui-type-weight-medium); color: var(--alert-title); text-wrap: balance; }
+.ui-alert-description { margin: 0; color: var(--alert-text); text-wrap: pretty; }
+.ui-alert-description p { margin: 0; }
+.ui-alert-action { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); margin-block-start: var(--ui-space-sm); }
+/* dismiss: an icon button in the top corner, its glyph on the inset like the card's action */
+.ui-alert-close { grid-column: 3; grid-row: 1; align-self: start; margin-block: calc(var(--ui-space-xs) * -1.5); margin-inline-end: calc(var(--ui-space-sm) * -1); }
+
+.ui-alert--success, .ui-alert--warning, .ui-alert--info { --alert-icon: var(--ui-text); }
+.ui-alert--error, .ui-alert--destructive, .ui-alert[data-variant="destructive"] { --alert-icon: var(--ui-alert-danger); --alert-title: var(--ui-alert-danger); }
+
+/* inside a card the alert steps one further, so it never matches its ground */
+.ui-card .ui-alert, .ui-alert--on-surface { --alert-bg: var(--ui-alert-bg-on-surface); }
+
+/* on glass */
+.ui-alert--glass { --alert-bg: var(--ui-alert-bg-glass); --alert-fg: var(--ui-glass-fg); --alert-text: var(--ui-glass-fg-secondary); --alert-icon: var(--ui-glass-fg); --alert-title: var(--ui-glass-fg); }
+.ui-alert--glass .ui-alert-description { font-weight: var(--ui-type-weight-medium); }
+.ui-alert--glass.ui-alert--error, .ui-alert--glass.ui-alert--destructive, .ui-alert--glass[data-variant="destructive"] { --alert-bg: var(--ui-alert-bg-glass-danger); --alert-text: var(--ui-glass-fg); --alert-icon: var(--ui-glass-fg); --alert-title: var(--ui-glass-fg); }

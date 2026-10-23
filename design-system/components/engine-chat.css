@@ -1,0 +1,51 @@
+/* Engine chat: what the Engine shows in the designers' chat (app v4, FLOWS §19). PROPOSED 15 Oct 2026.
+   Markup: the customer chat's frame (chat.css) with the Engine's messages (message.css, author "engine"), and in them:
+             <div class="ui-card ui-engine-widget"> header · <ul class="ui-pick-grid"> product tiles in selection mode
+               (product-pick.css) </ul> · footer pills </div>                             (products to tick)
+             <div class="ui-card ui-engine-widget" data-answered> <ul class="ui-pick-grid ui-pick-grid--sm"> </div>
+             <p class="ui-engine-answer"><svg/> <span>Which formats? <strong>Instagram feed 4:5</strong></span></p>
+             <div class="ui-item ui-engine-widget"> cover · title · Open in Studio </div>   (a creative)
+             <div class="ui-card ui-run"> … <div class="ui-run-step-detail"><ul class="ui-engine-run-tiles"> CreativeTile
+               (the media a button: Open in the Studio) </ul></div> … </div>                 (a run)
+             <div class="ui-card ui-engine-widget ui-engine-check-answer"> header · <div class="ui-item-group"> a row
+               per creative in Check (a link) </div></div>                                  (an answer)
+             <aside class="ui-chat-brief ui-engine-run-panel"> The run (chat.css's panel) · foot <div class="ui-progress
+               ui-engine-run-progress"/> note · Open in Check </aside>
+   Round 12 (UX review DTASK-5, DLAY-13, DWAY-13; PROPOSED 20 Oct 2026): the chat takes the Fume chat's desk with "The
+   run" on the right; each picture in a run card opens in the Studio (the media is a button, the tile's own "Open"
+   glass appears on hover); an answer to a question lists the creatives in Check, each a row that opens Check there.
+   Fume decisions: designers talk to the Engine the way customers talk to Fume (Marcus 15 Oct 14:28), so this is the
+   same chat: same scroller, same composer, same pills over it. The Engine asks one thing at a time; an answered
+   widget keeps the answer in words and drops its controls, so the chat reads as a record. Products are the one
+   product tile every picker uses (product-pick.css, 15 Oct): the Ink ring and badge when ticked, never Amber. An
+   answered product card shrinks to small tiles on the sunken surface: depth and size tell it apart, not a stroke.
+   Rule gate: few-strokes, amber-is-a-point, air, space-from-tokens, type-from-tokens, pills-for-actions. */
+
+.ui-message-content > .ui-engine-widget { align-self: stretch; }
+.ui-engine-widget[data-answered] { background: var(--ui-surface-sunken); box-shadow: none; }
+
+/* An answered product card lies on the sunken surface; a product without a picture steps back up to the sheet. */
+.ui-engine-widget[data-answered] .ui-pick-media { background: var(--ui-surface); }
+
+/* An answered question: the question quiet, the answer in the text colour. */
+.ui-engine-answer {
+  display: inline-flex; align-items: center; gap: var(--ui-space-xs); max-width: var(--ui-message-measure); min-width: 0; margin: 0;
+  font-size: var(--ui-type-label); line-height: 1.5; color: var(--ui-text-secondary);
+}
+.ui-engine-answer > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; color: var(--ui-text-tertiary); }
+.ui-engine-answer strong { font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+
+/* A run's pictures: the run card's grid, each a creative tile whose media opens it in the Studio */
+.ui-run-step-detail > .ui-engine-run-tiles { margin-block-start: var(--ui-space-xs); }
+.ui-engine-run-tiles {
+  display: grid; grid-template-columns: repeat(var(--ui-run-tile-cols), minmax(0, 1fr)); gap: var(--ui-space-md) var(--ui-space-sm);
+  min-width: 0; margin: 0; padding: 0; list-style: none;
+}
+@container ui-run (max-width: 479.98px) { .ui-engine-run-tiles { grid-template-columns: repeat(var(--ui-run-tile-cols-narrow), minmax(0, 1fr)); } }
+.ui-engine-run-tiles .ui-creative-caption { justify-content: flex-start; }
+
+/* The answer's rows: the creative small, its name and when it is due */
+.ui-engine-check-answer .ui-item-group { gap: var(--ui-space-xs); }
+
+/* The run panel's foot: the progress across, the note and Open in Check under it */
+.ui-engine-run-progress { flex: 1 1 100%; }

@@ -1,0 +1,128 @@
+/* Sheet and drawer. DECIDED 13 Oct, from round 7. Built on shadcn's sheet (Radix dialog: content with side
+   top|right|bottom|left, header, title, description, footer, close) and drawer (vaul: content, handle,
+   header, title, description, footer; data-vaul-drawer-direction), redesigned for Fume.
+   Both are Smoke glass panels at the panel radius, 32, with 24 inside (--ui-inset-panel), over the glass
+   scrim. dialog.js opens and closes them like a dialog: focus trap, Escape, scrim click, focus back.
+   Sheet: a side panel for detail beside the work (creative details). It floats 12 off the top, side and
+   bottom of the screen (--ui-sheet-margin), so its corners show: a panel lying on the page, not a slab
+   glued to the edge. Header, a body that scrolls on its own, and the actions at the bottom; regions are
+   parted by space, never a line. It slides in from its side and comes into focus from blur.
+   Drawer: the same content from the bottom on a phone. It floats 8 off the sides and the bottom
+   (--ui-drawer-margin) so all four corners show, opens at the first snap point (--ui-drawer-snap, 60 % of
+   the screen) and snaps to fully open or away. The grab handle is a short pill (40 x 6), not a line, with
+   a 44 px hit area: drag it (or the header) to move between snaps, or press it with the keyboard.
+   The right panel (round 9, DLAY-15, DWAY-5 and DWAY-4, desktop review 19 Oct; PROPOSED 19 Oct 2026): on a desk a
+   form, a product to confirm or anything longer than a short question opens as a panel on the right, never a centred
+   dialog, so the page stays in view on the left. Two widths: md 440 (default) and lg 520 ([data-size="lg"]: a long
+   form such as Add a product or Import). It runs the window's full height, 12 off the edges as before; the body
+   scrolls on its own and the footer is pinned at its foot under a hairline in the faint Porcelain veil, the main
+   action last, at the bottom right. The Smoke glass (glass.css). Under 640 px the same panel rises from the bottom as
+   the phone's sheet (8 off the sides and the bottom, up to 48 below the top), so one component serves both.
+   A form around body and footer (.ui-sheet-form) takes no box, so the body still scrolls and the footer stays.
+   Markup: <div class="ui-glass ui-sheet" data-side="right" data-size="lg" role="dialog">
+             <div class="ui-sheet-header"><h2 class="ui-sheet-title">Add a product</h2></div>
+             <form class="ui-sheet-form"><div class="ui-sheet-body">…</div>
+               <div class="ui-sheet-footer"><button class="ui-btn ui-btn--glass-clear">Later</button>
+                 <button class="ui-btn ui-btn--glass-white">Add it</button></div></form>
+             <button class="ui-btn ui-btn--glass-clear ui-btn--icon ui-btn--sm ui-sheet-close">×</button></div>
+   Rule gate: air, space-from-tokens, glass-one-white, few-strokes, type-from-tokens, touch-target,
+   touch-feedback, hover-needs-hover, reduced-motion. */
+
+/* ---------- sheet ---------- */
+.ui-sheet {
+  --sheet-from: translateX(calc(100% + var(--ui-sheet-margin)));
+  position: fixed; z-index: var(--ui-overlay-z-modal);
+  top: var(--ui-sheet-margin); right: var(--ui-sheet-margin); bottom: var(--ui-sheet-margin);
+  width: min(var(--ui-sheet-width), calc(100% - 2 * var(--ui-sheet-margin)));
+  display: flex; flex-direction: column; overflow: hidden;
+  border-radius: var(--ui-radius-panel);
+  color: var(--ui-glass-fg); font-family: var(--ui-type-family); font-size: var(--ui-type-control);
+  outline: none;
+}
+.ui-sheet[data-side="left"] { --sheet-from: translateX(calc(-100% - var(--ui-sheet-margin))); right: auto; left: var(--ui-sheet-margin); }
+/* the right panel's two widths (round 9): md 440, lg 520 */
+.ui-sheet:is([data-side="right"], [data-side="left"]) { width: min(440px, calc(100% - 2 * var(--ui-sheet-margin))); } /* gate-allow:space-from-tokens the right panel's width, a layout width (DLAY-15) */
+.ui-sheet:is([data-side="right"], [data-side="left"])[data-size="lg"] { width: min(520px, calc(100% - 2 * var(--ui-sheet-margin))); } /* gate-allow:space-from-tokens the wide right panel, a layout width (DLAY-15) */
+/* a form around body and footer takes no box: the body scrolls, the footer stays */
+.ui-sheet-form { display: contents; }
+.ui-sheet[data-side="top"], .ui-sheet[data-side="bottom"] { left: var(--ui-sheet-margin); right: var(--ui-sheet-margin); width: auto; max-height: calc(100% - 2 * var(--ui-sheet-margin)); }
+.ui-sheet[data-side="top"] { --sheet-from: translateY(calc(-100% - var(--ui-sheet-margin))); bottom: auto; }
+.ui-sheet[data-side="bottom"] { --sheet-from: translateY(calc(100% + var(--ui-sheet-margin))); top: auto; }
+.ui-sheet[data-state="open"] { animation: ui-sheet-in var(--ui-motion-slow) var(--ui-motion-ease) both; }
+.ui-sheet[data-state="closed"] { animation: ui-sheet-out var(--ui-motion-base) var(--ui-motion-ease) both; }
+
+/* ---------- drawer ---------- */
+.ui-drawer {
+  position: fixed; z-index: var(--ui-overlay-z-modal);
+  left: var(--ui-drawer-margin); right: var(--ui-drawer-margin); bottom: calc(var(--ui-drawer-margin) + env(safe-area-inset-bottom, 0px));
+  width: auto; max-width: var(--ui-drawer-width); margin-inline: auto;
+  max-height: calc(100% - var(--ui-drawer-top) - var(--ui-drawer-margin));
+  display: flex; flex-direction: column; overflow: hidden;
+  border-radius: var(--ui-radius-panel);
+  color: var(--ui-glass-fg); font-family: var(--ui-type-family); font-size: var(--ui-type-control);
+  outline: none; translate: 0 var(--drawer-y, 0px); overscroll-behavior: contain;
+}
+.ui-drawer.is-snapping { transition: height var(--ui-motion-base) var(--ui-motion-ease), translate var(--ui-motion-base) var(--ui-motion-ease); }
+.ui-drawer[data-state="open"] { animation: ui-drawer-in var(--ui-motion-slow) var(--ui-motion-ease) both; }
+.ui-drawer[data-state="closed"] { animation: ui-drawer-out var(--ui-motion-base) var(--ui-motion-ease) both; }
+.ui-sheet[hidden], .ui-drawer[hidden] { display: none; }
+
+/* the grab handle: a short pill; the whole top of the drawer drags */
+.ui-drawer-handle {
+  position: relative; flex-shrink: 0; align-self: center;
+  width: var(--ui-drawer-handle-width); height: var(--ui-drawer-handle-height);
+  margin-top: var(--ui-space-md); padding: 0; border: 0; border-radius: var(--ui-radius-action);
+  background: var(--ui-drawer-handle); cursor: grab; touch-action: none; outline: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+/* the 44 hit area starts at the drawer's top edge (the handle sits 12 below it), so the rounded top never clips it */
+.ui-drawer-handle::after { content: ""; position: absolute; inset: calc(-1 * var(--ui-space-md)) min(0px, calc(50% - var(--ui-size-hit) / 2)) auto; height: var(--ui-size-hit); }
+@media (hover: hover) { .ui-drawer-handle:hover { background: var(--ui-drawer-handle-active); } }
+.ui-drawer-handle:active, .ui-drawer-handle.is-pressed, .ui-drawer[data-dragging] .ui-drawer-handle { background: var(--ui-drawer-handle-active); transform: scale(var(--ui-motion-press-scale)); cursor: grabbing; }
+.ui-drawer-handle:focus-visible, .ui-drawer-handle.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-size-ring-offset); }
+.ui-drawer[data-dragging] { user-select: none; }
+.ui-drawer[data-dragging] .ui-drawer-header { cursor: grabbing; }
+
+/* ---------- parts, shared ---------- */
+.ui-sheet-header, .ui-drawer-header { position: relative; flex-shrink: 0; display: grid; gap: var(--ui-space-sm); min-width: 0; padding: var(--ui-inset-panel) var(--ui-inset-panel) 0; }
+.ui-drawer-header { padding-top: var(--ui-space-lg); touch-action: none; }
+.ui-sheet-title, .ui-drawer-title { margin: 0; font-size: var(--ui-type-body-large); font-weight: var(--ui-type-weight-medium); line-height: 1.3; letter-spacing: -.01em; text-wrap: balance; }
+.ui-sheet-description, .ui-drawer-description { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.5; color: var(--ui-glass-fg-secondary); }
+/* the body is its own scroll area. Its 24 of air above and below is margin, not padding, so the scroll
+   clips 24 short of the header and of the actions: a line cut by the scroll never runs into a button */
+.ui-sheet-body, .ui-drawer-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: grid; align-content: start; gap: var(--ui-space-xl); margin-block: var(--ui-space-xl); padding: 0 var(--ui-inset-panel); }
+.ui-sheet-footer, .ui-drawer-footer { flex-shrink: 0; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--ui-space-sm); padding: 0 var(--ui-inset-panel) var(--ui-inset-panel); }
+/* the panel's footer is pinned at its foot under a hairline (round 9, DWAY-4): the body's last line never sits under a
+   button. The body's 24 below stays as space above the line. */
+.ui-sheet-body + .ui-sheet-footer, .ui-sheet-form > .ui-sheet-body + .ui-sheet-footer {
+  margin-top: calc(-1 * var(--ui-space-xl) + var(--ui-space-lg)); padding-top: var(--ui-space-lg);
+  box-shadow: inset 0 1px 0 var(--ui-glass-button-clear); /* gate-allow:few-strokes  the one line on the panel: it parts the pinned actions from the scrolled form (DWAY-4) */
+}
+.ui-drawer-footer > .ui-btn { --h: var(--ui-size-hit); flex: 1 1 auto; }
+/* a sheet on a narrow screen: actions share the width (and stack when they do not fit), 44 tall */
+@media (max-width: 600px) { .ui-sheet-footer > .ui-btn { --h: var(--ui-size-hit); flex: 1 1 auto; } }
+/* the phone: the side panel rises from the bottom as the phone's sheet (round 9) */
+@media (max-width: 639.98px) {
+  .ui-sheet:is([data-side="right"], [data-side="left"]), .ui-sheet:is([data-side="right"], [data-side="left"])[data-size] {
+    --sheet-from: translateY(calc(100% + var(--ui-drawer-margin)));
+    top: auto; left: var(--ui-drawer-margin); right: var(--ui-drawer-margin); bottom: calc(var(--ui-drawer-margin) + env(safe-area-inset-bottom, 0px));
+    width: auto; max-width: var(--ui-drawer-width); margin-inline: auto;
+    max-height: calc(100% - var(--ui-drawer-top) - var(--ui-drawer-margin) - env(safe-area-inset-bottom, 0px));
+  }
+}
+/* close: the same clear circle as a dialog's, on the title's first line */
+.ui-sheet-close { position: absolute; top: var(--ui-inset-panel); right: var(--ui-inset-panel); }
+.ui-sheet:has(> .ui-sheet-close) > .ui-sheet-header { padding-inline-end: calc(var(--ui-inset-panel) + var(--ui-size-control-sm) + var(--ui-space-md)); }
+.ui-sheet:has(> .ui-sheet-close) .ui-sheet-title { display: flex; align-items: center; min-height: var(--ui-size-control-sm); }
+
+@keyframes ui-sheet-in { from { transform: var(--sheet-from); filter: blur(var(--ui-motion-enter-blur)); } to { transform: none; filter: none; } }
+@keyframes ui-sheet-out { to { transform: var(--sheet-from); filter: blur(var(--ui-motion-enter-blur)); } }
+@keyframes ui-drawer-in { from { transform: translateY(calc(100% + var(--ui-drawer-margin))); filter: blur(var(--ui-motion-enter-blur)); } to { transform: none; filter: none; } }
+@keyframes ui-drawer-out { to { transform: translateY(calc(100% + var(--ui-drawer-margin))); filter: blur(var(--ui-motion-enter-blur)); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-sheet[data-state], .ui-drawer[data-state] { animation: none; }
+  .ui-drawer.is-snapping, .ui-drawer-handle { transition: none; }
+  .ui-drawer-handle:active, .ui-drawer-handle.is-pressed { transform: none; }
+}

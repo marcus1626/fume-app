@@ -1,0 +1,62 @@
+/* Input OTP: a sign-in code in six slots. DECIDED 13 Oct, from round 7.
+   Built on shadcn's input-otp (InputOTP, InputOTPGroup, InputOTPSlot with data-active,
+   InputOTPSeparator role=separator), same parts and attributes, redesigned for Fume. Behaviour:
+   input-otp.js.
+   One real input (autocomplete="one-time-code") lies invisibly over the slots, so typing, pasting
+   and the phone's code autofill work as usual, and it is the 44 px target for a finger. Each slot is
+   a white field with the field's hairline and radius; the digits are data (the mono face, 24).
+   The active slot carries the sharp Ink ring and, while empty, an Ink caret that fades in and out.
+   The separator between the groups of three is space, not a line: groups sit 24 apart, slots 8.
+   Slots narrow evenly when there is little room, so the code stays on one line on a phone.
+   Invalid: Rouge edges and the message under the code. Disabled: sunken slots.
+   Rule gate: few-strokes (the field's hairline, the focus ring), focus-is-sharp, radius-from-tokens,
+   space-from-tokens, type-from-tokens, mono-is-data, fields-16-on-touch, reduced-motion. */
+
+.ui-input-otp {
+  position: relative; display: flex; align-items: center; gap: var(--ui-otp-gap);
+  width: 100%; max-width: calc(6 * var(--ui-otp-slot-width) + 6 * var(--ui-otp-gap) + var(--ui-otp-separator));
+  cursor: text;
+}
+.ui-input-otp-group { display: flex; flex: 1 1 0; gap: var(--ui-otp-gap); min-width: 0; }
+.ui-input-otp-separator { flex: 0 0 var(--ui-otp-separator); align-self: stretch; } /* space, not a line */
+.ui-input-otp-slot {
+  --edge: var(--ui-field-edge);
+  position: relative; display: grid; place-items: center; flex: 1 1 0; min-width: 0; max-width: var(--ui-otp-slot-width); height: var(--ui-otp-slot-height);
+  border-radius: var(--ui-radius-field); background: var(--ui-field-bg); color: var(--ui-field-fg);
+  box-shadow: inset 0 0 0 1px var(--edge); /* gate-allow:few-strokes  each slot is a field: its hairline */
+  font-family: var(--ui-type-family-data); font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-regular); line-height: 1; /* gate-allow:mono-is-data  a sign-in code is data */
+  font-variant-numeric: tabular-nums;
+  transition: box-shadow var(--ui-motion-fast) var(--ui-motion-ease), background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+/* the real input: invisible, over every slot */
+.ui-input-otp-input {
+  position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; margin: 0; padding: 0;
+  border: 0; background: transparent; color: transparent; caret-color: transparent; opacity: 0; outline: none;
+  font-size: var(--ui-type-body); letter-spacing: 0; cursor: text; -webkit-tap-highlight-color: transparent;
+}
+
+@media (hover: hover) { .ui-input-otp:hover .ui-input-otp-slot { --edge: var(--ui-field-edge-hover); } }
+.ui-input-otp.is-hover .ui-input-otp-slot { --edge: var(--ui-field-edge-hover); }
+.ui-input-otp-slot[data-active="true"] { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); z-index: 0; }
+.ui-input-otp:has(.ui-input-otp-input[data-ui-focus="pointer"]) .ui-input-otp-slot[data-active="true"] { outline: none; } /* tapped in: the caret in the slot shows where you type; the ring is for the keyboard (focus.js, Marcus 13 Oct) */
+/* the caret in the active empty slot */
+.ui-input-otp-slot[data-active="true"]:empty::after {
+  content: ""; width: var(--ui-size-ring); height: 1em; background: var(--ui-otp-caret);
+  animation: ui-otp-caret var(--ui-motion-slow) var(--ui-motion-ease) infinite alternate;
+}
+@keyframes ui-otp-caret { from { opacity: 1; } to { opacity: 0; } }
+
+/* invalid and disabled */
+.ui-input-otp[data-invalid="true"] .ui-input-otp-slot, .ui-input-otp:has(.ui-input-otp-input[aria-invalid="true"]) .ui-input-otp-slot { --edge: var(--ui-field-edge-invalid); }
+.ui-input-otp:has(.ui-input-otp-input:disabled) { cursor: not-allowed; }
+.ui-input-otp:has(.ui-input-otp-input:disabled) .ui-input-otp-slot, .ui-input-otp[data-disabled="true"] .ui-input-otp-slot { --edge: transparent; background: var(--ui-field-bg-disabled); color: var(--ui-field-fg-disabled); }
+
+/* on glass: the veil, no stroke, the Porcelain ring */
+.ui-glass .ui-input-otp-slot { --edge: transparent; background: var(--ui-field-glass-bg); color: var(--ui-field-glass-fg); }
+.ui-glass .ui-input-otp-slot[data-active="true"] { outline-color: var(--ui-focus-ring-on-glass); }
+.ui-glass .ui-input-otp-slot[data-active="true"]:empty::after { background: var(--ui-glass-fg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-input-otp-slot { transition: none; }
+  .ui-input-otp-slot[data-active="true"]:empty::after { animation: none; }
+}

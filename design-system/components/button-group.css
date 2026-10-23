@@ -1,0 +1,47 @@
+/* Button group and split button. DECIDED 13 Oct, from round 7. Built on shadcn's button-group (role="group",
+   data-orientation horizontal | vertical, parts ButtonGroupText and ButtonGroupSeparator; groups nest),
+   redesigned for Fume. Markup:
+     <div class="ui-btn-group" role="group" aria-label="Generate">
+       <button class="ui-btn ui-btn--primary">Generate 12 creatives</button>
+       <button class="ui-btn ui-btn--primary ui-btn--icon" aria-label="More ways to generate" aria-haspopup="menu" aria-expanded="false">chevron</button>
+     </div>
+   The children are ordinary buttons (button.css): every variant, size and state is theirs.
+   Fume decisions: the group is the pill. Its two ends keep the full round and the joins inside are cut
+   straight, with a 2 px gap of ground between the buttons instead of shadcn's border: space, not a line
+   (few-strokes), and the pill still reads as one object. A split button is a primary button and its
+   chevron, the menu trigger, cut by the same 2 px. Each button shrinks toward the join when pressed, so
+   the gap stays 2 px and the outer end moves. ButtonGroupText is a sunken segment (counts and values in
+   the data face: .ui-btn-group-text--num). ButtonGroupSeparator is more space (8), never a line.
+   Groups nest 8 apart. Vertical groups stack with round top and bottom.
+   Touch: each button keeps its own 44 px hit area (button.css). Rule gate: actions-are-pills (allowed:
+   the joins inside a group, whose outer ends are the pill), few-strokes, space-from-tokens. */
+
+.ui-btn-group { display: inline-flex; align-items: stretch; gap: calc(var(--ui-space-xs) / 2); width: max-content; max-width: 100%; }
+.ui-btn-group[data-orientation="vertical"] { flex-direction: column; }
+.ui-btn-group:has(> .ui-btn-group) { gap: var(--ui-space-sm); }
+.ui-btn-group-separator { flex: none; width: calc(var(--ui-space-sm) - var(--ui-space-xs)); height: calc(var(--ui-space-sm) - var(--ui-space-xs)); }
+
+/* joins: straight inside, round at the two ends; a pressed button shrinks toward its join */
+.ui-btn-group:not([data-orientation="vertical"]) > :not(:first-child) { border-start-start-radius: 0; border-end-start-radius: 0; } /* gate-allow:actions-are-pills  a join inside the group; the group's two ends keep the pill */
+.ui-btn-group:not([data-orientation="vertical"]) > :not(:last-child) { border-start-end-radius: 0; border-end-end-radius: 0; } /* gate-allow:actions-are-pills  as above */
+.ui-btn-group[data-orientation="vertical"] > :not(:first-child) { border-start-start-radius: 0; border-start-end-radius: 0; } /* gate-allow:actions-are-pills  as above */
+.ui-btn-group[data-orientation="vertical"] > :not(:last-child) { border-end-start-radius: 0; border-end-end-radius: 0; } /* gate-allow:actions-are-pills  as above */
+.ui-btn-group:not([data-orientation="vertical"]) > :first-child:not(:last-child) { transform-origin: right center; }
+.ui-btn-group:not([data-orientation="vertical"]) > :last-child:not(:first-child) { transform-origin: left center; }
+.ui-btn-group[data-orientation="vertical"] > :first-child:not(:last-child) { transform-origin: center bottom; }
+.ui-btn-group[data-orientation="vertical"] > :last-child:not(:first-child) { transform-origin: center top; }
+.ui-btn-group > .ui-btn:focus-visible { z-index: 1; }
+/* the chevron of a split button: a little narrower than a square, the chevron near the join */
+.ui-btn-group:not([data-orientation="vertical"]) > .ui-btn--icon:last-child:not(:first-child) { width: auto; padding-inline: var(--ui-space-sm) var(--ui-space-md); }
+.ui-btn-group > .ui-btn[aria-expanded="true"] { background: var(--bg-pressed); }
+
+/* text segment: a value or a label inside the group */
+.ui-btn-group-text {
+  display: inline-flex; align-items: center; gap: var(--ui-space-sm); flex-shrink: 0;
+  min-height: var(--ui-size-control-md); padding-inline: var(--ui-size-pad-sm);
+  border-radius: var(--ui-radius-action); background: var(--ui-surface-sunken); color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); white-space: nowrap;
+}
+.ui-btn-group-text svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; }
+.ui-btn-group-text--num { justify-content: center; min-width: calc(var(--ui-size-control-md) * 1.5); font-family: var(--ui-type-family-data); font-weight: var(--ui-type-weight-regular); font-variant-numeric: tabular-nums; }
+.ui-btn-group--sm > .ui-btn-group-text { min-height: var(--ui-size-control-sm); padding-inline: var(--ui-space-md); font-size: var(--ui-type-label); }

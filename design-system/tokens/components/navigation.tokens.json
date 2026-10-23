@@ -1,0 +1,152 @@
+{
+  "$description": "Navigation and data: sidebar, site top bar, breadcrumb, pagination, tabs, table and calendar. DECIDED 13 Oct 2026 (approved on the review board, F-D072 to F-D075), first shown in round 7. Sizes and the few surface steps these components need; every colour points at an existing role. Built into --ui-<group>-<key> by node tools/tokens/build.mjs.",
+  "sidebar": {
+    "width": {
+      "value": "240px",
+      "description": "The expanded app sidebar on the layer behind the page.",
+      "status": "DECIDED"
+    },
+    "width-icon": {
+      "value": "calc({size.hit} + 2 * {space.md})",
+      "description": "The collapsed icon rail: 44 px rounded squares (radius item) with 12 px of the layer behind on each side (68 px). Square, not round: Fume's rail (Marcus, 13 Oct).",
+      "status": "DECIDED"
+    },
+    "width-mobile": {
+      "value": "288px",
+      "description": "The sidebar as a glass drawer on a phone; never wider than the screen minus 56 px, so the page stays in view behind the scrim.",
+      "status": "DECIDED"
+    },
+    "row": {
+      "value": "{size.control-md}",
+      "description": "A navigation row, 40 px; 44 on touch screens. The current row comes forward to Porcelain (--ui-behind-active) with --ui-depth-raised.",
+      "status": "DECIDED"
+    },
+    "gap": {
+      "value": "{space.sm}",
+      "description": "The layer behind that shows around the page sheet (8 px). No stroke between the sidebar and the page: the sheet lies on the layer with --ui-depth-sheet.",
+      "status": "DECIDED"
+    },
+    "logo": {
+      "value": "26px",
+      "description": "Height of the Fume logo (the lockup) in the sidebar header: 103 px wide, above the 96 px minimum, the word as large as the old 18 px wordmark. Logo before mark before wordmark (F-D080).",
+      "status": "DECIDED"
+    },
+    "logo-mark": {
+      "value": "24px",
+      "description": "Height of the mark alone when the sidebar folds to the rail: the logo becomes its icon.",
+      "status": "DECIDED"
+    }
+  },
+  "nav": {
+    "height": {
+      "value": "calc({size.control-md} + 2 * {space.md})",
+      "description": "The site top bar: 40 px controls with 12 px of air above and below (64 px).",
+      "status": "DECIDED"
+    },
+    "link": {
+      "value": "{size.seg}",
+      "description": "A link in the top bar: a 36 px quiet pill, 44 to touch.",
+      "status": "DECIDED"
+    },
+    "logo": {
+      "value": "26px",
+      "description": "Height of the Fume logo (the lockup) in the top bar: 103 px wide, above the 96 px minimum. Logo before mark before wordmark (F-D080).",
+      "status": "DECIDED"
+    },
+    "panel": {
+      "value": "340px",
+      "description": "Width of a top-bar dropdown: glass, radius float, rows with a title and one line of text.",
+      "status": "DECIDED"
+    }
+  },
+  "breadcrumb": {
+    "gap": {
+      "value": "{space.xs}",
+      "description": "Between a crumb and its chevron separator (4 px); the chevron is the only divider, never a slash or a line.",
+      "status": "DECIDED"
+    }
+  },
+  "pagination": {
+    "size": {
+      "value": "{size.control-md}",
+      "description": "A page button: a 40 px circle (two digits stay round), 44 to touch. The current page is Ink.",
+      "status": "DECIDED"
+    }
+  },
+  "table": {
+    "row-gap": {
+      "value": "{space.xs}",
+      "description": "Space between rows (4 px). Rows are told apart by space and the hover surface, never by lines (few-strokes).",
+      "status": "DECIDED"
+    },
+    "row-hover": {
+      "value": "{color.surface}",
+      "description": "A row under the pointer: one step toward Ink on Porcelain.",
+      "status": "DECIDED"
+    },
+    "row-selected": {
+      "value": "{color.selected}",
+      "description": "A selected row: the faint Amber wash of color.selected, light on what you chose (round 10; round 9 had Amber 50, round 8 two steps toward Ink). The checkbox itself is Ink.",
+      "status": "DECIDED"
+    },
+    "cell-x": {
+      "value": "{space.md}",
+      "description": "Air sideways in a cell (12 px); the first and last cell keep --ui-inset-float (16) from the row's rounded ends.",
+      "status": "DECIDED"
+    },
+    "cell-y": {
+      "value": "{space.sm}",
+      "description": "Air above and below a cell (8 px).",
+      "status": "DECIDED"
+    },
+    "head": {
+      "value": "{size.control-sm}",
+      "description": "Header row height (32 px): label type in tertiary, sticky on scroll.",
+      "status": "DECIDED"
+    },
+    "thumb": {
+      "value": "{size.control-md}",
+      "description": "Width of the creative thumbnail in a row (40 px, 4:5, so 50 tall), with the creative's hairline edge.",
+      "status": "DECIDED"
+    }
+  },
+  "calendar": {
+    "day": {
+      "value": "{size.control-md}",
+      "description": "A day: a 40 px circle. Selected is an Ink circle; on glass a Porcelain one.",
+      "status": "DECIDED"
+    },
+    "cell": {
+      "value": "{size.hit}",
+      "description": "A day's cell and hit area, 44 px. Narrow screens let the cells shrink and keep the 44 px hit area.",
+      "status": "DECIDED"
+    },
+    "range": {
+      "value": "{color.selected}",
+      "description": "The band between the two Ink ends of a range: the faint Amber wash of color.selected (round 10; round 9 had Amber 50, round 8 the sunken step); no outline.",
+      "status": "DECIDED"
+    },
+    "range-on-glass": {
+      "value": "{color.glass.button-clear-hover}",
+      "description": "The band of a range on glass: the clear veil, one step up.",
+      "status": "DECIDED"
+    },
+    "today": {
+      "value": "4px",
+      "description": "Today: a small Ink dot under the date (Porcelain on a selected day). A dot, not a ring, so nothing draws a line.",
+      "status": "DECIDED"
+    }
+  },
+  "tabs": {
+    "gap": {
+      "value": "{space.lg}",
+      "description": "Between the tab list and its panel (16 px).",
+      "status": "DECIDED"
+    },
+    "vertical-width": {
+      "value": "220px",
+      "description": "The vertical tab list on a settings page: a sunken track with one white pill that slides, like the segmented control.",
+      "status": "DECIDED"
+    }
+  }
+}

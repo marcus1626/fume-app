@@ -1,0 +1,120 @@
+/* Share: who sees a campaign, and the link. DECIDED 13 Oct, from round 8. Fume's own (shadcn has no share dialog);
+   composed from the dialog (dialog.css, dialog.js: glass, radius 32, 24 inside, focus trap, Escape, scrim),
+   the glass field and select (field.css, select.css), the avatar, the glass switch and the glass buttons.
+   Behaviour: share.js.
+   Decisions:
+   - One white button on the glass, and it is Invite: the reason the dialog was opened. Copy link and
+     each person's remove are clear (glass-one-white).
+   - Invite by email in one row: the field, the role (Viewer, Can comment, Can approve) and Invite. The role
+     is a select, so the words say what someone may do; "Can approve" is the customer's right: the expert checks, only the customer approves.
+   - People with access are rows of avatar, name and email, their role and a clear remove circle. You are
+     first and own the campaign, so your row has words where the others have controls. The list scrolls
+     inside --ui-share-list-max, stopping on half a row; when narrow (a phone sheet) it does not, and the
+     sheet scrolls as one. Rows are parted by space, never a line.
+   - Anyone with the link: a glass switch; on, the link shows in the data face with Copy link beside it.
+     Copy link says Copied, with the check, for --ui-share-copied, then turns back; off, the link is gone
+     and the words say who can still open it.
+   - On a phone (under 600 px of screen) the dialog is a sheet at the bottom, 8 off the sides and the foot
+     like the drawer, so all four corners show; the invite row wraps, the role and Invite under the email.
+   - The layout follows the dialog's own width (container ui-share), so it is the same inside a board frame.
+   Air: 24 inside the panel (3/4 of 32), 16 between groups, 8 inside a group, 4 between rows.
+   Touch: every control 44 to a finger; fields 16 px on touch screens (field.css, select.css).
+   Rule gate: glass-one-white, glass-no-stroke, few-strokes, air, proximity, space-from-tokens,
+   radius-from-tokens, type-from-tokens, mono-is-data, touch-target, touch-feedback, hover-needs-hover,
+   reduced-motion. */
+
+.ui-share { --dialog-w: var(--ui-share-width); --avatar-ground: transparent; }
+.ui-share-inner { container: ui-share / inline-size; display: grid; gap: var(--ui-space-xl); min-width: 0; }
+
+/* ---------- invite ---------- */
+.ui-share-invite { display: grid; gap: var(--ui-space-sm); min-width: 0; margin: 0; }
+.ui-share-invite-row { display: grid; grid-template-columns: minmax(0, 1fr) var(--ui-share-role-width) auto; align-items: start; gap: var(--ui-space-sm); min-width: 0; }
+.ui-share-invite-row > .ui-btn { min-width: 0; }
+.ui-share-invite .ui-field-error[hidden] { display: none; }
+.ui-share-label { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-glass-fg); }
+
+/* ---------- people with access ---------- */
+.ui-share-people { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-share-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--ui-space-md); min-width: 0; }
+.ui-share-count { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-glass-fg-secondary); font-variant-numeric: tabular-nums; }
+/* the list scrolls, so it clips: 8 of room at the sides keeps the remove circles' 44 hit areas whole */
+.ui-share-list { display: grid; gap: var(--ui-space-xs); max-height: var(--ui-share-list-max); min-width: 0; margin: 0 calc(var(--ui-space-sm) * -1); padding: 0 var(--ui-space-sm); list-style: none; grid-auto-rows: max-content; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.ui-share-list::-webkit-scrollbar { display: none; }
+.ui-share-person {
+  display: grid; grid-template-columns: var(--ui-avatar-size) minmax(0, 1fr) var(--ui-share-role-width) var(--ui-size-control-sm);
+  align-items: center; gap: var(--ui-space-md); min-width: 0; min-height: var(--ui-size-hit); padding-block: var(--ui-space-xs);
+}
+.ui-share-person.is-leaving { animation: ui-share-leave var(--ui-motion-base) var(--ui-motion-ease) both; }
+.ui-share-person.is-new { animation: ui-share-arrive var(--ui-motion-base) var(--ui-motion-ease) both; }
+.ui-share-person .ui-avatar { --size: var(--ui-avatar-size); }
+.ui-glass .ui-share-person .ui-avatar:not(.ui-avatar--ink) { background: var(--ui-glass-button-clear-hover); color: var(--ui-glass-fg); } /* gate-allow:state-tokens-in-state: on glass an avatar takes the clear button's lifted tint, the one step glass has */
+.ui-glass .ui-share-person .ui-avatar--ink { background: var(--ui-glass-button-white); color: var(--ui-glass-button-white-fg); }
+.ui-share-who { display: grid; gap: 0; min-width: 0; }
+.ui-share-name { overflow: hidden; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-glass-fg); text-overflow: ellipsis; white-space: nowrap; }
+.ui-share-name small { margin-left: var(--ui-space-xs); font-size: var(--ui-type-label); color: var(--ui-glass-fg-secondary); }
+.ui-share-mail { overflow: hidden; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.45; color: var(--ui-glass-fg-secondary); text-overflow: ellipsis; white-space: nowrap; }
+/* the owner's role is words in the role's place, aligned with the selects' text */
+.ui-share-role-text { grid-column: 3 / span 2; padding-inline: var(--ui-field-pad-sm); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-glass-fg-secondary); }
+.ui-share-person .ui-select-trigger { --h: var(--ui-field-height-sm); --px: var(--ui-field-pad-sm); }
+
+/* ---------- anyone with the link ---------- */
+.ui-share-link { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-share-switch { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ui-space-lg); min-width: 0; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+/* the words switch it too (a label round the switch, as .ui-choice): hover and press show on the switch */
+@media (hover: hover) { .ui-share-switch:hover > .ui-switch { background: var(--track-hover); } }
+.ui-share-switch:active > .ui-switch { --stretch: var(--ui-switch-stretch); background: var(--track-hover); }
+.ui-share-switch-text { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-share-switch-title { display: flex; align-items: center; gap: var(--ui-space-sm); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: var(--ui-switch-height); color: var(--ui-glass-fg); }
+.ui-share-switch-title svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex: none; }
+.ui-share-switch-hint { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.45; color: var(--ui-glass-fg-secondary); text-wrap: pretty; }
+.ui-share-url-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-share-url {
+  display: flex; align-items: center; min-width: 0; height: var(--ui-field-height); padding-inline: var(--ui-field-pad);
+  border-radius: var(--ui-radius-field); background: var(--ui-field-glass-bg); color: var(--ui-field-glass-fg);
+  font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); /* gate-allow:mono-is-data  the link is data: an address to copy */
+  user-select: all;
+}
+.ui-share-url span { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-share[data-link="off"] .ui-share-url-row { display: none; }
+.ui-share-copy[data-state="copied"] svg { animation: ui-share-copied var(--ui-motion-base) var(--ui-motion-ease) both; }
+.ui-share-copy-label { display: inline-grid; }
+.ui-share-copy-label > span { grid-area: 1 / 1; }
+.ui-share-copy-label > span:last-child, .ui-share-copy[data-state="copied"] .ui-share-copy-label > span:first-child { visibility: hidden; } /* the button keeps the width of its longer word */
+.ui-share-copy[data-state="copied"] .ui-share-copy-label > span:last-child { visibility: visible; }
+
+/* ---------- narrow (the dialog under 400 px inside, a phone sheet) ---------- */
+@container ui-share (max-width: 399.98px) {
+  .ui-share-invite-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .ui-share-invite-row > :first-child { grid-column: 1 / -1; }
+  .ui-share-person { grid-template-columns: var(--ui-avatar-size) minmax(0, 1fr) var(--ui-size-control-sm); grid-template-rows: auto auto; row-gap: var(--ui-space-sm); align-items: start; padding-block: var(--ui-space-sm); }
+  .ui-share-person > .ui-avatar { grid-row: 1; align-self: start; margin-top: var(--ui-space-xs); }
+  .ui-share-person > .ui-share-who { grid-column: 2; grid-row: 1; }
+  .ui-share-person > .ui-select { grid-column: 2; grid-row: 2; width: auto; justify-self: start; min-width: var(--ui-share-role-width); }
+  .ui-share-person > .ui-btn { grid-column: 3; grid-row: 1; }
+  .ui-share-role-text { grid-column: 2 / span 2; grid-row: 2; padding-inline: 0; }
+  .ui-share-url-row { grid-template-columns: minmax(0, 1fr); }
+  .ui-share-url-row > .ui-btn { width: 100%; }
+  .ui-share-list { max-height: none; overflow: visible; } /* the sheet scrolls as one: never a scroll inside a scroll on a phone */
+}
+
+/* ---------- a phone: the dialog is a sheet at the bottom ---------- */
+@media (max-width: 600px) {
+  .ui-share.ui-dialog {
+    inset: auto var(--ui-drawer-margin) calc(var(--ui-drawer-margin) + env(safe-area-inset-bottom, 0px));
+    width: auto; max-height: calc(100% - var(--ui-drawer-top) - var(--ui-drawer-margin)); margin: 0;
+  }
+  .ui-share.ui-dialog[data-state="open"] { animation: ui-drawer-in var(--ui-motion-slow) var(--ui-motion-ease) both; }
+  .ui-share.ui-dialog[data-state="closed"] { animation: ui-drawer-out var(--ui-motion-base) var(--ui-motion-ease) both; }
+}
+
+/* the live region that says Link copied; seen as the button's own Copied */
+.ui-share-live { position: absolute; width: 1px; height: 1px; margin: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+@keyframes ui-share-leave { to { opacity: 0; transform: translateX(var(--ui-space-sm)); } }
+@keyframes ui-share-arrive { from { opacity: 0; transform: translateY(calc(var(--ui-space-sm) * -1)); } }
+@keyframes ui-share-copied { from { opacity: 0; transform: scale(.6); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-share-person.is-leaving, .ui-share-person.is-new, .ui-share-copy[data-state="copied"] svg { animation: none; }
+  .ui-share.ui-dialog[data-state] { animation: none; }
+}

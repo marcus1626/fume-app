@@ -1,0 +1,138 @@
+/* Studio light and looks: look sources, advanced light, camera presets (app v4, FLOWS §18). PROPOSED 15 Oct 2026.
+   Every look section of the Studio's right panel (Light, Camera, a section with a brand preset) says where its look
+   comes from: Brand · Fume · Own · Engine. Brand and Fume show presets you pick and the values they set, read-only,
+   with Adjust; Own shows the controls (studio-controls.css); Engine shows one quiet line. Light has an advanced way:
+   a square board seen from above with the lights as dots you drag, a three.js view of the lights around a stand-in
+   bottle beside it, and the lights drawn on the creative while you drag.
+   Markup: <div class="ui-seg ui-sc-seg ui-sl-source"> Brand · Fume · Own · Engine </div>
+           <div class="ui-sl-presets" role="radiogroup"><button class="ui-sl-preset" role="radio" aria-checked data-picture>
+             <img class="ui-sl-preset-picture"> | <span class="ui-sl-preset-swatch" style="--swatch">
+             <span class="ui-sl-preset-text"><span class="ui-sl-preset-head"><span class="ui-sl-preset-name"/>
+             <span class="ui-sl-preset-meta">85 mm</span></span><span class="ui-sl-preset-line"/></span></button></div>
+           <div class="ui-sl-summary"><dl class="ui-sl-summary-rows"><div class="ui-sl-summary-row"><dt/><dd/></div></dl>
+             <button class="ui-btn ui-sl-adjust">Adjust</button></div>
+           <p class="ui-sl-engine"><svg class="ui-sl-engine-icon"/> The Engine decides the light</p>
+           <div class="ui-sl"><div class="ui-sl-stage" data-preview>
+               <div class="ui-sl-board"><span class="ui-sl-subject"/><svg class="ui-sl-camera"/>
+                 <button class="ui-sl-dot" aria-pressed style="--x: .82; --y: .3">K</button></div>
+               <div class="ui-sl-preview"><div class="ui-sl-3d"><canvas/></div></div></div>
+             <div class="ui-sl-lights"><div class="ui-seg ui-sl-pick"/> + bin </div>
+             <div class="ui-sl-parts"><div class="ui-seg ui-sl-kind"/><div class="ui-sl-part"> label · slider · readout </div></div></div>
+           <span class="ui-sl-overlay" data-active><span class="ui-sl-glow" style="--x; --y; --power; --soft"/>
+             <span class="ui-sl-pin" style="--x; --y"/></span>     inside the creative's frame (.ui-desk-shot)
+   Fume decisions: the board is the light dial made square: a sunken well seen from above, the subject in the
+   middle, the camera at the foot; each light a white dot lifted with depth and named by its first letter, the chosen
+   one Ink. Presets are rows on the sunken surface; the one in force carries the Ink ring the mode grid uses, never
+   Amber. The light on the creative is a picture of light, not chrome: a white disc blurred with filter: blur over the
+   photograph (never a gradient, never a shadow halo), wider when the light is soft, stronger when it is strong; it
+   shows while a light is dragged and fades when it is let go. The 3D view is neutral: the panel's sunken ground, a
+   stand-in bottle, one soft shadow, no bloom or glow, drawn only when something changes.
+   Rule gate: no-gradient, no-glow, few-strokes, air, proximity, space-from-tokens, radius-from-tokens,
+   type-from-tokens, mono-is-data, actions-are-pills, amber-is-a-point, touch-target, touch-feedback,
+   hover-needs-hover, focus-is-sharp, reduced-motion, tokens-only-color. */
+
+/* ---------- the source switch, presets, summary and the Engine's line ---------- */
+
+.ui-sl-source .ui-seg-option { font-size: var(--ui-type-label); }
+
+.ui-sl-presets { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-sl-preset {
+  position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--ui-space-md);
+  min-width: 0; min-height: var(--ui-size-hit); margin: 0; padding: var(--ui-space-sm) var(--ui-space-md); border: 0; border-radius: var(--ui-radius-item);
+  background: var(--ui-surface-sunken); color: var(--ui-text); font-family: var(--ui-type-family); text-align: start;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-sl-preset:not([data-picture]):not(:has(.ui-sl-preset-swatch)) { grid-template-columns: minmax(0, 1fr); }
+@media (hover: hover) { .ui-sl-preset:hover { background: var(--ui-surface-sunken-hover); } }
+.ui-sl-preset:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-sl-preset:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-sl-preset[aria-checked="true"] { background: var(--ui-surface); box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); }
+.ui-sl-preset:disabled { cursor: default; opacity: .56; transform: none; }
+.ui-sl-preset-picture { display: block; width: calc(var(--ui-size-control-lg) - var(--ui-space-xs)); height: calc(var(--ui-size-control-lg) - var(--ui-space-xs)); border-radius: var(--ui-radius-check); object-fit: cover; background: var(--ui-surface-creative); }
+.ui-sl-preset-swatch { display: block; width: var(--ui-size-pad-lg); height: var(--ui-size-pad-lg); border-radius: 50%; background: var(--swatch); box-shadow: inset 0 0 0 1px var(--ui-hairline); /* the hairline a pale swatch needs not to vanish */ }
+.ui-sl-preset-text { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-sl-preset-head { display: flex; align-items: baseline; gap: var(--ui-space-sm); min-width: 0; }
+.ui-sl-preset-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.3; }
+.ui-sl-preset-meta {
+  flex-shrink: 0; font-family: var(--ui-type-family-data); /* gate-allow:mono-is-data  the focal length is a measure */
+  font-size: var(--ui-type-label); line-height: 1.3; font-variant-numeric: tabular-nums; color: var(--ui-text-tertiary);
+}
+.ui-sl-preset-line {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+  font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary);
+}
+.ui-sl-cameras { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-sl-presets--cameras .ui-sl-preset-line { -webkit-line-clamp: 1; }
+
+.ui-sl-summary { display: grid; gap: var(--ui-space-md); justify-items: start; min-width: 0; }
+.ui-sl-summary-rows { display: grid; gap: var(--ui-space-xs); width: 100%; min-width: 0; margin: 0; }
+.ui-sl-summary-row { display: flex; align-items: baseline; gap: var(--ui-space-md); min-width: 0; font-size: var(--ui-type-label); line-height: 1.4; }
+.ui-sl-summary-row > dt { flex-shrink: 0; color: var(--ui-text-tertiary); }
+.ui-sl-summary-row > dd { min-width: 0; margin: 0 0 0 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ui-text-secondary); }
+
+.ui-sl-engine { display: flex; align-items: center; gap: var(--ui-space-sm); margin: 0; padding-block: var(--ui-space-xs); font-size: var(--ui-type-control); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-sl-engine-icon { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-tertiary); }
+
+/* ---------- advanced light: the board, the 3D view, the chosen light ---------- */
+
+.ui-sl { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-sl-stage { display: grid; grid-template-columns: minmax(0, calc(var(--ui-size-hit) * 4)); justify-content: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-sl-stage[data-preview] { grid-template-columns: repeat(2, minmax(0, 1fr)); justify-content: stretch; }
+.ui-sl-board {
+  position: relative; aspect-ratio: 1; min-width: 0; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken);
+  cursor: crosshair; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.ui-sl-board[data-disabled] { cursor: default; pointer-events: none; }
+.ui-sl-subject { position: absolute; left: 50%; top: 50%; width: var(--ui-space-md); height: calc(var(--ui-space-md) * 1.6); border-radius: var(--ui-radius-check); transform: translate(-50%, -50%); background: var(--ui-text-tertiary); pointer-events: none; }
+.ui-sl-camera { position: absolute; left: 50%; bottom: var(--ui-space-xs); width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); transform: translateX(-50%); color: var(--ui-text-tertiary); pointer-events: none; }
+.ui-sl-dot {
+  --d: calc(var(--ui-slider-thumb) + var(--ui-space-xs));
+  position: absolute; left: calc(var(--x) * 100%); top: calc(var(--y) * 100%); display: grid; place-items: center;
+  width: var(--d); height: var(--d); margin: 0; padding: 0; border: 0; border-radius: 50%; transform: translate(-50%, -50%);
+  background: var(--ui-surface-creative); box-shadow: var(--ui-depth-raised); color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1;
+  cursor: grab; -webkit-tap-highlight-color: transparent; touch-action: none; outline: none;
+  transition: transform var(--ui-motion-instant) var(--ui-motion-ease), background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-sl-dot::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: 50%; }
+.ui-sl-dot[aria-pressed="true"] { z-index: 1; background: var(--ui-action-primary); color: var(--ui-action-primary-fg); }
+.ui-sl-dot:active { cursor: grabbing; transform: translate(-50%, -50%) scale(var(--ui-motion-press-scale)); }
+.ui-sl-dot:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-sl-preview { position: relative; aspect-ratio: 1; min-width: 0; overflow: hidden; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-sl-3d { position: absolute; inset: 0; cursor: grab; touch-action: none; }
+.ui-sl-3d:active { cursor: grabbing; }
+.ui-sl-3d > canvas { display: block; width: 100%; height: 100%; }
+
+.ui-sl-lights { display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; }
+.ui-sl-pick { display: flex; flex: 1 1 auto; min-width: 0; }
+.ui-sl-pick .ui-seg-option, .ui-sl-kind .ui-seg-option { flex: 1 1 0; justify-content: center; min-width: 0; padding-inline: var(--ui-space-xs); overflow: hidden; text-overflow: ellipsis; font-size: var(--ui-type-label); }
+.ui-sl-parts { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-sl-kind { margin-block-end: var(--ui-space-xs); }
+.ui-sl-part { display: grid; grid-template-columns: calc(var(--ui-size-hit) * 1.4) minmax(0, 1fr) calc(var(--ui-size-control-lg) + var(--ui-space-xs)); align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-sl-part .ui-sc-readout { margin: 0; text-align: end; }
+
+/* ---------- the light on the creative, while a light is dragged ---------- */
+
+.ui-sl-overlay {
+  position: absolute; inset: 0; z-index: 1; overflow: hidden; border-radius: var(--ui-radius-item); pointer-events: none;
+  container-type: size; opacity: 0; transition: opacity var(--ui-motion-slow) var(--ui-motion-ease);
+}
+.ui-sl-overlay[data-active] { opacity: 1; transition-duration: var(--ui-motion-fast); }
+.ui-sl-glow {
+  position: absolute; left: calc(var(--x) * 100%); top: calc(var(--y) * 100%);
+  width: calc((24 + var(--soft) * 30) * 1cqmin); aspect-ratio: 1; border-radius: 50%; transform: translate(-50%, -50%);
+  background: var(--ui-surface-creative); /* the light itself: white, on the creative */
+  filter: blur(calc((3 + var(--soft) * 5) * 1cqmin)); mix-blend-mode: screen;
+  opacity: calc(.15 + var(--power) * .3);
+}
+.ui-sl-glow[data-selected] { opacity: calc(.35 + var(--power) * .45); }
+.ui-sl-pin {
+  position: absolute; left: calc(var(--x) * 100%); top: calc(var(--y) * 100%); width: var(--ui-space-md); height: var(--ui-space-md);
+  border-radius: 50%; transform: translate(-50%, -50%); background: var(--ui-surface-creative); box-shadow: var(--ui-depth-raised);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-sl-preset, .ui-sl-dot, .ui-sl-overlay { transition: none; }
+  .ui-sl-preset:active { transform: none; }
+}

@@ -1,0 +1,45 @@
+{
+  "$description": "Brand book site (site/): the frame and reading column of brand.fumecreatives.com. PROPOSED, 13 Oct 2026 (F-O039). The book is built from the decided design system: the sidebar on the layer behind, the page as a Porcelain sheet. Component files: site/book.css + site/book.js.",
+  "book": {
+    "page": {
+      "value": "1120px",
+      "description": "Widest the page content gets beside the contents rail: figures and specimens use it all.",
+      "status": "PROPOSED"
+    },
+    "measure": {
+      "value": "68ch",
+      "description": "The reading column: running text never runs wider than 68 characters.",
+      "status": "PROPOSED"
+    },
+    "lede": {
+      "value": "56ch",
+      "description": "The page's opening line under its title.",
+      "status": "PROPOSED"
+    },
+    "toc": {
+      "value": "200px",
+      "description": "The contents rail on the right (On this page), shown from 1280 px.",
+      "status": "PROPOSED"
+    },
+    "bar": {
+      "value": "{size.control-lg}",
+      "description": "Height of the bar at the top of the page sheet: the drawer button on a phone, where you are, Search.",
+      "status": "PROPOSED"
+    },
+    "figure-min": {
+      "value": "240px",
+      "description": "Smallest a specimen tile gets before the grid drops a column.",
+      "status": "PROPOSED"
+    },
+    "swatch": {
+      "value": "96px",
+      "description": "Height of a colour swatch's colour field.",
+      "status": "PROPOSED"
+    },
+    "logo-stage": {
+      "value": "280px",
+      "description": "Height of a logo stage: the logo sits in the middle with its clear space around it.",
+      "status": "PROPOSED"
+    }
+  }
+}

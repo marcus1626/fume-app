@@ -1,0 +1,82 @@
+/* Checkbox. DECIDED 13 Oct, from round 7. Built on shadcn's checkbox (Radix Checkbox: a <button role="checkbox">
+   with aria-checked true | false | mixed, data-state checked | unchecked | indeterminate, and an
+   Indicator part), redesigned for Fume. Markup:
+     <button class="ui-checkbox" type="button" role="checkbox" aria-checked="false" data-state="unchecked">
+       <span class="ui-checkbox-indicator"><svg class="ui-checkbox-check"><use href="#fi-check"/></svg>
+       <svg class="ui-checkbox-minus"><use href="#fi-minus"/></svg></span></button>
+   Pair it with words in a .ui-choice row (choice.css). checkbox.js toggles it and runs "select all".
+   Fume decisions: a 20 px soft square (6 px, half the field radius). Unchecked it is white with the one
+   hairline the system allows where a control would vanish (Ink at 48 %, 3:1 for UI parts). Checking it
+   is the Focus idea: the edge thickens inward until the box is Ink, then the Porcelain check lands.
+   Indeterminate is the same Ink with a dash. Ink decides; Amber is never a checkbox (Amber is only the
+   Quality Gate check on checked creatives, --ui-check, which this control never uses).
+   States: hover one step toward Ink (the edge, or Ink lifting to Focus 800), pressed two steps plus
+   the 3 % shrink on pointer-down, focus a sharp 2 px Ink ring 2 px off the box, disabled the sunken
+   disabled surface with no edge, invalid a Rouge edge (with the message in Rouge beside it).
+   Touch: an invisible 44 px hit area around the box; a row's words toggle it too; hover only with a mouse.
+   Rule gate: few-strokes (allowed: the box would vanish), focus-is-sharp, touch-target, touch-feedback,
+   hover-needs-hover, reduced-motion, amber-is-a-point. */
+
+.ui-checkbox {
+  --bg: var(--ui-check-bg); --edge: var(--ui-check-edge); --edge-w: 1px;
+  --bg-hover: var(--bg); --edge-hover: var(--ui-check-edge-hover);
+  --bg-pressed: var(--ui-action-secondary-pressed); --edge-pressed: var(--ui-check-edge-hover);
+  position: relative; display: inline-grid; place-items: center; flex-shrink: 0;
+  width: var(--ui-check-size); height: var(--ui-check-size); margin: 0; padding: 0;
+  border: 0; border-radius: var(--ui-radius-check);
+  background: var(--bg); color: var(--ui-check-mark);
+  box-shadow: inset 0 0 0 var(--edge-w) var(--edge); /* gate-allow:few-strokes  the hairline of an unchecked box: without it the control vanishes; checked, the same inset fills the box with Ink */
+  cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: box-shadow var(--ui-motion-fast) var(--ui-motion-ease),
+              background-color var(--ui-motion-fast) var(--ui-motion-ease),
+              transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+/* Hit area: 44 x 44, centred on the box. */
+.ui-checkbox::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: 50%; }
+
+/* The mark: the check or the dash, Porcelain on Ink. It lands after the fill (soft to sharp). */
+.ui-checkbox-indicator { display: grid; place-items: center; width: 100%; height: 100%; pointer-events: none; }
+.ui-checkbox-indicator svg {
+  grid-area: 1 / 1; width: var(--ui-size-icon); height: var(--ui-size-icon);
+  opacity: 0; transform: scale(var(--ui-motion-enter-scale));
+  transition: opacity var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-base) var(--ui-motion-ease);
+}
+
+/* checked and indeterminate: the edge grows inward until the box is Ink */
+.ui-checkbox[aria-checked="true"], .ui-checkbox[aria-checked="mixed"],
+.ui-checkbox[data-state="checked"], .ui-checkbox[data-state="indeterminate"] {
+  --bg: var(--ui-check-on); --edge: var(--ui-check-on); --edge-w: calc(var(--ui-check-size) / 2);
+  --bg-hover: var(--ui-check-on-hover); --edge-hover: var(--ui-check-on-hover);
+  --bg-pressed: var(--ui-check-on); --edge-pressed: var(--ui-check-on);
+}
+.ui-checkbox[aria-checked="true"] .ui-checkbox-check, .ui-checkbox[data-state="checked"] .ui-checkbox-check,
+.ui-checkbox[aria-checked="mixed"] .ui-checkbox-minus, .ui-checkbox[data-state="indeterminate"] .ui-checkbox-minus { opacity: 1; transform: none; }
+
+/* hover: the box, or the words in its row (only with a mouse) */
+@media (hover: hover) {
+  .ui-checkbox:hover, .ui-choice:hover > .ui-checkbox { background: var(--bg-hover); box-shadow: inset 0 0 0 var(--edge-w) var(--edge-hover); } /* gate-allow:few-strokes  as above */
+}
+.ui-checkbox.is-hover { background: var(--bg-hover); box-shadow: inset 0 0 0 var(--edge-w) var(--edge-hover); } /* gate-allow:few-strokes  as above */
+/* pressed: two steps toward Ink and the 3 % shrink, on pointer-down; pressing the row's words presses the box */
+.ui-checkbox:active, .ui-checkbox.is-pressed, .ui-choice:active > .ui-checkbox {
+  background: var(--bg-pressed); box-shadow: inset 0 0 0 var(--edge-w) var(--edge-pressed); /* gate-allow:few-strokes  as above */
+  transform: scale(var(--ui-motion-press-scale));
+}
+.ui-checkbox:focus-visible, .ui-checkbox.is-focus { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* invalid: a Rouge edge; the message beside it says what is wrong (colour is never the only signal) */
+.ui-checkbox[aria-invalid="true"]:not([aria-checked="true"]):not([aria-checked="mixed"]) { --edge: var(--ui-danger); --edge-hover: var(--ui-danger-hover); --edge-pressed: var(--ui-danger-hover); }
+
+/* disabled: the sunken disabled surface, no edge; checked keeps its mark in Focus 400 */
+.ui-checkbox:disabled, .ui-checkbox[data-disabled], .ui-checkbox[aria-disabled="true"] {
+  --bg: var(--ui-check-disabled); --bg-hover: var(--bg); --bg-pressed: var(--bg);
+  --edge: transparent; --edge-hover: transparent; --edge-pressed: transparent; --edge-w: 0px;
+  color: var(--ui-check-disabled-mark); cursor: default; pointer-events: none; transform: none;
+}
+.ui-choice:has(> .ui-checkbox:disabled) > .ui-checkbox { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-checkbox { transition: background-color var(--ui-motion-fast) linear, box-shadow var(--ui-motion-fast) linear; }
+  .ui-checkbox-indicator svg { transform: none; transition: opacity var(--ui-motion-fast) linear; }
+  .ui-checkbox:active, .ui-checkbox.is-pressed, .ui-choice:active > .ui-checkbox { transform: none; }
+}
