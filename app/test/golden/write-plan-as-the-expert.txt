@@ -1,0 +1,2663 @@
+-- anna: createMockApi({"latency":0,"userId":"u-anna"})
+anna plan("c-bf") → events
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v9",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [
+        {
+          "at": "2026-10-14T12:21:00.000Z",
+          "by": "u-anna",
+          "id": "fb-1",
+          "state": "fixed",
+          "text": "The cap must be matte burgundy, as in the Product Truth."
+        }
+      ],
+      "format": "feed",
+      "id": "qa-3",
+      "image": "/demo/lysne/06-10-feed.jpg",
+      "madeAt": "2026-10-14T12:20:00.000Z",
+      "risk": "high",
+      "slot": "Master 2 · Variant 3",
+      "state": "waiting",
+      "studio": "render",
+      "title": "Feed 7",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+anna plan("c-bf")
+  {
+    "briefVersion": 1,
+    "campaignId": "c-bf",
+    "changeRequestsIncluded": 2,
+    "checkAsked": {"at":"2026-10-14T09:32:00.000Z","by":"u-maja"},
+    "chosenDirectionId": "pd-c-bf-a",
+    "content": [
+      {
+        "key": "products",
+        "label": "Products",
+        "source": "product",
+        "value": "Night Body Oil 100 ml and Evening Candle 180 g, as their Product Truth says."
+      },
+      {
+        "key": "formats",
+        "label": "Formats",
+        "source": "brief",
+        "value": "Feed 4:5, Story 9:16, Square 1:1: 9 creatives in all, as your brief asks."
+      },
+      {
+        "key": "text",
+        "label": "Text on the creative",
+        "source": "brief",
+        "value": "One short line in Norwegian on each creative, from your brief’s message “One evening, wrapped”."
+      },
+      {
+        "key": "logo",
+        "label": "Logo",
+        "source": "brand_dna",
+        "value": "The wordmark on the label only; no logo added on the picture."
+      },
+      {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
+    ],
+    "directions": [
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-bf-a-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-a-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Evening Candle on folded linen, the light from the left."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-a-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "The products together, seen from above on linen."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-a-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-c-bf-a-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-a-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-bf-a-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-a-v3",
+            "kind": "variant",
+            "name": "Master 3 in Feed",
+            "of": "pc-c-bf-a-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-a-v4",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-bf-a-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-a-v5",
+            "kind": "variant",
+            "name": "Master 2 in Square",
+            "of": "pc-c-bf-a-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-a-v6",
+            "kind": "variant",
+            "name": "Master 3 in Story",
+            "of": "pc-c-bf-a-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Story 9:16, the same scene fitted to the frame."
+          }
+        ],
+        "hook": "One evening, wrapped.",
+        "id": "pd-c-bf-a",
+        "idea": "The oil and the candle as one set on night black, gold words, one hard light catching the glass. The offer readable at a glance, the evening still calm.",
+        "letter": "A",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brief",
+            "value": "Hard top light, one bright edge on the glass.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Pale stone and folded linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brief",
+            "value": "Night black grounds, gold-foil words, linen for small text.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "One evening, wrapped",
+        "recommended": true,
+        "references": [
+          {"caption":"Darker, one hard light on the glass","image":"/demo/lysne/10-06-feed.jpg","source":"brief"},
+          {"caption":"The set","image":"/demo/lysne/gen/ritual-pack.jpg","source":"product"},
+          {"caption":"The bottle close, glass catching light","image":"/demo/lysne/02-09-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Warm, low side light leads in your Brand DNA."},
+          {"source":"taste","text":"Your liked pictures keep the product low, with air above it."},
+          {"source":"memory","text":"Evening stone won in your last campaign."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-bf-b-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Close on Night Body Oil: its texture in a stripe of warm light."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-b-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "The label close, the set soft behind."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-b-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "The product lying on linen, light across it."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-b-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-c-bf-b-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-b-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-bf-b-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-b-v3",
+            "kind": "variant",
+            "name": "Master 3 in Feed",
+            "of": "pc-c-bf-b-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-b-v4",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-bf-b-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-b-v5",
+            "kind": "variant",
+            "name": "Master 2 in Square",
+            "of": "pc-c-bf-b-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-b-v6",
+            "kind": "variant",
+            "name": "Master 3 in Story",
+            "of": "pc-c-bf-b-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Story 9:16, the same scene fitted to the frame."
+          }
+        ],
+        "hook": "Made to be felt.",
+        "id": "pd-c-bf-b",
+        "idea": "Close on Night Body Oil and Evening Candle: the texture, the label and a stripe of warm light. Fewer things in the frame, the product nearer.",
+        "letter": "B",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brief",
+            "value": "Hard top light, one bright edge on the glass.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Stone, close; nothing else in the frame."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brief",
+            "value": "Night black grounds, gold-foil words, linen for small text.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Close and quiet",
+        "references": [
+          {
+            "caption": "Night Body Oil, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/oil-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Texture in warm light","image":"/demo/lysne/05-03-feed.jpg","source":"fume"},
+          {"caption":"Close, a stripe of light","image":"/demo/lysne/06-04-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"fume","text":"Close crops suit a product people touch every day."},
+          {"source":"product","text":"Golden, never orange: the Product Truth's colours lead."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-bf-c-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "A crop of skin and Night Body Oil in evening light, never a face."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-c-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Hands open the product on linen."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-c-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "The product on a bedside, one lamp."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-c-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-c-bf-c-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-c-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-bf-c-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-c-v3",
+            "kind": "variant",
+            "name": "Master 3 in Feed",
+            "of": "pc-c-bf-c-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-c-v4",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-bf-c-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-c-v5",
+            "kind": "variant",
+            "name": "Master 2 in Square",
+            "of": "pc-c-bf-c-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-c-v6",
+            "kind": "variant",
+            "name": "Master 3 in Story",
+            "of": "pc-c-bf-c-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Story 9:16, the same scene fitted to the frame."
+          }
+        ],
+        "hook": "The last quiet hour of the day.",
+        "id": "pd-c-bf-c",
+        "idea": "Night Body Oil and Evening Candle in use: a crop of skin or hands at the hour before sleep, never a face. Closest to the feeling, furthest from a packshot.",
+        "letter": "C",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brief",
+            "value": "Hard top light, one bright edge on the glass.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"A bedside of oak and linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brief",
+            "value": "Night black grounds, gold-foil words, linen for small text.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "Hands or a crop of skin, never a face; never holding the product.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "The ritual",
+        "references": [
+          {"caption":"Hands in evening light","image":"/demo/lysne/gen/taste-hands.jpg","source":"taste"},
+          {"caption":"The evening room","image":"/demo/lysne/gen/taste-bedroom.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Skin in crops, as your Brand DNA prefers; no face in this direction."},
+          {"source":"memory","text":"You passed on hands that hold the bottle once: here they never do."}
+        ]
+      }
+    ],
+    "readyBy": "2026-10-16T12:32:00.000Z",
+    "rules": [
+      {"kind":"must","source":"brief","text":"Black grounds, gold words"},
+      {"kind":"must","source":"brief","text":"The offer readable at a glance"},
+      {"kind":"never","source":"brief","text":"Red discount stickers"},
+      {"kind":"never","source":"brief","text":"Countdown clocks"},
+      {
+        "kind": "never",
+        "ruleId": "r7",
+        "source": "brand_dna",
+        "text": "Skin-result claims; only the lines on the approved list"
+      }
+    ],
+    "state": "in_check",
+    "summary": "Black Friday: the oil and the candle as a set, for one week in paid social and email. It speaks to existing customers and people who saved LYSNE posts. The message: one evening, wrapped. It runs in Norway, in Norwegian, from Fri 27 Nov.",
+    "timeline": [
+      {"at":"2026-10-16T16:32:00.000Z","label":"Masters, checked"},
+      {"at":"2026-10-21T16:32:00.000Z","label":"Variants and formats"},
+      {"at":"2026-10-23T16:32:00.000Z","label":"Delivery"},
+      {"at":"2026-11-27T12:32:00.000Z","label":"Goes live"}
+    ],
+    "version": 1,
+    "writtenAt": "2026-10-14T08:32:00.000Z"
+  }
+anna changePlan("c-bf", {"line":"light","value":"Candle light only."}) → events
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","email"],
+      "collectionIds": ["cl-gifts"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "cover": "/demo/lysne/10-06-feed.jpg",
+      "createdAt": "2026-10-13T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "dueAt": "2026-11-27T12:32:00.000Z",
+      "formats": ["feed","story","square"],
+      "id": "c-bf",
+      "language": "Norwegian",
+      "look": {
+        "backgrounds": [{"hex":"#141110","name":"Night black"},{"hex":"#3A1219","name":"Deep burgundy"}],
+        "colours": [
+          {"hex":"#141110","name":"Night black","use":"Grounds"},
+          {"hex":"#C9A45C","name":"Gold foil","use":"Words and the offer"},
+          {"hex":"#EFE6DA","name":"Linen","use":"Small text"}
+        ],
+        "light": "Hard top light, one bright edge on the glass",
+        "note": "Darker and sharper than LYSNE's evening light: black grounds, gold words, one hard light.",
+        "provenance": {
+          "at": "2026-10-13T16:32:00.000Z",
+          "by": "u-maja",
+          "evidence": "Black Friday brief",
+          "origin": "customer",
+          "state": "approved"
+        }
+      },
+      "market": "Norway",
+      "name": "Black Friday",
+      "productIds": ["pr-oil","pr-candle"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "scoped",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {
+        "briefReady": false,
+        "by": "2026-10-16T12:32:00.000Z",
+        "delivery": "2026-10-23T16:32:00.000Z",
+        "directions": 0,
+        "plan": "in_check",
+        "planChecked": false,
+        "planned": 9,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+anna changePlan("c-bf", {"line":"light","value":"Candle light only."})
+  {
+    "briefVersion": 1,
+    "campaignId": "c-bf",
+    "changeRequestsIncluded": 2,
+    "checkAsked": {"at":"2026-10-14T09:32:00.000Z","by":"u-maja"},
+    "chosenDirectionId": "pd-c-bf-a",
+    "content": [
+      {
+        "key": "products",
+        "label": "Products",
+        "source": "product",
+        "value": "Night Body Oil 100 ml and Evening Candle 180 g, as their Product Truth says."
+      },
+      {
+        "key": "formats",
+        "label": "Formats",
+        "source": "brief",
+        "value": "Feed 4:5, Story 9:16, Square 1:1: 9 creatives in all, as your brief asks."
+      },
+      {
+        "key": "text",
+        "label": "Text on the creative",
+        "source": "brief",
+        "value": "One short line in Norwegian on each creative, from your brief’s message “One evening, wrapped”."
+      },
+      {
+        "key": "logo",
+        "label": "Logo",
+        "source": "brand_dna",
+        "value": "The wordmark on the label only; no logo added on the picture."
+      },
+      {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
+    ],
+    "directions": [
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-bf-a-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-a-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Evening Candle on folded linen, the light from the left."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-a-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "The products together, seen from above on linen."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-a-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-c-bf-a-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-a-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-bf-a-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-a-v3",
+            "kind": "variant",
+            "name": "Master 3 in Feed",
+            "of": "pc-c-bf-a-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-a-v4",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-bf-a-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-a-v5",
+            "kind": "variant",
+            "name": "Master 2 in Square",
+            "of": "pc-c-bf-a-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-a-v6",
+            "kind": "variant",
+            "name": "Master 3 in Story",
+            "of": "pc-c-bf-a-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Story 9:16, the same scene fitted to the frame."
+          }
+        ],
+        "hook": "One evening, wrapped.",
+        "id": "pd-c-bf-a",
+        "idea": "The oil and the candle as one set on night black, gold words, one hard light catching the glass. The offer readable at a glance, the evening still calm.",
+        "letter": "A",
+        "look": [
+          {
+            "changedAt": "2026-10-14T12:32:00.000Z",
+            "changedBy": "u-anna",
+            "key": "light",
+            "label": "Light",
+            "source": "brief",
+            "value": "Candle light only.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Pale stone and folded linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brief",
+            "value": "Night black grounds, gold-foil words, linen for small text.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "One evening, wrapped",
+        "recommended": true,
+        "references": [
+          {"caption":"Darker, one hard light on the glass","image":"/demo/lysne/10-06-feed.jpg","source":"brief"},
+          {"caption":"The set","image":"/demo/lysne/gen/ritual-pack.jpg","source":"product"},
+          {"caption":"The bottle close, glass catching light","image":"/demo/lysne/02-09-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Warm, low side light leads in your Brand DNA."},
+          {"source":"taste","text":"Your liked pictures keep the product low, with air above it."},
+          {"source":"memory","text":"Evening stone won in your last campaign."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-bf-b-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Close on Night Body Oil: its texture in a stripe of warm light."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-b-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "The label close, the set soft behind."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-b-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "The product lying on linen, light across it."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-b-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-c-bf-b-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-b-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-bf-b-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-b-v3",
+            "kind": "variant",
+            "name": "Master 3 in Feed",
+            "of": "pc-c-bf-b-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-b-v4",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-bf-b-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-b-v5",
+            "kind": "variant",
+            "name": "Master 2 in Square",
+            "of": "pc-c-bf-b-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-b-v6",
+            "kind": "variant",
+            "name": "Master 3 in Story",
+            "of": "pc-c-bf-b-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Story 9:16, the same scene fitted to the frame."
+          }
+        ],
+        "hook": "Made to be felt.",
+        "id": "pd-c-bf-b",
+        "idea": "Close on Night Body Oil and Evening Candle: the texture, the label and a stripe of warm light. Fewer things in the frame, the product nearer.",
+        "letter": "B",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brief",
+            "value": "Hard top light, one bright edge on the glass.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Stone, close; nothing else in the frame."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brief",
+            "value": "Night black grounds, gold-foil words, linen for small text.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Close and quiet",
+        "references": [
+          {
+            "caption": "Night Body Oil, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/oil-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Texture in warm light","image":"/demo/lysne/05-03-feed.jpg","source":"fume"},
+          {"caption":"Close, a stripe of light","image":"/demo/lysne/06-04-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"fume","text":"Close crops suit a product people touch every day."},
+          {"source":"product","text":"Golden, never orange: the Product Truth's colours lead."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-bf-c-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "A crop of skin and Night Body Oil in evening light, never a face."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-c-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Hands open the product on linen."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-c-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "The product on a bedside, one lamp."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-c-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-c-bf-c-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-c-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-bf-c-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-c-v3",
+            "kind": "variant",
+            "name": "Master 3 in Feed",
+            "of": "pc-c-bf-c-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-c-v4",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-bf-c-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-c-v5",
+            "kind": "variant",
+            "name": "Master 2 in Square",
+            "of": "pc-c-bf-c-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-c-v6",
+            "kind": "variant",
+            "name": "Master 3 in Story",
+            "of": "pc-c-bf-c-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Story 9:16, the same scene fitted to the frame."
+          }
+        ],
+        "hook": "The last quiet hour of the day.",
+        "id": "pd-c-bf-c",
+        "idea": "Night Body Oil and Evening Candle in use: a crop of skin or hands at the hour before sleep, never a face. Closest to the feeling, furthest from a packshot.",
+        "letter": "C",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brief",
+            "value": "Hard top light, one bright edge on the glass.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"A bedside of oak and linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brief",
+            "value": "Night black grounds, gold-foil words, linen for small text.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "Hands or a crop of skin, never a face; never holding the product.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "The ritual",
+        "references": [
+          {"caption":"Hands in evening light","image":"/demo/lysne/gen/taste-hands.jpg","source":"taste"},
+          {"caption":"The evening room","image":"/demo/lysne/gen/taste-bedroom.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Skin in crops, as your Brand DNA prefers; no face in this direction."},
+          {"source":"memory","text":"You passed on hands that hold the bottle once: here they never do."}
+        ]
+      }
+    ],
+    "readyBy": "2026-10-16T12:32:00.000Z",
+    "rules": [
+      {"kind":"must","source":"brief","text":"Black grounds, gold words"},
+      {"kind":"must","source":"brief","text":"The offer readable at a glance"},
+      {"kind":"never","source":"brief","text":"Red discount stickers"},
+      {"kind":"never","source":"brief","text":"Countdown clocks"},
+      {
+        "kind": "never",
+        "ruleId": "r7",
+        "source": "brand_dna",
+        "text": "Skin-result claims; only the lines on the approved list"
+      }
+    ],
+    "state": "in_check",
+    "summary": "Black Friday: the oil and the candle as a set, for one week in paid social and email. It speaks to existing customers and people who saved LYSNE posts. The message: one evening, wrapped. It runs in Norway, in Norwegian, from Fri 27 Nov.",
+    "timeline": [
+      {"at":"2026-10-16T16:32:00.000Z","label":"Masters, checked"},
+      {"at":"2026-10-21T16:32:00.000Z","label":"Variants and formats"},
+      {"at":"2026-10-23T16:32:00.000Z","label":"Delivery"},
+      {"at":"2026-11-27T12:32:00.000Z","label":"Goes live"}
+    ],
+    "version": 1,
+    "writtenAt": "2026-10-14T08:32:00.000Z"
+  }
+anna checkPlan("c-bf") → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-bf","kind":"plan","version":1},
+      "id": "msg-mvkqt28w-1",
+      "text": "Anna checked the plan for Black Friday. Approve it and Fume starts on the 3 masters; nothing is made before that.",
+      "threadId": "t-general"
+    },
+    "type": "message.new"
+  }
+  {
+    "notification": {
+      "actor": {"kind":"fume"},
+      "at": "2026-10-14T12:32:00.000Z",
+      "href": "/campaigns/c-bf/plan",
+      "id": "n-mvkqt28w-2",
+      "kind": "waiting_on_you",
+      "read": false,
+      "text": "The plan for Black Friday is ready",
+      "userId": "u-maja"
+    },
+    "type": "notification.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","email"],
+      "collectionIds": ["cl-gifts"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "cover": "/demo/lysne/10-06-feed.jpg",
+      "createdAt": "2026-10-13T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "dueAt": "2026-11-27T12:32:00.000Z",
+      "formats": ["feed","story","square"],
+      "id": "c-bf",
+      "language": "Norwegian",
+      "look": {
+        "backgrounds": [{"hex":"#141110","name":"Night black"},{"hex":"#3A1219","name":"Deep burgundy"}],
+        "colours": [
+          {"hex":"#141110","name":"Night black","use":"Grounds"},
+          {"hex":"#C9A45C","name":"Gold foil","use":"Words and the offer"},
+          {"hex":"#EFE6DA","name":"Linen","use":"Small text"}
+        ],
+        "light": "Hard top light, one bright edge on the glass",
+        "note": "Darker and sharper than LYSNE's evening light: black grounds, gold words, one hard light.",
+        "provenance": {
+          "at": "2026-10-13T16:32:00.000Z",
+          "by": "u-maja",
+          "evidence": "Black Friday brief",
+          "origin": "customer",
+          "state": "approved"
+        }
+      },
+      "market": "Norway",
+      "name": "Black Friday",
+      "productIds": ["pr-oil","pr-candle"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {
+        "briefReady": false,
+        "delivery": "2026-10-23T16:32:00.000Z",
+        "directions": 0,
+        "plan": "ready",
+        "planChecked": true,
+        "planned": 9,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+anna checkPlan("c-bf")
+  {
+    "briefVersion": 1,
+    "campaignId": "c-bf",
+    "changeRequestsIncluded": 2,
+    "checkAsked": {"at":"2026-10-14T09:32:00.000Z","by":"u-maja"},
+    "checkedAt": "2026-10-14T12:32:00.000Z",
+    "checkedBy": "u-anna",
+    "chosenDirectionId": "pd-c-bf-a",
+    "content": [
+      {
+        "key": "products",
+        "label": "Products",
+        "source": "product",
+        "value": "Night Body Oil 100 ml and Evening Candle 180 g, as their Product Truth says."
+      },
+      {
+        "key": "formats",
+        "label": "Formats",
+        "source": "brief",
+        "value": "Feed 4:5, Story 9:16, Square 1:1: 9 creatives in all, as your brief asks."
+      },
+      {
+        "key": "text",
+        "label": "Text on the creative",
+        "source": "brief",
+        "value": "One short line in Norwegian on each creative, from your brief’s message “One evening, wrapped”."
+      },
+      {
+        "key": "logo",
+        "label": "Logo",
+        "source": "brand_dna",
+        "value": "The wordmark on the label only; no logo added on the picture."
+      },
+      {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
+    ],
+    "directions": [
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-bf-a-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-a-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Evening Candle on folded linen, the light from the left."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-a-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "The products together, seen from above on linen."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-a-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-c-bf-a-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-a-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-bf-a-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-a-v3",
+            "kind": "variant",
+            "name": "Master 3 in Feed",
+            "of": "pc-c-bf-a-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-a-v4",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-bf-a-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-a-v5",
+            "kind": "variant",
+            "name": "Master 2 in Square",
+            "of": "pc-c-bf-a-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-a-v6",
+            "kind": "variant",
+            "name": "Master 3 in Story",
+            "of": "pc-c-bf-a-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Story 9:16, the same scene fitted to the frame."
+          }
+        ],
+        "hook": "One evening, wrapped.",
+        "id": "pd-c-bf-a",
+        "idea": "The oil and the candle as one set on night black, gold words, one hard light catching the glass. The offer readable at a glance, the evening still calm.",
+        "letter": "A",
+        "look": [
+          {
+            "changedAt": "2026-10-14T12:32:00.000Z",
+            "changedBy": "u-anna",
+            "key": "light",
+            "label": "Light",
+            "source": "brief",
+            "value": "Candle light only.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Pale stone and folded linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brief",
+            "value": "Night black grounds, gold-foil words, linen for small text.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "One evening, wrapped",
+        "recommended": true,
+        "references": [
+          {"caption":"Darker, one hard light on the glass","image":"/demo/lysne/10-06-feed.jpg","source":"brief"},
+          {"caption":"The set","image":"/demo/lysne/gen/ritual-pack.jpg","source":"product"},
+          {"caption":"The bottle close, glass catching light","image":"/demo/lysne/02-09-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Warm, low side light leads in your Brand DNA."},
+          {"source":"taste","text":"Your liked pictures keep the product low, with air above it."},
+          {"source":"memory","text":"Evening stone won in your last campaign."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-bf-b-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Close on Night Body Oil: its texture in a stripe of warm light."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-b-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "The label close, the set soft behind."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-b-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "The product lying on linen, light across it."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-b-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-c-bf-b-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-b-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-bf-b-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-b-v3",
+            "kind": "variant",
+            "name": "Master 3 in Feed",
+            "of": "pc-c-bf-b-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-b-v4",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-bf-b-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-b-v5",
+            "kind": "variant",
+            "name": "Master 2 in Square",
+            "of": "pc-c-bf-b-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-b-v6",
+            "kind": "variant",
+            "name": "Master 3 in Story",
+            "of": "pc-c-bf-b-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Story 9:16, the same scene fitted to the frame."
+          }
+        ],
+        "hook": "Made to be felt.",
+        "id": "pd-c-bf-b",
+        "idea": "Close on Night Body Oil and Evening Candle: the texture, the label and a stripe of warm light. Fewer things in the frame, the product nearer.",
+        "letter": "B",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brief",
+            "value": "Hard top light, one bright edge on the glass.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Stone, close; nothing else in the frame."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brief",
+            "value": "Night black grounds, gold-foil words, linen for small text.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Close and quiet",
+        "references": [
+          {
+            "caption": "Night Body Oil, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/oil-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Texture in warm light","image":"/demo/lysne/05-03-feed.jpg","source":"fume"},
+          {"caption":"Close, a stripe of light","image":"/demo/lysne/06-04-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"fume","text":"Close crops suit a product people touch every day."},
+          {"source":"product","text":"Golden, never orange: the Product Truth's colours lead."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-bf-c-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "A crop of skin and Night Body Oil in evening light, never a face."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-c-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Hands open the product on linen."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-c-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "The product on a bedside, one lamp."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-c-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-c-bf-c-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-c-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-bf-c-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-c-v3",
+            "kind": "variant",
+            "name": "Master 3 in Feed",
+            "of": "pc-c-bf-c-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-c-v4",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-bf-c-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-c-v5",
+            "kind": "variant",
+            "name": "Master 2 in Square",
+            "of": "pc-c-bf-c-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-c-v6",
+            "kind": "variant",
+            "name": "Master 3 in Story",
+            "of": "pc-c-bf-c-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Story 9:16, the same scene fitted to the frame."
+          }
+        ],
+        "hook": "The last quiet hour of the day.",
+        "id": "pd-c-bf-c",
+        "idea": "Night Body Oil and Evening Candle in use: a crop of skin or hands at the hour before sleep, never a face. Closest to the feeling, furthest from a packshot.",
+        "letter": "C",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brief",
+            "value": "Hard top light, one bright edge on the glass.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"A bedside of oak and linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brief",
+            "value": "Night black grounds, gold-foil words, linen for small text.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "Hands or a crop of skin, never a face; never holding the product.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "The ritual",
+        "references": [
+          {"caption":"Hands in evening light","image":"/demo/lysne/gen/taste-hands.jpg","source":"taste"},
+          {"caption":"The evening room","image":"/demo/lysne/gen/taste-bedroom.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Skin in crops, as your Brand DNA prefers; no face in this direction."},
+          {"source":"memory","text":"You passed on hands that hold the bottle once: here they never do."}
+        ]
+      }
+    ],
+    "rules": [
+      {"kind":"must","source":"brief","text":"Black grounds, gold words"},
+      {"kind":"must","source":"brief","text":"The offer readable at a glance"},
+      {"kind":"never","source":"brief","text":"Red discount stickers"},
+      {"kind":"never","source":"brief","text":"Countdown clocks"},
+      {
+        "kind": "never",
+        "ruleId": "r7",
+        "source": "brand_dna",
+        "text": "Skin-result claims; only the lines on the approved list"
+      }
+    ],
+    "state": "ready",
+    "summary": "Black Friday: the oil and the candle as a set, for one week in paid social and email. It speaks to existing customers and people who saved LYSNE posts. The message: one evening, wrapped. It runs in Norway, in Norwegian, from Fri 27 Nov.",
+    "timeline": [
+      {"at":"2026-10-16T16:32:00.000Z","label":"Masters, checked"},
+      {"at":"2026-10-21T16:32:00.000Z","label":"Variants and formats"},
+      {"at":"2026-10-23T16:32:00.000Z","label":"Delivery"},
+      {"at":"2026-11-27T12:32:00.000Z","label":"Goes live"}
+    ],
+    "version": 1,
+    "writtenAt": "2026-10-14T08:32:00.000Z"
+  }
+anna plan("c-bf")
+  = anna checkPlan("c-bf")
+anna approvePlan("c-bf")
+  {"error":"forbidden","message":"Only the approver can approve."}
+-- signed in as maja
+maja plan("c-bf")
+  = anna checkPlan("c-bf")
+maja approvePlan("c-bf") → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {"kind":"run","runId":"run-plan-c-bf"},
+      "id": "msg-mvkqt28w-3",
+      "text": "Approved. The Engine has started on Master 1 and Master 3 in One evening, wrapped; Master 2 starts once Evening Candle is confirmed. Anna checks each one before you see it, by Fri 16 Oct.",
+      "threadId": "t-general"
+    },
+    "type": "message.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","email"],
+      "collectionIds": ["cl-gifts"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "cover": "/demo/lysne/10-06-feed.jpg",
+      "createdAt": "2026-10-13T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "dueAt": "2026-11-27T12:32:00.000Z",
+      "formats": ["feed","story","square"],
+      "id": "c-bf",
+      "language": "Norwegian",
+      "look": {
+        "backgrounds": [{"hex":"#141110","name":"Night black"},{"hex":"#3A1219","name":"Deep burgundy"}],
+        "colours": [
+          {"hex":"#141110","name":"Night black","use":"Grounds"},
+          {"hex":"#C9A45C","name":"Gold foil","use":"Words and the offer"},
+          {"hex":"#EFE6DA","name":"Linen","use":"Small text"}
+        ],
+        "light": "Hard top light, one bright edge on the glass",
+        "note": "Darker and sharper than LYSNE's evening light: black grounds, gold words, one hard light.",
+        "provenance": {
+          "at": "2026-10-13T16:32:00.000Z",
+          "by": "u-maja",
+          "evidence": "Black Friday brief",
+          "origin": "customer",
+          "state": "approved"
+        }
+      },
+      "market": "Norway",
+      "name": "Black Friday",
+      "productIds": ["pr-oil","pr-candle"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "masters",
+      "state": "in_production",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {
+        "briefReady": false,
+        "by": "2026-10-16T16:32:00.000Z",
+        "delivery": "2026-10-23T16:32:00.000Z",
+        "directions": 0,
+        "masters": 2,
+        "planned": 9,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja approvePlan("c-bf")
+  {
+    "approvedAt": "2026-10-14T12:32:00.000Z",
+    "approvedBy": "u-maja",
+    "briefVersion": 1,
+    "campaignId": "c-bf",
+    "changeRequestsIncluded": 2,
+    "checkAsked": {"at":"2026-10-14T09:32:00.000Z","by":"u-maja"},
+    "checkedAt": "2026-10-14T12:32:00.000Z",
+    "checkedBy": "u-anna",
+    "chosenDirectionId": "pd-c-bf-a",
+    "content": [
+      {
+        "key": "products",
+        "label": "Products",
+        "source": "product",
+        "value": "Night Body Oil 100 ml and Evening Candle 180 g, as their Product Truth says."
+      },
+      {
+        "key": "formats",
+        "label": "Formats",
+        "source": "brief",
+        "value": "Feed 4:5, Story 9:16, Square 1:1: 9 creatives in all, as your brief asks."
+      },
+      {
+        "key": "text",
+        "label": "Text on the creative",
+        "source": "brief",
+        "value": "One short line in Norwegian on each creative, from your brief’s message “One evening, wrapped”."
+      },
+      {
+        "key": "logo",
+        "label": "Logo",
+        "source": "brand_dna",
+        "value": "The wordmark on the label only; no logo added on the picture."
+      },
+      {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
+    ],
+    "directions": [
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-bf-a-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-a-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Evening Candle on folded linen, the light from the left."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-a-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "The products together, seen from above on linen."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-a-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-c-bf-a-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-a-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-bf-a-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-a-v3",
+            "kind": "variant",
+            "name": "Master 3 in Feed",
+            "of": "pc-c-bf-a-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-a-v4",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-bf-a-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-a-v5",
+            "kind": "variant",
+            "name": "Master 2 in Square",
+            "of": "pc-c-bf-a-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-a-v6",
+            "kind": "variant",
+            "name": "Master 3 in Story",
+            "of": "pc-c-bf-a-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Story 9:16, the same scene fitted to the frame."
+          }
+        ],
+        "hook": "One evening, wrapped.",
+        "id": "pd-c-bf-a",
+        "idea": "The oil and the candle as one set on night black, gold words, one hard light catching the glass. The offer readable at a glance, the evening still calm.",
+        "letter": "A",
+        "look": [
+          {
+            "changedAt": "2026-10-14T12:32:00.000Z",
+            "changedBy": "u-anna",
+            "key": "light",
+            "label": "Light",
+            "source": "brief",
+            "value": "Candle light only.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Pale stone and folded linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brief",
+            "value": "Night black grounds, gold-foil words, linen for small text.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "One evening, wrapped",
+        "recommended": true,
+        "references": [
+          {"caption":"Darker, one hard light on the glass","image":"/demo/lysne/10-06-feed.jpg","source":"brief"},
+          {"caption":"The set","image":"/demo/lysne/gen/ritual-pack.jpg","source":"product"},
+          {"caption":"The bottle close, glass catching light","image":"/demo/lysne/02-09-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Warm, low side light leads in your Brand DNA."},
+          {"source":"taste","text":"Your liked pictures keep the product low, with air above it."},
+          {"source":"memory","text":"Evening stone won in your last campaign."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-bf-b-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Close on Night Body Oil: its texture in a stripe of warm light."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-b-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "The label close, the set soft behind."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-b-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "The product lying on linen, light across it."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-b-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-c-bf-b-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-b-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-bf-b-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-b-v3",
+            "kind": "variant",
+            "name": "Master 3 in Feed",
+            "of": "pc-c-bf-b-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-b-v4",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-bf-b-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-b-v5",
+            "kind": "variant",
+            "name": "Master 2 in Square",
+            "of": "pc-c-bf-b-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-b-v6",
+            "kind": "variant",
+            "name": "Master 3 in Story",
+            "of": "pc-c-bf-b-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Story 9:16, the same scene fitted to the frame."
+          }
+        ],
+        "hook": "Made to be felt.",
+        "id": "pd-c-bf-b",
+        "idea": "Close on Night Body Oil and Evening Candle: the texture, the label and a stripe of warm light. Fewer things in the frame, the product nearer.",
+        "letter": "B",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brief",
+            "value": "Hard top light, one bright edge on the glass.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Stone, close; nothing else in the frame."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brief",
+            "value": "Night black grounds, gold-foil words, linen for small text.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Close and quiet",
+        "references": [
+          {
+            "caption": "Night Body Oil, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/oil-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Texture in warm light","image":"/demo/lysne/05-03-feed.jpg","source":"fume"},
+          {"caption":"Close, a stripe of light","image":"/demo/lysne/06-04-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"fume","text":"Close crops suit a product people touch every day."},
+          {"source":"product","text":"Golden, never orange: the Product Truth's colours lead."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-bf-c-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "A crop of skin and Night Body Oil in evening light, never a face."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-c-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Hands open the product on linen."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-c-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "The product on a bedside, one lamp."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-c-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-c-bf-c-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-c-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-bf-c-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-bf-c-v3",
+            "kind": "variant",
+            "name": "Master 3 in Feed",
+            "of": "pc-c-bf-c-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-c-v4",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-bf-c-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-bf-c-v5",
+            "kind": "variant",
+            "name": "Master 2 in Square",
+            "of": "pc-c-bf-c-m2",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 2 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-bf-c-v6",
+            "kind": "variant",
+            "name": "Master 3 in Story",
+            "of": "pc-c-bf-c-m3",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 3 in Story 9:16, the same scene fitted to the frame."
+          }
+        ],
+        "hook": "The last quiet hour of the day.",
+        "id": "pd-c-bf-c",
+        "idea": "Night Body Oil and Evening Candle in use: a crop of skin or hands at the hour before sleep, never a face. Closest to the feeling, furthest from a packshot.",
+        "letter": "C",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brief",
+            "value": "Hard top light, one bright edge on the glass.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"A bedside of oak and linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brief",
+            "value": "Night black grounds, gold-foil words, linen for small text.",
+            "why": "Your Black Friday look"
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "Hands or a crop of skin, never a face; never holding the product.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "The ritual",
+        "references": [
+          {"caption":"Hands in evening light","image":"/demo/lysne/gen/taste-hands.jpg","source":"taste"},
+          {"caption":"The evening room","image":"/demo/lysne/gen/taste-bedroom.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Skin in crops, as your Brand DNA prefers; no face in this direction."},
+          {"source":"memory","text":"You passed on hands that hold the bottle once: here they never do."}
+        ]
+      }
+    ],
+    "rules": [
+      {"kind":"must","source":"brief","text":"Black grounds, gold words"},
+      {"kind":"must","source":"brief","text":"The offer readable at a glance"},
+      {"kind":"never","source":"brief","text":"Red discount stickers"},
+      {"kind":"never","source":"brief","text":"Countdown clocks"},
+      {
+        "kind": "never",
+        "ruleId": "r7",
+        "source": "brand_dna",
+        "text": "Skin-result claims; only the lines on the approved list"
+      }
+    ],
+    "state": "approved",
+    "summary": "Black Friday: the oil and the candle as a set, for one week in paid social and email. It speaks to existing customers and people who saved LYSNE posts. The message: one evening, wrapped. It runs in Norway, in Norwegian, from Fri 27 Nov.",
+    "timeline": [
+      {"at":"2026-10-16T16:32:00.000Z","label":"Masters, checked"},
+      {"at":"2026-10-21T16:32:00.000Z","label":"Variants and formats"},
+      {"at":"2026-10-23T16:32:00.000Z","label":"Delivery"},
+      {"at":"2026-11-27T12:32:00.000Z","label":"Goes live"}
+    ],
+    "version": 1,
+    "writtenAt": "2026-10-14T08:32:00.000Z"
+  }
+maja changePlanWithFume("c-bf", "Warmer") → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt28w-5",
+      "text": "Warmer",
+      "threadId": "t-mvkqt28w-4"
+    },
+    "type": "message.new"
+  }
+  {
+    "message": {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"fume"},
+      "id": "msg-mvkqt28w-6",
+      "text": "You approved this plan, and the Engine has started, so it stays as it is. Ask for a change on a creative once you see it.",
+      "threadId": "t-mvkqt28w-4"
+    },
+    "type": "message.new"
+  }
+maja changePlanWithFume("c-bf", "Warmer")
+  = maja approvePlan("c-bf")
+maja campaign("c-bf")
+  {
+    "approver": {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"Head of Marketing"},
+    "brief": {
+      "approvedAt": "2026-10-13T16:32:00.000Z",
+      "approvedBy": "u-maja",
+      "audience": "Existing customers and people who saved LYSNE posts.",
+      "campaignId": "c-bf",
+      "channels": ["paid_social","email"],
+      "creatives": 9,
+      "formats": ["feed","story","square"],
+      "mandatory": ["Black grounds, gold words","The offer readable at a glance"],
+      "message": "One evening, wrapped.",
+      "missing": [],
+      "never": ["Red discount stickers","Countdown clocks"],
+      "objective": "Black Friday: the oil and the candle as a set, for one week in paid social and email.",
+      "offer": "The evening set, 25 % off, Black Friday to Cyber Monday, 27–30 November.",
+      "references": ["/demo/lysne/10-06-square.jpg"],
+      "state": "approved",
+      "version": 1
+    },
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","email"],
+      "collectionIds": ["cl-gifts"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "cover": "/demo/lysne/10-06-feed.jpg",
+      "createdAt": "2026-10-13T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "dueAt": "2026-11-27T12:32:00.000Z",
+      "formats": ["feed","story","square"],
+      "id": "c-bf",
+      "language": "Norwegian",
+      "look": {
+        "backgrounds": [{"hex":"#141110","name":"Night black"},{"hex":"#3A1219","name":"Deep burgundy"}],
+        "colours": [
+          {"hex":"#141110","name":"Night black","use":"Grounds"},
+          {"hex":"#C9A45C","name":"Gold foil","use":"Words and the offer"},
+          {"hex":"#EFE6DA","name":"Linen","use":"Small text"}
+        ],
+        "light": "Hard top light, one bright edge on the glass",
+        "note": "Darker and sharper than LYSNE's evening light: black grounds, gold words, one hard light.",
+        "provenance": {
+          "at": "2026-10-13T16:32:00.000Z",
+          "by": "u-maja",
+          "evidence": "Black Friday brief",
+          "origin": "customer",
+          "state": "approved"
+        }
+      },
+      "market": "Norway",
+      "name": "Black Friday",
+      "productIds": ["pr-oil","pr-candle"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "masters",
+      "state": "in_production",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {
+        "briefReady": false,
+        "by": "2026-10-16T16:32:00.000Z",
+        "delivery": "2026-10-23T16:32:00.000Z",
+        "directions": 0,
+        "masters": 2,
+        "planned": 9,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "clock": {"campaignId":"c-bf","dueAt":"2026-10-16T16:32:00.000Z","stage":"masters","state":"running"},
+    "creatives": [],
+    "directions": [],
+    "people": [
+      {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"Head of Marketing"},
+      {"email":"jonas@lysne.example","id":"u-jonas","name":"Jonas Berg","title":"Performance Marketer"},
+      {"email":"ida@lysne.example","id":"u-ida","name":"Ida Strand","title":"Finance Lead"}
+    ],
+    "record": [],
+    "runs": [
+      {
+        "campaignId": "c-bf",
+        "id": "run-plan-c-bf",
+        "made": 0,
+        "previews": [],
+        "purpose": "masters",
+        "startedAt": "2026-10-14T12:32:00.000Z",
+        "state": "running",
+        "steps": [
+          {"label":"Plan approved by you","state":"done"},
+          {"detail":"0 of 3","label":"Masters in One evening, wrapped","state":"active"},
+          {"label":"Master 2: Evening Candle to confirm first","state":"waiting"},
+          {"label":"Quality Gate: Anna checks each master","state":"waiting"}
+        ],
+        "total": 3
+      }
+    ],
+    "threadId": "t-mvkqt28w-4"
+  }
+maja home()
+  {
+    "deliveries": [
+      {
+        "bytes": 38400000,
+        "campaignId": "c-summer",
+        "createdAt": "2026-09-26T12:32:00.000Z",
+        "creativeIds": ["cr-s-1","cr-s-2","cr-s-3","cr-s-4","cr-s-5","cr-s-6","cr-s-7","cr-s-8"],
+        "formats": ["feed","story"],
+        "id": "dl-summer",
+        "name": "Summer evenings · Direction A",
+        "rightsNote": "For LYSNE's paid and organic channels in the Nordics, no end date. No real people appear in these creatives.",
+        "scope": "campaign",
+        "state": "confirmed_live"
+      },
+      {
+        "bytes": 9600000,
+        "campaignId": "c-autumn",
+        "createdAt": "2026-10-12T12:32:00.000Z",
+        "creativeIds": ["cr-a-m1","cr-a-m2"],
+        "formats": ["feed"],
+        "id": "dl-autumn-m",
+        "name": "Autumn launch · Masters",
+        "rightsNote": "For LYSNE's paid and organic channels in the Nordics, no end date. No real people appear in these creatives.",
+        "scope": "campaign",
+        "state": "ready"
+      }
+    ],
+    "fumeNeeds": [],
+    "inProduction": [
+      {
+        "campaign": {
+          "approverId": "u-maja",
+          "boardId": "bd-autumn",
+          "brandDnaVersion": 3,
+          "channels": ["paid_social","email","product_page"],
+          "chosenDirectionId": "d-a1",
+          "collectionIds": ["cl-aw26"],
+          "counts": {"approved":2,"checked":6,"creatives":11,"delivered":0,"inCheck":3},
+          "cover": "/demo/lysne/05-06-feed.jpg",
+          "createdAt": "2026-10-02T12:32:00.000Z",
+          "createdBy": "u-maja",
+          "dueAt": "2026-10-17T12:32:00.000Z",
+          "formats": ["feed","story","square"],
+          "id": "c-autumn",
+          "language": "Norwegian",
+          "market": "Norway",
+          "name": "Autumn launch",
+          "productIds": ["pr-oil"],
+          "roundsIncluded": 2,
+          "roundsUsed": 1,
+          "stage": "variants",
+          "state": "in_review",
+          "updatedAt": "2026-10-14T12:26:00.000Z",
+          "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":0},
+          "workspaceId": "w-lysne"
+        },
+        "clock": {"campaignId":"c-autumn","dueAt":"2026-10-17T12:32:00.000Z","stage":"variants","state":"running"},
+        "run": {
+          "campaignId": "c-autumn",
+          "id": "run-autumn-v",
+          "made": 9,
+          "previews": [
+            "/demo/lysne/04-05-feed.jpg",
+            "/demo/lysne/03-05-feed.jpg",
+            "/demo/lysne/05-01-feed.jpg",
+            "/demo/lysne/09-07-feed.jpg",
+            "/demo/lysne/06-10-feed.jpg"
+          ],
+          "purpose": "variants",
+          "startedAt": "2026-10-14T10:32:00.000Z",
+          "state": "done",
+          "steps": [
+            {"label":"Masters 1 and 2 approved by Maja","state":"done"},
+            {"detail":"9 of 9","label":"Variants and channel formats","state":"done"},
+            {"detail":"6 of 9","label":"Quality Gate: Anna checks each creative","state":"active"}
+          ],
+          "total": 9
+        }
+      },
+      {
+        "campaign": {
+          "approverId": "u-maja",
+          "brandDnaVersion": 3,
+          "channels": ["paid_social","email"],
+          "collectionIds": ["cl-gifts"],
+          "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+          "cover": "/demo/lysne/10-06-feed.jpg",
+          "createdAt": "2026-10-13T12:32:00.000Z",
+          "createdBy": "u-maja",
+          "dueAt": "2026-11-27T12:32:00.000Z",
+          "formats": ["feed","story","square"],
+          "id": "c-bf",
+          "language": "Norwegian",
+          "look": {
+            "backgrounds": [{"hex":"#141110","name":"Night black"},{"hex":"#3A1219","name":"Deep burgundy"}],
+            "colours": [
+              {"hex":"#141110","name":"Night black","use":"Grounds"},
+              {"hex":"#C9A45C","name":"Gold foil","use":"Words and the offer"},
+              {"hex":"#EFE6DA","name":"Linen","use":"Small text"}
+            ],
+            "light": "Hard top light, one bright edge on the glass",
+            "note": "Darker and sharper than LYSNE's evening light: black grounds, gold words, one hard light.",
+            "provenance": {
+              "at": "2026-10-13T16:32:00.000Z",
+              "by": "u-maja",
+              "evidence": "Black Friday brief",
+              "origin": "customer",
+              "state": "approved"
+            }
+          },
+          "market": "Norway",
+          "name": "Black Friday",
+          "productIds": ["pr-oil","pr-candle"],
+          "roundsIncluded": 2,
+          "roundsUsed": 0,
+          "stage": "masters",
+          "state": "in_production",
+          "updatedAt": "2026-10-14T12:32:00.000Z",
+          "waits": {
+            "briefReady": false,
+            "by": "2026-10-16T16:32:00.000Z",
+            "delivery": "2026-10-23T16:32:00.000Z",
+            "directions": 0,
+            "masters": 2,
+            "planned": 9,
+            "questions": 0
+          },
+          "workspaceId": "w-lysne"
+        },
+        "clock": {"campaignId":"c-bf","dueAt":"2026-10-16T16:32:00.000Z","stage":"masters","state":"running"},
+        "run": {
+          "campaignId": "c-bf",
+          "id": "run-plan-c-bf",
+          "made": 0,
+          "previews": [],
+          "purpose": "masters",
+          "startedAt": "2026-10-14T12:32:00.000Z",
+          "state": "running",
+          "steps": [
+            {"label":"Plan approved by you","state":"done"},
+            {"detail":"0 of 3","label":"Masters in One evening, wrapped","state":"active"},
+            {"label":"Master 2: Evening Candle to confirm first","state":"waiting"},
+            {"label":"Quality Gate: Anna checks each master","state":"waiting"}
+          ],
+          "total": 3
+        }
+      }
+    ],
+    "learned": [
+      {
+        "at": "2026-10-09T12:32:00.000Z",
+        "campaignId": "c-autumn",
+        "id": "m4",
+        "kind": "approved",
+        "lesson": "Evening stone was chosen over skin and texture: warm stone leads."
+      },
+      {
+        "at": "2026-10-08T12:32:00.000Z",
+        "campaignId": "c-autumn",
+        "id": "m3",
+        "kind": "rejected",
+        "lesson": "You passed on hands that hold the bottle. Fume no longer proposes them."
+      },
+      {
+        "at": "2026-09-25T12:32:00.000Z",
+        "campaignId": "c-summer",
+        "id": "m2",
+        "kind": "changed",
+        "lesson": "You moved the product lower in the frame twice. New creatives start there."
+      }
+    ],
+    "recentlyApproved": [
+      {
+        "campaignId": "c-autumn",
+        "channel": "paid_social",
+        "current": {
+          "approvedAt": "2026-10-11T13:32:00.000Z",
+          "approvedBy": "u-maja",
+          "checkedAt": "2026-10-11T12:32:00.000Z",
+          "checkedBy": "u-anna",
+          "creativeId": "cr-a-m1",
+          "height": 1350,
+          "id": "v-cr-a-m1-1",
+          "image": "/demo/lysne/05-06-feed.jpg",
+          "madeAt": "2026-10-11T12:02:00.000Z",
+          "number": 2,
+          "state": "approved",
+          "width": 1080
+        },
+        "directionId": "d-a1",
+        "format": "feed",
+        "id": "cr-a-m1",
+        "kind": "master",
+        "masterId": null,
+        "name": "lysne_autumn_a_m1_feed_v2",
+        "title": "Feed 1",
+        "versions": [
+          {
+            "checkedAt": "2026-10-09T12:32:00.000Z",
+            "checkedBy": "u-anna",
+            "creativeId": "cr-a-m1",
+            "height": 1350,
+            "id": "v-cr-a-m1-old",
+            "image": "/demo/lysne/01-03-feed.jpg",
+            "madeAt": "2026-10-11T12:02:00.000Z",
+            "number": 1,
+            "state": "changes_requested",
+            "width": 1080
+          },
+          {
+            "approvedAt": "2026-10-11T13:32:00.000Z",
+            "approvedBy": "u-maja",
+            "checkedAt": "2026-10-11T12:32:00.000Z",
+            "checkedBy": "u-anna",
+            "creativeId": "cr-a-m1",
+            "height": 1350,
+            "id": "v-cr-a-m1-1",
+            "image": "/demo/lysne/05-06-feed.jpg",
+            "madeAt": "2026-10-11T12:02:00.000Z",
+            "number": 2,
+            "state": "approved",
+            "width": 1080
+          }
+        ]
+      },
+      {
+        "campaignId": "c-autumn",
+        "channel": "paid_social",
+        "current": {
+          "approvedAt": "2026-10-11T13:32:00.000Z",
+          "approvedBy": "u-maja",
+          "checkedAt": "2026-10-11T12:32:00.000Z",
+          "checkedBy": "u-anna",
+          "creativeId": "cr-a-m2",
+          "height": 1350,
+          "id": "v-cr-a-m2-2",
+          "image": "/demo/lysne/08-02-feed.jpg",
+          "madeAt": "2026-10-11T12:02:00.000Z",
+          "number": 1,
+          "state": "approved",
+          "width": 1080
+        },
+        "directionId": "d-a1",
+        "format": "feed",
+        "id": "cr-a-m2",
+        "kind": "master",
+        "masterId": null,
+        "name": "lysne_autumn_a_m2_feed_v1",
+        "title": "Feed 2",
+        "versions": [
+          {
+            "approvedAt": "2026-10-11T13:32:00.000Z",
+            "approvedBy": "u-maja",
+            "checkedAt": "2026-10-11T12:32:00.000Z",
+            "checkedBy": "u-anna",
+            "creativeId": "cr-a-m2",
+            "height": 1350,
+            "id": "v-cr-a-m2-2",
+            "image": "/demo/lysne/08-02-feed.jpg",
+            "madeAt": "2026-10-11T12:02:00.000Z",
+            "number": 1,
+            "state": "approved",
+            "width": 1080
+          }
+        ]
+      }
+    ],
+    "usage": {"campaignsActive":4,"creativeCap":27,"creativesUsed":11,"periodEndsAt":"2026-10-31T12:32:00.000Z"},
+    "waitingOnYou": [
+      {
+        "campaignId": "c-autumn",
+        "count": 6,
+        "detail": "6 checked creatives are ready for you",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "href": "/campaigns/c-autumn/review",
+        "id": "wc-c-autumn",
+        "kind": "creatives",
+        "title": "Autumn launch"
+      },
+      {
+        "campaignId": "c-winter",
+        "detail": "The plan is ready. Approve it and Fume starts.",
+        "href": "/campaigns/c-winter/plan",
+        "id": "wpl-c-winter",
+        "kind": "plan",
+        "title": "Winter gifting"
+      },
+      {
+        "campaignId": "c-balm",
+        "detail": "Fume needs the claims we may use for Hand Balm",
+        "href": "/brand/products/pr-balm#needs",
+        "id": "w-c-balm",
+        "kind": "question",
+        "title": "Hand Balm introduction"
+      },
+      {
+        "detail": "Confirm what Fume read about this product",
+        "href": "/brand/products/pr-balm",
+        "id": "wp-pr-balm",
+        "kind": "product",
+        "title": "Hand Balm 50 ml"
+      },
+      {
+        "detail": "Confirm what Fume read about this product",
+        "href": "/brand/products/pr-mist",
+        "id": "wp-pr-mist",
+        "kind": "product",
+        "title": "Pillow Mist 50 ml"
+      },
+      {
+        "detail": "Confirm what Fume read about this product",
+        "href": "/brand/products/pr-candle",
+        "id": "wp-pr-candle",
+        "kind": "product",
+        "title": "Evening Candle 180 g"
+      },
+      {
+        "detail": "Confirm what Fume read about this product",
+        "href": "/brand/products/pr-kveld",
+        "id": "wp-pr-kveld",
+        "kind": "product",
+        "title": "Kveld Eau de Parfum 50 ml"
+      },
+      {
+        "detail": "Confirm what Fume read about this product",
+        "href": "/brand/products/pr-diffuser",
+        "id": "wp-pr-diffuser",
+        "kind": "product",
+        "title": "Room Diffuser 100 ml"
+      },
+      {
+        "detail": "Confirm what Fume read about this product",
+        "href": "/brand/products/pr-ritual",
+        "id": "wp-pr-ritual",
+        "kind": "product",
+        "title": "Evening Ritual gift box Oil and candle"
+      },
+      {
+        "detail": "Confirm what Fume read about this product",
+        "href": "/brand/products/pr-sweater",
+        "id": "wp-pr-sweater",
+        "kind": "product",
+        "title": "Merino Lounge Sweater Ecru"
+      }
+    ]
+  }
