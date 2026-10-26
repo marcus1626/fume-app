@@ -1,0 +1,2405 @@
+-- anna: createMockApi({"latency":0,"userId":"u-anna"})
+anna qaCheck("qa-1") → events
+  {
+    "creativeId": "cr-a-v7",
+    "type": "version.state",
+    "version": {
+      "checkedAt": "2026-10-14T12:32:00.000Z",
+      "checkedBy": "u-anna",
+      "creativeId": "cr-a-v7",
+      "height": 1350,
+      "id": "v-cr-a-v7-9",
+      "image": "/demo/lysne/09-07-feed.jpg",
+      "madeAt": "2026-10-14T11:54:00.000Z",
+      "number": 1,
+      "state": "checked",
+      "width": 1080
+    }
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "boardId": "bd-autumn",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","email","product_page"],
+      "chosenDirectionId": "d-a1",
+      "collectionIds": ["cl-aw26"],
+      "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+      "cover": "/demo/lysne/05-06-feed.jpg",
+      "createdAt": "2026-10-02T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "dueAt": "2026-10-17T12:32:00.000Z",
+      "formats": ["feed","story","square"],
+      "id": "c-autumn",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Autumn launch",
+      "productIds": ["pr-oil"],
+      "roundsIncluded": 2,
+      "roundsUsed": 1,
+      "stage": "variants",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "checkedAt": "2026-10-14T12:32:00.000Z",
+      "checkedBy": "u-anna",
+      "creativeId": "cr-a-v7",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [],
+      "format": "feed",
+      "id": "qa-1",
+      "image": "/demo/lysne/09-07-feed.jpg",
+      "madeAt": "2026-10-14T12:24:00.000Z",
+      "risk": "normal",
+      "slot": "Master 2 · Variant 2",
+      "state": "checked",
+      "studio": "render",
+      "title": "Feed 6",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v9",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [
+        {
+          "at": "2026-10-14T12:21:00.000Z",
+          "by": "u-anna",
+          "id": "fb-1",
+          "state": "fixed",
+          "text": "The cap must be matte burgundy, as in the Product Truth."
+        }
+      ],
+      "format": "feed",
+      "id": "qa-3",
+      "image": "/demo/lysne/06-10-feed.jpg",
+      "madeAt": "2026-10-14T12:20:00.000Z",
+      "risk": "high",
+      "slot": "Master 2 · Variant 3",
+      "state": "waiting",
+      "studio": "render",
+      "title": "Feed 7",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+anna qaCheck("qa-1")
+  {
+    "campaignId": "c-autumn",
+    "checkedAt": "2026-10-14T12:32:00.000Z",
+    "checkedBy": "u-anna",
+    "creativeId": "cr-a-v7",
+    "dueAt": "2026-10-15T12:32:00.000Z",
+    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+    "feedback": [],
+    "format": "feed",
+    "id": "qa-1",
+    "image": "/demo/lysne/09-07-feed.jpg",
+    "madeAt": "2026-10-14T12:24:00.000Z",
+    "risk": "normal",
+    "slot": "Master 2 · Variant 2",
+    "state": "checked",
+    "studio": "render",
+    "title": "Feed 6",
+    "workspaceId": "w-lysne"
+  }
+anna qaUncheck("qa-1") → events
+  {
+    "creativeId": "cr-a-v7",
+    "type": "version.state",
+    "version": {
+      "creativeId": "cr-a-v7",
+      "height": 1350,
+      "id": "v-cr-a-v7-9",
+      "image": "/demo/lysne/09-07-feed.jpg",
+      "madeAt": "2026-10-14T11:54:00.000Z",
+      "number": 1,
+      "state": "in_check",
+      "width": 1080
+    }
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "boardId": "bd-autumn",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","email","product_page"],
+      "chosenDirectionId": "d-a1",
+      "collectionIds": ["cl-aw26"],
+      "counts": {"approved":2,"checked":6,"creatives":11,"delivered":0,"inCheck":3},
+      "cover": "/demo/lysne/05-06-feed.jpg",
+      "createdAt": "2026-10-02T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "dueAt": "2026-10-17T12:32:00.000Z",
+      "formats": ["feed","story","square"],
+      "id": "c-autumn",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Autumn launch",
+      "productIds": ["pr-oil"],
+      "roundsIncluded": 2,
+      "roundsUsed": 1,
+      "stage": "variants",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":0},
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v7",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [],
+      "format": "feed",
+      "id": "qa-1",
+      "image": "/demo/lysne/09-07-feed.jpg",
+      "madeAt": "2026-10-14T12:24:00.000Z",
+      "risk": "normal",
+      "slot": "Master 2 · Variant 2",
+      "state": "waiting",
+      "studio": "render",
+      "title": "Feed 6",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+anna qaUncheck("qa-1")
+  {
+    "campaignId": "c-autumn",
+    "creativeId": "cr-a-v7",
+    "dueAt": "2026-10-15T12:32:00.000Z",
+    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+    "feedback": [],
+    "format": "feed",
+    "id": "qa-1",
+    "image": "/demo/lysne/09-07-feed.jpg",
+    "madeAt": "2026-10-14T12:24:00.000Z",
+    "risk": "normal",
+    "slot": "Master 2 · Variant 2",
+    "state": "waiting",
+    "studio": "render",
+    "title": "Feed 6",
+    "workspaceId": "w-lysne"
+  }
+anna qaCheck("qa-1") → events
+  {
+    "creativeId": "cr-a-v7",
+    "type": "version.state",
+    "version": {
+      "checkedAt": "2026-10-14T12:32:00.000Z",
+      "checkedBy": "u-anna",
+      "creativeId": "cr-a-v7",
+      "height": 1350,
+      "id": "v-cr-a-v7-9",
+      "image": "/demo/lysne/09-07-feed.jpg",
+      "madeAt": "2026-10-14T11:54:00.000Z",
+      "number": 1,
+      "state": "checked",
+      "width": 1080
+    }
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "boardId": "bd-autumn",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","email","product_page"],
+      "chosenDirectionId": "d-a1",
+      "collectionIds": ["cl-aw26"],
+      "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+      "cover": "/demo/lysne/05-06-feed.jpg",
+      "createdAt": "2026-10-02T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "dueAt": "2026-10-17T12:32:00.000Z",
+      "formats": ["feed","story","square"],
+      "id": "c-autumn",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Autumn launch",
+      "productIds": ["pr-oil"],
+      "roundsIncluded": 2,
+      "roundsUsed": 1,
+      "stage": "variants",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "checkedAt": "2026-10-14T12:32:00.000Z",
+      "checkedBy": "u-anna",
+      "creativeId": "cr-a-v7",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [],
+      "format": "feed",
+      "id": "qa-1",
+      "image": "/demo/lysne/09-07-feed.jpg",
+      "madeAt": "2026-10-14T12:24:00.000Z",
+      "risk": "normal",
+      "slot": "Master 2 · Variant 2",
+      "state": "checked",
+      "studio": "render",
+      "title": "Feed 6",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+anna qaCheck("qa-1")
+  = anna qaCheck("qa-1")
+anna qaFeedback("qa-2", "The cap reads gold, not burgundy", [{"n":1,"text":"Cap","x":0.5,"y":0.3}]) → events
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v8",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [
+        {
+          "at": "2026-10-14T12:32:00.000Z",
+          "by": "u-anna",
+          "id": "fb-mvkqtu0w-3",
+          "pins": [{"n":1,"text":"Cap","x":0.5,"y":0.3}],
+          "state": "fixed",
+          "text": "The cap reads gold, not burgundy"
+        }
+      ],
+      "format": "square",
+      "id": "qa-2",
+      "image": "/demo/lysne/09-07-square.jpg",
+      "madeAt": "2026-10-14T12:25:00.000Z",
+      "risk": "normal",
+      "slot": "Master 2 · Variant 2 · square",
+      "state": "waiting",
+      "studio": "render",
+      "title": "Square 2",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+anna qaFeedback("qa-2", "The cap reads gold, not burgundy", [{"n":1,"text":"Cap","x":0.5,"y":0.3}])
+  {
+    "campaignId": "c-autumn",
+    "creativeId": "cr-a-v8",
+    "dueAt": "2026-10-15T12:32:00.000Z",
+    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+    "feedback": [
+      {
+        "at": "2026-10-14T12:32:00.000Z",
+        "by": "u-anna",
+        "id": "fb-mvkqtu0w-3",
+        "pins": [{"n":1,"text":"Cap","x":0.5,"y":0.3}],
+        "state": "fixed",
+        "text": "The cap reads gold, not burgundy"
+      }
+    ],
+    "format": "square",
+    "id": "qa-2",
+    "image": "/demo/lysne/09-07-square.jpg",
+    "madeAt": "2026-10-14T12:25:00.000Z",
+    "risk": "normal",
+    "slot": "Master 2 · Variant 2 · square",
+    "state": "waiting",
+    "studio": "render",
+    "title": "Square 2",
+    "workspaceId": "w-lysne"
+  }
+-- 10 s later
+anna qaQueue()
+  [
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "creativeId": "cr-a-v9",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [
+          {
+            "at": "2026-10-14T12:21:00.000Z",
+            "by": "u-anna",
+            "id": "fb-1",
+            "state": "fixed",
+            "text": "The cap must be matte burgundy, as in the Product Truth."
+          }
+        ],
+        "format": "feed",
+        "id": "qa-3",
+        "image": "/demo/lysne/06-10-feed.jpg",
+        "madeAt": "2026-10-14T12:20:00.000Z",
+        "risk": "high",
+        "slot": "Master 2 · Variant 3",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 7",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "creativeId": "cr-a-v8",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [
+          {
+            "at": "2026-10-14T12:32:00.000Z",
+            "by": "u-anna",
+            "id": "fb-mvkqtu0w-3",
+            "pins": [{"n":1,"text":"Cap","x":0.5,"y":0.3}],
+            "state": "fixed",
+            "text": "The cap reads gold, not burgundy"
+          }
+        ],
+        "format": "square",
+        "id": "qa-2",
+        "image": "/demo/lysne/09-07-square.jpg",
+        "madeAt": "2026-10-14T12:25:00.000Z",
+        "risk": "normal",
+        "slot": "Master 2 · Variant 2 · square",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Square 2",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "creativeId": "cr-doc-autumn-email",
+        "documentId": "doc-autumn-email",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "story",
+        "id": "qa-4",
+        "image": "/demo/lysne/05-01-story.jpg",
+        "layers": [
+          {
+            "h": 1,
+            "id": "ly-img",
+            "image": "/demo/lysne/05-01-feed.jpg",
+            "kind": "image",
+            "locked": true,
+            "name": "Image v3",
+            "visible": true,
+            "w": 1,
+            "x": 0,
+            "y": 0
+          },
+          {
+            "h": 0.1,
+            "id": "ly-head",
+            "kind": "text",
+            "name": "Headline",
+            "style": "headline",
+            "text": "For the hour before sleep.",
+            "visible": true,
+            "w": 0.84,
+            "x": 0.08,
+            "y": 0.72
+          },
+          {
+            "h": 0.05,
+            "id": "ly-body",
+            "kind": "text",
+            "name": "Line",
+            "style": "small",
+            "text": "Night Body Oil · 100 ml",
+            "visible": true,
+            "w": 0.6,
+            "x": 0.08,
+            "y": 0.83
+          },
+          {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+        ],
+        "madeAt": "2026-10-14T12:17:00.000Z",
+        "risk": "normal",
+        "slot": "Email header",
+        "state": "waiting",
+        "studio": "design",
+        "title": "Email header",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-solv",
+        "brandDnaVersion": 1,
+        "channels": ["paid_social"],
+        "counts": {"approved":0,"checked":0,"creatives":2,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/10-08-feed.jpg",
+        "createdAt": "2026-10-06T12:32:00.000Z",
+        "createdBy": "u-solv",
+        "dueAt": "2026-10-16T12:32:00.000Z",
+        "formats": ["feed"],
+        "id": "c-solv",
+        "language": "Swedish",
+        "market": "Sweden",
+        "name": "Morning ritual",
+        "productIds": [],
+        "roundsIncluded": 2,
+        "roundsUsed": 0,
+        "stage": "masters",
+        "state": "in_production",
+        "updatedAt": "2026-10-14T12:02:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-16T12:32:00.000Z","directions":0,"questions":0},
+        "workspaceId": "w-solv"
+      },
+      "item": {
+        "campaignId": "c-solv",
+        "creativeId": "cr-solv-1",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "feed",
+        "id": "qa-5",
+        "image": "/demo/lysne/10-08-feed.jpg",
+        "madeAt": "2026-10-14T12:02:00.000Z",
+        "risk": "normal",
+        "slot": "Master 1",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 1",
+        "workspaceId": "w-solv"
+      },
+      "workspace": {"brandName":"SOLV","id":"w-solv","language":"Swedish","market":"Sweden","organisationId":"o-solv"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-solv",
+        "brandDnaVersion": 1,
+        "channels": ["paid_social"],
+        "counts": {"approved":0,"checked":0,"creatives":2,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/10-08-feed.jpg",
+        "createdAt": "2026-10-06T12:32:00.000Z",
+        "createdBy": "u-solv",
+        "dueAt": "2026-10-16T12:32:00.000Z",
+        "formats": ["feed"],
+        "id": "c-solv",
+        "language": "Swedish",
+        "market": "Sweden",
+        "name": "Morning ritual",
+        "productIds": [],
+        "roundsIncluded": 2,
+        "roundsUsed": 0,
+        "stage": "masters",
+        "state": "in_production",
+        "updatedAt": "2026-10-14T12:02:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-16T12:32:00.000Z","directions":0,"questions":0},
+        "workspaceId": "w-solv"
+      },
+      "item": {
+        "campaignId": "c-solv",
+        "creativeId": "cr-solv-2",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"minor","brandRules":"pass","notes":["A soft edge on the left cup"],"productTruth":"pass"},
+        "feedback": [],
+        "format": "feed",
+        "id": "qa-6",
+        "image": "/demo/lysne/10-06-feed.jpg",
+        "madeAt": "2026-10-14T12:04:00.000Z",
+        "risk": "normal",
+        "slot": "Master 2",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 2",
+        "workspaceId": "w-solv"
+      },
+      "workspace": {"brandName":"SOLV","id":"w-solv","language":"Swedish","market":"Sweden","organisationId":"o-solv"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "brandDnaVersion": 3,
+        "channels": ["product_page"],
+        "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+        "createdAt": "2026-10-14T12:32:10.000Z",
+        "createdBy": "fume",
+        "formats": ["square"],
+        "id": "",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Product page",
+        "productIds": [],
+        "roundsIncluded": 0,
+        "roundsUsed": 0,
+        "stage": "masters",
+        "state": "in_production",
+        "updatedAt": "2026-10-14T12:32:10.000Z",
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "",
+        "creativeId": "bt-1-c1",
+        "dueAt": "2026-10-16T06:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "square",
+        "id": "qa-bt-1-1",
+        "image": "/demo/lysne/03-08-square.jpg",
+        "madeAt": "2026-10-14T06:33:00.000Z",
+        "risk": "normal",
+        "runId": "bt-1",
+        "slot": "Night Body Oil · Square 1",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Night Body Oil · Square 1",
+        "workspaceId": "w-lysne"
+      },
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "brandDnaVersion": 3,
+        "channels": ["product_page"],
+        "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+        "createdAt": "2026-10-14T12:32:10.000Z",
+        "createdBy": "fume",
+        "formats": ["square"],
+        "id": "",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Product page",
+        "productIds": [],
+        "roundsIncluded": 0,
+        "roundsUsed": 0,
+        "stage": "masters",
+        "state": "in_production",
+        "updatedAt": "2026-10-14T12:32:10.000Z",
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "",
+        "creativeId": "bt-1-c2",
+        "dueAt": "2026-10-16T06:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "square",
+        "id": "qa-bt-1-2",
+        "image": "/demo/lysne/03-02-square.jpg",
+        "madeAt": "2026-10-14T06:34:00.000Z",
+        "risk": "normal",
+        "runId": "bt-1",
+        "slot": "Night Body Oil · Square 2",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Night Body Oil · Square 2",
+        "workspaceId": "w-lysne"
+      },
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "brandDnaVersion": 3,
+        "channels": ["product_page"],
+        "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+        "createdAt": "2026-10-14T12:32:10.000Z",
+        "createdBy": "fume",
+        "formats": ["square"],
+        "id": "",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Product page",
+        "productIds": [],
+        "roundsIncluded": 0,
+        "roundsUsed": 0,
+        "stage": "masters",
+        "state": "in_production",
+        "updatedAt": "2026-10-14T12:32:10.000Z",
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "",
+        "creativeId": "bt-1-c3",
+        "dueAt": "2026-10-16T06:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "square",
+        "id": "qa-bt-1-3",
+        "image": "/demo/lysne/03-05-square.jpg",
+        "madeAt": "2026-10-14T06:35:00.000Z",
+        "risk": "normal",
+        "runId": "bt-1",
+        "slot": "Night Body Oil · Square 3",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Night Body Oil · Square 3",
+        "workspaceId": "w-lysne"
+      },
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "brandDnaVersion": 3,
+        "channels": ["product_page"],
+        "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+        "createdAt": "2026-10-14T12:32:10.000Z",
+        "createdBy": "fume",
+        "formats": ["square"],
+        "id": "",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Product page",
+        "productIds": [],
+        "roundsIncluded": 0,
+        "roundsUsed": 0,
+        "stage": "masters",
+        "state": "in_production",
+        "updatedAt": "2026-10-14T12:32:10.000Z",
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "",
+        "creativeId": "bt-1-c4",
+        "dueAt": "2026-10-16T06:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "square",
+        "id": "qa-bt-1-4",
+        "image": "/demo/lysne/03-12-square.jpg",
+        "madeAt": "2026-10-14T06:36:00.000Z",
+        "risk": "normal",
+        "runId": "bt-1",
+        "slot": "Night Body Oil · Square 4",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Night Body Oil · Square 4",
+        "workspaceId": "w-lysne"
+      },
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "checkedAt": "2026-10-14T12:32:00.000Z",
+        "checkedBy": "u-anna",
+        "creativeId": "cr-a-v7",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "feed",
+        "id": "qa-1",
+        "image": "/demo/lysne/09-07-feed.jpg",
+        "madeAt": "2026-10-14T12:24:00.000Z",
+        "risk": "normal",
+        "slot": "Master 2 · Variant 2",
+        "state": "checked",
+        "studio": "render",
+        "title": "Feed 6",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    }
+  ]
+anna qaCheck("qa-4") → events
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "checkedAt": "2026-10-14T12:32:10.000Z",
+      "checkedBy": "u-anna",
+      "creativeId": "cr-doc-autumn-email",
+      "documentId": "doc-autumn-email",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [],
+      "format": "story",
+      "id": "qa-4",
+      "image": "/demo/lysne/05-01-story.jpg",
+      "layers": [
+        {
+          "h": 1,
+          "id": "ly-img",
+          "image": "/demo/lysne/05-01-feed.jpg",
+          "kind": "image",
+          "locked": true,
+          "name": "Image v3",
+          "visible": true,
+          "w": 1,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "h": 0.1,
+          "id": "ly-head",
+          "kind": "text",
+          "name": "Headline",
+          "style": "headline",
+          "text": "For the hour before sleep.",
+          "visible": true,
+          "w": 0.84,
+          "x": 0.08,
+          "y": 0.72
+        },
+        {
+          "h": 0.05,
+          "id": "ly-body",
+          "kind": "text",
+          "name": "Line",
+          "style": "small",
+          "text": "Night Body Oil · 100 ml",
+          "visible": true,
+          "w": 0.6,
+          "x": 0.08,
+          "y": 0.83
+        },
+        {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+      ],
+      "madeAt": "2026-10-14T12:17:00.000Z",
+      "risk": "normal",
+      "slot": "Email header",
+      "state": "checked",
+      "studio": "design",
+      "title": "Email header",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+anna qaCheck("qa-4")
+  {
+    "campaignId": "c-autumn",
+    "checkedAt": "2026-10-14T12:32:10.000Z",
+    "checkedBy": "u-anna",
+    "creativeId": "cr-doc-autumn-email",
+    "documentId": "doc-autumn-email",
+    "dueAt": "2026-10-15T12:32:00.000Z",
+    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+    "feedback": [],
+    "format": "story",
+    "id": "qa-4",
+    "image": "/demo/lysne/05-01-story.jpg",
+    "layers": [
+      {
+        "h": 1,
+        "id": "ly-img",
+        "image": "/demo/lysne/05-01-feed.jpg",
+        "kind": "image",
+        "locked": true,
+        "name": "Image v3",
+        "visible": true,
+        "w": 1,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "h": 0.1,
+        "id": "ly-head",
+        "kind": "text",
+        "name": "Headline",
+        "style": "headline",
+        "text": "For the hour before sleep.",
+        "visible": true,
+        "w": 0.84,
+        "x": 0.08,
+        "y": 0.72
+      },
+      {
+        "h": 0.05,
+        "id": "ly-body",
+        "kind": "text",
+        "name": "Line",
+        "style": "small",
+        "text": "Night Body Oil · 100 ml",
+        "visible": true,
+        "w": 0.6,
+        "x": 0.08,
+        "y": 0.83
+      },
+      {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+    ],
+    "madeAt": "2026-10-14T12:17:00.000Z",
+    "risk": "normal",
+    "slot": "Email header",
+    "state": "checked",
+    "studio": "design",
+    "title": "Email header",
+    "workspaceId": "w-lysne"
+  }
+anna qaEdit("qa-4", [{"h":1,"id":"ly-img","image":"/demo/lysne/05-01-feed.jpg","kind":"image","locked":true,"name":"Image v3","visible":true,"w":1,"x":0,"y":...)
+  {
+    "campaignId": "c-autumn",
+    "checkedAt": "2026-10-14T12:32:10.000Z",
+    "checkedBy": "u-anna",
+    "creativeId": "cr-doc-autumn-email",
+    "documentId": "doc-autumn-email",
+    "dueAt": "2026-10-15T12:32:00.000Z",
+    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+    "feedback": [],
+    "format": "story",
+    "id": "qa-4",
+    "image": "/demo/lysne/05-01-story.jpg",
+    "layers": [
+      {
+        "h": 1,
+        "id": "ly-img",
+        "image": "/demo/lysne/05-01-feed.jpg",
+        "kind": "image",
+        "locked": true,
+        "name": "Image v3",
+        "visible": true,
+        "w": 1,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "h": 0.1,
+        "id": "ly-head",
+        "kind": "text",
+        "name": "Headline",
+        "style": "headline",
+        "text": "Autumn",
+        "visible": true,
+        "w": 0.84,
+        "x": 0.08,
+        "y": 0.72
+      },
+      {
+        "h": 0.05,
+        "id": "ly-body",
+        "kind": "text",
+        "name": "Line",
+        "style": "small",
+        "text": "Autumn",
+        "visible": true,
+        "w": 0.6,
+        "x": 0.08,
+        "y": 0.83
+      },
+      {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+    ],
+    "madeAt": "2026-10-14T12:17:00.000Z",
+    "risk": "normal",
+    "slot": "Email header",
+    "state": "checked",
+    "studio": "design",
+    "title": "Email header",
+    "workspaceId": "w-lysne"
+  }
+anna qaToStudio("qa-2") → events
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v8",
+      "documentId": "doc-mvkqu1qo-4",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [
+        {
+          "at": "2026-10-14T12:32:00.000Z",
+          "by": "u-anna",
+          "id": "fb-mvkqtu0w-3",
+          "pins": [{"n":1,"text":"Cap","x":0.5,"y":0.3}],
+          "state": "fixed",
+          "text": "The cap reads gold, not burgundy"
+        }
+      ],
+      "format": "square",
+      "id": "qa-2",
+      "image": "/demo/lysne/09-07-square.jpg",
+      "madeAt": "2026-10-14T12:25:00.000Z",
+      "risk": "normal",
+      "slot": "Master 2 · Variant 2 · square",
+      "state": "in_studio",
+      "studio": "render",
+      "studioAt": "2026-10-14T12:32:10.000Z",
+      "studioBy": "u-anna",
+      "title": "Square 2",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+anna qaToStudio("qa-2")
+  {
+    "document": {
+      "by": "u-anna",
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v8",
+      "edits": [],
+      "id": "doc-mvkqu1qo-4",
+      "layers": [],
+      "modeId": "m-scene",
+      "overrides": [],
+      "pickedVersionId": "rv-mvkqu1qo-5",
+      "slot": "Master 2 · Variant 2 · square",
+      "specs": {"count":4,"format":"square","imageModel":"Nano Banana Pro","modelIds":[],"productId":"pr-oil","referenceIds":[]},
+      "state": "draft",
+      "studio": "render",
+      "title": "Square 2",
+      "updatedAt": "2026-10-14T12:32:10.000Z",
+      "variables": {
+        "depth": 40,
+        "lens": {"focal":50,"height":30,"tilt":-8},
+        "lightAngle": {"azimuth":70,"elevation":20},
+        "lightPreset": "evening",
+        "productPlace": "low",
+        "productSize": 32,
+        "props": ["towel"],
+        "rig": {
+          "lights": [
+            {"height":20,"id":"l-key","kind":"key","softness":60,"strength":80,"warmth":2700,"x":0.82,"y":0.3},
+            {"height":30,"id":"l-fill","kind":"fill","softness":90,"strength":25,"warmth":3200,"x":0.18,"y":0.45}
+          ]
+        },
+        "scene": "stone",
+        "softness": 60,
+        "surface": "stone",
+        "warmth": 2700
+      },
+      "versions": [
+        {
+          "at": "2026-10-14T12:25:00.000Z",
+          "by": "u-anna",
+          "cost": 0.12,
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "id": "rv-mvkqu1qo-5",
+          "image": "/demo/lysne/09-07-square.jpg",
+          "number": 1,
+          "specs": {"count":1,"format":"square","imageModel":"Nano Banana Pro","modelIds":[],"referenceIds":[]},
+          "state": "done",
+          "variables": {
+            "depth": 40,
+            "lens": {"focal":50,"height":30,"tilt":-8},
+            "lightAngle": {"azimuth":70,"elevation":20},
+            "lightPreset": "evening",
+            "productPlace": "low",
+            "productSize": 32,
+            "props": ["towel"],
+            "rig": {
+              "lights": [
+                {"height":20,"id":"l-key","kind":"key","softness":60,"strength":80,"warmth":2700,"x":0.82,"y":0.3},
+                {"height":30,"id":"l-fill","kind":"fill","softness":90,"strength":25,"warmth":3200,"x":0.18,"y":0.45}
+              ]
+            },
+            "scene": "stone",
+            "softness": 60,
+            "surface": "stone",
+            "warmth": 2700
+          }
+        }
+      ],
+      "workspaceId": "w-lysne"
+    },
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v8",
+      "documentId": "doc-mvkqu1qo-4",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [
+        {
+          "at": "2026-10-14T12:32:00.000Z",
+          "by": "u-anna",
+          "id": "fb-mvkqtu0w-3",
+          "pins": [{"n":1,"text":"Cap","x":0.5,"y":0.3}],
+          "state": "fixed",
+          "text": "The cap reads gold, not burgundy"
+        }
+      ],
+      "format": "square",
+      "id": "qa-2",
+      "image": "/demo/lysne/09-07-square.jpg",
+      "madeAt": "2026-10-14T12:25:00.000Z",
+      "risk": "normal",
+      "slot": "Master 2 · Variant 2 · square",
+      "state": "in_studio",
+      "studio": "render",
+      "studioAt": "2026-10-14T12:32:10.000Z",
+      "studioBy": "u-anna",
+      "title": "Square 2",
+      "workspaceId": "w-lysne"
+    }
+  }
+anna qaToStudio("qa-bt-1-1", true) → events
+  {
+    "item": {
+      "campaignId": "",
+      "creativeId": "bt-1-c1",
+      "documentId": "doc-mvkqu1qo-6",
+      "dueAt": "2026-10-16T06:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [],
+      "format": "square",
+      "id": "qa-bt-1-1",
+      "image": "/demo/lysne/03-08-square.jpg",
+      "madeAt": "2026-10-14T06:33:00.000Z",
+      "risk": "normal",
+      "runId": "bt-1",
+      "slot": "Night Body Oil · Square 1",
+      "state": "in_studio",
+      "studio": "render",
+      "studioAt": "2026-10-14T12:32:10.000Z",
+      "studioBy": "u-anna",
+      "title": "Night Body Oil · Square 1",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+anna qaToStudio("qa-bt-1-1", true)
+  {
+    "document": {
+      "by": "u-anna",
+      "campaignId": "",
+      "creativeId": "bt-1-c1",
+      "edits": [],
+      "id": "doc-mvkqu1qo-6",
+      "layers": [],
+      "modeId": "m-scene",
+      "overrides": [],
+      "pickedVersionId": "rv-mvkqu1qo-7",
+      "slot": "Night Body Oil · Square 1",
+      "specs": {"count":4,"format":"square","imageModel":"Nano Banana Pro","modelIds":[],"productId":"pr-oil","referenceIds":[]},
+      "state": "draft",
+      "studio": "render",
+      "title": "Night Body Oil · Square 1",
+      "updatedAt": "2026-10-14T12:32:10.000Z",
+      "variables": {
+        "depth": 40,
+        "lens": {"focal":50,"height":30,"tilt":-8},
+        "lightAngle": {"azimuth":70,"elevation":20},
+        "lightPreset": "evening",
+        "productPlace": "low",
+        "productSize": 32,
+        "props": ["towel"],
+        "rig": {
+          "lights": [
+            {"height":20,"id":"l-key","kind":"key","softness":60,"strength":80,"warmth":2700,"x":0.82,"y":0.3},
+            {"height":30,"id":"l-fill","kind":"fill","softness":90,"strength":25,"warmth":3200,"x":0.18,"y":0.45}
+          ]
+        },
+        "scene": "stone",
+        "softness": 60,
+        "surface": "stone",
+        "warmth": 2700
+      },
+      "versions": [
+        {
+          "at": "2026-10-14T06:33:00.000Z",
+          "by": "u-anna",
+          "cost": 0.12,
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "id": "rv-mvkqu1qo-7",
+          "image": "/demo/lysne/03-08-square.jpg",
+          "number": 1,
+          "specs": {"count":1,"format":"square","imageModel":"Nano Banana Pro","modelIds":[],"referenceIds":[]},
+          "state": "done",
+          "variables": {
+            "depth": 40,
+            "lens": {"focal":50,"height":30,"tilt":-8},
+            "lightAngle": {"azimuth":70,"elevation":20},
+            "lightPreset": "evening",
+            "productPlace": "low",
+            "productSize": 32,
+            "props": ["towel"],
+            "rig": {
+              "lights": [
+                {"height":20,"id":"l-key","kind":"key","softness":60,"strength":80,"warmth":2700,"x":0.82,"y":0.3},
+                {"height":30,"id":"l-fill","kind":"fill","softness":90,"strength":25,"warmth":3200,"x":0.18,"y":0.45}
+              ]
+            },
+            "scene": "stone",
+            "softness": 60,
+            "surface": "stone",
+            "warmth": 2700
+          }
+        }
+      ],
+      "workspaceId": "w-lysne"
+    },
+    "item": {
+      "campaignId": "",
+      "creativeId": "bt-1-c1",
+      "documentId": "doc-mvkqu1qo-6",
+      "dueAt": "2026-10-16T06:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [],
+      "format": "square",
+      "id": "qa-bt-1-1",
+      "image": "/demo/lysne/03-08-square.jpg",
+      "madeAt": "2026-10-14T06:33:00.000Z",
+      "risk": "normal",
+      "runId": "bt-1",
+      "slot": "Night Body Oil · Square 1",
+      "state": "in_studio",
+      "studio": "render",
+      "studioAt": "2026-10-14T12:32:10.000Z",
+      "studioBy": "u-anna",
+      "title": "Night Body Oil · Square 1",
+      "workspaceId": "w-lysne"
+    }
+  }
+anna qaQueue()
+  [
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "creativeId": "cr-a-v9",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [
+          {
+            "at": "2026-10-14T12:21:00.000Z",
+            "by": "u-anna",
+            "id": "fb-1",
+            "state": "fixed",
+            "text": "The cap must be matte burgundy, as in the Product Truth."
+          }
+        ],
+        "format": "feed",
+        "id": "qa-3",
+        "image": "/demo/lysne/06-10-feed.jpg",
+        "madeAt": "2026-10-14T12:20:00.000Z",
+        "risk": "high",
+        "slot": "Master 2 · Variant 3",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 7",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-solv",
+        "brandDnaVersion": 1,
+        "channels": ["paid_social"],
+        "counts": {"approved":0,"checked":0,"creatives":2,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/10-08-feed.jpg",
+        "createdAt": "2026-10-06T12:32:00.000Z",
+        "createdBy": "u-solv",
+        "dueAt": "2026-10-16T12:32:00.000Z",
+        "formats": ["feed"],
+        "id": "c-solv",
+        "language": "Swedish",
+        "market": "Sweden",
+        "name": "Morning ritual",
+        "productIds": [],
+        "roundsIncluded": 2,
+        "roundsUsed": 0,
+        "stage": "masters",
+        "state": "in_production",
+        "updatedAt": "2026-10-14T12:02:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-16T12:32:00.000Z","directions":0,"questions":0},
+        "workspaceId": "w-solv"
+      },
+      "item": {
+        "campaignId": "c-solv",
+        "creativeId": "cr-solv-1",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "feed",
+        "id": "qa-5",
+        "image": "/demo/lysne/10-08-feed.jpg",
+        "madeAt": "2026-10-14T12:02:00.000Z",
+        "risk": "normal",
+        "slot": "Master 1",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 1",
+        "workspaceId": "w-solv"
+      },
+      "workspace": {"brandName":"SOLV","id":"w-solv","language":"Swedish","market":"Sweden","organisationId":"o-solv"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-solv",
+        "brandDnaVersion": 1,
+        "channels": ["paid_social"],
+        "counts": {"approved":0,"checked":0,"creatives":2,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/10-08-feed.jpg",
+        "createdAt": "2026-10-06T12:32:00.000Z",
+        "createdBy": "u-solv",
+        "dueAt": "2026-10-16T12:32:00.000Z",
+        "formats": ["feed"],
+        "id": "c-solv",
+        "language": "Swedish",
+        "market": "Sweden",
+        "name": "Morning ritual",
+        "productIds": [],
+        "roundsIncluded": 2,
+        "roundsUsed": 0,
+        "stage": "masters",
+        "state": "in_production",
+        "updatedAt": "2026-10-14T12:02:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-16T12:32:00.000Z","directions":0,"questions":0},
+        "workspaceId": "w-solv"
+      },
+      "item": {
+        "campaignId": "c-solv",
+        "creativeId": "cr-solv-2",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"minor","brandRules":"pass","notes":["A soft edge on the left cup"],"productTruth":"pass"},
+        "feedback": [],
+        "format": "feed",
+        "id": "qa-6",
+        "image": "/demo/lysne/10-06-feed.jpg",
+        "madeAt": "2026-10-14T12:04:00.000Z",
+        "risk": "normal",
+        "slot": "Master 2",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 2",
+        "workspaceId": "w-solv"
+      },
+      "workspace": {"brandName":"SOLV","id":"w-solv","language":"Swedish","market":"Sweden","organisationId":"o-solv"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "brandDnaVersion": 3,
+        "channels": ["product_page"],
+        "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+        "createdAt": "2026-10-14T12:32:10.000Z",
+        "createdBy": "fume",
+        "formats": ["square"],
+        "id": "",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Product page",
+        "productIds": [],
+        "roundsIncluded": 0,
+        "roundsUsed": 0,
+        "stage": "masters",
+        "state": "in_production",
+        "updatedAt": "2026-10-14T12:32:10.000Z",
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "",
+        "creativeId": "bt-1-c2",
+        "dueAt": "2026-10-16T06:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "square",
+        "id": "qa-bt-1-2",
+        "image": "/demo/lysne/03-02-square.jpg",
+        "madeAt": "2026-10-14T06:34:00.000Z",
+        "risk": "normal",
+        "runId": "bt-1",
+        "slot": "Night Body Oil · Square 2",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Night Body Oil · Square 2",
+        "workspaceId": "w-lysne"
+      },
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "brandDnaVersion": 3,
+        "channels": ["product_page"],
+        "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+        "createdAt": "2026-10-14T12:32:10.000Z",
+        "createdBy": "fume",
+        "formats": ["square"],
+        "id": "",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Product page",
+        "productIds": [],
+        "roundsIncluded": 0,
+        "roundsUsed": 0,
+        "stage": "masters",
+        "state": "in_production",
+        "updatedAt": "2026-10-14T12:32:10.000Z",
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "",
+        "creativeId": "bt-1-c3",
+        "dueAt": "2026-10-16T06:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "square",
+        "id": "qa-bt-1-3",
+        "image": "/demo/lysne/03-05-square.jpg",
+        "madeAt": "2026-10-14T06:35:00.000Z",
+        "risk": "normal",
+        "runId": "bt-1",
+        "slot": "Night Body Oil · Square 3",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Night Body Oil · Square 3",
+        "workspaceId": "w-lysne"
+      },
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "brandDnaVersion": 3,
+        "channels": ["product_page"],
+        "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+        "createdAt": "2026-10-14T12:32:10.000Z",
+        "createdBy": "fume",
+        "formats": ["square"],
+        "id": "",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Product page",
+        "productIds": [],
+        "roundsIncluded": 0,
+        "roundsUsed": 0,
+        "stage": "masters",
+        "state": "in_production",
+        "updatedAt": "2026-10-14T12:32:10.000Z",
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "",
+        "creativeId": "bt-1-c4",
+        "dueAt": "2026-10-16T06:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "square",
+        "id": "qa-bt-1-4",
+        "image": "/demo/lysne/03-12-square.jpg",
+        "madeAt": "2026-10-14T06:36:00.000Z",
+        "risk": "normal",
+        "runId": "bt-1",
+        "slot": "Night Body Oil · Square 4",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Night Body Oil · Square 4",
+        "workspaceId": "w-lysne"
+      },
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "creativeId": "cr-a-v8",
+        "documentId": "doc-mvkqu1qo-4",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [
+          {
+            "at": "2026-10-14T12:32:00.000Z",
+            "by": "u-anna",
+            "id": "fb-mvkqtu0w-3",
+            "pins": [{"n":1,"text":"Cap","x":0.5,"y":0.3}],
+            "state": "fixed",
+            "text": "The cap reads gold, not burgundy"
+          }
+        ],
+        "format": "square",
+        "id": "qa-2",
+        "image": "/demo/lysne/09-07-square.jpg",
+        "madeAt": "2026-10-14T12:25:00.000Z",
+        "risk": "normal",
+        "slot": "Master 2 · Variant 2 · square",
+        "state": "in_studio",
+        "studio": "render",
+        "studioAt": "2026-10-14T12:32:10.000Z",
+        "studioBy": "u-anna",
+        "title": "Square 2",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "brandDnaVersion": 3,
+        "channels": ["product_page"],
+        "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+        "createdAt": "2026-10-14T12:32:10.000Z",
+        "createdBy": "fume",
+        "formats": ["square"],
+        "id": "",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Product page",
+        "productIds": [],
+        "roundsIncluded": 0,
+        "roundsUsed": 0,
+        "stage": "masters",
+        "state": "in_production",
+        "updatedAt": "2026-10-14T12:32:10.000Z",
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "",
+        "creativeId": "bt-1-c1",
+        "documentId": "doc-mvkqu1qo-6",
+        "dueAt": "2026-10-16T06:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "square",
+        "id": "qa-bt-1-1",
+        "image": "/demo/lysne/03-08-square.jpg",
+        "madeAt": "2026-10-14T06:33:00.000Z",
+        "risk": "normal",
+        "runId": "bt-1",
+        "slot": "Night Body Oil · Square 1",
+        "state": "in_studio",
+        "studio": "render",
+        "studioAt": "2026-10-14T12:32:10.000Z",
+        "studioBy": "u-anna",
+        "title": "Night Body Oil · Square 1",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "checkedAt": "2026-10-14T12:32:00.000Z",
+        "checkedBy": "u-anna",
+        "creativeId": "cr-a-v7",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "feed",
+        "id": "qa-1",
+        "image": "/demo/lysne/09-07-feed.jpg",
+        "madeAt": "2026-10-14T12:24:00.000Z",
+        "risk": "normal",
+        "slot": "Master 2 · Variant 2",
+        "state": "checked",
+        "studio": "render",
+        "title": "Feed 6",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "checkedAt": "2026-10-14T12:32:10.000Z",
+        "checkedBy": "u-anna",
+        "creativeId": "cr-doc-autumn-email",
+        "documentId": "doc-autumn-email",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "story",
+        "id": "qa-4",
+        "image": "/demo/lysne/05-01-story.jpg",
+        "layers": [
+          {
+            "h": 1,
+            "id": "ly-img",
+            "image": "/demo/lysne/05-01-feed.jpg",
+            "kind": "image",
+            "locked": true,
+            "name": "Image v3",
+            "visible": true,
+            "w": 1,
+            "x": 0,
+            "y": 0
+          },
+          {
+            "h": 0.1,
+            "id": "ly-head",
+            "kind": "text",
+            "name": "Headline",
+            "style": "headline",
+            "text": "Autumn",
+            "visible": true,
+            "w": 0.84,
+            "x": 0.08,
+            "y": 0.72
+          },
+          {
+            "h": 0.05,
+            "id": "ly-body",
+            "kind": "text",
+            "name": "Line",
+            "style": "small",
+            "text": "Autumn",
+            "visible": true,
+            "w": 0.6,
+            "x": 0.08,
+            "y": 0.83
+          },
+          {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+        ],
+        "madeAt": "2026-10-14T12:17:00.000Z",
+        "risk": "normal",
+        "slot": "Email header",
+        "state": "checked",
+        "studio": "design",
+        "title": "Email header",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    }
+  ]
+anna qaQueue("w-solv")
+  [
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-solv",
+        "brandDnaVersion": 1,
+        "channels": ["paid_social"],
+        "counts": {"approved":0,"checked":0,"creatives":2,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/10-08-feed.jpg",
+        "createdAt": "2026-10-06T12:32:00.000Z",
+        "createdBy": "u-solv",
+        "dueAt": "2026-10-16T12:32:00.000Z",
+        "formats": ["feed"],
+        "id": "c-solv",
+        "language": "Swedish",
+        "market": "Sweden",
+        "name": "Morning ritual",
+        "productIds": [],
+        "roundsIncluded": 2,
+        "roundsUsed": 0,
+        "stage": "masters",
+        "state": "in_production",
+        "updatedAt": "2026-10-14T12:02:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-16T12:32:00.000Z","directions":0,"questions":0},
+        "workspaceId": "w-solv"
+      },
+      "item": {
+        "campaignId": "c-solv",
+        "creativeId": "cr-solv-1",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "feed",
+        "id": "qa-5",
+        "image": "/demo/lysne/10-08-feed.jpg",
+        "madeAt": "2026-10-14T12:02:00.000Z",
+        "risk": "normal",
+        "slot": "Master 1",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 1",
+        "workspaceId": "w-solv"
+      },
+      "workspace": {"brandName":"SOLV","id":"w-solv","language":"Swedish","market":"Sweden","organisationId":"o-solv"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-solv",
+        "brandDnaVersion": 1,
+        "channels": ["paid_social"],
+        "counts": {"approved":0,"checked":0,"creatives":2,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/10-08-feed.jpg",
+        "createdAt": "2026-10-06T12:32:00.000Z",
+        "createdBy": "u-solv",
+        "dueAt": "2026-10-16T12:32:00.000Z",
+        "formats": ["feed"],
+        "id": "c-solv",
+        "language": "Swedish",
+        "market": "Sweden",
+        "name": "Morning ritual",
+        "productIds": [],
+        "roundsIncluded": 2,
+        "roundsUsed": 0,
+        "stage": "masters",
+        "state": "in_production",
+        "updatedAt": "2026-10-14T12:02:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-16T12:32:00.000Z","directions":0,"questions":0},
+        "workspaceId": "w-solv"
+      },
+      "item": {
+        "campaignId": "c-solv",
+        "creativeId": "cr-solv-2",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"minor","brandRules":"pass","notes":["A soft edge on the left cup"],"productTruth":"pass"},
+        "feedback": [],
+        "format": "feed",
+        "id": "qa-6",
+        "image": "/demo/lysne/10-06-feed.jpg",
+        "madeAt": "2026-10-14T12:04:00.000Z",
+        "risk": "normal",
+        "slot": "Master 2",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 2",
+        "workspaceId": "w-solv"
+      },
+      "workspace": {"brandName":"SOLV","id":"w-solv","language":"Swedish","market":"Sweden","organisationId":"o-solv"}
+    }
+  ]
+anna qaCheck("qa-5") → events
+  {
+    "creativeId": "cr-solv-1",
+    "type": "version.state",
+    "version": {
+      "checkedAt": "2026-10-14T12:32:10.000Z",
+      "checkedBy": "u-anna",
+      "creativeId": "cr-solv-1",
+      "height": 1350,
+      "id": "v-cr-solv-1-20",
+      "image": "/demo/lysne/10-08-feed.jpg",
+      "madeAt": "2026-10-14T11:32:00.000Z",
+      "number": 1,
+      "state": "checked",
+      "width": 1080
+    }
+  }
+  {
+    "campaign": {
+      "approverId": "u-solv",
+      "brandDnaVersion": 1,
+      "channels": ["paid_social"],
+      "counts": {"approved":0,"checked":1,"creatives":2,"delivered":0,"inCheck":1},
+      "cover": "/demo/lysne/10-08-feed.jpg",
+      "createdAt": "2026-10-06T12:32:00.000Z",
+      "createdBy": "u-solv",
+      "dueAt": "2026-10-16T12:32:00.000Z",
+      "formats": ["feed"],
+      "id": "c-solv",
+      "language": "Swedish",
+      "market": "Sweden",
+      "name": "Morning ritual",
+      "productIds": [],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "masters",
+      "state": "in_production",
+      "updatedAt": "2026-10-14T12:32:10.000Z",
+      "waits": {"briefReady":false,"by":"2026-10-16T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+      "workspaceId": "w-solv"
+    },
+    "type": "campaign.state"
+  }
+  {
+    "item": {
+      "campaignId": "c-solv",
+      "checkedAt": "2026-10-14T12:32:10.000Z",
+      "checkedBy": "u-anna",
+      "creativeId": "cr-solv-1",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [],
+      "format": "feed",
+      "id": "qa-5",
+      "image": "/demo/lysne/10-08-feed.jpg",
+      "madeAt": "2026-10-14T12:02:00.000Z",
+      "risk": "normal",
+      "slot": "Master 1",
+      "state": "checked",
+      "studio": "render",
+      "title": "Feed 1",
+      "workspaceId": "w-solv"
+    },
+    "type": "qa.state"
+  }
+anna qaCheck("qa-5")
+  {
+    "campaignId": "c-solv",
+    "checkedAt": "2026-10-14T12:32:10.000Z",
+    "checkedBy": "u-anna",
+    "creativeId": "cr-solv-1",
+    "dueAt": "2026-10-15T12:32:00.000Z",
+    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+    "feedback": [],
+    "format": "feed",
+    "id": "qa-5",
+    "image": "/demo/lysne/10-08-feed.jpg",
+    "madeAt": "2026-10-14T12:02:00.000Z",
+    "risk": "normal",
+    "slot": "Master 1",
+    "state": "checked",
+    "studio": "render",
+    "title": "Feed 1",
+    "workspaceId": "w-solv"
+  }
+anna campaign("c-solv")
+  {
+    "approver": {"email":"elin@solv.example","id":"u-solv","name":"Elin Ek","title":"Brand Manager"},
+    "brief": {
+      "audience": "",
+      "campaignId": "c-solv",
+      "channels": [],
+      "creatives": 0,
+      "formats": [],
+      "mandatory": [],
+      "message": "",
+      "missing": [],
+      "never": [],
+      "objective": "",
+      "references": [],
+      "state": "drafting",
+      "version": 1
+    },
+    "campaign": {
+      "approverId": "u-solv",
+      "brandDnaVersion": 1,
+      "channels": ["paid_social"],
+      "counts": {"approved":0,"checked":1,"creatives":2,"delivered":0,"inCheck":1},
+      "cover": "/demo/lysne/10-08-feed.jpg",
+      "createdAt": "2026-10-06T12:32:00.000Z",
+      "createdBy": "u-solv",
+      "dueAt": "2026-10-16T12:32:00.000Z",
+      "formats": ["feed"],
+      "id": "c-solv",
+      "language": "Swedish",
+      "market": "Sweden",
+      "name": "Morning ritual",
+      "productIds": [],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "masters",
+      "state": "in_production",
+      "updatedAt": "2026-10-14T12:32:10.000Z",
+      "waits": {"briefReady":false,"by":"2026-10-16T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+      "workspaceId": "w-solv"
+    },
+    "clock": {"campaignId":"c-solv","dueAt":"2026-10-16T12:32:00.000Z","stage":"masters","state":"running"},
+    "creatives": [
+      {
+        "campaignId": "c-solv",
+        "channel": "paid_social",
+        "current": {
+          "checkedAt": "2026-10-14T12:32:10.000Z",
+          "checkedBy": "u-anna",
+          "creativeId": "cr-solv-1",
+          "height": 1350,
+          "id": "v-cr-solv-1-20",
+          "image": "/demo/lysne/10-08-feed.jpg",
+          "madeAt": "2026-10-14T11:32:00.000Z",
+          "number": 1,
+          "state": "checked",
+          "width": 1080
+        },
+        "directionId": "d-solv",
+        "format": "feed",
+        "id": "cr-solv-1",
+        "kind": "master",
+        "masterId": null,
+        "name": "solv_morning_a_m1_feed_v1",
+        "title": "Feed 1",
+        "versions": [
+          {
+            "checkedAt": "2026-10-14T12:32:10.000Z",
+            "checkedBy": "u-anna",
+            "creativeId": "cr-solv-1",
+            "height": 1350,
+            "id": "v-cr-solv-1-20",
+            "image": "/demo/lysne/10-08-feed.jpg",
+            "madeAt": "2026-10-14T11:32:00.000Z",
+            "number": 1,
+            "state": "checked",
+            "width": 1080
+          }
+        ]
+      },
+      {
+        "campaignId": "c-solv",
+        "channel": "paid_social",
+        "current": {
+          "creativeId": "cr-solv-2",
+          "height": 1350,
+          "id": "v-cr-solv-2-21",
+          "image": "/demo/lysne/10-06-feed.jpg",
+          "madeAt": "2026-10-14T11:34:00.000Z",
+          "number": 1,
+          "state": "in_check",
+          "width": 1080
+        },
+        "directionId": "d-solv",
+        "format": "feed",
+        "id": "cr-solv-2",
+        "kind": "master",
+        "masterId": null,
+        "name": "solv_morning_a_m2_feed_v1",
+        "title": "Feed 2",
+        "versions": [
+          {
+            "creativeId": "cr-solv-2",
+            "height": 1350,
+            "id": "v-cr-solv-2-21",
+            "image": "/demo/lysne/10-06-feed.jpg",
+            "madeAt": "2026-10-14T11:34:00.000Z",
+            "number": 1,
+            "state": "in_check",
+            "width": 1080
+          }
+        ]
+      }
+    ],
+    "directions": [],
+    "people": [{"email":"elin@solv.example","id":"u-solv","name":"Elin Ek","title":"Brand Manager"}],
+    "record": [
+      {
+        "action": "checked",
+        "actor": {"kind":"person","userId":"u-anna"},
+        "at": "2026-10-14T12:32:10.000Z",
+        "campaignId": "c-solv",
+        "detail": "Feed 1 checked",
+        "id": "e-mvkqu1qo-8",
+        "subjectId": "cr-solv-1",
+        "workspaceId": "w-solv"
+      }
+    ],
+    "runs": [],
+    "threadId": "t-general"
+  }
+anna creative("cr-a-v9")
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "boardId": "bd-autumn",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","email","product_page"],
+      "chosenDirectionId": "d-a1",
+      "collectionIds": ["cl-aw26"],
+      "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+      "cover": "/demo/lysne/05-06-feed.jpg",
+      "createdAt": "2026-10-02T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "dueAt": "2026-10-17T12:32:00.000Z",
+      "formats": ["feed","story","square"],
+      "id": "c-autumn",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Autumn launch",
+      "productIds": ["pr-oil"],
+      "roundsIncluded": 2,
+      "roundsUsed": 1,
+      "stage": "variants",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+      "workspaceId": "w-lysne"
+    },
+    "creative": {
+      "campaignId": "c-autumn",
+      "channel": "paid_social",
+      "current": {
+        "creativeId": "cr-a-v9",
+        "height": 1350,
+        "heldReason": "The cap reads glossy. Anna is matching it to the matte burgundy in the Product Truth.",
+        "id": "v-cr-a-v9-11",
+        "image": "/demo/lysne/06-10-feed.jpg",
+        "madeAt": "2026-10-14T11:50:00.000Z",
+        "number": 1,
+        "state": "held",
+        "width": 1080
+      },
+      "directionId": "d-a1",
+      "format": "feed",
+      "id": "cr-a-v9",
+      "kind": "variant",
+      "masterId": "cr-a-m2",
+      "name": "lysne_autumn_a_m2_v3_feed_v1",
+      "title": "Feed 7",
+      "versions": [
+        {
+          "creativeId": "cr-a-v9",
+          "height": 1350,
+          "heldReason": "The cap reads glossy. Anna is matching it to the matte burgundy in the Product Truth.",
+          "id": "v-cr-a-v9-11",
+          "image": "/demo/lysne/06-10-feed.jpg",
+          "madeAt": "2026-10-14T11:50:00.000Z",
+          "number": 1,
+          "state": "held",
+          "width": 1080
+        }
+      ]
+    },
+    "siblings": ["cr-a-m1","cr-a-m2","cr-a-v1","cr-a-v2","cr-a-v3","cr-a-v4","cr-a-v5","cr-a-v6","cr-a-v7","cr-a-v8","cr-a-v9"]
+  }
