@@ -111,7 +111,7 @@ test("v5: a Studio document can change its campaign, and its look sources start 
   assert.equal(none.campaignId, undefined);
 });
 
-// Round 10 (FLOWS §22): nothing is made before the customer approves the plan.
+// FLOWS §22: nothing is made before the customer approves the plan.
 test("the Engine starts only after the customer approves the plan; the plan is checked first", async () => {
   {
     const api = maja();
@@ -139,7 +139,7 @@ test("the Engine starts only after the customer approves the plan; the plan is c
   }
 });
 
-// Round 13 (#25): the expert's check of a plan is optional, so a written plan waits on the customer at once.
+// FLOWS §25: the expert's check of a plan is optional, so a written plan waits on the customer at once.
 test("a sent brief becomes a plan that is written and then waits on the customer", async () => {
   const { vi } = await import("vitest");
   vi.useFakeTimers({ shouldAdvanceTime: true });
@@ -160,8 +160,8 @@ test("a sent brief becomes a plan that is written and then waits on the customer
   }
 });
 
-// ── Round 11 (FLOWS §24): the agency. The agency writes the brief and checks the plan; only the client approves the
-// plan (round 13, Marcus's card 23 Oct 2026) and the creatives.
+// ── The agency (FLOWS §24, §26.8). The agency writes the brief and checks the plan; only the client approves the
+// plan and the creatives.
 const nora = () => createMockApi({ latency: 0, agency: true });
 
 test("the agency sees its clients, recent first, and what waits on it", async () => {
@@ -191,7 +191,7 @@ test("in the agency's world Fume's expert is gone: the checks are the agency's a
   const view = await api.campaign("c-autumn");
   const checkedBy = new Set(view.creatives.map((c) => c.current.checkedBy).filter(Boolean));
   assert.ok(!checkedBy.has("u-anna"));
-  // Round 13 (Marcus's card): the agency never approves the plan; only the client does.
+  // FLOWS §26.8: the agency never approves the plan; only the client does.
   await assert.rejects(api.approvePlan("c-winter"), /Only Maja approves the plan/);
 });
 
@@ -274,7 +274,7 @@ test("the agency never approves a creative: it sends it to the client, or record
   const checked = view.creatives.filter((c) => c.current.state === "checked").map((c) => c.current.id);
   assert.ok(checked.length >= 2);
   await assert.rejects(api.approve(checked), /Only the client approves/);
-  // Round 12: the demo starts with one earlier send (the first four, on 14 Oct), so both send states show.
+  // The demo starts with one earlier send (the first four creatives), so both send states show.
   const before = (await api.clientSends("c-autumn")).length;
   const send = await api.sendToClient({
     campaignId: "c-autumn",
@@ -299,7 +299,7 @@ test("the agency never approves a creative: it sends it to the client, or record
   assert.equal(recorded[0].recordedBy, "u-nora");
   const link = await api.clientLink(send.link!.token);
   assert.equal(link.agency.name, "Brygga Studio");
-  // Round 12 (DWAY-4): signed in, the agency sees the link as a preview; its answer never counts as the client's.
+  // Signed in, the agency sees the link as a preview; its answer never counts as the client's.
   await assert.rejects(
     api.answerClientLink({ token: send.link!.token, versionId: two, verdict: "approve", name: "Maja" }),
     /preview/,
@@ -337,13 +337,13 @@ test("a sent brief in an agency's client becomes a plan with no Fume check", asy
   }
 });
 
-// Round 11 CLIENT FLOW (FLOWS §24.3, §24.5): Home in a client an agency runs.
+// The client's flow (FLOWS §24.3, §24.5): Home in a client an agency runs.
 test("in a client an agency runs, Home never asks the agency to approve a creative, and the client's Home keeps only her approvals", async () => {
   const agency = await nora().home();
   assert.ok(!agency.waitingOnYou.some((w) => w.kind === "creatives"), "checked creatives are the client's to approve");
   assert.ok(agency.waitingOnYou.some((w) => w.kind === "plan" && w.campaignId === "c-winter"));
   assert.ok(agency.waitingOnYou.some((w) => w.kind === "product"));
-  // Round 13: the plan the agency checked and sent (Black Friday) is hers too; the one it has not checked is not.
+  // The plan the agency checked and sent (Black Friday) is hers too; the one it has not checked is not.
   assert.ok(
     !agency.waitingOnYou.some((w) => w.kind === "plan" && w.campaignId === "c-bf"),
     "a plan sent to the client waits on her",
@@ -371,7 +371,7 @@ test("a client link names each creative as the client reads it in Fume, never Ma
   });
   const link = await api.clientLink(send.link!.token);
   const names = checked.map((c) => link.names?.[c.id]);
-  // Round 12 (DLOAD-8): the one name, copy.creativeName, without the direction's letter ("Night Body Oil · Feed 3").
+  // One name, copy.creativeName, without the direction's letter ("Night Body Oil · Feed 3").
   assert.ok(
     names.every((n) => n && /^Night Body Oil · (Feed|Story|Square) \d+$/.test(n)),
     names.join(", "),

@@ -1,0 +1,2711 @@
+-- nora: createMockApi({"agency":true,"latency":0})
+nora changeBrief("c-balm", {"message":"Soft hands for the hour before sleep.","missing":[]}) → events
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v9",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [
+        {
+          "at": "2026-10-14T12:21:00.000Z",
+          "by": "u-nora",
+          "id": "fb-1",
+          "state": "fixed",
+          "text": "The cap must be matte burgundy, as in the Product Truth."
+        }
+      ],
+      "format": "feed",
+      "id": "qa-3",
+      "image": "/demo/lysne/06-10-feed.jpg",
+      "madeAt": "2026-10-14T12:20:00.000Z",
+      "risk": "high",
+      "slot": "Master 2 · Variant 3",
+      "state": "waiting",
+      "studio": "render",
+      "title": "Feed 7",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "brief",
+      "state": "draft",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {"briefReady":true,"by":"2026-10-19T12:32:00.000Z","directions":0,"questions":0,"toSend":0},
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "brief",
+      "state": "draft",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {"briefReady":true,"by":"2026-10-19T12:32:00.000Z","directions":0,"questions":0,"toSend":0},
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+nora changeBrief("c-balm", {"message":"Soft hands for the hour before sleep.","missing":[]})
+  {
+    "audience": "Existing LYSNE customers.",
+    "campaignId": "c-balm",
+    "channels": ["paid_social","product_page"],
+    "creatives": 6,
+    "formats": ["feed","square"],
+    "mandatory": [],
+    "message": "Soft hands for the hour before sleep.",
+    "missing": [],
+    "never": [],
+    "objective": "Introduce Hand Balm to people who already use the oil.",
+    "references": [],
+    "state": "drafting",
+    "version": 1
+  }
+nora sendBrief("c-balm") → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-balm","kind":"plan","version":1},
+      "id": "msg-mvkqvuk0-1",
+      "text": "Thank you. Fume writes the plan now: the direction, the look and every creative, before anything is made. You see it here by Thu 15 Oct.",
+      "threadId": "t-balm"
+    },
+    "type": "message.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "scoped",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {
+        "briefReady": false,
+        "by": "2026-10-15T12:32:00.000Z",
+        "delivery": "2026-10-26T12:32:00.000Z",
+        "directions": 0,
+        "plan": "writing",
+        "planChecked": false,
+        "planned": 6,
+        "questions": 0,
+        "toSend": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+nora sendBrief("c-balm")
+  {
+    "approvedAt": "2026-10-14T12:32:00.000Z",
+    "approvedBy": "u-nora",
+    "audience": "Existing LYSNE customers.",
+    "campaignId": "c-balm",
+    "channels": ["paid_social","product_page"],
+    "creatives": 6,
+    "formats": ["feed","square"],
+    "mandatory": [],
+    "message": "Soft hands for the hour before sleep.",
+    "missing": [],
+    "never": [],
+    "objective": "Introduce Hand Balm to people who already use the oil.",
+    "references": [],
+    "state": "approved",
+    "version": 1
+  }
+-- 3 s later
+nora, 3 s later → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:02.500Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-balm","kind":"plan","version":1},
+      "id": "msg-mvkqvwhg-2",
+      "text": "The plan for Hand Balm introduction is ready. Check it and send it to Maja; Fume starts on the 2 masters once she approves it. Change it with me here first if you like.",
+      "threadId": "t-balm"
+    },
+    "type": "message.new"
+  }
+  {
+    "notification": {
+      "actor": {"kind":"fume"},
+      "at": "2026-10-14T12:32:02.500Z",
+      "href": "/campaigns/c-balm/plan",
+      "id": "n-mvkqvwhg-3",
+      "kind": "waiting_on_you",
+      "read": false,
+      "text": "The plan for Hand Balm introduction waits for your check",
+      "userId": "u-nora"
+    },
+    "type": "notification.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:32:02.500Z",
+      "waits": {
+        "briefReady": false,
+        "delivery": "2026-10-26T12:32:00.000Z",
+        "directions": 0,
+        "plan": "ready",
+        "planChecked": false,
+        "planned": 6,
+        "questions": 0,
+        "toSend": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+nora plan("c-balm")
+  {
+    "briefVersion": 1,
+    "campaignId": "c-balm",
+    "changeRequestsIncluded": 2,
+    "checkedAt": "2026-10-14T12:32:02.500Z",
+    "chosenDirectionId": "pd-c-balm-a",
+    "content": [
+      {"key":"products","label":"Products","source":"product","value":"Hand Balm 50 ml, as their Product Truth says."},
+      {
+        "key": "formats",
+        "label": "Formats",
+        "source": "brief",
+        "value": "Feed 4:5, Square 1:1: 6 creatives in all, as your brief asks."
+      },
+      {
+        "key": "text",
+        "label": "Text on the creative",
+        "source": "brief",
+        "value": "One short line in Norwegian on each creative, from your brief’s message “Soft hands for the hour before sleep”."
+      },
+      {
+        "key": "logo",
+        "label": "Logo",
+        "source": "brand_dna",
+        "value": "The wordmark on the label only; no logo added on the picture."
+      },
+      {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
+    ],
+    "directions": [
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm low in the frame on pale stone, warm side light, air above."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm on folded linen, the light from the left."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Soft hands for the hour before sleep.",
+        "id": "pd-c-balm-a",
+        "idea": "Hand Balm at the hour before sleep: low, warm side light on stone and linen, the product low in the frame with air above it.",
+        "letter": "A",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "Low, warm side light from the left, long soft shadows.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Pale stone and folded linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Evening light",
+        "recommended": true,
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-scene.jpg",
+            "source": "product"
+          },
+          {"caption":"Fluted glass and slow light.","image":"/demo/lysne/02-04-feed.jpg","source":"taste"},
+          {"caption":"Product low, air above.","image":"/demo/lysne/08-06-feed.jpg","source":"taste"},
+          {"caption":"A picture you liked","image":"/demo/lysne/02-05-feed.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Warm, low side light leads in your Brand DNA."},
+          {"source":"taste","text":"Your liked pictures keep the product low, with air above it."},
+          {"source":"memory","text":"Evening stone won in your last campaign."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Close on Hand Balm: its texture in a stripe of warm light."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "The label close, the set soft behind."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Made to be felt.",
+        "id": "pd-c-balm-b",
+        "idea": "Close on Hand Balm: the texture, the label and a stripe of warm light. Fewer things in the frame, the product nearer.",
+        "letter": "B",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "A stripe of warm light across the product, the rest in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Stone, close; nothing else in the frame."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Close and quiet",
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Texture in warm light","image":"/demo/lysne/05-03-feed.jpg","source":"fume"},
+          {"caption":"Close, a stripe of light","image":"/demo/lysne/06-04-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"fume","text":"Close crops suit a product people touch every day."},
+          {"source":"product","text":"Golden, never orange: the Product Truth's colours lead."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "A crop of skin and Hand Balm in evening light, never a face."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hands open the product on linen."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "The last quiet hour of the day.",
+        "id": "pd-c-balm-c",
+        "idea": "Hand Balm in use: a crop of skin or hands at the hour before sleep, never a face. Closest to the feeling, furthest from a packshot.",
+        "letter": "C",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "One warm lamp, low; the room in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"A bedside of oak and linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "Hands or a crop of skin, never a face; never holding the product.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "The ritual",
+        "references": [
+          {"caption":"Hands in evening light","image":"/demo/lysne/gen/taste-hands.jpg","source":"taste"},
+          {"caption":"The evening room","image":"/demo/lysne/gen/taste-bedroom.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Skin in crops, as your Brand DNA prefers; no face in this direction."},
+          {"source":"memory","text":"You passed on hands that hold the bottle once: here they never do."}
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "kind": "never",
+        "ruleId": "r7",
+        "source": "brand_dna",
+        "text": "Skin-result claims; only the lines on the approved list"
+      }
+    ],
+    "state": "ready",
+    "summary": "Introduce Hand Balm to people who already use the oil. It speaks to existing LYSNE customers. The message: soft hands for the hour before sleep. It runs in Norway, in Norwegian.",
+    "timeline": [
+      {"at":"2026-10-19T12:32:00.000Z","label":"Masters, checked"},
+      {"at":"2026-10-22T12:32:00.000Z","label":"Variants and formats"},
+      {"at":"2026-10-26T12:32:00.000Z","label":"Delivery"}
+    ],
+    "version": 1,
+    "writtenAt": "2026-10-14T12:32:02.500Z"
+  }
+nora askPlanCheck("c-balm")
+  {"error":"invalid","message":"No expert checks plans in this brand."}
+-- 5 s later
+nora plan("c-balm")
+  = nora plan("c-balm")
+nora addClient({"brandName":"FJELL","language":"Norwegian","market":"Norway","people":[{"email":"kari@fjell.example","name":"Kari Fjell","role":"owner"}...) → events
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "boardId": "bd-autumn",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","email","product_page"],
+      "chosenDirectionId": "d-a1",
+      "collectionIds": ["cl-aw26"],
+      "counts": {"approved":2,"checked":6,"creatives":11,"delivered":0,"inCheck":3},
+      "cover": "/demo/lysne/05-06-feed.jpg",
+      "createdAt": "2026-10-02T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "dueAt": "2026-10-17T12:32:00.000Z",
+      "formats": ["feed","story","square"],
+      "id": "c-autumn",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Autumn launch",
+      "productIds": ["pr-oil"],
+      "roundsIncluded": 2,
+      "roundsUsed": 1,
+      "stage": "variants",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:26:00.000Z",
+      "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":2},
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+nora addClient({"brandName":"FJELL","language":"Norwegian","market":"Norway","people":[{"email":"kari@fjell.example","name":"Kari Fjell","role":"owner"}...)
+  {
+    "campaignsActive": 0,
+    "example": "summary",
+    "lead": {
+      "agency": {"organisationId":"o-brygga","role":"lead"},
+      "email": "nora@brygga.example",
+      "id": "u-nora",
+      "name": "Nora Vik",
+      "staffRole": "expert",
+      "title": "Creative lead"
+    },
+    "openedAt": "2026-10-14T12:32:08.000Z",
+    "people": [
+      {"email":"kari@fjell.example","id":"u-mvkqw0q8-6","name":"Kari Fjell","title":""},
+      {"email":"ola@fjell.example","id":"u-mvkqw0q8-7","name":"Ola Fjell","title":""}
+    ],
+    "since": "2026-10-14T12:32:08.000Z",
+    "status": "New client: Fume is reading fjell.example",
+    "waitingOnYou": 0,
+    "workspace": {
+      "agencyId": "o-brygga",
+      "brandName": "FJELL",
+      "id": "w-mvkqw0q8-5",
+      "language": "Norwegian",
+      "market": "Norway",
+      "organisationId": "o-mvkqw0q8-4"
+    }
+  }
+nora agencyClients()
+  [
+    {
+      "campaignsActive": 0,
+      "example": "summary",
+      "isNew": true,
+      "lead": {
+        "agency": {"organisationId":"o-brygga","role":"lead"},
+        "email": "nora@brygga.example",
+        "id": "u-nora",
+        "name": "Nora Vik",
+        "staffRole": "expert",
+        "title": "Creative lead"
+      },
+      "openedAt": "2026-10-14T12:32:08.000Z",
+      "people": [
+        {"email":"kari@fjell.example","id":"u-mvkqw0q8-6","name":"Kari Fjell","title":""},
+        {"email":"ola@fjell.example","id":"u-mvkqw0q8-7","name":"Ola Fjell","title":""}
+      ],
+      "roles": {"u-mvkqw0q8-6":"owner","u-mvkqw0q8-7":"approver"},
+      "since": "2026-10-14T12:32:08.000Z",
+      "status": "New client: Fume is reading fjell.example",
+      "waitingOnYou": 0,
+      "workspace": {
+        "agencyId": "o-brygga",
+        "brandName": "FJELL",
+        "id": "w-mvkqw0q8-5",
+        "language": "Norwegian",
+        "market": "Norway",
+        "organisationId": "o-mvkqw0q8-4"
+      }
+    },
+    {
+      "campaignsActive": 4,
+      "current": {
+        "campaignId": "c-autumn",
+        "detail": "11 creatives · 2 approved",
+        "name": "Autumn launch",
+        "progress": 0.18181818181818182
+      },
+      "example": "full",
+      "isNew": false,
+      "lead": {
+        "agency": {"organisationId":"o-brygga","role":"lead"},
+        "email": "nora@brygga.example",
+        "id": "u-nora",
+        "name": "Nora Vik",
+        "staffRole": "expert",
+        "title": "Creative lead"
+      },
+      "nextDelivery": {"at":"2026-10-17T12:32:00.000Z","title":"Autumn launch, the delivery"},
+      "openedAt": "2026-10-14T12:32:00.000Z",
+      "people": [
+        {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"Head of Marketing"},
+        {"email":"jonas@lysne.example","id":"u-jonas","name":"Jonas Berg","title":"Performance Marketer"},
+        {"email":"ida@lysne.example","id":"u-ida","name":"Ida Strand","title":"Finance Lead"}
+      ],
+      "picture": "/demo/lysne/05-06-feed.jpg",
+      "roles": {"u-ida":"viewer","u-jonas":"member","u-maja":"owner"},
+      "since": "2026-06-16T12:32:00.000Z",
+      "status": "Winter gifting: the plan waits for your check",
+      "waitingOn": "4 creatives with Maja",
+      "waitingOnYou": 5,
+      "workspace": {
+        "agencyId": "o-brygga",
+        "brandName": "LYSNE",
+        "id": "w-lysne",
+        "language": "Norwegian",
+        "market": "Norway",
+        "organisationId": "o-lysne"
+      }
+    },
+    {
+      "campaignsActive": 1,
+      "current": {"detail":"16 creatives · 10 approved","name":"Autumn knit","progress":0.62},
+      "example": "summary",
+      "isNew": false,
+      "lead": {
+        "agency": {"organisationId":"o-brygga","role":"creative"},
+        "email": "live@brygga.example",
+        "id": "u-live",
+        "name": "Live Hauge",
+        "staffRole": "expert",
+        "title": "Art director"
+      },
+      "nextDelivery": {"at":"2026-10-17T12:32:00.000Z","title":"Autumn knit, the delivery"},
+      "openedAt": "2026-10-13T10:32:00.000Z",
+      "people": [{"email":"sara@vev.example","id":"u-sara","name":"Sara Lind","title":"Marketing lead"}],
+      "picture": "/demo/lysne/gen/sweater-flat.jpg",
+      "roles": {"u-sara":"owner"},
+      "since": "2026-08-11T12:32:00.000Z",
+      "status": "Autumn knit: 6 creatives with Sara",
+      "waitingOn": "6 creatives with Sara",
+      "waitingOnYou": 0,
+      "workspace": {
+        "agencyId": "o-brygga",
+        "brandName": "VEV",
+        "id": "w-vev",
+        "language": "Swedish",
+        "market": "Sweden",
+        "organisationId": "o-vev"
+      }
+    },
+    {
+      "campaignsActive": 1,
+      "example": "summary",
+      "isNew": false,
+      "lead": {
+        "agency": {"organisationId":"o-brygga","role":"creative"},
+        "email": "even@brygga.example",
+        "id": "u-even",
+        "name": "Even Dahl",
+        "staffRole": "expert",
+        "title": "Designer"
+      },
+      "openedAt": "2026-10-12T10:32:00.000Z",
+      "people": [{"email":"henrik@halm.example","id":"u-henrik","name":"Henrik Aas","title":"Founder"}],
+      "picture": "/demo/kinds/furniture.jpg",
+      "roles": {"u-henrik":"owner"},
+      "since": "2026-09-23T12:32:00.000Z",
+      "status": "Studio chair launch: the brief waits on you, who it is for",
+      "waitingOnYou": 1,
+      "workspace": {
+        "agencyId": "o-brygga",
+        "brandName": "HALM",
+        "id": "w-halm",
+        "language": "Norwegian",
+        "market": "Norway",
+        "organisationId": "o-halm"
+      }
+    },
+    {
+      "campaignsActive": 0,
+      "example": "summary",
+      "isNew": false,
+      "lead": {
+        "agency": {"organisationId":"o-brygga","role":"creative"},
+        "email": "live@brygga.example",
+        "id": "u-live",
+        "name": "Live Hauge",
+        "staffRole": "expert",
+        "title": "Art director"
+      },
+      "people": [{"email":"camille@aurea.example","id":"u-camille","name":"Camille Roux","title":"Brand director"}],
+      "picture": "/demo/kinds/fragrance.jpg",
+      "roles": {"u-camille":"owner"},
+      "since": "2026-10-10T12:32:00.000Z",
+      "status": "New client: 14 Brand DNA finds to confirm",
+      "waitingOnYou": 1,
+      "workspace": {
+        "agencyId": "o-brygga",
+        "brandName": "AURÉA",
+        "id": "w-aurea",
+        "language": "Danish",
+        "market": "Denmark",
+        "organisationId": "o-aurea"
+      }
+    }
+  ]
+nora agencyHome()
+  {
+    "agency": {"id":"o-brygga","kind":"agency","name":"Brygga Studio","packageId":"p-core"},
+    "clients": [
+      {
+        "campaignsActive": 0,
+        "example": "summary",
+        "isNew": true,
+        "lead": {
+          "agency": {"organisationId":"o-brygga","role":"lead"},
+          "email": "nora@brygga.example",
+          "id": "u-nora",
+          "name": "Nora Vik",
+          "staffRole": "expert",
+          "title": "Creative lead"
+        },
+        "openedAt": "2026-10-14T12:32:08.000Z",
+        "people": [
+          {"email":"kari@fjell.example","id":"u-mvkqw0q8-6","name":"Kari Fjell","title":""},
+          {"email":"ola@fjell.example","id":"u-mvkqw0q8-7","name":"Ola Fjell","title":""}
+        ],
+        "roles": {"u-mvkqw0q8-6":"owner","u-mvkqw0q8-7":"approver"},
+        "since": "2026-10-14T12:32:08.000Z",
+        "status": "New client: Fume is reading fjell.example",
+        "waitingOnYou": 0,
+        "workspace": {
+          "agencyId": "o-brygga",
+          "brandName": "FJELL",
+          "id": "w-mvkqw0q8-5",
+          "language": "Norwegian",
+          "market": "Norway",
+          "organisationId": "o-mvkqw0q8-4"
+        }
+      },
+      {
+        "campaignsActive": 4,
+        "current": {
+          "campaignId": "c-autumn",
+          "detail": "11 creatives · 2 approved",
+          "name": "Autumn launch",
+          "progress": 0.18181818181818182
+        },
+        "example": "full",
+        "isNew": false,
+        "lead": {
+          "agency": {"organisationId":"o-brygga","role":"lead"},
+          "email": "nora@brygga.example",
+          "id": "u-nora",
+          "name": "Nora Vik",
+          "staffRole": "expert",
+          "title": "Creative lead"
+        },
+        "nextDelivery": {"at":"2026-10-17T12:32:00.000Z","title":"Autumn launch, the delivery"},
+        "openedAt": "2026-10-14T12:32:00.000Z",
+        "people": [
+          {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"Head of Marketing"},
+          {"email":"jonas@lysne.example","id":"u-jonas","name":"Jonas Berg","title":"Performance Marketer"},
+          {"email":"ida@lysne.example","id":"u-ida","name":"Ida Strand","title":"Finance Lead"}
+        ],
+        "picture": "/demo/lysne/05-06-feed.jpg",
+        "roles": {"u-ida":"viewer","u-jonas":"member","u-maja":"owner"},
+        "since": "2026-06-16T12:32:00.000Z",
+        "status": "Winter gifting: the plan waits for your check",
+        "waitingOn": "4 creatives with Maja",
+        "waitingOnYou": 5,
+        "workspace": {
+          "agencyId": "o-brygga",
+          "brandName": "LYSNE",
+          "id": "w-lysne",
+          "language": "Norwegian",
+          "market": "Norway",
+          "organisationId": "o-lysne"
+        }
+      },
+      {
+        "campaignsActive": 1,
+        "current": {"detail":"16 creatives · 10 approved","name":"Autumn knit","progress":0.62},
+        "example": "summary",
+        "isNew": false,
+        "lead": {
+          "agency": {"organisationId":"o-brygga","role":"creative"},
+          "email": "live@brygga.example",
+          "id": "u-live",
+          "name": "Live Hauge",
+          "staffRole": "expert",
+          "title": "Art director"
+        },
+        "nextDelivery": {"at":"2026-10-17T12:32:00.000Z","title":"Autumn knit, the delivery"},
+        "openedAt": "2026-10-13T10:32:00.000Z",
+        "people": [{"email":"sara@vev.example","id":"u-sara","name":"Sara Lind","title":"Marketing lead"}],
+        "picture": "/demo/lysne/gen/sweater-flat.jpg",
+        "roles": {"u-sara":"owner"},
+        "since": "2026-08-11T12:32:00.000Z",
+        "status": "Autumn knit: 6 creatives with Sara",
+        "waitingOn": "6 creatives with Sara",
+        "waitingOnYou": 0,
+        "workspace": {
+          "agencyId": "o-brygga",
+          "brandName": "VEV",
+          "id": "w-vev",
+          "language": "Swedish",
+          "market": "Sweden",
+          "organisationId": "o-vev"
+        }
+      },
+      {
+        "campaignsActive": 1,
+        "example": "summary",
+        "isNew": false,
+        "lead": {
+          "agency": {"organisationId":"o-brygga","role":"creative"},
+          "email": "even@brygga.example",
+          "id": "u-even",
+          "name": "Even Dahl",
+          "staffRole": "expert",
+          "title": "Designer"
+        },
+        "openedAt": "2026-10-12T10:32:00.000Z",
+        "people": [{"email":"henrik@halm.example","id":"u-henrik","name":"Henrik Aas","title":"Founder"}],
+        "picture": "/demo/kinds/furniture.jpg",
+        "roles": {"u-henrik":"owner"},
+        "since": "2026-09-23T12:32:00.000Z",
+        "status": "Studio chair launch: the brief waits on you, who it is for",
+        "waitingOnYou": 1,
+        "workspace": {
+          "agencyId": "o-brygga",
+          "brandName": "HALM",
+          "id": "w-halm",
+          "language": "Norwegian",
+          "market": "Norway",
+          "organisationId": "o-halm"
+        }
+      },
+      {
+        "campaignsActive": 0,
+        "example": "summary",
+        "isNew": false,
+        "lead": {
+          "agency": {"organisationId":"o-brygga","role":"creative"},
+          "email": "live@brygga.example",
+          "id": "u-live",
+          "name": "Live Hauge",
+          "staffRole": "expert",
+          "title": "Art director"
+        },
+        "people": [{"email":"camille@aurea.example","id":"u-camille","name":"Camille Roux","title":"Brand director"}],
+        "picture": "/demo/kinds/fragrance.jpg",
+        "roles": {"u-camille":"owner"},
+        "since": "2026-10-10T12:32:00.000Z",
+        "status": "New client: 14 Brand DNA finds to confirm",
+        "waitingOnYou": 1,
+        "workspace": {
+          "agencyId": "o-brygga",
+          "brandName": "AURÉA",
+          "id": "w-aurea",
+          "language": "Danish",
+          "market": "Denmark",
+          "organisationId": "o-aurea"
+        }
+      }
+    ],
+    "needsYou": [
+      {
+        "action": "Check the plan",
+        "at": "2026-10-14T12:32:02.500Z",
+        "clientId": "w-lysne",
+        "detail": "The plan waits for your check",
+        "href": "/campaigns/c-balm/plan",
+        "id": "an-plan-c-balm",
+        "kind": "plan",
+        "title": "LYSNE · Hand Balm introduction"
+      },
+      {
+        "action": "Check",
+        "at": "2026-10-14T12:24:00.000Z",
+        "clientId": "w-lysne",
+        "detail": "4 creatives to check",
+        "href": "/studio/b/w-lysne/qa?campaign=c-autumn",
+        "id": "an-check-c-autumn",
+        "kind": "check",
+        "picture": "/demo/lysne/09-07-feed.jpg",
+        "title": "LYSNE · Autumn launch"
+      },
+      {
+        "action": "Send",
+        "at": "2026-10-14T12:10:00.000Z",
+        "clientId": "w-lysne",
+        "detail": "2 creatives to send to Maja",
+        "href": "/campaigns/c-autumn/review?send=1",
+        "id": "an-send-c-autumn",
+        "kind": "check",
+        "picture": "/demo/lysne/05-01-feed.jpg",
+        "title": "LYSNE · Autumn launch"
+      },
+      {
+        "action": "Open",
+        "at": "2026-10-14T07:32:00.000Z",
+        "clientId": "w-halm",
+        "detail": "The brief waits on you: who it is for",
+        "href": "/agency/clients?client=w-halm",
+        "id": "an-halm-brief",
+        "kind": "brief",
+        "picture": "/demo/kinds/furniture.jpg",
+        "title": "HALM · Studio chair launch"
+      },
+      {
+        "action": "Check",
+        "at": "2026-10-14T06:33:00.000Z",
+        "clientId": "w-lysne",
+        "detail": "4 creatives to check",
+        "href": "/studio/b/w-lysne/qa",
+        "id": "an-check-product-page",
+        "kind": "check",
+        "picture": "/demo/lysne/03-08-square.jpg",
+        "title": "LYSNE · Product page"
+      },
+      {
+        "action": "Check the plan",
+        "at": "2026-10-13T18:32:00.000Z",
+        "clientId": "w-lysne",
+        "detail": "The plan waits for your check",
+        "href": "/campaigns/c-winter/plan",
+        "id": "an-plan-c-winter",
+        "kind": "plan",
+        "picture": "/demo/lysne/02-05-feed.jpg",
+        "title": "LYSNE · Winter gifting"
+      },
+      {
+        "action": "Open",
+        "at": "2026-10-13T16:32:00.000Z",
+        "clientId": "w-aurea",
+        "detail": "14 finds to confirm",
+        "href": "/agency/clients?client=w-aurea",
+        "id": "an-aurea-brand",
+        "kind": "brand",
+        "picture": "/demo/kinds/fragrance.jpg",
+        "title": "AURÉA · Brand DNA"
+      }
+    ],
+    "summary": "5 client brands. 2 plans, 8 creatives to check and 2 to send wait on you; 4 creatives with Maja.",
+    "team": [
+      {
+        "clientIds": ["w-lysne"],
+        "load": 0.82,
+        "role": "lead",
+        "thisWeek": "8 creatives to check · 2 plans to check · LYSNE",
+        "user": {
+          "agency": {"organisationId":"o-brygga","role":"lead"},
+          "email": "nora@brygga.example",
+          "id": "u-nora",
+          "name": "Nora Vik",
+          "staffRole": "expert",
+          "title": "Creative lead"
+        }
+      },
+      {
+        "clientIds": ["w-vev","w-aurea"],
+        "load": 0.7,
+        "role": "creative",
+        "thisWeek": "Autumn knit's variants · AURÉA's Brand DNA",
+        "user": {
+          "agency": {"organisationId":"o-brygga","role":"creative"},
+          "email": "live@brygga.example",
+          "id": "u-live",
+          "name": "Live Hauge",
+          "staffRole": "expert",
+          "title": "Art director"
+        }
+      },
+      {
+        "clientIds": ["w-halm"],
+        "load": 0.45,
+        "role": "creative",
+        "thisWeek": "Studio chair launch: the brief and the plan",
+        "user": {
+          "agency": {"organisationId":"o-brygga","role":"creative"},
+          "email": "even@brygga.example",
+          "id": "u-even",
+          "name": "Even Dahl",
+          "staffRole": "expert",
+          "title": "Designer"
+        }
+      },
+      {
+        "clientIds": ["w-lysne","w-vev"],
+        "load": 0.58,
+        "role": "creative",
+        "thisWeek": "Deliveries: Autumn launch, Autumn knit",
+        "user": {
+          "agency": {"organisationId":"o-brygga","role":"creative"},
+          "email": "sindre@brygga.example",
+          "id": "u-sindre",
+          "name": "Sindre Moe",
+          "staffRole": "operator",
+          "title": "Producer"
+        }
+      }
+    ]
+  }
+nora licence()
+  {
+    "agency": {"id":"o-brygga","kind":"agency","name":"Brygga Studio","packageId":"p-core"},
+    "period": {"from":"2026-10-01T00:00:00.000Z","to":"2026-10-31T23:59:59.000Z"},
+    "scope": "Early access: product campaigns for paid social, scoped with Fume on 6 Oct",
+    "seats": {"included":6,"used":4},
+    "total": {"creativesApproved":12,"creativesMade":27},
+    "usage": [
+      {
+        "client": {
+          "agencyId": "o-brygga",
+          "brandName": "LYSNE",
+          "id": "w-lysne",
+          "language": "Norwegian",
+          "market": "Norway",
+          "organisationId": "o-lysne"
+        },
+        "creativesApproved": 2,
+        "creativesMade": 11
+      },
+      {
+        "client": {
+          "agencyId": "o-brygga",
+          "brandName": "AURÉA",
+          "id": "w-aurea",
+          "language": "Danish",
+          "market": "Denmark",
+          "organisationId": "o-aurea"
+        },
+        "creativesApproved": 0,
+        "creativesMade": 0
+      },
+      {
+        "client": {
+          "agencyId": "o-brygga",
+          "brandName": "HALM",
+          "id": "w-halm",
+          "language": "Norwegian",
+          "market": "Norway",
+          "organisationId": "o-halm"
+        },
+        "creativesApproved": 0,
+        "creativesMade": 0
+      },
+      {
+        "client": {
+          "agencyId": "o-brygga",
+          "brandName": "VEV",
+          "id": "w-vev",
+          "language": "Swedish",
+          "market": "Sweden",
+          "organisationId": "o-vev"
+        },
+        "creativesApproved": 10,
+        "creativesMade": 16
+      },
+      {
+        "client": {
+          "agencyId": "o-brygga",
+          "brandName": "FJELL",
+          "id": "w-mvkqw0q8-5",
+          "language": "Norwegian",
+          "market": "Norway",
+          "organisationId": "o-mvkqw0q8-4"
+        },
+        "creativesApproved": 0,
+        "creativesMade": 0
+      }
+    ]
+  }
+nora switchWorkspace("w-mvkqw0q8-5")
+  {
+    "agency": {"organisation":{"id":"o-brygga","kind":"agency","name":"Brygga Studio","packageId":"p-core"},"role":"lead"},
+    "agencyName": "Brygga Studio",
+    "onboarded": true,
+    "organisation": {"id":"o-mvkqw0q8-4","kind":"brand","name":"FJELL","packageId":"p-core"},
+    "role": "approver",
+    "user": {
+      "agency": {"organisationId":"o-brygga","role":"lead"},
+      "email": "nora@brygga.example",
+      "id": "u-nora",
+      "name": "Nora Vik",
+      "staffRole": "expert",
+      "title": "Creative lead"
+    },
+    "workspace": {
+      "agencyId": "o-brygga",
+      "brandName": "FJELL",
+      "id": "w-mvkqw0q8-5",
+      "language": "Norwegian",
+      "market": "Norway",
+      "organisationId": "o-mvkqw0q8-4"
+    },
+    "workspaces": [
+      {
+        "agencyId": "o-brygga",
+        "brandName": "LYSNE",
+        "id": "w-lysne",
+        "language": "Norwegian",
+        "market": "Norway",
+        "organisationId": "o-lysne"
+      },
+      {
+        "agencyId": "o-brygga",
+        "brandName": "AURÉA",
+        "id": "w-aurea",
+        "language": "Danish",
+        "market": "Denmark",
+        "organisationId": "o-aurea"
+      },
+      {
+        "agencyId": "o-brygga",
+        "brandName": "HALM",
+        "id": "w-halm",
+        "language": "Norwegian",
+        "market": "Norway",
+        "organisationId": "o-halm"
+      },
+      {
+        "agencyId": "o-brygga",
+        "brandName": "VEV",
+        "id": "w-vev",
+        "language": "Swedish",
+        "market": "Sweden",
+        "organisationId": "o-vev"
+      },
+      {
+        "agencyId": "o-brygga",
+        "brandName": "FJELL",
+        "id": "w-mvkqw0q8-5",
+        "language": "Norwegian",
+        "market": "Norway",
+        "organisationId": "o-mvkqw0q8-4"
+      }
+    ]
+  }
+nora session()
+  = nora switchWorkspace("w-mvkqw0q8-5")
+nora home()
+  {
+    "deliveries": [],
+    "fumeNeeds": [],
+    "inProduction": [],
+    "learned": [
+      {
+        "at": "2026-10-09T12:32:00.000Z",
+        "campaignId": "c-autumn",
+        "id": "m4",
+        "kind": "approved",
+        "lesson": "Evening stone was chosen over skin and texture: warm stone leads."
+      },
+      {
+        "at": "2026-10-08T12:32:00.000Z",
+        "campaignId": "c-autumn",
+        "id": "m3",
+        "kind": "rejected",
+        "lesson": "You passed on hands that hold the bottle. Fume no longer proposes them."
+      },
+      {
+        "at": "2026-09-25T12:32:00.000Z",
+        "campaignId": "c-summer",
+        "id": "m2",
+        "kind": "changed",
+        "lesson": "You moved the product lower in the frame twice. New creatives start there."
+      }
+    ],
+    "recentlyApproved": [],
+    "usage": {"campaignsActive":0,"creativeCap":27,"creativesUsed":0,"periodEndsAt":"2026-10-31T12:32:00.000Z"},
+    "waitingOnYou": []
+  }
+nora brandDna()
+  {
+    "assets": [
+      {
+        "at": "2026-10-02T12:32:00.000Z",
+        "bytes": 18400,
+        "id": "a1",
+        "kind": "logo",
+        "name": "LYSNE wordmark.svg",
+        "uploadedBy": "u-maja"
+      },
+      {
+        "at": "2026-10-02T12:32:00.000Z",
+        "bytes": 8200000,
+        "id": "a2",
+        "kind": "guideline",
+        "name": "LYSNE brand guide 2026.pdf",
+        "uploadedBy": "u-maja"
+      },
+      {
+        "at": "2026-10-02T12:32:00.000Z",
+        "bytes": 1200000,
+        "id": "a3",
+        "kind": "packshot",
+        "name": "Night Body Oil packshot",
+        "thumbnail": "/demo/lysne/03-08-square.jpg",
+        "uploadedBy": "u-maja"
+      },
+      {
+        "at": "2026-10-03T12:32:00.000Z",
+        "bytes": 24000000,
+        "id": "a4",
+        "kind": "campaign",
+        "name": "Spring 2026 campaign",
+        "thumbnail": "/demo/lysne/08-02-square.jpg",
+        "uploadedBy": "u-jonas"
+      }
+    ],
+    "dna": {
+      "approvedAt": "2026-10-05T12:32:00.000Z",
+      "approvedBy": "u-maja",
+      "completeness": 0.86,
+      "state": "approved",
+      "summary": "LYSNE makes body oils for the hour before sleep. Calm, warm and close: low evening light on stone and skin, amber glass, few words. Never loud, never clinical.",
+      "version": 3,
+      "workspaceId": "w-lysne"
+    },
+    "memory": [
+      {
+        "at": "2026-09-24T12:32:00.000Z",
+        "campaignId": "c-summer",
+        "id": "m1",
+        "kind": "caught",
+        "lesson": "Nora caught a glossy cap on two creatives; the Product Truth now says matte."
+      },
+      {
+        "at": "2026-09-25T12:32:00.000Z",
+        "campaignId": "c-summer",
+        "id": "m2",
+        "kind": "changed",
+        "lesson": "You moved the product lower in the frame twice. New creatives start there."
+      },
+      {
+        "at": "2026-10-08T12:32:00.000Z",
+        "campaignId": "c-autumn",
+        "id": "m3",
+        "kind": "rejected",
+        "lesson": "You passed on hands that hold the bottle. Fume no longer proposes them."
+      },
+      {
+        "at": "2026-10-09T12:32:00.000Z",
+        "campaignId": "c-autumn",
+        "id": "m4",
+        "kind": "approved",
+        "lesson": "Evening stone was chosen over skin and texture: warm stone leads."
+      }
+    ],
+    "products": [],
+    "references": [
+      {
+        "addedBy": "u-maja",
+        "id": "ref1",
+        "image": "/demo/lysne/02-04-feed.jpg",
+        "note": "Fluted glass and slow light.",
+        "verdict": "liked"
+      },
+      {
+        "addedBy": "u-maja",
+        "id": "ref2",
+        "image": "/demo/lysne/08-06-feed.jpg",
+        "note": "Product low, air above.",
+        "verdict": "liked"
+      },
+      {
+        "addedBy": "u-jonas",
+        "id": "ref3",
+        "image": "/demo/lysne/07-10-feed.jpg",
+        "note": "Hands too staged.",
+        "verdict": "disliked"
+      },
+      {"addedBy":"u-jonas","id":"ref4","image":"/demo/lysne/02-05-feed.jpg","verdict":"liked"}
+    ],
+    "rules": [
+      {
+        "area": "logo",
+        "confidence": "high",
+        "id": "r1",
+        "kind": "hard_constraint",
+        "polarity": "do",
+        "source": "supplied",
+        "statement": "The wordmark stands alone on the label; never redrawn, never on a busy area."
+      },
+      {
+        "area": "colour",
+        "confidence": "high",
+        "id": "r2",
+        "kind": "rule",
+        "polarity": "do",
+        "source": "verified",
+        "statement": "Warm neutrals and amber light."
+      },
+      {
+        "area": "type",
+        "confidence": "high",
+        "id": "r3",
+        "kind": "rule",
+        "polarity": "do",
+        "source": "supplied",
+        "statement": "Serif for the name, small caps for the line under it."
+      },
+      {
+        "area": "voice",
+        "confidence": "high",
+        "id": "r4",
+        "kind": "rule",
+        "polarity": "do",
+        "source": "verified",
+        "statement": "Short, quiet sentences. Speaks of the evening, never of results."
+      },
+      {
+        "area": "imagery",
+        "confidence": "medium",
+        "id": "r5",
+        "kind": "preference",
+        "polarity": "do",
+        "source": "learned",
+        "statement": "Stone, linen and glass. People are AI models only, always labelled; skin in soft crops."
+      },
+      {
+        "area": "layout",
+        "confidence": "medium",
+        "id": "r6",
+        "kind": "preference",
+        "polarity": "do",
+        "source": "inferred",
+        "statement": "The product sits low in the frame with air above it."
+      },
+      {
+        "area": "claims",
+        "confidence": "high",
+        "id": "r7",
+        "kind": "hard_constraint",
+        "polarity": "dont",
+        "source": "supplied",
+        "statement": "No skin-result claims. Only lines on the approved claims list."
+      },
+      {
+        "area": "colour",
+        "confidence": "high",
+        "id": "r8",
+        "kind": "rule",
+        "polarity": "dont",
+        "source": "verified",
+        "statement": "No cold blue light and no saturated colour."
+      },
+      {
+        "area": "voice",
+        "confidence": "high",
+        "id": "r9",
+        "kind": "hard_constraint",
+        "polarity": "dont",
+        "source": "supplied",
+        "statement": "No exclamation marks and no urgency: never “now”, “hurry” or “last chance”."
+      },
+      {
+        "area": "imagery",
+        "confidence": "high",
+        "id": "r10",
+        "kind": "hard_constraint",
+        "polarity": "dont",
+        "source": "supplied",
+        "statement": "No real person’s face. People are AI models, always labelled as AI."
+      }
+    ],
+    "tastePairs": [
+      {
+        "a": "/demo/lysne/04-02-feed.jpg",
+        "b": "/demo/lysne/06-05-feed.jpg",
+        "chosen": "a",
+        "id": "tp1",
+        "question": "Which feels more like LYSNE?",
+        "reason": "Upright and calm."
+      },
+      {
+        "a": "/demo/lysne/05-03-feed.jpg",
+        "b": "/demo/lysne/09-04-feed.jpg",
+        "id": "tp2",
+        "question": "Which feels more like LYSNE?"
+      },
+      {
+        "a": "/demo/lysne/01-04-feed.jpg",
+        "b": "/demo/lysne/08-02-feed.jpg",
+        "id": "tp3",
+        "question": "Which feels more like LYSNE?"
+      }
+    ],
+    "understanding": {
+      "conflicts": [
+        {
+          "id": "cf1",
+          "resolved": "Warm evening light. Page 14 is from before the relaunch.",
+          "text": "Your guide shows cool morning light on page 14; every campaign since uses warm evening light."
+        }
+      ],
+      "summary": [
+        "LYSNE is evening care, not skincare: the oil belongs to the hour before sleep.",
+        "The light is low and warm, from the side, on stone, linen and glass.",
+        "The product is the hero and sits low with air above; people are AI models only, always labelled, mostly as crops of skin."
+      ],
+      "testDirections": [
+        {"id":"td1","image":"/demo/lysne/05-06-feed.jpg","name":"Evening stone","reason":"This is us.","verdict":"yes"},
+        {"id":"td2","image":"/demo/lysne/09-13-feed.jpg","name":"Water light","verdict":"yes"},
+        {"id":"td3","image":"/demo/lysne/06-10-feed.jpg","name":"Studio white","reason":"Too clinical.","verdict":"no"}
+      ],
+      "unknowns": [],
+      "version": 3
+    }
+  }
+nora switchWorkspace("w-vev")
+  {
+    "agency": {"organisation":{"id":"o-brygga","kind":"agency","name":"Brygga Studio","packageId":"p-core"},"role":"lead"},
+    "agencyName": "Brygga Studio",
+    "onboarded": true,
+    "organisation": {"id":"o-vev","kind":"brand","name":"VEV","packageId":"p-core"},
+    "role": "approver",
+    "user": {
+      "agency": {"organisationId":"o-brygga","role":"lead"},
+      "email": "nora@brygga.example",
+      "id": "u-nora",
+      "name": "Nora Vik",
+      "staffRole": "expert",
+      "title": "Creative lead"
+    },
+    "workspace": {
+      "agencyId": "o-brygga",
+      "brandName": "VEV",
+      "id": "w-vev",
+      "language": "Swedish",
+      "market": "Sweden",
+      "organisationId": "o-vev"
+    },
+    "workspaces": [
+      {
+        "agencyId": "o-brygga",
+        "brandName": "LYSNE",
+        "id": "w-lysne",
+        "language": "Norwegian",
+        "market": "Norway",
+        "organisationId": "o-lysne"
+      },
+      {
+        "agencyId": "o-brygga",
+        "brandName": "AURÉA",
+        "id": "w-aurea",
+        "language": "Danish",
+        "market": "Denmark",
+        "organisationId": "o-aurea"
+      },
+      {
+        "agencyId": "o-brygga",
+        "brandName": "HALM",
+        "id": "w-halm",
+        "language": "Norwegian",
+        "market": "Norway",
+        "organisationId": "o-halm"
+      },
+      {
+        "agencyId": "o-brygga",
+        "brandName": "VEV",
+        "id": "w-vev",
+        "language": "Swedish",
+        "market": "Sweden",
+        "organisationId": "o-vev"
+      },
+      {
+        "agencyId": "o-brygga",
+        "brandName": "FJELL",
+        "id": "w-mvkqw0q8-5",
+        "language": "Norwegian",
+        "market": "Norway",
+        "organisationId": "o-mvkqw0q8-4"
+      }
+    ]
+  }
+nora session()
+  = nora switchWorkspace("w-vev")
+nora home()
+  = nora home()
+nora campaigns()
+  []
+nora engineSay("w-vev", "What waits on me?") → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:08.000Z",
+      "author": {"kind":"engine"},
+      "id": "em-mvkqw0q8-9",
+      "text": "Nothing from VEV waits for a check.",
+      "workspaceId": "w-vev"
+    },
+    "type": "engine.message"
+  }
+nora engineSay("w-vev", "What waits on me?")
+  {
+    "at": "2026-10-14T12:32:08.000Z",
+    "author": {"kind":"person","userId":"u-nora"},
+    "id": "em-mvkqw0q8-8",
+    "text": "What waits on me?",
+    "workspaceId": "w-vev"
+  }
+-- 3 s later
+nora engineChat("w-vev")
+  [
+    {
+      "at": "2026-10-14T12:32:08.000Z",
+      "author": {"kind":"person","userId":"u-nora"},
+      "id": "em-mvkqw0q8-8",
+      "text": "What waits on me?",
+      "workspaceId": "w-vev"
+    },
+    {
+      "at": "2026-10-14T12:32:08.000Z",
+      "author": {"kind":"engine"},
+      "id": "em-mvkqw0q8-9",
+      "text": "Nothing from VEV waits for a check.",
+      "workspaceId": "w-vev"
+    }
+  ]
+nora askFume({"amount":"About 20 creatives","clientId":"w-lysne","kind":"manpower","when":"This week","work":["checks","renders"]})
+  {
+    "amount": "About 20 creatives",
+    "at": "2026-10-14T12:32:11.000Z",
+    "by": "u-nora",
+    "clientId": "w-lysne",
+    "id": "fr-mvkqw31k-10",
+    "kind": "manpower",
+    "state": "sent",
+    "when": "This week",
+    "work": ["checks","renders"]
+  }
+nora askFume({"kind":"support","text":"Can we add a client?","topic":"Licence"})
+  {
+    "at": "2026-10-14T12:32:11.000Z",
+    "by": "u-nora",
+    "id": "fr-mvkqw31k-11",
+    "kind": "support",
+    "state": "sent",
+    "text": "Can we add a client?",
+    "topic": "Licence"
+  }
+nora agencyPlan()
+  {
+    "contact": {"email":"sander@fumecreatives.com","id":"u-sander","name":"Sander","staffRole":"operator","title":"Producer"},
+    "decidedBy": "Fume decides which features and updates an agency gets, and when. A new one shows here before it reaches your team.",
+    "features": [
+      {
+        "detail": "Fume reads each client’s brand and keeps it apart from the others",
+        "id": "f-dna",
+        "name": "Brand DNA for each client",
+        "state": "included"
+      },
+      {"detail":"One conversation per client, with its memory","id":"f-chat","name":"The Fume chat","state":"included"},
+      {
+        "detail": "Images and designs, each product as it really is",
+        "id": "f-engine",
+        "name": "The Engine with Product Truth",
+        "state": "included"
+      },
+      {
+        "detail": "Image and Design, models, references and boards",
+        "id": "f-studio",
+        "name": "The Studio",
+        "state": "included"
+      },
+      {
+        "detail": "Your own experts check every creative before the client sees it",
+        "id": "f-check",
+        "name": "Check",
+        "state": "included"
+      },
+      {
+        "detail": "The client approves in Fume, or through a link without an account",
+        "id": "f-send",
+        "name": "Send to client and the client link",
+        "state": "included"
+      },
+      {
+        "detail": "Campaign windows, deliveries and approved creatives",
+        "id": "f-calendar",
+        "name": "The calendar and deliveries",
+        "state": "included"
+      },
+      {
+        "detail": "Video in the Studio, next to Image and Design",
+        "id": "f-video",
+        "name": "The video editor",
+        "state": "coming",
+        "when": "Next on Fume’s list"
+      },
+      {
+        "detail": "How the creatives do once they run, per client",
+        "id": "f-performance",
+        "name": "Performance",
+        "state": "coming",
+        "when": "Later this year"
+      },
+      {
+        "detail": "From the calendar, straight to the channels",
+        "id": "f-publish",
+        "name": "Publishing to Meta and Instagram",
+        "state": "coming",
+        "when": "Later this year"
+      },
+      {"detail":"Masters and designs both ways","id":"f-figma","name":"Figma","state":"coming","when":"Not dated yet"},
+      {
+        "detail": "Fume in the tools your team already uses",
+        "id": "f-connectors",
+        "name": "Claude, ChatGPT and Slack",
+        "state": "coming",
+        "when": "Not dated yet"
+      },
+      {
+        "detail": "Fume’s experts, designers and operators for a campaign that needs more hands",
+        "id": "f-people",
+        "name": "Fume’s people",
+        "state": "on_request"
+      }
+    ],
+    "name": "Agency · early access",
+    "requests": [
+      {
+        "at": "2026-10-14T12:32:11.000Z",
+        "by": "u-nora",
+        "id": "fr-mvkqw31k-11",
+        "kind": "support",
+        "state": "sent",
+        "text": "Can we add a client?",
+        "topic": "Licence"
+      },
+      {
+        "amount": "About 20 creatives",
+        "at": "2026-10-14T12:32:11.000Z",
+        "by": "u-nora",
+        "clientId": "w-lysne",
+        "id": "fr-mvkqw31k-10",
+        "kind": "manpower",
+        "state": "sent",
+        "when": "This week",
+        "work": ["checks","renders"]
+      }
+    ]
+  }
+nora agencyTeam()
+  [
+    {
+      "clientIds": ["w-lysne"],
+      "load": 0.82,
+      "role": "lead",
+      "thisWeek": "8 creatives to check · 2 plans to check · LYSNE",
+      "user": {
+        "agency": {"organisationId":"o-brygga","role":"lead"},
+        "email": "nora@brygga.example",
+        "id": "u-nora",
+        "name": "Nora Vik",
+        "staffRole": "expert",
+        "title": "Creative lead"
+      }
+    },
+    {
+      "clientIds": ["w-vev","w-aurea"],
+      "load": 0.7,
+      "role": "creative",
+      "thisWeek": "Autumn knit's variants · AURÉA's Brand DNA",
+      "user": {
+        "agency": {"organisationId":"o-brygga","role":"creative"},
+        "email": "live@brygga.example",
+        "id": "u-live",
+        "name": "Live Hauge",
+        "staffRole": "expert",
+        "title": "Art director"
+      }
+    },
+    {
+      "clientIds": ["w-halm"],
+      "load": 0.45,
+      "role": "creative",
+      "thisWeek": "Studio chair launch: the brief and the plan",
+      "user": {
+        "agency": {"organisationId":"o-brygga","role":"creative"},
+        "email": "even@brygga.example",
+        "id": "u-even",
+        "name": "Even Dahl",
+        "staffRole": "expert",
+        "title": "Designer"
+      }
+    },
+    {
+      "clientIds": ["w-lysne","w-vev"],
+      "load": 0.58,
+      "role": "creative",
+      "thisWeek": "Deliveries: Autumn launch, Autumn knit",
+      "user": {
+        "agency": {"organisationId":"o-brygga","role":"creative"},
+        "email": "sindre@brygga.example",
+        "id": "u-sindre",
+        "name": "Sindre Moe",
+        "staffRole": "operator",
+        "title": "Producer"
+      }
+    }
+  ]
+-- even: createMockApi({"agency":true,"latency":0,"userId":"u-even"})
+even addClient({"brandName":"NOPE","people":[]}) → events
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v9",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [
+        {
+          "at": "2026-10-14T12:21:00.000Z",
+          "by": "u-nora",
+          "id": "fb-1",
+          "state": "fixed",
+          "text": "The cap must be matte burgundy, as in the Product Truth."
+        }
+      ],
+      "format": "feed",
+      "id": "qa-3",
+      "image": "/demo/lysne/06-10-feed.jpg",
+      "madeAt": "2026-10-14T12:20:00.000Z",
+      "risk": "high",
+      "slot": "Master 2 · Variant 3",
+      "state": "waiting",
+      "studio": "render",
+      "title": "Feed 7",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+even addClient({"brandName":"NOPE","people":[]})
+  {"error":"forbidden","message":"Only the agency lead adds clients."}
+even approve(["v-cr-a-v1-3"])
+  {
+    "error": "forbidden",
+    "message": "Only the client approves creatives. Send them to the client, or record an approval the client gave you."
+  }
+even checkPlan("c-winter") → events
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "boardId": "bd-winter",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","organic_social"],
+      "collectionIds": ["cl-gifts"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "cover": "/demo/lysne/02-05-feed.jpg",
+      "createdAt": "2026-10-12T12:32:00.000Z",
+      "createdBy": "u-jonas",
+      "dueAt": "2026-11-03T12:32:00.000Z",
+      "formats": ["feed","story"],
+      "id": "c-winter",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Winter gifting",
+      "productIds": ["pr-oil","pr-candle"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {
+        "briefReady": false,
+        "delivery": "2026-10-27T12:32:00.000Z",
+        "directions": 0,
+        "plan": "ready",
+        "planChecked": true,
+        "planned": 9,
+        "questions": 0,
+        "toSend": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+even checkPlan("c-winter")
+  {
+    "briefVersion": 1,
+    "campaignId": "c-winter",
+    "changeRequestsIncluded": 2,
+    "checkedAt": "2026-10-14T12:32:00.000Z",
+    "checkedBy": "u-even",
+    "chosenDirectionId": "pd-w-a",
+    "content": [
+      {
+        "key": "products",
+        "label": "Products",
+        "source": "product",
+        "value": "Night Body Oil 100 ml and Evening Candle, as their Product Truth says: amber glass, matte burgundy cap, the label front and centred."
+      },
+      {
+        "key": "formats",
+        "label": "Formats",
+        "source": "brief",
+        "value": "Feed 4:5 (5 creatives) and Story 9:16 (4 creatives): 9 in all, as your brief asks."
+      },
+      {
+        "key": "text",
+        "label": "Text on the creative",
+        "source": "brand_dna",
+        "value": "One short line in Norwegian on each creative, as planned under The 9 creatives; nothing else on the picture.",
+        "why": "Your voice: short, quiet sentences"
+      },
+      {
+        "key": "cta",
+        "label": "Call to action",
+        "source": "fume",
+        "value": "“Kjøp gaven” in the ad's button, never on the picture."
+      },
+      {
+        "key": "logo",
+        "label": "Logo",
+        "source": "brand_dna",
+        "value": "The LYSNE wordmark on the label only; no logo added on the picture.",
+        "why": "Your Brand DNA: the wordmark stands alone on the label"
+      },
+      {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
+    ],
+    "directions": [
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-w-a-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-oil","pr-candle"],
+            "scene": "The oil in its gift sleeve on the sill, the candle lit behind it, the window going blue.",
+            "text": "En roligere kveld, gitt."
+          },
+          {
+            "format": "feed",
+            "id": "pc-w-a-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "Hands only",
+            "productIds": ["pr-oil"],
+            "scene": "Two hands tie a clay ribbon around the sleeve; the bottle stands beside them, label to the front.",
+            "text": "Gi bort en roligere kveld."
+          },
+          {
+            "format": "story",
+            "id": "pc-w-a-m3",
+            "kind": "master",
+            "look": {
+              "camera": "From straight above, 35 mm; the box square in the frame.",
+              "light": "The same window light, softer, the box lit from the left."
+            },
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-oil","pr-candle"],
+            "scene": "From above: the open Evening Ritual box on linen, the candle lit, the lid set aside.",
+            "text": "Til noen som fortjener kvelden."
+          },
+          {
+            "format": "story",
+            "id": "pc-w-a-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-w-a-m1",
+            "people": "No people",
+            "productIds": ["pr-oil","pr-candle"],
+            "scene": "Master 1, taller: more of the window and the evening above the bottle.",
+            "text": "En roligere kveld, gitt."
+          },
+          {
+            "format": "story",
+            "id": "pc-w-a-v2",
+            "kind": "variant",
+            "name": "Master 2 in Story",
+            "of": "pc-w-a-m2",
+            "people": "Hands only",
+            "productIds": ["pr-oil"],
+            "scene": "Master 2, taller: the ribbon's loose end falls into the frame.",
+            "text": "Gi bort en roligere kveld."
+          },
+          {
+            "format": "feed",
+            "id": "pc-w-a-v3",
+            "kind": "variant",
+            "name": "Master 3 in Feed",
+            "of": "pc-w-a-m3",
+            "people": "No people",
+            "productIds": ["pr-oil","pr-candle"],
+            "scene": "Master 3, closer: the box and the candle fill the frame.",
+            "text": "Til noen som fortjener kvelden."
+          },
+          {
+            "format": "feed",
+            "id": "pc-w-a-v4",
+            "kind": "variant",
+            "name": "The candle alone",
+            "of": "pc-w-a-m1",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "Master 1's sill with Evening Candle alone, its flame the only light inside.",
+            "text": "Tenn kvelden."
+          },
+          {
+            "format": "feed",
+            "id": "pc-w-a-v5",
+            "kind": "variant",
+            "name": "The label, close",
+            "of": "pc-w-a-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Close on the label and the sleeve's edge, the candle a warm blur behind.",
+            "text": "For timen før søvn."
+          },
+          {
+            "format": "story",
+            "id": "pc-w-a-v6",
+            "kind": "variant",
+            "name": "The candle alone in Story",
+            "of": "pc-w-a-m1",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "The candle alone, taller, the window's blue above it.",
+            "text": "Tenn kvelden."
+          }
+        ],
+        "hook": "The candle is lit before the gift is opened.",
+        "id": "pd-w-a",
+        "idea": "A gift waits by a window on a dark December afternoon: the oil in its sleeve, the candle just lit, the last blue light outside and warm light inside. It is the moment before the gift is given, calm and certain.",
+        "letter": "A",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "Low, warm side light from a window at dusk; the lit candle as a second, small warm light. Never cold blue light inside the room.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm at table height, close. The bottle sharp, the window soft behind it."
+          },
+          {
+            "key": "set",
+            "label": "Set",
+            "source": "moodboard",
+            "value": "A deep windowsill in pale stone and oak, a linen cloth, the dark blue evening outside.",
+            "why": "From your Winter gifting moodboard"
+          },
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brief",
+            "value": "The gift sleeve, a loose ribbon in clay, Evening Candle lit. Nothing seasonal beyond that: no trees, no baubles.",
+            "why": "Your brief: never red and green Christmas colours"
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Amber glass, cream, clay and the window's deep blue. No red, no green."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "memory",
+            "value": "Hands only, in one master: tying the ribbon, never holding the bottle. Never a face.",
+            "why": "You passed on hands that hold the bottle in Autumn launch"
+          }
+        ],
+        "name": "Window light",
+        "recommended": true,
+        "references": [
+          {
+            "caption": "A candle by a window at dusk: the light we aim for",
+            "image": "/demo/lysne/gen/candle-scene.jpg",
+            "source": "moodboard"
+          },
+          {
+            "caption": "The Evening Ritual box: the gift itself",
+            "image": "/demo/lysne/gen/ritual-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Product low, air above it, as you liked","image":"/demo/lysne/08-06-feed.jpg","source":"taste"},
+          {"caption":"The reference in your brief","image":"/demo/lysne/02-05-feed.jpg","source":"brief"},
+          {"caption":"Window light through glass","image":"/demo/lysne/03-12-feed.jpg","source":"moodboard"},
+          {"caption":"The evening room, one warm lamp","image":"/demo/lysne/gen/taste-bedroom.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Warm, low side light leads in your Brand DNA."},
+          {"source":"taste","text":"You chose warm light over cool every time it came up in your taste."},
+          {"source":"moodboard","text":"Your moodboard keeps the product low, with air above it."},
+          {"source":"memory","text":"Evening stone won in Autumn launch; this carries its warmth into winter."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-w-b-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-oil","pr-candle"],
+            "scene": "The oil and the candle on folded linen, light striped by the ribbed glass.",
+            "text": "En roligere kveld, gitt."
+          },
+          {
+            "format": "feed",
+            "id": "pc-w-b-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "The oil lying on the linen, its sleeve half off, the stripes of light across the label's edge.",
+            "text": "Gi bort en roligere kveld."
+          },
+          {
+            "format": "story",
+            "id": "pc-w-b-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-oil","pr-candle"],
+            "scene": "The open box on linen, seen from above, a stripe of light across it.",
+            "text": "Til noen som fortjener kvelden."
+          },
+          {
+            "format": "story",
+            "id": "pc-w-b-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-w-b-m1",
+            "people": "No people",
+            "productIds": ["pr-oil","pr-candle"],
+            "scene": "Master 1, taller, more linen above.",
+            "text": "En roligere kveld, gitt."
+          },
+          {
+            "format": "story",
+            "id": "pc-w-b-v2",
+            "kind": "variant",
+            "name": "Master 2 in Story",
+            "of": "pc-w-b-m2",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 2, taller.",
+            "text": "Gi bort en roligere kveld."
+          },
+          {
+            "format": "feed",
+            "id": "pc-w-b-v3",
+            "kind": "variant",
+            "name": "Master 3 in Feed",
+            "of": "pc-w-b-m3",
+            "people": "No people",
+            "productIds": ["pr-oil","pr-candle"],
+            "scene": "Master 3, closer.",
+            "text": "Til noen som fortjener kvelden."
+          },
+          {
+            "format": "feed",
+            "id": "pc-w-b-v4",
+            "kind": "variant",
+            "name": "The candle alone",
+            "of": "pc-w-b-m1",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "The candle alone on the linen, lit.",
+            "text": "Tenn kvelden."
+          },
+          {
+            "format": "feed",
+            "id": "pc-w-b-v5",
+            "kind": "variant",
+            "name": "The label, close",
+            "of": "pc-w-b-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Close on the label in a stripe of light.",
+            "text": "For timen før søvn."
+          },
+          {
+            "format": "story",
+            "id": "pc-w-b-v6",
+            "kind": "variant",
+            "name": "The candle alone in Story",
+            "of": "pc-w-b-m1",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "The candle alone, taller.",
+            "text": "Tenn kvelden."
+          }
+        ],
+        "hook": "Wrapped as softly as the evening it gives.",
+        "id": "pd-w-b",
+        "idea": "Close and quiet: the oil and the candle on folded linen, warm light through ribbed glass, as if the gift were already unwrapped at home. No window and no season, only the evening.",
+        "letter": "B",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "taste",
+            "value": "Soft, warm light through a ribbed glass screen, from the left. The candle lit but not the main light.",
+            "why": "Ribbed glass and slow light, from your liked pictures"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm at table height, close. The bottle sharp, the window soft behind it."
+          },
+          {
+            "key": "set",
+            "label": "Set",
+            "source": "brand_dna",
+            "value": "Folded cream linen on oak, a ribbed glass screen behind."
+          },
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brief",
+            "value": "The gift sleeve, a loose ribbon in clay, Evening Candle lit. Nothing seasonal beyond that: no trees, no baubles.",
+            "why": "Your brief: never red and green Christmas colours"
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Amber glass, cream, clay and the window's deep blue. No red, no green."
+          },
+          {"key":"people","label":"People","source":"fume","value":"No people."}
+        ],
+        "name": "Linen and glass",
+        "references": [
+          {"caption":"Ribbed glass and slow light, as you liked","image":"/demo/lysne/02-04-feed.jpg","source":"taste"},
+          {"caption":"Light through ribbed glass","image":"/demo/lysne/05-08-feed.jpg","source":"moodboard"},
+          {"caption":"Stone and folded linen","image":"/demo/lysne/gen/taste-stone.jpg","source":"taste"},
+          {"caption":"The Evening Ritual box","image":"/demo/lysne/gen/ritual-pack.jpg","source":"product"}
+        ],
+        "why": [
+          {"source":"taste","text":"Ribbed glass and slow light are on your list of liked pictures."},
+          {"source":"brand_dna","text":"Linen and glass are named in your Brand DNA's imagery."},
+          {"source":"fume","text":"Less seasonal than A: it can run past Christmas."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-w-c-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-oil","pr-candle"],
+            "scene": "The oil beside the lit candle on a dark shelf, the flame in the glass.",
+            "text": "En roligere kveld, gitt."
+          },
+          {
+            "format": "feed",
+            "id": "pc-w-c-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "The oil alone, its glass glowing from the candle just out of frame.",
+            "text": "Gi bort en roligere kveld."
+          },
+          {
+            "format": "story",
+            "id": "pc-w-c-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-oil","pr-candle"],
+            "scene": "The open box in candlelight, from above.",
+            "text": "Til noen som fortjener kvelden."
+          },
+          {
+            "format": "story",
+            "id": "pc-w-c-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-w-c-m1",
+            "people": "No people",
+            "productIds": ["pr-oil","pr-candle"],
+            "scene": "Master 1, taller.",
+            "text": "En roligere kveld, gitt."
+          },
+          {
+            "format": "story",
+            "id": "pc-w-c-v2",
+            "kind": "variant",
+            "name": "Master 2 in Story",
+            "of": "pc-w-c-m2",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Master 2, taller.",
+            "text": "Gi bort en roligere kveld."
+          },
+          {
+            "format": "feed",
+            "id": "pc-w-c-v3",
+            "kind": "variant",
+            "name": "Master 3 in Feed",
+            "of": "pc-w-c-m3",
+            "people": "No people",
+            "productIds": ["pr-oil","pr-candle"],
+            "scene": "Master 3, closer.",
+            "text": "Til noen som fortjener kvelden."
+          },
+          {
+            "format": "feed",
+            "id": "pc-w-c-v4",
+            "kind": "variant",
+            "name": "The candle alone",
+            "of": "pc-w-c-m1",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "The candle alone, the flame sharp.",
+            "text": "Tenn kvelden."
+          },
+          {
+            "format": "feed",
+            "id": "pc-w-c-v5",
+            "kind": "variant",
+            "name": "The label, close",
+            "of": "pc-w-c-m1",
+            "people": "No people",
+            "productIds": ["pr-oil"],
+            "scene": "Close on the label in candlelight.",
+            "text": "For timen før søvn."
+          },
+          {
+            "format": "story",
+            "id": "pc-w-c-v6",
+            "kind": "variant",
+            "name": "The candle alone in Story",
+            "of": "pc-w-c-m1",
+            "people": "No people",
+            "productIds": ["pr-candle"],
+            "scene": "The candle alone, taller.",
+            "text": "Tenn kvelden."
+          }
+        ],
+        "hook": "The first hour after the candle is lit.",
+        "id": "pd-w-c",
+        "idea": "A dark room and only the candle: the oil catches its flame. The most intimate of the three, and darker than LYSNE usually goes, so the words must stay readable on a phone.",
+        "letter": "C",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "fume",
+            "value": "The candle is the only light: warm, low, falling off fast into deep shadow."
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm at table height, close. The bottle sharp, the window soft behind it."
+          },
+          {
+            "key": "set",
+            "label": "Set",
+            "source": "fume",
+            "value": "A dark oak shelf, a stone dish, the room behind in shadow."
+          },
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brief",
+            "value": "The gift sleeve, a loose ribbon in clay, Evening Candle lit. Nothing seasonal beyond that: no trees, no baubles.",
+            "why": "Your brief: never red and green Christmas colours"
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Amber glass, cream, clay and the window's deep blue. No red, no green."
+          },
+          {"key":"people","label":"People","source":"fume","value":"No people."}
+        ],
+        "name": "Candle hour",
+        "references": [
+          {"caption":"The candle as the only light","image":"/demo/lysne/gen/candle-scene.jpg","source":"moodboard"},
+          {"caption":"Darker, the bottle in deep shadow","image":"/demo/lysne/10-06-feed.jpg","source":"fume"},
+          {"caption":"A dark shelf, one warm source","image":"/demo/lysne/gen/holder-lit.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"product","text":"The candle is the gift's second product: here it is also the light."},
+          {"source":"fume","text":"Darker than your recent campaigns: a risk on small screens."}
+        ]
+      }
+    ],
+    "rules": [
+      {"kind":"must","source":"brief","text":"The bottle with its gift sleeve"},
+      {"kind":"must","source":"brief","text":"Warm, low light"},
+      {"kind":"never","source":"brief","text":"Red and green Christmas colours"},
+      {"kind":"never","source":"brief","text":"Discount language"},
+      {"kind":"never","ruleId":"r7","source":"brand_dna","text":"Skin-result claims; only “For the hour before sleep.”"},
+      {"kind":"never","source":"product","text":"A cropped or covered label"},
+      {"kind":"never","source":"product","text":"A glossy or black cap"}
+    ],
+    "state": "ready",
+    "summary": "Winter gifting puts Night Body Oil and Evening Candle forward as one considered gift in the weeks before Christmas. It speaks to people buying for someone close, who want a present that feels chosen rather than grabbed. The message: a slower evening, given. It runs in paid and organic social in Norway, in Norwegian, from Tuesday 3 November.",
+    "timeline": [
+      {"at":"2026-10-19T12:32:00.000Z","label":"Masters, checked by Nora"},
+      {"at":"2026-10-23T12:32:00.000Z","label":"Variants and formats"},
+      {"at":"2026-10-27T12:32:00.000Z","label":"Delivery"},
+      {"at":"2026-11-03T12:32:00.000Z","label":"Goes live"}
+    ],
+    "version": 1,
+    "writtenAt": "2026-10-13T18:32:00.000Z"
+  }
+even agencyHome()
+  {
+    "agency": {"id":"o-brygga","kind":"agency","name":"Brygga Studio","packageId":"p-core"},
+    "clients": [
+      {
+        "campaignsActive": 4,
+        "current": {
+          "campaignId": "c-autumn",
+          "detail": "11 creatives · 2 approved",
+          "name": "Autumn launch",
+          "progress": 0.18181818181818182
+        },
+        "example": "full",
+        "isNew": false,
+        "lead": {
+          "agency": {"organisationId":"o-brygga","role":"lead"},
+          "email": "nora@brygga.example",
+          "id": "u-nora",
+          "name": "Nora Vik",
+          "staffRole": "expert",
+          "title": "Creative lead"
+        },
+        "nextDelivery": {"at":"2026-10-17T12:32:00.000Z","title":"Autumn launch, the delivery"},
+        "openedAt": "2026-10-14T12:32:00.000Z",
+        "people": [
+          {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"Head of Marketing"},
+          {"email":"jonas@lysne.example","id":"u-jonas","name":"Jonas Berg","title":"Performance Marketer"},
+          {"email":"ida@lysne.example","id":"u-ida","name":"Ida Strand","title":"Finance Lead"}
+        ],
+        "picture": "/demo/lysne/05-06-feed.jpg",
+        "roles": {"u-ida":"viewer","u-jonas":"member","u-maja":"owner"},
+        "since": "2026-06-16T12:32:00.000Z",
+        "status": "8 creatives to check",
+        "waitingOn": "4 creatives with Maja",
+        "waitingOnYou": 3,
+        "workspace": {
+          "agencyId": "o-brygga",
+          "brandName": "LYSNE",
+          "id": "w-lysne",
+          "language": "Norwegian",
+          "market": "Norway",
+          "organisationId": "o-lysne"
+        }
+      },
+      {
+        "campaignsActive": 1,
+        "current": {"detail":"16 creatives · 10 approved","name":"Autumn knit","progress":0.62},
+        "example": "summary",
+        "isNew": false,
+        "lead": {
+          "agency": {"organisationId":"o-brygga","role":"creative"},
+          "email": "live@brygga.example",
+          "id": "u-live",
+          "name": "Live Hauge",
+          "staffRole": "expert",
+          "title": "Art director"
+        },
+        "nextDelivery": {"at":"2026-10-17T12:32:00.000Z","title":"Autumn knit, the delivery"},
+        "openedAt": "2026-10-13T10:32:00.000Z",
+        "people": [{"email":"sara@vev.example","id":"u-sara","name":"Sara Lind","title":"Marketing lead"}],
+        "picture": "/demo/lysne/gen/sweater-flat.jpg",
+        "roles": {"u-sara":"owner"},
+        "since": "2026-08-11T12:32:00.000Z",
+        "status": "Autumn knit: 6 creatives with Sara",
+        "waitingOn": "6 creatives with Sara",
+        "waitingOnYou": 0,
+        "workspace": {
+          "agencyId": "o-brygga",
+          "brandName": "VEV",
+          "id": "w-vev",
+          "language": "Swedish",
+          "market": "Sweden",
+          "organisationId": "o-vev"
+        }
+      },
+      {
+        "campaignsActive": 1,
+        "example": "summary",
+        "isNew": false,
+        "lead": {
+          "agency": {"organisationId":"o-brygga","role":"creative"},
+          "email": "even@brygga.example",
+          "id": "u-even",
+          "name": "Even Dahl",
+          "staffRole": "expert",
+          "title": "Designer"
+        },
+        "openedAt": "2026-10-12T10:32:00.000Z",
+        "people": [{"email":"henrik@halm.example","id":"u-henrik","name":"Henrik Aas","title":"Founder"}],
+        "picture": "/demo/kinds/furniture.jpg",
+        "roles": {"u-henrik":"owner"},
+        "since": "2026-09-23T12:32:00.000Z",
+        "status": "Studio chair launch: the brief waits on you, who it is for",
+        "waitingOnYou": 1,
+        "workspace": {
+          "agencyId": "o-brygga",
+          "brandName": "HALM",
+          "id": "w-halm",
+          "language": "Norwegian",
+          "market": "Norway",
+          "organisationId": "o-halm"
+        }
+      },
+      {
+        "campaignsActive": 0,
+        "example": "summary",
+        "isNew": false,
+        "lead": {
+          "agency": {"organisationId":"o-brygga","role":"creative"},
+          "email": "live@brygga.example",
+          "id": "u-live",
+          "name": "Live Hauge",
+          "staffRole": "expert",
+          "title": "Art director"
+        },
+        "people": [{"email":"camille@aurea.example","id":"u-camille","name":"Camille Roux","title":"Brand director"}],
+        "picture": "/demo/kinds/fragrance.jpg",
+        "roles": {"u-camille":"owner"},
+        "since": "2026-10-10T12:32:00.000Z",
+        "status": "New client: 14 Brand DNA finds to confirm",
+        "waitingOnYou": 1,
+        "workspace": {
+          "agencyId": "o-brygga",
+          "brandName": "AURÉA",
+          "id": "w-aurea",
+          "language": "Danish",
+          "market": "Denmark",
+          "organisationId": "o-aurea"
+        }
+      }
+    ],
+    "needsYou": [
+      {
+        "action": "Check",
+        "at": "2026-10-14T12:24:00.000Z",
+        "clientId": "w-lysne",
+        "detail": "4 creatives to check",
+        "href": "/studio/b/w-lysne/qa?campaign=c-autumn",
+        "id": "an-check-c-autumn",
+        "kind": "check",
+        "picture": "/demo/lysne/09-07-feed.jpg",
+        "title": "LYSNE · Autumn launch"
+      },
+      {
+        "action": "Send",
+        "at": "2026-10-14T12:10:00.000Z",
+        "clientId": "w-lysne",
+        "detail": "2 creatives to send to Maja",
+        "href": "/campaigns/c-autumn/review?send=1",
+        "id": "an-send-c-autumn",
+        "kind": "check",
+        "picture": "/demo/lysne/05-01-feed.jpg",
+        "title": "LYSNE · Autumn launch"
+      },
+      {
+        "action": "Answer",
+        "at": "2026-10-14T09:32:00.000Z",
+        "clientId": "w-lysne",
+        "detail": "2 questions for you",
+        "href": "/campaigns/c-balm",
+        "id": "an-questions-c-balm",
+        "kind": "brief",
+        "title": "LYSNE · Hand Balm introduction"
+      },
+      {
+        "action": "Open",
+        "at": "2026-10-14T07:32:00.000Z",
+        "clientId": "w-halm",
+        "detail": "The brief waits on you: who it is for",
+        "href": "/agency/clients?client=w-halm",
+        "id": "an-halm-brief",
+        "kind": "brief",
+        "picture": "/demo/kinds/furniture.jpg",
+        "title": "HALM · Studio chair launch"
+      },
+      {
+        "action": "Check",
+        "at": "2026-10-14T06:33:00.000Z",
+        "clientId": "w-lysne",
+        "detail": "4 creatives to check",
+        "href": "/studio/b/w-lysne/qa",
+        "id": "an-check-product-page",
+        "kind": "check",
+        "picture": "/demo/lysne/03-08-square.jpg",
+        "title": "LYSNE · Product page"
+      },
+      {
+        "action": "Open",
+        "at": "2026-10-13T16:32:00.000Z",
+        "clientId": "w-aurea",
+        "detail": "14 finds to confirm",
+        "href": "/agency/clients?client=w-aurea",
+        "id": "an-aurea-brand",
+        "kind": "brand",
+        "picture": "/demo/kinds/fragrance.jpg",
+        "title": "AURÉA · Brand DNA"
+      }
+    ],
+    "summary": "4 client brands. 8 creatives to check and 2 to send wait on you; 4 creatives with Maja.",
+    "team": [
+      {
+        "clientIds": ["w-lysne"],
+        "load": 0.82,
+        "role": "lead",
+        "thisWeek": "8 creatives to check · LYSNE",
+        "user": {
+          "agency": {"organisationId":"o-brygga","role":"lead"},
+          "email": "nora@brygga.example",
+          "id": "u-nora",
+          "name": "Nora Vik",
+          "staffRole": "expert",
+          "title": "Creative lead"
+        }
+      },
+      {
+        "clientIds": ["w-vev","w-aurea"],
+        "load": 0.7,
+        "role": "creative",
+        "thisWeek": "Autumn knit's variants · AURÉA's Brand DNA",
+        "user": {
+          "agency": {"organisationId":"o-brygga","role":"creative"},
+          "email": "live@brygga.example",
+          "id": "u-live",
+          "name": "Live Hauge",
+          "staffRole": "expert",
+          "title": "Art director"
+        }
+      },
+      {
+        "clientIds": ["w-halm"],
+        "load": 0.45,
+        "role": "creative",
+        "thisWeek": "Studio chair launch: the brief and the plan",
+        "user": {
+          "agency": {"organisationId":"o-brygga","role":"creative"},
+          "email": "even@brygga.example",
+          "id": "u-even",
+          "name": "Even Dahl",
+          "staffRole": "expert",
+          "title": "Designer"
+        }
+      },
+      {
+        "clientIds": ["w-lysne","w-vev"],
+        "load": 0.58,
+        "role": "creative",
+        "thisWeek": "Deliveries: Autumn launch, Autumn knit",
+        "user": {
+          "agency": {"organisationId":"o-brygga","role":"creative"},
+          "email": "sindre@brygga.example",
+          "id": "u-sindre",
+          "name": "Sindre Moe",
+          "staffRole": "operator",
+          "title": "Producer"
+        }
+      }
+    ]
+  }
