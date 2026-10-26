@@ -68,6 +68,8 @@ select test.ok(exists (select 1 from public.staff_assignments a join public.prof
 select test.ok(exists (select 1 from public.staff_assignments a join public.profiles p on p.id = a.user_id
   where p.email = 'william@fumecreatives.com' and a.staff_role = 'account_manager' and not a.can_check), 'William is an account manager and may not check');
 
+select test.refuses($$ select test.signup('stranger@example.com') $$, 'forbidden', 'an address without an invitation gets no account');
+
 select test.keep('lysne', '0b000000-0000-4000-8000-000000000001');
 select test.keep('solv', '0b000000-0000-4000-8000-000000000002');
 select test.keep('oil', '0e000000-0000-4000-8000-000000000001');
@@ -91,6 +93,10 @@ select test.act('marcus+lysne@fumecreatives.com');
 select test.keep('campaign', (public.create_campaign(test.id('lysne'), 'The hour before sleep', array[test.id('oil')]) ->> 'id')::uuid);
 select test.refuses($$ select public.send_brief(test.id('campaign'), '{"objective":"Launch"}') $$, 'invalid', 'an incomplete brief names what is missing');
 select public.send_brief(test.id('campaign'), '{"objective":"Make the evening ritual the reason to buy","audience":"Women 30-50 who wind down with a ritual","message":"For the hour before sleep","formats":"feed, square, story","count":"4"}');
+select test.ok((select written_by from public.plan_versions where campaign_id = test.id('campaign') and version = 1) = 'fume'
+  and (select jsonb_array_length(body -> 'planned_creatives') from public.plan_versions where campaign_id = test.id('campaign') and version = 1) = 3,
+  'sending the brief has Fume write plan 1: a master and two formats');
+select test.ok((select brief_draft ->> 'message' from public.campaigns where id = test.id('campaign')) = 'For the hour before sleep', 'the sent brief stays as the draft to change');
 
 select test.act('member+lysne@fumecreatives.com');
 select test.refuses($$ select public.write_plan(test.id('campaign'), '{}') $$, 'forbidden', 'a member cannot write Fume''s plan');
@@ -101,16 +107,16 @@ select public.write_plan(test.id('campaign'),
 select public.write_plan(test.id('campaign'),
   '{"directions":[{"id":"a","name":"Evening stone"}],"chosen_direction_id":"a","planned_creatives":[{"kind":"master","format":"feed"}]}',
   array['Master 1: the cap lit from the side']);
-select test.refuses($$ select public.approve_plan(test.id('campaign'), 2) $$, 'forbidden', 'Fume''s admin cannot approve the plan (2)');
+select test.refuses($$ select public.approve_plan(test.id('campaign'), 3) $$, 'forbidden', 'Fume''s admin cannot approve the plan (2)');
 
 select test.act('marcus+lysne@fumecreatives.com');
-select public.ask_plan_check(test.id('campaign'), 2);
+select public.ask_plan_check(test.id('campaign'), 3);
 select test.act('kristian@fumecreatives.com');
-select public.check_plan(test.id('campaign'), 2);
+select public.check_plan(test.id('campaign'), 3);
 
 select test.act('marcus+lysne@fumecreatives.com');
 select test.refuses($$ select public.approve_plan(test.id('campaign'), 1) $$, 'conflict', 'approving a stale plan version is refused (6)');
-select test.refuses($$ select public.approve_plan(test.id('campaign'), 2) $$, 'invalid', 'unverified required facts block the plan (7)');
+select test.refuses($$ select public.approve_plan(test.id('campaign'), 3) $$, 'invalid', 'unverified required facts block the plan (7)');
 
 select test.act('member+lysne@fumecreatives.com');
 select test.refuses($$ select public.verify_fact(test.id('fact_cap')) $$, 'forbidden', 'a member cannot verify a fact');
@@ -121,9 +127,9 @@ select test.refuses($$ select public.start_job(test.id('campaign'), 'master', '{
 select test.act('marcus+lysne@fumecreatives.com');
 select public.verify_fact(f.id) from public.product_facts f where f.required;
 select test.ok(cardinality(app.unverified_required_facts(test.id('campaign'))) = 0, 'the approver verified the four required facts');
-select public.approve_plan(test.id('campaign'), 2, 'approve-plan-1');
-select test.ok((public.approve_plan(test.id('campaign'), 2, 'approve-plan-1') ->> 'state') = 'approved', 'approving again with the same key returns the first result');
-select test.refuses($$ select public.approve_plan(test.id('campaign'), 3, 'approve-plan-1') $$, 'conflict', 'the same key with another body is refused');
+select public.approve_plan(test.id('campaign'), 3, 'approve-plan-1');
+select test.ok((public.approve_plan(test.id('campaign'), 3, 'approve-plan-1') ->> 'state') = 'approved', 'approving again with the same key returns the first result');
+select test.refuses($$ select public.approve_plan(test.id('campaign'), 4, 'approve-plan-1') $$, 'conflict', 'the same key with another body is refused');
 
 -- ─── Manual production through the system ────────────────────────────────────
 

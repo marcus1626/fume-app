@@ -1,11 +1,15 @@
 // The app's one way to the backend. Screens never fetch: they call the hooks in ./hooks, which call FumeApi.
-// VITE_FUME_API picks the implementation: "mock" (default, the LYSNE workspace in memory) or the real backend's URL
-// once it exists (an http implementation of the same contract goes in ./http.ts).
+// VITE_FUME_API picks the implementation: "mock" (default, the LYSNE workspace in memory) or "supabase", the live
+// backend (./live), where a person signs in with an email link first.
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useMemo, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import type { FumeApi, Id } from "../contract";
+import { SignInPage } from "../features/auth/SignInPage";
 import { createMockApi } from "../mock/mockApi";
+import { useAuthState } from "./auth";
+import { createLiveApi } from "./live";
+import { isLive } from "./live/supabase";
 
 type MockApi = FumeApi & { signInAs(userId: Id): void };
 
@@ -19,6 +23,8 @@ const AGENCY_PEOPLE = ["nora", "even", "live", "sindre"];
  * run, ?as=nora the agency. ?agency&as=maja is LYSNE's client view in the agency's world.
  */
 function createApi(): MockApi {
+  // Live: who is signed in comes from the sign-in, never from the address.
+  if (isLive) return Object.assign(createLiveApi(), { signInAs() {} });
   const params = new URLSearchParams(window.location.search);
   const as = params.get("as");
   const agency = (as !== null && AGENCY_PEOPLE.includes(as)) || params.has("agency") || agencyFlag();
@@ -119,6 +125,13 @@ export function restartDemo(fresh: boolean) {
 }
 
 export function ApiProvider({ children }: { children: ReactNode }) {
+  const auth = useAuthState();
+  if (auth === "checking") return null;
+  if (auth === "signed_out") return <SignInPage />;
+  return <SignedIn>{children}</SignedIn>;
+}
+
+function SignedIn({ children }: { children: ReactNode }) {
   const api = useMemo(createApi, []);
   const queryClient = useMemo(
     () =>
