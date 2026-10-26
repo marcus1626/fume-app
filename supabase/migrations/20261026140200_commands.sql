@@ -163,8 +163,8 @@ begin
   if not app.can_read(p_workspace_id) then
     perform app.fail('not_found', 'No such workspace.');
   end if;
-  if p_purpose = 'candidate' and not app.is_staff(p_workspace_id, array['operator']) then
-    perform app.fail('forbidden', 'Only an operator adds production candidates.');
+  if p_purpose = 'candidate' and not app.is_staff(p_workspace_id, array['designer']) then
+    perform app.fail('forbidden', 'Only a designer adds production candidates.');
   end if;
   if p_purpose = 'source'
      and not (app.customer_is(p_workspace_id, array['owner', 'approver', 'member']) or app.is_staff(p_workspace_id)) then
@@ -209,7 +209,7 @@ begin
   if not app.can_read(p_workspace_id) then
     perform app.fail('not_found', 'No such workspace.');
   end if;
-  if not (app.customer_is(p_workspace_id, array['owner', 'approver', 'member']) or app.is_staff(p_workspace_id, array['operator'])) then
+  if not (app.customer_is(p_workspace_id, array['owner', 'approver', 'member']) or app.is_staff(p_workspace_id, array['account_manager', 'designer'])) then
     perform app.fail('forbidden', 'Viewers cannot start a campaign.');
   end if;
   if coalesce(trim(p_name), '') = '' or coalesce(cardinality(p_product_ids), 0) = 0 then
@@ -251,7 +251,7 @@ begin
   if not found or not app.can_read(c.workspace_id) then
     perform app.fail('not_found', 'No such campaign.');
   end if;
-  if not app.customer_is(c.workspace_id, array['owner', 'approver', 'member']) and not app.is_staff(c.workspace_id, array['operator']) then
+  if not app.customer_is(c.workspace_id, array['owner', 'approver', 'member']) and not app.is_staff(c.workspace_id, array['account_manager']) then
     perform app.fail('forbidden', 'Viewers cannot send a brief.');
   end if;
   if exists (select 1 from public.plan_versions where campaign_id = c.id and state = 'approved') then
@@ -278,7 +278,7 @@ begin
   return app.idem_end(p_key, 'send_brief', req, to_jsonb(b));
 end $$;
 
--- Fume writes a plan version (T03) from the latest brief: the LLM proposes, an operator or expert submits it here.
+-- Fume writes a plan version (T03) from the latest brief: the LLM proposes, a designer submits it here.
 create or replace function public.write_plan(
   p_campaign_id uuid, p_body jsonb, p_changes text[] default '{}', p_by_fume boolean default true, p_key text default null
 ) returns jsonb
@@ -298,8 +298,8 @@ begin
   if not found or not app.can_read(c.workspace_id) then
     perform app.fail('not_found', 'No such campaign.');
   end if;
-  if not app.is_staff(c.workspace_id) then
-    perform app.fail('forbidden', 'Fume writes the plan.');
+  if not app.is_staff(c.workspace_id, array['designer']) then
+    perform app.fail('forbidden', 'A designer writes the plan.');
   end if;
   if exists (select 1 from public.plan_versions where campaign_id = c.id and state = 'approved') then
     perform app.fail('conflict', 'The plan is already approved.');
@@ -369,8 +369,11 @@ declare
 begin
   perform app.require_user();
   p := app.current_plan(p_campaign_id, p_version);
-  if not app.is_staff(p.workspace_id, array['expert']) then
-    perform app.fail('forbidden', 'Only an expert checks the plan.');
+  if not app.can_check(p.workspace_id) then
+    perform app.fail('forbidden', 'Only a designer who may check checks the plan.');
+  end if;
+  if p.written_by = auth.uid()::text then
+    perform app.fail('forbidden', 'Someone else checks a plan you wrote.');
   end if;
   if p.checked_by is not null and p.state = 'ready' then return to_jsonb(p); end if;
   if p.state not in ('in_check', 'ready') then
@@ -487,8 +490,8 @@ begin
   if not found or not app.can_read(c.workspace_id) then
     perform app.fail('not_found', 'No such campaign.');
   end if;
-  if not app.is_staff(c.workspace_id, array['operator']) then
-    perform app.fail('forbidden', 'Only an operator starts production.');
+  if not app.is_staff(c.workspace_id, array['designer']) then
+    perform app.fail('forbidden', 'Only a designer starts production.');
   end if;
   select * into p from public.plan_versions where campaign_id = c.id and state = 'approved' order by version desc limit 1;
   if not found then
@@ -553,8 +556,8 @@ begin
   if not found or not app.can_read(j.workspace_id) then
     perform app.fail('not_found', 'No such job.');
   end if;
-  if not app.is_staff(j.workspace_id, array['operator']) then
-    perform app.fail('forbidden', 'Only an operator changes a job.');
+  if not app.is_staff(j.workspace_id, array['designer']) then
+    perform app.fail('forbidden', 'Only a designer changes a job.');
   end if;
   if j.state = p_state then return to_jsonb(j); end if;
   if not (
@@ -590,8 +593,8 @@ begin
   if not found or not app.can_read(j.workspace_id) then
     perform app.fail('not_found', 'No such job.');
   end if;
-  if not app.is_staff(j.workspace_id, array['operator']) then
-    perform app.fail('forbidden', 'Only an operator adds a candidate.');
+  if not app.is_staff(j.workspace_id, array['designer']) then
+    perform app.fail('forbidden', 'Only a designer adds a candidate.');
   end if;
   if j.state in ('cancelled') then
     perform app.fail('conflict', 'This job was cancelled.');
@@ -637,8 +640,8 @@ begin
   if not found or not app.can_read(cand.workspace_id) then
     perform app.fail('not_found', 'No such candidate.');
   end if;
-  if not app.is_staff(cand.workspace_id, array['operator']) then
-    perform app.fail('forbidden', 'Only an operator sends work to check.');
+  if not app.is_staff(cand.workspace_id, array['designer']) then
+    perform app.fail('forbidden', 'Only a designer sends work to check.');
   end if;
   if exists (select 1 from public.creative_versions where candidate_id = cand.id) then
     perform app.fail('conflict', 'This candidate is already a version.');
@@ -690,8 +693,8 @@ begin
   if not found or not app.can_read_version(p_version) then
     perform app.fail('not_found', 'No such creative version.');
   end if;
-  if not app.is_staff(v.workspace_id, array['expert']) then
-    perform app.fail('forbidden', 'Only an expert checks creatives.');
+  if not app.can_check(v.workspace_id) then
+    perform app.fail('forbidden', 'Only a designer who may check checks creatives.');
   end if;
   if v.number <> (app.latest_version(v.creative_id)).number then
     perform app.fail('conflict', 'A newer version of this creative exists.');
@@ -727,7 +730,7 @@ declare
 begin
   perform app.require_user();
   select * into f from public.findings where id = p_finding_id;
-  if not found or not app.is_staff(f.workspace_id, array['expert']) then
+  if not found or not app.can_check(f.workspace_id) then
     perform app.fail('not_found', 'No such finding.');
   end if;
   if p_status not in ('resolved', 'accepted') then
@@ -756,6 +759,10 @@ begin
   end if;
   if exists (select 1 from public.findings where version_id = v.id and severity = 'critical' and status = 'open') then
     perform app.fail('conflict', 'A critical finding is still open on this version.');
+  end if;
+  -- Two pairs of eyes: the person who made a version never checks it.
+  if exists (select 1 from public.candidates cand where cand.id = v.candidate_id and cand.made_by = auth.uid()) then
+    perform app.fail('forbidden', 'Someone else checks a version you made.');
   end if;
   update public.creative_versions set state = 'checked' where id = v.id returning * into v;
   update public.expert_checks set state = 'checked', expert_id = auth.uid(), decided_at = now(), items = p_items
@@ -823,8 +830,8 @@ begin
   if not found or not app.can_read(c.workspace_id) then
     perform app.fail('not_found', 'No such campaign.');
   end if;
-  if not app.is_staff(c.workspace_id, array['operator']) then
-    perform app.fail('forbidden', 'Only an operator sends checked work.');
+  if not app.is_staff(c.workspace_id, array['account_manager', 'designer']) then
+    perform app.fail('forbidden', 'Only an account manager or designer sends checked work.');
   end if;
   update public.creative_versions v set sent_at = now(), sent_by = auth.uid()
   from public.creatives cr
@@ -1007,8 +1014,8 @@ begin
   if not found or not app.can_read(c.workspace_id) then
     perform app.fail('not_found', 'No such campaign.');
   end if;
-  if not (app.customer_is(c.workspace_id, array['owner', 'approver']) or app.is_staff(c.workspace_id, array['operator'])) then
-    perform app.fail('forbidden', 'Only the approver or an operator makes a delivery.');
+  if not (app.customer_is(c.workspace_id, array['owner', 'approver']) or app.is_staff(c.workspace_id, array['account_manager', 'designer'])) then
+    perform app.fail('forbidden', 'Only the approver, an account manager or a designer makes a delivery.');
   end if;
   if coalesce(trim(p_rights_note), '') = '' then
     perform app.fail('invalid', 'A delivery needs its usage rights.');

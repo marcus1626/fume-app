@@ -34,18 +34,18 @@ exist today. "Who" is the role that does it; "Call" is the contract call the scr
 | # | Step | Who | Screen (route) | Hook → call |
 | --- | --- | --- | --- | --- |
 | 1 | Sign in | everyone | none yet; the mock picks a person from `?as=` | `useSession` → `session()` |
-| 2 | Register the product and its facts | customer / operator | Brand → Products (`/brand/products/:id`), Product check (`/check/products`) | `useProduct`, `useVerifyFact`, `useCorrectFact`, `useVerifyProduct`, `useUploadShot` → `product()`, `verifyFact()`, `correctFact()`, `verifyProduct()`, `uploadShot()` |
+| 2 | Register the product and its facts | customer / designer | Brand → Products (`/brand/products/:id`), Product check (`/check/products`) | `useProduct`, `useVerifyFact`, `useCorrectFact`, `useVerifyProduct`, `useUploadShot` → `product()`, `verifyFact()`, `correctFact()`, `verifyProduct()`, `uploadShot()` |
 | 3 | Write and send the brief | customer | New campaign (`/campaigns/new`), Brief tab | `useOrderBrief`, `useSendBrief`, `useChangeBrief` → `orderBrief()`, `sendBrief()`, `changeBrief()` |
-| 4 | Fume writes the plan | Fume (LLM) + operator | Plan tab, staff plan (`/studio/b/:ws/campaigns/:id/plan`) | `usePlan`, `useChangePlan`, `useChoosePlanDirection` → `plan()`, `changePlan()`, `choosePlanDirection()` |
+| 4 | Fume writes the plan | Fume (LLM) + designer | Plan tab, staff plan (`/studio/b/:ws/campaigns/:id/plan`) | `usePlan`, `useChangePlan`, `useChoosePlanDirection` → `plan()`, `changePlan()`, `choosePlanDirection()` |
 | 5 | Expert checks the plan (optional, FLOWS §26.2) | expert | Check → Plans tab (`/studio/qa`), staff plan | `useAskPlanCheck`, `useCheckPlan` → `askPlanCheck()`, `checkPlan()` |
 | 6 | Customer approves the plan | approver | Plan tab | `useApprovePlan`, `useUndoApprovePlan` → `approvePlan(campaignId)`, `undoApprovePlan()` |
-| 7 | Produce the master (Engine or manual) | operator | Studio desk (`/studio/b/:ws/studio`, `/studio/doc/:id`); older session desk (`/studio/b/:ws/studio/session/:id`) | `useOpenDocument`, `useRender`, `usePickVersion`, `useDocumentToCheck` → `openDocument()`, `render()`, `pickVersion()`, `documentToCheck()`; or `startBatch()` |
+| 7 | Produce the master (Engine or manual) | designer | Studio desk (`/studio/b/:ws/studio`, `/studio/doc/:id`); older session desk (`/studio/b/:ws/studio/session/:id`) | `useOpenDocument`, `useRender`, `usePickVersion`, `useDocumentToCheck` → `openDocument()`, `render()`, `pickVersion()`, `documentToCheck()`; or `startBatch()` |
 | 8 | Expert checks the creative | expert | Check → Images (`/studio/qa`) | `useQaQueue`, `useQaCheck`, `useQaFeedback`, `useQaToStudio` → `qaQueue()`, `qaCheck()`, `qaFeedback()`, `qaToStudio()` |
-| 9 | Send checked work to the customer | operator | Staff Campaigns (`/studio/campaigns`) | `useRelease` → `release(campaignId)` |
+| 9 | Send checked work to the customer | designer | Staff Campaigns (`/studio/campaigns`) | `useRelease` → `release(campaignId)` |
 | 10 | Customer reviews: approve or ask for changes | approver | Review (`/review`, `/review/:campaignId`), viewer (`/review/:campaignId/c/:creativeId`) | `useApprove`, `useUnapprove`, `useAddReviewComment`, `useSendChanges` → `approve(versionIds)`, `unapprove()`, `addReviewComment()`, `requestChangeRound()` |
-| 11 | New version after a change | operator → expert | Check → Studio → Check (`qaToStudio`, `documentToCheck`) | as 7–8 |
-| 12 | Variants and formats from the approved master | operator | Studio desk → Formats | `useMakeFormats` → `makeFormats(documentId, placementIds)` |
-| 13 | Make the delivery and download | customer / operator | Campaign → Delivery tab, Deliveries (`/deliveries/:id`) | `useMakeDelivery`, `useDeliveryDownload`, `useConfirmLive` → `makeDelivery()`, `downloadUrl()`, `confirmLive()` |
+| 11 | New version after a change | designer → expert | Check → Studio → Check (`qaToStudio`, `documentToCheck`) | as 7–8 |
+| 12 | Variants and formats from the approved master | designer | Studio desk → Formats | `useMakeFormats` → `makeFormats(documentId, placementIds)` |
+| 13 | Make the delivery and download | customer / designer | Campaign → Delivery tab, Deliveries (`/deliveries/:id`) | `useMakeDelivery`, `useDeliveryDownload`, `useConfirmLive` → `makeDelivery()`, `downloadUrl()`, `confirmLive()` |
 
 Every step has a screen. No new screen is needed for the MVP cycle.
 
@@ -76,7 +76,7 @@ What the contract cannot express today. These become contract changes (contract,
 4. **No production job in the contract.** `EngineRun`, `Batch`, `StudioSession` and `CreativeDocument` all describe
    making things; none records attempts, provider, inputs, cost or an idempotency key. The MVP needs `ProductionJob` +
    `JobAttempt` + `ContextSnapshot` behind the existing desk and run cards.
-5. **No manual candidate.** Nothing lets an operator upload an image they made elsewhere as a candidate with its
+5. **No manual candidate.** Nothing lets an designer upload an image they made elsewhere as a candidate with its
    provenance (Tue §3).
 6. **Product evidence does not block anything.** `ProductFact.verifiedBy` exists, but no call refuses production when
    a required fact is unverified.

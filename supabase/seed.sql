@@ -13,15 +13,19 @@ insert into public.workspaces (id, organisation_id, slug, brand_name, market, la
   ('0b000000-0000-4000-8000-000000000002', '0a000000-0000-4000-8000-000000000002', 'solv', 'SOLV', 'Sweden', 'en')
 on conflict (id) do nothing;
 
--- Who signs in (Marcus confirms the roles; acceptance-script.md §2).
-insert into public.invitations (email, workspace_id, role, staff_role, name, title) values
-  ('marcus@fumecreatives.com', null, null, 'admin', 'Marcus Blom', 'Founder & CEO'),
-  ('marcus@fumecreatives.com', '0b000000-0000-4000-8000-000000000001', null, 'operator', null, null),
-  ('william@fumecreatives.com', '0b000000-0000-4000-8000-000000000001', null, 'expert', 'William Henriksson', 'Founder & CSO'),
-  ('kristian@fumecreatives.com', '0b000000-0000-4000-8000-000000000001', 'approver', null, 'Kristian Eek', 'Founder & COO'),
+-- Who signs in (Marcus, 26 Oct). One person may hold several roles. Only a designer with can_check may check; nobody
+-- checks their own work; William talks with customers and never checks.
+insert into public.invitations (email, workspace_id, role, staff_role, can_check, name, title) values
+  ('marcus@fumecreatives.com', null, null, 'admin', false, 'Marcus Blom', 'Founder & CEO'),
+  ('marcus@fumecreatives.com', '0b000000-0000-4000-8000-000000000001', null, 'designer', false, null, null),
+  ('kristian@fumecreatives.com', null, null, 'admin', false, 'Kristian Eek', 'Founder & COO'),
+  ('kristian@fumecreatives.com', '0b000000-0000-4000-8000-000000000001', null, 'designer', true, null, null),
+  ('william@fumecreatives.com', '0b000000-0000-4000-8000-000000000001', null, 'account_manager', false, 'William Henriksson', 'Founder & CSO'),
+  -- LYSNE's approver for the rehearsal (a fictional brand; the address reaches Marcus's inbox)
+  ('marcus+lysne@fumecreatives.com', '0b000000-0000-4000-8000-000000000001', 'approver', null, false, 'LYSNE Approver', 'Brand Manager'),
   -- test-only people for the access checks
-  ('member+lysne@fumecreatives.com', '0b000000-0000-4000-8000-000000000001', 'member', null, 'Test Member', 'Marketer'),
-  ('user+solv@fumecreatives.com', '0b000000-0000-4000-8000-000000000002', 'approver', null, 'Test SOLV', 'Brand Manager');
+  ('member+lysne@fumecreatives.com', '0b000000-0000-4000-8000-000000000001', 'member', null, false, 'Test Member', 'Marketer'),
+  ('user+solv@fumecreatives.com', '0b000000-0000-4000-8000-000000000002', 'approver', null, false, 'Test SOLV', 'Brand Manager');
 
 -- Brand DNA v1 (approved), from the demo brand's rules.
 insert into public.brand_dna_versions (id, workspace_id, version, state, approved_at) values

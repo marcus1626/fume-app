@@ -17,8 +17,8 @@ create table public.profiles (
   name text not null,
   -- Real job title, shown with the name on every check (F-D040).
   title text not null default '',
-  -- Set for Fume's own people only.
-  staff_role text check (staff_role in ('expert', 'operator', 'admin')),
+  -- Set for Fume's own people only (one of their roles; staff_assignments holds them all per workspace).
+  staff_role text check (staff_role in ('designer', 'account_manager', 'admin')),
   created_at timestamptz not null default now()
 );
 
@@ -50,7 +50,12 @@ create table public.memberships (
 create table public.staff_assignments (
   user_id uuid not null references public.profiles (id) on delete cascade,
   workspace_id uuid not null references public.workspaces (id) on delete cascade,
-  staff_role text not null check (staff_role in ('expert', 'operator')),
+  -- designer: makes the work; account_manager: talks with the customer (sales, CSM), never checks.
+  -- One person may hold several roles, one row each.
+  staff_role text not null check (staff_role in ('designer', 'account_manager')),
+  -- A designer with this right may check (sign) plans and creatives: the expert check (F-D077).
+  can_check boolean not null default false,
+  check (not can_check or staff_role = 'designer'),
   created_at timestamptz not null default now(),
   primary key (user_id, workspace_id, staff_role)
 );
@@ -62,7 +67,8 @@ create table public.invitations (
   email text not null,
   workspace_id uuid references public.workspaces (id) on delete cascade,
   role text check (role in ('owner', 'approver', 'member', 'viewer')),
-  staff_role text check (staff_role in ('expert', 'operator', 'admin')),
+  staff_role text check (staff_role in ('designer', 'account_manager', 'admin')),
+  can_check boolean not null default false,
   name text,
   title text,
   invited_by uuid references public.profiles (id),
@@ -90,14 +96,25 @@ language sql stable security definer set search_path = '' as $$
   select m.role from public.memberships m where m.user_id = auth.uid() and m.workspace_id = ws
 $$;
 
--- True when the caller works on this workspace for Fume with one of the given staff roles. An admin reads every
--- workspace and acts as its operator, but checks creatives only when assigned as its expert: the check carries a
--- named expert, never a role by default.
-create or replace function app.is_staff(ws uuid, roles text[] default array['expert', 'operator']) returns boolean
+-- True when the caller works on this workspace for Fume with one of the given staff roles. 'admin' in the list lets
+-- an admin through: the default list (reading) does, but no command that makes, checks or sends work names it, so an
+-- admin does that work only with a designer or account manager role of their own on the workspace.
+create or replace function app.is_staff(
+  ws uuid, roles text[] default array['designer', 'account_manager', 'admin']
+) returns boolean
 language sql stable security definer set search_path = '' as $$
-  select (app.is_admin() and 'operator' = any (roles)) or exists (
+  select ('admin' = any (roles) and app.is_admin()) or exists (
     select 1 from public.staff_assignments s
     where s.user_id = auth.uid() and s.workspace_id = ws and s.staff_role = any (roles)
+  )
+$$;
+
+-- True when the caller is a designer on this workspace with the right to check.
+create or replace function app.can_check(ws uuid) returns boolean
+language sql stable security definer set search_path = '' as $$
+  select exists (
+    select 1 from public.staff_assignments s
+    where s.user_id = auth.uid() and s.workspace_id = ws and s.staff_role = 'designer' and s.can_check
   )
 $$;
 
@@ -149,9 +166,10 @@ begin
       insert into public.memberships (user_id, workspace_id, role) values (new.id, inv.workspace_id, inv.role)
       on conflict (user_id, workspace_id) do update set role = excluded.role;
     end if;
-    if inv.staff_role in ('expert', 'operator') then
-      insert into public.staff_assignments (user_id, workspace_id, staff_role)
-      values (new.id, inv.workspace_id, inv.staff_role) on conflict do nothing;
+    if inv.staff_role in ('designer', 'account_manager') then
+      insert into public.staff_assignments (user_id, workspace_id, staff_role, can_check)
+      values (new.id, inv.workspace_id, inv.staff_role, inv.can_check)
+      on conflict (user_id, workspace_id, staff_role) do update set can_check = excluded.can_check;
     end if;
     update public.invitations set state = 'accepted' where id = inv.id;
   end loop;
@@ -186,7 +204,7 @@ create policy organisations_read on public.organisations for select to authentic
 create policy memberships_read on public.memberships for select to authenticated using (app.can_read(workspace_id));
 create policy staff_assignments_read on public.staff_assignments for select to authenticated using (app.can_read(workspace_id));
 create policy invitations_read on public.invitations for select to authenticated using (
-  app.is_admin() or (workspace_id is not null and (app.customer_role(workspace_id) = 'owner' or app.is_staff(workspace_id, array['operator'])))
+  app.is_admin() or (workspace_id is not null and (app.customer_role(workspace_id) = 'owner' or app.is_staff(workspace_id, array['account_manager'])))
 );
 
 grant select on public.profiles, public.organisations, public.workspaces, public.memberships, public.staff_assignments,

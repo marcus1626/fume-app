@@ -14,7 +14,7 @@ The LLM proposes; a domain command validates schema, access and rules, then writ
 
 | Plan object | Contract | MVP note |
 | --- | --- | --- |
-| Organisation, Workspace, User, Membership, StaffAssignment | same names (`identity.ts`) | Membership role: owner, approver, member, viewer. Staff role: expert, operator, admin. |
+| Organisation, Workspace, User, Membership, StaffAssignment | same names (`identity.ts`) | Membership role: owner, approver, member, viewer. Staff role: designer, account_manager, admin; a person may hold several, and a designer may carry the right to check (DECIDED 26 Oct). |
 | Source, Asset | `SourceAsset` (`brand.ts`), `ProductFile` (`products.ts`) | Must hold a real stored file (bucket path, checksum, uploader). |
 | BrandProfileVersion, BrandRule | `BrandDna` (version, state), `BrandRule` | A campaign records which Brand DNA version it used. |
 | Product, ProductTruthVersion, FactAssertion | `Product`, `ProductFact` (source, confidence, verifiedBy) | MVP: a fact's `source` = `verified` means a named person confirmed it. `required` is **New** (which facts production depends on). |
@@ -70,19 +70,19 @@ version named is the current one, and the command carries an idempotency key. "B
 | Command (contract call) | Who may | Requires | Result | Blocked with |
 | --- | --- | --- | --- | --- |
 | `sendBrief(campaignId)` | owner, approver, member | brief has what, for whom, product, format, count | brief vN `ready`; plan `writing` | `invalid` (lists what is missing) |
-| `changePlan` / `choosePlanDirection` | approver; operator, expert | plan not `approved` | new plan version | `conflict` |
-| `askPlanCheck` → `checkPlan` | approver asks; expert checks | plan `ready` | plan `in_check` → `ready`, checked by named expert | `forbidden`, `conflict` |
+| `changePlan` / `choosePlanDirection` | approver; designer | plan not `approved` | new plan version | `conflict` |
+| `askPlanCheck` → `checkPlan` | approver asks; a designer who may check, and not the one who wrote it | plan `ready` | plan `in_check` → `ready`, checked by named expert | `forbidden`, `conflict` |
 | `approvePlan(campaignId, version)` | approver (in agency work: the client) | plan `ready`, version = current; every **required** product fact verified | plan `approved`; production may start | `conflict` (stale version), `invalid` (unverified facts listed), `forbidden` |
-| `startJob(input, idempotencyKey)` **New** | operator | plan approved; for variants: master approved; inputs exist | job `queued` + ContextSnapshot | `invalid`, `conflict`; same key returns the same job |
-| `addManualCandidate(jobId, file, note)` **New** | operator | job exists | candidate file stored with provenance "manual" | `invalid` |
-| `sendToCheck(candidate)` (`documentToCheck`) | operator | candidate from a job | creative version n `in_check`, ExpertCheck `waiting` | `invalid` |
-| `markChecked(checkId)` (`qaCheck`) | expert (staff, assigned); in agency work the agency | version `in_check`; no open critical finding | version `checked`, check by named expert | `forbidden`, `conflict` |
-| `requestCorrection` / `hold` | expert | version `in_check` | `correcting` / `held` | `conflict` |
-| `release(campaignId)` (send) | operator | at least one `checked` version | those versions become visible to the customer | `conflict` |
+| `startJob(input, idempotencyKey)` **New** | designer | plan approved; for variants: master approved; inputs exist | job `queued` + ContextSnapshot | `invalid`, `conflict`; same key returns the same job |
+| `addManualCandidate(jobId, file, note)` **New** | designer | job exists | candidate file stored with provenance "manual" | `invalid` |
+| `sendToCheck(candidate)` (`documentToCheck`) | designer | candidate from a job | creative version n `in_check`, ExpertCheck `waiting` | `invalid` |
+| `markChecked(checkId)` (`qaCheck`) | a designer who may check, never the maker; in agency work the agency | version `in_check`; no open critical finding | version `checked`, check by named expert | `forbidden`, `conflict` |
+| `requestCorrection` / `hold` | a designer who may check | version `in_check` | `correcting` / `held` | `conflict` |
+| `release(campaignId)` (send) | account manager or designer | at least one `checked` version | those versions become visible to the customer | `conflict` |
 | `approve(versionIds)` | approver (client in agency work) | each version `checked` and sent, id = current version | `approved` by named person | `forbidden`, `conflict` (stale or unchecked) |
 | `requestChanges(versionId, cause, ...)` | approver, member | version `checked` and sent | version n `changes_requested`, version n+1 `making`; revision uses a round, correction does not | `conflict` (no rounds left) |
-| `makeFormats(masterVersionId, placements)` | operator | master version `approved` | variant creatives in `making`, each with `masterId` | `invalid` (master not approved) |
-| `makeDelivery(campaignId)` | approver, operator | every included version `approved`; no open critical finding | Delivery with one DeliveryItem per approved version | `invalid` |
+| `makeFormats(masterVersionId, placements)` | designer | master version `approved` | variant creatives in `making`, each with `masterId` | `invalid` (master not approved) |
+| `makeDelivery(campaignId)` | approver, account manager or designer | every included version `approved`; no open critical finding | Delivery with one DeliveryItem per approved version | `invalid` |
 | `downloadUrl(deliveryId, format?)` | anyone in the workspace who can see deliveries | delivery `ready` or later | short-lived signed URL to exactly the delivered files | `forbidden` |
 
 ## 4. Rules (the plan's critical MVP rules, made concrete)

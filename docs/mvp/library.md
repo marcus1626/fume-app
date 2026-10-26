@@ -32,7 +32,7 @@ Common rules for all of them:
 | B08 | Messaging and copy | T02, approved claims (B03) | T04 | Every claim line references a fact; no new promise | LLM proposes (Wed) |
 | B09 | Art direction and shot plan | T03, B02, B03 | T05 part 1 | Subject, scene, light, composition, text space, prohibited changes | Marcus writes, LLM drafts |
 | B10 | Production recipe | B09, product references | T05 part 2 + a job | Inputs readable before submit; cost limit set | One provider, one recipe (Wed) |
-| B11 | Evaluation and Quality Gate | Creative version, B02, B03, T05 | T06 | Expert signs off on one version; automated findings recorded as findings | William checks |
+| B11 | Evaluation and Quality Gate | Creative version, B02, B03, T05 | T06 | Expert signs off on one version; automated findings recorded as findings | Kristian checks |
 | B12 | Feedback and repair | T06 or a customer change | T07 + a new version | Cause recorded; what must change and what must stay are explicit | Manual repair allowed (Thu) |
 | B13 | Variants and formats | Approved master version | Derived creatives with `masterId` | Each is checked; no locked fact changed | 1:1, 9:16, one variant (Thu) |
 | B14 | Delivery | Approved versions | T08 | Files match approved versions; rights note present | Fri |

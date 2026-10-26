@@ -56,12 +56,17 @@ grant execute on all functions in schema test to authenticated;
 
 -- Everyone signs in once, so their invitations turn into access.
 select test.signup(e) from unnest(array['marcus@fumecreatives.com', 'william@fumecreatives.com', 'kristian@fumecreatives.com',
+  'marcus+lysne@fumecreatives.com',
   'member+lysne@fumecreatives.com', 'user+solv@fumecreatives.com']) e;
 
 set client_min_messages = notice;
 select test.ok((select staff_role from public.profiles where email = 'marcus@fumecreatives.com') = 'admin', 'invitation makes Marcus admin');
 select test.ok(exists (select 1 from public.memberships m join public.profiles p on p.id = m.user_id
-  where p.email = 'kristian@fumecreatives.com' and m.role = 'approver'), 'invitation makes Kristian LYSNE''s approver');
+  where p.email = 'marcus+lysne@fumecreatives.com' and m.role = 'approver'), 'invitation makes the approver LYSNE''s approver');
+select test.ok(exists (select 1 from public.staff_assignments a join public.profiles p on p.id = a.user_id
+  where p.email = 'kristian@fumecreatives.com' and a.staff_role = 'designer' and a.can_check), 'Kristian is a designer who may check');
+select test.ok(exists (select 1 from public.staff_assignments a join public.profiles p on p.id = a.user_id
+  where p.email = 'william@fumecreatives.com' and a.staff_role = 'account_manager' and not a.can_check), 'William is an account manager and may not check');
 
 select test.keep('lysne', '0b000000-0000-4000-8000-000000000001');
 select test.keep('solv', '0b000000-0000-4000-8000-000000000002');
@@ -82,7 +87,7 @@ select test.refuses($$ select public.verify_fact(test.id('fact_cap')) $$, 'forbi
 
 -- ─── Product evidence and the plan ───────────────────────────────────────────
 
-select test.act('kristian@fumecreatives.com');
+select test.act('marcus+lysne@fumecreatives.com');
 select test.keep('campaign', (public.create_campaign(test.id('lysne'), 'The hour before sleep', array[test.id('oil')]) ->> 'id')::uuid);
 select test.refuses($$ select public.send_brief(test.id('campaign'), '{"objective":"Launch"}') $$, 'invalid', 'an incomplete brief names what is missing');
 select public.send_brief(test.id('campaign'), '{"objective":"Make the evening ritual the reason to buy","audience":"Women 30-50 who wind down with a ritual","message":"For the hour before sleep","formats":"feed, square, story","count":"4"}');
@@ -98,12 +103,12 @@ select public.write_plan(test.id('campaign'),
   array['Master 1: the cap lit from the side']);
 select test.refuses($$ select public.approve_plan(test.id('campaign'), 2) $$, 'forbidden', 'Fume''s admin cannot approve the plan (2)');
 
-select test.act('kristian@fumecreatives.com');
+select test.act('marcus+lysne@fumecreatives.com');
 select public.ask_plan_check(test.id('campaign'), 2);
-select test.act('william@fumecreatives.com');
+select test.act('kristian@fumecreatives.com');
 select public.check_plan(test.id('campaign'), 2);
 
-select test.act('kristian@fumecreatives.com');
+select test.act('marcus+lysne@fumecreatives.com');
 select test.refuses($$ select public.approve_plan(test.id('campaign'), 1) $$, 'conflict', 'approving a stale plan version is refused (6)');
 select test.refuses($$ select public.approve_plan(test.id('campaign'), 2) $$, 'invalid', 'unverified required facts block the plan (7)');
 
@@ -113,9 +118,9 @@ select test.refuses($$ select public.verify_fact(test.id('fact_cap')) $$, 'forbi
 select test.act('marcus@fumecreatives.com');
 select test.refuses($$ select public.start_job(test.id('campaign'), 'master', '{"provider":"manual"}') $$, 'invalid', 'production waits for the approved plan (8)');
 
-select test.act('kristian@fumecreatives.com');
+select test.act('marcus+lysne@fumecreatives.com');
 select public.verify_fact(f.id) from public.product_facts f where f.required;
-select test.ok(cardinality(app.unverified_required_facts(test.id('campaign'))) = 0, 'Kristian verified the four required facts');
+select test.ok(cardinality(app.unverified_required_facts(test.id('campaign'))) = 0, 'the approver verified the four required facts');
 select public.approve_plan(test.id('campaign'), 2, 'approve-plan-1');
 select test.ok((public.approve_plan(test.id('campaign'), 2, 'approve-plan-1') ->> 'state') = 'approved', 'approving again with the same key returns the first result');
 select test.refuses($$ select public.approve_plan(test.id('campaign'), 3, 'approve-plan-1') $$, 'conflict', 'the same key with another body is refused');
@@ -128,14 +133,14 @@ select test.ok((public.start_job(test.id('campaign'), 'master', '{"provider":"ma
 select test.ok((select count(*) from public.production_jobs) = 1, 'one job in the database');
 select test.ok((select jsonb_array_length(facts) from public.context_snapshots) = 6, 'the job''s snapshot holds the six facts');
 
--- the operator uploads a picture made by hand (storage is stubbed here; the app uploads to the bucket)
+-- the designer uploads a picture made by hand (storage is stubbed here; the app uploads to the bucket)
 reset role;
 insert into storage.objects (bucket_id, name, owner_id)
 values ('workspace-files', '0b000000-0000-4000-8000-000000000001/master-v1.jpg', (select id::text from public.profiles where email = 'marcus@fumecreatives.com')),
        ('workspace-files', '0b000000-0000-4000-8000-000000000001/master-v2.jpg', (select id::text from public.profiles where email = 'marcus@fumecreatives.com'));
 set role authenticated;
 
-select test.act('kristian@fumecreatives.com');
+select test.act('marcus+lysne@fumecreatives.com');
 select test.refuses($$ select public.register_file(test.id('lysne'), '0b000000-0000-4000-8000-000000000001/master-v1.jpg', 'm.jpg', 'image/jpeg', 1, null, null, null, 'candidate') $$, 'forbidden', 'a customer cannot add a production candidate');
 
 select test.act('marcus@fumecreatives.com');
@@ -147,7 +152,7 @@ select test.keep('v1', (public.send_to_check(test.id('cand1'), 'feed', 'Night Bo
 
 -- ─── The gate: unchecked work never reaches the customer ─────────────────────
 
-select test.act('kristian@fumecreatives.com');
+select test.act('marcus+lysne@fumecreatives.com');
 select test.ok((select count(*) from public.creative_versions) = 0, 'the customer cannot see a version in check (4)');
 select test.ok((select count(*) from public.files where id = test.id('file1')) = 0, 'the customer cannot see its file row (4)');
 select test.ok(not app.can_read_object('0b000000-0000-4000-8000-000000000001/master-v1.jpg'), 'the customer cannot read its bytes from storage (4)');
@@ -155,20 +160,23 @@ select test.ok((select count(*) from public.production_jobs) = 0 and (select cou
 select test.refuses($$ select public.approve_versions(array[test.id('v1')]) $$, 'not_found', 'the customer cannot approve an unchecked version (3)');
 
 select test.act('marcus@fumecreatives.com');
-select test.refuses($$ select public.mark_checked(test.id('v1')) $$, 'forbidden', 'the operator does not check; the expert does');
+select test.refuses($$ select public.mark_checked(test.id('v1')) $$, 'forbidden', 'a designer without the right to check cannot check');
 select test.act('william@fumecreatives.com');
+select test.refuses($$ select public.mark_checked(test.id('v1')) $$, 'forbidden', 'the account manager never checks a creative');
+select test.refuses($$ select public.write_plan(test.id('campaign'), '{}') $$, 'forbidden', 'the account manager does not write the plan');
+select test.act('kristian@fumecreatives.com');
 select public.add_finding(test.id('v1'), 'product', 'critical', 'Cap reads glossy', 'automated');
 select test.refuses($$ select public.mark_checked(test.id('v1')) $$, 'conflict', 'an open critical finding blocks the check');
 select public.resolve_finding((select id from public.findings limit 1), 'accepted');
 select public.mark_checked(test.id('v1'), '[{"against":"Cap","result":"pass"}]', 'check-v1');
 select test.ok((public.mark_checked(test.id('v1'), '[{"against":"Cap","result":"pass"}]', 'check-v1') ->> 'state') = 'checked', 'checking twice with the same key is one check (13)');
-select test.refuses($$ select public.approve_versions(array[test.id('v1')]) $$, 'forbidden', 'the expert cannot approve (2)');
+select test.refuses($$ select public.approve_versions(array[test.id('v1')]) $$, 'forbidden', 'the one who checked cannot approve (2)');
 
-select test.act('kristian@fumecreatives.com');
+select test.act('marcus+lysne@fumecreatives.com');
 select test.ok((select count(*) from public.creative_versions) = 0, 'checked but not sent: still hidden');
 select test.act('marcus@fumecreatives.com');
 select public.send_checked(test.id('campaign'));
-select test.act('kristian@fumecreatives.com');
+select test.act('marcus+lysne@fumecreatives.com');
 select test.ok((select count(*) from public.creative_versions) = 1, 'checked and sent: the customer sees it');
 select test.ok((select count(*) from public.expert_checks where state = 'checked' and expert_id is not null) = 1, 'the customer sees who checked it');
 select test.ok((select count(*) from public.findings) = 0, 'automated findings stay with Fume');
@@ -179,7 +187,7 @@ select test.refuses($$ select public.approve_versions(array[test.id('v1')]) $$, 
 
 -- ─── A correction makes a new version that starts from nothing ───────────────
 
-select test.act('kristian@fumecreatives.com');
+select test.act('marcus+lysne@fumecreatives.com');
 select public.request_changes(test.id('v1'), 'correction', 'The cap reads glossy', '["the cap''s finish"]', '["scene","light","label"]');
 select test.ok((select rounds_used from public.campaigns where id = test.id('campaign')) = 0, 'a correction uses no round');
 
@@ -193,26 +201,26 @@ select test.ok(not exists (select 1 from public.approvals where version_id = tes
   and (select state from public.expert_checks where version_id = test.id('v2')) = 'waiting', 'version 2 has no approval and a waiting check (11)');
 select test.ok((select new_version_id from public.change_requests where version_id = test.id('v1')) = test.id('v2'), 'the change request points at the version that answers it');
 
-select test.act('william@fumecreatives.com');
+select test.act('kristian@fumecreatives.com');
 select test.refuses($$ select public.mark_checked(test.id('v1')) $$, 'conflict', 'an old version cannot be checked');
 select public.mark_checked(test.id('v2'));
 select test.act('marcus@fumecreatives.com');
 select public.send_checked(test.id('campaign'));
 
-select test.act('kristian@fumecreatives.com');
+select test.act('marcus+lysne@fumecreatives.com');
 select test.refuses($$ select public.approve_versions(array[test.id('v1')]) $$, 'conflict', 'approving version 1 after version 2 exists is refused (10)');
 select public.approve_versions(array[test.id('v2')]);
-select test.ok((select decided_by from public.approvals where version_id = test.id('v2')) = (select id from public.profiles where email = 'kristian@fumecreatives.com'), 'the approval names Kristian and version 2');
+select test.ok((select decided_by from public.approvals where version_id = test.id('v2')) = (select id from public.profiles where email = 'marcus+lysne@fumecreatives.com'), 'the approval names the approver and version 2');
 
 -- ─── Formats need an approved master ─────────────────────────────────────────
 
 select test.act('marcus@fumecreatives.com');
 select test.refuses($$ select public.start_job(test.id('campaign'), 'format', '{"provider":"manual"}', '[]', null, test.id('v1'), 'manual') $$, 'invalid', 'a format from an unapproved master version is refused (9)');
-select public.start_job(test.id('campaign'), 'format', '{"provider":"manual"}', '[]', null, test.id('v2'), 'manual');
+select test.keep('job3', (public.start_job(test.id('campaign'), 'format', '{"provider":"manual"}', '[]', null, test.id('v2'), 'manual') ->> 'id')::uuid);
 
 -- ─── Delivery points at exact approved files ─────────────────────────────────
 
-select test.act('kristian@fumecreatives.com');
+select test.act('marcus+lysne@fumecreatives.com');
 select test.refuses($$ select public.make_delivery(test.id('campaign'), '') $$, 'invalid', 'a delivery needs its usage rights');
 select test.keep('delivery', (public.make_delivery(test.id('campaign'), 'Paid and organic social in Norway, 12 months') ->> 'id')::uuid);
 select test.ok((select version_id from public.delivery_items where delivery_id = test.id('delivery')) = test.id('v2'), 'the delivery holds version 2');
@@ -225,6 +233,22 @@ select test.ok((select state from public.campaigns where id = test.id('campaign'
 
 select test.ok((select count(*) from public.record_events where action = 'version.approved') = 1, 'one approval event, though approve ran with retries');
 select test.ok((select count(*) from public.record_events where action = 'version.checked') = 2, 'two check events, one per version');
+
+set role authenticated;
+
+-- ─── Two pairs of eyes: nobody checks their own work ─────────────────────────
+
+reset role;
+insert into storage.objects (bucket_id, name, owner_id)
+values ('workspace-files', '0b000000-0000-4000-8000-000000000001/square-v1.jpg', (select id::text from public.profiles where email = 'kristian@fumecreatives.com'));
+set role authenticated;
+
+select test.act('kristian@fumecreatives.com');
+select test.keep('file3', (public.register_file(test.id('lysne'), '0b000000-0000-4000-8000-000000000001/square-v1.jpg', 'square-v1.jpg', 'image/jpeg', 700000, 'sha-s1', 1080, 1080, 'candidate') ->> 'id')::uuid);
+select test.keep('cand3', (public.add_candidate(test.id('job3'), test.id('file3'), 'manual', 'Cropped the approved master to square') ->> 'id')::uuid);
+select test.keep('v3', (public.send_to_check(test.id('cand3'), 'square', 'Night Body Oil · Square 1') ->> 'id')::uuid);
+select test.refuses($$ select public.mark_checked(test.id('v3')) $$, 'forbidden', 'the one who made a version cannot check it');
+
 
 reset role;
 select test.ok(true, 'all rule tests passed');
