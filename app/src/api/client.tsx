@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import type { FumeApi, Id } from "../contract";
 import { SignInPage } from "../features/auth/SignInPage";
 import { createMockApi } from "../mock/mockApi";
-import { useAuthState } from "./auth";
+import { signOut, useAuthState } from "./auth";
 import { createLiveApi } from "./live";
 import { isLive } from "./live/supabase";
 
@@ -204,12 +204,17 @@ export function useApi(): MockApi {
 }
 
 /** Demo only: sign in as someone else in the mock without leaving the page (the preview has no address bar to change). */
+/** True with the mock: the demo's people and its restarts show only then. */
+export const isDemo = !isLive;
+
 export type DemoPerson = "maja" | "jonas" | "ida" | "anna" | "sander" | "vera" | "nora" | "even";
 export function useDemoSignIn(): (who: DemoPerson) => void {
   const api = useApi();
   const client = useQueryClient();
   const navigate = useNavigate();
   return (who) => {
+    // Live, the person menu's Sign out signs out for real; there are no demo people to become.
+    if (isLive) return void signOut();
     const agencyPerson = AGENCY_PEOPLE.includes(who);
     const fumePerson = who === "anna" || who === "sander" || who === "vera";
     // The agency's world and Fume's own are two demos: crossing between them reloads.

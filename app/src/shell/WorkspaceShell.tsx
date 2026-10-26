@@ -32,7 +32,7 @@ import {
 } from "@fume/ui";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
-import { isAgencyDemo, restartDemo, useApi, useDemoSignIn } from "../api/client";
+import { isAgencyDemo, isDemo, restartDemo, useApi, useDemoSignIn } from "../api/client";
 import { useBoard, useSession } from "../api/hooks";
 import * as copy from "../copy";
 import { useReviewCount } from "../features/review/ReviewPage";
@@ -274,8 +274,8 @@ function AccountMenu({ onBookMeeting, avatar }: { onBookMeeting: () => void; ava
             Book a meeting
           </DropdownMenuItem>
         )}
-        <DropdownMenuSeparator />
-        {agencyWorld ? (
+        {isDemo && <DropdownMenuSeparator />}
+        {!isDemo ? null : agencyWorld ? (
           <AgencyDemoSignIns />
         ) : (
           <>
