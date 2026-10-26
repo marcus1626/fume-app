@@ -16,6 +16,8 @@ across sign-ins.
 | Date | Decision | State |
 | --- | --- | --- |
 | 26 Oct | Backend: Supabase (WIRING §3 option A), EU region, in Fume's own Supabase organisation, never Stolon's | DECIDED (Marcus) |
+| 26 Oct | Supabase project `fume-app` (ref `vkusmctftfzsrxbcxtdz`), organisation Fume, Frankfurt (eu-central-1), Free plan | DONE (Marcus) |
+| 26 Oct | Rules live in the database: tables are read-only to signed-in people; every change is a Postgres command (`supabase/migrations/*_commands.sql`) that checks role, version and rules, is idempotent by key and writes the record | PROPOSED (Claude) |
 | 26 Oct | Scenario, people, counts in `acceptance-script.md` | PROPOSED |
 | 26 Oct | Domain model and contract changes in `domain-model.md` | PROPOSED |
 
@@ -30,5 +32,13 @@ across sign-ins.
 - Defects: none new. Known: two check models (`Check`, `QaItem`); delivery points at creatives, not versions; plan
   approval has no version (code-map §5).
 - Waiting on: Fume's Supabase organisation (Marcus); confirmation of the people in the scenario (Marcus).
-- Next (Tue): Supabase project in EU, schema and row-level security for identity and tenancy, seed LYSNE, storage
-  bucket, `http.ts` for session and products, then plan, check, approval and delivery for the manual cycle.
+- Afternoon (Tuesday's first half, started early): `supabase/` holds the schema (identity, Product Truth, campaign,
+  brief, plan, jobs, creative versions, checks, approvals, change requests, deliveries, record), 28 commands, the
+  private bucket and the LYSNE seed. `npm run db:test` runs the whole cycle and its negative tests on plain Postgres
+  (54 checks pass; CI job `db`). Applied to `fume-app` in Frankfurt; the function bodies match the tested ones
+  (one differs by a comment only). Security advisor: search paths pinned, Supabase's `rls_auto_enable` closed to the
+  API; the remaining notice (commands are SECURITY DEFINER and callable when signed in) is the design.
+- Known, not urgent: performance advisor lists unindexed foreign keys and one per-row `auth.uid()` in `profiles_read`;
+  fine at this size, revisit before pilots.
+- Next (Tue): Auth settings (site URL, redirect URLs, email link), `app/src/api/http.ts` for the cycle's calls behind
+  `VITE_FUME_API`, sign-in screen, upload and signed download, then the manual cycle in the app.
