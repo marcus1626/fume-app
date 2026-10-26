@@ -1,0 +1,3023 @@
+-- maja: createMockApi({"latency":0})
+maja startProductImport({"file":{"bytes":4000,"name":"products.csv"},"source":"csv"}) → events
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v9",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [
+        {
+          "at": "2026-10-14T12:21:00.000Z",
+          "by": "u-anna",
+          "id": "fb-1",
+          "state": "fixed",
+          "text": "The cap must be matte burgundy, as in the Product Truth."
+        }
+      ],
+      "format": "feed",
+      "id": "qa-3",
+      "image": "/demo/lysne/06-10-feed.jpg",
+      "madeAt": "2026-10-14T12:20:00.000Z",
+      "risk": "high",
+      "slot": "Master 2 · Variant 3",
+      "state": "waiting",
+      "studio": "render",
+      "title": "Feed 7",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+maja startProductImport({"file":{"bytes":4000,"name":"products.csv"},"source":"csv"})
+  {
+    "columns": [
+      {"column":"Handle","fieldId":null,"sample":"night-body-oil","sure":true},
+      {"column":"Title","fieldId":"name","sample":"Night Body Oil","sure":true},
+      {"column":"Variant","fieldId":"variant","sample":"100 ml","sure":true},
+      {"column":"SKU","fieldId":"sku","sample":"LYS-NBO-100","sure":true},
+      {"column":"Pris","fieldId":"price","sample":"490","sure":true},
+      {
+        "column": "Str.",
+        "fieldId": "net",
+        "sample": "100",
+        "sure": false,
+        "why": "Numbers with no unit: the Engine reads them as millilitres, like the rest of your catalogue."
+      },
+      {
+        "column": "Kategori",
+        "fieldId": "kind",
+        "sample": "Kropp",
+        "sure": false,
+        "why": "Your own categories (Kropp, Hjem): the Engine maps them to Fume’s kinds of product."
+      },
+      {"column":"Ingredienser","fieldId":"inci","sample":"Prunus Amygdalus Dulcis Oil, Squalane…","sure":true},
+      {"column":"Image Src","fieldId":"image","sample":"cdn.shopify.com/…/oil-pack.jpg","sure":true}
+    ],
+    "counts": [{"label":"Rows","n":12},{"label":"Columns","n":9},{"label":"Products found","n":0}],
+    "fieldOptions": [
+      {"id":"name","label":"Name"},
+      {"id":"variant","label":"Size or variant"},
+      {"id":"sku","label":"SKU"},
+      {"id":"gtin","label":"Barcode (GTIN)"},
+      {"id":"price","label":"Price"},
+      {"id":"kind","label":"Kind of product"},
+      {"id":"net","label":"Net content"},
+      {"id":"inci","label":"Ingredients (INCI)"},
+      {"id":"claims","label":"Claims you may use"},
+      {"id":"description","label":"Description"},
+      {"id":"image","label":"Picture link"}
+    ],
+    "fileName": "products.csv",
+    "found": [],
+    "id": "imp-mvkqpjpc-1",
+    "log": [],
+    "progress": 0,
+    "reading": "Opening lysne-products-2026.csv",
+    "source": "csv",
+    "startedAt": "2026-10-14T12:32:00.000Z",
+    "state": "reading",
+    "unchanged": 0,
+    "workspaceId": "w-lysne"
+  }
+-- 3 s later
+maja importJob("imp-mvkqpjpc-1")
+  {
+    "columns": [
+      {"column":"Handle","fieldId":null,"sample":"night-body-oil","sure":true},
+      {"column":"Title","fieldId":"name","sample":"Night Body Oil","sure":true},
+      {"column":"Variant","fieldId":"variant","sample":"100 ml","sure":true},
+      {"column":"SKU","fieldId":"sku","sample":"LYS-NBO-100","sure":true},
+      {"column":"Pris","fieldId":"price","sample":"490","sure":true},
+      {
+        "column": "Str.",
+        "fieldId": "net",
+        "sample": "100",
+        "sure": false,
+        "why": "Numbers with no unit: the Engine reads them as millilitres, like the rest of your catalogue."
+      },
+      {
+        "column": "Kategori",
+        "fieldId": "kind",
+        "sample": "Kropp",
+        "sure": false,
+        "why": "Your own categories (Kropp, Hjem): the Engine maps them to Fume’s kinds of product."
+      },
+      {"column":"Ingredienser","fieldId":"inci","sample":"Prunus Amygdalus Dulcis Oil, Squalane…","sure":true},
+      {"column":"Image Src","fieldId":"image","sample":"cdn.shopify.com/…/oil-pack.jpg","sure":true}
+    ],
+    "counts": [{"label":"Rows","n":12},{"label":"Columns","n":9},{"label":"Products found","n":0}],
+    "fieldOptions": [
+      {"id":"name","label":"Name"},
+      {"id":"variant","label":"Size or variant"},
+      {"id":"sku","label":"SKU"},
+      {"id":"gtin","label":"Barcode (GTIN)"},
+      {"id":"price","label":"Price"},
+      {"id":"kind","label":"Kind of product"},
+      {"id":"net","label":"Net content"},
+      {"id":"inci","label":"Ingredients (INCI)"},
+      {"id":"claims","label":"Claims you may use"},
+      {"id":"description","label":"Description"},
+      {"id":"image","label":"Picture link"}
+    ],
+    "fileName": "products.csv",
+    "found": [],
+    "id": "imp-mvkqpjpc-1",
+    "log": ["Opening lysne-products-2026.csv"],
+    "progress": 0,
+    "reading": "Matching the 9 columns to Fume’s fields",
+    "source": "csv",
+    "startedAt": "2026-10-14T12:32:00.000Z",
+    "state": "mapping",
+    "unchanged": 0,
+    "workspaceId": "w-lysne"
+  }
+maja mapImportColumns("imp-mvkqpjpc-1", [{"column":"Handle","fieldId":null},{"column":"Title","fieldId":"name"},{"column":"Variant","fieldId":"variant"},{"column":"SKU","fieldId...)
+  {
+    "columns": [
+      {"column":"Handle","fieldId":null,"sample":"night-body-oil","sure":true},
+      {"column":"Title","fieldId":"name","sample":"Night Body Oil","sure":true},
+      {"column":"Variant","fieldId":"variant","sample":"100 ml","sure":true},
+      {"column":"SKU","fieldId":"sku","sample":"LYS-NBO-100","sure":true},
+      {"column":"Pris","fieldId":"price","sample":"490","sure":true},
+      {
+        "column": "Str.",
+        "fieldId": "net",
+        "sample": "100",
+        "sure": true,
+        "why": "Numbers with no unit: the Engine reads them as millilitres, like the rest of your catalogue."
+      },
+      {
+        "column": "Kategori",
+        "fieldId": "kind",
+        "sample": "Kropp",
+        "sure": true,
+        "why": "Your own categories (Kropp, Hjem): the Engine maps them to Fume’s kinds of product."
+      },
+      {"column":"Ingredienser","fieldId":"inci","sample":"Prunus Amygdalus Dulcis Oil, Squalane…","sure":true},
+      {"column":"Image Src","fieldId":"image","sample":"cdn.shopify.com/…/oil-pack.jpg","sure":true}
+    ],
+    "counts": [{"label":"Rows","n":12},{"label":"Columns","n":9},{"label":"Products found","n":6}],
+    "fieldOptions": [
+      {"id":"name","label":"Name"},
+      {"id":"variant","label":"Size or variant"},
+      {"id":"sku","label":"SKU"},
+      {"id":"gtin","label":"Barcode (GTIN)"},
+      {"id":"price","label":"Price"},
+      {"id":"kind","label":"Kind of product"},
+      {"id":"net","label":"Net content"},
+      {"id":"inci","label":"Ingredients (INCI)"},
+      {"id":"claims","label":"Claims you may use"},
+      {"id":"description","label":"Description"},
+      {"id":"image","label":"Picture link"}
+    ],
+    "fileName": "products.csv",
+    "found": [],
+    "id": "imp-mvkqpjpc-1",
+    "log": ["Opening lysne-products-2026.csv","Matching the 9 columns to Fume’s fields"],
+    "progress": 0.3392857142857143,
+    "reading": "Reading rows 1 to 6",
+    "source": "csv",
+    "startedAt": "2026-10-14T12:32:00.000Z",
+    "state": "reading",
+    "unchanged": 0,
+    "workspaceId": "w-lysne"
+  }
+-- 10 s later
+maja importJob("imp-mvkqpjpc-1")
+  {
+    "columns": [
+      {"column":"Handle","fieldId":null,"sample":"night-body-oil","sure":true},
+      {"column":"Title","fieldId":"name","sample":"Night Body Oil","sure":true},
+      {"column":"Variant","fieldId":"variant","sample":"100 ml","sure":true},
+      {"column":"SKU","fieldId":"sku","sample":"LYS-NBO-100","sure":true},
+      {"column":"Pris","fieldId":"price","sample":"490","sure":true},
+      {
+        "column": "Str.",
+        "fieldId": "net",
+        "sample": "100",
+        "sure": true,
+        "why": "Numbers with no unit: the Engine reads them as millilitres, like the rest of your catalogue."
+      },
+      {
+        "column": "Kategori",
+        "fieldId": "kind",
+        "sample": "Kropp",
+        "sure": true,
+        "why": "Your own categories (Kropp, Hjem): the Engine maps them to Fume’s kinds of product."
+      },
+      {"column":"Ingredienser","fieldId":"inci","sample":"Prunus Amygdalus Dulcis Oil, Squalane…","sure":true},
+      {"column":"Image Src","fieldId":"image","sample":"cdn.shopify.com/…/oil-pack.jpg","sure":true}
+    ],
+    "counts": [{"label":"Rows","n":12},{"label":"Columns","n":9},{"label":"Products found","n":12}],
+    "fieldOptions": [
+      {"id":"name","label":"Name"},
+      {"id":"variant","label":"Size or variant"},
+      {"id":"sku","label":"SKU"},
+      {"id":"gtin","label":"Barcode (GTIN)"},
+      {"id":"price","label":"Price"},
+      {"id":"kind","label":"Kind of product"},
+      {"id":"net","label":"Net content"},
+      {"id":"inci","label":"Ingredients (INCI)"},
+      {"id":"claims","label":"Claims you may use"},
+      {"id":"description","label":"Description"},
+      {"id":"image","label":"Picture link"}
+    ],
+    "fileName": "products.csv",
+    "found": [
+      {
+        "changes": "Ingredients and price added",
+        "confidence": "high",
+        "fields": [
+          {
+            "before": "Not known yet",
+            "fieldId": "inci",
+            "label": "Ingredients (INCI)",
+            "source": "Row 2",
+            "value": "Butyrospermum Parkii Butter, Glycerin, Cera Alba, Tocopherol"
+          },
+          {"before":"Not known yet","fieldId":"price","label":"Price","source":"Row 2","value":"NOK 260"},
+          {"before":"Not known yet","fieldId":"sku","label":"SKU","source":"Row 2","value":"LYS-HB-50"}
+        ],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 2"}],
+        "id": "fp-csv-balm",
+        "images": ["/demo/lysne/gen/balm-pack.jpg"],
+        "kindConfidence": "high",
+        "kindId": "kind-skincare",
+        "name": "Hand Balm",
+        "productId": "pr-balm",
+        "source": "lysne-products-2026.csv, row 2",
+        "status": "changed",
+        "variant": "50 ml"
+      },
+      {
+        "confidence": "high",
+        "fields": [
+          {"fieldId":"sku","label":"SKU","source":"Row 9","value":"LYS-BS-200"},
+          {"fieldId":"price","label":"Price","source":"Row 9","value":"NOK 380"},
+          {"fieldId":"net","label":"Net content","source":"Row 9","value":"200 ml"},
+          {"fieldId":"container","label":"Container","source":"Row 9","value":"Jar"},
+          {"fieldId":"container-material","label":"Container material","source":"Row 9","value":"Amber glass"}
+        ],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 9"}],
+        "id": "fp-csv-scrub",
+        "images": ["/demo/lysne/gen/scrub-pack.jpg"],
+        "kindConfidence": "high",
+        "kindId": "kind-skincare",
+        "name": "Body Scrub",
+        "source": "lysne-products-2026.csv, row 9",
+        "status": "new",
+        "variant": "200 ml"
+      },
+      {
+        "confidence": "high",
+        "fields": [
+          {"fieldId":"sku","label":"SKU","source":"Row 10","value":"LYS-SB-30"},
+          {"fieldId":"price","label":"Price","source":"Row 10","value":"NOK 240"},
+          {"fieldId":"net","label":"Net content","source":"Row 10","value":"30 g"},
+          {"fieldId":"container","label":"Container","source":"Picture","value":"Tin"},
+          {
+            "fieldId": "inci",
+            "label": "Ingredients (INCI)",
+            "source": "Row 10",
+            "value": "Cera Alba, Lavandula Angustifolia Oil, Helianthus Annuus Seed Oil"
+          }
+        ],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 10"}],
+        "id": "fp-csv-sleep",
+        "images": ["/demo/lysne/gen/sleep-pack.jpg"],
+        "kindConfidence": "high",
+        "kindId": "kind-skincare",
+        "name": "Sleep Balm",
+        "source": "lysne-products-2026.csv, row 10",
+        "status": "new",
+        "variant": "30 g"
+      },
+      {
+        "confidence": "low",
+        "fields": [{"fieldId":"price","label":"Price","source":"Row 12","value":"NOK 500"}],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 12"}],
+        "id": "fp-csv-gift",
+        "images": [],
+        "name": "Gavekort",
+        "note": "A gift card: no size, no picture, no ingredients. Is it a product Fume should make creatives of?",
+        "source": "lysne-products-2026.csv, row 12",
+        "status": "unsure",
+        "variant": "NOK 500"
+      }
+    ],
+    "id": "imp-mvkqpjpc-1",
+    "log": [
+      "Opening lysne-products-2026.csv",
+      "Matching the 9 columns to Fume’s fields",
+      "Reading rows 1 to 6",
+      "Reading rows 7 to 12",
+      "Fetching 11 pictures from the image links",
+      "Comparing with your catalogue"
+    ],
+    "progress": 1,
+    "source": "csv",
+    "startedAt": "2026-10-14T12:32:00.000Z",
+    "state": "review",
+    "unchanged": 8,
+    "unchangedNames": [
+      "Night Body Oil",
+      "Pillow Mist",
+      "Evening Candle",
+      "Face Oil",
+      "Evening Body Wash",
+      "Kveld Eau de Parfum",
+      "Room Diffuser",
+      "Lip Balm"
+    ],
+    "workspaceId": "w-lysne"
+  }
+maja decideFound("imp-mvkqpjpc-1", "fp-csv-balm", {"verdict":"keep"})
+  {
+    "columns": [
+      {"column":"Handle","fieldId":null,"sample":"night-body-oil","sure":true},
+      {"column":"Title","fieldId":"name","sample":"Night Body Oil","sure":true},
+      {"column":"Variant","fieldId":"variant","sample":"100 ml","sure":true},
+      {"column":"SKU","fieldId":"sku","sample":"LYS-NBO-100","sure":true},
+      {"column":"Pris","fieldId":"price","sample":"490","sure":true},
+      {
+        "column": "Str.",
+        "fieldId": "net",
+        "sample": "100",
+        "sure": true,
+        "why": "Numbers with no unit: the Engine reads them as millilitres, like the rest of your catalogue."
+      },
+      {
+        "column": "Kategori",
+        "fieldId": "kind",
+        "sample": "Kropp",
+        "sure": true,
+        "why": "Your own categories (Kropp, Hjem): the Engine maps them to Fume’s kinds of product."
+      },
+      {"column":"Ingredienser","fieldId":"inci","sample":"Prunus Amygdalus Dulcis Oil, Squalane…","sure":true},
+      {"column":"Image Src","fieldId":"image","sample":"cdn.shopify.com/…/oil-pack.jpg","sure":true}
+    ],
+    "counts": [{"label":"Rows","n":12},{"label":"Columns","n":9},{"label":"Products found","n":12}],
+    "fieldOptions": [
+      {"id":"name","label":"Name"},
+      {"id":"variant","label":"Size or variant"},
+      {"id":"sku","label":"SKU"},
+      {"id":"gtin","label":"Barcode (GTIN)"},
+      {"id":"price","label":"Price"},
+      {"id":"kind","label":"Kind of product"},
+      {"id":"net","label":"Net content"},
+      {"id":"inci","label":"Ingredients (INCI)"},
+      {"id":"claims","label":"Claims you may use"},
+      {"id":"description","label":"Description"},
+      {"id":"image","label":"Picture link"}
+    ],
+    "fileName": "products.csv",
+    "found": [
+      {
+        "changes": "Ingredients and price added",
+        "confidence": "high",
+        "decision": "kept",
+        "fields": [
+          {
+            "before": "Not known yet",
+            "fieldId": "inci",
+            "label": "Ingredients (INCI)",
+            "source": "Row 2",
+            "value": "Butyrospermum Parkii Butter, Glycerin, Cera Alba, Tocopherol"
+          },
+          {"before":"Not known yet","fieldId":"price","label":"Price","source":"Row 2","value":"NOK 260"},
+          {"before":"Not known yet","fieldId":"sku","label":"SKU","source":"Row 2","value":"LYS-HB-50"}
+        ],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 2"}],
+        "id": "fp-csv-balm",
+        "images": ["/demo/lysne/gen/balm-pack.jpg"],
+        "kindConfidence": "high",
+        "kindId": "kind-skincare",
+        "name": "Hand Balm",
+        "productId": "pr-balm",
+        "source": "lysne-products-2026.csv, row 2",
+        "status": "changed",
+        "variant": "50 ml"
+      },
+      {
+        "confidence": "high",
+        "fields": [
+          {"fieldId":"sku","label":"SKU","source":"Row 9","value":"LYS-BS-200"},
+          {"fieldId":"price","label":"Price","source":"Row 9","value":"NOK 380"},
+          {"fieldId":"net","label":"Net content","source":"Row 9","value":"200 ml"},
+          {"fieldId":"container","label":"Container","source":"Row 9","value":"Jar"},
+          {"fieldId":"container-material","label":"Container material","source":"Row 9","value":"Amber glass"}
+        ],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 9"}],
+        "id": "fp-csv-scrub",
+        "images": ["/demo/lysne/gen/scrub-pack.jpg"],
+        "kindConfidence": "high",
+        "kindId": "kind-skincare",
+        "name": "Body Scrub",
+        "source": "lysne-products-2026.csv, row 9",
+        "status": "new",
+        "variant": "200 ml"
+      },
+      {
+        "confidence": "high",
+        "fields": [
+          {"fieldId":"sku","label":"SKU","source":"Row 10","value":"LYS-SB-30"},
+          {"fieldId":"price","label":"Price","source":"Row 10","value":"NOK 240"},
+          {"fieldId":"net","label":"Net content","source":"Row 10","value":"30 g"},
+          {"fieldId":"container","label":"Container","source":"Picture","value":"Tin"},
+          {
+            "fieldId": "inci",
+            "label": "Ingredients (INCI)",
+            "source": "Row 10",
+            "value": "Cera Alba, Lavandula Angustifolia Oil, Helianthus Annuus Seed Oil"
+          }
+        ],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 10"}],
+        "id": "fp-csv-sleep",
+        "images": ["/demo/lysne/gen/sleep-pack.jpg"],
+        "kindConfidence": "high",
+        "kindId": "kind-skincare",
+        "name": "Sleep Balm",
+        "source": "lysne-products-2026.csv, row 10",
+        "status": "new",
+        "variant": "30 g"
+      },
+      {
+        "confidence": "low",
+        "fields": [{"fieldId":"price","label":"Price","source":"Row 12","value":"NOK 500"}],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 12"}],
+        "id": "fp-csv-gift",
+        "images": [],
+        "name": "Gavekort",
+        "note": "A gift card: no size, no picture, no ingredients. Is it a product Fume should make creatives of?",
+        "source": "lysne-products-2026.csv, row 12",
+        "status": "unsure",
+        "variant": "NOK 500"
+      }
+    ],
+    "id": "imp-mvkqpjpc-1",
+    "log": [
+      "Opening lysne-products-2026.csv",
+      "Matching the 9 columns to Fume’s fields",
+      "Reading rows 1 to 6",
+      "Reading rows 7 to 12",
+      "Fetching 11 pictures from the image links",
+      "Comparing with your catalogue"
+    ],
+    "progress": 1,
+    "source": "csv",
+    "startedAt": "2026-10-14T12:32:00.000Z",
+    "state": "review",
+    "unchanged": 8,
+    "unchangedNames": [
+      "Night Body Oil",
+      "Pillow Mist",
+      "Evening Candle",
+      "Face Oil",
+      "Evening Body Wash",
+      "Kveld Eau de Parfum",
+      "Room Diffuser",
+      "Lip Balm"
+    ],
+    "workspaceId": "w-lysne"
+  }
+maja decideFound("imp-mvkqpjpc-1", "fp-csv-scrub", {"verdict":"remove"})
+  {
+    "columns": [
+      {"column":"Handle","fieldId":null,"sample":"night-body-oil","sure":true},
+      {"column":"Title","fieldId":"name","sample":"Night Body Oil","sure":true},
+      {"column":"Variant","fieldId":"variant","sample":"100 ml","sure":true},
+      {"column":"SKU","fieldId":"sku","sample":"LYS-NBO-100","sure":true},
+      {"column":"Pris","fieldId":"price","sample":"490","sure":true},
+      {
+        "column": "Str.",
+        "fieldId": "net",
+        "sample": "100",
+        "sure": true,
+        "why": "Numbers with no unit: the Engine reads them as millilitres, like the rest of your catalogue."
+      },
+      {
+        "column": "Kategori",
+        "fieldId": "kind",
+        "sample": "Kropp",
+        "sure": true,
+        "why": "Your own categories (Kropp, Hjem): the Engine maps them to Fume’s kinds of product."
+      },
+      {"column":"Ingredienser","fieldId":"inci","sample":"Prunus Amygdalus Dulcis Oil, Squalane…","sure":true},
+      {"column":"Image Src","fieldId":"image","sample":"cdn.shopify.com/…/oil-pack.jpg","sure":true}
+    ],
+    "counts": [{"label":"Rows","n":12},{"label":"Columns","n":9},{"label":"Products found","n":12}],
+    "fieldOptions": [
+      {"id":"name","label":"Name"},
+      {"id":"variant","label":"Size or variant"},
+      {"id":"sku","label":"SKU"},
+      {"id":"gtin","label":"Barcode (GTIN)"},
+      {"id":"price","label":"Price"},
+      {"id":"kind","label":"Kind of product"},
+      {"id":"net","label":"Net content"},
+      {"id":"inci","label":"Ingredients (INCI)"},
+      {"id":"claims","label":"Claims you may use"},
+      {"id":"description","label":"Description"},
+      {"id":"image","label":"Picture link"}
+    ],
+    "fileName": "products.csv",
+    "found": [
+      {
+        "changes": "Ingredients and price added",
+        "confidence": "high",
+        "decision": "kept",
+        "fields": [
+          {
+            "before": "Not known yet",
+            "fieldId": "inci",
+            "label": "Ingredients (INCI)",
+            "source": "Row 2",
+            "value": "Butyrospermum Parkii Butter, Glycerin, Cera Alba, Tocopherol"
+          },
+          {"before":"Not known yet","fieldId":"price","label":"Price","source":"Row 2","value":"NOK 260"},
+          {"before":"Not known yet","fieldId":"sku","label":"SKU","source":"Row 2","value":"LYS-HB-50"}
+        ],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 2"}],
+        "id": "fp-csv-balm",
+        "images": ["/demo/lysne/gen/balm-pack.jpg"],
+        "kindConfidence": "high",
+        "kindId": "kind-skincare",
+        "name": "Hand Balm",
+        "productId": "pr-balm",
+        "source": "lysne-products-2026.csv, row 2",
+        "status": "changed",
+        "variant": "50 ml"
+      },
+      {
+        "confidence": "high",
+        "fields": [
+          {"fieldId":"sku","label":"SKU","source":"Row 10","value":"LYS-SB-30"},
+          {"fieldId":"price","label":"Price","source":"Row 10","value":"NOK 240"},
+          {"fieldId":"net","label":"Net content","source":"Row 10","value":"30 g"},
+          {"fieldId":"container","label":"Container","source":"Picture","value":"Tin"},
+          {
+            "fieldId": "inci",
+            "label": "Ingredients (INCI)",
+            "source": "Row 10",
+            "value": "Cera Alba, Lavandula Angustifolia Oil, Helianthus Annuus Seed Oil"
+          }
+        ],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 10"}],
+        "id": "fp-csv-sleep",
+        "images": ["/demo/lysne/gen/sleep-pack.jpg"],
+        "kindConfidence": "high",
+        "kindId": "kind-skincare",
+        "name": "Sleep Balm",
+        "source": "lysne-products-2026.csv, row 10",
+        "status": "new",
+        "variant": "30 g"
+      },
+      {
+        "confidence": "low",
+        "fields": [{"fieldId":"price","label":"Price","source":"Row 12","value":"NOK 500"}],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 12"}],
+        "id": "fp-csv-gift",
+        "images": [],
+        "name": "Gavekort",
+        "note": "A gift card: no size, no picture, no ingredients. Is it a product Fume should make creatives of?",
+        "source": "lysne-products-2026.csv, row 12",
+        "status": "unsure",
+        "variant": "NOK 500"
+      }
+    ],
+    "id": "imp-mvkqpjpc-1",
+    "log": [
+      "Opening lysne-products-2026.csv",
+      "Matching the 9 columns to Fume’s fields",
+      "Reading rows 1 to 6",
+      "Reading rows 7 to 12",
+      "Fetching 11 pictures from the image links",
+      "Comparing with your catalogue"
+    ],
+    "progress": 1,
+    "source": "csv",
+    "startedAt": "2026-10-14T12:32:00.000Z",
+    "state": "review",
+    "unchanged": 8,
+    "unchangedNames": [
+      "Night Body Oil",
+      "Pillow Mist",
+      "Evening Candle",
+      "Face Oil",
+      "Evening Body Wash",
+      "Kveld Eau de Parfum",
+      "Room Diffuser",
+      "Lip Balm"
+    ],
+    "workspaceId": "w-lysne"
+  }
+maja decideFound("imp-mvkqpjpc-1", "fp-csv-sleep", {"intoId":"fp-csv-balm","verdict":"merge"})
+  {
+    "columns": [
+      {"column":"Handle","fieldId":null,"sample":"night-body-oil","sure":true},
+      {"column":"Title","fieldId":"name","sample":"Night Body Oil","sure":true},
+      {"column":"Variant","fieldId":"variant","sample":"100 ml","sure":true},
+      {"column":"SKU","fieldId":"sku","sample":"LYS-NBO-100","sure":true},
+      {"column":"Pris","fieldId":"price","sample":"490","sure":true},
+      {
+        "column": "Str.",
+        "fieldId": "net",
+        "sample": "100",
+        "sure": true,
+        "why": "Numbers with no unit: the Engine reads them as millilitres, like the rest of your catalogue."
+      },
+      {
+        "column": "Kategori",
+        "fieldId": "kind",
+        "sample": "Kropp",
+        "sure": true,
+        "why": "Your own categories (Kropp, Hjem): the Engine maps them to Fume’s kinds of product."
+      },
+      {"column":"Ingredienser","fieldId":"inci","sample":"Prunus Amygdalus Dulcis Oil, Squalane…","sure":true},
+      {"column":"Image Src","fieldId":"image","sample":"cdn.shopify.com/…/oil-pack.jpg","sure":true}
+    ],
+    "counts": [{"label":"Rows","n":12},{"label":"Columns","n":9},{"label":"Products found","n":12}],
+    "fieldOptions": [
+      {"id":"name","label":"Name"},
+      {"id":"variant","label":"Size or variant"},
+      {"id":"sku","label":"SKU"},
+      {"id":"gtin","label":"Barcode (GTIN)"},
+      {"id":"price","label":"Price"},
+      {"id":"kind","label":"Kind of product"},
+      {"id":"net","label":"Net content"},
+      {"id":"inci","label":"Ingredients (INCI)"},
+      {"id":"claims","label":"Claims you may use"},
+      {"id":"description","label":"Description"},
+      {"id":"image","label":"Picture link"}
+    ],
+    "fileName": "products.csv",
+    "found": [
+      {
+        "changes": "Ingredients and price added",
+        "confidence": "high",
+        "decision": "kept",
+        "fields": [
+          {
+            "before": "Not known yet",
+            "fieldId": "inci",
+            "label": "Ingredients (INCI)",
+            "source": "Row 2",
+            "value": "Butyrospermum Parkii Butter, Glycerin, Cera Alba, Tocopherol"
+          },
+          {"before":"Not known yet","fieldId":"price","label":"Price","source":"Row 2","value":"NOK 260"},
+          {"before":"Not known yet","fieldId":"sku","label":"SKU","source":"Row 2","value":"LYS-HB-50"},
+          {"fieldId":"net","label":"Net content","source":"Row 10","value":"30 g"},
+          {"fieldId":"container","label":"Container","source":"Picture","value":"Tin"}
+        ],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 2"},{"bytes":380000,"kind":"other","name":"Row 10"}],
+        "id": "fp-csv-balm",
+        "images": ["/demo/lysne/gen/balm-pack.jpg","/demo/lysne/gen/sleep-pack.jpg"],
+        "kindConfidence": "high",
+        "kindId": "kind-skincare",
+        "name": "Hand Balm",
+        "productId": "pr-balm",
+        "source": "lysne-products-2026.csv, row 2",
+        "status": "changed",
+        "variant": "50 ml"
+      },
+      {
+        "confidence": "low",
+        "fields": [{"fieldId":"price","label":"Price","source":"Row 12","value":"NOK 500"}],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 12"}],
+        "id": "fp-csv-gift",
+        "images": [],
+        "name": "Gavekort",
+        "note": "A gift card: no size, no picture, no ingredients. Is it a product Fume should make creatives of?",
+        "source": "lysne-products-2026.csv, row 12",
+        "status": "unsure",
+        "variant": "NOK 500"
+      }
+    ],
+    "id": "imp-mvkqpjpc-1",
+    "log": [
+      "Opening lysne-products-2026.csv",
+      "Matching the 9 columns to Fume’s fields",
+      "Reading rows 1 to 6",
+      "Reading rows 7 to 12",
+      "Fetching 11 pictures from the image links",
+      "Comparing with your catalogue"
+    ],
+    "progress": 1,
+    "source": "csv",
+    "startedAt": "2026-10-14T12:32:00.000Z",
+    "state": "review",
+    "unchanged": 8,
+    "unchangedNames": [
+      "Night Body Oil",
+      "Pillow Mist",
+      "Evening Candle",
+      "Face Oil",
+      "Evening Body Wash",
+      "Kveld Eau de Parfum",
+      "Room Diffuser",
+      "Lip Balm"
+    ],
+    "workspaceId": "w-lysne"
+  }
+maja decideFound("imp-mvkqpjpc-1", "fp-csv-gift", {"name":"Renamed","variant":"100 ml","verdict":"fix"})
+  {
+    "columns": [
+      {"column":"Handle","fieldId":null,"sample":"night-body-oil","sure":true},
+      {"column":"Title","fieldId":"name","sample":"Night Body Oil","sure":true},
+      {"column":"Variant","fieldId":"variant","sample":"100 ml","sure":true},
+      {"column":"SKU","fieldId":"sku","sample":"LYS-NBO-100","sure":true},
+      {"column":"Pris","fieldId":"price","sample":"490","sure":true},
+      {
+        "column": "Str.",
+        "fieldId": "net",
+        "sample": "100",
+        "sure": true,
+        "why": "Numbers with no unit: the Engine reads them as millilitres, like the rest of your catalogue."
+      },
+      {
+        "column": "Kategori",
+        "fieldId": "kind",
+        "sample": "Kropp",
+        "sure": true,
+        "why": "Your own categories (Kropp, Hjem): the Engine maps them to Fume’s kinds of product."
+      },
+      {"column":"Ingredienser","fieldId":"inci","sample":"Prunus Amygdalus Dulcis Oil, Squalane…","sure":true},
+      {"column":"Image Src","fieldId":"image","sample":"cdn.shopify.com/…/oil-pack.jpg","sure":true}
+    ],
+    "counts": [{"label":"Rows","n":12},{"label":"Columns","n":9},{"label":"Products found","n":12}],
+    "fieldOptions": [
+      {"id":"name","label":"Name"},
+      {"id":"variant","label":"Size or variant"},
+      {"id":"sku","label":"SKU"},
+      {"id":"gtin","label":"Barcode (GTIN)"},
+      {"id":"price","label":"Price"},
+      {"id":"kind","label":"Kind of product"},
+      {"id":"net","label":"Net content"},
+      {"id":"inci","label":"Ingredients (INCI)"},
+      {"id":"claims","label":"Claims you may use"},
+      {"id":"description","label":"Description"},
+      {"id":"image","label":"Picture link"}
+    ],
+    "fileName": "products.csv",
+    "found": [
+      {
+        "changes": "Ingredients and price added",
+        "confidence": "high",
+        "decision": "kept",
+        "fields": [
+          {
+            "before": "Not known yet",
+            "fieldId": "inci",
+            "label": "Ingredients (INCI)",
+            "source": "Row 2",
+            "value": "Butyrospermum Parkii Butter, Glycerin, Cera Alba, Tocopherol"
+          },
+          {"before":"Not known yet","fieldId":"price","label":"Price","source":"Row 2","value":"NOK 260"},
+          {"before":"Not known yet","fieldId":"sku","label":"SKU","source":"Row 2","value":"LYS-HB-50"},
+          {"fieldId":"net","label":"Net content","source":"Row 10","value":"30 g"},
+          {"fieldId":"container","label":"Container","source":"Picture","value":"Tin"}
+        ],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 2"},{"bytes":380000,"kind":"other","name":"Row 10"}],
+        "id": "fp-csv-balm",
+        "images": ["/demo/lysne/gen/balm-pack.jpg","/demo/lysne/gen/sleep-pack.jpg"],
+        "kindConfidence": "high",
+        "kindId": "kind-skincare",
+        "name": "Hand Balm",
+        "productId": "pr-balm",
+        "source": "lysne-products-2026.csv, row 2",
+        "status": "changed",
+        "variant": "50 ml"
+      },
+      {
+        "confidence": "high",
+        "decision": "fixed",
+        "fields": [{"fieldId":"price","label":"Price","source":"Row 12","value":"NOK 500"}],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 12"}],
+        "id": "fp-csv-gift",
+        "images": [],
+        "name": "Renamed",
+        "source": "lysne-products-2026.csv, row 12",
+        "status": "new",
+        "variant": "100 ml"
+      }
+    ],
+    "id": "imp-mvkqpjpc-1",
+    "log": [
+      "Opening lysne-products-2026.csv",
+      "Matching the 9 columns to Fume’s fields",
+      "Reading rows 1 to 6",
+      "Reading rows 7 to 12",
+      "Fetching 11 pictures from the image links",
+      "Comparing with your catalogue"
+    ],
+    "progress": 1,
+    "source": "csv",
+    "startedAt": "2026-10-14T12:32:00.000Z",
+    "state": "review",
+    "unchanged": 8,
+    "unchangedNames": [
+      "Night Body Oil",
+      "Pillow Mist",
+      "Evening Candle",
+      "Face Oil",
+      "Evening Body Wash",
+      "Kveld Eau de Parfum",
+      "Room Diffuser",
+      "Lip Balm"
+    ],
+    "workspaceId": "w-lysne"
+  }
+maja approveImport("imp-mvkqpjpc-1")
+  {
+    "approvedAt": "2026-10-14T12:32:13.000Z",
+    "approvedBy": "u-maja",
+    "columns": [
+      {"column":"Handle","fieldId":null,"sample":"night-body-oil","sure":true},
+      {"column":"Title","fieldId":"name","sample":"Night Body Oil","sure":true},
+      {"column":"Variant","fieldId":"variant","sample":"100 ml","sure":true},
+      {"column":"SKU","fieldId":"sku","sample":"LYS-NBO-100","sure":true},
+      {"column":"Pris","fieldId":"price","sample":"490","sure":true},
+      {
+        "column": "Str.",
+        "fieldId": "net",
+        "sample": "100",
+        "sure": true,
+        "why": "Numbers with no unit: the Engine reads them as millilitres, like the rest of your catalogue."
+      },
+      {
+        "column": "Kategori",
+        "fieldId": "kind",
+        "sample": "Kropp",
+        "sure": true,
+        "why": "Your own categories (Kropp, Hjem): the Engine maps them to Fume’s kinds of product."
+      },
+      {"column":"Ingredienser","fieldId":"inci","sample":"Prunus Amygdalus Dulcis Oil, Squalane…","sure":true},
+      {"column":"Image Src","fieldId":"image","sample":"cdn.shopify.com/…/oil-pack.jpg","sure":true}
+    ],
+    "counts": [{"label":"Rows","n":12},{"label":"Columns","n":9},{"label":"Products found","n":12}],
+    "fieldOptions": [
+      {"id":"name","label":"Name"},
+      {"id":"variant","label":"Size or variant"},
+      {"id":"sku","label":"SKU"},
+      {"id":"gtin","label":"Barcode (GTIN)"},
+      {"id":"price","label":"Price"},
+      {"id":"kind","label":"Kind of product"},
+      {"id":"net","label":"Net content"},
+      {"id":"inci","label":"Ingredients (INCI)"},
+      {"id":"claims","label":"Claims you may use"},
+      {"id":"description","label":"Description"},
+      {"id":"image","label":"Picture link"}
+    ],
+    "fileName": "products.csv",
+    "found": [
+      {
+        "changes": "Ingredients and price added",
+        "confidence": "high",
+        "decision": "kept",
+        "fields": [
+          {
+            "before": "Not known yet",
+            "fieldId": "inci",
+            "label": "Ingredients (INCI)",
+            "source": "Row 2",
+            "value": "Butyrospermum Parkii Butter, Glycerin, Cera Alba, Tocopherol"
+          },
+          {"before":"Not known yet","fieldId":"price","label":"Price","source":"Row 2","value":"NOK 260"},
+          {"before":"Not known yet","fieldId":"sku","label":"SKU","source":"Row 2","value":"LYS-HB-50"},
+          {"fieldId":"net","label":"Net content","source":"Row 10","value":"30 g"},
+          {"fieldId":"container","label":"Container","source":"Picture","value":"Tin"}
+        ],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 2"},{"bytes":380000,"kind":"other","name":"Row 10"}],
+        "id": "fp-csv-balm",
+        "images": ["/demo/lysne/gen/balm-pack.jpg","/demo/lysne/gen/sleep-pack.jpg"],
+        "kindConfidence": "high",
+        "kindId": "kind-skincare",
+        "name": "Hand Balm",
+        "productId": "pr-balm",
+        "source": "lysne-products-2026.csv, row 2",
+        "status": "changed",
+        "variant": "50 ml"
+      },
+      {
+        "confidence": "high",
+        "decision": "fixed",
+        "fields": [{"fieldId":"price","label":"Price","source":"Row 12","value":"NOK 500"}],
+        "files": [{"bytes":380000,"kind":"other","name":"Row 12"}],
+        "id": "fp-csv-gift",
+        "images": [],
+        "name": "Renamed",
+        "source": "lysne-products-2026.csv, row 12",
+        "status": "new",
+        "variant": "100 ml"
+      }
+    ],
+    "id": "imp-mvkqpjpc-1",
+    "log": [
+      "Opening lysne-products-2026.csv",
+      "Matching the 9 columns to Fume’s fields",
+      "Reading rows 1 to 6",
+      "Reading rows 7 to 12",
+      "Fetching 11 pictures from the image links",
+      "Comparing with your catalogue"
+    ],
+    "progress": 1,
+    "result": {"added":1,"productIds":["pr-balm","pr-mvkqptqg-2"],"updated":1},
+    "source": "csv",
+    "startedAt": "2026-10-14T12:32:00.000Z",
+    "state": "done",
+    "unchanged": 8,
+    "unchangedNames": [
+      "Night Body Oil",
+      "Pillow Mist",
+      "Evening Candle",
+      "Face Oil",
+      "Evening Body Wash",
+      "Kveld Eau de Parfum",
+      "Room Diffuser",
+      "Lip Balm"
+    ],
+    "workspaceId": "w-lysne"
+  }
+maja productImport()
+  = maja approveImport("imp-mvkqpjpc-1")
+maja catalogue()
+  {
+    "categories": [
+      {"id":"cat-body","name":"Body care","workspaceId":"w-lysne"},
+      {"id":"cat-oils","name":"Oils","parentId":"cat-body","workspaceId":"w-lysne"},
+      {"id":"cat-hands","name":"Hands","parentId":"cat-body","workspaceId":"w-lysne"},
+      {"id":"cat-home","name":"Home","workspaceId":"w-lysne"},
+      {"id":"cat-merch","name":"Merchandise","workspaceId":"w-lysne"}
+    ],
+    "collections": [
+      {
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "description": "Autumn and winter: the evening ritual.",
+        "endsAt": "2027-02-11T12:32:00.000Z",
+        "id": "cl-aw26",
+        "kind": "season",
+        "name": "AW26",
+        "productIds": ["pr-oil","pr-balm","pr-face","pr-wash","pr-lip"],
+        "provenance": {"at":"2026-10-02T12:32:00.000Z","by":"u-maja","evidence":"Made by Maja","origin":"customer","state":"approved"},
+        "startsAt": "2026-09-14T12:32:00.000Z",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "cover": "/demo/lysne/09-13-feed.jpg",
+        "description": "Spring and summer: light evenings.",
+        "endsAt": "2027-09-09T12:32:00.000Z",
+        "id": "cl-ss27",
+        "kind": "season",
+        "name": "SS27",
+        "productIds": ["pr-mist","pr-oil","pr-wash","pr-diffuser"],
+        "provenance": {"at":"2026-10-02T12:32:00.000Z","by":"u-maja","evidence":"Made by Maja","origin":"customer","state":"approved"},
+        "startsAt": "2027-03-13T12:32:00.000Z",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "cover": "/demo/lysne/02-05-feed.jpg",
+        "description": "The Engine grouped the products sold as gifts on lysne.no.",
+        "id": "cl-gifts",
+        "kind": "line",
+        "name": "Gift sets",
+        "productIds": ["pr-oil","pr-candle","pr-ritual","pr-kveld"],
+        "provenance": {"confidence":"medium","evidence":"lysne.no/gifts","origin":"engine","state":"proposed"},
+        "workspaceId": "w-lysne"
+      }
+    ],
+    "products": [
+      {
+        "categoryId": "cat-oils",
+        "collectionIds": ["cl-aw26","cl-ss27","cl-gifts"],
+        "facts": [
+          {
+            "area": "shape",
+            "confidence": "high",
+            "id": "f1",
+            "label": "Bottle",
+            "productId": "pr-oil",
+            "source": "verified",
+            "statement": "Amber glass, 100 ml, tall and round-shouldered, as in the packshot.",
+            "verifiedAt": "2026-10-04T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "colour",
+            "confidence": "high",
+            "id": "f2",
+            "label": "Cap",
+            "productId": "pr-oil",
+            "source": "verified",
+            "statement": "Burgundy, matte. Never glossy, never black.",
+            "verifiedAt": "2026-10-04T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "label",
+            "confidence": "high",
+            "id": "f3",
+            "label": "Label",
+            "productId": "pr-oil",
+            "source": "verified",
+            "statement": "Cream paper, front and centred, never cropped. LYSNE, then Night Body Oil · 100 ml.",
+            "verifiedAt": "2026-10-04T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "colour",
+            "confidence": "high",
+            "id": "f4",
+            "label": "Oil",
+            "productId": "pr-oil",
+            "source": "verified",
+            "statement": "Reads golden, never orange.",
+            "verifiedAt": "2026-10-04T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "never",
+            "confidence": "high",
+            "id": "f5",
+            "label": "Never",
+            "productId": "pr-oil",
+            "source": "supplied",
+            "statement": "Other sizes, a dropper, hands that cover the label."
+          },
+          {
+            "area": "claim",
+            "confidence": "high",
+            "id": "f6",
+            "label": "Claims",
+            "productId": "pr-oil",
+            "source": "supplied",
+            "statement": "Only the lines on the approved list: \"For the hour before sleep.\""
+          }
+        ],
+        "files": [
+          {
+            "at": "2026-10-03T12:00:00.000Z",
+            "by": "u-maja",
+            "bytes": 1840000,
+            "filled": ["carton"],
+            "id": "pf-oil-dieline",
+            "kind": "dieline",
+            "name": "LYS-NBO-100 box dieline.pdf",
+            "read": ["Box 58 × 58 × 160 mm, tuck end","Blind emboss on the front panel","Burgundy print inside"]
+          },
+          {
+            "at": "2026-10-03T12:00:00.000Z",
+            "by": "u-maja",
+            "bytes": 4200000,
+            "filled": ["label-front","label-size","foil-colour"],
+            "id": "pf-oil-art",
+            "kind": "artwork",
+            "name": "Night Body Oil label.ai",
+            "read": [
+              "Label 60 × 85 mm, three lines of text",
+              "Wordmark in hot-foil, soft gold",
+              "Every letter of the front label"
+            ]
+          },
+          {
+            "at": "2026-10-03T12:00:00.000Z",
+            "by": "u-maja",
+            "bytes": 620000,
+            "filled": ["brimful","neck-finish","decoration"],
+            "id": "pf-oil-spec",
+            "kind": "spec",
+            "name": "Bottle and cap spec, supplier.pdf",
+            "read": ["Amber glass 100 ml, brimful 110 ml","Neck 20/410","Cap: coated aluminium, Pantone 7421 C, matte"]
+          }
+        ],
+        "id": "pr-oil",
+        "images": [
+          "/demo/lysne/gen/oil-pack.jpg",
+          "/demo/lysne/gen/oil-scene.jpg",
+          "/demo/lysne/03-08-feed.jpg",
+          "/demo/lysne/05-08-feed.jpg",
+          "/demo/lysne/01-03-feed.jpg"
+        ],
+        "kindId": "kind-skincare",
+        "name": "Night Body Oil",
+        "parts": [
+          {
+            "colour": {"hex":"#8A4B14","name":"Amber"},
+            "finish": "gloss",
+            "id": "pp-oil-bottle",
+            "material": "Amber glass",
+            "name": "Bottle",
+            "note": "Tall, round-shouldered.",
+            "opacity": "translucent",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"}
+          },
+          {
+            "colour": {"hex":"#5B1E2A","name":"Burgundy","pantone":"7421 C"},
+            "finish": "matte",
+            "id": "pp-oil-cap",
+            "material": "Aluminium, coated",
+            "name": "Cap",
+            "note": "Never glossy, never black.",
+            "opacity": "opaque",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"}
+          },
+          {
+            "colour": {"hex":"#F1E9DA","name":"Cream"},
+            "decoration": "Wordmark in soft gold hot-foil",
+            "finish": "matte",
+            "id": "pp-oil-label",
+            "material": "Cream textured paper",
+            "name": "Label",
+            "note": "Front, centred, never cropped.",
+            "opacity": "opaque",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"}
+          },
+          {
+            "colour": {"hex":"#EDE4D3","name":"Cream"},
+            "decoration": "Blind emboss, burgundy inside print",
+            "finish": "matte",
+            "id": "pp-oil-box",
+            "material": "Uncoated board",
+            "name": "Box",
+            "opacity": "opaque",
+            "provenance": {"confidence":"high","evidence":"Dieline LYS-NBO-100","origin":"engine","state":"proposed"}
+          }
+        ],
+        "provenance": {"evidence":"Added by Maja","origin":"customer","state":"approved"},
+        "shots": [
+          {
+            "image": "/demo/lysne/gen/oil-pack.jpg",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Packshot LYS-NBO-100",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "slotId": "front"
+          },
+          {
+            "image": "/demo/lysne/gen/oil-ref-back.jpg",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "slotId": "back"
+          },
+          {
+            "image": "/demo/lysne/gen/oil-ref-side.jpg",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "slotId": "side"
+          },
+          {
+            "image": "/demo/lysne/gen/oil-ref-top.jpg",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "slotId": "top"
+          },
+          {
+            "image": "/demo/lysne/gen/oil-ref-label.jpg",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "slotId": "label"
+          },
+          {
+            "image": "/demo/lysne/gen/oil-ref-hand.jpg",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "slotId": "scale"
+          }
+        ],
+        "sku": "LYS-NBO-100",
+        "specs": [
+          {
+            "fieldId": "net",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Packshot LYS-NBO-100",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "unit": "ml",
+            "value": 100
+          },
+          {
+            "fieldId": "dims",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Measured by Maja",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": {"h":148,"shape":"round","unit":"mm","w":52}
+          },
+          {
+            "fieldId": "fill-level",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "To the shoulder"
+          },
+          {
+            "fieldId": "brimful",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Component spec sheet",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "unit": "ml",
+            "value": 110
+          },
+          {
+            "fieldId": "container",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Bottle"
+          },
+          {
+            "fieldId": "container-material",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Amber glass"
+          },
+          {
+            "fieldId": "finish",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Gloss"
+          },
+          {
+            "fieldId": "neck-finish",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Component spec sheet",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "20/410"
+          },
+          {
+            "fieldId": "decoration",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Component spec sheet",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": ["Pressure-sensitive label","Hot-foil"]
+          },
+          {
+            "fieldId": "foil-colour",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Label artwork",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": {"hex":"#B8955A","name":"Soft gold foil"}
+          },
+          {
+            "fieldId": "label-stock",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Textured paper"
+          },
+          {
+            "fieldId": "label-finish",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Matte"
+          },
+          {
+            "fieldId": "carton",
+            "provenance": {"confidence":"high","evidence":"Dieline LYS-NBO-100","origin":"engine","state":"proposed"},
+            "value": "Uncoated cream board, blind emboss of the wordmark, printed inside in burgundy."
+          },
+          {
+            "fieldId": "formula-colour",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Reads golden, never orange",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": {"hex":"#C99A3E","name":"Golden oil","pantone":"7563 C"}
+          },
+          {
+            "fieldId": "texture",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Oil"
+          },
+          {
+            "fieldId": "viscosity",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Fluid"
+          },
+          {
+            "fieldId": "scent",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Lavender and almond, soft"
+          },
+          {
+            "detailTokenId": "dt-label",
+            "fieldId": "label-front",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Packshot LYS-NBO-100",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "LYSNE\nNight Body Oil\n100 ml"
+          },
+          {
+            "detailTokenId": "dt-size",
+            "fieldId": "label-size",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Packshot LYS-NBO-100",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "100 ml"
+          },
+          {
+            "detailTokenId": "dt-logo",
+            "fieldId": "wordmark",
+            "provenance": {"confidence":"high","evidence":"lysne.no, header","origin":"engine","state":"proposed"},
+            "value": "LYSNE"
+          },
+          {
+            "fieldId": "label-back",
+            "provenance": {"confidence":"medium","evidence":"lysne.no/night-body-oil","origin":"engine","state":"proposed"},
+            "value": "Warm a few drops between your palms and press into damp skin, the hour before sleep. 100 ml e"
+          },
+          {
+            "fieldId": "pao",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "12M, batch code on the base"
+          },
+          {
+            "fieldId": "sizes",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": ["100 ml","30 ml travel"]
+          },
+          {
+            "fieldId": "how",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "A few drops warmed in the palms, pressed into skin after the evening shower."
+          },
+          {
+            "fieldId": "inci",
+            "provenance": {"confidence":"high","evidence":"lysne.no/night-body-oil","origin":"engine","state":"proposed"},
+            "value": "Prunus Amygdalus Dulcis Oil, Simmondsia Chinensis Seed Oil, Lavandula Angustifolia Oil, Tocopherol, Linalool"
+          },
+          {
+            "fieldId": "claims",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Approved claims list",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": ["For the hour before sleep."]
+          },
+          {
+            "fieldId": "origin",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Norway"
+          }
+        ],
+        "state": "verified",
+        "variant": "100 ml",
+        "variants": [
+          {
+            "id": "va-oil-100",
+            "image": "/demo/lysne/03-08-square.jpg",
+            "name": "100 ml",
+            "productId": "pr-oil",
+            "sku": "LYS-NBO-100"
+          },
+          {"id":"va-oil-30","name":"30 ml travel","productId":"pr-oil","sku":"LYS-NBO-30"}
+        ],
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-hands",
+        "collectionIds": ["cl-aw26"],
+        "facts": [
+          {
+            "area": "packaging",
+            "confidence": "medium",
+            "id": "f7",
+            "label": "Tube",
+            "productId": "pr-balm",
+            "source": "inferred",
+            "statement": "Soft cream tube, 50 ml, ribbed brown cap."
+          },
+          {
+            "area": "colour",
+            "confidence": "low",
+            "id": "f8",
+            "label": "Balm",
+            "productId": "pr-balm",
+            "source": "inferred",
+            "statement": "Pale ivory, soft matte surface."
+          },
+          {
+            "area": "label",
+            "confidence": "medium",
+            "id": "f9",
+            "label": "Label",
+            "productId": "pr-balm",
+            "source": "inferred",
+            "statement": "LYSNE on the front; Hand Balm · 50 ml near the cap."
+          },
+          {
+            "area": "claim",
+            "confidence": "low",
+            "id": "f10",
+            "label": "Claims",
+            "productId": "pr-balm",
+            "source": "unknown",
+            "statement": "Not known yet. Which lines may we use?"
+          }
+        ],
+        "id": "pr-balm",
+        "images": ["/demo/lysne/gen/balm-pack.jpg","/demo/lysne/gen/balm-scene.jpg"],
+        "kindId": "kind-skincare",
+        "name": "Hand Balm",
+        "parts": [
+          {
+            "colour": {"hex":"#EDE8DF","name":"Cream"},
+            "decoration": "Screen print, one colour",
+            "finish": "matte",
+            "id": "pp-balm-tube",
+            "material": "Soft tube, PE",
+            "name": "Tube",
+            "opacity": "opaque",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          },
+          {
+            "colour": {"hex":"#6B3A22","name":"Chestnut"},
+            "finish": "matte",
+            "id": "pp-balm-cap",
+            "material": "PP, ribbed",
+            "name": "Cap",
+            "opacity": "opaque",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          },
+          {
+            "colour": {"hex":"#3B2A20","name":"Dark brown"},
+            "finish": "matte",
+            "id": "pp-balm-print",
+            "material": "Printed on the tube",
+            "name": "Print",
+            "opacity": "opaque",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          }
+        ],
+        "provenance": {"confidence":"high","evidence":"lysne.no/hand-balm","origin":"engine","state":"proposed"},
+        "shots": [
+          {
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "provenance": {"confidence":"high","evidence":"lysne.no/hand-balm","origin":"engine","state":"proposed"},
+            "slotId": "front"
+          }
+        ],
+        "sku": "LYS-HB-50",
+        "specs": [
+          {
+            "fieldId": "container-material",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Soft tube, PE"
+          },
+          {
+            "fieldId": "finish",
+            "provenance": {"confidence":"low","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Matte"
+          },
+          {
+            "fieldId": "decoration",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": ["Screen print"]
+          },
+          {
+            "fieldId": "label-stock",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Printed on the pack"
+          },
+          {
+            "fieldId": "formula-colour",
+            "provenance": {"confidence":"low","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": {"hex":"#EFE7D6","name":"Pale ivory"}
+          },
+          {
+            "fieldId": "texture",
+            "provenance": {"confidence":"high","evidence":"lysne.no/hand-balm","origin":"engine","state":"proposed"},
+            "value": "Balm"
+          },
+          {
+            "fieldId": "label-front",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "LYSNE\nHand Balm · 50 ml"
+          },
+          {
+            "fieldId": "wordmark",
+            "provenance": {"confidence":"high","evidence":"lysne.no, header","origin":"engine","state":"proposed"},
+            "value": "LYSNE"
+          },
+          {
+            "fieldId": "inci",
+            "provenance": {"confidence":"high","evidence":"Row 2","origin":"engine","state":"proposed"},
+            "value": "Butyrospermum Parkii Butter, Glycerin, Cera Alba, Tocopherol"
+          },
+          {
+            "fieldId": "net",
+            "provenance": {"confidence":"high","evidence":"Row 10","origin":"engine","state":"proposed"},
+            "unit": "g",
+            "value": 30
+          },
+          {
+            "fieldId": "container",
+            "provenance": {"confidence":"high","evidence":"Picture","origin":"engine","state":"proposed"},
+            "value": "Tin"
+          }
+        ],
+        "state": "needs_you",
+        "variant": "50 ml",
+        "variants": [{"id":"va-balm-50","name":"50 ml","productId":"pr-balm"}],
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-home",
+        "collectionIds": ["cl-ss27"],
+        "facts": [
+          {
+            "area": "shape",
+            "confidence": "high",
+            "id": "f20",
+            "label": "Bottle",
+            "productId": "pr-mist",
+            "source": "inferred",
+            "statement": "Amber glass spray, 50 ml, black pump under a clear cap."
+          },
+          {
+            "area": "label",
+            "confidence": "medium",
+            "id": "f21",
+            "label": "Label",
+            "productId": "pr-mist",
+            "source": "inferred",
+            "statement": "LYSNE, then Pillow Mist · 50 ml."
+          },
+          {
+            "area": "claim",
+            "confidence": "low",
+            "id": "f22",
+            "label": "Claims",
+            "productId": "pr-mist",
+            "source": "inferred",
+            "statement": "\"Lavender and cedar for the hour before sleep.\""
+          }
+        ],
+        "id": "pr-mist",
+        "images": ["/demo/lysne/gen/mist-pack.jpg","/demo/lysne/gen/mist-scene.jpg"],
+        "kindId": "kind-fragrance",
+        "name": "Pillow Mist",
+        "parts": [
+          {
+            "colour": {"hex":"#8A4B14","name":"Amber"},
+            "finish": "gloss",
+            "id": "pp-mist-bottle",
+            "material": "Amber glass",
+            "name": "Bottle",
+            "opacity": "translucent",
+            "provenance": {"confidence":"high","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          },
+          {
+            "colour": {"hex":"#1E1B19","name":"Black"},
+            "finish": "matte",
+            "id": "pp-mist-pump",
+            "material": "PP",
+            "name": "Spray pump",
+            "opacity": "opaque",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          },
+          {
+            "finish": "gloss",
+            "id": "pp-mist-overcap",
+            "material": "PET",
+            "name": "Overcap",
+            "opacity": "clear",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          },
+          {
+            "colour": {"hex":"#F1E9DA","name":"Cream"},
+            "finish": "matte",
+            "id": "pp-mist-label",
+            "material": "Cream paper",
+            "name": "Label",
+            "opacity": "opaque",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          }
+        ],
+        "provenance": {"confidence":"high","evidence":"lysne.no/pillow-mist","origin":"engine","state":"proposed"},
+        "shots": [
+          {
+            "image": "/demo/lysne/gen/mist-pack.jpg",
+            "provenance": {"confidence":"high","evidence":"lysne.no/pillow-mist","origin":"engine","state":"proposed"},
+            "slotId": "front"
+          }
+        ],
+        "specs": [
+          {
+            "fieldId": "concentration",
+            "provenance": {"confidence":"high","evidence":"lysne.no/pillow-mist","origin":"engine","state":"proposed"},
+            "value": "Mist"
+          },
+          {
+            "fieldId": "net",
+            "provenance": {"confidence":"high","evidence":"lysne.no/pillow-mist","origin":"engine","state":"proposed"},
+            "unit": "ml",
+            "value": 50
+          },
+          {
+            "fieldId": "glass",
+            "provenance": {"confidence":"high","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Tinted glass"
+          },
+          {
+            "fieldId": "cap-material",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Plastic"
+          },
+          {
+            "fieldId": "label-front",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "LYSNE\nPillow Mist · 50 ml"
+          },
+          {
+            "fieldId": "label-size",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "50 ml"
+          },
+          {
+            "fieldId": "wordmark",
+            "provenance": {"confidence":"high","evidence":"lysne.no, header","origin":"engine","state":"proposed"},
+            "value": "LYSNE"
+          },
+          {
+            "fieldId": "notes",
+            "provenance": {"confidence":"medium","evidence":"lysne.no/pillow-mist","origin":"engine","state":"proposed"},
+            "value": ["Lavender","Cedar","Chamomile"]
+          }
+        ],
+        "state": "needs_you",
+        "variant": "50 ml",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-home",
+        "collectionIds": ["cl-gifts"],
+        "facts": [
+          {
+            "area": "packaging",
+            "confidence": "medium",
+            "id": "f23",
+            "label": "Vessel",
+            "productId": "pr-candle",
+            "source": "inferred",
+            "statement": "Amber glass tumbler with a travertine lid."
+          },
+          {
+            "area": "claim",
+            "confidence": "low",
+            "id": "f24",
+            "label": "Claims",
+            "productId": "pr-candle",
+            "source": "unknown",
+            "statement": "Not known yet. Which lines may we use?"
+          }
+        ],
+        "id": "pr-candle",
+        "images": ["/demo/lysne/gen/candle-pack.jpg","/demo/lysne/gen/candle-scene.jpg"],
+        "kindId": "kind-home",
+        "name": "Evening Candle",
+        "parts": [
+          {
+            "colour": {"hex":"#8A4B14","name":"Amber"},
+            "finish": "gloss",
+            "id": "pp-candle-vessel",
+            "material": "Amber glass",
+            "name": "Vessel",
+            "opacity": "translucent",
+            "provenance": {"confidence":"high","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          },
+          {
+            "colour": {"hex":"#D8CDBE","name":"Travertine"},
+            "finish": "textured",
+            "id": "pp-candle-lid",
+            "material": "Travertine",
+            "name": "Lid",
+            "opacity": "opaque",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          },
+          {
+            "colour": {"hex":"#F1E9DA","name":"Cream"},
+            "finish": "matte",
+            "id": "pp-candle-label",
+            "material": "Cream paper",
+            "name": "Label",
+            "opacity": "opaque",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          }
+        ],
+        "provenance": {"confidence":"medium","evidence":"lysne.no/candle","origin":"engine","state":"proposed"},
+        "shots": [
+          {
+            "image": "/demo/lysne/gen/candle-pack.jpg",
+            "provenance": {"confidence":"high","evidence":"lysne.no/evening-candle","origin":"engine","state":"proposed"},
+            "slotId": "front"
+          }
+        ],
+        "specs": [
+          {
+            "fieldId": "net",
+            "provenance": {"confidence":"high","evidence":"lysne.no/evening-candle","origin":"engine","state":"proposed"},
+            "unit": "g",
+            "value": 180
+          },
+          {
+            "fieldId": "dims",
+            "provenance": {"confidence":"medium","evidence":"lysne.no/evening-candle","origin":"engine","state":"proposed"},
+            "value": {"h":90,"shape":"round","unit":"mm","w":80}
+          },
+          {
+            "fieldId": "wicks",
+            "provenance": {"confidence":"high","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "unit": "wicks",
+            "value": 1
+          },
+          {
+            "fieldId": "wax",
+            "provenance": {"confidence":"medium","evidence":"lysne.no/evening-candle","origin":"engine","state":"proposed"},
+            "value": "Rapeseed"
+          },
+          {
+            "fieldId": "wax-surface",
+            "provenance": {"confidence":"low","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Smooth"
+          },
+          {
+            "fieldId": "wick-type",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Cotton"
+          },
+          {
+            "fieldId": "vessel",
+            "provenance": {"confidence":"high","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Amber glass"
+          },
+          {
+            "fieldId": "vessel-finish",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Gloss"
+          },
+          {
+            "fieldId": "lid",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Travertine"
+          },
+          {
+            "fieldId": "wax-colour",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": {"hex":"#EDE3CF","name":"Warm cream"}
+          },
+          {
+            "fieldId": "label-front",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "LYSNE\nEvening Candle\n180 g"
+          },
+          {
+            "fieldId": "wordmark",
+            "provenance": {"confidence":"high","evidence":"lysne.no, header","origin":"engine","state":"proposed"},
+            "value": "LYSNE"
+          },
+          {
+            "fieldId": "notes",
+            "provenance": {"confidence":"medium","evidence":"lysne.no/evening-candle","origin":"engine","state":"proposed"},
+            "value": ["Fig leaf","Cedar","Amber"]
+          },
+          {
+            "fieldId": "burn",
+            "provenance": {"confidence":"high","evidence":"lysne.no/evening-candle","origin":"engine","state":"proposed"},
+            "unit": "h",
+            "value": 40
+          }
+        ],
+        "state": "needs_you",
+        "variant": "180 g",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-oils",
+        "collectionIds": ["cl-aw26"],
+        "facts": [
+          {
+            "area": "shape",
+            "confidence": "high",
+            "id": "f70",
+            "label": "Bottle",
+            "productId": "pr-face",
+            "source": "verified",
+            "statement": "Amber glass dropper bottle, 30 ml, matte burgundy cap.",
+            "verifiedAt": "2026-10-08T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "label",
+            "confidence": "high",
+            "id": "f71",
+            "label": "Label",
+            "productId": "pr-face",
+            "source": "verified",
+            "statement": "Cream paper: LYSNE, then Face Oil · 30 ml.",
+            "verifiedAt": "2026-10-08T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "claim",
+            "confidence": "high",
+            "id": "f72",
+            "label": "Claims",
+            "productId": "pr-face",
+            "source": "verified",
+            "statement": "\"Light enough for the evening, gone by morning.\"",
+            "verifiedAt": "2026-10-08T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          }
+        ],
+        "id": "pr-face",
+        "images": ["/demo/lysne/gen/face-pack.jpg"],
+        "kindId": "kind-skincare",
+        "name": "Face Oil",
+        "provenance": {
+          "at": "2026-10-08T12:32:00.000Z",
+          "by": "u-maja",
+          "evidence": "Added by Maja",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "sku": "LYS-FO-30",
+        "state": "verified",
+        "variant": "30 ml",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-body",
+        "collectionIds": ["cl-aw26","cl-ss27"],
+        "facts": [
+          {
+            "area": "shape",
+            "confidence": "high",
+            "id": "f73",
+            "label": "Bottle",
+            "productId": "pr-wash",
+            "source": "verified",
+            "statement": "Amber pump bottle, 250 ml, matte burgundy pump.",
+            "verifiedAt": "2026-10-08T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "label",
+            "confidence": "high",
+            "id": "f74",
+            "label": "Label",
+            "productId": "pr-wash",
+            "source": "verified",
+            "statement": "Cream paper: LYSNE, then Evening Body Wash · 250 ml.",
+            "verifiedAt": "2026-10-08T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          }
+        ],
+        "id": "pr-wash",
+        "images": ["/demo/lysne/gen/wash-pack.jpg"],
+        "kindId": "kind-skincare",
+        "name": "Evening Body Wash",
+        "provenance": {
+          "at": "2026-10-08T12:32:00.000Z",
+          "by": "u-maja",
+          "evidence": "Added by Maja",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "sku": "LYS-BW-250",
+        "state": "verified",
+        "variant": "250 ml",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-home",
+        "collectionIds": ["cl-gifts"],
+        "facts": [
+          {
+            "area": "shape",
+            "confidence": "high",
+            "id": "f75",
+            "label": "Bottle",
+            "productId": "pr-kveld",
+            "source": "inferred",
+            "statement": "Heavy square clear glass, 50 ml, matte burgundy cap."
+          },
+          {
+            "area": "claim",
+            "confidence": "low",
+            "id": "f76",
+            "label": "Claims",
+            "productId": "pr-kveld",
+            "source": "unknown",
+            "statement": "Not known yet. Which lines may we use?"
+          }
+        ],
+        "id": "pr-kveld",
+        "images": ["/demo/lysne/gen/kveld-pack.jpg"],
+        "isNew": true,
+        "kindId": "kind-fragrance",
+        "name": "Kveld Eau de Parfum",
+        "provenance": {"confidence":"high","evidence":"lysne.no/kveld","origin":"engine","state":"proposed"},
+        "state": "needs_you",
+        "variant": "50 ml",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-home",
+        "collectionIds": ["cl-ss27"],
+        "facts": [
+          {
+            "area": "packaging",
+            "confidence": "medium",
+            "id": "f77",
+            "label": "Bottle",
+            "productId": "pr-diffuser",
+            "source": "inferred",
+            "statement": "Amber glass, 100 ml, six rattan reeds."
+          },
+          {
+            "area": "label",
+            "confidence": "medium",
+            "id": "f78",
+            "label": "Label",
+            "productId": "pr-diffuser",
+            "source": "inferred",
+            "statement": "LYSNE, then Room Diffuser · 100 ml."
+          }
+        ],
+        "id": "pr-diffuser",
+        "images": ["/demo/lysne/gen/diffuser-pack.jpg"],
+        "kindId": "kind-home",
+        "name": "Room Diffuser",
+        "provenance": {"confidence":"medium","evidence":"lysne.no/diffuser","origin":"engine","state":"proposed"},
+        "state": "needs_you",
+        "variant": "100 ml",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-body",
+        "collectionIds": ["cl-aw26"],
+        "facts": [
+          {
+            "area": "packaging",
+            "confidence": "high",
+            "id": "f79",
+            "label": "Tin",
+            "productId": "pr-lip",
+            "source": "verified",
+            "statement": "Round matte burgundy tin, 15 ml, LYSNE embossed on the lid.",
+            "verifiedAt": "2026-10-08T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "colour",
+            "confidence": "high",
+            "id": "f7-lip-1",
+            "label": "Balm",
+            "productId": "pr-lip",
+            "source": "verified",
+            "statement": "Pale ivory.",
+            "verifiedAt": "2026-10-08T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          }
+        ],
+        "id": "pr-lip",
+        "images": ["/demo/lysne/gen/lip-pack.jpg"],
+        "kindId": "kind-skincare",
+        "name": "Lip Balm",
+        "provenance": {
+          "at": "2026-10-08T12:32:00.000Z",
+          "by": "u-maja",
+          "evidence": "Added by Maja",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "sku": "LYS-LB-15",
+        "state": "verified",
+        "variant": "15 ml",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-home",
+        "collectionIds": ["cl-gifts"],
+        "facts": [
+          {
+            "area": "packaging",
+            "confidence": "medium",
+            "id": "f7-ritual-1",
+            "label": "Box",
+            "productId": "pr-ritual",
+            "source": "inferred",
+            "statement": "Cream rigid box: Night Body Oil 100 ml and Evening Candle 180 g in cream paper."
+          },
+          {
+            "area": "claim",
+            "confidence": "low",
+            "id": "f7-ritual-2",
+            "label": "Claims",
+            "productId": "pr-ritual",
+            "source": "unknown",
+            "statement": "Not known yet. Which lines may we use?"
+          }
+        ],
+        "id": "pr-ritual",
+        "images": ["/demo/lysne/gen/ritual-pack.jpg"],
+        "kindId": "kind-home",
+        "name": "Evening Ritual gift box",
+        "provenance": {"confidence":"medium","evidence":"lysne.no/gifts","origin":"engine","state":"proposed"},
+        "state": "needs_you",
+        "variant": "Oil and candle",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-merch",
+        "facts": [
+          {
+            "area": "shape",
+            "confidence": "high",
+            "id": "f80",
+            "label": "Knit",
+            "productId": "pr-sweater",
+            "source": "verified",
+            "statement": "Fine 12GG jersey, 2×2 rib at the neck, cuffs and a deep 6 cm hem.",
+            "verifiedAt": "2026-10-12T12:00:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "label",
+            "confidence": "high",
+            "id": "f81",
+            "label": "Label",
+            "productId": "pr-sweater",
+            "source": "verified",
+            "statement": "Small cream woven label inside the back neck: LYSNE in dark brown.",
+            "verifiedAt": "2026-10-12T12:00:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "claim",
+            "confidence": "low",
+            "id": "f82",
+            "label": "Claims",
+            "productId": "pr-sweater",
+            "source": "unknown",
+            "statement": "Not known yet. Which lines may we use?"
+          }
+        ],
+        "files": [
+          {
+            "at": "2026-10-12T12:00:00.000Z",
+            "by": "u-maja",
+            "bytes": 6400000,
+            "filled": ["composition","measures","gauge","knit","trim-rib","trims","colourways"],
+            "id": "pf-sw-tp",
+            "kind": "techpack",
+            "name": "LYS-KN-001 tech pack v3.pdf",
+            "read": [
+              "Fibre blend 70 % merino wool, 30 % cashmere",
+              "12 points of measure × 5 sizes, tolerances, base size M",
+              "12GG jersey, 2×2 rib trims, fully fashioned, linked",
+              "Trims: main label, care label, size label, hang tag",
+              "Colourways Ecru 11-0507 TCX, Night brown 19-1015 TCX"
+            ]
+          },
+          {
+            "at": "2026-10-12T12:00:00.000Z",
+            "by": "u-maja",
+            "bytes": 2100000,
+            "filled": ["sleeve","neckline"],
+            "id": "pf-sw-flats",
+            "kind": "flats",
+            "name": "LYS-KN-001 flats.ai",
+            "read": ["Front and back flats","Drop shoulder, crew neck, 6 cm hem rib"]
+          },
+          {
+            "at": "2026-10-12T12:00:00.000Z",
+            "by": "u-maja",
+            "bytes": 880000,
+            "id": "pf-sw-cad",
+            "kind": "cad",
+            "name": "LYS-KN-001 pattern.dxf",
+            "read": ["5 pattern pieces: front, back, sleeve × 2, neck rib","Graded XS–XL"]
+          }
+        ],
+        "id": "pr-sweater",
+        "images": [
+          "/demo/lysne/gen/sweater-flat.jpg",
+          "/demo/lysne/gen/sweater-body.jpg",
+          "/demo/lysne/gen/sweater-detail.jpg",
+          "/demo/lysne/gen/sweater-back.jpg"
+        ],
+        "isNew": true,
+        "kindId": "kind-apparel",
+        "name": "Merino Lounge Sweater",
+        "parts": [],
+        "provenance": {
+          "at": "2026-10-12T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Added by Maja",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "shots": [
+          {
+            "image": "/demo/lysne/gen/sweater-flat.jpg",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Added by Maja",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "slotId": "flat-front"
+          },
+          {
+            "image": "/demo/lysne/gen/sweater-back.jpg",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Added by Maja",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "slotId": "flat-back"
+          },
+          {
+            "image": "/demo/lysne/gen/sweater-detail.jpg",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Added by Maja",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "slotId": "detail"
+          },
+          {
+            "image": "/demo/lysne/gen/sweater-body.jpg",
+            "provenance": {"confidence":"high","evidence":"lysne.no/merino-lounge-sweater","origin":"engine","state":"proposed"},
+            "slotId": "on-body"
+          }
+        ],
+        "sku": "LYS-KN-001-ECR",
+        "specs": [
+          {
+            "fieldId": "garment",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Added by Maja",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Sweater"
+          },
+          {
+            "fieldId": "style-no",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "LYS-KN-001"
+          },
+          {
+            "fieldId": "season",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "AW26"
+          },
+          {
+            "fieldId": "gender",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Unisex"
+          },
+          {
+            "fieldId": "composition",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": {"fibres":[{"fibre":"Merino wool","pct":70},{"fibre":"Cashmere","pct":30}]}
+          },
+          {
+            "fieldId": "yarn-finish",
+            "provenance": {"confidence":"medium","evidence":"Your detail photo","origin":"engine","state":"proposed"},
+            "value": "Brushed"
+          },
+          {
+            "fieldId": "dye",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Undyed"
+          },
+          {
+            "fieldId": "yarn-count",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "2/28 Nm"
+          },
+          {
+            "fieldId": "yarn-weight",
+            "provenance": {"confidence":"medium","evidence":"LYS-KN-001 tech pack v3.pdf","origin":"engine","state":"proposed"},
+            "value": "Fingering"
+          },
+          {
+            "fieldId": "garment-weight",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "unit": "g",
+            "value": 340
+          },
+          {
+            "fieldId": "yarn-supplier",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Italian spinner, merino-cashmere 2/28 Nm, RWS"
+          },
+          {
+            "fieldId": "knit",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Jersey"
+          },
+          {
+            "fieldId": "gauge",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "12GG"
+          },
+          {
+            "fieldId": "make",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Fully fashioned"
+          },
+          {
+            "fieldId": "neckline",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Crew"
+          },
+          {
+            "fieldId": "sleeve",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Drop shoulder"
+          },
+          {
+            "fieldId": "trim-rib",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Rib 2:2"
+          },
+          {
+            "fieldId": "hem-rib",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "unit": "mm",
+            "value": 60
+          },
+          {
+            "fieldId": "cuff-rib",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "unit": "mm",
+            "value": 70
+          },
+          {
+            "fieldId": "neck-rib",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "unit": "mm",
+            "value": 25
+          },
+          {
+            "fieldId": "drape",
+            "provenance": {"confidence":"medium","evidence":"Your on-body photo","origin":"engine","state":"proposed"},
+            "value": "Soft"
+          },
+          {
+            "fieldId": "seams",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Linked"
+          },
+          {
+            "fieldId": "stitch-density",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "56 wales × 84 courses per 10 cm"
+          },
+          {
+            "fieldId": "fit",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Relaxed"
+          },
+          {
+            "fieldId": "measures",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": {
+              "base": "M",
+              "rows": [
+                {
+                  "code": "A",
+                  "how": "2 cm below the armhole, side to side",
+                  "pom": "Chest width ½",
+                  "tol": 1,
+                  "values": [54,56,58,60,62]
+                },
+                {
+                  "code": "B",
+                  "how": "From the high point of the shoulder to the hem edge",
+                  "pom": "Body length from HPS",
+                  "tol": 1,
+                  "values": [64,65.5,67,68.5,70]
+                },
+                {
+                  "code": "C",
+                  "how": "Drop shoulder, seam to seam",
+                  "pom": "Shoulder width",
+                  "tol": 1,
+                  "values": [58,60,62,64,66]
+                },
+                {
+                  "code": "D",
+                  "how": "Centre back neck, over the shoulder, to the cuff edge",
+                  "pom": "Sleeve length from CB",
+                  "tol": 1,
+                  "values": [76,78,80,82,84]
+                },
+                {"code":"E","pom":"Armhole straight","tol":0.5,"values":[23,24,25,26,27]},
+                {
+                  "code": "F",
+                  "how": "Cuff relaxed, edge to edge",
+                  "pom": "Sleeve opening",
+                  "tol": 0.5,
+                  "values": [9,9.5,10,10.5,11]
+                },
+                {"code":"G","how":"Hem rib relaxed","pom":"Hem width","tol":1,"values":[48,50,52,54,56]},
+                {"code":"H","how":"Seam to seam","pom":"Neck width","tol":0.5,"values":[19,19.5,20,20.5,21]},
+                {"code":"I","pom":"Front neck drop","tol":0.5,"values":[7,7,7.5,7.5,8]},
+                {"code":"J","pom":"Hem rib depth","tol":0.3,"values":[6,6,6,6,6]},
+                {"code":"K","pom":"Cuff rib depth","tol":0.3,"values":[7,7,7,7,7]},
+                {"code":"L","pom":"Neck rib depth","tol":0.2,"values":[2.5,2.5,2.5,2.5,2.5]}
+              ],
+              "sizes": ["XS","S","M","L","XL"],
+              "unit": "cm"
+            }
+          },
+          {
+            "fieldId": "size-run",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": ["XS","S","M","L","XL"]
+          },
+          {
+            "fieldId": "model",
+            "provenance": {"confidence":"medium","evidence":"lysne.no/merino-lounge-sweater","origin":"engine","state":"proposed"},
+            "value": "Wears M, 178 cm"
+          },
+          {
+            "fieldId": "grading",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Chest ½ +1 cm, length +1.5 cm, sleeve +2 cm per size"
+          },
+          {
+            "fieldId": "measured",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Flat, relaxed"
+          },
+          {
+            "fieldId": "trims",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": {
+              "parts": [
+                {
+                  "colour": {"hex":"#F1E9DA","name":"Cream"},
+                  "decoration": "LYSNE woven in Night brown",
+                  "finish": "Matte",
+                  "material": "Woven damask",
+                  "name": "Main label",
+                  "note": "Inside the back neck, centred",
+                  "size": "40 × 15 mm"
+                },
+                {
+                  "colour": {"hex":"#EDE6D8","name":"Ecru"},
+                  "finish": "Satin",
+                  "material": "Printed satin",
+                  "name": "Care label",
+                  "note": "Left side seam, 8 cm above the hem",
+                  "size": "30 × 60 mm"
+                },
+                {
+                  "colour": {"hex":"#F1E9DA","name":"Cream"},
+                  "finish": "Matte",
+                  "material": "Woven",
+                  "name": "Size label",
+                  "note": "Folded into the main label seam"
+                },
+                {
+                  "colour": {"hex":"#EFE6DA","name":"Linen"},
+                  "decoration": "Blind emboss of the wordmark",
+                  "finish": "Matte",
+                  "material": "Uncoated board, 450 g/m²",
+                  "name": "Hang tag",
+                  "note": "On cotton string, through the main label"
+                }
+              ]
+            }
+          },
+          {
+            "fieldId": "branding",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "No outside branding. A small cream woven label inside the back neck: LYSNE in Night brown."
+          },
+          {
+            "fieldId": "colourways",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": [
+              {"hex":"#E9E1D1","name":"Ecru","pantone":"11-0507 TCX"},
+              {"hex":"#3A2A22","name":"Night brown","pantone":"19-1015 TCX"}
+            ]
+          },
+          {
+            "fieldId": "care",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Hand wash cold or wool cycle 30 °C, dry flat, do not tumble dry."
+          },
+          {
+            "fieldId": "care-symbols",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": ["Hand wash","Do not bleach","Dry flat","Do not tumble dry","Iron low"]
+          },
+          {
+            "fieldId": "origin",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Portugal"
+          },
+          {
+            "fieldId": "certifications",
+            "provenance": {"confidence":"low","evidence":"lysne.no/merino-lounge-sweater","origin":"engine","state":"proposed"},
+            "value": ["RWS","Mulesing-free"]
+          }
+        ],
+        "state": "needs_you",
+        "variant": "Ecru",
+        "variants": [
+          {"id":"va-sw-ecru","name":"Ecru","productId":"pr-sweater"},
+          {"id":"va-sw-brown","name":"Night brown","productId":"pr-sweater"}
+        ],
+        "workspaceId": "w-lysne"
+      },
+      {
+        "facts": [],
+        "id": "pr-mvkqptqg-2",
+        "images": [],
+        "name": "Renamed",
+        "parts": [],
+        "provenance": {
+          "at": "2026-10-14T12:32:13.000Z",
+          "by": "u-maja",
+          "evidence": "lysne-products-2026.csv, row 12",
+          "origin": "engine",
+          "state": "approved"
+        },
+        "shots": [],
+        "specs": [],
+        "state": "needs_you",
+        "variant": "100 ml",
+        "workspaceId": "w-lysne"
+      }
+    ]
+  }
+maja startProductImport({"source":"website","url":"https://lysne.example/shop"})
+  {
+    "counts": [{"label":"Pages read","n":1},{"label":"Products found","n":0},{"label":"Pictures","n":0}],
+    "found": [],
+    "id": "imp-mvkqptqg-3",
+    "log": [],
+    "progress": 0,
+    "reading": "Opening lysne.no",
+    "source": "website",
+    "startedAt": "2026-10-14T12:32:13.000Z",
+    "state": "reading",
+    "unchanged": 0,
+    "url": "lysne.example/shop",
+    "workspaceId": "w-lysne"
+  }
+-- 2 s later
+maja productImport()
+  {
+    "counts": [{"label":"Pages read","n":9},{"label":"Products found","n":4},{"label":"Pictures","n":11}],
+    "found": [],
+    "id": "imp-mvkqptqg-3",
+    "log": ["Opening lysne.no","Reading the sitemap: 46 pages"],
+    "progress": 0.30303030303030304,
+    "reading": "Reading the Shopify product feed",
+    "source": "website",
+    "startedAt": "2026-10-14T12:32:13.000Z",
+    "state": "reading",
+    "unchanged": 0,
+    "url": "lysne.example/shop",
+    "workspaceId": "w-lysne"
+  }
+-- 30 s later
+maja importJob("imp-mvkqptqg-3")
+  {
+    "counts": [{"label":"Pages read","n":31},{"label":"Products found","n":4},{"label":"Pictures","n":23}],
+    "found": [
+      {
+        "confidence": "high",
+        "fields": [
+          {"fieldId":"price","label":"Price","source":"lysne.no/products/body-scrub","value":"NOK 380"},
+          {"fieldId":"net","label":"Net content","source":"lysne.no/products/body-scrub","value":"200 ml"},
+          {"fieldId":"container","label":"Container","source":"lysne.no/products/body-scrub","value":"Jar"},
+          {
+            "fieldId": "container-material",
+            "label": "Container material",
+            "source": "lysne.no/products/body-scrub",
+            "value": "Amber glass"
+          },
+          {"fieldId":"finish","label":"Finish","source":"Packshot","value":"Gloss"},
+          {"fieldId":"label-size","label":"Size as printed","source":"Packshot","value":"Body Scrub · 200 ml"},
+          {"fieldId":"wordmark","label":"Wordmark","source":"Packshot","value":"LYSNE"},
+          {
+            "fieldId": "claims",
+            "label": "Claims you may use",
+            "source": "lysne.no/products/body-scrub",
+            "value": "Polishes without stripping"
+          }
+        ],
+        "files": [
+          {"kind":"page","name":"lysne.no/products/body-scrub"},
+          {"bytes":2400000,"kind":"picture","name":"body-scrub-packshot.jpg","src":"/demo/lysne/gen/scrub-pack.jpg"},
+          {"bytes":2400000,"kind":"picture","name":"body-scrub-texture.jpg","src":"/demo/lysne/gen/scrub-detail.jpg"}
+        ],
+        "id": "fp-scrub",
+        "images": ["/demo/lysne/gen/scrub-pack.jpg","/demo/lysne/gen/scrub-detail.jpg"],
+        "kindConfidence": "high",
+        "kindId": "kind-skincare",
+        "name": "Body Scrub",
+        "source": "lysne.no/products/body-scrub",
+        "status": "new",
+        "variant": "200 ml"
+      },
+      {
+        "changes": "New size: 100 ml",
+        "confidence": "high",
+        "fields": [
+          {
+            "before": "50 ml",
+            "fieldId": "sizes",
+            "label": "Sizes",
+            "source": "lysne.no/products/pillow-mist",
+            "value": "50 ml, 100 ml"
+          },
+          {
+            "before": "Pillow Mist · 50 ml",
+            "fieldId": "label-size",
+            "label": "Size as printed",
+            "source": "New packshot",
+            "value": "Pillow Mist · 100 ml"
+          },
+          {
+            "before": "NOK 290",
+            "fieldId": "price",
+            "label": "Price",
+            "source": "lysne.no/products/pillow-mist",
+            "value": "NOK 420 (100 ml)"
+          }
+        ],
+        "files": [
+          {"kind":"page","name":"lysne.no/products/pillow-mist"},
+          {"bytes":2400000,"kind":"picture","name":"pillow-mist-100ml.jpg","src":"/demo/lysne/gen/mist100-pack.jpg"}
+        ],
+        "id": "fp-mist",
+        "images": ["/demo/lysne/gen/mist100-pack.jpg","/demo/lysne/gen/mist-pack.jpg"],
+        "kindConfidence": "high",
+        "kindId": "kind-fragrance",
+        "name": "Pillow Mist",
+        "patch": {"image":"/demo/lysne/gen/mist100-pack.jpg","variant":"50 ml · 100 ml"},
+        "productId": "pr-mist",
+        "source": "lysne.no/products/pillow-mist",
+        "status": "changed",
+        "variant": "50 ml · 100 ml"
+      }
+    ],
+    "id": "imp-mvkqptqg-3",
+    "log": [
+      "Opening lysne.no",
+      "Reading the sitemap: 46 pages",
+      "Reading the Shopify product feed",
+      "Reading lysne.no/products/night-body-oil",
+      "Reading lysne.no/products/pillow-mist",
+      "Reading lysne.no/products/body-scrub",
+      "Comparing with your catalogue"
+    ],
+    "progress": 1,
+    "source": "website",
+    "startedAt": "2026-10-14T12:32:13.000Z",
+    "state": "review",
+    "unchanged": 2,
+    "unchangedNames": ["Night Body Oil","Hand Balm"],
+    "url": "lysne.example/shop",
+    "workspaceId": "w-lysne"
+  }
+maja dismissImport("imp-mvkqptqg-3")
+  undefined
+maja productImport()
+  = maja approveImport("imp-mvkqpjpc-1")
+maja startProductImport({"file":{"bytes":90000000,"name":"shots.zip"},"source":"zip"})
+  {
+    "counts": [{"label":"Files","n":31},{"label":"Pictures","n":0},{"label":"Documents","n":0},{"label":"Products found","n":0}],
+    "fileName": "shots.zip",
+    "found": [],
+    "id": "imp-mvkqqifc-4",
+    "log": [],
+    "progress": 0,
+    "reading": "Opening LYSNE_AW26_everything.zip: 31 files",
+    "source": "zip",
+    "startedAt": "2026-10-14T12:32:45.000Z",
+    "state": "reading",
+    "unchanged": 0,
+    "workspaceId": "w-lysne"
+  }
+-- 30 s later
+maja importJob("imp-mvkqqifc-4")
+  {
+    "counts": [{"label":"Files","n":31},{"label":"Pictures","n":19},{"label":"Documents","n":8},{"label":"Products found","n":5}],
+    "fileName": "shots.zip",
+    "found": [
+      {
+        "confidence": "high",
+        "fields": [
+          {"fieldId":"net","label":"Net content","source":"spec-sheet_body-scrub.pdf","value":"200 ml"},
+          {"fieldId":"container","label":"Container","source":"spec-sheet_body-scrub.pdf","value":"Jar"},
+          {
+            "fieldId": "container-material",
+            "label": "Container material",
+            "source": "spec-sheet_body-scrub.pdf",
+            "value": "Amber glass"
+          },
+          {"fieldId":"finish","label":"Finish","source":"Packshot","value":"Gloss"},
+          {"fieldId":"label-size","label":"Size as printed","source":"Packshot","value":"Body Scrub · 200 ml"},
+          {"fieldId":"wordmark","label":"Wordmark","source":"Packshot","value":"LYSNE"},
+          {
+            "fieldId": "claims",
+            "label": "Claims you may use",
+            "source": "spec-sheet_body-scrub.pdf",
+            "value": "Polishes without stripping"
+          },
+          {
+            "fieldId": "inci",
+            "label": "Ingredients (INCI)",
+            "source": "spec-sheet_body-scrub.pdf",
+            "value": "Sucrose, Prunus Amygdalus Dulcis Oil, Tocopherol"
+          }
+        ],
+        "files": [
+          {"bytes":2400000,"kind":"picture","name":"DSC_0412.jpg","src":"/demo/lysne/gen/scrub-pack.jpg"},
+          {"bytes":2400000,"kind":"picture","name":"DSC_0415.jpg","src":"/demo/lysne/gen/scrub-detail.jpg"},
+          {"bytes":2400000,"kind":"picture","name":"DSC_0417.jpg","src":"/demo/lysne/gen/scrub-pack.jpg"},
+          {"bytes":2400000,"kind":"picture","name":"scrub_lid_off.jpg","src":"/demo/lysne/gen/scrub-detail.jpg"},
+          {"bytes":380000,"kind":"spec","name":"spec-sheet_body-scrub.pdf"},
+          {"bytes":2100000,"kind":"artwork","name":"label_body-scrub_200ml.ai"}
+        ],
+        "id": "fp-zip-scrub",
+        "images": ["/demo/lysne/gen/scrub-pack.jpg","/demo/lysne/gen/scrub-detail.jpg"],
+        "kindConfidence": "high",
+        "kindId": "kind-skincare",
+        "name": "Body Scrub",
+        "source": "spec-sheet_body-scrub.pdf",
+        "status": "new",
+        "variant": "200 ml"
+      },
+      {
+        "confidence": "medium",
+        "fields": [
+          {"fieldId":"net","label":"Net content","source":"Label in sleep_balm_01.jpg","value":"30 g"},
+          {"fieldId":"container","label":"Container","source":"Pictures","value":"Tin"},
+          {"fieldId":"container-material","label":"Container material","source":"Pictures","value":"Aluminium"},
+          {"fieldId":"finish","label":"Finish","source":"Pictures","value":"Brushed"},
+          {
+            "fieldId": "inci",
+            "label": "Ingredients (INCI)",
+            "source": "sleep-balm_INCI.pdf",
+            "value": "Cera Alba, Lavandula Angustifolia Oil, Helianthus Annuus Seed Oil"
+          }
+        ],
+        "files": [
+          {"bytes":2400000,"kind":"picture","name":"sleep_balm_01.jpg","src":"/demo/lysne/gen/sleep-pack.jpg"},
+          {"bytes":2400000,"kind":"picture","name":"sleep_balm_02.jpg","src":"/demo/lysne/gen/sleep-pack.jpg"},
+          {"bytes":2400000,"kind":"picture","name":"sleep_balm_open.jpg","src":"/demo/lysne/gen/sleep-pack.jpg"},
+          {"bytes":380000,"kind":"pdf","name":"sleep-balm_INCI.pdf"},
+          {"bytes":380000,"kind":"artwork","name":"tin_dieline_60mm.pdf"}
+        ],
+        "id": "fp-zip-sleep",
+        "images": ["/demo/lysne/gen/sleep-pack.jpg"],
+        "kindConfidence": "high",
+        "kindId": "kind-skincare",
+        "name": "Sleep Balm",
+        "source": "sleep-balm_INCI.pdf",
+        "status": "new",
+        "variant": "30 g"
+      },
+      {
+        "confidence": "high",
+        "fields": [
+          {"fieldId":"concentration","label":"Concentration","source":"Tech pack, page 1","value":"Mist"},
+          {"fieldId":"net","label":"Net content","source":"Tech pack, page 1","value":"150 ml"},
+          {"fieldId":"glass","label":"Glass","source":"Tech pack, page 2","value":"Tinted glass"},
+          {
+            "fieldId": "label-size",
+            "label": "Size as printed",
+            "source": "linen-spray_label_150ml.pdf",
+            "value": "Linen Spray · 150 ml"
+          },
+          {"fieldId":"wordmark","label":"Wordmark","source":"linen-spray_label_150ml.pdf","value":"LYSNE"},
+          {"fieldId":"notes","label":"Notes","source":"Tech pack, page 3","value":"Linen, lavender, cedar"}
+        ],
+        "files": [
+          {"bytes":2400000,"kind":"picture","name":"linen_spray_front.jpg","src":"/demo/lysne/gen/linen-pack.jpg"},
+          {"bytes":2400000,"kind":"picture","name":"linen_spray_side.jpg","src":"/demo/lysne/gen/linen-pack.jpg"},
+          {"bytes":2400000,"kind":"picture","name":"linen_spray_top.jpg","src":"/demo/lysne/gen/linen-pack.jpg"},
+          {"bytes":4800000,"kind":"techpack","name":"LYSNE_techpack_linen-spray_v3.pdf"},
+          {"bytes":380000,"kind":"artwork","name":"linen-spray_label_150ml.pdf"},
+          {"bytes":9200000,"kind":"other","name":"bottle_150ml_boston.step"}
+        ],
+        "id": "fp-zip-linen",
+        "images": ["/demo/lysne/gen/linen-pack.jpg"],
+        "kindConfidence": "medium",
+        "kindId": "kind-fragrance",
+        "name": "Linen Spray",
+        "note": "Fragrance or Home? The tech pack calls it a room and linen mist.",
+        "source": "LYSNE_techpack_linen-spray_v3.pdf",
+        "status": "new",
+        "variant": "150 ml"
+      },
+      {
+        "changes": "New size: 100 ml",
+        "confidence": "high",
+        "fields": [
+          {
+            "before": "50 ml",
+            "fieldId": "sizes",
+            "label": "Sizes",
+            "source": "pillow-mist_100ml_spec.pdf",
+            "value": "50 ml, 100 ml"
+          },
+          {
+            "before": "Pillow Mist · 50 ml",
+            "fieldId": "label-size",
+            "label": "Size as printed",
+            "source": "New packshot",
+            "value": "Pillow Mist · 100 ml"
+          },
+          {
+            "before": "NOK 290",
+            "fieldId": "price",
+            "label": "Price",
+            "source": "pillow-mist_100ml_spec.pdf",
+            "value": "NOK 420 (100 ml)"
+          }
+        ],
+        "files": [
+          {"bytes":2400000,"kind":"picture","name":"PM100_front.jpg","src":"/demo/lysne/gen/mist100-pack.jpg"},
+          {"bytes":2400000,"kind":"picture","name":"PM100_side.jpg","src":"/demo/lysne/gen/mist100-pack.jpg"},
+          {"bytes":2400000,"kind":"picture","name":"PM100_hand.jpg","src":"/demo/lysne/gen/mist100-pack.jpg"},
+          {"bytes":380000,"kind":"spec","name":"pillow-mist_100ml_spec.pdf"},
+          {"bytes":380000,"kind":"artwork","name":"PM_label_100ml.pdf"}
+        ],
+        "id": "fp-zip-mist",
+        "images": ["/demo/lysne/gen/mist100-pack.jpg","/demo/lysne/gen/mist-pack.jpg"],
+        "kindConfidence": "high",
+        "kindId": "kind-fragrance",
+        "name": "Pillow Mist",
+        "patch": {"image":"/demo/lysne/gen/mist100-pack.jpg","variant":"50 ml · 100 ml"},
+        "productId": "pr-mist",
+        "source": "pillow-mist_100ml_spec.pdf",
+        "status": "changed",
+        "variant": "50 ml · 100 ml"
+      },
+      {
+        "confidence": "low",
+        "fields": [
+          {"fieldId":"vessel","label":"Vessel","source":"Pictures","value":"Ceramic"},
+          {"fieldId":"vessel-finish","label":"Vessel finish","source":"Pictures","value":"Matte"}
+        ],
+        "files": [
+          {"bytes":3100000,"kind":"picture","name":"IMG_4471.HEIC","src":"/demo/lysne/gen/holder-front.jpg"},
+          {"bytes":3000000,"kind":"picture","name":"IMG_4472.HEIC","src":"/demo/lysne/gen/holder-top.jpg"},
+          {"bytes":3400000,"kind":"picture","name":"IMG_4480.HEIC","src":"/demo/lysne/gen/holder-lit.jpg"}
+        ],
+        "id": "fp-zip-holder",
+        "images": ["/demo/lysne/gen/holder-front.jpg","/demo/lysne/gen/holder-top.jpg","/demo/lysne/gen/holder-lit.jpg"],
+        "kindConfidence": "low",
+        "kindId": "kind-home",
+        "name": "Stoneware holder",
+        "note": "These 3 pictures might be one product. The Engine found no name, size or label for it.",
+        "status": "unsure",
+        "variant": "Name not found"
+      }
+    ],
+    "id": "imp-mvkqqifc-4",
+    "log": [
+      "Opening LYSNE_AW26_everything.zip: 31 files",
+      "Looking at 19 pictures",
+      "Reading spec-sheet_body-scrub.pdf",
+      "Reading LYSNE_techpack_linen-spray_v3.pdf",
+      "Grouping the files into products",
+      "Comparing with your catalogue"
+    ],
+    "progress": 1,
+    "setAside": {
+      "count": 6,
+      "line": "The Engine set aside 6 files that are not about a product: 4 moodboard pictures, an invoice and a font. They are not imported."
+    },
+    "source": "zip",
+    "startedAt": "2026-10-14T12:32:45.000Z",
+    "state": "review",
+    "unchanged": 0,
+    "unchangedNames": [],
+    "workspaceId": "w-lysne"
+  }

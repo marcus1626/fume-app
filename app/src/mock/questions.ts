@@ -1,116 +1,33 @@
-// One question, one record (walk-through 15 Oct, Must 4; UX review C3). A question Fume asks the customer can show in
-// many places: as a line the brief still misses (campaign page, Campaigns, Home), as an unknown line of a product
-// (product page), as an open question in the Brand understanding, and as a card in the Fume chat. Before, each place
-// kept its own copy, so answering it in one place left it open everywhere else. Now every question is one record here:
-// an answer given in ANY place closes the record, and the record then writes that answer into every other place, so
-// every screen reads the same state. createMockApi wraps the api so the store settles before every call.
-
-import {
-  FumeError,
-  type Brief,
-  type Campaign,
-  type FumeApi,
-  type FumeEvent,
-  type Id,
-  type Message,
-  type OpenQuestion,
-  type Product,
-  type ServiceClock,
-} from "../contract";
-
-export interface QuestionRecord {
-  id: Id;
-  workspaceId: Id;
-  /** The campaign whose brief waits on it, when one does. */
-  campaignId?: Id;
-  /** The brief's line, as Fume writes it there: "The claims we may use for Hand Balm". */
-  line: string;
-  /** Where it is quickest to answer. */
-  href: string;
-  /** Round 8 (one sheet, WAY-3): the question as Fume asks it, why, and how it is answered. */
-  ask: string;
-  why: string;
-  kind: "text" | "picture";
-  suggestions?: { label: string; text: string }[];
-  hint?: string;
-  /** The places the same question shows. */
-  productId?: Id;
-  factId?: Id;
-  specFieldId?: string;
-  shotSlotId?: string;
-  unknownId?: Id;
-  answer?: string;
-  answeredBy?: Id;
-  answeredAt?: string;
-}
-
-/** LYSNE's open questions. Hand Balm's brief waits on its claims and a packshot of the tube. */
-export const seedQuestions: QuestionRecord[] = [
-  {
-    id: "q-balm-claims",
-    workspaceId: "w-lysne",
-    campaignId: "c-balm",
-    line: "The claims we may use for Hand Balm",
-    href: "/brand/products/pr-balm#needs",
-    productId: "pr-balm",
-    factId: "f10",
-    specFieldId: "claims",
-    unknownId: "un1",
-    ask: "Which claims may we use for Hand Balm?",
-    why: "Every line on a creative must be true. Fume’s expert checks each one against your answer, so we never guess it.",
-    kind: "text",
-    suggestions: [{ label: "The same as Night Body Oil", text: "For the hour before sleep." }],
-    hint: "One claim per line, as it may stand on a creative",
-  },
-  {
-    id: "q-balm-packshot",
-    workspaceId: "w-lysne",
-    campaignId: "c-balm",
-    line: "A packshot of the tube",
-    href: "/brand/products/pr-balm#needs",
-    productId: "pr-balm",
-    shotSlotId: "front",
-    ask: "Is this the Hand Balm packshot?",
-    why: "The Engine draws the tube from this photo, so its shape, cap and label come out right. Confirm it, or add a better one.",
-    kind: "picture",
-  },
-];
-
-interface Db {
-  products: Product[];
-  briefs: Brief[];
-  campaigns: Campaign[];
-  clocks: ServiceClock[];
-  threads: { id: Id; campaignId: Id | null }[];
-  messages: Message[];
-  understanding: { unknowns: { id: Id; question: string; answer?: string }[] };
-}
-
-interface Ctx {
-  now: () => string;
-  userId: () => Id;
-  emit: (event: FumeEvent) => void;
-}
+// One question, one record. A question Fume asks the customer can show in many places: as a line the brief still
+// misses (campaign page, Campaigns, Home), as an unknown line of a product (product page), as an open question in the
+// Brand understanding, and as a card in the Fume chat. An answer given in ANY place closes the record, and the record
+// then writes that answer into every other place, so every screen reads the same state. index.ts settles the records
+// before and after every call.
+import { FumeError, type Id, type OpenQuestion, type Product } from "../contract";
+import { isConfirmed } from "../domain/products";
+import type { Mock } from "./context";
+import type { QuestionRecord } from "./seed";
 
 const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 
 /** The open question a campaign waits on first, if any (Home and the campaign link to where it is answered). */
-export function openQuestion(questions: QuestionRecord[], campaignId: Id): QuestionRecord | undefined {
-  return questions.find((q) => q.campaignId === campaignId && !q.answer);
+export function openQuestion(m: Mock, campaignId: Id): QuestionRecord | undefined {
+  return m.db.questions.find((q) => q.campaignId === campaignId && !q.answer);
 }
 
 /** Settles every record: finds an answer given in any place, then writes it into every other place. */
-export function settleQuestions(questions: QuestionRecord[], db: Db, ctx: Ctx): void {
-  for (const q of questions) {
+export function settleQuestions(m: Mock): void {
+  for (const q of m.db.questions) {
     if (q.answer) continue;
-    const answer = answeredSomewhere(q, db);
+    const answer = answeredSomewhere(m, q);
     if (answer === undefined) continue;
-    Object.assign(q, { answer, answeredBy: ctx.userId(), answeredAt: ctx.now() });
-    spread(q, db, ctx);
+    Object.assign(q, { answer, answeredBy: m.userId, answeredAt: m.now() });
+    spread(m, q);
   }
 }
 
-function answeredSomewhere(q: QuestionRecord, db: Db): string | undefined {
+function answeredSomewhere(m: Mock, q: QuestionRecord): string | undefined {
+  const { db } = m;
   const product = q.productId ? db.products.find((p) => p.id === q.productId) : undefined;
   const fact = q.factId ? product?.facts.find((f) => f.id === q.factId) : undefined;
   if (fact && fact.source !== "unknown") return fact.statement;
@@ -127,7 +44,7 @@ function answeredSomewhere(q: QuestionRecord, db: Db): string | undefined {
   if (brief && !brief.missing.includes(q.line)) {
     const thread = db.threads.find((t) => t.campaignId === q.campaignId);
     const said = db.messages
-      .filter((m) => m.threadId === thread?.id && m.author.kind === "person")
+      .filter((x) => x.threadId === thread?.id && x.author.kind === "person")
       .sort((a, b) => a.at.localeCompare(b.at))
       .at(-1);
     return said?.text ?? "Answered";
@@ -135,12 +52,14 @@ function answeredSomewhere(q: QuestionRecord, db: Db): string | undefined {
   return undefined;
 }
 
-function spread(q: QuestionRecord, db: Db, ctx: Ctx): void {
-  const by = ctx.userId();
-  const at = ctx.now();
+/** Writes an answered record into every place the question shows: the product's line, the Brand understanding, the
+ *  brief, and with the brief the campaign and its clock. */
+function spread(m: Mock, q: QuestionRecord): void {
+  const { db } = m;
+  const by = m.userId;
+  const at = m.now();
   const product = q.productId ? db.products.find((p) => p.id === q.productId) : undefined;
   const answer = q.answer!;
-  // The product's line.
   const fact = q.factId ? product?.facts.find((f) => f.id === q.factId) : undefined;
   if (fact && fact.source === "unknown")
     Object.assign(fact, { statement: answer, source: "verified", confidence: "high", verifiedBy: by, verifiedAt: at });
@@ -158,12 +77,9 @@ function spread(q: QuestionRecord, db: Db, ctx: Ctx): void {
       .filter((s) => s.fieldId !== q.specFieldId)
       .concat({ fieldId: q.specFieldId, value: lines, provenance: { origin: "customer", state: "approved", by, at } });
   }
-  if (product && product.facts.every((f) => f.source === "verified" || f.source === "supplied") && product.facts.length)
-    product.state = "verified";
-  // The Brand understanding's question.
+  if (product && isConfirmed(product)) product.state = "verified";
   const unknown = q.unknownId ? db.understanding.unknowns.find((u) => u.id === q.unknownId) : undefined;
   if (unknown && !unknown.answer) unknown.answer = answer;
-  // The brief's line, and with it the campaign and its clock.
   const brief = q.campaignId ? db.briefs.find((b) => b.campaignId === q.campaignId) : undefined;
   const campaign = q.campaignId ? db.campaigns.find((c) => c.id === q.campaignId) : undefined;
   if (!brief || !campaign) return;
@@ -178,27 +94,8 @@ function spread(q: QuestionRecord, db: Db, ctx: Ctx): void {
     }
   } else if (clock?.state === "paused_waiting_on_you") clock.pausedReason = `Fume needs ${lower(brief.missing[0])}.`;
   campaign.updatedAt = at;
-  ctx.emit({ type: "campaign.state", campaign });
+  m.emit({ type: "campaign.state", campaign });
 }
-
-/** Wraps every api call so the questions settle before it reads or writes (answers in the chat land later, on a timer). */
-export function keepQuestions(api: FumeApi, settle: () => void): void {
-  const calls = api as unknown as Record<string, unknown>;
-  for (const [name, fn] of Object.entries(calls)) {
-    if (typeof fn !== "function" || name === "subscribe") continue;
-    calls[name] = (...args: unknown[]) => {
-      settle();
-      const result = (fn as (...a: unknown[]) => unknown).apply(api, args);
-      if (result instanceof Promise) return result.then((value) => (settle(), value));
-      return result;
-    };
-  }
-}
-
-// ── Round 8 (HOME): one sheet answers every question (WAY-3, LOAD-4) ──────────────────────────────────────────────
-// questions() lists what is still open: the records above whose campaign and product exist, plus every other line a
-// product does not know yet (a claims line Fume asks before the product can be used). answerQuestion() writes the
-// answer where it belongs, on that product's own line, then spreads it (the brief, the understanding, the clock).
 
 const claimsWhy =
   "Every line on a creative must be true. Fume’s expert checks each one against your answer, so we never guess it.";
@@ -223,11 +120,12 @@ function factQuestion(p: Product, f: Product["facts"][number]): OpenQuestion {
 }
 
 /** The open questions in a workspace: brief questions first (a campaign waits on them), then product lines. */
-export function listQuestions(questions: QuestionRecord[], db: Db, workspaceId: Id): OpenQuestion[] {
+export function listQuestions(m: Mock, workspaceId: Id): OpenQuestion[] {
+  const { db } = m;
   const products = db.products.filter((p) => p.workspaceId === workspaceId);
   const campaigns = db.campaigns.filter((c) => c.workspaceId === workspaceId);
   const open: OpenQuestion[] = [];
-  for (const q of questions) {
+  for (const q of db.questions) {
     if (q.answer || q.workspaceId !== workspaceId) continue;
     if (q.campaignId && !campaigns.some((c) => c.id === q.campaignId)) continue;
     const product = q.productId ? products.find((p) => p.id === q.productId) : undefined;
@@ -255,11 +153,9 @@ export function listQuestions(questions: QuestionRecord[], db: Db, workspaceId: 
   return open;
 }
 
-/** Answer one question: on the product's own line (by product, never by a bare line id), then everywhere else. */
+/** Answers one question: on the product's own line (by product, never by a bare line id), then everywhere else. */
 export function answerOne(
-  questions: QuestionRecord[],
-  db: Db,
-  ctx: Ctx,
+  m: Mock,
   workspaceId: Id,
   input: {
     questionId: Id;
@@ -268,9 +164,10 @@ export function answerOne(
     keepPicture?: boolean;
   },
 ): void {
-  const by = ctx.userId();
-  const at = ctx.now();
-  const open = listQuestions(questions, db, workspaceId).find((q) => q.id === input.questionId);
+  const { db } = m;
+  const by = m.userId;
+  const at = m.now();
+  const open = listQuestions(m, workspaceId).find((q) => q.id === input.questionId);
   if (!open) throw new FumeError("not_found", "That question is answered already.");
   const product = open.productId
     ? db.products.find((p) => p.id === open.productId && p.workspaceId === workspaceId)
@@ -292,20 +189,15 @@ export function answerOne(
     const fact = open.factId ? product?.facts.find((f) => f.id === open.factId) : undefined;
     if (fact)
       Object.assign(fact, { statement: text, source: "verified", confidence: "high", verifiedBy: by, verifiedAt: at });
-    if (
-      product &&
-      product.facts.length &&
-      product.facts.every((f) => f.source === "verified" || f.source === "supplied")
-    )
-      product.state = "verified";
+    if (product && isConfirmed(product)) product.state = "verified";
   }
-  const record = questions.find((q) => q.id === open.id);
+  const record = db.questions.find((q) => q.id === open.id);
   if (record) {
     Object.assign(record, {
       answer: open.answer === "picture" ? "Packshot added" : text,
       answeredBy: by,
       answeredAt: at,
     });
-    spread(record, db, ctx);
+    spread(m, record);
   }
 }

@@ -1,0 +1,4977 @@
+-- maja: createMockApi({"latency":0})
+maja changeBrief("c-balm", {"message":"Soft hands for the hour before sleep.","missing":[]}) → events
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v9",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [
+        {
+          "at": "2026-10-14T12:21:00.000Z",
+          "by": "u-anna",
+          "id": "fb-1",
+          "state": "fixed",
+          "text": "The cap must be matte burgundy, as in the Product Truth."
+        }
+      ],
+      "format": "feed",
+      "id": "qa-3",
+      "image": "/demo/lysne/06-10-feed.jpg",
+      "madeAt": "2026-10-14T12:20:00.000Z",
+      "risk": "high",
+      "slot": "Master 2 · Variant 3",
+      "state": "waiting",
+      "studio": "render",
+      "title": "Feed 7",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "brief",
+      "state": "draft",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {"briefReady":true,"by":"2026-10-19T12:32:00.000Z","directions":0,"questions":0},
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "brief",
+      "state": "draft",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {"briefReady":true,"by":"2026-10-19T12:32:00.000Z","directions":0,"questions":0},
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja changeBrief("c-balm", {"message":"Soft hands for the hour before sleep.","missing":[]})
+  {
+    "audience": "Existing LYSNE customers.",
+    "campaignId": "c-balm",
+    "channels": ["paid_social","product_page"],
+    "creatives": 6,
+    "formats": ["feed","square"],
+    "mandatory": [],
+    "message": "Soft hands for the hour before sleep.",
+    "missing": [],
+    "never": [],
+    "objective": "Introduce Hand Balm to people who already use the oil.",
+    "references": [],
+    "state": "drafting",
+    "version": 1
+  }
+maja approveBrief("c-balm") → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-balm","kind":"plan","version":1},
+      "id": "msg-mvkqr9fk-1",
+      "text": "Thank you. Fume writes the plan now: the direction, the look and every creative, before anything is made. You see it here by Thu 15 Oct.",
+      "threadId": "t-balm"
+    },
+    "type": "message.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "scoped",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {
+        "briefReady": false,
+        "by": "2026-10-15T12:32:00.000Z",
+        "delivery": "2026-10-26T12:32:00.000Z",
+        "directions": 0,
+        "plan": "writing",
+        "planChecked": false,
+        "planned": 6,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja approveBrief("c-balm")
+  {
+    "approvedAt": "2026-10-14T12:32:00.000Z",
+    "approvedBy": "u-maja",
+    "audience": "Existing LYSNE customers.",
+    "campaignId": "c-balm",
+    "channels": ["paid_social","product_page"],
+    "creatives": 6,
+    "formats": ["feed","square"],
+    "mandatory": [],
+    "message": "Soft hands for the hour before sleep.",
+    "missing": [],
+    "never": [],
+    "objective": "Introduce Hand Balm to people who already use the oil.",
+    "references": [],
+    "state": "approved",
+    "version": 1
+  }
+maja plan("c-balm")
+  {
+    "briefVersion": 1,
+    "campaignId": "c-balm",
+    "changeRequestsIncluded": 2,
+    "chosenDirectionId": "pd-c-balm-a",
+    "content": [],
+    "directions": [],
+    "readyBy": "2026-10-15T12:32:00.000Z",
+    "rules": [],
+    "state": "writing",
+    "summary": "",
+    "timeline": [
+      {"at":"2026-10-19T12:32:00.000Z","label":"Masters, checked"},
+      {"at":"2026-10-22T12:32:00.000Z","label":"Variants and formats"},
+      {"at":"2026-10-26T12:32:00.000Z","label":"Delivery"}
+    ],
+    "version": 1
+  }
+-- 3 s later
+maja, 3 s later → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:02.500Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-balm","kind":"plan","version":1},
+      "id": "msg-mvkqrbd0-2",
+      "text": "The plan for Hand Balm introduction is ready. Approve it and Fume starts on the 2 masters, or change it with me here first. Nothing is made before you approve it.",
+      "threadId": "t-balm"
+    },
+    "type": "message.new"
+  }
+  {
+    "notification": {
+      "actor": {"kind":"fume"},
+      "at": "2026-10-14T12:32:02.500Z",
+      "href": "/campaigns/c-balm/plan",
+      "id": "n-mvkqrbd0-3",
+      "kind": "waiting_on_you",
+      "read": false,
+      "text": "The plan for Hand Balm introduction is ready",
+      "userId": "u-maja"
+    },
+    "type": "notification.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:32:02.500Z",
+      "waits": {
+        "briefReady": false,
+        "delivery": "2026-10-26T12:32:00.000Z",
+        "directions": 0,
+        "plan": "ready",
+        "planChecked": false,
+        "planned": 6,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja plan("c-balm")
+  {
+    "briefVersion": 1,
+    "campaignId": "c-balm",
+    "changeRequestsIncluded": 2,
+    "checkedAt": "2026-10-14T12:32:02.500Z",
+    "chosenDirectionId": "pd-c-balm-a",
+    "content": [
+      {"key":"products","label":"Products","source":"product","value":"Hand Balm 50 ml, as their Product Truth says."},
+      {
+        "key": "formats",
+        "label": "Formats",
+        "source": "brief",
+        "value": "Feed 4:5, Square 1:1: 6 creatives in all, as your brief asks."
+      },
+      {
+        "key": "text",
+        "label": "Text on the creative",
+        "source": "brief",
+        "value": "One short line in Norwegian on each creative, from your brief’s message “Soft hands for the hour before sleep”."
+      },
+      {
+        "key": "logo",
+        "label": "Logo",
+        "source": "brand_dna",
+        "value": "The wordmark on the label only; no logo added on the picture."
+      },
+      {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
+    ],
+    "directions": [
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm low in the frame on pale stone, warm side light, air above."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm on folded linen, the light from the left."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Soft hands for the hour before sleep.",
+        "id": "pd-c-balm-a",
+        "idea": "Hand Balm at the hour before sleep: low, warm side light on stone and linen, the product low in the frame with air above it.",
+        "letter": "A",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "Low, warm side light from the left, long soft shadows.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Pale stone and folded linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Evening light",
+        "recommended": true,
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-scene.jpg",
+            "source": "product"
+          },
+          {"caption":"Fluted glass and slow light.","image":"/demo/lysne/02-04-feed.jpg","source":"taste"},
+          {"caption":"Product low, air above.","image":"/demo/lysne/08-06-feed.jpg","source":"taste"},
+          {"caption":"A picture you liked","image":"/demo/lysne/02-05-feed.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Warm, low side light leads in your Brand DNA."},
+          {"source":"taste","text":"Your liked pictures keep the product low, with air above it."},
+          {"source":"memory","text":"Evening stone won in your last campaign."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Close on Hand Balm: its texture in a stripe of warm light."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "The label close, the set soft behind."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Made to be felt.",
+        "id": "pd-c-balm-b",
+        "idea": "Close on Hand Balm: the texture, the label and a stripe of warm light. Fewer things in the frame, the product nearer.",
+        "letter": "B",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "A stripe of warm light across the product, the rest in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Stone, close; nothing else in the frame."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Close and quiet",
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Texture in warm light","image":"/demo/lysne/05-03-feed.jpg","source":"fume"},
+          {"caption":"Close, a stripe of light","image":"/demo/lysne/06-04-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"fume","text":"Close crops suit a product people touch every day."},
+          {"source":"product","text":"Golden, never orange: the Product Truth's colours lead."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "A crop of skin and Hand Balm in evening light, never a face."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hands open the product on linen."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "The last quiet hour of the day.",
+        "id": "pd-c-balm-c",
+        "idea": "Hand Balm in use: a crop of skin or hands at the hour before sleep, never a face. Closest to the feeling, furthest from a packshot.",
+        "letter": "C",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "One warm lamp, low; the room in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"A bedside of oak and linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "Hands or a crop of skin, never a face; never holding the product.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "The ritual",
+        "references": [
+          {"caption":"Hands in evening light","image":"/demo/lysne/gen/taste-hands.jpg","source":"taste"},
+          {"caption":"The evening room","image":"/demo/lysne/gen/taste-bedroom.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Skin in crops, as your Brand DNA prefers; no face in this direction."},
+          {"source":"memory","text":"You passed on hands that hold the bottle once: here they never do."}
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "kind": "never",
+        "ruleId": "r7",
+        "source": "brand_dna",
+        "text": "Skin-result claims; only the lines on the approved list"
+      }
+    ],
+    "state": "ready",
+    "summary": "Introduce Hand Balm to people who already use the oil. It speaks to existing LYSNE customers. The message: soft hands for the hour before sleep. It runs in Norway, in Norwegian.",
+    "timeline": [
+      {"at":"2026-10-19T12:32:00.000Z","label":"Masters, checked"},
+      {"at":"2026-10-22T12:32:00.000Z","label":"Variants and formats"},
+      {"at":"2026-10-26T12:32:00.000Z","label":"Delivery"}
+    ],
+    "version": 1,
+    "writtenAt": "2026-10-14T12:32:02.500Z"
+  }
+maja changePlan("c-balm", {"line":"light","value":"Low lamp light, warm."}) → events
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:32:03.000Z",
+      "waits": {
+        "briefReady": false,
+        "delivery": "2026-10-26T12:32:00.000Z",
+        "directions": 0,
+        "plan": "ready",
+        "planChecked": false,
+        "planned": 6,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja changePlan("c-balm", {"line":"light","value":"Low lamp light, warm."})
+  {
+    "briefVersion": 1,
+    "campaignId": "c-balm",
+    "changeRequestsIncluded": 2,
+    "checkedAt": "2026-10-14T12:32:02.500Z",
+    "chosenDirectionId": "pd-c-balm-a",
+    "content": [
+      {"key":"products","label":"Products","source":"product","value":"Hand Balm 50 ml, as their Product Truth says."},
+      {
+        "key": "formats",
+        "label": "Formats",
+        "source": "brief",
+        "value": "Feed 4:5, Square 1:1: 6 creatives in all, as your brief asks."
+      },
+      {
+        "key": "text",
+        "label": "Text on the creative",
+        "source": "brief",
+        "value": "One short line in Norwegian on each creative, from your brief’s message “Soft hands for the hour before sleep”."
+      },
+      {
+        "key": "logo",
+        "label": "Logo",
+        "source": "brand_dna",
+        "value": "The wordmark on the label only; no logo added on the picture."
+      },
+      {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
+    ],
+    "directions": [
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm low in the frame on pale stone, warm side light, air above."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm on folded linen, the light from the left."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Soft hands for the hour before sleep.",
+        "id": "pd-c-balm-a",
+        "idea": "Hand Balm at the hour before sleep: low, warm side light on stone and linen, the product low in the frame with air above it.",
+        "letter": "A",
+        "look": [
+          {
+            "changedAt": "2026-10-14T12:32:03.000Z",
+            "changedBy": "u-maja",
+            "key": "light",
+            "label": "Light",
+            "source": "you",
+            "value": "Low lamp light, warm."
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Pale stone and folded linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Evening light",
+        "recommended": true,
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-scene.jpg",
+            "source": "product"
+          },
+          {"caption":"Fluted glass and slow light.","image":"/demo/lysne/02-04-feed.jpg","source":"taste"},
+          {"caption":"Product low, air above.","image":"/demo/lysne/08-06-feed.jpg","source":"taste"},
+          {"caption":"A picture you liked","image":"/demo/lysne/02-05-feed.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Warm, low side light leads in your Brand DNA."},
+          {"source":"taste","text":"Your liked pictures keep the product low, with air above it."},
+          {"source":"memory","text":"Evening stone won in your last campaign."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Close on Hand Balm: its texture in a stripe of warm light."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "The label close, the set soft behind."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Made to be felt.",
+        "id": "pd-c-balm-b",
+        "idea": "Close on Hand Balm: the texture, the label and a stripe of warm light. Fewer things in the frame, the product nearer.",
+        "letter": "B",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "A stripe of warm light across the product, the rest in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Stone, close; nothing else in the frame."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Close and quiet",
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Texture in warm light","image":"/demo/lysne/05-03-feed.jpg","source":"fume"},
+          {"caption":"Close, a stripe of light","image":"/demo/lysne/06-04-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"fume","text":"Close crops suit a product people touch every day."},
+          {"source":"product","text":"Golden, never orange: the Product Truth's colours lead."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "A crop of skin and Hand Balm in evening light, never a face."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hands open the product on linen."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "The last quiet hour of the day.",
+        "id": "pd-c-balm-c",
+        "idea": "Hand Balm in use: a crop of skin or hands at the hour before sleep, never a face. Closest to the feeling, furthest from a packshot.",
+        "letter": "C",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "One warm lamp, low; the room in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"A bedside of oak and linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "Hands or a crop of skin, never a face; never holding the product.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "The ritual",
+        "references": [
+          {"caption":"Hands in evening light","image":"/demo/lysne/gen/taste-hands.jpg","source":"taste"},
+          {"caption":"The evening room","image":"/demo/lysne/gen/taste-bedroom.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Skin in crops, as your Brand DNA prefers; no face in this direction."},
+          {"source":"memory","text":"You passed on hands that hold the bottle once: here they never do."}
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "kind": "never",
+        "ruleId": "r7",
+        "source": "brand_dna",
+        "text": "Skin-result claims; only the lines on the approved list"
+      }
+    ],
+    "state": "ready",
+    "summary": "Introduce Hand Balm to people who already use the oil. It speaks to existing LYSNE customers. The message: soft hands for the hour before sleep. It runs in Norway, in Norwegian.",
+    "timeline": [
+      {"at":"2026-10-19T12:32:00.000Z","label":"Masters, checked"},
+      {"at":"2026-10-22T12:32:00.000Z","label":"Variants and formats"},
+      {"at":"2026-10-26T12:32:00.000Z","label":"Delivery"}
+    ],
+    "version": 1,
+    "writtenAt": "2026-10-14T12:32:02.500Z"
+  }
+maja choosePlanDirection("c-balm", "pd-c-balm-b", "Closer to the brand") → events
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:32:03.000Z",
+      "waits": {
+        "briefReady": false,
+        "delivery": "2026-10-26T12:32:00.000Z",
+        "directions": 0,
+        "plan": "ready",
+        "planChecked": false,
+        "planned": 6,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja choosePlanDirection("c-balm", "pd-c-balm-b", "Closer to the brand")
+  {
+    "briefVersion": 1,
+    "campaignId": "c-balm",
+    "changeRequestsIncluded": 2,
+    "checkedAt": "2026-10-14T12:32:02.500Z",
+    "chosenDirectionId": "pd-c-balm-b",
+    "chosenReason": "Closer to the brand",
+    "content": [
+      {"key":"products","label":"Products","source":"product","value":"Hand Balm 50 ml, as their Product Truth says."},
+      {
+        "key": "formats",
+        "label": "Formats",
+        "source": "brief",
+        "value": "Feed 4:5, Square 1:1: 6 creatives in all, as your brief asks."
+      },
+      {
+        "key": "text",
+        "label": "Text on the creative",
+        "source": "brief",
+        "value": "One short line in Norwegian on each creative, from your brief’s message “Soft hands for the hour before sleep”."
+      },
+      {
+        "key": "logo",
+        "label": "Logo",
+        "source": "brand_dna",
+        "value": "The wordmark on the label only; no logo added on the picture."
+      },
+      {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
+    ],
+    "directions": [
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm low in the frame on pale stone, warm side light, air above."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm on folded linen, the light from the left."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Soft hands for the hour before sleep.",
+        "id": "pd-c-balm-a",
+        "idea": "Hand Balm at the hour before sleep: low, warm side light on stone and linen, the product low in the frame with air above it.",
+        "letter": "A",
+        "look": [
+          {
+            "changedAt": "2026-10-14T12:32:03.000Z",
+            "changedBy": "u-maja",
+            "key": "light",
+            "label": "Light",
+            "source": "you",
+            "value": "Low lamp light, warm."
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Pale stone and folded linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Evening light",
+        "recommended": true,
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-scene.jpg",
+            "source": "product"
+          },
+          {"caption":"Fluted glass and slow light.","image":"/demo/lysne/02-04-feed.jpg","source":"taste"},
+          {"caption":"Product low, air above.","image":"/demo/lysne/08-06-feed.jpg","source":"taste"},
+          {"caption":"A picture you liked","image":"/demo/lysne/02-05-feed.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Warm, low side light leads in your Brand DNA."},
+          {"source":"taste","text":"Your liked pictures keep the product low, with air above it."},
+          {"source":"memory","text":"Evening stone won in your last campaign."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Close on Hand Balm: its texture in a stripe of warm light."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "The label close, the set soft behind."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Made to be felt.",
+        "id": "pd-c-balm-b",
+        "idea": "Close on Hand Balm: the texture, the label and a stripe of warm light. Fewer things in the frame, the product nearer.",
+        "letter": "B",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "A stripe of warm light across the product, the rest in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Stone, close; nothing else in the frame."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Close and quiet",
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Texture in warm light","image":"/demo/lysne/05-03-feed.jpg","source":"fume"},
+          {"caption":"Close, a stripe of light","image":"/demo/lysne/06-04-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"fume","text":"Close crops suit a product people touch every day."},
+          {"source":"product","text":"Golden, never orange: the Product Truth's colours lead."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "A crop of skin and Hand Balm in evening light, never a face."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hands open the product on linen."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "The last quiet hour of the day.",
+        "id": "pd-c-balm-c",
+        "idea": "Hand Balm in use: a crop of skin or hands at the hour before sleep, never a face. Closest to the feeling, furthest from a packshot.",
+        "letter": "C",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "One warm lamp, low; the room in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"A bedside of oak and linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "Hands or a crop of skin, never a face; never holding the product.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "The ritual",
+        "references": [
+          {"caption":"Hands in evening light","image":"/demo/lysne/gen/taste-hands.jpg","source":"taste"},
+          {"caption":"The evening room","image":"/demo/lysne/gen/taste-bedroom.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Skin in crops, as your Brand DNA prefers; no face in this direction."},
+          {"source":"memory","text":"You passed on hands that hold the bottle once: here they never do."}
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "kind": "never",
+        "ruleId": "r7",
+        "source": "brand_dna",
+        "text": "Skin-result claims; only the lines on the approved list"
+      }
+    ],
+    "state": "ready",
+    "summary": "Introduce Hand Balm to people who already use the oil. It speaks to existing LYSNE customers. The message: soft hands for the hour before sleep. It runs in Norway, in Norwegian.",
+    "timeline": [
+      {"at":"2026-10-19T12:32:00.000Z","label":"Masters, checked"},
+      {"at":"2026-10-22T12:32:00.000Z","label":"Variants and formats"},
+      {"at":"2026-10-26T12:32:00.000Z","label":"Delivery"}
+    ],
+    "version": 1,
+    "writtenAt": "2026-10-14T12:32:02.500Z"
+  }
+maja plan("c-balm")
+  = maja choosePlanDirection("c-balm", "pd-c-balm-b", "Closer to the brand")
+maja changePlan("c-balm", {"creative":{"text":"Hands, then sleep"},"creativeId":"pc-c-balm-b-m1"}) → events
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:32:03.000Z",
+      "waits": {
+        "briefReady": false,
+        "delivery": "2026-10-26T12:32:00.000Z",
+        "directions": 0,
+        "plan": "ready",
+        "planChecked": false,
+        "planned": 6,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja changePlan("c-balm", {"creative":{"text":"Hands, then sleep"},"creativeId":"pc-c-balm-b-m1"})
+  {
+    "briefVersion": 1,
+    "campaignId": "c-balm",
+    "changeRequestsIncluded": 2,
+    "checkedAt": "2026-10-14T12:32:02.500Z",
+    "chosenDirectionId": "pd-c-balm-b",
+    "chosenReason": "Closer to the brand",
+    "content": [
+      {"key":"products","label":"Products","source":"product","value":"Hand Balm 50 ml, as their Product Truth says."},
+      {
+        "key": "formats",
+        "label": "Formats",
+        "source": "brief",
+        "value": "Feed 4:5, Square 1:1: 6 creatives in all, as your brief asks."
+      },
+      {
+        "key": "text",
+        "label": "Text on the creative",
+        "source": "brief",
+        "value": "One short line in Norwegian on each creative, from your brief’s message “Soft hands for the hour before sleep”."
+      },
+      {
+        "key": "logo",
+        "label": "Logo",
+        "source": "brand_dna",
+        "value": "The wordmark on the label only; no logo added on the picture."
+      },
+      {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
+    ],
+    "directions": [
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm low in the frame on pale stone, warm side light, air above."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm on folded linen, the light from the left."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Soft hands for the hour before sleep.",
+        "id": "pd-c-balm-a",
+        "idea": "Hand Balm at the hour before sleep: low, warm side light on stone and linen, the product low in the frame with air above it.",
+        "letter": "A",
+        "look": [
+          {
+            "changedAt": "2026-10-14T12:32:03.000Z",
+            "changedBy": "u-maja",
+            "key": "light",
+            "label": "Light",
+            "source": "you",
+            "value": "Low lamp light, warm."
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Pale stone and folded linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Evening light",
+        "recommended": true,
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-scene.jpg",
+            "source": "product"
+          },
+          {"caption":"Fluted glass and slow light.","image":"/demo/lysne/02-04-feed.jpg","source":"taste"},
+          {"caption":"Product low, air above.","image":"/demo/lysne/08-06-feed.jpg","source":"taste"},
+          {"caption":"A picture you liked","image":"/demo/lysne/02-05-feed.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Warm, low side light leads in your Brand DNA."},
+          {"source":"taste","text":"Your liked pictures keep the product low, with air above it."},
+          {"source":"memory","text":"Evening stone won in your last campaign."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "changedAt": "2026-10-14T12:32:03.000Z",
+            "changedBy": "u-maja",
+            "format": "feed",
+            "id": "pc-c-balm-b-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Close on Hand Balm: its texture in a stripe of warm light.",
+            "text": "Hands, then sleep"
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "The label close, the set soft behind."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Made to be felt.",
+        "id": "pd-c-balm-b",
+        "idea": "Close on Hand Balm: the texture, the label and a stripe of warm light. Fewer things in the frame, the product nearer.",
+        "letter": "B",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "A stripe of warm light across the product, the rest in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Stone, close; nothing else in the frame."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Close and quiet",
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Texture in warm light","image":"/demo/lysne/05-03-feed.jpg","source":"fume"},
+          {"caption":"Close, a stripe of light","image":"/demo/lysne/06-04-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"fume","text":"Close crops suit a product people touch every day."},
+          {"source":"product","text":"Golden, never orange: the Product Truth's colours lead."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "A crop of skin and Hand Balm in evening light, never a face."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hands open the product on linen."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "The last quiet hour of the day.",
+        "id": "pd-c-balm-c",
+        "idea": "Hand Balm in use: a crop of skin or hands at the hour before sleep, never a face. Closest to the feeling, furthest from a packshot.",
+        "letter": "C",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "One warm lamp, low; the room in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"A bedside of oak and linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "Hands or a crop of skin, never a face; never holding the product.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "The ritual",
+        "references": [
+          {"caption":"Hands in evening light","image":"/demo/lysne/gen/taste-hands.jpg","source":"taste"},
+          {"caption":"The evening room","image":"/demo/lysne/gen/taste-bedroom.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Skin in crops, as your Brand DNA prefers; no face in this direction."},
+          {"source":"memory","text":"You passed on hands that hold the bottle once: here they never do."}
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "kind": "never",
+        "ruleId": "r7",
+        "source": "brand_dna",
+        "text": "Skin-result claims; only the lines on the approved list"
+      }
+    ],
+    "state": "ready",
+    "summary": "Introduce Hand Balm to people who already use the oil. It speaks to existing LYSNE customers. The message: soft hands for the hour before sleep. It runs in Norway, in Norwegian.",
+    "timeline": [
+      {"at":"2026-10-19T12:32:00.000Z","label":"Masters, checked"},
+      {"at":"2026-10-22T12:32:00.000Z","label":"Variants and formats"},
+      {"at":"2026-10-26T12:32:00.000Z","label":"Delivery"}
+    ],
+    "version": 1,
+    "writtenAt": "2026-10-14T12:32:02.500Z"
+  }
+maja changePlan("c-balm", {"creative":{"text":"Nothing"},"creativeId":"pc-nope"})
+  {"error":"not_found","message":"No such creative in the plan."}
+maja askPlanChanges("c-balm", "Show the tube closed") → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:03.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqrbqw-4",
+      "text": "Show the tube closed",
+      "threadId": "t-balm"
+    },
+    "type": "message.new"
+  }
+  {
+    "message": {
+      "at": "2026-10-14T12:32:03.000Z",
+      "author": {"kind":"fume"},
+      "id": "msg-mvkqrbqw-5",
+      "text": "Fume is changing the plan for Hand Balm introduction. You get version 2 here by Thu 15 Oct. Changing the plan never uses a change request.",
+      "threadId": "t-balm"
+    },
+    "type": "message.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "revision",
+      "updatedAt": "2026-10-14T12:32:03.000Z",
+      "waits": {
+        "briefReady": false,
+        "by": "2026-10-15T12:32:03.000Z",
+        "delivery": "2026-10-26T12:32:00.000Z",
+        "directions": 0,
+        "plan": "changes_asked",
+        "planChecked": false,
+        "planned": 6,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja askPlanChanges("c-balm", "Show the tube closed")
+  {
+    "briefVersion": 1,
+    "campaignId": "c-balm",
+    "changeRequestsIncluded": 2,
+    "checkedAt": "2026-10-14T12:32:02.500Z",
+    "chosenDirectionId": "pd-c-balm-b",
+    "chosenReason": "Closer to the brand",
+    "content": [
+      {"key":"products","label":"Products","source":"product","value":"Hand Balm 50 ml, as their Product Truth says."},
+      {
+        "key": "formats",
+        "label": "Formats",
+        "source": "brief",
+        "value": "Feed 4:5, Square 1:1: 6 creatives in all, as your brief asks."
+      },
+      {
+        "key": "text",
+        "label": "Text on the creative",
+        "source": "brief",
+        "value": "One short line in Norwegian on each creative, from your brief’s message “Soft hands for the hour before sleep”."
+      },
+      {
+        "key": "logo",
+        "label": "Logo",
+        "source": "brand_dna",
+        "value": "The wordmark on the label only; no logo added on the picture."
+      },
+      {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
+    ],
+    "directions": [
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm low in the frame on pale stone, warm side light, air above."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm on folded linen, the light from the left."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Soft hands for the hour before sleep.",
+        "id": "pd-c-balm-a",
+        "idea": "Hand Balm at the hour before sleep: low, warm side light on stone and linen, the product low in the frame with air above it.",
+        "letter": "A",
+        "look": [
+          {
+            "changedAt": "2026-10-14T12:32:03.000Z",
+            "changedBy": "u-maja",
+            "key": "light",
+            "label": "Light",
+            "source": "you",
+            "value": "Low lamp light, warm."
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Pale stone and folded linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Evening light",
+        "recommended": true,
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-scene.jpg",
+            "source": "product"
+          },
+          {"caption":"Fluted glass and slow light.","image":"/demo/lysne/02-04-feed.jpg","source":"taste"},
+          {"caption":"Product low, air above.","image":"/demo/lysne/08-06-feed.jpg","source":"taste"},
+          {"caption":"A picture you liked","image":"/demo/lysne/02-05-feed.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Warm, low side light leads in your Brand DNA."},
+          {"source":"taste","text":"Your liked pictures keep the product low, with air above it."},
+          {"source":"memory","text":"Evening stone won in your last campaign."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "changedAt": "2026-10-14T12:32:03.000Z",
+            "changedBy": "u-maja",
+            "format": "feed",
+            "id": "pc-c-balm-b-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Close on Hand Balm: its texture in a stripe of warm light.",
+            "text": "Hands, then sleep"
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "The label close, the set soft behind."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Made to be felt.",
+        "id": "pd-c-balm-b",
+        "idea": "Close on Hand Balm: the texture, the label and a stripe of warm light. Fewer things in the frame, the product nearer.",
+        "letter": "B",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "A stripe of warm light across the product, the rest in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Stone, close; nothing else in the frame."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Close and quiet",
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Texture in warm light","image":"/demo/lysne/05-03-feed.jpg","source":"fume"},
+          {"caption":"Close, a stripe of light","image":"/demo/lysne/06-04-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"fume","text":"Close crops suit a product people touch every day."},
+          {"source":"product","text":"Golden, never orange: the Product Truth's colours lead."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "A crop of skin and Hand Balm in evening light, never a face."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hands open the product on linen."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "The last quiet hour of the day.",
+        "id": "pd-c-balm-c",
+        "idea": "Hand Balm in use: a crop of skin or hands at the hour before sleep, never a face. Closest to the feeling, furthest from a packshot.",
+        "letter": "C",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "One warm lamp, low; the room in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"A bedside of oak and linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "Hands or a crop of skin, never a face; never holding the product.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "The ritual",
+        "references": [
+          {"caption":"Hands in evening light","image":"/demo/lysne/gen/taste-hands.jpg","source":"taste"},
+          {"caption":"The evening room","image":"/demo/lysne/gen/taste-bedroom.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Skin in crops, as your Brand DNA prefers; no face in this direction."},
+          {"source":"memory","text":"You passed on hands that hold the bottle once: here they never do."}
+        ]
+      }
+    ],
+    "note": {"at":"2026-10-14T12:32:03.000Z","by":"u-maja","text":"Show the tube closed"},
+    "readyBy": "2026-10-15T12:32:03.000Z",
+    "rules": [
+      {
+        "kind": "never",
+        "ruleId": "r7",
+        "source": "brand_dna",
+        "text": "Skin-result claims; only the lines on the approved list"
+      }
+    ],
+    "state": "changes_asked",
+    "summary": "Introduce Hand Balm to people who already use the oil. It speaks to existing LYSNE customers. The message: soft hands for the hour before sleep. It runs in Norway, in Norwegian.",
+    "timeline": [
+      {"at":"2026-10-19T12:32:00.000Z","label":"Masters, checked"},
+      {"at":"2026-10-22T12:32:00.000Z","label":"Variants and formats"},
+      {"at":"2026-10-26T12:32:00.000Z","label":"Delivery"}
+    ],
+    "version": 1,
+    "writtenAt": "2026-10-14T12:32:02.500Z"
+  }
+-- 3 s later
+maja, 3 s later → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:05.500Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-balm","kind":"plan","version":2},
+      "id": "msg-mvkqrdoc-6",
+      "text": "The plan for Hand Balm introduction is ready. Approve it and Fume starts on the 2 masters, or change it with me here first. Nothing is made before you approve it.",
+      "threadId": "t-balm"
+    },
+    "type": "message.new"
+  }
+  {
+    "notification": {
+      "actor": {"kind":"fume"},
+      "at": "2026-10-14T12:32:05.500Z",
+      "href": "/campaigns/c-balm/plan",
+      "id": "n-mvkqrdoc-7",
+      "kind": "waiting_on_you",
+      "read": false,
+      "text": "The plan for Hand Balm introduction is ready",
+      "userId": "u-maja"
+    },
+    "type": "notification.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:32:05.500Z",
+      "waits": {
+        "briefReady": false,
+        "delivery": "2026-10-26T12:32:00.000Z",
+        "directions": 0,
+        "plan": "ready",
+        "planChecked": false,
+        "planned": 6,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja plan("c-balm")
+  {
+    "briefVersion": 1,
+    "campaignId": "c-balm",
+    "changeRequestsIncluded": 2,
+    "checkedAt": "2026-10-14T12:32:05.500Z",
+    "chosenDirectionId": "pd-c-balm-b",
+    "chosenReason": "Closer to the brand",
+    "content": [
+      {"key":"products","label":"Products","source":"product","value":"Hand Balm 50 ml, as their Product Truth says."},
+      {
+        "key": "formats",
+        "label": "Formats",
+        "source": "brief",
+        "value": "Feed 4:5, Square 1:1: 6 creatives in all, as your brief asks."
+      },
+      {
+        "key": "text",
+        "label": "Text on the creative",
+        "source": "brief",
+        "value": "One short line in Norwegian on each creative, from your brief’s message “Soft hands for the hour before sleep”."
+      },
+      {
+        "key": "logo",
+        "label": "Logo",
+        "source": "brand_dna",
+        "value": "The wordmark on the label only; no logo added on the picture."
+      },
+      {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
+    ],
+    "directions": [
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm low in the frame on pale stone, warm side light, air above."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm on folded linen, the light from the left."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Soft hands for the hour before sleep.",
+        "id": "pd-c-balm-a",
+        "idea": "Hand Balm at the hour before sleep: low, warm side light on stone and linen, the product low in the frame with air above it.",
+        "letter": "A",
+        "look": [
+          {
+            "changedAt": "2026-10-14T12:32:03.000Z",
+            "changedBy": "u-maja",
+            "key": "light",
+            "label": "Light",
+            "source": "you",
+            "value": "Low lamp light, warm."
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Pale stone and folded linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Evening light",
+        "recommended": true,
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-scene.jpg",
+            "source": "product"
+          },
+          {"caption":"Fluted glass and slow light.","image":"/demo/lysne/02-04-feed.jpg","source":"taste"},
+          {"caption":"Product low, air above.","image":"/demo/lysne/08-06-feed.jpg","source":"taste"},
+          {"caption":"A picture you liked","image":"/demo/lysne/02-05-feed.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Warm, low side light leads in your Brand DNA."},
+          {"source":"taste","text":"Your liked pictures keep the product low, with air above it."},
+          {"source":"memory","text":"Evening stone won in your last campaign."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "changedAt": "2026-10-14T12:32:05.500Z",
+            "changedBy": "fume",
+            "format": "feed",
+            "id": "pc-c-balm-b-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Close on Hand Balm: its texture in a stripe of warm light; the show the tube closed.",
+            "text": "Hands, then sleep"
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "The label close, the set soft behind."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Made to be felt.",
+        "id": "pd-c-balm-b",
+        "idea": "Close on Hand Balm: the texture, the label and a stripe of warm light. Fewer things in the frame, the product nearer.",
+        "letter": "B",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "A stripe of warm light across the product, the rest in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Stone, close; nothing else in the frame."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Close and quiet",
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Texture in warm light","image":"/demo/lysne/05-03-feed.jpg","source":"fume"},
+          {"caption":"Close, a stripe of light","image":"/demo/lysne/06-04-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"fume","text":"Close crops suit a product people touch every day."},
+          {"source":"product","text":"Golden, never orange: the Product Truth's colours lead."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "A crop of skin and Hand Balm in evening light, never a face."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hands open the product on linen."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "The last quiet hour of the day.",
+        "id": "pd-c-balm-c",
+        "idea": "Hand Balm in use: a crop of skin or hands at the hour before sleep, never a face. Closest to the feeling, furthest from a packshot.",
+        "letter": "C",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "One warm lamp, low; the room in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"A bedside of oak and linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "Hands or a crop of skin, never a face; never holding the product.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "The ritual",
+        "references": [
+          {"caption":"Hands in evening light","image":"/demo/lysne/gen/taste-hands.jpg","source":"taste"},
+          {"caption":"The evening room","image":"/demo/lysne/gen/taste-bedroom.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Skin in crops, as your Brand DNA prefers; no face in this direction."},
+          {"source":"memory","text":"You passed on hands that hold the bottle once: here they never do."}
+        ]
+      }
+    ],
+    "note": {
+      "at": "2026-10-14T12:32:05.500Z",
+      "by": "fume",
+      "text": "Changed as you asked: Master 1’s scene: the show the tube closed."
+    },
+    "rules": [
+      {
+        "kind": "never",
+        "ruleId": "r7",
+        "source": "brand_dna",
+        "text": "Skin-result claims; only the lines on the approved list"
+      }
+    ],
+    "state": "ready",
+    "summary": "Introduce Hand Balm to people who already use the oil. It speaks to existing LYSNE customers. The message: soft hands for the hour before sleep. It runs in Norway, in Norwegian.",
+    "timeline": [
+      {"at":"2026-10-19T12:32:00.000Z","label":"Masters, checked"},
+      {"at":"2026-10-22T12:32:00.000Z","label":"Variants and formats"},
+      {"at":"2026-10-26T12:32:00.000Z","label":"Delivery"}
+    ],
+    "version": 2,
+    "versions": [
+      {
+        "asked": "Show the tube closed",
+        "at": "2026-10-14T12:32:05.500Z",
+        "by": "u-maja",
+        "changes": ["Master 1’s scene: the show the tube closed"],
+        "version": 2
+      }
+    ],
+    "writtenAt": "2026-10-14T12:32:05.500Z"
+  }
+maja askPlanCheck("c-balm") → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:06.000Z",
+      "author": {"kind":"fume"},
+      "id": "msg-mvkqre28-8",
+      "text": "Anna checks the plan for Hand Balm introduction and you see it again by Thu 15 Oct. Nothing is made before you approve it.",
+      "threadId": "t-balm"
+    },
+    "type": "message.new"
+  }
+  {
+    "notification": {
+      "actor": {"kind":"person","userId":"u-maja"},
+      "at": "2026-10-14T12:32:06.000Z",
+      "href": "/studio/b/w-lysne/campaigns/c-balm/plan",
+      "id": "n-mvkqre28-9",
+      "kind": "waiting_on_you",
+      "read": false,
+      "text": "Maja asked you to check the plan for Hand Balm introduction",
+      "userId": "u-anna"
+    },
+    "type": "notification.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "scoped",
+      "updatedAt": "2026-10-14T12:32:06.000Z",
+      "waits": {
+        "briefReady": false,
+        "by": "2026-10-15T12:32:06.000Z",
+        "delivery": "2026-10-26T12:32:00.000Z",
+        "directions": 0,
+        "plan": "in_check",
+        "planChecked": false,
+        "planned": 6,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja askPlanCheck("c-balm")
+  {
+    "briefVersion": 1,
+    "campaignId": "c-balm",
+    "changeRequestsIncluded": 2,
+    "checkAsked": {"at":"2026-10-14T12:32:06.000Z","by":"u-maja"},
+    "chosenDirectionId": "pd-c-balm-b",
+    "chosenReason": "Closer to the brand",
+    "content": [
+      {"key":"products","label":"Products","source":"product","value":"Hand Balm 50 ml, as their Product Truth says."},
+      {
+        "key": "formats",
+        "label": "Formats",
+        "source": "brief",
+        "value": "Feed 4:5, Square 1:1: 6 creatives in all, as your brief asks."
+      },
+      {
+        "key": "text",
+        "label": "Text on the creative",
+        "source": "brief",
+        "value": "One short line in Norwegian on each creative, from your brief’s message “Soft hands for the hour before sleep”."
+      },
+      {
+        "key": "logo",
+        "label": "Logo",
+        "source": "brand_dna",
+        "value": "The wordmark on the label only; no logo added on the picture."
+      },
+      {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
+    ],
+    "directions": [
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm low in the frame on pale stone, warm side light, air above."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm on folded linen, the light from the left."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Soft hands for the hour before sleep.",
+        "id": "pd-c-balm-a",
+        "idea": "Hand Balm at the hour before sleep: low, warm side light on stone and linen, the product low in the frame with air above it.",
+        "letter": "A",
+        "look": [
+          {
+            "changedAt": "2026-10-14T12:32:03.000Z",
+            "changedBy": "u-maja",
+            "key": "light",
+            "label": "Light",
+            "source": "you",
+            "value": "Low lamp light, warm."
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Pale stone and folded linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Evening light",
+        "recommended": true,
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-scene.jpg",
+            "source": "product"
+          },
+          {"caption":"Fluted glass and slow light.","image":"/demo/lysne/02-04-feed.jpg","source":"taste"},
+          {"caption":"Product low, air above.","image":"/demo/lysne/08-06-feed.jpg","source":"taste"},
+          {"caption":"A picture you liked","image":"/demo/lysne/02-05-feed.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Warm, low side light leads in your Brand DNA."},
+          {"source":"taste","text":"Your liked pictures keep the product low, with air above it."},
+          {"source":"memory","text":"Evening stone won in your last campaign."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "changedAt": "2026-10-14T12:32:05.500Z",
+            "changedBy": "fume",
+            "format": "feed",
+            "id": "pc-c-balm-b-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Close on Hand Balm: its texture in a stripe of warm light; the show the tube closed.",
+            "text": "Hands, then sleep"
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "The label close, the set soft behind."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Made to be felt.",
+        "id": "pd-c-balm-b",
+        "idea": "Close on Hand Balm: the texture, the label and a stripe of warm light. Fewer things in the frame, the product nearer.",
+        "letter": "B",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "A stripe of warm light across the product, the rest in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Stone, close; nothing else in the frame."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Close and quiet",
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Texture in warm light","image":"/demo/lysne/05-03-feed.jpg","source":"fume"},
+          {"caption":"Close, a stripe of light","image":"/demo/lysne/06-04-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"fume","text":"Close crops suit a product people touch every day."},
+          {"source":"product","text":"Golden, never orange: the Product Truth's colours lead."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "A crop of skin and Hand Balm in evening light, never a face."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hands open the product on linen."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "The last quiet hour of the day.",
+        "id": "pd-c-balm-c",
+        "idea": "Hand Balm in use: a crop of skin or hands at the hour before sleep, never a face. Closest to the feeling, furthest from a packshot.",
+        "letter": "C",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "One warm lamp, low; the room in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"A bedside of oak and linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "Hands or a crop of skin, never a face; never holding the product.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "The ritual",
+        "references": [
+          {"caption":"Hands in evening light","image":"/demo/lysne/gen/taste-hands.jpg","source":"taste"},
+          {"caption":"The evening room","image":"/demo/lysne/gen/taste-bedroom.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Skin in crops, as your Brand DNA prefers; no face in this direction."},
+          {"source":"memory","text":"You passed on hands that hold the bottle once: here they never do."}
+        ]
+      }
+    ],
+    "note": {
+      "at": "2026-10-14T12:32:05.500Z",
+      "by": "fume",
+      "text": "Changed as you asked: Master 1’s scene: the show the tube closed."
+    },
+    "readyBy": "2026-10-15T12:32:06.000Z",
+    "rules": [
+      {
+        "kind": "never",
+        "ruleId": "r7",
+        "source": "brand_dna",
+        "text": "Skin-result claims; only the lines on the approved list"
+      }
+    ],
+    "state": "in_check",
+    "summary": "Introduce Hand Balm to people who already use the oil. It speaks to existing LYSNE customers. The message: soft hands for the hour before sleep. It runs in Norway, in Norwegian.",
+    "timeline": [
+      {"at":"2026-10-19T12:32:00.000Z","label":"Masters, checked"},
+      {"at":"2026-10-22T12:32:00.000Z","label":"Variants and formats"},
+      {"at":"2026-10-26T12:32:00.000Z","label":"Delivery"}
+    ],
+    "version": 2,
+    "versions": [
+      {
+        "asked": "Show the tube closed",
+        "at": "2026-10-14T12:32:05.500Z",
+        "by": "u-maja",
+        "changes": ["Master 1’s scene: the show the tube closed"],
+        "version": 2
+      }
+    ],
+    "writtenAt": "2026-10-14T12:32:05.500Z"
+  }
+maja approvePlan("c-balm")
+  {"error":"invalid","message":"The plan isn't ready for you yet."}
+-- 5 s later
+maja, 5 s later → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:10.000Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-balm","kind":"plan","version":2},
+      "id": "msg-mvkqrh5c-10",
+      "text": "Anna checked the plan for Hand Balm introduction. Approve it and Fume starts on the 2 masters; nothing is made before that.",
+      "threadId": "t-balm"
+    },
+    "type": "message.new"
+  }
+  {
+    "notification": {
+      "actor": {"kind":"fume"},
+      "at": "2026-10-14T12:32:10.000Z",
+      "href": "/campaigns/c-balm/plan",
+      "id": "n-mvkqrh5c-11",
+      "kind": "waiting_on_you",
+      "read": false,
+      "text": "The plan for Hand Balm introduction is ready",
+      "userId": "u-maja"
+    },
+    "type": "notification.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:32:10.000Z",
+      "waits": {
+        "briefReady": false,
+        "delivery": "2026-10-26T12:32:00.000Z",
+        "directions": 0,
+        "plan": "ready",
+        "planChecked": true,
+        "planned": 6,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja plan("c-balm")
+  {
+    "briefVersion": 1,
+    "campaignId": "c-balm",
+    "changeRequestsIncluded": 2,
+    "checkAsked": {"at":"2026-10-14T12:32:06.000Z","by":"u-maja"},
+    "checkedAt": "2026-10-14T12:32:10.000Z",
+    "checkedBy": "u-anna",
+    "chosenDirectionId": "pd-c-balm-b",
+    "chosenReason": "Closer to the brand",
+    "content": [
+      {"key":"products","label":"Products","source":"product","value":"Hand Balm 50 ml, as their Product Truth says."},
+      {
+        "key": "formats",
+        "label": "Formats",
+        "source": "brief",
+        "value": "Feed 4:5, Square 1:1: 6 creatives in all, as your brief asks."
+      },
+      {
+        "key": "text",
+        "label": "Text on the creative",
+        "source": "brief",
+        "value": "One short line in Norwegian on each creative, from your brief’s message “Soft hands for the hour before sleep”."
+      },
+      {
+        "key": "logo",
+        "label": "Logo",
+        "source": "brand_dna",
+        "value": "The wordmark on the label only; no logo added on the picture."
+      },
+      {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
+    ],
+    "directions": [
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm low in the frame on pale stone, warm side light, air above."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm on folded linen, the light from the left."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Soft hands for the hour before sleep.",
+        "id": "pd-c-balm-a",
+        "idea": "Hand Balm at the hour before sleep: low, warm side light on stone and linen, the product low in the frame with air above it.",
+        "letter": "A",
+        "look": [
+          {
+            "changedAt": "2026-10-14T12:32:03.000Z",
+            "changedBy": "u-maja",
+            "key": "light",
+            "label": "Light",
+            "source": "you",
+            "value": "Low lamp light, warm."
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Pale stone and folded linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Evening light",
+        "recommended": true,
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-scene.jpg",
+            "source": "product"
+          },
+          {"caption":"Fluted glass and slow light.","image":"/demo/lysne/02-04-feed.jpg","source":"taste"},
+          {"caption":"Product low, air above.","image":"/demo/lysne/08-06-feed.jpg","source":"taste"},
+          {"caption":"A picture you liked","image":"/demo/lysne/02-05-feed.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Warm, low side light leads in your Brand DNA."},
+          {"source":"taste","text":"Your liked pictures keep the product low, with air above it."},
+          {"source":"memory","text":"Evening stone won in your last campaign."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "changedAt": "2026-10-14T12:32:05.500Z",
+            "changedBy": "fume",
+            "format": "feed",
+            "id": "pc-c-balm-b-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Close on Hand Balm: its texture in a stripe of warm light; the show the tube closed.",
+            "text": "Hands, then sleep"
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "The label close, the set soft behind."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Made to be felt.",
+        "id": "pd-c-balm-b",
+        "idea": "Close on Hand Balm: the texture, the label and a stripe of warm light. Fewer things in the frame, the product nearer.",
+        "letter": "B",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "A stripe of warm light across the product, the rest in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Stone, close; nothing else in the frame."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Close and quiet",
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Texture in warm light","image":"/demo/lysne/05-03-feed.jpg","source":"fume"},
+          {"caption":"Close, a stripe of light","image":"/demo/lysne/06-04-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"fume","text":"Close crops suit a product people touch every day."},
+          {"source":"product","text":"Golden, never orange: the Product Truth's colours lead."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "A crop of skin and Hand Balm in evening light, never a face."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hands open the product on linen."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "The last quiet hour of the day.",
+        "id": "pd-c-balm-c",
+        "idea": "Hand Balm in use: a crop of skin or hands at the hour before sleep, never a face. Closest to the feeling, furthest from a packshot.",
+        "letter": "C",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "One warm lamp, low; the room in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"A bedside of oak and linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "Hands or a crop of skin, never a face; never holding the product.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "The ritual",
+        "references": [
+          {"caption":"Hands in evening light","image":"/demo/lysne/gen/taste-hands.jpg","source":"taste"},
+          {"caption":"The evening room","image":"/demo/lysne/gen/taste-bedroom.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Skin in crops, as your Brand DNA prefers; no face in this direction."},
+          {"source":"memory","text":"You passed on hands that hold the bottle once: here they never do."}
+        ]
+      }
+    ],
+    "note": {
+      "at": "2026-10-14T12:32:05.500Z",
+      "by": "fume",
+      "text": "Changed as you asked: Master 1’s scene: the show the tube closed."
+    },
+    "rules": [
+      {
+        "kind": "never",
+        "ruleId": "r7",
+        "source": "brand_dna",
+        "text": "Skin-result claims; only the lines on the approved list"
+      }
+    ],
+    "state": "ready",
+    "summary": "Introduce Hand Balm to people who already use the oil. It speaks to existing LYSNE customers. The message: soft hands for the hour before sleep. It runs in Norway, in Norwegian.",
+    "timeline": [
+      {"at":"2026-10-19T12:32:00.000Z","label":"Masters, checked"},
+      {"at":"2026-10-22T12:32:00.000Z","label":"Variants and formats"},
+      {"at":"2026-10-26T12:32:00.000Z","label":"Delivery"}
+    ],
+    "version": 2,
+    "versions": [
+      {
+        "asked": "Show the tube closed",
+        "at": "2026-10-14T12:32:05.500Z",
+        "by": "u-maja",
+        "changes": ["Master 1’s scene: the show the tube closed"],
+        "version": 2
+      }
+    ],
+    "writtenAt": "2026-10-14T12:32:05.500Z"
+  }
+maja approvePlan("c-balm") → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:11.000Z",
+      "author": {"kind":"fume"},
+      "card": {"kind":"run","runId":"run-plan-c-balm"},
+      "id": "msg-mvkqrhx4-12",
+      "text": "Approved. The Engine starts on the 2 masters in Close and quiet once Hand Balm is confirmed. Anna checks each one before you see it, by Mon 19 Oct.",
+      "threadId": "t-balm"
+    },
+    "type": "message.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "masters",
+      "state": "in_production",
+      "updatedAt": "2026-10-14T12:32:11.000Z",
+      "waits": {
+        "briefReady": false,
+        "by": "2026-10-19T12:32:00.000Z",
+        "delivery": "2026-10-26T12:32:00.000Z",
+        "directions": 0,
+        "masters": 2,
+        "planned": 6,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja approvePlan("c-balm")
+  {
+    "approvedAt": "2026-10-14T12:32:11.000Z",
+    "approvedBy": "u-maja",
+    "briefVersion": 1,
+    "campaignId": "c-balm",
+    "changeRequestsIncluded": 2,
+    "checkAsked": {"at":"2026-10-14T12:32:06.000Z","by":"u-maja"},
+    "checkedAt": "2026-10-14T12:32:10.000Z",
+    "checkedBy": "u-anna",
+    "chosenDirectionId": "pd-c-balm-b",
+    "chosenReason": "Closer to the brand",
+    "content": [
+      {"key":"products","label":"Products","source":"product","value":"Hand Balm 50 ml, as their Product Truth says."},
+      {
+        "key": "formats",
+        "label": "Formats",
+        "source": "brief",
+        "value": "Feed 4:5, Square 1:1: 6 creatives in all, as your brief asks."
+      },
+      {
+        "key": "text",
+        "label": "Text on the creative",
+        "source": "brief",
+        "value": "One short line in Norwegian on each creative, from your brief’s message “Soft hands for the hour before sleep”."
+      },
+      {
+        "key": "logo",
+        "label": "Logo",
+        "source": "brand_dna",
+        "value": "The wordmark on the label only; no logo added on the picture."
+      },
+      {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
+    ],
+    "directions": [
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm low in the frame on pale stone, warm side light, air above."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hand Balm on folded linen, the light from the left."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-a-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-a-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-a-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-a-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Soft hands for the hour before sleep.",
+        "id": "pd-c-balm-a",
+        "idea": "Hand Balm at the hour before sleep: low, warm side light on stone and linen, the product low in the frame with air above it.",
+        "letter": "A",
+        "look": [
+          {
+            "changedAt": "2026-10-14T12:32:03.000Z",
+            "changedBy": "u-maja",
+            "key": "light",
+            "label": "Light",
+            "source": "you",
+            "value": "Low lamp light, warm."
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Pale stone and folded linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Evening light",
+        "recommended": true,
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-scene.jpg",
+            "source": "product"
+          },
+          {"caption":"Fluted glass and slow light.","image":"/demo/lysne/02-04-feed.jpg","source":"taste"},
+          {"caption":"Product low, air above.","image":"/demo/lysne/08-06-feed.jpg","source":"taste"},
+          {"caption":"A picture you liked","image":"/demo/lysne/02-05-feed.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Warm, low side light leads in your Brand DNA."},
+          {"source":"taste","text":"Your liked pictures keep the product low, with air above it."},
+          {"source":"memory","text":"Evening stone won in your last campaign."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "changedAt": "2026-10-14T12:32:05.500Z",
+            "changedBy": "fume",
+            "format": "feed",
+            "id": "pc-c-balm-b-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Close on Hand Balm: its texture in a stripe of warm light; the show the tube closed.",
+            "text": "Hands, then sleep"
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "The label close, the set soft behind."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-b-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-b-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-b-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-b-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Made to be felt.",
+        "id": "pd-c-balm-b",
+        "idea": "Close on Hand Balm: the texture, the label and a stripe of warm light. Fewer things in the frame, the product nearer.",
+        "letter": "B",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "A stripe of warm light across the product, the rest in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Stone, close; nothing else in the frame."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Close and quiet",
+        "references": [
+          {
+            "caption": "Hand Balm, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Texture in warm light","image":"/demo/lysne/05-03-feed.jpg","source":"fume"},
+          {"caption":"Close, a stripe of light","image":"/demo/lysne/06-04-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"fume","text":"Close crops suit a product people touch every day."},
+          {"source":"product","text":"Golden, never orange: the Product Truth's colours lead."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "A crop of skin and Hand Balm in evening light, never a face."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Hands open the product on linen."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v1",
+            "kind": "variant",
+            "name": "Master 1 in Square",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1 in Square 1:1, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-balm-c-v3",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-balm-c-m1",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "square",
+            "id": "pc-c-balm-c-v4",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-balm-c-m2",
+            "people": "No people",
+            "productIds": ["pr-balm"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "The last quiet hour of the day.",
+        "id": "pd-c-balm-c",
+        "idea": "Hand Balm in use: a crop of skin or hands at the hour before sleep, never a face. Closest to the feeling, furthest from a packshot.",
+        "letter": "C",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "One warm lamp, low; the room in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"A bedside of oak and linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "Hands or a crop of skin, never a face; never holding the product.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "The ritual",
+        "references": [
+          {"caption":"Hands in evening light","image":"/demo/lysne/gen/taste-hands.jpg","source":"taste"},
+          {"caption":"The evening room","image":"/demo/lysne/gen/taste-bedroom.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Skin in crops, as your Brand DNA prefers; no face in this direction."},
+          {"source":"memory","text":"You passed on hands that hold the bottle once: here they never do."}
+        ]
+      }
+    ],
+    "note": {
+      "at": "2026-10-14T12:32:05.500Z",
+      "by": "fume",
+      "text": "Changed as you asked: Master 1’s scene: the show the tube closed."
+    },
+    "rules": [
+      {
+        "kind": "never",
+        "ruleId": "r7",
+        "source": "brand_dna",
+        "text": "Skin-result claims; only the lines on the approved list"
+      }
+    ],
+    "state": "approved",
+    "summary": "Introduce Hand Balm to people who already use the oil. It speaks to existing LYSNE customers. The message: soft hands for the hour before sleep. It runs in Norway, in Norwegian.",
+    "timeline": [
+      {"at":"2026-10-19T12:32:00.000Z","label":"Masters, checked"},
+      {"at":"2026-10-22T12:32:00.000Z","label":"Variants and formats"},
+      {"at":"2026-10-26T12:32:00.000Z","label":"Delivery"}
+    ],
+    "version": 2,
+    "versions": [
+      {
+        "asked": "Show the tube closed",
+        "at": "2026-10-14T12:32:05.500Z",
+        "by": "u-maja",
+        "changes": ["Master 1’s scene: the show the tube closed"],
+        "version": 2
+      }
+    ],
+    "writtenAt": "2026-10-14T12:32:05.500Z"
+  }
+maja campaign("c-balm")
+  {
+    "approver": {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"Head of Marketing"},
+    "brief": {
+      "approvedAt": "2026-10-14T12:32:00.000Z",
+      "approvedBy": "u-maja",
+      "audience": "Existing LYSNE customers.",
+      "campaignId": "c-balm",
+      "channels": ["paid_social","product_page"],
+      "creatives": 6,
+      "formats": ["feed","square"],
+      "mandatory": [],
+      "message": "Soft hands for the hour before sleep.",
+      "missing": [],
+      "never": [],
+      "objective": "Introduce Hand Balm to people who already use the oil.",
+      "references": [],
+      "state": "approved",
+      "version": 1
+    },
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "masters",
+      "state": "in_production",
+      "updatedAt": "2026-10-14T12:32:11.000Z",
+      "waits": {
+        "briefReady": false,
+        "by": "2026-10-19T12:32:00.000Z",
+        "delivery": "2026-10-26T12:32:00.000Z",
+        "directions": 0,
+        "masters": 2,
+        "planned": 6,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "clock": {"campaignId":"c-balm","dueAt":"2026-10-19T12:32:00.000Z","stage":"masters","state":"running"},
+    "creatives": [],
+    "directions": [],
+    "people": [
+      {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"Head of Marketing"},
+      {"email":"jonas@lysne.example","id":"u-jonas","name":"Jonas Berg","title":"Performance Marketer"},
+      {"email":"ida@lysne.example","id":"u-ida","name":"Ida Strand","title":"Finance Lead"}
+    ],
+    "record": [],
+    "runs": [
+      {
+        "campaignId": "c-balm",
+        "id": "run-plan-c-balm",
+        "made": 0,
+        "previews": [],
+        "purpose": "masters",
+        "startedAt": "2026-10-14T12:32:11.000Z",
+        "state": "running",
+        "steps": [
+          {"label":"Plan approved by you","state":"done"},
+          {"detail":"0 of 2","label":"Masters in Close and quiet","state":"waiting"},
+          {"label":"Master 1 and Master 2: Hand Balm to confirm first","state":"waiting"},
+          {"label":"Quality Gate: Anna checks each master","state":"waiting"}
+        ],
+        "total": 2
+      }
+    ],
+    "threadId": "t-balm"
+  }
+maja undoApprovePlan("c-balm") → events
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:32:11.000Z",
+      "waits": {
+        "briefReady": false,
+        "delivery": "2026-10-26T12:32:00.000Z",
+        "directions": 0,
+        "plan": "ready",
+        "planChecked": true,
+        "planned": 6,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja undoApprovePlan("c-balm")
+  = maja plan("c-balm")
+maja approvePlan("c-balm") → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:11.000Z",
+      "author": {"kind":"fume"},
+      "card": {"kind":"run","runId":"run-plan-c-balm"},
+      "id": "msg-mvkqrhx4-13",
+      "text": "Approved. The Engine starts on the 2 masters in Close and quiet once Hand Balm is confirmed. Anna checks each one before you see it, by Mon 19 Oct.",
+      "threadId": "t-balm"
+    },
+    "type": "message.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "masters",
+      "state": "in_production",
+      "updatedAt": "2026-10-14T12:32:11.000Z",
+      "waits": {
+        "briefReady": false,
+        "by": "2026-10-19T12:32:00.000Z",
+        "delivery": "2026-10-26T12:32:00.000Z",
+        "directions": 0,
+        "masters": 2,
+        "planned": 6,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja approvePlan("c-balm")
+  = maja approvePlan("c-balm")
+maja changePlanWithFume("c-balm", "Make the light colder") → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:11.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqrhx4-14",
+      "text": "Make the light colder",
+      "threadId": "t-balm"
+    },
+    "type": "message.new"
+  }
+  {
+    "message": {
+      "at": "2026-10-14T12:32:11.000Z",
+      "author": {"kind":"fume"},
+      "id": "msg-mvkqrhx4-15",
+      "text": "You approved this plan, and the Engine has started, so it stays as it is. Ask for a change on a creative once you see it.",
+      "threadId": "t-balm"
+    },
+    "type": "message.new"
+  }
+maja changePlanWithFume("c-balm", "Make the light colder")
+  = maja approvePlan("c-balm")
+maja changePlanWithFume("c-spring", "Anything")
+  {"error":"Error","message":"No plan for this campaign yet."}
+-- 13 s later
+maja, 13 s later → events
+  {
+    "run": {
+      "campaignId": "c-balm",
+      "id": "run-plan-c-balm",
+      "made": 1,
+      "previews": [],
+      "purpose": "masters",
+      "startedAt": "2026-10-14T12:32:11.000Z",
+      "state": "running",
+      "steps": [
+        {"label":"Plan approved by you","state":"done"},
+        {"detail":"0 of 2","label":"Masters in Close and quiet","state":"waiting"},
+        {"label":"Master 1 and Master 2: Hand Balm to confirm first","state":"waiting"},
+        {"label":"Quality Gate: Anna checks each master","state":"waiting"}
+      ],
+      "total": 2
+    },
+    "type": "run.progress"
+  }
+  {
+    "run": {
+      "campaignId": "c-balm",
+      "id": "run-plan-c-balm",
+      "made": 2,
+      "previews": [],
+      "purpose": "masters",
+      "startedAt": "2026-10-14T12:32:11.000Z",
+      "state": "done",
+      "steps": [
+        {"label":"Plan approved by you","state":"done"},
+        {"detail":"0 of 2","label":"Masters in Close and quiet","state":"active"},
+        {"label":"Master 1 and Master 2: Hand Balm to confirm first","state":"waiting"},
+        {"label":"Quality Gate: Anna checks each master","state":"waiting"}
+      ],
+      "total": 2
+    },
+    "type": "run.progress"
+  }
+maja campaign("c-balm")
+  {
+    "approver": {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"Head of Marketing"},
+    "brief": {
+      "approvedAt": "2026-10-14T12:32:00.000Z",
+      "approvedBy": "u-maja",
+      "audience": "Existing LYSNE customers.",
+      "campaignId": "c-balm",
+      "channels": ["paid_social","product_page"],
+      "creatives": 6,
+      "formats": ["feed","square"],
+      "mandatory": [],
+      "message": "Soft hands for the hour before sleep.",
+      "missing": [],
+      "never": [],
+      "objective": "Introduce Hand Balm to people who already use the oil.",
+      "references": [],
+      "state": "approved",
+      "version": 1
+    },
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "masters",
+      "state": "in_production",
+      "updatedAt": "2026-10-14T12:32:11.000Z",
+      "waits": {
+        "briefReady": false,
+        "by": "2026-10-19T12:32:00.000Z",
+        "delivery": "2026-10-26T12:32:00.000Z",
+        "directions": 0,
+        "masters": 2,
+        "planned": 6,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "clock": {"campaignId":"c-balm","dueAt":"2026-10-19T12:32:00.000Z","stage":"masters","state":"running"},
+    "creatives": [],
+    "directions": [],
+    "people": [
+      {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"Head of Marketing"},
+      {"email":"jonas@lysne.example","id":"u-jonas","name":"Jonas Berg","title":"Performance Marketer"},
+      {"email":"ida@lysne.example","id":"u-ida","name":"Ida Strand","title":"Finance Lead"}
+    ],
+    "record": [],
+    "runs": [
+      {
+        "campaignId": "c-balm",
+        "id": "run-plan-c-balm",
+        "made": 2,
+        "previews": [],
+        "purpose": "masters",
+        "startedAt": "2026-10-14T12:32:11.000Z",
+        "state": "done",
+        "steps": [
+          {"label":"Plan approved by you","state":"done"},
+          {"detail":"0 of 2","label":"Masters in Close and quiet","state":"active"},
+          {"label":"Master 1 and Master 2: Hand Balm to confirm first","state":"waiting"},
+          {"label":"Quality Gate: Anna checks each master","state":"waiting"}
+        ],
+        "total": 2
+      }
+    ],
+    "threadId": "t-balm"
+  }
+maja home()
+  {
+    "deliveries": [
+      {
+        "bytes": 38400000,
+        "campaignId": "c-summer",
+        "createdAt": "2026-09-26T12:32:00.000Z",
+        "creativeIds": ["cr-s-1","cr-s-2","cr-s-3","cr-s-4","cr-s-5","cr-s-6","cr-s-7","cr-s-8"],
+        "formats": ["feed","story"],
+        "id": "dl-summer",
+        "name": "Summer evenings · Direction A",
+        "rightsNote": "For LYSNE's paid and organic channels in the Nordics, no end date. No real people appear in these creatives.",
+        "scope": "campaign",
+        "state": "confirmed_live"
+      },
+      {
+        "bytes": 9600000,
+        "campaignId": "c-autumn",
+        "createdAt": "2026-10-12T12:32:00.000Z",
+        "creativeIds": ["cr-a-m1","cr-a-m2"],
+        "formats": ["feed"],
+        "id": "dl-autumn-m",
+        "name": "Autumn launch · Masters",
+        "rightsNote": "For LYSNE's paid and organic channels in the Nordics, no end date. No real people appear in these creatives.",
+        "scope": "campaign",
+        "state": "ready"
+      }
+    ],
+    "fumeNeeds": [],
+    "inProduction": [
+      {
+        "campaign": {
+          "approverId": "u-maja",
+          "boardId": "bd-autumn",
+          "brandDnaVersion": 3,
+          "channels": ["paid_social","email","product_page"],
+          "chosenDirectionId": "d-a1",
+          "collectionIds": ["cl-aw26"],
+          "counts": {"approved":2,"checked":6,"creatives":11,"delivered":0,"inCheck":3},
+          "cover": "/demo/lysne/05-06-feed.jpg",
+          "createdAt": "2026-10-02T12:32:00.000Z",
+          "createdBy": "u-maja",
+          "dueAt": "2026-10-17T12:32:00.000Z",
+          "formats": ["feed","story","square"],
+          "id": "c-autumn",
+          "language": "Norwegian",
+          "market": "Norway",
+          "name": "Autumn launch",
+          "productIds": ["pr-oil"],
+          "roundsIncluded": 2,
+          "roundsUsed": 1,
+          "stage": "variants",
+          "state": "in_review",
+          "updatedAt": "2026-10-14T12:26:00.000Z",
+          "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":0},
+          "workspaceId": "w-lysne"
+        },
+        "clock": {"campaignId":"c-autumn","dueAt":"2026-10-17T12:32:00.000Z","stage":"variants","state":"running"},
+        "run": {
+          "campaignId": "c-autumn",
+          "id": "run-autumn-v",
+          "made": 9,
+          "previews": [
+            "/demo/lysne/04-05-feed.jpg",
+            "/demo/lysne/03-05-feed.jpg",
+            "/demo/lysne/05-01-feed.jpg",
+            "/demo/lysne/09-07-feed.jpg",
+            "/demo/lysne/06-10-feed.jpg"
+          ],
+          "purpose": "variants",
+          "startedAt": "2026-10-14T10:32:00.000Z",
+          "state": "done",
+          "steps": [
+            {"label":"Masters 1 and 2 approved by Maja","state":"done"},
+            {"detail":"9 of 9","label":"Variants and channel formats","state":"done"},
+            {"detail":"6 of 9","label":"Quality Gate: Anna checks each creative","state":"active"}
+          ],
+          "total": 9
+        }
+      },
+      {
+        "campaign": {
+          "approverId": "u-maja",
+          "brandDnaVersion": 3,
+          "channels": ["paid_social","email"],
+          "collectionIds": ["cl-gifts"],
+          "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+          "cover": "/demo/lysne/10-06-feed.jpg",
+          "createdAt": "2026-10-13T12:32:00.000Z",
+          "createdBy": "u-maja",
+          "dueAt": "2026-11-27T12:32:00.000Z",
+          "formats": ["feed","story","square"],
+          "id": "c-bf",
+          "language": "Norwegian",
+          "look": {
+            "backgrounds": [{"hex":"#141110","name":"Night black"},{"hex":"#3A1219","name":"Deep burgundy"}],
+            "colours": [
+              {"hex":"#141110","name":"Night black","use":"Grounds"},
+              {"hex":"#C9A45C","name":"Gold foil","use":"Words and the offer"},
+              {"hex":"#EFE6DA","name":"Linen","use":"Small text"}
+            ],
+            "light": "Hard top light, one bright edge on the glass",
+            "note": "Darker and sharper than LYSNE's evening light: black grounds, gold words, one hard light.",
+            "provenance": {
+              "at": "2026-10-13T16:32:00.000Z",
+              "by": "u-maja",
+              "evidence": "Black Friday brief",
+              "origin": "customer",
+              "state": "approved"
+            }
+          },
+          "market": "Norway",
+          "name": "Black Friday",
+          "productIds": ["pr-oil","pr-candle"],
+          "roundsIncluded": 2,
+          "roundsUsed": 0,
+          "stage": "plan",
+          "state": "scoped",
+          "updatedAt": "2026-10-14T07:32:00.000Z",
+          "waits": {
+            "briefReady": false,
+            "by": "2026-10-16T12:32:00.000Z",
+            "delivery": "2026-10-23T16:32:00.000Z",
+            "directions": 0,
+            "plan": "in_check",
+            "planChecked": false,
+            "planned": 9,
+            "questions": 0
+          },
+          "workspaceId": "w-lysne"
+        },
+        "clock": {"campaignId":"c-bf","dueAt":"2026-10-16T12:32:00.000Z","stage":"plan","state":"running"}
+      },
+      {
+        "campaign": {
+          "approverId": "u-maja",
+          "brandDnaVersion": 3,
+          "channels": ["paid_social","product_page"],
+          "collectionIds": [],
+          "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+          "createdAt": "2026-10-14T09:32:00.000Z",
+          "createdBy": "u-maja",
+          "formats": ["feed","square"],
+          "id": "c-balm",
+          "language": "Norwegian",
+          "market": "Norway",
+          "name": "Hand Balm introduction",
+          "productIds": ["pr-balm"],
+          "roundsIncluded": 2,
+          "roundsUsed": 0,
+          "stage": "masters",
+          "state": "in_production",
+          "updatedAt": "2026-10-14T12:32:11.000Z",
+          "waits": {
+            "briefReady": false,
+            "by": "2026-10-19T12:32:00.000Z",
+            "delivery": "2026-10-26T12:32:00.000Z",
+            "directions": 0,
+            "masters": 2,
+            "planned": 6,
+            "questions": 0
+          },
+          "workspaceId": "w-lysne"
+        },
+        "clock": {"campaignId":"c-balm","dueAt":"2026-10-19T12:32:00.000Z","stage":"masters","state":"running"},
+        "run": {
+          "campaignId": "c-balm",
+          "id": "run-plan-c-balm",
+          "made": 2,
+          "previews": [],
+          "purpose": "masters",
+          "startedAt": "2026-10-14T12:32:11.000Z",
+          "state": "done",
+          "steps": [
+            {"label":"Plan approved by you","state":"done"},
+            {"detail":"0 of 2","label":"Masters in Close and quiet","state":"active"},
+            {"label":"Master 1 and Master 2: Hand Balm to confirm first","state":"waiting"},
+            {"label":"Quality Gate: Anna checks each master","state":"waiting"}
+          ],
+          "total": 2
+        }
+      }
+    ],
+    "learned": [
+      {
+        "at": "2026-10-09T12:32:00.000Z",
+        "campaignId": "c-autumn",
+        "id": "m4",
+        "kind": "approved",
+        "lesson": "Evening stone was chosen over skin and texture: warm stone leads."
+      },
+      {
+        "at": "2026-10-08T12:32:00.000Z",
+        "campaignId": "c-autumn",
+        "id": "m3",
+        "kind": "rejected",
+        "lesson": "You passed on hands that hold the bottle. Fume no longer proposes them."
+      },
+      {
+        "at": "2026-09-25T12:32:00.000Z",
+        "campaignId": "c-summer",
+        "id": "m2",
+        "kind": "changed",
+        "lesson": "You moved the product lower in the frame twice. New creatives start there."
+      }
+    ],
+    "recentlyApproved": [
+      {
+        "campaignId": "c-autumn",
+        "channel": "paid_social",
+        "current": {
+          "approvedAt": "2026-10-11T13:32:00.000Z",
+          "approvedBy": "u-maja",
+          "checkedAt": "2026-10-11T12:32:00.000Z",
+          "checkedBy": "u-anna",
+          "creativeId": "cr-a-m1",
+          "height": 1350,
+          "id": "v-cr-a-m1-1",
+          "image": "/demo/lysne/05-06-feed.jpg",
+          "madeAt": "2026-10-11T12:02:00.000Z",
+          "number": 2,
+          "state": "approved",
+          "width": 1080
+        },
+        "directionId": "d-a1",
+        "format": "feed",
+        "id": "cr-a-m1",
+        "kind": "master",
+        "masterId": null,
+        "name": "lysne_autumn_a_m1_feed_v2",
+        "title": "Feed 1",
+        "versions": [
+          {
+            "checkedAt": "2026-10-09T12:32:00.000Z",
+            "checkedBy": "u-anna",
+            "creativeId": "cr-a-m1",
+            "height": 1350,
+            "id": "v-cr-a-m1-old",
+            "image": "/demo/lysne/01-03-feed.jpg",
+            "madeAt": "2026-10-11T12:02:00.000Z",
+            "number": 1,
+            "state": "changes_requested",
+            "width": 1080
+          },
+          {
+            "approvedAt": "2026-10-11T13:32:00.000Z",
+            "approvedBy": "u-maja",
+            "checkedAt": "2026-10-11T12:32:00.000Z",
+            "checkedBy": "u-anna",
+            "creativeId": "cr-a-m1",
+            "height": 1350,
+            "id": "v-cr-a-m1-1",
+            "image": "/demo/lysne/05-06-feed.jpg",
+            "madeAt": "2026-10-11T12:02:00.000Z",
+            "number": 2,
+            "state": "approved",
+            "width": 1080
+          }
+        ]
+      },
+      {
+        "campaignId": "c-autumn",
+        "channel": "paid_social",
+        "current": {
+          "approvedAt": "2026-10-11T13:32:00.000Z",
+          "approvedBy": "u-maja",
+          "checkedAt": "2026-10-11T12:32:00.000Z",
+          "checkedBy": "u-anna",
+          "creativeId": "cr-a-m2",
+          "height": 1350,
+          "id": "v-cr-a-m2-2",
+          "image": "/demo/lysne/08-02-feed.jpg",
+          "madeAt": "2026-10-11T12:02:00.000Z",
+          "number": 1,
+          "state": "approved",
+          "width": 1080
+        },
+        "directionId": "d-a1",
+        "format": "feed",
+        "id": "cr-a-m2",
+        "kind": "master",
+        "masterId": null,
+        "name": "lysne_autumn_a_m2_feed_v1",
+        "title": "Feed 2",
+        "versions": [
+          {
+            "approvedAt": "2026-10-11T13:32:00.000Z",
+            "approvedBy": "u-maja",
+            "checkedAt": "2026-10-11T12:32:00.000Z",
+            "checkedBy": "u-anna",
+            "creativeId": "cr-a-m2",
+            "height": 1350,
+            "id": "v-cr-a-m2-2",
+            "image": "/demo/lysne/08-02-feed.jpg",
+            "madeAt": "2026-10-11T12:02:00.000Z",
+            "number": 1,
+            "state": "approved",
+            "width": 1080
+          }
+        ]
+      }
+    ],
+    "usage": {"campaignsActive":4,"creativeCap":27,"creativesUsed":11,"periodEndsAt":"2026-10-31T12:32:00.000Z"},
+    "waitingOnYou": [
+      {
+        "campaignId": "c-autumn",
+        "count": 6,
+        "detail": "6 checked creatives are ready for you",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "href": "/campaigns/c-autumn/review",
+        "id": "wc-c-autumn",
+        "kind": "creatives",
+        "title": "Autumn launch"
+      },
+      {
+        "campaignId": "c-winter",
+        "detail": "The plan is ready. Approve it and Fume starts.",
+        "href": "/campaigns/c-winter/plan",
+        "id": "wpl-c-winter",
+        "kind": "plan",
+        "title": "Winter gifting"
+      },
+      {
+        "detail": "Confirm what Fume read about this product",
+        "href": "/brand/products/pr-balm",
+        "id": "wp-pr-balm",
+        "kind": "product",
+        "title": "Hand Balm 50 ml"
+      },
+      {
+        "detail": "Confirm what Fume read about this product",
+        "href": "/brand/products/pr-mist",
+        "id": "wp-pr-mist",
+        "kind": "product",
+        "title": "Pillow Mist 50 ml"
+      },
+      {
+        "detail": "Confirm what Fume read about this product",
+        "href": "/brand/products/pr-candle",
+        "id": "wp-pr-candle",
+        "kind": "product",
+        "title": "Evening Candle 180 g"
+      },
+      {
+        "detail": "Confirm what Fume read about this product",
+        "href": "/brand/products/pr-kveld",
+        "id": "wp-pr-kveld",
+        "kind": "product",
+        "title": "Kveld Eau de Parfum 50 ml"
+      },
+      {
+        "detail": "Confirm what Fume read about this product",
+        "href": "/brand/products/pr-diffuser",
+        "id": "wp-pr-diffuser",
+        "kind": "product",
+        "title": "Room Diffuser 100 ml"
+      },
+      {
+        "detail": "Confirm what Fume read about this product",
+        "href": "/brand/products/pr-ritual",
+        "id": "wp-pr-ritual",
+        "kind": "product",
+        "title": "Evening Ritual gift box Oil and candle"
+      },
+      {
+        "detail": "Confirm what Fume read about this product",
+        "href": "/brand/products/pr-sweater",
+        "id": "wp-pr-sweater",
+        "kind": "product",
+        "title": "Merino Lounge Sweater Ecru"
+      }
+    ]
+  }
+-- 60 s later
+maja campaign("c-balm")
+  = maja campaign("c-balm")
+maja studioCampaigns()
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}

@@ -1,0 +1,1630 @@
+-- maja: createMockApi({"latency":0})
+maja startCampaign({"productIds":["pr-face"],"text":"A spring campaign for the face oil"}) → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt28w-3",
+      "text": "A spring campaign for the face oil",
+      "threadId": "t-mvkqt28w-2"
+    },
+    "type": "message.new"
+  }
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v9",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [
+        {
+          "at": "2026-10-14T12:21:00.000Z",
+          "by": "u-anna",
+          "id": "fb-1",
+          "state": "fixed",
+          "text": "The cap must be matte burgundy, as in the Product Truth."
+        }
+      ],
+      "format": "feed",
+      "id": "qa-3",
+      "image": "/demo/lysne/06-10-feed.jpg",
+      "madeAt": "2026-10-14T12:20:00.000Z",
+      "risk": "high",
+      "slot": "Master 2 · Variant 3",
+      "state": "waiting",
+      "studio": "render",
+      "title": "Feed 7",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+  {
+    "message": {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {
+        "kind": "question",
+        "options": ["Existing customers","New customers","Both"],
+        "question": "Who should it reach?",
+        "why": "It decides the tone, and whether we show the product new or as an old friend."
+      },
+      "id": "msg-mvkqt28w-4",
+      "text": "Who should it reach?",
+      "threadId": "t-mvkqt28w-2"
+    },
+    "type": "message.new"
+  }
+maja startCampaign({"productIds":["pr-face"],"text":"A spring campaign for the face oil"})
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","story"],
+      "id": "c-mvkqt28w-1",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Spring · Face Oil",
+      "productIds": ["pr-face"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "brief",
+      "state": "draft",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {"briefReady":false,"directions":0,"questions":3},
+      "workspaceId": "w-lysne"
+    },
+    "threadId": "t-mvkqt28w-2"
+  }
+maja campaign("c-mvkqt28w-1")
+  {
+    "approver": {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"Head of Marketing"},
+    "brief": {
+      "audience": "",
+      "campaignId": "c-mvkqt28w-1",
+      "channels": ["paid_social"],
+      "creatives": 0,
+      "formats": ["feed","story"],
+      "mandatory": [],
+      "message": "",
+      "missing": ["Who it should reach","When it goes live","What it should say"],
+      "never": [],
+      "objective": "Sell Face Oil for Spring in paid social.",
+      "references": [],
+      "state": "drafting",
+      "version": 1
+    },
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","story"],
+      "id": "c-mvkqt28w-1",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Spring · Face Oil",
+      "productIds": ["pr-face"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "brief",
+      "state": "draft",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {"briefReady":false,"directions":0,"questions":3},
+      "workspaceId": "w-lysne"
+    },
+    "creatives": [],
+    "directions": [],
+    "people": [
+      {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"Head of Marketing"},
+      {"email":"jonas@lysne.example","id":"u-jonas","name":"Jonas Berg","title":"Performance Marketer"},
+      {"email":"ida@lysne.example","id":"u-ida","name":"Ida Strand","title":"Finance Lead"}
+    ],
+    "record": [],
+    "runs": [],
+    "threadId": "t-mvkqt28w-2"
+  }
+maja messages("t-mvkqt28w-2")
+  [
+    {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt28w-3",
+      "text": "A spring campaign for the face oil",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {
+        "kind": "question",
+        "options": ["Existing customers","New customers","Both"],
+        "question": "Who should it reach?",
+        "why": "It decides the tone, and whether we show the product new or as an old friend."
+      },
+      "id": "msg-mvkqt28w-4",
+      "text": "Who should it reach?",
+      "threadId": "t-mvkqt28w-2"
+    }
+  ]
+maja send("t-mvkqt28w-2", "Women who sleep badly") → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt28w-5",
+      "text": "Women who sleep badly",
+      "threadId": "t-mvkqt28w-2"
+    },
+    "type": "message.new"
+  }
+  {
+    "message": {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {
+        "kind": "question",
+        "options": ["In two weeks","In a month","No fixed date"],
+        "question": "When should it go live?",
+        "why": "We plan the work back from that day and tell you if your package needs longer."
+      },
+      "id": "msg-mvkqt28w-6",
+      "text": "When should it go live?",
+      "threadId": "t-mvkqt28w-2"
+    },
+    "type": "message.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","story"],
+      "id": "c-mvkqt28w-1",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Spring · Face Oil",
+      "productIds": ["pr-face"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "brief",
+      "state": "draft",
+      "updatedAt": "2026-10-14T12:32:00.000Z",
+      "waits": {"briefReady":false,"directions":0,"questions":2},
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja send("t-mvkqt28w-2", "Women who sleep badly")
+  {
+    "at": "2026-10-14T12:32:00.000Z",
+    "author": {"kind":"person","userId":"u-maja"},
+    "id": "msg-mvkqt28w-5",
+    "text": "Women who sleep badly",
+    "threadId": "t-mvkqt28w-2"
+  }
+-- 1 s later
+maja send("t-mvkqt28w-2", "Calm skin by morning") → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:01.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt30o-7",
+      "text": "Calm skin by morning",
+      "threadId": "t-mvkqt28w-2"
+    },
+    "type": "message.new"
+  }
+  {
+    "message": {
+      "at": "2026-10-14T12:32:01.000Z",
+      "author": {"kind":"fume"},
+      "card": {
+        "kind": "question",
+        "options": ["Made to be felt.","A slower evening, given."],
+        "question": "What should it say?",
+        "why": "It is the one line every creative carries, in the pictures more than in words."
+      },
+      "id": "msg-mvkqt30o-8",
+      "text": "Last thing. The first line is our suggestion, the second is the one from your last brief. Or write your own.",
+      "threadId": "t-mvkqt28w-2"
+    },
+    "type": "message.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","story"],
+      "id": "c-mvkqt28w-1",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Spring · Face Oil",
+      "productIds": ["pr-face"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "brief",
+      "state": "draft",
+      "updatedAt": "2026-10-14T12:32:01.000Z",
+      "waits": {"briefReady":false,"directions":0,"questions":1},
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja send("t-mvkqt28w-2", "Calm skin by morning")
+  {
+    "at": "2026-10-14T12:32:01.000Z",
+    "author": {"kind":"person","userId":"u-maja"},
+    "id": "msg-mvkqt30o-7",
+    "text": "Calm skin by morning",
+    "threadId": "t-mvkqt28w-2"
+  }
+-- 1 s later
+maja send("t-mvkqt28w-2", "Paid social, feed and story") → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:02.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt3sg-9",
+      "text": "Paid social, feed and story",
+      "threadId": "t-mvkqt28w-2"
+    },
+    "type": "message.new"
+  }
+  {
+    "message": {
+      "at": "2026-10-14T12:32:02.000Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-mvkqt28w-1","kind":"brief","version":1},
+      "id": "msg-mvkqt3sg-10",
+      "text": "That is all we need. The brief for Spring · Face Oil is ready. Send it when it reads right; nothing is made before you approve the plan.",
+      "threadId": "t-mvkqt28w-2"
+    },
+    "type": "message.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","story"],
+      "id": "c-mvkqt28w-1",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Spring · Face Oil",
+      "productIds": ["pr-face"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "brief",
+      "state": "draft",
+      "updatedAt": "2026-10-14T12:32:02.000Z",
+      "waits": {"briefReady":true,"directions":0,"questions":0},
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja send("t-mvkqt28w-2", "Paid social, feed and story")
+  {
+    "at": "2026-10-14T12:32:02.000Z",
+    "author": {"kind":"person","userId":"u-maja"},
+    "id": "msg-mvkqt3sg-9",
+    "text": "Paid social, feed and story",
+    "threadId": "t-mvkqt28w-2"
+  }
+-- 1 s later
+maja send("t-mvkqt28w-2", "Mid March") → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:03.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt4k8-11",
+      "text": "Mid March",
+      "threadId": "t-mvkqt28w-2"
+    },
+    "type": "message.new"
+  }
+  {
+    "message": {
+      "at": "2026-10-14T12:32:03.000Z",
+      "author": {"kind":"fume"},
+      "id": "msg-mvkqt4k8-12",
+      "text": "Thanks. We have that now and will come back to you here.",
+      "threadId": "t-mvkqt28w-2"
+    },
+    "type": "message.new"
+  }
+maja send("t-mvkqt28w-2", "Mid March")
+  {
+    "at": "2026-10-14T12:32:03.000Z",
+    "author": {"kind":"person","userId":"u-maja"},
+    "id": "msg-mvkqt4k8-11",
+    "text": "Mid March",
+    "threadId": "t-mvkqt28w-2"
+  }
+-- 1 s later
+maja messages("t-mvkqt28w-2")
+  [
+    {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt28w-3",
+      "text": "A spring campaign for the face oil",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {
+        "kind": "question",
+        "options": ["Existing customers","New customers","Both"],
+        "question": "Who should it reach?",
+        "why": "It decides the tone, and whether we show the product new or as an old friend."
+      },
+      "id": "msg-mvkqt28w-4",
+      "text": "Who should it reach?",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt28w-5",
+      "text": "Women who sleep badly",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {
+        "kind": "question",
+        "options": ["In two weeks","In a month","No fixed date"],
+        "question": "When should it go live?",
+        "why": "We plan the work back from that day and tell you if your package needs longer."
+      },
+      "id": "msg-mvkqt28w-6",
+      "text": "When should it go live?",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:01.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt30o-7",
+      "text": "Calm skin by morning",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:01.000Z",
+      "author": {"kind":"fume"},
+      "card": {
+        "kind": "question",
+        "options": ["Made to be felt.","A slower evening, given."],
+        "question": "What should it say?",
+        "why": "It is the one line every creative carries, in the pictures more than in words."
+      },
+      "id": "msg-mvkqt30o-8",
+      "text": "Last thing. The first line is our suggestion, the second is the one from your last brief. Or write your own.",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:02.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt3sg-9",
+      "text": "Paid social, feed and story",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:02.000Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-mvkqt28w-1","kind":"brief","version":1},
+      "id": "msg-mvkqt3sg-10",
+      "text": "That is all we need. The brief for Spring · Face Oil is ready. Send it when it reads right; nothing is made before you approve the plan.",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:03.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt4k8-11",
+      "text": "Mid March",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:03.000Z",
+      "author": {"kind":"fume"},
+      "id": "msg-mvkqt4k8-12",
+      "text": "Thanks. We have that now and will come back to you here.",
+      "threadId": "t-mvkqt28w-2"
+    }
+  ]
+maja campaign("c-mvkqt28w-1")
+  {
+    "approver": {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"Head of Marketing"},
+    "brief": {
+      "audience": "Women who sleep badly",
+      "campaignId": "c-mvkqt28w-1",
+      "channels": ["paid_social"],
+      "creatives": 8,
+      "formats": ["feed","story"],
+      "mandatory": [],
+      "message": "Paid social, feed and story",
+      "missing": [],
+      "never": [],
+      "objective": "Sell Face Oil for Spring in paid social.",
+      "references": [],
+      "state": "ready",
+      "version": 1
+    },
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","story"],
+      "id": "c-mvkqt28w-1",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Spring · Face Oil",
+      "productIds": ["pr-face"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "brief",
+      "state": "draft",
+      "updatedAt": "2026-10-14T12:32:02.000Z",
+      "waits": {"briefReady":true,"directions":0,"questions":0},
+      "workspaceId": "w-lysne"
+    },
+    "creatives": [],
+    "directions": [],
+    "people": [
+      {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"Head of Marketing"},
+      {"email":"jonas@lysne.example","id":"u-jonas","name":"Jonas Berg","title":"Performance Marketer"},
+      {"email":"ida@lysne.example","id":"u-ida","name":"Ida Strand","title":"Finance Lead"}
+    ],
+    "record": [],
+    "runs": [],
+    "threadId": "t-mvkqt28w-2"
+  }
+maja sendBrief("c-mvkqt28w-1") → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:04.000Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-mvkqt28w-1","kind":"plan","version":1},
+      "id": "msg-mvkqt5c0-13",
+      "text": "Thank you. Fume writes the plan now: the direction, the look and every creative, before anything is made. You see it here by Thu 15 Oct.",
+      "threadId": "t-mvkqt28w-2"
+    },
+    "type": "message.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","story"],
+      "id": "c-mvkqt28w-1",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Spring · Face Oil",
+      "productIds": ["pr-face"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "scoped",
+      "updatedAt": "2026-10-14T12:32:04.000Z",
+      "waits": {
+        "briefReady": false,
+        "by": "2026-10-15T12:32:04.000Z",
+        "delivery": "2026-10-26T12:32:04.000Z",
+        "directions": 0,
+        "plan": "writing",
+        "planChecked": false,
+        "planned": 8,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja sendBrief("c-mvkqt28w-1")
+  {
+    "approvedAt": "2026-10-14T12:32:04.000Z",
+    "approvedBy": "u-maja",
+    "audience": "Women who sleep badly",
+    "campaignId": "c-mvkqt28w-1",
+    "channels": ["paid_social"],
+    "creatives": 8,
+    "formats": ["feed","story"],
+    "mandatory": [],
+    "message": "Paid social, feed and story",
+    "missing": [],
+    "never": [],
+    "objective": "Sell Face Oil for Spring in paid social.",
+    "references": [],
+    "state": "approved",
+    "version": 1
+  }
+-- 3 s later
+maja, 3 s later → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:06.500Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-mvkqt28w-1","kind":"plan","version":1},
+      "id": "msg-mvkqt79g-14",
+      "text": "The plan for Spring · Face Oil is ready. Approve it and Fume starts on the 3 masters, or change it with me here first. Nothing is made before you approve it.",
+      "threadId": "t-mvkqt28w-2"
+    },
+    "type": "message.new"
+  }
+  {
+    "notification": {
+      "actor": {"kind":"fume"},
+      "at": "2026-10-14T12:32:06.500Z",
+      "href": "/campaigns/c-mvkqt28w-1/plan",
+      "id": "n-mvkqt79g-15",
+      "kind": "waiting_on_you",
+      "read": false,
+      "text": "The plan for Spring · Face Oil is ready",
+      "userId": "u-maja"
+    },
+    "type": "notification.new"
+  }
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","story"],
+      "id": "c-mvkqt28w-1",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Spring · Face Oil",
+      "productIds": ["pr-face"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:32:06.500Z",
+      "waits": {
+        "briefReady": false,
+        "delivery": "2026-10-26T12:32:04.000Z",
+        "directions": 0,
+        "plan": "ready",
+        "planChecked": false,
+        "planned": 8,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "type": "campaign.state"
+  }
+maja plan("c-mvkqt28w-1")
+  {
+    "briefVersion": 1,
+    "campaignId": "c-mvkqt28w-1",
+    "changeRequestsIncluded": 2,
+    "checkedAt": "2026-10-14T12:32:06.500Z",
+    "chosenDirectionId": "pd-c-mvkqt28w-1-a",
+    "content": [
+      {"key":"products","label":"Products","source":"product","value":"Face Oil 30 ml, as their Product Truth says."},
+      {
+        "key": "formats",
+        "label": "Formats",
+        "source": "brief",
+        "value": "Feed 4:5, Story 9:16: 8 creatives in all, as your brief asks."
+      },
+      {
+        "key": "text",
+        "label": "Text on the creative",
+        "source": "brief",
+        "value": "One short line in Norwegian on each creative, from your brief’s message “Paid social, feed and story”."
+      },
+      {
+        "key": "logo",
+        "label": "Logo",
+        "source": "brand_dna",
+        "value": "The wordmark on the label only; no logo added on the picture."
+      },
+      {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
+    ],
+    "directions": [
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-mvkqt28w-1-a-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Face Oil low in the frame on pale stone, warm side light, air above."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-mvkqt28w-1-a-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Face Oil on folded linen, the light from the left."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-mvkqt28w-1-a-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "The products together, seen from above on linen."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-mvkqt28w-1-a-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-c-mvkqt28w-1-a-m1",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Master 1 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-mvkqt28w-1-a-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-mvkqt28w-1-a-m2",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-mvkqt28w-1-a-v3",
+            "kind": "variant",
+            "name": "Master 3 in Story",
+            "of": "pc-c-mvkqt28w-1-a-m3",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Master 3 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-mvkqt28w-1-a-v4",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-mvkqt28w-1-a-m1",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-mvkqt28w-1-a-v5",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-mvkqt28w-1-a-m2",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Paid social, feed and story",
+        "id": "pd-c-mvkqt28w-1-a",
+        "idea": "Face Oil at the hour before sleep: low, warm side light on stone and linen, the product low in the frame with air above it.",
+        "letter": "A",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "Low, warm side light from the left, long soft shadows.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Pale stone and folded linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Evening light",
+        "recommended": true,
+        "references": [
+          {
+            "caption": "Face Oil, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/face-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Fluted glass and slow light.","image":"/demo/lysne/02-04-feed.jpg","source":"taste"},
+          {"caption":"Product low, air above.","image":"/demo/lysne/08-06-feed.jpg","source":"taste"},
+          {"caption":"A picture you liked","image":"/demo/lysne/02-05-feed.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Warm, low side light leads in your Brand DNA."},
+          {"source":"taste","text":"Your liked pictures keep the product low, with air above it."},
+          {"source":"memory","text":"Evening stone won in your last campaign."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-mvkqt28w-1-b-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Close on Face Oil: its texture in a stripe of warm light."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-mvkqt28w-1-b-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "The label close, the set soft behind."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-mvkqt28w-1-b-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "The product lying on linen, light across it."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-mvkqt28w-1-b-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-c-mvkqt28w-1-b-m1",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Master 1 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-mvkqt28w-1-b-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-mvkqt28w-1-b-m2",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-mvkqt28w-1-b-v3",
+            "kind": "variant",
+            "name": "Master 3 in Story",
+            "of": "pc-c-mvkqt28w-1-b-m3",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Master 3 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-mvkqt28w-1-b-v4",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-mvkqt28w-1-b-m1",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-mvkqt28w-1-b-v5",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-mvkqt28w-1-b-m2",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "Made to be felt.",
+        "id": "pd-c-mvkqt28w-1-b",
+        "idea": "Close on Face Oil: the texture, the label and a stripe of warm light. Fewer things in the frame, the product nearer.",
+        "letter": "B",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "A stripe of warm light across the product, the rest in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"Stone, close; nothing else in the frame."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "No people.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "Close and quiet",
+        "references": [
+          {
+            "caption": "Face Oil, as its Product Truth shows it",
+            "image": "/demo/lysne/gen/face-pack.jpg",
+            "source": "product"
+          },
+          {"caption":"Texture in warm light","image":"/demo/lysne/05-03-feed.jpg","source":"fume"},
+          {"caption":"Close, a stripe of light","image":"/demo/lysne/06-04-feed.jpg","source":"fume"}
+        ],
+        "why": [
+          {"source":"fume","text":"Close crops suit a product people touch every day."},
+          {"source":"product","text":"Golden, never orange: the Product Truth's colours lead."}
+        ]
+      },
+      {
+        "creatives": [
+          {
+            "format": "feed",
+            "id": "pc-c-mvkqt28w-1-c-m1",
+            "kind": "master",
+            "name": "Master 1",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "A crop of skin and Face Oil in evening light, never a face."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-mvkqt28w-1-c-m2",
+            "kind": "master",
+            "name": "Master 2",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Hands open the product on linen."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-mvkqt28w-1-c-m3",
+            "kind": "master",
+            "name": "Master 3",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "The product on a bedside, one lamp."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-mvkqt28w-1-c-v1",
+            "kind": "variant",
+            "name": "Master 1 in Story",
+            "of": "pc-c-mvkqt28w-1-c-m1",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Master 1 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-mvkqt28w-1-c-v2",
+            "kind": "variant",
+            "name": "Master 2 in Feed",
+            "of": "pc-c-mvkqt28w-1-c-m2",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Master 2 in Feed 4:5, the same scene fitted to the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-mvkqt28w-1-c-v3",
+            "kind": "variant",
+            "name": "Master 3 in Story",
+            "of": "pc-c-mvkqt28w-1-c-m3",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Master 3 in Story 9:16, the same scene fitted to the frame."
+          },
+          {
+            "format": "feed",
+            "id": "pc-c-mvkqt28w-1-c-v4",
+            "kind": "variant",
+            "name": "Master 1, closer",
+            "of": "pc-c-mvkqt28w-1-c-m1",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Master 1, closer: the product fills more of the frame."
+          },
+          {
+            "format": "story",
+            "id": "pc-c-mvkqt28w-1-c-v5",
+            "kind": "variant",
+            "name": "Master 2, closer",
+            "of": "pc-c-mvkqt28w-1-c-m2",
+            "people": "No people",
+            "productIds": ["pr-face"],
+            "scene": "Master 2, closer: the product fills more of the frame."
+          }
+        ],
+        "hook": "The last quiet hour of the day.",
+        "id": "pd-c-mvkqt28w-1-c",
+        "idea": "Face Oil in use: a crop of skin or hands at the hour before sleep, never a face. Closest to the feeling, furthest from a packshot.",
+        "letter": "C",
+        "look": [
+          {
+            "key": "light",
+            "label": "Light",
+            "source": "brand_dna",
+            "value": "One warm lamp, low; the room in soft shadow.",
+            "why": "Your Brand DNA: warm neutrals and amber light"
+          },
+          {
+            "key": "camera",
+            "label": "Camera",
+            "source": "fume",
+            "value": "50 mm, close and level with the product; the product sharp, the set soft behind."
+          },
+          {"key":"set","label":"Set","source":"brand_dna","value":"A bedside of oak and linen."},
+          {
+            "key": "props",
+            "label": "Props",
+            "source": "brand_dna",
+            "value": "Only what the product needs: linen, stone, a little glass."
+          },
+          {
+            "key": "colour",
+            "label": "Colour",
+            "source": "brand_dna",
+            "value": "Warm neutrals, amber glass and cream. No saturated colour."
+          },
+          {
+            "key": "people",
+            "label": "People",
+            "source": "brand_dna",
+            "value": "Hands or a crop of skin, never a face; never holding the product.",
+            "why": "AI models only, always labelled; skin in crops"
+          }
+        ],
+        "name": "The ritual",
+        "references": [
+          {"caption":"Hands in evening light","image":"/demo/lysne/gen/taste-hands.jpg","source":"taste"},
+          {"caption":"The evening room","image":"/demo/lysne/gen/taste-bedroom.jpg","source":"taste"}
+        ],
+        "why": [
+          {"source":"brand_dna","text":"Skin in crops, as your Brand DNA prefers; no face in this direction."},
+          {"source":"memory","text":"You passed on hands that hold the bottle once: here they never do."}
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "kind": "never",
+        "ruleId": "r7",
+        "source": "brand_dna",
+        "text": "Skin-result claims; only the lines on the approved list"
+      }
+    ],
+    "state": "ready",
+    "summary": "Sell Face Oil for Spring in paid social. It speaks to women who sleep badly. The message: paid social, feed and story. It runs in Norway, in Norwegian.",
+    "timeline": [
+      {"at":"2026-10-19T12:32:04.000Z","label":"Masters, checked"},
+      {"at":"2026-10-22T12:32:04.000Z","label":"Variants and formats"},
+      {"at":"2026-10-26T12:32:04.000Z","label":"Delivery"}
+    ],
+    "version": 1,
+    "writtenAt": "2026-10-14T12:32:06.500Z"
+  }
+maja startCampaign({"text":"Something for the Autumn launch again"}) → events
+  {
+    "message": {
+      "at": "2026-10-14T12:32:07.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt7nc-16",
+      "text": "Something for the Autumn launch again",
+      "threadId": "t-general"
+    },
+    "type": "message.new"
+  }
+  {
+    "message": {
+      "at": "2026-10-14T12:32:07.000Z",
+      "author": {"kind":"fume"},
+      "card": {
+        "kind": "question",
+        "options": ["Add to Autumn launch","Start a new one"],
+        "question": "Add to it or start a new one?",
+        "why": "One campaign per occasion keeps the brief, the creatives and the deliveries together."
+      },
+      "id": "msg-mvkqt7nc-17",
+      "text": "You already have Autumn launch, due 17 Oct.",
+      "threadId": "t-general"
+    },
+    "type": "message.new"
+  }
+maja startCampaign({"text":"Something for the Autumn launch again"})
+  {
+    "campaign": {
+      "approverId": "u-maja",
+      "boardId": "bd-autumn",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","email","product_page"],
+      "chosenDirectionId": "d-a1",
+      "collectionIds": ["cl-aw26"],
+      "counts": {"approved":2,"checked":6,"creatives":11,"delivered":0,"inCheck":3},
+      "cover": "/demo/lysne/05-06-feed.jpg",
+      "createdAt": "2026-10-02T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "dueAt": "2026-10-17T12:32:00.000Z",
+      "formats": ["feed","story","square"],
+      "id": "c-autumn",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Autumn launch",
+      "productIds": ["pr-oil"],
+      "roundsIncluded": 2,
+      "roundsUsed": 1,
+      "stage": "variants",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:26:00.000Z",
+      "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":0},
+      "workspaceId": "w-lysne"
+    },
+    "threadId": "t-general"
+  }
+-- 1 s later
+maja conversation()
+  [
+    {
+      "at": "2026-10-02T12:27:00.000Z",
+      "author": {"kind":"fume"},
+      "id": "msg10",
+      "text": "Tell Fume what you need. We'll ask a few questions and write the plan with you; nothing is made before you approve it.",
+      "threadId": "t-general"
+    },
+    {
+      "at": "2026-10-02T12:32:00.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg1",
+      "text": "Autumn launch for the night body oil. Low evening light, stone and skin, calm and close. Paid social, email and the product page.",
+      "threadId": "t-autumn"
+    },
+    {
+      "at": "2026-10-02T12:34:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-autumn","kind":"brief","version":2},
+      "id": "msg2",
+      "text": "Here is your brief. Change anything that is off, then send it to Fume.",
+      "threadId": "t-autumn"
+    },
+    {
+      "at": "2026-10-07T12:32:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-autumn","kind":"directions"},
+      "id": "msg3",
+      "text": "Three directions are ready. Pick one to take forward, or tell us why none fits.",
+      "threadId": "t-autumn"
+    },
+    {
+      "at": "2026-10-08T12:32:00.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg4",
+      "text": "A. Evening stone is the autumn feeling.",
+      "threadId": "t-autumn"
+    },
+    {
+      "at": "2026-10-13T16:29:00.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-h1",
+      "text": "Can we move the invoice date for October to the end of the month?",
+      "threadId": "t-general"
+    },
+    {
+      "at": "2026-10-13T16:30:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {"kind":"handover","reason":"Invoices are handled by people at Fume.","userId":"u-sander"},
+      "id": "msg-h2",
+      "text": "That is one for a person. Sander at Fume will answer you here.",
+      "threadId": "t-general"
+    },
+    {
+      "at": "2026-10-13T16:32:00.000Z",
+      "author": {"kind":"person","userId":"u-sander"},
+      "id": "msg-h3",
+      "text": "Hi Maja, done: the October invoice is now due on the 31st.",
+      "threadId": "t-general"
+    },
+    {
+      "at": "2026-10-14T09:30:00.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg7",
+      "text": "Let's introduce the hand balm to people who already love the oil.",
+      "threadId": "t-balm"
+    },
+    {
+      "at": "2026-10-14T09:32:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {
+        "kind": "question",
+        "options": ["Same as the oil","I'll send a list"],
+        "question": "Which claims may we use for Hand Balm?",
+        "why": "Fume checks every line on a creative against your approved claims, so we need them before any work starts."
+      },
+      "id": "msg8",
+      "text": "Which claims may we use for Hand Balm?",
+      "threadId": "t-balm"
+    },
+    {
+      "at": "2026-10-14T09:32:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-winter","kind":"plan","version":1},
+      "id": "msg9",
+      "text": "The plan for Winter gifting is ready and Anna checked it. Approve it and Fume starts on the 3 masters; nothing is made before that.",
+      "threadId": "t-winter"
+    },
+    {
+      "at": "2026-10-14T10:32:00.000Z",
+      "author": {"kind":"engine"},
+      "card": {"kind":"run","runId":"run-autumn-v"},
+      "id": "msg5",
+      "text": "Variants and channel formats for Masters 1 and 2.",
+      "threadId": "t-autumn"
+    },
+    {
+      "at": "2026-10-14T12:26:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {
+        "campaignId": "c-autumn",
+        "creativeIds": ["cr-a-v1","cr-a-v2","cr-a-v3","cr-a-v4","cr-a-v5","cr-a-v6"],
+        "kind": "creatives"
+      },
+      "id": "msg6",
+      "text": "Anna checked 6 creatives. They are ready for you; 3 more are in check.",
+      "threadId": "t-autumn"
+    },
+    {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt28w-3",
+      "text": "A spring campaign for the face oil",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {
+        "kind": "question",
+        "options": ["Existing customers","New customers","Both"],
+        "question": "Who should it reach?",
+        "why": "It decides the tone, and whether we show the product new or as an old friend."
+      },
+      "id": "msg-mvkqt28w-4",
+      "text": "Who should it reach?",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt28w-5",
+      "text": "Women who sleep badly",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:00.000Z",
+      "author": {"kind":"fume"},
+      "card": {
+        "kind": "question",
+        "options": ["In two weeks","In a month","No fixed date"],
+        "question": "When should it go live?",
+        "why": "We plan the work back from that day and tell you if your package needs longer."
+      },
+      "id": "msg-mvkqt28w-6",
+      "text": "When should it go live?",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:01.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt30o-7",
+      "text": "Calm skin by morning",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:01.000Z",
+      "author": {"kind":"fume"},
+      "card": {
+        "kind": "question",
+        "options": ["Made to be felt.","A slower evening, given."],
+        "question": "What should it say?",
+        "why": "It is the one line every creative carries, in the pictures more than in words."
+      },
+      "id": "msg-mvkqt30o-8",
+      "text": "Last thing. The first line is our suggestion, the second is the one from your last brief. Or write your own.",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:02.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt3sg-9",
+      "text": "Paid social, feed and story",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:02.000Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-mvkqt28w-1","kind":"brief","version":1},
+      "id": "msg-mvkqt3sg-10",
+      "text": "That is all we need. The brief for Spring · Face Oil is ready. Send it when it reads right; nothing is made before you approve the plan.",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:03.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt4k8-11",
+      "text": "Mid March",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:03.000Z",
+      "author": {"kind":"fume"},
+      "id": "msg-mvkqt4k8-12",
+      "text": "Thanks. We have that now and will come back to you here.",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:04.000Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-mvkqt28w-1","kind":"plan","version":1},
+      "id": "msg-mvkqt5c0-13",
+      "text": "Thank you. Fume writes the plan now: the direction, the look and every creative, before anything is made. You see it here by Thu 15 Oct.",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:06.500Z",
+      "author": {"kind":"fume"},
+      "card": {"campaignId":"c-mvkqt28w-1","kind":"plan","version":1},
+      "id": "msg-mvkqt79g-14",
+      "text": "The plan for Spring · Face Oil is ready. Approve it and Fume starts on the 3 masters, or change it with me here first. Nothing is made before you approve it.",
+      "threadId": "t-mvkqt28w-2"
+    },
+    {
+      "at": "2026-10-14T12:32:07.000Z",
+      "author": {"kind":"person","userId":"u-maja"},
+      "id": "msg-mvkqt7nc-16",
+      "text": "Something for the Autumn launch again",
+      "threadId": "t-general"
+    },
+    {
+      "at": "2026-10-14T12:32:07.000Z",
+      "author": {"kind":"fume"},
+      "card": {
+        "kind": "question",
+        "options": ["Add to Autumn launch","Start a new one"],
+        "question": "Add to it or start a new one?",
+        "why": "One campaign per occasion keeps the brief, the creatives and the deliveries together."
+      },
+      "id": "msg-mvkqt7nc-17",
+      "text": "You already have Autumn launch, due 17 Oct.",
+      "threadId": "t-general"
+    }
+  ]
+maja threads()
+  [
+    {
+      "campaignId": "c-mvkqt28w-1",
+      "id": "t-mvkqt28w-2",
+      "title": "Spring · Face Oil",
+      "unread": 0,
+      "updatedAt": "2026-10-14T12:32:03.000Z",
+      "workspaceId": "w-lysne"
+    },
+    {
+      "campaignId": "c-winter",
+      "id": "t-winter",
+      "kind": "fume",
+      "title": "Winter gifting",
+      "unread": 0,
+      "updatedAt": "2026-10-14T12:30:00.000Z",
+      "workspaceId": "w-lysne"
+    },
+    {
+      "campaignId": "c-autumn",
+      "id": "t-autumn",
+      "kind": "fume",
+      "title": "Autumn launch",
+      "unread": 1,
+      "updatedAt": "2026-10-14T12:26:00.000Z",
+      "workspaceId": "w-lysne"
+    },
+    {
+      "campaignId": null,
+      "id": "t-general",
+      "kind": "fume",
+      "title": "Fume",
+      "unread": 0,
+      "updatedAt": "2026-10-14T09:32:00.000Z",
+      "workspaceId": "w-lysne"
+    },
+    {
+      "campaignId": "c-balm",
+      "id": "t-balm",
+      "kind": "fume",
+      "title": "Hand Balm introduction",
+      "unread": 1,
+      "updatedAt": "2026-10-14T09:32:00.000Z",
+      "workspaceId": "w-lysne"
+    },
+    {
+      "campaignId": null,
+      "id": "t-contact",
+      "kind": "contact",
+      "title": "Contact",
+      "unread": 1,
+      "updatedAt": "2026-10-13T16:32:00.000Z",
+      "workspaceId": "w-lysne"
+    }
+  ]
+maja campaigns()
+  [
+    {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","story"],
+      "id": "c-mvkqt28w-1",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Spring · Face Oil",
+      "productIds": ["pr-face"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:32:06.500Z",
+      "waits": {
+        "briefReady": false,
+        "delivery": "2026-10-26T12:32:04.000Z",
+        "directions": 0,
+        "plan": "ready",
+        "planChecked": false,
+        "planned": 8,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    {
+      "approverId": "u-maja",
+      "boardId": "bd-winter",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","organic_social"],
+      "collectionIds": ["cl-gifts"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "cover": "/demo/lysne/02-05-feed.jpg",
+      "createdAt": "2026-10-12T12:32:00.000Z",
+      "createdBy": "u-jonas",
+      "dueAt": "2026-11-03T12:32:00.000Z",
+      "formats": ["feed","story"],
+      "id": "c-winter",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Winter gifting",
+      "productIds": ["pr-oil","pr-candle"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:30:00.000Z",
+      "waits": {
+        "briefReady": false,
+        "delivery": "2026-10-27T12:32:00.000Z",
+        "directions": 0,
+        "plan": "ready",
+        "planChecked": true,
+        "planned": 9,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    {
+      "approverId": "u-maja",
+      "boardId": "bd-autumn",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","email","product_page"],
+      "chosenDirectionId": "d-a1",
+      "collectionIds": ["cl-aw26"],
+      "counts": {"approved":2,"checked":6,"creatives":11,"delivered":0,"inCheck":3},
+      "cover": "/demo/lysne/05-06-feed.jpg",
+      "createdAt": "2026-10-02T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "dueAt": "2026-10-17T12:32:00.000Z",
+      "formats": ["feed","story","square"],
+      "id": "c-autumn",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Autumn launch",
+      "productIds": ["pr-oil"],
+      "roundsIncluded": 2,
+      "roundsUsed": 1,
+      "stage": "variants",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:26:00.000Z",
+      "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":0},
+      "workspaceId": "w-lysne"
+    },
+    {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","product_page"],
+      "collectionIds": [],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "createdAt": "2026-10-14T09:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","square"],
+      "id": "c-balm",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Hand Balm introduction",
+      "productIds": ["pr-balm"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "brief",
+      "state": "awaiting_input",
+      "updatedAt": "2026-10-14T09:32:00.000Z",
+      "waits": {"briefReady":false,"directions":0,"questions":2},
+      "workspaceId": "w-lysne"
+    },
+    {
+      "approverId": "u-maja",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","email"],
+      "collectionIds": ["cl-gifts"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "cover": "/demo/lysne/10-06-feed.jpg",
+      "createdAt": "2026-10-13T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "dueAt": "2026-11-27T12:32:00.000Z",
+      "formats": ["feed","story","square"],
+      "id": "c-bf",
+      "language": "Norwegian",
+      "look": {
+        "backgrounds": [{"hex":"#141110","name":"Night black"},{"hex":"#3A1219","name":"Deep burgundy"}],
+        "colours": [
+          {"hex":"#141110","name":"Night black","use":"Grounds"},
+          {"hex":"#C9A45C","name":"Gold foil","use":"Words and the offer"},
+          {"hex":"#EFE6DA","name":"Linen","use":"Small text"}
+        ],
+        "light": "Hard top light, one bright edge on the glass",
+        "note": "Darker and sharper than LYSNE's evening light: black grounds, gold words, one hard light.",
+        "provenance": {
+          "at": "2026-10-13T16:32:00.000Z",
+          "by": "u-maja",
+          "evidence": "Black Friday brief",
+          "origin": "customer",
+          "state": "approved"
+        }
+      },
+      "market": "Norway",
+      "name": "Black Friday",
+      "productIds": ["pr-oil","pr-candle"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "scoped",
+      "updatedAt": "2026-10-14T07:32:00.000Z",
+      "waits": {
+        "briefReady": false,
+        "by": "2026-10-16T12:32:00.000Z",
+        "delivery": "2026-10-23T16:32:00.000Z",
+        "directions": 0,
+        "plan": "in_check",
+        "planChecked": false,
+        "planned": 9,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    {
+      "approverId": "u-maja",
+      "brandDnaVersion": 2,
+      "channels": ["paid_social","email"],
+      "chosenDirectionId": "d-s1",
+      "collectionIds": [],
+      "counts": {"approved":8,"checked":0,"creatives":8,"delivered":8,"inCheck":0},
+      "cover": "/demo/lysne/08-06-feed.jpg",
+      "createdAt": "2026-09-04T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed","story"],
+      "id": "c-summer",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Summer evenings",
+      "productIds": ["pr-oil"],
+      "roundsIncluded": 2,
+      "roundsUsed": 1,
+      "stage": "delivery",
+      "state": "delivered",
+      "updatedAt": "2026-09-26T12:32:00.000Z",
+      "waits": {"briefReady":false,"delivery":"2026-09-26T12:32:00.000Z","directions":0,"questions":0},
+      "workspaceId": "w-lysne"
+    },
+    {
+      "approverId": "u-maja",
+      "brandDnaVersion": 1,
+      "channels": ["paid_social"],
+      "collectionIds": [],
+      "counts": {"approved":6,"checked":0,"creatives":6,"delivered":6,"inCheck":0},
+      "cover": "/demo/lysne/01-03-feed.jpg",
+      "createdAt": "2026-07-16T12:32:00.000Z",
+      "createdBy": "u-maja",
+      "formats": ["feed"],
+      "id": "c-spring",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Spring relaunch",
+      "productIds": ["pr-oil"],
+      "roundsIncluded": 2,
+      "roundsUsed": 2,
+      "stage": "delivery",
+      "state": "closed",
+      "updatedAt": "2026-08-15T12:32:00.000Z",
+      "waits": {"briefReady":false,"delivery":"2026-08-15T12:32:00.000Z","directions":0,"questions":0},
+      "workspaceId": "w-lysne"
+    }
+  ]

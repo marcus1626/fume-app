@@ -1,0 +1,3437 @@
+-- maja: createMockApi({"latency":0})
+maja readProduct({"kindId":"kind-skincare","name":"Night Serum","shots":[{"bytes":300000,"name":"front.jpg","slotId":"front"}],"url":"https://lysne.exampl...) → events
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v9",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [
+        {
+          "at": "2026-10-14T12:21:00.000Z",
+          "by": "u-anna",
+          "id": "fb-1",
+          "state": "fixed",
+          "text": "The cap must be matte burgundy, as in the Product Truth."
+        }
+      ],
+      "format": "feed",
+      "id": "qa-3",
+      "image": "/demo/lysne/06-10-feed.jpg",
+      "madeAt": "2026-10-14T12:20:00.000Z",
+      "risk": "high",
+      "slot": "Master 2 · Variant 3",
+      "state": "waiting",
+      "studio": "render",
+      "title": "Feed 7",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+maja readProduct({"kindId":"kind-skincare","name":"Night Serum","shots":[{"bytes":300000,"name":"front.jpg","slotId":"front"}],"url":"https://lysne.exampl...)
+  {
+    "facts": [],
+    "files": [],
+    "id": "pr-mvkqr5ko-1",
+    "images": [],
+    "kindId": "kind-skincare",
+    "name": "Night Serum",
+    "parts": [
+      {
+        "id": "pp-mvkqr5ko-2",
+        "name": "Bottle",
+        "provenance": {"confidence":"low","evidence":"Usual for skincare and body","origin":"engine","state":"proposed"}
+      },
+      {
+        "id": "pp-mvkqr5ko-3",
+        "name": "Cap",
+        "provenance": {"confidence":"low","evidence":"Usual for skincare and body","origin":"engine","state":"proposed"}
+      },
+      {
+        "id": "pp-mvkqr5ko-4",
+        "name": "Label",
+        "provenance": {"confidence":"low","evidence":"Usual for skincare and body","origin":"engine","state":"proposed"}
+      },
+      {
+        "id": "pp-mvkqr5ko-5",
+        "name": "Box",
+        "provenance": {"confidence":"low","evidence":"Usual for skincare and body","origin":"engine","state":"proposed"}
+      }
+    ],
+    "provenance": {"at":"2026-10-14T12:32:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+    "shots": [],
+    "specs": [
+      {
+        "fieldId": "container",
+        "provenance": {"confidence":"medium","evidence":"Your front photo","origin":"engine","state":"proposed"},
+        "value": "Bottle"
+      },
+      {
+        "fieldId": "container-material",
+        "provenance": {"confidence":"medium","evidence":"Your front photo","origin":"engine","state":"proposed"},
+        "value": "Clear glass"
+      },
+      {
+        "fieldId": "texture",
+        "provenance": {"confidence":"medium","evidence":"lysne.example/serum","origin":"engine","state":"proposed"},
+        "value": "Serum"
+      },
+      {
+        "fieldId": "decoration",
+        "provenance": {"confidence":"medium","evidence":"Your front photo","origin":"engine","state":"proposed"},
+        "value": ["Screen print"]
+      },
+      {
+        "fieldId": "net",
+        "provenance": {"at":"2026-10-14T12:32:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "unit": "ml",
+        "value": 30
+      }
+    ],
+    "state": "needs_you",
+    "variant": "30 ml",
+    "workspaceId": "w-lysne"
+  }
+-- 5 s later
+maja product("pr-mvkqr5ko-1")
+  = maja readProduct({"kindId":"kind-skincare","name":"Night Serum","shots":[{"bytes":300000,"name":"front.jpg","slotId":"front"}],"url":"https://lysne.exampl...)
+maja saveProductSpecs("pr-mvkqr5ko-1", {"keep":["container"],"keepShots":["front"],"parts":[{"id":"part-cap","material":"Aluminium","name":"Cap"}],"values":[{"fieldId":"net","u...)
+  {
+    "facts": [],
+    "files": [],
+    "id": "pr-mvkqr5ko-1",
+    "images": [],
+    "kindId": "kind-skincare",
+    "name": "Night Serum",
+    "parts": [
+      {
+        "id": "part-cap",
+        "material": "Aluminium",
+        "name": "Cap",
+        "provenance": {"at":"2026-10-14T12:32:05.000Z","by":"u-maja","origin":"customer","state":"approved"}
+      }
+    ],
+    "provenance": {"at":"2026-10-14T12:32:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+    "shots": [],
+    "specs": [
+      {
+        "fieldId": "container",
+        "provenance": {
+          "at": "2026-10-14T12:32:05.000Z",
+          "by": "u-maja",
+          "confidence": "medium",
+          "evidence": "Your front photo",
+          "origin": "engine",
+          "state": "approved"
+        },
+        "value": "Bottle"
+      },
+      {
+        "fieldId": "container-material",
+        "provenance": {"confidence":"medium","evidence":"Your front photo","origin":"engine","state":"proposed"},
+        "value": "Clear glass"
+      },
+      {
+        "fieldId": "texture",
+        "provenance": {"confidence":"medium","evidence":"lysne.example/serum","origin":"engine","state":"proposed"},
+        "value": "Serum"
+      },
+      {
+        "fieldId": "decoration",
+        "provenance": {"confidence":"medium","evidence":"Your front photo","origin":"engine","state":"proposed"},
+        "value": ["Screen print"]
+      },
+      {
+        "fieldId": "net",
+        "provenance": {"at":"2026-10-14T12:32:05.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "unit": "ml",
+        "value": 30
+      }
+    ],
+    "state": "needs_you",
+    "variant": "30 ml",
+    "workspaceId": "w-lysne"
+  }
+maja uploadShot("pr-mvkqr5ko-1", "back", {"bytes":200000,"name":"back.jpg","src":"/demo/lysne/01-feed.jpg"})
+  {
+    "facts": [],
+    "files": [],
+    "id": "pr-mvkqr5ko-1",
+    "images": [],
+    "kindId": "kind-skincare",
+    "name": "Night Serum",
+    "parts": [
+      {
+        "id": "part-cap",
+        "material": "Aluminium",
+        "name": "Cap",
+        "provenance": {"at":"2026-10-14T12:32:05.000Z","by":"u-maja","origin":"customer","state":"approved"}
+      }
+    ],
+    "provenance": {"at":"2026-10-14T12:32:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+    "shots": [
+      {
+        "image": "/demo/lysne/01-feed.jpg",
+        "provenance": {"at":"2026-10-14T12:32:05.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "back"
+      }
+    ],
+    "specs": [
+      {
+        "fieldId": "container",
+        "provenance": {
+          "at": "2026-10-14T12:32:05.000Z",
+          "by": "u-maja",
+          "confidence": "medium",
+          "evidence": "Your front photo",
+          "origin": "engine",
+          "state": "approved"
+        },
+        "value": "Bottle"
+      },
+      {
+        "fieldId": "container-material",
+        "provenance": {"confidence":"medium","evidence":"Your front photo","origin":"engine","state":"proposed"},
+        "value": "Clear glass"
+      },
+      {
+        "fieldId": "texture",
+        "provenance": {"confidence":"medium","evidence":"lysne.example/serum","origin":"engine","state":"proposed"},
+        "value": "Serum"
+      },
+      {
+        "fieldId": "decoration",
+        "provenance": {"confidence":"medium","evidence":"Your front photo","origin":"engine","state":"proposed"},
+        "value": ["Screen print"]
+      },
+      {
+        "fieldId": "net",
+        "provenance": {"at":"2026-10-14T12:32:05.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "unit": "ml",
+        "value": 30
+      }
+    ],
+    "state": "needs_you",
+    "variant": "30 ml",
+    "workspaceId": "w-lysne"
+  }
+maja uploadProductFile("pr-mvkqr5ko-1", {"bytes":50000,"kind":"dieline","name":"dieline.pdf"})
+  {
+    "facts": [],
+    "files": [
+      {
+        "at": "2026-10-14T12:32:05.000Z",
+        "by": "u-maja",
+        "bytes": 50000,
+        "id": "pf-mvkqr9fk-6",
+        "kind": "dieline",
+        "name": "dieline.pdf",
+        "read": ["The flat pack with its measures","Where the print and the finishes sit"]
+      }
+    ],
+    "id": "pr-mvkqr5ko-1",
+    "images": [],
+    "kindId": "kind-skincare",
+    "name": "Night Serum",
+    "parts": [
+      {
+        "id": "part-cap",
+        "material": "Aluminium",
+        "name": "Cap",
+        "provenance": {"at":"2026-10-14T12:32:05.000Z","by":"u-maja","origin":"customer","state":"approved"}
+      }
+    ],
+    "provenance": {"at":"2026-10-14T12:32:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+    "shots": [
+      {
+        "image": "/demo/lysne/01-feed.jpg",
+        "provenance": {"at":"2026-10-14T12:32:05.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "back"
+      }
+    ],
+    "specs": [
+      {
+        "fieldId": "container",
+        "provenance": {
+          "at": "2026-10-14T12:32:05.000Z",
+          "by": "u-maja",
+          "confidence": "medium",
+          "evidence": "Your front photo",
+          "origin": "engine",
+          "state": "approved"
+        },
+        "value": "Bottle"
+      },
+      {
+        "fieldId": "container-material",
+        "provenance": {"confidence":"medium","evidence":"Your front photo","origin":"engine","state":"proposed"},
+        "value": "Clear glass"
+      },
+      {
+        "fieldId": "texture",
+        "provenance": {"confidence":"medium","evidence":"lysne.example/serum","origin":"engine","state":"proposed"},
+        "value": "Serum"
+      },
+      {
+        "fieldId": "decoration",
+        "provenance": {"confidence":"medium","evidence":"Your front photo","origin":"engine","state":"proposed"},
+        "value": ["Screen print"]
+      },
+      {
+        "fieldId": "net",
+        "provenance": {"at":"2026-10-14T12:32:05.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "unit": "ml",
+        "value": 30
+      }
+    ],
+    "state": "needs_you",
+    "variant": "30 ml",
+    "workspaceId": "w-lysne"
+  }
+maja product("pr-mvkqr5ko-1")
+  = maja uploadProductFile("pr-mvkqr5ko-1", {"bytes":50000,"kind":"dieline","name":"dieline.pdf"})
+maja saveProductSpecs("pr-oil", {"keepParts":[],"remove":["texture"]})
+  {
+    "categoryId": "cat-oils",
+    "collectionIds": ["cl-aw26","cl-ss27","cl-gifts"],
+    "facts": [
+      {
+        "area": "shape",
+        "confidence": "high",
+        "id": "f1",
+        "label": "Bottle",
+        "productId": "pr-oil",
+        "source": "verified",
+        "statement": "Amber glass, 100 ml, tall and round-shouldered, as in the packshot.",
+        "verifiedAt": "2026-10-04T12:32:00.000Z",
+        "verifiedBy": "u-maja"
+      },
+      {
+        "area": "colour",
+        "confidence": "high",
+        "id": "f2",
+        "label": "Cap",
+        "productId": "pr-oil",
+        "source": "verified",
+        "statement": "Burgundy, matte. Never glossy, never black.",
+        "verifiedAt": "2026-10-04T12:32:00.000Z",
+        "verifiedBy": "u-maja"
+      },
+      {
+        "area": "label",
+        "confidence": "high",
+        "id": "f3",
+        "label": "Label",
+        "productId": "pr-oil",
+        "source": "verified",
+        "statement": "Cream paper, front and centred, never cropped. LYSNE, then Night Body Oil · 100 ml.",
+        "verifiedAt": "2026-10-04T12:32:00.000Z",
+        "verifiedBy": "u-maja"
+      },
+      {
+        "area": "colour",
+        "confidence": "high",
+        "id": "f4",
+        "label": "Oil",
+        "productId": "pr-oil",
+        "source": "verified",
+        "statement": "Reads golden, never orange.",
+        "verifiedAt": "2026-10-04T12:32:00.000Z",
+        "verifiedBy": "u-maja"
+      },
+      {
+        "area": "never",
+        "confidence": "high",
+        "id": "f5",
+        "label": "Never",
+        "productId": "pr-oil",
+        "source": "supplied",
+        "statement": "Other sizes, a dropper, hands that cover the label."
+      },
+      {
+        "area": "claim",
+        "confidence": "high",
+        "id": "f6",
+        "label": "Claims",
+        "productId": "pr-oil",
+        "source": "supplied",
+        "statement": "Only the lines on the approved list: \"For the hour before sleep.\""
+      }
+    ],
+    "files": [
+      {
+        "at": "2026-10-03T12:00:00.000Z",
+        "by": "u-maja",
+        "bytes": 1840000,
+        "filled": ["carton"],
+        "id": "pf-oil-dieline",
+        "kind": "dieline",
+        "name": "LYS-NBO-100 box dieline.pdf",
+        "read": ["Box 58 × 58 × 160 mm, tuck end","Blind emboss on the front panel","Burgundy print inside"]
+      },
+      {
+        "at": "2026-10-03T12:00:00.000Z",
+        "by": "u-maja",
+        "bytes": 4200000,
+        "filled": ["label-front","label-size","foil-colour"],
+        "id": "pf-oil-art",
+        "kind": "artwork",
+        "name": "Night Body Oil label.ai",
+        "read": ["Label 60 × 85 mm, three lines of text","Wordmark in hot-foil, soft gold","Every letter of the front label"]
+      },
+      {
+        "at": "2026-10-03T12:00:00.000Z",
+        "by": "u-maja",
+        "bytes": 620000,
+        "filled": ["brimful","neck-finish","decoration"],
+        "id": "pf-oil-spec",
+        "kind": "spec",
+        "name": "Bottle and cap spec, supplier.pdf",
+        "read": ["Amber glass 100 ml, brimful 110 ml","Neck 20/410","Cap: coated aluminium, Pantone 7421 C, matte"]
+      }
+    ],
+    "id": "pr-oil",
+    "images": [
+      "/demo/lysne/gen/oil-pack.jpg",
+      "/demo/lysne/gen/oil-scene.jpg",
+      "/demo/lysne/03-08-feed.jpg",
+      "/demo/lysne/05-08-feed.jpg",
+      "/demo/lysne/01-03-feed.jpg"
+    ],
+    "kindId": "kind-skincare",
+    "name": "Night Body Oil",
+    "parts": [
+      {
+        "colour": {"hex":"#8A4B14","name":"Amber"},
+        "finish": "gloss",
+        "id": "pp-oil-bottle",
+        "material": "Amber glass",
+        "name": "Bottle",
+        "note": "Tall, round-shouldered.",
+        "opacity": "translucent",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"}
+      },
+      {
+        "colour": {"hex":"#5B1E2A","name":"Burgundy","pantone":"7421 C"},
+        "finish": "matte",
+        "id": "pp-oil-cap",
+        "material": "Aluminium, coated",
+        "name": "Cap",
+        "note": "Never glossy, never black.",
+        "opacity": "opaque",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"}
+      },
+      {
+        "colour": {"hex":"#F1E9DA","name":"Cream"},
+        "decoration": "Wordmark in soft gold hot-foil",
+        "finish": "matte",
+        "id": "pp-oil-label",
+        "material": "Cream textured paper",
+        "name": "Label",
+        "note": "Front, centred, never cropped.",
+        "opacity": "opaque",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"}
+      },
+      {
+        "colour": {"hex":"#EDE4D3","name":"Cream"},
+        "decoration": "Blind emboss, burgundy inside print",
+        "finish": "matte",
+        "id": "pp-oil-box",
+        "material": "Uncoated board",
+        "name": "Box",
+        "opacity": "opaque",
+        "provenance": {"confidence":"high","evidence":"Dieline LYS-NBO-100","origin":"engine","state":"proposed"}
+      }
+    ],
+    "provenance": {"evidence":"Added by Maja","origin":"customer","state":"approved"},
+    "shots": [
+      {
+        "image": "/demo/lysne/gen/oil-pack.jpg",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Packshot LYS-NBO-100",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "slotId": "front"
+      },
+      {
+        "image": "/demo/lysne/gen/oil-ref-back.jpg",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "back"
+      },
+      {
+        "image": "/demo/lysne/gen/oil-ref-side.jpg",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "side"
+      },
+      {
+        "image": "/demo/lysne/gen/oil-ref-top.jpg",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "top"
+      },
+      {
+        "image": "/demo/lysne/gen/oil-ref-label.jpg",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "label"
+      },
+      {
+        "image": "/demo/lysne/gen/oil-ref-hand.jpg",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "scale"
+      }
+    ],
+    "sku": "LYS-NBO-100",
+    "specs": [
+      {
+        "fieldId": "net",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Packshot LYS-NBO-100",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "unit": "ml",
+        "value": 100
+      },
+      {
+        "fieldId": "dims",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Measured by Maja",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": {"h":148,"shape":"round","unit":"mm","w":52}
+      },
+      {
+        "fieldId": "fill-level",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "To the shoulder"
+      },
+      {
+        "fieldId": "brimful",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Component spec sheet",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "unit": "ml",
+        "value": 110
+      },
+      {
+        "fieldId": "container",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Bottle"
+      },
+      {
+        "fieldId": "container-material",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Amber glass"
+      },
+      {
+        "fieldId": "finish",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Gloss"
+      },
+      {
+        "fieldId": "neck-finish",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Component spec sheet",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": "20/410"
+      },
+      {
+        "fieldId": "decoration",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Component spec sheet",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": ["Pressure-sensitive label","Hot-foil"]
+      },
+      {
+        "fieldId": "foil-colour",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Label artwork",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": {"hex":"#B8955A","name":"Soft gold foil"}
+      },
+      {
+        "fieldId": "label-stock",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Textured paper"
+      },
+      {
+        "fieldId": "label-finish",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Matte"
+      },
+      {
+        "fieldId": "carton",
+        "provenance": {"confidence":"high","evidence":"Dieline LYS-NBO-100","origin":"engine","state":"proposed"},
+        "value": "Uncoated cream board, blind emboss of the wordmark, printed inside in burgundy."
+      },
+      {
+        "fieldId": "formula-colour",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Reads golden, never orange",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": {"hex":"#C99A3E","name":"Golden oil","pantone":"7563 C"}
+      },
+      {
+        "fieldId": "viscosity",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Fluid"
+      },
+      {
+        "fieldId": "scent",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Lavender and almond, soft"
+      },
+      {
+        "detailTokenId": "dt-label",
+        "fieldId": "label-front",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Packshot LYS-NBO-100",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": "LYSNE\nNight Body Oil\n100 ml"
+      },
+      {
+        "detailTokenId": "dt-size",
+        "fieldId": "label-size",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Packshot LYS-NBO-100",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": "100 ml"
+      },
+      {
+        "detailTokenId": "dt-logo",
+        "fieldId": "wordmark",
+        "provenance": {"confidence":"high","evidence":"lysne.no, header","origin":"engine","state":"proposed"},
+        "value": "LYSNE"
+      },
+      {
+        "fieldId": "label-back",
+        "provenance": {"confidence":"medium","evidence":"lysne.no/night-body-oil","origin":"engine","state":"proposed"},
+        "value": "Warm a few drops between your palms and press into damp skin, the hour before sleep. 100 ml e"
+      },
+      {
+        "fieldId": "pao",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "12M, batch code on the base"
+      },
+      {
+        "fieldId": "sizes",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": ["100 ml","30 ml travel"]
+      },
+      {
+        "fieldId": "how",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "A few drops warmed in the palms, pressed into skin after the evening shower."
+      },
+      {
+        "fieldId": "inci",
+        "provenance": {"confidence":"high","evidence":"lysne.no/night-body-oil","origin":"engine","state":"proposed"},
+        "value": "Prunus Amygdalus Dulcis Oil, Simmondsia Chinensis Seed Oil, Lavandula Angustifolia Oil, Tocopherol, Linalool"
+      },
+      {
+        "fieldId": "claims",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Approved claims list",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": ["For the hour before sleep."]
+      },
+      {
+        "fieldId": "origin",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Norway"
+      }
+    ],
+    "state": "verified",
+    "variant": "100 ml",
+    "variants": [
+      {
+        "id": "va-oil-100",
+        "image": "/demo/lysne/03-08-square.jpg",
+        "name": "100 ml",
+        "productId": "pr-oil",
+        "sku": "LYS-NBO-100"
+      },
+      {"id":"va-oil-30","name":"30 ml travel","productId":"pr-oil","sku":"LYS-NBO-30"}
+    ],
+    "workspaceId": "w-lysne"
+  }
+maja uploadShot("pr-oil", "scale", {"bytes":1000,"name":"scale.jpg"})
+  {
+    "categoryId": "cat-oils",
+    "collectionIds": ["cl-aw26","cl-ss27","cl-gifts"],
+    "facts": [
+      {
+        "area": "shape",
+        "confidence": "high",
+        "id": "f1",
+        "label": "Bottle",
+        "productId": "pr-oil",
+        "source": "verified",
+        "statement": "Amber glass, 100 ml, tall and round-shouldered, as in the packshot.",
+        "verifiedAt": "2026-10-04T12:32:00.000Z",
+        "verifiedBy": "u-maja"
+      },
+      {
+        "area": "colour",
+        "confidence": "high",
+        "id": "f2",
+        "label": "Cap",
+        "productId": "pr-oil",
+        "source": "verified",
+        "statement": "Burgundy, matte. Never glossy, never black.",
+        "verifiedAt": "2026-10-04T12:32:00.000Z",
+        "verifiedBy": "u-maja"
+      },
+      {
+        "area": "label",
+        "confidence": "high",
+        "id": "f3",
+        "label": "Label",
+        "productId": "pr-oil",
+        "source": "verified",
+        "statement": "Cream paper, front and centred, never cropped. LYSNE, then Night Body Oil · 100 ml.",
+        "verifiedAt": "2026-10-04T12:32:00.000Z",
+        "verifiedBy": "u-maja"
+      },
+      {
+        "area": "colour",
+        "confidence": "high",
+        "id": "f4",
+        "label": "Oil",
+        "productId": "pr-oil",
+        "source": "verified",
+        "statement": "Reads golden, never orange.",
+        "verifiedAt": "2026-10-04T12:32:00.000Z",
+        "verifiedBy": "u-maja"
+      },
+      {
+        "area": "never",
+        "confidence": "high",
+        "id": "f5",
+        "label": "Never",
+        "productId": "pr-oil",
+        "source": "supplied",
+        "statement": "Other sizes, a dropper, hands that cover the label."
+      },
+      {
+        "area": "claim",
+        "confidence": "high",
+        "id": "f6",
+        "label": "Claims",
+        "productId": "pr-oil",
+        "source": "supplied",
+        "statement": "Only the lines on the approved list: \"For the hour before sleep.\""
+      }
+    ],
+    "files": [
+      {
+        "at": "2026-10-03T12:00:00.000Z",
+        "by": "u-maja",
+        "bytes": 1840000,
+        "filled": ["carton"],
+        "id": "pf-oil-dieline",
+        "kind": "dieline",
+        "name": "LYS-NBO-100 box dieline.pdf",
+        "read": ["Box 58 × 58 × 160 mm, tuck end","Blind emboss on the front panel","Burgundy print inside"]
+      },
+      {
+        "at": "2026-10-03T12:00:00.000Z",
+        "by": "u-maja",
+        "bytes": 4200000,
+        "filled": ["label-front","label-size","foil-colour"],
+        "id": "pf-oil-art",
+        "kind": "artwork",
+        "name": "Night Body Oil label.ai",
+        "read": ["Label 60 × 85 mm, three lines of text","Wordmark in hot-foil, soft gold","Every letter of the front label"]
+      },
+      {
+        "at": "2026-10-03T12:00:00.000Z",
+        "by": "u-maja",
+        "bytes": 620000,
+        "filled": ["brimful","neck-finish","decoration"],
+        "id": "pf-oil-spec",
+        "kind": "spec",
+        "name": "Bottle and cap spec, supplier.pdf",
+        "read": ["Amber glass 100 ml, brimful 110 ml","Neck 20/410","Cap: coated aluminium, Pantone 7421 C, matte"]
+      }
+    ],
+    "id": "pr-oil",
+    "images": [
+      "/demo/lysne/gen/oil-pack.jpg",
+      "/demo/lysne/gen/oil-scene.jpg",
+      "/demo/lysne/03-08-feed.jpg",
+      "/demo/lysne/05-08-feed.jpg",
+      "/demo/lysne/01-03-feed.jpg"
+    ],
+    "kindId": "kind-skincare",
+    "name": "Night Body Oil",
+    "parts": [
+      {
+        "colour": {"hex":"#8A4B14","name":"Amber"},
+        "finish": "gloss",
+        "id": "pp-oil-bottle",
+        "material": "Amber glass",
+        "name": "Bottle",
+        "note": "Tall, round-shouldered.",
+        "opacity": "translucent",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"}
+      },
+      {
+        "colour": {"hex":"#5B1E2A","name":"Burgundy","pantone":"7421 C"},
+        "finish": "matte",
+        "id": "pp-oil-cap",
+        "material": "Aluminium, coated",
+        "name": "Cap",
+        "note": "Never glossy, never black.",
+        "opacity": "opaque",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"}
+      },
+      {
+        "colour": {"hex":"#F1E9DA","name":"Cream"},
+        "decoration": "Wordmark in soft gold hot-foil",
+        "finish": "matte",
+        "id": "pp-oil-label",
+        "material": "Cream textured paper",
+        "name": "Label",
+        "note": "Front, centred, never cropped.",
+        "opacity": "opaque",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"}
+      },
+      {
+        "colour": {"hex":"#EDE4D3","name":"Cream"},
+        "decoration": "Blind emboss, burgundy inside print",
+        "finish": "matte",
+        "id": "pp-oil-box",
+        "material": "Uncoated board",
+        "name": "Box",
+        "opacity": "opaque",
+        "provenance": {"confidence":"high","evidence":"Dieline LYS-NBO-100","origin":"engine","state":"proposed"}
+      }
+    ],
+    "provenance": {"evidence":"Added by Maja","origin":"customer","state":"approved"},
+    "shots": [
+      {
+        "image": "/demo/lysne/gen/oil-pack.jpg",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Packshot LYS-NBO-100",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "slotId": "front"
+      },
+      {
+        "image": "/demo/lysne/gen/oil-ref-back.jpg",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "back"
+      },
+      {
+        "image": "/demo/lysne/gen/oil-ref-side.jpg",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "side"
+      },
+      {
+        "image": "/demo/lysne/gen/oil-ref-top.jpg",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "top"
+      },
+      {
+        "image": "/demo/lysne/gen/oil-ref-label.jpg",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "label"
+      },
+      {
+        "image": "/demo/lysne/gen/oil-pack.jpg",
+        "provenance": {"at":"2026-10-14T12:32:05.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "scale"
+      }
+    ],
+    "sku": "LYS-NBO-100",
+    "specs": [
+      {
+        "fieldId": "net",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Packshot LYS-NBO-100",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "unit": "ml",
+        "value": 100
+      },
+      {
+        "fieldId": "dims",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Measured by Maja",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": {"h":148,"shape":"round","unit":"mm","w":52}
+      },
+      {
+        "fieldId": "fill-level",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "To the shoulder"
+      },
+      {
+        "fieldId": "brimful",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Component spec sheet",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "unit": "ml",
+        "value": 110
+      },
+      {
+        "fieldId": "container",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Bottle"
+      },
+      {
+        "fieldId": "container-material",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Amber glass"
+      },
+      {
+        "fieldId": "finish",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Gloss"
+      },
+      {
+        "fieldId": "neck-finish",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Component spec sheet",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": "20/410"
+      },
+      {
+        "fieldId": "decoration",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Component spec sheet",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": ["Pressure-sensitive label","Hot-foil"]
+      },
+      {
+        "fieldId": "foil-colour",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Label artwork",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": {"hex":"#B8955A","name":"Soft gold foil"}
+      },
+      {
+        "fieldId": "label-stock",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Textured paper"
+      },
+      {
+        "fieldId": "label-finish",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Matte"
+      },
+      {
+        "fieldId": "carton",
+        "provenance": {"confidence":"high","evidence":"Dieline LYS-NBO-100","origin":"engine","state":"proposed"},
+        "value": "Uncoated cream board, blind emboss of the wordmark, printed inside in burgundy."
+      },
+      {
+        "fieldId": "formula-colour",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Reads golden, never orange",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": {"hex":"#C99A3E","name":"Golden oil","pantone":"7563 C"}
+      },
+      {
+        "fieldId": "viscosity",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Fluid"
+      },
+      {
+        "fieldId": "scent",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Lavender and almond, soft"
+      },
+      {
+        "detailTokenId": "dt-label",
+        "fieldId": "label-front",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Packshot LYS-NBO-100",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": "LYSNE\nNight Body Oil\n100 ml"
+      },
+      {
+        "detailTokenId": "dt-size",
+        "fieldId": "label-size",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Packshot LYS-NBO-100",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": "100 ml"
+      },
+      {
+        "detailTokenId": "dt-logo",
+        "fieldId": "wordmark",
+        "provenance": {"confidence":"high","evidence":"lysne.no, header","origin":"engine","state":"proposed"},
+        "value": "LYSNE"
+      },
+      {
+        "fieldId": "label-back",
+        "provenance": {"confidence":"medium","evidence":"lysne.no/night-body-oil","origin":"engine","state":"proposed"},
+        "value": "Warm a few drops between your palms and press into damp skin, the hour before sleep. 100 ml e"
+      },
+      {
+        "fieldId": "pao",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "12M, batch code on the base"
+      },
+      {
+        "fieldId": "sizes",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": ["100 ml","30 ml travel"]
+      },
+      {
+        "fieldId": "how",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "A few drops warmed in the palms, pressed into skin after the evening shower."
+      },
+      {
+        "fieldId": "inci",
+        "provenance": {"confidence":"high","evidence":"lysne.no/night-body-oil","origin":"engine","state":"proposed"},
+        "value": "Prunus Amygdalus Dulcis Oil, Simmondsia Chinensis Seed Oil, Lavandula Angustifolia Oil, Tocopherol, Linalool"
+      },
+      {
+        "fieldId": "claims",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Approved claims list",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": ["For the hour before sleep."]
+      },
+      {
+        "fieldId": "origin",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Norway"
+      }
+    ],
+    "state": "verified",
+    "variant": "100 ml",
+    "variants": [
+      {
+        "id": "va-oil-100",
+        "image": "/demo/lysne/03-08-square.jpg",
+        "name": "100 ml",
+        "productId": "pr-oil",
+        "sku": "LYS-NBO-100"
+      },
+      {"id":"va-oil-30","name":"30 ml travel","productId":"pr-oil","sku":"LYS-NBO-30"}
+    ],
+    "workspaceId": "w-lysne"
+  }
+maja uploadProductFile("pr-oil", {"bytes":9000,"kind":"spec","name":"spec.pdf"})
+  {
+    "categoryId": "cat-oils",
+    "collectionIds": ["cl-aw26","cl-ss27","cl-gifts"],
+    "facts": [
+      {
+        "area": "shape",
+        "confidence": "high",
+        "id": "f1",
+        "label": "Bottle",
+        "productId": "pr-oil",
+        "source": "verified",
+        "statement": "Amber glass, 100 ml, tall and round-shouldered, as in the packshot.",
+        "verifiedAt": "2026-10-04T12:32:00.000Z",
+        "verifiedBy": "u-maja"
+      },
+      {
+        "area": "colour",
+        "confidence": "high",
+        "id": "f2",
+        "label": "Cap",
+        "productId": "pr-oil",
+        "source": "verified",
+        "statement": "Burgundy, matte. Never glossy, never black.",
+        "verifiedAt": "2026-10-04T12:32:00.000Z",
+        "verifiedBy": "u-maja"
+      },
+      {
+        "area": "label",
+        "confidence": "high",
+        "id": "f3",
+        "label": "Label",
+        "productId": "pr-oil",
+        "source": "verified",
+        "statement": "Cream paper, front and centred, never cropped. LYSNE, then Night Body Oil · 100 ml.",
+        "verifiedAt": "2026-10-04T12:32:00.000Z",
+        "verifiedBy": "u-maja"
+      },
+      {
+        "area": "colour",
+        "confidence": "high",
+        "id": "f4",
+        "label": "Oil",
+        "productId": "pr-oil",
+        "source": "verified",
+        "statement": "Reads golden, never orange.",
+        "verifiedAt": "2026-10-04T12:32:00.000Z",
+        "verifiedBy": "u-maja"
+      },
+      {
+        "area": "never",
+        "confidence": "high",
+        "id": "f5",
+        "label": "Never",
+        "productId": "pr-oil",
+        "source": "supplied",
+        "statement": "Other sizes, a dropper, hands that cover the label."
+      },
+      {
+        "area": "claim",
+        "confidence": "high",
+        "id": "f6",
+        "label": "Claims",
+        "productId": "pr-oil",
+        "source": "supplied",
+        "statement": "Only the lines on the approved list: \"For the hour before sleep.\""
+      }
+    ],
+    "files": [
+      {
+        "at": "2026-10-03T12:00:00.000Z",
+        "by": "u-maja",
+        "bytes": 1840000,
+        "filled": ["carton"],
+        "id": "pf-oil-dieline",
+        "kind": "dieline",
+        "name": "LYS-NBO-100 box dieline.pdf",
+        "read": ["Box 58 × 58 × 160 mm, tuck end","Blind emboss on the front panel","Burgundy print inside"]
+      },
+      {
+        "at": "2026-10-03T12:00:00.000Z",
+        "by": "u-maja",
+        "bytes": 4200000,
+        "filled": ["label-front","label-size","foil-colour"],
+        "id": "pf-oil-art",
+        "kind": "artwork",
+        "name": "Night Body Oil label.ai",
+        "read": ["Label 60 × 85 mm, three lines of text","Wordmark in hot-foil, soft gold","Every letter of the front label"]
+      },
+      {
+        "at": "2026-10-03T12:00:00.000Z",
+        "by": "u-maja",
+        "bytes": 620000,
+        "filled": ["brimful","neck-finish","decoration"],
+        "id": "pf-oil-spec",
+        "kind": "spec",
+        "name": "Bottle and cap spec, supplier.pdf",
+        "read": ["Amber glass 100 ml, brimful 110 ml","Neck 20/410","Cap: coated aluminium, Pantone 7421 C, matte"]
+      },
+      {
+        "at": "2026-10-14T12:32:05.000Z",
+        "by": "u-maja",
+        "bytes": 9000,
+        "id": "pf-mvkqr9fk-7",
+        "kind": "spec",
+        "name": "spec.pdf",
+        "read": ["Material, finish and colour per part"]
+      }
+    ],
+    "id": "pr-oil",
+    "images": [
+      "/demo/lysne/gen/oil-pack.jpg",
+      "/demo/lysne/gen/oil-scene.jpg",
+      "/demo/lysne/03-08-feed.jpg",
+      "/demo/lysne/05-08-feed.jpg",
+      "/demo/lysne/01-03-feed.jpg"
+    ],
+    "kindId": "kind-skincare",
+    "name": "Night Body Oil",
+    "parts": [
+      {
+        "colour": {"hex":"#8A4B14","name":"Amber"},
+        "finish": "gloss",
+        "id": "pp-oil-bottle",
+        "material": "Amber glass",
+        "name": "Bottle",
+        "note": "Tall, round-shouldered.",
+        "opacity": "translucent",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"}
+      },
+      {
+        "colour": {"hex":"#5B1E2A","name":"Burgundy","pantone":"7421 C"},
+        "finish": "matte",
+        "id": "pp-oil-cap",
+        "material": "Aluminium, coated",
+        "name": "Cap",
+        "note": "Never glossy, never black.",
+        "opacity": "opaque",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"}
+      },
+      {
+        "colour": {"hex":"#F1E9DA","name":"Cream"},
+        "decoration": "Wordmark in soft gold hot-foil",
+        "finish": "matte",
+        "id": "pp-oil-label",
+        "material": "Cream textured paper",
+        "name": "Label",
+        "note": "Front, centred, never cropped.",
+        "opacity": "opaque",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"}
+      },
+      {
+        "colour": {"hex":"#EDE4D3","name":"Cream"},
+        "decoration": "Blind emboss, burgundy inside print",
+        "finish": "matte",
+        "id": "pp-oil-box",
+        "material": "Uncoated board",
+        "name": "Box",
+        "opacity": "opaque",
+        "provenance": {"confidence":"high","evidence":"Dieline LYS-NBO-100","origin":"engine","state":"proposed"}
+      }
+    ],
+    "provenance": {"evidence":"Added by Maja","origin":"customer","state":"approved"},
+    "shots": [
+      {
+        "image": "/demo/lysne/gen/oil-pack.jpg",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Packshot LYS-NBO-100",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "slotId": "front"
+      },
+      {
+        "image": "/demo/lysne/gen/oil-ref-back.jpg",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "back"
+      },
+      {
+        "image": "/demo/lysne/gen/oil-ref-side.jpg",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "side"
+      },
+      {
+        "image": "/demo/lysne/gen/oil-ref-top.jpg",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "top"
+      },
+      {
+        "image": "/demo/lysne/gen/oil-ref-label.jpg",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "label"
+      },
+      {
+        "image": "/demo/lysne/gen/oil-pack.jpg",
+        "provenance": {"at":"2026-10-14T12:32:05.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "slotId": "scale"
+      }
+    ],
+    "sku": "LYS-NBO-100",
+    "specs": [
+      {
+        "fieldId": "net",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Packshot LYS-NBO-100",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "unit": "ml",
+        "value": 100
+      },
+      {
+        "fieldId": "dims",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Measured by Maja",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": {"h":148,"shape":"round","unit":"mm","w":52}
+      },
+      {
+        "fieldId": "fill-level",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "To the shoulder"
+      },
+      {
+        "fieldId": "brimful",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Component spec sheet",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "unit": "ml",
+        "value": 110
+      },
+      {
+        "fieldId": "container",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Bottle"
+      },
+      {
+        "fieldId": "container-material",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Amber glass"
+      },
+      {
+        "fieldId": "finish",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Gloss"
+      },
+      {
+        "fieldId": "neck-finish",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Component spec sheet",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": "20/410"
+      },
+      {
+        "fieldId": "decoration",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Component spec sheet",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": ["Pressure-sensitive label","Hot-foil"]
+      },
+      {
+        "fieldId": "foil-colour",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Label artwork",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": {"hex":"#B8955A","name":"Soft gold foil"}
+      },
+      {
+        "fieldId": "label-stock",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Textured paper"
+      },
+      {
+        "fieldId": "label-finish",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Matte"
+      },
+      {
+        "fieldId": "carton",
+        "provenance": {"confidence":"high","evidence":"Dieline LYS-NBO-100","origin":"engine","state":"proposed"},
+        "value": "Uncoated cream board, blind emboss of the wordmark, printed inside in burgundy."
+      },
+      {
+        "fieldId": "formula-colour",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Reads golden, never orange",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": {"hex":"#C99A3E","name":"Golden oil","pantone":"7563 C"}
+      },
+      {
+        "fieldId": "viscosity",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Fluid"
+      },
+      {
+        "fieldId": "scent",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Lavender and almond, soft"
+      },
+      {
+        "detailTokenId": "dt-label",
+        "fieldId": "label-front",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Packshot LYS-NBO-100",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": "LYSNE\nNight Body Oil\n100 ml"
+      },
+      {
+        "detailTokenId": "dt-size",
+        "fieldId": "label-size",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Packshot LYS-NBO-100",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": "100 ml"
+      },
+      {
+        "detailTokenId": "dt-logo",
+        "fieldId": "wordmark",
+        "provenance": {"confidence":"high","evidence":"lysne.no, header","origin":"engine","state":"proposed"},
+        "value": "LYSNE"
+      },
+      {
+        "fieldId": "label-back",
+        "provenance": {"confidence":"medium","evidence":"lysne.no/night-body-oil","origin":"engine","state":"proposed"},
+        "value": "Warm a few drops between your palms and press into damp skin, the hour before sleep. 100 ml e"
+      },
+      {
+        "fieldId": "pao",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "12M, batch code on the base"
+      },
+      {
+        "fieldId": "sizes",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": ["100 ml","30 ml travel"]
+      },
+      {
+        "fieldId": "how",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "A few drops warmed in the palms, pressed into skin after the evening shower."
+      },
+      {
+        "fieldId": "inci",
+        "provenance": {"confidence":"high","evidence":"lysne.no/night-body-oil","origin":"engine","state":"proposed"},
+        "value": "Prunus Amygdalus Dulcis Oil, Simmondsia Chinensis Seed Oil, Lavandula Angustifolia Oil, Tocopherol, Linalool"
+      },
+      {
+        "fieldId": "claims",
+        "provenance": {
+          "at": "2026-10-06T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Approved claims list",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "value": ["For the hour before sleep."]
+      },
+      {
+        "fieldId": "origin",
+        "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "value": "Norway"
+      }
+    ],
+    "state": "verified",
+    "variant": "100 ml",
+    "variants": [
+      {
+        "id": "va-oil-100",
+        "image": "/demo/lysne/03-08-square.jpg",
+        "name": "100 ml",
+        "productId": "pr-oil",
+        "sku": "LYS-NBO-100"
+      },
+      {"id":"va-oil-30","name":"30 ml travel","productId":"pr-oil","sku":"LYS-NBO-30"}
+    ],
+    "workspaceId": "w-lysne"
+  }
+maja product("pr-oil")
+  = maja uploadProductFile("pr-oil", {"bytes":9000,"kind":"spec","name":"spec.pdf"})
+maja detailTokens("pr-oil")
+  [
+    {
+      "id": "dt-size",
+      "image": "/demo/lysne/09-07-square.jpg",
+      "kind": "text",
+      "label": "Size",
+      "productId": "pr-oil",
+      "provenance": {
+        "at": "2026-10-05T12:32:00.000Z",
+        "by": "u-maja",
+        "evidence": "Packshot LYS-NBO-100",
+        "origin": "customer",
+        "state": "approved"
+      },
+      "region": {"h":0.05,"w":0.125,"x":0.56,"y":0.79},
+      "value": "100 ml"
+    },
+    {
+      "id": "dt-label",
+      "image": "/demo/lysne/09-07-square.jpg",
+      "kind": "label",
+      "label": "Label",
+      "productId": "pr-oil",
+      "provenance": {
+        "at": "2026-10-05T12:32:00.000Z",
+        "by": "u-maja",
+        "evidence": "Packshot LYS-NBO-100",
+        "origin": "customer",
+        "state": "approved"
+      },
+      "region": {"h":0.44,"w":0.31,"x":0.345,"y":0.425},
+      "value": "LYSNE · Night Body Oil"
+    },
+    {
+      "id": "dt-cap",
+      "image": "/demo/lysne/09-07-square.jpg",
+      "kind": "cap",
+      "label": "Cap",
+      "productId": "pr-oil",
+      "provenance": {
+        "at": "2026-10-05T12:32:00.000Z",
+        "by": "u-maja",
+        "evidence": "Packshot LYS-NBO-100",
+        "origin": "customer",
+        "state": "approved"
+      },
+      "region": {"h":0.235,"w":0.22,"x":0.39,"y":0.085},
+      "value": "Burgundy, matte"
+    },
+    {
+      "id": "dt-logo",
+      "image": "/demo/lysne/09-07-square.jpg",
+      "kind": "logo",
+      "label": "Wordmark",
+      "productId": "pr-oil",
+      "provenance": {"confidence":"high","evidence":"lysne.no, header","origin":"engine","state":"proposed"},
+      "region": {"h":0.075,"w":0.225,"x":0.385,"y":0.585},
+      "value": "LYSNE"
+    }
+  ]
+maja catalogue()
+  {
+    "categories": [
+      {"id":"cat-body","name":"Body care","workspaceId":"w-lysne"},
+      {"id":"cat-oils","name":"Oils","parentId":"cat-body","workspaceId":"w-lysne"},
+      {"id":"cat-hands","name":"Hands","parentId":"cat-body","workspaceId":"w-lysne"},
+      {"id":"cat-home","name":"Home","workspaceId":"w-lysne"},
+      {"id":"cat-merch","name":"Merchandise","workspaceId":"w-lysne"}
+    ],
+    "collections": [
+      {
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "description": "Autumn and winter: the evening ritual.",
+        "endsAt": "2027-02-11T12:32:00.000Z",
+        "id": "cl-aw26",
+        "kind": "season",
+        "name": "AW26",
+        "productIds": ["pr-oil","pr-balm","pr-face","pr-wash","pr-lip"],
+        "provenance": {"at":"2026-10-02T12:32:00.000Z","by":"u-maja","evidence":"Made by Maja","origin":"customer","state":"approved"},
+        "startsAt": "2026-09-14T12:32:00.000Z",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "cover": "/demo/lysne/09-13-feed.jpg",
+        "description": "Spring and summer: light evenings.",
+        "endsAt": "2027-09-09T12:32:00.000Z",
+        "id": "cl-ss27",
+        "kind": "season",
+        "name": "SS27",
+        "productIds": ["pr-mist","pr-oil","pr-wash","pr-diffuser"],
+        "provenance": {"at":"2026-10-02T12:32:00.000Z","by":"u-maja","evidence":"Made by Maja","origin":"customer","state":"approved"},
+        "startsAt": "2027-03-13T12:32:00.000Z",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "cover": "/demo/lysne/02-05-feed.jpg",
+        "description": "The Engine grouped the products sold as gifts on lysne.no.",
+        "id": "cl-gifts",
+        "kind": "line",
+        "name": "Gift sets",
+        "productIds": ["pr-oil","pr-candle","pr-ritual","pr-kveld"],
+        "provenance": {"confidence":"medium","evidence":"lysne.no/gifts","origin":"engine","state":"proposed"},
+        "workspaceId": "w-lysne"
+      }
+    ],
+    "products": [
+      {
+        "categoryId": "cat-oils",
+        "collectionIds": ["cl-aw26","cl-ss27","cl-gifts"],
+        "facts": [
+          {
+            "area": "shape",
+            "confidence": "high",
+            "id": "f1",
+            "label": "Bottle",
+            "productId": "pr-oil",
+            "source": "verified",
+            "statement": "Amber glass, 100 ml, tall and round-shouldered, as in the packshot.",
+            "verifiedAt": "2026-10-04T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "colour",
+            "confidence": "high",
+            "id": "f2",
+            "label": "Cap",
+            "productId": "pr-oil",
+            "source": "verified",
+            "statement": "Burgundy, matte. Never glossy, never black.",
+            "verifiedAt": "2026-10-04T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "label",
+            "confidence": "high",
+            "id": "f3",
+            "label": "Label",
+            "productId": "pr-oil",
+            "source": "verified",
+            "statement": "Cream paper, front and centred, never cropped. LYSNE, then Night Body Oil · 100 ml.",
+            "verifiedAt": "2026-10-04T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "colour",
+            "confidence": "high",
+            "id": "f4",
+            "label": "Oil",
+            "productId": "pr-oil",
+            "source": "verified",
+            "statement": "Reads golden, never orange.",
+            "verifiedAt": "2026-10-04T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "never",
+            "confidence": "high",
+            "id": "f5",
+            "label": "Never",
+            "productId": "pr-oil",
+            "source": "supplied",
+            "statement": "Other sizes, a dropper, hands that cover the label."
+          },
+          {
+            "area": "claim",
+            "confidence": "high",
+            "id": "f6",
+            "label": "Claims",
+            "productId": "pr-oil",
+            "source": "supplied",
+            "statement": "Only the lines on the approved list: \"For the hour before sleep.\""
+          }
+        ],
+        "files": [
+          {
+            "at": "2026-10-03T12:00:00.000Z",
+            "by": "u-maja",
+            "bytes": 1840000,
+            "filled": ["carton"],
+            "id": "pf-oil-dieline",
+            "kind": "dieline",
+            "name": "LYS-NBO-100 box dieline.pdf",
+            "read": ["Box 58 × 58 × 160 mm, tuck end","Blind emboss on the front panel","Burgundy print inside"]
+          },
+          {
+            "at": "2026-10-03T12:00:00.000Z",
+            "by": "u-maja",
+            "bytes": 4200000,
+            "filled": ["label-front","label-size","foil-colour"],
+            "id": "pf-oil-art",
+            "kind": "artwork",
+            "name": "Night Body Oil label.ai",
+            "read": [
+              "Label 60 × 85 mm, three lines of text",
+              "Wordmark in hot-foil, soft gold",
+              "Every letter of the front label"
+            ]
+          },
+          {
+            "at": "2026-10-03T12:00:00.000Z",
+            "by": "u-maja",
+            "bytes": 620000,
+            "filled": ["brimful","neck-finish","decoration"],
+            "id": "pf-oil-spec",
+            "kind": "spec",
+            "name": "Bottle and cap spec, supplier.pdf",
+            "read": ["Amber glass 100 ml, brimful 110 ml","Neck 20/410","Cap: coated aluminium, Pantone 7421 C, matte"]
+          },
+          {
+            "at": "2026-10-14T12:32:05.000Z",
+            "by": "u-maja",
+            "bytes": 9000,
+            "id": "pf-mvkqr9fk-7",
+            "kind": "spec",
+            "name": "spec.pdf",
+            "read": ["Material, finish and colour per part"]
+          }
+        ],
+        "id": "pr-oil",
+        "images": [
+          "/demo/lysne/gen/oil-pack.jpg",
+          "/demo/lysne/gen/oil-scene.jpg",
+          "/demo/lysne/03-08-feed.jpg",
+          "/demo/lysne/05-08-feed.jpg",
+          "/demo/lysne/01-03-feed.jpg"
+        ],
+        "kindId": "kind-skincare",
+        "name": "Night Body Oil",
+        "parts": [
+          {
+            "colour": {"hex":"#8A4B14","name":"Amber"},
+            "finish": "gloss",
+            "id": "pp-oil-bottle",
+            "material": "Amber glass",
+            "name": "Bottle",
+            "note": "Tall, round-shouldered.",
+            "opacity": "translucent",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"}
+          },
+          {
+            "colour": {"hex":"#5B1E2A","name":"Burgundy","pantone":"7421 C"},
+            "finish": "matte",
+            "id": "pp-oil-cap",
+            "material": "Aluminium, coated",
+            "name": "Cap",
+            "note": "Never glossy, never black.",
+            "opacity": "opaque",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"}
+          },
+          {
+            "colour": {"hex":"#F1E9DA","name":"Cream"},
+            "decoration": "Wordmark in soft gold hot-foil",
+            "finish": "matte",
+            "id": "pp-oil-label",
+            "material": "Cream textured paper",
+            "name": "Label",
+            "note": "Front, centred, never cropped.",
+            "opacity": "opaque",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"}
+          },
+          {
+            "colour": {"hex":"#EDE4D3","name":"Cream"},
+            "decoration": "Blind emboss, burgundy inside print",
+            "finish": "matte",
+            "id": "pp-oil-box",
+            "material": "Uncoated board",
+            "name": "Box",
+            "opacity": "opaque",
+            "provenance": {"confidence":"high","evidence":"Dieline LYS-NBO-100","origin":"engine","state":"proposed"}
+          }
+        ],
+        "provenance": {"evidence":"Added by Maja","origin":"customer","state":"approved"},
+        "shots": [
+          {
+            "image": "/demo/lysne/gen/oil-pack.jpg",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Packshot LYS-NBO-100",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "slotId": "front"
+          },
+          {
+            "image": "/demo/lysne/gen/oil-ref-back.jpg",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "slotId": "back"
+          },
+          {
+            "image": "/demo/lysne/gen/oil-ref-side.jpg",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "slotId": "side"
+          },
+          {
+            "image": "/demo/lysne/gen/oil-ref-top.jpg",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "slotId": "top"
+          },
+          {
+            "image": "/demo/lysne/gen/oil-ref-label.jpg",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "slotId": "label"
+          },
+          {
+            "image": "/demo/lysne/gen/oil-pack.jpg",
+            "provenance": {"at":"2026-10-14T12:32:05.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "slotId": "scale"
+          }
+        ],
+        "sku": "LYS-NBO-100",
+        "specs": [
+          {
+            "fieldId": "net",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Packshot LYS-NBO-100",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "unit": "ml",
+            "value": 100
+          },
+          {
+            "fieldId": "dims",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Measured by Maja",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": {"h":148,"shape":"round","unit":"mm","w":52}
+          },
+          {
+            "fieldId": "fill-level",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "To the shoulder"
+          },
+          {
+            "fieldId": "brimful",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Component spec sheet",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "unit": "ml",
+            "value": 110
+          },
+          {
+            "fieldId": "container",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Bottle"
+          },
+          {
+            "fieldId": "container-material",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Amber glass"
+          },
+          {
+            "fieldId": "finish",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Gloss"
+          },
+          {
+            "fieldId": "neck-finish",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Component spec sheet",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "20/410"
+          },
+          {
+            "fieldId": "decoration",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Component spec sheet",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": ["Pressure-sensitive label","Hot-foil"]
+          },
+          {
+            "fieldId": "foil-colour",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Label artwork",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": {"hex":"#B8955A","name":"Soft gold foil"}
+          },
+          {
+            "fieldId": "label-stock",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Textured paper"
+          },
+          {
+            "fieldId": "label-finish",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Matte"
+          },
+          {
+            "fieldId": "carton",
+            "provenance": {"confidence":"high","evidence":"Dieline LYS-NBO-100","origin":"engine","state":"proposed"},
+            "value": "Uncoated cream board, blind emboss of the wordmark, printed inside in burgundy."
+          },
+          {
+            "fieldId": "formula-colour",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Reads golden, never orange",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": {"hex":"#C99A3E","name":"Golden oil","pantone":"7563 C"}
+          },
+          {
+            "fieldId": "viscosity",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Fluid"
+          },
+          {
+            "fieldId": "scent",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Lavender and almond, soft"
+          },
+          {
+            "detailTokenId": "dt-label",
+            "fieldId": "label-front",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Packshot LYS-NBO-100",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "LYSNE\nNight Body Oil\n100 ml"
+          },
+          {
+            "detailTokenId": "dt-size",
+            "fieldId": "label-size",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Packshot LYS-NBO-100",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "100 ml"
+          },
+          {
+            "detailTokenId": "dt-logo",
+            "fieldId": "wordmark",
+            "provenance": {"confidence":"high","evidence":"lysne.no, header","origin":"engine","state":"proposed"},
+            "value": "LYSNE"
+          },
+          {
+            "fieldId": "label-back",
+            "provenance": {"confidence":"medium","evidence":"lysne.no/night-body-oil","origin":"engine","state":"proposed"},
+            "value": "Warm a few drops between your palms and press into damp skin, the hour before sleep. 100 ml e"
+          },
+          {
+            "fieldId": "pao",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "12M, batch code on the base"
+          },
+          {
+            "fieldId": "sizes",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": ["100 ml","30 ml travel"]
+          },
+          {
+            "fieldId": "how",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "A few drops warmed in the palms, pressed into skin after the evening shower."
+          },
+          {
+            "fieldId": "inci",
+            "provenance": {"confidence":"high","evidence":"lysne.no/night-body-oil","origin":"engine","state":"proposed"},
+            "value": "Prunus Amygdalus Dulcis Oil, Simmondsia Chinensis Seed Oil, Lavandula Angustifolia Oil, Tocopherol, Linalool"
+          },
+          {
+            "fieldId": "claims",
+            "provenance": {
+              "at": "2026-10-06T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Approved claims list",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": ["For the hour before sleep."]
+          },
+          {
+            "fieldId": "origin",
+            "provenance": {"at":"2026-10-06T12:00:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "value": "Norway"
+          }
+        ],
+        "state": "verified",
+        "variant": "100 ml",
+        "variants": [
+          {
+            "id": "va-oil-100",
+            "image": "/demo/lysne/03-08-square.jpg",
+            "name": "100 ml",
+            "productId": "pr-oil",
+            "sku": "LYS-NBO-100"
+          },
+          {"id":"va-oil-30","name":"30 ml travel","productId":"pr-oil","sku":"LYS-NBO-30"}
+        ],
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-hands",
+        "collectionIds": ["cl-aw26"],
+        "facts": [
+          {
+            "area": "packaging",
+            "confidence": "medium",
+            "id": "f7",
+            "label": "Tube",
+            "productId": "pr-balm",
+            "source": "inferred",
+            "statement": "Soft cream tube, 50 ml, ribbed brown cap."
+          },
+          {
+            "area": "colour",
+            "confidence": "low",
+            "id": "f8",
+            "label": "Balm",
+            "productId": "pr-balm",
+            "source": "inferred",
+            "statement": "Pale ivory, soft matte surface."
+          },
+          {
+            "area": "label",
+            "confidence": "medium",
+            "id": "f9",
+            "label": "Label",
+            "productId": "pr-balm",
+            "source": "inferred",
+            "statement": "LYSNE on the front; Hand Balm · 50 ml near the cap."
+          },
+          {
+            "area": "claim",
+            "confidence": "low",
+            "id": "f10",
+            "label": "Claims",
+            "productId": "pr-balm",
+            "source": "unknown",
+            "statement": "Not known yet. Which lines may we use?"
+          }
+        ],
+        "id": "pr-balm",
+        "images": ["/demo/lysne/gen/balm-pack.jpg","/demo/lysne/gen/balm-scene.jpg"],
+        "kindId": "kind-skincare",
+        "name": "Hand Balm",
+        "parts": [
+          {
+            "colour": {"hex":"#EDE8DF","name":"Cream"},
+            "decoration": "Screen print, one colour",
+            "finish": "matte",
+            "id": "pp-balm-tube",
+            "material": "Soft tube, PE",
+            "name": "Tube",
+            "opacity": "opaque",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          },
+          {
+            "colour": {"hex":"#6B3A22","name":"Chestnut"},
+            "finish": "matte",
+            "id": "pp-balm-cap",
+            "material": "PP, ribbed",
+            "name": "Cap",
+            "opacity": "opaque",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          },
+          {
+            "colour": {"hex":"#3B2A20","name":"Dark brown"},
+            "finish": "matte",
+            "id": "pp-balm-print",
+            "material": "Printed on the tube",
+            "name": "Print",
+            "opacity": "opaque",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          }
+        ],
+        "provenance": {"confidence":"high","evidence":"lysne.no/hand-balm","origin":"engine","state":"proposed"},
+        "shots": [
+          {
+            "image": "/demo/lysne/gen/balm-pack.jpg",
+            "provenance": {"confidence":"high","evidence":"lysne.no/hand-balm","origin":"engine","state":"proposed"},
+            "slotId": "front"
+          }
+        ],
+        "specs": [
+          {
+            "fieldId": "net",
+            "provenance": {"confidence":"high","evidence":"lysne.no/hand-balm","origin":"engine","state":"proposed"},
+            "unit": "ml",
+            "value": 50
+          },
+          {
+            "fieldId": "container",
+            "provenance": {"confidence":"high","evidence":"lysne.no/hand-balm","origin":"engine","state":"proposed"},
+            "value": "Tube"
+          },
+          {
+            "fieldId": "container-material",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Soft tube, PE"
+          },
+          {
+            "fieldId": "finish",
+            "provenance": {"confidence":"low","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Matte"
+          },
+          {
+            "fieldId": "decoration",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": ["Screen print"]
+          },
+          {
+            "fieldId": "label-stock",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Printed on the pack"
+          },
+          {
+            "fieldId": "formula-colour",
+            "provenance": {"confidence":"low","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": {"hex":"#EFE7D6","name":"Pale ivory"}
+          },
+          {
+            "fieldId": "texture",
+            "provenance": {"confidence":"high","evidence":"lysne.no/hand-balm","origin":"engine","state":"proposed"},
+            "value": "Balm"
+          },
+          {
+            "fieldId": "label-front",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "LYSNE\nHand Balm · 50 ml"
+          },
+          {
+            "fieldId": "wordmark",
+            "provenance": {"confidence":"high","evidence":"lysne.no, header","origin":"engine","state":"proposed"},
+            "value": "LYSNE"
+          }
+        ],
+        "state": "needs_you",
+        "variant": "50 ml",
+        "variants": [{"id":"va-balm-50","name":"50 ml","productId":"pr-balm"}],
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-home",
+        "collectionIds": ["cl-ss27"],
+        "facts": [
+          {
+            "area": "shape",
+            "confidence": "high",
+            "id": "f20",
+            "label": "Bottle",
+            "productId": "pr-mist",
+            "source": "inferred",
+            "statement": "Amber glass spray, 50 ml, black pump under a clear cap."
+          },
+          {
+            "area": "label",
+            "confidence": "medium",
+            "id": "f21",
+            "label": "Label",
+            "productId": "pr-mist",
+            "source": "inferred",
+            "statement": "LYSNE, then Pillow Mist · 50 ml."
+          },
+          {
+            "area": "claim",
+            "confidence": "low",
+            "id": "f22",
+            "label": "Claims",
+            "productId": "pr-mist",
+            "source": "inferred",
+            "statement": "\"Lavender and cedar for the hour before sleep.\""
+          }
+        ],
+        "id": "pr-mist",
+        "images": ["/demo/lysne/gen/mist-pack.jpg","/demo/lysne/gen/mist-scene.jpg"],
+        "kindId": "kind-fragrance",
+        "name": "Pillow Mist",
+        "parts": [
+          {
+            "colour": {"hex":"#8A4B14","name":"Amber"},
+            "finish": "gloss",
+            "id": "pp-mist-bottle",
+            "material": "Amber glass",
+            "name": "Bottle",
+            "opacity": "translucent",
+            "provenance": {"confidence":"high","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          },
+          {
+            "colour": {"hex":"#1E1B19","name":"Black"},
+            "finish": "matte",
+            "id": "pp-mist-pump",
+            "material": "PP",
+            "name": "Spray pump",
+            "opacity": "opaque",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          },
+          {
+            "finish": "gloss",
+            "id": "pp-mist-overcap",
+            "material": "PET",
+            "name": "Overcap",
+            "opacity": "clear",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          },
+          {
+            "colour": {"hex":"#F1E9DA","name":"Cream"},
+            "finish": "matte",
+            "id": "pp-mist-label",
+            "material": "Cream paper",
+            "name": "Label",
+            "opacity": "opaque",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          }
+        ],
+        "provenance": {"confidence":"high","evidence":"lysne.no/pillow-mist","origin":"engine","state":"proposed"},
+        "shots": [
+          {
+            "image": "/demo/lysne/gen/mist-pack.jpg",
+            "provenance": {"confidence":"high","evidence":"lysne.no/pillow-mist","origin":"engine","state":"proposed"},
+            "slotId": "front"
+          }
+        ],
+        "specs": [
+          {
+            "fieldId": "concentration",
+            "provenance": {"confidence":"high","evidence":"lysne.no/pillow-mist","origin":"engine","state":"proposed"},
+            "value": "Mist"
+          },
+          {
+            "fieldId": "net",
+            "provenance": {"confidence":"high","evidence":"lysne.no/pillow-mist","origin":"engine","state":"proposed"},
+            "unit": "ml",
+            "value": 50
+          },
+          {
+            "fieldId": "glass",
+            "provenance": {"confidence":"high","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Tinted glass"
+          },
+          {
+            "fieldId": "cap-material",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Plastic"
+          },
+          {
+            "fieldId": "label-front",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "LYSNE\nPillow Mist · 50 ml"
+          },
+          {
+            "fieldId": "label-size",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "50 ml"
+          },
+          {
+            "fieldId": "wordmark",
+            "provenance": {"confidence":"high","evidence":"lysne.no, header","origin":"engine","state":"proposed"},
+            "value": "LYSNE"
+          },
+          {
+            "fieldId": "notes",
+            "provenance": {"confidence":"medium","evidence":"lysne.no/pillow-mist","origin":"engine","state":"proposed"},
+            "value": ["Lavender","Cedar","Chamomile"]
+          }
+        ],
+        "state": "needs_you",
+        "variant": "50 ml",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-home",
+        "collectionIds": ["cl-gifts"],
+        "facts": [
+          {
+            "area": "packaging",
+            "confidence": "medium",
+            "id": "f23",
+            "label": "Vessel",
+            "productId": "pr-candle",
+            "source": "inferred",
+            "statement": "Amber glass tumbler with a travertine lid."
+          },
+          {
+            "area": "claim",
+            "confidence": "low",
+            "id": "f24",
+            "label": "Claims",
+            "productId": "pr-candle",
+            "source": "unknown",
+            "statement": "Not known yet. Which lines may we use?"
+          }
+        ],
+        "id": "pr-candle",
+        "images": ["/demo/lysne/gen/candle-pack.jpg","/demo/lysne/gen/candle-scene.jpg"],
+        "kindId": "kind-home",
+        "name": "Evening Candle",
+        "parts": [
+          {
+            "colour": {"hex":"#8A4B14","name":"Amber"},
+            "finish": "gloss",
+            "id": "pp-candle-vessel",
+            "material": "Amber glass",
+            "name": "Vessel",
+            "opacity": "translucent",
+            "provenance": {"confidence":"high","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          },
+          {
+            "colour": {"hex":"#D8CDBE","name":"Travertine"},
+            "finish": "textured",
+            "id": "pp-candle-lid",
+            "material": "Travertine",
+            "name": "Lid",
+            "opacity": "opaque",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          },
+          {
+            "colour": {"hex":"#F1E9DA","name":"Cream"},
+            "finish": "matte",
+            "id": "pp-candle-label",
+            "material": "Cream paper",
+            "name": "Label",
+            "opacity": "opaque",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"}
+          }
+        ],
+        "provenance": {"confidence":"medium","evidence":"lysne.no/candle","origin":"engine","state":"proposed"},
+        "shots": [
+          {
+            "image": "/demo/lysne/gen/candle-pack.jpg",
+            "provenance": {"confidence":"high","evidence":"lysne.no/evening-candle","origin":"engine","state":"proposed"},
+            "slotId": "front"
+          }
+        ],
+        "specs": [
+          {
+            "fieldId": "net",
+            "provenance": {"confidence":"high","evidence":"lysne.no/evening-candle","origin":"engine","state":"proposed"},
+            "unit": "g",
+            "value": 180
+          },
+          {
+            "fieldId": "dims",
+            "provenance": {"confidence":"medium","evidence":"lysne.no/evening-candle","origin":"engine","state":"proposed"},
+            "value": {"h":90,"shape":"round","unit":"mm","w":80}
+          },
+          {
+            "fieldId": "wicks",
+            "provenance": {"confidence":"high","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "unit": "wicks",
+            "value": 1
+          },
+          {
+            "fieldId": "wax",
+            "provenance": {"confidence":"medium","evidence":"lysne.no/evening-candle","origin":"engine","state":"proposed"},
+            "value": "Rapeseed"
+          },
+          {
+            "fieldId": "wax-surface",
+            "provenance": {"confidence":"low","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Smooth"
+          },
+          {
+            "fieldId": "wick-type",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Cotton"
+          },
+          {
+            "fieldId": "vessel",
+            "provenance": {"confidence":"high","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Amber glass"
+          },
+          {
+            "fieldId": "vessel-finish",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Gloss"
+          },
+          {
+            "fieldId": "lid",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "Travertine"
+          },
+          {
+            "fieldId": "wax-colour",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": {"hex":"#EDE3CF","name":"Warm cream"}
+          },
+          {
+            "fieldId": "label-front",
+            "provenance": {"confidence":"medium","evidence":"Photo on lysne.no","origin":"engine","state":"proposed"},
+            "value": "LYSNE\nEvening Candle\n180 g"
+          },
+          {
+            "fieldId": "wordmark",
+            "provenance": {"confidence":"high","evidence":"lysne.no, header","origin":"engine","state":"proposed"},
+            "value": "LYSNE"
+          },
+          {
+            "fieldId": "notes",
+            "provenance": {"confidence":"medium","evidence":"lysne.no/evening-candle","origin":"engine","state":"proposed"},
+            "value": ["Fig leaf","Cedar","Amber"]
+          },
+          {
+            "fieldId": "burn",
+            "provenance": {"confidence":"high","evidence":"lysne.no/evening-candle","origin":"engine","state":"proposed"},
+            "unit": "h",
+            "value": 40
+          }
+        ],
+        "state": "needs_you",
+        "variant": "180 g",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-oils",
+        "collectionIds": ["cl-aw26"],
+        "facts": [
+          {
+            "area": "shape",
+            "confidence": "high",
+            "id": "f70",
+            "label": "Bottle",
+            "productId": "pr-face",
+            "source": "verified",
+            "statement": "Amber glass dropper bottle, 30 ml, matte burgundy cap.",
+            "verifiedAt": "2026-10-08T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "label",
+            "confidence": "high",
+            "id": "f71",
+            "label": "Label",
+            "productId": "pr-face",
+            "source": "verified",
+            "statement": "Cream paper: LYSNE, then Face Oil · 30 ml.",
+            "verifiedAt": "2026-10-08T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "claim",
+            "confidence": "high",
+            "id": "f72",
+            "label": "Claims",
+            "productId": "pr-face",
+            "source": "verified",
+            "statement": "\"Light enough for the evening, gone by morning.\"",
+            "verifiedAt": "2026-10-08T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          }
+        ],
+        "id": "pr-face",
+        "images": ["/demo/lysne/gen/face-pack.jpg"],
+        "kindId": "kind-skincare",
+        "name": "Face Oil",
+        "provenance": {
+          "at": "2026-10-08T12:32:00.000Z",
+          "by": "u-maja",
+          "evidence": "Added by Maja",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "sku": "LYS-FO-30",
+        "state": "verified",
+        "variant": "30 ml",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-body",
+        "collectionIds": ["cl-aw26","cl-ss27"],
+        "facts": [
+          {
+            "area": "shape",
+            "confidence": "high",
+            "id": "f73",
+            "label": "Bottle",
+            "productId": "pr-wash",
+            "source": "verified",
+            "statement": "Amber pump bottle, 250 ml, matte burgundy pump.",
+            "verifiedAt": "2026-10-08T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "label",
+            "confidence": "high",
+            "id": "f74",
+            "label": "Label",
+            "productId": "pr-wash",
+            "source": "verified",
+            "statement": "Cream paper: LYSNE, then Evening Body Wash · 250 ml.",
+            "verifiedAt": "2026-10-08T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          }
+        ],
+        "id": "pr-wash",
+        "images": ["/demo/lysne/gen/wash-pack.jpg"],
+        "kindId": "kind-skincare",
+        "name": "Evening Body Wash",
+        "provenance": {
+          "at": "2026-10-08T12:32:00.000Z",
+          "by": "u-maja",
+          "evidence": "Added by Maja",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "sku": "LYS-BW-250",
+        "state": "verified",
+        "variant": "250 ml",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-home",
+        "collectionIds": ["cl-gifts"],
+        "facts": [
+          {
+            "area": "shape",
+            "confidence": "high",
+            "id": "f75",
+            "label": "Bottle",
+            "productId": "pr-kveld",
+            "source": "inferred",
+            "statement": "Heavy square clear glass, 50 ml, matte burgundy cap."
+          },
+          {
+            "area": "claim",
+            "confidence": "low",
+            "id": "f76",
+            "label": "Claims",
+            "productId": "pr-kveld",
+            "source": "unknown",
+            "statement": "Not known yet. Which lines may we use?"
+          }
+        ],
+        "id": "pr-kveld",
+        "images": ["/demo/lysne/gen/kveld-pack.jpg"],
+        "isNew": true,
+        "kindId": "kind-fragrance",
+        "name": "Kveld Eau de Parfum",
+        "provenance": {"confidence":"high","evidence":"lysne.no/kveld","origin":"engine","state":"proposed"},
+        "state": "needs_you",
+        "variant": "50 ml",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-home",
+        "collectionIds": ["cl-ss27"],
+        "facts": [
+          {
+            "area": "packaging",
+            "confidence": "medium",
+            "id": "f77",
+            "label": "Bottle",
+            "productId": "pr-diffuser",
+            "source": "inferred",
+            "statement": "Amber glass, 100 ml, six rattan reeds."
+          },
+          {
+            "area": "label",
+            "confidence": "medium",
+            "id": "f78",
+            "label": "Label",
+            "productId": "pr-diffuser",
+            "source": "inferred",
+            "statement": "LYSNE, then Room Diffuser · 100 ml."
+          }
+        ],
+        "id": "pr-diffuser",
+        "images": ["/demo/lysne/gen/diffuser-pack.jpg"],
+        "kindId": "kind-home",
+        "name": "Room Diffuser",
+        "provenance": {"confidence":"medium","evidence":"lysne.no/diffuser","origin":"engine","state":"proposed"},
+        "state": "needs_you",
+        "variant": "100 ml",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-body",
+        "collectionIds": ["cl-aw26"],
+        "facts": [
+          {
+            "area": "packaging",
+            "confidence": "high",
+            "id": "f79",
+            "label": "Tin",
+            "productId": "pr-lip",
+            "source": "verified",
+            "statement": "Round matte burgundy tin, 15 ml, LYSNE embossed on the lid.",
+            "verifiedAt": "2026-10-08T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "colour",
+            "confidence": "high",
+            "id": "f7-lip-1",
+            "label": "Balm",
+            "productId": "pr-lip",
+            "source": "verified",
+            "statement": "Pale ivory.",
+            "verifiedAt": "2026-10-08T12:32:00.000Z",
+            "verifiedBy": "u-maja"
+          }
+        ],
+        "id": "pr-lip",
+        "images": ["/demo/lysne/gen/lip-pack.jpg"],
+        "kindId": "kind-skincare",
+        "name": "Lip Balm",
+        "provenance": {
+          "at": "2026-10-08T12:32:00.000Z",
+          "by": "u-maja",
+          "evidence": "Added by Maja",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "sku": "LYS-LB-15",
+        "state": "verified",
+        "variant": "15 ml",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-home",
+        "collectionIds": ["cl-gifts"],
+        "facts": [
+          {
+            "area": "packaging",
+            "confidence": "medium",
+            "id": "f7-ritual-1",
+            "label": "Box",
+            "productId": "pr-ritual",
+            "source": "inferred",
+            "statement": "Cream rigid box: Night Body Oil 100 ml and Evening Candle 180 g in cream paper."
+          },
+          {
+            "area": "claim",
+            "confidence": "low",
+            "id": "f7-ritual-2",
+            "label": "Claims",
+            "productId": "pr-ritual",
+            "source": "unknown",
+            "statement": "Not known yet. Which lines may we use?"
+          }
+        ],
+        "id": "pr-ritual",
+        "images": ["/demo/lysne/gen/ritual-pack.jpg"],
+        "kindId": "kind-home",
+        "name": "Evening Ritual gift box",
+        "provenance": {"confidence":"medium","evidence":"lysne.no/gifts","origin":"engine","state":"proposed"},
+        "state": "needs_you",
+        "variant": "Oil and candle",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "categoryId": "cat-merch",
+        "facts": [
+          {
+            "area": "shape",
+            "confidence": "high",
+            "id": "f80",
+            "label": "Knit",
+            "productId": "pr-sweater",
+            "source": "verified",
+            "statement": "Fine 12GG jersey, 2×2 rib at the neck, cuffs and a deep 6 cm hem.",
+            "verifiedAt": "2026-10-12T12:00:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "label",
+            "confidence": "high",
+            "id": "f81",
+            "label": "Label",
+            "productId": "pr-sweater",
+            "source": "verified",
+            "statement": "Small cream woven label inside the back neck: LYSNE in dark brown.",
+            "verifiedAt": "2026-10-12T12:00:00.000Z",
+            "verifiedBy": "u-maja"
+          },
+          {
+            "area": "claim",
+            "confidence": "low",
+            "id": "f82",
+            "label": "Claims",
+            "productId": "pr-sweater",
+            "source": "unknown",
+            "statement": "Not known yet. Which lines may we use?"
+          }
+        ],
+        "files": [
+          {
+            "at": "2026-10-12T12:00:00.000Z",
+            "by": "u-maja",
+            "bytes": 6400000,
+            "filled": ["composition","measures","gauge","knit","trim-rib","trims","colourways"],
+            "id": "pf-sw-tp",
+            "kind": "techpack",
+            "name": "LYS-KN-001 tech pack v3.pdf",
+            "read": [
+              "Fibre blend 70 % merino wool, 30 % cashmere",
+              "12 points of measure × 5 sizes, tolerances, base size M",
+              "12GG jersey, 2×2 rib trims, fully fashioned, linked",
+              "Trims: main label, care label, size label, hang tag",
+              "Colourways Ecru 11-0507 TCX, Night brown 19-1015 TCX"
+            ]
+          },
+          {
+            "at": "2026-10-12T12:00:00.000Z",
+            "by": "u-maja",
+            "bytes": 2100000,
+            "filled": ["sleeve","neckline"],
+            "id": "pf-sw-flats",
+            "kind": "flats",
+            "name": "LYS-KN-001 flats.ai",
+            "read": ["Front and back flats","Drop shoulder, crew neck, 6 cm hem rib"]
+          },
+          {
+            "at": "2026-10-12T12:00:00.000Z",
+            "by": "u-maja",
+            "bytes": 880000,
+            "id": "pf-sw-cad",
+            "kind": "cad",
+            "name": "LYS-KN-001 pattern.dxf",
+            "read": ["5 pattern pieces: front, back, sleeve × 2, neck rib","Graded XS–XL"]
+          }
+        ],
+        "id": "pr-sweater",
+        "images": [
+          "/demo/lysne/gen/sweater-flat.jpg",
+          "/demo/lysne/gen/sweater-body.jpg",
+          "/demo/lysne/gen/sweater-detail.jpg",
+          "/demo/lysne/gen/sweater-back.jpg"
+        ],
+        "isNew": true,
+        "kindId": "kind-apparel",
+        "name": "Merino Lounge Sweater",
+        "parts": [],
+        "provenance": {
+          "at": "2026-10-12T12:00:00.000Z",
+          "by": "u-maja",
+          "evidence": "Added by Maja",
+          "origin": "customer",
+          "state": "approved"
+        },
+        "shots": [
+          {
+            "image": "/demo/lysne/gen/sweater-flat.jpg",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Added by Maja",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "slotId": "flat-front"
+          },
+          {
+            "image": "/demo/lysne/gen/sweater-back.jpg",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Added by Maja",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "slotId": "flat-back"
+          },
+          {
+            "image": "/demo/lysne/gen/sweater-detail.jpg",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Added by Maja",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "slotId": "detail"
+          },
+          {
+            "image": "/demo/lysne/gen/sweater-body.jpg",
+            "provenance": {"confidence":"high","evidence":"lysne.no/merino-lounge-sweater","origin":"engine","state":"proposed"},
+            "slotId": "on-body"
+          }
+        ],
+        "sku": "LYS-KN-001-ECR",
+        "specs": [
+          {
+            "fieldId": "garment",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "Added by Maja",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Sweater"
+          },
+          {
+            "fieldId": "style-no",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "LYS-KN-001"
+          },
+          {
+            "fieldId": "season",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "AW26"
+          },
+          {
+            "fieldId": "gender",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Unisex"
+          },
+          {
+            "fieldId": "composition",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": {"fibres":[{"fibre":"Merino wool","pct":70},{"fibre":"Cashmere","pct":30}]}
+          },
+          {
+            "fieldId": "yarn-finish",
+            "provenance": {"confidence":"medium","evidence":"Your detail photo","origin":"engine","state":"proposed"},
+            "value": "Brushed"
+          },
+          {
+            "fieldId": "dye",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Undyed"
+          },
+          {
+            "fieldId": "yarn-count",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "2/28 Nm"
+          },
+          {
+            "fieldId": "yarn-weight",
+            "provenance": {"confidence":"medium","evidence":"LYS-KN-001 tech pack v3.pdf","origin":"engine","state":"proposed"},
+            "value": "Fingering"
+          },
+          {
+            "fieldId": "garment-weight",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "unit": "g",
+            "value": 340
+          },
+          {
+            "fieldId": "yarn-supplier",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Italian spinner, merino-cashmere 2/28 Nm, RWS"
+          },
+          {
+            "fieldId": "knit",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Jersey"
+          },
+          {
+            "fieldId": "gauge",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "12GG"
+          },
+          {
+            "fieldId": "make",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Fully fashioned"
+          },
+          {
+            "fieldId": "neckline",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Crew"
+          },
+          {
+            "fieldId": "sleeve",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Drop shoulder"
+          },
+          {
+            "fieldId": "trim-rib",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Rib 2:2"
+          },
+          {
+            "fieldId": "hem-rib",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "unit": "mm",
+            "value": 60
+          },
+          {
+            "fieldId": "cuff-rib",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "unit": "mm",
+            "value": 70
+          },
+          {
+            "fieldId": "neck-rib",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "unit": "mm",
+            "value": 25
+          },
+          {
+            "fieldId": "drape",
+            "provenance": {"confidence":"medium","evidence":"Your on-body photo","origin":"engine","state":"proposed"},
+            "value": "Soft"
+          },
+          {
+            "fieldId": "seams",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Linked"
+          },
+          {
+            "fieldId": "stitch-density",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "56 wales × 84 courses per 10 cm"
+          },
+          {
+            "fieldId": "fit",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Relaxed"
+          },
+          {
+            "fieldId": "measures",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": {
+              "base": "M",
+              "rows": [
+                {
+                  "code": "A",
+                  "how": "2 cm below the armhole, side to side",
+                  "pom": "Chest width ½",
+                  "tol": 1,
+                  "values": [54,56,58,60,62]
+                },
+                {
+                  "code": "B",
+                  "how": "From the high point of the shoulder to the hem edge",
+                  "pom": "Body length from HPS",
+                  "tol": 1,
+                  "values": [64,65.5,67,68.5,70]
+                },
+                {
+                  "code": "C",
+                  "how": "Drop shoulder, seam to seam",
+                  "pom": "Shoulder width",
+                  "tol": 1,
+                  "values": [58,60,62,64,66]
+                },
+                {
+                  "code": "D",
+                  "how": "Centre back neck, over the shoulder, to the cuff edge",
+                  "pom": "Sleeve length from CB",
+                  "tol": 1,
+                  "values": [76,78,80,82,84]
+                },
+                {"code":"E","pom":"Armhole straight","tol":0.5,"values":[23,24,25,26,27]},
+                {
+                  "code": "F",
+                  "how": "Cuff relaxed, edge to edge",
+                  "pom": "Sleeve opening",
+                  "tol": 0.5,
+                  "values": [9,9.5,10,10.5,11]
+                },
+                {"code":"G","how":"Hem rib relaxed","pom":"Hem width","tol":1,"values":[48,50,52,54,56]},
+                {"code":"H","how":"Seam to seam","pom":"Neck width","tol":0.5,"values":[19,19.5,20,20.5,21]},
+                {"code":"I","pom":"Front neck drop","tol":0.5,"values":[7,7,7.5,7.5,8]},
+                {"code":"J","pom":"Hem rib depth","tol":0.3,"values":[6,6,6,6,6]},
+                {"code":"K","pom":"Cuff rib depth","tol":0.3,"values":[7,7,7,7,7]},
+                {"code":"L","pom":"Neck rib depth","tol":0.2,"values":[2.5,2.5,2.5,2.5,2.5]}
+              ],
+              "sizes": ["XS","S","M","L","XL"],
+              "unit": "cm"
+            }
+          },
+          {
+            "fieldId": "size-run",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": ["XS","S","M","L","XL"]
+          },
+          {
+            "fieldId": "model",
+            "provenance": {"confidence":"medium","evidence":"lysne.no/merino-lounge-sweater","origin":"engine","state":"proposed"},
+            "value": "Wears M, 178 cm"
+          },
+          {
+            "fieldId": "grading",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Chest ½ +1 cm, length +1.5 cm, sleeve +2 cm per size"
+          },
+          {
+            "fieldId": "measured",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Flat, relaxed"
+          },
+          {
+            "fieldId": "trims",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": {
+              "parts": [
+                {
+                  "colour": {"hex":"#F1E9DA","name":"Cream"},
+                  "decoration": "LYSNE woven in Night brown",
+                  "finish": "Matte",
+                  "material": "Woven damask",
+                  "name": "Main label",
+                  "note": "Inside the back neck, centred",
+                  "size": "40 × 15 mm"
+                },
+                {
+                  "colour": {"hex":"#EDE6D8","name":"Ecru"},
+                  "finish": "Satin",
+                  "material": "Printed satin",
+                  "name": "Care label",
+                  "note": "Left side seam, 8 cm above the hem",
+                  "size": "30 × 60 mm"
+                },
+                {
+                  "colour": {"hex":"#F1E9DA","name":"Cream"},
+                  "finish": "Matte",
+                  "material": "Woven",
+                  "name": "Size label",
+                  "note": "Folded into the main label seam"
+                },
+                {
+                  "colour": {"hex":"#EFE6DA","name":"Linen"},
+                  "decoration": "Blind emboss of the wordmark",
+                  "finish": "Matte",
+                  "material": "Uncoated board, 450 g/m²",
+                  "name": "Hang tag",
+                  "note": "On cotton string, through the main label"
+                }
+              ]
+            }
+          },
+          {
+            "fieldId": "branding",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "No outside branding. A small cream woven label inside the back neck: LYSNE in Night brown."
+          },
+          {
+            "fieldId": "colourways",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": [
+              {"hex":"#E9E1D1","name":"Ecru","pantone":"11-0507 TCX"},
+              {"hex":"#3A2A22","name":"Night brown","pantone":"19-1015 TCX"}
+            ]
+          },
+          {
+            "fieldId": "care",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Hand wash cold or wool cycle 30 °C, dry flat, do not tumble dry."
+          },
+          {
+            "fieldId": "care-symbols",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": ["Hand wash","Do not bleach","Dry flat","Do not tumble dry","Iron low"]
+          },
+          {
+            "fieldId": "origin",
+            "provenance": {
+              "at": "2026-10-12T12:00:00.000Z",
+              "by": "u-maja",
+              "evidence": "LYS-KN-001 tech pack v3.pdf",
+              "origin": "customer",
+              "state": "approved"
+            },
+            "value": "Portugal"
+          },
+          {
+            "fieldId": "certifications",
+            "provenance": {"confidence":"low","evidence":"lysne.no/merino-lounge-sweater","origin":"engine","state":"proposed"},
+            "value": ["RWS","Mulesing-free"]
+          }
+        ],
+        "state": "needs_you",
+        "variant": "Ecru",
+        "variants": [
+          {"id":"va-sw-ecru","name":"Ecru","productId":"pr-sweater"},
+          {"id":"va-sw-brown","name":"Night brown","productId":"pr-sweater"}
+        ],
+        "workspaceId": "w-lysne"
+      },
+      {
+        "facts": [],
+        "files": [
+          {
+            "at": "2026-10-14T12:32:05.000Z",
+            "by": "u-maja",
+            "bytes": 50000,
+            "id": "pf-mvkqr9fk-6",
+            "kind": "dieline",
+            "name": "dieline.pdf",
+            "read": ["The flat pack with its measures","Where the print and the finishes sit"]
+          }
+        ],
+        "id": "pr-mvkqr5ko-1",
+        "images": [],
+        "kindId": "kind-skincare",
+        "name": "Night Serum",
+        "parts": [
+          {
+            "id": "part-cap",
+            "material": "Aluminium",
+            "name": "Cap",
+            "provenance": {"at":"2026-10-14T12:32:05.000Z","by":"u-maja","origin":"customer","state":"approved"}
+          }
+        ],
+        "provenance": {"at":"2026-10-14T12:32:00.000Z","by":"u-maja","origin":"customer","state":"approved"},
+        "shots": [
+          {
+            "image": "/demo/lysne/01-feed.jpg",
+            "provenance": {"at":"2026-10-14T12:32:05.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "slotId": "back"
+          }
+        ],
+        "specs": [
+          {
+            "fieldId": "container",
+            "provenance": {
+              "at": "2026-10-14T12:32:05.000Z",
+              "by": "u-maja",
+              "confidence": "medium",
+              "evidence": "Your front photo",
+              "origin": "engine",
+              "state": "approved"
+            },
+            "value": "Bottle"
+          },
+          {
+            "fieldId": "container-material",
+            "provenance": {"confidence":"medium","evidence":"Your front photo","origin":"engine","state":"proposed"},
+            "value": "Clear glass"
+          },
+          {
+            "fieldId": "texture",
+            "provenance": {"confidence":"medium","evidence":"lysne.example/serum","origin":"engine","state":"proposed"},
+            "value": "Serum"
+          },
+          {
+            "fieldId": "decoration",
+            "provenance": {"confidence":"medium","evidence":"Your front photo","origin":"engine","state":"proposed"},
+            "value": ["Screen print"]
+          },
+          {
+            "fieldId": "net",
+            "provenance": {"at":"2026-10-14T12:32:05.000Z","by":"u-maja","origin":"customer","state":"approved"},
+            "unit": "ml",
+            "value": 30
+          }
+        ],
+        "state": "needs_you",
+        "variant": "30 ml",
+        "workspaceId": "w-lysne"
+      }
+    ]
+  }
+maja questions()
+  [
+    {
+      "answer": "text",
+      "campaignId": "c-balm",
+      "factId": "f10",
+      "hint": "One claim per line, as it may stand on a creative",
+      "id": "q-balm-claims",
+      "line": "The claims we may use for Hand Balm",
+      "productId": "pr-balm",
+      "question": "Which claims may we use for Hand Balm?",
+      "suggestions": [{"label":"The same as Night Body Oil","text":"For the hour before sleep."}],
+      "templates": [
+        {"label":"Care","text":"Softens dry hands."},
+        {"label":"Texture","text":"Sinks in quickly and leaves no greasy film."},
+        {"label":"Ingredients","text":"With shea butter and plant oils."},
+        {"label":"Scent","text":"Lightly scented, like the evening ritual."}
+      ],
+      "templatesWhy": "lysne.no says nothing about the claims of Hand Balm, so here is what hand balms usually say. Start from one and keep only what is true.",
+      "why": "Every line on a creative must be true. Fume’s expert checks each one against your answer, so we never guess it."
+    },
+    {
+      "answer": "picture",
+      "campaignId": "c-balm",
+      "id": "q-balm-packshot",
+      "line": "A packshot of the tube",
+      "picture": "/demo/lysne/gen/balm-pack.jpg",
+      "productId": "pr-balm",
+      "question": "Is this the Hand Balm packshot?",
+      "shotSlotId": "front",
+      "why": "The Engine draws the tube from this photo, so its shape, cap and label come out right. Confirm it, or add a better one."
+    },
+    {
+      "answer": "text",
+      "factId": "f24",
+      "hint": "One claim per line, as it may stand on a creative",
+      "id": "q-fact-pr-candle-f24",
+      "line": "The claims we may use for Evening Candle",
+      "productId": "pr-candle",
+      "question": "Which claims may we use for Evening Candle?",
+      "templates": [
+        {"label":"Burn time","text":"Burns for about 40 hours."},
+        {"label":"Wax","text":"Plant wax and a cotton wick."},
+        {"label":"Scent","text":"Cedar and lavender, for the hour before sleep."}
+      ],
+      "templatesWhy": "lysne.no says nothing about the claims of Evening Candle, so here is what candles usually say. Start from one and keep only what is true.",
+      "why": "Every line on a creative must be true. Fume’s expert checks each one against your answer, so we never guess it."
+    },
+    {
+      "answer": "text",
+      "factId": "f76",
+      "hint": "One claim per line, as it may stand on a creative",
+      "id": "q-fact-pr-kveld-f76",
+      "line": "The claims we may use for Kveld Eau de Parfum",
+      "productId": "pr-kveld",
+      "question": "Which claims may we use for Kveld Eau de Parfum?",
+      "why": "Every line on a creative must be true. Fume’s expert checks each one against your answer, so we never guess it."
+    },
+    {
+      "answer": "text",
+      "factId": "f7-ritual-2",
+      "hint": "One claim per line, as it may stand on a creative",
+      "id": "q-fact-pr-ritual-f7-ritual-2",
+      "line": "The claims we may use for Evening Ritual gift box",
+      "productId": "pr-ritual",
+      "question": "Which claims may we use for Evening Ritual gift box?",
+      "why": "Every line on a creative must be true. Fume’s expert checks each one against your answer, so we never guess it."
+    },
+    {
+      "answer": "text",
+      "factId": "f82",
+      "hint": "One claim per line, as it may stand on a creative",
+      "id": "q-fact-pr-sweater-f82",
+      "line": "The claims we may use for Merino Lounge Sweater",
+      "productId": "pr-sweater",
+      "question": "Which claims may we use for Merino Lounge Sweater?",
+      "why": "Every line on a creative must be true. Fume’s expert checks each one against your answer, so we never guess it."
+    }
+  ]
