@@ -18,8 +18,8 @@ Product-kind pictures for the "What kind of product?" grid are in ../../kinds/ (
 
 Known: oil-ref-back carries invented fine print (ingredients block); taste-clinical carries an invented brand name. Both are mock only.
 | face-pack, wash-pack, kveld-pack, diffuser-pack, lip-pack, ritual-pack | More LYSNE products (face oil, body wash, Kveld eau de parfum, diffuser, lip balm, Evening Ritual gift set) | Catalogue, All products sheet |
-| scrub-pack, scrub-detail, sleep-pack, linen-pack, holder-front, holder-top, holder-lit, mist100-pack | Round 7 (16 Oct, gpt_image_2_5): Body Scrub 200 ml and its texture, Sleep Balm 30 g tin, Linen Spray 150 ml, an unlabelled stoneware incense holder (front, top, lit on a shelf: the zip's unsure group), Pillow Mist in its new 100 ml | Import products demo (seed8.ts) |
-| sweater-flat, sweater-back, sweater-detail, sweater-body | Round 7 (16 Oct, gpt_image_2_5): Merino Lounge Sweater in Ecru, flat front and back, the jersey-to-rib detail with the neck label, on a body (no face) | Product page, three levels of product data (seed6.ts) |
+| scrub-pack, scrub-detail, sleep-pack, linen-pack, holder-front, holder-top, holder-lit, mist100-pack | Round 7 (16 Oct, gpt_image_2_5): Body Scrub 200 ml and its texture, Sleep Balm 30 g tin, Linen Spray 150 ml, an unlabelled stoneware incense holder (front, top, lit on a shelf: the zip's unsure group), Pillow Mist in its new 100 ml | Import products demo (app/src/mock/seed/productImport.ts) |
+| sweater-flat, sweater-back, sweater-detail, sweater-body | Round 7 (16 Oct, gpt_image_2_5): Merino Lounge Sweater in Ecru, flat front and back, the jersey-to-rib detail with the neck label, on a body (no face) | Product page, three levels of product data (app/src/mock/seed/productSpecs.ts) |
 
 ## models/ (round 13, 22 Oct 2026, Marcus's comment #41: "Alle tatt i hvitt studio med samme klær")
 Made with Higgsfield, model gpt_image_2_5, text only (6 generations, about 1.5 credits): one full-body turnaround sheet and

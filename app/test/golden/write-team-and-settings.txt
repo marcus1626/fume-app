@@ -1,0 +1,250 @@
+-- maja: createMockApi({"latency":0})
+-- jonas: createMockApi({"latency":0,"userId":"u-jonas"})
+jonas invite("someone@lysne.example", "member") → events
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v9",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [
+        {
+          "at": "2026-10-14T12:21:00.000Z",
+          "by": "u-anna",
+          "id": "fb-1",
+          "state": "fixed",
+          "text": "The cap must be matte burgundy, as in the Product Truth."
+        }
+      ],
+      "format": "feed",
+      "id": "qa-3",
+      "image": "/demo/lysne/06-10-feed.jpg",
+      "madeAt": "2026-10-14T12:20:00.000Z",
+      "risk": "high",
+      "slot": "Master 2 · Variant 3",
+      "state": "waiting",
+      "studio": "render",
+      "title": "Feed 7",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+jonas invite("someone@lysne.example", "member")
+  {"error":"forbidden","message":"Only the owner invites people."}
+maja invite("kari@lysne.example", "approver") → events
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v9",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [
+        {
+          "at": "2026-10-14T12:21:00.000Z",
+          "by": "u-anna",
+          "id": "fb-1",
+          "state": "fixed",
+          "text": "The cap must be matte burgundy, as in the Product Truth."
+        }
+      ],
+      "format": "feed",
+      "id": "qa-3",
+      "image": "/demo/lysne/06-10-feed.jpg",
+      "madeAt": "2026-10-14T12:20:00.000Z",
+      "risk": "high",
+      "slot": "Master 2 · Variant 3",
+      "state": "waiting",
+      "studio": "render",
+      "title": "Feed 7",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+maja invite("kari@lysne.example", "approver")
+  {
+    "at": "2026-10-14T12:32:00.000Z",
+    "email": "kari@lysne.example",
+    "id": "inv-mvkqosp4-1",
+    "invitedBy": "u-maja",
+    "role": "approver",
+    "state": "sent",
+    "workspaceId": "w-lysne"
+  }
+maja changeRole("u-jonas", "approver")
+  {"role":"approver","userId":"u-jonas","workspaceId":"w-lysne"}
+maja setApprover("c-winter", "u-jonas")
+  {
+    "approverId": "u-jonas",
+    "boardId": "bd-winter",
+    "brandDnaVersion": 3,
+    "channels": ["paid_social","organic_social"],
+    "collectionIds": ["cl-gifts"],
+    "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+    "cover": "/demo/lysne/02-05-feed.jpg",
+    "createdAt": "2026-10-12T12:32:00.000Z",
+    "createdBy": "u-jonas",
+    "dueAt": "2026-11-03T12:32:00.000Z",
+    "formats": ["feed","story"],
+    "id": "c-winter",
+    "language": "Norwegian",
+    "market": "Norway",
+    "name": "Winter gifting",
+    "productIds": ["pr-oil","pr-candle"],
+    "roundsIncluded": 2,
+    "roundsUsed": 0,
+    "stage": "plan",
+    "state": "in_review",
+    "updatedAt": "2026-10-14T12:30:00.000Z",
+    "waits": {
+      "briefReady": false,
+      "delivery": "2026-10-27T12:32:00.000Z",
+      "directions": 0,
+      "plan": "ready",
+      "planChecked": true,
+      "planned": 9,
+      "questions": 0
+    },
+    "workspaceId": "w-lysne"
+  }
+maja removeMember("u-ida")
+  undefined
+maja team()
+  {
+    "fumeTeam": [
+      {"email":"anna@fumecreatives.com","id":"u-anna","name":"Anna","staffRole":"expert","title":"Designer"},
+      {"email":"sander@fumecreatives.com","id":"u-sander","name":"Sander","staffRole":"operator","title":"Producer"}
+    ],
+    "invitations": [
+      {
+        "at": "2026-10-13T10:32:00.000Z",
+        "email": "eva@lysne.example",
+        "id": "inv-1",
+        "invitedBy": "u-maja",
+        "role": "approver",
+        "state": "sent",
+        "workspaceId": "w-lysne"
+      },
+      {
+        "at": "2026-10-14T12:32:00.000Z",
+        "email": "kari@lysne.example",
+        "id": "inv-mvkqosp4-1",
+        "invitedBy": "u-maja",
+        "role": "approver",
+        "state": "sent",
+        "workspaceId": "w-lysne"
+      }
+    ],
+    "members": [
+      {
+        "membership": {"role":"owner","userId":"u-maja","workspaceId":"w-lysne"},
+        "user": {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"Head of Marketing"}
+      },
+      {
+        "membership": {"role":"approver","userId":"u-jonas","workspaceId":"w-lysne"},
+        "user": {"email":"jonas@lysne.example","id":"u-jonas","name":"Jonas Berg","title":"Performance Marketer"}
+      }
+    ]
+  }
+maja people()
+  [
+    {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"Head of Marketing"},
+    {"email":"jonas@lysne.example","id":"u-jonas","name":"Jonas Berg","title":"Performance Marketer"},
+    {"email":"anna@fumecreatives.com","id":"u-anna","name":"Anna","staffRole":"expert","title":"Designer"},
+    {"email":"sander@fumecreatives.com","id":"u-sander","name":"Sander","staffRole":"operator","title":"Producer"}
+  ]
+maja updateWorkspace({"brandName":"LYSNE Studio","language":"English"})
+  {"brandName":"LYSNE Studio","id":"w-lysne","language":"English","market":"Norway","organisationId":"o-lysne"}
+maja updateProfile({"email":"maja@lysne.example","name":"Maja Lind","title":"CMO"})
+  {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"CMO"}
+maja session()
+  {
+    "onboarded": true,
+    "organisation": {"id":"o-lysne","name":"LYSNE","packageId":"p-core"},
+    "role": "owner",
+    "user": {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"CMO"},
+    "workspace": {"brandName":"LYSNE Studio","id":"w-lysne","language":"English","market":"Norway","organisationId":"o-lysne"},
+    "workspaces": [{"brandName":"LYSNE Studio","id":"w-lysne","language":"English","market":"Norway","organisationId":"o-lysne"}]
+  }
+maja settings()
+  {
+    "notificationPrefs": [
+      {"email":true,"inApp":true,"kind":"checked","label":"Creatives are checked and ready for you"},
+      {"email":true,"inApp":true,"kind":"waiting_on_you","label":"Fume needs something from you"},
+      {"email":false,"inApp":true,"kind":"engine_done","label":"The Engine finished a run"},
+      {"email":true,"inApp":true,"kind":"delivered","label":"A delivery is ready"},
+      {"email":true,"inApp":true,"kind":"mention","label":"Someone mentions you"}
+    ],
+    "package": {"creativeCap":27,"directionRounds":1,"id":"p-core","kind":"core","period":"monthly","productionRounds":2},
+    "usage": {"campaignsActive":4,"creativeCap":27,"creativesUsed":11,"periodEndsAt":"2026-10-31T12:32:00.000Z"},
+    "workspace": {"brandName":"LYSNE Studio","id":"w-lysne","language":"English","market":"Norway","organisationId":"o-lysne"}
+  }
+maja campaign("c-winter")
+  {
+    "approver": {"email":"jonas@lysne.example","id":"u-jonas","name":"Jonas Berg","title":"Performance Marketer"},
+    "brief": {
+      "approvedAt": "2026-10-13T12:32:00.000Z",
+      "approvedBy": "u-maja",
+      "audience": "People buying a considered gift for someone close.",
+      "campaignId": "c-winter",
+      "channels": ["paid_social","organic_social"],
+      "creatives": 9,
+      "formats": ["feed","story"],
+      "mandatory": ["The bottle with its gift sleeve","Warm, low light"],
+      "message": "A slower evening, given.",
+      "missing": [],
+      "never": ["Red and green Christmas colours","Discount language"],
+      "objective": "Gift sets for the weeks before Christmas, on Instagram and Facebook.",
+      "references": ["/demo/lysne/02-05-square.jpg"],
+      "state": "approved",
+      "version": 1
+    },
+    "campaign": {
+      "approverId": "u-jonas",
+      "boardId": "bd-winter",
+      "brandDnaVersion": 3,
+      "channels": ["paid_social","organic_social"],
+      "collectionIds": ["cl-gifts"],
+      "counts": {"approved":0,"checked":0,"creatives":0,"delivered":0,"inCheck":0},
+      "cover": "/demo/lysne/02-05-feed.jpg",
+      "createdAt": "2026-10-12T12:32:00.000Z",
+      "createdBy": "u-jonas",
+      "dueAt": "2026-11-03T12:32:00.000Z",
+      "formats": ["feed","story"],
+      "id": "c-winter",
+      "language": "Norwegian",
+      "market": "Norway",
+      "name": "Winter gifting",
+      "productIds": ["pr-oil","pr-candle"],
+      "roundsIncluded": 2,
+      "roundsUsed": 0,
+      "stage": "plan",
+      "state": "in_review",
+      "updatedAt": "2026-10-14T12:30:00.000Z",
+      "waits": {
+        "briefReady": false,
+        "delivery": "2026-10-27T12:32:00.000Z",
+        "directions": 0,
+        "plan": "ready",
+        "planChecked": true,
+        "planned": 9,
+        "questions": 0
+      },
+      "workspaceId": "w-lysne"
+    },
+    "clock": {
+      "campaignId": "c-winter",
+      "dueAt": "2026-10-19T12:32:00.000Z",
+      "pausedReason": "The plan waits on Maja’s approval.",
+      "stage": "plan",
+      "state": "paused_waiting_on_you"
+    },
+    "creatives": [],
+    "directions": [],
+    "people": [
+      {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"CMO"},
+      {"email":"jonas@lysne.example","id":"u-jonas","name":"Jonas Berg","title":"Performance Marketer"}
+    ],
+    "record": [],
+    "runs": [],
+    "threadId": "t-winter"
+  }

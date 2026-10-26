@@ -1,0 +1,2384 @@
+-- maja: createMockApi({"latency":0})
+maja startBrandScan({"files":[{"bytes":2000000,"name":"guide.pdf"}],"source":"upload"}) → events
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v9",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "feedback": [
+        {
+          "at": "2026-10-14T12:21:00.000Z",
+          "by": "u-anna",
+          "id": "fb-1",
+          "state": "fixed",
+          "text": "The cap must be matte burgundy, as in the Product Truth."
+        }
+      ],
+      "format": "feed",
+      "id": "qa-3",
+      "image": "/demo/lysne/06-10-feed.jpg",
+      "madeAt": "2026-10-14T12:20:00.000Z",
+      "risk": "high",
+      "slot": "Master 2 · Variant 3",
+      "state": "waiting",
+      "studio": "render",
+      "title": "Feed 7",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+maja startBrandScan({"files":[{"bytes":2000000,"name":"guide.pdf"}],"source":"upload"})
+  {
+    "files": ["guide.pdf"],
+    "finds": [
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-logo",
+        "kind": "logo",
+        "label": "Wordmark",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "LYSNE"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-logo2",
+        "kind": "logo",
+        "label": "Wordmark, reversed",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "LYSNE"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-c1",
+        "kind": "colour",
+        "label": "Night brown",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "#2B1D17"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-c2",
+        "kind": "colour",
+        "label": "Linen",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "#EFE6DA"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-c3",
+        "kind": "colour",
+        "label": "Amber glass",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "#A8642B"
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-c4",
+        "kind": "colour",
+        "label": "Burgundy cap",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "#5C1F2A"
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-c5",
+        "kind": "colour",
+        "label": "Evening stone",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "#B5A691"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-t1",
+        "kind": "typeface",
+        "label": "Cormorant",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "For the hour before sleep."
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-t2",
+        "kind": "typeface",
+        "label": "Inter",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "Warm the oil in your hands."
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-t3",
+        "kind": "typeface",
+        "label": "Small caps",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "NIGHT BODY OIL"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-i1",
+        "kind": "image",
+        "label": "Low side light on stone",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/05-06-square.jpg"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-i2",
+        "kind": "image",
+        "label": "Fluted glass, slow light",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/02-04-square.jpg"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-i3",
+        "kind": "image",
+        "label": "Product low, air above",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/08-06-square.jpg"
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-i4",
+        "kind": "image",
+        "label": "Water light on linen",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/09-13-square.jpg"
+      },
+      {
+        "confidence": "low",
+        "evidence": "guide.pdf",
+        "id": "m-c6",
+        "kind": "colour",
+        "label": "Dusk blue",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "#3E4A5C"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-p1",
+        "kind": "product",
+        "label": "Night Body Oil",
+        "origin": "customer",
+        "productId": "pr-oil",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/oil-pack.jpg"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-p2",
+        "kind": "product",
+        "label": "Hand Balm",
+        "origin": "customer",
+        "productId": "pr-balm",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/balm-pack.jpg"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-p3",
+        "kind": "product",
+        "label": "Pillow Mist",
+        "origin": "customer",
+        "productId": "pr-mist",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/mist-pack.jpg"
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-p4",
+        "kind": "product",
+        "label": "Evening Candle",
+        "origin": "customer",
+        "productId": "pr-candle",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/candle-pack.jpg"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-p5",
+        "kind": "product",
+        "label": "Face Oil",
+        "origin": "customer",
+        "productId": "pr-face",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/face-pack.jpg"
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-p6",
+        "kind": "product",
+        "label": "Kveld Eau de Parfum",
+        "origin": "customer",
+        "productId": "pr-kveld",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/kveld-pack.jpg"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-p7",
+        "kind": "product",
+        "label": "Evening Body Wash",
+        "origin": "customer",
+        "productId": "pr-wash",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/wash-pack.jpg"
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-p8",
+        "kind": "product",
+        "label": "Room Diffuser",
+        "origin": "customer",
+        "productId": "pr-diffuser",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/diffuser-pack.jpg"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-p9",
+        "kind": "product",
+        "label": "Lip Balm",
+        "origin": "customer",
+        "productId": "pr-lip",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/lip-pack.jpg"
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-p10",
+        "kind": "product",
+        "label": "Evening Ritual gift box",
+        "origin": "customer",
+        "productId": "pr-ritual",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/ritual-pack.jpg"
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-p11",
+        "kind": "product",
+        "label": "Merino Lounge Sweater",
+        "origin": "customer",
+        "productId": "pr-sweater",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/sweater-flat.jpg"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-v1",
+        "kind": "voice",
+        "label": "Short, quiet sentences.",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "Warm the oil in your hands. Breathe out."
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-v2",
+        "kind": "voice",
+        "label": "Speaks of the evening, never of results.",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "For the hour before sleep."
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-v3",
+        "kind": "voice",
+        "label": "Says “you”, rarely “we”.",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "Your evening, slowed down."
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-r1",
+        "kind": "rule",
+        "label": "No results or before-and-after",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "Never promise results; speak of the evening."
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-r2",
+        "kind": "rule",
+        "label": "The label is never cropped",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "The label stays whole, front and centred."
+      },
+      {
+        "confidence": "low",
+        "evidence": "guide.pdf",
+        "id": "m-a1",
+        "kind": "audience",
+        "label": "Who LYSNE speaks to",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "Women 30 to 55 in Norway who keep an evening ritual."
+      }
+    ],
+    "id": "scan-mvkqowk0-1",
+    "needsYou": 12,
+    "reading": "Reading guide.pdf",
+    "source": "upload",
+    "sources": [{"id":"sf0","kind":"file","label":"guide.pdf","state":"reading"}],
+    "state": "reading",
+    "workspaceId": "w-lysne"
+  }
+-- 10 s later
+maja, 10 s later → events
+  {
+    "scan": {
+      "files": ["guide.pdf"],
+      "finds": [
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-logo",
+          "kind": "logo",
+          "label": "Wordmark",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "LYSNE"
+        },
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-logo2",
+          "kind": "logo",
+          "label": "Wordmark, reversed",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "LYSNE"
+        },
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-c1",
+          "kind": "colour",
+          "label": "Night brown",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "#2B1D17"
+        },
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-c2",
+          "kind": "colour",
+          "label": "Linen",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "#EFE6DA"
+        },
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-c3",
+          "kind": "colour",
+          "label": "Amber glass",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "#A8642B"
+        },
+        {
+          "confidence": "medium",
+          "evidence": "guide.pdf",
+          "id": "m-c4",
+          "kind": "colour",
+          "label": "Burgundy cap",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "#5C1F2A"
+        },
+        {
+          "confidence": "medium",
+          "evidence": "guide.pdf",
+          "id": "m-c5",
+          "kind": "colour",
+          "label": "Evening stone",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "#B5A691"
+        },
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-t1",
+          "kind": "typeface",
+          "label": "Cormorant",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "For the hour before sleep."
+        },
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-t2",
+          "kind": "typeface",
+          "label": "Inter",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "Warm the oil in your hands."
+        },
+        {
+          "confidence": "medium",
+          "evidence": "guide.pdf",
+          "id": "m-t3",
+          "kind": "typeface",
+          "label": "Small caps",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "NIGHT BODY OIL"
+        },
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-i1",
+          "kind": "image",
+          "label": "Low side light on stone",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "/demo/lysne/05-06-square.jpg"
+        },
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-i2",
+          "kind": "image",
+          "label": "Fluted glass, slow light",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "/demo/lysne/02-04-square.jpg"
+        },
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-i3",
+          "kind": "image",
+          "label": "Product low, air above",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "/demo/lysne/08-06-square.jpg"
+        },
+        {
+          "confidence": "medium",
+          "evidence": "guide.pdf",
+          "id": "m-i4",
+          "kind": "image",
+          "label": "Water light on linen",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "/demo/lysne/09-13-square.jpg"
+        },
+        {
+          "confidence": "low",
+          "evidence": "guide.pdf",
+          "id": "m-c6",
+          "kind": "colour",
+          "label": "Dusk blue",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "#3E4A5C"
+        },
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-p1",
+          "kind": "product",
+          "label": "Night Body Oil",
+          "origin": "customer",
+          "productId": "pr-oil",
+          "sourceId": "sf0",
+          "value": "/demo/lysne/gen/oil-pack.jpg"
+        },
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-p2",
+          "kind": "product",
+          "label": "Hand Balm",
+          "origin": "customer",
+          "productId": "pr-balm",
+          "sourceId": "sf0",
+          "value": "/demo/lysne/gen/balm-pack.jpg"
+        },
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-p3",
+          "kind": "product",
+          "label": "Pillow Mist",
+          "origin": "customer",
+          "productId": "pr-mist",
+          "sourceId": "sf0",
+          "value": "/demo/lysne/gen/mist-pack.jpg"
+        },
+        {
+          "confidence": "medium",
+          "evidence": "guide.pdf",
+          "id": "m-p4",
+          "kind": "product",
+          "label": "Evening Candle",
+          "origin": "customer",
+          "productId": "pr-candle",
+          "sourceId": "sf0",
+          "value": "/demo/lysne/gen/candle-pack.jpg"
+        },
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-p5",
+          "kind": "product",
+          "label": "Face Oil",
+          "origin": "customer",
+          "productId": "pr-face",
+          "sourceId": "sf0",
+          "value": "/demo/lysne/gen/face-pack.jpg"
+        },
+        {
+          "confidence": "medium",
+          "evidence": "guide.pdf",
+          "id": "m-p6",
+          "kind": "product",
+          "label": "Kveld Eau de Parfum",
+          "origin": "customer",
+          "productId": "pr-kveld",
+          "sourceId": "sf0",
+          "value": "/demo/lysne/gen/kveld-pack.jpg"
+        },
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-p7",
+          "kind": "product",
+          "label": "Evening Body Wash",
+          "origin": "customer",
+          "productId": "pr-wash",
+          "sourceId": "sf0",
+          "value": "/demo/lysne/gen/wash-pack.jpg"
+        },
+        {
+          "confidence": "medium",
+          "evidence": "guide.pdf",
+          "id": "m-p8",
+          "kind": "product",
+          "label": "Room Diffuser",
+          "origin": "customer",
+          "productId": "pr-diffuser",
+          "sourceId": "sf0",
+          "value": "/demo/lysne/gen/diffuser-pack.jpg"
+        },
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-p9",
+          "kind": "product",
+          "label": "Lip Balm",
+          "origin": "customer",
+          "productId": "pr-lip",
+          "sourceId": "sf0",
+          "value": "/demo/lysne/gen/lip-pack.jpg"
+        },
+        {
+          "confidence": "medium",
+          "evidence": "guide.pdf",
+          "id": "m-p10",
+          "kind": "product",
+          "label": "Evening Ritual gift box",
+          "origin": "customer",
+          "productId": "pr-ritual",
+          "sourceId": "sf0",
+          "value": "/demo/lysne/gen/ritual-pack.jpg"
+        },
+        {
+          "confidence": "medium",
+          "evidence": "guide.pdf",
+          "id": "m-p11",
+          "kind": "product",
+          "label": "Merino Lounge Sweater",
+          "origin": "customer",
+          "productId": "pr-sweater",
+          "sourceId": "sf0",
+          "value": "/demo/lysne/gen/sweater-flat.jpg"
+        },
+        {
+          "confidence": "high",
+          "evidence": "guide.pdf",
+          "id": "m-v1",
+          "kind": "voice",
+          "label": "Short, quiet sentences.",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "Warm the oil in your hands. Breathe out."
+        },
+        {
+          "confidence": "medium",
+          "evidence": "guide.pdf",
+          "id": "m-v2",
+          "kind": "voice",
+          "label": "Speaks of the evening, never of results.",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "For the hour before sleep."
+        },
+        {
+          "confidence": "medium",
+          "evidence": "guide.pdf",
+          "id": "m-v3",
+          "kind": "voice",
+          "label": "Says “you”, rarely “we”.",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "Your evening, slowed down."
+        },
+        {
+          "confidence": "medium",
+          "evidence": "guide.pdf",
+          "id": "m-r1",
+          "kind": "rule",
+          "label": "No results or before-and-after",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "Never promise results; speak of the evening."
+        },
+        {
+          "confidence": "medium",
+          "evidence": "guide.pdf",
+          "id": "m-r2",
+          "kind": "rule",
+          "label": "The label is never cropped",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "The label stays whole, front and centred."
+        },
+        {
+          "confidence": "low",
+          "evidence": "guide.pdf",
+          "id": "m-a1",
+          "kind": "audience",
+          "label": "Who LYSNE speaks to",
+          "origin": "customer",
+          "sourceId": "sf0",
+          "value": "Women 30 to 55 in Norway who keep an evening ritual."
+        }
+      ],
+      "id": "scan-mvkqowk0-1",
+      "needsYou": 12,
+      "source": "upload",
+      "sources": [{"id":"sf0","kind":"file","label":"guide.pdf","state":"read"}],
+      "state": "done",
+      "workspaceId": "w-lysne"
+    },
+    "type": "scan.progress"
+  }
+maja brandScan()
+  {
+    "files": ["guide.pdf"],
+    "finds": [
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-logo",
+        "kind": "logo",
+        "label": "Wordmark",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "LYSNE"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-logo2",
+        "kind": "logo",
+        "label": "Wordmark, reversed",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "LYSNE"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-c1",
+        "kind": "colour",
+        "label": "Night brown",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "#2B1D17"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-c2",
+        "kind": "colour",
+        "label": "Linen",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "#EFE6DA"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-c3",
+        "kind": "colour",
+        "label": "Amber glass",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "#A8642B"
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-c4",
+        "kind": "colour",
+        "label": "Burgundy cap",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "#5C1F2A"
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-c5",
+        "kind": "colour",
+        "label": "Evening stone",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "#B5A691"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-t1",
+        "kind": "typeface",
+        "label": "Cormorant",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "For the hour before sleep."
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-t2",
+        "kind": "typeface",
+        "label": "Inter",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "Warm the oil in your hands."
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-t3",
+        "kind": "typeface",
+        "label": "Small caps",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "NIGHT BODY OIL"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-i1",
+        "kind": "image",
+        "label": "Low side light on stone",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/05-06-square.jpg"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-i2",
+        "kind": "image",
+        "label": "Fluted glass, slow light",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/02-04-square.jpg"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-i3",
+        "kind": "image",
+        "label": "Product low, air above",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/08-06-square.jpg"
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-i4",
+        "kind": "image",
+        "label": "Water light on linen",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/09-13-square.jpg"
+      },
+      {
+        "confidence": "low",
+        "evidence": "guide.pdf",
+        "id": "m-c6",
+        "kind": "colour",
+        "label": "Dusk blue",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "#3E4A5C"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-p1",
+        "kind": "product",
+        "label": "Night Body Oil",
+        "origin": "customer",
+        "productId": "pr-oil",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/oil-pack.jpg"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-p2",
+        "kind": "product",
+        "label": "Hand Balm",
+        "origin": "customer",
+        "productId": "pr-balm",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/balm-pack.jpg"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-p3",
+        "kind": "product",
+        "label": "Pillow Mist",
+        "origin": "customer",
+        "productId": "pr-mist",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/mist-pack.jpg"
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-p4",
+        "kind": "product",
+        "label": "Evening Candle",
+        "origin": "customer",
+        "productId": "pr-candle",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/candle-pack.jpg"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-p5",
+        "kind": "product",
+        "label": "Face Oil",
+        "origin": "customer",
+        "productId": "pr-face",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/face-pack.jpg"
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-p6",
+        "kind": "product",
+        "label": "Kveld Eau de Parfum",
+        "origin": "customer",
+        "productId": "pr-kveld",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/kveld-pack.jpg"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-p7",
+        "kind": "product",
+        "label": "Evening Body Wash",
+        "origin": "customer",
+        "productId": "pr-wash",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/wash-pack.jpg"
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-p8",
+        "kind": "product",
+        "label": "Room Diffuser",
+        "origin": "customer",
+        "productId": "pr-diffuser",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/diffuser-pack.jpg"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-p9",
+        "kind": "product",
+        "label": "Lip Balm",
+        "origin": "customer",
+        "productId": "pr-lip",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/lip-pack.jpg"
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-p10",
+        "kind": "product",
+        "label": "Evening Ritual gift box",
+        "origin": "customer",
+        "productId": "pr-ritual",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/ritual-pack.jpg"
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-p11",
+        "kind": "product",
+        "label": "Merino Lounge Sweater",
+        "origin": "customer",
+        "productId": "pr-sweater",
+        "sourceId": "sf0",
+        "value": "/demo/lysne/gen/sweater-flat.jpg"
+      },
+      {
+        "confidence": "high",
+        "evidence": "guide.pdf",
+        "id": "m-v1",
+        "kind": "voice",
+        "label": "Short, quiet sentences.",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "Warm the oil in your hands. Breathe out."
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-v2",
+        "kind": "voice",
+        "label": "Speaks of the evening, never of results.",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "For the hour before sleep."
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-v3",
+        "kind": "voice",
+        "label": "Says “you”, rarely “we”.",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "Your evening, slowed down."
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-r1",
+        "kind": "rule",
+        "label": "No results or before-and-after",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "Never promise results; speak of the evening."
+      },
+      {
+        "confidence": "medium",
+        "evidence": "guide.pdf",
+        "id": "m-r2",
+        "kind": "rule",
+        "label": "The label is never cropped",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "The label stays whole, front and centred."
+      },
+      {
+        "confidence": "low",
+        "evidence": "guide.pdf",
+        "id": "m-a1",
+        "kind": "audience",
+        "label": "Who LYSNE speaks to",
+        "origin": "customer",
+        "sourceId": "sf0",
+        "value": "Women 30 to 55 in Norway who keep an evening ritual."
+      }
+    ],
+    "id": "scan-mvkqowk0-1",
+    "needsYou": 12,
+    "source": "upload",
+    "sources": [{"id":"sf0","kind":"file","label":"guide.pdf","state":"read"}],
+    "state": "done",
+    "workspaceId": "w-lysne"
+  }
+maja startBrandUpdate({"source":"website","url":"https://lysne.example"})
+  {
+    "files": [],
+    "found": [
+      {
+        "confidence": "high",
+        "id": "bf-autumn",
+        "image": "/demo/lysne/06-05-square.jpg",
+        "images": [
+          "/demo/lysne/06-05-square.jpg",
+          "/demo/lysne/07-02-square.jpg",
+          "/demo/lysne/04-06-square.jpg",
+          "/demo/lysne/01-12-square.jpg"
+        ],
+        "kind": "image",
+        "note": "A new campaign page since your last approval.",
+        "source": "lysne.no/autumn",
+        "status": "new",
+        "subtitle": "4 pictures",
+        "title": "Autumn 2026 campaign"
+      },
+      {
+        "after": "#A3927B",
+        "before": "#B5A691",
+        "confidence": "medium",
+        "id": "bf-stone",
+        "kind": "colour",
+        "note": "A little darker and warmer on the site now.",
+        "source": "lysne.no, the site’s colours",
+        "status": "changed",
+        "subtitle": "Support colour",
+        "targetId": "col-stone",
+        "title": "Evening stone"
+      },
+      {
+        "after": "Names the hour, not the product.",
+        "confidence": "high",
+        "id": "bf-voice",
+        "kind": "voice",
+        "note": "A new line on the about page.",
+        "source": "lysne.no/about",
+        "status": "new",
+        "subtitle": "“Seven in the evening. The house goes quiet.”",
+        "title": "Names the hour, not the product."
+      },
+      {
+        "after": "Inter Tight",
+        "before": "Inter",
+        "confidence": "low",
+        "id": "bf-type",
+        "kind": "typeface",
+        "note": "The headings look narrower. A new typeface, or Inter set tighter?",
+        "source": "lysne.no/about, headings",
+        "status": "unsure",
+        "subtitle": "Body typeface",
+        "targetId": "tf-body",
+        "title": "Inter Tight"
+      }
+    ],
+    "id": "bu-mvkqp49s-2",
+    "products": {"count":2,"names":["Body Scrub, new","Pillow Mist, a new 100 ml size"]},
+    "reading": "Reading lysne.no",
+    "source": "website",
+    "sources": [
+      {"id":"u-home","kind":"page","label":"lysne.no","state":"reading"},
+      {"id":"u-autumn","kind":"page","label":"lysne.no/autumn","state":"waiting"},
+      {"id":"u-about","kind":"page","label":"lysne.no/about","state":"waiting"},
+      {"id":"u-shop","kind":"page","label":"lysne.no/shop","state":"waiting"}
+    ],
+    "startedAt": "2026-10-14T12:32:10.000Z",
+    "state": "reading",
+    "unchanged": 23,
+    "url": "https://lysne.example",
+    "workspaceId": "w-lysne"
+  }
+-- 10 s later
+maja brandUpdate()
+  {
+    "files": [],
+    "found": [
+      {
+        "confidence": "high",
+        "id": "bf-autumn",
+        "image": "/demo/lysne/06-05-square.jpg",
+        "images": [
+          "/demo/lysne/06-05-square.jpg",
+          "/demo/lysne/07-02-square.jpg",
+          "/demo/lysne/04-06-square.jpg",
+          "/demo/lysne/01-12-square.jpg"
+        ],
+        "kind": "image",
+        "note": "A new campaign page since your last approval.",
+        "source": "lysne.no/autumn",
+        "status": "new",
+        "subtitle": "4 pictures",
+        "title": "Autumn 2026 campaign"
+      },
+      {
+        "after": "#A3927B",
+        "before": "#B5A691",
+        "confidence": "medium",
+        "id": "bf-stone",
+        "kind": "colour",
+        "note": "A little darker and warmer on the site now.",
+        "source": "lysne.no, the site’s colours",
+        "status": "changed",
+        "subtitle": "Support colour",
+        "targetId": "col-stone",
+        "title": "Evening stone"
+      },
+      {
+        "after": "Names the hour, not the product.",
+        "confidence": "high",
+        "id": "bf-voice",
+        "kind": "voice",
+        "note": "A new line on the about page.",
+        "source": "lysne.no/about",
+        "status": "new",
+        "subtitle": "“Seven in the evening. The house goes quiet.”",
+        "title": "Names the hour, not the product."
+      },
+      {
+        "after": "Inter Tight",
+        "before": "Inter",
+        "confidence": "low",
+        "id": "bf-type",
+        "kind": "typeface",
+        "note": "The headings look narrower. A new typeface, or Inter set tighter?",
+        "source": "lysne.no/about, headings",
+        "status": "unsure",
+        "subtitle": "Body typeface",
+        "targetId": "tf-body",
+        "title": "Inter Tight"
+      }
+    ],
+    "id": "bu-mvkqp49s-2",
+    "products": {"count":2,"names":["Body Scrub, new","Pillow Mist, a new 100 ml size"]},
+    "source": "website",
+    "sources": [
+      {"id":"u-home","kind":"page","label":"lysne.no","state":"read"},
+      {"id":"u-autumn","kind":"page","label":"lysne.no/autumn","state":"read"},
+      {"id":"u-about","kind":"page","label":"lysne.no/about","state":"read"},
+      {"id":"u-shop","kind":"page","label":"lysne.no/shop","state":"read"}
+    ],
+    "startedAt": "2026-10-14T12:32:10.000Z",
+    "state": "ready",
+    "unchanged": 23,
+    "url": "https://lysne.example",
+    "workspaceId": "w-lysne"
+  }
+maja decideBrandFound({"foundId":"bf-autumn","updateId":"bu-mvkqp49s-2","verdict":"keep"})
+  {
+    "files": [],
+    "found": [
+      {
+        "confidence": "high",
+        "decision": "kept",
+        "id": "bf-autumn",
+        "image": "/demo/lysne/06-05-square.jpg",
+        "images": [
+          "/demo/lysne/06-05-square.jpg",
+          "/demo/lysne/07-02-square.jpg",
+          "/demo/lysne/04-06-square.jpg",
+          "/demo/lysne/01-12-square.jpg"
+        ],
+        "kind": "image",
+        "note": "A new campaign page since your last approval.",
+        "source": "lysne.no/autumn",
+        "status": "new",
+        "subtitle": "4 pictures",
+        "title": "Autumn 2026 campaign"
+      },
+      {
+        "after": "#A3927B",
+        "before": "#B5A691",
+        "confidence": "medium",
+        "id": "bf-stone",
+        "kind": "colour",
+        "note": "A little darker and warmer on the site now.",
+        "source": "lysne.no, the site’s colours",
+        "status": "changed",
+        "subtitle": "Support colour",
+        "targetId": "col-stone",
+        "title": "Evening stone"
+      },
+      {
+        "after": "Names the hour, not the product.",
+        "confidence": "high",
+        "id": "bf-voice",
+        "kind": "voice",
+        "note": "A new line on the about page.",
+        "source": "lysne.no/about",
+        "status": "new",
+        "subtitle": "“Seven in the evening. The house goes quiet.”",
+        "title": "Names the hour, not the product."
+      },
+      {
+        "after": "Inter Tight",
+        "before": "Inter",
+        "confidence": "low",
+        "id": "bf-type",
+        "kind": "typeface",
+        "note": "The headings look narrower. A new typeface, or Inter set tighter?",
+        "source": "lysne.no/about, headings",
+        "status": "unsure",
+        "subtitle": "Body typeface",
+        "targetId": "tf-body",
+        "title": "Inter Tight"
+      }
+    ],
+    "id": "bu-mvkqp49s-2",
+    "products": {"count":2,"names":["Body Scrub, new","Pillow Mist, a new 100 ml size"]},
+    "source": "website",
+    "sources": [
+      {"id":"u-home","kind":"page","label":"lysne.no","state":"read"},
+      {"id":"u-autumn","kind":"page","label":"lysne.no/autumn","state":"read"},
+      {"id":"u-about","kind":"page","label":"lysne.no/about","state":"read"},
+      {"id":"u-shop","kind":"page","label":"lysne.no/shop","state":"read"}
+    ],
+    "startedAt": "2026-10-14T12:32:10.000Z",
+    "state": "ready",
+    "unchanged": 23,
+    "url": "https://lysne.example",
+    "workspaceId": "w-lysne"
+  }
+maja decideBrandFound({"foundId":"bf-stone","updateId":"bu-mvkqp49s-2","value":"Fixed","verdict":"fix"})
+  {
+    "files": [],
+    "found": [
+      {
+        "confidence": "high",
+        "decision": "kept",
+        "id": "bf-autumn",
+        "image": "/demo/lysne/06-05-square.jpg",
+        "images": [
+          "/demo/lysne/06-05-square.jpg",
+          "/demo/lysne/07-02-square.jpg",
+          "/demo/lysne/04-06-square.jpg",
+          "/demo/lysne/01-12-square.jpg"
+        ],
+        "kind": "image",
+        "note": "A new campaign page since your last approval.",
+        "source": "lysne.no/autumn",
+        "status": "new",
+        "subtitle": "4 pictures",
+        "title": "Autumn 2026 campaign"
+      },
+      {
+        "after": "#A3927B",
+        "before": "#B5A691",
+        "confidence": "medium",
+        "decision": "fixed",
+        "id": "bf-stone",
+        "kind": "colour",
+        "note": "A little darker and warmer on the site now.",
+        "source": "lysne.no, the site’s colours",
+        "status": "changed",
+        "subtitle": "Support colour",
+        "targetId": "col-stone",
+        "title": "Evening stone"
+      },
+      {
+        "after": "Names the hour, not the product.",
+        "confidence": "high",
+        "id": "bf-voice",
+        "kind": "voice",
+        "note": "A new line on the about page.",
+        "source": "lysne.no/about",
+        "status": "new",
+        "subtitle": "“Seven in the evening. The house goes quiet.”",
+        "title": "Names the hour, not the product."
+      },
+      {
+        "after": "Inter Tight",
+        "before": "Inter",
+        "confidence": "low",
+        "id": "bf-type",
+        "kind": "typeface",
+        "note": "The headings look narrower. A new typeface, or Inter set tighter?",
+        "source": "lysne.no/about, headings",
+        "status": "unsure",
+        "subtitle": "Body typeface",
+        "targetId": "tf-body",
+        "title": "Inter Tight"
+      }
+    ],
+    "id": "bu-mvkqp49s-2",
+    "products": {"count":2,"names":["Body Scrub, new","Pillow Mist, a new 100 ml size"]},
+    "source": "website",
+    "sources": [
+      {"id":"u-home","kind":"page","label":"lysne.no","state":"read"},
+      {"id":"u-autumn","kind":"page","label":"lysne.no/autumn","state":"read"},
+      {"id":"u-about","kind":"page","label":"lysne.no/about","state":"read"},
+      {"id":"u-shop","kind":"page","label":"lysne.no/shop","state":"read"}
+    ],
+    "startedAt": "2026-10-14T12:32:10.000Z",
+    "state": "ready",
+    "unchanged": 23,
+    "url": "https://lysne.example",
+    "workspaceId": "w-lysne"
+  }
+maja decideBrandFound({"foundId":"bf-voice","updateId":"bu-mvkqp49s-2","verdict":"remove"})
+  {
+    "files": [],
+    "found": [
+      {
+        "confidence": "high",
+        "decision": "kept",
+        "id": "bf-autumn",
+        "image": "/demo/lysne/06-05-square.jpg",
+        "images": [
+          "/demo/lysne/06-05-square.jpg",
+          "/demo/lysne/07-02-square.jpg",
+          "/demo/lysne/04-06-square.jpg",
+          "/demo/lysne/01-12-square.jpg"
+        ],
+        "kind": "image",
+        "note": "A new campaign page since your last approval.",
+        "source": "lysne.no/autumn",
+        "status": "new",
+        "subtitle": "4 pictures",
+        "title": "Autumn 2026 campaign"
+      },
+      {
+        "after": "#A3927B",
+        "before": "#B5A691",
+        "confidence": "medium",
+        "decision": "fixed",
+        "id": "bf-stone",
+        "kind": "colour",
+        "note": "A little darker and warmer on the site now.",
+        "source": "lysne.no, the site’s colours",
+        "status": "changed",
+        "subtitle": "Support colour",
+        "targetId": "col-stone",
+        "title": "Evening stone"
+      },
+      {
+        "after": "Names the hour, not the product.",
+        "confidence": "high",
+        "decision": "removed",
+        "id": "bf-voice",
+        "kind": "voice",
+        "note": "A new line on the about page.",
+        "source": "lysne.no/about",
+        "status": "new",
+        "subtitle": "“Seven in the evening. The house goes quiet.”",
+        "title": "Names the hour, not the product."
+      },
+      {
+        "after": "Inter Tight",
+        "before": "Inter",
+        "confidence": "low",
+        "id": "bf-type",
+        "kind": "typeface",
+        "note": "The headings look narrower. A new typeface, or Inter set tighter?",
+        "source": "lysne.no/about, headings",
+        "status": "unsure",
+        "subtitle": "Body typeface",
+        "targetId": "tf-body",
+        "title": "Inter Tight"
+      }
+    ],
+    "id": "bu-mvkqp49s-2",
+    "products": {"count":2,"names":["Body Scrub, new","Pillow Mist, a new 100 ml size"]},
+    "source": "website",
+    "sources": [
+      {"id":"u-home","kind":"page","label":"lysne.no","state":"read"},
+      {"id":"u-autumn","kind":"page","label":"lysne.no/autumn","state":"read"},
+      {"id":"u-about","kind":"page","label":"lysne.no/about","state":"read"},
+      {"id":"u-shop","kind":"page","label":"lysne.no/shop","state":"read"}
+    ],
+    "startedAt": "2026-10-14T12:32:10.000Z",
+    "state": "ready",
+    "unchanged": 23,
+    "url": "https://lysne.example",
+    "workspaceId": "w-lysne"
+  }
+maja approveBrandUpdate("bu-mvkqp49s-2")
+  {
+    "appliedAt": "2026-10-14T12:32:20.000Z",
+    "appliedBy": "u-maja",
+    "files": [],
+    "found": [
+      {
+        "confidence": "high",
+        "decision": "kept",
+        "id": "bf-autumn",
+        "image": "/demo/lysne/06-05-square.jpg",
+        "images": [
+          "/demo/lysne/06-05-square.jpg",
+          "/demo/lysne/07-02-square.jpg",
+          "/demo/lysne/04-06-square.jpg",
+          "/demo/lysne/01-12-square.jpg"
+        ],
+        "kind": "image",
+        "note": "A new campaign page since your last approval.",
+        "source": "lysne.no/autumn",
+        "status": "new",
+        "subtitle": "4 pictures",
+        "title": "Autumn 2026 campaign"
+      },
+      {
+        "after": "#A3927B",
+        "before": "#B5A691",
+        "confidence": "medium",
+        "decision": "fixed",
+        "id": "bf-stone",
+        "kind": "colour",
+        "note": "A little darker and warmer on the site now.",
+        "source": "lysne.no, the site’s colours",
+        "status": "changed",
+        "subtitle": "Support colour",
+        "targetId": "col-stone",
+        "title": "Evening stone"
+      },
+      {
+        "after": "Names the hour, not the product.",
+        "confidence": "high",
+        "decision": "removed",
+        "id": "bf-voice",
+        "kind": "voice",
+        "note": "A new line on the about page.",
+        "source": "lysne.no/about",
+        "status": "new",
+        "subtitle": "“Seven in the evening. The house goes quiet.”",
+        "title": "Names the hour, not the product."
+      },
+      {
+        "after": "Inter Tight",
+        "before": "Inter",
+        "confidence": "low",
+        "decision": "kept",
+        "id": "bf-type",
+        "kind": "typeface",
+        "note": "The headings look narrower. A new typeface, or Inter set tighter?",
+        "source": "lysne.no/about, headings",
+        "status": "unsure",
+        "subtitle": "Body typeface",
+        "targetId": "tf-body",
+        "title": "Inter Tight"
+      }
+    ],
+    "id": "bu-mvkqp49s-2",
+    "products": {"count":2,"names":["Body Scrub, new","Pillow Mist, a new 100 ml size"]},
+    "source": "website",
+    "sources": [
+      {"id":"u-home","kind":"page","label":"lysne.no","state":"read"},
+      {"id":"u-autumn","kind":"page","label":"lysne.no/autumn","state":"read"},
+      {"id":"u-about","kind":"page","label":"lysne.no/about","state":"read"},
+      {"id":"u-shop","kind":"page","label":"lysne.no/shop","state":"read"}
+    ],
+    "startedAt": "2026-10-14T12:32:10.000Z",
+    "state": "applied",
+    "unchanged": 23,
+    "url": "https://lysne.example",
+    "workspaceId": "w-lysne"
+  }
+maja brandUpdate()
+  = maja approveBrandUpdate("bu-mvkqp49s-2")
+maja brandBoard()
+  {
+    "dna": {
+      "approvedAt": "2026-10-14T12:32:20.000Z",
+      "approvedBy": "u-maja",
+      "completeness": 0.86,
+      "state": "approved",
+      "summary": "LYSNE makes body oils for the hour before sleep. Calm, warm and close: low evening light on stone and skin, amber glass, few words. Never loud, never clinical.",
+      "version": 4,
+      "workspaceId": "w-lysne"
+    },
+    "identity": {
+      "colours": [
+        {
+          "hex": "#2B1D17",
+          "id": "col-ink",
+          "name": "Night brown",
+          "provenance": {
+            "at": "2026-10-02T12:32:00.000Z",
+            "by": "u-maja",
+            "evidence": "LYSNE brand guide 2026.pdf, page 6",
+            "origin": "customer",
+            "state": "approved"
+          },
+          "role": "text",
+          "usage": "Words, the wordmark on light grounds.",
+          "uses": ["text","ui"]
+        },
+        {
+          "hex": "#EFE6DA",
+          "id": "col-linen",
+          "name": "Linen",
+          "provenance": {
+            "at": "2026-10-02T12:32:00.000Z",
+            "by": "u-maja",
+            "evidence": "LYSNE brand guide 2026.pdf, page 6",
+            "origin": "customer",
+            "state": "approved"
+          },
+          "role": "ground",
+          "usage": "Grounds, the label paper.",
+          "uses": ["backgrounds","packaging"]
+        },
+        {
+          "hex": "#A8642B",
+          "id": "col-amber",
+          "name": "Amber glass",
+          "provenance": {
+            "at": "2026-10-05T12:32:00.000Z",
+            "by": "u-maja",
+            "evidence": "lysne.no, product pages",
+            "origin": "engine",
+            "state": "approved"
+          },
+          "role": "primary",
+          "usage": "The bottle; the warm light in every image.",
+          "uses": ["accent","light","packaging"]
+        },
+        {
+          "hex": "#5C1F2A",
+          "id": "col-cap",
+          "name": "Burgundy cap",
+          "provenance": {
+            "at": "2026-10-05T12:32:00.000Z",
+            "by": "u-maja",
+            "evidence": "Night Body Oil packshot",
+            "origin": "engine",
+            "state": "changed",
+            "was": "#6B1E2E"
+          },
+          "role": "accent",
+          "usage": "The cap, and small accents only.",
+          "uses": ["accent","buttons","packaging"]
+        },
+        {
+          "hex": "Fixed",
+          "id": "col-stone",
+          "name": "Evening stone",
+          "provenance": {
+            "at": "2026-10-14T12:32:20.000Z",
+            "by": "u-maja",
+            "evidence": "lysne.no, the site’s colours",
+            "origin": "engine",
+            "state": "changed",
+            "was": "#B5A691"
+          },
+          "role": "support",
+          "usage": "Surfaces in images: stone, plaster.",
+          "uses": ["backgrounds"]
+        },
+        {
+          "hex": "#3E4A5C",
+          "id": "col-dusk",
+          "name": "Dusk blue",
+          "provenance": {"confidence":"low","evidence":"lysne.no/journal, 2 images","origin":"engine","state":"proposed"},
+          "role": "support",
+          "usage": "Seen in two images on the website.",
+          "uses": []
+        }
+      ],
+      "imagery": [
+        {
+          "campaign": "Spring relaunch 2026",
+          "caption": "Low side light on stone",
+          "group": "campaign",
+          "id": "im-1",
+          "image": "/demo/lysne/05-06-feed.jpg",
+          "provenance": {
+            "at": "2026-10-05T12:32:00.000Z",
+            "by": "u-maja",
+            "evidence": "Spring relaunch",
+            "origin": "engine",
+            "state": "approved"
+          }
+        },
+        {
+          "caption": "Fluted glass, slow light",
+          "group": "look",
+          "id": "im-2",
+          "image": "/demo/lysne/02-04-feed.jpg",
+          "provenance": {
+            "at": "2026-10-02T12:32:00.000Z",
+            "by": "u-maja",
+            "evidence": "Maja's reference",
+            "origin": "customer",
+            "state": "approved"
+          }
+        },
+        {
+          "caption": "Product low, air above",
+          "group": "look",
+          "id": "im-3",
+          "image": "/demo/lysne/08-06-feed.jpg",
+          "provenance": {
+            "at": "2026-10-05T12:32:00.000Z",
+            "by": "u-maja",
+            "evidence": "Summer evenings, approved creatives",
+            "origin": "engine",
+            "state": "approved"
+          }
+        },
+        {
+          "caption": "Water light on linen",
+          "group": "look",
+          "id": "im-4",
+          "image": "/demo/lysne/09-13-feed.jpg",
+          "provenance": {"confidence":"medium","evidence":"lysne.no/journal","origin":"engine","state":"proposed"}
+        },
+        {
+          "campaign": "Summer evenings 2025",
+          "caption": "Summer evenings, golden hour",
+          "group": "campaign",
+          "id": "im-5",
+          "image": "/demo/lysne/06-05-feed.jpg",
+          "provenance": {
+            "at": "2026-10-05T12:32:00.000Z",
+            "by": "u-maja",
+            "evidence": "Summer evenings 2025, lysne.no/journal",
+            "origin": "engine",
+            "state": "approved"
+          }
+        },
+        {
+          "caption": "Night Body Oil on white",
+          "group": "product",
+          "id": "im-6",
+          "image": "/demo/lysne/gen/oil-pack.jpg",
+          "provenance": {
+            "at": "2026-10-05T12:32:00.000Z",
+            "by": "u-maja",
+            "evidence": "lysne.no/shop",
+            "origin": "engine",
+            "state": "approved"
+          }
+        },
+        {
+          "caption": "Hand Balm on white",
+          "group": "product",
+          "id": "im-7",
+          "image": "/demo/lysne/gen/balm-pack.jpg",
+          "provenance": {
+            "at": "2026-10-05T12:32:00.000Z",
+            "by": "u-maja",
+            "evidence": "lysne.no/shop",
+            "origin": "engine",
+            "state": "approved"
+          }
+        },
+        {
+          "caption": "Christmas market stand, 2024",
+          "group": "unused",
+          "id": "im-8",
+          "image": "/demo/lysne/04-06-feed.jpg",
+          "provenance": {
+            "at": "2026-10-05T12:32:00.000Z",
+            "by": "u-maja",
+            "evidence": "lysne.no/journal",
+            "origin": "engine",
+            "state": "approved"
+          }
+        },
+        {
+          "caption": "Autumn 2026 campaign, 1",
+          "id": "im-mvkqpbzk-3",
+          "image": "/demo/lysne/06-05-square.jpg",
+          "provenance": {
+            "at": "2026-10-14T12:32:20.000Z",
+            "by": "u-maja",
+            "evidence": "lysne.no/autumn",
+            "origin": "engine",
+            "state": "approved"
+          }
+        },
+        {
+          "caption": "Autumn 2026 campaign, 2",
+          "id": "im-mvkqpbzk-4",
+          "image": "/demo/lysne/07-02-square.jpg",
+          "provenance": {
+            "at": "2026-10-14T12:32:20.000Z",
+            "by": "u-maja",
+            "evidence": "lysne.no/autumn",
+            "origin": "engine",
+            "state": "approved"
+          }
+        },
+        {
+          "caption": "Autumn 2026 campaign, 3",
+          "id": "im-mvkqpbzk-5",
+          "image": "/demo/lysne/04-06-square.jpg",
+          "provenance": {
+            "at": "2026-10-14T12:32:20.000Z",
+            "by": "u-maja",
+            "evidence": "lysne.no/autumn",
+            "origin": "engine",
+            "state": "approved"
+          }
+        },
+        {
+          "caption": "Autumn 2026 campaign, 4",
+          "id": "im-mvkqpbzk-6",
+          "image": "/demo/lysne/01-12-square.jpg",
+          "provenance": {
+            "at": "2026-10-14T12:32:20.000Z",
+            "by": "u-maja",
+            "evidence": "lysne.no/autumn",
+            "origin": "engine",
+            "state": "approved"
+          }
+        }
+      ],
+      "logos": [
+        {
+          "ground": "light",
+          "id": "lg-light",
+          "name": "Wordmark",
+          "provenance": {
+            "at": "2026-10-02T12:32:00.000Z",
+            "by": "u-maja",
+            "evidence": "LYSNE wordmark.svg",
+            "origin": "customer",
+            "state": "approved"
+          },
+          "use": "On Linen and light images. Alone on the label; never redrawn.",
+          "wordmark": "LYSNE"
+        },
+        {
+          "ground": "dark",
+          "id": "lg-dark",
+          "name": "Wordmark, reversed",
+          "provenance": {"confidence":"high","evidence":"lysne.no footer","origin":"engine","state":"proposed"},
+          "use": "On dark images, in Linen.",
+          "wordmark": "LYSNE"
+        }
+      ],
+      "typefaces": [
+        {
+          "cssFamily": "\"Cormorant Garamond\", Georgia, serif",
+          "id": "tf-display",
+          "name": "Cormorant",
+          "provenance": {
+            "at": "2026-10-02T12:32:00.000Z",
+            "by": "u-maja",
+            "evidence": "LYSNE brand guide 2026.pdf, page 8",
+            "origin": "customer",
+            "state": "approved"
+          },
+          "role": "display",
+          "sample": "For the hour before sleep.",
+          "usage": "The brand name and short lines.",
+          "weights": ["Regular","Italic"]
+        },
+        {
+          "cssFamily": "Inter, system-ui, sans-serif",
+          "id": "tf-body",
+          "name": "Inter Tight",
+          "provenance": {
+            "at": "2026-10-14T12:32:20.000Z",
+            "by": "u-maja",
+            "evidence": "lysne.no/about, headings",
+            "origin": "engine",
+            "state": "changed",
+            "was": "Inter"
+          },
+          "role": "body",
+          "sample": "Night Body Oil · 100 ml. Warm the oil in your hands.",
+          "usage": "Body copy, labels, the website.",
+          "weights": ["Regular","Medium"]
+        },
+        {
+          "cssFamily": "Inter, system-ui, sans-serif",
+          "id": "tf-caps",
+          "name": "Small caps",
+          "provenance": {"confidence":"medium","evidence":"Label on the packshot","origin":"engine","state":"proposed"},
+          "role": "accent",
+          "sample": "NIGHT BODY OIL",
+          "usage": "The line under the name.",
+          "weights": ["Medium"]
+        }
+      ],
+      "voice": [
+        {
+          "example": "Warm the oil in your hands. Breathe out.",
+          "id": "vo-1",
+          "provenance": {
+            "at": "2026-10-05T12:32:00.000Z",
+            "by": "u-maja",
+            "evidence": "lysne.no/about",
+            "origin": "engine",
+            "state": "approved"
+          },
+          "statement": "Short, quiet sentences."
+        },
+        {
+          "example": "For the hour before sleep.",
+          "id": "vo-2",
+          "provenance": {
+            "at": "2026-10-02T12:32:00.000Z",
+            "by": "u-maja",
+            "evidence": "LYSNE brand guide 2026.pdf, page 11",
+            "origin": "customer",
+            "state": "approved"
+          },
+          "statement": "Speaks of the evening, never of results."
+        },
+        {
+          "example": "Your evening, slowed down.",
+          "id": "vo-3",
+          "provenance": {"confidence":"medium","evidence":"lysne.no, 14 pages","origin":"engine","state":"proposed"},
+          "statement": "Says “you”, rarely “we”."
+        }
+      ],
+      "voiceBook": {
+        "audience": {
+          "cares": [
+            "A calm end to the day",
+            "Few, honest ingredients",
+            "Things that look good on a bedside",
+            "Gifts that feel personal"
+          ],
+          "notFor": "Not for quick fixes or results-led skincare.",
+          "who": "Women 30 to 55 in Norway who keep an evening ritual."
+        },
+        "examples": [
+          {"language":"no","line":"Varm oljen i hendene. Pust ut.","where":"lysne.no, Night Body Oil"},
+          {"language":"en","line":"Warm the oil in your hands. Breathe out.","where":"Instagram, Autumn launch"},
+          {"language":"no","line":"Til timen før du sovner.","where":"The label, Night Body Oil"},
+          {"language":"en","line":"For the hour before sleep.","where":"The approved claims list"},
+          {"language":"no","line":"Kvelden din, litt langsommere.","where":"Newsletter, September"},
+          {"language":"en","line":"Your evening, slowed down.","where":"lysne.no, front page"}
+        ],
+        "identity": {
+          "believe": [
+            "The evening is worth slowing down for.",
+            "Fewer, better things: a short list, made well.",
+            "Care is a habit, not a promise of results."
+          ],
+          "personality": ["Calm","Warm","Close","Quietly sure"],
+          "who": "LYSNE makes body oils and small rituals for the hour before sleep. Made in Norway, sold in Norway and the Nordics."
+        },
+        "parts": [
+          {
+            "found": "Calm, warm and close: a brand for the hour before sleep.",
+            "id": "identity",
+            "provenance": {
+              "at": "2026-10-05T12:32:00.000Z",
+              "by": "u-maja",
+              "evidence": "lysne.no/about",
+              "origin": "engine",
+              "state": "approved"
+            }
+          },
+          {
+            "found": "Short, quiet sentences. “You”, rarely “we”; informal «du» in Norwegian.",
+            "id": "speak",
+            "provenance": {
+              "at": "2026-10-05T12:32:00.000Z",
+              "by": "u-maja",
+              "evidence": "lysne.no, 14 pages",
+              "origin": "engine",
+              "state": "approved"
+            }
+          },
+          {
+            "found": "No result claims, no urgency, no exclamation marks.",
+            "id": "rules",
+            "provenance": {
+              "at": "2026-10-05T12:32:00.000Z",
+              "by": "u-maja",
+              "evidence": "lysne.no/about and product pages",
+              "origin": "engine",
+              "state": "approved"
+            }
+          },
+          {
+            "found": "Women 30 to 55 in Norway who keep an evening ritual.",
+            "id": "audience",
+            "provenance": {
+              "at": "2026-10-05T12:32:00.000Z",
+              "by": "u-maja",
+              "evidence": "lysne.no/about",
+              "origin": "engine",
+              "state": "approved"
+            }
+          },
+          {
+            "found": "6 good lines, in Norwegian and English.",
+            "id": "examples",
+            "provenance": {
+              "at": "2026-10-05T12:32:00.000Z",
+              "by": "u-maja",
+              "evidence": "lysne.no, Instagram",
+              "origin": "engine",
+              "state": "approved"
+            }
+          }
+        ],
+        "rules": {
+          "claims": ["For the hour before sleep.","100 % natural oils.","Made in Norway."],
+          "must": [
+            "Name the product as it is printed: Night Body Oil · 100 ml.",
+            "Say “you”, rarely “we”.",
+            "End a line with a full stop."
+          ],
+          "never": [
+            "Skin-result claims, or before-and-after.",
+            "Urgency: “now”, “hurry”, “last chance”.",
+            "Exclamation marks and emojis."
+          ]
+        },
+        "speak": {
+          "avoid": ["anti-ageing","miracle","results","luxury","hurry","transform","best ever"],
+          "formality": "Informal and close: «du» in Norwegian, “you” in English. Never «dere» or “customers”.",
+          "languages": "Norwegian (bokmål) first, on lysne.no and in Norway; English for the Nordics and Instagram. Never both in one line.",
+          "sentences": "Short: two to eight words, one idea a line. A full stop where others use a comma.",
+          "traits": [
+            {
+              "do": "Warm the oil in your hands. Breathe out.",
+              "dont": "Don’t miss out. Order tonight!",
+              "means": "We never hurry the reader.",
+              "trait": "Calm"
+            },
+            {
+              "do": "Your evening, slowed down.",
+              "dont": "Our customers love our bestselling oil.",
+              "means": "We write to one person, as a friend would.",
+              "trait": "Close"
+            },
+            {
+              "do": "Almond oil and squalane. Nothing else.",
+              "dont": "A luxurious, transformative elixir.",
+              "means": "Simple words; the product speaks for itself.",
+              "trait": "Plain"
+            },
+            {
+              "do": "Golden, slow, warm on the skin.",
+              "dont": "Visibly firmer skin in 7 days.",
+              "means": "We say what it feels like, not what it does.",
+              "trait": "Sensory"
+            }
+          ],
+          "use": ["evening","slow","warm","your hands","breathe","kveld","ro","varme"]
+        }
+      }
+    },
+    "moodboard": {
+      "height": 1000,
+      "id": "bd-brand",
+      "items": [
+        {
+          "boardId": "bd-brand",
+          "h": 920,
+          "id": "bi-1",
+          "kind": "section",
+          "provenance": {"at":"2026-10-02T12:32:00.000Z","by":"u-maja","evidence":"Maja","origin":"customer","state":"approved"},
+          "text": "Evening light",
+          "w": 760,
+          "x": 40,
+          "y": 40
+        },
+        {
+          "boardId": "bd-brand",
+          "h": 400,
+          "id": "bi-2",
+          "image": "/demo/lysne/05-06-feed.jpg",
+          "kind": "image",
+          "note": "Low side light on stone.",
+          "provenance": {"at":"2026-10-02T12:32:00.000Z","by":"u-maja","evidence":"Maja","origin":"customer","state":"approved"},
+          "verdict": "liked",
+          "w": 320,
+          "x": 80,
+          "y": 110
+        },
+        {
+          "boardId": "bd-brand",
+          "h": 330,
+          "id": "bi-3",
+          "image": "/demo/lysne/02-04-square.jpg",
+          "kind": "image",
+          "note": "Fluted glass and slow light.",
+          "provenance": {"at":"2026-10-02T12:32:00.000Z","by":"u-maja","evidence":"Maja","origin":"customer","state":"approved"},
+          "verdict": "liked",
+          "w": 330,
+          "x": 430,
+          "y": 110
+        },
+        {
+          "boardId": "bd-brand",
+          "h": 440,
+          "id": "bi-4",
+          "image": "/demo/lysne/08-06-feed.jpg",
+          "kind": "image",
+          "provenance": {"at":"2026-10-02T12:32:00.000Z","by":"u-maja","evidence":"Jonas","origin":"customer","state":"approved"},
+          "verdict": "liked",
+          "w": 330,
+          "x": 430,
+          "y": 470
+        },
+        {
+          "boardId": "bd-brand",
+          "h": 160,
+          "id": "bi-5",
+          "kind": "note",
+          "provenance": {"at":"2026-10-02T12:32:00.000Z","by":"u-maja","evidence":"Maja","origin":"customer","state":"approved"},
+          "text": "Product low in the frame, air above. People are AI models, always labelled.",
+          "w": 320,
+          "x": 80,
+          "y": 560
+        },
+        {
+          "boardId": "bd-brand",
+          "h": 560,
+          "id": "bi-6",
+          "kind": "section",
+          "provenance": {"at":"2026-10-02T12:32:00.000Z","by":"u-maja","evidence":"Maja","origin":"customer","state":"approved"},
+          "text": "Not us",
+          "w": 720,
+          "x": 840,
+          "y": 40
+        },
+        {
+          "boardId": "bd-brand",
+          "h": 375,
+          "id": "bi-7",
+          "image": "/demo/lysne/07-10-feed.jpg",
+          "kind": "image",
+          "note": "Hands too staged.",
+          "provenance": {"at":"2026-10-02T12:32:00.000Z","by":"u-maja","evidence":"Jonas","origin":"customer","state":"approved"},
+          "verdict": "disliked",
+          "w": 300,
+          "x": 880,
+          "y": 110
+        },
+        {
+          "boardId": "bd-brand",
+          "h": 310,
+          "id": "bi-8",
+          "image": "/demo/lysne/06-10-square.jpg",
+          "kind": "image",
+          "note": "Too clinical.",
+          "provenance": {"at":"2026-10-02T12:32:00.000Z","by":"u-maja","evidence":"Maja","origin":"customer","state":"approved"},
+          "verdict": "disliked",
+          "w": 310,
+          "x": 1210,
+          "y": 110
+        },
+        {
+          "boardId": "bd-brand",
+          "h": 150,
+          "hex": "#A8642B",
+          "id": "bi-9",
+          "kind": "swatch",
+          "provenance": {"at":"2026-10-05T12:32:00.000Z","by":"u-maja","evidence":"lysne.no","origin":"engine","state":"approved"},
+          "text": "Amber glass",
+          "w": 150,
+          "x": 880,
+          "y": 650
+        },
+        {
+          "boardId": "bd-brand",
+          "h": 150,
+          "hex": "#5C1F2A",
+          "id": "bi-10",
+          "kind": "swatch",
+          "provenance": {"at":"2026-10-05T12:32:00.000Z","by":"u-maja","evidence":"Packshot","origin":"engine","state":"approved"},
+          "text": "Burgundy cap",
+          "w": 150,
+          "x": 1050,
+          "y": 650
+        },
+        {
+          "boardId": "bd-brand",
+          "h": 300,
+          "id": "bi-11",
+          "image": "/demo/lysne/09-13-square.jpg",
+          "kind": "image",
+          "note": "Water light on linen: more of this for SS27?",
+          "provenance": {"confidence":"medium","evidence":"lysne.no/journal","origin":"engine","state":"proposed"},
+          "w": 300,
+          "x": 1230,
+          "y": 650
+        }
+      ],
+      "kind": "brand_moodboard",
+      "name": "LYSNE moodboard",
+      "updatedAt": "2026-10-12T12:32:00.000Z",
+      "width": 1600,
+      "workspaceId": "w-lysne"
+    },
+    "open": 6,
+    "rules": [
+      {
+        "area": "logo",
+        "confidence": "high",
+        "id": "r1",
+        "kind": "hard_constraint",
+        "polarity": "do",
+        "source": "supplied",
+        "statement": "The wordmark stands alone on the label; never redrawn, never on a busy area."
+      },
+      {
+        "area": "colour",
+        "confidence": "high",
+        "id": "r2",
+        "kind": "rule",
+        "polarity": "do",
+        "source": "verified",
+        "statement": "Warm neutrals and amber light."
+      },
+      {
+        "area": "type",
+        "confidence": "high",
+        "id": "r3",
+        "kind": "rule",
+        "polarity": "do",
+        "source": "supplied",
+        "statement": "Serif for the name, small caps for the line under it."
+      },
+      {
+        "area": "voice",
+        "confidence": "high",
+        "id": "r4",
+        "kind": "rule",
+        "polarity": "do",
+        "source": "verified",
+        "statement": "Short, quiet sentences. Speaks of the evening, never of results."
+      },
+      {
+        "area": "imagery",
+        "confidence": "medium",
+        "id": "r5",
+        "kind": "preference",
+        "polarity": "do",
+        "source": "learned",
+        "statement": "Stone, linen and glass. People are AI models only, always labelled; skin in soft crops."
+      },
+      {
+        "area": "layout",
+        "confidence": "medium",
+        "id": "r6",
+        "kind": "preference",
+        "polarity": "do",
+        "source": "inferred",
+        "statement": "The product sits low in the frame with air above it."
+      },
+      {
+        "area": "claims",
+        "confidence": "high",
+        "id": "r7",
+        "kind": "hard_constraint",
+        "polarity": "dont",
+        "source": "supplied",
+        "statement": "No skin-result claims. Only lines on the approved claims list."
+      },
+      {
+        "area": "colour",
+        "confidence": "high",
+        "id": "r8",
+        "kind": "rule",
+        "polarity": "dont",
+        "source": "verified",
+        "statement": "No cold blue light and no saturated colour."
+      },
+      {
+        "area": "voice",
+        "confidence": "high",
+        "id": "r9",
+        "kind": "hard_constraint",
+        "polarity": "dont",
+        "source": "supplied",
+        "statement": "No exclamation marks and no urgency: never “now”, “hurry” or “last chance”."
+      },
+      {
+        "area": "imagery",
+        "confidence": "high",
+        "id": "r10",
+        "kind": "hard_constraint",
+        "polarity": "dont",
+        "source": "supplied",
+        "statement": "No real person’s face. People are AI models, always labelled as AI."
+      }
+    ]
+  }
+maja startBrandUpdate({"files":[{"bytes":100,"name":"new-guide.pdf"}],"source":"upload"})
+  {
+    "files": ["new-guide.pdf"],
+    "found": [
+      {
+        "confidence": "high",
+        "id": "bf-autumn",
+        "image": "/demo/lysne/06-05-square.jpg",
+        "images": [
+          "/demo/lysne/06-05-square.jpg",
+          "/demo/lysne/07-02-square.jpg",
+          "/demo/lysne/04-06-square.jpg",
+          "/demo/lysne/01-12-square.jpg"
+        ],
+        "kind": "image",
+        "note": "A new campaign page since your last approval.",
+        "source": "new-guide.pdf",
+        "status": "new",
+        "subtitle": "4 pictures",
+        "title": "Autumn 2026 campaign"
+      },
+      {
+        "after": "#A3927B",
+        "before": "#B5A691",
+        "confidence": "medium",
+        "id": "bf-stone",
+        "kind": "colour",
+        "note": "A little darker and warmer on the site now.",
+        "source": "new-guide.pdf",
+        "status": "changed",
+        "subtitle": "Support colour",
+        "targetId": "col-stone",
+        "title": "Evening stone"
+      },
+      {
+        "after": "Names the hour, not the product.",
+        "confidence": "high",
+        "id": "bf-voice",
+        "kind": "voice",
+        "note": "A new line on the about page.",
+        "source": "new-guide.pdf",
+        "status": "new",
+        "subtitle": "“Seven in the evening. The house goes quiet.”",
+        "title": "Names the hour, not the product."
+      },
+      {
+        "after": "Inter Tight",
+        "before": "Inter",
+        "confidence": "low",
+        "id": "bf-type",
+        "kind": "typeface",
+        "note": "The headings look narrower. A new typeface, or Inter set tighter?",
+        "source": "new-guide.pdf",
+        "status": "unsure",
+        "subtitle": "Body typeface",
+        "targetId": "tf-body",
+        "title": "Inter Tight"
+      }
+    ],
+    "id": "bu-mvkqpbzk-7",
+    "products": {"count":2,"names":["Body Scrub, new","Pillow Mist, a new 100 ml size"]},
+    "reading": "Reading new-guide.pdf",
+    "source": "upload",
+    "sources": [{"id":"z0","kind":"file","label":"new-guide.pdf","state":"reading"}],
+    "startedAt": "2026-10-14T12:32:20.000Z",
+    "state": "reading",
+    "unchanged": 23,
+    "workspaceId": "w-lysne"
+  }
+-- 10 s later
+maja brandUpdate()
+  {
+    "files": ["new-guide.pdf"],
+    "found": [
+      {
+        "confidence": "high",
+        "id": "bf-autumn",
+        "image": "/demo/lysne/06-05-square.jpg",
+        "images": [
+          "/demo/lysne/06-05-square.jpg",
+          "/demo/lysne/07-02-square.jpg",
+          "/demo/lysne/04-06-square.jpg",
+          "/demo/lysne/01-12-square.jpg"
+        ],
+        "kind": "image",
+        "note": "A new campaign page since your last approval.",
+        "source": "new-guide.pdf",
+        "status": "new",
+        "subtitle": "4 pictures",
+        "title": "Autumn 2026 campaign"
+      },
+      {
+        "after": "#A3927B",
+        "before": "#B5A691",
+        "confidence": "medium",
+        "id": "bf-stone",
+        "kind": "colour",
+        "note": "A little darker and warmer on the site now.",
+        "source": "new-guide.pdf",
+        "status": "changed",
+        "subtitle": "Support colour",
+        "targetId": "col-stone",
+        "title": "Evening stone"
+      },
+      {
+        "after": "Names the hour, not the product.",
+        "confidence": "high",
+        "id": "bf-voice",
+        "kind": "voice",
+        "note": "A new line on the about page.",
+        "source": "new-guide.pdf",
+        "status": "new",
+        "subtitle": "“Seven in the evening. The house goes quiet.”",
+        "title": "Names the hour, not the product."
+      },
+      {
+        "after": "Inter Tight",
+        "before": "Inter",
+        "confidence": "low",
+        "id": "bf-type",
+        "kind": "typeface",
+        "note": "The headings look narrower. A new typeface, or Inter set tighter?",
+        "source": "new-guide.pdf",
+        "status": "unsure",
+        "subtitle": "Body typeface",
+        "targetId": "tf-body",
+        "title": "Inter Tight"
+      }
+    ],
+    "id": "bu-mvkqpbzk-7",
+    "products": {"count":2,"names":["Body Scrub, new","Pillow Mist, a new 100 ml size"]},
+    "source": "upload",
+    "sources": [{"id":"z0","kind":"file","label":"new-guide.pdf","state":"read"}],
+    "startedAt": "2026-10-14T12:32:20.000Z",
+    "state": "ready",
+    "unchanged": 23,
+    "workspaceId": "w-lysne"
+  }
