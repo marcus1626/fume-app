@@ -3,7 +3,7 @@
 // design is still to come.
 import { Button, Field, FieldError, FieldLabel, Input } from "@fume/ui";
 import { useId, useState, type FormEvent } from "react";
-import { sendSignInLink } from "../../api/auth";
+import { googleSignIn, sendSignInLink, signInErrorFromUrl, signInWithGoogle } from "../../api/auth";
 import { FumeError } from "../../contract";
 import { Lockup } from "../../shell/Logo";
 
@@ -11,8 +11,20 @@ export function SignInPage() {
   const id = useId();
   const [email, setEmail] = useState("");
   const [sentTo, setSentTo] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(() => signInErrorFromUrl());
   const [sending, setSending] = useState(false);
+  const [toGoogle, setToGoogle] = useState(false);
+
+  const google = async () => {
+    setToGoogle(true);
+    setError(null);
+    try {
+      await signInWithGoogle();
+    } catch (e) {
+      setError(e instanceof FumeError ? e.message : "Google sign-in did not open. Try again.");
+      setToGoogle(false);
+    }
+  };
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
@@ -44,7 +56,9 @@ export function SignInPage() {
             <p className="ui-welcome-lede">
               {sentTo
                 ? `We sent a sign-in link to ${sentTo}. Open it on this device and you are in.`
-                : "We email you a link to sign in. There is no password."}
+                : googleSignIn
+                  ? "Continue with Google, or get a link by email. There is no password."
+                  : "We email you a link to sign in. There is no password."}
             </p>
           </header>
           {sentTo ? (
@@ -55,6 +69,13 @@ export function SignInPage() {
             </div>
           ) : (
             <form className="ui-welcome-form" onSubmit={submit} noValidate aria-label="Sign in">
+              {googleSignIn && (
+                <div className="ui-welcome-go">
+                  <Button type="button" size="lg" variant="secondary" loading={toGoogle} onClick={google}>
+                    Continue with Google
+                  </Button>
+                </div>
+              )}
               <div className="ui-welcome-way">
                 <Field invalid={Boolean(error)}>
                   <FieldLabel htmlFor={id}>Your work email</FieldLabel>

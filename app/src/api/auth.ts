@@ -36,6 +36,29 @@ export async function sendSignInLink(email: string): Promise<void> {
   throw new FumeError("unavailable", error.message);
 }
 
+/** Google sign-in is on once its provider is set up in Supabase Auth (VITE_AUTH_GOOGLE=on). */
+export const googleSignIn = import.meta.env.VITE_AUTH_GOOGLE === "on";
+
+/** Signs in with Google; Google brings the person back to the page they are on. */
+export async function signInWithGoogle(): Promise<void> {
+  const { error } = await supabase().auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: window.location.origin + window.location.pathname },
+  });
+  if (error) throw new FumeError("unavailable", error.message);
+}
+
+/** What a sign-in that came back with an error says, read once from the address and then cleared from it. */
+export function signInErrorFromUrl(): string | null {
+  const params = new URLSearchParams(window.location.search + "&" + window.location.hash.slice(1));
+  const description = params.get("error_description");
+  if (!description) return null;
+  window.history.replaceState(null, "", window.location.pathname);
+  return /database error/i.test(description)
+    ? "This Google account’s address has no invitation to Fume. Ask the person who works with you."
+    : description;
+}
+
 export async function signOut(): Promise<void> {
   if (isLive) await supabase().auth.signOut();
 }
