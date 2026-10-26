@@ -42,3 +42,23 @@ across sign-ins.
   fine at this size, revisit before pilots.
 - Next (Tue): Auth settings (site URL, redirect URLs, email link), `app/src/api/http.ts` for the cycle's calls behind
   `VITE_FUME_API`, sign-in screen, upload and signed download, then the manual cycle in the app.
+
+### Tue 27 Oct (started Mon afternoon)
+- Roles as Marcus decided them (26 Oct): designer (makes the work), the right to check (a designer's), account manager
+  (talks with customers, never checks or approves), admin; one person can hold several; nobody checks their own work.
+  Only invited addresses can sign in.
+- The live layer (`app/src/api/live/`, `VITE_FUME_API=supabase`): sign-in by email link, then identity, products,
+  campaigns, brief, plan, Home, Studio (a picture made by hand becomes the newest version), Check, review, delivery
+  (signed download, checksums checked, one zip for several files) against the database. Calls not moved yet answer
+  from an empty mock workspace.
+- New commands: `save_brief_draft`, `set_campaign_approver`, `change_plan`, `open_creative`, `add_manual_version`,
+  `uncheck_version`, `request_change_round`, `withdraw_change_round`, `undo_approvals`, `reply_comment`,
+  `resolve_comment`; `send_brief` writes Fume's plan 1. The record shows a customer only what they may see.
+- Checks: `npm run check` (73 unit tests), db tests (rules, campaigns, production, review and delivery, all pass),
+  e2e 12 of 12 (run with `VITE_FUME_API=mock` when `app/.env.local` points at Supabase). All migrations applied to
+  `fume-app`.
+- The branch preview runs live; production `fume-app.vercel.app` stays on the mock.
+- Waiting on: `*.supabase.co` allowed for the cloud container (to click the cycle through), and SMTP (Resend) for
+  sign-in emails beyond Supabase's 2 an hour (Marcus).
+- Known: the delivery's rights note has a default wording until the contract carries one; Check's words still say
+  "Engine" for work made by hand; approving a plan has no version yet.
