@@ -5,6 +5,7 @@
 import type { FumeApi } from "../../contract";
 import { createMockApi } from "../../mock/mockApi";
 import { createLive } from "./context";
+import { eventCalls } from "./events";
 import { identityCalls } from "./identity";
 import { campaignCalls } from "./campaigns";
 import { homeCalls } from "./home";
@@ -31,6 +32,7 @@ export function createLiveApi(): FumeApi {
     ...studioCalls(live),
     ...qualityCalls(live),
     ...overviewCalls(live),
+    ...eventCalls(live),
     ...reviewCalls(live),
     ...deliveryCalls(live),
   };
