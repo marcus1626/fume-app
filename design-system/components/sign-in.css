@@ -2,7 +2,7 @@
    Desktop: the form on Porcelain on the left, a Fume Engine light image on the right (an inset panel with the
    card radius, labelled "Made with Fume Engine" under it). Under 900 px the image goes and the form stands alone.
    The form is one narrow column: title and lede, Google (primary, Ink), "or", the work email and its link
-   (secondary). "Check your email" takes the same column. Problems show as an alert over the actions, or under
+   (secondary). "Check your email" and "About you" (the first sign-in: name and title) take the same column. Problems show as an alert over the actions, or under
    the field when they are about the address. No lines: groups are separated by space.
    Markup: <div class="ui-signin">
              <div class="ui-signin-side">
@@ -52,6 +52,20 @@
 .ui-signin-sent-icon svg { width: var(--ui-space-xl); height: var(--ui-space-xl); }
 .ui-signin-again { display: grid; justify-items: start; gap: var(--ui-space-xl); }
 .ui-signin-again .ui-btn:not(.ui-btn--link) { width: 100%; }
+
+/* "About you": the person as others will see them (avatar, name, title), over the fields that make it. */
+.ui-signin-you {
+  display: flex; align-items: center; gap: var(--ui-space-md); min-width: 0;
+  padding: var(--ui-space-lg); border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken);
+}
+.ui-signin-you-text { display: grid; min-width: 0; }
+.ui-signin-you-name { font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); line-height: 1.4; overflow-wrap: anywhere; }
+.ui-signin-you-title { font-size: var(--ui-type-control); line-height: 1.4; color: var(--ui-text-secondary); overflow-wrap: anywhere; }
+.ui-signin-you [data-empty] { color: var(--ui-text-tertiary); }
+/* Its fields sit further apart than a label from its field; the button belongs with the fields. */
+.ui-signin-about { display: grid; gap: var(--ui-space-xl); }
+.ui-signin-about > .ui-btn { width: 100%; }
+.ui-signin-about > .ui-signin-hint { margin-block-start: calc(var(--ui-space-sm) - var(--ui-space-xl)); }
 
 .ui-signin-foot { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-tertiary); }
 

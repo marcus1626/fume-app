@@ -10,7 +10,6 @@ import {
   FieldLabel,
   FieldSeparator,
   Icon,
-  IconSprite,
   Input,
 } from "@fume/ui";
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
@@ -23,8 +22,7 @@ import {
   type SignInProblem,
 } from "../../api/auth";
 import { FumeError } from "../../contract";
-import { Lockup } from "../../shell/Logo";
-import lightImage from "./sign-in-light.jpg";
+import { SignInFrame } from "./frame";
 
 /** How long before the same address can have another link (Supabase sends one a minute). */
 const RESEND_AFTER_S = 60;
@@ -44,28 +42,9 @@ function noticeOnArrival(): Notice | null {
 export function SignInPage() {
   const [sentTo, setSentTo] = useState<string | null>(null);
   return (
-    <div className="ui-signin">
-      <div className="ui-signin-side">
-        <header className="ui-signin-top">
-          <Lockup />
-          <IconSprite />
-        </header>
-        <main id="main" className="ui-signin-body">
-          {sentTo ? (
-            <CheckEmail address={sentTo} onAnother={() => setSentTo(null)} />
-          ) : (
-            <SignInForm onSent={setSentTo} />
-          )}
-        </main>
-        <footer className="ui-signin-foot">Fume is open to invited people only.</footer>
-      </div>
-      <figure className="ui-signin-art">
-        <div className="ui-signin-art-media">
-          <img src={lightImage} alt="" />
-        </div>
-        <figcaption>Made with Fume Engine</figcaption>
-      </figure>
-    </div>
+    <SignInFrame foot="Fume is open to invited people only.">
+      {sentTo ? <CheckEmail address={sentTo} onAnother={() => setSentTo(null)} /> : <SignInForm onSent={setSentTo} />}
+    </SignInFrame>
   );
 }
 

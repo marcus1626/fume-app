@@ -1,6 +1,7 @@
 // The root of every route: it loads the session and sends each person to their place. A customer whose Brand DNA is not
 // yet approved goes to the first run; Fume's people land in the studio and an agency's in the agency's overview (the
 // staff frame, StudioShell.tsx, sends them there).
+// Before either, a person who has not said who they are yet (their first sign-in) goes to "About you" (/hello).
 // It also keeps the person's place. One scroll rule for the page's scroller (.ui-sidebar-inset in a shell, the window
 // in /welcome): a new page opens at its top, back and forward put each page where it was left, a tab of the same page
 // keeps the reader's place, and an address with a #hash scrolls that item into view under the app bar and marks it for
@@ -28,6 +29,12 @@ export function Root() {
   useEffect(() => {
     if (!data) return;
     const staff = Boolean(data.user.staffRole || data.user.agency);
+    // Everyone says who they are first ("About you"), once; the client link opens without it.
+    if (!data.introduced) {
+      if (pathname !== "/hello" && !pathname.startsWith("/c/")) navigate("/hello", { replace: true });
+      return;
+    }
+    if (pathname === "/hello") return void navigate("/", { replace: true });
     if (!staff && !data.onboarded && !pathname.startsWith("/welcome")) navigate("/welcome?resume", { replace: true }); // Welcome opens the furthest step reached
   }, [data, pathname, navigate]);
 

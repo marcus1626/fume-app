@@ -27,10 +27,28 @@ export function identityCalls(live: Live): Pick<FumeApi, Calls> {
         "organisation",
       );
       const organisation: Organisation = { id: org.id, name: org.name, kind: org.kind, packageId: "p-core" };
-      const dna = await rows<{ id: string }>(
-        supabase().from("brand_dna_versions").select("id").eq("workspace_id", wsId).eq("state", "approved").limit(1),
-      );
-      return { user, workspace, organisation, role, workspaces, onboarded: dna.length > 0 };
+      const [dna, introduced] = await Promise.all([
+        rows<{ id: string }>(
+          supabase().from("brand_dna_versions").select("id").eq("workspace_id", wsId).eq("state", "approved").limit(1),
+        ),
+        // Until the person has said who they are, "About you" opens first. A database without the column yet
+        // (20261027170000_introductions.sql not applied) opens Fume as before.
+        supabase()
+          .from("profiles")
+          .select("introduced_at")
+          .eq("id", user.id)
+          .maybeSingle<{ introduced_at: string | null }>()
+          .then(({ data, error }) => Boolean(error) || Boolean(data?.introduced_at)),
+      ]);
+      return {
+        user,
+        workspace,
+        organisation,
+        role,
+        workspaces,
+        introduced,
+        onboarded: dna.length > 0,
+      };
     },
     async switchWorkspace(workspaceId) {
       const list = await live.workspaces();

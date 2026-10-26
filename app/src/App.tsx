@@ -7,6 +7,7 @@
 import { IconSprite, ToastProvider, TooltipProvider } from "@fume/ui";
 import { createBrowserRouter, createMemoryRouter, Navigate, RouterProvider, useParams } from "react-router-dom";
 import { ApiProvider, demoStartPath } from "./api/client";
+import { AboutYouPage } from "./features/auth/AboutYouPage";
 import { BoardPage } from "./features/boards/BoardPage";
 import { BrandBoardPage } from "./features/brand/BrandBoardPage";
 import { ModelPage } from "./features/brand/models";
@@ -127,6 +128,8 @@ const routes = [
     element: <Root />,
     errorElement: <NotFound />,
     children: [
+      // The first sign-in: name and title, before anything else (features/auth/AboutYouPage.tsx)
+      { path: "hello", element: <AboutYouPage /> },
       { path: "welcome/:step?", element: <Welcome /> },
       { path: "studio/check/:checkId", element: <CheckPage /> },
       // The Studio itself is full screen, like Photoshop (FLOWS §9)
