@@ -8,6 +8,7 @@ import { createLive } from "./context";
 import { identityCalls } from "./identity";
 import { campaignCalls } from "./campaigns";
 import { homeCalls } from "./home";
+import { overviewCalls } from "./overview";
 import { planCalls } from "./plan";
 import { productCalls } from "./products";
 import { productionCalls } from "./production";
@@ -29,6 +30,7 @@ export function createLiveApi(): FumeApi {
     ...productionCalls(live),
     ...studioCalls(live),
     ...qualityCalls(live),
+    ...overviewCalls(live),
     ...reviewCalls(live),
     ...deliveryCalls(live),
   };

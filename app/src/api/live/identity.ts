@@ -2,9 +2,9 @@
 import type { CustomerRole, FumeApi, Invitation, Membership, Organisation, Session } from "../../contract";
 import { FumeError } from "../../contract";
 import type { Live } from "./context";
-import { one, rows, supabase } from "./supabase";
+import { command, one, rows, supabase } from "./supabase";
 
-type Calls = "session" | "switchWorkspace" | "team" | "people";
+type Calls = "session" | "switchWorkspace" | "team" | "people" | "updateProfile";
 
 interface OrganisationRow {
   id: string;
@@ -81,6 +81,12 @@ export function identityCalls(live: Live): Pick<FumeApi, Calls> {
           })),
         fumeTeam: [...new Set(staff.map((s) => s.user_id))].flatMap((id) => people.get(id) ?? []),
       };
+    },
+    // Name and title; the email address is the one the person signs in with.
+    async updateProfile({ name, title }) {
+      await command("update_profile", { p_name: name, p_title: title });
+      live.forget();
+      return live.me();
     },
     async people() {
       const ws = await live.workspaceId();

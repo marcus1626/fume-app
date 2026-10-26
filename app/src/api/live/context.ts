@@ -9,6 +9,7 @@ export interface ProfileRow {
   name: string;
   title: string;
   staff_role: "designer" | "account_manager" | "admin" | null;
+  avatar_url: string | null;
 }
 interface StaffRow {
   user_id: string;
@@ -81,13 +82,20 @@ export function createLive(): Live {
   const people = () =>
     (peopleCache ??= (async () => {
       const [profiles, staff] = await Promise.all([
-        rows<ProfileRow>(supabase().from("profiles").select("id, email, name, title, staff_role")),
+        rows<ProfileRow>(supabase().from("profiles").select("id, email, name, title, staff_role, avatar_url")),
         rows<StaffRow>(supabase().from("staff_assignments").select("user_id, workspace_id, staff_role, can_check")),
       ]);
       const map = new Map<Id, User>();
       for (const p of profiles) {
         const staffRole = appStaffRole(p, staff);
-        map.set(p.id, { id: p.id, name: p.name, title: p.title, email: p.email, ...(staffRole ? { staffRole } : {}) });
+        map.set(p.id, {
+          id: p.id,
+          name: p.name,
+          title: p.title,
+          email: p.email,
+          ...(p.avatar_url ? { avatar: p.avatar_url } : {}),
+          ...(staffRole ? { staffRole } : {}),
+        });
       }
       return map;
     })());

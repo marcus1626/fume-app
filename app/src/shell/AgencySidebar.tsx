@@ -94,12 +94,18 @@ export function AgencyPersonMenu({ avatar }: { avatar?: boolean }) {
         <DropdownMenuTrigger asChild>
           {avatar ? (
             <Button variant="quiet" iconOnly aria-label={triggerName}>
-              <Avatar size="sm" ink initials={initials(user.name)} />
+              <Avatar size="sm" ink src={user.avatar} initials={initials(user.name)} />
             </Button>
           ) : (
             <SidebarMenuButton
               size="lg"
-              leading={<SidebarAvatar>{initials(user.name)}</SidebarAvatar>}
+              leading={
+                user.avatar ? (
+                  <Avatar size="sm" src={user.avatar} initials={initials(user.name)} />
+                ) : (
+                  <SidebarAvatar>{initials(user.name)}</SidebarAvatar>
+                )
+              }
               description={agencyName}
               endIcon="chevrons-up-down"
               aria-label={triggerName}
