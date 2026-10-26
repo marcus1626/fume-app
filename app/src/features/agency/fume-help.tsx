@@ -1,13 +1,11 @@
-// Round 13 AGENCY (Marcus's video comment #71, 22 Oct 2026: "Burde være book a meeting og borrow manpower funksjon. Og
-// customer service."; PROPOSED): an agency's ways to Fume's people. An agency has no Fume people in its plan (#70: "de
-// får ikke vår manpower"), so it asks for them:
-// - Book a meeting: the customer's meeting dialog (features/fume/meeting.tsx), with Sander, the agency's producer at
-//   Fume. It lands in the calendar.
-// - Borrow Fume's people: a right panel. Which client and campaign, what (checks, design, renders), about how much and
-//   when, a note; it sends a request (askFume) and Sander answers with who and when.
-// - Customer service: a right panel. What it is about and the message; Fume answers in a working day.
-// Where an agency person finds them: "Help from Fume" at the foot of the sidebar (above the person), the person menu,
-// and on the Overview beside the team. Each place holds its own panels (useFumeHelp).
+// An agency's ways to Fume's people. An agency has no Fume people in its plan, so it asks for them:
+// - Book a meeting: the customer's meeting dialog (features/fume/meeting.tsx), with the agency's producer at Fume. It
+//   lands in the calendar.
+// - Borrow Fume's people: a right panel (which client and campaign, what, about how much and when, a note); it sends a
+//   request (askFume) and the producer answers with who and when.
+// - Customer service: a right panel with the topic and the message; Fume answers in a working day.
+// They are offered at the foot of the sidebar ("Help from Fume"), in the person menu, and on the Overview beside the
+// team. Each place holds its own panels (useFumeHelp).
 import {
   Button,
   Checkbox,
@@ -104,7 +102,11 @@ export function AgencyHelpMenu() {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <SidebarMenuButton icon="info" endIcon="chevron-up" aria-label="Help from Fume: book a meeting, borrow Fume’s people, customer service">
+          <SidebarMenuButton
+            icon="info"
+            endIcon="chevron-up"
+            aria-label="Help from Fume: book a meeting, borrow Fume’s people, customer service"
+          >
             Help from Fume
           </SidebarMenuButton>
         </DropdownMenuTrigger>
@@ -159,7 +161,9 @@ export function FumeHelpSection() {
               </ItemMedia>
               <ItemContent>
                 <ItemTitle>{w.label}</ItemTitle>
-                <ItemDescription>{w.kind === "meeting" && contact ? `30 minutes with ${contact}, on a video call` : w.detail}</ItemDescription>
+                <ItemDescription>
+                  {w.kind === "meeting" && contact ? `30 minutes with ${contact}, on a video call` : w.detail}
+                </ItemDescription>
               </ItemContent>
               <ItemActions>
                 <Icon name="chevron-right" />
@@ -216,10 +220,19 @@ function BorrowPanel({ open, onOpenChange }: { open: boolean; onOpenChange: (ope
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, clients.length]);
 
-  const theirs = campaigns.filter((r) => r.client.id === client && !["approved", "delivered", "closed"].includes(r.campaign.state));
+  const theirs = campaigns.filter(
+    (r) => r.client.id === client && !["approved", "delivered", "closed"].includes(r.campaign.state),
+  );
   const chosen = theirs.find((r) => r.campaign.id === campaign)?.campaign;
   const clientName = clients.find((c) => c.workspace.id === client)?.workspace.brandName ?? "the client";
-  const whenWords = when === "week" ? "This week" : when === "next" ? "Next week" : chosen?.dueAt ? `By ${due(chosen.dueAt)}` : "By the campaign’s date";
+  const whenWords =
+    when === "week"
+      ? "This week"
+      : when === "next"
+        ? "Next week"
+        : chosen?.dueAt
+          ? `By ${due(chosen.dueAt)}`
+          : "By the campaign’s date";
   const noWork = tried && work.size === 0;
 
   const submit = (e: FormEvent) => {
@@ -230,10 +243,20 @@ function BorrowPanel({ open, onOpenChange }: { open: boolean; onOpenChange: (ope
       return;
     }
     void ask
-      .mutateAsync({ kind: "manpower", clientId: client, campaignId: chosen?.id, work: [...work], amount: amountWords(amount), when: whenWords, text: note.trim() || undefined })
+      .mutateAsync({
+        kind: "manpower",
+        clientId: client,
+        campaignId: chosen?.id,
+        work: [...work],
+        amount: amountWords(amount),
+        when: whenWords,
+        text: note.trim() || undefined,
+      })
       .then(
         () => {
-          toast.done("Request sent to Fume", { description: `${contact ?? "Fume"} answers today with who and when, for ${chosen ? chosen.name : clientName}.` });
+          toast.done("Request sent to Fume", {
+            description: `${contact ?? "Fume"} answers today with who and when, for ${chosen ? chosen.name : clientName}.`,
+          });
           onOpenChange(false);
         },
         (err: Error) => toast.error("The request wasn’t sent", { description: err.message }),
@@ -246,7 +269,10 @@ function BorrowPanel({ open, onOpenChange }: { open: boolean; onOpenChange: (ope
         <form className="ui-sheet-form" onSubmit={submit} noValidate aria-label="Borrow Fume’s people">
           <SheetHeader>
             <SheetTitle>Borrow Fume’s people</SheetTitle>
-            <SheetDescription>Fume’s experts, designers and operators work on one of your clients for a while. You still send the work to the client; only the client approves it.</SheetDescription>
+            <SheetDescription>
+              Fume’s experts, designers and operators work on one of your clients for a while. You still send the work
+              to the client; only the client approves it.
+            </SheetDescription>
           </SheetHeader>
           <SheetBody>
             <div className="ui-agency-form">
@@ -316,7 +342,15 @@ function BorrowPanel({ open, onOpenChange }: { open: boolean; onOpenChange: (ope
                   <FieldLabel as="span" id={`${id}-amount`}>
                     How much
                   </FieldLabel>
-                  <ToggleGroup type="single" variant="outline" size="sm" loose value={amount} onValueChange={(v) => v && setAmount(v)} aria-labelledby={`${id}-amount`}>
+                  <ToggleGroup
+                    type="single"
+                    variant="outline"
+                    size="sm"
+                    loose
+                    value={amount}
+                    onValueChange={(v) => v && setAmount(v)}
+                    aria-labelledby={`${id}-amount`}
+                  >
                     {AMOUNTS.map((a) => (
                       <ToggleGroupItem key={a} value={a}>
                         {a === "more" ? "More" : `About ${a}`}
@@ -329,17 +363,33 @@ function BorrowPanel({ open, onOpenChange }: { open: boolean; onOpenChange: (ope
                   <FieldLabel as="span" id={`${id}-when`}>
                     When
                   </FieldLabel>
-                  <ToggleGroup type="single" variant="outline" size="sm" loose value={when} onValueChange={(v) => v && setWhen(v)} aria-labelledby={`${id}-when`}>
+                  <ToggleGroup
+                    type="single"
+                    variant="outline"
+                    size="sm"
+                    loose
+                    value={when}
+                    onValueChange={(v) => v && setWhen(v)}
+                    aria-labelledby={`${id}-when`}
+                  >
                     <ToggleGroupItem value="week">This week</ToggleGroupItem>
                     <ToggleGroupItem value="next">Next week</ToggleGroupItem>
-                    <ToggleGroupItem value="date">{chosen?.dueAt ? `By ${due(chosen.dueAt)}` : "By the campaign’s date"}</ToggleGroupItem>
+                    <ToggleGroupItem value="date">
+                      {chosen?.dueAt ? `By ${due(chosen.dueAt)}` : "By the campaign’s date"}
+                    </ToggleGroupItem>
                   </ToggleGroup>
                 </Field>
                 <Field>
                   <FieldLabel htmlFor={`${id}-note`}>
                     A note <FieldOptional />
                   </FieldLabel>
-                  <Textarea id={`${id}-note`} rows={3} value={note} onChange={(e) => setNote(e.target.value)} placeholder="The story formats need a second pair of eyes." />
+                  <Textarea
+                    id={`${id}-note`}
+                    rows={3}
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                    placeholder="The story formats need a second pair of eyes."
+                  />
                 </Field>
               </FieldGroup>
             </div>
@@ -388,7 +438,9 @@ function SupportPanel({ open, onOpenChange }: { open: boolean; onOpenChange: (op
     }
     void ask.mutateAsync({ kind: "support", topic, text }).then(
       () => {
-        toast.done("Sent to Fume’s customer service", { description: `${contact ?? "Fume"} answers within a working day.` });
+        toast.done("Sent to Fume’s customer service", {
+          description: `${contact ?? "Fume"} answers within a working day.`,
+        });
         onOpenChange(false);
       },
       (err: Error) => toast.error("It wasn’t sent", { description: err.message }),
@@ -402,7 +454,8 @@ function SupportPanel({ open, onOpenChange }: { open: boolean; onOpenChange: (op
           <SheetHeader>
             <SheetTitle>Customer service</SheetTitle>
             <SheetDescription>
-              {contact ? `${contact}, your producer at Fume, ` : "Fume "}answers within a working day. About one client’s brand, its Fume chat answers at once.
+              {contact ? `${contact}, your producer at Fume, ` : "Fume "}answers within a working day. About one
+              client’s brand, its Fume chat answers at once.
             </SheetDescription>
           </SheetHeader>
           <SheetBody>
@@ -412,7 +465,15 @@ function SupportPanel({ open, onOpenChange }: { open: boolean; onOpenChange: (op
                   <FieldLabel as="span" id={`${id}-topic`}>
                     What it is about
                   </FieldLabel>
-                  <ToggleGroup type="single" variant="outline" size="sm" loose value={topic} onValueChange={(v) => v && setTopic(v)} aria-labelledby={`${id}-topic`}>
+                  <ToggleGroup
+                    type="single"
+                    variant="outline"
+                    size="sm"
+                    loose
+                    value={topic}
+                    onValueChange={(v) => v && setTopic(v)}
+                    aria-labelledby={`${id}-topic`}
+                  >
                     {TOPICS.map((t) => (
                       <ToggleGroupItem key={t} value={t}>
                         {t}
@@ -452,7 +513,10 @@ function SupportPanel({ open, onOpenChange }: { open: boolean; onOpenChange: (op
 }
 
 /** One quiet row of what was asked: "Borrow Fume’s people · LYSNE · Checks, Design · This week". */
-export function requestWords(r: { kind: string; work?: string[]; amount?: string; when?: string; topic?: string }, clientName?: string): string {
+export function requestWords(
+  r: { kind: string; work?: string[]; amount?: string; when?: string; topic?: string },
+  clientName?: string,
+): string {
   if (r.kind === "support") return ["Customer service", r.topic].filter(Boolean).join(" · ");
   const work = (r.work ?? []).map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(", ");
   return ["Borrow Fume’s people", clientName, work, r.amount, r.when].filter(Boolean).join(" · ");

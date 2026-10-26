@@ -1,15 +1,11 @@
-// The agency's settings (FLOWS §24.3, §24.6, round 11, PROPOSED 20 Oct 2026): the agency (its name, clients and
-// people) and Licence and usage: this period, what the early access covers, the creatives made and approved per
-// client this month with the total, and the seats used of those included. Usage only: no prices anywhere (the licence
-// is a fixed platform fee; production is by use). Each page has its own address (/agency/settings/:page), as the
-// customer's settings: the phone shows the list at /agency/settings and a page at its address.
-// Round 12 AGENCY (UX review DLOAD-7, DTASK-6; PROPOSED 20 Oct 2026): the licence keeps what the licence is (this
-// period's totals, "Approved by clients", the seats, what it covers); the figures per client and per period are on the
-// one Usage page (/agency/usage), the same numbers each client's Home reads.
-// Round 13 AGENCY (Marcus #70, #71, robot note 10-agency; PROPOSED 22 Oct 2026): the roles are Fume's own (Admin, Expert,
-// Operator); "Fume plan" says what the agency has, what comes and that Fume decides it, with Fume's people on request
-// (Borrow Fume's people) and what the agency asked Fume; "Your profile" is the agency person's own page here, never
-// the customer's settings.
+// The agency's settings (FLOWS §24.3, §24.6), each page at its own address (/agency/settings/:page); the phone shows
+// the list at /agency/settings.
+// - The agency: its name, clients and people, with Fume's roles (Admin, Expert, Operator).
+// - Licence and usage: this period's totals, "Approved by clients", the seats and what the licence covers. No prices
+//   anywhere: the licence is a fixed platform fee and production is by use. The figures per client and per period are
+//   on the one Usage page (/agency/usage).
+// - Fume plan: what the agency has, what comes and that Fume decides it; Fume's people on request.
+// - Your profile: the agency person's own page, never the customer's settings.
 import {
   Avatar,
   Badge,
@@ -45,7 +41,8 @@ import { requestWords, useFumeHelp } from "./fume-help";
 
 const PAGES = ["agency", "plan", "licence", "profile"] as const;
 /** A licence period's day as the licence says it (its days are whole days in UTC): "1 Oct", "31 Oct". */
-const utcDay = (iso: string) => new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "UTC" }).format(Date.parse(iso));
+const utcDay = (iso: string) =>
+  new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "UTC" }).format(Date.parse(iso));
 type PageId = (typeof PAGES)[number];
 
 export function AgencySettingsPage() {
@@ -59,10 +56,34 @@ export function AgencySettingsPage() {
   const opened = useRef(false);
 
   const sections: SettingsSectionDef[] = [
-    { id: "agency", label: "Agency", icon: "users", description: "The agency, its clients and its people", content: <AgencyPane /> },
-    { id: "plan", label: "Fume plan", icon: "package", description: "What you have from Fume, and what comes", content: <PlanPane /> },
-    { id: "licence", label: "Licence and usage", icon: "chart-column", description: "What the licence covers and what is used", content: <LicencePane /> },
-    { id: "profile", label: "Your profile", icon: "user", description: "You, as your team and Fume see you", content: <ProfilePane /> },
+    {
+      id: "agency",
+      label: "Agency",
+      icon: "users",
+      description: "The agency, its clients and its people",
+      content: <AgencyPane />,
+    },
+    {
+      id: "plan",
+      label: "Fume plan",
+      icon: "package",
+      description: "What you have from Fume, and what comes",
+      content: <PlanPane />,
+    },
+    {
+      id: "licence",
+      label: "Licence and usage",
+      icon: "chart-column",
+      description: "What the licence covers and what is used",
+      content: <LicencePane />,
+    },
+    {
+      id: "profile",
+      label: "Your profile",
+      icon: "user",
+      description: "You, as your team and Fume see you",
+      content: <ProfilePane />,
+    },
   ];
 
   if (!known)
@@ -74,7 +95,10 @@ export function AgencySettingsPage() {
     );
 
   return (
-    <Page title="Settings" docTitle={page ? `${sections.find((x) => x.id === value)?.label ?? "Settings"} · Settings` : "Settings"}>
+    <Page
+      title="Settings"
+      docTitle={page ? `${sections.find((x) => x.id === value)?.label ?? "Settings"} · Settings` : "Settings"}
+    >
       <SettingsLayout
         header={<PageHeader title="Settings" meta={agency ? [agency.name] : undefined} />}
         sections={sections}
@@ -107,7 +131,10 @@ function AgencyPane() {
   const licence = useLicence();
   const seats = licence.data?.seats;
   return (
-    <SettingsPane title="Agency" description="The agency that runs these client brands in Fume. Each client keeps its own Brand DNA, products, taste and conversation with Fume; nothing crosses between them.">
+    <SettingsPane
+      title="Agency"
+      description="The agency that runs these client brands in Fume. Each client keeps its own Brand DNA, products, taste and conversation with Fume; nothing crosses between them."
+    >
       <SettingsSection title="The agency">
         <DataList>
           <DataListItem label="Name">{agency?.name ?? "—"}</DataListItem>
@@ -118,14 +145,27 @@ function AgencyPane() {
         </DataList>
       </SettingsSection>
 
-      <SettingsSection title="People" description={lead ? "Who works in the agency, and their role. Invite someone from Team." : "Who works in the agency, and their role. The agency lead invites people."}>
+      <SettingsSection
+        title="People"
+        description={
+          lead
+            ? "Who works in the agency, and their role. Invite someone from Team."
+            : "Who works in the agency, and their role. The agency lead invites people."
+        }
+      >
         <Query query={team}>
           {(rows) => (
             <ItemGroup as="ul">
               {rows.map((t) => (
                 <Item key={t.user.id} as="li" size="sm">
                   <ItemMedia>
-                    <Avatar size="md" src={t.user.avatar} initials={initials(t.user.name)} ink={t.role === "lead"} aria-hidden="true" />
+                    <Avatar
+                      size="md"
+                      src={t.user.avatar}
+                      initials={initials(t.user.name)}
+                      ink={t.role === "lead"}
+                      aria-hidden="true"
+                    />
                   </ItemMedia>
                   <ItemContent>
                     <ItemTitle>
@@ -157,7 +197,10 @@ function AgencyPane() {
 function LicencePane() {
   const licence = useLicence();
   return (
-    <SettingsPane title="Licence and usage" description="The agency licence is a fixed platform fee; production is by use, counted per client each month.">
+    <SettingsPane
+      title="Licence and usage"
+      description="The agency licence is a fixed platform fee; production is by use, counted per client each month."
+    >
       <Query query={licence} loading="Loading the licence">
         {(v) => <Licence view={v} />}
       </Query>
@@ -168,8 +211,7 @@ function LicencePane() {
 function Licence({ view }: { view: LicenceView }) {
   const { period, scope, total, seats } = view;
   const span = `${utcDay(period.from)} to ${utcDay(period.to)}`;
-  // Round 12 (DLOAD-7, DTASK-6): the same numbers as Usage and each client's Home, under the same names; the figures
-  // per client and per period live on the one Usage page.
+  // The same numbers as Usage and each client's Home, under the same names.
   return (
     <>
       <SettingsSection title="This period" description={span}>
@@ -199,7 +241,7 @@ function Licence({ view }: { view: LicenceView }) {
   );
 }
 
-// ─── The Fume plan (round 13, Marcus #70) ───────────────────────────────────
+// ─── The Fume plan ─────────────────────────────────────────────────────────
 
 const featureIcon = { included: "circle-check", coming: "clock", on_request: "users" } as const;
 
@@ -209,7 +251,10 @@ function PlanPane() {
   const clients = useAgencyClients(true).data ?? [];
   const help = useFumeHelp();
   return (
-    <SettingsPane title="Fume plan" description={plan.data?.decidedBy ?? "Fume decides which features and updates an agency gets, and when."}>
+    <SettingsPane
+      title="Fume plan"
+      description={plan.data?.decidedBy ?? "Fume decides which features and updates an agency gets, and when."}
+    >
       <Query query={plan} loading="Loading your plan">
         {(p) => {
           const clientName = (id?: string) => clients.find((c) => c.workspace.id === id)?.workspace.brandName;
@@ -252,10 +297,16 @@ function PlanPane() {
               <SettingsSection title="In your plan" description="What your team has in Fume today.">
                 {list("included")}
               </SettingsSection>
-              <SettingsSection title="Coming" description="Fume decides when an update reaches your team. It shows here first.">
+              <SettingsSection
+                title="Coming"
+                description="Fume decides when an update reaches your team. It shows here first."
+              >
                 {list("coming")}
               </SettingsSection>
-              <SettingsSection title="On request" description="Fume’s own people work for Fume’s customers. Borrow them when a campaign needs more hands.">
+              <SettingsSection
+                title="On request"
+                description="Fume’s own people work for Fume’s customers. Borrow them when a campaign needs more hands."
+              >
                 {list("on_request")}
                 <div className="ui-app-row">
                   <Button variant="secondary" size="sm" icon="users" onClick={() => help.open("borrow")}>
@@ -267,7 +318,10 @@ function PlanPane() {
                 </div>
               </SettingsSection>
               {p.requests.length > 0 && (
-                <SettingsSection title="What you asked Fume" description={`${p.contact ? p.contact.name.split(" ")[0] : "Fume"} answers within a working day.`}>
+                <SettingsSection
+                  title="What you asked Fume"
+                  description={`${p.contact ? p.contact.name.split(" ")[0] : "Fume"} answers within a working day.`}
+                >
                   <ItemGroup as="ul">
                     {p.requests.map((r) => (
                       <Item key={r.id} as="li" size="sm">
@@ -276,7 +330,9 @@ function PlanPane() {
                         </ItemMedia>
                         <ItemContent>
                           <ItemTitle>{requestWords(r, clientName(r.clientId))}</ItemTitle>
-                          <ItemDescription>{[`Sent ${when(r.at)}`, r.text ? `“${r.text}”` : undefined].filter(Boolean).join(" · ")}</ItemDescription>
+                          <ItemDescription>
+                            {[`Sent ${when(r.at)}`, r.text ? `“${r.text}”` : undefined].filter(Boolean).join(" · ")}
+                          </ItemDescription>
                         </ItemContent>
                       </Item>
                     ))}
@@ -292,7 +348,7 @@ function PlanPane() {
   );
 }
 
-// ─── Your profile (round 13, robot note 10-agency) ──────────────────────────
+// ─── Your profile ──────────────────────────────────────────────────────────
 
 /** The agency person's own profile: who they are and their role in the agency, never a client's customer role. */
 function ProfilePane() {
@@ -301,11 +357,12 @@ function ProfilePane() {
   const team = useAgencyTeam();
   const clients = useAgencyClients(true).data ?? [];
   const mine = team.data?.find((t) => t.user.id === me?.id);
-  const clientNames = (mine?.clientIds ?? []).map((id) => clients.find((c) => c.workspace.id === id)?.workspace.brandName).filter(Boolean);
+  const clientNames = (mine?.clientIds ?? [])
+    .map((id) => clients.find((c) => c.workspace.id === id)?.workspace.brandName)
+    .filter(Boolean);
   const role = mine ? agencyRoleOf(mine.role, mine.user) : undefined;
   if (!me) return null;
-  // The one profile form (features/settings/parts.tsx, builder D): name, title and email changed in place and saved;
-  // under it, the person's role at the agency and their clients.
+  // The one profile form (features/settings/parts.tsx), then the person's role at the agency and their clients.
   return (
     <SettingsPane title="Your profile" description="You, as your team, your clients and Fume see you.">
       <ProfileForm
@@ -313,9 +370,13 @@ function ProfilePane() {
         about={
           <DataList>
             <DataListItem label={`At ${agency?.name ?? "the agency"}`}>
-              {role ? `${agencyRoleWords[role]}: ${agencyRoleHelp[role].charAt(0).toLowerCase()}${agencyRoleHelp[role].slice(1)}` : "—"}
+              {role
+                ? `${agencyRoleWords[role]}: ${agencyRoleHelp[role].charAt(0).toLowerCase()}${agencyRoleHelp[role].slice(1)}`
+                : "—"}
             </DataListItem>
-            {mine && <DataListItem label="Clients">{clientNames.length ? clientNames.join(", ") : "None yet"}</DataListItem>}
+            {mine && (
+              <DataListItem label="Clients">{clientNames.length ? clientNames.join(", ") : "None yet"}</DataListItem>
+            )}
           </DataList>
         }
       />

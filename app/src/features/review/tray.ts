@@ -1,12 +1,11 @@
-// The creatives Maja marked "Needs changes" on one review set (UX review 19 Oct, TASK-5; round 13, Marcus #33, #34):
-// a mark says the creative needs changes, and its open comments are the change list (comments post at once, so
-// nothing she wrote waits here). "Start the changes" sends every marked creative of the campaign as ONE change
-// request. It lives in the tab's sessionStorage per campaign, so the viewer, Swipe through, the review pages and the
-// campaign page all see the same marks, and a reload or a trip elsewhere does not lose them. A creative that no
-// longer waits on her (approved, or already being remade) drops out when it is read.
-// Round 13 (PROPOSED 21 Oct 2026): the store keeps its old name and shape (ChangeTray, ChangeDraft) so the old call
-// sites still work; `text` and `pins` are no longer written (the comments are read when the changes start), and
-// useMarksAcross reads the marks of several campaigns at once (the Review place, across campaigns).
+// The creatives Maja marked "Needs changes" on one review set: a mark says the creative needs changes, and its open
+// comments are the change list (comments post at once, so nothing she wrote waits here). "Start the changes" sends
+// every marked creative of the campaign as one change request. It lives in the tab's sessionStorage per campaign, so
+// the viewer, Swipe through, the review pages and the campaign page all see the same marks, and a reload or a trip
+// elsewhere does not lose them. A creative that no longer waits on her (approved, or already being remade) drops out
+// when it is read. The store's names (ChangeTray, ChangeDraft) are older than the marks; `text` and `pins` are left
+// unwritten (the comments are read when the changes start). useMarksAcross reads the marks of several campaigns at once
+// (the Review place).
 import { useCallback, useMemo, useSyncExternalStore } from "react";
 import type { ChangeTag, Creative, Format, Id, Pin } from "../../contract";
 
@@ -19,9 +18,9 @@ export interface ChangeDraft {
   format: Format;
   /** "product": the product itself is off (Fume's own mistake, no change request used). */
   tags: ChangeTag[];
-  /** Before round 13: what should change, in her words. Now the creative's open comments say it. */
+  /** Left unwritten: the creative's open comments say what should change. */
   text?: string;
-  /** Before round 13: the spots she marked. Now the comments' pins. */
+  /** Left unwritten: the comments carry the pins. */
   pins?: Pin[];
 }
 
@@ -69,7 +68,8 @@ const subscribe = (l: () => void) => {
 };
 
 /** True when the mark still applies: the creative waits on her, at the version she marked. */
-const applies = (d: ChangeDraft, c: Creative | undefined) => Boolean(c && c.current.id === d.versionId && c.current.state === "checked");
+const applies = (d: ChangeDraft, c: Creative | undefined) =>
+  Boolean(c && c.current.id === d.versionId && c.current.state === "checked");
 
 export interface ChangeTray {
   /** The marks that still apply: each creative still waits on her, at the version she marked. */
@@ -145,6 +145,7 @@ export function useMarksAcross(campaignIds: Id[]): Set<string> {
 }
 
 /** Whether a creative is marked, by the set useMarksAcross gives. */
-export const isMarked = (marks: Set<string>, c: Creative) => c.current.state === "checked" && marks.has(`${c.id}:${c.current.id}`);
+export const isMarked = (marks: Set<string>, c: Creative) =>
+  c.current.state === "checked" && marks.has(`${c.id}:${c.current.id}`);
 
 const EMPTY: ChangeDraft[] = [];

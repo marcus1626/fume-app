@@ -1,9 +1,7 @@
-// What the conversation opens (round 13, Marcus's video comments #13, #14, #15 of 21 Oct; PROPOSED 22 Oct 2026).
-// #15 ("Når du jumpet til kampanjen, ble jeg usikker her på om man fortsatt er i chatten eller ikke"): a campaign, a
-// plan, a creative, a product or a collection the conversation links to opens in the panel beside it on a desk (from
-// 1280 px), so she never leaves the talk; the panel's head has "Open full page". The full page then shows one Smoke
-// glass pill, "← Back to the conversation", which takes her back to where she was in it. On a smaller screen a link
-// goes to the page itself, with the same pill.
+// What the conversation opens (FLOWS §26.1). A campaign, a plan, a creative, a product or a collection the conversation
+// links to opens in the panel beside it on a desk (from 1280 px), so she never leaves the talk; the panel's head has
+// "Open full page". The full page then shows one Smoke glass pill, "← Back to the conversation", which takes her back
+// to where she was in it. On a smaller screen a link goes to the page itself, with the same pill.
 // - ChatLinkProvider: the chat says how a link opens (in its panel); outside the chat, useOpenLink goes to the page.
 // - ReturnToChat: the pill, mounted once by the frame (Frame.tsx); it shows while she is on the page she opened from
 //   the chat, or under it.
@@ -89,7 +87,9 @@ export function ReturnToChat() {
     if (inChat) keepReturn(undefined);
     setPath(readReturn());
   }, [inChat, location.pathname]);
-  const shown = !inChat && (direct || (path !== undefined && (location.pathname === path || location.pathname.startsWith(`${path}/`))));
+  const shown =
+    !inChat &&
+    (direct || (path !== undefined && (location.pathname === path || location.pathname.startsWith(`${path}/`))));
   if (!shown) return null;
   return (
     <div className="ui-glass ui-glass--bar ui-chat-return">

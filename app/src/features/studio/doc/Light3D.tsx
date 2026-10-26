@@ -32,10 +32,22 @@ function place(x: number, y: number, height: number) {
   const az = Math.atan2(x - 0.5, y - 0.5);
   const reach = Math.min(1, Math.hypot(x - 0.5, y - 0.5) * 2) * 0.6 + 0.4;
   const el = (height * Math.PI) / 180;
-  return new THREE.Vector3(Math.sin(az) * r * reach * Math.cos(el), 0.7 + r * Math.sin(el), Math.cos(az) * r * reach * Math.cos(el));
+  return new THREE.Vector3(
+    Math.sin(az) * r * reach * Math.cos(el),
+    0.7 + r * Math.sin(el),
+    Math.cos(az) * r * reach * Math.cos(el),
+  );
 }
 
-export default function Light3D({ rig, selected, label = "The lights around a stand-in of the product, in 3D. Drag to turn it." }: { rig: StudioLightRig; selected?: string; label?: string }) {
+export default function Light3D({
+  rig,
+  selected,
+  label = "The lights around a stand-in of the product, in 3D. Drag to turn it.",
+}: {
+  rig: StudioLightRig;
+  selected?: string;
+  label?: string;
+}) {
   const host = useRef<HTMLDivElement>(null);
   const three = useRef<Scene3D>();
 
@@ -64,16 +76,26 @@ export default function Light3D({ rig, selected, label = "The lights around a st
     camera.position.set(0, 2.2, 6.4);
 
     // The surface, the bottle and its cap: neutral, a little sheen on the glass.
-    const surface = new THREE.Mesh(new THREE.CircleGeometry(4, 64), new THREE.MeshStandardMaterial({ color: ground.clone().multiplyScalar(0.96), roughness: 0.95 }));
+    const surface = new THREE.Mesh(
+      new THREE.CircleGeometry(4, 64),
+      new THREE.MeshStandardMaterial({ color: ground.clone().multiplyScalar(0.96), roughness: 0.95 }),
+    );
     surface.rotation.x = -Math.PI / 2;
     surface.receiveShadow = true;
     scene.add(surface);
-    const glass = new THREE.MeshStandardMaterial({ color: new THREE.Color("#D9D2C7"), roughness: 0.35, metalness: 0.05 });
+    const glass = new THREE.MeshStandardMaterial({
+      color: new THREE.Color("#D9D2C7"),
+      roughness: 0.35,
+      metalness: 0.05,
+    });
     const body = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 1.25, 48), glass);
     body.position.y = 0.625;
     const shoulder = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.42, 0.22, 48), glass);
     shoulder.position.y = 1.36;
-    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.34, 32), new THREE.MeshStandardMaterial({ color: new THREE.Color("#4A2A2A"), roughness: 0.7 }));
+    const cap = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.17, 0.17, 0.34, 32),
+      new THREE.MeshStandardMaterial({ color: new THREE.Color("#4A2A2A"), roughness: 0.7 }),
+    );
     cap.position.y = 1.64;
     for (const m of [body, shoulder, cap]) {
       m.castShadow = true;
@@ -138,18 +160,32 @@ export default function Light3D({ rig, selected, label = "The lights around a st
       const [r, g, b] = kelvinToRgb(l.warmth);
       const colour = new THREE.Color(`rgb(${r}, ${g}, ${b})`);
       const at = place(l.x, l.y, l.height);
-      const spot = new THREE.SpotLight(colour, (l.strength / 100) * 7, 0, Math.PI / 5 + (l.softness / 100) * (Math.PI / 8), 0.2 + (l.softness / 100) * 0.75, 0);
+      const spot = new THREE.SpotLight(
+        colour,
+        (l.strength / 100) * 7,
+        0,
+        Math.PI / 5 + (l.softness / 100) * (Math.PI / 8),
+        0.2 + (l.softness / 100) * 0.75,
+        0,
+      );
       spot.position.copy(at);
       spot.target.position.set(0, 0.7, 0);
       // One shadow, from the strongest light: enough to read the direction, calm.
-      spot.castShadow = i === rig.lights.reduce((best, x, j) => (x.strength > rig.lights[best]!.strength ? j : best), 0);
+      spot.castShadow =
+        i === rig.lights.reduce((best, x, j) => (x.strength > rig.lights[best]!.strength ? j : best), 0);
       spot.shadow.mapSize.set(512, 512);
       spot.shadow.radius = 2 + (l.softness / 100) * 10;
       spot.shadow.bias = -0.0008;
       t.rig.add(spot, spot.target);
       const marker = new THREE.Mesh(
         new THREE.SphereGeometry(l.id === selected ? 0.1 : 0.07, 16, 12),
-        new THREE.MeshBasicMaterial({ color: tokenColour(host.current!, l.id === selected ? "--ui-action-primary" : "--ui-surface-creative", l.id === selected ? "#1A1714" : "#FFFFFF") }),
+        new THREE.MeshBasicMaterial({
+          color: tokenColour(
+            host.current!,
+            l.id === selected ? "--ui-action-primary" : "--ui-surface-creative",
+            l.id === selected ? "#1A1714" : "#FFFFFF",
+          ),
+        }),
       );
       marker.position.copy(at);
       t.rig.add(marker);

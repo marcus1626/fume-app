@@ -18,7 +18,12 @@ export interface GlassProps extends HTMLAttributes<HTMLDivElement> {
 export const Glass = forwardRef<HTMLDivElement, GlassProps>(({ variant = "panel", className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cx("ui-glass", variant === "small" && "ui-glass--small", variant === "bar" && "ui-glass--bar", className)}
+    className={cx(
+      "ui-glass",
+      variant === "small" && "ui-glass--small",
+      variant === "bar" && "ui-glass--bar",
+      className,
+    )}
     {...props}
   />
 ));

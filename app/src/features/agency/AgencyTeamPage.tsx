@@ -1,8 +1,6 @@
-// The agency's team (FLOWS §24.3, round 11, PROPOSED 20 Oct 2026): its people, their role, the clients they work on,
-// how full their week is (a quiet bar, the share as data) and what they do this week. Round 12 (UX review DLAY-14,
-// DTASK-7): the same Team table as Fume's studio (features/studio/team-table.tsx). The lead invites someone with
-// Invite, a secondary pill (a small right panel: email and role; in the preview a toast says the invitation went).
-// Round 13 (Marcus #70): the roles are Fume's own, Admin, Expert and Operator.
+// The agency's team (FLOWS §24.3): the same Team table as Fume's studio (features/studio/team-table.tsx), with Fume's
+// roles (Admin, Expert, Operator). The lead invites someone with Invite, a small right panel; in the preview a toast
+// says the invitation went.
 import { Button, PageHeader } from "@fume/ui";
 import { useState } from "react";
 import { useAgencyClients, useAgencyTeam } from "../../api/hooks";
@@ -21,7 +19,9 @@ function teamRow(t: AgencyTeamMember, clients: AgencyClient[]): TeamTableRow {
     user: t.user,
     role: agencyRoleWords[agencyRoleOf(t.role, t.user)],
     lead: t.role === "lead",
-    brands: t.clientIds.map((id) => clients.find((c) => c.workspace.id === id)?.workspace.brandName).filter((n): n is string => Boolean(n)),
+    brands: t.clientIds
+      .map((id) => clients.find((c) => c.workspace.id === id)?.workspace.brandName)
+      .filter((n): n is string => Boolean(n)),
     week: { value: pct, max: 100, words: `${pct} %`, label: `${firstName(t.user.name)}’s week is ${pct} % full` },
     doing: t.thisWeek,
   };
@@ -55,13 +55,23 @@ export function AgencyTeamPage() {
             <Nothing icon="users" title="No one on the team yet" />
           ) : (
             <Section aria-label="This week">
-              <TeamTable rows={rows.map((t) => teamRow(t, clients.data ?? []))} me={me} brandLabel="Clients" label="The team this week" />
+              <TeamTable
+                rows={rows.map((t) => teamRow(t, clients.data ?? []))}
+                me={me}
+                brandLabel="Clients"
+                label="The team this week"
+              />
             </Section>
           )
         }
       </Query>
 
-      <InvitePanel open={inviting} onOpenChange={setInviting} agencyName={name} known={(team.data ?? []).map((t) => t.user.email)} />
+      <InvitePanel
+        open={inviting}
+        onOpenChange={setInviting}
+        agencyName={name}
+        known={(team.data ?? []).map((t) => t.user.email)}
+      />
     </Page>
   );
 }

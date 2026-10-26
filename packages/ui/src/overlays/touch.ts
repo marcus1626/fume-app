@@ -1,7 +1,7 @@
-// Touch or mouse (walk-through 19 Oct, MOB-23 and MOB-14; PROPOSED 19 Oct 2026): screens pick their words and their
-// first focus by the person's main pointer. A finger (pointer: coarse) taps, so the words say "Tap", never "click",
-// "drop" or "press"; and a dialog does not put the cursor in its first field, which would raise the keyboard over its
-// buttons before the dialog is read. A mouse or a pen (pointer: fine) keeps the desk words and the first-field focus.
+// Touch or mouse: screens pick their words and their first focus by the person's main pointer. A finger (pointer:
+// coarse) taps, so the words say "Tap", never "click", "drop" or "press"; and a dialog does not put the cursor in its
+// first field, which would raise the keyboard over its buttons before the dialog is read. A mouse or a pen (pointer:
+// fine) keeps the desk words and the first-field focus.
 //   const touch = useTouch();
 //   <p>{touch ? "Tap the creative to pin a comment" : "Click the creative to pin a comment on a spot"}</p>
 import { useEffect, useState } from "react";

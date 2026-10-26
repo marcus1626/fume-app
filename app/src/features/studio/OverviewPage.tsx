@@ -1,16 +1,29 @@
-// The overview (FLOWS §4.2 and §24.3): one page for Fume's studio ("All brands") and an agency ("All clients").
-// DECIDED by Marcus 20 Oct 2026: "Agency dashboard blir strengt tatt lik som vår, vi skal ha performance og alt sånt
-// vi også", so what Fume's team gets here, an agency gets too.
-// Round 12 (desktop review 20 Oct, DLAY-7, DLOAD-12, DTASK-19, DWAY-14, DWAY-20; PROPOSED 20 Oct 2026): the work first.
-// The greeting and one headline built the same way in both frames ("2 brands. 1 plan and 5 creatives to check; 6
-// creatives with Maja."); then what needs you (two thirds) beside the deliveries due (a third), each opening where the
-// work is done (a delivery opens its campaign, never the brand's list); then the brands or clients as compact tiles
-// without photos (the mark, the name, a quiet dot when something waits on you, the first ask in one line, the next
-// delivery, the current campaign as a thin bar), A to Z so a brand stays where it was (the photos stay on Clients and
-// each brand's Home); then the Engine's runs beside the team this week, each person's load as "1.5 of 4". Fume's admin
-// follows the work and checks nothing: no Needs you, and the page starts with the brands. Every link is the frame's
-// own address (scope.ts): a campaign opens the campaign (Fume: its plan), a run its brand's Engine output.
-import { Avatar, Button, EngineRun, Icon, Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemMediaImage, ItemTitle, PageHeader, Progress, useNarrowScreen, type PageHeaderPrimaryAction } from "@fume/ui";
+// The overview (FLOWS §4.2, §24.3): one page for Fume's studio ("All brands") and an agency ("All clients"), so what
+// Fume's team gets here, an agency gets too. The work first: the greeting and one headline built the same way in both
+// frames ("2 brands. 1 plan and 5 creatives to check; 6 creatives with Maja."); then what needs you (two thirds) beside
+// the deliveries due (a third), each opening where the work is done (a delivery opens its campaign); then the brands or
+// clients as compact tiles (the mark, the name, a quiet dot when something waits on you, the first ask in one line, the
+// next delivery, the current campaign as a thin bar), A to Z so a brand stays where it was; then the Engine's runs
+// beside the team this week, each person's load as "1.5 of 4". Fume's admin follows the work and checks nothing: no
+// Needs you, and the page starts with the brands. Every link is the frame's own address (scope.ts).
+import {
+  Avatar,
+  Button,
+  EngineRun,
+  Icon,
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemMedia,
+  ItemMediaImage,
+  ItemTitle,
+  PageHeader,
+  Progress,
+  useNarrowScreen,
+  type PageHeaderPrimaryAction,
+} from "@fume/ui";
 import type { ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAgencyHome, useAllBrands, useQaQueue, useSession, useStudioCampaigns } from "../../api/hooks";
@@ -75,16 +88,25 @@ interface OverviewModel {
   deliveriesTo: string;
   team: TeamModel[];
   teamTo: string;
-  /** Round 13 AGENCY: the agency's ways to Fume's people, under the team. */
+  /** The agency's ways to Fume's people, under the team. */
   help?: ReactNode;
 }
 
-/** "LYSNE · 2 of 11 approved", or "LYSNE · No creatives yet" while the plan comes first (DLOAD-12: one way to say it). */
-const approvedOf = (d: AllBrandsView["deliveriesDue"][number]) => `${d.workspace.brandName} · ${d.total ? `${d.approved} of ${d.total} approved` : "No creatives yet"}`;
+/** "LYSNE · 2 of 11 approved", or "LYSNE · No creatives yet" while the plan comes first. */
+const approvedOf = (d: AllBrandsView["deliveriesDue"][number]) =>
+  `${d.workspace.brandName} · ${d.total ? `${d.approved} of ${d.total} approved` : "No creatives yet"}`;
 
-const needIcon = { plan: "file-text", check: "fume-check", client_changes: "message-square", brief: "file-text", products: "tag", brand: "palette" } as const;
+const needIcon = {
+  plan: "file-text",
+  check: "fume-check",
+  client_changes: "message-square",
+  brief: "file-text",
+  products: "tag",
+  brand: "palette",
+} as const;
 
-const byBrand = <T extends { workspace: Workspace }>(a: T, b: T) => a.workspace.brandName.localeCompare(b.workspace.brandName, "en", { sensitivity: "base" });
+const byBrand = <T extends { workspace: Workspace }>(a: T, b: T) =>
+  a.workspace.brandName.localeCompare(b.workspace.brandName, "en", { sensitivity: "base" });
 
 /** "LYSNE · " (a batch made outside a campaign has no name yet) → "LYSNE". */
 const tidy = (title: string) => title.replace(/\s·\s*$/, "");
@@ -111,17 +133,27 @@ export function withCustomers(rows: StudioCampaignRow[], frame: StaffFrameKind) 
     const who = approver ? firstName(approver.name) : frame === "agency" ? "the client" : "the customer";
     people.set(who, (people.get(who) ?? 0) + sent);
   }
-  const withThem = [...people].map(([who, n], i) => (i === 0 ? `${copy.creatives(n)} with ${who}` : `${n} with ${who}`)).join(", ");
+  const withThem = [...people]
+    .map(([who, n], i) => (i === 0 ? `${copy.creatives(n)} with ${who}` : `${n} with ${who}`))
+    .join(", ");
   return { toSend, withThem };
 }
 
-/** The headline, the same sentence in both frames (DLOAD-12): how many, what to check, what to send, what is with whom. */
-export function headline(o: { count?: string; plans: number; checks: number; toSend: number; withThem: string; frame: StaffFrameKind; follows: boolean }): string {
+/** The headline, the same sentence in both frames: how many, what to check, what to send, what is with whom. */
+export function headline(o: {
+  count?: string;
+  plans: number;
+  checks: number;
+  toSend: number;
+  withThem: string;
+  frame: StaffFrameKind;
+  follows: boolean;
+}): string {
   const asks: string[] = [];
   if (!o.follows) {
     const plans = o.plans ? copy.count(o.plans, "plan") : "";
-    // Fume's expert checks both: "1 plan and 5 creatives to check". Round 13 AGENCY (robot notes 10-agency,
-    // 11-agency-client): so does an agency, which checks its plans and never approves one (only the client approves).
+    // Fume's expert checks both, "1 plan and 5 creatives to check"; so does an agency, which checks its plans and never
+    // approves one (only the client approves).
     const both = [plans, o.checks ? copy.creatives(o.checks) : ""].filter(Boolean).join(" and ");
     if (both) asks.push(`${both} to check`);
     if (o.toSend) asks.push(`${copy.creatives(o.toSend)} to send`);
@@ -158,7 +190,11 @@ function StudioOverview() {
         const first = needs.find((n) => n.clientId === b.workspace.id);
         const inCheck = waiting.filter((x) => x.item.workspaceId === b.workspace.id).length;
         const status = admin
-          ? b.current ? `${b.current.name}: ${b.current.detail}` : b.running ? `${copy.count(b.running, "run")} under way` : "Nothing due"
+          ? b.current
+            ? `${b.current.name}: ${b.current.detail}`
+            : b.running
+              ? `${copy.count(b.running, "run")} under way`
+              : "Nothing due"
           : first
             ? askLine(first)
             : inCheck
@@ -176,7 +212,9 @@ function StudioOverview() {
           to: brandBase("fume", b.workspace.id),
         };
       }),
-      needs: admin ? undefined : needs.map((n) => ({ ...n, title: tidy(n.title), to: hrefIn("fume", n.clientId, n.href) })),
+      needs: admin
+        ? undefined
+        : needs.map((n) => ({ ...n, title: tidy(n.title), to: hrefIn("fume", n.clientId, n.href) })),
       runs: v.runs,
       runsOpen: !admin,
       deliveries: v.deliveriesDue.map((d) => ({
@@ -184,16 +222,21 @@ function StudioOverview() {
         title: d.campaign.name,
         detail: approvedOf(d),
         at: d.dueAt,
-        // DTASK-19, DWAY-14: the campaign itself (Fume's admin has no plan to check: the brand's Home)
+        // the campaign itself (Fume's admin has no plan to check: the brand's Home)
         to: admin ? brandBase("fume", d.workspace.id) : campaignHref("fume", d.workspace.id, d.campaign.id),
       })),
       deliveriesTo: "/studio/deliveries",
       team: v.team.map((r) => {
-        const brands = (r.brandIds ?? []).map((id) => v.brands.find((b) => b.workspace.id === id)?.workspace.brandName).filter(Boolean).join(", ");
+        const brands = (r.brandIds ?? [])
+          .map((id) => v.brands.find((b) => b.workspace.id === id)?.workspace.brandName)
+          .filter(Boolean)
+          .join(", ");
         return {
           user: r.user,
           name: `${firstName(r.user.name)}${r.user.id === me?.id ? " (you)" : ""}`,
-          small: [staffRoleLabel[r.user.staffRole ?? "expert"], r.follows ? "follows every brand" : brands].filter(Boolean).join(" · "),
+          small: [staffRoleLabel[r.user.staffRole ?? "expert"], r.follows ? "follows every brand" : brands]
+            .filter(Boolean)
+            .join(" · "),
           load: r.follows
             ? undefined
             : {
@@ -246,14 +289,17 @@ function AgencyOverview() {
   const model = (view: NonNullable<typeof home.data>): OverviewModel => {
     const client = (id: Id) => view.clients.find((c) => c.workspace.id === id);
     const v = all.data;
-    // The deliveries the mock holds (LYSNE). Round 13 AGENCY (robot note 10-agency): the same list as Deliveries, so
-    // an example client's next delivery stays on its tile and its Home (Overview said 4, Deliveries 3).
+    // The deliveries the mock holds (LYSNE): the same list as Deliveries, so an example client's next delivery is the
+    // same on its tile and its Home.
     const full: DeliveryModel[] = (v?.deliveriesDue ?? []).map((d) => ({
       id: d.campaign.id,
       title: d.campaign.name,
       detail: approvedOf(d),
       at: d.dueAt,
-      to: client(d.workspace.id)?.example === "summary" ? brandBase("agency", d.workspace.id) : campaignHref("agency", d.workspace.id, d.campaign.id),
+      to:
+        client(d.workspace.id)?.example === "summary"
+          ? brandBase("agency", d.workspace.id)
+          : campaignHref("agency", d.workspace.id, d.campaign.id),
     }));
     return {
       frame: "agency",
@@ -282,19 +328,27 @@ function AgencyOverview() {
       deliveriesTo: "/agency/deliveries",
       team: view.team.map((t) => {
         const pct = Math.round(t.load * 100);
-        const brands = t.clientIds.map((id) => client(id)?.workspace.brandName).filter(Boolean).join(", ");
+        const brands = t.clientIds
+          .map((id) => client(id)?.workspace.brandName)
+          .filter(Boolean)
+          .join(", ");
         return {
           user: t.user,
           lead: t.role === "lead",
           name: `${firstName(t.user.name)}${t.user.id === me?.id ? " (you)" : ""}`,
-          // Round 13 AGENCY (Marcus #70): the role in Fume's words, as Fume's own team line ("Expert · LYSNE")
+          // the role in Fume's words, as Fume's own team line ("Expert · LYSNE")
           small: `${agencyRoleWords[agencyRoleOf(t.role, t.user)]} · ${brands}`,
-          load: { value: pct, max: 100, number: `${pct} %`, label: `${firstName(t.user.name)}’s week is ${pct} % full` },
+          load: {
+            value: pct,
+            max: 100,
+            number: `${pct} %`,
+            label: `${firstName(t.user.name)}’s week is ${pct} % full`,
+          },
           week: t.thisWeek,
         };
       }),
       teamTo: "/agency/team",
-      // Round 13 AGENCY (Marcus #71): Book a meeting, Borrow Fume's people and Customer service, beside the team
+      // Book a meeting, Borrow Fume's people and Customer service, beside the team
       help: <FumeHelpSection />,
     };
   };
@@ -320,7 +374,11 @@ function AgencyOverview() {
       <Query query={home} loading="Loading your clients">
         {(view) => <Overview model={model(view)} />}
       </Query>
-      <AddClientPanel open={add.open} onOpenChange={(o) => add.setOpen(o)} onAdded={(client) => navigate(`/agency/clients?client=${client.workspace.id}`, { replace: true })} />
+      <AddClientPanel
+        open={add.open}
+        onOpenChange={(o) => add.setOpen(o)}
+        onAdded={(client) => navigate(`/agency/clients?client=${client.workspace.id}`, { replace: true })}
+      />
     </Page>
   );
 }
@@ -328,7 +386,9 @@ function AgencyOverview() {
 /** The greeting and the day's sentence; the page's one action is its primary one (under the sentence on a phone). */
 function Greeting({ summary, action }: { summary?: string; action?: PageHeaderPrimaryAction }) {
   const me = useSession().data?.user;
-  return <PageHeader title={`${greeting()}, ${me ? firstName(me.name) : ""}`} description={summary} primaryAction={action} />;
+  return (
+    <PageHeader title={`${greeting()}, ${me ? firstName(me.name) : ""}`} description={summary} primaryAction={action} />
+  );
 }
 
 /** Two rows of tiles at most; the rest are a click away (Clients). */
@@ -337,7 +397,12 @@ const MAX_TILES = 8;
 function Overview({ model }: { model: OverviewModel }) {
   const m = model;
   const tiles = (
-    <Section title={m.tilesTitle} meta={m.tiles.length} titleId="overview-brands" action={m.tiles.length > MAX_TILES || m.frame === "agency" ? m.tilesAction : undefined}>
+    <Section
+      title={m.tilesTitle}
+      meta={m.tiles.length}
+      titleId="overview-brands"
+      action={m.tiles.length > MAX_TILES || m.frame === "agency" ? m.tilesAction : undefined}
+    >
       <ul className="ui-agency-tiles" aria-labelledby="overview-brands">
         {m.tiles.slice(0, MAX_TILES).map((t) => (
           <BrandTile key={t.id} tile={t} />
@@ -431,7 +496,11 @@ function Overview({ model }: { model: OverviewModel }) {
                   ))}
                 </ItemGroup>
               ) : (
-                <Nothing icon="circle-check" title="Nothing needs you" text="A plan to check, a creative to check or an answer shows here first." />
+                <Nothing
+                  icon="circle-check"
+                  title="Nothing needs you"
+                  text="A plan to check, a creative to check or an answer shows here first."
+                />
               )}
             </Section>
           </div>
@@ -455,7 +524,7 @@ function Overview({ model }: { model: OverviewModel }) {
   );
 }
 
-/** One brand or client as a compact tile (DLAY-7): the whole tile opens it. */
+/** One brand or client as a compact tile: the whole tile opens it. */
 function BrandTile({ tile }: { tile: TileModel }) {
   const { workspace, current } = tile;
   const pct = current ? Math.round(current.progress * 100) : 0;
@@ -470,7 +539,9 @@ function BrandTile({ tile }: { tile: TileModel }) {
             {tile.at && <span className="ui-agency-data ui-agency-tile-at">{due(tile.at)}</span>}
           </span>
           <span className="ui-agency-tile-status">{tile.status}</span>
-          {current && <Progress className="ui-agency-tile-bar" value={pct} aria-label={`${current.name}: ${current.detail}`} />}
+          {current && (
+            <Progress className="ui-agency-tile-bar" value={pct} aria-label={`${current.name}: ${current.detail}`} />
+          )}
         </span>
       </Link>
     </li>
@@ -531,7 +602,9 @@ function TeamWeek({ team }: { team: TeamModel[] }) {
                 </span>
               )}
             </span>
-            {t.load && <Progress className="ui-agency-load" value={t.load.value} max={t.load.max} aria-label={t.load.label} />}
+            {t.load && (
+              <Progress className="ui-agency-load" value={t.load.value} max={t.load.max} aria-label={t.load.label} />
+            )}
             {t.week && <span className="ui-agency-team-week">{t.week}</span>}
           </span>
         </li>

@@ -110,7 +110,20 @@ export interface ChartProps extends Omit<HTMLAttributes<HTMLDivElement>, "title"
 /* ============================== helpers ============================== */
 
 const NS_MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const NS_MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const NS_MONTH = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 const nf = new Intl.NumberFormat("en-GB");
 const SVGNS = "http://www.w3.org/2000/svg";
 
@@ -183,37 +196,125 @@ function monotone(p: Array<[number, number]>): string {
   const n = p.length;
   if (!n) return "";
   if (n < 3) return "M" + p.map((q) => f(q[0]) + "," + f(q[1])).join("L");
-  const dx: number[] = [], m: number[] = [], t: number[] = [];
+  const dx: number[] = [],
+    m: number[] = [],
+    t: number[] = [];
   for (let i = 0; i < n - 1; i++) {
     dx[i] = p[i + 1][0] - p[i][0];
     m[i] = dx[i] ? (p[i + 1][1] - p[i][1]) / dx[i] : 0;
   }
   for (let i = 1; i < n - 1; i++) {
     const pm = (m[i - 1] * dx[i] + m[i] * dx[i - 1]) / (dx[i - 1] + dx[i]);
-    t[i] = (Math.sign(m[i - 1]) + Math.sign(m[i])) * Math.min(Math.abs(m[i - 1]), Math.abs(m[i]), 0.5 * Math.abs(pm)) || 0;
+    t[i] =
+      (Math.sign(m[i - 1]) + Math.sign(m[i])) * Math.min(Math.abs(m[i - 1]), Math.abs(m[i]), 0.5 * Math.abs(pm)) || 0;
   }
   t[0] = (3 * m[0] - t[1]) / 2;
   t[n - 1] = (3 * m[n - 2] - t[n - 2]) / 2;
   let d = "M" + f(p[0][0]) + "," + f(p[0][1]);
   for (let i = 0; i < n - 1; i++) {
     const k = dx[i] / 3;
-    d += "C" + f(p[i][0] + k) + "," + f(p[i][1] + k * t[i]) + "," + f(p[i + 1][0] - k) + "," + f(p[i + 1][1] - k * t[i + 1]) + "," + f(p[i + 1][0]) + "," + f(p[i + 1][1]);
+    d +=
+      "C" +
+      f(p[i][0] + k) +
+      "," +
+      f(p[i][1] + k * t[i]) +
+      "," +
+      f(p[i + 1][0] - k) +
+      "," +
+      f(p[i + 1][1] - k * t[i + 1]) +
+      "," +
+      f(p[i + 1][0]) +
+      "," +
+      f(p[i + 1][1]);
   }
   return d;
 }
 // bars: the data end rounded, the baseline end square; same commands at any size, so CSS can morph d
 function barUp(x: number, y: number, w: number, hh: number, r: number) {
   r = Math.max(0, Math.min(r, w / 2, hh));
-  const b = y + hh, x1 = x + w;
-  return "M" + f(x) + "," + f(b) + "V" + f(y + r) + "A" + f(r) + "," + f(r) + " 0 0 1 " + f(x + r) + "," + f(y) + "H" + f(x1 - r) + "A" + f(r) + "," + f(r) + " 0 0 1 " + f(x1) + "," + f(y + r) + "V" + f(b) + "Z";
+  const b = y + hh,
+    x1 = x + w;
+  return (
+    "M" +
+    f(x) +
+    "," +
+    f(b) +
+    "V" +
+    f(y + r) +
+    "A" +
+    f(r) +
+    "," +
+    f(r) +
+    " 0 0 1 " +
+    f(x + r) +
+    "," +
+    f(y) +
+    "H" +
+    f(x1 - r) +
+    "A" +
+    f(r) +
+    "," +
+    f(r) +
+    " 0 0 1 " +
+    f(x1) +
+    "," +
+    f(y + r) +
+    "V" +
+    f(b) +
+    "Z"
+  );
 }
 function barRight(x: number, y: number, w: number, hh: number, r: number, r0 = 0) {
   r = Math.max(0, Math.min(r, hh / 2, w));
   r0 = Math.max(0, Math.min(r0, hh / 2, w));
-  const x1 = x + w, y1 = y + hh;
+  const x1 = x + w,
+    y1 = y + hh;
   return (
-    "M" + f(x + r0) + "," + f(y) + "H" + f(x1 - r) + "A" + f(r) + "," + f(r) + " 0 0 1 " + f(x1) + "," + f(y + r) + "V" + f(y1 - r) + "A" + f(r) + "," + f(r) + " 0 0 1 " + f(x1 - r) + "," + f(y1) +
-    "H" + f(x + r0) + "A" + f(r0) + "," + f(r0) + " 0 0 1 " + f(x) + "," + f(y1 - r0) + "V" + f(y + r0) + "A" + f(r0) + "," + f(r0) + " 0 0 1 " + f(x + r0) + "," + f(y) + "Z"
+    "M" +
+    f(x + r0) +
+    "," +
+    f(y) +
+    "H" +
+    f(x1 - r) +
+    "A" +
+    f(r) +
+    "," +
+    f(r) +
+    " 0 0 1 " +
+    f(x1) +
+    "," +
+    f(y + r) +
+    "V" +
+    f(y1 - r) +
+    "A" +
+    f(r) +
+    "," +
+    f(r) +
+    " 0 0 1 " +
+    f(x1 - r) +
+    "," +
+    f(y1) +
+    "H" +
+    f(x + r0) +
+    "A" +
+    f(r0) +
+    "," +
+    f(r0) +
+    " 0 0 1 " +
+    f(x) +
+    "," +
+    f(y1 - r0) +
+    "V" +
+    f(y + r0) +
+    "A" +
+    f(r0) +
+    "," +
+    f(r0) +
+    " 0 0 1 " +
+    f(x + r0) +
+    "," +
+    f(y) +
+    "Z"
   );
 }
 function wrap(name: string, font: string, space: number): string[] {
@@ -222,7 +323,8 @@ function wrap(name: string, font: string, space: number): string[] {
   if (w.length < 2) return [name];
   let best: { m: number; lines: string[] } | null = null;
   for (let i = 1; i < w.length; i++) {
-    const a = w.slice(0, i).join(" "), b = w.slice(i).join(" ");
+    const a = w.slice(0, i).join(" "),
+      b = w.slice(i).join(" ");
     const m = Math.max(measure(a, font), measure(b, font));
     if (!best || m < best.m) best = { m, lines: [a, b] };
   }
@@ -281,7 +383,8 @@ const labelOf = (cfg: Cfg, k: string | number) => (cfg.config[String(k)] && cfg.
 function fmtV(cfg: Cfg, v: number | null | undefined): string {
   if (v == null || !isFinite(v)) return "–";
   if (cfg.format === "minutes") {
-    const hh = Math.floor(v / 60), mm = Math.round(v % 60);
+    const hh = Math.floor(v / 60),
+      mm = Math.round(v % 60);
     return (hh ? hh + " h " : "") + mm + " min";
   }
   return nf.format(v) + (cfg.unit || "");
@@ -289,7 +392,8 @@ function fmtV(cfg: Cfg, v: number | null | undefined): string {
 function fmtX(cfg: Cfg, v: string | number, mode: "tick" | "head" | "spoken"): string {
   if (cfg.xFormat === "week" || cfg.xFormat === "date") {
     const a = day(v);
-    if (mode === "spoken") return (cfg.xFormat === "week" ? "Week of " : "") + a.getUTCDate() + " " + NS_MONTH[a.getUTCMonth()];
+    if (mode === "spoken")
+      return (cfg.xFormat === "week" ? "Week of " : "") + a.getUTCDate() + " " + NS_MONTH[a.getUTCMonth()];
     if (cfg.xFormat === "date" || mode === "tick") return a.getUTCDate() + " " + NS_MON[a.getUTCMonth()];
     const b = new Date(a.getTime() + 6 * 864e5);
     return a.getUTCMonth() === b.getUTCMonth()
@@ -306,8 +410,14 @@ function summaryOf(cfg: Cfg, keys: string[]): string {
   if (!d.length) return "";
   if (cfg.type === "donut") {
     const r = rows(cfg);
-    const vals = r.map((x) => num(x, cfg.dataKey)), sh = shares(vals);
-    return r.map((x, i) => labelOf(cfg, x[cfg.nameKey]) + " " + nf.format(vals[i]) + " (" + sh[i] + "%)").join(", ") + "; " + nf.format(sum(vals)) + " in all.";
+    const vals = r.map((x) => num(x, cfg.dataKey)),
+      sh = shares(vals);
+    return (
+      r.map((x, i) => labelOf(cfg, x[cfg.nameKey]) + " " + nf.format(vals[i]) + " (" + sh[i] + "%)").join(", ") +
+      "; " +
+      nf.format(sum(vals)) +
+      " in all."
+    );
   }
   if (cfg.type === "bar") {
     const r = rows(cfg);
@@ -316,11 +426,17 @@ function summaryOf(cfg: Cfg, keys: string[]): string {
     return r.length + " " + (cfg.point || "item") + "s. Highest: " + r[i][cfg.xKey] + ", " + fmtV(cfg, tot[i]) + ".";
   }
   const vals = (k: string) => (d as Array<ChartDatum | number>).map((x) => raw(x, k));
-  const first = d[0], last = d[d.length - 1];
+  const first = d[0],
+    last = d[d.length - 1];
   return (
-    keys.map((k) => labelOf(cfg, k) + " from " + fmtV(cfg, vals(k)[0]) + " to " + fmtV(cfg, vals(k)[d.length - 1])).join("; ") +
+    keys
+      .map((k) => labelOf(cfg, k) + " from " + fmtV(cfg, vals(k)[0]) + " to " + fmtV(cfg, vals(k)[d.length - 1]))
+      .join("; ") +
     (cfg.xKey && typeof first !== "number" && typeof last !== "number"
-      ? ", from the " + lower1(fmtX(cfg, first[cfg.xKey], "spoken")) + " to the " + lower1(fmtX(cfg, last[cfg.xKey], "spoken"))
+      ? ", from the " +
+        lower1(fmtX(cfg, first[cfg.xKey], "spoken")) +
+        " to the " +
+        lower1(fmtX(cfg, last[cfg.xKey], "spoken"))
       : "") +
     "."
   );
@@ -333,7 +449,8 @@ function spokenOf(cfg: Cfg, keys: string[], hidden: Record<string, boolean>, i: 
     return labelOf(cfg, r[cfg.nameKey]) + ": " + fmtV(cfg, vals[i]) + ", " + shares(vals)[i] + "%.";
   }
   const vis = keys.filter((k) => !hidden[k]);
-  let t = fmtX(cfg, r[cfg.xKey], "spoken") + ": " + vis.map((k) => labelOf(cfg, k) + " " + fmtV(cfg, raw(r, k))).join(", ");
+  let t =
+    fmtX(cfg, r[cfg.xKey], "spoken") + ": " + vis.map((k) => labelOf(cfg, k) + " " + fmtV(cfg, raw(r, k))).join(", ");
   if (cfg.stack && vis.length > 1) t += ", total " + fmtV(cfg, sum(vis.map((k) => num(r, k))));
   return t + ".";
 }
@@ -341,8 +458,27 @@ function spokenOf(cfg: Cfg, keys: string[], hidden: Record<string, boolean>, i: 
 /* ============================== layout ============================== */
 
 type ChartNode =
-  | { t: "text"; key: string; cls: string; x: number; y: number; str: string; anchor?: "start" | "middle" | "end"; series?: string; style?: CSSProperties }
-  | { t: "path"; key: string; cls: string; d: string; series?: string; pathLength?: string; style?: CSSProperties; index?: number }
+  | {
+      t: "text";
+      key: string;
+      cls: string;
+      x: number;
+      y: number;
+      str: string;
+      anchor?: "start" | "middle" | "end";
+      series?: string;
+      style?: CSSProperties;
+    }
+  | {
+      t: "path";
+      key: string;
+      cls: string;
+      d: string;
+      series?: string;
+      pathLength?: string;
+      style?: CSSProperties;
+      index?: number;
+    }
   | { t: "circle"; key: string; cls: string; cx: number; cy: number; r: number; series?: string; style?: CSSProperties }
   | { t: "line"; key: string; cls: string; x1: number; x2: number; y1: number; y2: number }
   | { t: "g"; key: string; cls?: string; hidden?: boolean; style?: CSSProperties; children: ChartNode[] };
@@ -407,44 +543,98 @@ const visibleKeys = (keys: string[], hidden: Record<string, boolean>) => keys.fi
 
 function layoutXY(I: LayoutIn): Model {
   const { cfg, keys, hidden, W, H, M, fontData: font } = I;
-  const d = rows(cfg), n = d.length;
-  const top = Math.max(M.line / 2, M.point / 2 + M.ring), bottom = H - M.line - M.gap;
+  const d = rows(cfg),
+    n = d.length;
+  const top = Math.max(M.line / 2, M.point / 2 + M.ring),
+    bottom = H - M.line - M.gap;
   const sc = nice(cfg.max || amax(d.map((r) => amax(keys.map((k) => num(r, k))))), room(bottom - top));
   const left = Math.ceil(amax(sc.ticks.map((t) => measure(fmtV(cfg, t), font))) + M.gap);
   const endW = cfg.endLabels === false ? 0 : amax(keys.map((k) => measure(fmtV(cfg, raw(d[n - 1], k)), font)));
   const right = endW ? Math.ceil(M.point / 2 + M.ring + M.gap + endW) : M.point / 2 + M.ring;
-  const plotW = Math.max(16, W - left - right), step = n > 1 ? plotW / (n - 1) : plotW;
+  const plotW = Math.max(16, W - left - right),
+    step = n > 1 ? plotW / (n - 1) : plotW;
   const X = (i: number) => left + (n > 1 ? i * step : plotW / 2);
   const Y = (v: number) => top + (1 - v / sc.max) * (bottom - top);
   const marks = (i: number): [number, number] => {
     const ys = visibleKeys(keys, hidden).map((k) => Y(num(d[i], k)));
     return [Math.min(...ys), Math.max(...ys)];
   };
-  const ticks: ChartNode[] = sc.ticks.map((t) => ({ t: "text", key: "tick" + t, cls: "ui-chart-data", x: left - M.gap, y: Y(t), str: fmtV(cfg, t), anchor: "end" }));
+  const ticks: ChartNode[] = sc.ticks.map((t) => ({
+    t: "text",
+    key: "tick" + t,
+    cls: "ui-chart-data",
+    x: left - M.gap,
+    y: Y(t),
+    str: fmtV(cfg, t),
+    anchor: "end",
+  }));
   const labels = d.map((r) => fmtX(cfg, r[cfg.xKey], "tick"));
   const lw = amax(labels.map((l) => measure(l, font)));
   const every = [1, 2, 3, 4, 6, 12].find((k) => k * step >= lw + M.gap * 2 && Math.ceil(n / k) <= 7) || n;
   for (let i = n - 1; i >= 0; i -= every) {
     const w = measure(labels[i], font);
-    ticks.push({ t: "text", key: "x" + i, cls: "ui-chart-data", x: clamp(X(i), w / 2, W - w / 2), y: bottom + M.gap + M.line / 2, str: labels[i], anchor: "middle" });
+    ticks.push({
+      t: "text",
+      key: "x" + i,
+      cls: "ui-chart-data",
+      x: clamp(X(i), w / 2, W - w / 2),
+      y: bottom + M.gap + M.line / 2,
+      str: labels[i],
+      anchor: "middle",
+    });
   }
-  const areas: ChartNode[] = [], lines: ChartNode[] = [], points: ChartNode[] = [];
+  const areas: ChartNode[] = [],
+    lines: ChartNode[] = [],
+    points: ChartNode[] = [];
   const ends: Array<{ k: string; y: number; v: number; off: string }> = [];
   keys.forEach((k) => {
     const pts = d.map((r, i) => [X(i), Y(num(r, k))] as [number, number]);
-    const line = monotone(pts), off = hidden[k] ? " is-off" : "";
+    const line = monotone(pts),
+      off = hidden[k] ? " is-off" : "";
     if (cfg.type === "area")
-      areas.push({ t: "path", key: "a" + k, cls: "ui-chart-area" + off, d: line + "L" + f(X(n - 1)) + "," + f(Y(0)) + "L" + f(X(0)) + "," + f(Y(0)) + "Z", series: k, style: tint(k) });
-    lines.push({ t: "path", key: "l" + k, cls: "ui-chart-line" + off, d: line, pathLength: "1", series: k, style: tint(k) });
+      areas.push({
+        t: "path",
+        key: "a" + k,
+        cls: "ui-chart-area" + off,
+        d: line + "L" + f(X(n - 1)) + "," + f(Y(0)) + "L" + f(X(0)) + "," + f(Y(0)) + "Z",
+        series: k,
+        style: tint(k),
+      });
+    lines.push({
+      t: "path",
+      key: "l" + k,
+      cls: "ui-chart-line" + off,
+      d: line,
+      pathLength: "1",
+      series: k,
+      style: tint(k),
+    });
     ends.push({ k, y: pts[n - 1][1], v: raw(d[n - 1], k), off });
   });
   let last = -Infinity;
   ends
     .sort((a, b) => a.y - b.y)
     .forEach((e) => {
-      points.push({ t: "circle", key: "p" + e.k, cls: "ui-chart-dot" + e.off, cx: X(n - 1), cy: e.y, r: M.point / 2 + M.ring / 2, series: e.k });
+      points.push({
+        t: "circle",
+        key: "p" + e.k,
+        cls: "ui-chart-dot" + e.off,
+        cx: X(n - 1),
+        cy: e.y,
+        r: M.point / 2 + M.ring / 2,
+        series: e.k,
+      });
       if (endW && e.y - last >= M.line) {
-        points.push({ t: "text", key: "e" + e.k, cls: "ui-chart-data ui-chart-data--label" + e.off, x: X(n - 1) + M.point / 2 + M.ring + M.gap, y: e.y, str: fmtV(cfg, e.v), series: e.k, style: tint(e.k) });
+        points.push({
+          t: "text",
+          key: "e" + e.k,
+          cls: "ui-chart-data ui-chart-data--label" + e.off,
+          x: X(n - 1) + M.point / 2 + M.ring + M.gap,
+          y: e.y,
+          str: fmtV(cfg, e.v),
+          series: e.k,
+          style: tint(e.k),
+        });
         last = e.y;
       }
     });
@@ -466,51 +656,103 @@ function layoutXY(I: LayoutIn): Model {
 function scaleTop(cfg: Cfg, keys: string[]) {
   const d = rows(cfg);
   if (cfg.max) return cfg.max;
-  return cfg.stack ? amax(d.map((r) => sum(keys.map((k) => num(r, k))))) : amax(d.map((r) => amax(keys.map((k) => num(r, k)))));
+  return cfg.stack
+    ? amax(d.map((r) => sum(keys.map((k) => num(r, k)))))
+    : amax(d.map((r) => amax(keys.map((k) => num(r, k)))));
 }
 
 function layoutColumns(I: LayoutIn): Model {
   const { cfg, keys, hidden, W, H, M, fontData: font, fontName } = I;
-  const d = rows(cfg), n = d.length, stack = cfg.stack;
-  const sc = stack ? { max: scaleTop(cfg, keys), ticks: [] as number[] } : nice(scaleTop(cfg, keys), room(H - M.line * 3));
+  const d = rows(cfg),
+    n = d.length,
+    stack = cfg.stack;
+  const sc = stack
+    ? { max: scaleTop(cfg, keys), ticks: [] as number[] }
+    : nice(scaleTop(cfg, keys), room(H - M.line * 3));
   const left = stack ? 0 : Math.ceil(amax(sc.ticks.map((t) => measure(fmtV(cfg, t), font))) + M.gap);
   const slot = (W - left) / n;
   const names = d.map((r) => wrap(String(r[cfg.xKey]), fontName, slot - M.gap * 2));
   const lineCount = amax(names.map((l) => l.length));
-  const bottom = Math.round(H - lineCount * M.line - M.gap), top = stack ? M.line + M.gap : M.line / 2;
+  const bottom = Math.round(H - lineCount * M.line - M.gap),
+    top = stack ? M.line + M.gap : M.line / 2;
   const scMax = sc.max || 1;
   const Y = (v: number) => bottom - (v / scMax) * (bottom - top);
-  const vis = visibleKeys(keys, hidden), m = vis.length;
-  const bw = stack ? Math.min(M.barMax, slot * 0.5) : Math.min(M.barGrouped, (slot * 0.72 - M.ring * (m - 1)) / Math.max(m, 1));
+  const vis = visibleKeys(keys, hidden),
+    m = vis.length;
+  const bw = stack
+    ? Math.min(M.barMax, slot * 0.5)
+    : Math.min(M.barGrouped, (slot * 0.72 - M.ring * (m - 1)) / Math.max(m, 1));
   const tops = d.map((r) => Y(stack ? sum(vis.map((k) => num(r, k))) : amax(vis.map((k) => num(r, k)))));
   const ticks: ChartNode[] = [];
-  if (!stack) sc.ticks.forEach((t) => ticks.push({ t: "text", key: "tick" + t, cls: "ui-chart-data", x: left - M.gap, y: Y(t), str: fmtV(cfg, t), anchor: "end" }));
+  if (!stack)
+    sc.ticks.forEach((t) =>
+      ticks.push({
+        t: "text",
+        key: "tick" + t,
+        cls: "ui-chart-data",
+        x: left - M.gap,
+        y: Y(t),
+        str: fmtV(cfg, t),
+        anchor: "end",
+      }),
+    );
   names.forEach((l, i) =>
     l.forEach((line, j) =>
-      ticks.push({ t: "text", key: "n" + i + "-" + j, cls: "ui-chart-name", x: left + slot * (i + 0.5), y: bottom + M.gap + M.line * (j + 0.5), str: line, anchor: "middle" }),
+      ticks.push({
+        t: "text",
+        key: "n" + i + "-" + j,
+        cls: "ui-chart-name",
+        x: left + slot * (i + 0.5),
+        y: bottom + M.gap + M.line * (j + 0.5),
+        str: line,
+        anchor: "middle",
+      }),
     ),
   );
-  const groups: ChartNode[] = [], totals: ChartNode[] = [];
+  const groups: ChartNode[] = [],
+    totals: ChartNode[] = [];
   d.forEach((r, i) => {
     const cx = left + slot * (i + 0.5);
     const bars: ChartNode[] = [];
     let acc = 0;
     if (stack) {
-      const live = vis.filter((k) => num(r, k) > 0), topKey = live[live.length - 1];
+      const live = vis.filter((k) => num(r, k) > 0),
+        topKey = live[live.length - 1];
       keys.forEach((k) => {
-        const v = hidden[k] ? 0 : num(r, k), y1 = Y(acc), y0 = Y(acc + v), isTop = k === topKey, cut = v && !isTop ? M.ring : 0;
+        const v = hidden[k] ? 0 : num(r, k),
+          y1 = Y(acc),
+          y0 = Y(acc + v),
+          isTop = k === topKey,
+          cut = v && !isTop ? M.ring : 0;
         acc += v;
         const dd = barUp(cx - bw / 2, y0 + cut, bw, Math.max(0, y1 - y0 - cut), isTop ? M.radius : 0);
-        bars.push({ t: "path", key: i + "|" + k, cls: "ui-chart-bar" + (v ? "" : " is-off"), d: dd, series: k, style: { ...tint(k), ...dPath(dd) } });
+        bars.push({
+          t: "path",
+          key: i + "|" + k,
+          cls: "ui-chart-bar" + (v ? "" : " is-off"),
+          d: dd,
+          series: k,
+          style: { ...tint(k), ...dPath(dd) },
+        });
       });
     } else {
       const gw = m * bw + (m - 1) * M.ring;
       let j = 0;
       keys.forEach((k) => {
-        const hid = !!hidden[k], v = hid ? 0 : num(r, k), x = hid ? cx - bw / 2 : cx - gw / 2 + j++ * (bw + M.ring), hh = bottom - Y(v);
+        const hid = !!hidden[k],
+          v = hid ? 0 : num(r, k),
+          x = hid ? cx - bw / 2 : cx - gw / 2 + j++ * (bw + M.ring),
+          hh = bottom - Y(v);
         acc += v;
         const dd = barUp(x, bottom - hh, bw, hh, M.radius);
-        bars.push({ t: "path", key: i + "|" + k, cls: "ui-chart-bar" + (v ? "" : " is-off"), d: dd, series: k, style: { ...tint(k), ...dPath(dd) } });
+        bars.push({
+          t: "path",
+          key: i + "|" + k,
+          cls: "ui-chart-bar" + (v ? "" : " is-off"),
+          d: dd,
+          series: k,
+          style: { ...tint(k), ...dPath(dd) },
+        });
       });
     }
     groups.push({ t: "g", key: "c" + i, cls: "ui-chart-grow", style: cssVars({ "--i": i }), children: bars });
@@ -532,48 +774,111 @@ function layoutColumns(I: LayoutIn): Model {
       { t: "g", key: "bars", children: groups },
       { t: "g", key: "totals", children: totals },
     ],
-    geo: { kind: "cols", n, left, slot, top, bottom, W, cx: (i) => left + slot * (i + 0.5), step: slot, marks: (i) => [tops[i], bottom] },
+    geo: {
+      kind: "cols",
+      n,
+      left,
+      slot,
+      top,
+      bottom,
+      W,
+      cx: (i) => left + slot * (i + 0.5),
+      step: slot,
+      marks: (i) => [tops[i], bottom],
+    },
   };
 }
 
 function layoutRows(I: LayoutIn): Model {
   const { cfg, keys, hidden, W, M } = I;
-  const d = rows(cfg), n = d.length, stack = cfg.stack, vis = visibleKeys(keys, hidden), m = vis.length;
-  const single = keys.length === 1, grouped = !stack && !single;
-  const subH = Math.round((M.barRow * 2) / 3), barH = grouped ? m * subH + (m - 1) * M.ring : M.barRow;
-  const rowH = M.line + M.gap + barH, band = grouped ? M.line + M.gap : 0;
+  const d = rows(cfg),
+    n = d.length,
+    stack = cfg.stack,
+    vis = visibleKeys(keys, hidden),
+    m = vis.length;
+  const single = keys.length === 1,
+    grouped = !stack && !single;
+  const subH = Math.round((M.barRow * 2) / 3),
+    barH = grouped ? m * subH + (m - 1) * M.ring : M.barRow;
+  const rowH = M.line + M.gap + barH,
+    band = grouped ? M.line + M.gap : 0;
   const H = n * rowH + (n - 1) * M.rowGap + band;
-  const x0 = M.gap, x1 = W - M.gap;
+  const x0 = M.gap,
+    x1 = W - M.gap;
   const sc = grouped ? nice(scaleTop(cfg, keys), 3) : { max: scaleTop(cfg, keys), ticks: [] as number[] };
   const scMax = sc.max || 1;
   const X = (v: number) => x0 + (v / scMax) * (x1 - x0);
   const topOf = (i: number) => i * (rowH + M.rowGap);
-  const texts: ChartNode[] = [], tracks: ChartNode[] = [], groups: ChartNode[] = [];
+  const texts: ChartNode[] = [],
+    tracks: ChartNode[] = [],
+    groups: ChartNode[] = [];
   d.forEach((r, i) => {
-    const y = topOf(i), by = y + M.line + M.gap;
-    texts.push({ t: "text", key: "n" + i, cls: "ui-chart-name ui-chart-name--strong", x: x0, y: y + M.line / 2, str: String(r[cfg.xKey]), anchor: "start" });
-    if (cfg.track) tracks.push({ t: "path", key: "tr" + i, cls: "ui-chart-track", d: barRight(x0, by, x1 - x0, barH, barH / 2, barH / 2) });
+    const y = topOf(i),
+      by = y + M.line + M.gap;
+    texts.push({
+      t: "text",
+      key: "n" + i,
+      cls: "ui-chart-name ui-chart-name--strong",
+      x: x0,
+      y: y + M.line / 2,
+      str: String(r[cfg.xKey]),
+      anchor: "start",
+    });
+    if (cfg.track)
+      tracks.push({
+        t: "path",
+        key: "tr" + i,
+        cls: "ui-chart-track",
+        d: barRight(x0, by, x1 - x0, barH, barH / 2, barH / 2),
+      });
     const bars: ChartNode[] = [];
     let acc = 0;
     if (grouped) {
       let j = 0;
       keys.forEach((k) => {
-        const hid = !!hidden[k], v = hid ? 0 : num(r, k), yy = hid ? by : by + j++ * (subH + M.ring);
+        const hid = !!hidden[k],
+          v = hid ? 0 : num(r, k),
+          yy = hid ? by : by + j++ * (subH + M.ring);
         acc += v;
         const dd = barRight(x0, yy, X(v) - x0, hid ? 0 : subH, M.radius);
-        bars.push({ t: "path", key: i + "|" + k, cls: "ui-chart-bar" + (v ? "" : " is-off"), d: dd, series: k, style: { ...tint(k), ...dPath(dd) } });
+        bars.push({
+          t: "path",
+          key: i + "|" + k,
+          cls: "ui-chart-bar" + (v ? "" : " is-off"),
+          d: dd,
+          series: k,
+          style: { ...tint(k), ...dPath(dd) },
+        });
       });
     } else {
-      const live = vis.filter((k) => num(r, k) > 0), lastKey = live[live.length - 1];
+      const live = vis.filter((k) => num(r, k) > 0),
+        lastKey = live[live.length - 1];
       keys.forEach((k) => {
-        const v = hidden[k] ? 0 : num(r, k), xa = X(acc), xb = X(acc + v), isLast = k === lastKey, cut = v && !isLast ? M.ring : 0;
+        const v = hidden[k] ? 0 : num(r, k),
+          xa = X(acc),
+          xb = X(acc + v),
+          isLast = k === lastKey,
+          cut = v && !isLast ? M.ring : 0;
         acc += v;
         const rr = cfg.track ? barH / 2 : isLast ? M.radius : 0;
         const dd = barRight(xa, by, Math.max(0, xb - xa - cut), barH, rr, cfg.track ? rr : 0);
-        bars.push({ t: "path", key: i + "|" + k, cls: "ui-chart-bar" + (v ? "" : " is-off"), d: dd, series: k, style: { ...tint(k), ...dPath(dd) } });
+        bars.push({
+          t: "path",
+          key: i + "|" + k,
+          cls: "ui-chart-bar" + (v ? "" : " is-off"),
+          d: dd,
+          series: k,
+          style: { ...tint(k), ...dPath(dd) },
+        });
       });
     }
-    groups.push({ t: "g", key: "r" + i, cls: "ui-chart-grow ui-chart-grow--x", style: cssVars({ "--i": i }), children: bars });
+    groups.push({
+      t: "g",
+      key: "r" + i,
+      cls: "ui-chart-grow ui-chart-grow--x",
+      style: cssVars({ "--i": i }),
+      children: bars,
+    });
     texts.push({
       t: "text",
       key: "total|" + i,
@@ -587,7 +892,15 @@ function layoutRows(I: LayoutIn): Model {
   });
   if (grouped)
     sc.ticks.forEach((t, i) =>
-      texts.push({ t: "text", key: "tick" + t, cls: "ui-chart-data", x: X(t), y: H - M.line / 2, str: fmtV(cfg, t), anchor: i === 0 ? "start" : i === sc.ticks.length - 1 ? "end" : "middle" }),
+      texts.push({
+        t: "text",
+        key: "tick" + t,
+        cls: "ui-chart-data",
+        x: X(t),
+        y: H - M.line / 2,
+        str: fmtV(cfg, t),
+        anchor: i === 0 ? "start" : i === sc.ticks.length - 1 ? "end" : "middle",
+      }),
     );
   return {
     nodes: [
@@ -603,16 +916,24 @@ function layoutRows(I: LayoutIn): Model {
 function layoutDonut(I: LayoutIn): Model {
   const { cfg, W, M, donutRing: ring } = I;
   const d = rows(cfg);
-  const size = W, R = size / 2 - ring / 2, cx = size / 2;
-  const vals = d.map((r) => num(r, cfg.dataKey)), tot = sum(vals) || 1, gapA = M.ring / R;
-  let a = -Math.PI / 2, acc = 0;
+  const size = W,
+    R = size / 2 - ring / 2,
+    cx = size / 2;
+  const vals = d.map((r) => num(r, cfg.dataKey)),
+    tot = sum(vals) || 1,
+    gapA = M.ring / R;
+  let a = -Math.PI / 2,
+    acc = 0;
   const arcs: Array<[number, number]> = [];
   const nodes: ChartNode[] = [];
   d.forEach((r, i) => {
-    const fr = vals[i] / tot, a0 = a, a1 = a + fr * Math.PI * 2;
+    const fr = vals[i] / tot,
+      a0 = a,
+      a1 = a + fr * Math.PI * 2;
     a = a1;
     arcs.push([a0, a1]);
-    const s0 = a0 + gapA / 2, s1 = a1 - gapA / 2;
+    const s0 = a0 + gapA / 2,
+      s1 = a1 - gapA / 2;
     if (s1 <= s0) {
       acc += fr;
       return;
@@ -629,23 +950,44 @@ function layoutDonut(I: LayoutIn): Model {
     });
     acc += fr;
   });
-  return { nodes: [{ t: "g", key: "arcs", children: nodes }], geo: { kind: "donut", n: d.length, center: cx, R, ring, arcs } };
+  return {
+    nodes: [{ t: "g", key: "arcs", children: nodes }],
+    geo: { kind: "donut", n: d.length, center: cx, R, ring, arcs },
+  };
 }
 
 function layoutSpark(I: LayoutIn): Model {
   const { cfg, keys, W, H, M } = I;
-  const d = cfg.data as Array<ChartDatum | number>, n = d.length, k = keys[0] || "value";
+  const d = cfg.data as Array<ChartDatum | number>,
+    n = d.length,
+    k = keys[0] || "value";
   const vals = d.map((r) => (typeof r === "number" ? r : num(r, cfg.dataKey || k)));
   const pad = M.point / 2 + M.ring;
-  const lo = cfg.min != null ? cfg.min : Math.min(...vals), hi = Math.max(...vals), span = hi - lo || 1;
+  const lo = cfg.min != null ? cfg.min : Math.min(...vals),
+    hi = Math.max(...vals),
+    span = hi - lo || 1;
   const X = (i: number) => pad + (n > 1 ? (i * (W - 2 * pad)) / (n - 1) : (W - 2 * pad) / 2);
   const Y = (v: number) => pad + (1 - (v - lo) / span) * (H - 2 * pad);
   const line = monotone(vals.map((v, i) => [X(i), Y(v)] as [number, number]));
   return {
     nodes: [
-      { t: "path", key: "a", cls: "ui-chart-area", d: line + "L" + f(X(n - 1)) + "," + H + "L" + f(X(0)) + "," + H + "Z", style: tint(k) },
+      {
+        t: "path",
+        key: "a",
+        cls: "ui-chart-area",
+        d: line + "L" + f(X(n - 1)) + "," + H + "L" + f(X(0)) + "," + H + "Z",
+        style: tint(k),
+      },
       { t: "path", key: "l", cls: "ui-chart-line", d: line, pathLength: "1", style: tint(k) },
-      { t: "circle", key: "p", cls: "ui-chart-dot", cx: X(n - 1), cy: Y(vals[n - 1]), r: M.point / 2 + M.ring / 2 - 1, series: k },
+      {
+        t: "circle",
+        key: "p",
+        cls: "ui-chart-dot",
+        cx: X(n - 1),
+        cy: Y(vals[n - 1]),
+        r: M.point / 2 + M.ring / 2 - 1,
+        series: k,
+      },
     ],
     geo: { kind: "spark", n },
   };
@@ -656,7 +998,8 @@ function layout(I: LayoutIn): { model: Model; rowsMode: boolean } {
   if (cfg.type === "area" || cfg.type === "line") return { model: layoutXY(I), rowsMode: false };
   if (cfg.type === "donut") return { model: layoutDonut(I), rowsMode: false };
   if (cfg.type === "spark") return { model: layoutSpark(I), rowsMode: false };
-  const d = rows(cfg), n = d.length;
+  const d = rows(cfg),
+    n = d.length;
   let orient = cfg.orientation;
   if (orient === "auto") {
     const slot0 = I.elW / Math.max(n, 1);
@@ -668,7 +1011,9 @@ function layout(I: LayoutIn): { model: Model; rowsMode: boolean } {
       });
     orient = fits ? "vertical" : "horizontal";
   }
-  return orient === "horizontal" ? { model: layoutRows(I), rowsMode: true } : { model: layoutColumns(I), rowsMode: false };
+  return orient === "horizontal"
+    ? { model: layoutRows(I), rowsMode: true }
+    : { model: layoutColumns(I), rowsMode: false };
 }
 
 function readMetrics(el: Element): Metrics {
@@ -697,7 +1042,16 @@ function renderNode(n: ChartNode, dimExcept: number): ReactNode {
       );
     case "text":
       return (
-        <text key={n.key} className={n.cls} x={f(n.x)} y={f(n.y)} textAnchor={n.anchor ?? "start"} dominantBaseline="central" data-series={n.series} style={n.style}>
+        <text
+          key={n.key}
+          className={n.cls}
+          x={f(n.x)}
+          y={f(n.y)}
+          textAnchor={n.anchor ?? "start"}
+          dominantBaseline="central"
+          data-series={n.series}
+          style={n.style}
+        >
           {n.str}
         </text>
       );
@@ -803,7 +1157,23 @@ export const Chart = forwardRef<HTMLDivElement, ChartProps>(function Chart(props
     centerLabel,
   };
   const keys = Object.keys(config).filter((k) => /^[\w-]+$/.test(k));
-  const cfgKey = JSON.stringify([type, config, data, xKey, xFormat, unit, format, max, min, endLabels, stack, orientation, track, nameKey, dataKey]);
+  const cfgKey = JSON.stringify([
+    type,
+    config,
+    data,
+    xKey,
+    xFormat,
+    unit,
+    format,
+    max,
+    min,
+    endLabels,
+    stack,
+    orientation,
+    track,
+    nameKey,
+    dataKey,
+  ]);
   const id = `ui-chart-${useId().replace(/:/g, "")}`;
 
   const rootRef = useRef<HTMLDivElement>(null);
@@ -837,11 +1207,15 @@ export const Chart = forwardRef<HTMLDivElement, ChartProps>(function Chart(props
   const colorVars: Record<string, string> = {};
   if (type === "donut") {
     Object.keys(config).forEach((k, i) => {
-      colorVars["--color-" + k] = config[k].approved ? "var(--ui-chart-approved)" : config[k].color || `var(--ui-chart-series-${Math.min(i + 1, 4)})`;
+      colorVars["--color-" + k] = config[k].approved
+        ? "var(--ui-chart-approved)"
+        : config[k].color || `var(--ui-chart-series-${Math.min(i + 1, 4)})`;
     });
   } else {
     keys.forEach((k, i) => {
-      colorVars["--color-" + k] = config[k].approved ? "var(--ui-chart-approved)" : config[k].color || `var(--ui-chart-series-${Math.min(i + 1, 4)})`;
+      colorVars["--color-" + k] = config[k].approved
+        ? "var(--ui-chart-approved)"
+        : config[k].color || `var(--ui-chart-series-${Math.min(i + 1, 4)})`;
     });
   }
 
@@ -860,7 +1234,8 @@ export const Chart = forwardRef<HTMLDivElement, ChartProps>(function Chart(props
 
   // the box the chart is drawn for
   useLayoutEffect(() => {
-    const el = rootRef.current, fr = frameRef.current;
+    const el = rootRef.current,
+      fr = frameRef.current;
     if (!el || !fr) return;
     const read = () => {
       const s = { w: fr.clientWidth, h: fr.clientHeight, elW: el.clientWidth };
@@ -889,7 +1264,9 @@ export const Chart = forwardRef<HTMLDivElement, ChartProps>(function Chart(props
 
   // lay out the marks
   useLayoutEffect(() => {
-    const el = rootRef.current, fr = frameRef.current, svg = svgRef.current;
+    const el = rootRef.current,
+      fr = frameRef.current,
+      svg = svgRef.current;
     if (!el || !fr || !svg) return;
     if (state) {
       setModel(null);
@@ -939,7 +1316,11 @@ export const Chart = forwardRef<HTMLDivElement, ChartProps>(function Chart(props
     const el = rootRef.current;
     if (!el || motion === "reduce" || prefersReducedMotion()) return;
     setDrawing(true);
-    const ms = cssMs(el, "--ui-chart-draw", 480) + cssMs(el, "--ui-motion-base", 240) + (model.geo.n * cssMs(el, "--ui-motion-instant", 100)) / 4 + 120;
+    const ms =
+      cssMs(el, "--ui-chart-draw", 480) +
+      cssMs(el, "--ui-motion-base", 240) +
+      (model.geo.n * cssMs(el, "--ui-motion-instant", 100)) / 4 +
+      120;
     window.clearTimeout(drawTimer.current);
     drawTimer.current = window.setTimeout(() => setDrawing(false), ms);
   }, [model, motion]);
@@ -962,12 +1343,26 @@ export const Chart = forwardRef<HTMLDivElement, ChartProps>(function Chart(props
   let band: { x: number; y: number; w: number; h: number } | null = null;
   let box: { x0: number; x1: number; y0: number; y1: number; top: number; above?: boolean } | null = null;
   if (geo && M && shown >= 0 && shown < geo.n) {
-    if (geo.kind === "xy" && geo.X && geo.step !== undefined && geo.left !== undefined && geo.right !== undefined && geo.bottom !== undefined && geo.marks) {
+    if (
+      geo.kind === "xy" &&
+      geo.X &&
+      geo.step !== undefined &&
+      geo.left !== undefined &&
+      geo.right !== undefined &&
+      geo.bottom !== undefined &&
+      geo.marks
+    ) {
       const bw = clamp(geo.step * 0.9, M.point * 2, M.point * 5);
       const x = clamp(geo.X(shown) - bw / 2, geo.left - M.point, geo.right + M.point - bw);
       band = { x, y: 0, w: bw, h: geo.bottom + M.gap / 2 };
       box = { x0: x, x1: x + bw, y0: 0, y1: geo.bottom, top: geo.marks(shown)[0] };
-    } else if (geo.kind === "cols" && geo.left !== undefined && geo.slot !== undefined && geo.bottom !== undefined && geo.marks) {
+    } else if (
+      geo.kind === "cols" &&
+      geo.left !== undefined &&
+      geo.slot !== undefined &&
+      geo.bottom !== undefined &&
+      geo.marks
+    ) {
       const x = geo.left + geo.slot * shown + M.ring;
       band = { x, y: 0, w: geo.slot - M.ring * 2, h: geo.bottom + M.gap / 2 };
       box = { x0: x, x1: x + geo.slot - M.ring * 2, y0: 0, y1: geo.bottom, top: geo.marks(shown)[0] };
@@ -980,13 +1375,19 @@ export const Chart = forwardRef<HTMLDivElement, ChartProps>(function Chart(props
 
   // where the tooltip goes (as chart.js placeTip)
   useLayoutEffect(() => {
-    const tipBox = tipBoxRef.current, tip = tipRef.current, el = rootRef.current, fr = frameRef.current;
+    const tipBox = tipBoxRef.current,
+      tip = tipRef.current,
+      el = rootRef.current,
+      fr = frameRef.current;
     const fresh = prevShown.current < 0;
     prevShown.current = box ? shown : -1;
     if (!tipBox || !tip || !el || !fr || !box || !geo) return;
     if (fresh) tipBox.classList.add("is-placing");
-    const W = fr.clientWidth, off = cssPx(el, "--ui-chart-tick-gap", 8);
-    const tw = tip.offsetWidth, th = tip.offsetHeight, mid = (box.x0 + box.x1) / 2;
+    const W = fr.clientWidth,
+      off = cssPx(el, "--ui-chart-tick-gap", 8);
+    const tw = tip.offsetWidth,
+      th = tip.offsetHeight,
+      mid = (box.x0 + box.x1) / 2;
     const ceiling = el.getBoundingClientRect().top - fr.getBoundingClientRect().top;
     let x: number | null = null;
     let y: number;
@@ -1000,7 +1401,8 @@ export const Chart = forwardRef<HTMLDivElement, ChartProps>(function Chart(props
     } else {
       y = box.y0;
       if (geo.marks && geo.cx && geo.step !== undefined) {
-        let lo = Infinity, hi = -Infinity;
+        let lo = Infinity,
+          hi = -Infinity;
         for (let i = 0; i < geo.n; i++) {
           const cx = geo.cx(i);
           if (cx < x - geo.step || cx > x + tw + geo.step) continue;
@@ -1008,7 +1410,9 @@ export const Chart = forwardRef<HTMLDivElement, ChartProps>(function Chart(props
           lo = Math.min(lo, a);
           hi = Math.max(hi, z);
         }
-        const H = fr.clientHeight, up = lo - off * 2 - th, down = hi + off * 2;
+        const H = fr.clientHeight,
+          up = lo - off * 2 - th,
+          down = hi + off * 2;
         if (lo < Infinity) y = up >= 0 ? up : down + th <= H ? down : up >= ceiling ? up : box.y0;
       }
     }
@@ -1031,16 +1435,22 @@ export const Chart = forwardRef<HTMLDivElement, ChartProps>(function Chart(props
   const hit = (e: { clientX: number; clientY: number }) => {
     const fr = frameRef.current;
     if (!geo || !fr) return -1;
-    const rc = fr.getBoundingClientRect(), x = e.clientX - rc.left, y = e.clientY - rc.top;
-    if (geo.kind === "xy" && geo.left !== undefined && geo.step) return clamp(Math.round((x - geo.left) / geo.step), 0, geo.n - 1);
-    if (geo.kind === "cols" && geo.left !== undefined && geo.slot) return clamp(Math.floor((x - geo.left) / geo.slot), 0, geo.n - 1);
+    const rc = fr.getBoundingClientRect(),
+      x = e.clientX - rc.left,
+      y = e.clientY - rc.top;
+    if (geo.kind === "xy" && geo.left !== undefined && geo.step)
+      return clamp(Math.round((x - geo.left) / geo.step), 0, geo.n - 1);
+    if (geo.kind === "cols" && geo.left !== undefined && geo.slot)
+      return clamp(Math.floor((x - geo.left) / geo.slot), 0, geo.n - 1);
     if (geo.kind === "rows" && geo.topOf && geo.rowH !== undefined) {
       const gapY = rootRef.current ? cssPx(rootRef.current, "--ui-space-xl", 24) / 2 : 12;
       for (let i = 0; i < geo.n; i++) if (y < geo.topOf(i) + geo.rowH + gapY) return i;
       return geo.n - 1;
     }
     if (geo.kind === "donut" && geo.center !== undefined && geo.R !== undefined && geo.ring !== undefined && geo.arcs) {
-      const dx = x - geo.center, dy = y - geo.center, dist = Math.hypot(dx, dy);
+      const dx = x - geo.center,
+        dy = y - geo.center,
+        dist = Math.hypot(dx, dy);
       if (dist < geo.R - geo.ring / 2 - 8 || dist > geo.R + geo.ring / 2 + 12) return -1;
       let a = Math.atan2(dy, dx);
       if (a < -Math.PI / 2) a += Math.PI * 2;
@@ -1157,7 +1567,19 @@ export const Chart = forwardRef<HTMLDivElement, ChartProps>(function Chart(props
       data-focus={focusVisible ? "visible" : undefined}
       hidden={state === "empty" || state === "error" ? true : undefined}
     >
-      <div className="ui-chart-cursor" style={band ? cssVars({ "--x": f(band.x) + "px", "--y": f(band.y) + "px", "--w": f(band.w) + "px", "--h": f(band.h) + "px" }) : undefined} />
+      <div
+        className="ui-chart-cursor"
+        style={
+          band
+            ? cssVars({
+                "--x": f(band.x) + "px",
+                "--y": f(band.y) + "px",
+                "--w": f(band.w) + "px",
+                "--h": f(band.h) + "px",
+              })
+            : undefined
+        }
+      />
       <svg ref={svgRef} className="ui-chart-svg" role="img" aria-labelledby={`${id}-t ${id}-d`} focusable="false">
         <title id={`${id}-t`}>{title}</title>
         <desc id={`${id}-d`}>{summaryOf(cfg, keys)}</desc>
@@ -1191,10 +1613,18 @@ export const Chart = forwardRef<HTMLDivElement, ChartProps>(function Chart(props
       )}
       {type !== "spark" && (
         <div ref={tipBoxRef} className="ui-chart-tip">
-          <div ref={tipRef} className="ui-glass ui-glass--small ui-chart-tooltip" data-slot="chart-tooltip" hidden={!box} data-state={box ? "open" : undefined}>
+          <div
+            ref={tipRef}
+            className="ui-glass ui-glass--small ui-chart-tooltip"
+            data-slot="chart-tooltip"
+            hidden={!box}
+            data-state={box ? "open" : undefined}
+          >
             {box && shown >= 0 && r[shown] && (
               <>
-                <div className={cx("ui-chart-tooltip-head", xFormat && "ui-chart-tooltip-time")}>{fmtX(cfg, r[shown][xKey], "head")}</div>
+                <div className={cx("ui-chart-tooltip-head", xFormat && "ui-chart-tooltip-time")}>
+                  {fmtX(cfg, r[shown][xKey], "head")}
+                </div>
                 <div className="ui-chart-tooltip-rows">
                   {visKeys.map((k) => (
                     <TooltipRow key={k} name={labelOf(cfg, k)} value={fmtV(cfg, raw(r[shown], k))} />
@@ -1202,7 +1632,9 @@ export const Chart = forwardRef<HTMLDivElement, ChartProps>(function Chart(props
                   {stack && visKeys.length > 1 && (
                     <>
                       <span className="ui-chart-tooltip-name ui-chart-tooltip-total is-total">Total</span>
-                      <span className="ui-chart-tooltip-num is-total">{fmtV(cfg, sum(visKeys.map((k) => num(r[shown], k))))}</span>
+                      <span className="ui-chart-tooltip-num is-total">
+                        {fmtV(cfg, sum(visKeys.map((k) => num(r[shown], k))))}
+                      </span>
                     </>
                   )}
                 </div>
@@ -1215,7 +1647,9 @@ export const Chart = forwardRef<HTMLDivElement, ChartProps>(function Chart(props
         <div className="ui-chart-donut-center" aria-hidden="true">
           <span className="ui-chart-donut-num">{fmtV(cfg, shown >= 0 ? donutVals[shown] : sum(donutVals))}</span>
           <span className="ui-chart-donut-caption">
-            {shown >= 0 && r[shown] ? `${labelOf(cfg, r[shown][nameKey])} · ${donutShares[shown]}%` : centerLabel || "in all"}
+            {shown >= 0 && r[shown]
+              ? `${labelOf(cfg, r[shown][nameKey])} · ${donutShares[shown]}%`
+              : centerLabel || "in all"}
           </span>
         </div>
       )}
@@ -1225,7 +1659,10 @@ export const Chart = forwardRef<HTMLDivElement, ChartProps>(function Chart(props
             <span
               key={i}
               className="ui-skeleton"
-              style={cssVars({ "--i": i, "--h": Math.round(42 + 44 * Math.sin((i / Math.max(skeletonCount - 1, 1)) * 1.4)) + "%" })}
+              style={cssVars({
+                "--i": i,
+                "--h": Math.round(42 + 44 * Math.sin((i / Math.max(skeletonCount - 1, 1)) * 1.4)) + "%",
+              })}
             />
           ))}
         </div>
@@ -1238,7 +1675,17 @@ export const Chart = forwardRef<HTMLDivElement, ChartProps>(function Chart(props
       <div className={cx("ui-empty ui-empty--sm ui-chart-state", state === "error" && "ui-chart-state--error")}>
         <div className="ui-empty-header">
           <div className="ui-empty-media ui-empty-media--icon">
-            <Icon name={(state === "error" ? "circle-alert" : type === "donut" ? "chart-pie" : type === "bar" ? "chart-column" : "chart-line") as IconName} />
+            <Icon
+              name={
+                (state === "error"
+                  ? "circle-alert"
+                  : type === "donut"
+                    ? "chart-pie"
+                    : type === "bar"
+                      ? "chart-column"
+                      : "chart-line") as IconName
+              }
+            />
           </div>
           <p className="ui-empty-title">{state === "error" ? errorTitle : emptyTitle}</p>
           <p className="ui-empty-description">{state === "error" ? errorDescription : emptyDescription}</p>
@@ -1339,7 +1786,8 @@ function ChartTable({ cfg, keys }: { cfg: Cfg; keys: string[] }) {
   const d = rows(cfg);
   const caption = cfg.title + (cfg.description ? ", " + cfg.description : "");
   if (cfg.type === "donut") {
-    const vals = d.map((r) => num(r, cfg.dataKey)), sh = shares(vals);
+    const vals = d.map((r) => num(r, cfg.dataKey)),
+      sh = shares(vals);
     return (
       <table>
         <caption>{caption}</caption>

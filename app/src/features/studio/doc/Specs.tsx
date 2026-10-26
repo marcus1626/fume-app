@@ -1,14 +1,12 @@
 // The desk's left panel (FLOWS §9.1): specs only. The mode picker on top (a grid menu in a popover, filtered by the
 // studio), then folding sections with only the specs the mode uses: format, count and image model; the brand's
-// references (library, upload, make one); the product and its Product Truth, each fact changeable for this creative
-// or for the product itself (FLOWS §9.5); the brand's models with their state (FLOWS §9.6). Design shows the layers
-// in place of the product's data.
-// Round 12 (UX review DLAY-3, DLOAD-15, PROPOSED 20 Oct 2026): the panel scrolls when its open part is taller than
-// it (nothing is cut off any more), and the product is one row with only what needs a look under it: the details the
-// picked version reads wrong and the facts changed for this creative. "All 20 facts" opens the whole product in a
-// right panel over the board (measures, parts and every Product Truth line, each changeable there).
-// Round 13 (#60, Marcus: "what happens if you switch in the middle of a project?"): a mode switch asks first, in the
-// popover, and says what carries over, what is set aside (kept in the last version) and that the versions stay.
+// references (library, upload, make one); the product and its Product Truth, each fact changeable for this creative or
+// for the product itself (FLOWS §9.5); the brand's models with their state (FLOWS §9.6). Design shows the layers in
+// place of the product's data.
+// The panel scrolls when its open part is taller than it. The product is one row with only what needs a look under it:
+// the details the picked version reads wrong and the facts changed for this creative; "All 20 facts" opens the whole
+// product in a right panel over the board. A mode switch asks first, in the popover, and says what carries over, what
+// is set aside (kept in the last version) and that the versions stay.
 import {
   Button,
   Icon,
@@ -39,8 +37,24 @@ import {
 } from "@fume/ui";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDetailTokens, useOpenDocument, useOverrideProduct, usePlacements, useProduct, useProductKinds, useStudioKit } from "../../../api/hooks";
-import type { BrandAssetsView, CreativeDocument, Format, Layer, ProductOverride, Specs, StudioMode } from "../../../contract";
+import {
+  useDetailTokens,
+  useOpenDocument,
+  useOverrideProduct,
+  usePlacements,
+  useProduct,
+  useProductKinds,
+  useStudioKit,
+} from "../../../api/hooks";
+import type {
+  BrandAssetsView,
+  CreativeDocument,
+  Format,
+  Layer,
+  ProductOverride,
+  Specs,
+  StudioMode,
+} from "../../../contract";
 import * as copy from "../../../copy";
 import { AllProductsSheet, confirmed } from "../../fume/AllProducts";
 import { fidelity, pct, valueWords } from "../../products/spec";
@@ -86,7 +100,11 @@ export function SpecsPanel(props: SpecsProps) {
       <>
         {mode?.output === "creative" &&
           (placements ? (
-            <PlacementPicker placements={placements} specs={specs} onPick={(p) => props.onSpecs({ ...specs, placementId: p.id, format: p.format }, "placement")} />
+            <PlacementPicker
+              placements={placements}
+              specs={specs}
+              onPick={(p) => props.onSpecs({ ...specs, placementId: p.id, format: p.format }, "placement")}
+            />
           ) : (
             <StudioSegmented
               label="Format"
@@ -97,7 +115,14 @@ export function SpecsPanel(props: SpecsProps) {
             />
           ))}
         {(uses.has("count") || !isDesign) && (
-          <StudioNumber label="Count" id="spec-count" value={specs.count} min={1} max={8} onChange={(n) => props.onSpecs({ ...specs, count: n }, "count")} />
+          <StudioNumber
+            label="Count"
+            id="spec-count"
+            value={specs.count}
+            min={1}
+            max={8}
+            onChange={(n) => props.onSpecs({ ...specs, count: n }, "count")}
+          />
         )}
         <StudioSelect
           label="Generator"
@@ -111,15 +136,49 @@ export function SpecsPanel(props: SpecsProps) {
     ),
   });
 
-  if (isDesign) sections.push({ id: "Layers", title: "Layers", meta: props.layers.length, children: <LayerList {...props} /> });
-  else if (uses.has("product")) sections.push({ id: "Product", title: "Product", meta: doc.overrides.length || doc.fixes?.length ? [doc.overrides.length && `${doc.overrides.length} changed`, doc.fixes?.length && `${doc.fixes.length} fixed`].filter(Boolean).join(" · ") : undefined, children: <ProductData {...props} /> });
-  if (uses.has("reference")) sections.push({ id: "References", title: "References", meta: specs.referenceIds.length || undefined, children: <References {...props} /> });
-  if (uses.has("model")) sections.push({ id: "Models", title: "Models", meta: specs.modelIds.length || undefined, children: <Models {...props} /> });
+  if (isDesign)
+    sections.push({ id: "Layers", title: "Layers", meta: props.layers.length, children: <LayerList {...props} /> });
+  else if (uses.has("product"))
+    sections.push({
+      id: "Product",
+      title: "Product",
+      meta:
+        doc.overrides.length || doc.fixes?.length
+          ? [
+              doc.overrides.length && `${doc.overrides.length} changed`,
+              doc.fixes?.length && `${doc.fixes.length} fixed`,
+            ]
+              .filter(Boolean)
+              .join(" · ")
+          : undefined,
+      children: <ProductData {...props} />,
+    });
+  if (uses.has("reference"))
+    sections.push({
+      id: "References",
+      title: "References",
+      meta: specs.referenceIds.length || undefined,
+      children: <References {...props} />,
+    });
+  if (uses.has("model"))
+    sections.push({
+      id: "Models",
+      title: "Models",
+      meta: specs.modelIds.length || undefined,
+      children: <Models {...props} />,
+    });
 
   return (
     <aside className="ui-desk-panel ui-desk-specs" aria-label="Specs">
       <ModePicker doc={doc} mode={mode} modes={modes.filter((m) => m.studio === doc.studio)} onMode={props.onMode} />
-      <StudioFolds key={`${doc.modeId}-${doc.studio}`} label="Specs" sections={sections} initialOpen={["Product", "Layers", "Output", "References", "Models"].filter((id) => sections.some((s) => s.id === id))} />
+      <StudioFolds
+        key={`${doc.modeId}-${doc.studio}`}
+        label="Specs"
+        sections={sections}
+        initialOpen={["Product", "Layers", "Output", "References", "Models"].filter((id) =>
+          sections.some((s) => s.id === id),
+        )}
+      />
       <p className="ui-sr-only">{brandName}</p>
     </aside>
   );
@@ -130,8 +189,8 @@ export function SpecsPanel(props: SpecsProps) {
 /** "Light and camera" from ["Light", "Camera"]. */
 const listWords = (xs: string[]) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
 
-/** What a switch from one mode to another does, in one sentence (#60): the sections that carry over, the ones set
- *  aside (the last version keeps them, so going back or reopening that version brings them back), the versions. */
+/** What a switch from one mode to another does, in one sentence: the sections that carry over, the ones set aside (the
+ *  last version keeps them, so going back or reopening that version brings them back), the versions. */
 export function switchWords(doc: CreativeDocument, from: StudioMode | undefined, to: StudioMode): string {
   const keys = new Set(to.variables.map((v) => v.key));
   const sections = from?.sections ?? [];
@@ -143,16 +202,31 @@ export function switchWords(doc: CreativeDocument, from: StudioMode | undefined,
   if (product && to.uses.includes("product")) carried.unshift("the product");
   else if (product) aside.unshift("the product");
   const last = doc.versions.at(-1);
-  const lower = (xs: string[]) => xs.map((x, i) => (i === 0 ? x.charAt(0).toUpperCase() + x.slice(1) : x.toLowerCase()));
+  const lower = (xs: string[]) =>
+    xs.map((x, i) => (i === 0 ? x.charAt(0).toUpperCase() + x.slice(1) : x.toLowerCase()));
   const plural = (xs: string[]) => xs.length > 1;
   const parts = [
-    carried.length ? `${listWords(lower(carried))} ${plural(carried) ? "carry" : "carries"} over` : "Nothing carries over",
-    aside.length ? `${listWords(aside.map((x) => x.toLowerCase()))} ${aside.length === 1 ? "is" : "are"} set aside${last ? `, kept in V${last.number}` : ""}` : undefined,
+    carried.length
+      ? `${listWords(lower(carried))} ${plural(carried) ? "carry" : "carries"} over`
+      : "Nothing carries over",
+    aside.length
+      ? `${listWords(aside.map((x) => x.toLowerCase()))} ${aside.length === 1 ? "is" : "are"} set aside${last ? `, kept in V${last.number}` : ""}`
+      : undefined,
   ].filter(Boolean);
   return `${parts.join("; ")}.${doc.versions.length ? " The versions stay." : ""}`;
 }
 
-function ModePicker({ doc, mode, modes, onMode }: { doc: CreativeDocument; mode?: StudioMode; modes: StudioMode[]; onMode: (id: string) => void }) {
+function ModePicker({
+  doc,
+  mode,
+  modes,
+  onMode,
+}: {
+  doc: CreativeDocument;
+  mode?: StudioMode;
+  modes: StudioMode[];
+  onMode: (id: string) => void;
+}) {
   const [open, setOpen] = useState(false);
   // The mode she picked, waiting for her yes.
   const [asking, setAsking] = useState<StudioMode>();
@@ -234,7 +308,12 @@ function ProductData(props: SpecsProps) {
   const [all, setAll] = useState(false);
   return (
     <>
-      <ProductPicker workspaceId={doc.workspaceId} value={specs.productId} approver={props.approver} onPick={(id) => onSpecs({ ...specs, productId: id, variantId: undefined }, "product")} />
+      <ProductPicker
+        workspaceId={doc.workspaceId}
+        value={specs.productId}
+        approver={props.approver}
+        onPick={(id) => onSpecs({ ...specs, productId: id, variantId: undefined }, "product")}
+      />
       {specs.productId && <ProductLook {...props} productId={specs.productId} onAll={() => setAll(true)} />}
       {specs.productId && <Fixes doc={doc} productId={specs.productId} name={props.name} />}
       {specs.productId && <AllFacts {...props} productId={specs.productId} open={all} onOpenChange={setAll} />}
@@ -289,7 +368,10 @@ function ProductLook({ doc, name, approver, productId, onAll }: SpecsProps & { p
 }
 
 /** The kind's measure and part fields that the product has a value for. */
-function specRows(product: NonNullable<ReturnType<typeof useProduct>["data"]>, kind: NonNullable<ReturnType<typeof useProductKinds>["data"]>[number]) {
+function specRows(
+  product: NonNullable<ReturnType<typeof useProduct>["data"]>,
+  kind: NonNullable<ReturnType<typeof useProductKinds>["data"]>[number],
+) {
   return kind.groups
     .filter((g) => ["size", "materials", "construction", "formula", "label"].includes(g.id))
     .flatMap((g) => g.fields)
@@ -298,7 +380,14 @@ function specRows(product: NonNullable<ReturnType<typeof useProduct>["data"]>, k
 }
 
 /** The whole product in a right panel over the board: its measures and parts, then every Product Truth line. */
-function AllFacts({ doc, name, approver, productId, open, onOpenChange }: SpecsProps & { productId: string; open: boolean; onOpenChange: (open: boolean) => void }) {
+function AllFacts({
+  doc,
+  name,
+  approver,
+  productId,
+  open,
+  onOpenChange,
+}: SpecsProps & { productId: string; open: boolean; onOpenChange: (open: boolean) => void }) {
   const product = useProduct(productId).data;
   const kind = useProductKinds().data?.find((k) => k.id === product?.kindId);
   if (!product) return null;
@@ -312,7 +401,10 @@ function AllFacts({ doc, name, approver, productId, open, onOpenChange }: SpecsP
           <SheetTitle>
             {product.name} · {product.variant}
           </SheetTitle>
-          <SheetDescription>Its Product Truth, as {approver} confirmed it. Change a line for this creative, or propose it for the product.</SheetDescription>
+          <SheetDescription>
+            Its Product Truth, as {approver} confirmed it. Change a line for this creative, or propose it for the
+            product.
+          </SheetDescription>
         </SheetHeader>
         <SheetBody>
           {fid && (
@@ -364,12 +456,31 @@ function AllFacts({ doc, name, approver, productId, open, onOpenChange }: SpecsP
 }
 
 /** One Product Truth line; a changed line shows who changed it and for what. */
-function FactRow({ doc, fact, name, approver, side = "right" }: { doc: CreativeDocument; fact: { id: string; label: string; statement: string }; name: SpecsProps["name"]; approver: string; side?: "left" | "right" }) {
+function FactRow({
+  doc,
+  fact,
+  name,
+  approver,
+  side = "right",
+}: {
+  doc: CreativeDocument;
+  fact: { id: string; label: string; statement: string };
+  name: SpecsProps["name"];
+  approver: string;
+  side?: "left" | "right";
+}) {
   const mine = doc.overrides.filter((o) => o.field === fact.label && o.state !== "declined");
   const shown = mine.find((o) => o.scope === "this_render") ?? mine.find((o) => o.state === "approved");
   return (
     <li>
-      <FactEditor doc={doc} field={fact.label} statement={shown?.value ?? fact.statement} truth={fact.statement} changed={Boolean(shown)} side={side} />
+      <FactEditor
+        doc={doc}
+        field={fact.label}
+        statement={shown?.value ?? fact.statement}
+        truth={fact.statement}
+        changed={Boolean(shown)}
+        side={side}
+      />
       {mine.map((o) => (
         <p key={o.id} className="ui-desk-fact-who" data-scope={o.scope}>
           <Icon name={o.scope === "product" && o.state === "proposed" ? "clock" : "pencil"} />
@@ -380,12 +491,21 @@ function FactRow({ doc, fact, name, approver, side = "right" }: { doc: CreativeD
   );
 }
 
-/** The product as a picture; it opens the brand's products as a grid of tiles (Marcus 15 Oct: products as a grid,
- *  never a list of names). The popover holds the few confirmed products, the current one first, and "View all
- *  products" opens the whole catalogue in the shared sheet (walk-through Must 1): search, kinds and collections, and
- *  a lock on products whose facts the customer has not confirmed. */
+/** The product as a picture; it opens the brand's products as a grid of tiles, never a list of names. The popover holds
+ *  the few confirmed products, the current one first, and "View all products" opens the whole catalogue in the shared
+ *  sheet: search, kinds and collections, and a lock on products whose facts the customer has not confirmed. */
 const RECENT = 6;
-function ProductPicker({ workspaceId, value, approver, onPick }: { workspaceId: string; value?: string; approver: string; onPick: (id: string) => void }) {
+function ProductPicker({
+  workspaceId,
+  value,
+  approver,
+  onPick,
+}: {
+  workspaceId: string;
+  value?: string;
+  approver: string;
+  onPick: (id: string) => void;
+}) {
   const [open, setOpen] = useState(false);
   const [all, setAll] = useState(false);
   const products = useStudioKit(workspaceId).data?.products ?? [];
@@ -400,16 +520,30 @@ function ProductPicker({ workspaceId, value, approver, onPick }: { workspaceId: 
     <>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <PickTrigger label="Product" name={current ? `${current.name} · ${current.variant}` : "Pick a product"} src={current?.images[0]} aria-label={current ? `Product: ${current.name}, ${current.variant}. Change` : "Pick a product"} />
+          <PickTrigger
+            label="Product"
+            name={current ? `${current.name} · ${current.variant}` : "Pick a product"}
+            src={current?.images[0]}
+            aria-label={current ? `Product: ${current.name}, ${current.variant}. Change` : "Pick a product"}
+          />
         </PopoverTrigger>
         <PopoverContent side="right" align="start" className="ui-pick-popover" aria-labelledby="product-pick-title">
           <PopoverHeader>
             <PopoverTitle id="product-pick-title">Products</PopoverTitle>
-            <PopoverDescription>The product this creative shows, with its Product Truth. Only products with confirmed facts.</PopoverDescription>
+            <PopoverDescription>
+              The product this creative shows, with its Product Truth. Only products with confirmed facts.
+            </PopoverDescription>
           </PopoverHeader>
           <PickGrid aria-label="Products">
             {recent.map((p) => (
-              <ProductTile key={p.id} name={p.name} variant={p.variant} src={p.images[0]} selected={p.id === value} onSelectedChange={() => pick(p.id)} />
+              <ProductTile
+                key={p.id}
+                name={p.name}
+                variant={p.variant}
+                src={p.images[0]}
+                selected={p.id === value}
+                onSelectedChange={() => pick(p.id)}
+              />
             ))}
           </PickGrid>
           <ProductSheetButton
@@ -422,7 +556,14 @@ function ProductPicker({ workspaceId, value, approver, onPick }: { workspaceId: 
           />
         </PopoverContent>
       </Popover>
-      <AllProductsSheet open={all} onOpenChange={setAll} value={value ? [value] : []} onPick={([id]) => id && pick(id)} staff confirmer={approver} />
+      <AllProductsSheet
+        open={all}
+        onOpenChange={setAll}
+        value={value ? [value] : []}
+        onPick={([id]) => id && pick(id)}
+        staff
+        confirmer={approver}
+      />
     </>
   );
 }
@@ -433,7 +574,21 @@ function Fixes({ doc, productId, name }: { doc: CreativeDocument; productId: str
   return <FixHistory doc={doc} tokens={tokens} name={name} />;
 }
 
-function FactEditor({ doc, field, statement, truth, changed, side = "right" }: { doc: CreativeDocument; field: string; statement: string; truth: string; changed: boolean; side?: "left" | "right" }) {
+function FactEditor({
+  doc,
+  field,
+  statement,
+  truth,
+  changed,
+  side = "right",
+}: {
+  doc: CreativeDocument;
+  field: string;
+  statement: string;
+  truth: string;
+  changed: boolean;
+  side?: "left" | "right";
+}) {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState(statement);
   const override = useOverrideProduct();
@@ -444,9 +599,15 @@ function FactEditor({ doc, field, statement, truth, changed, side = "right" }: {
       {
         onSuccess: () => {
           setOpen(false);
-          toast.done(scope === "this_render" ? `${field} changed for this creative` : `${field}: proposed to the customer`, {
-            description: scope === "this_render" ? "The expert sees it in the check." : "The product changes once the customer approves.",
-          });
+          toast.done(
+            scope === "this_render" ? `${field} changed for this creative` : `${field}: proposed to the customer`,
+            {
+              description:
+                scope === "this_render"
+                  ? "The expert sees it in the check."
+                  : "The product changes once the customer approves.",
+            },
+          );
         },
         onError: (e) => toast.error("That didn’t save", { description: e.message }),
       },
@@ -460,7 +621,12 @@ function FactEditor({ doc, field, statement, truth, changed, side = "right" }: {
       }}
     >
       <PopoverTrigger asChild>
-        <button type="button" className="ui-desk-fact" data-changed={changed ? "" : undefined} aria-label={`${field}: ${statement}. Change`}>
+        <button
+          type="button"
+          className="ui-desk-fact"
+          data-changed={changed ? "" : undefined}
+          aria-label={`${field}: ${statement}. Change`}
+        >
           <span className="ui-desk-fact-label">{field}</span>
           <span className="ui-desk-fact-text">{statement}</span>
           <Icon name="pencil" className="ui-desk-fact-icon" />
@@ -471,12 +637,29 @@ function FactEditor({ doc, field, statement, truth, changed, side = "right" }: {
           <PopoverTitle id={`fact-${field}`}>{field}</PopoverTitle>
           <PopoverDescription>Product Truth: {truth}</PopoverDescription>
         </PopoverHeader>
-        <textarea className="ui-textarea ui-desk-fact-field" rows={3} value={text} aria-label={`${field}, changed`} onChange={(e) => setText(e.target.value)} />
+        <textarea
+          className="ui-textarea ui-desk-fact-field"
+          rows={3}
+          value={text}
+          aria-label={`${field}, changed`}
+          onChange={(e) => setText(e.target.value)}
+        />
         <div className="ui-desk-fact-actions">
-          <Button size="sm" variant="glass-clear" disabled={!text.trim() || text.trim() === truth || override.isPending} onClick={() => save("product")}>
+          <Button
+            size="sm"
+            variant="glass-clear"
+            disabled={!text.trim() || text.trim() === truth || override.isPending}
+            onClick={() => save("product")}
+          >
             Change the product
           </Button>
-          <Button size="sm" variant="glass-white" loading={override.isPending} disabled={!text.trim() || text.trim() === truth} onClick={() => save("this_render")}>
+          <Button
+            size="sm"
+            variant="glass-white"
+            loading={override.isPending}
+            disabled={!text.trim() || text.trim() === truth}
+            onClick={() => save("this_render")}
+          >
             For this creative
           </Button>
         </div>
@@ -494,7 +677,15 @@ function References({ doc, specs, onSpecs, assets }: SpecsProps) {
   const file = useRef<HTMLInputElement>(null);
   const refs = assets?.references ?? [];
   const toggle = (id: string) =>
-    onSpecs({ ...specs, referenceIds: specs.referenceIds.includes(id) ? specs.referenceIds.filter((x) => x !== id) : [...specs.referenceIds, id] }, "references");
+    onSpecs(
+      {
+        ...specs,
+        referenceIds: specs.referenceIds.includes(id)
+          ? specs.referenceIds.filter((x) => x !== id)
+          : [...specs.referenceIds, id],
+      },
+      "references",
+    );
   return (
     <>
       <ul className="ui-desk-thumbs" aria-label="The brand’s references">
@@ -502,7 +693,14 @@ function References({ doc, specs, onSpecs, assets }: SpecsProps) {
           const on = specs.referenceIds.includes(r.id);
           return (
             <li key={r.id}>
-              <button type="button" className="ui-desk-thumb" aria-pressed={on} title={`${r.name}${r.state === "draft" ? " (draft)" : ""}`} aria-label={`${r.name}${r.state === "draft" ? ", draft" : ""}`} onClick={() => toggle(r.id)}>
+              <button
+                type="button"
+                className="ui-desk-thumb"
+                aria-pressed={on}
+                title={`${r.name}${r.state === "draft" ? " (draft)" : ""}`}
+                aria-label={`${r.name}${r.state === "draft" ? ", draft" : ""}`}
+                onClick={() => toggle(r.id)}
+              >
                 <img src={r.image} alt="" />
                 {on && <Icon name="check" className="ui-desk-thumb-check" />}
                 {r.state === "draft" && <span className="ui-desk-thumb-tag">Draft</span>}
@@ -519,7 +717,10 @@ function References({ doc, specs, onSpecs, assets }: SpecsProps) {
           hidden
           onChange={(e) => {
             const f = e.target.files?.[0];
-            if (f) toast.info(`${f.name} is ready for the library`, { description: "Fume keeps uploads once the backend stores them." });
+            if (f)
+              toast.info(`${f.name} is ready for the library`, {
+                description: "Fume keeps uploads once the backend stores them.",
+              });
             e.target.value = "";
           }}
         />
@@ -534,7 +735,10 @@ function References({ doc, specs, onSpecs, assets }: SpecsProps) {
           onClick={() =>
             open.mutate(
               { workspaceId: doc.workspaceId, studio: "render", modeId: "m-reference", campaignId: doc.campaignId },
-              { onSuccess: (d) => navigate(`/studio/doc/${d.id}`), onError: (e) => toast.error("The reference maker didn’t open", { description: e.message }) },
+              {
+                onSuccess: (d) => navigate(`/studio/doc/${d.id}`),
+                onError: (e) => toast.error("The reference maker didn’t open", { description: e.message }),
+              },
             )
           }
         >
@@ -551,9 +755,21 @@ function Models({ specs, onSpecs, assets, name, approver }: SpecsProps) {
   const models = assets?.models ?? [];
   if (!models.length) return <p className="ui-sc-help">The brand has no models yet. Make one in Model mode.</p>;
   const state = (m: BrandAssetsView["models"][number]) =>
-    m.state === "approved" ? `${approver} approved` : m.state === "saved" ? `Saved by ${name(m.savedBy)}` : m.state === "declined" ? `${approver} declined` : `Draft · ${name(m.madeBy)}`;
+    m.state === "approved"
+      ? `${approver} approved`
+      : m.state === "saved"
+        ? `Saved by ${name(m.savedBy)}`
+        : m.state === "declined"
+          ? `${approver} declined`
+          : `Draft · ${name(m.madeBy)}`;
   const toggle = (id: string) =>
-    onSpecs({ ...specs, modelIds: specs.modelIds.includes(id) ? specs.modelIds.filter((x) => x !== id) : [...specs.modelIds, id] }, "models");
+    onSpecs(
+      {
+        ...specs,
+        modelIds: specs.modelIds.includes(id) ? specs.modelIds.filter((x) => x !== id) : [...specs.modelIds, id],
+      },
+      "models",
+    );
   return (
     <ul className="ui-desk-models" aria-label="The brand’s models">
       {models.map((m) => {
@@ -561,7 +777,13 @@ function Models({ specs, onSpecs, assets, name, approver }: SpecsProps) {
         const on = specs.modelIds.includes(m.id);
         return (
           <li key={m.id}>
-            <button type="button" className="ui-desk-model" aria-pressed={on} disabled={!usable} onClick={() => toggle(m.id)}>
+            <button
+              type="button"
+              className="ui-desk-model"
+              aria-pressed={on}
+              disabled={!usable}
+              onClick={() => toggle(m.id)}
+            >
               <span className="ui-desk-model-img">
                 <img src={m.image} alt="" />
                 <span className="ui-desk-ai">AI model</span>
@@ -588,7 +810,12 @@ function LayerList({ layers, onLayers, selectedLayer, onSelectLayer }: SpecsProp
     <ul className="ui-desk-layer-list" aria-label="Layers">
       {[...layers].reverse().map((l) => (
         <li key={l.id} className="ui-desk-layer-row" aria-current={selectedLayer === l.id ? "true" : undefined}>
-          <button type="button" className="ui-desk-layer-pick" disabled={l.locked} onClick={() => onSelectLayer(selectedLayer === l.id ? undefined : l.id)}>
+          <button
+            type="button"
+            className="ui-desk-layer-pick"
+            disabled={l.locked}
+            onClick={() => onSelectLayer(selectedLayer === l.id ? undefined : l.id)}
+          >
             <Icon name={layerIcon[l.kind]} />
             <span className="ui-desk-layer-name">{l.name}</span>
             {l.locked && <Icon name="lock" className="ui-desk-layer-lock" />}
@@ -602,7 +829,12 @@ function LayerList({ layers, onLayers, selectedLayer, onSelectLayer }: SpecsProp
               className="ui-desk-layer-eye"
               data-hidden={l.visible ? undefined : ""}
               aria-label={l.visible ? `Hide ${l.name}` : `Show ${l.name}`}
-              onClick={() => onLayers(layers.map((x) => (x.id === l.id ? { ...x, visible: !x.visible } : x)), `layer-${l.id}-visible`)}
+              onClick={() =>
+                onLayers(
+                  layers.map((x) => (x.id === l.id ? { ...x, visible: !x.visible } : x)),
+                  `layer-${l.id}-visible`,
+                )
+              }
             />
           )}
         </li>

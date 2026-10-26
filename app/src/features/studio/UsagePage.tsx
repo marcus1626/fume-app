@@ -1,15 +1,13 @@
-// Usage (FLOWS §20): what each brand uses, for Fume's admin and operators. Renders, what they cost (staff only),
-// creatives made and delivered, and renders per week over the last eight weeks. Calm: no Amber here (Amber counts
-// checked work only), the series are Ink and Focus.
-// Round 12 AGENCY (UX review DTASK-6, DLOAD-7, DLAY-16; PROPOSED 20 Oct 2026): ONE Usage page for both frames, at
-// /studio/usage for Fume's people and /agency/usage for an agency's. A period control at the top, This month (the
-// default) · Last month · Last 8 weeks, kept in the address (?period=last_month | weeks), with the dates written out
-// in the meta line ("1–31 Oct 2026"). Then one table, a row per brand or client: Package (used of included, when it
-// renews; Fume's brands, this month only), Creatives made, Approved by the customer (the client, for an agency),
-// Delivered, and Renders and Cost (Fume's people only), with "In all" at its foot. No stat cards: the table is the
-// answer. Fume's people then see the renders per week; an agency sees what its licence covers. The numbers are the
-// same ones the brand's Home and the agency's Licence read (mock: r11-agency.ts usage()). On a phone each brand is a
-// row with its figures in one line.
+// Usage (FLOWS §20): what each brand uses, one page for both frames, at /studio/usage for Fume's admin and operators
+// and /agency/usage for an agency's people. Calm: no Amber here (Amber counts checked work only); the series are Ink
+// and Focus.
+// A period control at the top, This month (the default) · Last month · Last 8 weeks, kept in the address
+// (?period=last_month | weeks), with the dates written out in the meta line ("1–31 Oct 2026"). Then one table, a row
+// per brand or client: Package (used of included, when it renews; Fume's brands, this month only), Creatives made,
+// Approved by the customer (the client, for an agency), Delivered, and Renders and Cost (Fume's people only), with "In
+// all" at its foot. Fume's people then see the renders per week; an agency sees what its licence covers. The numbers
+// are the same ones the brand's Home and the agency's Licence read (the mock's usage()). On a phone each brand is a row
+// with its figures in one line.
 import {
   Button,
   Chart,
@@ -54,12 +52,14 @@ const PERIODS: { value: UsagePeriod; label: string }[] = [
 ];
 
 /** A day of a period's edge; the periods are whole UTC days, so they are read in UTC. */
-const part = (iso: string, o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat("en-GB", { ...o, timeZone: "UTC" }).format(Date.parse(iso));
+const part = (iso: string, o: Intl.DateTimeFormatOptions) =>
+  new Intl.DateTimeFormat("en-GB", { ...o, timeZone: "UTC" }).format(Date.parse(iso));
 
 /** "1–31 Oct 2026", "24 Aug – 18 Oct 2026": a period with its dates written out. */
 export function periodSpan(p: { from: string; to: string }): string {
   const year = part(p.to, { year: "numeric" });
-  const sameMonth = part(p.from, { month: "short", year: "numeric" }) === part(p.to, { month: "short", year: "numeric" });
+  const sameMonth =
+    part(p.from, { month: "short", year: "numeric" }) === part(p.to, { month: "short", year: "numeric" });
   return sameMonth
     ? `${part(p.from, { day: "numeric" })}–${part(p.to, { day: "numeric", month: "short" })} ${year}`
     : `${part(p.from, { day: "numeric", month: "short" })} – ${part(p.to, { day: "numeric", month: "short" })} ${year}`;
@@ -68,8 +68,14 @@ export function periodSpan(p: { from: string; to: string }): string {
 /** The Monday of each of the last eight weeks, oldest first, as ISO dates (the chart's "week of" labels). */
 function weekStarts(): string[] {
   const today = new Date(now());
-  const monday = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - ((today.getUTCDay() + 6) % 7));
-  return Array.from({ length: WEEKS }, (_, i) => new Date(monday - (WEEKS - 1 - i) * 7 * 86_400_000).toISOString().slice(0, 10));
+  const monday = Date.UTC(
+    today.getUTCFullYear(),
+    today.getUTCMonth(),
+    today.getUTCDate() - ((today.getUTCDay() + 6) % 7),
+  );
+  return Array.from({ length: WEEKS }, (_, i) =>
+    new Date(monday - (WEEKS - 1 - i) * 7 * 86_400_000).toISOString().slice(0, 10),
+  );
 }
 
 const isPeriod = (v: string | null): v is UsagePeriod => v === "month" || v === "last_month" || v === "weeks";
@@ -100,7 +106,11 @@ export function UsagePage() {
             ? `What ${org} made for each client, and what each client approved and received. Production is by use, counted per client each month.`
             : "What each brand used, made, approved and received, and what the Engine’s images cost. Cost is for Fume’s people only."
         }
-        meta={usage.data ? [...(span ? [periodSpan(span)] : []), copy.count(usage.data.length, noun[0], noun[1])] : undefined}
+        meta={
+          usage.data
+            ? [...(span ? [periodSpan(span)] : []), copy.count(usage.data.length, noun[0], noun[1])]
+            : undefined
+        }
         tabs={
           <SegmentedControl aria-label="The period" value={period} onValueChange={choose}>
             {PERIODS.map((p) => (
@@ -118,7 +128,11 @@ export function UsagePage() {
             <Nothing
               icon="chart-column"
               title="No usage yet"
-              text={agency ? "Clients show here once the Engine makes creatives for them." : "Brands show here once the Engine makes images for them."}
+              text={
+                agency
+                  ? "Clients show here once the Engine makes creatives for them."
+                  : "Brands show here once the Engine makes images for them."
+              }
             />
           ) : (
             <>
@@ -138,14 +152,18 @@ function UsageTable({ rows, period, agency }: { rows: UsageRow[]; period: UsageP
   const of = (r: UsageRow): UsageFigures | undefined => r.periods?.[period];
   const name = (r: UsageRow) => r.workspace?.brandName ?? r.workspaceId;
   const href = (r: UsageRow) => (agency ? hrefIn("agency", r.workspaceId, "/") : `/studio/b/${r.workspaceId}`);
-  const sorted = [...rows].sort((a, b) => (of(b)?.creatives ?? 0) - (of(a)?.creatives ?? 0) || name(a).localeCompare(name(b)));
+  const sorted = [...rows].sort(
+    (a, b) => (of(b)?.creatives ?? 0) - (of(a)?.creatives ?? 0) || name(a).localeCompare(name(b)),
+  );
   const sum = (pick: (f: UsageFigures) => number) => rows.reduce((n, r) => n + (of(r) ? pick(of(r)!) : 0), 0);
   // The package is this month's: Fume's brands only (an agency pays by use).
   const showPackage = !agency && period === "month";
   const approvedBy = agency ? "Approved by the client" : "Approved by the customer";
-  const example = (r: UsageRow) => (r.example === "summary" ? "Example client: summary figures" : r.workspace ? `${r.workspace.market}` : undefined);
+  const example = (r: UsageRow) =>
+    r.example === "summary" ? "Example client: summary figures" : r.workspace ? `${r.workspace.market}` : undefined;
   const pkg = (r: UsageRow) => (r.package ? `${r.package.used} of ${r.package.included}` : "–");
-  const renews = (r: UsageRow) => (r.package?.renewsAt ? `renews ${part(r.package.renewsAt, { day: "numeric", month: "short" })}` : undefined);
+  const renews = (r: UsageRow) =>
+    r.package?.renewsAt ? `renews ${part(r.package.renewsAt, { day: "numeric", month: "short" })}` : undefined;
   const title = agency ? "Per client" : "Per brand";
 
   if (phone)
@@ -281,14 +299,19 @@ function UsageTable({ rows, period, agency }: { rows: UsageRow[]; period: UsageP
   );
 }
 
-/** Fume's people: the Engine's images (renders) per brand over the last eight weeks, Monday to Sunday (r13 #58: "Image" in the words). */
+/** Fume's people: the Engine's images (renders) per brand over the last eight weeks, Monday to Sunday ("Image" in the
+ *  words). */
 function RendersChart({ rows }: { rows: UsageRow[] }) {
   const weeks = weekStarts();
   const name = (r: UsageRow) => r.workspace?.brandName ?? r.workspaceId;
   const sorted = [...rows].sort((a, b) => b.renders - a.renders);
   const key = (row: UsageRow) => row.workspaceId.replace(/[^a-z0-9]/gi, "");
   return (
-    <Section title="Images per week" titleId="usage-trend" text="The last eight weeks, Monday to Sunday, whatever the period above.">
+    <Section
+      title="Images per week"
+      titleId="usage-trend"
+      text="The last eight weeks, Monday to Sunday, whatever the period above."
+    >
       <Chart
         type="line"
         title="Images per week"
@@ -326,7 +349,9 @@ function LicenceFacts() {
         {(v) => (
           <DataList>
             <DataListItem label="Platform">A fixed fee for {v.agency.name}</DataListItem>
-            <DataListItem label="Production">By use: the creatives made for each client, counted each month</DataListItem>
+            <DataListItem label="Production">
+              By use: the creatives made for each client, counted each month
+            </DataListItem>
             <DataListItem label="Scope">{v.scope}</DataListItem>
             <DataListItem label="Seats">
               {v.seats.used} of {v.seats.included} used

@@ -67,12 +67,25 @@ export interface BadgeDotProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 /** The dot before a badge's label (.ui-badge-dot). Decorative: the label says the state. */
-export const BadgeDot = forwardRef<HTMLSpanElement, BadgeDotProps>(function BadgeDot({ kind = "on", className, ...props }, ref) {
-  return <span ref={ref} aria-hidden="true" className={cx("ui-badge-dot", kind !== "on" && `ui-badge-dot--${kind}`, className)} {...props} />;
+export const BadgeDot = forwardRef<HTMLSpanElement, BadgeDotProps>(function BadgeDot(
+  { kind = "on", className, ...props },
+  ref,
+) {
+  return (
+    <span
+      ref={ref}
+      aria-hidden="true"
+      className={cx("ui-badge-dot", kind !== "on" && `ui-badge-dot--${kind}`, className)}
+      {...props}
+    />
+  );
 });
 
 /** A dot on its own at the corner of an icon button or an avatar (.ui-badge--dot). Put it in a positioned
  *  wrapper next to the button; say what it means in the button's aria-label ("Notifications, 2 new"). */
-export const DotBadge = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function DotBadge({ className, ...props }, ref) {
+export const DotBadge = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function DotBadge(
+  { className, ...props },
+  ref,
+) {
   return <span ref={ref} aria-hidden="true" className={cx("ui-badge", "ui-badge--dot", className)} {...props} />;
 });

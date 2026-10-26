@@ -11,7 +11,8 @@ const anna = () => createMockApi({ latency: 0, userId: "u-anna" });
 test("the customer never sees a creative before the expert has checked it (F-D025)", async () => {
   const api = maja();
   const view = await api.campaign("c-autumn");
-  for (const c of view.creatives) assert.ok(["checked", "approved", "delivered", "changes_requested"].includes(c.current.state), c.id);
+  for (const c of view.creatives)
+    assert.ok(["checked", "approved", "delivered", "changes_requested"].includes(c.current.state), c.id);
   assert.ok(view.directions.every((d) => !["making", "in_check"].includes(d.state)));
 });
 
@@ -43,7 +44,12 @@ test("a change request makes a new version and keeps the old one in the chain", 
   const view = await api.campaign("c-autumn");
   const target = view.creatives.find((c) => c.current.state === "checked")!;
   const before = target.versions.length;
-  const result = await api.requestChanges({ versionId: target.current.id, pins: [{ x: 0.5, y: 0.5, text: "Warmer light" }], tags: ["mood"], text: "Warmer light" });
+  const result = await api.requestChanges({
+    versionId: target.current.id,
+    pins: [{ x: 0.5, y: 0.5, text: "Warmer light" }],
+    tags: ["mood"],
+    text: "Warmer light",
+  });
   assert.equal(result.usesRound, true);
   assert.equal(result.version.number, target.current.number + 1);
   assert.equal(result.version.state, "making");
@@ -56,7 +62,12 @@ test("a product mistake is Fume's correction and does not use a round", async ()
   const api = maja();
   const view = await api.campaign("c-autumn");
   const target = view.creatives.find((c) => c.current.state === "checked")!;
-  const result = await api.requestChanges({ versionId: target.current.id, pins: [], tags: ["product"], text: "The cap is wrong" });
+  const result = await api.requestChanges({
+    versionId: target.current.id,
+    pins: [],
+    tags: ["product"],
+    text: "The cap is wrong",
+  });
   assert.equal(result.usesRound, false);
 });
 
@@ -70,13 +81,23 @@ test("home answers what waits for you", async () => {
 test("v5: a moodboard can be started on the spot, with a written brief or on a campaign without one", async () => {
   const api = maja();
   const campaign = await api.orderBrief({
-    name: "Test", goal: "A test", productIds: ["pr-oil"], collectionIds: [], channels: ["paid_social"], formats: ["feed"], notes: "", references: ["a.jpg", "b.jpg"],
+    name: "Test",
+    goal: "A test",
+    productIds: ["pr-oil"],
+    collectionIds: [],
+    channels: ["paid_social"],
+    formats: ["feed"],
+    notes: "",
+    references: ["a.jpg", "b.jpg"],
     moodboard: { images: ["a.jpg", "b.jpg"] },
   });
   assert.ok(campaign.boardId);
   const board = await api.board(campaign.boardId!);
   assert.equal(board.kind, "campaign_moodboard");
-  assert.deepEqual(board.items.map((i) => i.image), ["a.jpg", "b.jpg"]);
+  assert.deepEqual(
+    board.items.map((i) => i.image),
+    ["a.jpg", "b.jpg"],
+  );
   const bf = await api.startMoodboard("c-bf", ["c.jpg"]);
   assert.equal((await api.campaign("c-bf")).campaign.boardId, bf.id);
 });
@@ -184,7 +205,14 @@ test("the agency checks the plan and sends it; the client approves it in Fume or
     assert.equal((await maja.plan("c-winter"))?.directions.length, 0);
     await assert.rejects(maja.approvePlan("c-winter"), /checks the plan first/);
     // Sending the plan is the agency's check of it.
-    const send = await api.sendToClient({ campaignId: "c-winter", versionIds: [], to: ["u-maja"], link: true, plan: true, note: "Window light, as we said." });
+    const send = await api.sendToClient({
+      campaignId: "c-winter",
+      versionIds: [],
+      to: ["u-maja"],
+      link: true,
+      plan: true,
+      note: "Window light, as we said.",
+    });
     assert.equal(send.plan?.version, 1);
     const checked = await api.plan("c-winter");
     assert.equal(checked?.state, "ready");
@@ -196,10 +224,18 @@ test("the agency checks the plan and sends it; the client approves it in Fume or
     const link = await api.clientLink(send.link!.token);
     assert.equal(link.plan?.campaignId, "c-winter");
     assert.equal(link.planSend?.note, "Window light, as we said.");
-    await assert.rejects(api.answerClientPlan({ token: send.link!.token, verdict: "approve", name: "Nora" }), /preview/);
+    await assert.rejects(
+      api.answerClientPlan({ token: send.link!.token, verdict: "approve", name: "Nora" }),
+      /preview/,
+    );
     // The client asks for changes in the link: Fume writes version 2, and it is the agency's to check again.
     (api as typeof api & { signInAs(userId: string): void }).signInAs("u-maja");
-    const asked = await api.answerClientPlan({ token: send.link!.token, verdict: "changes", text: "The gift box closed on the first master", name: "Maja Lind" });
+    const asked = await api.answerClientPlan({
+      token: send.link!.token,
+      verdict: "changes",
+      text: "The gift box closed on the first master",
+      name: "Maja Lind",
+    });
     assert.equal(asked.state, "changes_asked");
     await vi.advanceTimersByTimeAsync(3000);
     (api as typeof api & { signInAs(userId: string): void }).signInAs("u-nora");
@@ -208,7 +244,13 @@ test("the agency checks the plan and sends it; the client approves it in Fume or
     assert.equal(second?.state, "ready");
     assert.equal(second?.checkedBy, undefined);
     // Sent again, in the same link.
-    const again = await api.sendToClient({ campaignId: "c-winter", versionIds: [], to: ["u-maja"], link: true, plan: true });
+    const again = await api.sendToClient({
+      campaignId: "c-winter",
+      versionIds: [],
+      to: ["u-maja"],
+      link: true,
+      plan: true,
+    });
     assert.equal(again.link?.token, send.link?.token);
     // She approves it in the link: the Engine starts, and it is her approval.
     (api as typeof api & { signInAs(userId: string): void }).signInAs("u-maja");
@@ -234,25 +276,48 @@ test("the agency never approves a creative: it sends it to the client, or record
   await assert.rejects(api.approve(checked), /Only the client approves/);
   // Round 12: the demo starts with one earlier send (the first four, on 14 Oct), so both send states show.
   const before = (await api.clientSends("c-autumn")).length;
-  const send = await api.sendToClient({ campaignId: "c-autumn", versionIds: checked, to: ["u-maja"], link: true, note: "Two for the launch." });
+  const send = await api.sendToClient({
+    campaignId: "c-autumn",
+    versionIds: checked,
+    to: ["u-maja"],
+    link: true,
+    note: "Two for the launch.",
+  });
   assert.ok(send.link?.url.endsWith(send.link.token));
   assert.equal((await api.clientSends("c-autumn")).length, before + 1);
-  await assert.rejects(api.sendToClient({ campaignId: "c-autumn", versionIds: checked, to: ["u-even"], link: false }), /client's own people/);
+  await assert.rejects(
+    api.sendToClient({ campaignId: "c-autumn", versionIds: checked, to: ["u-even"], link: false }),
+    /client's own people/,
+  );
   const [one, two] = checked;
-  const recorded = await api.recordClientApproval({ versionIds: [one], clientUserId: "u-maja", note: "Maja said yes in our Monday meeting." });
+  const recorded = await api.recordClientApproval({
+    versionIds: [one],
+    clientUserId: "u-maja",
+    note: "Maja said yes in our Monday meeting.",
+  });
   assert.equal(recorded[0].approvedBy, "u-maja");
   assert.equal(recorded[0].recordedBy, "u-nora");
   const link = await api.clientLink(send.link!.token);
   assert.equal(link.agency.name, "Brygga Studio");
   // Round 12 (DWAY-4): signed in, the agency sees the link as a preview; its answer never counts as the client's.
-  await assert.rejects(api.answerClientLink({ token: send.link!.token, versionId: two, verdict: "approve", name: "Maja" }), /preview/);
+  await assert.rejects(
+    api.answerClientLink({ token: send.link!.token, versionId: two, verdict: "approve", name: "Maja" }),
+    /preview/,
+  );
   (api as typeof api & { signInAs(userId: string): void }).signInAs("u-maja"); // the client, on the same demo
-  const answered = await api.answerClientLink({ token: send.link!.token, versionId: two, verdict: "approve", name: "Maja" });
+  const answered = await api.answerClientLink({
+    token: send.link!.token,
+    versionId: two,
+    verdict: "approve",
+    name: "Maja",
+  });
   assert.equal(answered.state, "approved");
   assert.equal(answered.approvedBy, "u-maja");
   // The client herself still approves as before.
   const maja = createMockApi({ latency: 0, agency: true, userId: "u-maja" });
-  const left = (await maja.campaign("c-autumn")).creatives.filter((c) => c.current.state === "checked").map((c) => c.current.id);
+  const left = (await maja.campaign("c-autumn")).creatives
+    .filter((c) => c.current.state === "checked")
+    .map((c) => c.current.id);
   if (left.length) assert.ok((await maja.approve(left)).every((v) => v.approvedBy === "u-maja"));
 });
 
@@ -279,10 +344,16 @@ test("in a client an agency runs, Home never asks the agency to approve a creati
   assert.ok(agency.waitingOnYou.some((w) => w.kind === "plan" && w.campaignId === "c-winter"));
   assert.ok(agency.waitingOnYou.some((w) => w.kind === "product"));
   // Round 13: the plan the agency checked and sent (Black Friday) is hers too; the one it has not checked is not.
-  assert.ok(!agency.waitingOnYou.some((w) => w.kind === "plan" && w.campaignId === "c-bf"), "a plan sent to the client waits on her");
+  assert.ok(
+    !agency.waitingOnYou.some((w) => w.kind === "plan" && w.campaignId === "c-bf"),
+    "a plan sent to the client waits on her",
+  );
   const client = await createMockApi({ latency: 0, agency: true, userId: "u-maja" }).home();
   assert.deepEqual([...new Set(client.waitingOnYou.map((w) => w.kind))].sort(), ["creatives", "plan"]);
-  assert.deepEqual(client.waitingOnYou.filter((w) => w.kind === "plan").map((w) => w.campaignId), ["c-bf"]);
+  assert.deepEqual(
+    client.waitingOnYou.filter((w) => w.kind === "plan").map((w) => w.campaignId),
+    ["c-bf"],
+  );
   assert.ok(client.deliveries.length > 0);
   // Outside the agency's world Maja's Home is as it was.
   const own = await maja().home();
@@ -292,10 +363,18 @@ test("in a client an agency runs, Home never asks the agency to approve a creati
 test("a client link names each creative as the client reads it in Fume, never Master 1 · Variant 1", async () => {
   const api = nora();
   const checked = (await api.campaign("c-autumn")).creatives.filter((c) => c.current.state === "checked");
-  const send = await api.sendToClient({ campaignId: "c-autumn", versionIds: checked.map((c) => c.current.id), to: [], link: true });
+  const send = await api.sendToClient({
+    campaignId: "c-autumn",
+    versionIds: checked.map((c) => c.current.id),
+    to: [],
+    link: true,
+  });
   const link = await api.clientLink(send.link!.token);
   const names = checked.map((c) => link.names?.[c.id]);
   // Round 12 (DLOAD-8): the one name, copy.creativeName, without the direction's letter ("Night Body Oil · Feed 3").
-  assert.ok(names.every((n) => n && /^Night Body Oil · (Feed|Story|Square) \d+$/.test(n)), names.join(", "));
+  assert.ok(
+    names.every((n) => n && /^Night Body Oil · (Feed|Story|Square) \d+$/.test(n)),
+    names.join(", "),
+  );
   assert.equal(new Set(names).size, names.length);
 });

@@ -1,10 +1,8 @@
-// Taking a delivery home (walk-through 15 Oct, Must 6): all of it, one format, or one creative. Every download
-// shows what is under way and when it is done: a loading toast with the share prepared, then "2 creatives
-// downloaded". The real backend answers with a signed link to a zip.
-// Round 9 (desktop review 19 Oct, DTSK-17, DLOAD-15; PROPOSED 19 Oct 2026): Download all is ONE zip, never a row of
+// Taking a delivery home: all of it, one format, or one creative. Every download shows what is under way and when it is
+// done: a loading toast with the share prepared, then "2 creatives downloaded". Download all is one zip, never a row of
 // loose files: LYSNE_Autumn-launch_Masters.zip, with a folder per collection, product and format inside
-// (AW26/Night-Body-Oil/Feed-4x5/). One format is the same zip of that format (…_Masters_Feed-4x5.zip). The demo
-// packs a real zip in the browser (mock/r9-campaign.ts) and saves it under that name.
+// (AW26/Night-Body-Oil/Feed-4x5/); one format is the same zip of that format. The real backend answers with a signed
+// link to a zip; the demo packs a real zip in the browser (the mock) and saves it under that name.
 import { useToast } from "@fume/ui";
 import { useRef, useState } from "react";
 import { useApi } from "../../api/client";
@@ -38,16 +36,30 @@ function save(href: string, name: string) {
 const fileName = (c: Creative) => `${c.name}.${c.current.image.split(".").pop()?.split("?")[0] || "jpg"}`;
 
 /** "Autumn launch" → "Autumn-launch", "Feed 4:5" → "Feed-4x5": safe on every disk. */
-const slug = (s: string) => s.trim().replace(/:/g, "x").replace(/[\\/?%*|"<>]/g, "").replace(/\s+/g, "-");
+const slug = (s: string) =>
+  s
+    .trim()
+    .replace(/:/g, "x")
+    .replace(/[\\/?%*|"<>]/g, "")
+    .replace(/\s+/g, "-");
 
 /** The zip's name: the brand, then the delivery's name, then the format when it is one format.
  *  "LYSNE" + "Autumn launch · Masters" → LYSNE_Autumn-launch_Masters.zip; with Feed → LYSNE_Autumn-launch_Masters_Feed-4x5.zip. */
 export function zipName(brand: string, delivery: string, format?: Format): string {
-  const parts = [brand.toUpperCase(), ...delivery.split(" · "), ...(format ? [`${copy.format[format].label} ${copy.format[format].ratio}`] : [])];
+  const parts = [
+    brand.toUpperCase(),
+    ...delivery.split(" · "),
+    ...(format ? [`${copy.format[format].label} ${copy.format[format].ratio}`] : []),
+  ];
   return `${parts.map(slug).filter(Boolean).join("_")}.zip`;
 }
 
-export function useDeliveryDownload(deliveryId: Id | undefined, totalBytes: number, totalCount: number, deliveryName = "Delivery") {
+export function useDeliveryDownload(
+  deliveryId: Id | undefined,
+  totalBytes: number,
+  totalCount: number,
+  deliveryName = "Delivery",
+) {
   const api = useApi();
   const toast = useToast();
   const brand = useSession().data?.workspace.brandName ?? "Fume";
@@ -96,13 +108,17 @@ export function useDeliveryDownload(deliveryId: Id | undefined, totalBytes: numb
           }
         }, 260);
       });
-      // One zip, named for the brand and the delivery, folders inside (DTSK-17).
+      // One zip, named for the brand and the delivery, folders inside.
       save(url, zipName(brand, deliveryName, format));
       if (url.startsWith("blob:")) window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
       setTaken((s) => new Set(s).add(key));
       t.update({ type: "done", title: `${copy.creatives(n)} downloaded`, meta: size(shareOf(n)) });
     } catch {
-      t.update({ type: "error", title: "The download didn’t start. Your creatives are safe; try again in a moment.", meta: undefined });
+      t.update({
+        type: "error",
+        title: "The download didn’t start. Your creatives are safe; try again in a moment.",
+        meta: undefined,
+      });
     } finally {
       setJob(null);
     }

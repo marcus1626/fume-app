@@ -1,12 +1,6 @@
-// The agency's person (round 11, FLOWS §24.3, §24.8; PROPOSED 20 Oct 2026): the person menu at the foot of the sidebar
-// and the agency demo's sign-ins (Nora, Even, Maja and Jonas of LYSNE, Leave the agency demo), and the shape of one
-// place in a sidebar.
-// Round 12 (desktop review 20 Oct, DWAY-5; PROPOSED 20 Oct 2026): the agency's sidebar, its picker and its ⌘K rows moved
-// to StaffSidebar.tsx and StudioShell.tsx, the one frame Fume's studio and an agency share. "Licence and usage" opens
-// the one Usage page (/agency/usage, DTASK-6).
-// Round 13 AGENCY (Marcus #71, robot note 10-agency; PROPOSED 22 Oct 2026): the person menu holds the three ways to
-// Fume's people (Book a meeting, Borrow Fume's people, Customer service; on a phone this menu is where they are), and
-// Your profile opens the agency's own profile page (/agency/settings/profile), never the customer's settings.
+// The agency's person menu at the foot of the sidebar, with the three ways to Fume's people (Book a meeting, Borrow
+// Fume's people, Customer service; on a phone this menu is where they are); the agency demo's sign-ins (FLOWS §24.8);
+// the shape of one place in a sidebar (NavItem); and the agency's bell. The sidebar itself is StaffSidebar.tsx.
 import {
   Avatar,
   Button,
@@ -40,10 +34,10 @@ export interface NavItem {
   end?: boolean;
   count?: number;
   /** Older or deeper addresses that live inside this place, so their pages light it up. A star stands for one segment
-   *  of the address (round 13). */
+   *  of the address. */
   holds?: string[];
-  /** Addresses under this place that belong to another place, so they never light this one (round 13: a campaign's
-   *  review lights Review, not Campaigns). "*" stands for one segment. */
+  /** Addresses under this place that belong to another place, so they never light this one (a campaign's review lights
+   *  Review, not Campaigns). "*" stands for one segment. */
   except?: string[];
   /** The link's name when its words alone repeat in the sidebar ("Campaigns, LYSNE" under a client in the list). */
   name?: string;
@@ -83,8 +77,7 @@ export function AgencyDemoSignIns() {
 
 /**
  * The agency person: at the foot of the sidebar on a desk, under the avatar in the app bar on a phone. The agency's
- * Settings (and, for the lead, Licence and usage), the demo switch between A and B, the demo's people and Sign out
- * (which in the agency demo signs in as Nora again).
+ * Settings, help from Fume, the demo's people and Sign out (which in the agency demo signs in as Nora again).
  */
 export function AgencyPersonMenu({ avatar }: { avatar?: boolean }) {
   const session = useSession().data!;
@@ -144,19 +137,37 @@ export function AgencyPersonMenu({ avatar }: { avatar?: boolean }) {
   );
 }
 
-// ─── The agency's bell (round 13, robot note 10-agency) ─────────────────────
+// ─── The agency's bell ──────────────────────────────────────────────────────
 
-const needKinds: Record<AgencyNeed["kind"], WaitingKind[]> = { plan: ["plan"], check: ["creatives"], brief: ["brief"], products: ["products"], brand: ["brand"], client_changes: [] };
+const needKinds: Record<AgencyNeed["kind"], WaitingKind[]> = {
+  plan: ["plan"],
+  check: ["creatives"],
+  brief: ["brief"],
+  products: ["products"],
+  brand: ["brand"],
+  client_changes: [],
+};
 /** The campaign a Needs-you row is about: "/campaigns/c-winter/plan", "…/qa?campaign=c-autumn". */
-const needCampaign = (href: string) => /\/campaigns\/([^/?#]+)/.exec(href)?.[1] ?? /[?&]campaign=([^&#]+)/.exec(href)?.[1];
+const needCampaign = (href: string) =>
+  /\/campaigns\/([^/?#]+)/.exec(href)?.[1] ?? /[?&]campaign=([^&#]+)/.exec(href)?.[1];
 
 /**
- * The agency's bell is the same under All clients and inside any client (the robot saw 2 and 3): a notification is
- * read when it was read, or when the agency's Needs you (every client) already asks what it asks. The customer's rule
- * (shell/notifications.ts) read the session's one brand, so the number changed with the client.
+ * The agency's bell is the same under All clients and inside any client: a notification is read when it was read, or
+ * when the agency's Needs you (every client) already asks what it asks. The customer's rule (shell/notifications.ts)
+ * reads the session's one brand, so its number would change with the client.
  */
-export function agencyBell(items: NotificationData[], raw: Notification[] | undefined, needs: AgencyNeed[]): { items: NotificationData[]; unread: number } {
-  const keys = new Set(homeKeys(needs.map((n) => ({ kind: needKinds[n.kind][0] ?? "draft", campaignId: needCampaign(n.href) })).filter((r) => r.kind !== "draft")));
+export function agencyBell(
+  items: NotificationData[],
+  raw: Notification[] | undefined,
+  needs: AgencyNeed[],
+): { items: NotificationData[]; unread: number } {
+  const keys = new Set(
+    homeKeys(
+      needs
+        .map((n) => ({ kind: needKinds[n.kind][0] ?? "draft", campaignId: needCampaign(n.href) }))
+        .filter((r) => r.kind !== "draft"),
+    ),
+  );
   const read = new Map((raw ?? []).map((n) => [n.id, n.read]));
   const shown = items.map((n) => {
     const unread = read.get(n.id) === false && !isOnHome(n.kind, keys, n.href);

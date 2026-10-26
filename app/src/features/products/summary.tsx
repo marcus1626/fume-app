@@ -1,6 +1,6 @@
-// The product's spec in a narrow panel, read only (round 6): for the Studio's Specs, under the product picker.
-// Fume's people see what the customer holds (fidelity, measures, parts with their finishes, the label lines) and
-// keep the Studio's own "change for this creative" on the Product Truth lines. One line to wire it in Specs.tsx:
+// The product's spec in a narrow panel, read only: for the Studio's Specs, under the product picker. Fume's people see
+// what the customer holds (fidelity, measures, parts with their finishes, the label lines) and keep the Studio's own
+// "change for this creative" on the Product Truth lines. One line to wire it in Specs.tsx:
 //   {specs.productId && <ProductSpecSummary productId={specs.productId} />}
 import { Progress } from "@fume/ui";
 import { useProduct, useProductKinds } from "../../api/hooks";
@@ -13,7 +13,9 @@ export function ProductSpecSummary({ productId }: { productId: string }) {
   const kind = kinds?.find((k) => k.id === product?.kindId);
   if (!product || !kind) return null;
   const fid = fidelity(product, kind);
-  const fields = kind.groups.filter((g) => ["size", "materials", "construction", "formula", "label"].includes(g.id)).flatMap((g) => g.fields);
+  const fields = kind.groups
+    .filter((g) => ["size", "materials", "construction", "formula", "label"].includes(g.id))
+    .flatMap((g) => g.fields);
   const rows = fields.map((f) => ({ f, e: product.specs?.find((s) => s.fieldId === f.id) })).filter((x) => x.e);
   return (
     <div className="ui-pspec-group" aria-label={`${product.name}: product spec`}>

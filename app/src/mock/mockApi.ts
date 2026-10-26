@@ -47,7 +47,20 @@ import { r13AgencyApi } from "./r13-agency";
 import { r13ChatApi } from "./r13-chat";
 import { sendHeld, unsentByFume } from "./r13-studio";
 import { v8Api, v8Db } from "./mockV8";
-import { audienceIn, audienceWords, campaignName, dateOptions, dayIn, messageOptions, messageQuestion, objectiveOf, occasionOf, productQuestion, productsNamed, sameCampaign } from "./fumeBrief";
+import {
+  audienceIn,
+  audienceWords,
+  campaignName,
+  dateOptions,
+  dayIn,
+  messageOptions,
+  messageQuestion,
+  objectiveOf,
+  occasionOf,
+  productQuestion,
+  productsNamed,
+  sameCampaign,
+} from "./fumeBrief";
 import { keepQuestions, openQuestion, seedQuestions, settleQuestions } from "./questions";
 
 const clone = <T>(value: T): T => structuredClone(value);
@@ -69,18 +82,38 @@ interface BriefQuestion {
 }
 const briefQuestions: BriefQuestion[] = [
   {
-    key: "market", missing: "Which market it is for", text: "Which market is this for? It decides the language and the claims we can use.",
-    question: "Which market is this for?", why: "It decides the language and the claims we can use.", options: ["Norway", "Sweden", "The Nordics"],
-    fill: (answer, c) => Object.assign(c, { market: answer, language: /swed|sver/i.test(answer) ? "Swedish" : /nordic|norden/i.test(answer) ? "Norwegian and Swedish" : "Norwegian" }),
+    key: "market",
+    missing: "Which market it is for",
+    text: "Which market is this for? It decides the language and the claims we can use.",
+    question: "Which market is this for?",
+    why: "It decides the language and the claims we can use.",
+    options: ["Norway", "Sweden", "The Nordics"],
+    fill: (answer, c) =>
+      Object.assign(c, {
+        market: answer,
+        language: /swed|sver/i.test(answer)
+          ? "Swedish"
+          : /nordic|norden/i.test(answer)
+            ? "Norwegian and Swedish"
+            : "Norwegian",
+      }),
   },
   {
-    key: "audience", missing: "Who it should reach", text: "Who should it reach?",
-    question: "Who should it reach?", why: "It decides the tone, and whether we show the product new or as an old friend.", options: ["Existing customers", "New customers", "Both"],
+    key: "audience",
+    missing: "Who it should reach",
+    text: "Who should it reach?",
+    question: "Who should it reach?",
+    why: "It decides the tone, and whether we show the product new or as an old friend.",
+    options: ["Existing customers", "New customers", "Both"],
     fill: (answer, _c, b) => Object.assign(b, { audience: audienceWords(answer) }),
   },
   {
-    key: "date", missing: "When it goes live", text: "When should it go live?",
-    question: "When should it go live?", why: "We plan the work back from that day and tell you if your package needs longer.", options: ["In two weeks", "In a month", "No fixed date"],
+    key: "date",
+    missing: "When it goes live",
+    text: "When should it go live?",
+    question: "When should it go live?",
+    why: "We plan the work back from that day and tell you if your package needs longer.",
+    options: ["In two weeks", "In a month", "No fixed date"],
     fill: (answer, c) => {
       // Round 8 (TASK-8): a day in words ("From 1 Dec", "15. november") is that day.
       const day = dayIn(answer, c.createdAt);
@@ -91,8 +124,12 @@ const briefQuestions: BriefQuestion[] = [
   },
   {
     // Round 8 (TASK-2): the message is asked last, so a chat brief passes the same briefGaps rule as the form.
-    key: "message", missing: messageQuestion.missing, text: messageQuestion.text,
-    question: messageQuestion.question, why: messageQuestion.why, options: [],
+    key: "message",
+    missing: messageQuestion.missing,
+    text: messageQuestion.text,
+    question: messageQuestion.question,
+    why: messageQuestion.why,
+    options: [],
     fill: (answer, _c, b) => Object.assign(b, { message: answer.trim().replace(/^[“"]|[”"]$/g, "") }),
   },
 ];
@@ -100,7 +137,10 @@ const briefQuestions: BriefQuestion[] = [
 /** Round 8 (CHAT): a question as the card Fume shows; the product question carries the products she named. */
 function questionCard(q: BriefQuestion): Message["card"] {
   const card: ProductQuestionCard = {
-    kind: "question", question: q.question, why: q.why, options: q.options,
+    kind: "question",
+    question: q.question,
+    why: q.why,
+    options: q.options,
     ...(q.productIds ? { productIds: q.productIds } : {}),
     ...(q.named?.length ? { named: q.named } : {}),
   };
@@ -166,7 +206,14 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
   if (options.agency) agencyWorld(db as unknown as Parameters<typeof agencyWorld>[0]); // round 11: Brygga Studio's world
 
   if (options.fresh) {
-    db.brandDna = { ...db.brandDna, version: 0, state: "draft", approvedBy: undefined, approvedAt: undefined, completeness: 0.2 };
+    db.brandDna = {
+      ...db.brandDna,
+      version: 0,
+      state: "draft",
+      approvedBy: undefined,
+      approvedAt: undefined,
+      completeness: 0.2,
+    };
     db.campaigns = [];
     db.deliveries = [];
     db.notifications = [];
@@ -195,7 +242,12 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
       testDirections: db.understanding.testDirections.map(({ verdict: _verdict, reason: _reason, ...d }) => d),
     };
     db.tastePairs = db.tastePairs.map(({ chosen: _chosen, reason: _reason, ...t }) => t);
-    db.tasteState = { ...db.tasteState, answered: 0, lastLesson: undefined, confidence: { light: 0, colour: 0, people: 0, composition: 0, styling: 0 } };
+    db.tasteState = {
+      ...db.tasteState,
+      answered: 0,
+      lastLesson: undefined,
+      confidence: { light: 0, colour: 0, people: 0, composition: 0, styling: 0 },
+    };
     db.memory = [];
     db.references = [];
     db.ratings = [];
@@ -249,7 +301,8 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
 
   const me = () => db.users.find((u) => u.id === userId)!;
   const isStaff = () => Boolean(me().staffRole);
-  const role = (): CustomerRole | null => db.memberships.find((m) => m.userId === userId && m.workspaceId === workspaceId)?.role ?? null;
+  const role = (): CustomerRole | null =>
+    db.memberships.find((m) => m.userId === userId && m.workspaceId === workspaceId)?.role ?? null;
   const user = (id: Id): User => {
     const found = db.users.find((u) => u.id === id);
     if (!found) throw new FumeError("not_found", `No person ${id}`);
@@ -275,7 +328,10 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
   const visible = (c: Creative) =>
     isStaff() ||
     ["approved", "delivered", "changes_requested"].includes(c.current.state) ||
-    (c.current.state === "checked" && campaignOf(c.campaignId).state !== "in_production" && !unsentToClient(db as never, c) && !unsentByFume(c)); // round 12 AGENCY: an agency's client sees what it sent; round 13: and Fume's held checks wait for the send
+    (c.current.state === "checked" &&
+      campaignOf(c.campaignId).state !== "in_production" &&
+      !unsentToClient(db as never, c) &&
+      !unsentByFume(c)); // round 12 AGENCY: an agency's client sees what it sent; round 13: and Fume's held checks wait for the send
 
   function recount(campaign: Campaign) {
     const list = db.creatives.filter((c) => c.campaignId === campaign.id);
@@ -287,7 +343,12 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
       approved: n("approved", "delivered"),
       delivered: n("delivered"),
     };
-    if (campaign.counts.creatives > 0 && campaign.counts.approved === campaign.counts.creatives && campaign.state === "in_review") campaign.state = "approved";
+    if (
+      campaign.counts.creatives > 0 &&
+      campaign.counts.approved === campaign.counts.creatives &&
+      campaign.state === "in_review"
+    )
+      campaign.state = "approved";
     campaign.updatedAt = now();
     emit({ type: "campaign.state", campaign });
   }
@@ -332,56 +393,82 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
   // The expert's own checks; an operator or admin sees every open check in the workspaces they are on.
   const openChecks = () =>
     db.checks
-      .filter((c) => (me().staffRole === "expert" ? c.expertId === userId : db.staff.some((s) => s.userId === userId && s.workspaceId === c.workspaceId) || me().staffRole === "admin"))
+      .filter((c) =>
+        me().staffRole === "expert"
+          ? c.expertId === userId
+          : db.staff.some((s) => s.userId === userId && s.workspaceId === c.workspaceId) || me().staffRole === "admin",
+      )
       .filter((c) => c.state !== "checked")
       .sort((a, b) => a.dueAt.localeCompare(b.dueAt) || (a.risk === "high" ? -1 : 1));
 
   const queueItems = (): QueueItem[] =>
-    openChecks().map((check) => ({ check, creative: find(db.creatives, check.creativeId, "creative"), campaign: campaignOf(check.campaignId), workspace: find(db.workspaces, check.workspaceId, "workspace") }));
+    openChecks().map((check) => ({
+      check,
+      creative: find(db.creatives, check.creativeId, "creative"),
+      campaign: campaignOf(check.campaignId),
+      workspace: find(db.workspaces, check.workspaceId, "workspace"),
+    }));
   // Round 12 NUMBERS (DLOAD-2): every campaign, done ones too (Spring relaunch was missing), with who approves it.
   const studioRows = () =>
-        db.campaigns
-          .map((campaign) => ({
-            campaign,
-            workspace: find(db.workspaces, campaign.workspaceId, "workspace"),
-            clock: db.clocks.find((k) => k.campaignId === campaign.id),
-            expert: db.staff.filter((s) => s.workspaceId === campaign.workspaceId && s.staffRole === "expert").map((s) => user(s.userId))[0],
-            operator: db.staff.filter((s) => s.workspaceId === campaign.workspaceId && s.staffRole === "operator").map((s) => user(s.userId))[0],
-            readyToRelease: db.creatives.filter((cr) => cr.campaignId === campaign.id && cr.current.state === "checked").length,
-            approver: db.users.find((u) => u.id === campaign.approverId),
-          }));
+    db.campaigns.map((campaign) => ({
+      campaign,
+      workspace: find(db.workspaces, campaign.workspaceId, "workspace"),
+      clock: db.clocks.find((k) => k.campaignId === campaign.id),
+      expert: db.staff
+        .filter((s) => s.workspaceId === campaign.workspaceId && s.staffRole === "expert")
+        .map((s) => user(s.userId))[0],
+      operator: db.staff
+        .filter((s) => s.workspaceId === campaign.workspaceId && s.staffRole === "operator")
+        .map((s) => user(s.userId))[0],
+      readyToRelease: db.creatives.filter((cr) => cr.campaignId === campaign.id && cr.current.state === "checked")
+        .length,
+      approver: db.users.find((u) => u.id === campaign.approverId),
+    }));
   // Round 12 NUMBERS (DLOAD-20, DTASK-7): an admin follows and checks nothing, so carries no load and no capacity; only
   // an expert checks. Each row says the brands and what the person does now, from the same QA items the Check page lists.
   const teamRows = () =>
-        db.users
-          .filter((u) => u.staffRole)
-          .map((u) => {
-            const brandIds = [...new Set(db.staff.filter((s) => s.userId === u.id).map((s) => s.workspaceId))];
-            const brandNames = brandIds.map((id) => db.workspaces.find((w) => w.id === id)?.brandName).filter(Boolean).join(", ");
-            const follows = u.staffRole === "admin";
-            const expert = u.staffRole === "expert";
-            const toCheck = db.qaItems.filter((q) => brandIds.includes(q.workspaceId) && q.state === "waiting").length;
-            const plans = db.plans.filter((p) => p.state === "in_check" && brandIds.includes(db.campaigns.find((c) => c.id === p.campaignId)?.workspaceId ?? "")).length;
-            const live = db.campaigns.filter((c) => brandIds.includes(c.workspaceId) && !["approved", "delivered", "closed"].includes(c.state)).length;
-            const doing = follows
-              ? "Usage and quality, every brand"
-              : [
-                  expert && toCheck ? `${toCheck} ${toCheck === 1 ? "creative" : "creatives"} to check` : "",
-                  expert && plans ? `${plans} ${plans === 1 ? "plan" : "plans"} to check` : "",
-                  !expert && live ? `${live} ${live === 1 ? "campaign" : "campaigns"} under way` : "",
-                  brandNames,
-                ].filter(Boolean).join(" · ") || "Nothing assigned";
-            return {
-              user: u,
-              load: follows ? 0 : brandIds.length * 1.5,
-              capacity: follows ? 0 : 4,
-              checksToday: expert ? db.checks.filter((c) => c.expertId === u.id && c.state === "checked").length + (u.id === "u-anna" ? 6 : 2) : 0,
-              minutesPerCheck: u.id === "u-anna" ? 4 : 6,
-              brandIds,
-              doing,
-              follows,
-            };
-          });
+    db.users
+      .filter((u) => u.staffRole)
+      .map((u) => {
+        const brandIds = [...new Set(db.staff.filter((s) => s.userId === u.id).map((s) => s.workspaceId))];
+        const brandNames = brandIds
+          .map((id) => db.workspaces.find((w) => w.id === id)?.brandName)
+          .filter(Boolean)
+          .join(", ");
+        const follows = u.staffRole === "admin";
+        const expert = u.staffRole === "expert";
+        const toCheck = db.qaItems.filter((q) => brandIds.includes(q.workspaceId) && q.state === "waiting").length;
+        const plans = db.plans.filter(
+          (p) =>
+            p.state === "in_check" &&
+            brandIds.includes(db.campaigns.find((c) => c.id === p.campaignId)?.workspaceId ?? ""),
+        ).length;
+        const live = db.campaigns.filter(
+          (c) => brandIds.includes(c.workspaceId) && !["approved", "delivered", "closed"].includes(c.state),
+        ).length;
+        const doing = follows
+          ? "Usage and quality, every brand"
+          : [
+              expert && toCheck ? `${toCheck} ${toCheck === 1 ? "creative" : "creatives"} to check` : "",
+              expert && plans ? `${plans} ${plans === 1 ? "plan" : "plans"} to check` : "",
+              !expert && live ? `${live} ${live === 1 ? "campaign" : "campaigns"} under way` : "",
+              brandNames,
+            ]
+              .filter(Boolean)
+              .join(" · ") || "Nothing assigned";
+        return {
+          user: u,
+          load: follows ? 0 : brandIds.length * 1.5,
+          capacity: follows ? 0 : 4,
+          checksToday: expert
+            ? db.checks.filter((c) => c.expertId === u.id && c.state === "checked").length + (u.id === "u-anna" ? 6 : 2)
+            : 0,
+          minutesPerCheck: u.id === "u-anna" ? 4 : 6,
+          brandIds,
+          doing,
+          follows,
+        };
+      });
 
   // A simulated Engine: the running run makes one more creative every few seconds, and finishes.
   const tick = setInterval(() => {
@@ -403,7 +490,9 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
           const gate = run.steps.find((s) => s.state === "waiting");
           if (gate) gate.state = "active";
           run.state = "done";
-          db.directions.filter((d) => d.campaignId === run.campaignId && d.state === "making").forEach((d) => (d.state = "in_check"));
+          db.directions
+            .filter((d) => d.campaignId === run.campaignId && d.state === "making")
+            .forEach((d) => (d.state = "in_check"));
         }
         emit({ type: "run.progress", run });
       }
@@ -451,13 +540,26 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
 
   /** Round 13 CHAT (r13-chat.ts): meeting topics, the plan changed in the chat; its wraps read the calls as they were before. */
   let beforeR13Chat: FumeApi | undefined;
-  const r13chat = r13ChatApi({ db, wait, now, nextId, emit, say, latency, userId: () => userId, workspaceId: () => workspaceId, base: () => beforeR13Chat! });
+  const r13chat = r13ChatApi({
+    db,
+    wait,
+    now,
+    nextId,
+    emit,
+    say,
+    latency,
+    userId: () => userId,
+    workspaceId: () => workspaceId,
+    base: () => beforeR13Chat!,
+  });
 
   const api: FumeApi = {
     async session(): Promise<Session> {
       const workspace = find(db.workspaces, workspaceId, "workspace");
       const visibleWorkspaces = isStaff()
-        ? db.workspaces.filter((w) => me().staffRole === "admin" || db.staff.some((s) => s.userId === userId && s.workspaceId === w.id))
+        ? db.workspaces.filter(
+            (w) => me().staffRole === "admin" || db.staff.some((s) => s.userId === userId && s.workspaceId === w.id),
+          )
         : db.workspaces.filter((w) => db.memberships.some((m) => m.userId === userId && m.workspaceId === w.id));
       return wait({
         user: me(),
@@ -482,29 +584,99 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
         const brief = db.briefs.find((b) => b.campaignId === c.id);
         if (c.state === "awaiting_input") {
           const thread = db.threads.find((t) => t.campaignId === c.id);
-          waitingOnYou.push({ id: `w-${c.id}`, kind: "question", campaignId: c.id, title: c.name, detail: brief?.missing[0] ? `Fume needs ${brief.missing[0].charAt(0).toLowerCase()}${brief.missing[0].slice(1)}` : "Fume has a question", href: openQuestion(questions, c.id)?.href ?? `/fume/${thread?.id ?? "t-general"}` });
+          waitingOnYou.push({
+            id: `w-${c.id}`,
+            kind: "question",
+            campaignId: c.id,
+            title: c.name,
+            detail: brief?.missing[0]
+              ? `Fume needs ${brief.missing[0].charAt(0).toLowerCase()}${brief.missing[0].slice(1)}`
+              : "Fume has a question",
+            href: openQuestion(questions, c.id)?.href ?? `/fume/${thread?.id ?? "t-general"}`,
+          });
         }
-        if (brief?.state === "ready") waitingOnYou.push({ id: `wb-${c.id}`, kind: "brief", campaignId: c.id, title: c.name, detail: "Your brief is ready to send", href: `/campaigns/${c.id}/plan` });
+        if (brief?.state === "ready")
+          waitingOnYou.push({
+            id: `wb-${c.id}`,
+            kind: "brief",
+            campaignId: c.id,
+            title: c.name,
+            detail: "Your brief is ready to send",
+            href: `/campaigns/${c.id}/plan`,
+          });
         // Round 10: the plan, checked and ready, waits on her before the Engine makes anything.
-        if (c.stage === "plan" && db.plans.some((p) => p.campaignId === c.id && p.state === "ready")) waitingOnYou.push({ id: `wpl-${c.id}`, kind: "plan", campaignId: c.id, title: c.name, detail: "The plan is ready. Approve it and Fume starts.", href: `/campaigns/${c.id}/plan` });
-        if (db.directions.some((d) => d.campaignId === c.id && d.state === "proposed")) waitingOnYou.push({ id: `wd-${c.id}`, kind: "directions", campaignId: c.id, title: c.name, detail: "Three directions are ready. Pick one to take forward.", href: `/campaigns/${c.id}/review` });
-        if (c.counts.checked > 0 && c.state !== "in_production") waitingOnYou.push({ id: `wc-${c.id}`, kind: "creatives", campaignId: c.id, title: c.name, detail: `${c.counts.checked} checked creatives are ready for you`, count: c.counts.checked, dueAt: c.dueAt, href: `/campaigns/${c.id}/review` });
+        if (c.stage === "plan" && db.plans.some((p) => p.campaignId === c.id && p.state === "ready"))
+          waitingOnYou.push({
+            id: `wpl-${c.id}`,
+            kind: "plan",
+            campaignId: c.id,
+            title: c.name,
+            detail: "The plan is ready. Approve it and Fume starts.",
+            href: `/campaigns/${c.id}/plan`,
+          });
+        if (db.directions.some((d) => d.campaignId === c.id && d.state === "proposed"))
+          waitingOnYou.push({
+            id: `wd-${c.id}`,
+            kind: "directions",
+            campaignId: c.id,
+            title: c.name,
+            detail: "Three directions are ready. Pick one to take forward.",
+            href: `/campaigns/${c.id}/review`,
+          });
+        if (c.counts.checked > 0 && c.state !== "in_production")
+          waitingOnYou.push({
+            id: `wc-${c.id}`,
+            kind: "creatives",
+            campaignId: c.id,
+            title: c.name,
+            detail: `${c.counts.checked} checked creatives are ready for you`,
+            count: c.counts.checked,
+            dueAt: c.dueAt,
+            href: `/campaigns/${c.id}/review`,
+          });
       }
       for (const p of inWorkspace(db.products).filter((p) => p.state === "needs_you")) {
-        waitingOnYou.push({ id: `wp-${p.id}`, kind: "product", title: `${p.name} ${p.variant}`, detail: "Confirm what Fume read about this product", href: `/brand/products/${p.id}` });
+        waitingOnYou.push({
+          id: `wp-${p.id}`,
+          kind: "product",
+          title: `${p.name} ${p.variant}`,
+          detail: "Confirm what Fume read about this product",
+          href: `/brand/products/${p.id}`,
+        });
       }
       return wait({
         waitingOnYou,
         inProduction: campaigns
-          .filter((c) => ["scoped", "in_production", "revision"].includes(c.state) || (c.state === "in_review" && c.counts.inCheck > 0))
-          .map((campaign) => ({ campaign, run: db.runs.find((r) => r.campaignId === campaign.id && r.state !== "done") ?? db.runs.find((r) => r.campaignId === campaign.id), clock: db.clocks.find((k) => k.campaignId === campaign.id) })),
-        fumeNeeds: db.understanding.unknowns.filter((u) => !u.answer).map((u) => ({ id: u.id, text: u.question, href: "/brand" })),
-        recentlyApproved: db.creatives.filter((c) => campaigns.some((k) => k.id === c.campaignId) && c.current.state === "approved").slice(0, 4),
+          .filter(
+            (c) =>
+              ["scoped", "in_production", "revision"].includes(c.state) ||
+              (c.state === "in_review" && c.counts.inCheck > 0),
+          )
+          .map((campaign) => ({
+            campaign,
+            run:
+              db.runs.find((r) => r.campaignId === campaign.id && r.state !== "done") ??
+              db.runs.find((r) => r.campaignId === campaign.id),
+            clock: db.clocks.find((k) => k.campaignId === campaign.id),
+          })),
+        fumeNeeds: db.understanding.unknowns
+          .filter((u) => !u.answer)
+          .map((u) => ({ id: u.id, text: u.question, href: "/brand" })),
+        recentlyApproved: db.creatives
+          .filter((c) => campaigns.some((k) => k.id === c.campaignId) && c.current.state === "approved")
+          .slice(0, 4),
         deliveries: db.deliveries.filter((d) => campaigns.some((k) => k.id === d.campaignId)),
         learned: db.memory.slice(-3).reverse(),
         usage: {
-          creativesUsed: campaigns.filter((c) => !["delivered", "closed"].includes(c.state)).reduce((n, c) => n + c.counts.creatives, 0),
-          creativeCap: find(db.packages, find(db.organisations, find(db.workspaces, workspaceId, "workspace").organisationId, "organisation").packageId, "package").creativeCap,
+          creativesUsed: campaigns
+            .filter((c) => !["delivered", "closed"].includes(c.state))
+            .reduce((n, c) => n + c.counts.creatives, 0),
+          creativeCap: find(
+            db.packages,
+            find(db.organisations, find(db.workspaces, workspaceId, "workspace").organisationId, "organisation")
+              .packageId,
+            "package",
+          ).creativeCap,
           campaignsActive: campaigns.filter((c) => !["delivered", "closed"].includes(c.state)).length,
           periodEndsAt: seed.inDays(17),
         },
@@ -513,7 +685,16 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
 
     // ── Brand DNA ──
     async brandDna() {
-      return wait({ dna: db.brandDna, rules: db.rules, products: inWorkspace(db.products), references: db.references, tastePairs: db.tastePairs, memory: db.memory, assets: db.assets, understanding: db.understanding });
+      return wait({
+        dna: db.brandDna,
+        rules: db.rules,
+        products: inWorkspace(db.products),
+        references: db.references,
+        tastePairs: db.tastePairs,
+        memory: db.memory,
+        assets: db.assets,
+        understanding: db.understanding,
+      });
     },
     async updateRule(rule) {
       const i = db.rules.findIndex((r) => r.id === rule.id);
@@ -551,7 +732,15 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
       return wait(p);
     },
     async addProduct(input) {
-      const p = { id: nextId("pr"), workspaceId, name: input.name, variant: input.variant, state: "needs_you" as const, images: [], facts: [] };
+      const p = {
+        id: nextId("pr"),
+        workspaceId,
+        name: input.name,
+        variant: input.variant,
+        state: "needs_you" as const,
+        images: [],
+        facts: [],
+      };
       db.products.push(p);
       return wait(p);
     },
@@ -568,12 +757,21 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
     async answerUnderstanding(input) {
       const u = db.understanding;
       if (input.unknownId) Object.assign(find(u.unknowns, input.unknownId, "question"), { answer: input.answer });
-      if (input.directionId) Object.assign(find(u.testDirections, input.directionId, "direction"), { verdict: input.verdict, reason: input.reason });
+      if (input.directionId)
+        Object.assign(find(u.testDirections, input.directionId, "direction"), {
+          verdict: input.verdict,
+          reason: input.reason,
+        });
       return wait(u);
     },
     async approveBrandDna() {
       mustApprove();
-      Object.assign(db.brandDna, { state: "approved", version: db.brandDna.version + 1, approvedBy: userId, approvedAt: now() });
+      Object.assign(db.brandDna, {
+        state: "approved",
+        version: db.brandDna.version + 1,
+        approvedBy: userId,
+        approvedAt: now(),
+      });
       return wait(db.brandDna);
     },
     async uploadSourceAssets(files) {
@@ -591,11 +789,27 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
     },
     async campaign(id) {
       const campaign = campaignOf(id);
-      const brief = db.briefs.find((b) => b.campaignId === id) ?? { campaignId: id, version: 1, state: "drafting" as const, objective: "", audience: "", message: "", mandatory: [], never: [], channels: [], formats: [], creatives: 0, references: [], missing: [] };
+      const brief = db.briefs.find((b) => b.campaignId === id) ?? {
+        campaignId: id,
+        version: 1,
+        state: "drafting" as const,
+        objective: "",
+        audience: "",
+        message: "",
+        mandatory: [],
+        never: [],
+        channels: [],
+        formats: [],
+        creatives: 0,
+        references: [],
+        missing: [],
+      };
       return wait({
         campaign,
         brief,
-        directions: db.directions.filter((d) => d.campaignId === id && (isStaff() || !["making", "in_check"].includes(d.state))),
+        directions: db.directions.filter(
+          (d) => d.campaignId === id && (isStaff() || !["making", "in_check"].includes(d.state)),
+        ),
         creatives: db.creatives.filter((c) => c.campaignId === id && visible(c)),
         runs: db.runs.filter((r) => r.campaignId === id),
         clock: db.clocks.find((k) => k.campaignId === id),
@@ -618,15 +832,32 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
       const waiting = said_.filter((p) => p.state !== "verified");
       const occasion = occasionOf(said);
       const name = campaignName(occasion, named);
-      const general = db.threads.find((t) => t.workspaceId === workspaceId && t.kind !== "contact" && t.campaignId === null);
+      const general = db.threads.find(
+        (t) => t.workspaceId === workspaceId && t.kind !== "contact" && t.campaignId === null,
+      );
       const same = sameCampaign(inWorkspace(db.campaigns), occasion, name);
       if (same && general && !startingAnyway) {
         // "You already have Black Friday, due 13 Nov. Add to it or start a new one?"
         say(general.id, { author: { kind: "person", userId }, text });
-        const due = same.dueAt ? `, due ${new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "Europe/Oslo" }).format(Date.parse(same.dueAt))}` : "";
+        const due = same.dueAt
+          ? `, due ${new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "Europe/Oslo" }).format(Date.parse(same.dueAt))}`
+          : "";
         const ask = "Add to it or start a new one?";
         pendingStart.set(general.id, { text, productIds: named.map((p) => p.id), campaignId: same.id });
-        setTimeout(() => say(general.id, { author: { kind: "fume" }, text: `You already have ${same.name}${due}.`, card: { kind: "question", question: ask, why: "One campaign per occasion keeps the brief, the creatives and the deliveries together.", options: [`Add to ${same.name}`, "Start a new one"] } }), latency * 6);
+        setTimeout(
+          () =>
+            say(general.id, {
+              author: { kind: "fume" },
+              text: `You already have ${same.name}${due}.`,
+              card: {
+                kind: "question",
+                question: ask,
+                why: "One campaign per occasion keeps the brief, the creatives and the deliveries together.",
+                options: [`Add to ${same.name}`, "Start a new one"],
+              },
+            }),
+          latency * 6,
+        );
         return wait({ campaign: same, threadId: general.id });
       }
       startingAnyway = false;
@@ -639,23 +870,55 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
       ];
       const day = /\b(\d{1,2})\.?\s*(jan|feb|mar|apr|may|mai|jun|jul|aug|sep|oct|okt|nov|dec|des)/.exec(said);
       const dated = Boolean(day);
-      const month = day ? ["jan", "feb", "mar", "apr", "ma", "jun", "jul", "aug", "sep", "o", "nov", "d"].findIndex((m) => day[2].startsWith(m)) : -1;
+      const month = day
+        ? ["jan", "feb", "mar", "apr", "ma", "jun", "jul", "aug", "sep", "o", "nov", "d"].findIndex((m) =>
+            day[2].startsWith(m),
+          )
+        : -1;
       const today = new Date(now());
-      const live = day && month >= 0 ? new Date(Date.UTC(today.getUTCFullYear() + (month < today.getUTCMonth() ? 1 : 0), month, +day[1], 15)).toISOString() : undefined;
-      const workspace = db.workspaces.find((w) => w.id === workspaceId) as { market?: string; language?: string } | undefined;
+      const live =
+        day && month >= 0
+          ? new Date(
+              Date.UTC(today.getUTCFullYear() + (month < today.getUTCMonth() ? 1 : 0), month, +day[1], 15),
+            ).toISOString()
+          : undefined;
+      const workspace = db.workspaces.find((w) => w.id === workspaceId) as
+        { market?: string; language?: string } | undefined;
       const campaign: Campaign = {
-        id, workspaceId, name, productIds: products, state: "draft", stage: "brief", approverId: role() === "owner" || role() === "approver" ? userId : "u-maja",
-        channels: channels.length ? channels : ["paid_social"], formats: ["feed", "story"], market: workspace?.market ?? "Norway", language: workspace?.language ?? "Norwegian", dueAt: live, createdBy: userId, createdAt: now(), updatedAt: now(),
-        counts: { creatives: 0, inCheck: 0, checked: 0, approved: 0, delivered: 0 }, roundsUsed: 0, roundsIncluded: 2, brandDnaVersion: db.brandDna.version,
+        id,
+        workspaceId,
+        name,
+        productIds: products,
+        state: "draft",
+        stage: "brief",
+        approverId: role() === "owner" || role() === "approver" ? userId : "u-maja",
+        channels: channels.length ? channels : ["paid_social"],
+        formats: ["feed", "story"],
+        market: workspace?.market ?? "Norway",
+        language: workspace?.language ?? "Norwegian",
+        dueAt: live,
+        createdBy: userId,
+        createdAt: now(),
+        updatedAt: now(),
+        counts: { creatives: 0, inCheck: 0, checked: 0, approved: 0, delivered: 0 },
+        roundsUsed: 0,
+        roundsIncluded: 2,
+        brandDnaVersion: db.brandDna.version,
       };
       db.campaigns.push(campaign);
       const threadId = nextId("t");
       // No product named: Fume asks with the grid first; the answer names the campaign and writes its objective.
       const ask: BriefQuestion = {
-        key: "product", missing: productQuestion.missing,
+        key: "product",
+        missing: productQuestion.missing,
         // Round 8 (CHAT, TASK-10): no "facts", and the way on is named; confirming what she named answers it (TASK-1).
         // Round 9 (CHAT, DLOAD-1): "check" is the expert's word; she confirms.
-        text: waiting.length ? `${waiting.map((p) => p.name).join(" and ")} ${waiting.length === 1 ? "is" : "are"} not confirmed yet, so we cannot make ${waiting.length === 1 ? "it" : "them"}. Confirm ${waiting.length === 1 ? "its" : "their"} details now, or tick a product that is ready.` : productQuestion.text, question: productQuestion.question, why: productQuestion.why, options: [],
+        text: waiting.length
+          ? `${waiting.map((p) => p.name).join(" and ")} ${waiting.length === 1 ? "is" : "are"} not confirmed yet, so we cannot make ${waiting.length === 1 ? "it" : "them"}. Confirm ${waiting.length === 1 ? "its" : "their"} details now, or tick a product that is ready.`
+          : productQuestion.text,
+        question: productQuestion.question,
+        why: productQuestion.why,
+        options: [],
         productIds: [...waiting, ...mine.filter((p) => !waiting.includes(p))].map((p) => p.id),
         named: waiting.map((p) => p.id),
         fill: (answer, c, brief) => {
@@ -670,19 +933,45 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
       // Round 8 (CHAT, TASK-8): the audience she wrote is not asked again; the dates fit the occasion; the message is
       // asked last with Fume's suggestion and the brand's last approved line as the pills (TASK-2).
       const heard = audienceIn(said);
-      const lastMessage = inWorkspace(db.campaigns).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)).map((c) => db.briefs.find((b) => b.campaignId === c.id && b.state === "approved" && b.message.trim())).find(Boolean)?.message;
-      const questions = [...(products.length ? [] : [ask]), ...briefQuestions.filter((q) => q.key !== "market" && (q.key !== "date" || !dated) && (q.key !== "audience" || !heard))].map((q) =>
-        q.key === "date" ? { ...q, ...dateOptions(occasion) } : q.key === "message" ? { ...q, ...messageOptions(occasion, lastMessage) } : q,
+      const lastMessage = inWorkspace(db.campaigns)
+        .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+        .map((c) => db.briefs.find((b) => b.campaignId === c.id && b.state === "approved" && b.message.trim()))
+        .find(Boolean)?.message;
+      const questions = [
+        ...(products.length ? [] : [ask]),
+        ...briefQuestions.filter(
+          (q) => q.key !== "market" && (q.key !== "date" || !dated) && (q.key !== "audience" || !heard),
+        ),
+      ].map((q) =>
+        q.key === "date"
+          ? { ...q, ...dateOptions(occasion) }
+          : q.key === "message"
+            ? { ...q, ...messageOptions(occasion, lastMessage) }
+            : q,
       );
       db.briefs.push({
-        campaignId: id, version: 1, state: "drafting", objective: objectiveOf(occasion, named, campaign.channels), audience: heard ?? "", message: "", mandatory: [], never: [],
-        channels: campaign.channels, formats: campaign.formats, creatives: 0, references: [], missing: questions.map((q) => q.missing),
+        campaignId: id,
+        version: 1,
+        state: "drafting",
+        objective: objectiveOf(occasion, named, campaign.channels),
+        audience: heard ?? "",
+        message: "",
+        mandatory: [],
+        never: [],
+        channels: campaign.channels,
+        formats: campaign.formats,
+        creatives: 0,
+        references: [],
+        missing: questions.map((q) => q.missing),
       });
       drafting.set(id, questions);
       db.threads.push({ id: threadId, workspaceId, campaignId: id, title: campaign.name, updatedAt: now(), unread: 0 });
       say(threadId, { author: { kind: "person", userId }, text });
       const first = questions[0];
-      setTimeout(() => say(threadId, { author: { kind: "fume" }, text: first.text, card: questionCard(first) }), latency * 6);
+      setTimeout(
+        () => say(threadId, { author: { kind: "fume" }, text: first.text, card: questionCard(first) }),
+        latency * 6,
+      );
       return wait({ campaign, threadId });
     },
     // approveBrief: round 10 sends the brief and starts the plan (r10-plan.ts, sendBrief).
@@ -690,13 +979,18 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
       const b = db.briefs.find((x) => x.campaignId === campaignId);
       if (!b) throw new FumeError("not_found", "No brief");
       // A line changed before approval is the same version; a change after it makes the next one (walk-through Must 12).
-      Object.assign(b, change, { version: b.state === "approved" ? b.version + 1 : b.version, state: b.missing.length ? b.state : "ready" });
+      Object.assign(b, change, {
+        version: b.state === "approved" ? b.version + 1 : b.version,
+        state: b.missing.length ? b.state : "ready",
+      });
       return wait(b);
     },
     async chooseDirection(directionId, reason) {
       mustApprove();
       const d = find(db.directions, directionId, "direction");
-      db.directions.filter((x) => x.campaignId === d.campaignId && x.id !== d.id && x.state === "proposed").forEach((x) => Object.assign(x, { state: "passed", decidedBy: userId, decidedAt: now() }));
+      db.directions
+        .filter((x) => x.campaignId === d.campaignId && x.id !== d.id && x.state === "proposed")
+        .forEach((x) => Object.assign(x, { state: "passed", decidedBy: userId, decidedAt: now() }));
       Object.assign(d, { state: "chosen", decidedBy: userId, decidedAt: now(), reason });
       const c = campaignOf(d.campaignId);
       Object.assign(c, { chosenDirectionId: d.id, stage: "masters", state: "in_production" });
@@ -720,7 +1014,11 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
     async creative(id) {
       const creative = find(db.creatives, id, "creative");
       if (!visible(creative)) throw new FumeError("not_found", "No such creative");
-      return wait({ creative, campaign: campaignOf(creative.campaignId), siblings: db.creatives.filter((c) => c.campaignId === creative.campaignId && visible(c)).map((c) => c.id) });
+      return wait({
+        creative,
+        campaign: campaignOf(creative.campaignId),
+        siblings: db.creatives.filter((c) => c.campaignId === creative.campaignId && visible(c)).map((c) => c.id),
+      });
     },
 
     // ── Review ──
@@ -728,10 +1026,15 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
       const items: ReviewItem[] = [];
       for (const campaign of myCampaigns()) {
         const directions = db.directions.filter((d) => d.campaignId === campaign.id && d.state === "proposed");
-        const creatives = db.creatives.filter((c) => c.campaignId === campaign.id && c.current.state === "checked" && visible(c));
-        if (directions.length) items.push({ campaign, kind: "directions", directions, creatives: [], dueAt: campaign.dueAt });
-        if (creatives.length) items.push({ campaign, kind: "creatives", directions: [], creatives, dueAt: campaign.dueAt });
-        if (db.briefs.find((b) => b.campaignId === campaign.id)?.state === "ready") items.push({ campaign, kind: "brief", directions: [], creatives: [] });
+        const creatives = db.creatives.filter(
+          (c) => c.campaignId === campaign.id && c.current.state === "checked" && visible(c),
+        );
+        if (directions.length)
+          items.push({ campaign, kind: "directions", directions, creatives: [], dueAt: campaign.dueAt });
+        if (creatives.length)
+          items.push({ campaign, kind: "creatives", directions: [], creatives, dueAt: campaign.dueAt });
+        if (db.briefs.find((b) => b.campaignId === campaign.id)?.state === "ready")
+          items.push({ campaign, kind: "brief", directions: [], creatives: [] });
       }
       return wait(items);
     },
@@ -747,7 +1050,16 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
       }
       const touched = new Set(versionIds.map((v) => db.creatives.find((c) => c.current.id === v)!.campaignId));
       touched.forEach((id) => recount(campaignOf(id)));
-      db.record.push({ id: nextId("e"), workspaceId, campaignId: [...touched][0], subjectId: versionIds[0], actor: { kind: "person", userId }, action: "approved", detail: `${versionIds.length} creatives approved`, at: now() });
+      db.record.push({
+        id: nextId("e"),
+        workspaceId,
+        campaignId: [...touched][0],
+        subjectId: versionIds[0],
+        actor: { kind: "person", userId },
+        action: "approved",
+        detail: `${versionIds.length} creatives approved`,
+        at: now(),
+      });
       return wait(done);
     },
     async requestChanges({ versionId, pins, tags, text }) {
@@ -756,26 +1068,56 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
       const campaign = campaignOf(c.campaignId);
       const isCorrection = tags.includes("product");
       if (!isCorrection && campaign.roundsUsed >= campaign.roundsIncluded)
-        throw new FumeError("conflict", "The rounds in your package are used for this campaign. Ask Fume for an extra round.");
+        throw new FumeError(
+          "conflict",
+          "The rounds in your package are used for this campaign. Ask Fume for an extra round.",
+        );
       if (!isCorrection) campaign.roundsUsed += 1;
       setVersion(c, { state: "changes_requested" });
-      const next: CreativeVersion = { ...c.current, id: nextId("v"), number: c.current.number + 1, state: "making", madeAt: now(), checkedAt: undefined, checkedBy: undefined };
+      const next: CreativeVersion = {
+        ...c.current,
+        id: nextId("v"),
+        number: c.current.number + 1,
+        state: "making",
+        madeAt: now(),
+        checkedAt: undefined,
+        checkedBy: undefined,
+      };
       c.versions.push(next);
       c.current = next;
       campaign.state = "revision";
       recount(campaign);
-      db.record.push({ id: nextId("e"), workspaceId, campaignId: campaign.id, subjectId: c.id, actor: { kind: "person", userId }, action: "changes_requested", detail: `${text}${pins.length ? ` (${pins.length} pins)` : ""}`, at: now() });
-      return wait({ version: next, usesRound: !isCorrection, roundsLeft: campaign.roundsIncluded - campaign.roundsUsed });
+      db.record.push({
+        id: nextId("e"),
+        workspaceId,
+        campaignId: campaign.id,
+        subjectId: c.id,
+        actor: { kind: "person", userId },
+        action: "changes_requested",
+        detail: `${text}${pins.length ? ` (${pins.length} pins)` : ""}`,
+        at: now(),
+      });
+      return wait({
+        version: next,
+        usesRound: !isCorrection,
+        roundsLeft: campaign.roundsIncluded - campaign.roundsUsed,
+      });
     },
 
     // ── Deliveries ──
     async deliveries() {
       const ids = new Set(myCampaigns().map((c) => c.id));
-      return wait(db.deliveries.filter((d) => ids.has(d.campaignId)).sort((a, b) => b.createdAt.localeCompare(a.createdAt)));
+      return wait(
+        db.deliveries.filter((d) => ids.has(d.campaignId)).sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
+      );
     },
     async delivery(id) {
       const delivery = find(db.deliveries, id, "delivery");
-      return wait({ delivery, campaign: campaignOf(delivery.campaignId), creatives: db.creatives.filter((c) => delivery.creativeIds.includes(c.id)) });
+      return wait({
+        delivery,
+        campaign: campaignOf(delivery.campaignId),
+        creatives: db.creatives.filter((c) => delivery.creativeIds.includes(c.id)),
+      });
     },
     // downloadUrl: round 9 CAMPAIGN packs one real zip (r9-campaign.ts).
     async confirmLive(id) {
@@ -795,7 +1137,11 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
     },
     async send(threadId, text, attachments) {
       const t = find(db.threads, threadId, "thread");
-      const m = say(threadId, { author: { kind: "person", userId }, text, attachments: attachments?.map((a) => ({ id: nextId("att"), kind: "document" as const, ...a })) });
+      const m = say(threadId, {
+        author: { kind: "person", userId },
+        text,
+        attachments: attachments?.map((a) => ({ id: nextId("att"), kind: "document" as const, ...a })),
+      });
       t.updatedAt = m.at;
       // v2: the Contact thread is people; Fume (AI) never answers there (FLOWS §1.2).
       if (t.kind === "contact") return wait(m);
@@ -809,20 +1155,35 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
           setTimeout(() => void api.startCampaign({ text: pending.text, productIds: pending.productIds }), latency * 4);
           return wait(m);
         }
-        const added = db.products.filter((p) => pending.productIds.includes(p.id) && !existing.productIds.includes(p.id));
+        const added = db.products.filter(
+          (p) => pending.productIds.includes(p.id) && !existing.productIds.includes(p.id),
+        );
         existing.productIds = [...existing.productIds, ...added.map((p) => p.id)];
         existing.updatedAt = now();
         // The answer goes to the campaign's own thread (made now if it had none), so its brief card shows in full.
         let thread = db.threads.find((x) => x.campaignId === existing.id && x.kind !== "contact");
         if (!thread) {
-          thread = { id: nextId("t"), workspaceId, campaignId: existing.id, title: existing.name, updatedAt: now(), unread: 0 };
+          thread = {
+            id: nextId("t"),
+            workspaceId,
+            campaignId: existing.id,
+            title: existing.name,
+            updatedAt: now(),
+            unread: 0,
+          };
           db.threads.push(thread);
         }
         setTimeout(() => {
           say(thread?.id ?? threadId, {
             author: { kind: "fume" },
-            text: added.length ? `${added.map((p) => p.name).join(" and ")} is in ${existing.name} now. Here is its brief.` : `${existing.name} it is. Here is its brief; tell us what to add.`,
-            card: { kind: "brief", campaignId: existing.id, version: db.briefs.find((x) => x.campaignId === existing.id)?.version ?? 1 },
+            text: added.length
+              ? `${added.map((p) => p.name).join(" and ")} is in ${existing.name} now. Here is its brief.`
+              : `${existing.name} it is. Here is its brief; tell us what to add.`,
+            card: {
+              kind: "brief",
+              campaignId: existing.id,
+              version: db.briefs.find((x) => x.campaignId === existing.id)?.version ?? 1,
+            },
           });
           emit({ type: "campaign.state", campaign: existing });
         }, latency * 6);
@@ -840,7 +1201,11 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
           // No confirmed product in the answer: the product question stays (walk-through Must 2: never 0 products).
           if (q.key === "product" && !c.productIds.length) {
             asked.unshift(q);
-            say(threadId, { author: { kind: "fume" }, text: "We found no confirmed product in that. Tick one in the grid, or confirm a product’s details first.", card: questionCard(q) });
+            say(threadId, {
+              author: { kind: "fume" },
+              text: "We found no confirmed product in that. Tick one in the grid, or confirm a product’s details first.",
+              card: questionCard(q),
+            });
             emit({ type: "campaign.state", campaign: c });
             return;
           }
@@ -852,7 +1217,11 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
             Object.assign(brief, { state: "ready", creatives: brief.formats.length * 4 });
             // Round 9 (CHAT): the same words whether the brief is a card here or the panel beside the conversation.
             // Round 10 (CHAT): she sends the brief; Fume writes the plan; nothing is made before she approves the plan.
-            say(threadId, { author: { kind: "fume" }, text: `That is all we need. The brief for ${c.name} is ready. Send it when it reads right; nothing is made before you approve the plan.`, card: { kind: "brief", campaignId: brief.campaignId, version: brief.version } });
+            say(threadId, {
+              author: { kind: "fume" },
+              text: `That is all we need. The brief for ${c.name} is ready. Send it when it reads right; nothing is made before you approve the plan.`,
+              card: { kind: "brief", campaignId: brief.campaignId, version: brief.version },
+            });
           }
           c.updatedAt = now();
           emit({ type: "campaign.state", campaign: c });
@@ -860,11 +1229,20 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
           brief.missing.shift();
           if (brief.missing.length === 0) {
             brief.state = "ready";
-            say(threadId, { author: { kind: "fume" }, text: "Thanks, that was the last thing. Here is your brief. Send it when it reads right; nothing is made before you approve the plan.", card: { kind: "brief", campaignId: brief.campaignId, version: brief.version } });
-          } else say(threadId, { author: { kind: "fume" }, text: `Thanks, that is in the brief. One more thing: ${brief.missing[0].charAt(0).toLowerCase()}${brief.missing[0].slice(1)}.` });
+            say(threadId, {
+              author: { kind: "fume" },
+              text: "Thanks, that was the last thing. Here is your brief. Send it when it reads right; nothing is made before you approve the plan.",
+              card: { kind: "brief", campaignId: brief.campaignId, version: brief.version },
+            });
+          } else
+            say(threadId, {
+              author: { kind: "fume" },
+              text: `Thanks, that is in the brief. One more thing: ${brief.missing[0].charAt(0).toLowerCase()}${brief.missing[0].slice(1)}.`,
+            });
           const c = db.campaigns.find((x) => x.id === brief.campaignId);
           if (c) emit({ type: "campaign.state", campaign: c });
-        } else say(threadId, { author: { kind: "fume" }, text: "Thanks. We have that now and will come back to you here." });
+        } else
+          say(threadId, { author: { kind: "fume" }, text: "Thanks. We have that now and will come back to you here." });
       }, latency * 8);
       return wait(m);
     },
@@ -872,7 +1250,9 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
     // ── Team ──
     async team() {
       return wait({
-        members: db.memberships.filter((m) => m.workspaceId === workspaceId).map((membership) => ({ user: user(membership.userId), membership })),
+        members: db.memberships
+          .filter((m) => m.workspaceId === workspaceId)
+          .map((membership) => ({ user: user(membership.userId), membership })),
         invitations: db.invitations.filter((i) => i.workspaceId === workspaceId),
         fumeTeam: db.staff.filter((s) => s.workspaceId === workspaceId).map((s) => user(s.userId)),
       });
@@ -886,7 +1266,15 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
     },
     async invite(email, r) {
       if (role() !== "owner") throw new FumeError("forbidden", "Only the owner invites people.");
-      const inv = { id: nextId("inv"), workspaceId, email, role: r, invitedBy: userId, state: "sent" as const, at: now() };
+      const inv = {
+        id: nextId("inv"),
+        workspaceId,
+        email,
+        role: r,
+        invitedBy: userId,
+        state: "sent" as const,
+        at: now(),
+      };
       db.invitations.push(inv);
       return wait(inv);
     },
@@ -909,7 +1297,11 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
     // ── Settings ──
     async settings() {
       const workspace = find(db.workspaces, workspaceId, "workspace");
-      const pkg = find(db.packages, find(db.organisations, workspace.organisationId, "organisation").packageId, "package");
+      const pkg = find(
+        db.packages,
+        find(db.organisations, workspace.organisationId, "organisation").packageId,
+        "package",
+      );
       const home = await api.home();
       return wait({
         workspace,
@@ -935,7 +1327,9 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
       return wait(db.notifications.filter((n) => n.userId === userId).sort((a, b) => b.at.localeCompare(a.at)));
     },
     async markRead(ids) {
-      db.notifications.filter((n) => n.userId === userId && (ids === "all" || ids.includes(n.id))).forEach((n) => (n.read = true));
+      db.notifications
+        .filter((n) => n.userId === userId && (ids === "all" || ids.includes(n.id)))
+        .forEach((n) => (n.read = true));
       return wait(undefined);
     },
 
@@ -958,7 +1352,15 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
     },
     async addNote(id, note) {
       const check = find(db.checks, id, "check");
-      const n = { id: nextId("n"), number: check.notes.length + 1, author: userId, at: now(), x: note.x, y: note.y, text: note.text };
+      const n = {
+        id: nextId("n"),
+        number: check.notes.length + 1,
+        author: userId,
+        at: now(),
+        x: note.x,
+        y: note.y,
+        text: note.text,
+      };
       check.notes.push(n);
       if (note.itemId) Object.assign(find(check.items, note.itemId, "item"), { result: "note", noteId: n.id });
       return wait(check);
@@ -971,7 +1373,16 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
       const creative = find(db.creatives, check.creativeId, "creative");
       setVersion(creative, { state: "checked", checkedBy: userId, checkedAt: now() });
       recount(campaignOf(check.campaignId));
-      db.record.push({ id: nextId("e"), workspaceId: check.workspaceId, campaignId: check.campaignId, subjectId: creative.id, actor: { kind: "person", userId }, action: "checked", detail: `${creative.title} checked`, at: now() });
+      db.record.push({
+        id: nextId("e"),
+        workspaceId: check.workspaceId,
+        campaignId: check.campaignId,
+        subjectId: creative.id,
+        actor: { kind: "person", userId },
+        action: "checked",
+        detail: `${creative.title} checked`,
+        at: now(),
+      });
       return wait(check);
     },
     async requestCorrection(id) {
@@ -1044,7 +1455,18 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
     ...r8OnbApi({ db, wait, fresh: options.fresh }), // round 8 ONB: continue where you left off; a fresh brand's honest start
     ...v8Api({ db, wait, now, nextId, me, workspaceId: () => workspaceId }), // round 7, worker W: Import products
     ...r8HomeApi({ db, questions, wait, now, userId: () => userId, workspaceId: () => workspaceId, emit }), // round 8 HOME: one question sheet
-    ...r8ReviewApi({ db, wait, now, nextId, userId: () => userId, workspaceId: () => workspaceId, mustApprove, campaignOf, setVersion, recount }), // round 8 REVIEW: Approve with Undo, one change request per set
+    ...r8ReviewApi({
+      db,
+      wait,
+      now,
+      nextId,
+      userId: () => userId,
+      workspaceId: () => workspaceId,
+      mustApprove,
+      campaignOf,
+      setVersion,
+      recount,
+    }), // round 8 REVIEW: Approve with Undo, one change request per set
     ...r9CampaignApi({ db, wait }), // round 9 CAMPAIGN: every campaign's waits (one status sentence), Download all as one zip
     ...r9ReviewApi({ db, wait, campaignOf, setVersion, recount }), // round 9 VIEWER: Undo a change request just sent
     ...r10PlanApi({ db, wait, now, nextId, emit, say, userId: () => userId, isStaff, mustApprove }), // round 10: the plan before the Engine makes anything (sendBrief; approveBrief sends it)
@@ -1063,7 +1485,11 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
   keepQuestions(api, () => settleQuestions(questions, db, { now, userId: () => userId, emit }));
   // Round 11 (FLOWS §24): session, switchWorkspace and approve change for the agency's people, over the finished api.
   beforeAgency = { ...api };
-  Object.assign(api, agency.wraps, r11ClientApi({ db, userId: () => userId, workspaceId: () => workspaceId, base: () => beforeAgency! })); // round 11 CLIENT FLOW: Home in a client an agency runs
+  Object.assign(
+    api,
+    agency.wraps,
+    r11ClientApi({ db, userId: () => userId, workspaceId: () => workspaceId, base: () => beforeAgency! }),
+  ); // round 11 CLIENT FLOW: Home in a client an agency runs
   Object.assign(api, r11PagesApi({ db, userId: () => userId, base: { ...api } })); // round 11 AGENCY PAGES: an agency checks only its own clients; an added client stays
   Object.assign(api, r13brand.wraps({ ...api })); // round 13 BRAND: the board carries the voice book
   beforeR13Agency = { ...api };
@@ -1075,7 +1501,7 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
     /** Mock only: sign in as someone else (the demo's "View as"). */
     signInAs(id: Id) {
       userId = id;
-      workspaceId = isStaff() ? workspaceId : db.memberships.find((m) => m.userId === id)?.workspaceId ?? workspaceId;
+      workspaceId = isStaff() ? workspaceId : (db.memberships.find((m) => m.userId === id)?.workspaceId ?? workspaceId);
     },
   });
 }

@@ -1,19 +1,14 @@
-// Round 12 (desktop review 20 Oct, DWAY-5, DWAY-1, DWAY-6, DWAY-9, DWAY-17, DWAY-20, DWAY-21; PROPOSED 20 Oct 2026): the
-// one sidebar of Fume's studio and an agency (Marcus 20 Oct 12:41Z: "Agency dashboard blir strengt tatt lik som vår").
-// One list of places per scope, the same names in both frames:
-// - all brands or all clients: Overview · Check · Campaigns · Deliveries · (Clients) · Team · Usage · Quality log;
-//   Fume's admin follows and does not check: Overview · Campaigns · Deliveries · Team · Usage · Quality log;
-// - one brand or client: Home · Check · Campaigns · Brand · Studio · Engine (· Fume for an agency). Brand holds the
-//   Brand DNA, the products, the models and references and the boards (FLOWS §9.6: brand assets); the Engine holds what
-//   it made. While Brand or the Engine is the current place, its two or one places inside show under it. Fume's people
-//   have Customer view at the foot of a brand (the brand as its customer sees it, marked "Fume view"); the admin a
-//   brand's Home and its Campaigns, to read.
-// The top of the sidebar is one picker for both (the agency's, which the review kept): the Fume mark and "All brands"
-// or "All clients", or the brand's mark and its market; its glass menu lists them A to Z (never recent first, so a
-// brand stays where it was), with a quiet dot where something waits on you, "Here" on the one you are in, and from 8 up
-// a search and a Recent group. Choosing one keeps the place you are on when the new scope has it (scope.ts,
-// equivalent). The brand is found in the brands the menu lists, never only in the session (DWAY-1: SOLV said
-// "All brands · Here").
+// The one sidebar of Fume's studio and an agency (FLOWS §25.1), with one list of places per scope and the same names in
+// both frames. All brands or all clients: Overview · Check · Campaigns · Deliveries · (Clients) · Team · Usage ·
+// Quality log; Fume's admin follows and does not check, so has no Check. One brand or client: Home · Check · Campaigns
+// · Brand · Studio · Engine (· Fume for an agency). Brand holds the Brand DNA, the products, the models and references
+// and the boards; the Engine holds what it made; while one of them is the current place, its places inside show under
+// it. Fume's people have Customer view at the foot of a brand; the admin has a brand's Home and its Campaigns, to read.
+// The top of the sidebar is one picker for both: the Fume mark and "All brands" or "All clients", or the brand's mark
+// and its market. Its glass menu lists them A to Z (never recent first, so a brand stays where it was), with a quiet
+// dot where something waits on you, "Here" on the one you are in, and from 8 up a search and a Recent group. Choosing
+// one keeps the place you are on when the new scope has it (scope.ts, equivalent). The brand is found in the brands the
+// menu lists, never only in the session.
 import {
   Avatar,
   Button,
@@ -46,7 +41,16 @@ import { AgencyPersonMenu, type NavItem } from "./AgencySidebar";
 import type { Frame } from "./Frame";
 import { Mark } from "./Logo";
 import { initials } from "./people";
-import { addressBrand, brandBase, checkPath, checkSegment, equivalent, frameRoot, setCustomerView, type StaffFrameKind } from "./scope";
+import {
+  addressBrand,
+  brandBase,
+  checkPath,
+  checkSegment,
+  equivalent,
+  frameRoot,
+  setCustomerView,
+  type StaffFrameKind,
+} from "./scope";
 
 // ─── The scope ──────────────────────────────────────────────────────────────
 
@@ -68,7 +72,7 @@ export interface StaffScope {
   workspaceId?: string;
   /** That brand or client, once the list knows it. */
   entry?: ScopeEntry;
-  /** Every brand or client, A to Z (DWAY-20). */
+  /** Every brand or client, A to Z. */
   entries: ScopeEntry[];
   /** True once the list has come, so an unknown address can be told from one still loading. */
   loaded: boolean;
@@ -80,7 +84,8 @@ export interface StaffScope {
   noun: "brand" | "client";
 }
 
-const byName = (a: ScopeEntry, b: ScopeEntry) => a.workspace.brandName.localeCompare(b.workspace.brandName, "en", { sensitivity: "base" });
+const byName = (a: ScopeEntry, b: ScopeEntry) =>
+  a.workspace.brandName.localeCompare(b.workspace.brandName, "en", { sensitivity: "base" });
 
 /** Where the person is: all brands or clients, or the one the address names. */
 export function useStaffScope(frame: StaffFrameKind): StaffScope {
@@ -94,17 +99,31 @@ export function useStaffScope(frame: StaffFrameKind): StaffScope {
   const entries = useMemo<ScopeEntry[]>(() => {
     if (agency) {
       if (clients.data)
-        return clients.data.map((c) => ({ workspace: c.workspace, waiting: c.waitingOnYou, summary: c.example === "summary", openedAt: c.openedAt, client: c })).sort(byName);
+        return clients.data
+          .map((c) => ({
+            workspace: c.workspace,
+            waiting: c.waitingOnYou,
+            summary: c.example === "summary",
+            openedAt: c.openedAt,
+            client: c,
+          }))
+          .sort(byName);
       return session.workspaces.map((workspace) => ({ workspace, waiting: 0, summary: false })).sort(byName);
     }
     const needs = all.data?.needsYou ?? [];
     const brands = all.data?.brands.map((b) => b.workspace) ?? session.workspaces;
     const seen = new Set(brands.map((w) => w.id));
-    return [...brands, ...session.workspaces.filter((w) => !seen.has(w.id))]
-      // Round 13 (robots' note 06: "SOLV, 1 waiting on you" while SOLV had 2 to check): a creative waiting in Check counts
-      // one each, as Check counts it; the rest of what needs you (a plan, a question) one each too.
-      .map((workspace) => ({ workspace, waiting: needs.filter((n) => n.clientId === workspace.id && n.kind !== "check").length + qa.of(workspace.id), summary: false }))
-      .sort(byName);
+    return (
+      [...brands, ...session.workspaces.filter((w) => !seen.has(w.id))]
+        // A creative waiting in Check counts one each, as Check counts it; the rest of what needs you (a plan, a
+        // question) one each too.
+        .map((workspace) => ({
+          workspace,
+          waiting: needs.filter((n) => n.clientId === workspace.id && n.kind !== "check").length + qa.of(workspace.id),
+          summary: false,
+        }))
+        .sort(byName)
+    );
   }, [agency, clients.data, all.data, session.workspaces, qa]);
   const entry = workspaceId ? entries.find((e) => e.workspace.id === workspaceId) : undefined;
   return {
@@ -113,7 +132,7 @@ export function useStaffScope(frame: StaffFrameKind): StaffScope {
     entry,
     entries,
     loaded: agency ? clients.isSuccess || clients.isError : all.isSuccess || all.isError,
-    orgName: agency ? session.agency?.organisation.name ?? "Your agency" : "Fume",
+    orgName: agency ? (session.agency?.organisation.name ?? "Your agency") : "Fume",
     limited: !agency && session.user.staffRole === "admin",
     noun: agency ? "client" : "brand",
   };
@@ -122,11 +141,14 @@ export function useStaffScope(frame: StaffFrameKind): StaffScope {
 // ─── The places ─────────────────────────────────────────────────────────────
 
 /** Check's number as its page says it (copy.toCheck, "8 to check: 1 plan, 7 creatives"): the creatives that wait for a
- *  check and, in Fume, the plans that wait for the expert's check (an agency approves its own plans). */
+ *  check and, in Fume, the plans that wait for the expert's check. */
 function useCheckCount(frame: StaffFrameKind): { total: number; of: (workspaceId: string) => number } {
   const qa = useQaWaiting();
   const rows = useStudioCampaigns().data;
-  const plans = frame === "fume" ? (rows ?? []).filter((r) => r.campaign.stage === "plan" && r.campaign.waits?.plan === "in_check") : [];
+  const plans =
+    frame === "fume"
+      ? (rows ?? []).filter((r) => r.campaign.stage === "plan" && r.campaign.waits?.plan === "in_check")
+      : [];
   return { total: qa.total + plans.length, of: (id) => qa.of(id) + plans.filter((r) => r.workspace.id === id).length };
 }
 
@@ -136,31 +158,104 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
   const { frame, workspaceId, limited } = scope;
   const root = frameRoot[frame];
   if (!workspaceId) {
-    const overview: NavItem = { to: root, label: "Overview", icon: "house", end: true, keywords: "home today all brands clients needs you" };
-    const deliveries: NavItem = { to: `${root}/deliveries`, label: "Deliveries", icon: "download", keywords: "deliveries due sent download" };
-    const team: NavItem = { to: `${root}/team`, label: "Team", icon: "users", keywords: "team people load capacity invite" };
-    // Settings › Licence is its own page under Settings (AGENCY, 20 Oct): Usage is lit only on Usage
-    const usage: NavItem = { to: `${root}/usage`, label: "Usage", icon: "chart-column", keywords: "usage licence creatives made approved renders month" };
-    const quality: NavItem = { to: `${root}/quality`, label: "Quality log", icon: "list", keywords: "quality log findings severity fixed" };
-    const campaigns: NavItem = { to: `${root}/campaigns`, label: "Campaigns", icon: "megaphone", keywords: "campaigns across brands clients calendar plans" };
+    const overview: NavItem = {
+      to: root,
+      label: "Overview",
+      icon: "house",
+      end: true,
+      keywords: "home today all brands clients needs you",
+    };
+    const deliveries: NavItem = {
+      to: `${root}/deliveries`,
+      label: "Deliveries",
+      icon: "download",
+      keywords: "deliveries due sent download",
+    };
+    const team: NavItem = {
+      to: `${root}/team`,
+      label: "Team",
+      icon: "users",
+      keywords: "team people load capacity invite",
+    };
+    // Licence is its own page under Settings, so Usage is lit only on Usage
+    const usage: NavItem = {
+      to: `${root}/usage`,
+      label: "Usage",
+      icon: "chart-column",
+      keywords: "usage licence creatives made approved renders month",
+    };
+    const quality: NavItem = {
+      to: `${root}/quality`,
+      label: "Quality log",
+      icon: "list",
+      keywords: "quality log findings severity fixed",
+    };
+    const campaigns: NavItem = {
+      to: `${root}/campaigns`,
+      label: "Campaigns",
+      icon: "megaphone",
+      keywords: "campaigns across brands clients calendar plans",
+    };
     if (limited) return [overview, campaigns, deliveries, team, usage, quality];
     return [
       overview,
-      { to: checkPath(frame), label: "Check", icon: "inbox", count: qa.total || undefined, holds: [`${root}/queue`], keywords: "check qa queue creatives plans to check mark checked" },
+      {
+        to: checkPath(frame),
+        label: "Check",
+        icon: "inbox",
+        count: qa.total || undefined,
+        holds: [`${root}/queue`],
+        keywords: "check qa queue creatives plans to check mark checked",
+      },
       campaigns,
       deliveries,
-      ...(frame === "agency" ? [{ to: "/agency/clients", label: "Clients", icon: "layout-grid", keywords: "clients brands add a client" } satisfies NavItem] : []),
+      ...(frame === "agency"
+        ? [
+            {
+              to: "/agency/clients",
+              label: "Clients",
+              icon: "layout-grid",
+              keywords: "clients brands add a client",
+            } satisfies NavItem,
+          ]
+        : []),
       team,
       usage,
       quality,
-      // Round 13 AGENCY (robot note 10-agency): the agency's Settings is a place of its own (its plan with Fume, its people)
-      ...(frame === "agency" ? [{ to: "/agency/settings", label: "Settings", icon: "settings", keywords: "settings agency fume plan features licence profile roles" } satisfies NavItem] : []),
+      // The agency's Settings is a place of its own (its plan with Fume, its people)
+      ...(frame === "agency"
+        ? [
+            {
+              to: "/agency/settings",
+              label: "Settings",
+              icon: "settings",
+              keywords: "settings agency fume plan features licence profile roles",
+            } satisfies NavItem,
+          ]
+        : []),
     ];
   }
   const base = brandBase(frame, workspaceId);
-  const home: NavItem = { to: base, label: "Home", icon: "house", end: true, holds: [`${base}/review`], keywords: "home brand today needs you waiting" };
-  // Fume's admin reads the brand's campaigns (NUMBERS, 20 Oct: she follows the work); a campaign opens the brand's Home
-  if (limited) return [home, { to: `${base}/campaigns`, label: "Campaigns", icon: "megaphone", end: true, keywords: "campaigns brief plan creatives delivery" }];
+  const home: NavItem = {
+    to: base,
+    label: "Home",
+    icon: "house",
+    end: true,
+    holds: [`${base}/review`],
+    keywords: "home brand today needs you waiting",
+  };
+  // Fume's admin reads the brand's campaigns (she follows the work); a campaign opens the brand's Home
+  if (limited)
+    return [
+      home,
+      {
+        to: `${base}/campaigns`,
+        label: "Campaigns",
+        icon: "megaphone",
+        end: true,
+        keywords: "campaigns brief plan creatives delivery",
+      },
+    ];
   const boards = `${base}/boards`;
   return [
     home,
@@ -187,7 +282,12 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
       holds: [`${base}/products`, `${base}/check/products`, `${base}/assets`, ...(campaignBoard ? [] : [boards])],
       keywords: "brand dna products taste rules",
       sub: [
-        { to: `${base}/assets`, label: "Models and references", icon: "users", keywords: "models references cast presets assets" },
+        {
+          to: `${base}/assets`,
+          label: "Models and references",
+          icon: "users",
+          keywords: "models references cast presets assets",
+        },
         { to: boards, label: "Boards", icon: "layout-grid", keywords: "boards moodboard" },
       ],
     },
@@ -198,9 +298,25 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
       icon: "fume-engine",
       holds: [`${base}/output`],
       keywords: "engine chat make generate runs",
-      sub: [{ to: `${base}/output`, label: "Engine output", icon: "image", keywords: "engine output runs generations made candidates" }],
+      sub: [
+        {
+          to: `${base}/output`,
+          label: "Engine output",
+          icon: "image",
+          keywords: "engine output runs generations made candidates",
+        },
+      ],
     },
-    ...(frame === "agency" ? [{ to: `${base}/fume`, label: "Fume", icon: "message-square", keywords: "chat ask fume conversation" } satisfies NavItem] : []),
+    ...(frame === "agency"
+      ? [
+          {
+            to: `${base}/fume`,
+            label: "Fume",
+            icon: "message-square",
+            keywords: "chat ask fume conversation",
+          } satisfies NavItem,
+        ]
+      : []),
   ];
 }
 
@@ -208,7 +324,11 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
 
 export function StaffSidebar({ scope, places, frame }: { scope: StaffScope; places: NavItem[]; frame: Frame }) {
   const name = scope.entry?.workspace.brandName;
-  const label = name ? `${name}, ${scope.frame === "agency" ? scope.orgName : "the Fume studio"}` : scope.frame === "agency" ? `${scope.orgName} in Fume` : "Fume studio";
+  const label = name
+    ? `${name}, ${scope.frame === "agency" ? scope.orgName : "the Fume studio"}`
+    : scope.frame === "agency"
+      ? `${scope.orgName} in Fume`
+      : "Fume studio";
   return (
     <Sidebar aria-label={label}>
       <SidebarHeader>
@@ -222,12 +342,17 @@ export function StaffSidebar({ scope, places, frame }: { scope: StaffScope; plac
         <SidebarGroup>
           <SidebarMenu>
             {places.flatMap((item) => {
-              const open = frame.isActive(item) ? item.sub ?? [] : [];
+              const open = frame.isActive(item) ? (item.sub ?? []) : [];
               const inside = open.some((s) => frame.isActive(s));
               return [
                 <SidebarMenuItem key={item.to}>
                   {/* A place is lit while you are in it, unless one of its places inside is (then that one is) */}
-                  <SidebarMenuButton asChild isActive={frame.isActive(item) && !inside} icon={item.icon} badge={item.count}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={frame.isActive(item) && !inside}
+                    icon={item.icon}
+                    badge={item.count}
+                  >
                     <Link to={item.to} onClick={frame.onPlace(item)} aria-label={item.name}>
                       {item.label}
                     </Link>
@@ -257,8 +382,8 @@ export function StaffSidebar({ scope, places, frame }: { scope: StaffScope; plac
         )}
       </SidebarContent>
       <SidebarFooter>
-        {/* Settings is in the person menu: the foot stays one row (FLOWS §24.3). Round 13 AGENCY (Marcus #71): an agency
-            has Help from Fume above the person (Book a meeting, Borrow Fume's people, Customer service). */}
+        {/* Settings is in the person menu, so the foot stays one row. An agency has Help from Fume above the person
+            (Book a meeting, Borrow Fume's people, Customer service). */}
         <SidebarMenu>
           {scope.frame === "agency" && (
             <SidebarMenuItem>
@@ -272,8 +397,8 @@ export function StaffSidebar({ scope, places, frame }: { scope: StaffScope; plac
   );
 }
 
-/** Opens the brand as its customer sees it, marked "Fume view" there (DWAY-2): the session is already on the brand of
- *  the address, so the customer's Home is the brand's, until "Back to <brand> in the studio". */
+/** Opens the brand as its customer sees it, marked "Fume view" there: the session is already on the brand of the
+ *  address, so the customer's Home is the brand's, until "Back to <brand> in the studio". */
 function CustomerView() {
   const navigate = useNavigate();
   return (
@@ -291,19 +416,19 @@ function CustomerView() {
 
 // ─── The picker ─────────────────────────────────────────────────────────────
 
-/** A search and a Recent group in the picker from this many brands or clients up (FLOWS §24.4, DWAY-20). */
+/** A search and a Recent group in the picker from this many brands or clients up (FLOWS §24.4). */
 const MANY = 8;
 
 /** A small mark (16 px) holds one letter; the large ones keep two ("BS"). */
 const letter = (name: string) => initials(name).slice(0, 1);
 
-/** "LYSNE, 2 waiting on you": a name with what waits on you, for a screen reader and the robot. */
+/** "LYSNE, 2 waiting on you": a name with what waits on you, for a screen reader. */
 const entryName = (name: string, waiting: number) => (waiting ? `${name}, ${waiting} waiting on you` : name);
 
 /**
  * The picker: the top of the sidebar (a large row), or on a phone a quiet pill in the app bar (compact). Its glass
  * menu: All brands or All clients, then each one A to Z with a dot where something waits on you. Choosing keeps the
- * place (DWAY-9).
+ * place.
  */
 export function ScopePicker({ scope, compact }: { scope: StaffScope; compact?: boolean }) {
   const navigate = useNavigate();
@@ -318,12 +443,24 @@ export function ScopePicker({ scope, compact }: { scope: StaffScope; compact?: b
   const many = entries.length >= MANY;
   const q = query.trim().toLowerCase();
   const shown = q ? entries.filter((e) => e.workspace.brandName.toLowerCase().includes(q)) : entries;
-  const recent = many && !q ? entries.filter((e) => e.openedAt).sort((a, b) => b.openedAt!.localeCompare(a.openedAt!)).slice(0, 3) : [];
+  const recent =
+    many && !q
+      ? entries
+          .filter((e) => e.openedAt)
+          .sort((a, b) => b.openedAt!.localeCompare(a.openedAt!))
+          .slice(0, 3)
+      : [];
   const triggerName = `${current ? current.brandName : allLabel}${frame === "agency" ? `, ${scope.orgName}` : ""}. Switch ${noun}`;
   const go = (workspaceId?: string) => navigate(equivalent(pathname, frame, workspaceId, limited));
 
   const trigger = compact ? (
-    <Button variant="quiet" size="sm" iconEnd="chevrons-up-down" className="ui-agency-bar-picker" aria-label={triggerName}>
+    <Button
+      variant="quiet"
+      size="sm"
+      iconEnd="chevrons-up-down"
+      className="ui-agency-bar-picker"
+      aria-label={triggerName}
+    >
       {current ? (
         <span className="ui-agency-mark" aria-hidden="true">
           {letter(current.brandName)}
@@ -377,7 +514,12 @@ export function ScopePicker({ scope, compact }: { scope: StaffScope; compact?: b
   const row = (e: ScopeEntry, key: string) => {
     const here = current?.id === e.workspace.id;
     return (
-      <DropdownMenuItem key={key} onSelect={() => go(e.workspace.id)} aria-label={entryName(e.workspace.brandName, e.waiting)} aria-current={here ? "page" : undefined}>
+      <DropdownMenuItem
+        key={key}
+        onSelect={() => go(e.workspace.id)}
+        aria-label={entryName(e.workspace.brandName, e.waiting)}
+        aria-current={here ? "page" : undefined}
+      >
         <span className="ui-switcher-mark" aria-hidden="true">
           {letter(e.workspace.brandName)}
         </span>
@@ -417,7 +559,11 @@ export function ScopePicker({ scope, compact }: { scope: StaffScope; compact?: b
             />
           </div>
         )}
-        <DropdownMenuItem onSelect={() => go(undefined)} aria-label={allLabel} aria-current={current ? undefined : "page"}>
+        <DropdownMenuItem
+          onSelect={() => go(undefined)}
+          aria-label={allLabel}
+          aria-current={current ? undefined : "page"}
+        >
           <span className="ui-switcher-mark ui-switcher-mark--fume" aria-hidden="true">
             <Mark />
           </span>
@@ -436,9 +582,17 @@ export function ScopePicker({ scope, compact }: { scope: StaffScope; compact?: b
             <DropdownMenuSeparator />
           </>
         )}
-        {shown.length > 0 && <DropdownMenuLabel>{q ? `${noun === "brand" ? "Brands" : "Clients"} found` : noun === "brand" ? "Brands" : "Clients"}</DropdownMenuLabel>}
+        {shown.length > 0 && (
+          <DropdownMenuLabel>
+            {q ? `${noun === "brand" ? "Brands" : "Clients"} found` : noun === "brand" ? "Brands" : "Clients"}
+          </DropdownMenuLabel>
+        )}
         {shown.map((e) => row(e, e.workspace.id))}
-        {q && !shown.length && <p className="ui-agency-picker-none">No {noun} called “{query.trim()}”</p>}
+        {q && !shown.length && (
+          <p className="ui-agency-picker-none">
+            No {noun} called “{query.trim()}”
+          </p>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -464,14 +618,20 @@ export function FumePersonMenu({ avatar }: { avatar?: boolean }) {
             <Avatar size="sm" ink initials={initials(user.name)} />
           </Button>
         ) : (
-          <SidebarMenuButton size="lg" leading={<SidebarAvatar>{initials(user.name)}</SidebarAvatar>} description={`${user.title} · ${role}`} endIcon="chevrons-up-down" aria-label={triggerName}>
+          <SidebarMenuButton
+            size="lg"
+            leading={<SidebarAvatar>{initials(user.name)}</SidebarAvatar>}
+            description={`${user.title} · ${role}`}
+            endIcon="chevrons-up-down"
+            aria-label={triggerName}
+          >
             {user.name}
           </SidebarMenuButton>
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent side={avatar ? "bottom" : "top"} align={avatar ? "end" : "start"}>
         <DropdownMenuLabel>{`${user.name}, ${role.toLowerCase()} at Fume`}</DropdownMenuLabel>
-        {/* Round 13 (robot note 08): Fume's person's own profile, in the studio, never the customer's Settings */}
+        {/* A Fume person's own profile, in the studio, never the customer's Settings */}
         <DropdownMenuItem icon="user" onSelect={() => navigate("/studio/settings/profile")}>
           Your profile
         </DropdownMenuItem>

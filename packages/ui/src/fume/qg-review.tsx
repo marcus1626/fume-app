@@ -1,5 +1,5 @@
-// Quality Gate review: Anna's screen (design-system/components/qg-review.css, behaviour from qg-review.js).
-// DECIDED 13 Oct, round 8. Composable parts inside QgScreen:
+// Quality Gate review: Anna's screen (design-system/components/qg-review.css, behaviour from qg-review.js). Composable
+// parts inside QgScreen:
 //   <QgScreen state reviewer checkedAt notesCount onMarkChecked onRequestChanges onUndo onPrev onNext onAddNote>
 //     <QgBar …/>                      back, the creative's name, the format switch, previous · 3 of 12 · next
 //     <QgStage src format notes …/>   the creative large in its well, Anna's numbered pins, the seal
@@ -37,7 +37,8 @@ import { Avatar, Btn, Kbd, Seg, formatAttrs, vars, type CreativeFormat, type Per
 export type QgState = "waiting" | "in_check" | "held" | "checked" | "changes_requested";
 
 type Phase = "waiting" | "approved" | "changes";
-const phaseOf = (s: QgState): Phase => (s === "checked" ? "approved" : s === "changes_requested" ? "changes" : "waiting");
+const phaseOf = (s: QgState): Phase =>
+  s === "checked" ? "approved" : s === "changes_requested" ? "changes" : "waiting";
 
 export interface QgDraft {
   /** 0–1 from the left. */
@@ -116,7 +117,22 @@ export interface QgScreenProps extends HTMLAttributes<HTMLDivElement> {
 
 /** div.ui-qg > div.ui-qg-screen[data-state]: the screen, its keys and the shared state of its parts. */
 export const QgScreen = forwardRef<HTMLDivElement, QgScreenProps>(function QgScreen(
-  { state, reviewer, checkedAt, notesCount, label, onMarkChecked, onRequestChanges, onUndo, onPrev, onNext, onAddNote, className, children, ...props },
+  {
+    state,
+    reviewer,
+    checkedAt,
+    notesCount,
+    label,
+    onMarkChecked,
+    onRequestChanges,
+    onUndo,
+    onPrev,
+    onNext,
+    onAddNote,
+    className,
+    children,
+    ...props
+  },
   ref,
 ) {
   const phase = phaseOf(state);
@@ -129,7 +145,11 @@ export const QgScreen = forwardRef<HTMLDivElement, QgScreenProps>(function QgScr
   const [snap, setSnap] = useState<"peek" | "full">("peek");
   const [hint, setHint] = useState<string | null>(null);
 
-  const openSheet = useCallback((open?: boolean) => setSnap((s) => (open === undefined ? (s === "full" ? "peek" : "full") : open ? "full" : "peek")), []);
+  const openSheet = useCallback(
+    (open?: boolean) =>
+      setSnap((s) => (open === undefined ? (s === "full" ? "peek" : "full") : open ? "full" : "peek")),
+    [],
+  );
   const focus = (el: HTMLElement | null) => el?.focus({ preventScroll: true });
 
   const markChecked = useCallback(() => {
@@ -203,8 +223,46 @@ export const QgScreen = forwardRef<HTMLDivElement, QgScreenProps>(function QgScr
   };
 
   const value = useMemo<QgContextValue>(
-    () => ({ phase, reviewer, checkedAt, notesCount, draft, setDraft, active, setActive, snap, openSheet, hint, noteField, nextButton, checkButton, rootRef, markChecked, requestChanges, undo, prev, next, addNote }),
-    [phase, reviewer, checkedAt, notesCount, draft, active, snap, openSheet, hint, markChecked, requestChanges, undo, prev, next, addNote],
+    () => ({
+      phase,
+      reviewer,
+      checkedAt,
+      notesCount,
+      draft,
+      setDraft,
+      active,
+      setActive,
+      snap,
+      openSheet,
+      hint,
+      noteField,
+      nextButton,
+      checkButton,
+      rootRef,
+      markChecked,
+      requestChanges,
+      undo,
+      prev,
+      next,
+      addNote,
+    }),
+    [
+      phase,
+      reviewer,
+      checkedAt,
+      notesCount,
+      draft,
+      active,
+      snap,
+      openSheet,
+      hint,
+      markChecked,
+      requestChanges,
+      undo,
+      prev,
+      next,
+      addNote,
+    ],
   );
 
   return (
@@ -246,11 +304,32 @@ export interface QgBarProps extends HTMLAttributes<HTMLElement> {
 }
 
 /** header.ui-qg-bar. Previous and next call QgScreen's onPrev and onNext. */
-export function QgBar({ title, campaign, eyebrow = "Quality Gate", onBack, backLabel, formats, format, onFormatChange, index, total, className, ...props }: QgBarProps) {
+export function QgBar({
+  title,
+  campaign,
+  eyebrow = "Quality Gate",
+  onBack,
+  backLabel,
+  formats,
+  format,
+  onFormatChange,
+  index,
+  total,
+  className,
+  ...props
+}: QgBarProps) {
   const qg = useQg();
   return (
     <header className={cx("ui-qg-bar", className)} {...props}>
-      {onBack && <Btn variant="quiet" iconOnly icon="chevron-left" aria-label={backLabel ?? (campaign ? `Back to ${campaign}` : "Back")} onClick={onBack} />}
+      {onBack && (
+        <Btn
+          variant="quiet"
+          iconOnly
+          icon="chevron-left"
+          aria-label={backLabel ?? (campaign ? `Back to ${campaign}` : "Back")}
+          onClick={onBack}
+        />
+      )}
       <div className="ui-qg-title">
         <span className="ui-qg-eyebrow">
           {campaign && <span className="ui-qg-crumb">{campaign} · </span>}
@@ -264,7 +343,11 @@ export function QgBar({ title, campaign, eyebrow = "Quality Gate", onBack, backL
             label="Format"
             value={format}
             onChange={onFormatChange}
-            options={formats.map((f) => ({ value: f.value, label: f.label, data: { format: f.value, ...(f.size ? { size: f.size } : {}) } }))}
+            options={formats.map((f) => ({
+              value: f.value,
+              label: f.label,
+              data: { format: f.value, ...(f.size ? { size: f.size } : {}) },
+            }))}
           />
         </div>
       )}
@@ -390,8 +473,14 @@ export function QgStage({ src, alt, format, pins = [], caption, size, className,
           )}
           <span className={cx("ui-qg-seal", landing && "is-landing")} data-check={check}>
             <Icon name="fume-check" />
-            <span className="ui-qg-seal-text">{check === "approved" ? `Checked · ${qg.reviewer}` : check === "changes" ? "Changes requested" : "In check"}</span>
-            <time className="ui-qg-seal-time">{check === "approved" ? qg.checkedAt ?? "" : ""}</time>
+            <span className="ui-qg-seal-text">
+              {check === "approved"
+                ? `Checked · ${qg.reviewer}`
+                : check === "changes"
+                  ? "Changes requested"
+                  : "In check"}
+            </span>
+            <time className="ui-qg-seal-time">{check === "approved" ? (qg.checkedAt ?? "") : ""}</time>
           </span>
         </div>
         {(caption || size) && (
@@ -429,7 +518,8 @@ export function QgPanel({ title, meta, summary, decision, keys = true, className
   const [top, setTop] = useState<number | null>(null);
   useEffect(() => {
     if (qg.snap !== "full") return;
-    const root = qg.rootRef.current, bar = root?.querySelector(".ui-qg-bar");
+    const root = qg.rootRef.current,
+      bar = root?.querySelector(".ui-qg-bar");
     if (root && bar) setTop(Math.round(bar.getBoundingClientRect().bottom - root.getBoundingClientRect().top));
   }, [qg.snap, qg.rootRef]);
   const full = qg.snap === "full";
@@ -442,7 +532,13 @@ export function QgPanel({ title, meta, summary, decision, keys = true, className
       {...props}
       style={{ ...props.style, ...(full && top !== null ? vars({ "--qg-top": `${top}px` }) : null) }}
     >
-      <button className="ui-qg-handle" type="button" aria-expanded={full} aria-label={full ? "Show less" : "Show the whole checklist"} onClick={() => qg.openSheet()} />
+      <button
+        className="ui-qg-handle"
+        type="button"
+        aria-expanded={full}
+        aria-label={full ? "Show less" : "Show the whole checklist"}
+        onClick={() => qg.openSheet()}
+      />
       <div className="ui-qg-head">
         <h4 className="ui-qg-sheet-title">{title}</h4>
         {meta && <div className="ui-qg-meta">{meta}</div>}
@@ -592,7 +688,12 @@ export interface QgComposeProps {
 }
 
 /** div.ui-qg-compose: the note field. Enter adds, Escape takes the draft pin away. */
-export function QgCompose({ label = "Add a note", placeholder = "What should the Engine change?", hint = "Press the creative to pin the note to a spot.", addLabel = "Add" }: QgComposeProps) {
+export function QgCompose({
+  label = "Add a note",
+  placeholder = "What should the Engine change?",
+  hint = "Press the creative to pin the note to a spot.",
+  addLabel = "Add",
+}: QgComposeProps) {
   const qg = useQg();
   const id = useId();
   const [text, setText] = useState("");
@@ -645,7 +746,13 @@ export interface QgDecisionProps {
 }
 
 /** div.ui-qg-decision--waiting (Request changes R, Mark checked C) and div.ui-qg-decision--done (outcome, Undo, Next). */
-export function QgDecision({ changesLabel = "Request changes", checkLabel = "Mark checked", undoLabel = "Undo", nextLabel = "Next creative", outcome }: QgDecisionProps) {
+export function QgDecision({
+  changesLabel = "Request changes",
+  checkLabel = "Mark checked",
+  undoLabel = "Undo",
+  nextLabel = "Next creative",
+  outcome,
+}: QgDecisionProps) {
   const qg = useQg();
   const n = Math.max(1, qg.notesCount);
   const words =
@@ -688,8 +795,10 @@ export function QgSeal({ state, by, time }: { state: QgState; by?: string; time?
   return (
     <span className="ui-qg-seal" data-check={p}>
       <Icon name="fume-check" />
-      <span className="ui-qg-seal-text">{p === "approved" ? `Checked · ${by ?? ""}` : p === "changes" ? "Changes requested" : "In check"}</span>
-      <time className="ui-qg-seal-time">{p === "approved" ? time ?? "" : ""}</time>
+      <span className="ui-qg-seal-text">
+        {p === "approved" ? `Checked · ${by ?? ""}` : p === "changes" ? "Changes requested" : "In check"}
+      </span>
+      <time className="ui-qg-seal-time">{p === "approved" ? (time ?? "") : ""}</time>
     </span>
   );
 }

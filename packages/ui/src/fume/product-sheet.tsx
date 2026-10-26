@@ -1,10 +1,8 @@
-// All products (design-system/components/product-sheet.css), PROPOSED 15 Oct 2026 (Marcus 15 Oct: "når man velger
-// produkt i studio er det logisk at det er en view all product knapp til å få opp popup siden en kunde kan ha mange
-// produkter"). One sheet for every product picker: the Studio's product, the Engine chat's tick grid, the manual
-// brief and Fume's product question. A picker shows its few recent tiles and a "View all products (N)" button; the
-// sheet holds them all, with a search, category and collection chips, and a lock on products the customer has not
-// confirmed yet ("To confirm", with the way forward under the tile; round 8: one state word, never "facts"; round 9,
-// DLOAD-1: the customer confirms, only the expert checks).
+// All products (design-system/components/product-sheet.css): one sheet for every product picker, since a customer can
+// have many products: the Studio's product, the Engine chat's tick grid, the manual brief and Fume's product question.
+// A picker shows its few recent tiles and a "View all products (N)" button; the sheet holds them all, with a search,
+// category and collection chips, and a lock on products the customer has not confirmed yet ("To confirm", with the way
+// forward under the tile; one state word; the customer confirms, only the expert checks).
 //   <ProductSheetButton count={12} onClick={() => setOpen(true)} />
 //   <ProductSheet open={open} onOpenChange={setOpen} products={rows} filters={[{ label: "Kind", options }]}
 //     multiple value={picked} onPick={(ids) => setPicked(ids)} />
@@ -182,7 +180,9 @@ export function ProductSheet({
         </div>
       )}
       <p className="ui-product-sheet-count" aria-live="polite">
-        {filtering ? `${shown.length} of ${plural(products.length, "product", "products")}` : plural(products.length, "product", "products")}
+        {filtering
+          ? `${shown.length} of ${plural(products.length, "product", "products")}`
+          : plural(products.length, "product", "products")}
         {multiple && ticked.length > 0 ? ` · ${ticked.length} ticked` : ""}
       </p>
       {shown.length ? (
@@ -199,7 +199,9 @@ export function ProductSheet({
               action={p.locked ? p.action : undefined}
               selected={p.locked ? undefined : multiple ? ticked.includes(p.id) : value.includes(p.id)}
               onSelectedChange={(on) => pick(p.id, multiple ? on : true)}
-              label={p.locked ? `${p.name}${p.variant ? `, ${p.variant}` : ""}: ${lockedLabel.toLowerCase()}` : undefined}
+              label={
+                p.locked ? `${p.name}${p.variant ? `, ${p.variant}` : ""}: ${lockedLabel.toLowerCase()}` : undefined
+              }
             />
           ))}
         </PickGrid>
@@ -276,9 +278,23 @@ export interface ProductSheetButtonProps {
 }
 
 /** "View all products (12)": opens the sheet, under a picker's few tiles. */
-export function ProductSheetButton({ count, onClick, label = "View all products", glass, disabled }: ProductSheetButtonProps) {
+export function ProductSheetButton({
+  count,
+  onClick,
+  label = "View all products",
+  glass,
+  disabled,
+}: ProductSheetButtonProps) {
   return (
-    <Button type="button" size="sm" variant={glass ? "glass-clear" : "secondary"} icon="layout-grid" onClick={onClick} disabled={disabled} className="ui-product-sheet-open">
+    <Button
+      type="button"
+      size="sm"
+      variant={glass ? "glass-clear" : "secondary"}
+      icon="layout-grid"
+      onClick={onClick}
+      disabled={disabled}
+      className="ui-product-sheet-open"
+    >
       {label} ({count})
     </Button>
   );

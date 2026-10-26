@@ -16,7 +16,7 @@ const AGENCY_PEOPLE = ["nora", "even", "live", "sindre"];
 
 /**
  * The mock lets the demo sign in as anyone: ?as=anna opens Fume's Quality Gate, ?as=jonas a member, ?fresh the first
- * run, ?as=nora the agency (round 11). ?agency&as=maja is LYSNE's client view in the agency's world.
+ * run, ?as=nora the agency. ?agency&as=maja is LYSNE's client view in the agency's world.
  */
 function createApi(): MockApi {
   const params = new URLSearchParams(window.location.search);
@@ -32,7 +32,7 @@ function createApi(): MockApi {
   }) as MockApi;
 }
 
-/** The demo's agency world (round 11), kept for the tab like the first run; who to sign in as after a demo reload. */
+/** The demo's agency world, kept for the tab like the first run; who to sign in as after a demo reload. */
 const AGENCY_KEY = "fume-demo-agency";
 const AS_KEY = "fume-demo-as";
 /** Where the preview's memory router starts after a demo reload (it has no address bar to keep it). */
@@ -120,7 +120,11 @@ export function restartDemo(fresh: boolean) {
 
 export function ApiProvider({ children }: { children: ReactNode }) {
   const api = useMemo(createApi, []);
-  const queryClient = useMemo(() => new QueryClient({ defaultOptions: { queries: { staleTime: 15_000, retry: 1, refetchOnWindowFocus: false } } }), []);
+  const queryClient = useMemo(
+    () =>
+      new QueryClient({ defaultOptions: { queries: { staleTime: 15_000, retry: 1, refetchOnWindowFocus: false } } }),
+    [],
+  );
   return (
     <ApiContext.Provider value={api}>
       <QueryClientProvider client={queryClient}>
@@ -195,7 +199,7 @@ export function useDemoSignIn(): (who: DemoPerson) => void {
   return (who) => {
     const agencyPerson = AGENCY_PEOPLE.includes(who);
     const fumePerson = who === "anna" || who === "sander" || who === "vera";
-    // The agency's world and Fume's own are two demos (round 11): crossing between them reloads.
+    // The agency's world and Fume's own are two demos: crossing between them reloads.
     if (agencyPerson && !isAgencyDemo()) return startAgencyDemo(who);
     if (fumePerson && isAgencyDemo()) return leaveAgencyDemo(who);
     // Leaving the first-run demo goes back to LYSNE with its history (signed in as Maja).

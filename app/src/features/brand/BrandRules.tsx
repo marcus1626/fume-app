@@ -1,10 +1,8 @@
-// Brand Rules (ARCHITECTURE §4.2): what every creative keeps to, by area (logo, colour, type, voice, layout,
-// imagery, claims). A hard constraint is never broken; a preference can bend for one campaign. A rule Fume found
-// itself says where it came from and how sure Fume is; a rule you gave or confirmed shows only itself (round 8,
-// LOAD-9). Owner, approver and member edit and add; a viewer reads. /brand/rules: "← Brand", no tab row (WAY-10).
-// Round 9 (desktop review DLAY-7; PROPOSED 19 Oct 2026): the reading measure (760), each area a 120 px column on the
-// left of its rules (Logo | rule | pencil), so seven rules fit in one screen with the pencil right after the text; a
-// rule is written in a panel on the right (a form, so never a centred dialog), the list still in view.
+// Brand Rules (ARCHITECTURE §4.2): what every creative keeps to, by area (logo, colour, type, voice, layout, imagery,
+// claims). A hard constraint is never broken; a preference can bend for one campaign. A rule Fume found itself says
+// where it came from and how sure Fume is; a rule you gave or confirmed shows only itself. Owner, approver and member
+// edit and add; a viewer reads. /brand/rules has "← Brand" and no tab row. Each area is a column on the left of its
+// rules, so seven rules fit in one screen; a rule is written in the right panel (a form), with the list still in view.
 import {
   Badge,
   Button,
@@ -42,14 +40,14 @@ import { Back, Nothing, Page, Query } from "../../shell/Page";
 import { useAddRule, useUpdateRule } from "./hooks";
 import { ruleArea, ruleAreas, ruleKind, ruleLine, useExpertName, useRole } from "./parts";
 
-// Round 13 (Marcus's video comment #43, robot note 05; PROPOSED 22 Oct 2026): every rule is a Do or a Don't, said on
-// the rule and chosen in the panel, with a filter over the list (All · Do · Don't). A new rule's area is not set to
-// Voice before she says anything: Fume guesses it from the words as she writes, or she chooses it.
+// Every rule is a Do or a Don't, said on the rule and chosen in the panel, with a filter over the list (All · Do ·
+// Don't). A new rule's area starts unset: Fume guesses it from the words as she writes, or she chooses it.
 type Draft = Omit<Pick<BrandRule, "area" | "kind" | "statement" | "polarity">, "area"> & { area: RuleArea | "" };
 
 export const polarityWord: Record<RulePolarity, string> = { do: "Do", dont: "Don’t" };
 /** A rule that starts with No, Never or Don't is a Don't. */
-export const polarityOf = (r: Pick<BrandRule, "polarity" | "statement">): RulePolarity => r.polarity ?? (/^(no|never|don[’']t|avoid)\b/i.test(r.statement.trim()) ? "dont" : "do");
+export const polarityOf = (r: Pick<BrandRule, "polarity" | "statement">): RulePolarity =>
+  r.polarity ?? (/^(no|never|don[’']t|avoid)\b/i.test(r.statement.trim()) ? "dont" : "do");
 
 /** The area a rule is about, guessed from its words; undefined when nothing says. */
 function guessArea(text: string): RuleArea | undefined {
@@ -66,11 +64,21 @@ function guessArea(text: string): RuleArea | undefined {
 
 /** Edit a rule, or add one when there is none to edit, in the right panel. Saving a rule makes it confirmed by you (the
  *  mock sets source "verified"). */
-function RulePanel({ open, onOpenChange, rule }: { open: boolean; onOpenChange: (open: boolean) => void; rule?: BrandRule }) {
+function RulePanel({
+  open,
+  onOpenChange,
+  rule,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  rule?: BrandRule;
+}) {
   const update = useUpdateRule();
   const add = useAddRule();
   const toast = useToast();
-  const [draft, setDraft] = useState<Draft>(rule ? { ...rule, polarity: polarityOf(rule) } : { area: "", kind: "rule", statement: "" });
+  const [draft, setDraft] = useState<Draft>(
+    rule ? { ...rule, polarity: polarityOf(rule) } : { area: "", kind: "rule", statement: "" },
+  );
   // what she chose herself is never guessed over
   const [chose, setChose] = useState({ area: Boolean(rule), polarity: Boolean(rule) });
   const busy = update.isPending || add.isPending;
@@ -94,7 +102,8 @@ function RulePanel({ open, onOpenChange, rule }: { open: boolean; onOpenChange: 
         toast.done(rule ? "Rule changed" : "Rule added", { description: "Fume follows it from the next creative on." });
         onOpenChange(false);
       },
-      onError: (error: Error) => toast.error(rule ? "The rule wasn’t changed" : "The rule wasn’t added", { description: error.message }),
+      onError: (error: Error) =>
+        toast.error(rule ? "The rule wasn’t changed" : "The rule wasn’t added", { description: error.message }),
     };
     if (rule) update.mutate({ ...rule, ...draft, area, polarity, statement }, done);
     else add.mutate({ ...draft, area, polarity, statement }, done);
@@ -105,18 +114,27 @@ function RulePanel({ open, onOpenChange, rule }: { open: boolean; onOpenChange: 
       <SheetContent side="right">
         <SheetHeader>
           <SheetTitle>{rule ? "Change the rule" : "Add a rule"}</SheetTitle>
-          <SheetDescription>Write it the way you would tell a designer. Every creative is made and checked against it.</SheetDescription>
+          <SheetDescription>
+            Write it the way you would tell a designer. Every creative is made and checked against it.
+          </SheetDescription>
         </SheetHeader>
         <form className="ui-sheet-form" onSubmit={submit}>
           <SheetBody>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="rule-statement">The rule</FieldLabel>
-                <Textarea id="rule-statement" value={draft.statement} onChange={(e) => write(e.target.value)} rows={3} required data-ui-autofocus />
+                <Textarea
+                  id="rule-statement"
+                  value={draft.statement}
+                  onChange={(e) => write(e.target.value)}
+                  rows={3}
+                  required
+                  data-ui-autofocus
+                />
               </Field>
               <Field>
                 <FieldLabel id="rule-polarity-label">Do or don’t</FieldLabel>
-                {/* a segmented control, glass-aware on the panel: the chosen one is the white pill (round 13 after-check of #43) */}
+                {/* a segmented control, glass-aware on the panel: the chosen one is the white pill */}
                 <SegmentedControl
                   value={draft.polarity ?? ""}
                   onValueChange={(v) => {
@@ -152,16 +170,27 @@ function RulePanel({ open, onOpenChange, rule }: { open: boolean; onOpenChange: 
                     </option>
                   ))}
                 </NativeSelect>
-                {guessed && <FieldDescription id="rule-area-help">Fume chose it from your words. Change it if it is not right.</FieldDescription>}
+                {guessed && (
+                  <FieldDescription id="rule-area-help">
+                    Fume chose it from your words. Change it if it is not right.
+                  </FieldDescription>
+                )}
               </Field>
               <Field>
                 <FieldLabel htmlFor="rule-kind">How strict</FieldLabel>
-                <NativeSelect id="rule-kind" value={draft.kind} onChange={(e) => set({ kind: e.target.value as BrandRule["kind"] })} aria-describedby="rule-kind-help">
+                <NativeSelect
+                  id="rule-kind"
+                  value={draft.kind}
+                  onChange={(e) => set({ kind: e.target.value as BrandRule["kind"] })}
+                  aria-describedby="rule-kind-help"
+                >
                   <option value="hard_constraint">{ruleKind.hard_constraint}</option>
                   <option value="rule">{ruleKind.rule}</option>
                   <option value="preference">{ruleKind.preference}</option>
                 </NativeSelect>
-                <FieldDescription id="rule-kind-help">A rule that is never broken stops a creative in the check. A preference can bend for one campaign.</FieldDescription>
+                <FieldDescription id="rule-kind-help">
+                  A rule that is never broken stops a creative in the check. A preference can bend for one campaign.
+                </FieldDescription>
               </Field>
             </FieldGroup>
           </SheetBody>
@@ -171,7 +200,12 @@ function RulePanel({ open, onOpenChange, rule }: { open: boolean; onOpenChange: 
                 Cancel
               </Button>
             </SheetClose>
-            <Button type="submit" variant="glass-white" loading={busy} disabled={!draft.statement.trim() || !draft.area}>
+            <Button
+              type="submit"
+              variant="glass-white"
+              loading={busy}
+              disabled={!draft.statement.trim() || !draft.area}
+            >
               {rule ? "Save the rule" : "Add the rule"}
             </Button>
           </SheetFooter>
@@ -241,7 +275,16 @@ export function RulesContent({ onAdd, onEdit }: { onAdd?: () => void; onEdit?: (
                           </ItemContent>
                           <ItemActions>
                             {r.kind === "hard_constraint" && <Badge variant="ink">{ruleKind.hard_constraint}</Badge>}
-                            {onEdit && <Button variant="quiet" size="sm" iconOnly icon="pencil" aria-label={`Change the rule: ${r.statement}`} onClick={() => onEdit(r.id)} />}
+                            {onEdit && (
+                              <Button
+                                variant="quiet"
+                                size="sm"
+                                iconOnly
+                                icon="pencil"
+                                aria-label={`Change the rule: ${r.statement}`}
+                                onClick={() => onEdit(r.id)}
+                              />
+                            )}
                           </ItemActions>
                         </Item>
                       ))}
@@ -255,7 +298,7 @@ export function RulesContent({ onAdd, onEdit }: { onAdd?: () => void; onEdit?: (
   );
 }
 
-/** /brand/rules: "← Brand", the title, who checks against them, Add a rule; then the rules by area (WAY-10). */
+/** /brand/rules: "← Brand", the title, who checks against them, Add a rule; then the rules by area. */
 export function BrandRules() {
   const brand = useBrandDna();
   const { canEdit } = useRole();

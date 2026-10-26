@@ -38,13 +38,14 @@ export const ButtonGroupText = forwardRef<HTMLSpanElement, ButtonGroupTextProps>
   { numeric = false, className, ...props },
   ref,
 ) {
-  return <span ref={ref} className={cx("ui-btn-group-text", numeric && "ui-btn-group-text--num", className)} {...props} />;
+  return (
+    <span ref={ref} className={cx("ui-btn-group-text", numeric && "ui-btn-group-text--num", className)} {...props} />
+  );
 });
 
 /** More space between buttons of a group (8), never a line. */
-export const ButtonGroupSeparator = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function ButtonGroupSeparator(
-  { className, ...props },
-  ref,
-) {
-  return <span ref={ref} aria-hidden="true" className={cx("ui-btn-group-separator", className)} {...props} />;
-});
+export const ButtonGroupSeparator = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(
+  function ButtonGroupSeparator({ className, ...props }, ref) {
+    return <span ref={ref} aria-hidden="true" className={cx("ui-btn-group-separator", className)} {...props} />;
+  },
+);

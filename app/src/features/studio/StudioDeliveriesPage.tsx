@@ -1,9 +1,8 @@
-// Deliveries across every brand (FLOWS §4.2). Round 12 (UX review DLAY-15, DLOAD-13, DLOAD-21, PROPOSED 20 Oct 2026):
-// the records table of Campaigns, grouped Due and Sent (not by brand): the cover, the campaign and where it stands
-// (the one status sentence, as Fume's people read it), the brand on the page for every brand, how much is approved
-// ("2 of 11" with a bar, or "Planned: 9 creatives" before any is made, never "0 of 0") and the delivery date with
-// its label: the plan's "Delivery", never the go-live under a bare "Due"; a sent row says "Delivered 26 Sep".
-// Due is sorted by that date, soonest first. A row opens the campaign.
+// Deliveries across every brand (FLOWS §4.2): the records table of Campaigns, grouped Due and Sent (not by brand). The
+// cover, the campaign and where it stands (the one status sentence, as Fume's people read it), the brand on the page
+// for every brand, how much is approved ("2 of 11" with a bar, or "Planned: 9 creatives" before any is made, never "0
+// of 0") and the delivery date with its label: the plan's "Delivery", never the go-live under a bare "Due"; a sent row
+// says "Delivered 26 Sep". Due is sorted by that date, soonest first. A row opens the campaign.
 import {
   Icon,
   Item,
@@ -48,7 +47,10 @@ export function StudioDeliveriesPage() {
 
   return (
     <Page title="Deliveries">
-      <PageHeader title="Deliveries" meta={campaigns.data ? [`${dueRows.length} due`, `${sent.length} sent`] : undefined} />
+      <PageHeader
+        title="Deliveries"
+        meta={campaigns.data ? [`${dueRows.length} due`, `${sent.length} sent`] : undefined}
+      />
 
       <Query query={campaigns} loading="Loading the deliveries">
         {() => (
@@ -75,17 +77,31 @@ export function StudioDeliveriesPage() {
 }
 
 const to = (r: StudioCampaignRow) => `/studio/b/${r.workspace.id}/campaigns/${r.campaign.id}/plan`;
-// Round 13 AGENCY (robot note 10-agency): the frame's reader (StudioShell sets it), so an agency reads its own step
-// ("Check the plan"), not Fume's staff's ("The plan waits on Maja")
+// The frame's reader (StudioShell sets it), so an agency reads its own step ("Check the plan"), not Fume's staff's
+// ("The plan waits on Maja").
 const status = (r: StudioCampaignRow) =>
-  copy.campaignStatus(r.campaign, undefined, { customerName: r.approver ? firstName(r.approver.name) : undefined, date: false }).words;
+  copy.campaignStatus(r.campaign, undefined, {
+    customerName: r.approver ? firstName(r.approver.name) : undefined,
+    date: false,
+  }).words;
 const dayOf = (r: StudioCampaignRow) => {
   const d = dateOf(r);
   if (!d) return undefined;
-  return { label: d.label, day: d.label === copy.dateLabel.delivered || d.label === "Went live" ? date(d.at) : due(d.at) };
+  return {
+    label: d.label,
+    day: d.label === copy.dateLabel.delivered || d.label === "Went live" ? date(d.at) : due(d.at),
+  };
 };
 
-function Deliveries({ rows, showBrand, labelledBy }: { rows: StudioCampaignRow[]; showBrand: boolean; labelledBy: string }) {
+function Deliveries({
+  rows,
+  showBrand,
+  labelledBy,
+}: {
+  rows: StudioCampaignRow[];
+  showBrand: boolean;
+  labelledBy: string;
+}) {
   const desk = !useNarrowScreen("(max-width: 1023px)");
   if (!desk)
     return (
@@ -95,12 +111,16 @@ function Deliveries({ rows, showBrand, labelledBy }: { rows: StudioCampaignRow[]
           return (
             <Item key={r.campaign.id} as="li" asChild>
               <Link to={to(r)}>
-                <ItemMedia variant={r.campaign.cover ? "image" : "icon"}>{r.campaign.cover ? <ItemMediaImage src={r.campaign.cover} alt="" /> : <Icon name="megaphone" />}</ItemMedia>
+                <ItemMedia variant={r.campaign.cover ? "image" : "icon"}>
+                  {r.campaign.cover ? <ItemMediaImage src={r.campaign.cover} alt="" /> : <Icon name="megaphone" />}
+                </ItemMedia>
                 <ItemContent>
                   <ItemTitle>
                     {r.campaign.name} {showBrand && <span className="ui-home-due">{r.workspace.brandName}</span>}
                   </ItemTitle>
-                  <ItemDescription>{[approved(r), d ? `${d.label} ${d.day}` : undefined].filter(Boolean).join(" · ")}</ItemDescription>
+                  <ItemDescription>
+                    {[approved(r), d ? `${d.label} ${d.day}` : undefined].filter(Boolean).join(" · ")}
+                  </ItemDescription>
                 </ItemContent>
                 <ItemActions>
                   <Icon name="chevron-right" />
@@ -142,7 +162,11 @@ function Deliveries({ rows, showBrand, labelledBy }: { rows: StudioCampaignRow[]
                 </TableCell>
                 <TableCell className="ui-campaign-cell-name">
                   <TableTitle sub={status(r)}>
-                    <Link className="ui-campaign-row-link" to={to(r)} aria-label={`${r.campaign.name}, ${r.workspace.brandName}: open the campaign`}>
+                    <Link
+                      className="ui-campaign-row-link"
+                      to={to(r)}
+                      aria-label={`${r.campaign.name}, ${r.workspace.brandName}: open the campaign`}
+                    >
                       {r.campaign.name}
                     </Link>
                   </TableTitle>
@@ -179,4 +203,5 @@ function Deliveries({ rows, showBrand, labelledBy }: { rows: StudioCampaignRow[]
 }
 
 /** "2 of 11 approved", "Planned: 9 creatives". */
-const approved = (r: StudioCampaignRow) => copy.approvedOf(r.campaign.counts.approved, r.campaign.counts.creatives, r.campaign.waits?.planned);
+const approved = (r: StudioCampaignRow) =>
+  copy.approvedOf(r.campaign.counts.approved, r.campaign.counts.creatives, r.campaign.waits?.planned);

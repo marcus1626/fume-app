@@ -1,10 +1,9 @@
-// The route table (ARCHITECTURE §7). The workspace and the studio are two shells on one app; the first run has
-// none. Every route is a screen in src/features/<domain>/.
-// Round 12 (desktop review 20 Oct, DWAY-3, DWAY-5; PROPOSED 20 Oct 2026): one layout (WorkspaceShell) holds every page
-// in a frame, and it picks the frame: the customer's, or the one staff frame of Fume's studio and an agency
-// (StudioShell). The two staff frames share one shape of address: all brands /studio/…, all clients /agency/…; one
-// brand /studio/b/:workspaceId/…, one client /agency/b/:workspaceId/… (brandPages). Under a brand's prefix live the
-// staff pages and the customer's own pages as the frame shows them, so every place names its brand in the address.
+// The route table (ARCHITECTURE §7); every route is a screen in src/features/<domain>/. One layout (WorkspaceShell)
+// holds every page in a frame and picks the frame: the customer's, or the one staff frame of Fume's studio and an
+// agency (StudioShell); the first run has none. The staff frames share one shape of address: all brands /studio/…, all
+// clients /agency/…; one brand /studio/b/:workspaceId/…, one client /agency/b/:workspaceId/… (brandPages). Under a
+// brand's prefix live the staff pages and the customer's own pages as the frame shows them, so every place names its
+// brand in the address (FLOWS §25.1).
 import { IconSprite, ToastProvider, TooltipProvider } from "@fume/ui";
 import { createBrowserRouter, createMemoryRouter, Navigate, RouterProvider, useParams } from "react-router-dom";
 import { ApiProvider, demoStartPath } from "./api/client";
@@ -53,15 +52,16 @@ import { ProductRedirect, Redirect } from "./shell/Redirect";
 import { Root } from "./shell/Root";
 import { WorkspaceShell } from "./shell/WorkspaceShell";
 
-/** Round 11 (FLOWS §24): the agency's pages and the client link load when first opened. */
+/** The agency's pages and the client link load when first opened. */
 const agencyPage = (name: string) => () =>
   import("./features/agency/index").then((m) => ({ Component: m[name as keyof typeof m] }));
 
 const brandCheckPage = () => import("./features/check/BrandCheckPage").then((m) => ({ Component: m.BrandCheckPage }));
-const productCheckPage = () => import("./features/check/ProductCheckPage").then((m) => ({ Component: m.ProductCheckPage }));
+const productCheckPage = () =>
+  import("./features/check/ProductCheckPage").then((m) => ({ Component: m.ProductCheckPage }));
 
-/** For Fume's people a campaign is its plan, the studio's page of a campaign (DWAY-14); its other tabs are the
- *  customer's, seen through Customer view. */
+/** For Fume's people a campaign is its plan, the studio's page of a campaign; its other tabs are the customer's, seen
+ *  through Customer view. */
 function ToStaffPlan() {
   const { workspaceId, campaignId } = useParams<"workspaceId" | "campaignId">();
   return <Navigate to={`/studio/b/${workspaceId}/campaigns/${campaignId}/plan`} replace />;
@@ -77,9 +77,9 @@ function brandPages(frame: "studio" | "agency") {
   const campaigns =
     frame === "studio"
       ? [
-          // Round 13 (robot note 08): ?show=calendar is the brand's calendar, as ⌘K's "Campaigns · Calendar" says
+          // ?show=calendar is the brand's calendar, as ⌘K's "Campaigns · Calendar" says
           { path: `${b}/campaigns`, element: <StudioCampaignsOrCalendar /> },
-          // Round 10 (FLOWS §22): the plan for the expert, who checks it before the customer sees it
+          // The plan for the expert, who checks it before the customer sees it (FLOWS §22)
           { path: `${b}/campaigns/:campaignId/plan`, element: <StaffPlanPage /> },
           { path: `${b}/campaigns/:campaignId/*`, element: <ToStaffPlan /> },
         ]
@@ -103,7 +103,7 @@ function brandPages(frame: "studio" | "agency") {
     { path: `${b}/boards/:boardId`, element: <BoardPage /> },
     { path: `${b}/brand/understanding`, element: <UnderstandingPage /> },
     { path: `${b}/brand/products/:productId`, element: <ProductPage /> },
-    // Round 13 BRAND (#41): an AI model's own page, its sheet and specs
+    // An AI model's own page: its sheet and specs
     { path: `${b}/brand/models/:modelId`, element: <ModelPage /> },
     { path: `${b}/brand/check`, lazy: brandCheckPage },
     { path: `${b}/check/products`, lazy: productCheckPage },
@@ -114,7 +114,7 @@ function brandPages(frame: "studio" | "agency") {
     { path: `${b}/deliveries`, element: <DeliveriesPage /> },
     { path: `${b}/deliveries/:deliveryId`, element: <DeliveryPage /> },
     { path: `${b}/products/collections/:collectionId`, element: <CollectionPage /> },
-    // the older addresses send you on, under the brand (the frame writes the customer's address under its prefix)
+    // The older addresses send you on, under the brand (the frame writes the customer's address under its prefix)
     { path: `${b}/calendar`, element: <Redirect to="/campaigns" add={{ show: "calendar" }} /> },
     { path: `${b}/products`, element: <Redirect to="/brand/products" /> },
     { path: `${b}/products/:productId`, element: <ProductRedirect /> },
@@ -131,12 +131,12 @@ const routes = [
       { path: "studio/check/:checkId", element: <CheckPage /> },
       // The Studio itself is full screen, like Photoshop (FLOWS §9)
       { path: "studio/doc/:documentId", element: <DocAddress /> },
-      // Round 13 AGENCY: the agency's people open the Studio at their own address (features/agency/DocAddress.tsx)
+      // The agency's people open the Studio at their own address (features/agency/DocAddress.tsx)
       { path: "agency/doc/:documentId", element: <DocAddress /> },
       // Review's full-screen viewer and swipe mode (FLOWS §11)
       { path: "review/:campaignId/c/:creativeId", element: <ViewerPage /> },
       { path: "review/:campaignId/swipe", element: <SwipePage /> },
-      // Round 11 (FLOWS §24.5): the client link opens only the creatives sent, for a client without an account
+      // The client link opens only what was sent, for a client without an account (FLOWS §24.5, §26.8)
       { path: "c/:token", lazy: agencyPage("ClientLinkPage") },
       {
         element: <WorkspaceShell />,
@@ -151,12 +151,12 @@ const routes = [
           { path: "studio/quality", element: <QualityLogPage /> },
           { path: "studio/team", element: <TeamLoadPage /> },
           { path: "studio/usage", element: <UsagePage /> },
-          // Round 13 BRAND (robot note 08): Fume's person's own profile, in the studio
+          // A Fume person's own profile, in the studio
           { path: "studio/settings", element: <Navigate to="/studio/settings/profile" replace /> },
           { path: "studio/settings/profile", element: <StaffProfilePage /> },
           ...brandPages("studio"),
-          // Round 11 (FLOWS §24.3): the agency's places across its clients; round 12: the same places as the studio's
-          // (Usage is the one Usage page, DTASK-6), and one client's places under /agency/b/:workspaceId
+          // The agency's places across its clients (FLOWS §24.3), the same as the studio's (Usage is the one Usage
+          // page), and one client's places under /agency/b/:workspaceId
           { path: "agency", lazy: agencyPage("AgencyHomePage") },
           { path: "agency/check", lazy: agencyPage("AgencyCheckPage") },
           { path: "agency/campaigns", lazy: agencyPage("AgencyCampaignsPage") },
@@ -167,26 +167,26 @@ const routes = [
           { path: "agency/quality", element: <QualityLogPage /> },
           { path: "agency/settings/:page?", lazy: agencyPage("AgencySettingsPage") },
           ...brandPages("agency"),
-          // The customer's four places (UX review 15 Oct, §2.4): Home (the one inbox), Campaigns, Brand, Fume.
+          // The customer's places: Home (the one inbox), Fume, Campaigns, Brand; Review and Deliveries further down.
           { index: true, element: <HomePage /> },
           { path: "fume/:threadId?", element: <FumePage /> },
           // Campaigns: a list or the calendar (?show=calendar); each campaign holds its brief, creatives and delivery
           { path: "campaigns", element: <CampaignsPage /> },
           { path: "campaigns/new", element: <NewBriefPage /> },
-          // A campaign's review is a state of the campaign (UX review 19 Oct, WAY-9); /review/:id sends you here
+          // A campaign's review is a state of the campaign; /review/:id sends you here
           { path: "campaigns/:campaignId/review", element: <ReviewCampaign /> },
           { path: "campaigns/:campaignId/:tab?", element: <CampaignPage /> },
           // Brand: one page, three tabs (Board, Products, Taste); the board's parts, Rules and Memory have their own address
           { path: "brand/understanding", element: <UnderstandingPage /> },
           { path: "brand/products/:productId", element: <ProductPage /> },
-          // Round 13 BRAND (#41): an AI model's own page, its sheet and specs
+          // An AI model's own page: its sheet and specs
           { path: "brand/models/:modelId", element: <ModelPage /> },
-          // Round 8 HOME: the Engine's open proposals one at a time, inside Brand (WAY-6, LOAD-6)
+          // The Engine's open proposals one at a time, inside Brand
           { path: "brand/check", lazy: brandCheckPage },
-          // Round 9 CHECK: the product queue is inside the shell too, the same frame as Brand's (DLAY-10, DLOAD-13)
+          // The product queue is inside the shell too, in the same frame as Brand's
           { path: "check/products", lazy: productCheckPage },
           { path: "brand/:tab?", element: <BrandBoardPage /> },
-          // Older places, now inside the four. Their deep links keep working.
+          // Review and Deliveries, and older addresses that send you on; their deep links keep working.
           { path: "review", element: <ReviewPage /> },
           { path: "review/:campaignId", element: <ReviewCampaign /> },
           { path: "deliveries", element: <DeliveriesPage /> },
@@ -200,14 +200,14 @@ const routes = [
             path: "products/collections/:collectionId",
             element: <CollectionPage />,
           },
-          // One address per product (walk-through 19 Oct, WAY-11): the old one sends you on.
+          // One address per product: the old one sends you on.
           { path: "products/:productId", element: <ProductRedirect /> },
-          // v4: Fume answers and hands over to people in the one conversation (FLOWS §21)
+          // Fume answers and hands over to people in the one conversation (FLOWS §21)
           { path: "contact", element: <Navigate to="/fume" replace /> },
           { path: "boards/:boardId", element: <BoardPage /> },
           { path: "notifications", element: <NotificationsPage /> },
           {
-            // round 8 NAV (WAY-21): /settings is the list on a phone (the workspace page on a desk); each page has its own address
+            // /settings is the list on a phone (the workspace page on a desk); each page has its own address
             path: "settings",
             element: <SettingsPage />,
           },
@@ -222,7 +222,9 @@ const routes = [
 // The preview build (VITE_ROUTER=memory) runs where the address bar cannot be used, so it keeps the route in memory
 // (and starts where a demo reload asked: the agency's Home in the agency demo).
 const router =
-  import.meta.env.VITE_ROUTER === "memory" ? createMemoryRouter(routes, { initialEntries: [demoStartPath()] }) : createBrowserRouter(routes);
+  import.meta.env.VITE_ROUTER === "memory"
+    ? createMemoryRouter(routes, { initialEntries: [demoStartPath()] })
+    : createBrowserRouter(routes);
 
 export function App() {
   return (

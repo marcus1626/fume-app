@@ -12,9 +12,8 @@
 // the empty state says so and offers a next step. Arrow keys, PageUp/PageDown and Ctrl+Home/End move the
 // highlight while focus stays in the field; Enter or a click chooses, the palette closes, then onSelect runs.
 // ⌘K / Ctrl+K opens and closes it (hotkey). It starts clean every time it opens.
-// Round 9 (DWAY-8, DWAY-10; PROPOSED 19 Oct 2026): closing gives focus back to what had it when the palette opened
-// (the Search button, a field), unless the choice went to another page, whose title then takes it. The list is
-// min(600 px, 70 %) tall on a desk (command.css).
+// Closing gives focus back to what had it when the palette opened (the Search button, a field), unless the choice went
+// to another page, whose title then takes it. The list is min(600 px, 70 %) tall on a desk (command.css).
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {
   useEffect,
@@ -75,13 +74,7 @@ export interface CommandPaletteProps {
 
 /** Lower case, accents off (ø, æ, å too), as command.js matches. */
 export function normalizeSearch(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/ø/g, "o")
-    .replace(/æ/g, "ae")
-    .replace(/å/g, "a");
+  return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ø/g, "o").replace(/æ/g, "ae").replace(/å/g, "a");
 }
 
 function matches(item: CommandPaletteItem, words: string[]): boolean {
@@ -279,7 +272,12 @@ export function CommandPalette({
               {groups.map((g, gi) => {
                 const headingId = `${uid}-g${gi}`;
                 return (
-                  <div className="ui-command-group" role="group" key={g.name || `group-${gi}`} aria-labelledby={g.name ? headingId : undefined}>
+                  <div
+                    className="ui-command-group"
+                    role="group"
+                    key={g.name || `group-${gi}`}
+                    aria-labelledby={g.name ? headingId : undefined}
+                  >
                     {g.name && (
                       <div className="ui-command-group-heading" id={headingId} onMouseDown={keepFocus}>
                         {g.name}

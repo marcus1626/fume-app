@@ -12,14 +12,35 @@ export interface StudioLensProps extends StudioControlProps<Lens> {
   help?: string;
 }
 
-export function StudioLens({ value, onChange, label, id, disabled, focal = [14, 200], height = [0, 200], tilt = [-45, 45], help }: StudioLensProps) {
+export function StudioLens({
+  value,
+  onChange,
+  label,
+  id,
+  disabled,
+  focal = [14, 200],
+  height = [0, 200],
+  tilt = [-45, 45],
+  help,
+}: StudioLensProps) {
   const sid = studioId(label, id);
   const part = (key: keyof Lens, name: string, [min, max]: [number, number], unit: string, step = 1) => (
     <div className="ui-sc-lens-part">
       <span className="ui-sc-label" aria-hidden="true">
         {name}
       </span>
-      <StudioSlider bare label={`${label}: ${name.toLowerCase()}`} id={`${sid}-${key}`} value={value[key]} min={min} max={max} step={step} unit={unit} disabled={disabled} onChange={(n) => onChange({ ...value, [key]: n })} />
+      <StudioSlider
+        bare
+        label={`${label}: ${name.toLowerCase()}`}
+        id={`${sid}-${key}`}
+        value={value[key]}
+        min={min}
+        max={max}
+        step={step}
+        unit={unit}
+        disabled={disabled}
+        onChange={(n) => onChange({ ...value, [key]: n })}
+      />
       <span className="ui-sc-readout">
         {value[key]}
         {unit === "°" ? "°" : ` ${unit}`}

@@ -1,5 +1,5 @@
-// Product fix (FLOWS §17), PROPOSED 15 Oct 2026. The Engine masks the product on every render and reads its details
-// against the product's detail tokens (real cut-outs of the real product). On the board:
+// Product fix (FLOWS §17). The Engine masks the product on every render and reads its details against the product's
+// detail tokens (real cut-outs of the real product). On the board:
 // - DetailsOverlay: the details it masked as subtle outlined regions, when "Product details" is on; a detail that
 //   reads wrong always shows, with a small marker ("Reads 200 ml · should be 100 ml"). Tap one: what the Engine
 //   read beside the real cut-out, and Fix with the real product. While it fixes, the region shimmers white; the fix
@@ -53,7 +53,10 @@ function cropAround(r: Region, imageRatio: number, aspect?: number) {
 /** An image shown cropped to a region through CSS custom properties. */
 function Crop({ src, crop, alt }: { src: string; crop: ReturnType<typeof cropAround>; alt: string }) {
   return (
-    <span className="ui-pfix-crop" style={{ "--cx": crop.x, "--cy": crop.y, "--cw": crop.w, "--ch": crop.h, "--ar": crop.aspect } as CSSProperties}>
+    <span
+      className="ui-pfix-crop"
+      style={{ "--cx": crop.x, "--cy": crop.y, "--cw": crop.w, "--ch": crop.h, "--ar": crop.aspect } as CSSProperties}
+    >
       <img src={src} alt={alt} draggable={false} />
     </span>
   );
@@ -80,15 +83,36 @@ export interface DetailsOverlayProps {
   readOnly: boolean;
 }
 
-export function DetailsOverlay({ doc, version, tokens, imageRatio, show, brushing, onBrushingChange, readOnly }: DetailsOverlayProps) {
+export function DetailsOverlay({
+  doc,
+  version,
+  tokens,
+  imageRatio,
+  show,
+  brushing,
+  onBrushingChange,
+  readOnly,
+}: DetailsOverlayProps) {
   const fixing = (doc.fixes ?? []).filter((f) => f.state === "fixing");
-  const details = (version.details ?? []).filter((d) => (show || !d.ok) && !fixing.some((f) => f.tokenId === d.tokenId));
+  const details = (version.details ?? []).filter(
+    (d) => (show || !d.ok) && !fixing.some((f) => f.tokenId === d.tokenId),
+  );
   const token = (id: string) => tokens.find((t) => t.id === id);
   return (
     <span className="ui-pfix" data-brushing={brushing ? "" : undefined}>
       {details.map((d) => {
         const t = token(d.tokenId);
-        return t ? <DetailRegion key={d.tokenId} doc={doc} version={version} find={d} token={t} imageRatio={imageRatio} readOnly={readOnly} /> : null;
+        return t ? (
+          <DetailRegion
+            key={d.tokenId}
+            doc={doc}
+            version={version}
+            find={d}
+            token={t}
+            imageRatio={imageRatio}
+            readOnly={readOnly}
+          />
+        ) : null;
       })}
       {fixing.map((f) => (
         <span key={f.id} className="ui-pfix-region" data-fixing="" style={box(f.region)}>
@@ -97,13 +121,29 @@ export function DetailsOverlay({ doc, version, tokens, imageRatio, show, brushin
           </span>
         </span>
       ))}
-      {show && !brushing && !version.details?.length && <span className="ui-pfix-hint">The Engine masked no product details on this version</span>}
+      {show && !brushing && !version.details?.length && (
+        <span className="ui-pfix-hint">The Engine masked no product details on this version</span>
+      )}
       {brushing && !readOnly && <Brush doc={doc} version={version} onDone={() => onBrushingChange(false)} />}
     </span>
   );
 }
 
-function DetailRegion({ doc, version, find, token, imageRatio, readOnly }: { doc: CreativeDocument; version: RenderVersion; find: DetailFind; token: DetailToken; imageRatio: number; readOnly: boolean }) {
+function DetailRegion({
+  doc,
+  version,
+  find,
+  token,
+  imageRatio,
+  readOnly,
+}: {
+  doc: CreativeDocument;
+  version: RenderVersion;
+  find: DetailFind;
+  token: DetailToken;
+  imageRatio: number;
+  readOnly: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const fix = useFixProduct();
   const toast = useToast();
@@ -111,14 +151,20 @@ function DetailRegion({ doc, version, find, token, imageRatio, readOnly }: { doc
     <span className="ui-pfix-marker">
       <Icon name="triangle-alert" />
       Reads {find.read}
-      {/* side by side the pictures are narrow: compare shows only what it reads (round 13, #59) */}
+      {/* side by side the pictures are narrow: compare shows only what it reads */}
       <span className="ui-pfix-should"> · should be {token.value}</span>
     </span>
   );
   const label = `${token.label}: the Engine reads ${find.read}${find.ok ? "" : `, should be ${token.value}`}`;
   if (readOnly)
     return (
-      <span className="ui-pfix-region" data-ok={find.ok ? "" : undefined} style={box(find.region)} role="img" aria-label={label}>
+      <span
+        className="ui-pfix-region"
+        data-ok={find.ok ? "" : undefined}
+        style={box(find.region)}
+        role="img"
+        aria-label={label}
+      >
         {marker}
       </span>
     );
@@ -135,7 +181,13 @@ function DetailRegion({ doc, version, find, token, imageRatio, readOnly }: { doc
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button type="button" className="ui-pfix-region" data-ok={find.ok ? "" : undefined} style={box(find.region)} aria-label={label}>
+        <button
+          type="button"
+          className="ui-pfix-region"
+          data-ok={find.ok ? "" : undefined}
+          style={box(find.region)}
+          aria-label={label}
+        >
           {marker}
         </button>
       </PopoverTrigger>
@@ -143,7 +195,9 @@ function DetailRegion({ doc, version, find, token, imageRatio, readOnly }: { doc
         <PopoverHeader>
           <PopoverTitle id={`pfix-${token.id}`}>{token.label}</PopoverTitle>
           <PopoverDescription>
-            {find.ok ? `The Engine reads ${find.read}, as on the real product.` : `The Engine reads ${find.read}. The real product says ${token.value}.`}
+            {find.ok
+              ? `The Engine reads ${find.read}, as on the real product.`
+              : `The Engine reads ${find.read}. The real product says ${token.value}.`}
           </PopoverDescription>
         </PopoverHeader>
         <div className="ui-pfix-compare">
@@ -163,7 +217,8 @@ function DetailRegion({ doc, version, find, token, imageRatio, readOnly }: { doc
           </figure>
         </div>
         <p className="ui-pfix-note">
-          The Engine gets the real cut-out, makes only this region again and places it back. It comes back as a new version.
+          The Engine gets the real cut-out, makes only this region again and places it back. It comes back as a new
+          version.
         </p>
         <div className="ui-pfix-actions">
           <Button size="sm" variant="glass-white" icon="package" loading={fix.isPending} onClick={go}>
@@ -230,7 +285,14 @@ function Brush({ doc, version, onDone }: { doc: CreativeDocument; version: Rende
 
   const above = rect ? rect.y + rect.h > 0.62 : false;
   return (
-    <span ref={layer} className="ui-pfix-brush" onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
+    <span
+      ref={layer}
+      className="ui-pfix-brush"
+      onPointerDown={down}
+      onPointerMove={move}
+      onPointerUp={up}
+      onPointerCancel={up}
+    >
       {!rect && <span className="ui-pfix-hint">Draw a box around what to fix</span>}
       {rect && <span className="ui-pfix-region" data-brush="" style={box(rect)} />}
       {rect && drawn && (
@@ -248,7 +310,15 @@ function Brush({ doc, version, onDone }: { doc: CreativeDocument; version: Rende
               autoComplete="off"
               onChange={(e) => setWhat(e.target.value)}
             />
-            <Button type="button" size="sm" variant="glass-clear" iconOnly icon="x" aria-label="Cancel the fix" onClick={onDone} />
+            <Button
+              type="button"
+              size="sm"
+              variant="glass-clear"
+              iconOnly
+              icon="x"
+              aria-label="Cancel the fix"
+              onClick={onDone}
+            />
             <Button type="submit" size="sm" variant="glass-white" loading={fix.isPending} disabled={!what.trim()}>
               Fix
             </Button>
@@ -262,7 +332,9 @@ function Brush({ doc, version, onDone }: { doc: CreativeDocument; version: Rende
 /** Says when a fix this session is watching comes back, and opens nothing: the new version is already picked. */
 export function useFixDone(doc: CreativeDocument) {
   const toast = useToast();
-  const seen = useRef<Record<string, ProductFix["state"]>>(Object.fromEntries((doc.fixes ?? []).map((f) => [f.id, f.state])));
+  const seen = useRef<Record<string, ProductFix["state"]>>(
+    Object.fromEntries((doc.fixes ?? []).map((f) => [f.id, f.state])),
+  );
   useEffect(() => {
     for (const f of doc.fixes ?? []) {
       const before = seen.current[f.id];
@@ -277,7 +349,15 @@ export function useFixDone(doc: CreativeDocument) {
 
 // ─── The history, in the left panel's product section ────────────────────────
 
-export function FixHistory({ doc, tokens, name }: { doc: CreativeDocument; tokens: DetailToken[]; name: (id: string | undefined) => string }) {
+export function FixHistory({
+  doc,
+  tokens,
+  name,
+}: {
+  doc: CreativeDocument;
+  tokens: DetailToken[];
+  name: (id: string | undefined) => string;
+}) {
   const fixes = [...(doc.fixes ?? [])].reverse();
   if (!fixes.length) return null;
   const label = (f: ProductFix) => tokens.find((t) => t.id === f.tokenId)?.label;

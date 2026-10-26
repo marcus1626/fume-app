@@ -1,9 +1,7 @@
-// One Team table for Fume's studio and an agency (UX review DLAY-14, DTASK-7, DLOAD-20, PROPOSED 20 Oct 2026; Marcus 20
-// Oct: "Agency dashboard blir strengt tatt lik som vår"). The agency's table: the person, their role, the brands or
-// clients they work on, this week's load as a quiet bar with its number, and what they do now. Fume's studio adds
-// today's checks and their time. An admin follows and carries no load ("Follows"), so the totals count only the
-// people who carry work. Said once: no chart and no tiles beside it; the totals are the line under the page title.
-// On the phone, rows.
+// One Team table for Fume's studio and an agency: the person, their role, the brands or clients they work on, this
+// week's load as a quiet bar with its number, and what they do now. Fume's studio adds today's checks and their time.
+// An admin follows and carries no load ("Follows"), so the totals count only the people who carry work. Said once: no
+// chart and no tiles beside it; the totals are the line under the page title. On the phone, rows.
 import {
   Avatar,
   Badge,
@@ -43,7 +41,19 @@ export interface TeamTableRow {
   checks?: { today: number; perCheck: number };
 }
 
-export function TeamTable({ rows, me, brandLabel = "Brands", checks = false, label }: { rows: TeamTableRow[]; me?: User; brandLabel?: string; checks?: boolean; label: string }) {
+export function TeamTable({
+  rows,
+  me,
+  brandLabel = "Brands",
+  checks = false,
+  label,
+}: {
+  rows: TeamTableRow[];
+  me?: User;
+  brandLabel?: string;
+  checks?: boolean;
+  label: string;
+}) {
   const desk = !useNarrowScreen("(max-width: 1023px)");
   const name = (t: TeamTableRow) => `${t.user.name}${t.user.id === me?.id ? " (you)" : ""}`;
   if (!desk)
@@ -56,7 +66,9 @@ export function TeamTable({ rows, me, brandLabel = "Brands", checks = false, lab
             </ItemMedia>
             <ItemContent>
               <ItemTitle>{name(t)}</ItemTitle>
-              <ItemDescription>{[t.user.title, t.role, t.brands.join(", ")].filter(Boolean).join(" · ")}</ItemDescription>
+              <ItemDescription>
+                {[t.user.title, t.role, t.brands.join(", ")].filter(Boolean).join(" · ")}
+              </ItemDescription>
               <Week t={t} />
               <ItemDescription>{t.doing}</ItemDescription>
             </ItemContent>
@@ -91,7 +103,13 @@ export function TeamTable({ rows, me, brandLabel = "Brands", checks = false, lab
             <TableRow key={t.user.id}>
               <TableCell>
                 <span className="ui-agency-cell-client">
-                  <Avatar size="md" src={t.user.avatar} initials={initials(t.user.name)} ink={t.lead} aria-hidden="true" />
+                  <Avatar
+                    size="md"
+                    src={t.user.avatar}
+                    initials={initials(t.user.name)}
+                    ink={t.lead}
+                    aria-hidden="true"
+                  />
                   <TableTitle sub={t.user.title}>{name(t)}</TableTitle>
                 </span>
               </TableCell>
@@ -123,7 +141,12 @@ function Week({ t }: { t: TeamTableRow }) {
   if (!t.week) return <span className="ui-table-muted">Follows</span>;
   return (
     <span className="ui-records-bar">
-      <Progress className="ui-agency-load" value={Math.min(t.week.value, t.week.max)} max={t.week.max} aria-label={`${firstName(t.user.name)}: ${t.week.label}`} />
+      <Progress
+        className="ui-agency-load"
+        value={Math.min(t.week.value, t.week.max)}
+        max={t.week.max}
+        aria-label={`${firstName(t.user.name)}: ${t.week.label}`}
+      />
       <span className="ui-records-data">{t.week.words}</span>
     </span>
   );

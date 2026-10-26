@@ -1,7 +1,7 @@
-// Focus frame (design-system/components/focus-frame.css): Fume's own sign in UI, two corners and one point, drawn
-// with the Focus System v1.3 geometry (F-D059). PROPOSED 15 Oct 2026. The geometry is the same as
-// templates/lib/focus.mjs (the port of tools/canvas/tools/geo.py): corners sized from the frame's short side
-// (u = 5 % of it / 3, corner 11u, arms 2.5u), the point from its area (5 % of √(w × h)). Never draw a frame by hand.
+// Focus frame (design-system/components/focus-frame.css): Fume's own sign in UI, two corners and one point, drawn with
+// the Focus System v1.3 geometry (F-D059). The geometry is the same as templates/lib/focus.mjs (the port of
+// tools/canvas/tools/geo.py): corners sized from the frame's short side (u = 5 % of it / 3, corner 11u, arms 2.5u), the
+// point from its area (5 % of √(w × h)). Never draw a frame by hand.
 //   <div style={{ position: "relative" }}> … <FocusFrame point="focal" /></div>
 // The frame fills its positioned parent; it redraws when the parent changes size.
 import { useEffect, useRef, useState, type HTMLAttributes } from "react";
@@ -41,8 +41,24 @@ function cornerD(u: number): string {
   const r = 0.1 * t;
   const L = 11 * u;
   return (
-    poly([[0, 0], [L, 0], [L - t, t], [0, t]], r) +
-    poly([[0, t + g], [t, t + g], [t, L - t], [0, L]], r)
+    poly(
+      [
+        [0, 0],
+        [L, 0],
+        [L - t, t],
+        [0, t],
+      ],
+      r,
+    ) +
+    poly(
+      [
+        [0, t + g],
+        [t, t + g],
+        [t, L - t],
+        [0, L],
+      ],
+      r,
+    )
   );
 }
 
@@ -57,7 +73,10 @@ export function focusFrameGeometry(W: number, H: number) {
       { d, transform: "translate(0 0) scale(1 1)" },
       { d, transform: `translate(${g6(W)} ${g6(H)}) scale(-1 -1)` },
     ],
-    point: { d: POINT_D, transform: `translate(${g6(tip[0])} ${g6(tip[1])}) rotate(45) scale(${g6(P / 150)}) translate(-225 -225)` },
+    point: {
+      d: POINT_D,
+      transform: `translate(${g6(tip[0])} ${g6(tip[1])}) rotate(45) scale(${g6(P / 150)}) translate(-225 -225)`,
+    },
   };
 }
 
@@ -93,7 +112,9 @@ export function FocusFrame({ point = "focal", tone = "ink", className, ...props 
           {geo.corners.map((c, i) => (
             <path key={i} className="ui-focus-frame-corner" d={c.d} transform={c.transform} />
           ))}
-          {point === "focal" && <path className="ui-focus-frame-point" d={geo.point.d} transform={geo.point.transform} />}
+          {point === "focal" && (
+            <path className="ui-focus-frame-point" d={geo.point.d} transform={geo.point.transform} />
+          )}
         </svg>
       )}
     </span>

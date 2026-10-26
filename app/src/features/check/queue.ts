@@ -1,5 +1,5 @@
-// The keys of a confirm queue (round 9, DWAY-13, DTSK-14): ← → step between items when the focus is not in a field,
-// ⌘↵ (Ctrl+Enter) confirms, Esc leaves a field first (onto its card, tabIndex -1) and then the queue (what Back does). ↑ ↓ live on the list itself
+// The keys of a confirm queue: ← → step between items when the focus is not in a field, ⌘↵ (Ctrl+Enter) confirms, Esc
+// leaves a field first (onto its card, tabIndex -1) and then the queue (what Back does). ↑ ↓ live on the list itself
 // (CheckQueueList). A dialog, sheet, menu or the palette on top keeps its own keys. Never an arrow to decide.
 import { useEffect, useRef } from "react";
 
@@ -12,7 +12,8 @@ export interface QueueKeys {
 }
 
 const FIELD = 'input, textarea, select, [contenteditable="true"], [role="textbox"]';
-const LAYER = '[role="dialog"][data-state="open"], [role="alertdialog"][data-state="open"], [role="menu"][data-state="open"], [cmdk-root]';
+const LAYER =
+  '[role="dialog"][data-state="open"], [role="alertdialog"][data-state="open"], [role="menu"][data-state="open"], [cmdk-root]';
 
 export function useQueueKeys(keys: QueueKeys) {
   const latest = useRef(keys);
@@ -34,7 +35,14 @@ export function useQueueKeys(keys: QueueKeys) {
         e.preventDefault();
         // Out of the field onto its card (never to the page's body), so ← → step from there; then out of the queue.
         // An empty field the queue focused for her holds nothing to lose, so Esc leaves at once.
-        const empty = field && !((field.matches("textarea, input") ? (field as HTMLInputElement) : field.querySelector<HTMLInputElement>("textarea, input"))?.value ?? "").trim();
+        const empty =
+          field &&
+          !(
+            (field.matches("textarea, input")
+              ? (field as HTMLInputElement)
+              : field.querySelector<HTMLInputElement>("textarea, input")
+            )?.value ?? ""
+          ).trim();
         if (field && !empty) {
           const card = field.closest<HTMLElement>(".ui-check-card");
           if (card) card.focus({ preventScroll: true });

@@ -27,7 +27,9 @@ export function r11PagesApi(ctx: R11PagesContext): Pick<FumeApi, Calls> {
   const added: AgencyClient[] = [];
   /** The agency's clients with the ones added in this session, recent first. */
   const withAdded = (list: AgencyClient[]) =>
-    [...list, ...added.filter((a) => !list.some((c) => c.workspace.id === a.workspace.id))].sort((a, b) => (b.openedAt ?? "").localeCompare(a.openedAt ?? ""));
+    [...list, ...added.filter((a) => !list.some((c) => c.workspace.id === a.workspace.id))].sort((a, b) =>
+      (b.openedAt ?? "").localeCompare(a.openedAt ?? ""),
+    );
 
   return {
     async qaQueue(workspaceId) {
@@ -51,12 +53,20 @@ export function r11PagesApi(ctx: R11PagesContext): Pick<FumeApi, Calls> {
     async agencyHome() {
       const view = await base.agencyHome();
       const clients = withAdded(view.clients);
-      const summary = clients.length === view.clients.length ? view.summary : view.summary.replace(/^\d+ client brands\./, `${clients.length} client brands.`);
+      const summary =
+        clients.length === view.clients.length
+          ? view.summary
+          : view.summary.replace(/^\d+ client brands\./, `${clients.length} client brands.`);
       return { ...view, clients, summary };
     },
     async licence() {
       const view = await base.licence();
-      const usage = [...view.usage, ...added.filter((a) => !view.usage.some((u) => u.client.id === a.workspace.id)).map((a) => ({ client: a.workspace, creativesMade: 0, creativesApproved: 0 }))];
+      const usage = [
+        ...view.usage,
+        ...added
+          .filter((a) => !view.usage.some((u) => u.client.id === a.workspace.id))
+          .map((a) => ({ client: a.workspace, creativesMade: 0, creativesApproved: 0 })),
+      ];
       return { ...view, usage };
     },
   };

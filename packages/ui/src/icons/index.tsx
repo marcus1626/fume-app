@@ -1,4 +1,4 @@
-// Icons: filled Lucide plus Fume's own (the checked triangle fume-check, the Engine fume-engine), DECIDED 13 Oct.
+// Icons: filled Lucide plus Fume's own (the checked triangle fume-check, the Engine fume-engine).
 // The sprite is built by tools/icons/build.mjs; put <IconSprite /> in the page once, then use <Icon name="…" />.
 import type { SVGProps } from "react";
 import sprite from "../../../../design-system/icons/sprite.svg?raw";
@@ -140,7 +140,13 @@ export interface IconProps extends Omit<SVGProps<SVGSVGElement>, "name"> {
 
 export function Icon({ name, label, className, ...props }: IconProps) {
   return (
-    <svg className={cx("ico", className)} aria-hidden={label ? undefined : true} role={label ? "img" : undefined} aria-label={label} {...props}>
+    <svg
+      className={cx("ico", className)}
+      aria-hidden={label ? undefined : true}
+      role={label ? "img" : undefined}
+      aria-label={label}
+      {...props}
+    >
       <use href={`#fi-${name}`} />
     </svg>
   );

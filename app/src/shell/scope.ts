@@ -1,16 +1,14 @@
-// Round 12 (desktop review 20 Oct, DWAY-3, DWAY-5, DWAY-9; PROPOSED 20 Oct 2026): the address is the scope. Fume's
-// studio and an agency are one frame (Marcus, 20 Oct 12:41Z: "Agency dashboard blir strengt tatt lik som vår"), with
-// one shape of address for its two scopes:
+// The address is the scope. Fume's studio and an agency are one frame, with one shape of address for its two scopes:
 //   all brands or all clients   /studio/…            /agency/…
 //   one brand or one client     /studio/b/:id/…      /agency/b/:id/…
-// Under a brand's prefix live the staff pages (Studio, Check, Engine, models and references, boards, Engine output)
-// and the customer's own pages as the frame shows them (Home, Campaigns and each campaign, Brand, Fume). So every place
-// in the sidebar names its brand or client in the address, a link opens in the right client, and two browser tabs
-// can hold two clients. The customer's own addresses (/campaigns/c-autumn, /brand/products) keep working for the
-// frame's people: they open under the brand's prefix. A person of the other kind who opens such an address lands on
-// their own page (a client on her /campaigns/c-autumn, Fume's people on the studio's, an agency's on the agency's).
-// Fume's people still see a brand exactly as its customer does, through Customer view: until they go back to the
-// studio, the customer's addresses are the customer's frame, marked "Fume view".
+// Under a brand's prefix live the staff pages (Studio, Check, Engine, models and references, boards, Engine output) and
+// the customer's own pages as the frame shows them (Home, Campaigns and each campaign, Brand, Fume). So every place in
+// the sidebar names its brand or client in the address, a link opens in the right client, and two browser tabs can hold
+// two clients. The customer's own addresses (/campaigns/c-autumn, /brand/products) keep working for the frame's people:
+// they open under the brand's prefix. A person of the other kind who opens such an address lands on their own page (a
+// client on her /campaigns/c-autumn, Fume's people on the studio's, an agency's on the agency's).
+// Fume's people see a brand exactly as its customer does through Customer view: until they go back to the studio, the
+// customer's addresses are the customer's frame, marked "Fume view".
 import { useSession } from "../api/hooks";
 
 export type StaffFrameKind = "fume" | "agency";
@@ -25,14 +23,14 @@ export const under = (pathname: string, to: string) => pathname === to || pathna
 /** Each frame's all-scope root. */
 export const frameRoot: Record<StaffFrameKind, string> = { fume: "/studio", agency: "/agency" };
 
-/** The check place's last segment: "Check" by name in both frames (DWAY-17); Fume's address keeps its old qa. */
+/** The check place's last segment: "Check" by name in both frames; Fume's address keeps its old qa. */
 export const checkSegment: Record<StaffFrameKind, string> = { fume: "qa", agency: "check" };
 
 /** The prefix of one brand's or one client's places. */
 export const brandBase = (frame: StaffFrameKind, workspaceId: string) => `${frameRoot[frame]}/b/${workspaceId}`;
 
-/** Round 13 AGENCY (robot note 11-agency-client): a Studio document keeps the frame's address, "/studio/doc/:id" or
- *  "/agency/doc/:id" (an agency's person who opens a studio address lands on the agency's, App.tsx). */
+/** A Studio document keeps the frame's address, "/studio/doc/:id" or "/agency/doc/:id" (an agency's person who opens a
+ *  studio address lands on the agency's, App.tsx). */
 export const docHref = (frame: StaffFrameKind, documentId: string) => `${frameRoot[frame]}/doc/${documentId}`;
 
 /** The check place of a scope: "/studio/qa", "/agency/b/w-lysne/check". */
@@ -98,14 +96,14 @@ export function hrefIn(frame: StaffFrameKind, workspaceId: string | undefined, h
   return ownAddress(frame, path, tail) ?? href;
 }
 
-/** Where a campaign opens in a staff frame (DWAY-14: a campaign row opens the campaign, everywhere): for Fume's people
- *  its plan, the studio's page of a campaign; for an agency's the campaign itself, with its tabs. */
+/** Where a campaign opens in a staff frame (a campaign row opens the campaign, everywhere): for Fume's people its plan,
+ *  the studio's page of a campaign; for an agency's the campaign itself, with its tabs. */
 export const campaignHref = (frame: StaffFrameKind, workspaceId: string, campaignId: string) =>
   `${brandBase(frame, workspaceId)}/campaigns/${campaignId}${frame === "fume" ? "/plan" : ""}`;
 
 /** The staff pages under a brand that are the same place in both frames, and their address in the other frame. */
 const segmentIn = (frame: StaffFrameKind, rest: string) => {
-  // the check place, by either name; the old queue is the check place too
+  // the check place, by either name; the older /queue address is the check place too
   if (/^\/(qa|check|queue)(\/|$)/.test(rest)) return `/${checkSegment[frame]}`;
   return rest;
 };
@@ -148,7 +146,7 @@ export function customerAddress(pathname: string, tail = ""): string {
   return "/";
 }
 
-// ─── One place, kept across a change of scope (DWAY-9) ──────────────────────
+// ─── One place, kept across a change of scope ───────────────────────────────
 
 export type PlaceKey = "home" | "check" | "campaigns" | "brand" | "studio" | "engine" | "fume" | "other";
 
@@ -167,12 +165,17 @@ export function placeOf(pathname: string): PlaceKey {
 }
 
 /**
- * The same place in another scope (DWAY-9, one rule for both pickers): Check, Campaigns, Studio, Engine and Brand map
- * to the same place in the new brand; a campaign, a plan or a document maps to that brand's Campaigns (or its Studio);
- * from a brand to all: Check to all Check, Campaigns to all Campaigns, anything else to the overview. `limited` (Fume's
- * admin, who follows the brands but has no Check, Studio or Engine) keeps Campaigns and lands on the first place else.
+ * The same place in another scope, one rule for both pickers: Check, Campaigns, Studio, Engine and Brand map to the
+ * same place in the new brand; a campaign, a plan or a document maps to that brand's Campaigns (or its Studio); from a
+ * brand to all: Check to all Check, Campaigns to all Campaigns, anything else to the overview. `limited` (Fume's admin,
+ * who follows the brands but has no Check, Studio or Engine) keeps Campaigns and lands on the first place else.
  */
-export function equivalent(pathname: string, frame: StaffFrameKind, workspaceId: string | undefined, limited = false): string {
+export function equivalent(
+  pathname: string,
+  frame: StaffFrameKind,
+  workspaceId: string | undefined,
+  limited = false,
+): string {
   const found = placeOf(pathname);
   const place = limited && found !== "campaigns" ? "other" : found;
   if (workspaceId) {

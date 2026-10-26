@@ -1,22 +1,14 @@
-// The plan as one document (FLOWS §22.2, PROPOSED 20 Oct 2026): what Fume will make, before anything is made, read like
-// an agency's treatment and shot list. In order: the brief in Fume's words (her own lines fold under it), the
-// direction (its idea, the idea in one line, why it fits with each reason's source, the reference pictures, and the
-// two more directions Fume considered), how every creative looks (the look and the content, each line with its source,
-// Change in place), the creatives (the masters first, then what follows them), the rules it keeps and when. At 960 px
-// of column and more a summary aside stays in view; narrower it is a strip above the parts. The decision (Approve the
-// plan, Ask for changes, Mark checked) is the caller's step footer.
-// Round 12 (UX review DLAY-10, DLOAD-9, DLOAD-10, DWAY-12, DLOAD-22, DLOAD-3, DLOAD-4; PROPOSED 20 Oct 2026): the same
-// plan, tighter. The aside holds the index of the parts ("In this plan", each entry its part's heading), the facts and
-// who checked it (and what changed since); the plan's own intro sentence is gone (the aside says it once). Lines are a
-// compact spec with one quiet source each; the masters are compact rows; what follows them is a table; the other
-// directions are rows. A product the plan uses that still waits to be confirmed is named on the Products line, with
-// the way to confirm it. Who approves follows who reads it (people.ts): the customer in Fume, the agency in a brand an
-// agency runs; the agency's client reads it with no decision ("Brygga Studio approves the plan; you approve the
-// creatives."). The expert and the agency read the brand's lines about the customer by her name.
-// Round 13 (Marcus's comments #25, #28, #67; PROPOSED 22 Oct 2026): the expert's check is optional, so "Checked by
-// Anna" is the Focus pointer in Amber (as Check marks "Checked by you"), and only when she checked it; a plan nobody was
-// asked to check says nothing about a check. A new version says what changed in it. When holds a small calendar strip
-// of the days the creatives go live, each day editable, and a link to the content calendar (GoLive.tsx).
+// The plan as one document (FLOWS §22.2): what Fume will make, before anything is made, read like an agency's treatment
+// and shot list. In order: the brief in Fume's words (her own lines fold under it), the direction (its idea, why it
+// fits with each reason's source, the reference pictures, and the two more directions Fume considered), how every
+// creative looks (each line a compact spec with one quiet source, Change in place), the creatives (the masters as
+// compact rows, then a table of what follows them), the rules it keeps, and when (with a calendar strip of the go-live
+// days, GoLive.tsx). At 960 px of column and more a summary aside stays in view (the index of the parts, the facts, who
+// checked it and what changed since); narrower it is a strip above the parts. The decision is the caller's step footer.
+// A product the plan uses that still waits to be confirmed is named on the Products line, with the way to confirm it.
+// Who approves follows who reads it (people.ts); the expert and the agency read the brand's lines about the customer by
+// her name. The expert's check is optional (FLOWS §26.2), so "Checked by Anna" (the Focus pointer in Amber) shows only
+// when someone checked it. A new version says what changed in it.
 import { Button, CheckMark, Collapsible, CollapsibleContent, CollapsibleTrigger, Icon, useToast } from "@fume/ui";
 import { useMemo, type ReactNode } from "react";
 import { useCampaigns, useCatalogue, useChoosePlanDirection, useStudioKit } from "../../api/hooks";
@@ -25,7 +17,17 @@ import * as copy from "../../copy";
 import { BriefFacts } from "../campaigns/brief-lines";
 import { useOpenProductCheck } from "../check/ProductCheckHost";
 import { GoLive } from "./GoLive";
-import { ChangedTag, ConsideredCard, FollowList, LineRow, MasterCard, SourceTag, Steps, versionWords, type Step } from "./parts";
+import {
+  ChangedTag,
+  ConsideredCard,
+  FollowList,
+  LineRow,
+  MasterCard,
+  SourceTag,
+  Steps,
+  versionWords,
+  type Step,
+} from "./parts";
 import { PlanIndex } from "./PlanIndex";
 import type { PlanPeople } from "./people";
 import { byDay, chosenOf, countWords, creativesOf, onDay, partsOf, sentOn, sourceLabel, voiceFor } from "./words";
@@ -42,8 +44,8 @@ export interface PlanDocumentProps {
   edit: boolean;
   /** "Use this direction" (she, while it is ready). */
   choose: boolean;
-  /** More for the summary aside, under the index and the facts (the expert's page: the customer's brief beside the lines
-   *  she checks, DLAY-11). With it, the facts fold to one line so it has the room. */
+  /** More for the summary aside, under the index and the facts (the expert's page: the customer's brief beside the
+   *  lines she checks). With it, the facts fold to one line so it has the room. */
   aside?: ReactNode;
 }
 
@@ -53,7 +55,10 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
   const campaigns = useCampaigns().data ?? [];
   const catalogue = useCatalogue();
   const kit = useStudioKit(people.staff ? campaign.workspaceId : undefined);
-  const products = useMemo<Product[]>(() => [...(catalogue.data?.products ?? []), ...(kit.data?.products ?? [])], [catalogue.data, kit.data]);
+  const products = useMemo<Product[]>(
+    () => [...(catalogue.data?.products ?? []), ...(kit.data?.products ?? [])],
+    [catalogue.data, kit.data],
+  );
   const openCheck = useOpenProductCheck();
   const { viewer } = people;
   const tag: Tag = (source, opts) => sourceLabel(source, campaigns, { ...opts, viewer });
@@ -66,7 +71,7 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
   const approvesCreatives = people.name(campaign.approverId);
   const yours = viewer === "customer";
 
-  // A product the plan uses whose details still wait to be confirmed (DLOAD-3): the Products line names it.
+  // A product the plan uses whose details still wait to be confirmed: the Products line names it.
   const waiting = campaign.productIds
     .map((id) => products.find((p) => p.id === id))
     .filter((p): p is Product => Boolean(p && p.state === "needs_you"))
@@ -78,8 +83,9 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
       <p className="ui-plandoc-line-ask">
         <Icon name="tag" />
         <span>
-          {listWords(waiting.map((p) => p.name))} {waiting.length === 1 ? "waits" : "wait"} for {confirms} to confirm {waiting.length === 1 ? "its" : "their"} details. Nothing is made with{" "}
-          {waiting.length === 1 ? "it" : "them"} before that.
+          {listWords(waiting.map((p) => p.name))} {waiting.length === 1 ? "waits" : "wait"} for {confirms} to confirm{" "}
+          {waiting.length === 1 ? "its" : "their"} details. Nothing is made with {waiting.length === 1 ? "it" : "them"}{" "}
+          before that.
         </span>
         {confirms === "you" &&
           waiting.slice(0, 1).map((p) => (
@@ -91,7 +97,15 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
     ) : undefined;
 
   const briefSender = brief.approvedBy;
-  const briefWho = people.isMe(briefSender) ? "Your brief" : viewer === "client" ? `${people.agencyName ?? "The agency"}’s brief` : briefSender ? `${people.Name(briefSender)}’s brief` : yours ? "Your brief" : `${cap(customer)}’s brief`;
+  const briefWho = people.isMe(briefSender)
+    ? "Your brief"
+    : viewer === "client"
+      ? `${people.agencyName ?? "The agency"}’s brief`
+      : briefSender
+        ? `${people.Name(briefSender)}’s brief`
+        : yours
+          ? "Your brief"
+          : `${cap(customer)}’s brief`;
 
   return (
     <div className="ui-plandoc-wrap">
@@ -126,13 +140,22 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
               <h2 className="ui-plandoc-part-title" id="plan-variables-title">
                 How it looks
               </h2>
-              <p className="ui-plandoc-part-lead">Every creative keeps to these lines.{edit ? " Change any of them." : ""}</p>
+              <p className="ui-plandoc-part-lead">
+                Every creative keeps to these lines.{edit ? " Change any of them." : ""}
+              </p>
             </div>
             <div className="ui-plandoc-group">
               <h3 className="ui-plandoc-group-title">The look</h3>
               <ul className="ui-plandoc-lines">
                 {direction.look.map((l) => (
-                  <LineRow key={`${direction.id}-${l.key}`} line={l} campaignId={campaign.id} editable={edit} voice={voice} tag={<LineTag line={l} tag={tag} people={people} />} />
+                  <LineRow
+                    key={`${direction.id}-${l.key}`}
+                    line={l}
+                    campaignId={campaign.id}
+                    editable={edit}
+                    voice={voice}
+                    tag={<LineTag line={l} tag={tag} people={people} />}
+                  />
                 ))}
               </ul>
             </div>
@@ -161,20 +184,35 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
                 The {copy.creatives(all.length)}
               </h2>
               <p className="ui-plandoc-part-lead">
-                {masters.length === 1 ? "One master first: the first creative. " : `${copy.count(masters.length, "master")} first: the first creatives, one per scene. `}
-                {cap(approvesCreatives)} {approvesCreatives === "you" ? "approve" : "approves"} {masters.length === 1 ? "it" : "them"} before the rest is made.
-                {brief.creatives > 0 && brief.creatives !== all.length ? ` ${yours ? "Your" : "The"} brief asked for ${brief.creatives}.` : ""}
+                {masters.length === 1
+                  ? "One master first: the first creative. "
+                  : `${copy.count(masters.length, "master")} first: the first creatives, one per scene. `}
+                {cap(approvesCreatives)} {approvesCreatives === "you" ? "approve" : "approves"}{" "}
+                {masters.length === 1 ? "it" : "them"} before the rest is made.
+                {brief.creatives > 0 && brief.creatives !== all.length
+                  ? ` ${yours ? "Your" : "The"} brief asked for ${brief.creatives}.`
+                  : ""}
               </p>
             </div>
             <ul className="ui-plandoc-masters" aria-label="The masters">
               {masters.map((m) => (
-                <MasterCard key={m.id} creative={m} products={products} campaignId={campaign.id} language={campaign.language} editable={edit} people={people} voice={voice} />
+                <MasterCard
+                  key={m.id}
+                  creative={m}
+                  products={products}
+                  campaignId={campaign.id}
+                  language={campaign.language}
+                  editable={edit}
+                  people={people}
+                  voice={voice}
+                />
               ))}
             </ul>
             {variants.length > 0 && (
               <div className="ui-plandoc-group">
                 <h3 className="ui-plandoc-group-title">
-                  Then {variants.length === 1 ? "1 variant or format" : `${variants.length} variants and formats`}, once {approvesCreatives} {approvesCreatives === "you" ? "approve" : "approves"} the masters
+                  Then {variants.length === 1 ? "1 variant or format" : `${variants.length} variants and formats`}, once{" "}
+                  {approvesCreatives} {approvesCreatives === "you" ? "approve" : "approves"} the masters
                 </h3>
                 <FollowList masters={masters} variants={variants} language={campaign.language} voice={voice} />
               </div>
@@ -187,7 +225,9 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
               <h2 className="ui-plandoc-part-title" id="plan-rules-title">
                 Rules
               </h2>
-              <p className="ui-plandoc-part-lead">From {yours ? "your" : "the"} brief and {yours ? "your" : "the"} Brand DNA, on every creative.</p>
+              <p className="ui-plandoc-part-lead">
+                From {yours ? "your" : "the"} brief and {yours ? "your" : "the"} Brand DNA, on every creative.
+              </p>
             </div>
             <div className="ui-plandoc-rules">
               {(["must", "never"] as const).map((kind) => {
@@ -200,7 +240,11 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
                       {list.map((r) => (
                         <li key={r.text} className="ui-plandoc-rule">
                           <span>{voice(r.text)}</span>
-                          <SourceTag source={r.source} label={tag(r.source)} to={r.source === "brand_dna" && viewer === "customer" ? "/brand#rules" : undefined} />
+                          <SourceTag
+                            source={r.source}
+                            label={tag(r.source)}
+                            to={r.source === "brand_dna" && viewer === "customer" ? "/brand#rules" : undefined}
+                          />
                         </li>
                       ))}
                     </ul>
@@ -229,7 +273,8 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
 }
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-const listWords = (names: string[]) => (names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : (names[0] ?? ""));
+const listWords = (names: string[]) =>
+  names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : (names[0] ?? "");
 
 /** A line's tag: "Changed by you" (or "Changed by Anna") once someone changed it, else its source. */
 function LineTag({ line, tag, people }: { line: PlanLine; tag: Tag; people: PlanPeople }) {
@@ -241,10 +286,20 @@ function LineTag({ line, tag, people }: { line: PlanLine; tag: Tag; people: Plan
 // ─── The head: only what the aside cannot say ───────────────────────────────
 
 /** The head holds what the summary aside does not: the version she asked to change, Fume's note on a new version, the
- *  expert's status line, and for the agency's client who decides. The plan's intro sentence is gone (DLOAD-9): the
- *  aside says who checked it. */
-function PlanHead({ plan, people, mode, customer }: { plan: CampaignPlan; people: PlanPeople; mode: PlanMode; customer: string }) {
-  const checked = plan.checkedBy && plan.checkedAt ? `Checked by ${people.name(plan.checkedBy)} ${onDay(plan.checkedAt)}.` : "";
+ *  expert's status line, and for the agency's client who decides. The aside says who checked it. */
+function PlanHead({
+  plan,
+  people,
+  mode,
+  customer,
+}: {
+  plan: CampaignPlan;
+  people: PlanPeople;
+  mode: PlanMode;
+  customer: string;
+}) {
+  const checked =
+    plan.checkedBy && plan.checkedAt ? `Checked by ${people.name(plan.checkedBy)} ${onDay(plan.checkedAt)}.` : "";
   const wrote = `Fume wrote it from ${people.staff ? `${customer}’s` : "your"} brief${plan.writtenAt ? ` ${onDay(plan.writtenAt, false)}` : ""}.`;
   let title: string | undefined;
   let status: string | undefined;
@@ -259,12 +314,13 @@ function PlanHead({ plan, people, mode, customer }: { plan: CampaignPlan; people
         : plan.state === "approved"
           ? `${people.Name(plan.approvedBy)} approved it${plan.approvedAt ? ` ${onDay(plan.approvedAt)}` : ""}.`
           : plan.checkAsked
-            ? // Round 13 (#25): the check is one she asked for
+            ? // the check is one she asked for
               `${wrote} ${people.Name(plan.checkAsked.by)} asked for a check ${onDay(plan.checkAsked.at)}; once you check it, it goes back to ${people.isMe(plan.checkAsked.by) ? "you" : people.name(plan.checkAsked.by)}.`
             : `${wrote} You check it; then it goes to ${customer}.`;
   }
-  const note = plan.note && plan.note.by === "fume" && plan.version > 1 && mode !== "previous" ? plan.note.text : undefined;
-  // Round 13 (#25): what this version changed, line by line, when Fume says so
+  const note =
+    plan.note && plan.note.by === "fume" && plan.version > 1 && mode !== "previous" ? plan.note.text : undefined;
+  // What this version changed, line by line, when Fume says so
   const latest = plan.versions?.find((v) => v.version === plan.version);
   if (!title && !status && !note) return null;
   return (
@@ -280,7 +336,10 @@ function PlanHead({ plan, people, mode, customer }: { plan: CampaignPlan; people
         <p className="ui-plandoc-note">
           <Icon name="message-square" />
           <span>
-            Version {plan.version} · {latest?.changes.length ? `Changed as ${latest.by === "fume" || people.isMe(latest.by) ? "you" : people.name(latest.by)} asked${latest.asked ? `: “${latest.asked}”` : ""}` : note}
+            Version {plan.version} ·{" "}
+            {latest?.changes.length
+              ? `Changed as ${latest.by === "fume" || people.isMe(latest.by) ? "you" : people.name(latest.by)} asked${latest.asked ? `: “${latest.asked}”` : ""}`
+              : note}
             {latest && latest.changes.length > 0 && (
               <ul className="ui-plandoc-note-changes">
                 {latest.changes.map((c) => (
@@ -297,10 +356,11 @@ function PlanHead({ plan, people, mode, customer }: { plan: CampaignPlan; people
 
 // ─── The summary: the aside on a desk (the index, the facts, who checked it), a strip of facts narrower ─────
 
-/** What changed since the expert checked it (DLOAD-22), as "the direction and 1 line"; nothing when nothing did. */
+/** What changed since the expert checked it, as "the direction and 1 line"; nothing when nothing did. */
 function changedSince(plan: CampaignPlan, checkedAt?: string): { words: string; by: string[] } | undefined {
   const direction = chosenOf(plan)!;
-  const after = (x: { changedBy?: string; changedAt?: string }) => Boolean(x.changedBy && x.changedBy !== plan.checkedBy && (!checkedAt || !x.changedAt || x.changedAt > checkedAt));
+  const after = (x: { changedBy?: string; changedAt?: string }) =>
+    Boolean(x.changedBy && x.changedBy !== plan.checkedBy && (!checkedAt || !x.changedAt || x.changedAt > checkedAt));
   const lines = [...direction.look, ...plan.content].filter(after);
   const made = direction.creatives.filter(after);
   const parts = [
@@ -312,7 +372,19 @@ function changedSince(plan: CampaignPlan, checkedAt?: string): { words: string; 
   return { words: listWords(parts), by: [...new Set([...lines, ...made].map((x) => x.changedBy!))] };
 }
 
-function Summary({ plan, campaign, people, mode, more }: { plan: CampaignPlan; campaign: Campaign; people: PlanPeople; mode: PlanMode; more?: ReactNode }) {
+function Summary({
+  plan,
+  campaign,
+  people,
+  mode,
+  more,
+}: {
+  plan: CampaignPlan;
+  campaign: Campaign;
+  people: PlanPeople;
+  mode: PlanMode;
+  more?: ReactNode;
+}) {
   const direction = chosenOf(plan)!;
   const counts = countWords(plan);
   const masters = plan.timeline[0];
@@ -323,10 +395,13 @@ function Summary({ plan, campaign, people, mode, more }: { plan: CampaignPlan; c
   const picked = direction.recommended ? "Fume’s pick" : `Chosen by ${chooser}`;
 
   let status: ReactNode = null;
-  // Round 13 (Marcus's card, 23 Oct 2026): in a brand an agency runs the agency checks the plan and the client approves
-  // it, so it reads as in Fume: "Maja approved it · Checked by Nora" (the client reads the agency's name for the check).
+  // In a brand an agency runs the agency checks the plan and the client approves it (FLOWS §26.8), so it reads as in
+  // Fume: "Maja approved it · Checked by Nora" (the client reads the agency's name for the check).
   const agencyRun = people.viewer === "agency" || people.viewer === "client";
-  const checkWords = (id: string) => copy.checkedBy(people.viewer === "client" && !people.isMe(id) ? (people.agencyName ?? people.name(id)) : people.name(id));
+  const checkWords = (id: string) =>
+    copy.checkedBy(
+      people.viewer === "client" && !people.isMe(id) ? (people.agencyName ?? people.name(id)) : people.name(id),
+    );
   if (mode === "approved") {
     status = (
       <p className="ui-plandoc-checked">
@@ -348,26 +423,36 @@ function Summary({ plan, campaign, people, mode, more }: { plan: CampaignPlan; c
           <span>
             {checkWords(plan.checkedBy)}
             {plan.checkedAt ? ` ${onDay(plan.checkedAt)}` : ""}
-            <span className="ui-plandoc-checked-sub">{people.viewer === "agency" ? `With ${people.approver(campaign)}; she approves it` : "Waits on you"}</span>
+            <span className="ui-plandoc-checked-sub">
+              {people.viewer === "agency" ? `With ${people.approver(campaign)}; she approves it` : "Waits on you"}
+            </span>
           </span>
         </p>
       ) : people.viewer === "agency" ? (
         <p className="ui-plandoc-checked">Waits for your check</p>
       ) : null;
   } else if (people.viewer !== "client") {
-    // Round 13 (#25, #28): only a plan someone checked, or one in check, says so; the check is optional.
+    // Only a plan someone checked, or one in check, says so; the check is optional.
     const expert = checker ?? (plan.state === "in_check" ? people.expert : undefined);
     const since = mode !== "staff" && checker ? changedSince(plan, plan.checkedAt) : undefined;
     status = expert ? (
       <p className="ui-plandoc-checked">
-        <span className="ui-creative-check ui-plandoc-checked-mark" data-check={checker ? "approved" : "waiting"} aria-hidden="true">
+        <span
+          className="ui-creative-check ui-plandoc-checked-mark"
+          data-check={checker ? "approved" : "waiting"}
+          aria-hidden="true"
+        >
           <Icon name="fume-check" />
         </span>
         <span>
           {checker ? copy.checkedBy(people.name(checker.id)) : `In check with ${people.name(expert.id)}`}
           {since && (
             <span className="ui-plandoc-checked-sub">
-              Since then {since.by.length === 1 && people.isMe(since.by[0]) ? "you" : listWords(since.by.map((id) => people.name(id)))} changed {since.words}
+              Since then{" "}
+              {since.by.length === 1 && people.isMe(since.by[0])
+                ? "you"
+                : listWords(since.by.map((id) => people.name(id)))}{" "}
+              changed {since.words}
             </span>
           )}
         </span>
@@ -380,7 +465,9 @@ function Summary({ plan, campaign, people, mode, more }: { plan: CampaignPlan; c
       <PlanIndex parts={partsOf(plan)} />
       {more ? (
         <p className="ui-plandoc-facts-line">
-          {[`${direction.letter} · ${direction.name}`, counts.total, live ? `live ${byDay(live)}` : ""].filter(Boolean).join(" · ")}
+          {[`${direction.letter} · ${direction.name}`, counts.total, live ? `live ${byDay(live)}` : ""]
+            .filter(Boolean)
+            .join(" · ")}
         </p>
       ) : (
         <dl className="ui-plandoc-facts">
@@ -420,7 +507,21 @@ function Summary({ plan, campaign, people, mode, more }: { plan: CampaignPlan; c
 
 // ─── The direction ──────────────────────────────────────────────────────────
 
-function DirectionPart({ plan, campaign, people, choose, tag, voice }: { plan: CampaignPlan; campaign: Campaign; people: PlanPeople; choose: boolean; tag: Tag; voice: (t: string) => string }) {
+function DirectionPart({
+  plan,
+  campaign,
+  people,
+  choose,
+  tag,
+  voice,
+}: {
+  plan: CampaignPlan;
+  campaign: Campaign;
+  people: PlanPeople;
+  choose: boolean;
+  tag: Tag;
+  voice: (t: string) => string;
+}) {
   const direction = chosenOf(plan)!;
   const others = plan.directions.filter((d) => d.id !== direction.id);
   const pick = useChoosePlanDirection();
@@ -483,7 +584,8 @@ function DirectionPart({ plan, campaign, people, choose, tag, voice }: { plan: C
                 <figure className="ui-plandoc-ref">
                   <img className="ui-plandoc-ref-media" src={r.image} alt={voice(r.caption)} loading="lazy" />
                   <figcaption className="ui-plandoc-ref-caption">
-                    <span>{voice(r.caption)}</span> <SourceTag source={r.source} label={tag(r.source, { campaignId: r.campaignId, text: r.caption })} />
+                    <span>{voice(r.caption)}</span>{" "}
+                    <SourceTag source={r.source} label={tag(r.source, { campaignId: r.campaignId, text: r.caption })} />
                   </figcaption>
                 </figure>
               </li>
@@ -494,11 +596,22 @@ function DirectionPart({ plan, campaign, people, choose, tag, voice }: { plan: C
       {others.length > 0 && (
         <div className="ui-plandoc-group">
           <h3 className="ui-plandoc-group-title">
-            {others.length === 1 ? "One more direction" : others.length === 2 ? "Two more directions" : `${others.length} more directions`} Fume considered
+            {others.length === 1
+              ? "One more direction"
+              : others.length === 2
+                ? "Two more directions"
+                : `${others.length} more directions`}{" "}
+            Fume considered
           </h3>
           <ul className="ui-plandoc-alts">
             {others.map((d) => (
-              <ConsideredCard key={d.id} direction={d} voice={voice} onUse={choose ? () => use(d.id) : undefined} busy={pick.isPending && pick.variables?.directionId === d.id} />
+              <ConsideredCard
+                key={d.id}
+                direction={d}
+                voice={voice}
+                onUse={choose ? () => use(d.id) : undefined}
+                busy={pick.isPending && pick.variables?.directionId === d.id}
+              />
             ))}
           </ul>
         </div>
@@ -517,11 +630,27 @@ function stepsOf(plan: CampaignPlan, campaign: Campaign, people: PlanPeople): St
   const who = people.approver(campaign);
   const Who = people.Approver(campaign);
   // How far the campaign is once the plan is approved: the step under way follows its stage.
-  const doneSteps = campaign.state === "delivered" || campaign.state === "closed" ? plan.timeline.length : campaign.stage === "variants" ? 1 : campaign.stage === "delivery" ? 2 : 0;
-  // Round 13 (Marcus's card, 23 Oct 2026): the client approves the plan in agency work too, so the first step is hers.
+  const doneSteps =
+    campaign.state === "delivered" || campaign.state === "closed"
+      ? plan.timeline.length
+      : campaign.stage === "variants"
+        ? 1
+        : campaign.stage === "delivery"
+          ? 2
+          : 0;
+  // The client approves the plan in agency work too, so the first step is hers (FLOWS §26.8).
   const first: Step = approved
-    ? { label: `${people.Name(plan.approvedBy)} approved the plan`, when: plan.approvedAt ? byDay(plan.approvedAt) : undefined, time: plan.approvedAt, state: "done" }
-    : { label: `${Who} ${who === "you" ? "approve" : "approves"} the plan`, when: `once ${who} ${who === "you" ? "approve" : "approves"}`, state: "now" };
+    ? {
+        label: `${people.Name(plan.approvedBy)} approved the plan`,
+        when: plan.approvedAt ? byDay(plan.approvedAt) : undefined,
+        time: plan.approvedAt,
+        state: "done",
+      }
+    : {
+        label: `${Who} ${who === "you" ? "approve" : "approves"} the plan`,
+        when: `once ${who} ${who === "you" ? "approve" : "approves"}`,
+        state: "now",
+      };
   return [
     first,
     ...plan.timeline.map((s, i): Step => {

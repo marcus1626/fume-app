@@ -92,7 +92,10 @@ export interface TabsListProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /** The track. Label it (aria-label or aria-labelledby). */
-export const TabsList = forwardRef<HTMLDivElement, TabsListProps>(function TabsList({ scroll = true, className, onKeyDown, children, ...props }, ref) {
+export const TabsList = forwardRef<HTMLDivElement, TabsListProps>(function TabsList(
+  { scroll = true, className, onKeyDown, children, ...props },
+  ref,
+) {
   const tabs = useTabs("TabsList");
   const vertical = tabs.orientation === "vertical";
   const listRef = useRef<HTMLDivElement>(null);
@@ -189,7 +192,10 @@ export interface TabsContentProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /** A panel: shown with a short fade when its tab is chosen; focusable, with the sharp ring. */
-export const TabsContent = forwardRef<HTMLDivElement, TabsContentProps>(function TabsContent({ value, forceMount = false, className, ...props }, ref) {
+export const TabsContent = forwardRef<HTMLDivElement, TabsContentProps>(function TabsContent(
+  { value, forceMount = false, className, ...props },
+  ref,
+) {
   const tabs = useTabs("TabsContent");
   const active = tabs.value === value;
   if (!active && !forceMount) return null;

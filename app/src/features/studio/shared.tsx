@@ -22,7 +22,16 @@ import {
 } from "@fume/ui";
 import { Link, useNavigate } from "react-router-dom";
 import { useOpenDocument } from "../../api/hooks";
-import type { Board, BoardKind, CreativeDocument, Format, Generation, Id, QueueItem, StudioSession } from "../../contract";
+import type {
+  Board,
+  BoardKind,
+  CreativeDocument,
+  Format,
+  Generation,
+  Id,
+  QueueItem,
+  StudioSession,
+} from "../../contract";
 import * as copy from "../../copy";
 import { due, time, when } from "../../lib/time";
 import { checkStateLabel, formatName, whatChanged } from "./parts";
@@ -39,7 +48,9 @@ export function QueueList({ items, showBrand = true }: { items: QueueItem[]; sho
             </ItemMedia>
             <ItemContent>
               <ItemTitle>{creative.title}</ItemTitle>
-              <ItemDescription>{showBrand ? `${workspace.brandName} · ${campaign.name}` : campaign.name}</ItemDescription>
+              <ItemDescription>
+                {showBrand ? `${workspace.brandName} · ${campaign.name}` : campaign.name}
+              </ItemDescription>
               <ItemDescription>
                 {formatName(creative.format)} · V{creative.current.number} · {whatChanged(creative)}
               </ItemDescription>
@@ -85,7 +96,7 @@ export function BoardCard({ board, to }: { board: Board; to: string }) {
         <CardHeader>
           <CardTitle>{board.name}</CardTitle>
           <CardDescription>
-            {/* round 13 (robots' note 08): the count the board itself says, its pictures (notes and swatches are not) */}
+            {/* the count the board itself says, its pictures (notes and swatches are not) */}
             {boardKindLabel[board.kind]} · {boardCount(board)} · changed {when(board.updatedAt)}
           </CardDescription>
         </CardHeader>
@@ -110,7 +121,8 @@ export function generationScore(g: Generation): number {
   return s;
 }
 
-export const bestFirst = (gs: Generation[]) => [...gs].sort((a, b) => generationScore(a) - generationScore(b) || b.at.localeCompare(a.at));
+export const bestFirst = (gs: Generation[]) =>
+  [...gs].sort((a, b) => generationScore(a) - generationScore(b) || b.at.localeCompare(a.at));
 
 /** "Clean", or what the evaluation flagged: "Product Truth flagged · Cap reads glossy". */
 export function evaluationWords(g: Generation): string {
@@ -145,7 +157,16 @@ export function useOpenInStudio(workspaceId: Id) {
     pending: open.isPending,
     open: (input: { campaignId?: Id; slot?: string; fromGenerationId?: Id; creativeId?: Id; modeId?: Id }) =>
       open.mutate(
-        { workspaceId, studio: "render", modeId: input.modeId ?? "m-free", campaignId: input.campaignId, creativeId: input.creativeId, slot: input.slot, title: input.slot, fromGenerationId: input.fromGenerationId },
+        {
+          workspaceId,
+          studio: "render",
+          modeId: input.modeId ?? "m-free",
+          campaignId: input.campaignId,
+          creativeId: input.creativeId,
+          slot: input.slot,
+          title: input.slot,
+          fromGenerationId: input.fromGenerationId,
+        },
         {
           onSuccess: (d) => navigate(`/studio/doc/${d.id}`),
           onError: (e) => toast.error("The Studio didn’t open", { description: e.message }),
@@ -189,18 +210,31 @@ export function distinctOutput<T extends { generations: Generation[] }>(output: 
 }
 
 /** A Studio session as a row: its slot, campaign, how many candidates, who and when; it opens the session. */
-export function SessionRow({ session, workspaceId, campaign, by }: { session: StudioSession; workspaceId: string; campaign?: string; by: string }) {
+export function SessionRow({
+  session,
+  workspaceId,
+  campaign,
+  by,
+}: {
+  session: StudioSession;
+  workspaceId: string;
+  campaign?: string;
+  by: string;
+}) {
   const picked = session.generations.find((g) => g.id === session.pickedId);
   const cover = picked ?? session.generations.at(-1);
   const sent = session.generations.some((g) => g.state === "sent_to_check");
   return (
     <Item as="li" variant="outline" asChild>
       <Link to={`/studio/b/${workspaceId}/studio/session/${session.id}`}>
-        <ItemMedia variant="creative">{cover ? <ItemMediaImage src={cover.image} alt="" /> : <Icon name="layers" />}</ItemMedia>
+        <ItemMedia variant="creative">
+          {cover ? <ItemMediaImage src={cover.image} alt="" /> : <Icon name="layers" />}
+        </ItemMedia>
         <ItemContent>
           <ItemTitle>{session.slot ?? "Free session"}</ItemTitle>
           <ItemDescription>
-            {campaign ?? "No campaign"} · {copy.count(session.generations.length, "candidate")} · {by}, {when(session.updatedAt)}
+            {campaign ?? "No campaign"} · {copy.count(session.generations.length, "candidate")} · {by},{" "}
+            {when(session.updatedAt)}
           </ItemDescription>
         </ItemContent>
         <ItemActions>
@@ -218,7 +252,9 @@ export function DocumentRow({ doc, campaign, by }: { doc: CreativeDocument; camp
   return (
     <Item as="li" variant="outline" asChild>
       <Link to={`/studio/doc/${doc.id}`}>
-        <ItemMedia variant="creative">{cover ? <ItemMediaImage src={cover.image} alt="" /> : <Icon name="layers" />}</ItemMedia>
+        <ItemMedia variant="creative">
+          {cover ? <ItemMediaImage src={cover.image} alt="" /> : <Icon name="layers" />}
+        </ItemMedia>
         <ItemContent>
           <ItemTitle>{doc.slot ?? doc.title}</ItemTitle>
           <ItemDescription>
@@ -226,7 +262,11 @@ export function DocumentRow({ doc, campaign, by }: { doc: CreativeDocument; camp
           </ItemDescription>
         </ItemContent>
         <ItemActions>
-          {doc.state === "in_check" ? <Badge check="waiting">In check</Badge> : cover ? <Badge>V{cover.number}</Badge> : null}
+          {doc.state === "in_check" ? (
+            <Badge check="waiting">In check</Badge>
+          ) : cover ? (
+            <Badge>V{cover.number}</Badge>
+          ) : null}
           <Icon name="chevron-right" />
         </ItemActions>
       </Link>

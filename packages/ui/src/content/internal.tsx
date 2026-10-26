@@ -49,7 +49,12 @@ export function elementRef(el: ReactElement): Ref<unknown> | undefined {
 }
 
 /** Merges slot props into a child element: classes and styles join, handlers chain, refs merge, the child's other props win. */
-export function mergeIntoChild(child: ReactElement, slotProps: AnyProps, ref?: Ref<unknown>, children?: ReactNode): ReactElement {
+export function mergeIntoChild(
+  child: ReactElement,
+  slotProps: AnyProps,
+  ref?: Ref<unknown>,
+  children?: ReactNode,
+): ReactElement {
   const childProps = child.props as AnyProps;
   const out: AnyProps = { ...slotProps, ...childProps };
   for (const k in slotProps) {
@@ -62,15 +67,20 @@ export function mergeIntoChild(child: ReactElement, slotProps: AnyProps, ref?: R
       };
     }
   }
-  out.className = cx(slotProps.className as string | undefined, childProps.className as string | undefined) || undefined;
-  if (slotProps.style || childProps.style) out.style = { ...(slotProps.style as CSSProperties), ...(childProps.style as CSSProperties) };
+  out.className =
+    cx(slotProps.className as string | undefined, childProps.className as string | undefined) || undefined;
+  if (slotProps.style || childProps.style)
+    out.style = { ...(slotProps.style as CSSProperties), ...(childProps.style as CSSProperties) };
   const cref = elementRef(child);
   out.ref = ref ? mergeRefs(ref, cref) : cref;
   return children === undefined ? cloneElement(child, out) : cloneElement(child, out, children);
 }
 
 /** shadcn's Slot: renders its one child with these props merged in (asChild). */
-export const Slot = forwardRef<HTMLElement, HTMLAttributes<HTMLElement> & AnyProps>(function Slot({ children, ...props }, ref) {
+export const Slot = forwardRef<HTMLElement, HTMLAttributes<HTMLElement> & AnyProps>(function Slot(
+  { children, ...props },
+  ref,
+) {
   const child = Children.only(children);
   if (!isValidElement(child)) return null;
   return mergeIntoChild(child, props, ref);
@@ -80,11 +90,18 @@ export const Slot = forwardRef<HTMLElement, HTMLAttributes<HTMLElement> & AnyPro
 export function withClass(node: ReactNode, className: string): ReactNode {
   if (!isValidElement(node)) return node;
   const p = node.props as AnyProps;
-  return cloneElement(node as ReactElement<AnyProps>, { className: cx(p.className as string | undefined, className), "aria-hidden": true });
+  return cloneElement(node as ReactElement<AnyProps>, {
+    className: cx(p.className as string | undefined, className),
+    "aria-hidden": true,
+  });
 }
 
 /** Controlled or uncontrolled state, as Radix does it. */
-export function useControllable<T>(value: T | undefined, defaultValue: T, onChange?: (v: T) => void): [T, (v: T) => void] {
+export function useControllable<T>(
+  value: T | undefined,
+  defaultValue: T,
+  onChange?: (v: T) => void,
+): [T, (v: T) => void] {
   const [inner, setInner] = useState<T>(defaultValue);
   const controlled = value !== undefined;
   const current = controlled ? (value as T) : inner;
@@ -108,10 +125,15 @@ export function motionMs(name: string, fallback: number): number {
 }
 
 export function prefersReducedMotion(): boolean {
-  return typeof window !== "undefined" && !!window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  return (
+    typeof window !== "undefined" &&
+    !!window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
 }
 
-const MENU_ITEMS = "a[href], button:not([disabled]), [role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']";
+const MENU_ITEMS =
+  "a[href], button:not([disabled]), [role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']";
 
 export interface MenuTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   ref: RefObject<HTMLButtonElement>;
@@ -140,7 +162,9 @@ export function useGlassMenu(id: string): {
 
   const items = (): HTMLElement[] =>
     contentRef.current
-      ? Array.from(contentRef.current.querySelectorAll<HTMLElement>(MENU_ITEMS)).filter((x) => !x.hidden && x.offsetParent !== null)
+      ? Array.from(contentRef.current.querySelectorAll<HTMLElement>(MENU_ITEMS)).filter(
+          (x) => !x.hidden && x.offsetParent !== null,
+        )
       : [];
 
   const setOpen = useCallback((next: boolean, focus = false) => {
@@ -232,7 +256,11 @@ export function useGlassMenu(id: string): {
  * Radix Toolbar's roving focus, as toolbar.js does it: the bar is one tab stop; ArrowLeft/Right (Up/Down when vertical),
  * Home and End move between its own controls (not those of a menu hanging off it) and skip disabled ones.
  */
-export function useRovingBar(ref: RefObject<HTMLElement>, vertical = false, onEscape?: () => void): {
+export function useRovingBar(
+  ref: RefObject<HTMLElement>,
+  vertical = false,
+  onEscape?: () => void,
+): {
   onKeyDown: (e: ReactKeyboardEvent<HTMLElement>) => void;
   onFocus: (e: ReactFocusEvent<HTMLElement>) => void;
 } {
@@ -241,7 +269,8 @@ export function useRovingBar(ref: RefObject<HTMLElement>, vertical = false, onEs
     if (!bar) return [];
     return Array.from(bar.querySelectorAll<HTMLElement>("button, a[href], input, select, textarea")).filter((el) => {
       if (el.closest('[role="menu"]')) return false;
-      if ((el as HTMLButtonElement).disabled || el.getAttribute("aria-disabled") === "true" || el.closest("[hidden]")) return false;
+      if ((el as HTMLButtonElement).disabled || el.getAttribute("aria-disabled") === "true" || el.closest("[hidden]"))
+        return false;
       return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
     });
   }, [ref]);
@@ -253,7 +282,9 @@ export function useRovingBar(ref: RefObject<HTMLElement>, vertical = false, onEs
       const pick =
         current && list.includes(current)
           ? current
-          : list.find((el) => el.getAttribute("aria-checked") === "true" || el.getAttribute("aria-pressed") === "true") || list[0];
+          : list.find(
+              (el) => el.getAttribute("aria-checked") === "true" || el.getAttribute("aria-pressed") === "true",
+            ) || list[0];
       bar.querySelectorAll<HTMLElement>("button, a[href], input, select, textarea").forEach((el) => {
         if (!el.closest('[role="menu"]')) el.tabIndex = -1;
       });

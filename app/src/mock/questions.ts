@@ -5,7 +5,18 @@
 // an answer given in ANY place closes the record, and the record then writes that answer into every other place, so
 // every screen reads the same state. createMockApi wraps the api so the store settles before every call.
 
-import { FumeError, type Brief, type Campaign, type FumeApi, type FumeEvent, type Id, type Message, type OpenQuestion, type Product, type ServiceClock } from "../contract";
+import {
+  FumeError,
+  type Brief,
+  type Campaign,
+  type FumeApi,
+  type FumeEvent,
+  type Id,
+  type Message,
+  type OpenQuestion,
+  type Product,
+  type ServiceClock,
+} from "../contract";
 
 export interface QuestionRecord {
   id: Id;
@@ -36,8 +47,15 @@ export interface QuestionRecord {
 /** LYSNE's open questions. Hand Balm's brief waits on its claims and a packshot of the tube. */
 export const seedQuestions: QuestionRecord[] = [
   {
-    id: "q-balm-claims", workspaceId: "w-lysne", campaignId: "c-balm", line: "The claims we may use for Hand Balm",
-    href: "/brand/products/pr-balm#needs", productId: "pr-balm", factId: "f10", specFieldId: "claims", unknownId: "un1",
+    id: "q-balm-claims",
+    workspaceId: "w-lysne",
+    campaignId: "c-balm",
+    line: "The claims we may use for Hand Balm",
+    href: "/brand/products/pr-balm#needs",
+    productId: "pr-balm",
+    factId: "f10",
+    specFieldId: "claims",
+    unknownId: "un1",
     ask: "Which claims may we use for Hand Balm?",
     why: "Every line on a creative must be true. Fume’s expert checks each one against your answer, so we never guess it.",
     kind: "text",
@@ -45,8 +63,13 @@ export const seedQuestions: QuestionRecord[] = [
     hint: "One claim per line, as it may stand on a creative",
   },
   {
-    id: "q-balm-packshot", workspaceId: "w-lysne", campaignId: "c-balm", line: "A packshot of the tube",
-    href: "/brand/products/pr-balm#needs", productId: "pr-balm", shotSlotId: "front",
+    id: "q-balm-packshot",
+    workspaceId: "w-lysne",
+    campaignId: "c-balm",
+    line: "A packshot of the tube",
+    href: "/brand/products/pr-balm#needs",
+    productId: "pr-balm",
+    shotSlotId: "front",
     ask: "Is this the Hand Balm packshot?",
     why: "The Engine draws the tube from this photo, so its shape, cap and label come out right. Confirm it, or add a better one.",
     kind: "picture",
@@ -91,7 +114,9 @@ function answeredSomewhere(q: QuestionRecord, db: Db): string | undefined {
   const product = q.productId ? db.products.find((p) => p.id === q.productId) : undefined;
   const fact = q.factId ? product?.facts.find((f) => f.id === q.factId) : undefined;
   if (fact && fact.source !== "unknown") return fact.statement;
-  const spec = q.specFieldId ? product?.specs?.find((s) => s.fieldId === q.specFieldId && s.provenance.origin === "customer") : undefined;
+  const spec = q.specFieldId
+    ? product?.specs?.find((s) => s.fieldId === q.specFieldId && s.provenance.origin === "customer")
+    : undefined;
   if (spec) return Array.isArray(spec.value) ? spec.value.join("\n") : String(spec.value);
   const shot = q.shotSlotId ? product?.shots?.find((s) => s.slotId === q.shotSlotId) : undefined;
   if (shot && (shot.provenance.origin === "customer" || shot.provenance.state === "approved")) return "Packshot added";
@@ -101,7 +126,10 @@ function answeredSomewhere(q: QuestionRecord, db: Db): string | undefined {
   const brief = q.campaignId ? db.briefs.find((b) => b.campaignId === q.campaignId) : undefined;
   if (brief && !brief.missing.includes(q.line)) {
     const thread = db.threads.find((t) => t.campaignId === q.campaignId);
-    const said = db.messages.filter((m) => m.threadId === thread?.id && m.author.kind === "person").sort((a, b) => a.at.localeCompare(b.at)).at(-1);
+    const said = db.messages
+      .filter((m) => m.threadId === thread?.id && m.author.kind === "person")
+      .sort((a, b) => a.at.localeCompare(b.at))
+      .at(-1);
     return said?.text ?? "Answered";
   }
   return undefined;
@@ -114,12 +142,24 @@ function spread(q: QuestionRecord, db: Db, ctx: Ctx): void {
   const answer = q.answer!;
   // The product's line.
   const fact = q.factId ? product?.facts.find((f) => f.id === q.factId) : undefined;
-  if (fact && fact.source === "unknown") Object.assign(fact, { statement: answer, source: "verified", confidence: "high", verifiedBy: by, verifiedAt: at });
-  if (product && q.specFieldId && product.kindId && !product.specs?.some((s) => s.fieldId === q.specFieldId && s.provenance.origin === "customer")) {
-    const lines = answer.split(/\n|;/).map((s) => s.trim()).filter(Boolean);
-    product.specs = (product.specs ?? []).filter((s) => s.fieldId !== q.specFieldId).concat({ fieldId: q.specFieldId, value: lines, provenance: { origin: "customer", state: "approved", by, at } });
+  if (fact && fact.source === "unknown")
+    Object.assign(fact, { statement: answer, source: "verified", confidence: "high", verifiedBy: by, verifiedAt: at });
+  if (
+    product &&
+    q.specFieldId &&
+    product.kindId &&
+    !product.specs?.some((s) => s.fieldId === q.specFieldId && s.provenance.origin === "customer")
+  ) {
+    const lines = answer
+      .split(/\n|;/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    product.specs = (product.specs ?? [])
+      .filter((s) => s.fieldId !== q.specFieldId)
+      .concat({ fieldId: q.specFieldId, value: lines, provenance: { origin: "customer", state: "approved", by, at } });
   }
-  if (product && product.facts.every((f) => f.source === "verified" || f.source === "supplied") && product.facts.length) product.state = "verified";
+  if (product && product.facts.every((f) => f.source === "verified" || f.source === "supplied") && product.facts.length)
+    product.state = "verified";
   // The Brand understanding's question.
   const unknown = q.unknownId ? db.understanding.unknowns.find((u) => u.id === q.unknownId) : undefined;
   if (unknown && !unknown.answer) unknown.answer = answer;
@@ -160,14 +200,19 @@ export function keepQuestions(api: FumeApi, settle: () => void): void {
 // product does not know yet (a claims line Fume asks before the product can be used). answerQuestion() writes the
 // answer where it belongs, on that product's own line, then spreads it (the brief, the understanding, the clock).
 
-const claimsWhy = "Every line on a creative must be true. Fume’s expert checks each one against your answer, so we never guess it.";
+const claimsWhy =
+  "Every line on a creative must be true. Fume’s expert checks each one against your answer, so we never guess it.";
 
 /** A product line Fume does not know, as a question of its own (no record: no brief waits on it). */
 function factQuestion(p: Product, f: Product["facts"][number]): OpenQuestion {
   const claims = f.area === "claim";
   return {
     id: `q-fact-${p.id}-${f.id}`,
-    question: claims ? `Which claims may we use for ${p.name}?` : f.statement.trim().endsWith("?") ? f.statement : `What is the ${f.label.toLowerCase()} of ${p.name}?`,
+    question: claims
+      ? `Which claims may we use for ${p.name}?`
+      : f.statement.trim().endsWith("?")
+        ? f.statement
+        : `What is the ${f.label.toLowerCase()} of ${p.name}?`,
     why: claims ? claimsWhy : "Fume makes creatives only of what you have confirmed, so we ask before we guess.",
     line: claims ? `The claims we may use for ${p.name}` : `${f.label} of ${p.name}`,
     answer: "text",
@@ -205,7 +250,8 @@ export function listQuestions(questions: QuestionRecord[], db: Db, workspaceId: 
   }
   for (const p of products)
     for (const f of p.facts)
-      if (f.source === "unknown" && !open.some((q) => q.productId === p.id && q.factId === f.id)) open.push(factQuestion(p, f));
+      if (f.source === "unknown" && !open.some((q) => q.productId === p.id && q.factId === f.id))
+        open.push(factQuestion(p, f));
   return open;
 }
 
@@ -215,13 +261,20 @@ export function answerOne(
   db: Db,
   ctx: Ctx,
   workspaceId: Id,
-  input: { questionId: Id; text?: string; picture?: { name: string; bytes: number; src?: string }; keepPicture?: boolean },
+  input: {
+    questionId: Id;
+    text?: string;
+    picture?: { name: string; bytes: number; src?: string };
+    keepPicture?: boolean;
+  },
 ): void {
   const by = ctx.userId();
   const at = ctx.now();
   const open = listQuestions(questions, db, workspaceId).find((q) => q.id === input.questionId);
   if (!open) throw new FumeError("not_found", "That question is answered already.");
-  const product = open.productId ? db.products.find((p) => p.id === open.productId && p.workspaceId === workspaceId) : undefined;
+  const product = open.productId
+    ? db.products.find((p) => p.id === open.productId && p.workspaceId === workspaceId)
+    : undefined;
   const text = input.text?.trim();
   if (open.answer === "picture") {
     if (!product || !open.shotSlotId) throw new FumeError("invalid", "No product to add the photo to.");
@@ -230,17 +283,29 @@ export function answerOne(
     else if (input.picture) {
       const image = input.picture.src ?? product.images[0];
       if (!image) throw new FumeError("invalid", "The photo did not arrive. Try it again.");
-      product.shots = (product.shots ?? []).filter((s) => s.slotId !== open.shotSlotId).concat({ slotId: open.shotSlotId, image, provenance: { origin: "customer", state: "approved", by, at } });
+      product.shots = (product.shots ?? [])
+        .filter((s) => s.slotId !== open.shotSlotId)
+        .concat({ slotId: open.shotSlotId, image, provenance: { origin: "customer", state: "approved", by, at } });
     } else throw new FumeError("invalid", "Keep the photo, or add one.");
   } else {
     if (!text) throw new FumeError("invalid", "Write the answer first.");
     const fact = open.factId ? product?.facts.find((f) => f.id === open.factId) : undefined;
-    if (fact) Object.assign(fact, { statement: text, source: "verified", confidence: "high", verifiedBy: by, verifiedAt: at });
-    if (product && product.facts.length && product.facts.every((f) => f.source === "verified" || f.source === "supplied")) product.state = "verified";
+    if (fact)
+      Object.assign(fact, { statement: text, source: "verified", confidence: "high", verifiedBy: by, verifiedAt: at });
+    if (
+      product &&
+      product.facts.length &&
+      product.facts.every((f) => f.source === "verified" || f.source === "supplied")
+    )
+      product.state = "verified";
   }
   const record = questions.find((q) => q.id === open.id);
   if (record) {
-    Object.assign(record, { answer: open.answer === "picture" ? "Packshot added" : text, answeredBy: by, answeredAt: at });
+    Object.assign(record, {
+      answer: open.answer === "picture" ? "Packshot added" : text,
+      answeredBy: by,
+      answeredAt: at,
+    });
     spread(record, db, ctx);
   }
 }

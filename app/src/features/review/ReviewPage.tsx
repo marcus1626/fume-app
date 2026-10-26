@@ -1,10 +1,9 @@
-// Review, a place of its own again (round 13, Marcus #29: "Burde være tydeligere i UI/UX at dette er Review"; PROPOSED
-// 21 Oct 2026). Between 15 Oct (UX review §2.3) and round 13 /review sent you Home. Now the customer's sidebar has
-// Review, with the number of creatives that wait on her across campaigns, and this page lists them grouped by
-// campaign: the review grid (every one selected to start with, "Approve 8" one press with Undo), the viewer over the
-// page with ← → through all of them, and per campaign the creatives she marked "Needs changes" with its one "Start
-// the changes". A campaign's own review (/campaigns/:id/review) stays, and lights Review too. Home keeps its inbox.
-// In a staff frame (Fume's studio, an agency) the brand's /review address goes on to the frame's start, as before.
+// Review, a place of its own (FLOWS §26.3): the customer's sidebar has Review, with the number of creatives that wait
+// on her across campaigns, and this page lists them grouped by campaign: the review grid (every one selected to start
+// with, "Approve 8" one press with Undo), the viewer over the page with ← → through all of them, and per campaign the
+// creatives she marked "Needs changes" with its one "Start the changes". A campaign's own review
+// (/campaigns/:id/review) stays, and lights Review too. Home keeps its inbox. In a staff frame (Fume's studio, an
+// agency) the brand's /review address goes on to the frame's start.
 import { Button, CreativeGrid, PageHeader } from "@fume/ui";
 import { useMemo, type MouseEvent as ReactMouseEvent } from "react";
 import { Link, Navigate, useLocation } from "react-router-dom";
@@ -28,7 +27,7 @@ type Rights = ReturnType<typeof rights>;
 
 export function ReviewPage() {
   const { pathname } = useLocation();
-  // A staff frame's brand address (/studio/b/w-lysne/review): its start, as before round 13.
+  // A staff frame's brand address (/studio/b/w-lysne/review): its start.
   if (pathname !== "/review") return <Navigate to="/" replace />;
   return (
     <Page title="Review">
@@ -49,7 +48,10 @@ function ReviewPlace() {
   const people = directory(usePeople().data);
   const can = rights(session.role);
   const viewer = useOverlay("c");
-  const groups = useMemo(() => (queue.data ?? []).filter((i) => i.kind === "creatives" && i.creatives.length > 0), [queue.data]);
+  const groups = useMemo(
+    () => (queue.data ?? []).filter((i) => i.kind === "creatives" && i.creatives.length > 0),
+    [queue.data],
+  );
   const campaigns = useMemo(() => groups.map((g) => g.campaign), [groups]);
   const campaignIds = useMemo(() => campaigns.map((c) => c.id), [campaigns]);
   const named = useCustomerNamesAcross(campaigns);
@@ -60,7 +62,14 @@ function ReviewPlace() {
   const total = list.length;
   const checkers = [...new Set(list.map((c) => c.current.checkedBy).filter(Boolean))].map((id) => people.name(id));
   const approvers = [...new Set(campaigns.map((c) => people.name(c.approverId).split(" ")[0]!))];
-  const words = selectionWords({ n, total, open: pick.open.length, approver: approvers.join(" or ") || "The approver", canApprove: can.approve, canAsk: can.ask });
+  const words = selectionWords({
+    n,
+    total,
+    open: pick.open.length,
+    approver: approvers.join(" or ") || "The approver",
+    canApprove: can.approve,
+    canAsk: can.ask,
+  });
 
   return (
     <>
@@ -109,10 +118,22 @@ function ReviewPlace() {
         ))
       )}
 
-      {can.approve && <ApproveBar selected={pick.selected} onClear={pick.clear} onNeedsChanges={can.ask ? (c) => viewer.open(c.id, { ask: "1" }) : undefined} />}
+      {can.approve && (
+        <ApproveBar
+          selected={pick.selected}
+          onClear={pick.clear}
+          onNeedsChanges={can.ask ? (c) => viewer.open(c.id, { ask: "1" }) : undefined}
+        />
+      )}
 
       {viewer.value && campaignIds.length > 0 && (
-        <ViewerAcross campaigns={campaigns} campaignIds={campaignIds} creativeId={viewer.value} onMove={viewer.move} onClose={viewer.close} />
+        <ViewerAcross
+          campaigns={campaigns}
+          campaignIds={campaignIds}
+          creativeId={viewer.value}
+          onMove={viewer.move}
+          onClose={viewer.close}
+        />
       )}
     </>
   );
@@ -203,5 +224,15 @@ function ViewerAcross({
   if (!review.ready) return null;
   const set = list.some((c) => c.id === creativeId) ? list : all;
   const fresh = review.views.map((v) => v.campaign);
-  return <ReviewViewer set={set} campaigns={fresh.length ? fresh : campaigns} creativeId={creativeId} all={review.all} threadId={review.views.length === 1 ? review.views[0]!.threadId : undefined} onMove={onMove} onClose={onClose} />;
+  return (
+    <ReviewViewer
+      set={set}
+      campaigns={fresh.length ? fresh : campaigns}
+      creativeId={creativeId}
+      all={review.all}
+      threadId={review.views.length === 1 ? review.views[0]!.threadId : undefined}
+      onMove={onMove}
+      onClose={onClose}
+    />
+  );
 }

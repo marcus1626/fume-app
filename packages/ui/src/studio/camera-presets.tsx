@@ -1,7 +1,6 @@
-// StudioCameraPresets: the camera as named presets (FLOWS §18, PROPOSED 15 Oct 2026). The brand's own camera specs
-// ("LYSNE close · 85 mm") and Fume's camera presets with a picture of the camera and its body and lens
-// ("Hasselblad X2D 100C · XCD 90 mm"), as small cards; picking one sets the lens. The chosen one's note sits under
-// the cards. Own values stay with StudioLens.
+// StudioCameraPresets: the camera as named presets (FLOWS §18). The brand's own camera specs ("LYSNE close · 85 mm")
+// and Fume's camera presets with a picture of the camera and its body and lens ("Hasselblad X2D 100C · XCD 90 mm"), as
+// small cards; picking one sets the lens. The chosen one's note sits under the cards. Own values stay with StudioLens.
 //   <StudioCameraPresets label="LYSNE’s cameras" presets={cams} value={pickedId} onPick={(c) => setLens(c.lens)} />
 import { StudioPresetPicker } from "./source";
 import type { StudioLensValue } from "./types";
@@ -37,7 +36,13 @@ export function StudioCameraPresets({ presets, value, onPick, label, disabled }:
         className="ui-sl-presets--cameras"
         value={value}
         disabled={disabled}
-        items={presets.map((p) => ({ id: p.id, name: p.name, meta: `${p.lens.focal} mm`, line: p.body, image: p.image }))}
+        items={presets.map((p) => ({
+          id: p.id,
+          name: p.name,
+          meta: `${p.lens.focal} mm`,
+          line: p.body,
+          image: p.image,
+        }))}
         onPick={(id) => {
           const p = presets.find((x) => x.id === id);
           if (p) onPick(p);

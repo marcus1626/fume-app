@@ -1,26 +1,45 @@
-// The content calendar (FLOWS §21, Marcus 15 Oct: "Full kontroll på hva som skal hvor og når"). One view of what runs
-// where and when: campaign windows as quiet bars across the days, collection drops, deliveries, meetings with Fume,
-// and approved creatives planned on a day and a placement. Month by default or a week on a desk; always the agenda on
-// a phone. "Ready to plan" holds the approved creatives, per campaign behind one "Plan 6 creatives" pill: on a desk
-// they are dragged onto a day; anywhere, "Plan" opens a small dialog. v1 plans only: publishing to Instagram and Meta
-// comes later. ?view=month|week and ?d=YYYY-MM-DD keep the place, so a link (a booked meeting) opens the right day.
-// Since the UX review (15 Oct, §2.3) the calendar is a view of Campaigns (/campaigns?show=calendar): CalendarView is
-// the calendar without a page, and /calendar sends you there with its day and view kept. Round 8 (WAY-18, LOAD-18):
-// Campaigns' one control picks List, Month or Week, so the calendar has no switch of its own; a planned creative is
-// named as she approved it ("Night Body Oil · Feed"), and a delivery on a day opens that delivery (WAY-19).
-// Round 9 (desktop review 19 Oct, DLAY-14, DLOAD-16; PROPOSED 19 Oct 2026): the calendar takes the inset's full width
-// (Campaigns gives its page .ui-plan-page), "Ready to plan" is a 300 px panel on the right that scrolls by itself, and
-// a planned creative carries its short unique name, "Night Body Oil · Feed A2" (review/names.ts), so two Feeds of one
-// product are told apart on the day. A creative in the tray is dragged onto a day, or clicked to pick its day.
+// The content calendar (FLOWS §21): what runs where and when. Campaign windows as quiet bars across the days,
+// collection drops, deliveries, meetings with Fume, and approved creatives planned on a day and a placement. It is a
+// view of Campaigns (/campaigns?show=calendar), whose one control picks List, Month or Week; CalendarView is the
+// calendar without a page, and /calendar sends you there with its day and view kept. The agenda on a phone.
+// ?view=month|week and ?d=YYYY-MM-DD keep the place, so a link (a booked meeting) opens the right day.
+// "Ready to plan" is a panel on the right that scrolls by itself, holding the approved creatives by campaign: one is
+// dragged onto a day, or clicked to pick its day. A planned creative carries its short unique name, "Night Body Oil ·
+// Feed A2" (review/names.ts), so two Feeds of one product are told apart. A delivery on a day opens that delivery. The
+// calendar only plans: publishing comes later.
 import { Button, PageHeader, useNarrowScreen, useToast } from "@fume/ui";
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useCalendar, useCampaignViews, useCampaigns, useCatalogue, useDeliveries, useMoveEntry, usePlacements, useSchedule, useSession } from "../../api/hooks";
+import {
+  useCalendar,
+  useCampaignViews,
+  useCampaigns,
+  useCatalogue,
+  useDeliveries,
+  useMoveEntry,
+  usePlacements,
+  useSchedule,
+  useSession,
+} from "../../api/hooks";
 import type { CalendarEntry, Placement } from "../../contract";
 import { now } from "../../lib/time";
 import { campaignSubject, creativeLabels, customerName } from "../review/names";
 import { Page, Query } from "../../shell/Page";
-import { addDays, addMonths, clock, dayOf, dayShort, endOfMonth, instant, isDay, monthTitle, startOfMonth, startOfWeek, weekTitle, type Day } from "./dates";
+import {
+  addDays,
+  addMonths,
+  clock,
+  dayOf,
+  dayShort,
+  endOfMonth,
+  instant,
+  isDay,
+  monthTitle,
+  startOfMonth,
+  startOfWeek,
+  weekTitle,
+  type Day,
+} from "./dates";
 import { useCalendarDrag, type DragPayload } from "./drag";
 import { Agenda, DragGhost, MonthGrid, ReadyTray, WeekGrid, type CalendarActions } from "./parts";
 import { DEFAULT_TIME, defaultPlacement, PlanDialog, type PlanTarget } from "./plan";
@@ -68,9 +87,12 @@ export function CalendarView() {
   const placementOf = useMemo(() => new Map((placements.data ?? []).map((p) => [p.id, p])), [placements.data]);
   const deliveries = useDeliveries();
   const catalogue = useCatalogue();
-  // A planned creative under the name she approved it by, short and unique: what it shows, and which one it is
-  // ("Night Body Oil · Feed A2", DLOAD-16). The labels come from each planned campaign's creatives.
-  const postCampaigns = useMemo(() => [...new Set(entries.filter((e) => e.kind === "post" && e.campaignId).map((e) => e.campaignId!))].sort(), [entries]);
+  // A planned creative under the name she approved it by, short and unique ("Night Body Oil · Feed A2"). The labels
+  // come from each planned campaign's creatives.
+  const postCampaigns = useMemo(
+    () => [...new Set(entries.filter((e) => e.kind === "post" && e.campaignId).map((e) => e.campaignId!))].sort(),
+    [entries],
+  );
   const views = useCampaignViews(postCampaigns);
   const labels = useMemo(() => {
     const all = new Map<string, string>();
@@ -92,7 +114,11 @@ export function CalendarView() {
   const deliveryHref = (e: CalendarEntry) => {
     const near = (deliveries.data ?? [])
       .filter((d) => d.campaignId === e.campaignId)
-      .sort((a, b) => Math.abs(Date.parse(a.createdAt) - Date.parse(e.start)) - Math.abs(Date.parse(b.createdAt) - Date.parse(e.start)))[0];
+      .sort(
+        (a, b) =>
+          Math.abs(Date.parse(a.createdAt) - Date.parse(e.start)) -
+          Math.abs(Date.parse(b.createdAt) - Date.parse(e.start)),
+      )[0];
     return near ? `/deliveries/${near.id}` : "/deliveries";
   };
 
@@ -194,11 +220,23 @@ export function CalendarView() {
               {range.title}
             </h2>
             <div className="ui-plan-nav" role="group" aria-label="Move through the calendar">
-              <Button variant="quiet" iconOnly icon="chevron-left" aria-label={view === "week" ? "Previous week" : "Previous month"} onClick={() => step(-1)} />
+              <Button
+                variant="quiet"
+                iconOnly
+                icon="chevron-left"
+                aria-label={view === "week" ? "Previous week" : "Previous month"}
+                onClick={() => step(-1)}
+              />
               <Button variant="secondary" size="sm" onClick={() => go({ d: today })} disabled={anchor === today}>
                 Today
               </Button>
-              <Button variant="quiet" iconOnly icon="chevron-right" aria-label={view === "week" ? "Next week" : "Next month"} onClick={() => step(1)} />
+              <Button
+                variant="quiet"
+                iconOnly
+                icon="chevron-right"
+                aria-label={view === "week" ? "Next week" : "Next month"}
+                onClick={() => step(1)}
+              />
             </div>
           </div>
           <Query query={calendar} loading="Opening the calendar">
@@ -216,7 +254,12 @@ export function CalendarView() {
         {canPlan && <ReadyTray campaigns={campaigns.data ?? []} entries={entries} actions={actions} anchor={anchor} />}
       </div>
       {drag && <DragGhost drag={drag} />}
-      <PlanDialog target={plan} placements={(placements.data ?? []) as Placement[]} today={today} onClose={() => setPlan(null)} />
+      <PlanDialog
+        target={plan}
+        placements={(placements.data ?? []) as Placement[]}
+        today={today}
+        onClose={() => setPlan(null)}
+      />
     </>
   );
 }

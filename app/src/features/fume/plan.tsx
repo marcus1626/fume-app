@@ -1,8 +1,6 @@
-// The plan in the Fume chat (FLOWS §22 and §23; round 10, PROPOSED 20 Oct 2026). Marcus, 20 Oct: "hvor er planen
-// som blir lagd før Engine genererer? Kunden må jo godkjenne det før Engine begynner å generere."
-// She SENDS her brief; Fume writes the plan from it; the expert checks it; she approves it on the plan page, and only
-// then does the Engine make anything. The chat never says or implies that something is made before that.
-// - The plan card in the conversation (MessageCard kind "plan") reads the plan as it is NOW, not as it was when the
+// The plan in the Fume chat (FLOWS §22, §23). She sends her brief; Fume writes the plan from it; she approves it, and
+// only then does the Engine make anything. The chat never says or implies that something is made before that.
+// - The plan card in the conversation (MessageCard kind "plan") reads the plan as it is now, not as it was when the
 //   card was posted: writing / in check (the words under way in the text shimmer, "Ready by …"), ready (the chosen
 //   direction, the count and the dates, "Checked by Anna", "Open the plan"), changes asked, approved. Only the
 //   campaign's latest plan card is drawn; an earlier one would show the same plan again, so Fume's words stand alone
@@ -11,7 +9,24 @@
 //   with its state, then its summary and "Open the plan" (secondary: the composer's Send stays the chat's one primary).
 // Words: Fume writes the plan; the expert checks it ("Checked by Anna"); she approves it; the Engine only makes
 // creatives. No Amber here: Amber stays on checked creatives.
-import { Avatar, Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Icon, Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle, TextShimmer } from "@fume/ui";
+import {
+  Avatar,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  Icon,
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+  TextShimmer,
+} from "@fume/ui";
 import type { MouseEvent as ReactMouseEvent, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useCampaign, usePeople, usePlan } from "../../api/hooks";
@@ -23,7 +38,7 @@ import { useExpertName } from "../brand/parts";
 import { BriefRowsList, useBriefRows } from "./desk";
 import { useOpenFullPage, useOpenLink } from "./open";
 
-/** The plan page (PLAN's), where she approves the plan or asks for changes. */
+/** The plan page, where she approves the plan or asks for changes. */
 export const planHref = (campaignId: Id) => `/campaigns/${campaignId}/plan`;
 
 /** "today", "tomorrow", "Thu 15 Oct": a day in the plan's words, as the plan page and the status sentence say it. */
@@ -51,14 +66,18 @@ export function planFacts(plan: CampaignPlan) {
   const masters = creatives.filter((c) => c.kind === "master").length;
   const rest = creatives.length - masters;
   const after = rest === 0 ? "" : rest === 1 ? ", 1 variant or format" : `, ${rest} variants and formats`;
-  // Round 13 (#20): how many of them are videos and carousels, once she asked for some in the chat.
+  // How many of them are videos and carousels, once she asked for some in the chat.
   const videos = creatives.filter((c) => c.medium === "video").length;
   const carousels = creatives.filter((c) => c.medium === "carousel").length;
-  const media = [videos ? copy.count(videos, "video") : "", carousels ? copy.count(carousels, "carousel") : ""].filter(Boolean).join(" and ");
+  const media = [videos ? copy.count(videos, "video") : "", carousels ? copy.count(carousels, "carousel") : ""]
+    .filter(Boolean)
+    .join(" and ");
   return {
     direction,
     /** "9 creatives: 3 masters, 6 variants and formats" (", 2 of them videos") */
-    count: creatives.length ? `${copy.creatives(creatives.length)}: ${copy.count(masters, "master")}${after}${media ? `; ${media} among them` : ""}` : undefined,
+    count: creatives.length
+      ? `${copy.creatives(creatives.length)}: ${copy.count(masters, "master")}${after}${media ? `; ${media} among them` : ""}`
+      : undefined,
     /** "Masters by Thu 22 Oct" */
     masters: plan.timeline[0] ? `Masters by ${day(plan.timeline[0].at)}` : undefined,
   };
@@ -71,18 +90,36 @@ export function usePlanWords(plan: CampaignPlan | null | undefined) {
   const people = directory(usePeople().data);
   if (!plan) return {};
   const checker = plan.checkedBy ? people.user(plan.checkedBy) : undefined;
-  const approver = plan.approvedBy ? copy.byYou(people.user(plan.approvedBy)?.name ?? "Someone", isMe(plan.approvedBy), true) : undefined;
+  const approver = plan.approvedBy
+    ? copy.byYou(people.user(plan.approvedBy)?.name ?? "Someone", isMe(plan.approvedBy), true)
+    : undefined;
   switch (plan.state) {
     case "writing":
       return { working: "Fume is writing the plan", meta: readyWords(plan.readyBy), short: "Fume is writing it" };
     case "in_check":
-      return { working: `${expert} is checking the plan`, meta: readyWords(plan.readyBy), short: `${expert} is checking it` };
+      return {
+        working: `${expert} is checking the plan`,
+        meta: readyWords(plan.readyBy),
+        short: `${expert} is checking it`,
+      };
     case "changes_asked":
-      return { working: "Fume is changing the plan", meta: readyWords(plan.readyBy, `Version ${plan.version + 1}, ready`), short: "Fume is changing it" };
+      return {
+        working: "Fume is changing the plan",
+        meta: readyWords(plan.readyBy, `Version ${plan.version + 1}, ready`),
+        short: "Fume is changing it",
+      };
     case "ready":
-      return { checker, short: checker ? `Checked by ${copy.byYou(checker.name, isMe(checker.id))}, ready to approve` : "Ready to approve" };
+      return {
+        checker,
+        short: checker
+          ? `Checked by ${copy.byYou(checker.name, isMe(checker.id))}, ready to approve`
+          : "Ready to approve",
+      };
     case "approved":
-      return { checker, short: `${approver ?? "Someone"} approved it${plan.approvedAt ? ` ${onDay(plan.approvedAt)}` : ""}` };
+      return {
+        checker,
+        short: `${approver ?? "Someone"} approved it${plan.approvedAt ? ` ${onDay(plan.approvedAt)}` : ""}`,
+      };
   }
 }
 
@@ -104,7 +141,13 @@ function CheckedBy({ plan }: { plan: CampaignPlan }) {
   if (!user) return null;
   return (
     <p className="ui-chat-plan-checked">
-      <Avatar size="sm" src={user.avatar} initials={initials(user.name)} ink={user.staffRole === "expert"} aria-hidden="true" />
+      <Avatar
+        size="sm"
+        src={user.avatar}
+        initials={initials(user.name)}
+        ink={user.staffRole === "expert"}
+        aria-hidden="true"
+      />
       <span>Checked by {copy.byYou(user.name, isMe(user.id))}</span>
     </p>
   );
@@ -145,11 +188,19 @@ function VersionNote({ plan }: { plan: CampaignPlan }) {
 
 /** The plan as it is now. `latest`: this is the campaign's latest plan card (an earlier one is not drawn). `inPanel`:
  *  the panel beside the conversation shows this plan, so the card points to it. */
-export function PlanCard({ campaignId, latest = true, inPanel }: { campaignId: Id; latest?: boolean; inPanel?: boolean }) {
+export function PlanCard({
+  campaignId,
+  latest = true,
+  inPanel,
+}: {
+  campaignId: Id;
+  latest?: boolean;
+  inPanel?: boolean;
+}) {
   const plan = usePlan(campaignId).data;
   const words = usePlanWords(plan);
-  // Round 13 after-check of #15: the card opens the plan the way every chat link does, in the panel beside the talk
-  // (on a smaller screen its page, with "Back to the conversation"); the href stays for a new tab.
+  // The card opens the plan the way every chat link does, in the panel beside the talk (on a smaller screen its page,
+  // with "Back to the conversation"); the href stays for a new tab.
   const openLink = useOpenLink();
   const open = (e: ReactMouseEvent) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey) return;
@@ -167,7 +218,11 @@ export function PlanCard({ campaignId, latest = true, inPanel }: { campaignId: I
         </ItemMedia>
         <ItemContent>
           <ItemTitle>The plan</ItemTitle>
-          <ItemDescription>{plan.state === "ready" ? "It is on the right. Open it to approve it or ask for changes." : `${words.short ?? "The plan"}. It is on the right.`}</ItemDescription>
+          <ItemDescription>
+            {plan.state === "ready"
+              ? "It is on the right. Open it to approve it or ask for changes."
+              : `${words.short ?? "The plan"}. It is on the right.`}
+          </ItemDescription>
         </ItemContent>
       </Item>
     );
@@ -194,7 +249,9 @@ export function PlanCard({ campaignId, latest = true, inPanel }: { campaignId: I
       <Card className="ui-chat-plan-card">
         <CardHeader>
           <CardTitle as="p">The plan</CardTitle>
-          <CardDescription>The direction, the look, every creative and the dates, before anything is made.</CardDescription>
+          <CardDescription>
+            The direction, the look, every creative and the dates, before anything is made.
+          </CardDescription>
         </CardHeader>
         <CardContent>{words.working && <PlanWorking working={words.working} meta={words.meta} />}</CardContent>
       </Card>
@@ -203,7 +260,9 @@ export function PlanCard({ campaignId, latest = true, inPanel }: { campaignId: I
     <Card className="ui-chat-plan-card">
       <CardHeader>
         <CardTitle as="p">The plan</CardTitle>
-        <CardDescription>{plan.version > 1 ? `Version ${plan.version}, ready to approve` : "Ready to approve"}</CardDescription>
+        <CardDescription>
+          {plan.version > 1 ? `Version ${plan.version}, ready to approve` : "Ready to approve"}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="ui-app-stack ui-app-stack--tight">
@@ -237,8 +296,8 @@ const PARTS = [
 ];
 
 /** "The plan" beside the conversation: its state while Fume writes it and the expert checks it, then its summary and
- *  "Open the plan". The brief she sent stays under it, read-only. Round 13 (#15, #20): opened from a link, its head
- *  has "Open full page" and ✕ (`actions`); while it is ready, her words in the composer change it with Fume. */
+ *  "Open the plan". The brief she sent stays under it, read-only. Opened from a link, its head has "Open full page" and
+ *  ✕ (`actions`); while it is ready, her words in the composer change it with Fume. */
 export function PlanPanel({ campaignId, actions }: { campaignId: Id; actions?: ReactNode }) {
   const openFull = useOpenFullPage();
   const plan = usePlan(campaignId).data;
@@ -290,7 +349,9 @@ export function PlanPanel({ campaignId, actions }: { campaignId: Id; actions?: R
       </div>
       <div className="ui-chat-brief-foot">
         <p className="ui-chat-brief-note" role="status">
-          {ready ? "Change it here: tell Fume how many creatives, videos or carousels, or the dates. Nothing is made before you approve it." : "Nothing is made before you approve the plan."}
+          {ready
+            ? "Change it here: tell Fume how many creatives, videos or carousels, or the dates. Nothing is made before you approve it."
+            : "Nothing is made before you approve the plan."}
         </p>
         {ready && (
           <Button asChild variant="secondary" iconEnd="arrow-right">

@@ -4,7 +4,15 @@
 // waits on the customer again at the version she asked changes on, the change request is not used, and the record
 // forgets it. Reuses the mock's own helpers (setVersion, recount), passed in from createMockApi.
 
-import { FumeError, type Campaign, type Creative, type CreativeVersion, type FumeApi, type Id, type RecordEvent } from "../contract";
+import {
+  FumeError,
+  type Campaign,
+  type Creative,
+  type CreativeVersion,
+  type FumeApi,
+  type Id,
+  type RecordEvent,
+} from "../contract";
 
 interface Db {
   creatives: Creative[];
@@ -26,9 +34,11 @@ export function r9ReviewApi(ctx: R9ReviewContext): Pick<FumeApi, "withdrawChange
       const campaign = campaignOf(campaignId);
       const list = versionIds.map((vid) => {
         const c = db.creatives.find((x) => x.current.id === vid);
-        if (!c || c.campaignId !== campaignId) throw new FumeError("not_found", `No new version ${vid} in this campaign`);
+        if (!c || c.campaignId !== campaignId)
+          throw new FumeError("not_found", `No new version ${vid} in this campaign`);
         // Only a version Fume has not started on can be taken back.
-        if (c.current.state !== "making" || c.versions.length < 2) throw new FumeError("conflict", "Fume has started on these changes already.");
+        if (c.current.state !== "making" || c.versions.length < 2)
+          throw new FumeError("conflict", "Fume has started on these changes already.");
         return c;
       });
       const back: CreativeVersion[] = [];
@@ -47,7 +57,11 @@ export function r9ReviewApi(ctx: R9ReviewContext): Pick<FumeApi, "withdrawChange
         }
       }
       if (usedRound && campaign.roundsUsed > 0) campaign.roundsUsed -= 1;
-      if (campaign.state === "revision" && !db.creatives.some((c) => c.campaignId === campaignId && c.current.state === "making")) campaign.state = "in_review";
+      if (
+        campaign.state === "revision" &&
+        !db.creatives.some((c) => c.campaignId === campaignId && c.current.state === "making")
+      )
+        campaign.state = "in_review";
       recount(campaign);
       return wait(back);
     },

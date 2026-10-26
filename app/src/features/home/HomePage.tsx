@@ -1,34 +1,16 @@
-// Home is the one inbox (UX review 15 Oct, §2.4; round 8: LOAD-3, LOAD-7, MOB-16, TASK-11, TASK-15, ONB-8, WAY-3;
-// round 9: DLOAD-4, DLOAD-14, DTSK-21, DTSK-16, DLAY-18, DLOAD-22, DLOAD-1, DLOAD-3, DLOAD-10, DWAY-5).
-// "Waiting on you" holds at most five rows, one per subject, and each row opens the one place where that work is done,
-// one item at a time: the review set, the product's card beside Home (?check=, when Fume's questions are all about one
-// product) or the question sheet, the chat where a brief waits on an answer, the confirm queue, Brand › Confirm your
-// brand, the delivery. The count shows once, beside the heading; the same number is the Home badge (shell/waiting.ts).
-// Products nothing waits on are one quiet line, never a row. Below, one line per campaign being made that does not
-// already wait on her, in the same row style, quieter; its words are the campaign's one status sentence. A workspace
-// with no campaign yet (the first visit after onboarding) leads with one card and one Ink, "Tell Fume what you need";
-// the header's New campaign steps aside while it shows. On a desk the aside: This month first, then one line on what
-// Fume learned.
-// Round 10 (FLOWS §22, PROPOSED 20 Oct 2026): a plan checked and ready is a row, "The plan for Winter gifting is ready",
-// with the campaign's cover and one action, "Open the plan"; it opens the plan, where she approves it. A campaign
-// whose plan is being written or checked is a line under Being made in the plan's words ("The plan is in check").
-// Round 11 CLIENT FLOW (FLOWS §24.3, §24.5; PROPOSED 20 Oct 2026): Home in a client brand an agency runs.
-// - The agency's people (Nora at "/" in LYSNE): what waits on the agency in this client (the plan to approve, a brief
-//   to send, products and Brand finds to confirm, and the creatives to check, as one row that opens the client's
-//   Check), then what waits on the client as one row, "6 creatives with Maja". Never "to approve" for the agency: the
-//   mock leaves the checked creatives out of the agency's waits (r11-client.ts). The aside is this month in the
-//   client, with the way to the licence.
-// - The client's own people (Maja in Brygga Studio's world): only her creatives to approve and her deliveries; the
-//   brief, the Brand DNA and the products are the agency's. Round 13 (Marcus's card): the plan, once the agency checked
-//   it and sent it to her, is hers too. No New campaign (the agency starts them); the
-//   aside says who makes the brand's creatives.
-// Round 12 AGENCY (UX review DTASK-13, DLOAD-5, DLOAD-7, DLAY-20, DLOAD-4; brief r12 SENDING; PROPOSED 20 Oct 2026):
-// - The agency in one client: what it checked and has not sent is its own row in Waiting on you, "2 creatives to send
-//   to Maja", with a Send pill that opens Send to Maja on the review; "With the client" holds only what was sent ("4
-//   creatives with Maja · Autumn launch · since 14 Oct"), so "with Maja" and "not sent" never meet. The aside is this
-//   month's usage in the client, from the one Usage page's numbers ("Made for LYSNE", "Approved"), with the way to it.
-// - The client: under her row, the creatives that wait on her as tiles with the one Ink "Review them" (DLAY-20); the
-//   lines under Being made read the agency's work as a fact ("Brygga Studio is planning").
+// Home is the one inbox. "Waiting on you" holds at most five rows, one per subject, and each row opens the one place
+// where that work is done, one item at a time (shell/waiting.ts): the review set, the product's card beside Home
+// (?check=, when Fume's questions are all about one product) or the question sheet, the chat where a brief waits on an
+// answer, the plan, the confirm queue, Brand › Confirm your brand, the delivery. The count shows once, beside the
+// heading; the same number is the Home badge. Products nothing waits on are one quiet line, never a row. Below, one
+// line per campaign being made that does not already wait on her, in its one status sentence. A workspace with no
+// campaign yet leads with one card and one Ink, "Tell Fume what you need". On a desk the aside has This month, then one
+// line on what Fume learned.
+// In a client brand an agency runs (FLOWS §24.5, §26.8): the agency's people see what waits on the agency there (a
+// brief to send, products and Brand finds to confirm, the creatives to check, and what it checked and has not sent: "2
+// creatives to send to Maja"), then what is with the client ("4 creatives with Maja"), never "to approve". The client's
+// own people see only her approvals (the plan once the agency checked and sent it, the creatives) and her deliveries,
+// with no New campaign; the agency's work reads as a fact ("Brygga Studio is planning").
 import {
   Button,
   Card,
@@ -55,7 +37,17 @@ import {
 } from "@fume/ui";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useBrandDna, useCampaigns, useCatalogue, useHome, usePeople, useQaQueue, useReviewQueue, useSession, useUsage } from "../../api/hooks";
+import {
+  useBrandDna,
+  useCampaigns,
+  useCatalogue,
+  useHome,
+  usePeople,
+  useQaQueue,
+  useReviewQueue,
+  useSession,
+  useUsage,
+} from "../../api/hooks";
 import type { Campaign, HomeView, Id } from "../../contract";
 import * as copy from "../../copy";
 import { date, due } from "../../lib/time";
@@ -88,7 +80,7 @@ function greeting(hour: number) {
   return "Good evening";
 }
 
-/** The row's pictures: one thumbnail, or a small stack of up to three (seven products, one row: MOB-16). */
+/** The row's pictures: one thumbnail, or a small stack of up to three (seven products, one row). */
 function RowMedia({ row }: { row: WaitingRow }) {
   if (row.pictures.length === 0)
     return (
@@ -142,7 +134,11 @@ function WaitingRowItem({ row, onAsk }: { row: WaitingRow; onAsk: (ids: Id[]) =>
   if (row.productId || row.questionIds?.length)
     return (
       <Item as="li" variant="muted" asChild>
-        <button type="button" onClick={() => (row.productId ? openCheck(row.productId) : onAsk(row.questionIds!))} aria-haspopup="dialog">
+        <button
+          type="button"
+          onClick={() => (row.productId ? openCheck(row.productId) : onAsk(row.questionIds!))}
+          aria-haspopup="dialog"
+        >
           <RowMedia row={row} />
           <RowWords row={row} />
           {end}
@@ -160,9 +156,9 @@ function WaitingRowItem({ row, onAsk }: { row: WaitingRow; onAsk: (ids: Id[]) =>
   );
 }
 
-/** Products nothing waits on yet (DLOAD-14, DLOAD-4): one quiet line, never a row and never counted.
- *  Round 13 (robot note 05, PROPOSED 22 Oct 2026): the number is the one the page it opens says ("Confirm 7 products"),
- *  every product still to confirm; the ones a campaign above already asks about are said as part of it. */
+/** Products nothing waits on yet: one quiet line, never a row and never counted. The number is the one the page it
+ *  opens says ("Confirm 7 products"), every product still to confirm; the ones a campaign above already asks about are
+ *  said as part of it. */
 function QuietLine({ quiet, first }: { quiet: QuietProducts; first?: boolean }) {
   const all = useCatalogue().data?.products.filter((p) => p.state === "needs_you").length ?? quiet.count;
   const total = Math.max(all, quiet.count);
@@ -175,7 +171,15 @@ function QuietLine({ quiet, first }: { quiet: QuietProducts; first?: boolean }) 
         : above > 0
           ? `${copy.count(total, "product")} to confirm, ${above} of them for a campaign above. `
           : `${copy.count(total, "product")} to confirm, none holds up a campaign. `}
-      Confirm {above > 0 ? (quiet.count === 1 ? "the other one when you first use it" : "the rest when you first use them") : total === 1 ? "it when you first use it" : "them when you first use them"}, or{" "}
+      Confirm{" "}
+      {above > 0
+        ? quiet.count === 1
+          ? "the other one when you first use it"
+          : "the rest when you first use them"
+        : total === 1
+          ? "it when you first use it"
+          : "them when you first use them"}
+      , or{" "}
       <Link className="ui-link" to={quiet.href}>
         {total === 1 ? "now" : "all now"} ({minutes})
       </Link>
@@ -184,13 +188,15 @@ function QuietLine({ quiet, first }: { quiet: QuietProducts; first?: boolean }) 
   );
 }
 
-/** The first visit after onboarding (ONB-8): the Brand DNA is ready, so the one thing to do is the first campaign. */
+/** The first visit after onboarding: the Brand DNA is ready, so the one thing to do is the first campaign. */
 function FirstCampaign({ quiet }: { quiet?: QuietProducts }) {
   return (
     <Card className="ui-home-first">
       <CardHeader>
         <CardTitle as="h2">Your Brand DNA is ready. Start your first campaign</CardTitle>
-        <CardDescription>Say what you need in a sentence. Fume asks what is missing, then writes the brief with you.</CardDescription>
+        <CardDescription>
+          Say what you need in a sentence. Fume asks what is missing, then writes the brief with you.
+        </CardDescription>
         {quiet && <QuietLine quiet={quiet} first />}
       </CardHeader>
       <CardFooter>
@@ -205,8 +211,8 @@ function FirstCampaign({ quiet }: { quiet?: QuietProducts }) {
   );
 }
 
-/** What a campaign being made is doing now, in its one status sentence (DLOAD-3: the same words as the Campaigns list,
- *  the campaign's header and the palette; the steps and pictures live on Campaigns). */
+/** What a campaign being made is doing now, in its one status sentence (the same words as the Campaigns list, the
+ *  campaign's header and the palette; the steps and pictures live on Campaigns). */
 function makingLine({ campaign }: HomeView["inProduction"][number], options?: copy.CampaignStatusOptions): string {
   return copy.campaignStatus(campaign, undefined, options).words;
 }
@@ -218,7 +224,7 @@ export function HomePage() {
 
 /** The rows of "Being made": one line per campaign Fume works on, in its one status sentence. */
 function MakingSection({ making }: { making: HomeView["inProduction"] }) {
-  // The client of an agency reads the agency's work as a fact (round 12, DLOAD-4).
+  // The client of an agency reads the agency's work as a fact.
   const options = useStatusOptions();
   if (making.length === 0) return null;
   return (
@@ -257,8 +263,8 @@ function MakingSection({ making }: { making: HomeView["inProduction"] }) {
   );
 }
 
-/** One line on what Fume learned, under the month (DLAY-18, DLOAD-22). Round 13 (robot note 05): counted from the same
- *  lessons "All lessons" lists, so the two numbers always agree. */
+/** One line on what Fume learned, under the month. Counted from the same lessons "All lessons" lists, so the two
+ *  numbers always agree. */
 function LearnedLine({ view }: { view: HomeView }) {
   const lessons = useBrandDna().data?.memory.length ?? view.learned.length;
   if (lessons === 0) return null;
@@ -273,33 +279,44 @@ function LearnedLine({ view }: { view: HomeView }) {
   );
 }
 
-/** The kinds of row the client's own people see in a brand an agency runs: her approvals and her deliveries, and (round
- *  13, Marcus's card 23 Oct 2026) the plan once the agency checked it and sent it to her (the backend sends only those). */
+/** The kinds of row the client's own people see in a brand an agency runs: her approvals, her deliveries, and the plan
+ *  once the agency checked it and sent it to her (the backend sends only those). */
 const clientKinds: WaitingKind[] = ["plan", "creatives", "download"];
 
-/** The customer's Home; `client`: one of the client's own people in a brand an agency runs (round 11). */
+/** The customer's Home; `client`: one of the client's own people in a brand an agency runs. */
 function CustomerHome({ client }: { client: boolean }) {
   const session = useSession().data!;
   const home = useHome();
   const all = useWaitingOnYou();
   const can = rights(session.role);
   const [asking, setAsking] = useState<Id[] | null>(null);
-  const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "numeric", hour12: false, timeZone: "Europe/Oslo" }).format(Date.now()));
-  // In a brand an agency runs, the brief, the Brand DNA and the products are the agency's (round 11); the plan is hers
-  // once the agency sent it (round 13).
+  const hour = Number(
+    new Intl.DateTimeFormat("en-GB", { hour: "numeric", hour12: false, timeZone: "Europe/Oslo" }).format(Date.now()),
+  );
+  // In a brand an agency runs, the brief, the Brand DNA and the products are the agency's; the plan is hers once the
+  // agency sent it.
   const items = client ? all.items.filter((row) => clientKinds.includes(row.kind)) : all.items;
-  const waiting = { ...all, items, count: items.length, quiet: client ? undefined : all.quiet, campaignIds: items.map((r) => r.campaignId).filter((c): c is Id => Boolean(c)) };
+  const waiting = {
+    ...all,
+    items,
+    count: items.length,
+    quiet: client ? undefined : all.quiet,
+    campaignIds: items.map((r) => r.campaignId).filter((c): c is Id => Boolean(c)),
+  };
   // The first visit: the card's "Tell Fume what you need" is the one Ink, so the header's New campaign steps aside.
   const welcome = waiting.firstRun && can.start && !client;
   const agencyName = session.agencyName ?? "Your agency";
 
   return (
     <Page title="Home">
-      <PageHeader title={`${greeting(hour)}, ${firstName(session.user.name)}`} actions={welcome || client ? undefined : <StartCampaign />} />
+      <PageHeader
+        title={`${greeting(hour)}, ${firstName(session.user.name)}`}
+        actions={welcome || client ? undefined : <StartCampaign />}
+      />
 
       <Query query={home}>
         {(view) => {
-          // A campaign already waiting on her is its row up there, not a second line here (DLOAD-4).
+          // A campaign already waiting on her is its row up there, not a second line here.
           const making = view.inProduction.filter((line) => !waiting.campaignIds.includes(line.campaign.id));
           return (
             <div className="ui-app-cols">
@@ -310,13 +327,23 @@ function CustomerHome({ client }: { client: boolean }) {
                   title="Waiting on you"
                   meta={waiting.count || undefined}
                   titleId="home-waiting"
-                  text={waiting.count && !can.approve ? (can.ask ? "You can look and ask for changes. The approver approves." : "You can look. The approver decides.") : undefined}
+                  text={
+                    waiting.count && !can.approve
+                      ? can.ask
+                        ? "You can look and ask for changes. The approver approves."
+                        : "You can look. The approver decides."
+                      : undefined
+                  }
                 >
                   {waiting.count === 0 ? (
                     <Nothing
                       icon="circle-check"
                       title="Nothing waits on you"
-                      text={client ? `${agencyName} tells you the moment creatives are ready for your approval.` : "Fume tells you the moment something is ready for your decision."}
+                      text={
+                        client
+                          ? `${agencyName} tells you the moment creatives are ready for your approval.`
+                          : "Fume tells you the moment something is ready for your decision."
+                      }
                     />
                   ) : (
                     <ItemGroup as="ul" aria-labelledby="home-waiting">
@@ -332,21 +359,34 @@ function CustomerHome({ client }: { client: boolean }) {
                 <MakingSection making={making} />
               </div>
 
-              {/* Desk only (LOAD-7): on a phone Home is the inbox; what Fume learned lives in Brand, the month in Settings.
-                  This month first, it is short and factual; then one line on what Fume learned (DLAY-18, DLOAD-22).
-                  The client of an agency: who makes the brand's creatives, in one line (round 11). */}
+              {/* Desk only: on a phone Home is the inbox; what Fume learned lives in Brand, the month in Settings. This
+                  month first, it is short and factual; then one line on what Fume learned. The client of an agency: who
+                  makes the brand's creatives, in one line. */}
               <aside className="ui-app-stack ui-home-aside" aria-label="About your workspace">
                 {client ? (
-                  <Section title={agencyName} titleId="home-agency" text={`${agencyName} makes ${session.workspace.brandName}’s creatives with Fume and sends you what is ready to approve.`} />
+                  <Section
+                    title={agencyName}
+                    titleId="home-agency"
+                    text={`${agencyName} makes ${session.workspace.brandName}’s creatives with Fume and sends you what is ready to approve.`}
+                  />
                 ) : (
                   <>
                     <Section title="This month" titleId="home-usage">
                       <StatGrid>
-                        <Stat label="Creatives used" value={[{ num: view.usage.creativesUsed, unit: `of ${view.usage.creativeCap}` }]} />
+                        <Stat
+                          label="Creatives used"
+                          value={[{ num: view.usage.creativesUsed, unit: `of ${view.usage.creativeCap}` }]}
+                        />
                         <Stat label="Campaigns active" value={view.usage.campaignsActive} />
                       </StatGrid>
-                      <Progress value={view.usage.creativesUsed} max={view.usage.creativeCap} aria-label={`${view.usage.creativesUsed} of ${view.usage.creativeCap} creatives used`} />
-                      {view.usage.periodEndsAt && <p className="ui-app-section-text">The package renews {date(view.usage.periodEndsAt)}.</p>}
+                      <Progress
+                        value={view.usage.creativesUsed}
+                        max={view.usage.creativeCap}
+                        aria-label={`${view.usage.creativesUsed} of ${view.usage.creativeCap} creatives used`}
+                      />
+                      {view.usage.periodEndsAt && (
+                        <p className="ui-app-section-text">The package renews {date(view.usage.periodEndsAt)}.</p>
+                      )}
                     </Section>
                     <LearnedLine view={view} />
                   </>
@@ -362,10 +402,11 @@ function CustomerHome({ client }: { client: boolean }) {
   );
 }
 
-// ─── The agency in one client (round 11) ────────────────────────────────────
+// ─── The agency in one client ───────────────────────────────────────────────
 
 /** The soonest go-live first, then rows without a date, as the inbox orders them (shell/waiting.ts). */
-const byGoLive = (a: WaitingRow, b: WaitingRow) => (a.dueAt && b.dueAt ? a.dueAt.localeCompare(b.dueAt) : a.dueAt ? -1 : b.dueAt ? 1 : 0);
+const byGoLive = (a: WaitingRow, b: WaitingRow) =>
+  a.dueAt && b.dueAt ? a.dueAt.localeCompare(b.dueAt) : a.dueAt ? -1 : b.dueAt ? 1 : 0;
 
 /** Home for the agency's people in one client: what waits on the agency here, and what is with the client. */
 function AgencyHome() {
@@ -376,12 +417,16 @@ function AgencyHome() {
   const campaigns = useCampaigns();
   const people = usePeople();
   const [asking, setAsking] = useState<Id[] | null>(null);
-  const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "numeric", hour12: false, timeZone: "Europe/Oslo" }).format(Date.now()));
+  const hour = Number(
+    new Intl.DateTimeFormat("en-GB", { hour: "numeric", hour12: false, timeZone: "Europe/Oslo" }).format(Date.now()),
+  );
   const brand = session.workspace.brandName;
   const nameOf = (id?: Id) => firstName(people.data?.find((u) => u.id === id)?.name ?? "the client");
 
   // The creatives the agency checks (the client's Check), as one row.
-  const toCheck = (qa.data ?? []).filter((q) => q.item.state === "waiting" && q.item.workspaceId === session.workspace.id);
+  const toCheck = (qa.data ?? []).filter(
+    (q) => q.item.state === "waiting" && q.item.workspaceId === session.workspace.id,
+  );
   const checkCampaigns = [...new Map(toCheck.map((q) => [q.campaign.id, q.campaign])).values()];
   const checkRow: WaitingRow | undefined = toCheck.length
     ? {
@@ -389,13 +434,16 @@ function AgencyHome() {
         kind: "creatives",
         title: checkCampaigns.length === 1 ? checkCampaigns[0]!.name : brand,
         detail: `${copy.creatives(toCheck.length)} to check`,
-        dueAt: checkCampaigns.map((c) => c.dueAt).filter((d): d is string => Boolean(d)).sort()[0],
+        dueAt: checkCampaigns
+          .map((c) => c.dueAt)
+          .filter((d): d is string => Boolean(d))
+          .sort()[0],
         href: `/studio/b/${session.workspace.id}/qa`,
         pictures: toCheck.slice(0, 3).map((q) => q.item.image),
         count: toCheck.length,
       }
     : undefined;
-  // What the agency checked and has not sent (round 12, DTASK-13): its own row, opening Send to Maja on the review.
+  // What the agency checked and has not sent: its own row, opening Send to Maja on the review.
   const list = campaigns.data ?? [];
   const toSendOf = (c: Campaign) => Math.min(c.counts.checked, c.waits?.toSend ?? 0);
   const sendRows: WaitingRow[] = list
@@ -416,11 +464,20 @@ function AgencyHome() {
   // What is with the client: only what the agency sent; it waits on whoever approves each campaign (the mock leaves
   // the checked creatives out of the agency's own waits, so they are never "to approve" here).
   const withClient = list.filter((c) => c.counts.checked - toSendOf(c) > 0 && c.state !== "in_production");
-  const busy = new Set([...waiting.campaignIds, ...checkCampaigns.map((c) => c.id), ...sendRows.map((r) => r.campaignId!), ...withClient.map((c) => c.id)]);
+  const busy = new Set([
+    ...waiting.campaignIds,
+    ...checkCampaigns.map((c) => c.id),
+    ...sendRows.map((r) => r.campaignId!),
+    ...withClient.map((c) => c.id),
+  ]);
 
   return (
     <Page title="Home">
-      <PageHeader title={`${greeting(hour)}, ${firstName(session.user.name)}`} meta={[brand]} actions={<StartCampaign />} />
+      <PageHeader
+        title={`${greeting(hour)}, ${firstName(session.user.name)}`}
+        meta={[brand]}
+        actions={<StartCampaign />}
+      />
 
       <Query query={home}>
         {(view) => {
@@ -430,10 +487,20 @@ function AgencyHome() {
               <div className="ui-app-stack ui-home-main">
                 <Section title="Waiting on you" meta={rows.length || undefined} titleId="home-waiting">
                   {rows.length === 0 ? (
-                    <Nothing icon="circle-check" title={`Nothing in ${brand} waits on you`} text="Fume tells you when a plan is ready, and the Engine’s creatives come to your Check." />
+                    <Nothing
+                      icon="circle-check"
+                      title={`Nothing in ${brand} waits on you`}
+                      text="Fume tells you when a plan is ready, and the Engine’s creatives come to your Check."
+                    />
                   ) : (
                     <ItemGroup as="ul" aria-labelledby="home-waiting">
-                      {rows.map((row) => (row.href.endsWith("?send=1") ? <SendRowItem key={row.id} row={row} /> : <WaitingRowItem key={row.id} row={row} onAsk={setAsking} />))}
+                      {rows.map((row) =>
+                        row.href.endsWith("?send=1") ? (
+                          <SendRowItem key={row.id} row={row} />
+                        ) : (
+                          <WaitingRowItem key={row.id} row={row} onAsk={setAsking} />
+                        ),
+                      )}
                     </ItemGroup>
                   )}
                   {waiting.quiet && <QuietLine quiet={waiting.quiet} />}
@@ -443,7 +510,12 @@ function AgencyHome() {
                   <Section title="With the client" titleId="home-client">
                     <ItemGroup as="ul" aria-labelledby="home-client" className="ui-home-making">
                       {withClient.map((c) => (
-                        <WithClientRow key={c.id} campaign={c} n={c.counts.checked - toSendOf(c)} client={nameOf(c.approverId)} />
+                        <WithClientRow
+                          key={c.id}
+                          campaign={c}
+                          n={c.counts.checked - toSendOf(c)}
+                          client={nameOf(c.approverId)}
+                        />
                       ))}
                     </ItemGroup>
                   </Section>
@@ -453,7 +525,12 @@ function AgencyHome() {
               </div>
 
               <aside className="ui-app-stack ui-home-aside" aria-label={`About ${brand}`}>
-                <ClientMonth brand={brand} workspaceId={session.workspace.id} lead={session.agency?.role === "lead"} active={view.usage.campaignsActive} />
+                <ClientMonth
+                  brand={brand}
+                  workspaceId={session.workspace.id}
+                  lead={session.agency?.role === "lead"}
+                  active={view.usage.campaignsActive}
+                />
                 <LearnedLine view={view} />
               </aside>
             </div>
@@ -466,7 +543,7 @@ function AgencyHome() {
   );
 }
 
-/** The agency's row for what it checked and has not sent (round 12, DTASK-13): the pictures are the unsent ones. */
+/** The agency's row for what it checked and has not sent: the pictures are the unsent ones. */
 function SendRowItem({ row }: { row: WaitingRow }) {
   const queue = useReviewQueue();
   const { sendOf } = useCampaignSends(row.campaignId, true);
@@ -492,7 +569,13 @@ function WithClientRow({ campaign: c, n, client }: { campaign: Campaign; n: numb
           <ItemTitle>
             {copy.creatives(n)} with {client}
           </ItemTitle>
-          <ItemDescription>{[c.name, ...(sent ? [`since ${date(sent.sentAt)}`] : []), ...(sent?.link ? [`client link until ${date(sent.link.expiresAt)}`] : [])].join(" · ")}</ItemDescription>
+          <ItemDescription>
+            {[
+              c.name,
+              ...(sent ? [`since ${date(sent.sentAt)}`] : []),
+              ...(sent?.link ? [`client link until ${date(sent.link.expiresAt)}`] : []),
+            ].join(" · ")}
+          </ItemDescription>
         </ItemContent>
         <ItemActions>
           <Icon name="chevron-right" />
@@ -502,9 +585,19 @@ function WithClientRow({ campaign: c, n, client }: { campaign: Campaign; n: numb
   );
 }
 
-/** This month in one client, from the one Usage page's numbers (round 12, DLOAD-7, DTASK-6): made, and approved by the
- *  client; the lead has the way to Usage. */
-function ClientMonth({ brand, workspaceId, lead, active }: { brand: string; workspaceId: Id; lead: boolean; active: number }) {
+/** This month in one client, from the one Usage page's numbers: made, and approved by the client; the lead has the way
+ *  to Usage. */
+function ClientMonth({
+  brand,
+  workspaceId,
+  lead,
+  active,
+}: {
+  brand: string;
+  workspaceId: Id;
+  lead: boolean;
+  active: number;
+}) {
   const usage = useUsage();
   const month = usage.data?.find((r) => r.workspaceId === workspaceId)?.periods?.month;
   return (
@@ -529,8 +622,8 @@ function ClientMonth({ brand, workspaceId, lead, active }: { brand: string; work
   );
 }
 
-/** The client's creatives that wait on her, right on Home (round 12, DLAY-20): the one Ink, "Review them", under her
- *  row, then the tiles of the first campaign that waits, under their one name; a tile opens it in the review. */
+/** The client's creatives that wait on her, right on Home: the one Ink, "Review them", under her row, then the tiles of
+ *  the first campaign that waits, under their one name; a tile opens it in the review. */
 function ClientWaiting() {
   const navigate = useNavigate();
   const queue = useReviewQueue();
@@ -546,9 +639,20 @@ function ClientWaiting() {
         </Button>
       </div>
       <CreativeGrid aria-label={`${item.campaign.name}: the creatives that wait on you`}>
-        {item.creatives.slice(0, 8).map(named).map((c) => (
-          <CreativeTile key={c.id} src={c.current.image} alt={c.title} format={c.format} label={c.title} caption={tileCaption(c)} onOpen={() => navigate(`${review}?c=${c.id}`)} />
-        ))}
+        {item.creatives
+          .slice(0, 8)
+          .map(named)
+          .map((c) => (
+            <CreativeTile
+              key={c.id}
+              src={c.current.image}
+              alt={c.title}
+              format={c.format}
+              label={c.title}
+              caption={tileCaption(c)}
+              onOpen={() => navigate(`${review}?c=${c.id}`)}
+            />
+          ))}
       </CreativeGrid>
     </div>
   );

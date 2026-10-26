@@ -12,7 +12,23 @@
 // - #11: the topics a meeting with Fume is usually about.
 // - #6: a product question whose answer the brand's website does not give comes with templates: what this kind of
 //   product usually says, to start from.
-import type { Brief, Campaign, CampaignPlan, ChatLink, Collection, Creative, FumeApi, FumeEvent, Id, Message, OpenQuestion, PlannedCreative, Product, Thread, User } from "../contract";
+import type {
+  Brief,
+  Campaign,
+  CampaignPlan,
+  ChatLink,
+  Collection,
+  Creative,
+  FumeApi,
+  FumeEvent,
+  Id,
+  Message,
+  OpenQuestion,
+  PlannedCreative,
+  Product,
+  Thread,
+  User,
+} from "../contract";
 
 interface Db {
   campaigns: Campaign[];
@@ -42,23 +58,45 @@ export interface R13ChatContext {
 }
 
 /** #11: what a meeting with Fume is usually about (mock data; the backend serves the brand's own). */
-export const MEETING_TOPICS = ["Urgent", "An update", "Feedback on creatives", "The plan", "Package and billing", "Something else"];
+export const MEETING_TOPICS = [
+  "Urgent",
+  "An update",
+  "Feedback on creatives",
+  "The plan",
+  "Package and billing",
+  "Something else",
+];
 
 // ── words ──
 const TZ = "Europe/Oslo";
-const dayWords = (iso: string) => new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: TZ }).format(Date.parse(iso)).replace(",", "");
-const list = (names: string[]) => (names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : (names[0] ?? ""));
+const dayWords = (iso: string) =>
+  new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: TZ })
+    .format(Date.parse(iso))
+    .replace(",", "");
+const list = (names: string[]) =>
+  names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : (names[0] ?? "");
 const count = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
-const STAGE: Record<string, string> = { brief: "the brief", moodboard: "the moodboard", plan: "the plan", directions: "the masters", masters: "the masters", variants: "the creatives", delivery: "delivery" };
+const STAGE: Record<string, string> = {
+  brief: "the brief",
+  moodboard: "the moodboard",
+  plan: "the plan",
+  directions: "the masters",
+  masters: "the masters",
+  variants: "the creatives",
+  delivery: "delivery",
+};
 const firstName = (u: User | undefined) => u?.name.split(" ")[0];
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 /** The text says this name: after "@", or as whole words. */
 const names = (text: string, name: string) => new RegExp(`(^|[^\\p{L}])@?${escape(name)}(?![\\p{L}])`, "iu").test(text);
 
 /** A question rather than an answer: "Where are…", "How is…", "…?". */
-const asks = (text: string) => /\?\s*$/.test(text.trim()) || /^(where|what|when|how|why|who|which|is|are|can|could|do|does|show|tell)\b/i.test(text.trim());
-const WAITING = /\b(what|anything)\b[^?]*\b(wait(s|ing)? (on|for) me|do i (need|have) to)\b|\bwaiting on me\b|\bmy to-?do\b/i;
+const asks = (text: string) =>
+  /\?\s*$/.test(text.trim()) ||
+  /^(where|what|when|how|why|who|which|is|are|can|could|do|does|show|tell)\b/i.test(text.trim());
+const WAITING =
+  /\b(what|anything)\b[^?]*\b(wait(s|ing)? (on|for) me|do i (need|have) to)\b|\bwaiting on me\b|\bmy to-?do\b/i;
 const MONTH = /\b(this month|in numbers|month in numbers|my usage|how many creatives (have i|did we) (used|use))\b/i;
 
 /** #6: what the claims of this kind of product usually say. */
@@ -93,17 +131,33 @@ const CLAIM_TEMPLATES: { kind: RegExp; plural: string; templates: { label: strin
   },
 ];
 
-export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meetingTopics" | "changePlanWithFume">; wraps: Pick<FumeApi, "say" | "send" | "questions" | "answerQuestion"> } {
+export function r13ChatApi(ctx: R13ChatContext): {
+  calls: Pick<FumeApi, "meetingTopics" | "changePlanWithFume">;
+  wraps: Pick<FumeApi, "say" | "send" | "questions" | "answerQuestion">;
+} {
   const { db, now } = ctx;
   const base = () => ctx.base();
   const mine = <T extends { workspaceId: Id }>(rows: T[]) => rows.filter((r) => r.workspaceId === ctx.workspaceId());
-  const general = () => db.threads.find((t) => t.workspaceId === ctx.workspaceId() && t.kind !== "contact" && t.campaignId === null);
-  const expertName = () => firstName(db.users.find((u) => db.staff.some((s) => s.userId === u.id && s.workspaceId === ctx.workspaceId() && s.staffRole === "expert"))) ?? "the expert";
+  const general = () =>
+    db.threads.find((t) => t.workspaceId === ctx.workspaceId() && t.kind !== "contact" && t.campaignId === null);
+  const expertName = () =>
+    firstName(
+      db.users.find((u) =>
+        db.staff.some((s) => s.userId === u.id && s.workspaceId === ctx.workspaceId() && s.staffRole === "expert"),
+      ),
+    ) ?? "the expert";
   /** The campaign's own thread in the conversation (made now if it has none). */
   const threadOf = (c: Campaign): Thread => {
     let t = db.threads.find((x) => x.campaignId === c.id && x.kind !== "contact");
     if (!t) {
-      t = { id: ctx.nextId("t"), workspaceId: c.workspaceId, campaignId: c.id, title: c.name, updatedAt: now(), unread: 0 };
+      t = {
+        id: ctx.nextId("t"),
+        workspaceId: c.workspaceId,
+        campaignId: c.id,
+        title: c.name,
+        updatedAt: now(),
+        unread: 0,
+      };
       db.threads.push(t);
     }
     return t;
@@ -133,9 +187,13 @@ export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meeting
     }
     const campaign = campaigns.find((c) => names(text, c.name));
     if (campaign) return { campaign };
-    const collection = mine(db.collections).sort((a, b) => b.name.length - a.name.length).find((c) => names(text, c.name));
+    const collection = mine(db.collections)
+      .sort((a, b) => b.name.length - a.name.length)
+      .find((c) => names(text, c.name));
     if (collection) return { collection };
-    const product = mine(db.products).sort((a, b) => b.name.length - a.name.length).find((p) => names(text, p.name));
+    const product = mine(db.products)
+      .sort((a, b) => b.name.length - a.name.length)
+      .find((p) => names(text, p.name));
     if (product) return { product };
     return {};
   }
@@ -145,7 +203,9 @@ export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meeting
     const brief = db.briefs.find((b) => b.campaignId === c.id);
     const plan = db.plans.find((p) => p.campaignId === c.id);
     const live = c.dueAt ? `, live ${dayWords(c.dueAt)}` : "";
-    const head = ["delivered", "closed"].includes(c.state) ? `${c.name} is delivered` : `${c.name} is at ${STAGE[c.stage] ?? c.stage}${live}`;
+    const head = ["delivered", "closed"].includes(c.state)
+      ? `${c.name} is delivered`
+      : `${c.name} is at ${STAGE[c.stage] ?? c.stage}${live}`;
     const facts: string[] = [];
     let next = "";
     if (c.stage === "brief" && brief) {
@@ -167,8 +227,12 @@ export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meeting
       // one short sentence each: what waits on her first, then what is still with the expert, then what is done
       const n = c.counts;
       const sentences: string[] = [];
-      if (n.checked) sentences.push(`${count(n.checked, "creative")} ${n.checked === 1 ? "waits" : "wait"} on you to approve.`);
-      if (n.inCheck) sentences.push(`${n.inCheck} more ${n.inCheck === 1 ? "is" : "are"} in check with ${expertName()}; you see ${n.inCheck === 1 ? "it" : "them"} once ${n.inCheck === 1 ? "it is" : "they are"} checked.`);
+      if (n.checked)
+        sentences.push(`${count(n.checked, "creative")} ${n.checked === 1 ? "waits" : "wait"} on you to approve.`);
+      if (n.inCheck)
+        sentences.push(
+          `${n.inCheck} more ${n.inCheck === 1 ? "is" : "are"} in check with ${expertName()}; you see ${n.inCheck === 1 ? "it" : "them"} once ${n.inCheck === 1 ? "it is" : "they are"} checked.`,
+        );
       if (n.approved) sentences.push(`You approved ${n.approved}.`);
       if (n.delivered) sentences.push(`${n.delivered} ${n.delivered === 1 ? "is" : "are"} delivered.`);
       return `${head}. ${sentences.join(" ")}`.trim();
@@ -176,9 +240,12 @@ export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meeting
     return `${head}.${facts.length ? ` ${list(facts.map((f, i) => (i ? lower(f) : f)))}.` : ""}${next ? ` ${next}` : ""}`;
   }
   function productWords(p: Product): string {
-    const using = mine(db.campaigns).filter((c) => c.productIds.includes(p.id) && !["closed", "delivered"].includes(c.state)).map((c) => c.name);
+    const using = mine(db.campaigns)
+      .filter((c) => c.productIds.includes(p.id) && !["closed", "delivered"].includes(c.state))
+      .map((c) => c.name);
     const name = `${p.name}${p.variant ? ` ${p.variant}` : ""}`;
-    if (p.state === "verified") return `${name} is confirmed, so Fume can make creatives of it.${using.length ? ` It is in ${list(using)}.` : " No campaign uses it yet."}`;
+    if (p.state === "verified")
+      return `${name} is confirmed, so Fume can make creatives of it.${using.length ? ` It is in ${list(using)}.` : " No campaign uses it yet."}`;
     const open = p.facts.filter((f) => f.source === "unknown").map((f) => lower(f.label));
     return `${name} is not confirmed yet${open.length ? `: Fume still needs ${list(open.map((o) => `the ${o}`))}` : ""}.${using.length ? ` ${list(using)} ${using.length === 1 ? "waits" : "wait"} on it.` : ""} Confirm it and Fume can make creatives of it.`;
   }
@@ -212,7 +279,16 @@ export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meeting
     if (WAITING.test(t) || MONTH.test(t)) {
       const of = WAITING.test(t) ? "waiting" : "month";
       ctx.say(g.id, { author: me, text: t });
-      later(() => ctx.say(g.id, { author: { kind: "fume" }, text: of === "waiting" ? "Here is what waits on you, soonest first. It is the same list as on Home." : "This month in numbers, as Home counts them.", card: { kind: "summary", of } }));
+      later(() =>
+        ctx.say(g.id, {
+          author: { kind: "fume" },
+          text:
+            of === "waiting"
+              ? "Here is what waits on you, soonest first. It is the same list as on Home."
+              : "This month in numbers, as Home counts them.",
+          card: { kind: "summary", of },
+        }),
+      );
       return true;
     }
     const a = about(t);
@@ -221,7 +297,14 @@ export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meeting
     if (!a.campaign && !a.product && !a.collection) return false;
     if (!mention && !asks(t)) return false;
     // A question about the campaign whose brief is being written, while Fume asks it something: the brief's own talk.
-    if (!mention && a.campaign && from && db.threads.find((x) => x.id === from)?.campaignId === a.campaign.id && !/\b(where|status|how far|what.?s next)\b/i.test(t)) return false;
+    if (
+      !mention &&
+      a.campaign &&
+      from &&
+      db.threads.find((x) => x.id === from)?.campaignId === a.campaign.id &&
+      !/\b(where|status|how far|what.?s next)\b/i.test(t)
+    )
+      return false;
     let words: string;
     let link: ChatLink;
     let thread: Thread = g;
@@ -232,7 +315,10 @@ export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meeting
     } else if (a.campaign) {
       words = campaignWords(a.campaign);
       const plan = db.plans.find((p) => p.campaignId === a.campaign!.id);
-      link = /\bplan\b/i.test(t) && plan ? { kind: "plan", campaignId: a.campaign.id } : { kind: "campaign", campaignId: a.campaign.id };
+      link =
+        /\bplan\b/i.test(t) && plan
+          ? { kind: "plan", campaignId: a.campaign.id }
+          : { kind: "campaign", campaignId: a.campaign.id };
       thread = threadOf(a.campaign);
     } else if (a.collection) {
       words = collectionWords(a.collection);
@@ -248,8 +334,24 @@ export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meeting
   }
 
   // ── #20: the plan, changed in the chat ──
-  const ORD: Record<string, number> = { one: 1, a: 1, an: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12 };
-  const num = (w: string | undefined) => (w === undefined ? undefined : /^\d+$/.test(w) ? Number(w) : ORD[w.toLowerCase()]);
+  const ORD: Record<string, number> = {
+    one: 1,
+    a: 1,
+    an: 1,
+    two: 2,
+    three: 3,
+    four: 4,
+    five: 5,
+    six: 6,
+    seven: 7,
+    eight: 8,
+    nine: 9,
+    ten: 10,
+    eleven: 11,
+    twelve: 12,
+  };
+  const num = (w: string | undefined) =>
+    w === undefined ? undefined : /^\d+$/.test(w) ? Number(w) : ORD[w.toLowerCase()];
   const N = "(\\d+|one|a|an|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)";
   const MONTHS = ["jan", "feb", "mar", "apr", "ma", "jun", "jul", "aug", "sep", "o", "nov", "d"];
   /** "30 Oct", "1. desember", "Friday" as the next such day. */
@@ -258,11 +360,16 @@ export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meeting
     const today = new Date(now());
     if (d) {
       const month = MONTHS.findIndex((m) => d[2].toLowerCase().startsWith(m));
-      if (month >= 0) return new Date(Date.UTC(today.getUTCFullYear() + (month < today.getUTCMonth() ? 1 : 0), month, Number(d[1]), 15)).toISOString();
+      if (month >= 0)
+        return new Date(
+          Date.UTC(today.getUTCFullYear() + (month < today.getUTCMonth() ? 1 : 0), month, Number(d[1]), 15),
+        ).toISOString();
     }
     const w = /\b(monday|tuesday|wednesday|thursday|friday)\b/i.exec(text);
     if (w) {
-      const want = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"].indexOf(w[1].toLowerCase());
+      const want = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"].indexOf(
+        w[1].toLowerCase(),
+      );
       const at = new Date(today);
       do at.setUTCDate(at.getUTCDate() + 1);
       while (at.getUTCDay() !== want);
@@ -282,8 +389,18 @@ export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meeting
     const list_ = direction.creatives;
     const masters = () => list_.filter((c) => c.kind === "master");
     const total = num(new RegExp(`\\b${N}\\s+(?:creatives|in all|in total)\\b`, "i").exec(text)?.[1]);
-    const videos = /\bno videos?\b/i.test(text) ? 0 : num(new RegExp(`\\b${N}\\s+(?:of them\\s+)?(?:as\\s+)?videos?\\b`, "i").exec(text)?.[1]) ?? (/\b(more|some|add (a )?)videos?\b|\bvideos? too\b/i.test(text) ? Math.max(2, list_.filter((c) => c.medium === "video").length + 1) : undefined);
-    const carousels = /\bno carousels?\b/i.test(text) ? 0 : num(new RegExp(`\\b${N}\\s+(?:of them\\s+)?(?:as\\s+)?carousels?\\b`, "i").exec(text)?.[1]) ?? (/\b(more|some|add (a )?)carousels?\b|\bcarousels? too\b/i.test(text) ? Math.max(1, list_.filter((c) => c.medium === "carousel").length + 1) : undefined);
+    const videos = /\bno videos?\b/i.test(text)
+      ? 0
+      : (num(new RegExp(`\\b${N}\\s+(?:of them\\s+)?(?:as\\s+)?videos?\\b`, "i").exec(text)?.[1]) ??
+        (/\b(more|some|add (a )?)videos?\b|\bvideos? too\b/i.test(text)
+          ? Math.max(2, list_.filter((c) => c.medium === "video").length + 1)
+          : undefined));
+    const carousels = /\bno carousels?\b/i.test(text)
+      ? 0
+      : (num(new RegExp(`\\b${N}\\s+(?:of them\\s+)?(?:as\\s+)?carousels?\\b`, "i").exec(text)?.[1]) ??
+        (/\b(more|some|add (a )?)carousels?\b|\bcarousels? too\b/i.test(text)
+          ? Math.max(1, list_.filter((c) => c.medium === "carousel").length + 1)
+          : undefined));
     // how many in all: more variants of the masters, or fewer from the end (the masters stay)
     if (total !== undefined && total > 0 && total !== list_.length) {
       const was = list_.length;
@@ -292,7 +409,19 @@ export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meeting
         if (!m) break;
         const format = list_.length % 2 ? "story" : "feed";
         const n = list_.filter((c) => c.format === format).length + 1;
-        list_.push({ id: ctx.nextId("pc"), name: `${format === "story" ? "Story" : "Feed"} ${n}`, kind: "variant", of: m.id, format, productIds: m.productIds, scene: `${m.scene.replace(/[.\s]+$/, "")}, as a ${format === "story" ? "story" : "feed post"}.`, text: m.text, people: m.people, changedBy: "fume", changedAt: now() } as PlannedCreative);
+        list_.push({
+          id: ctx.nextId("pc"),
+          name: `${format === "story" ? "Story" : "Feed"} ${n}`,
+          kind: "variant",
+          of: m.id,
+          format,
+          productIds: m.productIds,
+          scene: `${m.scene.replace(/[.\s]+$/, "")}, as a ${format === "story" ? "story" : "feed post"}.`,
+          text: m.text,
+          people: m.people,
+          changedBy: "fume",
+          changedAt: now(),
+        } as PlannedCreative);
       }
       while (list_.length > Math.max(total, 1)) {
         const i = list_.map((c) => c.kind).lastIndexOf("variant");
@@ -315,10 +444,26 @@ export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meeting
         if (!c) {
           const m = masters()[0] ?? list_[0];
           if (!m) break;
-          c = { id: ctx.nextId("pc"), name: `${medium === "video" ? "Story" : "Feed"} ${list_.length + 1}`, kind: "variant", of: m.id, format: medium === "video" ? "story" : "feed", productIds: m.productIds, scene: m.scene, text: m.text, people: m.people } as PlannedCreative;
+          c = {
+            id: ctx.nextId("pc"),
+            name: `${medium === "video" ? "Story" : "Feed"} ${list_.length + 1}`,
+            kind: "variant",
+            of: m.id,
+            format: medium === "video" ? "story" : "feed",
+            productIds: m.productIds,
+            scene: m.scene,
+            text: m.text,
+            people: m.people,
+          } as PlannedCreative;
           list_.push(c);
         }
-        Object.assign(c, { medium, format: medium === "video" ? "story" : "feed", name: `${c.name} · ${medium}`, changedBy: "fume", changedAt: now() });
+        Object.assign(c, {
+          medium,
+          format: medium === "video" ? "story" : "feed",
+          name: `${c.name} · ${medium}`,
+          changedBy: "fume",
+          changedAt: now(),
+        });
       }
       changes.push(`${count(want, medium)}${has.length ? ` (was ${has.length})` : ""}`);
     };
@@ -343,7 +488,9 @@ export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meeting
         p.timeline.forEach((s) => (s.at = shift(s.at, days)));
         const c = db.campaigns.find((x) => x.id === p.campaignId);
         if (c?.dueAt) c.dueAt = shift(c.dueAt, days);
-        changes.push(`every date ${weeks[1].replace(/^a$/, "one")} week${/two|2/.test(weeks[1]) ? "s" : ""} ${lower(weeks[2]) === "sooner" ? "earlier" : lower(weeks[2])}`);
+        changes.push(
+          `every date ${weeks[1].replace(/^a$/, "one")} week${/two|2/.test(weeks[1]) ? "s" : ""} ${lower(weeks[2]) === "sooner" ? "earlier" : lower(weeks[2])}`,
+        );
       }
     }
     return changes;
@@ -361,7 +508,12 @@ export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meeting
     const client = firstName(db.users.find((u) => u.id === c.approverId)) ?? "the client";
     if (agency && p.state === "ready" && p.checkedBy) {
       ctx.say(t.id, { author: me, text: words });
-      later(() => ctx.say(t.id, { author: { kind: "fume" }, text: `You sent this plan to ${client}, so it stays as it is while it is with her. If she asks for changes, Fume writes the next version and you check it again.` }));
+      later(() =>
+        ctx.say(t.id, {
+          author: { kind: "fume" },
+          text: `You sent this plan to ${client}, so it stays as it is while it is with her. If she asks for changes, Fume writes the next version and you check it again.`,
+        }),
+      );
       return ctx.wait(p);
     }
     if (p.state !== "ready") {
@@ -406,7 +558,11 @@ export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meeting
       const p = db.products.find((x) => x.id === q.productId);
       const kind = p ? CLAIM_TEMPLATES.find((k) => k.kind.test(p.name)) : undefined;
       if (!p || !kind) return q;
-      return { ...q, templates: kind.templates, templatesWhy: `${site()} says nothing about the claims of ${p.name}, so here is what ${kind.plural} usually say. Start from one and keep only what is true.` };
+      return {
+        ...q,
+        templates: kind.templates,
+        templatesWhy: `${site()} says nothing about the claims of ${p.name}, so here is what ${kind.plural} usually say. Start from one and keep only what is true.`,
+      };
     });
   }
 
@@ -423,12 +579,20 @@ export function r13ChatApi(ctx: R13ChatContext): { calls: Pick<FumeApi, "meeting
     },
     async send(threadId, text, attachments) {
       const t = db.threads.find((x) => x.id === threadId);
-      if (t?.kind !== "contact" && !attachments?.length && answer(text, threadId)) return ctx.wait(db.messages[db.messages.length - 1]);
+      if (t?.kind !== "contact" && !attachments?.length && answer(text, threadId))
+        return ctx.wait(db.messages[db.messages.length - 1]);
       // Robot note 02: a question that names nothing, sent while a brief is being written, is not its answer; it goes
       // to the talk about no campaign.
       const brief = t?.campaignId ? db.briefs.find((b) => b.campaignId === t.campaignId) : undefined;
       const g = general();
-      if (t?.kind !== "contact" && brief?.state === "drafting" && g && g.id !== threadId && /\?\s*$/.test(text.trim()) && /^(where|what|when|how|why|who|can|could|is|are|do|does)\b/i.test(text.trim()))
+      if (
+        t?.kind !== "contact" &&
+        brief?.state === "drafting" &&
+        g &&
+        g.id !== threadId &&
+        /\?\s*$/.test(text.trim()) &&
+        /^(where|what|when|how|why|who|can|could|is|are|do|does)\b/i.test(text.trim())
+      )
         return base().send(g.id, text, attachments);
       return base().send(threadId, text, attachments);
     },

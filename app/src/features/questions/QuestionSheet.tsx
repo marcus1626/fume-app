@@ -1,13 +1,12 @@
-// One question, one sheet (UX review 19 Oct, WAY-3, LOAD-4; round 8 decision: "a question about a product lives on
-// that product and is answered in one shared sheet wherever it is asked"). Home, the Fume chat, a campaign and the
-// product page all open this sheet (or, on the product page, show its answer inline): the question, why Fume asks,
-// the answer field and "Answer". She stays where she was. The answer lands on the product's own line, and the mock
-// spreads it to the brief, the chat and the Brand understanding, so answering once closes it everywhere.
-// Round 9 (DWAY-5, DTSK-6, decision 5): on a desk it is the right-side panel, never a centred dialog, and the page stays
-// in view. Questions that are all about one product open that product's card instead (ProductCheckPanel: the photo,
-// Fume's question first, the lines, Later · Confirm), so a product is confirmed in one place, however it was asked.
-// Answer is never greyed out: pressed with nothing written, it says what is missing. The hint is under the field, not
-// a placeholder that reads as an answer.
+// One question, one sheet: a question about a product lives on that product and is answered in one shared sheet
+// wherever it is asked. Home, the Fume chat, a campaign and the product page all open this sheet (or, on the product
+// page, show its answer inline): the question, why Fume asks, the answer field and "Answer". She stays where she was.
+// The answer lands on the product's own line, and the mock spreads it to the brief, the chat and the Brand
+// understanding, so answering once closes it everywhere.
+// On a desk it is the right-side panel, never a centred dialog. Questions that are all about one product open that
+// product's card instead (ProductCheckPanel), so a product is confirmed in one place, however it was asked. Answer is
+// never greyed out: pressed with nothing written, it says what is missing. The hint is under the field, not a
+// placeholder that reads as an answer.
 //
 // Use:
 //   const q = useQuestion({ campaignId });            // or { productId }, { questionId }
@@ -91,7 +90,11 @@ function useAnswer(
     setTried(false);
   }, [question?.id]);
 
-  const ready = question ? (question.answer === "picture" ? Boolean(photo || question.picture) : text.trim().length > 0) : false;
+  const ready = question
+    ? question.answer === "picture"
+      ? Boolean(photo || question.picture)
+      : text.trim().length > 0
+    : false;
 
   function send(keepPicture = false) {
     if (!question || answer.isPending) return;
@@ -105,8 +108,10 @@ function useAnswer(
           const briefDone = question.campaignId && !left.some((q) => q.campaignId === question.campaignId);
           if (last)
             toast.done(question.answer === "picture" ? "Photo saved" : "Answer saved", {
-            description: briefDone ? "The brief has what it needs now, so the work can start." : "Fume uses it everywhere it asked.",
-          });
+              description: briefDone
+                ? "The brief has what it needs now, so the work can start."
+                : "Fume uses it everywhere it asked.",
+            });
           onAnswered?.(question, said);
         },
         onError: (error) => toast.error("That wasn’t saved", { description: error.message }),
@@ -126,7 +131,19 @@ function useAnswer(
 type AnswerState = ReturnType<typeof useAnswer>;
 
 /** The field (or the photo) and Fume's suggestions. */
-function AnswerFields({ question, state, formId, autoFocus, glass }: { question: OpenQuestion; state: AnswerState; formId: string; autoFocus?: boolean; glass?: boolean }) {
+function AnswerFields({
+  question,
+  state,
+  formId,
+  autoFocus,
+  glass,
+}: {
+  question: OpenQuestion;
+  state: AnswerState;
+  formId: string;
+  autoFocus?: boolean;
+  glass?: boolean;
+}) {
   const fieldId = `${formId}-text`;
   const missing = state.tried && !state.text.trim();
   // On the sheet's glass the one white pill is Answer; Fume's suggestions are clear (glass-one-white).
@@ -147,7 +164,9 @@ function AnswerFields({ question, state, formId, autoFocus, glass }: { question:
         {src ? (
           <figure className="ui-qs-picture">
             <img src={src} alt={state.photo ? `Your photo, ${state.photo.name}` : "The photo Fume found"} />
-            <figcaption className="ui-qs-picture-caption">{state.photo ? "Your photo" : "The photo Fume found"}</figcaption>
+            <figcaption className="ui-qs-picture-caption">
+              {state.photo ? "Your photo" : "The photo Fume found"}
+            </figcaption>
           </figure>
         ) : (
           <p className="ui-qs-note">No photo yet. Add one taken straight on, in soft light.</p>
@@ -162,7 +181,7 @@ function AnswerFields({ question, state, formId, autoFocus, glass }: { question:
   }
   return (
     <form id={formId} className="ui-qs-form" onSubmit={submit}>
-      {/* round 13 (#6, #7): each suggestion with its words, and what this kind of product usually says */}
+      {/* each suggestion with its words, and what this kind of product usually says */}
       <AnswerSuggestions question={question} value={state.text} onChange={state.setText} glass={glass} />
       <Field invalid={missing}>
         <FieldLabel htmlFor={fieldId}>Your answer</FieldLabel>
@@ -176,7 +195,11 @@ function AnswerFields({ question, state, formId, autoFocus, glass }: { question:
           {...(autoFocus ? { "data-ui-autofocus": "" } : {})}
         />
         <FieldDescription id={`${fieldId}-help`}>
-          {missing ? "Write your answer first, or choose Later." : question.hint ? question.hint.replace(/[^.?]$/, "$&.") : "In your words, as it may stand on a creative."}
+          {missing
+            ? "Write your answer first, or choose Later."
+            : question.hint
+              ? question.hint.replace(/[^.?]$/, "$&.")
+              : "In your words, as it may stand on a creative."}
         </FieldDescription>
       </Field>
     </form>
@@ -185,7 +208,13 @@ function AnswerFields({ question, state, formId, autoFocus, glass }: { question:
 
 /** The words on the one action. */
 const actionLabel = (question: OpenQuestion, state: AnswerState) =>
-  question.answer === "picture" ? (state.photo ? "Use this photo" : question.picture ? "Confirm this photo" : "Add a photo") : "Answer";
+  question.answer === "picture"
+    ? state.photo
+      ? "Use this photo"
+      : question.picture
+        ? "Confirm this photo"
+        : "Add a photo"
+    : "Answer";
 
 export interface QuestionAnswerProps {
   question: OpenQuestion;
@@ -275,14 +304,20 @@ export function QuestionSheet({ open, onOpenChange, onAnswered, ...target }: Que
         productId={productId}
         open={open}
         onClose={(confirmed) => {
-          if (confirmed) for (const q of questions.filter((x) => ids.includes(x.id) || x.productId === productId)) onAnswered?.(q, "");
+          if (confirmed)
+            for (const q of questions.filter((x) => ids.includes(x.id) || x.productId === productId))
+              onAnswered?.(q, "");
           onOpenChange(false);
         }}
       />
     );
 
   const title = current?.question ?? (loading ? "Loading the question" : "Nothing to answer");
-  const description = current ? current.why : loading ? "" : "Fume has what it needs here. Someone may have answered it already.";
+  const description = current
+    ? current.why
+    : loading
+      ? ""
+      : "Fume has what it needs here. Someone may have answered it already.";
   const count = ids.length > 1 ? `${Math.min(step + 1, ids.length)} of ${ids.length}` : undefined;
   const about = product ? `${product.name} ${product.variant}`.trim() : undefined;
 
@@ -326,7 +361,11 @@ export function QuestionSheet({ open, onOpenChange, onAnswered, ...target }: Que
     );
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" closeLabel="Close, answer later" {...(description ? {} : { "aria-describedby": undefined })}>
+      <SheetContent
+        side="right"
+        closeLabel="Close, answer later"
+        {...(description ? {} : { "aria-describedby": undefined })}
+      >
         <SheetHeader>
           <SheetTitle>{title}</SheetTitle>
           {description && <SheetDescription>{description}</SheetDescription>}

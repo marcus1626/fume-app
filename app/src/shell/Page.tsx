@@ -1,21 +1,33 @@
 // The frame every screen uses inside a shell: the page (app.css .ui-app-page), its sections, and what a page shows
 // while its data loads or when it fails. Screens compose these with @fume/ui; none of them adds a look.
-// Round 8 (walk-through 19 Oct, WAY-1, MOB-7): the page also names itself in the tab's history, so a Back arrow can
-// name and return to where the person came from, and it tells the shell its title and its way back, so the app bar
-// can keep both in view once the page's own header has scrolled away.
-// Round 9 (desktop review 19 Oct; PROPOSED 19 Oct 2026):
-// - DWAY-6, DLAY-16: on a desk (1024 px and wider) the app bar always carries the way back with its target's name
-//   ("← Home"), beside the sidebar button, and the page's title after a thin divider once the header has scrolled
-//   away; the page header's own back row is left out there, so the content starts higher. The phone keeps both.
-// - DWAY-19: the browser tab says where you are: "<page> · <parent> · Fume". `title` names the page (its first part
-//   names it in a Back arrow); `docTitle` gives the tab a fuller name ("Brief · Autumn launch").
-// - DLAY-7, DLAY-8: `width="reading"` is the reading measure (760), left-aligned on the same left edge as every page.
-// - DWAY-17: useTabNavigate() changes a tab with replace, so Back and the browser's Back both leave the page.
-// Round 12 (desktop review 20 Oct, DWAY-15; PROPOSED 20 Oct 2026): in a staff frame's brand or client scope the frame
-// names the brand (PageScopeProvider), and the tab says it after the page: "Autumn launch · LYSNE · Fume", so three
-// clients in three tabs never read the same. A page whose name already holds the brand ("LYSNE") says it once.
-import { BackLink, Button, cx, Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle, Spinner, WithTooltip, type IconName } from "@fume/ui";
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type HTMLAttributes, type MouseEvent, type ReactNode } from "react";
+// A page names itself in the tab's history, so Back can name and return to where the person came from, and tells the
+// shell's bar its title and its way back. The browser tab reads "<page> · <parent> · Fume", or "<page> · <brand> ·
+// Fume" in a staff frame's brand or client scope, so three clients in three tabs never read the same.
+import {
+  BackLink,
+  Button,
+  cx,
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  Spinner,
+  WithTooltip,
+  type IconName,
+} from "@fume/ui";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type HTMLAttributes,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import { useHref, useLocation, useNavigate, type NavigateOptions } from "react-router-dom";
 import { FumeError } from "../contract";
 
@@ -43,9 +55,9 @@ const PageBarContext = createContext<((bar: PageBar) => void) | null>(null);
 /** The shell provides this; Page and Back report to it. */
 export const PageBarProvider = PageBarContext.Provider;
 const PageTitleContext = createContext<string | undefined>(undefined);
-/** Back tells its Page the parent's name, so the browser tab says "Autumn launch · Campaigns · Fume" (DWAY-19). */
+/** Back tells its Page the parent's name, so the browser tab says "Autumn launch · Campaigns · Fume". */
 const PageParentContext = createContext<((parent: string | undefined) => void) | null>(null);
-/** The brand or client a staff frame's scope is in (round 12, DWAY-15): the tab names it instead of the parent. */
+/** The brand or client a staff frame's scope is in: the tab names it instead of the parent. */
 const PageScopeContext = createContext<string | undefined>(undefined);
 export const PageScopeProvider = PageScopeContext.Provider;
 
@@ -57,7 +69,8 @@ export function Page({ title, docTitle, width = "default", className, ...props }
   useEffect(() => {
     // "<page> · <parent> · Fume": the parent is the page's Back, unless the title or docTitle already says more; in a
     // brand's scope the brand takes the parent's place ("Autumn launch · LYSNE · Fume"), once
-    const own = docTitle ?? (!scope && parent && !title.includes(" · ") && parent !== title ? `${title} · ${parent}` : title);
+    const own =
+      docTitle ?? (!scope && parent && !title.includes(" · ") && parent !== title ? `${title} · ${parent}` : title);
     const name = scope && !own.includes(scope) ? `${own} · ${scope}` : own;
     document.title = tabTitle(name);
     nameEntry(title);
@@ -68,7 +81,11 @@ export function Page({ title, docTitle, width = "default", className, ...props }
   return (
     <PageTitleContext.Provider value={title}>
       <PageParentContext.Provider value={setParent}>
-        <div ref={ref} className={cx("ui-app-page", width !== "default" && `ui-app-page--${width}`, className)} {...props} />
+        <div
+          ref={ref}
+          className={cx("ui-app-page", width !== "default" && `ui-app-page--${width}`, className)}
+          {...props}
+        />
       </PageParentContext.Provider>
     </PageTitleContext.Provider>
   );
@@ -78,24 +95,26 @@ export function Page({ title, docTitle, width = "default", className, ...props }
 export const pageName = (title: string) => title.split(" · ")[0]!.trim();
 
 /**
- * Tabs that change the address (DWAY-17): a tab replaces the history entry instead of adding one, so the browser's
- * Back and the page's Back both leave the page, never step through its tabs.
+ * Tabs that change the address: a tab replaces the history entry instead of adding one, so the browser's Back and the
+ * page's Back both leave the page, never step through its tabs.
  *   const goTab = useTabNavigate();
  *   <Tabs value={tab} onValueChange={(t) => goTab(`/campaigns/${id}/${t}`)}>
  * For a link: <Link to=… replace>.
  */
 export function useTabNavigate() {
   const navigate = useNavigate();
-  return useCallback((to: string, options?: Omit<NavigateOptions, "replace">) => navigate(to, { ...options, replace: true }), [navigate]);
+  return useCallback(
+    (to: string, options?: Omit<NavigateOptions, "replace">) => navigate(to, { ...options, replace: true }),
+    [navigate],
+  );
 }
 
 // ─── Tabs that don't jump ───────────────────────────────────────────────────
-// A tab or a view toggle changes the address (?show=calendar, /brand/products) while the page stays. The next tab
-// often loads first, so for a moment the page is only its header and a spinner: the scroller clamps its scroll to
-// the shorter page and, when the content comes, the tabs have moved (Marcus 15 Oct: "siden hopper litt"). So the
-// page keeps the height it had while anything in it still loads after such a change (app.css, data-hold), and
-// lets go as soon as the new content is there (or after 3 s), down to the height the reader's scroll needs. The
-// scroller (.ui-sidebar-inset) keeps its scrollbar's room (app.css) and the app bar no longer shrinks.
+// A tab or a view toggle changes the address (?show=calendar, /brand/products) while the page stays. The next tab often
+// loads first, so for a moment the page is only its header and a spinner: the scroller clamps its scroll to the shorter
+// page and the tabs jump when the content comes. So the page keeps the height it had while anything in it still loads
+// after such a change (app.css, data-hold), and lets go as soon as the new content is there (or after 3 s), down to the
+// height the reader's scroll needs. The scroller (.ui-sidebar-inset) keeps its scrollbar's room (app.css).
 
 let inPage: { key: string; tabs: boolean } | null = null;
 /** True when the navigation with this key only changed the tab of the page that stays (read by the scroll rule). */
@@ -139,7 +158,9 @@ function useHoldHeight() {
     const scroller = el.closest(".ui-sidebar-inset");
     const release = () => {
       const floor = scroller
-        ? scroller.scrollTop + scroller.clientHeight - (el.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop)
+        ? scroller.scrollTop +
+          scroller.clientHeight -
+          (el.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop)
         : 0;
       if (floor > 0) el.style.setProperty("--ui-app-page-hold", `${Math.ceil(floor)}px`);
       else {
@@ -175,12 +196,12 @@ function useHoldHeight() {
 }
 
 // ─── Back ───────────────────────────────────────────────────────────────────
-// One back link above the title instead of a breadcrumb (Marcus 15 Oct: "heller bare en pil tilbake knapp"). Back goes
-// back (walk-through 19 Oct, WAY-1): it names the page the person came from ("← Fume", "← SS27", "← Autumn launch")
-// and returns there through history, so that page keeps its view, filters and scroll. Entries of the same page (its
-// tabs, an overlay's ?param) are stepped over. Only on a cold deep link, with nothing of the app before it, does it
-// name and open the fixed parent the screen passes. The browser router numbers its entries (history.state.idx);
-// every push and replace is noted here, and each Page names its entry, so the entries before are known.
+// One back link above the title instead of a breadcrumb. Back goes back: it names the page the person came from ("←
+// Fume", "← SS27", "← Autumn launch") and returns there through history, so that page keeps its view, filters and
+// scroll. Entries of the same page (its tabs, an overlay's ?param) are stepped over. Only on a cold deep link, with
+// nothing of the app before it, does it name and open the fixed parent the screen passes. The browser router numbers
+// its entries (history.state.idx); every push and replace is noted here, and each Page names its entry, so the entries
+// before are known.
 
 const TRAIL = "fume.trail";
 interface Entry {
@@ -301,8 +322,8 @@ export function useBack({ to, label }: BackProps): BackTarget {
   return { label: name, href: entry.url, cold: false, back: () => navigate(-steps) };
 }
 
-/** The back link for PageHeader's `back`. Screens pass their fixed parent; it is shown only on a cold deep link.
- *  On a desk the app bar shows it (with the same name), and the page header leaves its own row out (DLAY-16). */
+/** The back link for PageHeader's `back`. Screens pass their fixed parent; it is shown only on a cold deep link. On a
+ *  desk the app bar shows it (with the same name), and the page header leaves its own row out. */
 export function Back({ to, label, className }: BackProps & { className?: string }) {
   const target = useBack({ to, label });
   const setBar = useContext(PageBarContext);
@@ -323,8 +344,8 @@ export function Back({ to, label, className }: BackProps & { className?: string 
   return <BackLink className={className} href={target.href} label={target.label} onClick={onClick} />;
 }
 
-/** The app bar's way back (MOB-7, DWAY-6): the arrow with its target's name ("← Home"; on a phone the arrow alone),
- *  then, once the page's header has scrolled away, a thin divider and the page's one-line title. */
+/** The app bar's way back: the arrow with its target's name ("← Home"; on a phone the arrow alone), then, once the
+ *  page's header has scrolled away, a thin divider and the page's one-line title. */
 export function BarBack({ back, title, away }: { back?: BackProps; title?: string; away?: boolean }) {
   // the bar sits outside the page, so it takes the page's title along: Back steps over the same page's entries
   return (
@@ -399,7 +420,9 @@ export function Loading({ label = "Loading" }: { label?: string }) {
 /** When a call fails: what happened in words, and one way on. A forbidden call says who can do it instead. */
 export function Failed({ error, onRetry }: { error: unknown; onRetry?: () => void }) {
   const message =
-    error instanceof FumeError ? error.message : "Fume couldn’t load this just now. Your work is safe; try again in a moment.";
+    error instanceof FumeError
+      ? error.message
+      : "Fume couldn’t load this just now. Your work is safe; try again in a moment.";
   const notFound = error instanceof FumeError && error.code === "not_found";
   return (
     <Empty>
@@ -420,7 +443,17 @@ export function Failed({ error, onRetry }: { error: unknown; onRetry?: () => voi
 }
 
 /** An empty list with one line on why and, when there is one, the way to fill it. */
-export function Nothing({ icon, title, text, action }: { icon: IconName; title: string; text?: ReactNode; action?: ReactNode }) {
+export function Nothing({
+  icon,
+  title,
+  text,
+  action,
+}: {
+  icon: IconName;
+  title: string;
+  text?: ReactNode;
+  action?: ReactNode;
+}) {
   return (
     <Empty surface>
       <EmptyHeader>

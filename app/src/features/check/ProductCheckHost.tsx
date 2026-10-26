@@ -1,8 +1,8 @@
-// Confirm a product beside whatever page asked (round 9, DWAY-5, DTSK-6; decision 5). One component in one container:
-// the product's card (ProductCheckCard: photo, the one question first, the lines) opens as a right-side panel on a
-// desk, with the page still in view on the left, and as a sheet from the bottom on a phone. The product is in the
-// address (?check=pr-balm), so Back closes the panel and a reload or a link opens it again. Confirm, Later, ✕ and Esc
-// take the param out in place (replace), so Back never reopens a product she has already decided on.
+// Confirm a product beside whatever page asked. The product's card (ProductCheckCard: photo, the one question first,
+// the lines) opens as a right-side panel on a desk, with the page still in view on the left, and as a sheet from the
+// bottom on a phone. The product is in the address (?check=pr-balm), so Back closes the panel and a reload or a link
+// opens it again. Confirm, Later, ✕ and Esc take the param out in place (replace), so Back never reopens a product she
+// has already decided on.
 //
 // Mount <ProductCheckHost /> once, in the workspace shell. Anything inside opens it:
 //   const openCheck = useOpenProductCheck();
@@ -44,7 +44,7 @@ export interface OpenProductCheckOptions {
   onClosed?: (confirmed: boolean) => void;
   /** Where she is, for the toast's words: "Hand Balm confirmed and in the brief." */
   over?: "brief" | "conversation";
-  /** Round 13 (builder A): the campaign being briefed where she opened it, named first ("Christmas waits on it"). */
+  /** The campaign being briefed where she opened it, named first ("Christmas waits on it"). */
   forCampaign?: string;
 }
 
@@ -117,7 +117,16 @@ export function ProductCheckHost() {
   );
 
   if (!shown) return null;
-  return <ProductCheckPanel key={shown} productId={shown} open={Boolean(id) && id === shown} onClose={close} over={waiting.get(shown)?.over} forCampaign={waiting.get(shown)?.forCampaign} />;
+  return (
+    <ProductCheckPanel
+      key={shown}
+      productId={shown}
+      open={Boolean(id) && id === shown}
+      onClose={close}
+      over={waiting.get(shown)?.over}
+      forCampaign={waiting.get(shown)?.forCampaign}
+    />
+  );
 }
 
 export interface ProductCheckPanelProps {
@@ -138,14 +147,30 @@ export function ProductCheckPanel({ productId, open = true, onClose, over, forCa
   const done = (verdict: CheckVerdict, p: Product) => {
     if (verdict === "confirmed") {
       const unblocked = waitingOn(campaigns.data, p.id);
-      toast.done(over === "brief" ? `${p.name} confirmed and in the brief.` : over === "conversation" ? `${p.name} confirmed and ticked for the campaign.` : `${p.name} confirmed.`, {
-        description: over ? undefined : unblocked ? `${unblocked.name} can go on with it now.` : "Fume can use it in any campaign now.",
-      });
+      toast.done(
+        over === "brief"
+          ? `${p.name} confirmed and in the brief.`
+          : over === "conversation"
+            ? `${p.name} confirmed and ticked for the campaign.`
+            : `${p.name} confirmed.`,
+        {
+          description: over
+            ? undefined
+            : unblocked
+              ? `${unblocked.name} can go on with it now.`
+              : "Fume can use it in any campaign now.",
+        },
+      );
     }
     onClose(verdict === "confirmed");
   };
   // The panel is the Smoke glass over the page (glass.css): the glass pills, Confirm the one white.
-  const check = useProductCheck(productId, { onDone: done, nameAs: phone ? DrawerTitle : SheetTitle, glass: true, forCampaign });
+  const check = useProductCheck(productId, {
+    onDone: done,
+    nameAs: phone ? DrawerTitle : SheetTitle,
+    glass: true,
+    forCampaign,
+  });
   const mac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
 
   const foot = (
@@ -168,9 +193,9 @@ export function ProductCheckPanel({ productId, open = true, onClose, over, forCa
     </span>
   );
 
-  // Esc closes the top layer only: a field she is in first (a line she is changing goes back to Fume's words and
-  // the focus to its Change; the answer field hands the focus to the panel itself), then the panel (WAY-1, the round 9
-  // keyboard rule). The focus never drops to the page behind.
+  // Esc closes the top layer only: a field she is in first (a line she is changing goes back to Fume's words and the
+  // focus to its Change; the answer field hands the focus to the panel itself), then the panel. The focus never drops
+  // to the page behind.
   const onEscapeKeyDown = (e: KeyboardEvent) => {
     const active = document.activeElement as HTMLElement | null;
     const panel = active?.closest<HTMLElement>(".ui-check-panel");
@@ -186,7 +211,13 @@ export function ProductCheckPanel({ productId, open = true, onClose, over, forCa
   if (phone)
     return (
       <Drawer open={open} onOpenChange={(o) => !o && onClose(false)}>
-        <DrawerContent className="ui-check-panel" tabIndex={-1} onKeyDown={check.onKeyDown} onEscapeKeyDown={onEscapeKeyDown} aria-describedby={`check-${productId}-lead`}>
+        <DrawerContent
+          className="ui-check-panel"
+          tabIndex={-1}
+          onKeyDown={check.onKeyDown}
+          onEscapeKeyDown={onEscapeKeyDown}
+          aria-describedby={`check-${productId}-lead`}
+        >
           <DrawerHeader>{check.head}</DrawerHeader>
           <DrawerBody>{check.body}</DrawerBody>
           <DrawerFooter>{foot}</DrawerFooter>

@@ -1,9 +1,7 @@
-// Settings (ARCHITECTURE §7.1, footer): the workspace, the team, the package and its usage, your notifications and
-// your profile. Each page is a route (/settings/:page), so a link (the switcher's "Your profile") opens it directly.
-// Round 8 (walk-through 19 Oct, WAY-21): the address says what shows. /settings is the list on a phone (and the
-// workspace page on a desk); every page, the workspace too, opens at its own address as a new entry, so the phone's
-// back from a page returns to the list, and the page's back does the same through history.
-// Round 9 (desktop review DWAY-19; PROPOSED 19 Oct 2026): the browser tab names the page: "Team · Settings · Fume".
+// Settings (ARCHITECTURE §7.1): the workspace, the team, the package and its usage, your notifications and your
+// profile. Each page is a route (/settings/:page), so a link (the switcher's "Your profile") opens it directly.
+// /settings is the list on a phone (and the workspace page on a desk); every page opens at its own address as a new
+// entry, so the phone's back from a page returns to the list. The browser tab names the page: "Team · Settings · Fume".
 import { PageHeader, SettingsLayout, type SettingsSectionDef } from "@fume/ui";
 import { useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -75,7 +73,10 @@ export function SettingsPage() {
     );
 
   return (
-    <Page title="Settings" docTitle={page ? `${sections.find((x) => x.id === value)?.label ?? "Settings"} · Settings` : "Settings"}>
+    <Page
+      title="Settings"
+      docTitle={page ? `${sections.find((x) => x.id === value)?.label ?? "Settings"} · Settings` : "Settings"}
+    >
       <SettingsLayout
         header={<PageHeader title="Settings" meta={[session.workspace.brandName]} />}
         sections={sections}

@@ -1,10 +1,9 @@
 // Models and references (FLOWS §9.4, §9.6), for Fume's people under one brand: the brand's chosen presets (first in
-// every swatch in Studio), its models (AI people, always labelled) and its reference library. Every asset says who
-// made it and where it stands: a designer's draft, saved to the brand (waiting for the customer), approved by the
-// customer, or declined. Only the customer approves a model; a reference is the designer's to save.
-// Round 12 (UX review DLAY-5, PROPOSED 20 Oct 2026): presets are a two-column list of rows (swatch, name and hex, use,
-// source), and a long state is a line under the name, never a pill that runs out of its card.
-// "Make a model" and "Make a reference" open a new document in Studio in Model or Reference maker mode.
+// every swatch in Studio), its models (AI people, always labelled) and its reference library. Every asset says who made
+// it and where it stands: a designer's draft, saved to the brand (waiting for the customer), approved by the customer,
+// or declined. Only the customer approves a model; a reference is the designer's to save. Presets are a two-column list
+// of rows, and a long state is a line under the name, never a pill that runs out of its card. "Make a model" and "Make
+// a reference" open a new document in Studio in Model or Reference maker mode.
 import {
   Badge,
   Button,
@@ -32,7 +31,11 @@ import { useNames } from "./qa/names";
 
 const presetKind: Record<BrandPreset["kind"], string> = { background: "Background", colour: "Colour", light: "Light" };
 const modelOrder: Record<AssetState, number> = { saved: 0, draft: 1, approved: 2, declined: 3 };
-const origin: Record<BrandReference["origin"], string> = { made: "Made in Studio", upload: "Uploaded", brand: "From the brand" };
+const origin: Record<BrandReference["origin"], string> = {
+  made: "Made in Studio",
+  upload: "Uploaded",
+  brand: "From the brand",
+};
 
 export function AssetsPage() {
   const { workspaceId } = useParams();
@@ -59,7 +62,11 @@ export function AssetsPage() {
         description={`${brand}’s chosen presets, its models and its reference library. Everything Studio puts first.`}
         meta={
           data
-            ? [copy.count(data.presets.length, "preset"), copy.count(data.models.length, "model"), copy.count(data.references.length, "reference")]
+            ? [
+                copy.count(data.presets.length, "preset"),
+                copy.count(data.models.length, "model"),
+                copy.count(data.references.length, "reference"),
+              ]
             : undefined
         }
       />
@@ -105,7 +112,11 @@ export function AssetsPage() {
               }
             >
               {models.length === 0 ? (
-                <Nothing icon="users" title="No models yet" text="Make a model in Studio: every variable it takes, then save it to the brand." />
+                <Nothing
+                  icon="users"
+                  title="No models yet"
+                  text="Make a model in Studio: every variable it takes, then save it to the brand."
+                />
               ) : (
                 <div className="ui-app-grid">
                   {[...models]
@@ -159,7 +170,7 @@ export function AssetsPage() {
 
 // ─── Presets ────────────────────────────────────────────────────────────────
 
-/** One preset as a row (DLAY-5): the swatch, its name and hex, what it is for, and where it comes from. */
+/** One preset as a row: the swatch, its name and hex, what it is for, and where it comes from. */
 function Preset({ preset }: { preset: BrandPreset }) {
   const names = useNames();
   const p = preset.provenance;
@@ -200,7 +211,7 @@ function Model({ model }: { model: BrandModel }) {
   const made = `Made by ${names.name(model.madeBy)}`;
   const saved = model.savedBy ? `saved by ${names.name(model.savedBy)}` : undefined;
   const decided = model.decidedBy ? names.name(model.decidedBy) : "the customer";
-  // A long state is a line under the name, not a pill (DLAY-5); the pills stay short.
+  // A long state is a line under the name, not a pill; the pills stay short.
   const where: Record<AssetState, ReactNode> = {
     draft: <Badge>Draft</Badge>,
     saved: <Badge dot="idle">Saved</Badge>,
@@ -220,7 +231,10 @@ function Model({ model }: { model: BrandModel }) {
           {where[model.state]}
         </>
       }
-      meta={[[made, saved].filter(Boolean).join(", "), model.usedIn ? `In ${copy.creatives(model.usedIn)}` : `Since ${date(model.at)}`]}
+      meta={[
+        [made, saved].filter(Boolean).join(", "),
+        model.usedIn ? `In ${copy.creatives(model.usedIn)}` : `Since ${date(model.at)}`,
+      ]}
       state={model.state === "saved" ? `Saved to the brand, waiting for ${decided}` : undefined}
     />
   );

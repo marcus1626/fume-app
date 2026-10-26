@@ -20,7 +20,10 @@ import {
 import { cx } from "../cx";
 import { Icon } from "../icons";
 
-export const TableContainer = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(function TableContainer({ className, ...props }, ref) {
+export const TableContainer = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(function TableContainer(
+  { className, ...props },
+  ref,
+) {
   return <div ref={ref} data-slot="table-container" className={cx("ui-table-container", className)} {...props} />;
 });
 
@@ -79,14 +82,25 @@ export interface TableHeadProps extends ThHTMLAttributes<HTMLTableCellElement>, 
   /** Makes the header a sort button. */
   onSort?: () => void;
 }
-export function TableHead({ sort, onSort, num, select, actions, hideStacked, className, children, scope = "col", ...props }: TableHeadProps) {
+export function TableHead({
+  sort,
+  onSort,
+  num,
+  select,
+  actions,
+  hideStacked,
+  className,
+  children,
+  scope = "col",
+  ...props
+}: TableHeadProps) {
   const sortable = onSort !== undefined;
   const icon = sort === "ascending" ? "arrow-up" : sort === "descending" ? "arrow-down" : "arrow-up-down";
   return (
     <th
       data-slot="table-head"
       scope={scope}
-      aria-sort={sortable ? sort ?? "none" : undefined}
+      aria-sort={sortable ? (sort ?? "none") : undefined}
       data-sort={sortable ? "" : undefined}
       className={cx(
         "ui-table-head",
@@ -120,7 +134,18 @@ export interface TableCellProps extends TdHTMLAttributes<HTMLTableCellElement>, 
   /** Tertiary words (a dash for "nobody yet"). */
   muted?: boolean;
 }
-export function TableCell({ data, num, select, actions, media, trail, hideStacked, muted, className, ...props }: TableCellProps) {
+export function TableCell({
+  data,
+  num,
+  select,
+  actions,
+  media,
+  trail,
+  hideStacked,
+  muted,
+  className,
+  ...props
+}: TableCellProps) {
   return (
     <td
       data-slot="table-cell"
@@ -225,7 +250,10 @@ export interface TableSort<K extends string> {
 }
 
 /** Sorting as table.js does it. */
-export function useTableSort<K extends string>(initial?: { key: K; direction?: "ascending" | "descending" }): TableSort<K> {
+export function useTableSort<K extends string>(initial?: {
+  key: K;
+  direction?: "ascending" | "descending";
+}): TableSort<K> {
   const [key, setKey] = useState<K | null>(initial?.key ?? null);
   const [direction, setDirection] = useState<"ascending" | "descending">(initial?.direction ?? "ascending");
   const sortBy = useCallback(
@@ -244,9 +272,12 @@ export function useTableSort<K extends string>(initial?: { key: K; direction?: "
       if (!key) return rows;
       const num = (x: string) => (/^-?\d+(\.\d+)?$/.test(x.trim()) ? parseFloat(x) : NaN);
       const out = rows.slice().sort((a, b) => {
-        const x = String(value(a, key) ?? ""), y = String(value(b, key) ?? "");
-        const nx = num(x), ny = num(y);
-        const c = !isNaN(nx) && !isNaN(ny) ? nx - ny : x.localeCompare(y, undefined, { numeric: true, sensitivity: "base" });
+        const x = String(value(a, key) ?? ""),
+          y = String(value(b, key) ?? "");
+        const nx = num(x),
+          ny = num(y);
+        const c =
+          !isNaN(nx) && !isNaN(ny) ? nx - ny : x.localeCompare(y, undefined, { numeric: true, sensitivity: "base" });
         return direction === "ascending" ? c : -c;
       });
       return out;

@@ -1,4 +1,4 @@
-// Marker: a place in a conversation (design-system/components/marker.css). DECIDED 13 Oct, round 8.
+// Marker: a place in a conversation (design-system/components/marker.css).
 // Space and a label, never a line. default: an icon and words at the start (read up to here, a run done);
 // separator: the words alone in the middle (a day); border: space under the words; isNew: new since you left,
 // in Ink, with an Ink count badge.
@@ -27,7 +27,12 @@ export const Marker = forwardRef<HTMLDivElement, MarkerProps>(function Marker(
   ref,
 ) {
   return (
-    <div ref={ref} className={cx("ui-marker", isNew && "ui-marker--new", className)} data-variant={variant === "default" ? undefined : variant} {...props}>
+    <div
+      ref={ref}
+      className={cx("ui-marker", isNew && "ui-marker--new", className)}
+      data-variant={variant === "default" ? undefined : variant}
+      {...props}
+    >
       {isNew && <span className="ui-marker-dot" aria-hidden="true" />}
       {!isNew && icon && (
         <span className="ui-marker-icon" aria-hidden="true">

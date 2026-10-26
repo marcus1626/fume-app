@@ -2,7 +2,18 @@
 // an unsorted zip. createMockApi mixes these in. A job plays its script (seed8.ts) by the wall clock each time it is
 // read, stops at the column mapping when the Engine is unsure of a CSV column, then compares what it found with the
 // catalogue: a product the catalogue already holds, as found, is counted as unchanged and not shown.
-import { FumeError, type FoundProduct, type ImportJob, type Product, type ProductKind, type SpecEntry, type SpecValue, type User, type Id, type ProductImportApi } from "../contract";
+import {
+  FumeError,
+  type FoundProduct,
+  type ImportJob,
+  type Product,
+  type ProductKind,
+  type SpecEntry,
+  type SpecValue,
+  type User,
+  type Id,
+  type ProductImportApi,
+} from "../contract";
 import { csvFields, importScripts } from "./seed8";
 
 export function v8Db() {
@@ -64,7 +75,9 @@ export function v8Api(ctx: V8Context): ProductImportApi {
       j.step += 1;
     }
     const total = script.steps.reduce((a, s) => a + s.ms, 0);
-    const done = script.steps.slice(0, j.step).reduce((a, s) => a + s.ms, 0) + Math.min(t - j.stepAt, script.steps[j.step]?.ms ?? 0);
+    const done =
+      script.steps.slice(0, j.step).reduce((a, s) => a + s.ms, 0) +
+      Math.min(t - j.stepAt, script.steps[j.step]?.ms ?? 0);
     j.progress = Math.min(0.99, done / total);
     if (j.step >= script.steps.length) finish(j);
   }
@@ -91,7 +104,15 @@ export function v8Api(ctx: V8Context): ProductImportApi {
       }
       found.push(f);
     }
-    Object.assign(j, { state: "review", progress: 1, reading: undefined, found, unchanged: unchangedNames.length, unchangedNames, setAside: script.setAside });
+    Object.assign(j, {
+      state: "review",
+      progress: 1,
+      reading: undefined,
+      found,
+      unchanged: unchangedNames.length,
+      unchangedNames,
+      setAside: script.setAside,
+    });
   }
 
   function land(j: Job, f: FoundProduct): Id | undefined {
@@ -104,7 +125,10 @@ export function v8Api(ctx: V8Context): ProductImportApi {
       .map((x) => ({
         fieldId: x.fieldId,
         ...specValue(fieldType(x.fieldId), x.value),
-        provenance: f.decision === "fixed" ? { origin: "customer", state: "approved", by, at } : { origin: "engine", state: "proposed", evidence: x.source ?? f.source, confidence: f.confidence },
+        provenance:
+          f.decision === "fixed"
+            ? { origin: "customer", state: "approved", by, at }
+            : { origin: "engine", state: "proposed", evidence: x.source ?? f.source, confidence: f.confidence },
       }));
     if (f.status === "changed") {
       const p = db.products.find((x) => x.id === f.productId);
@@ -130,7 +154,21 @@ export function v8Api(ctx: V8Context): ProductImportApi {
       ...(kind ? { kindId: kind.id } : {}),
       provenance: { origin: "engine", state: "approved", evidence: f.source ?? j.url ?? j.fileName, by, at },
       specs,
-      shots: f.images[0] && kind?.shots.some((s) => s.id === "front") ? [{ slotId: "front", image: f.images[0], provenance: { origin: "engine", state: "proposed", evidence: f.files.find((x) => x.src === f.images[0])?.name ?? f.source, confidence: "medium" } }] : [],
+      shots:
+        f.images[0] && kind?.shots.some((s) => s.id === "front")
+          ? [
+              {
+                slotId: "front",
+                image: f.images[0],
+                provenance: {
+                  origin: "engine",
+                  state: "proposed",
+                  evidence: f.files.find((x) => x.src === f.images[0])?.name ?? f.source,
+                  confidence: "medium",
+                },
+              },
+            ]
+          : [],
       parts: [],
     };
     db.products.push(p);
@@ -146,7 +184,8 @@ export function v8Api(ctx: V8Context): ProductImportApi {
     },
 
     async startProductImport(input) {
-      for (const old of db.importJobs) if (old.workspaceId === ctx.workspaceId() && old.state !== "done") old.state = "dismissed";
+      for (const old of db.importJobs)
+        if (old.workspaceId === ctx.workspaceId() && old.state !== "done") old.state = "dismissed";
       const script = importScripts[input.source];
       const first = script.steps[0]!;
       const j: Job = {
@@ -239,7 +278,11 @@ export function v8Api(ctx: V8Context): ProductImportApi {
       const j = job(jobId);
       if (j.state !== "review") throw new FumeError("invalid", "This import is not waiting for review");
       const ids = j.found.map((f) => land(j, f)).filter((x): x is Id => Boolean(x));
-      j.result = { productIds: ids, added: j.found.filter((f) => f.status !== "changed").length, updated: j.found.filter((f) => f.status === "changed").length };
+      j.result = {
+        productIds: ids,
+        added: j.found.filter((f) => f.status !== "changed").length,
+        updated: j.found.filter((f) => f.status === "changed").length,
+      };
       Object.assign(j, { state: "done", approvedAt: now(), approvedBy: ctx.me().id });
       return wait(strip(j));
     },

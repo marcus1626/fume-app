@@ -1,12 +1,30 @@
-// Clients (FLOWS §24.3, round 11, PROPOSED 20 Oct 2026): every client brand the agency runs, A to Z (round 12, DWAY-20:
-// a fixed order, so a client stays where it was; the picker's Recent group comes from 8 clients up). On a desk a
-// table to scan: the client's mark and name with its one status sentence (a quiet dot when something waits on the
-// agency), its campaigns under way, the next delivery, what waits on the client, the client's people and who leads
-// it at the agency. The whole row opens the client (its Home; a summary client's Home says it is an example). The
-// phone keeps rows. ?client=<id> marks that row for a moment and brings it into view (a link from Home or ⌘K, and the
-// client just added). The lead's one action is Add a client, a right panel (?add=1): the new client lands in the
-// table with Fume reading its website.
-import { Button, Icon, Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemMediaImage, ItemTitle, PageHeader, Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow, TableTitle, useNarrowScreen } from "@fume/ui";
+// Clients (FLOWS §24.3): every client brand the agency runs, A to Z, so a client stays where it was. On a desk a table
+// to scan: the client's mark, name and status sentence (a quiet dot when something waits on the agency), its campaigns
+// under way, the next delivery, what waits on the client, the client's people and who leads it at the agency. The whole
+// row opens the client's Home. The phone keeps rows. ?client=<id> marks that row for a moment and brings it into view.
+// The lead's one action is Add a client, a right panel (?add=1).
+import {
+  Button,
+  Icon,
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemMedia,
+  ItemMediaImage,
+  ItemTitle,
+  PageHeader,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableTitle,
+  useNarrowScreen,
+} from "@fume/ui";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAgencyClients } from "../../api/hooks";
@@ -18,7 +36,8 @@ import { AddClientPanel, useAddClientParam } from "./agency-add-client";
 import { ClientMark, Faces, nameOrYou, useAgencySeat, useOpenFromAgency, WaitsDot } from "./agency-parts";
 
 /** A to Z by the brand's name (AURÉA between ...A and B). */
-const byName = (rows: AgencyClient[]) => [...rows].sort((a, b) => a.workspace.brandName.localeCompare(b.workspace.brandName, "en", { sensitivity: "base" }));
+const byName = (rows: AgencyClient[]) =>
+  [...rows].sort((a, b) => a.workspace.brandName.localeCompare(b.workspace.brandName, "en", { sensitivity: "base" }));
 
 export function AgencyClientsPage() {
   const { lead, isAgency, me } = useAgencySeat();
@@ -34,7 +53,11 @@ export function AgencyClientsPage() {
     <Page title="Clients">
       <PageHeader
         title="Clients"
-        meta={clients.data ? [copy.count(clients.data.length, "client brand"), ...(waiting ? [`${waiting} wait on you`] : [])] : undefined}
+        meta={
+          clients.data
+            ? [copy.count(clients.data.length, "client brand"), ...(waiting ? [`${waiting} wait on you`] : [])]
+            : undefined
+        }
         actions={
           lead ? (
             <Button icon="plus" onClick={() => add.setOpen(true)}>
@@ -60,7 +83,9 @@ export function AgencyClientsPage() {
               }
             />
           ) : (
-            <Section aria-label="Every client">{desk ? <ClientsTable rows={byName(all)} me={me} /> : <ClientRows rows={byName(all)} />}</Section>
+            <Section aria-label="Every client">
+              {desk ? <ClientsTable rows={byName(all)} me={me} /> : <ClientRows rows={byName(all)} />}
+            </Section>
           )
         }
       </Query>
@@ -85,7 +110,10 @@ function useMark(id: string | undefined, ready: boolean) {
     if (!id || !ready) return;
     const el = document.querySelector<HTMLElement>(`[data-agency-client="${CSS.escape(id)}"]`);
     if (!el) return;
-    el.scrollIntoView({ block: "center", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    el.scrollIntoView({
+      block: "center",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    });
     el.setAttribute("data-marked", "");
     const t = window.setTimeout(() => el.removeAttribute("data-marked"), 3200);
     return () => window.clearTimeout(t);
@@ -137,7 +165,12 @@ function ClientRow({ client, me }: { client: AgencyClient; me?: User }) {
         <span className="ui-agency-cell-client">
           <TableTitle sub={client.status}>
             <span className="ui-agency-cell-who">
-              <button type="button" className="ui-agency-row-open" onClick={() => open({ id: workspace.id, example: client.example })} aria-label={`Open ${workspace.brandName}`}>
+              <button
+                type="button"
+                className="ui-agency-row-open"
+                onClick={() => open({ id: workspace.id, example: client.example })}
+                aria-label={`Open ${workspace.brandName}`}
+              >
                 {workspace.brandName}
               </button>
               <WaitsDot count={client.waitingOnYou} />
@@ -152,7 +185,16 @@ function ClientRow({ client, me }: { client: AgencyClient; me?: User }) {
         {nextDelivery ? due(nextDelivery.at) : "Not set"}
       </TableCell>
       <TableCell muted={!client.waitingOn}>{client.waitingOn ?? "—"}</TableCell>
-      <TableCell muted={!client.people.length}>{client.people.length ? <Faces people={client.people} label={`${workspace.brandName}’s people: ${client.people.map((p) => p.name).join(", ")}`} /> : "Not invited yet"}</TableCell>
+      <TableCell muted={!client.people.length}>
+        {client.people.length ? (
+          <Faces
+            people={client.people}
+            label={`${workspace.brandName}’s people: ${client.people.map((p) => p.name).join(", ")}`}
+          />
+        ) : (
+          "Not invited yet"
+        )}
+      </TableCell>
       <TableCell muted={!lead}>{nameOrYou(lead, me) ?? "—"}</TableCell>
     </TableRow>
   );

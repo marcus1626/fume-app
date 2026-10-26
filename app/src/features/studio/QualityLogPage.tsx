@@ -1,8 +1,7 @@
 // The quality log (ARCHITECTURE §4.6, §7.2): everything the Quality Gate caught before a customer saw it, how bad it
-// was and whether it is fixed. The table holds each one and comes first; the chart below it shows catches week by
-// week, stacked by severity. Round 12 (UX review DLAY-16, PROPOSED 20 Oct 2026): no stat tiles, the counts are the
-// line under the title; Critical is one of the table's filters; the chart is the compact height.
-// The point of the page is the record behind "every creative is checked" (F-D025), so nothing here is softened.
+// was and whether it is fixed. The table holds each one and comes first, with Critical as one of its filters; the chart
+// below it shows catches week by week, stacked by severity. The counts are the line under the title. The point of the
+// page is the record behind "every creative is checked" (F-D025), so nothing here is softened.
 import {
   Badge,
   Chart,
@@ -47,8 +46,11 @@ function byWeek(entries: QualityLogEntry[]): ChartDatum[] {
   return Array.from({ length: WEEKS }, (_, i) => {
     const week = new Date(thisWeek - (WEEKS - 1 - i) * 7 * DAY).toISOString().slice(0, 10);
     const inWeek = entries.filter((e) => monday(Date.parse(e.at)) === week);
-    // The week as the table writes a day ("24 Aug", DLOAD-21); the bar chart shows its key as it is.
-    return { week: date(week), ...Object.fromEntries(severities.map((s) => [s, inWeek.filter((e) => e.severity === s).length])) };
+    // The week as the table writes a day ("24 Aug"); the bar chart shows its key as it is.
+    return {
+      week: date(week),
+      ...Object.fromEntries(severities.map((s) => [s, inWeek.filter((e) => e.severity === s).length])),
+    };
   });
 }
 
@@ -60,7 +62,7 @@ export function QualityLogPage() {
   const people = directory(usePeople().data);
   const [show, setShow] = useState<Show>("all");
   const campaignOf = new Map((campaigns ?? []).map((r) => [r.campaign.id, r]));
-  // Round 13 AGENCY: an agency's checks keep its clients from seeing a mistake.
+  // An agency's checks keep its clients from seeing a mistake.
   const agency = Boolean(useSession().data?.user.agency);
 
   return (
@@ -70,7 +72,11 @@ export function QualityLogPage() {
         description={`What the Quality Gate caught before ${agency ? "a client" : "a customer"} saw it, how serious it was and whether it is fixed.`}
         meta={
           log.data
-            ? [copy.count(log.data.length, "catch", "catches"), `${log.data.filter((e) => e.severity === "critical").length} critical`, `${log.data.filter((e) => !e.fixed).length} open`]
+            ? [
+                copy.count(log.data.length, "catch", "catches"),
+                `${log.data.filter((e) => e.severity === "critical").length} critical`,
+                `${log.data.filter((e) => !e.fixed).length} open`,
+              ]
             : undefined
         }
       />
@@ -78,8 +84,22 @@ export function QualityLogPage() {
       <Query query={log} loading="Loading the quality log">
         {(entries) => {
           if (entries.length === 0)
-            return <Nothing icon="circle-check" title="Nothing caught yet" text="Every catch the expert makes in a check is written here." />;
-          const shown = entries.filter((e) => (show === "all" ? true : show === "open" ? !e.fixed : show === "critical" ? e.severity === "critical" : e.fixed));
+            return (
+              <Nothing
+                icon="circle-check"
+                title="Nothing caught yet"
+                text="Every catch the expert makes in a check is written here."
+              />
+            );
+          const shown = entries.filter((e) =>
+            show === "all"
+              ? true
+              : show === "open"
+                ? !e.fixed
+                : show === "critical"
+                  ? e.severity === "critical"
+                  : e.fixed,
+          );
           const fixed = entries.filter((e) => e.fixed).length;
           const critical = entries.filter((e) => e.severity === "critical").length;
           const chart = (
@@ -125,7 +145,12 @@ export function QualityLogPage() {
                 }
               >
                 {shown.length === 0 ? (
-                  <Nothing icon="circle-check" title={show === "open" ? "Nothing open" : show === "critical" ? "Nothing critical" : "Nothing fixed yet"} />
+                  <Nothing
+                    icon="circle-check"
+                    title={
+                      show === "open" ? "Nothing open" : show === "critical" ? "Nothing critical" : "Nothing fixed yet"
+                    }
+                  />
                 ) : (
                   <TableContainer>
                     <Table>
@@ -144,10 +169,14 @@ export function QualityLogPage() {
                           return (
                             <TableRow key={e.id}>
                               <TableCell>
-                                <TableTitle sub={row ? `${row.workspace.brandName} · ${row.campaign.name}` : undefined}>{e.what}</TableTitle>
+                                <TableTitle sub={row ? `${row.workspace.brandName} · ${row.campaign.name}` : undefined}>
+                                  {e.what}
+                                </TableTitle>
                               </TableCell>
                               <TableCell>
-                                <Badge variant={e.severity === "critical" ? "ink" : "neutral"}>{severityLabel[e.severity]}</Badge>
+                                <Badge variant={e.severity === "critical" ? "ink" : "neutral"}>
+                                  {severityLabel[e.severity]}
+                                </Badge>
                               </TableCell>
                               <TableCell>
                                 <Badge dot={e.fixed ? "on" : "idle"}>{e.fixed ? "Fixed" : "Open"}</Badge>

@@ -6,17 +6,16 @@
 // data-state="open|closed" the CSS animates on. Footer: at most one ui-btn--glass-white (or ui-btn--glass-danger)
 // and the rest ui-btn--glass-clear (glass-one-white); on a phone the footer stacks with the main action last,
 // so put the main action last.
-// Round 8 (walk-through 19 Oct, MOB-13, MOB-14; PROPOSED 19 Oct 2026): on a phone (under 640 px) a dialog of size md
-// or lg is the bottom sheet the drawer already is: it rises from the bottom, a grab handle on top (press it, or drag
-// it or the header down, to close), the body scrolls between the header and a footer that stays at the foot, and the
-// close circle steps away for the handle (data-phone="sheet"). Size sm stays the centred dialog, for short
-// confirmations. On a touch screen the first focus is the title, never the first field, so the keyboard does not
-// rise over the buttons before the dialog is read.
-// Round 9 (DWAY-4, DWAY-8, DLAY-15; PROPOSED 19 Oct 2026): a dialog is for a short confirmation; anything with a form
-// or more than about three fields opens as the right panel (SheetContent side="right", sheet.tsx). The dialog sits on
-// the solid surface (glass.css), at most the window less 48 px tall; its body scrolls between the header and the
-// footer, which stays at the foot under a hairline. Focus goes back to what opened it, also when no Trigger did
-// (a menu row, a shortcut). ⌘↵ (Ctrl+Enter) submits the form the focus is in.
+// A dialog is for a short confirmation; anything with a form or more than about three fields opens as the right panel
+// (SheetContent side="right", sheet.tsx). The dialog sits on the solid surface (glass.css), at most the window less 48
+// px tall; its body scrolls between the header and the footer, which stays at the foot under a hairline. Focus goes
+// back to what opened it, also when no Trigger did (a menu row, a shortcut). ⌘↵ (Ctrl+Enter) submits the form the focus
+// is in.
+// On a phone (under 640 px) a dialog of size md or lg is the bottom sheet the drawer already is: it rises from the
+// bottom, a grab handle on top (press it, or drag it or the header down, to close), the body scrolls between the header
+// and a footer that stays at the foot, and the close circle steps away for the handle (data-phone="sheet"). Size sm
+// stays the centred dialog, for short confirmations. On a touch screen the first focus is the title, never the first
+// field, so the keyboard does not rise over the buttons before the dialog is read.
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {
   forwardRef,
@@ -39,8 +38,8 @@ const PHONE = "(max-width: 639.98px)";
 const onPhone = () => typeof window !== "undefined" && window.matchMedia(PHONE).matches;
 
 /**
- * On a touch screen, focus a layer's title instead of its first field (MOB-14): the keyboard would rise over the
- * buttons before the dialog is read. Returns true when it took the focus. Used by dialogs, sheets and drawers.
+ * On a touch screen, focus a layer's title instead of its first field: the keyboard would rise over the buttons before
+ * the dialog is read. Returns true when it took the focus. Used by dialogs, sheets and drawers.
  */
 export function focusTitleOnTouch(layer: HTMLElement | null, title: string): boolean {
   if (!layer || !isTouch()) return false;
@@ -72,7 +71,9 @@ export type DialogProps = DialogPrimitive.DialogProps;
 export const DialogOverlay = forwardRef<
   ElementRef<typeof DialogPrimitive.Overlay>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => <DialogPrimitive.Overlay ref={ref} className={cx("ui-dialog-overlay", className)} {...props} />);
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Overlay ref={ref} className={cx("ui-dialog-overlay", className)} {...props} />
+));
 DialogOverlay.displayName = "DialogOverlay";
 
 export type DialogSize = "sm" | "md" | "lg";
@@ -187,7 +188,12 @@ export const DialogContent = forwardRef<ElementRef<typeof DialogPrimitive.Conten
           data-size={size}
           data-phone={sheet ? "sheet" : undefined}
           data-dragging={dragging ? "" : undefined}
-          className={cx("ui-glass ui-dialog", size === "sm" && "ui-dialog--sm", size === "lg" && "ui-dialog--lg", className)}
+          className={cx(
+            "ui-glass ui-dialog",
+            size === "sm" && "ui-dialog--sm",
+            size === "lg" && "ui-dialog--lg",
+            className,
+          )}
           // the drag's offset is computed at run time, as the drawer's --drawer-y
           style={sheet ? ({ ...style, "--dialog-y": `${offset}px` } as CSSProperties) : style}
           onOpenAutoFocus={(event) => {
@@ -195,7 +201,7 @@ export const DialogContent = forwardRef<ElementRef<typeof DialogPrimitive.Conten
             onOpenAutoFocus?.(event);
             if (event.defaultPrevented) return;
             const layer = event.currentTarget as HTMLElement;
-            // a finger: the title, so the keyboard waits (MOB-14); a mouse or keys: the first control, never the
+            // a finger: the title, so the keyboard waits; a mouse or keys: the first control, never the
             // close circle or the handle ([data-ui-autofocus] wins), as dialog.js does
             if (focusTitleOnTouch(layer, ".ui-dialog-title") || focusFirst(layer, CHROME)) event.preventDefault();
           }}
@@ -243,22 +249,27 @@ export const DialogContent = forwardRef<ElementRef<typeof DialogPrimitive.Conten
 DialogContent.displayName = "DialogContent";
 
 /** Title and description as one group, 8 apart: div.ui-dialog-header. */
-export const DialogHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
-  <div ref={ref} className={cx("ui-dialog-header", className)} {...props} />
-));
+export const DialogHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => <div ref={ref} className={cx("ui-dialog-header", className)} {...props} />,
+);
 DialogHeader.displayName = "DialogHeader";
 
 /** h2.ui-dialog-title, wired to the dialog's aria-labelledby. Required by Radix (it warns without one). */
-export const DialogTitle = forwardRef<ElementRef<typeof DialogPrimitive.Title>, ComponentPropsWithoutRef<typeof DialogPrimitive.Title>>(
-  ({ className, ...props }, ref) => <DialogPrimitive.Title ref={ref} className={cx("ui-dialog-title", className)} {...props} />,
-);
+export const DialogTitle = forwardRef<
+  ElementRef<typeof DialogPrimitive.Title>,
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Title ref={ref} className={cx("ui-dialog-title", className)} {...props} />
+));
 DialogTitle.displayName = "DialogTitle";
 
 /** p.ui-dialog-description, wired to aria-describedby. Without one, pass aria-describedby={undefined} to DialogContent. */
 export const DialogDescription = forwardRef<
   ElementRef<typeof DialogPrimitive.Description>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
->(({ className, ...props }, ref) => <DialogPrimitive.Description ref={ref} className={cx("ui-dialog-description", className)} {...props} />);
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Description ref={ref} className={cx("ui-dialog-description", className)} {...props} />
+));
 DialogDescription.displayName = "DialogDescription";
 
 /** The work between the words and the actions: div.ui-dialog-body. */
@@ -268,7 +279,7 @@ export const DialogBody = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
 DialogBody.displayName = "DialogBody";
 
 /** The actions, right-aligned (stacked on a phone, the last one nearest the thumb): div.ui-dialog-footer. */
-export const DialogFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
-  <div ref={ref} className={cx("ui-dialog-footer", className)} {...props} />
-));
+export const DialogFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => <div ref={ref} className={cx("ui-dialog-footer", className)} {...props} />,
+);
 DialogFooter.displayName = "DialogFooter";

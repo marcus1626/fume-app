@@ -121,5 +121,14 @@ export function useDocumentHistory(doc: CreativeDocument) {
   flushRef.current = flush;
   useEffect(() => () => flushRef.current(), []);
 
-  return { state, change, undo, redo, flush, reset, canUndo: past.current.length > 0, canRedo: future.current.length > 0 };
+  return {
+    state,
+    change,
+    undo,
+    redo,
+    flush,
+    reset,
+    canUndo: past.current.length > 0,
+    canRedo: future.current.length > 0,
+  };
 }

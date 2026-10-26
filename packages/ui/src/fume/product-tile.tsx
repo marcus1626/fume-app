@@ -1,5 +1,5 @@
-// Product pick (design-system/components/product-pick.css), PROPOSED 15 Oct 2026: products, collections and
-// campaigns are picked as a grid of pictures, never a list of names (Marcus 15 Oct). One tile for every picker.
+// Product pick (design-system/components/product-pick.css): products, collections and campaigns are picked as a grid of
+// pictures, never a list of names. One tile for every picker.
 //   <PickGrid aria-label="Products">
 //     <ProductTile name="Night Body Oil" variant="100 ml" src={img} selected={on} onSelectedChange={set} />
 //     <ProductTile name="Hand Balm" variant="50 ml" flag="To confirm" action={<Button size="sm" …>Confirm</Button>} />
@@ -54,7 +54,26 @@ export interface PickTileProps extends Omit<HTMLAttributes<HTMLElement>, "title"
 }
 
 export const PickTile = forwardRef<HTMLElement, PickTileProps>(function PickTile(
-  { as = "li", title, line, note, src, images, icon = "package", selected, onSelectedChange, included, onOpen, flag, flagIcon = "clock", action, label, disabled, className, ...props },
+  {
+    as = "li",
+    title,
+    line,
+    note,
+    src,
+    images,
+    icon = "package",
+    selected,
+    onSelectedChange,
+    included,
+    onOpen,
+    flag,
+    flagIcon = "clock",
+    action,
+    label,
+    disabled,
+    className,
+    ...props
+  },
   ref,
 ) {
   const pics = (images ?? []).filter(Boolean).slice(0, 4);
@@ -73,12 +92,25 @@ export const PickTile = forwardRef<HTMLElement, PickTileProps>(function PickTile
   );
   const name = label ?? (typeof line === "string" && line ? `${title}, ${line}` : title);
   const selectable = selected !== undefined && !included && !flag;
-  const state = included ? "included" : selected !== undefined && !flag ? (selected ? "checked" : "unchecked") : undefined;
+  const state = included
+    ? "included"
+    : selected !== undefined && !flag
+      ? selected
+        ? "checked"
+        : "unchecked"
+      : undefined;
 
   let media: ReactNode;
   if (selectable)
     media = (
-      <button type="button" className="ui-pick-media" aria-pressed={Boolean(selected)} aria-label={name} disabled={disabled} onClick={() => onSelectedChange?.(!selected)}>
+      <button
+        type="button"
+        className="ui-pick-media"
+        aria-pressed={Boolean(selected)}
+        aria-label={name}
+        disabled={disabled}
+        onClick={() => onSelectedChange?.(!selected)}
+      >
         {picture}
       </button>
     );
@@ -92,7 +124,13 @@ export const PickTile = forwardRef<HTMLElement, PickTileProps>(function PickTile
 
   const Tag = as as "li";
   return (
-    <Tag ref={ref as Ref<HTMLLIElement>} className={cx("ui-pick", className)} data-state={state} data-flag={flag ? "" : undefined} {...props}>
+    <Tag
+      ref={ref as Ref<HTMLLIElement>}
+      className={cx("ui-pick", className)}
+      data-state={state}
+      data-flag={flag ? "" : undefined}
+      {...props}
+    >
       <div className="ui-pick-frame">
         {media}
         {state && (
@@ -128,7 +166,10 @@ export interface ProductTileProps extends Omit<PickTileProps, "title" | "line"> 
 }
 
 /** A product as a pick tile: picture (or the package icon), name, variant. */
-export const ProductTile = forwardRef<HTMLElement, ProductTileProps>(function ProductTile({ name, variant, line, ...props }, ref) {
+export const ProductTile = forwardRef<HTMLElement, ProductTileProps>(function ProductTile(
+  { name, variant, line, ...props },
+  ref,
+) {
   return <PickTile ref={ref} title={name} line={line ?? (variant || undefined)} {...props} />;
 });
 
@@ -144,7 +185,10 @@ export interface PickTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement
 }
 
 /** The button that opens a grid of tiles (a PopoverTrigger's asChild child). */
-export const PickTrigger = forwardRef<HTMLButtonElement, PickTriggerProps>(function PickTrigger({ label, name, src, icon = "package", className, ...props }, ref) {
+export const PickTrigger = forwardRef<HTMLButtonElement, PickTriggerProps>(function PickTrigger(
+  { label, name, src, icon = "package", className, ...props },
+  ref,
+) {
   return (
     <button ref={ref} type="button" className={cx("ui-pick-trigger", className)} {...props}>
       <span className="ui-pick-trigger-media" aria-hidden="true">

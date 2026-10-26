@@ -1,6 +1,6 @@
-// What the catalogue screens share (FLOWS §3.1, §7 step 5): who may change what, the words for categories,
-// collections and provenance, and the two cards (a product, a collection). The look is catalogue.css on top of
-// Proposal (proposal.css): an Engine proposal lies flat, what the customer added or approved lifts.
+// What the catalogue screens share (FLOWS §3.1, §7 step 5): who may change what, the words for categories, collections
+// and provenance, and the two cards (a product, a collection). The look is catalogue.css on top of Proposal
+// (proposal.css): a proposal lies flat, what the customer added or approved lifts.
 import {
   Badge,
   Button,
@@ -30,7 +30,7 @@ import { directory } from "../../shell/people";
 
 // ─── Who may do what ────────────────────────────────────────────────────────
 
-/** Owner, approver and member sort the catalogue; only owner and approver decide on the Engine's proposals. */
+/** Owner, approver and member sort the catalogue; only owner and approver decide on Fume's proposals. */
 export function useCatalogueRights() {
   const role = useSession().data?.role ?? null;
   return {
@@ -72,7 +72,11 @@ export function categoryAndChildren(categories: Category[], id: string): Set<str
   let grew = true;
   while (grew) {
     grew = false;
-    for (const c of categories) if (c.parentId && ids.has(c.parentId) && !ids.has(c.id)) ids.add(c.id), (grew = true);
+    for (const c of categories)
+      if (c.parentId && ids.has(c.parentId) && !ids.has(c.id)) {
+        ids.add(c.id);
+        grew = true;
+      }
   }
   return ids;
 }
@@ -95,7 +99,7 @@ export function productLine(p: Product, categories: Category[]): string {
   return [variants, categoryPath(categories, p.categoryId) ?? "No category yet"].filter(Boolean).join(" · ");
 }
 
-/** The confirm queue (round 8, HOME's /check/products): the products that need the customer, one at a time. */
+/** The confirm queue: the products that need the customer, one at a time. */
 export const CHECK_PRODUCTS = "/check/products";
 
 /** A product may go into a campaign only once it is confirmed (FLOWS §7 step 5). */
@@ -112,44 +116,46 @@ export function ProvenanceTag({ provenance }: { provenance?: Provenance }) {
   const p = provenance ?? fallback;
   const state = p.state === "removed" ? "approved" : p.state;
   const by = p.by ? (p.by === me ? "You" : people.name(p.by)) : undefined;
-  return <ProposalTag origin={p.origin} state={state} evidence={p.evidence} by={by} when={p.at ? date(p.at) : undefined} />;
+  return (
+    <ProposalTag origin={p.origin} state={state} evidence={p.evidence} by={by} when={p.at ? date(p.at) : undefined} />
+  );
 }
 
 const stateOf = (p?: Provenance) => (p?.state === "removed" ? "approved" : (p?.state ?? "approved"));
 
 // ─── Product card ───────────────────────────────────────────────────────────
 
-/** The product's state as a badge: confirmed, it waits for her (To confirm), or Fume is still reading it. Round 8
- *  (MOB-9): status is never Ink, so it never looks like a button. Round 9 (DLOAD-1): she confirms; only the expert checks. */
-// Round 13 (Marcus's video comment #44; PROPOSED 22 Oct 2026): three clear states, each a badge on every card:
-// Confirmed, Not confirmed yet, and New (found since she last looked), and the Products tab in those three groups.
+/** The product's state as a badge: Confirmed, Not confirmed yet (it waits for her), or Fume is still reading it; "New"
+ *  is a badge of its own. Status is never Ink, so it never looks like a button. She confirms; only the expert checks. */
 export function ProductStateBadge({ product }: { product: Product }) {
   if (product.state === "verified") return <Badge icon="circle-check">{productState.verified}</Badge>;
   if (product.state === "needs_you") return <Badge dot="on">Not confirmed yet</Badge>;
   return <Badge dot="live">{productState.draft}</Badge>;
 }
 
-/** "New": Fume found it since she last looked at her products (#44). */
+/** "New": Fume found it since she last looked at her products. */
 export function ProductNewBadge({ product }: { product: Product }) {
   return product.isNew ? <Badge variant="secondary">New</Badge> : null;
 }
 
 export interface ProductCardProps {
   product: Product;
-  /** @deprecated round 8 (LOAD-14): the card shows the picture and the name only; category and collections live on
-   *  the product's page. Kept so callers need not change. */
+  /** @deprecated The card shows the picture and the name only; category and collections live on the product's page.
+   *  Kept so callers need not change. */
   categories?: Category[];
   collections?: Collection[];
   canEdit?: boolean;
 }
 
-/** One product (round 8, LOAD-14): its picture and its name, and a "To confirm" chip only while it needs her. The kind,
- *  category, collections and who put it in live on the product's page under All details. */
+/** One product: its picture and its name, and a "To confirm" chip only while it needs her. The kind, category,
+ *  collections and who put it in live on the product's page under All details. */
 export function ProductCard({ product: p }: ProductCardProps) {
   const image = p.images[0] ?? p.variants?.find((v) => v.image)?.image;
   return (
     <div className="ui-product-card" data-state={p.state}>
-      <div className="ui-product-card-media">{image ? <img src={image} alt="" loading="lazy" /> : <Icon name="image" />}</div>
+      <div className="ui-product-card-media">
+        {image ? <img src={image} alt="" loading="lazy" /> : <Icon name="image" />}
+      </div>
       <div className="ui-product-card-body">
         <Link to={`/brand/products/${p.id}`} className="ui-product-card-link">
           {p.name}
@@ -187,13 +193,18 @@ export function ProductMenu({
   const move = (change: { categoryId?: string; collectionIds?: string[] }, done: string) =>
     place.mutate(
       { productId: p.id, ...change },
-      { onSuccess: () => toast.done(done), onError: (error) => toast.error("That wasn’t moved", { description: error.message }) },
+      {
+        onSuccess: () => toast.done(done),
+        onError: (error) => toast.error("That wasn’t moved", { description: error.message }),
+      },
     );
 
   return (
     <div className="ui-product-card-menu">
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>{trigger ?? <CreativeMoreButton aria-label={`More for ${p.name}`} />}</DropdownMenuTrigger>
+        <DropdownMenuTrigger asChild>
+          {trigger ?? <CreativeMoreButton aria-label={`More for ${p.name}`} />}
+        </DropdownMenuTrigger>
         <DropdownMenuContent align={trigger ? "start" : "end"}>
           {!onPage && (
             <>
@@ -254,7 +265,9 @@ export function CollectionCard({ collection: c, onDecide, deciding }: Collection
   const state = stateOf(c.provenance);
   return (
     <Proposal state={state} className="ui-collection-card">
-      <div className="ui-collection-card-cover">{c.cover ? <img src={c.cover} alt="" loading="lazy" /> : <Icon name="layers" />}</div>
+      <div className="ui-collection-card-cover">
+        {c.cover ? <img src={c.cover} alt="" loading="lazy" /> : <Icon name="layers" />}
+      </div>
       <div className="ui-product-card-body">
         <Link to={`/products/collections/${c.id}`} className="ui-collection-card-link">
           {c.name}
@@ -262,13 +275,19 @@ export function CollectionCard({ collection: c, onDecide, deciding }: Collection
         <p className="ui-product-card-meta">{collectionLine(c)}</p>
       </div>
       {state === "proposed" && (
-        // Round 8 (LOAD-9): who made it shows only while it waits for her; its description lives on its page.
+        // Who made it shows only while it waits for her; its description lives on its page.
         <ProposalFoot>
           <ProvenanceTag provenance={c.provenance} />
           {onDecide && (
-            // Round 8 (MOB-8): no Ink on a card; the page keeps its one Ink action. Round 9 (DLOAD-1): Confirm.
+            // No Ink on a card: the page keeps its one Ink action.
             <div className="ui-proposal-actions">
-              <Button size="sm" variant="secondary" disabled={deciding} onClick={() => onDecide("keep")} aria-label={`Confirm ${c.name}`}>
+              <Button
+                size="sm"
+                variant="secondary"
+                disabled={deciding}
+                onClick={() => onDecide("keep")}
+                aria-label={`Confirm ${c.name}`}
+              >
                 Confirm
               </Button>
               <Button size="sm" variant="quiet" disabled={deciding} onClick={() => onDecide("change")}>
@@ -284,4 +303,3 @@ export function CollectionCard({ collection: c, onDecide, deciding }: Collection
     </Proposal>
   );
 }
-

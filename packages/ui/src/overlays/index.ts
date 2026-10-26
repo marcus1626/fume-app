@@ -1,4 +1,5 @@
-// Overlays: everything that floats over the page: Smoke glass over pictures, the same Smoke solid over the light app (round 9). See API.md.
+// Overlays: everything that floats over the page: Smoke glass over pictures, the same Smoke solid over the light app.
+// See API.md.
 export * from "./glass";
 export * from "./dialog";
 export * from "./alert-dialog";

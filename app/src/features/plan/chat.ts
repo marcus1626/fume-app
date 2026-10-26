@@ -1,7 +1,6 @@
-// Where "Change it with Fume" goes (round 13, Marcus's video comments #20, #25; PROPOSED 22 Oct 2026): the Fume chat with
-// the plan in its side panel, so she iterates the plan with Fume (the number of creatives, videos, carousels, timing)
-// before anything is made. The chat side (features/fume, builder A's notes) reads ?plan=<campaignId>. Under a brand's
-// prefix (an agency's client, the studio's Customer view) it is that brand's chat.
+// Where "Change it with Fume" goes: the Fume chat with the plan in its side panel, so she iterates the plan with Fume
+// (the number of creatives, videos, carousels, timing) before anything is made. The chat side (features/fume) reads
+// ?plan=<campaignId>. Under a brand's prefix (an agency's client, the studio's Customer view) it is that brand's chat.
 import { useLocation } from "react-router-dom";
 import { addressBrand, brandBase } from "../../shell/scope";
 

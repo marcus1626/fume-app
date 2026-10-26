@@ -77,7 +77,9 @@ export function ToolbarGroup({ wide, toggle, className, ...props }: ToolbarGroup
 
 /** Radix's separator; in Fume it is space. */
 export function ToolbarSeparator({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div role="separator" aria-orientation="vertical" className={cx("ui-toolbar-separator", className)} {...props} />;
+  return (
+    <div role="separator" aria-orientation="vertical" className={cx("ui-toolbar-separator", className)} {...props} />
+  );
 }
 
 export interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -86,7 +88,10 @@ export interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonEleme
   "aria-label": string;
 }
 /** A quiet icon circle. */
-export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(function ToolbarButton({ icon, className, type = "button", ...props }, ref) {
+export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(function ToolbarButton(
+  { icon, className, type = "button", ...props },
+  ref,
+) {
   return (
     <button ref={ref} type={type} className={cx("ui-btn ui-btn--quiet ui-btn--icon", className)} {...props}>
       <Icon name={icon} />
@@ -200,7 +205,13 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(function Act
   const more = useGlassMenu(menuId);
   const [hidden, setHidden] = useState(!open);
   const words = label ?? (count !== undefined ? " selected" : undefined);
-  const name = ariaLabel ?? (count !== undefined && typeof words === "string" ? `${count}${words}` : typeof words === "string" ? words : undefined);
+  const name =
+    ariaLabel ??
+    (count !== undefined && typeof words === "string"
+      ? `${count}${words}`
+      : typeof words === "string"
+        ? words
+        : undefined);
 
   useEffect(() => {
     if (open) {
@@ -223,7 +234,11 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(function Act
       onClick={a.onSelect}
       className={cx(
         "ui-btn",
-        a.variant === "white" ? "ui-btn--glass-white" : a.variant === "danger" ? "ui-btn--glass-danger" : "ui-btn--glass-clear",
+        a.variant === "white"
+          ? "ui-btn--glass-white"
+          : a.variant === "danger"
+            ? "ui-btn--glass-danger"
+            : "ui-btn--glass-clear",
         a.fold && "ui-action-bar-wide",
       )}
     >
@@ -254,12 +269,20 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(function Act
       {...props}
     >
       {onClear && (
-        <button className="ui-btn ui-btn--glass-clear ui-btn--icon ui-action-bar-clear" type="button" aria-label={clearLabel} onClick={onClear}>
+        <button
+          className="ui-btn ui-btn--glass-clear ui-btn--icon ui-action-bar-clear"
+          type="button"
+          aria-label={clearLabel}
+          onClick={onClear}
+        >
           <Icon name="x" />
         </button>
       )}
       {(count !== undefined || words !== undefined) && (
-        <span className={cx("ui-action-bar-label", optionalLabel && "ui-action-bar-label--optional")} aria-live={count !== undefined ? "polite" : undefined}>
+        <span
+          className={cx("ui-action-bar-label", optionalLabel && "ui-action-bar-label--optional")}
+          aria-live={count !== undefined ? "polite" : undefined}
+        >
           {count !== undefined ? (
             <>
               <span className="ui-action-bar-count">{count}</span>
@@ -274,7 +297,11 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(function Act
         <div className="ui-action-bar-actions">
           {before.map(btn)}
           {folded.length > 0 && (
-            <button {...more.triggerProps} className="ui-btn ui-btn--glass-clear ui-btn--icon ui-action-bar-more" aria-label={moreLabel}>
+            <button
+              {...more.triggerProps}
+              className="ui-btn ui-btn--glass-clear ui-btn--icon ui-action-bar-more"
+              aria-label={moreLabel}
+            >
               <Icon name="ellipsis" />
             </button>
           )}

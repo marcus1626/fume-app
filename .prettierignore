@@ -1,0 +1,14 @@
+node_modules/
+dist/
+dist-preview/
+dist-check/
+package-lock.json
+# Copies from the brand repository (marcus1626/Fume-Brand): formatted there.
+design-system/
+tokens/
+assets/
+rules/
+tools/gate/
+# Long-form documents keep their own line breaks.
+*.md
+app/public/

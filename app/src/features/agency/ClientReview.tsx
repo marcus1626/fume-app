@@ -1,11 +1,8 @@
-// Round 11 CLIENT FLOW (FLOWS §24.2, §24.5; PROPOSED 20 Oct 2026): a campaign's review as the agency sees it. The
-// agency never approves a creative, so there is no selection and no Approve here. What was approved shows with who
-// recorded it ("Maja approved · recorded by you"); what was sent, and the client link, sit beside on a desk.
-// Round 12 AGENCY (UX review DLOAD-5, DTASK-15; brief r12 SENDING; PROPOSED 20 Oct 2026): a checked creative reaches
-// the client only when the agency sends it, so the review has the two states in two groups, each named once: "To send"
-// (checked, not sent: the header's Ink "Send to Maja") and "With Maja" (sent; she approves them), then "Changes asked
-// for" and "Approved". Record an approval is a visible secondary pill in the header while anything waits on the
-// client (no "…" menu); its panel starts with nothing ticked.
+// A campaign's review as the agency sees it (FLOWS §24.2, §24.5). The agency never approves a creative, so there is no
+// selection and no Approve here. A checked creative reaches the client only when the agency sends it, so the groups are
+// "To send" (checked, not sent), "With Maja" (sent; she approves them), "Changes asked for" and "Approved". An approval
+// the agency recorded shows who recorded it ("Maja approved · recorded by you"). What was sent, and the client link,
+// sit beside on a desk.
 import { Button, CreativeGrid, CreativeTile } from "@fume/ui";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
@@ -29,11 +26,27 @@ export function useClientPanels(view: CampaignView, checked: Creative[]) {
   const [record, setRecord] = useState<{ initial?: Id[] } | null>(null);
   const panels = (
     <>
-      <SendToClientSheet campaign={view.campaign} creatives={checked} initial={send?.initial} open={send !== null} onOpenChange={(o) => !o && setSend(null)} />
-      <RecordApprovalSheet campaign={view.campaign} creatives={checked} initial={record?.initial} open={record !== null} onOpenChange={(o) => !o && setRecord(null)} />
+      <SendToClientSheet
+        campaign={view.campaign}
+        creatives={checked}
+        initial={send?.initial}
+        open={send !== null}
+        onOpenChange={(o) => !o && setSend(null)}
+      />
+      <RecordApprovalSheet
+        campaign={view.campaign}
+        creatives={checked}
+        initial={record?.initial}
+        open={record !== null}
+        onOpenChange={(o) => !o && setRecord(null)}
+      />
     </>
   );
-  return { openSend: (initial?: Id[]) => setSend({ initial }), openRecord: (initial?: Id[]) => setRecord({ initial }), panels };
+  return {
+    openSend: (initial?: Id[]) => setSend({ initial }),
+    openRecord: (initial?: Id[]) => setRecord({ initial }),
+    panels,
+  };
 }
 
 /** The review's header actions for the agency: "Send to Maja" (Ink) while anything is not sent, else "Send again"
@@ -52,23 +65,53 @@ export function useClientActions(view: CampaignView, checked: Creative[], panels
   );
   const record = pill("Record an approval", "check", () => panels.openRecord());
   return toSend.length
-    ? { actions: record, primaryAction: { label: copy.send.action(approver), icon: "send" as const, onSelect: () => panels.openSend() } }
+    ? {
+        actions: record,
+        primaryAction: { label: copy.send.action(approver), icon: "send" as const, onSelect: () => panels.openSend() },
+      }
     : { actions: [record, pill("Send again", "send", () => panels.openSend())] };
 }
 
 /** The checked creatives in their two states, then what the client asked to change and what she approved. */
-export function ClientCreatives({ view, checked, people, me, onOpen }: { view: CampaignView; checked: Creative[]; people: People; me: Id; onOpen: (c: Creative) => void }) {
+export function ClientCreatives({
+  view,
+  checked,
+  people,
+  me,
+  onOpen,
+}: {
+  view: CampaignView;
+  checked: Creative[];
+  people: People;
+  me: Id;
+  onOpen: (c: Creative) => void;
+}) {
   const named = useCustomerNames(view.campaign);
   const { waitingOn, split, sendOf } = useCampaignSends(view.campaign.id, true);
   const approver = firstName(view.approver.name);
-  const approved = useMemo(() => view.creatives.filter((c) => c.current.state === "approved" || c.current.state === "delivered").map(named), [view.creatives, named]);
-  const changed = useMemo(() => view.creatives.filter((c) => c.current.state === "changes_requested").map(named), [view.creatives, named]);
+  const approved = useMemo(
+    () => view.creatives.filter((c) => c.current.state === "approved" || c.current.state === "delivered").map(named),
+    [view.creatives, named],
+  );
+  const changed = useMemo(
+    () => view.creatives.filter((c) => c.current.state === "changes_requested").map(named),
+    [view.creatives, named],
+  );
   const { toSend, withThem } = split(checked);
   const checkers = [...new Set(toSend.map((c) => c.current.checkedBy).filter((id): id is Id => Boolean(id)))];
   const byWhom = checkers.map((id) => copy.byYou(people.user(id)?.name ?? people.name(id), id === me, true));
   // "You checked these 2. Maja sees them once you send them; only Maja approves a creative."
-  const checkedLine = byWhom.length ? `${byWhom.join(" and ")} checked ${toSend.length === 1 ? "this one" : `these ${toSend.length}`}. ` : "";
-  const sentOn = [...new Set(withThem.map((c) => sendOf(c.current.id)?.sentAt).filter((d): d is string => Boolean(d)).map((d) => date(d)))];
+  const checkedLine = byWhom.length
+    ? `${byWhom.join(" and ")} checked ${toSend.length === 1 ? "this one" : `these ${toSend.length}`}. `
+    : "";
+  const sentOn = [
+    ...new Set(
+      withThem
+        .map((c) => sendOf(c.current.id)?.sentAt)
+        .filter((d): d is string => Boolean(d))
+        .map((d) => date(d)),
+    ),
+  ];
 
   const tile = (c: Creative) => (
     <CreativeTile
@@ -87,7 +130,12 @@ export function ClientCreatives({ view, checked, people, me, onOpen }: { view: C
   return (
     <>
       {toSend.length > 0 && (
-        <Section title="To send" meta={toSend.length} titleId="review-to-send" text={`${checkedLine}${approver} sees ${toSend.length === 1 ? "it" : "them"} once you send ${toSend.length === 1 ? "it" : "them"}; only ${approver} approves a creative.`}>
+        <Section
+          title="To send"
+          meta={toSend.length}
+          titleId="review-to-send"
+          text={`${checkedLine}${approver} sees ${toSend.length === 1 ? "it" : "them"} once you send ${toSend.length === 1 ? "it" : "them"}; only ${approver} approves a creative.`}
+        >
           <CreativeGrid className="ui-review-grid" aria-labelledby="review-to-send">
             {toSend.map(tile)}
           </CreativeGrid>
@@ -116,7 +164,12 @@ export function ClientCreatives({ view, checked, people, me, onOpen }: { view: C
         </Section>
       )}
       {approved.length > 0 && (
-        <Section title="Approved" meta={approved.length} titleId="review-approved" text={`${approver} approved these, in Fume, through a client link, or as you recorded it.`}>
+        <Section
+          title="Approved"
+          meta={approved.length}
+          titleId="review-approved"
+          text={`${approver} approved these, in Fume, through a client link, or as you recorded it.`}
+        >
           <CreativeGrid aria-labelledby="review-approved">{approved.map(tile)}</CreativeGrid>
         </Section>
       )}
@@ -132,7 +185,11 @@ export function ClientSent({ view }: { view: CampaignView }) {
     <Section
       title="Sent"
       titleId="review-sent"
-      text={sends.length ? undefined : `Nothing sent yet. ${approver} sees checked creatives only once you send them. A client link is for someone at the client without an account.`}
+      text={
+        sends.length
+          ? undefined
+          : `Nothing sent yet. ${approver} sees checked creatives only once you send them. A client link is for someone at the client without an account.`
+      }
     >
       {sends.length > 0 && <ClientSends campaignId={view.campaign.id} titleId="review-sent" />}
     </Section>

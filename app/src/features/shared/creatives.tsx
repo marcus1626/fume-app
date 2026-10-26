@@ -33,10 +33,19 @@ export function checkState(state: VersionState): CheckState {
 }
 
 /** "Feed · 4:5 · V2" */
-export const formatLine = (c: Creative) => `${copy.format[c.format].label} · ${copy.format[c.format].ratio}${c.current.number > 1 ? ` · V${c.current.number}` : ""}`;
+export const formatLine = (c: Creative) =>
+  `${copy.format[c.format].label} · ${copy.format[c.format].ratio}${c.current.number > 1 ? ` · V${c.current.number}` : ""}`;
 
 /** The check line under a creative: who checked it and when, or the state in words. */
-export function CreativeCheck({ creative, people, long }: { creative: Creative; people: (id?: string) => User | undefined; long?: boolean }) {
+export function CreativeCheck({
+  creative,
+  people,
+  long,
+}: {
+  creative: Creative;
+  people: (id?: string) => User | undefined;
+  long?: boolean;
+}) {
   const v = creative.current;
   const isMe = useIsMe();
   const state = checkState(v.state);
@@ -57,7 +66,11 @@ export function CreativeCheck({ creative, people, long }: { creative: Creative; 
     <CheckMark
       state={state}
       by={state === "checked" ? by : undefined}
-      time={long && v.checkedAt && state === "checked" && !label ? time(v.checkedAt) : undefined /* round 8 REVIEW (LOAD-10): no clock time on tiles; only the long line keeps it */}
+      time={
+        long && v.checkedAt && state === "checked" && !label
+          ? time(v.checkedAt)
+          : undefined /* no clock time on tiles; only the long line keeps it */
+      }
       dateTime={v.checkedAt}
       wording={long ? "long" : "short"}
       label={label}
@@ -94,7 +107,11 @@ export function CreativeCard({ creative, people, to, onOpen, selected, onSelecte
 }
 
 /** The creative viewer's item for a creative. */
-export function viewerItem(creative: Creative, campaign: Campaign | undefined, people: (id?: string) => User | undefined): ViewerItem {
+export function viewerItem(
+  creative: Creative,
+  campaign: Campaign | undefined,
+  people: (id?: string) => User | undefined,
+): ViewerItem {
   const v = creative.current;
   const checked = ["checked", "approved", "delivered", "changes_requested"].includes(v.state);
   return {
@@ -105,7 +122,11 @@ export function viewerItem(creative: Creative, campaign: Campaign | undefined, p
     format: creative.format,
     size: `${v.width} × ${v.height}`,
     check: checked
-      ? { state: "checked", by: firstName(people(v.checkedBy)?.name ?? "the expert"), time: v.checkedAt ? time(v.checkedAt) : undefined }
+      ? {
+          state: "checked",
+          by: firstName(people(v.checkedBy)?.name ?? "the expert"),
+          time: v.checkedAt ? time(v.checkedAt) : undefined,
+        }
       : { state: "in_check" },
     facts: [
       { label: "Channel", value: copy.channel[creative.channel] },
@@ -115,7 +136,13 @@ export function viewerItem(creative: Creative, campaign: Campaign | undefined, p
   };
 }
 
-const runState: Record<EngineRun["state"], EngineRunState> = { queued: "queued", running: "running", paused: "paused", failed: "failed", done: "done" };
+const runState: Record<EngineRun["state"], EngineRunState> = {
+  queued: "queued",
+  running: "running",
+  paused: "paused",
+  failed: "failed",
+  done: "done",
+};
 
 export const runTitle: Record<EngineRun["purpose"], string> = {
   directions: "Making three directions",
@@ -128,13 +155,22 @@ export const runTitle: Record<EngineRun["purpose"], string> = {
 export function runProps(run: EngineRun): { title: string; state: EngineRunState; steps: EngineRunStepData[] } {
   const active = run.steps.findIndex((s) => s.state === "active");
   // A finished run shows what it made; a running one also the slots still to come.
-  const tiles: RunTileData[] = Array.from({ length: run.state === "done" ? Math.min(run.previews.length, 6) : Math.min(run.total, 6) }, (_, i) =>
-    i < run.previews.length ? { state: "done", src: run.previews[i] } : i === run.previews.length && run.state === "running" ? { state: "active" } : { state: "pending" },
+  const tiles: RunTileData[] = Array.from(
+    { length: run.state === "done" ? Math.min(run.previews.length, 6) : Math.min(run.total, 6) },
+    (_, i) =>
+      i < run.previews.length
+        ? { state: "done", src: run.previews[i] }
+        : i === run.previews.length && run.state === "running"
+          ? { state: "active" }
+          : { state: "pending" },
   );
   // A detail that is only a count ("6 of 9") is the step's own progress, drawn as data beside its label. The
   // creatives go under the step that makes them: the last step not at the Quality Gate, up to the active one.
   const count = (d?: string) => d?.match(/^(\d+) of (\d+)$/);
-  const lastMaking = run.steps.reduce((last, s, i) => (!s.label.startsWith("Quality Gate") && (active === -1 || i <= active) ? i : last), -1);
+  const lastMaking = run.steps.reduce(
+    (last, s, i) => (!s.label.startsWith("Quality Gate") && (active === -1 || i <= active) ? i : last),
+    -1,
+  );
   const making = lastMaking === -1 ? (active === -1 ? run.steps.length - 1 : active) : lastMaking;
   return {
     title: runTitle[run.purpose],
@@ -146,7 +182,13 @@ export function runProps(run: EngineRun): { title: string; state: EngineRunState
         : i === making
           ? { made: run.made, total: run.total, label: `${run.made} of ${run.total} made` }
           : undefined;
-      return { label: s.label, state: s.state, detail: n ? undefined : s.detail, ...(progress && { progress }), ...(i === making && { tiles }) };
+      return {
+        label: s.label,
+        state: s.state,
+        detail: n ? undefined : s.detail,
+        ...(progress && { progress }),
+        ...(i === making && { tiles }),
+      };
     }),
   };
 }

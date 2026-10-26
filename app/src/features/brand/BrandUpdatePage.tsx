@@ -1,12 +1,8 @@
-// Update the brand (round 7, Marcus 16 Oct, decided points 2, 3, 5): an onboarded brand is read again. Two ways in:
-// read the website again, or upload a zip of new things or changes. Fume compares what it reads with the
-// approved Brand DNA and shows only what is new, changed or unsure, in the shared "What Fume found" review
-// (FoundReview, @fume/ui): Approve all, or confirm, change or remove one. Products it saw are only a link to Products.
-// /brand/update, from "More about your Brand DNA" on the Brand page. Round 8 (LOAD-21): two ways, each a title and one
-// short line, no footnote; a confirmed one shows in the row itself, so it posts no toast (MOB-19).
-// Round 9 (desktop review DLOAD-7, DLOAD-1, DLAY-7; PROPOSED 19 Oct 2026): Fume reads and finds, never "the Engine"
-// (it only makes creatives); a find is changed, never "fixed", in a panel on the right; the page keeps the reading
-// measure.
+// Update the brand (/brand/update, from "More about your Brand DNA"): an onboarded brand is read again, from the
+// website or from a zip of new things or changes. Fume compares what it reads with the approved Brand DNA and shows
+// only what is new, changed or unsure, in the shared "What Fume found" review (FoundReview, @fume/ui): Approve all, or
+// confirm, change or remove one. A find is changed, never "fixed", in the right panel; a confirmed one shows in the row
+// itself, so it posts no toast. Fume reads and finds, never "the Engine" (it only makes creatives).
 import {
   Alert,
   AlertAction,
@@ -41,16 +37,34 @@ import {
 } from "@fume/ui";
 import { useState, type FormEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { useApproveBrandUpdate, useBrandBoard, useBrandScan, useBrandUpdate, useDecideBrandFound, useStartBrandUpdate } from "../../api/hooks";
+import {
+  useApproveBrandUpdate,
+  useBrandBoard,
+  useBrandScan,
+  useBrandUpdate,
+  useDecideBrandFound,
+  useStartBrandUpdate,
+} from "../../api/hooks";
 import type { BrandFound, BrandIdentity, BrandUpdate } from "../../contract";
 import * as copy from "../../copy";
 import { Back, Page, Query } from "../../shell/Page";
 import { vars } from "./board";
 import { useRole } from "./parts";
 
-const bare = (url: string) => url.trim().replace(/^https?:\/\//i, "").replace(/\/+$/, "");
+const bare = (url: string) =>
+  url
+    .trim()
+    .replace(/^https?:\/\//i, "")
+    .replace(/\/+$/, "");
 const HEX = /^#[0-9a-f]{6}$/i;
-const icon = { colour: "palette", typeface: "type", voice: "message-square", logo: "image", rule: "list", image: "image" } as const;
+const icon = {
+  colour: "palette",
+  typeface: "type",
+  voice: "message-square",
+  logo: "image",
+  rule: "list",
+  image: "image",
+} as const;
 
 function Swatch({ hex }: { hex: string }) {
   return (
@@ -78,7 +92,14 @@ function valueOf(f: BrandFound, value: string | undefined, identity: BrandIdenti
   if (f.kind === "colour") return <Swatch hex={value} />;
   if (f.kind === "typeface") {
     const known = identity?.typefaces.find((t) => t.name === value)?.cssFamily;
-    return <Face name={value} family={known ?? `"${value}", ${identity?.typefaces.find((t) => t.id === f.targetId)?.cssFamily ?? "system-ui"}`} />;
+    return (
+      <Face
+        name={value}
+        family={
+          known ?? `"${value}", ${identity?.typefaces.find((t) => t.id === f.targetId)?.cssFamily ?? "system-ui"}`
+        }
+      />
+    );
   }
   if (f.kind === "voice")
     return (
@@ -128,16 +149,25 @@ function ChangePanel({ update, found, onClose }: { update: BrandUpdate; found: B
   const decide = useDecideBrandFound();
   const toast = useToast();
   const field = {
-    colour: { label: "The colour’s hex", help: "Six digits, for example #A3927B. Fume uses your value from the next creative on." },
+    colour: {
+      label: "The colour’s hex",
+      help: "Six digits, for example #A3927B. Fume uses your value from the next creative on.",
+    },
     typeface: { label: "The typeface’s name", help: "As it is called in your guidelines or by the foundry." },
     voice: { label: "The line, in your words", help: "Write it the way you would tell a copywriter." },
-    image: { label: "What this set is called", help: "For example Autumn 2026. The pictures are kept under this name." },
+    image: {
+      label: "What this set is called",
+      help: "For example Autumn 2026. The pictures are kept under this name.",
+    },
     logo: { label: "The logo’s name", help: "What your team calls this version." },
     rule: { label: "The rule, in your words", help: "One sentence every creative can be held against." },
   }[found.kind];
   const start = found.after ?? found.title;
   const [text, setText] = useState(start);
-  const next = found.kind === "colour" ? (text.trim().startsWith("#") ? text.trim() : `#${text.trim()}`).toUpperCase() : text.trim();
+  const next =
+    found.kind === "colour"
+      ? (text.trim().startsWith("#") ? text.trim() : `#${text.trim()}`).toUpperCase()
+      : text.trim();
   const valid = found.kind === "colour" ? HEX.test(next) : next.length > 0;
 
   function submit(event: FormEvent) {
@@ -160,13 +190,21 @@ function ChangePanel({ update, found, onClose }: { update: BrandUpdate; found: B
       <SheetContent side="right">
         <SheetHeader>
           <SheetTitle>Change {found.title}</SheetTitle>
-          <SheetDescription>Fume read this on {found.source}. Say what is right, and it becomes yours.</SheetDescription>
+          <SheetDescription>
+            Fume read this on {found.source}. Say what is right, and it becomes yours.
+          </SheetDescription>
         </SheetHeader>
         <form className="ui-sheet-form" onSubmit={submit}>
           <SheetBody>
             <Field>
               <FieldLabel htmlFor={`change-${found.id}-value`}>{field.label}</FieldLabel>
-              <Input id={`change-${found.id}-value`} value={text} onChange={(e) => setText(e.target.value)} aria-describedby={`change-${found.id}-help`} data-ui-autofocus />
+              <Input
+                id={`change-${found.id}-value`}
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                aria-describedby={`change-${found.id}-help`}
+                data-ui-autofocus
+              />
               <FieldDescription id={`change-${found.id}-help`}>{field.help}</FieldDescription>
             </Field>
           </SheetBody>
@@ -198,8 +236,15 @@ function Ways({ onStarted }: { onStarted: () => void }) {
 
   function read(source: "website" | "upload") {
     start.mutate(
-      { source, url: source === "website" ? site : undefined, files: source === "upload" ? files.map((f) => ({ name: f.name, bytes: f.bytes })) : undefined },
-      { onSuccess: onStarted, onError: (error) => toast.error("Fume couldn’t start reading", { description: error.message }) },
+      {
+        source,
+        url: source === "website" ? site : undefined,
+        files: source === "upload" ? files.map((f) => ({ name: f.name, bytes: f.bytes })) : undefined,
+      },
+      {
+        onSuccess: onStarted,
+        onError: (error) => toast.error("Fume couldn’t start reading", { description: error.message }),
+      },
     );
   }
 
@@ -222,10 +267,23 @@ function Ways({ onStarted }: { onStarted: () => void }) {
             >
               <Field>
                 <FieldLabel htmlFor="update-url">Website address</FieldLabel>
-                <Input id="update-url" type="text" inputMode="url" autoComplete="url" value={url} onChange={(e) => setUrl(e.target.value)} disabled={!canApprove} />
+                <Input
+                  id="update-url"
+                  type="text"
+                  inputMode="url"
+                  autoComplete="url"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  disabled={!canApprove}
+                />
               </Field>
               <div className="ui-app-row">
-                <Button type="submit" icon="fume-engine" loading={start.isPending && start.variables?.source === "website"} disabled={site.length <= 3 || !canApprove}>
+                <Button
+                  type="submit"
+                  icon="fume-engine"
+                  loading={start.isPending && start.variables?.source === "website"}
+                  disabled={site.length <= 3 || !canApprove}
+                >
                   Read it again
                 </Button>
               </div>
@@ -244,7 +302,18 @@ function Ways({ onStarted }: { onStarted: () => void }) {
               <Dropzone
                 compact
                 items={files}
-                onFiles={(list) => setFiles((now) => [...now, ...list.map((f, i) => ({ id: `up-${Date.now()}-${i}`, name: f.name, bytes: f.size, state: "done" as const, file: f }))])}
+                onFiles={(list) =>
+                  setFiles((now) => [
+                    ...now,
+                    ...list.map((f, i) => ({
+                      id: `up-${Date.now()}-${i}`,
+                      name: f.name,
+                      bytes: f.size,
+                      state: "done" as const,
+                      file: f,
+                    })),
+                  ])
+                }
                 onRemove={(id) => setFiles((now) => now.filter((f) => f.id !== id))}
                 accept=".zip,image/*,.pdf,.svg,.otf,.ttf,.woff,.woff2"
                 maxBytes={500_000_000}
@@ -258,7 +327,12 @@ function Ways({ onStarted }: { onStarted: () => void }) {
               />
               {files.length > 0 && (
                 <div className="ui-app-row">
-                  <Button variant="secondary" icon="fume-engine" loading={start.isPending && start.variables?.source === "upload"} onClick={() => read("upload")}>
+                  <Button
+                    variant="secondary"
+                    icon="fume-engine"
+                    loading={start.isPending && start.variables?.source === "upload"}
+                    onClick={() => read("upload")}
+                  >
                     Read {files.length === 1 ? files[0].name : copy.count(files.length, "upload")}
                   </Button>
                 </div>
@@ -284,7 +358,9 @@ function Reading({ update }: { update: BrandUpdate }) {
         {update.sources.map((s) => (
           <li key={s.id} className="ui-brand-update-source" data-state={s.state}>
             <span className="ui-brand-update-source-label">{s.label}</span>
-            <span className="ui-brand-update-source-state">{s.state === "waiting" ? "Waiting" : s.state === "reading" ? "Reading now" : "Compared"}</span>
+            <span className="ui-brand-update-source-state">
+              {s.state === "waiting" ? "Waiting" : s.state === "reading" ? "Reading now" : "Compared"}
+            </span>
           </li>
         ))}
       </ol>
@@ -301,7 +377,13 @@ function Review({ update, identity }: { update: BrandUpdate; identity?: BrandIde
   const open = update.found.filter((f) => f.decision !== "removed");
   const items = open.map((f) => toItem(f, identity));
   const n = (s: BrandFound["status"]) => update.found.filter((f) => f.status === s).length;
-  const counts = [n("new") && `${n("new")} new`, n("changed") && `${n("changed")} changed`, n("unsure") && `${n("unsure")} unsure`].filter(Boolean).join(", ");
+  const counts = [
+    n("new") && `${n("new")} new`,
+    n("changed") && `${n("changed")} changed`,
+    n("unsure") && `${n("unsure")} unsure`,
+  ]
+    .filter(Boolean)
+    .join(", ");
   const where = update.url ?? (update.files.length ? update.files.join(", ") : "your upload");
 
   const answer = (foundId: string, verdict: "keep" | "remove") => {
@@ -311,7 +393,8 @@ function Review({ update, identity }: { update: BrandUpdate; identity?: BrandIde
       {
         // a confirmed one shows in the row itself; leaving one out takes it out of the list, so that one is said.
         onSuccess: () => {
-          if (verdict === "remove") toast.done(f?.status === "changed" ? `${f?.title} stays as it was` : `${f?.title} left out`);
+          if (verdict === "remove")
+            toast.done(f?.status === "changed" ? `${f?.title} stays as it was` : `${f?.title} left out`);
         },
         onError: (error) => toast.error("That wasn’t saved", { description: error.message }),
       },
@@ -327,7 +410,8 @@ function Review({ update, identity }: { update: BrandUpdate; identity?: BrandIde
         busy={decide.isPending || approve.isPending || !canApprove}
         onApproveAll={() =>
           approve.mutate(update.id, {
-            onSuccess: () => toast.done("Your Brand DNA is updated", { description: "Every creative from now on is made with it." }),
+            onSuccess: () =>
+              toast.done("Your Brand DNA is updated", { description: "Every creative from now on is made with it." }),
             onError: (error) => toast.error("The update wasn’t approved", { description: error.message }),
           })
         }
@@ -339,10 +423,15 @@ function Review({ update, identity }: { update: BrandUpdate; identity?: BrandIde
             <Alert>
               <Icon name="package" />
               <AlertTitle>
-                {/* round 13 (robot note 05): the same products Import from website finds, new or changed */}
-                {update.products.count === 1 ? "1 product new or changed" : `${update.products.count} products new or changed`}, see {update.products.count === 1 ? "it" : "them"} in Products
+                {/* the same products Import from website finds, new or changed */}
+                {update.products.count === 1
+                  ? "1 product new or changed"
+                  : `${update.products.count} products new or changed`}
+                , see {update.products.count === 1 ? "it" : "them"} in Products
               </AlertTitle>
-              <AlertDescription>{update.products.names.join("; ")}. Products have their own import and review; nothing was added here.</AlertDescription>
+              <AlertDescription>
+                {update.products.names.join("; ")}. Products have their own import and review; nothing was added here.
+              </AlertDescription>
               <AlertAction>
                 <Button asChild variant="secondary" size="sm" iconEnd="arrow-right">
                   <Link to="/brand/products">Open Products</Link>
@@ -363,7 +452,9 @@ function Applied({ update, onAgain }: { update: BrandUpdate; onAgain: () => void
     <Alert variant="success">
       <AlertTitle>{kept === 0 ? "Nothing new was kept" : "Your Brand DNA is updated"}</AlertTitle>
       <AlertDescription>
-        {kept === 0 ? "Your Brand DNA stays as it was." : `${copy.count(kept, "thing")} from ${update.url ?? "your upload"} ${kept === 1 ? "is" : "are"} in your Brand DNA now.`}
+        {kept === 0
+          ? "Your Brand DNA stays as it was."
+          : `${copy.count(kept, "thing")} from ${update.url ?? "your upload"} ${kept === 1 ? "is" : "are"} in your Brand DNA now.`}
       </AlertDescription>
       <AlertAction>
         <Button asChild size="sm" iconEnd="arrow-right">
@@ -384,7 +475,11 @@ export function BrandUpdatePage() {
 
   return (
     <Page title="Update the brand · Brand" width="reading">
-      <PageHeader title="Update the brand" back={<Back to="/brand" label="Brand" />} description="Fume shows only what is new or changed." />
+      <PageHeader
+        title="Update the brand"
+        back={<Back to="/brand" label="Brand" />}
+        description="Fume shows only what is new or changed."
+      />
       <Query query={query} loading="Loading">
         {(update) =>
           !update || (fresh && update.state === "applied") ? (

@@ -1,12 +1,10 @@
 // Product scope picker (FLOWS §3.2, §7 step 8): what a campaign is about, as single products and whole collections,
-// picked as a grid of pictures (Marcus 15 Oct: "ser man produktene som grid, ikke liste med navn"). A collection brings
-// all its products, and new products in it join later.
-// Round 8 (UX review 19 Oct, LOAD-5 and LOAD-2): the grid shows only products that can be used. Products not confirmed
-// yet fold into ONE row, "6 more products to confirm". A product the brief's line names comes first, alone.
-// Collections wait behind a quiet "A whole collection", so the first question stays "Which product?".
-// Round 9 (desktop review 19 Oct, DWAY-5, DTSK-6, DLOAD-1; PROPOSED): a product that waits is confirmed in CHECK's one
-// product panel (useOpenProductCheck, the card with the photo and Fume's question first), beside the form; once
-// confirmed it is ticked here. One verb: Confirm.
+// picked as a grid of pictures, never a list of names. A collection brings all its products, and new products in it
+// join later.
+// The grid shows only products that can be used; products not confirmed yet fold into one row, "6 more products to
+// confirm". A product the brief's line names comes first, alone. Collections wait behind a quiet "A whole collection",
+// so the first question stays "Which product?". A product that waits is confirmed in the one product panel
+// (useOpenProductCheck), beside the form; once confirmed it is ticked here.
 //
 //   With a campaign, it saves itself through useSetCampaignScope:
 //     <ProductScopePicker campaign={campaign} onSaved={() => …} />
@@ -61,13 +59,28 @@ export interface ProductScopePickerProps {
 }
 
 const names = (list: Product[]) =>
-  list.length <= 3 ? list.map((p) => p.name).join(", ").replace(/, ([^,]*)$/, " and $1") : `${list.slice(0, 3).map((p) => p.name).join(", ")} and ${list.length - 3} more`;
+  list.length <= 3
+    ? list
+        .map((p) => p.name)
+        .join(", ")
+        .replace(/, ([^,]*)$/, " and $1")
+    : `${list
+        .slice(0, 3)
+        .map((p) => p.name)
+        .join(", ")} and ${list.length - 3} more`;
 
-export function ProductScopePicker({ campaign, onSaved, value, onChange, named = [], size = "md" }: ProductScopePickerProps) {
+export function ProductScopePicker({
+  campaign,
+  onSaved,
+  value,
+  onChange,
+  named = [],
+  size = "md",
+}: ProductScopePickerProps) {
   const catalogue = useCatalogue();
   const save = useSetCampaignScope();
   const toast = useToast();
-  // Round 6 (walk-through Must 1, worker T): a few tiles inline, the whole catalogue in the All products sheet.
+  // A few tiles inline, the whole catalogue in the All products sheet.
   const [all, setAll] = useState(false);
   const [own, setOwn] = useState<Scope>(() => ({
     collectionIds: campaign?.collectionIds ?? [],
@@ -82,15 +95,24 @@ export function ProductScopePicker({ campaign, onSaved, value, onChange, named =
     <Query query={catalogue} loading="Loading your catalogue">
       {({ products, collections }) => {
         const fromCollections = new Map<Id, string>();
-        for (const c of collections) if (scope.collectionIds.includes(c.id)) for (const id of c.productIds) if (!fromCollections.has(id)) fromCollections.set(id, c.name);
-        const total = new Set([...scope.productIds.filter((id) => products.some((p) => p.id === id && usable(p))), ...fromCollections.keys()]).size;
+        for (const c of collections)
+          if (scope.collectionIds.includes(c.id))
+            for (const id of c.productIds) if (!fromCollections.has(id)) fromCollections.set(id, c.name);
+        const total = new Set([
+          ...scope.productIds.filter((id) => products.some((p) => p.id === id && usable(p))),
+          ...fromCollections.keys(),
+        ]).size;
         const toggle = (key: keyof Scope, id: Id, on: boolean) =>
           set({ ...scope, [key]: on ? [...new Set([...scope[key], id])] : scope[key].filter((x) => x !== id) });
-        const pictures = (ids: Id[]) => ids.map((id) => products.find((p) => p.id === id)?.images[0]).filter((s): s is string => Boolean(s));
+        const pictures = (ids: Id[]) =>
+          ids.map((id) => products.find((p) => p.id === id)?.images[0]).filter((s): s is string => Boolean(s));
 
         const ready = products.filter(usable);
         // A product picked before its check (an older campaign) keeps its tile, with the way to check it.
-        const shown = [...ready.filter((p, i) => i < INLINE || scope.productIds.includes(p.id)), ...products.filter((p) => !usable(p) && scope.productIds.includes(p.id))];
+        const shown = [
+          ...ready.filter((p, i) => i < INLINE || scope.productIds.includes(p.id)),
+          ...products.filter((p) => !usable(p) && scope.productIds.includes(p.id)),
+        ];
         const waiting = products.filter((p) => !usable(p) && !scope.productIds.includes(p.id));
         const asked = waiting.filter((p) => named.includes(p.id));
         const next = asked.length ? asked : waiting;
@@ -98,7 +120,7 @@ export function ProductScopePicker({ campaign, onSaved, value, onChange, named =
           ? `Confirm ${names(asked)} first`
           : `${ready.length ? `${waiting.length} more ${waiting.length === 1 ? "product" : "products"}` : copy.count(waiting.length, "product")} to confirm`;
         const line = asked.length ? "Confirm what Fume read, and it is added here." : names(waiting);
-        // The one product panel (CHECK), beside the page; once she confirms, the product is ticked here.
+        // The one product panel (ProductCheckHost), beside the page; once she confirms, the product is ticked here.
         const check = (id: Id) =>
           openCheck(id, {
             over: "brief",
@@ -125,7 +147,13 @@ export function ProductScopePicker({ campaign, onSaved, value, onChange, named =
                       flag={ok ? undefined : "Not confirmed yet"}
                       action={
                         ok ? undefined : (
-                          <Button size="sm" variant="secondary" icon="circle-check" aria-label={`Confirm ${p.name}`} onClick={() => check(p.id)}>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            icon="circle-check"
+                            aria-label={`Confirm ${p.name}`}
+                            onClick={() => check(p.id)}
+                          >
                             Confirm
                           </Button>
                         )
@@ -137,7 +165,13 @@ export function ProductScopePicker({ campaign, onSaved, value, onChange, named =
             )}
             {ready.length > INLINE && <ProductSheetButton count={products.length} onClick={() => setAll(true)} />}
             {waiting.length > 0 && (
-              <Item as="button" type="button" variant="muted" data-reveal={asked.length ? "" : undefined} onClick={() => check(next[0].id)}>
+              <Item
+                as="button"
+                type="button"
+                variant="muted"
+                data-reveal={asked.length ? "" : undefined}
+                onClick={() => check(next[0].id)}
+              >
                 {next[0].images[0] ? (
                   <ItemMedia variant="image">
                     <img src={next[0].images[0]} alt="" />

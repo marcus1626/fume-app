@@ -1,7 +1,6 @@
-// Round 13 AGENCY (robot note 10-agency, 22 Oct 2026; PROPOSED): Check's number went from 7 to 8 during the chapter
-// with nothing on screen saying why. It is the Engine's fix of a creative coming back (the feedback the seed left
-// with the Engine, or feedback from Check): it waits for a check again. One toast says so where the agency's person
-// is, with the way to Check when they are not there; Check's own row already says "The Engine’s fix is back".
+// When the Engine's fix of a creative comes back it waits for a check again, so Check's number goes up. One toast says
+// why where the agency's person is, with the way to Check when they are not there; Check's own row says "The Engine’s
+// fix is back".
 import { useToast } from "@fume/ui";
 import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";

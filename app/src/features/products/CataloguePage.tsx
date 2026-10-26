@@ -1,8 +1,8 @@
-// Products (FLOWS §0 row 4, §3.1, §7 step 5): the customer's catalogue, image-led. Every product with its picture,
-// variants, category and collections, its state (verified, or it needs you) and who put it in: the Engine's
-// proposals from the website lie flat until someone opens the product and verifies its facts. Filter by category
-// (a tree) and by collection, search by name. Under the products, the collections: a campaign can take one whole,
-// and each can be its own delivery. A proposed collection gets Keep · Change · Remove.
+// Products (FLOWS §3.1, §7 step 5): the customer's catalogue, image-led. Every product with its picture, variants,
+// category and collections, its state (verified, or it needs you) and who put it in: what Fume read from the website
+// lies flat until someone opens the product and verifies its facts. Filter by category (a tree) and by collection,
+// search by name. Under the products, the collections: a campaign can take one whole, and each can be its own delivery.
+// A proposed collection gets Confirm · Change · Remove.
 import {
   Button,
   Icon,
@@ -54,7 +54,11 @@ export function CataloguePage() {
     decide.mutate(
       { kind: "collection", id: c.id, verdict },
       {
-        onSuccess: () => toast.done(verdict === "keep" ? `${c.name} is yours now` : `${c.name} removed`, verdict === "remove" ? { description: "Its products stay in the catalogue." } : undefined),
+        onSuccess: () =>
+          toast.done(
+            verdict === "keep" ? `${c.name} is yours now` : `${c.name} removed`,
+            verdict === "remove" ? { description: "Its products stay in the catalogue." } : undefined,
+          ),
         onError: (error) => toast.error("That wasn’t saved", { description: error.message }),
       },
     );
@@ -65,9 +69,19 @@ export function CataloguePage() {
       <PageHeader
         title="Products"
         description="Your catalogue: every product Fume makes creatives of, sorted into categories and collections. A product goes into a campaign once you have verified its facts."
-        meta={catalogue.data ? [copy.count(products.length, "product"), needYou ? `${needYou} need you` : "All verified", session.workspace.brandName] : undefined}
+        meta={
+          catalogue.data
+            ? [
+                copy.count(products.length, "product"),
+                needYou ? `${needYou} need you` : "All verified",
+                session.workspace.brandName,
+              ]
+            : undefined
+        }
         primaryAction={canEdit ? { label: "Add a product", icon: "plus", onSelect: () => setAdding(true) } : undefined}
-        secondaryActions={canEdit ? [{ label: "New collection", icon: "layers", onSelect: () => setMaking(true) }] : undefined}
+        secondaryActions={
+          canEdit ? [{ label: "New collection", icon: "layers", onSelect: () => setMaking(true) }] : undefined
+        }
       />
 
       {canEdit && (
@@ -101,7 +115,11 @@ export function CataloguePage() {
           const shown = all
             .filter((p) => !categoryIds || (p.categoryId && categoryIds.has(p.categoryId)))
             .filter((p) => collection === ALL || p.collectionIds?.includes(collection))
-            .filter((p) => !q || `${p.name} ${p.variant} ${p.variants?.map((v) => v.name).join(" ") ?? ""}`.toLowerCase().includes(q))
+            .filter(
+              (p) =>
+                !q ||
+                `${p.name} ${p.variant} ${p.variants?.map((v) => v.name).join(" ") ?? ""}`.toLowerCase().includes(q),
+            )
             .sort((a, b) => order[a.state] - order[b.state] || a.name.localeCompare(b.name));
           const filtering = Boolean(q) || top !== ALL || collection !== ALL;
           const clear = () => {
@@ -117,14 +135,24 @@ export function CataloguePage() {
                 title="Catalogue"
                 meta={filtering ? `${shown.length} of ${all.length}` : all.length}
                 titleId="catalogue-products"
-                text={needYou ? `${copy.count(needYou, "product")} ${needYou === 1 ? "needs" : "need"} you: open ${needYou === 1 ? "it" : "each one"} and verify its facts.` : undefined}
+                text={
+                  needYou
+                    ? `${copy.count(needYou, "product")} ${needYou === 1 ? "needs" : "need"} you: open ${needYou === 1 ? "it" : "each one"} and verify its facts.`
+                    : undefined
+                }
               >
                 <div className="ui-catalogue-filters">
                   <InputGroup role="search" className="ui-catalogue-search">
                     <InputGroupAddon>
                       <Icon name="search" />
                     </InputGroupAddon>
-                    <InputGroupInput aria-label="Search products" placeholder="Search products" value={query} onChange={(e) => setQuery(e.target.value)} onClear={() => setQuery("")} />
+                    <InputGroupInput
+                      aria-label="Search products"
+                      placeholder="Search products"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      onClear={() => setQuery("")}
+                    />
                     <InputGroupAddon align="inline-end">
                       <InputGroupButton clear aria-label="Clear the search" onClick={() => setQuery("")} />
                     </InputGroupAddon>
@@ -156,7 +184,13 @@ export function CataloguePage() {
                       <span className="ui-catalogue-filter-label" id="filter-subcategory">
                         In {categories.find((c) => c.id === top)?.name}
                       </span>
-                      <ToggleGroup type="single" size="sm" aria-labelledby="filter-subcategory" value={sub} onValueChange={(v) => setSub(v || ALL)}>
+                      <ToggleGroup
+                        type="single"
+                        size="sm"
+                        aria-labelledby="filter-subcategory"
+                        value={sub}
+                        onValueChange={(v) => setSub(v || ALL)}
+                      >
                         <ToggleGroupItem value={ALL}>All</ToggleGroupItem>
                         {children.map((c) => (
                           <ToggleGroupItem key={c.id} value={c.id}>
@@ -171,7 +205,13 @@ export function CataloguePage() {
                       <span className="ui-catalogue-filter-label" id="filter-collection">
                         Collection
                       </span>
-                      <ToggleGroup type="single" size="sm" aria-labelledby="filter-collection" value={collection} onValueChange={(v) => setCollection(v || ALL)}>
+                      <ToggleGroup
+                        type="single"
+                        size="sm"
+                        aria-labelledby="filter-collection"
+                        value={collection}
+                        onValueChange={(v) => setCollection(v || ALL)}
+                      >
                         <ToggleGroupItem value={ALL}>All</ToggleGroupItem>
                         {collections.map((c) => (
                           <ToggleGroupItem key={c.id} value={c.id}>
@@ -219,11 +259,20 @@ export function CataloguePage() {
                 }
               >
                 {collections.length === 0 ? (
-                  <Nothing icon="layers" title="No collections yet" text="Group products into a season, a launch or a line, such as SS27." />
+                  <Nothing
+                    icon="layers"
+                    title="No collections yet"
+                    text="Group products into a season, a launch or a line, such as SS27."
+                  />
                 ) : (
                   <div className="ui-catalogue-grid ui-catalogue-grid--collections">
                     {collections.map((c) => (
-                      <CollectionCard key={c.id} collection={c} onDecide={canDecide ? (v) => onDecide(c, v) : undefined} deciding={decide.isPending} />
+                      <CollectionCard
+                        key={c.id}
+                        collection={c}
+                        onDecide={canDecide ? (v) => onDecide(c, v) : undefined}
+                        deciding={decide.isPending}
+                      />
                     ))}
                   </div>
                 )}
@@ -244,13 +293,20 @@ export function CataloguePage() {
       </Query>
 
       {canEdit && (
-        // Round 6: one product starts with its kind; many come in by CSV.
+        // One product starts with its kind; many come in by CSV.
         <>
-          <AddProductFlow open={adding} onOpenChange={setAdding} onAdded={(p) => navigate(`/brand/products/${p.id}`)} onCsv={() => setCsv(true)} />
+          <AddProductFlow
+            open={adding}
+            onOpenChange={setAdding}
+            onAdded={(p) => navigate(`/brand/products/${p.id}`)}
+            onCsv={() => setCsv(true)}
+          />
           <ImportSourceDialog source={csv ? "csv" : null} onOpenChange={setCsv} />
         </>
       )}
-      {canDecide && <ChangeCollectionDialog collection={changing} onOpenChange={(open) => !open && setChanging(null)} />}
+      {canDecide && (
+        <ChangeCollectionDialog collection={changing} onOpenChange={(open) => !open && setChanging(null)} />
+      )}
     </Page>
   );
 }

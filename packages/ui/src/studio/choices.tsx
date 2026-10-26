@@ -5,7 +5,15 @@
 //   StudioToggle     on or off (Switch, small, on the label line)
 //   StudioChips      several of a few (ToggleGroup multiple, small pills that wrap)
 import { SegmentedControl, SegmentedOption } from "../controls/segmented";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../controls/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../controls/select";
 import { Switch } from "../controls/switch";
 import { ToggleGroup, ToggleGroupItem } from "../controls/toggle";
 import { StudioRow } from "./row";
@@ -22,7 +30,13 @@ export function StudioSegmented({ value, onChange, label, id, disabled, options,
   const sid = studioId(label, id);
   return (
     <StudioRow label={label} labelId={`${sid}-l`} help={help} disabled={disabled}>
-      <SegmentedControl id={sid} className="ui-sc-seg" aria-labelledby={`${sid}-l`} value={value} onValueChange={(v) => !disabled && onChange(v)}>
+      <SegmentedControl
+        id={sid}
+        className="ui-sc-seg"
+        aria-labelledby={`${sid}-l`}
+        value={value}
+        onValueChange={(v) => !disabled && onChange(v)}
+      >
         {options.map((o) => (
           <SegmentedOption key={o.value} value={o.value} disabled={disabled}>
             {o.label}
@@ -41,7 +55,17 @@ export interface StudioSelectProps extends StudioControlProps<string> {
   help?: string;
 }
 
-export function StudioSelect({ value, onChange, label, id, disabled, options, presets = [], placeholder, help }: StudioSelectProps) {
+export function StudioSelect({
+  value,
+  onChange,
+  label,
+  id,
+  disabled,
+  options,
+  presets = [],
+  placeholder,
+  help,
+}: StudioSelectProps) {
   const sid = studioId(label, id);
   const isPreset = (o: StudioOption) => presets.find((p) => p.name.toLowerCase() === o.label.toLowerCase());
   const brandOptions = options.filter(isPreset);
@@ -105,8 +129,24 @@ export interface StudioChipsProps extends StudioControlProps<string[]> {
 export function StudioChips({ value, onChange, label, id, disabled, options, help }: StudioChipsProps) {
   const sid = studioId(label, id);
   return (
-    <StudioRow label={label} labelId={`${sid}-l`} readout={value.length ? `${value.length} of ${options.length}` : undefined} help={help} disabled={disabled}>
-      <ToggleGroup id={sid} type="multiple" size="sm" variant="outline" className="ui-sc-chips" aria-labelledby={`${sid}-l`} value={value} onValueChange={onChange} disabled={disabled}>
+    <StudioRow
+      label={label}
+      labelId={`${sid}-l`}
+      readout={value.length ? `${value.length} of ${options.length}` : undefined}
+      help={help}
+      disabled={disabled}
+    >
+      <ToggleGroup
+        id={sid}
+        type="multiple"
+        size="sm"
+        variant="outline"
+        className="ui-sc-chips"
+        aria-labelledby={`${sid}-l`}
+        value={value}
+        onValueChange={onChange}
+        disabled={disabled}
+      >
         {options.map((o) => (
           <ToggleGroupItem key={o.value} value={o.value}>
             {o.label}

@@ -7,12 +7,15 @@ import type { Campaign, Collection, Creative, Delivery, Direction, Format, Id, P
 const FORMAT_ORDER: Format[] = ["feed", "square", "story"];
 
 /** The product a creative shows, when the campaign tells it. */
-export const productOf = (_c: Creative, campaign: Campaign): Id | undefined => (campaign.productIds.length === 1 ? campaign.productIds[0] : undefined);
+export const productOf = (_c: Creative, campaign: Campaign): Id | undefined =>
+  campaign.productIds.length === 1 ? campaign.productIds[0] : undefined;
 
 /** Does this creative belong to this collection? */
 export function inCollection(c: Creative, campaign: Campaign, collection: Collection): boolean {
   const product = productOf(c, campaign);
-  return product ? collection.productIds.includes(product) : campaign.productIds.some((id) => collection.productIds.includes(id));
+  return product
+    ? collection.productIds.includes(product)
+    : campaign.productIds.some((id) => collection.productIds.includes(id));
 }
 
 export interface Readiness {
@@ -32,12 +35,14 @@ export interface Readiness {
 function measure(creatives: Creative[], deliveries: Delivery[], collection?: Collection): Readiness {
   const approved = creatives.filter((c) => c.current.state === "approved");
   const delivered = creatives.filter((c) => c.current.state === "delivered").length;
-  // Any of the campaign's deliveries counts (round 8, TASK-16): what a collection delivery holds is delivered for the
-  // whole campaign too, so the same creatives are never offered twice. The row opens the newest one that holds them.
+  // Any of the campaign's deliveries counts: what a collection delivery holds is delivered for the whole campaign too,
+  // so the same creatives are never offered twice. The row opens the newest one that holds them.
   const packed = new Set(deliveries.flatMap((d) => d.creativeIds));
   const delivery =
     approved.length > 0 && approved.every((c) => packed.has(c.id))
-      ? [...deliveries].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).find((d) => approved.some((c) => d.creativeIds.includes(c.id)))
+      ? [...deliveries]
+          .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+          .find((d) => approved.some((c) => d.creativeIds.includes(c.id)))
       : undefined;
   return {
     collection,
@@ -51,12 +56,23 @@ function measure(creatives: Creative[], deliveries: Delivery[], collection?: Col
 }
 
 /** One row per collection the campaign takes, then the whole campaign. */
-export function readiness(campaign: Campaign, creatives: Creative[], collections: Collection[], deliveries: Delivery[]): Readiness[] {
+export function readiness(
+  campaign: Campaign,
+  creatives: Creative[],
+  collections: Collection[],
+  deliveries: Delivery[],
+): Readiness[] {
   const mine = deliveries.filter((d) => d.campaignId === campaign.id);
   const rows = (campaign.collectionIds ?? [])
     .map((id) => collections.find((c) => c.id === id))
     .filter((c): c is Collection => Boolean(c))
-    .map((cl) => measure(creatives.filter((c) => inCollection(c, campaign, cl)), mine, cl));
+    .map((cl) =>
+      measure(
+        creatives.filter((c) => inCollection(c, campaign, cl)),
+        mine,
+        cl,
+      ),
+    );
   return [...rows, measure(creatives, mine)];
 }
 
@@ -65,7 +81,10 @@ export function readinessLine(r: Readiness, name: string): string {
   if (r.total === 0) return "No creatives yet";
   if (r.delivery) return `In a delivery · ${r.approved} approved`;
   if (r.ready) return `${name} is ready to deliver · ${r.approved} approved`;
-  if (r.approved === 0) return r.delivered ? `${r.delivered} delivered · ${r.underWay} still under way` : `Nothing approved yet · ${r.underWay} under way`;
+  if (r.approved === 0)
+    return r.delivered
+      ? `${r.delivered} delivered · ${r.underWay} still under way`
+      : `Nothing approved yet · ${r.underWay} under way`;
   return `${r.approved} of ${r.total} approved · ${r.underWay} still under way`;
 }
 
@@ -109,11 +128,17 @@ export function deliveryTree(
   const collections = catalogue?.collections ?? [];
   const products = catalogue?.products ?? [];
   const scoped = delivery.collectionId ? collections.find((c) => c.id === delivery.collectionId) : undefined;
-  const campaignCollections = (campaign.collectionIds ?? []).map((id) => collections.find((c) => c.id === id)).filter((c): c is Collection => Boolean(c));
+  const campaignCollections = (campaign.collectionIds ?? [])
+    .map((id) => collections.find((c) => c.id === id))
+    .filter((c): c is Collection => Boolean(c));
 
-  const collectionOf = (c: Creative): Collection | undefined => scoped ?? campaignCollections.find((cl) => inCollection(c, campaign, cl));
+  const collectionOf = (c: Creative): Collection | undefined =>
+    scoped ?? campaignCollections.find((cl) => inCollection(c, campaign, cl));
 
-  const groups = new Map<string, { collection?: Collection; byProduct: Map<string, { productId?: Id; byDirection: Map<Id, Creative[]> }> }>();
+  const groups = new Map<
+    string,
+    { collection?: Collection; byProduct: Map<string, { productId?: Id; byDirection: Map<Id, Creative[]> }> }
+  >();
   for (const c of creatives) {
     const collection = collectionOf(c);
     const productId = productOf(c, campaign);
@@ -132,7 +157,12 @@ export function deliveryTree(
         creatives: [...list].sort(byMasterVariantFormat),
       }));
       dirs.sort((a, b) => (a.direction?.letter ?? "").localeCompare(b.direction?.letter ?? ""));
-      return { productId: p.productId, product: products.find((x) => x.id === p.productId), directions: dirs, count: dirs.reduce((n, d) => n + d.creatives.length, 0) };
+      return {
+        productId: p.productId,
+        product: products.find((x) => x.id === p.productId),
+        directions: dirs,
+        count: dirs.reduce((n, d) => n + d.creatives.length, 0),
+      };
     });
     return { collection: g.collection, products: productGroups, count: productGroups.reduce((n, p) => n + p.count, 0) };
   });

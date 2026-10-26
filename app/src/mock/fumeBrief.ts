@@ -4,8 +4,18 @@
 import type { Campaign, Channel, Product } from "../contract";
 
 const OCCASIONS: [string, string][] = [
-  ["black friday", "Black Friday"], ["christmas", "Christmas"], ["jul", "Christmas"], ["mother", "Mother’s Day"], ["morsdag", "Mother’s Day"],
-  ["valentine", "Valentine’s Day"], ["summer", "Summer"], ["sommer", "Summer"], ["spring", "Spring"], ["vår", "Spring"], ["autumn", "Autumn"], ["høst", "Autumn"],
+  ["black friday", "Black Friday"],
+  ["christmas", "Christmas"],
+  ["jul", "Christmas"],
+  ["mother", "Mother’s Day"],
+  ["morsdag", "Mother’s Day"],
+  ["valentine", "Valentine’s Day"],
+  ["summer", "Summer"],
+  ["sommer", "Summer"],
+  ["spring", "Spring"],
+  ["vår", "Spring"],
+  ["autumn", "Autumn"],
+  ["høst", "Autumn"],
 ];
 
 export const occasionOf = (said: string) => OCCASIONS.find(([k]) => new RegExp(`\\b${k}`).test(said))?.[1];
@@ -16,13 +26,15 @@ export function productsNamed(said: string, products: Product[]): Product[] {
   const whole = products.filter((p) => t.includes(p.name.toLowerCase()));
   const words = new Map<string, Product[]>();
   for (const p of products)
-    for (const w of p.name.toLowerCase().split(/\s+/))
-      if (w.length >= 4) words.set(w, [...(words.get(w) ?? []), p]);
-  const byWord = [...words.entries()].filter(([w, list]) => list.length === 1 && new RegExp(`\\b${w}s?\\b`).test(t)).map(([, [p]]) => p);
+    for (const w of p.name.toLowerCase().split(/\s+/)) if (w.length >= 4) words.set(w, [...(words.get(w) ?? []), p]);
+  const byWord = [...words.entries()]
+    .filter(([w, list]) => list.length === 1 && new RegExp(`\\b${w}s?\\b`).test(t))
+    .map(([, [p]]) => p);
   return [...new Set([...whole, ...byWord])];
 }
 
-const listWords = (names: string[]) => (names.length <= 1 ? names.join("") : `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`);
+const listWords = (names: string[]) =>
+  names.length <= 1 ? names.join("") : `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
 
 export function campaignName(occasion: string | undefined, products: Product[]): string {
   const names = products.map((p) => p.name);
@@ -32,12 +44,22 @@ export function campaignName(occasion: string | undefined, products: Product[]):
   return names.length ? `${listWords(names.slice(0, 2))}${names.length > 2 ? " and more" : ""}` : "New campaign";
 }
 
-const channelWords: Record<Channel, string> = { paid_social: "paid social", organic_social: "organic social", email: "email", product_page: "the product page", display: "display ads" };
+const channelWords: Record<Channel, string> = {
+  paid_social: "paid social",
+  organic_social: "organic social",
+  email: "email",
+  product_page: "the product page",
+  display: "display ads",
+};
 
 /** "Sell Evening Candle as a Christmas gift in paid social." */
 export function objectiveOf(occasion: string | undefined, products: Product[], channels: Channel[]): string {
   const what = products.length ? listWords(products.map((p) => p.name)) : "the products";
-  const when = occasion ? (/christmas|mother|valentine/i.test(occasion) ? ` as a ${occasion} gift` : ` for ${occasion}`) : "";
+  const when = occasion
+    ? /christmas|mother|valentine/i.test(occasion)
+      ? ` as a ${occasion} gift`
+      : ` for ${occasion}`
+    : "";
   const where = channels.length ? ` in ${listWords(channels.map((c) => channelWords[c]))}` : "";
   return `Sell ${what}${when}${where}.`;
 }
@@ -54,7 +76,11 @@ export function audienceWords(answer: string): string {
 /** An open campaign with the same occasion (or the same name). */
 export function sameCampaign(campaigns: Campaign[], occasion: string | undefined, name: string): Campaign | undefined {
   const open = campaigns.filter((c) => !["closed", "delivered"].includes(c.state));
-  return open.find((c) => (occasion && c.name.toLowerCase().includes(occasion.toLowerCase())) || c.name.toLowerCase() === name.toLowerCase());
+  return open.find(
+    (c) =>
+      (occasion && c.name.toLowerCase().includes(occasion.toLowerCase())) ||
+      c.name.toLowerCase() === name.toLowerCase(),
+  );
 }
 
 export const productQuestion = {
@@ -71,7 +97,8 @@ export const productQuestion = {
 /** The audience when the first line names it ("existing customers", "nye kunder"), so Fume does not ask again. */
 export function audienceIn(said: string): string | undefined {
   const t = said.toLowerCase();
-  const existing = /\b(existing|current|loyal|returning|our)\s+customers\b|eksisterende kunder|faste kunder|våre kunder/.test(t);
+  const existing =
+    /\b(existing|current|loyal|returning|our)\s+customers\b|eksisterende kunder|faste kunder|våre kunder/.test(t);
   const fresh = /\bnew\s+(customers|audience)\b|nye kunder/.test(t);
   if ((existing && fresh) || /\bboth\b[^.]*customers|begge/.test(t)) return "Existing and new customers";
   if (existing) return "Existing customers";
@@ -100,12 +127,19 @@ export function dateOptions(occasion: string | undefined): { text: string; optio
     "Valentine’s Day": ["From 1 Feb", "On 14 Feb"],
   };
   // Fume's line leads into the card and never repeats its question (a line equal to it is not shown).
-  if (occasion && fit[occasion]) return { text: `For ${occasion}, we would go live in good time. Tap a day, or write your own.`, options: [...fit[occasion], "No fixed date"] };
+  if (occasion && fit[occasion])
+    return {
+      text: `For ${occasion}, we would go live in good time. Tap a day, or write your own.`,
+      options: [...fit[occasion], "No fixed date"],
+    };
   return { text: "When should it go live?", options: ["In two weeks", "In a month", "No fixed date"] };
 }
 
 /** The line every creative carries, as Fume would put it for the occasion, and the brand's last approved one. */
-export function messageOptions(occasion: string | undefined, lastApproved: string | undefined): { text: string; options: string[] } {
+export function messageOptions(
+  occasion: string | undefined,
+  lastApproved: string | undefined,
+): { text: string; options: string[] } {
   const byOccasion: Record<string, string> = {
     Christmas: "Something soft, given.",
     "Black Friday": "The ritual, for less.",
@@ -117,7 +151,10 @@ export function messageOptions(occasion: string | undefined, lastApproved: strin
   const ours = (occasion && byOccasion[occasion]) || "Made to be felt.";
   const options = [...new Set([ours, ...(lastApproved ? [lastApproved] : [])])];
   return {
-    text: options.length > 1 ? "Last thing. The first line is our suggestion, the second is the one from your last brief. Or write your own." : "Last thing. Tap our suggestion, or write your own line.",
+    text:
+      options.length > 1
+        ? "Last thing. The first line is our suggestion, the second is the one from your last brief. Or write your own."
+        : "Last thing. Tap our suggestion, or write your own line.",
     options,
   };
 }
@@ -137,5 +174,7 @@ export function workingDaysOn(from: string, days: number): string {
     d.setUTCDate(d.getUTCDate() + 1);
     if (d.getUTCDay() !== 0 && d.getUTCDay() !== 6) left--;
   }
-  return new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "Europe/Oslo" }).format(d).replace(",", "");
+  return new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "Europe/Oslo" })
+    .format(d)
+    .replace(",", "");
 }

@@ -1,16 +1,10 @@
-// Brand › Products (UX review 15 Oct, §2.3): the catalogue as a picture grid, one tab of Brand. Products are part of
-// what Fume knows about the brand, so they live beside the board and the taste, not as a place of their own. A
-// product that needs you comes first: Fume read lines about it that you have not confirmed, and nothing about it
-// ships until you have (Product Vision §4.3). Under the products, the collections. Each product keeps its own page
-// (/brand/products/:id); /products comes here.
-// Round 8 (walk-through 19 Oct, LOAD-14, TASK-6, TASK-13; PROPOSED): a card is the picture and the name, plus "Check"
-// while it needs her; the products that need her are checked one at a time from one pill, "Check 7 products" (the
-// confirm queue), never by opening seven long pages. A product added by hand lands here, in the list, with a toast
-// that says what is left.
-// Round 9 (desktop review 19 Oct, DLAY-13, DLAY-15, DLOAD-1; PROPOSED): the tab's one action, "Confirm 7 products"
-// (Ink), sits right on the section title's line with Import and Add as quiet pills to its left; the card's chip
-// says "To confirm"; Add a product and Import open as the right panel, and a product added lands in the grid, shown
-// and marked for a moment (#product-<id>).
+// Brand › Products: the catalogue as a picture grid, one tab of Brand. Products are part of what Fume knows about the
+// brand, so they live beside the board and the taste. Nothing about a product ships until she confirms what Fume read
+// (Product Vision §4.3). The grid has three groups, New, Not confirmed yet and Confirmed; under the products, the
+// collections. Each product keeps its own page (/brand/products/:id); /products comes here.
+// The products that need her are confirmed one at a time from one pill, "Confirm 7 products" (the confirm queue, the
+// tab's one Ink action), never by opening seven long pages. Add a product and Import open as the right panel; a product
+// added lands in the grid, shown and marked for a moment (#product-<id>).
 import { Button, Icon, InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, useToast } from "@fume/ui";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -31,13 +25,28 @@ const order: Record<Product["state"], number> = {
   verified: 2,
 };
 
-/** The three groups of the Products tab (#44): what Fume found since she last looked, what waits for her, what is
- *  confirmed. Empty groups are left out. */
+/** The three groups of the Products tab: what Fume found since she last looked, what waits for her, what is confirmed.
+ *  Empty groups are left out. */
 function productGroups(list: Product[]) {
   return [
-    { id: "new", title: "New", line: "Fume found these since you last looked. Confirm them before they go into a campaign.", items: list.filter((p) => p.isNew) },
-    { id: "open", title: "Not confirmed yet", line: "Fume uses a product in a campaign once you confirm what it read.", items: list.filter((p) => !p.isNew && p.state !== "verified") },
-    { id: "confirmed", title: "Confirmed", line: "Every creative shows these as they are.", items: list.filter((p) => !p.isNew && p.state === "verified") },
+    {
+      id: "new",
+      title: "New",
+      line: "Fume found these since you last looked. Confirm them before they go into a campaign.",
+      items: list.filter((p) => p.isNew),
+    },
+    {
+      id: "open",
+      title: "Not confirmed yet",
+      line: "Fume uses a product in a campaign once you confirm what it read.",
+      items: list.filter((p) => !p.isNew && p.state !== "verified"),
+    },
+    {
+      id: "confirmed",
+      title: "Confirmed",
+      line: "Every creative shows these as they are.",
+      items: list.filter((p) => !p.isNew && p.state === "verified"),
+    },
   ].filter((g) => g.items.length > 0);
 }
 
@@ -46,7 +55,8 @@ export function ProductsContent() {
   const catalogue = useCatalogue();
   const { canEdit, canDecide } = useCatalogueRights();
   const importJob = useProductImport().data;
-  const importing = canEdit && (importJob?.state === "mapping" || importJob?.state === "review" || importJob?.state === "done");
+  const importing =
+    canEdit && (importJob?.state === "mapping" || importJob?.state === "review" || importJob?.state === "done");
   const decide = useDecide();
   const toast = useToast();
   const navigate = useNavigate();
@@ -97,7 +107,11 @@ export function ProductsContent() {
           const needYou = all.filter((p) => p.state === "needs_you").length;
           const q = query.trim().toLowerCase();
           const shown = all
-            .filter((p) => !q || `${p.name} ${p.variant} ${p.variants?.map((v) => v.name).join(" ") ?? ""}`.toLowerCase().includes(q))
+            .filter(
+              (p) =>
+                !q ||
+                `${p.name} ${p.variant} ${p.variants?.map((v) => v.name).join(" ") ?? ""}`.toLowerCase().includes(q),
+            )
             .sort((a, b) => order[a.state] - order[b.state] || a.name.localeCompare(b.name));
           return (
             <>
@@ -108,8 +122,8 @@ export function ProductsContent() {
                 text={needYou ? undefined : "Every product is confirmed."}
                 action={
                   canEdit ? (
-                    // Round 7: many products come in by Import products (website, CSV, zip); one by Add a product. Round 9
-                    // (DLAY-13): the one Ink action, the confirm queue, last on the title's line; the two quiet pills before it.
+                    // Many products come in by Import products (website, CSV, zip), one by Add a product; the one Ink
+                    // action, the confirm queue, comes last on the title's line.
                     <span className="ui-import-entry">
                       <ImportProducts />
                       <Button variant="quiet" size="sm" icon="plus" onClick={() => setAdding(true)}>
@@ -154,7 +168,7 @@ export function ProductsContent() {
                     }
                   />
                 ) : (
-                  // Round 13 (#44): New, Not confirmed yet and Confirmed, each a group with its own title
+                  // New, Not confirmed yet and Confirmed, each a group with its own title
                   productGroups(shown).map((g) => (
                     <section key={g.id} className="ui-product-group" aria-labelledby={`products-${g.id}`}>
                       <div className="ui-image-group-head">
@@ -166,7 +180,12 @@ export function ProductsContent() {
                       <ul className="ui-catalogue-grid" aria-labelledby={`products-${g.id}`}>
                         {g.items.map((p) => (
                           <li key={p.id} id={`product-${p.id}`}>
-                            <ProductCard product={p} categories={categories} collections={collections} canEdit={canEdit} />
+                            <ProductCard
+                              product={p}
+                              categories={categories}
+                              collections={collections}
+                              canEdit={canEdit}
+                            />
                           </li>
                         ))}
                       </ul>
@@ -188,11 +207,20 @@ export function ProductsContent() {
                 }
               >
                 {collections.length === 0 ? (
-                  <Nothing icon="layers" title="No collections yet" text="Group products into a season, a launch or a line, such as SS27." />
+                  <Nothing
+                    icon="layers"
+                    title="No collections yet"
+                    text="Group products into a season, a launch or a line, such as SS27."
+                  />
                 ) : (
                   <div className="ui-catalogue-grid ui-catalogue-grid--collections">
                     {collections.map((c) => (
-                      <CollectionCard key={c.id} collection={c} onDecide={canDecide ? (v) => onDecide(c, v) : undefined} deciding={decide.isPending} />
+                      <CollectionCard
+                        key={c.id}
+                        collection={c}
+                        onDecide={canDecide ? (v) => onDecide(c, v) : undefined}
+                        deciding={decide.isPending}
+                      />
                     ))}
                   </div>
                 )}
@@ -213,7 +241,7 @@ export function ProductsContent() {
       </Query>
 
       {canEdit && (
-        // Round 6: one product starts with its kind; many come in by CSV.
+        // One product starts with its kind; many come in by CSV.
         <>
           <AddProductFlow
             open={adding}
@@ -225,7 +253,9 @@ export function ProductsContent() {
           <ImportSourceDialog source={csv ? "csv" : null} onOpenChange={setCsv} />
         </>
       )}
-      {canDecide && <ChangeCollectionDialog collection={changing} onOpenChange={(open) => !open && setChanging(null)} />}
+      {canDecide && (
+        <ChangeCollectionDialog collection={changing} onOpenChange={(open) => !open && setChanging(null)} />
+      )}
     </>
   );
 }

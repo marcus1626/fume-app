@@ -1,9 +1,10 @@
 #!/usr/bin/env node
-// Copies the design system from the brand repository (marcus1626/Fume-Brand) into this one. The brand repository is
-// its only source: change tokens, components, icons, fonts, the logo or the rules there, then run this.
+// Copies the design system from the brand repository (marcus1626/Fume-Brand) into this one. Shared tokens,
+// components, icons, fonts, the logo and the rules are changed there first, then synced here. It never deletes: a file
+// that exists only here (an app screen's own stylesheet) is kept and listed.
 // Usage: node tools/sync-design-system.mjs [path to a Fume-Brand checkout]   (default: ../Fume-Brand)
-import { cpSync, existsSync, rmSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { cpSync, existsSync, readdirSync, statSync } from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -14,15 +15,33 @@ if (!existsSync(join(brand, "design-system/tokens/ui.css"))) {
 }
 
 /** The folders that come from the brand repository, replaced whole on every sync. */
-export const SYNCED = ["design-system", "tokens", "assets/fonts", "assets/logo", "rules", "tools/gate"];
+export const SYNCED = [
+  "design-system",
+  "tokens",
+  "assets/fonts",
+  "assets/logo",
+  "rules",
+  "tools/gate",
+  "tools/tokens",
+  "tools/icons",
+];
+
+const files = (dir) =>
+  existsSync(dir)
+    ? readdirSync(dir).flatMap((name) => {
+        const p = join(dir, name);
+        return statSync(p).isDirectory() ? files(p) : [p];
+      })
+    : [];
 
 for (const path of SYNCED) {
-  rmSync(join(root, path), { recursive: true, force: true });
   cpSync(join(brand, path), join(root, path), {
     recursive: true,
     // The render audit needs the brand repository's review board, so it stays there.
     filter: (src) => !/\/tools\/gate\/audit[^/]*\.mjs$/.test(src),
   });
-  console.log(`synced ${path}`);
+  const onlyHere = files(join(root, path)).filter((f) => !existsSync(join(brand, relative(root, f))));
+  console.log(`synced ${path}${onlyHere.length ? `; kept ${onlyHere.length} files that Fume-Brand does not have:` : ""}`);
+  for (const f of onlyHere) console.log(`  ${relative(root, f)}`);
 }
 console.log("Now run: npm run check");

@@ -10,19 +10,17 @@
 // to the newest. The region is a polite live region, so each toast is read out.
 // Words: say what happened, the actor named ("3 creatives approved", "Delivery failed"), no exclamation marks.
 // Error: the icon alone is Rouge, the words say what went wrong. Never Amber, never green.
-// Round 8 (walk-through 19 Oct, MOB-19, ONB-17; PROPOSED 19 Oct 2026): a toast is for what happens out of sight or
-// what can be undone, never for a change the item already shows. It leaves after 4 s (8 s with an action or for an
-// error), leaves when the page changes (leave(): the app calls it on a change of path; a toast raised with the move,
-// one with an action and a loading one stay), shows its whole sentence (it wraps, never cut), and rises above whatever
-// sits at the foot of the screen: the tab bar, a floating action bar, a docked composer, a sheet's or dialog's footer,
-// or anything marked [data-ui-foot].
-// Round 9 (desktop review DTSK-19; PROPOSED 19 Oct 2026): on a desk (1024 px and wider) toasts sit at the bottom left
-// of the main column, 24 in from its edge (the sidebar's side), away from the composer's send and the viewer's Approve
-// at the centre. A screen can name where its toasts go instead: [data-ui-toast-anchor] on a column puts them at its
-// bottom left; [data-ui-toast-anchor="top"] at its top left (the viewer's comments panel). Up to three show; the same
-// message raised again while it shows does not stack a second toast: the open one takes the new words and starts its
-// time again. A toast never covers the control in use: what sits at the foot under it, and the element with focus
-// when it is low on the screen, push it up.
+// A toast is for what happens out of sight or what can be undone, never for a change the item already shows. It leaves
+// after 4 s (8 s with an action or for an error), leaves when the page changes (leave(): the app calls it on a change
+// of path; a toast raised with the move, one with an action and a loading one stay), shows its whole sentence (it
+// wraps, never cut), and rises above whatever sits at the foot of the screen: the tab bar, a floating action bar, a
+// docked composer, a sheet's or dialog's footer, or anything marked [data-ui-foot].
+// On a desk (1024 px and wider) toasts sit at the bottom left of the main column, 24 in from its edge (the sidebar's
+// side), away from the composer's send and the viewer's Approve at the centre. A screen can name where its toasts go
+// instead: [data-ui-toast-anchor] on a column puts them at its bottom left; [data-ui-toast-anchor="top"] at its top
+// left (the viewer's comments panel). The same message raised again while it shows does not stack a second toast: the
+// open one takes the new words and starts its time again. A toast never covers the control in use: what sits at the
+// foot under it, and the element with focus when it is low on the screen, push it up.
 import {
   createContext,
   useContext,
@@ -87,7 +85,11 @@ export interface ToastApi {
   /** A loading toast that becomes done or error when the promise settles. */
   promise: <T>(
     promise: Promise<T>,
-    messages: { loading: string; done: string | ((value: T) => Partial<ToastOptions>); error: string | ((error: unknown) => Partial<ToastOptions>) },
+    messages: {
+      loading: string;
+      done: string | ((value: T) => Partial<ToastOptions>);
+      error: string | ((error: unknown) => Partial<ToastOptions>);
+    },
   ) => ToastHandle;
   /** Dismiss one toast by id, or all of them. */
   dismiss: (id?: string | number) => void;
@@ -96,7 +98,12 @@ export interface ToastApi {
   leave: () => void;
 }
 
-const ICON: Record<ToastType, IconName> = { done: "circle-check", error: "circle-alert", loading: "loader-circle", info: "info" };
+const ICON: Record<ToastType, IconName> = {
+  done: "circle-check",
+  error: "circle-alert",
+  loading: "loader-circle",
+  info: "info",
+};
 const MAX_SHOWN = 3;
 /** A toast raised this close before a change of place was raised with the move ("Brief sent", then the campaign opens). */
 const MOVE_MS = 1200;
@@ -127,7 +134,8 @@ function placement(): Place {
   const r = column.getBoundingClientRect();
   const w = Math.max(0, Math.min(width, r.width - 2 * inset));
   if (w < 240) return { mode: "center" };
-  if (anchor?.dataset.uiToastAnchor === "top") return { mode: "top", x: Math.round(r.left + inset), y: Math.round(Math.max(0, r.top) + inset), w };
+  if (anchor?.dataset.uiToastAnchor === "top")
+    return { mode: "top", x: Math.round(r.left + inset), y: Math.round(Math.max(0, r.top) + inset), w };
   return { mode: "start", x: Math.round(r.left + inset), w };
 }
 
@@ -216,7 +224,9 @@ export function ToastProvider({ children, label = "Notifications (Alt+T)", conta
   const durationOf = (r: Rec) => {
     if (r.type === "loading") return Infinity;
     if (r.duration) return r.duration;
-    return r.type === "error" || r.action ? tokenMs("--ui-toast-duration-long", 8000) : tokenMs("--ui-toast-duration", 5000);
+    return r.type === "error" || r.action
+      ? tokenMs("--ui-toast-duration-long", 8000)
+      : tokenMs("--ui-toast-duration", 5000);
   };
   const stop = (r: Rec) => {
     if (r.timer) {
@@ -293,11 +303,21 @@ export function ToastProvider({ children, label = "Notifications (Alt+T)", conta
     const toast = (input: ToastOptions | string): ToastHandle => {
       const o: ToastOptions = typeof input === "string" ? { title: input } : input;
       // the same message again while it shows: the open toast takes it and starts its time again
-      const same = live().find(
-        (x) => (o.id != null ? x.id === o.id : x.title === o.title && x.type === (o.type ?? "done") && x.description === o.description),
+      const same = live().find((x) =>
+        o.id != null
+          ? x.id === o.id
+          : x.title === o.title && x.type === (o.type ?? "done") && x.description === o.description,
       );
       if (same) {
-        Object.assign(same, { title: o.title, type: o.type ?? same.type, description: o.description, meta: o.meta, action: o.action, duration: o.duration, born: Date.now() });
+        Object.assign(same, {
+          title: o.title,
+          type: o.type ?? same.type,
+          description: o.description,
+          meta: o.meta,
+          action: o.action,
+          duration: o.duration,
+          born: Date.now(),
+        });
         same.left = undefined;
         start(same);
         render();
@@ -322,7 +342,8 @@ export function ToastProvider({ children, label = "Notifications (Alt+T)", conta
       render();
       return handleOf(r);
     };
-    const typed = (type: ToastType) => (title: string, options?: Omit<ToastOptions, "title" | "type">) => toast({ ...options, title, type });
+    const typed = (type: ToastType) => (title: string, options?: Omit<ToastOptions, "title" | "type">) =>
+      toast({ ...options, title, type });
     apiRef.current = {
       toast,
       done: typed("done"),
@@ -338,7 +359,9 @@ export function ToastProvider({ children, label = "Notifications (Alt+T)", conta
         return t;
       },
       dismiss: (id) => {
-        recs.current.filter((r) => r.state === "open" && (id == null || r.id === id)).forEach((r) => dismissRef.current(r));
+        recs.current
+          .filter((r) => r.state === "open" && (id == null || r.id === id))
+          .forEach((r) => dismissRef.current(r));
       },
       leave: () => {
         const now = Date.now();
@@ -383,7 +406,8 @@ export function ToastProvider({ children, label = "Notifications (Alt+T)", conta
     const measure = () => {
       const p = placement();
       setPlace((old) => (old.mode === p.mode && old.x === p.x && old.y === p.y && old.w === p.w ? old : p));
-      const w = p.w ?? Math.min(tokenPx("--ui-toast-width", 400), window.innerWidth - 2 * tokenPx("--ui-overlay-margin", 16));
+      const w =
+        p.w ?? Math.min(tokenPx("--ui-toast-width", 400), window.innerWidth - 2 * tokenPx("--ui-overlay-margin", 16));
       const x = p.x ?? (window.innerWidth - w) / 2;
       setClear(p.mode === "top" ? 0 : footClearance(x, x + w));
     };
@@ -426,7 +450,7 @@ export function ToastProvider({ children, label = "Notifications (Alt+T)", conta
     >
       <ol className="ui-toaster-list">
         {recs.current.map((r) => {
-          const index = r.state === "open" ? order.indexOf(r) : r.frozen ?? 0;
+          const index = r.state === "open" ? order.indexOf(r) : (r.frozen ?? 0);
           return (
             <ToastItem
               key={r.id}

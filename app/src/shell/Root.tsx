@@ -1,16 +1,16 @@
-// The root of every route: it loads the session and sends each person to their place. A customer whose Brand DNA
-// is not yet approved goes to the first run; Fume's people land in the studio and an agency's in the agency's overview
-// (the staff frame, StudioShell.tsx, sends them there).
-// Round 8 (walk-through 19 Oct, WAY-4, MOB-1, WAY-14, MOB-19): the root also keeps the person's place. One scroll rule
-// for the page's scroller (.ui-sidebar-inset in a shell, the window in /welcome): a new page opens at its top, back
-// and forward put each page where it was left, a tab of the same page keeps the reader's place, and an address with
-// a #hash scrolls that item into view under the app bar and marks it for a moment. A toast belongs to the page it
-// was raised on: when the path changes it leaves, unless it was raised with the move or holds an action (Undo).
-// Round 9 (desktop review DWAY-8; PROPOSED 19 Oct 2026): the keyboard's place. "Skip to content" is the first stop of
-// the Tab key and goes to the page's title. When a link, a menu row or the palette takes you to another page (also
-// back and forward), focus moves to the new page's title (its h1), so the next Tab starts in the page and a screen
-// reader says where you are; a tab of the same page, an overlay's ?c= or a filter keeps focus where it is, and a page
-// that puts focus in a field of its own (the chat's composer) keeps it there.
+// The root of every route: it loads the session and sends each person to their place. A customer whose Brand DNA is not
+// yet approved goes to the first run; Fume's people land in the studio and an agency's in the agency's overview (the
+// staff frame, StudioShell.tsx, sends them there).
+// It also keeps the person's place. One scroll rule for the page's scroller (.ui-sidebar-inset in a shell, the window
+// in /welcome): a new page opens at its top, back and forward put each page where it was left, a tab of the same page
+// keeps the reader's place, and an address with a #hash scrolls that item into view under the app bar and marks it for
+// a moment. A toast belongs to the page it was raised on: when the path changes it leaves, unless it was raised with
+// the move or holds an action (Undo).
+// And the keyboard's place: "Skip to content" is the first stop of the Tab key and goes to the page's title. When a
+// link, a menu row or the palette takes you to another page (also back and forward), focus moves to the new page's
+// title (its h1), so the next Tab starts in the page and a screen reader says where you are; a tab of the same page, an
+// overlay's ?c= or a filter keeps focus where it is, and a page that puts focus in a field of its own (the chat's
+// composer) keeps it there.
 import { tokenPx, useToast } from "@fume/ui";
 import { useEffect, useLayoutEffect, useRef, type MouseEvent } from "react";
 import { Outlet, useLocation, useMatches, useNavigate, useNavigationType } from "react-router-dom";
@@ -23,12 +23,12 @@ export function Root() {
   const { pathname } = useLocation();
   const data = session.data;
 
-  // Round 12 (DWAY-2, DWAY-3): Fume's and an agency's people land in their frame's overview on the first "/" only;
-  // after that "/" is the Home of the brand they are in, and Customer view stays on the customer's Home (StudioShell)
+  // Fume's and an agency's people land in their frame's overview on the first "/" only; after that "/" is the Home of
+  // the brand they are in, and Customer view stays on the customer's Home (StudioShell)
   useEffect(() => {
     if (!data) return;
     const staff = Boolean(data.user.staffRole || data.user.agency);
-    if (!staff && !data.onboarded && !pathname.startsWith("/welcome")) navigate("/welcome?resume", { replace: true }); // round 8 ONB: Welcome opens the furthest step reached
+    if (!staff && !data.onboarded && !pathname.startsWith("/welcome")) navigate("/welcome?resume", { replace: true }); // Welcome opens the furthest step reached
   }, [data, pathname, navigate]);
 
   useScrollRule();
@@ -122,7 +122,11 @@ const KEEP = 120;
 
 /** The page's scroller: the shell's inset, or the window (the onboarding, full-screen pages). */
 function scroller(): HTMLElement {
-  return document.querySelector<HTMLElement>(".ui-sidebar-inset") ?? (document.scrollingElement as HTMLElement | null) ?? document.documentElement;
+  return (
+    document.querySelector<HTMLElement>(".ui-sidebar-inset") ??
+    (document.scrollingElement as HTMLElement | null) ??
+    document.documentElement
+  );
 }
 
 /** Each entry's place, with the address it was left at: a fresh document's first entry has no key of its own (the
@@ -202,7 +206,9 @@ function stuckAbove(s: HTMLElement, target: HTMLElement): number {
   const win = s === document.scrollingElement || s === document.documentElement;
   let covered = win ? 0 : (s.querySelector<HTMLElement>(":scope > .ui-app-bar")?.offsetHeight ?? 0);
   // sticky rows that hold to the top (top under the screen's first third), not the item itself or what holds it
-  for (const el of Array.from(s.querySelectorAll<HTMLElement>(".ui-page-header-tabs, [data-ui-sticky], [class*='-bar'], [class*='tabs']"))) {
+  for (const el of Array.from(
+    s.querySelectorAll<HTMLElement>(".ui-page-header-tabs, [data-ui-sticky], [class*='-bar'], [class*='tabs']"),
+  )) {
     if (el.contains(target) || target.contains(el) || !el.offsetHeight) continue;
     const cs = getComputedStyle(el);
     if (cs.position !== "sticky") continue;
@@ -210,12 +216,14 @@ function stuckAbove(s: HTMLElement, target: HTMLElement): number {
     if (!Number.isFinite(stick) || stick > window.innerHeight / 3) continue;
     covered = Math.max(covered, stick + el.offsetHeight);
   }
-  const margin = parseFloat(getComputedStyle(target).scrollMarginBlockStart || getComputedStyle(target).scrollMarginTop) || 0;
+  const margin =
+    parseFloat(getComputedStyle(target).scrollMarginBlockStart || getComputedStyle(target).scrollMarginTop) || 0;
   return Math.max(covered + tokenPx("--ui-space-lg", 24), margin);
 }
 
-/** An address with #id: wait for the item, scroll it into view under the app bar (and any sticky tab row), keep it there while what is above
- *  it still loads, then mark it for a moment with an Ink outline (app.css [data-ui-target]; no glow, no Amber). */
+/** An address with #id: wait for the item, scroll it into view under the app bar (and any sticky tab row), keep it
+ *  there while what is above it still loads, then mark it for a moment with an Ink outline (app.css [data-ui-target];
+ *  no glow, no Amber). */
 function toHash(hash: string) {
   let id = "";
   try {
@@ -231,7 +239,8 @@ function toHash(hash: string) {
     const place = (el: HTMLElement) => {
       const s = scroller();
       const win = s === document.scrollingElement || s === document.documentElement;
-      const top = el.getBoundingClientRect().top - (win ? 0 : s.getBoundingClientRect().top) + s.scrollTop - stuckAbove(s, el);
+      const top =
+        el.getBoundingClientRect().top - (win ? 0 : s.getBoundingClientRect().top) + s.scrollTop - stuckAbove(s, el);
       if (Math.abs(s.scrollTop - Math.max(0, top)) > 1) jump(s, Math.max(0, top));
     };
     const step = () => {
@@ -254,9 +263,9 @@ function toHash(hash: string) {
 }
 
 /**
- * One scroll rule for the whole app (WAY-4, MOB-1). A new page (push or replace) opens at its top; back and forward
- * (pop) put the entry where it was left; the same page at a new address keeps the place when only the search changed
- * (an overlay's ?c=, a filter, ?show=calendar) or when it changed tab; an address with a #hash goes to that item.
+ * One scroll rule for the whole app. A new page (push or replace) opens at its top; back and forward (pop) put the
+ * entry where it was left; the same page at a new address keeps the place when only the search changed (an overlay's
+ * ?c=, a filter, ?show=calendar) or when it changed tab; an address with a #hash goes to that item.
  */
 function useScrollRule() {
   const location = useLocation();

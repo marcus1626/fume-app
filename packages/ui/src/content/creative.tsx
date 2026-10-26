@@ -1,10 +1,11 @@
 // Creative tile, check mark and aspect ratio: design-system/components/creative.css. The customer's creative, the one
 // pure white content surface, always with its hairline. The check (rule check-states): checked = the Amber fume-check
 // beside the checker's name and time; in check = the same triangle in grey beside "In check". Selected = the Ink ring
-// and the round Ink badge, never Amber. The "more" circle sits on its own Smoke glass, revealed on hover, always on touch.
-// Round 9, the desktop (PROPOSED 19 Oct 2026, UX review DTSK-10): onSelectedChange gets the click, so a grid can select a
-// range with shift; on a tile that opens and selects, Space on the picture toggles the selection (Enter opens it); with
-// a mouse, a quiet "Open" shows on the picture of a tile that opens.
+// and the round Ink badge, never Amber. The "more" circle sits on its own Smoke glass, revealed on hover, always on
+// touch.
+// onSelectedChange gets the click, so a grid can select a range with shift; on a tile that opens and selects, Space on
+// the picture toggles the selection (Enter opens it); with a mouse, a quiet "Open" shows on the picture of a tile that
+// opens.
 import {
   forwardRef,
   type ButtonHTMLAttributes,
@@ -50,7 +51,12 @@ export function AspectRatio({ format, ratio, className, style, ...props }: Aspec
  */
 export type CheckState = "checked" | "in-check" | "generating" | "changes";
 
-const CHECK_DATA: Record<CheckState, string> = { checked: "approved", "in-check": "waiting", generating: "generating", changes: "changes" };
+const CHECK_DATA: Record<CheckState, string> = {
+  checked: "approved",
+  "in-check": "waiting",
+  generating: "generating",
+  changes: "changes",
+};
 
 export interface CheckMarkProps extends HTMLAttributes<HTMLSpanElement> {
   state: CheckState;
@@ -66,7 +72,16 @@ export interface CheckMarkProps extends HTMLAttributes<HTMLSpanElement> {
   label?: ReactNode;
 }
 
-export function CheckMark({ state, by, time, dateTime, wording = "short", label, className, ...props }: CheckMarkProps) {
+export function CheckMark({
+  state,
+  by,
+  time,
+  dateTime,
+  wording = "short",
+  label,
+  className,
+  ...props
+}: CheckMarkProps) {
   const words =
     label ??
     (state === "checked"
@@ -110,16 +125,21 @@ export function CreativeGrid({ className, ...props }: HTMLAttributes<HTMLUListEl
  * The tile's "more" circle (glass-clear icon button). Use it as a DropdownMenuTrigger's asChild child and pass that
  * whole menu to CreativeTile's `more`.
  */
-export const CreativeMoreButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement>>(function CreativeMoreButton(
-  { className, ...props },
-  ref,
-) {
-  return (
-    <button ref={ref} type="button" aria-haspopup="menu" className={cx("ui-btn ui-btn--glass-clear ui-btn--icon ui-btn--sm", className)} {...props}>
-      <Icon name="ellipsis" />
-    </button>
-  );
-});
+export const CreativeMoreButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement>>(
+  function CreativeMoreButton({ className, ...props }, ref) {
+    return (
+      <button
+        ref={ref}
+        type="button"
+        aria-haspopup="menu"
+        className={cx("ui-btn ui-btn--glass-clear ui-btn--icon ui-btn--sm", className)}
+        {...props}
+      >
+        <Icon name="ellipsis" />
+      </button>
+    );
+  },
+);
 
 /* ---------- tile ---------- */
 
@@ -148,8 +168,8 @@ export interface CreativeTileProps extends Omit<HTMLAttributes<HTMLElement>, "on
   onSelectedChange?: (selected: boolean, event?: ReactMouseEvent<HTMLElement>) => void;
   /** Open mode: the media is a link. */
   href?: string;
-  /** Open mode: the media is a button. With `selected` too, a tap on the media opens it and the round corner
-   *  checkbox selects it (the standard grid pattern; PROPOSED 15 Oct 2026, walk-through Must 8). */
+  /** Open mode: the media is a button. With `selected` too, a tap on the media opens it and the round corner checkbox
+   *  selects it (the standard grid pattern). */
   onOpen?: () => void;
   /** The more circle: pass a whole menu whose trigger is <CreativeMoreButton/> (asChild). */
   more?: ReactNode;
@@ -194,10 +214,18 @@ export const CreativeTile = forwardRef<HTMLElement, CreativeTileProps>(function 
 
   let mediaEl: ReactNode;
   if (loading) {
-    mediaEl = <span className="ui-skeleton ui-skeleton--creative" aria-hidden="true" data-format={format} style={mediaStyle} />;
+    mediaEl = (
+      <span className="ui-skeleton ui-skeleton--creative" aria-hidden="true" data-format={format} style={mediaStyle} />
+    );
   } else if (selectable && !pickable) {
     mediaEl = (
-      <button type="button" {...mediaCommon} aria-pressed={!!selected} aria-label={label} onClick={(e) => onSelectedChange?.(!selected, e)}>
+      <button
+        type="button"
+        {...mediaCommon}
+        aria-pressed={!!selected}
+        aria-label={label}
+        onClick={(e) => onSelectedChange?.(!selected, e)}
+      >
         {inner}
       </button>
     );

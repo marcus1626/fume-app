@@ -28,7 +28,20 @@ export interface SkeletonProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 export const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(function Skeleton(
-  { shape, index, width, size, ratio, height, onSurface = false, onGlass = false, className, style, children, ...props },
+  {
+    shape,
+    index,
+    width,
+    size,
+    ratio,
+    height,
+    onSurface = false,
+    onGlass = false,
+    className,
+    style,
+    children,
+    ...props
+  },
   ref,
 ) {
   const vars: Record<string, string | number> = {};
@@ -63,7 +76,10 @@ export interface SkeletonEngineProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 /** The Engine and its progress at the centre of a creative's skeleton. */
-export const SkeletonEngine = forwardRef<HTMLSpanElement, SkeletonEngineProps>(function SkeletonEngine({ meta, className, ...props }, ref) {
+export const SkeletonEngine = forwardRef<HTMLSpanElement, SkeletonEngineProps>(function SkeletonEngine(
+  { meta, className, ...props },
+  ref,
+) {
   return (
     <span ref={ref} className={cx("ui-skeleton-engine", className)} {...props}>
       <Icon name="fume-engine" />

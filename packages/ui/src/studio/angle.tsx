@@ -16,7 +16,7 @@ export interface StudioAngleProps extends StudioControlProps<StudioLightAngle> {
 }
 
 const wrap = (deg: number) => {
-  let d = ((deg + 180) % 360 + 360) % 360 - 180;
+  let d = ((((deg + 180) % 360) + 360) % 360) - 180;
   if (d === -180) d = 180;
   return d;
 };
@@ -53,14 +53,22 @@ export function StudioAngle({ value, onChange, label, id, disabled, step = 5, he
     if (e.currentTarget.hasPointerCapture(e.pointerId)) fromPointer(e.clientX, e.clientY);
   };
   const keys = (e: KeyboardEvent<HTMLSpanElement>) => {
-    const by = ({ ArrowRight: step, ArrowUp: step, ArrowLeft: -step, ArrowDown: -step } as Record<string, number>)[e.key];
+    const by = ({ ArrowRight: step, ArrowUp: step, ArrowLeft: -step, ArrowDown: -step } as Record<string, number>)[
+      e.key
+    ];
     if (!by) return;
     e.preventDefault();
     onChange({ ...value, azimuth: wrap(value.azimuth + by) });
   };
 
   return (
-    <StudioRow label={label} labelId={`${sid}-l`} readout={`${angleWords(value)} · ${value.elevation}° up`} help={help} disabled={disabled}>
+    <StudioRow
+      label={label}
+      labelId={`${sid}-l`}
+      readout={`${angleWords(value)} · ${value.elevation}° up`}
+      help={help}
+      disabled={disabled}
+    >
       <div className="ui-sc-angle">
         <div
           ref={disc}
@@ -89,7 +97,18 @@ export function StudioAngle({ value, onChange, label, id, disabled, step = 5, he
           <span className="ui-sc-label" aria-hidden="true">
             Height
           </span>
-          <StudioSlider bare label={`${label} height`} id={`${sid}-h`} value={value.elevation} min={0} max={90} step={step} unit="°" disabled={disabled} onChange={(elevation) => onChange({ ...value, elevation })} />
+          <StudioSlider
+            bare
+            label={`${label} height`}
+            id={`${sid}-h`}
+            value={value.elevation}
+            min={0}
+            max={90}
+            step={step}
+            unit="°"
+            disabled={disabled}
+            onChange={(elevation) => onChange({ ...value, elevation })}
+          />
           <span className="ui-sc-readout">{value.elevation}°</span>
         </div>
       </div>

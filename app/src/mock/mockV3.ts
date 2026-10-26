@@ -88,10 +88,42 @@ export interface V3Context {
 }
 
 type V3Keys =
-  | "studioModes" | "documents" | "document" | "openDocument" | "updateDocument" | "engineEdit" | "decideEdit" | "render" | "pickVersion"
-  | "overrideProduct" | "documentToCheck" | "brandAssets" | "saveModel" | "decideModel" | "saveReference" | "decideOverride" | "productProposals"
-  | "qaQueue" | "qaCheck" | "qaUncheck" | "undoDocumentToCheck" | "qaFeedback" | "qaEdit" | "qaToStudio" | "reviewComments" | "addReviewComment" | "resolveReviewComment"
-  | "rate" | "ratings" | "tasteTraining" | "answerTaste" | "conversation" | "say" | "orderBrief" | "batches" | "startBatch";
+  | "studioModes"
+  | "documents"
+  | "document"
+  | "openDocument"
+  | "updateDocument"
+  | "engineEdit"
+  | "decideEdit"
+  | "render"
+  | "pickVersion"
+  | "overrideProduct"
+  | "documentToCheck"
+  | "brandAssets"
+  | "saveModel"
+  | "decideModel"
+  | "saveReference"
+  | "decideOverride"
+  | "productProposals"
+  | "qaQueue"
+  | "qaCheck"
+  | "qaUncheck"
+  | "undoDocumentToCheck"
+  | "qaFeedback"
+  | "qaEdit"
+  | "qaToStudio"
+  | "reviewComments"
+  | "addReviewComment"
+  | "resolveReviewComment"
+  | "rate"
+  | "ratings"
+  | "tasteTraining"
+  | "answerTaste"
+  | "conversation"
+  | "say"
+  | "orderBrief"
+  | "batches"
+  | "startBatch";
 
 /** Renders in the demo come from this pool, so every new version looks different. */
 const POOL: Record<string, string[]> = {
@@ -143,7 +175,8 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
     const more = /(longer|more|bigger|larger|up|increase|stronger)/.test(t);
     const less = /(shorter|less|smaller|down|decrease|weaker)/.test(t);
     if (/hair/.test(t) && /(long|short)/.test(t)) num("hairLength", /short/.test(t) ? -25 : 25);
-    if (/hair/.test(t) && /(curl|wav|straight)/.test(t)) set("hairTexture", /curl/.test(t) ? "curly" : /wav/.test(t) ? "wavy" : "straight");
+    if (/hair/.test(t) && /(curl|wav|straight)/.test(t))
+      set("hairTexture", /curl/.test(t) ? "curly" : /wav/.test(t) ? "wavy" : "straight");
     if (/(older|younger)/.test(t)) num("age", /older/.test(t) ? 8 : -8, 18, 80);
     if (/freckle/.test(t)) num("freckles", less || /no freckle/.test(t) ? -30 : 30);
     if (/smil/.test(t)) set("expression", "soft_smile");
@@ -151,12 +184,18 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
     if (/(softer|harder) light|light.*(softer|harder)/.test(t)) num("softness", /softer/.test(t) ? 20 : -20);
     if (/(bottle|product)/.test(t) && (more || less)) num("productSize", more ? 6 : -6, 10, 80);
     if (/(lower|higher)/.test(t)) set("productPlace", /lower/.test(t) ? "low" : "high");
-    if (/(from the left|from left)/.test(t) && has("lightAngle")) set("lightAngle", { ...(vars.lightAngle as LightAngle), azimuth: -70 });
-    if (/(from the right|from right)/.test(t) && has("lightAngle")) set("lightAngle", { ...(vars.lightAngle as LightAngle), azimuth: 70 });
-    if (/(closer|tighter)/.test(t) && has("lens")) set("lens", { ...(vars.lens as Lens), focal: Math.min(135, (vars.lens as Lens).focal + 15) });
-    if (/(wider|further)/.test(t) && has("lens")) set("lens", { ...(vars.lens as Lens), focal: Math.max(24, (vars.lens as Lens).focal - 15) });
+    if (/(from the left|from left)/.test(t) && has("lightAngle"))
+      set("lightAngle", { ...(vars.lightAngle as LightAngle), azimuth: -70 });
+    if (/(from the right|from right)/.test(t) && has("lightAngle"))
+      set("lightAngle", { ...(vars.lightAngle as LightAngle), azimuth: 70 });
+    if (/(closer|tighter)/.test(t) && has("lens"))
+      set("lens", { ...(vars.lens as Lens), focal: Math.min(135, (vars.lens as Lens).focal + 15) });
+    if (/(wider|further)/.test(t) && has("lens"))
+      set("lens", { ...(vars.lens as Lens), focal: Math.max(24, (vars.lens as Lens).focal - 15) });
     if (/(white|linen|stone|brown) (background|ground)|background/.test(t) && has("background")) {
-      const preset = db.presets.find((p) => p.kind === "background" && t.includes(p.name.toLowerCase().split(" ").pop()!));
+      const preset = db.presets.find(
+        (p) => p.kind === "background" && t.includes(p.name.toLowerCase().split(" ").pop()!),
+      );
       if (preset?.hex) set("background", preset.hex);
     }
     if (/shadow/.test(t)) set("shadow", /no shadow|without/.test(t) ? "none" : /hard/.test(t) ? "hard" : "soft");
@@ -175,7 +214,10 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
     const mode = modeOf(d);
     const has = (key: string) => mode.variables.some((v) => v.key === key);
     const label = (key: string) => mode.variables.find((v) => v.key === key)?.label ?? key;
-    const pieces = text.split(/\s*(?:[,;]|\.(?=\s|$)|\band then\b|\band\b|\bthen\b)\s*/i).map((s) => s.trim()).filter((s) => s.length > 2);
+    const pieces = text
+      .split(/\s*(?:[,;]|\.(?=\s|$)|\band then\b|\band\b|\bthen\b)\s*/i)
+      .map((s) => s.trim())
+      .filter((s) => s.length > 2);
     const changes: EngineEdit["changes"] = [];
     const parts: NonNullable<EngineEdit["parts"]> = [];
     for (const piece of pieces.length ? pieces : [text]) {
@@ -188,11 +230,21 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
       const t = piece.toLowerCase();
       const place = d.variables.productPlace;
       if (/(lower|higher)/.test(t) && has("productPlace") && place === (/lower/.test(t) ? "low" : "high")) {
-        parts.push({ text: piece, keys: [], note: `${label("productPlace")} is already ${/lower/.test(t) ? "Low" : "High"}` });
+        parts.push({
+          text: piece,
+          keys: [],
+          note: `${label("productPlace")} is already ${/lower/.test(t) ? "Low" : "High"}`,
+        });
       } else if (/(soft|hard)/.test(t) && has("softness")) {
         const from = Number(d.variables.softness);
         const to = Math.max(0, Math.min(100, from + (/soft/.test(t) ? 20 : -20)));
-        parts.push({ text: piece, keys: [], note: /shadow/.test(t) && !has("shadow") ? `${mode.name} has no shadow of its own; the light sets it` : undefined, suggestion: to !== from ? { key: "softness", label: label("softness"), from, to } : undefined });
+        parts.push({
+          text: piece,
+          keys: [],
+          note:
+            /shadow/.test(t) && !has("shadow") ? `${mode.name} has no shadow of its own; the light sets it` : undefined,
+          suggestion: to !== from ? { key: "softness", label: label("softness"), from, to } : undefined,
+        });
       } else {
         parts.push({ text: piece, keys: [], note: `Nothing in ${mode.name} sets that` });
       }
@@ -210,15 +262,29 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
     const n = d.versions.length + 1;
     const fmt = d.modeId === "m-model" || d.modeId === "m-reference" ? "square" : d.specs.format;
     const v: RenderVersion = {
-      id: nextId("rv"), number: n, image: img(pool[n % pool.length], fmt), at: now(), by: ctx.me().id, state: "rendering",
-      variables: structuredClone(d.variables), specs: structuredClone(d.specs), cost: 0.12 * Math.max(1, d.specs.count),
-      evaluation: { productTruth: "pass", brandRules: "pass", artefacts: "none", notes: [] }, instruction,
+      id: nextId("rv"),
+      number: n,
+      image: img(pool[n % pool.length], fmt),
+      at: now(),
+      by: ctx.me().id,
+      state: "rendering",
+      variables: structuredClone(d.variables),
+      specs: structuredClone(d.specs),
+      cost: 0.12 * Math.max(1, d.specs.count),
+      evaluation: { productTruth: "pass", brandRules: "pass", artefacts: "none", notes: [] },
+      instruction,
     };
     d.versions.push(v);
     touch(d);
     setTimeout(() => {
       v.state = "done";
-      if (n % 3 === 0) v.evaluation = { productTruth: "pass", brandRules: "pass", artefacts: "minor", notes: ["A soft edge on the label"] };
+      if (n % 3 === 0)
+        v.evaluation = {
+          productTruth: "pass",
+          brandRules: "pass",
+          artefacts: "minor",
+          notes: ["A soft edge on the label"],
+        };
       d.pickedVersionId = v.id;
       touch(d);
     }, ctx.latency * 14);
@@ -239,7 +305,9 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
   /** The product a QA item shows: its document's, else its campaign's when the campaign has one. */
   const productOf = (item: QaItem) => {
     const d = item.documentId ? db.documents.find((x) => x.id === item.documentId) : undefined;
-    const ids = d?.specs.productId ? [d.specs.productId] : (db.campaigns.find((c) => c.id === item.campaignId)?.productIds ?? []);
+    const ids = d?.specs.productId
+      ? [d.specs.productId]
+      : (db.campaigns.find((c) => c.id === item.campaignId)?.productIds ?? []);
     return ids.length === 1 ? db.products.find((p) => p.id === ids[0])?.name : undefined;
   };
   /** Round 12 QA: a creative made outside a campaign (a product page's pictures, campaignId "") is checked too. In Check
@@ -248,9 +316,24 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
     const w = find(db.workspaces, item.workspaceId, "workspace");
     const any = db.campaigns.find((c) => c.workspaceId === item.workspaceId);
     return {
-      id: "", workspaceId: w.id, name: "Product page", productIds: [], state: "in_production", stage: "masters", approverId: any?.approverId ?? "",
-      channels: ["product_page"], formats: [item.format], market: w.market, language: w.language, createdBy: "fume", createdAt: item.sentAt ?? now(), updatedAt: now(),
-      counts: { creatives: 0, inCheck: 0, checked: 0, approved: 0, delivered: 0 }, roundsUsed: 0, roundsIncluded: 0, brandDnaVersion: any?.brandDnaVersion ?? 1,
+      id: "",
+      workspaceId: w.id,
+      name: "Product page",
+      productIds: [],
+      state: "in_production",
+      stage: "masters",
+      approverId: any?.approverId ?? "",
+      channels: ["product_page"],
+      formats: [item.format],
+      market: w.market,
+      language: w.language,
+      createdBy: "fume",
+      createdAt: item.sentAt ?? now(),
+      updatedAt: now(),
+      counts: { creatives: 0, inCheck: 0, checked: 0, approved: 0, delivered: 0 },
+      roundsUsed: 0,
+      roundsIncluded: 0,
+      brandDnaVersion: any?.brandDnaVersion ?? 1,
     };
   };
   const qaView = (item: QaItem): QaView => ({
@@ -261,7 +344,10 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
     productName: productOf(item),
   });
   /** Before a check: what the creative and its check were, so Undo puts both back. */
-  const beforeCheck = new Map<Id, { version?: import("../contract").CreativeVersion; check?: import("../contract").Check["state"] }>();
+  const beforeCheck = new Map<
+    Id,
+    { version?: import("../contract").CreativeVersion; check?: import("../contract").Check["state"] }
+  >();
   /** Before a Send to check: what the QA item showed, so Undo puts it back (or removes the item it added). */
   const beforeSend = new Map<Id, { itemId: Id; was?: QaItem; added: boolean; docState: CreativeDocument["state"] }>();
 
@@ -276,7 +362,8 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
     }, ctx.latency * 60);
   }
 
-  const fumeThreadIds = () => new Set(db.threads.filter((t) => t.workspaceId === ctx.workspaceId() && t.kind !== "contact").map((t) => t.id));
+  const fumeThreadIds = () =>
+    new Set(db.threads.filter((t) => t.workspaceId === ctx.workspaceId() && t.kind !== "contact").map((t) => t.id));
 
   return {
     // ── Studio documents ──
@@ -285,7 +372,11 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
     },
     async documents(workspaceId) {
       ctx.mustStaff();
-      return wait(db.documents.filter((d) => d.workspaceId === workspaceId).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)));
+      return wait(
+        db.documents
+          .filter((d) => d.workspaceId === workspaceId)
+          .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)),
+      );
     },
     async document(id) {
       ctx.mustStaff();
@@ -308,16 +399,47 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
           const modeId = g.recipe.mode === "type" ? "m-scene" : "m-free";
           const mode = find(db.modes, modeId, "mode");
           const specs = {
-            format: g.recipe.format, count: 1, imageModel: g.recipe.route?.model ?? "Nano Banana Pro", referenceIds: [], modelIds: [],
-            productId: g.recipe.productId ?? (mode.uses.includes("product") ? "pr-oil" : undefined), variantId: g.recipe.variantId,
+            format: g.recipe.format,
+            count: 1,
+            imageModel: g.recipe.route?.model ?? "Nano Banana Pro",
+            referenceIds: [],
+            modelIds: [],
+            productId: g.recipe.productId ?? (mode.uses.includes("product") ? "pr-oil" : undefined),
+            variantId: g.recipe.variantId,
           };
           const variables = seed3.defaults(mode.id);
           const campaign = db.campaigns.find((c) => c.id === (input.campaignId ?? session.campaignId));
           const d: CreativeDocument = {
-            id: nextId("doc"), workspaceId: input.workspaceId, campaignId: campaign?.id,
-            title: session.slot ?? (campaign ? `${campaign.name} · candidate ${g.branch}` : `Candidate ${g.branch}`), slot: session.slot,
-            studio: "render", modeId: mode.id, variables, specs, overrides: [], layers: [], edits: [], state: "draft", by: ctx.me().id, updatedAt: now(),
-            versions: [{ id: nextId("rv"), number: 1, image: g.image, at: g.at, by: ctx.me().id, state: "done", variables, specs, evaluation: g.evaluation, instruction: "The Engine's candidate, opened from its run", cost: g.cost }],
+            id: nextId("doc"),
+            workspaceId: input.workspaceId,
+            campaignId: campaign?.id,
+            title: session.slot ?? (campaign ? `${campaign.name} · candidate ${g.branch}` : `Candidate ${g.branch}`),
+            slot: session.slot,
+            studio: "render",
+            modeId: mode.id,
+            variables,
+            specs,
+            overrides: [],
+            layers: [],
+            edits: [],
+            state: "draft",
+            by: ctx.me().id,
+            updatedAt: now(),
+            versions: [
+              {
+                id: nextId("rv"),
+                number: 1,
+                image: g.image,
+                at: g.at,
+                by: ctx.me().id,
+                state: "done",
+                variables,
+                specs,
+                evaluation: g.evaluation,
+                instruction: "The Engine's candidate, opened from its run",
+                cost: g.cost,
+              },
+            ],
           };
           d.pickedVersionId = d.versions[0].id;
           db.documents.push(d);
@@ -327,21 +449,51 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
       }
       // A campaign's free session opens again while it is still empty, so pressing twice makes one document.
       if (!input.creativeId) {
-        const empty = db.documents.find((d) => d.workspaceId === input.workspaceId && d.campaignId === input.campaignId && d.slot === input.slot && d.modeId === input.modeId && d.versions.length === 0 && d.by === ctx.me().id);
+        const empty = db.documents.find(
+          (d) =>
+            d.workspaceId === input.workspaceId &&
+            d.campaignId === input.campaignId &&
+            d.slot === input.slot &&
+            d.modeId === input.modeId &&
+            d.versions.length === 0 &&
+            d.by === ctx.me().id,
+        );
         if (empty) return wait(empty);
       }
       const mode = find(db.modes, input.modeId, "mode");
       const d: CreativeDocument = {
-        id: nextId("doc"), workspaceId: input.workspaceId, campaignId: input.campaignId, creativeId: input.creativeId,
-        title: input.title ?? (mode.output === "model" ? "New model" : mode.output === "reference" ? "New reference" : "Untitled creative"),
-        slot: input.slot, studio: input.studio, modeId: mode.id, variables: seed3.defaults(mode.id),
+        id: nextId("doc"),
+        workspaceId: input.workspaceId,
+        campaignId: input.campaignId,
+        creativeId: input.creativeId,
+        title:
+          input.title ??
+          (mode.output === "model" ? "New model" : mode.output === "reference" ? "New reference" : "Untitled creative"),
+        slot: input.slot,
+        studio: input.studio,
+        modeId: mode.id,
+        variables: seed3.defaults(mode.id),
         // r13 #56: no product picked unless it was started from one, from its campaign (the campaign's first product) or
         // from a creative (the demo's creatives are Night Body Oil); before, every new creative started on Night Body Oil.
         specs: {
-          format: mode.output === "creative" ? "feed" : "square", count: mode.output === "creative" ? 4 : 2, imageModel: "Nano Banana Pro", referenceIds: [], modelIds: [],
-          productId: mode.uses.includes("product") ? (input.productId ?? (input.campaignId ? db.campaigns.find((c) => c.id === input.campaignId)?.productIds[0] : undefined) ?? (input.creativeId ? "pr-oil" : undefined)) : undefined,
+          format: mode.output === "creative" ? "feed" : "square",
+          count: mode.output === "creative" ? 4 : 2,
+          imageModel: "Nano Banana Pro",
+          referenceIds: [],
+          modelIds: [],
+          productId: mode.uses.includes("product")
+            ? (input.productId ??
+              (input.campaignId ? db.campaigns.find((c) => c.id === input.campaignId)?.productIds[0] : undefined) ??
+              (input.creativeId ? "pr-oil" : undefined))
+            : undefined,
         },
-        overrides: [], layers: [], versions: [], edits: [], state: "draft", by: ctx.me().id, updatedAt: now(),
+        overrides: [],
+        layers: [],
+        versions: [],
+        edits: [],
+        state: "draft",
+        by: ctx.me().id,
+        updatedAt: now(),
       };
       db.documents.push(d);
       return wait(d);
@@ -354,10 +506,17 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
         // r13 #60: what the new mode has no use for is set aside on the document, and comes back on a switch back.
         const held = d as typeof d & { aside?: Variables };
         const fits = ([k]: [string, unknown]) => mode.variables.some((v) => v.key === k);
-        const aside = { ...held.aside, ...Object.fromEntries(Object.entries(d.variables).filter((e) => !fits(e))) } as Variables;
+        const aside = {
+          ...held.aside,
+          ...Object.fromEntries(Object.entries(d.variables).filter((e) => !fits(e))),
+        } as Variables;
         d.modeId = mode.id;
         d.studio = mode.studio;
-        d.variables = { ...seed3.defaults(mode.id), ...Object.fromEntries(Object.entries(aside).filter(fits)), ...Object.fromEntries(Object.entries(d.variables).filter(fits)) };
+        d.variables = {
+          ...seed3.defaults(mode.id),
+          ...Object.fromEntries(Object.entries(aside).filter(fits)),
+          ...Object.fromEntries(Object.entries(d.variables).filter(fits)),
+        };
         held.aside = Object.fromEntries(Object.entries(aside).filter((e) => !fits(e))) as Variables;
       }
       if (change.variables) d.variables = { ...d.variables, ...change.variables };
@@ -378,7 +537,14 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
     async engineEdit(id, text) {
       ctx.mustStaff();
       const d = doc(id);
-      const edit: EngineEdit = { id: nextId("ed"), text, ...readParts(d, text), by: ctx.me().id, at: now(), state: "proposed" }; // round 12 DESK: each part read
+      const edit: EngineEdit = {
+        id: nextId("ed"),
+        text,
+        ...readParts(d, text),
+        by: ctx.me().id,
+        at: now(),
+        state: "proposed",
+      }; // round 12 DESK: each part read
       d.edits.push(edit);
       for (const c of edit.changes) d.variables[c.key] = c.to;
       touch(d);
@@ -420,7 +586,17 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
       if (!product) throw new FumeError("invalid", "Pick a product first.");
       const fact = product.facts.find((f) => f.label === field);
       d.overrides = d.overrides.filter((o) => !(o.field === field && o.scope === scope && o.state !== "approved"));
-      d.overrides.push({ id: nextId("ov"), productId: product.id, field, value, was: fact?.statement ?? "", scope, by: ctx.me().id, at: now(), state: scope === "product" ? "proposed" : "applied" });
+      d.overrides.push({
+        id: nextId("ov"),
+        productId: product.id,
+        field,
+        value,
+        was: fact?.statement ?? "",
+        scope,
+        by: ctx.me().id,
+        at: now(),
+        state: scope === "product" ? "proposed" : "applied",
+      });
       touch(d);
       return wait(d);
     },
@@ -440,9 +616,20 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
       if (item) {
         beforeSend.set(d.id, { itemId: item.id, was: structuredClone(item), added: false, docState });
         const shown = item.version ?? 1;
-        if (picked.image !== item.image) Object.assign(item, { previous: { image: item.image, version: shown }, image: picked.image, version: Math.max(picked.number, shown + 1) });
+        if (picked.image !== item.image)
+          Object.assign(item, {
+            previous: { image: item.image, version: shown },
+            image: picked.image,
+            version: Math.max(picked.number, shown + 1),
+          });
         Object.assign(item, by, {
-          state: "waiting", evaluation: picked.evaluation, format: d.specs.format, checkedBy: undefined, checkedAt: undefined, studioBy: undefined, studioAt: undefined,
+          state: "waiting",
+          evaluation: picked.evaluation,
+          format: d.specs.format,
+          checkedBy: undefined,
+          checkedAt: undefined,
+          studioBy: undefined,
+          studioAt: undefined,
           layers: d.studio === "design" ? structuredClone(d.layers) : item.layers,
         });
         emit({ type: "qa.state", item: structuredClone(item) });
@@ -450,10 +637,25 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
         // every creative is checked: one with no campaign (a product page's pictures) lands in "Product page"
         const campaign = db.campaigns.find((c) => c.id === d.campaignId);
         const added: QaItem = {
-          id: nextId("qa"), workspaceId: d.workspaceId, campaignId: d.campaignId ?? "", creativeId: d.creativeId ?? `cr-${d.id}`, documentId: d.id,
-          title: d.title, slot: d.slot ?? d.title, studio: d.studio, image: picked.image, format: d.specs.format, madeAt: picked.at,
-          dueAt: campaign?.dueAt ?? now(), risk: "normal", state: "waiting", evaluation: picked.evaluation, feedback: [], version: picked.number,
-          layers: d.studio === "design" ? structuredClone(d.layers) : undefined, ...by,
+          id: nextId("qa"),
+          workspaceId: d.workspaceId,
+          campaignId: d.campaignId ?? "",
+          creativeId: d.creativeId ?? `cr-${d.id}`,
+          documentId: d.id,
+          title: d.title,
+          slot: d.slot ?? d.title,
+          studio: d.studio,
+          image: picked.image,
+          format: d.specs.format,
+          madeAt: picked.at,
+          dueAt: campaign?.dueAt ?? now(),
+          risk: "normal",
+          state: "waiting",
+          evaluation: picked.evaluation,
+          feedback: [],
+          version: picked.number,
+          layers: d.studio === "design" ? structuredClone(d.layers) : undefined,
+          ...by,
         };
         db.qaItems.push(added);
         beforeSend.set(d.id, { itemId: added.id, added: true, docState });
@@ -503,7 +705,24 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
       const v = d.variables;
       const look = [`${v.age ?? ""}s`.replace(/^(\d)\d/, "$10"), v.hairTexture, "hair"].filter(Boolean).join(", ");
       if (!m) {
-        m = { id: nextId("bm"), workspaceId: d.workspaceId, name, image: picked.image, sheet: d.versions.filter((x) => x.state === "done").slice(-3).map((x) => x.image), variables: structuredClone(v), look, state, isAiPerson: true, madeBy: ctx.me().id, at: now(), usedIn: 0, documentId };
+        m = {
+          id: nextId("bm"),
+          workspaceId: d.workspaceId,
+          name,
+          image: picked.image,
+          sheet: d.versions
+            .filter((x) => x.state === "done")
+            .slice(-3)
+            .map((x) => x.image),
+          variables: structuredClone(v),
+          look,
+          state,
+          isAiPerson: true,
+          madeBy: ctx.me().id,
+          at: now(),
+          usedIn: 0,
+          documentId,
+        };
         db.models.push(m);
       } else Object.assign(m, { name, image: picked.image, variables: structuredClone(v), state });
       if (state === "saved") m.savedBy = ctx.me().id;
@@ -524,7 +743,17 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
       if (!picked) throw new FumeError("invalid", "Render the reference first.");
       let r = db.brandReferences.find((x) => x.documentId === documentId);
       if (!r) {
-        r = { id: nextId("rf"), workspaceId: d.workspaceId, name, image: picked.image, origin: "made", state, madeBy: ctx.me().id, at: now(), documentId };
+        r = {
+          id: nextId("rf"),
+          workspaceId: d.workspaceId,
+          name,
+          image: picked.image,
+          origin: "made",
+          state,
+          madeBy: ctx.me().id,
+          at: now(),
+          documentId,
+        };
         db.brandReferences.push(r);
       } else Object.assign(r, { name, image: picked.image, state });
       d.title = name;
@@ -532,7 +761,11 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
     },
     async productProposals(productId) {
       const ws = ctx.workspaceId();
-      return wait(db.documents.filter((d) => d.workspaceId === ws).flatMap((d) => d.overrides.filter((o) => o.scope === "product" && o.productId === productId)));
+      return wait(
+        db.documents
+          .filter((d) => d.workspaceId === ws)
+          .flatMap((d) => d.overrides.filter((o) => o.scope === "product" && o.productId === productId)),
+      );
     },
     async decideOverride(overrideId, verdict) {
       ctx.mustApprove();
@@ -556,7 +789,11 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
       return wait(
         db.qaItems
           .filter((i) => !workspaceId || i.workspaceId === workspaceId)
-          .sort((a, b) => order[a.state] - order[b.state] || (a.risk === b.risk ? a.dueAt.localeCompare(b.dueAt) : a.risk === "high" ? -1 : 1))
+          .sort(
+            (a, b) =>
+              order[a.state] - order[b.state] ||
+              (a.risk === b.risk ? a.dueAt.localeCompare(b.dueAt) : a.risk === "high" ? -1 : 1),
+          )
           .map(qaView),
       );
     },
@@ -571,12 +808,31 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
       const check = db.checks?.find((c) => c.creativeId === item.creativeId && creative);
       beforeCheck.set(item.id, { version: creative ? { ...creative.current } : undefined, check: check?.state });
       if (creative && ["making", "in_check", "correcting", "held"].includes(creative.current.state)) {
-        ctx.setVersion?.(creative, { state: "checked", checkedBy: ctx.me().id, checkedAt: now(), heldReason: undefined });
+        ctx.setVersion?.(creative, {
+          state: "checked",
+          checkedBy: ctx.me().id,
+          checkedAt: now(),
+          heldReason: undefined,
+        });
         const campaign = db.campaigns.find((c) => c.id === item.campaignId); // none for a product page's pictures
         // Round 13 (robots' note 06): once the campaign's set is out, a new check waits for the next send (r13-studio.ts).
-        if (campaign && campaign.state !== "in_production" && !(db.workspaces.find((w) => w.id === item.workspaceId) as { agencyId?: Id } | undefined)?.agencyId) holdUntilSent(creative.current.id);
+        if (
+          campaign &&
+          campaign.state !== "in_production" &&
+          !(db.workspaces.find((w) => w.id === item.workspaceId) as { agencyId?: Id } | undefined)?.agencyId
+        )
+          holdUntilSent(creative.current.id);
         if (campaign) ctx.recount?.(campaign);
-        db.record?.push({ id: nextId("e"), workspaceId: item.workspaceId, campaignId: item.campaignId, subjectId: creative.id, actor: { kind: "person", userId: ctx.me().id }, action: "checked", detail: `${creative.title} checked`, at: now() });
+        db.record?.push({
+          id: nextId("e"),
+          workspaceId: item.workspaceId,
+          campaignId: item.campaignId,
+          subjectId: creative.id,
+          actor: { kind: "person", userId: ctx.me().id },
+          action: "checked",
+          detail: `${creative.title} checked`,
+          at: now(),
+        });
       }
       if (check) Object.assign(check, { state: "checked", checkedAt: now() });
       emit({ type: "qa.state", item: structuredClone(item) });
@@ -592,7 +848,12 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
       const creative = creativeOf(item);
       if (creative && was?.version && creative.current.state === "checked") {
         releaseHold(creative.current.id); // round 13: nothing to send once the check is undone
-        ctx.setVersion?.(creative, { state: was.version.state, checkedBy: was.version.checkedBy, checkedAt: was.version.checkedAt, heldReason: was.version.heldReason });
+        ctx.setVersion?.(creative, {
+          state: was.version.state,
+          checkedBy: was.version.checkedBy,
+          checkedAt: was.version.checkedAt,
+          heldReason: was.version.heldReason,
+        });
         const campaign = db.campaigns.find((c) => c.id === item.campaignId);
         if (campaign) ctx.recount?.(campaign);
         if (db.record) {
@@ -609,7 +870,14 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
       ctx.mustStaff();
       const item = find(db.qaItems, itemId, "QA item");
       // r13 #51: the pins go with it as located notes
-      const fb = { id: nextId("fb"), text, by: ctx.me().id, at: now(), state: "sent" as "sent" | "fixed", ...(pins?.length ? { pins: structuredClone(pins) } : {}) };
+      const fb = {
+        id: nextId("fb"),
+        text,
+        by: ctx.me().id,
+        at: now(),
+        state: "sent" as "sent" | "fixed",
+        ...(pins?.length ? { pins: structuredClone(pins) } : {}),
+      };
       item.feedback.push(fb);
       item.state = "fixing";
       setTimeout(() => {
@@ -631,15 +899,49 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
     async qaToStudio(itemId, takeOver) {
       ctx.mustStaff();
       const item = find(db.qaItems, itemId, "QA item");
-      let d = item.documentId ? db.documents.find((x) => x.id === item.documentId) : db.documents.find((x) => x.creativeId === item.creativeId);
+      let d = item.documentId
+        ? db.documents.find((x) => x.id === item.documentId)
+        : db.documents.find((x) => x.creativeId === item.creativeId);
       if (!d) {
         const modeId = item.studio === "design" ? "m-layout" : "m-scene";
         d = {
-          id: nextId("doc"), workspaceId: item.workspaceId, campaignId: item.campaignId, creativeId: item.creativeId, title: item.title, slot: item.slot,
-          studio: item.studio, modeId, variables: seed3.defaults(modeId),
-          specs: { format: item.format, count: 4, imageModel: "Nano Banana Pro", referenceIds: [], modelIds: [], productId: "pr-oil" },
-          overrides: [], layers: item.layers ?? [], edits: [], state: "draft", by: ctx.me().id, updatedAt: now(),
-          versions: [{ id: nextId("rv"), number: 1, image: item.image, at: item.madeAt, by: ctx.me().id, state: "done", variables: seed3.defaults(modeId), specs: { format: item.format, count: 1, imageModel: "Nano Banana Pro", referenceIds: [], modelIds: [] }, evaluation: item.evaluation, cost: 0.12 }],
+          id: nextId("doc"),
+          workspaceId: item.workspaceId,
+          campaignId: item.campaignId,
+          creativeId: item.creativeId,
+          title: item.title,
+          slot: item.slot,
+          studio: item.studio,
+          modeId,
+          variables: seed3.defaults(modeId),
+          specs: {
+            format: item.format,
+            count: 4,
+            imageModel: "Nano Banana Pro",
+            referenceIds: [],
+            modelIds: [],
+            productId: "pr-oil",
+          },
+          overrides: [],
+          layers: item.layers ?? [],
+          edits: [],
+          state: "draft",
+          by: ctx.me().id,
+          updatedAt: now(),
+          versions: [
+            {
+              id: nextId("rv"),
+              number: 1,
+              image: item.image,
+              at: item.madeAt,
+              by: ctx.me().id,
+              state: "done",
+              variables: seed3.defaults(modeId),
+              specs: { format: item.format, count: 1, imageModel: "Nano Banana Pro", referenceIds: [], modelIds: [] },
+              evaluation: item.evaluation,
+              cost: 0.12,
+            },
+          ],
         };
         d.pickedVersionId = d.versions[0].id;
         db.documents.push(d);
@@ -654,7 +956,9 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
 
     // ── Review ──
     async reviewComments(creativeId) {
-      return wait(db.reviewComments.filter((c) => c.creativeId === creativeId).sort((a, b) => a.at.localeCompare(b.at)));
+      return wait(
+        db.reviewComments.filter((c) => c.creativeId === creativeId).sort((a, b) => a.at.localeCompare(b.at)),
+      );
     },
     async addReviewComment({ creativeId, versionId, text, pin, replyTo }) {
       if (replyTo) {
@@ -714,7 +1018,11 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
         composition: "The product low, with air above it.",
         styling: "Natural fabrics: linen and wool, nothing shiny.",
       };
-      s.lastLesson = reason ? `${reason.charAt(0).toUpperCase()}${reason.slice(1).replace(/\.?$/, ".")}` : answer === "no" ? `Not this. ${lessons[area]}` : lessons[area];
+      s.lastLesson = reason
+        ? `${reason.charAt(0).toUpperCase()}${reason.slice(1).replace(/\.?$/, ".")}`
+        : answer === "no"
+          ? `Not this. ${lessons[area]}`
+          : lessons[area];
       // The deck never ends: an answered card goes to the back with a fresh picture.
       db.tasteCards = [...db.tasteCards.filter((c) => c.id !== cardId), { ...card, id: nextId("tc") }];
       return wait({ card, state: s });
@@ -726,37 +1034,103 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
       return wait(db.messages.filter((m) => ids.has(m.threadId)).sort((a, b) => a.at.localeCompare(b.at)));
     },
     async say(text, attachments) {
-      const general = db.threads.find((t) => t.workspaceId === ctx.workspaceId() && t.kind !== "contact" && t.campaignId === null);
+      const general = db.threads.find(
+        (t) => t.workspaceId === ctx.workspaceId() && t.kind !== "contact" && t.campaignId === null,
+      );
       if (!general) throw new FumeError("not_found", "No conversation with Fume");
       // A typed answer to Fume's latest question goes to the campaign it asked about, so it fills that brief (UX review C1).
       const ids = fumeThreadIds();
-      const latest = db.messages.filter((m) => ids.has(m.threadId)).sort((a, b) => a.at.localeCompare(b.at)).at(-1);
-      const asking = latest?.author.kind === "fume" && latest.card?.kind === "question" ? db.threads.find((t) => t.id === latest.threadId) : undefined;
-      const open = asking?.campaignId ? db.briefs.find((b) => b.campaignId === asking.campaignId && b.state === "drafting") : undefined;
+      const latest = db.messages
+        .filter((m) => ids.has(m.threadId))
+        .sort((a, b) => a.at.localeCompare(b.at))
+        .at(-1);
+      const asking =
+        latest?.author.kind === "fume" && latest.card?.kind === "question"
+          ? db.threads.find((t) => t.id === latest.threadId)
+          : undefined;
+      const open = asking?.campaignId
+        ? db.briefs.find((b) => b.campaignId === asking.campaignId && b.state === "drafting")
+        : undefined;
       return ctx.send(open && asking ? asking.id : general.id, text, attachments);
     },
     async orderBrief(order) {
       const me = ctx.me();
       const id = nextId("c");
       const campaign: Campaign = {
-        id, workspaceId: ctx.workspaceId(), name: order.name || "New campaign", productIds: order.productIds, state: "draft", stage: "brief",
+        id,
+        workspaceId: ctx.workspaceId(),
+        name: order.name || "New campaign",
+        productIds: order.productIds,
+        state: "draft",
+        stage: "brief",
         // Round 9 (FORMS, DTSK-12): the market and the number of creatives come from the form when it says them.
-        approverId: "u-maja", channels: order.channels, formats: order.formats, market: order.market ?? "Norway", language: order.language ?? "Norwegian", dueAt: order.deadline,
-        createdBy: me.id, createdAt: now(), updatedAt: now(), counts: { creatives: 0, inCheck: 0, checked: 0, approved: 0, delivered: 0 },
-        roundsUsed: 0, roundsIncluded: 2, brandDnaVersion: 3, collectionIds: order.collectionIds,
+        approverId: "u-maja",
+        channels: order.channels,
+        formats: order.formats,
+        market: order.market ?? "Norway",
+        language: order.language ?? "Norwegian",
+        dueAt: order.deadline,
+        createdBy: me.id,
+        createdAt: now(),
+        updatedAt: now(),
+        counts: { creatives: 0, inCheck: 0, checked: 0, approved: 0, delivered: 0 },
+        roundsUsed: 0,
+        roundsIncluded: 2,
+        brandDnaVersion: 3,
+        collectionIds: order.collectionIds,
       };
       db.campaigns.push(campaign);
-      if (order.moodboard?.images.length) startCampaignBoard(db, campaign, order.moodboard.images, { id: me.id, staff: Boolean(me.staffRole) }, now(), nextId);
+      if (order.moodboard?.images.length)
+        startCampaignBoard(
+          db,
+          campaign,
+          order.moodboard.images,
+          { id: me.id, staff: Boolean(me.staffRole) },
+          now(),
+          nextId,
+        );
       db.briefs.push({
         // Round 8 (BRIEF, TASK-2): the message is its own line, never the notes; the notes go to Fume as her words.
-        campaignId: id, version: 1, state: "ready", objective: order.goal, audience: order.audience ?? "", message: order.message ?? "",
-        mandatory: order.mandatory ?? [], never: order.never ?? [],
-        channels: order.channels, formats: order.formats, creatives: order.creatives && order.creatives > 0 ? Math.round(order.creatives) : order.formats.length * 4, references: order.references, missing: [],
+        campaignId: id,
+        version: 1,
+        state: "ready",
+        objective: order.goal,
+        audience: order.audience ?? "",
+        message: order.message ?? "",
+        mandatory: order.mandatory ?? [],
+        never: order.never ?? [],
+        channels: order.channels,
+        formats: order.formats,
+        creatives: order.creatives && order.creatives > 0 ? Math.round(order.creatives) : order.formats.length * 4,
+        references: order.references,
+        missing: [],
       });
       const threadId = nextId("t");
-      db.threads.push({ id: threadId, workspaceId: ctx.workspaceId(), campaignId: id, title: campaign.name, kind: "fume", updatedAt: now(), unread: 0 });
-      if (order.notes.trim()) db.messages.push({ id: nextId("msg"), threadId, author: { kind: "person", userId: me.id }, text: order.notes.trim(), at: now() });
-      const m: Message = { id: nextId("msg"), threadId, author: { kind: "fume" }, text: `${me.name.split(" ")[0]} wrote the brief for ${campaign.name}.`, at: now(), card: { kind: "brief", campaignId: id, version: 1 } };
+      db.threads.push({
+        id: threadId,
+        workspaceId: ctx.workspaceId(),
+        campaignId: id,
+        title: campaign.name,
+        kind: "fume",
+        updatedAt: now(),
+        unread: 0,
+      });
+      if (order.notes.trim())
+        db.messages.push({
+          id: nextId("msg"),
+          threadId,
+          author: { kind: "person", userId: me.id },
+          text: order.notes.trim(),
+          at: now(),
+        });
+      const m: Message = {
+        id: nextId("msg"),
+        threadId,
+        author: { kind: "fume" },
+        text: `${me.name.split(" ")[0]} wrote the brief for ${campaign.name}.`,
+        at: now(),
+        card: { kind: "brief", campaignId: id, version: 1 },
+      };
       db.messages.push(m);
       emit({ type: "message.new", message: m });
       emit({ type: "campaign.state", campaign });
@@ -766,15 +1140,28 @@ export function v3Api(ctx: V3Context): Pick<FumeApi, V3Keys> {
     // ── Batches ──
     async batches(campaignId) {
       ctx.mustStaff();
-      return wait(db.batches.filter((b) => !campaignId || b.campaignId === campaignId).sort((a, b) => b.at.localeCompare(a.at)));
+      return wait(
+        db.batches.filter((b) => !campaignId || b.campaignId === campaignId).sort((a, b) => b.at.localeCompare(a.at)),
+      );
     },
     async startBatch(input) {
       ctx.mustStaff();
       // Round 12 (DLOAD-3a): a batch for the product page has no campaign; its brand is its products' brand.
       const campaign = input.campaignId ? find(db.campaigns, input.campaignId, "campaign") : undefined;
-      const workspaceId = campaign?.workspaceId ?? db.products.find((p) => p.id === input.productIds[0])?.workspaceId ?? "";
+      const workspaceId =
+        campaign?.workspaceId ?? db.products.find((p) => p.id === input.productIds[0])?.workspaceId ?? "";
       const total = input.productIds.length * input.perProduct;
-      const b: Batch = { id: nextId("bt"), workspaceId, ...input, state: "running", made: 0, total, previews: [], by: ctx.me().id, at: now() };
+      const b: Batch = {
+        id: nextId("bt"),
+        workspaceId,
+        ...input,
+        state: "running",
+        made: 0,
+        total,
+        previews: [],
+        by: ctx.me().id,
+        at: now(),
+      };
       db.batches.push(b);
       const pool = POOL[input.modeId] ?? POOL["m-packshot"];
       const timer = setInterval(() => {

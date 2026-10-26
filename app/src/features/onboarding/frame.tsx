@@ -1,12 +1,11 @@
-// The frame every onboarding step shares (FLOWS §7; round 8, UX review ONB-1, ONB-4, ONB-10, ONB-12, ONB-16): Fume's
-// lockup on its own bar (the onboarding has no sidebar), where she is in the four steps (and, in step 3, in its five
-// parts), held at the top as she scrolls, the step itself, and its way forward pinned to the bottom of the screen.
-// Four steps, named as what happens: 1 Your brand, 2 Fume reads it, 3 Confirm what Fume found, 4 Your taste.
-// A new step (or part) opens at its top with focus on its title; Back and forward keep the browser's own place.
-// The furthest step and part she reached is kept on the workspace, so she can leave and continue where she left off:
-// the logo, step 1's "Continue" and the root (/welcome?resume) all go there.
-// Round 9 (desktop review DTSK-5, DTSK-7, PROPOSED 19 Oct 2026): while finds are open, step 3 says how many are left
-// ("3 · 12 left") instead of a tick, on every step; Enter, outside a control, presses the step's forward pill.
+// The frame every onboarding step shares (FLOWS §7): Fume's lockup on its own bar (the onboarding has no sidebar),
+// where she is in the four steps (and, in step 3, in its five parts), held at the top as she scrolls, the step itself,
+// and its way forward pinned to the bottom of the screen. Four steps, named as what happens: 1 Your brand, 2 Fume reads
+// it, 3 Confirm what Fume found, 4 Your taste. A new step (or part) opens at its top with focus on its title; Back and
+// forward keep the browser's own place. The furthest step and part she reached is kept on the workspace, so she can
+// leave and continue where she left off: the logo, step 1's "Continue" and the root (/welcome?resume) all go there.
+// While finds are open, step 3 says how many are left ("3 · 12 left") instead of a tick. Enter, outside a control,
+// presses the step's forward pill.
 import { cx, WelcomeProgress, type WelcomeProgressPart } from "@fume/ui";
 import { useEffect, useRef, type ReactNode } from "react";
 import { Link, useLocation, useNavigate, useNavigationType } from "react-router-dom";
@@ -29,7 +28,13 @@ export type OnboardingStep = OnboardingStepId;
 export const stepTitle = (id: OnboardingStepId) => onboardingSteps.find((s) => s.id === id)?.title ?? "";
 
 export const stepPath = (id: OnboardingStepId, part?: string) =>
-  id === "review" ? (part && part !== "logo" ? `/welcome/review?part=${part}` : "/welcome/review") : id ? `/welcome/${id}` : "/welcome";
+  id === "review"
+    ? part && part !== "logo"
+      ? `/welcome/review?part=${part}`
+      : "/welcome/review"
+    : id
+      ? `/welcome/${id}`
+      : "/welcome";
 
 /** Where "continue" goes: the furthest step and part reached. */
 export const resumePath = (p?: OnboardingProgress) => (p ? stepPath(p.step, p.part) : "/welcome");
@@ -73,17 +78,34 @@ export function useOpenAtTop() {
 }
 
 /**
- * Enter presses the step's forward pill (DTSK-7) when nothing else wants it: not in a field, not on a button or a
- * link (they have their own Enter), not while a dialog or a menu is open.
+ * Enter presses the step's forward pill when nothing else wants it: not in a field, not on a button or a link (they
+ * have their own Enter), not while a dialog or a menu is open.
  */
 export function useEnterForward(go: (() => void) | undefined) {
   const ref = useRef(go);
   ref.current = go;
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "Enter" || e.defaultPrevented || e.isComposing || e.metaKey || e.ctrlKey || e.altKey || e.shiftKey || !ref.current) return;
+      if (
+        e.key !== "Enter" ||
+        e.defaultPrevented ||
+        e.isComposing ||
+        e.metaKey ||
+        e.ctrlKey ||
+        e.altKey ||
+        e.shiftKey ||
+        !ref.current
+      )
+        return;
       const t = e.target as HTMLElement | null;
-      if (t && t !== document.body && t.closest("input, textarea, select, button, a[href], [role=button], [role=option], [role=menuitem], [role=tab], [role=radio], [role=checkbox], [contenteditable=true], [role=dialog]")) return;
+      if (
+        t &&
+        t !== document.body &&
+        t.closest(
+          "input, textarea, select, button, a[href], [role=button], [role=option], [role=menuitem], [role=tab], [role=radio], [role=checkbox], [contenteditable=true], [role=dialog]",
+        )
+      )
+        return;
       if (document.querySelector("[role=dialog][data-state=open], [role=menu][data-state=open]")) return;
       e.preventDefault();
       ref.current();
@@ -102,7 +124,10 @@ function useKeepProgress(step: OnboardingStepId, part?: string) {
     if (!p || !step || save.isPending) return;
     const ahead = stepIndex(step) > stepIndex(p.step);
     const partAhead =
-      step === "review" && p.step === "review" && part && checkParts.findIndex((x) => x.id === part) > checkParts.findIndex((x) => x.id === (p.part ?? "logo"));
+      step === "review" &&
+      p.step === "review" &&
+      part &&
+      checkParts.findIndex((x) => x.id === part) > checkParts.findIndex((x) => x.id === (p.part ?? "logo"));
     if (ahead || partAhead) save.mutate({ step, part });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [p?.step, p?.part, step, part]);
@@ -126,13 +151,22 @@ export interface StepFrameProps {
 }
 
 /** A step's page: the bar, where she is, the step itself, its way forward. */
-export function StepFrame({ step, title, parts, part, foot, footAlign = "between", footPinned = true, children }: StepFrameProps) {
+export function StepFrame({
+  step,
+  title,
+  parts,
+  part,
+  foot,
+  footAlign = "between",
+  footPinned = true,
+  children,
+}: StepFrameProps) {
   const navigate = useNavigate();
   const progress = useKeepProgress(step, part);
   const board = useBrandBoard();
   const current = stepIndex(step);
   const furthest = Math.max(current, progress ? stepIndex(progress.step) : 0);
-  // Step 3 says how many finds are left once she has reached it, instead of a tick (DTSK-5).
+  // Step 3 says how many finds are left once she has reached it, instead of a tick.
   const identity = board.data?.identity;
   const open = identity && furthest >= stepIndex("review") ? openTotal(identity) : 0;
   const steps = onboardingSteps.map((s, i) => ({
@@ -140,7 +174,10 @@ export function StepFrame({ step, title, parts, part, foot, footAlign = "between
     title: s.title,
     state: (i < current ? "done" : i === current ? "current" : "todo") as "done" | "current" | "todo",
     left: s.id === "review" && open > 0 ? `${open} left` : undefined,
-    onSelect: i <= furthest && i !== current ? () => navigate(i === stepIndex(progress?.step ?? "") ? resumePath(progress) : stepPath(s.id)) : undefined,
+    onSelect:
+      i <= furthest && i !== current
+        ? () => navigate(i === stepIndex(progress?.step ?? "") ? resumePath(progress) : stepPath(s.id))
+        : undefined,
   }));
 
   return (
@@ -148,11 +185,20 @@ export function StepFrame({ step, title, parts, part, foot, footAlign = "between
       <Bar to={resumePath(progress)} />
       <Page title={title}>
         <div className="ui-welcome-screen" data-step={step || "brand"}>
-          <WelcomeProgress aria-label="Your onboarding" steps={steps} parts={parts} partsLabel="The parts of your brand" />
+          <WelcomeProgress
+            aria-label="Your onboarding"
+            steps={steps}
+            parts={parts}
+            partsLabel="The parts of your brand"
+          />
           {children}
           {foot && (
             <div
-              className={cx("ui-welcome-foot", footAlign !== "between" && `ui-welcome-foot--${footAlign}`, !footPinned && "ui-welcome-foot--static")}
+              className={cx(
+                "ui-welcome-foot",
+                footAlign !== "between" && `ui-welcome-foot--${footAlign}`,
+                !footPinned && "ui-welcome-foot--static",
+              )}
               data-ui-foot={footPinned ? "" : undefined}
             >
               {foot}

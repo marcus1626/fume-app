@@ -2,8 +2,7 @@
 // On light ground: primary (Ink), secondary (white + hairline), quiet, danger (Rouge), link.
 // On glass (inside .ui-glass): glass-white (the one main action), glass-clear (the rest), glass-danger (delete).
 // Loading sets aria-busy and swaps the leading icon for the spinner; the label stays, so the width never jumps.
-// Icon-only buttons (iconOnly) need an aria-label.
-// Round 9 (DWAY-9; PROPOSED 19 Oct 2026): an icon-only button names itself: it wraps itself in a tooltip with its
+// An icon-only button (iconOnly) needs an aria-label, and names itself: it wraps itself in a tooltip with its
 // aria-label and, when it has one, its shortcut (`shortcut="⌘B"`, shown "Ctrl+B" off a Mac). Inside a TooltipTrigger
 // (WithTooltip) it does not add a second one; `tooltip={false}` leaves it out, a string says something shorter.
 import { cloneElement, forwardRef, isValidElement, type ButtonHTMLAttributes, type ReactNode, type Ref } from "react";
@@ -14,14 +13,7 @@ import { Slot } from "./slot";
 import { Spinner } from "./spinner";
 
 export type ButtonVariant =
-  | "primary"
-  | "secondary"
-  | "quiet"
-  | "danger"
-  | "link"
-  | "glass-white"
-  | "glass-clear"
-  | "glass-danger";
+  "primary" | "secondary" | "quiet" | "danger" | "link" | "glass-white" | "glass-clear" | "glass-danger";
 
 export type ButtonSize = "sm" | "md" | "lg";
 
@@ -47,12 +39,30 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 /** The modifier class of a variant and size, for elements that only need the look (a link styled as a button). */
-export function buttonClass({ variant = "primary", size = "md", iconOnly = false }: Pick<ButtonProps, "variant" | "size" | "iconOnly"> = {}): string {
+export function buttonClass({
+  variant = "primary",
+  size = "md",
+  iconOnly = false,
+}: Pick<ButtonProps, "variant" | "size" | "iconOnly"> = {}): string {
   return cx("ui-btn", `ui-btn--${variant}`, size !== "md" && `ui-btn--${size}`, iconOnly && "ui-btn--icon");
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = "primary", size = "md", iconOnly = false, icon, iconEnd, loading = false, asChild = false, shortcut, tooltip, type, className, children, ...props },
+  {
+    variant = "primary",
+    size = "md",
+    iconOnly = false,
+    icon,
+    iconEnd,
+    loading = false,
+    asChild = false,
+    shortcut,
+    tooltip,
+    type,
+    className,
+    children,
+    ...props
+  },
   ref,
 ) {
   const inTrigger = useInTooltipTrigger();

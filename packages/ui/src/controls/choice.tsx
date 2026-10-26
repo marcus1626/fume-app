@@ -14,8 +14,18 @@ export interface ChoiceProps extends LabelHTMLAttributes<HTMLLabelElement> {
   disabled?: boolean;
 }
 
-export const Choice = forwardRef<HTMLLabelElement, ChoiceProps>(function Choice({ end = false, disabled, className, ...props }, ref) {
-  return <label ref={ref} data-disabled={disabled ? "" : undefined} className={cx("ui-choice", end && "ui-choice--end", className)} {...props} />;
+export const Choice = forwardRef<HTMLLabelElement, ChoiceProps>(function Choice(
+  { end = false, disabled, className, ...props },
+  ref,
+) {
+  return (
+    <label
+      ref={ref}
+      data-disabled={disabled ? "" : undefined}
+      className={cx("ui-choice", end && "ui-choice--end", className)}
+      {...props}
+    />
+  );
 });
 
 export interface ChoiceTextProps extends HTMLAttributes<HTMLSpanElement> {
@@ -29,7 +39,10 @@ export interface ChoiceTextProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 /** The words of a row: label, hint, error. Children go after them. */
-export const ChoiceText = forwardRef<HTMLSpanElement, ChoiceTextProps>(function ChoiceText({ label, hint, error, errorId, className, children, ...props }, ref) {
+export const ChoiceText = forwardRef<HTMLSpanElement, ChoiceTextProps>(function ChoiceText(
+  { label, hint, error, errorId, className, children, ...props },
+  ref,
+) {
   return (
     <span ref={ref} className={cx("ui-choice-text", className)} {...props}>
       {label !== undefined ? <span className="ui-choice-label">{label}</span> : null}
@@ -46,12 +59,18 @@ export const ChoiceText = forwardRef<HTMLSpanElement, ChoiceTextProps>(function 
 });
 
 /** The label line alone (.ui-choice-label), for custom ChoiceText content. */
-export const ChoiceLabel = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function ChoiceLabel({ className, ...props }, ref) {
+export const ChoiceLabel = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function ChoiceLabel(
+  { className, ...props },
+  ref,
+) {
   return <span ref={ref} className={cx("ui-choice-label", className)} {...props} />;
 });
 
 /** The hint line alone (.ui-choice-hint). */
-export const ChoiceHint = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function ChoiceHint({ className, ...props }, ref) {
+export const ChoiceHint = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function ChoiceHint(
+  { className, ...props },
+  ref,
+) {
   return <span ref={ref} className={cx("ui-choice-hint", className)} {...props} />;
 });
 
@@ -61,10 +80,19 @@ export interface ChoiceGroupProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /** Rows that belong together: role="group", 12 apart. Checkbox rows go here; radios go in a RadioGroup. */
-export const ChoiceGroup = forwardRef<HTMLDivElement, ChoiceGroupProps>(function ChoiceGroup({ legend, className, children, ...props }, ref) {
+export const ChoiceGroup = forwardRef<HTMLDivElement, ChoiceGroupProps>(function ChoiceGroup(
+  { legend, className, children, ...props },
+  ref,
+) {
   const id = useId();
   return (
-    <div ref={ref} role="group" aria-labelledby={legend !== undefined ? id : undefined} className={cx("ui-choice-group", className)} {...props}>
+    <div
+      ref={ref}
+      role="group"
+      aria-labelledby={legend !== undefined ? id : undefined}
+      className={cx("ui-choice-group", className)}
+      {...props}
+    >
       {legend !== undefined ? (
         <span className="ui-choice-legend" id={id}>
           {legend}

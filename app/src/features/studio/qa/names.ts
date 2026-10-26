@@ -10,7 +10,8 @@ export function useNames() {
   const me = useSession().data?.user;
   const byId = new Map<Id, User>();
   for (const u of [...people, ...team.map((r) => r.user), ...(me ? [me] : [])]) byId.set(u.id, u);
-  const who = (id: Id | undefined) => (id && id === me?.id ? "you" : id ? firstName(byId.get(id)?.name ?? "Someone") : "Someone");
+  const who = (id: Id | undefined) =>
+    id && id === me?.id ? "you" : id ? firstName(byId.get(id)?.name ?? "Someone") : "Someone";
   return {
     /** "Anna", or "Someone" when the person is not known here. */
     name: (id: Id | undefined) => (id ? firstName(byId.get(id)?.name ?? "Someone") : "Someone"),

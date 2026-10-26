@@ -1,6 +1,6 @@
-// The parts of a product's spec (round 6): the fidelity meter, rows that say where each value came from, swatches,
-// the dimensions drawing, the packaging parts, the reference-shot slots, and one editor for every field type. The
-// product page, the add-product flow and the Studio's read-only summary use these. Looks: product-spec.css.
+// The parts of a product's spec: rows that say where each value came from, swatches, the dimensions drawing, the
+// packaging parts, the reference-shot slots, and one editor for every field type. The product page, the add-product
+// flow and the Studio's read-only summary use these. Looks: product-spec.css.
 import {
   Button,
   Dialog,
@@ -36,13 +36,48 @@ import {
   useNarrowScreen,
 } from "@fume/ui";
 import { useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
-import type { ColourValue, Dimensions, FibreBlend, FidelityGap, MeasureTable, PartsValue, ProductKind, ProductPart, ReferenceShot, SpecEntry, SpecField, SpecPart, SpecValue } from "../../contract";
+import type {
+  ColourValue,
+  Dimensions,
+  FibreBlend,
+  FidelityGap,
+  MeasureTable,
+  PartsValue,
+  ProductKind,
+  ProductPart,
+  ReferenceShot,
+  SpecEntry,
+  SpecField,
+  SpecPart,
+  SpecValue,
+} from "../../contract";
 import { date } from "../../lib/time";
-import { blendOk, blendSum, coloursIn, isBlend, isColour, isDims, isParts, isTable, parseColourLines, valueWords } from "./spec";
+import {
+  blendOk,
+  blendSum,
+  coloursIn,
+  isBlend,
+  isColour,
+  isDims,
+  isParts,
+  isTable,
+  parseColourLines,
+  valueWords,
+} from "./spec";
 
 // ─── Swatch ─────────────────────────────────────────────────────────────────
 
-export function Swatch({ colour, finish, large, label }: { colour: ColourValue; finish?: string; large?: boolean; label?: string }) {
+export function Swatch({
+  colour,
+  finish,
+  large,
+  label,
+}: {
+  colour: ColourValue;
+  finish?: string;
+  large?: boolean;
+  label?: string;
+}) {
   return (
     <span
       className={large ? "ui-pswatch ui-pswatch--lg" : "ui-pswatch"}
@@ -83,13 +118,21 @@ export function DimsDrawing({ dims, label }: { dims: Dimensions; label: string }
   );
 }
 
-// ─── What would make it truer (round 8) ─────────────────────────────────────
+// ─── What would make it truer ─────────────────────────────────────────────
 
 const gapAction = (g: FidelityGap) => (g.kind === "shot" ? "Add the photo" : "Add it");
 
-/** Round 8 (walk-through 19 Oct, LOAD-16, TASK-14): the old "Ready for the Engine N %" meter is gone; what is
- *  missing is an optional extra, one row per gap with its one action, folded under All details. No percentage. */
-export function GapList({ gaps, canEdit, onGap }: { gaps: FidelityGap[]; canEdit: boolean; onGap: (gap: FidelityGap) => void }) {
+/** What is missing is an optional extra: one row per gap with its one action, folded under All details. No
+ *  percentage. */
+export function GapList({
+  gaps,
+  canEdit,
+  onGap,
+}: {
+  gaps: FidelityGap[];
+  canEdit: boolean;
+  onGap: (gap: FidelityGap) => void;
+}) {
   const shown = gaps.filter((g) => g.kind !== "proposals");
   if (!shown.length) return null;
   return (
@@ -98,7 +141,12 @@ export function GapList({ gaps, canEdit, onGap }: { gaps: FidelityGap[]; canEdit
         <li key={`${g.kind}-${g.id}`}>
           <span className="ui-fidelity-gap">{g.label}</span>
           {canEdit && (
-            <Button size="sm" variant="quiet" onClick={() => onGap(g)} aria-label={`${gapAction(g)}: ${g.label.toLowerCase()}`}>
+            <Button
+              size="sm"
+              variant="quiet"
+              onClick={() => onGap(g)}
+              aria-label={`${gapAction(g)}: ${g.label.toLowerCase()}`}
+            >
               {gapAction(g)}
             </Button>
           )}
@@ -110,13 +158,24 @@ export function GapList({ gaps, canEdit, onGap }: { gaps: FidelityGap[]; canEdit
 
 // ─── A value with its source ────────────────────────────────────────────────
 
-export function provenanceTag(entry: { provenance: SpecEntry["provenance"] }, who: (id?: string) => string | undefined) {
+export function provenanceTag(
+  entry: { provenance: SpecEntry["provenance"] },
+  who: (id?: string) => string | undefined,
+) {
   const p = entry.provenance;
-  return <ProposalTag origin={p.origin} state={p.state} evidence={p.evidence} by={who(p.by)} when={p.at ? date(p.at) : undefined} />;
+  return (
+    <ProposalTag
+      origin={p.origin}
+      state={p.state}
+      evidence={p.evidence}
+      by={who(p.by)}
+      when={p.at ? date(p.at) : undefined}
+    />
+  );
 }
 
-/** Round 8 (LOAD-9): where a value came from shows only while it waits for the customer ("Fume read this on
- *  lysne.no/hand-balm"); what is hers or confirmed shows the value alone. The history is not repeated on every line. */
+/** Where a value came from shows only while it waits for the customer ("Fume read this on lysne.no/hand-balm"); what is
+ *  hers or confirmed shows the value alone. */
 export function ReadTag({ provenance }: { provenance?: SpecEntry["provenance"] }) {
   if (provenance?.state !== "proposed") return null;
   return (
@@ -158,7 +217,7 @@ export function SpecRow({
   field: SpecField;
   entry?: SpecEntry;
   canEdit: boolean;
-  /** @deprecated round 8: provenance shows only on proposals (ReadTag); kept so callers need not change. */
+  /** @deprecated Provenance shows only on proposals (ReadTag); kept so callers need not change. */
   who?: (id?: string) => string | undefined;
   onEdit?: () => void;
   extra?: ReactNode;
@@ -166,9 +225,17 @@ export function SpecRow({
   const rich = isRich(field);
   const foot = entry ? <ReadTag provenance={entry.provenance} /> : null;
   return (
-    <div className="ui-pspec-row" data-state={entry?.provenance.state} data-missing={entry ? undefined : ""} data-rich={rich || undefined} id={`spec-${field.id}`}>
+    <div
+      className="ui-pspec-row"
+      data-state={entry?.provenance.state}
+      data-missing={entry ? undefined : ""}
+      data-rich={rich || undefined}
+      id={`spec-${field.id}`}
+    >
       <dt className="ui-pspec-label">{field.label}</dt>
-      <dd className="ui-pspec-value">{entry ? <ValueView field={field} entry={entry} /> : field.required ? "Needed" : "Not added"}</dd>
+      <dd className="ui-pspec-value">
+        {entry ? <ValueView field={field} entry={entry} /> : field.required ? "Needed" : "Not added"}
+      </dd>
       {(foot || extra) && (
         <dd className="ui-pspec-foot">
           {foot}
@@ -176,9 +243,14 @@ export function SpecRow({
         </dd>
       )}
       {canEdit && onEdit && (
-        // Round 8 (MOB-8): no Keep on each field; a section keeps all its proposals at once. One quiet way to change.
+        // No Keep on each field: a section confirms all its proposals at once. One quiet way to change.
         <dd className="ui-pspec-actions">
-          <Button size="sm" variant="quiet" onClick={onEdit} aria-label={entry ? `Change the ${field.label.toLowerCase()}` : `Add the ${field.label.toLowerCase()}`}>
+          <Button
+            size="sm"
+            variant="quiet"
+            onClick={onEdit}
+            aria-label={entry ? `Change the ${field.label.toLowerCase()}` : `Add the ${field.label.toLowerCase()}`}
+          >
             {entry ? "Change" : "Add"}
           </Button>
         </dd>
@@ -200,9 +272,9 @@ export interface Draft {
   name: string;
   hex: string;
   pantone: string;
-  /** Round 7: the value of a blend, a measurement table or parts, edited by its own editor. */
+  /** The value of a blend, a measurement table or parts, edited by its own editor. */
   rich?: SpecValue;
-  /** Round 7: a list with options, picked as chips. */
+  /** A list with options, picked as chips. */
   picks?: string[];
 }
 
@@ -214,21 +286,45 @@ function emptyRich(field: SpecField): SpecValue | undefined {
   if (field.type === "parts") return { parts: [{ name: "" }] };
   if (field.type === "measurements") {
     const sizes = field.sizes ?? ["S", "M", "L"];
-    return { unit: "cm", sizes, base: sizes[Math.floor(sizes.length / 2)], rows: (field.poms ?? ["Chest width ½", "Length"]).map((pom) => ({ pom, values: sizes.map(() => null), tol: 1 })) };
+    return {
+      unit: "cm",
+      sizes,
+      base: sizes[Math.floor(sizes.length / 2)],
+      rows: (field.poms ?? ["Chest width ½", "Length"]).map((pom) => ({ pom, values: sizes.map(() => null), tol: 1 })),
+    };
   }
   return undefined;
 }
 
 export function draftOf(field: SpecField, entry?: Pick<SpecEntry, "value" | "unit">): Draft {
   const v = entry?.value;
-  const d: Draft = { text: "", num: "", unit: entry?.unit ?? field.units?.[0] ?? "", w: "", h: "", d: "", shape: "round", name: "", hex: "#", pantone: "" };
+  const d: Draft = {
+    text: "",
+    num: "",
+    unit: entry?.unit ?? field.units?.[0] ?? "",
+    w: "",
+    h: "",
+    d: "",
+    shape: "round",
+    name: "",
+    hex: "#",
+    pantone: "",
+  };
   if (typeof v === "string") d.text = v;
   else if (typeof v === "number") d.num = String(v);
-  else if (Array.isArray(v)) d.text = (v as (string | ColourValue)[]).map((x) => (typeof x === "string" ? x : [x.name, x.hex, x.pantone && `Pantone ${x.pantone}`].filter(Boolean).join(" "))).join("\n");
-  else if (isDims(v)) Object.assign(d, { w: String(v.w), h: String(v.h), d: v.d ? String(v.d) : "", unit: v.unit, shape: v.shape });
+  else if (Array.isArray(v))
+    d.text = (v as (string | ColourValue)[])
+      .map((x) =>
+        typeof x === "string" ? x : [x.name, x.hex, x.pantone && `Pantone ${x.pantone}`].filter(Boolean).join(" "),
+      )
+      .join("\n");
+  else if (isDims(v))
+    Object.assign(d, { w: String(v.w), h: String(v.h), d: v.d ? String(v.d) : "", unit: v.unit, shape: v.shape });
   else if (isColour(v)) Object.assign(d, { name: v.name, hex: v.hex, pantone: v.pantone ?? "" });
-  if (isRich(field)) d.rich = v !== undefined && (isBlend(v) || isTable(v) || isParts(v)) ? structuredClone(v) : emptyRich(field);
-  if (field.type === "list" && field.options) d.picks = Array.isArray(v) ? (v as (string | ColourValue)[]).map((x) => (typeof x === "string" ? x : x.name)) : [];
+  if (isRich(field))
+    d.rich = v !== undefined && (isBlend(v) || isTable(v) || isParts(v)) ? structuredClone(v) : emptyRich(field);
+  if (field.type === "list" && field.options)
+    d.picks = Array.isArray(v) ? (v as (string | ColourValue)[]).map((x) => (typeof x === "string" ? x : x.name)) : [];
   return d;
 }
 
@@ -244,16 +340,42 @@ export function valueOf(field: SpecField, d: Draft): { value: SpecValue; unit?: 
       const h = toNum(d.h);
       if (!(w > 0 && h > 0)) return undefined;
       const dd = toNum(d.d);
-      return { value: { w, h, ...(d.shape !== "round" && dd > 0 ? { d: dd } : {}), unit: (d.unit as Dimensions["unit"]) || "mm", shape: d.shape } };
+      return {
+        value: {
+          w,
+          h,
+          ...(d.shape !== "round" && dd > 0 ? { d: dd } : {}),
+          unit: (d.unit as Dimensions["unit"]) || "mm",
+          shape: d.shape,
+        },
+      };
     }
     case "colour":
-      return /^#[0-9a-f]{6}$/i.test(d.hex) ? { value: { name: d.name.trim() || d.hex.toUpperCase(), hex: d.hex, ...(d.pantone.trim() ? { pantone: d.pantone.trim() } : {}) } } : undefined;
+      return /^#[0-9a-f]{6}$/i.test(d.hex)
+        ? {
+            value: {
+              name: d.name.trim() || d.hex.toUpperCase(),
+              hex: d.hex,
+              ...(d.pantone.trim() ? { pantone: d.pantone.trim() } : {}),
+            },
+          }
+        : undefined;
     case "blend":
-      return isBlend(d.rich) && blendOk(d.rich) ? { value: { fibres: [...d.rich.fibres].map((r) => ({ fibre: r.fibre.trim(), pct: r.pct })).sort((a, b) => b.pct - a.pct) } } : undefined;
+      return isBlend(d.rich) && blendOk(d.rich)
+        ? {
+            value: {
+              fibres: [...d.rich.fibres]
+                .map((r) => ({ fibre: r.fibre.trim(), pct: r.pct }))
+                .sort((a, b) => b.pct - a.pct),
+            },
+          }
+        : undefined;
     case "measurements": {
       if (!isTable(d.rich)) return undefined;
       const rows = d.rich.rows.filter((r) => r.pom.trim());
-      return rows.length && rows.some((r) => r.values.some((x) => x !== null && x > 0)) ? { value: { ...d.rich, rows } } : undefined;
+      return rows.length && rows.some((r) => r.values.some((x) => x !== null && x > 0))
+        ? { value: { ...d.rich, rows } }
+        : undefined;
     }
     case "parts": {
       if (!isParts(d.rich)) return undefined;
@@ -264,7 +386,11 @@ export function valueOf(field: SpecField, d: Draft): { value: SpecValue; unit?: 
       if (field.options && d.picks) return d.picks.length ? { value: d.picks } : undefined;
       const items = parseColourLines(d.text);
       if (!items.length) return undefined;
-      return { value: items.every((x) => typeof x !== "string") ? (items as ColourValue[]) : items.map((x) => (typeof x === "string" ? x : x.name)) };
+      return {
+        value: items.every((x) => typeof x !== "string")
+          ? (items as ColourValue[])
+          : items.map((x) => (typeof x === "string" ? x : x.name)),
+      };
     }
     default:
       return d.text.trim() ? { value: d.text.trim() } : undefined;
@@ -272,13 +398,29 @@ export function valueOf(field: SpecField, d: Draft): { value: SpecValue; unit?: 
 }
 
 /** One input for any field type. ids are prefixed so several can sit in one form. */
-export function SpecInput({ field, draft, onDraft, idPrefix = "spec", autoFocus }: { field: SpecField; draft: Draft; onDraft: (d: Draft) => void; idPrefix?: string; autoFocus?: boolean }) {
+export function SpecInput({
+  field,
+  draft,
+  onDraft,
+  idPrefix = "spec",
+  autoFocus,
+}: {
+  field: SpecField;
+  draft: Draft;
+  onDraft: (d: Draft) => void;
+  idPrefix?: string;
+  autoFocus?: boolean;
+}) {
   const id = `${idPrefix}-${field.id}`;
   const set = (patch: Partial<Draft>) => onDraft({ ...draft, ...patch });
   const focus = autoFocus ? { "data-ui-autofocus": true } : {};
   const help = field.help && <FieldDescription id={`${id}-help`}>{field.help}</FieldDescription>;
   const units = field.units && field.units.length > 1 && (
-    <NativeSelect aria-label={`${field.label}, unit`} value={draft.unit} onChange={(e) => set({ unit: e.target.value })}>
+    <NativeSelect
+      aria-label={`${field.label}, unit`}
+      value={draft.unit}
+      onChange={(e) => set({ unit: e.target.value })}
+    >
       {field.units.map((u) => (
         <option key={u} value={u}>
           {u}
@@ -299,7 +441,15 @@ export function SpecInput({ field, draft, onDraft, idPrefix = "spec", autoFocus 
         <FieldLabel as="span" id={`${id}-label`}>
           {field.label}
         </FieldLabel>
-        <ToggleGroup type="multiple" size="sm" loose aria-labelledby={`${id}-label`} value={draft.picks} onValueChange={(v) => set({ picks: v })} className="ui-pspec-chips">
+        <ToggleGroup
+          type="multiple"
+          size="sm"
+          loose
+          aria-labelledby={`${id}-label`}
+          value={draft.picks}
+          onValueChange={(v) => set({ picks: v })}
+          className="ui-pspec-chips"
+        >
           {[...field.options, ...draft.picks.filter((x) => !field.options!.includes(x))].map((o) => (
             <ToggleGroupItem key={o} value={o}>
               {o}
@@ -318,7 +468,14 @@ export function SpecInput({ field, draft, onDraft, idPrefix = "spec", autoFocus 
           {field.units?.length === 1 ? ` (${field.units[0]})` : ""}
         </FieldLabel>
         <div className="ui-pspec-inline">
-          <Input id={id} inputMode="decimal" value={draft.num} onChange={(e) => set({ num: e.target.value })} aria-describedby={field.help ? `${id}-help` : undefined} {...focus} />
+          <Input
+            id={id}
+            inputMode="decimal"
+            value={draft.num}
+            onChange={(e) => set({ num: e.target.value })}
+            aria-describedby={field.help ? `${id}-help` : undefined}
+            {...focus}
+          />
           {units}
         </div>
         {help}
@@ -330,7 +487,11 @@ export function SpecInput({ field, draft, onDraft, idPrefix = "spec", autoFocus 
       <FieldGroup>
         <Field>
           <FieldLabel as="span">{field.label}</FieldLabel>
-          <SegmentedControl aria-label="Shape" value={draft.shape} onValueChange={(v) => set({ shape: v as Dimensions["shape"] })}>
+          <SegmentedControl
+            aria-label="Shape"
+            value={draft.shape}
+            onValueChange={(v) => set({ shape: v as Dimensions["shape"] })}
+          >
             <SegmentedOption value="round">Round</SegmentedOption>
             <SegmentedOption value="box">Square-ish</SegmentedOption>
             <SegmentedOption value="flat">Flat</SegmentedOption>
@@ -340,7 +501,13 @@ export function SpecInput({ field, draft, onDraft, idPrefix = "spec", autoFocus 
         <div className="ui-pspec-inline">
           <Field>
             <FieldLabel htmlFor={`${id}-w`}>{draft.shape === "round" ? "Diameter" : "Width"}</FieldLabel>
-            <Input id={`${id}-w`} inputMode="decimal" value={draft.w} onChange={(e) => set({ w: e.target.value })} {...focus} />
+            <Input
+              id={`${id}-w`}
+              inputMode="decimal"
+              value={draft.w}
+              onChange={(e) => set({ w: e.target.value })}
+              {...focus}
+            />
           </Field>
           <Field>
             <FieldLabel htmlFor={`${id}-h`}>Height</FieldLabel>
@@ -379,7 +546,11 @@ export function SpecInput({ field, draft, onDraft, idPrefix = "spec", autoFocus 
             <FieldLabel htmlFor={`${id}-hex`}>Hex</FieldLabel>
             <div className="ui-pspec-inline">
               {/^#[0-9a-f]{6}$/i.test(draft.hex) && <Swatch colour={{ name: draft.name, hex: draft.hex }} />}
-              <Input id={`${id}-hex`} value={draft.hex} onChange={(e) => set({ hex: e.target.value.startsWith("#") ? e.target.value : `#${e.target.value}` })} />
+              <Input
+                id={`${id}-hex`}
+                value={draft.hex}
+                onChange={(e) => set({ hex: e.target.value.startsWith("#") ? e.target.value : `#${e.target.value}` })}
+              />
             </div>
           </Field>
           <Field>
@@ -394,7 +565,13 @@ export function SpecInput({ field, draft, onDraft, idPrefix = "spec", autoFocus 
     return (
       <Field>
         <FieldLabel htmlFor={id}>{field.label}</FieldLabel>
-        <NativeSelect id={id} value={field.options.includes(draft.text) || !draft.text ? draft.text : "__own"} onChange={(e) => set({ text: e.target.value === "__own" ? " " : e.target.value })} aria-describedby={field.help ? `${id}-help` : undefined} {...focus}>
+        <NativeSelect
+          id={id}
+          value={field.options.includes(draft.text) || !draft.text ? draft.text : "__own"}
+          onChange={(e) => set({ text: e.target.value === "__own" ? " " : e.target.value })}
+          aria-describedby={field.help ? `${id}-help` : undefined}
+          {...focus}
+        >
           <option value="">Choose</option>
           {field.options.map((o) => (
             <option key={o} value={o}>
@@ -403,7 +580,13 @@ export function SpecInput({ field, draft, onDraft, idPrefix = "spec", autoFocus 
           ))}
           <option value="__own">Something else</option>
         </NativeSelect>
-        {draft.text && !field.options.includes(draft.text) && <Input aria-label={`${field.label}, in your words`} value={draft.text.trimStart()} onChange={(e) => set({ text: e.target.value })} />}
+        {draft.text && !field.options.includes(draft.text) && (
+          <Input
+            aria-label={`${field.label}, in your words`}
+            value={draft.text.trimStart()}
+            onChange={(e) => set({ text: e.target.value })}
+          />
+        )}
         {help}
       </Field>
     );
@@ -480,17 +663,38 @@ export function SpecDialog({
 
 // ─── Packaging parts ────────────────────────────────────────────────────────
 
-export const partLine = (p: ProductPart) => [p.material, p.finish && p.finish[0]!.toUpperCase() + p.finish.slice(1), p.opacity, p.colour?.pantone && `Pantone ${p.colour.pantone}`].filter(Boolean).join(" · ");
+export const partLine = (p: ProductPart) =>
+  [
+    p.material,
+    p.finish && p.finish[0]!.toUpperCase() + p.finish.slice(1),
+    p.opacity,
+    p.colour?.pantone && `Pantone ${p.colour.pantone}`,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
-export function PartsList({ parts, actions }: { parts: ProductPart[]; /** @deprecated round 8: provenance shows only on proposals. */ who?: (id?: string) => string | undefined; actions?: (p: ProductPart) => ReactNode }) {
+export function PartsList({
+  parts,
+  actions,
+}: {
+  parts: ProductPart[];
+  /** @deprecated Provenance shows only on proposals. */ who?: (id?: string) => string | undefined;
+  actions?: (p: ProductPart) => ReactNode;
+}) {
   return (
     <ul className="ui-pparts">
       {parts.map((p) => (
         <li key={p.id} className="ui-pparts-item" data-state={p.provenance.state}>
-          {p.colour ? <Swatch colour={p.colour} finish={p.finish} large label={`${p.name}: ${p.colour.name}`} /> : <span className="ui-pswatch ui-pswatch--lg" aria-hidden="true" />}
+          {p.colour ? (
+            <Swatch colour={p.colour} finish={p.finish} large label={`${p.name}: ${p.colour.name}`} />
+          ) : (
+            <span className="ui-pswatch ui-pswatch--lg" aria-hidden="true" />
+          )}
           <span className="ui-pparts-text">
             <span className="ui-pparts-name">{p.name}</span>
-            <span className="ui-pparts-line">{[p.colour?.name, partLine(p)].filter(Boolean).join(" · ") || "Material and finish not known yet"}</span>
+            <span className="ui-pparts-line">
+              {[p.colour?.name, partLine(p)].filter(Boolean).join(" · ") || "Material and finish not known yet"}
+            </span>
             {p.note && <span className="ui-pparts-line">{p.note}</span>}
           </span>
           {(p.provenance.state === "proposed" || actions?.(p)) && (
@@ -532,16 +736,29 @@ export function ShotGrid({
     <ul className="ui-shots" aria-label={label}>
       {ordered.map((slot) => {
         const s = shots.find((x) => x.slotId === slot.id);
-        const media = s ? <img src={s.image} alt="" loading="lazy" /> : (
+        const media = s ? (
+          <img src={s.image} alt="" loading="lazy" />
+        ) : (
           <span className="ui-shot-empty">
             <Icon name={busySlot === slot.id ? "loader-circle" : "camera"} />
             {slot.required ? "Needed" : "Helps"}
           </span>
         );
         return (
-          <li key={slot.id} className="ui-shot" data-empty={s ? undefined : ""} data-required={slot.required ? "" : undefined} id={`shot-${slot.id}`}>
+          <li
+            key={slot.id}
+            className="ui-shot"
+            data-empty={s ? undefined : ""}
+            data-required={slot.required ? "" : undefined}
+            id={`shot-${slot.id}`}
+          >
             {onPick ? (
-              <button type="button" className="ui-shot-media" onClick={() => void pick(slot.id)} aria-label={`${s ? "Replace" : "Add"} the ${slot.label.toLowerCase()} photo`}>
+              <button
+                type="button"
+                className="ui-shot-media"
+                onClick={() => void pick(slot.id)}
+                aria-label={`${s ? "Replace" : "Add"} the ${slot.label.toLowerCase()} photo`}
+              >
                 {media}
               </button>
             ) : (
@@ -559,7 +776,7 @@ export function ShotGrid({
 /** The browser's preview of a picked photo; the mock keeps it as the uploaded image. */
 export const previewOf = (file: File) => URL.createObjectURL(file);
 
-// ─── Round 7: fibre blend ───────────────────────────────────────────────────
+// ─── Fibre blend ───────────────────────────────────────────────────────────
 
 /** Up to four fibres take the chart's four series in order; a fifth and more fold into Other (the design system never
  *  makes up a fifth colour). */
@@ -581,7 +798,12 @@ export function BlendBar({ blend, compact }: { blend: FibreBlend; compact?: bool
     <span className="ui-blend" data-compact={compact || undefined}>
       <span className="ui-blend-bar" role="img" aria-label={label}>
         {slices.map((r, i) => (
-          <span key={r.fibre} className="ui-blend-seg" data-series={i + 1} style={{ "--share": `${Math.min(100, (r.pct / Math.max(sum, 100)) * 100)}%` } as CSSProperties} />
+          <span
+            key={r.fibre}
+            className="ui-blend-seg"
+            data-series={i + 1}
+            style={{ "--share": `${Math.min(100, (r.pct / Math.max(sum, 100)) * 100)}%` } as CSSProperties}
+          />
         ))}
       </span>
       <span className="ui-blend-legend">
@@ -596,10 +818,21 @@ export function BlendBar({ blend, compact }: { blend: FibreBlend; compact?: bool
   );
 }
 
-export function BlendEditor({ id, field, blend, onChange }: { id: string; field: SpecField; blend: FibreBlend; onChange: (b: FibreBlend) => void }) {
+export function BlendEditor({
+  id,
+  field,
+  blend,
+  onChange,
+}: {
+  id: string;
+  field: SpecField;
+  blend: FibreBlend;
+  onChange: (b: FibreBlend) => void;
+}) {
   const sum = blendSum(blend);
   const options = field.options ?? FIBRES;
-  const setRow = (i: number, patch: Partial<FibreBlend["fibres"][number]>) => onChange({ fibres: blend.fibres.map((r, j) => (j === i ? { ...r, ...patch } : r)) });
+  const setRow = (i: number, patch: Partial<FibreBlend["fibres"][number]>) =>
+    onChange({ fibres: blend.fibres.map((r, j) => (j === i ? { ...r, ...patch } : r)) });
   const left = Math.round((100 - sum) * 10) / 10;
   return (
     <FieldGroup>
@@ -613,7 +846,12 @@ export function BlendEditor({ id, field, blend, onChange }: { id: string; field:
       <ul className="ui-blend-rows" aria-labelledby={`${id}-label`}>
         {blend.fibres.map((r, i) => (
           <li key={i} className="ui-blend-row">
-            <NativeSelect aria-label={`Fibre ${i + 1}`} value={r.fibre} onChange={(e) => setRow(i, { fibre: e.target.value })} data-ui-autofocus={i === 0 || undefined}>
+            <NativeSelect
+              aria-label={`Fibre ${i + 1}`}
+              value={r.fibre}
+              onChange={(e) => setRow(i, { fibre: e.target.value })}
+              data-ui-autofocus={i === 0 || undefined}
+            >
               <option value="">Choose a fibre</option>
               {[...options, ...(r.fibre && !options.includes(r.fibre) ? [r.fibre] : [])].map((o) => (
                 <option key={o} value={o}>
@@ -622,18 +860,41 @@ export function BlendEditor({ id, field, blend, onChange }: { id: string; field:
               ))}
             </NativeSelect>
             <div className="ui-blend-pct-input">
-              <Input aria-label={`${r.fibre || `Fibre ${i + 1}`}, per cent`} inputMode="decimal" value={Number.isFinite(r.pct) && r.pct ? String(r.pct) : ""} onChange={(e) => setRow(i, { pct: Number(e.target.value.replace(",", ".")) || 0 })} />
+              <Input
+                aria-label={`${r.fibre || `Fibre ${i + 1}`}, per cent`}
+                inputMode="decimal"
+                value={Number.isFinite(r.pct) && r.pct ? String(r.pct) : ""}
+                onChange={(e) => setRow(i, { pct: Number(e.target.value.replace(",", ".")) || 0 })}
+              />
               <span aria-hidden="true">%</span>
             </div>
-            {blend.fibres.length > 1 && <Button size="sm" variant="quiet" iconOnly icon="x" aria-label={`Remove ${r.fibre || `fibre ${i + 1}`}`} onClick={() => onChange({ fibres: blend.fibres.filter((_, j) => j !== i) })} />}
+            {blend.fibres.length > 1 && (
+              <Button
+                size="sm"
+                variant="quiet"
+                iconOnly
+                icon="x"
+                aria-label={`Remove ${r.fibre || `fibre ${i + 1}`}`}
+                onClick={() => onChange({ fibres: blend.fibres.filter((_, j) => j !== i) })}
+              />
+            )}
           </li>
         ))}
       </ul>
       <div className="ui-blend-foot">
         <span className="ui-pspec-need" role="status" data-ok={sum === 100 || undefined}>
-          {sum === 100 ? "Adds up to 100 %" : left > 0 ? `Adds up to ${fmt(sum)} %: ${fmt(left)} % to place` : `Adds up to ${fmt(sum)} %: ${fmt(-left)} % too much`}
+          {sum === 100
+            ? "Adds up to 100 %"
+            : left > 0
+              ? `Adds up to ${fmt(sum)} %: ${fmt(left)} % to place`
+              : `Adds up to ${fmt(sum)} %: ${fmt(-left)} % too much`}
         </span>
-        <Button size="sm" variant="quiet" icon="plus" onClick={() => onChange({ fibres: [...blend.fibres, { fibre: "", pct: left > 0 ? left : 0 }] })}>
+        <Button
+          size="sm"
+          variant="quiet"
+          icon="plus"
+          onClick={() => onChange({ fibres: [...blend.fibres, { fibre: "", pct: left > 0 ? left : 0 }] })}
+        >
           Add a fibre
         </Button>
       </div>
@@ -642,9 +903,26 @@ export function BlendEditor({ id, field, blend, onChange }: { id: string; field:
 }
 
 /** Fibres a blend picks from when its field names none (research §8). */
-const FIBRES = ["Merino wool", "Cashmere", "Alpaca", "Mohair", "Lambswool", "Wool", "Silk", "Cotton", "Organic cotton", "Linen", "Viscose", "Lyocell", "Polyamide", "Elastane", "Recycled polyester", "Polyester"];
+const FIBRES = [
+  "Merino wool",
+  "Cashmere",
+  "Alpaca",
+  "Mohair",
+  "Lambswool",
+  "Wool",
+  "Silk",
+  "Cotton",
+  "Organic cotton",
+  "Linen",
+  "Viscose",
+  "Lyocell",
+  "Polyamide",
+  "Elastane",
+  "Recycled polyester",
+  "Polyester",
+];
 
-// ─── Round 7: measurement table ─────────────────────────────────────────────
+// ─── Measurement table ─────────────────────────────────────────────────────
 
 /** Points of measure × sizes. It scrolls sideways inside its own box, never the page. */
 function MeasureTableView({ table, label }: { table: MeasureTable; label: string }) {
@@ -693,8 +971,8 @@ function MeasureTableView({ table, label }: { table: MeasureTable; label: string
   );
 }
 
-/** The size table. On a desk the whole table; on a phone (LOAD-20) the base size only, one measure per line, and
- *  "See all sizes" opens the whole table in a sheet that scrolls sideways. */
+/** The size table. On a desk the whole table; on a phone the base size only, one measure per line, and "See all sizes"
+ *  opens the whole table in a sheet that scrolls sideways. */
 export function MeasureView({ table, label }: { table: MeasureTable; label: string }) {
   const narrow = useNarrowScreen();
   const [all, setAll] = useState(false);
@@ -744,8 +1022,19 @@ export function MeasureView({ table, label }: { table: MeasureTable; label: stri
   );
 }
 
-export function MeasureEditor({ id, field, table, onChange }: { id: string; field: SpecField; table: MeasureTable; onChange: (t: MeasureTable) => void }) {
-  const setRow = (i: number, patch: Partial<MeasureTable["rows"][number]>) => onChange({ ...table, rows: table.rows.map((r, j) => (j === i ? { ...r, ...patch } : r)) });
+export function MeasureEditor({
+  id,
+  field,
+  table,
+  onChange,
+}: {
+  id: string;
+  field: SpecField;
+  table: MeasureTable;
+  onChange: (t: MeasureTable) => void;
+}) {
+  const setRow = (i: number, patch: Partial<MeasureTable["rows"][number]>) =>
+    onChange({ ...table, rows: table.rows.map((r, j) => (j === i ? { ...r, ...patch } : r)) });
   const cell = (s: string) => (s.trim() === "" ? null : Number(s.replace(",", ".")) || null);
   return (
     <FieldGroup>
@@ -758,7 +1047,11 @@ export function MeasureEditor({ id, field, table, onChange }: { id: string; fiel
       <div className="ui-pspec-inline">
         <Field>
           <FieldLabel htmlFor={`${id}-unit`}>Unit</FieldLabel>
-          <NativeSelect id={`${id}-unit`} value={table.unit} onChange={(e) => onChange({ ...table, unit: e.target.value as MeasureTable["unit"] })}>
+          <NativeSelect
+            id={`${id}-unit`}
+            value={table.unit}
+            onChange={(e) => onChange({ ...table, unit: e.target.value as MeasureTable["unit"] })}
+          >
             <option value="cm">cm</option>
             <option value="mm">mm</option>
             <option value="in">in</option>
@@ -766,7 +1059,11 @@ export function MeasureEditor({ id, field, table, onChange }: { id: string; fiel
         </Field>
         <Field>
           <FieldLabel htmlFor={`${id}-base`}>Base size</FieldLabel>
-          <NativeSelect id={`${id}-base`} value={table.base ?? ""} onChange={(e) => onChange({ ...table, base: e.target.value })}>
+          <NativeSelect
+            id={`${id}-base`}
+            value={table.base ?? ""}
+            onChange={(e) => onChange({ ...table, base: e.target.value })}
+          >
             {table.sizes.map((sz) => (
               <option key={sz} value={sz}>
                 {sz}
@@ -797,7 +1094,11 @@ export function MeasureEditor({ id, field, table, onChange }: { id: string; fiel
             {table.rows.map((r, i) => (
               <tr key={`${i}-${table.rows.length}`}>
                 <th scope="row" className="ui-measure-pom">
-                  <Input aria-label={`Point of measure ${i + 1}`} value={r.pom} onChange={(e) => setRow(i, { pom: e.target.value })} />
+                  <Input
+                    aria-label={`Point of measure ${i + 1}`}
+                    value={r.pom}
+                    onChange={(e) => setRow(i, { pom: e.target.value })}
+                  />
                 </th>
                 {table.sizes.map((sz, k) => (
                   <td key={sz} data-base={sz === table.base || undefined}>
@@ -805,15 +1106,29 @@ export function MeasureEditor({ id, field, table, onChange }: { id: string; fiel
                       aria-label={`${r.pom || `Measure ${i + 1}`}, size ${sz}`}
                       inputMode="decimal"
                       defaultValue={r.values[k] ?? ""}
-                      onChange={(e) => setRow(i, { values: r.values.map((x, j) => (j === k ? cell(e.target.value) : x)) })}
+                      onChange={(e) =>
+                        setRow(i, { values: r.values.map((x, j) => (j === k ? cell(e.target.value) : x)) })
+                      }
                     />
                   </td>
                 ))}
                 <td>
-                  <Input aria-label={`${r.pom || `Measure ${i + 1}`}, tolerance`} inputMode="decimal" defaultValue={r.tol ?? ""} onChange={(e) => setRow(i, { tol: cell(e.target.value) ?? undefined })} />
+                  <Input
+                    aria-label={`${r.pom || `Measure ${i + 1}`}, tolerance`}
+                    inputMode="decimal"
+                    defaultValue={r.tol ?? ""}
+                    onChange={(e) => setRow(i, { tol: cell(e.target.value) ?? undefined })}
+                  />
                 </td>
                 <td>
-                  <Button size="sm" variant="quiet" iconOnly icon="x" aria-label={`Remove ${r.pom || `measure ${i + 1}`}`} onClick={() => onChange({ ...table, rows: table.rows.filter((_, j) => j !== i) })} />
+                  <Button
+                    size="sm"
+                    variant="quiet"
+                    iconOnly
+                    icon="x"
+                    aria-label={`Remove ${r.pom || `measure ${i + 1}`}`}
+                    onClick={() => onChange({ ...table, rows: table.rows.filter((_, j) => j !== i) })}
+                  />
                 </td>
               </tr>
             ))}
@@ -821,7 +1136,14 @@ export function MeasureEditor({ id, field, table, onChange }: { id: string; fiel
         </table>
       </div>
       <div>
-        <Button size="sm" variant="quiet" icon="plus" onClick={() => onChange({ ...table, rows: [...table.rows, { pom: "", values: table.sizes.map(() => null), tol: 1 }] })}>
+        <Button
+          size="sm"
+          variant="quiet"
+          icon="plus"
+          onClick={() =>
+            onChange({ ...table, rows: [...table.rows, { pom: "", values: table.sizes.map(() => null), tol: 1 }] })
+          }
+        >
           Add a point of measure
         </Button>
       </div>
@@ -829,9 +1151,10 @@ export function MeasureEditor({ id, field, table, onChange }: { id: string; fiel
   );
 }
 
-// ─── Round 7: parts as data ─────────────────────────────────────────────────
+// ─── Parts as data ──────────────────────────────────────────────────────────
 
-const partWords = (p: SpecPart) => [p.material, p.finish, p.colour?.name, p.decoration, p.size].filter(Boolean).join(" · ");
+const partWords = (p: SpecPart) =>
+  [p.material, p.finish, p.colour?.name, p.decoration, p.size].filter(Boolean).join(" · ");
 
 /** Each part with its swatch, material, finish, colour, decoration and size. */
 export function SpecPartsView({ parts }: { parts: SpecPart[] }) {
@@ -839,7 +1162,11 @@ export function SpecPartsView({ parts }: { parts: SpecPart[] }) {
     <ul className="ui-pparts ui-pparts--flat">
       {parts.map((p, i) => (
         <li key={`${p.name}-${i}`} className="ui-pparts-item">
-          {p.colour ? <Swatch colour={p.colour} finish={p.finish} large label={`${p.name}: ${p.colour.name}`} /> : <span className="ui-pswatch ui-pswatch--lg" aria-hidden="true" />}
+          {p.colour ? (
+            <Swatch colour={p.colour} finish={p.finish} large label={`${p.name}: ${p.colour.name}`} />
+          ) : (
+            <span className="ui-pswatch ui-pswatch--lg" aria-hidden="true" />
+          )}
           <span className="ui-pparts-text">
             <span className="ui-pparts-name">{p.name}</span>
             <span className="ui-pparts-line">{partWords(p) || "Material and finish not known yet"}</span>
@@ -851,10 +1178,31 @@ export function SpecPartsView({ parts }: { parts: SpecPart[] }) {
   );
 }
 
-const PART_FINISHES = ["Matte", "Satin", "Gloss", "Frosted", "Metallic", "Brushed", "Soft-touch", "Textured", "Polished"];
+const PART_FINISHES = [
+  "Matte",
+  "Satin",
+  "Gloss",
+  "Frosted",
+  "Metallic",
+  "Brushed",
+  "Soft-touch",
+  "Textured",
+  "Polished",
+];
 
-export function PartsEditor({ id, field, value, onChange }: { id: string; field: SpecField; value: PartsValue; onChange: (v: PartsValue) => void }) {
-  const setPart = (i: number, patch: Partial<SpecPart>) => onChange({ parts: value.parts.map((p, j) => (j === i ? { ...p, ...patch } : p)) });
+export function PartsEditor({
+  id,
+  field,
+  value,
+  onChange,
+}: {
+  id: string;
+  field: SpecField;
+  value: PartsValue;
+  onChange: (v: PartsValue) => void;
+}) {
+  const setPart = (i: number, patch: Partial<SpecPart>) =>
+    onChange({ parts: value.parts.map((p, j) => (j === i ? { ...p, ...patch } : p)) });
   return (
     <FieldGroup>
       <Field>
@@ -872,60 +1220,123 @@ export function PartsEditor({ id, field, value, onChange }: { id: string; field:
               <div className="ui-part-edit-head">
                 <Field>
                   <FieldLabel htmlFor={`${pid}-name`}>Part</FieldLabel>
-                  <Input id={`${pid}-name`} value={p.name} onChange={(e) => setPart(i, { name: e.target.value })} placeholder="Main label" data-ui-autofocus={i === 0 || undefined} />
+                  <Input
+                    id={`${pid}-name`}
+                    value={p.name}
+                    onChange={(e) => setPart(i, { name: e.target.value })}
+                    placeholder="Main label"
+                    data-ui-autofocus={i === 0 || undefined}
+                  />
                 </Field>
-                {value.parts.length > 1 && <Button size="sm" variant="quiet" iconOnly icon="x" aria-label={`Remove ${p.name || `part ${i + 1}`}`} onClick={() => onChange({ parts: value.parts.filter((_, j) => j !== i) })} />}
+                {value.parts.length > 1 && (
+                  <Button
+                    size="sm"
+                    variant="quiet"
+                    iconOnly
+                    icon="x"
+                    aria-label={`Remove ${p.name || `part ${i + 1}`}`}
+                    onClick={() => onChange({ parts: value.parts.filter((_, j) => j !== i) })}
+                  />
+                )}
               </div>
               <div className="ui-pspec-inline">
                 <Field>
                   <FieldLabel htmlFor={`${pid}-material`}>Material</FieldLabel>
-                  <Input id={`${pid}-material`} value={p.material ?? ""} onChange={(e) => setPart(i, { material: e.target.value || undefined })} />
+                  <Input
+                    id={`${pid}-material`}
+                    value={p.material ?? ""}
+                    onChange={(e) => setPart(i, { material: e.target.value || undefined })}
+                  />
                 </Field>
                 <Field>
                   <FieldLabel htmlFor={`${pid}-finish`}>Finish</FieldLabel>
-                  <NativeSelect id={`${pid}-finish`} value={p.finish ?? ""} onChange={(e) => setPart(i, { finish: e.target.value || undefined })}>
+                  <NativeSelect
+                    id={`${pid}-finish`}
+                    value={p.finish ?? ""}
+                    onChange={(e) => setPart(i, { finish: e.target.value || undefined })}
+                  >
                     <option value="">Choose</option>
-                    {[...PART_FINISHES, ...(p.finish && !PART_FINISHES.includes(p.finish) ? [p.finish] : [])].map((f) => (
-                      <option key={f} value={f}>
-                        {f}
-                      </option>
-                    ))}
+                    {[...PART_FINISHES, ...(p.finish && !PART_FINISHES.includes(p.finish) ? [p.finish] : [])].map(
+                      (f) => (
+                        <option key={f} value={f}>
+                          {f}
+                        </option>
+                      ),
+                    )}
                   </NativeSelect>
                 </Field>
               </div>
               <div className="ui-pspec-inline">
                 <Field>
                   <FieldLabel htmlFor={`${pid}-colour`}>Colour</FieldLabel>
-                  <Input id={`${pid}-colour`} value={p.colour?.name ?? ""} onChange={(e) => setPart(i, { colour: e.target.value || p.colour?.hex ? { name: e.target.value, hex } : undefined })} />
+                  <Input
+                    id={`${pid}-colour`}
+                    value={p.colour?.name ?? ""}
+                    onChange={(e) =>
+                      setPart(i, {
+                        colour: e.target.value || p.colour?.hex ? { name: e.target.value, hex } : undefined,
+                      })
+                    }
+                  />
                 </Field>
                 <Field>
                   <FieldLabel htmlFor={`${pid}-hex`}>Hex</FieldLabel>
                   <div className="ui-pspec-inline">
                     {/^#[0-9a-f]{6}$/i.test(hex) && <Swatch colour={{ name: p.colour?.name ?? "", hex }} />}
-                    <Input id={`${pid}-hex`} value={hex} onChange={(e) => setPart(i, { colour: { name: p.colour?.name ?? "", hex: e.target.value.startsWith("#") ? e.target.value : `#${e.target.value}` } })} />
+                    <Input
+                      id={`${pid}-hex`}
+                      value={hex}
+                      onChange={(e) =>
+                        setPart(i, {
+                          colour: {
+                            name: p.colour?.name ?? "",
+                            hex: e.target.value.startsWith("#") ? e.target.value : `#${e.target.value}`,
+                          },
+                        })
+                      }
+                    />
                   </div>
                 </Field>
               </div>
               <div className="ui-pspec-inline">
                 <Field>
                   <FieldLabel htmlFor={`${pid}-deco`}>Decoration</FieldLabel>
-                  <Input id={`${pid}-deco`} value={p.decoration ?? ""} onChange={(e) => setPart(i, { decoration: e.target.value || undefined })} placeholder="Woven, hot-foil, emboss" />
+                  <Input
+                    id={`${pid}-deco`}
+                    value={p.decoration ?? ""}
+                    onChange={(e) => setPart(i, { decoration: e.target.value || undefined })}
+                    placeholder="Woven, hot-foil, emboss"
+                  />
                 </Field>
                 <Field>
                   <FieldLabel htmlFor={`${pid}-size`}>Size</FieldLabel>
-                  <Input id={`${pid}-size`} value={p.size ?? ""} onChange={(e) => setPart(i, { size: e.target.value || undefined })} placeholder="40 × 15 mm" />
+                  <Input
+                    id={`${pid}-size`}
+                    value={p.size ?? ""}
+                    onChange={(e) => setPart(i, { size: e.target.value || undefined })}
+                    placeholder="40 × 15 mm"
+                  />
                 </Field>
               </div>
               <Field>
                 <FieldLabel htmlFor={`${pid}-note`}>Where it sits</FieldLabel>
-                <Input id={`${pid}-note`} value={p.note ?? ""} onChange={(e) => setPart(i, { note: e.target.value || undefined })} />
+                <Input
+                  id={`${pid}-note`}
+                  value={p.note ?? ""}
+                  onChange={(e) => setPart(i, { note: e.target.value || undefined })}
+                />
               </Field>
             </li>
           );
         })}
       </ul>
       <div>
-        <Button size="sm" variant="quiet" icon="plus" onClick={() => onChange({ parts: [...value.parts, { name: "" }] })}>
+        <Button
+          size="sm"
+          variant="quiet"
+          icon="plus"
+          onClick={() => onChange({ parts: [...value.parts, { name: "" }] })}
+        >
           Add a part
         </Button>
       </div>

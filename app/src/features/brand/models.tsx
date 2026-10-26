@@ -1,16 +1,13 @@
-// The brand's AI models on the Brand DNA board (FLOWS §9.6): the AI people Fume's designers made in the Studio's Model
-// mode. The part is called "AI models" (F-D041: always said to be AI). The customer never sees a designer's drafts (the
-// mock and the backend never send them) and never the variables or prompts behind a model.
-// Round 9 (desktop review DWAY-14, DLOAD-1, DLOAD-5; PROPOSED 19 Oct 2026): the board acts in place: a model that
-// waits for the customer carries Confirm · Remove under its portrait, which stays big enough to judge; once decided
-// it keeps its place for the visit. The part says "AI models" once: no "AI person" pill on each card, no line under
-// the heading. Before the first campaign a saved model is held back (useModelsHeldBack), as on Home.
-// Round 13 (Marcus's video comment #41; PROPOSED 22 Oct 2026): each AI model has a page of its own
-// (/brand/models/:id): the model sheet (front, three-quarter, profile, back, and the face close), every angle in a
-// white studio in the same plain clothes; the specs (age range, height, build, skin tone, hair, eyes, clothing sizes);
-// what the model may and may never be used for; how many creatives it is in; who made it and who decided. "AI model"
-// is on every picture of it, always: an AI model never poses as a real person. The board's cards open the page and
-// carry the label too. Fume's and an agency's people read the brand's name where the customer reads "your brand".
+// The brand's AI models (FLOWS §9.6): the AI people Fume's designers made in the Studio's Model mode. The part is
+// called "AI models" (F-D041: always said to be AI). The customer never sees a designer's drafts (the mock and the
+// backend never send them) and never the variables or prompts behind a model.
+// On the board a model that waits for the customer carries Confirm · Remove under its portrait, which stays big enough
+// to judge. Before the first campaign a saved model is held back (useModelsHeldBack), as on Home.
+// Each AI model has a page of its own (/brand/models/:id): the model sheet (front, three-quarter, profile, back, and
+// the face close) in a white studio in the same plain clothes; the specs; what the model may and may never be used for;
+// how many creatives it is in; who made it and who decided. "AI model" is on every picture of it, always: an AI model
+// never poses as a real person. Fume's and an agency's people read the brand's name where the customer reads "your
+// brand".
 import { DataList, DataListItem, Icon, PageHeader, Proposal, ProposalFoot, useToast } from "@fume/ui";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -23,12 +20,22 @@ import { BoardPart } from "./board";
 import { DecisionActions } from "./decide";
 import { useModelsHeldBack, useRole, useViewer } from "./parts";
 
-/** "AI model", on every picture of one (#41): Smoke glass over the picture's corner, never hidden. */
+/** "AI model", on every picture of one: Smoke glass over the picture's corner, never hidden. */
 export function AiLabel() {
   return <span className="ui-ai-label">AI model</span>;
 }
 
-function ModelCard({ model, who, canApprove, stays }: { model: BrandModel; who: (id?: string) => string; canApprove: boolean; stays: (id: string) => void }) {
+function ModelCard({
+  model,
+  who,
+  canApprove,
+  stays,
+}: {
+  model: BrandModel;
+  who: (id?: string) => string;
+  canApprove: boolean;
+  stays: (id: string) => void;
+}) {
   const decide = useDecideModel();
   const viewer = useViewer();
   const toast = useToast();
@@ -40,14 +47,25 @@ function ModelCard({ model, who, canApprove, stays }: { model: BrandModel; who: 
       {
         onSuccess: () => {
           stays(model.id);
-          if (verdict === "decline") toast.done(`${model.name} removed`, { description: "Fume will not use this AI model." });
+          if (verdict === "decline")
+            toast.done(`${model.name} removed`, { description: "Fume will not use this AI model." });
         },
         onError: failed,
       },
     );
   return (
-    <Proposal state={waiting ? "proposed" : "approved"} bare className="ui-brand-image" data-removed={model.state === "declined" ? "" : undefined}>
-      <Link to={`/brand/models/${model.id}`} className="ui-brand-image-media ui-model-card-media" tabIndex={-1} aria-hidden="true">
+    <Proposal
+      state={waiting ? "proposed" : "approved"}
+      bare
+      className="ui-brand-image"
+      data-removed={model.state === "declined" ? "" : undefined}
+    >
+      <Link
+        to={`/brand/models/${model.id}`}
+        className="ui-brand-image-media ui-model-card-media"
+        tabIndex={-1}
+        aria-hidden="true"
+      >
         <img src={model.image} alt="" loading="lazy" />
         <AiLabel />
       </Link>
@@ -63,9 +81,18 @@ function ModelCard({ model, who, canApprove, stays }: { model: BrandModel; who: 
         <ProposalFoot>
           <span className="ui-proposal-tag">
             <Icon name={model.state === "declined" ? "x" : "user"} />
-            {model.state === "declined" ? "Removed" : `${who(model.savedBy ?? model.madeBy)} made ${model.name} for ${viewer.staff ? viewer.brand : "your brand"}`}
+            {model.state === "declined"
+              ? "Removed"
+              : `${who(model.savedBy ?? model.madeBy)} made ${model.name} for ${viewer.staff ? viewer.brand : "your brand"}`}
           </span>
-          {waiting && canApprove && <DecisionActions name={model.name} onKeep={() => answer("approve")} onRemove={() => answer("decline")} disabled={decide.isPending} />}
+          {waiting && canApprove && (
+            <DecisionActions
+              name={model.name}
+              onKeep={() => answer("approve")}
+              onRemove={() => answer("decline")}
+              disabled={decide.isPending}
+            />
+          )}
           {waiting && !canApprove && <span className="ui-proposal-tag">An owner or an approver confirms it</span>}
         </ProposalFoot>
       )}
@@ -95,7 +122,9 @@ export function Models({ span }: { span?: "full" }) {
           <ModelCard key={m.id} model={m} who={who} canApprove={canApprove} stays={stays} />
         ))}
       </div>
-      {declined.length > 0 && <p className="ui-brand-caption-text">Removed, never used: {declined.map((m) => m.name).join(", ")}.</p>}
+      {declined.length > 0 && (
+        <p className="ui-brand-caption-text">Removed, never used: {declined.map((m) => m.name).join(", ")}.</p>
+      )}
     </BoardPart>
   );
 }
@@ -107,7 +136,7 @@ export function useHasModels(): boolean {
   return (assets.data?.models ?? []).some((m) => m.state !== "declined" && !(heldBack && m.state === "saved"));
 }
 
-// ─── The model's own page (#41) ─────────────────────────────────────────────
+// ─── The model's own page ─────────────────────────────────────────────────
 
 const angleWords: Record<ModelAngle, string> = {
   front: "Front",
@@ -139,13 +168,16 @@ function ModelView({ model }: { model: BrandModel }) {
   const viewer = useViewer();
   const decide = useDecideModel();
   const toast = useToast();
-  const angles = model.angles ?? model.sheet.map((image, i) => ({ angle: (bodyAngles[i] ?? "front") as ModelAngle, image }));
+  const angles =
+    model.angles ?? model.sheet.map((image, i) => ({ angle: (bodyAngles[i] ?? "front") as ModelAngle, image }));
   const body = angles.filter((a) => !a.angle.startsWith("face"));
   const faces = angles.filter((a) => a.angle.startsWith("face"));
   const person = (id?: string) => {
     const u = dir.user(id);
     if (!u) return "Someone";
-    return id === me ? `You, ${u.title.toLowerCase()}` : `${u.name}, ${u.title.toLowerCase()}${u.staffRole ? " at Fume" : ""}`;
+    return id === me
+      ? `You, ${u.title.toLowerCase()}`
+      : `${u.name}, ${u.title.toLowerCase()}${u.staffRole ? " at Fume" : ""}`;
   };
   const spec = model.spec;
   const waiting = model.state === "saved";
@@ -153,7 +185,11 @@ function ModelView({ model }: { model: BrandModel }) {
     decide.mutate(
       { modelId: model.id, verdict },
       {
-        onSuccess: () => toast.done(verdict === "approve" ? `${model.name} confirmed` : `${model.name} removed`, { description: verdict === "approve" ? "Fume may use this AI model in creatives." : "Fume will not use this AI model." }),
+        onSuccess: () =>
+          toast.done(verdict === "approve" ? `${model.name} confirmed` : `${model.name} removed`, {
+            description:
+              verdict === "approve" ? "Fume may use this AI model in creatives." : "Fume will not use this AI model.",
+          }),
         onError: (error) => toast.error("That wasn’t saved", { description: error.message }),
       },
     );
@@ -172,19 +208,29 @@ function ModelView({ model }: { model: BrandModel }) {
             ))}
           </div>
         )}
-        <p className="ui-model-note">Every angle in a white studio, in the same plain clothes, so the model looks the same in every creative.</p>
+        <p className="ui-model-note">
+          Every angle in a white studio, in the same plain clothes, so the model looks the same in every creative.
+        </p>
       </section>
 
       <div className="ui-model-specs">
         <div className="ui-model-ai">
           <AiLabel />
-          <p className="ui-model-ai-text">Made by Fume. {model.name} is not a real person and is never shown as one: every creative with {model.name} says so.</p>
+          <p className="ui-model-ai-text">
+            Made by Fume. {model.name} is not a real person and is never shown as one: every creative with {model.name}{" "}
+            says so.
+          </p>
         </div>
         {waiting && (
           <div className="ui-model-decide">
             <p className="ui-model-decide-text">{`${dir.name(model.savedBy ?? model.madeBy)} made ${model.name} for ${viewer.staff ? viewer.brand : "your brand"}. Fume uses ${model.name} once it is confirmed.`}</p>
             {canApprove ? (
-              <DecisionActions name={model.name} onKeep={() => answer("approve")} onRemove={() => answer("decline")} disabled={decide.isPending} />
+              <DecisionActions
+                name={model.name}
+                onKeep={() => answer("approve")}
+                onRemove={() => answer("decline")}
+                disabled={decide.isPending}
+              />
             ) : (
               <span className="ui-proposal-tag">An owner or an approver confirms it</span>
             )}
@@ -202,7 +248,9 @@ function ModelView({ model }: { model: BrandModel }) {
               <DataListItem label="Skin tone">{spec.skinTone}</DataListItem>
               <DataListItem label="Hair">{spec.hair}</DataListItem>
               <DataListItem label="Eyes">{spec.eyes}</DataListItem>
-              <DataListItem label="Clothing sizes">{spec.sizes.map((x) => `${x.label} ${x.value}`).join(" · ")}</DataListItem>
+              <DataListItem label="Clothing sizes">
+                {spec.sizes.map((x) => `${x.label} ${x.value}`).join(" · ")}
+              </DataListItem>
               <DataListItem label="On the sheet">{spec.clothing}</DataListItem>
             </DataList>
           </section>
@@ -230,10 +278,18 @@ function ModelView({ model }: { model: BrandModel }) {
             Record
           </h2>
           <DataList>
-            <DataListItem label="Used in">{model.usedIn > 0 ? copy.creatives(model.usedIn) : "No creative yet"}</DataListItem>
+            <DataListItem label="Used in">
+              {model.usedIn > 0 ? copy.creatives(model.usedIn) : "No creative yet"}
+            </DataListItem>
             <DataListItem label="Made by">{person(model.madeBy)}</DataListItem>
             <DataListItem label="Decided by">
-              {model.decidedBy ? person(model.decidedBy) : waiting ? "Waits for an owner or an approver" : model.state === "declined" ? "Removed" : "—"}
+              {model.decidedBy
+                ? person(model.decidedBy)
+                : waiting
+                  ? "Waits for an owner or an approver"
+                  : model.state === "declined"
+                    ? "Removed"
+                    : "—"}
             </DataListItem>
           </DataList>
         </section>
@@ -255,7 +311,17 @@ export function ModelPage() {
         description={model ? `An AI model: ${model.look}.` : undefined}
       />
       <Query query={assets} loading="Loading the AI model">
-        {() => (model ? <ModelView model={model} /> : <Nothing icon="user" title="This AI model isn’t here" text="It may have been removed. The brand’s AI models are on Brand DNA." />)}
+        {() =>
+          model ? (
+            <ModelView model={model} />
+          ) : (
+            <Nothing
+              icon="user"
+              title="This AI model isn’t here"
+              text="It may have been removed. The brand’s AI models are on Brand DNA."
+            />
+          )
+        }
       </Query>
     </Page>
   );

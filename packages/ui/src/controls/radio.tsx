@@ -4,7 +4,13 @@
 //     <Choice><RadioGroupItem value="now" /><ChoiceText label="Deliver now" /></Choice> …</RadioGroup>
 // Radio cards (pick one of a few, each with a preview): <RadioGroup cards> with RadioCard children.
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
-import { forwardRef, type ComponentPropsWithoutRef, type HTMLAttributes, type LabelHTMLAttributes, type ReactNode } from "react";
+import {
+  forwardRef,
+  type ComponentPropsWithoutRef,
+  type HTMLAttributes,
+  type LabelHTMLAttributes,
+  type ReactNode,
+} from "react";
 import { cx } from "../cx";
 
 export interface RadioGroupProps extends ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root> {
@@ -12,7 +18,10 @@ export interface RadioGroupProps extends ComponentPropsWithoutRef<typeof RadioGr
   cards?: boolean;
 }
 
-export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(function RadioGroup({ cards = false, orientation, className, ...props }, ref) {
+export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(function RadioGroup(
+  { cards = false, orientation, className, ...props },
+  ref,
+) {
   return (
     <RadioGroupPrimitive.Root
       ref={ref}
@@ -27,7 +36,10 @@ export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(function R
 export interface RadioGroupItemProps extends ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> {}
 
 /** One radio. Inside a Choice row its words label it; on its own give it an aria-label. */
-export const RadioGroupItem = forwardRef<HTMLButtonElement, RadioGroupItemProps>(function RadioGroupItem({ className, ...props }, ref) {
+export const RadioGroupItem = forwardRef<HTMLButtonElement, RadioGroupItemProps>(function RadioGroupItem(
+  { className, ...props },
+  ref,
+) {
   return (
     <RadioGroupPrimitive.Item ref={ref} className={cx("ui-radio", className)} {...props}>
       <RadioGroupPrimitive.Indicator className="ui-radio-indicator" />
@@ -62,13 +74,21 @@ export const RadioCard = forwardRef<HTMLButtonElement, RadioCardProps>(function 
           <span className="ui-radio-card-title">{title}</span>
           {meta !== undefined ? <span className="ui-radio-card-meta">{meta}</span> : null}
         </span>
-        <RadioGroupItem ref={ref} value={value} disabled={disabled} aria-label={itemLabel ?? (typeof title === "string" ? title : undefined)} />
+        <RadioGroupItem
+          ref={ref}
+          value={value}
+          disabled={disabled}
+          aria-label={itemLabel ?? (typeof title === "string" ? title : undefined)}
+        />
       </span>
     </label>
   );
 });
 
 /** The preview slot of a custom card, if you build one by hand. */
-export const RadioCardPreview = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function RadioCardPreview({ className, ...props }, ref) {
+export const RadioCardPreview = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function RadioCardPreview(
+  { className, ...props },
+  ref,
+) {
   return <span ref={ref} className={cx("ui-radio-card-preview", className)} {...props} />;
 });

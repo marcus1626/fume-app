@@ -24,7 +24,10 @@ export interface InputGroupProps extends HTMLAttributes<HTMLDivElement> {
   disabled?: boolean;
 }
 
-export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(function InputGroup({ size = "md", invalid, disabled, className, ...props }, ref) {
+export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(function InputGroup(
+  { size = "md", invalid, disabled, className, ...props },
+  ref,
+) {
   return (
     <div
       ref={ref}
@@ -54,7 +57,9 @@ export const InputGroupAddon = forwardRef<HTMLDivElement, InputGroupAddonProps>(
       onClick={(e: MouseEvent<HTMLDivElement>) => {
         onClick?.(e);
         if (e.defaultPrevented || (e.target as Element).closest("button, a, input, textarea, select")) return;
-        const control = e.currentTarget.parentElement?.querySelector<HTMLElement>(".ui-input-group-input, .ui-input-group-textarea");
+        const control = e.currentTarget.parentElement?.querySelector<HTMLElement>(
+          ".ui-input-group-input, .ui-input-group-textarea",
+        );
         control?.focus();
       }}
       {...props}
@@ -63,7 +68,10 @@ export const InputGroupAddon = forwardRef<HTMLDivElement, InputGroupAddonProps>(
 });
 
 /** Quiet words inside the field: "https://", "kr". */
-export const InputGroupText = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function InputGroupText({ className, ...props }, ref) {
+export const InputGroupText = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(function InputGroupText(
+  { className, ...props },
+  ref,
+) {
   return <span ref={ref} className={cx("ui-input-group-text", className)} {...props} />;
 });
 
@@ -95,7 +103,10 @@ export const InputGroupInput = forwardRef<HTMLInputElement, InputGroupInputProps
 });
 
 /** The textarea inside the group; it grows with its text. Put buttons under it in an addon with align="block-end". */
-export const InputGroupTextarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function InputGroupTextarea({ className, onInput, ...props }, ref) {
+export const InputGroupTextarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function InputGroupTextarea(
+  { className, onInput, ...props },
+  ref,
+) {
   return (
     <textarea
       ref={composeRefs(ref, growTextarea)}
@@ -131,7 +142,11 @@ export const InputGroupButton = forwardRef<HTMLButtonElement, InputGroupButtonPr
       className={cx("ui-input-group-button", className)}
       onClick={(e) => {
         onClick?.(e);
-        if (clear) e.currentTarget.closest(".ui-input-group")?.querySelector<HTMLElement>(".ui-input-group-input, .ui-input-group-textarea")?.focus();
+        if (clear)
+          e.currentTarget
+            .closest(".ui-input-group")
+            ?.querySelector<HTMLElement>(".ui-input-group-input, .ui-input-group-textarea")
+            ?.focus();
       }}
       {...props}
     />

@@ -1,10 +1,9 @@
-// What Fume found (design-system/components/found-review.css), PROPOSED 16 Oct 2026, round 7 (Marcus 16 Oct,
-// decided point 3): one review for everything Fume reads in, products from a website, a CSV or an unsorted zip,
-// and the brand read again. Items lie as picture tiles marked New, Changed or Unsure; a tile opens in place, across
-// the grid, with old and new side by side for a change; "Approve all (N)" is the one main action (round 8: its words can
-// say what it does, "Add 2 to the catalogue"), and any one item can be confirmed, changed or removed on its own, none
-// of them in Ink. Round 9 (desktop review 19 Oct, DLOAD-1, DLOAD-7; PROPOSED): one verb per action, Confirm · Change ·
-// Remove (a change: Use the new · Keep yours), and Fume reads; the Engine only makes creatives.
+// What Fume found (design-system/components/found-review.css): one review for everything Fume reads in, products from a
+// website, a CSV or an unsorted zip, and the brand read again. Items lie as picture tiles marked New, Changed or
+// Unsure; a tile opens in place, across the grid, with old and new side by side for a change. "Approve all (N)" is the
+// one main action (its words can say what it does, "Add 2 to the catalogue"), and any one item can be confirmed,
+// changed or removed on its own, none of them in Ink. One verb per action, Confirm · Change · Remove (a change: Use the
+// new · Keep yours); Fume reads, the Engine only makes creatives.
 //   <FoundReview title="What Fume found" summary="On lysne.no: 1 new product, 1 changed."
 //     items={[{ id, status: "changed", title: "Pillow Mist", image, before: <…50 ml>, after: <…50 ml · 100 ml> }]}
 //     onApproveAll={…} onKeep={(id) => …} onFix={(id) => …} onRemove={(id) => …} />
@@ -70,8 +69,8 @@ export interface FoundReviewProps {
   hideFilter?: boolean;
   /** A write is under way: the actions wait. */
   busy?: boolean;
-  /** "Approve all"; the count is added in brackets. Or a function of the count, for words that say what the action
-   *  does ("Add 2 to the catalogue", round 8). */
+  /** "Approve all"; the count is added in brackets. Or a function of the count, for words that say what the action does
+   *  ("Add 2 to the catalogue"). */
   approveLabel?: string | ((n: number) => string);
   /** Under the grid: what Fume set aside, a link to something found elsewhere. */
   footer?: ReactNode;
@@ -130,7 +129,9 @@ function Panel({
   busy?: boolean;
 }) {
   const compare = item.status === "changed" && (item.before !== undefined || item.after !== undefined);
-  const facts = [item.source && `Read in ${item.source}`, item.confidence && confidenceWords[item.confidence]].filter(Boolean);
+  const facts = [item.source && `Read in ${item.source}`, item.confidence && confidenceWords[item.confidence]].filter(
+    Boolean,
+  );
   return (
     <li className="ui-found-panel" id={id} data-status={item.status} aria-label={item.title}>
       <div className="ui-found-panel-head">
@@ -143,7 +144,15 @@ function Panel({
           {item.subtitle && <p className="ui-found-panel-line">{item.subtitle}</p>}
           {facts.length > 0 && <p className="ui-found-panel-facts">{facts.join(" · ")}</p>}
         </div>
-        <Btn variant="quiet" size="sm" iconOnly icon="x" aria-label={`Close ${item.title}`} className="ui-found-panel-close" onClick={onClose} />
+        <Btn
+          variant="quiet"
+          size="sm"
+          iconOnly
+          icon="x"
+          aria-label={`Close ${item.title}`}
+          className="ui-found-panel-close"
+          onClick={onClose}
+        />
       </div>
       {item.note && (
         <p className="ui-found-panel-note">
@@ -171,7 +180,7 @@ function Panel({
       {item.detail && <div className="ui-found-detail">{item.detail}</div>}
       <div className="ui-found-actions">
         {!item.kept && (
-          // Round 8 (MOB-8): the review's one Ink action is the header's; confirming one item is secondary.
+          // The review's one Ink action is the header's; confirming one item is secondary.
           <Btn size="sm" variant="secondary" icon="check" onClick={onKeep} disabled={busy}>
             {item.status === "changed" ? "Use the new" : "Confirm"}
           </Btn>
@@ -186,7 +195,13 @@ function Panel({
             {a.label}
           </Btn>
         ))}
-        <Btn size="sm" variant="quiet" icon={item.status === "changed" ? "rotate-ccw" : "trash"} onClick={onRemove} disabled={busy}>
+        <Btn
+          size="sm"
+          variant="quiet"
+          icon={item.status === "changed" ? "rotate-ccw" : "trash"}
+          onClick={onRemove}
+          disabled={busy}
+        >
           {item.status === "changed" ? "Keep yours" : "Remove"}
         </Btn>
       </div>
@@ -270,13 +285,19 @@ export function FoundReview({
           onChange={setFilter}
           options={[
             { value: "all", label: <FilterLabel label="All" n={counts.all} /> },
-            ...statuses.map((s) => ({ value: s as FoundFilter, label: <FilterLabel label={FOUND_STATUS_LABEL[s]} n={counts[s]} /> })),
+            ...statuses.map((s) => ({
+              value: s as FoundFilter,
+              label: <FilterLabel label={FOUND_STATUS_LABEL[s]} n={counts[s]} />,
+            })),
           ]}
         />
       )}
 
       {shown.length === 0 ? (
-        <p className="ui-found-none">Nothing {filter === "all" ? "" : `${FOUND_STATUS_LABEL[filter as FoundStatus].toLowerCase()} `}left to look at.</p>
+        <p className="ui-found-none">
+          Nothing {filter === "all" ? "" : `${FOUND_STATUS_LABEL[filter as FoundStatus].toLowerCase()} `}left to look
+          at.
+        </p>
       ) : (
         groups.map((g, gi) => (
           <div className="ui-found-group" key={g.name ?? `g${gi}`}>
@@ -286,7 +307,13 @@ export function FoundReview({
                 const isOpen = open === item.id;
                 const panelId = `${uid}-${item.id}`;
                 return [
-                  <li key={item.id} className="ui-found-tile" data-status={item.status} data-selected={isOpen || undefined} data-kept={item.kept || undefined}>
+                  <li
+                    key={item.id}
+                    className="ui-found-tile"
+                    data-status={item.status}
+                    data-selected={isOpen || undefined}
+                    data-kept={item.kept || undefined}
+                  >
                     <div className="ui-found-frame">
                       <button
                         type="button"
@@ -345,7 +372,15 @@ function FilterLabel({ label, n }: { label: string; n: number }) {
 }
 
 /** A small old/new value list for before and after: an optional picture, then label and value rows; changed rows are marked. */
-export function FoundFields({ rows, image, imageLabel }: { rows: { label: string; value: ReactNode; changed?: boolean }[]; image?: string; imageLabel?: string }) {
+export function FoundFields({
+  rows,
+  image,
+  imageLabel,
+}: {
+  rows: { label: string; value: ReactNode; changed?: boolean }[];
+  image?: string;
+  imageLabel?: string;
+}) {
   return (
     <dl className="ui-found-fields">
       {image && (

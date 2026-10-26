@@ -1,10 +1,9 @@
-// "View all products" (walk-through Must 1, Marcus 15 Oct: a customer can have many products): the brand's whole
-// catalogue in the shared ProductSheet (packages/ui/src/fume/product-sheet.tsx), with the kinds and collections as
-// chips, and a lock on products the customer has not confirmed yet (round 8, LOAD-2: one word, "Confirmed"; round 9,
-// DLOAD-1: the picker's own "To confirm" on the lock, since "check" is the expert's word; the readiness percentage only for Fume's
-// people, never on a confirmed product). A locked product's "Confirm details" opens the one product panel.
-// Every product picker uses it: the Studio's product, the Engine chat's tick grid, the manual brief and Fume's
-// product question. A picker shows a few tiles and <ProductSheetButton> under them.
+// "View all products": the brand's whole catalogue in the shared ProductSheet (packages/ui/src/fume/product-sheet.tsx),
+// with the kinds and collections as chips, and a lock on products the customer has not confirmed yet ("To confirm" on
+// the lock, since "check" is the expert's word; the readiness percentage only for Fume's people, never on a confirmed
+// product). A locked product's "Confirm details" opens the one product panel. Every product picker uses it: the
+// Studio's product, the Engine chat's tick grid, the manual brief and Fume's product question. A picker shows a few
+// tiles and <ProductSheetButton> under them.
 import { Button, ProductSheet, useToast, type SheetFilterGroup, type SheetProduct } from "@fume/ui";
 import { useMemo, type ReactNode } from "react";
 import { Link } from "react-router-dom";
@@ -24,7 +23,13 @@ export function useAllProducts(only?: Id[]) {
     const products = (data?.products ?? []).filter((p) => !only || only.includes(p.id));
     const usedKinds = (kinds ?? []).filter((k) => products.some((p) => p.kindId === k.id));
     const usedCollections = (data?.collections ?? []).filter((c) => products.some((p) => c.productIds.includes(p.id)));
-    const usedCategories = (data?.categories ?? []).filter((c) => !c.parentId && products.some((p) => p.categoryId === c.id || data?.categories.find((x) => x.id === p.categoryId)?.parentId === c.id));
+    const usedCategories = (data?.categories ?? []).filter(
+      (c) =>
+        !c.parentId &&
+        products.some(
+          (p) => p.categoryId === c.id || data?.categories.find((x) => x.id === p.categoryId)?.parentId === c.id,
+        ),
+    );
     const filters: SheetFilterGroup[] = [
       usedKinds.length
         ? { label: "Category", options: usedKinds.map((k) => ({ id: k.id, label: k.name })) }
@@ -33,7 +38,12 @@ export function useAllProducts(only?: Id[]) {
     ];
     const tags = (p: Product) => {
       const parent = data?.categories.find((x) => x.id === p.categoryId)?.parentId;
-      return [p.kindId, p.categoryId, parent, ...(data?.collections ?? []).filter((c) => c.productIds.includes(p.id)).map((c) => c.id)].filter((x): x is string => Boolean(x));
+      return [
+        p.kindId,
+        p.categoryId,
+        parent,
+        ...(data?.collections ?? []).filter((c) => c.productIds.includes(p.id)).map((c) => c.id),
+      ].filter((x): x is string => Boolean(x));
     };
     const readiness = (p: Product) => {
       const kind = kinds?.find((k) => k.id === p.kindId);
@@ -64,7 +74,15 @@ export interface AllProductsSheetProps {
 }
 
 /** The whole catalogue in the shared sheet. */
-export function AllProductsSheet({ open, onOpenChange, only, confirmer, onConfirm, staff, ...props }: AllProductsSheetProps) {
+export function AllProductsSheet({
+  open,
+  onOpenChange,
+  only,
+  confirmer,
+  onConfirm,
+  staff,
+  ...props
+}: AllProductsSheetProps) {
   const { products, filters, tags, readiness } = useAllProducts(only);
   const toast = useToast();
   const who = confirmer ?? "the customer";
@@ -84,7 +102,11 @@ export function AllProductsSheet({ open, onOpenChange, only, confirmer, onConfir
           variant="glass-clear"
           icon="send"
           aria-label={`Ask ${who} to confirm the details of ${p.name}`}
-          onClick={() => toast.done(`${who} is asked to confirm ${p.name}`, { description: "It waits on their Home. The product can be picked once it is confirmed." })}
+          onClick={() =>
+            toast.done(`${who} is asked to confirm ${p.name}`, {
+              description: "It waits on their Home. The product can be picked once it is confirmed.",
+            })
+          }
         >
           Ask {who.split(" ")[0]}
         </Button>
@@ -118,7 +140,9 @@ export function AllProductsSheet({ open, onOpenChange, only, confirmer, onConfir
       filters={filters}
       description={
         props.description ??
-        (staff ? `Products with a lock wait for ${who} to confirm their details; the Engine makes nothing of them before that.` : "We make creatives only of products you have confirmed.")
+        (staff
+          ? `Products with a lock wait for ${who} to confirm their details; the Engine makes nothing of them before that.`
+          : "We make creatives only of products you have confirmed.")
       }
       {...props}
     />

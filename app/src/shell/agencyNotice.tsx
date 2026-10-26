@@ -1,15 +1,12 @@
-// Round 11 (FLOWS §24.8; PROPOSED 20 Oct 2026): an example client's places in the preview. The mock is one brand deep
-// (LYSNE), so a summary client's own pages would show LYSNE's Brand DNA, products and chat under AURÉA's name. Instead
-// every place of a summary client shows this one notice, inside the agency's sidebar: the client's mark and name,
-// where it stands in one sentence, its current campaign and how far it is, its people, and the line that says only
-// LYSNE has the full example data, with one way on (Open LYSNE) and a quiet way back (All clients).
-// Round 13 AGENCY (robot note 10-agency, 22 Oct 2026; PROPOSED):
-// - Each place says its own (the robot saw the same Home under VEV's Campaigns, Check and Studio): Home keeps the
-//   summary; Campaigns shows the client's campaign; Check, Brand, Studio, Engine and Fume say what that place holds
-//   for this client, and the way on opens LYSNE's same place ("Open LYSNE’s Check").
-// - A client the agency has just added is new, not an example: "Fume is reading nordlys.no", and its first place is
-//   the Brand DNA.
-// - Each of the client's people has their role ("Can approve"), an invited one says so.
+// An example client's places in the preview (FLOWS §24.8). The mock is one brand deep (LYSNE), so a summary client's
+// own pages would show LYSNE's Brand DNA, products and chat under AURÉA's name. Instead every place of a summary client
+// shows a notice inside the agency's sidebar, with one way on (Open LYSNE) and a quiet way back (All clients):
+// - Home keeps the summary: the client's mark and name, where it stands, its current campaign and how far it is, its
+//   people, and the line that says only LYSNE has the full example data;
+// - Campaigns shows the client's campaign; Check, Brand, Studio, Engine and Fume say what that place holds for this
+//   client, and the way on opens LYSNE's same place ("Open LYSNE’s Check").
+// A client the agency has just added is new, not an example: "Fume is reading nordlys.no", and its first place is the
+// Brand DNA. Each of the client's people shows their role ("Can approve"); an invited one says so.
 import {
   Alert,
   AlertAction,
@@ -63,11 +60,25 @@ export function SummaryClientNotice({ workspace, client }: { workspace: Workspac
   const { pathname } = useLocation();
   const key = placeOf(pathname);
   const place = PLACES[key];
-  return place ? <ClientPlace workspace={workspace} client={client} place={place} pathname={pathname} /> : <ClientHome workspace={workspace} client={client} />;
+  return place ? (
+    <ClientPlace workspace={workspace} client={client} place={place} pathname={pathname} />
+  ) : (
+    <ClientHome workspace={workspace} client={client} />
+  );
 }
 
 /** What the preview says about this client, with the way on: LYSNE's same place (an example), or All clients. */
-function PreviewAlert({ workspace, client, place, pathname }: { workspace: Workspace; client?: AgencyClient; place?: { label: string }; pathname: string }) {
+function PreviewAlert({
+  workspace,
+  client,
+  place,
+  pathname,
+}: {
+  workspace: Workspace;
+  client?: AgencyClient;
+  place?: { label: string };
+  pathname: string;
+}) {
   const session = useSession().data!;
   const clients = useAgencyClients(Boolean(session.user.agency)).data ?? [];
   const full = clients.find((c) => c.example === "full");
@@ -87,12 +98,24 @@ function PreviewAlert({ workspace, client, place, pathname }: { workspace: Works
       <AlertDescription>{words}</AlertDescription>
       <AlertAction>
         {client?.isNew && !onBrand && (
-          <Button size="sm" iconEnd="arrow-right" onClick={() => navigate(`${brandBase("agency", workspace.id)}/brand`)}>
+          <Button
+            size="sm"
+            iconEnd="arrow-right"
+            onClick={() => navigate(`${brandBase("agency", workspace.id)}/brand`)}
+          >
             Its Brand DNA
           </Button>
         )}
         {full && !client?.isNew && (
-          <Button size="sm" iconEnd="arrow-right" onClick={() => (place ? navigate(equivalent(pathname, "agency", full.workspace.id)) : void openClient(full.workspace.id, "/"))}>
+          <Button
+            size="sm"
+            iconEnd="arrow-right"
+            onClick={() =>
+              place
+                ? navigate(equivalent(pathname, "agency", full.workspace.id))
+                : void openClient(full.workspace.id, "/")
+            }
+          >
             {place ? `Open ${fullName}’s ${place.label}` : `Open ${fullName}`}
           </Button>
         )}
@@ -112,7 +135,11 @@ function NowCard({ client, progressId }: { client?: AgencyClient; progressId: st
       <Card>
         <CardHeader>
           <CardTitle>No campaign yet</CardTitle>
-          <CardDescription>{client?.isNew ? "The first campaign starts once Fume has read the brand and you have confirmed its Brand DNA." : "The first campaign starts once the Brand DNA is confirmed."}</CardDescription>
+          <CardDescription>
+            {client?.isNew
+              ? "The first campaign starts once Fume has read the brand and you have confirmed its Brand DNA."
+              : "The first campaign starts once the Brand DNA is confirmed."}
+          </CardDescription>
         </CardHeader>
       </Card>
     );
@@ -125,12 +152,20 @@ function NowCard({ client, progressId }: { client?: AgencyClient; progressId: st
       </CardHeader>
       <CardContent>
         <ProgressField>
-          <ProgressHead label={`${client?.people[0]?.name.split(" ")[0] ?? "The client"} approved`} labelId={progressId} num={`${pct} %`} />
+          <ProgressHead
+            label={`${client?.people[0]?.name.split(" ")[0] ?? "The client"} approved`}
+            labelId={progressId}
+            num={`${pct} %`}
+          />
           <Progress value={pct} aria-labelledby={progressId} />
         </ProgressField>
         <DataList variant="grid">
-          <DataListItem label="Next delivery">{client?.nextDelivery ? due(client.nextDelivery.at) : "Not set yet"}</DataListItem>
-          <DataListItem label="Waiting on">{client?.waitingOn ?? (client?.waitingOnYou ? "You" : "No one")}</DataListItem>
+          <DataListItem label="Next delivery">
+            {client?.nextDelivery ? due(client.nextDelivery.at) : "Not set yet"}
+          </DataListItem>
+          <DataListItem label="Waiting on">
+            {client?.waitingOn ?? (client?.waitingOnYou ? "You" : "No one")}
+          </DataListItem>
           <DataListItem label="Campaigns">{copy.count(client?.campaignsActive ?? 0, "active campaign")}</DataListItem>
         </DataList>
       </CardContent>
@@ -176,7 +211,9 @@ function ClientHome({ workspace, client }: { workspace: Workspace; client?: Agen
         <ItemGroup as="ul">
           {(client?.people ?? []).map((p) => {
             const role = client?.roles?.[p.id];
-            const what = [p.title, role ? copy.role[role] : undefined, client?.isNew ? "invited" : undefined].filter(Boolean).join(" · ");
+            const what = [p.title, role ? copy.role[role] : undefined, client?.isNew ? "invited" : undefined]
+              .filter(Boolean)
+              .join(" · ");
             return (
               <Item key={p.id} as="li" variant="muted">
                 <ItemMedia>
@@ -209,7 +246,17 @@ function ClientHome({ workspace, client }: { workspace: Workspace; client?: Agen
 }
 
 /** One place of the client (Check, Campaigns, Brand, Studio, Engine, Fume): its own title and what it holds here. */
-function ClientPlace({ workspace, client, place, pathname }: { workspace: Workspace; client?: AgencyClient; place: { label: string; icon: IconName; holds: string }; pathname: string }) {
+function ClientPlace({
+  workspace,
+  client,
+  place,
+  pathname,
+}: {
+  workspace: Workspace;
+  client?: AgencyClient;
+  place: { label: string; icon: IconName; holds: string };
+  pathname: string;
+}) {
   const progressId = useId();
   const name = workspace.brandName;
   const key = placeOf(pathname);
@@ -251,7 +298,11 @@ function ClientPlace({ workspace, client, place, pathname }: { workspace: Worksp
           <Nothing
             icon={place.icon}
             title={client?.isNew ? `Fume is reading ${name}’s brand` : `${name}’s Brand DNA`}
-            text={client?.isNew ? `From ${siteOf(client) ?? "its website"}: the logo, colours, type, voice and products. You confirm what Fume found.` : (brandNews ?? `${name}’s Brand DNA, products and taste are kept apart from your other clients’.`)}
+            text={
+              client?.isNew
+                ? `From ${siteOf(client) ?? "its website"}: the logo, colours, type, voice and products. You confirm what Fume found.`
+                : (brandNews ?? `${name}’s Brand DNA, products and taste are kept apart from your other clients’.`)
+            }
           />
         );
       default:

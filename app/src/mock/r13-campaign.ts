@@ -27,9 +27,36 @@ const safe = (top = 0, bottom = 0) => ({ top, bottom, left: 0, right: 0 });
 /** #38: the placements the calendar's channels need besides those in seed4 (Facebook, TikTok). */
 export function r13Db(db: Pick<Db, "placements">) {
   const more: Placement[] = [
-    { id: "pl-fb-feed", name: "Facebook feed", group: "Facebook", ratio: "4:5", width: 1080, height: 1350, format: "feed", safe: safe() },
-    { id: "pl-fb-story", name: "Facebook story", group: "Facebook", ratio: "9:16", width: 1080, height: 1920, format: "story", safe: safe(0.14, 0.2) },
-    { id: "pl-tt-post", name: "TikTok post", group: "TikTok", ratio: "9:16", width: 1080, height: 1920, format: "story", safe: safe(0.12, 0.25) },
+    {
+      id: "pl-fb-feed",
+      name: "Facebook feed",
+      group: "Facebook",
+      ratio: "4:5",
+      width: 1080,
+      height: 1350,
+      format: "feed",
+      safe: safe(),
+    },
+    {
+      id: "pl-fb-story",
+      name: "Facebook story",
+      group: "Facebook",
+      ratio: "9:16",
+      width: 1080,
+      height: 1920,
+      format: "story",
+      safe: safe(0.14, 0.2),
+    },
+    {
+      id: "pl-tt-post",
+      name: "TikTok post",
+      group: "TikTok",
+      ratio: "9:16",
+      width: 1080,
+      height: 1920,
+      format: "story",
+      safe: safe(0.12, 0.25),
+    },
   ];
   for (const p of more) if (!db.placements.some((x) => x.id === p.id)) db.placements.push(p);
 }
@@ -112,17 +139,43 @@ function messages(base: string, product: string, feedback: string, round: number
   const warm = /warm|varm|soft|myk/.test(f);
   const bold = /bold|strong|sterk|louder/.test(f);
   const pools = [
-    [`${product}, for the hour before sleep`, "A slower evening, given", "The last quiet hour of the day", "Made to be felt, at night", "Give the evening back"],
-    ["The evening, wrapped", `${product}: a quiet gift`, "For someone who deserves the evening", "Light the evening", "Slow down. Then sleep"],
-    ["Warm light, a slower night", "The ritual after the day", `Keep ${product} by the bed`, "An evening worth giving", "Less day, more evening"],
+    [
+      `${product}, for the hour before sleep`,
+      "A slower evening, given",
+      "The last quiet hour of the day",
+      "Made to be felt, at night",
+      "Give the evening back",
+    ],
+    [
+      "The evening, wrapped",
+      `${product}: a quiet gift`,
+      "For someone who deserves the evening",
+      "Light the evening",
+      "Slow down. Then sleep",
+    ],
+    [
+      "Warm light, a slower night",
+      "The ritual after the day",
+      `Keep ${product} by the bed`,
+      "An evening worth giving",
+      "Less day, more evening",
+    ],
   ];
   // never her own words back as an alternative
-  const out = pools.map((pool, i) => pool[(round + i) % pool.length]).map((m, i) => (trim(m) === trim(base) ? pools[i][(round + i + 1) % pools[i].length] : m));
+  const out = pools
+    .map((pool, i) => pool[(round + i) % pool.length])
+    .map((m, i) => (trim(m) === trim(base) ? pools[i][(round + i + 1) % pools[i].length] : m));
   return out.map((m) => {
     let t = m;
     if (warm) {
       const w = t.replace(/^The /, "A warm ").replace(/quiet/, "warm");
-      t = w !== t ? w : t.replace(/\b(the|an?) (evening|night|hour)\b/i, (_m, art: string, word: string) => `${/^an$/i.test(art) ? "a" : art} warm ${word}`);
+      t =
+        w !== t
+          ? w
+          : t.replace(
+              /\b(the|an?) (evening|night|hour)\b/i,
+              (_m, art: string, word: string) => `${/^an$/i.test(art) ? "a" : art} warm ${word}`,
+            );
       if (t === m) t = `${t}, warmly`;
     }
     if (bold) t = t.replace(/^(A|The) /, "").replace(/^./, (c) => c.toUpperCase());
@@ -131,7 +184,9 @@ function messages(base: string, product: string, feedback: string, round: number
   });
 }
 
-export function r13CampaignApi(ctx: R13CampaignContext): Pick<FumeApi, "skipMoodboard" | "briefTemplates" | "briefAlternatives"> {
+export function r13CampaignApi(
+  ctx: R13CampaignContext,
+): Pick<FumeApi, "skipMoodboard" | "briefTemplates" | "briefAlternatives"> {
   const { db, wait } = ctx;
   return {
     async skipMoodboard(campaignId) {
@@ -145,7 +200,12 @@ export function r13CampaignApi(ctx: R13CampaignContext): Pick<FumeApi, "skipMood
       // Hers: one for each campaign she finished or approved, made by the Engine from its brief (#22).
       const ws = ctx.workspaceId();
       const yours: BriefTemplate[] = db.campaigns
-        .filter((c) => c.workspaceId === ws && ["approved", "delivered", "closed", "in_review"].includes(c.state) && !["brief", "plan"].includes(c.stage))
+        .filter(
+          (c) =>
+            c.workspaceId === ws &&
+            ["approved", "delivered", "closed", "in_review"].includes(c.state) &&
+            !["brief", "plan"].includes(c.stage),
+        )
         .map((c) => {
           const b = db.briefs.find((x) => x.campaignId === c.id);
           return b
@@ -178,9 +238,21 @@ export function r13CampaignApi(ctx: R13CampaignContext): Pick<FumeApi, "skipMood
       const g = trim(goal) || `A campaign for ${product}`;
       const short = /short|kort/.test(feedback.toLowerCase());
       const briefs = [
-        { goal: `${cap(g.replace(/^(a|an|the) /i, ""))}, told as the evening it gives`, audience: audience || "People who buy premium body care for themselves", message: msgs[0] },
-        { goal: `${product} as a considered gift, in paid social`, audience: "People buying a considered gift for someone close", message: msgs[1] },
-        { goal: `${product} close: its texture, its label, its light`, audience: audience || "People who already follow the brand", message: msgs[2] },
+        {
+          goal: `${cap(g.replace(/^(a|an|the) /i, ""))}, told as the evening it gives`,
+          audience: audience || "People who buy premium body care for themselves",
+          message: msgs[0],
+        },
+        {
+          goal: `${product} as a considered gift, in paid social`,
+          audience: "People buying a considered gift for someone close",
+          message: msgs[1],
+        },
+        {
+          goal: `${product} close: its texture, its label, its light`,
+          audience: audience || "People who already follow the brand",
+          message: msgs[2],
+        },
       ];
       return wait(short ? briefs.map((b) => ({ ...b, goal: b.goal.split(",")[0] })) : briefs);
     },

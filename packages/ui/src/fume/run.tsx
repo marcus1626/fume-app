@@ -1,4 +1,4 @@
-// Engine run: the steps the Engine takes for a brief (design-system/components/run.css). DECIDED 13 Oct, round 8.
+// Engine run: the steps the Engine takes for a brief (design-system/components/run.css).
 // A card with steps parted by space (no rail): a check when done, the spinner while it works, a grey dot before
 // it starts, pause or stop when you held it, the circle-alert in Rouge when it failed, and for the Quality Gate
 // the checked triangle in grey while it waits for Anna. Generating says "4 of 12" as data, fills an Ink bar and
@@ -55,7 +55,7 @@ export interface EngineRunProps extends Omit<HTMLAttributes<HTMLDivElement>, "ti
 
 const BADGE: Record<EngineRunState, { dot?: "live" | "danger" | "idle"; icon?: IconName; words: string }> = {
   queued: { dot: "idle", words: "Queued" },
-  // Round 9 (DLOAD-11): "Running" was a system word; the card says what a person would.
+  // The card says what a person would, never the system word "Running".
   running: { dot: "live", words: "Under way" },
   paused: { icon: "pause", words: "Paused" },
   stopped: { icon: "square", words: "Stopped by you" },
@@ -96,7 +96,15 @@ function Tile({ tile, i }: { tile: RunTileData; i: number }) {
       </div>
     );
   else if (tile.state === "active")
-    body = <div className="ui-skeleton ui-skeleton--creative" role="img" aria-label={`${name}, being made`} {...fa} style={{ ...fa.style, ...vars({ "--i": i }) }} />;
+    body = (
+      <div
+        className="ui-skeleton ui-skeleton--creative"
+        role="img"
+        aria-label={`${name}, being made`}
+        {...fa}
+        style={{ ...fa.style, ...vars({ "--i": i }) }}
+      />
+    );
   else if (tile.state === "failed")
     body = (
       <div className="ui-run-slot" role="img" aria-label={`${name} couldn’t be made`} {...fa}>
@@ -110,7 +118,7 @@ function Tile({ tile, i }: { tile: RunTileData; i: number }) {
       {tile.state === "done" && tile.check && (
         <span className="ui-creative-check" data-check={tile.check.state === "checked" ? "approved" : "waiting"}>
           <Icon name="fume-check" />
-          {tile.check.state === "checked" ? tile.check.by ?? "Checked" : "In check"}
+          {tile.check.state === "checked" ? (tile.check.by ?? "Checked") : "In check"}
           {tile.check.state === "checked" && tile.check.time && (
             <>
               {" "}
@@ -158,12 +166,19 @@ export const EngineRun = forwardRef<HTMLDivElement, EngineRunProps>(function Eng
   { title, description, state, time, steps, badge, failedLabel, actions, className, ...props },
   ref,
 ) {
-  // Done only when every line is done (round 9, DLOAD-2): a run whose making is over while a step still works or
-  // waits (the Quality Gate) wears "Under way", never "Done" next to a spinner.
+  // Done only when every line is done: a run whose making is over while a step still works or waits (the Quality Gate)
+  // wears "Under way", never "Done" next to a spinner.
   const open = state === "done" && steps.some((s) => s.state !== "done");
   const shown: EngineRunState = open ? "running" : state;
   return (
-    <div ref={ref} className={cx("ui-card ui-run", className)} data-state={shown} role="group" aria-label={`Engine run for ${title}`} {...props}>
+    <div
+      ref={ref}
+      className={cx("ui-card ui-run", className)}
+      data-state={shown}
+      role="group"
+      aria-label={`Engine run for ${title}`}
+      {...props}
+    >
       <div className="ui-run-header">
         <div className="ui-run-heading">
           <h4 className="ui-run-title">{title}</h4>
@@ -193,7 +208,10 @@ export interface EngineRunActionProps extends Omit<HTMLAttributes<HTMLButtonElem
 }
 
 /** A button at the run's foot: button.ui-btn.ui-btn--{variant}.ui-btn--sm with its icon. */
-export const EngineRunAction = forwardRef<HTMLButtonElement, EngineRunActionProps>(function EngineRunAction({ variant = "quiet", icon, children, ...props }, ref) {
+export const EngineRunAction = forwardRef<HTMLButtonElement, EngineRunActionProps>(function EngineRunAction(
+  { variant = "quiet", icon, children, ...props },
+  ref,
+) {
   return (
     <Btn ref={ref} variant={variant} size="sm" icon={icon} {...props}>
       {children}

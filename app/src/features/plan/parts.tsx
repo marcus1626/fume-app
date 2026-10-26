@@ -1,24 +1,37 @@
-// The plan document's parts (design-system/components/plan.css): a line's source tag, a line with Change in place,
-// a master as a row with a placeholder in its own ratio, what follows the masters, a direction Fume also considered,
-// the steps. Words (FLOWS §22, round 10 brief): "Change" edits a line in place (Esc cancels, ⌘↵ saves); a line she
-// changed says "Changed by you"; "Use this direction" takes another direction; "Fume's pick" names the one Fume
-// recommends.
-// Round 12 (UX review DLAY-10, DLOAD-9, DWAY-18, DLOAD-17; PROPOSED 20 Oct 2026): set like a spec, not like prose. A line
-// is one row: its label with its one quiet source under it, the value, what it rests on, and Change as a pencil that
-// shows on the row's hover and keyboard focus (always on a touch screen), not fifteen pills at rest. A master is a
-// compact row with a small placeholder in its ratio. What follows the masters is a table of one line each; two that
-// would be the same creative are one row, "2 ×". A direction Fume also considered is one row: two pictures, its name,
-// its idea, "Use this direction". Change puts the caret at the end of the words; Save, Cancel and Esc give the focus
-// back to the pencil that opened it.
-// Round 13 (Marcus's comments #26, #28, #67; PROPOSED 22 Oct 2026): a creative can have its own look ("Own look": its
-// light, the light's direction, its camera) beside the plan's look, which still holds for every other creative; Change
-// edits it in place. A creative Fume changed as she asked says "Changed by Fume". A step the expert checks carries the
-// Focus pointer (Amber once checked).
+// The plan document's parts (design-system/components/plan.css), set like a spec, not like prose: a line's source tag;
+// a line as one row (its label with its one quiet source under it, the value, what it rests on, and Change as a pencil
+// that shows on the row's hover and keyboard focus, always on a touch screen); a master as a compact row with a small
+// placeholder in its own ratio; what follows the masters as a table of one line each (two that would be the same
+// creative are one row, "2 ×"); a direction Fume also considered as one row (two pictures, its name, its idea, "Use
+// this direction"); the steps.
+// Words (FLOWS §22): "Change" edits a line in place (Esc cancels, ⌘↵ saves; the caret starts at the end of the words,
+// and Save, Cancel and Esc give the focus back to the pencil); a line she changed says "Changed by you", one Fume
+// changed as she asked "Changed by Fume"; "Use this direction" takes another direction; "Fume's pick" names the one
+// Fume recommends. A creative can have its own look (its light, the light's direction, its camera) beside the plan's
+// look, which still holds for every other creative. A step the expert checks carries the Focus pointer (Amber once
+// checked).
 import { Button, Field, FieldLabel, Icon, Input, Textarea, submitOnModEnter, useToast } from "@fume/ui";
-import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode, type RefObject } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type FormEvent,
+  type KeyboardEvent,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import { Link } from "react-router-dom";
 import { useChangePlan } from "../../api/hooks";
-import type { CampaignPlan, CreativeLook, PlanDirection, PlanLine, PlannedCreative, PlanSource, Product } from "../../contract";
+import type {
+  CampaignPlan,
+  CreativeLook,
+  PlanDirection,
+  PlanLine,
+  PlannedCreative,
+  PlanSource,
+  Product,
+} from "../../contract";
 import type { PlanPeople } from "./people";
 import { formatWord, plannedName, sourceIcon } from "./words";
 
@@ -70,7 +83,7 @@ function EditActions({ busy, onCancel }: { busy: boolean; onCancel: () => void }
   );
 }
 
-/** The caret after the last word (DWAY-18): a change adds to the line more often than it starts it again. */
+/** The caret after the last word: a change adds to the line more often than it starts it again. */
 function useCaretAtEnd<T extends HTMLTextAreaElement | HTMLInputElement>() {
   const ref = useRef<T>(null);
   useEffect(() => {
@@ -95,8 +108,27 @@ function useEditing() {
 }
 
 /** The pencil: on the row's hover and keyboard focus on a desk, always on a touch screen (plan.css). */
-function ChangePencil({ label, onClick, opener }: { label: string; onClick: () => void; opener: RefObject<HTMLButtonElement> }) {
-  return <Button ref={opener} className="ui-plandoc-change" variant="quiet" size="sm" iconOnly icon="pencil" aria-label={label} onClick={onClick} />;
+function ChangePencil({
+  label,
+  onClick,
+  opener,
+}: {
+  label: string;
+  onClick: () => void;
+  opener: RefObject<HTMLButtonElement>;
+}) {
+  return (
+    <Button
+      ref={opener}
+      className="ui-plandoc-change"
+      variant="quiet"
+      size="sm"
+      iconOnly
+      icon="pencil"
+      aria-label={label}
+      onClick={onClick}
+    />
+  );
 }
 
 // ─── A line: label and its source, the value and what it rests on, Change in place ──────────
@@ -146,12 +178,24 @@ export function LineRow({
           </>
         )}
       </div>
-      {editable && !editing && <ChangePencil opener={opener} label={`Change the ${line.label.toLowerCase()}`} onClick={open} />}
+      {editable && !editing && (
+        <ChangePencil opener={opener} label={`Change the ${line.label.toLowerCase()}`} onClick={open} />
+      )}
     </li>
   );
 }
 
-function LineEdit({ line, campaignId, labelId, onDone }: { line: PlanLine; campaignId: string; labelId: string; onDone: () => void }) {
+function LineEdit({
+  line,
+  campaignId,
+  labelId,
+  onDone,
+}: {
+  line: PlanLine;
+  campaignId: string;
+  labelId: string;
+  onDone: () => void;
+}) {
   const [text, setText] = useState(line.value);
   const change = useChangePlan();
   const toast = useToast();
@@ -181,7 +225,8 @@ function LineEdit({ line, campaignId, labelId, onDone }: { line: PlanLine; campa
 
 // ─── The creatives ──────────────────────────────────────────────────────────
 
-const langOf = (language?: string) => ({ Norwegian: "nb", Swedish: "sv", Danish: "da", English: "en", German: "de" })[language ?? ""] ?? undefined;
+const langOf = (language?: string) =>
+  ({ Norwegian: "nb", Swedish: "sv", Danish: "da", English: "en", German: "de" })[language ?? ""] ?? undefined;
 
 /** One master before it exists, as a compact row: a small placeholder in its own ratio with the product's packshot in
  *  the middle (never a fake finished picture), its one name with its format, the scene, the words on it, the people,
@@ -204,14 +249,22 @@ export function MasterCard({
   voice?: (text: string) => string;
 }) {
   const { editing, open, done, opener } = useEditing();
-  const shown = creative.productIds.map((id) => products.find((p) => p.id === id)).filter((p): p is Product => Boolean(p));
+  const shown = creative.productIds
+    .map((id) => products.find((p) => p.id === id))
+    .filter((p): p is Product => Boolean(p));
   const productWords = shown.map((p) => p.name).join(" and ");
   return (
     <li className="ui-plandoc-master" data-changed={creative.changedBy ? "" : undefined}>
-      <div className="ui-plandoc-stage" role="img" aria-label={`Not made yet: ${formatWord(creative.format)}${productWords ? ` with ${productWords}` : ""}`}>
+      <div
+        className="ui-plandoc-stage"
+        role="img"
+        aria-label={`Not made yet: ${formatWord(creative.format)}${productWords ? ` with ${productWords}` : ""}`}
+      >
         <div className="ui-plandoc-frame" data-format={creative.format}>
           <span className="ui-plandoc-frame-products" aria-hidden="true">
-            {shown.slice(0, 2).map((p) => (p.images[0] ? <img key={p.id} src={p.images[0]} alt="" loading="lazy" /> : null))}
+            {shown
+              .slice(0, 2)
+              .map((p) => (p.images[0] ? <img key={p.id} src={p.images[0]} alt="" loading="lazy" /> : null))}
           </span>
         </div>
       </div>
@@ -243,9 +296,13 @@ export function MasterCard({
   );
 }
 
-/** "Changed by you", "Changed by Anna", "Changed by Fume" (a change she asked Fume for, round 13). */
+/** "Changed by you", "Changed by Anna", "Changed by Fume" (a change she asked Fume for). */
 export function ChangedTag({ by, people }: { by: string; people: PlanPeople }) {
-  return by === "fume" ? <SourceTag source="fume" label="Changed by Fume" /> : <SourceTag source="you" label={`Changed by ${people.name(by)}`} />;
+  return by === "fume" ? (
+    <SourceTag source="fume" label="Changed by Fume" />
+  ) : (
+    <SourceTag source="you" label={`Changed by ${people.name(by)}`} />
+  );
 }
 
 const LOOK_PARTS = [
@@ -256,7 +313,7 @@ const LOOK_PARTS = [
 
 const hasLook = (look?: CreativeLook | null) => Boolean(look && LOOK_PARTS.some(([k]) => look[k]?.trim()));
 
-/** A creative's own look (#26): what differs from the plan's look for this one creative. Nothing when it has none. */
+/** A creative's own look: what differs from the plan's look for this one creative. Nothing when it has none. */
 export function OwnLook({ look, voice = (t) => t }: { look?: CreativeLook; voice?: (text: string) => string }) {
   if (!look || !hasLook(look)) return null;
   return (
@@ -271,7 +328,15 @@ export function OwnLook({ look, voice = (t) => t }: { look?: CreativeLook; voice
   );
 }
 
-function CreativeEdit({ creative, campaignId, onDone }: { creative: PlannedCreative; campaignId: string; onDone: () => void }) {
+function CreativeEdit({
+  creative,
+  campaignId,
+  onDone,
+}: {
+  creative: PlannedCreative;
+  campaignId: string;
+  onDone: () => void;
+}) {
   const id = useId();
   const [scene, setScene] = useState(creative.scene);
   const [text, setText] = useState(creative.text ?? "");
@@ -287,8 +352,18 @@ function CreativeEdit({ creative, campaignId, onDone }: { creative: PlannedCreat
         campaignId,
         creativeId: creative.id,
         creative: { scene: scene.trim(), text: text.trim() || undefined },
-        // its own look (#26): empty takes it back to the plan's look
-        ...(hasLook(look) ? { look: { light: look.light?.trim() || undefined, direction: look.direction?.trim() || undefined, camera: look.camera?.trim() || undefined } } : creative.look ? { look: null } : {}),
+        // its own look: empty takes it back to the plan's look
+        ...(hasLook(look)
+          ? {
+              look: {
+                light: look.light?.trim() || undefined,
+                direction: look.direction?.trim() || undefined,
+                camera: look.camera?.trim() || undefined,
+              },
+            }
+          : creative.look
+            ? { look: null }
+            : {}),
       },
       {
         onSuccess: () => {
@@ -314,7 +389,12 @@ function CreativeEdit({ creative, campaignId, onDone }: { creative: PlannedCreat
         {LOOK_PARTS.map(([k, label]) => (
           <Field key={k}>
             <FieldLabel htmlFor={`${id}-${k}`}>{label}</FieldLabel>
-            <Input id={`${id}-${k}`} value={look[k] ?? ""} placeholder="As the look" onChange={(e) => setLook((l) => ({ ...l, [k]: e.target.value }))} />
+            <Input
+              id={`${id}-${k}`}
+              value={look[k] ?? ""}
+              placeholder="As the look"
+              onChange={(e) => setLook((l) => ({ ...l, [k]: e.target.value }))}
+            />
           </Field>
         ))}
       </fieldset>
@@ -323,13 +403,31 @@ function CreativeEdit({ creative, campaignId, onDone }: { creative: PlannedCreat
   );
 }
 
-/** The variants and formats as a table of one line each: the creative's one name, the master it comes from, what changes
- *  and its words when they differ. Two that would be the same creative (the same master, format, scene and words) are
- *  one row, "2 ×" (DLOAD-17). */
-export function FollowList({ masters, variants, language, voice = (t) => t }: { masters: PlannedCreative[]; variants: PlannedCreative[]; language?: string; voice?: (text: string) => string }) {
+/** The variants and formats as a table of one line each: the creative's one name, the master it comes from, what
+ *  changes and its words when they differ. Two that would be the same creative (the same master, format, scene and
+ *  words) are one row, "2 ×". */
+export function FollowList({
+  masters,
+  variants,
+  language,
+  voice = (t) => t,
+}: {
+  masters: PlannedCreative[];
+  variants: PlannedCreative[];
+  language?: string;
+  voice?: (text: string) => string;
+}) {
   const rows: { v: PlannedCreative; n: number }[] = [];
   for (const v of variants) {
-    const same = rows.find((r) => r.v.of === v.of && r.v.format === v.format && r.v.scene === v.scene && r.v.text === v.text && !hasLook(r.v.look) && !hasLook(v.look));
+    const same = rows.find(
+      (r) =>
+        r.v.of === v.of &&
+        r.v.format === v.format &&
+        r.v.scene === v.scene &&
+        r.v.text === v.text &&
+        !hasLook(r.v.look) &&
+        !hasLook(v.look),
+    );
     if (same) same.n++;
     else rows.push({ v, n: 1 });
   }
@@ -345,7 +443,9 @@ export function FollowList({ masters, variants, language, voice = (t) => t }: { 
               {plannedName(v)}
             </span>
             {/* "from Master 1", unless its name already says so ("Master 1 · Story 9:16") */}
-            <span className="ui-plandoc-follow-from">{master && !plannedName(v).startsWith(`${master.name} `) ? `from ${master.name}` : ""}</span>
+            <span className="ui-plandoc-follow-from">
+              {master && !plannedName(v).startsWith(`${master.name} `) ? `from ${master.name}` : ""}
+            </span>
             <span className="ui-plandoc-follow-what">
               {voice(v.scene)}
               {v.text && v.text !== master?.text && (
@@ -367,7 +467,17 @@ export function FollowList({ masters, variants, language, voice = (t) => t }: { 
 
 // ─── A direction Fume also considered ───────────────────────────────────────
 
-export function ConsideredCard({ direction, onUse, busy, voice = (t) => t }: { direction: PlanDirection; onUse?: () => void; busy?: boolean; voice?: (text: string) => string }) {
+export function ConsideredCard({
+  direction,
+  onUse,
+  busy,
+  voice = (t) => t,
+}: {
+  direction: PlanDirection;
+  onUse?: () => void;
+  busy?: boolean;
+  voice?: (text: string) => string;
+}) {
   return (
     <li className="ui-plandoc-alt">
       <div className="ui-plandoc-alt-pictures">
@@ -383,7 +493,13 @@ export function ConsideredCard({ direction, onUse, busy, voice = (t) => t }: { d
         <p className="ui-plandoc-alt-idea">{voice(direction.idea)}</p>
       </div>
       {onUse && (
-        <Button variant="secondary" size="sm" loading={busy} aria-label={`Use this direction, ${direction.letter} ${direction.name}`} onClick={onUse}>
+        <Button
+          variant="secondary"
+          size="sm"
+          loading={busy}
+          aria-label={`Use this direction, ${direction.letter} ${direction.name}`}
+          onClick={onUse}
+        >
           Use this direction
         </Button>
       )}
@@ -399,7 +515,7 @@ export interface Step {
   when?: string;
   time?: string;
   state: "done" | "now" | "ahead";
-  /** The expert checks this step (round 13, #28): the Focus pointer, Amber once checked. */
+  /** The expert checks this step: the Focus pointer, Amber once checked. */
   check?: boolean;
 }
 
@@ -407,17 +523,31 @@ export function Steps({ steps, label }: { steps: Step[]; label: string }) {
   return (
     <ol className="ui-plandoc-when" aria-label={label}>
       {steps.map((s, i) => (
-        <li key={i} className="ui-plandoc-step" data-state={s.state} aria-current={s.state === "now" ? "step" : undefined}>
+        <li
+          key={i}
+          className="ui-plandoc-step"
+          data-state={s.state}
+          aria-current={s.state === "now" ? "step" : undefined}
+        >
           <span className="ui-plandoc-step-dot" aria-hidden="true" />
           <span className="ui-plandoc-step-label">
             {s.check && (
-              <span className="ui-creative-check ui-plandoc-step-check" data-check={s.state === "done" ? "approved" : "waiting"}>
+              <span
+                className="ui-creative-check ui-plandoc-step-check"
+                data-check={s.state === "done" ? "approved" : "waiting"}
+              >
                 <Icon name="fume-check" />
               </span>
             )}
             {s.label}
           </span>
-          {s.time ? <time className="ui-plandoc-step-time" dateTime={s.time}>{s.when}</time> : s.when && <span className="ui-plandoc-step-words">{s.when}</span>}
+          {s.time ? (
+            <time className="ui-plandoc-step-time" dateTime={s.time}>
+              {s.when}
+            </time>
+          ) : (
+            s.when && <span className="ui-plandoc-step-words">{s.when}</span>
+          )}
         </li>
       ))}
     </ol>

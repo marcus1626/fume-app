@@ -1,6 +1,5 @@
 // Option menu: one button that opens a few ways to do one thing, each with a line on what it means
-// (design-system/components/option-menu.css, PROPOSED 15 Oct 2026). Made for "New campaign" (Marcus 15 Oct: "Write
-// the brief yourself" and "Start with Fume" become one button, and you choose one of the two in its menu).
+// (design-system/components/option-menu.css), as "New campaign" holds "Start with Fume" and "Write the brief yourself".
 // On a desk the glass dropdown menu under the button; on a phone the drawer from the bottom (sheet.tsx), in reach of
 // the thumb. Each option is an icon, its name and one line; 2 to 4 options, never more.
 import { cloneElement, isValidElement, useState, type ReactElement, type ReactNode } from "react";
@@ -50,11 +49,14 @@ export function OptionMenu({ children, title, options, align = "end", className 
   const [open, setOpen] = useState(false);
   if (narrow) {
     const trigger = isValidElement(children)
-      ? cloneElement(children as ReactElement<{ onClick?: () => void; "aria-haspopup"?: string; "aria-expanded"?: boolean }>, {
-          onClick: () => setOpen(true),
-          "aria-haspopup": "dialog",
-          "aria-expanded": open,
-        })
+      ? cloneElement(
+          children as ReactElement<{ onClick?: () => void; "aria-haspopup"?: string; "aria-expanded"?: boolean }>,
+          {
+            onClick: () => setOpen(true),
+            "aria-haspopup": "dialog",
+            "aria-expanded": open,
+          },
+        )
       : children;
     return (
       <>

@@ -29,7 +29,13 @@ interface ToggleLook {
 }
 
 function toggleClass({ variant = "default", size = "md", iconOnly = false }: ToggleLook, className?: string): string {
-  return cx("ui-toggle", variant === "outline" && "ui-toggle--outline", size !== "md" && `ui-toggle--${size}`, iconOnly && "ui-toggle--icon", className);
+  return cx(
+    "ui-toggle",
+    variant === "outline" && "ui-toggle--outline",
+    size !== "md" && `ui-toggle--${size}`,
+    iconOnly && "ui-toggle--icon",
+    className,
+  );
 }
 
 /** Uncontrolled-or-controlled state, as Radix's useControllableState. */
@@ -62,7 +68,20 @@ export interface ToggleProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
-  { variant, size, iconOnly, icon, pressed, defaultPressed = false, onPressedChange, onClick, disabled, className, children, ...props },
+  {
+    variant,
+    size,
+    iconOnly,
+    icon,
+    pressed,
+    defaultPressed = false,
+    onPressedChange,
+    onClick,
+    disabled,
+    className,
+    children,
+    ...props
+  },
   ref,
 ) {
   const [on, setOn] = useControllable(pressed, defaultPressed, onPressedChange);
@@ -127,13 +146,30 @@ export interface ToggleGroupMultipleProps extends ToggleGroupBase {
 export type ToggleGroupProps = ToggleGroupSingleProps | ToggleGroupMultipleProps;
 
 export const ToggleGroup = forwardRef<HTMLDivElement, ToggleGroupProps>(function ToggleGroup(props, ref) {
-  const { type, variant, size, loose = false, orientation, disabled = false, className, children, onKeyDown, ...rest } = props;
+  const {
+    type,
+    variant,
+    size,
+    loose = false,
+    orientation,
+    disabled = false,
+    className,
+    children,
+    onKeyDown,
+    ...rest
+  } = props;
   const single = type === "single";
   // Normalise both kinds to a list of values.
   const singleProps = props as ToggleGroupSingleProps;
   const multiProps = props as ToggleGroupMultipleProps;
   const [values, setValues] = useControllable<string[]>(
-    single ? (singleProps.value !== undefined ? (singleProps.value ? [singleProps.value] : []) : undefined) : multiProps.value,
+    single
+      ? singleProps.value !== undefined
+        ? singleProps.value
+          ? [singleProps.value]
+          : []
+        : undefined
+      : multiProps.value,
     single ? (singleProps.defaultValue ? [singleProps.defaultValue] : []) : (multiProps.defaultValue ?? []),
     (next) => (single ? singleProps.onValueChange?.(next[0] ?? "") : multiProps.onValueChange?.(next)),
   );
@@ -152,9 +188,9 @@ export const ToggleGroup = forwardRef<HTMLDivElement, ToggleGroupProps>(function
   const onKeys = (e: KeyboardEvent<HTMLDivElement>) => {
     onKeyDown?.(e);
     if (e.defaultPrevented) return;
-    const items = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>("button.ui-toggle:not(:disabled)")).filter(
-      (el) => el.closest(".ui-toggle-group") === e.currentTarget,
-    );
+    const items = Array.from(
+      e.currentTarget.querySelectorAll<HTMLButtonElement>("button.ui-toggle:not(:disabled)"),
+    ).filter((el) => el.closest(".ui-toggle-group") === e.currentTarget);
     const i = items.indexOf(document.activeElement as HTMLButtonElement);
     if (i < 0) return;
     const step = ({ ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>)[e.key];

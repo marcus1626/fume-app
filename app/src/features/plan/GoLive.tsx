@@ -1,9 +1,9 @@
-// When each creative goes live (round 13, Marcus's comment #67; PROPOSED 22 Oct 2026): under the plan's steps, a small
-// calendar strip of the days the creatives go live (a count on each day that has any), and each creative with its day.
-// Who may change the plan changes the days with a date picker (the customer while it is ready; the expert until it is
-// approved); "Open the content calendar" goes to the calendar view of Campaigns. A creative with no day of its own goes
-// live from the plan's go-live day: the masters on the day, then two variants a day after it.
-// Round 13 (#37): the day is @fume/ui's DateField ("Sat 17 Oct 2026" and a glass month), not the browser's date input.
+// When each creative goes live (FLOWS §26.2): under the plan's steps, a small calendar strip of the days the creatives
+// go live (a count on each day that has any), and each creative with its day. Who may change the plan changes the days
+// with a date picker (the customer while it is ready; the expert until it is approved); "Open the content calendar"
+// goes to the calendar view of Campaigns. A creative with no day of its own goes live from the plan's go-live day: the
+// masters on the day, then two variants a day after it. The day is @fume/ui's DateField, never the browser's date input
+// (FLOWS §26.7).
 import { Button, DateField, useToast } from "@fume/ui";
 import { Link, useLocation } from "react-router-dom";
 import { useChangePlan } from "../../api/hooks";
@@ -24,7 +24,8 @@ const fromKey = (key: string) => new Date(`${key}T08:00:00Z`).toISOString();
 const noon = (key: string) => Date.parse(`${key}T12:00:00Z`);
 
 /** The plan's go-live day: its "Goes live" step, else the campaign's. */
-export const liveOf = (plan: CampaignPlan, campaign: Campaign) => plan.timeline.find((s) => /^goes live/i.test(s.label))?.at ?? campaign.dueAt;
+export const liveOf = (plan: CampaignPlan, campaign: Campaign) =>
+  plan.timeline.find((s) => /^goes live/i.test(s.label))?.at ?? campaign.dueAt;
 
 /** Each planned creative with its go-live day: its own, else the masters on the day and two variants a day after. */
 export function liveDays(plan: CampaignPlan, campaign: Campaign): { creative: PlannedCreative; at: string }[] {
@@ -34,7 +35,10 @@ export function liveDays(plan: CampaignPlan, campaign: Campaign): { creative: Pl
   const base = Date.parse(live);
   return [
     ...masters.map((c) => ({ creative: c, at: c.liveAt ?? live })),
-    ...variants.map((c, i) => ({ creative: c, at: c.liveAt ?? new Date(base + (Math.floor(i / 2) + 1) * DAY).toISOString() })),
+    ...variants.map((c, i) => ({
+      creative: c,
+      at: c.liveAt ?? new Date(base + (Math.floor(i / 2) + 1) * DAY).toISOString(),
+    })),
   ];
 }
 

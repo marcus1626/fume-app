@@ -1,5 +1,5 @@
 // Creative viewer: full screen on Ink (design-system/components/viewer.css, behaviour from viewer.js).
-// DECIDED 13 Oct, round 8. Modal on Radix Dialog (focus trap, Escape, focus back to the creative you came from,
+// Modal on Radix Dialog (focus trap, Escape, focus back to the creative you came from,
 // the page stops scrolling); inline (in place on a page) as a region with the same screen and keys.
 // Keys inside: the arrows move, + and - zoom, 0 fits, I shows the info, F expands, Escape closes (inline:
 // Escape brings the tools back). A swipe of --ui-viewer-swipe moves on touch; past fit a drag pans; a double
@@ -82,7 +82,12 @@ export interface CreativeViewerProps extends Omit<HTMLAttributes<HTMLDivElement>
 }
 
 function itemSlug(name: string) {
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "creative";
+  return (
+    name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "") || "creative"
+  );
 }
 
 /** div.ui-viewer[data-state][data-info][data-chrome][data-zoomed][data-dragging] > div.ui-viewer-screen. */
@@ -147,7 +152,8 @@ export const CreativeViewer = forwardRef<HTMLDivElement, CreativeViewerProps>(fu
   const clampPan = useCallback((x: number, y: number, z: number) => {
     const f = frameRef.current;
     if (!f || z <= 1) return { x: 0, y: 0 };
-    const mx = ((z - 1) * f.offsetWidth) / 2, my = ((z - 1) * f.offsetHeight) / 2;
+    const mx = ((z - 1) * f.offsetWidth) / 2,
+      my = ((z - 1) * f.offsetHeight) / 2;
     return { x: Math.max(-mx, Math.min(mx, x)), y: Math.max(-my, Math.min(my, y)) };
   }, []);
 
@@ -229,7 +235,8 @@ export const CreativeViewer = forwardRef<HTMLDivElement, CreativeViewerProps>(fu
   const move = (e: ReactPointerEvent<HTMLDivElement>) => {
     const d = drag.current;
     if (!d || e.pointerId !== d.id) return;
-    const dx = e.clientX - d.x, dy = e.clientY - d.y;
+    const dx = e.clientX - d.x,
+      dy = e.clientY - d.y;
     if (!d.moved && Math.hypot(dx, dy) < 4) return;
     if (!d.moved) {
       d.moved = true;
@@ -251,7 +258,8 @@ export const CreativeViewer = forwardRef<HTMLDivElement, CreativeViewerProps>(fu
     setDragX(0);
     if (cancel || !d.moved || zoom > 1) return;
     const dx = e.clientX - d.x;
-    if (Math.abs(dx) > tokenPx("--ui-viewer-swipe", 48) && Math.abs(dx) > Math.abs(e.clientY - d.y)) go(dx < 0 ? 1 : -1);
+    if (Math.abs(dx) > tokenPx("--ui-viewer-swipe", 48) && Math.abs(dx) > Math.abs(e.clientY - d.y))
+      go(dx < 0 ? 1 : -1);
   };
 
   const checked = item?.check?.state === "checked";
@@ -267,7 +275,13 @@ export const CreativeViewer = forwardRef<HTMLDivElement, CreativeViewerProps>(fu
             </Dialog.Close>
           )}
           <span className="ui-viewer-title">
-            {inline ? <b>{item.name}</b> : <Dialog.Title asChild><b>{item.name}</b></Dialog.Title>}
+            {inline ? (
+              <b>{item.name}</b>
+            ) : (
+              <Dialog.Title asChild>
+                <b>{item.name}</b>
+              </Dialog.Title>
+            )}
             {item.campaign && <small>{item.campaign}</small>}
           </span>
         </div>
@@ -276,9 +290,29 @@ export const CreativeViewer = forwardRef<HTMLDivElement, CreativeViewerProps>(fu
         </span>
         <div className="ui-viewer-tools">
           <span className="ui-viewer-zoom" role="group" aria-label="Zoom">
-            <Btn variant="glass-clear" size="sm" iconOnly icon="zoom-out" className="ui-viewer-hide" aria-label="Zoom out" disabled={zoom <= LEVELS[0]} onClick={() => stepZoom(-1)} />
-            <span className="ui-viewer-zoom-num ui-viewer-hide">{zoom === 1 ? "Fit" : `${Math.round(zoom * 100)} %`}</span>
-            <Btn variant="glass-clear" size="sm" iconOnly icon="zoom-in" className="ui-viewer-hide" aria-label="Zoom in" disabled={zoom >= LEVELS[LEVELS.length - 1]} onClick={() => stepZoom(1)} />
+            <Btn
+              variant="glass-clear"
+              size="sm"
+              iconOnly
+              icon="zoom-out"
+              className="ui-viewer-hide"
+              aria-label="Zoom out"
+              disabled={zoom <= LEVELS[0]}
+              onClick={() => stepZoom(-1)}
+            />
+            <span className="ui-viewer-zoom-num ui-viewer-hide">
+              {zoom === 1 ? "Fit" : `${Math.round(zoom * 100)} %`}
+            </span>
+            <Btn
+              variant="glass-clear"
+              size="sm"
+              iconOnly
+              icon="zoom-in"
+              className="ui-viewer-hide"
+              aria-label="Zoom in"
+              disabled={zoom >= LEVELS[LEVELS.length - 1]}
+              onClick={() => stepZoom(1)}
+            />
           </span>
           <span className="ui-viewer-gap" aria-hidden="true" />
           <Btn
@@ -291,10 +325,25 @@ export const CreativeViewer = forwardRef<HTMLDivElement, CreativeViewerProps>(fu
             aria-label={chromeHidden ? "Show the tools" : "Expand: the creative alone"}
             onClick={() => setChromeHidden((v) => !v)}
           />
-          <Btn variant="glass-clear" size="sm" iconOnly icon="info" className={tool("ui-viewer-hide")} aria-pressed={!!info} aria-label="Info" onClick={() => setInfo((v) => !v)} />
+          <Btn
+            variant="glass-clear"
+            size="sm"
+            iconOnly
+            icon="info"
+            className={tool("ui-viewer-hide")}
+            aria-pressed={!!info}
+            aria-label="Info"
+            onClick={() => setInfo((v) => !v)}
+          />
         </div>
       </div>
-      <div className="ui-viewer-stage" onPointerDown={down} onPointerMove={move} onPointerUp={(e) => end(e)} onPointerCancel={(e) => end(e, true)}>
+      <div
+        className="ui-viewer-stage"
+        onPointerDown={down}
+        onPointerMove={move}
+        onPointerUp={(e) => end(e)}
+        onPointerCancel={(e) => end(e, true)}
+      >
         <div ref={frameRef} className="ui-viewer-frame" {...formatAttrs(item.format)}>
           <div
             className={cx("ui-viewer-media", changing && "is-changing")}
@@ -315,8 +364,24 @@ export const CreativeViewer = forwardRef<HTMLDivElement, CreativeViewerProps>(fu
           </div>
         </div>
       </div>
-      <Btn variant="glass-clear" iconOnly icon="chevron-left" className="ui-viewer-prev" aria-label="Previous creative" disabled={n < 2} onClick={() => go(-1)} />
-      <Btn variant="glass-clear" iconOnly icon="chevron-right" className="ui-viewer-next" aria-label="Next creative" disabled={n < 2} onClick={() => go(1)} />
+      <Btn
+        variant="glass-clear"
+        iconOnly
+        icon="chevron-left"
+        className="ui-viewer-prev"
+        aria-label="Previous creative"
+        disabled={n < 2}
+        onClick={() => go(-1)}
+      />
+      <Btn
+        variant="glass-clear"
+        iconOnly
+        icon="chevron-right"
+        className="ui-viewer-next"
+        aria-label="Next creative"
+        disabled={n < 2}
+        onClick={() => go(1)}
+      />
       <aside className="ui-viewer-info" aria-label={infoLabel}>
         <div className="ui-viewer-info-head">
           <b>{item.name}</b>
@@ -368,7 +433,16 @@ export const CreativeViewer = forwardRef<HTMLDivElement, CreativeViewerProps>(fu
 
   if (inline)
     return (
-      <div ref={setRoot} className={cx("ui-viewer ui-viewer--inline", className)} role="region" aria-label={label} tabIndex={-1} {...attrs} {...props} onKeyDown={keys}>
+      <div
+        ref={setRoot}
+        className={cx("ui-viewer ui-viewer--inline", className)}
+        role="region"
+        aria-label={label}
+        tabIndex={-1}
+        {...attrs}
+        {...props}
+        onKeyDown={keys}
+      >
         {screen}
       </div>
     );
@@ -377,7 +451,14 @@ export const CreativeViewer = forwardRef<HTMLDivElement, CreativeViewerProps>(fu
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Content asChild aria-describedby={undefined} aria-label={label}>
-          <div ref={setRoot} className={cx("ui-viewer", className)} aria-modal="true" {...attrs} {...props} onKeyDown={keys}>
+          <div
+            ref={setRoot}
+            className={cx("ui-viewer", className)}
+            aria-modal="true"
+            {...attrs}
+            {...props}
+            onKeyDown={keys}
+          >
             {screen}
           </div>
         </Dialog.Content>
@@ -398,12 +479,14 @@ export interface ViewerLayerProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * The review viewer's frame (PROPOSED 19 Oct 2026, UX review WAY-8): a modal layer over the page that opened it,
- * so the page and what was selected on it stay put underneath. Radix Dialog gives the focus trap, Escape and focus
- * back to the tile it came from. Nothing outside closes it: the layer covers the screen, and the only things
- * outside are the toasts, whose Undo must stay pressable.
+ * The review viewer's frame: a modal layer over the page that opened it, so the page and what was selected on it stay
+ * put underneath. Radix Dialog gives the focus trap, Escape and focus back to the tile it came from. Nothing outside
+ * closes it: the layer covers the screen, and the only things outside are the toasts, whose Undo must stay pressable.
  */
-export const ViewerLayer = forwardRef<HTMLDivElement, ViewerLayerProps>(function ViewerLayer({ label, onClose, onEscape, children, ...props }, ref) {
+export const ViewerLayer = forwardRef<HTMLDivElement, ViewerLayerProps>(function ViewerLayer(
+  { label, onClose, onEscape, children, ...props },
+  ref,
+) {
   return (
     <Dialog.Root open onOpenChange={(o) => !o && onClose()}>
       <Dialog.Portal>

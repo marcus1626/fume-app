@@ -1,6 +1,5 @@
-// Round 11 (FLOWS §24.3, PROPOSED 20 Oct 2026): Invite someone to the agency, the lead's small right panel: their
-// email and their role (Creative, or Agency lead). In the preview it sends nothing: a toast says the invitation went.
-// Round 13 (Marcus #70): the roles are Fume's own, Expert, Operator or Admin.
+// Invite someone to the agency, the lead's small right panel (FLOWS §24.3): their email and one of Fume's roles
+// (Expert, Operator, Admin). In the preview it sends nothing: a toast says the invitation went.
 import {
   Button,
   Choice,
@@ -29,7 +28,17 @@ import { agencyRoleHelp, agencyRoleWords, type AgencyRoleName } from "./agency-p
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export function InvitePanel({ open, onOpenChange, agencyName, known }: { open: boolean; onOpenChange: (open: boolean) => void; agencyName: string; known: string[] }) {
+export function InvitePanel({
+  open,
+  onOpenChange,
+  agencyName,
+  known,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  agencyName: string;
+  known: string[];
+}) {
   const toast = useToast();
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<AgencyRoleName>("expert");
@@ -59,7 +68,9 @@ export function InvitePanel({ open, onOpenChange, agencyName, known }: { open: b
       field.current?.focus();
       return;
     }
-    toast.done(`Invitation sent to ${v}`, { description: `They join ${agencyName} as ${role === "operator" ? "an operator" : role === "admin" ? "an admin" : "an expert"}.` });
+    toast.done(`Invitation sent to ${v}`, {
+      description: `They join ${agencyName} as ${role === "operator" ? "an operator" : role === "admin" ? "an admin" : "an expert"}.`,
+    });
     onOpenChange(false);
   };
 

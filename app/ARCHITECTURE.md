@@ -314,30 +314,34 @@ Decided by Marcus 14 Oct: **React + TypeScript**.
 
 ```
 app/
-  ARCHITECTURE.md        this document
-  index.html, vite.config.ts, tsconfig.json, package.json
+  ARCHITECTURE.md        this document; FLOWS.md, the screens and flows by round of decisions
+  index.html, vite.config.ts, tsconfig.json, package.json, vercel.json, middleware.ts (the preview's password)
   src/
-    contract/            the data contract: entity types, enums, the FumeApi interface, events. No React.
-    mock/                the mock backend: seeded LYSNE workspace, in-memory, with simulated Engine and Quality Gate
-    api/                 the client: picks mock or http from VITE_FUME_API; React Query–style hooks on top
-    ui/                  React components that render the design system's own classes (ui-btn, ui-card, …) —
-                         the only place markup for a component lives; no styling of their own
-    features/            one folder per domain: brand, campaigns, review, deliveries, fume, studio, settings, onboarding
-    routes/              route table and layouts (workspace shell with the sidebar, studio shell, first run)
-    copy/                every sentence the customer reads, in one place, checked by the gate's copy rules
-  test/                  contract tests for the mock (and later the real API), render audit of every route
+    contract/            the data contract, one file per domain: entities/, views/ (what a screen reads), api/ (the
+                         FumeApi interface, one interface per domain), events.ts, errors.ts. No React.
+    mock/                the mock backend: the seeded LYSNE workspace in memory, with a simulated Engine and Quality Gate
+    api/                 client.tsx builds the FumeApi the app uses (today always the mock); hooks.ts, the React Query
+                         hooks every screen reads and writes through
+    shell/               the frames: workspace, studio and agency sidebars, page, notifications, who is signed in
+    features/            one folder per domain: brand, products, campaigns, plan, review, deliveries, fume, studio, check,
+                         agency, onboarding, settings …
+    copy/                sentences the customer reads more than once, checked by the gate's copy rules
+    lib/                 small helpers with no React and no data (time)
+  test/                  vitest: the mock behind the contract
+  e2e/                   Playwright: the main flows clicked through in a browser, per role
 ```
 
 Rules for the code:
 - **Styles come only from the design system.** `app/` loads `design-system/` CSS (tokens, ui.css, components) as it
-  is and adds no colours, sizes or radii. Layout glue for a screen uses `--ui-*` tokens only and runs through the gate
-  (`node tools/gate/gate.mjs` covers `app/`). Components keep the markup their CSS header documents.
+  is and adds no colours, sizes or radii. Layout glue for a screen uses `--ui-*` tokens only. CI runs the brand rule
+  gate on the design system and `@fume/ui` (`npm run gate`); `app/` is not gated yet. Components keep the markup
+  their CSS header documents.
 - **Screens never fetch.** A screen reads data through `api/` hooks typed by `contract/`. Swapping the mock for the
-  real backend is one environment variable.
-- **Words live in `copy/`**, so `fume_check`'s copy rules (say-creative, expert-checks, name-the-actor, words-avoid,
-  no-exclamation) run on all of them in CI.
-- **Every route is rendered in CI** on a 390 px phone and at 1280 px with the existing render audit (hit areas, tap
-  flash, field text, air).
+  real backend happens in `api/client.tsx` and nowhere else (`docs/WIRING.md`).
+- **Words follow the brand's copy rules** (say-creative, expert-checks, name-the-actor, words-avoid, no-exclamation;
+  `fume_check` on the Fume Brand connector). Sentences used in more than one place live in `copy/`.
+- **The main flows run in CI**: the Playwright tests in `e2e/` click through each role at 1440 px and fail on any
+  console error. Desktop comes first; the phone layout follows later.
 - Accessibility: every interactive part from the design system already has its keyboard behaviour and ARIA; React
   components keep it.
 
@@ -345,8 +349,10 @@ Rules for the code:
 
 ## 9. The data contract (what backend implements)
 
-`app/src/contract/api.ts` is the whole surface. Grouped by domain; every call is scoped to the signed-in user's
-workspace and checked against their role on the server.
+`app/src/contract/` is the whole surface: `FumeApi` (in `api/index.ts`) extends one interface per domain
+(`IdentityApi`, `BrandApi`, `CampaignsApi`, `PlanApi`, `QualityApi`, `ReviewApi`, `DeliveryApi`, `AgencyApi` …), each in
+its own file next to that domain's entities and views. Every call is scoped to the signed-in user's workspace and
+checked against their role on the server. The table is the overview; the files are the truth.
 
 | Group | Calls |
 |---|---|

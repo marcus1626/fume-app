@@ -61,7 +61,13 @@ export const Stepper = forwardRef<HTMLElement, StepperProps>(function Stepper(
           const state = i < at ? "complete" : i === at ? "current" : "upcoming";
           const busy = state === "current" && s.busy;
           const marker =
-            state === "complete" ? <Icon name="check" /> : busy ? <Icon name="loader-circle" className="ui-spinner" /> : i + 1;
+            state === "complete" ? (
+              <Icon name="check" />
+            ) : busy ? (
+              <Icon name="loader-circle" className="ui-spinner" />
+            ) : (
+              i + 1
+            );
           const inner = (
             <>
               <span className="ui-stepper-marker" aria-hidden="true">
@@ -69,7 +75,9 @@ export const Stepper = forwardRef<HTMLElement, StepperProps>(function Stepper(
               </span>
               <span className="ui-stepper-text">
                 <span className="ui-stepper-title">
-                  <span className="ui-stepper-status">{state === "complete" ? doneStatus : state === "current" ? currentStatus : ""}</span>
+                  <span className="ui-stepper-status">
+                    {state === "complete" ? doneStatus : state === "current" ? currentStatus : ""}
+                  </span>
                   {s.title}
                 </span>
                 {s.description !== undefined && <span className="ui-stepper-description">{s.description}</span>}
@@ -85,13 +93,20 @@ export const Stepper = forwardRef<HTMLElement, StepperProps>(function Stepper(
               aria-busy={busy || undefined}
             >
               {state === "complete" && onStepSelect ? (
-                <button className="ui-stepper-trigger" type="button" aria-label={backLabel(s.title)} onClick={() => onStepSelect(i)}>
+                <button
+                  className="ui-stepper-trigger"
+                  type="button"
+                  aria-label={backLabel(s.title)}
+                  onClick={() => onStepSelect(i)}
+                >
                   {inner}
                 </button>
               ) : (
                 <div className="ui-stepper-trigger">{inner}</div>
               )}
-              {state === "current" && orientation === "vertical" && s.content !== undefined && <div className="ui-stepper-content">{s.content}</div>}
+              {state === "current" && orientation === "vertical" && s.content !== undefined && (
+                <div className="ui-stepper-content">{s.content}</div>
+              )}
             </li>
           );
         })}

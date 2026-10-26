@@ -1,18 +1,40 @@
-// The brand onboarding (FLOWS §0.10, §7), outside the shell, in four steps (round 8, UX review ONB-10):
+// The brand onboarding (FLOWS §0.10, §7), outside the shell, in four steps:
 //   /welcome         1 Your brand: the website's address and Build; beside it on a desk (≥ 1024 px), a drop target
-//                      for brand material (two equal ways in, DLAY-11); under it on a phone, as a compact row.
-//                      While files are dragged, the whole page takes them (DTSK-22).
+//                      for brand material (two equal ways in); under it on a phone, as a compact row.
+//                      While files are dragged, the whole page takes them.
 //   /welcome/scan    2 Fume reads it: the mind map, then one pill, "Confirm what Fume found".
 //   /welcome/review  3 Confirm what Fume found: Logo, Colour, Type, Imagery, Voice, one part at a time (?part=).
-//   /welcome/taste   4 Your taste: one deck of six cards; then "What Fume understood" replaces it, with Approve and
+//   /welcome/taste   4 Your taste: one deck of cards; then "What Fume understood" replaces it, with Approve and
 //                      start at its foot.
-// A new customer is sent here until Brand DNA is approved (shell/Root → /welcome?resume, which opens the furthest
-// step she reached; ?fresh in the mock). Once a reading exists, step 1 says "Continue" instead of starting again.
-// "Start from nothing" (answer questions instead of a website) is not offered until that path exists (ONB-7).
-import { Alert, AlertAction, AlertDescription, AlertTitle, Button, Dropzone, Field, FieldDescription, FieldLabel, Input, useNarrowScreen, useToast, type DropzoneItem } from "@fume/ui";
+// A new customer is sent here until Brand DNA is approved (shell/Root → /welcome?resume, which opens the furthest step
+// she reached; ?fresh in the mock). Once a reading exists, step 1 says "Continue" instead of starting again. "Start
+// from nothing" (answer questions instead of a website) is not offered until that path exists.
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+  Button,
+  Dropzone,
+  Field,
+  FieldDescription,
+  FieldLabel,
+  Input,
+  useNarrowScreen,
+  useToast,
+  type DropzoneItem,
+} from "@fume/ui";
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { useBrandBoard, useBrandDna, useBrandScan, useOnboardingProgress, usePeople, useSession, useStartBrandScan } from "../../api/hooks";
+import {
+  useBrandBoard,
+  useBrandDna,
+  useBrandScan,
+  useOnboardingProgress,
+  usePeople,
+  useSession,
+  useStartBrandScan,
+} from "../../api/hooks";
 import { directory, firstName } from "../../shell/people";
 import { useRole, versionLine } from "../brand/parts";
 import { BuildingDna } from "./BuildingDna";
@@ -21,7 +43,11 @@ import { openIn } from "./found";
 import { CheckFound, TasteStep } from "./GoThrough";
 
 /** Strip the scheme and a trailing slash: "https://lysne.no/" reads "lysne.no". */
-const bare = (url: string) => url.trim().replace(/^https?:\/\//i, "").replace(/\/+$/, "");
+const bare = (url: string) =>
+  url
+    .trim()
+    .replace(/^https?:\/\//i, "")
+    .replace(/\/+$/, "");
 
 function WaysIn() {
   const session = useSession().data!;
@@ -90,14 +116,17 @@ function WaysIn() {
         <p className="ui-welcome-eyebrow">Hi {firstName(session.user.name)}</p>
         <h1 className="ui-welcome-title">Welcome to Fume, {brandName}</h1>
         <p className="ui-welcome-lede">
-          Show us your brand and Fume builds your Brand DNA: the brand rules every creative follows. Nothing is used until you confirm it.
+          Show us your brand and Fume builds your Brand DNA: the brand rules every creative follows. Nothing is used
+          until you confirm it.
         </p>
       </header>
 
       {dna?.state === "approved" && (
         <Alert>
           <AlertTitle>{versionLine(dna, dir.name, me)}</AlertTitle>
-          <AlertDescription>A new reading proposes changes. Your Brand DNA stays as it is until you confirm them.</AlertDescription>
+          <AlertDescription>
+            A new reading proposes changes. Your Brand DNA stays as it is until you confirm them.
+          </AlertDescription>
           <AlertAction>
             <Button asChild variant="secondary" size="sm" iconEnd="arrow-right">
               <Link to="/brand">Open Brand DNA</Link>
@@ -128,14 +157,34 @@ function WaysIn() {
           <div className="ui-welcome-way">
             <Field>
               <FieldLabel htmlFor="ways-url">Your website</FieldLabel>
-              <Input id="ways-url" type="text" inputMode="url" autoComplete="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="yourbrand.com" disabled={!canEdit} />
-              <FieldDescription>Fume reads your public pages: the logo, colours, type, pictures, products and how you write. Nothing on your site changes.</FieldDescription>
+              <Input
+                id="ways-url"
+                type="text"
+                inputMode="url"
+                autoComplete="url"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="yourbrand.com"
+                disabled={!canEdit}
+              />
+              <FieldDescription>
+                Fume reads your public pages: the logo, colours, type, pictures, products and how you write. Nothing on
+                your site changes.
+              </FieldDescription>
             </Field>
             <div className="ui-welcome-go">
-              <Button type="submit" size="lg" icon="fume-engine" loading={start.isPending} disabled={!ready || !canEdit}>
+              <Button
+                type="submit"
+                size="lg"
+                icon="fume-engine"
+                loading={start.isPending}
+                disabled={!ready || !canEdit}
+              >
                 Build my Brand DNA
               </Button>
-              {!canEdit && <p className="ui-welcome-note">Someone on your team who can edit Brand DNA starts the reading.</p>}
+              {!canEdit && (
+                <p className="ui-welcome-note">Someone on your team who can edit Brand DNA starts the reading.</p>
+              )}
             </div>
           </div>
           <div className="ui-welcome-way ui-welcome-more">
@@ -151,7 +200,13 @@ function WaysIn() {
               onFiles={(list) =>
                 setFiles((now) => [
                   ...now,
-                  ...list.map((f, i) => ({ id: `in-${Date.now()}-${i}`, name: f.name, bytes: f.size, state: "done" as const, file: f })),
+                  ...list.map((f, i) => ({
+                    id: `in-${Date.now()}-${i}`,
+                    name: f.name,
+                    bytes: f.size,
+                    state: "done" as const,
+                    file: f,
+                  })),
                 ])
               }
               onRemove={(id) => setFiles((now) => now.filter((f) => f.id !== id))}
@@ -180,7 +235,7 @@ export function Welcome() {
   if (step === "scan") return <BuildingDna />;
   if (step === "review") return <CheckFound />;
   if (step === "taste") return <TasteStep />;
-  // What Fume understood is now the last card of the taste deck.
+  // What Fume understood is the taste deck's last view; its own address lands there.
   if (step === "understanding") return <Navigate to="/welcome/taste" replace />;
   return <WaysIn />;
 }

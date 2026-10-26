@@ -1,7 +1,16 @@
 // Scroll area: design-system/components/scroll-area.css, behaviour ported from scroll-area.js. A thin overlay thumb
 // instead of the native scrollbar: it shows while scrolling (data-state="visible") and on hover, can be dragged, and a
 // press on the bar jumps there. Without JS the area still scrolls natively. The viewport takes keyboard focus.
-import { forwardRef, useCallback, useEffect, useRef, useState, type HTMLAttributes, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type HTMLAttributes,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from "react";
 import { cx } from "../cx";
 import { motionMs, prefersReducedMotion } from "./internal";
 

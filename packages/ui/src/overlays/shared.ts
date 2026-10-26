@@ -29,7 +29,11 @@ export function tokenMs(name: string, fallback: number): number {
 }
 
 /** Controlled when `value` is given, otherwise its own state; `onChange` hears every change either way. */
-export function useControllableState<T>(value: T | undefined, defaultValue: T, onChange?: (next: T) => void): [T, (next: T) => void] {
+export function useControllableState<T>(
+  value: T | undefined,
+  defaultValue: T,
+  onChange?: (next: T) => void,
+): [T, (next: T) => void] {
   const [inner, setInner] = useState<T>(defaultValue);
   const controlled = value !== undefined;
   const onChangeRef = useRef(onChange);
@@ -91,18 +95,20 @@ export function focusFirst(layer: HTMLElement | null, skip: string): boolean {
   if (!layer) return false;
   const target =
     layer.querySelector<HTMLElement>("[data-ui-autofocus]") ||
-    Array.from(layer.querySelectorAll<HTMLElement>(FOCUSABLE)).find((n) => !n.matches(skip) && n.getClientRects().length > 0) ||
+    Array.from(layer.querySelectorAll<HTMLElement>(FOCUSABLE)).find(
+      (n) => !n.matches(skip) && n.getClientRects().length > 0,
+    ) ||
     null;
   if (!target) return false;
   target.focus({ preventScroll: true });
   return true;
 }
 
-// ─── Focus goes back where it came from (round 9, DWAY-8; PROPOSED 19 Oct 2026) ────────────────────────────────────
+// ─── Focus goes back where it came from ───────────────────────────────────────────────────────────────────────
 // Radix gives focus back to a layer's Trigger. A layer opened from code (a menu row, a shortcut, a button that sets
-// state, the palette's Search) has none, so focus fell to the page body and the keyboard started over at the top.
-// Each layer notes what had focus when it opened (in onOpenAutoFocus, before focus moves in) and gives it back when
-// it closes. When that element is gone (a menu row that opened a dialog), the element focused just before it (the
+// state, the palette's Search) has none, so focus would fall to the page body and the keyboard would start over at the
+// top. Each layer notes what had focus when it opened (in onOpenAutoFocus, before focus moves in) and gives it back
+// when it closes. When that element is gone (a menu row that opened a dialog), the element focused just before it (the
 // menu's own button) takes it.
 const recent: HTMLElement[] = [];
 if (typeof document !== "undefined" && !(document as { __fumeFocusTrail?: boolean }).__fumeFocusTrail) {
@@ -148,7 +154,13 @@ export function returnFocusTo(opener: HTMLElement | null, layer?: HTMLElement | 
   if (typeof document === "undefined") return false;
   if (opener && openedOn.has(opener) && openedOn.get(opener) !== pagePath()) return true;
   const ok = (el: HTMLElement | null | undefined): el is HTMLElement =>
-    Boolean(el && el.isConnected && !(layer && layer.contains(el)) && !el.closest("[inert], [hidden]") && el.getClientRects().length > 0);
+    Boolean(
+      el &&
+      el.isConnected &&
+      !(layer && layer.contains(el)) &&
+      !el.closest("[inert], [hidden]") &&
+      el.getClientRects().length > 0,
+    );
   let target: HTMLElement | null = ok(opener) ? opener : null;
   if (!target && opener) {
     // the opener is gone (a menu row): the element focused just before it

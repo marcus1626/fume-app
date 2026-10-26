@@ -1,14 +1,10 @@
-// One delivery (FLOWS §3.2, §7 step 13): the approved creatives, named and grouped by collection › product ›
-// direction, masters before their variants and each in its formats; the rights that come with them; and the
-// download, all at once, one format at a time or one creative, each with its progress and a done state (walk-through
-// 15 Oct, Must 6). Once it is downloaded, the customer tells Fume it is live, which
-// closes the loop for Creative Memory. Each creative carries the name she approved it under ("Night Body Oil · Feed",
-// round 8, TASK-17), with the file name that lands on her disk as a small data line under it.
-// Round 9 (desktop review 19 Oct, DLOAD-15, DTSK-17, DLAY-20; PROPOSED 19 Oct 2026): one way to take it all, Download
-// all, ONE zip (download.ts); "By format" only when there are two formats or more; no State column (a delivery only
-// ever holds approved creatives); a count only where there is more than one group; 72 px thumbnails that preview at
-// about 320 px under the mouse and open the creative in the viewer; and "Confirm it is live" in place of a sentence
-// that asked her to tell Fume with no way to.
+// One delivery (FLOWS §3.2): the approved creatives, grouped by collection › product › direction, masters before their
+// variants and each in its formats; the rights that come with them; and the download. Each creative carries the name
+// she approved it under ("Night Body Oil · Feed"), with the file name that lands on her disk as a small data line under
+// it. Its 72 px thumbnail previews at about 320 px under the mouse and opens the creative in the viewer.
+// Download all is one zip (download.ts); "By format" shows only with two formats or more. No State column: a delivery
+// only holds approved creatives. Once it is downloaded, "Confirm it is live" tells Fume, which closes the loop for
+// Creative Memory.
 import {
   Alert,
   AlertDescription,
@@ -54,7 +50,12 @@ export function DeliveryPage() {
   const toast = useToast();
   const may = canTake(session.role);
   // Which download is on its way (all, a format or one creative), and what this person has taken in this visit.
-  const dl = useDeliveryDownload(deliveryId, delivery.data?.delivery.bytes ?? 0, delivery.data?.creatives.length ?? 0, delivery.data?.delivery.name);
+  const dl = useDeliveryDownload(
+    deliveryId,
+    delivery.data?.delivery.bytes ?? 0,
+    delivery.data?.creatives.length ?? 0,
+    delivery.data?.delivery.name,
+  );
   const taken = dl.taken.size > 0;
   const fetching = dl.job?.key ?? null;
   // While Fume packs a new delivery, look again every few seconds until it is ready.
@@ -67,7 +68,8 @@ export function DeliveryPage() {
   }, [preparing, refetch]);
 
   const all = delivery.data?.creatives ?? [];
-  const download = (format?: Format) => dl.start(format ?? "all", format ? all.filter((c) => c.format === format) : all);
+  const download = (format?: Format) =>
+    dl.start(format ?? "all", format ? all.filter((c) => c.format === format) : all);
 
   const name = delivery.data?.delivery.name ?? "Delivery";
 
@@ -78,7 +80,11 @@ export function DeliveryPage() {
         back={<Back to="/deliveries" label="Deliveries" />}
         meta={
           delivery.data
-            ? [delivery.data.campaign.name, copy.creatives(delivery.data.delivery.creativeIds.length), bytes(delivery.data.delivery.bytes)]
+            ? [
+                delivery.data.campaign.name,
+                copy.creatives(delivery.data.delivery.creativeIds.length),
+                bytes(delivery.data.delivery.bytes),
+              ]
             : undefined
         }
         primaryAction={
@@ -90,7 +96,9 @@ export function DeliveryPage() {
 
       <Query query={delivery}>
         {({ delivery: d, creatives, campaign }) => {
-          const formats = FORMAT_ORDER.map((f) => [f, creatives.filter((c) => c.format === f).length] as const).filter(([, n]) => n > 0);
+          const formats = FORMAT_ORDER.map((f) => [f, creatives.filter((c) => c.format === f).length] as const).filter(
+            ([, n]) => n > 0,
+          );
           const tree = deliveryTree(d, creatives, campaign, catalogue.data, campaignView.data?.directions ?? []);
           const live = d.state === "confirmed_live";
           return (
@@ -114,17 +122,32 @@ export function DeliveryPage() {
                     <DeliveryBadge state={d.state} />
                   </div>
                   {(d.state === "preparing" || live) && (
-                    <p className="ui-app-section-text">{d.state === "preparing" ? "Fume is naming and packing the creatives. It is ready to download soon." : "You told Fume this delivery is live."}</p>
+                    <p className="ui-app-section-text">
+                      {d.state === "preparing"
+                        ? "Fume is naming and packing the creatives. It is ready to download soon."
+                        : "You told Fume this delivery is live."}
+                    </p>
                   )}
                   {dl.job && (
                     <ProgressField>
-                      <ProgressHead labelId="delivery-progress" label={dl.job.key === "all" ? "Preparing every creative" : `Preparing ${copy.format[dl.job.key as Format]?.label ?? "the creatives"}`} num={`${dl.job.progress} %`} />
+                      <ProgressHead
+                        labelId="delivery-progress"
+                        label={
+                          dl.job.key === "all"
+                            ? "Preparing every creative"
+                            : `Preparing ${copy.format[dl.job.key as Format]?.label ?? "the creatives"}`
+                        }
+                        num={`${dl.job.progress} %`}
+                      />
                       <Progress value={dl.job.progress} aria-labelledby="delivery-progress" />
                     </ProgressField>
                   )}
                   {!dl.job && taken && (
                     <p className="ui-app-section-text">
-                      <Icon name="circle-check" /> {dl.taken.has("all") ? `Every creative downloaded, ${bytes(d.bytes)}.` : "Downloaded in this visit."}
+                      <Icon name="circle-check" />{" "}
+                      {dl.taken.has("all")
+                        ? `Every creative downloaded, ${bytes(d.bytes)}.`
+                        : "Downloaded in this visit."}
                     </p>
                   )}
                   {may && !live && d.state !== "preparing" && (
@@ -133,17 +156,27 @@ export function DeliveryPage() {
                         variant="secondary"
                         icon="check"
                         loading={confirm.isPending}
-                        onClick={() => confirm.mutate(d.id, { onSuccess: () => toast.done(`${campaign.name} is live`) })}
+                        onClick={() =>
+                          confirm.mutate(d.id, { onSuccess: () => toast.done(`${campaign.name} is live`) })
+                        }
                       >
                         Confirm it is live
                       </Button>
                     </div>
                   )}
-                  {!may && <p className="ui-app-section-text">Viewers see deliveries. The owner, approvers and members download them.</p>}
+                  {!may && (
+                    <p className="ui-app-section-text">
+                      Viewers see deliveries. The owner, approvers and members download them.
+                    </p>
+                  )}
                 </Section>
 
                 {may && d.state !== "preparing" && formats.length > 1 && (
-                  <Section title="By format" titleId="delivery-formats" text="Each format in its own download, named for where it goes.">
+                  <Section
+                    title="By format"
+                    titleId="delivery-formats"
+                    text="Each format in its own download, named for where it goes."
+                  >
                     <div className="ui-app-row">
                       {formats.map(([format, n]) => (
                         <Button
@@ -184,19 +217,35 @@ interface Take {
   taken: Set<DownloadKey>;
 }
 
-function CollectionSection({ group, campaign, counted, take, taken }: { group: CollectionGroup; campaign: Campaign; counted: boolean } & Take) {
+function CollectionSection({
+  group,
+  campaign,
+  counted,
+  take,
+  taken,
+}: { group: CollectionGroup; campaign: Campaign; counted: boolean } & Take) {
   const id = `delivery-${group.collection?.id ?? "campaign"}`;
   const products = group.products.length > 1;
   return (
-    <Section title={group.collection?.name ?? "Whole campaign"} meta={counted ? copy.creatives(group.count) : undefined} titleId={id}>
+    <Section
+      title={group.collection?.name ?? "Whole campaign"}
+      meta={counted ? copy.creatives(group.count) : undefined}
+      titleId={id}
+    >
       <div className="ui-delivery-tree">
         {group.products.map((p) => (
           <div key={p.productId ?? "all"} className="ui-delivery-product">
             <div className="ui-delivery-product-head">
-              <span className="ui-delivery-product-thumb">{p.product?.images[0] ? <img src={p.product.images[0]} alt="" /> : <Icon name="package" />}</span>
+              <span className="ui-delivery-product-thumb">
+                {p.product?.images[0] ? <img src={p.product.images[0]} alt="" /> : <Icon name="package" />}
+              </span>
               <div>
                 <h3 className="ui-delivery-product-title">{p.product?.name ?? "The campaign’s products"}</h3>
-                {(p.product?.variant || products) && <p className="ui-delivery-meta">{[p.product?.variant, products ? copy.creatives(p.count) : undefined].filter(Boolean).join(" · ")}</p>}
+                {(p.product?.variant || products) && (
+                  <p className="ui-delivery-meta">
+                    {[p.product?.variant, products ? copy.creatives(p.count) : undefined].filter(Boolean).join(" · ")}
+                  </p>
+                )}
               </div>
             </div>
             {p.directions.map((dir) => (
@@ -240,7 +289,10 @@ function CreativeTable({ creatives, campaign, take, taken }: { creatives: Creati
   const show = (e: ReactPointerEvent<HTMLElement>, c: Creative) => {
     if (e.pointerType !== "mouse") return;
     const r = e.currentTarget.getBoundingClientRect();
-    const y = Math.min(Math.max(PREVIEW_GAP, r.top + r.height / 2 - PREVIEW_HEIGHT / 2), window.innerHeight - PREVIEW_HEIGHT - PREVIEW_GAP);
+    const y = Math.min(
+      Math.max(PREVIEW_GAP, r.top + r.height / 2 - PREVIEW_HEIGHT / 2),
+      window.innerHeight - PREVIEW_HEIGHT - PREVIEW_GAP,
+    );
     setPreview({ src: c.current.image, format: c.format, x: r.right + PREVIEW_GAP, y });
   };
   return (
@@ -277,7 +329,9 @@ function CreativeTable({ creatives, campaign, take, taken }: { creatives: Creati
                   </Link>
                 </TableCell>
                 <TableCell>
-                  <TableTitle sub={<span className="ui-delivery-name">{c.name}</span>}>{c.current.number > 1 ? `${c.title} · version ${c.current.number}` : c.title}</TableTitle>
+                  <TableTitle sub={<span className="ui-delivery-name">{c.name}</span>}>
+                    {c.current.number > 1 ? `${c.title} · version ${c.current.number}` : c.title}
+                  </TableTitle>
                 </TableCell>
                 <TableCell trail>
                   <TableTitle sub={copy.format[c.format].size}>{copy.format[c.format].ratio}</TableTitle>
@@ -300,7 +354,12 @@ function CreativeTable({ creatives, campaign, take, taken }: { creatives: Creati
         </Table>
       </TableContainer>
       {preview && (
-        <div className="ui-delivery-preview" data-format={preview.format} style={{ "--preview-x": `${preview.x}px`, "--preview-y": `${preview.y}px` } as CSSProperties} aria-hidden="true">
+        <div
+          className="ui-delivery-preview"
+          data-format={preview.format}
+          style={{ "--preview-x": `${preview.x}px`, "--preview-y": `${preview.y}px` } as CSSProperties}
+          aria-hidden="true"
+        >
           <img src={preview.src} alt="" />
         </div>
       )}

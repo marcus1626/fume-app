@@ -1,7 +1,7 @@
-// A campaign's six stages, as people see them (round 13, Marcus's video comments #21, #27, #36, 22 Oct 2026; PROPOSED):
-// Brief → Moodboard → Plan → Masters → Creatives → Delivery. The campaign's tabs, the stage dots in lists and the staff
-// board's columns all read from here, so the order and the words are the same everywhere. The contract's stages map
-// onto them: "directions" (the first concepts) and "masters" are Masters; "variants" (variants and formats) are Creatives.
+// A campaign's six stages, as people see them (FLOWS §26.2): Brief → Moodboard → Plan → Masters → Creatives → Delivery.
+// The campaign's tabs, the stage dots in lists and the staff board's columns all read from here, so the order and the
+// words are the same everywhere. The contract's stages map onto them: "directions" (the first concepts) and "masters"
+// are Masters; "variants" (variants and formats) are Creatives.
 import type { CampaignStage } from "../../contract";
 
 export const STAGES = [

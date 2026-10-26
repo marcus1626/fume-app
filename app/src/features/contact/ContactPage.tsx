@@ -38,7 +38,9 @@ export function ContactPage() {
   const narrow = useNarrowScreen("(max-width: 1023px)");
   // The contact first, then the expert: the order a customer meets them in.
   const order = { operator: 0, expert: 1, admin: 2 } as const;
-  const fumeTeam = (team.data?.fumeTeam ?? []).slice().sort((a, b) => order[a.staffRole ?? "admin"] - order[b.staffRole ?? "admin"]);
+  const fumeTeam = (team.data?.fumeTeam ?? [])
+    .slice()
+    .sort((a, b) => order[a.staffRole ?? "admin"] - order[b.staffRole ?? "admin"]);
   const names = fumeTeam.map((u) => firstName(u.name));
 
   return (
@@ -48,8 +50,10 @@ export function ContactPage() {
           title="Contact"
           description={
             <>
-              {names.length ? `${names.join(" and ")} are people at Fume.` : "The people at Fume who work on your brand."} They answer here
-              themselves. For new work, talk to <Link to="/fume">Fume</Link>.
+              {names.length
+                ? `${names.join(" and ")} are people at Fume.`
+                : "The people at Fume who work on your brand."}{" "}
+              They answer here themselves. For new work, talk to <Link to="/fume">Fume</Link>.
             </>
           }
         />
@@ -58,13 +62,21 @@ export function ContactPage() {
             {fumeTeam.map((u) => (
               <Item key={u.id} role="listitem" variant="muted">
                 <ItemMedia>
-                  <Avatar size="lg" src={u.avatar} initials={initials(u.name)} ink={u.staffRole === "expert"} aria-hidden="true" />
+                  <Avatar
+                    size="lg"
+                    src={u.avatar}
+                    initials={initials(u.name)}
+                    ink={u.staffRole === "expert"}
+                    aria-hidden="true"
+                  />
                 </ItemMedia>
                 <ItemContent>
                   <ItemTitle>
                     {u.name}, {u.title}
                   </ItemTitle>
-                  <ItemDescription>{u.staffRole ? `A person at Fume, ${part[u.staffRole]}` : "A person at Fume"}</ItemDescription>
+                  <ItemDescription>
+                    {u.staffRole ? `A person at Fume, ${part[u.staffRole]}` : "A person at Fume"}
+                  </ItemDescription>
                 </ItemContent>
               </Item>
             ))}
@@ -81,7 +93,8 @@ export function ContactPage() {
                 title="No one to write to yet"
                 text={
                   <>
-                    Your contact at Fume joins once your workspace is set up. Until then, <Link to="/fume">Fume</Link> can help.
+                    Your contact at Fume joins once your workspace is set up. Until then, <Link to="/fume">Fume</Link>{" "}
+                    can help.
                   </>
                 }
               />
@@ -93,7 +106,17 @@ export function ContactPage() {
   );
 }
 
-function ContactThread({ thread, session, names, docked }: { thread: Thread; session: Session; names: string[]; docked: boolean }) {
+function ContactThread({
+  thread,
+  session,
+  names,
+  docked,
+}: {
+  thread: Thread;
+  session: Session;
+  names: string[];
+  docked: boolean;
+}) {
   const messages = useMessages(thread.id);
   const people = directory(usePeople().data);
   const send = useSend();
@@ -102,7 +125,10 @@ function ContactThread({ thread, session, names, docked }: { thread: Thread; ses
   const [sent, setSent] = useState(false);
   const who = names.length ? names.join(" or ") : "Your contact";
   const to = names.length ? names.join(" and ") : "your people at Fume";
-  const blocked = session.role === null && !session.user.staffRole ? "You are not on this workspace’s team, so you can read this but not write in it." : undefined;
+  const blocked =
+    session.role === null && !session.user.staffRole
+      ? "You are not on this workspace’s team, so you can read this but not write in it."
+      : undefined;
 
   return (
     <Query query={messages} loading="Opening the conversation">

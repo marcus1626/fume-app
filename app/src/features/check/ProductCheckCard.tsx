@@ -1,18 +1,45 @@
-// Confirming a product is ONE component everywhere (round 9, DWAY-5, DTSK-6, DTSK-14; decision 5): the product's photo,
-// its name and why it waits, the one question Fume has about it first, then its Product Truth lines, each changeable
-// in place. The frame around it holds Later and Confirm at its foot: the right-side panel (ProductCheckHost, opened
-// from Home, the chat, the brief and the product page) and the queue (/check/products) show exactly this card.
+// Confirming a product is one component everywhere: the product's photo, its name and why it waits, the one question
+// Fume has about it first, then its Product Truth lines, each changeable in place. The frame around it holds Later and
+// Confirm at its foot: the right-side panel (ProductCheckHost, opened from Home, the chat, the brief and the product
+// page) and the queue (/check/products) show exactly this card.
 //
-// Round 8, kept: Confirm is never greyed out without a reason. Pressed while Fume's question is open, it marks that
-// field, says so and puts the focus there. Fume's questions are answered in their own record (closed everywhere); the
-// photo question is answered by the photo on the card (kept, or the one she drops or adds).
+// Confirm is never greyed out without a reason. Pressed while Fume's question is open, it marks that field, says so and
+// puts the focus there. Fume's questions are answered in their own record (closed everywhere); the photo question is
+// answered by the photo on the card (kept, or the one she drops or adds).
 //
 // Use:
 //   const check = useProductCheck(productId, { onDone });
 //   <CheckCard …>{check.head}{check.body}</CheckCard>  or the panel's header and body;  check.confirm / check.later
-import { Button, CheckAsk, CheckLine, Field, FieldDescription, FieldLabel, pickFiles, Textarea, useToast } from "@fume/ui";
-import { useEffect, useRef, useState, type ComponentType, type DragEvent, type KeyboardEvent, type ReactNode } from "react";
-import { useAnswerQuestion, useCampaigns, useCorrectFact, useProduct, useProductKinds, useQuestions, useUploadShot, useVerifyProduct } from "../../api/hooks";
+import {
+  Button,
+  CheckAsk,
+  CheckLine,
+  Field,
+  FieldDescription,
+  FieldLabel,
+  pickFiles,
+  Textarea,
+  useToast,
+} from "@fume/ui";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ComponentType,
+  type DragEvent,
+  type KeyboardEvent,
+  type ReactNode,
+} from "react";
+import {
+  useAnswerQuestion,
+  useCampaigns,
+  useCorrectFact,
+  useProduct,
+  useProductKinds,
+  useQuestions,
+  useUploadShot,
+  useVerifyProduct,
+} from "../../api/hooks";
 import type { Campaign, Id, Product, ProductFact } from "../../contract";
 import { AnswerSuggestions } from "../questions/Suggestions";
 import { ProductTruthSheet } from "../products/truth";
@@ -21,20 +48,27 @@ export type CheckVerdict = "confirmed" | "later";
 
 /** The campaign that waits on a product, if any (it goes first in a queue, and the card says so). */
 export const waitingOn = (campaigns: Campaign[] | undefined, productId: Id) =>
-  (campaigns ?? []).find((c) => !["delivered", "closed", "approved"].includes(c.state) && c.productIds.includes(productId));
+  (campaigns ?? []).find(
+    (c) => !["delivered", "closed", "approved"].includes(c.state) && c.productIds.includes(productId),
+  );
 
-/** Round 13 (robot note 02, builder A): every campaign that waits on it, the newest first, so the Christmas brief
- *  that just picked Hand Balm is named, not only the older Hand Balm introduction. */
+/** Every campaign that waits on it, the newest first, so the brief that just picked Hand Balm is named, not only an
+ *  older one. */
 const waitWords = (campaigns: Campaign[] | undefined, productId: Id, first?: string) => {
-  const found = (campaigns ?? []).filter((c) => !["delivered", "closed", "approved"].includes(c.state) && c.productIds.includes(productId)).sort((a, b) => b.createdAt.localeCompare(a.createdAt)).map((c) => c.name);
+  const found = (campaigns ?? [])
+    .filter((c) => !["delivered", "closed", "approved"].includes(c.state) && c.productIds.includes(productId))
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .map((c) => c.name);
   const all = [...new Set([...(first ? [first] : []), ...found])];
-  return all.length > 1 ? `${all.slice(0, -1).join(", ")} and ${all[all.length - 1]} wait on it.` : `${all[0]} waits on it.`;
+  return all.length > 1
+    ? `${all.slice(0, -1).join(", ")} and ${all[all.length - 1]} wait on it.`
+    : `${all[0]} waits on it.`;
 };
 
 /** The product's own photo: the front reference shot, else its first picture. */
 export const photoOf = (p: Product | undefined) => p?.shots?.find((s) => s.slotId === "front")?.image ?? p?.images[0];
 
-/** Focus a field without making a phone raise its keyboard over the card before it is read (MOB-14). */
+/** Focus a field without making a phone raise its keyboard over the card before it is read. */
 const finePointer = () => typeof window !== "undefined" && window.matchMedia?.("(pointer: fine)").matches;
 
 type Photo = { name: string; bytes: number; src: string };
@@ -50,7 +84,7 @@ export interface ProductCheckOptions {
   glass?: boolean;
   /** The product as a list already has it (the catalogue), shown while its own record loads: no flash between items. */
   fallback?: Product;
-  /** Round 13 (builder A): the campaign she is briefing where she opened it (the chat's Christmas brief), named first. */
+  /** The campaign she is briefing where she opened it (the chat's brief), named first. */
   forCampaign?: string;
 }
 
@@ -72,7 +106,10 @@ export interface ProductCheck {
 }
 
 /** One product's check: its state, its two actions, and the card's two parts. Key the caller by productId. */
-export function useProductCheck(productId: Id, { onDone, nameAs: Name, autoFocus = true, glass = false, fallback, forCampaign }: ProductCheckOptions): ProductCheck {
+export function useProductCheck(
+  productId: Id,
+  { onDone, nameAs: Name, autoFocus = true, glass = false, fallback, forCampaign }: ProductCheckOptions,
+): ProductCheck {
   const product = useProduct(productId);
   const campaigns = useCampaigns();
   const openQuestions = useQuestions();
@@ -105,7 +142,7 @@ export function useProductCheck(productId: Id, { onDone, nameAs: Name, autoFocus
   const p = product.data ?? (fallback?.id === productId ? fallback : undefined);
   const base = `check-${productId}`;
 
-  // What Fume does not know comes first: it is the one line she has to write (round 8 robot walk, 19 Oct).
+  // What Fume does not know comes first: it is the one line she has to write.
   const unknown = p ? p.facts.filter((f) => f.source === "unknown") : [];
   const lines = p ? p.facts.filter((f) => f.source !== "unknown") : [];
   const pictureQuestion = questions.find((q) => q.answer === "picture");
@@ -117,13 +154,14 @@ export function useProductCheck(productId: Id, { onDone, nameAs: Name, autoFocus
   const fieldId = (f: ProductFact) => `${base}-ask-${f.id}`;
   const quiet = glass ? "glass-clear" : "quiet";
 
-  // The focus goes to the first empty answer once the product is there (DTSK-6, DWAY-13), on a desk.
+  // The focus goes to the first empty answer once the product is there, on a desk.
   useEffect(() => {
     if (!p || p.id !== productId || focused.current) return;
     focused.current = true;
     if (!autoFocus || !finePointer()) return;
     const first = unknown.find((f) => !said(f).trim());
-    if (first) window.requestAnimationFrame(() => document.getElementById(fieldId(first))?.focus({ preventScroll: true }));
+    if (first)
+      window.requestAnimationFrame(() => document.getElementById(fieldId(first))?.focus({ preventScroll: true }));
   }, [p, productId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function confirm() {
@@ -146,9 +184,22 @@ export function useProductCheck(productId: Id, { onDone, nameAs: Name, autoFocus
         if (q) await answer.mutateAsync({ questionId: q.id, text: said(f).trim() });
         else await correct.mutateAsync({ factId: f.id, statement: said(f).trim() });
       }
-      if (pictureQuestion) await answer.mutateAsync(photo ? { questionId: pictureQuestion.id, picture: photo } : { questionId: pictureQuestion.id, keepPicture: true });
-      else if (photo) await upload.mutateAsync({ productId: p.id, slotId: "front", name: photo.name, bytes: photo.bytes, src: photo.src });
-      for (const f of lines) if (said(f).trim() !== f.statement) await correct.mutateAsync({ factId: f.id, statement: said(f).trim() });
+      if (pictureQuestion)
+        await answer.mutateAsync(
+          photo
+            ? { questionId: pictureQuestion.id, picture: photo }
+            : { questionId: pictureQuestion.id, keepPicture: true },
+        );
+      else if (photo)
+        await upload.mutateAsync({
+          productId: p.id,
+          slotId: "front",
+          name: photo.name,
+          bytes: photo.bytes,
+          src: photo.src,
+        });
+      for (const f of lines)
+        if (said(f).trim() !== f.statement) await correct.mutateAsync({ factId: f.id, statement: said(f).trim() });
       await verify.mutateAsync(p.id);
       onDone("confirmed", p);
     } catch (error) {
@@ -158,7 +209,7 @@ export function useProductCheck(productId: Id, { onDone, nameAs: Name, autoFocus
   }
   const later = () => p && !busy && onDone("later", p);
 
-  // ⌘↵ confirms from anywhere in the card (DTSK-14, DTSK-20).
+  // ⌘↵ confirms from anywhere in the card.
   const onKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !e.defaultPrevented) {
       e.preventDefault();
@@ -167,13 +218,14 @@ export function useProductCheck(productId: Id, { onDone, nameAs: Name, autoFocus
   };
 
   const take = (file: File | undefined) => {
-    if (file && file.type.startsWith("image/")) setPhoto({ name: file.name, bytes: file.size, src: URL.createObjectURL(file) });
+    if (file && file.type.startsWith("image/"))
+      setPhoto({ name: file.name, bytes: file.size, src: URL.createObjectURL(file) });
   };
   async function addPhoto() {
     const [file] = await pickFiles("image/*", false);
     take(file);
   }
-  // The photo is a drop target: drag a better packshot onto it from the desktop (DTSK-14).
+  // The photo is a drop target: drag a better packshot onto it from the desktop.
   const files = (e: DragEvent) => Array.from(e.dataTransfer?.types ?? []).includes("Files");
   const drop = {
     onDragEnter: (e: DragEvent) => files(e) && (e.preventDefault(), setDropping(true)),
@@ -223,7 +275,11 @@ export function useProductCheck(productId: Id, { onDone, nameAs: Name, autoFocus
   const head = (
     <div className="ui-check-product-head">
       <figure className="ui-check-media" data-dropping={dropping || undefined} {...drop}>
-        {src ? <img src={src} alt={photo ? `Your photo of ${name}` : `${name}, as Fume has it`} /> : <span className="ui-check-media-empty">No photo yet</span>}
+        {src ? (
+          <img src={src} alt={photo ? `Your photo of ${name}` : `${name}, as Fume has it`} />
+        ) : (
+          <span className="ui-check-media-empty">No photo yet</span>
+        )}
         <span className="ui-check-drop" aria-hidden="true">
           Drop a better photo
         </span>
@@ -237,10 +293,18 @@ export function useProductCheck(productId: Id, { onDone, nameAs: Name, autoFocus
           </span>
         </H>
         <p className="ui-check-lead" id={`${base}-lead`}>
-          {blockedBy || forCampaign ? `${waitWords(campaigns.data, productId, forCampaign)} Is this right?` : "Is this right? Change any line that is off."}
+          {blockedBy || forCampaign
+            ? `${waitWords(campaigns.data, productId, forCampaign)} Is this right?`
+            : "Is this right? Change any line that is off."}
         </p>
         <p className="ui-check-media-caption">
-          <span>{photo ? "Your photo. Fume draws it from this one." : src ? `Fume draws ${name} from this photo.` : "Add a photo taken straight on, in soft light."}</span>
+          <span>
+            {photo
+              ? "Your photo. Fume draws it from this one."
+              : src
+                ? `Fume draws ${name} from this photo.`
+                : "Add a photo taken straight on, in soft light."}
+          </span>
           <Button size="sm" variant={quiet} icon="upload" onClick={() => void addPhoto()}>
             {photo ? "Another photo" : src ? "Add a better one" : "Add a photo"}
           </Button>
@@ -256,13 +320,22 @@ export function useProductCheck(productId: Id, { onDone, nameAs: Name, autoFocus
         const id = fieldId(f);
         const missing = tried && !said(f).trim();
         return (
-          <CheckAsk key={f.id} title={q?.question ?? f.statement} why={q?.why ?? "Every line on a creative must be true, so Fume asks before it guesses."}>
-            {/* round 13 (#6, #7, builder A): each suggestion with its words, and what this kind of product usually says */}
-            <AnswerSuggestions question={q} value={said(f)} onChange={(text) => setWords((w) => ({ ...w, [f.id]: text }))} glass={glass} />
+          <CheckAsk
+            key={f.id}
+            title={q?.question ?? f.statement}
+            why={q?.why ?? "Every line on a creative must be true, so Fume asks before it guesses."}
+          >
+            {/* each suggestion with its words, and what this kind of product usually says */}
+            <AnswerSuggestions
+              question={q}
+              value={said(f)}
+              onChange={(text) => setWords((w) => ({ ...w, [f.id]: text }))}
+              glass={glass}
+            />
             <Field invalid={missing}>
               <FieldLabel htmlFor={id}>Your answer</FieldLabel>
-              {/* No placeholder: an empty field must never look answered (DTSK-6). What a good answer looks like is
-                  said under it, and the field is marked if Confirm is pressed while it is empty. */}
+              {/* No placeholder: an empty field must never look answered. What a good answer looks like is said under
+                  it, and the field is marked if Confirm is pressed while it is empty. */}
               <Textarea
                 id={id}
                 rows={2}
@@ -271,7 +344,13 @@ export function useProductCheck(productId: Id, { onDone, nameAs: Name, autoFocus
                 aria-describedby={`${id}-help`}
                 onChange={(e) => setWords((w) => ({ ...w, [f.id]: e.target.value }))}
               />
-              <FieldDescription id={`${id}-help`}>{missing ? "Answer this first, then confirm. Or choose Later." : (q?.hint ? q.hint.replace(/[^.?]$/, "$&.") : "In your words, as it may stand on a creative.")}</FieldDescription>
+              <FieldDescription id={`${id}-help`}>
+                {missing
+                  ? "Answer this first, then confirm. Or choose Later."
+                  : q?.hint
+                    ? q.hint.replace(/[^.?]$/, "$&.")
+                    : "In your words, as it may stand on a creative."}
+              </FieldDescription>
             </Field>
           </CheckAsk>
         );
@@ -290,7 +369,14 @@ export function useProductCheck(productId: Id, { onDone, nameAs: Name, autoFocus
                 note={changed ? "Your words" : f.confidence === "low" ? "Fume is not sure" : undefined}
                 editing={open}
                 action={
-                  <Button id={`${base}-change-${f.id}`} size="sm" variant={quiet} icon="pencil" onClick={() => change(f)} aria-label={`Change the ${f.label.toLowerCase()}`}>
+                  <Button
+                    id={`${base}-change-${f.id}`}
+                    size="sm"
+                    variant={quiet}
+                    icon="pencil"
+                    onClick={() => change(f)}
+                    aria-label={`Change the ${f.label.toLowerCase()}`}
+                  >
                     Change
                   </Button>
                 }
@@ -331,8 +417,14 @@ export function useProductCheck(productId: Id, { onDone, nameAs: Name, autoFocus
           })}
         </ul>
       )}
-      {/* round 13 (#46, builder D): everything else Fume holds about it, organised, so she confirms it knowing all of it */}
-      {p && !glass && <ProductTruthSheet product={p} kind={kinds.data?.find((k) => k.id === p.kindId)} title={`Everything Fume holds about ${name}`} />}
+      {/* everything else Fume holds about it, organised, so she confirms it knowing all of it */}
+      {p && !glass && (
+        <ProductTruthSheet
+          product={p}
+          kind={kinds.data?.find((k) => k.id === p.kindId)}
+          title={`Everything Fume holds about ${name}`}
+        />
+      )}
     </div>
   );
 

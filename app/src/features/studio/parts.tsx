@@ -2,7 +2,16 @@
 // service clock in words, what changed since a creative's last version, and the queue's grouping by due date.
 // The studio speaks to the expert and the operator, so it names the customer's people and the workspace plainly.
 import { Badge } from "@fume/ui";
-import type { CampaignState, CheckArea, CheckState, Creative, Format, ServiceClock, Severity, StaffRole } from "../../contract";
+import type {
+  CampaignState,
+  CheckArea,
+  CheckState,
+  Creative,
+  Format,
+  ServiceClock,
+  Severity,
+  StaffRole,
+} from "../../contract";
 import * as copy from "../../copy";
 import { due, now } from "../../lib/time";
 
@@ -79,7 +88,12 @@ export function clockWords(clock: ServiceClock | undefined, dueAt?: string): str
 export function ClockBadge({ clock }: { clock: ServiceClock | undefined }) {
   if (!clock) return null;
   if (clock.state === "paused_waiting_on_you") return <Badge icon="pause">Paused</Badge>;
-  if (clock.state === "missed") return <Badge variant="danger" icon="clock">Missed</Badge>;
+  if (clock.state === "missed")
+    return (
+      <Badge variant="danger" icon="clock">
+        Missed
+      </Badge>
+    );
   if (clock.state === "met") return <Badge icon="circle-check">Met</Badge>;
   return <Badge icon="clock">Due {due(clock.dueAt)}</Badge>;
 }

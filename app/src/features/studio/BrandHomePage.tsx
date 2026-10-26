@@ -1,14 +1,11 @@
-// One brand's Home, or one client's (FLOWS §4.2, §24.3): /studio/b/:workspaceId for Fume's people, /agency/b/:workspaceId
-// for an agency's.
-// Round 12 (desktop review 20 Oct, DLAY-8, DWAY-15, DWAY-7, DWAY-14, DWAY-17; PROPOSED 20 Oct 2026): ONE Home for both
-// frames, built like the agency's, which the review kept. The h1 is the brand: its mark and its name, and one sentence
-// of where it stands ("1 plan and 3 creatives to check; 6 creatives with Maja."), so three clients in three browser
-// tabs never read alike. The work comes first: what needs you here (a plan to check or approve, creatives to send,
-// Fume's questions, a brief), then what waits for a check, each row opening that creative in Check (/qa?item=, never
-// the retired full-screen check) beside the campaigns, each row opening the campaign (Fume's people: its plan), and
-// this month's numbers. Then what the Engine made as one row of six, with the way to Engine output. The Studio and the
-// boards are the sidebar's (Studio, Brand › Boards), so this page no longer repeats them. Fume's admin follows the
-// brand: its usage and its campaigns.
+// One brand's Home, or one client's (FLOWS §4.2, §24.3): /studio/b/:workspaceId for Fume's people,
+// /agency/b/:workspaceId for an agency's, one Home for both frames. The h1 is the brand: its mark and its name, and one
+// sentence of where it stands ("1 plan and 3 creatives to check; 6 creatives with Maja."), so three clients in three
+// browser tabs never read alike. The work comes first: what needs you here (a plan to check or approve, creatives to
+// send, Fume's questions, a brief), then what waits for a check, each row opening that creative in Check (/qa?item=),
+// beside the campaigns, each row opening the campaign (Fume's people: its plan), and this month's numbers. Then what
+// the Engine made as one row of six, with the way to Engine output. The Studio and the boards are the sidebar's. Fume's
+// admin follows the brand: its usage and its campaigns.
 import {
   Badge,
   Button,
@@ -35,7 +32,15 @@ import type { BrandWorkspaceView, Id, QaView } from "../../contract";
 import * as copy from "../../copy";
 import { Nothing, Page, Query, Section } from "../../shell/Page";
 import { firstName, initials } from "../../shell/people";
-import { brandBase, campaignHref, checkPath, frameRoot, hrefIn, useFrameKind, type StaffFrameKind } from "../../shell/scope";
+import {
+  brandBase,
+  campaignHref,
+  checkPath,
+  frameRoot,
+  hrefIn,
+  useFrameKind,
+  type StaffFrameKind,
+} from "../../shell/scope";
 import { useWaitingOnYou, type QuietProducts } from "../../shell/waiting";
 import { useOpenProductCheck } from "../check/ProductCheckHost";
 import { QuestionSheet } from "../questions/QuestionSheet";
@@ -60,14 +65,28 @@ interface Ask {
   questionIds?: Id[];
 }
 
-const askIcon: Record<string, IconName> = { plan: "file-text", brief: "file-text", question: "message-square", products: "tag", brand: "palette", directions: "columns-2", download: "download", check: "send", client_changes: "message-square" };
+const askIcon: Record<string, IconName> = {
+  plan: "file-text",
+  brief: "file-text",
+  question: "message-square",
+  products: "tag",
+  brand: "palette",
+  directions: "columns-2",
+  download: "download",
+  check: "send",
+  client_changes: "message-square",
+};
 
 /** A row that goes to Check is not an ask here: the creatives are listed under "Waits for a check". */
 const toCheck = (href: string) => /\/(qa|check)(\?|$)/.test(href);
 
 /** What needs you in this brand or client, in the frame's words and addresses; for an agency, also the quiet line of
- *  products nothing waits on (DLOAD-14, as the agency's Home had it). */
-function useAsks(frame: StaffFrameKind, workspaceId: Id, v: BrandWorkspaceView | undefined): { asks: Ask[]; quiet?: QuietProducts } {
+ *  products nothing waits on. */
+function useAsks(
+  frame: StaffFrameKind,
+  workspaceId: Id,
+  v: BrandWorkspaceView | undefined,
+): { asks: Ask[]; quiet?: QuietProducts } {
   const all = useAllBrands();
   const home = useAgencyHome(frame === "agency");
   const waiting = useWaitingOnYou();
@@ -79,7 +98,18 @@ function useAsks(frame: StaffFrameKind, workspaceId: Id, v: BrandWorkspaceView |
           const n = Math.min(c.counts.checked, c.waits?.toSend ?? (c.state === "in_production" ? c.counts.checked : 0));
           if (!n || c.state === "approved" || c.state === "delivered" || c.state === "closed") return [];
           const who = approver ? firstName(approver.name) : "the customer";
-          return [{ id: `send-${c.id}`, kind: "send", title: c.name, detail: `${copy.creatives(n)} to send to ${who}`, action: copy.send.action(who), picture: c.cover, icon: "send", to: `${base}/campaigns` }];
+          return [
+            {
+              id: `send-${c.id}`,
+              kind: "send",
+              title: c.name,
+              detail: `${copy.creatives(n)} to send to ${who}`,
+              action: copy.send.action(who),
+              picture: c.cover,
+              icon: "send",
+              to: `${base}/campaigns`,
+            },
+          ];
         })
       : [];
   if (frame === "fume")
@@ -87,7 +117,16 @@ function useAsks(frame: StaffFrameKind, workspaceId: Id, v: BrandWorkspaceView |
       asks: [
         ...(all.data?.needsYou ?? [])
           .filter((n) => n.clientId === workspaceId && !toCheck(n.href))
-          .map((n) => ({ id: n.id, kind: n.kind, title: n.title.split(" · ").slice(1).join(" · ") || n.title, detail: n.detail, action: n.action, picture: n.picture, icon: askIcon[n.kind] ?? "file-text", to: hrefIn(frame, workspaceId, n.href) })),
+          .map((n) => ({
+            id: n.id,
+            kind: n.kind,
+            title: n.title.split(" · ").slice(1).join(" · ") || n.title,
+            detail: n.detail,
+            action: n.action,
+            picture: n.picture,
+            icon: askIcon[n.kind] ?? "file-text",
+            to: hrefIn(frame, workspaceId, n.href),
+          })),
         ...sends,
       ],
     };
@@ -106,16 +145,29 @@ function useAsks(frame: StaffFrameKind, workspaceId: Id, v: BrandWorkspaceView |
   }));
   const agencySends: Ask[] = (home.data?.needsYou ?? [])
     .filter((n) => n.clientId === workspaceId && n.kind === "check" && !toCheck(n.href))
-    .map((n) => ({ id: n.id, kind: "send", title: n.title.split(" · ").slice(1).join(" · ") || n.title, detail: n.detail, action: n.action, picture: n.picture, icon: "send", to: hrefIn(frame, workspaceId, n.href) }));
-  return { asks: [...rows, ...agencySends], quiet: waiting.quiet && { ...waiting.quiet, href: hrefIn(frame, workspaceId, waiting.quiet.href) } };
+    .map((n) => ({
+      id: n.id,
+      kind: "send",
+      title: n.title.split(" · ").slice(1).join(" · ") || n.title,
+      detail: n.detail,
+      action: n.action,
+      picture: n.picture,
+      icon: "send",
+      to: hrefIn(frame, workspaceId, n.href),
+    }));
+  return {
+    asks: [...rows, ...agencySends],
+    quiet: waiting.quiet && { ...waiting.quiet, href: hrefIn(frame, workspaceId, waiting.quiet.href) },
+  };
 }
 
 /** "7 products to confirm, none holds up a campaign. Confirm them when you first use them, or now (about 6 min)." */
 function QuietLine({ quiet }: { quiet: QuietProducts }) {
   return (
     <p className="ui-home-quiet">
-      {copy.count(quiet.count, quiet.more ? "more product" : "product", quiet.more ? "more products" : "products")} to confirm, none holds up a campaign.{" "}
-      Confirm {quiet.count === 1 ? "it when you first use it" : "them when you first use them"}, or{" "}
+      {copy.count(quiet.count, quiet.more ? "more product" : "product", quiet.more ? "more products" : "products")} to
+      confirm, none holds up a campaign. Confirm{" "}
+      {quiet.count === 1 ? "it when you first use it" : "them when you first use them"}, or{" "}
       <Link className="ui-link" to={quiet.href}>
         now ({quiet.minutes})
       </Link>
@@ -210,9 +262,8 @@ export function BrandHomePage() {
 
               <aside className="ui-app-stack ui-studio-gap" aria-label={`About ${v.workspace.brandName}`}>
                 {!admin && <CampaignsSection v={v} frame={frame} base={base} />}
-                {/* Every number names its period (AGENCY, 20 Oct): this month with its dates, as the agency's Home and
-                    Usage read it; a row without periods carries the last eight weeks. Round 13 (Marcus #69: "2 what?",
-                    robots' note 09): every number says what it counts, and the dates read as Usage writes them. */}
+                {/* Every number names its period and says what it counts: this month with its dates, as Usage writes
+                    them; a row without periods carries the last eight weeks. */}
                 <Section
                   title={usage?.periods ? "This month" : "The last 8 weeks"}
                   titleId="brand-usage"
@@ -225,8 +276,19 @@ export function BrandHomePage() {
                 >
                   {usage ? (
                     <StatGrid>
-                      {admin && <Stat label="Images the Engine made" value={usage.periods?.month.renders ?? usage.renders} spark={{ title: "Images per week, last 8 weeks", data: usage.trend }} />}
-                      {admin && <Stat label="Cost of the images" value={`$${(usage.periods?.month.cost ?? usage.cost).toFixed(2)}`} />}
+                      {admin && (
+                        <Stat
+                          label="Images the Engine made"
+                          value={usage.periods?.month.renders ?? usage.renders}
+                          spark={{ title: "Images per week, last 8 weeks", data: usage.trend }}
+                        />
+                      )}
+                      {admin && (
+                        <Stat
+                          label="Cost of the images"
+                          value={`$${(usage.periods?.month.cost ?? usage.cost).toFixed(2)}`}
+                        />
+                      )}
                       <Stat label="Creatives made" value={usage.periods?.month.creatives ?? usage.creatives} />
                       {usage.periods && <Stat label="Creatives approved" value={usage.periods.month.approved} />}
                       <Stat label="Creatives delivered" value={usage.periods?.month.delivered ?? usage.delivered} />
@@ -281,7 +343,12 @@ function AskRow({ ask, onAsk }: { ask: Ask; onAsk: (ids: Id[]) => void }) {
   if (ask.productId || ask.questionIds?.length)
     return (
       <Item as="li" variant="muted" asChild>
-        <button type="button" className="ui-agency-need" onClick={() => (ask.productId ? openCheck(ask.productId) : onAsk(ask.questionIds!))} aria-haspopup="dialog">
+        <button
+          type="button"
+          className="ui-agency-need"
+          onClick={() => (ask.productId ? openCheck(ask.productId) : onAsk(ask.questionIds!))}
+          aria-haspopup="dialog"
+        >
           {inner}
         </button>
       </Item>
@@ -295,8 +362,18 @@ function AskRow({ ask, onAsk }: { ask: Ask; onAsk: (ids: Id[]) => void }) {
   );
 }
 
-/** The creatives that wait for a check here, each opening in Check (DWAY-7, DWAY-17). */
-function CheckSection({ checks, frame, workspaceId, loading }: { checks: QaView[]; frame: StaffFrameKind; workspaceId: Id; loading: boolean }) {
+/** The creatives that wait for a check here, each opening in Check. */
+function CheckSection({
+  checks,
+  frame,
+  workspaceId,
+  loading,
+}: {
+  checks: QaView[];
+  frame: StaffFrameKind;
+  workspaceId: Id;
+  loading: boolean;
+}) {
   const to = checkPath(frame, workspaceId);
   return (
     <Section
@@ -320,7 +397,9 @@ function CheckSection({ checks, frame, workspaceId, loading }: { checks: QaView[
                     <ItemMediaImage src={x.item.image} alt="" />
                   </ItemMedia>
                   <ItemContent>
-                    <ItemTitle>{copy.creativeName({ title: x.item.title, format: x.item.format, productName: x.productName })}</ItemTitle>
+                    <ItemTitle>
+                      {copy.creativeName({ title: x.item.title, format: x.item.format, productName: x.productName })}
+                    </ItemTitle>
                     <ItemDescription>
                       {x.campaign.name} · {f.label} {f.ratio}
                     </ItemDescription>
@@ -341,8 +420,18 @@ function CheckSection({ checks, frame, workspaceId, loading }: { checks: QaView[
   );
 }
 
-/** The brand's campaigns, each opening the campaign (DWAY-14), in the frame's one status sentence. */
-function CampaignsSection({ v, frame, base, admin }: { v: BrandWorkspaceView; frame: StaffFrameKind; base: string; admin?: boolean }) {
+/** The brand's campaigns, each opening the campaign, in the frame's one status sentence. */
+function CampaignsSection({
+  v,
+  frame,
+  base,
+  admin,
+}: {
+  v: BrandWorkspaceView;
+  frame: StaffFrameKind;
+  base: string;
+  admin?: boolean;
+}) {
   return (
     <Section
       title="Campaigns"
@@ -358,14 +447,20 @@ function CampaignsSection({ v, frame, base, admin }: { v: BrandWorkspaceView; fr
         <ItemGroup as="ul" aria-labelledby="brand-campaigns">
           {v.campaigns.map(({ campaign, clock, approver }) => {
             // Fume's rows carry the clock's date as a badge, so the sentence leaves its own date out
-            const status = copy.campaignStatus(campaign, undefined, { viewer: frame === "agency" ? "agency" : "staff", customerName: approver ? firstName(approver.name) : undefined, date: frame === "agency" });
+            const status = copy.campaignStatus(campaign, undefined, {
+              viewer: frame === "agency" ? "agency" : "staff",
+              customerName: approver ? firstName(approver.name) : undefined,
+              date: frame === "agency",
+            });
             const content = (
               <>
                 <ItemContent>
                   <ItemTitle>{campaign.name}</ItemTitle>
                   <ItemDescription>{status.words}</ItemDescription>
                 </ItemContent>
-                <ItemActions>{frame === "fume" ? <ClockBadge clock={clock} /> : <Icon name="chevron-right" />}</ItemActions>
+                <ItemActions>
+                  {frame === "fume" ? <ClockBadge clock={clock} /> : <Icon name="chevron-right" />}
+                </ItemActions>
               </>
             );
             // Fume's admin checks no plan: the row is the campaign's line, not a way in
@@ -390,7 +485,9 @@ function CampaignsSection({ v, frame, base, admin }: { v: BrandWorkspaceView; fr
 /** What the Engine made since you last looked: one row of six, best first; any candidate opens in the Studio. */
 function MadeSection({ v, base, workspaceId }: { v: BrandWorkspaceView; base: string; workspaceId: Id }) {
   const studio = useOpenInStudio(workspaceId);
-  const made = distinctOutput(v.engineOutput).flatMap(({ campaign, generations }) => generations.filter((g) => g.state !== "discarded").map((g) => ({ g, campaign })));
+  const made = distinctOutput(v.engineOutput).flatMap(({ campaign, generations }) =>
+    generations.filter((g) => g.state !== "discarded").map((g) => ({ g, campaign })),
+  );
   const shown = bestFirst(made.map((m) => m.g)).slice(0, 6);
   const campaignOf = new Map(made.map((m) => [m.g.id, m.campaign.id]));
   return (
@@ -408,11 +505,19 @@ function MadeSection({ v, base, workspaceId }: { v: BrandWorkspaceView; base: st
       {shown.length ? (
         <CreativeGrid className="ui-app-made" aria-labelledby="brand-made">
           {shown.map((g) => (
-            <CandidateTile key={g.id} g={g} onOpen={() => studio.open({ campaignId: campaignOf.get(g.id), fromGenerationId: g.id })} />
+            <CandidateTile
+              key={g.id}
+              g={g}
+              onOpen={() => studio.open({ campaignId: campaignOf.get(g.id), fromGenerationId: g.id })}
+            />
           ))}
         </CreativeGrid>
       ) : (
-        <Nothing icon="fume-engine" title="The Engine has made nothing new" text="Runs for this brand show here as they finish." />
+        <Nothing
+          icon="fume-engine"
+          title="The Engine has made nothing new"
+          text="Runs for this brand show here as they finish."
+        />
       )}
     </Section>
   );

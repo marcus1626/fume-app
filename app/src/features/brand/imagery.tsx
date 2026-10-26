@@ -1,8 +1,16 @@
-// Round 13 (walk-through 21 Oct, #3; PROPOSED 22 Oct 2026): Fume sorts the pictures it found into groups, so a look
-// that was only for one campaign never steers every creative: Your look (lasting), Campaign looks (temporary, each
-// named after its campaign or season), Product shots, Not used. She moves a picture to another group from its Move
-// menu. The same groups in the onboarding's Imagery part and on the Brand DNA board. The look is r13-brand.css.
-import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, useToast } from "@fume/ui";
+// Fume sorts the pictures it found into groups, so a look that was only for one campaign never steers every creative:
+// Your look (lasting), Campaign looks (temporary, each named after its campaign or season), Product shots, Not used.
+// She moves a picture to another group from its Move menu. The same groups in the onboarding's Imagery part and on the
+// Brand DNA board. The look is r13-brand.css.
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+  useToast,
+} from "@fume/ui";
 import type { BrandImage, ImageGroup } from "../../contract";
 import { useMoveImage } from "../../api/hooks";
 
@@ -26,17 +34,30 @@ const groupOf = (i: BrandImage): ImageGroup => i.group ?? "look";
 
 /** The pictures by group, in the groups' order; empty groups are left out. */
 export function byGroup<T extends BrandImage>(list: T[]): { group: ImageGroup; items: T[] }[] {
-  return imageGroups.map((group) => ({ group, items: list.filter((i) => groupOf(i) === group) })).filter((g) => g.items.length > 0);
+  return imageGroups
+    .map((group) => ({ group, items: list.filter((i) => groupOf(i) === group) }))
+    .filter((g) => g.items.length > 0);
 }
 
 /** The campaigns the brand's campaign looks belong to, for the Move menu. */
-export const campaignsOf = (list: BrandImage[]) => [...new Set(list.map((i) => i.campaign).filter((c): c is string => Boolean(c)))];
+export const campaignsOf = (list: BrandImage[]) => [
+  ...new Set(list.map((i) => i.campaign).filter((c): c is string => Boolean(c))),
+];
 
 /** "Campaign look · Spring relaunch 2026", the line a picture carries under its name. */
-export const groupWords = (i: BrandImage) => (groupOf(i) === "campaign" && i.campaign ? `Campaign look · ${i.campaign}` : imageGroupTitle[groupOf(i)]);
+export const groupWords = (i: BrandImage) =>
+  groupOf(i) === "campaign" && i.campaign ? `Campaign look · ${i.campaign}` : imageGroupTitle[groupOf(i)];
 
 /** Move a picture to another group: the other groups, and each campaign by name. */
-export function MoveImage({ image, campaigns, disabled }: { image: BrandImage; campaigns: string[]; disabled?: boolean }) {
+export function MoveImage({
+  image,
+  campaigns,
+  disabled,
+}: {
+  image: BrandImage;
+  campaigns: string[];
+  disabled?: boolean;
+}) {
   const move = useMoveImage();
   const toast = useToast();
   const here = groupOf(image);
@@ -44,14 +65,24 @@ export function MoveImage({ image, campaigns, disabled }: { image: BrandImage; c
     move.mutate(
       { imageId: image.id, group, campaign },
       {
-        onSuccess: () => toast.done(`${image.caption} moved`, { description: group === "campaign" && campaign ? `To Campaign looks · ${campaign}.` : `To ${imageGroupTitle[group]}.` }),
+        onSuccess: () =>
+          toast.done(`${image.caption} moved`, {
+            description:
+              group === "campaign" && campaign ? `To Campaign looks · ${campaign}.` : `To ${imageGroupTitle[group]}.`,
+          }),
         onError: (error) => toast.error("The picture wasn’t moved", { description: error.message }),
       },
     );
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="sm" variant="quiet" icon="folder" disabled={disabled || move.isPending} aria-label={`Move ${image.caption} to another group`}>
+        <Button
+          size="sm"
+          variant="quiet"
+          icon="folder"
+          disabled={disabled || move.isPending}
+          aria-label={`Move ${image.caption} to another group`}
+        >
           Move
         </Button>
       </DropdownMenuTrigger>
@@ -65,8 +96,12 @@ export function MoveImage({ image, campaigns, disabled }: { image: BrandImage; c
               Campaign look · {c}
             </DropdownMenuItem>
           ))}
-        {here !== "product" && <DropdownMenuItem onSelect={() => to("product")}>{imageGroupTitle.product}</DropdownMenuItem>}
-        {here !== "unused" && <DropdownMenuItem onSelect={() => to("unused")}>{imageGroupTitle.unused}</DropdownMenuItem>}
+        {here !== "product" && (
+          <DropdownMenuItem onSelect={() => to("product")}>{imageGroupTitle.product}</DropdownMenuItem>
+        )}
+        {here !== "unused" && (
+          <DropdownMenuItem onSelect={() => to("unused")}>{imageGroupTitle.unused}</DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

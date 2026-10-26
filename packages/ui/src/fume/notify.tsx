@@ -1,12 +1,24 @@
 // Notifications: the bell, its popover and the inbox page (design-system/components/notify.css, behaviour from
-// notify.js). DECIDED 13 Oct, round 8. What happened, in Fume's words: "Anna checked 6 creatives in Autumn
-// launch", "The Engine finished 12 creatives", "Anna asked for changes on creative 3", "Marcus mentioned you".
+// notify.js). What happened, in Fume's words: "Anna checked 6 creatives in Autumn launch", "The Engine finished 12
+// creatives", "Anna asked for changes on creative 3", "Sander mentioned you".
 // People are their avatars (Anna in Ink), the Engine its own icon. Unread is the words at full strength and a
 // small dot after the time, never a blue dot. Grouped Today, Yesterday, Earlier with space.
 // The read state belongs to the app: rows call onRead, Mark all read calls onReadAll. Arrow Up and Down move
 // between rows, Home and End jump. The popover list stops on half a row so it says it scrolls.
 import * as Popover from "@radix-ui/react-popover";
-import { forwardRef, type ButtonHTMLAttributes, useCallback, useEffect, useRef, useState, type AnchorHTMLAttributes, type HTMLAttributes, type KeyboardEvent, type MouseEvent, type ReactNode } from "react";
+import {
+  forwardRef,
+  type ButtonHTMLAttributes,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type AnchorHTMLAttributes,
+  type HTMLAttributes,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import { cx } from "../cx";
 import { Icon } from "../icons";
 import { Avatar, Btn, Seg, tokenPx, vars, type PersonSign } from "./_parts";
@@ -59,10 +71,20 @@ export interface NotificationItemProps extends Omit<AnchorHTMLAttributes<HTMLAnc
 }
 
 /** a.ui-notify-item[data-state=read|unread][data-kind]: media, words (with "Unread. " for screen readers), quote, creatives, time and dot. */
-export const NotificationItem = forwardRef<HTMLAnchorElement, NotificationItemProps>(function NotificationItem({ item, full, className, href, ...props }, ref) {
+export const NotificationItem = forwardRef<HTMLAnchorElement, NotificationItemProps>(function NotificationItem(
+  { item, full, className, href, ...props },
+  ref,
+) {
   const a = item.actor;
   return (
-    <a ref={ref} className={cx("ui-notify-item", className)} href={href ?? item.href ?? "#"} data-state={item.unread ? "unread" : "read"} data-kind={item.kind} {...props}>
+    <a
+      ref={ref}
+      className={cx("ui-notify-item", className)}
+      href={href ?? item.href ?? "#"}
+      data-state={item.unread ? "unread" : "read"}
+      data-kind={item.kind}
+      {...props}
+    >
       {a.kind === "person" ? (
         <Avatar person={a.person} className="ui-notify-media" />
       ) : (
@@ -122,14 +144,30 @@ export const NotificationList = forwardRef<HTMLDivElement, NotificationListProps
     if (!row) return;
     const rows = Array.from(e.currentTarget.querySelectorAll<HTMLElement>(".ui-notify-item"));
     const i = rows.indexOf(row);
-    const j = e.key === "ArrowDown" ? Math.min(rows.length - 1, i + 1) : e.key === "ArrowUp" ? Math.max(0, i - 1) : e.key === "Home" ? 0 : e.key === "End" ? rows.length - 1 : -1;
+    const j =
+      e.key === "ArrowDown"
+        ? Math.min(rows.length - 1, i + 1)
+        : e.key === "ArrowUp"
+          ? Math.max(0, i - 1)
+          : e.key === "Home"
+            ? 0
+            : e.key === "End"
+              ? rows.length - 1
+              : -1;
     if (j < 0) return;
     e.preventDefault();
     rows[j]?.focus();
     rows[j]?.scrollIntoView({ block: "nearest" });
   };
   return (
-    <div ref={ref} className={cx("ui-notify", glass && "ui-notify--glass", className)} data-filter={filter} hidden={!shown.length} {...props} onKeyDown={keys}>
+    <div
+      ref={ref}
+      className={cx("ui-notify", glass && "ui-notify--glass", className)}
+      data-filter={filter}
+      hidden={!shown.length}
+      {...props}
+      onKeyDown={keys}
+    >
       {grouped(shown).map((g) => (
         <section key={g.name} className="ui-notify-section" aria-label={g.name}>
           <h5 className="ui-notify-group">{g.name}</h5>
@@ -162,10 +200,20 @@ export interface NotificationBellProps extends ButtonHTMLAttributes<HTMLButtonEl
 
 /** span.ui-notify-bell > button (quiet, "Notifications, 3 unread") + span.ui-notify-count (9+ past nine).
  *  The ref and every other prop go to the button, so it can be a Radix trigger (asChild). */
-export const NotificationBell = forwardRef<HTMLButtonElement, NotificationBellProps>(function NotificationBell({ unread, className, ...props }, ref) {
+export const NotificationBell = forwardRef<HTMLButtonElement, NotificationBellProps>(function NotificationBell(
+  { unread, className, ...props },
+  ref,
+) {
   return (
     <span className={cx("ui-notify-bell", className)}>
-      <Btn ref={ref} variant="quiet" iconOnly icon="bell" aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"} {...props} />
+      <Btn
+        ref={ref}
+        variant="quiet"
+        iconOnly
+        icon="bell"
+        aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"}
+        {...props}
+      />
       <span className="ui-notify-count" aria-hidden="true" hidden={!unread}>
         {unread ? (unread > 9 ? "9+" : String(unread)) : ""}
       </span>
@@ -174,7 +222,13 @@ export const NotificationBell = forwardRef<HTMLButtonElement, NotificationBellPr
 });
 
 /** div.ui-notify-empty: "You are all caught up" (the popover's empty state). */
-export function NotificationEmpty({ title = "You are all caught up", text = "Approvals, Engine runs and mentions show here as they happen." }: { title?: string; text?: string }) {
+export function NotificationEmpty({
+  title = "You are all caught up",
+  text = "Approvals, Engine runs and mentions show here as they happen.",
+}: {
+  title?: string;
+  text?: string;
+}) {
   return (
     <div className="ui-notify-empty">
       <span className="ui-notify-empty-icon" aria-hidden="true">
@@ -193,10 +247,15 @@ function useHalfRow(open: boolean) {
   const fit = useCallback(() => {
     const s = scroll.current;
     if (!s || !s.getClientRects().length) return;
-    const rowH = tokenPx("--ui-notify-row", 68), label = tokenPx("--ui-notify-label", 32);
-    const n = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--ui-notify-rows-visible")) || 3.5;
-    const target = label + rowH * n, top = s.getBoundingClientRect().top - s.scrollTop;
-    const items = Array.from(s.querySelectorAll<HTMLElement>(".ui-notify-item")).filter((x) => x.getClientRects().length);
+    const rowH = tokenPx("--ui-notify-row", 68),
+      label = tokenPx("--ui-notify-label", 32);
+    const n =
+      parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--ui-notify-rows-visible")) || 3.5;
+    const target = label + rowH * n,
+      top = s.getBoundingClientRect().top - s.scrollTop;
+    const items = Array.from(s.querySelectorAll<HTMLElement>(".ui-notify-item")).filter(
+      (x) => x.getClientRects().length,
+    );
     const last = items[items.length - 1];
     if (!last || last.getBoundingClientRect().bottom - top <= target) return setRows(null);
     for (const it of items) {

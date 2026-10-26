@@ -1,9 +1,8 @@
-// The bell on a desk (round 9, desktop review DWAY-11, DLOAD-4; PROPOSED 19 Oct 2026): the whole list of notifications
-// in the bell's popover, with its own All · Unread tabs, scrolling inside a popover up to 70 % of the screen's height.
-// There is no second inbox to open: "Open the inbox" is gone; All notifications (/notifications) stays for the phone
-// and for links. The bell counts only what Home does not already ask (shell/notifications.ts), so the sidebar's Home
-// number stays the one to-do count. Opening a row marks it read and goes where it points ("The plan for Winter gifting
-// is ready" opens the plan, round 10).
+// The bell on a desk: the whole list of notifications in the bell's popover, with its own All · Unread tabs, scrolling
+// inside the popover up to 70 % of the screen's height. All notifications (/notifications) is for the phone and for
+// links. The bell counts only what Home does not already ask (shell/notifications.ts), so the sidebar's Home number
+// stays the one to-do count. Opening a row marks it read and goes where it points ("The plan for Winter gifting is
+// ready" opens the plan).
 import {
   Button,
   NotificationBell,
@@ -40,7 +39,12 @@ export function NotificationsPopover({ items, unread }: { items: NotificationDat
     if (e.key !== "ArrowLeft" && e.key !== "ArrowRight" && e.key !== "Home" && e.key !== "End") return;
     e.preventDefault();
     const i = TABS.findIndex((t) => t.value === filter);
-    const j = e.key === "Home" ? 0 : e.key === "End" ? TABS.length - 1 : (i + (e.key === "ArrowRight" ? 1 : -1) + TABS.length) % TABS.length;
+    const j =
+      e.key === "Home"
+        ? 0
+        : e.key === "End"
+          ? TABS.length - 1
+          : (i + (e.key === "ArrowRight" ? 1 : -1) + TABS.length) % TABS.length;
     setFilter(TABS[j]!.value);
     tabs.current?.querySelectorAll<HTMLElement>("[role=tab]")[j]?.focus();
   };
@@ -88,7 +92,12 @@ export function NotificationsPopover({ items, unread }: { items: NotificationDat
             ))}
           </div>
         )}
-        <div className="ui-popover-scroll" id={`${id}-panel`} role={items.length ? "tabpanel" : undefined} aria-labelledby={items.length ? `${id}-tab-${filter}` : undefined}>
+        <div
+          className="ui-popover-scroll"
+          id={`${id}-panel`}
+          role={items.length ? "tabpanel" : undefined}
+          aria-labelledby={items.length ? `${id}-tab-${filter}` : undefined}
+        >
           {shown.length > 0 ? (
             <NotificationList
               items={items}
@@ -104,7 +113,11 @@ export function NotificationsPopover({ items, unread }: { items: NotificationDat
           ) : (
             <NotificationEmpty
               title={filter === "unread" ? "Everything is read" : "You are all caught up"}
-              text={filter === "unread" ? "What waits on you is on Home." : "Plans ready for you, checked creatives, questions from Fume and mentions show here as they happen."}
+              text={
+                filter === "unread"
+                  ? "What waits on you is on Home."
+                  : "Plans ready for you, checked creatives, questions from Fume and mentions show here as they happen."
+              }
             />
           )}
         </div>

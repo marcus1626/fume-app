@@ -36,7 +36,20 @@ export interface AlertDialogContentProps extends ComponentPropsWithoutRef<typeof
 
 /** The alert dialog with its scrim, in a portal. Children: AlertDialogHeader, AlertDialogFooter. */
 export const AlertDialogContent = forwardRef<ElementRef<typeof DialogPrimitive.Content>, AlertDialogContentProps>(
-  ({ size = "sm", container, className, children, onOpenAutoFocus, onCloseAutoFocus, onPointerDownOutside, onInteractOutside, ...props }, ref) => {
+  (
+    {
+      size = "sm",
+      container,
+      className,
+      children,
+      onOpenAutoFocus,
+      onCloseAutoFocus,
+      onPointerDownOutside,
+      onInteractOutside,
+      ...props
+    },
+    ref,
+  ) => {
     const cancelRef = useRef<HTMLButtonElement>(null);
     const el = useRef<HTMLDivElement | null>(null);
     const opener = useRef<HTMLElement | null>(null);
@@ -49,7 +62,12 @@ export const AlertDialogContent = forwardRef<ElementRef<typeof DialogPrimitive.C
             role="alertdialog"
             aria-modal="true"
             data-size={size}
-            className={cx("ui-glass ui-dialog", size === "sm" && "ui-dialog--sm", size === "lg" && "ui-dialog--lg", className)}
+            className={cx(
+              "ui-glass ui-dialog",
+              size === "sm" && "ui-dialog--sm",
+              size === "lg" && "ui-dialog--lg",
+              className,
+            )}
             onOpenAutoFocus={(event) => {
               opener.current = currentOpener();
               onOpenAutoFocus?.(event);
@@ -59,7 +77,7 @@ export const AlertDialogContent = forwardRef<ElementRef<typeof DialogPrimitive.C
             }}
             onCloseAutoFocus={(event) => {
               onCloseAutoFocus?.(event);
-              // focus goes back to what asked (round 9, DWAY-8), also when no Trigger did
+              // focus goes back to what asked, also when no Trigger did
               if (!event.defaultPrevented && returnFocusTo(opener.current, el.current)) event.preventDefault();
             }}
             onPointerDownOutside={(event) => {
@@ -93,10 +111,18 @@ export const AlertDialogFooter = DialogFooter;
 type CloseProps = ComponentPropsWithoutRef<typeof DialogPrimitive.Close>;
 
 /** Keeps things as they were and closes: button.ui-btn.ui-btn--glass-clear. Gets the focus when the dialog opens. */
-export const AlertDialogCancel = forwardRef<ElementRef<typeof DialogPrimitive.Close>, CloseProps>(({ className, ...props }, ref) => {
-  const cancelRef = useContext(CancelRefContext);
-  return <DialogPrimitive.Close ref={mergeRefs(ref, cancelRef ?? undefined)} className={cx("ui-btn ui-btn--glass-clear", className)} {...props} />;
-});
+export const AlertDialogCancel = forwardRef<ElementRef<typeof DialogPrimitive.Close>, CloseProps>(
+  ({ className, ...props }, ref) => {
+    const cancelRef = useContext(CancelRefContext);
+    return (
+      <DialogPrimitive.Close
+        ref={mergeRefs(ref, cancelRef ?? undefined)}
+        className={cx("ui-btn ui-btn--glass-clear", className)}
+        {...props}
+      />
+    );
+  },
+);
 AlertDialogCancel.displayName = "AlertDialogCancel";
 
 export interface AlertDialogActionProps extends CloseProps {

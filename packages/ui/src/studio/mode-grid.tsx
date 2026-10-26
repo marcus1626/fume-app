@@ -32,11 +32,36 @@ export interface StudioModeGridProps {
 }
 
 const iconFor = (m: StudioModeTileData): IconName =>
-  m.icon ?? (m.output === "model" ? "user" : m.output === "reference" ? "image-plus" : /packshot/i.test(m.name) ? "package" : /layout/i.test(m.name) ? "type" : /motion/i.test(m.name) ? "play" : /free/i.test(m.name) ? "pencil" : "image");
+  m.icon ??
+  (m.output === "model"
+    ? "user"
+    : m.output === "reference"
+      ? "image-plus"
+      : /packshot/i.test(m.name)
+        ? "package"
+        : /layout/i.test(m.name)
+          ? "type"
+          : /motion/i.test(m.name)
+            ? "play"
+            : /free/i.test(m.name)
+              ? "pencil"
+              : "image");
 
-export function StudioModeGrid({ modes, value, onPick, disabled, compact, large, className, ...props }: StudioModeGridProps) {
+export function StudioModeGrid({
+  modes,
+  value,
+  onPick,
+  disabled,
+  compact,
+  large,
+  className,
+  ...props
+}: StudioModeGridProps) {
   return (
-    <ul className={cx("ui-sc-modes", compact && "ui-sc-modes--compact", large && "ui-sc-modes--large", className)} aria-label={props["aria-label"] ?? "Modes"}>
+    <ul
+      className={cx("ui-sc-modes", compact && "ui-sc-modes--compact", large && "ui-sc-modes--large", className)}
+      aria-label={props["aria-label"] ?? "Modes"}
+    >
       {modes.map((m) => (
         <li key={m.id}>
           <button
@@ -49,7 +74,9 @@ export function StudioModeGrid({ modes, value, onPick, disabled, compact, large,
           >
             <Icon name={iconFor(m)} className="ui-sc-mode-icon" />
             <span className="ui-sc-mode-name">{m.name}</span>
-            <span className="ui-sc-mode-text">{m.available ? m.description.replace(/ Coming later\.?$/, "") : "Coming later"}</span>
+            <span className="ui-sc-mode-text">
+              {m.available ? m.description.replace(/ Coming later\.?$/, "") : "Coming later"}
+            </span>
           </button>
         </li>
       ))}

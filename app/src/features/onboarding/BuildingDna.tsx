@@ -1,13 +1,22 @@
-// Step 2, "Fume reads it" (FLOWS §7 step 3; round 7, Marcus 16 Oct; round 8, UX review ONB-2, ONB-3, ONB-22): the
-// moment the customer sees Fume understand them. The reading plays as a mind map on a calm Paper grid: the logo lands
-// in the middle, then Palette, Type, Pictures, Products, Voice, Rules and Audience connect to it one by one, each
-// with a line of what is being read ("Reading lysne.no/about"). A node waits for the page it is read from.
-// The map is the payoff and stays: no board, no Confirm · Change · Remove here (that is step 3's one job). When the
-// reading is done, one summary line with one honest count ("12 finds to confirm, about 5 minutes") and one pill,
-// "Confirm what Fume found", pinned to the bottom of the screen. After 3 s a quiet "Show me the result" skips the
-// rest of the animation; a reading that is already done opens settled, so coming back never replays it.
+// Step 2, "Fume reads it" (FLOWS §7 step 3): the moment the customer sees Fume understand them. The reading plays as a
+// mind map on a calm Paper grid: the logo lands in the middle, then Palette, Type, Pictures, Products, Voice, Rules and
+// Audience connect to it one by one, each with a line of what is being read ("Reading lysne.no/about"). A node waits
+// for the page it is read from. The map is the payoff and stays: no Confirm · Change · Remove here (that is step 3's
+// one job). When the reading is done, one summary line with one honest count ("12 finds to confirm, about 5 minutes")
+// and one pill, "Confirm what Fume found", pinned to the bottom of the screen. After 3 s a quiet "Show me the result"
+// skips the rest of the animation; a reading that is already done opens settled, so coming back never replays it.
 // The look and motion are design-system/components/mind-map.css and MindMap (@fume/ui). Reduced motion: a static map.
-import { Alert, AlertAction, AlertDescription, AlertTitle, Button, Icon, MindMap, type MindMapNode, type MindMapPlace } from "@fume/ui";
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+  Button,
+  Icon,
+  MindMap,
+  type MindMapNode,
+  type MindMapPlace,
+} from "@fume/ui";
 import type { IconName } from "@fume/ui";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -59,7 +68,13 @@ type Phase = { logo: boolean; states: Record<string, MindMapNode["state"]>; sett
  * lands a step later. A reading that was already done when the page opened is shown settled, with nothing to watch;
  * `skip` settles it as soon as the reading is done.
  */
-function useTimeline(scan: BrandScan | null | undefined, ids: NodeId[], sourcesOf: (id: NodeId) => string[], reduced: boolean, skip: boolean): Phase {
+function useTimeline(
+  scan: BrandScan | null | undefined,
+  ids: NodeId[],
+  sourcesOf: (id: NodeId) => string[],
+  reduced: boolean,
+  skip: boolean,
+): Phase {
   const [phase, setPhase] = useState<Phase>({ logo: false, states: {}, settled: false });
   const scanRef = useRef(scan);
   scanRef.current = scan;
@@ -87,13 +102,15 @@ function useTimeline(scan: BrandScan | null | undefined, ids: NodeId[], sourcesO
         if (!s || p.settled) return p;
         if (!p.logo) return { ...p, logo: true };
         const states = { ...p.states };
-        const open = (id: NodeId) => s.state === "done" || sourcesOf(id).every((src) => s.sources.find((x) => x.id === src)?.state !== "waiting");
+        const open = (id: NodeId) =>
+          s.state === "done" || sourcesOf(id).every((src) => s.sources.find((x) => x.id === src)?.state !== "waiting");
         const reading = ids.find((id) => states[id] === "reading");
         if (reading) states[reading] = "landed";
         const next = ids.find((id) => !states[id]);
         if (next && open(next)) states[next] = "reading";
         const all = ids.every((id) => states[id] === "landed");
-        if (all && s.state === "done" && p.states[ids[ids.length - 1]] === "landed") return { ...p, states, settled: true };
+        if (all && s.state === "done" && p.states[ids[ids.length - 1]] === "landed")
+          return { ...p, states, settled: true };
         return { ...p, states };
       });
     const kick = window.setTimeout(tick, reduced ? 0 : step / 3);
@@ -139,7 +156,13 @@ function NodeBody({ id, finds, identity }: { id: NodeId; finds: BrandScanFind[];
       return (
         <div className="ui-mind-map-swatches">
           {finds.map((f) => (
-            <span key={f.id} className="ui-mind-map-item ui-mind-map-swatch" style={vars({ "--swatch": f.value })} role="img" aria-label={`${f.label}, ${f.value}`} />
+            <span
+              key={f.id}
+              className="ui-mind-map-item ui-mind-map-swatch"
+              style={vars({ "--swatch": f.value })}
+              role="img"
+              aria-label={`${f.label}, ${f.value}`}
+            />
           ))}
         </div>
       );
@@ -147,7 +170,11 @@ function NodeBody({ id, finds, identity }: { id: NodeId; finds: BrandScanFind[];
       return (
         <div className="ui-mind-map-specimens">
           {finds.map((f) => (
-            <div key={f.id} className="ui-mind-map-item ui-mind-map-specimen" style={vars({ "--brand-font": identity?.typefaces.find((t) => t.name === f.label)?.cssFamily })}>
+            <div
+              key={f.id}
+              className="ui-mind-map-item ui-mind-map-specimen"
+              style={vars({ "--brand-font": identity?.typefaces.find((t) => t.name === f.label)?.cssFamily })}
+            >
               <span className="ui-mind-map-specimen-aa" aria-hidden="true">
                 Aa
               </span>
@@ -172,7 +199,9 @@ function NodeBody({ id, finds, identity }: { id: NodeId; finds: BrandScanFind[];
         <ul className="ui-mind-map-tiles" aria-label={`${copy.count(finds.length, "product")} Fume found`}>
           {finds.slice(0, more > 1 ? TILES : finds.length).map((f) => (
             <li key={f.id} className="ui-mind-map-item ui-mind-map-tile">
-              <span className="ui-mind-map-picture">{f.value ? <img src={f.value} alt="" /> : <Icon name="package" />}</span>
+              <span className="ui-mind-map-picture">
+                {f.value ? <img src={f.value} alt="" /> : <Icon name="package" />}
+              </span>
               <span className="ui-mind-map-tile-name">{f.label}</span>
             </li>
           ))}
@@ -230,12 +259,22 @@ export function BuildingDna() {
     return () => window.clearTimeout(t);
   }, []);
 
-  const defs = useMemo(() => nodeDefs.filter((d) => scan?.finds.some((f) => f.kind === d.kind)), [scan?.id, scan?.finds.length]); // eslint-disable-line react-hooks/exhaustive-deps
+  const defs = useMemo(
+    () => nodeDefs.filter((d) => scan?.finds.some((f) => f.kind === d.kind)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [scan?.id, scan?.finds.length],
+  );
   const ids = useMemo(() => defs.map((d) => d.id), [defs]);
   const findsOf = (kind: Kind) => scan?.finds.filter((f) => f.kind === kind) ?? [];
   const sourcesOf = (id: NodeId) => {
     const kind = nodeDefs.find((d) => d.id === id)!.kind;
-    return [...new Set(findsOf(kind).map((f) => f.sourceId).filter((s): s is string => Boolean(s)))];
+    return [
+      ...new Set(
+        findsOf(kind)
+          .map((f) => f.sourceId)
+          .filter((s): s is string => Boolean(s)),
+      ),
+    ];
   };
   const labelOf = (sourceId?: string) => scan?.sources.find((s) => s.id === sourceId)?.label;
   const phase = useTimeline(scan, ids, sourcesOf, reduced, skip);
@@ -245,7 +284,9 @@ export function BuildingDna() {
   const faces = identity ? brandFaces(identity) : undefined;
   const failed = scan?.state === "failed";
   const settled = phase.settled && Boolean(identity);
-  const where = scan ? [scan.url, scan.files.length ? copy.count(scan.files.length, "upload") : ""].filter(Boolean).join(" and your ") : "";
+  const where = scan
+    ? [scan.url, scan.files.length ? copy.count(scan.files.length, "upload") : ""].filter(Boolean).join(" and your ")
+    : "";
   const readingNow = ids.find((id) => phase.states[id] === "reading");
   const readingSource = readingNow ? sourcesOf(readingNow).map(labelOf)[0] : undefined;
   const status = !scan
@@ -300,7 +341,9 @@ export function BuildingDna() {
       footAlign={done ? "end" : "center"}
     >
       <header className="ui-welcome-head">
-        <h1 className="ui-welcome-title">{done ? `${session.workspace.brandName}, as Fume read it` : "Fume is reading your brand"}</h1>
+        <h1 className="ui-welcome-title">
+          {done ? `${session.workspace.brandName}, as Fume read it` : "Fume is reading your brand"}
+        </h1>
         <p className="ui-welcome-lede" aria-live="polite">
           {done
             ? scan.finds.length
@@ -333,7 +376,16 @@ export function BuildingDna() {
               label={`${logo?.value ?? "Your brand"}, as Fume reads it`}
               centerState={phase.logo ? "landed" : "waiting"}
               center={
-                <div className="ui-mind-map-logo" style={vars({ "--brand-ground": faces?.ground, "--brand-ink": faces?.ink, "--brand-display": faces?.display })} role="img" aria-label={logo ? `${logo.label}: ${logo.value}` : "Your logo"}>
+                <div
+                  className="ui-mind-map-logo"
+                  style={vars({
+                    "--brand-ground": faces?.ground,
+                    "--brand-ink": faces?.ink,
+                    "--brand-display": faces?.display,
+                  })}
+                  role="img"
+                  aria-label={logo ? `${logo.label}: ${logo.value}` : "Your logo"}
+                >
                   {logo?.value ?? ""}
                 </div>
               }

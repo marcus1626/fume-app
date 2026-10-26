@@ -1,36 +1,29 @@
-// The campaign's Plan tab (FLOWS §22, PROPOSED 20 Oct 2026; round 10 brief, PLAN). Marcus, 20 Oct: "hvor er planen som
-// blir lagd før Engine genererer? Kunden må jo godkjenne det før Engine begynner å generere."
-// By the plan's state:
-// - no plan yet: her brief, every line changeable in place, and "Send to Fume" in the step footer once it is complete
-//   (she SENDS her brief; she no longer approves it). Nothing is made yet.
-// - writing / in check: a calm state (the step in words, with the text shimmer on the words under way), when it is
-//   ready, what the plan will hold in one line, and her brief beside it, read-only.
+// The campaign's Plan tab (FLOWS §22, §26.2, §26.8). By the plan's state:
+// - no plan yet: the brief is its own stage (BriefTab, the campaign's Brief tab); nothing is made yet.
+// - writing / in check: a calm state on one screen (the step in words, with the text shimmer on the words under way),
+//   when it is ready, what the plan will hold in one line, and her brief beside it, read-only.
 // - changes asked: "Fume is changing the plan", her note, and the version she asked to change, read-only.
-// - ready: the plan document with the step footer: "Ask for changes" and "Approve the plan" (the one Ink; ⌘↵ too when
-//   the focus is not in a field). Approve acts at once, with Undo in the toast.
+// - ready: the plan document with the step footer. Fume writes the plan and it is hers at once: "Approve and start"
+//   (the one Ink; ⌘↵ too when the focus is not in a field) starts the masters, with Undo in the toast; "Change it with
+//   Fume" opens the Fume chat with the plan in its side panel; "Ask Anna to check" is optional, and the plan comes back
+//   checked.
 // - approved: the same document, read-only.
-// Round 12 (UX review DLOAD-4, DLAY-19, DLOAD-3, DLOAD-22; brief r12 PLAN; PROPOSED 20 Oct 2026): who approves follows
-// who reads it. In a brand an agency runs, the agency approves the plan (its footer is the customer's), and the agency's
-// client reads it with no footer: "Brygga Studio approves the plan; you approve the creatives." The customer talks to
-// Fume: "Approve it and Fume starts on the 3 masters" (the Engine only as the one making creatives). While the plan is
-// written or checked the page is one screen: the state with the parts it will hold in one line, her brief beside it.
-// A new version is checked again before it is hers ("Anna is checking version 2").
-// Round 13 (Marcus's video comments #20, #21, #25, #28, robot note 03; PROPOSED 22 Oct 2026): plans without a designer.
-// Fume writes the plan and it is hers at once: "Approve and start" (the one Ink) starts the masters, "Change it with
-// Fume" opens the Fume chat with the plan in its side panel (to iterate the number of creatives, videos, carousels,
-// timing), and "Ask Anna to check" is optional and then goes the way it went before (Anna checks; the plan comes back
-// checked). The brief is its own stage now (BriefTab, the campaign's Brief tab): changeable until the plan is approved;
-// changed after it was sent, it goes to Fume again and the plan is written again as its next version. An expert's
-// step carries the checked triangle (grey while it waits, Amber once checked), the same mark as Check's.
-// Round 13 (Marcus's card, 23 Oct 2026, DECIDED "Klienten godkjenner"): in a brand an agency runs the agency checks the
-// plan and sends it to the client: its footer's Ink is "Send to Maja" (the Send panel the creatives use, with the plan
-// in it and the campaign's client link), and once sent it reads "You sent it to Maja". The client sees where the plan
-// is until it is sent; then the plan with "Ask for changes" and "Approve and start", as the customer has in Fume (or the
-// same in the client link). Her approval starts the Engine.
+// In a brand an agency runs the agency checks the plan and sends it to the client: its footer's Ink is "Send to Maja"
+// (the Send panel the creatives use, with the plan in it and the campaign's client link), and once sent it reads "You
+// sent it to Maja". The client sees where the plan is until it is sent; then the plan with "Ask for changes" and
+// "Approve and start", as the customer has in Fume (or the same in the client link). Her approval starts the Engine. An
+// expert's step carries the checked triangle (grey while it waits, Amber once checked), the same mark as Check's.
 import { Button, Icon, PageFooter, PickGrid, PickTile, ProductTile, cx, useToast } from "@fume/ui";
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useApprovePlan, useAskPlanCheck, useCatalogue, usePlan, useSendBrief, useUndoApprovePlan } from "../../api/hooks";
+import {
+  useApprovePlan,
+  useAskPlanCheck,
+  useCatalogue,
+  usePlan,
+  useSendBrief,
+  useUndoApprovePlan,
+} from "../../api/hooks";
 import { useCampaignSends } from "../agency/clientFlow";
 import { SendToClientSheet } from "../agency/SendToClient";
 import { AskChanges } from "./AskChanges";
@@ -48,7 +41,8 @@ import { byDay, creativesOf, onDay, partsToCome, sentOn } from "./words";
 type Rights = ReturnType<typeof rights>;
 
 /** What happens once she sends the brief, in one sentence (the same words as the chat's brief panel). */
-export const AFTER_SENDING = "Fume writes the plan from your brief: the direction, how every creative looks and every creative. You approve the plan before anything is made.";
+export const AFTER_SENDING =
+  "Fume writes the plan from your brief: the direction, how every creative looks and every creative. You approve the plan before anything is made.";
 
 export function PlanTab({ view, can }: { view: CampaignView; can: Rights }) {
   const plan = usePlan(view.campaign.id);
@@ -60,15 +54,29 @@ export function PlanTab({ view, can }: { view: CampaignView; can: Rights }) {
   );
 }
 
-function PlanByState({ plan, view, can, people }: { plan: CampaignPlan | null; view: CampaignView; can: Rights; people: PlanPeople }) {
+function PlanByState({
+  plan,
+  view,
+  can,
+  people,
+}: {
+  plan: CampaignPlan | null;
+  view: CampaignView;
+  can: Rights;
+  people: PlanPeople;
+}) {
   const { campaign, brief } = view;
-  // Before the brief is sent there is no plan: the brief is its own stage (round 13).
+  // Before the brief is sent there is no plan: the brief is its own stage.
   if (!plan)
     return (
       <Nothing
         icon="file-text"
         title="No plan yet"
-        text={people.viewer === "client" ? `${people.agencyName ?? "Your agency"} sends the brief; Fume writes the plan from it.` : "Send your brief to Fume and Fume writes the plan from it: the direction, how every creative looks, every creative and the dates."}
+        text={
+          people.viewer === "client"
+            ? `${people.agencyName ?? "Your agency"} sends the brief; Fume writes the plan from it.`
+            : "Send your brief to Fume and Fume writes the plan from it: the direction, how every creative looks, every creative and the dates."
+        }
         action={
           <Button asChild variant="quiet" size="sm" iconEnd="arrow-right">
             <Link to={`/campaigns/${campaign.id}/brief`} replace>
@@ -86,37 +94,72 @@ function PlanByState({ plan, view, can, people }: { plan: CampaignPlan | null; v
       return (
         <>
           <PlanWaiting plan={plan} campaign={campaign} brief={brief} people={people} />
-          {plan.directions.length > 0 && <PlanDocument plan={plan} campaign={campaign} brief={brief} people={people} mode="previous" edit={false} choose={false} />}
+          {plan.directions.length > 0 && (
+            <PlanDocument
+              plan={plan}
+              campaign={campaign}
+              brief={brief}
+              people={people}
+              mode="previous"
+              edit={false}
+              choose={false}
+            />
+          )}
         </>
       );
     case "ready":
-      // Round 13: the agency's client sees the plan once the agency has checked it and sent it to her.
-      if (people.viewer === "client" && !plan.checkedBy) return <PlanWaiting plan={plan} campaign={campaign} brief={brief} people={people} />;
+      // The agency's client sees the plan once the agency has checked it and sent it to her.
+      if (people.viewer === "client" && !plan.checkedBy)
+        return <PlanWaiting plan={plan} campaign={campaign} brief={brief} people={people} />;
       return <PlanReady plan={plan} campaign={campaign} brief={brief} people={people} can={can} />;
     case "approved":
-      return <PlanDocument plan={plan} campaign={campaign} brief={brief} people={people} mode="approved" edit={false} choose={false} />;
+      return (
+        <PlanDocument
+          plan={plan}
+          campaign={campaign}
+          brief={brief}
+          people={people}
+          mode="approved"
+          edit={false}
+          choose={false}
+        />
+      );
   }
 }
 
 // ─── Ready: the document, Ask for changes, Approve the plan ────────────────
 
-function PlanReady({ plan, campaign, brief, people, can }: { plan: CampaignPlan; campaign: Campaign; brief: Brief; people: PlanPeople; can: Rights }) {
+function PlanReady({
+  plan,
+  campaign,
+  brief,
+  people,
+  can,
+}: {
+  plan: CampaignPlan;
+  campaign: Campaign;
+  brief: Brief;
+  people: PlanPeople;
+  can: Rights;
+}) {
   const approve = useApprovePlan();
   const undo = useUndoApprovePlan();
   const askCheck = useAskPlanCheck();
   const chatPath = usePlanChatPath(campaign.id);
   const catalogue = useCatalogue();
   const toast = useToast();
-  // Round 13 (#25): the expert's check is optional; she asks for it while no expert has checked this version.
+  // The expert's check is optional; she asks for it while no expert has checked this version.
   const expert = people.expert && people.viewer === "customer" && !plan.checkedBy ? people.expertName : undefined;
   const Expert = expert ? expert.charAt(0).toUpperCase() + expert.slice(1) : undefined;
   const { masters } = creativesOf(plan);
   const mastersWords = masters.length === 1 ? "the master" : `the ${masters.length} masters`;
-  // A product the plan uses that waits to be confirmed (DLOAD-3): the footer says it once, the toast says what waits.
-  const waiting = (catalogue.data?.products ?? []).filter((p) => campaign.productIds.includes(p.id) && p.state === "needs_you");
+  // A product the plan uses that waits to be confirmed: the footer says it once, the toast says what waits.
+  const waiting = (catalogue.data?.products ?? []).filter(
+    (p) => campaign.productIds.includes(p.id) && p.state === "needs_you",
+  );
   const held = masters.filter((m) => m.productIds.some((id) => waiting.some((p) => p.id === id)));
   const first = waiting.map((p) => p.name).join(" and ");
-  // Round 13 (Marcus's card): an agency checks the plan and sends it to the client; only the client approves it.
+  // An agency checks the plan and sends it to the client; only the client approves it.
   const agency = people.viewer === "agency";
   const client = people.viewer === "client";
   const sent = agency && Boolean(plan.checkedBy);
@@ -164,7 +207,9 @@ function PlanReady({ plan, campaign, brief, people, can }: { plan: CampaignPlan;
       const a = document.activeElement as HTMLElement | null;
       if (a && (a.matches("input, textarea, select, [contenteditable='true']") || a.closest("form"))) return;
       // an open panel or menu, not the phone's closed sidebar (a modal dialog that is always there, inert while closed)
-      const open = document.querySelectorAll("[role='dialog'][data-state='open'], [role='alertdialog'][data-state='open'], [role='menu'][data-state='open'], [aria-modal='true']");
+      const open = document.querySelectorAll(
+        "[role='dialog'][data-state='open'], [role='alertdialog'][data-state='open'], [role='menu'][data-state='open'], [aria-modal='true']",
+      );
       if ([...open].some((d) => !d.closest("[inert]"))) return;
       e.preventDefault();
       doApprove();
@@ -173,7 +218,7 @@ function PlanReady({ plan, campaign, brief, people, can }: { plan: CampaignPlan;
     return () => window.removeEventListener("keydown", onKey);
   });
 
-  // The footer says once what approving starts, and what waits for a product to be confirmed (DLOAD-3, DLOAD-9).
+  // The footer says once what approving starts, and what waits for a product to be confirmed.
   const going = masters.filter((m) => !held.includes(m));
   const line =
     held.length === 0
@@ -189,9 +234,20 @@ function PlanReady({ plan, campaign, brief, people, can }: { plan: CampaignPlan;
   if (agency)
     return (
       <>
-        <PlanDocument plan={plan} campaign={campaign} brief={brief} people={people} mode="ready" edit={can.approve && !sent} choose={can.approve && !sent} />
+        <PlanDocument
+          plan={plan}
+          campaign={campaign}
+          brief={brief}
+          people={people}
+          mode="ready"
+          edit={can.approve && !sent}
+          choose={can.approve && !sent}
+        />
         {sent ? (
-          <PageFooter className="ui-plandoc-foot" start={`You sent it to ${clientName}${plan.checkedAt ? ` ${onDay(plan.checkedAt, false)}` : ""}. Fume starts on ${mastersWords} once she approves it.`}>
+          <PageFooter
+            className="ui-plandoc-foot"
+            start={`You sent it to ${clientName}${plan.checkedAt ? ` ${onDay(plan.checkedAt, false)}` : ""}. Fume starts on ${mastersWords} once she approves it.`}
+          >
             {planLink && (
               <Button asChild variant="secondary" icon="external-link">
                 <Link to={`/c/${planLink.token}`}>Open the client link</Link>
@@ -199,7 +255,10 @@ function PlanReady({ plan, campaign, brief, people, can }: { plan: CampaignPlan;
             )}
           </PageFooter>
         ) : can.approve ? (
-          <PageFooter className="ui-plandoc-foot" start={`Check the plan, then send it to ${clientName}. Fume starts on ${mastersWords} once she approves it.`}>
+          <PageFooter
+            className="ui-plandoc-foot"
+            start={`Check the plan, then send it to ${clientName}. Fume starts on ${mastersWords} once she approves it.`}
+          >
             <Button asChild variant="secondary" icon="message-square">
               <Link to={chatPath}>Change it with Fume</Link>
             </Button>
@@ -216,17 +275,36 @@ function PlanReady({ plan, campaign, brief, people, can }: { plan: CampaignPlan;
 
   return (
     <>
-      <PlanDocument plan={plan} campaign={campaign} brief={brief} people={people} mode="ready" edit={can.approve && !client} choose={can.approve && !client} />
+      <PlanDocument
+        plan={plan}
+        campaign={campaign}
+        brief={brief}
+        people={people}
+        mode="ready"
+        edit={can.approve && !client}
+        choose={can.approve && !client}
+      />
       {can.approve && client ? (
         // The client approves the plan the agency checked and sent her; changes go to Fume in her words.
         <PageFooter className="ui-plandoc-foot" start={`${agencyName} checked it. ${line}`}>
           <Button variant="secondary" icon="message-square" onClick={() => setAsking(true)}>
             Ask for changes
           </Button>
-          <Button icon="check" loading={approve.isPending} onClick={doApprove} aria-keyshortcuts="Meta+Enter Control+Enter">
+          <Button
+            icon="check"
+            loading={approve.isPending}
+            onClick={doApprove}
+            aria-keyshortcuts="Meta+Enter Control+Enter"
+          >
             Approve and start
           </Button>
-          <AskChanges campaignId={campaign.id} expert={agencyName} included={plan.changeRequestsIncluded} open={asking} onOpenChange={setAsking} />
+          <AskChanges
+            campaignId={campaign.id}
+            expert={agencyName}
+            included={plan.changeRequestsIncluded}
+            open={asking}
+            onOpenChange={setAsking}
+          />
         </PageFooter>
       ) : can.approve ? (
         <PageFooter className="ui-plandoc-foot" start={line}>
@@ -237,7 +315,10 @@ function PlanReady({ plan, campaign, brief, people, can }: { plan: CampaignPlan;
               loading={askCheck.isPending}
               onClick={() =>
                 askCheck.mutate(campaign.id, {
-                  onSuccess: () => toast.done(`${Expert} checks the plan`, { description: "You see it here again once it is checked. Nothing is made before you approve it." }),
+                  onSuccess: () =>
+                    toast.done(`${Expert} checks the plan`, {
+                      description: "You see it here again once it is checked. Nothing is made before you approve it.",
+                    }),
                   onError: (e) => toast.error("That wasn’t sent", { description: e.message }),
                 })
               }
@@ -248,26 +329,45 @@ function PlanReady({ plan, campaign, brief, people, can }: { plan: CampaignPlan;
           <Button asChild variant="secondary" icon="message-square">
             <Link to={chatPath}>Change it with Fume</Link>
           </Button>
-          <Button icon="check" loading={approve.isPending} onClick={doApprove} aria-keyshortcuts="Meta+Enter Control+Enter">
+          <Button
+            icon="check"
+            loading={approve.isPending}
+            onClick={doApprove}
+            aria-keyshortcuts="Meta+Enter Control+Enter"
+          >
             Approve and start
           </Button>
         </PageFooter>
       ) : (
-        <PageFooter className="ui-plandoc-foot" start={`${people.Approver(campaign)} approves the plan. Nothing is made before that.`} />
+        <PageFooter
+          className="ui-plandoc-foot"
+          start={`${people.Approver(campaign)} approves the plan. Nothing is made before that.`}
+        />
       )}
     </>
   );
 }
 
-const listWords = (names: string[]) => (names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : (names[0] ?? ""));
+const listWords = (names: string[]) =>
+  names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : (names[0] ?? "");
 
 // ─── While Fume writes, the expert checks, or Fume changes it ──────────────
 
 type StepState = "done" | "now" | "ahead";
-/** A step of the waiting state; `check` marks the expert's (the checked triangle, round 13 #28). */
+/** A step of the waiting state; `check` marks the expert's (the checked triangle). */
 type WaitStep = { label: string; when?: string; state: StepState; check?: boolean };
 
-function PlanWaiting({ plan, campaign, brief, people }: { plan: CampaignPlan; campaign: Campaign; brief: Brief; people: PlanPeople }) {
+function PlanWaiting({
+  plan,
+  campaign,
+  brief,
+  people,
+}: {
+  plan: CampaignPlan;
+  campaign: Campaign;
+  brief: Brief;
+  people: PlanPeople;
+}) {
   const expert = people.expert ? people.expertName : undefined;
   const Expert = expert ? expert.charAt(0).toUpperCase() + expert.slice(1) : undefined;
   const sent = brief.approvedAt;
@@ -275,25 +375,53 @@ function PlanWaiting({ plan, campaign, brief, people }: { plan: CampaignPlan; ca
   const client = people.viewer === "client";
   // Who approves the plan, as this reader says it: "You", "Maja".
   const Who = people.Approver(campaign);
-  // Round 13 (Marcus's card, 23 Oct 2026): in a brand an agency runs the agency checks the plan and sends it ("You
-  // check it and send it to Maja", "Brygga Studio checks it"), then the client approves it.
+  // In a brand an agency runs the agency checks the plan and sends it ("You check it and send it to Maja", "Brygga
+  // Studio checks it"), then the client approves it.
   const agencyRun = people.viewer === "agency" || client;
   const Agency = people.viewer === "agency" ? "You" : (people.agencyName ?? "Your agency");
   const approves = `${Who} ${Who === "You" ? "approve" : "approves"} it`;
-  const yoursNext = people.viewer === "agency" ? "It is yours to check as soon as it is written." : client ? "" : "It is yours to approve as soon as it is written.";
+  const yoursNext =
+    people.viewer === "agency"
+      ? "It is yours to check as soon as it is written."
+      : client
+        ? ""
+        : "It is yours to approve as soon as it is written.";
   // The last steps: the agency's check (in agency work), then the approval, then the Engine makes the masters (the one
   // place it is named here).
-  const checkStep: WaitStep[] = agencyRun ? [{ label: people.viewer === "agency" ? `You check it and send it to ${people.approver(campaign)}` : `${Agency} checks it and sends it to you`, state: "ahead", check: true }] : [];
+  const checkStep: WaitStep[] = agencyRun
+    ? [
+        {
+          label:
+            people.viewer === "agency"
+              ? `You check it and send it to ${people.approver(campaign)}`
+              : `${Agency} checks it and sends it to you`,
+          state: "ahead",
+          check: true,
+        },
+      ]
+    : [];
   const last = { label: `${approves}; then the Engine makes the masters`, state: "ahead" as StepState };
-  const sender = brief.approvedBy ? (people.isMe(brief.approvedBy) ? "You" : client ? Agency : people.Name(brief.approvedBy)) : "You";
+  const sender = brief.approvedBy
+    ? people.isMe(brief.approvedBy)
+      ? "You"
+      : client
+        ? Agency
+        : people.Name(brief.approvedBy)
+    : "You";
   // Who asked for the changes: the note's author, or (once Fume has answered it) the one who approves the plan.
   const noteBy = plan.note && plan.note.by !== "fume" ? plan.note.by : undefined;
   const asker = noteBy ? (people.isMe(noteBy) ? "You" : people.Name(noteBy)) : Who;
   let words: string;
   let line: string;
   let steps: WaitStep[];
-  // Round 13 (#25): the expert checks only when she asked; who asked, in this reader's words.
-  const askedCheck = plan.checkAsked ? (people.isMe(plan.checkAsked.by) ? "You" : client ? Who : people.Name(plan.checkAsked.by)) : undefined;
+  // The expert checks only when she asked; who asked, in this reader's words.
+  const askedCheck = plan.checkAsked
+    ? people.isMe(plan.checkAsked.by)
+      ? "You"
+      : client
+        ? Who
+        : people.Name(plan.checkAsked.by)
+    : undefined;
   if (plan.state === "changes_asked") {
     words = "Fume is changing the plan";
     line = `Version ${plan.version + 1}${by ? ` by ${by}` : " next"}. ${client ? "" : yoursNext}`.trim();
@@ -304,32 +432,62 @@ function PlanWaiting({ plan, campaign, brief, people }: { plan: CampaignPlan; ca
       last,
     ];
   } else if (plan.state === "ready") {
-    // Round 13: the agency's client, before the agency has checked the plan and sent it to her.
+    // The agency's client, before the agency has checked the plan and sent it to her.
     const again = plan.version > 1;
     words = again ? `${Agency} is checking version ${plan.version}` : `${Agency} is checking the plan`;
     line = `You see it here once ${Agency} sends it to you. Nothing is made before you approve it.`;
     steps = [
       ...(again
-        ? [{ label: `Fume wrote version ${plan.version}`, when: plan.writtenAt ? sentOn(plan.writtenAt) : undefined, state: "done" as StepState }]
+        ? [
+            {
+              label: `Fume wrote version ${plan.version}`,
+              when: plan.writtenAt ? sentOn(plan.writtenAt) : undefined,
+              state: "done" as StepState,
+            },
+          ]
         : [
             { label: `${sender} sent the brief`, when: sent ? sentOn(sent) : undefined, state: "done" as StepState },
-            { label: "Fume wrote the plan", when: plan.writtenAt ? sentOn(plan.writtenAt) : undefined, state: "done" as StepState },
+            {
+              label: "Fume wrote the plan",
+              when: plan.writtenAt ? sentOn(plan.writtenAt) : undefined,
+              state: "done" as StepState,
+            },
           ]),
       { label: `${Agency} checks it and sends it to you`, state: "now", check: true },
       last,
     ];
   } else if (plan.state === "in_check") {
     const again = plan.version > 1;
-    words = again ? `${Expert ?? "The expert"} is checking version ${plan.version}` : `${Expert ?? "The expert"} is checking the plan`;
+    words = again
+      ? `${Expert ?? "The expert"} is checking version ${plan.version}`
+      : `${Expert ?? "The expert"} is checking the plan`;
     line = `Ready by ${by ?? "tomorrow"}. You see it here once it is checked.`;
     steps = [
       ...(again
-        ? [{ label: `Fume wrote version ${plan.version}`, when: plan.writtenAt ? sentOn(plan.writtenAt) : undefined, state: "done" as StepState }]
+        ? [
+            {
+              label: `Fume wrote version ${plan.version}`,
+              when: plan.writtenAt ? sentOn(plan.writtenAt) : undefined,
+              state: "done" as StepState,
+            },
+          ]
         : [
             { label: `${sender} sent the brief`, when: sent ? sentOn(sent) : undefined, state: "done" as StepState },
-            { label: "Fume wrote the plan", when: plan.writtenAt ? sentOn(plan.writtenAt) : undefined, state: "done" as StepState },
+            {
+              label: "Fume wrote the plan",
+              when: plan.writtenAt ? sentOn(plan.writtenAt) : undefined,
+              state: "done" as StepState,
+            },
           ]),
-      ...(askedCheck && plan.checkAsked ? [{ label: `${askedCheck} asked ${Expert ?? "the expert"} to check it`, when: sentOn(plan.checkAsked.at), state: "done" as StepState }] : []),
+      ...(askedCheck && plan.checkAsked
+        ? [
+            {
+              label: `${askedCheck} asked ${Expert ?? "the expert"} to check it`,
+              when: sentOn(plan.checkAsked.at),
+              state: "done" as StepState,
+            },
+          ]
+        : []),
       { label: `${Expert ?? "The expert"} checks it`, state: "now", check: true },
       last,
     ];
@@ -407,10 +565,19 @@ export function WaitingState({
       )}
       <ol className="ui-plandoc-steps" aria-label="Where the plan is">
         {steps.map((s) => (
-          <li key={s.label} className={cx("ui-plandoc-steps-item", s.check && "ui-plandoc-steps-item--check")} data-state={s.state} aria-current={s.state === "now" ? "step" : undefined}>
-            {/* the expert's step: the checked triangle, grey while it waits and Amber once checked (#28) */}
+          <li
+            key={s.label}
+            className={cx("ui-plandoc-steps-item", s.check && "ui-plandoc-steps-item--check")}
+            data-state={s.state}
+            aria-current={s.state === "now" ? "step" : undefined}
+          >
+            {/* the expert's step: the checked triangle, grey while it waits and Amber once checked */}
             {s.check ? (
-              <span className="ui-creative-check" data-check={s.state === "done" ? "approved" : "waiting"} aria-hidden="true">
+              <span
+                className="ui-creative-check"
+                data-check={s.state === "done" ? "approved" : "waiting"}
+                aria-hidden="true"
+              >
                 <Icon name="fume-check" />
               </span>
             ) : s.state === "done" ? (
@@ -430,7 +597,7 @@ export function WaitingState({
   );
 }
 
-/** What the plan will hold, in one line of its parts (DLAY-19). */
+/** What the plan will hold, in one line of its parts. */
 export function ToCome({ creatives }: { creatives: number }) {
   return (
     <p className="ui-plandoc-tocome">
@@ -442,29 +609,46 @@ export function ToCome({ creatives }: { creatives: number }) {
 
 // ─── The brief: her brief, changed in place until the plan is approved, then Send to Fume ─────────
 
-/** The campaign's Brief tab (round 13, #21): her brief, every line changeable in place until the plan is approved, and
- *  "Send to Fume" once it is complete. Changed after it was sent, the new version goes to Fume again and the plan is
- *  written again from it (its next version). */
+/** The campaign's Brief tab: her brief, every line changeable in place until the plan is approved, and "Send to Fume"
+ *  once it is complete. Changed after it was sent, the new version goes to Fume again and the plan is written again
+ *  from it (its next version). */
 export function BriefTab({ view, can }: { view: CampaignView; can: Rights }) {
   const people = usePlanPeople();
   const plan = usePlan(view.campaign.id).data;
   return <BriefToSend view={view} can={can} people={people} plan={plan} />;
 }
 
-function BriefToSend({ view, can, people, plan }: { view: CampaignView; can: Rights; people: PlanPeople; plan: CampaignPlan | null | undefined }) {
+function BriefToSend({
+  view,
+  can,
+  people,
+  plan,
+}: {
+  view: CampaignView;
+  can: Rights;
+  people: PlanPeople;
+  plan: CampaignPlan | null | undefined;
+}) {
   const { brief, campaign } = view;
   const send = useSendBrief();
   const toast = useToast();
   const gaps = briefGaps(brief);
   const sent = brief.state === "approved";
   const planApproved = plan?.state === "approved";
-  const over = planApproved || ["approved", "delivered", "closed"].includes(campaign.state) || ["directions", "masters", "variants", "delivery"].includes(campaign.stage);
+  const over =
+    planApproved ||
+    ["approved", "delivered", "closed"].includes(campaign.state) ||
+    ["directions", "masters", "variants", "delivery"].includes(campaign.stage);
   // The agency's client reads the brief; the agency writes it and sends it (FLOWS §24.2).
   const client = people.viewer === "client";
-  // Round 13: changeable until the plan is approved (a change after sending makes the next version, sent again).
+  // Changeable until the plan is approved (a change after sending makes the next version, sent again).
   const editable = !over && can.ask && !client && plan?.state !== "writing" && plan?.state !== "changes_asked";
   const again = Boolean(plan) && !sent;
-  const complete = !sent && brief.missing.length === 0 && gaps.length === 0 && (campaign.productIds.length > 0 || Boolean(campaign.collectionIds?.length));
+  const complete =
+    !sent &&
+    brief.missing.length === 0 &&
+    gaps.length === 0 &&
+    (campaign.productIds.length > 0 || Boolean(campaign.collectionIds?.length));
   const text = client
     ? `${people.agencyName ?? "Your agency"} writes the brief with Fume and sends it; Fume writes the plan from it.`
     : sent
@@ -478,7 +662,7 @@ function BriefToSend({ view, can, people, plan }: { view: CampaignView; can: Rig
             : brief.state === "ready" || complete
               ? "Change any line here before you send it."
               : "Fume is still forming the brief with you, one question at a time.";
-  // Round 13 (Marcus's card, 23 Oct 2026): the agency checks the plan and sends it; its client approves it.
+  // The agency checks the plan and sends it; its client approves it.
   const checksPlan = people.viewer === "agency";
   const after = checksPlan
     ? `Fume writes the plan ${again ? "again from this version" : "from your brief"}. You check it and send it to ${people.approver(campaign)}; nothing is made before she approves it.`
@@ -491,7 +675,11 @@ function BriefToSend({ view, can, people, plan }: { view: CampaignView; can: Rig
     void send.mutateAsync(campaign.id).then(
       () =>
         toast.done("Sent to Fume", {
-          description: again ? "Fume writes the plan again from your new brief." : checksPlan ? `Fume is writing the plan. You check it and send it to ${people.approver(campaign)}.` : "Fume is writing the plan. You approve it before anything is made.",
+          description: again
+            ? "Fume writes the plan again from your new brief."
+            : checksPlan
+              ? `Fume is writing the plan. You check it and send it to ${people.approver(campaign)}.`
+              : "Fume is writing the plan. You approve it before anything is made.",
         }),
       (e: Error) => toast.error("The brief wasn’t sent", { description: e.message }),
     );
@@ -522,7 +710,9 @@ function BriefToSend({ view, can, people, plan }: { view: CampaignView; can: Rig
           <p className="ui-plandoc-note">
             <Icon name="file-text" />
             <span>
-              {planApproved ? `The plan was written from version ${plan.briefVersion}. ` : "Fume wrote the plan from this version. "}
+              {planApproved
+                ? `The plan was written from version ${plan.briefVersion}. `
+                : "Fume wrote the plan from this version. "}
               <Link className="ui-link" to={`/campaigns/${campaign.id}/plan`} replace>
                 Open the plan
               </Link>
@@ -569,7 +759,11 @@ function Scope({ campaign, editable }: { campaign: Campaign; editable: boolean }
       title="What it covers"
       meta={catalogue.data ? copy.count(products.length, "product") : undefined}
       titleId="campaign-scope"
-      text={changing ? "Pick whole collections or single products. A collection brings all its products, and new ones in it join later." : undefined}
+      text={
+        changing
+          ? "Pick whole collections or single products. A collection brings all its products, and new ones in it join later."
+          : undefined
+      }
       action={
         editable && !changing ? (
           <Button variant="quiet" size="sm" icon="pencil" onClick={() => setChanging(true)}>
@@ -597,14 +791,23 @@ function Scope({ campaign, editable }: { campaign: Campaign; editable: boolean }
                     title={c.name}
                     line={`Collection · ${copy.count(c.productIds.length, "product")}`}
                     src={c.cover}
-                    images={c.productIds.map((id) => all.find((p) => p.id === id)?.images[0]).filter((x): x is string => Boolean(x))}
+                    images={c.productIds
+                      .map((id) => all.find((p) => p.id === id)?.images[0])
+                      .filter((x): x is string => Boolean(x))}
                     icon="layers"
                     label={`Open the collection ${c.name}`}
                     onOpen={() => navigate(`/products/collections/${c.id}`)}
                   />
                 ))}
                 {single.map((p) => (
-                  <ProductTile key={p.id} name={p.name} variant={p.variant} src={p.images[0]} label={`Open ${p.name}`} onOpen={() => navigate(`/brand/products/${p.id}`)} />
+                  <ProductTile
+                    key={p.id}
+                    name={p.name}
+                    variant={p.variant}
+                    src={p.images[0]}
+                    label={`Open ${p.name}`}
+                    onOpen={() => navigate(`/brand/products/${p.id}`)}
+                  />
                 ))}
               </PickGrid>
             )

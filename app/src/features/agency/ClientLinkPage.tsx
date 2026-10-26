@@ -1,21 +1,11 @@
-// Round 11 CLIENT FLOW (FLOWS §24.5; PROPOSED 20 Oct 2026): the client link, /c/:token, outside the shells. A calm page
-// for a client without an account: who sent what at the top ("Brygga Studio sent you 6 creatives for LYSNE · Autumn
-// launch"), the sender's note, then each creative big enough to judge with Approve and Ask for changes (a text field
-// opens for changes). The reviewer's name is asked once, before the first answer; when every creative has an answer
-// the page closes with what was said. A small "Made with Fume" at the foot. An expired or unknown link says so in one
-// calm sentence. In the demo an agency person opens it from Send to client, so the page says it is the client's view
-// and keeps a way back to the review (design-system/components/client-flow.css).
-// Round 12 AGENCY (UX review DWAY-4, DWAY-16; PROPOSED 20 Oct 2026): signed in as one of the agency's people, the link
-// is a preview: a full-width line at the top says "Preview of what Maja sees. Nothing you do here counts." with "Close
-// the preview"; Approve and Ask for changes show but are switched off, and the name field is left out, so the agency
-// never answers as the client (the mock refuses it too). Close the preview goes back the way she came (the history,
-// or the window when it was opened as one), so the review's own back arrow still leads Home.
-// Round 13 (Marcus's card, 23 Oct 2026, DECIDED "Klienten godkjenner"): the agency checks the plan and sends it, and
-// the client approves it here, in the same link where she approves the creatives: one link per campaign. The plan
-// comes first, as one card (its version and the agency's check, the brief in words, the direction with its pictures,
-// how it looks, the masters and what follows them, and when), with Approve the plan and Ask for changes under it, as
-// a creative has. Approved, Fume starts on the masters and the creatives come to this page once they are checked; asked
-// to change, Fume writes the next version and the agency sends it here again.
+// The client link, /c/:token, outside the shells (FLOWS §24.5, §26.8): one link per campaign, for a client without an
+// account. Who sent what at the top ("Brygga Studio sent you 6 creatives for LYSNE · Autumn launch"), the sender's
+// note, then the plan when the link carries it (one card with Approve the plan and Ask for changes), then each creative
+// big enough to judge with Approve and Ask for changes. The reviewer's name is asked once, before the first answer;
+// when everything has an answer the page closes with what was said. An expired or unknown link says so in one calm
+// sentence.
+// Signed in as one of the agency's people the page is a preview: a line at the top says so, the answers show but are
+// switched off, and the name field is left out, so the agency never answers as the client (the mock refuses it too).
 import { Button, Field, FieldDescription, FieldError, FieldLabel, Icon, Input, Textarea, useToast } from "@fume/ui";
 import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -39,11 +29,12 @@ export function ClientLinkPage() {
   const session = useSession().data;
   const people = usePeople().data;
   const navigate = useNavigate();
-  // The agency's own people see the link as a preview (DWAY-4); the real link has no sign-in and no way into Fume.
+  // The agency's own people see the link as a preview; the real link has no sign-in and no way into Fume.
   const preview = Boolean(session?.user.agency);
   const sentTo = link.data?.send.to[0];
-  const client = (sentTo && people?.find((u) => u.id === sentTo)?.name.split(" ")[0]) || link.data?.client.brandName || "the client";
-  /** Back the way she came: the window she opened, else the page before, else the campaign's review (DWAY-16). */
+  const client =
+    (sentTo && people?.find((u) => u.id === sentTo)?.name.split(" ")[0]) || link.data?.client.brandName || "the client";
+  /** Back the way she came: the window she opened, else the page before, else the campaign's review. */
   const close = () => {
     if (window.opener) return window.close();
     const at = (window.history.state as { idx?: number } | null)?.idx ?? 0;
@@ -57,9 +48,7 @@ export function ClientLinkPage() {
         <div className="ui-client-link-preview" role="note">
           <p className="ui-client-link-preview-text">
             <Icon name="eye" />
-            <span>
-              Preview of what {client} sees. Nothing you do here counts.
-            </span>
+            <span>Preview of what {client} sees. Nothing you do here counts.</span>
           </p>
           <Button variant="secondary" size="sm" icon="x" onClick={close} data-ui-autofocus="">
             Close the preview
@@ -76,7 +65,9 @@ export function ClientLinkPage() {
           <ClientLinkBody view={link.data} token={token!} preview={preview} />
         ) : (
           <Page title="Client link" className="ui-client-link-page">
-            <h1 className="ui-client-link-gone">This link has expired or no longer works; ask the person who sent it for a new one.</h1>
+            <h1 className="ui-client-link-gone">
+              This link has expired or no longer works; ask the person who sent it for a new one.
+            </h1>
           </Page>
         )}
       </main>
@@ -107,9 +98,11 @@ function ClientLinkBody({ view, token, preview }: { view: ClientLinkView; token:
   const brand = view.client.brandName;
   const campaign = view.campaign.name;
   const creatives = view.creatives;
-  // Round 13: the plan, when the link carries it. It waits on her while the version the agency sent is the plan's own.
+  // The plan, when the link carries it. It waits on her while the version the agency sent is the plan's own.
   const plan = view.plan;
-  const planOpen = Boolean(plan && plan.state === "ready" && plan.checkedBy && plan.version === view.planSend?.plan?.version);
+  const planOpen = Boolean(
+    plan && plan.state === "ready" && plan.checkedBy && plan.version === view.planSend?.plan?.version,
+  );
   const open = creatives.filter((c) => c.current.state === "checked");
   const total = creatives.length + (plan ? 1 : 0);
   const done = total - open.length - (planOpen ? 1 : 0);
@@ -120,7 +113,7 @@ function ClientLinkBody({ view, token, preview }: { view: ClientLinkView; token:
   const nameOf = (c: Creative) => view.names?.[c.id] ?? `${campaign} · ${formatWord[c.format]}`;
   const sender = view.sentBy.name;
 
-  // the closing words take focus once the last answer is in, so the reader hears and sees that it is done
+  // The closing words take focus once the last answer is in, so the reader hears and sees that it is done.
   const wasDone = useRef(allDone);
   useEffect(() => {
     if (allDone && !wasDone.current) closing.current?.focus();
@@ -166,7 +159,9 @@ function ClientLinkBody({ view, token, preview }: { view: ClientLinkView; token:
   };
 
   const who = firstName(name.trim());
-  const said = [approved ? `${approved} approved` : "", changes ? `${changes} with changes` : ""].filter(Boolean).join(", ");
+  const said = [approved ? `${approved} approved` : "", changes ? `${changes} with changes` : ""]
+    .filter(Boolean)
+    .join(", ");
   // The plan answered here with no creatives yet: what happens next, in one sentence each.
   const planOnly = planAnswer && creatives.length === 0;
   const closingTitle = planOnly
@@ -183,10 +178,16 @@ function ClientLinkBody({ view, token, preview }: { view: ClientLinkView; token:
     : mine.length || planAnswer
       ? `${agency} has your answers: ${[planAnswer ? (planAnswer.verdict === "approve" ? "the plan approved" : "changes to the plan") : "", said].filter(Boolean).join(", ")}. You can close this page.`
       : `Everything in this link has an answer, and ${agency} has them all. You can close this page.`;
-  const what = [plan ? "the plan" : "", creatives.length ? copy.creatives(creatives.length) : ""].filter(Boolean).join(" and ");
+  const what = [plan ? "the plan" : "", creatives.length ? copy.creatives(creatives.length) : ""]
+    .filter(Boolean)
+    .join(" and ");
 
   return (
-    <Page title={`${brand} · ${campaign}`} docTitle={`${brand} · ${campaign} · ${agency}`} className="ui-client-link-page">
+    <Page
+      title={`${brand} · ${campaign}`}
+      docTitle={`${brand} · ${campaign} · ${agency}`}
+      className="ui-client-link-page"
+    >
       <div className="ui-client-link-head">
         <h1 className="ui-client-link-title">
           {agency} sent you {what} for {brand} · {campaign}
@@ -234,9 +235,13 @@ function ClientLinkBody({ view, token, preview }: { view: ClientLinkView; token:
                   aria-describedby={`${id}-name-help`}
                 />
                 {missing && !name.trim() ? (
-                  <FieldError id={`${id}-name-help`}>Write your name first: {agency} sees it with your answers.</FieldError>
+                  <FieldError id={`${id}-name-help`}>
+                    Write your name first: {agency} sees it with your answers.
+                  </FieldError>
                 ) : (
-                  <FieldDescription id={`${id}-name-help`}>Asked once, before your first answer: {agency} sees it with your answers.</FieldDescription>
+                  <FieldDescription id={`${id}-name-help`}>
+                    Asked once, before your first answer: {agency} sees it with your answers.
+                  </FieldDescription>
                 )}
               </Field>
             )
@@ -274,7 +279,9 @@ function ClientLinkBody({ view, token, preview }: { view: ClientLinkView; token:
               brand={brand}
               agency={agency}
               mine={answers[c.id]}
-              busy={answer.isPending && answer.variables?.versionId === c.current.id ? answer.variables.verdict : undefined}
+              busy={
+                answer.isPending && answer.variables?.versionId === c.current.id ? answer.variables.verdict : undefined
+              }
               preview={preview}
               onAnswer={(verdict, text) => send(c, verdict, text)}
             />
@@ -340,7 +347,15 @@ function LinkCreative({ creative: c, name, place, brand, agency, mine, busy, pre
     }
   };
 
-  const view = waiting ? (asking ? "asking" : "open") : state === "approved" || state === "delivered" ? "approved" : state === "changes_requested" ? "changes" : "remaking";
+  const view = waiting
+    ? asking
+      ? "asking"
+      : "open"
+    : state === "approved" || state === "delivered"
+      ? "approved"
+      : state === "changes_requested"
+        ? "changes"
+        : "remaking";
 
   return (
     <li className="ui-client-link-item" data-state={view} aria-labelledby={`${id}-name`}>
@@ -359,10 +374,22 @@ function LinkCreative({ creative: c, name, place, brand, agency, mine, busy, pre
 
         {view === "open" && (
           <div className="ui-client-link-actions">
-            <Button icon="check" disabled={preview} loading={busy === "approve"} onClick={() => void onAnswer("approve")} aria-describedby={`${id}-name`}>
+            <Button
+              icon="check"
+              disabled={preview}
+              loading={busy === "approve"}
+              onClick={() => void onAnswer("approve")}
+              aria-describedby={`${id}-name`}
+            >
               Approve
             </Button>
-            <Button variant="secondary" icon="message-square" disabled={preview} onClick={() => setAsking(true)} aria-describedby={`${id}-name`}>
+            <Button
+              variant="secondary"
+              icon="message-square"
+              disabled={preview}
+              onClick={() => setAsking(true)}
+              aria-describedby={`${id}-name`}
+            >
               Ask for changes
             </Button>
           </div>
@@ -385,7 +412,9 @@ function LinkCreative({ creative: c, name, place, brand, agency, mine, busy, pre
               {tried && !text.trim() ? (
                 <FieldError id={`${id}-changes-help`}>Say what should change, so {agency} can make it.</FieldError>
               ) : (
-                <FieldDescription id={`${id}-changes-help`}>{agency} reads it as you write it and makes a new version.</FieldDescription>
+                <FieldDescription id={`${id}-changes-help`}>
+                  {agency} reads it as you write it and makes a new version.
+                </FieldDescription>
               )}
             </Field>
             <div className="ui-client-link-actions">
@@ -426,7 +455,7 @@ function LinkCreative({ creative: c, name, place, brand, agency, mine, busy, pre
   );
 }
 
-// ─── The plan (round 13): one card, then Approve the plan and Ask for changes ─────────
+// ─── The plan: one card, then Approve the plan and Ask for changes ─────────
 
 const shapeWords = (f: Format) => `${formatWord[f]} ${formatShape[f]}`;
 
@@ -472,7 +501,15 @@ function LinkPlan({ plan, open, brand, agency, mine, busy, preview, onAnswer }: 
     }
   };
 
-  const view = open ? (asking ? "asking" : "open") : plan.state === "approved" ? "approved" : plan.state === "changes_asked" && mine ? "changes" : "remaking";
+  const view = open
+    ? asking
+      ? "asking"
+      : "open"
+    : plan.state === "approved"
+      ? "approved"
+      : plan.state === "changes_asked" && mine
+        ? "changes"
+        : "remaking";
 
   return (
     <section className="ui-client-link-plan" data-state={view} aria-labelledby={`${id}-title`}>
@@ -554,10 +591,22 @@ function LinkPlan({ plan, open, brand, agency, mine, busy, preview, onAnswer }: 
 
       {view === "open" && (
         <div className="ui-client-link-actions">
-          <Button icon="check" disabled={preview} loading={busy === "approve"} onClick={() => void onAnswer("approve")} aria-describedby={`${id}-title`}>
+          <Button
+            icon="check"
+            disabled={preview}
+            loading={busy === "approve"}
+            onClick={() => void onAnswer("approve")}
+            aria-describedby={`${id}-title`}
+          >
             Approve the plan
           </Button>
-          <Button variant="secondary" icon="message-square" disabled={preview} onClick={() => setAsking(true)} aria-describedby={`${id}-title`}>
+          <Button
+            variant="secondary"
+            icon="message-square"
+            disabled={preview}
+            onClick={() => setAsking(true)}
+            aria-describedby={`${id}-title`}
+          >
             Ask for changes
           </Button>
         </div>
@@ -578,9 +627,13 @@ function LinkPlan({ plan, open, brand, agency, mine, busy, preview, onAnswer }: 
               aria-describedby={`${id}-changes-help`}
             />
             {tried && !text.trim() ? (
-              <FieldError id={`${id}-changes-help`}>Say what should change, so Fume can write the next version.</FieldError>
+              <FieldError id={`${id}-changes-help`}>
+                Say what should change, so Fume can write the next version.
+              </FieldError>
             ) : (
-              <FieldDescription id={`${id}-changes-help`}>Fume writes the next version and {agency} sends it to you here.</FieldDescription>
+              <FieldDescription id={`${id}-changes-help`}>
+                Fume writes the next version and {agency} sends it to you here.
+              </FieldDescription>
             )}
           </Field>
           <div className="ui-client-link-actions">
@@ -597,7 +650,9 @@ function LinkPlan({ plan, open, brand, agency, mine, busy, preview, onAnswer }: 
       {view === "approved" && (
         <p className="ui-client-link-answer" data-answer="approved">
           <Icon name="circle-check" />
-          {mine ? "You approved the plan. Fume has started on the masters." : `${brand} approved the plan. Fume has started on the masters.`}
+          {mine
+            ? "You approved the plan. Fume has started on the masters."
+            : `${brand} approved the plan. Fume has started on the masters.`}
         </p>
       )}
       {view === "changes" && (

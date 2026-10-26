@@ -3,9 +3,20 @@
   "private": true,
   "description": "Checks for the whole repository. The app itself is in app/.",
   "scripts": {
-    "check": "npm --prefix app run typecheck && npm --prefix app test && npm run gate",
+    "check": "npm run lint && npm run format:check && npm --prefix app run typecheck && npm --prefix app test && npm run gate",
+    "lint": "eslint app packages/ui/src",
+    "format": "prettier --write app packages/ui",
+    "format:check": "prettier --check app packages/ui",
     "gate": "node tools/gate/gate.mjs design-system/components design-system/theme packages",
     "gate:test": "node tools/gate/test.mjs",
     "sync:design-system": "node tools/sync-design-system.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.5",
+    "eslint": "9.39.5",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "17.13.0",
+    "prettier": "3.9.9",
+    "typescript-eslint": "8.71.1"
   }
 }

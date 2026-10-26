@@ -5,7 +5,7 @@ schema and picks a control for each variable from this list; the Studio renders 
 `ModeControl`. Styles: `design-system/components/studio-controls.css` (the controls, folding sections, mode grid) and
 `studio-desk.css` (the full-screen desk the app draws around them). Import from `@fume/ui`.
 
-The shapes mirror the app contract (`app/src/contract/entities.ts`: `ModeVariable`, `VarValue`, `LightAngle`, `Lens`)
+The shapes mirror the app contract (`app/src/contract/entities/studio.ts` and `production.ts`: `ModeVariable`, `VarValue`, `LightAngle`, `Lens`)
 structurally, so a backend mode can be passed straight in and packages/ui never imports app code.
 
 ## Shapes (`types.ts`)
