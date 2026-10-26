@@ -9,12 +9,13 @@ choices in §3 are Marcus's to make; nothing here is decided until he says so.
 - **One contract**, `app/src/contract/`: the entities, the `FumeApi` interface (one interface per domain), events
   and errors. Screens call it only through the hooks in `app/src/api/hooks.ts`. Nothing else in the app knows where
   data comes from.
-- **The rules**, `app/src/domain/`: pure functions for who may do what in which state (approve, check, send, undo).
-  The mock calls them; the backend should call the same functions.
-- **The mock**, `app/src/mock/`: one module per domain over one in-memory db. It is the backend's specification in
-  running code: when this document and the mock disagree, the mock shows what the screens expect.
-- **Tests**: `app/test/` (the rules, scenario tests and a golden master of every call) and `app/e2e/` (the main flows
-  clicked through in a browser, per role).
+- **The mock**, `app/src/mock/`: the LYSNE demo in memory, behind `createMockApi()`. It is the backend's
+  specification in running code: when this document and the mock disagree, the mock shows what the screens expect.
+  It still carries layers from the design rounds; a follow-up pull request flattens it into one module per domain
+  and moves the rules (who may do what in which state: approve, check, send, undo) into pure functions in
+  `app/src/domain/`, which the server should then import instead of rewriting.
+- **Tests**: `app/test/` (the mock behind the contract) and `app/e2e/` (the main flows clicked through in a browser,
+  per role).
 
 ## 2. The seam: one switch
 
@@ -77,7 +78,8 @@ implementations, and flip the domain on in a preview before the next.
 
 ## 6. Rules the server must keep
 
-The functions in `app/src/domain/` are the list, each with its rule in one line. The ones that must never break:
+Once the follow-up lands, the functions in `app/src/domain/` are the list, each with its rule in one line. The ones
+that must never break:
 
 - An expert checks every creative before the customer sees it. Only the customer approves; in agency work the agency
   checks and only its client approves, the plan included (FLOWS §26.8).
