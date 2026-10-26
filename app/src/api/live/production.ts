@@ -267,7 +267,7 @@ export async function readDocument(live: Live, documentId: Id): Promise<Document
 
 // ─── A picture made by hand ──────────────────────────────────────────────────
 
-/** Not in the contract yet (no screen can hand over a picture's bytes): the picture a designer made elsewhere, with how
+/** addVersion: the picture a designer made elsewhere, with how
  *  she made it, becomes the document's newest version, picked to go to check. */
 export async function addManualVersion(live: Live, documentId: Id, file: File | Blob, note: string) {
   const { creative } = await readDocument(live, documentId);

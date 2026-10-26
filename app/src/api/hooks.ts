@@ -156,6 +156,8 @@ export const useDecideEdit = () =>
 export const useRender = () => useM((a, documentId: Id) => a.render(documentId));
 export const usePickVersion = () =>
   useM((a, v: { documentId: Id; versionId: Id }) => a.pickVersion(v.documentId, v.versionId));
+export const useAddVersion = () =>
+  useM((a, v: { documentId: Id; file: File; note: string }) => a.addVersion(v.documentId, v.file, v.note));
 export const useOverrideProduct = () =>
   useM((a, v: { documentId: Id; field: string; value: string; scope: "this_render" | "product" }) =>
     a.overrideProduct(v.documentId, v),

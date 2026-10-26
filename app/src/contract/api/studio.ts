@@ -40,6 +40,8 @@ export interface StudioApi {
   decideEdit(documentId: Id, editId: Id, verdict: "keep" | "undo"): Promise<CreativeDocument>;
   render(documentId: Id): Promise<CreativeDocument>;
   pickVersion(documentId: Id, versionId: Id): Promise<CreativeDocument>;
+  /** A picture the designer made by hand, with how it was made: it becomes the newest version, picked. */
+  addVersion(documentId: Id, file: File, note: string): Promise<CreativeDocument>;
   overrideProduct(
     documentId: Id,
     change: { field: string; value: string; scope: ProductOverride["scope"] },

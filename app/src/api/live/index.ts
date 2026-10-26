@@ -10,6 +10,9 @@ import { campaignCalls } from "./campaigns";
 import { homeCalls } from "./home";
 import { planCalls } from "./plan";
 import { productCalls } from "./products";
+import { productionCalls } from "./production";
+import { qualityCalls } from "./quality";
+import { studioCalls } from "./studio";
 import { reviewCalls } from "./review";
 import { deliveryCalls } from "./delivery";
 
@@ -23,6 +26,9 @@ export function createLiveApi(): FumeApi {
     ...campaignCalls(live),
     ...planCalls(live),
     ...homeCalls(live),
+    ...productionCalls(live),
+    ...studioCalls(live),
+    ...qualityCalls(live),
     ...reviewCalls(live),
     ...deliveryCalls(live),
   };

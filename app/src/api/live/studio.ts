@@ -6,7 +6,15 @@ import { FumeError, type FumeApi, type StudioCampaignRow, type User } from "../.
 import { defaults, modes } from "../../mock/seed/studioModes";
 import type { Live } from "./context";
 import { readCampaigns } from "./map";
-import { creativeMode, deskOf, readDocument, readDocuments, toFormat, type StudioCreativeRow } from "./production";
+import {
+  addManualVersion,
+  creativeMode,
+  deskOf,
+  readDocument,
+  readDocuments,
+  toFormat,
+  type StudioCreativeRow,
+} from "./production";
 import { readProducts } from "./products";
 import { unsentChecked, withToSend } from "./quality";
 import { command, requestKey, rows, supabase } from "./supabase";
@@ -22,6 +30,7 @@ type Calls =
   | "decideEdit"
   | "render"
   | "pickVersion"
+  | "addVersion"
   | "documentToCheck"
   | "undoDocumentToCheck"
   | "setFormatTile";
@@ -151,6 +160,7 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
       deskOf(live, documentId).picked = versionId;
       return doc(documentId);
     },
+    addVersion: (documentId, file, note) => addManualVersion(live, documentId, file, note),
     // The picked picture becomes the creative's next version, waiting for the expert's check.
     async documentToCheck(documentId) {
       const read = await readDocument(live, documentId);

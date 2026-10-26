@@ -278,7 +278,7 @@ export async function readCampaigns(filter: { workspaceId?: Id; ids?: Id[] }): P
   const list = await rows<CampaignRow>(q.order("created_at", { ascending: false }));
   if (list.length === 0) return [];
   const ids = list.map((c) => c.id);
-  const [products, plans, creatives] = await Promise.all([
+  const [products, plans, creatives, unsent] = await Promise.all([
     rows<{ campaign_id: string; product_id: string }>(
       supabase().from("campaign_products").select("campaign_id, product_id").in("campaign_id", ids),
     ),
@@ -296,12 +296,15 @@ export async function readCampaigns(filter: { workspaceId?: Id; ids?: Id[] }): P
         .neq("state", "superseded"),
     ),
     readCreatives({ campaignIds: ids }),
+    rows<{ creative_id: string }>(
+      supabase().from("creative_versions").select("creative_id").eq("state", "checked").is("sent_at", null),
+    ),
   ]);
   return list.map((c) => {
     const lines = briefLines(c.brief_draft ?? {});
     const plan = plans.filter((p) => p.campaign_id === c.id).sort((a, b) => b.version - a.version)[0];
     const mine = creatives.filter((x) => x.campaignId === c.id);
-    const toSend = mine.filter((x) => x.current.state === "checked").length;
+    const toSend = mine.filter((x) => unsent.some((u) => u.creative_id === x.id)).length;
     return {
       id: c.id,
       workspaceId: c.workspace_id,
