@@ -6,6 +6,9 @@ import type { FumeApi } from "../../contract";
 import { createMockApi } from "../../mock/mockApi";
 import { createLive } from "./context";
 import { identityCalls } from "./identity";
+import { campaignCalls } from "./campaigns";
+import { homeCalls } from "./home";
+import { planCalls } from "./plan";
 import { productCalls } from "./products";
 import { reviewCalls } from "./review";
 import { deliveryCalls } from "./delivery";
@@ -17,6 +20,9 @@ export function createLiveApi(): FumeApi {
     ...notYet,
     ...identityCalls(live),
     ...productCalls(live),
+    ...campaignCalls(live),
+    ...planCalls(live),
+    ...homeCalls(live),
     ...reviewCalls(live),
     ...deliveryCalls(live),
   };

@@ -131,6 +131,7 @@ select test.refuses($$ select public.approve_versions(array[test.id('v1')]) $$, 
 
 select test.act('marcus+lysne@fumecreatives.com');
 select test.ok((select count(*) from public.creative_versions) = 0, 'checked but not sent: still hidden');
+select test.ok((select count(*) from public.record_events where subject_type in ('creative_version', 'candidate', 'production_job', 'finding', 'file')) = 0, 'the record shows nothing of unsent work or production');
 select test.act('marcus@fumecreatives.com');
 select public.send_checked(test.id('campaign'));
 select test.act('marcus+lysne@fumecreatives.com');
