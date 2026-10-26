@@ -319,7 +319,8 @@ app/
   src/
     contract/            the data contract, one file per domain: entities/, views/ (what a screen reads), api/ (the
                          FumeApi interface, one interface per domain), events.ts, errors.ts. No React.
-    mock/                the mock backend: the seeded LYSNE workspace in memory, with a simulated Engine and Quality Gate
+    domain/              the rules (who may do what in which state) as pure functions; the mock and the server share them
+    mock/                the mock backend, one module per domain over one in-memory db; seed/ holds the LYSNE demo
     api/                 client.tsx builds the FumeApi the app uses (today always the mock); hooks.ts, the React Query
                          hooks every screen reads and writes through
     shell/               the frames: workspace, studio and agency sidebars, page, notifications, who is signed in
@@ -327,7 +328,7 @@ app/
                          agency, onboarding, settings …
     copy/                sentences the customer reads more than once, checked by the gate's copy rules
     lib/                 small helpers with no React and no data (time)
-  test/                  vitest: the mock behind the contract
+  test/                  vitest: the rules (domain/), scenarios, and a golden master of every call (golden/)
   e2e/                   Playwright: the main flows clicked through in a browser, per role
 ```
 

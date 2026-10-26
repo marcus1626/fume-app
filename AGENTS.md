@@ -11,8 +11,11 @@ propose. Docs and UI copy are in English; Marcus talks to agents in Norwegian.
 ## The seam
 - Screens read and write only through the hooks in `app/src/api/hooks.ts`, which call `FumeApi` (`app/src/contract/api/`, one interface per domain).
   No screen imports from `app/src/mock/`. Keep it that way.
-- The mock (`app/src/mock/`) holds the rules the real backend must keep (who may approve what, and when). Read it as
-  the backend's specification; `app/test/mock.test.ts` tests those rules.
+- The rules the real backend must keep (who may approve what, and when) are pure functions in `app/src/domain/`,
+  tested in `app/test/domain/`. The backend imports them; it never rewrites them.
+- The mock (`app/src/mock/`, one module per domain over one in-memory db) is the backend's specification in running
+  code. `app/test/golden/` records what every `FumeApi` call answers; a diff there is a change in what the app sees,
+  so rewrite it (`cd app && npx vitest run test/golden.test.ts -u`) only on purpose, and read the diff first.
 - Backend work implements `FumeApi`. It never changes a screen to suit itself; if the contract must change, change
   the contract, the mock and the screens together in one pull request.
 
