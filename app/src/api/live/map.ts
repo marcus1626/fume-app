@@ -99,7 +99,7 @@ export const FILE = "id, path, name, content_type, bytes, sha256, width, height"
 
 // ─── Files ───────────────────────────────────────────────────────────────────
 
-const BUCKET = "workspace-files";
+export const BUCKET = "workspace-files";
 
 /** Short-lived signed addresses for private files, by file id; a file the caller may not read gets none. */
 export async function fileUrls(fileIds: (Id | null | undefined)[]): Promise<Map<Id, { url: string; file: FileRow }>> {

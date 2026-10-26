@@ -90,7 +90,10 @@ export function useDeliveryDownload(
       const url = await api.downloadUrl(deliveryId, format);
       if (!usingMock) {
         t.update({ type: "done", title: `${copy.creatives(n)} downloading`, meta: size(shareOf(n)) });
-        window.location.assign(url);
+        if (url.startsWith("blob:")) {
+          save(url, zipName(brand, deliveryName, format));
+          window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+        } else window.location.assign(url);
         setTaken((s) => new Set(s).add(key));
         setJob(null);
         return;

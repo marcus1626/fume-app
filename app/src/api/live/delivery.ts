@@ -11,12 +11,11 @@ import {
   type Workspace,
 } from "../../contract";
 import type { Live } from "./context";
-import { FILE, readCampaigns, readCreatives, type FileRow } from "./map";
+import { BUCKET, FILE, readCampaigns, readCreatives, type FileRow } from "./map";
 import { command, one, requestKey, rows, supabase } from "./supabase";
 
 type Calls = "deliveries" | "delivery" | "makeDelivery" | "downloadUrl" | "confirmLive";
 
-const BUCKET = "workspace-files";
 /** A signed link lives this long: enough to start the download, not to pass around. */
 const LINK_SECONDS = 5 * 60;
 

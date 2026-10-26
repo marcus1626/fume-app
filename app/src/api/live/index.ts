@@ -7,6 +7,8 @@ import { createMockApi } from "../../mock/mockApi";
 import { createLive } from "./context";
 import { identityCalls } from "./identity";
 import { productCalls } from "./products";
+import { reviewCalls } from "./review";
+import { deliveryCalls } from "./delivery";
 
 export function createLiveApi(): FumeApi {
   const live = createLive();
@@ -15,5 +17,7 @@ export function createLiveApi(): FumeApi {
     ...notYet,
     ...identityCalls(live),
     ...productCalls(live),
+    ...reviewCalls(live),
+    ...deliveryCalls(live),
   };
 }
