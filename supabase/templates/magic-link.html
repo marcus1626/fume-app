@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Your sign-in link for Fume</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Newsreader:opsz,wght@6..72,400&display=swap" rel="stylesheet">
+<style>
+  @media (max-width: 620px) { .card { padding: 32px 24px !important; } .code { font-size: 26px !important; letter-spacing: 6px !important; } }
+</style>
+</head>
+<body style="margin:0;padding:0;background:#FFFDF9;">
+<!-- Fume's sign-in email (Supabase Auth, "Magic Link"). PROPOSED 26 Oct 2026. Subject: Your sign-in link for Fume
+     The button signs in on the device that opens it; the code is for signing in on another device (the screen
+     "Check your email" takes it). Both work once, within the hour. Palette hex only, inline styles, 600 px. -->
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#FFFDF9;">It works once, within the hour. The code is for signing in on another device.</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFFDF9;">
+  <tr><td align="center" style="padding:40px 16px;">
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;">
+      <tr><td style="padding:0 8px 32px 8px;">
+        <a href="https://fumecreatives.com" style="text-decoration:none;"><img src="{{ .SiteURL }}/email/fume-lockup-horizontal-ink@2x.png" width="120" alt="Fume" style="display:block;width:120px;height:auto;border:0;"></a>
+      </td></tr>
+      <tr><td class="card" style="padding:40px;background:#F8F6F4;border-radius:16px;">
+        <h1 style="margin:0 0 16px 0;font-family:'GT Canon','Newsreader',Georgia,serif;font-weight:400;font-size:32px;line-height:1.15;color:#1B1410;">Sign in to Fume</h1>
+        <p style="margin:0 0 32px 0;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:16px;line-height:1.5;color:#463E39;">Press the button to sign in as <strong style="color:#1B1410;font-weight:500;">{{ .Email }}</strong>. It works once, within the hour.</p>
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+          <td style="background:#1B1410;border-radius:999px;">
+            <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=email" style="display:inline-block;padding:14px 28px;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:16px;font-weight:500;line-height:1.2;color:#FFFDF9;text-decoration:none;">Sign in to Fume</a>
+          </td>
+        </tr></table>
+        <p style="margin:40px 0 8px 0;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:14px;line-height:1.45;color:#6E6259;">Signing in on another device? Enter this code there:</p>
+        <p class="code" style="margin:0;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:32px;font-weight:500;letter-spacing:8px;line-height:1.2;color:#1B1410;">{{ .Token }}</p>
+      </td></tr>
+      <tr><td style="padding:32px 8px 0 8px;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:13px;line-height:1.5;color:#6E6259;">
+        You get this email because someone asked to sign in to Fume with this address. If it was not you, you can leave it: nothing happens without the link or the code.<br><br>
+        Fume · The Creative Engine Behind Every Campaign · <a href="https://fumecreatives.com" style="color:#6E6259;">fumecreatives.com</a>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>

@@ -1,5 +1,8 @@
 // Sign in (live backend only; the mock picks a demo person instead). Fume is open to invited people only, and there is
-// no password: "Continue with Google" leads, a link by email is the other way. The look is sign-in.css (PROPOSED).
+// no password: "Continue with Google" leads, an email with a link (and, with VITE_AUTH_CODE=on, a code for another
+// device) is the other way. A link from Fume's emails opens /auth/confirm, which signs in only when the person presses
+// the button, so a mail scanner cannot use it up; an invitation's link says who invited them to which brand. The look
+// is sign-in.css (PROPOSED).
 import {
   Alert,
   AlertDescription,
@@ -11,14 +14,20 @@ import {
   FieldSeparator,
   Icon,
   Input,
+  InputOTP,
 } from "@fume/ui";
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import {
+  confirmEmailLink,
+  emailLinkFromUrl,
   googleSignIn,
   justSignedOut,
   sendSignInLink,
+  signInCode,
   signInProblemFromUrl,
+  signInWithCode,
   signInWithGoogle,
+  type EmailLink,
   type SignInProblem,
 } from "../../api/auth";
 import { FumeError } from "../../contract";
@@ -40,19 +49,78 @@ function noticeOnArrival(): Notice | null {
 }
 
 export function SignInPage() {
+  const [link, setLink] = useState(emailLinkFromUrl);
+  const [failed, setFailed] = useState<Notice | null>(null);
   const [sentTo, setSentTo] = useState<string | null>(null);
   return (
     <SignInFrame foot="Fume is open to invited people only.">
-      {sentTo ? <CheckEmail address={sentTo} onAnother={() => setSentTo(null)} /> : <SignInForm onSent={setSentTo} />}
+      {link ? (
+        <ConfirmLink
+          link={link}
+          onFailed={(notice) => {
+            setFailed(notice);
+            setLink(null);
+          }}
+        />
+      ) : sentTo ? (
+        <CheckEmail address={sentTo} onAnother={() => setSentTo(null)} />
+      ) : (
+        <SignInForm onSent={setSentTo} given={failed} />
+      )}
     </SignInFrame>
   );
 }
 
-function SignInForm({ onSent }: { onSent: (address: string) => void }) {
+/** An email's link, opened: one press signs in (or joins the brand an invitation names). */
+function ConfirmLink({ link, onFailed }: { link: EmailLink; onFailed: (notice: Notice) => void }) {
+  const [busy, setBusy] = useState(false);
+  const invite = link.type === "invite";
+  const place = link.brand ?? "Fume";
+  const press = async () => {
+    setBusy(true);
+    try {
+      await confirmEmailLink(link); // signed in: Fume opens in this screen's place
+    } catch {
+      window.history.replaceState(null, "", "/");
+      onFailed(
+        invite
+          ? {
+              kind: "expired",
+              title: "This invitation link no longer works",
+              text: "Your invitation is still there. Sign in with the address it went to.",
+            }
+          : {
+              kind: "expired",
+              title: "This link no longer works",
+              text: "A sign-in link works once, for a short time. Send yourself a new one.",
+            },
+      );
+    }
+  };
+  return (
+    <>
+      <header className="ui-signin-head">
+        <h1 className="ui-signin-title">{invite ? `Join ${place} on Fume` : "Sign in to Fume"}</h1>
+        <p className="ui-signin-lede">
+          {invite
+            ? `${link.inviter ?? "Someone at Fume"} invited you to work on ${place} in Fume.`
+            : "You opened your sign-in link. Press the button to sign in on this device."}
+        </p>
+      </header>
+      <div className="ui-signin-ways">
+        <Button type="button" size="lg" loading={busy} onClick={press} data-ui-autofocus="">
+          {invite ? `Join ${place}` : "Sign in"}
+        </Button>
+      </div>
+    </>
+  );
+}
+
+function SignInForm({ onSent, given }: { onSent: (address: string) => void; given?: Notice | null }) {
   const id = useId();
   const [email, setEmail] = useState("");
   const [fieldError, setFieldError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<Notice | null>(noticeOnArrival);
+  const [notice, setNotice] = useState<Notice | null>(() => given ?? noticeOnArrival());
   // The next time this screen opens (after another sign-out) it reads afresh.
   useEffect(() => {
     arrival = undefined;
@@ -161,6 +229,21 @@ function SignInForm({ onSent }: { onSent: (address: string) => void }) {
 
 function CheckEmail({ address, onAnother }: { address: string; onAnother: () => void }) {
   const title = useRef<HTMLHeadingElement>(null);
+  const codeId = useId();
+  const [code, setCode] = useState("");
+  const [codeError, setCodeError] = useState<string | null>(null);
+  const [verifying, setVerifying] = useState(false);
+  const verify = async (value: string) => {
+    setVerifying(true);
+    setCodeError(null);
+    try {
+      await signInWithCode(address, value); // signed in: Fume opens in this screen's place
+    } catch (e) {
+      setCodeError(e instanceof FumeError ? e.message : "That code does not work. Check it, or send a new link.");
+      setCode("");
+      setVerifying(false);
+    }
+  };
   const [wait, setWait] = useState(RESEND_AFTER_S);
   const [sending, setSending] = useState(false);
   const [resent, setResent] = useState(false);
@@ -198,7 +281,8 @@ function CheckEmail({ address, onAnother }: { address: string; onAnother: () => 
         </h1>
         <p className="ui-signin-lede">
           {resent ? "We sent a new link to " : "We sent a sign-in link to "}
-          <strong>{address}</strong>. Open it on this device and you are in.
+          <strong>{address}</strong>.{" "}
+          {signInCode ? "Open it here, or enter the code from it below." : "Open it on this device and you are in."}
         </p>
         <p className="ui-signin-hint">It can take a minute. If it does not come, look in spam.</p>
       </header>
@@ -206,6 +290,24 @@ function CheckEmail({ address, onAnother }: { address: string; onAnother: () => 
         <Alert variant="error" onSurface>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
+      )}
+      {signInCode && (
+        <Field invalid={Boolean(codeError)}>
+          <FieldLabel htmlFor={codeId}>Code from the email</FieldLabel>
+          <InputOTP
+            id={codeId}
+            value={code}
+            onChange={(v) => {
+              setCode(v);
+              setCodeError(null);
+            }}
+            onComplete={verify}
+            invalid={Boolean(codeError)}
+            disabled={verifying}
+            aria-label="Code from the email"
+          />
+          <FieldError>{codeError}</FieldError>
+        </Field>
       )}
       <div className="ui-signin-again">
         {wait > 0 ? (

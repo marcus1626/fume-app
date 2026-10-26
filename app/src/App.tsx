@@ -130,6 +130,8 @@ const routes = [
     children: [
       // The first sign-in: name and title, before anything else (features/auth/AboutYouPage.tsx)
       { path: "hello", element: <AboutYouPage /> },
+      // An email's sign-in link, once it has signed in (features/auth/SignInPage.tsx), goes on to Fume
+      { path: "auth/confirm", element: <Navigate to="/" replace /> },
       { path: "welcome/:step?", element: <Welcome /> },
       { path: "studio/check/:checkId", element: <CheckPage /> },
       // The Studio itself is full screen, like Photoshop (FLOWS §9)
