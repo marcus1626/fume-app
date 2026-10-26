@@ -21,8 +21,9 @@ pull request; line numbers below will move, the shape will not.
 | `app/src/api/client.tsx` | Builds the one `FumeApi` the app uses. Today always `createMockApi()`; reads `?as=` to sign in as a demo person. This is the only switch to a real backend. |
 | `app/src/api/hooks.ts` | 279 React Query hooks, one per contract call. Every mutation invalidates every query (fine for the mock; events will replace it). |
 | `app/src/contract/` | The seam: `entities/`, `views/`, `api/` (15 domain interfaces, about 170 calls), `events.ts`, `errors.ts`. |
-| `app/src/mock/` | The in-memory LYSNE world, layered by design round (`mockApi.ts` + `mockV2…V9`, `r8…r13`, `seed…seed9`). About 17,800 lines. Holds the rules today. |
-| `app/test/` | Vitest, the mock behind the contract. |
+| `app/src/mock/` | The in-memory LYSNE world, one module per domain (`campaigns.ts`, `production.ts`, `delivery.ts`, …) with its data in `seed/`. About 16,800 lines. |
+| `app/src/domain/` | The rules as pure functions (`permissions.ts`, `creatives.ts`, `plan.ts`, `products.ts`, `dates.ts`), used by the mock; the database commands must agree with them. |
+| `app/test/` | Vitest: the domain rules, and a golden master of every `FumeApi` call against the mock (`test/golden/`). |
 | `app/e2e/` | Playwright, one spec per role: `maja` (approver), `jonas` (member), `ida` (viewer), `anna` (expert), `nora` (agency), `agency-client`, `client-link`, `first-run`. |
 
 ## 3. The MVP cycle, screen to operation
@@ -55,10 +56,10 @@ These live only in the browser today. Each is something the server has to own fo
 | Today (mock) | Why it matters for the MVP | Where |
 | --- | --- | --- |
 | Identity from `?as=` and `signInAs()` | No real sign-in; anyone is anyone. | `api/client.tsx`, `shell/people.ts` |
-| Role checks `mustStaff()`, `mustApprove()` in the browser | Access must be enforced on the server (plan, Tue §1). | `mock/mockApi.ts` |
-| Engine runs, batches and "fixes" on `setInterval` | A job dies with the tab; the plan needs jobs that survive a closed browser (Wed §3). | `mock/mockV3.ts` `startBatch`, `mockV4.ts` |
+| Role checks (`canApprove`, `canCheckPlan`, …) run in the browser | Access must be enforced on the server (plan, Tue §1). | `domain/permissions.ts`, `domain/creatives.ts` |
+| Engine runs, batches and "fixes" on `setInterval` | A job dies with the tab; the plan needs jobs that survive a closed browser (Wed §3). | `mock/production.ts` `startBatch` |
 | Uploads take `{ name, bytes }` only | No file is stored; the MVP needs private storage and signed URLs. | `uploadShot`, `uploadSourceAssets`, `uploadProductFile` |
-| `downloadUrl()` returns a picture address | Must be a signed URL to exactly the approved file. | `mock/r9-campaign.ts` |
+| `downloadUrl()` returns a picture address | Must be a signed URL to exactly the approved file. | `mock/delivery.ts` |
 | Record events pushed into an array | The history behind "who checked and who approved". | `db.record` |
 
 ## 5. Gaps between the contract and the MVP rules
