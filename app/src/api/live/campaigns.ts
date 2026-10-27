@@ -4,6 +4,7 @@
 // The brief lives in two places in the database: the draft she writes (campaigns.brief_draft, merged line by line by
 // save_brief_draft) and every version she sent (brief_versions, never overwritten). send_brief sends the draft and
 // has Fume write plan 1 from it (20261027091000_brief_draft_and_first_plan.sql).
+import { FunctionsHttpError } from "@supabase/supabase-js";
 import {
   FumeError,
   type Brief,
@@ -14,6 +15,7 @@ import {
   type Creative,
   type Format,
   type FumeApi,
+  type FumeErrorCode,
   type Id,
   type RecordEvent,
   type User,
@@ -22,7 +24,15 @@ import type { Live } from "./context";
 import { type CampaignRow, readCampaigns, readCreatives } from "./map";
 import { askFumeToWrite, command, requestKey, rows, supabase } from "./supabase";
 
-type Calls = "campaigns" | "campaign" | "setApprover" | "orderBrief" | "sendBrief" | "approveBrief" | "changeBrief";
+type Calls =
+  | "campaigns"
+  | "campaign"
+  | "setApprover"
+  | "orderBrief"
+  | "sendBrief"
+  | "approveBrief"
+  | "changeBrief"
+  | "briefAlternatives";
 
 // ─── The brief ───────────────────────────────────────────────────────────────
 
@@ -327,6 +337,20 @@ export function campaignCalls(live: Live): Pick<FumeApi, Calls> {
     },
     async approveBrief(campaignId) {
       return calls.sendBrief(campaignId);
+    },
+
+    // Fume's alternatives for the message or the whole brief, from her words, the brand and the products' facts
+    // (supabase/functions/fume-brief, a language model).
+    async briefAlternatives(input) {
+      const { data, error } = await supabase().functions.invoke<{
+        alternatives: { goal: string; audience: string; message: string }[];
+      }>("fume-brief", { body: { workspaceId: await live.workspaceId(), ...input } });
+      if (error || !data) {
+        const said: { code?: FumeErrorCode; message?: string } =
+          error instanceof FunctionsHttpError ? await error.context.json().catch(() => ({})) : {};
+        throw new FumeError(said.code ?? "unavailable", said.message ?? "Fume has no alternatives this time.");
+      }
+      return data.alternatives;
     },
 
     // A line changed is a change to the draft; after sending, the draft is the next version, sent again with

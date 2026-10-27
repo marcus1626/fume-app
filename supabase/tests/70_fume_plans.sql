@@ -169,4 +169,13 @@ select public.change_plan_with_fume(test.id('c8'), 1, 'Warmer');
 select test.ok((select state from public.plan_versions where campaign_id = test.id('c8') and version = 1) = 'changes_asked',
   'with the setting off, her words go to the designer');
 reset role;
+-- The brief's alternatives read the brand's products only, and only the service role reads them.
+select test.ok(not has_function_privilege('authenticated', 'public.fume_brief_context(uuid, uuid[])', 'execute'),
+  'only the service role reads a brand for the brief''s alternatives');
+select test.ok(jsonb_array_length(public.fume_brief_context(test.id('lysne'), array[test.id('oil'), (select id from public.products where workspace_id <> test.id('lysne') limit 1)]) -> 'products') = 1
+  and public.fume_brief_context(test.id('lysne'), array[test.id('oil')]) -> 'brand' ->> 'name' = 'LYSNE',
+  'the alternatives read the brand and its own products, never another brand''s');
+insert into public.task_runs (workspace_id, kind, subject_id, attempt, state) values (test.id('lysne'), 'brief', test.id('lysne'), 1, 'succeeded'),
+  (test.id('lysne'), 'brief', test.id('lysne'), 1, 'succeeded');
+select test.ok((select count(*) from public.task_runs where kind = 'brief') = 2, 'a brand keeps every run of its brief''s alternatives');
 select test.ok(true, 'all of Fume''s plan tests passed');
