@@ -34,10 +34,11 @@ an invited address signs in by email, and both are confirmed the same way (`type
    - **Redirect URLs:** every address the app runs on (the live app, the previews, localhost).
 3. **Send email through Resend** (Authentication › SMTP; set up 27 Oct). Without it Supabase sends two emails an
    hour, and only to the members of the Supabase organisation.
-4. The logo loads from the public edge function `email-logo` (`supabase/functions/email-logo`,
-   `https://vkusmctftfzsrxbcxtdz.supabase.co/functions/v1/email-logo`): the Ink lockup on a Porcelain tile, so it
-   stays readable when an inbox shows the email in dark mode. The app's previews sit behind Vercel's login, so the
-   logo cannot come from `{{ .SiteURL }}`.
+4. The logo loads from the public edge function `email-logo` (`supabase/functions/email-logo`):
+   the Ink lockup by default and the Paper lockup with `?c=paper`. The app's previews sit behind Vercel's login, so the
+   logo cannot come from `{{ .SiteURL }}`. Gmail's apps darken light backgrounds but leave images alone, so in Gmail
+   only (`u + .body`) the templates show the Paper lockup blended with `mix-blend-mode: difference`: near Ink on a
+   light background, near Paper on a dark one. Other inboxes keep the Ink logo (the emails declare light only).
 5. Turn on `VITE_AUTH_CODE=on` in Vercel.
 
 ## Sending invitations
