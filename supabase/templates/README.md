@@ -34,10 +34,13 @@ an invited address signs in by email, and both are confirmed the same way (`type
    - **Redirect URLs:** every address the app runs on (the live app, the previews, localhost).
 3. **Send email through Resend** (Authentication › SMTP; set up 27 Oct). Without it Supabase sends two emails an
    hour, and only to the members of the Supabase organisation.
-4. The logo loads from the public edge function `email-logo` (`supabase/functions/email-logo`,
-   `https://vkusmctftfzsrxbcxtdz.supabase.co/functions/v1/email-logo`): the Ink lockup on a Porcelain tile, so it
-   stays readable when an inbox shows the email in dark mode. The app's previews sit behind Vercel's login, so the
-   logo cannot come from `{{ .SiteURL }}`.
+4. The logo loads from the public edge function `email-logo` (`supabase/functions/email-logo`):
+   the Ink lockup by default and the Paper lockup with `?c=paper`. The app's previews sit behind Vercel's login, so the
+   logo cannot come from `{{ .SiteURL }}`. Gmail's apps darken light backgrounds but leave images alone, so in Gmail
+   only (`u + .body`) the templates show the Paper lockup blended with `mix-blend-mode: difference`: near Ink on a
+   light background, near Paper on a dark one. Inboxes that follow the reader's dark mode (Apple Mail, Outlook's apps) get Fume's dark palette through
+   `prefers-color-scheme` (Focus 900 page, Focus 800 card, Paper text and button) and the Paper logo; the `dk-*`
+   classes mark what changes. Every other inbox keeps the light email with the Ink logo.
 5. Turn on `VITE_AUTH_CODE=on` in Vercel.
 
 ## Sending invitations
@@ -60,8 +63,9 @@ decides the rest. Its tests run without Supabase: `deno test supabase/functions/
 `package.json`, or with `"nodeModulesDir": "none"`).
 
 The invitation's text is written for a brand's own people ("you approve what goes out"). Supabase has one invite
-email, so when Fume's or an agency's people are invited the same way, add a `kind` to `data` and branch the text with
-`{{ if eq .Data.kind "agency" }}…{{ end }}`.
+email, so Fume's own people get `data.team = true` and the template branches on it
+(`{{ if .Data.team }}…{{ else }}…{{ end }}`; a missing key is false, where `eq` on a missing key would fail): "… invited you to the Fume team", the studio's work, "Join the
+team". An agency's people can get a flag of their own the same way.
 
 ## How they were checked
 

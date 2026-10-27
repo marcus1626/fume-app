@@ -43,7 +43,7 @@ jobs:
         with:
           deno-version: v2.5.x
       - name: Edge function tests
-        run: deno test supabase/functions/
+        run: deno test --node-modules-dir=none --no-lock supabase/functions/
 
   app:
     runs-on: ubuntu-latest

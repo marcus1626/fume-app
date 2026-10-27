@@ -3,9 +3,10 @@
 // each call reads the current version first and passes it (docs/mvp/domain-model.md, gap 3: the contract's
 // approvePlan(campaignId) has no version, so a plan changed since the page was read is approved as it is now).
 //
-// Until the LLM writes plans (Wednesday) the plan has the one direction Fume wrote from the brief. Changing a line or a
-// planned creative in place writes the next version through change_plan (the approver while it is ready for her, a
-// designer until it is approved); "Change it with Fume" is a request for changes in her words.
+// Fume writes the plan with a language model when that is on (supabase/functions/fume-plan): the plan is 'writing'
+// until it is done, else it is the one direction built from the brief. Changing a line or a planned creative in place
+// writes the next version through change_plan (the approver while it is ready for her, a designer until it is
+// approved); "Change it with Fume" has Fume write the next version from her words.
 import {
   FumeError,
   type CampaignPlan,
@@ -23,7 +24,7 @@ import {
 } from "../../contract";
 import { seesPlan } from "../../domain/plan";
 import type { Live } from "./context";
-import { command, requestKey, rows, supabase } from "./supabase";
+import { askFumeToWrite, command, requestKey, rows, supabase } from "./supabase";
 
 type Calls =
   | "plan"
@@ -281,6 +282,8 @@ export function planCalls(live: Live): Pick<FumeApi, Calls> {
     // The customer reads it once it is ready; while it is written or checked she sees only where it is.
     async plan(campaignId) {
       const [plan, me] = await Promise.all([readPlan(campaignId), live.me()]);
+      // While Fume writes, each read makes sure it is (a run that never came back is taken again).
+      if (plan?.state === "writing") askFumeToWrite(campaignId);
       if (plan && !seesPlan(me, undefined, plan))
         return { ...plan, directions: [], content: [], rules: [], summary: "" };
       return plan;
@@ -376,18 +379,19 @@ export function planCalls(live: Live): Pick<FumeApi, Calls> {
       return (await calls.plan(campaignId))!;
     },
 
-    // Fume cannot change the plan by itself yet (no LLM before Wednesday): her words go to Fume's designer as a
-    // request for changes, as the mock does with words it cannot apply at once.
+    // Fume writes the next version from her words (change_plan_with_fume); when the language model is off, her
+    // words go to Fume's designer as a request for changes.
     async changePlanWithFume(campaignId, text) {
+      if (!text.trim()) throw new FumeError("invalid", "Write what Fume should change.");
       const p = await current(campaignId);
-      if (p.state !== "ready")
-        throw new FumeError(
-          "conflict",
-          p.state === "approved"
-            ? "This plan is approved and the work has started, so it stays as it is. Ask for a change on a creative once you see it."
-            : "Fume is still working on the plan. Tell me again once it is ready.",
-        );
-      return calls.askPlanChanges(campaignId, text);
+      await command("change_plan_with_fume", {
+        p_campaign_id: campaignId,
+        p_version: p.version,
+        p_note: text.trim(),
+        p_key: requestKey(),
+      });
+      askFumeToWrite(campaignId, true);
+      return (await calls.plan(campaignId))!;
     },
 
     async askPlanCheck(campaignId) {

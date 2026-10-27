@@ -20,7 +20,7 @@ import {
 } from "../../contract";
 import type { Live } from "./context";
 import { type CampaignRow, readCampaigns, readCreatives } from "./map";
-import { command, requestKey, rows, supabase } from "./supabase";
+import { askFumeToWrite, command, requestKey, rows, supabase } from "./supabase";
 
 type Calls = "campaigns" | "campaign" | "setApprover" | "orderBrief" | "sendBrief" | "approveBrief" | "changeBrief";
 
@@ -318,9 +318,11 @@ export function campaignCalls(live: Live): Pick<FumeApi, Calls> {
       return campaignOf(created.id);
     },
 
-    // She sends the draft: brief version n, and Fume's plan from it (send_brief writes both).
+    // She sends the draft: brief version n, and Fume's plan from it (send_brief writes it, or leaves it for Fume to
+    // write with the language model when that is on).
     async sendBrief(campaignId) {
       await command("send_brief", { p_campaign_id: campaignId, p_body: null, p_key: requestKey() });
+      askFumeToWrite(campaignId, true);
       return readBrief(campaignId);
     },
     async approveBrief(campaignId) {
