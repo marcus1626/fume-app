@@ -26,7 +26,7 @@
         <p style="margin:0 0 32px 0;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:16px;line-height:1.5;color:#463E39;">Press the button to sign in as <strong style="color:#1B1410;font-weight:500;">{{ .Email }}</strong>. It works once, within the hour.</p>
         <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
           <td style="background:#1B1410;border-radius:999px;">
-            <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=email" style="display:inline-block;padding:14px 28px;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:16px;font-weight:500;line-height:1.2;color:#FFFDF9;text-decoration:none;">Sign in to Fume</a>
+            <a href="{{ .RedirectTo }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=email" style="display:inline-block;padding:14px 28px;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:16px;font-weight:500;line-height:1.2;color:#FFFDF9;text-decoration:none;">Sign in to Fume</a>
           </td>
         </tr></table>
         <p style="margin:40px 0 8px 0;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:14px;line-height:1.45;color:#6E6259;">Signing in on another device? Enter this code there:</p>

@@ -20,13 +20,14 @@ export function useAuthState(): AuthState {
   return state;
 }
 
-/** Sends the sign-in link to this address; the link brings the person back to the page they are on. */
+/** Sends the sign-in link to this address. The email's button opens this app's /auth/confirm: the address the link
+ *  leads to is the app's origin (`{{ .RedirectTo }}` in supabase/templates/magic-link.html). */
 export async function sendSignInLink(email: string): Promise<void> {
   const address = email.trim();
   if (!/^\S+@\S+\.\S+$/.test(address)) throw new FumeError("invalid", "That email address doesn’t look right.");
   const { error } = await supabase().auth.signInWithOtp({
     email: address,
-    options: { emailRedirectTo: window.location.origin + window.location.pathname, shouldCreateUser: true },
+    options: { emailRedirectTo: window.location.origin, shouldCreateUser: true },
   });
   if (!error) return;
   if (error.status === 429)
