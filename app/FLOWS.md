@@ -969,3 +969,34 @@ approves the creatives. Her approval starts the Engine.
   "Plan approved by Maja", and the agency is told the masters are theirs to check before Maja sees them.
 - **The demo.** Nora (?as=nora): LYSNE › Winter gifting waits for her check and Send to Maja. Maja (?agency&as=maja):
   Black Friday is checked and sent, Approve and start. The seeded link is /c/bfplan.
+
+## 28. Empty pages with a scene (27 Oct 2026, PROPOSED)
+Marcus, 27 Oct: when a page is empty, because everything is done or nothing is set up yet, it shows one card in the
+middle with an art directed image, like "Good morning" with a cup of coffee. (§27 is Video in the Studio, on its own
+branch.)
+
+- **The card.** `<Empty scene>` with `<EmptyScene>` on top: a photo at 3:2 inside a card one step off the ground
+  (`--ui-card-bg`), 480 px wide at most, "Made with Fume Engine" under the photo, then the title, one line of text and
+  the page's action. In the app it is `<Nothing scene="…">` (shell/Page.tsx).
+- **When.** Only when the whole page has nothing to show and the person did not filter it. A filtered page ("Nothing
+  for this client", "No mentions") and small empties inside a panel or a section keep the icon.
+- **The images.** Fume's house layer: analog interiors, daylight, linen, wood, paper; hands at most, never a face; no
+  text, logos or brands in the photo. They are made with the Engine and live in public/scenes/ (1200 × 800 JPEG), with
+  the names in shell/scenes.ts. They are the same for every brand; brand-made scenes are for later.
+- **The time of day.** Home's "Nothing waits on you" and the studio overview's "Nothing needs you" follow the greeting:
+  morning (5 to 12, hands around a coffee), afternoon (12 to 18, tea by the window), evening (from 18 and before 5, a
+  lamp at blue hour). The studio uses Oslo's time.
+
+| Page | When | Scene |
+| --- | --- | --- |
+| Home (customer) | Nothing waits on you | morning, afternoon or evening |
+| Review (customer) | Nothing waits on you | quiet (a window seat) |
+| Campaigns (customer, studio, agency) | No campaigns yet | start (an open notebook) |
+| Deliveries | No deliveries yet | parcel |
+| Notifications | Nothing new, or everything is read (not Mentions) | letters |
+| Studio overview | Nothing needs you | morning, afternoon or evening |
+| Check (QA) | Nothing waits for a check (not filtered) | checked (a loupe on prints) |
+| Engine output | No runs yet | studio (an empty photo studio) |
+| Results, once it exists | Analytics not connected | connect (a lamp, unplugged) |
+
+- **Open.** The app has no results page yet, so "connect" is not used. Whether brands get scenes in their own style.

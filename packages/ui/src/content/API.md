@@ -36,13 +36,14 @@ Every component accepts `className` (merged with `cx`) and passes the rest of it
 - `AlertProps`: the props type.
 
 ## Empty (empty.tsx, empty.css)
-- `Empty` (div.ui-empty): HTML + `surface?: boolean`, `size?: "default" | "sm"`.
+- `Empty` (div.ui-empty): HTML + `surface?: boolean`, `size?: "default" | "sm"`, `scene?: boolean` (PROPOSED: the card with a picture for a page with nothing in it).
+- `EmptyScene` (figure.ui-empty-scene): HTML + `src: string`, `alt?` [""], `label?` ["Made with Fume Engine"].
 - `EmptyHeader` (div): HTML.
 - `EmptyMedia` (div): HTML + `variant?: "default" | "icon"` ["icon"], `icon?: IconName`, `waiting?: boolean`.
 - `EmptyTitle`: HTML + `as?: "h1" … "h6" | "p"` ["h3"].
 - `EmptyDescription` (p): HTML.
 - `EmptyContent` (div): HTML.
-- `EmptyProps`, `EmptyMediaProps`, `EmptyTitleProps`: the props types.
+- `EmptyProps`, `EmptyMediaProps`, `EmptyTitleProps`, `EmptySceneProps`: the props types.
 
 ## Data list (data-list.tsx, data-list.css)
 - `DataList` (dl): HTML + `variant?: "default" | "stacked" | "grid"`.

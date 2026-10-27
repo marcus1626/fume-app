@@ -12,6 +12,7 @@ import {
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
+  EmptyScene,
   EmptyTitle,
   Spinner,
   WithTooltip,
@@ -30,6 +31,7 @@ import {
 } from "react";
 import { useHref, useLocation, useNavigate, type NavigateOptions } from "react-router-dom";
 import { FumeError } from "../contract";
+import { sceneSrc, type Scene } from "./scenes";
 
 export interface PageProps extends HTMLAttributes<HTMLDivElement> {
   /** The page's name ("Autumn launch", "Products · Brand"). Its first part (before " · ") names the page in a Back
@@ -442,18 +444,32 @@ export function Failed({ error, onRetry }: { error: unknown; onRetry?: () => voi
   );
 }
 
-/** An empty list with one line on why and, when there is one, the way to fill it. */
+/** An empty list with one line on why and, when there is one, the way to fill it. With a scene, the page has nothing
+ *  else to show: one card in the middle with a picture that carries the moment (scenes.ts, PROPOSED). */
 export function Nothing({
   icon,
   title,
   text,
   action,
+  scene,
 }: {
   icon: IconName;
   title: string;
   text?: ReactNode;
   action?: ReactNode;
+  scene?: Scene;
 }) {
+  if (scene)
+    return (
+      <Empty scene data-scene={scene}>
+        <EmptyScene src={sceneSrc(scene)} />
+        <EmptyHeader>
+          <EmptyTitle>{title}</EmptyTitle>
+          {text && <EmptyDescription>{text}</EmptyDescription>}
+        </EmptyHeader>
+        {action && <EmptyContent>{action}</EmptyContent>}
+      </Empty>
+    );
   return (
     <Empty surface>
       <EmptyHeader>

@@ -81,6 +81,7 @@ export function NotificationsPage() {
               ) : (
                 <Nothing
                   icon="inbox"
+                  scene={filter === "mentions" ? undefined : "letters"}
                   title={
                     filter === "all"
                       ? "Nothing new since you last looked"

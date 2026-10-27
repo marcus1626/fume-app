@@ -1471,6 +1471,18 @@
       "description": "The empty state's icon at display size (icons-lucide: 24 px for display).",
       "status": "DECIDED"
     },
+    "empty.scene-width": {
+      "css": "var(--ui-empty-scene-width)",
+      "value": "480px",
+      "description": "The scene card of a page with nothing in it (27 Oct 2026): wide enough for a 3:2 picture to carry the moment, narrow enough to sit as one calm box in the middle of the page.",
+      "status": "PROPOSED"
+    },
+    "empty.scene-ratio": {
+      "css": "var(--ui-empty-scene-ratio)",
+      "value": "3 / 2",
+      "description": "The scene's picture: landscape, like a photograph on a desk.",
+      "status": "PROPOSED"
+    },
     "skeleton.bg": {
       "css": "var(--ui-skeleton-bg)",
       "value": "#EDE9E4",
