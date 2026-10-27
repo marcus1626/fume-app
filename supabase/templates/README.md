@@ -38,7 +38,9 @@ an invited address signs in by email, and both are confirmed the same way (`type
    the Ink lockup by default and the Paper lockup with `?c=paper`. The app's previews sit behind Vercel's login, so the
    logo cannot come from `{{ .SiteURL }}`. Gmail's apps darken light backgrounds but leave images alone, so in Gmail
    only (`u + .body`) the templates show the Paper lockup blended with `mix-blend-mode: difference`: near Ink on a
-   light background, near Paper on a dark one. Other inboxes keep the Ink logo (the emails declare light only).
+   light background, near Paper on a dark one. Inboxes that follow the reader's dark mode (Apple Mail, Outlook's apps) get Fume's dark palette through
+   `prefers-color-scheme` (Focus 900 page, Focus 800 card, Paper text and button) and the Paper logo; the `dk-*`
+   classes mark what changes. Every other inbox keeps the light email with the Ink logo.
 5. Turn on `VITE_AUTH_CODE=on` in Vercel.
 
 ## Sending invitations
