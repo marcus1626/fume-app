@@ -180,11 +180,15 @@ export function toPlan(
         : undefined;
   const directions = directionsOf(body);
   const chosenReason = str(body.chosen_reason);
+  const strategicTask = str(body.strategic_task);
+  const openQuestions = strings(body.open_questions).filter((q) => q.trim());
   return {
     campaignId: p.campaign_id,
     version: p.version,
     state: p.state === "superseded" ? "ready" : p.state,
     summary: str(body.summary),
+    ...(strategicTask ? { strategicTask } : {}),
+    ...(openQuestions.length ? { openQuestions } : {}),
     briefVersion,
     directions,
     chosenDirectionId: str(body.chosen_direction_id) || directions[0]?.id || "a",

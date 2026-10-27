@@ -111,6 +111,10 @@ export interface CampaignPlan {
   state: PlanState;
   /** The brief in words: Fume's paragraph. */
   summary: string;
+  /** For the team only: the audience and their situation, linked to the creative task (Fume's strategist). */
+  strategicTask?: string;
+  /** For the team only: what the brief leaves open that matters, for the designer to settle with her. */
+  openQuestions?: string[];
   /** The brief version the plan was written from. */
   briefVersion: number;
   directions: PlanDirection[];

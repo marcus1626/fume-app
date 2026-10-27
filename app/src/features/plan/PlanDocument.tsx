@@ -8,7 +8,8 @@
 // A product the plan uses that still waits to be confirmed is named on the Products line, with the way to confirm it.
 // Who approves follows who reads it (people.ts); the expert and the agency read the brand's lines about the customer by
 // her name. The expert's check is optional (FLOWS §26.2), so "Checked by Anna" (the Focus pointer in Amber) shows only
-// when someone checked it. A new version says what changed in it.
+// when someone checked it. A new version says what changed in it. The team (Fume's, or the agency) also reads the
+// strategist's task and the brief's open questions under the brief; the one who approves never does.
 import { Button, CheckMark, Collapsible, CollapsibleContent, CollapsibleTrigger, Icon, useToast } from "@fume/ui";
 import { useMemo, type ReactNode } from "react";
 import { useCampaigns, useCatalogue, useChoosePlanDirection, useStudioKit } from "../../api/hooks";
@@ -70,6 +71,8 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
   // Who approves the creatives (the customer, the agency's client): "you" for her, her name for everyone else.
   const approvesCreatives = people.name(campaign.approverId);
   const yours = viewer === "customer";
+  // The strategist's task and open questions are for whoever makes and checks the plan, never for the one who approves.
+  const team = viewer === "staff" || viewer === "agency";
 
   // A product the plan uses whose details still wait to be confirmed: the Products line names it.
   const waiting = campaign.productIds
@@ -120,6 +123,31 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
               The brief
             </h2>
             <p className="ui-plandoc-summary">{voice(plan.summary)}</p>
+            {team && plan.strategicTask && (
+              <div className="ui-plandoc-group">
+                <h3 className="ui-plandoc-group-title">The task</h3>
+                <p className="ui-plandoc-words">{plan.strategicTask}</p>
+              </div>
+            )}
+            {team &&
+              plan.openQuestions &&
+              plan.openQuestions.length > 0 &&
+              mode !== "approved" &&
+              mode !== "previous" && (
+                <div className="ui-plandoc-group">
+                  <h3 className="ui-plandoc-group-title">Open questions</h3>
+                  <p className="ui-plandoc-label">
+                    What the brief leaves open. Settle them with {customer} before production.
+                  </p>
+                  <ul className="ui-plandoc-rule-list">
+                    {plan.openQuestions.map((q) => (
+                      <li key={q} className="ui-plandoc-rule">
+                        {q}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             <Collapsible className="ui-plandoc-brief">
               <CollapsibleTrigger>
                 {briefWho}
