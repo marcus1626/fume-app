@@ -412,7 +412,15 @@ export function useDraftBriefs(): { data: DraftBrief[] | undefined; isPending: b
 export const usePlan = (campaignId: Id | undefined) =>
   useQ(["plan", campaignId], (a) => a.plan(campaignId!), Boolean(campaignId));
 export const useSendBrief = () => useM((a, campaignId: Id) => a.sendBrief(campaignId));
-export const useApprovePlan = () => useM((a, campaignId: Id) => a.approvePlan(campaignId));
+/** Approves the version she read; when a newer one came meanwhile, nothing is approved and the plan is read again. */
+export const useApprovePlan = () => {
+  const api = useApi();
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (v: { campaignId: Id; version: number }) => api.approvePlan(v.campaignId, v.version),
+    onSettled: () => client.invalidateQueries(),
+  });
+};
 export const useUndoApprovePlan = () => useM((a, campaignId: Id) => a.undoApprovePlan(campaignId));
 export const useChangePlan = () =>
   useM((a, v: { campaignId: Id } & import("../contract").PlanChange) => {

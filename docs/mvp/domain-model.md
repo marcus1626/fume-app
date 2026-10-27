@@ -19,7 +19,7 @@ The LLM proposes; a domain command validates schema, access and rules, then writ
 | BrandProfileVersion, BrandRule | `BrandDna` (version, state), `BrandRule` | A campaign records which Brand DNA version it used. |
 | Product, ProductTruthVersion, FactAssertion | `Product`, `ProductFact` (source, confidence, verifiedBy) | MVP: a fact's `source` = `verified` means a named person confirmed it. `required` is **New** (which facts production depends on). |
 | Campaign, BriefVersion | `Campaign`, `Brief` (version, state) | Brief versions are kept, never overwritten. |
-| Direction, PlanVersion, Scope | `PlanDirection`, `CampaignPlan` (version, state, briefVersion, versions[]) | Plan approval names the plan version (**gap 3**). |
+| Direction, PlanVersion, Scope | `PlanDirection`, `CampaignPlan` (version, state, briefVersion, versions[]) | Plan approval names the plan version (**gap 3**, closed 27 Oct: `approvePlan(campaignId, version)`; a newer version is a conflict). |
 | ProductionJob, JobAttempt | `EngineRun` / `Batch` (no attempts) | **New** server tables behind the run card: job, attempt, provider id, status, inputs, cost, error, idempotency key. |
 | ContextSnapshot | none | **New**: frozen ids + versions of brief, plan, Brand DNA, product facts, recipe, references at job start. |
 | Recipe | `Recipe` (`studio.ts`) | Add a version number. |

@@ -1,7 +1,7 @@
 // The plan on the live backend (FLOWS §22): Fume's plan versions from the sent brief to her approval. Every change is a
 // new version (plan_versions, never overwritten); an approval, a check and an ask name the version they are for, so
-// each call reads the current version first and passes it (docs/mvp/domain-model.md, gap 3: the contract's
-// approvePlan(campaignId) has no version, so a plan changed since the page was read is approved as it is now).
+// each call reads the current version first and passes it. An approval passes the version she read, so a plan changed
+// since is not approved as it is now (docs/mvp/domain-model.md, gap 3).
 //
 // Fume writes the plan with a language model when that is on (supabase/functions/fume-plan): the plan is 'writing'
 // until it is done, else it is the one direction built from the brief. Changing a line or a planned creative in place
@@ -293,9 +293,9 @@ export function planCalls(live: Live): Pick<FumeApi, Calls> {
       return plan;
     },
 
-    async approvePlan(campaignId) {
-      const p = await current(campaignId);
-      await command("approve_plan", { p_campaign_id: campaignId, p_version: p.version, p_key: requestKey() });
+    async approvePlan(campaignId, version) {
+      const v = version ?? (await current(campaignId)).version;
+      await command("approve_plan", { p_campaign_id: campaignId, p_version: v, p_key: requestKey() });
       return (await calls.plan(campaignId))!;
     },
     async undoApprovePlan(campaignId) {
