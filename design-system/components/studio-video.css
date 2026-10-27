@@ -1,0 +1,329 @@
+/* Studio video: the Video studio of the desk (app, FLOWS §27). PROPOSED 27 Oct 2026.
+   A video creative is one document with an edit: the shots on a timeline that runs the desk's whole width under the
+   panels, the brand's motion design, the captions and the sound on their own tracks. The player is the board: the
+   frame in the format's ratio with the shots playing in it, the motion and the captions drawn over them in the
+   creative's own type, and the safe zones on the rail. The left panel holds what the edit is made from (its shots,
+   the campaign's checked masters, the brand's footage, the brand's motion); the right panel what is selected (a
+   shot: its takes and how the Engine makes it again; a word or a sound; or nothing: the edit's own settings, the
+   Engine's checks and the other formats).
+   Markup: <div class="ui-desk" data-studio="video"> bar · <aside class="ui-desk-panel ui-desk-specs"> ·
+             <main class="ui-desk-centre"><section class="ui-desk-canvas"><div class="ui-glass ui-desk-rail"/>
+               <div class="ui-desk-stage"><div class="ui-video-frame" data-grade style="--ratio">
+                 <video data-on data-front style="--mix --blur"/> | <img class="ui-video-still"/> …
+                 <div class="ui-video-words"><p class="ui-video-motion"
+                 data-template data-place data-enter/> <p class="ui-video-caption"/></div> [SafeZones]</div></div>
+               <div class="ui-video-transport"> play · <span class="ui-video-time"/> · <span class="ui-video-made"/>
+                 <span class="ui-video-grade"/></div></section>
+               <div class="ui-desk-engine"> the Engine bar </div></main>
+             <aside class="ui-desk-panel ui-desk-vars"> the inspector </aside>
+             <section class="ui-video-timeline" style="--len --t"><div class="ui-video-heads"/> <div class="ui-video-lanes">
+               <div class="ui-video-ruler"><div class="ui-video-scrub" role="slider"/> <span class="ui-video-tick"
+               style="--at"/> <span class="ui-video-beat"/> <button class="ui-video-flag"/></div>
+               <div class="ui-video-lane" data-lane="motion|shots|captions|sound"><button class="ui-video-item"
+               data-kind style="--start --dur --poster" aria-pressed/> <button class="ui-video-trim" data-end="in|out"/></div>
+               <span class="ui-video-head"/></div></section>
+   Fume decisions: the timeline is a Porcelain sheet like the panels, its items on the sunken step, a shot a strip of
+   its own frames; the selected item carries the Ink ring the desk uses for a picked version, never Amber. The
+   playhead is the one Ink line (a position, not a decoration). A flag the Engine raised is a Rouge dot on the ruler
+   that jumps there. The words over the video are the creative's own (the brand's display face, its Linen), never
+   Fume's UI type, and enter soft to sharp (Motion board 16: blur 12 → 0, no bounce). No gradients, no glow, no
+   shadow on words: captions sit on a solid Ink step so they read on any frame.
+   Rule gate: few-strokes, air, space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data,
+   amber-is-a-point, glass-only-floating, touch-target, hover-needs-hover, focus-is-sharp, reduced-motion,
+   no-gradient, tokens-only-color. */
+
+/* ---------- the desk: the timeline takes the whole width under the panels ---------- */
+
+.ui-desk[data-studio="video"] {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas: "bar bar bar" "specs centre vars" "timeline timeline timeline";
+}
+.ui-desk[data-studio="video"][data-bare] { grid-template-areas: "bar" "centre" "timeline"; }
+
+/* ---------- the player: the board ---------- */
+
+.ui-video-canvas { flex-direction: column; }
+
+.ui-video-frame {
+  position: relative; display: block; overflow: hidden;
+  width: min(100cqw, calc(100cqh * var(--ratio))); aspect-ratio: var(--ratio);
+  border-radius: var(--ui-radius-item); background: var(--ui-text); box-shadow: var(--ui-depth-raised);
+}
+.ui-video-frame > video, .ui-video-frame > .ui-video-still {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0;
+}
+.ui-video-frame > video[data-on], .ui-video-frame > .ui-video-still[data-on] { opacity: var(--mix, 1); }
+.ui-video-frame > [data-front] { z-index: 1; }
+/* A focus pull brings a shot in soft to sharp (--blur, set by the clock), the lens-like pull of the Motion board */
+.ui-video-frame > video, .ui-video-frame > .ui-video-still { filter: blur(var(--blur, 0px)); }
+/* The grade: one look over every shot, so the Engine's shots and the brand's footage match */
+.ui-video-frame[data-grade="warm"] > video { filter: blur(var(--blur, 0px)) sepia(.1) saturate(1.06) contrast(1.03); }
+.ui-video-frame[data-grade="evening"] > video { filter: blur(var(--blur, 0px)) sepia(.18) saturate(.92) brightness(.9) contrast(1.06); }
+.ui-video-making {
+  position: absolute; inset-inline: 0; top: 50%; z-index: 3; margin: 0; translate: 0 -50%; text-align: center;
+  font-size: var(--ui-type-control); color: var(--ui-text-on-ink);
+}
+.ui-video-empty {
+  position: absolute; inset: 0; display: grid; place-content: center; gap: var(--ui-space-sm); padding: var(--ui-space-lg);
+  text-align: center; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-on-ink);
+}
+
+/* The words over the video: the creative's own, scaled to the frame */
+.ui-video-words { position: absolute; inset: 0; z-index: 2; container-type: size; pointer-events: none; color: var(--layer-ink, var(--ui-text-on-ink)); }
+.ui-video-motion {
+  position: absolute; inset-inline: 8%; margin: 0; text-align: center; text-wrap: balance;
+  font-family: var(--ui-type-display-family); /* gate-allow:canon-not-in-ui the brand's own display face in its creative (a stand-in until the brand's font is loaded) */
+  font-weight: var(--ui-type-weight-regular); line-height: 1.05;
+}
+.ui-video-motion[data-place="top"] { top: 12%; }
+.ui-video-motion[data-place="centre"] { top: 50%; transform: translateY(-50%); }
+.ui-video-motion[data-place="bottom"] { bottom: 24%; }
+.ui-video-motion[data-template="title"] { font-size: 10cqi; /* gate-allow:type-from-tokens the creative's title, scaled to the frame */ }
+.ui-video-motion[data-template="line"], .ui-video-motion[data-template="offer"] { font-size: 6cqi; /* gate-allow:type-from-tokens scaled to the frame */ }
+.ui-video-motion[data-template="product"] {
+  font-family: var(--ui-type-family); font-size: 3.6cqi; letter-spacing: .14em; text-transform: uppercase; /* gate-allow:type-from-tokens the product line as the label sets it, scaled to the frame */
+}
+/* The end card: the brand's mark alone on its own ground, so it never sits on a label that already carries it */
+.ui-video-motion[data-template="end"] {
+  inset: 0; top: 0; bottom: 0; display: grid; place-items: center; transform: none; background: var(--ui-text); color: var(--ui-text-on-ink);
+  font-size: 14cqi; letter-spacing: .12em; /* gate-allow:type-from-tokens the brand's wordmark on the end card, scaled to the frame */
+}
+.ui-video-motion[data-enter="soft"] { animation: ui-video-soft var(--ui-motion-slow) var(--ui-motion-ease) both; }
+.ui-video-motion[data-enter="fade"] { animation: ui-video-fade var(--ui-motion-slow) var(--ui-motion-ease) both; }
+.ui-video-motion[data-enter="rise"] { animation: ui-video-rise var(--ui-motion-slow) var(--ui-motion-ease) both; }
+.ui-video-caption {
+  position: absolute; inset-inline: 0; bottom: calc(var(--safe-bottom, .2) * 100% + 3%); margin: 0 auto; width: fit-content; max-width: 84%;
+  padding: .5cqi 2.4cqi; /* gate-allow:space-from-tokens a caption burnt into the video, scaled to the frame */
+  border-radius: var(--ui-radius-check); background: var(--ui-text); color: var(--ui-text-on-ink);
+  font-family: var(--ui-type-family); font-weight: var(--ui-type-weight-medium); line-height: 1.3; text-align: center;
+  font-size: 4.4cqi; /* gate-allow:type-from-tokens a caption burnt into the video, scaled to the frame */
+  animation: ui-video-fade var(--ui-motion-fast) var(--ui-motion-ease) both;
+}
+@keyframes ui-video-soft { from { opacity: 0; filter: blur(12px); } to { opacity: 1; filter: blur(0); } }
+@keyframes ui-video-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ui-video-rise { from { opacity: 0; translate: 0 6%; } to { opacity: 1; translate: 0 0; } }
+
+/* The transport under the player: play, the time as data, the format it is cut for */
+.ui-video-transport {
+  display: flex; flex-shrink: 0; align-items: center; gap: var(--ui-space-sm); min-width: 0;
+  padding: 0 var(--ui-space-md) var(--ui-space-md);
+}
+.ui-video-time {
+  font-family: var(--ui-type-family-data); /* gate-allow:mono-is-data the playhead's time is data */
+  font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; color: var(--ui-text-secondary); white-space: nowrap;
+}
+.ui-video-time > b { font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-video-transport-end { display: flex; align-items: center; gap: var(--ui-space-md); margin-inline-start: auto; min-width: 0; }
+.ui-video-made { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+.ui-video-grade {
+  display: inline-flex; align-items: center; gap: var(--ui-space-xs); flex-shrink: 0; height: var(--ui-size-control-sm); padding: 0 var(--ui-space-md);
+  border-radius: var(--ui-radius-action); background: var(--ui-ground); box-shadow: var(--ui-depth-raised);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); white-space: nowrap;
+}
+.ui-video-grade > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-secondary); }
+
+/* ---------- the timeline ---------- */
+
+.ui-video-timeline {
+  grid-area: timeline; display: grid; grid-template-columns: calc(var(--ui-size-hit) * 2) minmax(0, 1fr); gap: var(--ui-space-xs) var(--ui-space-sm);
+  min-width: 0; padding: var(--ui-space-sm) var(--ui-space-md) var(--ui-space-md);
+  border-radius: var(--ui-radius-card); background: var(--ui-ground); box-shadow: var(--ui-depth-sheet);
+  user-select: none;
+}
+.ui-video-heads { display: grid; grid-template-rows: var(--ui-size-control-sm) var(--video-lanes); gap: var(--ui-space-xs); }
+.ui-video-heads > span {
+  display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0;
+  font-size: var(--ui-type-label); line-height: 1.3; color: var(--ui-text-tertiary);
+}
+.ui-video-heads > span > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-video-timeline, .ui-video-heads {
+  --video-lanes: var(--ui-size-control-sm) calc(var(--ui-size-hit) + var(--ui-space-md)) var(--ui-size-control-sm) var(--ui-size-control-md);
+}
+.ui-video-lanes { position: relative; display: grid; grid-template-rows: var(--ui-size-control-sm) var(--video-lanes); gap: var(--ui-space-xs); min-width: 0; }
+.ui-video-ruler { position: relative; }
+.ui-video-scrub { position: absolute; inset: 0; cursor: pointer; touch-action: none; border-radius: var(--ui-radius-item); outline: none; -webkit-tap-highlight-color: transparent; }
+.ui-video-scrub:active { cursor: grabbing; }
+.ui-video-scrub:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+.ui-video-tick, .ui-video-beat { pointer-events: none; }
+.ui-video-tick {
+  position: absolute; left: calc(var(--at) / var(--len) * 100%); bottom: 0; translate: -50% 0;
+  font-family: var(--ui-type-family-data); /* gate-allow:mono-is-data seconds on the ruler are data */
+  font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; line-height: 1; color: var(--ui-text-tertiary);
+}
+.ui-video-tick:first-child { translate: 0 0; }
+.ui-video-tick:last-of-type { translate: -100% 0; }
+.ui-video-beat { position: absolute; left: calc(var(--at) / var(--len) * 100%); bottom: 0; width: 1px; height: var(--ui-space-xs); background: var(--ui-text-tertiary); } /* gate-allow:few-strokes a beat mark is a position on the ruler */ /* gate-allow:space-from-tokens a hairline mark */
+.ui-video-flag {
+  position: absolute; top: 0; left: calc(var(--at) / var(--len) * 100%); translate: -50% 0;
+  display: grid; place-items: center; width: var(--ui-size-control-sm); height: var(--ui-size-control-sm); margin: 0; padding: 0; border: 0;
+  border-radius: 50%; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; z-index: 1;
+}
+.ui-video-flag::before { content: ""; width: var(--ui-space-sm); height: var(--ui-space-sm); border-radius: 50%; background: var(--ui-danger); }
+@media (hover: hover) { .ui-video-flag:hover { background: var(--ui-action-secondary-hover); } }
+.ui-video-flag:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-video-flag:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+
+.ui-video-lane { position: relative; min-width: 0; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-video-item {
+  position: absolute; top: 0; bottom: 0; left: calc(var(--start) / var(--len) * 100%); width: calc(var(--dur) / var(--len) * 100%);
+  display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; margin: 0; padding: 0 var(--ui-space-sm); border: 0;
+  border-radius: var(--ui-radius-item); background: var(--ui-ground); box-shadow: var(--ui-depth-raised); color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); line-height: 1.2; text-align: start; overflow: hidden;
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-video-item > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (hover: hover) { .ui-video-item:hover { background: var(--ui-action-secondary-hover); } }
+.ui-video-item:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); z-index: 1; }
+.ui-video-item:disabled { cursor: default; }
+.ui-video-item:active:not(:disabled) { background-color: var(--ui-item-bg-pressed); }
+.ui-video-item[aria-pressed="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); z-index: 1; }
+/* A shot: a strip of its own frames, its name on a small Ink step */
+.ui-video-item[data-kind="shot"] {
+  align-items: flex-end; padding: var(--ui-space-xs);
+  background-color: var(--ui-text); background-image: var(--poster); background-size: auto 100%; background-repeat: repeat-x; background-position: left center;
+}
+.ui-video-item[data-kind="shot"] > span {
+  padding: 1px var(--ui-space-xs); border-radius: var(--ui-radius-check); background: var(--ui-text); color: var(--ui-text-on-ink); /* gate-allow:space-from-tokens a hairline of air around a 12 px name */
+}
+.ui-video-item[data-kind="shot"][aria-pressed="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary), inset 0 0 0 calc(var(--ui-size-ring) * 2) var(--ui-text-on-ink); }
+.ui-video-item[data-kind="shot"][data-making] > span { color: var(--ui-text-on-ink); }
+.ui-video-item > .ui-video-item-flag { flex-shrink: 0; width: var(--ui-space-sm); height: var(--ui-space-sm); border-radius: 50%; background: var(--ui-danger); }
+.ui-video-item[data-kind="sound"] { align-items: stretch; padding: 0; }
+.ui-video-wave { position: absolute; inset: var(--ui-space-xs) 0; width: 100%; height: calc(100% - 2 * var(--ui-space-xs)); color: var(--ui-text-disabled); }
+/* An effect or a voice over the music: its own short clip on the lane, named on hover and to a screen reader */
+.ui-video-item[data-kind="sound"]:not([data-sound="music"]) { top: var(--ui-space-xs); bottom: var(--ui-space-xs); z-index: 1; background: var(--ui-surface-sunken); box-shadow: none; }
+.ui-video-item[data-kind="sound"]:not([data-sound="music"]) > .ui-video-wave { inset: 0; height: 100%; color: var(--ui-text-secondary); }
+.ui-video-item[data-kind="sound"]:not([data-sound="music"]) > span { display: none; }
+.ui-video-item[data-kind="sound"] > span { position: relative; align-self: center; margin-inline: var(--ui-space-sm); padding: 1px var(--ui-space-xs); border-radius: var(--ui-radius-check); background: var(--ui-ground); } /* gate-allow:space-from-tokens a hairline of air */
+/* The trim handles on the selected shot: drag either end */
+.ui-video-trim {
+  position: absolute; top: 0; bottom: 0; z-index: 2; width: var(--ui-space-md); margin: 0; padding: 0; border: 0;
+  background: transparent; cursor: ew-resize; touch-action: none;
+}
+.ui-video-trim::after {
+  content: ""; position: absolute; top: 22%; bottom: 22%; left: 50%; width: calc(var(--ui-size-ring) * 2.5); translate: -50% 0;
+  border-radius: var(--ui-radius-action); background: var(--ui-text-on-ink); box-shadow: var(--ui-depth-raised);
+}
+@media (hover: hover) { .ui-video-trim:hover::after { background: var(--ui-ground); } }
+.ui-video-trim[data-end="in"] { left: calc(var(--start) / var(--len) * 100%); }
+.ui-video-trim[data-end="out"] { left: calc((var(--start) + var(--dur)) / var(--len) * 100% - var(--ui-space-md)); }
+.ui-video-trim:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+/* The playhead: the one Ink line, across every lane */
+.ui-video-head {
+  position: absolute; top: 0; bottom: 0; left: calc(var(--t) / var(--len) * 100%); z-index: 3; width: var(--ui-size-ring); translate: -50% 0;
+  background: var(--ui-action-primary); pointer-events: none; /* gate-allow:few-strokes the playhead is a position, not a decoration */
+}
+.ui-video-head::before {
+  content: ""; position: absolute; top: 0; left: 50%; width: var(--ui-space-sm); height: var(--ui-space-sm); translate: -50% 0;
+  border-radius: 50%; background: var(--ui-action-primary);
+}
+
+/* ---------- the panels ---------- */
+
+/* Rows of shots, masters and the brand's footage: a 9:16 thumb, the name, one line */
+.ui-video-list { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
+.ui-video-row {
+  display: grid; grid-template-columns: calc(var(--ui-size-hit) * .75) minmax(0, 1fr) auto; align-items: center; gap: var(--ui-space-sm);
+  width: 100%; margin: 0; padding: var(--ui-space-xs); border: 0; border-radius: var(--ui-radius-item); background: transparent;
+  color: var(--ui-text); font-family: var(--ui-type-family); text-align: start; cursor: pointer; outline: none;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+@media (hover: hover) { .ui-video-row:hover { background: var(--ui-action-secondary-hover); } }
+.ui-video-row:active { background: var(--ui-item-bg-pressed); }
+.ui-video-row:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+.ui-video-row[aria-pressed="true"] { background: var(--ui-ground); box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); }
+.ui-video-row-img { display: block; width: 100%; aspect-ratio: 9 / 16; overflow: hidden; border-radius: var(--ui-radius-check); background: var(--ui-surface-sunken); }
+.ui-video-row-img > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ui-video-row-img[data-glyph] { display: grid; place-items: center; aspect-ratio: 1; font-family: var(--ui-type-display-family); font-size: var(--ui-type-control); color: var(--ui-text-secondary); } /* gate-allow:canon-not-in-ui the brand's display face named on its own motion template */
+.ui-video-row-text { display: grid; min-width: 0; }
+.ui-video-row-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.35; }
+.ui-video-row-meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-video-row-end { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; }
+.ui-video-row-end > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-video-help { margin: 0; padding-inline: var(--ui-space-sm); font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+
+/* The takes of a shot: two to a row, the picked one with the Ink ring */
+.ui-video-takes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; }
+.ui-video-take {
+  position: relative; display: grid; gap: var(--ui-space-xs); width: 100%; margin: 0; padding: var(--ui-space-xs); border: 0;
+  border-radius: var(--ui-radius-item); background: var(--ui-ground); box-shadow: var(--ui-depth-raised); color: var(--ui-text);
+  font-family: var(--ui-type-family); text-align: start; cursor: pointer; outline: none; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.ui-video-take:disabled { cursor: default; }
+@media (hover: hover) { .ui-video-take:hover:not(:disabled) { background: var(--ui-action-secondary-hover); } }
+.ui-video-take:active:not(:disabled) { transform: scale(var(--ui-motion-press-scale)); }
+.ui-video-take:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-video-take[aria-pressed="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); }
+.ui-video-take-img { display: block; aspect-ratio: 9 / 16; overflow: hidden; border-radius: var(--ui-radius-check); background: var(--ui-surface-sunken); }
+.ui-video-take-img > img, .ui-video-take-img > .ui-skeleton { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ui-video-take-line { display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; font-size: var(--ui-type-label); line-height: 1.3; }
+.ui-video-take-num { font-family: var(--ui-type-family-data); font-weight: var(--ui-type-weight-medium); font-variant-numeric: tabular-nums; } /* gate-allow:mono-is-data the take number is data */
+.ui-video-take-line > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-danger); }
+
+.ui-video-row-end > .ui-video-row-flag { color: var(--ui-danger); }
+.ui-video-inspector-head { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); min-height: var(--ui-size-control-sm); }
+.ui-video-inspector-head > .ui-desk-panel-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-video-start { display: grid; grid-template-columns: calc(var(--ui-size-hit) * .75) minmax(0, 1fr); align-items: center; gap: var(--ui-space-sm); }
+.ui-video-start > .ui-video-help { padding: 0; }
+.ui-video-facts { padding: 0; color: var(--ui-text); }
+.ui-video-facts dt { color: var(--ui-text-tertiary); }
+.ui-video-facts dd { color: var(--ui-text); }
+
+/* The Engine's checks on the edit: a pass is quiet, a flag is a row that jumps to the moment */
+.ui-video-checks { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
+.ui-video-check {
+  display: grid; grid-template-columns: var(--ui-size-icon-sm) minmax(0, 1fr) auto; align-items: start; gap: var(--ui-space-sm);
+  width: 100%; margin: 0; padding: var(--ui-space-xs) var(--ui-space-sm); border: 0; border-radius: var(--ui-radius-item); background: transparent;
+  color: var(--ui-text); font-family: var(--ui-type-family); font-size: var(--ui-type-label); line-height: 1.45; text-align: start;
+}
+.ui-video-check > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); margin-top: 2px; color: var(--ui-text-tertiary); } /* gate-allow:space-from-tokens the icon on the first line's x-height */
+.ui-video-check[data-state="flag"] { background: var(--ui-surface-sunken); }
+.ui-video-check[data-state="flag"] > svg { color: var(--ui-danger); }
+button.ui-video-check { cursor: pointer; outline: none; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+@media (hover: hover) { button.ui-video-check:hover { background: var(--ui-action-secondary-hover); } }
+button.ui-video-check:active { background: var(--ui-item-bg-pressed); }
+button.ui-video-check:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+.ui-video-check-text { display: grid; min-width: 0; }
+.ui-video-check-note { color: var(--ui-text-secondary); }
+.ui-video-check-at { font-family: var(--ui-type-family-data); font-variant-numeric: tabular-nums; color: var(--ui-text-secondary); } /* gate-allow:mono-is-data a time on the timeline is data */
+
+/* The other formats, as in the agency concept's "Adapt for": a row each, a box when it will be made, its state */
+.ui-video-adapt { display: grid; gap: var(--ui-space-sm); justify-items: start; }
+.ui-video-formats { display: grid; gap: var(--ui-space-xs); width: 100%; margin: 0; padding: 0; list-style: none; }
+.ui-video-format {
+  display: grid; grid-template-columns: var(--ui-size-icon) minmax(0, 1fr) auto; align-items: center; gap: var(--ui-space-sm);
+  width: 100%; min-height: var(--ui-size-control-md); margin: 0; padding: var(--ui-space-xs) var(--ui-space-sm); border: 0;
+  border-radius: var(--ui-radius-item); background: var(--ui-ground); box-shadow: var(--ui-depth-raised); color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); text-align: start; cursor: pointer; outline: none;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-video-format:disabled { cursor: default; }
+@media (hover: hover) { .ui-video-format:hover:not(:disabled) { background: var(--ui-action-secondary-hover); } }
+.ui-video-format:active:not(:disabled) { transform: scale(var(--ui-motion-press-scale)); }
+.ui-video-format:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-video-format-box {
+  display: grid; place-items: center; width: var(--ui-size-icon); height: var(--ui-size-icon); border-radius: var(--ui-radius-check);
+  background: var(--ui-surface-sunken); color: var(--ui-action-primary-fg);
+}
+.ui-video-format-box[data-on] { background: var(--ui-action-primary); }
+.ui-video-format-box > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-video-format-name { font-weight: var(--ui-type-weight-medium); }
+.ui-video-format-meta { color: var(--ui-text-secondary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+@media (max-width: 899px) {
+  .ui-video-timeline { grid-template-columns: minmax(0, 1fr); }
+  .ui-video-heads, .ui-video-beat { display: none; }
+  .ui-video-frame { width: 100%; }
+}
+/* Touch (an iPad at the desk): every control is 44 to touch; the timeline's tracks grow to it */
+@media (pointer: coarse) {
+  .ui-video-timeline, .ui-video-heads { --video-lanes: var(--ui-size-hit) var(--ui-size-hit) var(--ui-size-hit) var(--ui-size-hit); }
+  .ui-video-scrub, .ui-video-flag, .ui-video-item, .ui-video-take, .ui-video-check, .ui-video-format, .ui-video-trim { min-height: var(--ui-size-hit); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ui-video-motion[data-enter], .ui-video-caption { animation: none; }
+  .ui-video-item, .ui-video-row, .ui-video-format { transition: none; }
+}

@@ -11,6 +11,10 @@ export const img = (tile: string, format: Format = "feed") =>
   `${import.meta.env.BASE_URL}demo/lysne/${tile}-${format}.jpg`;
 /** Pictures made with Higgsfield (app/public/demo/lysne/gen/MANIFEST.md). */
 export const gen = (name: string) => `${import.meta.env.BASE_URL}demo/lysne/gen/${name}.jpg`;
+/** Video shots made with Higgsfield (Kling 3.0) from the 9 Oct LYSNE masters (app/public/demo/lysne/video/), and
+ *  their first frames. */
+export const shot = (name: string) => `${import.meta.env.BASE_URL}demo/lysne/video/${name}.mp4`;
+export const poster = (name: string) => `${import.meta.env.BASE_URL}demo/lysne/video/${name}.jpg`;
 /** Pictures for the agency's example clients and the product kinds. */
 export const pic = (path: string) => `${import.meta.env.BASE_URL}demo/${path}`;
 

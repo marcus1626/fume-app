@@ -21,6 +21,8 @@ import type { Mock } from "./context";
 import { POOL } from "./production";
 import { defaults } from "./seed";
 import { img } from "./seed/helpers";
+import { footage } from "./seed/video";
+import { newTakes, readVideoAsk, startEdit, withChecks } from "./video";
 
 type Calls =
   | "studioKit"
@@ -35,6 +37,8 @@ type Calls =
   | "document"
   | "openDocument"
   | "updateDocument"
+  | "makeShot"
+  | "adaptVideo"
   | "engineEdit"
   | "decideEdit"
   | "render"
@@ -324,6 +328,7 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       layers: [],
       versions: [],
       edits: [],
+      ...(input.studio === "video" ? { video: startEdit(undefined, m.nextId) } : {}),
       state: "draft",
       by: m.me().id,
       updatedAt: now(),
@@ -532,6 +537,25 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       if (change.specs) d.specs = { ...d.specs, ...change.specs };
       if (change.layers) d.layers = change.layers;
       if (change.studio) d.studio = change.studio;
+      // Into Video from a picture: the picked render becomes the first shot's start frame (FLOWS §27.1).
+      if (d.studio === "video" && !d.video) d.video = startEdit(picked(d)?.image, m.nextId);
+      // The takes, the Engine's asks and the formats' progress are the backend's; the edit around them is hers.
+      if (change.video) {
+        const was = d.video;
+        const takesOf = new Map(was?.clips.map((c) => [c.id, c.takes]));
+        const stateOf = new Map(was?.formats.map((f) => [f.id, f.state]));
+        const next = change.video;
+        d.video = withChecks({
+          ...next,
+          clips: next.clips.map((c) => ({ ...c, takes: takesOf.get(c.id) ?? c.takes })),
+          formats: next.formats.map((f) => {
+            if (f.id === next.formatId) return { ...f, state: "this" as const };
+            const s = stateOf.get(f.id);
+            return { ...f, state: !s || s === "this" ? ("planned" as const) : s };
+          }),
+          edits: was?.edits ?? next.edits,
+        });
+      }
       if (change.title) d.title = change.title;
       // A campaign has its own look: the look sources start over, so a campaign with a look of its own leads every
       // look section.
@@ -543,9 +567,69 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       touch(d);
       return wait(d);
     },
+    async makeShot(id, input) {
+      m.mustStaff();
+      const d = doc(id);
+      if (!d.video) throw new FumeError("invalid", "This creative is not a video.");
+      if (input.takes < 1 || input.takes > 4) throw new FumeError("invalid", "Make one to four takes.");
+      let clip = input.clipId ? m.find(d.video.clips, input.clipId, "shot") : undefined;
+      if (!clip) {
+        clip = {
+          id: m.nextId("vc"),
+          name: input.name ?? `Shot ${d.video.clips.length + 1}`,
+          source: "engine",
+          takes: [],
+          in: 0,
+          out: input.recipe.seconds,
+          speed: 1,
+          transition: d.video.clips.length ? "dissolve" : "cut",
+        };
+        d.video.clips.push(clip);
+      }
+      clip.recipe = structuredClone(input.recipe);
+      const made = newTakes(clip, input.recipe, input.takes, m.nextId);
+      clip.takes.push(...made.takes);
+      d.video = withChecks(d.video);
+      touch(d);
+      const clipId = clip.id;
+      later(() => {
+        if (!d.video) return;
+        made.ready(d.video.clips);
+        const now = d.video.clips.find((c) => c.id === clipId);
+        if (now && !now.pickedTakeId) now.pickedTakeId = made.takes[0]!.id;
+        d.video = withChecks(d.video);
+        touch(d);
+      }, 30);
+      return wait(d);
+    },
+    async adaptVideo(id, formatIds) {
+      m.mustStaff();
+      const d = doc(id);
+      if (!d.video) throw new FumeError("invalid", "This creative is not a video.");
+      const pick = new Set(formatIds);
+      d.video.formats = d.video.formats.map((f) =>
+        pick.has(f.id) && f.state !== "this" ? { ...f, state: "making" } : f,
+      );
+      touch(d);
+      later(() => {
+        if (!d.video) return;
+        d.video.formats = d.video.formats.map((f) => (f.state === "making" ? { ...f, state: "ready" } : f));
+        touch(d);
+      }, 40);
+      return wait(d);
+    },
     async engineEdit(id, text) {
       m.mustStaff();
       const d = doc(id);
+      if (d.studio === "video" && d.video) {
+        if (!text.trim()) throw new FumeError("invalid", "Say what to change.");
+        d.video.edits = [
+          ...d.video.edits.map((e) => (e.state === "proposed" ? { ...e, state: "undone" as const } : e)),
+          readVideoAsk(d, text, m.nextId, m.me().id),
+        ];
+        touch(d);
+        return wait(d);
+      }
       const edit: EngineEdit = {
         id: m.nextId("ed"),
         text,
@@ -562,6 +646,15 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
     async decideEdit(id, editId, verdict) {
       m.mustStaff();
       const d = doc(id);
+      const asked = d.video?.edits.find((e) => e.id === editId);
+      if (d.video && asked) {
+        asked.state = verdict === "keep" ? "kept" : "undone";
+        const takesOf = new Map(d.video.clips.map((c) => [c.id, { takes: c.takes, pickedTakeId: c.pickedTakeId }]));
+        const after = { ...asked.after, clips: asked.after.clips.map((c) => ({ ...c, ...takesOf.get(c.id) })) };
+        d.video = withChecks(verdict === "keep" ? { ...d.video, ...after } : d.video);
+        touch(d);
+        return wait(d);
+      }
       const edit = m.find(d.edits, editId, "edit");
       if (verdict === "undo") {
         for (const c of edit.changes) d.variables[c.key] = c.from;
@@ -848,6 +941,7 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
         // The customer sees what Fume saved for them, never a designer's drafts.
         models: db.models.filter((x) => x.workspaceId === ws && (staff || x.state !== "draft")),
         references: db.brandReferences.filter((r) => r.workspaceId === ws && (staff || r.state === "saved")),
+        footage: footage.filter((f) => f.workspaceId === ws),
       });
     },
     async saveModel({ documentId, name, state }) {

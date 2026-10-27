@@ -5,15 +5,22 @@
 // again, and a change from elsewhere (an Engine edit, a picked version) becomes a step you can undo too.
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { useUpdateDocument } from "../../../api/hooks";
-import type { CreativeDocument, Layer, Specs, Variables } from "../../../contract";
+import type { CreativeDocument, Layer, Specs, Variables, VideoEdit } from "../../../contract";
 
 export interface Snapshot {
   variables: Variables;
   specs: Specs;
   layers: Layer[];
+  /** A video's edit (FLOWS §27): cutting, trimming, words and sound are undo steps too. */
+  video?: VideoEdit;
 }
 
-const snapOf = (d: CreativeDocument): Snapshot => ({ variables: d.variables, specs: d.specs, layers: d.layers });
+const snapOf = (d: CreativeDocument): Snapshot => ({
+  variables: d.variables,
+  specs: d.specs,
+  layers: d.layers,
+  ...(d.video ? { video: d.video } : {}),
+});
 const same = (a: Snapshot, b: Snapshot) => JSON.stringify(a) === JSON.stringify(b);
 const FOLD_MS = 800;
 const SAVE_MS = 350;
@@ -36,7 +43,15 @@ export function useDocumentHistory(doc: CreativeDocument) {
       timer.current = undefined;
       inflight.current += 1;
       update.mutate(
-        { documentId: doc.id, change: { variables: snap.variables, specs: snap.specs, layers: snap.layers } },
+        {
+          documentId: doc.id,
+          change: {
+            variables: snap.variables,
+            specs: snap.specs,
+            layers: snap.layers,
+            ...(snap.video ? { video: snap.video } : {}),
+          },
+        },
         { onSettled: () => (inflight.current -= 1) },
       );
     },

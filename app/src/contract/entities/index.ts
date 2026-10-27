@@ -9,6 +9,7 @@ export * from "./campaigns";
 export * from "./plan";
 export * from "./production";
 export * from "./studio";
+export * from "./video";
 export * from "./quality";
 export * from "./review";
 export * from "./delivery";
