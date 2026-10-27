@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>An invitation to Fume</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Newsreader:opsz,wght@6..72,400&display=swap" rel="stylesheet">
+<style>
+  @media (max-width: 620px) { .card { padding: 32px 24px !important; } }
+</style>
+</head>
+<body style="margin:0;padding:0;background:#FFFDF9;">
+<!-- Fume's invitation (Supabase Auth, "Invite user", sent with auth.admin.inviteUserByEmail and
+     data { inviter_name, brand_name }). PROPOSED 26 Oct 2026.
+     Subject: {{ .Data.inviter_name }} invited you to {{ .Data.brand_name }} on Fume
+     The button signs the person in and opens "About you", then their brand. The invitation row must exist first
+     (Fume is invitation-only). Palette hex only, inline styles, 600 px. -->
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#FFFDF9;">Fume makes {{ .Data.brand_name }}'s campaign creatives. A named expert checks each one before you see it.</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFFDF9;">
+  <tr><td align="center" style="padding:40px 16px;">
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;">
+      <tr><td style="padding:0 8px 32px 8px;">
+        <a href="https://fumecreatives.com" style="text-decoration:none;"><img src="{{ .SiteURL }}/email/fume-lockup-horizontal-ink@2x.png" width="120" alt="Fume" style="display:block;width:120px;height:auto;border:0;"></a>
+      </td></tr>
+      <tr><td class="card" style="padding:40px;background:#F8F6F4;border-radius:16px;">
+        <h1 style="margin:0 0 16px 0;font-family:'GT Canon','Newsreader',Georgia,serif;font-weight:400;font-size:32px;line-height:1.15;color:#1B1410;">{{ .Data.inviter_name }} invited you to {{ .Data.brand_name }} on Fume</h1>
+        <p style="margin:0 0 16px 0;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:16px;line-height:1.5;color:#463E39;">Fume makes {{ .Data.brand_name }}'s campaign creatives. Fume's Engine makes them, a named expert checks each one, and you approve what goes out.</p>
+        <p style="margin:0 0 32px 0;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:16px;line-height:1.5;color:#463E39;">The invitation is for <strong style="color:#1B1410;font-weight:500;">{{ .Email }}</strong>. The button signs you in; later you can also use Google with this address.</p>
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+          <td style="background:#1B1410;border-radius:999px;">
+            <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=invite&amp;brand={{ .Data.brand_name }}&amp;from={{ .Data.inviter_name }}" style="display:inline-block;padding:14px 28px;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:16px;font-weight:500;line-height:1.2;color:#FFFDF9;text-decoration:none;">Join {{ .Data.brand_name }}</a>
+          </td>
+        </tr></table>
+        <p style="margin:32px 0 0 0;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:14px;line-height:1.45;color:#6E6259;">If the button has stopped working, sign in at Fume with this address: the invitation is still there.</p>
+      </td></tr>
+      <tr><td style="padding:32px 8px 0 8px;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:13px;line-height:1.5;color:#6E6259;">
+        You get this email because {{ .Data.inviter_name }} invited this address to Fume. If you did not expect it, you can leave it: nothing happens until you press the button.<br><br>
+        Fume · The Creative Engine Behind Every Campaign · <a href="https://fumecreatives.com" style="color:#6E6259;">fumecreatives.com</a>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>

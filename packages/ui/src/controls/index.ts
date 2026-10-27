@@ -12,6 +12,7 @@ export * from "./avatar";
 export * from "./separator";
 export * from "./field";
 export * from "./input-group";
+export * from "./input-otp"; // a sign-in code in six slots
 export * from "./select";
 export * from "./date-field"; // DateField and TimeField, never a native date or time input
 export * from "./checkbox";
