@@ -1471,16 +1471,22 @@
       "description": "The empty state's icon at display size (icons-lucide: 24 px for display).",
       "status": "DECIDED"
     },
-    "empty.scene-width": {
-      "css": "var(--ui-empty-scene-width)",
-      "value": "480px",
-      "description": "The scene card of a page with nothing in it (27 Oct 2026): wide enough for a 3:2 picture to carry the moment, narrow enough to sit as one calm box in the middle of the page.",
+    "empty.scene-height": {
+      "css": "var(--ui-empty-scene-height)",
+      "value": "clamp(400px, 36vw, 520px)",
+      "description": "A page with nothing in it, round 2 (27 Oct 2026): the picture fills the page's width at this height, a calm band from 400 px (room for the glass and its words) to 520 px (never a wall).",
       "status": "PROPOSED"
     },
-    "empty.scene-ratio": {
-      "css": "var(--ui-empty-scene-ratio)",
-      "value": "3 / 2",
-      "description": "The scene's picture: landscape, like a photograph on a desk.",
+    "empty.scene-dim": {
+      "css": "var(--ui-empty-scene-dim)",
+      "value": "rgb(27 20 16 / 0.12)",
+      "description": "Ink at 12 % over the whole picture, flat (no gradient): the picture steps back so the glass and its words lead.",
+      "status": "PROPOSED"
+    },
+    "empty.scene-glass-width": {
+      "css": "var(--ui-empty-scene-glass-width)",
+      "value": "23rem",
+      "description": "The Smoke glass in the middle of the picture: the icon, the title, one line and the next step on a short measure.",
       "status": "PROPOSED"
     },
     "skeleton.bg": {

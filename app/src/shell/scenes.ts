@@ -1,18 +1,18 @@
 // The pictures of the empty pages (PROPOSED 27 Oct 2026, Marcus): a page with nothing in it, because everything is
-// done or because it is not set up yet, shows one calm card in the middle with a picture that carries the moment.
-// Fume's own pictures (house layer: analog interiors and light, nobody posing), made with the Engine, in
-// public/scenes/ at 1200 × 800. Which page uses which is in FLOWS §28.
+// done or because it is not set up yet, shows a picture that carries the moment, with the words on glass over it.
+// Fume's own pictures in the house layer of the Imagery system (one warm light, one sharp thing, the subject in the
+// right third), made with the Engine, in public/scenes/ at 1920 × 1072. Which page uses which is in FLOWS §28.
 export type Scene =
-  | "morning" // hands around a coffee cup in low sun: nothing waits, before noon
-  | "afternoon" // tea and a closed notebook on an oak desk: nothing waits, after noon
-  | "evening" // a lamp switched on at dusk: nothing waits, in the evening
-  | "checked" // a loupe on a squared stack of proofs: nothing waits for a check
-  | "start" // an open notebook and a fountain pen: no campaigns yet
-  | "parcel" // a kraft parcel on a sunlit stone bench: no deliveries yet
+  | "morning" // hands around a coffee cup, steam in the first light: nothing waits, before noon
+  | "afternoon" // water in amber glass by a linen curtain: nothing waits, after noon
+  | "evening" // a lamp on a walnut sideboard at dusk: nothing waits, in the evening
+  | "checked" // a brass loupe on a stack of proofs: nothing waits for a check
+  | "start" // a blank notebook and a fountain pen: no campaigns yet
+  | "parcel" // a kraft parcel on a travertine bench: no deliveries yet
   | "connect" // a lamp with its plug beside the socket: something is not connected yet
-  | "quiet" // a window seat with a folded blanket: nothing to review
-  | "studio" // an empty studio with the camera ready: the Engine has not run yet
-  | "letters"; // opened letters squared away: every notification read
+  | "quiet" // a window seat with a folded throw: nothing to review
+  | "studio" // a bare plinth under a softbox, the camera ready: the Engine has not run yet
+  | "letters"; // opened letters squared, a brass opener: every notification read
 
 export const sceneSrc = (scene: Scene) => `${import.meta.env.BASE_URL}scenes/${scene}.jpg`;
 

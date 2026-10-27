@@ -1,6 +1,7 @@
 // Empty state: design-system/components/empty.css (shadcn's empty parts). Calm and centred, one icon in a soft square
 // (the Engine where the next step is to generate, the grey checked triangle for an empty check queue), one next step.
-// A page with nothing in it can be a scene instead: <Empty scene><EmptyScene src/> … (PROPOSED 27 Oct 2026).
+// A page with nothing in it can be a scene instead: <Empty scene><EmptyScene src/><EmptySceneGlass>…</EmptySceneGlass>
+// (PROPOSED 27 Oct 2026): one of Fume's pictures across the width, dimmed, with Smoke glass in the middle.
 import { type HTMLAttributes, type ReactNode } from "react";
 import { cx } from "../cx";
 import { Icon, type IconName } from "../icons";
@@ -10,7 +11,7 @@ export interface EmptyProps extends HTMLAttributes<HTMLDivElement> {
   surface?: boolean;
   /** Smaller air and title (.ui-empty--sm), for cards and charts. */
   size?: "default" | "sm";
-  /** A page with nothing in it: one calm card in the middle with a picture on top (.ui-empty--scene, PROPOSED). */
+  /** A page with nothing in it: a picture across the width with glass in the middle (.ui-empty--scene, PROPOSED). */
   scene?: boolean;
 }
 export function Empty({ surface, size = "default", scene, className, ...props }: EmptyProps) {
@@ -29,22 +30,34 @@ export function Empty({ surface, size = "default", scene, className, ...props }:
   );
 }
 
-export interface EmptySceneProps extends HTMLAttributes<HTMLElement> {
+export interface EmptySceneProps {
   /** The picture: one of Fume's own, made with the Engine. */
   src: string;
   /** It sets the mood, so it is decorative by default. */
   alt?: string;
-  /** The label every image carries (imagery rule). */
+  /** The label every image carries (imagery rule), on a small glass chip in the corner. */
   label?: string;
 }
-/** The scene's picture with its label under it, for <Empty scene>. */
-export function EmptyScene({ src, alt = "", label = "Made with Fume Engine", className, ...props }: EmptySceneProps) {
+/** The scene's picture and its label, behind the glass of <Empty scene>. */
+export function EmptyScene({ src, alt = "", label = "Made with Fume Engine" }: EmptySceneProps) {
   return (
-    <figure data-slot="empty-scene" className={cx("ui-empty-scene", className)} {...props}>
-      <img src={src} alt={alt} decoding="async" draggable={false} />
-      <figcaption>{label}</figcaption>
-    </figure>
+    <>
+      <img
+        data-slot="empty-scene"
+        className="ui-empty-scene-img"
+        src={src}
+        alt={alt}
+        decoding="async"
+        draggable={false}
+      />
+      <span className="ui-empty-scene-label">{label}</span>
+    </>
   );
+}
+
+/** The Smoke glass in the middle of the scene: the header (icon, title, text) and the next step go inside it. */
+export function EmptySceneGlass({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div data-slot="empty-scene-glass" className={cx("ui-empty-scene-glass", className)} {...props} />;
 }
 
 export function EmptyHeader({ className, ...props }: HTMLAttributes<HTMLDivElement>) {

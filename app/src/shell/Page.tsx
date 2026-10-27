@@ -13,6 +13,7 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyScene,
+  EmptySceneGlass,
   EmptyTitle,
   Spinner,
   WithTooltip,
@@ -445,7 +446,7 @@ export function Failed({ error, onRetry }: { error: unknown; onRetry?: () => voi
 }
 
 /** An empty list with one line on why and, when there is one, the way to fill it. With a scene, the page has nothing
- *  else to show: one card in the middle with a picture that carries the moment (scenes.ts, PROPOSED). */
+ *  else to show: a picture across the width that carries the moment, with the words on glass (scenes.ts, PROPOSED). */
 export function Nothing({
   icon,
   title,
@@ -463,11 +464,14 @@ export function Nothing({
     return (
       <Empty scene data-scene={scene}>
         <EmptyScene src={sceneSrc(scene)} />
-        <EmptyHeader>
-          <EmptyTitle>{title}</EmptyTitle>
-          {text && <EmptyDescription>{text}</EmptyDescription>}
-        </EmptyHeader>
-        {action && <EmptyContent>{action}</EmptyContent>}
+        <EmptySceneGlass>
+          <EmptyHeader>
+            <EmptyMedia icon={icon} />
+            <EmptyTitle>{title}</EmptyTitle>
+            {text && <EmptyDescription>{text}</EmptyDescription>}
+          </EmptyHeader>
+          {action && <EmptyContent>{action}</EmptyContent>}
+        </EmptySceneGlass>
       </Empty>
     );
   return (

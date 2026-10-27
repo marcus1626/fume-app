@@ -267,8 +267,9 @@
   --ui-empty-media-bg: var(--ui-surface-sunken);
   --ui-empty-measure: 38ch; /* Line length of the empty state's text: short lines, centred. */
   --ui-empty-icon: 24px; /* The empty state's icon at display size (icons-lucide: 24 px for display). */
-  --ui-empty-scene-width: 480px; /* The scene card of a page with nothing in it (27 Oct 2026): wide enough for a 3:2 picture to carry the moment, narrow enough to sit as one calm box in the middle of the page. */
-  --ui-empty-scene-ratio: 3 / 2; /* The scene's picture: landscape, like a photograph on a desk. */
+  --ui-empty-scene-height: clamp(400px, 36vw, 520px); /* A page with nothing in it, round 2 (27 Oct 2026): the picture fills the page's width at this height, a calm band from 400 px (room for the glass and its words) to 520 px (never a wall). */
+  --ui-empty-scene-dim: rgb(27 20 16 / 0.12); /* Ink at 12 % over the whole picture, flat (no gradient): the picture steps back so the glass and its words lead. */
+  --ui-empty-scene-glass-width: 23rem; /* The Smoke glass in the middle of the picture: the icon, the title, one line and the next step on a short measure. */
   --ui-skeleton-bg: var(--ui-surface-sunken); /* Placeholder shapes on Porcelain: the sunken step, in the shape and size of what is coming. */
   --ui-skeleton-bg-pulse: var(--ui-surface); /* The shimmer lifts the shape to the surface step and back, slowly. A flat colour change, never a gradient sweep (round 7; restored in round 9 after Marcus found the round 8 sweep artificial). */
   --ui-skeleton-bg-on-surface: var(--fume-focus-100); /* Inside a card (surface) the shape starts one step deeper... */
