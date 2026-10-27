@@ -27,9 +27,10 @@ only, an Ink pill button and the Ink lockup on Porcelain. They follow the rules 
    - **Site URL:** the app's public address.
    - **Email OTP length:** 6.
    - **Email OTP expiration:** 3600 s. The emails say "within the hour".
-4. Make the logo load. It comes from `{{ .SiteURL }}/email/fume-lockup-horizontal-ink@2x.png`. `app/middleware.ts`
-   lets `/email/` through without the preview password, but a deployment behind Vercel's own login will still block
-   it. Until there is a public address, inboxes show the alt text "Fume".
+4. The logo loads from the public edge function `email-logo` (`supabase/functions/email-logo`,
+   `https://vkusmctftfzsrxbcxtdz.supabase.co/functions/v1/email-logo`): the Ink lockup on a Porcelain tile, so it
+   stays readable when an inbox shows the email in dark mode. The app's previews sit behind Vercel's login, so the
+   logo cannot come from `{{ .SiteURL }}`.
 5. Turn on `VITE_AUTH_CODE=on` in Vercel.
 
 ## Sending invitations (not built yet)
