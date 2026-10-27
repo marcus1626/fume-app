@@ -36,9 +36,9 @@ Every component accepts `className` (merged with `cx`) and passes the rest of it
 - `AlertProps`: the props type.
 
 ## Empty (empty.tsx, empty.css)
-- `Empty` (div.ui-empty): HTML + `surface?: boolean`, `size?: "default" | "sm"`, `scene?: boolean` (PROPOSED: a page with nothing in it, a picture across the width with glass in the middle).
-- `EmptyScene` (img.ui-empty-scene-img + span.ui-empty-scene-label): `src: string`, `alt?` [""], `label?` ["Made with Fume Engine"].
-- `EmptySceneGlass` (div.ui-empty-scene-glass): HTML. The Smoke glass that holds the header and the next step.
+- `Empty` (div.ui-empty): HTML + `surface?: boolean`, `size?: "default" | "sm"`, `scene?: boolean` (PROPOSED: a page with nothing in it, a picture across the width with a Smoke pill bar on it).
+- `EmptyScene` (img.ui-empty-scene-img): `src: string`, `alt?` [""]. No label on the picture.
+- `EmptySceneGlass` (div.ui-empty-scene-glass): HTML. The Smoke pill bar that holds the header and the next step; below 560 px of picture it folds into a small glass card.
 - `EmptyHeader` (div): HTML.
 - `EmptyMedia` (div): HTML + `variant?: "default" | "icon"` ["icon"], `icon?: IconName`, `waiting?: boolean`.
 - `EmptyTitle`: HTML + `as?: "h1" … "h6" | "p"` ["h3"].
