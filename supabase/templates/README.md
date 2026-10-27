@@ -32,11 +32,12 @@ an invited address signs in by email, and both are confirmed the same way (`type
    - **Email OTP length:** 6 (the project had 8). The code field has six slots.
    - **Email OTP expiration:** 3600 s. The emails say "within the hour".
    - **Redirect URLs:** every address the app runs on (the live app, the previews, localhost).
-3. **Send email through Resend** (Authentication › SMTP). Without it Supabase sends two emails an hour, and only to the
-   members of the Supabase organisation.
-4. Make the logo load. It comes from `{{ .SiteURL }}/email/fume-lockup-horizontal-ink@2x.png`. `app/middleware.ts`
-   lets `/email/` through without the preview password once the app on the Site URL carries it. Until then, inboxes
-   show the alt text "Fume".
+3. **Send email through Resend** (Authentication › SMTP; set up 27 Oct). Without it Supabase sends two emails an
+   hour, and only to the members of the Supabase organisation.
+4. The logo loads from the public edge function `email-logo` (`supabase/functions/email-logo`,
+   `https://vkusmctftfzsrxbcxtdz.supabase.co/functions/v1/email-logo`): the Ink lockup on a Porcelain tile, so it
+   stays readable when an inbox shows the email in dark mode. The app's previews sit behind Vercel's login, so the
+   logo cannot come from `{{ .SiteURL }}`.
 5. Turn on `VITE_AUTH_CODE=on` in Vercel.
 
 ## Sending invitations
