@@ -11,7 +11,7 @@ end $$;
 
 create schema auth;
 grant usage on schema auth to anon, authenticated;
-create table auth.users (id uuid primary key default gen_random_uuid(), email text not null unique, raw_user_meta_data jsonb not null default '{}');
+create table auth.users (id uuid primary key default gen_random_uuid(), email text not null unique, raw_user_meta_data jsonb not null default '{}', last_sign_in_at timestamptz);
 create function auth.uid() returns uuid language sql stable as $$
   select nullif(coalesce(
     nullif(current_setting('request.jwt.claim.sub', true), ''),

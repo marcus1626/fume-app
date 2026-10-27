@@ -6,43 +6,57 @@ only, an Ink pill button and the Ink lockup on Porcelain. They follow the rules 
 
 | File | Supabase Auth email | Subject |
 | --- | --- | --- |
-| `magic-link.html` | Magic Link | `Your sign-in link for Fume` |
+| `magic-link.html` | Magic Link, and Confirm signup | `Your sign-in link for Fume` |
 | `invite.html` | Invite user | `{{ .Data.inviter_name }} invited you to {{ .Data.brand_name }} on Fume` |
+
+`magic-link.html` serves both sign-in emails: Supabase sends "Confirm signup" instead of "Magic Link" the first time
+an invited address signs in by email, and both are confirmed the same way (`type=email`).
 
 ## What they do
 
-- **The button opens Fume's confirm page** (`/auth/confirm?token_hash=…&type=…`). The person signs in only when they
-  press the button there. A mail scanner that opens every link (common at companies) can no longer use the link up,
-  which is Supabase's own advice for this problem.
+- **The button opens Fume's confirm page** (`{{ .RedirectTo }}/auth/confirm?token_hash=…&type=…`). The person signs
+  in only when they press the button there. A mail scanner that opens every link (common at companies) can no longer
+  use the link up, which is Supabase's own advice for this problem. `{{ .RedirectTo }}` is the app the person asked
+  from (its origin), so a preview and the live app each get their own links; Supabase Auth falls back to the Site URL
+  when the address is not on its allow list.
 - **The sign-in email also carries the 6-digit code** (`{{ .Token }}`) for signing in on another device. "Check your
   email" asks for it when the app is built with `VITE_AUTH_CODE=on`. Turn that on once this email is in Supabase.
 - **The invitation names who invited and to which brand** (`data: { inviter_name, brand_name }`). The confirm page
   says "Join LYSNE on Fume" with a "Join LYSNE" button.
 
-## Putting them in (Marcus or the MVP thread)
+## Putting them in
 
-1. In Supabase, go to Authentication › Emails › Magic Link. Paste `magic-link.html` and set the subject.
-2. Do the same for Invite user with `invite.html`.
-3. Check the Auth settings:
-   - **Site URL:** the app's public address.
-   - **Email OTP length:** 6.
+1. In Supabase, go to Authentication › Emails. Paste `magic-link.html` into Magic Link and into Confirm signup, and
+   `invite.html` into Invite user, each with its subject.
+2. Check the Auth settings:
+   - **Email OTP length:** 6 (the project had 8). The code field has six slots.
    - **Email OTP expiration:** 3600 s. The emails say "within the hour".
+   - **Redirect URLs:** every address the app runs on (the live app, the previews, localhost).
+3. **Send email through Resend** (Authentication › SMTP). Without it Supabase sends two emails an hour, and only to the
+   members of the Supabase organisation.
 4. Make the logo load. It comes from `{{ .SiteURL }}/email/fume-lockup-horizontal-ink@2x.png`. `app/middleware.ts`
-   lets `/email/` through without the preview password, but a deployment behind Vercel's own login will still block
-   it. Until there is a public address, inboxes show the alt text "Fume".
+   lets `/email/` through without the preview password once the app on the Site URL carries it. Until then, inboxes
+   show the alt text "Fume".
 5. Turn on `VITE_AUTH_CODE=on` in Vercel.
 
-## Sending invitations (not built yet)
+## Sending invitations
 
-Fume is invitation-only: an `invitations` row comes first. To send the email, a server-side step (an Edge Function
-with the service role) calls:
+Settings › Team › Invite someone calls the edge function `invite` (`supabase/functions/invite`). It calls
+`public.invite_member` as the person inviting, which decides who may invite (the brand's owner, Fume's account
+manager on the brand, an admin) and keeps the invitation. Then the function sends the email with the service role:
 
 ```ts
-auth.admin.inviteUserByEmail(email, { data: { inviter_name, brand_name }, redirectTo: SITE_URL })
+auth.admin.inviteUserByEmail(email, { data: { inviter_name, brand_name }, redirectTo: site })
 ```
 
-This creates the account at once (`app.on_new_user` turns the invitation into access). If the invitation link has
-stopped working, the person can still sign in later with Google or an email code.
+This creates the account at once (`app.on_new_user` turns the invitation into the membership). Until the person has
+said who they are ("About you"), the team lists them as invited. Someone who already uses Fume gets no email: the
+brand is in their list the next time they open Fume. If the invitation link has stopped working, the person can still
+sign in with Google or an email code.
+
+Deploy it with `verify_jwt` off: the function asks Supabase Auth who the token belongs to, and the database command
+decides the rest. Its tests run without Supabase: `deno test supabase/functions/invite/` (from a folder without
+`package.json`, or with `"nodeModulesDir": "none"`).
 
 The invitation's text is written for a brand's own people ("you approve what goes out"). Supabase has one invite
 email, so when Fume's or an agency's people are invited the same way, add a `kind` to `data` and branch the text with

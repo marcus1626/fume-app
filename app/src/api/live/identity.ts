@@ -1,10 +1,39 @@
-// Identity on the live backend: the session, the workspaces, the team and the people.
-import type { CustomerRole, FumeApi, Invitation, Membership, Organisation, Session } from "../../contract";
+// Identity on the live backend: the session, the workspaces, the team and the people. An invitation goes through the
+// edge function `invite` (supabase/functions/invite), which keeps it in the database and sends the email.
+import { FunctionsHttpError } from "@supabase/supabase-js";
+import type {
+  CustomerRole,
+  FumeApi,
+  FumeErrorCode,
+  Invitation,
+  Membership,
+  Organisation,
+  Session,
+} from "../../contract";
 import { FumeError } from "../../contract";
 import type { Live } from "./context";
 import { command, one, rows, supabase } from "./supabase";
 
-type Calls = "session" | "switchWorkspace" | "team" | "people" | "updateProfile";
+type Calls = "session" | "switchWorkspace" | "team" | "people" | "updateProfile" | "invite";
+
+interface InvitationRow {
+  id: string;
+  email: string;
+  role: CustomerRole | null;
+  invited_by: string | null;
+  state: Invitation["state"];
+  created_at: string;
+}
+
+const toInvitation = (i: InvitationRow, workspaceId: string): Invitation => ({
+  id: i.id,
+  workspaceId,
+  email: i.email,
+  role: i.role!,
+  invitedBy: i.invited_by ?? "",
+  state: i.state,
+  at: i.created_at,
+});
 
 interface OrganisationRow {
   id: string;
@@ -59,46 +88,73 @@ export function identityCalls(live: Live): Pick<FumeApi, Calls> {
     async team() {
       const ws = await live.workspaceId();
       const people = await live.people();
-      const [members, staff, invitations] = await Promise.all([
+      const [members, staff, invitations, waiting] = await Promise.all([
         rows<{ user_id: string; role: CustomerRole }>(
           supabase().from("memberships").select("user_id, role").eq("workspace_id", ws),
         ),
         rows<{ user_id: string }>(supabase().from("staff_assignments").select("user_id").eq("workspace_id", ws)),
-        rows<{
-          id: string;
-          email: string;
-          role: CustomerRole | null;
-          invited_by: string | null;
-          state: Invitation["state"];
-          created_at: string;
-        }>(
+        rows<InvitationRow>(
           supabase()
             .from("invitations")
             .select("id, email, role, invited_by, state, created_at")
             .eq("workspace_id", ws)
-            .not("role", "is", null),
+            .not("role", "is", null)
+            .order("created_at", { ascending: false }),
         ),
+        // The invitation email makes the account at once, so someone who has not opened Fume yet is a member already.
+        // Until they have said who they are, the team shows them as invited.
+        supabase()
+          .from("profiles")
+          .select("id")
+          .is("introduced_at", null)
+          .then(({ data, error }) => new Set(error ? [] : (data ?? []).map((p: { id: string }) => p.id))),
       ]);
+      const joined = members.filter((m) => people.has(m.user_id) && !waiting.has(m.user_id));
+      const invited = members.flatMap((m) => {
+        const person = people.get(m.user_id);
+        if (!person || !waiting.has(m.user_id)) return [];
+        const row = invitations.find((i) => i.email.toLowerCase() === person.email.toLowerCase());
+        return [
+          {
+            ...toInvitation(
+              row ?? {
+                id: m.user_id,
+                email: person.email,
+                role: m.role,
+                invited_by: null,
+                state: "sent",
+                created_at: "",
+              },
+              ws,
+            ),
+            role: m.role,
+            state: "sent" as const,
+          },
+        ];
+      });
       return {
-        members: members
-          .filter((m) => people.has(m.user_id))
-          .map((m) => ({
-            user: people.get(m.user_id)!,
-            membership: { userId: m.user_id, workspaceId: ws, role: m.role } satisfies Membership,
-          })),
-        invitations: invitations
-          .filter((i) => i.state === "sent")
-          .map((i) => ({
-            id: i.id,
-            workspaceId: ws,
-            email: i.email,
-            role: i.role!,
-            invitedBy: i.invited_by ?? "",
-            state: i.state,
-            at: i.created_at,
-          })),
+        members: joined.map((m) => ({
+          user: people.get(m.user_id)!,
+          membership: { userId: m.user_id, workspaceId: ws, role: m.role } satisfies Membership,
+        })),
+        invitations: [...invitations.filter((i) => i.state === "sent").map((i) => toInvitation(i, ws)), ...invited],
         fumeTeam: [...new Set(staff.map((s) => s.user_id))].flatMap((id) => people.get(id) ?? []),
       };
+    },
+    // The edge function keeps the invitation (the database decides who may invite) and sends the email. Someone who
+    // already uses Fume joins at once ("accepted") and gets no email.
+    async invite(email, role) {
+      const ws = await live.workspaceId();
+      const { data, error } = await supabase().functions.invoke<{ invitation: InvitationRow }>("invite", {
+        body: { workspaceId: ws, email: email.trim(), role, site: window.location.origin },
+      });
+      if (error) {
+        const said: { code?: FumeErrorCode; message?: string } =
+          error instanceof FunctionsHttpError ? await error.context.json().catch(() => ({})) : {};
+        throw new FumeError(said.code ?? "unavailable", said.message ?? "The invitation wasn’t sent. Try again.");
+      }
+      live.forget();
+      return toInvitation(data!.invitation, ws);
     },
     // Name and title; the email address is the one the person signs in with.
     async updateProfile({ name, title }) {
