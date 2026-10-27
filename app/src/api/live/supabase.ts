@@ -56,3 +56,16 @@ export async function one<T>(
 export function requestKey(): string {
   return crypto.randomUUID();
 }
+
+const asked = new Map<string, number>();
+/** Asks Fume to write the campaign's plan when one is waiting for it (supabase/functions/fume-plan). It answers at
+ *  once and writes in the background; the record's new row refreshes the plan. At most once a minute per campaign,
+ *  unless `now`, and never in the way: a failure here only means the next read asks again. */
+export function askFumeToWrite(campaignId: string, now = false): void {
+  const last = asked.get(campaignId) ?? 0;
+  if (!now && Date.now() - last < 60_000) return;
+  asked.set(campaignId, Date.now());
+  void supabase()
+    .functions.invoke("fume-plan", { body: { campaignId } })
+    .catch(() => undefined);
+}

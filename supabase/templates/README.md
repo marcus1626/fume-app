@@ -63,8 +63,9 @@ decides the rest. Its tests run without Supabase: `deno test supabase/functions/
 `package.json`, or with `"nodeModulesDir": "none"`).
 
 The invitation's text is written for a brand's own people ("you approve what goes out"). Supabase has one invite
-email, so when Fume's or an agency's people are invited the same way, add a `kind` to `data` and branch the text with
-`{{ if eq .Data.kind "agency" }}…{{ end }}`.
+email, so Fume's own people get `data.team = true` and the template branches on it
+(`{{ if .Data.team }}…{{ else }}…{{ end }}`; a missing key is false, where `eq` on a missing key would fail): "… invited you to the Fume team", the studio's work, "Join the
+team". An agency's people can get a flag of their own the same way.
 
 ## How they were checked
 
