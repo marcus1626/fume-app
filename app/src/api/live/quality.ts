@@ -134,11 +134,64 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
     ? await rows<{
         id: string;
         brand_dna_version_id: string | null;
-        facts: { label: string; statement: string }[];
+        facts: { id?: string; label: string; statement: string }[];
       }>(supabase().from("context_snapshots").select("id, brand_dna_version_id, facts").in("id", snapshotIds))
     : [];
   const dnaIds = [...new Set(snapshots.flatMap((s) => (s.brand_dna_version_id ? [s.brand_dna_version_id] : [])))];
   const campaignIds = [...new Set(creatives.map((c) => c.campaign_id))];
+  // What changed since a version was made (plan Thursday: a new fact or rule is linked to the work it affects): a fact
+  // in its snapshot that was corrected since, and a newer approved Brand DNA of its brand.
+  const snapFactIds = [...new Set(snapshots.flatMap((s) => s.facts.flatMap((f) => (f.id ? [f.id] : []))))];
+  const [corrected, approvedDna] = await Promise.all([
+    snapFactIds.length
+      ? rows<{ id: string; superseded_by: string }>(
+          supabase()
+            .from("product_facts")
+            .select("id, superseded_by")
+            .in("id", snapFactIds)
+            .not("superseded_by", "is", null),
+        )
+      : Promise.resolve([]),
+    rows<{ id: string; workspace_id: string; version: number }>(
+      supabase()
+        .from("brand_dna_versions")
+        .select("id, workspace_id, version")
+        .eq("state", "approved")
+        .in("workspace_id", [...new Set(shown.map((v) => v.workspace_id))]),
+    ),
+  ]);
+  const successors = corrected.length
+    ? await rows<{ id: string; label: string; statement: string }>(
+        supabase()
+          .from("product_facts")
+          .select("id, label, statement")
+          .in(
+            "id",
+            corrected.map((c) => c.superseded_by),
+          ),
+      )
+    : [];
+  const changedSince = (snapshot: (typeof snapshots)[number] | undefined, workspaceId: string): Check[] => {
+    if (!snapshot) return [];
+    const facts = snapshot.facts.flatMap((f) => {
+      const next = successors.find((x) => x.id === corrected.find((c) => c.id === f.id)?.superseded_by);
+      return next
+        ? [{ result: "flag" as const, text: `${f.label} was corrected since this was made: now “${next.statement}”` }]
+        : [];
+    });
+    const made = approvedDna.find((d) => d.id === snapshot.brand_dna_version_id);
+    const newest = approvedDna.filter((d) => d.workspace_id === workspaceId).sort((a, b) => b.version - a.version)[0];
+    const dna =
+      made && newest && newest.version > made.version
+        ? [
+            {
+              result: "flag" as const,
+              text: `Made with Brand DNA v${made.version}; v${newest.version} is approved since`,
+            },
+          ]
+        : [];
+    return [...facts, ...dna];
+  };
   const [rules, campaigns, workspaces] = await Promise.all([
     dnaIds.length
       ? rows<{ brand_dna_version_id: string; area: string; statement: string }>(
@@ -213,11 +266,14 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
         dueAt: campaign.dueAt ?? v.created_at,
         risk: "normal",
         state,
-        evaluation: withFileCheck(
-          manualEvaluation(made),
-          fileChecks.filter((f) => f.version_id === v.id),
-          Boolean(v.file_id),
-          toFormat(cr.format),
+        evaluation: withChanges(
+          withFileCheck(
+            manualEvaluation(made),
+            fileChecks.filter((f) => f.version_id === v.id),
+            Boolean(v.file_id),
+            toFormat(cr.format),
+          ),
+          state === "checked" ? [] : changedSince(snapshot, v.workspace_id),
         ),
         feedback,
         version: v.number,
@@ -323,4 +379,11 @@ export function withFileCheck(e: Evaluation, found: FileFinding[], hasFile: bool
       }))
     : [{ result: "pass" as const, text: `The file is the right kind, shape and size for ${format}` }];
   return { ...e, checks };
+}
+
+type Check = NonNullable<Evaluation["checks"]>[number];
+
+/** Adds what changed in Product Truth or Brand DNA since the version was made, for the expert to weigh. */
+export function withChanges(e: Evaluation, changes: Check[]): Evaluation {
+  return changes.length ? { ...e, checks: [...(e.checks ?? []), ...changes] } : e;
 }
