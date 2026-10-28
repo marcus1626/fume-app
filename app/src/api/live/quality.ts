@@ -9,6 +9,8 @@ import {
   FumeError,
   type Campaign,
   type CheckArea,
+  type Evaluation,
+  type Format,
   type FumeApi,
   type Id,
   type QaFeedback,
@@ -97,7 +99,7 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
   const shownIds = shown.map((v) => v.id);
   const previous = (v: VersionRow) => all.find((x) => x.creative_id === v.creative_id && x.number === v.number - 1);
   const candidateIds = shown.flatMap((v) => (v.candidate_id ? [v.candidate_id] : []));
-  const [checks, candidates, changes, files] = await Promise.all([
+  const [checks, candidates, changes, files, fileChecks] = await Promise.all([
     rows<CheckRow & { snapshot_id: string | null }>(
       supabase().from("expert_checks").select(`${CHECK}, snapshot_id`).in("version_id", shownIds),
     ),
@@ -116,6 +118,16 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
         .order("created_at"),
     ),
     fileUrls([...shown.map((v) => v.file_id), ...shown.map((v) => previous(v)?.file_id)]),
+    // Fume's file check on each version (20261028090000_file_checks.sql); only Fume's team reads it.
+    rows<FileFinding>(
+      supabase()
+        .from("findings")
+        .select("version_id, finding, expected, observed")
+        .eq("method", "automated")
+        .eq("dimension", "file_spec")
+        .in("version_id", shownIds)
+        .order("created_at"),
+    ),
   ]);
   const snapshotIds = [...new Set(checks.flatMap((c) => (c.snapshot_id ? [c.snapshot_id] : [])))];
   const snapshots = snapshotIds.length
@@ -201,7 +213,12 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
         dueAt: campaign.dueAt ?? v.created_at,
         risk: "normal",
         state,
-        evaluation: manualEvaluation(made),
+        evaluation: withFileCheck(
+          manualEvaluation(made),
+          fileChecks.filter((f) => f.version_id === v.id),
+          Boolean(v.file_id),
+          toFormat(cr.format),
+        ),
         feedback,
         version: v.number,
         ...(before
@@ -285,4 +302,25 @@ export function qualityCalls(live: Live): Pick<FumeApi, Calls> {
       return withToSend(campaign, 0);
     },
   };
+}
+
+interface FileFinding {
+  version_id: string;
+  finding: string;
+  expected: string | null;
+  observed: string | null;
+}
+
+/** The file check's result for the expert: what it found, or that the file is right for its format. */
+export function withFileCheck(e: Evaluation, found: FileFinding[], hasFile: boolean, format: Format): Evaluation {
+  if (!hasFile) return e;
+  const checks = found.length
+    ? found.map((f) => ({
+        result: "flag" as const,
+        text: [f.finding, f.expected && `Expected ${f.expected}.`, f.observed && `The file: ${f.observed}.`]
+          .filter(Boolean)
+          .join(" "),
+      }))
+    : [{ result: "pass" as const, text: `The file is the right kind, shape and size for ${format}` }];
+  return { ...e, checks };
 }

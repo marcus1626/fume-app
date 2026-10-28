@@ -17,7 +17,7 @@ begin
   insert into test.log (what) values (p_what);
 end $$;
 SQL
-for f in 10_rules 20_campaigns 30_production_check 40_review_delivery 70_fume_plans; do grep -v '^\\' "supabase/tests/$f.sql"; done
+for f in 10_rules 20_campaigns 30_production_check 40_review_delivery 70_fume_plans 80_file_checks; do grep -v '^\\' "supabase/tests/$f.sql"; done
 echo "reset role;"
 echo "select count(*) as passed, (select what from test.log order by n desc limit 1) as last from test.log;"
 echo "rollback;"

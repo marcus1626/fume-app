@@ -74,6 +74,8 @@ export interface Evaluation {
   brandRules: "pass" | "flag";
   artefacts: "none" | "minor" | "major";
   notes: string[];
+  /** Checks Fume ran on the file itself (its kind, shape, size and weight against the format), each with its result. */
+  checks?: { result: "pass" | "flag"; text: string }[];
 }
 
 /** A spot on a creative in Check: a numbered pin, 0–1 from the top left, with what is wrong there. It goes to the

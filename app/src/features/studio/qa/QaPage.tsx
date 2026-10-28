@@ -1478,6 +1478,7 @@ function Evaluated({
             : "A major artefact",
     },
     ...evaluation.notes.map((n) => ({ result: "flag" as const, text: n })),
+    ...(evaluation.checks ?? []),
   ];
   const flagged = rows.filter((r) => r.result === "flag").length;
   const f = copy.format[format];
@@ -1488,7 +1489,7 @@ function Evaluated({
   return (
     <section className="ui-qa-part" aria-labelledby={`${id}-found`}>
       <h3 className="ui-qa-part-title" id={`${id}-found`}>
-        What the Engine found {flagged ? `· ${copy.count(flagged, "flag")}` : "· nothing flagged"}
+        {fixer.found} {flagged ? `· ${copy.count(flagged, "flag")}` : "· nothing flagged"}
       </h3>
       <ul className="ui-qa-notes">
         {rows.map((r, i) => (
