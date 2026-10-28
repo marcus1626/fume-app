@@ -71,7 +71,7 @@ export const photoOf = (p: Product | undefined) => p?.shots?.find((s) => s.slotI
 /** Focus a field without making a phone raise its keyboard over the card before it is read. */
 const finePointer = () => typeof window !== "undefined" && window.matchMedia?.("(pointer: fine)").matches;
 
-type Photo = { name: string; bytes: number; src: string };
+type Photo = { name: string; bytes: number; src: string; blob?: Blob };
 
 export interface ProductCheckOptions {
   /** After Confirm saved everything, or after Later. */
@@ -197,6 +197,7 @@ export function useProductCheck(
           name: photo.name,
           bytes: photo.bytes,
           src: photo.src,
+          blob: photo.blob,
         });
       for (const f of lines)
         if (said(f).trim() !== f.statement) await correct.mutateAsync({ factId: f.id, statement: said(f).trim() });
@@ -219,7 +220,7 @@ export function useProductCheck(
 
   const take = (file: File | undefined) => {
     if (file && file.type.startsWith("image/"))
-      setPhoto({ name: file.name, bytes: file.size, src: URL.createObjectURL(file) });
+      setPhoto({ name: file.name, bytes: file.size, src: URL.createObjectURL(file), blob: file });
   };
   async function addPhoto() {
     const [file] = await pickFiles("image/*", false);

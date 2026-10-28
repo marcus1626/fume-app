@@ -256,8 +256,8 @@ export const useReadProduct = () => useM((a, v: Parameters<FumeApi["readProduct"
 export const useSaveProductSpecs = () =>
   useM((a, v: { productId: Id } & Parameters<FumeApi["saveProductSpecs"]>[1]) => a.saveProductSpecs(v.productId, v));
 export const useUploadShot = () =>
-  useM((a, v: { productId: Id; slotId: Id; name: string; bytes: number; src?: string }) =>
-    a.uploadShot(v.productId, v.slotId, { name: v.name, bytes: v.bytes, src: v.src }),
+  useM((a, v: { productId: Id; slotId: Id; name: string; bytes: number; src?: string; blob?: Blob }) =>
+    a.uploadShot(v.productId, v.slotId, { name: v.name, bytes: v.bytes, src: v.src, blob: v.blob }),
   );
 export const useUploadProductFile = () =>
   useM((a, v: { productId: Id } & Parameters<FumeApi["uploadProductFile"]>[1]) => a.uploadProductFile(v.productId, v));
