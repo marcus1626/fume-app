@@ -17,6 +17,7 @@ import { qualityCalls } from "./quality";
 import { studioCalls } from "./studio";
 import { reviewCalls } from "./review";
 import { deliveryCalls } from "./delivery";
+import { brandCalls } from "./brand";
 
 export function createLiveApi(): FumeApi {
   const live = createLive();
@@ -35,5 +36,6 @@ export function createLiveApi(): FumeApi {
     ...eventCalls(live),
     ...reviewCalls(live),
     ...deliveryCalls(live),
+    ...brandCalls(live, notYet),
   };
 }
