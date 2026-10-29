@@ -85,8 +85,13 @@ export interface ProductsApi extends ProductImportApi {
       keepShots?: Id[];
     },
   ): Promise<Product>;
-  /** A reference photo for one angle slot. src: where the upload landed (the mock takes the browser's preview). */
-  uploadShot(productId: Id, slotId: Id, file: { name: string; bytes: number; src?: string }): Promise<Product>;
+  /** A reference photo for one angle slot. src: where the upload landed (the mock takes the browser's preview); blob:
+   *  the picture itself, which the live backend stores. */
+  uploadShot(
+    productId: Id,
+    slotId: Id,
+    file: { name: string; bytes: number; src?: string; blob?: Blob },
+  ): Promise<Product>;
   /** A 3D model, dieline or label artwork. */
   uploadProductFile(productId: Id, file: { kind: ProductFile["kind"]; name: string; bytes: number }): Promise<Product>;
 

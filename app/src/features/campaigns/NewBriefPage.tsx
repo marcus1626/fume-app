@@ -93,7 +93,7 @@ const MARKETS: { market: string; language: string }[] = [
   { market: "International", language: "English" },
 ];
 const marketKey = (m: { market: string; language: string }) => `${m.market}|${m.language}`;
-const marketWords = (m: { market: string; language: string }) => `${m.market}, in ${m.language}`;
+const marketWords = (m: { market: string; language: string }) => `${m.market}, in ${copy.languageName(m.language)}`;
 
 /** What she set herself; until then the form keeps what it read from her first line. */
 type Touched = "scope" | "channels" | "formats" | "audience" | "creatives";

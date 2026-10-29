@@ -39,6 +39,7 @@ type Calls =
   | "decideEdit"
   | "render"
   | "pickVersion"
+  | "addVersion"
   | "overrideProduct"
   | "documentToCheck"
   | "undoDocumentToCheck"
@@ -584,6 +585,28 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       const v = m.find(d.versions, versionId, "version");
       d.pickedVersionId = v.id;
       d.variables = structuredClone(v.variables);
+      touch(d);
+      return wait(d);
+    },
+    async addVersion(id, file, note) {
+      m.mustStaff();
+      const d = doc(id);
+      if (!note.trim()) throw new FumeError("invalid", "Say how the picture was made.");
+      const v: RenderVersion = {
+        id: m.nextId("rv"),
+        number: d.versions.length + 1,
+        image: URL.createObjectURL(file),
+        at: now(),
+        by: m.me().id,
+        state: "done",
+        variables: structuredClone(d.variables),
+        specs: structuredClone(d.specs),
+        cost: 0,
+        evaluation: { productTruth: "pass", brandRules: "pass", artefacts: "none", notes: [] },
+        instruction: `Made by hand: ${note.trim()}`,
+      };
+      d.versions.push(v);
+      d.pickedVersionId = v.id;
       touch(d);
       return wait(d);
     },

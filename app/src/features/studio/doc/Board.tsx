@@ -15,6 +15,7 @@ import {
   Button,
   Glass,
   Icon,
+  Input,
   Skeleton,
   TextShimmer,
   Toggle,
@@ -34,6 +35,7 @@ import {
 } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
+  useAddVersion,
   useDecideEdit,
   useDetailTokens,
   useEngineEdit,
@@ -622,90 +624,156 @@ export function Versions({
 
   if (!count)
     return (
-      <p className="ui-desk-versions ui-desk-versions--empty">
-        No versions yet. Each render becomes a version here; nothing is ever overwritten.
-      </p>
+      <>
+        <p className="ui-desk-versions ui-desk-versions--empty">
+          No versions yet. Each render becomes a version here; nothing is ever overwritten.
+        </p>
+        {!readOnly && <AddPicture doc={doc} />}
+      </>
     );
   // While comparing, a tap adds a version to the board or takes it off; otherwise it picks.
   const comparing = compare.length > 0 && Boolean(onCompare);
   const toggle = (id: string) =>
     onCompare?.(compare.includes(id) ? compare.filter((x) => x !== id) : [...compare, id].slice(-COMPARE_MAX));
   return (
-    <ol
-      ref={strip}
-      className="ui-desk-versions"
-      aria-label={comparing ? "Versions: tap to compare" : "Versions"}
-      data-comparing={comparing ? "" : undefined}
-    >
-      {doc.versions.map((v) => {
-        const picked = v.id === doc.pickedVersionId;
-        const flags = flagWords(v, tokens);
-        const body = (
-          <>
-            <span className="ui-desk-version-thumb">
-              {v.state === "rendering" ? <Skeleton shape="thumb" size="100%" /> : <img src={v.image} alt="" />}
-            </span>
-            <span className="ui-desk-version-text">
-              <span className="ui-desk-version-head">
-                <span className="ui-desk-version-num">V{v.number}</span>
-                {picked && (
-                  <span className="ui-desk-version-picked">
-                    <Icon name="bookmark" /> Picked
+    <>
+      <ol
+        ref={strip}
+        className="ui-desk-versions"
+        aria-label={comparing ? "Versions: tap to compare" : "Versions"}
+        data-comparing={comparing ? "" : undefined}
+      >
+        {doc.versions.map((v) => {
+          const picked = v.id === doc.pickedVersionId;
+          const flags = flagWords(v, tokens);
+          const body = (
+            <>
+              <span className="ui-desk-version-thumb">
+                {v.state === "rendering" ? <Skeleton shape="thumb" size="100%" /> : <img src={v.image} alt="" />}
+              </span>
+              <span className="ui-desk-version-text">
+                <span className="ui-desk-version-head">
+                  <span className="ui-desk-version-num">V{v.number}</span>
+                  {picked && (
+                    <span className="ui-desk-version-picked">
+                      <Icon name="bookmark" /> Picked
+                    </span>
+                  )}
+                  <span className="ui-desk-version-when">{when(v.at)}</span>
+                </span>
+                <span className="ui-desk-version-line">
+                  {v.state === "rendering" ? (
+                    <TextShimmer>Rendering</TextShimmer>
+                  ) : v.instruction ? (
+                    `“${v.instruction}”`
+                  ) : (
+                    "Rendered from the variables"
+                  )}
+                </span>
+                {v.state === "done" && (
+                  <span className="ui-desk-version-flags" data-clean={flags.clean ? "" : undefined}>
+                    <Icon name={flags.clean ? "circle-check" : "triangle-alert"} />
+                    {flags.words}
                   </span>
                 )}
-                <span className="ui-desk-version-when">{when(v.at)}</span>
               </span>
-              <span className="ui-desk-version-line">
-                {v.state === "rendering" ? (
-                  <TextShimmer>Rendering</TextShimmer>
-                ) : v.instruction ? (
-                  `“${v.instruction}”`
-                ) : (
-                  "Rendered from the variables"
-                )}
-              </span>
-              {v.state === "done" && (
-                <span className="ui-desk-version-flags" data-clean={flags.clean ? "" : undefined}>
-                  <Icon name={flags.clean ? "circle-check" : "triangle-alert"} />
-                  {flags.words}
-                </span>
+            </>
+          );
+          return (
+            <li key={v.id}>
+              {readOnly ? (
+                <div className="ui-desk-version" aria-current={picked ? "true" : undefined}>
+                  {body}
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  className="ui-desk-version"
+                  aria-current={picked ? "true" : undefined}
+                  aria-pressed={comparing ? compare.includes(v.id) : undefined}
+                  aria-label={`Version ${v.number}${picked ? ", picked" : ""}. ${v.instruction ?? ""} ${flags.words}`}
+                  title={
+                    comparing
+                      ? compare.includes(v.id)
+                        ? "On the board: tap to take it off"
+                        : "Tap to compare it"
+                      : flags.clean
+                        ? undefined
+                        : flags.words
+                  }
+                  disabled={v.state !== "done" || pick.isPending}
+                  onClick={() =>
+                    comparing ? toggle(v.id) : !picked && pick.mutate({ documentId: doc.id, versionId: v.id })
+                  }
+                >
+                  {body}
+                </button>
               )}
-            </span>
-          </>
-        );
-        return (
-          <li key={v.id}>
-            {readOnly ? (
-              <div className="ui-desk-version" aria-current={picked ? "true" : undefined}>
-                {body}
-              </div>
-            ) : (
-              <button
-                type="button"
-                className="ui-desk-version"
-                aria-current={picked ? "true" : undefined}
-                aria-pressed={comparing ? compare.includes(v.id) : undefined}
-                aria-label={`Version ${v.number}${picked ? ", picked" : ""}. ${v.instruction ?? ""} ${flags.words}`}
-                title={
-                  comparing
-                    ? compare.includes(v.id)
-                      ? "On the board: tap to take it off"
-                      : "Tap to compare it"
-                    : flags.clean
-                      ? undefined
-                      : flags.words
-                }
-                disabled={v.state !== "done" || pick.isPending}
-                onClick={() =>
-                  comparing ? toggle(v.id) : !picked && pick.mutate({ documentId: doc.id, versionId: v.id })
-                }
-              >
-                {body}
-              </button>
-            )}
-          </li>
-        );
-      })}
-    </ol>
+            </li>
+          );
+        })}
+      </ol>
+      {!readOnly && <AddPicture doc={doc} />}
+    </>
+  );
+}
+
+/** A picture made by hand (outside the Engine) becomes the newest version, picked, with how it was made. */
+function AddPicture({ doc }: { doc: CreativeDocument }) {
+  const add = useAddVersion();
+  const toast = useToast();
+  const input = useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [note, setNote] = useState("");
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    if (!file || !note.trim()) return;
+    add.mutate(
+      { documentId: doc.id, file, note: note.trim() },
+      {
+        onSuccess: () => {
+          setFile(null);
+          setNote("");
+          toast.done("The picture is the newest version", { description: "Picked to go to check." });
+        },
+        onError: (err) => toast.error("The picture wasn’t added", { description: err.message }),
+      },
+    );
+  };
+  return (
+    <form className="ui-desk-row-actions" onSubmit={submit}>
+      <input
+        ref={input}
+        type="file"
+        accept="image/*"
+        hidden
+        onChange={(e) => {
+          setFile(e.target.files?.[0] ?? null);
+          e.target.value = "";
+        }}
+      />
+      {file ? (
+        <>
+          <Input
+            size="sm"
+            aria-label={`How was ${file.name} made?`}
+            placeholder={`How was ${file.name} made?`}
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            autoFocus
+          />
+          <Button size="sm" type="submit" icon="check" loading={add.isPending} disabled={!note.trim()}>
+            Add
+          </Button>
+          <Button size="sm" variant="quiet" onClick={() => setFile(null)}>
+            Cancel
+          </Button>
+        </>
+      ) : (
+        <Button size="sm" variant="quiet" icon="image-plus" onClick={() => input.current?.click()}>
+          Add a picture made by hand
+        </Button>
+      )}
+    </form>
   );
 }

@@ -91,6 +91,7 @@ import { brandBase, checkPath, frameRoot, type StaffFrameKind } from "../../../s
 import { vars } from "../../brand/board";
 import { formatName } from "../parts";
 import { useNames } from "./names";
+import { fixer } from "../../../lib/fixer";
 
 /** The end card's place in the address (?item=end): past the last creative that waits. */
 const END = "end";
@@ -315,7 +316,7 @@ export function QaPage() {
     tell: (v, text, pins) =>
       feedback.mutateAsync({ itemId: v.item.id, text, pins }).then(
         () => {
-          toast.done(`With the Engine: ${qaName(v)}`, {
+          toast.done(`${fixer.withIt}: ${qaName(v)}`, {
             description: pins.length
               ? `${copy.count(pins.length, "pinned note")} with it. Its fix comes back here.`
               : "Its fix comes back here to check.",
@@ -324,7 +325,7 @@ export function QaPage() {
           return true;
         },
         (e: Error) => {
-          failed("The Engine didn’t get it")(e);
+          failed(fixer.didntGet)(e);
           return false;
         },
       ),
@@ -355,7 +356,7 @@ export function QaPage() {
   });
 
   const meta = queue.data
-    ? [copy.toCheck(toCheck, waitingAll), ...(fixing ? [`${fixing} with the Engine`] : [])]
+    ? [copy.toCheck(toCheck, waitingAll), ...(fixing ? [`${fixing} ${fixer.withItLower}`] : [])]
     : undefined;
   const nothingAtAll = queue.data && all.length === 0 && plans.length === 0;
   // The other tabs that still have something waiting, for the end card's "Next".
@@ -430,8 +431,8 @@ export function QaPage() {
               title={only ? `Nothing from ${run ? "this run" : only} waits for a check` : "Nothing waits for a check"}
               text={
                 agency
-                  ? "What the Engine makes lands here first, before anything goes to the client."
-                  : "What the Engine makes lands here first, before anyone sends it to a customer."
+                  ? `${fixer.landsHere}, before anything goes to the client.`
+                  : `${fixer.landsHere}, before anyone sends it to a customer.`
               }
               action={
                 filtered ? (
@@ -667,13 +668,13 @@ function rowState(item: QaItem, who: (id?: Id) => string): ReactNode {
     case "checked":
       return <Badge check="approved">{copy.checkedBy(who(item.checkedBy))}</Badge>;
     case "fixing":
-      return "With the Engine";
+      return fixer.withIt;
     case "in_studio":
       return `In Studio with ${who(item.studioBy)}`;
     default:
       if (item.sentAt)
         return (item.version ?? 1) > 1 ? `Version ${item.version} from the Studio` : "Back from the Studio";
-      if (item.feedback.at(-1)?.state === "fixed") return "The Engine’s fix is back";
+      if (item.feedback.at(-1)?.state === "fixed") return fixer.fixBack;
       return "Waiting for a check";
   }
 }
@@ -944,7 +945,7 @@ function QaFocus({
   const markChecked = () => {
     if (busy || checked) return;
     if (fixing) {
-      toast.info("With the Engine: nothing to check yet", { description: "Its fix comes back here." });
+      toast.info(`${fixer.withIt}: nothing to check yet`, { description: "Its fix comes back here." });
       return;
     }
     const go = () => void act.check(view);
@@ -1197,14 +1198,14 @@ function QaFocus({
             {/* 2b. What was said to the Engine before: one folded line, so it never sits under the decision */}
             {item.feedback.length > 0 && (
               <Collapsible className="ui-qa-against">
-                <CollapsibleTrigger>{`Said to the Engine · ${item.feedback.length}`}</CollapsibleTrigger>
+                <CollapsibleTrigger>{`${fixer.said} · ${item.feedback.length}`}</CollapsibleTrigger>
                 <CollapsibleContent>
-                  <ol className="ui-qa-history" aria-label="Said to the Engine">
+                  <ol className="ui-qa-history" aria-label={fixer.said}>
                     {item.feedback.map((f) => (
                       <li key={f.id} className="ui-qa-said">
                         <span className="ui-qa-said-who">
                           {names.Who(f.by)} · <time dateTime={f.at}>{time(f.at)}</time> ·{" "}
-                          {f.state === "sent" ? "with the Engine" : "the Engine fixed it"}
+                          {f.state === "sent" ? fixer.withItLower : fixer.fixed}
                         </span>
                         {f.text && <p>{f.text}</p>}
                         {(f.pins ?? []).map((p) => (
@@ -1264,7 +1265,7 @@ function QaFocus({
           {!checked && (
             <section className="ui-qa-part" aria-labelledby={`${item.id}-tell`}>
               <h3 className="ui-qa-part-title" id={`${item.id}-tell`}>
-                Tell the Engine
+                {fixer.tell}
               </h3>
               {pins.length > 0 && (
                 <ol className="ui-qa-pins" aria-label="Pinned notes">
@@ -1356,7 +1357,7 @@ function QaFocus({
                   loading={act.telling}
                   onClick={() => tell()}
                 >
-                  {pins.length ? `Tell the Engine · ${pins.length}` : "Tell the Engine"}
+                  {pins.length ? `${fixer.tell} · ${pins.length}` : fixer.tell}
                   <Kbd className="ui-qa-key">F</Kbd>
                 </Button>
                 <Button
@@ -1374,7 +1375,7 @@ function QaFocus({
           )}
           {latest?.state === "sent" && fixing && (
             <p className="ui-qa-foot-note">
-              <TextShimmer>The Engine is fixing it</TextShimmer>
+              <TextShimmer>{fixer.fixing}</TextShimmer>
             </p>
           )}
           <AlertDialog open={asking} onOpenChange={setAsking}>
@@ -1419,7 +1420,7 @@ function QaStatus({ item, who }: { item: QaItem; who: (id?: Id) => string }) {
     const said = item.feedback.at(-1);
     return (
       <>
-        <TextShimmer>With the Engine</TextShimmer>
+        <TextShimmer>{fixer.withIt}</TextShimmer>
         {said?.text
           ? `: “${said.text.replace(/[.\s]+$/, "")}”`
           : said?.pins?.length
@@ -1458,27 +1459,38 @@ function Evaluated({
   /** Folds that belong with the findings (what was said to the Engine), 8 under them rather than 24. */
   children?: ReactNode;
 }) {
+  // Not evaluated yet (made by hand): nothing is said to hold or to be off; the expert checks by eye.
+  const byEye = evaluation.evaluated === false;
   const rows: { result: "pass" | "flag"; text: string }[] = [
-    {
-      result: evaluation.productTruth,
-      text: evaluation.productTruth === "pass" ? "Product Truth holds" : "Product Truth is off",
-    },
-    {
-      result: evaluation.brandRules,
-      text: evaluation.brandRules === "pass" ? "Brand rules hold" : "A brand rule is broken",
-    },
-    {
-      result: evaluation.artefacts === "none" ? "pass" : "flag",
-      text:
-        evaluation.artefacts === "none"
-          ? "No artefacts"
-          : evaluation.artefacts === "minor"
-            ? "A minor artefact"
-            : "A major artefact",
-    },
-    ...evaluation.notes.map((n) => ({ result: "flag" as const, text: n })),
+    ...(byEye
+      ? [
+          { result: "flag" as const, text: "Product Truth: not evaluated by Fume, check it by eye" },
+          { result: "flag" as const, text: "Brand rules: not evaluated by Fume, check them by eye" },
+        ]
+      : [
+          {
+            result: evaluation.productTruth,
+            text: evaluation.productTruth === "pass" ? "Product Truth holds" : "Product Truth is off",
+          },
+          {
+            result: evaluation.brandRules,
+            text: evaluation.brandRules === "pass" ? "Brand rules hold" : "A brand rule is broken",
+          },
+          {
+            result: evaluation.artefacts === "none" ? ("pass" as const) : ("flag" as const),
+            text:
+              evaluation.artefacts === "none"
+                ? "No artefacts"
+                : evaluation.artefacts === "minor"
+                  ? "A minor artefact"
+                  : "A major artefact",
+          },
+        ]),
+    ...evaluation.notes.map((n) => ({ result: byEye ? ("pass" as const) : ("flag" as const), text: n })),
+    ...(evaluation.checks ?? []),
   ];
-  const flagged = rows.filter((r) => r.result === "flag").length;
+  // By eye, the two "check it by eye" rows are not flags of their own: only what Fume found on the file counts.
+  const flagged = rows.filter((r) => r.result === "flag").length - (byEye ? 2 : 0);
   const f = copy.format[format];
   // The channel line follows the creative's own format (the brand's list is written for a feed).
   const lines = (against ?? []).map((a) =>
@@ -1487,7 +1499,12 @@ function Evaluated({
   return (
     <section className="ui-qa-part" aria-labelledby={`${id}-found`}>
       <h3 className="ui-qa-part-title" id={`${id}-found`}>
-        What the Engine found {flagged ? `· ${copy.count(flagged, "flag")}` : "· nothing flagged"}
+        {fixer.found}{" "}
+        {byEye
+          ? `· ${flagged ? `${copy.count(flagged, "flag")}, the rest by eye` : "check it by eye"}`
+          : flagged
+            ? `· ${copy.count(flagged, "flag")}`
+            : "· nothing flagged"}
       </h3>
       <ul className="ui-qa-notes">
         {rows.map((r, i) => (
@@ -1625,7 +1642,7 @@ function QaEnd({
       </section>
     );
   const engine = fixing
-    ? ` ${fixing === 1 ? "One is" : `${fixing} are`} with the Engine; ${fixing === 1 ? "its fix comes" : "their fixes come"} back here.`
+    ? ` ${fixing === 1 ? "One is" : `${fixing} are`} ${fixer.withItLower}; ${fixing === 1 ? "its fix comes" : "their fixes come"} back here.`
     : "";
   return (
     <section className="ui-qa-end" aria-labelledby="qa-end-title" data-ui-toast-anchor>

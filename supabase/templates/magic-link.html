@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+<title>Your sign-in link for Fume</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Newsreader:opsz,wght@6..72,400&display=swap" rel="stylesheet">
+<style>
+  @media (max-width: 620px) { .card { padding: 32px 24px !important; } .code { font-size: 26px !important; letter-spacing: 6px !important; } }
+  /* Inboxes that follow the reader's dark mode (Apple Mail, Outlook's apps): Fume's own dark palette and the
+     Paper logo. Gmail ignores this and darkens on its own (see the rules below). */
+  @media (prefers-color-scheme: dark) {
+    .dk-page { background: #1B1410 !important; }
+    .dk-card { background: #2C2520 !important; }
+    .dk-button { background: #FCF6EB !important; }
+    .dk-text { color: #FCF6EB !important; }
+    .dk-body { color: #DCD6D0 !important; }
+    .dk-quiet { color: #A49D97 !important; }
+    .dk-on-button { color: #1B1410 !important; }
+    .logo-ink { display: none !important; }
+    .logo-blend { display: block !important; max-height: none !important; overflow: visible !important; }
+  }
+  /* Gmail's apps turn light backgrounds dark but leave images alone, so an Ink logo would vanish. Only Gmail matches
+     "u + .body": there the Paper logo is shown instead, blended with "difference" against the background, so it
+     comes out near Ink on a light background and near Paper on a dark one. Other inboxes keep the Ink logo. */
+  u + .body .logo-ink { display: none !important; }
+  u + .body .logo-blend { display: block !important; max-height: none !important; overflow: visible !important; }
+  u + .body .logo-blend img { mix-blend-mode: difference; }
+</style>
+</head>
+<body class="body dk-page" style="margin:0;padding:0;background:#FFFDF9;">
+<!-- Fume's sign-in email (Supabase Auth, "Magic Link"). PROPOSED 26 Oct 2026. Subject: Your sign-in link for Fume
+     The button signs in on the device that opens it; the code is for signing in on another device (the screen
+     "Check your email" takes it). Both work once, within the hour. Palette hex only, inline styles, 600 px. -->
+<div class="dk-on-button" style="display:none;max-height:0;overflow:hidden;opacity:0;color:#FFFDF9;">It works once, within the hour. The code is for signing in on another device.</div>
+<table class="dk-page" role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFFDF9;">
+  <tr><td align="center" style="padding:40px 16px;">
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;">
+      <tr><td style="padding:0 8px 32px 8px;">
+        <a href="https://fumecreatives.com" style="text-decoration:none;"><img class="logo-ink" src="https://vkusmctftfzsrxbcxtdz.supabase.co/functions/v1/email-logo" width="120" alt="Fume" style="display:block;width:120px;height:auto;border:0;"><!--[if !mso]><!--><div class="logo-blend" style="display:none;max-height:0;overflow:hidden;"><img src="https://vkusmctftfzsrxbcxtdz.supabase.co/functions/v1/email-logo?c=paper" width="120" alt="Fume" style="display:block;width:120px;height:auto;border:0;"></div><!--<![endif]--></a>
+      </td></tr>
+      <tr><td class="dk-card card" style="padding:40px;background:#F8F6F4;border-radius:16px;">
+        <h1 class="dk-text" style="margin:0 0 16px 0;font-family:'GT Canon','Newsreader',Georgia,serif;font-weight:400;font-size:32px;line-height:1.15;color:#1B1410;">Sign in to Fume</h1>
+        <p class="dk-body" style="margin:0 0 32px 0;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:16px;line-height:1.5;color:#463E39;">Press the button to sign in as <strong class="dk-text" style="color:#1B1410;font-weight:500;">{{ .Email }}</strong>. It works once, within the hour.</p>
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+          <td class="dk-button" style="background:#1B1410;border-radius:999px;">
+            <a class="dk-on-button" href="{{ .RedirectTo }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=email" style="display:inline-block;padding:14px 28px;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:16px;font-weight:500;line-height:1.2;color:#FFFDF9;text-decoration:none;">Sign in to Fume</a>
+          </td>
+        </tr></table>
+        <p class="dk-quiet" style="margin:40px 0 8px 0;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:14px;line-height:1.45;color:#6E6259;">Signing in on another device? Enter this code there:</p>
+        <p class="dk-text code" style="margin:0;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:32px;font-weight:500;letter-spacing:8px;line-height:1.2;color:#1B1410;">{{ .Token }}</p>
+      </td></tr>
+      <tr><td class="dk-quiet" style="padding:32px 8px 0 8px;font-family:'GT Standard','Geist','Helvetica Neue',Arial,sans-serif;font-size:13px;line-height:1.5;color:#6E6259;">
+        You get this email because someone asked to sign in to Fume with this address. If it was not you, you can leave it: nothing happens without the link or the code.<br><br>
+        Fume · The Creative Engine Behind Every Campaign · <a class="dk-quiet" href="https://fumecreatives.com" style="color:#6E6259;">fumecreatives.com</a>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>

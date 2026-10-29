@@ -24,8 +24,9 @@ export interface PlanApi {
   /** The campaign's plan, or null before the brief is sent. */
   plan(campaignId: Id): Promise<CampaignPlan | null>;
   /** She approves the plan (only while it is ready): the Engine starts on the masters. In a brand an agency runs only
-   *  the client approves it, once the agency has checked it and sent it to her (FLOWS §26.8). */
-  approvePlan(campaignId: Id): Promise<CampaignPlan>;
+   *  the client approves it, once the agency has checked it and sent it to her (FLOWS §26.8). `version` is the one she
+   *  read: when the plan has a newer version since, nothing is approved (a conflict) and she reads the new one first. */
+  approvePlan(campaignId: Id, version?: number): Promise<CampaignPlan>;
   /** Undo an approval just made, while the Engine has not delivered anything: the plan waits on her again. */
   undoApprovePlan(campaignId: Id): Promise<CampaignPlan>;
   /** She changes one line or one planned creative in place (while ready). */

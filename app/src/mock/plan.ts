@@ -911,9 +911,11 @@ export function planCalls(m: Mock): Pick<FumeApi, Calls> {
     sendBrief,
     // Approving the brief is sending it.
     approveBrief: sendBrief,
-    async approvePlan(campaignId) {
+    async approvePlan(campaignId, version) {
       m.mustApprove();
       const p = must(campaignId);
+      if (version !== undefined && version !== p.version)
+        throw new FumeError("conflict", `The plan has changed since: version ${p.version} is current, not ${version}.`);
       const c = m.campaignOf(campaignId);
       mustApproveAsClient(c, p);
       if (!planAllows(p, "approve"))

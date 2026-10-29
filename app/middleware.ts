@@ -1,9 +1,11 @@
-// The preview's password (Vercel Routing Middleware). Every request asks for it first; the browser remembers it for
-// the session. The password is the PREVIEW_PASSWORD environment variable of the Vercel project. Without it, nothing is
-// served. Any user name works. This runs only on Vercel; `npm run dev` never asks.
+// The preview's password (Vercel Routing Middleware). Every request but the emails' logo (/email/) asks for it first;
+// the browser remembers it for the session. The password is the PREVIEW_PASSWORD environment variable of the Vercel
+// project. Without it, nothing is served. Any user name works. This runs only on Vercel; `npm run dev` never asks.
 import { next } from "@vercel/functions";
 
 export default function middleware(request: Request) {
+  // The logo in Fume's sign-in and invitation emails (supabase/templates) must load in any inbox.
+  if (new URL(request.url).pathname.startsWith("/email/")) return next();
   const password = process.env.PREVIEW_PASSWORD;
   const given = passwordOf(request.headers.get("authorization"));
   if (password && given !== undefined && same(given, password)) return next();

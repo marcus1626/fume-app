@@ -616,7 +616,7 @@ function AllDetails({
   function addShot(slotId: string, file: File) {
     setBusySlot(slotId);
     upload.mutate(
-      { productId: product.id, slotId, name: file.name, bytes: file.size, src: previewOf(file) },
+      { productId: product.id, slotId, name: file.name, bytes: file.size, src: previewOf(file), blob: file },
       { onError: fail, onSettled: () => setBusySlot(undefined) },
     );
   }

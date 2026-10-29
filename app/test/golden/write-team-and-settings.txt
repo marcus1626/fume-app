@@ -158,6 +158,7 @@ maja updateProfile({"email":"maja@lysne.example","name":"Maja Lind","title":"CMO
   {"email":"maja@lysne.example","id":"u-maja","name":"Maja Lind","title":"CMO"}
 maja session()
   {
+    "introduced": true,
     "onboarded": true,
     "organisation": {"id":"o-lysne","name":"LYSNE","packageId":"p-core"},
     "role": "owner",

@@ -156,6 +156,8 @@ export const useDecideEdit = () =>
 export const useRender = () => useM((a, documentId: Id) => a.render(documentId));
 export const usePickVersion = () =>
   useM((a, v: { documentId: Id; versionId: Id }) => a.pickVersion(v.documentId, v.versionId));
+export const useAddVersion = () =>
+  useM((a, v: { documentId: Id; file: File; note: string }) => a.addVersion(v.documentId, v.file, v.note));
 export const useOverrideProduct = () =>
   useM((a, v: { documentId: Id; field: string; value: string; scope: "this_render" | "product" }) =>
     a.overrideProduct(v.documentId, v),
@@ -254,8 +256,8 @@ export const useReadProduct = () => useM((a, v: Parameters<FumeApi["readProduct"
 export const useSaveProductSpecs = () =>
   useM((a, v: { productId: Id } & Parameters<FumeApi["saveProductSpecs"]>[1]) => a.saveProductSpecs(v.productId, v));
 export const useUploadShot = () =>
-  useM((a, v: { productId: Id; slotId: Id; name: string; bytes: number; src?: string }) =>
-    a.uploadShot(v.productId, v.slotId, { name: v.name, bytes: v.bytes, src: v.src }),
+  useM((a, v: { productId: Id; slotId: Id; name: string; bytes: number; src?: string; blob?: Blob }) =>
+    a.uploadShot(v.productId, v.slotId, { name: v.name, bytes: v.bytes, src: v.src, blob: v.blob }),
   );
 export const useUploadProductFile = () =>
   useM((a, v: { productId: Id } & Parameters<FumeApi["uploadProductFile"]>[1]) => a.uploadProductFile(v.productId, v));
@@ -410,7 +412,15 @@ export function useDraftBriefs(): { data: DraftBrief[] | undefined; isPending: b
 export const usePlan = (campaignId: Id | undefined) =>
   useQ(["plan", campaignId], (a) => a.plan(campaignId!), Boolean(campaignId));
 export const useSendBrief = () => useM((a, campaignId: Id) => a.sendBrief(campaignId));
-export const useApprovePlan = () => useM((a, campaignId: Id) => a.approvePlan(campaignId));
+/** Approves the version she read; when a newer one came meanwhile, nothing is approved and the plan is read again. */
+export const useApprovePlan = () => {
+  const api = useApi();
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (v: { campaignId: Id; version: number }) => api.approvePlan(v.campaignId, v.version),
+    onSettled: () => client.invalidateQueries(),
+  });
+};
 export const useUndoApprovePlan = () => useM((a, campaignId: Id) => a.undoApprovePlan(campaignId));
 export const useChangePlan = () =>
   useM((a, v: { campaignId: Id } & import("../contract").PlanChange) => {
