@@ -44,19 +44,17 @@ interface OrganisationRow {
 export function identityCalls(live: Live): Pick<FumeApi, Calls> {
   const calls: Pick<FumeApi, Calls> = {
     async session(): Promise<Session> {
-      const [user, workspaces, wsId, role] = await Promise.all([
-        live.me(),
-        live.workspaces(),
-        live.workspaceId(),
-        live.role(),
-      ]);
+      // Two rounds, not four: the workspace first, then everything that hangs on it at once.
+      const [wsId, uid] = await Promise.all([live.workspaceId(), live.uid()]);
+      const workspaces = await live.workspaces();
       const workspace = workspaces.find((w) => w.id === wsId)!;
-      const org = await one<OrganisationRow>(
-        supabase().from("organisations").select("id, name, kind").eq("id", workspace.organisationId).maybeSingle(),
-        "organisation",
-      );
-      const organisation: Organisation = { id: org.id, name: org.name, kind: org.kind, packageId: "p-core" };
-      const [dna, introduced] = await Promise.all([
+      const [user, role, org, dna, introduced] = await Promise.all([
+        live.me(),
+        live.role(),
+        one<OrganisationRow>(
+          supabase().from("organisations").select("id, name, kind").eq("id", workspace.organisationId).maybeSingle(),
+          "organisation",
+        ),
         rows<{ id: string }>(
           supabase().from("brand_dna_versions").select("id").eq("workspace_id", wsId).eq("state", "approved").limit(1),
         ),
@@ -65,10 +63,11 @@ export function identityCalls(live: Live): Pick<FumeApi, Calls> {
         supabase()
           .from("profiles")
           .select("introduced_at")
-          .eq("id", user.id)
+          .eq("id", uid)
           .maybeSingle<{ introduced_at: string | null }>()
           .then(({ data, error }) => Boolean(error) || Boolean(data?.introduced_at)),
       ]);
+      const organisation: Organisation = { id: org.id, name: org.name, kind: org.kind, packageId: "p-core" };
       return {
         user,
         workspace,

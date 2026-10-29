@@ -4,7 +4,7 @@
 import type { FumeApi, FumeEvent } from "../../contract";
 import type { Live } from "./context";
 import { readCampaigns } from "./map";
-import { supabase } from "./supabase";
+import { forgetReads, supabase } from "./supabase";
 
 interface RecordRow {
   workspace_id: string;
@@ -21,6 +21,7 @@ export function eventCalls(live: Live): Pick<FumeApi, "subscribe"> {
       const flush = async () => {
         const ids = [...pending];
         pending.clear();
+        forgetReads();
         live.forget();
         const campaigns = await readCampaigns(ids.length ? { ids } : { workspaceId: await live.workspaceId() }).catch(
           () => [],
