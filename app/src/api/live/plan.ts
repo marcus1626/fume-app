@@ -186,7 +186,7 @@ export function toPlan(
     campaignId: p.campaign_id,
     version: p.version,
     state: p.state === "superseded" ? "ready" : p.state,
-    summary: str(body.summary),
+    summary: str(body.summary).replace(/([.!?…])\.(?=\s|$)/g, "$1"),
     ...(strategicTask ? { strategicTask } : {}),
     ...(openQuestions.length ? { openQuestions } : {}),
     briefVersion,

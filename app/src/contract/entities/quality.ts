@@ -74,6 +74,9 @@ export interface Evaluation {
   brandRules: "pass" | "flag";
   artefacts: "none" | "minor" | "major";
   notes: string[];
+  /** False when no one has evaluated the picture yet (made by hand, or before the Engine evaluates): Product Truth, the
+   *  brand rules and artefacts are then for the expert to check by eye, and nothing is said to hold or to be off. */
+  evaluated?: boolean;
   /** Checks Fume ran on the file itself (its kind, shape, size and weight against the format), each with its result. */
   checks?: { result: "pass" | "flag"; text: string }[];
 }

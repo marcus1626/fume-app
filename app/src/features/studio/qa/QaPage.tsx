@@ -1459,28 +1459,38 @@ function Evaluated({
   /** Folds that belong with the findings (what was said to the Engine), 8 under them rather than 24. */
   children?: ReactNode;
 }) {
+  // Not evaluated yet (made by hand): nothing is said to hold or to be off; the expert checks by eye.
+  const byEye = evaluation.evaluated === false;
   const rows: { result: "pass" | "flag"; text: string }[] = [
-    {
-      result: evaluation.productTruth,
-      text: evaluation.productTruth === "pass" ? "Product Truth holds" : "Product Truth is off",
-    },
-    {
-      result: evaluation.brandRules,
-      text: evaluation.brandRules === "pass" ? "Brand rules hold" : "A brand rule is broken",
-    },
-    {
-      result: evaluation.artefacts === "none" ? "pass" : "flag",
-      text:
-        evaluation.artefacts === "none"
-          ? "No artefacts"
-          : evaluation.artefacts === "minor"
-            ? "A minor artefact"
-            : "A major artefact",
-    },
-    ...evaluation.notes.map((n) => ({ result: "flag" as const, text: n })),
+    ...(byEye
+      ? [
+          { result: "flag" as const, text: "Product Truth: not evaluated by Fume, check it by eye" },
+          { result: "flag" as const, text: "Brand rules: not evaluated by Fume, check them by eye" },
+        ]
+      : [
+          {
+            result: evaluation.productTruth,
+            text: evaluation.productTruth === "pass" ? "Product Truth holds" : "Product Truth is off",
+          },
+          {
+            result: evaluation.brandRules,
+            text: evaluation.brandRules === "pass" ? "Brand rules hold" : "A brand rule is broken",
+          },
+          {
+            result: evaluation.artefacts === "none" ? ("pass" as const) : ("flag" as const),
+            text:
+              evaluation.artefacts === "none"
+                ? "No artefacts"
+                : evaluation.artefacts === "minor"
+                  ? "A minor artefact"
+                  : "A major artefact",
+          },
+        ]),
+    ...evaluation.notes.map((n) => ({ result: byEye ? ("pass" as const) : ("flag" as const), text: n })),
     ...(evaluation.checks ?? []),
   ];
-  const flagged = rows.filter((r) => r.result === "flag").length;
+  // By eye, the two "check it by eye" rows are not flags of their own: only what Fume found on the file counts.
+  const flagged = rows.filter((r) => r.result === "flag").length - (byEye ? 2 : 0);
   const f = copy.format[format];
   // The channel line follows the creative's own format (the brand's list is written for a feed).
   const lines = (against ?? []).map((a) =>
@@ -1489,7 +1499,12 @@ function Evaluated({
   return (
     <section className="ui-qa-part" aria-labelledby={`${id}-found`}>
       <h3 className="ui-qa-part-title" id={`${id}-found`}>
-        {fixer.found} {flagged ? `· ${copy.count(flagged, "flag")}` : "· nothing flagged"}
+        {fixer.found}{" "}
+        {byEye
+          ? `· ${flagged ? `${copy.count(flagged, "flag")}, the rest by eye` : "check it by eye"}`
+          : flagged
+            ? `· ${copy.count(flagged, "flag")}`
+            : "· nothing flagged"}
       </h3>
       <ul className="ui-qa-notes">
         {rows.map((r, i) => (

@@ -66,16 +66,17 @@ export function mustBeId(id: Id, what: string): Id {
 
 export const toFormat = (f: CreativeRow["format"]): Format => (f === "banner" ? "feed" : f);
 
-/** No evaluation of a picture is stored yet (by hand this week; the Engine's findings come with the Engine), and the
- *  contract cannot say "not evaluated". So nothing is said to hold: Product Truth and the brand rules are left flagged
- *  for the expert, and the note says how the picture was made. */
+/** No evaluation of a picture is stored yet (by hand this week; the Engine's findings come with the Engine). So nothing
+ *  is said to hold or to be off: the expert checks Product Truth, the brand rules and artefacts by eye, and the note
+ *  says how the picture was made. */
 export function manualEvaluation(c: Pick<CandidateRow, "origin" | "note"> | undefined): Evaluation {
   const how = c?.origin === "engine" ? "Made by the Engine" : "Made by hand";
   return {
     productTruth: "flag",
     brandRules: "flag",
     artefacts: "none",
-    notes: [`${how}${c?.note ? `: ${c.note}` : ""}. Not evaluated yet: check the product and the brand rules.`],
+    evaluated: false,
+    notes: [`${how}${c?.note ? `: ${c.note.trim().replace(/[.!?…]+$/, "")}` : ""}.`],
   };
 }
 

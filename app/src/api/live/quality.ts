@@ -109,8 +109,10 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
     rows<ChangeRow>(
       supabase()
         .from("change_requests")
+        // The expert's and the customer's: the expert checks a new version against what was asked for.
         .select("id, version_id, problem, pins, by, created_at, new_version_id")
-        .eq("source", "expert")
+        .in("source", ["expert", "customer"])
+        .is("withdrawn_at", null)
         .in(
           "version_id",
           all.map((v) => v.id),
