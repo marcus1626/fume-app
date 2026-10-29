@@ -29,7 +29,7 @@ select public.send_brief(test.id('c7'),
   'send-c7');
 select test.ok((select state from public.plan_versions where campaign_id = test.id('c7') and version = 1) = 'writing',
   'with the setting on, plan 1 waits for Fume in ''writing''');
-select test.ok(not exists (select 1 from public.record_events where action = 'plan.written'
+select test.ok(not exists (select 1 from public.record_events where workspace_id = test.id('lysne') and at >= test.since() and action = 'plan.written'
   and subject_id = (select id from public.plan_versions where campaign_id = test.id('c7') and version = 1)),
   'nothing says the plan is written yet');
 select test.refuses($$ select public.ask_plan_check(test.id('c7'), 1) $$, 'conflict', 'a plan being written cannot go to check');
@@ -96,7 +96,7 @@ select test.ok((select body -> 'rules' from public.plan_versions where campaign_
 select test.ok((select state from public.task_runs where id = test.id('run1')) = 'succeeded'
   and (select cost_usd from public.task_runs where id = test.id('run1')) = 0.052,
   'the run is kept with its tokens and cost');
-select test.ok(exists (select 1 from public.record_events where action = 'plan.written'
+select test.ok(exists (select 1 from public.record_events where workspace_id = test.id('lysne') and at >= test.since() and action = 'plan.written'
   and subject_id = (select id from public.plan_versions where campaign_id = test.id('c7') and version = 1)), 'the record says Fume wrote it');
 select test.refuses($$ select public.fume_finish_plan(test.id('run1'), (select body from good), '{}', '{}') $$,
   'conflict', 'a finished run cannot write again');
@@ -157,7 +157,7 @@ select test.keep('run6', (public.fume_take_plan(test.id('c8')) ->> 'run_id')::uu
 select test.ok((select state from public.task_runs where id = test.id('run5')) = 'failed', 'a run that never came back counts as failed');
 select public.fume_fail_plan(test.id('run6'), 'refused', '{}', true);
 select test.ok((select state from public.plan_versions where campaign_id = test.id('c8') and version = 1) = 'ready'
-  and exists (select 1 from public.record_events where action = 'plan.written' and (detail ->> 'fallback')::boolean
+  and exists (select 1 from public.record_events where workspace_id = test.id('lysne') and at >= test.since() and action = 'plan.written' and (detail ->> 'fallback')::boolean
     and subject_id = (select id from public.plan_versions where campaign_id = test.id('c8') and version = 1)),
   'the plan from the brief stands, and the record says so');
 

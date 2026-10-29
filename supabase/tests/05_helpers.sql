@@ -24,6 +24,10 @@ begin
   perform set_config('request.jwt.claims', json_build_object('sub', test.signup(p_email), 'role', 'authenticated')::text, false);
 end $$;
 
+-- When this run began: the record events it made are the ones at or after it (live data from other runs stays out).
+create table test.started as select now() as at;
+grant select on test.started to authenticated;
+create function test.since() returns timestamptz language sql stable as $$ select at from test.started $$;
 create function test.id(p_name text) returns uuid language sql stable as $$ select id from test.ids where name = p_name $$;
 create function test.keep(p_name text, p_id uuid) returns uuid language sql as $$
   insert into test.ids values (p_name, p_id) on conflict (name) do update set id = excluded.id returning id

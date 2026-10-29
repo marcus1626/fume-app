@@ -165,6 +165,6 @@ select test.ok((select creative_id = test.id('sq') and master_version_id = test.
 select test.refuses($$ select public.mark_checked(test.id('sv1')) $$, 'forbidden', 'Kristian made the square, so he cannot check it');
 
 reset role;
-select test.ok((select count(*) from public.record_events where action = 'creative.opened') = 4, 'every opened creative is in the record');
-select test.ok((select count(*) from public.record_events where action = 'version.check_undone') = 1, 'the Undo of a check is in the record');
+select test.ok((select count(*) from public.record_events where workspace_id = test.id('lysne') and at >= test.since() and action = 'creative.opened') = 4, 'every opened creative is in the record');
+select test.ok((select count(*) from public.record_events where workspace_id = test.id('lysne') and at >= test.since() and action = 'version.check_undone') = 1, 'the Undo of a check is in the record');
 select test.ok(true, 'all production tests passed');

@@ -95,7 +95,7 @@ select test.act('marcus+lysne@fumecreatives.com');
 select public.approve_plan(test.id('c2'), 4, 'approve-c2');
 select test.refuses($$ select public.change_plan(test.id('c2'), 4, (select body from public.plan_versions where campaign_id = test.id('c2') and version = 4), array['x']) $$,
   'conflict', 'an approved plan is not changed');
-select test.ok((select count(*) from public.record_events where action = 'plan.changed') = 3, 'every change is in the record');
+select test.ok((select count(*) from public.record_events where workspace_id = test.id('lysne') and at >= test.since() and action = 'plan.changed') = 3, 'every change is in the record');
 
 reset role;
 select test.ok(true, 'all campaign tests passed');

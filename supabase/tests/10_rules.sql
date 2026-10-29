@@ -87,8 +87,8 @@ select test.refuses($$ select public.approve_plan(test.id('campaign'), 4, 'appro
 select test.act('marcus@fumecreatives.com');
 select test.keep('job', (public.start_job(test.id('campaign'), 'master', '{"provider":"manual","task":"reference_guided"}', '[]', null, null, 'manual', 'job-1') ->> 'id')::uuid);
 select test.ok((public.start_job(test.id('campaign'), 'master', '{"provider":"manual","task":"reference_guided"}', '[]', null, null, 'manual', 'job-1') ->> 'id')::uuid = test.id('job'), 'starting the same job twice makes one job (12)');
-select test.ok((select count(*) from public.production_jobs) = 1, 'one job in the database');
-select test.ok((select jsonb_array_length(facts) from public.context_snapshots) = 6, 'the job''s snapshot holds the six facts');
+select test.ok((select count(*) from public.production_jobs where campaign_id = test.id('campaign')) = 1, 'one job in the database');
+select test.ok((select jsonb_array_length(s.facts) from public.context_snapshots s join public.production_jobs j on j.snapshot_id = s.id where j.id = test.id('job')) = 6, 'the job''s snapshot holds the six facts');
 
 -- the designer uploads a picture made by hand (storage is stubbed here; the app uploads to the bucket)
 reset role;
@@ -110,10 +110,10 @@ select test.keep('v1', (public.send_to_check(test.id('cand1'), 'feed', 'Night Bo
 -- ─── The gate: unchecked work never reaches the customer ─────────────────────
 
 select test.act('marcus+lysne@fumecreatives.com');
-select test.ok((select count(*) from public.creative_versions) = 0, 'the customer cannot see a version in check (4)');
+select test.ok((select count(*) from public.creative_versions v join public.creatives c on c.id = v.creative_id where c.campaign_id = test.id('campaign')) = 0, 'the customer cannot see a version in check (4)');
 select test.ok((select count(*) from public.files where id = test.id('file1')) = 0, 'the customer cannot see its file row (4)');
 select test.ok(not app.can_read_object('0b000000-0000-4000-8000-000000000001/master-v1.jpg'), 'the customer cannot read its bytes from storage (4)');
-select test.ok((select count(*) from public.production_jobs) = 0 and (select count(*) from public.candidates) = 0, 'jobs and candidates stay with Fume');
+select test.ok((select count(*) from public.production_jobs where campaign_id = test.id('campaign')) = 0 and (select count(*) from public.candidates) = 0, 'jobs and candidates stay with Fume');
 select test.refuses($$ select public.approve_versions(array[test.id('v1')]) $$, 'not_found', 'the customer cannot approve an unchecked version (3)');
 
 select test.act('marcus@fumecreatives.com');
@@ -124,20 +124,20 @@ select test.refuses($$ select public.write_plan(test.id('campaign'), '{}') $$, '
 select test.act('kristian@fumecreatives.com');
 select public.add_finding(test.id('v1'), 'product', 'critical', 'Cap reads glossy', 'automated');
 select test.refuses($$ select public.mark_checked(test.id('v1')) $$, 'conflict', 'an open critical finding blocks the check');
-select public.resolve_finding((select id from public.findings limit 1), 'accepted');
+select public.resolve_finding((select id from public.findings where version_id = test.id('v1') limit 1), 'accepted');
 select public.mark_checked(test.id('v1'), '[{"against":"Cap","result":"pass"}]', 'check-v1');
 select test.ok((public.mark_checked(test.id('v1'), '[{"against":"Cap","result":"pass"}]', 'check-v1') ->> 'state') = 'checked', 'checking twice with the same key is one check (13)');
 select test.refuses($$ select public.approve_versions(array[test.id('v1')]) $$, 'forbidden', 'the one who checked cannot approve (2)');
 
 select test.act('marcus+lysne@fumecreatives.com');
-select test.ok((select count(*) from public.creative_versions) = 0, 'checked but not sent: still hidden');
-select test.ok((select count(*) from public.record_events where subject_type in ('creative_version', 'candidate', 'production_job', 'finding', 'file')) = 0, 'the record shows nothing of unsent work or production');
+select test.ok((select count(*) from public.creative_versions v join public.creatives c on c.id = v.creative_id where c.campaign_id = test.id('campaign')) = 0, 'checked but not sent: still hidden');
+select test.ok((select count(*) from public.record_events where workspace_id = test.id('lysne') and at >= test.since() and subject_type in ('creative_version', 'candidate', 'production_job', 'finding', 'file')) = 0, 'the record shows nothing of unsent work or production');
 select test.act('marcus@fumecreatives.com');
 select public.send_checked(test.id('campaign'));
 select test.act('marcus+lysne@fumecreatives.com');
-select test.ok((select count(*) from public.creative_versions) = 1, 'checked and sent: the customer sees it');
-select test.ok((select count(*) from public.expert_checks where state = 'checked' and expert_id is not null) = 1, 'the customer sees who checked it');
-select test.ok((select count(*) from public.findings) = 0, 'automated findings stay with Fume');
+select test.ok((select count(*) from public.creative_versions v join public.creatives c on c.id = v.creative_id where c.campaign_id = test.id('campaign')) = 1, 'checked and sent: the customer sees it');
+select test.ok((select count(*) from public.expert_checks e join public.creative_versions v on v.id = e.version_id join public.creatives c on c.id = v.creative_id where c.campaign_id = test.id('campaign') and e.state = 'checked' and e.expert_id is not null) = 1, 'the customer sees who checked it');
+select test.ok((select count(*) from public.findings f join public.creative_versions v on v.id = f.version_id join public.creatives c on c.id = v.creative_id where c.campaign_id = test.id('campaign')) = 0, 'automated findings stay with Fume');
 select test.ok(app.can_read_object('0b000000-0000-4000-8000-000000000001/master-v1.jpg'), 'now the customer can read its file');
 
 select test.act('member+lysne@fumecreatives.com');
@@ -189,8 +189,8 @@ select test.ok((select state from public.campaigns where id = test.id('campaign'
 
 -- ─── The record ──────────────────────────────────────────────────────────────
 
-select test.ok((select count(*) from public.record_events where action = 'version.approved') = 1, 'one approval event, though approve ran with retries');
-select test.ok((select count(*) from public.record_events where action = 'version.checked') = 2, 'two check events, one per version');
+select test.ok((select count(*) from public.record_events where workspace_id = test.id('lysne') and at >= test.since() and action = 'version.approved') = 1, 'one approval event, though approve ran with retries');
+select test.ok((select count(*) from public.record_events where workspace_id = test.id('lysne') and at >= test.since() and action = 'version.checked') = 2, 'two check events, one per version');
 
 set role authenticated;
 
