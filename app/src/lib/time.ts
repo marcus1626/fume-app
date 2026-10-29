@@ -1,6 +1,6 @@
 // Dates and times in the app's words. Times are data (the mono face, rule mono-is-data), so they stay short.
 // With the mock, "now" runs on from the seed's moment, so the demo reads the same on any day.
-import { NOW } from "../mock/seed";
+import { NOW } from "../mock/seed/helpers";
 
 const loaded = Date.now();
 const usingMock = (import.meta.env?.VITE_FUME_API ?? "mock") === "mock";

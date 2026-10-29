@@ -2,13 +2,11 @@
 // VITE_FUME_API picks the implementation: "mock" (default, the LYSNE workspace in memory) or "supabase", the live
 // backend (./live), where a person signs in with an email link first.
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
-import { createContext, useContext, useEffect, useMemo, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import type { FumeApi, Id } from "../contract";
 import { SignInPage } from "../features/auth/SignInPage";
-import { createMockApi } from "../mock/mockApi";
 import { signOut, useAuthState } from "./auth";
-import { createLiveApi } from "./live";
 import { isLive } from "./live/supabase";
 
 type MockApi = FumeApi & { signInAs(userId: Id): void };
@@ -22,9 +20,13 @@ const AGENCY_PEOPLE = ["nora", "even", "live", "sindre"];
  * The mock lets the demo sign in as anyone: ?as=anna opens Fume's Quality Gate, ?as=jonas a member, ?fresh the first
  * run, ?as=nora the agency. ?agency&as=maja is LYSNE's client view in the agency's world.
  */
-function createApi(): MockApi {
-  // Live: who is signed in comes from the sign-in, never from the address.
-  if (isLive) return Object.assign(createLiveApi(), { signInAs() {} });
+async function createApi(): Promise<MockApi> {
+  // Live: who is signed in comes from the sign-in, never from the address. Each build loads only its own backend.
+  if (isLive) {
+    const { createLiveApi } = await import("./live");
+    return Object.assign(createLiveApi(), { signInAs() {} });
+  }
+  const { createMockApi } = await import("../mock/mockApi");
   const params = new URLSearchParams(window.location.search);
   const as = params.get("as");
   const agency = (as !== null && AGENCY_PEOPLE.includes(as)) || params.has("agency") || agencyFlag();
@@ -131,13 +133,23 @@ export function ApiProvider({ children }: { children: ReactNode }) {
   return <SignedIn>{children}</SignedIn>;
 }
 
+let creating: Promise<MockApi> | undefined;
+
 function SignedIn({ children }: { children: ReactNode }) {
-  const api = useMemo(createApi, []);
+  const [api, setApi] = useState<MockApi | null>(null);
+  useEffect(() => {
+    let on = true;
+    void (creating ??= createApi()).then((a) => on && setApi(a));
+    return () => {
+      on = false;
+    };
+  }, []);
   const queryClient = useMemo(
     () =>
       new QueryClient({ defaultOptions: { queries: { staleTime: 15_000, retry: 1, refetchOnWindowFocus: false } } }),
     [],
   );
+  if (!api) return null;
   return (
     <ApiContext.Provider value={api}>
       <QueryClientProvider client={queryClient}>
