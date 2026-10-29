@@ -145,6 +145,7 @@ select test.act('marcus@fumecreatives.com');
 select test.keep('sq', (public.open_creative(test.id('c2'), null, 'format', 'square', test.id('mv3')) ->> 'id')::uuid);
 select test.ok((select slot = 'pc2' and kind = 'format' and format = 'square' and master_id = test.id('m') from public.creatives where id = test.id('sq')),
   'the square format is the plan''s pc2, made from the master');
+select test.ok((select stage = 'variants' from public.campaigns where id = test.id('c2')), 'with a format made, the campaign is at Creatives');
 select test.ok((public.open_creative(test.id('c2'), null, 'format', 'square', test.id('mv3')) ->> 'id')::uuid = test.id('sq'), 'asking for the square again opens the same creative');
 select test.keep('st', (public.open_creative(test.id('c2')) ->> 'id')::uuid);
 select test.ok((select slot = 'pc3' and kind = 'format' and format = 'story' from public.creatives where id = test.id('st')),

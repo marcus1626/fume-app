@@ -24,7 +24,7 @@ select test.refuses($$ select test.signup('stranger@example.com') $$, 'forbidden
 select test.keep('lysne', '0b000000-0000-4000-8000-000000000001');
 select test.keep('solv', '0b000000-0000-4000-8000-000000000002');
 select test.keep('oil', '0e000000-0000-4000-8000-000000000001');
-select test.keep('fact_cap', (select id from public.product_facts where label = 'Cap'));
+select test.keep('fact_cap', (select id from public.product_facts where label = 'Cap' and product_id = test.id('oil')));
 
 -- ─── Access ──────────────────────────────────────────────────────────────────
 set role authenticated;
