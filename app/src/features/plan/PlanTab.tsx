@@ -518,7 +518,14 @@ function PlanWaiting({
         steps={steps}
         asked={asked}
         askedBy={asker}
-        more={plan.state !== "changes_asked" ? <ToCome creatives={brief.creatives} /> : undefined}
+        more={
+          plan.state !== "changes_asked" ? (
+            <ToCome
+              creatives={brief.creatives}
+              planned={(plan.directions.find((d) => d.recommended) ?? plan.directions[0])?.creatives}
+            />
+          ) : undefined
+        }
       />
       {plan.state !== "changes_asked" && (
         <aside className="ui-plandoc-waiting-brief" aria-labelledby="plan-sent-brief">
@@ -604,11 +611,11 @@ export function WaitingState({
 }
 
 /** What the plan will hold, in one line of its parts. */
-export function ToCome({ creatives }: { creatives: number }) {
+export function ToCome({ creatives, planned }: { creatives: number; planned?: { kind: "master" | "variant" }[] }) {
   return (
     <p className="ui-plandoc-tocome">
       <span className="ui-plandoc-label">The plan will hold</span>
-      <span className="ui-plandoc-tocome-text">{partsToCome(creatives)}</span>
+      <span className="ui-plandoc-tocome-text">{partsToCome(creatives, planned)}</span>
     </p>
   );
 }

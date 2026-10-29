@@ -278,7 +278,8 @@ export async function readCampaigns(filter: { workspaceId?: Id; ids?: Id[] }): P
   const list = await rows<CampaignRow>(q.order("created_at", { ascending: false }));
   if (list.length === 0) return [];
   const ids = list.map((c) => c.id);
-  const [products, plans, creatives, unsent] = await Promise.all([
+  const brands = [...new Set(list.map((c) => c.workspace_id))];
+  const [products, plans, creatives, unsent, dnas] = await Promise.all([
     rows<{ campaign_id: string; product_id: string }>(
       supabase().from("campaign_products").select("campaign_id, product_id").in("campaign_id", ids),
     ),
@@ -287,17 +288,31 @@ export async function readCampaigns(filter: { workspaceId?: Id; ids?: Id[] }): P
       version: number;
       state: string;
       checked_by: string | null;
-      body: { planned_creatives?: unknown[] };
+      planned: unknown;
     }>(
+      // Only the count of planned creatives is needed here, not the whole plan.
       supabase()
         .from("plan_versions")
-        .select("campaign_id, version, state, checked_by, body")
+        .select("campaign_id, version, state, checked_by, planned:body->planned_creatives")
         .in("campaign_id", ids)
         .neq("state", "superseded"),
     ),
     readCreatives({ campaignIds: ids }),
     rows<{ creative_id: string }>(
-      supabase().from("creative_versions").select("creative_id").eq("state", "checked").is("sent_at", null),
+      supabase()
+        .from("creative_versions")
+        .select("creative_id")
+        .in("workspace_id", brands)
+        .eq("state", "checked")
+        .is("sent_at", null),
+    ),
+    // The brand's approved Brand DNA: the version a campaign is checked against.
+    rows<{ workspace_id: string; version: number }>(
+      supabase()
+        .from("brand_dna_versions")
+        .select("workspace_id, version")
+        .in("workspace_id", brands)
+        .eq("state", "approved"),
     ),
   ]);
   return list.map((c) => {
@@ -325,13 +340,13 @@ export async function readCampaigns(filter: { workspaceId?: Id; ids?: Id[] }): P
       roundsUsed: c.rounds_used,
       roundsIncluded: c.rounds_included,
       chosenDirectionId: "a",
-      brandDnaVersion: 1,
+      brandDnaVersion: Math.max(1, ...dnas.filter((d) => d.workspace_id === c.workspace_id).map((d) => d.version)),
       waits: {
         questions: 0,
         directions: 0,
         briefReady: false,
         ...(plan ? { plan: (plan.state === "changes_asked" ? "changes_asked" : plan.state) as never } : {}),
-        ...(plan?.body?.planned_creatives ? { planned: plan.body.planned_creatives.length } : {}),
+        ...(Array.isArray(plan?.planned) ? { planned: plan.planned.length } : {}),
         ...(plan?.checked_by ? { planChecked: true } : {}),
         ...(toSend ? { toSend } : {}),
       },

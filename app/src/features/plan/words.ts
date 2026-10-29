@@ -136,8 +136,14 @@ export const sentOn = (iso: string) => date(iso);
 export const byDay = (iso: string) => due(iso);
 
 /** What the plan will hold, in one line: the waiting state says it while Fume writes and the expert checks. */
-export function partsToCome(creatives: number): string {
-  const masters = Math.max(1, Math.min(3, Math.ceil(creatives / 3)));
+export function partsToCome(creatives: number, planned?: { kind: "master" | "variant" }[]): string {
+  // Once Fume has written the plan, its own counts; before that, a guess from the brief.
+  if (planned?.length) {
+    creatives = planned.length;
+  }
+  const masters = planned?.length
+    ? Math.max(1, planned.filter((c) => c.kind === "master").length)
+    : Math.max(1, Math.min(3, Math.ceil(creatives / 3)));
   const made =
     creatives > 0
       ? `the ${copy.creatives(creatives)}, ${copy.count(masters, "master")} first`
