@@ -99,6 +99,18 @@ export const checkedBy = (name: string) => `Checked by ${name}`;
 export const approvedBy = (name: string) => `${name} approved`;
 export const count = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 export const creatives = (n: number) => count(n, "creative");
+/** A language as people say it: the database keeps codes ("en"), the brief names ("English"). */
+const LANGUAGES: Record<string, string> = {
+  en: "English",
+  nb: "Norwegian",
+  nn: "Norwegian",
+  no: "Norwegian",
+  sv: "Swedish",
+  da: "Danish",
+  fi: "Finnish",
+  de: "German",
+};
+export const languageName = (code: string) => LANGUAGES[code.toLowerCase()] ?? code;
 
 /** Where a campaign stands, in one sentence. Every place that shows it calls this (Home, the Campaigns list, the
  *  campaign header, ⌘K, the collection, the chat cards, the bell), so a campaign never has two statuses: "6 creatives

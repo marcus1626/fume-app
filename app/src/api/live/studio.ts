@@ -35,7 +35,7 @@ type Calls =
   | "undoDocumentToCheck"
   | "setFormatTile";
 
-const NO_ENGINE = "The Engine runs from Wednesday. Until then the picture is made by hand and added to the creative.";
+const NO_ENGINE = "The Engine is not part of this version. Make the picture by hand and add it to the creative.";
 
 async function mustBeStaff(live: Live) {
   if (!(await live.me()).staffRole) throw new FumeError("forbidden", "Only Fume's people work in the Studio.");
@@ -102,7 +102,7 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
       await mustBeStaff(live);
       const mode = modes.find((m) => m.id === input.modeId);
       if (mode && mode.output !== "creative")
-        throw new FumeError("unavailable", `${mode.name} is made with the Engine. It runs from Wednesday.`);
+        throw new FumeError("unavailable", `${mode.name} is made with the Engine, which is not part of this version.`);
       let id: string;
       if (input.creativeId) id = (await readDocument(live, input.creativeId)).doc.id;
       else {
