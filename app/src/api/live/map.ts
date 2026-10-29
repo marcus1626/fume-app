@@ -104,21 +104,9 @@ export const BUCKET = "workspace-files";
 /** Short-lived signed addresses for private files, by file id; a file the caller may not read gets none. */
 export async function fileUrls(fileIds: (Id | null | undefined)[]): Promise<Map<Id, { url: string; file: FileRow }>> {
   const ids = [...new Set(fileIds.filter((x): x is Id => Boolean(x)))];
-  const out = new Map<Id, { url: string; file: FileRow }>();
-  if (ids.length === 0) return out;
+  if (ids.length === 0) return new Map();
   const files = await rows<FileRow>(supabase().from("files").select(FILE).in("id", ids));
-  if (files.length === 0) return out;
-  const { data } = await supabase()
-    .storage.from(BUCKET)
-    .createSignedUrls(
-      files.map((f) => f.path),
-      60 * 60,
-    );
-  for (const f of files) {
-    const signed = data?.find((d) => d.path === f.path)?.signedUrl;
-    if (signed) out.set(f.id, { url: signed, file: f });
-  }
-  return out;
+  return signFiles(files);
 }
 
 /** Uploads a file into the workspace's folder and registers it; answers the file's id. */
@@ -168,39 +156,60 @@ function toChannel(c: string): Channel {
   );
 }
 
-/** Everything one set of creatives needs, read in a few queries; the caller's row-level security decides what comes back. */
+/** A version as readCreatives reads it: with its check, its approvals and its file in the same query. */
+type VersionWithParts = VersionRow & {
+  expert_checks: CheckRow | CheckRow[] | null;
+  approvals: ApprovalRow[] | null;
+  files: FileRow | null;
+};
+type CreativeWithVersions = CreativeRow & { creative_versions: VersionWithParts[] | null };
+
+const CREATIVE_WITH_PARTS =
+  `${CREATIVE}, creative_versions(${VERSION}, expert_checks(${CHECK}), ` +
+  `approvals(id, version_id, decided_by, created_at, revoked_at), files(${FILE}))`;
+
+/** Signed addresses for files already read, by file id (one round to storage). */
+async function signFiles(files: FileRow[]): Promise<Map<Id, { url: string; file: FileRow }>> {
+  const out = new Map<Id, { url: string; file: FileRow }>();
+  if (files.length === 0) return out;
+  const { data } = await supabase()
+    .storage.from(BUCKET)
+    .createSignedUrls(
+      files.map((f) => f.path),
+      60 * 60,
+    );
+  for (const f of files) {
+    const signed = data?.find((d) => d.path === f.path)?.signedUrl;
+    if (signed) out.set(f.id, { url: signed, file: f });
+  }
+  return out;
+}
+
+/**
+ * Everything one set of creatives needs, in two rounds: the creatives with their versions, checks, approvals and files
+ * in one query, then the files' signed addresses. The caller's row-level security decides what comes back, for the
+ * embedded rows too (a customer gets no version still in check).
+ */
 export async function readCreatives(filter: { campaignIds?: Id[]; creativeIds?: Id[] }): Promise<Creative[]> {
-  let q = supabase().from("creatives").select(CREATIVE);
+  let q = supabase()
+    .from("creatives")
+    .select(CREATIVE_WITH_PARTS)
+    .is("creative_versions.approvals.revoked_at", null)
+    .order("number", { referencedTable: "creative_versions" });
   if (filter.campaignIds) q = q.in("campaign_id", filter.campaignIds);
   if (filter.creativeIds) q = q.in("id", filter.creativeIds);
-  const creatives = await rows<CreativeRow>(q.order("created_at"));
-  if (creatives.length === 0) return [];
-  const versions = await rows<VersionRow>(
-    supabase()
-      .from("creative_versions")
-      .select(VERSION)
-      .in(
-        "creative_id",
-        creatives.map((c) => c.id),
-      )
-      .order("number"),
+  const found = await rows<CreativeWithVersions>(
+    q.order("created_at").overrideTypes<CreativeWithVersions[], { merge: false }>(),
   );
-  const versionIds = versions.map((v) => v.id);
-  const [checks, approvals, files] = await Promise.all([
-    versionIds.length
-      ? rows<CheckRow>(supabase().from("expert_checks").select(CHECK).in("version_id", versionIds))
-      : Promise.resolve([]),
-    versionIds.length
-      ? rows<ApprovalRow>(
-          supabase()
-            .from("approvals")
-            .select("id, version_id, decided_by, created_at, revoked_at")
-            .in("version_id", versionIds)
-            .is("revoked_at", null),
-        )
-      : Promise.resolve([]),
-    fileUrls(versions.map((v) => v.file_id)),
-  ]);
+  if (found.length === 0) return [];
+  const creatives: CreativeRow[] = found;
+  const parts = found.flatMap((c) => c.creative_versions ?? []);
+  const versions: VersionRow[] = parts;
+  const checks = parts.flatMap((v) =>
+    Array.isArray(v.expert_checks) ? v.expert_checks : v.expert_checks ? [v.expert_checks] : [],
+  );
+  const approvals = parts.flatMap((v) => (v.approvals ?? []).filter((a) => !a.revoked_at));
+  const files = await signFiles(parts.flatMap((v) => (v.files ? [v.files] : [])));
   return creatives.flatMap((c) => {
     const mine = versions.filter((v) => v.creative_id === c.id);
     if (mine.length === 0) return [];
