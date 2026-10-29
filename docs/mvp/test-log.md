@@ -11,6 +11,7 @@ live data for Friday: `tools/db/preflight.sql`.
 | 27 Oct 2026 | `61785c8` | Live, rolled back | 133 passed |
 | 28 Oct 2026 | `c78dde3` | Live, rolled back | 141 passed (file checks added) |
 | 28 Oct 2026 | `cf1698a` | Live, rolled back | 147 passed (product pictures added) |
+| 29 Oct 2026 | `4c3784b` | The app on live, on a copy of LYSNE (`lysne-walk`) | Lines 1–16 passed in the browser as Marcus, Kristian and the approver; 6 defects fixed (below) |
 
 ## The acceptance script, line by line
 
@@ -49,6 +50,17 @@ app, with the people named there.
 | Wrong workspace | Refused as not found; nothing of the other brand can be read | 10, 30, 90 |
 | A wrong file | Flagged in Check for the expert (kind, shape, size, weight), never shown to the customer | 80 |
 | Facts or Brand DNA changed since a version was made | Flagged in Check for the expert | app (live Check) |
+
+## The walk-through in the app (29 Oct)
+
+Each line was clicked through in a browser on the live backend, on a copy of LYSNE so the real one stays as it is for
+Friday. The downloaded files were byte for byte the approved ones. Line 17 rests on the database tests.
+
+Fixed: Check said Product Truth was off and a brand rule broken on a picture no one had evaluated; Check did not show
+what the customer asked for; double full stops in the plan and notes; "Norway, in en"; a stale Engine date; the flag
+count. Open: the Studio document does not show the change asked for (it shows in Check); Marcus, who may not check,
+sees Mark checked and is refused; pages load slowly from the test machine (Review about 7 s), to be timed on a normal
+connection.
 
 ## Friday's record (to fill in)
 
