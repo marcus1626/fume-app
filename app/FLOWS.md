@@ -969,3 +969,43 @@ approves the creatives. Her approval starts the Engine.
   "Plan approved by Maja", and the agency is told the masters are theirs to check before Maja sees them.
 - **The demo.** Nora (?as=nora): LYSNE › Winter gifting waits for her check and Send to Maja. Maja (?agency&as=maja):
   Black Friday is checked and sent, Approve and start. The seeded link is /c/bfplan.
+
+## 28. Empty pages with a scene (27 Oct 2026, PROPOSED)
+Marcus, 27 Oct: when a page is empty, because everything is done or nothing is set up yet, it shows one card in the
+middle with an art directed image, like "Good morning" with a cup of coffee. (§27 is Video in the Studio, on its own
+branch.)
+
+- **The scene (round 3, the same day).** One of Fume's pictures across the page's width, a calm band 320 to 440 px
+  tall, dimmed a little (Ink at 12 %, flat), with one Smoke pill bar at the bottom left, on the calm side of the
+  picture: the page's icon (bare, no square behind it), the title, one line and the next step in the bar's ring; the
+  first action is white and the rest are clear. It is Fume's own pattern for words over a picture, the toast's and the
+  website's cookie bar. Below 560 px of picture the bar folds into a small glass card, the actions under the words.
+  No label on the picture. The picture comes into focus once, soft to sharp, and the bar arrives just after it.
+  Round 1 (a card with the picture inside) was not Fume's taste: no box in a box, and an icon wanted. Round 2 (a large
+  square of glass in the middle and a "Made with Fume Engine" chip) was too big a box, Marcus said, and the label had
+  to go. In the app it is `<Nothing scene="…">` (shell/Page.tsx), built from `<Empty scene>`, `<EmptyScene>` and
+  `<EmptySceneGlass>`.
+- **When.** Only when the whole page has nothing to show and the person did not filter it. A filtered page ("Nothing
+  for this client", "No mentions") and small empties inside a panel or a section keep the icon.
+- **The images.** The house layer of the Imagery system (APPROVED 8 Oct): analog 35 mm, one warm light, one sharp thing
+  and the rest soft, walnut, linen, travertine and amber glass, warm brown shadows, film grain; hands at most, never a
+  face; no text, logos or brands. The subject sits in the right third so the bar leaves it in view. Made with the
+  Engine, in public/scenes/ (1920 × 1072 JPEG), named in shell/scenes.ts. The same for every brand; brand-made scenes
+  are for later.
+- **The time of day.** Home's "Nothing waits on you" and the studio overview's "Nothing needs you" follow the greeting:
+  morning (5 to 12, hands around a coffee in the first light), afternoon (12 to 18, water in amber glass by a linen
+  curtain), evening (from 18 and before 5, a lamp on a walnut sideboard at dusk). The studio uses Oslo's time.
+
+| Page | When | Scene |
+| --- | --- | --- |
+| Home (customer) | Nothing waits on you | morning, afternoon or evening |
+| Review (customer) | Nothing waits on you | quiet (a window seat with a folded throw) |
+| Campaigns (customer, studio, agency) | No campaigns yet | start (a blank notebook and a fountain pen) |
+| Deliveries | No deliveries yet | parcel (kraft paper and string on travertine) |
+| Notifications | Nothing new, or everything is read (not Mentions) | letters (opened, squared, a brass opener) |
+| Studio overview | Nothing needs you | morning, afternoon or evening |
+| Check (QA) | Nothing waits for a check (not filtered) | checked (a brass loupe on proofs) |
+| Engine output | No runs yet | studio (a travertine plinth under a softbox) |
+| Results, once it exists | Analytics not connected | connect (a lamp's plug beside the socket) |
+
+- **Open.** The app has no results page yet, so "connect" is not used. Whether brands get scenes in their own style.

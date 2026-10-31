@@ -428,6 +428,7 @@ export function QaPage() {
           nothingAtAll ? (
             <Nothing
               icon="inbox"
+              scene={filtered ? undefined : "checked"}
               title={only ? `Nothing from ${run ? "this run" : only} waits for a check` : "Nothing waits for a check"}
               text={
                 agency

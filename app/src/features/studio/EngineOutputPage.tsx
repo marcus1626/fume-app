@@ -46,6 +46,7 @@ export function EngineOutputPage() {
           v.engineOutput.length === 0 ? (
             <Nothing
               icon="fume-engine"
+              scene="studio"
               title="No runs yet"
               text={`The Engine’s runs for ${v.workspace.brandName} show here with every candidate they made.`}
             />

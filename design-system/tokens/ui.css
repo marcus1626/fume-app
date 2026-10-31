@@ -267,6 +267,9 @@
   --ui-empty-media-bg: var(--ui-surface-sunken);
   --ui-empty-measure: 38ch; /* Line length of the empty state's text: short lines, centred. */
   --ui-empty-icon: 24px; /* The empty state's icon at display size (icons-lucide: 24 px for display). */
+  --ui-empty-scene-height: clamp(320px, 30vw, 440px); /* A page with nothing in it, round 3 (27 Oct 2026): the picture fills the page's width at this height, a calm band from 320 px to 440 px (never a wall); round 2 was 400 to 520. */
+  --ui-empty-scene-dim: rgb(27 20 16 / 0.12); /* Ink at 12 % over the whole picture, flat (no gradient): the picture steps back so the glass and its words lead. */
+  --ui-empty-scene-pill-width: 38rem; /* Round 3 (27 Oct 2026): the widest the Smoke pill bar on the picture grows (icon, title, one line, the next step), so it stays a caption and never a panel. */
   --ui-skeleton-bg: var(--ui-surface-sunken); /* Placeholder shapes on Porcelain: the sunken step, in the shape and size of what is coming. */
   --ui-skeleton-bg-pulse: var(--ui-surface); /* The shimmer lifts the shape to the surface step and back, slowly. A flat colour change, never a gradient sweep (round 7; restored in round 9 after Marcus found the round 8 sweep artificial). */
   --ui-skeleton-bg-on-surface: var(--fume-focus-100); /* Inside a card (surface) the shape starts one step deeper... */

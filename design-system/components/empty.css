@@ -31,3 +31,95 @@
 .ui-empty-description { margin: 0; font-size: var(--ui-type-control); line-height: 1.55; color: var(--ui-text-secondary); text-wrap: balance; }
 .ui-empty-description a { color: var(--ui-text); text-decoration: underline; text-decoration-color: var(--ui-hairline-strong); text-underline-offset: 3px; }
 .ui-empty-content { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--ui-space-sm); max-width: var(--ui-empty-measure); min-width: 0; }
+
+/* The scene (PROPOSED 27 Oct 2026, Marcus; rounds 2 and 3 the same day). A page with nothing in it, because everything
+   is done or because it is not set up yet, shows one of Fume's own pictures across the page's width, dimmed a little,
+   with one Smoke pill bar on it holding the icon, the title, one line and the next step.
+   Round 1 was a card with the picture inside it (not Fume's taste, no box in a box). Round 2 put a large square of
+   glass in the middle and labelled the picture "Made with Fume Engine" on a chip; Marcus: no label, a much smaller
+   box, designed like Fume. Round 3 takes Fume's own pattern for words over a picture, the pill bar of the toast and
+   of the website's cookie bar: Smoke glass at the pill radius, text 22 in, the buttons in the 6 px ring at the end,
+   at the bottom left on the calm side of the picture (the subject sits in the right third). Below 560 px of picture
+   the bar folds into a small glass card at the float radius, the actions under the words.
+   Markup: <div class="ui-empty ui-empty--scene">
+             <img class="ui-empty-scene-img"/>
+             <div class="ui-empty-scene-glass"> <div class="ui-empty-header"> icon · title · text </div>
+               <div class="ui-empty-content"> actions </div> </div>
+           </div>
+   Decisions: the picture is the surface (card radius, no stroke); a flat Ink dim, never a gradient; the glass is the
+   DECIDED Smoke, floating over the picture like a toast over the page (glass-only-floating); the icon stands bare,
+   no square behind it; on the glass the first action is the one white button and the rest are clear
+   (glass-one-white); the picture comes into focus once, soft to sharp, and the bar arrives just after it.
+   Rule gate: air, glass-only-floating, glass-no-stroke, glass-one-white, no-gradient, reduced-motion,
+   reduced-transparency. */
+.ui-empty--scene {
+  position: relative; isolation: isolate; overflow: hidden; container-type: inline-size;
+  justify-content: flex-end; align-items: flex-start;
+  align-self: stretch; height: var(--ui-empty-scene-height);
+  padding: var(--ui-space-lg);
+  background: var(--ui-surface-sunken); color: var(--ui-glass-fg);
+}
+.ui-empty--scene::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--ui-empty-scene-dim); }
+.ui-empty-scene-img {
+  position: absolute; inset: 0; z-index: -2; display: block; width: 100%; height: 100%;
+  object-fit: cover; object-position: 70% 50%;
+  animation: ui-empty-scene-focus var(--ui-motion-slow) var(--ui-motion-ease) both;
+}
+@keyframes ui-empty-scene-focus {
+  from { filter: blur(var(--ui-motion-enter-blur)); transform: scale(1.02); }
+  to   { filter: none; transform: none; }
+}
+.ui-empty-scene-glass {
+  display: flex; align-items: center; gap: var(--ui-space-md);
+  max-width: min(100%, var(--ui-empty-scene-pill-width)); min-height: var(--ui-size-hit);
+  padding: var(--ui-inset-ring) var(--ui-inset-ring) var(--ui-inset-ring) calc(var(--ui-inset-ring) + var(--ui-inset-float));
+  border-radius: var(--ui-radius-action); text-align: start;
+  background: var(--ui-glass-bg); color: var(--ui-glass-fg); box-shadow: var(--ui-glass-shadow);
+  -webkit-backdrop-filter: var(--ui-glass-filter); backdrop-filter: var(--ui-glass-filter);
+  animation: ui-empty-scene-arrive var(--ui-motion-slow) var(--ui-motion-ease) var(--ui-motion-fast) both;
+}
+.ui-empty-scene-glass:not(:has(> .ui-empty-content)) { padding-inline-end: calc(var(--ui-inset-ring) + var(--ui-inset-float)); }
+@keyframes ui-empty-scene-arrive {
+  from { opacity: 0; transform: translateY(var(--ui-space-sm)); filter: blur(var(--ui-motion-enter-blur)); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+.ui-empty-scene-glass .ui-empty-header {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--ui-space-md); row-gap: 0;
+  justify-items: start; align-items: center; max-width: none; padding-block: var(--ui-space-xs);
+}
+.ui-empty-scene-glass .ui-empty-media { grid-row: 1 / span 2; margin: 0; color: var(--ui-glass-fg); }
+.ui-empty-scene-glass .ui-empty-media--icon { width: auto; height: auto; border-radius: 0; background: none; }
+.ui-empty-scene-glass .ui-empty-media svg { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); }
+.ui-empty-scene-glass .ui-empty-title { grid-column: 2; font-size: var(--ui-type-control); letter-spacing: 0; text-wrap: pretty; }
+.ui-empty-scene-glass .ui-empty-description {
+  grid-column: 2; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4;
+  color: var(--ui-glass-fg-secondary); text-wrap: pretty;
+}
+.ui-empty-scene-glass .ui-empty-description a { color: var(--ui-glass-fg); text-decoration-color: currentColor; }
+.ui-empty-scene-glass .ui-empty-content { flex: none; flex-wrap: nowrap; justify-content: flex-start; max-width: none; }
+/* The page's actions keep their components; on the glass they take the glass variants: the first one white, the rest clear. */
+.ui-empty-scene-glass .ui-btn { --bg: var(--ui-glass-button-clear); --bg-hover: var(--ui-glass-button-clear-hover); --bg-pressed: var(--ui-glass-button-clear-pressed); --fg: var(--ui-glass-button-clear-fg); --edge: transparent; --edge-hover: transparent; --ring: var(--ui-focus-ring-on-glass); }
+.ui-empty-scene-glass .ui-empty-content > .ui-btn:first-child,
+.ui-empty-scene-glass .ui-empty-content > :first-child > .ui-btn:first-child { --bg: var(--ui-glass-button-white); --bg-hover: var(--ui-glass-button-white-hover); --bg-pressed: var(--ui-glass-button-white-pressed); --fg: var(--ui-glass-button-white-fg); }
+/* A narrow picture (a phone, the home column on a small desk): the bar folds into a small glass card. */
+@container (max-width: 560px) {
+  .ui-empty-scene-glass {
+    flex-direction: column; align-items: stretch; gap: var(--ui-space-md);
+    padding: var(--ui-inset-float); border-radius: var(--ui-radius-float);
+  }
+  .ui-empty-scene-glass:not(:has(> .ui-empty-content)) { padding-inline-end: var(--ui-inset-float); }
+  .ui-empty-scene-glass .ui-empty-header { align-items: start; padding-block: 0; }
+  .ui-empty-scene-glass .ui-empty-content {
+    flex-wrap: wrap; padding-inline-start: calc(var(--ui-size-icon-lg) + var(--ui-space-md));
+  }
+}
+@media (max-width: 640px) {
+  .ui-empty--scene { height: auto; min-height: var(--ui-empty-scene-height); padding: var(--ui-space-md); }
+}
+@media (prefers-reduced-motion: reduce) { .ui-empty-scene-img, .ui-empty-scene-glass { animation: none; } }
+@media (prefers-reduced-transparency: reduce) {
+  .ui-empty-scene-glass { background: var(--ui-glass-bg-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .ui-empty-scene-glass { background: var(--ui-glass-bg-solid); }
+}

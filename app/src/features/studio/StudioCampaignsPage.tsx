@@ -170,6 +170,7 @@ export function StudioCampaignsPage() {
           rows.length === 0 ? (
             <Nothing
               icon="megaphone"
+              scene="start"
               title="No campaigns yet"
               text="A campaign shows here once a customer starts a brief with Fume."
             />

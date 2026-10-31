@@ -213,6 +213,21 @@
       "value": "24px",
       "status": "DECIDED",
       "description": "The empty state's icon at display size (icons-lucide: 24 px for display)."
+    },
+    "scene-height": {
+      "value": "clamp(320px, 30vw, 440px)",
+      "status": "PROPOSED",
+      "description": "A page with nothing in it, round 3 (27 Oct 2026): the picture fills the page's width at this height, a calm band from 320 px to 440 px (never a wall); round 2 was 400 to 520."
+    },
+    "scene-dim": {
+      "value": "rgb(27 20 16 / 0.12)",
+      "status": "PROPOSED",
+      "description": "Ink at 12 % over the whole picture, flat (no gradient): the picture steps back so the glass and its words lead."
+    },
+    "scene-pill-width": {
+      "value": "38rem",
+      "status": "PROPOSED",
+      "description": "Round 3 (27 Oct 2026): the widest the Smoke pill bar on the picture grows (icon, title, one line, the next step), so it stays a caption and never a panel."
     }
   },
   "skeleton": {

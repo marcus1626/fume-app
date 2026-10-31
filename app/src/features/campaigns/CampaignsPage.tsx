@@ -137,6 +137,7 @@ export function CampaignsPage() {
             all.length === 0 ? (
               <Nothing
                 icon="megaphone"
+                scene="start"
                 title="No campaigns yet"
                 text={
                   client
