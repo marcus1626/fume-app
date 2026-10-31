@@ -8,6 +8,7 @@ import type { Format, FormatTile } from "./campaigns";
 import type { DetailFind, ProductFix, ProductOverride } from "./products";
 import type { LightAngle, Lens, LightRig, LookSource } from "./production";
 import type { Evaluation } from "./quality";
+import type { VideoEdit } from "./video";
 
 // ─── Modes and controls ─────────────────────────────────────────────────────
 
@@ -60,7 +61,7 @@ export interface StudioMode {
   /** Section order in the right panel. */
   sections: string[];
   variables: ModeVariable[];
-  /** False for a mode that is planned but not built (3D object, video). */
+  /** False for a mode that is planned but not built (3D object). */
   available: boolean;
   /** Which left-panel specs this mode uses. */
   uses: ("product" | "model" | "reference" | "count")[];
@@ -164,6 +165,8 @@ export interface CreativeDocument {
   formats?: FormatTile[];
   /** Product fixes, automatic and by hand (FLOWS §17). */
   fixes?: ProductFix[];
+  /** A video creative's edit (FLOWS §27): set when the document is in the Video studio. */
+  video?: VideoEdit;
   state: "draft" | "in_check" | "checked";
   by: Id;
   updatedAt: Instant;

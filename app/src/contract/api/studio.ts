@@ -4,6 +4,7 @@
 import type { Id } from "../entities/common";
 import type { ProductOverride } from "../entities/products";
 import type { CreativeDocument, Recipe, StudioKind, StudioMode, StudioSession } from "../entities/studio";
+import type { ShotRecipe } from "../entities/video";
 import type { BrandWorkspaceView, StudioCampaignRow, StudioKit } from "../views/studio";
 
 export interface StudioApi {
@@ -32,10 +33,19 @@ export interface StudioApi {
   updateDocument(
     documentId: Id,
     change: Partial<
-      Pick<CreativeDocument, "variables" | "specs" | "layers" | "modeId" | "studio" | "title" | "campaignId">
+      Pick<CreativeDocument, "variables" | "specs" | "layers" | "modeId" | "studio" | "title" | "campaignId" | "video">
     >,
   ): Promise<CreativeDocument>;
-  /** Words in the Engine bar: the Engine proposes a variable change and shows it before it renders. */
+  /** Video (FLOWS §27.3): the Engine makes takes of a shot from its recipe with a video model. A clipId that is not on
+   *  the timeline yet adds the shot at the end. */
+  makeShot(
+    documentId: Id,
+    input: { clipId?: Id; recipe: ShotRecipe; takes: number; name?: string },
+  ): Promise<CreativeDocument>;
+  /** Video (FLOWS §27.5): the Engine makes the edit into other formats: it reframes each shot and cuts it down. */
+  adaptVideo(documentId: Id, formatIds: Id[]): Promise<CreativeDocument>;
+  /** Words in the Engine bar: the Engine proposes a variable change and shows it before it renders. On a video, it
+   *  proposes a change to the edit (document.video.edits) and shows it on the timeline before it is kept. */
   engineEdit(documentId: Id, text: string): Promise<CreativeDocument>;
   decideEdit(documentId: Id, editId: Id, verdict: "keep" | "undo"): Promise<CreativeDocument>;
   render(documentId: Id): Promise<CreativeDocument>;

@@ -149,6 +149,13 @@ export const useUpdateDocument = () =>
     a.updateDocument(v.documentId, v.change),
   );
 export const useEngineEdit = () => useM((a, v: { documentId: Id; text: string }) => a.engineEdit(v.documentId, v.text));
+export const useMakeShot = () =>
+  useM((a, v: { documentId: Id } & Parameters<FumeApi["makeShot"]>[1]) => {
+    const { documentId, ...input } = v;
+    return a.makeShot(documentId, input);
+  });
+export const useAdaptVideo = () =>
+  useM((a, v: { documentId: Id; formatIds: Id[] }) => a.adaptVideo(v.documentId, v.formatIds));
 export const useDecideEdit = () =>
   useM((a, v: { documentId: Id; editId: Id; verdict: "keep" | "undo" }) =>
     a.decideEdit(v.documentId, v.editId, v.verdict),

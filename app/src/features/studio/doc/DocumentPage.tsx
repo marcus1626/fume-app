@@ -51,6 +51,8 @@ import { EngineLockBar, lockProps, useEngineWork } from "./lock";
 import { SpecsPanel } from "./Specs";
 import { VariablesPanel } from "./Variables";
 import { frameRoot } from "../../../shell/scope";
+import { withServer } from "./video/edit";
+import { VideoDesk } from "./video/VideoDesk";
 
 export function DocumentPage() {
   const role = useSession().data?.user.staffRole;
@@ -180,6 +182,12 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
   const work = useEngineWork(doc, title);
   const locked = Boolean(work) && !readOnly;
   const { state } = history;
+  const noVersion = !doc.versions.some((v) => v.state === "done");
+  // A video goes to check once every shot has a take (FLOWS §27.6); its first frame stands for it in Check.
+  const video = doc.studio === "video" ? (state.video ? withServer(state.video, doc.video) : doc.video) : undefined;
+  const videoNotReady = Boolean(
+    video && (!video.clips.length || video.checks.some((c) => c.id === "ck-shots" && c.state === "flag")),
+  );
   const name = (id: string | undefined) =>
     session && id === session.user.id ? firstName(session.user.name) : id === "u-tuva" ? "Tuva" : people.name(id);
   // The way back follows history: "← Check" when she came from Check, else the page she came from. A cold link goes
@@ -200,8 +208,11 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
   }, [title]);
 
   const switchStudio = (studio: StudioKind) => {
-    if (studio === doc.studio || studio === "video") return;
-    const next = modes.find((m) => m.studio === studio && m.available);
+    if (studio === doc.studio) return;
+    // Into Video from a picture: "Motion from a still" makes the picked render move (FLOWS §27.1).
+    const next =
+      (studio === "video" && !noVersion ? modes.find((m) => m.id === "m-video-still" && m.available) : undefined) ??
+      modes.find((m) => m.studio === studio && m.available);
     if (!next) return;
     history.flush();
     update.mutate(
@@ -243,7 +254,6 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
 
   const model = assets?.models.find((m) => m.documentId === doc.id);
   const reference = assets?.references.find((r) => r.documentId === doc.id);
-  const noVersion = !doc.versions.some((v) => v.state === "done");
 
   let actions: React.ReactNode;
   if (mode?.output === "model") {
@@ -321,7 +331,7 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
         <SendToCheck
           doc={doc}
           name={title}
-          disabled={!doc.pickedVersionId || noVersion}
+          disabled={video ? videoNotReady || !doc.pickedVersionId : !doc.pickedVersionId || noVersion}
           onBefore={history.flush}
           onSent={fromCheck ? back.back : undefined}
         />
@@ -375,9 +385,7 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
           >
             <SegmentedOption value="render">Image</SegmentedOption>
             <SegmentedOption value="design">Design</SegmentedOption>
-            <SegmentedOption value="video" disabled aria-disabled="true" title="Video is coming later">
-              Video <span className="ui-desk-later">Later</span>
-            </SegmentedOption>
+            <SegmentedOption value="video">Video</SegmentedOption>
           </SegmentedControl>
         )}
         <div className="ui-desk-bar-end" {...lockProps(locked)}>
@@ -431,87 +439,116 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
         </p>
       )}
 
-      {!readOnly && !bare && (
-        <div className="ui-desk-lockable" {...lockProps(locked)}>
-          <SpecsPanel
+      {doc.studio === "video" ? (
+        video ? (
+          <VideoDesk
             doc={doc}
+            edit={video}
+            variables={state.variables}
             mode={mode}
             modes={modes}
-            specs={state.specs}
-            layers={state.layers}
-            assets={assets}
             brandName={brandName}
-            approver={approver}
-            name={name}
-            onSpecs={(specs, key) => history.change({ specs }, `spec-${key}`)}
-            onLayers={(layers, key) => history.change({ layers }, key)}
+            productName={product?.name}
+            title={title}
+            readOnly={readOnly}
+            bare={bare}
+            locked={locked}
+            lock={locked && work ? <EngineLockBar item={work} title={title} /> : undefined}
+            onToggleBare={toggleBare}
+            onChange={(part, key) => history.change(part, key)}
             onMode={switchMode}
-            selectedLayer={selectedLayer}
-            onSelectLayer={setSelectedLayer}
-          />
-        </div>
-      )}
-
-      <main className="ui-desk-centre">
-        <Board
-          doc={{ ...doc, variables: state.variables, specs: state.specs }}
-          mode={mode}
-          layers={state.layers}
-          brandName={brandName}
-          selectedLayer={selectedLayer}
-          onSelectLayer={setSelectedLayer}
-          readOnly={readOnly}
-          onBeforeRender={history.flush}
-          onVariable={(key, value) =>
-            history.change({ variables: { ...state.variables, [key]: value } }, `engine-${key}`)
-          }
-          bare={bare}
-          onToggleBare={toggleBare}
-          compare={compare}
-          onCompare={setCompare}
-          realProduct={product?.images[0] ? { name: product.name, image: product.images[0] } : undefined}
-          lock={locked && work ? <EngineLockBar item={work} title={title} /> : undefined}
-        />
-        {formatsOpen && !readOnly ? (
-          <MakeFormats
-            doc={doc}
-            placements={placements}
-            source={doc.versions.find((v) => v.id === doc.pickedVersionId && v.state === "done")}
-            onClose={() => setFormatsOpen(false)}
+            onBefore={history.flush}
           />
         ) : (
-          <div className="ui-desk-lockable" {...lockProps(locked)}>
-            <Versions doc={doc} readOnly={readOnly} compare={compare} onCompare={setCompare} />
-          </div>
-        )}
-        <CanvasLight rig={state.variables.rig as LightRig | undefined} view={lightView} />
-      </main>
+          <main className="ui-desk-centre">
+            <Loading label="Setting up the edit" />
+          </main>
+        )
+      ) : (
+        <>
+          {!readOnly && !bare && (
+            <div className="ui-desk-lockable" {...lockProps(locked)}>
+              <SpecsPanel
+                doc={doc}
+                mode={mode}
+                modes={modes}
+                specs={state.specs}
+                layers={state.layers}
+                assets={assets}
+                brandName={brandName}
+                approver={approver}
+                name={name}
+                onSpecs={(specs, key) => history.change({ specs }, `spec-${key}`)}
+                onLayers={(layers, key) => history.change({ layers }, key)}
+                onMode={switchMode}
+                selectedLayer={selectedLayer}
+                onSelectLayer={setSelectedLayer}
+              />
+            </div>
+          )}
 
-      {!readOnly && !bare && (
-        <div className="ui-desk-lockable" {...lockProps(locked)}>
-          <VariablesPanel
-            key={doc.campaignId ?? "no-campaign"}
-            doc={doc}
-            mode={mode}
-            variables={state.variables}
-            layers={state.layers}
-            selectedLayer={selectedLayer}
-            assets={assets}
-            brandName={brandName}
-            campaign={
-              doc.campaignId && campaign.data
-                ? { name: campaign.data.campaign.name, look: campaign.data.campaign.look }
-                : undefined
-            }
-            proposed={proposedKeys(doc)}
-            onVariable={(key, value) =>
-              history.change({ variables: { ...state.variables, [key]: value } }, `var-${key}`)
-            }
-            onVariables={(patch, key) => history.change({ variables: { ...state.variables, ...patch } }, key)}
-            onLayers={(layers, key) => history.change({ layers }, key)}
-            onLightView={setLightView}
-          />
-        </div>
+          <main className="ui-desk-centre">
+            <Board
+              doc={{ ...doc, variables: state.variables, specs: state.specs }}
+              mode={mode}
+              layers={state.layers}
+              brandName={brandName}
+              selectedLayer={selectedLayer}
+              onSelectLayer={setSelectedLayer}
+              readOnly={readOnly}
+              onBeforeRender={history.flush}
+              onVariable={(key, value) =>
+                history.change({ variables: { ...state.variables, [key]: value } }, `engine-${key}`)
+              }
+              bare={bare}
+              onToggleBare={toggleBare}
+              compare={compare}
+              onCompare={setCompare}
+              realProduct={product?.images[0] ? { name: product.name, image: product.images[0] } : undefined}
+              lock={locked && work ? <EngineLockBar item={work} title={title} /> : undefined}
+            />
+            {formatsOpen && !readOnly ? (
+              <MakeFormats
+                doc={doc}
+                placements={placements}
+                source={doc.versions.find((v) => v.id === doc.pickedVersionId && v.state === "done")}
+                onClose={() => setFormatsOpen(false)}
+              />
+            ) : (
+              <div className="ui-desk-lockable" {...lockProps(locked)}>
+                <Versions doc={doc} readOnly={readOnly} compare={compare} onCompare={setCompare} />
+              </div>
+            )}
+            <CanvasLight rig={state.variables.rig as LightRig | undefined} view={lightView} />
+          </main>
+
+          {!readOnly && !bare && (
+            <div className="ui-desk-lockable" {...lockProps(locked)}>
+              <VariablesPanel
+                key={doc.campaignId ?? "no-campaign"}
+                doc={doc}
+                mode={mode}
+                variables={state.variables}
+                layers={state.layers}
+                selectedLayer={selectedLayer}
+                assets={assets}
+                brandName={brandName}
+                campaign={
+                  doc.campaignId && campaign.data
+                    ? { name: campaign.data.campaign.name, look: campaign.data.campaign.look }
+                    : undefined
+                }
+                proposed={proposedKeys(doc)}
+                onVariable={(key, value) =>
+                  history.change({ variables: { ...state.variables, [key]: value } }, `var-${key}`)
+                }
+                onVariables={(patch, key) => history.change({ variables: { ...state.variables, ...patch } }, key)}
+                onLayers={(layers, key) => history.change({ layers }, key)}
+                onLightView={setLightView}
+              />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

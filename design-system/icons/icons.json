@@ -579,6 +579,27 @@
       "note": ""
     },
     {
+      "name": "film",
+      "lucide": "film",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "a shot in the Video studio (FLOWS §27)"
+    },
+    {
+      "name": "music",
+      "lucide": "music",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "the sound track in the Video studio (FLOWS §27)"
+    },
+    {
+      "name": "captions",
+      "lucide": "captions",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "captions in the Video studio (FLOWS §27)"
+    },
+    {
       "name": "mic",
       "lucide": "mic",
       "kind": "filled",
