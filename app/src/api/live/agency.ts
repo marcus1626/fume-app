@@ -20,6 +20,7 @@ import type {
   Id,
   Organisation,
   StudioCampaignRow,
+  UsageRow,
   User,
   Workspace,
 } from "../../contract";
@@ -47,7 +48,8 @@ type Calls =
   | "answerClientPlan"
   | "agencyPlan"
   | "askFume"
-  | "licence";
+  | "licence"
+  | "usage";
 
 interface SendRow {
   id: string;
@@ -507,6 +509,17 @@ export function agencyCalls(live: Live): Pick<FumeApi, Calls> {
         },
         seats: r.seats,
       };
+    },
+    // The Usage page: Fume's people see the brands they work on, an agency the agency's clients (usage_overview).
+    async usage() {
+      const [list, workspaces] = await Promise.all([
+        command<(Omit<UsageRow, "package"> & { package: UsageRow["package"] | null })[]>("usage_overview", {}),
+        live.workspaces(),
+      ]);
+      return list.map(({ package: pkg, ...r }) => {
+        const workspace = workspaces.find((w) => w.id === r.workspaceId);
+        return { ...r, ...(workspace ? { workspace } : {}), ...(pkg ? { package: pkg } : {}) };
+      });
     },
     async agencyClients() {
       return clientsOf(await read());
