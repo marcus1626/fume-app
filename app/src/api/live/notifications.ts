@@ -6,7 +6,7 @@ import { command, rows, supabase } from "./supabase";
 
 type Calls = "notifications" | "markRead";
 
-interface NotificationRow {
+export interface NotificationRow {
   id: string;
   user_id: string;
   kind: Notification["kind"];

@@ -1,9 +1,12 @@
 // Live updates on the live backend: every new row in the record (a brief sent, a version checked, an approval, a
 // delivery) reaches the open screens over Supabase Realtime, which applies the same row-level security as a read.
-// The app then reads again what the change touches; a burst of rows becomes one refresh.
+// The app then reads again what the change touches; a burst of rows becomes one refresh. A new message in the Fume
+// chat and a new line in the bell come the same way, as they are.
 import type { FumeApi, FumeEvent } from "../../contract";
 import type { Live } from "./context";
+import { type MessageRow, toMessage } from "./conversation";
 import { readCampaigns } from "./map";
+import { type NotificationRow, toNotification } from "./notifications";
 import { forgetReads, supabase } from "./supabase";
 
 interface RecordRow {
@@ -37,6 +40,16 @@ export function eventCalls(live: Live): Pick<FumeApi, "subscribe"> {
           if (campaignId) pending.add(campaignId);
           clearTimeout(timer);
           timer = setTimeout(() => void flush(), 300);
+        })
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: "conversation_messages" }, (payload) => {
+          forgetReads();
+          handler({ type: "message.new", message: toMessage(payload.new as MessageRow) });
+        })
+        .on("postgres_changes", { event: "*", schema: "public", table: "notifications" }, (payload) => {
+          const row = payload.new as NotificationRow | undefined;
+          if (!row?.id) return;
+          forgetReads();
+          handler({ type: "notification.new", notification: toNotification(row) });
         })
         .subscribe();
       return () => {

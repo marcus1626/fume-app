@@ -32,7 +32,8 @@ type Calls =
   | "sendBrief"
   | "approveBrief"
   | "changeBrief"
-  | "briefAlternatives";
+  | "briefAlternatives"
+  | "startCampaign";
 
 // ─── The brief ───────────────────────────────────────────────────────────────
 
@@ -267,10 +268,17 @@ export function campaignCalls(live: Live): Pick<FumeApi, Calls> {
         readCreatives({ campaignIds: [id] }),
         live.people(),
       ]);
-      const [record, members] = await Promise.all([
+      const [record, members, threads] = await Promise.all([
         readRecord(campaign, creatives),
         rows<{ user_id: string }>(
           supabase().from("memberships").select("user_id").eq("workspace_id", campaign.workspaceId),
+        ),
+        rows<{ id: string; campaign_id: string | null }>(
+          supabase()
+            .from("conversation_threads")
+            .select("id, campaign_id")
+            .eq("workspace_id", campaign.workspaceId)
+            .or(`campaign_id.eq.${id},campaign_id.is.null`),
         ),
       ]);
       return {
@@ -283,9 +291,17 @@ export function campaignCalls(live: Live): Pick<FumeApi, Calls> {
         record,
         approver: people.get(campaign.approverId) ?? NOBODY,
         people: members.flatMap((m) => people.get(m.user_id) ?? []),
-        // The conversation is not live yet; its threads are the empty workspace's.
-        threadId: "t-general",
+        // The campaign's thread in the Fume chat, else the talk about no campaign (made with the first message).
+        threadId: (threads.find((t) => t.campaign_id === id) ?? threads[0])?.id ?? "t-general",
       } satisfies CampaignView;
+    },
+
+    // Writing the brief in the chat is not live yet: the brief form is.
+    async startCampaign() {
+      throw new FumeError(
+        "unavailable",
+        "Starting a campaign in the chat comes soon. Use New campaign to write the brief.",
+      );
     },
 
     async setApprover(campaignId, userId) {
