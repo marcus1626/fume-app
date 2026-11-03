@@ -20,6 +20,7 @@ import {
   type RecordEvent,
   type User,
 } from "../../contract";
+import { boardCalls } from "./boards";
 import type { Live } from "./context";
 import { type CampaignRow, readCampaigns, readCreatives } from "./map";
 import { askFumeToWrite, command, requestKey, rows, supabase } from "./supabase";
@@ -28,6 +29,7 @@ type Calls =
   | "campaigns"
   | "campaign"
   | "setApprover"
+  | "setCampaignScope"
   | "orderBrief"
   | "sendBrief"
   | "approveBrief"
@@ -304,23 +306,45 @@ export function campaignCalls(live: Live): Pick<FumeApi, Calls> {
       );
     },
 
+    // Single products and whole collections; a collection brings all its products.
+    async setCampaignScope(campaignId, scope) {
+      await command("set_campaign_scope", {
+        p_campaign_id: campaignId,
+        p_product_ids: scope.productIds,
+        p_collection_ids: scope.collectionIds,
+      });
+      return campaignOf(campaignId);
+    },
+
     async setApprover(campaignId, userId) {
       await command("set_campaign_approver", { p_campaign_id: campaignId, p_user_id: userId, p_key: requestKey() });
       return campaignOf(campaignId);
     },
 
-    // The form's brief: the campaign, then every line of the brief as its draft. Sending it is the next call
-    // (NewBriefPage sends right after, for someone who may). Collections and a moodboard started on the form are not
-    // in the database yet.
+    // The form's brief: the campaign with its products and collections, a moodboard started on the form, then every
+    // line of the brief as its draft. Sending it is the next call (NewBriefPage sends right after, for someone who
+    // may).
     async orderBrief(order: BriefOrder) {
       const ws = await live.workspaceId();
       const workspace = (await live.workspaces()).find((w) => w.id === ws);
+      const fromCollections = order.collectionIds.length
+        ? await rows<{ product_id: string }>(
+            supabase().from("collection_products").select("product_id").in("collection_id", order.collectionIds),
+          )
+        : [];
       const created = await command<CampaignRow>("create_campaign", {
         p_workspace_id: ws,
         p_name: order.name.trim() || "New campaign",
-        p_product_ids: order.productIds,
+        p_product_ids: [...new Set([...order.productIds, ...fromCollections.map((r) => r.product_id)])],
         p_key: requestKey(),
       });
+      if (order.collectionIds.length)
+        await command("set_campaign_scope", {
+          p_campaign_id: created.id,
+          p_product_ids: order.productIds,
+          p_collection_ids: order.collectionIds,
+        });
+      if (order.moodboard?.images.length) await boardCalls(live).startMoodboard(created.id, order.moodboard.images);
       const creatives = order.creatives && order.creatives > 0 ? Math.round(order.creatives) : order.formats.length * 4;
       await command("save_brief_draft", {
         p_campaign_id: created.id,

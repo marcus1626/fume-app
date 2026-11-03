@@ -303,9 +303,12 @@ export async function readCampaigns(filter: { workspaceId?: Id; ids?: Id[] }): P
   if (list.length === 0) return [];
   const ids = list.map((c) => c.id);
   const brands = [...new Set(list.map((c) => c.workspace_id))];
-  const [products, plans, creatives, unsent, dnas] = await Promise.all([
+  const [products, collections, plans, creatives, unsent, dnas] = await Promise.all([
     rows<{ campaign_id: string; product_id: string }>(
       supabase().from("campaign_products").select("campaign_id, product_id").in("campaign_id", ids),
+    ),
+    rows<{ campaign_id: string; collection_id: string }>(
+      supabase().from("campaign_collections").select("campaign_id, collection_id").in("campaign_id", ids),
     ),
     rows<{
       campaign_id: string;
@@ -344,6 +347,7 @@ export async function readCampaigns(filter: { workspaceId?: Id; ids?: Id[] }): P
     const mine = creatives.filter((x) => x.campaignId === c.id);
     return toCampaign(c, {
       productIds: products.filter((p) => p.campaign_id === c.id).map((p) => p.product_id),
+      collectionIds: collections.filter((k) => k.campaign_id === c.id).map((k) => k.collection_id),
       plan,
       creatives: mine,
       toSend: mine.filter((x) => unsent.some((u) => u.creative_id === x.id)).length,
@@ -357,6 +361,7 @@ export function toCampaign(
   c: CampaignRow,
   parts: {
     productIds: Id[];
+    collectionIds?: Id[];
     plan?: { state: string; checked_by: string | null; planned?: unknown };
     creatives: Creative[];
     toSend: number;
@@ -370,6 +375,7 @@ export function toCampaign(
     workspaceId: c.workspace_id,
     name: c.name,
     productIds: parts.productIds,
+    ...(parts.collectionIds?.length ? { collectionIds: parts.collectionIds } : {}),
     state: c.state,
     stage: STAGE[c.stage],
     approverId: c.approver_id ?? "",
