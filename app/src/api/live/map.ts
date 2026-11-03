@@ -29,9 +29,11 @@ export interface CampaignRow {
   created_by: string | null;
   created_at: string;
   brief_draft: Record<string, unknown>;
+  board_id: string | null;
+  moodboard_skipped: boolean;
 }
 export const CAMPAIGN =
-  "id, workspace_id, name, state, stage, approver_id, rounds_included, rounds_used, due_at, created_by, created_at, brief_draft";
+  "id, workspace_id, name, state, stage, approver_id, rounds_included, rounds_used, due_at, created_by, created_at, brief_draft, board_id, moodboard_skipped";
 
 export interface CreativeRow {
   id: string;
@@ -376,6 +378,8 @@ export function toCampaign(
     market: lines.market,
     language: lines.language,
     ...(c.due_at ? { dueAt: c.due_at } : {}),
+    ...(c.board_id ? { boardId: c.board_id } : {}),
+    ...(c.moodboard_skipped ? { moodboardSkipped: true } : {}),
     createdBy: c.created_by ?? "",
     createdAt: c.created_at,
     updatedAt: c.created_at,

@@ -20,6 +20,7 @@ import type { Live } from "./context";
 import { fileUrls } from "./map";
 import { readProducts } from "./products";
 import { command, rows, supabase } from "./supabase";
+import { brandMoodboard } from "./boards";
 import { learnTaste, readDeck, readReferences } from "./taste";
 
 type Calls =
@@ -203,22 +204,17 @@ async function scanCall(body: Record<string, unknown>): Promise<ScanRow> {
 export function brandCalls(live: Live, empty: Pick<FumeApi, Calls>): Pick<FumeApi, Calls> {
   const board = async () => {
     const ws = await live.workspaceId();
-    const [{ dna, rules, identity }, rest] = await Promise.all([readBrand(ws), empty.brandBoard()]);
+    const [{ dna, rules, identity }, rest, moodboard] = await Promise.all([
+      readBrand(ws),
+      empty.brandBoard(),
+      brandMoodboard(ws),
+    ]);
     return {
       ...rest,
       dna,
       rules,
       identity,
-      moodboard: {
-        id: `moodboard-${ws}`,
-        workspaceId: ws,
-        kind: rest.moodboard.kind,
-        name: "Moodboard",
-        width: rest.moodboard.width,
-        height: rest.moodboard.height,
-        updatedAt: new Date().toISOString(),
-        items: [],
-      },
+      moodboard,
       open: openOf(identity),
     };
   };
