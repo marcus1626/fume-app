@@ -24,6 +24,7 @@ import { agencyCalls } from "./agency";
 import { calendarCalls } from "./calendar";
 import { tasteCalls } from "./taste";
 import { questionCalls } from "./questions";
+import { brandUpdateCalls } from "./brand-update";
 import { boardCalls } from "./boards";
 
 /** The calls not moved yet, answered by an empty mock workspace that loads on the first such call. */
@@ -56,6 +57,7 @@ export function createLiveApi(): FumeApi {
     ...reviewCalls(live),
     ...deliveryCalls(live),
     ...brandCalls(live, notYet),
+    ...brandUpdateCalls(live),
     ...notificationCalls(),
     ...conversationCalls(live),
     ...agencyCalls(live),

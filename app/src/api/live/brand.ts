@@ -191,7 +191,7 @@ async function readAssets(workspaceId: string): Promise<SourceAsset[]> {
   });
 }
 
-async function scanCall(body: Record<string, unknown>): Promise<ScanRow> {
+export async function scanCall(body: Record<string, unknown>): Promise<ScanRow> {
   const { data, error } = await supabase().functions.invoke<{ scan: ScanRow }>("brand-scan", { body });
   if (error) {
     const said: { code?: FumeErrorCode; message?: string } =
