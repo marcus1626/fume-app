@@ -107,7 +107,7 @@ export function ImportSourceDialog({
 }) {
   const start = useStartProductImport();
   const toast = useToast();
-  const [url, setUrl] = useState("https://lysne.no");
+  const [url, setUrl] = useState("");
   const [file, setFile] = useState<{ name: string; bytes: number } | null>(null);
   const open = source !== null;
 
