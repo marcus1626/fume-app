@@ -2,13 +2,59 @@
 // products and its sources. The parts the Engine learns later (references, taste, memory, the understanding check,
 // the board's identity and moodboard) still answer from the empty workspace (live/index.ts), so their pages show
 // nothing rather than the demo's data. Changing a rule or approving Brand DNA is not live yet.
-import type { BrandDna, BrandRule, FumeApi, SourceAsset, SourceAssetKind } from "../../contract";
+import { FunctionsHttpError } from "@supabase/supabase-js";
+import type {
+  BrandDna,
+  BrandIdentity,
+  BrandRule,
+  BrandScan,
+  FumeApi,
+  FumeErrorCode,
+  Provenance,
+  SourceAsset,
+  SourceAssetKind,
+} from "../../contract";
+import { FumeError } from "../../contract";
 import type { Live } from "./context";
 import { fileUrls } from "./map";
 import { readProducts } from "./products";
-import { rows, supabase } from "./supabase";
+import { command, rows, supabase } from "./supabase";
 
-type Calls = "brandDna" | "brandBoard";
+type Calls =
+  | "brandDna"
+  | "brandBoard"
+  | "decide"
+  | "setColourUses"
+  | "moveImage"
+  | "decideVoicePart"
+  | "approveBrandDna"
+  | "startBrandScan"
+  | "brandScan";
+
+const EMPTY: BrandIdentity = { colours: [], typefaces: [], logos: [], voice: [], imagery: [] };
+interface ScanRow {
+  id: string;
+  workspace_id: string;
+  source: BrandScan["source"];
+  url: string | null;
+  files: string[];
+  state: BrandScan["state"];
+  sources: BrandScan["sources"];
+  finds: BrandScan["finds"];
+  error: string | null;
+}
+const toScan = (r: ScanRow, needsYou: number): BrandScan => ({
+  id: r.id,
+  workspaceId: r.workspace_id,
+  source: r.source,
+  ...(r.url ? { url: r.url } : {}),
+  files: r.files ?? [],
+  state: r.state,
+  sources: r.sources ?? [],
+  finds: r.finds ?? [],
+  needsYou,
+  ...(r.error ? { error: r.error } : {}),
+});
 
 interface DnaRow {
   id: string;
@@ -17,6 +63,7 @@ interface DnaRow {
   state: "draft" | "in_review" | "approved" | "superseded";
   approved_by: string | null;
   approved_at: string | null;
+  identity: BrandIdentity | null;
 }
 interface RuleRow {
   id: string;
@@ -36,18 +83,36 @@ interface SourceRow {
 
 const RULE_AREAS: BrandRule["area"][] = ["logo", "colour", "type", "voice", "layout", "imagery", "claims"];
 
-/** The approved version if there is one, else the newest draft. */
+/** The newest version: the draft that takes her decisions, else the approved one. */
 async function currentDna(workspaceId: string): Promise<DnaRow | undefined> {
   const list = await rows<DnaRow>(
     supabase()
       .from("brand_dna_versions")
-      .select("id, workspace_id, version, state, approved_by, approved_at")
+      .select("id, workspace_id, version, state, approved_by, approved_at, identity")
       .eq("workspace_id", workspaceId)
       .neq("state", "superseded")
       .order("version", { ascending: false }),
   );
-  return list.find((d) => d.state === "approved") ?? list[0];
+  return list[0];
 }
+
+/** The identity as the board shows it: what she removed is left out. */
+function identityOf(d: DnaRow | undefined): BrandIdentity {
+  const id = { ...EMPTY, ...(d?.identity ?? {}) };
+  const kept = <T extends { provenance: Provenance }>(list: T[] | undefined) =>
+    (list ?? []).filter((x) => x.provenance?.state !== "removed");
+  return {
+    colours: kept(id.colours),
+    typefaces: kept(id.typefaces),
+    logos: kept(id.logos),
+    voice: kept(id.voice),
+    imagery: kept(id.imagery),
+    ...(id.voiceBook ? { voiceBook: id.voiceBook } : {}),
+  };
+}
+const openOf = (i: BrandIdentity) =>
+  [...i.colours, ...i.typefaces, ...i.logos, ...i.voice, ...i.imagery].filter((x) => x.provenance.state === "proposed")
+    .length;
 
 function toDna(workspaceId: string, d: DnaRow | undefined, rules: RuleRow[]): BrandDna {
   if (!d) return { workspaceId, version: 0, state: "draft", completeness: 0, summary: "" };
@@ -87,7 +152,11 @@ async function readBrand(workspaceId: string) {
       )
     : [];
   const approved = d?.state === "approved";
-  return { dna: toDna(workspaceId, d, ruleRows), rules: ruleRows.map((r) => toRule(r, approved)) };
+  return {
+    dna: toDna(workspaceId, d, ruleRows),
+    rules: ruleRows.map((r) => toRule(r, approved)),
+    identity: identityOf(d),
+  };
 }
 
 /** The brand's own files (logo, guidelines, pictures). Product pictures belong to their product. */
@@ -117,8 +186,39 @@ async function readAssets(workspaceId: string): Promise<SourceAsset[]> {
   });
 }
 
+async function scanCall(body: Record<string, unknown>): Promise<ScanRow> {
+  const { data, error } = await supabase().functions.invoke<{ scan: ScanRow }>("brand-scan", { body });
+  if (error) {
+    const said: { code?: FumeErrorCode; message?: string } =
+      error instanceof FunctionsHttpError ? await error.context.json().catch(() => ({})) : {};
+    throw new FumeError(said.code ?? "unavailable", said.message ?? "Fume could not read the website just now.");
+  }
+  return data!.scan;
+}
+
 export function brandCalls(live: Live, empty: Pick<FumeApi, Calls>): Pick<FumeApi, Calls> {
-  return {
+  const board = async () => {
+    const ws = await live.workspaceId();
+    const [{ dna, rules, identity }, rest] = await Promise.all([readBrand(ws), empty.brandBoard()]);
+    return {
+      ...rest,
+      dna,
+      rules,
+      identity,
+      moodboard: {
+        id: `moodboard-${ws}`,
+        workspaceId: ws,
+        kind: rest.moodboard.kind,
+        name: "Moodboard",
+        width: rest.moodboard.width,
+        height: rest.moodboard.height,
+        updatedAt: new Date().toISOString(),
+        items: [],
+      },
+      open: openOf(identity),
+    };
+  };
+  const calls: Pick<FumeApi, Calls> = {
     async brandDna() {
       const workspaceId = await live.workspaceId();
       const [brand, products, assets, rest] = await Promise.all([
@@ -127,11 +227,78 @@ export function brandCalls(live: Live, empty: Pick<FumeApi, Calls>): Pick<FumeAp
         readAssets(workspaceId),
         empty.brandDna(),
       ]);
-      return { ...rest, ...brand, products, assets };
+      return { ...rest, dna: brand.dna, rules: brand.rules, products, assets };
     },
-    async brandBoard() {
-      const [brand, rest] = await Promise.all([readBrand(await live.workspaceId()), empty.brandBoard()]);
-      return { ...rest, ...brand };
+    brandBoard: board,
+    // Only the customer decides; the database says so when someone else tries.
+    async decide({ kind, id, verdict, value }) {
+      if (!["colour", "typeface", "logo", "voice", "image"].includes(kind))
+        throw new FumeError("unavailable", "Deciding on this comes soon.");
+      await command("decide_identity", {
+        p_workspace_id: await live.workspaceId(),
+        p_kind: kind,
+        p_id: id,
+        p_verdict: verdict,
+        p_value: value ?? null,
+      });
+      return board();
+    },
+    async setColourUses({ colourId, uses }) {
+      return command("set_colour_uses", {
+        p_workspace_id: await live.workspaceId(),
+        p_colour_id: colourId,
+        p_uses: uses,
+      });
+    },
+    async moveImage({ imageId, group, campaign }) {
+      return command("move_image", {
+        p_workspace_id: await live.workspaceId(),
+        p_image_id: imageId,
+        p_group: group,
+        p_campaign: campaign ?? null,
+      });
+    },
+    async decideVoicePart({ part, verdict, note }) {
+      return command("decide_voice_part", {
+        p_workspace_id: await live.workspaceId(),
+        p_part: part,
+        p_verdict: verdict,
+        p_note: note ?? null,
+      });
+    },
+    async approveBrandDna() {
+      const ws = await live.workspaceId();
+      await command("approve_brand_dna", { p_workspace_id: ws });
+      live.forget();
+      return (await readBrand(ws)).dna;
+    },
+    // Fume reads the website now (the edge function brand-scan); reading uploaded files comes with the Engine.
+    async startBrandScan({ source, url }) {
+      if (source === "upload" || !url)
+        throw new FumeError(
+          "unavailable",
+          "Reading files comes soon. Give Fume the website, or upload the files to Brand and Fume's people add them.",
+        );
+      const ws = await live.workspaceId();
+      const workspace = (await live.workspaces()).find((w) => w.id === ws);
+      const row = await scanCall({ workspaceId: ws, url, brand: workspace?.brandName });
+      return toScan(row, openOf((await readBrand(ws)).identity));
+    },
+    async brandScan() {
+      const ws = await live.workspaceId();
+      const [list, brand] = await Promise.all([
+        rows<ScanRow>(
+          supabase()
+            .from("brand_scans")
+            .select("id, workspace_id, source, url, files, state, sources, finds, error")
+            .eq("workspace_id", ws)
+            .order("created_at", { ascending: false })
+            .limit(1),
+        ),
+        readBrand(ws),
+      ]);
+      return list[0] ? toScan(list[0], openOf(brand.identity)) : null;
     },
   };
+  return calls;
 }

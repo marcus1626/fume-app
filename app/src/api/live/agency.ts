@@ -513,6 +513,16 @@ export function agencyCalls(live: Live): Pick<FumeApi, Calls> {
       }
       live.forget();
       const workspace = toWorkspace(row);
+      // Fume reads the brand from its website at once (edge function brand-scan); a site that will not open is kept
+      // as a failed reading, and the client's Brand page says what to do.
+      let read = false;
+      if (website?.trim())
+        read = await supabase()
+          .functions.invoke("brand-scan", {
+            body: { workspaceId: row.id, url: website.trim(), brand: workspace.brandName },
+          })
+          .then(({ data }) => (data as { scan?: { state?: string } } | null)?.scan?.state === "done")
+          .catch(() => false);
       if (failed.length)
         throw new FumeError(
           "unavailable",
@@ -520,9 +530,11 @@ export function agencyCalls(live: Live): Pick<FumeApi, Calls> {
         );
       return {
         workspace,
-        status: website
-          ? `New client: add the brand from ${website.replace(/^https?:\/\//, "")}`
-          : "New client: Fume needs the website or the brand guide",
+        status: read
+          ? "New client: Brand DNA to confirm"
+          : website
+            ? `New client: Fume could not read ${website.replace(/^https?:\/\//, "")}`
+            : "New client: Fume needs the website or the brand guide",
         waitingOnYou: 1,
         campaignsActive: 0,
         people: [],
