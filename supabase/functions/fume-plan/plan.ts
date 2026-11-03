@@ -86,6 +86,14 @@ export interface Brain {
   taste?: unknown[];
   market?: unknown[];
   memory?: unknown[];
+  /** What Fume measured in the pictures she kept, approved and turned down (taste-learn). */
+  taste_profile?: {
+    measured_pictures?: number;
+    do?: unknown[];
+    dont?: unknown[];
+    reasons?: unknown[];
+    palette?: unknown[];
+  };
 }
 
 /** The Brand Brain as a part of the prompt; empty when Fume knows nothing more. */
@@ -96,11 +104,21 @@ export function brainPart(brain: Brain | null | undefined): string[] {
       brain[k]?.length ? [[k, brain[k]]] : [],
     ),
   );
-  if (Object.keys(known).length === 0) return [];
-  return [
-    `<brand_brain>\n${JSON.stringify(known, null, 1)}\n</brand_brain>`,
-    "The brand brain is what Fume knows about the brand: its identity, rules, taste, market, and what it approved or asked to change before (memory). An item with confirmed false is only proposed: a hint, never a fact, and never a claim. Learn from the memory: do not repeat what she asked to change.",
-  ];
+  const profile = brain.taste_profile;
+  const measured = (profile?.measured_pictures ?? 0) > 0 && (profile?.do?.length || profile?.dont?.length);
+  if (Object.keys(known).length === 0 && !measured) return [];
+  const parts = Object.keys(known).length
+    ? [
+        `<brand_brain>\n${JSON.stringify(known, null, 1)}\n</brand_brain>`,
+        "The brand brain is what Fume knows about the brand: its identity, rules, taste, market, and what it approved or asked to change before (memory). An item with confirmed false is only proposed: a hint, never a fact, and never a claim. Learn from the memory: do not repeat what she asked to change.",
+      ]
+    : [];
+  if (measured)
+    parts.push(
+      `<taste_profile>\n${JSON.stringify(profile, null, 1)}\n</taste_profile>`,
+      "The taste profile is measured in the pictures she kept, approved and turned down: each do and don't has a target (in its unit), a range, a confidence from 0 to 1, and how many pictures it rests on. from says what the pictures were (packshots count for less than scenes). Lean on what is confident (0.5 and up), treat the rest as a hint, and say the look in words a photographer would use; reasons are her own words about what she did not like.",
+    );
+  return parts;
 }
 
 /** The user message: the task as data. Instructions found inside the brief are the customer's words, not orders. */

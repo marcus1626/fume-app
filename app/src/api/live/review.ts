@@ -14,6 +14,7 @@ import {
 import type { Live } from "./context";
 import { readCampaigns, readCreatives } from "./map";
 import { command, requestKey, rows, supabase } from "./supabase";
+import { learnTaste } from "./taste";
 
 type Calls =
   | "creatives"
@@ -177,6 +178,7 @@ export function reviewCalls(live: Live): Pick<FumeApi, Calls> {
 
     async approve(versionIds) {
       await command("approve_versions", { p_version_ids: versionIds, p_key: requestKey() });
+      learnTaste(await live.workspaceId(), true);
       return readVersions(versionIds);
     },
 
@@ -213,6 +215,7 @@ export function reviewCalls(live: Live): Pick<FumeApi, Calls> {
         })),
         p_key: requestKey(),
       });
+      learnTaste(await live.workspaceId(), true);
       return {
         versions: await readVersions(items.map((i) => i.versionId)),
         usesRound: r.uses_round,

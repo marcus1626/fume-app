@@ -218,4 +218,19 @@ Deno.test("the plan writer reads the brand brain, and what is only proposed is m
     throw new Error("the brain is not in the prompt");
   if (withBrain.includes('"identity"')) throw new Error("empty layers are left out");
   if (prompt({ ...base, brain: {} }).includes("<brand_brain>")) throw new Error("an empty brain adds nothing");
+  const tasted = prompt({
+    ...base,
+    brain: {
+      taste_profile: {
+        measured_pictures: 6,
+        do: [{ what: "Light: low key", target: 0.32, confidence: 0.7 }],
+        dont: [],
+        reasons: ["Too bright"],
+      },
+    },
+  });
+  if (!tasted.includes("<taste_profile>") || !tasted.includes("low key") || tasted.includes("<brand_brain>"))
+    throw new Error("the taste profile is in the prompt on its own");
+  if (prompt({ ...base, brain: { taste_profile: { measured_pictures: 0, do: [] } } }).includes("<taste_profile>"))
+    throw new Error("an unmeasured taste adds nothing");
 });

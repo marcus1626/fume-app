@@ -19,6 +19,7 @@ import type { Live } from "./context";
 import { fileUrls } from "./map";
 import { readProducts } from "./products";
 import { command, rows, supabase } from "./supabase";
+import { learnTaste } from "./taste";
 
 type Calls =
   | "brandDna"
@@ -227,6 +228,7 @@ export function brandCalls(live: Live, empty: Pick<FumeApi, Calls>): Pick<FumeAp
         readAssets(workspaceId),
         empty.brandDna(),
       ]);
+      learnTaste(workspaceId);
       return { ...rest, dna: brand.dna, rules: brand.rules, products, assets };
     },
     brandBoard: board,
@@ -241,6 +243,7 @@ export function brandCalls(live: Live, empty: Pick<FumeApi, Calls>): Pick<FumeAp
         p_verdict: verdict,
         p_value: value ?? null,
       });
+      if (kind === "image") learnTaste(await live.workspaceId(), true);
       return board();
     },
     async setColourUses({ colourId, uses }) {
@@ -269,6 +272,7 @@ export function brandCalls(live: Live, empty: Pick<FumeApi, Calls>): Pick<FumeAp
     async approveBrandDna() {
       const ws = await live.workspaceId();
       await command("approve_brand_dna", { p_workspace_id: ws });
+      learnTaste(ws, true);
       live.forget();
       return (await readBrand(ws)).dna;
     },
