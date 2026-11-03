@@ -71,7 +71,11 @@ Deno.serve((req) =>
       },
       context: async (messageId) => {
         const { data, error } = await service.rpc("fume_chat_context", { p_message_id: messageId });
-        return error ? null : (data as ChatContext);
+        if (error || !data) return null;
+        const ctx = data as ChatContext;
+        // What Fume knows about the brand; the answer goes on without it if it cannot be read.
+        const brain = await service.rpc("brain_context", { p_workspace_id: ctx.message.workspace_id });
+        return { ...ctx, brain: brain.error ? null : brain.data };
       },
       write,
       answer: async (messageId, text, card) => {

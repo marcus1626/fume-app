@@ -190,3 +190,32 @@ Deno.test("the prompt lists only verified claims as usable, and the body keeps t
     [false, "pc1", "For the hour before sleep.", "call_to_action"],
   );
 });
+
+Deno.test("the plan writer reads the brand brain, and what is only proposed is marked", async () => {
+  const { prompt } = await import("./plan.ts");
+  const base = {
+    run_id: "r",
+    attempt: 1,
+    plan_id: "p",
+    version: 1,
+    campaign_id: "c",
+    brand: { name: "Halm", market: "NO", language: "en" },
+    campaign: { name: "Autumn", due_at: null },
+    brief: {},
+    products: [],
+    rules: [],
+    change: null,
+  };
+  const withBrain = prompt({
+    ...base,
+    brain: {
+      market: [{ what: "Young families", kind: "audience", confirmed: true }],
+      memory: [{ kind: "change", what: "Too dark" }],
+      identity: [],
+    },
+  });
+  if (!withBrain.includes("<brand_brain>") || !withBrain.includes("Young families") || !withBrain.includes("Too dark"))
+    throw new Error("the brain is not in the prompt");
+  if (withBrain.includes('"identity"')) throw new Error("empty layers are left out");
+  if (prompt({ ...base, brain: {} }).includes("<brand_brain>")) throw new Error("an empty brain adds nothing");
+});

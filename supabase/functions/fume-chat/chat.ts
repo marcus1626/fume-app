@@ -38,6 +38,7 @@ export interface ChatContext {
   }[];
   products: { id: string; name: string; confirmed: boolean; missing: string[] }[];
   people_at_fume: { name: string; title: string; role: string }[];
+  brain?: Brain | null;
 }
 
 export type Card =
@@ -73,6 +74,30 @@ const day = (iso: string | null) =>
       }).format(Date.parse(iso))
     : null;
 
+/** What Fume knows about the brand (public.brain_context): confirmed, or only proposed. */
+export interface Brain {
+  identity?: unknown[];
+  rules?: unknown[];
+  taste?: unknown[];
+  market?: unknown[];
+  memory?: unknown[];
+}
+
+/** The Brand Brain as a part of the prompt; empty when Fume knows nothing more. */
+export function brainPart(brain: Brain | null | undefined): string[] {
+  if (!brain) return [];
+  const known = Object.fromEntries(
+    (["identity", "rules", "taste", "market", "memory"] as const).flatMap((k) =>
+      brain[k]?.length ? [[k, brain[k]]] : [],
+    ),
+  );
+  if (Object.keys(known).length === 0) return [];
+  return [
+    `<brand_brain>\n${JSON.stringify(known, null, 1)}\n</brand_brain>`,
+    "The brand brain is what Fume knows about the brand: its identity, rules, taste, market, and what it approved or asked to change before (memory). An item with confirmed false is only proposed: a hint, never a fact, and never a claim. Learn from the memory: do not repeat what she asked to change.",
+  ];
+}
+
 export function prompt(ctx: ChatContext): string {
   const facts = {
     brand: ctx.brand,
@@ -91,6 +116,7 @@ export function prompt(ctx: ChatContext): string {
     .join("\n");
   return [
     `<facts>\n${JSON.stringify(facts, null, 1)}\n</facts>`,
+    ...brainPart(ctx.brain),
     `<talk_so_far>\n${talk || "(nothing yet)"}\n</talk_so_far>`,
     `<her_message>\n${ctx.message.text || "(she sent a file)"}\n</her_message>`,
   ].join("\n\n");

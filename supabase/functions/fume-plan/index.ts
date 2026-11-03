@@ -19,7 +19,8 @@ const service = createClient(url, secret, { auth: { persistSession: false, autoR
 // a key made inside a workspace needs nothing more.
 const workspace = Deno.env.get("ANTHROPIC_WORKSPACE_ID");
 const claude = new Anthropic({
-  timeout: 130_000, maxRetries: 1,
+  timeout: 130_000,
+  maxRetries: 1,
   ...(workspace ? { defaultHeaders: { "anthropic-workspace-id": workspace } } : {}),
 });
 
@@ -78,7 +79,10 @@ Deno.serve((req) =>
       service: {
         take: async (campaignId) => {
           const { data, error } = await service.rpc("fume_take_plan", { p_campaign_id: campaignId });
-          return { data, error: err(error) };
+          if (error || !data) return { data, error: err(error) };
+          // What Fume knows about the brand; the plan is written without it if it cannot be read.
+          const brain = await service.rpc("brain_context_of_campaign", { p_campaign_id: campaignId });
+          return { data: { ...data, brain: brain.error ? null : brain.data }, error: null };
         },
         finish: async (runId, body, changes, usage) => {
           const { error } = await service.rpc("fume_finish_plan", {

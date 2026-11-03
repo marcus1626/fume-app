@@ -35,6 +35,7 @@ export interface BriefContext {
     facts: { area: string; label: string; statement: string; status: string }[];
   }[];
   rules: { text: string; kind: string; area: string }[];
+  brain?: Brain | null;
 }
 
 export const SYSTEM = `You are Fume's creative strategist. A customer is writing a campaign brief for Fume, a creative studio whose expert checks every creative before the customer approves it. Suggest alternatives she can pick from.
@@ -45,6 +46,30 @@ export const SYSTEM = `You are Fume's creative strategist. A customer is writing
 - Respect every rule of the brand.
 - Write in the brand's language (English unless it says otherwise), plainly and briefly. No hype, no exclamation marks.`;
 
+/** What Fume knows about the brand (public.brain_context): confirmed, or only proposed. */
+export interface Brain {
+  identity?: unknown[];
+  rules?: unknown[];
+  taste?: unknown[];
+  market?: unknown[];
+  memory?: unknown[];
+}
+
+/** The Brand Brain as a part of the prompt; empty when Fume knows nothing more. */
+export function brainPart(brain: Brain | null | undefined): string[] {
+  if (!brain) return [];
+  const known = Object.fromEntries(
+    (["identity", "rules", "taste", "market", "memory"] as const).flatMap((k) =>
+      brain[k]?.length ? [[k, brain[k]]] : [],
+    ),
+  );
+  if (Object.keys(known).length === 0) return [];
+  return [
+    `<brand_brain>\n${JSON.stringify(known, null, 1)}\n</brand_brain>`,
+    "The brand brain is what Fume knows about the brand: its identity, rules, taste, market, and what it approved or asked to change before (memory). An item with confirmed false is only proposed: a hint, never a fact, and never a claim. Learn from the memory: do not repeat what she asked to change.",
+  ];
+}
+
 export function prompt(ask: BriefAsk, ctx: BriefContext): string {
   const parts = [
     `Brand: ${ctx.brand?.name ?? "unknown"} (market: ${ctx.brand?.market || "not given"}, language: ${ctx.brand?.language ?? "en"}).`,
@@ -54,6 +79,7 @@ export function prompt(ask: BriefAsk, ctx: BriefContext): string {
       2,
     )}\n</products>`,
     `<rules>\n${ctx.rules.map((r) => `- ${r.kind === "hard_constraint" ? "Never break" : "Follow"}: ${r.text} (${r.area})`).join("\n") || "none"}\n</rules>`,
+    ...brainPart(ctx.brain),
     `<her_brief>\nGoal: ${ask.goal || "(empty)"}\nAudience: ${ask.audience || "(empty)"}\nMessage: ${ask.message || "(empty)"}\n</her_brief>`,
   ];
   if (ask.feedback) parts.push(`<what_she_wants_changed>\n${ask.feedback}\n</what_she_wants_changed>`);

@@ -20,7 +20,8 @@ const service = createClient(url, secret, { auth: { persistSession: false, autoR
 // a key made inside a workspace needs nothing more.
 const workspace = Deno.env.get("ANTHROPIC_WORKSPACE_ID");
 const claude = new Anthropic({
-  timeout: 60_000, maxRetries: 1,
+  timeout: 60_000,
+  maxRetries: 1,
   ...(workspace ? { defaultHeaders: { "anthropic-workspace-id": workspace } } : {}),
 });
 
@@ -73,7 +74,9 @@ Deno.serve((req) =>
           p_workspace_id: workspaceId,
           p_product_ids: productIds,
         });
-        return error ? null : (data as BriefContext);
+        if (error || !data) return null;
+        const brain = await service.rpc("brain_context", { p_workspace_id: workspaceId });
+        return { ...(data as BriefContext), brain: brain.error ? null : brain.data };
       },
       write,
       keep: async ({ workspaceId, ask, output, error, usage }) => {
