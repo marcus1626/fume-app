@@ -46,27 +46,38 @@ const resolve = (map: Record<string, string[]>) => (host: string, type: "A" | "A
 
 Deno.test("a redirect or a name that leads to a closed address is not followed", async () => {
   const seen: string[] = [];
-  const web = (routes: Record<string, Response>) => ((url: string) => {
-    seen.push(url);
-    return Promise.resolve(routes[url] ?? new Response("missing", { status: 404 }));
-  }) as typeof fetch;
+  const web = (routes: Record<string, Response>) =>
+    ((url: string) => {
+      seen.push(url);
+      return Promise.resolve(routes[url] ?? new Response("missing", { status: 404 }));
+    }) as typeof fetch;
   const open = { "halm.no": ["151.101.1.1"], "evil.test": ["169.254.169.254"] };
 
-  const ok = await openFetch("https://halm.no/a", {}, {
-    fetch: web({
-      "https://halm.no/a": new Response(null, { status: 301, headers: { location: "/b" } }),
-      "https://halm.no/b": new Response("hello"),
-    }),
-    resolve: resolve(open),
-  });
+  const ok = await openFetch(
+    "https://halm.no/a",
+    {},
+    {
+      fetch: web({
+        "https://halm.no/a": new Response(null, { status: 301, headers: { location: "/b" } }),
+        "https://halm.no/b": new Response("hello"),
+      }),
+      resolve: resolve(open),
+    },
+  );
   assertEquals(await ok?.text(), "hello");
   assertEquals(ok?.url, "https://halm.no/b");
 
   seen.length = 0;
-  const bounced = await openFetch("https://halm.no/x", {}, {
-    fetch: web({ "https://halm.no/x": new Response(null, { status: 302, headers: { location: "http://10.0.0.1/" } }) }),
-    resolve: resolve(open),
-  });
+  const bounced = await openFetch(
+    "https://halm.no/x",
+    {},
+    {
+      fetch: web({
+        "https://halm.no/x": new Response(null, { status: 302, headers: { location: "http://10.0.0.1/" } }),
+      }),
+      resolve: resolve(open),
+    },
+  );
   assertEquals(bounced, null);
   assertEquals(seen, ["https://halm.no/x"]);
 

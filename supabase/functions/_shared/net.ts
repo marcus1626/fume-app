@@ -64,8 +64,7 @@ export function publicUrl(raw: string): URL | undefined {
 }
 
 type Resolve = (host: string, type: "A" | "AAAA") => Promise<string[]>;
-const resolveDns: Resolve = (host, type) =>
-  (Deno as unknown as { resolveDns: Resolve }).resolveDns(host, type);
+const resolveDns: Resolve = (host, type) => (Deno as unknown as { resolveDns: Resolve }).resolveDns(host, type);
 
 /** Whether the name points only at public addresses. A name that does not resolve is left to fetch to fail. */
 async function resolvesPublic(hostname: string, resolve: Resolve): Promise<boolean> {
