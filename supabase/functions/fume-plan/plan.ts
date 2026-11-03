@@ -155,8 +155,8 @@ export function toBody(a: PlanAnswer): Record<string, unknown> {
   };
 }
 
-/** Claude Opus 5.5's list price, in dollars per million tokens. */
-const PRICE = { input: 4, output: 20 };
+/** Claude Haiku 5.5's list price for prompts up to 100K tokens, in dollars per million tokens. */
+const PRICE = { input: 0.1, output: 0.5 };
 export function costOf(usage: { input_tokens?: number | null; output_tokens?: number | null }): number {
   const cost = ((usage.input_tokens ?? 0) * PRICE.input + (usage.output_tokens ?? 0) * PRICE.output) / 1_000_000;
   return Math.round(cost * 10_000) / 10_000;

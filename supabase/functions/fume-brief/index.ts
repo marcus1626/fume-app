@@ -6,9 +6,10 @@ import { createClient } from "npm:@supabase/supabase-js@2.117.3";
 import { type Answer, handleBrief } from "./handler.ts";
 import { BriefAnswer, type BriefAsk, type BriefContext, prompt, SYSTEM } from "./brief.ts";
 
-const MODEL = "claude-opus-5-5";
-/** Claude Opus 5.5's list price, in dollars per million tokens. */
-const PRICE = { input: 4, output: 20 };
+// The cheap model first (Marcus, 3 Nov); Opus only where it is needed.
+const MODEL = "claude-haiku-5-5";
+/** Claude Haiku 5.5's list price for prompts up to 100K tokens, in dollars per million tokens. */
+const PRICE = { input: 0.1, output: 0.5 };
 const url = Deno.env.get("SUPABASE_URL")!;
 const keyOf = (json: string, legacy: string) =>
   (Deno.env.get(json) && JSON.parse(Deno.env.get(json)!).default) || Deno.env.get(legacy)!;
@@ -17,16 +18,25 @@ const secret = keyOf("SUPABASE_SECRET_KEYS", "SUPABASE_SERVICE_ROLE_KEY");
 const service = createClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
 const claude = new Anthropic({ timeout: 60_000, maxRetries: 1 });
 
+/** Whether the week's ceiling on the model's cost allows one more call (20261103110000_llm_budget.sql). */
+async function withinBudget(): Promise<boolean> {
+  const { data, error } = await service.rpc("fume_llm_budget");
+  return !error && Boolean((data as { allowed?: boolean } | null)?.allowed);
+}
+
 async function write(ask: BriefAsk, ctx: BriefContext): Promise<Answer> {
+  if (!(await withinBudget()))
+    return {
+      ok: false,
+      error: "This week's budget for Fume's language model is used up.",
+      usage: { model: MODEL, input_tokens: 0, output_tokens: 0, cost_usd: 0 },
+    };
   const message = await claude.beta.messages.parse({
     model: MODEL,
     max_tokens: 4_000,
     system: SYSTEM,
     messages: [{ role: "user", content: prompt(ask, ctx) }],
     output_config: { effort: "low", format: betaZodOutputFormat(BriefAnswer) },
-    // If Opus declines for policy reasons, Anthropic retries on its default fallback model.
-    betas: ["server-side-fallback-2026-07-01"],
-    fallbacks: "default",
   });
   const u = message.usage;
   const usage = {

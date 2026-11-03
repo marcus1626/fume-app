@@ -6,7 +6,8 @@ import { createClient } from "npm:@supabase/supabase-js@2.117.3";
 import { handlePlan, type Written } from "./handler.ts";
 import { costOf, PlanAnswer, prompt, SYSTEM, toBody } from "./plan.ts";
 
-const MODEL = "claude-opus-5-5";
+// The cheap model first (Marcus, 3 Nov); Opus only where it is needed.
+const MODEL = "claude-haiku-5-5";
 const url = Deno.env.get("SUPABASE_URL")!;
 const keyOf = (json: string, legacy: string) =>
   (Deno.env.get(json) && JSON.parse(Deno.env.get(json)!).default) || Deno.env.get(legacy)!;
@@ -16,7 +17,20 @@ const service = createClient(url, secret, { auth: { persistSession: false, autoR
 // The function's time runs out after about 150 seconds; the run is taken again on the next read if it does.
 const claude = new Anthropic({ timeout: 130_000, maxRetries: 1 });
 
+/** Whether the week's ceiling on the model's cost allows one more call (20261103110000_llm_budget.sql). */
+async function withinBudget(): Promise<boolean> {
+  const { data, error } = await service.rpc("fume_llm_budget");
+  return !error && Boolean((data as { allowed?: boolean } | null)?.allowed);
+}
+
 async function write(task: Parameters<typeof prompt>[0], problem?: string): Promise<Written> {
+  if (!(await withinBudget()))
+    return {
+      ok: false,
+      error: "This week's budget for Fume's language model is used up.",
+      usage: { model: MODEL, input_tokens: 0, output_tokens: 0, cost_usd: 0 },
+      final: true,
+    };
   const content = problem
     ? `${prompt(task)}\n\nYour last plan was refused by Fume's checks: ${problem}\nWrite it again and fix that.`
     : prompt(task);
@@ -27,9 +41,6 @@ async function write(task: Parameters<typeof prompt>[0], problem?: string): Prom
     messages: [{ role: "user", content }],
     thinking: { type: "adaptive" },
     output_config: { effort: "medium", format: betaZodOutputFormat(PlanAnswer) },
-    // If Opus declines for policy reasons, Anthropic retries on its default fallback model.
-    betas: ["server-side-fallback-2026-07-01"],
-    fallbacks: "default",
   });
   const usage = {
     model: message.model,
