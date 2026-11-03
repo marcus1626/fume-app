@@ -4,7 +4,7 @@
 
 /** Rows of cells. Quotes, doubled quotes and line breaks inside quotes are read; the separator is guessed. */
 export function parseCsv(text: string): string[][] {
-  const body = text.replace(/^﻿/, "");
+  const body = text.replace(/^\uFEFF/, "");
   const first = body.split(/\r?\n/, 1)[0] ?? "";
   const sep = [",", ";", "\t"].sort((a, b) => count(first, b) - count(first, a))[0]!;
   const rows: string[][] = [];
