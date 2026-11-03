@@ -8,13 +8,40 @@ import type {
   Invitation,
   Membership,
   Organisation,
+  Package,
   Session,
+  SettingsView,
+  Workspace,
 } from "../../contract";
 import { FumeError } from "../../contract";
 import type { Live } from "./context";
 import { command, one, rows, supabase } from "./supabase";
 
-type Calls = "session" | "switchWorkspace" | "team" | "people" | "updateProfile" | "invite";
+type Calls =
+  | "session"
+  | "switchWorkspace"
+  | "team"
+  | "people"
+  | "updateProfile"
+  | "invite"
+  | "changeRole"
+  | "removeMember"
+  | "settings"
+  | "updateWorkspace";
+
+/** What public.package_usage answers: the package with its period, and what the period has used. */
+interface PackageUsage {
+  package: Package & { from: string; to: string | null };
+  usage: { creativesUsed: number; creativeCap: number; campaignsActive: number; periodEndsAt: string | null };
+}
+
+// Fume sends these by email and in the bell; choosing them per person comes later, so they are what Fume sends today.
+const NOTIFICATION_PREFS: SettingsView["notificationPrefs"] = [
+  { kind: "checked", label: "Creatives are checked and ready for you", email: true, inApp: true },
+  { kind: "waiting_on_you", label: "Fume needs something from you", email: true, inApp: true },
+  { kind: "delivered", label: "A delivery is ready", email: true, inApp: true },
+  { kind: "mention", label: "Someone mentions you", email: true, inApp: true },
+];
 
 interface InvitationRow {
   id: string;
@@ -124,6 +151,46 @@ export function identityCalls(live: Live): Pick<FumeApi, Calls> {
         workspaces,
         introduced,
         onboarded: dna.length > 0,
+      };
+    },
+    // Only the owner changes roles, takes people off and renames the brand; the database says so to anyone else.
+    async changeRole(userId, role) {
+      return command<Membership>("change_role", {
+        p_workspace_id: await live.workspaceId(),
+        p_user_id: userId,
+        p_role: role,
+      });
+    },
+    async removeMember(userId) {
+      await command("remove_member", { p_workspace_id: await live.workspaceId(), p_user_id: userId });
+    },
+    async updateWorkspace(change) {
+      const w = await command<Workspace>("update_workspace", {
+        p_workspace_id: await live.workspaceId(),
+        p_brand_name: change.brandName ?? null,
+        p_market: change.market ?? null,
+        p_language: change.language ?? null,
+      });
+      live.forget();
+      return (await live.workspaces()).find((x) => x.id === w.id) ?? w;
+    },
+    async settings() {
+      const ws = await live.workspaceId();
+      const [workspaces, r] = await Promise.all([
+        live.workspaces(),
+        command<PackageUsage>("package_usage", { p_workspace_id: ws }),
+      ]);
+      const { from: _from, to: _to, ...pkg } = r.package;
+      return {
+        workspace: workspaces.find((w) => w.id === ws)!,
+        package: pkg,
+        usage: {
+          creativesUsed: r.usage.creativesUsed,
+          creativeCap: r.usage.creativeCap,
+          campaignsActive: r.usage.campaignsActive,
+          ...(r.usage.periodEndsAt ? { periodEndsAt: r.usage.periodEndsAt } : {}),
+        },
+        notificationPrefs: NOTIFICATION_PREFS,
       };
     },
     async switchWorkspace(workspaceId) {

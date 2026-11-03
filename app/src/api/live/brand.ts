@@ -9,6 +9,7 @@ import type {
   BrandRule,
   BrandScan,
   FumeApi,
+  OnboardingProgress,
   FumeErrorCode,
   Provenance,
   SourceAsset,
@@ -30,7 +31,9 @@ type Calls =
   | "decideVoicePart"
   | "approveBrandDna"
   | "startBrandScan"
-  | "brandScan";
+  | "brandScan"
+  | "onboardingProgress"
+  | "saveOnboardingProgress";
 
 const EMPTY: BrandIdentity = { colours: [], typefaces: [], logos: [], voice: [], imagery: [] };
 interface ScanRow {
@@ -287,6 +290,25 @@ export function brandCalls(live: Live, empty: Pick<FumeApi, Calls>): Pick<FumeAp
       const workspace = (await live.workspaces()).find((w) => w.id === ws);
       const row = await scanCall({ workspaceId: ws, url, brand: workspace?.brandName });
       return toScan(row, openOf((await readBrand(ws)).identity));
+    },
+    // Where the brand's people got to in the onboarding, kept on the workspace (moves forward only).
+    async onboardingProgress() {
+      const list = await rows<OnboardingProgress & { part: string | null }>(
+        supabase()
+          .from("onboarding_progress")
+          .select("step, part, lines")
+          .eq("workspace_id", await live.workspaceId()),
+      );
+      const r = list[0];
+      return r ? { step: r.step, ...(r.part ? { part: r.part } : {}), lines: r.lines ?? [] } : { step: "", lines: [] };
+    },
+    async saveOnboardingProgress({ step, part, line }) {
+      return command<OnboardingProgress>("save_onboarding_progress", {
+        p_workspace_id: await live.workspaceId(),
+        p_step: step ?? null,
+        p_part: part ?? null,
+        p_line: line ?? null,
+      });
     },
     async brandScan() {
       const ws = await live.workspaceId();

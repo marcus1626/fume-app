@@ -1,8 +1,8 @@
 // The agency on the live backend (20261103140000_agency.sql, FLOWS §24). An agency's person works on its clients as
 // Fume's people do on their brands, so the agency's pages read the same campaigns and checks as Fume's studio, for
 // the agency's clients only. Sending to the client and recording an approval are commands; the client link goes
-// through the edge function `client-link`, which opens it without an account. The licence and usage stay on the
-// fallback until usage is counted.
+// through the edge function `client-link`, which opens it without an account. The licence is counted by the database
+// (public.agency_licence); the Usage page stays on the fallback until the Engine's renders are counted.
 import { FunctionsHttpError } from "@supabase/supabase-js";
 import type {
   AgencyCampaignRow,
@@ -46,7 +46,8 @@ type Calls =
   | "answerClientLink"
   | "answerClientPlan"
   | "agencyPlan"
-  | "askFume";
+  | "askFume"
+  | "licence";
 
 interface SendRow {
   id: string;
@@ -475,6 +476,36 @@ export function agencyCalls(live: Live): Pick<FumeApi, Calls> {
         clients,
         needsYou: needsOf(r),
         team: teamOf(r),
+      };
+    },
+    async licence() {
+      const { seat } = await mustAgency();
+      const [r, workspaces, org] = await Promise.all([
+        command<{
+          package: { from: string; to: string | null; scope: string };
+          clients: { workspaceId: string; creativesMade: number; creativesApproved: number }[];
+          seats: { used: number; included: number };
+        }>("agency_licence", {}),
+        live.workspaces(),
+        rows<{ id: string; name: string }>(
+          supabase().from("organisations").select("id, name").eq("id", seat.organisationId),
+        ),
+      ]);
+      const usage = r.clients.flatMap((c) => {
+        const client = workspaces.find((w) => w.id === c.workspaceId);
+        return client ? [{ client, creativesMade: c.creativesMade, creativesApproved: c.creativesApproved }] : [];
+      });
+      const to = r.package.to ?? new Date().toISOString();
+      return {
+        agency: { id: seat.organisationId, name: org[0]?.name ?? "", kind: "agency", packageId: "p-agency" },
+        period: { from: r.package.from, to },
+        scope: r.package.scope || "Product campaigns for your clients, made with Fume",
+        usage,
+        total: {
+          creativesMade: usage.reduce((n, u) => n + u.creativesMade, 0),
+          creativesApproved: usage.reduce((n, u) => n + u.creativesApproved, 0),
+        },
+        seats: r.seats,
       };
     },
     async agencyClients() {
