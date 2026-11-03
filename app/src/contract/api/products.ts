@@ -93,7 +93,10 @@ export interface ProductsApi extends ProductImportApi {
     file: { name: string; bytes: number; src?: string; blob?: Blob },
   ): Promise<Product>;
   /** A 3D model, dieline or label artwork. */
-  uploadProductFile(productId: Id, file: { kind: ProductFile["kind"]; name: string; bytes: number }): Promise<Product>;
+  uploadProductFile(
+    productId: Id,
+    file: { kind: ProductFile["kind"]; name: string; bytes: number; blob?: Blob },
+  ): Promise<Product>;
 
   // Product data changed in the Studio (FLOWS §9.5): only the customer approves Product Truth
   /** Product-data changes Fume made in the Studio for this product (scope product, any state), for the customer to decide. */

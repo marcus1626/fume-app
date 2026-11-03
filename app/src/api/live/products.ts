@@ -9,6 +9,7 @@ import {
   type FumeErrorCode,
   type ImportJob,
   type Product,
+  type ProductFile,
   type SpecEntry,
   type ProductFact,
   type ProductFactArea,
@@ -16,7 +17,7 @@ import {
 } from "../../contract";
 import type { Live } from "./context";
 import { readDeliveries } from "./delivery";
-import { fileUrls, readCampaigns, readCreatives, uploadFile } from "./map";
+import { fileUrls, readCampaigns, readCreatives, uploadFile, type FileRow } from "./map";
 import { command, one, requestKey, rows, supabase } from "./supabase";
 
 type Calls =
@@ -39,11 +40,13 @@ type Calls =
   | "dismissImport"
   | "collection"
   | "addCollection"
-  | "setProductPlace";
+  | "setProductPlace"
+  | "uploadProductFile";
 
 interface PictureRow {
   id: string;
   product_id: string;
+  kind?: string;
   slot: string | null;
   file_id: string | null;
   url: string | null;
@@ -222,24 +225,45 @@ async function readCollections(workspaceId: string, ids?: string[]): Promise<Col
   }));
 }
 
+/** A product's own files (a 3D model, a dieline, artwork), newest first. */
+function filesOf(
+  productId: string,
+  rows: PictureRow[],
+  urls: Map<string, { url: string; file: FileRow }>,
+): Pick<Product, "files"> {
+  const files: ProductFile[] = rows
+    .filter((r) => r.product_id === productId)
+    .map((r) => ({
+      id: r.id,
+      kind: r.slot as ProductFile["kind"],
+      name: urls.get(r.file_id!)?.file.name ?? "File",
+      bytes: urls.get(r.file_id!)?.file.bytes ?? 0,
+      at: r.created_at,
+      by: r.created_by ?? "",
+    }));
+  return files.length ? { files } : {};
+}
+
 export async function readProducts(workspaceId: string, ids?: string[]): Promise<Product[]> {
   let products = supabase().from("products").select(PRODUCT).eq("workspace_id", workspaceId);
   if (ids) products = products.in("id", ids);
   const list = await rows<ProductRow>(products.order("name"));
   if (list.length === 0) return [];
   const productIds = list.map((p) => p.id);
-  const [facts, pictureRows] = await Promise.all([
+  const [facts, sourceRows] = await Promise.all([
     rows<FactRow>(supabase().from("product_facts").select(FACT).in("product_id", productIds).order("created_at")),
     rows<PictureRow>(
       supabase()
         .from("sources")
-        .select("id, product_id, slot, file_id, url, created_by, created_at")
-        .eq("kind", "packshot")
+        .select("id, product_id, kind, slot, file_id, url, created_by, created_at")
+        .in("kind", ["packshot", "product_file"])
         .in("product_id", productIds)
         .order("created_at", { ascending: false }),
     ),
   ]);
-  const urls = await fileUrls(pictureRows.map((r) => r.file_id));
+  const pictureRows = sourceRows.filter((r) => r.kind === "packshot");
+  const fileRows = sourceRows.filter((r) => r.kind === "product_file" && r.file_id);
+  const urls = await fileUrls(sourceRows.map((r) => r.file_id));
   const pictures = pictureRows.flatMap((row) => {
     // An upload, or a picture on the brand's website (an import).
     const url = row.file_id ? urls.get(row.file_id)?.url : row.url;
@@ -251,6 +275,7 @@ export async function readProducts(workspaceId: string, ids?: string[]): Promise
       ...toProduct(p, facts, pictures),
       ...(p.category_id ? { categoryId: p.category_id } : {}),
       ...(collections.length ? { collectionIds: collections } : {}),
+      ...filesOf(p.id, fileRows, urls),
     };
   });
 }
@@ -361,6 +386,17 @@ export function productCalls(live: Live): Pick<FumeApi, Calls> {
         p_product_ids: productIds,
       });
       return (await readCollections(ws, [r.id]))[0]!;
+    },
+    // A 3D model, dieline or label artwork: the file goes to the brand's storage, then onto the product.
+    async uploadProductFile(productId, file) {
+      if (!file.blob) throw new FumeError("invalid", "Choose the file again.");
+      const p = await one<ProductRow>(
+        supabase().from("products").select(PRODUCT).eq("id", productId).maybeSingle(),
+        "product",
+      );
+      const fileId = await uploadFile(p.workspace_id, file.blob, { name: file.name, purpose: "source" });
+      await command("add_product_file", { p_product_id: productId, p_kind: file.kind, p_file_id: fileId });
+      return calls.product(productId);
     },
     async setProductPlace(productId, change) {
       await command("set_product_place", {

@@ -624,7 +624,7 @@ function AllDetails({
     const [file] = await pickFiles(fileAccept[kindOfFile], false);
     if (!file) return;
     uploadFile.mutate(
-      { productId: product.id, kind: kindOfFile, name: file.name, bytes: file.size },
+      { productId: product.id, kind: kindOfFile, name: file.name, bytes: file.size, blob: file },
       {
         onSuccess: () => toast.done(`${label} added`, { description: "Fume reads it and shows what it finds here." }),
         onError: fail,
