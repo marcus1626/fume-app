@@ -20,7 +20,7 @@ import type { Live } from "./context";
 import { fileUrls } from "./map";
 import { readProducts } from "./products";
 import { command, rows, supabase } from "./supabase";
-import { learnTaste } from "./taste";
+import { learnTaste, readDeck, readReferences } from "./taste";
 
 type Calls =
   | "brandDna"
@@ -225,14 +225,24 @@ export function brandCalls(live: Live, empty: Pick<FumeApi, Calls>): Pick<FumeAp
   const calls: Pick<FumeApi, Calls> = {
     async brandDna() {
       const workspaceId = await live.workspaceId();
-      const [brand, products, assets, rest] = await Promise.all([
+      const [brand, products, assets, rest, deck, references] = await Promise.all([
         readBrand(workspaceId),
         readProducts(workspaceId),
         readAssets(workspaceId),
         empty.brandDna(),
+        readDeck(workspaceId).catch(() => undefined),
+        readReferences(workspaceId).catch(() => []),
       ]);
       learnTaste(workspaceId);
-      return { ...rest, dna: brand.dna, rules: brand.rules, products, assets };
+      return {
+        ...rest,
+        dna: brand.dna,
+        rules: brand.rules,
+        products,
+        assets,
+        references,
+        ...(deck ? { tastePairs: deck.pairs } : {}),
+      };
     },
     brandBoard: board,
     // Only the customer decides; the database says so when someone else tries.
