@@ -108,7 +108,7 @@ export function ImportSourceDialog({
   const start = useStartProductImport();
   const toast = useToast();
   const [url, setUrl] = useState("");
-  const [file, setFile] = useState<{ name: string; bytes: number } | null>(null);
+  const [file, setFile] = useState<{ name: string; bytes: number; blob?: Blob } | null>(null);
   const open = source !== null;
 
   function close() {
@@ -177,7 +177,9 @@ export function ImportSourceDialog({
                   moreCopy="Choose another"
                   compact={Boolean(file)}
                   items={file ? [{ id: "f", name: file.name, bytes: file.bytes, state: "done" }] : []}
-                  onFiles={(files) => files[0] && setFile({ name: files[0].name, bytes: files[0].size })}
+                  onFiles={(files) =>
+                    files[0] && setFile({ name: files[0].name, bytes: files[0].size, blob: files[0] })
+                  }
                   onRemove={() => setFile(null)}
                 />
               )

@@ -463,11 +463,32 @@ export function productCalls(live: Live): Pick<FumeApi, Calls> {
       );
       return found[0] ? toImport(found[0]) : null;
     },
-    async startProductImport({ source, url }) {
+    async startProductImport({ source, url, file }) {
+      // A CSV is read here in the browser: its columns are matched by their headings, one product per row.
+      if (source === "csv") {
+        if (!file?.blob) throw new FumeError("invalid", "Choose the CSV again.");
+        const { productsFromCsv } = await import("./csv");
+        const { found } = productsFromCsv(await file.blob.text(), file.name);
+        if (found.length === 0)
+          throw new FumeError(
+            "invalid",
+            "Fume found no product names in this CSV. Give it a column called Name or Title, one product per row.",
+          );
+        return toImport(
+          await command<ImportRow>("save_product_import", {
+            p_workspace_id: await live.workspaceId(),
+            p_source: "csv",
+            p_url: null,
+            p_found: found,
+            p_file_name: file.name,
+            p_log: [`Read ${file.name}: ${found.length} products`],
+          }),
+        );
+      }
       if (source !== "website" || !url)
         throw new FumeError(
           "unavailable",
-          "Reading a CSV or a zip comes soon. Import from the website, or add the products one by one.",
+          "Reading a zip comes soon. Import from the website or a CSV, or add the products one by one.",
         );
       return toImport(await importCall({ workspaceId: await live.workspaceId(), url }));
     },
@@ -476,8 +497,9 @@ export function productCalls(live: Live): Pick<FumeApi, Calls> {
         await one<ImportRow>(supabase().from("product_imports").select("*").eq("id", id).maybeSingle(), "import"),
       );
     },
-    async mapImportColumns() {
-      throw new FumeError("unavailable", "Reading a CSV comes soon.");
+    // The columns are matched by their headings, so an import never waits for a mapping.
+    async mapImportColumns(jobId) {
+      return calls.importJob(jobId);
     },
     async decideFound(jobId, foundId, decision) {
       return toImport(

@@ -26,7 +26,7 @@ export interface ProductImportApi {
   startProductImport(input: {
     source: ImportSource;
     url?: string;
-    file?: { name: string; bytes: number };
+    file?: { name: string; bytes: number; blob?: Blob };
   }): Promise<ImportJob>;
   importJob(id: Id): Promise<ImportJob>;
   /** csv: the customer's answer to the column mapping; reading goes on. */
