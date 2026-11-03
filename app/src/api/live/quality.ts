@@ -17,6 +17,8 @@ import {
   type QaItem,
   type QaPin,
   type QaView,
+  type QualityLogEntry,
+  type Severity,
 } from "../../contract";
 import type { Live } from "./context";
 import { CHECK, VERSION, fileUrls, readCampaigns, type CheckRow, type VersionRow } from "./map";
@@ -32,7 +34,7 @@ import {
 } from "./production";
 import { command, requestKey, rows, supabase } from "./supabase";
 
-type Calls = "qaQueue" | "qaCheck" | "qaUncheck" | "qaFeedback" | "qaToStudio" | "release";
+type Calls = "qaQueue" | "qaCheck" | "qaUncheck" | "qaFeedback" | "qaToStudio" | "release" | "qualityLog";
 
 /** The versions Check holds: waiting for a check, back with a designer for a correction, held, or checked. */
 const IN_CHECK = ["in_check", "correcting", "held", "checked"] as const;
@@ -358,6 +360,108 @@ export function qualityCalls(live: Live): Pick<FumeApi, Calls> {
       const [campaign] = await readCampaigns({ ids: [campaignId] });
       if (!campaign) throw new FumeError("not_found", "No such campaign.");
       return withToSend(campaign, 0);
+    },
+    // Everything the check caught before a customer saw it: the file checks and the expert's findings, and each
+    // correction an expert asked for. Fixed once resolved, or once a new version answers the correction.
+    async qualityLog() {
+      const [found, asked] = await Promise.all([
+        rows<{
+          id: string;
+          workspace_id: string;
+          version_id: string;
+          severity: Severity;
+          finding: string;
+          status: string;
+          created_by: string | null;
+          created_at: string;
+        }>(
+          supabase()
+            .from("findings")
+            .select("id, workspace_id, version_id, severity, finding, status, created_by, created_at")
+            .order("created_at", { ascending: false })
+            .limit(500),
+        ),
+        rows<{
+          id: string;
+          workspace_id: string;
+          version_id: string;
+          problem: string;
+          new_version_id: string | null;
+          by: string;
+          created_at: string;
+        }>(
+          supabase()
+            .from("change_requests")
+            .select("id, workspace_id, version_id, problem, new_version_id, by, created_at")
+            .eq("source", "expert")
+            .order("created_at", { ascending: false })
+            .limit(500),
+        ),
+      ]);
+      const versionIds = [...new Set([...found, ...asked].map((x) => x.version_id))];
+      if (versionIds.length === 0) return [];
+      const [versions, checks] = await Promise.all([
+        rows<{ id: string; creative_id: string; creatives: { campaign_id: string } | null }>(
+          supabase()
+            .from("creative_versions")
+            .select("id, creative_id, creatives(campaign_id)")
+            .in("id", versionIds)
+            .overrideTypes<
+              { id: string; creative_id: string; creatives: { campaign_id: string } | null }[],
+              { merge: false }
+            >(),
+        ),
+        rows<{ id: string; version_id: string }>(
+          supabase().from("expert_checks").select("id, version_id").in("version_id", versionIds),
+        ),
+      ]);
+      const of = (versionId: string) => {
+        const v = versions.find((x) => x.id === versionId);
+        return v && v.creatives
+          ? {
+              creativeId: v.creative_id,
+              campaignId: v.creatives.campaign_id,
+              checkId: checks.find((c) => c.version_id === versionId)?.id ?? versionId,
+            }
+          : undefined;
+      };
+      const entries: QualityLogEntry[] = [
+        ...found.flatMap((f) => {
+          const where = of(f.version_id);
+          return where
+            ? [
+                {
+                  id: f.id,
+                  ...where,
+                  workspaceId: f.workspace_id,
+                  severity: f.severity,
+                  what: f.finding,
+                  fixed: f.status !== "open",
+                  by: f.created_by ?? "",
+                  at: f.created_at,
+                },
+              ]
+            : [];
+        }),
+        ...asked.flatMap((c) => {
+          const where = of(c.version_id);
+          return where
+            ? [
+                {
+                  id: c.id,
+                  ...where,
+                  workspaceId: c.workspace_id,
+                  severity: "major" as const,
+                  what: c.problem,
+                  fixed: Boolean(c.new_version_id),
+                  by: c.by,
+                  at: c.created_at,
+                },
+              ]
+            : [];
+        }),
+      ];
+      return entries.sort((a, b) => b.at.localeCompare(a.at));
     },
   };
 }
