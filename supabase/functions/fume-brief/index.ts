@@ -16,7 +16,13 @@ const keyOf = (json: string, legacy: string) =>
 const publishable = keyOf("SUPABASE_PUBLISHABLE_KEYS", "SUPABASE_ANON_KEY");
 const secret = keyOf("SUPABASE_SECRET_KEYS", "SUPABASE_SERVICE_ROLE_KEY");
 const service = createClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
-const claude = new Anthropic({ timeout: 60_000, maxRetries: 1 });
+// A key made for the whole organisation must name the Anthropic workspace to bill (secret ANTHROPIC_WORKSPACE_ID);
+// a key made inside a workspace needs nothing more.
+const workspace = Deno.env.get("ANTHROPIC_WORKSPACE_ID");
+const claude = new Anthropic({
+  timeout: 60_000, maxRetries: 1,
+  ...(workspace ? { defaultHeaders: { "anthropic-workspace-id": workspace } } : {}),
+});
 
 /** Whether the week's ceiling on the model's cost allows one more call (20261103110000_llm_budget.sql). */
 async function withinBudget(): Promise<boolean> {
