@@ -44,6 +44,37 @@ interface OrganisationRow {
 export function identityCalls(live: Live): Pick<FumeApi, Calls> {
   const calls: Pick<FumeApi, Calls> = {
     async session(): Promise<Session> {
+      // An agency's lead before its first client: the agency's own frame, with no client open yet.
+      if ((await live.workspaces()).length === 0) {
+        const me = await live.me().catch(() => undefined);
+        if (me?.agency) {
+          const agency = await one<OrganisationRow>(
+            supabase().from("organisations").select("id, name, kind").eq("id", me.agency.organisationId).maybeSingle(),
+            "agency",
+          );
+          const organisation: Organisation = {
+            id: agency.id,
+            name: agency.name,
+            kind: "agency",
+            packageId: "p-agency",
+          };
+          const { data } = await supabase()
+            .from("profiles")
+            .select("introduced_at")
+            .eq("id", me.id)
+            .maybeSingle<{ introduced_at: string | null }>();
+          return {
+            user: me,
+            workspace: { id: "", organisationId: agency.id, brandName: agency.name, market: "", language: "en" },
+            organisation,
+            role: null,
+            workspaces: [],
+            introduced: Boolean(data?.introduced_at),
+            onboarded: true,
+            agency: { organisation, role: me.agency.role },
+          };
+        }
+      }
       // Two rounds, not four: the workspace first, then everything that hangs on it at once.
       const [wsId, uid] = await Promise.all([live.workspaceId(), live.uid()]);
       const workspaces = await live.workspaces();
@@ -68,7 +99,24 @@ export function identityCalls(live: Live): Pick<FumeApi, Calls> {
           .then(({ data, error }) => Boolean(error) || Boolean(data?.introduced_at)),
       ]);
       const organisation: Organisation = { id: org.id, name: org.name, kind: org.kind, packageId: "p-core" };
+      // An agency's person: their agency and seat. A client's person: the agency that runs the brand.
+      const agencyOrg = user.agency?.organisationId ?? workspace.agencyId;
+      const agency = agencyOrg
+        ? await one<OrganisationRow>(
+            supabase().from("organisations").select("id, name, kind").eq("id", agencyOrg).maybeSingle(),
+            "agency",
+          ).catch(() => undefined)
+        : undefined;
       return {
+        ...(user.agency && agency
+          ? {
+              agency: {
+                organisation: { id: agency.id, name: agency.name, kind: "agency", packageId: "p-agency" },
+                role: user.agency.role,
+              },
+            }
+          : {}),
+        ...(!user.agency && agency && workspace.agencyId ? { agencyName: agency.name } : {}),
         user,
         workspace,
         organisation,

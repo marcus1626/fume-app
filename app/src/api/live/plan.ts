@@ -39,7 +39,7 @@ type Calls =
 
 type Json = Record<string, unknown>;
 
-interface PlanRow {
+export interface PlanRow {
   id: string;
   campaign_id: string;
   workspace_id: string;
@@ -59,7 +59,7 @@ interface PlanRow {
 const PLAN =
   "id, campaign_id, workspace_id, version, brief_version_id, body, state, check_asked_by, checked_by, checked_at, approved_by, approved_at, written_by, changes, created_at";
 
-interface AskRow {
+export interface AskRow {
   actor: string | null;
   action: "plan.changes_asked" | "plan.check_asked";
   subject_id: string;

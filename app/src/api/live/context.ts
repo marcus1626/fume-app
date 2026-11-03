@@ -1,5 +1,13 @@
 // What every live domain module shares: who is signed in, the workspace they are in, and the people they meet.
-import { FumeError, type CustomerRole, type Id, type StaffRole, type User, type Workspace } from "../../contract";
+import {
+  FumeError,
+  type AgencyRole,
+  type CustomerRole,
+  type Id,
+  type StaffRole,
+  type User,
+  type Workspace,
+} from "../../contract";
 import { rows, supabase } from "./supabase";
 
 /** The database's people, as the contract names them. */
@@ -24,6 +32,12 @@ export interface WorkspaceRow {
   brand_name: string;
   market: string;
   language: string;
+  agency_id: string | null;
+}
+interface SeatRow {
+  user_id: string;
+  organisation_id: string;
+  role: AgencyRole;
 }
 
 const WORKSPACE_KEY = "fume-live-workspace";
@@ -65,6 +79,7 @@ export function toWorkspace(w: WorkspaceRow): Workspace {
     brandName: w.brand_name,
     market: w.market,
     language: w.language,
+    ...(w.agency_id ? { agencyId: w.agency_id } : {}),
   };
 }
 
@@ -81,13 +96,16 @@ export function createLive(): Live {
 
   const people = () =>
     (peopleCache ??= (async () => {
-      const [profiles, staff] = await Promise.all([
+      const [profiles, staff, seats] = await Promise.all([
         rows<ProfileRow>(supabase().from("profiles").select("id, email, name, title, staff_role, avatar_url")),
         rows<StaffRow>(supabase().from("staff_assignments").select("user_id, workspace_id, staff_role, can_check")),
+        rows<SeatRow>(supabase().from("agency_seats").select("user_id, organisation_id, role")),
       ]);
       const map = new Map<Id, User>();
       for (const p of profiles) {
-        const staffRole = appStaffRole(p, staff);
+        // An agency's people check their clients' work, so they are experts in the staff frame (as in the mock).
+        const seat = seats.find((s) => s.user_id === p.id);
+        const staffRole = seat ? "expert" : appStaffRole(p, staff);
         map.set(p.id, {
           id: p.id,
           name: p.name,
@@ -95,6 +113,7 @@ export function createLive(): Live {
           email: p.email,
           ...(p.avatar_url ? { avatar: p.avatar_url } : {}),
           ...(staffRole ? { staffRole } : {}),
+          ...(seat ? { agency: { organisationId: seat.organisation_id, role: seat.role } } : {}),
         });
       }
       return map;
@@ -104,7 +123,7 @@ export function createLive(): Live {
     (workspacesCache ??= rows<WorkspaceRow>(
       supabase()
         .from("workspaces")
-        .select("id, organisation_id, slug, brand_name, market, language")
+        .select("id, organisation_id, slug, brand_name, market, language, agency_id")
         .order("brand_name"),
     ).then((list) => list.map(toWorkspace)));
 

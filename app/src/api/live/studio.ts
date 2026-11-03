@@ -20,6 +20,7 @@ import { unsentChecked, withToSend } from "./quality";
 import { command, requestKey, rows, supabase } from "./supabase";
 
 type Calls =
+  | "brandWorkspace"
   | "studioCampaigns"
   | "studioKit"
   | "documents"
@@ -80,6 +81,14 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
           },
         ];
       });
+    },
+    // One brand's page in the staff frame: its campaigns. Engine output, the queue, sessions and boards come with the
+    // Engine.
+    async brandWorkspace(workspaceId) {
+      const workspace = (await live.workspaces()).find((w) => w.id === workspaceId);
+      if (!workspace) throw new FumeError("not_found", "No such brand.");
+      const campaigns = (await calls.studioCampaigns()).filter((r) => r.workspace.id === workspaceId);
+      return { workspace, campaigns, engineOutput: [], queue: [], sessions: [], boards: [] };
     },
     // The kit's products are the brand's; the Engine's cast, scenes and creative types come with the Engine.
     async studioKit(workspaceId) {

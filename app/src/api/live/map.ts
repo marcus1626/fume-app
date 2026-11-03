@@ -83,6 +83,9 @@ export interface ApprovalRow {
   decided_by: string;
   created_at: string;
   revoked_at: string | null;
+  /** An approval the client gave outside Fume, recorded by the agency. */
+  recorded_by?: string | null;
+  recorded_note?: string | null;
 }
 
 export interface FileRow {
@@ -157,16 +160,16 @@ function toChannel(c: string): Channel {
 }
 
 /** A version as readCreatives reads it: with its check, its approvals and its file in the same query. */
-type VersionWithParts = VersionRow & {
+export type VersionWithParts = VersionRow & {
   expert_checks: CheckRow | CheckRow[] | null;
   approvals: ApprovalRow[] | null;
   files: FileRow | null;
 };
-type CreativeWithVersions = CreativeRow & { creative_versions: VersionWithParts[] | null };
+export type CreativeWithVersions = CreativeRow & { creative_versions: VersionWithParts[] | null };
 
 const CREATIVE_WITH_PARTS =
   `${CREATIVE}, creative_versions(${VERSION}, expert_checks(${CHECK}), ` +
-  `approvals(id, version_id, decided_by, created_at, revoked_at), files(${FILE}))`;
+  `approvals(id, version_id, decided_by, created_at, revoked_at, recorded_by, recorded_note), files(${FILE}))`;
 
 /** Signed addresses for files already read, by file id (one round to storage). */
 async function signFiles(files: FileRow[]): Promise<Map<Id, { url: string; file: FileRow }>> {
@@ -202,6 +205,15 @@ export async function readCreatives(filter: { campaignIds?: Id[]; creativeIds?: 
     q.order("created_at").overrideTypes<CreativeWithVersions[], { merge: false }>(),
   );
   if (found.length === 0) return [];
+  const files = await signFiles(
+    found.flatMap((c) => (c.creative_versions ?? []).flatMap((v) => (v.files ? [v.files] : []))),
+  );
+  return toCreatives(found, files);
+}
+
+/** Creatives as the contract's, from the rows with their versions, checks, approvals and files, and the files' signed
+ *  addresses (readCreatives, and the client link, which reads them through its edge function). */
+export function toCreatives(found: CreativeWithVersions[], files: Map<Id, { url: string; file: FileRow }>): Creative[] {
   const creatives: CreativeRow[] = found;
   const parts = found.flatMap((c) => c.creative_versions ?? []);
   const versions: VersionRow[] = parts;
@@ -209,7 +221,6 @@ export async function readCreatives(filter: { campaignIds?: Id[]; creativeIds?: 
     Array.isArray(v.expert_checks) ? v.expert_checks : v.expert_checks ? [v.expert_checks] : [],
   );
   const approvals = parts.flatMap((v) => (v.approvals ?? []).filter((a) => !a.revoked_at));
-  const files = await signFiles(parts.flatMap((v) => (v.files ? [v.files] : [])));
   return creatives.flatMap((c) => {
     const mine = versions.filter((v) => v.creative_id === c.id);
     if (mine.length === 0) return [];
@@ -232,6 +243,8 @@ export async function readCreatives(filter: { campaignIds?: Id[]; creativeIds?: 
           ? { checkedBy: check.expert_id, checkedAt: check.decided_at ?? v.created_at }
           : {}),
         ...(approval ? { approvedBy: approval.decided_by, approvedAt: approval.created_at } : {}),
+        ...(approval?.recorded_by ? { recordedBy: approval.recorded_by } : {}),
+        ...(approval?.recorded_note ? { recordedNote: approval.recorded_note } : {}),
         ...(v.held_reason ? { heldReason: v.held_reason } : {}),
       };
     };
@@ -325,40 +338,60 @@ export async function readCampaigns(filter: { workspaceId?: Id; ids?: Id[] }): P
     ),
   ]);
   return list.map((c) => {
-    const lines = briefLines(c.brief_draft ?? {});
     const plan = plans.filter((p) => p.campaign_id === c.id).sort((a, b) => b.version - a.version)[0];
     const mine = creatives.filter((x) => x.campaignId === c.id);
-    const toSend = mine.filter((x) => unsent.some((u) => u.creative_id === x.id)).length;
-    return {
-      id: c.id,
-      workspaceId: c.workspace_id,
-      name: c.name,
+    return toCampaign(c, {
       productIds: products.filter((p) => p.campaign_id === c.id).map((p) => p.product_id),
-      state: c.state,
-      stage: STAGE[c.stage],
-      approverId: c.approver_id ?? "",
-      channels: lines.channels,
-      formats: lines.formats,
-      market: lines.market,
-      language: lines.language,
-      ...(c.due_at ? { dueAt: c.due_at } : {}),
-      createdBy: c.created_by ?? "",
-      createdAt: c.created_at,
-      updatedAt: c.created_at,
-      counts: countCreatives(mine),
-      roundsUsed: c.rounds_used,
-      roundsIncluded: c.rounds_included,
-      chosenDirectionId: "a",
+      plan,
+      creatives: mine,
+      toSend: mine.filter((x) => unsent.some((u) => u.creative_id === x.id)).length,
       brandDnaVersion: Math.max(1, ...dnas.filter((d) => d.workspace_id === c.workspace_id).map((d) => d.version)),
-      waits: {
-        questions: 0,
-        directions: 0,
-        briefReady: false,
-        ...(plan ? { plan: (plan.state === "changes_asked" ? "changes_asked" : plan.state) as never } : {}),
-        ...(Array.isArray(plan?.planned) ? { planned: plan.planned.length } : {}),
-        ...(plan?.checked_by ? { planChecked: true } : {}),
-        ...(toSend ? { toSend } : {}),
-      },
-    } satisfies Campaign;
+    });
   });
+}
+
+/** One campaign as the contract's, from its row and what hangs on it (readCampaigns, and the client link). */
+export function toCampaign(
+  c: CampaignRow,
+  parts: {
+    productIds: Id[];
+    plan?: { state: string; checked_by: string | null; planned?: unknown };
+    creatives: Creative[];
+    toSend: number;
+    brandDnaVersion: number;
+  },
+): Campaign {
+  const lines = briefLines(c.brief_draft ?? {});
+  const { plan, toSend } = parts;
+  return {
+    id: c.id,
+    workspaceId: c.workspace_id,
+    name: c.name,
+    productIds: parts.productIds,
+    state: c.state,
+    stage: STAGE[c.stage],
+    approverId: c.approver_id ?? "",
+    channels: lines.channels,
+    formats: lines.formats,
+    market: lines.market,
+    language: lines.language,
+    ...(c.due_at ? { dueAt: c.due_at } : {}),
+    createdBy: c.created_by ?? "",
+    createdAt: c.created_at,
+    updatedAt: c.created_at,
+    counts: countCreatives(parts.creatives),
+    roundsUsed: c.rounds_used,
+    roundsIncluded: c.rounds_included,
+    chosenDirectionId: "a",
+    brandDnaVersion: parts.brandDnaVersion,
+    waits: {
+      questions: 0,
+      directions: 0,
+      briefReady: false,
+      ...(plan ? { plan: (plan.state === "changes_asked" ? "changes_asked" : plan.state) as never } : {}),
+      ...(Array.isArray(plan?.planned) ? { planned: plan.planned.length } : {}),
+      ...(plan?.checked_by ? { planChecked: true } : {}),
+      ...(toSend ? { toSend } : {}),
+    },
+  } satisfies Campaign;
 }
