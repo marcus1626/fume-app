@@ -70,7 +70,7 @@ export function partsOf(plan?: CampaignPlan): { id: string; label: string }[] {
     { id: "plan-brief", label: "The brief" },
     { id: "plan-direction", label: direction?.name ?? "The direction" },
     { id: "plan-variables", label: "How it looks" },
-    { id: "plan-creatives", label: total ? `The ${total} creatives` : "The creatives" },
+    { id: "plan-creatives", label: total ? `The ${copy.creatives(total)}` : "The creatives" },
     { id: "plan-rules", label: "Rules" },
     { id: "plan-when", label: "When" },
   ];

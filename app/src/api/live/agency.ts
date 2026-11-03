@@ -40,6 +40,7 @@ type Calls =
   | "agencyCampaigns"
   | "agencyTeam"
   | "addClient"
+  | "inviteToAgency"
   | "sendToClient"
   | "clientSends"
   | "recordClientApproval"
@@ -537,6 +538,31 @@ export function agencyCalls(live: Live): Pick<FumeApi, Calls> {
     },
     async agencyTeam() {
       return teamOf(await read());
+    },
+    // Into the agency: the database keeps the invitation and the seat (invite_agency_person), the edge function sends
+    // the email. An Operator runs the Engine, so that role comes with it.
+    async inviteToAgency({ email, role }) {
+      const { seat } = await mustAgency();
+      if (role === "operator")
+        throw new FumeError(
+          "unavailable",
+          "An operator runs the Engine, which comes later. Invite them as an expert for now.",
+        );
+      const { data, error } = await supabase().functions.invoke<{ joined: boolean }>("invite", {
+        body: {
+          agencyId: seat.organisationId,
+          agencyRole: role === "admin" ? "lead" : "creative",
+          email: email.trim(),
+          site: window.location.origin,
+        },
+      });
+      if (error) {
+        const said: { code?: FumeErrorCode; message?: string } =
+          error instanceof FunctionsHttpError ? await error.context.json().catch(() => ({})) : {};
+        throw new FumeError(said.code ?? "unavailable", said.message ?? "The invitation wasn’t sent. Try again.");
+      }
+      live.forget();
+      return { joined: Boolean(data?.joined) };
     },
     // The client brand first (the database makes the agency's people its team), then its people's invitations.
     async addClient({ brandName, website, market, language, people }) {

@@ -28,6 +28,10 @@ Deno.serve((req) =>
           const { data, error } = await asCaller.rpc("invite_member", p);
           return { data, error };
         },
+        inviteToAgency: async (p) => {
+          const { data, error } = await asCaller.rpc("invite_agency_person", p);
+          return { data, error };
+        },
       },
       admin: {
         setMetadata: async (userId, data) => {

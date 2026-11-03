@@ -7,6 +7,9 @@
 
 export interface InviteBody {
   workspaceId?: string;
+  /** Into the agency itself (its lead invites), instead of a brand: with agencyRole lead or creative. */
+  agencyId?: string;
+  agencyRole?: string;
   email?: string;
   role?: string;
   /** The address of the app the person invites from; the email's button leads there (must be allowed in Auth). */
@@ -22,6 +25,17 @@ export interface InviteResult {
   inviter_name: string | null;
 }
 
+/** What public.invite_agency_person answers. */
+export interface AgencyInviteResult {
+  id: string;
+  email: string;
+  agency_role: string;
+  state: string;
+  joined: boolean;
+  agency_name: string;
+  inviter_name: string | null;
+}
+
 type Failure = { message: string; details?: string | null } | null;
 
 /** The parts of the Supabase clients the handler uses. */
@@ -33,6 +47,13 @@ export interface Clients {
       data: InviteResult | null;
       error: Failure;
     }>;
+    inviteToAgency(p: {
+      p_agency_id: string;
+      p_email: string;
+      p_name: null;
+      p_title: null;
+      p_role: string;
+    }): Promise<{ data: AgencyInviteResult | null; error: Failure }>;
   };
   /** With the service role: only sends the email. */
   admin: {
@@ -79,15 +100,36 @@ export async function handleInvite(req: Request, clients: (authorization: string
   } catch {
     return refuse("invalid", "The invitation could not be read.");
   }
-  if (!body.workspaceId || !body.email || !body.role) return refuse("invalid", "Write the address and choose a role.");
+  const toAgency = Boolean(body.agencyId);
+  if (!body.email || !(toAgency ? body.agencyRole : body.workspaceId && body.role))
+    return refuse("invalid", "Write the address and choose a role.");
 
   const { caller, admin } = clients(authorization);
   if (!(await caller.signedIn())) return refuse("forbidden", "Sign in first.");
 
+  // Into the agency: someone who already uses Fume gets the seat at once; someone new gets the email.
+  if (toAgency) {
+    const { data, error } = await caller.inviteToAgency({
+      p_agency_id: body.agencyId!,
+      p_email: body.email,
+      p_name: null,
+      p_title: null,
+      p_role: body.agencyRole!,
+    });
+    if (error || !data)
+      return refuse(error?.details ?? "unavailable", error?.message ?? "The invitation was not saved.");
+    if (data.joined) return answer(200, { ...data, emailed: false });
+    const words = { inviter_name: data.inviter_name ?? "Someone at Fume", brand_name: data.agency_name };
+    const { error: sent } = await admin.sendInvite(data.email, words, siteOf(body.site));
+    if (sent)
+      return refuse("unavailable", "The invitation is saved, but the email did not go out. Try again in a moment.");
+    return answer(200, { ...data, emailed: true });
+  }
+
   const { data, error } = await caller.invite({
-    p_workspace_id: body.workspaceId,
+    p_workspace_id: body.workspaceId!,
     p_email: body.email,
-    p_role: body.role,
+    p_role: body.role!,
   });
   if (error || !data) return refuse(error?.details ?? "unavailable", error?.message ?? "The invitation was not saved.");
   if (data.account === "active") return answer(200, { ...data, emailed: false });

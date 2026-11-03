@@ -448,6 +448,7 @@ export const useAgencyCampaigns = () => useQ(["agency", "campaigns"], (a) => a.a
 export const useAgencyTeam = () => useQ(["agency", "team"], (a) => a.agencyTeam());
 export const useLicence = () => useQ(["agency", "licence"], (a) => a.licence());
 export const useAddClient = () => useM((a, v: Parameters<FumeApi["addClient"]>[0]) => a.addClient(v));
+export const useInviteToAgency = () => useM((a, v: Parameters<FumeApi["inviteToAgency"]>[0]) => a.inviteToAgency(v));
 export const useSendToClient = () => useM((a, v: Parameters<FumeApi["sendToClient"]>[0]) => a.sendToClient(v));
 export const useClientSends = (campaignId?: Id) =>
   useQ(["agency", "sends", campaignId], (a) => a.clientSends(campaignId!), Boolean(campaignId));

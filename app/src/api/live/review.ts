@@ -161,9 +161,12 @@ export function reviewCalls(live: Live): Pick<FumeApi, Calls> {
           )
         : [];
       const waiting = new Set(sent.map((v) => v.id));
+      // The customer sees what was sent to her; Fume's and an agency's people also see what is checked and not sent
+      // yet, which is theirs to send (the page splits the two).
+      const staff = Boolean((await live.me()).staffRole);
       const items: ReviewItem[] = [];
       for (const campaign of campaigns) {
-        const mine = checked.filter((c) => c.campaignId === campaign.id && waiting.has(c.current.id));
+        const mine = checked.filter((c) => c.campaignId === campaign.id && (staff || waiting.has(c.current.id)));
         if (mine.length)
           items.push({
             campaign,
