@@ -87,7 +87,7 @@ function toDelivery(d: DeliveryRow, parts: Parts): Delivery {
   };
 }
 
-async function readDeliveries(filter: { workspaceId?: Id; ids?: Id[] }): Promise<Delivery[]> {
+export async function readDeliveries(filter: { workspaceId?: Id; ids?: Id[] }): Promise<Delivery[]> {
   let q = supabase().from("deliveries").select(DELIVERY);
   if (filter.workspaceId) q = q.eq("workspace_id", filter.workspaceId);
   if (filter.ids) q = q.in("id", filter.ids);

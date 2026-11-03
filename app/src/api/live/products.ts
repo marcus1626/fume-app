@@ -4,6 +4,7 @@
 import { FunctionsHttpError } from "@supabase/supabase-js";
 import {
   FumeError,
+  type Collection,
   type FumeApi,
   type FumeErrorCode,
   type ImportJob,
@@ -14,7 +15,8 @@ import {
   type ReferenceShot,
 } from "../../contract";
 import type { Live } from "./context";
-import { fileUrls, uploadFile } from "./map";
+import { readDeliveries } from "./delivery";
+import { fileUrls, readCampaigns, readCreatives, uploadFile } from "./map";
 import { command, one, requestKey, rows, supabase } from "./supabase";
 
 type Calls =
@@ -34,7 +36,10 @@ type Calls =
   | "mapImportColumns"
   | "decideFound"
   | "approveImport"
-  | "dismissImport";
+  | "dismissImport"
+  | "collection"
+  | "addCollection"
+  | "setProductPlace";
 
 interface PictureRow {
   id: string;
@@ -68,8 +73,11 @@ interface ProductRow {
   kind_id: string | null;
   specs: SpecEntry[] | null;
   verified_at: string | null;
+  category_id: string | null;
+  collection_products?: { collection_id: string }[];
 }
-const PRODUCT = "id, workspace_id, name, variant, sku, kind_id, specs, verified_at";
+const PRODUCT =
+  "id, workspace_id, name, variant, sku, kind_id, specs, verified_at, category_id, collection_products(collection_id)";
 
 interface ImportRow {
   id: string;
@@ -175,39 +183,76 @@ function toProduct(
   };
 }
 
+/** The brand's collections, each with its products and the cover of its first product. */
+async function readCollections(workspaceId: string, ids?: string[]): Promise<Collection[]> {
+  let q = supabase()
+    .from("collections")
+    .select(
+      "id, workspace_id, name, kind, starts_at, ends_at, description, created_by, created_at, collection_products(product_id)",
+    )
+    .eq("workspace_id", workspaceId);
+  if (ids) q = q.in("id", ids);
+  const list = await rows<{
+    id: string;
+    workspace_id: string;
+    name: string;
+    kind: Collection["kind"];
+    starts_at: string | null;
+    ends_at: string | null;
+    description: string | null;
+    created_by: string | null;
+    created_at: string;
+    collection_products: { product_id: string }[] | null;
+  }>(q.order("created_at"));
+  return list.map((c) => ({
+    id: c.id,
+    workspaceId: c.workspace_id,
+    name: c.name,
+    kind: c.kind,
+    ...(c.starts_at ? { startsAt: c.starts_at } : {}),
+    ...(c.ends_at ? { endsAt: c.ends_at } : {}),
+    ...(c.description ? { description: c.description } : {}),
+    productIds: (c.collection_products ?? []).map((x) => x.product_id),
+    provenance: {
+      origin: "customer",
+      state: "approved",
+      ...(c.created_by ? { by: c.created_by } : {}),
+      at: c.created_at,
+    },
+  }));
+}
+
 export async function readProducts(workspaceId: string, ids?: string[]): Promise<Product[]> {
   let products = supabase().from("products").select(PRODUCT).eq("workspace_id", workspaceId);
   if (ids) products = products.in("id", ids);
   const list = await rows<ProductRow>(products.order("name"));
   if (list.length === 0) return [];
-  const facts = await rows<FactRow>(
-    supabase()
-      .from("product_facts")
-      .select(FACT)
-      .in(
-        "product_id",
-        list.map((p) => p.id),
-      )
-      .order("created_at"),
-  );
-  const pictureRows = await rows<PictureRow>(
-    supabase()
-      .from("sources")
-      .select("id, product_id, slot, file_id, url, created_by, created_at")
-      .eq("kind", "packshot")
-      .in(
-        "product_id",
-        list.map((p) => p.id),
-      )
-      .order("created_at", { ascending: false }),
-  );
+  const productIds = list.map((p) => p.id);
+  const [facts, pictureRows] = await Promise.all([
+    rows<FactRow>(supabase().from("product_facts").select(FACT).in("product_id", productIds).order("created_at")),
+    rows<PictureRow>(
+      supabase()
+        .from("sources")
+        .select("id, product_id, slot, file_id, url, created_by, created_at")
+        .eq("kind", "packshot")
+        .in("product_id", productIds)
+        .order("created_at", { ascending: false }),
+    ),
+  ]);
   const urls = await fileUrls(pictureRows.map((r) => r.file_id));
   const pictures = pictureRows.flatMap((row) => {
     // An upload, or a picture on the brand's website (an import).
     const url = row.file_id ? urls.get(row.file_id)?.url : row.url;
     return url ? [{ slot: row.slot ?? "front", image: url, row }] : [];
   });
-  return list.map((p) => toProduct(p, facts, pictures));
+  return list.map((p) => {
+    const collections = (p.collection_products ?? []).map((c) => c.collection_id);
+    return {
+      ...toProduct(p, facts, pictures),
+      ...(p.category_id ? { categoryId: p.category_id } : {}),
+      ...(collections.length ? { collectionIds: collections } : {}),
+    };
+  });
 }
 
 export function productCalls(live: Live): Pick<FumeApi, Calls> {
@@ -259,7 +304,72 @@ export function productCalls(live: Live): Pick<FumeApi, Calls> {
       return calls.product(productId);
     },
     async catalogue() {
-      return { products: await readProducts(await live.workspaceId()), categories: [], collections: [] };
+      const ws = await live.workspaceId();
+      const [products, categories, collections] = await Promise.all([
+        readProducts(ws),
+        rows<{ id: string; workspace_id: string; name: string; parent_id: string | null }>(
+          supabase()
+            .from("product_categories")
+            .select("id, workspace_id, name, parent_id")
+            .eq("workspace_id", ws)
+            .order("name"),
+        ),
+        readCollections(ws),
+      ]);
+      return {
+        products,
+        categories: categories.map((c) => ({
+          id: c.id,
+          workspaceId: c.workspace_id,
+          name: c.name,
+          ...(c.parent_id ? { parentId: c.parent_id } : {}),
+        })),
+        collections,
+      };
+    },
+    async collection(collectionId) {
+      const ws = await live.workspaceId();
+      const collection = (await readCollections(ws, [collectionId]))[0];
+      if (!collection) throw new FumeError("not_found", "No such collection.");
+      const [products, links, allDeliveries] = await Promise.all([
+        readProducts(ws, collection.productIds),
+        collection.productIds.length
+          ? rows<{ campaign_id: string }>(
+              supabase().from("campaign_products").select("campaign_id").in("product_id", collection.productIds),
+            )
+          : Promise.resolve([]),
+        readDeliveries({ workspaceId: ws }),
+      ]);
+      const campaignIds = [...new Set(links.map((l) => l.campaign_id))];
+      const [campaigns, creatives] = campaignIds.length
+        ? await Promise.all([readCampaigns({ ids: campaignIds }), readCreatives({ campaignIds })])
+        : [[], []];
+      return {
+        collection,
+        products: products.length ? products : [],
+        campaigns,
+        approved: creatives.filter((c) => ["approved", "delivered"].includes(c.current.state)),
+        deliveries: allDeliveries.filter((d) => campaignIds.includes(d.campaignId)),
+      };
+    },
+    async addCollection({ name, kind, productIds }) {
+      const ws = await live.workspaceId();
+      const r = await command<{ id: string }>("add_collection", {
+        p_workspace_id: ws,
+        p_name: name,
+        p_kind: kind,
+        p_product_ids: productIds,
+      });
+      return (await readCollections(ws, [r.id]))[0]!;
+    },
+    async setProductPlace(productId, change) {
+      await command("set_product_place", {
+        p_product_id: productId,
+        p_set_category: "categoryId" in change,
+        p_category_id: change.categoryId || null,
+        p_collection_ids: change.collectionIds ?? null,
+      });
+      return calls.product(productId);
     },
     async addProduct({ name, variant, url }) {
       const row = await command<ProductRow>("add_product", {

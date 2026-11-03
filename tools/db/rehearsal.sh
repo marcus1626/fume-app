@@ -19,7 +19,7 @@ end $$;
 -- The tests start from the settings a new project has (the plan written from the brief); rolled back with the rest.
 update app.settings set value = 'false' where key = 'llm_plans';
 SQL
-for f in 10_rules 20_campaigns 30_production_check 40_review_delivery 70_fume_plans 80_file_checks 90_product_pictures 95_notifications 96_conversation 97_agency 98_brand_identity 99_products 9a_brand_brain 9b_taste 9c_team_settings 9d_onboarding 9e_calendar 9f_taste_swipes 9g_meetings 9h_boards; do grep -v '^\\' "supabase/tests/$f.sql"; done
+for f in 10_rules 20_campaigns 30_production_check 40_review_delivery 70_fume_plans 80_file_checks 90_product_pictures 95_notifications 96_conversation 97_agency 98_brand_identity 99_products 9a_brand_brain 9b_taste 9c_team_settings 9d_onboarding 9e_calendar 9f_taste_swipes 9g_meetings 9h_boards 9i_catalogue; do grep -v '^\\' "supabase/tests/$f.sql"; done
 echo "reset role;"
 echo "select count(*) as passed, (select what from test.log order by n desc limit 1) as last from test.log;"
 echo "rollback;"
