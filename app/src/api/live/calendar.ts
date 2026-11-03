@@ -54,7 +54,7 @@ export function calendarCalls(live: Live): Pick<FumeApi, Calls> {
   return {
     async calendar({ from, to }) {
       const ws = await live.workspaceId();
-      const [posts, campaigns, deliveries] = await Promise.all([
+      const [posts, campaigns, deliveries, meetings] = await Promise.all([
         rows<Row>(
           supabase()
             .from("calendar_posts")
@@ -81,6 +81,15 @@ export function calendarCalls(live: Live): Pick<FumeApi, Calls> {
             .gte("created_at", from)
             .lte("created_at", to),
         ),
+        rows<{ id: string; topic: string; at: string; minutes: number }>(
+          supabase()
+            .from("meetings")
+            .select("id, topic, at, minutes")
+            .eq("workspace_id", ws)
+            .eq("state", "booked")
+            .gte("at", from)
+            .lte("at", to),
+        ),
       ]);
       const entries: CalendarEntry[] = [
         ...campaigns.map((c) => ({
@@ -99,6 +108,15 @@ export function calendarCalls(live: Live): Pick<FumeApi, Calls> {
           title: d.name,
           start: iso(d.created_at),
           campaignId: d.campaign_id,
+        })),
+        ...meetings.map((m) => ({
+          id: `meeting-${m.id}`,
+          workspaceId: ws,
+          kind: "meeting" as const,
+          title: m.topic,
+          start: iso(m.at),
+          end: new Date(Date.parse(m.at) + m.minutes * 60_000).toISOString(),
+          meetingId: m.id,
         })),
         ...posts.map(toPost),
       ];

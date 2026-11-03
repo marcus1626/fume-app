@@ -1,7 +1,7 @@
 // The Fume chat on the live backend (20261103120000_conversation.sql). Her words go in with the command `say`; Fume
 // answers in the edge function `fume-chat` (a language model, supabase/functions/fume-chat), and a person at Fume
 // takes over in the same chat when Fume cannot answer. New messages reach the open chat over Realtime (events.ts).
-// Starting a campaign from the chat, the questions Fume waits on and meetings are not live yet.
+// Starting a campaign from the chat is not live yet; the questions Fume waits on and meetings are in questions.ts.
 import type { FumeApi, Id, Message, MessageCard, Thread } from "../../contract";
 import type { Live } from "./context";
 import { command, requestKey, rows, supabase } from "./supabase";
