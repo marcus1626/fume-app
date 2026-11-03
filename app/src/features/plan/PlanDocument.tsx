@@ -31,7 +31,18 @@ import {
 } from "./parts";
 import { PlanIndex } from "./PlanIndex";
 import type { PlanPeople } from "./people";
-import { byDay, chosenOf, countWords, creativesOf, onDay, partsOf, sentOn, sourceLabel, voiceFor } from "./words";
+import {
+  byDay,
+  chosenOf,
+  countWords,
+  creativesOf,
+  hasLines,
+  onDay,
+  partsOf,
+  sentOn,
+  sourceLabel,
+  voiceFor,
+} from "./words";
 
 export type PlanMode = "ready" | "approved" | "previous" | "staff";
 
@@ -162,48 +173,54 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
           {/* 2. The direction */}
           <DirectionPart plan={plan} campaign={campaign} people={people} choose={choose} tag={tag} voice={voice} />
 
-          {/* 3. How every creative looks (the variables) */}
-          <section className="ui-plandoc-part" id="plan-variables" aria-labelledby="plan-variables-title">
-            <div className="ui-plandoc-part-head">
-              <h2 className="ui-plandoc-part-title" id="plan-variables-title">
-                How it looks
-              </h2>
-              <p className="ui-plandoc-part-lead">
-                Every creative keeps to these lines.{edit ? " Change any of them." : ""}
-              </p>
-            </div>
-            <div className="ui-plandoc-group">
-              <h3 className="ui-plandoc-group-title">The look</h3>
-              <ul className="ui-plandoc-lines">
-                {direction.look.map((l) => (
-                  <LineRow
-                    key={`${direction.id}-${l.key}`}
-                    line={l}
-                    campaignId={campaign.id}
-                    editable={edit}
-                    voice={voice}
-                    tag={<LineTag line={l} tag={tag} people={people} />}
-                  />
-                ))}
-              </ul>
-            </div>
-            <div className="ui-plandoc-group">
-              <h3 className="ui-plandoc-group-title">Products, formats and words</h3>
-              <ul className="ui-plandoc-lines">
-                {plan.content.map((l) => (
-                  <LineRow
-                    key={l.key}
-                    line={l}
-                    campaignId={campaign.id}
-                    editable={edit}
-                    voice={voice}
-                    tag={<LineTag line={l} tag={tag} people={people} />}
-                    note={l.key === "products" ? productNote : undefined}
-                  />
-                ))}
-              </ul>
-            </div>
-          </section>
+          {/* 3. How every creative looks (the variables); a plan built from the brief alone has none yet */}
+          {hasLines(plan) && (
+            <section className="ui-plandoc-part" id="plan-variables" aria-labelledby="plan-variables-title">
+              <div className="ui-plandoc-part-head">
+                <h2 className="ui-plandoc-part-title" id="plan-variables-title">
+                  How it looks
+                </h2>
+                <p className="ui-plandoc-part-lead">
+                  Every creative keeps to these lines.{edit ? " Change any of them." : ""}
+                </p>
+              </div>
+              {direction.look.length > 0 && (
+                <div className="ui-plandoc-group">
+                  <h3 className="ui-plandoc-group-title">The look</h3>
+                  <ul className="ui-plandoc-lines">
+                    {direction.look.map((l) => (
+                      <LineRow
+                        key={`${direction.id}-${l.key}`}
+                        line={l}
+                        campaignId={campaign.id}
+                        editable={edit}
+                        voice={voice}
+                        tag={<LineTag line={l} tag={tag} people={people} />}
+                      />
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {plan.content.length > 0 && (
+                <div className="ui-plandoc-group">
+                  <h3 className="ui-plandoc-group-title">Products, formats and words</h3>
+                  <ul className="ui-plandoc-lines">
+                    {plan.content.map((l) => (
+                      <LineRow
+                        key={l.key}
+                        line={l}
+                        campaignId={campaign.id}
+                        editable={edit}
+                        voice={voice}
+                        tag={<LineTag line={l} tag={tag} people={people} />}
+                        note={l.key === "products" ? productNote : undefined}
+                      />
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </section>
+          )}
 
           {/* 4. The creatives: the masters, then what follows them */}
           <section className="ui-plandoc-part" id="plan-creatives" aria-labelledby="plan-creatives-title">

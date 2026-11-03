@@ -61,6 +61,11 @@ export function sourceLabel(
   return viewer === "customer" ? sourceWords[source] : neutralWords[source];
 }
 
+/** Whether the plan has lines of its own: the chosen direction's look, or the products, formats and words. */
+export function hasLines(plan: CampaignPlan): boolean {
+  return (chosenOf(plan)?.look.length ?? 0) > 0 || plan.content.length > 0;
+}
+
 /** The parts of the plan, in order: its index (in the summary aside) says each part's own heading. The ids stay as they
  *  were, so links to a part keep working. */
 export function partsOf(plan?: CampaignPlan): { id: string; label: string }[] {
@@ -69,7 +74,8 @@ export function partsOf(plan?: CampaignPlan): { id: string; label: string }[] {
   return [
     { id: "plan-brief", label: "The brief" },
     { id: "plan-direction", label: direction?.name ?? "The direction" },
-    { id: "plan-variables", label: "How it looks" },
+    // A plan built from the brief alone (no language model) has no lines of its own yet.
+    ...(plan && !hasLines(plan) ? [] : [{ id: "plan-variables", label: "How it looks" }]),
     { id: "plan-creatives", label: total ? `The ${copy.creatives(total)}` : "The creatives" },
     { id: "plan-rules", label: "Rules" },
     { id: "plan-when", label: "When" },
