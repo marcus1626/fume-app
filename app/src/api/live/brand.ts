@@ -201,16 +201,11 @@ export async function scanCall(body: Record<string, unknown>): Promise<ScanRow> 
   return data!.scan;
 }
 
-export function brandCalls(live: Live, empty: Pick<FumeApi, Calls>): Pick<FumeApi, Calls> {
+export function brandCalls(live: Live): Pick<FumeApi, Calls> {
   const board = async () => {
     const ws = await live.workspaceId();
-    const [{ dna, rules, identity }, rest, moodboard] = await Promise.all([
-      readBrand(ws),
-      empty.brandBoard(),
-      brandMoodboard(ws),
-    ]);
+    const [{ dna, rules, identity }, moodboard] = await Promise.all([readBrand(ws), brandMoodboard(ws)]);
     return {
-      ...rest,
       dna,
       rules,
       identity,
@@ -221,23 +216,25 @@ export function brandCalls(live: Live, empty: Pick<FumeApi, Calls>): Pick<FumeAp
   const calls: Pick<FumeApi, Calls> = {
     async brandDna() {
       const workspaceId = await live.workspaceId();
-      const [brand, products, assets, rest, deck, references] = await Promise.all([
+      const [brand, products, assets, deck, references] = await Promise.all([
         readBrand(workspaceId),
         readProducts(workspaceId),
         readAssets(workspaceId),
-        empty.brandDna(),
         readDeck(workspaceId).catch(() => undefined),
         readReferences(workspaceId).catch(() => []),
       ]);
       learnTaste(workspaceId);
+      // What Fume understood from uploaded material, and the memory it keeps, come with the Engine; until then they
+      // are empty for every brand (never the demo brand's).
       return {
-        ...rest,
         dna: brand.dna,
         rules: brand.rules,
         products,
         assets,
         references,
-        ...(deck ? { tastePairs: deck.pairs } : {}),
+        tastePairs: deck?.pairs ?? [],
+        memory: [],
+        understanding: { version: brand.dna.version, summary: [], conflicts: [], unknowns: [], testDirections: [] },
       };
     },
     brandBoard: board,

@@ -56,7 +56,7 @@ export function createLiveApi(): FumeApi {
     ...eventCalls(live),
     ...reviewCalls(live),
     ...deliveryCalls(live),
-    ...brandCalls(live, notYet),
+    ...brandCalls(live),
     ...brandUpdateCalls(live),
     ...notificationCalls(),
     ...conversationCalls(live),

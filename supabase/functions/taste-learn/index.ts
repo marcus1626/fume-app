@@ -1,6 +1,7 @@
 // The edge function `taste-learn` (handler.ts says what it does). Deployed with verify_jwt off: the caller's own token
 // lists what waits (taste_pending decides who may); the service signs stored files and saves the numbers.
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
+import { openFetch, signedIn as isSignedIn } from "../_shared/net.ts";
 import jpeg from "npm:jpeg-js@0.4.4";
 import { decode as decodePng } from "npm:fast-png@6.2.0";
 import { handleLearn, type Pending } from "./handler.ts";
@@ -17,15 +18,14 @@ const LIMIT = 15_000_000;
 
 async function fetchImage(target: string): Promise<Uint8Array | null> {
   try {
-    const res = await fetch(target, {
-      redirect: "follow",
+    const res = await openFetch(target, {
       signal: AbortSignal.timeout(12_000),
       headers: {
         "User-Agent": "FumeTasteReader/1.0 (+https://fumecreatives.com)",
         Accept: "image/jpeg,image/png;q=0.9,*/*;q=0.5",
       },
     });
-    if (!res.ok || !/^image\//.test(res.headers.get("content-type") ?? "")) return null;
+    if (!res?.ok || !/^image\//.test(res.headers.get("content-type") ?? "")) return null;
     const bytes = new Uint8Array(await res.arrayBuffer());
     return bytes.length > LIMIT ? null : bytes;
   } catch {
@@ -57,13 +57,14 @@ async function decode(bytes: Uint8Array) {
   return null;
 }
 
-Deno.serve((req) => {
+Deno.serve(async (req) => {
   const authorization = req.headers.get("Authorization") ?? "";
   const asCaller = createClient(url, publishable, {
     global: { headers: { Authorization: authorization } },
     auth: { persistSession: false, autoRefreshToken: false },
   });
-  const signedIn = /^Bearer\s+\S+\.\S+\.\S+$/.test(authorization);
+  // A real signed-in person, asked of Supabase Auth before Fume opens anything on the web for them.
+  const signedIn = await isSignedIn(asCaller, authorization);
   return handleLearn(req, signedIn, {
     pending: async (workspaceId) => {
       const { data, error } = await asCaller.rpc("taste_pending", { p_workspace_id: workspaceId });

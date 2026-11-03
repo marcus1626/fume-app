@@ -1,5 +1,6 @@
 // What the shop says about its products, read without a model: Shopify's product feed, WooCommerce's Store API, else
 // the structured data (schema.org Product) on the product pages found from the front page and the sitemap.
+import { publicUrl } from "../_shared/net.ts";
 
 export interface Found {
   name: string;
@@ -19,8 +20,7 @@ export function siteUrl(raw: string): string | undefined {
   if (!t) return undefined;
   try {
     const u = new URL(/^https?:\/\//i.test(t) ? t : `https://${t}`);
-    if (!u.hostname.includes(".") || /^(localhost|127\.|10\.|192\.168\.|169\.254\.)/.test(u.hostname)) return undefined;
-    return u.href;
+    return publicUrl(u.href)?.href;
   } catch {
     return undefined;
   }

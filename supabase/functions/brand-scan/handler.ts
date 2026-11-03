@@ -1,6 +1,7 @@
 // Fume reads a brand from its website (FLOWS §7 step 3): the home page and a couple of pages it links to, with their
 // stylesheets, read by read.ts into proposals. The caller's own token saves them (save_brand_scan decides who may),
 // so the people who run the brand and its owner or approver can start it. handler.test.ts runs it without the web.
+import { publicUrl } from "../_shared/net.ts";
 import { brandName, inlineCss, morePages, type Page, readBrand, stylesheets } from "./read.ts";
 
 export interface Deps {
@@ -24,8 +25,7 @@ export function siteUrl(raw: string): string | undefined {
   if (!t) return undefined;
   try {
     const u = new URL(/^https?:\/\//i.test(t) ? t : `https://${t}`);
-    if (!u.hostname.includes(".") || /^(localhost|127\.|10\.|192\.168\.|169\.254\.)/.test(u.hostname)) return undefined;
-    return u.href;
+    return publicUrl(u.href)?.href;
   } catch {
     return undefined;
   }

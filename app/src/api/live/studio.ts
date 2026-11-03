@@ -3,6 +3,7 @@
 // on its strip is a candidate picture). Until the Engine runs (Wednesday), nothing renders: a designer makes the
 // picture elsewhere and it is added to the creative with how it was made.
 import { FumeError, type FumeApi, type StudioCampaignRow, type User } from "../../contract";
+import { placements } from "../../domain/placements";
 import { defaults, modes } from "../../mock/seed/studioModes";
 import type { Live } from "./context";
 import { readCampaigns } from "./map";
@@ -34,7 +35,9 @@ type Calls =
   | "addVersion"
   | "documentToCheck"
   | "undoDocumentToCheck"
-  | "setFormatTile";
+  | "setFormatTile"
+  | "placements"
+  | "brandAssets";
 
 const NO_ENGINE = "The Engine is not part of this version. Make the picture by hand and add it to the creative.";
 
@@ -89,6 +92,14 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
       if (!workspace) throw new FumeError("not_found", "No such brand.");
       const campaigns = (await calls.studioCampaigns()).filter((r) => r.workspace.id === workspaceId);
       return { workspace, campaigns, engineOutput: [], queue: [], sessions: [], boards: [] };
+    },
+    // The places a creative is made for: one list for every brand.
+    async placements() {
+      return placements;
+    },
+    // A brand's presets, AI models and saved references are made with the Engine; none yet.
+    async brandAssets() {
+      return { presets: [], models: [], references: [] };
     },
     // The kit's products are the brand's; the Engine's cast, scenes and creative types come with the Engine.
     async studioKit(workspaceId) {
