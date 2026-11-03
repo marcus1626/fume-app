@@ -30,6 +30,7 @@ type Calls =
   | "campaign"
   | "setApprover"
   | "setCampaignScope"
+  | "briefTemplates"
   | "orderBrief"
   | "sendBrief"
   | "approveBrief"
@@ -304,6 +305,13 @@ export function campaignCalls(live: Live): Pick<FumeApi, Calls> {
         "unavailable",
         "Starting a campaign in the chat comes soon. Use New campaign to write the brief.",
       );
+    },
+
+    // Fume's templates, and one from each of her campaigns past its plan.
+    async briefTemplates() {
+      const { FUME_BRIEF_TEMPLATES, yourBriefTemplates } = await import("./templates");
+      const campaigns = await readCampaigns({ workspaceId: await live.workspaceId() });
+      return [...FUME_BRIEF_TEMPLATES, ...(await yourBriefTemplates(campaigns))];
     },
 
     // Single products and whole collections; a collection brings all its products.
