@@ -24,7 +24,7 @@ with
     (7, 'Kristian may check on LYSNE',
       exists (select 1 from public.staff_assignments s join public.profiles p on p.id = s.user_id join ws on ws.id = s.workspace_id
               where p.email = 'kristian@fumecreatives.com' and s.can_check), null),
-    (8, 'William (account manager) has signed in', exists (select 1 from person where email = 'william@fumecreatives.com'),
+    (8, 'William (account manager) has signed in', exists (select 1 from person where email = 'william@fumecreatives.com' and last_sign_in_at is not null),
       'Line 10: William is refused the check. He signs in once with his invitation'),
     (9, 'The test member and the SOLV test user can sign in',
       (select count(*) from public.invitations where email in ('member+lysne@fumecreatives.com', 'user+solv@fumecreatives.com')) = 2,
