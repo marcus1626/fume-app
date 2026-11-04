@@ -962,7 +962,7 @@ async function familiesOf(book) {
     }
     chosen.set(s.name, used);
     fonts.push({ style: s.name, asked, used });
-    styles.push(used !== asked && s.case === "upper" ? { ...s, lineHeight: standInLeading(s.lineHeight, await capHeightOf(used, s.weight)) } : s);
+    styles.push((used !== asked || t?.source === "stand_in") && s.case === "upper" ? { ...s, lineHeight: standInLeading(s.lineHeight, await capHeightOf(used, s.weight)) } : s);
   }
   return { familyFor: (s) => chosen.get(s.name) ?? "Inter", fonts, book: { ...book, styles } };
 }

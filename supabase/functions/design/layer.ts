@@ -88,7 +88,10 @@ export function layoutsOf(t: Take): BrandLayout[] {
   // A layout with no words (a plain product photo, the logo alone) is never one to set the plan's words in.
   const words = (l: BrandLayout & { hasWords?: boolean }) =>
     l.hasWords ?? !/\b(no|without) (words|text|copy)\b|\b(logo|swoosh|mark) alone\b/i.test(l.name);
-  return (on?.layouts ?? []).filter(words).slice(0, 5).map((l) => ({ name: l.name, band: l.band, align: l.align, ground: l.ground, words: l.words, cta: l.cta, why: l.why }));
+  const carrying = (on?.layouts ?? []).filter(words) as (BrandLayout & { source?: string })[];
+  // The brand's own ads are its graphic design; its shop's layouts are offered only when it has no ads read.
+  const ads = carrying.filter((l) => l.source === "pictures");
+  return (ads.length ? ads : carrying).slice(0, 5).map((l) => ({ name: l.name, band: l.band, align: l.align, ground: l.ground, words: l.words, cta: l.cta, why: l.why }));
 }
 
 /** The model's boxes, in the format's pixels, cut to the frame; nonsense dropped. */

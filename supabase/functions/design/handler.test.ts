@@ -145,3 +145,13 @@ Deno.test("where the brand's layout carries no button, the review is told the ca
   assertEquals(off.includes("left off on purpose"), true);
   assertEquals(reviewPrompt({} as Take, words, { cta: "with_words" }).includes("Kjøp"), true);
 });
+
+Deno.test("the brand's layouts from its own ads are offered before its shop's", () => {
+  const t = { book: { body: { onPictures: { layouts: [
+    { name: "Quote stack bottom left", band: "bottom", align: "left", source: "pictures" },
+    { name: "Hero centred with pills", band: "middle", align: "center", source: "site" },
+  ] } } } } as unknown as Take;
+  assertEquals(layoutsOf(t).map((l) => l.name), ["Quote stack bottom left"]);
+  const shopOnly = { book: { body: { onPictures: { layouts: [{ name: "Hero centred with pills", band: "middle", align: "center", source: "site" }] } } } } as unknown as Take;
+  assertEquals(layoutsOf(shopOnly).length, 1);
+});

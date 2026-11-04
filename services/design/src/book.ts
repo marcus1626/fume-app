@@ -20,6 +20,8 @@ export interface Typeface {
   family: string;
   weights?: number[];
   fallback?: string;
+  /** "stand_in" when the family is the closest Google Font to the brand's own face, not the face itself. */
+  source?: string;
 }
 export interface Style {
   name: string;
