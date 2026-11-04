@@ -11,6 +11,7 @@ across sign-ins.
 | [domain-model.md](domain-model.md) | Minimum objects reconciled with the contract, lifecycles, transition table, rules, negative tests |
 | [library.md](library.md) | Blueprints B01–B14 and templates T01–T08, narrow v0.1 |
 | [brand-books.md](brand-books.md) | The brand's long Tone of Voice and full design system: written by Fume, checked by an expert, approved by the customer |
+| [product-truth.md](product-truth.md) | Product Truth: Fume reads the product page and pictures and proposes facts, the brand confirms them |
 
 ## Decisions this week
 

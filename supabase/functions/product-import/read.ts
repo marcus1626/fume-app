@@ -138,14 +138,21 @@ export function fromWoo(json: unknown, origin: string): Found[] | null {
 type Json = Record<string, unknown>;
 const isProduct = (x: Json) => {
   const t = x["@type"];
-  return t === "Product" || (Array.isArray(t) && t.includes("Product"));
+  const kinds = ["Product", "ProductGroup"];
+  return kinds.includes(t as string) || (Array.isArray(t) && t.some((k) => kinds.includes(k)));
+};
+
+/** A product group (a model in sizes and colours): its own name, with a picture and offer from its first variant. */
+const flatGroup = (x: Json): Json => {
+  const first = Array.isArray(x.hasVariant) ? (x.hasVariant as Json[])[0] : undefined;
+  return first ? { ...first, ...x, image: x.image ?? first.image, offers: x.offers ?? first.offers, sku: x.sku ?? x.productGroupID ?? first.sku } : x;
 };
 
 function productsIn(node: unknown): Json[] {
   if (Array.isArray(node)) return node.flatMap(productsIn);
   if (!node || typeof node !== "object") return [];
   const x = node as Json;
-  if (isProduct(x)) return [x];
+  if (isProduct(x)) return [flatGroup(x)];
   return productsIn(x["@graph"]);
 }
 
@@ -190,11 +197,18 @@ export function fromPage(html: string, url: string): Found | null {
 export function productLinks(html: string, base: string): string[] {
   const host = new URL(base).hostname.replace(/^www\./, "");
   const out = new Set<string>();
-  for (const m of html.matchAll(/href=["']([^"'#]+)["']/gi)) {
+  // Links in the markup, and addresses in the page's own data (a shop that draws its products with JavaScript
+  // still lists them in JSON-LD or its framework's data, often with escaped slashes).
+  const raw = html.replace(/\\u002F/gi, "/").replace(/\\\//g, "/");
+  const found = [
+    ...[...raw.matchAll(/href=["']([^"'#]+)["']/gi)].map((m) => m[1]!),
+    ...[...raw.matchAll(/["'](https?:\/\/[^"'\s<>]+|\/[a-z]{2}(?:-[a-z]{2})?\/t\/[^"'\s<>]+)["']/gi)].map((m) => m[1]!),
+  ];
+  for (const href of found) {
     try {
-      const u = new URL(m[1]!, base);
+      const u = new URL(href, base);
       if (u.hostname.replace(/^www\./, "") !== host) continue;
-      if (!/\/(products?|produkt(er)?|p|shop|item)\/[^/]+/i.test(u.pathname)) continue;
+      if (!/\/(products?|produkt(er)?|p|t|shop|item)\/[^/]+/i.test(u.pathname)) continue;
       if (/\.(jpe?g|png|webp|gif|svg|css|js)$/i.test(u.pathname)) continue;
       u.search = "";
       out.add(u.href.replace(/\/$/, ""));
@@ -202,7 +216,12 @@ export function productLinks(html: string, base: string): string[] {
       /* not an address */
     }
   }
-  return [...out];
+  // Product pages before category pages: a last part with a number in it (a code), then the deeper address.
+  const score = (href: string) => {
+    const parts = new URL(href).pathname.split("/").filter(Boolean);
+    return (/\d/.test(parts.at(-1) ?? "") ? 100 : 0) + parts.length;
+  };
+  return [...out].sort((a, b) => score(b) - score(a));
 }
 
 /** Sitemaps that list products, and the product pages they list. */

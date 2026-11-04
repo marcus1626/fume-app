@@ -109,3 +109,17 @@ Deno.test("no products, a closed site, or a private address is said plainly", as
     403,
   );
 });
+
+Deno.test("a shop that draws its products with JavaScript still lists them in its data", () => {
+  const html = `<script id="__NEXT_DATA__">{"url":"https:\\/\\/www.nike.com\\/no\\/t\\/air-force-1-07-sko-ABC123\\/CW2288-111","x":"\\u002Fno\\u002Ft\\u002Fpegasus-41\\u002FFD2722-002"}</script><a href="/no/w/herre">`;
+  assertEquals(productLinks(html, "https://www.nike.com/no/"), [
+    "https://www.nike.com/no/t/air-force-1-07-sko-ABC123/CW2288-111",
+    "https://www.nike.com/no/t/pegasus-41/FD2722-002",
+  ]);
+});
+
+Deno.test("a product group (a model in sizes and colours) is read as the product", () => {
+  const html = `<script type="application/ld+json">[{"@context":"https://schema.org","@type":"ProductGroup","name":"Air Jordan 4 Retro","description":"Ta på deg en klassiker.","productGroupID":"JA5911","hasVariant":[{"@type":"Product","sku":"JA5911-320-42","image":"https://static.nike.com/a/1.png","offers":{"price":2199,"priceCurrency":"NOK"}}]}]</script>`;
+  const f = fromPage(html, "https://www.nike.com/no/t/aj4/JA5911-320");
+  assertEquals([f?.name, f?.images[0], f?.fields.find((x) => x.fieldId === "sku")?.value], ["Air Jordan 4 Retro", "https://static.nike.com/a/1.png", "JA5911"]);
+});
