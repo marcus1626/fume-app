@@ -25,7 +25,7 @@ import { CHECK, VERSION, fileUrls, readCampaigns, type CheckRow, type VersionRow
 import {
   CANDIDATE,
   STUDIO_CREATIVE,
-  manualEvaluation,
+  evaluationOf,
   mustBeId,
   readDocument,
   toFormat,
@@ -272,7 +272,7 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
         state,
         evaluation: withChanges(
           withFileCheck(
-            manualEvaluation(made),
+            evaluationOf(made),
             fileChecks.filter((f) => f.version_id === v.id),
             Boolean(v.file_id),
             toFormat(cr.format),
