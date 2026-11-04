@@ -193,7 +193,168 @@ export interface VoiceBook {
   rules: { must: string[]; never: string[]; claims: string[] };
   audience: { who: string; cares: string[]; notFor: string };
   examples: VoiceExample[];
+  // The long Tone of Voice Fume writes (FLOWS §30, brand_books.body): the voice at work, besides the five parts.
+  /** The voice in three sentences a copywriter can work from. */
+  summary?: string;
+  /** Where the brand sits between two words, 1 (from) to 5 (to). */
+  scale?: { from: string; to: string; at: number }[];
+  mechanics?: { casing: string; punctuation: string; numbers: string; emoji: string; names: string };
+  /** The brand's own words and how to use them. */
+  vocabulary?: { word: string; use: string }[];
+  channels?: { channel: VoiceChannel; how: string; length: string; example: string }[];
+  headlines?: { pattern: string; example: string }[];
+  ctas?: { cta: string; when: string }[];
+  /** On brand against off brand, and why. */
+  pairs?: { good: string; bad: string; why: string }[];
+  sources?: BookSource[];
+  /** What Fume could not find, as questions for the brand. */
+  gaps?: string[];
 }
+
+export type VoiceChannel =
+  "instagram_feed" | "instagram_story" | "tiktok" | "paid_social" | "email" | "website" | "packaging" | "print";
+
+/** Where a part of a book comes from: the brand's own pages, its Brand DNA, its rules, its products, its taste, its
+ *  past campaigns, or Fume's proposal where the data is thin. */
+export interface BookSource {
+  part: string;
+  source: "site" | "brand_dna" | "rules" | "products" | "taste" | "memory" | "fume";
+  evidence: string;
+}
+
+// ─── The brand's books (FLOWS §30): a long Tone of Voice and a design system ──
+// Fume writes them; an expert checks a draft; only the customer's owner or approver approves one. The approved
+// version stays in use until a newer one is approved. A customer never sees a book being written or a draft.
+
+export type DesignRole =
+  | "primary"
+  | "secondary"
+  | "accent"
+  | "background"
+  | "surface"
+  | "text"
+  | "text_muted"
+  | "on_primary"
+  | "on_photo"
+  | "cta"
+  | "cta_text"
+  | "border"
+  | "support";
+export type DesignFormat = "feed" | "square" | "story" | "banner";
+export type DesignStyleName =
+  "display" | "h1" | "h2" | "subline" | "body" | "caption" | "label" | "cta" | "price" | "legal";
+export type DesignComponentName =
+  "headline" | "subline" | "body" | "cta" | "price" | "badge" | "legal" | "product_name" | "logo";
+
+/** The brand's design system for its campaign creatives. Sizes are in pixels at a frame 1080 pixels wide; code builds
+ *  the CSS and measures the contrast of every pair that carries words. */
+export interface DesignBook {
+  summary: string;
+  colours: { name: string; hex: string; role: DesignRole; use: string; source: BookSource["source"] }[];
+  typefaces: {
+    role: "display" | "heading" | "body" | "label";
+    family: string;
+    /** A Google Font close to it when the brand's own face cannot be loaded. */
+    fallback: string;
+    weights: number[];
+    source: "brand" | "stand_in";
+    note: string;
+  }[];
+  styles: {
+    name: DesignStyleName;
+    font: "display" | "heading" | "body" | "label";
+    sizePx: number;
+    lineHeight: number;
+    trackingEm: number;
+    weight: number;
+    case: "none" | "upper" | "title" | "lower";
+  }[];
+  spacing: { unitPx: number; scale: number[] };
+  radiusPx: { none: number; small: number; large: number; pill: number };
+  formats: {
+    format: DesignFormat;
+    marginPx: number;
+    safeTopPx: number;
+    safeBottomPx: number;
+    columns: number;
+    gutterPx: number;
+  }[];
+  logo: {
+    versions: { name: string; use: string }[];
+    clearSpace: string;
+    minWidthPx: number;
+    placements: { format: DesignFormat; where: LogoPlace; widthPct: number }[];
+  };
+  photoText: { rules: string[]; scrim: "none" | "gradient" | "flat"; scrimOpacity: number };
+  components: {
+    name: DesignComponentName;
+    purpose: string;
+    style: DesignStyleName;
+    colour: DesignRole;
+    background: DesignRole | null;
+    radius: "none" | "small" | "large" | "pill";
+    paddingPx: number;
+    rules: string[];
+  }[];
+  rules: { do: string[]; dont: string[] };
+  /** Examples of graphic design: the layers on a photograph, in per cent of the frame. */
+  examples: {
+    name: string;
+    format: DesignFormat;
+    purpose: string;
+    /** What the photograph behind it shows, and where it is calm. */
+    picture: string;
+    /** A photograph of the brand's to draw it on; the live API picks one of the brand's own. */
+    image?: string;
+    layers: {
+      component: DesignComponentName;
+      text: string;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      align: "left" | "centre" | "right";
+      /** The colour when the photograph asks for another than the component's: Linen words on a dark wall. */
+      colour?: DesignRole;
+    }[];
+    why: string;
+  }[];
+  /** The tokens as CSS variables on a `.brand` class, built by code. */
+  css: string;
+  checks: {
+    contrast: { pair: string; ratio: number; ok: boolean; need: number }[];
+    missingRoles: DesignRole[];
+    fails: string[];
+  };
+  sources: BookSource[];
+  gaps: string[];
+}
+
+export type LogoPlace = "top_left" | "top_centre" | "top_right" | "bottom_left" | "bottom_centre" | "bottom_right";
+
+export type BrandBookKind = "voice" | "design";
+export type BrandBookState = "writing" | "failed" | "draft" | "checked" | "changes_asked" | "approved" | "superseded";
+
+interface BookVersion {
+  id: Id;
+  version: number;
+  state: BrandBookState;
+  /** The words this version was written for: the customer's change, or Fume's own ask. */
+  ask?: string;
+  askedBy?: Id;
+  /** Why it could not be written (state failed). */
+  error?: string;
+  createdAt: Instant;
+  writtenAt?: Instant;
+  checkedBy?: Id;
+  checkedAt?: Instant;
+  approvedBy?: Id;
+  approvedAt?: Instant;
+}
+
+/** One version of a book; no body while it is being written, or when writing it failed. */
+export type BrandBook =
+  (BookVersion & { kind: "voice"; body?: VoiceBook }) | (BookVersion & { kind: "design"; body?: DesignBook });
 
 // ─── Taste (FLOWS §14: taste keeps learning) ────────────────────────────────
 

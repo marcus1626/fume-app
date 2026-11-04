@@ -70,5 +70,19 @@ enkleste", say in an open question why the claims were left out, and two lines w
 
 ## Not yet
 
-The Engine reading the approved design system, the expert's view of the copy check and the screens to read, check and approve a book (design
-thread), and graphic design from the tokens (OpenPencil, Del 3).
+The Engine reading the approved design system, the screens to read, check and approve a book (design thread), and
+graphic design from the tokens (OpenPencil, Del 3).
+
+- The screens to read, check, approve and ask for a change are designed, not wired yet (app/FLOWS.md §30, PROPOSED):
+  `brandBooks()` reads `brand_books` for the workspace as `BrandBook` rows, newest first, split by kind; `body` is the
+  voice answer (with `parts`, as `VoiceBook`) or the design answer with `css` and `checks` (as `DesignBook`), and
+  `askedBy` is `created_by` when the row has an ask. `writeBrandBook` maps to `write_brand_book`, `checkBrandBook` to
+  `check_brand_book`, `approveBrandBook` to `approve_brand_book`, `askBrandBookChange` to `ask_brand_book_change`; a
+  `book.state` event on every change. An example's `image` is one of the brand's own photographs the live API picks,
+  and a layer may carry `colour` (a role) when the photograph needs another colour than the component's. Open: a
+  customer who asked for a change sees nothing until an expert checks it; may she see that a version is being
+  written (its state only, no body)?
+- The expert's view of the copy check is designed, not wired yet (app/FLOWS.md §31, PROPOSED): `CampaignPlan.copyCheck`
+  maps the plan run's `task_runs.copy_check` as it is (read, error, rewritten, rewrote_for, voice_book, lines with their
+  claims, findings), sent to Fume's own people only. A claim's `backedBy` is the verified fact's statement in words,
+  looked up from its id. A line's ref is `copy:<the plan line's key>` or `<direction id>/<creative id>`.

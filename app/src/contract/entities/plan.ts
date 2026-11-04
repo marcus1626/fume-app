@@ -142,4 +142,56 @@ export interface CampaignPlan {
   checkAsked?: { by: Id; at: Instant };
   /** Every version after the first, with what changed. */
   versions?: PlanVersionNote[];
+  /** For Fume's own people only (never a customer, an agency or its client): how the plan's words were read for claims
+   *  and for the brand's Tone of Voice before the expert reads it (FLOWS §31, task_runs.copy_check). */
+  copyCheck?: PlanCopyCheck;
+}
+
+/** What a claim is: a result, a health effect, best or most, better than, a price, an offer, where it is from, an award. */
+export type PlanClaimKind =
+  "result" | "health" | "superlative" | "comparison" | "price" | "offer" | "origin" | "award" | "other";
+
+/** One claim in a line: backed by a verified fact, said by the brand's own words (a price, an offer, an origin or its
+ *  own line), or backed by nothing. */
+export interface PlanClaim {
+  /** The words that make the claim, as written. */
+  words: string;
+  kind: PlanClaimKind;
+  verdict: "backed" | "brand_says" | "unbacked";
+  /** The verified fact that backs it, in words ("Night Body Oil · 100 ml"). */
+  backedBy?: string;
+}
+
+/** One line of words the plan has the brand say. ref: "copy:<PlanLine.key>" for a line of the plan's words,
+ *  "<direction id>/<creative id>" for the words on a planned creative. */
+export interface PlanCopyLine {
+  ref: string;
+  /** Where it sits: "Headline", "Direction A: Master 2". */
+  where: string;
+  /** The words as they were read. */
+  text: string;
+  claims: PlanClaim[];
+  /** Whether it sounds like the brand's Tone of Voice; left out when it could not be read. */
+  voice?: "on" | "off";
+}
+
+export interface PlanCopyFinding {
+  ref: string;
+  /** A claim nothing backs, a line off the voice, or a word the voice avoids. */
+  kind: "unbacked_claim" | "off_voice" | "avoided_word";
+  /** In one sentence: "The voice avoids “luxury”." An unbacked claim's words and kind are on its line's claims. */
+  note: string;
+}
+
+export interface PlanCopyCheck {
+  /** False when the words could not be read; error says why. */
+  read: boolean;
+  error?: string;
+  /** Fume wrote the plan again once, for the claims in rewroteFor. */
+  rewritten: boolean;
+  rewroteFor?: { ref: string; text: string; note: string }[];
+  /** The Tone of Voice the words were written in. */
+  voiceBook?: { version: number; state: "approved" | "checked" | "draft" };
+  lines: PlanCopyLine[];
+  findings: PlanCopyFinding[];
 }

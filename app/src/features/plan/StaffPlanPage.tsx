@@ -20,6 +20,7 @@ import * as copy from "../../copy";
 import { Back, Nothing, Page, Query } from "../../shell/Page";
 import { checkPath } from "../../shell/scope";
 import { BriefFacts } from "../campaigns/brief-lines";
+import { CopyCheckSummary, openUnbacked } from "./copy-check";
 import { useQaWaiting } from "../studio/qa/count";
 import { PlanDocument } from "./PlanDocument";
 import { PlanIndex } from "./PlanIndex";
@@ -100,8 +101,12 @@ function StaffPlan({
   const mine = changedByMe(plan, people.me?.id);
   // The customer's brief beside the lines she checks against it.
   const briefFrom = view.brief.approvedBy ? people.Name(view.brief.approvedBy) : cap(approver);
+  // What Fume's word check found, still open: a claim nothing backs on a line nobody changed since (FLOWS §31). It never
+  // stops the check; the foot says it.
+  const unbacked = openUnbacked(plan);
   const aside = (
     <>
+      <CopyCheckSummary plan={plan} />
       <p className="ui-plandoc-index-title">
         {briefFrom}’s brief{view.brief.approvedAt ? `, sent ${sentOn(view.brief.approvedAt)}` : ""}
       </p>
@@ -148,7 +153,13 @@ function StaffPlan({
       {inCheck && !held.held && !held.sent && (
         <PageFooter
           className="ui-plandoc-foot"
-          start={`${mine ? `You changed ${mine} in your check.` : "Change what needs it, line by line."} Marked checked, the plan goes to ${approver}.`}
+          start={`${
+            unbacked
+              ? `${unbacked === 1 ? "1 claim nothing backs is" : `${unbacked} claims nothing backs are`} still in the plan.`
+              : mine
+                ? `You changed ${mine} in your check.`
+                : "Change what needs it, line by line."
+          } Marked checked, the plan goes to ${approver}.`}
         >
           <Button icon="check" loading={held.sending} onClick={held.mark}>
             Mark checked

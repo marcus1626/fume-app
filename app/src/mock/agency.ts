@@ -31,6 +31,7 @@ import * as copy from "../copy";
 import { canBeApproved } from "../domain/creatives";
 import { canAddClients, canAnswerClientLink } from "../domain/permissions";
 import type { Mock } from "./context";
+import { withoutCopyCheck } from "./plan";
 import { at, inDays, pic } from "./seed/helpers";
 import { AGENCY_ID, FULL_CLIENT, FUME_CONTACT, agencyPeople, clientOwners, leads, summaryUsage } from "./seed/agency";
 
@@ -850,7 +851,7 @@ export function agencyCalls(m: Mock): Pick<FumeApi, Calls> {
           (c) => versionIds.includes(c.current.id) || c.versions.some((v) => versionIds.includes(v.id)),
         ),
         sentBy: person(send.sentBy)!,
-        ...(plan && planSend ? { plan, planSend } : {}),
+        ...(plan && planSend ? { plan: withoutCopyCheck(plan), planSend } : {}),
         names: customerNames(campaign),
       });
     },

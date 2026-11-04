@@ -969,3 +969,59 @@ approves the creatives. Her approval starts the Engine.
   "Plan approved by Maja", and the agency is told the masters are theirs to check before Maja sees them.
 - **The demo.** Nora (?as=nora): LYSNE › Winter gifting waits for her check and Send to Maja. Maja (?agency&as=maja):
   Black Friday is checked and sent, Approve and start. The seeded link is /c/bfplan.
+
+## 30. The brand's books (4 Nov 2026, PROPOSED)
+Every customer has two books Fume writes from what it knows about the brand (docs/mvp/brand-books.md): a long
+**Tone of Voice** and a full **design system** for its campaign creatives. Fume writes a version, Fume's expert checks
+it, and only the customer's owner or approver approves it or asks for a change. Both live under Brand: the Voice part
+of the board opens Brand › Tone of Voice (/brand/voice), the Type part opens Brand › Design system (/brand/design).
+- **One frame for both.** The header names the book and says, in one line, which version is shown and where it
+  stands: "Version 2 · Draft · waits on your check", "Version 1 · Checked by Anna · waits on Maja" (to Maja: "· yours
+  to approve"), "Version 1 · Approved by Maja, 8 Oct · in use", "Replaced by version 2". The newest version with a
+  body is shown; ?v=2 shows another, and **Versions** at the foot lists them all.
+- **Notes above the book** say what else is true: Fume writing the next version ("Fume is writing version 3… about a
+  minute", with a turning mark), a version that failed and why ("Try again"), "Version 1 stays in use until Maja
+  approves this one: Fume writes every word from it" (the design system: "the Engine lays out every creative from
+  it"), and the words the version was written for: "Written for Maja's words: “…”".
+- **The step's foot.** Anna on a draft: "Marked checked, Maja reads version 2 and approves it." with **Mark checked**.
+  Maja on a checked version: "Anna checked it. Approved, Fume writes every word from it." with **Ask for a change**
+  and **Approve**. Approving replaces the version in use. On the version in use, **Ask for a change** sits in the
+  header for Maja; Fume's people have **Write a new version** there. Both open one box: "What should change?"
+- **The Tone of Voice** starts with its summary and the five parts the brand confirmed (identity, how it speaks,
+  rules, audience, examples), then the voice at work: the tone on five scales, mechanics (casing, punctuation,
+  numbers, emoji, names), its own words, each channel (how, how long, an example), headline patterns and calls to
+  action, on brand and off brand pairs with why, what Fume still needs to know, and where each part comes from.
+- **The design system** starts with **In use**: examples of graphic design drawn on the brand's own photographs,
+  each layer where the book puts it, in the brand's own faces and colours, at the frame's true shape (one row height
+  for every format), with what the picture shows and why the words sit where they do. Then colour (one swatch per
+  colour with every role it plays, and the contrast of every pair that carries words, measured by code), type (the
+  faces, and every style in proportion to a frame 1080 wide), layout (each format's margins and the space the
+  platform covers), the logo, words on photographs, components, rules, the tokens as CSS with **Copy**, what Fume
+  still needs to know, and where it comes from.
+- **Who sees what.** A customer never sees a version being written, one that failed, or a draft no expert checked:
+  Maja reads version 1 of the Tone of Voice while Anna has version 2 in check. The brand's colours and faces are the
+  customer's data, drawn inline; nothing of Fume's own look (Amber, Smoke glass) is used on them.
+- **The demo.** Anna (?as=anna): LYSNE › Brand › Tone of Voice, version 2 waits on her check; the design system is
+  checked and waits on Maja. Maja (/brand/design): Approve or Ask for a change.
+
+## 31. The copy check on a plan (4 Nov 2026, PROPOSED)
+Fume writes the plan's words in the brand's Tone of Voice and reads every line it has the brand say before the expert
+does: each claim (a result, health, best or most, better than, a price, an offer, where it is from, an award) and
+whether the line sounds like the voice (docs/mvp/brand-books.md, the copy lane). A claim nothing backs sends the plan
+back to Fume once. What the check found reaches Fume's own expert on the plan she checks; the customer, an agency and
+its client never see it.
+- **On the line.** Under a line of the plan's words, or under a master's words, a quiet note per finding. A claim no
+  verified fact backs is Rouge with its alert mark: "No verified fact says this: “roligere søvn”. A health claim needs
+  one." Off the voice ("Off the voice. An exclamation mark and “nå”: LYSNE never hurries the reader.") and a word the
+  voice avoids ("The voice avoids “luxury”.") are secondary. A claim a fact backs ("100 ml") or one the brand's own
+  words make (the brief's offer) is only counted, never flagged.
+- **In the aside.** Above the customer's brief: **The words, checked**, "6 lines read · 1 claim nothing backs · 1 off
+  the voice · 1 word the voice avoids", each finding a link that glides to its line, "Written again once, for a claim
+  nothing backed: “Norges beste kveldsolje, nå i et sett.”" and "Written in the Tone of Voice, version 1 (approved)".
+  When the words could not be read, it says so and asks her to read them herself.
+- **She changes the words in place**, as any line. A line changed after the check keeps its notes, muted, under "You
+  changed this line after the check."
+- **It never blocks.** A machine's reading never stops the check on its own: Mark checked stays as it is, and while a
+  claim nothing backs is still on a line nobody changed, the foot says "1 claim nothing backs is still in the plan."
+  Nothing here is Amber: nothing in it is checked.
+- **The demo.** Anna (?as=anna): LYSNE › Black Friday › Plan, in check because Maja asked.

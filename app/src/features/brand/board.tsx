@@ -311,7 +311,7 @@ export function TypePart({ identity, rules, visit, open, onOpen }: PartProps) {
   const settled = list.filter((t) => !isFind(t, visit));
   const finds = list.filter((t) => isFind(t, visit));
   return (
-    <BoardPart id="type" title="Type" open={open} onOpen={onOpen}>
+    <BoardPart id="type" title="Type" open={open} onOpen={onOpen} to="/brand/design" linkLabel="The design system">
       <div className="ui-brand-types" data-mode="board">
         {settled.map((t) => (
           <Proposal key={t.id} state={t.provenance.state} bare className="ui-brand-type">
@@ -365,7 +365,7 @@ export function VoicePart({ identity, rules, visit, open, onOpen }: PartProps) {
   const settled = list.filter((v) => !isFind(v, visit));
   const finds = list.filter((v) => isFind(v, visit));
   return (
-    <BoardPart id="voice" title="Voice" open={open} onOpen={onOpen} to="/brand/voice" linkLabel="The whole voice">
+    <BoardPart id="voice" title="Voice" open={open} onOpen={onOpen} to="/brand/voice" linkLabel="The Tone of Voice">
       <div className="ui-brand-voice" data-mode="board">
         {settled.map((v) => (
           <Proposal key={v.id} state={v.provenance.state} bare className="ui-brand-voice-line">

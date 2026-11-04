@@ -2,6 +2,7 @@
 
 import type { Board } from "../entities/campaigns";
 import type {
+  BrandBook,
   BrandDna,
   BrandIdentity,
   BrandModel,
@@ -41,4 +42,11 @@ export interface BrandAssetsView {
   presets: BrandPreset[];
   models: BrandModel[];
   references: BrandReference[];
+}
+
+/** The brand's books (FLOWS §30), newest version first: only the versions the reader may see. A customer reads a
+ *  version once an expert has checked it. */
+export interface BrandBooksView {
+  voice: BrandBook[];
+  design: BrandBook[];
 }

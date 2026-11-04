@@ -1,0 +1,110 @@
+/* The brand's books (app FLOWS §30): Brand › Tone of Voice and Brand › Design system. They share the voice page's
+   sections (r13-brand.css .ui-voice-*); this file adds the notes above a book, its versions, the voice at work, and the
+   design system's examples, swatches, contrast, type ladder, formats and CSS. The brand's own colours and faces come
+   in as inline styles from the book: they are the customer's data, never Fume's. */
+
+/* ── Notes above the book ─────────────────────────────────────────────── */
+.ui-brandbook-notes { display: grid; gap: var(--ui-space-xs); margin-block-end: var(--ui-space-xl); }
+.ui-brandbook-note { display: flex; align-items: flex-start; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text); text-wrap: pretty; }
+.ui-brandbook-note > svg { flex: none; width: 1rem; height: 1lh; color: var(--ui-text-tertiary); }
+.ui-brandbook-note[data-tone="quiet"] { color: var(--ui-text-secondary); }
+.ui-brandbook-note[data-tone="failed"] > svg { color: var(--ui-danger); }
+.ui-brandbook-note[data-tone="failed"] { align-items: center; flex-wrap: wrap; }
+.ui-brandbook-note-spin { animation: ui-brandbook-spin var(--ui-motion-spin) linear infinite; }
+@keyframes ui-brandbook-spin { to { transform: rotate(1turn); } }
+@media (prefers-reduced-motion: reduce) { .ui-brandbook-note-spin { animation-duration: var(--ui-motion-spin-reduced); } }
+
+.ui-brandbook-summary { max-width: 42rem; }
+
+/* ── Versions ─────────────────────────────────────────────────────────── */
+.ui-brandbook-versions { display: grid; gap: var(--ui-space-sm); margin-block-start: var(--ui-space-2xl); }
+.ui-brandbook-version-list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.ui-brandbook-version { display: flex; align-items: baseline; gap: var(--ui-space-md); padding: var(--ui-inset-tight) var(--ui-space-sm); border-radius: var(--ui-radius-item); color: var(--ui-text); text-decoration: none; }
+@media (hover: hover) { .ui-brandbook-version:hover { background: var(--ui-surface-sunken-hover); } }
+.ui-brandbook-version:focus-visible { outline: none; box-shadow: var(--ui-focus-ring); }
+.ui-brandbook-version[aria-current="page"] { background: var(--ui-surface-sunken); }
+.ui-brandbook-version-name { font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); }
+.ui-brandbook-version-meta { font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+
+/* ── The voice at work ───────────────────────────────────────────────── */
+.ui-brandbook-scales { display: grid; gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; max-width: 32rem; }
+.ui-brandbook-scale { display: grid; grid-template-columns: 6rem 1fr 6rem; align-items: center; gap: var(--ui-space-md); font-size: var(--ui-type-control); color: var(--ui-text); }
+.ui-brandbook-scale-word[data-end] { text-align: end; color: var(--ui-text-secondary); }
+.ui-brandbook-scale-track { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--ui-space-xs); }
+.ui-brandbook-scale-step { height: 0.375rem; border-radius: var(--ui-radius-check); background: var(--ui-surface-sunken); }
+.ui-brandbook-scale-step[data-at] { background: var(--ui-text); }
+
+.ui-brandbook-cards { display: grid; gap: var(--ui-space-md); margin: 0; padding: 0; list-style: none; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+.ui-brandbook-length { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+
+.ui-brandbook-rows { display: grid; gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; }
+.ui-brandbook-rows > li { display: grid; gap: 0; min-width: 0; }
+.ui-brandbook-row-main { font-size: var(--ui-type-body); line-height: 1.4; color: var(--ui-text); text-wrap: pretty; }
+.ui-brandbook-row-meta { font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+
+.ui-brandbook-pairs { display: grid; gap: var(--ui-space-md); margin: 0; padding: 0; list-style: none; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
+.ui-brandbook-pair { display: grid; gap: var(--ui-space-sm); align-content: start; padding: var(--ui-inset-float); border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); min-width: 0; }
+
+/* ── Design system: examples of graphic design ───────────────────────── */
+/* One row height for every format, so a story stands beside a feed picture at its true shape */
+.ui-brandbook-examples { --ui-brandbook-row: 17rem; display: flex; flex-wrap: wrap; gap: var(--ui-space-xl) var(--ui-space-lg); align-items: flex-start; }
+.ui-brandbook-example { display: grid; gap: var(--ui-space-sm); align-content: start; margin: 0; min-width: 0; inline-size: min(100%, max(12rem, calc(var(--ui-brandbook-row) * var(--ar)))); }
+.ui-brandbook-example > .ui-brandbook-frame { inline-size: min(100%, calc(var(--ui-brandbook-row) * var(--ar))); }
+.ui-brandbook-frame { position: relative; overflow: hidden; container-type: inline-size; border-radius: var(--ui-radius-item); background: var(--ui-surface-creative); }
+.ui-brandbook-frame-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ui-brandbook-layer { position: absolute; display: flex; align-items: flex-start; }
+.ui-brandbook-layer-text { display: inline-block; text-wrap: balance; }
+.ui-brandbook-layer-text[data-boxed] { white-space: nowrap; }
+.ui-brandbook-layer[data-layer="logo"] { align-items: center; letter-spacing: 0.12em; line-height: 1; }
+.ui-brandbook-example-text { display: grid; gap: 0; }
+.ui-brandbook-example-name { font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-brandbook-example-meta { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-brandbook-example-why { font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+
+/* ── Colour ───────────────────────────────────────────────────────────── */
+.ui-brandbook-swatches { display: grid; gap: var(--ui-space-lg) var(--ui-space-md); margin: 0; padding: 0; list-style: none; grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr)); }
+.ui-brandbook-swatch { display: grid; gap: 0; align-content: start; min-width: 0; }
+.ui-brandbook-swatch-colour { display: block; aspect-ratio: 3 / 2; margin-block-end: var(--ui-space-xs); border-radius: var(--ui-radius-item); box-shadow: inset 0 0 0 1px var(--ui-creative-edge); }
+.ui-brandbook-swatch-name { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-brandbook-swatch-code { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+.ui-brandbook-swatch-roles { font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+.ui-brandbook-swatch-use { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); text-wrap: pretty; }
+
+.ui-brandbook-contrast { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; max-width: 36rem; }
+.ui-brandbook-contrast-pair { display: grid; grid-template-columns: 2.5rem 1fr auto; align-items: center; gap: var(--ui-space-md); font-size: var(--ui-type-control); color: var(--ui-text); }
+.ui-brandbook-contrast-swatch { display: grid; place-items: center; height: 1.75rem; border-radius: var(--ui-radius-check); box-shadow: inset 0 0 0 1px var(--ui-creative-edge); font-weight: var(--ui-type-weight-medium); }
+.ui-brandbook-contrast-num { display: inline-flex; align-items: center; gap: var(--ui-space-xs); font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text); }
+.ui-brandbook-contrast-num > svg { width: 0.875rem; height: 0.875rem; color: var(--ui-text-tertiary); }
+.ui-brandbook-contrast-pair:not([data-ok]) .ui-brandbook-contrast-num,
+.ui-brandbook-contrast-pair:not([data-ok]) .ui-brandbook-contrast-num > svg { color: var(--ui-danger); }
+.ui-brandbook-contrast-need { font-family: var(--ui-type-family); color: var(--ui-text-tertiary); }
+.ui-brandbook-fails { color: var(--ui-danger); }
+
+/* ── Type ─────────────────────────────────────────────────────────────── */
+.ui-brandbook-ladder { display: grid; gap: 0; max-inline-size: 46rem; margin: 0; padding: 0; list-style: none; }
+.ui-brandbook-ladder-row { display: grid; grid-template-columns: 11rem minmax(0, 1fr); align-items: baseline; gap: var(--ui-space-lg); padding-block: var(--ui-space-sm); min-width: 0; }
+.ui-brandbook-ladder-meta { display: grid; gap: 0; }
+.ui-brandbook-ladder-name { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-brandbook-ladder-spec { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+/* The sample's column stands for a frame 1080 wide: a style's size is its share of it, never below a readable size */
+.ui-brandbook-ladder-sample { container-type: inline-size; min-width: 0; }
+.ui-brandbook-ladder-text { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ui-text); }
+
+.ui-brandbook-face { font-size: var(--ui-type-body); color: var(--ui-text); }
+.ui-brandbook-face-note { display: block; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+
+/* ── Layout ───────────────────────────────────────────────────────────── */
+.ui-brandbook-formats { --ui-brandbook-row: 9rem; display: flex; flex-wrap: wrap; gap: var(--ui-space-lg) var(--ui-space-md); margin: 0; padding: 0; list-style: none; align-items: flex-start; }
+.ui-brandbook-format { display: grid; grid-template-rows: var(--ui-brandbook-row) auto; gap: 0; min-width: 0; inline-size: min(100%, max(9.5rem, calc(var(--ui-brandbook-row) * var(--ar)))); }
+.ui-brandbook-format-frame { position: relative; display: block; align-self: end; inline-size: min(100%, calc(var(--ui-brandbook-row) * var(--ar))); margin-block-end: var(--ui-space-xs); border-radius: var(--ui-radius-check); background: var(--ui-surface-sunken); }
+/* the space words may use: a step lighter than the frame; the margins and the platforms' bands stay sunken */
+.ui-brandbook-format-safe { position: absolute; inset: var(--m-top) var(--m-x) var(--m-bottom); border-radius: var(--ui-radius-check); background: var(--ui-surface); }
+.ui-brandbook-format-name { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-brandbook-format-spec { display: block; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-brandbook-format-text { display: grid; gap: 0; }
+
+/* ── The CSS ──────────────────────────────────────────────────────────── */
+.ui-brandbook-code { position: relative; min-width: 0; }
+.ui-brandbook-code > .ui-brandbook-code-copy { position: absolute; z-index: 1; inset-block-start: var(--ui-space-sm); inset-inline-end: var(--ui-space-sm); }
+.ui-brandbook-code-text { max-height: 20rem; margin: 0; padding: var(--ui-inset-float); overflow: auto; border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); line-height: 1.6; color: var(--ui-text); }
+.ui-brandbook-code-text:focus-visible { outline: none; box-shadow: var(--ui-focus-ring); }

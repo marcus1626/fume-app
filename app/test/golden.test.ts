@@ -329,6 +329,7 @@ async function readEverything(p: Person, ids: Universe) {
   await a.session();
   await a.home();
   await a.brandDna();
+  await a.brandBooks();
   await a.campaigns();
   await a.campaigns({ state: ["in_review", "in_production"] });
   await a.campaigns({ search: "gift" });
@@ -1254,6 +1255,38 @@ scenario("agency brief and clients", async (golden) => {
   await even.approve(["v-cr-a-v1-3"]);
   await even.checkPlan("c-winter");
   await even.agencyHome();
+});
+
+scenario("brand books", async (golden) => {
+  // One brand, and the people who take turns on it: Anna checks, Maja approves or asks for a change.
+  const book = golden.open("anna", { userId: "u-anna" });
+  const a = book.call;
+  await a.checkBrandBook("bb-voice-2");
+  await a.checkBrandBook("bb-voice-2");
+  await a.checkBrandBook("bb-missing");
+  book.signInAs("sander", "u-sander");
+  await a.checkBrandBook("bb-design-1");
+  book.signInAs("jonas", "u-jonas");
+  await a.brandBooks();
+  await a.approveBrandBook("bb-design-1");
+  await a.writeBrandBook({ kind: "voice" });
+  book.signInAs("maja", "u-maja");
+  await a.approveBrandBook("bb-voice-2");
+  await a.approveBrandBook("bb-voice-1");
+  await a.askBrandBookChange({ bookId: "bb-design-1", ask: " " });
+  await a.askBrandBookChange({
+    bookId: "bb-design-1",
+    ask: "Burgundy for the price too, not only the call to action.",
+  });
+  await a.brandBooks();
+  book.signInAs("anna", "u-anna");
+  await a.brandBooks();
+  const [draft] = (await a.brandBooks())?.design ?? [];
+  if (draft) await a.checkBrandBook(draft.id);
+  await a.writeBrandBook({ kind: "voice", ask: "Shorter captions for stories." });
+  await a.writeBrandBook({ kind: "voice" });
+  await book.advance(1_000);
+  await a.brandBooks();
 });
 
 test("the golden master calls every member of the mock", () => {
