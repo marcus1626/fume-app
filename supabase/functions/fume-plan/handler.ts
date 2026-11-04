@@ -91,7 +91,12 @@ export async function writePlan(task: PlanTask, deps: Deps): Promise<"written" |
       if (blocking.length && !rewroteCopy && round < 2) {
         rewroteCopy = true;
         rewroteFor = blocking;
-        problem = `Words that make a claim no verified fact states: ${copyProblem(blocking)} Rewrite those words without the claim, or keep to the product name, the moment and the brief's message.`;
+        const claims = blocking.filter((f) => f.kind === "unbacked_claim");
+        const language = blocking.filter((f) => f.kind === "language");
+        problem = [
+          claims.length ? `Words that make a claim no verified fact states: ${copyProblem(claims)} Rewrite those words without the claim, or keep to the product name, the moment and the brief's message.` : "",
+          language.length ? `Words with a mistake in their language: ${copyProblem(language)} Write them correctly.` : "",
+        ].filter(Boolean).join(" ");
         continue;
       }
       await deps.service.copyChecked?.(task.run_id, {
@@ -99,7 +104,8 @@ export async function writePlan(task: PlanTask, deps: Deps): Promise<"written" |
         ...(readError ? { error: readError } : {}),
         rewritten: rewroteCopy,
         ...(rewroteCopy ? { rewrote_for: rewroteFor } : {}),
-        unbacked: blocking.length,
+        unbacked: blocking.filter((f) => f.kind === "unbacked_claim").length,
+        language: blocking.filter((f) => f.kind === "language").length,
         voice_book: task.voice ? { id: task.voice.id, version: task.voice.version, state: task.voice.state } : null,
         lines: judged.lines,
         findings: judged.findings,

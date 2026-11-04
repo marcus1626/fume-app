@@ -56,8 +56,10 @@ examples, $0.025.
    offer, where it is from, an award) and names the verified fact that states each one. **Code decides**: only a
    verified fact of the campaign's products backs a claim; a result, a health effect, a comparison or an award
    needs a verified *claim* fact; the brand's own words back only a price, an offer, an origin or its own line.
-   Code also finds the words the voice avoids, and the model says when a line is off the voice.
-3. A claim nothing backs sends the plan back once with what was wrong. If it is still there, the plan goes on to
+   Code also finds the words the voice avoids, and the model says when a line is off the voice. It also reads
+   each line as a native proofreader (gender and article, agreement, spelling): a Nike headline said "EN IKON"
+   on 4 Nov, where Norwegian says "et ikon".
+3. A claim nothing backs, or a mistake in the language, sends the plan back once with what was wrong. If it is still there, the plan goes on to
    the expert with the check: a machine's reading never blocks on its own.
 4. The check is kept on the run (`task_runs.copy_check`, staff only) with what the first draft was rewritten for.
    A customer never reads it, nor the Engine's prompts and findings, nor an event about a brand book she may not
@@ -67,6 +69,12 @@ First live run (4 Nov, Nordlys, a brief asking for "the best coffee in Norway" a
 carried an unbacked claim and was rewritten; the plan's words use the brand's own line "Det beste er ofte det
 enkleste", say in an open question why the claims were left out, and two lines were read as off the voice
 ("kaffeelskeren" instead of du). $0.014 for the plan and both checks.
+
+**Voice from the ads (4 Nov).** The Tone of Voice was written from the shop's pages, which say how a brand sells,
+not how it speaks. When the brand's own ads are on the board (added as "this is us"), Claude Sonnet first copies
+their words down word for word with the habits they share (`brand-book/adwords.ts`), and the voice is written
+from that page first. The words read are kept on the book (`body.adWords`). Nike's 10 ads gave "JUST DO IT",
+the athlete quotes and "Shop Now" (about $0.05).
 
 ## Not yet
 

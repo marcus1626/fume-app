@@ -253,7 +253,7 @@ Deno.test("the plan writer reads the brand brain, and what is only proposed is m
 });
 
 const noClaims = (a: PlanAnswer): ClaimRead => ({
-  lines: copyLines(a).map((l) => ({ ref: l.ref, claims: [], voice: "on" as const, voiceNote: null })),
+  lines: copyLines(a).map((l) => ({ ref: l.ref, claims: [], voice: "on" as const, voiceNote: null, language: "ok" as const, languageNote: null })),
 });
 
 Deno.test("every line of words is read for claims; a verified claim fact backs one", () => {
@@ -261,8 +261,8 @@ Deno.test("every line of words is read for claims; a verified claim fact backs o
   assertEquals(lines.map((l) => l.ref), ["copy:call_to_action", "a/pc2"]);
   const read: ClaimRead = {
     lines: [
-      { ref: "copy:call_to_action", claims: [], voice: "on", voiceNote: null },
-      { ref: "a/pc2", claims: [{ words: "For the hour before sleep", kind: "other", backedBy: "f1", brandSays: false }], voice: "on", voiceNote: null },
+      { ref: "copy:call_to_action", claims: [], voice: "on", voiceNote: null, language: "ok" as const, languageNote: null },
+      { ref: "a/pc2", claims: [{ words: "For the hour before sleep", kind: "other", backedBy: "f1", brandSays: false }], voice: "on", voiceNote: null, language: "ok" as const, languageNote: null },
     ],
   };
   const j = judgeCopy(task, lines, read);
@@ -274,8 +274,8 @@ Deno.test("an unverified fact, an invented id or the brand's own words never bac
   const lines = copyLines(plan);
   const read: ClaimRead = {
     lines: [
-      { ref: "copy:call_to_action", claims: [{ words: "Skin like silk", kind: "result", backedBy: "f2", brandSays: true }], voice: "on", voiceNote: null },
-      { ref: "a/pc2", claims: [{ words: "Sleep better", kind: "health", backedBy: "f9", brandSays: false }], voice: "off", voiceNote: "Too loud" },
+      { ref: "copy:call_to_action", claims: [{ words: "Skin like silk", kind: "result", backedBy: "f2", brandSays: true }], voice: "on", voiceNote: null, language: "ok" as const, languageNote: null },
+      { ref: "a/pc2", claims: [{ words: "Sleep better", kind: "health", backedBy: "f9", brandSays: false }], voice: "off", voiceNote: "Too loud", language: "ok" as const, languageNote: null },
     ],
   };
   const j = judgeCopy(task, lines, read);
@@ -291,8 +291,8 @@ Deno.test("a price the brand says on its site passes as the brand's words; the v
   const a: PlanAnswer = { ...plan, copy: [{ label: "Offer", value: "Nydelig olje. Fri frakt over 998,-", why: "w" }] };
   const read: ClaimRead = {
     lines: [
-      { ref: "copy:offer", claims: [{ words: "Fri frakt over 998,-", kind: "offer", backedBy: null, brandSays: true }], voice: "on", voiceNote: null },
-      { ref: "a/pc2", claims: [], voice: "on", voiceNote: null },
+      { ref: "copy:offer", claims: [{ words: "Fri frakt over 998,-", kind: "offer", backedBy: null, brandSays: true }], voice: "on", voiceNote: null, language: "ok" as const, languageNote: null },
+      { ref: "a/pc2", claims: [], voice: "on", voiceNote: null, language: "ok" as const, languageNote: null },
     ],
   };
   const j = judgeCopy(t, copyLines(a), read);
@@ -303,8 +303,8 @@ Deno.test("a price the brand says on its site passes as the brand's words; the v
 Deno.test("a claim no verified fact states is written once more without it, and the check is kept on the run", async () => {
   const bad: ClaimRead = {
     lines: [
-      { ref: "copy:call_to_action", claims: [{ words: "Sleep better", kind: "health", backedBy: null, brandSays: false }], voice: "on", voiceNote: null },
-      { ref: "a/pc2", claims: [], voice: "on", voiceNote: null },
+      { ref: "copy:call_to_action", claims: [{ words: "Sleep better", kind: "health", backedBy: null, brandSays: false }], voice: "on", voiceNote: null, language: "ok" as const, languageNote: null },
+      { ref: "a/pc2", claims: [], voice: "on", voiceNote: null, language: "ok" as const, languageNote: null },
     ],
   };
   const f = fake({ answers: [{ ok: true, answer: plan, usage }, { ok: true, answer: plan, usage }], reads: [bad, noClaims(plan)] });
@@ -321,8 +321,8 @@ Deno.test("a claim no verified fact states is written once more without it, and 
 Deno.test("a claim still unbacked after the rewrite goes to the expert with the check, not to the customer", async () => {
   const bad: ClaimRead = {
     lines: [
-      { ref: "copy:call_to_action", claims: [{ words: "Best oil", kind: "superlative", backedBy: null, brandSays: false }], voice: "on", voiceNote: null },
-      { ref: "a/pc2", claims: [], voice: "on", voiceNote: null },
+      { ref: "copy:call_to_action", claims: [{ words: "Best oil", kind: "superlative", backedBy: null, brandSays: false }], voice: "on", voiceNote: null, language: "ok" as const, languageNote: null },
+      { ref: "a/pc2", claims: [], voice: "on", voiceNote: null, language: "ok" as const, languageNote: null },
     ],
   };
   const f = fake({ answers: [{ ok: true, answer: plan, usage }, { ok: true, answer: plan, usage }], reads: [bad, bad] });
@@ -346,4 +346,12 @@ Deno.test("the plan writer writes in the brand's Tone of Voice and says how far 
   assertEquals(p.includes("Calm and plain"), true);
   assertEquals(p.includes("A Fume expert checked it"), true);
   assertEquals(prompt(task).includes("<tone_of_voice>"), false);
+});
+
+Deno.test("a mistake in the language is a finding that has the plan's words rewritten", () => {
+  const lines = [{ ref: "a/pc1", where: "Master 1", text: "EN IKON FOR BYEN OM NATTEN." }];
+  const j = judgeCopy(task, lines, {
+    lines: [{ ref: "a/pc1", claims: [], voice: "on", voiceNote: null, language: "error", languageNote: "Ikon is neuter: ET IKON FOR BYEN OM NATTEN." }],
+  });
+  assertEquals(j.findings.map((f) => `${f.kind} ${f.blocking}`), ["language true"]);
 });
