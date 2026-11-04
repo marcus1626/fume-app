@@ -56,6 +56,8 @@ import * as copy from "../../../copy";
 import { when } from "../../../lib/time";
 import { DetailsOverlay, useFixDone } from "./fix";
 import { placementOf, SafeZones, versionRatio } from "./formats";
+import { failedWords, usePromptAddress, useSeesPrompt } from "./prompt";
+import { shownVersion } from "./versions";
 
 const ratio = { feed: "4 / 5", square: "1 / 1", story: "9 / 16" } as const;
 
@@ -89,10 +91,7 @@ export function flagWords(v: RenderVersion, tokens: DetailToken[] = []): { clean
   return { clean: false, words: `${copy.count(n, "flag")} · ${flags.join(" · ")}` };
 }
 
-export const shownVersion = (doc: CreativeDocument) =>
-  doc.versions.find((v) => v.id === doc.pickedVersionId) ??
-  [...doc.versions].reverse().find((v) => v.state === "done") ??
-  doc.versions.at(-1);
+export { shownVersion };
 
 // ─── The board ───────────────────────────────────────────────────────────────
 
@@ -164,6 +163,12 @@ export function Board({
   const needsProduct =
     Boolean(mode?.uses.includes("product")) && doc.studio === "render" && mode?.id !== "m-free" && !doc.specs.productId;
   useFixDone(doc);
+  // The prompt behind the shown version, for Fume's own people (FLOWS §29)
+  const seesPrompt = useSeesPrompt();
+  const promptAt = usePromptAddress();
+  const promptFor = promptAt.id && doc.versions.some((v) => v.id === promptAt.id) ? promptAt.id : undefined;
+  // No picture to show, only a version that did not render: say so on the board (FLOWS §29)
+  const failed = shown ? undefined : [...doc.versions].reverse().find((v) => v.state === "failed");
 
   const figure = (v: RenderVersion, label: string | undefined, withLayers: boolean) => (
     <figure className="ui-desk-figure" key={v.id}>
@@ -263,6 +268,15 @@ export function Board({
                 />
               </>
             )}
+            {seesPrompt && doc.versions.some((v) => v.prompt) && (
+              <RailToggle
+                label="The Engine’s prompt and checks"
+                icon="file-text"
+                pressed={Boolean(shown && promptFor === shown.id)}
+                disabled={!shown?.prompt}
+                onPressedChange={(on) => (on && shown ? promptAt.open(shown.id) : promptAt.close())}
+              />
+            )}
             <span className="ui-desk-rail-gap" aria-hidden="true" />
             <RailToggle
               label={bare ? "Show the panels" : "Hide the panels"}
@@ -304,6 +318,15 @@ export function Board({
             </>
           ) : shown ? (
             figure(shown, undefined, true)
+          ) : failed ? (
+            <div className="ui-desk-empty">
+              <p className="ui-desk-empty-text">
+                Version {failed.number} didn’t render, so there is no picture yet. Its tile in the strip says why.
+              </p>
+              <Button size="sm" variant="secondary" onClick={() => promptAt.open(failed.id)}>
+                See why
+              </Button>
+            </div>
           ) : (
             <p className="ui-desk-empty">
               {needsProduct
@@ -337,7 +360,7 @@ function RailToggle({
   ...props
 }: {
   label: string;
-  icon: "zoom-in" | "minimize-2" | "maximize-2" | "columns-2" | "crop" | "package" | "pencil" | "image";
+  icon: "zoom-in" | "minimize-2" | "maximize-2" | "columns-2" | "crop" | "package" | "pencil" | "image" | "file-text";
   shortcut?: string;
   pressed: boolean;
   disabled?: boolean;
@@ -614,6 +637,7 @@ export function Versions({
 }) {
   const pick = usePickVersion();
   const tokens = useDetailTokens(doc.specs.productId).data ?? [];
+  const promptAt = usePromptAddress();
   const strip = useRef<HTMLOListElement>(null);
   const count = doc.versions.length;
   // Newest right: keep the newest in view when one arrives.
@@ -644,12 +668,20 @@ export function Versions({
         data-comparing={comparing ? "" : undefined}
       >
         {doc.versions.map((v) => {
-          const picked = v.id === doc.pickedVersionId;
-          const flags = flagWords(v, tokens);
+          const failed = v.state === "failed";
+          // A version that did not render is never the picked one, even if the address says so
+          const picked = v.id === doc.pickedVersionId && !failed;
+          const flags = failed ? { clean: false, words: failedWords(v) } : flagWords(v, tokens);
           const body = (
             <>
-              <span className="ui-desk-version-thumb">
-                {v.state === "rendering" ? <Skeleton shape="thumb" size="100%" /> : <img src={v.image} alt="" />}
+              <span className="ui-desk-version-thumb" data-none={failed ? "" : undefined}>
+                {v.state === "rendering" ? (
+                  <Skeleton shape="thumb" size="100%" />
+                ) : failed ? (
+                  <Icon name="image" />
+                ) : (
+                  <img src={v.image} alt="" />
+                )}
               </span>
               <span className="ui-desk-version-text">
                 <span className="ui-desk-version-head">
@@ -666,13 +698,19 @@ export function Versions({
                     <TextShimmer>Rendering</TextShimmer>
                   ) : v.instruction ? (
                     `“${v.instruction}”`
+                  ) : failed ? (
+                    "From the variables"
                   ) : (
                     "Rendered from the variables"
                   )}
                 </span>
-                {v.state === "done" && (
-                  <span className="ui-desk-version-flags" data-clean={flags.clean ? "" : undefined}>
-                    <Icon name={flags.clean ? "circle-check" : "triangle-alert"} />
+                {v.state !== "rendering" && (
+                  <span
+                    className="ui-desk-version-flags"
+                    data-clean={flags.clean ? "" : undefined}
+                    data-failed={failed ? "" : undefined}
+                  >
+                    <Icon name={failed ? "circle-x" : flags.clean ? "circle-check" : "triangle-alert"} />
                     {flags.words}
                   </span>
                 )}
@@ -691,19 +729,26 @@ export function Versions({
                   className="ui-desk-version"
                   aria-current={picked ? "true" : undefined}
                   aria-pressed={comparing ? compare.includes(v.id) : undefined}
-                  aria-label={`Version ${v.number}${picked ? ", picked" : ""}. ${v.instruction ?? ""} ${flags.words}`}
+                  aria-label={`Version ${v.number}${picked ? ", picked" : ""}. ${v.instruction ?? ""} ${flags.words}${failed ? ". Open to see why" : ""}`}
+                  aria-haspopup={failed ? "dialog" : undefined}
                   title={
-                    comparing
-                      ? compare.includes(v.id)
-                        ? "On the board: tap to take it off"
-                        : "Tap to compare it"
-                      : flags.clean
-                        ? undefined
-                        : flags.words
+                    failed
+                      ? v.failure
+                      : comparing
+                        ? compare.includes(v.id)
+                          ? "On the board: tap to take it off"
+                          : "Tap to compare it"
+                        : flags.clean
+                          ? undefined
+                          : flags.words
                   }
-                  disabled={v.state !== "done" || pick.isPending}
+                  disabled={v.state === "rendering" || (failed ? comparing : pick.isPending)}
                   onClick={() =>
-                    comparing ? toggle(v.id) : !picked && pick.mutate({ documentId: doc.id, versionId: v.id })
+                    failed
+                      ? promptAt.open(v.id)
+                      : comparing
+                        ? toggle(v.id)
+                        : !picked && pick.mutate({ documentId: doc.id, versionId: v.id })
                   }
                 >
                   {body}

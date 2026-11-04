@@ -31,6 +31,7 @@ type Calls =
   | "qaCheck"
   | "qaUncheck"
   | "qaFeedback"
+  | "qaSettleFinding"
   | "qaEdit"
   | "qaToStudio";
 
@@ -129,7 +130,12 @@ export function qaViews(m: Mock, workspaceId?: Id): QaView[] {
 export function fixLater(m: Mock, item: QaItem, delay: number, only?: QaItem["feedback"][number]) {
   setTimeout(() => {
     if (item.state !== "fixing") return;
-    (only ? [only] : item.feedback).forEach((f) => (f.state = "fixed"));
+    const fixed = only ? [only] : item.feedback;
+    fixed.forEach((f) => (f.state = "fixed"));
+    // The Engine's findings the note took up are fixed with it.
+    const taken = new Set(fixed.flatMap((f) => f.findingIds ?? []));
+    for (const f of item.findings ?? [])
+      if (taken.has(f.id) && f.status === "open") Object.assign(f, { status: "resolved", by: undefined, at: m.now() });
     item.state = "waiting";
     item.evaluation = { productTruth: "pass", brandRules: "pass", artefacts: "none", notes: [] };
     m.emit({ type: "qa.state", item: structuredClone(item) });
@@ -253,6 +259,9 @@ export function qualityCalls(m: Mock): Pick<FumeApi, Calls> {
       const item = m.find(db.qaItems, itemId, "QA item");
       if (item.state === "fixing") throw new FumeError("invalid", "The Engine is still fixing it.");
       if (item.state === "checked") return wait(item);
+      // As in the database: an open critical finding stops the check (mark_checked).
+      if (item.findings?.some((f) => f.severity === "critical" && f.status === "open"))
+        throw new FumeError("conflict", "A finding that stops the check is still open.");
       Object.assign(item, { state: "checked", checkedBy: m.me().id, checkedAt: m.now() });
       const creative = creativeOf(m, item);
       const check = db.checks.find((c) => c.creativeId === item.creativeId && creative);
@@ -305,9 +314,11 @@ export function qualityCalls(m: Mock): Pick<FumeApi, Calls> {
       return wait(item);
     },
     // The pins go with the feedback as located notes.
-    async qaFeedback(itemId, text, pins) {
+    async qaFeedback(itemId, text, pins, findingIds) {
       m.mustStaff();
       const item = m.find(db.qaItems, itemId, "QA item");
+      const known = new Set((item.findings ?? []).map((f) => f.id));
+      const taken = (findingIds ?? []).filter((id) => known.has(id));
       const fb = {
         id: m.nextId("fb"),
         text,
@@ -315,10 +326,26 @@ export function qualityCalls(m: Mock): Pick<FumeApi, Calls> {
         at: m.now(),
         state: "sent" as "sent" | "fixed",
         ...(pins?.length ? { pins: structuredClone(pins) } : {}),
+        ...(taken.length ? { findingIds: taken } : {}),
       };
       item.feedback.push(fb);
       item.state = "fixing";
       fixLater(m, item, m.latency * 20, fb);
+      return wait(item);
+    },
+    // The one who checks sets one of the Engine's findings aside (resolve_finding, accepted), or takes that back.
+    async qaSettleFinding(itemId, findingId, status) {
+      m.mustStaff();
+      const item = m.find(db.qaItems, itemId, "QA item");
+      const f = (item.findings ?? []).find((x) => x.id === findingId);
+      if (!f) throw new FumeError("not_found", "No such finding.");
+      if (item.state === "checked") throw new FumeError("invalid", "Undo the check first.");
+      if (f.status === "resolved") throw new FumeError("invalid", "The Engine already fixed it.");
+      Object.assign(
+        f,
+        status === "accepted" ? { status, by: m.me().id, at: m.now() } : { status, by: undefined, at: undefined },
+      );
+      m.emit({ type: "qa.state", item: structuredClone(item) });
       return wait(item);
     },
     async qaEdit(itemId, layers) {

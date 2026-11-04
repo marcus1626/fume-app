@@ -49,3 +49,13 @@ test("Nora's own view of the client link is a preview with its buttons off", asy
   await page.getByRole("button", { name: "Close the preview" }).click();
   await expect(page).toHaveURL(/\/agency\/b\/w-lysne\/campaigns\/c-bf/);
 });
+
+test("Nora sees why a version didn't render, but never the Engine's prompt", async ({ page }) => {
+  await page.goto("/agency/doc/doc-autumn-m3?as=nora");
+  await expect(page.getByRole("button", { name: "The Engine’s prompt and checks" })).toHaveCount(0);
+  await page.getByRole("button", { name: /^Version 4\. .*Stopped by 2 rules/ }).click();
+  const panel = page.getByRole("dialog", { name: "Version 4 didn’t render" });
+  await expect(panel).toBeVisible();
+  await expect(panel.getByText("Add a glossy reflection on the cap", { exact: false })).toBeVisible();
+  await expect(panel.getByText("The last try, never sent")).toHaveCount(0);
+});

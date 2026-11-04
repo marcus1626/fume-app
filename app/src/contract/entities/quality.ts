@@ -81,6 +81,25 @@ export interface Evaluation {
   checks?: { result: "pass" | "flag"; text: string }[];
 }
 
+/** What the Engine's picture check found, as a finding the one who checks settles (findings with method automated;
+ *  FLOWS §29.6, PROPOSED). Customers never read it. */
+export interface QaFinding {
+  id: Id;
+  /** product: the product against its own photographs; brand_brief: the brand's rules and the planned scene;
+   *  artefacts: something the image model got wrong; text_claims: printed words nobody asked for. */
+  dimension: "product" | "brand_brief" | "artefacts" | "text_claims";
+  /** critical: the creative cannot be marked checked while it is open. */
+  severity: "critical" | "major" | "minor";
+  finding: string;
+  /** What it should be, and what the picture shows. */
+  expected?: string;
+  observed?: string;
+  /** open; accepted: the one who checks set it aside (not a problem here); resolved: the Engine fixed it. */
+  status: "open" | "accepted" | "resolved";
+  by?: Id;
+  at?: Instant;
+}
+
 /** A spot on a creative in Check: a numbered pin, 0–1 from the top left, with what is wrong there. It goes to the
  *  Engine with "Tell the Engine" as a located note, the same pin as the customer's review viewer. */
 export interface QaPin {
@@ -100,6 +119,8 @@ export interface QaFeedback {
   state: "sent" | "fixed";
   /** The spots it is about. */
   pins?: QaPin[];
+  /** The Engine's own findings it took up. */
+  findingIds?: Id[];
 }
 
 /** A creative in Check. */
@@ -119,6 +140,8 @@ export interface QaItem {
   risk: "normal" | "high";
   state: "waiting" | "fixing" | "checked" | "in_studio";
   evaluation: Evaluation;
+  /** What the Engine's picture check found on this version, for the one who checks to settle. */
+  findings?: QaFinding[];
   feedback: QaFeedback[];
   /** Design creatives can be changed directly in Check (FLOWS §10). */
   layers?: Layer[];
