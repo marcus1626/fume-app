@@ -1,57 +1,57 @@
 {
   "updated": "2026-11-04T14:30:00Z",
   "deadline": "2026-11-30T23:59:59+01:00",
-  "deadlineLabel": "Fume-appen er ferdig",
+  "deadlineLabel": "the Fume app is finished",
   "start": "2026-10-26T08:00:00+01:00",
-  "summary": "Hele kunderunden går live uten Engine, og Engine laget sitt første ekte bilde 4. november. Nå kobler vi Engine inn i Studio og gjør appen klar for byrå og kunde.",
+  "summary": "The whole customer round runs live without the Engine, and the Engine made its first real picture on 4 November. Now we are bringing the Engine into the Studio and getting the app ready for agencies and their clients.",
   "tracks": [
     {
       "id": "app",
-      "name": "Fume-appen",
-      "lede": "Appen kunden, byrået og Fume-folkene jobber i.",
+      "name": "The Fume app",
+      "lede": "Where the customer, the agency and Fume's people work.",
       "items": [
-        { "status": "done", "title": "Design og flyt for kunde, studio og byrå", "note": "13 runder med gjennomgang og fikser", "date": "22. okt" },
-        { "status": "done", "title": "Egen kodebase med designsystem og tester", "date": "26. okt" },
-        { "status": "done", "title": "Innlogging, roller og fire øyne på alt", "note": "Ingen sjekker sitt eget arbeid", "date": "27. okt" },
-        { "status": "done", "title": "Brand DNA fra nettsiden, produkter fra nettbutikken", "date": "3. nov" },
-        { "status": "done", "title": "Kampanje fra brief til levering", "note": "Fume skriver planen, eksperten sjekker, kunden godkjenner", "date": "3. nov" },
-        { "status": "done", "title": "Fume-chat med overlevering til et menneske, og varsler", "date": "3. nov" },
-        { "status": "done", "title": "Byrå: plasser, kundemerker, send til kunde, kundelenke", "date": "3. nov" },
-        { "status": "done", "title": "Team, kalender, moodboards, katalog og forbruk", "date": "3. nov" },
-        { "status": "done", "title": "Hele runden kjørt live uten Engine", "date": "3. nov" },
-        { "status": "now", "title": "Engine i Studio: feilede versjoner, prompt og «Lær Engine»", "note": "Designet er klart, venter på Marcus" },
-        { "status": "now", "title": "Video i Studio", "note": "Første utkast" },
-        { "status": "next", "title": "Opplastede merkevarefiler leses inn i Brand DNA" },
-        { "status": "next", "title": "Hvor Fume-folk svarer kunden i chatten", "note": "Venter på Marcus" },
-        { "status": "next", "title": "E-post for varsler" },
-        { "status": "next", "title": "Byrå og kunde inne i appen", "date": "13. nov" },
-        { "status": "next", "title": "Appen live på egen adresse", "date": "30. nov" }
+        { "status": "done", "title": "Design and flows for customer, studio and agency", "note": "13 rounds of review and fixes", "date": "22 Oct" },
+        { "status": "done", "title": "Own codebase with design system and tests", "date": "26 Oct" },
+        { "status": "done", "title": "Sign-in, roles and four eyes on everything", "note": "Nobody checks their own work", "date": "27 Oct" },
+        { "status": "done", "title": "Brand DNA from the website, products from the online store", "date": "3 Nov" },
+        { "status": "done", "title": "Campaign from brief to delivery", "note": "Fume writes the plan, the expert checks, the customer approves", "date": "3 Nov" },
+        { "status": "done", "title": "Fume chat with handover to a person, and notifications", "date": "3 Nov" },
+        { "status": "done", "title": "Agencies: seats, client brands, send to client, client link", "date": "3 Nov" },
+        { "status": "done", "title": "Team, calendar, moodboards, catalogue and usage", "date": "3 Nov" },
+        { "status": "done", "title": "Whole round run live without the Engine", "date": "3 Nov" },
+        { "status": "now", "title": "Engine in the Studio: failed versions, the prompt and Teach the Engine", "note": "Design ready, waiting for Marcus" },
+        { "status": "now", "title": "Video in the Studio", "note": "First draft" },
+        { "status": "next", "title": "Uploaded brand files read into Brand DNA" },
+        { "status": "next", "title": "Where Fume's people answer the customer in chat", "note": "Waiting for Marcus" },
+        { "status": "next", "title": "Email for notifications" },
+        { "status": "next", "title": "Agencies and their clients inside the app", "date": "13 Nov" },
+        { "status": "next", "title": "The app live on its own address", "date": "30 Nov" }
       ]
     },
     {
       "id": "engine",
-      "name": "Engine",
-      "lede": "Motoren som lager creatives, med en ekspert som sjekker alt.",
+      "name": "The Engine",
+      "lede": "Makes the creatives. An expert checks every one.",
       "items": [
-        { "status": "done", "title": "Arkitektur: kunnskap, data, resonnering, motor og læring", "date": "4. nov" },
-        { "status": "done", "title": "Promptmaskinen med egne regler for hver bildemodell", "date": "4. nov" },
-        { "status": "done", "title": "Fume skriver plan og brief med AI", "note": "Rundt 30 sekunder og under en krone per plan", "date": "4. nov" },
-        { "status": "done", "title": "Bildemodeller koblet til", "note": "Nano Banana Pro, Nano Banana 2 og Seedream", "date": "4. nov" },
-        { "status": "done", "title": "Første ekte bilde laget av Engine", "note": "59 sekunder fra knapp til bilde", "date": "4. nov" },
-        { "status": "done", "title": "Engine lærer av svar med begrunnelse", "date": "4. nov" },
-        { "status": "done", "title": "Fast ukesbudsjett så kostnaden aldri løper", "date": "4. nov" },
-        { "status": "now", "title": "Engine-visningen i Studio kobles live" },
-        { "status": "next", "title": "Engine ser på bildet og sjekker det selv før eksperten" },
-        { "status": "next", "title": "Engine lager alle formatene" },
-        { "status": "next", "title": "Video med Seedance og Kling", "note": "Venter på kreditter hos Higgsfield" }
+        { "status": "done", "title": "Architecture: knowledge, data, reasoning, engine and learning", "date": "4 Nov" },
+        { "status": "done", "title": "The prompt machine, with its own rules for each image model", "date": "4 Nov" },
+        { "status": "done", "title": "Fume writes the plan and brief with AI", "note": "About 30 seconds and under one cent per plan", "date": "4 Nov" },
+        { "status": "done", "title": "Image models connected", "note": "Nano Banana Pro, Nano Banana 2 and Seedream", "date": "4 Nov" },
+        { "status": "done", "title": "First real picture made by the Engine", "note": "59 seconds from button to picture", "date": "4 Nov" },
+        { "status": "done", "title": "The Engine learns from answers with a reason", "date": "4 Nov" },
+        { "status": "done", "title": "A fixed weekly budget, so cost never runs away", "date": "4 Nov" },
+        { "status": "now", "title": "The Engine's view in the Studio goes live" },
+        { "status": "next", "title": "The Engine looks at each picture and checks it before the expert" },
+        { "status": "next", "title": "The Engine makes every format" },
+        { "status": "next", "title": "Video with Seedance and Kling", "note": "Waiting for Higgsfield credits" }
       ]
     }
   ],
   "milestones": [
-    { "date": "26. okt", "title": "Kodebase og backend i gang", "status": "done" },
-    { "date": "3. nov", "title": "Hele kunderunden live", "status": "done" },
-    { "date": "4. nov", "title": "Første bilde fra Engine", "status": "done" },
-    { "date": "13. nov", "title": "Byrå og kunde inne i appen", "status": "next" },
-    { "date": "30. nov", "title": "Fume-appen ferdig", "status": "next" }
+    { "date": "26 Oct", "title": "Codebase and backend under way", "status": "done" },
+    { "date": "3 Nov", "title": "Whole customer round live", "status": "done" },
+    { "date": "4 Nov", "title": "First picture from the Engine", "status": "done" },
+    { "date": "13 Nov", "title": "Agencies and clients inside the app", "status": "next" },
+    { "date": "30 Nov", "title": "The Fume app finished", "status": "next" }
   ]
 }
