@@ -1,4 +1,4 @@
-// The Vercel function (built to api/design.js by tools/build.mjs). Fonts the brand has not given Fume come from
+// The Vercel function (built to app/api/design.js by tools/build.mjs, served by the fume-app project). Fonts the brand has not given Fume come from
 // Google Fonts; a family Google does not have is set in the book's fallback, and the check says so.
 import { handle } from "../src/handler.ts";
 import { start } from "../src/render.ts";

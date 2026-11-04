@@ -20,9 +20,14 @@ picture the Engine made, in the brand's own design system, and keeps an editable
 
 Marcus, 4 Nov 2026: the service goes into the existing fume-app Vercel project, not a new project.
 
+- `services/design/tools/build.mjs` bundles Fume's code into `app/api/design.js` (built, do not edit; CI checks it is
+  up to date). OpenPencil and CanvasKit are dependencies of the app, since they read their own files (the wasm, the
+  default fonts) from where they are installed; `app/vercel.json` includes those files in the function.
+- `POST /api/design` is left out of the preview password (`app/middleware.ts`): Fume's backend calls it, and it does
+  work only with signed links to Fume's own storage. `GET /api/design` answers that it is up.
+
 ## Still open
 
 - The `design` edge function: a vision model picks the words (verbatim from the plan), band, alignment and what must
   stay clear, calls the service, checks the result, then `design_finish`.
-- The service inside the fume-app Vercel project.
 - The UI (owned by the design thread): "Add graphic design" on a candidate, the Look Book screens, the copy check.
