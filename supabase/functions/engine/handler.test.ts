@@ -1,6 +1,6 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import { type Deps, handleEngine, NO_PROVIDER, runJob, type Taken } from "./handler.ts";
-import { higgsfield } from "./provider.ts";
+import { higgsfield, ratioFor } from "./provider.ts";
 import type { Composer, Decider, SlotText, Verifier } from "../_shared/engine/index.ts";
 
 const JOB = "0b000000-0000-4000-8000-0000000000aa";
@@ -165,7 +165,7 @@ Deno.test("Higgsfield gets the prompt, the ratio and the pictures, with Fume's k
   assertEquals(s, { ok: true, providerJobId: "r1" });
   assertEquals(sent[0].url, "https://api.higgsfield.ai/bytedance/seedream/v4/edit");
   assertEquals((sent[0].init.headers as Record<string, string>).Authorization, "Key id:secret");
-  assertEquals(JSON.parse(sent[0].init.body as string), { prompt: "A bench.", aspect_ratio: "4:5", input_images: [{ type: "image_url", image_url: "https://p/1.png" }] });
+  assertEquals(JSON.parse(sent[0].init.body as string), { prompt: "A bench.", aspect_ratio: "4:5", image_urls: ["https://p/1.png"] });
   const c = await hf.collect("r1");
   assertEquals(c.state === "done" && c.urls, ["https://cdn/a.png"]);
   const none = higgsfield("k", { fetch: (async () => new Response("no", { status: 403 })) as unknown as typeof fetch });
@@ -186,4 +186,10 @@ Deno.test("a single API key is tried as Key, then as Bearer, and the accepted on
   assertEquals(await hf.submit(r), { ok: true, providerJobId: "r9" });
   assertEquals(await hf.submit(r), { ok: true, providerJobId: "r9" });
   assertEquals(auths, ["Key single-key", "Bearer single-key", "Bearer single-key"]);
+});
+
+Deno.test("a format the model does not make is asked as the nearest ratio it does", () => {
+  assertEquals(ratioFor("qwen-image-3", "4:5"), "7:9");
+  assertEquals(ratioFor("qwen-image-3", "9:16"), "9:16");
+  assertEquals(ratioFor("seedream-4", "4:5"), "4:5");
 });

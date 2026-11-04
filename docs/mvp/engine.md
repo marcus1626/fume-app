@@ -32,7 +32,13 @@ design follows Marcus's five domains and the Fume Engine prototype (Oct 2026), p
 ## Secrets
 
 `HF_CREDENTIALS` (Higgsfield "key id:key secret"), optionally `HF_ENDPOINTS` to change a model's endpoint. The
-default image model is `engine_image_model` in `app.settings` (nano-banana-pro).
+image model is `engine_image_model` in `app.settings`.
+
+Higgsfield's API (checked 4 Nov 2026 with Fume's key) offers 18 image models, and Nano Banana, Seedream, Flux and
+GPT Image are not among them. The image models are Qwen Image 3 (text-to-image and edit), Grok Imagine 2.0,
+Ideogram 4, Recraft 4.1, Soul and Z-Image. The live setting is `qwen-image-3`, which edits from up to three product
+pictures (`image_urls`). It does not make 4:5, so a feed picture is asked for as 7:9 and cropped. A
+POST to `engine` with `{"jobId", "probe": true}` checks the key and lists the models without using credits.
 
 ## Not yet
 

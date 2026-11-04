@@ -24,12 +24,29 @@ const BASE = "https://api.higgsfield.ai";
 // Fume's model names to Higgsfield's endpoints. The endpoints are read from Higgsfield's SDK and confirmed on the
 // first real call; the secret HF_ENDPOINTS ({"nano-banana-pro": "..."}) replaces any of them without a deploy.
 export const HIGGSFIELD_ENDPOINTS: Record<string, { text: string; references: string }> = {
+  "qwen-image-3": { text: "alibaba/qwen-image-3/text-to-image", references: "alibaba/qwen-image-3/edit" },
+  "grok-imagine-2": { text: "xai/grok-imagine-image-2.0", references: "xai/grok-imagine-image-2.0" },
   "nano-banana-pro": { text: "google/nano-banana-pro/text-to-image", references: "google/nano-banana-pro/edit" },
   "nano-banana-2": { text: "google/nano-banana-2/text-to-image", references: "google/nano-banana-2/edit" },
   "seedream-4": { text: "bytedance/seedream/v4/text-to-image", references: "bytedance/seedream/v4/edit" },
   "flux-kontext": { text: "flux-pro/kontext/max/text-to-image", references: "flux-pro/kontext/max" },
   "gpt-image": { text: "openai/gpt-image/text-to-image", references: "openai/gpt-image/edit" },
 };
+// The ratios a model makes; another one is asked as the nearest of these, and the picture is cropped to the format
+// after (Higgsfield's answers, 4 Nov 2026).
+const RATIOS: Record<string, string[]> = {
+  "qwen-image-3": ["1:1", "2:3", "3:2", "3:4", "4:3", "7:9", "9:7", "9:16", "16:9", "21:9"],
+};
+const value = (r: string) => {
+  const [w, h] = r.split(":").map(Number);
+  return w / h;
+};
+/** The ratio to ask a model for: the format's own, or the nearest one the model makes. */
+export function ratioFor(imageModel: string, ratio: string): string {
+  const allowed = RATIOS[imageModel];
+  if (!allowed || allowed.includes(ratio)) return ratio;
+  return allowed.reduce((a, b) => (Math.abs(Math.log(value(b) / value(ratio))) < Math.abs(Math.log(value(a) / value(ratio))) ? b : a));
+}
 // Estimates until Higgsfield's bill says otherwise (cents per picture).
 const PRICES: Record<string, number> = { "nano-banana-pro": 15, "nano-banana-2": 6, "seedream-4": 4, "flux-kontext": 8, "gpt-image": 10 };
 
@@ -65,11 +82,11 @@ export function higgsfield(
     async submit(r) {
       const endpoint = endpoints[r.imageModel];
       if (!endpoint) return { ok: false, error: `Higgsfield has no endpoint for ${r.imageModel}.`, final: true };
-      const body: Record<string, unknown> = { prompt: r.text, aspect_ratio: r.aspectRatio };
+      const body: Record<string, unknown> = { prompt: r.text, aspect_ratio: ratioFor(r.imageModel, r.aspectRatio) };
       if (r.seed !== null) body.seed = r.seed;
       if (r.resolution) body.resolution = r.resolution;
-      if (r.referenceUrls.length)
-        body.input_images = r.referenceUrls.map((image_url) => ({ type: "image_url", image_url }));
+      // Higgsfield's model routes take the pictures as image_urls (its answer to the first real call, 4 Nov 2026).
+      if (r.referenceUrls.length) body.image_urls = r.referenceUrls;
       const path = r.referenceUrls.length ? endpoint.references : endpoint.text;
       const res = await call(`${BASE}/${path}`, { method: "POST", body: JSON.stringify(body) });
       const text = await res.text();
@@ -101,9 +118,17 @@ export function higgsfield(
         const r = await go(`${BASE}/requests/00000000-0000-4000-8000-000000000000/status`, { headers: headersOf(i) });
         out[`status_${s}`] = { status: r.status, body: clean(await r.text()) };
       }
-      for (const path of ["models", "v1/models", "v1/applications"]) {
-        const r = await call(`${BASE}/${path}`);
-        out[path] = { status: r.status, body: clean(await r.text()) };
+      // What the key may use: every model's address, kind and price in credits.
+      const r = await call(`${BASE}/models`);
+      if (r.ok) {
+        const j = (await r.json()) as { total?: number; items?: { slug: string; output_type: string; base_credits: string; operation_type: string[] }[] };
+        out.total = j.total;
+        out.models = (j.items ?? []).map((m) => [m.slug, m.output_type, m.base_credits, m.operation_type.join(",")]);
+      } else out.models = { status: r.status, body: clean(await r.text()) };
+      // The input each of Fume's image models takes.
+      for (const slug of new Set(Object.values(endpoints).flatMap((e) => [e.text, e.references]))) {
+        const d = await call(`${BASE}/models/${slug}`);
+        out[`model ${slug}`] = { status: d.status, body: clean(await d.text()) };
       }
       return out;
     },
