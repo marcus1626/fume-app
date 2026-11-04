@@ -969,3 +969,56 @@ approves the creatives. Her approval starts the Engine.
   "Plan approved by Maja", and the agency is told the masters are theirs to check before Maja sees them.
 - **The demo.** Nora (?as=nora): LYSNE › Winter gifting waits for her check and Send to Maja. Maja (?agency&as=maja):
   Black Friday is checked and sent, Approve and start. The seeded link is /c/bfplan.
+
+## 29. The Engine in the Studio: a failed version, the prompt behind a version, teaching the Engine (4 Nov 2026)
+
+Status: PROPOSED (design thread, from the Engine v1 handover: docs/mvp/engine.md, "Not yet"). Numbered 29 so it does not
+clash with §27 (video) and §28 (empty pages) on their own branches.
+
+### 29.1 A version that did not render
+
+- **In the strip.** A render that never reached the image model still becomes a version, so nothing is lost and the
+  numbers stay true. Its tile has no picture: the sunken ground holds a quiet picture mark. The line says what was asked
+  (or "From the variables"); under it, Rouge only on the mark: "Stopped by 2 rules" (the prompt worked against them
+  three tries in a row), "Waits for a person" (the checks could not tell; a person decides) or "Not rendered".
+- **It still opens.** A tap opens the right panel (a peek, the board stays live; ?prompt=<version>): "Version 4 didn't
+  render", the reason in one sentence, What was asked, and **Write a new instruction**, which closes the panel and puts
+  the cursor in the Engine bar. A failed version is never picked and never compared.
+- **Never charged.** No picture was made, so the version costs nothing; the prompt's own cost shows to Fume's people.
+
+### 29.2 The prompt behind a version (Fume's own people only)
+
+- **Who.** Fume's own people. Never an agency's people, never a customer (engine_prompts is staff only; the live API
+  sends `prompt` only to them, and the app hides it too).
+- **Where.** The board's rail has "The Engine's prompt and checks" for the shown version; a failed version's panel
+  shows the same for its last try. One panel for both.
+- **What.** For a rendered version, the prompt first (data face, Copy), then **What the prompt had to carry**: every
+  fact and rule as one line, marked carried (a check), works against it (the solid Rouge disc cut with Porcelain, as an
+  error on glass), not visible in a picture, or sent to a person, with the checker's note. Then **The code's checks**
+  (no printed words, no equipment, no file names, no forbidden words, locked parts unchanged) and **About this prompt**:
+  status, why it stopped, image model, method, tries "n of 3", and what writing and checking it cost.
+- **For a failed version** the order is what was asked, what it had to carry (the two against first), then "The last
+  try, never sent".
+- **Never Amber.** Nothing here is a person's check.
+
+### 29.3 Teaching the Engine
+
+- **Where.** Engine output (/studio/b/:ws/output) has **Teach the Engine · 6** at the head of the page (Fume's own
+  people), counting the pictures nobody has answered yet; with none left it reads All taught.
+- **The deck.** The same deck as Brand › Taste, on its own screen: one picture at a time, "Is this right for LYSNE?",
+  the campaign above it, **No** and **Yes** (swipe, the pills, or N and Y). After an answer, chips say why: on No, The
+  product is off, The light, The composition, Not LYSNE, Artefacts, Text in the picture; on Yes, The product is right,
+  The light, The composition, Feels like LYSNE; or Write…. Every answer saves at once; the why updates the same answer.
+- **No bias.** The card does not show the Engine's own evaluation, so the person judges the picture, not the Engine.
+- **What it teaches.** Each answer becomes a lesson for the brand (engine_lessons: do or avoid, the why, the picture
+  it came from). Only people's answers teach. The end card: "The Engine keeps 4 answers as lessons for LYSNE and uses
+  them from the next render."
+
+### 29.4 The contract
+
+- `RenderVersion.failure` (one sentence for everyone) and `RenderVersion.prompt` (`EnginePrompt`: status validated,
+  escalated or blocked, reason, model, method, text, tries, findings with carried, against, not_visible or person,
+  codeChecks, llmUsd), sent only to Fume's own people.
+- `Generation.taught` ("yes" or "no") and `teachEngine({ generationId, verdict, why })`: Fume's own people only.
+- The demo: LYSNE › Autumn launch › Master 3 has V4, stopped by two rules ("Add a glossy reflection on the cap");
+  V1 to V3 carry their prompts.

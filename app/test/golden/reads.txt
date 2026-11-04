@@ -34016,6 +34016,32 @@ anna documents("w-lysne")
           "id": "rv-1",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
+          "prompt": {
+            "codeChecks": [
+              {"pass":true,"text":"No words for the picture to print"},
+              {"pass":true,"text":"No studio equipment in the frame"},
+              {"pass":true,"text":"No file names or links"},
+              {"pass":true,"text":"None of LYSNE's forbidden words"},
+              {"pass":true,"text":"The locked parts unchanged: the product's name, size and pictures"}
+            ],
+            "findings": [
+              {
+                "item": "Night Body Oil, 100 ml, amber glass with a burgundy matte cap",
+                "note": "From the verified facts, word for word",
+                "verdict": "carried"
+              },
+              {"item":"Warm low light from one side, like a lamp in the evening","verdict":"carried"},
+              {"item":"Linen, travertine and walnut; nothing glossy","verdict":"carried"},
+              {"item":"The bottle is the one sharp thing; the rest falls soft","verdict":"carried"},
+              {"item":"No people, no hands","note":"Nothing in the picture to show it","verdict":"not_visible"}
+            ],
+            "llmUsd": 0.002,
+            "method": "Product on a surface",
+            "model": "Nano Banana Pro",
+            "status": "validated",
+            "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy matte cap, LYSNE Night Body Oil, stands in the centre on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
+            "tries": 1
+          },
           "specs": {
             "count": 4,
             "format": "feed",
@@ -34065,6 +34091,32 @@ anna documents("w-lysne")
           "image": "/demo/lysne/04-06-feed.jpg",
           "instruction": "Make the bottle a little bigger",
           "number": 2,
+          "prompt": {
+            "codeChecks": [
+              {"pass":true,"text":"No words for the picture to print"},
+              {"pass":true,"text":"No studio equipment in the frame"},
+              {"pass":true,"text":"No file names or links"},
+              {"pass":true,"text":"None of LYSNE's forbidden words"},
+              {"pass":true,"text":"The locked parts unchanged: the product's name, size and pictures"}
+            ],
+            "findings": [
+              {
+                "item": "Night Body Oil, 100 ml, amber glass with a burgundy matte cap",
+                "note": "From the verified facts, word for word",
+                "verdict": "carried"
+              },
+              {"item":"Warm low light from one side, like a lamp in the evening","verdict":"carried"},
+              {"item":"Linen, travertine and walnut; nothing glossy","verdict":"carried"},
+              {"item":"The bottle is the one sharp thing; the rest falls soft","verdict":"carried"},
+              {"item":"No people, no hands","note":"Nothing in the picture to show it","verdict":"not_visible"}
+            ],
+            "llmUsd": 0.002,
+            "method": "Product on a surface",
+            "model": "Nano Banana Pro",
+            "status": "validated",
+            "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy matte cap, LYSNE Night Body Oil, stands a little larger in the frame, in the centre on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
+            "tries": 2
+          },
           "specs": {
             "count": 4,
             "format": "feed",
@@ -34114,6 +34166,32 @@ anna documents("w-lysne")
           "image": "/demo/lysne/05-01-feed.jpg",
           "instruction": "Move the bottle lower, more air above",
           "number": 3,
+          "prompt": {
+            "codeChecks": [
+              {"pass":true,"text":"No words for the picture to print"},
+              {"pass":true,"text":"No studio equipment in the frame"},
+              {"pass":true,"text":"No file names or links"},
+              {"pass":true,"text":"None of LYSNE's forbidden words"},
+              {"pass":true,"text":"The locked parts unchanged: the product's name, size and pictures"}
+            ],
+            "findings": [
+              {
+                "item": "Night Body Oil, 100 ml, amber glass with a burgundy matte cap",
+                "note": "From the verified facts, word for word",
+                "verdict": "carried"
+              },
+              {"item":"Warm low light from one side, like a lamp in the evening","verdict":"carried"},
+              {"item":"Linen, travertine and walnut; nothing glossy","verdict":"carried"},
+              {"item":"The bottle is the one sharp thing; the rest falls soft","verdict":"carried"},
+              {"item":"No people, no hands","note":"Nothing in the picture to show it","verdict":"not_visible"}
+            ],
+            "llmUsd": 0.002,
+            "method": "Product on a surface",
+            "model": "Nano Banana Pro",
+            "status": "validated",
+            "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy matte cap, LYSNE Night Body Oil, stands low in the frame with calm air above it on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
+            "tries": 1
+          },
           "specs": {
             "count": 4,
             "format": "feed",
@@ -34124,6 +34202,77 @@ anna documents("w-lysne")
             "variantId": "va-oil-100"
           },
           "state": "done",
+          "variables": {
+            "depth": 40,
+            "lens": {"focal":50,"height":30,"tilt":-8},
+            "lightAngle": {"azimuth":70,"elevation":20},
+            "lightPreset": "evening",
+            "productPlace": "low",
+            "productSize": 28,
+            "props": ["towel"],
+            "rig": {
+              "lights": [
+                {"height":20,"id":"l-key","kind":"key","softness":60,"strength":80,"warmth":2700,"x":0.82,"y":0.3},
+                {"height":30,"id":"l-fill","kind":"fill","softness":90,"strength":25,"warmth":3200,"x":0.18,"y":0.45}
+              ]
+            },
+            "scene": "stone",
+            "softness": 60,
+            "surface": "stone",
+            "warmth": 2700
+          }
+        },
+        {
+          "at": "2026-10-14T12:26:00.000Z",
+          "by": "u-anna",
+          "cost": 0,
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "failure": "The prompt worked against 2 of LYSNE's rules three tries in a row, so nothing was rendered.",
+          "id": "rv-4",
+          "image": "",
+          "instruction": "Add a glossy reflection on the cap",
+          "number": 4,
+          "prompt": {
+            "codeChecks": [
+              {"pass":true,"text":"No words for the picture to print"},
+              {"pass":true,"text":"No studio equipment in the frame"},
+              {"pass":true,"text":"No file names or links"},
+              {"pass":true,"text":"None of LYSNE's forbidden words"},
+              {"pass":true,"text":"The locked parts unchanged: the product's name, size and pictures"}
+            ],
+            "findings": [
+              {
+                "item": "Burgundy matte cap, never glossy (verified fact)",
+                "note": "The instruction asks for a glossy reflection on the cap",
+                "verdict": "against"
+              },
+              {
+                "item": "Linen, travertine and walnut; nothing glossy",
+                "note": "A glossy reflection is the one thing the rule rules out",
+                "verdict": "against"
+              },
+              {"item":"Warm low light from one side, like a lamp in the evening","verdict":"carried"},
+              {"item":"The bottle is the one sharp thing; the rest falls soft","verdict":"carried"},
+              {"item":"No people, no hands","note":"Nothing in the picture to show it","verdict":"not_visible"}
+            ],
+            "llmUsd": 0.006,
+            "method": "Product on a surface",
+            "model": "Nano Banana Pro",
+            "reason": "A glossy cap works against the verified facts and the brand's rule: nothing glossy.",
+            "status": "blocked",
+            "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy cap with a glossy reflection, LYSNE Night Body Oil, stands low in the frame with calm air above it on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
+            "tries": 3
+          },
+          "specs": {
+            "count": 4,
+            "format": "feed",
+            "imageModel": "Nano Banana Pro",
+            "modelIds": [],
+            "productId": "pr-oil",
+            "referenceIds": ["rf-stone"],
+            "variantId": "va-oil-100"
+          },
+          "state": "failed",
           "variables": {
             "depth": 40,
             "lens": {"focal":50,"height":30,"tilt":-8},
@@ -35475,6 +35624,32 @@ anna document("doc-autumn-m3")
         "id": "rv-1",
         "image": "/demo/lysne/05-08-feed.jpg",
         "number": 1,
+        "prompt": {
+          "codeChecks": [
+            {"pass":true,"text":"No words for the picture to print"},
+            {"pass":true,"text":"No studio equipment in the frame"},
+            {"pass":true,"text":"No file names or links"},
+            {"pass":true,"text":"None of LYSNE's forbidden words"},
+            {"pass":true,"text":"The locked parts unchanged: the product's name, size and pictures"}
+          ],
+          "findings": [
+            {
+              "item": "Night Body Oil, 100 ml, amber glass with a burgundy matte cap",
+              "note": "From the verified facts, word for word",
+              "verdict": "carried"
+            },
+            {"item":"Warm low light from one side, like a lamp in the evening","verdict":"carried"},
+            {"item":"Linen, travertine and walnut; nothing glossy","verdict":"carried"},
+            {"item":"The bottle is the one sharp thing; the rest falls soft","verdict":"carried"},
+            {"item":"No people, no hands","note":"Nothing in the picture to show it","verdict":"not_visible"}
+          ],
+          "llmUsd": 0.002,
+          "method": "Product on a surface",
+          "model": "Nano Banana Pro",
+          "status": "validated",
+          "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy matte cap, LYSNE Night Body Oil, stands in the centre on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
+          "tries": 1
+        },
         "specs": {
           "count": 4,
           "format": "feed",
@@ -35524,6 +35699,32 @@ anna document("doc-autumn-m3")
         "image": "/demo/lysne/04-06-feed.jpg",
         "instruction": "Make the bottle a little bigger",
         "number": 2,
+        "prompt": {
+          "codeChecks": [
+            {"pass":true,"text":"No words for the picture to print"},
+            {"pass":true,"text":"No studio equipment in the frame"},
+            {"pass":true,"text":"No file names or links"},
+            {"pass":true,"text":"None of LYSNE's forbidden words"},
+            {"pass":true,"text":"The locked parts unchanged: the product's name, size and pictures"}
+          ],
+          "findings": [
+            {
+              "item": "Night Body Oil, 100 ml, amber glass with a burgundy matte cap",
+              "note": "From the verified facts, word for word",
+              "verdict": "carried"
+            },
+            {"item":"Warm low light from one side, like a lamp in the evening","verdict":"carried"},
+            {"item":"Linen, travertine and walnut; nothing glossy","verdict":"carried"},
+            {"item":"The bottle is the one sharp thing; the rest falls soft","verdict":"carried"},
+            {"item":"No people, no hands","note":"Nothing in the picture to show it","verdict":"not_visible"}
+          ],
+          "llmUsd": 0.002,
+          "method": "Product on a surface",
+          "model": "Nano Banana Pro",
+          "status": "validated",
+          "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy matte cap, LYSNE Night Body Oil, stands a little larger in the frame, in the centre on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
+          "tries": 2
+        },
         "specs": {
           "count": 4,
           "format": "feed",
@@ -35573,6 +35774,32 @@ anna document("doc-autumn-m3")
         "image": "/demo/lysne/05-01-feed.jpg",
         "instruction": "Move the bottle lower, more air above",
         "number": 3,
+        "prompt": {
+          "codeChecks": [
+            {"pass":true,"text":"No words for the picture to print"},
+            {"pass":true,"text":"No studio equipment in the frame"},
+            {"pass":true,"text":"No file names or links"},
+            {"pass":true,"text":"None of LYSNE's forbidden words"},
+            {"pass":true,"text":"The locked parts unchanged: the product's name, size and pictures"}
+          ],
+          "findings": [
+            {
+              "item": "Night Body Oil, 100 ml, amber glass with a burgundy matte cap",
+              "note": "From the verified facts, word for word",
+              "verdict": "carried"
+            },
+            {"item":"Warm low light from one side, like a lamp in the evening","verdict":"carried"},
+            {"item":"Linen, travertine and walnut; nothing glossy","verdict":"carried"},
+            {"item":"The bottle is the one sharp thing; the rest falls soft","verdict":"carried"},
+            {"item":"No people, no hands","note":"Nothing in the picture to show it","verdict":"not_visible"}
+          ],
+          "llmUsd": 0.002,
+          "method": "Product on a surface",
+          "model": "Nano Banana Pro",
+          "status": "validated",
+          "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy matte cap, LYSNE Night Body Oil, stands low in the frame with calm air above it on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
+          "tries": 1
+        },
         "specs": {
           "count": 4,
           "format": "feed",
@@ -35583,6 +35810,77 @@ anna document("doc-autumn-m3")
           "variantId": "va-oil-100"
         },
         "state": "done",
+        "variables": {
+          "depth": 40,
+          "lens": {"focal":50,"height":30,"tilt":-8},
+          "lightAngle": {"azimuth":70,"elevation":20},
+          "lightPreset": "evening",
+          "productPlace": "low",
+          "productSize": 28,
+          "props": ["towel"],
+          "rig": {
+            "lights": [
+              {"height":20,"id":"l-key","kind":"key","softness":60,"strength":80,"warmth":2700,"x":0.82,"y":0.3},
+              {"height":30,"id":"l-fill","kind":"fill","softness":90,"strength":25,"warmth":3200,"x":0.18,"y":0.45}
+            ]
+          },
+          "scene": "stone",
+          "softness": 60,
+          "surface": "stone",
+          "warmth": 2700
+        }
+      },
+      {
+        "at": "2026-10-14T12:26:00.000Z",
+        "by": "u-anna",
+        "cost": 0,
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "failure": "The prompt worked against 2 of LYSNE's rules three tries in a row, so nothing was rendered.",
+        "id": "rv-4",
+        "image": "",
+        "instruction": "Add a glossy reflection on the cap",
+        "number": 4,
+        "prompt": {
+          "codeChecks": [
+            {"pass":true,"text":"No words for the picture to print"},
+            {"pass":true,"text":"No studio equipment in the frame"},
+            {"pass":true,"text":"No file names or links"},
+            {"pass":true,"text":"None of LYSNE's forbidden words"},
+            {"pass":true,"text":"The locked parts unchanged: the product's name, size and pictures"}
+          ],
+          "findings": [
+            {
+              "item": "Burgundy matte cap, never glossy (verified fact)",
+              "note": "The instruction asks for a glossy reflection on the cap",
+              "verdict": "against"
+            },
+            {
+              "item": "Linen, travertine and walnut; nothing glossy",
+              "note": "A glossy reflection is the one thing the rule rules out",
+              "verdict": "against"
+            },
+            {"item":"Warm low light from one side, like a lamp in the evening","verdict":"carried"},
+            {"item":"The bottle is the one sharp thing; the rest falls soft","verdict":"carried"},
+            {"item":"No people, no hands","note":"Nothing in the picture to show it","verdict":"not_visible"}
+          ],
+          "llmUsd": 0.006,
+          "method": "Product on a surface",
+          "model": "Nano Banana Pro",
+          "reason": "A glossy cap works against the verified facts and the brand's rule: nothing glossy.",
+          "status": "blocked",
+          "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy cap with a glossy reflection, LYSNE Night Body Oil, stands low in the frame with calm air above it on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
+          "tries": 3
+        },
+        "specs": {
+          "count": 4,
+          "format": "feed",
+          "imageModel": "Nano Banana Pro",
+          "modelIds": [],
+          "productId": "pr-oil",
+          "referenceIds": ["rf-stone"],
+          "variantId": "va-oil-100"
+        },
+        "state": "failed",
         "variables": {
           "depth": 40,
           "lens": {"focal":50,"height":30,"tilt":-8},
@@ -72101,6 +72399,32 @@ nora documents("w-lysne")
           "id": "rv-1",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
+          "prompt": {
+            "codeChecks": [
+              {"pass":true,"text":"No words for the picture to print"},
+              {"pass":true,"text":"No studio equipment in the frame"},
+              {"pass":true,"text":"No file names or links"},
+              {"pass":true,"text":"None of LYSNE's forbidden words"},
+              {"pass":true,"text":"The locked parts unchanged: the product's name, size and pictures"}
+            ],
+            "findings": [
+              {
+                "item": "Night Body Oil, 100 ml, amber glass with a burgundy matte cap",
+                "note": "From the verified facts, word for word",
+                "verdict": "carried"
+              },
+              {"item":"Warm low light from one side, like a lamp in the evening","verdict":"carried"},
+              {"item":"Linen, travertine and walnut; nothing glossy","verdict":"carried"},
+              {"item":"The bottle is the one sharp thing; the rest falls soft","verdict":"carried"},
+              {"item":"No people, no hands","note":"Nothing in the picture to show it","verdict":"not_visible"}
+            ],
+            "llmUsd": 0.002,
+            "method": "Product on a surface",
+            "model": "Nano Banana Pro",
+            "status": "validated",
+            "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy matte cap, LYSNE Night Body Oil, stands in the centre on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
+            "tries": 1
+          },
           "specs": {
             "count": 4,
             "format": "feed",
@@ -72150,6 +72474,32 @@ nora documents("w-lysne")
           "image": "/demo/lysne/04-06-feed.jpg",
           "instruction": "Make the bottle a little bigger",
           "number": 2,
+          "prompt": {
+            "codeChecks": [
+              {"pass":true,"text":"No words for the picture to print"},
+              {"pass":true,"text":"No studio equipment in the frame"},
+              {"pass":true,"text":"No file names or links"},
+              {"pass":true,"text":"None of LYSNE's forbidden words"},
+              {"pass":true,"text":"The locked parts unchanged: the product's name, size and pictures"}
+            ],
+            "findings": [
+              {
+                "item": "Night Body Oil, 100 ml, amber glass with a burgundy matte cap",
+                "note": "From the verified facts, word for word",
+                "verdict": "carried"
+              },
+              {"item":"Warm low light from one side, like a lamp in the evening","verdict":"carried"},
+              {"item":"Linen, travertine and walnut; nothing glossy","verdict":"carried"},
+              {"item":"The bottle is the one sharp thing; the rest falls soft","verdict":"carried"},
+              {"item":"No people, no hands","note":"Nothing in the picture to show it","verdict":"not_visible"}
+            ],
+            "llmUsd": 0.002,
+            "method": "Product on a surface",
+            "model": "Nano Banana Pro",
+            "status": "validated",
+            "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy matte cap, LYSNE Night Body Oil, stands a little larger in the frame, in the centre on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
+            "tries": 2
+          },
           "specs": {
             "count": 4,
             "format": "feed",
@@ -72199,6 +72549,32 @@ nora documents("w-lysne")
           "image": "/demo/lysne/05-01-feed.jpg",
           "instruction": "Move the bottle lower, more air above",
           "number": 3,
+          "prompt": {
+            "codeChecks": [
+              {"pass":true,"text":"No words for the picture to print"},
+              {"pass":true,"text":"No studio equipment in the frame"},
+              {"pass":true,"text":"No file names or links"},
+              {"pass":true,"text":"None of LYSNE's forbidden words"},
+              {"pass":true,"text":"The locked parts unchanged: the product's name, size and pictures"}
+            ],
+            "findings": [
+              {
+                "item": "Night Body Oil, 100 ml, amber glass with a burgundy matte cap",
+                "note": "From the verified facts, word for word",
+                "verdict": "carried"
+              },
+              {"item":"Warm low light from one side, like a lamp in the evening","verdict":"carried"},
+              {"item":"Linen, travertine and walnut; nothing glossy","verdict":"carried"},
+              {"item":"The bottle is the one sharp thing; the rest falls soft","verdict":"carried"},
+              {"item":"No people, no hands","note":"Nothing in the picture to show it","verdict":"not_visible"}
+            ],
+            "llmUsd": 0.002,
+            "method": "Product on a surface",
+            "model": "Nano Banana Pro",
+            "status": "validated",
+            "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy matte cap, LYSNE Night Body Oil, stands low in the frame with calm air above it on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
+            "tries": 1
+          },
           "specs": {
             "count": 4,
             "format": "feed",
@@ -72209,6 +72585,77 @@ nora documents("w-lysne")
             "variantId": "va-oil-100"
           },
           "state": "done",
+          "variables": {
+            "depth": 40,
+            "lens": {"focal":50,"height":30,"tilt":-8},
+            "lightAngle": {"azimuth":70,"elevation":20},
+            "lightPreset": "evening",
+            "productPlace": "low",
+            "productSize": 28,
+            "props": ["towel"],
+            "rig": {
+              "lights": [
+                {"height":20,"id":"l-key","kind":"key","softness":60,"strength":80,"warmth":2700,"x":0.82,"y":0.3},
+                {"height":30,"id":"l-fill","kind":"fill","softness":90,"strength":25,"warmth":3200,"x":0.18,"y":0.45}
+              ]
+            },
+            "scene": "stone",
+            "softness": 60,
+            "surface": "stone",
+            "warmth": 2700
+          }
+        },
+        {
+          "at": "2026-10-14T12:26:00.000Z",
+          "by": "u-nora",
+          "cost": 0,
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "failure": "The prompt worked against 2 of LYSNE's rules three tries in a row, so nothing was rendered.",
+          "id": "rv-4",
+          "image": "",
+          "instruction": "Add a glossy reflection on the cap",
+          "number": 4,
+          "prompt": {
+            "codeChecks": [
+              {"pass":true,"text":"No words for the picture to print"},
+              {"pass":true,"text":"No studio equipment in the frame"},
+              {"pass":true,"text":"No file names or links"},
+              {"pass":true,"text":"None of LYSNE's forbidden words"},
+              {"pass":true,"text":"The locked parts unchanged: the product's name, size and pictures"}
+            ],
+            "findings": [
+              {
+                "item": "Burgundy matte cap, never glossy (verified fact)",
+                "note": "The instruction asks for a glossy reflection on the cap",
+                "verdict": "against"
+              },
+              {
+                "item": "Linen, travertine and walnut; nothing glossy",
+                "note": "A glossy reflection is the one thing the rule rules out",
+                "verdict": "against"
+              },
+              {"item":"Warm low light from one side, like a lamp in the evening","verdict":"carried"},
+              {"item":"The bottle is the one sharp thing; the rest falls soft","verdict":"carried"},
+              {"item":"No people, no hands","note":"Nothing in the picture to show it","verdict":"not_visible"}
+            ],
+            "llmUsd": 0.006,
+            "method": "Product on a surface",
+            "model": "Nano Banana Pro",
+            "reason": "A glossy cap works against the verified facts and the brand's rule: nothing glossy.",
+            "status": "blocked",
+            "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy cap with a glossy reflection, LYSNE Night Body Oil, stands low in the frame with calm air above it on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
+            "tries": 3
+          },
+          "specs": {
+            "count": 4,
+            "format": "feed",
+            "imageModel": "Nano Banana Pro",
+            "modelIds": [],
+            "productId": "pr-oil",
+            "referenceIds": ["rf-stone"],
+            "variantId": "va-oil-100"
+          },
+          "state": "failed",
           "variables": {
             "depth": 40,
             "lens": {"focal":50,"height":30,"tilt":-8},
@@ -72863,6 +73310,32 @@ nora document("doc-autumn-m3")
         "id": "rv-1",
         "image": "/demo/lysne/05-08-feed.jpg",
         "number": 1,
+        "prompt": {
+          "codeChecks": [
+            {"pass":true,"text":"No words for the picture to print"},
+            {"pass":true,"text":"No studio equipment in the frame"},
+            {"pass":true,"text":"No file names or links"},
+            {"pass":true,"text":"None of LYSNE's forbidden words"},
+            {"pass":true,"text":"The locked parts unchanged: the product's name, size and pictures"}
+          ],
+          "findings": [
+            {
+              "item": "Night Body Oil, 100 ml, amber glass with a burgundy matte cap",
+              "note": "From the verified facts, word for word",
+              "verdict": "carried"
+            },
+            {"item":"Warm low light from one side, like a lamp in the evening","verdict":"carried"},
+            {"item":"Linen, travertine and walnut; nothing glossy","verdict":"carried"},
+            {"item":"The bottle is the one sharp thing; the rest falls soft","verdict":"carried"},
+            {"item":"No people, no hands","note":"Nothing in the picture to show it","verdict":"not_visible"}
+          ],
+          "llmUsd": 0.002,
+          "method": "Product on a surface",
+          "model": "Nano Banana Pro",
+          "status": "validated",
+          "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy matte cap, LYSNE Night Body Oil, stands in the centre on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
+          "tries": 1
+        },
         "specs": {
           "count": 4,
           "format": "feed",
@@ -72912,6 +73385,32 @@ nora document("doc-autumn-m3")
         "image": "/demo/lysne/04-06-feed.jpg",
         "instruction": "Make the bottle a little bigger",
         "number": 2,
+        "prompt": {
+          "codeChecks": [
+            {"pass":true,"text":"No words for the picture to print"},
+            {"pass":true,"text":"No studio equipment in the frame"},
+            {"pass":true,"text":"No file names or links"},
+            {"pass":true,"text":"None of LYSNE's forbidden words"},
+            {"pass":true,"text":"The locked parts unchanged: the product's name, size and pictures"}
+          ],
+          "findings": [
+            {
+              "item": "Night Body Oil, 100 ml, amber glass with a burgundy matte cap",
+              "note": "From the verified facts, word for word",
+              "verdict": "carried"
+            },
+            {"item":"Warm low light from one side, like a lamp in the evening","verdict":"carried"},
+            {"item":"Linen, travertine and walnut; nothing glossy","verdict":"carried"},
+            {"item":"The bottle is the one sharp thing; the rest falls soft","verdict":"carried"},
+            {"item":"No people, no hands","note":"Nothing in the picture to show it","verdict":"not_visible"}
+          ],
+          "llmUsd": 0.002,
+          "method": "Product on a surface",
+          "model": "Nano Banana Pro",
+          "status": "validated",
+          "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy matte cap, LYSNE Night Body Oil, stands a little larger in the frame, in the centre on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
+          "tries": 2
+        },
         "specs": {
           "count": 4,
           "format": "feed",
@@ -72961,6 +73460,32 @@ nora document("doc-autumn-m3")
         "image": "/demo/lysne/05-01-feed.jpg",
         "instruction": "Move the bottle lower, more air above",
         "number": 3,
+        "prompt": {
+          "codeChecks": [
+            {"pass":true,"text":"No words for the picture to print"},
+            {"pass":true,"text":"No studio equipment in the frame"},
+            {"pass":true,"text":"No file names or links"},
+            {"pass":true,"text":"None of LYSNE's forbidden words"},
+            {"pass":true,"text":"The locked parts unchanged: the product's name, size and pictures"}
+          ],
+          "findings": [
+            {
+              "item": "Night Body Oil, 100 ml, amber glass with a burgundy matte cap",
+              "note": "From the verified facts, word for word",
+              "verdict": "carried"
+            },
+            {"item":"Warm low light from one side, like a lamp in the evening","verdict":"carried"},
+            {"item":"Linen, travertine and walnut; nothing glossy","verdict":"carried"},
+            {"item":"The bottle is the one sharp thing; the rest falls soft","verdict":"carried"},
+            {"item":"No people, no hands","note":"Nothing in the picture to show it","verdict":"not_visible"}
+          ],
+          "llmUsd": 0.002,
+          "method": "Product on a surface",
+          "model": "Nano Banana Pro",
+          "status": "validated",
+          "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy matte cap, LYSNE Night Body Oil, stands low in the frame with calm air above it on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
+          "tries": 1
+        },
         "specs": {
           "count": 4,
           "format": "feed",
@@ -72971,6 +73496,77 @@ nora document("doc-autumn-m3")
           "variantId": "va-oil-100"
         },
         "state": "done",
+        "variables": {
+          "depth": 40,
+          "lens": {"focal":50,"height":30,"tilt":-8},
+          "lightAngle": {"azimuth":70,"elevation":20},
+          "lightPreset": "evening",
+          "productPlace": "low",
+          "productSize": 28,
+          "props": ["towel"],
+          "rig": {
+            "lights": [
+              {"height":20,"id":"l-key","kind":"key","softness":60,"strength":80,"warmth":2700,"x":0.82,"y":0.3},
+              {"height":30,"id":"l-fill","kind":"fill","softness":90,"strength":25,"warmth":3200,"x":0.18,"y":0.45}
+            ]
+          },
+          "scene": "stone",
+          "softness": 60,
+          "surface": "stone",
+          "warmth": 2700
+        }
+      },
+      {
+        "at": "2026-10-14T12:26:00.000Z",
+        "by": "u-nora",
+        "cost": 0,
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "failure": "The prompt worked against 2 of LYSNE's rules three tries in a row, so nothing was rendered.",
+        "id": "rv-4",
+        "image": "",
+        "instruction": "Add a glossy reflection on the cap",
+        "number": 4,
+        "prompt": {
+          "codeChecks": [
+            {"pass":true,"text":"No words for the picture to print"},
+            {"pass":true,"text":"No studio equipment in the frame"},
+            {"pass":true,"text":"No file names or links"},
+            {"pass":true,"text":"None of LYSNE's forbidden words"},
+            {"pass":true,"text":"The locked parts unchanged: the product's name, size and pictures"}
+          ],
+          "findings": [
+            {
+              "item": "Burgundy matte cap, never glossy (verified fact)",
+              "note": "The instruction asks for a glossy reflection on the cap",
+              "verdict": "against"
+            },
+            {
+              "item": "Linen, travertine and walnut; nothing glossy",
+              "note": "A glossy reflection is the one thing the rule rules out",
+              "verdict": "against"
+            },
+            {"item":"Warm low light from one side, like a lamp in the evening","verdict":"carried"},
+            {"item":"The bottle is the one sharp thing; the rest falls soft","verdict":"carried"},
+            {"item":"No people, no hands","note":"Nothing in the picture to show it","verdict":"not_visible"}
+          ],
+          "llmUsd": 0.006,
+          "method": "Product on a surface",
+          "model": "Nano Banana Pro",
+          "reason": "A glossy cap works against the verified facts and the brand's rule: nothing glossy.",
+          "status": "blocked",
+          "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy cap with a glossy reflection, LYSNE Night Body Oil, stands low in the frame with calm air above it on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
+          "tries": 3
+        },
+        "specs": {
+          "count": 4,
+          "format": "feed",
+          "imageModel": "Nano Banana Pro",
+          "modelIds": [],
+          "productId": "pr-oil",
+          "referenceIds": ["rf-stone"],
+          "variantId": "va-oil-100"
+        },
+        "state": "failed",
         "variables": {
           "depth": 40,
           "lens": {"focal":50,"height":30,"tilt":-8},

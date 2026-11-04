@@ -5,6 +5,7 @@ import type {
   CreativeDocument,
   CreativeType,
   DetailFind,
+  EnginePrompt,
   Generation,
   Layer,
   ProductFix,
@@ -52,6 +53,36 @@ const version = (
   cost: 0.12,
   ...extra,
 });
+
+// The prompt behind a render, as the Engine keeps it (FLOWS §29): what it had to carry and what the checks said.
+const codeChecks: EnginePrompt["codeChecks"] = [
+  { text: "No words for the picture to print", pass: true },
+  { text: "No studio equipment in the frame", pass: true },
+  { text: "No file names or links", pass: true },
+  { text: "None of LYSNE's forbidden words", pass: true },
+  { text: "The locked parts unchanged: the product's name, size and pictures", pass: true },
+];
+const carried = (item: string, note?: string) => ({ item, verdict: "carried" as const, ...(note ? { note } : {}) });
+const lysneFindings = [
+  carried("Night Body Oil, 100 ml, amber glass with a burgundy matte cap", "From the verified facts, word for word"),
+  carried("Warm low light from one side, like a lamp in the evening"),
+  carried("Linen, travertine and walnut; nothing glossy"),
+  carried("The bottle is the one sharp thing; the rest falls soft"),
+  { item: "No people, no hands", verdict: "not_visible" as const, note: "Nothing in the picture to show it" },
+];
+const prompt = (text: string, extra: Partial<EnginePrompt> = {}): EnginePrompt => ({
+  status: "validated",
+  model: "Nano Banana Pro",
+  method: "Product on a surface",
+  text,
+  tries: 1,
+  findings: lysneFindings,
+  codeChecks,
+  llmUsd: 0.002,
+  ...extra,
+});
+const scenePrompt = (place: string) =>
+  `Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy matte cap, LYSNE Night Body Oil, stands ${place} on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.`;
 
 const sceneVars = { ...defaults("m-scene") };
 
@@ -135,6 +166,7 @@ const seeded: CreativeDocument[] = [
     versions: [
       version("rv-1", 1, "05-08", 90, sceneVars, {
         evaluation: { ...ok, productTruth: "flag", notes: ["Cap reads glossy"] },
+        prompt: prompt(scenePrompt("in the centre")),
       }),
       version(
         "rv-2",
@@ -142,7 +174,10 @@ const seeded: CreativeDocument[] = [
         "04-06",
         60,
         { ...sceneVars, productSize: 34 },
-        { instruction: "Make the bottle a little bigger" },
+        {
+          instruction: "Make the bottle a little bigger",
+          prompt: prompt(scenePrompt("a little larger in the frame, in the centre"), { tries: 2 }),
+        },
       ),
       version(
         "rv-3",
@@ -150,7 +185,51 @@ const seeded: CreativeDocument[] = [
         "05-01",
         20,
         { ...sceneVars, productSize: 28, productPlace: "low" },
-        { instruction: "Move the bottle lower, more air above" },
+        {
+          instruction: "Move the bottle lower, more air above",
+          prompt: prompt(scenePrompt("low in the frame with calm air above it")),
+        },
+      ),
+      // A render that did not start: the prompt kept working against two of LYSNE's rules, three tries in a row.
+      version(
+        "rv-4",
+        4,
+        "05-01",
+        6,
+        { ...sceneVars, productSize: 28, productPlace: "low" },
+        {
+          state: "failed",
+          image: "",
+          cost: 0,
+          instruction: "Add a glossy reflection on the cap",
+          failure: "The prompt worked against 2 of LYSNE's rules three tries in a row, so nothing was rendered.",
+          prompt: prompt(
+            scenePrompt("low in the frame with calm air above it").replace(
+              "a burgundy matte cap",
+              "a burgundy cap with a glossy reflection",
+            ),
+            {
+              status: "blocked",
+              reason: "A glossy cap works against the verified facts and the brand's rule: nothing glossy.",
+              tries: 3,
+              llmUsd: 0.006,
+              findings: [
+                {
+                  item: "Burgundy matte cap, never glossy (verified fact)",
+                  verdict: "against",
+                  note: "The instruction asks for a glossy reflection on the cap",
+                },
+                {
+                  item: "Linen, travertine and walnut; nothing glossy",
+                  verdict: "against",
+                  note: "A glossy reflection is the one thing the rule rules out",
+                },
+                ...lysneFindings.slice(1, 2),
+                ...lysneFindings.slice(3),
+              ],
+            },
+          ),
+        },
       ),
     ],
     pickedVersionId: "rv-3",

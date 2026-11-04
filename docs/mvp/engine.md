@@ -37,5 +37,7 @@ default image model is `engine_image_model` in `app.settings` (nano-banana-pro).
 ## Not yet
 
 The Engine bar's words, Make formats by the Engine, picture checks by a vision model, lessons from verdicts, video,
-a second image provider. The Studio shows a failed render as a message; a failed version in the strip and the
-prompt for staff are the design thread's.
+a second image provider. The Studio's side is designed in app/FLOWS.md §29 (PROPOSED): a failed version in the
+strip with its reason, the prompt and its checks for Fume's people, and Yes or No on the Engine's pictures. The live
+API still has to write a failed attempt as a version (`failure`, `prompt`), send `prompt` only to Fume's people, and
+turn `teachEngine` into a row of `engine_lessons`.

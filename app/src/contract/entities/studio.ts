@@ -116,6 +116,36 @@ export interface RenderVersion {
   cost: number;
   /** The product details the Engine masked and read on this render (FLOWS §17). */
   details?: DetailFind[];
+  /** Why a failed version did not render, in one sentence ("The prompt missed 2 of LYSNE's rules after three tries"). */
+  failure?: string;
+  /** How the Engine wrote and checked the prompt behind it (engine_prompts). Fume's staff only: never an agency's
+   *  people, never a customer (FLOWS §29). */
+  prompt?: EnginePrompt;
+}
+
+/** The prompt behind a render and its checks, as the Engine kept them (engine_prompts; FLOWS §29, PROPOSED). */
+export interface EnginePrompt {
+  /** validated: it passed and went to the image model; escalated: a person had to judge it; blocked: it did not
+   *  pass, and nothing was rendered. */
+  status: "validated" | "escalated" | "blocked";
+  /** Why it was blocked or escalated, in words. */
+  reason?: string;
+  /** The image model, by its name ("Nano Banana Pro"). */
+  model: string;
+  /** The method the Engine picked for the picture ("Product on a surface"). */
+  method?: string;
+  /** The prompt as the image model got it; none when it was blocked before it was finished. */
+  text?: string;
+  /** How many times the Engine wrote it (up to three: findings send it back). */
+  tries: number;
+  /** What the prompt had to carry (the brand's rules, the product's verified facts) and what the check said of each:
+   *  carried, works against it, not visible in a picture, or sent to a person to judge. */
+  findings: { item: string; verdict: "carried" | "against" | "not_visible" | "person"; note?: string }[];
+  /** The checks by code before any model read it: no rendered text, no equipment, no file names, no forbidden
+   *  terms, the locked slots unchanged. */
+  codeChecks: { text: string; pass: boolean }[];
+  /** What writing and checking it cost, in USD. */
+  llmUsd: number;
 }
 
 /** One part of an Engine bar instruction: the words, the variables it changed, or why nothing changed ("Placement is
@@ -235,6 +265,8 @@ export interface Generation {
   at: Instant;
   /** What the designer asked to repair, in words. */
   repair?: string;
+  /** What a person taught the Engine about this picture (Yes or No, FLOWS §29); unset until someone answers. */
+  taught?: "yes" | "no";
 }
 
 export interface StudioSession {

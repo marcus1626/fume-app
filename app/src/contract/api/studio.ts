@@ -57,5 +57,8 @@ export interface StudioApi {
   generate(sessionId: Id, recipe: Recipe): Promise<StudioSession>;
   repair(sessionId: Id, generationId: Id, what: string): Promise<StudioSession>;
   pickGeneration(sessionId: Id, generationId: Id): Promise<StudioSession>;
+  /** A person's Yes or No on one of the Engine's pictures, and why (chips and words, joined): it becomes a lesson
+   *  for the brand (engine_lessons; only people's verdicts teach, FLOWS §29). Fume's staff only. */
+  teachEngine(input: { generationId: Id; verdict: "yes" | "no"; why?: string }): Promise<void>;
   sendToCheck(sessionId: Id): Promise<StudioSession>;
 }

@@ -136,6 +136,7 @@ export const useRepair = () =>
 export const usePickGeneration = () =>
   useM((a, v: { sessionId: Id; generationId: Id }) => a.pickGeneration(v.sessionId, v.generationId));
 export const useSendToCheck = () => useM((a, sessionId: Id) => a.sendToCheck(sessionId));
+export const useTeachEngine = () => useM((a, v: Parameters<FumeApi["teachEngine"]>[0]) => a.teachEngine(v));
 
 // Studio documents
 export const useStudioModes = () => useQ(["studio", "modes"], (a) => a.studioModes());
