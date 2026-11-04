@@ -376,3 +376,18 @@ Deno.test("a Render's direction is held like a rule, unless the designer asked f
     ["ask"],
   );
 });
+
+Deno.test("a format reshapes its approved master: the master goes first and the frame changes, nothing else", async () => {
+  const seen: { text: string; referenceUrls: string[]; aspectRatio: string }[] = [];
+  const t = taken();
+  t.run = { ...t.run, kind: "format" };
+  t.creative = { ...t.creative, format: "story", kind: "format" };
+  t.master = { path: "ws1/master.png", title: "Master 1" };
+  const f = fake({ takes: [t], provider: fakeProvider(["done"], seen) });
+  assertEquals(await runJob(JOB, f.deps), "made");
+  assertEquals(seen[0].referenceUrls[0], "https://signed/ws1/master.png");
+  assertEquals(seen[0].aspectRatio, "9:16");
+  const p = f.prompts[0] as { compile_package: { grammar: { imageType: string }; manifest: { requirement: string }[] } };
+  assertEquals(p.compile_package.grammar.imageType, "picture_edit");
+  assert(p.compile_package.manifest.some((m) => m.requirement.startsWith("Make the first picture in the story format, 9:16")));
+});
