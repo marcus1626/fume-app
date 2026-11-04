@@ -334,6 +334,7 @@ begin
   perform test.ok(t #>> '{change,ask}' = 'Make the light warmer' and (t #>> '{master,picked}')::boolean
     and t #>> '{master,path}' like '%/engine/e2.png', 'the Engine changes the picked picture as asked');
   perform test.ok(t -> 'composition' = 'null'::jsonb, 'a change to a picture keeps its own look: no moodboard picture');
+  perform test.ok(jsonb_typeof(t -> 'arms') = 'array', 'and how each way of writing a prompt did for this model');
 end $$;
 do $$
 declare a uuid;

@@ -9,6 +9,7 @@ import {
   buildConcept,
   buildKnowledge,
   buildLedger,
+  chooseVariants,
   COMPOSITION_ROLE,
   buildProduct,
   checklist,
@@ -41,6 +42,8 @@ export type Taken = Omit<EngineTask, "products" | "master" | "composition"> & {
   run: { job_id: string; attempt_id: string; attempt: number; workspace_id: string; kind: string; image_model: string };
   products: (Omit<EngineTask["products"][number], "pictures"> & { pictures: Picture[] })[];
   master: (Stored & { title: string; picked?: boolean }) | null;
+  /** How each way of writing a prompt did for this model, per kind of picture (the prompt graph, every brand). */
+  arms?: { image_type: string; feature: string; n: number; sum: number }[];
   /** The campaign moodboard's picture for composition, light and mood (never the product's truth). */
   composition?: ({ id: string; note?: string } & ({ path: string; bucket?: string; url?: undefined } | { url: string; path?: undefined })) | null;
   /** A correction's problem and what must change and stay; `ask` and `direction` are the designer's words with Render. */
@@ -299,14 +302,17 @@ async function attempt(t: Taken, deps: Deps): Promise<RunOutcome> {
     // Words on a picture already made change that picture, and a format reshapes its master; everything else is a new
     // campaign still.
     const target = { imageType: t.master?.picked || isFormat(t) ? "picture_edit" : "campaign_still", imageModel: t.run.image_model };
-    const method = selectMethod(target);
+    // One way of saying each thing the dialect has a choice for, drawn from how each did (learn.ts).
+    const arms = (t.arms ?? []).filter((a) => a.image_type === target.imageType);
+    const dialects = DIALECTS.map((d) => (d.imageModel === target.imageModel ? chooseVariants(d, arms).dialect : d));
+    const method = selectMethod(target, GRAMMARS, dialects);
     const maxReferences = method.method === "compose" ? method.dialect.maxReferences : 3;
     const concept = buildConcept(task);
     const result: MachineResult = await runPromptMachine(
       {
         target,
         grammars: GRAMMARS,
-        dialects: DIALECTS,
+        dialects,
         product: buildProduct(task, maxReferences),
         brand: buildBrand(task, concept.lookKey),
         concept,

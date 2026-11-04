@@ -11,3 +11,4 @@ export * from "./context.ts";
 export * from "./instructions.ts";
 export * from "./evaluate.ts";
 export * from "./ledger.ts";
+export * from "./learn.ts";

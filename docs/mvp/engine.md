@@ -72,6 +72,12 @@ design follows Marcus's five domains and the Fume Engine prototype (Oct 2026), p
    The product's photographs stay the only truth about the product, and the picture check never compares the
    product with it. Not for a change to a picture, a correction, a variant or a format.
 
+14. **The Engine chooses how to write** (`_shared/engine/learn.ts`). Where a model's dialect has two ways of writing
+   the same prompt (rules with the same `choice`: a tight or a full brief, the light early or late), `engine_take`
+   hands over how each did for that model (the prompt graph's newest 500 scored prompts, every brand: how a model
+   reads a prompt is the model's) and Thompson sampling draws one: with no evidence both are tried about as often;
+   as evidence grows the better one wins nearly always, and the other is still tried now and then.
+
 ## Money
 
 - The language model's week (`llm_week_usd`, $50) counts the plan writer, the chat, the Engine's prompts, digesting
@@ -102,7 +108,6 @@ without making a picture.
 
 ## Not yet
 
-Statics and graphic design come before video (Marcus, 4 Nov). Not built yet: the Engine choosing between ways of
-saying a thing from the prompt graph's numbers, a fixed test set, and graphic design (OpenPencil). The Engine bar reads every word into the Direction; reading words into the
+Statics and graphic design come before video (Marcus, 4 Nov). Not built yet: a fixed test set, and graphic design (OpenPencil). The Engine bar reads every word into the Direction; reading words into the
 desk's own variables (light, angle, lens) is not built yet. The Studio's side (a failed version in the strip, the
 prompt for Fume's own people, Teach the Engine) is on the design branch, app/FLOWS.md §29.

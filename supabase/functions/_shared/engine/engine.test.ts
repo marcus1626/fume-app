@@ -7,7 +7,9 @@ import {
   buildKnowledge,
   buildLedger,
   buildProduct,
+  beta,
   CAMPAIGN_STILL_V1,
+  chooseVariants,
   classifyFindings,
   type Composer,
   type Decider,
@@ -312,4 +314,34 @@ Deno.test("a moodboard picture rules composition, light and mood, after the prod
   assertEquals(buildProduct(t, 2).references.map((r) => r.url), ["https://x/front.png", "https://x/mood.jpg"]);
   const variant = buildProduct({ ...t, master: { url: "https://x/master.png", title: "Master 1" } }, 3);
   assert(!variant.references.some((r) => r.url === "https://x/mood.jpg"), "a picture made from a master keeps the master's look");
+});
+
+// A seeded random source, so a draw is the same every run.
+const seeded = (seed: number) => () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296);
+
+Deno.test("each choice in a model's dialect keeps one way of saying it", () => {
+  const nbp = DIALECTS.find((d) => d.imageModel === "nano-banana-pro")!;
+  const { dialect, chosen } = chooseVariants(nbp, [], seeded(1));
+  assertEquals(chosen.length, 2);
+  assertEquals(dialect.rules.filter((r) => r.choice === "length").length, 1);
+  assertEquals(dialect.rules.filter((r) => r.choice === "light").length, 1);
+  assertEquals(dialect.rules.filter((r) => !r.choice).length, nbp.rules.filter((r) => !r.choice).length);
+});
+
+Deno.test("the Engine moves to the way of writing whose pictures did better, and still tries the other", () => {
+  const nbp = DIALECTS.find((d) => d.imageModel === "nano-banana-pro")!;
+  const arms = [
+    { feature: "dialect:nbp-length-tight", n: 30, sum: 24 },
+    { feature: "dialect:nbp-length-full", n: 30, sum: 9 },
+  ];
+  const random = seeded(7);
+  let tight = 0;
+  for (let i = 0; i < 400; i++) if (chooseVariants(nbp, arms, random).chosen.includes("nbp-length-tight")) tight++;
+  assert(tight > 380, `the better way wins nearly always with this much evidence (${tight}/400)`);
+  let fresh = 0;
+  for (let i = 0; i < 400; i++) if (chooseVariants(nbp, [], random).chosen.includes("nbp-length-tight")) fresh++;
+  assert(fresh > 150 && fresh < 250, `with no evidence both are tried about as often (${fresh}/400)`);
+  let mean = 0;
+  for (let i = 0; i < 2000; i++) mean += beta(3, 7, random) / 2000;
+  assert(Math.abs(mean - 0.3) < 0.03, `a Beta(3, 7) draw averages 0.3 (${mean.toFixed(3)})`);
 });
