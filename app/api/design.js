@@ -331,16 +331,19 @@ function start(opts = {}) {
   return engine;
 }
 var measurer = null;
-function splitWords(doc, name) {
+function wordWidths(doc, name) {
   const id = doc.ids.get(name);
   const node = id ? doc.graph.getNode(id) : null;
   if (!measurer || !node || node.type !== "TEXT" || !node.text || !node.width) return [];
   const out = [];
   for (const word of new Set(node.text.split(/\s+/).filter(Boolean))) {
-    const m = measurer.measureTextNode({ ...node, text: word }, 1e6);
-    if (m && m.width > node.width + 1) out.push(word);
+    const m = measurer.measureTextNode({ ...node, id: `${node.id}:word:${word}`, text: word }, 1e6);
+    if (m) out.push({ word, width: m.width, box: node.width });
   }
   return out;
+}
+function splitWords(doc, name) {
+  return wordWidths(doc, name).filter((w) => w.width > w.box + 1).map((w) => w.word);
 }
 var loaded = /* @__PURE__ */ new Map();
 function hasFont(family, weight) {
@@ -647,9 +650,11 @@ async function balance(ask, base, familyFor, pixels, keep, logo = null) {
   const l = base.layout;
   const plan = logo ? logoPlan(book, gridOf(book, format), l, logo) : null;
   const widths = {};
+  let longest = 0;
   const heightOf = async (w, name) => {
     const c2 = compose(book, format, words, l, familyFor, w);
     const doc2 = await build(c2.jsx, ask.picture);
+    longest = Math.max(0, ...wordWidths(doc2, name).map((x) => x.width));
     return boxOf(doc2, name)?.h ?? Infinity;
   };
   for (const name of ["Headline", "Subline"]) {
@@ -658,7 +663,7 @@ async function balance(ask, base, familyFor, pixels, keep, logo = null) {
     const full = box.w;
     const one = await heightOf({ ...widths, [name]: full * 4 }, name);
     if (box.h <= one + 1) continue;
-    let lo = Math.round(full * 0.5);
+    let lo = Math.max(Math.round(full * 0.5), Math.ceil(longest) + 2);
     let hi = Math.round(full);
     while (hi - lo > 12) {
       const mid = Math.round((lo + hi) / 2);
