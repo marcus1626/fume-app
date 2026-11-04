@@ -231,4 +231,20 @@ end $$;
 select test.ok((public.fume_llm_budget() ->> 'spent_usd')::numeric >= 0.0057, 'the language model''s week counts digesting');
 set role authenticated;
 
+-- ─── The Engine looks at its pictures (20261104170000_engine_evaluation.sql) ─
+
+reset role;
+select test.ok(not has_function_privilege('authenticated', 'public.engine_to_evaluate(uuid)', 'execute')
+  and not has_function_privilege('authenticated', 'public.engine_evaluated(uuid, jsonb, numeric)', 'execute'),
+  'only the Engine looks at its pictures');
+select test.ok(public.engine_to_evaluate(test.id('ea3')) #>> '{candidates,0,id}' = test.id('ecand')::text
+  and public.engine_to_evaluate(test.id('ea3')) #>> '{candidates,0,path}' like '%/engine/e1.png', 'a kept picture waits to be looked at');
+select test.refuses($$ select public.engine_evaluated(test.id('ecand'), '{"productTruth":"fine"}', 0) $$, 'invalid', 'an evaluation says what it must');
+select public.engine_evaluated(test.id('ecand'),
+  '{"productTruth":"flag","brandRules":"pass","artefacts":"none","notes":["The label is hidden."],"evaluated":true,"items":[]}', 0.0009);
+select test.ok((select evaluation ->> 'productTruth' = 'flag' and evaluation_usd = 0.0009 from public.candidates where id = test.id('ecand'))
+  and jsonb_array_length(public.engine_to_evaluate(test.id('ea3')) -> 'candidates') = 0, 'the picture keeps what the Engine saw, once');
+select test.ok((public.fume_llm_budget() ->> 'spent_usd')::numeric >= 0.0066, 'the language model''s week counts looking');
+set role authenticated;
+
 select test.ok(true, 'all of the Engine tests passed');

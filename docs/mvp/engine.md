@@ -26,10 +26,19 @@ design follows Marcus's five domains and the Fume Engine prototype (Oct 2026), p
    (`engine_pending`, Claude with DIGEST_SYSTEM, `engine_digested`), from what the person said only. That prompt
    already uses them; a changed answer is digested again and its old lessons retire. Digesting counts in the
    language model's week.
+8. **The Engine looks at its picture** (`_shared/engine/evaluate.ts`). Right after a picture is kept, Claude Haiku
+   sees the product's own photographs (at most three; never the master) and the picture, and answers for each item
+   of the prompt's checklist whether the picture holds it, is off, or cannot be told, and names artefacts and
+   printed words outside the product. The first item is always that the product is the product in its photographs.
+   The format and the taste model's words are code's, so they are not on the list. Code turns the answers into the
+   candidate's `evaluation` (product truth, brand rules, artefacts, notes in order of weight) through
+   `engine_evaluated`. It helps the expert and never checks a picture in their place; customers never see it. About
+   $0.0015 a picture, in the language model's week. A failure leaves the picture unevaluated.
 
 ## Money
 
-- The language model's week (`llm_week_usd`, $50) counts the plan writer, the chat and the Engine's prompts.
+- The language model's week (`llm_week_usd`, $50) counts the plan writer, the chat, the Engine's prompts, digesting
+  answers and looking at pictures.
 - The pictures have their own week (`engine_week_usd`, $20). Over it, Render says so.
 - A dry run (no image provider's key yet) writes and checks the prompt for about $0.002 and renders nothing.
 
@@ -56,6 +65,5 @@ without making a picture.
 
 ## Not yet
 
-The Engine bar's words, Make formats by the Engine, picture checks by a vision model, video,
-a second image provider. The Studio shows a failed render as a message; a failed version in the strip and the
+The Engine bar's words, Make formats by the Engine, video, and the picture's evaluation in the Studio. The Studio shows a failed render as a message; a failed version in the strip and the
 prompt for staff are the design thread's.

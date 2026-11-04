@@ -287,3 +287,58 @@ Deno.test("a failed digest never stops the render", async () => {
   f.deps.service.digested = async () => ({ data: 1, error: null });
   assertEquals(await runJob(JOB, f.deps), "dry");
 });
+
+Deno.test("the Engine looks at the picture it kept, against what the prompt had to carry", async () => {
+  const f = fake({ takes: [taken()], provider: fakeProvider(["done"]) });
+  const seen: { pictureUrl: string; productUrls: string[]; checks: { area: string; requirement: string }[] }[] = [];
+  const kept: unknown[] = [];
+  f.deps.models.evaluate = async (input) => {
+    seen.push(input);
+    return {
+      looked: {
+        answers: input.checks.map((c) => ({ n: c.n, verdict: c.area === "product" ? "unclear" : "holds", note: c.area === "product" ? "The label is hidden." : "" })),
+        artefacts: "none",
+        artefactNotes: [],
+        printedText: false,
+      },
+      call: { ...call, costUsd: 0.0008 },
+    };
+  };
+  f.deps.service.toEvaluate = async () => ({
+    data: {
+      candidates: [{ id: "cand-1", path: "ws1/engine/x.png", width: 1080, height: 1350 }],
+      manifest: [
+        { id: "ref-text", kind: "reference_text_locked", refId: "r", required: true, check: "code", requirement: "word for word", suggestedSlot: "references" },
+        { id: "inv-1", kind: "product_invariant", refId: "1", required: true, check: "decision", requirement: "A small amber glass bottle", suggestedSlot: "constraints" },
+        { id: "brand-1", kind: "brand_rule_hard", refId: "b", required: true, check: "decision", requirement: "No people", suggestedSlot: "people" },
+        { id: "brand-taste-light", kind: "brand_rule_soft", refId: "taste-light.even", required: false, check: "decision", requirement: "light even across.", suggestedSlot: "brand" },
+      ],
+      references: [
+        { url: "https://signed/ws1/master.png", role: "the approved Master 1, whose picture this keeps" },
+        { url: "https://signed/ws1/oil.png", role: "Oil, front" },
+        { url: "https://signed/ws1/oil-back.png", role: "Oil, back" },
+      ],
+    },
+    error: null,
+  });
+  f.deps.service.evaluated = async (...a) => (kept.push(a), { error: null });
+  assertEquals(await runJob(JOB, f.deps), "made");
+  assertEquals(seen[0].pictureUrl, "https://signed/ws1/engine/x.png");
+  assertEquals(seen[0].productUrls, ["https://signed/ws1/oil.png", "https://signed/ws1/oil-back.png"]);
+  assertEquals(seen[0].checks.map((c) => c.requirement).slice(1), ["A small amber glass bottle", "No people"]);
+  assert(seen[0].checks[0].requirement.startsWith("The product in the picture is the product in the photographs"));
+  const [id, evaluation, usd] = kept[0] as [string, { productTruth: string; brandRules: string; notes: string[]; evaluated: boolean }, number];
+  assertEquals([id, evaluation.productTruth, evaluation.brandRules, evaluation.evaluated, usd], ["cand-1", "flag", "pass", true, 0.0008]);
+  assertEquals(evaluation.notes, ["The label is hidden."]);
+  assertEquals((seen[0] as { size?: unknown }).size, { width: 1080, height: 1350 });
+});
+
+Deno.test("a picture the model cannot look at stays made, for the expert to check by eye", async () => {
+  const f = fake({ takes: [taken()], provider: fakeProvider(["done"]) });
+  f.deps.models.evaluate = async () => {
+    throw new Error("The model could not read the picture.");
+  };
+  f.deps.service.toEvaluate = async () => ({ data: { candidates: [{ id: "c", path: "p" }], manifest: [], references: [] }, error: null });
+  f.deps.service.evaluated = async () => ({ error: null });
+  assertEquals(await runJob(JOB, f.deps), "made");
+});

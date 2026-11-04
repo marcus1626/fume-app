@@ -83,6 +83,12 @@ Deno.serve((req) =>
           const { data, error } = await service.rpc("engine_digested", { p_answer_id: answerId, p_updated_at: updatedAt, p_lessons: lessons, p_llm_usd: llmUsd });
           return { data, error: err(error) };
         },
+        toEvaluate: async (attemptId) => {
+          const { data, error } = await service.rpc("engine_to_evaluate", { p_attempt_id: attemptId });
+          return { data, error: err(error) };
+        },
+        evaluated: async (candidateId, evaluation, llmUsd) =>
+          ({ error: err((await service.rpc("engine_evaluated", { p_candidate_id: candidateId, p_evaluation: evaluation, p_llm_usd: llmUsd })).error) }),
         store: async (path, bytes, contentType) =>
           ({ error: err((await service.storage.from("workspace-files").upload(path, bytes, { contentType, upsert: false })).error) }),
       },
