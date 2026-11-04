@@ -166,24 +166,26 @@ async function dnaLogo(task: Parameters<typeof voicePrompt>[0]): Promise<BookLog
 /** The logo file the brand's people added (a source of kind logo): the brand's own file is the best one there is. */
 async function fileLogo(task: Parameters<typeof voicePrompt>[0]): Promise<BookLogo | null> {
   try {
-    const { data: src } = await service.from("sources").select("file_id, name").eq("workspace_id", task.book.workspace_id)
-      .eq("kind", "logo").not("file_id", "is", null).order("created_at", { ascending: false }).limit(1).maybeSingle();
-    if (!src?.file_id) return null;
-    const { data: f } = await service.from("files").select("bucket, path, content_type").eq("id", src.file_id).maybeSingle();
-    if (!f || !LOGO_TYPES.test(f.content_type ?? "")) return null;
-    const { data: blob } = await service.storage.from(f.bucket).download(f.path);
+    const { data: f, error: e1 } = await service.rpc("brand_logo_file", { p_workspace_id: task.book.workspace_id });
+    if (e1) console.error("brand-book logo file", e1.message);
+    const src = { name: (f as { name?: string } | null)?.name ?? null };
+    if (!f || !LOGO_TYPES.test(f.type ?? "")) return null;
+    const { data: blob, error: e3 } = await service.storage.from(f.bucket).download(f.path);
+    if (e3) console.error("brand-book logo file", e3.message);
     if (!blob || blob.size > 3_000_000) return null;
     let bytes = new Uint8Array(await blob.arrayBuffer());
-    if (f.content_type === "image/svg+xml") {
+    if (f.type === "image/svg+xml") {
       const svg = safeSvg(new TextDecoder().decode(bytes));
       if (!svg) return null;
       bytes = new TextEncoder().encode(svg);
     }
     const bucket = "workspace-files";
     const path = `${task.book.workspace_id}/brand/logo/${task.book.id}-file`;
-    const { error } = await service.storage.from(bucket).upload(path, bytes, { contentType: f.content_type, upsert: true });
-    return error ? null : { bucket, path, type: f.content_type, from: `the brand's own file ${src.name ?? ""}`.trim() };
-  } catch {
+    const { error } = await service.storage.from(bucket).upload(path, bytes, { contentType: f.type, upsert: true });
+    if (error) console.error("brand-book logo file", error.message);
+    return error ? null : { bucket, path, type: f.type, from: `the brand's own file ${src.name ?? ""}`.trim() };
+  } catch (e) {
+    console.error("brand-book logo file", e instanceof Error ? e.message : String(e));
     return null;
   }
 }

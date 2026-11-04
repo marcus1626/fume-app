@@ -21,7 +21,7 @@ export const PicturesAnswer = z.object({
     seen: Seen,
   })).describe("Three to seven colours the brand's own graphic design is built from; never colours that are only in a photograph"),
   typefaces: z.array(z.object({
-    name: z.string().describe("The face as a type designer would name it, or its closest well-known face"),
+    name: z.string().describe("A real font family's name only: the face itself when you know it, else the closest well-known family (e.g. Brandon Grotesque), never a description"),
     role: z.enum(["display", "body"]),
     weights: z.array(z.string()),
     sample: z.string().describe("Words set in it, word for word from a picture"),
