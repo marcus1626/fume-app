@@ -54,4 +54,15 @@ select public.verify_product(test.id('balm'));
 select test.ok(not exists (select 1 from public.product_facts where product_id = test.id('balm') and status <> 'verified'),
   'the brand confirms the product, and with it what Fume read');
 
+-- The Engine reads the design system the customer approved (20261105020000_engine_design_palette.sql).
+reset role;
+insert into public.brand_books (workspace_id, kind, version, state, body)
+values (test.id('lysne'), 'design', 9, 'approved', '{"colours":[{"name":"Dusk","hex":"#2b2a4c","role":"primary","use":"Grounds"},{"name":"Bad","hex":"blue","role":"accent"}]}');
+select test.ok((select p -> 0 ->> 'hex' = '#2B2A4C' and (p -> 0 ->> 'confirmed')::boolean and p -> 0 ->> 'source' = 'design_system'
+    and not exists (select 1 from jsonb_array_elements(p) c where c ->> 'name' = 'Bad')
+  from (select app.engine_brain(test.id('lysne'), null, 'x') -> 'palette' p) t),
+  'the colours of the approved design system come first in the brain, as the brand''s own');
+delete from public.brand_books where workspace_id = test.id('lysne') and kind = 'design' and version = 9;
+set role authenticated;
+
 select test.ok(true, 'all of the product truth tests passed');
