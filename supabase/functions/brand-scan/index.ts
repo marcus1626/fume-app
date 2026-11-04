@@ -52,7 +52,9 @@ async function readPictures(asCaller: any, workspaceId: string, ids: string[], b
   }
   if (!images.length) return { error: "none of the pictures could be opened." };
   try {
-    const message = await new Anthropic({ apiKey: key }).beta.messages.parse({
+    const workspace = Deno.env.get("ANTHROPIC_WORKSPACE_ID");
+    const claude = new Anthropic({ apiKey: key, ...(workspace ? { defaultHeaders: { "anthropic-workspace-id": workspace } } : {}) });
+    const message = await claude.beta.messages.parse({
       model: PICTURES_MODEL,
       max_tokens: 8_000,
       system: PICTURES_SYSTEM,
