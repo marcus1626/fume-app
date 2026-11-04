@@ -20,6 +20,7 @@ export const CreativesAnswer = z.object({
     what: z.string().describe("One sentence: the words, where they sit, how they look"),
   })).describe("Every picture you were shown"),
   headline: z.object({
+    seenAsHeadline: z.boolean().describe("True only when a picture carries a real headline: the largest words of an ad. A caption, a name tag or the words printed on a product are not a headline"),
     looksLike: z.string().describe("The face as a type designer names it, e.g. a condensed grotesque in extra bold, or a high-contrast serif"),
     closestGoogleFont: z.string().describe("The Google Font closest to it, e.g. Anton, Oswald, Archivo, Inter Tight, Playfair Display"),
     weight: z.number().int().describe("100 to 900"),
@@ -100,7 +101,10 @@ const round = (n: number, d = 2) => Math.round(n * 10 ** d) / 10 ** d;
  * the brand's own face is not to be had. A proposal (source "fume") is kept beside the book but changes nothing in it.
  */
 export function withCreatives<T extends DesignBody>(body: T, c: CreativesAnswer, pictures: LookPicture[]): T & { onPictures: unknown } {
-  const seen = c.headline.source === "pictures";
+  // Only a headline the brand set on its own ads changes the book: a caption or a name tag on a photo says nothing
+  // about how big and bold its headlines are.
+  const carryingWords = c.read.filter((r) => r.carries === "words" || r.carries === "words_and_logo").length;
+  const seen = c.headline.source === "pictures" && c.headline.seenAsHeadline && c.headline.sizePctOfWidth >= 5 && carryingWords >= 2;
   const styles = body.styles.map((s) => {
     if (!seen || !["display", "h1", "h2"].includes(s.name)) return s;
     const scale = s.name === "display" ? 1 : s.name === "h1" ? 0.78 : 0.6;
@@ -116,7 +120,7 @@ export function withCreatives<T extends DesignBody>(body: T, c: CreativesAnswer,
   const headlineFont = styles.find((s) => s.name === "display" || s.name === "h1")?.font;
   const bodyFont = styles.find((s) => s.name === "body")?.font;
   const typefaces = body.typefaces.map((t) => {
-    const from = t.role === headlineFont && c.headline.source !== "fume" ? c.headline : t.role === bodyFont && c.body.source !== "fume" ? c.body : null;
+    const from = t.role === headlineFont && seen ? c.headline : t.role === bodyFont && c.body.source !== "fume" ? c.body : null;
     return from && from.closestGoogleFont.trim() ? { ...t, fallback: from.closestGoogleFont.trim() } : t;
   });
   const read = c.read
@@ -135,7 +139,7 @@ export function withCreatives<T extends DesignBody>(body: T, c: CreativesAnswer,
     onPictures: {
       read,
       carrying: read.filter((r) => r.carries !== "none").length,
-      headline: c.headline,
+      headline: { ...c.headline, used: seen },
       body: c.body,
       layouts,
       rules: c.rules,

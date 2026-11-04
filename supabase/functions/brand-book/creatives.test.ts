@@ -13,8 +13,8 @@ const body = {
   ],
 };
 const answer = (source: "pictures" | "fume"): CreativesAnswer => ({
-  read: [{ picture: 1, carries: "words_and_logo", what: "Big stack bottom left" }, { picture: 9, carries: "none", what: "not shown" }],
-  headline: { looksLike: "condensed grotesque, extra bold", closestGoogleFont: "Anton", weight: 840, case: "upper", condensed: true, trackingEm: -0.01, lineHeight: 0.88, sizePctOfWidth: 12, source },
+  read: [{ picture: 1, carries: "words_and_logo", what: "Big stack bottom left" }, { picture: 1, carries: "words", what: "Same" }, { picture: 9, carries: "none", what: "not shown" }],
+  headline: { seenAsHeadline: true, looksLike: "condensed grotesque, extra bold", closestGoogleFont: "Anton", weight: 840, case: "upper", condensed: true, trackingEm: -0.01, lineHeight: 0.88, sizePctOfWidth: 12, source },
   body: { looksLike: "neo-grotesque", closestGoogleFont: "Inter Tight", weight: 400, source },
   layouts: [{ name: "Big stack", pictures: [1, 7], band: "bottom", align: "left", wordsWidthPct: 140, ground: "photo", words: "light", cta: "pill", logo: "top_left", logoWidthPct: 9, why: "", source }],
   rules: ["Never more than six words in the headline"],
@@ -30,14 +30,21 @@ Deno.test("what the brand's pictures show sets the headline: case, weight, size,
   assertEquals(out.styles.find((s) => s.name === "body")!.case, "none", "the body is not the headline");
   assertEquals(out.typefaces.map((t) => t.fallback), ["Anton", "Inter Tight"]);
   const on = out.onPictures as { read: unknown[]; layouts: { pictures: number[]; wordsWidthPct: number }[]; carrying: number };
-  assertEquals(on.read.length, 1, "only pictures that were shown");
+  assertEquals(on.read.length, 2, "only pictures that were shown");
   assertEquals(on.layouts[0].pictures, [1]);
   assertEquals(on.layouts[0].wordsWidthPct, 100);
-  assertEquals(on.carrying, 1);
+  assertEquals(on.carrying, 2);
 });
 
 Deno.test("a proposal where no picture shows it is kept beside the book and changes nothing in it", () => {
   const out = withCreatives(body, answer("fume"), [{ url: "https://x/1.jpg", kind: "site" }]);
   assertEquals(out.styles, body.styles);
   assertEquals(out.typefaces, body.typefaces);
+});
+
+Deno.test("a caption or a name tag on a photo is not taken for the brand's headline", () => {
+  const a = answer("pictures");
+  const out = withCreatives(body, { ...a, headline: { ...a.headline, seenAsHeadline: false, sizePctOfWidth: 3.5 } }, [{ url: "https://x/1.jpg", kind: "site" }]);
+  assertEquals(out.styles, body.styles);
+  assertEquals(out.typefaces[0].fallback, "Inter");
 });
