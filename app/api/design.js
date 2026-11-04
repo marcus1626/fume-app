@@ -340,6 +340,29 @@ function hasFont(family, weight) {
   }
   return loaded.get(key);
 }
+async function capHeightOf(family, weight) {
+  const file = source ? await source(family, weight, false).catch(() => null) : null;
+  return file ? capOf(new DataView(file)) : null;
+}
+function capOf(v) {
+  try {
+    const n = v.getUint16(4);
+    let os2 = -1;
+    let head = -1;
+    for (let i = 0; i < n; i++) {
+      const r = 12 + i * 16;
+      const tag = String.fromCharCode(v.getUint8(r), v.getUint8(r + 1), v.getUint8(r + 2), v.getUint8(r + 3));
+      if (tag === "OS/2") os2 = v.getUint32(r + 8);
+      if (tag === "head") head = v.getUint32(r + 8);
+    }
+    if (os2 < 0 || head < 0 || v.getUint16(os2) < 2) return null;
+    const upm = v.getUint16(head + 18);
+    const cap = v.getInt16(os2 + 88);
+    return upm > 0 && cap > 0 ? cap / upm : null;
+  } catch {
+    return null;
+  }
+}
 function imageHash(bytes) {
   return createHash("sha1").update(bytes).digest("hex");
 }
@@ -546,12 +569,13 @@ function cornersFor(first, band, align) {
 
 // src/design.ts
 var SCALE = 0.25;
-async function design(ask) {
+async function design(asked) {
   const t0 = Date.now();
+  const { familyFor, fonts, book: set } = await familiesOf(asked.book);
+  const ask = { ...asked, book: set };
   const { book, format, words } = ask;
   const g = gridOf(book, format);
   const pixels = await pictureAt(ask.picture, format, SCALE);
-  const { familyFor, fonts } = await familiesOf(book);
   const keep = ask.keepClear ?? [];
   const logo = ask.logo ? await logoOf(ask.logo, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000").catch(() => null) : null;
   let best = null;
@@ -925,6 +949,7 @@ function gridSize(format) {
 async function familiesOf(book) {
   const fonts = [];
   const chosen = /* @__PURE__ */ new Map();
+  const styles = [];
   for (const s of book.styles) {
     const t = book.typefaces.find((x) => x.role === s.font) ?? book.typefaces[0];
     const asked = t?.family ?? "Inter";
@@ -937,8 +962,14 @@ async function familiesOf(book) {
     }
     chosen.set(s.name, used);
     fonts.push({ style: s.name, asked, used });
+    styles.push(used !== asked && s.case === "upper" ? { ...s, lineHeight: standInLeading(s.lineHeight, await capHeightOf(used, s.weight)) } : s);
   }
-  return { familyFor: (s) => chosen.get(s.name) ?? "Inter", fonts };
+  return { familyFor: (s) => chosen.get(s.name) ?? "Inter", fonts, book: { ...book, styles } };
+}
+var BRAND_CAP = 0.72;
+function standInLeading(lineHeight, cap) {
+  if (!cap || cap <= BRAND_CAP) return lineHeight;
+  return Math.round((lineHeight + cap - BRAND_CAP) * 100) / 100;
 }
 function contrastOf(a, b) {
   return Math.round(contrast(luminance(...rgbOf(a)), luminance(...rgbOf(b))) * 100) / 100;

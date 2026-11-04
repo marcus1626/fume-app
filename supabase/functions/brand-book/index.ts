@@ -22,6 +22,7 @@ import {
   voicePrompt,
 } from "./book.ts";
 import { CREATIVES_SYSTEM, CreativesAnswer, creativesPrompt, withCreatives } from "./creatives.ts";
+import { AdWords, ADWORDS_SYSTEM, adWordsPage, adWordsPrompt } from "./adwords.ts";
 import { type BookLogo, dnaLogoUrl, LOGO_TYPES, safeSvg } from "./logo.ts";
 import { handleBook, type Written } from "./handler.ts";
 import { LOOK_MODEL, LOOK_PARTS, LOOK_SYSTEM, type LookAnswer, type LookPicture, lookCostOf, lookPrompt, pageImages, toLookBody } from "./look.ts";
@@ -253,10 +254,31 @@ async function readCreatives(task: Parameters<typeof voicePrompt>[0], read: Page
   }
 }
 
+/** The words on the brand's own ads, read with eyes; null when it has no pictures or the read fails. */
+async function readAdWords(task: Parameters<typeof voicePrompt>[0]) {
+  try {
+    const { pictures, images } = await brandPictures(task);
+    if (!pictures.length) return null;
+    const message = await claude.beta.messages.parse({
+      model: LOOK_MODEL,
+      max_tokens: 8_000,
+      system: ADWORDS_SYSTEM,
+      messages: [{ role: "user", content: [...images, { type: "text", text: adWordsPrompt(pictures) }] }],
+      output_config: { effort: "low", format: betaZodOutputFormat(AdWords) },
+    });
+    const answer = message.stop_reason === "end_turn" ? (message.parsed_output as AdWords | null) : null;
+    return { answer, page: adWordsPage(answer), pictures, usage: message.usage };
+  } catch {
+    return null;
+  }
+}
+
 async function write(task: Parameters<typeof voicePrompt>[0], read: PageText[]): Promise<Written> {
   if (task.book.kind === "look") return writeLook(task, read);
   const voice = task.book.kind === "voice";
-  const content = voice ? voicePrompt(task, read) : designPrompt(task, read);
+  // The voice is written from the brand's own ads first, then its pages.
+  const ads = voice ? await readAdWords(task) : null;
+  const content = voice ? voicePrompt(task, ads?.page ? [ads.page, ...read] : read) : designPrompt(task, read);
   const parts = voice ? VOICE_PARTS : DESIGN_PARTS;
   // The design system's tokens come from the pages; how the brand sets words on pictures, from its pictures, at the same time.
   const eyes = voice ? Promise.resolve(null) : readCreatives(task, read);
@@ -265,10 +287,10 @@ async function write(task: Parameters<typeof voicePrompt>[0], read: PageText[]):
   const messages = settled.flatMap((s) => (s.status === "fulfilled" ? [s.value] : []));
   const usage = {
     model: messages[0]?.model ?? MODEL,
-    input_tokens: messages.reduce((n, m) => n + m.usage.input_tokens, 0) + (seen?.message?.usage.input_tokens ?? 0),
-    output_tokens: messages.reduce((n, m) => n + m.usage.output_tokens, 0) + (seen?.message?.usage.output_tokens ?? 0),
+    input_tokens: messages.reduce((n, m) => n + m.usage.input_tokens, 0) + (seen?.message?.usage.input_tokens ?? 0) + (ads?.usage.input_tokens ?? 0),
+    output_tokens: messages.reduce((n, m) => n + m.usage.output_tokens, 0) + (seen?.message?.usage.output_tokens ?? 0) + (ads?.usage.output_tokens ?? 0),
     cost_usd:
-      Math.round((messages.reduce((n, m) => n + costOf(m.usage), 0) + (seen?.message ? lookCostOf(seen.message.usage) : 0)) * 10_000) / 10_000,
+      Math.round((messages.reduce((n, m) => n + costOf(m.usage), 0) + (seen?.message ? lookCostOf(seen.message.usage) : 0) + (ads ? lookCostOf(ads.usage) : 0)) * 10_000) / 10_000,
   };
   const failed = settled.find((s) => s.status === "rejected") as PromiseRejectedResult | undefined;
   if (failed) return { ok: false, error: failed.reason instanceof Error ? failed.reason.message : String(failed.reason), usage };
@@ -276,7 +298,10 @@ async function write(task: Parameters<typeof voicePrompt>[0], read: PageText[]):
   if (messages.some((m) => m.stop_reason === "max_tokens")) return { ok: false, error: "The book was cut off.", usage };
   if (messages.some((m) => !m.parsed_output)) return { ok: false, error: "The book could not be read.", usage };
   const joined = joinParts<VoiceAnswer & DesignAnswer>(messages.map((m) => m.parsed_output as Record<string, unknown>));
-  if (voice) return { ok: true, body: toVoiceBody(joined, task), sources: { sources: joined.sources }, usage };
+  if (voice) {
+    const sources = { sources: joined.sources, ...(ads?.page ? { ads: ads.pictures.map((p) => p.url ?? p.path) } : {}) };
+    return { ok: true, body: { ...toVoiceBody(joined, task), adWords: ads?.answer ?? null }, sources, usage };
+  }
   const design = toDesignBody(joined, task);
   const onBrand = seen?.answer ? withCreatives(design, seen.answer, seen.pictures) : { ...design, onPictures: null };
   // The logo file the design layer sets on every creative, or none yet.

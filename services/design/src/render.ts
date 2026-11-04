@@ -51,6 +51,32 @@ export function hasFont(family: string, weight: number): Promise<boolean> {
   return loaded.get(key)!;
 }
 
+/** The face's capital height as a share of its size, from its OS/2 table; null when the file does not say. */
+export async function capHeightOf(family: string, weight: number): Promise<number | null> {
+  const file = source ? await source(family, weight, false).catch(() => null) : null;
+  return file ? capOf(new DataView(file)) : null;
+}
+
+export function capOf(v: DataView): number | null {
+  try {
+    const n = v.getUint16(4);
+    let os2 = -1;
+    let head = -1;
+    for (let i = 0; i < n; i++) {
+      const r = 12 + i * 16;
+      const tag = String.fromCharCode(v.getUint8(r), v.getUint8(r + 1), v.getUint8(r + 2), v.getUint8(r + 3));
+      if (tag === "OS/2") os2 = v.getUint32(r + 8);
+      if (tag === "head") head = v.getUint32(r + 8);
+    }
+    if (os2 < 0 || head < 0 || v.getUint16(os2) < 2) return null;
+    const upm = v.getUint16(head + 18);
+    const cap = v.getInt16(os2 + 88);
+    return upm > 0 && cap > 0 ? cap / upm : null;
+  } catch {
+    return null;
+  }
+}
+
 export function imageHash(bytes: Uint8Array): string {
   return createHash("sha1").update(bytes).digest("hex");
 }

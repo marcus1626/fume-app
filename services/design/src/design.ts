@@ -5,7 +5,7 @@
 import { type DesignBook, type Format, type Grid, type Style, colourOf, componentOf, gridOf, headlineSteps, signatureOf, styleOf } from "./book.ts";
 import { type Band, type Composed, type FamilyFor, type Ground, type Layout, type Words, compose, shadeFill, shadeFor } from "./compose.ts";
 import { type Box, type Pixels, type Shade, contrast, luminance, overlap, rgbOf, under } from "./pixels.ts";
-import { type Doc, boxOf, build, fig, hasFont, pixelsOf, place, png } from "./render.ts";
+import { type Doc, boxOf, build, fig, capHeightOf, hasFont, pixelsOf, place, png } from "./render.ts";
 import { type Logo, type Where, CORNERS, cornersFor, logoOf } from "./logo.ts";
 
 export interface Ask {
@@ -72,12 +72,13 @@ export interface Designed {
 
 const SCALE = 0.25;
 
-export async function design(ask: Ask): Promise<Designed> {
+export async function design(asked: Ask): Promise<Designed> {
   const t0 = Date.now();
+  const { familyFor, fonts, book: set } = await familiesOf(asked.book);
+  const ask = { ...asked, book: set };
   const { book, format, words } = ask;
   const g = gridOf(book, format);
   const pixels = await pictureAt(ask.picture, format, SCALE);
-  const { familyFor, fonts } = await familiesOf(book);
   const keep = ask.keepClear ?? [];
   const logo = ask.logo
     ? await logoOf(ask.logo, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000").catch(() => null)
@@ -530,6 +531,7 @@ function gridSize(format: Format) {
 async function familiesOf(book: DesignBook) {
   const fonts: { style: string; asked: string; used: string }[] = [];
   const chosen = new Map<string, string>();
+  const styles: Style[] = [];
   for (const s of book.styles) {
     const t = book.typefaces.find((x) => x.role === s.font) ?? book.typefaces[0];
     const asked = t?.family ?? "Inter";
@@ -542,8 +544,20 @@ async function familiesOf(book: DesignBook) {
     }
     chosen.set(s.name, used);
     fonts.push({ style: s.name, asked, used });
+    styles.push(used !== asked && s.case === "upper" ? { ...s, lineHeight: standInLeading(s.lineHeight, await capHeightOf(used, s.weight)) } : s);
   }
-  return { familyFor: (s: Style) => chosen.get(s.name) ?? "Inter", fonts };
+  return { familyFor: (s: Style) => chosen.get(s.name) ?? "Inter", fonts, book: { ...book, styles } };
+}
+
+// The cap height the brands' condensed display faces share (Futura Condensed, Trade Gothic, Helvetica Condensed).
+const BRAND_CAP = 0.72;
+/**
+ * Line height for capitals set in a stand-in face: the brand's read line height keeps the gap between lines its own
+ * face leaves, so a taller stand-in (Anton's capitals are 0.86 of its size) does not set the lines touching.
+ */
+export function standInLeading(lineHeight: number, cap: number | null): number {
+  if (!cap || cap <= BRAND_CAP) return lineHeight;
+  return Math.round((lineHeight + cap - BRAND_CAP) * 100) / 100;
 }
 
 function contrastOf(a: string, b: string): number {
