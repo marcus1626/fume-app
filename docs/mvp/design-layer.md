@@ -55,6 +55,12 @@ Marcus: "Designet var ikke veldig on brand." What changed:
   never the favicon; the book names the file (`body.logo`). The service sets it in the brand's corner or a calm one
   away from the words, light or dark for a one-colour logo, and leaves it off where the brand's layout carries none.
 - **A new book is used only once it is checked and approved** (`app.brand_book_in_use`).
+- **Whole words.** A word wider than its box fails the layout ("FLANELLS / KJORTER"); balancing never narrows a text
+  below its longest word. A long headline or button word is set smaller than its style (not below 60%, and the
+  headline stays at least a quarter bigger than the subline) so it fits whole, and the expert is told the share.
+- **Room on a studio picture** (`src/room.ts`). When no layout passes and the picture's top and left edges are a smooth
+  backdrop, the picture is set at 82%, then 72%, in the bottom right corner, its backdrop carried on from a softened
+  copy, and the keep-clear boxes move with it. A scene is never stretched. The expert is told.
 
 ## Still open
 

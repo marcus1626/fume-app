@@ -68,7 +68,7 @@ function clamp(n, lo, hi) {
 function compose(book, format, words, l, family, widths = {}, logo) {
   const g = gridOf(book, format);
   const unit = book.spacing?.unitPx ?? 8;
-  const hl = styleOf(book, l.headline) ?? styleOf(book, "h1") ?? book.styles[0];
+  const hl = fitted(styleOf(book, l.headline) ?? styleOf(book, "h1") ?? book.styles[0], l.fit?.headline);
   const sub = styleOf(book, l.subline ?? "subline") ?? styleOf(book, "subline") ?? styleOf(book, "body") ?? hl;
   const panel = componentOf(book, "body");
   const isBlock = l.ground === "block";
@@ -95,7 +95,7 @@ function compose(book, format, words, l, family, widths = {}, logo) {
   };
   const cta = () => {
     const c = componentOf(book, "cta");
-    const s = styleOf(book, c?.style ?? "cta") ?? sub;
+    const s = fitted(styleOf(book, c?.style ?? "cta") ?? sub, l.fit?.cta);
     const fam = family(s);
     fonts.push({ family: fam, weight: s.weight });
     const look = l.ctaLook ?? "pill";
@@ -147,6 +147,9 @@ function compose(book, format, words, l, family, widths = {}, logo) {
   )}} fills={[{ type: "IMAGE", imageHash: "LOGO", imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />` : "";
   const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${shade}${block}${alone}${logoNode}</Frame>`;
   return { jsx, grid: g, fonts, colours, sizes, ...onPanel ? { panel: panelHex } : {} };
+}
+function fitted(s, k) {
+  return k && k < 1 ? { ...s, sizePx: Math.round(s.sizePx * k) } : s;
 }
 function bindShort(text) {
   return text.replace(new RegExp("(?<=^|\\s)(\\p{L}{1,2}) (?=\\S)", "gu"), "$1\xA0");
@@ -583,9 +586,128 @@ function cornersFor(first, band, align) {
   return [...new Set(order)];
 }
 
+// src/room.ts
+function plainEdges(data, width, height) {
+  const lumAt = (x, y) => {
+    const i = (y * width + x) * 4;
+    return luminance(data[i], data[i + 1], data[i + 2]);
+  };
+  const steps = [];
+  const walk = (n, at) => {
+    let prev = at(0);
+    for (let k = 3; k < n; k += 3) {
+      const l = at(k);
+      steps.push(Math.abs(l - prev));
+      prev = l;
+    }
+  };
+  for (const d of [0, 2]) {
+    walk(width, (x) => lumAt(x, d));
+    walk(height, (y) => lumAt(d, y));
+  }
+  const mean = steps.reduce((a, x) => a + x, 0) / steps.length;
+  const worst = [...steps].sort((a, b) => a - b)[Math.floor(steps.length * 0.99)] ?? 0;
+  return mean < 0.015 && worst < 0.04;
+}
+async function inset(picture, frame, scale) {
+  const { ck } = await start();
+  const img = ck.MakeImageFromEncoded(picture);
+  if (!img) return null;
+  const iw = img.width();
+  const ih = img.height();
+  const data = img.readPixels(0, 0, {
+    width: iw,
+    height: ih,
+    colorType: ck.ColorType.RGBA_8888,
+    alphaType: ck.AlphaType.Unpremul,
+    colorSpace: ck.ColorSpace.SRGB
+  });
+  if (!data || !plainEdges(data, iw, ih)) {
+    img.delete();
+    return null;
+  }
+  const fit = Math.max(frame.w / iw, frame.h / ih);
+  const sw = frame.w / fit;
+  const sh = frame.h / fit;
+  const sx = (iw - sw) / 2;
+  const sy = (ih - sh) / 2;
+  const w = Math.round(frame.w * scale);
+  const h = Math.round(frame.h * scale);
+  const ox = frame.w - w;
+  const oy = frame.h - h;
+  const surface = ck.MakeSurface(frame.w, frame.h);
+  if (!surface) {
+    img.delete();
+    return null;
+  }
+  const canvas = surface.getCanvas();
+  const paint = new ck.Paint();
+  const softSurface = ck.MakeSurface(iw, ih);
+  if (!softSurface) {
+    paint.delete();
+    surface.delete();
+    img.delete();
+    return null;
+  }
+  const soft = new ck.Paint();
+  soft.setImageFilter(ck.ImageFilter.MakeBlur(12, 12, ck.TileMode.Clamp, null));
+  softSurface.getCanvas().drawImage(img, 0, 0, soft);
+  const blurred = softSurface.makeImageSnapshot();
+  const draw = (from, src, dst) => canvas.drawImageRectOptions(from, ck.XYWHRect(src[0], src[1], src[2], src[3]), ck.XYWHRect(dst[0], dst[1], dst[2], dst[3]), ck.FilterMode.Linear, ck.MipmapMode.None, paint);
+  const e = 6;
+  draw(blurred, [sx + e, sy + e, 2, 2], [0, 0, ox + 1, oy + 1]);
+  draw(blurred, [sx, sy + e, sw, 2], [ox, 0, w, oy + 1]);
+  draw(blurred, [sx + e, sy, 2, sh], [0, oy, ox + 1, h]);
+  draw(img, [sx, sy, sw, sh], [ox, oy, w, h]);
+  const snap = surface.makeImageSnapshot();
+  const bytes = snap.encodeToBytes();
+  snap.delete();
+  paint.delete();
+  soft.delete();
+  blurred.delete();
+  softSurface.delete();
+  surface.delete();
+  img.delete();
+  if (!bytes) return null;
+  return {
+    picture: bytes,
+    move: (b) => ({ x: Math.round(ox + b.x * scale), y: Math.round(oy + b.y * scale), w: Math.round(b.w * scale), h: Math.round(b.h * scale) })
+  };
+}
+
 // src/design.ts
 var SCALE = 0.25;
+var INSETS = [0.82, 0.72];
 async function design(asked) {
+  const t0 = Date.now();
+  const first = await designOn(asked);
+  if (first.ok) return first;
+  const g = gridOf(asked.book, asked.format);
+  let best = first;
+  let tried = first.tried;
+  for (const scale of INSETS) {
+    const room = await inset(asked.picture, g, scale).catch(() => null);
+    if (!room) break;
+    const keepClear = (asked.keepClear ?? []).map((k) => ({ ...room.move(k), what: k.what }));
+    const next = await designOn({ ...asked, picture: room.picture, keepClear });
+    tried += next.tried;
+    if (next.ok || hardFails(next) < hardFails(best)) {
+      best = {
+        ...next,
+        checks: [
+          ...next.checks,
+          { check: "covers", node: "Picture", ok: true, hard: false, note: `The picture is set at ${Math.round(scale * 100)}% on its own backdrop, carried on to the edges, so the words have room.` }
+        ]
+      };
+    }
+    if (next.ok) break;
+  }
+  return { ...best, tried, ms: Date.now() - t0 };
+}
+function hardFails(d) {
+  return d.checks.filter((c) => !c.ok && c.hard).length;
+}
+async function designOn(asked) {
   const t0 = Date.now();
   const { familyFor, fonts, book: set } = await familiesOf(asked.book);
   const ask = { ...asked, book: set };
@@ -604,18 +726,37 @@ async function design(asked) {
     const plan = logo ? logoPlan(book, g, l, logo) : null;
     const c = compose(book, format, words, l, familyFor, {}, plan ?? void 0);
     const doc = await build(c.jsx, ask.picture, plan?.logo.variants);
-    const t = measure(doc, c, l, book, pixels, keep, plan);
+    let t = measure(doc, c, l, book, pixels, keep, plan);
+    let made = doc;
     tried++;
+    const fit = fitFor(doc, c.sizes);
+    if (fit) {
+      const lf = { ...l, fit };
+      const cf = compose(book, format, words, lf, familyFor, {}, plan ?? void 0);
+      const df = await build(cf.jsx, ask.picture, plan?.logo.variants);
+      const tf = measure(df, cf, lf, book, pixels, keep, plan);
+      tried++;
+      if (better(tf, t) || tf.ok === t.ok && tf.score >= t.score) {
+        t = tf;
+        made = df;
+      }
+    }
     if (attempts.length < 30) {
       attempts.push({ layout: l, failed: t.checks.filter((x) => !x.ok && x.hard).map((x) => `${x.node}: ${x.note}`) });
     }
-    if (!best || better(t, best.t)) best = { t, doc };
+    if (!best || better(t, best.t)) best = { t, doc: made };
     if (best.t.ok && tried >= 6) break;
     if (tried >= 320) break;
   }
   if (!best) throw new Error("No layout could be made.");
   const even = await balance(ask, best.t, familyFor, pixels, keep, logo);
   if (even) best = even;
+  const fitted2 = best.t.layout.fit;
+  if (fitted2) {
+    for (const [node, k] of [["Headline", fitted2.headline], ["CTA", fitted2.cta]]) {
+      if (k) best.t.checks.push({ check: "fits", node, ok: true, hard: false, note: `Set at ${Math.round(k * 100)}% of its style's size, so its longest word fits the column whole.` });
+    }
+  }
   const used = /* @__PURE__ */ new Set([best.t.layout.headline, best.t.layout.subline ?? "subline", componentOf(book, "cta")?.style ?? "cta"]);
   const seen = /* @__PURE__ */ new Set();
   if (ask.logo && !logo) {
@@ -952,6 +1093,18 @@ function scoreOf(l, checks) {
   if (l.ground === "photo") s += 2;
   if (l.ground === "gradient") s += 1;
   return s;
+}
+var FIT_FLOOR = 0.6;
+function fitFor(doc, sizes = {}) {
+  const need = (name, floor = FIT_FLOOR) => {
+    const ws = wordWidths(doc, name);
+    const worst = Math.min(1, ...ws.map((w) => (w.box - 2) / w.width));
+    return worst < 1 && worst >= floor ? Math.floor(worst * 100) / 100 : void 0;
+  };
+  const over = sizes.Headline && sizes.Subline ? sizes.Subline * 1.25 / sizes.Headline : 0;
+  const headline = need("Headline", Math.max(FIT_FLOOR, over));
+  const cta = need("CTA words");
+  return headline || cta ? { ...headline ? { headline } : {}, ...cta ? { cta } : {} } : null;
 }
 function better(a, b) {
   if (a.ok !== b.ok) return a.ok;

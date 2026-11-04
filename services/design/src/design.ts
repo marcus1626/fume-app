@@ -7,6 +7,7 @@ import { type Band, type Composed, type FamilyFor, type Ground, type Layout, typ
 import { type Box, type Pixels, type Shade, contrast, luminance, overlap, rgbOf, under } from "./pixels.ts";
 import { type Doc, boxOf, build, fig, capHeightOf, hasFont, pixelsOf, place, png, splitWords, wordWidths } from "./render.ts";
 import { type Logo, type Where, CORNERS, cornersFor, logoOf } from "./logo.ts";
+import { inset } from "./room.ts";
 
 export interface Ask {
   picture: Uint8Array;
@@ -72,7 +73,42 @@ export interface Designed {
 
 const SCALE = 0.25;
 
+/** Picture sizes tried, largest first, when the product fills a studio picture and the words have no room. */
+const INSETS = [0.82, 0.72];
+
 export async function design(asked: Ask): Promise<Designed> {
+  const t0 = Date.now();
+  const first = await designOn(asked);
+  if (first.ok) return first;
+  // A packshot the product fills: set the picture smaller on its own backdrop, so the words get room.
+  const g = gridOf(asked.book, asked.format);
+  let best = first;
+  let tried = first.tried;
+  for (const scale of INSETS) {
+    const room = await inset(asked.picture, g, scale).catch(() => null);
+    if (!room) break;
+    const keepClear = (asked.keepClear ?? []).map((k) => ({ ...room.move(k), what: k.what }));
+    const next = await designOn({ ...asked, picture: room.picture, keepClear });
+    tried += next.tried;
+    if (next.ok || hardFails(next) < hardFails(best)) {
+      best = {
+        ...next,
+        checks: [
+          ...next.checks,
+          { check: "covers", node: "Picture", ok: true, hard: false, note: `The picture is set at ${Math.round(scale * 100)}% on its own backdrop, carried on to the edges, so the words have room.` },
+        ],
+      };
+    }
+    if (next.ok) break;
+  }
+  return { ...best, tried, ms: Date.now() - t0 };
+}
+
+function hardFails(d: Designed): number {
+  return d.checks.filter((c) => !c.ok && c.hard).length;
+}
+
+async function designOn(asked: Ask): Promise<Designed> {
   const t0 = Date.now();
   const { familyFor, fonts, book: set } = await familiesOf(asked.book);
   const ask = { ...asked, book: set };
@@ -95,18 +131,38 @@ export async function design(asked: Ask): Promise<Designed> {
     const plan = logo ? logoPlan(book, g, l, logo) : null;
     const c = compose(book, format, words, l, familyFor, {}, plan ?? undefined);
     const doc = await build(c.jsx, ask.picture, plan?.logo.variants);
-    const t = measure(doc, c, l, book, pixels, keep, plan);
+    let t = measure(doc, c, l, book, pixels, keep, plan);
+    let made = doc;
     tried++;
+    // A word too long for the column: the headline or the button is sized down to fit it whole, once.
+    const fit = fitFor(doc, c.sizes);
+    if (fit) {
+      const lf = { ...l, fit };
+      const cf = compose(book, format, words, lf, familyFor, {}, plan ?? undefined);
+      const df = await build(cf.jsx, ask.picture, plan?.logo.variants);
+      const tf = measure(df, cf, lf, book, pixels, keep, plan);
+      tried++;
+      if (better(tf, t) || (tf.ok === t.ok && tf.score >= t.score)) {
+        t = tf;
+        made = df;
+      }
+    }
     if (attempts.length < 30) {
       attempts.push({ layout: l, failed: t.checks.filter((x) => !x.ok && x.hard).map((x) => `${x.node}: ${x.note}`) });
     }
-    if (!best || better(t, best.t)) best = { t, doc };
+    if (!best || better(t, best.t)) best = { t, doc: made };
     if (best.t.ok && tried >= 6) break;
     if (tried >= 320) break;
   }
   if (!best) throw new Error("No layout could be made.");
   const even = await balance(ask, best.t, familyFor, pixels, keep, logo);
   if (even) best = even;
+  const fitted = best.t.layout.fit;
+  if (fitted) {
+    for (const [node, k] of [["Headline", fitted.headline], ["CTA", fitted.cta]] as const) {
+      if (k) best.t.checks.push({ check: "fits", node, ok: true, hard: false, note: `Set at ${Math.round(k * 100)}% of its style's size, so its longest word fits the column whole.` });
+    }
+  }
   const used = new Set([best.t.layout.headline, best.t.layout.subline ?? "subline", componentOf(book, "cta")?.style ?? "cta"]);
   const seen = new Set<string>();
   if (ask.logo && !logo) {
@@ -512,6 +568,26 @@ function scoreOf(l: Layout, checks: Check[]): number {
   if (l.ground === "photo") s += 2;
   if (l.ground === "gradient") s += 1;
   return s;
+}
+
+/** The smallest share of a style's size a long word may be set at to fit its column. */
+const FIT_FLOOR = 0.6;
+
+/**
+ * How much smaller the headline and the button must be set so their longest word fits on a line, or null when
+ * every word fits (or would need to be set smaller than the floor, which reads as a different style).
+ */
+export function fitFor(doc: Doc, sizes: Record<string, number> = {}): Layout["fit"] | null {
+  const need = (name: string, floor = FIT_FLOOR) => {
+    const ws = wordWidths(doc, name);
+    const worst = Math.min(1, ...ws.map((w) => (w.box - 2) / w.width));
+    return worst < 1 && worst >= floor ? Math.floor(worst * 100) / 100 : undefined;
+  };
+  // The headline stays clearly bigger than the line under it, or the order of reading is lost.
+  const over = sizes.Headline && sizes.Subline ? (sizes.Subline * 1.25) / sizes.Headline : 0;
+  const headline = need("Headline", Math.max(FIT_FLOOR, over));
+  const cta = need("CTA words");
+  return headline || cta ? { ...(headline ? { headline } : {}), ...(cta ? { cta } : {}) } : null;
 }
 
 /** The first passing layout in the model's order wins; among failing ones, the one that fails least. */

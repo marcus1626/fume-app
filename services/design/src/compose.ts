@@ -50,6 +50,11 @@ export interface Layout {
   cta: "with_words" | "bottom" | "none";
   /** How many of the grid's columns the words span. */
   columns: number;
+  /**
+   * The headline or the call to action set smaller than its style, so a long word fits the column whole
+   * ("FLANELLSKJORTER"), as a designer sizes a headline to its measure. 1 is the style's own size.
+   */
+  fit?: { headline?: number; cta?: number };
 }
 
 export interface Composed {
@@ -80,7 +85,7 @@ export function compose(
 ): Composed {
   const g = gridOf(book, format);
   const unit = book.spacing?.unitPx ?? 8;
-  const hl = styleOf(book, l.headline) ?? styleOf(book, "h1") ?? book.styles[0];
+  const hl = fitted(styleOf(book, l.headline) ?? styleOf(book, "h1") ?? book.styles[0], l.fit?.headline);
   const sub = styleOf(book, l.subline ?? "subline") ?? styleOf(book, "subline") ?? styleOf(book, "body") ?? hl;
   const panel = componentOf(book, "body");
   const isBlock = l.ground === "block";
@@ -116,7 +121,7 @@ export function compose(
 
   const cta = () => {
     const c = componentOf(book, "cta");
-    const s = styleOf(book, c?.style ?? "cta") ?? sub;
+    const s = fitted(styleOf(book, c?.style ?? "cta") ?? sub, l.fit?.cta);
     const fam = family(s);
     fonts.push({ family: fam, weight: s.weight });
     const look = l.ctaLook ?? "pill";
@@ -192,6 +197,11 @@ export function compose(
     : "";
   const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${shade}${block}${alone}${logoNode}</Frame>`;
   return { jsx, grid: g, fonts, colours, sizes, ...(onPanel ? { panel: panelHex } : {}) };
+}
+
+/** A type style at a share of its size; its leading and tracking scale with it. */
+function fitted(s: Style, k?: number): Style {
+  return k && k < 1 ? { ...s, sizePx: Math.round(s.sizePx * k) } : s;
 }
 
 /**
