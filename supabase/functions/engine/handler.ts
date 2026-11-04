@@ -240,7 +240,7 @@ async function attempt(t: Taken, deps: Deps): Promise<RunOutcome> {
       await deps.service.fail(attemptId, submitted.error, null, 0, submitted.final);
       return "failed";
     }
-    await deps.service.submitted(attemptId, deps.provider.name, submitted.providerJobId, result.request);
+    await deps.service.submitted(attemptId, submitted.provider ?? deps.provider.name, submitted.providerJobId, result.request);
     return await collect({ attemptId, workspaceId: t.run.workspace_id, jobId: t.run.job_id, providerJobId: submitted.providerJobId, model: t.run.image_model, title: t.creative.title }, deps);
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
@@ -261,14 +261,21 @@ export function handleEngine(req: Request, deps: (authorization: string) => Deps
   if (!authorization) return answer(401, { error: "Sign in first." });
   return (async () => {
     let jobId: unknown;
+    let probe = false;
+    let routes: string[] | undefined;
     try {
-      jobId = ((await req.json()) as { jobId?: unknown }).jobId;
+      const body = (await req.json()) as { jobId?: unknown; probe?: unknown; routes?: unknown };
+      jobId = body.jobId;
+      probe = body.probe === true;
+      if (Array.isArray(body.routes)) routes = body.routes.filter((r): r is string => typeof r === "string" && /^(https:\/\/[a-z0-9-]+\.higgsfield\.ai)?[\w./-]{1,160}$/.test(r)).slice(0, 40);
     } catch {
       return answer(400, { error: "Send the job's id." });
     }
     if (typeof jobId !== "string" || !/^[0-9a-f-]{36}$/i.test(jobId)) return answer(400, { error: "Send the job's id." });
     const d = deps(authorization);
     if (!(await d.canRead(jobId))) return answer(404, { error: "No such job." });
+    // Fume's people check the image provider's key without making a picture.
+    if (probe) return answer(200, { provider: d.provider?.name ?? null, probe: d.provider?.probe ? await d.provider.probe(routes) : null });
     d.later(runJob(jobId, d).catch(() => undefined));
     return answer(202, { ok: true });
   })();

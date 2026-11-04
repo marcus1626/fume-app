@@ -1,11 +1,13 @@
 // The edge function `engine` (handler.ts says what it does). Deployed with verify_jwt off: the handler reads the job
 // with the caller's own token first. Secrets: ANTHROPIC_API_KEY (and ANTHROPIC_WORKSPACE_ID) for the prompt and its
-// checks; HF_CREDENTIALS (Higgsfield's "key id:key secret") for the pictures, and HF_ENDPOINTS to change an endpoint.
+// checks; HF_CREDENTIALS (Higgsfield's "key id:key secret", or a single API key) for the pictures, and HF_ENDPOINTS to
+// change an endpoint.
 import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
 import { handleEngine } from "./handler.ts";
 import { claudeModels } from "./models.ts";
-import { higgsfield } from "./provider.ts";
+import { fal } from "./fal.ts";
+import { byModel, higgsfield } from "./provider.ts";
 
 const url = Deno.env.get("SUPABASE_URL")!;
 const keyOf = (json: string, legacy: string) =>
@@ -19,15 +21,23 @@ const claude = new Anthropic({
   maxRetries: 1,
   ...(workspace ? { defaultHeaders: { "anthropic-workspace-id": workspace } } : {}),
 });
-const credentials = Deno.env.get("HF_CREDENTIALS");
-const endpoints = (() => {
+const json = (name: string) => {
   try {
-    return JSON.parse(Deno.env.get("HF_ENDPOINTS") ?? "{}");
+    return JSON.parse(Deno.env.get(name) ?? "{}");
   } catch {
     return {};
   }
-})();
-const provider = credentials ? higgsfield(credentials, { endpoints }) : null;
+};
+const credentials = Deno.env.get("HF_CREDENTIALS");
+const falKey = Deno.env.get("FAL_KEY");
+// fal first for the image models Higgsfield's API lacks; ENGINE_ROUTE ({"qwen-image-3": "higgsfield"}) moves a model.
+const provider = byModel(
+  [
+    ...(falKey ? [fal(falKey, { endpoints: json("FAL_ENDPOINTS") })] : []),
+    ...(credentials ? [higgsfield(credentials, { endpoints: json("HF_ENDPOINTS") })] : []),
+  ],
+  json("ENGINE_ROUTE"),
+);
 
 async function allowed(): Promise<boolean> {
   const { data, error } = await service.rpc("fume_llm_budget");

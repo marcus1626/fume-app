@@ -1,6 +1,7 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import { type Deps, handleEngine, NO_PROVIDER, runJob, type Taken } from "./handler.ts";
-import { higgsfield } from "./provider.ts";
+import { byModel, higgsfield, ratioFor } from "./provider.ts";
+import { fal, sizeFor } from "./fal.ts";
 import type { Composer, Decider, SlotText, Verifier } from "../_shared/engine/index.ts";
 
 const JOB = "0b000000-0000-4000-8000-0000000000aa";
@@ -161,14 +162,93 @@ Deno.test("Higgsfield gets the prompt, the ratio and the pictures, with Fume's k
       return new Response(JSON.stringify(url.includes("/requests/") ? { status: "completed", images: [{ url: "https://cdn/a.png" }] } : { request_id: "r1" }));
     }) as typeof fetch,
   });
-  const s = await hf.submit({ imageModel: "seedream-4", text: "A bench.", referenceUrls: ["https://p/1.png"], aspectRatio: "4:5", resolution: null, seed: null });
-  assertEquals(s, { ok: true, providerJobId: "r1" });
-  assertEquals(sent[0].url, "https://api.higgsfield.ai/bytedance/seedream/v4/edit");
+  const s = await hf.submit({ imageModel: "qwen-image-3", text: "A bench.", referenceUrls: ["https://p/1.png"], aspectRatio: "4:5", resolution: null, seed: null });
+  assertEquals(s, { ok: true, providerJobId: "r1", provider: "higgsfield" });
+  assertEquals(sent[0].url, "https://api.higgsfield.ai/alibaba/qwen-image-3/edit");
   assertEquals((sent[0].init.headers as Record<string, string>).Authorization, "Key id:secret");
-  assertEquals(JSON.parse(sent[0].init.body as string), { prompt: "A bench.", aspect_ratio: "4:5", input_images: [{ type: "image_url", image_url: "https://p/1.png" }] });
+  assertEquals(JSON.parse(sent[0].init.body as string), { prompt: "A bench.", aspect_ratio: "7:9", image_urls: ["https://p/1.png"] });
   const c = await hf.collect("r1");
   assertEquals(c.state === "done" && c.urls, ["https://cdn/a.png"]);
   const none = higgsfield("k", { fetch: (async () => new Response("no", { status: 403 })) as unknown as typeof fetch });
-  assertEquals(await none.submit({ imageModel: "seedream-4", text: "x", referenceUrls: [], aspectRatio: "1:1", resolution: null, seed: null }),
+  assertEquals(await none.submit({ imageModel: "qwen-image-3", text: "x", referenceUrls: [], aspectRatio: "1:1", resolution: null, seed: null }),
     { ok: false, error: "Higgsfield has no credits left for Fume.", final: true });
+});
+
+Deno.test("a single API key is tried as Key, then as Bearer, and the accepted one is kept", async () => {
+  const auths: string[] = [];
+  const hf = higgsfield("single-key", {
+    fetch: (async (_url: string, init: RequestInit) => {
+      const a = (init.headers as Record<string, string>).Authorization;
+      auths.push(a);
+      return a.startsWith("Bearer") ? new Response(JSON.stringify({ request_id: "r9" })) : new Response("no", { status: 401 });
+    }) as typeof fetch,
+  });
+  const r = { imageModel: "qwen-image-3", text: "x", referenceUrls: [], aspectRatio: "1:1", resolution: null, seed: null };
+  assertEquals(await hf.submit(r), { ok: true, providerJobId: "r9", provider: "higgsfield" });
+  assertEquals(await hf.submit(r), { ok: true, providerJobId: "r9", provider: "higgsfield" });
+  assertEquals(auths, ["Key single-key", "Bearer single-key", "Bearer single-key"]);
+});
+
+Deno.test("a format the model does not make is asked as the nearest ratio it does", () => {
+  assertEquals(ratioFor("qwen-image-3", "4:5"), "7:9");
+  assertEquals(ratioFor("qwen-image-3", "9:16"), "9:16");
+  assertEquals(ratioFor("seedream-4", "4:5"), "4:5");
+});
+
+const Q = "https://queue.fal.run";
+function falFake(sent: { url: string; init: RequestInit }[], result: () => Response = () => new Response(JSON.stringify({ images: [{ url: "https://fal.media/a.png" }] }))) {
+  return (async (url: string, init: RequestInit = {}) => {
+    sent.push({ url, init });
+    if (init.method === "POST") return new Response(JSON.stringify({ request_id: "q1", response_url: `${Q}/fal-ai/nano-banana-pro/requests/q1` }));
+    if (url.endsWith("/status")) return new Response(JSON.stringify({ status: "COMPLETED" }));
+    return result();
+  }) as typeof fetch;
+}
+
+Deno.test("fal gets Nano Banana Pro's prompt, ratio and pictures, and is collected from its result address", async () => {
+  const sent: { url: string; init: RequestInit }[] = [];
+  const p = fal("fal-key", { fetch: falFake(sent) });
+  const s = await p.submit({ imageModel: "nano-banana-pro", text: "A bench.", referenceUrls: ["https://p/1.png"], aspectRatio: "4:5", resolution: null, seed: 7 });
+  assertEquals(s, { ok: true, providerJobId: `${Q}/fal-ai/nano-banana-pro/requests/q1`, provider: "fal" });
+  assertEquals(sent[0].url, `${Q}/fal-ai/nano-banana-pro/edit`);
+  assertEquals((sent[0].init.headers as Record<string, string>).Authorization, "Key fal-key");
+  assertEquals(JSON.parse(sent[0].init.body as string),
+    { prompt: "A bench.", num_images: 1, image_urls: ["https://p/1.png"], seed: 7, aspect_ratio: "4:5", resolution: "2K", output_format: "png" });
+  const c = await p.collect(`${Q}/fal-ai/nano-banana-pro/requests/q1`);
+  assertEquals(c.state === "done" && c.urls, ["https://fal.media/a.png"]);
+  assertEquals(sent.slice(1).map((x) => x.url), [`${Q}/fal-ai/nano-banana-pro/requests/q1/status`, `${Q}/fal-ai/nano-banana-pro/requests/q1`]);
+});
+
+Deno.test("fal asks Seedream for a size and GPT Image for its nearest shape; a refusal is tried again", async () => {
+  const sent: { url: string; init: RequestInit }[] = [];
+  const p = fal("k", { fetch: falFake(sent, () => new Response(JSON.stringify({ detail: "Content flagged by safety checker" }), { status: 422 })) });
+  await p.submit({ imageModel: "seedream-4", text: "x", referenceUrls: [], aspectRatio: "9:16", resolution: null, seed: null });
+  assertEquals(sent[0].url, `${Q}/fal-ai/bytedance/seedream/v4/text-to-image`);
+  assertEquals(JSON.parse(sent[0].init.body as string).image_size, sizeFor("9:16"));
+  await p.submit({ imageModel: "gpt-image", text: "x", referenceUrls: [], aspectRatio: "4:5", resolution: null, seed: 3 });
+  const g = JSON.parse(sent[1].init.body as string);
+  assertEquals([g.image_size, g.seed], ["1024x1536", undefined]);
+  const c = await p.collect(`${Q}/fal-ai/nano-banana-pro/requests/q1`);
+  assertEquals(c.state === "failed" && [c.error, c.final], ["The image model refused the picture as unsafe.", false]);
+  assertEquals(await fal("k", { fetch: (async () => new Response("{}", { status: 401 })) as unknown as typeof fetch })
+    .submit({ imageModel: "nano-banana-2", text: "x", referenceUrls: [], aspectRatio: "1:1", resolution: null, seed: null }),
+    { ok: false, error: "fal refused Fume's key.", final: true });
+});
+
+Deno.test("each model goes to the provider that has it, and comes back from the one that took it", async () => {
+  const sent: { url: string; init: RequestInit }[] = [];
+  const both = byModel([
+    fal("k", { fetch: falFake(sent) }),
+    higgsfield("id:s", { fetch: (async (url: string, init: RequestInit = {}) => {
+      sent.push({ url, init });
+      return new Response(JSON.stringify(url.includes("/requests/") ? { status: "completed", images: [{ url: "https://hf/b.png" }] } : { request_id: "h1" }));
+    }) as typeof fetch }),
+  ])!;
+  const r = { text: "x", referenceUrls: [], aspectRatio: "1:1", resolution: null, seed: null };
+  assertEquals((await both.submit({ ...r, imageModel: "nano-banana-pro" })).ok && sent[0].url, `${Q}/fal-ai/nano-banana-pro`);
+  assertEquals(await both.submit({ ...r, imageModel: "qwen-image-3" }), { ok: true, providerJobId: "h1", provider: "higgsfield" });
+  assertEquals((await both.collect("h1")).state === "done", true);
+  assertEquals((await both.collect(`${Q}/fal-ai/nano-banana-pro/requests/q1`)).state === "done", true);
+  assertEquals([both.priceCents("nano-banana-pro"), both.priceCents("qwen-image-3")], [15, 4]);
+  assertEquals(byModel([]), null);
 });

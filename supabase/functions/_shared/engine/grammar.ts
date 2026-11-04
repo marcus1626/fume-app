@@ -31,6 +31,9 @@ export const DIALECTS: Dialect[] = [
     { id: "nbp-clothing", text: "Describe clothing plainly; words like sheer, fitted or clinging near the body are refused often.", status: "seeded", sourceUrl: null }] },
   { imageModel: "nano-banana-2", version: 1, textForm: "prose", maxReferences: 3, rules: common("nb2") },
   { imageModel: "seedream-4", version: 1, textForm: "prose", maxReferences: 3, rules: common("sd4") },
+  // On Higgsfield's API (4 Nov 2026): the models the key may use for a product picture with references.
+  { imageModel: "qwen-image-3", version: 1, textForm: "prose", maxReferences: 3, rules: common("qw3") },
+  { imageModel: "grok-imagine-2", version: 1, textForm: "prose", maxReferences: 3, rules: common("gk2") },
   { imageModel: "gpt-image", version: 1, textForm: "prose", maxReferences: 3, rules: common("gpt") },
   { imageModel: "flux-kontext", version: 1, textForm: "prose", maxReferences: 1, rules: common("flx") },
 ];
