@@ -180,7 +180,13 @@ export const useQaQueue = (workspaceId?: Id) =>
   useQ(["studio", "qa", workspaceId ?? "all"], (a) => a.qaQueue(workspaceId));
 export const useQaCheck = () => useM((a, itemId: Id) => a.qaCheck(itemId));
 export const useQaFeedback = () =>
-  useM((a, v: { itemId: Id; text: string; pins?: QaPin[] }) => a.qaFeedback(v.itemId, v.text, v.pins));
+  useM((a, v: { itemId: Id; text: string; pins?: QaPin[]; findingIds?: Id[] }) =>
+    a.qaFeedback(v.itemId, v.text, v.pins, v.findingIds),
+  );
+export const useQaSettleFinding = () =>
+  useM((a, v: { itemId: Id; findingId: Id; status: "accepted" | "open" }) =>
+    a.qaSettleFinding(v.itemId, v.findingId, v.status),
+  );
 export const useQaEdit = () =>
   useM((a, v: { itemId: Id; layers: Parameters<FumeApi["qaEdit"]>[1] }) => a.qaEdit(v.itemId, v.layers));
 export const useQaToStudio = () => useM((a, itemId: Id) => a.qaToStudio(itemId));

@@ -82,6 +82,12 @@ The Studio's side is designed in app/FLOWS.md §29 (PROPOSED) and wired live (ap
   again starts the same job over. Earlier failures of a job that later succeeded are not kept as versions yet.
 - `prompt` comes from engine_prompts (the last try's findings and decisions, the code's checks, what it cost). The
   table is read by Fume's own people only (migration 20261104150000_engine_studio), so an agency's people get none.
+- Designed, not wired yet (FLOWS §29.5, §29.6, PROPOSED): `EnginePrompt.ledger` maps engine_prompts.ledger as it is
+  (source, what, used, how, passed, why). `QaItem.findings` maps the version's automated findings other than file_spec
+  (id, dimension, severity, finding, expected, observed, status, resolved_by, resolved_at). `qaSettleFinding` with
+  "accepted" calls resolve_finding; "open" (Undo) needs a small command that reopens a finding the same person set
+  aside. `qaFeedback`'s `findingIds` are the findings the note takes up: the expert agrees with them, which the
+  calibration of the picture check can count. Once this is live, the product finding can be made critical.
 - Engine output is one run per Engine job with its candidates; a Generation's id is its candidate's id, and opening
   one opens its creative. `taught` is the newest answer on the picture; `teachEngine` calls `teach_engine`, which keeps
   one answer per person and picture as a pending lesson. Answers become lessons before the next prompt (step 7).

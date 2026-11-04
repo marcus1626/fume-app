@@ -970,7 +970,7 @@ approves the creatives. Her approval starts the Engine.
 - **The demo.** Nora (?as=nora): LYSNE › Winter gifting waits for her check and Send to Maja. Maja (?agency&as=maja):
   Black Friday is checked and sent, Approve and start. The seeded link is /c/bfplan.
 
-## 29. The Engine in the Studio: a failed version, the prompt behind a version, teaching the Engine (4 Nov 2026)
+## 29. The Engine in the Studio and Check: a failed version, the prompt behind a version, teaching the Engine, the Engine's findings (4 Nov 2026)
 
 Status: PROPOSED (design thread, from the Engine v1 handover: docs/mvp/engine.md, "Not yet"). Numbered 29 so it does not
 clash with §27 (video) and §28 (empty pages) on their own branches.
@@ -1022,3 +1022,42 @@ clash with §27 (video) and §28 (empty pages) on their own branches.
 - `Generation.taught` ("yes" or "no") and `teachEngine({ generationId, verdict, why })`: Fume's own people only.
 - The demo: LYSNE › Autumn launch › Master 3 has V4, stopped by two rules ("Add a glossy reflection on the cap");
   V1 to V3 carry their prompts.
+
+### 29.5 What the Engine had for a prompt (the ledger; Fume's own people only)
+
+- **Where.** In the prompt panel of §29.2, after what the prompt had to carry and before the code's checks: **What
+  the Engine had · 17 of 26 went in**, and "· 2 not found" when the check missed something that went in.
+- **Groups.** Product facts, Brand rules, Taste, Brand Brain, Lessons, Pictures and examples: one quiet row each, its
+  count after the title ("3 of 6 in", "all 3 in"), folded. A group with a piece that went in but was not found opens by
+  itself and says "1 not found" first.
+- **Each piece.** What it is, then how it went in (Word for word, By meaning, Read by the writer, Sent as a picture)
+  and whether the check found it, or why it was left out ("A scent fact is for the words, not the picture.",
+  "Not sure enough yet (48 %)", "Proposed, not confirmed by the brand."). In first; a piece that went in and was not
+  found carries the Rouge disc; one left out steps back to secondary.
+- **Why.** So Fume's people can see that the brand and the product were in the prompt, and what was cut, instead of
+  taking it on trust (plan, part 1).
+
+### 29.6 The Engine's findings in Check
+
+- **What.** The Engine's picture check becomes findings on the version (findings with method automated: product,
+  brand and brief, artefacts, printed words). In Check they lead **What the Engine found**, before the lines that hold;
+  an area a finding speaks to drops its summary line ("Product Truth is off"), so nothing is said twice.
+- **Each finding.** The finding, then what it is about and how much it weighs (Product · stops the check, Brand ·
+  minor), then **Should be** and **In the picture** when the check said them. Two quiet answers:
+  - **Add to the note**: the finding, with what it should be, goes into Tell the Engine; the button reads **In the
+    note** (pressed) and takes it out again. Sending the note tells the Engine which findings it takes up; when the
+    fix is back they read "fixed by the Engine".
+  - **Not a problem**: sets it aside here (resolve_finding, accepted): "Brand · not a problem, said you, 14:32", with
+    Undo while the creative is not checked.
+- **What stops the check.** A critical finding that is open: Mark checked is disabled, and one line over it says
+  "The product finding stops the check." C says the same in a toast. Major and minor findings never stop it: the
+  expert decides. Proposed: the Engine's product finding is critical, so a wrong product never reaches the customer
+  unless an expert says it is not a problem.
+- **Who.** Everyone who checks (Fume's experts, an agency's people). Customers never read the Engine's findings.
+- **Colour.** Only an open finding that stops the check carries Rouge, on its mark. No boxes: space between findings.
+- **The contract.** `QaItem.findings` (`QaFinding`: dimension, severity, finding, expected, observed, status open,
+  accepted or resolved, by, at), `qaSettleFinding(itemId, findingId, "accepted" | "open")`, and `qaFeedback(…,
+  findingIds)`. `EnginePrompt.ledger` (`PromptLedgerEntry`: source, what, used, how, passed, why).
+- **The demo.** Check › LYSNE › Night Body Oil · Feed 8: the cap is glossy (stops the check), the light comes from
+  above, a smeared edge. Master 3's prompts carry their ledgers; V4's shows the cap and the rule against gloss went in
+  and were not found.

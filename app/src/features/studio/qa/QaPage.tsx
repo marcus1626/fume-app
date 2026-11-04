@@ -78,12 +78,13 @@ import {
   useQaEdit,
   useQaFeedback,
   useQaQueue,
+  useQaSettleFinding,
   useQaToStudio,
   useQaUncheck,
   useSession,
   useStudioCampaigns,
 } from "../../../api/hooks";
-import type { Evaluation, Id, Layer, QaItem, QaPin, QaView, StudioCampaignRow } from "../../../contract";
+import type { Evaluation, Id, Layer, QaFinding, QaItem, QaPin, QaView, StudioCampaignRow } from "../../../contract";
 import * as copy from "../../../copy";
 import { due, now, time, when } from "../../../lib/time";
 import { Nothing, Page, Query } from "../../../shell/Page";
@@ -313,8 +314,8 @@ export function QaPage() {
         toast.done(`Check undone: ${qaName(v)}`, { description: "It waits for a check again." });
         reopen(v.item.id);
       }, failed("The check wasn’t undone")),
-    tell: (v, text, pins) =>
-      feedback.mutateAsync({ itemId: v.item.id, text, pins }).then(
+    tell: (v, text, pins, findingIds) =>
+      feedback.mutateAsync({ itemId: v.item.id, text, pins, findingIds }).then(
         () => {
           toast.done(`${fixer.withIt}: ${qaName(v)}`, {
             description: pins.length
@@ -874,8 +875,8 @@ interface QaActions {
   telling: boolean;
   check: (v: QaView) => Promise<void>;
   undo: (v: QaView) => Promise<void>;
-  /** True once the Engine has it. */
-  tell: (v: QaView, text: string, pins: QaPin[]) => Promise<boolean>;
+  /** True once the Engine has it; `findingIds` are the Engine's own findings the note takes up. */
+  tell: (v: QaView, text: string, pins: QaPin[], findingIds: Id[]) => Promise<boolean>;
 }
 
 /** A pin's note is written beside it; where the well has no room for it on either side (the box's width and the pin,
@@ -903,6 +904,7 @@ function QaFocus({
   const navigate = useNavigate();
   const edit = useQaEdit();
   const toStudio = useQaToStudio();
+  const settle = useQaSettleFinding();
   const tellRef = useRef<HTMLTextAreaElement>(null);
   const [text, setText] = useState("");
   const textLayers = (item.layers ?? []).filter((l) => l.kind === "text");
@@ -942,10 +944,50 @@ function QaFocus({
       },
     );
 
+  // The Engine's findings (FLOWS §29.6): "Add to the note" puts one in the note to the Engine, "Not a problem" sets it
+  // aside. A critical one that is still open stops the check, as it does in the database.
+  const findings = item.findings ?? [];
+  const inNote = (f: QaFinding) => text.includes(findingLine(f));
+  const stopping = findings.find((f) => f.severity === "critical" && f.status === "open");
+  const toggleInNote = (f: QaFinding) => {
+    const line = findingLine(f);
+    setText((t) =>
+      t.includes(line)
+        ? t
+            .replace(line, "")
+            .replace(/\n{2,}/g, "\n")
+            .trim()
+        : t.trim()
+          ? `${t.trim()}\n${line}`
+          : line,
+    );
+    requestAnimationFrame(() => {
+      const el = tellRef.current;
+      el?.focus();
+      el?.setSelectionRange(el.value.length, el.value.length);
+    });
+  };
+  const settleFinding = (f: QaFinding, status: "accepted" | "open") =>
+    settle.mutate(
+      { itemId: item.id, findingId: f.id, status },
+      {
+        onSuccess: () => {
+          if (status === "accepted") setText((t) => t.replace(findingLine(f), "").trim());
+        },
+        onError: failed(status === "accepted" ? "The finding wasn’t set aside" : "The finding wasn’t opened again"),
+      },
+    );
+
   const markChecked = () => {
     if (busy || checked) return;
     if (fixing) {
       toast.info(`${fixer.withIt}: nothing to check yet`, { description: "Its fix comes back here." });
+      return;
+    }
+    if (stopping) {
+      toast.info(`${findingKind[stopping.dimension]} finding stops the check`, {
+        description: "Add it to the note to the Engine, or say it is not a problem.",
+      });
       return;
     }
     const go = () => void act.check(view);
@@ -966,11 +1008,18 @@ function QaFocus({
       setAsking(true);
       return;
     }
-    void act.tell(view, said, pins).then((sent) => {
-      if (!sent) return;
-      setText("");
-      setPins([]);
-    });
+    void act
+      .tell(
+        view,
+        said,
+        pins,
+        findings.filter((f) => f.status === "open" && said.includes(findingLine(f))).map((f) => f.id),
+      )
+      .then((sent) => {
+        if (!sent) return;
+        setText("");
+        setPins([]);
+      });
   };
 
   const openStudio = () => {
@@ -1194,6 +1243,43 @@ function QaFocus({
             against={view.against}
             format={item.format}
             brandDna={campaign.brandDnaVersion}
+            findings={findings}
+            who={names.who}
+            actions={(f) =>
+              checked || fixing ? null : f.status === "open" ? (
+                <div className="ui-qa-finding-actions">
+                  <Button
+                    size="sm"
+                    variant={inNote(f) ? "secondary" : "quiet"}
+                    icon={inNote(f) ? "check" : "send"}
+                    aria-pressed={inNote(f)}
+                    onClick={() => toggleInNote(f)}
+                  >
+                    {inNote(f) ? "In the note" : "Add to the note"}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="quiet"
+                    loading={settle.isPending && settle.variables?.findingId === f.id}
+                    onClick={() => settleFinding(f, "accepted")}
+                  >
+                    Not a problem
+                  </Button>
+                </div>
+              ) : f.status === "accepted" ? (
+                <div className="ui-qa-finding-actions">
+                  <Button
+                    size="sm"
+                    variant="quiet"
+                    icon="undo-2"
+                    loading={settle.isPending && settle.variables?.findingId === f.id}
+                    onClick={() => settleFinding(f, "open")}
+                  >
+                    Undo
+                  </Button>
+                </div>
+              ) : null
+            }
           >
             {/* 2b. What was said to the Engine before: one folded line, so it never sits under the decision */}
             {item.feedback.length > 0 && (
@@ -1338,11 +1424,17 @@ function QaFocus({
             </>
           ) : (
             <>
+              {stopping && !fixing && (
+                <p className="ui-qa-foot-note" id={`${item.id}-stops`}>
+                  {`The ${findingKind[stopping.dimension].toLowerCase()} finding stops the check.`}
+                </p>
+              )}
               <Button
                 className="ui-qa-foot-main ui-qa-mark"
                 icon="fume-check"
                 onClick={markChecked}
-                disabled={fixing}
+                disabled={fixing || Boolean(stopping)}
+                aria-describedby={stopping && !fixing ? `${item.id}-stops` : undefined}
                 loading={act.checking}
               >
                 Mark checked
@@ -1441,6 +1533,32 @@ function QaStatus({ item, who }: { item: QaItem; who: (id?: Id) => string }) {
   return <>Waiting for a check</>;
 }
 
+/** What a finding is about, in a word. */
+const findingKind: Record<QaFinding["dimension"], string> = {
+  product: "Product",
+  brand_brief: "Brand",
+  artefacts: "Artefact",
+  text_claims: "Printed words",
+};
+const severityOrder: Record<QaFinding["severity"], number> = { critical: 0, major: 1, minor: 2 };
+const severityWords: Record<QaFinding["severity"], string> = {
+  critical: "stops the check",
+  major: "major",
+  minor: "minor",
+};
+
+/** A finding as the line it puts in the note to the Engine. */
+const findingLine = (f: QaFinding) =>
+  `${f.finding.replace(/[.\s]+$/, "")}.${f.expected ? ` It should be: ${f.expected.replace(/[.\s]+$/, "")}.` : ""}`;
+
+/** Under a finding: what it is about and how much it weighs, or who set it aside, or that the Engine fixed it. */
+function findingMeta(f: QaFinding, who?: (id?: Id) => string) {
+  if (f.status === "resolved") return `${findingKind[f.dimension]} · fixed by the Engine`;
+  if (f.status === "accepted")
+    return `${findingKind[f.dimension]} · not a problem, said ${who?.(f.by) ?? "the expert"}${f.at ? `, ${time(f.at)}` : ""}`;
+  return `${findingKind[f.dimension]} · ${severityWords[f.severity]}`;
+}
+
 /** The Engine's own evaluation of what it made, in words, and what it is checked against (the per-rule list, read-only,
  *  folded). */
 function Evaluated({
@@ -1449,6 +1567,9 @@ function Evaluated({
   against,
   format,
   brandDna,
+  findings = [],
+  who,
+  actions,
   children,
 }: {
   evaluation: Evaluation;
@@ -1456,11 +1577,18 @@ function Evaluated({
   against: QaView["against"];
   format: QaItem["format"];
   brandDna?: number;
+  /** What the Engine's picture check found, for the one who checks to settle. */
+  findings?: QaFinding[];
+  who?: (id?: Id) => string;
+  /** Each finding's buttons (none once it is checked, or while the Engine fixes it). */
+  actions?: (f: QaFinding) => ReactNode;
   /** Folds that belong with the findings (what was said to the Engine), 8 under them rather than 24. */
   children?: ReactNode;
 }) {
   // Not evaluated yet (made by hand): nothing is said to hold or to be off; the expert checks by eye.
   const byEye = evaluation.evaluated === false;
+  // An area the Engine's findings speak to is said by them, with what they found; its summary line and the notes go.
+  const covered = new Set(findings.map((f) => f.dimension));
   const rows: { result: "pass" | "flag"; text: string }[] = [
     ...(byEye
       ? [
@@ -1468,29 +1596,52 @@ function Evaluated({
           { result: "flag" as const, text: "Brand rules: not evaluated by Fume, check them by eye" },
         ]
       : [
-          {
-            result: evaluation.productTruth,
-            text: evaluation.productTruth === "pass" ? "Product Truth holds" : "Product Truth is off",
-          },
-          {
-            result: evaluation.brandRules,
-            text: evaluation.brandRules === "pass" ? "Brand rules hold" : "A brand rule is broken",
-          },
-          {
-            result: evaluation.artefacts === "none" ? ("pass" as const) : ("flag" as const),
-            text:
-              evaluation.artefacts === "none"
-                ? "No artefacts"
-                : evaluation.artefacts === "minor"
-                  ? "A minor artefact"
-                  : "A major artefact",
-          },
+          ...(covered.has("product")
+            ? []
+            : [
+                {
+                  result: evaluation.productTruth,
+                  text: evaluation.productTruth === "pass" ? "Product Truth holds" : "Product Truth is off",
+                },
+              ]),
+          ...(covered.has("brand_brief")
+            ? []
+            : [
+                {
+                  result: evaluation.brandRules,
+                  text: evaluation.brandRules === "pass" ? "Brand rules hold" : "A brand rule is broken",
+                },
+              ]),
+          ...(covered.has("artefacts")
+            ? []
+            : [
+                {
+                  result: evaluation.artefacts === "none" ? ("pass" as const) : ("flag" as const),
+                  text:
+                    evaluation.artefacts === "none"
+                      ? "No artefacts"
+                      : evaluation.artefacts === "minor"
+                        ? "A minor artefact"
+                        : "A major artefact",
+                },
+              ]),
         ]),
-    ...evaluation.notes.map((n) => ({ result: byEye ? ("pass" as const) : ("flag" as const), text: n })),
+    ...(findings.length
+      ? []
+      : evaluation.notes.map((n) => ({ result: byEye ? ("pass" as const) : ("flag" as const), text: n }))),
     ...(evaluation.checks ?? []),
   ];
   // By eye, the two "check it by eye" rows are not flags of their own: only what Fume found on the file counts.
-  const flagged = rows.filter((r) => r.result === "flag").length - (byEye ? 2 : 0);
+  const flagged =
+    rows.filter((r) => r.result === "flag").length -
+    (byEye ? 2 : 0) +
+    findings.filter((f) => f.status === "open").length;
+  // Open first, the one that stops the check before the rest; then what was set aside or fixed.
+  const shown = [...findings].sort(
+    (a, b) =>
+      Number(b.status === "open") - Number(a.status === "open") ||
+      severityOrder[a.severity] - severityOrder[b.severity],
+  );
   const f = copy.format[format];
   // The channel line follows the creative's own format (the brand's list is written for a feed).
   const lines = (against ?? []).map((a) =>
@@ -1504,8 +1655,34 @@ function Evaluated({
           ? `· ${flagged ? `${copy.count(flagged, "flag")}, the rest by eye` : "check it by eye"}`
           : flagged
             ? `· ${copy.count(flagged, "flag")}`
-            : "· nothing flagged"}
+            : findings.length
+              ? "· nothing open"
+              : "· nothing flagged"}
       </h3>
+      {shown.length > 0 && (
+        <ul className="ui-qa-findings" aria-label="The Engine’s findings">
+          {shown.map((f) => (
+            <li key={f.id} className="ui-qa-finding" data-status={f.status} data-severity={f.severity}>
+              <Icon name={f.status === "open" ? "circle-alert" : f.status === "resolved" ? "circle-check" : "minus"} />
+              <div className="ui-qa-finding-body">
+                <p className="ui-qa-finding-text">{f.finding}</p>
+                <p className="ui-qa-finding-meta">{findingMeta(f, who)}</p>
+                {f.status === "open" && f.expected && (
+                  <p className="ui-qa-finding-evidence">
+                    <span className="ui-qa-finding-label">Should be</span> {f.expected}
+                  </p>
+                )}
+                {f.status === "open" && f.observed && f.observed !== f.finding && (
+                  <p className="ui-qa-finding-evidence">
+                    <span className="ui-qa-finding-label">In the picture</span> {f.observed}
+                  </p>
+                )}
+                {actions?.(f)}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
       <ul className="ui-qa-notes">
         {rows.map((r, i) => (
           <li key={i} className="ui-qa-note" data-result={r.result}>

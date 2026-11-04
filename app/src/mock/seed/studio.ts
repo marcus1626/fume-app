@@ -70,6 +70,73 @@ const lysneFindings = [
   carried("The bottle is the one sharp thing; the rest falls soft"),
   { item: "No people, no hands", verdict: "not_visible" as const, note: "Nothing in the picture to show it" },
 ];
+// What the Engine had for a LYSNE prompt, piece by piece (engine_prompts.ledger): what went in, how the check looked for
+// it, and why the rest stayed out.
+type Ledger = NonNullable<EnginePrompt["ledger"]>;
+const fact = (what: string, why?: string): Ledger[number] =>
+  why
+    ? { source: "product_fact", what, used: false, why }
+    : { source: "product_fact", what, used: true, how: "verbatim", passed: true };
+const meant = (source: Ledger[number]["source"], what: string): Ledger[number] => ({
+  source,
+  what,
+  used: true,
+  how: "meaning",
+  passed: true,
+});
+const left = (source: Ledger[number]["source"], what: string, why: string): Ledger[number] => ({
+  source,
+  what,
+  used: false,
+  why,
+});
+const read = (source: Ledger[number]["source"], what: string): Ledger[number] => ({
+  source,
+  what,
+  used: true,
+  how: "guidance",
+});
+const lysneLedger: Ledger = [
+  fact("Bottle: 100 ml amber glass bottle"),
+  fact("Cap: Burgundy matte cap, never glossy"),
+  fact("Label: The LYSNE wordmark in white on the front"),
+  fact("Scent: Cedar, vetiver and bergamot", "A scent fact is for the words, not the picture."),
+  fact("Use: Massage into damp skin before bed", "A use fact is for the words, not the picture."),
+  fact("Travel size: 30 ml", "Not verified yet."),
+  meant("brand_rule", "Imagery: Warm low light from one side, like a lamp in the evening"),
+  meant("brand_rule", "Imagery: Linen, travertine and walnut; nothing glossy"),
+  meant("brand_rule", "Imagery: No people, no hands"),
+  left(
+    "brand_rule",
+    "Voice: Quiet and unhurried, never salesy",
+    "A voice rule is for the words and the layout, not the picture.",
+  ),
+  left(
+    "brand_rule",
+    "Claims: Never say it helps you sleep",
+    "A claims rule is for the words and the layout, not the picture.",
+  ),
+  meant("taste", "Analog film, soft halation"),
+  meant("taste", "Shallow depth of field"),
+  meant("taste", "Avoid hard flash and clinical white"),
+  left("taste", "Brass and gold details", "Not sure enough yet (48 %)."),
+  meant("brain", "Picture: The bottle on a bedside ledge at dusk"),
+  meant("brain", "Colour: Burgundy #5B1A23 (accent)"),
+  meant("brain", "Market: Norway, women 30 to 50"),
+  left("brain", "Colour: Bone #EDE6DA (ground)", "A text or ground colour is for layouts."),
+  left("brain", "Picture: Morning light in a white bathroom", "Proposed, not confirmed by the brand."),
+  left("brain", "Audience: Reads slowly, buys once she trusts it", "About the words or the business, not the picture."),
+  read("lesson", "Avoid: Hands in the frame read as stock"),
+  read("lesson", "Prefer: The bottle low in the frame, with air above it"),
+  read("lesson", "Prefer: Travertine reads warmer than marble"),
+  { source: "picture", what: "The product's own photograph", used: true, how: "reference" },
+  read("plan", "An approved prompt: Analog 35 mm photograph, warm evening light from a single lamp…"),
+];
+/** The ledger of the stopped try: the cap and the rule against gloss went in, and the check did not find them. */
+const blockedLedger: Ledger = lysneLedger.map((e) =>
+  e.what.startsWith("Cap:") || e.what.includes("nothing glossy") ? { ...e, passed: false } : e,
+);
+
 const prompt = (text: string, extra: Partial<EnginePrompt> = {}): EnginePrompt => ({
   status: "validated",
   model: "Nano Banana Pro",
@@ -79,6 +146,7 @@ const prompt = (text: string, extra: Partial<EnginePrompt> = {}): EnginePrompt =
   findings: lysneFindings,
   codeChecks,
   llmUsd: 0.002,
+  ledger: lysneLedger,
   ...extra,
 });
 const scenePrompt = (place: string) =>
@@ -213,6 +281,7 @@ const seeded: CreativeDocument[] = [
               reason: "A glossy cap works against the verified facts and the brand's rule: nothing glossy.",
               tries: 3,
               llmUsd: 0.006,
+              ledger: blockedLedger,
               findings: [
                 {
                   item: "Burgundy matte cap, never glossy (verified fact)",

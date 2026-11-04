@@ -2626,7 +2626,7 @@ anna teamLoad()
       "brandIds": ["w-lysne"],
       "capacity": 4,
       "checksToday": 8,
-      "doing": "8 creatives to check · 1 plan to check · LYSNE",
+      "doing": "9 creatives to check · 1 plan to check · LYSNE",
       "follows": false,
       "load": 1.5,
       "minutesPerCheck": 4,
@@ -2674,7 +2674,7 @@ anna allBrands()
           "name": "Autumn launch",
           "progress": 0.18181818181818182
         },
-        "inCheck": 8,
+        "inCheck": 9,
         "nextDue": "2026-10-17T12:32:00.000Z",
         "picture": "/demo/lysne/05-06-feed.jpg",
         "readyToRelease": 0,
@@ -2855,7 +2855,7 @@ anna allBrands()
         "action": "Check",
         "at": "2026-10-14T12:24:00.000Z",
         "clientId": "w-lysne",
-        "detail": "4 creatives to check",
+        "detail": "5 creatives to check",
         "href": "/studio/b/w-lysne/qa?campaign=c-autumn",
         "id": "on-check-c-autumn",
         "kind": "check",
@@ -3075,7 +3075,7 @@ anna allBrands()
         "brandIds": ["w-lysne"],
         "capacity": 4,
         "checksToday": 8,
-        "doing": "8 creatives to check · 1 plan to check · LYSNE",
+        "doing": "9 creatives to check · 1 plan to check · LYSNE",
         "follows": false,
         "load": 1.5,
         "minutesPerCheck": 4,
@@ -3333,6 +3333,102 @@ anna qaQueue()
         "state": "waiting",
         "studio": "render",
         "title": "Square 2",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":8,"creatives":11,"delivered":0,"inCheck":1},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":0},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "creativeId": "cr-a-v10",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {
+          "artefacts": "minor",
+          "brandRules": "flag",
+          "evaluated": true,
+          "notes": [
+            "The cap reads glossy",
+            "Light from above, not from the side",
+            "A smeared edge where the bottle meets the ledge"
+          ],
+          "productTruth": "flag"
+        },
+        "feedback": [],
+        "findings": [
+          {
+            "dimension": "product",
+            "expected": "Burgundy matte cap, as in its photographs",
+            "finding": "The cap is glossy; LYSNE's cap is matte.",
+            "id": "fi-1",
+            "observed": "A glossy cap with a bright highlight on top",
+            "severity": "critical",
+            "status": "open"
+          },
+          {
+            "dimension": "brand_brief",
+            "expected": "Warm low light from one side, like a lamp in the evening",
+            "finding": "The light comes from above, not from one side like a lamp.",
+            "id": "fi-2",
+            "observed": "Even, soft light from above",
+            "severity": "minor",
+            "status": "open"
+          },
+          {
+            "dimension": "artefacts",
+            "finding": "A soft, smeared edge where the bottle meets the ledge.",
+            "id": "fi-3",
+            "severity": "minor",
+            "status": "open"
+          }
+        ],
+        "format": "feed",
+        "id": "qa-7",
+        "image": "/demo/lysne/06-10-feed.jpg",
+        "madeAt": "2026-10-14T12:27:00.000Z",
+        "risk": "normal",
+        "slot": "Master 3 · Variant 1",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 8",
         "workspaceId": "w-lysne"
       },
       "productName": "Night Body Oil",

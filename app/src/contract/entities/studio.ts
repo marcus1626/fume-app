@@ -146,6 +146,25 @@ export interface EnginePrompt {
   codeChecks: { text: string; pass: boolean }[];
   /** What writing and checking it cost, in USD. */
   llmUsd: number;
+  /** Everything the Engine had for this prompt, piece by piece: whether each went in, how the check looked for it, and
+   *  why the rest was left out (engine_prompts.ledger). */
+  ledger?: PromptLedgerEntry[];
+}
+
+/** One piece of the brand's data in a prompt's ledger (FLOWS §29.5, PROPOSED). */
+export interface PromptLedgerEntry {
+  /** Where it came from: a verified product fact, a Brand DNA rule, the taste model, the Brand Brain, a lesson from
+   *  earlier verdicts, a reference picture, or the plan (an approved prompt to learn from). */
+  source: "product_fact" | "brand_rule" | "taste" | "brain" | "lesson" | "picture" | "plan";
+  what: string;
+  used: boolean;
+  /** verbatim: word for word, checked by code; meaning: a model checked the prompt says it; guidance: the writer read
+   *  it; reference: sent to the image model as a picture. */
+  how?: "verbatim" | "meaning" | "guidance" | "reference";
+  /** Whether the check found it in the prompt (verbatim and meaning only). */
+  passed?: boolean;
+  /** Why it was left out. */
+  why?: string;
 }
 
 /** One part of an Engine bar instruction: the words, the variables it changed, or why nothing changed ("Placement is

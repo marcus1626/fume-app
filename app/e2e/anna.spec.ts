@@ -32,9 +32,64 @@ test("Anna sees why a version didn't render, and the prompt behind it", async ({
   await expect(panel).toBeHidden();
   await expect(page.getByLabel("Tell the Engine what to change")).toBeFocused();
 
-  // The picked version's prompt, from the board's rail
+  // The picked version's prompt, from the board's rail, with everything the Engine had for it
   await page.getByRole("button", { name: "The Engine’s prompt and checks" }).click();
-  await expect(page.getByRole("dialog", { name: "The prompt behind version 3" })).toBeVisible();
+  const prompt = page.getByRole("dialog", { name: "The prompt behind version 3" });
+  await expect(prompt).toBeVisible();
+  await expect(prompt.getByRole("heading", { name: "What the Engine had · 17 of 26 went in" })).toBeVisible();
+  await prompt.getByRole("button", { name: /^Product facts/ }).click();
+  await expect(prompt.getByText("A scent fact is for the words, not the picture.")).toBeVisible();
+});
+
+test("Anna sees what went into a stopped prompt and what its check didn't find", async ({ page }) => {
+  await page.goto("/studio/doc/doc-autumn-m3?as=anna&prompt=rv-4");
+  const panel = page.getByRole("dialog", { name: "Version 4 didn’t render" });
+  await expect(
+    panel.getByRole("heading", { name: /What the Engine had · 17 of 26 went in · 2 not found/ }),
+  ).toBeVisible();
+  // the group with a piece that was not found opens by itself
+  await expect(panel.getByRole("button", { name: /^Product facts.*1 not found/ })).toHaveAttribute(
+    "aria-expanded",
+    "true",
+  );
+  await expect(panel.getByText("Word for word, not found in the prompt")).toBeVisible();
+});
+
+test("Anna settles the Engine's findings in Check", async ({ page }) => {
+  await page.goto("/studio/b/w-lysne/qa?as=anna&item=qa-7");
+  await expect(page.getByRole("heading", { level: 2, name: "Night Body Oil · Feed 8" })).toBeVisible();
+  const findings = page.getByRole("list", { name: "The Engine’s findings" });
+  const finding = (text: string) => findings.getByRole("listitem").filter({ hasText: text });
+  // The cap is off, so the creative can't be marked checked yet
+  await expect(finding("The cap is glossy").getByText("Product · stops the check")).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Mark checked/ })).toBeDisabled();
+  await expect(page.getByText("The product finding stops the check.")).toBeVisible();
+
+  // The light is not a problem here, and Undo takes that back
+  await finding("The light comes from above").getByRole("button", { name: "Not a problem" }).click();
+  await expect(finding("The light comes from above").getByText(/^Brand · not a problem, said you/)).toBeVisible();
+  await finding("The light comes from above").getByRole("button", { name: "Undo" }).click();
+  await expect(finding("The light comes from above").getByText("Brand · minor")).toBeVisible();
+
+  // The cap goes to the Engine in the note, and its fix settles it
+  await finding("The cap is glossy").getByRole("button", { name: "Add to the note" }).click();
+  await expect(page.getByRole("textbox", { name: "Tell the Engine" })).toHaveValue(
+    "The cap is glossy; LYSNE's cap is matte. It should be: Burgundy matte cap, as in its photographs.",
+  );
+  await expect(finding("The cap is glossy").getByRole("button", { name: "In the note" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await page.getByRole("button", { name: /^Tell the Engine/ }).click();
+  // Check moves on while the Engine fixes it; back to it once the fix is in
+  await expect(page.getByRole("heading", { level: 2, name: "Night Body Oil · Feed 8" })).toBeHidden();
+  await page
+    .getByRole("button", { name: /^Night Body Oil · Feed 8 .*The Engine’s fix is back$/ })
+    .click({ timeout: 15_000 });
+  await expect(finding("The cap is glossy").getByText("Product · fixed by the Engine")).toBeVisible({
+    timeout: 15_000,
+  });
+  await expect(page.getByRole("button", { name: /^Mark checked/ })).toBeEnabled();
 });
 
 test("Anna teaches the Engine with yes or no on its pictures", async ({ page }) => {

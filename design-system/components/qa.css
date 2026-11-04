@@ -97,6 +97,24 @@
 .ui-qa-note { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--ui-space-sm); font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); }
 .ui-qa-note > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-tertiary); }
 .ui-qa-note[data-result="flag"] > svg { color: var(--ui-text); }
+/* The Engine's findings (FLOWS §29.6, PROPOSED 4 Nov 2026): each one the finding, what it is about and how much it
+   weighs, what it should be against what the picture shows, and two quiet answers (Add to the note, Not a problem). Only a
+   finding that stops the check carries Rouge, on its mark; one set aside or fixed steps back to secondary. No boxes:
+   space between findings, the evidence in two short label rows. */
+.ui-qa-findings { display: grid; gap: var(--ui-space-lg); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.ui-qa-finding { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qa-finding > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); margin-block: calc((1lh - var(--ui-size-icon)) / 2); color: var(--ui-text); font-size: var(--ui-type-control); line-height: 1.5; }
+.ui-qa-finding[data-severity="critical"][data-status="open"] > svg { color: var(--ui-danger); }
+.ui-qa-finding:not([data-status="open"]) > svg { color: var(--ui-text-tertiary); }
+.ui-qa-finding-body { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-qa-finding-text { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); text-wrap: pretty; }
+.ui-qa-finding:not([data-status="open"]) .ui-qa-finding-text { color: var(--ui-text-secondary); }
+.ui-qa-finding-meta { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-qa-finding-evidence { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text); overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-qa-finding-label { color: var(--ui-text-tertiary); }
+.ui-qa-finding-meta + .ui-qa-finding-evidence { margin-block-start: var(--ui-space-xs); }
+.ui-qa-finding-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); margin-inline-start: calc(var(--ui-size-pad-sm) * -1); }
+.ui-qa-findings + .ui-qa-notes { margin-block-start: var(--ui-space-sm); }
 .ui-qa-against { justify-items: start; }
 /* the fold's trigger and the chip are quiet pills: their words line up with the column, the pill reaches past it */
 .ui-qa-against > .ui-collapsible-trigger, .ui-qa-chip { justify-self: start; max-width: calc(100% + var(--ui-size-pad-sm)); margin-inline-start: calc(var(--ui-size-pad-sm) * -1); }
@@ -123,6 +141,7 @@
 .ui-qa-foot-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
 .ui-qa-foot-row > .ui-btn { flex: 1 1 auto; }
 .ui-qa-foot-note { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); text-align: center; }
+.ui-qa-foot > .ui-qa-foot-note:first-child { padding-block-start: var(--ui-space-sm); }
 .ui-qa-key { margin-inline-start: var(--ui-space-xs); }
 .ui-btn--primary .ui-qa-key { background: var(--ui-qg-key-on-ink); color: var(--ui-qg-key-on-ink-fg); }
 

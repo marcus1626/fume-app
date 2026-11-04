@@ -427,6 +427,26 @@ button.ui-desk-version:disabled { cursor: default; }
 }
 .ui-desk-trace-prompt:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-size-ring-offset); }
 
+/* The ledger (FLOWS §29.5): one quiet row per group, its count after the title, opened to the pieces. A group with a
+   piece that went in but was not found opens by itself and names it in its count; only that piece carries Rouge. */
+.ui-desk-trace-groups { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-desk-trace-group { gap: var(--ui-space-xs); }
+.ui-desk-trace-group-trigger {
+  display: flex; align-items: center; gap: var(--ui-space-sm); width: 100%; min-width: 0; min-height: var(--ui-size-hit);
+  margin: 0; padding: 0 var(--ui-space-sm); border: 0; border-radius: var(--ui-radius-item); background: transparent;
+  color: var(--ui-glass-fg); font: inherit; font-size: var(--ui-type-control); text-align: start;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+@media (hover: hover) { .ui-desk-trace-group-trigger:hover { background: var(--ui-glass-button-clear); } }
+.ui-desk-trace-group-trigger:active { background: var(--ui-glass-button-clear); }
+.ui-desk-trace-group-trigger:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-size-ring-offset); }
+.ui-desk-trace-group-trigger > .ui-accordion-chevron { color: var(--ui-glass-fg-secondary); }
+.ui-desk-trace-group-title { flex: 1; min-width: 0; }
+.ui-desk-trace-group-meta { flex: none; font-size: var(--ui-type-label); color: var(--ui-glass-fg-secondary); font-variant-numeric: tabular-nums; }
+.ui-desk-trace-group .ui-collapsible-content > div > .ui-desk-trace-list { padding-block: var(--ui-space-xs) var(--ui-space-sm); }
+.ui-desk-trace-item[data-verdict="left"] .ui-desk-trace-what { color: var(--ui-glass-fg-secondary); }
+
 /* ---------- a phone: the board and the versions, read-only ---------- */
 
 @media (max-width: 899px) {

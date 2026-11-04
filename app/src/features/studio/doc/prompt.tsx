@@ -6,6 +6,9 @@
 // - Never Amber: nothing here is a person's check. Rouge marks only what works against a rule, cut with Porcelain.
 import {
   Button,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
   Icon,
   Sheet,
   SheetBody,
@@ -19,7 +22,7 @@ import {
 } from "@fume/ui";
 import { useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import type { CreativeDocument, EnginePrompt, RenderVersion } from "../../../contract";
+import type { CreativeDocument, EnginePrompt, PromptLedgerEntry, RenderVersion } from "../../../contract";
 import * as copy from "../../../copy";
 import { useFumeTeam } from "../shared";
 
@@ -64,6 +67,91 @@ const verdicts: Record<EnginePrompt["findings"][number]["verdict"], { words: str
     carried: { words: "", icon: "check", order: 2 },
     not_visible: { words: "Not visible in a picture", icon: "minus", order: 3 },
   };
+
+/** The ledger's groups, in the order a person reads them: the product, the brand's rules, its taste, the Brand Brain,
+ *  what verdicts taught, then the pictures and examples the writer had. */
+const ledgerGroups: { title: string; sources: PromptLedgerEntry["source"][] }[] = [
+  { title: "Product facts", sources: ["product_fact"] },
+  { title: "Brand rules", sources: ["brand_rule"] },
+  { title: "Taste", sources: ["taste"] },
+  { title: "Brand Brain", sources: ["brain"] },
+  { title: "Lessons", sources: ["lesson"] },
+  { title: "Pictures and examples", sources: ["picture", "plan"] },
+];
+
+const how: Record<NonNullable<PromptLedgerEntry["how"]>, string> = {
+  verbatim: "Word for word",
+  meaning: "By meaning",
+  guidance: "Read by the writer",
+  reference: "Sent as a picture",
+};
+
+/** In, and checked and not found: the one thing in the ledger that is wrong. */
+const missing = (e: PromptLedgerEntry) => e.used && e.passed === false;
+
+/** One line of the ledger: what it is, and how it went in, or why it was left out. */
+function ledgerNote(e: PromptLedgerEntry) {
+  if (!e.used) return e.why ?? "Left out";
+  const found = e.passed === undefined ? undefined : e.passed ? "found" : "not found in the prompt";
+  return [e.how && how[e.how], found].filter(Boolean).join(", ");
+}
+
+/** Everything the Engine had for the prompt, by where it came from (engine_prompts.ledger). A group opens by itself
+ *  when something in it went in but the check did not find it. */
+function Ledger({ ledger }: { ledger: PromptLedgerEntry[] }) {
+  const used = ledger.filter((e) => e.used).length;
+  const notFound = ledger.filter(missing).length;
+  return (
+    <section className="ui-desk-sheet-part" aria-labelledby="trace-ledger">
+      <h3 className="ui-desk-sheet-head" id="trace-ledger">
+        {`What the Engine had · ${used} of ${ledger.length} went in`}
+        {notFound > 0 && ` · ${notFound} not found`}
+      </h3>
+      <div className="ui-desk-trace-groups">
+        {ledgerGroups.map((g) => {
+          const rows = ledger
+            .filter((e) => g.sources.includes(e.source))
+            // In first, and what went in but was not found before everything else.
+            .sort((a, b) => Number(missing(b)) - Number(missing(a)) || Number(b.used) - Number(a.used));
+          if (!rows.length) return null;
+          const n = rows.filter((e) => e.used).length;
+          const off = rows.filter(missing).length;
+          return (
+            <Collapsible key={g.title} className="ui-desk-trace-group" defaultOpen={off > 0}>
+              <CollapsibleTrigger className="ui-desk-trace-group-trigger">
+                <span className="ui-desk-trace-group-title">{g.title}</span>
+                <span className="ui-desk-trace-group-meta" data-off={off ? "" : undefined}>
+                  {off ? `${off} not found · ` : ""}
+                  {n === rows.length ? `all ${n} in` : `${n} of ${rows.length} in`}
+                </span>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <ul className="ui-desk-trace-list" data-dense="">
+                  {rows.map((e, i) => (
+                    <li
+                      key={`${e.source}-${i}`}
+                      className="ui-desk-trace-item"
+                      data-verdict={missing(e) ? "against" : e.used ? "carried" : "left"}
+                    >
+                      <Icon
+                        name={missing(e) ? "circle-x" : e.used ? "check" : "minus"}
+                        className="ui-desk-trace-mark"
+                      />
+                      <span className="ui-desk-trace-text">
+                        <span className="ui-desk-trace-what">{e.what}</span>
+                        <span className="ui-desk-trace-note">{ledgerNote(e)}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </CollapsibleContent>
+            </Collapsible>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
 
 const status: Record<EnginePrompt["status"], string> = {
   validated: "Passed, sent to the image model",
@@ -171,6 +259,8 @@ export function PromptSheet({ doc }: { doc: CreativeDocument }) {
               )}
 
               {failed && promptBlock}
+
+              {p?.ledger && p.ledger.length > 0 && <Ledger ledger={p.ledger} />}
 
               {p && p.codeChecks.length > 0 && (
                 <section className="ui-desk-sheet-part" aria-labelledby="trace-code">
