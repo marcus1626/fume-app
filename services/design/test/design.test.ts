@@ -115,3 +115,19 @@ test("a light pill with dark words, when the brand's buttons are white", () => {
   assert.equal(c.colours.CTA, dark, "dark words on the pill");
   assert.ok(c.jsx.includes(`bg=${JSON.stringify(light)}><Text name="CTA words"`), "the pill is the light colour");
 });
+
+test("the brand's own block colour from its ads, with words that read on it, and no call to action where its ads carry none", () => {
+  const branded = {
+    ...book,
+    onPictures: { layouts: [
+      { name: "Green panel", hasWords: true, band: "top", align: "left", wordsWidthPct: 60, ground: "colour_block", groundHex: "#0A5C36", words: "light", cta: "pill", ctaFill: "light" },
+    ] },
+  } as unknown as typeof book;
+  const l = [...layoutsFor(branded, "feed", {}, true)].find((x) => x.ground === "block")!;
+  assert.equal(l.groundHex, "#0A5C36");
+  const c = compose(branded, "feed", { headline: "Morning", cta: "Read more" }, l, () => "Inter");
+  assert.equal(c.panel, "#0A5C36");
+  assert.equal(c.colours.CTA, "#0A5C36", "green words on the white pill");
+  const quiet = { ...book, onPictures: { layouts: [{ name: "Quote", hasWords: true, band: "bottom", align: "left", wordsWidthPct: 80, ground: "photo", words: "light", cta: "none" }] } } as unknown as typeof book;
+  assert.ok([...layoutsFor(quiet, "feed", {}, true)].every((x) => x.cta === "none"));
+});

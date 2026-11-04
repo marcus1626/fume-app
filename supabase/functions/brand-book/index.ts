@@ -173,7 +173,10 @@ async function brandPictures(
   const shots = site.shots;
   // The brand's own uploads first, then its website as a visitor sees it, then the pictures on its pages.
   const own = ((kept as LookPicture[] | null) ?? []);
-  const candidates: LookPicture[] = [...own.filter((p) => p.kind === "brand" || p.kind === "liked"), ...shots, ...own.filter((p) => p.kind !== "brand" && p.kind !== "liked")];
+  // For the design system, the pictures the brand's people added as "this is us" (its own ads) come first of all.
+  const candidates: LookPicture[] = opts.shots
+    ? [...own.filter((p) => p.kind === "liked"), ...shots, ...own.filter((p) => p.kind === "brand"), ...own.filter((p) => p.kind !== "brand" && p.kind !== "liked")]
+    : [...own.filter((p) => p.kind === "brand" || p.kind === "liked"), ...shots, ...own.filter((p) => p.kind !== "brand" && p.kind !== "liked")];
   if (task.website) {
     const home = await readPage(task.website);
     if (home) {

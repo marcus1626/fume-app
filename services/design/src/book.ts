@@ -57,6 +57,8 @@ export interface Signature {
   wordsWidthPct: number;
   ground: "photo" | "gradient" | "flat" | "colour_block";
   words: "light" | "dark" | "brand_colour";
+  /** The block's or panel's own colour, read from the brand's ads (Møllers' green), when the words stand on one. */
+  groundHex?: string;
   cta: "pill" | "box" | "underline" | "text" | "none";
   ctaFill?: "light" | "dark" | "brand_colour" | "none";
   logo?: string;

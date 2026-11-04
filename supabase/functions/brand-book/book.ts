@@ -239,7 +239,8 @@ export const DesignAnswer = z.object({
     })).describe("Positions in per cent of the frame"),
     why: z.string(),
   })).describe("Ten to sixteen examples across the formats"),
-  sources: z.array(z.object({ part: z.string(), source: Source, evidence: z.string() })),
+  // A source the model names outside the list (Møllers' book named one, 4 Nov) is Fume's own reading, not a failed book.
+  sources: z.array(z.object({ part: z.string(), source: Source.catch("fume"), evidence: z.string() })),
   gaps: z.array(z.string()).describe("What Fume could not find and should ask the brand (font files, logo versions, rules)"),
 });
 export type DesignAnswer = z.infer<typeof DesignAnswer>;

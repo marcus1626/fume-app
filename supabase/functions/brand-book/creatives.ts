@@ -47,6 +47,7 @@ export const CreativesAnswer = z.object({
     wordsWidthPct: z.number().describe("How much of the width the words take, in per cent"),
     ground: z.enum(["photo", "gradient", "flat", "colour_block"]).describe("Words straight on the photo, on a shade, on a flat panel, or on a block of brand colour"),
     words: z.enum(["light", "dark", "brand_colour"]),
+    groundHex: z.string().describe("The colour of the block or panel the words stand on, as #RRGGBB read from the pictures; empty when they stand on the photo or a shade"),
     cta: z.enum(["pill", "box", "underline", "text", "none"]).describe("How the call to action looks, or none when the brand's creatives carry no call to action"),
     ctaFill: z.enum(["light", "dark", "brand_colour", "none"]).describe("The button's own colour: light (e.g. a white pill with dark words), dark, the brand's colour, or none for words alone"),
     logo: Where,
@@ -143,6 +144,7 @@ export function withCreatives<T extends DesignBody>(body: T, c: CreativesAnswer,
     ...l,
     pictures: l.pictures.filter((n) => Number.isInteger(n) && n >= 1 && n <= pictures.length),
     wordsWidthPct: round(clamp(l.wordsWidthPct, 25, 100), 0),
+    groundHex: /^#[0-9a-f]{6}$/i.test(l.groundHex ?? "") ? l.groundHex.toUpperCase() : "",
     logoWidthPct: l.logo === "none" ? 0 : round(clamp(l.logoWidthPct, 4, 30), 0),
   }));
   return {

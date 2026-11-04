@@ -67,7 +67,8 @@ function compose(book, format, words, l, family, widths = {}, logo) {
   const panel = componentOf(book, "body");
   const isBlock = l.ground === "block";
   const onPanel = l.ground === "flat" || isBlock;
-  const wordsHex = isBlock ? colourOf(book, "on_primary") ?? "#FFFFFF" : onPanel ? colourOf(book, "text") ?? "#000000" : colourOf(book, l.colour) ?? "#FFFFFF";
+  const ownGround = isBlock && l.groundHex && /^#[0-9a-f]{6}$/i.test(l.groundHex) ? l.groundHex.toUpperCase() : null;
+  const wordsHex = isBlock ? ownGround ? readableOn(ownGround, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000") : colourOf(book, "on_primary") ?? "#FFFFFF" : onPanel ? colourOf(book, "text") ?? "#000000" : colourOf(book, l.colour) ?? "#FFFFFF";
   const subHex = isBlock ? wordsHex : onPanel ? colourOf(book, "text_muted") ?? wordsHex : wordsHex;
   const width = columnsWidth(g, Math.min(g.columns, Math.max(4, l.columns)));
   const x = l.align === "left" ? g.margin : l.align === "right" ? g.w - g.margin - width : Math.round((g.w - width) / 2);
@@ -95,7 +96,7 @@ function compose(book, format, words, l, family, widths = {}, logo) {
     const light = colourOf(book, "on_photo") ?? "#FFFFFF";
     const dark = colourOf(book, "text") ?? "#000000";
     const bg = l.ctaFill === "light" ? light : l.ctaFill === "dark" ? dark : colourOf(book, c?.background ?? "cta") ?? colourOf(book, "primary") ?? "#000000";
-    const fg = l.ctaFill === "light" ? dark : l.ctaFill === "dark" ? light : colourOf(book, c?.colour ?? "cta_text") ?? "#FFFFFF";
+    const fg = l.ctaFill === "light" ? ownGround && !isLight(ownGround) ? ownGround : dark : l.ctaFill === "dark" ? light : colourOf(book, c?.colour ?? "cta_text") ?? "#FFFFFF";
     sizes.CTA = s.sizePx;
     const pad2 = c?.paddingPx ?? 24;
     const line = Math.round(s.sizePx * s.lineHeight);
@@ -123,7 +124,7 @@ function compose(book, format, words, l, family, widths = {}, logo) {
   }
   const ctaWithWords = words.cta && (l.cta === "with_words" || l.cta === "bottom" && l.band === "bottom");
   const pad = onPanel ? panel?.paddingPx ?? 32 : 0;
-  const panelHex = isBlock ? colourOf(book, "primary") ?? "#000000" : colourOf(book, panel?.background ?? "surface") ?? colourOf(book, "background") ?? "#FFFFFF";
+  const panelHex = isBlock ? ownGround ?? colourOf(book, "primary") ?? "#000000" : colourOf(book, panel?.background ?? "surface") ?? colourOf(book, "background") ?? "#FFFFFF";
   const panelBg = onPanel ? ` bg=${q(panelHex)}` : "";
   const panelRadius = onPanel ? ` rounded={${radiusOf(book, panel?.radius ?? "none")}}` : "";
   const block = `<Frame name="Words" position="absolute" x={${x}} y={${g.top}} w={${width}} h="hug" flex="col" items=${q(
@@ -165,6 +166,22 @@ function shadeFill(s, h, y) {
       gradientTransform: { m00: 0, m01: 1, m02: 0, m10: -1, m11: 0, m12: 1 }
     }
   ];
+}
+function isLight(hex) {
+  const { r, g, b } = rgb01(hex);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.5;
+}
+function readableOn(ground, light, dark) {
+  const lum = (h) => {
+    const { r, g, b } = rgb01(h);
+    const lin2 = (c) => c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    return 0.2126 * lin2(r) + 0.7152 * lin2(g) + 0.0722 * lin2(b);
+  };
+  const ratio = (a, b) => {
+    const [x, y] = [lum(a), lum(b)].sort((m, n) => n - m);
+    return (x + 0.05) / (y + 0.05);
+  };
+  return ratio(light, ground) >= ratio(dark, ground) ? light : dark;
 }
 function isDark(hex) {
   const { r, g, b } = rgb01(hex);
@@ -602,7 +619,9 @@ function* layoutsFor(book, format, prefer, hasCta) {
   const sigColumns = sig ? Math.min(g.columns, Math.max(4, Math.round(sig.wordsWidthPct / 100 * g.columns))) : null;
   const sigGround = sig ? sig.ground === "colour_block" ? "block" : sig.ground : null;
   const sigColour = sig ? { light: "on_photo", dark: "text", brand_colour: "accent" }[sig.words] : null;
-  const ctaLook = sig && sig.cta !== "none" ? sig.cta : sig ? "text" : void 0;
+  const ctaLook = sig && sig.cta !== "none" ? sig.cta : void 0;
+  const noCta = sig?.cta === "none";
+  const groundHex = sig?.groundHex && /^#[0-9a-f]{6}$/i.test(sig.groundHex) ? sig.groundHex : void 0;
   const ctaFill = sig?.ctaFill && sig.ctaFill !== "none" ? sig.ctaFill : void 0;
   const bands = uniq([prefer.band ?? sig?.band ?? "top", sig?.band ?? "top", "top", "bottom", "middle"]);
   const aligns = uniq([prefer.align ?? sig?.align ?? "left", sig?.align ?? "left", "left", "right", "center"]);
@@ -620,7 +639,7 @@ function* layoutsFor(book, format, prefer, hasCta) {
     "flat"
   ]).filter((x) => x !== "block" || sigGround === "block");
   const widths = prefer.columns ? [prefer.columns] : uniq([...sigColumns ? [sigColumns] : [], ...format === "banner" ? [6, 8] : [9, 7, 12]]);
-  const cta = hasCta ? prefer.cta ?? "with_words" : "none";
+  const cta = hasCta && !noCta ? prefer.cta ?? "with_words" : "none";
   const sublines = uniq(["subline", "body"].filter((n) => styleOf(book, n)));
   if (!sublines.length) sublines.push("subline");
   for (const band of bands) {
@@ -642,6 +661,7 @@ function* layoutsFor(book, format, prefer, hasCta) {
                   ...subline === "subline" ? {} : { subline },
                   ...ctaLook ? { ctaLook } : {},
                   ...ctaFill ? { ctaFill } : {},
+                  ...groundHex && ground === "block" ? { groundHex } : {},
                   ...sig ? { signature: sig.name } : {}
                 };
               }
@@ -657,7 +677,8 @@ function measure(doc, c, l, book, p, keep, logo = null) {
   const words0 = boxOf(doc, "Words");
   const action0 = boxOf(doc, "Action");
   const room = g.h - g.top - g.bottom - (action0 ? action0.h + 32 : 0);
-  const y = l.band === "top" ? g.top : l.band === "bottom" ? g.h - g.bottom - words0.h - (action0 ? action0.h + 32 : 0) : Math.round(g.top + (room - words0.h) / 2);
+  const shareBand = logo?.first?.startsWith(l.band === "middle" ? "-" : l.band) ? logo.h + 40 : 0;
+  const y = l.band === "top" ? g.top + shareBand : l.band === "bottom" ? g.h - g.bottom - words0.h - (action0 ? action0.h + 32 : 0) - shareBand : Math.round(g.top + (room - words0.h) / 2);
   place(doc, "Words", { y });
   if (action0) place(doc, "Action", { y: g.h - g.bottom - action0.h });
   const words = boxOf(doc, "Words");

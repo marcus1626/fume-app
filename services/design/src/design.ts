@@ -192,7 +192,10 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
   const sigColumns = sig ? Math.min(g.columns, Math.max(4, Math.round((sig.wordsWidthPct / 100) * g.columns))) : null;
   const sigGround: Ground | null = sig ? (sig.ground === "colour_block" ? "block" : sig.ground) : null;
   const sigColour = sig ? ({ light: "on_photo", dark: "text", brand_colour: "accent" } as const)[sig.words] : null;
-  const ctaLook = sig && sig.cta !== "none" ? sig.cta : sig ? "text" : undefined;
+  const ctaLook = sig && sig.cta !== "none" ? sig.cta : undefined;
+  // A brand whose ads carry no call to action on the picture (Nike: it sits in the ad's own button) gets none.
+  const noCta = sig?.cta === "none";
+  const groundHex = sig?.groundHex && /^#[0-9a-f]{6}$/i.test(sig.groundHex) ? sig.groundHex : undefined;
   const ctaFill = sig?.ctaFill && sig.ctaFill !== "none" ? sig.ctaFill : undefined;
   const bands: Band[] = uniq([prefer.band ?? sig?.band ?? "top", sig?.band ?? "top", "top", "bottom", "middle"]) as Band[];
   const aligns = uniq([prefer.align ?? sig?.align ?? "left", sig?.align ?? "left", "left", "right", "center"]) as Layout["align"][];
@@ -212,7 +215,7 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
   const widths = prefer.columns
     ? [prefer.columns]
     : uniq([...(sigColumns ? [sigColumns] : []), ...(format === "banner" ? [6, 8] : [9, 7, 12])]);
-  const cta = hasCta ? (prefer.cta ?? "with_words") : "none";
+  const cta = hasCta && !noCta ? (prefer.cta ?? "with_words") : "none";
   // A long line from the plan may step down to the book's body size before the words move.
   const sublines = uniq(["subline", "body"].filter((n) => styleOf(book, n)));
   if (!sublines.length) sublines.push("subline");
@@ -231,6 +234,7 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
                   ...(subline === "subline" ? {} : { subline }),
                   ...(ctaLook ? { ctaLook } : {}),
                   ...(ctaFill ? { ctaFill } : {}),
+                  ...(groundHex && ground === "block" ? { groundHex } : {}),
                   ...(sig ? { signature: sig.name } : {}),
                 };
               }
@@ -256,11 +260,14 @@ export function measure(
   const words0 = boxOf(doc, "Words")!;
   const action0 = boxOf(doc, "Action");
   const room = g.h - g.top - g.bottom - (action0 ? action0.h + 32 : 0);
+  // The brand's logo in the words' own band sits beside them as the brand sets it: the Swoosh under the quote,
+  // Møllers' logo over the headline. The words make room for it.
+  const shareBand = logo?.first?.startsWith(l.band === "middle" ? "-" : l.band) ? logo.h + 40 : 0;
   const y =
     l.band === "top"
-      ? g.top
+      ? g.top + shareBand
       : l.band === "bottom"
-        ? g.h - g.bottom - words0.h - (action0 ? action0.h + 32 : 0)
+        ? g.h - g.bottom - words0.h - (action0 ? action0.h + 32 : 0) - shareBand
         : Math.round(g.top + (room - words0.h) / 2);
   place(doc, "Words", { y });
   if (action0) place(doc, "Action", { y: g.h - g.bottom - action0.h });

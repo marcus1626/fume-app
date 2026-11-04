@@ -40,6 +40,8 @@ export interface Layout {
   ctaLook?: CtaLook;
   /** The button's own colour, as the brand's creatives show it: a light pill with dark words, a dark one, or the brand's. */
   ctaFill?: "light" | "dark" | "brand_colour";
+  /** The block's colour from the brand's own ads, when it is not one of the book's roles. */
+  groundHex?: string;
   /** The brand's layout this one follows, by name. */
   signature?: string;
   /** The subline's type style, by name: a smaller one when the plan's line is long for the picture. */
@@ -83,8 +85,11 @@ export function compose(
   const panel = componentOf(book, "body");
   const isBlock = l.ground === "block";
   const onPanel = l.ground === "flat" || isBlock;
+  const ownGround = isBlock && l.groundHex && /^#[0-9a-f]{6}$/i.test(l.groundHex) ? l.groundHex.toUpperCase() : null;
   const wordsHex = isBlock
-    ? (colourOf(book, "on_primary") ?? "#FFFFFF")
+    ? ownGround
+      ? readableOn(ownGround, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000")
+      : (colourOf(book, "on_primary") ?? "#FFFFFF")
     : onPanel
       ? (colourOf(book, "text") ?? "#000000")
       : (colourOf(book, l.colour) ?? "#FFFFFF");
@@ -118,7 +123,9 @@ export function compose(
     const dark = colourOf(book, "text") ?? "#000000";
     const bg =
       l.ctaFill === "light" ? light : l.ctaFill === "dark" ? dark : (colourOf(book, c?.background ?? "cta") ?? colourOf(book, "primary") ?? "#000000");
-    const fg = l.ctaFill === "light" ? dark : l.ctaFill === "dark" ? light : (colourOf(book, c?.colour ?? "cta_text") ?? "#FFFFFF");
+    // On the brand's own block, a light pill carries the block's colour in its words (Møllers: green on white).
+    const fg =
+      l.ctaFill === "light" ? (ownGround && !isLight(ownGround) ? ownGround : dark) : l.ctaFill === "dark" ? light : (colourOf(book, c?.colour ?? "cta_text") ?? "#FFFFFF");
     sizes.CTA = s.sizePx;
     const pad = c?.paddingPx ?? 24;
     const line = Math.round(s.sizePx * s.lineHeight);
@@ -149,7 +156,7 @@ export function compose(
   const ctaWithWords = words.cta && (l.cta === "with_words" || (l.cta === "bottom" && l.band === "bottom"));
   const pad = onPanel ? (panel?.paddingPx ?? 32) : 0;
   const panelHex = isBlock
-    ? (colourOf(book, "primary") ?? "#000000")
+    ? (ownGround ?? colourOf(book, "primary") ?? "#000000")
     : (colourOf(book, panel?.background ?? "surface") ?? colourOf(book, "background") ?? "#FFFFFF");
   const panelBg = onPanel ? ` bg=${q(panelHex)}` : "";
   const panelRadius = onPanel ? ` rounded={${radiusOf(book, panel?.radius ?? "none")}}` : "";
@@ -219,6 +226,23 @@ export function shadeFill(s: Shade, h: number, y: number) {
   ];
 }
 
+function isLight(hex: string) {
+  const { r, g, b } = rgb01(hex);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.5;
+}
+/** The light or the dark of the book, whichever reads better on a colour. */
+function readableOn(ground: string, light: string, dark: string) {
+  const lum = (h: string) => {
+    const { r, g, b } = rgb01(h);
+    const lin = (c: number) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+    return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+  };
+  const ratio = (a: string, b: string) => {
+    const [x, y] = [lum(a), lum(b)].sort((m, n) => n - m);
+    return (x + 0.05) / (y + 0.05);
+  };
+  return ratio(light, ground) >= ratio(dark, ground) ? light : dark;
+}
 function isDark(hex: string) {
   const { r, g, b } = rgb01(hex);
   return 0.2126 * r + 0.7152 * g + 0.0722 * b < 0.2;

@@ -16,7 +16,7 @@ const answer = (source: "pictures" | "site" | "fume"): CreativesAnswer => ({
   read: [{ picture: 1, carries: "words_and_logo", what: "Big stack bottom left" }, { picture: 1, carries: "words", what: "Same" }, { picture: 9, carries: "none", what: "not shown" }],
   headline: { seenAsHeadline: true, looksLike: "condensed grotesque, extra bold", closestGoogleFont: "Anton", weight: 840, case: "upper", condensed: true, trackingEm: -0.01, lineHeight: 0.88, sizePctOfWidth: 12, source },
   body: { looksLike: "neo-grotesque", closestGoogleFont: "Inter Tight", weight: 400, source },
-  layouts: [{ name: "Big stack", hasWords: true, pictures: [1, 7], band: "bottom", align: "left", wordsWidthPct: 140, ground: "photo", words: "light", cta: "pill", ctaFill: "light", logo: "top_left", logoWidthPct: 9, why: "", source }],
+  layouts: [{ name: "Big stack", hasWords: true, pictures: [1, 7], band: "bottom", align: "left", wordsWidthPct: 140, ground: "photo", words: "light", groundHex: "", cta: "pill", ctaFill: "light", logo: "top_left", logoWidthPct: 9, why: "", source }],
   rules: ["Never more than six words in the headline"],
   sources: [],
   gaps: [],
