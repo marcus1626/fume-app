@@ -45,7 +45,7 @@ across sign-ins.
 
 ### Tue 27 Oct (started Mon afternoon)
 - Roles as Marcus decided them (26 Oct): designer (makes the work), the right to check (a designer's), account manager
-  (talks with customers, never checks or approves), admin; one person can hold several; nobody checks their own work.
+  (talks with customers, never checks or approves), admin; one person can hold several; nobody checks their own work, except an agency of one person, who does everything (DECIDED 4 Nov 2026).
   Only invited addresses can sign in.
 - The live layer (`app/src/api/live/`, `VITE_FUME_API=supabase`): sign-in by email link, then identity, products,
   campaigns, brief, plan, Home, Studio (a picture made by hand becomes the newest version), Check, review, delivery

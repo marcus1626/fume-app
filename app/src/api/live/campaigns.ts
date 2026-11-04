@@ -219,7 +219,8 @@ async function readRecord(campaign: Campaign, creatives: Creative[]): Promise<Re
     const detail: Record<RecordEvent["action"], string> = {
       brief_approved: `Sent the brief, version ${text(e.detail.version) || "1"}`,
       made: `Made ${of}`,
-      checked: `Checked ${of}`,
+      // The only person in an agency checks their own work; the history says so.
+      checked: e.detail.own_work === true ? `Checked ${of}, their own work` : `Checked ${of}`,
       correction: `Asked for a correction to ${of}`,
       held: `Held ${of}`,
       approved: `Approved ${of}`,

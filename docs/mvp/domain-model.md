@@ -76,7 +76,7 @@ version named is the current one, and the command carries an idempotency key. "B
 | `startJob(input, idempotencyKey)` **New** | designer | plan approved; for variants: master approved; inputs exist | job `queued` + ContextSnapshot | `invalid`, `conflict`; same key returns the same job |
 | `addManualCandidate(jobId, file, note)` **New** | designer | job exists | candidate file stored with provenance "manual" | `invalid` |
 | `sendToCheck(candidate)` (`documentToCheck`) | designer | candidate from a job | creative version n `in_check`, ExpertCheck `waiting` | `invalid` |
-| `markChecked(checkId)` (`qaCheck`) | a designer who may check, never the maker; in agency work the agency | version `in_check`; no open critical finding | version `checked`, check by named expert | `forbidden`, `conflict` |
+| `markChecked(checkId)` (`qaCheck`) | a designer who may check, never the maker (except the only person in an agency, marked as own work, DECIDED 4 Nov 2026); in agency work the agency | version `in_check`; no open critical finding | version `checked`, check by named expert | `forbidden`, `conflict` |
 | `requestCorrection` / `hold` | a designer who may check | version `in_check` | `correcting` / `held` | `conflict` |
 | `release(campaignId)` (send) | account manager or designer | at least one `checked` version | those versions become visible to the customer | `conflict` |
 | `approve(versionIds)` | approver (client in agency work) | each version `checked` and sent, id = current version | `approved` by named person | `forbidden`, `conflict` (stale or unchecked) |
