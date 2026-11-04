@@ -177,5 +177,5 @@ select test.ok(jsonb_array_length(public.fume_brief_context(test.id('lysne'), ar
   'the alternatives read the brand and its own products, never another brand''s');
 insert into public.task_runs (workspace_id, kind, subject_id, attempt, state) values (test.id('lysne'), 'brief', test.id('lysne'), 1, 'succeeded'),
   (test.id('lysne'), 'brief', test.id('lysne'), 1, 'succeeded');
-select test.ok((select count(*) from public.task_runs where kind = 'brief') = 2, 'a brand keeps every run of its brief''s alternatives');
+select test.ok((select count(*) from public.task_runs where kind = 'brief' and workspace_id = test.id('lysne') and started_at >= test.since()) = 2, 'a brand keeps every run of its brief''s alternatives');
 select test.ok(true, 'all of Fume''s plan tests passed');
