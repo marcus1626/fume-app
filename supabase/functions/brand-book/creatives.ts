@@ -67,6 +67,8 @@ Look at every picture as a designer studies a brand's past work:
 3. The layouts the brand repeats: where the words sit, how wide, on the photo or on a shade or a block of colour, light or dark words, how the call to action looks, where the logo sits and how big.
 4. What it always and never does.
 
+Screenshots of the brand's own website show how it sets its headlines, buttons and type over its pictures: read the hero and the campaign blocks as the brand's own graphic design, and leave out menus, cookie banners, prices and the shop's interface.
+
 Rules:
 - Only what the pictures show is source "pictures". Where no picture carries words, propose what fits the brand from its pages and Brand DNA, mark it "fume", and say in gaps that Fume needs the brand's own ads.
 - closestGoogleFont must be a real family on Google Fonts.

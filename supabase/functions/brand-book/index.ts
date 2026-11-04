@@ -98,9 +98,46 @@ async function pictureBytes(p: LookPicture): Promise<{ media_type: string; data:
 type Image = { type: "image"; source: { type: "base64"; media_type: "image/jpeg"; data: string } };
 
 /** The brand's own pictures first, then its people's "this is us" and "not us", then its site's; at most twelve. */
-async function brandPictures(task: Parameters<typeof voicePrompt>[0]): Promise<{ pictures: LookPicture[]; images: Image[] }> {
-  const { data: kept } = await service.rpc("brand_look_pictures", { p_workspace_id: task.book.workspace_id });
-  const candidates: LookPicture[] = [...((kept as LookPicture[] | null) ?? [])];
+const shotUrl = Deno.env.get("SHOT_URL") ?? "https://fume-app-git-claude-project-thread-4e84v4-fume-5d92c9b4.vercel.app/api/shot";
+const bypass = Deno.env.get("VERCEL_BYPASS_SECRET");
+const SHOT_VIEWS = ["desktop", "desktop_second", "mobile"];
+
+/**
+ * Screenshots of the brand's own website, stored in its workspace: how the brand sets words on its pictures as a
+ * visitor sees it. The pictures on a site carry no words; the page does. Empty when the page cannot be opened.
+ */
+async function siteShots(task: Parameters<typeof voicePrompt>[0]): Promise<LookPicture[]> {
+  if (!task.website) return [];
+  const bucket = "workspace-files";
+  const paths = SHOT_VIEWS.map((v) => `${task.book.workspace_id}/brand/shots/${task.book.id}-${v}.jpg`);
+  try {
+    const links = await Promise.all(paths.map((p) => service.storage.from(bucket).createSignedUploadUrl(p)));
+    if (links.some((l) => l.error || !l.data)) return [];
+    const res = await fetch(shotUrl, {
+      method: "POST",
+      headers: { "content-type": "application/json", ...(bypass ? { "x-vercel-protection-bypass": bypass } : {}) },
+      body: JSON.stringify({ url: task.website, upload: links.map((l) => l.data!.signedUrl) }),
+      signal: AbortSignal.timeout(70_000),
+    });
+    if (!res.ok) return [];
+    const out = (await res.json()) as { shots?: { view: string }[] };
+    const taken = new Set((out.shots ?? []).map((s) => s.view));
+    return SHOT_VIEWS.flatMap((v, i) =>
+      taken.has(v) ? [{ bucket, path: paths[i], kind: "screenshot" as const, note: `The brand's own website, ${v.replace("_", " ")}` }] : []
+    );
+  } catch {
+    return [];
+  }
+}
+
+async function brandPictures(task: Parameters<typeof voicePrompt>[0], opts: { shots?: boolean } = {}): Promise<{ pictures: LookPicture[]; images: Image[] }> {
+  const [{ data: kept }, shots] = await Promise.all([
+    service.rpc("brand_look_pictures", { p_workspace_id: task.book.workspace_id }),
+    opts.shots ? siteShots(task) : Promise.resolve([]),
+  ]);
+  // The brand's own uploads first, then its website as a visitor sees it, then the pictures on its pages.
+  const own = ((kept as LookPicture[] | null) ?? []);
+  const candidates: LookPicture[] = [...own.filter((p) => p.kind === "brand" || p.kind === "liked"), ...shots, ...own.filter((p) => p.kind !== "brand" && p.kind !== "liked")];
   if (task.website) {
     const home = await readPage(task.website);
     if (home) {
@@ -159,7 +196,7 @@ async function writeLook(task: Parameters<typeof voicePrompt>[0], read: PageText
 
 /** How the brand sets words on its pictures, read with eyes; null when there are no pictures or the read fails. */
 async function readCreatives(task: Parameters<typeof voicePrompt>[0], read: PageText[]) {
-  const { pictures, images } = await brandPictures(task);
+  const { pictures, images } = await brandPictures(task, { shots: true });
   if (!pictures.length) return { answer: null, pictures, message: null };
   try {
     const message = await claude.beta.messages.parse({

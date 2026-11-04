@@ -11,6 +11,9 @@ export default function middleware(request: Request) {
   // signed link to a picture in Fume's own storage and signed links to store the result there, which only Fume's
   // backend can make (services/design/src/handler.ts).
   if (path === "/api/design") return next();
+  // The same holds for the screenshots of a brand's website (services/design/src/shot.ts): it stores them only through
+  // signed upload links to Fume's storage.
+  if (path === "/api/shot") return next();
   const password = process.env.PREVIEW_PASSWORD;
   const given = passwordOf(request.headers.get("authorization"));
   if (password && given !== undefined && same(given, password)) return next();

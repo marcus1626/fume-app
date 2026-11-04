@@ -23,6 +23,11 @@
       "maxDuration": 60,
       "memory": 2048,
       "includeFiles": "node_modules/{canvaskit-wasm/bin,@open-pencil/core/assets}/**"
+    },
+    "api/shot.js": {
+      "maxDuration": 60,
+      "memory": 2048,
+      "includeFiles": "node_modules/@sparticuz/chromium/bin/**"
     }
   }
 }

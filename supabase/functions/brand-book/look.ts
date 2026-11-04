@@ -5,7 +5,7 @@
 import { z } from "npm:zod@4.6.7";
 import type { BookTask, PageText } from "./book.ts";
 
-export type LookPicture = { url?: string; bucket?: string; path?: string; kind: "brand" | "liked" | "not_us" | "site"; note?: string | null };
+export type LookPicture = { url?: string; bucket?: string; path?: string; kind: "brand" | "liked" | "not_us" | "site" | "screenshot"; note?: string | null };
 
 const Grain = z.enum(["none", "fine", "medium", "heavy"]);
 const Source = z.enum(["pictures", "site", "brand_dna", "taste", "fume"]).describe(

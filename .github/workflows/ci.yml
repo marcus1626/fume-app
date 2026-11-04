@@ -64,7 +64,7 @@ jobs:
       - name: Tests
         run: npm test
       - name: The built function is up to date
-        run: npm run build && git diff --exit-code ../../app/api/design.js
+        run: npm run build && git diff --exit-code ../../app/api/
 
   app:
     runs-on: ubuntu-latest
