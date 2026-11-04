@@ -252,3 +252,38 @@ Deno.test("each model goes to the provider that has it, and comes back from the 
   assertEquals([both.priceCents("nano-banana-pro"), both.priceCents("qwen-image-3")], [15, 4]);
   assertEquals(byModel([]), null);
 });
+
+Deno.test("the brand's answers become lessons before the prompt is written, and this prompt uses them", async () => {
+  const f = fake({ takes: [taken()] });
+  const seenLessons: string[][] = [];
+  const digested: unknown[] = [];
+  f.deps.models.compose = async (input) => {
+    seenLessons.push(input.compilePackage.knowledge.lessons.map((l) => l.statement));
+    return compose(input);
+  };
+  f.deps.models.digest = async (a) => ({
+    lessons: [{ statement: `Keep the cap matte (${a.why}).`, polarity: "avoid", reason: a.why, scope: "brand" }],
+    call: { ...call, costUsd: 0.0004 },
+  });
+  f.deps.service.pending = async () => ({
+    data: [{ id: "l1", verdict: "no", why: "Too glossy", image_model: "nano-banana-pro", updated_at: "2026-11-04T12:00:00Z", concept: "", slots: [] }],
+    error: null,
+  });
+  f.deps.service.digested = async (...a) => (digested.push(a), { data: 1, error: null });
+  assertEquals(await runJob(JOB, f.deps), "dry");
+  assertEquals(digested, [["l1", "2026-11-04T12:00:00Z", [{ statement: "Keep the cap matte (Too glossy).", polarity: "avoid", reason: "Too glossy", scope: "brand" }], 0.0004]]);
+  assert(seenLessons[0].includes("Keep the cap matte (Too glossy)."));
+});
+
+Deno.test("a failed digest never stops the render", async () => {
+  const f = fake({ takes: [taken()] });
+  f.deps.models.digest = async () => {
+    throw new Error("The model declined the digest.");
+  };
+  f.deps.service.pending = async () => ({
+    data: [{ id: "l1", verdict: "yes", why: "Nice", image_model: null, updated_at: "2026-11-04T12:00:00Z", concept: "", slots: [] }],
+    error: null,
+  });
+  f.deps.service.digested = async () => ({ data: 1, error: null });
+  assertEquals(await runJob(JOB, f.deps), "dry");
+});

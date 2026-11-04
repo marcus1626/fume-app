@@ -35,6 +35,11 @@ export type Taken = Omit<EngineTask, "products" | "master"> & {
   master: (Stored & { title: string }) | null;
   change: { problem: string; must_change: string[]; must_stay: string[] } | null;
 };
+/** A person's answer on one of the Engine's pictures, with the prompt behind it. */
+export type Pending = { id: string; verdict: "yes" | "no"; why: string; image_model: string | null; updated_at: string; concept: string; slots: { slotKey: string; text: string }[] };
+export type DigestLesson = { statement: string; polarity: "do" | "avoid"; reason: string; scope: "brand" | "brand_and_model" };
+/** Turns one answer into at most three lessons, from what the person said only. */
+export type Digester = (answer: Pending) => Promise<{ lessons: DigestLesson[]; call: ModelCall }>;
 export type Collect = { job_id: string; attempt_id: string; workspace_id: string; provider: string; model: string; provider_job_id: string; started_at: string };
 
 export interface Deps {
@@ -49,8 +54,12 @@ export interface Deps {
     sign(file: Stored): Promise<string>;
     /** Keeps a made picture in the workspace's folder. */
     store(path: string, bytes: Uint8Array, contentType: string): Promise<{ error: Failure }>;
+    /** The brand's answers that wait to become lessons (public.engine_pending). */
+    pending?(workspaceId: string): Promise<{ data: Pending[] | null; error: Failure }>;
+    /** An answer's lessons (public.engine_digested); 0 when the answer changed in the meantime. */
+    digested?(answerId: string, updatedAt: string, lessons: DigestLesson[], llmUsd: number): Promise<{ data: number | null; error: Failure }>;
   };
-  models: { compose: Composer; decide: Decider; verify: Verifier };
+  models: { compose: Composer; decide: Decider; verify: Verifier; digest?: Digester };
   /** null: no image provider yet (a dry run). */
   provider: ImageProvider | null;
   download(url: string): Promise<{ bytes: Uint8Array; contentType: string }>;
@@ -177,6 +186,25 @@ export async function runJob(jobId: string, deps: Deps): Promise<RunOutcome> {
   return outcome;
 }
 
+/** Before a prompt is written, the brand's answers that say why become lessons, and this prompt already uses them. A
+ *  failure here never stops the render: the answers wait for the next one. */
+async function digestAnswers(t: Taken, deps: Deps): Promise<void> {
+  const digest = deps.models.digest;
+  if (!digest || !deps.service.pending || !deps.service.digested) return;
+  try {
+    const { data } = await deps.service.pending(t.run.workspace_id);
+    for (const a of data ?? []) {
+      const { lessons, call } = await digest(a);
+      const kept = lessons.slice(0, 3);
+      const { data: n, error } = await deps.service.digested(a.id, a.updated_at, kept, call.costUsd ?? 0);
+      if (error || !n) continue;
+      t.lessons = [...kept.map((l, i) => ({ id: `${a.id}:${i}`, statement: l.statement, polarity: l.polarity, reason: l.reason })), ...t.lessons];
+    }
+  } catch {
+    // The answers stay pending; the next render digests them.
+  }
+}
+
 async function attempt(t: Taken, deps: Deps): Promise<RunOutcome> {
   const calls: ModelCall[] = [];
   const keep = <A, R extends { call: ModelCall | null }>(f: (a: A) => Promise<R>) => async (a: A) => {
@@ -194,6 +222,7 @@ async function attempt(t: Taken, deps: Deps): Promise<RunOutcome> {
   const attemptId = t.run.attempt_id;
   let recorded = false;
   try {
+    await digestAnswers(t, deps);
     const task = await signTask(t, deps);
     const target = { imageType: "campaign_still", imageModel: t.run.image_model };
     const method = selectMethod(target);

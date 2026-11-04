@@ -4,6 +4,7 @@
 import type Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { betaZodOutputFormat } from "npm:@anthropic-ai/sdk@1.3.0/helpers/beta/zod";
 import { z } from "npm:zod@4.6.7";
+import type { Digester } from "./handler.ts";
 import {
   type Composer,
   COMPOSER_SYSTEM,
@@ -11,6 +12,8 @@ import {
   type Decider,
   DECIDER_SYSTEM,
   deciderPrompt,
+  DIGEST_SYSTEM,
+  digestPrompt,
   type ModelCall,
   type Verifier,
   VERIFIER_SYSTEM,
@@ -28,8 +31,14 @@ export function costOf(usage: { input_tokens?: number | null; output_tokens?: nu
 const Slots = z.object({ slots: z.array(z.object({ slotKey: z.string(), text: z.string(), sources: z.array(z.string()) })) });
 const Answers = z.object({ answers: z.array(z.object({ n: z.number().int(), probability: z.number().min(0).max(1) })) });
 const Verdict = z.object({ expressed: z.boolean(), probability: z.number().min(0).max(1), reason: z.string() });
+const Lessons = z.object({
+  lessons: z.array(z.object({ statement: z.string(), polarity: z.enum(["do", "avoid"]), reason: z.string(), scope: z.enum(["brand", "brand_and_model"]) })),
+});
 
-export function claudeModels(claude: Anthropic, allowed: () => Promise<boolean>): { compose: Composer; decide: Decider; verify: Verifier } {
+export function claudeModels(
+  claude: Anthropic,
+  allowed: () => Promise<boolean>,
+): { compose: Composer; decide: Decider; verify: Verifier; digest: Digester } {
   async function ask<T>(task: string, system: string, content: string, schema: z.ZodType<T>, effort: "low" | "medium") {
     if (!(await allowed())) throw new Error("This week's budget for Fume's language model is used up.");
     const started = Date.now();
@@ -69,6 +78,11 @@ export function claudeModels(claude: Anthropic, allowed: () => Promise<boolean>)
     async verify({ prompt, requirement }) {
       const { out, call } = await ask("verify", VERIFIER_SYSTEM, verifierPrompt(prompt, requirement), Verdict, "low");
       return { ...out, call };
+    },
+    async digest(a) {
+      const prompt = digestPrompt({ decision: a.verdict === "yes" ? "approved" : "rejected", reason: a.why, wanted: null, concept: a.concept, slots: a.slots });
+      const { out, call } = await ask("digest", DIGEST_SYSTEM, prompt, Lessons, "low");
+      return { lessons: out.lessons, call };
     },
   };
 }

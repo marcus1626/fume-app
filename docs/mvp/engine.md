@@ -21,7 +21,11 @@ design follows Marcus's five domains and the Fume Engine prototype (Oct 2026), p
 6. Only a prompt that passed goes to the image model (fal or Higgsfield, the prompt unchanged), and the picture
    comes back as a candidate of the job, made for the designer who pressed Render, so someone else checks it.
 7. The **feedback domain**: `engine_lessons` holds what people's verdicts taught (only people's verdicts teach);
-   approved pictures' prompts become examples. Turning verdicts into lessons is the next step.
+   approved pictures' prompts become examples. A person's Yes or No (`teach_engine`) waits as an answer; before the
+   next prompt for the brand, the Engine turns up to three answers that say why into at most three lessons each
+   (`engine_pending`, Claude with DIGEST_SYSTEM, `engine_digested`), from what the person said only. That prompt
+   already uses them; a changed answer is digested again and its old lessons retire. Digesting counts in the
+   language model's week.
 
 ## Money
 
@@ -52,6 +56,6 @@ without making a picture.
 
 ## Not yet
 
-The Engine bar's words, Make formats by the Engine, picture checks by a vision model, lessons from verdicts, video,
+The Engine bar's words, Make formats by the Engine, picture checks by a vision model, video,
 a second image provider. The Studio shows a failed render as a message; a failed version in the strip and the
 prompt for staff are the design thread's.

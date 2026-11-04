@@ -187,4 +187,48 @@ select test.ok(app.is_staff(test.id('client')) and (select count(*) from public.
 select test.act('marcus@fumecreatives.com');
 select test.ok((select count(*) from public.engine_prompts where job_id = test.id('ej')) = 2, 'Fume''s own designer still does');
 
+-- ─── Lessons from the answers (20261104160000_engine_digest.sql) ────────────
+
+set role authenticated;
+select test.act('marcus@fumecreatives.com');
+select public.teach_engine(test.id('ecand'), 'no', 'The cap reads too glossy');
+reset role;
+select test.ok(not has_function_privilege('authenticated', 'public.engine_pending(uuid, int)', 'execute')
+  and not has_function_privilege('authenticated', 'public.engine_digested(uuid, timestamptz, jsonb, numeric)', 'execute'),
+  'only the Engine digests the answers');
+do $$
+declare
+  p jsonb := public.engine_pending(test.id('lysne'));
+  at timestamptz;
+  t jsonb;
+begin
+  perform test.ok(jsonb_array_length(p) = 1 and p #>> '{0,why}' = 'The cap reads too glossy' and p #>> '{0,verdict}' = 'no',
+    'an answer with a why waits to be digested, with the prompt behind its picture');
+  at := (p #>> '{0,updated_at}')::timestamptz;
+  perform test.ok(public.engine_digested((p #>> '{0,id}')::uuid, at,
+    '[{"statement":"Keep the cap matte, without glossy reflections.","polarity":"avoid","reason":"The cap reads too glossy","scope":"brand"},{"statement":"","polarity":"do"},{"statement":"x","polarity":"maybe"}]', 0.0007) = 1,
+    'its lessons are kept; an empty or unreadable one is not');
+  perform test.ok((select state = 'digested' and llm_usd = 0.0007 from public.engine_lessons where id = test.id('lesson')), 'the answer is digested, with what it cost');
+  perform test.ok(public.engine_digested((p #>> '{0,id}')::uuid, at, '[{"statement":"Again","polarity":"do"}]', 0) = 0, 'an answer is digested once');
+  perform test.ok(jsonb_array_length(public.engine_pending(test.id('lysne'))) = 0, 'and waits no more');
+  update public.production_jobs set state = 'queued' where id = test.id('ecj');
+  t := public.engine_take(test.id('ecj'));
+  perform test.ok(exists (select 1 from jsonb_array_elements(t -> 'lessons') x where x ->> 'statement' = 'Keep the cap matte, without glossy reflections.'
+    and x ->> 'polarity' = 'avoid'), 'the lesson reaches the next prompt');
+  update public.production_jobs set state = 'failed' where id = test.id('ecj');
+end $$;
+set role authenticated;
+select test.act('marcus@fumecreatives.com');
+select public.teach_engine(test.id('ecand'), 'yes', 'The light is right');
+reset role;
+do $$
+declare p jsonb := public.engine_pending(test.id('lysne'));
+begin
+  perform public.engine_digested((p #>> '{0,id}')::uuid, (p #>> '{0,updated_at}')::timestamptz, '[{"statement":"Soft side light from a window.","polarity":"do"}]', 0);
+  perform test.ok((select array_agg(state order by created_at) = array['retired', 'active']
+    from public.engine_lessons where source_candidate_id = test.id('ecand') and verdict is null), 'a changed answer retires the lessons of the one before');
+end $$;
+select test.ok((public.fume_llm_budget() ->> 'spent_usd')::numeric >= 0.0057, 'the language model''s week counts digesting');
+set role authenticated;
+
 select test.ok(true, 'all of the Engine tests passed');
