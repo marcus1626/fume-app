@@ -5,7 +5,7 @@
 import { type DesignBook, type Format, type Grid, type Style, colourOf, componentOf, gridOf, headlineSteps, signatureOf, styleOf } from "./book.ts";
 import { type Band, type Composed, type FamilyFor, type Ground, type Layout, type Words, compose, shadeFill, shadeFor } from "./compose.ts";
 import { type Box, type Pixels, type Shade, contrast, luminance, overlap, rgbOf, under } from "./pixels.ts";
-import { type Doc, boxOf, build, fig, capHeightOf, hasFont, pixelsOf, place, png, splitWords } from "./render.ts";
+import { type Doc, boxOf, build, fig, capHeightOf, hasFont, pixelsOf, place, png, splitWords, wordWidths } from "./render.ts";
 import { type Logo, type Where, CORNERS, cornersFor, logoOf } from "./logo.ts";
 
 export interface Ask {
@@ -156,9 +156,11 @@ export async function balance(
   const l = base.layout;
   const plan = logo ? logoPlan(book, gridOf(book, format), l, logo) : null;
   const widths: Partial<Record<"Headline" | "Subline", number>> = {};
+  let longest = 0;
   const heightOf = async (w: typeof widths, name: "Headline" | "Subline") => {
     const c = compose(book, format, words, l, familyFor, w);
     const doc = await build(c.jsx, ask.picture);
+    longest = Math.max(0, ...wordWidths(doc, name).map((x) => x.width));
     return boxOf(doc, name)?.h ?? Infinity;
   };
   for (const name of ["Headline", "Subline"] as const) {
@@ -167,7 +169,8 @@ export async function balance(
     const full = box.w;
     const one = await heightOf({ ...widths, [name]: full * 4 }, name);
     if (box.h <= one + 1) continue; // one line already
-    let lo = Math.round(full * 0.5);
+    // Never narrower than its longest word: a word runs out of its box rather than onto a new line.
+    let lo = Math.max(Math.round(full * 0.5), Math.ceil(longest) + 2);
     let hi = Math.round(full);
     while (hi - lo > 12) {
       const mid = Math.round((lo + hi) / 2);

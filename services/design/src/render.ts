@@ -38,20 +38,26 @@ export function start(opts: { fonts?: FontSource; online?: boolean } = {}) {
 
 let measurer: SkiaRenderer | null = null;
 
+/** Each word of a text node set on one line, with its width: a word wider than its box runs out of it. */
+export function wordWidths(doc: Doc, name: string): { word: string; width: number; box: number }[] {
+  const id = doc.ids.get(name);
+  const node = id ? doc.graph.getNode(id) : null;
+  if (!measurer || !node || node.type !== "TEXT" || !node.text || !node.width) return [];
+  const out: { word: string; width: number; box: number }[] = [];
+  for (const word of new Set(node.text.split(/\s+/).filter(Boolean))) {
+    // Its own id, so the measure cache never answers with the whole text's width.
+    const m = measurer.measureTextNode({ ...node, id: `${node.id}:word:${word}`, text: word } as typeof node, 1e6);
+    if (m) out.push({ word, width: m.width, box: node.width });
+  }
+  return out;
+}
+
 /**
  * The words in a laid-out text that are wider than its box, so the renderer broke them inside the word
  * ("FLANELLS / KJORTER"). A brand never splits a word; a layout that does is not one to use.
  */
 export function splitWords(doc: Doc, name: string): string[] {
-  const id = doc.ids.get(name);
-  const node = id ? doc.graph.getNode(id) : null;
-  if (!measurer || !node || node.type !== "TEXT" || !node.text || !node.width) return [];
-  const out: string[] = [];
-  for (const word of new Set(node.text.split(/\s+/).filter(Boolean))) {
-    const m = measurer.measureTextNode({ ...node, text: word } as typeof node, 1e6);
-    if (m && m.width > node.width + 1) out.push(word);
-  }
-  return out;
+  return wordWidths(doc, name).filter((w) => w.width > w.box + 1).map((w) => w.word);
 }
 
 const loaded = new Map<string, Promise<boolean>>();
