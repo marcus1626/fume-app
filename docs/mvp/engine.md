@@ -65,5 +65,5 @@ without making a picture.
 
 ## Not yet
 
-The Engine bar's words, Make formats by the Engine, video, and the picture's evaluation in the Studio. The Studio shows a failed render as a message; a failed version in the strip and the
-prompt for staff are the design thread's.
+The Engine bar's words, Make formats by the Engine and video. The Studio's side (a failed version in the strip, the
+prompt for Fume's own people, Teach the Engine) is on the design branch, app/FLOWS.md §29.
