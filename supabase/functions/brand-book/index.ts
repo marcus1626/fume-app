@@ -21,6 +21,7 @@ import {
   type VoiceAnswer,
   voicePrompt,
 } from "./book.ts";
+import { CREATIVES_SYSTEM, CreativesAnswer, creativesPrompt, withCreatives } from "./creatives.ts";
 import { handleBook, type Written } from "./handler.ts";
 import { LOOK_MODEL, LOOK_PARTS, LOOK_SYSTEM, type LookAnswer, type LookPicture, lookCostOf, lookPrompt, pageImages, toLookBody } from "./look.ts";
 
@@ -94,9 +95,10 @@ async function pictureBytes(p: LookPicture): Promise<{ media_type: string; data:
   }
 }
 
-/** The Look Book: the brand's own pictures first, then its people's "this is us" and "not us", then its site's. */
-async function writeLook(task: Parameters<typeof voicePrompt>[0], read: PageText[]): Promise<Written> {
-  const none = { model: LOOK_MODEL, input_tokens: 0, output_tokens: 0, cost_usd: 0 };
+type Image = { type: "image"; source: { type: "base64"; media_type: "image/jpeg"; data: string } };
+
+/** The brand's own pictures first, then its people's "this is us" and "not us", then its site's; at most twelve. */
+async function brandPictures(task: Parameters<typeof voicePrompt>[0]): Promise<{ pictures: LookPicture[]; images: Image[] }> {
   const { data: kept } = await service.rpc("brand_look_pictures", { p_workspace_id: task.book.workspace_id });
   const candidates: LookPicture[] = [...((kept as LookPicture[] | null) ?? [])];
   if (task.website) {
@@ -109,7 +111,7 @@ async function writeLook(task: Parameters<typeof voicePrompt>[0], read: PageText
   }
   const seen = new Set<string>();
   const pictures: LookPicture[] = [];
-  const images: { type: "image"; source: { type: "base64"; media_type: "image/jpeg"; data: string } }[] = [];
+  const images: Image[] = [];
   for (const c of candidates) {
     if (images.length >= 12) break;
     const key = c.url ?? `${c.bucket}/${c.path}`;
@@ -120,6 +122,13 @@ async function writeLook(task: Parameters<typeof voicePrompt>[0], read: PageText
     pictures.push(c);
     images.push({ type: "image", source: { type: "base64", media_type: b.media_type as "image/jpeg", data: b.data } });
   }
+  return { pictures, images };
+}
+
+/** The Look Book, read from the brand's pictures. */
+async function writeLook(task: Parameters<typeof voicePrompt>[0], read: PageText[]): Promise<Written> {
+  const none = { model: LOOK_MODEL, input_tokens: 0, output_tokens: 0, cost_usd: 0 };
+  const { pictures, images } = await brandPictures(task);
   if (pictures.length < 2) return { ok: false, error: "Fume found fewer than two of the brand's pictures to read the look from.", usage: none, final: true };
   const text = lookPrompt(task, pictures, read);
   const settled = await Promise.allSettled(LOOK_PARTS.map((p) =>
@@ -148,18 +157,41 @@ async function writeLook(task: Parameters<typeof voicePrompt>[0], read: PageText
   return { ok: true, body: toLookBody(joined, task, pictures), sources: { sources: joined.sources, pictures: pictures.map((p) => p.url ?? p.path) }, usage };
 }
 
+/** How the brand sets words on its pictures, read with eyes; null when there are no pictures or the read fails. */
+async function readCreatives(task: Parameters<typeof voicePrompt>[0], read: PageText[]) {
+  const { pictures, images } = await brandPictures(task);
+  if (!pictures.length) return { answer: null, pictures, message: null };
+  try {
+    const message = await claude.beta.messages.parse({
+      model: LOOK_MODEL,
+      max_tokens: 12_000,
+      system: CREATIVES_SYSTEM,
+      messages: [{ role: "user", content: [...images, { type: "text", text: creativesPrompt(task, pictures, read) }] }],
+      thinking: { type: "adaptive" },
+      output_config: { effort: "medium", format: betaZodOutputFormat(CreativesAnswer) },
+    });
+    return { answer: message.stop_reason === "end_turn" ? (message.parsed_output as CreativesAnswer | null) : null, pictures, message };
+  } catch {
+    return { answer: null, pictures, message: null };
+  }
+}
+
 async function write(task: Parameters<typeof voicePrompt>[0], read: PageText[]): Promise<Written> {
   if (task.book.kind === "look") return writeLook(task, read);
   const voice = task.book.kind === "voice";
   const content = voice ? voicePrompt(task, read) : designPrompt(task, read);
   const parts = voice ? VOICE_PARTS : DESIGN_PARTS;
+  // The design system's tokens come from the pages; how the brand sets words on pictures, from its pictures, at the same time.
+  const eyes = voice ? Promise.resolve(null) : readCreatives(task, read);
   const settled = await Promise.allSettled(parts.map((p) => part(voice ? VOICE_SYSTEM : DESIGN_SYSTEM, content, p.name, p.schema)));
+  const seen = await eyes;
   const messages = settled.flatMap((s) => (s.status === "fulfilled" ? [s.value] : []));
   const usage = {
     model: messages[0]?.model ?? MODEL,
-    input_tokens: messages.reduce((n, m) => n + m.usage.input_tokens, 0),
-    output_tokens: messages.reduce((n, m) => n + m.usage.output_tokens, 0),
-    cost_usd: Math.round(messages.reduce((n, m) => n + costOf(m.usage), 0) * 10_000) / 10_000,
+    input_tokens: messages.reduce((n, m) => n + m.usage.input_tokens, 0) + (seen?.message?.usage.input_tokens ?? 0),
+    output_tokens: messages.reduce((n, m) => n + m.usage.output_tokens, 0) + (seen?.message?.usage.output_tokens ?? 0),
+    cost_usd:
+      Math.round((messages.reduce((n, m) => n + costOf(m.usage), 0) + (seen?.message ? lookCostOf(seen.message.usage) : 0)) * 10_000) / 10_000,
   };
   const failed = settled.find((s) => s.status === "rejected") as PromiseRejectedResult | undefined;
   if (failed) return { ok: false, error: failed.reason instanceof Error ? failed.reason.message : String(failed.reason), usage };
@@ -167,8 +199,12 @@ async function write(task: Parameters<typeof voicePrompt>[0], read: PageText[]):
   if (messages.some((m) => m.stop_reason === "max_tokens")) return { ok: false, error: "The book was cut off.", usage };
   if (messages.some((m) => !m.parsed_output)) return { ok: false, error: "The book could not be read.", usage };
   const joined = joinParts<VoiceAnswer & DesignAnswer>(messages.map((m) => m.parsed_output as Record<string, unknown>));
-  const body = voice ? toVoiceBody(joined, task) : toDesignBody(joined, task);
-  return { ok: true, body, sources: { sources: joined.sources }, usage };
+  if (voice) return { ok: true, body: toVoiceBody(joined, task), sources: { sources: joined.sources }, usage };
+  const design = toDesignBody(joined, task);
+  const body = seen?.answer ? withCreatives(design, seen.answer, seen.pictures) : { ...design, onPictures: null };
+  if (!seen?.answer) (body as { gaps: string[] }).gaps = [...joined.gaps, "Fume could not read how the brand sets words on its pictures; upload a few of the brand's own ads."];
+  const sources = { sources: [...joined.sources, ...(seen?.answer?.sources ?? [])], pictures: (seen?.pictures ?? []).map((p) => p.url ?? p.path) };
+  return { ok: true, body, sources, usage };
 }
 
 const err = (e: { message: string; details?: string } | null) => (e ? { message: e.message, details: e.details } : null);

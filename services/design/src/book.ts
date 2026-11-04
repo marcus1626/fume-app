@@ -47,6 +47,18 @@ export interface Component {
   paddingPx: number;
   rules?: string[];
 }
+/** A layout the brand repeats on its pictures, read from its own creatives (brand-book creatives.ts). */
+export interface Signature {
+  name: string;
+  band: "top" | "middle" | "bottom";
+  align: "left" | "center" | "right";
+  wordsWidthPct: number;
+  ground: "photo" | "gradient" | "flat" | "colour_block";
+  words: "light" | "dark" | "brand_colour";
+  cta: "pill" | "box" | "underline" | "text" | "none";
+  logo?: string;
+  logoWidthPct?: number;
+}
 export interface DesignBook {
   colours: Colour[];
   typefaces: Typeface[];
@@ -56,6 +68,14 @@ export interface DesignBook {
   radiusPx: Record<string, number>;
   photoText: { rules: string[]; scrim: "none" | "gradient" | "flat"; scrimOpacity: number };
   spacing?: { unitPx: number; scale: number[] };
+  /** How the brand sets words on its pictures; the first layout is the most typical. */
+  onPictures?: { layouts?: Signature[] } | null;
+}
+
+/** The brand's layout by name, else its most typical one. */
+export function signatureOf(book: DesignBook, name?: string): Signature | null {
+  const all = book.onPictures?.layouts ?? [];
+  return all.find((l) => l.name === name) ?? all[0] ?? null;
 }
 
 /** The format's grid, with the platform's safe areas (a story's top and bottom stay free whatever the book says). */

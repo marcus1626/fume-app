@@ -1,6 +1,6 @@
 import { assertEquals } from "jsr:@std/assert@1";
 import { handleScan, siteUrl } from "./handler.ts";
-import { colourName, readBrand } from "./read.ts";
+import { colourName, nextFont, readBrand } from "./read.ts";
 
 const HOME = `<html><head><title>Halm Møbler | Chairs for good</title>
 <meta name="description" content="Chairs made in Norway, to keep for good.">
@@ -103,4 +103,10 @@ Deno.test("a video player's or a carousel's own face is never taken for the bran
     .slick-title{font-family:slick}`;
   const r = readBrand([{ url: "https://shoe.test/", html: "<html><head><title>Shoe</title></head><body></body></html>", css }], "Shoe");
   assertEquals(r.typefaces.map((t) => [t.name, t.role]), [["Helvetica Now Display", "display"], ["Helvetica Now Text", "body"]]);
+});
+
+Deno.test("a face as Next.js names it is the face it loads, and its fallback copy is no face at all", () => {
+  assertEquals(nextFont("__Open_Sans_227a9f"), "Open Sans");
+  assertEquals(nextFont("__Inter_Fallback_e8ce0c"), "");
+  assertEquals(nextFont("Helvetica Now Text"), "Helvetica Now Text");
 });

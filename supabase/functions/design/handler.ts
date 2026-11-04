@@ -3,7 +3,7 @@
 // own token decides whether they may see the layer (design_layers is staff-only); the service role takes the work.
 // The answer comes at once (202); the work goes on in the background. handler.test.ts runs it without Supabase, a
 // model or the design service.
-import { formatOf, keepClearOf, type LayoutChoice, type Review, type Take, type Words, wordsOf } from "./layer.ts";
+import { formatOf, keepClearOf, type LayoutChoice, layoutsOf, type Review, type Take, type Words, wordsOf } from "./layer.ts";
 
 type Failure = { message: string } | null;
 export type Spent = { usd: number };
@@ -62,7 +62,14 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
       format,
       book: t.book.body,
       words,
-      prefer: choice ? { band: choice.band, align: choice.align, colour: choice.colour } : {},
+      prefer: choice
+        ? {
+          band: choice.band,
+          align: choice.align,
+          colour: choice.colour,
+          ...(layoutsOf(t).some((l) => l.name === choice!.layout) ? { signature: choice.layout } : {}),
+        }
+        : {},
       keepClear: choice ? keepClearOf(choice, format) : [],
       upload: { png: links.png, fig: links.fig },
     };

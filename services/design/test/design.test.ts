@@ -84,3 +84,26 @@ test("a short word is held to the next one, and nothing else changes", async () 
   assert.equal(bindShort("for deg og din familie."), "for deg og\u00A0din familie.");
   assert.equal(bindShort("Kjøp nå").replace(/\u00A0/g, " "), "Kjøp nå");
 });
+
+test("the brand's own layout comes first: its place, width, ground and call to action", () => {
+  const branded = {
+    ...book,
+    onPictures: { layouts: [{ name: "Block bottom left", band: "bottom", align: "left", wordsWidthPct: 50, ground: "colour_block", words: "light", cta: "underline" }] },
+  } as unknown as typeof book;
+  const [l] = [...layoutsFor(branded, "feed", {}, true)];
+  assert.equal(l.band, "bottom");
+  assert.equal(l.ground, "block");
+  assert.equal(l.ctaLook, "underline");
+  assert.equal(l.signature, "Block bottom left");
+  assert.ok(l.columns < 9, "half the width");
+  const picked = [...layoutsFor(branded, "feed", { band: "top" }, true)][0];
+  assert.equal(picked.band, "top", "the picture's calm place, from the model's eye, still wins");
+  assert.ok(![...layoutsFor(book, "feed", {}, true)].some((x) => x.ground === "block"), "no colour block for a brand that never uses one");
+});
+
+test("words on a block of the brand's colour, and a call to action as underlined words", () => {
+  const c = compose(book, "feed", { headline: "Morning", cta: "See it" }, { band: "bottom", align: "left", headline: "h1", colour: "on_primary", ground: "block", cta: "with_words", columns: 6, ctaLook: "underline" }, () => "Inter");
+  assert.ok(c.panel, "the panel's colour is known, so contrast is measured against it");
+  assert.ok(c.jsx.includes('name="Rule"'), "the call to action is underlined");
+  assert.ok(!c.jsx.includes('name="CTA" w="hug" h="hug" px='), "no pill");
+});

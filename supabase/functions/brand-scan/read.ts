@@ -230,10 +230,12 @@ function readTypefaces(pages: Page[], brand: string): Read["typefaces"] {
   const count = new Map<string, { n: number; display: number; serif: boolean; weights: Set<string> }>();
   const add = (raw: string, display: boolean, block = "") => {
     const families = raw.split(",").map((f) =>
-      f
-        .trim()
-        .replace(/^["']|["']$/g, "")
-        .trim(),
+      nextFont(
+        f
+          .trim()
+          .replace(/^["']|["']$/g, "")
+          .trim(),
+      ),
     );
     const name = families.find(
       (f) =>
@@ -469,3 +471,14 @@ export function stylesheets(page: Page, max = 4): string[] {
 
 export const inlineCss = (html: string) =>
   [...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].map((m) => m[1]).join("\n");
+
+/**
+ * A face as Next.js names it in its stylesheets ("__Open_Sans_227a9f", "__Inter_Fallback_e8ce0c") is the face it
+ * loads: "Open Sans". Its fallback copy is a local system face, not the brand's.
+ */
+export function nextFont(family: string): string {
+  const m = /^__(.+?)_[0-9a-f]{6}$/i.exec(family);
+  if (!m) return family;
+  const name = m[1].replace(/_/g, " ").trim();
+  return /\bFallback$/i.test(name) ? "" : name;
+}

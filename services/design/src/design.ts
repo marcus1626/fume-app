@@ -2,9 +2,9 @@
 // by name (where the words go, which headline style, which colour role); code tries the layouts in that order, measures
 // each one in the picture (contrast under every line of words, how busy it is, what it covers, whether it fits the
 // safe area), and keeps the best that passes. What did not pass is said, for the expert.
-import { type DesignBook, type Format, type Style, componentOf, gridOf, headlineSteps, styleOf } from "./book.ts";
+import { type DesignBook, type Format, type Style, componentOf, gridOf, headlineSteps, signatureOf, styleOf } from "./book.ts";
 import { type Band, type Composed, type FamilyFor, type Ground, type Layout, type Words, compose, shadeFill, shadeFor } from "./compose.ts";
-import { type Box, type Pixels, type Shade, overlap, under } from "./pixels.ts";
+import { type Box, type Pixels, type Shade, contrast, luminance, overlap, rgbOf, under } from "./pixels.ts";
 import { type Doc, boxOf, build, fig, hasFont, pixelsOf, place, png } from "./render.ts";
 
 export interface Ask {
@@ -157,20 +157,32 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
   const comp = componentOf(book, "headline");
   const first = prefer.headline && styleOf(book, prefer.headline) ? prefer.headline : (comp?.style ?? "h1");
   const steps = headlineSteps(book, first).map((s) => s.name);
-  const bands: Band[] = uniq([prefer.band ?? "top", "top", "bottom", "middle"]) as Band[];
-  const aligns = uniq([prefer.align ?? "left", "left", "right", "center"]) as Layout["align"][];
-  const photoColour = prefer.colour && book.colours.some((c) => c.role === prefer.colour) ? prefer.colour : "on_photo";
+  // The brand's own way of setting words on pictures comes before Fume's defaults; the picture's calm place, from the
+  // model's eye, comes before both.
+  const sig = signatureOf(book, prefer.signature);
+  const g = gridOf(book, format);
+  const sigColumns = sig ? Math.min(g.columns, Math.max(4, Math.round((sig.wordsWidthPct / 100) * g.columns))) : null;
+  const sigGround: Ground | null = sig ? (sig.ground === "colour_block" ? "block" : sig.ground) : null;
+  const sigColour = sig ? ({ light: "on_photo", dark: "text", brand_colour: "accent" } as const)[sig.words] : null;
+  const ctaLook = sig && sig.cta !== "none" ? sig.cta : sig ? "text" : undefined;
+  const bands: Band[] = uniq([prefer.band ?? sig?.band ?? "top", sig?.band ?? "top", "top", "bottom", "middle"]) as Band[];
+  const aligns = uniq([prefer.align ?? sig?.align ?? "left", sig?.align ?? "left", "left", "right", "center"]) as Layout["align"][];
+  const wanted = prefer.colour ?? sigColour ?? "on_photo";
+  const photoColour = book.colours.some((c) => c.role === wanted) ? wanted : "on_photo";
   const colours = uniq([photoColour, "on_photo", comp?.colour ?? "text", "text"]).filter((r) =>
     book.colours.some((c) => c.role === r),
   );
   const scrim = book.photoText?.scrim ?? "gradient";
   const grounds: Ground[] = uniq([
-    prefer.ground ?? "photo",
+    prefer.ground ?? sigGround ?? "photo",
+    sigGround ?? "photo",
     "photo",
     ...(scrim === "gradient" ? ["gradient"] : []),
     "flat",
-  ]) as Ground[];
-  const widths = prefer.columns ? [prefer.columns] : format === "banner" ? [6, 8] : [9, 7, 12];
+  ]).filter((x) => x !== "block" || sigGround === "block") as Ground[];
+  const widths = prefer.columns
+    ? [prefer.columns]
+    : uniq([...(sigColumns ? [sigColumns] : []), ...(format === "banner" ? [6, 8] : [9, 7, 12])]);
   const cta = hasCta ? (prefer.cta ?? "with_words") : "none";
   // A long line from the plan may step down to the book's body size before the words move.
   const sublines = uniq(["subline", "body"].filter((n) => styleOf(book, n)));
@@ -184,8 +196,13 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
         for (const columns of widths) {
           for (const headline of steps.slice(0, 3)) {
             for (const subline of sublines) {
-              for (const colour of ground === "flat" ? ["text"] : colours) {
-                yield { band, align, headline, colour, ground, cta, columns, ...(subline === "subline" ? {} : { subline }) };
+              for (const colour of ground === "flat" ? ["text"] : ground === "block" ? ["on_primary"] : colours) {
+                yield {
+                  band, align, headline, colour, ground, cta, columns,
+                  ...(subline === "subline" ? {} : { subline }),
+                  ...(ctaLook ? { ctaLook } : {}),
+                  ...(sig ? { signature: sig.name } : {}),
+                };
               }
             }
           }
@@ -253,11 +270,14 @@ export function measure(doc: Doc, c: Composed, l: Layout, book: DesignBook, p: P
       note: `${lines} line${lines === 1 ? "" : "s"} (at most ${most}).`,
     });
   }
-  const onPhoto = l.ground !== "flat";
+  const onPhoto = l.ground === "photo" || l.ground === "gradient";
   for (const n of ["Headline", "Subline"]) {
     const b = boxes[n];
     if (!b) continue;
-    const u = under(p, b, c.colours[n], shades, Math.max(16, c.sizes[n] * 0.5));
+    // On a panel the words are read against the panel's own colour, not the picture under it.
+    const u = !onPhoto && c.panel
+      ? { contrast: contrastOf(c.colours[n], c.panel), poor: 0, worst: 21, busy: 0 }
+      : under(p, b, c.colours[n], shades, Math.max(16, c.sizes[n] * 0.5));
     const need = n === "Headline" ? 3 : 4.5;
     checks.push({
       check: "contrast",
@@ -356,6 +376,10 @@ async function familiesOf(book: DesignBook) {
     fonts.push({ style: s.name, asked, used });
   }
   return { familyFor: (s: Style) => chosen.get(s.name) ?? "Inter", fonts };
+}
+
+function contrastOf(a: string, b: string): number {
+  return Math.round(contrast(luminance(...rgbOf(a)), luminance(...rgbOf(b))) * 100) / 100;
 }
 
 function uniq<T>(xs: T[]): T[] {

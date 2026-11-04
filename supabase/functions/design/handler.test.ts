@@ -34,7 +34,7 @@ function deps(over: Partial<Deps> = {}) {
     },
     choose: (_t, _w, _p, spent) => {
       spent.usd += 0.001;
-      return Promise.resolve({ keepClear: [{ what: "the shoe", x: 0.2, y: 0.5, w: 0.7, h: 0.3 }], band: "top", align: "left", colour: "on_photo", why: "calm sky" });
+      return Promise.resolve({ keepClear: [{ what: "the shoe", x: 0.2, y: 0.5, w: 0.7, h: 0.3 }], band: "top", align: "left", colour: "on_photo", layout: "", why: "calm sky" });
     },
     review: (_t, _w, _p, spent) => {
       spent.usd += 0.001;
@@ -54,7 +54,7 @@ Deno.test("the words are the plan's approved copy, word for word, and nothing el
 });
 
 Deno.test("what must stay clear becomes boxes in the format's pixels, cut to the frame", () => {
-  const boxes = keepClearOf({ keepClear: [{ what: "shoe", x: 0.5, y: 0.5, w: 0.9, h: 0.2 }, { what: "speck", x: 0, y: 0, w: 0.001, h: 0.5 }], band: "top", align: "left", colour: "text", why: "" }, "feed");
+  const boxes = keepClearOf({ keepClear: [{ what: "shoe", x: 0.5, y: 0.5, w: 0.9, h: 0.2 }, { what: "speck", x: 0, y: 0, w: 0.001, h: 0.5 }], band: "top", align: "left", colour: "text", layout: "", why: "" }, "feed");
   assertEquals(boxes, [{ what: "shoe", x: 540, y: 675, w: 540, h: 270 }]);
 });
 
@@ -78,6 +78,17 @@ Deno.test("without the model's eye the service still lays it out; a failed servi
   const broken = deps({ lay: () => Promise.resolve({ ok: false, status: 400, body: { error: "Unknown format." } }) });
   assertEquals(await designLayer(take, broken.d), "failed");
   assertEquals(broken.calls.fail, ["The design service answered 400: Unknown format."]);
+});
+
+Deno.test("the brand's own layout the model picked goes to the service by name; a made-up one does not", async () => {
+  const branded = { ...take, book: { ...take.book, body: { ...take.book.body, onPictures: { layouts: [{ name: "Big stack", band: "bottom", align: "left", ground: "photo", words: "light", cta: "text" }] } } } };
+  const pick = (layout: string) => deps({ choose: () => Promise.resolve({ keepClear: [], band: "bottom", align: "left", colour: "on_photo", layout, why: "" }) });
+  const a = pick("Big stack");
+  await designLayer(branded, a.d);
+  assertEquals((a.calls.lay[0] as { prefer: { signature?: string } }).prefer.signature, "Big stack");
+  const b = pick("Something else");
+  await designLayer(branded, b.d);
+  assertEquals((b.calls.lay[0] as { prefer: { signature?: string } }).prefer.signature, undefined);
 });
 
 Deno.test("a slow service is tried once more; a refusal is not", async () => {

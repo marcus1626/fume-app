@@ -10,6 +10,10 @@ var SIZES = {
   story: { w: 1080, h: 1920 },
   banner: { w: 1920, h: 1080 }
 };
+function signatureOf(book, name) {
+  const all = book.onPictures?.layouts ?? [];
+  return all.find((l) => l.name === name) ?? all[0] ?? null;
+}
 function gridOf(book, format) {
   const size = SIZES[format];
   const f = book.formats.find((x) => x.format === format);
@@ -58,9 +62,10 @@ function compose(book, format, words, l, family, widths = {}) {
   const hl = styleOf(book, l.headline) ?? styleOf(book, "h1") ?? book.styles[0];
   const sub = styleOf(book, l.subline ?? "subline") ?? styleOf(book, "subline") ?? styleOf(book, "body") ?? hl;
   const panel = componentOf(book, "body");
-  const onPanel = l.ground === "flat";
-  const wordsHex = onPanel ? colourOf(book, "text") ?? "#000000" : colourOf(book, l.colour) ?? "#FFFFFF";
-  const subHex = onPanel ? colourOf(book, "text_muted") ?? wordsHex : wordsHex;
+  const isBlock = l.ground === "block";
+  const onPanel = l.ground === "flat" || isBlock;
+  const wordsHex = isBlock ? colourOf(book, "on_primary") ?? "#FFFFFF" : onPanel ? colourOf(book, "text") ?? "#000000" : colourOf(book, l.colour) ?? "#FFFFFF";
+  const subHex = isBlock ? wordsHex : onPanel ? colourOf(book, "text_muted") ?? wordsHex : wordsHex;
   const width = columnsWidth(g, Math.min(g.columns, Math.max(4, l.columns)));
   const x = l.align === "left" ? g.margin : l.align === "right" ? g.w - g.margin - width : Math.round((g.w - width) / 2);
   const textAlign = l.align;
@@ -83,16 +88,24 @@ function compose(book, format, words, l, family, widths = {}) {
     const s = styleOf(book, c?.style ?? "cta") ?? sub;
     const fam = family(s);
     fonts.push({ family: fam, weight: s.weight });
+    const look = l.ctaLook ?? "pill";
     const bg = colourOf(book, c?.background ?? "cta") ?? colourOf(book, "primary") ?? "#000000";
     const fg = colourOf(book, c?.colour ?? "cta_text") ?? "#FFFFFF";
-    colours.CTA = fg;
     sizes.CTA = s.sizePx;
     const pad2 = c?.paddingPx ?? 24;
     const line = Math.round(s.sizePx * s.lineHeight);
+    if (look === "underline" || look === "text") {
+      colours.CTA = wordsHex;
+      const rule = look === "underline" ? `<Rectangle name="Rule" w="fill" h={${Math.max(2, Math.round(s.sizePx / 14))}} bg=${q(wordsHex)} />` : "";
+      return `<Frame name="CTA" w="hug" h="hug" flex="col" gap={${Math.round(s.sizePx / 4)}}><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
+        s.trackingEm * s.sizePx
+      )}} color=${q(wordsHex)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} />${rule}</Frame>`;
+    }
+    colours.CTA = fg;
     const py = Math.max(Math.round(pad2 * 0.6), Math.ceil((56 - line) / 2));
     return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(pad2 * 1.5)}} py={${py}} rounded={${radiusOf(
       book,
-      c?.radius ?? "pill"
+      look === "box" ? "small" : c?.radius ?? "pill"
     )}} bg=${q(bg)}><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
       s.trackingEm * s.sizePx
     )}} color=${q(fg)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} /></Frame>`;
@@ -105,7 +118,8 @@ function compose(book, format, words, l, family, widths = {}) {
   }
   const ctaWithWords = words.cta && (l.cta === "with_words" || l.cta === "bottom" && l.band === "bottom");
   const pad = onPanel ? panel?.paddingPx ?? 32 : 0;
-  const panelBg = onPanel ? ` bg=${q(colourOf(book, panel?.background ?? "surface") ?? colourOf(book, "background") ?? "#FFFFFF")}` : "";
+  const panelHex = isBlock ? colourOf(book, "primary") ?? "#000000" : colourOf(book, panel?.background ?? "surface") ?? colourOf(book, "background") ?? "#FFFFFF";
+  const panelBg = onPanel ? ` bg=${q(panelHex)}` : "";
   const panelRadius = onPanel ? ` rounded={${radiusOf(book, panel?.radius ?? "none")}}` : "";
   const block = `<Frame name="Words" position="absolute" x={${x}} y={${g.top}} w={${width}} h="hug" flex="col" items=${q(
     items
@@ -113,7 +127,7 @@ function compose(book, format, words, l, family, widths = {}) {
   const alone = words.cta && !ctaWithWords && l.cta !== "none" ? `<Frame name="Action" position="absolute" x={${l.align === "left" ? g.margin : 0}} y={${g.h - g.bottom - 80}} w={${l.align === "left" ? '"hug"' : l.align === "right" ? g.w - g.margin : g.w}} h="hug" flex="col" items=${q(items)}>${cta()}</Frame>` : "";
   const shade = l.ground === "gradient" ? `<Rectangle name="Shade" position="absolute" x={0} y={0} w={${g.w}} h={${Math.round(g.h / 2)}} fills={[]} />` : "";
   const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${shade}${block}${alone}</Frame>`;
-  return { jsx, grid: g, fonts, colours, sizes };
+  return { jsx, grid: g, fonts, colours, sizes, ...onPanel ? { panel: panelHex } : {} };
 }
 function bindShort(text) {
   return text.replace(new RegExp("(?<=^|\\s)(\\p{L}{1,2}) (?=\\S)", "gu"), "$1\xA0");
@@ -466,20 +480,28 @@ function* layoutsFor(book, format, prefer, hasCta) {
   const comp = componentOf(book, "headline");
   const first = prefer.headline && styleOf(book, prefer.headline) ? prefer.headline : comp?.style ?? "h1";
   const steps = headlineSteps(book, first).map((s) => s.name);
-  const bands = uniq([prefer.band ?? "top", "top", "bottom", "middle"]);
-  const aligns = uniq([prefer.align ?? "left", "left", "right", "center"]);
-  const photoColour = prefer.colour && book.colours.some((c) => c.role === prefer.colour) ? prefer.colour : "on_photo";
+  const sig = signatureOf(book, prefer.signature);
+  const g = gridOf(book, format);
+  const sigColumns = sig ? Math.min(g.columns, Math.max(4, Math.round(sig.wordsWidthPct / 100 * g.columns))) : null;
+  const sigGround = sig ? sig.ground === "colour_block" ? "block" : sig.ground : null;
+  const sigColour = sig ? { light: "on_photo", dark: "text", brand_colour: "accent" }[sig.words] : null;
+  const ctaLook = sig && sig.cta !== "none" ? sig.cta : sig ? "text" : void 0;
+  const bands = uniq([prefer.band ?? sig?.band ?? "top", sig?.band ?? "top", "top", "bottom", "middle"]);
+  const aligns = uniq([prefer.align ?? sig?.align ?? "left", sig?.align ?? "left", "left", "right", "center"]);
+  const wanted = prefer.colour ?? sigColour ?? "on_photo";
+  const photoColour = book.colours.some((c) => c.role === wanted) ? wanted : "on_photo";
   const colours = uniq([photoColour, "on_photo", comp?.colour ?? "text", "text"]).filter(
     (r) => book.colours.some((c) => c.role === r)
   );
   const scrim = book.photoText?.scrim ?? "gradient";
   const grounds = uniq([
-    prefer.ground ?? "photo",
+    prefer.ground ?? sigGround ?? "photo",
+    sigGround ?? "photo",
     "photo",
     ...scrim === "gradient" ? ["gradient"] : [],
     "flat"
-  ]);
-  const widths = prefer.columns ? [prefer.columns] : format === "banner" ? [6, 8] : [9, 7, 12];
+  ]).filter((x) => x !== "block" || sigGround === "block");
+  const widths = prefer.columns ? [prefer.columns] : uniq([...sigColumns ? [sigColumns] : [], ...format === "banner" ? [6, 8] : [9, 7, 12]]);
   const cta = hasCta ? prefer.cta ?? "with_words" : "none";
   const sublines = uniq(["subline", "body"].filter((n) => styleOf(book, n)));
   if (!sublines.length) sublines.push("subline");
@@ -490,8 +512,19 @@ function* layoutsFor(book, format, prefer, hasCta) {
         for (const columns of widths) {
           for (const headline of steps.slice(0, 3)) {
             for (const subline of sublines) {
-              for (const colour of ground === "flat" ? ["text"] : colours) {
-                yield { band, align, headline, colour, ground, cta, columns, ...subline === "subline" ? {} : { subline } };
+              for (const colour of ground === "flat" ? ["text"] : ground === "block" ? ["on_primary"] : colours) {
+                yield {
+                  band,
+                  align,
+                  headline,
+                  colour,
+                  ground,
+                  cta,
+                  columns,
+                  ...subline === "subline" ? {} : { subline },
+                  ...ctaLook ? { ctaLook } : {},
+                  ...sig ? { signature: sig.name } : {}
+                };
               }
             }
           }
@@ -552,11 +585,11 @@ function measure(doc, c, l, book, p, keep) {
       note: `${lines} line${lines === 1 ? "" : "s"} (at most ${most}).`
     });
   }
-  const onPhoto = l.ground !== "flat";
+  const onPhoto = l.ground === "photo" || l.ground === "gradient";
   for (const n of ["Headline", "Subline"]) {
     const b = boxes[n];
     if (!b) continue;
-    const u = under(p, b, c.colours[n], shades, Math.max(16, c.sizes[n] * 0.5));
+    const u = !onPhoto && c.panel ? { contrast: contrastOf(c.colours[n], c.panel), poor: 0, worst: 21, busy: 0 } : under(p, b, c.colours[n], shades, Math.max(16, c.sizes[n] * 0.5));
     const need = n === "Headline" ? 3 : 4.5;
     checks.push({
       check: "contrast",
@@ -647,6 +680,9 @@ async function familiesOf(book) {
     fonts.push({ style: s.name, asked, used });
   }
   return { familyFor: (s) => chosen.get(s.name) ?? "Inter", fonts };
+}
+function contrastOf(a, b) {
+  return Math.round(contrast(luminance(...rgbOf(a)), luminance(...rgbOf(b))) * 100) / 100;
 }
 function uniq(xs) {
   return [...new Set(xs)];

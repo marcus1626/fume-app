@@ -23,7 +23,8 @@ export interface Words {
 
 export type Band = "top" | "middle" | "bottom";
 export type Align = "left" | "center" | "right";
-export type Ground = "photo" | "gradient" | "flat";
+export type Ground = "photo" | "gradient" | "flat" | "block";
+export type CtaLook = "pill" | "box" | "underline" | "text";
 
 /** One way to lay the words out. */
 export interface Layout {
@@ -33,8 +34,12 @@ export interface Layout {
   headline: string;
   /** The colour role of the words on the picture. */
   colour: string;
-  /** What the words stand on: the picture itself, a fade of dark from the edge, or a flat panel. */
+  /** What the words stand on: the picture itself, a fade of dark from the edge, a flat panel, or a block of the brand's colour. */
   ground: Ground;
+  /** How the call to action looks, as the brand's own creatives show it (a pill when the book says nothing). */
+  ctaLook?: CtaLook;
+  /** The brand's layout this one follows, by name. */
+  signature?: string;
   /** The subline's type style, by name: a smaller one when the plan's line is long for the picture. */
   subline?: string;
   /** The call to action under the words, or alone at the bottom of the frame. */
@@ -51,6 +56,8 @@ export interface Composed {
   /** The colours of the words, by node name. */
   colours: Record<string, string>;
   sizes: Record<string, number>;
+  /** The panel's colour when the words stand on one. */
+  panel?: string;
 }
 
 /** A family the renderer can set, by the role it plays in the book. */
@@ -70,9 +77,14 @@ export function compose(
   const hl = styleOf(book, l.headline) ?? styleOf(book, "h1") ?? book.styles[0];
   const sub = styleOf(book, l.subline ?? "subline") ?? styleOf(book, "subline") ?? styleOf(book, "body") ?? hl;
   const panel = componentOf(book, "body");
-  const onPanel = l.ground === "flat";
-  const wordsHex = onPanel ? (colourOf(book, "text") ?? "#000000") : (colourOf(book, l.colour) ?? "#FFFFFF");
-  const subHex = onPanel ? (colourOf(book, "text_muted") ?? wordsHex) : wordsHex;
+  const isBlock = l.ground === "block";
+  const onPanel = l.ground === "flat" || isBlock;
+  const wordsHex = isBlock
+    ? (colourOf(book, "on_primary") ?? "#FFFFFF")
+    : onPanel
+      ? (colourOf(book, "text") ?? "#000000")
+      : (colourOf(book, l.colour) ?? "#FFFFFF");
+  const subHex = isBlock ? wordsHex : onPanel ? (colourOf(book, "text_muted") ?? wordsHex) : wordsHex;
   const width = columnsWidth(g, Math.min(g.columns, Math.max(4, l.columns)));
   const x = l.align === "left" ? g.margin : l.align === "right" ? g.w - g.margin - width : Math.round((g.w - width) / 2);
   const textAlign = l.align;
@@ -97,16 +109,25 @@ export function compose(
     const s = styleOf(book, c?.style ?? "cta") ?? sub;
     const fam = family(s);
     fonts.push({ family: fam, weight: s.weight });
+    const look = l.ctaLook ?? "pill";
     const bg = colourOf(book, c?.background ?? "cta") ?? colourOf(book, "primary") ?? "#000000";
     const fg = colourOf(book, c?.colour ?? "cta_text") ?? "#FFFFFF";
-    colours.CTA = fg;
     sizes.CTA = s.sizePx;
     const pad = c?.paddingPx ?? 24;
     const line = Math.round(s.sizePx * s.lineHeight);
+    if (look === "underline" || look === "text") {
+      // The words alone, in the words' own colour; underlined when the brand does so.
+      colours.CTA = wordsHex;
+      const rule = look === "underline" ? `<Rectangle name="Rule" w="fill" h={${Math.max(2, Math.round(s.sizePx / 14))}} bg=${q(wordsHex)} />` : "";
+      return `<Frame name="CTA" w="hug" h="hug" flex="col" gap={${Math.round(s.sizePx / 4)}}><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
+        s.trackingEm * s.sizePx,
+      )}} color=${q(wordsHex)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} />${rule}</Frame>`;
+    }
+    colours.CTA = fg;
     const py = Math.max(Math.round(pad * 0.6), Math.ceil((56 - line) / 2));
     return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(pad * 1.5)}} py={${py}} rounded={${radiusOf(
       book,
-      c?.radius ?? "pill",
+      look === "box" ? "small" : (c?.radius ?? "pill"),
     )}} bg=${q(bg)}><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
       s.trackingEm * s.sizePx,
     )}} color=${q(fg)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} /></Frame>`;
@@ -120,7 +141,10 @@ export function compose(
   }
   const ctaWithWords = words.cta && (l.cta === "with_words" || (l.cta === "bottom" && l.band === "bottom"));
   const pad = onPanel ? (panel?.paddingPx ?? 32) : 0;
-  const panelBg = onPanel ? ` bg=${q(colourOf(book, panel?.background ?? "surface") ?? colourOf(book, "background") ?? "#FFFFFF")}` : "";
+  const panelHex = isBlock
+    ? (colourOf(book, "primary") ?? "#000000")
+    : (colourOf(book, panel?.background ?? "surface") ?? colourOf(book, "background") ?? "#FFFFFF");
+  const panelBg = onPanel ? ` bg=${q(panelHex)}` : "";
   const panelRadius = onPanel ? ` rounded={${radiusOf(book, panel?.radius ?? "none")}}` : "";
   const block = `<Frame name="Words" position="absolute" x={${x}} y={${g.top}} w={${width}} h="hug" flex="col" items=${q(
     items,
@@ -138,7 +162,7 @@ export function compose(
       ? `<Rectangle name="Shade" position="absolute" x={0} y={0} w={${g.w}} h={${Math.round(g.h / 2)}} fills={[]} />`
       : "";
   const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${shade}${block}${alone}</Frame>`;
-  return { jsx, grid: g, fonts, colours, sizes };
+  return { jsx, grid: g, fonts, colours, sizes, ...(onPanel ? { panel: panelHex } : {}) };
 }
 
 /**
