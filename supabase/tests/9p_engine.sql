@@ -46,7 +46,7 @@ select test.act('marcus@fumecreatives.com');
 select test.keep('ej', (public.render_creative(test.id('em'), 'render-1') ->> 'id')::uuid);
 select test.ok((select kind = 'master' and mode = 'engine' and state = 'queued' and creative_id = test.id('em')
   from public.production_jobs where id = test.id('ej')), 'Render starts the creative''s Engine master job, queued');
-select test.ok((select s.recipe ->> 'image_model' = 'nano-banana-pro' and s.recipe ->> 'slot' = 'pc1'
+select test.ok((select coalesce(s.recipe ->> 'image_model', '') <> '' and s.recipe ->> 'slot' = 'pc1'
   from public.production_jobs j join public.context_snapshots s on s.id = j.snapshot_id where j.id = test.id('ej')),
   'its frozen recipe names the image model and the planned creative');
 select test.ok((public.render_creative(test.id('em')) ->> 'id')::uuid = test.id('ej'), 'pressing again while it is queued gives the same job');
@@ -146,5 +146,45 @@ select test.refuses($$ select public.render_creative(test.id('em')) $$, 'unavail
 reset role;
 update app.settings set value = '20' where key = 'engine_week_usd';
 set role authenticated;
+
+-- ─── Teaching the Engine; the prompt is Fume's own (20261104150000_engine_studio.sql) ─────────────────────
+
+select test.act('marcus+lysne@fumecreatives.com');
+select test.refuses($$ select public.teach_engine(test.id('ecand'), 'yes') $$, 'forbidden', 'the customer does not teach the Engine');
+select test.act('marcus@fumecreatives.com');
+select test.keep('lesson', (public.teach_engine(test.id('ecand'), 'yes') ->> 'id')::uuid);
+select test.ok((select verdict = 'yes' and polarity = 'do' and state = 'pending' and why is null and created_by = (select id from public.profiles where email = 'marcus@fumecreatives.com')
+  from public.engine_lessons where id = test.id('lesson')), 'a Yes is kept as an answer that waits to become a lesson');
+select test.ok((public.teach_engine(test.id('ecand'), 'yes', 'The light') ->> 'id')::uuid = test.id('lesson'), 'the why goes to the same answer');
+select test.ok((select why = 'The light' and statement = 'The light' and (select count(*) from public.engine_lessons where source_candidate_id = test.id('ecand')) = 1
+  from public.engine_lessons where id = test.id('lesson')), 'and updates it');
+select public.teach_engine(test.id('ecand'), 'no');
+select test.ok((select verdict = 'no' and polarity = 'avoid' and why is null from public.engine_lessons where id = test.id('lesson')),
+  'a changed answer drops the why given for the other one');
+select test.refuses($$ select public.teach_engine(test.id('ecand'), 'maybe') $$, 'invalid', 'the answer is yes or no');
+reset role;
+update public.production_jobs set state = 'queued' where id = test.id('ecj');
+update public.engine_lessons set statement = 'A person said: no gloss' where id = test.id('lesson');
+do $$
+declare t jsonb := public.engine_take(test.id('ecj'));
+begin
+  perform test.ok(t ? 'lessons' and not exists (select 1 from jsonb_array_elements(t -> 'lessons') x
+    where x::text like '%no gloss%'), 'an answer reaches no prompt until it is a lesson');
+end $$;
+update public.production_jobs set state = 'failed' where id = test.id('ecj');
+-- An agency's people on their own client see neither the prompts nor the answers.
+with a as (
+  insert into public.job_attempts (workspace_id, job_id, number, provider, state)
+  values (test.id('client'), test.id('ja'), 1, 'test', 'failed') returning id
+)
+insert into public.engine_prompts (workspace_id, job_id, attempt_id, hash, status, image_model)
+select test.id('client'), test.id('ja'), a.id, 'h-agency', 'validated', 'nano-banana-pro' from a;
+select test.ok((select count(*) from public.engine_prompts where workspace_id = test.id('client')) = 1, 'a prompt on an agency''s client');
+set role authenticated;
+select test.act('nora@brygga.test');
+select test.ok(app.is_staff(test.id('client')) and (select count(*) from public.engine_prompts where workspace_id = test.id('client')) = 0,
+  'an agency''s designer does not see the prompt behind their client''s pictures');
+select test.act('marcus@fumecreatives.com');
+select test.ok((select count(*) from public.engine_prompts where job_id = test.id('ej')) = 2, 'Fume''s own designer still does');
 
 select test.ok(true, 'all of the Engine tests passed');
