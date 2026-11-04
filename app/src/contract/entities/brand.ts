@@ -218,7 +218,7 @@ export type VoiceChannel =
  *  past campaigns, or Fume's proposal where the data is thin. */
 export interface BookSource {
   part: string;
-  source: "site" | "brand_dna" | "rules" | "products" | "taste" | "memory" | "fume";
+  source: "site" | "brand_dna" | "rules" | "products" | "taste" | "memory" | "fume" | "pictures";
   evidence: string;
 }
 
@@ -332,7 +332,70 @@ export interface DesignBook {
 
 export type LogoPlace = "top_left" | "top_centre" | "top_right" | "bottom_left" | "bottom_centre" | "bottom_right";
 
-export type BrandBookKind = "voice" | "design";
+/** The brand's photography, read from its own pictures (FLOWS §32, PROPOSED; brand-book/look.ts): every picture the
+ *  Engine makes is shot the way the brand shoots. Fume reads at most twelve of the brand's pictures (its Brand DNA
+ *  imagery, the ones its people liked or turned down, the large ones on its website) and writes the look as a
+ *  photographer and a colourist would brief it. */
+export interface LookBook {
+  /** The photography in three sentences a photographer could shoot from. */
+  summary: string;
+  /** Four to six things that make a picture unmistakably the brand's. */
+  signature: string[];
+  camera: {
+    capture: string;
+    lenses: { focalMm: number; use: string }[];
+    aperture: string;
+    height: string;
+    distance: string;
+    motion: string;
+  };
+  light: {
+    key: string;
+    quality: string;
+    direction: string;
+    /** In words with the kelvin: "2700 K sun low through a window". */
+    colourTemperatureK: string;
+    contrast: string;
+    timeOfDay: string;
+    rules: string[];
+  };
+  colour: {
+    grade: string;
+    saturation: string;
+    blacks: string;
+    highlights: string;
+    whiteBalance: string;
+    /** The colours the pictures are built from, in words, with a hex where it is clear ("Honey amber #B5651D"). */
+    palette: string[];
+  };
+  texture: {
+    grain: "none" | "fine" | "medium" | "heavy";
+    grainCharacter: string;
+    sharpness: string;
+    surfaces: string;
+    lensCharacter: string;
+  };
+  composition: { rules: string[]; negativeSpace: string; subjectPlacement: string };
+  styling: { settings: string[]; props: string; surfaces: string; wardrobe: string };
+  people: { shows: boolean; casting: string; direction: string; skin: string };
+  retouch: string;
+  /** What the brand's pictures never do, the marks of generated pictures included. */
+  never: string[];
+  /** Four to eight recipes, one per kind of scene the brand shoots. */
+  recipes: { scene: string; camera: string; light: string; grade: string; composition: string }[];
+  /** What each picture Fume read shows of the look, by its number from 1; only pictures it was shown. */
+  evidence: { picture: number; shows: string; url: string | null; kind: LookPictureKind }[];
+  sources: BookSource[];
+  gaps: string[];
+  /** How many pictures Fume read. */
+  pictures: number;
+}
+
+/** Where a picture Fume read comes from: the Brand DNA's imagery, a picture the brand's people liked or turned down
+ *  (Taste), or the brand's website. */
+export type LookPictureKind = "brand" | "liked" | "not_us" | "site";
+
+export type BrandBookKind = "voice" | "design" | "look";
 export type BrandBookState = "writing" | "failed" | "draft" | "checked" | "changes_asked" | "approved" | "superseded";
 
 interface BookVersion {
@@ -354,7 +417,9 @@ interface BookVersion {
 
 /** One version of a book; no body while it is being written, or when writing it failed. */
 export type BrandBook =
-  (BookVersion & { kind: "voice"; body?: VoiceBook }) | (BookVersion & { kind: "design"; body?: DesignBook });
+  | (BookVersion & { kind: "voice"; body?: VoiceBook })
+  | (BookVersion & { kind: "design"; body?: DesignBook })
+  | (BookVersion & { kind: "look"; body?: LookBook });
 
 // ─── Taste (FLOWS §14: taste keeps learning) ────────────────────────────────
 

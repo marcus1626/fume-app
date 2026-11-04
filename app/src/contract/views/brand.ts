@@ -50,6 +50,7 @@ export interface BrandAssetsView {
 export interface BrandBooksView {
   voice: BrandBook[];
   design: BrandBook[];
+  look: BrandBook[];
   /** To a customer: the newest version of each book on its way that she may not read yet, as its number and state
    *  only, never its words (brand_book_progress). Fume's own people read those versions themselves. */
   progress?: BookProgress[];

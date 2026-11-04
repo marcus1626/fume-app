@@ -402,7 +402,15 @@ export function ImageryPart({ identity, rules, visit, open, onOpen }: PartProps)
   const { canEdit } = useRole();
   const campaigns = campaignsOf(identity.imagery);
   return (
-    <BoardPart id="imagery" title="Imagery" span="full" open={open} onOpen={onOpen}>
+    <BoardPart
+      id="imagery"
+      title="Imagery"
+      span="full"
+      open={open}
+      onOpen={onOpen}
+      to="/brand/look"
+      linkLabel="The Look Book"
+    >
       {byGroup(drawn(identity.imagery, visit)).map((g) => (
         <section key={g.group} className="ui-image-group" aria-labelledby={`brand-group-${g.group}`}>
           <div className="ui-image-group-head">
