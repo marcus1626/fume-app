@@ -1,7 +1,15 @@
 // The brand's books (FLOWS §30): Fume writes a Tone of Voice or a design system, an expert checks the draft, and only
 // the customer's owner or approver approves it or asks for a change. The rules are brand_books' (migration
 // 20261104233000_brand_books): a customer never reads a version being written, a failed one, or a draft.
-import { FumeError, type BrandBook, type BrandBookKind, type FumeApi, type Id } from "../contract";
+import {
+  FumeError,
+  type BookProgress,
+  type BrandBook,
+  type BrandBookKind,
+  type BrandBooksView,
+  type FumeApi,
+  type Id,
+} from "../contract";
 import { canApprove } from "../domain/permissions";
 import type { Mock } from "./context";
 
@@ -26,6 +34,27 @@ export function bookCalls(m: Mock): Pick<FumeApi, Calls> {
     if (m.isStaff() || !canApprove(m.role()))
       throw new FumeError("forbidden", `Only the brand's owner or approver ${what}.`);
   };
+
+  /** What a customer may know of a version she cannot read yet: the newest of each kind on its way, newer than the
+   *  newest she reads. Its number and state, never its words (brand_book_progress). */
+  function progress(): BookProgress[] {
+    const out: BookProgress[] = [];
+    for (const kind of ["voice", "design"] as const) {
+      const rows = mine().filter((b) => b.kind === kind);
+      const read = Math.max(0, ...rows.filter(customerReads).map((b) => b.version));
+      const next = rows.find(
+        (b) => b.version > read && (b.state === "writing" || b.state === "draft" || b.state === "failed"),
+      );
+      if (next)
+        out.push({
+          kind,
+          version: next.version,
+          state: next.state as BookProgress["state"],
+          updatedAt: next.writtenAt ?? next.createdAt,
+        });
+    }
+    return out;
+  }
 
   /** A new version, written in the background: from the version before, with the ask. A brand Fume has not read yet
    *  has nothing to write from, so the mock's writing fails there (as the writer does after three tries). */
@@ -62,7 +91,12 @@ export function bookCalls(m: Mock): Pick<FumeApi, Calls> {
   return {
     async brandBooks() {
       const list = db.brandBooks.filter(readable).map(out);
-      return wait({ voice: list.filter((b) => b.kind === "voice"), design: list.filter((b) => b.kind === "design") });
+      const view: BrandBooksView = {
+        voice: list.filter((b) => b.kind === "voice"),
+        design: list.filter((b) => b.kind === "design"),
+      };
+      if (!m.isStaff()) view.progress = progress();
+      return wait(view);
     },
     async writeBrandBook({ kind, ask }) {
       if (kind !== "voice" && kind !== "design") throw new FumeError("invalid", "A Tone of Voice or a design system.");

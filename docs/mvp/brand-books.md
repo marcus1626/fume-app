@@ -79,9 +79,10 @@ graphic design from the tokens (OpenPencil, Del 3).
   `askedBy` is `created_by` when the row has an ask. `writeBrandBook` maps to `write_brand_book`, `checkBrandBook` to
   `check_brand_book`, `approveBrandBook` to `approve_brand_book`, `askBrandBookChange` to `ask_brand_book_change`; a
   `book.state` event on every change. An example's `image` is one of the brand's own photographs the live API picks,
-  and a layer may carry `colour` (a role) when the photograph needs another colour than the component's. Open: a
-  customer who asked for a change sees nothing until an expert checks it; may she see that a version is being
-  written (its state only, no body)?
+  and a layer may carry `colour` (a role) when the photograph needs another colour than the component's. To a customer,
+  `BrandBooksView.progress` carries the newest version of each book on its way that she may not read yet: kind,
+  version, state (writing, draft or failed) and updatedAt, never its body, from `brand_book_progress` (the dev thread
+  adds it when this is wired). She reads "Fume is writing version 3. Anna checks it before you read it."
 - The expert's view of the copy check is designed, not wired yet (app/FLOWS.md §31, PROPOSED): `CampaignPlan.copyCheck`
   maps the plan run's `task_runs.copy_check` as it is (read, error, rewritten, rewrote_for, voice_book, lines with their
   claims, findings), sent to Fume's own people only. A claim's `backedBy` is the verified fact's statement in words,

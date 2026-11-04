@@ -998,8 +998,10 @@ of the board opens Brand › Tone of Voice (/brand/voice), the Type part opens B
   faces, and every style in proportion to a frame 1080 wide), layout (each format's margins and the space the
   platform covers), the logo, words on photographs, components, rules, the tokens as CSS with **Copy**, what Fume
   still needs to know, and where it comes from.
-- **Who sees what.** A customer never sees a version being written, one that failed, or a draft no expert checked:
-  Maja reads version 1 of the Tone of Voice while Anna has version 2 in check. The brand's colours and faces are the
+- **Who sees what.** A customer never reads a version being written, one that failed, or a draft no expert checked:
+  Maja reads version 1 of the Tone of Voice while Anna has version 2 in check. She only learns that one is on its way,
+  by its number: "Anna is checking version 2. You read it once it is checked." or, after she asked for a change, "Fume
+  is writing version 3. Anna checks it before you read it." The brand's colours and faces are the
   customer's data, drawn inline; nothing of Fume's own look (Amber, Smoke glass) is used on them.
 - **The demo.** Anna (?as=anna): LYSNE › Brand › Tone of Voice, version 2 waits on her check; the design system is
   checked and waits on Maja. Maja (/brand/design): Approve or Ask for a change.

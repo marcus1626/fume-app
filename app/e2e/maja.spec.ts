@@ -54,11 +54,11 @@ test("Maja approves the design system Anna checked, and asks for a change in the
   await page.goto("/brand/voice");
   await expect(page.getByText("Version 1", { exact: true })).toBeVisible();
   await expect(page.getByText(/^Approved by you, /)).toBeVisible();
-  await expect(page.getByText("Version 2")).toHaveCount(0);
+  await expect(page.getByText("Anna is checking version 2. You read it once it is checked.")).toBeVisible();
   await page.getByRole("button", { name: "Ask for a change" }).click();
   const ask = page.getByRole("dialog", { name: "Ask for a change" });
   await ask.getByLabel("What should change?").fill("Never “du” in English captions.");
   await ask.getByRole("button", { name: "Ask Fume" }).click();
-  await expect(page.getByText("Fume is writing version 3")).toBeVisible();
   await expect(page.getByText("With your words. Anna checks it before you read it.")).toBeVisible();
+  await expect(page.getByText("Fume is writing version 3. Anna checks it before you read it.")).toBeVisible();
 });

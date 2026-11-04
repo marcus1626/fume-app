@@ -36,7 +36,7 @@ import {
   useTeam,
   useWriteBrandBook,
 } from "../../api/hooks";
-import type { BrandBook, BrandBookKind, DesignBook, VoiceBook } from "../../contract";
+import type { BookProgress, BrandBook, BrandBookKind, DesignBook, VoiceBook } from "../../contract";
 
 type BodyOf = { voice: VoiceBook; design: DesignBook };
 import { date } from "../../lib/time";
@@ -114,7 +114,13 @@ export function BookFrame<K extends BrandBookKind>({ kind, children, empty, desc
     <Page title={`${title} · Brand`} width="reading">
       <Query query={books} loading={`Loading the ${title.toLowerCase()}`}>
         {(view) => (
-          <Book kind={kind} list={view[kind]} empty={empty} description={description}>
+          <Book
+            kind={kind}
+            list={view[kind]}
+            coming={view.progress?.find((p) => p.kind === kind)}
+            empty={empty}
+            description={description}
+          >
             {children}
           </Book>
         )}
@@ -126,10 +132,11 @@ export function BookFrame<K extends BrandBookKind>({ kind, children, empty, desc
 function Book<K extends BrandBookKind>({
   kind,
   list,
+  coming,
   children,
   empty,
   description,
-}: BookFrameProps<K> & { list: BrandBook[] }) {
+}: BookFrameProps<K> & { list: BrandBook[]; coming?: BookProgress }) {
   const viewer = useViewer();
   const { canApprove } = useRole();
   const people = useBookPeople();
@@ -145,7 +152,7 @@ function Book<K extends BrandBookKind>({
   const asked = Number(params.get("v"));
   // The version shown: the one asked for, else the newest with words (a draft, a checked or the approved one).
   const shown = written.find((b) => b.version === asked) ?? written[0];
-  const busy = latest?.state === "writing";
+  const busy = latest?.state === "writing" || coming?.state === "writing";
   const canWrite = staff || canApprove;
 
   const back = <Back to="/brand" label="Brand" />;
@@ -197,7 +204,7 @@ function Book<K extends BrandBookKind>({
         meta={[`Version ${shown.version}`, standing(shown, people, staff, list)]}
         secondaryActions={actions}
       />
-      <Status latest={latest} shown={shown} inUse={inUse} people={people} staff={staff} kind={kind} />
+      <Status latest={latest} shown={shown} inUse={inUse} people={people} staff={staff} kind={kind} coming={coming} />
       {children(shown.body as BodyOf[K], shown)}
       {written.length > 1 && <Versions list={written} shown={shown} people={people} staff={staff} />}
       {step === "check" && <CheckFoot book={shown} people={people} />}
@@ -233,6 +240,7 @@ function Status({
   people,
   staff,
   kind,
+  coming,
 }: {
   latest: BrandBook | undefined;
   shown: BrandBook | undefined;
@@ -240,8 +248,24 @@ function Status({
   people: BookPeople;
   staff: boolean;
   kind: BrandBookKind;
+  coming?: BookProgress;
 }) {
   const lines: ReactNode[] = [];
+  // To a customer, a version she cannot read yet is only its number and where it is: never its words.
+  if (coming && !staff && coming.version > (shown?.version ?? 0))
+    lines.push(
+      <p key="coming" className="ui-brandbook-note" data-tone="working" role="status">
+        <Icon
+          name={coming.state === "writing" ? "loader-circle" : "info"}
+          className={coming.state === "writing" ? "ui-brandbook-note-spin" : undefined}
+        />
+        <span>
+          {coming.state === "draft"
+            ? `${cap(people.expert)} is checking version ${coming.version}. You read it once it is checked.`
+            : `Fume is writing version ${coming.version}. ${cap(people.expert)} checks it before you read it.`}
+        </span>
+      </p>,
+    );
   if (latest && latest.id !== shown?.id && latest.state === "writing")
     lines.push(
       <p key="writing" className="ui-brandbook-note" data-tone="working" role="status">

@@ -2634,6 +2634,7 @@ maja brandBooks()
         "writtenAt": "2026-10-13T10:33:00.000Z"
       }
     ],
+    "progress": [{"kind":"voice","state":"draft","updatedAt":"2026-10-14T09:33:00.000Z","version":2}],
     "voice": [
       {
         "approvedAt": "2026-10-08T12:32:00.000Z",
@@ -43786,7 +43787,7 @@ maja (first run) brandDna()
     }
   }
 maja (first run) brandBooks()
-  {"design":[],"voice":[]}
+  {"design":[],"progress":[],"voice":[]}
 maja (first run) campaigns()
   []
 maja (first run) campaigns({"state":["in_review","in_production"]})

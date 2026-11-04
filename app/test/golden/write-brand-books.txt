@@ -915,6 +915,7 @@ jonas brandBooks()
         "writtenAt": "2026-10-13T10:33:00.000Z"
       }
     ],
+    "progress": [],
     "voice": [
       {
         "ask": "Add the gift season's words: calls to action and headlines for a gift.",
@@ -2318,6 +2319,7 @@ maja askBrandBookChange({"ask":"Burgundy for the price too, not only the call to
 maja brandBooks()
   {
     "design": [],
+    "progress": [{"kind":"design","state":"draft","updatedAt":"2026-10-14T12:32:00.000Z","version":2}],
     "voice": [
       {
         "approvedAt": "2026-10-14T12:32:00.000Z",
