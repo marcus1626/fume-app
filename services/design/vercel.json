@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/design.js": {
+      "maxDuration": 60,
+      "memory": 2048,
+      "includeFiles": "node_modules/canvaskit-wasm/bin/**"
+    }
+  }
+}
