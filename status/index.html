@@ -27,7 +27,7 @@
   .status-item-date { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; }
   .status-item[data-status="done"] .status-item-title { color: var(--ui-text-secondary); }
 
-  .status-steps { list-style: none; margin: var(--ui-web-group-gap) 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--ui-space-lg); }
+  .status-steps { list-style: none; margin: var(--ui-web-group-gap) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--ui-space-lg); }
   .status-step { display: flex; flex-direction: column; gap: var(--ui-space-sm); }
   .status-step::before { content: ""; display: block; height: var(--ui-badge-dot); border-radius: var(--ui-radius-action); background: var(--ui-card-progress-track); margin-bottom: var(--ui-space-xs); }
   .status-step[data-status="done"]::before { background: var(--ui-action-primary); }

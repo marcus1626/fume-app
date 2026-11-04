@@ -1,31 +1,96 @@
 {
-  "updated": "2026-11-04T14:30:00Z",
+  "updated": "2026-11-04T15:30:00Z",
   "deadline": "2026-11-30T23:59:59+01:00",
   "deadlineLabel": "the Fume app is finished",
   "start": "2026-10-26T08:00:00+01:00",
-  "summary": "The whole customer round runs live without the Engine, and the Engine made its first real picture on 4 November. Now we are bringing the Engine into the Studio and getting the app ready for agencies and their clients.",
+  "summary": "The whole customer round runs live without the Engine, and the Engine made its first real picture on 4 November. The Engine is far from done: next is getting statics and graphic design fully right, on brand, before any video.",
   "tracks": [
     {
       "id": "app",
       "name": "The Fume app",
       "lede": "Where the customer, the agency and Fume's people work.",
       "items": [
-        { "status": "done", "title": "Design and flows for customer, studio and agency", "note": "13 rounds of review and fixes", "date": "22 Oct" },
-        { "status": "done", "title": "Own codebase with design system and tests", "date": "26 Oct" },
-        { "status": "done", "title": "Sign-in, roles and four eyes on everything", "note": "Nobody checks their own work", "date": "27 Oct" },
-        { "status": "done", "title": "Brand DNA from the website, products from the online store", "date": "3 Nov" },
-        { "status": "done", "title": "Campaign from brief to delivery", "note": "Fume writes the plan, the expert checks, the customer approves", "date": "3 Nov" },
-        { "status": "done", "title": "Fume chat with handover to a person, and notifications", "date": "3 Nov" },
-        { "status": "done", "title": "Agencies: seats, client brands, send to client, client link", "date": "3 Nov" },
-        { "status": "done", "title": "Team, calendar, moodboards, catalogue and usage", "date": "3 Nov" },
-        { "status": "done", "title": "Whole round run live without the Engine", "date": "3 Nov" },
-        { "status": "now", "title": "Engine in the Studio: failed versions, the prompt and Teach the Engine", "note": "Design ready, waiting for Marcus" },
-        { "status": "now", "title": "Video in the Studio", "note": "First draft" },
-        { "status": "next", "title": "Uploaded brand files read into Brand DNA" },
-        { "status": "next", "title": "Where Fume's people answer the customer in chat", "note": "Waiting for Marcus" },
-        { "status": "next", "title": "Email for notifications" },
-        { "status": "next", "title": "Agencies and their clients inside the app", "date": "13 Nov" },
-        { "status": "next", "title": "The app live on its own address", "date": "30 Nov" }
+        {
+          "status": "done",
+          "title": "Design and flows for customer, studio and agency",
+          "note": "13 rounds of review and fixes",
+          "date": "22 Oct"
+        },
+        {
+          "status": "done",
+          "title": "Own codebase with design system and tests",
+          "date": "26 Oct"
+        },
+        {
+          "status": "done",
+          "title": "Sign-in, roles and four eyes on everything",
+          "note": "Nobody checks their own work",
+          "date": "27 Oct"
+        },
+        {
+          "status": "done",
+          "title": "Brand DNA from the website, products from the online store",
+          "date": "3 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Campaign from brief to delivery",
+          "note": "Fume writes the plan, the expert checks, the customer approves",
+          "date": "3 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Fume chat with handover to a person, and notifications",
+          "date": "3 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Agencies: seats, client brands, send to client, client link",
+          "date": "3 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Team, calendar, moodboards, catalogue and usage",
+          "date": "3 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Whole round run live without the Engine",
+          "date": "3 Nov"
+        },
+        {
+          "status": "now",
+          "title": "Engine in the Studio: failed versions, the prompt and Teach the Engine",
+          "note": "Design ready, waiting for Marcus"
+        },
+        {
+          "status": "next",
+          "title": "Uploaded brand files read into Brand DNA"
+        },
+        {
+          "status": "next",
+          "title": "Where Fume's people answer the customer in chat",
+          "note": "Waiting for Marcus"
+        },
+        {
+          "status": "next",
+          "title": "Email for notifications"
+        },
+        {
+          "status": "next",
+          "title": "Agencies and their clients inside the app",
+          "date": "13 Nov"
+        },
+        {
+          "status": "next",
+          "title": "The app live on its own address",
+          "date": "30 Nov"
+        },
+        {
+          "status": "next",
+          "title": "Video in the Studio",
+          "note": "After statics and graphic design are finished"
+        }
       ]
     },
     {
@@ -33,25 +98,120 @@
       "name": "The Engine",
       "lede": "Makes the creatives. An expert checks every one.",
       "items": [
-        { "status": "done", "title": "Architecture: knowledge, data, reasoning, engine and learning", "date": "4 Nov" },
-        { "status": "done", "title": "The prompt machine, with its own rules for each image model", "date": "4 Nov" },
-        { "status": "done", "title": "Fume writes the plan and brief with AI", "note": "About 30 seconds and under one cent per plan", "date": "4 Nov" },
-        { "status": "done", "title": "Image models connected", "note": "Nano Banana Pro, Nano Banana 2 and Seedream", "date": "4 Nov" },
-        { "status": "done", "title": "First real picture made by the Engine", "note": "59 seconds from button to picture", "date": "4 Nov" },
-        { "status": "done", "title": "The Engine learns from answers with a reason", "date": "4 Nov" },
-        { "status": "done", "title": "A fixed weekly budget, so cost never runs away", "date": "4 Nov" },
-        { "status": "now", "title": "The Engine's view in the Studio goes live" },
-        { "status": "next", "title": "The Engine looks at each picture and checks it before the expert" },
-        { "status": "next", "title": "The Engine makes every format" },
-        { "status": "next", "title": "Video with Seedance and Kling", "note": "Waiting for Higgsfield credits" }
+        {
+          "status": "done",
+          "title": "Fume writes the plan and brief with AI",
+          "note": "About 30 seconds and under one cent per plan",
+          "date": "4 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Image models connected",
+          "note": "Nano Banana Pro, Nano Banana 2 and Seedream",
+          "date": "4 Nov"
+        },
+        {
+          "status": "done",
+          "title": "First real picture made by the Engine",
+          "note": "59 seconds from button to picture",
+          "date": "4 Nov"
+        },
+        {
+          "status": "done",
+          "title": "A fixed weekly budget, so cost never runs away",
+          "date": "4 Nov"
+        },
+        {
+          "status": "now",
+          "title": "Check that brand and product data really reach the prompt",
+          "note": "First version"
+        },
+        {
+          "status": "now",
+          "title": "The Engine checks each picture before the expert does",
+          "note": "First version"
+        },
+        {
+          "status": "now",
+          "title": "The Engine learns from the experts' answers",
+          "note": "First version, not proven yet"
+        },
+        {
+          "status": "now",
+          "title": "The Engine makes the formats from the approved master",
+          "note": "First version"
+        },
+        {
+          "status": "next",
+          "title": "Brand Brain knowledge graph feeding the Engine"
+        },
+        {
+          "status": "next",
+          "title": "Learn which kinds of prompt work and which do not"
+        },
+        {
+          "status": "next",
+          "title": "A long tone of voice document for every brand",
+          "note": "Everything from the brand"
+        },
+        {
+          "status": "next",
+          "title": "A full CSS token design system for every brand",
+          "note": "With examples of graphic design"
+        },
+        {
+          "status": "next",
+          "title": "Graphic design by the Engine with OpenPencil",
+          "note": "System prompts, architecture, functions and skills"
+        },
+        {
+          "status": "next",
+          "title": "Statics and graphic design finished",
+          "note": "On brand, fits the campaign, the taste and the picture"
+        },
+        {
+          "status": "next",
+          "title": "Video",
+          "note": "Only after statics and graphic design"
+        }
       ]
     }
   ],
   "milestones": [
-    { "date": "26 Oct", "title": "Codebase and backend under way", "status": "done" },
-    { "date": "3 Nov", "title": "Whole customer round live", "status": "done" },
-    { "date": "4 Nov", "title": "First picture from the Engine", "status": "done" },
-    { "date": "13 Nov", "title": "Agencies and clients inside the app", "status": "next" },
-    { "date": "30 Nov", "title": "The Fume app finished", "status": "next" }
+    {
+      "date": "26 Oct",
+      "title": "Codebase and backend under way",
+      "status": "done"
+    },
+    {
+      "date": "3 Nov",
+      "title": "Whole customer round live",
+      "status": "done"
+    },
+    {
+      "date": "4 Nov",
+      "title": "First picture from the Engine",
+      "status": "done"
+    },
+    {
+      "date": "13 Nov",
+      "title": "Agencies and clients inside the app",
+      "status": "next"
+    },
+    {
+      "date": "Date to set",
+      "title": "Statics and graphic design finished",
+      "status": "next"
+    },
+    {
+      "date": "30 Nov",
+      "title": "The Fume app finished",
+      "status": "next"
+    },
+    {
+      "date": "After graphic design",
+      "title": "Video in the Engine",
+      "status": "next"
+    }
   ]
 }
