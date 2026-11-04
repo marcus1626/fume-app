@@ -32,6 +32,7 @@ const slots: SlotText[] = [
   { slotKey: "assignment", text: "A quiet campaign photograph.", sources: [] },
   { slotKey: "people", text: "No people are in the frame.", sources: [] },
   { slotKey: "scene", text: "A bedside table at dusk, the bottle beside a lamp.", sources: [] },
+  { slotKey: "camera", text: "Captured on full-frame digital with a 50 mm lens at f/2.8 from table height; low daylight at 5600 K from the left at 3:1 contrast; a soft warm grade with fine grain and real wear on the wood.", sources: [] },
   { slotKey: "brand", text: "Warm, low light.", sources: [] },
   { slotKey: "constraints", text: "No person in the frame.", sources: [] },
 ];

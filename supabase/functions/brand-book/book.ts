@@ -7,7 +7,7 @@ import { z } from "npm:zod@4.6.7";
 // ─── The task ─────────────────────────────────────────────────────────────────
 
 export type BookTask = {
-  book: { id: string; workspace_id: string; kind: "voice" | "design"; version: number; ask: string | null; attempt: number };
+  book: { id: string; workspace_id: string; kind: "voice" | "design" | "look"; version: number; ask: string | null; attempt: number };
   brand: Record<string, unknown> & { brand?: { name?: string; market?: string; language?: string } };
   identity: Record<string, unknown>;
   dna_state: string | null;

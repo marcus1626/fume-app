@@ -53,7 +53,74 @@ export type EngineTask = {
   brain?: Brain;
   /** The campaign moodboard's picture for composition, light and mood; never the product's truth. */
   composition?: { id: string; url: string; note?: string } | null;
+  /** The brand's Look Book in use (public.engine_look): how its photographs are made. */
+  look?: { id: string; version: number; state: string; body: LookBody } | null;
 };
+
+/** The parts of a Look Book (brand-book/look.ts) the prompt is written from. */
+export type LookBody = {
+  summary?: string;
+  signature?: string[];
+  camera?: { capture?: string; lenses?: { focalMm: number; use: string }[]; aperture?: string; height?: string; distance?: string; motion?: string };
+  light?: { key?: string; quality?: string; direction?: string; colourTemperatureK?: string; contrast?: string; timeOfDay?: string; rules?: string[] };
+  colour?: { grade?: string; saturation?: string; blacks?: string; highlights?: string; whiteBalance?: string };
+  texture?: { grain?: string; grainCharacter?: string; sharpness?: string; surfaces?: string; lensCharacter?: string };
+  composition?: { rules?: string[]; negativeSpace?: string; subjectPlacement?: string };
+  people?: { shows?: boolean; skin?: string; direction?: string };
+  retouch?: string;
+  never?: string[];
+  recipes?: { scene: string; camera: string; light: string; grade: string; composition: string }[];
+};
+
+const words = (t: string) => new Set(t.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter((w) => w.length > 3));
+
+/** The Look Book's recipe closest to the planned scene, by the words they share. */
+export function recipeFor(look: LookBody, scene: string) {
+  const want = words(scene);
+  let best: { r: NonNullable<LookBody["recipes"]>[number]; n: number } | null = null;
+  for (const r of look.recipes ?? []) {
+    const n = [...words(`${r.scene} ${r.composition}`)].filter((w) => want.has(w)).length;
+    if (!best || n > best.n) best = { r, n };
+  }
+  return best?.r ?? null;
+}
+
+const AI_TELL = /skin|finger|hand|smooth|cgi|render|symmetr|no source|glow|bloom|halo|garbl|warp|invent|front to back|everything (razor )?sharp|in focus|oversaturat|neon|plastic|waxy|airbrush/i;
+
+/** The Look Book as rules: how this picture is shot, lit, graded and textured, and what the brand never does. */
+export function lookRules(task: EngineTask): BrandRule[] {
+  const look = task.look?.body;
+  if (!look) return [];
+  const id = (k: string) => `lookbook-${k}`;
+  const rule = (k: string, dimension: string, statement: string | null, binding: "hard" | "soft" = "soft"): BrandRule[] =>
+    statement && statement.trim().length > 8
+      ? [{ id: id(k), dimension, lookKey: null, statement: sentence(statement), binding, epistemic: "known", scope: "core" }]
+      : [];
+  const join = (...xs: (string | undefined | null)[]) => xs.filter((x) => x && x.trim()).join("; ");
+  const planned = plannedCreative(task);
+  const recipe = recipeFor(look, `${planned?.scene ?? ""} ${task.creative.title}`);
+  const c = look.camera ?? {};
+  const lenses = (c.lenses ?? []).map((l) => `${l.focalMm} mm for ${l.use}`).join(", ");
+  const l = look.light ?? {};
+  const g = look.colour ?? {};
+  const t = look.texture ?? {};
+  const never = (look.never ?? []).slice(0, 12);
+  const taste = never.filter((n) => !AI_TELL.test(n)).slice(0, 6);
+  return [
+    ...rule("recipe", "look recipe", recipe
+      ? `Shoot it as the brand shoots ${recipe.scene}: ${recipe.camera}. Light: ${recipe.light}. Grade: ${recipe.grade}`
+      : null),
+    ...rule("camera", "camera", join(c.capture && `Captured as ${c.capture}`, lenses && `lenses ${lenses}`, c.aperture, c.height, c.distance)),
+    ...rule("light", "light", join(l.key, l.quality, l.direction, l.colourTemperatureK, l.contrast)),
+    ...rule("grade", "colour grade", join(g.grade, g.saturation, g.blacks && `blacks ${g.blacks}`, g.highlights && `highlights ${g.highlights}`)),
+    ...rule("texture", "texture", join(t.grainCharacter, t.surfaces, t.lensCharacter)),
+    // What the brand never does is its taste, held softly so a plan that asks for something else is not blocked by
+    // it. The marks of a generated picture are looked for in the picture itself (evaluate.ts), not listed in the
+    // prompt: long lists of what to avoid make image models worse.
+    ...rule("never-taste", "taste", taste.length ? `The brand's pictures avoid ${taste.join("; ")}` : null),
+    ...(planned?.people && !/^no people/i.test(planned.people) && look.people?.skin ? rule("skin", "people", look.people.skin, "hard") : []),
+  ];
+}
 
 export const COMPOSITION_ROLE = "the moodboard's picture for composition, light and mood";
 
@@ -224,6 +291,7 @@ export function buildBrand(task: EngineTask, lookKey: string | null): BrandConte
   }
 
   rules.push(...brainRules(task.brain ?? NO_BRAIN));
+  rules.push(...lookRules(task));
 
   return { rules, forbiddenTerms: [task.brand.name.replace(/\s*\(test\)\s*$/i, "").trim()].filter(Boolean) };
 }

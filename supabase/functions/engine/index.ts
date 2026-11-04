@@ -60,6 +60,11 @@ Deno.serve((req) =>
       service: {
         take: async (jobId) => {
           const { data, error } = await service.rpc("engine_take", { p_job_id: jobId });
+          // The brand's Look Book: how its photographs are made (20261105040000_look_book.sql).
+          if (data?.run) {
+            const { data: look } = await service.rpc("engine_look", { p_job_id: jobId });
+            if (look) data.look = look;
+          }
           return { data, error: err(error) };
         },
         prompted: async (attemptId, prompt) =>

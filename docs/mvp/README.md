@@ -12,6 +12,8 @@ across sign-ins.
 | [library.md](library.md) | Blueprints B01–B14 and templates T01–T08, narrow v0.1 |
 | [brand-books.md](brand-books.md) | The brand's long Tone of Voice and full design system: written by Fume, checked by an expert, approved by the customer |
 | [product-truth.md](product-truth.md) | Product Truth: Fume reads the product page and pictures and proposes facts, the brand confirms them |
+| [look-book.md](look-book.md) | The Look Book: the brand's photography read from its own pictures, and how every prompt is shot from it |
+| [design-layer.md](design-layer.md) | The design layer: the plan's words laid on a picture in the brand's design system, measured in code, kept as .fig |
 
 ## Decisions this week
 

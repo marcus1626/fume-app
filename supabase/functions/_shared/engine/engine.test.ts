@@ -88,6 +88,7 @@ const good: SlotText[] = [
   { slotKey: "assignment", text: "A campaign photograph in a tall four by five frame; the brand rules below come before any habit of the model.", sources: ["format"] },
   { slotKey: "people", text: "Only a hand reaches in from the right; no face.", sources: [] },
   { slotKey: "scene", text: "A kitchen bench at dawn with steam rising over a cup, the bag standing beside it.", sources: ["concept"] },
+  { slotKey: "camera", text: "Captured on full-frame digital with a 50 mm lens at f/2.8 from table height; low daylight at 5600 K from the left at 3:1 contrast; a soft warm grade with fine grain and real wear on the wood.", sources: [] },
   { slotKey: "brand", text: "Low winter sun from the left, warm wood and cream, one source of daylight with soft shadows.", sources: [] },
   { slotKey: "constraints", text: "One soft daylight source. The beans stay in the bag.", sources: [] },
 ];
@@ -169,7 +170,7 @@ Deno.test("the locked slots carry the approved text and any change is found", ()
   assertEquals(a.slots[1].text, compilePackage.lockedProductText);
   assertEquals(a.findings.map((f) => f.code), ["unknown_slot"]);
   const missing = lint(assemble(compilePackage, good.slice(0, 2)), compilePackage);
-  assertEquals(missing.filter((f) => f.code === "missing_slot").map((f) => f.slotKey), ["scene", "brand", "constraints"]);
+  assertEquals(missing.filter((f) => f.code === "missing_slot").map((f) => f.slotKey), ["scene", "camera", "brand", "constraints"]);
   const { blocking } = classifyFindings(missing, compilePackage);
   assertEquals(blocking.length, missing.length);
 });
@@ -344,4 +345,43 @@ Deno.test("the Engine moves to the way of writing whose pictures did better, and
   let mean = 0;
   for (let i = 0; i < 2000; i++) mean += beta(3, 7, random) / 2000;
   assert(Math.abs(mean - 0.3) < 0.03, `a Beta(3, 7) draw averages 0.3 (${mean.toFixed(3)})`);
+});
+
+Deno.test("empty quality words are found, and a camera slot must name the lens, aperture, kelvin and grain", () => {
+  const found = lintText("A stunning, hyperrealistic 8K masterpiece with cinematic light.", "scene", { forbiddenTerms: [] });
+  assertEquals(found.filter((f) => f.code === "slop_term").length, 5);
+  assertEquals(lintText("Low sun on worn wood.", "scene", { forbiddenTerms: [] }).length, 0);
+});
+
+Deno.test("the Look Book becomes rules for the camera slot, with the recipe closest to the scene", async () => {
+  const { lookRules, recipeFor } = await import("./context.ts");
+  const look = {
+    camera: { capture: "full-frame digital, clean", lenses: [{ focalMm: 35, use: "places" }], aperture: "f/2.8", height: "at table height" },
+    light: { key: "window daylight", quality: "soft", direction: "from the left", colourTemperatureK: "5600 K", contrast: "3:1" },
+    colour: { grade: "warm, muted greens", blacks: "rich" },
+    texture: { grainCharacter: "fine 35 mm grain", surfaces: "crumbs, worn linen" },
+    never: ["plastic skin", "light with no source", "kitchen counters"],
+    recipes: [
+      { scene: "studio packshot", camera: "100 mm macro at f/8", light: "large soft key", grade: "neutral", composition: "centred" },
+      { scene: "breakfast table at dawn", camera: "35 mm at f/2.8 from table height", light: "window daylight 5600 K", grade: "warm, fine grain", composition: "product right third" },
+    ],
+  };
+  assertEquals(recipeFor(look, "A kitchen bench at dawn, steam over a cup, breakfast")?.scene, "breakfast table at dawn");
+  const rules = lookRules({ ...task, look: { id: "lb", version: 1, state: "approved", body: look } });
+  assertEquals(rules.map((r) => r.id), ["lookbook-recipe", "lookbook-camera", "lookbook-light", "lookbook-grade", "lookbook-texture", "lookbook-never-taste"]);
+  assertEquals(rules.some((r) => r.binding === "hard"), false);
+  const brand = buildBrand({ ...task, look: { id: "lb", version: 1, state: "approved", body: look } }, null);
+  const { compilePackage } = buildCompilePackage({
+    target: { imageType: "campaign_still", imageModel: "nano-banana-pro" },
+    grammar: GRAMMARS.find((g) => g.imageType === "campaign_still" && g.version === 2)!,
+    dialect: DIALECTS[0],
+    product: buildProduct(task, 3),
+    brand,
+    concept: buildConcept(task),
+    format: formatOf(task),
+    knowledge: NO_KNOWLEDGE,
+    enforcedLessons: [],
+  } as never);
+  const camera = compilePackage.manifest.filter((m) => m.suggestedSlot === "camera").map((m) => m.id);
+  assertEquals(camera, ["brand-lookbook-recipe", "brand-lookbook-camera", "brand-lookbook-light", "brand-lookbook-grade", "brand-lookbook-texture"]);
 });
