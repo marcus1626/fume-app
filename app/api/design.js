@@ -75,7 +75,7 @@ function compose(book, format, words, l, family, widths = {}) {
     return `<Text name=${q(name)} w=${w} font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${Math.round(
       s.sizePx * s.lineHeight
     )}} letterSpacing={${round(s.trackingEm * s.sizePx)}} color=${q(hex)}${caseOf(s)} textAlign=${q(textAlign)} text={${JSON.stringify(
-      value
+      bindShort(value)
     )}} />`;
   };
   const cta = () => {
@@ -114,6 +114,9 @@ function compose(book, format, words, l, family, widths = {}) {
   const shade = l.ground === "gradient" ? `<Rectangle name="Shade" position="absolute" x={0} y={0} w={${g.w}} h={${Math.round(g.h / 2)}} fills={[]} />` : "";
   const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${shade}${block}${alone}</Frame>`;
   return { jsx, grid: g, fonts, colours, sizes };
+}
+function bindShort(text) {
+  return text.replace(new RegExp("(?<=^|\\s)(\\p{L}{1,2}) (?=\\S)", "gu"), "$1\xA0");
 }
 function shadeFor(book, l, g, words) {
   if (l.ground !== "gradient") return null;

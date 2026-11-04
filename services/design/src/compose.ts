@@ -88,7 +88,7 @@ export function compose(
     return `<Text name=${q(name)} w=${w} font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${Math.round(
       s.sizePx * s.lineHeight,
     )}} letterSpacing={${round(s.trackingEm * s.sizePx)}} color=${q(hex)}${caseOf(s)} textAlign=${q(textAlign)} text={${JSON.stringify(
-      value,
+      bindShort(value),
     )}} />`;
   };
 
@@ -139,6 +139,14 @@ export function compose(
       : "";
   const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${shade}${block}${alone}</Frame>`;
   return { jsx, grid: g, fonts, colours, sizes };
+}
+
+/**
+ * A word of one or two letters ("i", "og", "å") is held to the word after it with a no-break space, as a typesetter
+ * does, so it never hangs at the end of a line. Only the spaces change; the words stay the plan's.
+ */
+export function bindShort(text: string): string {
+  return text.replace(/(?<=^|\s)(\p{L}{1,2}) (?=\S)/gu, "$1\u00A0");
 }
 
 /** The shade under the words once they are placed: dark from the nearer edge, full behind the words. */

@@ -32,8 +32,8 @@ test("every layout is named from the book only", () => {
 });
 
 test("the words are the plan's and the colours the book's", () => {
-  const c = compose(book, "feed", { headline: 'He said "{hi}" <b>', cta: "Go" }, { band: "top", align: "left", headline: "h1", colour: "on_photo", ground: "photo", cta: "with_words", columns: 9 }, () => "Inter");
-  assert.ok(c.jsx.includes(JSON.stringify('He said "{hi}" <b>')), "words are written as data, not markup");
+  const c = compose(book, "feed", { headline: 'She said "{hi}" <b>', cta: "Go" }, { band: "top", align: "left", headline: "h1", colour: "on_photo", ground: "photo", cta: "with_words", columns: 9 }, () => "Inter");
+  assert.ok(c.jsx.includes(JSON.stringify('She said "{hi}" <b>')), "words are written as data, not markup");
   assert.equal(c.colours.Headline, "#FFFFFF");
   assert.ok(c.jsx.includes('bg="#1F4E3D"'), "the call to action is the book's cta colour");
 });
@@ -76,4 +76,11 @@ test("a subline's lines come out even: the same number of lines, no lone word on
   const full = out.boxes.Words.w;
   assert.ok(out.ok);
   assert.ok(sub.w < full, `the subline is set narrower than its column (${sub.w} < ${full})`);
+});
+
+test("a short word is held to the next one, and nothing else changes", async () => {
+  const { bindShort } = await import("../src/compose.ts");
+  assert.equal(bindShort("Førsteklasses skinn i overdelen"), "Førsteklasses skinn i\u00A0overdelen");
+  assert.equal(bindShort("for deg og din familie."), "for deg og\u00A0din familie.");
+  assert.equal(bindShort("Kjøp nå").replace(/\u00A0/g, " "), "Kjøp nå");
 });
