@@ -74,7 +74,7 @@ export type LookBody = {
 
 const words = (t: string) => new Set(t.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter((w) => w.length > 3));
 
-/** The Look Book's recipe closest to the planned scene, by the words they share. */
+/** The Look Book's recipe closest to the planned scene, by the words they share (at least two), else none. */
 export function recipeFor(look: LookBody, scene: string) {
   const want = words(scene);
   let best: { r: NonNullable<LookBody["recipes"]>[number]; n: number } | null = null;
@@ -82,7 +82,8 @@ export function recipeFor(look: LookBody, scene: string) {
     const n = [...words(`${r.scene} ${r.composition}`)].filter((w) => want.has(w)).length;
     if (!best || n > best.n) best = { r, n };
   }
-  return best?.r ?? null;
+  // A recipe for another kind of scene would pull the picture away from the plan: none is better than a stranger.
+  return best && best.n >= 2 ? best.r : null;
 }
 
 const AI_TELL = /skin|finger|hand|smooth|cgi|render|symmetr|no source|glow|bloom|halo|garbl|warp|invent|front to back|everything (razor )?sharp|in focus|oversaturat|neon|plastic|waxy|airbrush/i;

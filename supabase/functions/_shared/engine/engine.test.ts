@@ -363,10 +363,11 @@ Deno.test("the Look Book becomes rules for the camera slot, with the recipe clos
     never: ["plastic skin", "light with no source", "kitchen counters"],
     recipes: [
       { scene: "studio packshot", camera: "100 mm macro at f/8", light: "large soft key", grade: "neutral", composition: "centred" },
-      { scene: "breakfast table at dawn", camera: "35 mm at f/2.8 from table height", light: "window daylight 5600 K", grade: "warm, fine grain", composition: "product right third" },
+      { scene: "kitchen bench at dawn", camera: "35 mm at f/2.8 from table height", light: "window daylight 5600 K", grade: "warm, fine grain", composition: "product right third" },
     ],
   };
-  assertEquals(recipeFor(look, "A kitchen bench at dawn, steam over a cup, breakfast")?.scene, "breakfast table at dawn");
+  assertEquals(recipeFor(look, "A kitchen bench at dawn, steam over a cup, breakfast")?.scene, "kitchen bench at dawn");
+  assertEquals(recipeFor(look, "Skoen på våt asfalt om natten"), null);
   const rules = lookRules({ ...task, look: { id: "lb", version: 1, state: "approved", body: look } });
   assertEquals(rules.map((r) => r.id), ["lookbook-recipe", "lookbook-camera", "lookbook-light", "lookbook-grade", "lookbook-texture", "lookbook-never-taste"]);
   assertEquals(rules.some((r) => r.binding === "hard"), false);
