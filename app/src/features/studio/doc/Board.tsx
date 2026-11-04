@@ -54,8 +54,10 @@ import type {
 } from "../../../contract";
 import * as copy from "../../../copy";
 import { when } from "../../../lib/time";
+import { frameRoot } from "../../../shell/scope";
 import { DetailsOverlay, useFixDone } from "./fix";
 import { placementOf, SafeZones, versionRatio } from "./formats";
+import { AddGraphicDesign, designFlags, designLine, DrawnWords, useDesignAddress, useSeesDesign } from "./graphic";
 import { failedWords, usePromptAddress, useSeesPrompt } from "./prompt";
 import { shownVersion } from "./versions";
 
@@ -166,6 +168,9 @@ export function Board({
   // The prompt behind the shown version, for Fume's own people (FLOWS §29)
   const seesPrompt = useSeesPrompt();
   const promptAt = usePromptAddress();
+  // The graphic design Fume laid on the shown version, for Fume's own people (FLOWS §33)
+  const seesDesign = useSeesDesign();
+  const designAt = useDesignAddress();
   const promptFor = promptAt.id && doc.versions.some((v) => v.id === promptAt.id) ? promptAt.id : undefined;
   // No picture to show, only a version that did not render: say so on the board (FLOWS §29)
   const failed = shown ? undefined : [...doc.versions].reverse().find((v) => v.state === "failed");
@@ -174,6 +179,7 @@ export function Board({
     <figure className="ui-desk-figure" key={v.id}>
       <span className="ui-desk-shot" style={{ "--ratio": ratio[format] } as CSSProperties}>
         <img src={v.image} alt={`${doc.title}, version ${v.number}`} draggable={false} />
+        {v.drawn && <DrawnWords drawing={v.drawn} />}
         {withLayers && safe && placement && !readOnly && (
           <SafeZones placement={placement} sourceRatio={versionRatio(v, placements)} />
         )}
@@ -277,6 +283,14 @@ export function Board({
                 onPressedChange={(on) => (on && shown ? promptAt.open(shown.id) : promptAt.close())}
               />
             )}
+            {seesDesign && shown?.design && (
+              <RailToggle
+                label="The graphic design and its checks"
+                icon="type"
+                pressed={designAt.id === shown.id}
+                onPressedChange={(on) => (on ? designAt.open(shown.id) : designAt.close())}
+              />
+            )}
             <span className="ui-desk-rail-gap" aria-hidden="true" />
             <RailToggle
               label={bare ? "Show the panels" : "Hide the panels"}
@@ -289,7 +303,20 @@ export function Board({
         )}
 
         <div className="ui-desk-stage" onClick={(e) => e.target === e.currentTarget && onSelectLayer(undefined)}>
-          {rendering && !comparing ? (
+          {rendering?.design && !comparing ? (
+            <figure className="ui-desk-figure" aria-busy="true">
+              <span className="ui-desk-shot" data-designing="" style={{ "--ratio": ratio[format] } as CSSProperties}>
+                <img
+                  src={rendering.image}
+                  alt={`${doc.title}, version ${rendering.design.fromNumber}`}
+                  draggable={false}
+                />
+              </span>
+              <figcaption className="ui-desk-caption">
+                <TextShimmer>{`Fume is designing version ${rendering.number} on V${rendering.design.fromNumber}`}</TextShimmer>
+              </figcaption>
+            </figure>
+          ) : rendering && !comparing ? (
             <figure className="ui-desk-figure" aria-busy="true">
               <span className="ui-desk-shot" style={{ "--ratio": ratio[format] } as CSSProperties}>
                 <Skeleton shape="creative" ratio={ratio[format]} className="ui-desk-skeleton" />
@@ -360,7 +387,17 @@ function RailToggle({
   ...props
 }: {
   label: string;
-  icon: "zoom-in" | "minimize-2" | "maximize-2" | "columns-2" | "crop" | "package" | "pencil" | "image" | "file-text";
+  icon:
+    | "zoom-in"
+    | "minimize-2"
+    | "maximize-2"
+    | "columns-2"
+    | "crop"
+    | "package"
+    | "pencil"
+    | "image"
+    | "file-text"
+    | "type";
   shortcut?: string;
   pressed: boolean;
   disabled?: boolean;
@@ -638,6 +675,7 @@ export function Versions({
   const pick = usePickVersion();
   const tokens = useDetailTokens(doc.specs.productId).data ?? [];
   const promptAt = usePromptAddress();
+  const designAt = useDesignAddress();
   const strip = useRef<HTMLOListElement>(null);
   const count = doc.versions.length;
   // Newest right: keep the newest in view when one arrives.
@@ -671,11 +709,21 @@ export function Versions({
           const failed = v.state === "failed";
           // A version that did not render is never the picked one, even if the address says so
           const picked = v.id === doc.pickedVersionId && !failed;
-          const flags = failed ? { clean: false, words: failedWords(v) } : flagWords(v, tokens);
+          const designed = v.design;
+          const flags = failed
+            ? { clean: false, words: designed ? "Not designed" : failedWords(v) }
+            : designFlags(v, flagWords(v, tokens));
+          const busy = v.state === "rendering";
           const body = (
             <>
-              <span className="ui-desk-version-thumb" data-none={failed ? "" : undefined}>
-                {v.state === "rendering" ? (
+              <span
+                className="ui-desk-version-thumb"
+                data-none={failed ? "" : undefined}
+                data-designing={busy && designed ? "" : undefined}
+              >
+                {busy && designed ? (
+                  <img src={v.image} alt="" />
+                ) : busy ? (
                   <Skeleton shape="thumb" size="100%" />
                 ) : failed ? (
                   <Icon name="image" />
@@ -694,8 +742,12 @@ export function Versions({
                   <span className="ui-desk-version-when">{when(v.at)}</span>
                 </span>
                 <span className="ui-desk-version-line">
-                  {v.state === "rendering" ? (
+                  {busy && designed ? (
+                    <TextShimmer>Fume is designing</TextShimmer>
+                  ) : busy ? (
                     <TextShimmer>Rendering</TextShimmer>
+                  ) : designed ? (
+                    designLine(designed)
                   ) : v.instruction ? (
                     `“${v.instruction}”`
                   ) : failed ? (
@@ -729,7 +781,7 @@ export function Versions({
                   className="ui-desk-version"
                   aria-current={picked ? "true" : undefined}
                   aria-pressed={comparing ? compare.includes(v.id) : undefined}
-                  aria-label={`Version ${v.number}${picked ? ", picked" : ""}. ${v.instruction ?? ""} ${flags.words}${failed ? ". Open to see why" : ""}`}
+                  aria-label={`Version ${v.number}${picked ? ", picked" : ""}. ${designed ? `${designLine(designed)}.` : (v.instruction ?? "")} ${flags.words}${failed ? ". Open to see why" : ""}`}
                   aria-haspopup={failed ? "dialog" : undefined}
                   title={
                     failed
@@ -745,7 +797,9 @@ export function Versions({
                   disabled={v.state === "rendering" || (failed ? comparing : pick.isPending)}
                   onClick={() =>
                     failed
-                      ? promptAt.open(v.id)
+                      ? designed
+                        ? designAt.open(v.id)
+                        : promptAt.open(v.id)
                       : comparing
                         ? toggle(v.id)
                         : !picked && pick.mutate({ documentId: doc.id, versionId: v.id })
@@ -815,9 +869,12 @@ function AddPicture({ doc }: { doc: CreativeDocument }) {
           </Button>
         </>
       ) : (
-        <Button size="sm" variant="quiet" icon="image-plus" onClick={() => input.current?.click()}>
-          Add a picture made by hand
-        </Button>
+        <>
+          <Button size="sm" variant="quiet" icon="image-plus" onClick={() => input.current?.click()}>
+            Add a picture made by hand
+          </Button>
+          <AddGraphicDesign doc={doc} base={`${frameRoot.fume}/b/${doc.workspaceId}`} />
+        </>
       )}
     </form>
   );

@@ -447,6 +447,62 @@ button.ui-desk-version:disabled { cursor: default; }
 .ui-desk-trace-group .ui-collapsible-content > div > .ui-desk-trace-list { padding-block: var(--ui-space-xs) var(--ui-space-sm); }
 .ui-desk-trace-item[data-verdict="left"] .ui-desk-trace-what { color: var(--ui-glass-fg-secondary); }
 
+/* ---------- graphic design by Fume (FLOWS §33, PROPOSED 4 Nov 2026) ----------
+   Fume lays the plan's words on a version in the brand's design system; it comes back as a version of its own.
+   Markup: [strip] <button class="ui-btn"> Add graphic design to V3 </button> beside Add a picture made by hand;
+           [tile] <span class="ui-desk-version-thumb" data-designing><img/></span> … Fume is designing | Designed from V3
+           [board] <span class="ui-desk-shot" data-designing><img/></span> | <span class="ui-desk-shot"><img/>
+             <span class="ui-design-drawn"><span class="ui-design-shade" data-from/><span class="ui-design-words"
+             data-role="headline|subline|cta"><span class="ui-design-words-text" data-fill/></span></span></span>
+           [review, on glass or on the page] <ul class="ui-design-list" data-tone="glass|page" data-dense><li
+             class="ui-design-item" data-severity|data-verdict|data-check="ok|soft|failed"><svg class="ui-design-mark"/>
+             <span class="ui-design-text"><span class="ui-design-what"/><span class="ui-design-note"/></span></li></ul>
+           [dialog] <form class="ui-design-form"><section class="ui-design-part"><h3 class="ui-design-head"/>
+             <dl class="ui-design-rows"/> | <p class="ui-design-line"/></section> <p class="ui-design-blocked"/> field </form>
+   The words on a demo picture are drawn here; the live picture is the designed PNG. Never Amber: nothing here is a
+   person's check. Rouge marks only a hard check that failed. */
+.ui-desk-shot[data-designing] > img, .ui-desk-version-thumb[data-designing] > img { opacity: .6; }
+.ui-design-drawn { position: absolute; inset: 0; overflow: hidden; border-radius: var(--ui-radius-item); container-type: inline-size; pointer-events: none; }
+.ui-design-shade { position: absolute; inset-inline: 0; height: 45%; }
+.ui-design-shade[data-from="top"] { inset-block-start: 0; }
+.ui-design-shade[data-from="bottom"] { inset-block-end: 0; }
+.ui-design-words { position: absolute; display: flex; }
+.ui-design-words-text { display: inline-block; text-wrap: balance; }
+.ui-design-words-text[data-fill] { white-space: nowrap; }
+
+.ui-design-list { display: grid; gap: var(--ui-space-md); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.ui-design-list[data-dense] { gap: var(--ui-space-sm); }
+.ui-design-list[data-tone="glass"] { padding-inline: var(--ui-space-sm); }
+.ui-design-item { display: grid; grid-template-columns: var(--ui-size-icon-sm) minmax(0, 1fr); align-items: start; gap: var(--ui-space-sm); font-size: var(--ui-type-label); line-height: 1.45; }
+.ui-design-list[data-tone="page"] .ui-design-item { grid-template-columns: var(--ui-size-icon) minmax(0, 1fr); font-size: var(--ui-type-control); line-height: 1.5; }
+.ui-design-mark { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); margin-block: calc((1lh - var(--ui-size-icon-sm)) / 2); color: var(--ui-glass-fg-secondary); }
+.ui-design-list[data-tone="page"] .ui-design-mark { width: var(--ui-size-icon); height: var(--ui-size-icon); margin-block: calc((1lh - var(--ui-size-icon)) / 2); color: var(--ui-text-tertiary); }
+.ui-design-item:is([data-severity="major"], [data-severity="critical"], [data-verdict="needs_work"], [data-check="soft"]) .ui-design-mark { color: var(--ui-glass-fg); }
+.ui-design-list[data-tone="page"] .ui-design-item:is([data-severity="major"], [data-severity="critical"], [data-verdict="needs_work"], [data-check="soft"]) .ui-design-mark { color: var(--ui-text); }
+.ui-design-item[data-check="failed"] .ui-design-mark { color: var(--ui-danger); }
+.ui-design-text { display: grid; min-width: 0; }
+.ui-design-what { color: var(--ui-glass-fg); overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-design-note { color: var(--ui-glass-fg-secondary); text-wrap: pretty; }
+.ui-design-list[data-tone="page"] .ui-design-what { color: var(--ui-text); }
+.ui-design-list[data-tone="page"] .ui-design-note { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-design-list + .ui-design-list { margin-block-start: var(--ui-space-sm); }
+
+.ui-design-form { display: grid; gap: var(--ui-space-lg); min-width: 0; }
+.ui-design-part { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-design-head { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-glass-fg-secondary); }
+.ui-design-line, .ui-design-quiet, .ui-design-loading, .ui-design-file-line { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-glass-fg); text-wrap: pretty; }
+.ui-design-quiet { color: var(--ui-glass-fg-secondary); }
+.ui-design-file-line { padding-inline: var(--ui-space-sm); font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-glass-fg-secondary); }
+.ui-design-link { color: inherit; text-decoration: underline; text-underline-offset: 0.2em; }
+.ui-design-link:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-size-ring-offset); border-radius: var(--ui-radius-item); }
+.ui-design-rows { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 5fr); gap: var(--ui-space-sm) var(--ui-space-lg); margin: 0; font-size: var(--ui-type-control); line-height: 1.45; }
+.ui-design-rows[data-tone="glass"] { padding-inline: var(--ui-space-sm); font-size: var(--ui-type-label); }
+.ui-design-rows > div { display: contents; }
+.ui-design-rows dt { margin: 0; min-width: 0; color: var(--ui-glass-fg-secondary); }
+.ui-design-rows dd { margin: 0; min-width: 0; color: var(--ui-glass-fg); overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-design-blocked { display: flex; align-items: flex-start; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-glass-fg); text-wrap: pretty; }
+.ui-design-blocked > svg { flex: none; width: var(--ui-size-icon); height: 1lh; color: var(--ui-glass-fg-secondary); }
+
 /* ---------- a phone: the board and the versions, read-only ---------- */
 
 @media (max-width: 899px) {

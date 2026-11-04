@@ -599,6 +599,152 @@ anna qaQueue()
       },
       "item": {
         "campaignId": "c-autumn",
+        "creativeId": "cr-a-v11",
+        "design": {
+          "at": "2026-10-14T12:28:00.000Z",
+          "book": {"state":"checked","version":1},
+          "checks": [
+            {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
+            {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
+            {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {
+              "check": "contrast",
+              "hard": true,
+              "need": 3,
+              "node": "Headline",
+              "note": "9.4:1 against nine in ten of the pixels under the words (needs 3:1).",
+              "ok": true,
+              "value": 9.4
+            },
+            {
+              "check": "contrast",
+              "hard": true,
+              "need": 4.5,
+              "node": "Subline",
+              "note": "7.8:1 against nine in ten of the pixels under the words (needs 4.5:1).",
+              "ok": true,
+              "value": 7.8
+            },
+            {
+              "check": "font",
+              "hard": false,
+              "node": "h1",
+              "note": "Cormorant is not on file; set in Cormorant Garamond until the brand gives Fume its font.",
+              "ok": false
+            }
+          ],
+          "document": {"name":"feed-9-v2.fig"},
+          "findings": [
+            {
+              "by": "fume_review",
+              "severity": "minor",
+              "what": "The supporting line sits close to the headline; one more step of space would let it breathe."
+            }
+          ],
+          "fromNumber": 1,
+          "fromVersionId": "cv-a-v11-1",
+          "id": "dl-1",
+          "layout": {"align":"left","band":"top","colour":"text","ground":"photo"},
+          "llmUsd": 0.002,
+          "requestedBy": "u-anna",
+          "state": "made",
+          "tried": 6,
+          "verdict": "ready_for_check",
+          "words": {"cta":"Se kveldsoljen","headline":"Den langsomme timen før søvn.","subline":"Night Body Oil · 100 ml"}
+        },
+        "drawn": {
+          "fonts": ["Cormorant Garamond","Inter"],
+          "layers": [
+            {
+              "align": "left",
+              "colour": "#2B1D17",
+              "family": "\"Cormorant\", \"Cormorant Garamond\", Georgia, serif",
+              "lineHeight": 1.05,
+              "role": "headline",
+              "sizePx": 76,
+              "text": "Den langsomme timen før søvn.",
+              "trackingEm": -0.01,
+              "w": 57,
+              "weight": 400,
+              "x": 6.7,
+              "y": 5.3
+            },
+            {
+              "align": "left",
+              "colour": "#2B1D17",
+              "family": "\"Inter\", \"Inter\", system-ui, sans-serif",
+              "lineHeight": 1.3,
+              "role": "subline",
+              "sizePx": 30,
+              "text": "Night Body Oil · 100 ml",
+              "trackingEm": 0,
+              "w": 57,
+              "weight": 400,
+              "x": 6.7,
+              "y": 18.9
+            }
+          ]
+        },
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "feed",
+        "id": "qa-8",
+        "image": "/demo/lysne/10-08-feed.jpg",
+        "madeAt": "2026-10-14T12:29:00.000Z",
+        "previous": {"image":"/demo/lysne/10-08-feed.jpg","version":1},
+        "risk": "normal",
+        "slot": "Master 2 · Variant 4",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 9",
+        "version": 2,
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
         "creativeId": "cr-doc-autumn-email",
         "documentId": "doc-autumn-email",
         "dueAt": "2026-10-15T12:32:00.000Z",
@@ -1636,6 +1782,152 @@ anna qaQueue()
         "state": "waiting",
         "studio": "render",
         "title": "Feed 8",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "creativeId": "cr-a-v11",
+        "design": {
+          "at": "2026-10-14T12:28:00.000Z",
+          "book": {"state":"checked","version":1},
+          "checks": [
+            {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
+            {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
+            {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {
+              "check": "contrast",
+              "hard": true,
+              "need": 3,
+              "node": "Headline",
+              "note": "9.4:1 against nine in ten of the pixels under the words (needs 3:1).",
+              "ok": true,
+              "value": 9.4
+            },
+            {
+              "check": "contrast",
+              "hard": true,
+              "need": 4.5,
+              "node": "Subline",
+              "note": "7.8:1 against nine in ten of the pixels under the words (needs 4.5:1).",
+              "ok": true,
+              "value": 7.8
+            },
+            {
+              "check": "font",
+              "hard": false,
+              "node": "h1",
+              "note": "Cormorant is not on file; set in Cormorant Garamond until the brand gives Fume its font.",
+              "ok": false
+            }
+          ],
+          "document": {"name":"feed-9-v2.fig"},
+          "findings": [
+            {
+              "by": "fume_review",
+              "severity": "minor",
+              "what": "The supporting line sits close to the headline; one more step of space would let it breathe."
+            }
+          ],
+          "fromNumber": 1,
+          "fromVersionId": "cv-a-v11-1",
+          "id": "dl-1",
+          "layout": {"align":"left","band":"top","colour":"text","ground":"photo"},
+          "llmUsd": 0.002,
+          "requestedBy": "u-anna",
+          "state": "made",
+          "tried": 6,
+          "verdict": "ready_for_check",
+          "words": {"cta":"Se kveldsoljen","headline":"Den langsomme timen før søvn.","subline":"Night Body Oil · 100 ml"}
+        },
+        "drawn": {
+          "fonts": ["Cormorant Garamond","Inter"],
+          "layers": [
+            {
+              "align": "left",
+              "colour": "#2B1D17",
+              "family": "\"Cormorant\", \"Cormorant Garamond\", Georgia, serif",
+              "lineHeight": 1.05,
+              "role": "headline",
+              "sizePx": 76,
+              "text": "Den langsomme timen før søvn.",
+              "trackingEm": -0.01,
+              "w": 57,
+              "weight": 400,
+              "x": 6.7,
+              "y": 5.3
+            },
+            {
+              "align": "left",
+              "colour": "#2B1D17",
+              "family": "\"Inter\", \"Inter\", system-ui, sans-serif",
+              "lineHeight": 1.3,
+              "role": "subline",
+              "sizePx": 30,
+              "text": "Night Body Oil · 100 ml",
+              "trackingEm": 0,
+              "w": 57,
+              "weight": 400,
+              "x": 6.7,
+              "y": 18.9
+            }
+          ]
+        },
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "feed",
+        "id": "qa-8",
+        "image": "/demo/lysne/10-08-feed.jpg",
+        "madeAt": "2026-10-14T12:29:00.000Z",
+        "previous": {"image":"/demo/lysne/10-08-feed.jpg","version":1},
+        "risk": "normal",
+        "slot": "Master 2 · Variant 4",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 9",
+        "version": 2,
         "workspaceId": "w-lysne"
       },
       "productName": "Night Body Oil",

@@ -3,7 +3,7 @@
 
 import type { Id } from "../entities/common";
 import type { ProductOverride } from "../entities/products";
-import type { CreativeDocument, Recipe, StudioKind, StudioMode, StudioSession } from "../entities/studio";
+import type { CreativeDocument, DesignAsk, Recipe, StudioKind, StudioMode, StudioSession } from "../entities/studio";
 import type { BrandWorkspaceView, StudioCampaignRow, StudioKit } from "../views/studio";
 
 export interface StudioApi {
@@ -42,6 +42,14 @@ export interface StudioApi {
   pickVersion(documentId: Id, versionId: Id): Promise<CreativeDocument>;
   /** A picture the designer made by hand, with how it was made: it becomes the newest version, picked. */
   addVersion(documentId: Id, file: File, note: string): Promise<CreativeDocument>;
+  /** What "Add graphic design" would lay on a version: the plan's approved words, the design system in use, and why
+   *  it cannot be asked now (FLOWS §33). Fume's designers only. */
+  designAsk(documentId: Id, versionId: Id): Promise<DesignAsk>;
+  /** Fume lays the plan's words on the version in the brand's design system (design_candidate, then the `design`
+   *  function). Answered at once: the document with a new version Fume is designing; it becomes a version of its
+   *  own, picked, with its design file. On a designed version it designs again from the picture under it; asking
+   *  while one is being made on that picture returns it. Fume's designers only. */
+  designVersion(documentId: Id, versionId: Id, ask?: string): Promise<CreativeDocument>;
   overrideProduct(
     documentId: Id,
     change: { field: string; value: string; scope: ProductOverride["scope"] },

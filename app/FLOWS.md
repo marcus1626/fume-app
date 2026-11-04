@@ -1119,3 +1119,36 @@ its client never see it.
   claim nothing backs is still on a line nobody changed, the foot says "1 claim nothing backs is still in the plan."
   Nothing here is Amber: nothing in it is checked.
 - **The demo.** Anna (?as=anna): LYSNE › Black Friday › Plan, in check because Maja asked.
+
+## 33. Graphic design by Fume (4 Nov 2026, PROPOSED)
+Fume lays the plan's approved words on a picture the Engine made, in the brand's design system, measures the layout
+by code and has its review look at it as a designer would (docs/mvp/design-layer.md). Only Fume's people see any of
+it: the customer, an agency and its client never do. Only a Fume designer asks for it.
+- **Where it lives.** Under the strip, beside "Add a picture made by hand": **Add graphic design to V3**, on the
+  picked version. On a designed version it reads **Design again from V3**; while Fume works on that picture,
+  **Fume is designing on V3**, and it cannot be asked twice. A video or design creative has no such action.
+- **The dialog** says what Fume will do and with what, before anything starts: "Fume lays the plan's words on V3 in
+  the brand's design system and checks the layout by code. It comes back as a new version with a design file you can
+  change by hand; V3 stays as it is." Then **The words, from the approved plan** (headline, supporting line, call to
+  action, word for word), **The design system** ("Version 1 · checked · the customer has not approved it yet, so Fume
+  uses the checked one · Open it"), and an optional box, "Anything Fume should know (if anything)". When it cannot be
+  asked, the box gives way to why: "Graphic design goes on a picture.", "The brand has no design system yet. Ask Fume
+  to write one first." or "The approved plan has no headline to set on this creative."
+- **While Fume works** a new version's tile reads "Fume is designing", over the picture it designs on, and the board
+  shows that picture with "Fume is designing version 5 on V3". The toast: "Fume is designing version 5 · On V3, in the
+  design system. V3 stays as it is."
+- **The result** is a version of its own, picked: its tile reads "Designed from V3 · Ready for check" or with what
+  was found ("1 flag · 1 design note"), and the board draws the words on it. A layer that failed is a failed version
+  ("Not designed"); its panel says why and offers **Design again**.
+- **The panel**, from the rail's **The graphic design and its checks**: what Fume's review found (its verdict, then
+  each finding by severity: "Minor · Fume's review"), **What code measured · 6 of 8 passed** (failed hard checks
+  first, a soft one "Said to the expert; it does not rule the layout out.", and "no layout passed every check; this
+  is the closest one" when none did), the words, about this design (the picture under it, the design system, where
+  the words sit, how many layouts code tried, what was asked, what Fume's review cost), and the design file:
+  **Download the design file** (a .fig whose words stay text) and **Design again**.
+- **In Check**, a designed version shows its words on the creative and, after what the Engine found, **The graphic
+  design · design system version 1 · checked**: the review's verdict and findings, failed checks, then the passed ones
+  summed up in one line. It is read-only there and never stops a check: the expert decides, as always.
+- **The demo.** Anna (?as=anna): LYSNE › Autumn launch › Master 3 (/studio/doc/doc-autumn-m3), Add graphic design to
+  V3; the second try moves the words to the foot, where the review says it needs work. In Check, Night Body Oil ·
+  Feed 9 (?item=qa-8) is a designed version 2 waiting for a check.

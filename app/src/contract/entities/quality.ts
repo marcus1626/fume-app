@@ -4,7 +4,7 @@
 
 import type { Id, Instant } from "./common";
 import type { Format } from "./campaigns";
-import type { Layer, StudioKind } from "./studio";
+import type { DesignDrawing, Layer, StudioKind, VersionDesign } from "./studio";
 
 // ─── The Quality Gate check ─────────────────────────────────────────────────
 
@@ -142,6 +142,11 @@ export interface QaItem {
   evaluation: Evaluation;
   /** What the Engine's picture check found on this version, for the one who checks to settle. */
   findings?: QaFinding[];
+  /** The graphic design Fume laid on the picture, when the version in check is one (FLOWS §33, PROPOSED): what code
+   *  measured and what Fume's review found. Fume's people only; read-only in Check. */
+  design?: VersionDesign;
+  /** Demo only: the words to draw on `image` (the live picture is the designed PNG). */
+  drawn?: DesignDrawing;
   feedback: QaFeedback[];
   /** Design creatives can be changed directly in Check (FLOWS §10). */
   layers?: Layer[];

@@ -159,6 +159,11 @@ export const usePickVersion = () =>
   useM((a, v: { documentId: Id; versionId: Id }) => a.pickVersion(v.documentId, v.versionId));
 export const useAddVersion = () =>
   useM((a, v: { documentId: Id; file: File; note: string }) => a.addVersion(v.documentId, v.file, v.note));
+// Graphic design by Fume (FLOWS §33)
+export const useDesignAsk = (documentId: Id, versionId: Id | undefined) =>
+  useQ(["design-ask", documentId, versionId], (a) => a.designAsk(documentId, versionId!), Boolean(versionId));
+export const useDesignVersion = () =>
+  useM((a, v: { documentId: Id; versionId: Id; ask?: string }) => a.designVersion(v.documentId, v.versionId, v.ask));
 export const useOverrideProduct = () =>
   useM((a, v: { documentId: Id; field: string; value: string; scope: "this_render" | "product" }) =>
     a.overrideProduct(v.documentId, v),

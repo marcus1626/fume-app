@@ -136,3 +136,32 @@ test("Anna teaches the Engine with yes or no on its pictures", async ({ page }) 
   await page.getByRole("button", { name: "Done" }).click();
   await expect(page.getByRole("button", { name: "Teach the Engine · 5" })).toBeVisible();
 });
+
+test("Anna asks Fume for the graphic design on a picture, and reads what came back", async ({ page }) => {
+  await page.goto("/studio/doc/doc-autumn-m3?as=anna");
+  await page.getByRole("button", { name: "Add graphic design to V3" }).click();
+  const dialog = page.getByRole("dialog", { name: "Add graphic design to V3" });
+  await expect(dialog.getByText("Den langsomme timen før søvn.")).toBeVisible();
+  await expect(dialog.getByText(/^Version 1 · checked/)).toBeVisible();
+  await dialog.getByLabel("Anything Fume should know (if anything)").fill("Keep the words high, clear of the bottle.");
+  await dialog.getByRole("button", { name: "Add graphic design", exact: true }).click();
+
+  // Fume designs it as a new version, and it comes back picked, with its words on the picture
+  await expect(page.getByText("Fume is designing version 5")).toBeVisible();
+  await expect(page.getByRole("button", { name: /Designed from V3/ })).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(".ui-design-drawn").first()).toContainText("Den langsomme timen før søvn.");
+
+  await page.getByRole("button", { name: "The graphic design and its checks" }).click();
+  const sheet = page.getByRole("dialog", { name: "The graphic design on version 5" });
+  await expect(sheet.getByRole("list", { name: "What Fume’s review found" })).toContainText(
+    "Ready for the expert’s check",
+  );
+  await expect(sheet.getByText(/^What code measured · \d+ of \d+ passed/)).toBeVisible();
+  await expect(sheet.getByText("“Keep the words high, clear of the bottle.”")).toBeVisible();
+  await expect(sheet.getByRole("button", { name: "Design again" })).toBeVisible();
+
+  // In Check, the expert reads the same findings beside the creative
+  await page.goto("/studio/qa?as=anna&item=qa-8");
+  await expect(page.getByText(/^The graphic design · design system version 1/)).toBeVisible();
+  await expect(page.getByRole("list", { name: "What code measured" })).toContainText("checks passed");
+});

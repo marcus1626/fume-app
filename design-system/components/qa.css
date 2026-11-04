@@ -115,6 +115,8 @@
 .ui-qa-finding-meta + .ui-qa-finding-evidence { margin-block-start: var(--ui-space-xs); }
 .ui-qa-finding-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); margin-inline-start: calc(var(--ui-size-pad-sm) * -1); }
 .ui-qa-findings + .ui-qa-notes { margin-block-start: var(--ui-space-sm); }
+/* The graphic design Fume laid on the picture (FLOWS §33): its review and code's checks, read-only (studio-desk.css .ui-design-list) */
+.ui-qa-design-line { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
 .ui-qa-against { justify-items: start; }
 /* the fold's trigger and the chip are quiet pills: their words line up with the column, the pill reaches past it */
 .ui-qa-against > .ui-collapsible-trigger, .ui-qa-chip { justify-self: start; max-width: calc(100% + var(--ui-size-pad-sm)); margin-inline-start: calc(var(--ui-size-pad-sm) * -1); }

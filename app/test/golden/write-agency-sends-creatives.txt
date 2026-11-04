@@ -3253,7 +3253,7 @@ nora agencyHome()
         "action": "Check",
         "at": "2026-10-14T12:24:00.000Z",
         "clientId": "w-lysne",
-        "detail": "5 creatives to check",
+        "detail": "6 creatives to check",
         "href": "/studio/b/w-lysne/qa?campaign=c-autumn",
         "id": "an-check-c-autumn",
         "kind": "check",
@@ -3326,13 +3326,13 @@ nora agencyHome()
         "title": "AURÉA · Brand DNA"
       }
     ],
-    "summary": "4 client brands. 1 plan, 9 creatives to check and 2 to send wait on you.",
+    "summary": "4 client brands. 1 plan, 10 creatives to check and 2 to send wait on you.",
     "team": [
       {
         "clientIds": ["w-lysne"],
         "load": 0.82,
         "role": "lead",
-        "thisWeek": "9 creatives to check · 1 plan to check · LYSNE",
+        "thisWeek": "10 creatives to check · 1 plan to check · LYSNE",
         "user": {
           "agency": {"organisationId":"o-brygga","role":"lead"},
           "email": "nora@brygga.example",

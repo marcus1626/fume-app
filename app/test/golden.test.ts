@@ -1298,6 +1298,36 @@ scenario("brand books", async (golden) => {
   await a.brandBooks();
 });
 
+scenario("graphic design", async (golden) => {
+  // Anna asks Fume to lay the plan's words on V3 of Master 3 in LYSNE's design system (FLOWS §33). Each call answers
+  // with the version Fume is designing; on this still clock it is made before the next call, so asking again designs
+  // again, and each new try moves the words.
+  const anna = golden.open("anna", { userId: "u-anna" });
+  const a = anna.call;
+  await a.designAsk("doc-autumn-m3", "rv-3");
+  await a.designAsk("doc-autumn-m3", "rv-4");
+  await a.designAsk("doc-bf-1", "rv-bf-1");
+  await a.designVersion("doc-bf-1", "rv-bf-1");
+  anna.signInAs("sander", "u-sander");
+  await a.designAsk("doc-autumn-m3", "rv-3");
+  await a.designVersion("doc-autumn-m3", "rv-3");
+  anna.signInAs("maja", "u-maja");
+  await a.designAsk("doc-autumn-m3", "rv-3");
+  anna.signInAs("anna", "u-anna");
+  const designing = await a.designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the bottle.");
+  const made = designing?.versions.at(-1);
+  await anna.advance(1_000);
+  await a.document("doc-autumn-m3");
+  await a.designVersion("doc-autumn-m3", "rv-3");
+  if (made) {
+    await a.designAsk("doc-autumn-m3", made.id);
+    await a.designVersion("doc-autumn-m3", made.id);
+  }
+  await a.document("doc-autumn-m3");
+  await a.documentToCheck("doc-autumn-m3");
+  await a.qaQueue("w-lysne");
+});
+
 test("the golden master calls every member of the mock", () => {
   const missing = members.filter((m) => !covered.has(m));
   console.log(`golden master: ${members.length - missing.length} of ${members.length} FumeApi members called`);

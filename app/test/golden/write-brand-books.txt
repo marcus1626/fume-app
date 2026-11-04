@@ -2298,7 +2298,7 @@ maja askBrandBookChange({"ask":"Burgundy for the price too, not only the call to
         ]
       },
       "createdAt": "2026-10-14T12:32:00.000Z",
-      "id": "bb-mvkqw31k-1",
+      "id": "bb-mvkqwarc-1",
       "kind": "design",
       "state": "draft",
       "version": 2,
@@ -2311,7 +2311,7 @@ maja askBrandBookChange({"ask":"Burgundy for the price too, not only the call to
     "ask": "Burgundy for the price too, not only the call to action.",
     "askedBy": "u-maja",
     "createdAt": "2026-10-14T12:32:00.000Z",
-    "id": "bb-mvkqw31k-1",
+    "id": "bb-mvkqwarc-1",
     "kind": "design",
     "state": "writing",
     "version": 2
@@ -3195,7 +3195,7 @@ anna brandBooks()
           ]
         },
         "createdAt": "2026-10-14T12:32:00.000Z",
-        "id": "bb-mvkqw31k-1",
+        "id": "bb-mvkqwarc-1",
         "kind": "design",
         "state": "draft",
         "version": 2,
@@ -4081,7 +4081,7 @@ anna brandBooks()
   }
 anna brandBooks()
   = anna brandBooks()
-anna checkBrandBook("bb-mvkqw31k-1") → events
+anna checkBrandBook("bb-mvkqwarc-1") → events
   {
     "book": {
       "ask": "Burgundy for the price too, not only the call to action.",
@@ -4415,7 +4415,7 @@ anna checkBrandBook("bb-mvkqw31k-1") → events
       "checkedAt": "2026-10-14T12:32:00.000Z",
       "checkedBy": "u-anna",
       "createdAt": "2026-10-14T12:32:00.000Z",
-      "id": "bb-mvkqw31k-1",
+      "id": "bb-mvkqwarc-1",
       "kind": "design",
       "state": "checked",
       "version": 2,
@@ -4423,7 +4423,7 @@ anna checkBrandBook("bb-mvkqw31k-1") → events
     },
     "type": "book.state"
   }
-anna checkBrandBook("bb-mvkqw31k-1")
+anna checkBrandBook("bb-mvkqwarc-1")
   {
     "ask": "Burgundy for the price too, not only the call to action.",
     "askedBy": "u-maja",
@@ -4742,7 +4742,7 @@ anna checkBrandBook("bb-mvkqw31k-1")
     "checkedAt": "2026-10-14T12:32:00.000Z",
     "checkedBy": "u-anna",
     "createdAt": "2026-10-14T12:32:00.000Z",
-    "id": "bb-mvkqw31k-1",
+    "id": "bb-mvkqwarc-1",
     "kind": "design",
     "state": "checked",
     "version": 2,
@@ -4999,7 +4999,7 @@ anna writeBrandBook({"ask":"Shorter captions for stories.","kind":"voice"}) → 
         ]
       },
       "createdAt": "2026-10-14T12:32:00.000Z",
-      "id": "bb-mvkqw31k-2",
+      "id": "bb-mvkqwarc-2",
       "kind": "voice",
       "state": "draft",
       "version": 3,
@@ -5012,7 +5012,7 @@ anna writeBrandBook({"ask":"Shorter captions for stories.","kind":"voice"})
     "ask": "Shorter captions for stories.",
     "askedBy": "u-anna",
     "createdAt": "2026-10-14T12:32:00.000Z",
-    "id": "bb-mvkqw31k-2",
+    "id": "bb-mvkqwarc-2",
     "kind": "voice",
     "state": "writing",
     "version": 3
@@ -5266,7 +5266,7 @@ anna writeBrandBook({"kind":"voice"}) → events
         ]
       },
       "createdAt": "2026-10-14T12:32:00.000Z",
-      "id": "bb-mvkqw31k-3",
+      "id": "bb-mvkqwarc-3",
       "kind": "voice",
       "state": "draft",
       "version": 4,
@@ -5275,7 +5275,7 @@ anna writeBrandBook({"kind":"voice"}) → events
     "type": "book.state"
   }
 anna writeBrandBook({"kind":"voice"})
-  {"createdAt":"2026-10-14T12:32:00.000Z","id":"bb-mvkqw31k-3","kind":"voice","state":"writing","version":4}
+  {"createdAt":"2026-10-14T12:32:00.000Z","id":"bb-mvkqwarc-3","kind":"voice","state":"writing","version":4}
 -- 1 s later
 anna brandBooks()
   {
@@ -5633,7 +5633,7 @@ anna brandBooks()
         "checkedAt": "2026-10-14T12:32:00.000Z",
         "checkedBy": "u-anna",
         "createdAt": "2026-10-14T12:32:00.000Z",
-        "id": "bb-mvkqw31k-1",
+        "id": "bb-mvkqwarc-1",
         "kind": "design",
         "state": "checked",
         "version": 2,
@@ -6249,7 +6249,7 @@ anna brandBooks()
           ]
         },
         "createdAt": "2026-10-14T12:32:00.000Z",
-        "id": "bb-mvkqw31k-3",
+        "id": "bb-mvkqwarc-3",
         "kind": "voice",
         "state": "draft",
         "version": 4,
@@ -6508,7 +6508,7 @@ anna brandBooks()
           ]
         },
         "createdAt": "2026-10-14T12:32:00.000Z",
-        "id": "bb-mvkqw31k-2",
+        "id": "bb-mvkqwarc-2",
         "kind": "voice",
         "state": "draft",
         "version": 3,

@@ -48,6 +48,7 @@ import { useDocumentHistory } from "./history";
 import { SendToCheck } from "./sendCheck";
 import { withLibrary } from "./sceneLibrary";
 import { EngineLockBar, lockProps, useEngineWork } from "./lock";
+import { DesignSheet } from "./graphic";
 import { PromptSheet } from "./prompt";
 import { SpecsPanel } from "./Specs";
 import { VariablesPanel } from "./Variables";
@@ -487,6 +488,7 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
         )}
         <CanvasLight rig={state.variables.rig as LightRig | undefined} view={lightView} />
         <PromptSheet doc={doc} />
+        <DesignSheet doc={doc} />
       </main>
 
       {!readOnly && !bare && (

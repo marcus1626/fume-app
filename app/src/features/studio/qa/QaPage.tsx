@@ -90,6 +90,7 @@ import { due, now, time, when } from "../../../lib/time";
 import { Nothing, Page, Query } from "../../../shell/Page";
 import { brandBase, checkPath, frameRoot, type StaffFrameKind } from "../../../shell/scope";
 import { vars } from "../../brand/board";
+import { bookWords, DesignChecks, DesignFindings, DrawnWords, useSeesDesign } from "../doc/graphic";
 import { formatName } from "../parts";
 import { useNames } from "./names";
 import { fixer } from "../../../lib/fixer";
@@ -905,6 +906,7 @@ function QaFocus({
   const edit = useQaEdit();
   const toStudio = useQaToStudio();
   const settle = useQaSettleFinding();
+  const seesDesign = useSeesDesign();
   const tellRef = useRef<HTMLTextAreaElement>(null);
   const [text, setText] = useState("");
   const textLayers = (item.layers ?? []).filter((l) => l.kind === "text");
@@ -1140,6 +1142,7 @@ function QaFocus({
               title={pinnable ? "Click to pin a note" : undefined}
             >
               <img src={image} alt={`${name}, version ${version}`} draggable={false} />
+              {!before && item.drawn && <DrawnWords drawing={item.drawn} />}
               {!before &&
                 (item.layers ?? [])
                   .filter((l) => l.visible && (l.kind === "text" || l.kind === "logo"))
@@ -1309,6 +1312,21 @@ function QaFocus({
               </Collapsible>
             )}
           </Evaluated>
+
+          {/* 2c. The graphic design Fume laid on the picture (FLOWS §33): Fume's people only, read-only */}
+          {seesDesign && item.design && item.design.state === "made" && (
+            <section className="ui-qa-part" aria-labelledby={`${item.id}-design`}>
+              <h3 className="ui-qa-part-title" id={`${item.id}-design`}>
+                The graphic design
+                {item.design.book ? ` · design system ${bookWords(item.design.book).toLowerCase()}` : ""}
+              </h3>
+              <p className="ui-qa-design-line">
+                {`Fume laid the plan’s words on V${item.design.fromNumber}. Code measured it; Fume’s review looked at it.`}
+              </p>
+              <DesignFindings design={item.design} tone="page" />
+              <DesignChecks checks={item.design.checks} tone="page" compact />
+            </section>
+          )}
 
           {/* 3. A design's words, changed right here */}
           {textLayers.length > 0 && !checked && (
