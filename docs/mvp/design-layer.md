@@ -41,9 +41,24 @@ Marcus, 4 Nov 2026: the service goes into the existing fume-app Vercel project, 
 - First live runs from Supabase, 4 Nov: Nike (test) passed every check in about 26 s; Møllers (test) gave only the
   closest layout (the call to action sits close to the bottle cap). About $0.0015 a layer.
 
+## On brand (4 Nov 2026)
+
+Marcus: "Designet var ikke veldig on brand." What changed:
+
+- **Fonts.** Every creative was set in Inter: OpenPencil's web-font providers come back empty on the server.
+  `src/fonts.ts` fetches TrueType files from Google Fonts itself and takes the nearest weight a family has.
+- **How the brand sets words on pictures.** The design book reads it with eyes (`brand-book/creatives.ts`) from the
+  brand's own pictures and from screenshots of its site (`app/api/shot.js`): the headline's face, case, weight,
+  tracking and size, the layouts it repeats, the button's look and colour, where the logo sits. The site counts as
+  the brand's own graphic design. A widget's face from the stylesheets (VideoJS) gives way to what the eyes saw.
+- **The logo.** The screenshots keep the SVG in the site's header (made safe), else the Brand DNA's logo picture,
+  never the favicon; the book names the file (`body.logo`). The service sets it in the brand's corner or a calm one
+  away from the words, light or dark for a one-colour logo, and leaves it off where the brand's layout carries none.
+- **A new book is used only once it is checked and approved** (`app.brand_book_in_use`).
+
 ## Still open
 
-- Layouts for a tall product in the middle of the frame (Møllers): none passes yet; the words need a smaller block
-  or a side column.
-- Nike's design book still has the scan's old fonts until Nike is scanned again.
+- The brand's own ads: a brand's site rarely shows how it sets words on an ad. Uploads of its ads come first in the
+  book's pictures when the customer adds them.
+- Layouts for a tall product in the middle of the frame (Møllers): the words need a smaller block or a side column.
 - The UI (owned by the design thread): "Add graphic design" on a candidate, the Look Book screens, the copy check.
