@@ -26,7 +26,13 @@ design follows Marcus's five domains and the Fume Engine prototype (Oct 2026), p
    (`engine_pending`, Claude with DIGEST_SYSTEM, `engine_digested`), from what the person said only. That prompt
    already uses them; a changed answer is digested again and its old lessons retire. Digesting counts in the
    language model's week.
-8. **The Engine looks at its picture** (`_shared/engine/evaluate.ts`). Right after a picture is kept, Claude Haiku
+8. **The Engine bar** (FLOWS §9.1). The designer's words go into the creative's Direction and show before anything
+   renders. Keep and render sends them with Render (`render_creative`'s `p_direction`): with a picture on the desk,
+   the Engine changes that picture (the `picture_edit` grammar: the picked picture first, the change, what stays; the
+   scene and the look are the picture's own, so only hard rules and the product's facts are written again); without
+   one, the Direction goes into a new campaign still. A plain Render sends the Direction. The job keeps the words
+   (`production_jobs.direction`), and its tries count from the Render that queued it (`tries_from`).
+9. **The Engine looks at its picture** (`_shared/engine/evaluate.ts`). Right after a picture is kept, Claude Haiku
    sees the product's own photographs (at most three; never the master) and the picture, and answers for each item
    of the prompt's checklist whether the picture holds it, is off, or cannot be told, and names artefacts and
    printed words outside the product. The first item is always that the product is the product in its photographs.
@@ -65,7 +71,8 @@ without making a picture.
 
 ## Not yet
 
-The Engine bar's words, Make formats by the Engine and video.
+Make formats by the Engine and video. The Engine bar reads every word into the Direction; reading words into the
+desk's own variables (light, angle, lens) is not built yet.
 The Studio's side is designed in app/FLOWS.md §29 (PROPOSED) and wired live (app/src/api/live/engine.ts):
 
 - A failed Engine job is a version with state `failed` and `failure` (one sentence, for everyone on the desk); Render

@@ -15,7 +15,22 @@ export const CAMPAIGN_STILL_V1: Grammar = {
   ],
 };
 
-export const GRAMMARS: Grammar[] = [CAMPAIGN_STILL_V1];
+// The Engine bar on a picture already made: the image model changes that picture as the designer asks and keeps the
+// rest. The scene and the look are the picture's own, so they are not written again (that makes a new picture).
+export const PICTURE_EDIT_V1: Grammar = {
+  imageType: "picture_edit",
+  version: 1,
+  slots: [
+    { key: "references", order: 1, filledBy: "locked", required: true, purpose: "What each reference picture is for and what must not be taken from it." },
+    { key: "product", order: 2, filledBy: "locked", required: true, purpose: "The product exactly as it is: construction, materials, colours and proportions." },
+    { key: "assignment", order: 3, filledBy: "composer", required: true, purpose: "That this changes the first picture as asked, in its format, and keeps everything else in it." },
+    { key: "change", order: 4, filledBy: "composer", required: true, purpose: "The designer's change, written as visible effects in the picture and nothing more." },
+    { key: "keep", order: 5, filledBy: "composer", required: true, purpose: "What stays exactly as in the first picture: the composition, the scene, the objects, the product and its label." },
+    { key: "constraints", order: 6, filledBy: "composer", required: true, purpose: "One sentence per hard brand rule and per product invariant." },
+  ],
+};
+
+export const GRAMMARS: Grammar[] = [CAMPAIGN_STILL_V1, PICTURE_EDIT_V1];
 
 // Seeded from Fume's research on these models (prototype docs/knowledge/image-models.md, 9 Oct 2026); each becomes
 // "measured" once Fume's own verdicts support it.

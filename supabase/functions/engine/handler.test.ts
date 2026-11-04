@@ -1,5 +1,5 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
-import { type Deps, handleEngine, NO_PROVIDER, runJob, type Taken } from "./handler.ts";
+import { type Deps, enforcedOf, handleEngine, NO_PROVIDER, runJob, type Taken } from "./handler.ts";
 import { byModel, higgsfield, ratioFor } from "./provider.ts";
 import { fal, sizeFor } from "./fal.ts";
 import type { Composer, Decider, SlotText, Verifier } from "../_shared/engine/index.ts";
@@ -36,8 +36,17 @@ const slots: SlotText[] = [
   { slotKey: "constraints", text: "No person in the frame.", sources: [] },
 ];
 const call = { task: "x", provider: "test", model: "test", latencyMs: 1, costUsd: 0.001 };
+const editSlots: SlotText[] = [
+  { slotKey: "assignment", text: "Change the first picture as asked.", sources: [] },
+  { slotKey: "change", text: "The light turns warm, like late morning sun.", sources: [] },
+  { slotKey: "keep", text: "Everything else stays exactly as in the first picture.", sources: [] },
+  { slotKey: "constraints", text: "No person in the frame.", sources: [] },
+];
+// The composer fills the free slots of the grammar it is given.
 const compose: Composer = async ({ compilePackage }) => ({
-  slots: slots.map((s, i) => (i === 0 ? { ...s, sources: compilePackage.manifest.map((m) => m.id) } : s)),
+  slots: (compilePackage.grammar.imageType === "picture_edit" ? editSlots : slots).map((s, i) =>
+    i === 0 ? { ...s, sources: compilePackage.manifest.map((m) => m.id) } : s
+  ),
   call,
 });
 const decide: Decider = async ({ questions }) => ({
@@ -341,4 +350,29 @@ Deno.test("a picture the model cannot look at stays made, for the expert to chec
   f.deps.service.toEvaluate = async () => ({ data: { candidates: [{ id: "c", path: "p" }], manifest: [], references: [] }, error: null });
   f.deps.service.evaluated = async () => ({ error: null });
   assertEquals(await runJob(JOB, f.deps), "made");
+});
+
+Deno.test("the designer's words change the picked picture: it goes first, and the words are held like a rule", async () => {
+  const seen: { text: string; referenceUrls: string[]; aspectRatio: string }[] = [];
+  const t = taken();
+  t.master = { path: "ws1/engine/pick.png", title: "Master 1", picked: true };
+  t.change = { problem: "", must_change: [], must_stay: [], ask: "make the light warmer" };
+  const f = fake({ takes: [t], provider: fakeProvider(["done"], seen) });
+  assertEquals(await runJob(JOB, f.deps), "made");
+  assertEquals(seen[0].referenceUrls[0], "https://signed/ws1/engine/pick.png");
+  const p = f.prompts[0] as { compile_package: { manifest: { requirement: string }[]; references: { role: string }[]; lockedReferenceText?: string } };
+  assert(p.compile_package.manifest.some((m) => m.requirement === "The designer asks for this change: make the light warmer."));
+  assertEquals(p.compile_package.references[0].role, "the picture of Master 1 that this changes");
+  assert(!p.compile_package.manifest.some((m) => m.requirement.startsWith("The scene shows")), "the scene is the picture's own");
+  assert(seen[0].text.includes("The light turns warm"));
+});
+
+Deno.test("a Render's direction is held like a rule, unless the designer asked for a change", () => {
+  assertEquals(enforcedOf({ change: { problem: "", must_change: [], must_stay: [], direction: "Morning, the cup steaming" } }), [
+    { id: "direction", statement: "The designer's direction for the picture: Morning, the cup steaming." },
+  ]);
+  assertEquals(
+    enforcedOf({ change: { problem: "", must_change: [], must_stay: [], ask: "warmer light!", direction: "Morning" } }).map((x) => x.id),
+    ["ask"],
+  );
 });
