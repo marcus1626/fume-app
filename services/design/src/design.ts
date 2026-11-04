@@ -27,6 +27,8 @@ export interface LogoPlan {
   w: number;
   h: number;
   first: Where | null;
+  /** In the words' own panel, over the headline, when the brand's corner is in the words' band. */
+  inside?: boolean;
 }
 
 export interface Check {
@@ -187,7 +189,7 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
   const steps = headlineSteps(book, first).map((s) => s.name);
   // The brand's own way of setting words on pictures comes before Fume's defaults; the picture's calm place, from the
   // model's eye, comes before both.
-  const sig = signatureOf(book, prefer.signature);
+  const sig = signatureOf(book, prefer.signature, hasCta);
   const g = gridOf(book, format);
   const sigColumns = sig ? Math.min(g.columns, Math.max(4, Math.round((sig.wordsWidthPct / 100) * g.columns))) : null;
   const sigGround: Ground | null = sig ? (sig.ground === "colour_block" ? "block" : sig.ground) : null;
@@ -234,7 +236,7 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
                   ...(subline === "subline" ? {} : { subline }),
                   ...(ctaLook ? { ctaLook } : {}),
                   ...(ctaFill ? { ctaFill } : {}),
-                  ...(groundHex && ground === "block" ? { groundHex } : {}),
+                  ...(groundHex && (ground === "block" || ground === "flat") ? { groundHex } : {}),
                   ...(sig ? { signature: sig.name } : {}),
                 };
               }
@@ -262,7 +264,7 @@ export function measure(
   const room = g.h - g.top - g.bottom - (action0 ? action0.h + 32 : 0);
   // The brand's logo in the words' own band sits beside them as the brand sets it: the Swoosh under the quote,
   // Møllers' logo over the headline. The words make room for it.
-  const shareBand = logo?.first?.startsWith(l.band === "middle" ? "-" : l.band) ? logo.h + 40 : 0;
+  const shareBand = !logo?.inside && logo?.first?.startsWith(l.band === "middle" ? "-" : l.band) ? logo.h + 40 : 0;
   const y =
     l.band === "top"
       ? g.top + shareBand
@@ -367,7 +369,29 @@ export function measure(
     }
   }
   let placed: Tried["logo"] = null;
-  if (logo) {
+  if (logo?.inside && c.panel) {
+    // In the panel: the version that reads best on the panel's own colour.
+    const id = doc.ids.get("Logo");
+    const v = [...logo.logo.variants].sort((a, b) => contrastOf(b.hex, c.panel!) - contrastOf(a.hex, c.panel!))[0];
+    const value = contrastOf(v.hex, c.panel);
+    if (id) {
+      doc.graph.updateNode(id, {
+        fills: [{ type: "IMAGE", imageHash: v.hash, imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }] as never,
+      });
+    }
+    const box = boxOf(doc, "Logo");
+    if (box) boxes.Logo = box;
+    checks.push({
+      check: "logo",
+      node: "Logo",
+      ok: value >= 3,
+      hard: false,
+      value,
+      need: 3,
+      note: value >= 3 ? `In the panel over the headline, ${v.name === "as_is" ? "as drawn" : `the ${v.name} version`}, ${value}:1.` : `The logo is hard to see on the panel (${value}:1).`,
+    });
+    placed = { where: logo.first ?? "top_left", variant: v.name, contrast: value };
+  } else if (logo) {
     const at = placeLogo(doc, g, logo, boxes, keep, p, shades, l);
     checks.push(at.check);
     if (at.box) boxes.Logo = at.box;
@@ -393,7 +417,8 @@ export function logoPlan(book: DesignBook, g: Grid, l: Layout, logo: Logo): Logo
     w = (w * most) / h;
     h = most;
   }
-  return { logo, w: Math.round(w), h: Math.round(h), first };
+  const inside = Boolean(first?.startsWith(l.band)) && (l.ground === "flat" || l.ground === "block");
+  return { logo, w: Math.round(w), h: Math.round(h), first, ...(inside ? { inside } : {}) };
 }
 
 function boxAt(where: Where, g: Grid, w: number, h: number): Box {

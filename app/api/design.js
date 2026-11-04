@@ -10,9 +10,10 @@ var SIZES = {
   story: { w: 1080, h: 1920 },
   banner: { w: 1920, h: 1080 }
 };
-function signatureOf(book, name) {
+function signatureOf(book, name, hasCta) {
   const all = (book.onPictures?.layouts ?? []).filter((l) => carriesWords(l));
-  return all.find((l) => l.name === name) ?? all[0] ?? null;
+  const fits = hasCta ? all.find((l) => l.cta !== "none") : void 0;
+  return all.find((l) => l.name === name) ?? fits ?? all[0] ?? null;
 }
 function carriesWords(l) {
   return l.hasWords ?? !/\b(no|without) (words|text|copy)\b|\b(logo|swoosh|mark) alone\b/i.test(l.name);
@@ -67,9 +68,9 @@ function compose(book, format, words, l, family, widths = {}, logo) {
   const panel = componentOf(book, "body");
   const isBlock = l.ground === "block";
   const onPanel = l.ground === "flat" || isBlock;
-  const ownGround = isBlock && l.groundHex && /^#[0-9a-f]{6}$/i.test(l.groundHex) ? l.groundHex.toUpperCase() : null;
-  const wordsHex = isBlock ? ownGround ? readableOn(ownGround, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000") : colourOf(book, "on_primary") ?? "#FFFFFF" : onPanel ? colourOf(book, "text") ?? "#000000" : colourOf(book, l.colour) ?? "#FFFFFF";
-  const subHex = isBlock ? wordsHex : onPanel ? colourOf(book, "text_muted") ?? wordsHex : wordsHex;
+  const ownGround = onPanel && l.groundHex && /^#[0-9a-f]{6}$/i.test(l.groundHex) ? l.groundHex.toUpperCase() : null;
+  const wordsHex = ownGround ? readableOn(ownGround, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000") : isBlock ? colourOf(book, "on_primary") ?? "#FFFFFF" : onPanel ? colourOf(book, "text") ?? "#000000" : colourOf(book, l.colour) ?? "#FFFFFF";
+  const subHex = isBlock || ownGround ? wordsHex : onPanel ? colourOf(book, "text_muted") ?? wordsHex : wordsHex;
   const width = columnsWidth(g, Math.min(g.columns, Math.max(4, l.columns)));
   const x = l.align === "left" ? g.margin : l.align === "right" ? g.w - g.margin - width : Math.round((g.w - width) / 2);
   const textAlign = l.align;
@@ -124,15 +125,19 @@ function compose(book, format, words, l, family, widths = {}, logo) {
   }
   const ctaWithWords = words.cta && (l.cta === "with_words" || l.cta === "bottom" && l.band === "bottom");
   const pad = onPanel ? panel?.paddingPx ?? 32 : 0;
-  const panelHex = isBlock ? ownGround ?? colourOf(book, "primary") ?? "#000000" : colourOf(book, panel?.background ?? "surface") ?? colourOf(book, "background") ?? "#FFFFFF";
+  const panelHex = ownGround ? ownGround : isBlock ? colourOf(book, "primary") ?? "#000000" : colourOf(book, panel?.background ?? "surface") ?? colourOf(book, "background") ?? "#FFFFFF";
   const panelBg = onPanel ? ` bg=${q(panelHex)}` : "";
+  const insideLogo = logo?.inside ? `<Rectangle name="Logo" w={${Math.round(logo.w)}} h={${Math.round(logo.h)}} fills={[{ type: "IMAGE", imageHash: "LOGO", imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />` : "";
   const panelRadius = onPanel ? ` rounded={${radiusOf(book, panel?.radius ?? "none")}}` : "";
   const block = `<Frame name="Words" position="absolute" x={${x}} y={${g.top}} w={${width}} h="hug" flex="col" items=${q(
     items
-  )} gap={${unit * 5}}${panelBg}${panelRadius} p={${pad}}><Frame name="Lines" w="fill" h="hug" flex="col" items=${q(items)} gap={${unit * 3}}>${inner.join("")}</Frame>${ctaWithWords ? cta() : ""}</Frame>`;
+  )} gap={${unit * 5}}${panelBg}${panelRadius} p={${pad}}><Frame name="Lines" w="fill" h="hug" flex="col" items=${q(items)} gap={${unit * 3}}>${inner.join("")}</Frame>${ctaWithWords ? cta() : ""}</Frame>`.replace(
+    '<Frame name="Lines"',
+    `${insideLogo}<Frame name="Lines"`
+  );
   const alone = words.cta && !ctaWithWords && l.cta !== "none" ? `<Frame name="Action" position="absolute" x={${l.align === "left" ? g.margin : 0}} y={${g.h - g.bottom - 80}} w={${l.align === "left" ? '"hug"' : l.align === "right" ? g.w - g.margin : g.w}} h="hug" flex="col" items=${q(items)}>${cta()}</Frame>` : "";
   const shade = l.ground === "gradient" ? `<Rectangle name="Shade" position="absolute" x={0} y={0} w={${g.w}} h={${Math.round(g.h / 2)}} fills={[]} />` : "";
-  const logoNode = logo ? `<Rectangle name="Logo" position="absolute" x={${g.margin}} y={${g.top}} w={${Math.round(logo.w)}} h={${Math.round(
+  const logoNode = logo && !logo.inside ? `<Rectangle name="Logo" position="absolute" x={${g.margin}} y={${g.top}} w={${Math.round(logo.w)}} h={${Math.round(
     logo.h
   )}} fills={[{ type: "IMAGE", imageHash: "LOGO", imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />` : "";
   const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${shade}${block}${alone}${logoNode}</Frame>`;
@@ -614,7 +619,7 @@ function* layoutsFor(book, format, prefer, hasCta) {
   const comp = componentOf(book, "headline");
   const first = prefer.headline && styleOf(book, prefer.headline) ? prefer.headline : comp?.style ?? "h1";
   const steps = headlineSteps(book, first).map((s) => s.name);
-  const sig = signatureOf(book, prefer.signature);
+  const sig = signatureOf(book, prefer.signature, hasCta);
   const g = gridOf(book, format);
   const sigColumns = sig ? Math.min(g.columns, Math.max(4, Math.round(sig.wordsWidthPct / 100 * g.columns))) : null;
   const sigGround = sig ? sig.ground === "colour_block" ? "block" : sig.ground : null;
@@ -661,7 +666,7 @@ function* layoutsFor(book, format, prefer, hasCta) {
                   ...subline === "subline" ? {} : { subline },
                   ...ctaLook ? { ctaLook } : {},
                   ...ctaFill ? { ctaFill } : {},
-                  ...groundHex && ground === "block" ? { groundHex } : {},
+                  ...groundHex && (ground === "block" || ground === "flat") ? { groundHex } : {},
                   ...sig ? { signature: sig.name } : {}
                 };
               }
@@ -677,7 +682,7 @@ function measure(doc, c, l, book, p, keep, logo = null) {
   const words0 = boxOf(doc, "Words");
   const action0 = boxOf(doc, "Action");
   const room = g.h - g.top - g.bottom - (action0 ? action0.h + 32 : 0);
-  const shareBand = logo?.first?.startsWith(l.band === "middle" ? "-" : l.band) ? logo.h + 40 : 0;
+  const shareBand = !logo?.inside && logo?.first?.startsWith(l.band === "middle" ? "-" : l.band) ? logo.h + 40 : 0;
   const y = l.band === "top" ? g.top + shareBand : l.band === "bottom" ? g.h - g.bottom - words0.h - (action0 ? action0.h + 32 : 0) - shareBand : Math.round(g.top + (room - words0.h) / 2);
   place(doc, "Words", { y });
   if (action0) place(doc, "Action", { y: g.h - g.bottom - action0.h });
@@ -774,7 +779,28 @@ function measure(doc, c, l, book, p, keep, logo = null) {
     }
   }
   let placed = null;
-  if (logo) {
+  if (logo?.inside && c.panel) {
+    const id = doc.ids.get("Logo");
+    const v = [...logo.logo.variants].sort((a, b) => contrastOf(b.hex, c.panel) - contrastOf(a.hex, c.panel))[0];
+    const value = contrastOf(v.hex, c.panel);
+    if (id) {
+      doc.graph.updateNode(id, {
+        fills: [{ type: "IMAGE", imageHash: v.hash, imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]
+      });
+    }
+    const box = boxOf(doc, "Logo");
+    if (box) boxes.Logo = box;
+    checks.push({
+      check: "logo",
+      node: "Logo",
+      ok: value >= 3,
+      hard: false,
+      value,
+      need: 3,
+      note: value >= 3 ? `In the panel over the headline, ${v.name === "as_is" ? "as drawn" : `the ${v.name} version`}, ${value}:1.` : `The logo is hard to see on the panel (${value}:1).`
+    });
+    placed = { where: logo.first ?? "top_left", variant: v.name, contrast: value };
+  } else if (logo) {
     const at = placeLogo(doc, g, logo, boxes, keep, p, shades, l);
     checks.push(at.check);
     if (at.box) boxes.Logo = at.box;
@@ -795,7 +821,8 @@ function logoPlan(book, g, l, logo) {
     w = w * most / h;
     h = most;
   }
-  return { logo, w: Math.round(w), h: Math.round(h), first };
+  const inside = Boolean(first?.startsWith(l.band)) && (l.ground === "flat" || l.ground === "block");
+  return { logo, w: Math.round(w), h: Math.round(h), first, ...inside ? { inside } : {} };
 }
 function boxAt(where, g, w, h) {
   const [v, side] = where.split("_");

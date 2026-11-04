@@ -76,7 +76,7 @@ export function compose(
   /** Narrower widths for single lines of words, so their lines come out even (see balance in design.ts). */
   widths: Partial<Record<"Headline" | "Subline", number>> = {},
   /** The logo's size on this format, when it is set; measure() moves it to its corner. */
-  logo?: { w: number; h: number },
+  logo?: { w: number; h: number; inside?: boolean },
 ): Composed {
   const g = gridOf(book, format);
   const unit = book.spacing?.unitPx ?? 8;
@@ -85,15 +85,16 @@ export function compose(
   const panel = componentOf(book, "body");
   const isBlock = l.ground === "block";
   const onPanel = l.ground === "flat" || isBlock;
-  const ownGround = isBlock && l.groundHex && /^#[0-9a-f]{6}$/i.test(l.groundHex) ? l.groundHex.toUpperCase() : null;
-  const wordsHex = isBlock
-    ? ownGround
-      ? readableOn(ownGround, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000")
-      : (colourOf(book, "on_primary") ?? "#FFFFFF")
+  // A block or a panel in the brand's own colour from its ads (Møllers' green) carries words that read on it.
+  const ownGround = onPanel && l.groundHex && /^#[0-9a-f]{6}$/i.test(l.groundHex) ? l.groundHex.toUpperCase() : null;
+  const wordsHex = ownGround
+    ? readableOn(ownGround, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000")
+    : isBlock
+      ? (colourOf(book, "on_primary") ?? "#FFFFFF")
     : onPanel
       ? (colourOf(book, "text") ?? "#000000")
       : (colourOf(book, l.colour) ?? "#FFFFFF");
-  const subHex = isBlock ? wordsHex : onPanel ? (colourOf(book, "text_muted") ?? wordsHex) : wordsHex;
+  const subHex = isBlock || ownGround ? wordsHex : onPanel ? (colourOf(book, "text_muted") ?? wordsHex) : wordsHex;
   const width = columnsWidth(g, Math.min(g.columns, Math.max(4, l.columns)));
   const x = l.align === "left" ? g.margin : l.align === "right" ? g.w - g.margin - width : Math.round((g.w - width) / 2);
   const textAlign = l.align;
@@ -155,16 +156,25 @@ export function compose(
   }
   const ctaWithWords = words.cta && (l.cta === "with_words" || (l.cta === "bottom" && l.band === "bottom"));
   const pad = onPanel ? (panel?.paddingPx ?? 32) : 0;
-  const panelHex = isBlock
-    ? (ownGround ?? colourOf(book, "primary") ?? "#000000")
+  const panelHex = ownGround
+    ? ownGround
+    : isBlock
+      ? (colourOf(book, "primary") ?? "#000000")
     : (colourOf(book, panel?.background ?? "surface") ?? colourOf(book, "background") ?? "#FFFFFF");
   const panelBg = onPanel ? ` bg=${q(panelHex)}` : "";
+  // On the brand's own panel its logo sits in the panel, over the headline, as Möller's ads set it.
+  const insideLogo = logo?.inside
+    ? `<Rectangle name="Logo" w={${Math.round(logo.w)}} h={${Math.round(logo.h)}} fills={[{ type: "IMAGE", imageHash: "LOGO", imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />`
+    : "";
   const panelRadius = onPanel ? ` rounded={${radiusOf(book, panel?.radius ?? "none")}}` : "";
   const block = `<Frame name="Words" position="absolute" x={${x}} y={${g.top}} w={${width}} h="hug" flex="col" items=${q(
     items,
   )} gap={${unit * 5}}${panelBg}${panelRadius} p={${pad}}><Frame name="Lines" w="fill" h="hug" flex="col" items=${q(items)} gap={${
     unit * 3
-  }}>${inner.join("")}</Frame>${ctaWithWords ? cta() : ""}</Frame>`;
+  }}>${inner.join("")}</Frame>${ctaWithWords ? cta() : ""}</Frame>`.replace(
+    '<Frame name="Lines"',
+    `${insideLogo}<Frame name="Lines"`,
+  );
   const alone =
     words.cta && !ctaWithWords && l.cta !== "none"
       ? `<Frame name="Action" position="absolute" x={${l.align === "left" ? g.margin : 0}} y={${g.h - g.bottom - 80}} w={${
@@ -175,7 +185,7 @@ export function compose(
     l.ground === "gradient"
       ? `<Rectangle name="Shade" position="absolute" x={0} y={0} w={${g.w}} h={${Math.round(g.h / 2)}} fills={[]} />`
       : "";
-  const logoNode = logo
+  const logoNode = logo && !logo.inside
     ? `<Rectangle name="Logo" position="absolute" x={${g.margin}} y={${g.top}} w={${Math.round(logo.w)}} h={${Math.round(
         logo.h,
       )}} fills={[{ type: "IMAGE", imageHash: "LOGO", imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />`

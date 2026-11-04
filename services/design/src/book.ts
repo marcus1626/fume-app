@@ -78,9 +78,11 @@ export interface DesignBook {
 }
 
 /** The brand's layout by name, else its most typical one. */
-export function signatureOf(book: DesignBook, name?: string): Signature | null {
+export function signatureOf(book: DesignBook, name?: string, hasCta?: boolean): Signature | null {
   const all = (book.onPictures?.layouts ?? []).filter((l) => carriesWords(l));
-  return all.find((l) => l.name === name) ?? all[0] ?? null;
+  // Without a name, the brand's most typical layout for these words: one with a button when the plan has one.
+  const fits = hasCta ? all.find((l) => l.cta !== "none") : undefined;
+  return all.find((l) => l.name === name) ?? fits ?? all[0] ?? null;
 }
 
 /** Books written before hasWords say it in the name. */
