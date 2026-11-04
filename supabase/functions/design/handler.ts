@@ -21,7 +21,7 @@ export interface Deps {
     picture(t: Take): Promise<Uint8Array | null>;
   };
   choose(t: Take, words: Words, picture: Uint8Array, spent: Spent): Promise<LayoutChoice | null>;
-  review(t: Take, words: Words, png: Uint8Array, spent: Spent): Promise<Review | null>;
+  review(t: Take, words: Words, png: Uint8Array, spent: Spent, set?: { cta?: string } | null): Promise<Review | null>;
   /** The design service (services/design): POST /api/design. */
   lay(request: Record<string, unknown>): Promise<{ ok: boolean; status: number; body: Record<string, unknown> }>;
   later(work: Promise<unknown>): void;
@@ -90,7 +90,7 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     let verdict: string | null = null;
     try {
       const png = await d.service.read(t.store.bucket, t.store.png);
-      const r = png ? await d.review(t, words, png, spent) : null;
+      const r = png ? await d.review(t, words, png, spent, out.layout as { cta?: string } | null) : null;
       if (r) {
         findings = r.findings.map((f) => ({ ...f, by: "fume_review" }));
         verdict = r.verdict;

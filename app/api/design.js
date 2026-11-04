@@ -458,11 +458,9 @@ async function logoOf(bytes, light, dark) {
   };
   const asIs = encode(data) ?? raster;
   const variants = [{ name: "as_is", png: asIs, hash: imageHash(asIs), hex: t.hex }];
-  {
-    for (const [name, hex] of [["light", light], ["dark", dark]]) {
-      const png2 = encode(tint(data, hex));
-      if (png2) variants.push({ name, png: png2, hash: imageHash(png2), hex });
-    }
+  for (const [name, hex] of [["light", light], ["dark", dark]]) {
+    const png2 = encode(t.mono ? tint(data, hex) : reversed(data, hex));
+    if (png2) variants.push({ name, png: png2, hash: imageHash(png2), hex });
   }
   return { width, height, mono: t.mono, variants };
 }
@@ -509,6 +507,24 @@ function tint(px, hex) {
     out[i + 1] = n >> 8 & 255;
     out[i + 2] = n & 255;
     out[i + 3] = px[i + 3];
+  }
+  return out;
+}
+function reversed(px, hex) {
+  let lo = 1;
+  let hi = 0;
+  for (let i = 0; i < px.length; i += 4) {
+    if (px[i + 3] < 160) continue;
+    const l = luminance(px[i], px[i + 1], px[i + 2]);
+    if (l < lo) lo = l;
+    if (l > hi) hi = l;
+  }
+  const out = tint(px, hex);
+  if (hi - lo < 0.15) return out;
+  for (let i = 0; i < px.length; i += 4) {
+    const t = Math.min(1, Math.max(0, (hi - luminance(px[i], px[i + 1], px[i + 2])) / (hi - lo)));
+    const k = t < 0.25 ? 0 : t > 0.55 ? 1 : (t - 0.25) / 0.3;
+    out[i + 3] = Math.round(px[i + 3] * k);
   }
   return out;
 }

@@ -136,3 +136,12 @@ Deno.test("a brand layout with no words is never offered for the plan's words", 
   ] } } } } as typeof take;
   assertEquals(layoutsOf(t).map((l) => l.name), ["Big stack"]);
 });
+
+Deno.test("where the brand's layout carries no button, the review is told the call to action is left off on purpose", async () => {
+  const { reviewPrompt } = await import("./layer.ts");
+  const words = { headline: "IKON", cta: "Kjøp" };
+  const off = reviewPrompt({} as Take, words, { cta: "none" });
+  assertEquals(off.includes("Kjøp"), false);
+  assertEquals(off.includes("left off on purpose"), true);
+  assertEquals(reviewPrompt({} as Take, words, { cta: "with_words" }).includes("Kjøp"), true);
+});

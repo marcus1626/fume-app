@@ -52,13 +52,12 @@ export async function logoOf(bytes: Uint8Array, light: string, dark: string): Pr
   };
   const asIs = encode(data) ?? raster;
   const variants: LogoVariant[] = [{ name: "as_is", png: asIs, hash: imageHash(asIs), hex: t.hex }];
-  // A one-colour logo is set light or dark as brands do; a logo in colours gets a one-colour version too, for a
-  // ground it cannot be read on as drawn (the brand's own reversed logo is better, and the expert is told).
-  {
-    for (const [name, hex] of [["light", light], ["dark", dark]] as const) {
-      const png = encode(tint(data, hex));
-      if (png) variants.push({ name, png, hash: imageHash(png), hex });
-    }
+  // A one-colour logo is set light or dark as brands do. A logo in colours gets a reversed version for a ground it
+  // cannot be read on as drawn: its darker parts in one colour and its lighter parts cut out, the way a brand's own
+  // reversed logo keeps the drawing inside its mark (the brand's own file is better, and the expert is told).
+  for (const [name, hex] of [["light", light], ["dark", dark]] as const) {
+    const png = encode(t.mono ? tint(data, hex) : reversed(data, hex));
+    if (png) variants.push({ name, png, hash: imageHash(png), hex });
   }
   return { width, height, mono: t.mono, variants };
 }
@@ -113,6 +112,27 @@ function tint(px: Uint8Array, hex: string): Uint8Array {
     out[i + 1] = (n >> 8) & 255;
     out[i + 2] = n & 255;
     out[i + 3] = px[i + 3];
+  }
+  return out;
+}
+
+/** One colour where the logo is darker, see-through where it is lighter, so the drawing inside a filled mark stays. */
+export function reversed(px: Uint8Array, hex: string): Uint8Array {
+  let lo = 1;
+  let hi = 0;
+  for (let i = 0; i < px.length; i += 4) {
+    if (px[i + 3] < 160) continue;
+    const l = luminance(px[i], px[i + 1], px[i + 2]);
+    if (l < lo) lo = l;
+    if (l > hi) hi = l;
+  }
+  const out = tint(px, hex);
+  if (hi - lo < 0.15) return out;
+  for (let i = 0; i < px.length; i += 4) {
+    const t = Math.min(1, Math.max(0, (hi - luminance(px[i], px[i + 1], px[i + 2])) / (hi - lo)));
+    // A soft step keeps edges smooth and leaves the mid tones of a mark solid.
+    const k = t < 0.25 ? 0 : t > 0.55 ? 1 : (t - 0.25) / 0.3;
+    out[i + 3] = Math.round(px[i + 3] * k);
   }
   return out;
 }

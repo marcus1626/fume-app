@@ -89,7 +89,7 @@ Deno.serve((req) =>
         picture: (t) => download(t.picture.bucket, t.picture.path),
       },
       choose: (t, words, picture, spent) => look<LayoutChoice>(CHOOSE_SYSTEM, choosePrompt(t, words), picture, LayoutChoice, spent),
-      review: (t, words, png, spent) => look<Review>(REVIEW_SYSTEM, reviewPrompt(t, words), png, Review, spent),
+      review: (t, words, png, spent, set) => look<Review>(REVIEW_SYSTEM, reviewPrompt(t, words, set), png, Review, spent),
       lay: async (request) => {
         const res = await fetch(designUrl, {
           method: "POST",
