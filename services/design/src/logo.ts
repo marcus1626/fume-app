@@ -52,7 +52,9 @@ export async function logoOf(bytes: Uint8Array, light: string, dark: string): Pr
   };
   const asIs = encode(data) ?? raster;
   const variants: LogoVariant[] = [{ name: "as_is", png: asIs, hash: imageHash(asIs), hex: t.hex }];
-  if (t.mono) {
+  // A one-colour logo is set light or dark as brands do; a logo in colours gets a one-colour version too, for a
+  // ground it cannot be read on as drawn (the brand's own reversed logo is better, and the expert is told).
+  {
     for (const [name, hex] of [["light", light], ["dark", dark]] as const) {
       const png = encode(tint(data, hex));
       if (png) variants.push({ name, png, hash: imageHash(png), hex });

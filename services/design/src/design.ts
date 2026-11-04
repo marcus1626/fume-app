@@ -372,8 +372,7 @@ export function measure(
   if (logo?.inside && c.panel) {
     // In the panel: the version that reads best on the panel's own colour.
     const id = doc.ids.get("Logo");
-    const v = [...logo.logo.variants].sort((a, b) => contrastOf(b.hex, c.panel!) - contrastOf(a.hex, c.panel!))[0];
-    const value = contrastOf(v.hex, c.panel);
+    const { v, contrast: value } = preferDrawn(logo.logo, logo.logo.variants.map((x) => ({ v: x, contrast: contrastOf(x.hex, c.panel!) })));
     if (id) {
       doc.graph.updateNode(id, {
         fills: [{ type: "IMAGE", imageHash: v.hash, imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }] as never,
@@ -388,7 +387,12 @@ export function measure(
       hard: false,
       value,
       need: 3,
-      note: value >= 3 ? `In the panel over the headline, ${v.name === "as_is" ? "as drawn" : `the ${v.name} version`}, ${value}:1.` : `The logo is hard to see on the panel (${value}:1).`,
+      note:
+        value < 3
+          ? `The logo is hard to see on the panel (${value}:1).`
+          : `In the panel over the headline, ${v.name === "as_is" ? "as drawn" : `the ${v.name} version`}, ${value}:1.${
+              v.name !== "as_is" && !logo.logo.mono ? " Made in one colour from the brand's logo; ask the brand for its reversed logo." : ""
+            }`,
     });
     placed = { where: logo.first ?? "top_left", variant: v.name, contrast: value };
   } else if (logo) {
@@ -421,6 +425,16 @@ export function logoPlan(book: DesignBook, g: Grid, l: Layout, logo: Logo): Logo
   return { logo, w: Math.round(w), h: Math.round(h), first, ...(inside ? { inside } : {}) };
 }
 
+/**
+ * The logo as the brand drew it when it reads there; else the one-colour version that reads best. A logo in colours
+ * is only set in one colour when its own colours cannot be read on that ground.
+ */
+function preferDrawn(logo: Logo, read: { v: Logo["variants"][number]; contrast: number }[]) {
+  const drawn = read.find((r) => r.v.name === "as_is");
+  if (drawn && (drawn.contrast >= 3 || (logo.mono && drawn.contrast >= 3))) return drawn;
+  return [...read].sort((a, b) => b.contrast - a.contrast)[0];
+}
+
 function boxAt(where: Where, g: Grid, w: number, h: number): Box {
   const [v, side] = where.split("_") as ["top" | "bottom", "left" | "centre" | "right"];
   const x = side === "left" ? g.margin : side === "right" ? g.w - g.margin - w : Math.round((g.w - w) / 2);
@@ -446,10 +460,9 @@ function placeLogo(
     const box = boxAt(where, g, plan.w, plan.h);
     const pad = { x: box.x - 16, y: box.y - 16, w: box.w + 32, h: box.h + 32 };
     if (avoid.some((a) => overlap(pad, a) > 0)) continue;
-    for (const v of plan.logo.variants) {
-      const u = under(p, box, v.hex, shades, Math.max(8, Math.round(plan.h * 0.5)));
-      if (!best || u.contrast > best.contrast + 0.01) best = { where, box, v, contrast: u.contrast };
-    }
+    const read = plan.logo.variants.map((v) => ({ v, contrast: under(p, box, v.hex, shades, Math.max(8, Math.round(plan.h * 0.5))).contrast }));
+    const pick = preferDrawn(plan.logo, read);
+    if (!best || pick.contrast > best.contrast + 0.01) best = { where, box, v: pick.v, contrast: pick.contrast };
     if (best && best.where === where && best.contrast >= 3) break;
   }
   if (!id || !best || best.contrast < 3) {

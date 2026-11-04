@@ -181,7 +181,16 @@ var LOGO = `(() => {
     return { svg: c.outerHTML.replace(/currentColor/g, col).slice(0, 200000) };
   }
   const imgs = Array.from(document.querySelectorAll('header img, nav img, [class*="logo" i] img, img[alt*="logo" i], img[src*="logo" i], a[href="/"] img'));
-  for (const i of imgs) if (near(i) && named(i)) return { src: i.currentSrc || i.src };
+  // The largest picture the page offers, and the original behind an image optimiser (Next.js serves /logo.png small).
+  const big = (i) => {
+    let src = i.currentSrc || i.src;
+    const set = (i.getAttribute('srcset') || '').split(',').map((x) => x.trim().split(/s+/)).filter((x) => x[0]);
+    const widest = set.sort((a, b) => parseFloat(b[1] || '0') - parseFloat(a[1] || '0'))[0];
+    if (widest) src = new URL(widest[0], location.href).href;
+    try { const u = new URL(src, location.href); if (u.pathname.startsWith('/_next/image') && u.searchParams.get('url')) src = new URL(u.searchParams.get('url'), location.href).href; } catch (e) {}
+    return src;
+  };
+  for (const i of imgs) if (near(i) && named(i)) return { src: big(i) };
   return null;
 })()`;
 var DISMISS = `(() => {

@@ -12,8 +12,13 @@ var SIZES = {
 };
 function signatureOf(book, name, hasCta) {
   const all = (book.onPictures?.layouts ?? []).filter((l) => carriesWords(l));
-  const fits = hasCta ? all.find((l) => l.cta !== "none") : void 0;
-  return all.find((l) => l.name === name) ?? fits ?? all[0] ?? null;
+  const named = all.find((l) => l.name === name);
+  if (named) return named;
+  const rank = (l) => l.source === "pictures" ? 0 : l.source === "site" ? 1 : 2;
+  const best = [...all].sort((a, b) => rank(a) - rank(b));
+  const first = best[0];
+  const fits = hasCta && first ? best.find((l) => rank(l) === rank(first) && l.cta !== "none") : void 0;
+  return fits ?? first ?? null;
 }
 function carriesWords(l) {
   return l.hasWords ?? !/\b(no|without) (words|text|copy)\b|\b(logo|swoosh|mark) alone\b/i.test(l.name);
@@ -453,7 +458,7 @@ async function logoOf(bytes, light, dark) {
   };
   const asIs = encode(data) ?? raster;
   const variants = [{ name: "as_is", png: asIs, hash: imageHash(asIs), hex: t.hex }];
-  if (t.mono) {
+  {
     for (const [name, hex] of [["light", light], ["dark", dark]]) {
       const png2 = encode(tint(data, hex));
       if (png2) variants.push({ name, png: png2, hash: imageHash(png2), hex });
@@ -781,8 +786,7 @@ function measure(doc, c, l, book, p, keep, logo = null) {
   let placed = null;
   if (logo?.inside && c.panel) {
     const id = doc.ids.get("Logo");
-    const v = [...logo.logo.variants].sort((a, b) => contrastOf(b.hex, c.panel) - contrastOf(a.hex, c.panel))[0];
-    const value = contrastOf(v.hex, c.panel);
+    const { v, contrast: value } = preferDrawn(logo.logo, logo.logo.variants.map((x) => ({ v: x, contrast: contrastOf(x.hex, c.panel) })));
     if (id) {
       doc.graph.updateNode(id, {
         fills: [{ type: "IMAGE", imageHash: v.hash, imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]
@@ -797,7 +801,7 @@ function measure(doc, c, l, book, p, keep, logo = null) {
       hard: false,
       value,
       need: 3,
-      note: value >= 3 ? `In the panel over the headline, ${v.name === "as_is" ? "as drawn" : `the ${v.name} version`}, ${value}:1.` : `The logo is hard to see on the panel (${value}:1).`
+      note: value < 3 ? `The logo is hard to see on the panel (${value}:1).` : `In the panel over the headline, ${v.name === "as_is" ? "as drawn" : `the ${v.name} version`}, ${value}:1.${v.name !== "as_is" && !logo.logo.mono ? " Made in one colour from the brand's logo; ask the brand for its reversed logo." : ""}`
     });
     placed = { where: logo.first ?? "top_left", variant: v.name, contrast: value };
   } else if (logo) {
@@ -824,6 +828,11 @@ function logoPlan(book, g, l, logo) {
   const inside = Boolean(first?.startsWith(l.band)) && (l.ground === "flat" || l.ground === "block");
   return { logo, w: Math.round(w), h: Math.round(h), first, ...inside ? { inside } : {} };
 }
+function preferDrawn(logo, read) {
+  const drawn = read.find((r) => r.v.name === "as_is");
+  if (drawn && (drawn.contrast >= 3 || logo.mono && drawn.contrast >= 3)) return drawn;
+  return [...read].sort((a, b) => b.contrast - a.contrast)[0];
+}
 function boxAt(where, g, w, h) {
   const [v, side] = where.split("_");
   const x = side === "left" ? g.margin : side === "right" ? g.w - g.margin - w : Math.round((g.w - w) / 2);
@@ -838,10 +847,9 @@ function placeLogo(doc, g, plan, boxes, keep, p, shades, l) {
     const box = boxAt(where, g, plan.w, plan.h);
     const pad = { x: box.x - 16, y: box.y - 16, w: box.w + 32, h: box.h + 32 };
     if (avoid.some((a) => overlap(pad, a) > 0)) continue;
-    for (const v of plan.logo.variants) {
-      const u = under(p, box, v.hex, shades, Math.max(8, Math.round(plan.h * 0.5)));
-      if (!best || u.contrast > best.contrast + 0.01) best = { where, box, v, contrast: u.contrast };
-    }
+    const read = plan.logo.variants.map((v) => ({ v, contrast: under(p, box, v.hex, shades, Math.max(8, Math.round(plan.h * 0.5))).contrast }));
+    const pick = preferDrawn(plan.logo, read);
+    if (!best || pick.contrast > best.contrast + 0.01) best = { where, box, v: pick.v, contrast: pick.contrast };
     if (best && best.where === where && best.contrast >= 3) break;
   }
   if (!id || !best || best.contrast < 3) {

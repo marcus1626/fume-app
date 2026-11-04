@@ -63,6 +63,8 @@ export interface Signature {
   ctaFill?: "light" | "dark" | "brand_colour" | "none";
   logo?: string;
   logoWidthPct?: number;
+  /** Where it was read: the brand's own ads and pictures, its site, or Fume's proposal. */
+  source?: string;
 }
 export interface DesignBook {
   colours: Colour[];
@@ -80,9 +82,15 @@ export interface DesignBook {
 /** The brand's layout by name, else its most typical one. */
 export function signatureOf(book: DesignBook, name?: string, hasCta?: boolean): Signature | null {
   const all = (book.onPictures?.layouts ?? []).filter((l) => carriesWords(l));
-  // Without a name, the brand's most typical layout for these words: one with a button when the plan has one.
-  const fits = hasCta ? all.find((l) => l.cta !== "none") : undefined;
-  return all.find((l) => l.name === name) ?? fits ?? all[0] ?? null;
+  const named = all.find((l) => l.name === name);
+  if (named) return named;
+  // Without a name, the brand's most typical layout from its own ads first (Nike's ads carry no button; its shop
+  // does), and among those one with a button when the plan has one.
+  const rank = (l: Signature) => (l.source === "pictures" ? 0 : l.source === "site" ? 1 : 2);
+  const best = [...all].sort((a, b) => rank(a) - rank(b));
+  const first = best[0];
+  const fits = hasCta && first ? best.find((l) => rank(l) === rank(first) && l.cta !== "none") : undefined;
+  return fits ?? first ?? null;
 }
 
 /** Books written before hasWords say it in the name. */
