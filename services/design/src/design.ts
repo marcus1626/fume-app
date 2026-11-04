@@ -77,10 +77,10 @@ export async function design(ask: Ask): Promise<Designed> {
     }
     if (!best || better(t, best.t)) best = { t, doc };
     if (best.t.ok && tried >= 6) break;
-    if (tried >= 120) break;
+    if (tried >= 320) break;
   }
   if (!best) throw new Error("No layout could be made.");
-  const used = new Set([best.t.layout.headline, "subline", componentOf(book, "cta")?.style ?? "cta"]);
+  const used = new Set([best.t.layout.headline, best.t.layout.subline ?? "subline", componentOf(book, "cta")?.style ?? "cta"]);
   const seen = new Set<string>();
   const fontChecks: Check[] = fonts
     .filter((f) => used.has(f.style) && f.asked !== f.used && !seen.has(f.asked) && seen.add(f.asked))
@@ -114,7 +114,7 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
   const first = prefer.headline && styleOf(book, prefer.headline) ? prefer.headline : (comp?.style ?? "h1");
   const steps = headlineSteps(book, first).map((s) => s.name);
   const bands: Band[] = uniq([prefer.band ?? "top", "top", "bottom", "middle"]) as Band[];
-  const aligns = uniq([prefer.align ?? "left", "left", "center"]) as ("left" | "center")[];
+  const aligns = uniq([prefer.align ?? "left", "left", "right", "center"]) as Layout["align"][];
   const photoColour = prefer.colour && book.colours.some((c) => c.role === prefer.colour) ? prefer.colour : "on_photo";
   const colours = uniq([photoColour, "on_photo", comp?.colour ?? "text", "text"]).filter((r) =>
     book.colours.some((c) => c.role === r),
@@ -126,8 +126,11 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
     ...(scrim === "gradient" ? ["gradient"] : []),
     "flat",
   ]) as Ground[];
-  const widths = prefer.columns ? [prefer.columns] : format === "banner" ? [6, 8] : [9, 12];
+  const widths = prefer.columns ? [prefer.columns] : format === "banner" ? [6, 8] : [9, 7, 12];
   const cta = hasCta ? (prefer.cta ?? "with_words") : "none";
+  // A long line from the plan may step down to the book's body size before the words move.
+  const sublines = uniq(["subline", "body"].filter((n) => styleOf(book, n)));
+  if (!sublines.length) sublines.push("subline");
   // The model's place for the words first; there, the picture as it is, then a shade, then a panel; then the
   // other places. The headline steps down a size before the words move.
   for (const band of bands) {
@@ -136,8 +139,10 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
       for (const align of aligns) {
         for (const columns of widths) {
           for (const headline of steps.slice(0, 3)) {
-            for (const colour of ground === "flat" ? ["text"] : colours) {
-              yield { band, align, headline, colour, ground, cta, columns };
+            for (const subline of sublines) {
+              for (const colour of ground === "flat" ? ["text"] : colours) {
+                yield { band, align, headline, colour, ground, cta, columns, ...(subline === "subline" ? {} : { subline }) };
+              }
             }
           }
         }

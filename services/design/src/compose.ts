@@ -22,7 +22,7 @@ export interface Words {
 }
 
 export type Band = "top" | "middle" | "bottom";
-export type Align = "left" | "center";
+export type Align = "left" | "center" | "right";
 export type Ground = "photo" | "gradient" | "flat";
 
 /** One way to lay the words out. */
@@ -35,6 +35,8 @@ export interface Layout {
   colour: string;
   /** What the words stand on: the picture itself, a fade of dark from the edge, or a flat panel. */
   ground: Ground;
+  /** The subline's type style, by name: a smaller one when the plan's line is long for the picture. */
+  subline?: string;
   /** The call to action under the words, or alone at the bottom of the frame. */
   cta: "with_words" | "bottom" | "none";
   /** How many of the grid's columns the words span. */
@@ -64,15 +66,15 @@ export function compose(
   const g = gridOf(book, format);
   const unit = book.spacing?.unitPx ?? 8;
   const hl = styleOf(book, l.headline) ?? styleOf(book, "h1") ?? book.styles[0];
-  const sub = styleOf(book, "subline") ?? styleOf(book, "body") ?? hl;
+  const sub = styleOf(book, l.subline ?? "subline") ?? styleOf(book, "subline") ?? styleOf(book, "body") ?? hl;
   const panel = componentOf(book, "body");
   const onPanel = l.ground === "flat";
   const wordsHex = onPanel ? (colourOf(book, "text") ?? "#000000") : (colourOf(book, l.colour) ?? "#FFFFFF");
   const subHex = onPanel ? (colourOf(book, "text_muted") ?? wordsHex) : wordsHex;
   const width = columnsWidth(g, Math.min(g.columns, Math.max(4, l.columns)));
-  const x = l.align === "left" ? g.margin : Math.round((g.w - width) / 2);
-  const textAlign = l.align === "left" ? "left" : "center";
-  const items = l.align === "left" ? "start" : "center";
+  const x = l.align === "left" ? g.margin : l.align === "right" ? g.w - g.margin - width : Math.round((g.w - width) / 2);
+  const textAlign = l.align;
+  const items = l.align === "left" ? "start" : l.align === "right" ? "end" : "center";
   const fonts: { family: string; weight: number }[] = [];
   const colours: Record<string, string> = { Headline: wordsHex };
   const sizes: Record<string, number> = { Headline: hl.sizePx };
@@ -125,7 +127,7 @@ export function compose(
   const alone =
     words.cta && !ctaWithWords && l.cta !== "none"
       ? `<Frame name="Action" position="absolute" x={${l.align === "left" ? g.margin : 0}} y={${g.h - g.bottom - 80}} w={${
-          l.align === "left" ? "\"hug\"" : g.w
+          l.align === "left" ? "\"hug\"" : l.align === "right" ? g.w - g.margin : g.w
         }} h="hug" flex="col" items=${q(items)}>${cta()}</Frame>`
       : "";
   const shade =

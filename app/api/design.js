@@ -56,15 +56,15 @@ function compose(book, format, words, l, family) {
   const g = gridOf(book, format);
   const unit = book.spacing?.unitPx ?? 8;
   const hl = styleOf(book, l.headline) ?? styleOf(book, "h1") ?? book.styles[0];
-  const sub = styleOf(book, "subline") ?? styleOf(book, "body") ?? hl;
+  const sub = styleOf(book, l.subline ?? "subline") ?? styleOf(book, "subline") ?? styleOf(book, "body") ?? hl;
   const panel = componentOf(book, "body");
   const onPanel = l.ground === "flat";
   const wordsHex = onPanel ? colourOf(book, "text") ?? "#000000" : colourOf(book, l.colour) ?? "#FFFFFF";
   const subHex = onPanel ? colourOf(book, "text_muted") ?? wordsHex : wordsHex;
   const width = columnsWidth(g, Math.min(g.columns, Math.max(4, l.columns)));
-  const x = l.align === "left" ? g.margin : Math.round((g.w - width) / 2);
-  const textAlign = l.align === "left" ? "left" : "center";
-  const items = l.align === "left" ? "start" : "center";
+  const x = l.align === "left" ? g.margin : l.align === "right" ? g.w - g.margin - width : Math.round((g.w - width) / 2);
+  const textAlign = l.align;
+  const items = l.align === "left" ? "start" : l.align === "right" ? "end" : "center";
   const fonts = [];
   const colours = { Headline: wordsHex };
   const sizes = { Headline: hl.sizePx };
@@ -109,7 +109,7 @@ function compose(book, format, words, l, family) {
   const block = `<Frame name="Words" position="absolute" x={${x}} y={${g.top}} w={${width}} h="hug" flex="col" items=${q(
     items
   )} gap={${unit * 5}}${panelBg}${panelRadius} p={${pad}}><Frame name="Lines" w="fill" h="hug" flex="col" items=${q(items)} gap={${unit * 3}}>${inner.join("")}</Frame>${ctaWithWords ? cta() : ""}</Frame>`;
-  const alone = words.cta && !ctaWithWords && l.cta !== "none" ? `<Frame name="Action" position="absolute" x={${l.align === "left" ? g.margin : 0}} y={${g.h - g.bottom - 80}} w={${l.align === "left" ? '"hug"' : g.w}} h="hug" flex="col" items=${q(items)}>${cta()}</Frame>` : "";
+  const alone = words.cta && !ctaWithWords && l.cta !== "none" ? `<Frame name="Action" position="absolute" x={${l.align === "left" ? g.margin : 0}} y={${g.h - g.bottom - 80}} w={${l.align === "left" ? '"hug"' : l.align === "right" ? g.w - g.margin : g.w}} h="hug" flex="col" items=${q(items)}>${cta()}</Frame>` : "";
   const shade = l.ground === "gradient" ? `<Rectangle name="Shade" position="absolute" x={0} y={0} w={${g.w}} h={${Math.round(g.h / 2)}} fills={[]} />` : "";
   const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${shade}${block}${alone}</Frame>`;
   return { jsx, grid: g, fonts, colours, sizes };
@@ -398,10 +398,10 @@ async function design(ask) {
     }
     if (!best || better(t, best.t)) best = { t, doc };
     if (best.t.ok && tried >= 6) break;
-    if (tried >= 120) break;
+    if (tried >= 320) break;
   }
   if (!best) throw new Error("No layout could be made.");
-  const used = /* @__PURE__ */ new Set([best.t.layout.headline, "subline", componentOf(book, "cta")?.style ?? "cta"]);
+  const used = /* @__PURE__ */ new Set([best.t.layout.headline, best.t.layout.subline ?? "subline", componentOf(book, "cta")?.style ?? "cta"]);
   const seen = /* @__PURE__ */ new Set();
   const fontChecks = fonts.filter((f) => used.has(f.style) && f.asked !== f.used && !seen.has(f.asked) && seen.add(f.asked)).map((f) => ({
     check: "font",
@@ -431,7 +431,7 @@ function* layoutsFor(book, format, prefer, hasCta) {
   const first = prefer.headline && styleOf(book, prefer.headline) ? prefer.headline : comp?.style ?? "h1";
   const steps = headlineSteps(book, first).map((s) => s.name);
   const bands = uniq([prefer.band ?? "top", "top", "bottom", "middle"]);
-  const aligns = uniq([prefer.align ?? "left", "left", "center"]);
+  const aligns = uniq([prefer.align ?? "left", "left", "right", "center"]);
   const photoColour = prefer.colour && book.colours.some((c) => c.role === prefer.colour) ? prefer.colour : "on_photo";
   const colours = uniq([photoColour, "on_photo", comp?.colour ?? "text", "text"]).filter(
     (r) => book.colours.some((c) => c.role === r)
@@ -443,16 +443,20 @@ function* layoutsFor(book, format, prefer, hasCta) {
     ...scrim === "gradient" ? ["gradient"] : [],
     "flat"
   ]);
-  const widths = prefer.columns ? [prefer.columns] : format === "banner" ? [6, 8] : [9, 12];
+  const widths = prefer.columns ? [prefer.columns] : format === "banner" ? [6, 8] : [9, 7, 12];
   const cta = hasCta ? prefer.cta ?? "with_words" : "none";
+  const sublines = uniq(["subline", "body"].filter((n) => styleOf(book, n)));
+  if (!sublines.length) sublines.push("subline");
   for (const band of bands) {
     for (const ground of grounds) {
       if (ground === "gradient" && band === "middle") continue;
       for (const align of aligns) {
         for (const columns of widths) {
           for (const headline of steps.slice(0, 3)) {
-            for (const colour of ground === "flat" ? ["text"] : colours) {
-              yield { band, align, headline, colour, ground, cta, columns };
+            for (const subline of sublines) {
+              for (const colour of ground === "flat" ? ["text"] : colours) {
+                yield { band, align, headline, colour, ground, cta, columns, ...subline === "subline" ? {} : { subline } };
+              }
             }
           }
         }
