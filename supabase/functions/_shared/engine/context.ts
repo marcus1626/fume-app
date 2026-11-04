@@ -24,6 +24,17 @@ export type PlanBody = {
   directions?: { id: string; name: string; idea: string; hook?: string; productRole?: string; look?: PlanLine[] }[];
   planned_creatives?: PlannedCreative[];
 };
+/** What the Brand Brain knows that shapes a picture (app.engine_brain); every item keeps its node's id. */
+export type Brain = {
+  market?: { market?: string; language?: string } | null;
+  palette: { id: string; name: string; hex: string; role?: string; use?: string; confidence?: string; confirmed: boolean }[];
+  imagery: { id: string; what: string; confirmed: boolean }[];
+  notes: { id: string; layer: string; kind: string; what: string; confirmed: boolean }[];
+  changes: { id: string; what: string; cause?: string; from?: string; creative?: string; this_campaign?: boolean }[];
+  checks: { id: string; what: string; state: string; creative?: string }[];
+};
+export const NO_BRAIN: Brain = { market: null, palette: [], imagery: [], notes: [], changes: [], checks: [] };
+
 export type Taste = { key: string; words: string | null; do_confidence: number; avoid_words: string | null; avoid_confidence: number };
 
 /** What public.engine_take hands over, with the pictures' addresses signed by the function. */
@@ -39,6 +50,7 @@ export type EngineTask = {
   /** For a variant, a format or a correction: the version it is made from, as the first reference. `picked` when it is
    *  the picture the designer's words change (the Engine bar), not yet approved. */
   master: { url: string; title: string; picked?: boolean } | null;
+  brain?: Brain;
 };
 
 export const FORMATS: Record<string, FormatSpec> = {
@@ -201,7 +213,74 @@ export function buildBrand(task: EngineTask, lookKey: string | null): BrandConte
       rules.push({ id: `taste-${t.key}-avoid`, dimension: "taste", lookKey: null, statement: sentence(`Avoid ${t.avoid_words}`), binding: "soft", epistemic: "inferred", scope: "core" });
   }
 
+  rules.push(...brainRules(task.brain ?? NO_BRAIN));
+
   return { rules, forbiddenTerms: [task.brand.name.replace(/\s*\(test\)\s*$/i, "").trim()].filter(Boolean) };
+}
+
+// The brand's own pictures in words. A caption that only says where a picture came from says nothing about its look.
+const GENERIC_CAPTION = /^(a |the )?(picture|image|photo)s? (from|on|of) (the )?(site|website|web|page|shop|instagram)\b/i;
+// The palette roles that colour a brand; text and ground colours belong to layouts, not to a scene.
+const SCENE_ROLES = new Set(["primary", "accent", "secondary", "brand", "support"]);
+// What a note says about the picture, by its kind; other notes are about words, people or the business.
+const PICTURE_NOTE = /image|imagery|look|photo|picture|style|light|colour|color|scene|setting|prop/i;
+export const brainImagery = (b: Brain) => b.imagery.filter((i) => i.confirmed && !GENERIC_CAPTION.test(i.what.trim()));
+export const brainPalette = (b: Brain) =>
+  b.palette
+    .filter((c) => c.confirmed && SCENE_ROLES.has((c.role ?? "").toLowerCase()) && c.confidence !== "low")
+    .sort((a, c) => (a.role === "primary" ? -1 : 0) - (c.role === "primary" ? -1 : 0))
+    .slice(0, 3);
+export const brainNotes = (b: Brain) =>
+  b.notes.filter((n) => n.confirmed && (n.layer === "rules" || PICTURE_NOTE.test(n.kind)));
+
+/** The Brand Brain's rules for a picture: all soft, the brand's own taste, not its hard rules (those are the Brand DNA's). */
+export function brainRules(b: Brain): BrandRule[] {
+  const rules: BrandRule[] = [];
+  const imagery = brainImagery(b).slice(0, 6);
+  if (imagery.length)
+    rules.push({
+      id: "brain-imagery",
+      dimension: "imagery",
+      lookKey: null,
+      statement: sentence(`The brand's own pictures look like this: ${imagery.map((i) => i.what.trim().replace(/[.]$/, "").toLowerCase()).join("; ")}`),
+      binding: "soft",
+      epistemic: "known",
+      scope: "core",
+    });
+  const palette = brainPalette(b);
+  if (palette.length)
+    rules.push({
+      id: "brain-palette",
+      dimension: "colour",
+      lookKey: null,
+      statement: sentence(`Where the scene's own colours are free (props, cloth, a wall), they lean to the brand's ${palette.map((c) => `${c.name.toLowerCase()} ${c.hex.toUpperCase()}`).join(" and ")}, and never compete with the product`),
+      binding: "soft",
+      epistemic: "known",
+      scope: "core",
+    });
+  const market = b.market?.market?.trim();
+  if (market)
+    rules.push({ id: "brain-market", dimension: "setting", lookKey: null, statement: sentence(`The setting is believable for the brand's market, ${market}`), binding: "soft", epistemic: "known", scope: "core" });
+  for (const n of brainNotes(b).slice(0, 4))
+    rules.push({ id: `brain-${n.id}`, dimension: n.kind.toLowerCase(), lookKey: null, statement: sentence(n.what), binding: "soft", epistemic: "known", scope: "core" });
+  return rules;
+}
+
+/** What people asked to change in the brand's other creatives, and what experts said: lessons for this prompt. */
+export function brainLessons(b: Brain): Knowledge["lessons"] {
+  const changes = b.changes.slice(0, 4).map((c) => ({
+    id: `brain-${c.id}`,
+    statement: sentence(`${c.creative ? `On ${c.creative}, ` : ""}${c.from === "customer" ? "the customer" : "Fume"} asked to change: ${c.what}`),
+    polarity: "avoid" as const,
+    reason: c.cause ? sentence(c.cause) : "An earlier creative of this brand.",
+  }));
+  const checks = b.checks.filter((c) => c.state === "checked" || c.state === "correction").slice(0, 3).map((c) => ({
+    id: `brain-${c.id}`,
+    statement: sentence(c.what),
+    polarity: c.state === "checked" ? ("do" as const) : ("avoid" as const),
+    reason: `An expert's note on ${c.creative ?? "an earlier creative"}.`,
+  }));
+  return [...changes, ...checks];
 }
 
 export function buildConcept(task: EngineTask): Concept {
@@ -220,7 +299,7 @@ export function buildConcept(task: EngineTask): Concept {
 export function buildKnowledge(task: EngineTask): Knowledge {
   return {
     exemplars: task.exemplars.slice(0, 3).map((e) => ({ promptText: e.text })),
-    lessons: task.lessons.slice(0, 12),
+    lessons: [...task.lessons.slice(0, 12), ...brainLessons(task.brain ?? NO_BRAIN)],
     badFragments: [],
   };
 }

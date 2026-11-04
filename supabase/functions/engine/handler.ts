@@ -8,6 +8,7 @@ import {
   buildBrand,
   buildConcept,
   buildKnowledge,
+  buildLedger,
   buildProduct,
   checklist,
   type Composer,
@@ -323,6 +324,8 @@ async function attempt(t: Taken, deps: Deps): Promise<RunOutcome> {
         attempts: result.attempts,
         calls,
         llm_usd: llmUsd(),
+        // What of the brand's data went into this prompt, how it was checked there, and why the rest was left out.
+        ledger: buildLedger(task, result.compilePackage, result.attempts.at(-1)?.decisions ?? []),
       };
     await deps.service.prompted(attemptId, record);
     recorded = true;

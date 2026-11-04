@@ -74,6 +74,11 @@ begin
     and exists (select 1 from jsonb_array_elements(t #> '{products,0,pictures}') x where x ->> 'slot' = 'back' and x ->> 'url' = 'https://lysne.example/oil-back.png'),
     'it carries the product, its frozen facts, its picture file and the picture from its website');
   perform test.ok(t -> 'master' = 'null'::jsonb and t #>> '{brand,name}' is not null, 'a master is made from no earlier picture');
+  perform test.ok(jsonb_typeof(t #> '{brain,palette}') = 'array' and jsonb_typeof(t #> '{brain,imagery}') = 'array'
+    and jsonb_typeof(t #> '{brain,changes}') = 'array' and t #>> '{brain,market,market}' is not null,
+    'it carries what the Brand Brain knows about the brand''s pictures');
+  perform test.ok(not exists (select 1 from jsonb_array_elements(t #> '{brain,palette}') c where c ->> 'id' is null or c ->> 'hex' !~* '^#[0-9a-f]{6}$'),
+    'every colour keeps its node and its hex');
 end $$;
 
 -- A prompt that did not pass fails the attempt and the job; a person looks at it.
@@ -81,6 +86,7 @@ select public.engine_prompted(test.id('ea2'), '{"hash":"h1","status":"escalated"
 select test.ok((select state = 'failed' and error like 'The prompt did not pass Fume''s checks: The prompt works against%'
   from public.production_jobs where id = test.id('ej')), 'a prompt that does not pass fails the job with its finding');
 select test.ok((select llm_usd = 0.002 from public.engine_prompts where attempt_id = test.id('ea2')), 'the prompt keeps what its checks cost');
+select test.ok((select ledger = '[]'::jsonb from public.engine_prompts where attempt_id = test.id('ea2')), 'a prompt without a ledger keeps an empty one');
 
 -- Render again: the same job, queued, and this time the picture comes.
 set role authenticated;
@@ -88,7 +94,8 @@ select test.act('marcus@fumecreatives.com');
 select test.ok((public.render_creative(test.id('em')) ->> 'id')::uuid = test.id('ej'), 'Render again queues the same job');
 reset role;
 select test.keep('ea3', (public.engine_take(test.id('ej')) #>> '{run,attempt_id}')::uuid);
-select public.engine_prompted(test.id('ea3'), '{"hash":"h2","status":"validated","image_model":"nano-banana-pro","text":"The first picture is the product itself.","llm_usd":0.003}');
+select public.engine_prompted(test.id('ea3'), '{"hash":"h2","status":"validated","image_model":"nano-banana-pro","text":"The first picture is the product itself.","llm_usd":0.003,"ledger":[{"ref":"f1","source":"product_fact","what":"Bottle","used":true,"how":"verbatim"}]}');
+select test.ok((select ledger #>> '{0,ref}' = 'f1' from public.engine_prompts where attempt_id = test.id('ea3')), 'the prompt keeps its ledger');
 select public.engine_submitted(test.id('ea3'), 'higgsfield', 'hf-req-1', '{"prompt":"The first picture is the product itself."}');
 select test.ok((public.engine_take(test.id('ej')) #>> '{collect,provider_job_id}') = 'hf-req-1', 'a submitted attempt comes back to be collected');
 insert into storage.objects (bucket_id, name, owner_id) values ('workspace-files', test.id('lysne') || '/engine/e1.png', null);

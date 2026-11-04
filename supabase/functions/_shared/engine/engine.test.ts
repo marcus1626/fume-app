@@ -5,6 +5,7 @@ import {
   buildCompilePackage,
   buildConcept,
   buildKnowledge,
+  buildLedger,
   buildProduct,
   CAMPAIGN_STILL_V1,
   classifyFindings,
@@ -14,6 +15,7 @@ import {
   type EngineTask,
   formatOf,
   GRAMMARS,
+  ledgerSummary,
   lint,
   lintText,
   type MachineInput,
@@ -242,4 +244,62 @@ Deno.test("a product with no verified description is escalated before any paid c
   assertEquals(composed, 0);
   assertEquals(CAMPAIGN_STILL_V1.slots.length, 7);
   assertEquals(NO_KNOWLEDGE.lessons.length, 0);
+});
+
+const brain = {
+  market: { market: "Norway", language: "nb" },
+  palette: [
+    { id: "c1", name: "Red", hex: "#c83232", role: "primary", confidence: "high", confirmed: true },
+    { id: "c2", name: "Black", hex: "#000000", role: "text", confidence: "high", confirmed: true },
+    { id: "c3", name: "Teal", hex: "#108474", role: "support", confidence: "low", confirmed: true },
+  ],
+  imagery: [
+    { id: "i1", what: "Low side light on stone", confirmed: true },
+    { id: "i2", what: "A picture from the site", confirmed: true },
+    { id: "i3", what: "Water light on linen", confirmed: false },
+  ],
+  notes: [
+    { id: "n1", layer: "identity", kind: "look", what: "Never a studio sweep behind the bag", confirmed: true },
+    { id: "n2", layer: "market", kind: "audience", what: "Home brewers in their thirties", confirmed: true },
+  ],
+  changes: [{ id: "ch1", what: "The label is blurred", cause: "correction", from: "customer", creative: "Master 2" }],
+  checks: [{ id: "x1", what: "Steam reads as smoke", state: "correction", creative: "Master 3" }],
+};
+
+Deno.test("the Brand Brain's look, palette, market and picture notes become soft rules; its history becomes lessons", () => {
+  const t: EngineTask = { ...task, brain };
+  const rules = buildBrand(t, "a").rules;
+  const byId = new Map(rules.map((r) => [r.id, r]));
+  assertMatch(byId.get("brain-imagery")!.statement, /low side light on stone\./);
+  assert(!byId.get("brain-imagery")!.statement.includes("site"), "a caption that only says where it came from is left out");
+  assert(!byId.get("brain-imagery")!.statement.includes("linen"), "a proposed picture is left out");
+  assertMatch(byId.get("brain-palette")!.statement, /red #C83232/);
+  assert(!byId.get("brain-palette")!.statement.includes("#000000"), "a text colour is for layouts");
+  assert(!byId.get("brain-palette")!.statement.includes("#108474"), "an unsure colour is left out");
+  assertMatch(byId.get("brain-market")!.statement, /Norway/);
+  assert(byId.has("brain-n1") && !byId.has("brain-n2"), "only notes about the picture");
+  assert([...byId.keys()].filter((k) => k.startsWith("brain-")).every((k) => byId.get(k)!.binding === "soft"));
+  const lessons = buildKnowledge(t).lessons;
+  assertEquals(lessons.map((l) => [l.id, l.polarity]), [["brain-ch1", "avoid"], ["brain-x1", "avoid"]]);
+  assertMatch(lessons[0].statement, /On Master 2, the customer asked to change: The label is blurred\./);
+});
+
+Deno.test("the ledger says what of the brand's data went into the prompt, how it was checked, and why the rest did not", () => {
+  const t: EngineTask = { ...task, brain, lessons: [{ id: "l1", statement: "Keep the bag upright", polarity: "do", reason: "said" }] };
+  const { compilePackage } = buildCompilePackage({ ...inputOf(t), grammar: CAMPAIGN_STILL_V1, dialect: DIALECTS[0] });
+  const decisions = compilePackage.manifest.map((m) => ({ key: m.id, kind: "coverage" as const, itemId: m.id, via: m.check === "code" ? "code" as const : "decision" as const, probability: 1, passed: m.id !== "brand-brain-palette" }));
+  const ledger = buildLedger(t, compilePackage, decisions);
+  const of = (ref: string) => ledger.find((e) => e.ref === ref)!;
+  assertEquals([of("f1").used, of("f1").how, of("f1").passed], [true, "verbatim", true]);
+  assertEquals([of("f3").used, of("f3").how], [true, "meaning"]);
+  assertEquals([of("f4").used, of("f4").why], [false, "Not verified yet."]);
+  assertMatch(of("f5").why!, /claim fact is for the words/);
+  assertMatch(of("r2").why!, /voice rule is for the words/);
+  assertEquals([of("r1").used, of("r1").how], [true, "meaning"]);
+  assertEquals([of("taste-warmth").used, of("taste-detail").used], [true, false]);
+  assertEquals([of("i1").used, of("i2").used, of("i3").used], [true, false, false]);
+  assertEquals([of("c1").used, of("c1").passed, of("c2").used], [true, false, false]);
+  assertEquals([of("market").used, of("n1").used, of("n2").used], [true, true, false]);
+  assertEquals([of("l1").used, of("ch1").used, of("x1").used], [true, true, true]);
+  assertEquals(ledgerSummary(ledger).missing, ["c1"]);
 });
