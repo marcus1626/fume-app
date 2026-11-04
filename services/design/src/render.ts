@@ -29,10 +29,29 @@ export function start(opts: { fonts?: FontSource; online?: boolean } = {}) {
     const ck = await initCanvasKit();
     const renderer = new SkiaRenderer(ck, ck.MakeSurface(1, 1)!);
     await renderer.loadFonts();
+    measurer = renderer;
     installTextMeasurer((node, maxWidth) => renderer.measureTextNode(node, maxWidth));
     return { ck, renderer, io: new IORegistry(BUILTIN_IO_FORMATS) };
   })();
   return engine;
+}
+
+let measurer: SkiaRenderer | null = null;
+
+/**
+ * The words in a laid-out text that are wider than its box, so the renderer broke them inside the word
+ * ("FLANELLS / KJORTER"). A brand never splits a word; a layout that does is not one to use.
+ */
+export function splitWords(doc: Doc, name: string): string[] {
+  const id = doc.ids.get(name);
+  const node = id ? doc.graph.getNode(id) : null;
+  if (!measurer || !node || node.type !== "TEXT" || !node.text || !node.width) return [];
+  const out: string[] = [];
+  for (const word of new Set(node.text.split(/\s+/).filter(Boolean))) {
+    const m = measurer.measureTextNode({ ...node, text: word } as typeof node, 1e6);
+    if (m && m.width > node.width + 1) out.push(word);
+  }
+  return out;
 }
 
 const loaded = new Map<string, Promise<boolean>>();

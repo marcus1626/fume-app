@@ -5,7 +5,7 @@
 import { type DesignBook, type Format, type Grid, type Style, colourOf, componentOf, gridOf, headlineSteps, signatureOf, styleOf } from "./book.ts";
 import { type Band, type Composed, type FamilyFor, type Ground, type Layout, type Words, compose, shadeFill, shadeFor } from "./compose.ts";
 import { type Box, type Pixels, type Shade, contrast, luminance, overlap, rgbOf, under } from "./pixels.ts";
-import { type Doc, boxOf, build, fig, capHeightOf, hasFont, pixelsOf, place, png } from "./render.ts";
+import { type Doc, boxOf, build, fig, capHeightOf, hasFont, pixelsOf, place, png, splitWords } from "./render.ts";
 import { type Logo, type Where, CORNERS, cornersFor, logoOf } from "./logo.ts";
 
 export interface Ask {
@@ -299,6 +299,11 @@ export function measure(
   }
   if (boxes.Action && overlap(boxes.Action, words) > 0) {
     checks.push({ check: "fits", node: "CTA", ok: false, hard: true, note: "The call to action runs into the words." });
+  }
+  for (const n of ["Headline", "Subline", "CTA words"]) {
+    const split = splitWords(doc, n);
+    if (split.length)
+      checks.push({ check: "fits", node: n === "CTA words" ? "CTA" : n, ok: false, hard: true, note: `Breaks inside a word: ${split.join(", ")}.` });
   }
   const tall = c.grid.h > c.grid.w * 1.5;
   for (const [n, style, most] of [

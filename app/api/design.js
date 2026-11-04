@@ -324,10 +324,23 @@ function start(opts = {}) {
     const ck = await initCanvasKit();
     const renderer = new SkiaRenderer(ck, ck.MakeSurface(1, 1));
     await renderer.loadFonts();
+    measurer = renderer;
     installTextMeasurer((node, maxWidth) => renderer.measureTextNode(node, maxWidth));
     return { ck, renderer, io: new IORegistry(BUILTIN_IO_FORMATS) };
   })();
   return engine;
+}
+var measurer = null;
+function splitWords(doc, name) {
+  const id = doc.ids.get(name);
+  const node = id ? doc.graph.getNode(id) : null;
+  if (!measurer || !node || node.type !== "TEXT" || !node.text || !node.width) return [];
+  const out = [];
+  for (const word of new Set(node.text.split(/\s+/).filter(Boolean))) {
+    const m = measurer.measureTextNode({ ...node, text: word }, 1e6);
+    if (m && m.width > node.width + 1) out.push(word);
+  }
+  return out;
 }
 var loaded = /* @__PURE__ */ new Map();
 function hasFont(family, weight) {
@@ -756,6 +769,11 @@ function measure(doc, c, l, book, p, keep, logo = null) {
   }
   if (boxes.Action && overlap(boxes.Action, words) > 0) {
     checks.push({ check: "fits", node: "CTA", ok: false, hard: true, note: "The call to action runs into the words." });
+  }
+  for (const n of ["Headline", "Subline", "CTA words"]) {
+    const split = splitWords(doc, n);
+    if (split.length)
+      checks.push({ check: "fits", node: n === "CTA words" ? "CTA" : n, ok: false, hard: true, note: `Breaks inside a word: ${split.join(", ")}.` });
   }
   const tall = c.grid.h > c.grid.w * 1.5;
   for (const [n, style, most] of [
