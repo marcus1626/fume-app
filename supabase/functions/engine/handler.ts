@@ -16,6 +16,7 @@ import {
   type EngineTask,
   type Evaluation,
   formatOf,
+  FORMATS,
   GRAMMARS,
   type Looked,
   type MachineResult,
@@ -120,12 +121,21 @@ async function signTask(t: Taken, deps: Deps): Promise<EngineTask> {
   };
 }
 
+const isFormat = (t: Partial<Pick<Taken, "run" | "creative" | "master">>) =>
+  t.run?.kind === "format" && Boolean(t.master) && Boolean(t.creative);
+
 /** What must change and stay in a correction, and what the designer asked: held to the prompt like any rule. */
-export function enforcedOf(t: Pick<Taken, "change">): { id: string; statement: string }[] {
-  if (!t.change) return [];
+export function enforcedOf(t: Pick<Taken, "change"> & Partial<Pick<Taken, "run" | "creative" | "master">>): { id: string; statement: string }[] {
   const out: { id: string; statement: string }[] = [];
-  if (t.change.ask?.trim()) out.push({ id: "ask", statement: `The designer asks for this change: ${t.change.ask.trim().replace(/[.!?]*$/, ".")}` });
-  if (t.change.direction?.trim() && !t.change.ask?.trim())
+  const said = t.change?.ask?.trim().replace(/[.!?]*$/, ".");
+  // A format is the approved master in another shape: the same picture, recomposed where the frame changes.
+  const format = isFormat(t)
+    ? `Make the first picture in the ${t.creative!.format} format, ${(FORMATS[t.creative!.format] ?? FORMATS.feed).aspectRatio}: extend or recompose the scene where the frame changes, and keep the product whole and exactly as it is.`
+    : null;
+  if (format || said)
+    out.push({ id: "ask", statement: [format, said && `The designer asks for this change: ${said}`].filter(Boolean).join(" ") });
+  if (!t.change) return out;
+  if (t.change.direction?.trim() && !said)
     out.push({ id: "direction", statement: `The designer's direction for the picture: ${t.change.direction.trim().replace(/[.!?]*$/, ".")}` });
   if (t.change.problem?.trim()) out.push({ id: "change", statement: `Fix this: ${t.change.problem.trim()}` });
   (t.change.must_change ?? []).forEach((x, i) => out.push({ id: `change-${i + 1}`, statement: `Change ${x}.` }));
@@ -279,8 +289,9 @@ async function attempt(t: Taken, deps: Deps): Promise<RunOutcome> {
   try {
     await digestAnswers(t, deps);
     const task = await signTask(t, deps);
-    // Words on a picture already made change that picture; everything else is a new campaign still.
-    const target = { imageType: t.master?.picked ? "picture_edit" : "campaign_still", imageModel: t.run.image_model };
+    // Words on a picture already made change that picture, and a format reshapes its master; everything else is a new
+    // campaign still.
+    const target = { imageType: t.master?.picked || isFormat(t) ? "picture_edit" : "campaign_still", imageModel: t.run.image_model };
     const method = selectMethod(target);
     const maxReferences = method.method === "compose" ? method.dialect.maxReferences : 3;
     const concept = buildConcept(task);

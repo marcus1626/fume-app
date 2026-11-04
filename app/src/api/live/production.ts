@@ -303,7 +303,7 @@ export async function readDocuments(
           placementId: desk.placements?.[f] ?? placements.find((p) => p.format === f)?.id ?? f,
           method: "native",
           engineChose: "native",
-          why: `Made by hand in its own creative, ${ch.title}, from the approved master.`,
+          why: `Made in its own creative, ${ch.title}, from the approved master: the Engine renders it, or a designer adds it by hand.`,
           state: made ? "done" : "waiting",
           ...(image ? { image } : {}),
         };
@@ -389,7 +389,7 @@ export function productionCalls(live: Live): Pick<FumeApi, Calls> {
         if (!wanted.has(p.format)) wanted.set(p.format, p.id);
       }
       for (const [format, placementId] of wanted) {
-        await command("open_creative", {
+        const opened = await command<{ id: string }>("open_creative", {
           p_campaign_id: creative.campaign_id,
           p_slot: null,
           p_kind: "format",
@@ -399,6 +399,17 @@ export function productionCalls(live: Live): Pick<FumeApi, Calls> {
           p_key: requestKey(),
         });
         desk.placements = { ...desk.placements, [format]: placementId };
+        // The Engine makes the format from the approved master; when it cannot yet (no approval, the week's budget),
+        // the format waits to be rendered or made by hand in its own creative.
+        try {
+          const job = await command<{ id: string }>("render_creative", {
+            p_creative_id: opened.id,
+            p_key: requestKey(),
+          });
+          void askEngine(job.id, true);
+        } catch {
+          // Made later, from its own creative.
+        }
       }
       return (await readDocument(live, creative.id)).doc;
     },

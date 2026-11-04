@@ -32,6 +32,9 @@ design follows Marcus's five domains and the Fume Engine prototype (Oct 2026), p
    scene and the look are the picture's own, so only hard rules and the product's facts are written again); without
    one, the Direction goes into a new campaign still. A plain Render sends the Direction. The job keeps the words
    (`production_jobs.direction`), and its tries count from the Render that queued it (`tries_from`).
+   **Make formats**: each new format creative is rendered by the Engine at once, from the approved master, with the
+   same `picture_edit` grammar (the master first, the new shape, the product whole). When it cannot render yet, the
+   format waits in its own creative as before.
 9. **The Engine looks at its picture** (`_shared/engine/evaluate.ts`). Right after a picture is kept, Claude Haiku
    sees the product's own photographs (at most three; never the master) and the picture, and answers for each item
    of the prompt's checklist whether the picture holds it, is off, or cannot be told, and names artefacts and
@@ -71,7 +74,7 @@ without making a picture.
 
 ## Not yet
 
-Make formats by the Engine and video. The Engine bar reads every word into the Direction; reading words into the
+Video. The Engine bar reads every word into the Direction; reading words into the
 desk's own variables (light, angle, lens) is not built yet.
 The Studio's side is designed in app/FLOWS.md §29 (PROPOSED) and wired live (app/src/api/live/engine.ts):
 
