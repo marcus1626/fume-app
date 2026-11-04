@@ -44,6 +44,40 @@ design follows Marcus's five domains and the Fume Engine prototype (Oct 2026), p
    `engine_evaluated`. It helps the expert and never checks a picture in their place; customers never see it. About
    $0.0015 a picture, in the language model's week. A failure leaves the picture unevaluated.
 
+10. **The Brand Brain in the prompt** (`app.engine_brain`, `_shared/engine/context.ts`). `engine_take` hands over
+   what the brand's knowledge graph knows about its pictures: the palette, the brand's own pictures in words, notes
+   about the picture, the market, and what was asked to change in its other creatives and what experts noted. They
+   become soft rules (never hard: the Brand DNA's rules are the hard ones) and lessons the writer reads. Captions that
+   only say where a picture came from, text and ground colours, unsure colours and proposed nodes stay out.
+   Every prompt keeps a **ledger** (`_shared/engine/ledger.ts`, `engine_prompts.ledger`): each product fact, rule,
+   taste word, brain node, lesson and picture the Engine had, whether it went in, how it was checked (word for word
+   by code, or by meaning) and whether the check found it, or why it was left out.
+11. **The prompt graph** (`app.engine_prompt_rows`, `public.engine_learning`). Every validated prompt with what it
+   was built from (the model's rules, the kinds of brand rule and lesson, the kinds of data the ledger says went in,
+   the number of pictures) and its best picture's score: people's verdicts first (approved 1.0, checked 0.8, Yes
+   0.7, taken as a version 0.6, a correction or change 0.2, No 0), else the picture check (0.5 pass, 0.25 a brand
+   rule or major artefacts, 0.1 the product). `engine_learning` gives the numbers per model and kind of picture and
+   per feature with and without it, with how many prompts each rests on: for Fume's people on a brand, and across
+   brands (how models behave only) for Fume's admins. Customers never read it.
+
+12. **The picture check as findings** (`app.engine_findings`). What the vision model saw becomes automated findings
+   on the version made from the picture (when the version is made, or when the check finishes after it): the product
+   off (major) or not judgeable (minor), a hard rule off (major), a soft rule or the scene off (minor), each artefact,
+   and printed words nobody asked for (major), with what was expected and what was seen. None is critical: a
+   machine's reading never blocks a check on its own; the expert decides. Customers never read them.
+
+13. **A composition reference** (`engine_take` → `composition`). The campaign moodboard's newest liked picture (else
+   its newest one not disliked) goes to the model after at least one of the product's own pictures, with its role
+   said plainly: framing, camera angle, light and mood only, never its objects, products, people, words or brand.
+   The product's photographs stay the only truth about the product, and the picture check never compares the
+   product with it. Not for a change to a picture, a correction, a variant or a format.
+
+14. **The Engine chooses how to write** (`_shared/engine/learn.ts`). Where a model's dialect has two ways of writing
+   the same prompt (rules with the same `choice`: a tight or a full brief, the light early or late), `engine_take`
+   hands over how each did for that model (the prompt graph's newest 500 scored prompts, every brand: how a model
+   reads a prompt is the model's) and Thompson sampling draws one: with no evidence both are tried about as often;
+   as evidence grows the better one wins nearly always, and the other is still tried now and then.
+
 ## Money
 
 - The language model's week (`llm_week_usd`, $50) counts the plan writer, the chat, the Engine's prompts, digesting
@@ -74,8 +108,9 @@ without making a picture.
 
 ## Not yet
 
-Video. The Engine bar reads every word into the Direction; reading words into the
-desk's own variables (light, angle, lens) is not built yet.
+Statics and graphic design come before video (Marcus, 4 Nov). Not built yet: a fixed test set, and graphic design
+(OpenPencil). The Engine bar reads every word into the Direction; reading words into the desk's own variables
+(light, angle, lens) is not built yet.
 The Studio's side is designed in app/FLOWS.md §29 (PROPOSED) and wired live (app/src/api/live/engine.ts):
 
 - A failed Engine job is a version with state `failed` and `failure` (one sentence, for everyone on the desk); Render

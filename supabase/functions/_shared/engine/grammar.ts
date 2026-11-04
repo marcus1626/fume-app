@@ -39,6 +39,12 @@ const common = (prefix: string) => [
   { id: `${prefix}-first`, text: "Introduce the product photograph first: the first reference sets the base of the picture.", status: "seeded" as const, sourceUrl: null },
   { id: `${prefix}-ratio`, text: "The aspect ratio is a request field; never rely on a reference picture's shape.", status: "seeded" as const, sourceUrl: null },
   { id: `${prefix}-short-no`, text: "Keep exclusions few and plain: long lists of what to avoid trigger refusals.", status: "seeded" as const, sourceUrl: null },
+  // Choices: two ways of writing the same prompt. The Engine tries both and moves to the one whose pictures do better
+  // (learn.ts); the prompt graph counts them as dialect features.
+  { id: `${prefix}-length-tight`, choice: "length", text: "Keep the prompt tight: about 120 to 180 words, every sentence about something the camera sees.", status: "seeded" as const, sourceUrl: null },
+  { id: `${prefix}-length-full`, choice: "length", text: "Write a full photographer's brief of about 220 to 320 words: the scene, the light, the materials and the composition each in their own sentences.", status: "seeded" as const, sourceUrl: null },
+  { id: `${prefix}-light-first`, choice: "light", text: "Describe the light right after the scene, before the props and the palette: the light carries the mood.", status: "seeded" as const, sourceUrl: null },
+  { id: `${prefix}-light-late`, choice: "light", text: "Describe the scene and its objects first, then the light, then the palette.", status: "seeded" as const, sourceUrl: null },
 ];
 
 export const DIALECTS: Dialect[] = [

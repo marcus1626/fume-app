@@ -15,7 +15,14 @@ export type SlotDef = {
 
 export type Grammar = { imageType: string; version: number; slots: SlotDef[] };
 
-export type DialectRule = { id: string; text: string; status: "seeded" | "measured" | "retired"; sourceUrl: string | null };
+export type DialectRule = {
+  id: string;
+  text: string;
+  status: "seeded" | "measured" | "retired";
+  sourceUrl: string | null;
+  /** Rules with the same choice are ways of saying one thing: the Engine uses one, picked from how each has done. */
+  choice?: string;
+};
 
 /** How one image model is best instructed. */
 export type Dialect = {

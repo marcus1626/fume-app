@@ -10,7 +10,10 @@ export type Evaluation = {
   artefacts: "none" | "minor" | "major";
   notes: string[];
   evaluated: true;
-  items: { item: string; area: "product" | "brand" | "scene"; verdict: "holds" | "off" | "unclear"; note?: string }[];
+  items: { item: string; area: "product" | "brand" | "scene"; verdict: "holds" | "off" | "unclear"; note?: string; hard?: boolean }[];
+  /** What the model named as artefacts, and whether it saw printed words nobody asked for: findings on the version. */
+  artefactNotes?: string[];
+  printedText?: boolean;
 };
 
 /** What the vision model answers. */
@@ -69,7 +72,7 @@ export function toEvaluation(checks: Check[], looked: Looked): Evaluation {
   const items = checks.map((c) => {
     const a = looked.answers.find((x) => x.n === c.n);
     const verdict = a?.verdict ?? "unclear";
-    return { item: c.requirement, area: c.area, verdict, ...(a?.note && verdict !== "holds" ? { note: a.note } : {}) };
+    return { item: c.requirement, area: c.area, verdict, ...(a?.note && verdict !== "holds" ? { note: a.note } : {}), ...(c.hard ? { hard: true } : {}) };
   });
   const product = items.filter((i) => i.area === "product");
   const brandOff = checks.filter((c, i) => c.area === "brand" && c.hard && items[i].verdict === "off");
@@ -91,5 +94,7 @@ export function toEvaluation(checks: Check[], looked: Looked): Evaluation {
     notes: [...new Set(notes)].slice(0, 8),
     evaluated: true,
     items,
+    artefactNotes: looked.artefactNotes.slice(0, 6),
+    printedText: looked.printedText,
   };
 }
