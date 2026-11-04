@@ -15,6 +15,8 @@ export interface ImageProvider {
   priceCents(imageModel: string): number;
   submit(request: ProviderRequest): Promise<Submitted>;
   collect(providerJobId: string): Promise<Collected>;
+  /** Checks the key and lists what the provider offers, without making a picture (no credits). */
+  probe?(): Promise<unknown>;
 }
 
 const BASE = "https://api.higgsfield.ai";
@@ -37,7 +39,20 @@ export function higgsfield(
 ): ImageProvider {
   const endpoints = { ...HIGGSFIELD_ENDPOINTS, ...opts.endpoints };
   const go = opts.fetch ?? fetch;
-  const headers = { Authorization: `Key ${credentials}`, "Content-Type": "application/json", Accept: "application/json" };
+  // A key made as "key id:key secret" is sent as Key; a single API key is tried as Key, then as Bearer, and the one
+  // Higgsfield accepts is kept.
+  const schemes = credentials.includes(":") ? ["Key"] : ["Key", "Bearer"];
+  let scheme = 0;
+  const headersOf = (i: number) => ({ Authorization: `${schemes[i]} ${credentials}`, "Content-Type": "application/json", Accept: "application/json" });
+  async function call(url: string, init: RequestInit = {}): Promise<Response> {
+    let res = await go(url, { ...init, headers: headersOf(scheme) });
+    while (res.status === 401 && scheme < schemes.length - 1) {
+      scheme++;
+      res = await go(url, { ...init, headers: headersOf(scheme) });
+    }
+    return res;
+  }
+  const clean = (t: string) => t.replaceAll(credentials, "[key]").slice(0, 1500);
   const failure = (status: number, text: string) => ({
     error: status === 401 ? "Higgsfield refused Fume's key." : status === 403 ? "Higgsfield has no credits left for Fume."
       : `Higgsfield answered ${status}: ${text.slice(0, 300)}`,
@@ -56,18 +71,18 @@ export function higgsfield(
       if (r.referenceUrls.length)
         body.input_images = r.referenceUrls.map((image_url) => ({ type: "image_url", image_url }));
       const path = r.referenceUrls.length ? endpoint.references : endpoint.text;
-      const res = await go(`${BASE}/${path}`, { method: "POST", headers, body: JSON.stringify(body) });
+      const res = await call(`${BASE}/${path}`, { method: "POST", body: JSON.stringify(body) });
       const text = await res.text();
       if (!res.ok) return { ok: false, ...failure(res.status, text) };
       const id = (JSON.parse(text) as { request_id?: string }).request_id;
       return id ? { ok: true, providerJobId: id } : { ok: false, error: "Higgsfield gave no request id.", final: false };
     },
     async collect(id) {
-      const res = await go(`${BASE}/requests/${encodeURIComponent(id)}/status`, { headers });
+      const res = await call(`${BASE}/requests/${encodeURIComponent(id)}/status`);
       const text = await res.text();
       if (!res.ok) {
         const f = failure(res.status, text);
-        return res.status >= 500 ? { state: "waiting" } : { state: "failed", ...f, response: text.slice(0, 2000) };
+        return res.status >= 500 ? { state: "waiting" } : { state: "failed", ...f, response: clean(text) };
       }
       const r = JSON.parse(text) as { status?: string; images?: { url: string }[]; error?: string };
       if (r.status === "completed") {
@@ -79,6 +94,18 @@ export function higgsfield(
       if (r.status === "nsfw") return { state: "failed", error: "The image model refused the picture as unsafe.", final: false, response: r };
       if (r.status === "failed") return { state: "failed", error: r.error ?? "The image model failed.", final: false, response: r };
       return { state: "waiting" };
+    },
+    async probe() {
+      const out: Record<string, unknown> = {};
+      for (const [i, s] of schemes.entries()) {
+        const r = await go(`${BASE}/requests/00000000-0000-4000-8000-000000000000/status`, { headers: headersOf(i) });
+        out[`status_${s}`] = { status: r.status, body: clean(await r.text()) };
+      }
+      for (const path of ["models", "v1/models", "v1/applications"]) {
+        const r = await call(`${BASE}/${path}`);
+        out[path] = { status: r.status, body: clean(await r.text()) };
+      }
+      return out;
     },
   };
 }

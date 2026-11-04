@@ -172,3 +172,18 @@ Deno.test("Higgsfield gets the prompt, the ratio and the pictures, with Fume's k
   assertEquals(await none.submit({ imageModel: "seedream-4", text: "x", referenceUrls: [], aspectRatio: "1:1", resolution: null, seed: null }),
     { ok: false, error: "Higgsfield has no credits left for Fume.", final: true });
 });
+
+Deno.test("a single API key is tried as Key, then as Bearer, and the accepted one is kept", async () => {
+  const auths: string[] = [];
+  const hf = higgsfield("single-key", {
+    fetch: (async (_url: string, init: RequestInit) => {
+      const a = (init.headers as Record<string, string>).Authorization;
+      auths.push(a);
+      return a.startsWith("Bearer") ? new Response(JSON.stringify({ request_id: "r9" })) : new Response("no", { status: 401 });
+    }) as typeof fetch,
+  });
+  const r = { imageModel: "seedream-4", text: "x", referenceUrls: [], aspectRatio: "1:1", resolution: null, seed: null };
+  assertEquals(await hf.submit(r), { ok: true, providerJobId: "r9" });
+  assertEquals(await hf.submit(r), { ok: true, providerJobId: "r9" });
+  assertEquals(auths, ["Key single-key", "Bearer single-key", "Bearer single-key"]);
+});
