@@ -95,3 +95,12 @@ Deno.test("no one reads a brand without signing in", async () => {
   });
   assertEquals(res.status, 403);
 });
+
+Deno.test("a video player's or a carousel's own face is never taken for the brand's", () => {
+  const css = `.vjs-control-bar .vjs-title{font-family:VideoJS} .video-js h1{font-family:VideoJS} .vjs-icon{font-family:VideoJS}
+    .vjs-a{font-family:VideoJS}.vjs-b{font-family:VideoJS}.vjs-c{font-family:VideoJS}
+    h1{font-family:"Helvetica Now Display",Helvetica,sans-serif} body{font-family:"Helvetica Now Text",Helvetica,sans-serif}
+    .slick-title{font-family:slick}`;
+  const r = readBrand([{ url: "https://shoe.test/", html: "<html><head><title>Shoe</title></head><body></body></html>", css }], "Shoe");
+  assertEquals(r.typefaces.map((t) => [t.name, t.role]), [["Helvetica Now Display", "display"], ["Helvetica Now Text", "body"]]);
+});

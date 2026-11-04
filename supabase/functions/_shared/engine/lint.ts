@@ -15,6 +15,15 @@ export const EQUIPMENT_TERMS = [
   "umbrella light", "diffusion panel",
 ];
 
+// The words that make a generated picture look generated: they say nothing a camera sees, and models answer them
+// with their average glossy picture (Marcus, 4 Nov 2026: "AI-slop").
+export const SLOP_TERMS = [
+  "stunning", "breathtaking", "hyperrealistic", "hyper-realistic", "hyper realistic", "ultra-detailed", "ultra detailed",
+  "highly detailed", "8k", "4k", "masterpiece", "award-winning", "award winning", "photorealistic", "photo-realistic",
+  "cinematic", "epic", "flawless", "high quality", "best quality", "professional photo", "trending on", "octane render",
+  "unreal engine", "dramatic lighting", "perfect lighting", "beautiful lighting", "vibrant colors", "vibrant colours",
+];
+
 const TEXT_REQUESTS: RegExp[] = [
   /\b(text|words?|lettering|caption|headline|slogan|tagline|typography)\s+(that\s+)?(reads?|says?|saying|reading|spells?|spelling)\b/i,
   /\b(sign|signage|label|banner|poster|placard)\s+(text\s+)?(that\s+)?(reads?|says?|saying|reading|spells?|spelling)\b/i,
@@ -50,6 +59,9 @@ export function lintText(text: string, slotKey: string, opts: { forbiddenTerms: 
   for (const term of EQUIPMENT_TERMS)
     if (containsTerm(text, term))
       findings.push({ code: "equipment_term", slotKey, message: `Names studio equipment ("${term}"); describe how the light falls instead.` });
+  for (const term of SLOP_TERMS)
+    if (containsTerm(text, term))
+      findings.push({ code: "slop_term", slotKey, message: `Uses the empty quality word "${term}"; say what the camera sees instead.` });
   const file = text.match(FILE_NAME);
   if (file) findings.push({ code: "file_name", slotKey, message: `Names a file ("${file[0]}"); refer to the pictures by what they show.` });
   for (const re of INERT_SYNTAX) {
@@ -73,6 +85,18 @@ export function lint(assembly: Assembly, pkg: CompilePackage, opts: { maxReferen
     // The approved product text may name what is printed on the product; only the written slots are held to this.
     const found = lintText(slot.text, slot.slotKey, { forbiddenTerms: pkg.forbiddenTerms });
     findings.push(...(locked ? found.filter((f) => f.code !== "text_request" && f.code !== "forbidden_term") : found));
+  }
+  // The camera slot names the photograph as it is made: a focal length, an aperture and the light's colour temperature.
+  const camera = assembly.slots.find((x) => x.slotKey === "camera");
+  if (camera) {
+    const missing = [
+      !/\b\d{2,3}(\s?|-)(mm|millimet(re|er)s?)\b/i.test(camera.text) && "the lens's focal length (written like 85 mm)",
+      !/\bf\/\s?\d/i.test(camera.text) && "the aperture (written like f/8)",
+      !/\b\d{1,2}[,.\s]?\d{3}\s?(k|kelvin)\b/i.test(camera.text) && "the light's colour temperature (written like 5200 K)",
+      !/\b(grain|grainy|clean digital|no grain)\b/i.test(camera.text) && "the grain",
+    ].filter(Boolean);
+    if (missing.length)
+      findings.push({ code: "camera_unspecified", slotKey: "camera", message: `The camera slot leaves out ${missing.join(", ")}.` });
   }
   const limit = Math.min(opts.maxReferences ?? DEFAULT_MAX_REFERENCES, pkg.dialect.maxReferences);
   if (pkg.references.length > limit)

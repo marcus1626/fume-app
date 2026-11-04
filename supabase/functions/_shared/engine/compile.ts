@@ -30,6 +30,9 @@ function normalise(value: unknown): unknown {
 export const canonicalJson = (value: unknown) => JSON.stringify(normalise(value));
 export const sha256Hex = (text: string) => createHash("sha256").update(text).digest("hex");
 
+/** The Look Book's dimensions (context.ts): how the photograph is made. */
+export const LOOK_DIMENSIONS = new Set(["camera", "light", "colour grade", "texture", "look recipe"]);
+
 const slug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 export function applicableRules(brand: BrandContext, lookKey: string | null): BrandRule[] {
@@ -44,8 +47,11 @@ export function buildManifest(input: {
   enforcedLessons: { id: string; statement: string }[];
   /** A change to a picture already made (picture_edit): its scene and look are the picture's own. */
   edit?: boolean;
+  /** The grammar has a slot for the photograph as it is made (campaign_still v2): the Look Book's rules go there. */
+  camera?: boolean;
 }): ManifestItem[] {
   const { product, brand, concept, format, edit } = input;
+  const hasCamera = Boolean(input.camera);
   const items: ManifestItem[] = [
     { id: "ref-text", kind: "reference_text_locked", refId: "lockedReferenceText", required: true, check: "code", requirement: "The approved reference description, word for word.", expected: product.lockedReferenceText, suggestedSlot: "references" },
     { id: "product-text", kind: "product_text_locked", refId: "lockedProductText", required: true, check: "code", requirement: "The approved product description, word for word.", expected: product.lockedProductText, suggestedSlot: "product" },
@@ -56,7 +62,7 @@ export function buildManifest(input: {
     items.push({ id: `colour-${slug(c.area)}`, kind: "product_colour", refId: `colours.${c.area}`, required: true, check: "code", requirement: `The ${c.area} is the colour ${c.valueHex}.`, expected: c.valueHex, suggestedSlot: "product" });
   for (const rule of applicableRules(brand, concept.lookKey)) {
     if (edit && rule.binding !== "hard") continue;
-    items.push({ id: `brand-${rule.id}`, kind: rule.binding === "hard" ? "brand_rule_hard" : "brand_rule_soft", refId: rule.id, required: rule.binding === "hard", check: "decision", requirement: rule.statement, suggestedSlot: edit ? "constraints" : rule.dimension === "people" ? "people" : "brand" });
+    items.push({ id: `brand-${rule.id}`, kind: rule.binding === "hard" ? "brand_rule_hard" : "brand_rule_soft", refId: rule.id, required: rule.binding === "hard", check: "decision", requirement: rule.statement, suggestedSlot: edit ? "constraints" : rule.dimension === "people" ? "people" : LOOK_DIMENSIONS.has(rule.dimension) && hasCamera ? "camera" : "brand" });
   }
   if (!edit)
     items.push({ id: "concept", kind: "concept", refId: concept.id, required: true, check: "decision", requirement: `The scene shows: ${concept.sceneIdea} The product's role: ${concept.productRole}.`, suggestedSlot: "scene" });
@@ -84,7 +90,11 @@ export function buildCompilePackage(input: CompileInput): { compilePackage: Comp
     target: input.target,
     grammar: input.grammar,
     dialect: input.dialect,
-    manifest: buildManifest({ ...input, edit: input.target.imageType === "picture_edit" }),
+    manifest: buildManifest({
+      ...input,
+      edit: input.target.imageType === "picture_edit",
+      camera: input.grammar.slots.some((s) => s.key === "camera"),
+    }),
     brandRules: input.brand.rules.filter((r) => r.lookKey === null || r.lookKey === input.concept.lookKey),
     lockedReferenceText: input.product.lockedReferenceText,
     lockedProductText: input.product.lockedProductText,

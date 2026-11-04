@@ -5,7 +5,12 @@ import { next } from "@vercel/functions";
 
 export default function middleware(request: Request) {
   // The logo in Fume's sign-in and invitation emails (supabase/templates) must load in any inbox.
-  if (new URL(request.url).pathname.startsWith("/email/")) return next();
+  const path = new URL(request.url).pathname;
+  if (path.startsWith("/email/")) return next();
+  // The design service is called by Fume's backend, not a browser. It holds no keys and does work only with a live
+  // signed link to a picture in Fume's own storage and signed links to store the result there, which only Fume's
+  // backend can make (services/design/src/handler.ts).
+  if (path === "/api/design") return next();
   const password = process.env.PREVIEW_PASSWORD;
   const given = passwordOf(request.headers.get("authorization"));
   if (password && given !== undefined && same(given, password)) return next();
