@@ -2,14 +2,26 @@
 // and the creative documents (production.ts reads them; ids are explained there: a document is a creative, a version
 // on its strip is a candidate picture). Render asks the Engine for the picture; a designer can also make it elsewhere
 // and add it to the creative with how it was made.
-import { FumeError, type FumeApi, type StudioCampaignRow, type User } from "../../contract";
+import {
+  FumeError,
+  type EngineRun,
+  type FumeApi,
+  type Generation,
+  type Id,
+  type StudioCampaignRow,
+  type User,
+} from "../../contract";
 import { placements } from "../../domain/placements";
 import { defaults, modes } from "../../mock/seed/studioModes";
 import type { Live } from "./context";
-import { readCampaigns } from "./map";
+import { readTaught, teach } from "./engine";
+import { CREATIVE, fileUrls, readCampaigns, type CreativeRow } from "./map";
 import {
   addManualVersion,
+  CANDIDATE,
   creativeMode,
+  manualEvaluation,
+  type CandidateRow,
   deskOf,
   readDocument,
   readDocuments,
@@ -37,7 +49,8 @@ type Calls =
   | "undoDocumentToCheck"
   | "setFormatTile"
   | "placements"
-  | "brandAssets";
+  | "brandAssets"
+  | "teachEngine";
 
 const NO_ENGINE = "The Engine does not change variables from words yet. Change them on the desk, then render.";
 /** How long Render waits for the Engine's outcome before it leaves the version rendering. */
@@ -87,13 +100,23 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
         ];
       });
     },
-    // One brand's page in the staff frame: its campaigns. Engine output, the queue, sessions and boards come with the
-    // Engine.
+    // One brand's page in the staff frame: its campaigns, and what the Engine made for them (one run per Engine job,
+    // its pictures as the run's versions). The queue, sessions and boards come later.
     async brandWorkspace(workspaceId) {
       const workspace = (await live.workspaces()).find((w) => w.id === workspaceId);
       if (!workspace) throw new FumeError("not_found", "No such brand.");
       const campaigns = (await calls.studioCampaigns()).filter((r) => r.workspace.id === workspaceId);
-      return { workspace, campaigns, engineOutput: [], queue: [], sessions: [], boards: [] };
+      const engineOutput = await readEngineOutput(
+        workspaceId,
+        new Map(campaigns.map((r) => [r.campaign.id, r.campaign])),
+      );
+      return { workspace, campaigns, engineOutput, queue: [], sessions: [], boards: [] };
+    },
+    // A person's Yes or No on one of the Engine's pictures: Fume's own people only (teach_engine says so too).
+    async teachEngine(input) {
+      const me = await live.me();
+      if (!me.staffRole || me.agency) throw new FumeError("forbidden", "Only Fume's own team teaches the Engine.");
+      await teach(input);
     },
     // The places a creative is made for: one list for every brand.
     async placements() {
@@ -126,7 +149,10 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
       if (mode && mode.output !== "creative")
         throw new FumeError("unavailable", `${mode.name} is made with the Engine, which is not part of this version.`);
       let id: string;
-      if (input.creativeId) id = (await readDocument(live, input.creativeId)).doc.id;
+      // One of the Engine's pictures opens the creative it was made for.
+      const from = input.fromGenerationId ? await creativeOfCandidate(input.fromGenerationId) : undefined;
+      const creativeId = input.creativeId ?? from;
+      if (creativeId) id = (await readDocument(live, creativeId)).doc.id;
       else {
         if (!input.campaignId)
           throw new FumeError(
@@ -235,4 +261,114 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
     },
   };
   return calls;
+}
+
+interface EngineJobRow {
+  id: string;
+  campaign_id: string;
+  creative_id: string | null;
+  kind: "master" | "variant" | "format" | "correction";
+  state: "queued" | "running" | "succeeded" | "failed" | "cancelled" | "unknown";
+  created_at: string;
+}
+const PURPOSE: Record<EngineJobRow["kind"], EngineRun["purpose"]> = {
+  master: "masters",
+  variant: "variants",
+  format: "variants",
+  correction: "correction",
+};
+const RUN_STATE: Record<EngineJobRow["state"], EngineRun["state"]> = {
+  queued: "queued",
+  running: "running",
+  unknown: "running",
+  succeeded: "done",
+  failed: "failed",
+  cancelled: "failed",
+};
+
+/** What the Engine made for a brand: one run per Engine job, newest first, with its pictures and who answered them. */
+async function readEngineOutput(
+  workspaceId: Id,
+  campaigns: Map<Id, StudioCampaignRow["campaign"]>,
+): Promise<{ run: EngineRun; campaign: StudioCampaignRow["campaign"]; generations: Generation[] }[]> {
+  const jobs = await rows<EngineJobRow>(
+    supabase()
+      .from("production_jobs")
+      .select("id, campaign_id, creative_id, kind, state, created_at")
+      .eq("workspace_id", workspaceId)
+      .eq("mode", "engine")
+      .order("created_at", { ascending: false }),
+  );
+  const mine = jobs.filter((j) => campaigns.has(j.campaign_id));
+  if (!mine.length) return [];
+  const creativeIds = [...new Set(mine.flatMap((j) => (j.creative_id ? [j.creative_id] : [])))];
+  const [candidates, creatives, sent] = await Promise.all([
+    rows<CandidateRow>(
+      supabase()
+        .from("candidates")
+        .select(CANDIDATE)
+        .in(
+          "job_id",
+          mine.map((j) => j.id),
+        )
+        .eq("origin", "engine")
+        .order("created_at"),
+    ),
+    creativeIds.length
+      ? rows<CreativeRow>(supabase().from("creatives").select(CREATIVE).in("id", creativeIds))
+      : Promise.resolve([]),
+    rows<{ candidate_id: string | null }>(
+      supabase().from("creative_versions").select("candidate_id").eq("workspace_id", workspaceId),
+    ),
+  ]);
+  const [files, taught] = await Promise.all([
+    fileUrls(candidates.map((c) => c.file_id)),
+    readTaught(candidates.map((c) => c.id)),
+  ]);
+  const inCheck = new Set(sent.flatMap((v) => (v.candidate_id ? [v.candidate_id] : [])));
+  return mine.map((j) => {
+    const campaign = campaigns.get(j.campaign_id)!;
+    const creative = creatives.find((c) => c.id === j.creative_id);
+    const format = toFormat(creative?.format ?? "feed");
+    const generations = candidates
+      .filter((c) => c.job_id === j.id)
+      .map((c): Generation => {
+        const answer = taught.get(c.id);
+        return {
+          id: c.id,
+          sessionId: j.creative_id ?? j.id,
+          branch: 1,
+          image: files.get(c.file_id)?.url ?? "",
+          recipe: { mode: "free", castIds: [], references: [], format, count: 1 },
+          evaluation: manualEvaluation(c),
+          cost: 0,
+          state: inCheck.has(c.id) ? "sent_to_check" : "candidate",
+          at: c.created_at,
+          ...(answer ? { taught: answer } : {}),
+        };
+      });
+    const run: EngineRun = {
+      id: j.id,
+      campaignId: j.campaign_id,
+      purpose: PURPOSE[j.kind],
+      state: RUN_STATE[j.state],
+      steps: [],
+      made: generations.length,
+      total: Math.max(1, generations.length),
+      startedAt: j.created_at,
+      previews: generations.map((g) => g.image).filter(Boolean),
+    };
+    return { run, campaign, generations };
+  });
+}
+
+/** The creative one of the Engine's pictures was made for, if it is a picture this person can see. */
+async function creativeOfCandidate(candidateId: Id): Promise<Id | undefined> {
+  if (!/^[0-9a-f-]{36}$/i.test(candidateId)) return undefined;
+  const found = await rows<{ job_id: string }>(supabase().from("candidates").select("job_id").eq("id", candidateId));
+  if (!found[0]) return undefined;
+  const job = await rows<{ creative_id: string | null }>(
+    supabase().from("production_jobs").select("creative_id").eq("id", found[0].job_id),
+  );
+  return job[0]?.creative_id ?? undefined;
 }

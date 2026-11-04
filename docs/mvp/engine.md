@@ -53,8 +53,12 @@ without making a picture.
 ## Not yet
 
 The Engine bar's words, Make formats by the Engine, picture checks by a vision model, lessons from verdicts, video.
-The Studio's side is designed in app/FLOWS.md §29 (PROPOSED): a failed version in the strip with its reason, the
-prompt and its checks for Fume's people, and Yes or No on the Engine's pictures. The database side is in place
-(migration 20261104150000_engine_studio: prompts and lessons for Fume's own people only, `teach_engine`, one answer
-per person and picture). The live API still has to map a failed attempt to a version (`failure`, `prompt`), fill
-`Generation.taught`, and call `teach_engine` from `teachEngine` (the generation id is the Engine candidate's id).
+The Studio's side is designed in app/FLOWS.md §29 (PROPOSED) and wired live (app/src/api/live/engine.ts):
+
+- A failed Engine job is a version with state `failed` and `failure` (one sentence, for everyone on the desk); Render
+  again starts the same job over. Earlier failures of a job that later succeeded are not kept as versions yet.
+- `prompt` comes from engine_prompts (the last try's findings and decisions, the code's checks, what it cost). The
+  table is read by Fume's own people only (migration 20261104150000_engine_studio), so an agency's people get none.
+- Engine output is one run per Engine job with its candidates; a Generation's id is its candidate's id, and opening
+  one opens its creative. `taught` is the newest answer on the picture; `teachEngine` calls `teach_engine`, which keeps
+  one answer per person and picture as a pending lesson. Turning answers into lessons the prompt uses is next.
