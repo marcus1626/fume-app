@@ -241,7 +241,7 @@ function readTypefaces(pages: Page[], brand: string): Read["typefaces"] {
         f.length <= 40 &&
         !/[:;(){}]/.test(f) &&
         !GENERIC.has(f.toLowerCase()) &&
-        !/icon|awesome|glyph|star|slick|swiper|judgeme|emoji|symbol/i.test(f),
+        !/icon|awesome|glyph|star|slick|swiper|judgeme|emoji|symbol|video\s?js|vjs|player|plyr|flickity|fancybox|lightbox|katex|mathjax/i.test(f),
     );
     if (!name) return;
     const c = count.get(name) ?? {
@@ -260,6 +260,8 @@ function readTypefaces(pages: Page[], brand: string): Read["typefaces"] {
       const sel = m[1]!;
       const block = m[2]!;
       if (/@font-face/i.test(sel)) continue;
+      // A video player, a carousel or a widget brings its own face for its own controls, not the brand's.
+      if (/vjs|video-js|player|plyr|slick|swiper|flickity|fancybox|lightbox|cookie|consent|chat-?widget/i.test(sel)) continue;
       const fam = /font-family\s*:\s*([^;}]+)/i.exec(block)?.[1];
       if (fam) add(fam, /\bh[1-3]\b|title|heading|display|hero/i.test(sel), block);
       // Themes name their faces in custom properties: --font-heading-family: "Canela", serif.

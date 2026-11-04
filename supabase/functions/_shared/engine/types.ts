@@ -2,7 +2,7 @@
 // facts into a prompt an image model reads, and checks that every rule and product fact is in it before anything is
 // paid for. Pure logic: the model calls come in as functions, so every part is tested without a provider.
 
-export const SLOT_KEYS = ["references", "product", "assignment", "people", "scene", "brand", "change", "keep", "constraints"] as const;
+export const SLOT_KEYS = ["references", "product", "assignment", "people", "scene", "camera", "brand", "change", "keep", "constraints"] as const;
 export type SlotKey = (typeof SLOT_KEYS)[number];
 
 export type SlotDef = {
@@ -69,6 +69,8 @@ export type FindingCode =
   | "text_request"
   | "forbidden_term"
   | "equipment_term"
+  | "slop_term"
+  | "camera_unspecified"
   | "inert_syntax"
   | "file_name"
   | "too_many_references"

@@ -1,0 +1,163 @@
+// OpenPencil, the open design tool (MIT), run on the server: a layout written as design JSX becomes a real design
+// document (frames, auto layout, text, an image fill) that a designer can open and change, and a PNG of it.
+import { createHash } from "node:crypto";
+import { SceneGraph } from "@open-pencil/scene-graph";
+import { renderJSX } from "@open-pencil/core/design-jsx";
+import { IORegistry, BUILTIN_IO_FORMATS, initCanvasKit } from "@open-pencil/core/io";
+import { computeAllLayouts, installTextMeasurer } from "@open-pencil/core/layout";
+import { SkiaRenderer } from "@open-pencil/core/canvas";
+import { prepareGraphFonts, fontManager, weightToStyle } from "@open-pencil/core/text";
+import type { Box, Pixels } from "./pixels.ts";
+
+/** Where a font comes from that the renderer does not have: the brand's own files first. */
+export type FontSource = (family: string, weight: number, italic: boolean) => Promise<ArrayBuffer | null>;
+
+type CK = Awaited<ReturnType<typeof initCanvasKit>>;
+let engine: Promise<{ ck: CK; renderer: SkiaRenderer; io: IORegistry }> | null = null;
+let source: FontSource | null = null;
+
+/** Starts CanvasKit once per process. Online fonts are off unless asked for: the brand's files come first. */
+export function start(opts: { fonts?: FontSource; online?: boolean } = {}) {
+  source = opts.fonts ?? source;
+  fontManager.setOnlineFontProviders({ google: opts.online ?? false, fontsource: false, bunny: false });
+  fontManager.setHostFontLoader(async (family: string, style: string) => {
+    if (!source) return null;
+    const weight = weightOf(style);
+    return source(family, weight, /italic/i.test(style));
+  });
+  engine ??= (async () => {
+    const ck = await initCanvasKit();
+    const renderer = new SkiaRenderer(ck, ck.MakeSurface(1, 1)!);
+    await renderer.loadFonts();
+    installTextMeasurer((node, maxWidth) => renderer.measureTextNode(node, maxWidth));
+    return { ck, renderer, io: new IORegistry(BUILTIN_IO_FORMATS) };
+  })();
+  return engine;
+}
+
+const loaded = new Map<string, Promise<boolean>>();
+/** Whether the renderer can set words in this family and weight. */
+export function hasFont(family: string, weight: number): Promise<boolean> {
+  const key = `${family}|${weight}`;
+  if (!loaded.has(key)) {
+    loaded.set(
+      key,
+      fontManager
+        .loadFont(family, weightToStyle(weight))
+        .then((b) => b !== null && b.byteLength > 0)
+        .catch(() => false),
+    );
+  }
+  return loaded.get(key)!;
+}
+
+export function imageHash(bytes: Uint8Array): string {
+  return createHash("sha1").update(bytes).digest("hex");
+}
+
+export interface Doc {
+  graph: SceneGraph;
+  root: string;
+  /** Node ids by name. */
+  ids: Map<string, string>;
+  /** Whether every font was the one asked for. */
+  faithful: boolean;
+  fontIssues: string[];
+  warnings: string[];
+}
+
+/** Builds and lays out a design document from design JSX; PHOTO in it stands for the picture's hash. */
+export async function build(jsx: string, picture: Uint8Array): Promise<Doc> {
+  await start();
+  const graph = new SceneGraph();
+  const hash = imageHash(picture);
+  graph.images.set(hash, picture);
+  const results = await renderJSX(graph, jsx.replaceAll("PHOTO", hash));
+  const root = results[0].id;
+  graph.applyDerivedLayoutDuring?.(() => computeAllLayouts(graph));
+  const fonts = await prepareGraphFonts(graph, [root]);
+  graph.applyDerivedLayoutDuring?.(() => computeAllLayouts(graph));
+  const ids = new Map<string, string>();
+  const walk = (id: string) => {
+    const n = graph.getNode(id);
+    if (!n) return;
+    if (n.name && !ids.has(n.name)) ids.set(n.name, id);
+    for (const c of graph.getChildren(id)) walk(c.id);
+  };
+  walk(root);
+  return {
+    graph,
+    root,
+    ids,
+    faithful: Boolean(fonts.faithful),
+    fontIssues: ((fonts.issues ?? []) as { family: string; style: string }[]).map((f) => `${f.family} ${f.style}`),
+    warnings: results.flatMap((r) => (r.warnings ?? []).map(String)).slice(0, 10),
+  };
+}
+
+export function boxOf(doc: Doc, name: string): Box | null {
+  const id = doc.ids.get(name);
+  if (!id) return null;
+  const r = doc.graph.getAbsoluteBounds(id);
+  return { x: r.x, y: r.y, w: r.width, h: r.height };
+}
+
+/** Moves or resizes a node, then lays the document out again. */
+export function place(doc: Doc, name: string, changes: { x?: number; y?: number; width?: number; height?: number }) {
+  const id = doc.ids.get(name);
+  if (!id) return;
+  doc.graph.updateNode(id, changes);
+  doc.graph.applyDerivedLayoutDuring?.(() => computeAllLayouts(doc.graph));
+}
+
+export async function png(doc: Doc, scale = 1): Promise<Uint8Array> {
+  const { io } = await start();
+  const res = await io.exportContent(
+    "png",
+    { graph: doc.graph, target: { scope: "node", nodeId: doc.root } },
+    { format: "PNG", scale },
+  );
+  return res.data as Uint8Array;
+}
+
+/** The design document as a .fig file a designer opens in OpenPencil (or Figma). */
+export async function fig(doc: Doc): Promise<Uint8Array> {
+  const { io } = await start();
+  const res = await io.writeDocument("fig", doc.graph);
+  return res.data as Uint8Array;
+}
+
+/** A PNG decoded to pixels. */
+export async function pixelsOf(bytes: Uint8Array, scale: number): Promise<Pixels> {
+  const { ck } = await start();
+  const img = ck.MakeImageFromEncoded(bytes);
+  if (!img) throw new Error("The picture could not be read.");
+  const width = img.width();
+  const height = img.height();
+  const data = img.readPixels(0, 0, {
+    width,
+    height,
+    colorType: ck.ColorType.RGBA_8888,
+    alphaType: ck.AlphaType.Unpremul,
+    colorSpace: ck.ColorSpace.SRGB,
+  }) as Uint8Array;
+  img.delete();
+  return { data, width, height, scale };
+}
+
+function weightOf(style: string): number {
+  const s = style.toLowerCase();
+  const table: [RegExp, number][] = [
+    [/thin|hairline/, 100],
+    [/extra ?light|ultra ?light/, 200],
+    [/light/, 300],
+    [/medium/, 500],
+    [/semi ?bold|demi ?bold/, 600],
+    [/extra ?bold|ultra ?bold/, 800],
+    [/black|heavy/, 900],
+    [/bold/, 700],
+  ];
+  for (const [re, w] of table) if (re.test(s)) return w;
+  const n = parseInt(s, 10);
+  return Number.isFinite(n) ? n : 400;
+}

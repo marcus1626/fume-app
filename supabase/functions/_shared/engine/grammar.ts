@@ -15,6 +15,20 @@ export const CAMPAIGN_STILL_V1: Grammar = {
   ],
 };
 
+// Version 2 (Marcus, 4 Nov 2026: the pictures had no taste): the photograph as it is made gets its own slot, written
+// from the brand's Look Book. A prompt that leaves the camera, the light and the grade to the model gets the model's
+// average picture.
+export const CAMPAIGN_STILL_V2: Grammar = {
+  imageType: "campaign_still",
+  version: 2,
+  slots: [
+    ...CAMPAIGN_STILL_V1.slots.filter((s) => s.order <= 5),
+    { key: "camera", order: 6, filledBy: "composer", required: true, purpose: "The photograph as it is made, from the brand's Look Book: the capture, the lens's focal length, the aperture and depth of field, the camera's height, angle and distance; every light source with its direction, quality, colour temperature and contrast; the colour grade, the grain and the real texture of the surfaces." },
+    { key: "brand", order: 7, filledBy: "composer", required: true, purpose: "Every other applicable brand rule, written as visible effects." },
+    { key: "constraints", order: 8, filledBy: "composer", required: true, purpose: "One sentence per hard brand rule and per product invariant." },
+  ],
+};
+
 // The Engine bar on a picture already made: the image model changes that picture as the designer asks and keeps the
 // rest. The scene and the look are the picture's own, so they are not written again (that makes a new picture).
 export const PICTURE_EDIT_V1: Grammar = {
@@ -30,7 +44,7 @@ export const PICTURE_EDIT_V1: Grammar = {
   ],
 };
 
-export const GRAMMARS: Grammar[] = [CAMPAIGN_STILL_V1, PICTURE_EDIT_V1];
+export const GRAMMARS: Grammar[] = [CAMPAIGN_STILL_V1, CAMPAIGN_STILL_V2, PICTURE_EDIT_V1];
 
 // Seeded from Fume's research on these models (prototype docs/knowledge/image-models.md, 9 Oct 2026); each becomes
 // "measured" once Fume's own verdicts support it.
