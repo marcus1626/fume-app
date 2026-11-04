@@ -253,6 +253,29 @@ select test.ok((select evaluation ->> 'productTruth' = 'flag' and evaluation_usd
   and jsonb_array_length(public.engine_to_evaluate(test.id('ea3')) -> 'candidates') = 0, 'the picture keeps what the Engine saw, once');
 select test.ok((public.fume_llm_budget() ->> 'spent_usd')::numeric >= 0.0066, 'the language model''s week counts looking');
 
+-- ─── The picture check as findings (20261104210000_engine_findings.sql) ─
+select test.keep('ev', (select id from public.creative_versions where candidate_id = test.id('ecand') order by number limit 1));
+update public.candidates set evaluation = '{"productTruth":"flag","brandRules":"flag","artefacts":"major","notes":[],"evaluated":true,
+  "items":[{"area":"product","item":"The bottle as in its photographs","verdict":"off","note":"The cork is black, not burgundy."},
+           {"area":"brand","item":"One source of daylight","verdict":"off","note":"Two light sources.","hard":true},
+           {"area":"brand","item":"Muted colour","verdict":"holds"},
+           {"area":"scene","item":"Oil on warm skin","verdict":"off"}],
+  "artefactNotes":["A sixth finger on the left hand.","A warped tile line."],"printedText":true}' where id = test.id('ecand');
+delete from public.findings where version_id = test.id('ev') and method = 'automated' and dimension <> 'file_spec';
+select test.ok(app.engine_findings(test.id('ev')) = 6, 'what the Engine saw becomes findings on the version');
+select test.ok((select array_agg(dimension || ':' || severity order by created_at, id) @> array['product:major', 'artefacts:major', 'text_claims:major']
+    and bool_and(severity <> 'critical') and count(*) filter (where dimension = 'brand_brief' and severity = 'minor') = 1
+    and bool_or(dimension = 'product' and observed = 'The cork is black, not burgundy.' and expected = 'The bottle as in its photographs')
+  from public.findings where version_id = test.id('ev') and method = 'automated' and dimension <> 'file_spec'),
+  'by dimension and weight, with what was expected and seen, and none critical: the expert decides that');
+select test.ok(app.engine_findings(test.id('ev')) = 0, 'once per version');
+set role authenticated;
+select test.act('marcus+lysne@fumecreatives.com');
+select test.ok((select count(*) from public.findings where version_id = test.id('ev') and method = 'automated') = 0,
+  'the customer never reads them');
+select test.act('marcus@fumecreatives.com');
+reset role;
+
 -- ─── The prompt graph (20261104200000_engine_graph.sql) ─
 select test.ok((select score = 0.2 and signal = 'changed' and pictures = 1 and 'used:product_fact' = any (features)
     from app.engine_prompt_rows(test.id('lysne')) where prompt_id = (select id from public.engine_prompts where attempt_id = test.id('ea3'))),

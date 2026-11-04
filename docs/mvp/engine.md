@@ -60,6 +60,12 @@ design follows Marcus's five domains and the Fume Engine prototype (Oct 2026), p
    per feature with and without it, with how many prompts each rests on: for Fume's people on a brand, and across
    brands (how models behave only) for Fume's admins. Customers never read it.
 
+12. **The picture check as findings** (`app.engine_findings`). What the vision model saw becomes automated findings
+   on the version made from the picture (when the version is made, or when the check finishes after it): the product
+   off (major) or not judgeable (minor), a hard rule off (major), a soft rule or the scene off (minor), each artefact,
+   and printed words nobody asked for (major), with what was expected and what was seen. None is critical: a
+   machine's reading never blocks a check on its own; the expert decides. Customers never read them.
+
 ## Money
 
 - The language model's week (`llm_week_usd`, $50) counts the plan writer, the chat, the Engine's prompts, digesting
@@ -91,7 +97,7 @@ without making a picture.
 ## Not yet
 
 Statics and graphic design come before video (Marcus, 4 Nov). Not built yet: the Engine choosing between ways of
-saying a thing from the prompt graph's numbers, a fixed test set, the picture check's notes as findings, product
+saying a thing from the prompt graph's numbers, a fixed test set, product
 references apart from composition references, and graphic design (OpenPencil). The Engine bar reads every word into the Direction; reading words into the
 desk's own variables (light, angle, lens) is not built yet. The Studio's side (a failed version in the strip, the
 prompt for Fume's own people, Teach the Engine) is on the design branch, app/FLOWS.md §29.
