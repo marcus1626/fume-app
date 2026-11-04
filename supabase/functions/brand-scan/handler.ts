@@ -2,13 +2,15 @@
 // stylesheets, read by read.ts into proposals. The caller's own token saves them (save_brand_scan decides who may),
 // so the people who run the brand and its owner or approver can start it. handler.test.ts runs it without the web.
 import { publicUrl } from "../_shared/net.ts";
-import { brandName, inlineCss, morePages, type Page, readBrand, stylesheets } from "./read.ts";
+import { brandName, inlineCss, morePages, type Page, type Read, readBrand, stylesheets } from "./read.ts";
 
 export interface Deps {
   /** A page or stylesheet, or null when it cannot be fetched. */
   fetchText(url: string): Promise<{ url: string; text: string } | null>;
   /** save_brand_scan as the caller. */
   save(input: Record<string, unknown>): Promise<{ data?: unknown; error?: { code: string; message: string } }>;
+  /** The brand read from pictures its people added (file ids in its folder), when its website will not open. */
+  readPictures?(workspaceId: string, fileIds: string[], brand: string): Promise<{ read: Read; names: string[] } | { error: string }>;
 }
 
 const CORS = {
@@ -36,7 +38,7 @@ export async function handleScan(req: Request, authorized: boolean, deps: Deps):
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   if (req.method !== "POST") return reply(400, { code: "invalid", message: "Use POST." });
   if (!authorized) return reply(403, { code: "forbidden", message: "Sign in first." });
-  let body: { workspaceId?: string; url?: string; brand?: string };
+  let body: { workspaceId?: string; url?: string; brand?: string; files?: string[] };
   try {
     body = await req.json();
   } catch {
@@ -52,11 +54,23 @@ export async function handleScan(req: Request, authorized: boolean, deps: Deps):
   };
 
   const first = await deps.fetchText(url);
-  if (!first || !/<html|<body|<head/i.test(first.text))
+  if (!first || !/<html|<body|<head/i.test(first.text)) {
+    // A site that keeps readers out is read from the pictures the brand's people added instead.
+    const files = (Array.isArray(body.files) ? body.files : []).filter((f) => typeof f === "string" && UUID.test(f)).slice(0, 12);
+    if (files.length && deps.readPictures) {
+      const brand = (body.brand ?? "").trim() || label(url);
+      const got = await deps.readPictures(body.workspaceId, files, brand);
+      if ("read" in got) {
+        const sources = got.names.map((n, i) => ({ id: `f${i}`, label: n, kind: "file", state: "read" }));
+        return save({ p_identity: got.read, p_sources: sources, p_finds: findsOf(got.read, "f0"), p_source: "upload", p_files: files });
+      }
+      return save({ p_identity: {}, p_error: `Fume could not open ${label(url)}, nor read the brand's pictures: ${got.error}`, p_source: "upload", p_files: files });
+    }
     return save({
       p_identity: {},
-      p_error: `Fume could not open ${label(url)}. Check the address, or upload the brand guide.`,
+      p_error: `Fume could not open ${label(url)}. Check the address, or add the brand's own ads and pictures and read them instead.`,
     });
+  }
   const home: Page = { url: first.url, html: first.text, css: inlineCss(first.text) };
   const others = (await Promise.all(morePages(home).map((u) => deps.fetchText(u)))).flatMap((p) =>
     p && /<html|<body/i.test(p.text) ? [{ url: p.url, html: p.text, css: inlineCss(p.text) }] : [],
@@ -68,7 +82,14 @@ export async function handleScan(req: Request, authorized: boolean, deps: Deps):
   const brand = (body.brand ?? "").trim() || brandName(home, label(url));
   const read = readBrand(pages, brand);
   const sources = pages.map((p, i) => ({ id: `p${i}`, label: label(p.url), kind: "page", state: "read" }));
-  const finds = [
+  return save({ p_identity: read, p_sources: sources, p_finds: findsOf(read, "p0") });
+}
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** What was read as the finds the review shows, each from its source. */
+export function findsOf(read: Read, sourceId: string) {
+  return [
     ...read.logos.map((x, i) => ({
       id: `f-logo-${i}`,
       kind: "logo",
@@ -106,10 +127,9 @@ export async function handleScan(req: Request, authorized: boolean, deps: Deps):
     })),
   ].map(({ provenance, ...f }) => ({
     ...f,
-    sourceId: "p0",
+    sourceId,
     evidence: provenance.evidence,
     confidence: provenance.confidence,
     origin: "engine",
   }));
-  return save({ p_identity: read, p_sources: sources, p_finds: finds });
 }

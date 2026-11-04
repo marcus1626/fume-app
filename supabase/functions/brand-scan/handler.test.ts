@@ -85,7 +85,7 @@ Deno.test("a site that will not open is a failed reading, kept with what to do",
     save: (input) => ((saved = input), Promise.resolve({ data: { state: "failed" } })),
   });
   assertEquals(res.status, 200);
-  assertEquals(saved.p_error, "Fume could not open halm.test. Check the address, or upload the brand guide.");
+  assertEquals(saved.p_error, "Fume could not open halm.test. Check the address, or add the brand's own ads and pictures and read them instead.");
 });
 
 Deno.test("no one reads a brand without signing in", async () => {
@@ -109,4 +109,26 @@ Deno.test("a face as Next.js names it is the face it loads, and its fallback cop
   assertEquals(nextFont("__Open_Sans_227a9f"), "Open Sans");
   assertEquals(nextFont("__Inter_Fallback_e8ce0c"), "");
   assertEquals(nextFont("Helvetica Now Text"), "Helvetica Now Text");
+});
+
+Deno.test("a site that keeps readers out is read from the pictures the brand's people added", async () => {
+  const saved: Record<string, unknown>[] = [];
+  const id = "2b0b3f2e-6c55-4d2b-9a59-3f0c2d1e9a10";
+  const res = await handleScan(
+    new Request("https://x/brand-scan", { method: "POST", body: JSON.stringify({ workspaceId: "w", url: "dressmann.com/no", brand: "Dressmann", files: [id, "not-an-id"] }) }),
+    true,
+    {
+      fetchText: async () => null,
+      save: async (input) => (saved.push(input), { data: { state: input.p_error ? "failed" : "done" } }),
+      readPictures: async (_ws, ids) => ({
+        names: ["ad-01.png"],
+        read: { colours: [{ name: "Green", hex: "#0B3B2E", role: "primary", usage: "Headlines", provenance: { origin: "engine", state: "proposed", evidence: "ad-01.png", confidence: "medium" } }], typefaces: [], logos: [], voice: [], imagery: [] },
+        ...(ids.length !== 1 ? { names: [] } : {}),
+      }),
+    },
+  );
+  assertEquals(res.status, 200);
+  assertEquals(saved[0].p_source, "upload");
+  assertEquals(saved[0].p_files, [id]);
+  assertEquals((saved[0].p_finds as { kind: string }[]).map((f) => f.kind), ["colour"]);
 });
