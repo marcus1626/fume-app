@@ -57,7 +57,7 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
       choice = null;
     }
     const links = await d.service.links(t);
-    const res = await d.lay({
+    const request = {
       picture: links.picture,
       format,
       book: t.book.body,
@@ -65,7 +65,10 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
       prefer: choice ? { band: choice.band, align: choice.align, colour: choice.colour } : {},
       keepClear: choice ? keepClearOf(choice, format) : [],
       upload: { png: links.png, fig: links.fig },
-    });
+    };
+    let res = await d.lay(request);
+    // A slow read or a cold start is worth one more try; a refusal (4xx) is not.
+    if (res.status === 500 || res.status === 504) res = await d.lay(request);
     if (!res.ok) {
       const e = res.body.error as unknown;
       const why = typeof e === "string" ? e : e && typeof e === "object" ? String((e as { message?: unknown }).message ?? JSON.stringify(e)) : "";

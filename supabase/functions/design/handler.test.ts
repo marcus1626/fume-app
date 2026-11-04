@@ -80,6 +80,17 @@ Deno.test("without the model's eye the service still lays it out; a failed servi
   assertEquals(broken.calls.fail, ["The design service answered 400: Unknown format."]);
 });
 
+Deno.test("a slow service is tried once more; a refusal is not", async () => {
+  let n = 0;
+  const slow = deps({ lay: (r) => (n++ === 0 ? Promise.resolve({ ok: false, status: 504, body: { error: "slow" } }) : deps().d.lay(r)) });
+  assertEquals(await designLayer(take, slow.d), "made");
+  assertEquals(n, 2);
+  let m = 0;
+  const refused = deps({ lay: () => (m++, Promise.resolve({ ok: false, status: 400, body: { error: "Unknown format." } })) });
+  assertEquals(await designLayer(take, refused.d), "failed");
+  assertEquals(m, 1);
+});
+
 Deno.test("the function asks who is calling, and answers at once while the work goes on", async () => {
   const post = (body: unknown, auth = "Bearer x") =>
     new Request("https://f/design", { method: "POST", headers: { Authorization: auth }, body: JSON.stringify(body) });

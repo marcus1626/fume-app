@@ -2,6 +2,7 @@
 // with the caller's own token first. Needs the secret ANTHROPIC_API_KEY. DESIGN_URL is the design service in the
 // fume-app Vercel project (POST /api/design). Until PR #2 is merged the service lives only on this branch's preview,
 // so that is the default; when it is merged, the default becomes https://fume-app.vercel.app/api/design.
+// VERCEL_BYPASS_SECRET lets this function past Vercel's deployment protection on previews (Marcus chose it 4 Nov).
 import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { betaZodOutputFormat } from "npm:@anthropic-ai/sdk@1.3.0/helpers/beta/zod";
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
@@ -15,6 +16,7 @@ const publishable = keyOf("SUPABASE_PUBLISHABLE_KEYS", "SUPABASE_ANON_KEY");
 const secret = keyOf("SUPABASE_SECRET_KEYS", "SUPABASE_SERVICE_ROLE_KEY");
 const service = createClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
 const designUrl = Deno.env.get("DESIGN_URL") ?? "https://fume-app-git-claude-project-thread-4e84v4-fume-5d92c9b4.vercel.app/api/design";
+const bypass = Deno.env.get("VERCEL_BYPASS_SECRET");
 const workspace = Deno.env.get("ANTHROPIC_WORKSPACE_ID");
 const claude = new Anthropic({
   timeout: 60_000,
@@ -86,7 +88,7 @@ Deno.serve((req) =>
       lay: async (request) => {
         const res = await fetch(designUrl, {
           method: "POST",
-          headers: { "content-type": "application/json" },
+          headers: { "content-type": "application/json", ...(bypass ? { "x-vercel-protection-bypass": bypass } : {}) },
           body: JSON.stringify(request),
           signal: AbortSignal.timeout(90_000),
         });

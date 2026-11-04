@@ -653,10 +653,15 @@ async function handle(req, deps) {
   }
   const why = invalid(r, deps.storageHost);
   if (why) return json(400, { error: why });
-  const got = await deps.fetch(r.picture, { signal: AbortSignal.timeout(2e4) });
-  const type = got.headers.get("content-type") ?? "";
-  if (!got.ok || !type.startsWith("image/")) return json(403, { error: "The picture link is not live." });
-  const picture = new Uint8Array(await got.arrayBuffer());
+  let picture;
+  try {
+    const got = await deps.fetch(r.picture, { signal: AbortSignal.timeout(45e3) });
+    const type = got.headers.get("content-type") ?? "";
+    if (!got.ok || !type.startsWith("image/")) return json(403, { error: "The picture link is not live." });
+    picture = new Uint8Array(await got.arrayBuffer());
+  } catch {
+    return json(504, { error: "Reading the picture from storage took too long." });
+  }
   if (picture.byteLength > 25e6) return json(413, { error: "The picture is too large." });
   const out = await (deps.design ?? design)({
     picture,

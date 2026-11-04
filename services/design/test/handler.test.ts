@@ -58,3 +58,14 @@ test("the result is stored through the signed links and only its numbers come ba
   assert.match(out.png.sha256, /^[0-9a-f]{64}$/);
   assert.ok(!("data" in out.png));
 });
+
+test("a picture that cannot be read in time is answered with why, never a crash", async () => {
+  const slow = (async () => {
+    throw new DOMException("The operation was aborted due to timeout", "TimeoutError");
+  }) as typeof fetch;
+  let ran = false;
+  const res = await handle(post(body), { storageHost: host, fetch: slow, design: async () => ((ran = true), designed()) });
+  assert.equal(res.status, 504);
+  assert.match((await res.json()).error, /took too long/);
+  assert.ok(!ran);
+});
