@@ -57,6 +57,7 @@ import { when } from "../../../lib/time";
 import { DetailsOverlay, useFixDone } from "./fix";
 import { placementOf, SafeZones, versionRatio } from "./formats";
 import { failedWords, usePromptAddress, useSeesPrompt } from "./prompt";
+import { shownVersion } from "./versions";
 
 const ratio = { feed: "4 / 5", square: "1 / 1", story: "9 / 16" } as const;
 
@@ -90,10 +91,7 @@ export function flagWords(v: RenderVersion, tokens: DetailToken[] = []): { clean
   return { clean: false, words: `${copy.count(n, "flag")} · ${flags.join(" · ")}` };
 }
 
-export const shownVersion = (doc: CreativeDocument) =>
-  doc.versions.find((v) => v.id === doc.pickedVersionId) ??
-  [...doc.versions].reverse().find((v) => v.state === "done") ??
-  doc.versions.at(-1);
+export { shownVersion };
 
 // ─── The board ───────────────────────────────────────────────────────────────
 
@@ -169,6 +167,8 @@ export function Board({
   const seesPrompt = useSeesPrompt();
   const promptAt = usePromptAddress();
   const promptFor = promptAt.id && doc.versions.some((v) => v.id === promptAt.id) ? promptAt.id : undefined;
+  // No picture to show, only a version that did not render: say so on the board (FLOWS §29)
+  const failed = shown ? undefined : [...doc.versions].reverse().find((v) => v.state === "failed");
 
   const figure = (v: RenderVersion, label: string | undefined, withLayers: boolean) => (
     <figure className="ui-desk-figure" key={v.id}>
@@ -318,6 +318,15 @@ export function Board({
             </>
           ) : shown ? (
             figure(shown, undefined, true)
+          ) : failed ? (
+            <div className="ui-desk-empty">
+              <p className="ui-desk-empty-text">
+                Version {failed.number} didn’t render, so there is no picture yet. Its tile in the strip says why.
+              </p>
+              <Button size="sm" variant="secondary" onClick={() => promptAt.open(failed.id)}>
+                See why
+              </Button>
+            </div>
           ) : (
             <p className="ui-desk-empty">
               {needsProduct
@@ -659,8 +668,9 @@ export function Versions({
         data-comparing={comparing ? "" : undefined}
       >
         {doc.versions.map((v) => {
-          const picked = v.id === doc.pickedVersionId;
           const failed = v.state === "failed";
+          // A version that did not render is never the picked one, even if the address says so
+          const picked = v.id === doc.pickedVersionId && !failed;
           const flags = failed ? { clean: false, words: failedWords(v) } : flagWords(v, tokens);
           const body = (
             <>

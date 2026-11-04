@@ -23,6 +23,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useOpenDocument, useSession } from "../../api/hooks";
 import { useFrameKind } from "../../shell/scope";
+import { shownVersion } from "./doc/versions";
 import type {
   Board,
   BoardKind,
@@ -256,7 +257,7 @@ export function SessionRow({
 
 /** A creative document as a row: its title, campaign, version and who changed it last; it opens the desk. */
 export function DocumentRow({ doc, campaign, by }: { doc: CreativeDocument; campaign?: string; by: string }) {
-  const cover = doc.versions.find((v) => v.id === doc.pickedVersionId) ?? doc.versions.at(-1);
+  const cover = shownVersion(doc);
   return (
     <Item as="li" variant="outline" asChild>
       <Link to={`/studio/doc/${doc.id}`}>

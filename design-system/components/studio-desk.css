@@ -281,6 +281,9 @@
 .ui-desk-canvas[data-zoom="full"] .ui-desk-shot > img { max-width: none; max-height: none; }
 .ui-desk-caption { font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
 .ui-desk-empty { margin: 0; max-width: calc(var(--ui-size-hit) * 8); text-align: center; font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+/* Only a version that did not render (FLOWS §29): the line and a way to its reason */
+div.ui-desk-empty { display: grid; justify-items: center; gap: var(--ui-space-md); }
+.ui-desk-empty-text { margin: 0; text-wrap: pretty; }
 
 /* Design: the layers drawn over the render, each a box you can select. Their type is the creative's own, scaled
    to the frame. */
