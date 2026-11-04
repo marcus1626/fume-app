@@ -3,7 +3,7 @@
 // answers with a request id; the pictures are collected later.
 import type { ProviderRequest } from "../_shared/engine/index.ts";
 
-export type Submitted = { ok: true; providerJobId: string } | { ok: false; error: string; final: boolean };
+export type Submitted = { ok: true; providerJobId: string; provider?: string } | { ok: false; error: string; final: boolean };
 export type Collected =
   | { state: "waiting" }
   | { state: "done"; urls: string[]; response: unknown }
@@ -13,24 +13,22 @@ export interface ImageProvider {
   name: string;
   /** What one picture costs, in cents (the provider's list price as Fume knows it). */
   priceCents(imageModel: string): number;
+  /** Whether this provider makes pictures with the model (a provider without it makes them all). */
+  handles?(imageModel: string): boolean;
   submit(request: ProviderRequest): Promise<Submitted>;
   collect(providerJobId: string): Promise<Collected>;
   /** Checks the key and lists what the provider offers, without making a picture (no credits). */
-  probe?(): Promise<unknown>;
+  probe?(routes?: string[]): Promise<unknown>;
 }
 
 const BASE = "https://api.higgsfield.ai";
 
-// Fume's model names to Higgsfield's endpoints. The endpoints are read from Higgsfield's SDK and confirmed on the
-// first real call; the secret HF_ENDPOINTS ({"nano-banana-pro": "..."}) replaces any of them without a deploy.
+// Fume's model names to Higgsfield's endpoints, as its API lists them (4 Nov 2026). Its Nano Banana Pro answers
+// "model_disabled", and Nano Banana 2, GPT Image and Seedream are not there: those go to fal (fal.ts). The secret
+// HF_ENDPOINTS ({"model": {"text": "...", "references": "..."}}) adds or replaces one without a deploy.
 export const HIGGSFIELD_ENDPOINTS: Record<string, { text: string; references: string }> = {
   "qwen-image-3": { text: "alibaba/qwen-image-3/text-to-image", references: "alibaba/qwen-image-3/edit" },
   "grok-imagine-2": { text: "xai/grok-imagine-image-2.0", references: "xai/grok-imagine-image-2.0" },
-  "nano-banana-pro": { text: "google/nano-banana-pro/text-to-image", references: "google/nano-banana-pro/edit" },
-  "nano-banana-2": { text: "google/nano-banana-2/text-to-image", references: "google/nano-banana-2/edit" },
-  "seedream-4": { text: "bytedance/seedream/v4/text-to-image", references: "bytedance/seedream/v4/edit" },
-  "flux-kontext": { text: "flux-pro/kontext/max/text-to-image", references: "flux-pro/kontext/max" },
-  "gpt-image": { text: "openai/gpt-image/text-to-image", references: "openai/gpt-image/edit" },
 };
 // The ratios a model makes; another one is asked as the nearest of these, and the picture is cropped to the format
 // after (Higgsfield's answers, 4 Nov 2026).
@@ -48,7 +46,7 @@ export function ratioFor(imageModel: string, ratio: string): string {
   return allowed.reduce((a, b) => (Math.abs(Math.log(value(b) / value(ratio))) < Math.abs(Math.log(value(a) / value(ratio))) ? b : a));
 }
 // Estimates until Higgsfield's bill says otherwise (cents per picture).
-const PRICES: Record<string, number> = { "nano-banana-pro": 15, "nano-banana-2": 6, "seedream-4": 4, "flux-kontext": 8, "gpt-image": 10 };
+const PRICES: Record<string, number> = { "qwen-image-3": 4, "grok-imagine-2": 5 };
 
 export function higgsfield(
   credentials: string,
@@ -79,6 +77,7 @@ export function higgsfield(
   return {
     name: "higgsfield",
     priceCents: (m) => PRICES[m] ?? 15,
+    handles: (m) => Boolean(endpoints[m]),
     async submit(r) {
       const endpoint = endpoints[r.imageModel];
       if (!endpoint) return { ok: false, error: `Higgsfield has no endpoint for ${r.imageModel}.`, final: true };
@@ -92,7 +91,7 @@ export function higgsfield(
       const text = await res.text();
       if (!res.ok) return { ok: false, ...failure(res.status, text) };
       const id = (JSON.parse(text) as { request_id?: string }).request_id;
-      return id ? { ok: true, providerJobId: id } : { ok: false, error: "Higgsfield gave no request id.", final: false };
+      return id ? { ok: true, providerJobId: id, provider: "higgsfield" } : { ok: false, error: "Higgsfield gave no request id.", final: false };
     },
     async collect(id) {
       const res = await call(`${BASE}/requests/${encodeURIComponent(id)}/status`);
@@ -112,7 +111,7 @@ export function higgsfield(
       if (r.status === "failed") return { state: "failed", error: r.error ?? "The image model failed.", final: false, response: r };
       return { state: "waiting" };
     },
-    async probe() {
+    async probe(routes?: string[]) {
       const out: Record<string, unknown> = {};
       for (const [i, s] of schemes.entries()) {
         const r = await go(`${BASE}/requests/00000000-0000-4000-8000-000000000000/status`, { headers: headersOf(i) });
@@ -125,11 +124,40 @@ export function higgsfield(
         out.total = j.total;
         out.models = (j.items ?? []).map((m) => [m.slug, m.output_type, m.base_credits, m.operation_type.join(",")]);
       } else out.models = { status: r.status, body: clean(await r.text()) };
-      // The input each of Fume's image models takes.
-      for (const slug of new Set(Object.values(endpoints).flatMap((e) => [e.text, e.references]))) {
-        const d = await call(`${BASE}/models/${slug}`);
-        out[`model ${slug}`] = { status: d.status, body: clean(await d.text()) };
+      // Which routes exist: with no credits a real route answers 403, a missing one 404 or 405 (nothing is made).
+      for (const slug of routes ?? []) {
+        const d = await call(`${BASE}/${slug}`, { method: "POST", body: JSON.stringify({ prompt: "probe", aspect_ratio: "1:1" }) });
+        out[`route ${slug}`] = { status: d.status, body: clean(await d.text()).slice(0, 200) };
       }
+      return out;
+    },
+  };
+}
+
+/**
+ * One provider made of several: each model goes to the first provider that has it (fal for the image models
+ * Higgsfield's API lacks, Higgsfield for the rest and for video), and a request is collected from the provider that
+ * took it (fal's ids are its result addresses).
+ */
+export function byModel(providers: ImageProvider[], route: Record<string, string> = {}): ImageProvider | null {
+  if (!providers.length) return null;
+  const pick = (m: string) =>
+    providers.find((p) => p.name === route[m]) ?? providers.find((p) => p.handles?.(m) ?? true) ?? providers[0];
+  const owner = (id: string) => providers.find((p) => p.name === "fal" && id.startsWith("https://queue.fal.run/"))
+    ?? providers.find((p) => p.name !== "fal") ?? providers[0];
+  return {
+    name: providers.map((p) => p.name).join("+"),
+    priceCents: (m) => pick(m).priceCents(m),
+    handles: (m) => providers.some((p) => p.handles?.(m) ?? true),
+    async submit(r) {
+      const p = pick(r.imageModel);
+      const s = await p.submit(r);
+      return s.ok ? { ...s, provider: s.provider ?? p.name } : s;
+    },
+    collect: (id) => owner(id).collect(id),
+    async probe(routes?: string[]) {
+      const out: Record<string, unknown> = {};
+      for (const p of providers) out[p.name] = p.probe ? await p.probe(routes?.filter((r) => (p.name === "fal") === r.startsWith("fal-ai/"))) : null;
       return out;
     },
   };

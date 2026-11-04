@@ -240,7 +240,7 @@ async function attempt(t: Taken, deps: Deps): Promise<RunOutcome> {
       await deps.service.fail(attemptId, submitted.error, null, 0, submitted.final);
       return "failed";
     }
-    await deps.service.submitted(attemptId, deps.provider.name, submitted.providerJobId, result.request);
+    await deps.service.submitted(attemptId, submitted.provider ?? deps.provider.name, submitted.providerJobId, result.request);
     return await collect({ attemptId, workspaceId: t.run.workspace_id, jobId: t.run.job_id, providerJobId: submitted.providerJobId, model: t.run.image_model, title: t.creative.title }, deps);
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
@@ -262,10 +262,12 @@ export function handleEngine(req: Request, deps: (authorization: string) => Deps
   return (async () => {
     let jobId: unknown;
     let probe = false;
+    let routes: string[] | undefined;
     try {
-      const body = (await req.json()) as { jobId?: unknown; probe?: unknown };
+      const body = (await req.json()) as { jobId?: unknown; probe?: unknown; routes?: unknown };
       jobId = body.jobId;
       probe = body.probe === true;
+      if (Array.isArray(body.routes)) routes = body.routes.filter((r): r is string => typeof r === "string" && /^[\w./-]{1,120}$/.test(r)).slice(0, 40);
     } catch {
       return answer(400, { error: "Send the job's id." });
     }
@@ -273,7 +275,7 @@ export function handleEngine(req: Request, deps: (authorization: string) => Deps
     const d = deps(authorization);
     if (!(await d.canRead(jobId))) return answer(404, { error: "No such job." });
     // Fume's people check the image provider's key without making a picture.
-    if (probe) return answer(200, { provider: d.provider?.name ?? null, probe: d.provider?.probe ? await d.provider.probe() : null });
+    if (probe) return answer(200, { provider: d.provider?.name ?? null, probe: d.provider?.probe ? await d.provider.probe(routes) : null });
     d.later(runJob(jobId, d).catch(() => undefined));
     return answer(202, { ok: true });
   })();
