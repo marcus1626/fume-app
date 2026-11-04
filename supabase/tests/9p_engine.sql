@@ -252,7 +252,19 @@ select public.engine_evaluated(test.id('ecand'),
 select test.ok((select evaluation ->> 'productTruth' = 'flag' and evaluation_usd = 0.0009 from public.candidates where id = test.id('ecand'))
   and jsonb_array_length(public.engine_to_evaluate(test.id('ea3')) -> 'candidates') = 0, 'the picture keeps what the Engine saw, once');
 select test.ok((public.fume_llm_budget() ->> 'spent_usd')::numeric >= 0.0066, 'the language model''s week counts looking');
+
+-- ─── The prompt graph (20261104200000_engine_graph.sql) ─
+select test.ok((select score = 0.2 and signal = 'changed' and pictures = 1 and 'used:product_fact' = any (features)
+    from app.engine_prompt_rows(test.id('lysne')) where prompt_id = (select id from public.engine_prompts where attempt_id = test.id('ea3'))),
+  'a prompt scores its best picture, and a person''s verdict (a correction asked) outranks the machine''s check');
+select test.ok((public.engine_learning(test.id('lysne')) ->> 'scored')::int >= 1
+  and public.engine_learning(test.id('lysne')) #>> '{by_type,0,image_model}' = 'nano-banana-pro'
+  and public.engine_learning(test.id('lysne')) #>> '{recent,0,signal}' is not null, 'the Engine counts what works per model and kind of picture');
 set role authenticated;
+select test.act('marcus+lysne@fumecreatives.com');
+select test.refuses($$ select public.engine_learning(test.id('lysne')) $$, 'forbidden', 'a customer never reads what the Engine learned');
+select test.act('marcus@fumecreatives.com');
+select test.ok((public.engine_learning(test.id('lysne')) ->> 'prompts')::int >= 1, 'Fume''s people on the brand read it');
 
 -- ─── The designer's words reach the picture (20261104180000_engine_direction.sql) ─
 

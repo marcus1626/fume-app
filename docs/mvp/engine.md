@@ -44,6 +44,22 @@ design follows Marcus's five domains and the Fume Engine prototype (Oct 2026), p
    `engine_evaluated`. It helps the expert and never checks a picture in their place; customers never see it. About
    $0.0015 a picture, in the language model's week. A failure leaves the picture unevaluated.
 
+10. **The Brand Brain in the prompt** (`app.engine_brain`, `_shared/engine/context.ts`). `engine_take` hands over
+   what the brand's knowledge graph knows about its pictures: the palette, the brand's own pictures in words, notes
+   about the picture, the market, and what was asked to change in its other creatives and what experts noted. They
+   become soft rules (never hard: the Brand DNA's rules are the hard ones) and lessons the writer reads. Captions that
+   only say where a picture came from, text and ground colours, unsure colours and proposed nodes stay out.
+   Every prompt keeps a **ledger** (`_shared/engine/ledger.ts`, `engine_prompts.ledger`): each product fact, rule,
+   taste word, brain node, lesson and picture the Engine had, whether it went in, how it was checked (word for word
+   by code, or by meaning) and whether the check found it, or why it was left out.
+11. **The prompt graph** (`app.engine_prompt_rows`, `public.engine_learning`). Every validated prompt with what it
+   was built from (the model's rules, the kinds of brand rule and lesson, the kinds of data the ledger says went in,
+   the number of pictures) and its best picture's score: people's verdicts first (approved 1.0, checked 0.8, Yes
+   0.7, taken as a version 0.6, a correction or change 0.2, No 0), else the picture check (0.5 pass, 0.25 a brand
+   rule or major artefacts, 0.1 the product). `engine_learning` gives the numbers per model and kind of picture and
+   per feature with and without it, with how many prompts each rests on: for Fume's people on a brand, and across
+   brands (how models behave only) for Fume's admins. Customers never read it.
+
 ## Money
 
 - The language model's week (`llm_week_usd`, $50) counts the plan writer, the chat, the Engine's prompts, digesting
@@ -74,6 +90,8 @@ without making a picture.
 
 ## Not yet
 
-Video. The Engine bar reads every word into the Direction; reading words into the
+Statics and graphic design come before video (Marcus, 4 Nov). Not built yet: the Engine choosing between ways of
+saying a thing from the prompt graph's numbers, a fixed test set, the picture check's notes as findings, product
+references apart from composition references, and graphic design (OpenPencil). The Engine bar reads every word into the Direction; reading words into the
 desk's own variables (light, angle, lens) is not built yet. The Studio's side (a failed version in the strip, the
 prompt for Fume's own people, Teach the Engine) is on the design branch, app/FLOWS.md §29.
