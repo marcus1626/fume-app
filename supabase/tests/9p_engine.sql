@@ -304,11 +304,20 @@ select test.keep('ej2', (public.render_creative(test.id('em2'), 'dir-1',
 select test.ok((select direction = '{"direction":"Morning, the cup steaming"}' from public.production_jobs where id = test.id('ej2')),
   'the job keeps the Direction, without empty words or another creative''s picture');
 reset role;
+-- The campaign's moodboard: a liked picture is the composition reference, a disliked one never.
+select test.keep('eb', gen_random_uuid());
+insert into public.boards (id, workspace_id, kind, campaign_id, name)
+values (test.id('eb'), test.id('lysne'), 'campaign_moodboard', test.id('ec2'), 'Morning round');
+insert into public.board_items (board_id, workspace_id, kind, image_url, verdict, note, created_at) values
+  (test.id('eb'), test.id('lysne'), 'image', 'https://lysne.example/mood-liked.jpg', 'liked', 'Low sun, long shadows', now() - interval '1 day'),
+  (test.id('eb'), test.id('lysne'), 'image', 'https://lysne.example/mood-disliked.jpg', 'disliked', null, now());
 do $$
 declare t jsonb := public.engine_take(test.id('ej2'));
 begin
   perform test.ok(t #>> '{change,direction}' = 'Morning, the cup steaming' and t -> 'master' = 'null'::jsonb,
     'the Engine gets the Direction for a new picture');
+  perform test.ok(t #>> '{composition,url}' = 'https://lysne.example/mood-liked.jpg' and t #>> '{composition,note}' = 'Low sun, long shadows',
+    'and the moodboard''s liked picture for composition, light and mood');
   perform test.keep('ecand2', (public.engine_finish((t #>> '{run,attempt_id}')::uuid,
     jsonb_build_array(jsonb_build_object('path', test.id('lysne') || '/engine/e2.png', 'name', 'Master 2, Engine.png',
       'content_type', 'image/png', 'bytes', 2000, 'width', 1080, 'height', 1350)), '{}', 15) -> 0 ->> 'id')::uuid);
@@ -324,6 +333,7 @@ declare t jsonb := public.engine_take(test.id('ej2'));
 begin
   perform test.ok(t #>> '{change,ask}' = 'Make the light warmer' and (t #>> '{master,picked}')::boolean
     and t #>> '{master,path}' like '%/engine/e2.png', 'the Engine changes the picked picture as asked');
+  perform test.ok(t -> 'composition' = 'null'::jsonb, 'a change to a picture keeps its own look: no moodboard picture');
 end $$;
 do $$
 declare a uuid;

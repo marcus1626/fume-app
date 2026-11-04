@@ -66,6 +66,12 @@ design follows Marcus's five domains and the Fume Engine prototype (Oct 2026), p
    and printed words nobody asked for (major), with what was expected and what was seen. None is critical: a
    machine's reading never blocks a check on its own; the expert decides. Customers never read them.
 
+13. **A composition reference** (`engine_take` → `composition`). The campaign moodboard's newest liked picture (else
+   its newest one not disliked) goes to the model after at least one of the product's own pictures, with its role
+   said plainly: framing, camera angle, light and mood only, never its objects, products, people, words or brand.
+   The product's photographs stay the only truth about the product, and the picture check never compares the
+   product with it. Not for a change to a picture, a correction, a variant or a format.
+
 ## Money
 
 - The language model's week (`llm_week_usd`, $50) counts the plan writer, the chat, the Engine's prompts, digesting
@@ -97,7 +103,6 @@ without making a picture.
 ## Not yet
 
 Statics and graphic design come before video (Marcus, 4 Nov). Not built yet: the Engine choosing between ways of
-saying a thing from the prompt graph's numbers, a fixed test set, product
-references apart from composition references, and graphic design (OpenPencil). The Engine bar reads every word into the Direction; reading words into the
+saying a thing from the prompt graph's numbers, a fixed test set, and graphic design (OpenPencil). The Engine bar reads every word into the Direction; reading words into the
 desk's own variables (light, angle, lens) is not built yet. The Studio's side (a failed version in the strip, the
 prompt for Fume's own people, Teach the Engine) is on the design branch, app/FLOWS.md §29.

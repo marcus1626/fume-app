@@ -303,3 +303,13 @@ Deno.test("the ledger says what of the brand's data went into the prompt, how it
   assertEquals([of("l1").used, of("ch1").used, of("x1").used], [true, true, true]);
   assertEquals(ledgerSummary(ledger).missing, ["c1"]);
 });
+
+Deno.test("a moodboard picture rules composition, light and mood, after the product's own picture, never the product", () => {
+  const t: EngineTask = { ...task, composition: { id: "b1", url: "https://x/mood.jpg" } };
+  const p = buildProduct(t, 3);
+  assertEquals(p.references.map((r) => r.url), ["https://x/front.png", "https://x/back.png", "https://x/mood.jpg"]);
+  assertMatch(p.lockedReferenceText, /The third picture is the moodboard's picture for composition, light and mood only: take its framing, camera angle, light and mood, never its objects, products, people, words or brand\./);
+  assertEquals(buildProduct(t, 2).references.map((r) => r.url), ["https://x/front.png", "https://x/mood.jpg"]);
+  const variant = buildProduct({ ...t, master: { url: "https://x/master.png", title: "Master 1" } }, 3);
+  assert(!variant.references.some((r) => r.url === "https://x/mood.jpg"), "a picture made from a master keeps the master's look");
+});

@@ -9,6 +9,7 @@ import {
   buildConcept,
   buildKnowledge,
   buildLedger,
+  COMPOSITION_ROLE,
   buildProduct,
   checklist,
   type Composer,
@@ -36,10 +37,12 @@ type Stored = { path: string; bucket?: string };
 type Picture = { slot: string | null; name?: string } & ({ path: string; bucket?: string; url?: undefined } | { url: string; path?: undefined });
 
 /** What public.engine_take hands over, before the pictures' addresses are signed. */
-export type Taken = Omit<EngineTask, "products" | "master"> & {
+export type Taken = Omit<EngineTask, "products" | "master" | "composition"> & {
   run: { job_id: string; attempt_id: string; attempt: number; workspace_id: string; kind: string; image_model: string };
   products: (Omit<EngineTask["products"][number], "pictures"> & { pictures: Picture[] })[];
   master: (Stored & { title: string; picked?: boolean }) | null;
+  /** The campaign moodboard's picture for composition, light and mood (never the product's truth). */
+  composition?: ({ id: string; note?: string } & ({ path: string; bucket?: string; url?: undefined } | { url: string; path?: undefined })) | null;
   /** A correction's problem and what must change and stay; `ask` and `direction` are the designer's words with Render. */
   change: { problem: string; must_change: string[]; must_stay: string[]; ask?: string; direction?: string } | null;
 };
@@ -118,6 +121,9 @@ async function signTask(t: Taken, deps: Deps): Promise<EngineTask> {
     }))),
     master: t.master
       ? { title: t.master.title, url: await deps.service.sign(t.master), ...(t.master.picked ? { picked: true } : {}) }
+      : null,
+    composition: t.composition
+      ? { id: t.composition.id, url: t.composition.url ?? (await deps.service.sign({ path: t.composition.path!, bucket: t.composition.bucket })), ...(t.composition.note ? { note: t.composition.note } : {}) }
       : null,
   };
 }
@@ -237,7 +243,7 @@ async function evaluatePictures(attemptId: string, deps: Deps): Promise<void> {
     // The product's photographs (the picture this is made from is not one: context.ts names it "the approved …" or "the
     // picture of …").
     const productUrls = (data.references ?? [])
-      .filter((r) => !r.role.startsWith("the approved ") && !r.role.startsWith("the picture of "))
+      .filter((r) => !r.role.startsWith("the approved ") && !r.role.startsWith("the picture of ") && r.role !== COMPOSITION_ROLE)
       .map((r) => r.url)
       .slice(0, 3);
     const checks = checklist(data.manifest ?? [], productUrls.length > 0);

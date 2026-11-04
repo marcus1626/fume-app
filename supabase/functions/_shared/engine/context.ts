@@ -51,7 +51,11 @@ export type EngineTask = {
    *  the picture the designer's words change (the Engine bar), not yet approved. */
   master: { url: string; title: string; picked?: boolean } | null;
   brain?: Brain;
+  /** The campaign moodboard's picture for composition, light and mood; never the product's truth. */
+  composition?: { id: string; url: string; note?: string } | null;
 };
+
+export const COMPOSITION_ROLE = "the moodboard's picture for composition, light and mood";
 
 export const FORMATS: Record<string, FormatSpec> = {
   feed: { aspectRatio: "4:5", resolution: null },
@@ -123,7 +127,11 @@ export function buildProduct(task: EngineTask, maxReferences: number): ProductCo
   for (const p of products)
     for (const pic of [...p.pictures].sort((a, b) => slotRank(a.slot) - slotRank(b.slot)))
       pictures.push({ url: pic.url, role: `${p.name}${pic.slot ? `, ${pic.slot}` : ""}` });
-  const references = pictures.slice(0, maxReferences);
+  // A composition reference takes the last place, after at least one of the product's own pictures.
+  const composition = !task.master && task.composition ? task.composition : null;
+  const room = composition && pictures.length > 0 ? maxReferences - 1 : maxReferences;
+  const references = pictures.slice(0, room);
+  if (composition && references.length < maxReferences) references.push({ url: composition.url, role: COMPOSITION_ROLE });
 
   const lockedReferenceText = references.length
     ? references.map((r, i) => {
@@ -132,6 +140,8 @@ export function buildProduct(task: EngineTask, maxReferences: number): ProductCo
         return task.master.picked
           ? `The ${n} picture is ${r.role}: change only what the designer asks, and keep everything else in it exactly.`
           : `The ${n} picture is ${r.role}: keep its scene, light and product exactly; change only what is asked.`;
+      if (r.role === COMPOSITION_ROLE)
+        return `The ${n} picture is ${r.role} only: take its framing, camera angle, light and mood, never its objects, products, people, words or brand.`;
       return `The ${n} picture is the product itself (${r.role}) and the only truth about its shape, colours and label; its background is not used.`;
     }).join(" ")
     : "There is no picture of the product; follow the description of it exactly.";
