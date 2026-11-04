@@ -35,9 +35,15 @@ Marcus, 4 Nov 2026: the service goes into the existing fume-app Vercel project, 
 - The service lays it out and stores the PNG and .fig through signed upload links. Haiku then reviews the result as a
   designer (findings, staff only), and `design_finish` adds the candidate. About $0.002 a layer.
 - `DESIGN_URL` points at the service. Until PR #2 is merged it is this branch's preview, which Vercel's deployment
-  protection closes to server calls (401), so a live run needs either a protection bypass or the merge.
+  protection closes to server calls. The function sends Vercel's automation bypass (`VERCEL_BYPASS_SECRET`, Marcus
+  chose this 4 Nov); it is harmless once the service runs in production.
+- A 500 or 504 from the service is tried once more; a refusal is not.
+- First live runs from Supabase, 4 Nov: Nike (test) passed every check in about 26 s; Møllers (test) gave only the
+  closest layout (the call to action sits close to the bottle cap). About $0.0015 a layer.
 
 ## Still open
 
-- A live run from Supabase (see above).
+- Layouts for a tall product in the middle of the frame (Møllers): none passes yet; the words need a smaller block
+  or a side column.
+- Nike's design book still has the scan's old fonts until Nike is scanned again.
 - The UI (owned by the design thread): "Add graphic design" on a candidate, the Look Book screens, the copy check.
