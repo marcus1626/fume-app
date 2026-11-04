@@ -126,6 +126,12 @@ export function higgsfield(
       } else out.models = { status: r.status, body: clean(await r.text()) };
       // Which routes exist: with no credits a real route answers 403, a missing one 404 or 405 (nothing is made).
       for (const slug of routes ?? []) {
+        // A Higgsfield address of its own (its developer API) is read, never posted to.
+        if (/^https:\/\/[a-z0-9-]+\.higgsfield\.ai\//.test(slug)) {
+          const g = await call(slug);
+          out[`get ${slug}`] = { status: g.status, body: clean(await g.text()).slice(0, 3000) };
+          continue;
+        }
         const d = await call(`${BASE}/${slug}`, { method: "POST", body: JSON.stringify({ prompt: "probe", aspect_ratio: "1:1" }) });
         out[`route ${slug}`] = { status: d.status, body: clean(await d.text()).slice(0, 200) };
       }

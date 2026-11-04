@@ -267,7 +267,7 @@ export function handleEngine(req: Request, deps: (authorization: string) => Deps
       const body = (await req.json()) as { jobId?: unknown; probe?: unknown; routes?: unknown };
       jobId = body.jobId;
       probe = body.probe === true;
-      if (Array.isArray(body.routes)) routes = body.routes.filter((r): r is string => typeof r === "string" && /^[\w./-]{1,120}$/.test(r)).slice(0, 40);
+      if (Array.isArray(body.routes)) routes = body.routes.filter((r): r is string => typeof r === "string" && /^(https:\/\/[a-z0-9-]+\.higgsfield\.ai)?[\w./-]{1,160}$/.test(r)).slice(0, 40);
     } catch {
       return answer(400, { error: "Send the job's id." });
     }
