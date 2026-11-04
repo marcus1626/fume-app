@@ -107,27 +107,34 @@ async function capture(url, views) {
     executablePath: process.env.FUME_CHROMIUM ?? await chromium.executablePath(),
     headless: true
   });
-  try {
-    const out = [];
-    for (const v of views) {
-      const page = await browser.newPage();
+  const one = async (v) => {
+    const page = await browser.newPage();
+    try {
       await page.setViewport({ width: v.width, height: v.height, deviceScaleFactor: v.scale, isMobile: v.name === "mobile" });
       await page.setUserAgent(
         v.name === "mobile" ? "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
       );
-      await page.goto(url, { waitUntil: "networkidle2", timeout: 25e3 }).catch(() => void 0);
+      await page.goto(url, { waitUntil: "domcontentloaded", timeout: 2e4 }).catch(() => void 0);
+      await Promise.race([page.waitForNetworkIdle({ idleTime: 800, timeout: 8e3 }).catch(() => void 0), wait(8e3)]);
       await page.evaluate(DISMISS).catch(() => false);
-      await new Promise((r) => setTimeout(r, 1200));
-      if (v.scrollScreens) await page.evaluate((y) => window.scrollTo(0, y), v.height * v.scrollScreens);
-      await new Promise((r) => setTimeout(r, 800));
-      out.push(new Uint8Array(await page.screenshot({ type: "jpeg", quality: 80 })));
-      await page.close();
+      await wait(1e3);
+      if (v.scrollScreens) {
+        await page.evaluate((y) => window.scrollTo(0, y), v.height * v.scrollScreens).catch(() => void 0);
+        await wait(1500);
+      }
+      return new Uint8Array(await page.screenshot({ type: "jpeg", quality: 80 }));
+    } finally {
+      await page.close().catch(() => void 0);
     }
-    return out;
+  };
+  try {
+    const shots = await Promise.allSettled(views.map(one));
+    return shots.map((s) => s.status === "fulfilled" ? s.value : new Uint8Array());
   } finally {
     await browser.close();
   }
 }
+var wait = (ms) => new Promise((r) => setTimeout(r, ms));
 async function POST(req) {
   return handleShot(req, { storageHost: process.env.FUME_STORAGE_HOST ?? "vkusmctftfzsrxbcxtdz.supabase.co", fetch, capture });
 }

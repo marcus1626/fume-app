@@ -117,7 +117,7 @@ async function siteShots(task: Parameters<typeof voicePrompt>[0]): Promise<LookP
       method: "POST",
       headers: { "content-type": "application/json", ...(bypass ? { "x-vercel-protection-bypass": bypass } : {}) },
       body: JSON.stringify({ url: task.website, upload: links.map((l) => l.data!.signedUrl) }),
-      signal: AbortSignal.timeout(70_000),
+      signal: AbortSignal.timeout(95_000),
     });
     if (!res.ok) return [];
     const out = (await res.json()) as { shots?: { view: string }[] };
