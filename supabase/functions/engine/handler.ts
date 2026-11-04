@@ -37,8 +37,9 @@ type Picture = { slot: string | null; name?: string } & ({ path: string; bucket?
 export type Taken = Omit<EngineTask, "products" | "master"> & {
   run: { job_id: string; attempt_id: string; attempt: number; workspace_id: string; kind: string; image_model: string };
   products: (Omit<EngineTask["products"][number], "pictures"> & { pictures: Picture[] })[];
-  master: (Stored & { title: string }) | null;
-  change: { problem: string; must_change: string[]; must_stay: string[] } | null;
+  master: (Stored & { title: string; picked?: boolean }) | null;
+  /** A correction's problem and what must change and stay; `ask` and `direction` are the designer's words with Render. */
+  change: { problem: string; must_change: string[]; must_stay: string[]; ask?: string; direction?: string } | null;
 };
 /** A person's answer on one of the Engine's pictures, with the prompt behind it. */
 export type Pending = { id: string; verdict: "yes" | "no"; why: string; image_model: string | null; updated_at: string; concept: string; slots: { slotKey: string; text: string }[] };
@@ -113,14 +114,19 @@ async function signTask(t: Taken, deps: Deps): Promise<EngineTask> {
         url: pic.url ?? (await deps.service.sign({ path: pic.path!, bucket: pic.bucket })),
       }))),
     }))),
-    master: t.master ? { title: t.master.title, url: await deps.service.sign(t.master) } : null,
+    master: t.master
+      ? { title: t.master.title, url: await deps.service.sign(t.master), ...(t.master.picked ? { picked: true } : {}) }
+      : null,
   };
 }
 
-/** What must change and stay in a correction: held to the prompt like any rule. */
-function enforcedOf(t: Taken): { id: string; statement: string }[] {
+/** What must change and stay in a correction, and what the designer asked: held to the prompt like any rule. */
+export function enforcedOf(t: Pick<Taken, "change">): { id: string; statement: string }[] {
   if (!t.change) return [];
   const out: { id: string; statement: string }[] = [];
+  if (t.change.ask?.trim()) out.push({ id: "ask", statement: `The designer asks for this change: ${t.change.ask.trim().replace(/[.!?]*$/, ".")}` });
+  if (t.change.direction?.trim() && !t.change.ask?.trim())
+    out.push({ id: "direction", statement: `The designer's direction for the picture: ${t.change.direction.trim().replace(/[.!?]*$/, ".")}` });
   if (t.change.problem?.trim()) out.push({ id: "change", statement: `Fix this: ${t.change.problem.trim()}` });
   (t.change.must_change ?? []).forEach((x, i) => out.push({ id: `change-${i + 1}`, statement: `Change ${x}.` }));
   (t.change.must_stay ?? []).forEach((x, i) => out.push({ id: `stay-${i + 1}`, statement: `Keep ${x} exactly as it is.` }));
@@ -217,8 +223,12 @@ async function evaluatePictures(attemptId: string, deps: Deps): Promise<void> {
   try {
     const { data } = await deps.service.toEvaluate(attemptId);
     if (!data?.candidates.length) return;
-    // The product's photographs (an approved master the picture keeps is not one: context.ts names it "the approved …").
-    const productUrls = (data.references ?? []).filter((r) => !r.role.startsWith("the approved ")).map((r) => r.url).slice(0, 3);
+    // The product's photographs (the picture this is made from is not one: context.ts names it "the approved …" or "the
+    // picture of …").
+    const productUrls = (data.references ?? [])
+      .filter((r) => !r.role.startsWith("the approved ") && !r.role.startsWith("the picture of "))
+      .map((r) => r.url)
+      .slice(0, 3);
     const checks = checklist(data.manifest ?? [], productUrls.length > 0);
     for (const c of data.candidates) {
       const pictureUrl = await deps.service.sign({ path: c.path });
@@ -269,7 +279,8 @@ async function attempt(t: Taken, deps: Deps): Promise<RunOutcome> {
   try {
     await digestAnswers(t, deps);
     const task = await signTask(t, deps);
-    const target = { imageType: "campaign_still", imageModel: t.run.image_model };
+    // Words on a picture already made change that picture; everything else is a new campaign still.
+    const target = { imageType: t.master?.picked ? "picture_edit" : "campaign_still", imageModel: t.run.image_model };
     const method = selectMethod(target);
     const maxReferences = method.method === "compose" ? method.dialect.maxReferences : 3;
     const concept = buildConcept(task);

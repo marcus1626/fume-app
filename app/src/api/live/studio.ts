@@ -2,7 +2,15 @@
 // and the creative documents (production.ts reads them; ids are explained there: a document is a creative, a version
 // on its strip is a candidate picture). Render asks the Engine for the picture; a designer can also make it elsewhere
 // and add it to the creative with how it was made.
-import { FumeError, type FumeApi, type StudioCampaignRow, type User } from "../../contract";
+import {
+  FumeError,
+  type CreativeDocument,
+  type EngineEdit,
+  type FumeApi,
+  type Id,
+  type StudioCampaignRow,
+  type User,
+} from "../../contract";
 import { placements } from "../../domain/placements";
 import { defaults, modes } from "../../mock/seed/studioModes";
 import type { Live } from "./context";
@@ -39,9 +47,17 @@ type Calls =
   | "placements"
   | "brandAssets";
 
-const NO_ENGINE = "The Engine does not change variables from words yet. Change them on the desk, then render.";
+/** What the designer says with a Render (render_creative's p_direction): the Engine bar's words and the picture they
+ *  change, or the creative's Direction for a new picture. */
+type Direction = { instruction?: string; direction?: string; from_candidate_id?: Id };
 /** How long Render waits for the Engine's outcome before it leaves the version rendering. */
 const RENDER_WAIT_MS = 90_000;
+
+/** A new picture's Direction, when the creative has one. */
+function directionOf(doc: CreativeDocument): Direction | undefined {
+  const words = String(doc.variables.direction ?? doc.variables.object ?? "").trim();
+  return words ? { direction: words.slice(0, 1000) } : undefined;
+}
 
 async function mustBeStaff(live: Live) {
   if (!(await live.me()).staffRole) throw new FumeError("forbidden", "Only Fume's people work in the Studio.");
@@ -49,6 +65,29 @@ async function mustBeStaff(live: Live) {
 
 export function studioCalls(live: Live): Pick<FumeApi, Calls> {
   const doc = async (id: string) => (await readDocument(live, id)).doc;
+
+  /** Render with what the designer said: the creative's Engine job starts (or starts again with these words), and the
+   *  Studio waits a while for the outcome. */
+  async function renderWith(documentId: Id, direction: Direction | undefined): Promise<CreativeDocument> {
+    const read = await readDocument(live, documentId);
+    const job = await command<{ id: string; state: string; error: string | null }>("render_creative", {
+      p_creative_id: read.creative.id,
+      p_key: requestKey(),
+      p_direction: direction ?? null,
+    });
+    await askEngine(job.id, true);
+    const until = Date.now() + RENDER_WAIT_MS;
+    while (Date.now() < until) {
+      await new Promise((r) => setTimeout(r, 2_000));
+      const now = await rows<{ state: string; error: string | null }>(
+        supabase().from("production_jobs").select("state, error").eq("id", job.id),
+      );
+      const state = now[0]?.state;
+      if (state === "failed") throw new FumeError("unavailable", now[0]?.error ?? "The Engine could not render it.");
+      if (state === "succeeded" || state === "cancelled") break;
+    }
+    return doc(documentId);
+  }
 
   const calls: Pick<FumeApi, Calls> = {
     // Every campaign Fume's people can see, with who checks it, who sends it and who approves it. What waits to be sent
@@ -167,11 +206,58 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
       if (change.title) desk.title = change.title;
       return doc(documentId);
     },
-    async engineEdit() {
-      throw new FumeError("unavailable", NO_ENGINE);
+    // The Engine bar: the words go into the Direction, shown before it renders. The Engine reads them when it writes
+    // the prompt; with a picture on the desk it changes that picture as asked and keeps the rest.
+    async engineEdit(documentId, text) {
+      await mustBeStaff(live);
+      const words = text.trim();
+      if (!words) throw new FumeError("invalid", "Tell the Engine what to change.");
+      if (words.length > 500) throw new FumeError("invalid", "Say it in up to 500 characters.");
+      const read = await readDocument(live, documentId);
+      const mode = creativeMode(read.doc.modeId);
+      const key = mode.variables.some((v) => v.key === "direction") ? "direction" : "object";
+      const variable = mode.variables.find((v) => v.key === key);
+      if (!variable)
+        throw new FumeError("unavailable", `${mode.name} takes no words. Change it on the desk, then render.`);
+      const desk = deskOf(live, documentId);
+      // A change still waiting is set aside: the newest words are the ones shown.
+      desk.edits = (desk.edits ?? []).map((e) => (e.state === "proposed" ? { ...e, state: "undone" } : e));
+      const from = String(read.doc.variables[key] ?? "");
+      const to = [from.trim().replace(/[.!?]*$/, ""), words].filter(Boolean).join(". ");
+      const edit: EngineEdit = {
+        id: crypto.randomUUID(),
+        text: words,
+        changes: [{ key, label: variable.label, from, to }],
+        parts: [{ text: words, keys: [key] }],
+        by: (await live.me()).id,
+        at: new Date().toISOString(),
+        state: "proposed",
+      };
+      desk.edits.push(edit);
+      desk.variables = { ...read.doc.variables, [key]: to };
+      return doc(documentId);
     },
-    async decideEdit() {
-      throw new FumeError("unavailable", NO_ENGINE);
+    async decideEdit(documentId, editId, verdict) {
+      await mustBeStaff(live);
+      const desk = deskOf(live, documentId);
+      const edit = desk.edits?.find((e) => e.id === editId);
+      if (!edit) throw new FumeError("not_found", "No such change.");
+      if (edit.state !== "proposed") throw new FumeError("conflict", "That change is decided.");
+      const read = await readDocument(live, documentId);
+      if (verdict === "undo") {
+        edit.state = "undone";
+        desk.variables = { ...read.doc.variables, ...Object.fromEntries(edit.changes.map((c) => [c.key, c.from])) };
+        return doc(documentId);
+      }
+      edit.state = "kept";
+      // With a picture on the desk, the words change it; without one, the Direction goes into a new picture.
+      const picture = read.doc.versions.find(
+        (v) => v.id === read.doc.pickedVersionId && v.state === "done" && !v.id.startsWith("job:"),
+      );
+      return renderWith(
+        documentId,
+        picture ? { instruction: edit.text, from_candidate_id: picture.id } : directionOf(read.doc),
+      );
     },
     // The Engine renders the creative (supabase/migrations/20261104130000_engine.sql): the creative's Engine job starts,
     // and the Engine is asked to work on it. The Studio waits a while for the outcome: the new version, or why there
@@ -180,22 +266,7 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
     async render(documentId) {
       await mustBeStaff(live);
       const read = await readDocument(live, documentId);
-      const job = await command<{ id: string; state: string; error: string | null }>("render_creative", {
-        p_creative_id: read.creative.id,
-        p_key: requestKey(),
-      });
-      await askEngine(job.id, true);
-      const until = Date.now() + RENDER_WAIT_MS;
-      while (Date.now() < until) {
-        await new Promise((r) => setTimeout(r, 2_000));
-        const now = await rows<{ state: string; error: string | null }>(
-          supabase().from("production_jobs").select("state, error").eq("id", job.id),
-        );
-        const state = now[0]?.state;
-        if (state === "failed") throw new FumeError("unavailable", now[0]?.error ?? "The Engine could not render it.");
-        if (state === "succeeded" || state === "cancelled") break;
-      }
-      return doc(documentId);
+      return renderWith(documentId, directionOf(read.doc));
     },
     async pickVersion(documentId, versionId) {
       const read = await readDocument(live, documentId);

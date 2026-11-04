@@ -36,8 +36,9 @@ export type EngineTask = {
   taste: Taste[];
   lessons: { id: string; statement: string; polarity: "do" | "avoid"; reason: string }[];
   exemplars: { text: string }[];
-  /** For a variant, a format or a correction: the version it is made from, as the first reference. */
-  master: { url: string; title: string } | null;
+  /** For a variant, a format or a correction: the version it is made from, as the first reference. `picked` when it is
+   *  the picture the designer's words change (the Engine bar), not yet approved. */
+  master: { url: string; title: string; picked?: boolean } | null;
 };
 
 export const FORMATS: Record<string, FormatSpec> = {
@@ -102,7 +103,11 @@ export function buildProduct(task: EngineTask, maxReferences: number): ProductCo
 
   // The pictures: the version this is made from first, then each product's pictures front first.
   const pictures: { url: string; role: string }[] = [];
-  if (task.master) pictures.push({ url: task.master.url, role: `the approved ${task.master.title}, whose picture this keeps` });
+  if (task.master)
+    pictures.push({
+      url: task.master.url,
+      role: task.master.picked ? `the picture of ${task.master.title} that this changes` : `the approved ${task.master.title}, whose picture this keeps`,
+    });
   for (const p of products)
     for (const pic of [...p.pictures].sort((a, b) => slotRank(a.slot) - slotRank(b.slot)))
       pictures.push({ url: pic.url, role: `${p.name}${pic.slot ? `, ${pic.slot}` : ""}` });
@@ -112,7 +117,9 @@ export function buildProduct(task: EngineTask, maxReferences: number): ProductCo
     ? references.map((r, i) => {
       const n = ORDINAL[i] ?? `next`;
       if (task.master && i === 0)
-        return `The ${n} picture is ${r.role}: keep its scene, light and product exactly; change only what is asked.`;
+        return task.master.picked
+          ? `The ${n} picture is ${r.role}: change only what the designer asks, and keep everything else in it exactly.`
+          : `The ${n} picture is ${r.role}: keep its scene, light and product exactly; change only what is asked.`;
       return `The ${n} picture is the product itself (${r.role}) and the only truth about its shape, colours and label; its background is not used.`;
     }).join(" ")
     : "There is no picture of the product; follow the description of it exactly.";

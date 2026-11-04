@@ -247,4 +247,52 @@ select test.ok((select evaluation ->> 'productTruth' = 'flag' and evaluation_usd
 select test.ok((public.fume_llm_budget() ->> 'spent_usd')::numeric >= 0.0066, 'the language model''s week counts looking');
 set role authenticated;
 
+-- ─── The designer's words reach the picture (20261104180000_engine_direction.sql) ─
+
+select test.act('marcus+lysne@fumecreatives.com');
+select test.keep('ec2', (public.create_campaign(test.id('lysne'), 'Morning round', array[test.id('oil')]) ->> 'id')::uuid);
+select public.send_brief(test.id('ec2'), '{"objective":"Morning","audience":"Women 30-50","message":"Oil after the shower","formats":"feed","count":"1"}');
+select public.approve_plan(test.id('ec2'), 1);
+select test.act('marcus@fumecreatives.com');
+select test.keep('em2', (public.open_creative(test.id('ec2')) ->> 'id')::uuid);
+select test.refuses(format($$ select public.render_creative(%L, null, jsonb_build_object('instruction', repeat('x', 501))) $$, test.id('em2')),
+  'invalid', 'the words have a length');
+select test.keep('ej2', (public.render_creative(test.id('em2'), 'dir-1',
+  jsonb_build_object('direction', ' Morning, the cup steaming ', 'instruction', '  ', 'from_candidate_id', test.id('ecand'))) ->> 'id')::uuid);
+select test.ok((select direction = '{"direction":"Morning, the cup steaming"}' from public.production_jobs where id = test.id('ej2')),
+  'the job keeps the Direction, without empty words or another creative''s picture');
+reset role;
+do $$
+declare t jsonb := public.engine_take(test.id('ej2'));
+begin
+  perform test.ok(t #>> '{change,direction}' = 'Morning, the cup steaming' and t -> 'master' = 'null'::jsonb,
+    'the Engine gets the Direction for a new picture');
+  perform test.keep('ecand2', (public.engine_finish((t #>> '{run,attempt_id}')::uuid,
+    jsonb_build_array(jsonb_build_object('path', test.id('lysne') || '/engine/e2.png', 'name', 'Master 2, Engine.png',
+      'content_type', 'image/png', 'bytes', 2000, 'width', 1080, 'height', 1350)), '{}', 15) -> 0 ->> 'id')::uuid);
+end $$;
+set role authenticated;
+select test.act('marcus@fumecreatives.com');
+select test.ok((public.render_creative(test.id('em2'), 'dir-2',
+  jsonb_build_object('instruction', 'Make the light warmer', 'from_candidate_id', test.id('ecand2'))) ->> 'id')::uuid = test.id('ej2'),
+  'the words of the Engine bar render the same job again');
+reset role;
+do $$
+declare t jsonb := public.engine_take(test.id('ej2'));
+begin
+  perform test.ok(t #>> '{change,ask}' = 'Make the light warmer' and (t #>> '{master,picked}')::boolean
+    and t #>> '{master,path}' like '%/engine/e2.png', 'the Engine changes the picked picture as asked');
+end $$;
+do $$
+declare a uuid;
+begin
+  -- A Render again has its own three tries: the try under way and two more.
+  select id into a from public.job_attempts where job_id = test.id('ej2') and state = 'running';
+  perform test.ok((public.engine_fail(a, 'The model refused the picture.') ->> 'state') = 'queued', 'a job rendered again tries again');
+  perform public.engine_fail((public.engine_take(test.id('ej2')) #>> '{run,attempt_id}')::uuid, 'The model refused the picture.');
+  perform test.ok((public.engine_fail((public.engine_take(test.id('ej2')) #>> '{run,attempt_id}')::uuid, 'The model refused the picture.')
+    ->> 'state') = 'failed', 'and stops after its third try since that Render');
+end $$;
+set role authenticated;
+
 select test.ok(true, 'all of the Engine tests passed');

@@ -42,8 +42,10 @@ export function buildManifest(input: {
   concept: Concept;
   format: FormatSpec;
   enforcedLessons: { id: string; statement: string }[];
+  /** A change to a picture already made (picture_edit): its scene and look are the picture's own. */
+  edit?: boolean;
 }): ManifestItem[] {
-  const { product, brand, concept, format } = input;
+  const { product, brand, concept, format, edit } = input;
   const items: ManifestItem[] = [
     { id: "ref-text", kind: "reference_text_locked", refId: "lockedReferenceText", required: true, check: "code", requirement: "The approved reference description, word for word.", expected: product.lockedReferenceText, suggestedSlot: "references" },
     { id: "product-text", kind: "product_text_locked", refId: "lockedProductText", required: true, check: "code", requirement: "The approved product description, word for word.", expected: product.lockedProductText, suggestedSlot: "product" },
@@ -52,11 +54,14 @@ export function buildManifest(input: {
     items.push({ id: `inv-${inv.id}`, kind: "product_invariant", refId: inv.id, required: true, check: "decision", requirement: inv.statement, suggestedSlot: "constraints" });
   for (const c of product.colours)
     items.push({ id: `colour-${slug(c.area)}`, kind: "product_colour", refId: `colours.${c.area}`, required: true, check: "code", requirement: `The ${c.area} is the colour ${c.valueHex}.`, expected: c.valueHex, suggestedSlot: "product" });
-  for (const rule of applicableRules(brand, concept.lookKey))
-    items.push({ id: `brand-${rule.id}`, kind: rule.binding === "hard" ? "brand_rule_hard" : "brand_rule_soft", refId: rule.id, required: rule.binding === "hard", check: "decision", requirement: rule.statement, suggestedSlot: rule.dimension === "people" ? "people" : "brand" });
-  items.push({ id: "concept", kind: "concept", refId: concept.id, required: true, check: "decision", requirement: `The scene shows: ${concept.sceneIdea} The product's role: ${concept.productRole}.`, suggestedSlot: "scene" });
+  for (const rule of applicableRules(brand, concept.lookKey)) {
+    if (edit && rule.binding !== "hard") continue;
+    items.push({ id: `brand-${rule.id}`, kind: rule.binding === "hard" ? "brand_rule_hard" : "brand_rule_soft", refId: rule.id, required: rule.binding === "hard", check: "decision", requirement: rule.statement, suggestedSlot: edit ? "constraints" : rule.dimension === "people" ? "people" : "brand" });
+  }
+  if (!edit)
+    items.push({ id: "concept", kind: "concept", refId: concept.id, required: true, check: "decision", requirement: `The scene shows: ${concept.sceneIdea} The product's role: ${concept.productRole}.`, suggestedSlot: "scene" });
   for (const lesson of input.enforcedLessons)
-    items.push({ id: `lesson-${lesson.id}`, kind: "lesson_enforced", refId: lesson.id, required: true, check: "decision", requirement: lesson.statement, suggestedSlot: "constraints" });
+    items.push({ id: `lesson-${lesson.id}`, kind: "lesson_enforced", refId: lesson.id, required: true, check: "decision", requirement: lesson.statement, suggestedSlot: edit && lesson.id === "ask" ? "change" : "constraints" });
   items.push({ id: "format", kind: "format", refId: "format", required: true, check: "code", requirement: `Aspect ratio ${format.aspectRatio}.`, expected: format.aspectRatio, suggestedSlot: "assignment" });
   return items;
 }
@@ -79,7 +84,7 @@ export function buildCompilePackage(input: CompileInput): { compilePackage: Comp
     target: input.target,
     grammar: input.grammar,
     dialect: input.dialect,
-    manifest: buildManifest(input),
+    manifest: buildManifest({ ...input, edit: input.target.imageType === "picture_edit" }),
     brandRules: input.brand.rules.filter((r) => r.lookKey === null || r.lookKey === input.concept.lookKey),
     lockedReferenceText: input.product.lockedReferenceText,
     lockedProductText: input.product.lockedProductText,

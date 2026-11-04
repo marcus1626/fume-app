@@ -14,6 +14,7 @@
 import {
   FumeError,
   type CreativeDocument,
+  type EngineEdit,
   type Evaluation,
   type Format,
   type FormatTile,
@@ -119,6 +120,8 @@ interface Desk {
   picked?: Id;
   /** The placement asked for, by format (Make formats). */
   placements?: Partial<Record<Format, Id>>;
+  /** The Engine bar's words in this tab, each shown before it renders (FLOWS §9.1). */
+  edits?: EngineEdit[];
 }
 const desks = new WeakMap<Live, Map<Id, Desk>>();
 export function deskOf(live: Live, documentId: Id): Desk {
@@ -289,7 +292,7 @@ export async function readDocuments(
       layers: desk.layers ?? [],
       versions: list,
       ...(picked ? { pickedVersionId: picked } : {}),
-      edits: [],
+      edits: desk.edits ?? [],
       ...(formats.length ? { formats } : {}),
       state,
       by,
