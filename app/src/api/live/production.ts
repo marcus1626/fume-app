@@ -1,11 +1,11 @@
-// Manual production on the live backend (until the Engine runs, Wednesday): the Studio's creative documents read from
+// Production on the live backend: the Studio's creative documents read from
 // the database, Make formats from the approved master, and a picture a designer made by hand.
 //
 // Ids: how the contract's objects map to database rows (supabase/migrations/20261027110000_manual_production.sql).
 //   CreativeDocument.id = creatives.id, and CreativeDocument.creativeId is the same id. The Studio holds one document
 //     per creative; opening one for a planned creative makes the creative first (open_creative), with no version, so
 //     nobody outside Fume sees it.
-//   RenderVersion.id = candidates.id: every picture made for the creative (by hand this week, the Engine's later), on
+//   RenderVersion.id = candidates.id: every picture made for the creative (by the Engine or by hand), on
 //     the creative's jobs, numbered in the order they were made. "Send to check" makes the picked one a creative
 //     version (send_to_check).
 //   QaItem.id = creative_versions.id (quality.ts): one version in Check; its documentId is its creative's id.
@@ -29,7 +29,7 @@ import { placements } from "../../mock/seed/studio";
 import { defaults, modes } from "../../mock/seed/studioModes";
 import type { Live } from "./context";
 import { CREATIVE, VERSION, fileUrls, uploadFile, type CreativeRow, type VersionRow } from "./map";
-import { command, requestKey, rows, supabase } from "./supabase";
+import { askEngine, command, requestKey, rows, supabase } from "./supabase";
 
 // ─── Rows ────────────────────────────────────────────────────────────────────
 
@@ -42,9 +42,17 @@ interface JobRow {
   id: string;
   creative_id: string | null;
   kind: "master" | "variant" | "format" | "correction";
+  mode: "engine" | "manual";
+  state: "queued" | "running" | "succeeded" | "failed" | "cancelled" | "unknown";
+  error: string | null;
   requested_by: string;
   created_at: string;
+  updated_at: string;
 }
+const JOB = "id, creative_id, kind, mode, state, error, requested_by, created_at, updated_at";
+/** An Engine job still at work: the Studio shows it as the version being rendered. */
+export const engineAtWork = (j: Pick<JobRow, "mode" | "state">) =>
+  j.mode === "engine" && ["queued", "running", "unknown"].includes(j.state);
 
 export interface CandidateRow {
   id: string;
@@ -133,12 +141,7 @@ export async function readDocuments(
   const campaignIds = [...new Set(creatives.map((c) => c.campaign_id))];
   const [versions, jobs, children, products] = await Promise.all([
     rows<VersionRow>(supabase().from("creative_versions").select(VERSION).in("creative_id", ids).order("number")),
-    rows<JobRow>(
-      supabase()
-        .from("production_jobs")
-        .select("id, creative_id, kind, requested_by, created_at")
-        .in("creative_id", ids),
-    ),
+    rows<JobRow>(supabase().from("production_jobs").select(JOB).in("creative_id", ids)),
     // The formats made from a master, for its Make formats strip.
     rows<StudioCreativeRow>(
       supabase()
@@ -213,6 +216,23 @@ export async function readDocuments(
       instruction: c.origin === "manual" ? `Made by hand${c.note ? `: ${c.note}` : ""}` : (c.note ?? undefined),
       cost: 0,
     }));
+    // The Engine at work on this creative: the next version, rendering. The Engine is asked again now and then, so a
+    // picture that was still being made when its run ended is collected.
+    for (const j of jobs.filter((x) => x.creative_id === cr.id && engineAtWork(x))) {
+      void askEngine(j.id);
+      list.push({
+        id: `job:${j.id}`,
+        number: list.length + 1,
+        image: "",
+        at: j.updated_at,
+        by: j.requested_by,
+        state: "rendering",
+        variables,
+        specs: { ...specs, imageModel: "Engine" },
+        evaluation: { productTruth: "flag", brandRules: "flag", artefacts: "none", evaluated: false, notes: [] },
+        cost: 0,
+      });
+    }
     // The picture that goes to check: the one picked, else the newest not sent yet; once sent, the one in Check.
     const picked =
       (desk.picked && unsent.some((c) => c.id === desk.picked) ? desk.picked : undefined) ??

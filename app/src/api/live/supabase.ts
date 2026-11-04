@@ -112,3 +112,16 @@ export function askFumeToWrite(campaignId: string, now = false): void {
     .functions.invoke("fume-plan", { body: { campaignId } })
     .catch(() => undefined);
 }
+
+const engineAsked = new Map<string, number>();
+/** Asks the Engine to work on a job (supabase/functions/engine): it answers at once and works in the background; the
+ *  record's new rows refresh the Studio. At most once a minute per job, unless `now`. A failure here only means the
+ *  next read asks again. */
+export async function askEngine(jobId: string, now = false): Promise<void> {
+  const last = engineAsked.get(jobId) ?? 0;
+  if (!now && Date.now() - last < 60_000) return;
+  engineAsked.set(jobId, Date.now());
+  await supabase()
+    .functions.invoke("engine", { body: { jobId } })
+    .catch(() => undefined);
+}

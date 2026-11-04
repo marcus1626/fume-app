@@ -30,6 +30,9 @@ insert into public.files (workspace_id, path, name, content_type, bytes, purpose
 values (test.id('lysne'), test.id('lysne') || '/oil-front.png', 'oil-front.png', 'image/png', 1000, 'source');
 insert into public.sources (workspace_id, kind, name, file_id, product_id, slot)
 select test.id('lysne'), 'packshot', 'Oil, front', id, test.id('oil'), 'front' from public.files where name = 'oil-front.png';
+-- And one the product import found on the brand's website: an address, no file.
+insert into public.sources (workspace_id, kind, name, url, product_id, slot)
+values (test.id('lysne'), 'packshot', 'Oil, back', 'https://lysne.example/oil-back.png', test.id('oil'), 'back');
 set role authenticated;
 
 -- ─── Render ─────────────────────────────────────────────────────────────────
@@ -66,8 +69,10 @@ begin
   perform test.ok(t #>> '{creative,slot}' = 'pc1' and t #>> '{creative,format}' = 'feed', 'it names the creative and its format');
   perform test.ok(t #>> '{plan,chosen_direction_id}' is not null and jsonb_array_length(t #> '{plan,planned_creatives}') = 2,
     'it carries the approved plan');
-  perform test.ok(jsonb_array_length(t -> 'products') = 1 and t #>> '{products,0,pictures,0,slot}' = 'front'
-    and jsonb_array_length(t #> '{products,0,facts}') > 0, 'it carries the product, its frozen facts and its front picture');
+  perform test.ok(jsonb_array_length(t -> 'products') = 1 and jsonb_array_length(t #> '{products,0,facts}') > 0
+    and exists (select 1 from jsonb_array_elements(t #> '{products,0,pictures}') x where x ->> 'slot' = 'front' and x ->> 'path' like '%/oil-front.png')
+    and exists (select 1 from jsonb_array_elements(t #> '{products,0,pictures}') x where x ->> 'slot' = 'back' and x ->> 'url' = 'https://lysne.example/oil-back.png'),
+    'it carries the product, its frozen facts, its picture file and the picture from its website');
   perform test.ok(t -> 'master' = 'null'::jsonb and t #>> '{brand,name}' is not null, 'a master is made from no earlier picture');
 end $$;
 

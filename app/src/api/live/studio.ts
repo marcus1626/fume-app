@@ -1,7 +1,7 @@
 // The Studio on the live backend, as far as manual production needs it: the staff Campaigns table, the brand's kit,
 // and the creative documents (production.ts reads them; ids are explained there: a document is a creative, a version
-// on its strip is a candidate picture). Until the Engine runs (Wednesday), nothing renders: a designer makes the
-// picture elsewhere and it is added to the creative with how it was made.
+// on its strip is a candidate picture). Render asks the Engine for the picture; a designer can also make it elsewhere
+// and add it to the creative with how it was made.
 import { FumeError, type FumeApi, type StudioCampaignRow, type User } from "../../contract";
 import { placements } from "../../domain/placements";
 import { defaults, modes } from "../../mock/seed/studioModes";
@@ -18,7 +18,7 @@ import {
 } from "./production";
 import { readProducts } from "./products";
 import { unsentChecked, withToSend } from "./quality";
-import { command, requestKey, rows, supabase } from "./supabase";
+import { askEngine, command, requestKey, rows, supabase } from "./supabase";
 
 type Calls =
   | "brandWorkspace"
@@ -39,7 +39,9 @@ type Calls =
   | "placements"
   | "brandAssets";
 
-const NO_ENGINE = "The Engine is not part of this version. Make the picture by hand and add it to the creative.";
+const NO_ENGINE = "The Engine does not change variables from words yet. Change them on the desk, then render.";
+/** How long Render waits for the Engine's outcome before it leaves the version rendering. */
+const RENDER_WAIT_MS = 90_000;
 
 async function mustBeStaff(live: Live) {
   if (!(await live.me()).staffRole) throw new FumeError("forbidden", "Only Fume's people work in the Studio.");
@@ -171,12 +173,35 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
     async decideEdit() {
       throw new FumeError("unavailable", NO_ENGINE);
     },
-    async render() {
-      throw new FumeError("unavailable", NO_ENGINE);
+    // The Engine renders the creative (supabase/migrations/20261104130000_engine.sql): the creative's Engine job starts,
+    // and the Engine is asked to work on it. The Studio waits a while for the outcome: the new version, or why there
+    // is none (the prompt did not pass Fume's checks, the image model refused, the week's budget is used). A picture
+    // that takes longer shows as rendering, and the record's new rows bring it in.
+    async render(documentId) {
+      await mustBeStaff(live);
+      const read = await readDocument(live, documentId);
+      const job = await command<{ id: string; state: string; error: string | null }>("render_creative", {
+        p_creative_id: read.creative.id,
+        p_key: requestKey(),
+      });
+      await askEngine(job.id, true);
+      const until = Date.now() + RENDER_WAIT_MS;
+      while (Date.now() < until) {
+        await new Promise((r) => setTimeout(r, 2_000));
+        const now = await rows<{ state: string; error: string | null }>(
+          supabase().from("production_jobs").select("state, error").eq("id", job.id),
+        );
+        const state = now[0]?.state;
+        if (state === "failed") throw new FumeError("unavailable", now[0]?.error ?? "The Engine could not render it.");
+        if (state === "succeeded" || state === "cancelled") break;
+      }
+      return doc(documentId);
     },
     async pickVersion(documentId, versionId) {
       const read = await readDocument(live, documentId);
-      if (!read.doc.versions.some((v) => v.id === versionId)) throw new FumeError("not_found", "No such version.");
+      const version = read.doc.versions.find((v) => v.id === versionId);
+      if (!version) throw new FumeError("not_found", "No such version.");
+      if (version.state !== "done") throw new FumeError("conflict", "The Engine is still rendering this version.");
       deskOf(live, documentId).picked = versionId;
       return doc(documentId);
     },

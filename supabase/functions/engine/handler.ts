@@ -25,11 +25,13 @@ import type { ImageProvider } from "./provider.ts";
 
 type Failure = { message: string } | null;
 type Stored = { path: string; bucket?: string };
+/** A product picture: a file in the workspace's folder, or an address on the brand's own website. */
+type Picture = { slot: string | null; name?: string } & ({ path: string; bucket?: string; url?: undefined } | { url: string; path?: undefined });
 
 /** What public.engine_take hands over, before the pictures' addresses are signed. */
 export type Taken = Omit<EngineTask, "products" | "master"> & {
   run: { job_id: string; attempt_id: string; attempt: number; workspace_id: string; kind: string; image_model: string };
-  products: (Omit<EngineTask["products"][number], "pictures"> & { pictures: ({ slot: string | null; name?: string } & Stored)[] })[];
+  products: (Omit<EngineTask["products"][number], "pictures"> & { pictures: Picture[] })[];
   master: (Stored & { title: string }) | null;
   change: { problem: string; must_change: string[]; must_stay: string[] } | null;
 };
@@ -75,7 +77,11 @@ async function signTask(t: Taken, deps: Deps): Promise<EngineTask> {
     ...t,
     products: await Promise.all(t.products.map(async (p) => ({
       ...p,
-      pictures: await Promise.all(p.pictures.map(async (pic) => ({ slot: pic.slot, name: pic.name, url: await deps.service.sign(pic) }))),
+      pictures: await Promise.all(p.pictures.map(async (pic) => ({
+        slot: pic.slot,
+        name: pic.name,
+        url: pic.url ?? (await deps.service.sign({ path: pic.path!, bucket: pic.bucket })),
+      }))),
     }))),
     master: t.master ? { title: t.master.title, url: await deps.service.sign(t.master) } : null,
   };

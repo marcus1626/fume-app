@@ -17,7 +17,7 @@ const taken = (attempt = 1): Taken => ({
     id: "p1",
     name: "Night oil",
     facts: [{ id: "f1", area: "shape", label: "Bottle", statement: "A small amber glass bottle with a dropper", status: "verified" }],
-    pictures: [{ slot: "front", path: "ws1/oil.png" }],
+    pictures: [{ slot: "front", path: "ws1/oil.png" }, { slot: "back", url: "https://brand.example/oil-back.png" }],
   }],
   rules: [],
   taste: [],
@@ -99,7 +99,7 @@ Deno.test("with an image model the checked prompt goes unchanged, pictures first
   const f = fake({ takes: [taken()], provider: fakeProvider(["waiting", "done"], seen) });
   assertEquals(await runJob(JOB, f.deps), "made");
   assertEquals(f.log, ["prompted att-1 validated", "submitted att-1 fake req-1", `store ws1/engine/${JOB}/att-1-1.png`, "finish att-1 15"]);
-  assertEquals(seen[0].referenceUrls, ["https://signed/ws1/oil.png"]);
+  assertEquals(seen[0].referenceUrls, ["https://signed/ws1/oil.png", "https://brand.example/oil-back.png"]);
   assertEquals(seen[0].aspectRatio, "4:5");
   assertEquals(seen[0].text, (f.prompts[0] as { text: string }).text);
   const file = f.finished[0][0] as { width: number; height: number; name: string };
