@@ -1,5 +1,5 @@
-// The brand's books (FLOWS §30): Brand › Tone of Voice (/brand/voice) and Brand › Design system (/brand/design). One
-// frame for both: the version and where it stands in the header's meta, a note when another version is on its way or
+// The brand's books (FLOWS §30, §32): Brand › Tone of Voice (/brand/voice), Brand › Design system (/brand/design) and
+// Brand › Look Book (/brand/look). One frame for all three: the version and where it stands in the header's meta, a note when another version is on its way or
 // in use, the book, its versions, and the step's foot.
 // - Fume writes a version (Write a new version, for Fume's people and the brand's owner or approver); an expert checks
 //   the draft (Mark checked, in the foot); only the customer's owner or approver approves it or asks for a change.
@@ -36,15 +36,29 @@ import {
   useTeam,
   useWriteBrandBook,
 } from "../../api/hooks";
-import type { BookProgress, BrandBook, BrandBookKind, DesignBook, VoiceBook } from "../../contract";
+import type { BookProgress, BrandBook, BrandBookKind, DesignBook, LookBook, VoiceBook } from "../../contract";
 
-type BodyOf = { voice: VoiceBook; design: DesignBook };
+type BodyOf = { voice: VoiceBook; design: DesignBook; look: LookBook };
 import { date } from "../../lib/time";
 import { Back, Nothing, Page, Query } from "../../shell/Page";
 import { firstName } from "../../shell/people";
 import { useRole, useViewer } from "./parts";
 
-export const bookName: Record<BrandBookKind, string> = { voice: "Tone of Voice", design: "Design system" };
+export const bookName: Record<BrandBookKind, string> = {
+  voice: "Tone of Voice",
+  design: "Design system",
+  look: "Look Book",
+};
+
+/** What a book is for, once approved: the end of "Version 1 stays in use until…" and of the customer's foot. */
+const usedFor: Record<BrandBookKind, string> = {
+  voice: "Fume writes every word from it",
+  design: "the Engine lays out every creative from it",
+  look: "the Engine shoots every picture from it",
+};
+
+/** A name for the book inside a sentence: "the Tone of Voice", "the design system", "the Look Book". */
+const inLine = (kind: BrandBookKind) => (kind === "design" ? "design system" : bookName[kind]);
 
 /** Who the book's lines name: the expert who checks, the customer who approves, and "you". */
 function useBookPeople() {
@@ -293,8 +307,7 @@ function Status({
         <Icon name="info" />
         <span>
           Version {inUse.version} stays in use until{" "}
-          {people.approver === "you" ? "you approve" : `${people.approver} approves`} this one
-          {kind === "voice" ? ": Fume writes every word from it." : ": the Engine lays out every creative from it."}
+          {people.approver === "you" ? "you approve" : `${people.approver} approves`} this one: {usedFor[kind]}.
         </span>
       </p>,
     );
@@ -364,7 +377,7 @@ function CheckFoot({ book, people }: { book: BrandBook; people: BookPeople }) {
               toast.done(`${name}, version ${book.version} checked`, {
                 description: `${cap(people.approver)} sees it now.`,
               }),
-            (e: Error) => toast.error(`The ${name.toLowerCase()} wasn’t marked checked`, { description: e.message }),
+            (e: Error) => toast.error(`The ${inLine(book.kind)} wasn’t marked checked`, { description: e.message }),
           )
         }
       >
@@ -390,11 +403,7 @@ function DecideFoot({
   const toast = useToast();
   const name = bookName[kind];
   return (
-    <PageFooter
-      start={`${people.Name(book.checkedBy)} checked it. Approved, ${
-        kind === "voice" ? "Fume writes every word from it" : "the Engine lays out every creative from it"
-      }.`}
-    >
+    <PageFooter start={`${people.Name(book.checkedBy)} checked it. Approved, ${usedFor[kind]}.`}>
       <Button variant="secondary" icon="message-square" onClick={onChange}>
         Ask for a change
       </Button>
@@ -405,12 +414,9 @@ function DecideFoot({
           approve.mutateAsync(book.id).then(
             () =>
               toast.done(`${name} approved`, {
-                description:
-                  kind === "voice"
-                    ? `Fume writes every word from version ${book.version} now.`
-                    : `The Engine lays out every creative from version ${book.version} now.`,
+                description: `${cap(usedFor[kind]).replace(/ from it$/, "")} from version ${book.version} now.`,
               }),
-            (e: Error) => toast.error(`The ${name.toLowerCase()} wasn’t approved`, { description: e.message }),
+            (e: Error) => toast.error(`The ${inLine(kind)} wasn’t approved`, { description: e.message }),
           )
         }
       >
@@ -434,7 +440,6 @@ function WriteNow({
 }) {
   const write = useWriteBrandBook();
   const toast = useToast();
-  const name = bookName[kind];
   return (
     <Button
       variant={quiet ? "secondary" : "primary"}
@@ -443,12 +448,12 @@ function WriteNow({
       loading={write.isPending}
       onClick={() =>
         write.mutateAsync({ kind, ...(ask ? { ask } : {}) }).then(
-          () => toast.done(`Fume is writing the ${name.toLowerCase()}`, { description: "It takes about a minute." }),
-          (e: Error) => toast.error(`The ${name.toLowerCase()} wasn’t started`, { description: e.message }),
+          () => toast.done(`Fume is writing the ${inLine(kind)}`, { description: "It takes about a minute." }),
+          (e: Error) => toast.error(`The ${inLine(kind)} wasn’t started`, { description: e.message }),
         )
       }
     >
-      {again ? "Try again" : `Write the ${name.toLowerCase()}`}
+      {again ? "Try again" : `Write the ${inLine(kind)}`}
     </Button>
   );
 }
@@ -473,7 +478,6 @@ function AskDialog({
   const write = useWriteBrandBook();
   const change = useAskBrandBookChange();
   const toast = useToast();
-  const name = bookName[kind];
   const id = `book-ask-${mode}`;
   const busy = write.isPending || change.isPending;
   const ready = mode === "write" || text.trim().length > 0;
@@ -504,7 +508,7 @@ function AskDialog({
           <DialogTitle>{mode === "change" ? "Ask for a change" : `Write version ${next}`}</DialogTitle>
           <DialogDescription>
             {mode === "change"
-              ? `Fume writes a new version of the ${name.toLowerCase()} from version ${book.version} and your words. Version ${book.version} stays in use until you approve the new one.`
+              ? `Fume writes a new version of the ${inLine(kind)} from version ${book.version} and your words. Version ${book.version} stays in use until you approve the new one.`
               : `Fume writes it from version ${book.version} and what it knows about the brand now.`}
           </DialogDescription>
         </DialogHeader>
@@ -523,11 +527,7 @@ function AskDialog({
                 aria-describedby={`${id}-help`}
                 data-ui-autofocus
               />
-              <FieldDescription id={`${id}-help`}>
-                {kind === "voice"
-                  ? "For example: More words for the gift season. Never “du” in English."
-                  : "For example: The call to action in Night brown, not Burgundy."}
-              </FieldDescription>
+              <FieldDescription id={`${id}-help`}>{example[kind]}</FieldDescription>
             </Field>
           </form>
         </DialogBody>
@@ -544,16 +544,43 @@ function AskDialog({
   );
 }
 
+/** What a change to each book can sound like. */
+const example: Record<BrandBookKind, string> = {
+  voice: "For example: More words for the gift season. Never “du” in English.",
+  design: "For example: The call to action in Night brown, not Burgundy.",
+  look: "For example: A night look of its own. Never a top-down shot of the bottle.",
+};
+
+/** Where Fume writes each book from, to a customer and to Fume's people. */
+const writtenFrom: Record<BrandBookKind, { staff: (brand: string) => string; customer: string }> = {
+  voice: {
+    staff: (brand) =>
+      `Fume writes ${brand}’s Tone of Voice from its Brand DNA, its rules, its products and its website.`,
+    customer: "Fume writes it from your Brand DNA, your rules, your products and your website.",
+  },
+  design: {
+    staff: (brand) =>
+      `Fume writes ${brand}’s design system from its Brand DNA, its rules, its products and its website.`,
+    customer: "Fume writes it from your Brand DNA, your rules, your products and your website.",
+  },
+  look: {
+    staff: (brand) =>
+      `Fume reads ${brand}’s photography from its own pictures: its Brand DNA imagery, the pictures its people liked or turned down, and the pictures on its website.`,
+    customer:
+      "Fume reads it from your own pictures: your Brand DNA imagery, the pictures you liked or turned down, and the pictures on your website.",
+  },
+};
+
 /** Nothing to read yet. */
 export function NoBook({ kind, staff, brand }: { kind: BrandBookKind; staff: boolean; brand: string }) {
   return (
     <Nothing
-      icon={kind === "voice" ? "message-square" : "palette"}
-      title={`No ${bookName[kind].toLowerCase()} yet`}
+      icon={kind === "voice" ? "message-square" : kind === "look" ? "camera" : "palette"}
+      title={`No ${inLine(kind)} yet`}
       text={
         staff
-          ? `Fume writes ${brand}’s ${bookName[kind].toLowerCase()} from its Brand DNA, its rules, its products and its website.`
-          : `Fume writes it from your Brand DNA, your rules, your products and your website. An expert at Fume checks it before you read it.`
+          ? writtenFrom[kind].staff(brand)
+          : `${writtenFrom[kind].customer} An expert at Fume checks it before you read it.`
       }
     />
   );

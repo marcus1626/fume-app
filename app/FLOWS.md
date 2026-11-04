@@ -1120,6 +1120,31 @@ its client never see it.
   Nothing here is Amber: nothing in it is checked.
 - **The demo.** Anna (?as=anna): LYSNE › Black Friday › Plan, in check because Maja asked.
 
+## 32. The Look Book (4 Nov 2026, PROPOSED)
+Beside the Tone of Voice and the design system, every brand has a third book: its **photography**, read from its own
+pictures (docs/mvp/look-book.md), so every picture the Engine makes is shot the way the brand shoots. Marcus, 4 Nov:
+"Smak fra brands handler om alle detaljene, kamera, grain, lys, komposisjon, alt." The Imagery part of the board opens
+Brand › Look Book (/brand/look) with "The Look Book".
+- **The same frame as the other two (§30).** Version and where it stands in the header, the notes above the book, the
+  Versions list, Anna's **Mark checked** on a draft, Maja's **Approve** and **Ask for a change** on a checked version,
+  and Fume's people's **Write a new version**. What it is for, in the foot and the notes: "Approved, the Engine shoots
+  every picture from it." A customer never reads a draft; she only learns its number is on its way.
+- **The book.** A summary a photographer could shoot from, then **The signature**: four to six things that make a
+  picture the brand's at a glance. **Read from your pictures** shows the pictures Fume read (at most twelve), each
+  with the number the book calls it by, where it comes from (Brand DNA, the website, liked or turned down in Taste,
+  the turned-down ones dimmed) and what it shows of the look.
+  Then **Camera** (the capture, each lens in millimetres and what it is for, aperture, height, distance, motion),
+  **Light** (key, quality, direction, colour temperature in kelvin, contrast, time of day, rules), **Colour** (the
+  grade, the palette as swatches with their hex, saturation, blacks, highlights, white balance), **Texture** (grain on
+  a scale of none, fine, medium, heavy, sharpness, surfaces, the lens), **Composition**, **Styling**, **People** (who,
+  how they move, real skin; "Your pictures show no people." when there are none), **Retouching**, **Never**, and
+  **Recipes**, one per kind of scene, each with camera, light, grade and composition: the Engine takes the one closest
+  to the picture the plan asks for. What Fume still needs to know and where each part comes from close it, as in the
+  other books ("The brand's pictures" is a source of its own).
+- **Who sees what.** As §30. The brand's palette is the customer's data, drawn inline.
+- **The demo.** LYSNE's Look Book, version 1, read from twelve pictures, is checked by Anna and waits on Maja. Maja
+  (/brand/look): Approve or Ask for a change. Anna (?as=anna): "Checked by you · waits on Maja".
+
 ## 33. Graphic design by Fume (4 Nov 2026, PROPOSED)
 Fume lays the plan's approved words on a picture the Engine made, in the brand's design system, measures the layout
 by code and has its review look at it as a designer would (docs/mvp/design-layer.md). Only Fume's people see any of

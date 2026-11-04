@@ -62,3 +62,18 @@ test("Maja approves the design system Anna checked, and asks for a change in the
   await expect(page.getByText("With your words. Anna checks it before you read it.")).toBeVisible();
   await expect(page.getByText("Fume is writing version 3. Anna checks it before you read it.")).toBeVisible();
 });
+
+test("Maja reads the Look Book Fume wrote from LYSNE's pictures, and approves it", async ({ page }) => {
+  await page.goto("/brand#imagery");
+  await page.getByRole("link", { name: "The Look Book" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Look Book" })).toBeVisible();
+  await expect(page.getByText("Checked by Anna · yours to approve", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 2, name: "Read from your pictures" })).toBeVisible();
+  await expect(page.getByText("Turned down in Taste")).toBeVisible();
+  await expect(page.getByRole("list", { name: "Lenses" })).toContainText("85 mm");
+
+  await page.getByRole("button", { name: "Approve", exact: true }).click();
+  await expect(page.getByText("Look Book approved")).toBeVisible();
+  await expect(page.getByText("The Engine shoots every picture from version 1 now.")).toBeVisible();
+  await expect(page.getByText(/^Approved by you, /)).toBeVisible();
+});

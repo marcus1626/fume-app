@@ -1,9 +1,11 @@
 // LYSNE's books (FLOWS §30): the long Tone of Voice and the design system Fume wrote. The voice's version 1 is
 // approved by Maja and in use; version 2 (the gift season's words, Anna's ask) is a draft that waits on Anna's check.
 // The design system's version 1 is checked by Anna and waits on Maja. Code builds the CSS and measures the contrast,
-// as the brand-book function does (supabase/functions/brand-book/book.ts).
+// as the brand-book function does (supabase/functions/brand-book/book.ts). The Look Book's version 1 (FLOWS §32),
+// written from twelve of LYSNE's pictures, is checked by Anna and waits on Maja too.
 import type { BrandBook, DesignRole, DesignBook, VoiceBook } from "../../contract";
 import { at, img } from "./helpers";
+import { lysneLook } from "./look";
 
 /** The voice at work, besides its five parts (the long Tone of Voice). */
 function voiceAtWork(): Omit<VoiceBook, "parts" | "identity" | "speak" | "rules" | "audience" | "examples"> {
@@ -555,6 +557,17 @@ export function brandBooks(voice: VoiceBook): BrandBook[] {
       checkedBy: "u-anna",
       checkedAt: at(60 * 5),
       body: builtDesign(lysneDesign()),
+    },
+    {
+      id: "bb-look-1",
+      kind: "look",
+      version: 1,
+      state: "checked",
+      createdAt: at(60 * 7),
+      writtenAt: at(60 * 7 - 2),
+      checkedBy: "u-anna",
+      checkedAt: at(60 * 2),
+      body: lysneLook(),
     },
   ];
 }

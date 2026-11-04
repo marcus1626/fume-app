@@ -418,6 +418,7 @@ const sourceWord: Record<NonNullable<VoiceBook["sources"]>[number]["source"], st
   taste: "Taste",
   memory: "Past campaigns",
   fume: "Fume’s proposal",
+  pictures: "The brand’s pictures",
 };
 
 /** The long Tone of Voice's other parts: where the voice sits, its mechanics, its words, the channels, headlines and

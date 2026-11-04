@@ -1279,7 +1279,11 @@ scenario("brand books", async (golden) => {
   await a.brandBooks();
   await a.approveBrandBook("bb-design-1");
   await a.writeBrandBook({ kind: "voice" });
+  await a.writeBrandBook({ kind: "look" });
   book.signInAs("maja", "u-maja");
+  // The Look Book (FLOWS §32): Maja approves the version Anna checked, then asks for a night look of its own.
+  await a.approveBrandBook("bb-look-1");
+  await a.askBrandBookChange({ bookId: "bb-look-1", ask: "A night look of its own, for the bedside." });
   await a.approveBrandBook("bb-voice-2");
   await a.approveBrandBook("bb-voice-1");
   await a.askBrandBookChange({ bookId: "bb-design-1", ask: " " });
