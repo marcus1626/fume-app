@@ -38,6 +38,8 @@ export interface Layout {
   ground: Ground;
   /** How the call to action looks, as the brand's own creatives show it (a pill when the book says nothing). */
   ctaLook?: CtaLook;
+  /** The button's own colour, as the brand's creatives show it: a light pill with dark words, a dark one, or the brand's. */
+  ctaFill?: "light" | "dark" | "brand_colour";
   /** The brand's layout this one follows, by name. */
   signature?: string;
   /** The subline's type style, by name: a smaller one when the plan's line is long for the picture. */
@@ -71,6 +73,8 @@ export function compose(
   family: FamilyFor,
   /** Narrower widths for single lines of words, so their lines come out even (see balance in design.ts). */
   widths: Partial<Record<"Headline" | "Subline", number>> = {},
+  /** The logo's size on this format, when it is set; measure() moves it to its corner. */
+  logo?: { w: number; h: number },
 ): Composed {
   const g = gridOf(book, format);
   const unit = book.spacing?.unitPx ?? 8;
@@ -110,8 +114,11 @@ export function compose(
     const fam = family(s);
     fonts.push({ family: fam, weight: s.weight });
     const look = l.ctaLook ?? "pill";
-    const bg = colourOf(book, c?.background ?? "cta") ?? colourOf(book, "primary") ?? "#000000";
-    const fg = colourOf(book, c?.colour ?? "cta_text") ?? "#FFFFFF";
+    const light = colourOf(book, "on_photo") ?? "#FFFFFF";
+    const dark = colourOf(book, "text") ?? "#000000";
+    const bg =
+      l.ctaFill === "light" ? light : l.ctaFill === "dark" ? dark : (colourOf(book, c?.background ?? "cta") ?? colourOf(book, "primary") ?? "#000000");
+    const fg = l.ctaFill === "light" ? dark : l.ctaFill === "dark" ? light : (colourOf(book, c?.colour ?? "cta_text") ?? "#FFFFFF");
     sizes.CTA = s.sizePx;
     const pad = c?.paddingPx ?? 24;
     const line = Math.round(s.sizePx * s.lineHeight);
@@ -161,7 +168,12 @@ export function compose(
     l.ground === "gradient"
       ? `<Rectangle name="Shade" position="absolute" x={0} y={0} w={${g.w}} h={${Math.round(g.h / 2)}} fills={[]} />`
       : "";
-  const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${shade}${block}${alone}</Frame>`;
+  const logoNode = logo
+    ? `<Rectangle name="Logo" position="absolute" x={${g.margin}} y={${g.top}} w={${Math.round(logo.w)}} h={${Math.round(
+        logo.h,
+      )}} fills={[{ type: "IMAGE", imageHash: "LOGO", imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />`
+    : "";
+  const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${shade}${block}${alone}${logoNode}</Frame>`;
   return { jsx, grid: g, fonts, colours, sizes, ...(onPanel ? { panel: panelHex } : {}) };
 }
 

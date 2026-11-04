@@ -107,3 +107,11 @@ test("words on a block of the brand's colour, and a call to action as underlined
   assert.ok(c.jsx.includes('name="Rule"'), "the call to action is underlined");
   assert.ok(!c.jsx.includes('name="CTA" w="hug" h="hug" px='), "no pill");
 });
+
+test("a light pill with dark words, when the brand's buttons are white", () => {
+  const c = compose(book, "feed", { headline: "Morning", cta: "Buy" }, { band: "top", align: "left", headline: "h1", colour: "on_photo", ground: "photo", cta: "with_words", columns: 9, ctaFill: "light" }, () => "Inter");
+  const light = book.colours.find((x) => x.role === "on_photo")?.hex.toUpperCase() ?? "#FFFFFF";
+  const dark = book.colours.find((x) => x.role === "text")?.hex.toUpperCase() ?? "#000000";
+  assert.equal(c.colours.CTA, dark, "dark words on the pill");
+  assert.ok(c.jsx.includes(`bg=${JSON.stringify(light)}><Text name="CTA words"`), "the pill is the light colour");
+});

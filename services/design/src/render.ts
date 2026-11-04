@@ -67,12 +67,14 @@ export interface Doc {
 }
 
 /** Builds and lays out a design document from design JSX; PHOTO in it stands for the picture's hash. */
-export async function build(jsx: string, picture: Uint8Array): Promise<Doc> {
+export async function build(jsx: string, picture: Uint8Array, logo?: { hash: string; png: Uint8Array }[]): Promise<Doc> {
   await start();
   const graph = new SceneGraph();
   const hash = imageHash(picture);
   graph.images.set(hash, picture);
-  const results = await renderJSX(graph, jsx.replaceAll("PHOTO", hash));
+  // Every version of the logo is in the document; the layout shows the one that reads best where it sits.
+  for (const v of logo ?? []) graph.images.set(v.hash, v.png);
+  const results = await renderJSX(graph, jsx.replaceAll("PHOTO", hash).replaceAll('"LOGO"', JSON.stringify(logo?.[0]?.hash ?? hash)));
   const root = results[0].id;
   graph.applyDerivedLayoutDuring?.(() => computeAllLayouts(graph));
   const fonts = await prepareGraphFonts(graph, [root]);

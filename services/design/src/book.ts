@@ -50,12 +50,15 @@ export interface Component {
 /** A layout the brand repeats on its pictures, read from its own creatives (brand-book creatives.ts). */
 export interface Signature {
   name: string;
+  /** False for a layout with no words (a plain product photo, the logo alone): never used to set words. */
+  hasWords?: boolean;
   band: "top" | "middle" | "bottom";
   align: "left" | "center" | "right";
   wordsWidthPct: number;
   ground: "photo" | "gradient" | "flat" | "colour_block";
   words: "light" | "dark" | "brand_colour";
   cta: "pill" | "box" | "underline" | "text" | "none";
+  ctaFill?: "light" | "dark" | "brand_colour" | "none";
   logo?: string;
   logoWidthPct?: number;
 }
@@ -74,8 +77,13 @@ export interface DesignBook {
 
 /** The brand's layout by name, else its most typical one. */
 export function signatureOf(book: DesignBook, name?: string): Signature | null {
-  const all = book.onPictures?.layouts ?? [];
+  const all = (book.onPictures?.layouts ?? []).filter((l) => carriesWords(l));
   return all.find((l) => l.name === name) ?? all[0] ?? null;
+}
+
+/** Books written before hasWords say it in the name. */
+export function carriesWords(l: Signature): boolean {
+  return l.hasWords ?? !/\b(no|without) (words|text|copy)\b|\b(logo|swoosh|mark) alone\b/i.test(l.name);
 }
 
 /** The format's grid, with the platform's safe areas (a story's top and bottom stay free whatever the book says). */

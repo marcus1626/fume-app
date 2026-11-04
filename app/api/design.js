@@ -11,8 +11,11 @@ var SIZES = {
   banner: { w: 1920, h: 1080 }
 };
 function signatureOf(book, name) {
-  const all = book.onPictures?.layouts ?? [];
+  const all = (book.onPictures?.layouts ?? []).filter((l) => carriesWords(l));
   return all.find((l) => l.name === name) ?? all[0] ?? null;
+}
+function carriesWords(l) {
+  return l.hasWords ?? !/\b(no|without) (words|text|copy)\b|\b(logo|swoosh|mark) alone\b/i.test(l.name);
 }
 function gridOf(book, format) {
   const size = SIZES[format];
@@ -56,7 +59,7 @@ function clamp(n, lo, hi) {
 }
 
 // src/compose.ts
-function compose(book, format, words, l, family, widths = {}) {
+function compose(book, format, words, l, family, widths = {}, logo) {
   const g = gridOf(book, format);
   const unit = book.spacing?.unitPx ?? 8;
   const hl = styleOf(book, l.headline) ?? styleOf(book, "h1") ?? book.styles[0];
@@ -89,8 +92,10 @@ function compose(book, format, words, l, family, widths = {}) {
     const fam = family(s);
     fonts.push({ family: fam, weight: s.weight });
     const look = l.ctaLook ?? "pill";
-    const bg = colourOf(book, c?.background ?? "cta") ?? colourOf(book, "primary") ?? "#000000";
-    const fg = colourOf(book, c?.colour ?? "cta_text") ?? "#FFFFFF";
+    const light = colourOf(book, "on_photo") ?? "#FFFFFF";
+    const dark = colourOf(book, "text") ?? "#000000";
+    const bg = l.ctaFill === "light" ? light : l.ctaFill === "dark" ? dark : colourOf(book, c?.background ?? "cta") ?? colourOf(book, "primary") ?? "#000000";
+    const fg = l.ctaFill === "light" ? dark : l.ctaFill === "dark" ? light : colourOf(book, c?.colour ?? "cta_text") ?? "#FFFFFF";
     sizes.CTA = s.sizePx;
     const pad2 = c?.paddingPx ?? 24;
     const line = Math.round(s.sizePx * s.lineHeight);
@@ -126,7 +131,10 @@ function compose(book, format, words, l, family, widths = {}) {
   )} gap={${unit * 5}}${panelBg}${panelRadius} p={${pad}}><Frame name="Lines" w="fill" h="hug" flex="col" items=${q(items)} gap={${unit * 3}}>${inner.join("")}</Frame>${ctaWithWords ? cta() : ""}</Frame>`;
   const alone = words.cta && !ctaWithWords && l.cta !== "none" ? `<Frame name="Action" position="absolute" x={${l.align === "left" ? g.margin : 0}} y={${g.h - g.bottom - 80}} w={${l.align === "left" ? '"hug"' : l.align === "right" ? g.w - g.margin : g.w}} h="hug" flex="col" items=${q(items)}>${cta()}</Frame>` : "";
   const shade = l.ground === "gradient" ? `<Rectangle name="Shade" position="absolute" x={0} y={0} w={${g.w}} h={${Math.round(g.h / 2)}} fills={[]} />` : "";
-  const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${shade}${block}${alone}</Frame>`;
+  const logoNode = logo ? `<Rectangle name="Logo" position="absolute" x={${g.margin}} y={${g.top}} w={${Math.round(logo.w)}} h={${Math.round(
+    logo.h
+  )}} fills={[{ type: "IMAGE", imageHash: "LOGO", imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />` : "";
+  const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${shade}${block}${alone}${logoNode}</Frame>`;
   return { jsx, grid: g, fonts, colours, sizes, ...onPanel ? { panel: panelHex } : {} };
 }
 function bindShort(text) {
@@ -308,12 +316,13 @@ function hasFont(family, weight) {
 function imageHash(bytes) {
   return createHash("sha1").update(bytes).digest("hex");
 }
-async function build(jsx, picture) {
+async function build(jsx, picture, logo) {
   await start();
   const graph = new SceneGraph();
   const hash = imageHash(picture);
   graph.images.set(hash, picture);
-  const results = await renderJSX(graph, jsx.replaceAll("PHOTO", hash));
+  for (const v of logo ?? []) graph.images.set(v.hash, v.png);
+  const results = await renderJSX(graph, jsx.replaceAll("PHOTO", hash).replaceAll('"LOGO"', JSON.stringify(logo?.[0]?.hash ?? hash)));
   const root = results[0].id;
   graph.applyDerivedLayoutDuring?.(() => computeAllLayouts(graph));
   const fonts = await prepareGraphFonts(graph, [root]);
@@ -394,6 +403,104 @@ function weightOf(style) {
   return Number.isFinite(n) ? n : 400;
 }
 
+// src/logo.ts
+import { SceneGraph as SceneGraph2 } from "@open-pencil/scene-graph";
+import { renderJSX as renderJSX2 } from "@open-pencil/core/design-jsx";
+import { createSVGNodes } from "@open-pencil/core/io";
+var CORNERS = ["top_left", "top_right", "bottom_left", "bottom_right", "top_centre", "bottom_centre"];
+var MAX = 1200;
+async function logoOf(bytes, light, dark) {
+  const { ck } = await start();
+  const raster = isSvg(bytes) ? await rasterise(new TextDecoder().decode(bytes)) : bytes;
+  if (!raster) return null;
+  const img = ck.MakeImageFromEncoded(raster);
+  if (!img) return null;
+  const width = img.width();
+  const height = img.height();
+  const info = { width, height, colorType: ck.ColorType.RGBA_8888, alphaType: ck.AlphaType.Unpremul, colorSpace: ck.ColorSpace.SRGB };
+  const data = img.readPixels(0, 0, info);
+  img.delete();
+  if (!data || width < 8 || height < 8) return null;
+  const t = tone(data);
+  if (!t) return null;
+  const encode = (px) => {
+    const im = ck.MakeImage(info, px, width * 4);
+    const out = im?.encodeToBytes() ?? null;
+    im?.delete();
+    return out;
+  };
+  const asIs = encode(data) ?? raster;
+  const variants = [{ name: "as_is", png: asIs, hash: imageHash(asIs), hex: t.hex }];
+  if (t.mono) {
+    for (const [name, hex] of [["light", light], ["dark", dark]]) {
+      const png2 = encode(tint(data, hex));
+      if (png2) variants.push({ name, png: png2, hash: imageHash(png2), hex });
+    }
+  }
+  return { width, height, mono: t.mono, variants };
+}
+function isSvg(bytes) {
+  const head = new TextDecoder().decode(bytes.subarray(0, 512)).trimStart().toLowerCase();
+  return head.startsWith("<svg") || head.startsWith("<?xml") && head.includes("<svg");
+}
+async function rasterise(svg) {
+  if (svg.length > 4e5) return null;
+  const graph = new SceneGraph2();
+  const [root] = await renderJSX2(graph, `<Frame name="Logo" w={10} h={10} />`);
+  const node = createSVGNodes(graph, root.id, svg, { name: "Logo", x: 0, y: 0 });
+  if (!node || !node.width || !node.height) return null;
+  graph.updateNode(node.id, { fills: [] });
+  const scale = Math.min(8, MAX / Math.max(node.width, node.height));
+  return png({ graph, root: node.id, ids: /* @__PURE__ */ new Map(), faithful: true, fontIssues: [], warnings: [] }, scale);
+}
+function tone(px) {
+  let n = 0;
+  let r = 0;
+  let g = 0;
+  let b = 0;
+  const lums = [];
+  for (let i = 0; i < px.length; i += 16) {
+    if (px[i + 3] < 160) continue;
+    n++;
+    r += px[i];
+    g += px[i + 1];
+    b += px[i + 2];
+    lums.push(luminance(px[i], px[i + 1], px[i + 2]));
+  }
+  if (n < 20) return null;
+  const mean = lums.reduce((a, x) => a + x, 0) / n;
+  const spread = Math.sqrt(lums.reduce((a, x) => a + (x - mean) ** 2, 0) / n);
+  const hex = `#${[r, g, b].map((c) => Math.round(c / n).toString(16).padStart(2, "0")).join("")}`.toUpperCase();
+  const covered = n / (px.length / 16);
+  return { hex, mono: spread < 0.06 && covered < 0.9 };
+}
+function tint(px, hex) {
+  const n = parseInt(hex.replace("#", ""), 16);
+  const out = new Uint8Array(px.length);
+  for (let i = 0; i < px.length; i += 4) {
+    out[i] = n >> 16 & 255;
+    out[i + 1] = n >> 8 & 255;
+    out[i + 2] = n & 255;
+    out[i + 3] = px[i + 3];
+  }
+  return out;
+}
+function cornersFor(first, band, align) {
+  const side = align === "center" ? "centre" : align;
+  const away = band === "top" ? "bottom" : "top";
+  const near = band === "top" ? "top" : "bottom";
+  const order = [
+    ...first ? [first] : [],
+    `${away}_${side}`,
+    `${away}_left`,
+    `${away}_right`,
+    ...align !== "left" ? [`${near}_left`] : [],
+    ...align !== "right" ? [`${near}_right`] : [],
+    `${away}_centre`
+  ];
+  return [...new Set(order)];
+}
+
 // src/design.ts
 var SCALE = 0.25;
 async function design(ask) {
@@ -403,13 +510,18 @@ async function design(ask) {
   const pixels = await pictureAt(ask.picture, format, SCALE);
   const { familyFor, fonts } = await familiesOf(book);
   const keep = ask.keepClear ?? [];
+  const logo = ask.logo ? await logoOf(ask.logo, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000").catch(() => null) : null;
   let best = null;
   let tried = 0;
   const attempts = [];
+  const perBand = /* @__PURE__ */ new Map();
   for (const l of layoutsFor(book, format, ask.prefer ?? {}, Boolean(words.cta))) {
-    const c = compose(book, format, words, l, familyFor);
-    const doc = await build(c.jsx, ask.picture);
-    const t = measure(doc, c, l, book, pixels, keep);
+    if ((perBand.get(l.band) ?? 0) >= 110) continue;
+    perBand.set(l.band, (perBand.get(l.band) ?? 0) + 1);
+    const plan = logo ? logoPlan(book, g, l, logo) : null;
+    const c = compose(book, format, words, l, familyFor, {}, plan ?? void 0);
+    const doc = await build(c.jsx, ask.picture, plan?.logo.variants);
+    const t = measure(doc, c, l, book, pixels, keep, plan);
     tried++;
     if (attempts.length < 30) {
       attempts.push({ layout: l, failed: t.checks.filter((x) => !x.ok && x.hard).map((x) => `${x.node}: ${x.note}`) });
@@ -419,10 +531,13 @@ async function design(ask) {
     if (tried >= 320) break;
   }
   if (!best) throw new Error("No layout could be made.");
-  const even = await balance(ask, best.t, familyFor, pixels, keep);
+  const even = await balance(ask, best.t, familyFor, pixels, keep, logo);
   if (even) best = even;
   const used = /* @__PURE__ */ new Set([best.t.layout.headline, best.t.layout.subline ?? "subline", componentOf(book, "cta")?.style ?? "cta"]);
   const seen = /* @__PURE__ */ new Set();
+  if (ask.logo && !logo) {
+    best.t.checks.push({ check: "logo", node: "Logo", ok: false, hard: false, note: "The logo file could not be read; set it by hand." });
+  }
   const fontChecks = fonts.filter((f) => used.has(f.style) && f.asked !== f.used && !seen.has(f.asked) && seen.add(f.asked)).map((f) => ({
     check: "font",
     node: f.style,
@@ -443,12 +558,14 @@ async function design(ask) {
     tried,
     attempts,
     fonts,
+    logo: best.t.logo ?? null,
     ms: Date.now() - t0
   };
 }
-async function balance(ask, base, familyFor, pixels, keep) {
+async function balance(ask, base, familyFor, pixels, keep, logo = null) {
   const { book, format, words } = ask;
   const l = base.layout;
+  const plan = logo ? logoPlan(book, gridOf(book, format), l, logo) : null;
   const widths = {};
   const heightOf = async (w, name) => {
     const c2 = compose(book, format, words, l, familyFor, w);
@@ -471,9 +588,9 @@ async function balance(ask, base, familyFor, pixels, keep) {
     if (hi < full - 12) widths[name] = Math.min(full, hi + 4);
   }
   if (!Object.keys(widths).length) return null;
-  const c = compose(book, format, words, l, familyFor, widths);
-  const doc = await build(c.jsx, ask.picture);
-  const t = measure(doc, c, l, book, pixels, keep);
+  const c = compose(book, format, words, l, familyFor, widths, plan ?? void 0);
+  const doc = await build(c.jsx, ask.picture, plan?.logo.variants);
+  const t = measure(doc, c, l, book, pixels, keep, plan);
   return t.ok || !base.ok ? { t, doc } : null;
 }
 function* layoutsFor(book, format, prefer, hasCta) {
@@ -486,6 +603,7 @@ function* layoutsFor(book, format, prefer, hasCta) {
   const sigGround = sig ? sig.ground === "colour_block" ? "block" : sig.ground : null;
   const sigColour = sig ? { light: "on_photo", dark: "text", brand_colour: "accent" }[sig.words] : null;
   const ctaLook = sig && sig.cta !== "none" ? sig.cta : sig ? "text" : void 0;
+  const ctaFill = sig?.ctaFill && sig.ctaFill !== "none" ? sig.ctaFill : void 0;
   const bands = uniq([prefer.band ?? sig?.band ?? "top", sig?.band ?? "top", "top", "bottom", "middle"]);
   const aligns = uniq([prefer.align ?? sig?.align ?? "left", sig?.align ?? "left", "left", "right", "center"]);
   const wanted = prefer.colour ?? sigColour ?? "on_photo";
@@ -523,6 +641,7 @@ function* layoutsFor(book, format, prefer, hasCta) {
                   columns,
                   ...subline === "subline" ? {} : { subline },
                   ...ctaLook ? { ctaLook } : {},
+                  ...ctaFill ? { ctaFill } : {},
                   ...sig ? { signature: sig.name } : {}
                 };
               }
@@ -533,7 +652,7 @@ function* layoutsFor(book, format, prefer, hasCta) {
     }
   }
 }
-function measure(doc, c, l, book, p, keep) {
+function measure(doc, c, l, book, p, keep, logo = null) {
   const g = c.grid;
   const words0 = boxOf(doc, "Words");
   const action0 = boxOf(doc, "Action");
@@ -633,8 +752,76 @@ function measure(doc, c, l, book, p, keep) {
       }
     }
   }
+  let placed = null;
+  if (logo) {
+    const at = placeLogo(doc, g, logo, boxes, keep, p, shades, l);
+    checks.push(at.check);
+    if (at.box) boxes.Logo = at.box;
+    placed = at.placed;
+  }
   const ok = checks.every((x) => x.ok || !x.hard);
-  return { layout: l, ok, score: scoreOf(l, checks), checks, boxes, shades };
+  return { layout: l, ok, score: scoreOf(l, checks), checks, boxes, shades, logo: placed };
+}
+function logoPlan(book, g, l, logo) {
+  const sig = signatureOf(book, l.signature);
+  if (sig && sig.logo === "none") return null;
+  const first = sig && CORNERS.includes(sig.logo) ? sig.logo : null;
+  const pct = sig?.logoWidthPct && sig.logoWidthPct > 0 ? Math.min(30, Math.max(4, sig.logoWidthPct)) : 12;
+  let w = g.w * pct / 100;
+  let h = w * logo.height / logo.width;
+  const most = g.h * 0.08;
+  if (h > most) {
+    w = w * most / h;
+    h = most;
+  }
+  return { logo, w: Math.round(w), h: Math.round(h), first };
+}
+function boxAt(where, g, w, h) {
+  const [v, side] = where.split("_");
+  const x = side === "left" ? g.margin : side === "right" ? g.w - g.margin - w : Math.round((g.w - w) / 2);
+  const y = v === "top" ? g.top : g.h - g.bottom - h;
+  return { x, y, w, h };
+}
+function placeLogo(doc, g, plan, boxes, keep, p, shades, l) {
+  const id = doc.ids.get("Logo");
+  const avoid = [...["Words", "CTA", "Action"].map((n) => boxes[n]).filter(Boolean), ...keep];
+  let best = null;
+  for (const where of cornersFor(plan.first, l.band, l.align)) {
+    const box = boxAt(where, g, plan.w, plan.h);
+    const pad = { x: box.x - 16, y: box.y - 16, w: box.w + 32, h: box.h + 32 };
+    if (avoid.some((a) => overlap(pad, a) > 0)) continue;
+    for (const v of plan.logo.variants) {
+      const u = under(p, box, v.hex, shades, Math.max(8, Math.round(plan.h * 0.5)));
+      if (!best || u.contrast > best.contrast + 0.01) best = { where, box, v, contrast: u.contrast };
+    }
+    if (best && best.where === where && best.contrast >= 3) break;
+  }
+  if (!id || !best || best.contrast < 3) {
+    if (id) doc.graph.updateNode(id, { visible: false });
+    return {
+      check: { check: "logo", node: "Logo", ok: false, hard: false, value: best?.contrast, need: 3, note: "No calm corner reads for the logo; it is left off for the designer to place." },
+      box: null,
+      placed: null
+    };
+  }
+  place(doc, "Logo", { x: best.box.x, y: best.box.y });
+  doc.graph.updateNode(id, {
+    fills: [{ type: "IMAGE", imageHash: best.v.hash, imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]
+  });
+  const own = plan.first === best.where;
+  return {
+    check: {
+      check: "logo",
+      node: "Logo",
+      ok: true,
+      hard: false,
+      value: best.contrast,
+      need: 3,
+      note: `${own ? "In the brand's own corner" : "In a calm corner"} (${best.where.replace("_", " ")}), ${best.v.name === "as_is" ? "as drawn" : `the ${best.v.name} version`}, ${best.contrast}:1.`
+    },
+    box: best.box,
+    placed: { where: best.where, variant: best.v.name, contrast: best.contrast }
+  };
 }
 function scoreOf(l, checks) {
   let s = 0;
@@ -705,6 +892,7 @@ function invalid(r, host) {
   if (!signedLink(r.upload?.png, host, "upload") || !signedLink(r.upload?.fig, host, "upload")) {
     return "The result needs signed upload links to Fume's storage.";
   }
+  if (r.logo != null && !signedLink(r.logo, host, "read")) return "The logo must be a signed link to Fume's storage.";
   if (!r.format || !(r.format in SIZES)) return "Unknown format.";
   if (!r.book || !Array.isArray(r.book.styles) || !Array.isArray(r.book.colours) || !Array.isArray(r.book.typefaces)) {
     return "The brand's design system is missing.";
@@ -735,13 +923,25 @@ async function handle(req, deps) {
     return json(504, { error: "Reading the picture from storage took too long." });
   }
   if (picture.byteLength > 25e6) return json(413, { error: "The picture is too large." });
+  let logo;
+  if (r.logo) {
+    try {
+      const got = await deps.fetch(r.logo, { signal: AbortSignal.timeout(15e3) });
+      const type = got.headers.get("content-type") ?? "";
+      const bytes = got.ok && type.startsWith("image/") ? new Uint8Array(await got.arrayBuffer()) : null;
+      if (bytes && bytes.byteLength <= 3e6) logo = bytes;
+    } catch {
+      logo = void 0;
+    }
+  }
   const out = await (deps.design ?? design)({
     picture,
     format: r.format,
     book: r.book,
     words: r.words,
     prefer: r.prefer ?? {},
-    keepClear: (r.keepClear ?? []).filter(isBox).slice(0, 8)
+    keepClear: (r.keepClear ?? []).filter(isBox).slice(0, 8),
+    ...logo ? { logo } : {}
   });
   const put = async (link, bytes, contentType) => {
     const res = await deps.fetch(link, {
@@ -769,8 +969,45 @@ function isBox(b) {
   return Boolean(x) && [x.x, x.y, x.w, x.h].every((n) => typeof n === "number" && Number.isFinite(n)) && typeof x.what === "string";
 }
 
+// src/fonts.ts
+var UA = "Mozilla/4.0";
+var WEIGHTS = [100, 200, 300, 400, 500, 600, 700, 800, 900];
+function googleFonts(get = fetch) {
+  const files = /* @__PURE__ */ new Map();
+  const cssOf = async (query) => {
+    const res = await get(`https://fonts.googleapis.com/css2?family=${query}&display=swap`, {
+      headers: { "user-agent": UA },
+      signal: AbortSignal.timeout(8e3)
+    }).catch(() => null);
+    return res?.ok ? res.text() : null;
+  };
+  const fileOf = (css) => css?.match(/url\((https:\/\/fonts\.gstatic\.com\/[^)\s]+\.ttf)\)/)?.[1] ?? null;
+  const load = async (family, weight, italic) => {
+    if (!/^[\p{L}\p{N} ]{1,60}$/u.test(family)) return null;
+    const name = encodeURIComponent(family.trim()).replace(/%20/g, "+");
+    const order = [...WEIGHTS].sort((a, b) => Math.abs(a - weight) - Math.abs(b - weight) || b - a);
+    let url = null;
+    for (const w of order.slice(0, 9)) {
+      url = fileOf(await cssOf(`${name}:ital,wght@${italic ? 1 : 0},${w}`));
+      if (url) break;
+      if (w === order[0]) {
+        url = fileOf(await cssOf(name));
+        if (url) break;
+      }
+    }
+    if (!url) return null;
+    const res = await get(url, { signal: AbortSignal.timeout(1e4) }).catch(() => null);
+    return res?.ok ? res.arrayBuffer() : null;
+  };
+  return (family, weight, italic) => {
+    const key = `${family}|${weight}|${italic}`;
+    if (!files.has(key)) files.set(key, load(family, weight, italic).catch(() => null));
+    return files.get(key);
+  };
+}
+
 // api-src/design.ts
-start({ online: true });
+start({ fonts: googleFonts(fetch), online: false });
 async function POST(req) {
   return handle(req, { storageHost: process.env.FUME_STORAGE_HOST ?? "vkusmctftfzsrxbcxtdz.supabase.co", fetch });
 }

@@ -2,15 +2,16 @@
 // Chromium that opens a brand's page and screenshots it as a visitor sees it (src/shot.ts says why).
 import chromium from "@sparticuz/chromium";
 import puppeteer from "puppeteer-core";
-import { DISMISS, handleShot, type View } from "../src/shot.ts";
+import { DISMISS, type HeaderLogo, handleShot, LOGO, type View } from "../src/shot.ts";
 
-async function capture(url: string, views: View[]): Promise<Uint8Array[]> {
+async function capture(url: string, views: View[]): Promise<{ shots: Uint8Array[]; logo: HeaderLogo | null }> {
   const browser = await puppeteer.launch({
     args: chromium.args,
     executablePath: process.env.FUME_CHROMIUM ?? (await chromium.executablePath()),
     headless: true,
   });
   // A shop's page may never go quiet; every view gets the same short budget, and the views are taken side by side.
+  let logo: HeaderLogo | null = null;
   const one = async (v: View): Promise<Uint8Array> => {
     const page = await browser.newPage();
     try {
@@ -24,6 +25,7 @@ async function capture(url: string, views: View[]): Promise<Uint8Array[]> {
       await Promise.race([page.waitForNetworkIdle({ idleTime: 800, timeout: 8_000 }).catch(() => undefined), wait(8_000)]);
       await page.evaluate(DISMISS).catch(() => false);
       await wait(1_000);
+      if (v.name === "desktop") logo = ((await page.evaluate(LOGO).catch(() => null)) as HeaderLogo | null) ?? null;
       if (v.scrollScreens) {
         await page.evaluate((y) => window.scrollTo(0, y), v.height * v.scrollScreens).catch(() => undefined);
         await wait(1_500);
@@ -35,7 +37,7 @@ async function capture(url: string, views: View[]): Promise<Uint8Array[]> {
   };
   try {
     const shots = await Promise.allSettled(views.map(one));
-    return shots.map((s) => (s.status === "fulfilled" ? s.value : new Uint8Array()));
+    return { shots: shots.map((s) => (s.status === "fulfilled" ? s.value : new Uint8Array())), logo };
   } finally {
     await browser.close();
   }

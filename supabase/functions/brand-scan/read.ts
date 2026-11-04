@@ -243,7 +243,7 @@ function readTypefaces(pages: Page[], brand: string): Read["typefaces"] {
         f.length <= 40 &&
         !/[:;(){}]/.test(f) &&
         !GENERIC.has(f.toLowerCase()) &&
-        !/icon|awesome|glyph|star|slick|swiper|judgeme|emoji|symbol|video\s?js|vjs|player|plyr|flickity|fancybox|lightbox|katex|mathjax/i.test(f),
+        !NOT_TEXT_FACE.test(f),
     );
     if (!name) return;
     const c = count.get(name) ?? {
@@ -476,6 +476,9 @@ export const inlineCss = (html: string) =>
  * A face as Next.js names it in its stylesheets ("__Open_Sans_227a9f", "__Inter_Fallback_e8ce0c") is the face it
  * loads: "Open Sans". Its fallback copy is a local system face, not the brand's.
  */
+/** A face a widget, a player or an icon set brings to the page, never the brand's own type. */
+export const NOT_TEXT_FACE = /icon|awesome|glyph|star|slick|swiper|judgeme|emoji|symbol|video\s?js|vjs|player|plyr|flickity|fancybox|lightbox|katex|mathjax/i;
+
 export function nextFont(family: string): string {
   const m = /^__(.+?)_[0-9a-f]{6}$/i.exec(family);
   if (!m) return family;

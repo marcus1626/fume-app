@@ -85,7 +85,10 @@ type BrandLayout = { name: string; band: string; align: string; ground: string; 
 /** The brand's own layouts from its design system, as the model is shown them. */
 export function layoutsOf(t: Take): BrandLayout[] {
   const on = (t.book.body as { onPictures?: { layouts?: BrandLayout[] } | null }).onPictures;
-  return (on?.layouts ?? []).slice(0, 5).map((l) => ({ name: l.name, band: l.band, align: l.align, ground: l.ground, words: l.words, cta: l.cta, why: l.why }));
+  // A layout with no words (a plain product photo, the logo alone) is never one to set the plan's words in.
+  const words = (l: BrandLayout & { hasWords?: boolean }) =>
+    l.hasWords ?? !/\b(no|without) (words|text|copy)\b|\b(logo|swoosh|mark) alone\b/i.test(l.name);
+  return (on?.layouts ?? []).filter(words).slice(0, 5).map((l) => ({ name: l.name, band: l.band, align: l.align, ground: l.ground, words: l.words, cta: l.cta, why: l.why }));
 }
 
 /** The model's boxes, in the format's pixels, cut to the frame; nonsense dropped. */

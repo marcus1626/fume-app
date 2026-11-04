@@ -22,6 +22,7 @@ import {
   voicePrompt,
 } from "./book.ts";
 import { CREATIVES_SYSTEM, CreativesAnswer, creativesPrompt, withCreatives } from "./creatives.ts";
+import { type BookLogo, dnaLogoUrl, LOGO_TYPES, safeSvg } from "./logo.ts";
 import { handleBook, type Written } from "./handler.ts";
 import { LOOK_MODEL, LOOK_PARTS, LOOK_SYSTEM, type LookAnswer, type LookPicture, lookCostOf, lookPrompt, pageImages, toLookBody } from "./look.ts";
 
@@ -106,35 +107,70 @@ const SHOT_VIEWS = ["desktop", "desktop_second", "mobile"];
  * Screenshots of the brand's own website, stored in its workspace: how the brand sets words on its pictures as a
  * visitor sees it. The pictures on a site carry no words; the page does. Empty when the page cannot be opened.
  */
-async function siteShots(task: Parameters<typeof voicePrompt>[0]): Promise<LookPicture[]> {
-  if (!task.website) return [];
+async function siteShots(task: Parameters<typeof voicePrompt>[0]): Promise<{ shots: LookPicture[]; logo: BookLogo | null }> {
+  const none = { shots: [], logo: null };
+  if (!task.website) return none;
   const bucket = "workspace-files";
   const paths = SHOT_VIEWS.map((v) => `${task.book.workspace_id}/brand/shots/${task.book.id}-${v}.jpg`);
+  // The logo in the site's header is kept beside the screenshots, as the brand's own mark for the design layer.
+  const logoPath = `${task.book.workspace_id}/brand/logo/${task.book.id}-site`;
   try {
-    const links = await Promise.all(paths.map((p) => service.storage.from(bucket).createSignedUploadUrl(p)));
-    if (links.some((l) => l.error || !l.data)) return [];
+    const links = await Promise.all([...paths, logoPath].map((p) => service.storage.from(bucket).createSignedUploadUrl(p)));
+    if (links.some((l) => l.error || !l.data)) return none;
     const res = await fetch(shotUrl, {
       method: "POST",
       headers: { "content-type": "application/json", ...(bypass ? { "x-vercel-protection-bypass": bypass } : {}) },
-      body: JSON.stringify({ url: task.website, upload: links.map((l) => l.data!.signedUrl) }),
+      body: JSON.stringify({ url: task.website, upload: links.slice(0, -1).map((l) => l.data!.signedUrl), logo: links.at(-1)!.data!.signedUrl }),
       signal: AbortSignal.timeout(95_000),
     });
-    if (!res.ok) return [];
-    const out = (await res.json()) as { shots?: { view: string }[] };
+    if (!res.ok) return none;
+    const out = (await res.json()) as { shots?: { view: string }[]; logo?: { type: string; from: string } | null };
     const taken = new Set((out.shots ?? []).map((s) => s.view));
-    return SHOT_VIEWS.flatMap((v, i) =>
+    const shots = SHOT_VIEWS.flatMap((v, i) =>
       taken.has(v) ? [{ bucket, path: paths[i], kind: "screenshot" as const, note: `The brand's own website, ${v.replace("_", " ")}` }] : []
     );
+    const logo = out.logo && LOGO_TYPES.test(out.logo.type)
+      ? { bucket, path: logoPath, type: out.logo.type, from: `the header of ${new URL(task.website).hostname}` }
+      : null;
+    return { shots, logo };
   } catch {
-    return [];
+    return none;
   }
 }
 
-async function brandPictures(task: Parameters<typeof voicePrompt>[0], opts: { shots?: boolean } = {}): Promise<{ pictures: LookPicture[]; images: Image[] }> {
-  const [{ data: kept }, shots] = await Promise.all([
+/** The Brand DNA's logo, kept in the brand's workspace: a picture or a safe SVG, never the site's icon. */
+async function dnaLogo(task: Parameters<typeof voicePrompt>[0]): Promise<BookLogo | null> {
+  const url = dnaLogoUrl(task.identity);
+  if (!url) return null;
+  try {
+    const res = await openFetch(url, { signal: AbortSignal.timeout(10_000) });
+    const type = (res?.headers.get("content-type") ?? "").split(";")[0].trim();
+    if (!res?.ok || !LOGO_TYPES.test(type)) return null;
+    let bytes = new Uint8Array(await res.arrayBuffer());
+    if (bytes.byteLength > 3_000_000) return null;
+    if (type === "image/svg+xml") {
+      const svg = safeSvg(new TextDecoder().decode(bytes));
+      if (!svg) return null;
+      bytes = new TextEncoder().encode(svg);
+    }
+    const bucket = "workspace-files";
+    const path = `${task.book.workspace_id}/brand/logo/${task.book.id}-dna`;
+    const { error } = await service.storage.from(bucket).upload(path, bytes, { contentType: type, upsert: true });
+    return error ? null : { bucket, path, type, from: "the Brand DNA" };
+  } catch {
+    return null;
+  }
+}
+
+async function brandPictures(
+  task: Parameters<typeof voicePrompt>[0],
+  opts: { shots?: boolean } = {},
+): Promise<{ pictures: LookPicture[]; images: Image[]; logo: BookLogo | null }> {
+  const [{ data: kept }, site] = await Promise.all([
     service.rpc("brand_look_pictures", { p_workspace_id: task.book.workspace_id }),
-    opts.shots ? siteShots(task) : Promise.resolve([]),
+    opts.shots ? siteShots(task) : Promise.resolve({ shots: [] as LookPicture[], logo: null }),
   ]);
+  const shots = site.shots;
   // The brand's own uploads first, then its website as a visitor sees it, then the pictures on its pages.
   const own = ((kept as LookPicture[] | null) ?? []);
   const candidates: LookPicture[] = [...own.filter((p) => p.kind === "brand" || p.kind === "liked"), ...shots, ...own.filter((p) => p.kind !== "brand" && p.kind !== "liked")];
@@ -159,7 +195,7 @@ async function brandPictures(task: Parameters<typeof voicePrompt>[0], opts: { sh
     pictures.push(c);
     images.push({ type: "image", source: { type: "base64", media_type: b.media_type as "image/jpeg", data: b.data } });
   }
-  return { pictures, images };
+  return { pictures, images, logo: site.logo };
 }
 
 /** The Look Book, read from the brand's pictures. */
@@ -196,8 +232,9 @@ async function writeLook(task: Parameters<typeof voicePrompt>[0], read: PageText
 
 /** How the brand sets words on its pictures, read with eyes; null when there are no pictures or the read fails. */
 async function readCreatives(task: Parameters<typeof voicePrompt>[0], read: PageText[]) {
-  const { pictures, images } = await brandPictures(task, { shots: true });
-  if (!pictures.length) return { answer: null, pictures, message: null };
+  const { pictures, images, logo: siteLogo } = await brandPictures(task, { shots: true });
+  const logo = siteLogo ?? (await dnaLogo(task));
+  if (!pictures.length) return { answer: null, pictures, message: null, logo };
   try {
     const message = await claude.beta.messages.parse({
       model: LOOK_MODEL,
@@ -207,9 +244,9 @@ async function readCreatives(task: Parameters<typeof voicePrompt>[0], read: Page
       thinking: { type: "adaptive" },
       output_config: { effort: "medium", format: betaZodOutputFormat(CreativesAnswer) },
     });
-    return { answer: message.stop_reason === "end_turn" ? (message.parsed_output as CreativesAnswer | null) : null, pictures, message };
+    return { answer: message.stop_reason === "end_turn" ? (message.parsed_output as CreativesAnswer | null) : null, pictures, message, logo };
   } catch {
-    return { answer: null, pictures, message: null };
+    return { answer: null, pictures, message: null, logo };
   }
 }
 
@@ -238,7 +275,9 @@ async function write(task: Parameters<typeof voicePrompt>[0], read: PageText[]):
   const joined = joinParts<VoiceAnswer & DesignAnswer>(messages.map((m) => m.parsed_output as Record<string, unknown>));
   if (voice) return { ok: true, body: toVoiceBody(joined, task), sources: { sources: joined.sources }, usage };
   const design = toDesignBody(joined, task);
-  const body = seen?.answer ? withCreatives(design, seen.answer, seen.pictures) : { ...design, onPictures: null };
+  const onBrand = seen?.answer ? withCreatives(design, seen.answer, seen.pictures) : { ...design, onPictures: null };
+  // The logo file the design layer sets on every creative, or none yet.
+  const body = { ...onBrand, logo: seen?.logo ?? null };
   if (!seen?.answer) (body as { gaps: string[] }).gaps = [...joined.gaps, "Fume could not read how the brand sets words on its pictures; upload a few of the brand's own ads."];
   const sources = { sources: [...joined.sources, ...(seen?.answer?.sources ?? [])], pictures: (seen?.pictures ?? []).map((p) => p.url ?? p.path) };
   return { ok: true, body, sources, usage };

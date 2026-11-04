@@ -14,6 +14,8 @@ export interface DesignRequest {
   words: Words;
   prefer?: Partial<Layout>;
   keepClear?: (Box & { what: string })[];
+  /** A signed link to the brand's logo file in Fume's storage, when its design system names one. */
+  logo?: string;
   upload: { png: string; fig: string };
 }
 
@@ -43,6 +45,7 @@ export function invalid(r: Partial<DesignRequest>, host: string): string | null 
   if (!signedLink(r.upload?.png, host, "upload") || !signedLink(r.upload?.fig, host, "upload")) {
     return "The result needs signed upload links to Fume's storage.";
   }
+  if (r.logo != null && !signedLink(r.logo, host, "read")) return "The logo must be a signed link to Fume's storage.";
   if (!r.format || !(r.format in SIZES)) return "Unknown format.";
   if (!r.book || !Array.isArray(r.book.styles) || !Array.isArray(r.book.colours) || !Array.isArray(r.book.typefaces)) {
     return "The brand's design system is missing.";
@@ -75,6 +78,18 @@ export async function handle(req: Request, deps: Deps): Promise<Response> {
     return json(504, { error: "Reading the picture from storage took too long." });
   }
   if (picture.byteLength > 25_000_000) return json(413, { error: "The picture is too large." });
+  // The logo is a help, not a gate: without it the layout is made and the expert is told.
+  let logo: Uint8Array | undefined;
+  if (r.logo) {
+    try {
+      const got = await deps.fetch(r.logo, { signal: AbortSignal.timeout(15_000) });
+      const type = got.headers.get("content-type") ?? "";
+      const bytes = got.ok && type.startsWith("image/") ? new Uint8Array(await got.arrayBuffer()) : null;
+      if (bytes && bytes.byteLength <= 3_000_000) logo = bytes;
+    } catch {
+      logo = undefined;
+    }
+  }
 
   const out = await (deps.design ?? design)({
     picture,
@@ -83,6 +98,7 @@ export async function handle(req: Request, deps: Deps): Promise<Response> {
     words: r.words!,
     prefer: r.prefer ?? {},
     keepClear: (r.keepClear ?? []).filter(isBox).slice(0, 8),
+    ...(logo ? { logo } : {}),
   });
   const put = async (link: string, bytes: Uint8Array, contentType: string) => {
     const res = await deps.fetch(link, {

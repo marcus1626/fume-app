@@ -14,8 +14,8 @@ export interface Deps {
     take(layerId: string): Promise<{ data: Take | null; error: Failure }>;
     finish(layerId: string, result: Record<string, unknown>): Promise<{ error: Failure }>;
     fail(layerId: string, error: string, usd: number): Promise<{ error: Failure }>;
-    /** A link to read the picture, and links to store the result where design_take said. */
-    links(t: Take): Promise<{ picture: string; png: string; fig: string }>;
+    /** A link to read the picture, links to store the result where design_take said, and one to read the brand's logo. */
+    links(t: Take): Promise<{ picture: string; png: string; fig: string; logo?: string | null }>;
     /** The stored result, to look at it. */
     read(bucket: string, path: string): Promise<Uint8Array | null>;
     picture(t: Take): Promise<Uint8Array | null>;
@@ -71,6 +71,7 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
         }
         : {},
       keepClear: choice ? keepClearOf(choice, format) : [],
+      ...(links.logo ? { logo: links.logo } : {}),
       upload: { png: links.png, fig: links.fig },
     };
     let res = await d.lay(request);

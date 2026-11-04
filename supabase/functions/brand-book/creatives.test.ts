@@ -12,11 +12,11 @@ const body = {
     { role: "body", family: "Brand Text", fallback: "Inter", weights: [400], source: "brand", note: "" },
   ],
 };
-const answer = (source: "pictures" | "fume"): CreativesAnswer => ({
+const answer = (source: "pictures" | "site" | "fume"): CreativesAnswer => ({
   read: [{ picture: 1, carries: "words_and_logo", what: "Big stack bottom left" }, { picture: 1, carries: "words", what: "Same" }, { picture: 9, carries: "none", what: "not shown" }],
   headline: { seenAsHeadline: true, looksLike: "condensed grotesque, extra bold", closestGoogleFont: "Anton", weight: 840, case: "upper", condensed: true, trackingEm: -0.01, lineHeight: 0.88, sizePctOfWidth: 12, source },
   body: { looksLike: "neo-grotesque", closestGoogleFont: "Inter Tight", weight: 400, source },
-  layouts: [{ name: "Big stack", pictures: [1, 7], band: "bottom", align: "left", wordsWidthPct: 140, ground: "photo", words: "light", cta: "pill", logo: "top_left", logoWidthPct: 9, why: "", source }],
+  layouts: [{ name: "Big stack", hasWords: true, pictures: [1, 7], band: "bottom", align: "left", wordsWidthPct: 140, ground: "photo", words: "light", cta: "pill", ctaFill: "light", logo: "top_left", logoWidthPct: 9, why: "", source }],
   rules: ["Never more than six words in the headline"],
   sources: [],
   gaps: [],
@@ -47,4 +47,12 @@ Deno.test("a caption or a name tag on a photo is not taken for the brand's headl
   const out = withCreatives(body, { ...a, headline: { ...a.headline, seenAsHeadline: false, sizePctOfWidth: 3.5 } }, [{ url: "https://x/1.jpg", kind: "site" }]);
   assertEquals(out.styles, body.styles);
   assertEquals(out.typefaces[0].fallback, "Inter");
+});
+
+Deno.test("the brand's own site, seen as a visitor sees it, sets the headline too, and a player's font gives way", () => {
+  const b = { ...body, typefaces: [{ ...body.typefaces[0], family: "VideoJS" }, body.typefaces[1]] };
+  const out = withCreatives(b, answer("site"), [{ url: "https://x/1.jpg", kind: "screenshot" }]);
+  assertEquals(out.styles.find((s) => s.name === "display")!.case, "upper");
+  assertEquals([out.typefaces[0].family, out.typefaces[0].fallback, out.typefaces[0].source], ["Anton", "Anton", "stand_in"]);
+  assertEquals(out.typefaces[1].family, "Brand Text", "a real face is kept");
 });

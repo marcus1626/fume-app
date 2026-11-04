@@ -78,7 +78,12 @@ Deno.serve((req) =>
           const png = await service.storage.from(t.store.bucket).createSignedUploadUrl(t.store.png);
           const fig = await service.storage.from(t.store.bucket).createSignedUploadUrl(t.store.fig);
           if (read.error || png.error || fig.error) throw new Error("Fume could not make the storage links.");
-          return { picture: read.data.signedUrl, png: png.data.signedUrl, fig: fig.data.signedUrl };
+          // The brand's logo, as its design system names it; without one the layout is made without it.
+          const mark = (t.book.body as { logo?: { bucket?: string; path?: string } | null }).logo;
+          const logo = mark?.bucket === "workspace-files" && mark.path?.startsWith(`${t.workspace_id}/brand/logo/`)
+            ? await service.storage.from(mark.bucket).createSignedUrl(mark.path, 600)
+            : null;
+          return { picture: read.data.signedUrl, png: png.data.signedUrl, fig: fig.data.signedUrl, logo: logo?.data?.signedUrl ?? null };
         },
         read: download,
         picture: (t) => download(t.picture.bucket, t.picture.path),

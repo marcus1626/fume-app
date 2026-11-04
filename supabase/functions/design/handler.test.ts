@@ -1,6 +1,6 @@
 import { assertEquals } from "jsr:@std/assert@1";
 import { type Deps, designLayer, handleDesign } from "./handler.ts";
-import { keepClearOf, type Take, wordsOf } from "./layer.ts";
+import { keepClearOf, layoutsOf, type Take, wordsOf } from "./layer.ts";
 
 const take: Take = {
   layer_id: "00000000-0000-0000-0000-0000000000aa",
@@ -112,4 +112,27 @@ Deno.test("the function asks who is calling, and answers at once while the work 
   let later = 0;
   assertEquals((await handleDesign(post({ layerId: id }), () => deps({ later: () => void later++ }).d)).status, 202);
   assertEquals(later, 1);
+});
+
+Deno.test("the brand's logo goes to the service when its design system names one, and a layer without one is still made", async () => {
+  const withLogo = deps({
+    service: {
+      ...deps().d.service,
+      links: () => Promise.resolve({ picture: "https://s/sign/p?token=1", png: "https://s/upload/sign/a?token=2", fig: "https://s/upload/sign/b?token=3", logo: "https://s/sign/l?token=4" }),
+    },
+  });
+  assertEquals(await designLayer(take, withLogo.d), "made");
+  assertEquals((withLogo.calls.lay[0] as { logo?: string }).logo, "https://s/sign/l?token=4");
+  const without = deps();
+  assertEquals(await designLayer(take, without.d), "made");
+  assertEquals("logo" in (without.calls.lay[0] as object), false);
+});
+
+Deno.test("a brand layout with no words is never offered for the plan's words", () => {
+  const t = { ...take, book: { ...take.book, body: { ...take.book.body, onPictures: { layouts: [
+    { name: "Clean product photo, no words", band: "top", align: "left", ground: "photo", words: "dark", cta: "none", why: "" },
+    { name: "Swoosh alone", hasWords: false, band: "middle", align: "center", ground: "flat", words: "light", cta: "none", why: "" },
+    { name: "Big stack", band: "bottom", align: "left", ground: "photo", words: "light", cta: "pill", why: "" },
+  ] } } } } as typeof take;
+  assertEquals(layoutsOf(t).map((l) => l.name), ["Big stack"]);
 });

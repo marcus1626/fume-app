@@ -2,10 +2,11 @@
 // by name (where the words go, which headline style, which colour role); code tries the layouts in that order, measures
 // each one in the picture (contrast under every line of words, how busy it is, what it covers, whether it fits the
 // safe area), and keeps the best that passes. What did not pass is said, for the expert.
-import { type DesignBook, type Format, type Style, componentOf, gridOf, headlineSteps, signatureOf, styleOf } from "./book.ts";
+import { type DesignBook, type Format, type Grid, type Style, colourOf, componentOf, gridOf, headlineSteps, signatureOf, styleOf } from "./book.ts";
 import { type Band, type Composed, type FamilyFor, type Ground, type Layout, type Words, compose, shadeFill, shadeFor } from "./compose.ts";
 import { type Box, type Pixels, type Shade, contrast, luminance, overlap, rgbOf, under } from "./pixels.ts";
 import { type Doc, boxOf, build, fig, hasFont, pixelsOf, place, png } from "./render.ts";
+import { type Logo, type Where, CORNERS, cornersFor, logoOf } from "./logo.ts";
 
 export interface Ask {
   picture: Uint8Array;
@@ -16,10 +17,20 @@ export interface Ask {
   prefer?: Partial<Layout>;
   /** What the words must never cover (the product, a face, a logo), in layout pixels. */
   keepClear?: (Box & { what: string })[];
+  /** The brand's logo file (SVG, PNG, JPEG or WebP), when its design system names one. */
+  logo?: Uint8Array;
+}
+
+/** The logo on one layout: its size, and the brand's own corner for it when its creatives show one. */
+export interface LogoPlan {
+  logo: Logo;
+  w: number;
+  h: number;
+  first: Where | null;
 }
 
 export interface Check {
-  check: "fits" | "lines" | "contrast" | "busy" | "covers" | "font";
+  check: "fits" | "lines" | "contrast" | "busy" | "covers" | "font" | "logo";
   node: string;
   ok: boolean;
   /** Hard checks fail the layout; soft ones are said to the expert. */
@@ -36,6 +47,7 @@ export interface Tried {
   checks: Check[];
   boxes: Record<string, Box>;
   shades: Shade[];
+  logo?: { where: Where; variant: string; contrast: number } | null;
 }
 
 export interface Designed {
@@ -51,6 +63,8 @@ export interface Designed {
   /** What the first layouts tried failed on, for the expert. */
   attempts: { layout: Layout; failed: string[] }[];
   fonts: { style: string; asked: string; used: string }[];
+  /** Where the logo sits and which version of it, or null when it is left off. */
+  logo: { where: Where; variant: string; contrast: number } | null;
   ms: number;
 }
 
@@ -63,14 +77,22 @@ export async function design(ask: Ask): Promise<Designed> {
   const pixels = await pictureAt(ask.picture, format, SCALE);
   const { familyFor, fonts } = await familiesOf(book);
   const keep = ask.keepClear ?? [];
+  const logo = ask.logo
+    ? await logoOf(ask.logo, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000").catch(() => null)
+    : null;
 
   let best: { t: Tried; doc: Doc } | null = null;
   let tried = 0;
   const attempts: Designed["attempts"] = [];
+  // Each place for the words gets its share of the tries, so a place that cannot work never uses them all up.
+  const perBand = new Map<string, number>();
   for (const l of layoutsFor(book, format, ask.prefer ?? {}, Boolean(words.cta))) {
-    const c = compose(book, format, words, l, familyFor);
-    const doc = await build(c.jsx, ask.picture);
-    const t = measure(doc, c, l, book, pixels, keep);
+    if ((perBand.get(l.band) ?? 0) >= 110) continue;
+    perBand.set(l.band, (perBand.get(l.band) ?? 0) + 1);
+    const plan = logo ? logoPlan(book, g, l, logo) : null;
+    const c = compose(book, format, words, l, familyFor, {}, plan ?? undefined);
+    const doc = await build(c.jsx, ask.picture, plan?.logo.variants);
+    const t = measure(doc, c, l, book, pixels, keep, plan);
     tried++;
     if (attempts.length < 30) {
       attempts.push({ layout: l, failed: t.checks.filter((x) => !x.ok && x.hard).map((x) => `${x.node}: ${x.note}`) });
@@ -80,10 +102,13 @@ export async function design(ask: Ask): Promise<Designed> {
     if (tried >= 320) break;
   }
   if (!best) throw new Error("No layout could be made.");
-  const even = await balance(ask, best.t, familyFor, pixels, keep);
+  const even = await balance(ask, best.t, familyFor, pixels, keep, logo);
   if (even) best = even;
   const used = new Set([best.t.layout.headline, best.t.layout.subline ?? "subline", componentOf(book, "cta")?.style ?? "cta"]);
   const seen = new Set<string>();
+  if (ask.logo && !logo) {
+    best.t.checks.push({ check: "logo", node: "Logo", ok: false, hard: false, note: "The logo file could not be read; set it by hand." });
+  }
   const fontChecks: Check[] = fonts
     .filter((f) => used.has(f.style) && f.asked !== f.used && !seen.has(f.asked) && seen.add(f.asked))
     .map((f) => ({
@@ -106,6 +131,7 @@ export async function design(ask: Ask): Promise<Designed> {
     tried,
     attempts,
     fonts,
+    logo: best.t.logo ?? null,
     ms: Date.now() - t0,
   };
 }
@@ -121,9 +147,11 @@ export async function balance(
   familyFor: FamilyFor,
   pixels: Pixels,
   keep: (Box & { what: string })[],
+  logo: Logo | null = null,
 ): Promise<{ t: Tried; doc: Doc } | null> {
   const { book, format, words } = ask;
   const l = base.layout;
+  const plan = logo ? logoPlan(book, gridOf(book, format), l, logo) : null;
   const widths: Partial<Record<"Headline" | "Subline", number>> = {};
   const heightOf = async (w: typeof widths, name: "Headline" | "Subline") => {
     const c = compose(book, format, words, l, familyFor, w);
@@ -146,9 +174,9 @@ export async function balance(
     if (hi < full - 12) widths[name] = Math.min(full, hi + 4);
   }
   if (!Object.keys(widths).length) return null;
-  const c = compose(book, format, words, l, familyFor, widths);
-  const doc = await build(c.jsx, ask.picture);
-  const t = measure(doc, c, l, book, pixels, keep);
+  const c = compose(book, format, words, l, familyFor, widths, plan ?? undefined);
+  const doc = await build(c.jsx, ask.picture, plan?.logo.variants);
+  const t = measure(doc, c, l, book, pixels, keep, plan);
   return t.ok || !base.ok ? { t, doc } : null;
 }
 
@@ -165,6 +193,7 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
   const sigGround: Ground | null = sig ? (sig.ground === "colour_block" ? "block" : sig.ground) : null;
   const sigColour = sig ? ({ light: "on_photo", dark: "text", brand_colour: "accent" } as const)[sig.words] : null;
   const ctaLook = sig && sig.cta !== "none" ? sig.cta : sig ? "text" : undefined;
+  const ctaFill = sig?.ctaFill && sig.ctaFill !== "none" ? sig.ctaFill : undefined;
   const bands: Band[] = uniq([prefer.band ?? sig?.band ?? "top", sig?.band ?? "top", "top", "bottom", "middle"]) as Band[];
   const aligns = uniq([prefer.align ?? sig?.align ?? "left", sig?.align ?? "left", "left", "right", "center"]) as Layout["align"][];
   const wanted = prefer.colour ?? sigColour ?? "on_photo";
@@ -201,6 +230,7 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
                   band, align, headline, colour, ground, cta, columns,
                   ...(subline === "subline" ? {} : { subline }),
                   ...(ctaLook ? { ctaLook } : {}),
+                  ...(ctaFill ? { ctaFill } : {}),
                   ...(sig ? { signature: sig.name } : {}),
                 };
               }
@@ -213,7 +243,15 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
 }
 
 /** Places the words, then measures the layout in the picture. */
-export function measure(doc: Doc, c: Composed, l: Layout, book: DesignBook, p: Pixels, keep: (Box & { what: string })[]): Tried {
+export function measure(
+  doc: Doc,
+  c: Composed,
+  l: Layout,
+  book: DesignBook,
+  p: Pixels,
+  keep: (Box & { what: string })[],
+  logo: LogoPlan | null = null,
+): Tried {
   const g = c.grid;
   const words0 = boxOf(doc, "Words")!;
   const action0 = boxOf(doc, "Action");
@@ -321,8 +359,93 @@ export function measure(doc: Doc, c: Composed, l: Layout, book: DesignBook, p: P
       }
     }
   }
+  let placed: Tried["logo"] = null;
+  if (logo) {
+    const at = placeLogo(doc, g, logo, boxes, keep, p, shades, l);
+    checks.push(at.check);
+    if (at.box) boxes.Logo = at.box;
+    placed = at.placed;
+  }
   const ok = checks.every((x) => x.ok || !x.hard);
-  return { layout: l, ok, score: scoreOf(l, checks), checks, boxes, shades };
+  return { layout: l, ok, score: scoreOf(l, checks), checks, boxes, shades, logo: placed };
+}
+
+/**
+ * The logo's size and the brand's corner for it on this layout, or null when the brand's own layout carries none
+ * (Nike never shrinks the Swoosh into a corner of an ad). Without a layout of the brand's, a calm corner is found.
+ */
+export function logoPlan(book: DesignBook, g: Grid, l: Layout, logo: Logo): LogoPlan | null {
+  const sig = signatureOf(book, l.signature);
+  if (sig && sig.logo === "none") return null;
+  const first = sig && CORNERS.includes(sig.logo as Where) ? (sig.logo as Where) : null;
+  const pct = sig?.logoWidthPct && sig.logoWidthPct > 0 ? Math.min(30, Math.max(4, sig.logoWidthPct)) : 12;
+  let w = (g.w * pct) / 100;
+  let h = (w * logo.height) / logo.width;
+  const most = g.h * 0.08;
+  if (h > most) {
+    w = (w * most) / h;
+    h = most;
+  }
+  return { logo, w: Math.round(w), h: Math.round(h), first };
+}
+
+function boxAt(where: Where, g: Grid, w: number, h: number): Box {
+  const [v, side] = where.split("_") as ["top" | "bottom", "left" | "centre" | "right"];
+  const x = side === "left" ? g.margin : side === "right" ? g.w - g.margin - w : Math.round((g.w - w) / 2);
+  const y = v === "top" ? g.top : g.h - g.bottom - h;
+  return { x, y, w, h };
+}
+
+/** The logo in the first corner that keeps clear of the words and reads, in the version that reads best there. */
+function placeLogo(
+  doc: Doc,
+  g: Grid,
+  plan: LogoPlan,
+  boxes: Record<string, Box>,
+  keep: (Box & { what: string })[],
+  p: Pixels,
+  shades: Shade[],
+  l: Layout,
+): { check: Check; box: Box | null; placed: Tried["logo"] } {
+  const id = doc.ids.get("Logo");
+  const avoid = [...["Words", "CTA", "Action"].map((n) => boxes[n]).filter(Boolean), ...keep];
+  let best: { where: Where; box: Box; v: Logo["variants"][number]; contrast: number } | null = null;
+  for (const where of cornersFor(plan.first, l.band, l.align)) {
+    const box = boxAt(where, g, plan.w, plan.h);
+    const pad = { x: box.x - 16, y: box.y - 16, w: box.w + 32, h: box.h + 32 };
+    if (avoid.some((a) => overlap(pad, a) > 0)) continue;
+    for (const v of plan.logo.variants) {
+      const u = under(p, box, v.hex, shades, Math.max(8, Math.round(plan.h * 0.5)));
+      if (!best || u.contrast > best.contrast + 0.01) best = { where, box, v, contrast: u.contrast };
+    }
+    if (best && best.where === where && best.contrast >= 3) break;
+  }
+  if (!id || !best || best.contrast < 3) {
+    if (id) doc.graph.updateNode(id, { visible: false } as never);
+    return {
+      check: { check: "logo", node: "Logo", ok: false, hard: false, value: best?.contrast, need: 3, note: "No calm corner reads for the logo; it is left off for the designer to place." },
+      box: null,
+      placed: null,
+    };
+  }
+  place(doc, "Logo", { x: best.box.x, y: best.box.y });
+  doc.graph.updateNode(id, {
+    fills: [{ type: "IMAGE", imageHash: best.v.hash, imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }] as never,
+  });
+  const own = plan.first === best.where;
+  return {
+    check: {
+      check: "logo",
+      node: "Logo",
+      ok: true,
+      hard: false,
+      value: best.contrast,
+      need: 3,
+      note: `${own ? "In the brand's own corner" : "In a calm corner"} (${best.where.replace("_", " ")}), ${best.v.name === "as_is" ? "as drawn" : `the ${best.v.name} version`}, ${best.contrast}:1.`,
+    },
+    box: best.box,
+    placed: { where: best.where, variant: best.v.name, contrast: best.contrast },
+  };
 }
 
 function scoreOf(l: Layout, checks: Check[]): number {
