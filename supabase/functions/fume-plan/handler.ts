@@ -3,7 +3,8 @@
 // came back is taken again after four minutes). The caller's own token decides whether they may see the campaign;
 // the service role takes the work, and the database checks the model's plan before it becomes the version.
 // The answer comes at once (202); the writing goes on in the background. handler.test.ts runs it without Supabase.
-import type { PlanAnswer, PlanTask } from "./plan.ts";
+import type { ClaimRead, CopyLine, PlanAnswer, PlanTask } from "./plan.ts";
+import { copyLines, copyProblem, judgeCopy } from "./plan.ts";
 
 type Failure = { message: string; details?: string | null } | null;
 export interface Usage {
@@ -24,7 +25,11 @@ export interface Deps {
     take(campaignId: string): Promise<{ data: PlanTask | null; error: Failure }>;
     finish(runId: string, body: Record<string, unknown>, changes: string[], usage: Usage): Promise<{ error: Failure }>;
     fail(runId: string, error: string, usage: Usage, final: boolean): Promise<{ error: Failure }>;
+    /** Keeps the claim check on the run (staff only), before the plan is handed over. */
+    copyChecked?(runId: string, check: Record<string, unknown>): Promise<{ error: Failure }>;
   };
+  /** Reads every line of words for claims and voice (the copy lane); absent, the words are not read. */
+  checkCopy?(task: PlanTask, lines: CopyLine[]): Promise<{ read: ClaimRead | null; usage: Usage }>;
   /** Asks the model; `problem` is set on the second try after the database refused the first plan. */
   write(task: PlanTask, problem?: string): Promise<Written>;
   toBody(answer: PlanAnswer): Record<string, unknown>;
@@ -47,11 +52,15 @@ const add = (a: Usage, b: Usage): Usage => ({
   cost_usd: Math.round((a.cost_usd + b.cost_usd) * 10_000) / 10_000,
 });
 
-/** One run: ask, hand the plan to the database, and on a refusal by the database ask once more with its reasons. */
+/** One run: ask, read the words for claims (one rewrite when a claim has no verified fact), hand the plan to the
+ * database, and on a refusal by the database ask once more with its reasons. */
 export async function writePlan(task: PlanTask, deps: Deps): Promise<"written" | "failed"> {
   let usage: Usage = { model: "", input_tokens: 0, output_tokens: 0, cost_usd: 0 };
   let problem: string | undefined;
-  for (let round = 0; round < 2; round++) {
+  let refused = false;
+  let rewroteCopy = false;
+  let rewroteFor: unknown[] = [];
+  for (let round = 0; round < 3; round++) {
     let written: Written;
     try {
       written = await deps.write(task, problem);
@@ -63,6 +72,39 @@ export async function writePlan(task: PlanTask, deps: Deps): Promise<"written" |
       await deps.service.fail(task.run_id, written.error, usage, written.final ?? false);
       return "failed";
     }
+    if (deps.checkCopy) {
+      const lines = copyLines(written.answer);
+      let read: ClaimRead | null = null;
+      let readError: string | undefined;
+      if (lines.length) {
+        try {
+          const c = await deps.checkCopy(task, lines);
+          usage = add(usage, c.usage);
+          read = c.read;
+          if (!read) readError = "The words could not be read.";
+        } catch (e) {
+          readError = e instanceof Error ? e.message : String(e);
+        }
+      }
+      const judged = judgeCopy(task, lines, read);
+      const blocking = judged.findings.filter((f) => f.blocking);
+      if (blocking.length && !rewroteCopy && round < 2) {
+        rewroteCopy = true;
+        rewroteFor = blocking;
+        problem = `Words that make a claim no verified fact states: ${copyProblem(blocking)} Rewrite those words without the claim, or keep to the product name, the moment and the brief's message.`;
+        continue;
+      }
+      await deps.service.copyChecked?.(task.run_id, {
+        read: Boolean(read) || lines.length === 0,
+        ...(readError ? { error: readError } : {}),
+        rewritten: rewroteCopy,
+        ...(rewroteCopy ? { rewrote_for: rewroteFor } : {}),
+        unbacked: blocking.length,
+        voice_book: task.voice ? { id: task.voice.id, version: task.voice.version, state: task.voice.state } : null,
+        lines: judged.lines,
+        findings: judged.findings,
+      });
+    }
     const { error } = await deps.service.finish(
       task.run_id,
       deps.toBody(written.answer),
@@ -70,10 +112,11 @@ export async function writePlan(task: PlanTask, deps: Deps): Promise<"written" |
       usage,
     );
     if (!error) return "written";
-    if (error.details !== "invalid") {
-      await deps.service.fail(task.run_id, error.message, usage, false);
+    if (error.details !== "invalid" || refused) {
+      await deps.service.fail(task.run_id, refused ? `The plan did not pass: ${error.message}` : error.message, usage, false);
       return "failed";
     }
+    refused = true;
     problem = error.message;
   }
   await deps.service.fail(task.run_id, `The plan did not pass: ${problem}`, usage, false);

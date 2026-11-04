@@ -4,7 +4,7 @@ import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { betaZodOutputFormat } from "npm:@anthropic-ai/sdk@1.3.0/helpers/beta/zod";
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
 import { handlePlan, type Written } from "./handler.ts";
-import { costOf, PlanAnswer, prompt, SYSTEM, toBody } from "./plan.ts";
+import { CLAIM_SYSTEM, ClaimRead, claimPrompt, costOf, type CopyLine, PlanAnswer, type PlanTask, prompt, SYSTEM, toBody } from "./plan.ts";
 
 // The cheap model first (Marcus, 3 Nov); Opus only where it is needed.
 const MODEL = "claude-haiku-5-5";
@@ -62,6 +62,27 @@ async function write(task: Parameters<typeof prompt>[0], problem?: string): Prom
   return { ok: true, answer: message.parsed_output, usage };
 }
 
+/** The claim check: the cheap model reads every line of words; code then decides what backs each claim. */
+async function checkCopy(task: PlanTask, lines: CopyLine[]) {
+  const none = { model: MODEL, input_tokens: 0, output_tokens: 0, cost_usd: 0 };
+  if (!(await withinBudget())) return { read: null, usage: none };
+  const message = await claude.beta.messages.parse({
+    model: MODEL,
+    max_tokens: 8_000,
+    system: CLAIM_SYSTEM,
+    messages: [{ role: "user", content: claimPrompt(task, lines) }],
+    thinking: { type: "adaptive" },
+    output_config: { effort: "low", format: betaZodOutputFormat(ClaimRead) },
+  });
+  const usage = {
+    model: message.model,
+    input_tokens: message.usage.input_tokens,
+    output_tokens: message.usage.output_tokens,
+    cost_usd: costOf(message.usage),
+  };
+  return { read: message.stop_reason === "end_turn" ? (message.parsed_output ?? null) : null, usage };
+}
+
 const err = (e: { message: string; details?: string } | null) =>
   e ? { message: e.message, details: e.details } : null;
 
@@ -82,7 +103,12 @@ Deno.serve((req) =>
           if (error || !data) return { data, error: err(error) };
           // What Fume knows about the brand; the plan is written without it if it cannot be read.
           const brain = await service.rpc("brain_context_of_campaign", { p_campaign_id: campaignId });
-          return { data: { ...data, brain: brain.error ? null : brain.data }, error: null };
+          // The brand's Tone of Voice for the words; without it the plan keeps to the brief's.
+          const voice = await service.rpc("brand_voice_of_campaign", { p_campaign_id: campaignId });
+          return {
+            data: { ...data, brain: brain.error ? null : brain.data, voice: voice.error ? null : voice.data },
+            error: null,
+          };
         },
         finish: async (runId, body, changes, usage) => {
           const { error } = await service.rpc("fume_finish_plan", {
@@ -102,8 +128,13 @@ Deno.serve((req) =>
           });
           return { error: err(e) };
         },
+        copyChecked: async (runId, check) => {
+          const { error } = await service.rpc("fume_plan_copy_checked", { p_run_id: runId, p_check: check });
+          return { error: err(error) };
+        },
       },
       write,
+      checkCopy,
       toBody,
       later: (work) => EdgeRuntime.waitUntil(work),
     };

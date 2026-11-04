@@ -1,7 +1,7 @@
 // The plan handler without Supabase or the model: deno test supabase/functions/fume-plan/
 import { assertEquals } from "jsr:@std/assert@1";
 import { type Deps, handlePlan, type Written } from "./handler.ts";
-import { type PlanAnswer, type PlanTask, prompt, toBody } from "./plan.ts";
+import { type ClaimRead, copyLines, judgeCopy, type PlanAnswer, type PlanTask, prompt, toBody } from "./plan.ts";
 
 const task: PlanTask = {
   run_id: "r1",
@@ -89,7 +89,11 @@ const plan: PlanAnswer = {
 };
 const usage = { model: "claude-opus-5-5", input_tokens: 1000, output_tokens: 500, cost_usd: 0.014 };
 
-function fake(opts: { canRead?: boolean; task?: PlanTask | null; answers?: Written[]; refusals?: string[] } = {}) {
+function fake(
+  opts: { canRead?: boolean; task?: PlanTask | null; answers?: Written[]; refusals?: string[]; reads?: (ClaimRead | null)[] } = {},
+) {
+  const checks: Record<string, unknown>[] = [];
+  const reads = opts.reads ? [...opts.reads] : undefined;
   const calls: string[] = [];
   const work: Promise<unknown>[] = [];
   const answers = [...(opts.answers ?? [{ ok: true, answer: plan, usage }])];
@@ -107,15 +111,28 @@ function fake(opts: { canRead?: boolean; task?: PlanTask | null; answers?: Writt
         calls.push(`fail ${error} ${u.cost_usd} ${final}`);
         return { error: null };
       },
+      copyChecked: async (_id, check) => {
+        checks.push(check);
+        calls.push(`copy checked ${check.unbacked}`);
+        return { error: null };
+      },
     },
     write: async (_t, problem) => {
       calls.push(`write${problem ? ` (${problem})` : ""}`);
       return answers.shift()!;
     },
+    ...(reads
+      ? {
+          checkCopy: async () => {
+            calls.push("read words");
+            return { read: reads.shift() ?? null, usage: { ...usage, cost_usd: 0.001 } };
+          },
+        }
+      : {}),
     toBody,
     later: (p) => work.push(p),
   });
-  return { calls, deps, done: () => Promise.all(work) };
+  return { calls, deps, checks, done: () => Promise.all(work) };
 }
 const post = (body: unknown, auth = "Bearer t") =>
   new Request("https://x.test/functions/v1/fume-plan", {
@@ -233,4 +250,100 @@ Deno.test("the plan writer reads the brand brain, and what is only proposed is m
     throw new Error("the taste profile is in the prompt on its own");
   if (prompt({ ...base, brain: { taste_profile: { measured_pictures: 0, do: [] } } }).includes("<taste_profile>"))
     throw new Error("an unmeasured taste adds nothing");
+});
+
+const noClaims = (a: PlanAnswer): ClaimRead => ({
+  lines: copyLines(a).map((l) => ({ ref: l.ref, claims: [], voice: "on" as const, voiceNote: null })),
+});
+
+Deno.test("every line of words is read for claims; a verified claim fact backs one", () => {
+  const lines = copyLines(plan);
+  assertEquals(lines.map((l) => l.ref), ["copy:call_to_action", "a/pc2"]);
+  const read: ClaimRead = {
+    lines: [
+      { ref: "copy:call_to_action", claims: [], voice: "on", voiceNote: null },
+      { ref: "a/pc2", claims: [{ words: "For the hour before sleep", kind: "other", backedBy: "f1", brandSays: false }], voice: "on", voiceNote: null },
+    ],
+  };
+  const j = judgeCopy(task, lines, read);
+  assertEquals(j.findings, []);
+  assertEquals((j.lines[1].claims[0] as { verdict: string }).verdict, "backed");
+});
+
+Deno.test("an unverified fact, an invented id or the brand's own words never back a result", () => {
+  const lines = copyLines(plan);
+  const read: ClaimRead = {
+    lines: [
+      { ref: "copy:call_to_action", claims: [{ words: "Skin like silk", kind: "result", backedBy: "f2", brandSays: true }], voice: "on", voiceNote: null },
+      { ref: "a/pc2", claims: [{ words: "Sleep better", kind: "health", backedBy: "f9", brandSays: false }], voice: "off", voiceNote: "Too loud" },
+    ],
+  };
+  const j = judgeCopy(task, lines, read);
+  assertEquals(j.findings.map((f) => `${f.ref} ${f.kind} ${f.blocking}`), [
+    "copy:call_to_action unbacked_claim true",
+    "a/pc2 unbacked_claim true",
+    "a/pc2 off_voice false",
+  ]);
+});
+
+Deno.test("a price the brand says on its site passes as the brand's words; the voice's avoided words are found", () => {
+  const t: PlanTask = { ...task, voice: { id: "v1", version: 2, state: "approved", body: { speak: { avoid: ["Nydelig", "Kjøp nå!!"] } } } };
+  const a: PlanAnswer = { ...plan, copy: [{ label: "Offer", value: "Nydelig olje. Fri frakt over 998,-", why: "w" }] };
+  const read: ClaimRead = {
+    lines: [
+      { ref: "copy:offer", claims: [{ words: "Fri frakt over 998,-", kind: "offer", backedBy: null, brandSays: true }], voice: "on", voiceNote: null },
+      { ref: "a/pc2", claims: [], voice: "on", voiceNote: null },
+    ],
+  };
+  const j = judgeCopy(t, copyLines(a), read);
+  assertEquals(j.findings.map((f) => `${f.kind} ${f.note}`), ['avoided_word The voice avoids "Nydelig".']);
+  assertEquals((j.lines[0].claims[0] as { verdict: string }).verdict, "brand_says");
+});
+
+Deno.test("a claim no verified fact states is written once more without it, and the check is kept on the run", async () => {
+  const bad: ClaimRead = {
+    lines: [
+      { ref: "copy:call_to_action", claims: [{ words: "Sleep better", kind: "health", backedBy: null, brandSays: false }], voice: "on", voiceNote: null },
+      { ref: "a/pc2", claims: [], voice: "on", voiceNote: null },
+    ],
+  };
+  const f = fake({ answers: [{ ok: true, answer: plan, usage }, { ok: true, answer: plan, usage }], reads: [bad, noClaims(plan)] });
+  await handlePlan(post({ campaignId: "c1" }), f.deps);
+  await f.done();
+  assertEquals(f.calls[0], "write");
+  assertEquals(f.calls[1], "read words");
+  assertEquals(f.calls[2].startsWith('write (Words that make a claim no verified fact states: copy:call_to_action ("Shop the oil"): "Sleep better"'), true);
+  assertEquals(f.calls.slice(3), ["read words", "copy checked 0", "finish 1 [] 0.03"]);
+  assertEquals(f.checks[0].rewritten, true);
+  assertEquals((f.checks[0].rewrote_for as { kind: string }[]).map((x) => x.kind), ["unbacked_claim"]);
+});
+
+Deno.test("a claim still unbacked after the rewrite goes to the expert with the check, not to the customer", async () => {
+  const bad: ClaimRead = {
+    lines: [
+      { ref: "copy:call_to_action", claims: [{ words: "Best oil", kind: "superlative", backedBy: null, brandSays: false }], voice: "on", voiceNote: null },
+      { ref: "a/pc2", claims: [], voice: "on", voiceNote: null },
+    ],
+  };
+  const f = fake({ answers: [{ ok: true, answer: plan, usage }, { ok: true, answer: plan, usage }], reads: [bad, bad] });
+  await handlePlan(post({ campaignId: "c1" }), f.deps);
+  await f.done();
+  assertEquals(f.calls.slice(-2), ["copy checked 1", "finish 1 [] 0.03"]);
+  assertEquals((f.checks[0].findings as unknown[]).length, 1);
+});
+
+Deno.test("words that cannot be read are kept as not read, and the plan goes on", async () => {
+  const f = fake({ reads: [null] });
+  await handlePlan(post({ campaignId: "c1" }), f.deps);
+  await f.done();
+  assertEquals(f.calls, ["write", "read words", "copy checked 0", "finish 1 [] 0.015"]);
+  assertEquals(f.checks[0].read, false);
+});
+
+Deno.test("the plan writer writes in the brand's Tone of Voice and says how far it stands", () => {
+  const p = prompt({ ...task, voice: { id: "v1", version: 3, state: "checked", body: { summary: "Calm and plain" } } });
+  assertEquals(p.includes("<tone_of_voice>"), true);
+  assertEquals(p.includes("Calm and plain"), true);
+  assertEquals(p.includes("A Fume expert checked it"), true);
+  assertEquals(prompt(task).includes("<tone_of_voice>"), false);
 });

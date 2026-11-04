@@ -47,7 +47,28 @@ Voice: 14 examples, 8 channels, 16 pairs, 25 gaps (for example which name to use
 Design: 8 colours from Brand DNA and the site, Baskerville and Nunito Sans, every contrast pair passes, 3 layout
 examples, $0.025.
 
+## The copy lane (20261105000000_copy_lane.sql)
+
+1. The plan writer (`fume-plan`) reads the brand's Tone of Voice (`brand_voice_of_campaign`: the approved book,
+   else the newest checked, else the newest draft, without its sources and gaps) and writes every word the brand
+   will say in it: the copy set and the words on each planned creative.
+2. **The claim check.** Claude Haiku reads every line for claims (a result, health, best, better than, a price, an
+   offer, where it is from, an award) and names the verified fact that states each one. **Code decides**: only a
+   verified fact of the campaign's products backs a claim; a result, a health effect, a comparison or an award
+   needs a verified *claim* fact; the brand's own words back only a price, an offer, an origin or its own line.
+   Code also finds the words the voice avoids, and the model says when a line is off the voice.
+3. A claim nothing backs sends the plan back once with what was wrong. If it is still there, the plan goes on to
+   the expert with the check: a machine's reading never blocks on its own.
+4. The check is kept on the run (`task_runs.copy_check`, staff only) with what the first draft was rewritten for.
+   A customer never reads it, nor the Engine's prompts and findings, nor an event about a brand book she may not
+   read (the record's read rule, tightened in the same migration).
+
+First live run (4 Nov, Nordlys, a brief asking for "the best coffee in Norway" and "sleep better"): the first draft
+carried an unbacked claim and was rewritten; the plan's words use the brand's own line "Det beste er ofte det
+enkleste", say in an open question why the claims were left out, and two lines were read as off the voice
+("kaffeelskeren" instead of du). $0.014 for the plan and both checks.
+
 ## Not yet
 
-The Engine and the copy lane reading the approved book, the screens to read, check and approve a book (design
+The Engine reading the approved design system, the expert's view of the copy check and the screens to read, check and approve a book (design
 thread), and graphic design from the tokens (OpenPencil, Del 3).
