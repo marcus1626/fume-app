@@ -26,8 +26,18 @@ Marcus, 4 Nov 2026: the service goes into the existing fume-app Vercel project, 
 - `POST /api/design` is left out of the preview password (`app/middleware.ts`): Fume's backend calls it, and it does
   work only with signed links to Fume's own storage. `GET /api/design` answers that it is up.
 
+## The `design` edge function
+
+- The app calls it with `{layerId}` after `design_candidate`; the caller's own token must see the layer (staff only).
+- The words are the plan's approved headline, supporting line and call to action, picked by code, word for word.
+- Claude Haiku 5.5 looks at the picture and says what must stay clear (the product, bright lights, faces, the label)
+  and which band, alignment and colour role fit. That is a help, not a gate: without it the service still searches.
+- The service lays it out and stores the PNG and .fig through signed upload links. Haiku then reviews the result as a
+  designer (findings, staff only), and `design_finish` adds the candidate. About $0.002 a layer.
+- `DESIGN_URL` points at the service. Until PR #2 is merged it is this branch's preview, which Vercel's deployment
+  protection closes to server calls (401), so a live run needs either a protection bypass or the merge.
+
 ## Still open
 
-- The `design` edge function: a vision model picks the words (verbatim from the plan), band, alignment and what must
-  stay clear, calls the service, checks the result, then `design_finish`.
+- A live run from Supabase (see above).
 - The UI (owned by the design thread): "Add graphic design" on a candidate, the Look Book screens, the copy check.
