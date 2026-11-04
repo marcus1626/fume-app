@@ -3,7 +3,7 @@
 // each one in the picture (contrast under every line of words, how busy it is, what it covers, whether it fits the
 // safe area), and keeps the best that passes. What did not pass is said, for the expert.
 import { type DesignBook, type Format, type Style, componentOf, gridOf, headlineSteps, styleOf } from "./book.ts";
-import { type Band, type Composed, type Ground, type Layout, type Words, compose, shadeFill, shadeFor } from "./compose.ts";
+import { type Band, type Composed, type FamilyFor, type Ground, type Layout, type Words, compose, shadeFill, shadeFor } from "./compose.ts";
 import { type Box, type Pixels, type Shade, overlap, under } from "./pixels.ts";
 import { type Doc, boxOf, build, fig, hasFont, pixelsOf, place, png } from "./render.ts";
 
@@ -80,6 +80,8 @@ export async function design(ask: Ask): Promise<Designed> {
     if (tried >= 320) break;
   }
   if (!best) throw new Error("No layout could be made.");
+  const even = await balance(ask, best.t, familyFor, pixels, keep);
+  if (even) best = even;
   const used = new Set([best.t.layout.headline, best.t.layout.subline ?? "subline", componentOf(book, "cta")?.style ?? "cta"]);
   const seen = new Set<string>();
   const fontChecks: Check[] = fonts
@@ -106,6 +108,48 @@ export async function design(ask: Ask): Promise<Designed> {
     fonts,
     ms: Date.now() - t0,
   };
+}
+
+/**
+ * Even lines, as a designer sets them: no lone word on the last line, no small word left hanging. For the headline and
+ * the subline, the narrowest width that keeps the same number of lines is found, so each line carries a fair share.
+ * The even version is kept only when it passes as well as the one it replaces.
+ */
+export async function balance(
+  ask: Ask,
+  base: Tried,
+  familyFor: FamilyFor,
+  pixels: Pixels,
+  keep: (Box & { what: string })[],
+): Promise<{ t: Tried; doc: Doc } | null> {
+  const { book, format, words } = ask;
+  const l = base.layout;
+  const widths: Partial<Record<"Headline" | "Subline", number>> = {};
+  const heightOf = async (w: typeof widths, name: "Headline" | "Subline") => {
+    const c = compose(book, format, words, l, familyFor, w);
+    const doc = await build(c.jsx, ask.picture);
+    return boxOf(doc, name)?.h ?? Infinity;
+  };
+  for (const name of ["Headline", "Subline"] as const) {
+    const box = base.boxes[name];
+    if (!box) continue;
+    const full = box.w;
+    const one = await heightOf({ ...widths, [name]: full * 4 }, name);
+    if (box.h <= one + 1) continue; // one line already
+    let lo = Math.round(full * 0.5);
+    let hi = Math.round(full);
+    while (hi - lo > 12) {
+      const mid = Math.round((lo + hi) / 2);
+      if ((await heightOf({ ...widths, [name]: mid }, name)) <= box.h + 1) hi = mid;
+      else lo = mid;
+    }
+    if (hi < full - 12) widths[name] = Math.min(full, hi + 4);
+  }
+  if (!Object.keys(widths).length) return null;
+  const c = compose(book, format, words, l, familyFor, widths);
+  const doc = await build(c.jsx, ask.picture);
+  const t = measure(doc, c, l, book, pixels, keep);
+  return t.ok || !base.ok ? { t, doc } : null;
 }
 
 /** The layouts to try, the model's choice first, then the rest of what the book allows. */

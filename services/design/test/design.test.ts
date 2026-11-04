@@ -66,3 +66,14 @@ test("a story keeps its words out of the platform's top and bottom", async () =>
   assert.equal(px.width, 1080);
   assert.equal(px.height, 1920);
 });
+
+test("a subline's lines come out even: the same number of lines, no lone word on the last", async () => {
+  const pic = await picture("#0E1A14", "#0E1A14");
+  const long = { headline: "Morning, slowly", subline: "Fresh from the roastery every single morning, ground for you by hand." };
+  const prefer = { band: "top" as const, align: "left" as const, colour: "on_photo", columns: 9 };
+  const out = await design({ picture: pic, format: "feed", book, words: long, prefer, keepClear: [product] });
+  const sub = out.boxes.Subline;
+  const full = out.boxes.Words.w;
+  assert.ok(out.ok);
+  assert.ok(sub.w < full, `the subline is set narrower than its column (${sub.w} < ${full})`);
+});

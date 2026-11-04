@@ -62,6 +62,8 @@ export function compose(
   words: Words,
   l: Layout,
   family: FamilyFor,
+  /** Narrower widths for single lines of words, so their lines come out even (see balance in design.ts). */
+  widths: Partial<Record<"Headline" | "Subline", number>> = {},
 ): Composed {
   const g = gridOf(book, format);
   const unit = book.spacing?.unitPx ?? 8;
@@ -79,10 +81,11 @@ export function compose(
   const colours: Record<string, string> = { Headline: wordsHex };
   const sizes: Record<string, number> = { Headline: hl.sizePx };
 
-  const text = (name: string, s: Style, value: string, hex: string) => {
+  const text = (name: "Headline" | "Subline", s: Style, value: string, hex: string) => {
     const fam = family(s);
     fonts.push({ family: fam, weight: s.weight });
-    return `<Text name=${q(name)} w="fill" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${Math.round(
+    const w = widths[name] ? `{${Math.round(widths[name]!)}}` : `"fill"`;
+    return `<Text name=${q(name)} w=${w} font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${Math.round(
       s.sizePx * s.lineHeight,
     )}} letterSpacing={${round(s.trackingEm * s.sizePx)}} color=${q(hex)}${caseOf(s)} textAlign=${q(textAlign)} text={${JSON.stringify(
       value,

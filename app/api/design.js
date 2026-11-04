@@ -52,7 +52,7 @@ function clamp(n, lo, hi) {
 }
 
 // src/compose.ts
-function compose(book, format, words, l, family) {
+function compose(book, format, words, l, family, widths = {}) {
   const g = gridOf(book, format);
   const unit = book.spacing?.unitPx ?? 8;
   const hl = styleOf(book, l.headline) ?? styleOf(book, "h1") ?? book.styles[0];
@@ -71,7 +71,8 @@ function compose(book, format, words, l, family) {
   const text = (name, s, value, hex) => {
     const fam = family(s);
     fonts.push({ family: fam, weight: s.weight });
-    return `<Text name=${q(name)} w="fill" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${Math.round(
+    const w = widths[name] ? `{${Math.round(widths[name])}}` : `"fill"`;
+    return `<Text name=${q(name)} w=${w} font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${Math.round(
       s.sizePx * s.lineHeight
     )}} letterSpacing={${round(s.trackingEm * s.sizePx)}} color=${q(hex)}${caseOf(s)} textAlign=${q(textAlign)} text={${JSON.stringify(
       value
@@ -401,6 +402,8 @@ async function design(ask) {
     if (tried >= 320) break;
   }
   if (!best) throw new Error("No layout could be made.");
+  const even = await balance(ask, best.t, familyFor, pixels, keep);
+  if (even) best = even;
   const used = /* @__PURE__ */ new Set([best.t.layout.headline, best.t.layout.subline ?? "subline", componentOf(book, "cta")?.style ?? "cta"]);
   const seen = /* @__PURE__ */ new Set();
   const fontChecks = fonts.filter((f) => used.has(f.style) && f.asked !== f.used && !seen.has(f.asked) && seen.add(f.asked)).map((f) => ({
@@ -425,6 +428,36 @@ async function design(ask) {
     fonts,
     ms: Date.now() - t0
   };
+}
+async function balance(ask, base, familyFor, pixels, keep) {
+  const { book, format, words } = ask;
+  const l = base.layout;
+  const widths = {};
+  const heightOf = async (w, name) => {
+    const c2 = compose(book, format, words, l, familyFor, w);
+    const doc2 = await build(c2.jsx, ask.picture);
+    return boxOf(doc2, name)?.h ?? Infinity;
+  };
+  for (const name of ["Headline", "Subline"]) {
+    const box = base.boxes[name];
+    if (!box) continue;
+    const full = box.w;
+    const one = await heightOf({ ...widths, [name]: full * 4 }, name);
+    if (box.h <= one + 1) continue;
+    let lo = Math.round(full * 0.5);
+    let hi = Math.round(full);
+    while (hi - lo > 12) {
+      const mid = Math.round((lo + hi) / 2);
+      if (await heightOf({ ...widths, [name]: mid }, name) <= box.h + 1) hi = mid;
+      else lo = mid;
+    }
+    if (hi < full - 12) widths[name] = Math.min(full, hi + 4);
+  }
+  if (!Object.keys(widths).length) return null;
+  const c = compose(book, format, words, l, familyFor, widths);
+  const doc = await build(c.jsx, ask.picture);
+  const t = measure(doc, c, l, book, pixels, keep);
+  return t.ok || !base.ok ? { t, doc } : null;
 }
 function* layoutsFor(book, format, prefer, hasCta) {
   const comp = componentOf(book, "headline");
