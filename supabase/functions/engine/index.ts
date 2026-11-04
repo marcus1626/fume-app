@@ -75,6 +75,20 @@ Deno.serve((req) =>
           if (error || !data) throw new Error(`A picture could not be read: ${error?.message ?? file.path}`);
           return data.signedUrl;
         },
+        pending: async (workspaceId) => {
+          const { data, error } = await service.rpc("engine_pending", { p_workspace_id: workspaceId, p_limit: 3 });
+          return { data, error: err(error) };
+        },
+        digested: async (answerId, updatedAt, lessons, llmUsd) => {
+          const { data, error } = await service.rpc("engine_digested", { p_answer_id: answerId, p_updated_at: updatedAt, p_lessons: lessons, p_llm_usd: llmUsd });
+          return { data, error: err(error) };
+        },
+        toEvaluate: async (attemptId) => {
+          const { data, error } = await service.rpc("engine_to_evaluate", { p_attempt_id: attemptId });
+          return { data, error: err(error) };
+        },
+        evaluated: async (candidateId, evaluation, llmUsd) =>
+          ({ error: err((await service.rpc("engine_evaluated", { p_candidate_id: candidateId, p_evaluation: evaluation, p_llm_usd: llmUsd })).error) }),
         store: async (path, bytes, contentType) =>
           ({ error: err((await service.storage.from("workspace-files").upload(path, bytes, { contentType, upsert: false })).error) }),
       },

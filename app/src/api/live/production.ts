@@ -64,8 +64,13 @@ export interface CandidateRow {
   made_by: string | null;
   attempt_id: string | null;
   created_at: string;
+  /** What the Engine saw when it looked at its own picture (20261104170000_engine_evaluation.sql); null until then. */
+  evaluation?: StoredEvaluation | null;
 }
-export const CANDIDATE = "id, job_id, file_id, origin, note, made_by, attempt_id, created_at";
+export const CANDIDATE = "id, job_id, file_id, origin, note, made_by, attempt_id, created_at, evaluation";
+type StoredEvaluation = Pick<Evaluation, "productTruth" | "brandRules" | "artefacts" | "notes"> & {
+  evaluated?: boolean;
+};
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 /** An id the database can hold; anything else (an old link, a demo id) is simply not there. */
@@ -76,17 +81,31 @@ export function mustBeId(id: Id, what: string): Id {
 
 export const toFormat = (f: CreativeRow["format"]): Format => (f === "banner" ? "feed" : f);
 
-/** No evaluation of a picture is stored yet (by hand this week; the Engine's findings come with the Engine). So nothing
- *  is said to hold or to be off: the expert checks Product Truth, the brand rules and artefacts by eye, and the note
- *  says how the picture was made. */
-export function manualEvaluation(c: Pick<CandidateRow, "origin" | "note"> | undefined): Evaluation {
+/** A picture's evaluation: what the Engine saw when it looked at its own picture. A picture made by hand, or one the
+ *  Engine has not looked at yet, has none: nothing is said to hold or to be off, the expert checks Product Truth, the
+ *  brand rules and artefacts by eye, and the note says how the picture was made. */
+export function evaluationOf(c: Pick<CandidateRow, "origin" | "note" | "evaluation"> | undefined): Evaluation {
+  const e = c?.evaluation;
+  if (c?.origin === "engine" && e?.evaluated)
+    return {
+      productTruth: e.productTruth,
+      brandRules: e.brandRules,
+      artefacts: e.artefacts,
+      notes: e.notes,
+      evaluated: true,
+    };
   const how = c?.origin === "engine" ? "Made by the Engine" : "Made by hand";
   return {
     productTruth: "flag",
     brandRules: "flag",
     artefacts: "none",
     evaluated: false,
-    notes: [`${how}${c?.note ? `: ${c.note.trim().replace(/[.!?…]+$/, "")}` : ""}.`],
+    notes: [
+      // The Engine's own note already says how ("Made by the Engine with …").
+      c?.note && /^made by/i.test(c.note.trim())
+        ? `${c.note.trim().replace(/[.!?…]+$/, "")}.`
+        : `${how}${c?.note ? `: ${c.note.trim().replace(/[.!?…]+$/, "")}` : ""}.`,
+    ],
   };
 }
 
@@ -220,7 +239,7 @@ export async function readDocuments(
         state: "done",
         variables,
         specs: p ? { ...specs, imageModel: modelName(p.image_model) } : specs,
-        evaluation: manualEvaluation(c),
+        evaluation: evaluationOf(c),
         instruction: c.origin === "manual" ? `Made by hand${c.note ? `: ${c.note}` : ""}` : (c.note ?? undefined),
         cost: 0,
         ...(p ? { prompt: toEnginePrompt(p) } : {}),

@@ -21,11 +21,24 @@ design follows Marcus's five domains and the Fume Engine prototype (Oct 2026), p
 6. Only a prompt that passed goes to the image model (fal or Higgsfield, the prompt unchanged), and the picture
    comes back as a candidate of the job, made for the designer who pressed Render, so someone else checks it.
 7. The **feedback domain**: `engine_lessons` holds what people's verdicts taught (only people's verdicts teach);
-   approved pictures' prompts become examples. Turning verdicts into lessons is the next step.
+   approved pictures' prompts become examples. A person's Yes or No (`teach_engine`) waits as an answer; before the
+   next prompt for the brand, the Engine turns up to three answers that say why into at most three lessons each
+   (`engine_pending`, Claude with DIGEST_SYSTEM, `engine_digested`), from what the person said only. That prompt
+   already uses them; a changed answer is digested again and its old lessons retire. Digesting counts in the
+   language model's week.
+8. **The Engine looks at its picture** (`_shared/engine/evaluate.ts`). Right after a picture is kept, Claude Haiku
+   sees the product's own photographs (at most three; never the master) and the picture, and answers for each item
+   of the prompt's checklist whether the picture holds it, is off, or cannot be told, and names artefacts and
+   printed words outside the product. The first item is always that the product is the product in its photographs.
+   The format and the taste model's words are code's, so they are not on the list. Code turns the answers into the
+   candidate's `evaluation` (product truth, brand rules, artefacts, notes in order of weight) through
+   `engine_evaluated`. It helps the expert and never checks a picture in their place; customers never see it. About
+   $0.0015 a picture, in the language model's week. A failure leaves the picture unevaluated.
 
 ## Money
 
-- The language model's week (`llm_week_usd`, $50) counts the plan writer, the chat and the Engine's prompts.
+- The language model's week (`llm_week_usd`, $50) counts the plan writer, the chat, the Engine's prompts, digesting
+  answers and looking at pictures.
 - The pictures have their own week (`engine_week_usd`, $20). Over it, Render says so.
 - A dry run (no image provider's key yet) writes and checks the prompt for about $0.002 and renders nothing.
 
@@ -52,7 +65,7 @@ without making a picture.
 
 ## Not yet
 
-The Engine bar's words, Make formats by the Engine, picture checks by a vision model, lessons from verdicts, video.
+The Engine bar's words, Make formats by the Engine and video.
 The Studio's side is designed in app/FLOWS.md §29 (PROPOSED) and wired live (app/src/api/live/engine.ts):
 
 - A failed Engine job is a version with state `failed` and `failure` (one sentence, for everyone on the desk); Render
@@ -61,4 +74,4 @@ The Studio's side is designed in app/FLOWS.md §29 (PROPOSED) and wired live (ap
   table is read by Fume's own people only (migration 20261104150000_engine_studio), so an agency's people get none.
 - Engine output is one run per Engine job with its candidates; a Generation's id is its candidate's id, and opening
   one opens its creative. `taught` is the newest answer on the picture; `teachEngine` calls `teach_engine`, which keeps
-  one answer per person and picture as a pending lesson. Turning answers into lessons the prompt uses is next.
+  one answer per person and picture as a pending lesson. Answers become lessons before the next prompt (step 7).

@@ -9,16 +9,21 @@ import {
   buildConcept,
   buildKnowledge,
   buildProduct,
+  checklist,
   type Composer,
   type Decider,
   DIALECTS,
   type EngineTask,
+  type Evaluation,
   formatOf,
   GRAMMARS,
+  type Looked,
   type MachineResult,
+  type ManifestItem,
   type ModelCall,
   runPromptMachine,
   selectMethod,
+  toEvaluation,
   type Verifier,
 } from "../_shared/engine/index.ts";
 import type { ImageProvider } from "./provider.ts";
@@ -35,6 +40,24 @@ export type Taken = Omit<EngineTask, "products" | "master"> & {
   master: (Stored & { title: string }) | null;
   change: { problem: string; must_change: string[]; must_stay: string[] } | null;
 };
+/** A person's answer on one of the Engine's pictures, with the prompt behind it. */
+export type Pending = { id: string; verdict: "yes" | "no"; why: string; image_model: string | null; updated_at: string; concept: string; slots: { slotKey: string; text: string }[] };
+export type DigestLesson = { statement: string; polarity: "do" | "avoid"; reason: string; scope: "brand" | "brand_and_model" };
+/** Looks at a picture against the prompt's checklist (and the product's own photograph). */
+export type Evaluator = (input: {
+  pictureUrl: string;
+  /** The product's own photographs, at most three. */
+  productUrls: string[];
+  checks: ReturnType<typeof checklist>;
+  size?: { width: number; height: number };
+}) => Promise<{ looked: Looked; call: ModelCall }>;
+/** Turns one answer into at most three lessons, from what the person said only. */
+export type Digester = (answer: Pending) => Promise<{ lessons: DigestLesson[]; call: ModelCall }>;
+export type ToEvaluate = {
+  candidates: { id: string; path: string; width?: number | null; height?: number | null }[];
+  manifest: ManifestItem[];
+  references: { url: string; role: string }[];
+};
 export type Collect = { job_id: string; attempt_id: string; workspace_id: string; provider: string; model: string; provider_job_id: string; started_at: string };
 
 export interface Deps {
@@ -49,8 +72,15 @@ export interface Deps {
     sign(file: Stored): Promise<string>;
     /** Keeps a made picture in the workspace's folder. */
     store(path: string, bytes: Uint8Array, contentType: string): Promise<{ error: Failure }>;
+    /** The brand's answers that wait to become lessons (public.engine_pending). */
+    pending?(workspaceId: string): Promise<{ data: Pending[] | null; error: Failure }>;
+    /** An answer's lessons (public.engine_digested); 0 when the answer changed in the meantime. */
+    digested?(answerId: string, updatedAt: string, lessons: DigestLesson[], llmUsd: number): Promise<{ data: number | null; error: Failure }>;
+    /** An attempt's pictures that wait to be looked at, with the prompt's manifest (public.engine_to_evaluate). */
+    toEvaluate?(attemptId: string): Promise<{ data: ToEvaluate | null; error: Failure }>;
+    evaluated?(candidateId: string, evaluation: Evaluation, llmUsd: number): Promise<{ error: Failure }>;
   };
-  models: { compose: Composer; decide: Decider; verify: Verifier };
+  models: { compose: Composer; decide: Decider; verify: Verifier; digest?: Digester; evaluate?: Evaluator };
   /** null: no image provider yet (a dry run). */
   provider: ImageProvider | null;
   download(url: string): Promise<{ bytes: Uint8Array; contentType: string }>;
@@ -150,7 +180,9 @@ async function collect(
         files.push({ path, name: `${c.title}, Engine ${i + 1}.${ext}`, content_type: contentType, bytes: bytes.length, sha256: await sha256(bytes), ...sizeOf(bytes) });
       }
       const { error } = await deps.service.finish(c.attemptId, files, r.response, provider.priceCents(c.model) * r.urls.length);
-      return error ? "failed" : "made";
+      if (error) return "failed";
+      await evaluatePictures(c.attemptId, deps);
+      return "made";
     }
     await deps.wait(delay);
     delay = Math.min(delay * 1.5, 10_000);
@@ -177,6 +209,47 @@ export async function runJob(jobId: string, deps: Deps): Promise<RunOutcome> {
   return outcome;
 }
 
+/** The Engine looks at the pictures it just kept. A failure here never undoes the picture: it is simply not evaluated,
+ *  and the expert checks it by eye as with any picture. */
+async function evaluatePictures(attemptId: string, deps: Deps): Promise<void> {
+  const evaluate = deps.models.evaluate;
+  if (!evaluate || !deps.service.toEvaluate || !deps.service.evaluated) return;
+  try {
+    const { data } = await deps.service.toEvaluate(attemptId);
+    if (!data?.candidates.length) return;
+    // The product's photographs (an approved master the picture keeps is not one: context.ts names it "the approved …").
+    const productUrls = (data.references ?? []).filter((r) => !r.role.startsWith("the approved ")).map((r) => r.url).slice(0, 3);
+    const checks = checklist(data.manifest ?? [], productUrls.length > 0);
+    for (const c of data.candidates) {
+      const pictureUrl = await deps.service.sign({ path: c.path });
+      const size = c.width && c.height ? { width: c.width, height: c.height } : undefined;
+      const { looked, call } = await evaluate({ pictureUrl, productUrls, checks, ...(size ? { size } : {}) });
+      await deps.service.evaluated(c.id, toEvaluation(checks, looked), call.costUsd ?? 0);
+    }
+  } catch {
+    // Not evaluated: the expert checks by eye.
+  }
+}
+
+/** Before a prompt is written, the brand's answers that say why become lessons, and this prompt already uses them. A
+ *  failure here never stops the render: the answers wait for the next one. */
+async function digestAnswers(t: Taken, deps: Deps): Promise<void> {
+  const digest = deps.models.digest;
+  if (!digest || !deps.service.pending || !deps.service.digested) return;
+  try {
+    const { data } = await deps.service.pending(t.run.workspace_id);
+    for (const a of data ?? []) {
+      const { lessons, call } = await digest(a);
+      const kept = lessons.slice(0, 3);
+      const { data: n, error } = await deps.service.digested(a.id, a.updated_at, kept, call.costUsd ?? 0);
+      if (error || !n) continue;
+      t.lessons = [...kept.map((l, i) => ({ id: `${a.id}:${i}`, statement: l.statement, polarity: l.polarity, reason: l.reason })), ...t.lessons];
+    }
+  } catch {
+    // The answers stay pending; the next render digests them.
+  }
+}
+
 async function attempt(t: Taken, deps: Deps): Promise<RunOutcome> {
   const calls: ModelCall[] = [];
   const keep = <A, R extends { call: ModelCall | null }>(f: (a: A) => Promise<R>) => async (a: A) => {
@@ -194,6 +267,7 @@ async function attempt(t: Taken, deps: Deps): Promise<RunOutcome> {
   const attemptId = t.run.attempt_id;
   let recorded = false;
   try {
+    await digestAnswers(t, deps);
     const task = await signTask(t, deps);
     const target = { imageType: "campaign_still", imageModel: t.run.image_model };
     const method = selectMethod(target);
