@@ -163,6 +163,31 @@ async function dnaLogo(task: Parameters<typeof voicePrompt>[0]): Promise<BookLog
   }
 }
 
+/** The logo file the brand's people added (a source of kind logo): the brand's own file is the best one there is. */
+async function fileLogo(task: Parameters<typeof voicePrompt>[0]): Promise<BookLogo | null> {
+  try {
+    const { data: src } = await service.from("sources").select("file_id, name").eq("workspace_id", task.book.workspace_id)
+      .eq("kind", "logo").not("file_id", "is", null).order("created_at", { ascending: false }).limit(1).maybeSingle();
+    if (!src?.file_id) return null;
+    const { data: f } = await service.from("files").select("bucket, path, content_type").eq("id", src.file_id).maybeSingle();
+    if (!f || !LOGO_TYPES.test(f.content_type ?? "")) return null;
+    const { data: blob } = await service.storage.from(f.bucket).download(f.path);
+    if (!blob || blob.size > 3_000_000) return null;
+    let bytes = new Uint8Array(await blob.arrayBuffer());
+    if (f.content_type === "image/svg+xml") {
+      const svg = safeSvg(new TextDecoder().decode(bytes));
+      if (!svg) return null;
+      bytes = new TextEncoder().encode(svg);
+    }
+    const bucket = "workspace-files";
+    const path = `${task.book.workspace_id}/brand/logo/${task.book.id}-file`;
+    const { error } = await service.storage.from(bucket).upload(path, bytes, { contentType: f.content_type, upsert: true });
+    return error ? null : { bucket, path, type: f.content_type, from: `the brand's own file ${src.name ?? ""}`.trim() };
+  } catch {
+    return null;
+  }
+}
+
 async function brandPictures(
   task: Parameters<typeof voicePrompt>[0],
   opts: { shots?: boolean } = {},
@@ -237,7 +262,7 @@ async function writeLook(task: Parameters<typeof voicePrompt>[0], read: PageText
 /** How the brand sets words on its pictures, read with eyes; null when there are no pictures or the read fails. */
 async function readCreatives(task: Parameters<typeof voicePrompt>[0], read: PageText[]) {
   const { pictures, images, logo: siteLogo } = await brandPictures(task, { shots: true });
-  const logo = siteLogo ?? (await dnaLogo(task));
+  const logo = (await fileLogo(task)) ?? siteLogo ?? (await dnaLogo(task));
   if (!pictures.length) return { answer: null, pictures, message: null, logo };
   try {
     const message = await claude.beta.messages.parse({
