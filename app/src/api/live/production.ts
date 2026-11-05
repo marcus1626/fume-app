@@ -21,6 +21,7 @@ import {
   type FumeApi,
   type Id,
   type Layer,
+  type ProductFix,
   type RenderVersion,
   type Specs,
   type StudioKind,
@@ -67,6 +68,19 @@ export interface CandidateRow {
   evaluation?: StoredEvaluation | null;
 }
 export const CANDIDATE = "id, job_id, file_id, origin, note, made_by, created_at, evaluation";
+/** A surgical fix on a picture (docs/mvp/picture-fix.md); staff-only, so a customer reads none. */
+const FIX = "id, candidate_id, state, box, ask, error, result_candidate_id, requested_by, created_at";
+type FixRow = {
+  id: Id;
+  candidate_id: Id;
+  state: "fixing" | "made" | "failed";
+  box: ProductFix["region"];
+  ask: string;
+  error: string | null;
+  result_candidate_id: Id | null;
+  requested_by: Id;
+  created_at: string;
+};
 type StoredEvaluation = Pick<Evaluation, "productTruth" | "brandRules" | "artefacts" | "notes"> & {
   evaluated?: boolean;
 };
@@ -194,7 +208,21 @@ export async function readDocuments(
   const candidates = jobIds.length
     ? await rows<CandidateRow>(supabase().from("candidates").select(CANDIDATE).in("job_id", jobIds).order("created_at"))
     : [];
-  const files = await fileUrls([...candidates.map((c) => c.file_id), ...childVersions.map((v) => v.file_id)]);
+  const [files, fixRows] = await Promise.all([
+    fileUrls([...candidates.map((c) => c.file_id), ...childVersions.map((v) => v.file_id)]),
+    candidates.length
+      ? rows<FixRow>(
+          supabase()
+            .from("picture_fixes")
+            .select(FIX)
+            .in(
+              "candidate_id",
+              candidates.map((c) => c.id),
+            )
+            .order("created_at"),
+        )
+      : Promise.resolve([] as FixRow[]),
+  ]);
 
   return creatives.map((cr) => {
     const desk = deskOf(live, cr.id);
@@ -275,6 +303,22 @@ export async function readDocuments(
           ...(image ? { image } : {}),
         };
       });
+    // The fixes a designer brushed on these pictures: one being made shimmers, one made is the new version. A failed
+    // fix told the designer why when it failed, and is left out.
+    const ids = new Set(pictures.map((c) => c.id));
+    const fixes: ProductFix[] = fixRows
+      .filter((f) => ids.has(f.candidate_id) && f.state !== "failed")
+      .map((f) => ({
+        id: f.id,
+        region: f.box,
+        found: "The brushed area",
+        expected: f.ask,
+        auto: false,
+        by: f.requested_by,
+        at: f.created_at,
+        state: f.state === "made" ? "fixed" : "fixing",
+        ...(f.result_candidate_id ? { versionId: f.result_candidate_id } : {}),
+      }));
     const times = [cr.created_at, ...pictures.map((c) => c.created_at), ...mine.map((v) => v.created_at)].sort();
     const by = jobs.find((j) => j.creative_id === cr.id)?.requested_by ?? pictures[0]?.made_by ?? "";
     const doc: CreativeDocument = {
@@ -294,6 +338,7 @@ export async function readDocuments(
       ...(picked ? { pickedVersionId: picked } : {}),
       edits: desk.edits ?? [],
       ...(formats.length ? { formats } : {}),
+      ...(fixes.length ? { fixes } : {}),
       state,
       by,
       updatedAt: times.at(-1)!,

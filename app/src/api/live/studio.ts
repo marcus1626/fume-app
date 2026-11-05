@@ -45,13 +45,16 @@ type Calls =
   | "undoDocumentToCheck"
   | "setFormatTile"
   | "placements"
-  | "brandAssets";
+  | "brandAssets"
+  | "fixProduct";
 
 /** What the designer says with a Render (render_creative's p_direction): the Engine bar's words and the picture they
  *  change, or the creative's Direction for a new picture. */
 type Direction = { instruction?: string; direction?: string; from_candidate_id?: Id };
 /** How long Render waits for the Engine's outcome before it leaves the version rendering. */
 const RENDER_WAIT_MS = 90_000;
+/** How long a fix is watched after it starts: about a minute is usual; a slower one comes in with the record's rows. */
+const FIX_WAIT_MS = 120_000;
 
 /** A new picture's Direction, when the creative has one. */
 function directionOf(doc: CreativeDocument): Direction | undefined {
@@ -290,6 +293,37 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
         p_key: requestKey(),
       });
       deskOf(live, documentId).picked = undefined;
+      return doc(documentId);
+    },
+    // A surgical fix (docs/mvp/picture-fix.md): only the brushed part is made again, from the product's own
+    // photographs, and the fixed picture comes back as a new version of the same creative, picked. A detail token
+    // needs its region on the picture, which the live picture check does not mark yet, so the designer brushes it.
+    async fixProduct(documentId, { versionId, region, what }) {
+      await mustBeStaff(live);
+      const read = await readDocument(live, documentId);
+      if (!read.candidates.some((c) => c.id === versionId)) throw new FumeError("not_found", "No such version.");
+      if (!region) throw new FumeError("invalid", "Brush the part to fix on the picture.");
+      if (region.w * region.h > 0.5) throw new FumeError("invalid", "Draw a smaller box: at most half the picture.");
+      const ask = (what ?? "").trim();
+      if (!ask) throw new FumeError("invalid", "Say what to change.");
+      const fix = await command<{ id: string }>("fix_candidate", {
+        p_candidate_id: versionId,
+        p_box: region,
+        p_ask: ask,
+      });
+      const { error } = await supabase().functions.invoke("fix", { body: { fixId: fix.id } });
+      if (error) throw new FumeError("unavailable", "Fume could not start the fix. Try again in a moment.");
+      deskOf(live, documentId).picked = undefined; // the newest picture, the fixed one, is picked when it comes
+      const until = Date.now() + FIX_WAIT_MS;
+      while (Date.now() < until) {
+        await new Promise((r) => setTimeout(r, 3_000));
+        const now = await rows<{ state: string; error: string | null }>(
+          supabase().from("picture_fixes").select("state, error").eq("id", fix.id),
+        );
+        if (now[0]?.state === "failed")
+          throw new FumeError("unavailable", now[0].error ?? "The fix could not be made.");
+        if (now[0]?.state === "made") break;
+      }
       return doc(documentId);
     },
     async undoDocumentToCheck() {

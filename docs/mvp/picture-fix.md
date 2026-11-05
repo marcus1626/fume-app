@@ -36,5 +36,5 @@ approves it. Customers never see a fix.
 
 ## Still open
 
-- The UI (the design thread's lane): in Studio, mark a part of a candidate and say what is wrong.
+- The Studio (FLOWS §17, `features/studio/doc/fix.tsx`, the design thread's screen) is live: "Brush a fix" calls `fixProduct`, which runs `fix_candidate` and `fix` and waits for the fix; the fixed picture comes back as the picked version (`api/live/studio.ts`). A detail token needs its region marked by the live picture check first, so for now the designer brushes it. Still open: the design thread's screens for a failed fix and for the `-ref.png` beside the result.
 - Finding the wrong label by itself: the picture check does not read small print yet.
