@@ -39,6 +39,7 @@ export function DeliveriesPage() {
             return (
               <Nothing
                 icon="package"
+                scene="parcel"
                 title="No deliveries yet"
                 text="When you approve the creatives in a campaign, Fume names them, groups them by collection and format and puts them here."
               />

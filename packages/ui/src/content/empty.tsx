@@ -1,5 +1,7 @@
 // Empty state: design-system/components/empty.css (shadcn's empty parts). Calm and centred, one icon in a soft square
 // (the Engine where the next step is to generate, the grey checked triangle for an empty check queue), one next step.
+// A page with nothing in it can be a scene instead: <Empty scene><EmptyScene src/><EmptySceneGlass>…</EmptySceneGlass>
+// (PROPOSED 27 Oct 2026, round 3): one of Fume's pictures across the width, dimmed, with one Smoke pill bar on it.
 import { type HTMLAttributes, type ReactNode } from "react";
 import { cx } from "../cx";
 import { Icon, type IconName } from "../icons";
@@ -9,15 +11,48 @@ export interface EmptyProps extends HTMLAttributes<HTMLDivElement> {
   surface?: boolean;
   /** Smaller air and title (.ui-empty--sm), for cards and charts. */
   size?: "default" | "sm";
+  /** A page with nothing in it: a picture across the width with a Smoke pill bar on it (.ui-empty--scene, PROPOSED). */
+  scene?: boolean;
 }
-export function Empty({ surface, size = "default", className, ...props }: EmptyProps) {
+export function Empty({ surface, size = "default", scene, className, ...props }: EmptyProps) {
   return (
     <div
       data-slot="empty"
-      className={cx("ui-empty", surface && "ui-empty--surface", size === "sm" && "ui-empty--sm", className)}
+      className={cx(
+        "ui-empty",
+        surface && !scene && "ui-empty--surface",
+        size === "sm" && "ui-empty--sm",
+        scene && "ui-empty--scene",
+        className,
+      )}
       {...props}
     />
   );
+}
+
+export interface EmptySceneProps {
+  /** The picture: one of Fume's own, made with the Engine. */
+  src: string;
+  /** It sets the mood, so it is decorative by default. */
+  alt?: string;
+}
+/** The scene's picture, behind the glass of <Empty scene>. No label on it (round 3, Marcus). */
+export function EmptyScene({ src, alt = "" }: EmptySceneProps) {
+  return (
+    <img
+      data-slot="empty-scene"
+      className="ui-empty-scene-img"
+      src={src}
+      alt={alt}
+      decoding="async"
+      draggable={false}
+    />
+  );
+}
+
+/** The Smoke pill bar on the scene: the header (icon, title, text) and the next step go inside it. */
+export function EmptySceneGlass({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div data-slot="empty-scene-glass" className={cx("ui-empty-scene-glass", className)} {...props} />;
 }
 
 export function EmptyHeader({ className, ...props }: HTMLAttributes<HTMLDivElement>) {

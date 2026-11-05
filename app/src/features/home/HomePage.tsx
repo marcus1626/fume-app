@@ -52,6 +52,7 @@ import type { Campaign, HomeView, Id } from "../../contract";
 import * as copy from "../../copy";
 import { date, due } from "../../lib/time";
 import { Nothing, Page, Query, Section } from "../../shell/Page";
+import { dayScene } from "../../shell/scenes";
 import { firstName } from "../../shell/people";
 import { useWaitingOnYou, type QuietProducts, type WaitingKind, type WaitingRow } from "../../shell/waiting";
 import { useAgencyScope, useCampaignSends, useStatusOptions } from "../agency/clientFlow";
@@ -338,6 +339,7 @@ function CustomerHome({ client }: { client: boolean }) {
                   {waiting.count === 0 ? (
                     <Nothing
                       icon="circle-check"
+                      scene={welcome ? undefined : dayScene(hour)}
                       title="Nothing waits on you"
                       text={
                         client

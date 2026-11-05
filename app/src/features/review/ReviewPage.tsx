@@ -90,6 +90,7 @@ function ReviewPlace() {
       ) : total === 0 ? (
         <Nothing
           icon="circle-check"
+          scene="quiet"
           title="Nothing waits on you"
           text="When the expert has checked new creatives, they wait for you here. Home says what else waits."
           action={
