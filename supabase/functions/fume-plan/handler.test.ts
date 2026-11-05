@@ -2,6 +2,7 @@
 import { assertEquals } from "jsr:@std/assert@1";
 import { type Deps, handlePlan, type Written } from "./handler.ts";
 import { type ClaimRead, copyLines, judgeCopy, type PlanAnswer, type PlanTask, prompt, toBody } from "./plan.ts";
+import { repeatsHeadline } from "./plan.ts";
 
 const task: PlanTask = {
   run_id: "r1",
@@ -354,4 +355,15 @@ Deno.test("a mistake in the language is a finding that has the plan's words rewr
     lines: [{ ref: "a/pc1", claims: [], voice: "on", voiceNote: null, language: "error", languageNote: "Ikon is neuter: ET IKON FOR BYEN OM NATTEN." }],
   });
   assertEquals(j.findings.map((f) => `${f.kind} ${f.blocking}`), ["language true"]);
+});
+
+Deno.test("a call to action that says the headline again is rewritten, unless the brand's own buttons do that", () => {
+  const lines = [
+    { ref: "copy:headline", where: "Headline", text: "FLANELLSKJORTER" },
+    { ref: "copy:call_to_action", where: "Call to action", text: "Flanellskjorter." },
+  ];
+  const found = repeatsHeadline(lines, [{ cta: "KJØP NÅ", when: "Sale ads where a price is shown." }]);
+  assertEquals([found?.kind, found?.blocking, found?.ref], ["repeats_headline", true, "copy:call_to_action"]);
+  assertEquals(repeatsHeadline(lines, [{ cta: "DRESSER", when: "Category ads. Repeats the product noun." }]), null);
+  assertEquals(repeatsHeadline([lines[0], { ...lines[1], text: "KJØP NÅ" }], []), null);
 });

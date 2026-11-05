@@ -59,7 +59,9 @@ examples, $0.025.
    Code also finds the words the voice avoids, and the model says when a line is off the voice. It also reads
    each line as a native proofreader (gender and article, agreement, spelling): a Nike headline said "EN IKON"
    on 4 Nov, where Norwegian says "et ikon".
-3. A claim nothing backs, or a mistake in the language, sends the plan back once with what was wrong. If it is still there, the plan goes on to
+   Code also finds a call to action that says the headline again (Dressmann, 4 Nov: "FLANELLSKJORTER" twice), unless
+   the brand's own buttons do that, as its Tone of Voice says of a call to action ("Repeats the product noun").
+3. A claim nothing backs, a mistake in the language or a repeated headline sends the plan back once with what was wrong. If it is still there, the plan goes on to
    the expert with the check: a machine's reading never blocks on its own.
 4. The check is kept on the run (`task_runs.copy_check`, staff only) with what the first draft was rewritten for.
    A customer never reads it, nor the Engine's prompts and findings, nor an event about a brand book she may not

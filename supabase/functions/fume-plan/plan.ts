@@ -71,7 +71,7 @@ export interface VoiceInUse {
   id: string;
   version: number;
   state: "approved" | "checked" | "draft";
-  body: Record<string, unknown> & { speak?: { avoid?: string[] } };
+  body: Record<string, unknown> & { speak?: { avoid?: string[] }; ctas?: { cta: string; when: string }[] };
 }
 
 /** The brand's Tone of Voice as a part of the prompt. */
@@ -293,7 +293,7 @@ export function claimPrompt(task: PlanTask, lines: CopyLine[]): string {
 export interface CopyFinding {
   ref: string;
   text: string;
-  kind: "unbacked_claim" | "off_voice" | "avoided_word" | "language";
+  kind: "unbacked_claim" | "off_voice" | "avoided_word" | "language" | "repeats_headline";
   blocking: boolean;
   note: string;
 }
@@ -335,7 +335,28 @@ export function judgeCopy(task: PlanTask, lines: CopyLine[], read: ClaimRead | n
     }
     return { ...line, claims, ...(r ? { voice: r.voice } : {}) };
   });
+  const repeat = repeatsHeadline(lines, task.voice?.body?.ctas ?? []);
+  if (repeat) findings.push(repeat);
   return { findings, lines: out };
+}
+
+const plain = (t: string) => t.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+
+/**
+ * A call to action that says the headline again adds nothing, unless the brand's own buttons do just that (Dressmann's
+ * "DRESSER" under "DRESSER"): its Tone of Voice says so in the call to action's use. Code decides; the plan is
+ * rewritten once, as for a claim.
+ */
+export function repeatsHeadline(lines: CopyLine[], ctas: { cta: string; when: string }[]): CopyFinding | null {
+  const head = lines.find((l) => /^copy:(headline|overskrift)/.test(l.ref));
+  const cta = lines.find((l) => /^copy:(call_to_action|cta|knapp)/.test(l.ref));
+  if (!head || !cta || !plain(cta.text) || plain(cta.text) !== plain(head.text)) return null;
+  const brandDoes = ctas.some((c) => /repeat|product noun|category name|gjentar/i.test(c.when ?? ""));
+  if (brandDoes) return null;
+  return {
+    ref: cta.ref, text: cta.text, kind: "repeats_headline", blocking: true,
+    note: `The call to action says the headline again ("${head.text}"). Write a short call to action that says what to do, from the brand's own calls to action.`,
+  };
 }
 
 /** The findings as the reason for a rewrite. */

@@ -93,9 +93,11 @@ export async function writePlan(task: PlanTask, deps: Deps): Promise<"written" |
         rewroteFor = blocking;
         const claims = blocking.filter((f) => f.kind === "unbacked_claim");
         const language = blocking.filter((f) => f.kind === "language");
+        const repeats = blocking.filter((f) => f.kind === "repeats_headline");
         problem = [
           claims.length ? `Words that make a claim no verified fact states: ${copyProblem(claims)} Rewrite those words without the claim, or keep to the product name, the moment and the brief's message.` : "",
           language.length ? `Words with a mistake in their language: ${copyProblem(language)} Write them correctly.` : "",
+          repeats.length ? `${copyProblem(repeats)}` : "",
         ].filter(Boolean).join(" ");
         continue;
       }
