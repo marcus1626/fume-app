@@ -354,7 +354,7 @@ export function measure(
     shades.push(shade);
   }
   const boxes: Record<string, Box> = { Words: words };
-  for (const n of ["Headline", "Subline", "CTA", "Action"]) {
+  for (const n of ["Headline", "Price", "Subline", "CTA", "Action"]) {
     const b = boxOf(doc, n);
     if (b) boxes[n] = b;
   }
@@ -369,7 +369,7 @@ export function measure(
   if (boxes.Action && overlap(boxes.Action, words) > 0) {
     checks.push({ check: "fits", node: "CTA", ok: false, hard: true, note: "The call to action runs into the words." });
   }
-  for (const n of ["Headline", "Subline", "CTA words"]) {
+  for (const n of ["Headline", "Price", "Subline", "CTA words"]) {
     const split = splitWords(doc, n);
     if (split.length)
       checks.push({ check: "fits", node: n === "CTA words" ? "CTA" : n, ok: false, hard: true, note: `Breaks inside a word: ${split.join(", ")}.` });
@@ -377,9 +377,10 @@ export function measure(
   const tall = c.grid.h > c.grid.w * 1.5;
   for (const [n, style, most] of [
     ["Headline", l.headline, tall ? 3 : 2],
+    ["Price", "price", 1],
     ["Subline", "subline", tall ? 4 : 3],
   ] as const) {
-    const s = styleOf(book, style) ?? styleOf(book, "body");
+    const s = n === "Price" && c.sizes.Price ? { sizePx: c.sizes.Price, lineHeight: styleOf(book, "price")?.lineHeight ?? 1 } : styleOf(book, style) ?? styleOf(book, "body");
     if (!boxes[n] || !s) continue;
     const lines = Math.round(boxes[n].h / (s.sizePx * s.lineHeight));
     checks.push({
@@ -393,14 +394,14 @@ export function measure(
     });
   }
   const onPhoto = l.ground === "photo" || l.ground === "gradient";
-  for (const n of ["Headline", "Subline"]) {
+  for (const n of ["Headline", "Price", "Subline"]) {
     const b = boxes[n];
     if (!b) continue;
     // On a panel the words are read against the panel's own colour, not the picture under it.
     const u = !onPhoto && c.panel
       ? { contrast: contrastOf(c.colours[n], c.panel), poor: 0, worst: 21, busy: 0 }
       : under(p, b, c.colours[n], shades, Math.max(16, c.sizes[n] * 0.5));
-    const need = n === "Headline" ? 3 : 4.5;
+    const need = n === "Subline" ? 4.5 : 3;
     checks.push({
       check: "contrast",
       node: n,
@@ -597,7 +598,8 @@ export function fitFor(doc: Doc, sizes: Record<string, number> = {}): Layout["fi
   const over = sizes.Headline && sizes.Subline ? (sizes.Subline * 1.25) / sizes.Headline : 0;
   const headline = need("Headline", Math.max(FIT_FLOOR, over));
   const cta = need("CTA words");
-  return headline || cta ? { ...(headline ? { headline } : {}), ...(cta ? { cta } : {}) } : null;
+  const price = need("Price");
+  return headline || cta || price ? { ...(headline ? { headline } : {}), ...(cta ? { cta } : {}), ...(price ? { price } : {}) } : null;
 }
 
 /** The first passing layout in the model's order wins; among failing ones, the one that fails least. */

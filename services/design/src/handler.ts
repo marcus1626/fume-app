@@ -62,7 +62,7 @@ export function invalid(r: Partial<DesignRequest>, host: string): string | null 
     return "The brand's design system is missing.";
   }
   if (!r.words || typeof r.words.headline !== "string" || !r.words.headline.trim()) return "A layout needs a headline.";
-  for (const w of [r.words.headline, r.words.subline, r.words.cta]) {
+  for (const w of [r.words.headline, r.words.subline, r.words.cta, r.words.price]) {
     if (w != null && (typeof w !== "string" || w.length > 400)) return "The words are too long.";
   }
   return null;

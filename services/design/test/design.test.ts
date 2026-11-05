@@ -152,3 +152,12 @@ test("the brand's own font file sets its face, and only on its own brand's creat
   assert.equal(other?.used, "Libre Baskerville");
   assert.equal(other?.own, undefined);
 });
+
+test("a price from the plan is set as the brand's figure, under the headline, and checked like the words", async () => {
+  const pic = await picture("#EDE6DA", "#2B2B2B");
+  const out = await design({ picture: pic, format: "feed", book, words: { ...words, price: "199,-" }, keepClear: [product] });
+  assert.ok(out.boxes.Price, "the price is laid out");
+  assert.ok(out.boxes.Price.y > out.boxes.Headline.y, "under the headline");
+  assert.ok(out.boxes.Price.h > out.boxes.Headline.h / 2, "big enough to be the figure");
+  assert.ok(out.checks.some((c) => c.node === "Price" && c.check === "contrast"));
+});

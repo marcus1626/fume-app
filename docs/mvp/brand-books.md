@@ -55,7 +55,9 @@ examples, $0.025.
 2. **The claim check.** Claude Haiku reads every line for claims (a result, health, best, better than, a price, an
    offer, where it is from, an award) and names the verified fact that states each one. **Code decides**: only a
    verified fact of the campaign's products backs a claim; a result, a health effect, a comparison or an award
-   needs a verified *claim* fact; the brand's own words back only a price, an offer, an origin or its own line.
+   needs a verified *claim* fact; the brand's own words back only a store-wide offer, an origin or its own line. A product's price needs a verified fact
+   (5 Nov): the brand's prices for other products never back it. The plan adds a "Price" copy line from such a fact
+   when the brand sets prices on its ads, and the design layer sets it in the brand's price style.
    Code also finds the words the voice avoids, and the model says when a line is off the voice. It also reads
    each line as a native proofreader (gender and article, agreement, spelling): a Nike headline said "EN IKON"
    on 4 Nov, where Norwegian says "et ikon".

@@ -26,7 +26,7 @@ export type Take = {
   book: { id: string; version: number; state: string; body: Record<string, unknown> };
   store: { bucket: string; png: string; fig: string };
 };
-export type Words = { headline: string; subline?: string; cta?: string };
+export type Words = { headline: string; subline?: string; cta?: string; price?: string };
 
 const clean = (s: string | undefined | null) => (s ?? "").replace(/\s+/g, " ").trim();
 const pick = (copy: CopyItem[], keys: RegExp) => clean(copy.find((c) => keys.test(`${c.key ?? ""} ${c.label ?? ""}`))?.value);
@@ -37,7 +37,9 @@ export function wordsOf(t: Take): Words | null {
   if (!headline) return null;
   const subline = pick(t.copy, /support|subline|sub_?head|body|undertekst/i);
   const cta = pick(t.copy, /call_?to_?action|\bcta\b|knapp/i);
-  return { headline, ...(subline ? { subline } : {}), ...(cta ? { cta } : {}) };
+  // A price is in the copy only when the plan wrote it from a verified fact (fume-plan's copy check).
+  const price = pick(t.copy, /\bprice\b|\bpris\b|\boffer\b|tilbud/i);
+  return { headline, ...(subline ? { subline } : {}), ...(cta ? { cta } : {}), ...(price ? { price } : {}) };
 }
 
 export function formatOf(t: Take): Format {

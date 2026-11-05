@@ -19,6 +19,8 @@ export interface Words {
   headline: string;
   subline?: string | null;
   cta?: string | null;
+  /** The price as the plan wrote it from a verified fact ("NÅ 199,-"); the brand's price style sets it. */
+  price?: string | null;
 }
 
 export type Band = "top" | "middle" | "bottom";
@@ -54,7 +56,7 @@ export interface Layout {
    * The headline or the call to action set smaller than its style, so a long word fits the column whole
    * ("FLANELLSKJORTER"), as a designer sizes a headline to its measure. 1 is the style's own size.
    */
-  fit?: { headline?: number; cta?: number };
+  fit?: { headline?: number; cta?: number; price?: number };
 }
 
 export interface Composed {
@@ -108,10 +110,10 @@ export function compose(
   const colours: Record<string, string> = { Headline: wordsHex };
   const sizes: Record<string, number> = { Headline: hl.sizePx };
 
-  const text = (name: "Headline" | "Subline", s: Style, value: string, hex: string) => {
+  const text = (name: "Headline" | "Subline" | "Price", s: Style, value: string, hex: string) => {
     const fam = family(s);
     fonts.push({ family: fam, weight: s.weight });
-    const w = widths[name] ? `{${Math.round(widths[name]!)}}` : `"fill"`;
+    const w = name !== "Price" && widths[name] ? `{${Math.round(widths[name]!)}}` : `"fill"`;
     return `<Text name=${q(name)} w=${w} font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${Math.round(
       s.sizePx * s.lineHeight,
     )}} letterSpacing={${round(s.trackingEm * s.sizePx)}} color=${q(hex)}${caseOf(s)} textAlign=${q(textAlign)} text={${JSON.stringify(
@@ -154,6 +156,13 @@ export function compose(
   };
 
   const inner: string[] = [text("Headline", hl, words.headline, wordsHex)];
+  // The price is the brand's biggest figure where it sets one (Dressmann: caps title, then the price, then the button).
+  if (words.price) {
+    const ps = fitted(styleOf(book, "price") ?? { ...hl, name: "price", sizePx: Math.round(hl.sizePx * 1.6), case: "none" }, l.fit?.price);
+    inner.push(text("Price", ps, words.price, wordsHex));
+    colours.Price = wordsHex;
+    sizes.Price = ps.sizePx;
+  }
   if (words.subline) {
     inner.push(text("Subline", sub, words.subline, subHex));
     colours.Subline = subHex;

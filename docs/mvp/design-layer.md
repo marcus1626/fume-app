@@ -61,6 +61,9 @@ Marcus: "Designet var ikke veldig on brand." What changed:
 - **Room on a studio picture** (`src/room.ts`). When no layout passes and the picture's top and left edges are a smooth
   backdrop, the picture is set at 82%, then 72%, in the bottom right corner, its backdrop carried on from a softened
   copy, and the keep-clear boxes move with it. A scene is never stretched. The expert is told.
+- **The price as the brand's figure** (5 Nov). A copy line labelled Price, which the plan writes only from a verified
+  fact, is set under the headline in the book's `price` style (Dressmann: 200 px), fitted to its column like the
+  headline, and checked for whole words, one line and contrast. Without a price style it is 1.6 times the headline.
 - **The brand's own font files** (5 Nov). A TrueType or OpenType file the brand adds as a font source
   (`public.brand_font_files`) is read for the family, weight and italic its own tables hold (`brand-book/fontfile.ts`),
   copied beside the book (`<workspace>/brand/font/`) and named in `body.fonts`; the writer is told the families, and a

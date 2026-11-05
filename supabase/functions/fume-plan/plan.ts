@@ -38,7 +38,7 @@ export const PlanAnswer = z.object({
   directions: z.array(Direction).describe("One recommended direction and up to two more that differ in idea"),
   chosenDirectionId: z.enum(["a", "b", "c"]).describe("The recommended direction"),
   chosenReason: z.string(),
-  copy: z.array(Line).describe("The copy set for the chosen direction: headline, supporting line, call to action"),
+  copy: z.array(Line).describe("The copy set for the chosen direction: headline, supporting line, call to action, and a price line only from a verified fact"),
   openQuestions: z.array(z.string()).describe("What the brief leaves open that matters; empty when nothing"),
   changes: z.array(z.string()).describe("For a change: what changed, one short line each; empty for a first plan"),
 });
@@ -95,6 +95,7 @@ You write the campaign plan from the customer's brief: the strategic task, one t
 
 How to write:
 - Work from the brief, the brand's rules and the product facts you are given. Unknown stays unknown: never invent product facts, ingredients, results or prices. When the brief leaves something open that matters, say so in openQuestions instead of guessing.
+- A price or an offer is written only from a verified claim fact that states it, word for word in its figures, and listed in claimRefs. When there is one and the brand's tone of voice sets prices on its ads, add a copy line labelled "Price" with the price as the brand writes it (for example NÅ 199,-), and keep the price out of the headline. Without such a fact, no price and no offer.
 - Words on a creative may only use claims from the verified claim facts. List the fact ids you rely on in claimRefs. Never promise a result (skin, health, sleep) that is not one of those facts. With no verified claims, keep the words to the product name, the moment, or the brief's message.
 - Directions must differ in idea, not only in look. Mark exactly one as recommended, and choose it.
 - Follow the brand's own style. Do not import a house style. Respect every "never" rule from the brief and the brand.
@@ -307,6 +308,9 @@ export function judgeCopy(task: PlanTask, lines: CopyLine[], read: ClaimRead | n
     task.products.flatMap((p) => p.facts.filter((f) => f.status === "verified").map((f) => [f.id, f] as const)),
   );
   const needsClaim = new Set(["result", "health", "comparison", "award"]);
+  // A price is this product's, today: the brand's words for other products never back it. A store-wide offer
+  // (free shipping over 998,-) the brand says itself still does.
+  const needsFact = new Set(["price"]);
   const avoid = (task.voice?.body?.speak?.avoid ?? []).map((w) => String(w).trim()).filter((w) => w.length > 2);
   const findings: CopyFinding[] = [];
   const byRef = new Map((read?.lines ?? []).map((l) => [l.ref, l]));
@@ -315,7 +319,7 @@ export function judgeCopy(task: PlanTask, lines: CopyLine[], read: ClaimRead | n
     const claims = (r?.claims ?? []).map((c) => {
       const fact = c.backedBy ? verified.get(c.backedBy) : undefined;
       const backed = Boolean(fact) && (!needsClaim.has(c.kind) || fact!.area === "claim");
-      const verdict = backed ? "backed" : c.brandSays && !needsClaim.has(c.kind) ? "brand_says" : "unbacked";
+      const verdict = backed ? "backed" : c.brandSays && !needsClaim.has(c.kind) && !needsFact.has(c.kind) ? "brand_says" : "unbacked";
       if (verdict === "unbacked")
         findings.push({
           ref: line.ref, text: line.text, kind: "unbacked_claim", blocking: true,

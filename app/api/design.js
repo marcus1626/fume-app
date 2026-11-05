@@ -86,7 +86,7 @@ function compose(book, format, words, l, family, widths = {}, logo) {
   const text = (name, s, value, hex) => {
     const fam = family(s);
     fonts.push({ family: fam, weight: s.weight });
-    const w = widths[name] ? `{${Math.round(widths[name])}}` : `"fill"`;
+    const w = name !== "Price" && widths[name] ? `{${Math.round(widths[name])}}` : `"fill"`;
     return `<Text name=${q(name)} w=${w} font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${Math.round(
       s.sizePx * s.lineHeight
     )}} letterSpacing={${round(s.trackingEm * s.sizePx)}} color=${q(hex)}${caseOf(s)} textAlign=${q(textAlign)} text={${JSON.stringify(
@@ -123,6 +123,12 @@ function compose(book, format, words, l, family, widths = {}, logo) {
     )}} color=${q(fg)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} /></Frame>`;
   };
   const inner = [text("Headline", hl, words.headline, wordsHex)];
+  if (words.price) {
+    const ps = fitted(styleOf(book, "price") ?? { ...hl, name: "price", sizePx: Math.round(hl.sizePx * 1.6), case: "none" }, l.fit?.price);
+    inner.push(text("Price", ps, words.price, wordsHex));
+    colours.Price = wordsHex;
+    sizes.Price = ps.sizePx;
+  }
   if (words.subline) {
     inner.push(text("Subline", sub, words.subline, subHex));
     colours.Subline = subHex;
@@ -961,7 +967,7 @@ function measure(doc, c, l, book, p, keep, logo = null) {
     shades.push(shade);
   }
   const boxes = { Words: words };
-  for (const n of ["Headline", "Subline", "CTA", "Action"]) {
+  for (const n of ["Headline", "Price", "Subline", "CTA", "Action"]) {
     const b = boxOf(doc, n);
     if (b) boxes[n] = b;
   }
@@ -976,7 +982,7 @@ function measure(doc, c, l, book, p, keep, logo = null) {
   if (boxes.Action && overlap(boxes.Action, words) > 0) {
     checks.push({ check: "fits", node: "CTA", ok: false, hard: true, note: "The call to action runs into the words." });
   }
-  for (const n of ["Headline", "Subline", "CTA words"]) {
+  for (const n of ["Headline", "Price", "Subline", "CTA words"]) {
     const split = splitWords(doc, n);
     if (split.length)
       checks.push({ check: "fits", node: n === "CTA words" ? "CTA" : n, ok: false, hard: true, note: `Breaks inside a word: ${split.join(", ")}.` });
@@ -984,9 +990,10 @@ function measure(doc, c, l, book, p, keep, logo = null) {
   const tall = c.grid.h > c.grid.w * 1.5;
   for (const [n, style, most] of [
     ["Headline", l.headline, tall ? 3 : 2],
+    ["Price", "price", 1],
     ["Subline", "subline", tall ? 4 : 3]
   ]) {
-    const s = styleOf(book, style) ?? styleOf(book, "body");
+    const s = n === "Price" && c.sizes.Price ? { sizePx: c.sizes.Price, lineHeight: styleOf(book, "price")?.lineHeight ?? 1 } : styleOf(book, style) ?? styleOf(book, "body");
     if (!boxes[n] || !s) continue;
     const lines = Math.round(boxes[n].h / (s.sizePx * s.lineHeight));
     checks.push({
@@ -1000,11 +1007,11 @@ function measure(doc, c, l, book, p, keep, logo = null) {
     });
   }
   const onPhoto = l.ground === "photo" || l.ground === "gradient";
-  for (const n of ["Headline", "Subline"]) {
+  for (const n of ["Headline", "Price", "Subline"]) {
     const b = boxes[n];
     if (!b) continue;
     const u = !onPhoto && c.panel ? { contrast: contrastOf(c.colours[n], c.panel), poor: 0, worst: 21, busy: 0 } : under(p, b, c.colours[n], shades, Math.max(16, c.sizes[n] * 0.5));
-    const need = n === "Headline" ? 3 : 4.5;
+    const need = n === "Subline" ? 4.5 : 3;
     checks.push({
       check: "contrast",
       node: n,
@@ -1164,7 +1171,8 @@ function fitFor(doc, sizes = {}) {
   const over = sizes.Headline && sizes.Subline ? sizes.Subline * 1.25 / sizes.Headline : 0;
   const headline = need("Headline", Math.max(FIT_FLOOR, over));
   const cta = need("CTA words");
-  return headline || cta ? { ...headline ? { headline } : {}, ...cta ? { cta } : {} } : null;
+  const price = need("Price");
+  return headline || cta || price ? { ...headline ? { headline } : {}, ...cta ? { cta } : {}, ...price ? { price } : {} } : null;
 }
 function better(a, b) {
   if (a.ok !== b.ok) return a.ok;
@@ -1250,7 +1258,7 @@ function invalid(r, host) {
     return "The brand's design system is missing.";
   }
   if (!r.words || typeof r.words.headline !== "string" || !r.words.headline.trim()) return "A layout needs a headline.";
-  for (const w of [r.words.headline, r.words.subline, r.words.cta]) {
+  for (const w of [r.words.headline, r.words.subline, r.words.cta, r.words.price]) {
     if (w != null && (typeof w !== "string" || w.length > 400)) return "The words are too long.";
   }
   return null;

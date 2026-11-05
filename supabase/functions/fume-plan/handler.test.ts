@@ -367,3 +367,13 @@ Deno.test("a call to action that says the headline again is rewritten, unless th
   assertEquals(repeatsHeadline(lines, [{ cta: "DRESSER", when: "Category ads. Repeats the product noun." }]), null);
   assertEquals(repeatsHeadline([lines[0], { ...lines[1], text: "KJØP NÅ" }], []), null);
 });
+
+Deno.test("a price is never backed by the brand's words for other products, only by a verified fact", () => {
+  const lines = [{ ref: "copy:price", where: "Price", text: "NÅ 199,-" }];
+  const read = (backedBy: string | null) => ({
+    lines: [{ ref: "copy:price", claims: [{ words: "NÅ 199,-", kind: "price" as const, backedBy, brandSays: true }], voice: "on" as const, voiceNote: null, language: "ok" as const, languageNote: null }],
+  });
+  assertEquals(judgeCopy(task, lines, read(null)).findings.map((f) => `${f.kind} ${f.blocking}`), ["unbacked_claim true"]);
+  const fact = task.products[0].facts.find((f) => f.status === "verified")!;
+  assertEquals(judgeCopy(task, lines, read(fact.id)).findings, []);
+});
