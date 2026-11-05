@@ -61,6 +61,17 @@ Deno.test("each place with print is cropped close on the picture and on the real
   assertEquals(Math.round(calls.finish[0][1] * 10_000) / 10_000, 0.0023, "what reading it cost is counted");
 });
 
+Deno.test("a read that finds the letters right is read once more, and a mismatch stands", async () => {
+  let n = 0;
+  const { d } = deps({ find: () => Promise.resolve({ usd: 0, places: [
+    { what: "label", box: { x: 0.58, y: 0.24, w: 0.05, h: 0.02 }, photo: 1, photoBox: { x: 0.46, y: 0.18, w: 0.13, h: 0.05 } },
+  ] }), read: () => Promise.resolve(++n === 1
+    ? { reads: "Dressmann", expected: "Dressmann", ok: true, note: "", usd: 0 }
+    : { reads: "Dressmeann", expected: "Dressmann", ok: false, note: "", usd: 0 }) });
+  const out = await readDetails(take, d);
+  assertEquals([n, out![0].ok, out![0].note], [2, false, "The label reads Dressmeann; on the product it reads Dressmann."]);
+});
+
 Deno.test("a picture with no product photographs is read as nothing, and a failure keeps what was read", async () => {
   const none = deps({ service: { ...deps().d.service, readLink: (_b, p) => Promise.resolve(p.includes("/p/") ? null : `https://s/read/${p}`) } });
   assertEquals(await readDetails(take, none.d), []);

@@ -26,7 +26,8 @@ export const FIND_SYSTEM = [
 
 export const READ_SYSTEM = [
   "You read small print for Fume's expert. Image 1 is a close crop of a generated product picture; image 2, when given,",
-  "is the same part on the real product's photograph. In reads, write only the letters of the main word or words on",
+  "is the same part on the real product's photograph. Read image 1 as it is, not as it should be: image models garble letters,",
+  "and a garbled word must be written garbled. In reads, write only the letters of the main word or words on",
   "image 1, exactly as printed, letter for letter: no description, no quotes, no small lines you cannot read. In",
   "expected, the same for image 2. Leave either empty when its letters cannot be read. ok is true when the letters are",
   "the same (case and spacing aside) and a logo has the same shape; a garbled, missing, extra or swapped letter is not",
@@ -36,7 +37,7 @@ export const READ_SYSTEM = [
 
 export const REFINE_SYSTEM = [
   "You help Fume's expert read small print on a product picture. You get a crop of the picture and the name of a part",
-  "of the product with print on it (a label, a tag, a wordmark). Give a tight box around just that part on this crop, as",
+  "of the product with print on it (a label, a tag, a wordmark). Give a tight box around just its letters on this crop, as",
   "shares of the crop's width and height (x and y are the top left corner, from 0 to 1). When the crop does not show",
   "it, found is false.",
 ].join(" ");

@@ -111,8 +111,15 @@ export async function readDetails(t: Take, d: Deps): Promise<Detail[] | null> {
       const photo = place.photo >= 1 && place.photo <= photos.length ? photos[place.photo - 1] : null;
       const refUrl = photo && photoBox ? await closeIn(t, d, photo, photoBox, place.what, `${t.store.prefix}-${n}-ref.png`, spent) : null;
       usd += spent.usd;
-      const r = await d.read({ cropUrl, refUrl, what: place.what });
+      // The model tends to read a garbled word as the word it should be, never the other way: a read that finds the
+      // letters right is read once more, and a mismatch in either is what stands.
+      let r = await d.read({ cropUrl, refUrl, what: place.what });
       usd += r.usd;
+      if (refUrl && readsRight(r)) {
+        const again = await d.read({ cropUrl, refUrl, what: place.what });
+        usd += again.usd;
+        if (!readsRight(again)) r = again;
+      }
       out.push({
         n, what: place.what.slice(0, 120), box: place.box, reads: r.reads.slice(0, 200), expected: r.expected.slice(0, 200),
         // Without the real one to read against, nothing is called wrong.

@@ -20,8 +20,10 @@ reads Dressmann."), and its place on the picture is where the designer fixes it 
      can be off by a label's height), then a close crop of that, enlarged to 1024 px (design service `fix-crop` with
      `read`). Read on a small crop, the model corrects garbled letters by itself.
   3. The model reads both crops, letter for letter. Code compares the letters: the model's own verdict does not decide
-     when it read the letters on both.
-- Under half a cent a picture.
+     when it read the letters on both. The model tends to read a garbled word as the word it should be, never the other
+     way, so a read that finds the letters right is read once more, and a mismatch in either stands.
+- Live (5 Nov, Dressmann): three rounds on the garbled label ("DRESSMEANN") and the fixed one, all six right; one read
+  alone missed the garbled label once in two. About a quarter of a cent a picture.
 
 ## Still open
 
