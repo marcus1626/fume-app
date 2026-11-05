@@ -128,6 +128,7 @@ export async function makeFormat(t: Take, d: Deps): Promise<"made" | "failed"> {
     });
     if (!chose.ok) return await fail(errorOf(chose.body, chose.status));
     const method = chose.body.method as "crop" | "expand";
+    console.log(JSON.stringify({ make: t.make_id, format: t.format, around, what, chose: { method: chose.body.method, reason: chose.body.reason, window: chose.body.window } }));
     const reason = String(chose.body.reason ?? "asked");
     const at = chose.body.at as Rect | undefined;
     const why = whyOf(method, reason, t.format, what, at);

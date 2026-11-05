@@ -13,8 +13,8 @@ creative and goes to the expert's check like any other picture.
    (the format gets its own words, laid for its own shape).
 3. Unless the designer chose, Claude Haiku says where the product is (one box around all that must stay whole).
 4. The design service (`op: "format"`) chooses:
-   - **Crop** when the product fits the new shape with 4 % air on each side and the crop keeps at least 60 % of the
-     master. The crop is the master's own pixels. No image model, no cost but the product's place (about 0.1 c).
+   - **Crop** when the product fits the new shape with 4 % air on each side (in a story, clear of the platform's top
+     250 px and bottom 340 px of 1920) and the crop keeps at least 60 % of the master. The crop is the master's own pixels. No image model, no cost but the product's place (about 0.1 c).
    - **Expand** otherwise (or when the product's place is not known, so nothing is cut). The master is put on a canvas
      of the new shape at its own scale, the new parts plain grey. Nano Banana Pro (fal, 2K, about 15 c) draws only the
      new edges. `format-set` brings the drawing to the canvas, moves its colour to the master's (median difference), and
@@ -31,3 +31,10 @@ Costs count in the Engine's week (pictures) and the language model's week. A fai
 - `supabase/functions/format/` (handler, models, tests)
 - `services/design/src/format.ts`, ops in `services/design/src/handler.ts`, tests `services/design/test/format.test.ts`
 - `app/src/api/live/production.ts` (`makeFormat`, the tiles), `app/src/api/live/studio.ts` (`setFormatTile`)
+
+## Live test (5 Nov 2026, Dressmann)
+
+Master: the fixed shirt picture, designed, checked by a second person and approved by the test owner. Square: cropped
+in 9 s for 0.07 c. Story: the first rule cropped it with the shirt under the platform's top and bottom; with the safe
+areas the Engine extended it instead, in 49 s for 15 c, with no visible seam. Pictures in
+/mnt/project-files/engine-test/2026-11-05/formats/.
