@@ -66,8 +66,22 @@ export interface CandidateRow {
   created_at: string;
   /** What the Engine saw when it looked at its own picture (20261104170000_engine_evaluation.sql); null until then. */
   evaluation?: StoredEvaluation | null;
+  /** The product's small print as the picture check read it (docs/mvp/detail-read.md); null until read. */
+  details?: StoredDetail[] | null;
 }
-export const CANDIDATE = "id, job_id, file_id, origin, note, made_by, created_at, evaluation";
+/** One place with print, as `details_finish` keeps it. */
+export interface StoredDetail {
+  n: number;
+  what: string;
+  box: { x: number; y: number; w: number; h: number };
+  reads: string;
+  expected: string;
+  ok: boolean;
+  note?: string;
+}
+export const CANDIDATE = "id, job_id, file_id, origin, note, made_by, created_at, evaluation, details";
+/** A detail's id: the picture it was read on, and its number there. Its token (the real product's cut-out) has the same. */
+export const detailId = (candidateId: Id, n: number) => `${candidateId}:${n}`;
 /** A surgical fix on a picture (docs/mvp/picture-fix.md); staff-only, so a customer reads none. */
 const FIX = "id, candidate_id, state, box, ask, error, result_candidate_id, requested_by, created_at";
 type FixRow = {
@@ -263,6 +277,16 @@ export async function readDocuments(
       variables,
       specs,
       evaluation: evaluationOf(c),
+      ...(c.details?.length
+        ? {
+            details: c.details.map((d) => ({
+              tokenId: detailId(c.id, d.n),
+              region: d.box,
+              read: d.reads || "nothing legible",
+              ok: d.ok,
+            })),
+          }
+        : {}),
       instruction: c.origin === "manual" ? `Made by hand${c.note ? `: ${c.note}` : ""}` : (c.note ?? undefined),
       cost: 0,
     }));

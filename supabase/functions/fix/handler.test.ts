@@ -15,14 +15,14 @@ const take: Take = {
 };
 
 function deps(over: Partial<Deps> = {}) {
-  const calls = { steps: [] as Record<string, unknown>[], submitted: [] as unknown[], stored: [] as string[], finish: [] as Record<string, unknown>[], fail: [] as [string, number][], spent: [] as [number, unknown][] };
+  const calls = { steps: [] as Record<string, unknown>[], submitted: [] as unknown[], stored: [] as string[], finish: [] as Record<string, unknown>[], fail: [] as [string, number][], spent: [] as [number, unknown][], details: [] as string[] };
   const d: Deps = {
     canRead: () => Promise.resolve(true),
     service: {
       take: () => Promise.resolve({ data: take, error: null }),
       finish: (_id, r) => {
         calls.finish.push(r);
-        return Promise.resolve({ error: null });
+        return Promise.resolve({ data: { candidate_id: "c-new" }, error: null });
       },
       fail: (_id, why, cents) => {
         calls.fail.push([why, cents]);
@@ -40,6 +40,10 @@ function deps(over: Partial<Deps> = {}) {
       },
     },
     locate: () => Promise.resolve({ found: null, usd: 0.001 }),
+    askDetails: (id) => {
+      calls.details.push(id);
+      return Promise.resolve();
+    },
     step: (r) => {
       calls.steps.push(r);
       return Promise.resolve(r.op === "fix-crop"
@@ -76,6 +80,7 @@ Deno.test("the crop goes to the image model with the product's own photographs, 
   assertEquals([set.redrawn, set.upload.png], ["https://s/read/ws/fix/f1-redrawn.png", "https://s/up/ws/fix/f1.png"]);
   assertEquals(set.rect, { x: 800, y: 400, w: 480, h: 480 });
   assertEquals(calls.finish[0].cost_cents, 15);
+  assertEquals(calls.details, ["c-new"], "the fixed picture's small print is read again");
   assertEquals((calls.finish[0].png as { path: string }).path, "ws/fix/f1.png");
 });
 

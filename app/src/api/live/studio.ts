@@ -5,6 +5,7 @@
 import {
   FumeError,
   type CreativeDocument,
+  type DetailToken,
   type EngineEdit,
   type FumeApi,
   type Id,
@@ -17,7 +18,9 @@ import type { Live } from "./context";
 import { readCampaigns } from "./map";
 import {
   addManualVersion,
+  type CandidateRow,
   creativeMode,
+  detailId,
   deskOf,
   readDocument,
   readDocuments,
@@ -46,7 +49,8 @@ type Calls =
   | "setFormatTile"
   | "placements"
   | "brandAssets"
-  | "fixProduct";
+  | "fixProduct"
+  | "detailTokens";
 
 /** What the designer says with a Render (render_creative's p_direction): the Engine bar's words and the picture they
  *  change, or the creative's Direction for a new picture. */
@@ -298,13 +302,28 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
     // A surgical fix (docs/mvp/picture-fix.md): only the brushed part is made again, from the product's own
     // photographs, and the fixed picture comes back as a new version of the same creative, picked. A detail token
     // needs its region on the picture, which the live picture check does not mark yet, so the designer brushes it.
-    async fixProduct(documentId, { versionId, region, what }) {
+    async fixProduct(documentId, { versionId, tokenId, region: brushed, what }) {
       await mustBeStaff(live);
       const read = await readDocument(live, documentId);
-      if (!read.candidates.some((c) => c.id === versionId)) throw new FumeError("not_found", "No such version.");
+      const picture = read.candidates.find((c) => c.id === versionId);
+      if (!picture) throw new FumeError("not_found", "No such version.");
+      // A detail the picture check read wrong: its place, and what the real product says.
+      const detail = tokenId ? picture.details?.find((d) => detailId(picture.id, d.n) === tokenId) : undefined;
+      if (tokenId && !detail) throw new FumeError("not_found", "No such detail on this version.");
+      // A detail read tight is grown to the least a fix takes (2.5% a side), around its middle.
+      const grow = (b: { x: number; y: number; w: number; h: number }) => {
+        const w = Math.max(b.w, 0.025),
+          h = Math.max(b.h, 0.025);
+        const x = Math.min(Math.max(0, b.x + b.w / 2 - w / 2), 1 - w),
+          y = Math.min(Math.max(0, b.y + b.h / 2 - h / 2), 1 - h);
+        return { x, y, w, h };
+      };
+      const region = detail ? grow(detail.box) : brushed;
       if (!region) throw new FumeError("invalid", "Brush the part to fix on the picture.");
       if (region.w * region.h > 0.5) throw new FumeError("invalid", "Draw a smaller box: at most half the picture.");
-      const ask = (what ?? "").trim();
+      const ask = detail
+        ? `The ${detail.what} reads "${detail.reads || "nothing legible"}". It says "${detail.expected}", as on the product photographs.`
+        : (what ?? "").trim();
       if (!ask) throw new FumeError("invalid", "Say what to change.");
       const fix = await command<{ id: string }>("fix_candidate", {
         p_candidate_id: versionId,
@@ -325,6 +344,52 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
         if (now[0]?.state === "made") break;
       }
       return doc(documentId);
+    },
+    // The real product's cut-outs for the details the picture check read (docs/mvp/detail-read.md): one per place with
+    // print on a picture of this product, cut from the product's own photograph. Staff only, like the pictures.
+    async detailTokens(productId) {
+      const campaigns = await rows<{ campaign_id: string }>(
+        supabase().from("campaign_products").select("campaign_id").eq("product_id", productId),
+      );
+      if (!campaigns.length) return [];
+      const jobs = await rows<{ id: string }>(
+        supabase()
+          .from("production_jobs")
+          .select("id")
+          .in(
+            "campaign_id",
+            campaigns.map((c) => c.campaign_id),
+          ),
+      );
+      if (!jobs.length) return [];
+      const read = await rows<Pick<CandidateRow, "id" | "details"> & { workspace_id: string }>(
+        supabase()
+          .from("candidates")
+          .select("id, workspace_id, details")
+          .in(
+            "job_id",
+            jobs.map((j) => j.id),
+          )
+          .not("details", "is", null),
+      );
+      const found = read.flatMap((c) => (c.details ?? []).filter((d) => d.expected).map((d) => ({ c, d })));
+      if (!found.length) return [];
+      const { data } = await supabase()
+        .storage.from("workspace-files")
+        .createSignedUrls(
+          found.map(({ c, d }) => `${c.workspace_id}/check/${c.id}-${d.n}-ref.png`),
+          3600,
+        );
+      return found.map(({ c, d }, i): DetailToken => ({
+        id: detailId(c.id, d.n),
+        productId,
+        label: d.what.charAt(0).toUpperCase() + d.what.slice(1),
+        value: d.expected,
+        kind: "label",
+        image: data?.[i]?.signedUrl ?? "",
+        region: { x: 0, y: 0, w: 1, h: 1 },
+        provenance: { origin: "engine", state: "proposed", evidence: "Read on the product's own photograph" },
+      }));
     },
     async undoDocumentToCheck() {
       throw new FumeError(

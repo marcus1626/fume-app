@@ -62,7 +62,7 @@ export function readsRight(r: Read): boolean {
  * A close crop to read, in Fume's storage: first a wider crop around the model's box, where the model finds the part
  * again (its first box can be off by a label's height), then a close crop of that, enlarged. Answers a link to it.
  */
-async function closeIn(t: Take, d: Deps, picture: string, box: Rect, what: string, path: string, spent: { usd: number }): Promise<string | null> {
+async function closeIn(t: Take, d: Deps, picture: string, box: Rect, what: string, path: string, spent: { usd: number }): Promise<{ link: string; box: Rect } | null> {
   const cut = async (b: Rect, read: boolean) => {
     const up = await d.service.uploadLink(t.store.bucket, path);
     const r = up ? await d.step({ op: "fix-crop", picture, box: b, ...(read ? { read: true } : {}), upload: { crop: up } }) : null;
@@ -78,7 +78,11 @@ async function closeIn(t: Take, d: Deps, picture: string, box: Rect, what: strin
   const tight = g && W > 0 && H > 0
     ? generous({ x: (r.x + g.x * r.w) / W, y: (r.y + g.y * r.h) / H, w: (g.w * r.w) / W, h: (g.h * r.h) / H })
     : null;
-  return (await cut(tight ?? box, true))?.link ?? null;
+  const close = await cut(tight ?? box, true);
+  // The place kept is the one found again, without the room generous() added, so a fix redraws just the part.
+  const found = g && W > 0 && H > 0 ? { x: (r.x + g.x * r.w) / W, y: (r.y + g.y * r.h) / H, w: (g.w * r.w) / W, h: (g.h * r.h) / H } : box;
+  const round = (n: number) => Math.round(n * 10_000) / 10_000;
+  return close ? { link: close.link, box: { x: round(found.x), y: round(found.y), w: round(found.w), h: round(found.h) } } : null;
 }
 
 export async function readDetails(t: Take, d: Deps): Promise<Detail[] | null> {
@@ -101,15 +105,16 @@ export async function readDetails(t: Take, d: Deps): Promise<Detail[] | null> {
       if (!box) continue;
       n += 1;
       const spent = { usd: 0 };
-      const cropUrl = await closeIn(t, d, picture, box, place.what, `${t.store.prefix}-${n}.png`, spent);
-      if (!cropUrl) {
+      const onPicture = await closeIn(t, d, picture, box, place.what, `${t.store.prefix}-${n}.png`, spent);
+      const cropUrl = onPicture?.link ?? null;
+      if (!onPicture || !cropUrl) {
         usd += spent.usd;
         continue;
       }
       // The same place on the product's own photograph, when the model found it there.
       const photoBox = place.photoBox ? generous(place.photoBox) : null;
       const photo = place.photo >= 1 && place.photo <= photos.length ? photos[place.photo - 1] : null;
-      const refUrl = photo && photoBox ? await closeIn(t, d, photo, photoBox, place.what, `${t.store.prefix}-${n}-ref.png`, spent) : null;
+      const refUrl = photo && photoBox ? (await closeIn(t, d, photo, photoBox, place.what, `${t.store.prefix}-${n}-ref.png`, spent))?.link ?? null : null;
       usd += spent.usd;
       // The model tends to read a garbled word as the word it should be, never the other way: a read that finds the
       // letters right is read once more, and a mismatch in either is what stands.
@@ -121,7 +126,7 @@ export async function readDetails(t: Take, d: Deps): Promise<Detail[] | null> {
         if (!readsRight(again)) r = again;
       }
       out.push({
-        n, what: place.what.slice(0, 120), box: place.box, reads: r.reads.slice(0, 200), expected: r.expected.slice(0, 200),
+        n, what: place.what.slice(0, 120), box: onPicture.box, reads: r.reads.slice(0, 200), expected: r.expected.slice(0, 200),
         // Without the real one to read against, nothing is called wrong.
         ok: refUrl ? readsRight(r) : true,
         ...(refUrl && !readsRight(r) ? { note: (r.note || `The ${place.what} reads ${r.reads}; on the product it reads ${r.expected}.`).slice(0, 300) } : {}),

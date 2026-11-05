@@ -55,6 +55,7 @@ Deno.test("each place with print is cropped close on the picture and on the real
   assertEquals(calls.steps[2].picture, "https://s/read/ws/p/1.png", "the same part, cut from the product's own photograph");
   const close = calls.steps[1].box as { x: number; w: number };
   assertEquals(Math.round(close.x * 1856), Math.round(0.4 * 384 - 0.25 * 0.2 * 384), "the close box is where it was found again");
+  assertEquals(Math.round(out![0].box.x * 1856), Math.round(0.4 * 384), "and that place is kept, without the room");
   assertEquals(out!.map((x) => x.ok), [false, true], "without the real one to read against, nothing is called wrong");
   assertMatch(out![0].note!, /reads DRESSMEANN; on the product it reads Dressmann/);
   assertEquals(out![1].note, undefined);

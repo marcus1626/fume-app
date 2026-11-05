@@ -25,7 +25,15 @@ reads Dressmann."), and its place on the picture is where the designer fixes it 
 - Live (5 Nov, Dressmann): three rounds on the garbled label ("DRESSMEANN") and the fixed one, all six right; one read
   alone missed the garbled label once in two. About a quarter of a cent a picture.
 
+## In the Studio
+
+- A version carries what was read (`RenderVersion.details`, one per place, id `<candidate>:<n>`), and `detailTokens`
+  answers the real product's cut-out for each (`-<n>-ref.png`). The Studio's details overlay (FLOWS §17) shows a wrong
+  one; "Fix with the real product" fixes its place with an ask made from what it reads and should read
+  (`api/live/studio.ts`). The place kept is the one found again on the close crop, grown to the least a fix takes.
+- A fixed picture is read again by itself (the `fix` function asks `details`), so the designer sees whether the fix
+  holds. Live (5 Nov, Dressmann): found "DRESSMEANN", fixed, and read again as "Dressmann", without anyone marking it.
+
 ## Still open
 
-- Showing the finds in Studio as details to fix with the real product (FLOWS §17, the design thread's screens): the
-  live versions do not carry `details` yet.
+- The small lines on a label (above and below the wordmark) are not compared, only the main word.

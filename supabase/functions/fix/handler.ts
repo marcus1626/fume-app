@@ -37,7 +37,7 @@ export interface Deps {
   canRead(fixId: string): Promise<boolean>;
   service: {
     take(fixId: string): Promise<{ data: Take | null; error: Failure }>;
-    finish(fixId: string, result: Record<string, unknown>): Promise<{ error: Failure }>;
+    finish(fixId: string, result: Record<string, unknown>): Promise<{ data?: unknown; error: Failure }>;
     fail(fixId: string, error: string, cents: number): Promise<{ error: Failure }>;
     /** A signed link to read a stored file. */
     readLink(bucket: string, path: string): Promise<string | null>;
@@ -50,6 +50,8 @@ export interface Deps {
   };
   /** The language model looks at the crop (image 1) and the product's photographs, and finds the same part. */
   locate(r: { ask: string; cropUrl: string; photoUrls: string[] }): Promise<{ found: Found | null; usd: number }>;
+  /** Asks the picture check to read the fixed picture's small print (docs/mvp/detail-read.md). */
+  askDetails?(candidateId: string): Promise<void>;
   /** The design service's fix steps (services/design, POST /api/design with op). */
   step(request: Record<string, unknown>): Promise<{ ok: boolean; status: number; body: Record<string, unknown> }>;
   image: {
@@ -203,12 +205,15 @@ export async function fixPicture(t: Take, d: Deps): Promise<"made" | "failed"> {
     const set = await d.step({ op: "fix-set", picture, redrawn, rect, box: t.box, upload: { png: pngUp } });
     if (!set.ok) return await fail(errorOf(set.body, set.status));
     const png = set.body.png as { bytes: number; sha256: string };
-    const { error } = await d.service.finish(t.fix_id, {
+    const { data, error } = await d.service.finish(t.fix_id, {
       png: { path: t.store.png, bytes: png.bytes, sha256: png.sha256 },
       width: set.body.width, height: set.body.height, drift: set.body.drift,
       prompt: text, model: MODEL, cost_cents: cents, ms: d.now() - started,
     });
     if (error) return await fail(error.message);
+    // The fixed picture's small print is read again, so the designer sees whether the fix holds.
+    const made = (data as { candidate_id?: string } | null)?.candidate_id;
+    if (made) await d.askDetails?.(made).catch(() => undefined);
     return "made";
   } catch (e) {
     return await fail(e instanceof Error ? e.message : String(e));
