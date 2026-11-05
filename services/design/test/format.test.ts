@@ -25,6 +25,9 @@ test("the Engine crops when the product fits with air, and expands when a crop w
   assert.equal(chooseFormat(1856, 2304, "square", { around: centred }).method, "crop");
   assert.equal(chooseFormat(1856, 2304, "story", { around: { x: 0.05, y: 0.3, w: 0.9, h: 0.4 } }).reason, "cuts");
   assert.equal(chooseFormat(1856, 2304, "banner", { around: centred }).reason, "little");
+  const tall = { x: 0.3, y: 0.08, w: 0.4, h: 0.85 };
+  assert.equal(chooseFormat(1856, 2304, "story", { around: tall }).reason, "safe", "a story's top and bottom are the platform's");
+  assert.equal(chooseFormat(1856, 2304, "story", { around: { x: 0.3, y: 0.2, w: 0.4, h: 0.55 } }).method, "crop");
   assert.equal(chooseFormat(1856, 2304, "square", {}).method, "expand", "without the product's place, nothing is cut");
   assert.equal(chooseFormat(1856, 2304, "square", { method: "expand", around: centred }).reason, "asked");
   const own = chooseFormat(1000, 1250, "square", { method: "crop", window: { x: 0, y: 0.1, w: 1, h: 0.8 } });

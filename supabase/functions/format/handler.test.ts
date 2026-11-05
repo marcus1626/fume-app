@@ -105,6 +105,7 @@ Deno.test("the prompt draws only the new edges and adds nothing", () => {
   assertMatch(p, /grey areas/);
   assertMatch(p, /Leave the photograph itself exactly as it is/);
   assertMatch(p, /no people/);
+  assertMatch(whyOf("expand", "safe", "story", "the shirt"), /platform covers the top and bottom, and a crop would put the shirt there/);
   assert(whyOf("expand", "unknown", "square", "").startsWith("Fume could not tell where the product is"));
   assertMatch(whyOf("expand", "little", "banner", "", { x: 1120, y: 0, w: 1856, h: 2304 }), /extended at the sides/);
 });

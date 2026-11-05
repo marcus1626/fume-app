@@ -24,11 +24,20 @@ export function windowFor(width: number, height: number, ratio: number, around?:
   return { x, y, w, h };
 }
 
-/** Whether the box (shares of the picture) lies inside the window (pixels) with `air` of the window on each side. */
-export function fits(box: Rect, win: Rect, width: number, height: number, air = 0.04): boolean {
+/** The air a product needs in each format, as shares of the window: a story's top and bottom are the platform's. */
+export const AIR: Record<string, { side: number; top: number; bottom: number }> = {
+  feed: { side: 0.04, top: 0.04, bottom: 0.04 },
+  square: { side: 0.04, top: 0.04, bottom: 0.04 },
+  banner: { side: 0.04, top: 0.04, bottom: 0.04 },
+  // Instagram's story: 250 px of 1920 at the top and 340 at the bottom (book.ts, the format's grid).
+  story: { side: 0.04, top: 250 / 1920, bottom: 340 / 1920 },
+};
+
+/** Whether the box (shares of the picture) lies inside the window (pixels) with the air of the format around it. */
+export function fits(box: Rect, win: Rect, width: number, height: number, air = AIR.square): boolean {
   const bx0 = box.x * width, by0 = box.y * height, bx1 = (box.x + box.w) * width, by1 = (box.y + box.h) * height;
-  const ax = win.w * air, ay = win.h * air;
-  return bx0 >= win.x + ax - 0.5 && by0 >= win.y + ay - 0.5 && bx1 <= win.x + win.w - ax + 0.5 && by1 <= win.y + win.h - ay + 0.5;
+  return bx0 >= win.x + win.w * air.side - 0.5 && bx1 <= win.x + win.w * (1 - air.side) + 0.5 &&
+    by0 >= win.y + win.h * air.top - 0.5 && by1 <= win.y + win.h * (1 - air.bottom) + 0.5;
 }
 
 /** The share of the master a crop to the ratio keeps. */

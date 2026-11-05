@@ -71,6 +71,7 @@ export function whyOf(method: "crop" | "expand", reason: string, format: string,
   }
   if (method === "crop") return `${cap(thing)} fits the ${name} with air around it, so the master is cropped. Every pixel is the master's.`;
   if (reason === "little") return `A ${name} crop would keep less than 60 % of the master, so the scene is extended ${sides}. The master's own pixels are kept.`;
+  if (reason === "safe") return `In a ${name} the platform covers the top and bottom, and a crop would put ${thing} there, so the scene is extended ${sides}. The master's own pixels are kept.`;
   if (reason === "cuts") return `A ${name} crop would cut ${thing}, so the scene is extended ${sides}. The master's own pixels are kept.`;
   return `Fume could not tell where the product is, so nothing is cut: the scene is extended ${sides}. The master's own pixels are kept.`;
 }

@@ -1402,10 +1402,16 @@ function windowFor(width, height, ratio, around) {
   const y = Math.round(Math.min(Math.max(0, cy - h / 2), height - h));
   return { x, y, w, h };
 }
-function fits(box, win, width, height, air = 0.04) {
+var AIR = {
+  feed: { side: 0.04, top: 0.04, bottom: 0.04 },
+  square: { side: 0.04, top: 0.04, bottom: 0.04 },
+  banner: { side: 0.04, top: 0.04, bottom: 0.04 },
+  // Instagram's story: 250 px of 1920 at the top and 340 at the bottom (book.ts, the format's grid).
+  story: { side: 0.04, top: 250 / 1920, bottom: 340 / 1920 }
+};
+function fits(box, win, width, height, air = AIR.square) {
   const bx0 = box.x * width, by0 = box.y * height, bx1 = (box.x + box.w) * width, by1 = (box.y + box.h) * height;
-  const ax = win.w * air, ay = win.h * air;
-  return bx0 >= win.x + ax - 0.5 && by0 >= win.y + ay - 0.5 && bx1 <= win.x + win.w - ax + 0.5 && by1 <= win.y + win.h - ay + 0.5;
+  return bx0 >= win.x + win.w * air.side - 0.5 && bx1 <= win.x + win.w * (1 - air.side) + 0.5 && by0 >= win.y + win.h * air.top - 0.5 && by1 <= win.y + win.h * (1 - air.bottom) + 0.5;
 }
 var kept = (width, height, ratio) => {
   const w = windowFor(width, height, ratio);
@@ -1694,7 +1700,9 @@ function chooseFormat(width, height, format, r) {
   if (r.method) return { method: r.method, window: win, reason: "asked" };
   if (!r.around) return { method: "expand", window: win, reason: "unknown" };
   if (kept(width, height, ratio) < 0.6) return { method: "expand", window: win, reason: "little" };
-  return fits(r.around, win, width, height) ? { method: "crop", window: win, reason: "fits" } : { method: "expand", window: win, reason: "cuts" };
+  if (fits(r.around, win, width, height, AIR[format])) return { method: "crop", window: win, reason: "fits" };
+  const safe = AIR[format].top > AIR.square.top && fits(r.around, win, width, height, { ...AIR[format], top: AIR.square.top, bottom: AIR.square.bottom });
+  return { method: "expand", window: win, reason: safe ? "safe" : "cuts" };
 }
 async function formatStep(r, deps) {
   const why = invalidFormat(r, deps.storageHost);

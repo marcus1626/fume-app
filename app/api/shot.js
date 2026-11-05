@@ -44,6 +44,13 @@ var RATIOS = [
 
 // src/format.ts
 var RATIO = { feed: 4 / 5, square: 1, story: 9 / 16, banner: 16 / 9 };
+var AIR = {
+  feed: { side: 0.04, top: 0.04, bottom: 0.04 },
+  square: { side: 0.04, top: 0.04, bottom: 0.04 },
+  banner: { side: 0.04, top: 0.04, bottom: 0.04 },
+  // Instagram's story: 250 px of 1920 at the top and 340 at the bottom (book.ts, the format's grid).
+  story: { side: 0.04, top: 250 / 1920, bottom: 340 / 1920 }
+};
 
 // src/handler.ts
 function signedLink(link, host, kind) {

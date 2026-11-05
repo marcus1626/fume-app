@@ -8,7 +8,7 @@ import { type Ask, design } from "./design.ts";
 import { type Box } from "./pixels.ts";
 import { type BrandFace } from "./render.ts";
 import { blank, crop, cropFor, decode, encode, type Rect, resize, setBack } from "./fix.ts";
-import { canvasFor, fits, kept, MODEL_RATIO, pad, RATIO, setMaster, windowFor } from "./format.ts";
+import { AIR, canvasFor, fits, kept, MODEL_RATIO, pad, RATIO, setMaster, windowFor } from "./format.ts";
 
 export interface DesignRequest {
   picture: string;
@@ -267,7 +267,7 @@ export interface FormatRequest {
 }
 
 /** Why the Engine chose as it did, for the designer. */
-export type FormatReason = "asked" | "fits" | "cuts" | "little" | "unknown";
+export type FormatReason = "asked" | "fits" | "cuts" | "safe" | "little" | "unknown";
 
 export function invalidFormat(r: Partial<FormatRequest>, host: string): string | null {
   if (!signedLink(r.picture, host, "read")) return "The picture must be a signed link to Fume's storage.";
@@ -297,7 +297,10 @@ export function chooseFormat(width: number, height: number, format: string, r: P
   if (r.method) return { method: r.method, window: win, reason: "asked" };
   if (!r.around) return { method: "expand", window: win, reason: "unknown" };
   if (kept(width, height, ratio) < 0.6) return { method: "expand", window: win, reason: "little" };
-  return fits(r.around, win, width, height) ? { method: "crop", window: win, reason: "fits" } : { method: "expand", window: win, reason: "cuts" };
+  if (fits(r.around, win, width, height, AIR[format])) return { method: "crop", window: win, reason: "fits" };
+  // Fits but for the platform's top and bottom: the scene is extended so the product clears them.
+  const safe = AIR[format].top > AIR.square.top && fits(r.around, win, width, height, { ...AIR[format], top: AIR.square.top, bottom: AIR.square.bottom });
+  return { method: "expand", window: win, reason: safe ? "safe" : "cuts" };
 }
 
 async function formatStep(r: FormatRequest, deps: Deps): Promise<Response> {
