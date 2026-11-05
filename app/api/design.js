@@ -383,6 +383,13 @@ function wordWidths(doc, name) {
   }
   return out;
 }
+function lineWidth(doc, name) {
+  const id = doc.ids.get(name);
+  const node = id ? doc.graph.getNode(id) : null;
+  if (!measurer || !node || node.type !== "TEXT" || !node.text || !node.width) return null;
+  const m = measurer.measureTextNode({ ...node, id: `${node.id}:line`, text: node.text.replace(/\s+/g, " ").trim() }, 1e6);
+  return m ? { width: m.width, box: node.width } : null;
+}
 function splitWords(doc, name) {
   return wordWidths(doc, name).filter((w) => w.width > w.box + 1).map((w) => w.word);
 }
@@ -1185,7 +1192,9 @@ function fitFor(doc, sizes = {}) {
   const over = sizes.Headline && sizes.Subline ? sizes.Subline * 1.25 / sizes.Headline : 0;
   const headline = need("Headline", Math.max(FIT_FLOOR, over));
   const cta = need("CTA words");
-  const price = need("Price");
+  const line = lineWidth(doc, "Price");
+  const whole = line ? Math.min(1, (line.box - 2) / line.width) : 1;
+  const price = whole < 1 && whole >= FIT_FLOOR ? Math.floor(whole * 100) / 100 : need("Price");
   return headline || cta || price ? { ...headline ? { headline } : {}, ...cta ? { cta } : {}, ...price ? { price } : {} } : null;
 }
 function better(a, b) {

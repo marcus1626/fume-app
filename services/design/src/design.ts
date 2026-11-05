@@ -5,7 +5,7 @@
 import { type DesignBook, type Format, type Grid, type Style, colourOf, componentOf, gridOf, headlineSteps, signatureOf, styleOf } from "./book.ts";
 import { type Band, type Composed, type FamilyFor, type Ground, type Layout, type Words, compose, shadeFill, shadeFor } from "./compose.ts";
 import { type Box, type Pixels, type Shade, contrast, luminance, overlap, rgbOf, under } from "./pixels.ts";
-import { type BrandFace, type Doc, boxOf, build, fig, capHeightOf, hasFont, pixelsOf, place, png, splitWords, useBrandFaces, wordWidths } from "./render.ts";
+import { type BrandFace, type Doc, boxOf, build, fig, capHeightOf, hasFont, pixelsOf, place, png, lineWidth, splitWords, useBrandFaces, wordWidths } from "./render.ts";
 import { type Logo, type Where, CORNERS, cornersFor, logoOf } from "./logo.ts";
 import { inset } from "./room.ts";
 
@@ -604,7 +604,10 @@ export function fitFor(doc: Doc, sizes: Record<string, number> = {}): Layout["fi
   const over = sizes.Headline && sizes.Subline ? (sizes.Subline * 1.25) / sizes.Headline : 0;
   const headline = need("Headline", Math.max(FIT_FLOOR, over));
   const cta = need("CTA words");
-  const price = need("Price");
+  // The price is one figure: the whole line fits its column, not only its longest word ("NÅ / 199,-" fails).
+  const line = lineWidth(doc, "Price");
+  const whole = line ? Math.min(1, (line.box - 2) / line.width) : 1;
+  const price = whole < 1 && whole >= FIT_FLOOR ? Math.floor(whole * 100) / 100 : need("Price");
   return headline || cta || price ? { ...(headline ? { headline } : {}), ...(cta ? { cta } : {}), ...(price ? { price } : {}) } : null;
 }
 

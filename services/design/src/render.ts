@@ -88,6 +88,15 @@ export function wordWidths(doc: Doc, name: string): { word: string; width: numbe
   return out;
 }
 
+/** A text node's whole text set on one line, with its width, for words that must stay on one line (a price). */
+export function lineWidth(doc: Doc, name: string): { width: number; box: number } | null {
+  const id = doc.ids.get(name);
+  const node = id ? doc.graph.getNode(id) : null;
+  if (!measurer || !node || node.type !== "TEXT" || !node.text || !node.width) return null;
+  const m = measurer.measureTextNode({ ...node, id: `${node.id}:line`, text: node.text.replace(/\s+/g, " ").trim() } as typeof node, 1e6);
+  return m ? { width: m.width, box: node.width } : null;
+}
+
 /**
  * The words in a laid-out text that are wider than its box, so the renderer broke them inside the word
  * ("FLANELLS / KJORTER"). A brand never splits a word; a layout that does is not one to use.
