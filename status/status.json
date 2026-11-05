@@ -1,9 +1,9 @@
 {
-  "updated": "2026-11-05T12:40:00Z",
+  "updated": "2026-11-05T17:50:00Z",
   "deadline": "2026-11-21T23:59:59+01:00",
   "deadlineLabel": "the Fume app is finished",
   "start": "2026-10-26T08:00:00+01:00",
-  "summary": "The whole customer round runs live. The Engine learns, knows each brand, sets graphic design that passes its hard checks, and finds and fixes a wrong label on its own. Next: brands' own fonts, formats, then video. Target: the whole app finished on 21 November.",
+  "summary": "The whole customer round runs live. The Engine learns, knows each brand, sets graphic design that passes its hard checks, fixes a wrong label on its own, and makes the square and story formats from an approved master. Next: brands' own fonts and text on every format, then video. Target: the whole app finished on 21 November.",
   "tracks": [
     {
       "id": "app",
@@ -160,9 +160,16 @@
           "date": "11–14 Nov"
         },
         {
-          "status": "next",
+          "status": "now",
           "title": "The Engine makes every format from the approved master",
-          "note": "4:5, 9:16 and more"
+          "note": "Crop and extend live; the master is never changed. Regenerate and text on each format next",
+          "date": "5 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Prices with an end date",
+          "note": "A creative with an expired price cannot be checked, sent, approved or delivered",
+          "date": "5 Nov"
         },
         {
           "status": "next",
@@ -219,13 +226,17 @@
   "reports": [
     {
       "date": "2026-11-05",
-      "title": "Graphic design passes its checks; the Engine fixes labels itself",
+      "title": "Graphic design passes its checks; formats from the master",
       "items": [
         "Dressmann, Nike and Møllers pass all hard checks on graphic design, live. Dressmann's green price campaign sets «NÅ 199,-» on one line.",
         "The Engine now leaves calm space in the picture for the words, and the design uses it first.",
         "«Fix with the real product» is live: mark a part, only that part is redrawn from the product's own photos. The Dressmann label went from «DRESSMEANN» to «Dressmann» in 55 seconds.",
         "The picture check reads the small print itself and compares it letter by letter with the product photos. It found and fixed the wrong label with nobody pointing, for about 0.25 cent per picture.",
-        "Next: formats (4:5, 9:16) from an approved master, and the brands' own font files."
+        "Formats from an approved master are live. The square was cropped in 9 seconds; the story was extended in 49 seconds for 15 cents, because Instagram covers its top and bottom. The master's own pixels are never changed.",
+        "Prices now have an end date. A creative with an expired price cannot be checked, sent, approved or delivered.",
+        "Each picture task has its own image model. The cheaper Nano Banana 2 left visible stripes, so Nano Banana Pro stays.",
+        "Short videos of the Studio, brand book and graphic design screens are ready for Marcus to approve.",
+        "Next: regenerate as a third format option, text placed on each format, and the brands' own font files."
       ]
     },
     {
