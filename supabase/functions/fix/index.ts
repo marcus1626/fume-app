@@ -54,6 +54,7 @@ Deno.serve((req) =>
           !(await service.storage.from(bucket).upload(path, bytes, { contentType: "image/png", upsert: true })).error,
         spent: async (id, usd, reference) =>
           await service.rpc("fix_spent", { p_fix_id: id, p_llm_usd: usd, p_reference: reference }),
+        model: async (task) => (await service.rpc("task_model", { p_task: task })).data ?? null,
       },
       locate,
       askDetails: async (candidateId) => {

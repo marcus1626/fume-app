@@ -53,6 +53,7 @@ Deno.serve((req) =>
         uploadLink: async (bucket, path) => (await service.storage.from(bucket).createSignedUploadUrl(path, { upsert: true })).data?.signedUrl ?? null,
         store: async (bucket, path, bytes) =>
           !(await service.storage.from(bucket).upload(path, bytes, { contentType: "image/png", upsert: true })).error,
+        model: async (task) => (await service.rpc("task_model", { p_task: task })).data ?? null,
       },
       locate,
       step: async (request) => {

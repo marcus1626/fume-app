@@ -47,6 +47,8 @@ export interface Deps {
     store(bucket: string, path: string, bytes: Uint8Array): Promise<boolean>;
     /** Records what finding the part cost, and where it was found. */
     spent(fixId: string, usd: number, reference: Found | null): Promise<{ error: Failure }>;
+    /** The image model named for a task (task_model), when one is. */
+    model?(task: "fix"): Promise<string | null>;
   };
   /** The language model looks at the crop (image 1) and the product's photographs, and finds the same part. */
   locate(r: { ask: string; cropUrl: string; photoUrls: string[] }): Promise<{ found: Found | null; usd: number }>;
@@ -185,9 +187,10 @@ export async function fixPicture(t: Take, d: Deps): Promise<"made" | "failed"> {
     }
     const text = promptOf(t, refs.length, close);
     const referenceUrls = [cropRead, ...(closeRead ? [closeRead] : []), ...refs];
-    const sent = await d.image.submit({ imageModel: MODEL, text, referenceUrls, aspectRatio: ratio, resolution: "2K", seed: null });
+    const model = (await d.service.model?.("fix").catch(() => null)) || MODEL;
+    const sent = await d.image.submit({ imageModel: model, text, referenceUrls, aspectRatio: ratio, resolution: "2K", seed: null });
     if (!sent.ok) return await fail(sent.error);
-    cents = d.image.priceCents(MODEL);
+    cents = d.image.priceCents(model);
     let got: Collected = { state: "waiting" };
     for (let i = 0; i < 40 && got.state === "waiting"; i++) {
       await d.wait(i < 5 ? 3_000 : 5_000);
@@ -208,7 +211,7 @@ export async function fixPicture(t: Take, d: Deps): Promise<"made" | "failed"> {
     const { data, error } = await d.service.finish(t.fix_id, {
       png: { path: t.store.png, bytes: png.bytes, sha256: png.sha256 },
       width: set.body.width, height: set.body.height, drift: set.body.drift,
-      prompt: text, model: MODEL, cost_cents: cents, ms: d.now() - started,
+      prompt: text, model, cost_cents: cents, ms: d.now() - started,
     });
     if (error) return await fail(error.message);
     // The fixed picture's small print is read again, so the designer sees whether the fix holds.

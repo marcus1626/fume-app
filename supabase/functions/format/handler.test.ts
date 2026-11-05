@@ -120,3 +120,11 @@ Deno.test("the request names a make the caller may read", async () => {
   const bad = await handleFormat(new Request("https://x", { method: "POST", headers: { Authorization: "Bearer t" }, body: "{}" }), () => ok.d);
   assertEquals(bad.status, 400);
 });
+
+Deno.test("an expansion uses the model named for the task", async () => {
+  const { d: base, calls } = deps("expand");
+  const d = { ...base, service: { ...base.service, model: () => Promise.resolve("nano-banana-2") } };
+  assertEquals(await makeFormat(take, d), "made");
+  assertEquals((calls.submitted[0] as unknown as { imageModel: string }).imageModel, "nano-banana-2");
+  assertEquals(calls.finish[0].model, "nano-banana-2");
+});

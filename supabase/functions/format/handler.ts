@@ -39,6 +39,8 @@ export interface Deps {
     readLink(bucket: string, path: string): Promise<string | null>;
     uploadLink(bucket: string, path: string): Promise<string | null>;
     store(bucket: string, path: string, bytes: Uint8Array): Promise<boolean>;
+    /** The image model named for a task (task_model), when one is. */
+    model?(task: "expand"): Promise<string | null>;
   };
   /** The language model finds what must stay whole on the picture: the product, as a box of shares. */
   locate(r: { pictureUrl: string; format: string }): Promise<{ box: Rect | null; what: string; usd: number }>;
@@ -143,11 +145,12 @@ export async function makeFormat(t: Take, d: Deps): Promise<"made" | "failed"> {
     const padded = await d.service.readLink(t.store.bucket, path("-padded.png"));
     if (!padded) return await fail("Fume could not read the padded picture back.");
     const text = promptOf(t);
+    const model = (await d.service.model?.("expand").catch(() => null)) || MODEL;
     const sent = await d.image.submit({
-      imageModel: MODEL, text, referenceUrls: [padded], aspectRatio: String(chose.body.ratio ?? "1:1"), resolution: "2K", seed: null,
+      imageModel: model, text, referenceUrls: [padded], aspectRatio: String(chose.body.ratio ?? "1:1"), resolution: "2K", seed: null,
     });
     if (!sent.ok) return await fail(sent.error);
-    cents = d.image.priceCents(MODEL);
+    cents = d.image.priceCents(model);
     let got: Collected = { state: "waiting" };
     for (let i = 0; i < 40 && got.state === "waiting"; i++) {
       await d.wait(i < 5 ? 3_000 : 5_000);
@@ -166,7 +169,7 @@ export async function makeFormat(t: Take, d: Deps): Promise<"made" | "failed"> {
     const png = set.body.png as { bytes: number; sha256: string };
     const { error } = await d.service.finish(t.make_id, {
       png: { path: path(".png"), bytes: png.bytes, sha256: png.sha256 }, width: set.body.width, height: set.body.height,
-      method, why, window: set.body.at, prompt: text, model: MODEL, cost_cents: cents, llm_usd: usd, drift: set.body.drift,
+      method, why, window: set.body.at, prompt: text, model, cost_cents: cents, llm_usd: usd, drift: set.body.drift,
       ms: d.now() - started,
     });
     return error ? await fail(error.message) : "made";
