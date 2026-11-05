@@ -101,6 +101,17 @@ test("the brand's own layout comes first: its place, width, ground and call to a
   assert.ok(![...layoutsFor(book, "feed", {}, true)].some((x) => x.ground === "block"), "no colour block for a brand that never uses one");
 });
 
+test("the brand's own words colour comes before the model's", () => {
+  const branded = {
+    ...book,
+    colours: [...book.colours, { hex: "#00563F", role: "accent" }],
+    onPictures: { layouts: [{ name: "Green stack", hasWords: true, band: "top", align: "left", wordsWidthPct: 50, ground: "photo", words: "brand_colour", cta: "box" }] },
+  } as unknown as typeof book;
+  const all = [...layoutsFor(branded, "feed", { colour: "text" }, true)];
+  assert.equal(all[0].colour, "accent", "the brand's green stack first");
+  assert.ok(all.some((x) => x.colour === "text"), "the model's colour is still tried");
+});
+
 test("words on a block of the brand's colour, and a call to action as underlined words", () => {
   const c = compose(book, "feed", { headline: "Morning", cta: "See it" }, { band: "bottom", align: "left", headline: "h1", colour: "on_primary", ground: "block", cta: "with_words", columns: 6, ctaLook: "underline" }, () => "Inter");
   assert.ok(c.panel, "the panel's colour is known, so contrast is measured against it");

@@ -921,9 +921,7 @@ function* layoutsFor(book, format, prefer, hasCta) {
   const ctaFill = sig?.ctaFill && sig.ctaFill !== "none" ? sig.ctaFill : void 0;
   const bands = uniq([prefer.band ?? sig?.band ?? "top", sig?.band ?? "top", "top", "bottom", "middle"]);
   const aligns = uniq([prefer.align ?? sig?.align ?? "left", sig?.align ?? "left", "left", "right", "center"]);
-  const wanted = prefer.colour ?? sigColour ?? "on_photo";
-  const photoColour = book.colours.some((c) => c.role === wanted) ? wanted : "on_photo";
-  const colours = uniq([photoColour, "on_photo", comp?.colour ?? "text", "text"]).filter(
+  const colours = uniq([...sigColour ? [sigColour] : [], prefer.colour ?? "on_photo", "on_photo", comp?.colour ?? "text", "text"]).filter(
     (r) => book.colours.some((c) => c.role === r)
   );
   const scrim = book.photoText?.scrim ?? "gradient";

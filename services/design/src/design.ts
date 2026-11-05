@@ -277,9 +277,9 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
   const ctaFill = sig?.ctaFill && sig.ctaFill !== "none" ? sig.ctaFill : undefined;
   const bands: Band[] = uniq([prefer.band ?? sig?.band ?? "top", sig?.band ?? "top", "top", "bottom", "middle"]) as Band[];
   const aligns = uniq([prefer.align ?? sig?.align ?? "left", sig?.align ?? "left", "left", "right", "center"]) as Layout["align"][];
-  const wanted = prefer.colour ?? sigColour ?? "on_photo";
-  const photoColour = book.colours.some((c) => c.role === wanted) ? wanted : "on_photo";
-  const colours = uniq([photoColour, "on_photo", comp?.colour ?? "text", "text"]).filter((r) =>
+  // The colour the brand's own layout sets its words in comes first (Dressmann's green stack), then the model's;
+  // the contrast checks still turn it down where it cannot be read.
+  const colours = uniq([...(sigColour ? [sigColour] : []), prefer.colour ?? "on_photo", "on_photo", comp?.colour ?? "text", "text"]).filter((r) =>
     book.colours.some((c) => c.role === r),
   );
   const scrim = book.photoText?.scrim ?? "gradient";
