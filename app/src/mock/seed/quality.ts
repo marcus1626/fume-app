@@ -211,6 +211,49 @@ const seeded: QaItem[] = [
     ],
     state: "fixing",
   }),
+  // The Engine's picture check found three things (FLOWS §29.6): the cap is off, which stops the check until the one
+  // who checks settles it, and two small ones.
+  qa("qa-7", "cr-a-v10", "Feed 8", "06-10", 5, {
+    slot: "Master 3 · Variant 1",
+    evaluation: {
+      productTruth: "flag",
+      brandRules: "flag",
+      artefacts: "minor",
+      notes: [
+        "The cap reads glossy",
+        "Light from above, not from the side",
+        "A smeared edge where the bottle meets the ledge",
+      ],
+      evaluated: true,
+    },
+    findings: [
+      {
+        id: "fi-1",
+        dimension: "product",
+        severity: "critical",
+        finding: "The cap is glossy; LYSNE's cap is matte.",
+        expected: "Burgundy matte cap, as in its photographs",
+        observed: "A glossy cap with a bright highlight on top",
+        status: "open",
+      },
+      {
+        id: "fi-2",
+        dimension: "brand_brief",
+        severity: "minor",
+        finding: "The light comes from above, not from one side like a lamp.",
+        expected: "Warm low light from one side, like a lamp in the evening",
+        observed: "Even, soft light from above",
+        status: "open",
+      },
+      {
+        id: "fi-3",
+        dimension: "artefacts",
+        severity: "minor",
+        finding: "A soft, smeared edge where the bottle meets the ledge.",
+        status: "open",
+      },
+    ],
+  }),
   qa("qa-4", "cr-doc-autumn-email", "Email header", "05-01", 15, {
     studio: "design",
     documentId: "doc-autumn-email",

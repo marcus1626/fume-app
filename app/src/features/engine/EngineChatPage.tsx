@@ -74,6 +74,7 @@ import { directory, firstName, sign } from "../../shell/people";
 import { AllProductsSheet, confirmed } from "../fume/AllProducts";
 import { DayMarker, dayLabel } from "../fume/parts";
 import { formatName } from "../studio/parts";
+import { shownVersion } from "../studio/doc/versions";
 import { useOpenInStudio } from "../studio/shared";
 import { useCheckWords, type CheckWords } from "../agency/agency-parts";
 
@@ -943,7 +944,7 @@ function batchSteps(b: Batch, inRun: QaView[], open: (i: number) => void, busy: 
 function DocumentWidget({ documentId, workspaceId }: { documentId: Id; workspaceId: Id }) {
   const doc = useDocuments(workspaceId).data?.find((d) => d.id === documentId);
   if (!doc) return null;
-  const cover = doc.versions.find((v) => v.id === doc.pickedVersionId) ?? doc.versions.at(-1);
+  const cover = shownVersion(doc);
   return (
     <Item variant="outline" className="ui-engine-widget">
       <ItemMedia variant="creative">

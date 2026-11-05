@@ -5,6 +5,7 @@ import {
   FumeError,
   type CreativeDocument,
   type EngineEdit,
+  type EnginePrompt,
   type FormatTile,
   type FumeApi,
   type Generation,
@@ -29,6 +30,7 @@ type Calls =
   | "generate"
   | "repair"
   | "pickGeneration"
+  | "teachEngine"
   | "sendToCheck"
   | "studioModes"
   | "documents"
@@ -197,6 +199,8 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       cost: 0.12 * Math.max(1, d.specs.count),
       evaluation: { productTruth: "pass", brandRules: "pass", artefacts: "none", notes: [] },
       instruction,
+      // The prompt behind it, as the Engine keeps it (FLOWS §29): the previous one's checks, the new words.
+      prompt: renderedPrompt(d, instruction),
     };
     d.versions.push(v);
     touch(d);
@@ -212,6 +216,24 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       d.pickedVersionId = v.id;
       touch(d);
     }, m.latency * 14);
+  }
+
+  /** The prompt of a new render: the last prompt the Engine wrote for this document, with the instruction's words in
+   *  it, or a plain one when there is none yet. */
+  function renderedPrompt(d: CreativeDocument, instruction?: string): EnginePrompt {
+    const last = [...d.versions].reverse().find((x) => x.prompt?.status === "validated")?.prompt;
+    const base =
+      last?.text ?? "Analog 35 mm photograph, warm light from a single source, the product the one sharp thing.";
+    return {
+      status: "validated",
+      model: last?.model ?? "Nano Banana Pro",
+      method: last?.method ?? "Product on a surface",
+      text: instruction ? `${base} ${instruction}.` : base,
+      tries: 1,
+      findings: last?.findings.filter((f) => f.verdict !== "against") ?? [],
+      codeChecks: last?.codeChecks ?? [{ text: "No words for the picture to print", pass: true }],
+      llmUsd: 0.002,
+    };
   }
 
   /** A document opened from a creative, a candidate, or empty. */
@@ -436,6 +458,16 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       s.pickedId = generationId;
       return wait(s);
     },
+    async teachEngine({ generationId, verdict, why }) {
+      m.mustStaff();
+      if (m.me().agency) throw new FumeError("forbidden", "Only Fume's own team teaches the Engine.");
+      const g = db.sessions.flatMap((s) => s.generations).find((x) => x.id === generationId);
+      if (!g) throw new FumeError("not_found", "That picture is gone.");
+      // Only people's verdicts teach: the lesson is kept for the brand (engine_lessons in the live app).
+      g.taught = verdict;
+      void why;
+      return wait(undefined);
+    },
     async sendToCheck(sessionId) {
       m.mustStaff();
       const s = sessionOf(sessionId);
@@ -583,6 +615,7 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       m.mustStaff();
       const d = doc(id);
       const v = m.find(d.versions, versionId, "version");
+      if (v.state !== "done") throw new FumeError("invalid", "Only a rendered version can be picked.");
       d.pickedVersionId = v.id;
       d.variables = structuredClone(v.variables);
       touch(d);

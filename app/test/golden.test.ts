@@ -981,6 +981,15 @@ scenario("quality gate", async (golden) => {
   await a.qaCheck("qa-5");
   await a.campaign("c-solv");
   await a.creative("cr-a-v9");
+  // The Engine's findings (FLOWS §29.6): an open critical one stops the check; one is set aside and taken back; the
+  // note takes the critical one up, and the Engine's fix resolves it.
+  await a.qaCheck("qa-7");
+  await a.qaSettleFinding("qa-7", "fi-2", "accepted");
+  await a.qaSettleFinding("qa-7", "fi-2", "open");
+  await a.qaSettleFinding("qa-7", "fi-nope", "accepted");
+  await a.qaFeedback("qa-7", "The cap is glossy; LYSNE's cap is matte.", [], ["fi-1", "fi-nope"]);
+  await anna.advance(10_000);
+  await a.qaCheck("qa-7");
 });
 
 scenario("studio", async (golden) => {
