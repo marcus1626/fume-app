@@ -161,3 +161,12 @@ test("a price from the plan is set as the brand's figure, under the headline, an
   assert.ok(out.boxes.Price.h > out.boxes.Headline.h / 2, "big enough to be the figure");
   assert.ok(out.checks.some((c) => c.node === "Price" && c.check === "contrast"));
 });
+
+test("the price before is set small under the figure", async () => {
+  const { splitPrice } = await import("../src/compose.ts");
+  assert.deepEqual(splitPrice("NÅ 199,- TIDLIGERE 399,-"), { now: "NÅ 199,-", was: "TIDLIGERE 399,-" });
+  assert.deepEqual(splitPrice("199,-"), { now: "199,-", was: null });
+  const pic = await picture("#EDE6DA", "#2B2B2B");
+  const out = await design({ picture: pic, format: "feed", book, words: { ...words, price: "NÅ 199,- før 399,-" }, keepClear: [product] });
+  assert.ok(out.boxes.Was && out.boxes.Was.y > out.boxes.Price.y && out.boxes.Was.h < out.boxes.Price.h);
+});

@@ -110,10 +110,10 @@ export function compose(
   const colours: Record<string, string> = { Headline: wordsHex };
   const sizes: Record<string, number> = { Headline: hl.sizePx };
 
-  const text = (name: "Headline" | "Subline" | "Price", s: Style, value: string, hex: string) => {
+  const text = (name: "Headline" | "Subline" | "Price" | "Was", s: Style, value: string, hex: string) => {
     const fam = family(s);
     fonts.push({ family: fam, weight: s.weight });
-    const w = name !== "Price" && widths[name] ? `{${Math.round(widths[name]!)}}` : `"fill"`;
+    const w = (name === "Headline" || name === "Subline") && widths[name] ? `{${Math.round(widths[name]!)}}` : `"fill"`;
     return `<Text name=${q(name)} w=${w} font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${Math.round(
       s.sizePx * s.lineHeight,
     )}} letterSpacing={${round(s.trackingEm * s.sizePx)}} color=${q(hex)}${caseOf(s)} textAlign=${q(textAlign)} text={${JSON.stringify(
@@ -158,10 +158,18 @@ export function compose(
   const inner: string[] = [text("Headline", hl, words.headline, wordsHex)];
   // The price is the brand's biggest figure where it sets one (Dressmann: caps title, then the price, then the button).
   if (words.price) {
+    // The price before ("TIDLIGERE 399,-") is set small under the figure, as the brand sets it.
+    const { now, was } = splitPrice(words.price);
     const ps = fitted(styleOf(book, "price") ?? { ...hl, name: "price", sizePx: Math.round(hl.sizePx * 1.6), case: "none" }, l.fit?.price);
-    inner.push(text("Price", ps, words.price, wordsHex));
+    inner.push(text("Price", ps, now, wordsHex));
     colours.Price = wordsHex;
     sizes.Price = ps.sizePx;
+    if (was) {
+      const ws = styleOf(book, "label") ?? sub;
+      inner.push(text("Was", ws, was, wordsHex));
+      colours.Was = wordsHex;
+      sizes.Was = ws.sizePx;
+    }
   }
   if (words.subline) {
     inner.push(text("Subline", sub, words.subline, subHex));
@@ -209,6 +217,12 @@ export function compose(
 }
 
 /** A type style at a share of its size; its leading and tracking scale with it. */
+/** A price line split into the figure and the price before it, where the line carries one. */
+export function splitPrice(line: string): { now: string; was: string | null } {
+  const m = line.match(/^(.*?)\s+((?:tidligere|før|ord(?:inær|\.)?\s*pris|was|before)\b.*)$/i);
+  return m && m[1].trim() ? { now: m[1].trim(), was: m[2].trim() } : { now: line.trim(), was: null };
+}
+
 function fitted(s: Style, k?: number): Style {
   return k && k < 1 ? { ...s, sizePx: Math.round(s.sizePx * k) } : s;
 }

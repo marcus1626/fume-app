@@ -86,7 +86,7 @@ function compose(book, format, words, l, family, widths = {}, logo) {
   const text = (name, s, value, hex) => {
     const fam = family(s);
     fonts.push({ family: fam, weight: s.weight });
-    const w = name !== "Price" && widths[name] ? `{${Math.round(widths[name])}}` : `"fill"`;
+    const w = (name === "Headline" || name === "Subline") && widths[name] ? `{${Math.round(widths[name])}}` : `"fill"`;
     return `<Text name=${q(name)} w=${w} font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${Math.round(
       s.sizePx * s.lineHeight
     )}} letterSpacing={${round(s.trackingEm * s.sizePx)}} color=${q(hex)}${caseOf(s)} textAlign=${q(textAlign)} text={${JSON.stringify(
@@ -124,10 +124,17 @@ function compose(book, format, words, l, family, widths = {}, logo) {
   };
   const inner = [text("Headline", hl, words.headline, wordsHex)];
   if (words.price) {
+    const { now, was } = splitPrice(words.price);
     const ps = fitted(styleOf(book, "price") ?? { ...hl, name: "price", sizePx: Math.round(hl.sizePx * 1.6), case: "none" }, l.fit?.price);
-    inner.push(text("Price", ps, words.price, wordsHex));
+    inner.push(text("Price", ps, now, wordsHex));
     colours.Price = wordsHex;
     sizes.Price = ps.sizePx;
+    if (was) {
+      const ws = styleOf(book, "label") ?? sub;
+      inner.push(text("Was", ws, was, wordsHex));
+      colours.Was = wordsHex;
+      sizes.Was = ws.sizePx;
+    }
   }
   if (words.subline) {
     inner.push(text("Subline", sub, words.subline, subHex));
@@ -153,6 +160,10 @@ function compose(book, format, words, l, family, widths = {}, logo) {
   )}} fills={[{ type: "IMAGE", imageHash: "LOGO", imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />` : "";
   const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${shade}${block}${alone}${logoNode}</Frame>`;
   return { jsx, grid: g, fonts, colours, sizes, ...onPanel ? { panel: panelHex } : {} };
+}
+function splitPrice(line) {
+  const m = line.match(/^(.*?)\s+((?:tidligere|før|ord(?:inær|\.)?\s*pris|was|before)\b.*)$/i);
+  return m && m[1].trim() ? { now: m[1].trim(), was: m[2].trim() } : { now: line.trim(), was: null };
 }
 function fitted(s, k) {
   return k && k < 1 ? { ...s, sizePx: Math.round(s.sizePx * k) } : s;
@@ -967,7 +978,7 @@ function measure(doc, c, l, book, p, keep, logo = null) {
     shades.push(shade);
   }
   const boxes = { Words: words };
-  for (const n of ["Headline", "Price", "Subline", "CTA", "Action"]) {
+  for (const n of ["Headline", "Price", "Was", "Subline", "CTA", "Action"]) {
     const b = boxOf(doc, n);
     if (b) boxes[n] = b;
   }
@@ -982,7 +993,7 @@ function measure(doc, c, l, book, p, keep, logo = null) {
   if (boxes.Action && overlap(boxes.Action, words) > 0) {
     checks.push({ check: "fits", node: "CTA", ok: false, hard: true, note: "The call to action runs into the words." });
   }
-  for (const n of ["Headline", "Price", "Subline", "CTA words"]) {
+  for (const n of ["Headline", "Price", "Was", "Subline", "CTA words"]) {
     const split = splitWords(doc, n);
     if (split.length)
       checks.push({ check: "fits", node: n === "CTA words" ? "CTA" : n, ok: false, hard: true, note: `Breaks inside a word: ${split.join(", ")}.` });
@@ -1007,11 +1018,11 @@ function measure(doc, c, l, book, p, keep, logo = null) {
     });
   }
   const onPhoto = l.ground === "photo" || l.ground === "gradient";
-  for (const n of ["Headline", "Price", "Subline"]) {
+  for (const n of ["Headline", "Price", "Was", "Subline"]) {
     const b = boxes[n];
     if (!b) continue;
     const u = !onPhoto && c.panel ? { contrast: contrastOf(c.colours[n], c.panel), poor: 0, worst: 21, busy: 0 } : under(p, b, c.colours[n], shades, Math.max(16, c.sizes[n] * 0.5));
-    const need = n === "Subline" ? 4.5 : 3;
+    const need = n === "Subline" || n === "Was" ? 4.5 : 3;
     checks.push({
       check: "contrast",
       node: n,

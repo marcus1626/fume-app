@@ -354,7 +354,7 @@ export function measure(
     shades.push(shade);
   }
   const boxes: Record<string, Box> = { Words: words };
-  for (const n of ["Headline", "Price", "Subline", "CTA", "Action"]) {
+  for (const n of ["Headline", "Price", "Was", "Subline", "CTA", "Action"]) {
     const b = boxOf(doc, n);
     if (b) boxes[n] = b;
   }
@@ -369,7 +369,7 @@ export function measure(
   if (boxes.Action && overlap(boxes.Action, words) > 0) {
     checks.push({ check: "fits", node: "CTA", ok: false, hard: true, note: "The call to action runs into the words." });
   }
-  for (const n of ["Headline", "Price", "Subline", "CTA words"]) {
+  for (const n of ["Headline", "Price", "Was", "Subline", "CTA words"]) {
     const split = splitWords(doc, n);
     if (split.length)
       checks.push({ check: "fits", node: n === "CTA words" ? "CTA" : n, ok: false, hard: true, note: `Breaks inside a word: ${split.join(", ")}.` });
@@ -394,14 +394,14 @@ export function measure(
     });
   }
   const onPhoto = l.ground === "photo" || l.ground === "gradient";
-  for (const n of ["Headline", "Price", "Subline"]) {
+  for (const n of ["Headline", "Price", "Was", "Subline"]) {
     const b = boxes[n];
     if (!b) continue;
     // On a panel the words are read against the panel's own colour, not the picture under it.
     const u = !onPhoto && c.panel
       ? { contrast: contrastOf(c.colours[n], c.panel), poor: 0, worst: 21, busy: 0 }
       : under(p, b, c.colours[n], shades, Math.max(16, c.sizes[n] * 0.5));
-    const need = n === "Subline" ? 4.5 : 3;
+    const need = n === "Subline" || n === "Was" ? 4.5 : 3;
     checks.push({
       check: "contrast",
       node: n,
