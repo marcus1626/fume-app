@@ -821,6 +821,10 @@ async function designOn(asked) {
     hard: false,
     note: `${f.asked} is not on file; set in ${f.used} until the brand gives Fume its font.`
   }));
+  const standIns = [...new Set(fonts.filter((f) => f.standIn && f.asked === f.used && used.has(f.style)).map((f) => f.used))];
+  if (standIns.length) {
+    fontChecks.push({ check: "font", node: "Words", ok: false, hard: false, note: `Set in ${standIns.join(", ")}, the closest Google Font to the brand's own face, until the brand gives Fume its font file.` });
+  }
   const ownFaces = [...new Set(fonts.filter((f) => f.own && used.has(f.style)).map((f) => f.asked))];
   if (ownFaces.length) {
     fontChecks.push({ check: "font", node: "Words", ok: true, hard: false, note: `Set in the brand's own font file: ${ownFaces.join(", ")}.` });
@@ -1198,7 +1202,7 @@ async function familiesOf(book, files = []) {
     }
     chosen.set(s.name, used);
     const isOwn = Boolean(file) && used === file;
-    fonts.push({ style: s.name, asked, used: isOwn ? asked : used, ...isOwn ? { own: true } : {} });
+    fonts.push({ style: s.name, asked, used: isOwn ? asked : used, ...isOwn ? { own: true } : t?.source === "stand_in" ? { standIn: true } : {} });
     styles.push(!isOwn && (used !== asked || t?.source === "stand_in") && s.case === "upper" ? { ...s, lineHeight: standInLeading(s.lineHeight, await capHeightOf(used, s.weight)) } : s);
   }
   return { familyFor: (s) => chosen.get(s.name) ?? "Inter", fonts, book: { ...book, styles } };

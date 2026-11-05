@@ -67,7 +67,7 @@ export interface Designed {
   tried: number;
   /** What the first layouts tried failed on, for the expert. */
   attempts: { layout: Layout; failed: string[] }[];
-  fonts: { style: string; asked: string; used: string; own?: boolean }[];
+  fonts: { style: string; asked: string; used: string; own?: boolean; standIn?: boolean }[];
   /** Where the logo sits and which version of it, or null when it is left off. */
   logo: { where: Where; variant: string; contrast: number } | null;
   ms: number;
@@ -179,6 +179,10 @@ async function designOn(asked: Ask): Promise<Designed> {
       hard: false,
       note: `${f.asked} is not on file; set in ${f.used} until the brand gives Fume its font.`,
     }));
+  const standIns = [...new Set(fonts.filter((f) => f.standIn && f.asked === f.used && used.has(f.style)).map((f) => f.used))];
+  if (standIns.length) {
+    fontChecks.push({ check: "font", node: "Words", ok: false, hard: false, note: `Set in ${standIns.join(", ")}, the closest Google Font to the brand's own face, until the brand gives Fume its font file.` });
+  }
   const ownFaces = [...new Set(fonts.filter((f) => f.own && used.has(f.style)).map((f) => f.asked))];
   if (ownFaces.length) {
     fontChecks.push({ check: "font", node: "Words", ok: true, hard: false, note: `Set in the brand's own font file: ${ownFaces.join(", ")}.` });
@@ -622,7 +626,7 @@ const sameFamily = (a: string, b: string) => a.toLowerCase().replace(/[\s_-]+/g,
 
 /** The family each of the book's styles is set in: the brand's own when Fume has it, else the book's fallback. */
 async function familiesOf(book: DesignBook, files: BrandFace[] = []) {
-  const fonts: { style: string; asked: string; used: string; own?: boolean }[] = [];
+  const fonts: { style: string; asked: string; used: string; own?: boolean; standIn?: boolean }[] = [];
   const chosen = new Map<string, string>();
   const styles: Style[] = [];
   const own = useBrandFaces(files);
@@ -642,7 +646,7 @@ async function familiesOf(book: DesignBook, files: BrandFace[] = []) {
     chosen.set(s.name, used);
     const isOwn = Boolean(file) && used === file;
     // The brand's own file is reported by the family it holds.
-    fonts.push({ style: s.name, asked, used: isOwn ? asked : used, ...(isOwn ? { own: true } : {}) });
+    fonts.push({ style: s.name, asked, used: isOwn ? asked : used, ...(isOwn ? { own: true } : t?.source === "stand_in" ? { standIn: true } : {}) });
     styles.push(!isOwn && (used !== asked || t?.source === "stand_in") && s.case === "upper" ? { ...s, lineHeight: standInLeading(s.lineHeight, await capHeightOf(used, s.weight)) } : s);
   }
   return { familyFor: (s: Style) => chosen.get(s.name) ?? "Inter", fonts, book: { ...book, styles } };

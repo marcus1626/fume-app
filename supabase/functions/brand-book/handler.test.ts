@@ -146,3 +146,13 @@ Deno.test("a serif face falls back to serif, a sans to sans-serif", async () => 
   if (genericOf("Geist Mono") !== "monospace") throw new Error("mono");
   if (genericOf("Inter") !== "sans-serif") throw new Error("Inter");
 });
+
+Deno.test("a described face is not a family: the stand-in is set as what it is", async () => {
+  const { namedFaces } = await import("./book.ts");
+  const t = (family: string) => ({ role: "display", family, fallback: "Familjen Grotesk", weights: [800], source: "brand" as const, note: "" });
+  const out = namedFaces({ typefaces: [t("Grotesque display with flared, slightly quirky caps"), t("Roboto-like neo-grotesque sans"), t("Bold wide grotesque caps"), t("Source Serif Pro"), t("IBM Plex Sans Condensed")] } as never);
+  assertEquals(out.typefaces.map((x) => [x.family, x.source]), [
+    ["Familjen Grotesk", "stand_in"], ["Familjen Grotesk", "stand_in"], ["Familjen Grotesk", "stand_in"],
+    ["Source Serif Pro", "brand"], ["IBM Plex Sans Condensed", "brand"],
+  ]);
+});

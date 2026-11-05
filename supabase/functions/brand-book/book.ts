@@ -360,7 +360,26 @@ export function tokensOf(input: DesignAnswer) {
   return { tokens, css: lines.join("\n"), contrast: pairs.filter((p, i, all) => all.findIndex((q) => q.pair === p.pair) === i) };
 }
 
-export function toDesignBody(a: DesignAnswer, task: BookTask) {
+/**
+ * A typeface is a family's name. Where the writer described a face it could not name ("Grotesque display with flared
+ * caps"), the description is kept in the note and the stand-in is set as what it is (Dressmann, 5 Nov).
+ */
+export function namedFaces(a: DesignAnswer): DesignAnswer {
+  // A name is capitalised ("Source Serif Pro"); a description runs in lower case or says what it is like.
+  const described = (f: string) =>
+    /,|-like\b|\b(with|like|similar|style|looking)\b/.test(f) || /\b[a-z]{3,}\s+(caps|sans|serif|grotesque|slab|script)\b/.test(f);
+  return {
+    ...a,
+    typefaces: a.typefaces.map((t) =>
+      described(t.family) && t.fallback.trim()
+        ? { ...t, family: t.fallback.trim(), source: "stand_in" as const, note: `${t.family}. ${t.note}`.trim() }
+        : t
+    ),
+  };
+}
+
+export function toDesignBody(input: DesignAnswer, task: BookTask) {
+  const a = namedFaces(input);
   const { tokens, css, contrast: pairs } = tokensOf(a);
   const missing = ColourRole.options.filter((r) => !a.colours.some((c) => c.role === r && /^#[0-9a-f]{6}$/i.test(c.hex.trim())));
   return {
