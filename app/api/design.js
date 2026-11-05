@@ -319,9 +319,12 @@ function start(opts = {}) {
   source = opts.fonts ?? source;
   fontManager.setOnlineFontProviders({ google: opts.online ?? false, fontsource: false, bunny: false });
   fontManager.setHostFontLoader(async (family, style) => {
-    if (!source) return null;
     const weight = weightOf(style);
-    return source(family, weight, /italic/i.test(style));
+    const italic = /italic/i.test(style);
+    const own = brandFaces.get(family);
+    if (own) return nearestFace(own, weight, italic);
+    if (!source) return null;
+    return source(family, weight, italic);
   });
   engine ??= (async () => {
     const ck = await initCanvasKit();
@@ -334,6 +337,24 @@ function start(opts = {}) {
   return engine;
 }
 var measurer = null;
+var brandFaces = /* @__PURE__ */ new Map();
+function nearestFace(faces, weight, italic) {
+  const best = [...faces].sort((a, b) => Number(a.italic !== italic) - Number(b.italic !== italic) || Math.abs(a.weight - weight) - Math.abs(b.weight - weight))[0];
+  return best.bytes.slice().buffer;
+}
+function useBrandFaces(faces) {
+  const names = /* @__PURE__ */ new Map();
+  const byFamily = /* @__PURE__ */ new Map();
+  for (const f of faces) byFamily.set(f.family, [...byFamily.get(f.family) ?? [], f]);
+  for (const [family, list] of byFamily) {
+    const h = createHash("sha1");
+    for (const f of list) h.update(f.bytes);
+    const name = `${family} ${h.digest("hex").slice(0, 8)}`;
+    brandFaces.set(name, list);
+    names.set(family, name);
+  }
+  return names;
+}
 function wordWidths(doc, name) {
   const id = doc.ids.get(name);
   const node = id ? doc.graph.getNode(id) : null;
@@ -740,7 +761,7 @@ function hardFails(d) {
 }
 async function designOn(asked) {
   const t0 = Date.now();
-  const { familyFor, fonts, book: set } = await familiesOf(asked.book);
+  const { familyFor, fonts, book: set } = await familiesOf(asked.book, asked.fonts ?? []);
   const ask = { ...asked, book: set };
   const { book, format, words } = ask;
   const g = gridOf(book, format);
@@ -800,6 +821,10 @@ async function designOn(asked) {
     hard: false,
     note: `${f.asked} is not on file; set in ${f.used} until the brand gives Fume its font.`
   }));
+  const ownFaces = [...new Set(fonts.filter((f) => f.own && used.has(f.style)).map((f) => f.asked))];
+  if (ownFaces.length) {
+    fontChecks.push({ check: "font", node: "Words", ok: true, hard: false, note: `Set in the brand's own font file: ${ownFaces.join(", ")}.` });
+  }
   const out = best.doc;
   return {
     png: await png(out, 1),
@@ -1153,23 +1178,28 @@ async function pictureAt(picture, format, scale) {
 function gridSize(format) {
   return { feed: { w: 1080, h: 1350 }, square: { w: 1080, h: 1080 }, story: { w: 1080, h: 1920 }, banner: { w: 1920, h: 1080 } }[format];
 }
-async function familiesOf(book) {
+var sameFamily = (a, b) => a.toLowerCase().replace(/[\s_-]+/g, "") === b.toLowerCase().replace(/[\s_-]+/g, "");
+async function familiesOf(book, files = []) {
   const fonts = [];
   const chosen = /* @__PURE__ */ new Map();
   const styles = [];
+  const own = useBrandFaces(files);
+  const ownFor = (family) => family ? [...own].find(([f]) => sameFamily(f, family))?.[1] : void 0;
   for (const s of book.styles) {
     const t = book.typefaces.find((x) => x.role === s.font) ?? book.typefaces[0];
     const asked = t?.family ?? "Inter";
+    const file = ownFor(asked);
     let used = "Inter";
-    for (const f of [asked, t?.fallback, "Inter"]) {
+    for (const f of [file, asked, t?.fallback, "Inter"]) {
       if (f && await hasFont(f, s.weight)) {
         used = f;
         break;
       }
     }
     chosen.set(s.name, used);
-    fonts.push({ style: s.name, asked, used });
-    styles.push((used !== asked || t?.source === "stand_in") && s.case === "upper" ? { ...s, lineHeight: standInLeading(s.lineHeight, await capHeightOf(used, s.weight)) } : s);
+    const isOwn = Boolean(file) && used === file;
+    fonts.push({ style: s.name, asked, used: isOwn ? asked : used, ...isOwn ? { own: true } : {} });
+    styles.push(!isOwn && (used !== asked || t?.source === "stand_in") && s.case === "upper" ? { ...s, lineHeight: standInLeading(s.lineHeight, await capHeightOf(used, s.weight)) } : s);
   }
   return { familyFor: (s) => chosen.get(s.name) ?? "Inter", fonts, book: { ...book, styles } };
 }
@@ -1203,6 +1233,14 @@ function invalid(r, host) {
     return "The result needs signed upload links to Fume's storage.";
   }
   if (r.logo != null && !signedLink(r.logo, host, "read")) return "The logo must be a signed link to Fume's storage.";
+  if (r.fonts != null) {
+    if (!Array.isArray(r.fonts) || r.fonts.length > 12) return "Too many font files.";
+    for (const f of r.fonts) {
+      if (!signedLink(f?.url, host, "read")) return "A font file must be a signed link to Fume's storage.";
+      if (typeof f.family !== "string" || !/^[\p{L}\p{N} ._'&-]{1,60}$/u.test(f.family)) return "A font file's family is not one Fume reads.";
+      if (!Number.isInteger(f.weight) || f.weight < 100 || f.weight > 900 || typeof f.italic !== "boolean") return "A font file's face is not one Fume reads.";
+    }
+  }
   if (!r.format || !(r.format in SIZES)) return "Unknown format.";
   if (!r.book || !Array.isArray(r.book.styles) || !Array.isArray(r.book.colours) || !Array.isArray(r.book.typefaces)) {
     return "The brand's design system is missing.";
@@ -1244,6 +1282,15 @@ async function handle(req, deps) {
       logo = void 0;
     }
   }
+  const fonts = [];
+  for (const f of r.fonts ?? []) {
+    try {
+      const got = await deps.fetch(f.url, { signal: AbortSignal.timeout(15e3) });
+      const bytes = got.ok ? new Uint8Array(await got.arrayBuffer()) : null;
+      if (bytes && bytes.byteLength <= 8e6 && isSfnt(bytes)) fonts.push({ family: f.family, weight: f.weight, italic: f.italic, bytes });
+    } catch {
+    }
+  }
   const out = await (deps.design ?? design)({
     picture,
     format: r.format,
@@ -1251,7 +1298,8 @@ async function handle(req, deps) {
     words: r.words,
     prefer: r.prefer ?? {},
     keepClear: (r.keepClear ?? []).filter(isBox).slice(0, 8),
-    ...logo ? { logo } : {}
+    ...logo ? { logo } : {},
+    ...fonts.length ? { fonts } : {}
   });
   const put = async (link, bytes, contentType) => {
     const res = await deps.fetch(link, {
@@ -1273,6 +1321,11 @@ async function handle(req, deps) {
   } catch (e) {
     return json(502, { error: e.message });
   }
+}
+function isSfnt(b) {
+  if (b.length < 12) return false;
+  const tag = String.fromCharCode(b[0], b[1], b[2], b[3]);
+  return tag === "OTTO" || tag === "true" || b[0] === 0 && b[1] === 1 && b[2] === 0 && b[3] === 0;
 }
 function isBox(b) {
   const x = b;

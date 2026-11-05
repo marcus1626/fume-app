@@ -69,3 +69,29 @@ test("a picture that cannot be read in time is answered with why, never a crash"
   assert.match((await res.json()).error, /took too long/);
   assert.ok(!ran);
 });
+
+test("the brand's font files come only from Fume's storage, and only TrueType or OpenType ones are used", async () => {
+  const font = (n: string) => `https://${host}/storage/v1/object/sign/workspace-files/w/brand/font/${n}?token=t`;
+  const deps = { storageHost: host, fetch: fake().f, design: designed };
+  const bad = [
+    [{ family: "Brand Sans", weight: 700, italic: false, url: "https://evil.example/f.ttf" }],
+    [{ family: "<script>", weight: 700, italic: false, url: font("a") }],
+    [{ family: "Brand Sans", weight: 1200, italic: false, url: font("a") }],
+  ];
+  for (const fonts of bad) assert.equal((await handle(post({ ...body, fonts }), deps)).status, 400);
+  const sfnt = new Uint8Array(16);
+  sfnt.set([0, 1, 0, 0]);
+  let got: { family: string }[] = [];
+  const f = (async (url: string, init?: RequestInit) => {
+    if (init?.method === "PUT") return new Response("{}", { status: 200 });
+    if (url.includes("/brand/font/a")) return new Response(sfnt);
+    if (url.includes("/brand/font/b")) return new Response(new TextEncoder().encode("wOF2 not a ttf.."));
+    return new Response(new Uint8Array([1, 2, 3]), { headers: { "content-type": "image/png" } });
+  }) as typeof fetch;
+  const res = await handle(
+    post({ ...body, fonts: [{ family: "Brand Sans", weight: 700, italic: false, url: font("a") }, { family: "Brand Web", weight: 400, italic: false, url: font("b") }] }),
+    { storageHost: host, fetch: f, design: async (ask) => ((got = ask.fonts ?? []), designed()) },
+  );
+  assert.equal(res.status, 200);
+  assert.deepEqual(got.map((x) => x.family), ["Brand Sans"]);
+});

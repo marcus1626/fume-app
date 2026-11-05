@@ -131,3 +131,24 @@ test("the brand's own block colour from its ads, with words that read on it, and
   const quiet = { ...book, onPictures: { layouts: [{ name: "Quote", hasWords: true, band: "bottom", align: "left", wordsWidthPct: 80, ground: "photo", words: "light", cta: "none" }] } } as unknown as typeof book;
   assert.ok([...layoutsFor(quiet, "feed", {}, true)].every((x) => x.cta === "none"));
 });
+
+test("the brand's own font file sets its face, and only on its own brand's creatives", async () => {
+  const file = await readFile(new URL("../node_modules/@open-pencil/core/assets/Inter-Bold.ttf", import.meta.url));
+  const pic = await picture("#EDE6DA", "#2B2B2B");
+  const mine = await design({
+    picture: pic,
+    format: "feed",
+    book,
+    words,
+    keepClear: [product],
+    fonts: [{ family: "brand serif pro", weight: 700, italic: false, bytes: new Uint8Array(file) }],
+  });
+  const display = mine.fonts.find((f) => f.style === mine.layout.headline);
+  assert.deepEqual([display?.used, display?.own], ["Brand Serif Pro", true]);
+  assert.ok(mine.checks.some((c) => c.check === "font" && c.ok && /own font file/.test(c.note)));
+  // The next brand's book names the same family without a file: it never gets the first brand's.
+  const theirs = await design({ picture: pic, format: "feed", book, words, keepClear: [product] });
+  const other = theirs.fonts.find((f) => f.style === theirs.layout.headline);
+  assert.equal(other?.used, "Libre Baskerville");
+  assert.equal(other?.own, undefined);
+});

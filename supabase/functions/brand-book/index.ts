@@ -24,6 +24,7 @@ import {
 import { CREATIVES_SYSTEM, CreativesAnswer, creativesPrompt, withCreatives } from "./creatives.ts";
 import { AdWords, ADWORDS_SYSTEM, adWordsPage, adWordsPrompt } from "./adwords.ts";
 import { type BookLogo, dnaLogoUrl, LOGO_TYPES, safeSvg } from "./logo.ts";
+import { type BookFont, faceOf, fontFilesPage, withFontFiles } from "./fontfile.ts";
 import { handleBook, type Written } from "./handler.ts";
 import { LOOK_MODEL, LOOK_PARTS, LOOK_SYSTEM, type LookAnswer, type LookPicture, lookCostOf, lookPrompt, pageImages, toLookBody } from "./look.ts";
 
@@ -190,6 +191,38 @@ async function fileLogo(task: Parameters<typeof voicePrompt>[0]): Promise<BookLo
   }
 }
 
+/** The font files the brand's people added (sources of kind font), each read for its own family and weight. */
+async function fileFonts(task: Parameters<typeof voicePrompt>[0]): Promise<BookFont[]> {
+  try {
+    const { data, error } = await service.rpc("brand_font_files", { p_workspace_id: task.book.workspace_id });
+    if (error) console.error("brand-book font files", error.message);
+    const files = (Array.isArray(data) ? data : []) as { bucket: string; path: string; name: string | null; file: string; bytes: number }[];
+    const out: BookFont[] = [];
+    for (const [i, f] of files.entries()) {
+      if (f.bytes > 8_000_000) continue;
+      const { data: blob, error: e2 } = await service.storage.from(f.bucket).download(f.path);
+      if (e2) console.error("brand-book font file", e2.message);
+      if (!blob || blob.size > 8_000_000) continue;
+      const bytes = new Uint8Array(await blob.arrayBuffer());
+      const face = faceOf(bytes);
+      if (!face) continue;
+      // A copy beside the book, so the design layer reads only what the book names.
+      const bucket = "workspace-files";
+      const path = `${task.book.workspace_id}/brand/font/${task.book.id}-${i}`;
+      const { error: e3 } = await service.storage.from(bucket).upload(path, bytes, { contentType: "font/ttf", upsert: true });
+      if (e3) {
+        console.error("brand-book font file", e3.message);
+        continue;
+      }
+      out.push({ ...face, bucket, path, from: f.file || f.name || "a font file" });
+    }
+    return out;
+  } catch (e) {
+    console.error("brand-book font files", e instanceof Error ? e.message : String(e));
+    return [];
+  }
+}
+
 async function brandPictures(
   task: Parameters<typeof voicePrompt>[0],
   opts: { shots?: boolean } = {},
@@ -305,7 +338,10 @@ async function write(task: Parameters<typeof voicePrompt>[0], read: PageText[]):
   const voice = task.book.kind === "voice";
   // The voice is written from the brand's own ads first, then its pages.
   const ads = voice ? await readAdWords(task) : null;
-  const content = voice ? voicePrompt(task, ads?.page ? [ads.page, ...read] : read) : designPrompt(task, read);
+  // The brand's own font files are named to the design system's writer, so it names their families.
+  const fonts = voice ? [] : await fileFonts(task);
+  const fontPage = fontFilesPage(fonts);
+  const content = voice ? voicePrompt(task, ads?.page ? [ads.page, ...read] : read) : designPrompt(task, fontPage ? [fontPage, ...read] : read);
   const parts = voice ? VOICE_PARTS : DESIGN_PARTS;
   // The design system's tokens come from the pages; how the brand sets words on pictures, from its pictures, at the same time.
   const eyes = voice ? Promise.resolve(null) : readCreatives(task, read);
@@ -332,8 +368,8 @@ async function write(task: Parameters<typeof voicePrompt>[0], read: PageText[]):
   const design = toDesignBody(joined, task);
   const onBrand = seen?.answer ? withCreatives(design, seen.answer, seen.pictures) : { ...design, onPictures: null };
   // The logo file the design layer sets on every creative, or none yet.
-  const body = { ...onBrand, logo: seen?.logo ?? null };
-  if (!seen?.answer) (body as { gaps: string[] }).gaps = [...joined.gaps, "Fume could not read how the brand sets words on its pictures; upload a few of the brand's own ads."];
+  const body = withFontFiles({ ...onBrand, logo: seen?.logo ?? null }, fonts);
+  if (!seen?.answer) (body as { gaps: string[] }).gaps = [...((body as { gaps?: string[] }).gaps ?? joined.gaps), "Fume could not read how the brand sets words on its pictures; upload a few of the brand's own ads."];
   const sources = { sources: [...joined.sources, ...(seen?.answer?.sources ?? [])], pictures: (seen?.pictures ?? []).map((p) => p.url ?? p.path) };
   return { ok: true, body, sources, usage };
 }

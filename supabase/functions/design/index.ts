@@ -83,7 +83,15 @@ Deno.serve((req) =>
           const logo = mark?.bucket === "workspace-files" && mark.path?.startsWith(`${t.workspace_id}/brand/logo/`)
             ? await service.storage.from(mark.bucket).createSignedUrl(mark.path, 600)
             : null;
-          return { picture: read.data.signedUrl, png: png.data.signedUrl, fig: fig.data.signedUrl, logo: logo?.data?.signedUrl ?? null };
+          // The brand's own font files the book names, read from beside the book only.
+          const files = ((t.book.body as { fonts?: { family: string; weight: number; italic: boolean; bucket: string; path: string }[] }).fonts ?? [])
+            .filter((f) => f.bucket === "workspace-files" && f.path?.startsWith(`${t.workspace_id}/brand/font/`))
+            .slice(0, 12);
+          const signed = await Promise.all(files.map((f) => service.storage.from(f.bucket).createSignedUrl(f.path, 600)));
+          const fonts = files.flatMap((f, i) =>
+            signed[i].data?.signedUrl ? [{ family: f.family, weight: f.weight, italic: f.italic, url: signed[i].data!.signedUrl }] : []
+          );
+          return { picture: read.data.signedUrl, png: png.data.signedUrl, fig: fig.data.signedUrl, logo: logo?.data?.signedUrl ?? null, fonts };
         },
         read: download,
         picture: (t) => download(t.picture.bucket, t.picture.path),

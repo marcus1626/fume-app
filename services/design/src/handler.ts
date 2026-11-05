@@ -6,6 +6,7 @@ import { type DesignBook, type Format, SIZES } from "./book.ts";
 import { type Layout, type Words } from "./compose.ts";
 import { type Ask, design } from "./design.ts";
 import { type Box } from "./pixels.ts";
+import { type BrandFace } from "./render.ts";
 
 export interface DesignRequest {
   picture: string;
@@ -16,6 +17,8 @@ export interface DesignRequest {
   keepClear?: (Box & { what: string })[];
   /** A signed link to the brand's logo file in Fume's storage, when its design system names one. */
   logo?: string;
+  /** Signed links to the brand's own font files in Fume's storage, with the face each holds. */
+  fonts?: { family: string; weight: number; italic: boolean; url: string }[];
   upload: { png: string; fig: string };
 }
 
@@ -46,6 +49,14 @@ export function invalid(r: Partial<DesignRequest>, host: string): string | null 
     return "The result needs signed upload links to Fume's storage.";
   }
   if (r.logo != null && !signedLink(r.logo, host, "read")) return "The logo must be a signed link to Fume's storage.";
+  if (r.fonts != null) {
+    if (!Array.isArray(r.fonts) || r.fonts.length > 12) return "Too many font files.";
+    for (const f of r.fonts) {
+      if (!signedLink(f?.url, host, "read")) return "A font file must be a signed link to Fume's storage.";
+      if (typeof f.family !== "string" || !/^[\p{L}\p{N} ._'&-]{1,60}$/u.test(f.family)) return "A font file's family is not one Fume reads.";
+      if (!Number.isInteger(f.weight) || f.weight < 100 || f.weight > 900 || typeof f.italic !== "boolean") return "A font file's face is not one Fume reads.";
+    }
+  }
   if (!r.format || !(r.format in SIZES)) return "Unknown format.";
   if (!r.book || !Array.isArray(r.book.styles) || !Array.isArray(r.book.colours) || !Array.isArray(r.book.typefaces)) {
     return "The brand's design system is missing.";
@@ -91,6 +102,18 @@ export async function handle(req: Request, deps: Deps): Promise<Response> {
     }
   }
 
+  // The brand's own fonts are a help too: a file that cannot be read is left out, and the stand-in is reported.
+  const fonts: BrandFace[] = [];
+  for (const f of r.fonts ?? []) {
+    try {
+      const got = await deps.fetch(f.url, { signal: AbortSignal.timeout(15_000) });
+      const bytes = got.ok ? new Uint8Array(await got.arrayBuffer()) : null;
+      if (bytes && bytes.byteLength <= 8_000_000 && isSfnt(bytes)) fonts.push({ family: f.family, weight: f.weight, italic: f.italic, bytes });
+    } catch {
+      // left out
+    }
+  }
+
   const out = await (deps.design ?? design)({
     picture,
     format: r.format!,
@@ -99,6 +122,7 @@ export async function handle(req: Request, deps: Deps): Promise<Response> {
     prefer: r.prefer ?? {},
     keepClear: (r.keepClear ?? []).filter(isBox).slice(0, 8),
     ...(logo ? { logo } : {}),
+    ...(fonts.length ? { fonts } : {}),
   });
   const put = async (link: string, bytes: Uint8Array, contentType: string) => {
     const res = await deps.fetch(link, {
@@ -120,6 +144,13 @@ export async function handle(req: Request, deps: Deps): Promise<Response> {
   } catch (e) {
     return json(502, { error: (e as Error).message });
   }
+}
+
+/** Whether the bytes are a TrueType or OpenType file (the renderer reads no web font formats). */
+export function isSfnt(b: Uint8Array): boolean {
+  if (b.length < 12) return false;
+  const tag = String.fromCharCode(b[0], b[1], b[2], b[3]);
+  return tag === "OTTO" || tag === "true" || (b[0] === 0 && b[1] === 1 && b[2] === 0 && b[3] === 0);
 }
 
 function isBox(b: unknown): b is Box & { what: string } {

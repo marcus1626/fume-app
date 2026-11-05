@@ -5,7 +5,7 @@
 import { type DesignBook, type Format, type Grid, type Style, colourOf, componentOf, gridOf, headlineSteps, signatureOf, styleOf } from "./book.ts";
 import { type Band, type Composed, type FamilyFor, type Ground, type Layout, type Words, compose, shadeFill, shadeFor } from "./compose.ts";
 import { type Box, type Pixels, type Shade, contrast, luminance, overlap, rgbOf, under } from "./pixels.ts";
-import { type Doc, boxOf, build, fig, capHeightOf, hasFont, pixelsOf, place, png, splitWords, wordWidths } from "./render.ts";
+import { type BrandFace, type Doc, boxOf, build, fig, capHeightOf, hasFont, pixelsOf, place, png, splitWords, useBrandFaces, wordWidths } from "./render.ts";
 import { type Logo, type Where, CORNERS, cornersFor, logoOf } from "./logo.ts";
 import { inset } from "./room.ts";
 
@@ -20,6 +20,8 @@ export interface Ask {
   keepClear?: (Box & { what: string })[];
   /** The brand's logo file (SVG, PNG, JPEG or WebP), when its design system names one. */
   logo?: Uint8Array;
+  /** The brand's own font files its design system names (TrueType or OpenType). */
+  fonts?: BrandFace[];
 }
 
 /** The logo on one layout: its size, and the brand's own corner for it when its creatives show one. */
@@ -65,7 +67,7 @@ export interface Designed {
   tried: number;
   /** What the first layouts tried failed on, for the expert. */
   attempts: { layout: Layout; failed: string[] }[];
-  fonts: { style: string; asked: string; used: string }[];
+  fonts: { style: string; asked: string; used: string; own?: boolean }[];
   /** Where the logo sits and which version of it, or null when it is left off. */
   logo: { where: Where; variant: string; contrast: number } | null;
   ms: number;
@@ -110,7 +112,7 @@ function hardFails(d: Designed): number {
 
 async function designOn(asked: Ask): Promise<Designed> {
   const t0 = Date.now();
-  const { familyFor, fonts, book: set } = await familiesOf(asked.book);
+  const { familyFor, fonts, book: set } = await familiesOf(asked.book, asked.fonts ?? []);
   const ask = { ...asked, book: set };
   const { book, format, words } = ask;
   const g = gridOf(book, format);
@@ -177,6 +179,10 @@ async function designOn(asked: Ask): Promise<Designed> {
       hard: false,
       note: `${f.asked} is not on file; set in ${f.used} until the brand gives Fume its font.`,
     }));
+  const ownFaces = [...new Set(fonts.filter((f) => f.own && used.has(f.style)).map((f) => f.asked))];
+  if (ownFaces.length) {
+    fontChecks.push({ check: "font", node: "Words", ok: true, hard: false, note: `Set in the brand's own font file: ${ownFaces.join(", ")}.` });
+  }
   const out = best.doc;
   return {
     png: await png(out, 1),
@@ -611,24 +617,33 @@ function gridSize(format: Format) {
   return { feed: { w: 1080, h: 1350 }, square: { w: 1080, h: 1080 }, story: { w: 1080, h: 1920 }, banner: { w: 1920, h: 1080 } }[format];
 }
 
+/** Family names compared as a designer would: case, spaces and hyphens do not count. */
+const sameFamily = (a: string, b: string) => a.toLowerCase().replace(/[\s_-]+/g, "") === b.toLowerCase().replace(/[\s_-]+/g, "");
+
 /** The family each of the book's styles is set in: the brand's own when Fume has it, else the book's fallback. */
-async function familiesOf(book: DesignBook) {
-  const fonts: { style: string; asked: string; used: string }[] = [];
+async function familiesOf(book: DesignBook, files: BrandFace[] = []) {
+  const fonts: { style: string; asked: string; used: string; own?: boolean }[] = [];
   const chosen = new Map<string, string>();
   const styles: Style[] = [];
+  const own = useBrandFaces(files);
+  const ownFor = (family: string | undefined) =>
+    family ? [...own].find(([f]) => sameFamily(f, family))?.[1] : undefined;
   for (const s of book.styles) {
     const t = book.typefaces.find((x) => x.role === s.font) ?? book.typefaces[0];
     const asked = t?.family ?? "Inter";
+    const file = ownFor(asked);
     let used = "Inter";
-    for (const f of [asked, t?.fallback, "Inter"]) {
+    for (const f of [file, asked, t?.fallback, "Inter"]) {
       if (f && (await hasFont(f, s.weight))) {
         used = f;
         break;
       }
     }
     chosen.set(s.name, used);
-    fonts.push({ style: s.name, asked, used });
-    styles.push((used !== asked || t?.source === "stand_in") && s.case === "upper" ? { ...s, lineHeight: standInLeading(s.lineHeight, await capHeightOf(used, s.weight)) } : s);
+    const isOwn = Boolean(file) && used === file;
+    // The brand's own file is reported by the family it holds.
+    fonts.push({ style: s.name, asked, used: isOwn ? asked : used, ...(isOwn ? { own: true } : {}) });
+    styles.push(!isOwn && (used !== asked || t?.source === "stand_in") && s.case === "upper" ? { ...s, lineHeight: standInLeading(s.lineHeight, await capHeightOf(used, s.weight)) } : s);
   }
   return { familyFor: (s: Style) => chosen.get(s.name) ?? "Inter", fonts, book: { ...book, styles } };
 }

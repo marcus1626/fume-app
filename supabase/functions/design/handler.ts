@@ -5,6 +5,14 @@
 // model or the design service.
 import { formatOf, keepClearOf, type LayoutChoice, layoutsOf, type Review, type Take, type Words, wordsOf } from "./layer.ts";
 
+/** A signed link to one of the brand's own font files, with the face it holds (brand-book fontfile.ts). */
+export interface FontLink {
+  family: string;
+  weight: number;
+  italic: boolean;
+  url: string;
+}
+
 type Failure = { message: string } | null;
 export type Spent = { usd: number };
 
@@ -15,7 +23,7 @@ export interface Deps {
     finish(layerId: string, result: Record<string, unknown>): Promise<{ error: Failure }>;
     fail(layerId: string, error: string, usd: number): Promise<{ error: Failure }>;
     /** A link to read the picture, links to store the result where design_take said, and one to read the brand's logo. */
-    links(t: Take): Promise<{ picture: string; png: string; fig: string; logo?: string | null }>;
+    links(t: Take): Promise<{ picture: string; png: string; fig: string; logo?: string | null; fonts?: FontLink[] }>;
     /** The stored result, to look at it. */
     read(bucket: string, path: string): Promise<Uint8Array | null>;
     picture(t: Take): Promise<Uint8Array | null>;
@@ -72,6 +80,7 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
         : {},
       keepClear: choice ? keepClearOf(choice, format) : [],
       ...(links.logo ? { logo: links.logo } : {}),
+      ...(links.fonts?.length ? { fonts: links.fonts } : {}),
       upload: { png: links.png, fig: links.fig },
     };
     let res = await d.lay(request);

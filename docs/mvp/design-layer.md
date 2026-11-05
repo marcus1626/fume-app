@@ -61,6 +61,13 @@ Marcus: "Designet var ikke veldig on brand." What changed:
 - **Room on a studio picture** (`src/room.ts`). When no layout passes and the picture's top and left edges are a smooth
   backdrop, the picture is set at 82%, then 72%, in the bottom right corner, its backdrop carried on from a softened
   copy, and the keep-clear boxes move with it. A scene is never stretched. The expert is told.
+- **The brand's own font files** (5 Nov). A TrueType or OpenType file the brand adds as a font source
+  (`public.brand_font_files`) is read for the family, weight and italic its own tables hold (`brand-book/fontfile.ts`),
+  copied beside the book (`<workspace>/brand/font/`) and named in `body.fonts`; the writer is told the families, and a
+  typeface naming one becomes `source: "brand"`. A file no typeface names is a gap. The design function sends signed
+  links; the service sets the face before any stand-in and says so in a passing check. The renderer keeps every face
+  for the life of the process, so a brand's file is registered under its family plus a hash of its files, never the
+  plain family: another brand's book naming the same family never gets it. The .fig file names that hashed family.
 
 ## Still open
 

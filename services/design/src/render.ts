@@ -21,9 +21,12 @@ export function start(opts: { fonts?: FontSource; online?: boolean } = {}) {
   source = opts.fonts ?? source;
   fontManager.setOnlineFontProviders({ google: opts.online ?? false, fontsource: false, bunny: false });
   fontManager.setHostFontLoader(async (family: string, style: string) => {
-    if (!source) return null;
     const weight = weightOf(style);
-    return source(family, weight, /italic/i.test(style));
+    const italic = /italic/i.test(style);
+    const own = brandFaces.get(family);
+    if (own) return nearestFace(own, weight, italic);
+    if (!source) return null;
+    return source(family, weight, italic);
   });
   engine ??= (async () => {
     const ck = await initCanvasKit();
@@ -37,6 +40,39 @@ export function start(opts: { fonts?: FontSource; online?: boolean } = {}) {
 }
 
 let measurer: SkiaRenderer | null = null;
+
+/** One of the brand's own font files: the face it holds and its bytes. */
+export interface BrandFace {
+  family: string;
+  weight: number;
+  italic: boolean;
+  bytes: Uint8Array;
+}
+
+// The brand's own faces, by a family name made from the files themselves. The renderer keeps every face it has
+// loaded for the life of the process, so a brand's file is never registered under its plain family name: another
+// brand's book that names the same family would be set in it.
+const brandFaces = new Map<string, BrandFace[]>();
+
+function nearestFace(faces: BrandFace[], weight: number, italic: boolean): ArrayBuffer {
+  const best = [...faces].sort((a, b) => Number(a.italic !== italic) - Number(b.italic !== italic) || Math.abs(a.weight - weight) - Math.abs(b.weight - weight))[0];
+  return best.bytes.slice().buffer as ArrayBuffer;
+}
+
+/** Makes the brand's own files the renderer's to use; answers the family each one is set under, by its own name. */
+export function useBrandFaces(faces: BrandFace[]): Map<string, string> {
+  const names = new Map<string, string>();
+  const byFamily = new Map<string, BrandFace[]>();
+  for (const f of faces) byFamily.set(f.family, [...(byFamily.get(f.family) ?? []), f]);
+  for (const [family, list] of byFamily) {
+    const h = createHash("sha1");
+    for (const f of list) h.update(f.bytes);
+    const name = `${family} ${h.digest("hex").slice(0, 8)}`;
+    brandFaces.set(name, list);
+    names.set(family, name);
+  }
+  return names;
+}
 
 /** Each word of a text node set on one line, with its width: a word wider than its box runs out of it. */
 export function wordWidths(doc: Doc, name: string): { word: string; width: number; box: number }[] {
