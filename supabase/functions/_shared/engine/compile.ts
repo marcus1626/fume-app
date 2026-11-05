@@ -62,7 +62,7 @@ export function buildManifest(input: {
     items.push({ id: `colour-${slug(c.area)}`, kind: "product_colour", refId: `colours.${c.area}`, required: true, check: "code", requirement: `The ${c.area} is the colour ${c.valueHex}.`, expected: c.valueHex, suggestedSlot: "product" });
   for (const rule of applicableRules(brand, concept.lookKey)) {
     if (edit && rule.binding !== "hard") continue;
-    items.push({ id: `brand-${rule.id}`, kind: rule.binding === "hard" ? "brand_rule_hard" : "brand_rule_soft", refId: rule.id, required: rule.binding === "hard", check: "decision", requirement: rule.statement, suggestedSlot: edit ? "constraints" : rule.dimension === "people" ? "people" : LOOK_DIMENSIONS.has(rule.dimension) && hasCamera ? "camera" : "brand" });
+    items.push({ id: `brand-${rule.id}`, kind: rule.binding === "hard" ? "brand_rule_hard" : "brand_rule_soft", refId: rule.id, required: rule.binding === "hard", check: "decision", requirement: rule.statement, suggestedSlot: edit ? "constraints" : rule.dimension === "people" ? "people" : rule.dimension === "composition" ? "scene" : LOOK_DIMENSIONS.has(rule.dimension) && hasCamera ? "camera" : "brand" });
   }
   if (!edit)
     items.push({ id: "concept", kind: "concept", refId: concept.id, required: true, check: "decision", requirement: `The scene shows: ${concept.sceneIdea} The product's role: ${concept.productRole}.`, suggestedSlot: "scene" });

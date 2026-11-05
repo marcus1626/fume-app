@@ -386,3 +386,21 @@ Deno.test("the Look Book becomes rules for the camera slot, with the recipe clos
   const camera = compilePackage.manifest.filter((m) => m.suggestedSlot === "camera").map((m) => m.id);
   assertEquals(camera, ["brand-lookbook-recipe", "brand-lookbook-camera", "brand-lookbook-light", "brand-lookbook-grade", "brand-lookbook-texture"]);
 });
+
+Deno.test("a picture that carries words is made with room for them, where the plan or the brand puts them", async () => {
+  const { roomRules, wordsRoom } = await import("./context.ts");
+  const pc = task.plan.planned_creatives![0];
+  const room = { id: "db", version: 1, layouts: [
+    { name: "Panel", band: "middle" as const, align: "center" as const, wordsWidthPct: 38, ground: "colour_block" },
+    { name: "Beside the model, left", band: "middle" as const, align: "left" as const, wordsWidthPct: 25, ground: "photo" },
+  ] };
+  assertEquals(wordsRoom({ ...task, room }), null, "a picture without words needs no room");
+  const withWords = (scene: string) => ({ ...task, room, plan: { ...task.plan, planned_creatives: [{ ...pc, text: "FLANELLSKJORTER", scene }] } });
+  assertEquals(wordsRoom(withWords("A shirt laid flat. Right side of the frame kept clear for the headline."))?.side, "right");
+  const fromBrand = wordsRoom(withWords("A shirt laid flat on grey."));
+  assertEquals([fromBrand?.side, fromBrand?.share], ["left", 0.39]);
+  const [rule] = roomRules(withWords("A shirt laid flat on grey."));
+  assertEquals([rule.id, rule.binding, rule.dimension], ["room-for-words", "hard", "composition"]);
+  assertEquals(/right 61% of the frame's width/.test(rule.statement) && /never fills the frame/.test(rule.statement), true);
+  assertEquals(wordsRoom({ ...withWords("x"), master: { url: "u", title: "V1", picked: true } }), null, "a correction keeps its frame");
+});

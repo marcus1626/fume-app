@@ -64,6 +64,9 @@ Deno.serve((req) =>
           if (data?.run) {
             const { data: look } = await service.rpc("engine_look", { p_job_id: jobId });
             if (look) data.look = look;
+            // How the brand sets words on its pictures, so a picture that carries words leaves room for them.
+            const { data: room } = await service.rpc("engine_words_room", { p_job_id: jobId });
+            if (room) data.room = room;
           }
           return { data, error: err(error) };
         },

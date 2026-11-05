@@ -55,7 +55,47 @@ export type EngineTask = {
   composition?: { id: string; url: string; note?: string } | null;
   /** The brand's Look Book in use (public.engine_look): how its photographs are made. */
   look?: { id: string; version: number; state: string; body: LookBody } | null;
+  /** How the brand sets words on its pictures, from its design system in use (public.engine_words_room). */
+  room?: { id: string; version: number; layouts: RoomLayout[] } | null;
 };
+
+export type RoomLayout = { name: string; band: "top" | "middle" | "bottom"; align: "left" | "center" | "right"; wordsWidthPct: number; ground: string; why?: string };
+export type Side = "left" | "right" | "top" | "bottom";
+
+/**
+ * Where the words will go on a picture that carries them, and how much of the frame they need: the plan's own scene
+ * first ("Left side of the frame kept clear"), else the brand's first layout that sets words on the photograph. Null
+ * for a picture without words or a layout that sets them on its own panel.
+ */
+export function wordsRoom(task: EngineTask): { side: Side; share: number; from: string } | null {
+  const planned = plannedCreative(task);
+  if (!planned?.text?.trim() || task.master?.picked) return null;
+  const scene = planned.scene ?? "";
+  const said = scene.match(/\b(left|right|top|bottom|upper|lower)\b[^.]*\b(clear|empty|free|space|room)\b/i)?.[1]?.toLowerCase();
+  const fromScene: Side | undefined = said === "upper" ? "top" : said === "lower" ? "bottom" : (said as Side | undefined);
+  const layout = (task.room?.layouts ?? []).find((l) => l.ground === "photo");
+  const fromLayout: Side | undefined = !layout ? undefined
+    : layout.band === "top" ? "top" : layout.band === "bottom" ? "bottom" : layout.align === "right" ? "right" : "left";
+  const side = fromScene ?? fromLayout;
+  if (!side) return null;
+  const width = layout ? Math.min(60, Math.max(25, layout.wordsWidthPct)) / 100 : 0.3;
+  const share = side === "top" || side === "bottom" ? 0.32 : Math.round(Math.min(0.5, Math.max(0.38, width + 0.14)) * 100) / 100;
+  return { side, share, from: fromScene ? "the plan's scene" : `the brand's layout "${layout!.name}"` };
+}
+
+/** The room for the words as a rule the prompt must carry: where the product sits and how much bare ground is left. */
+export function roomRules(task: EngineTask): BrandRule[] {
+  const room = wordsRoom(task);
+  if (!room) return [];
+  const pct = Math.round(room.share * 100);
+  const rest = 100 - pct;
+  const across = room.side === "left" || room.side === "right";
+  const other = { left: "right", right: "left", top: "bottom", bottom: "top" }[room.side];
+  const statement = across
+    ? `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's width; the ${room.side} ${pct}% of the width, from top to bottom, is bare, even ground with nothing in it, the same ground carried on, for the words set later. The product never fills the frame.`
+    : `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's height; the ${room.side} ${pct}% of the height, edge to edge, is bare, even ground with nothing in it, the same ground carried on, for the words set later. The product never fills the frame.`;
+  return [{ id: "room-for-words", dimension: "composition", lookKey: null, statement, binding: "hard", epistemic: "known", scope: "core" }];
+}
 
 /** The parts of a Look Book (brand-book/look.ts) the prompt is written from. */
 export type LookBody = {
@@ -118,6 +158,7 @@ export function lookRules(task: EngineTask): BrandRule[] {
     // What the brand never does is its taste, held softly so a plan that asks for something else is not blocked by
     // it. The marks of a generated picture are looked for in the picture itself (evaluate.ts), not listed in the
     // prompt: long lists of what to avoid make image models worse.
+    ...rule("composition", "composition", join(look.composition?.subjectPlacement, look.composition?.negativeSpace)),
     ...rule("never-taste", "taste", taste.length ? `The brand's pictures avoid ${taste.join("; ")}` : null),
     ...(planned?.people && !/^no people/i.test(planned.people) && look.people?.skin ? rule("skin", "people", look.people.skin, "hard") : []),
   ];
@@ -293,6 +334,7 @@ export function buildBrand(task: EngineTask, lookKey: string | null): BrandConte
 
   rules.push(...brainRules(task.brain ?? NO_BRAIN));
   rules.push(...lookRules(task));
+  rules.push(...roomRules(task));
 
   return { rules, forbiddenTerms: [task.brand.name.replace(/\s*\(test\)\s*$/i, "").trim()].filter(Boolean) };
 }
