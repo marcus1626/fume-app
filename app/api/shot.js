@@ -42,6 +42,9 @@ var RATIOS = [
   ["9:16", 9 / 16]
 ];
 
+// src/format.ts
+var RATIO = { feed: 4 / 5, square: 1, story: 9 / 16, banner: 16 / 9 };
+
 // src/handler.ts
 function signedLink(link, host, kind) {
   if (typeof link !== "string") return false;

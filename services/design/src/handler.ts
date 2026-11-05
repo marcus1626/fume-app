@@ -8,6 +8,7 @@ import { type Ask, design } from "./design.ts";
 import { type Box } from "./pixels.ts";
 import { type BrandFace } from "./render.ts";
 import { blank, crop, cropFor, decode, encode, type Rect, resize, setBack } from "./fix.ts";
+import { canvasFor, fits, kept, MODEL_RATIO, pad, RATIO, setMaster, windowFor } from "./format.ts";
 
 export interface DesignRequest {
   picture: string;
@@ -80,6 +81,7 @@ export async function handle(req: Request, deps: Deps): Promise<Response> {
   // A surgical fix's two steps (fix.ts): the crop the image model redraws, and the redrawn crop set back.
   const op = (r as { op?: unknown }).op;
   if (op === "fix-crop" || op === "fix-set") return fixStep(r as unknown as FixRequest, deps);
+  if (op === "format" || op === "format-set") return formatStep(r as unknown as FormatRequest, deps);
   const why = invalid(r, deps.storageHost);
   if (why) return json(400, { error: why });
   // A 2K picture from storage can be slow while other layers are being made; a slow read is answered, never thrown.
@@ -244,6 +246,86 @@ async function fixStep(r: FixRequest, deps: Deps): Promise<Response> {
     const out = setBack(picture, await decode(redrawnBytes), rect, r.box);
     const png = await store(r.upload.png!, await encode(out.picture), deps);
     return json(200, { width: picture.width, height: picture.height, drift: out.drift, png });
+  } catch (e) {
+    return json(502, { error: (e as Error).message });
+  }
+}
+
+export interface FormatRequest {
+  op: "format" | "format-set";
+  /** The master's picture, and for format-set the image model's drawing, as signed links to Fume's storage. */
+  picture: string;
+  drawn?: string;
+  format: string;
+  /** format: crop or expand when the designer chose; the Engine chooses otherwise. */
+  method?: "crop" | "expand" | null;
+  /** format: what must stay whole (the product), as shares of the picture, when the language model found it. */
+  around?: Rect | null;
+  /** format: the designer's own crop window, as shares of the picture. */
+  window?: Rect | null;
+  upload: { png?: string; padded?: string };
+}
+
+/** Why the Engine chose as it did, for the designer. */
+export type FormatReason = "asked" | "fits" | "cuts" | "little" | "unknown";
+
+export function invalidFormat(r: Partial<FormatRequest>, host: string): string | null {
+  if (!signedLink(r.picture, host, "read")) return "The picture must be a signed link to Fume's storage.";
+  if (!r.format || !(r.format in RATIO)) return "Unknown format.";
+  if (r.method != null && r.method !== "crop" && r.method !== "expand") return "Crop or expand.";
+  if (r.around != null && !isShare(r.around)) return "The product's box lies inside the picture.";
+  if (r.window != null && (!isShare(r.window) || r.method !== "crop")) return "A crop window lies inside the picture.";
+  if (r.op === "format" && (!signedLink(r.upload?.png, host, "upload") || !signedLink(r.upload?.padded, host, "upload"))) {
+    return "The format needs signed upload links to Fume's storage.";
+  }
+  if (r.op === "format-set" && (!signedLink(r.drawn, host, "read") || !signedLink(r.upload?.png, host, "upload"))) {
+    return "The drawing and the result need signed links to Fume's storage.";
+  }
+  return null;
+}
+
+/** Crop when the product fits the new shape with air around it and the crop keeps most of the master; else expand. */
+export function chooseFormat(width: number, height: number, format: string, r: Pick<FormatRequest, "method" | "around" | "window">):
+  { method: "crop" | "expand"; window: Rect; reason: FormatReason } {
+  const ratio = RATIO[format];
+  if (r.window) {
+    const w = { x: Math.round(r.window.x * width), y: Math.round(r.window.y * height), w: Math.round(r.window.w * width), h: 0 };
+    w.h = Math.min(height - w.y, Math.round(w.w / ratio));
+    return { method: "crop", window: w, reason: "asked" };
+  }
+  const win = windowFor(width, height, ratio, r.around ?? undefined);
+  if (r.method) return { method: r.method, window: win, reason: "asked" };
+  if (!r.around) return { method: "expand", window: win, reason: "unknown" };
+  if (kept(width, height, ratio) < 0.6) return { method: "expand", window: win, reason: "little" };
+  return fits(r.around, win, width, height) ? { method: "crop", window: win, reason: "fits" } : { method: "expand", window: win, reason: "cuts" };
+}
+
+async function formatStep(r: FormatRequest, deps: Deps): Promise<Response> {
+  const why = invalidFormat(r, deps.storageHost);
+  if (why) return json(400, { error: why });
+  const got = await read(r.picture, deps);
+  if (got instanceof Response) return got;
+  try {
+    const master = await decode(got);
+    const canvas = canvasFor(master.width, master.height, RATIO[r.format]);
+    if (r.op === "format") {
+      const chose = chooseFormat(master.width, master.height, r.format, r);
+      const share = (w: Rect) => ({ x: w.x / master.width, y: w.y / master.height, w: w.w / master.width, h: w.h / master.height });
+      if (chose.method === "crop") {
+        const png = await store(r.upload.png!, await encode(crop(master, chose.window)), deps);
+        return json(200, { method: "crop", reason: chose.reason, window: share(chose.window), width: chose.window.w, height: chose.window.h, png });
+      }
+      const padded = await store(r.upload.padded!, await encode(pad(master, canvas)), deps);
+      return json(200, {
+        method: "expand", reason: chose.reason, window: share(chose.window), ratio: MODEL_RATIO[r.format],
+        width: canvas.width, height: canvas.height, at: canvas.at, padded,
+      });
+    }
+    const drawn = await read(r.drawn!, deps);
+    if (drawn instanceof Response) return drawn;
+    const out = setMaster(master, await decode(drawn), canvas);
+    const png = await store(r.upload.png!, await encode(out.picture), deps);
+    return json(200, { width: canvas.width, height: canvas.height, at: canvas.at, drift: out.drift, png });
   } catch (e) {
     return json(502, { error: (e as Error).message });
   }

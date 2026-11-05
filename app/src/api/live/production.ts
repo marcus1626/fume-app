@@ -95,6 +95,20 @@ type FixRow = {
   requested_by: Id;
   created_at: string;
 };
+/** A format made from the master's own picture (docs/mvp/formats.md); staff-only. */
+const MAKE = "id, creative_id, asked, method, why, window, state, error, result_candidate_id, created_at";
+type MakeRow = {
+  id: Id;
+  creative_id: Id;
+  asked: "crop" | "expand" | null;
+  method: "crop" | "expand" | null;
+  why: string | null;
+  window: { x: number; y: number; w: number; h: number } | null;
+  state: "making" | "made" | "failed";
+  error: string | null;
+  result_candidate_id: Id | null;
+  created_at: string;
+};
 type StoredEvaluation = Pick<Evaluation, "productTruth" | "brandRules" | "artefacts" | "notes"> & {
   evaluated?: boolean;
 };
@@ -205,17 +219,33 @@ export async function readDocuments(
       supabase().from("campaign_products").select("campaign_id, product_id").in("campaign_id", campaignIds),
     ),
   ]);
-  const childVersions = children.length
-    ? await rows<VersionRow>(
-        supabase()
-          .from("creative_versions")
-          .select(VERSION)
-          .in(
-            "creative_id",
-            children.map((c) => c.id),
-          )
-          .order("number"),
-      )
+  const [childVersions, makes] = children.length
+    ? await Promise.all([
+        rows<VersionRow>(
+          supabase()
+            .from("creative_versions")
+            .select(VERSION)
+            .in(
+              "creative_id",
+              children.map((c) => c.id),
+            )
+            .order("number"),
+        ),
+        rows<MakeRow>(
+          supabase()
+            .from("format_makes")
+            .select(MAKE)
+            .in(
+              "creative_id",
+              children.map((c) => c.id),
+            )
+            .order("created_at"),
+        ),
+      ])
+    : [[] as VersionRow[], [] as MakeRow[]];
+  const madeIds = makes.flatMap((x) => (x.result_candidate_id ? [x.result_candidate_id] : []));
+  const madeFormats = madeIds.length
+    ? await rows<{ id: Id; file_id: Id }>(supabase().from("candidates").select("id, file_id").in("id", madeIds))
     : [];
   // The pictures: on the creative's own jobs, and on the jobs its versions came from.
   const jobIds = [...new Set([...jobs.map((j) => j.id), ...versions.flatMap((v) => (v.job_id ? [v.job_id] : []))])];
@@ -223,7 +253,11 @@ export async function readDocuments(
     ? await rows<CandidateRow>(supabase().from("candidates").select(CANDIDATE).in("job_id", jobIds).order("created_at"))
     : [];
   const [files, fixRows] = await Promise.all([
-    fileUrls([...candidates.map((c) => c.file_id), ...childVersions.map((v) => v.file_id)]),
+    fileUrls([
+      ...candidates.map((c) => c.file_id),
+      ...childVersions.map((v) => v.file_id),
+      ...madeFormats.map((c) => c.file_id),
+    ]),
     candidates.length
       ? rows<FixRow>(
           supabase()
@@ -312,18 +346,39 @@ export async function readDocuments(
       (desk.picked && unsent.some((c) => c.id === desk.picked) ? desk.picked : undefined) ??
       unsent.at(-1)?.id ??
       (state !== "draft" ? (latest?.candidate_id ?? undefined) : undefined);
+    // Each format: made from the master's own picture (crop or expand, the Engine's choice unless the designer chose),
+    // then a version of its own creative once it goes to check.
     const formats: FormatTile[] = children
       .filter((ch) => ch.master_id === cr.id)
       .map((ch) => {
         const f = toFormat(ch.format);
         const made = childVersions.filter((v) => v.creative_id === ch.id).at(-1);
-        const image = made?.file_id ? files.get(made.file_id)?.url : undefined;
+        const mineMade = makes.filter((x) => x.creative_id === ch.id);
+        const last = mineMade.at(-1);
+        const engine = mineMade.find((x) => !x.asked && x.method);
+        const method = (last?.method ?? last?.asked ?? engine?.method ?? "native") as FormatTile["method"];
+        const result = last?.result_candidate_id
+          ? madeFormats.find((c) => c.id === last.result_candidate_id)
+          : undefined;
+        const image = made?.file_id
+          ? files.get(made.file_id)?.url
+          : result
+            ? files.get(result.file_id)?.url
+            : undefined;
+        const why =
+          last?.state === "failed"
+            ? `Fume could not make it: ${last.error ?? "it failed"}. Ask again, or choose the other way.`
+            : (last?.why ??
+              (last
+                ? "Fume is choosing how to make it from the master."
+                : `Made in its own creative, ${ch.title}, from the approved master.`));
         return {
           placementId: desk.placements?.[f] ?? placements.find((p) => p.format === f)?.id ?? f,
-          method: "native",
-          engineChose: "native",
-          why: `Made in its own creative, ${ch.title}, from the approved master: the Engine renders it, or a designer adds it by hand.`,
-          state: made ? "done" : "waiting",
+          method,
+          engineChose: (engine?.method ?? method) as FormatTile["engineChose"],
+          why,
+          ...(last?.method === "crop" && last.window ? { crop: last.window } : {}),
+          state: made || last?.state === "made" ? "done" : last?.state === "making" ? "making" : "waiting",
           ...(image ? { image } : {}),
         };
       });
@@ -406,6 +461,20 @@ export async function addManualVersion(live: Live, documentId: Id, file: File | 
 
 // ─── Make formats ────────────────────────────────────────────────────────────
 
+/** Asks for a format of the master (make_format) and starts the `format` function on it. */
+export async function makeFormat(creativeId: Id, method: "crop" | "expand" | null, window: FormatTile["crop"] | null) {
+  const make = await command<{ id: Id; state: string }>("make_format", {
+    p_creative_id: creativeId,
+    p_method: method,
+    p_window: window ?? null,
+  });
+  if (make.state === "making") {
+    const { error } = await supabase().functions.invoke("format", { body: { makeId: make.id } });
+    if (error) throw new FumeError("unavailable", "Fume could not start the format. Ask again in a moment.");
+  }
+  return make;
+}
+
 type Calls = "makeFormats";
 
 export function productionCalls(live: Live): Pick<FumeApi, Calls> {
@@ -435,14 +504,10 @@ export function productionCalls(live: Live): Pick<FumeApi, Calls> {
           p_key: requestKey(),
         });
         desk.placements = { ...desk.placements, [format]: placementId };
-        // The Engine makes the format from the approved master; when it cannot yet (no approval, the week's budget),
-        // the format waits to be rendered or made by hand in its own creative.
+        // Fume makes the format from the master's own picture: a crop when the product fits the new shape, else the
+        // scene extended. A format that already has a version follows the expert's correction in its own creative.
         try {
-          const job = await command<{ id: string }>("render_creative", {
-            p_creative_id: opened.id,
-            p_key: requestKey(),
-          });
-          void askEngine(job.id, true);
+          await makeFormat(opened.id, null, null);
         } catch {
           // Made later, from its own creative.
         }

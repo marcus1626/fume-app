@@ -17,8 +17,8 @@ function signatureOf(book, name, hasCta) {
   const rank = (l) => l.source === "pictures" ? 0 : l.source === "site" ? 1 : 2;
   const best = [...all].sort((a, b) => rank(a) - rank(b));
   const first = best[0];
-  const fits = hasCta && first ? best.find((l) => rank(l) === rank(first) && l.cta !== "none") : void 0;
-  return fits ?? first ?? null;
+  const fits2 = hasCta && first ? best.find((l) => rank(l) === rank(first) && l.cta !== "none") : void 0;
+  return fits2 ?? first ?? null;
 }
 function carriesWords(l) {
   return l.hasWords ?? !/\b(no|without) (words|text|copy)\b|\b(logo|swoosh|mark) alone\b/i.test(l.name);
@@ -104,7 +104,7 @@ function compose(book, format, words, l, family, widths = {}, logo) {
     const bg = l.ctaFill === "light" ? light : l.ctaFill === "dark" ? dark : colourOf(book, c?.background ?? "cta") ?? colourOf(book, "primary") ?? "#000000";
     const fg = l.ctaFill === "light" ? ownGround && !isLight(ownGround) ? ownGround : dark : l.ctaFill === "dark" ? light : colourOf(book, c?.colour ?? "cta_text") ?? "#FFFFFF";
     sizes.CTA = s.sizePx;
-    const pad2 = c?.paddingPx ?? 24;
+    const pad3 = c?.paddingPx ?? 24;
     const line = Math.round(s.sizePx * s.lineHeight);
     if (look === "underline" || look === "text") {
       colours.CTA = wordsHex;
@@ -114,8 +114,8 @@ function compose(book, format, words, l, family, widths = {}, logo) {
       )}} color=${q(wordsHex)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} />${rule}</Frame>`;
     }
     colours.CTA = fg;
-    const py = Math.max(Math.round(pad2 * 0.6), Math.ceil((56 - line) / 2));
-    return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(pad2 * 1.5)}} py={${py}} rounded={${radiusOf(
+    const py = Math.max(Math.round(pad3 * 0.6), Math.ceil((56 - line) / 2));
+    return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(pad3 * 1.5)}} py={${py}} rounded={${radiusOf(
       book,
       look === "box" ? "small" : c?.radius ?? "pill"
     )}} bg=${q(bg)}><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
@@ -142,14 +142,14 @@ function compose(book, format, words, l, family, widths = {}, logo) {
     sizes.Subline = sub.sizePx;
   }
   const ctaWithWords = words.cta && (l.cta === "with_words" || l.cta === "bottom" && l.band === "bottom");
-  const pad = onPanel ? panel?.paddingPx ?? 32 : 0;
+  const pad2 = onPanel ? panel?.paddingPx ?? 32 : 0;
   const panelHex = ownGround ? ownGround : isBlock ? colourOf(book, "primary") ?? "#000000" : colourOf(book, panel?.background ?? "surface") ?? colourOf(book, "background") ?? "#FFFFFF";
   const panelBg = onPanel ? ` bg=${q(panelHex)}` : "";
   const insideLogo = logo?.inside ? `<Rectangle name="Logo" w={${Math.round(logo.w)}} h={${Math.round(logo.h)}} fills={[{ type: "IMAGE", imageHash: "LOGO", imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />` : "";
   const panelRadius = onPanel ? ` rounded={${radiusOf(book, panel?.radius ?? "none")}}` : "";
   const block = `<Frame name="Words" position="absolute" x={${x}} y={${g.top}} w={${width}} h="hug" flex="col" items=${q(
     items
-  )} gap={${unit * 5}}${panelBg}${panelRadius} p={${pad}}><Frame name="Lines" w="fill" h="hug" flex="col" items=${q(items)} gap={${unit * 3}}>${inner.join("")}</Frame>${ctaWithWords ? cta() : ""}</Frame>`.replace(
+  )} gap={${unit * 5}}${panelBg}${panelRadius} p={${pad2}}><Frame name="Lines" w="fill" h="hug" flex="col" items=${q(items)} gap={${unit * 3}}>${inner.join("")}</Frame>${ctaWithWords ? cta() : ""}</Frame>`.replace(
     '<Frame name="Lines"',
     `${insideLogo}<Frame name="Lines"`
   );
@@ -1135,8 +1135,8 @@ function placeLogo(doc, g, plan, boxes, keep, p, shades, l) {
   let best = null;
   for (const where of cornersFor(plan.first, l.band, l.align)) {
     const box = boxAt(where, g, plan.w, plan.h);
-    const pad = { x: box.x - 16, y: box.y - 16, w: box.w + 32, h: box.h + 32 };
-    if (avoid.some((a) => overlap(pad, a) > 0)) continue;
+    const pad2 = { x: box.x - 16, y: box.y - 16, w: box.w + 32, h: box.h + 32 };
+    if (avoid.some((a) => overlap(pad2, a) > 0)) continue;
     const read2 = plan.logo.variants.map((v) => ({ v, contrast: under(p, box, v.hex, shades, Math.max(8, Math.round(plan.h * 0.5))).contrast }));
     const pick = preferDrawn(plan.logo, read2);
     if (!best || pick.contrast > best.contrast + 0.01) best = { where, box, v: pick.v, contrast: pick.contrast };
@@ -1263,8 +1263,8 @@ var RATIOS = [
 ];
 function cropFor(box, width, height, least = 384) {
   const bx = box.x * width, by = box.y * height, bw = box.w * width, bh = box.h * height;
-  const pad = Math.max(bw, bh) * 0.4;
-  let w = Math.max(least, bw + 2 * pad), h = Math.max(least, bh + 2 * pad);
+  const pad2 = Math.max(bw, bh) * 0.4;
+  let w = Math.max(least, bw + 2 * pad2), h = Math.max(least, bh + 2 * pad2);
   const [ratio, r] = RATIOS.reduce((a, b) => Math.abs(Math.log(b[1] / (w / h))) < Math.abs(Math.log(a[1] / (w / h))) ? b : a);
   if (w / h < r) w = h * r;
   else h = w / r;
@@ -1387,6 +1387,104 @@ async function encode(img) {
   return bytes;
 }
 
+// src/format.ts
+var RATIO = { feed: 4 / 5, square: 1, story: 9 / 16, banner: 16 / 9 };
+var MODEL_RATIO = { feed: "4:5", square: "1:1", story: "9:16", banner: "16:9" };
+function windowFor(width, height, ratio, around) {
+  let w = width, h = Math.round(width / ratio);
+  if (h > height) {
+    h = height;
+    w = Math.round(height * ratio);
+  }
+  const cx = around ? (around.x + around.w / 2) * width : width / 2;
+  const cy = around ? (around.y + around.h / 2) * height : height / 2;
+  const x = Math.round(Math.min(Math.max(0, cx - w / 2), width - w));
+  const y = Math.round(Math.min(Math.max(0, cy - h / 2), height - h));
+  return { x, y, w, h };
+}
+function fits(box, win, width, height, air = 0.04) {
+  const bx0 = box.x * width, by0 = box.y * height, bx1 = (box.x + box.w) * width, by1 = (box.y + box.h) * height;
+  const ax = win.w * air, ay = win.h * air;
+  return bx0 >= win.x + ax - 0.5 && by0 >= win.y + ay - 0.5 && bx1 <= win.x + win.w - ax + 0.5 && by1 <= win.y + win.h - ay + 0.5;
+}
+var kept = (width, height, ratio) => {
+  const w = windowFor(width, height, ratio);
+  return w.w * w.h / (width * height);
+};
+function canvasFor(width, height, ratio) {
+  if (width / height > ratio) {
+    const H = Math.round(width / ratio);
+    return { width, height: H, at: { x: 0, y: Math.round((H - height) / 2), w: width, h: height } };
+  }
+  const W = Math.round(height * ratio);
+  return { width: W, height, at: { x: Math.round((W - width) / 2), y: 0, w: width, h: height } };
+}
+function pad(master, canvas, most = 2048) {
+  const data = new Uint8Array(canvas.width * canvas.height * 4);
+  for (let i = 0; i < data.length; i += 4) data.set([128, 128, 128, 255], i);
+  for (let y = 0; y < master.height; y++) {
+    const from = y * master.width * 4;
+    data.set(master.data.subarray(from, from + master.width * 4), ((canvas.at.y + y) * canvas.width + canvas.at.x) * 4);
+  }
+  const out = { width: canvas.width, height: canvas.height, data };
+  const k = most / Math.max(canvas.width, canvas.height);
+  return k < 1 ? resize(out, Math.round(canvas.width * k), Math.round(canvas.height * k)) : out;
+}
+function setMaster(master, drawn, canvas, seam = 48) {
+  const out = resize(drawn, canvas.width, canvas.height);
+  const at = canvas.at;
+  const counts = [new Uint32Array(511), new Uint32Array(511), new Uint32Array(511)];
+  let n = 0;
+  for (let y = 0; y < master.height; y += 4) {
+    for (let x = 0; x < master.width; x += 4) {
+      const i = (y * master.width + x) * 4;
+      const j = ((at.y + y) * canvas.width + at.x + x) * 4;
+      for (let c = 0; c < 3; c++) counts[c][master.data[i + c] - out.data[j + c] + 255]++;
+      n++;
+    }
+  }
+  const median = (h) => {
+    let seen = 0;
+    for (let v = 0; v < h.length; v++) if ((seen += h[v]) * 2 >= n) return v - 255;
+    return 0;
+  };
+  const shift = n ? counts.map(median) : [0, 0, 0];
+  for (let y = 0; y < canvas.height; y++) {
+    for (let x = 0; x < canvas.width; x++) {
+      if (x >= at.x && x < at.x + at.w && y >= at.y && y < at.y + at.h) continue;
+      const j = (y * canvas.width + x) * 4;
+      for (let c = 0; c < 3; c++) out.data[j + c] = Math.min(255, Math.max(0, Math.round(out.data[j + c] + shift[c])));
+      out.data[j + 3] = 255;
+    }
+  }
+  const open = { left: at.x > 0, right: at.x + at.w < canvas.width, top: at.y > 0, bottom: at.y + at.h < canvas.height };
+  for (let y = 0; y < master.height; y++) {
+    for (let x = 0; x < master.width; x++) {
+      const d = Math.min(
+        open.left ? x : Infinity,
+        open.right ? master.width - 1 - x : Infinity,
+        open.top ? y : Infinity,
+        open.bottom ? master.height - 1 - y : Infinity
+      );
+      const i = (y * master.width + x) * 4;
+      const j = ((at.y + y) * canvas.width + at.x + x) * 4;
+      if (d >= seam) {
+        out.data.set(master.data.subarray(i, i + 4), j);
+        out.data[j + 3] = 255;
+        continue;
+      }
+      const t = d / seam;
+      const a = t * t * (3 - 2 * t);
+      for (let c = 0; c < 3; c++) {
+        const v = Math.min(255, Math.max(0, out.data[j + c] + shift[c]));
+        out.data[j + c] = Math.round(v * (1 - a) + master.data[i + c] * a);
+      }
+      out.data[j + 3] = 255;
+    }
+  }
+  return { picture: out, drift: Math.round(Math.hypot(shift[0], shift[1], shift[2]) * 10) / 10 };
+}
+
 // src/handler.ts
 var json = (status, body) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 function signedLink(link, host, kind) {
@@ -1433,6 +1531,7 @@ async function handle(req, deps) {
   }
   const op = r.op;
   if (op === "fix-crop" || op === "fix-set") return fixStep(r, deps);
+  if (op === "format" || op === "format-set") return formatStep(r, deps);
   const why = invalid(r, deps.storageHost);
   if (why) return json(400, { error: why });
   let picture;
@@ -1566,6 +1665,69 @@ async function fixStep(r, deps) {
     const out = setBack(picture, await decode(redrawnBytes), rect, r.box);
     const png2 = await store(r.upload.png, await encode(out.picture), deps);
     return json(200, { width: picture.width, height: picture.height, drift: out.drift, png: png2 });
+  } catch (e) {
+    return json(502, { error: e.message });
+  }
+}
+function invalidFormat(r, host) {
+  if (!signedLink(r.picture, host, "read")) return "The picture must be a signed link to Fume's storage.";
+  if (!r.format || !(r.format in RATIO)) return "Unknown format.";
+  if (r.method != null && r.method !== "crop" && r.method !== "expand") return "Crop or expand.";
+  if (r.around != null && !isShare(r.around)) return "The product's box lies inside the picture.";
+  if (r.window != null && (!isShare(r.window) || r.method !== "crop")) return "A crop window lies inside the picture.";
+  if (r.op === "format" && (!signedLink(r.upload?.png, host, "upload") || !signedLink(r.upload?.padded, host, "upload"))) {
+    return "The format needs signed upload links to Fume's storage.";
+  }
+  if (r.op === "format-set" && (!signedLink(r.drawn, host, "read") || !signedLink(r.upload?.png, host, "upload"))) {
+    return "The drawing and the result need signed links to Fume's storage.";
+  }
+  return null;
+}
+function chooseFormat(width, height, format, r) {
+  const ratio = RATIO[format];
+  if (r.window) {
+    const w = { x: Math.round(r.window.x * width), y: Math.round(r.window.y * height), w: Math.round(r.window.w * width), h: 0 };
+    w.h = Math.min(height - w.y, Math.round(w.w / ratio));
+    return { method: "crop", window: w, reason: "asked" };
+  }
+  const win = windowFor(width, height, ratio, r.around ?? void 0);
+  if (r.method) return { method: r.method, window: win, reason: "asked" };
+  if (!r.around) return { method: "expand", window: win, reason: "unknown" };
+  if (kept(width, height, ratio) < 0.6) return { method: "expand", window: win, reason: "little" };
+  return fits(r.around, win, width, height) ? { method: "crop", window: win, reason: "fits" } : { method: "expand", window: win, reason: "cuts" };
+}
+async function formatStep(r, deps) {
+  const why = invalidFormat(r, deps.storageHost);
+  if (why) return json(400, { error: why });
+  const got = await read(r.picture, deps);
+  if (got instanceof Response) return got;
+  try {
+    const master = await decode(got);
+    const canvas = canvasFor(master.width, master.height, RATIO[r.format]);
+    if (r.op === "format") {
+      const chose = chooseFormat(master.width, master.height, r.format, r);
+      const share = (w) => ({ x: w.x / master.width, y: w.y / master.height, w: w.w / master.width, h: w.h / master.height });
+      if (chose.method === "crop") {
+        const png3 = await store(r.upload.png, await encode(crop(master, chose.window)), deps);
+        return json(200, { method: "crop", reason: chose.reason, window: share(chose.window), width: chose.window.w, height: chose.window.h, png: png3 });
+      }
+      const padded = await store(r.upload.padded, await encode(pad(master, canvas)), deps);
+      return json(200, {
+        method: "expand",
+        reason: chose.reason,
+        window: share(chose.window),
+        ratio: MODEL_RATIO[r.format],
+        width: canvas.width,
+        height: canvas.height,
+        at: canvas.at,
+        padded
+      });
+    }
+    const drawn = await read(r.drawn, deps);
+    if (drawn instanceof Response) return drawn;
+    const out = setMaster(master, await decode(drawn), canvas);
+    const png2 = await store(r.upload.png, await encode(out.picture), deps);
+    return json(200, { width: canvas.width, height: canvas.height, at: canvas.at, drift: out.drift, png: png2 });
   } catch (e) {
     return json(502, { error: e.message });
   }

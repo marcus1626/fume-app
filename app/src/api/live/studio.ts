@@ -21,6 +21,7 @@ import {
   type CandidateRow,
   creativeMode,
   detailId,
+  makeFormat,
   deskOf,
   readDocument,
   readDocuments,
@@ -397,11 +398,24 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
         "A version sent to check stays there. The expert can ask for a correction, and the next picture becomes the next version.",
       );
     },
-    async setFormatTile() {
-      throw new FumeError(
-        "unavailable",
-        "Crop and expand are the Engine's. Until Wednesday each format is made by hand.",
+    // The designer switches crop and expand, or moves the crop window: the format is made again from the master.
+    async setFormatTile(documentId, placementId, change) {
+      const { creative, doc } = await readDocument(live, documentId);
+      if (creative.kind !== "master") throw new FumeError("invalid", "Formats are made from a master.");
+      const tile = doc.formats?.find((t) => t.placementId === placementId);
+      const format = placements.find((p) => p.id === placementId)?.format ?? placementId;
+      if (!tile) throw new FumeError("not_found", "Make this format first.");
+      const method = change.crop ? "crop" : change.method;
+      if (method !== "crop" && method !== "expand") {
+        throw new FumeError("invalid", "A format is cropped or expanded from the master.");
+      }
+      const children = await rows<{ id: Id; format: string }>(
+        supabase().from("creatives").select("id, format").eq("master_id", creative.id).eq("kind", "format"),
       );
+      const child = children.find((c) => (c.format === "banner" ? "feed" : c.format) === format);
+      if (!child) throw new FumeError("not_found", "Make this format first.");
+      await makeFormat(child.id, method, change.crop ?? null);
+      return (await readDocument(live, documentId)).doc;
     },
   };
   return calls;
