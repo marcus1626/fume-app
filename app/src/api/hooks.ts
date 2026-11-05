@@ -136,6 +136,7 @@ export const useRepair = () =>
 export const usePickGeneration = () =>
   useM((a, v: { sessionId: Id; generationId: Id }) => a.pickGeneration(v.sessionId, v.generationId));
 export const useSendToCheck = () => useM((a, sessionId: Id) => a.sendToCheck(sessionId));
+export const useTeachEngine = () => useM((a, v: Parameters<FumeApi["teachEngine"]>[0]) => a.teachEngine(v));
 
 // Studio documents
 export const useStudioModes = () => useQ(["studio", "modes"], (a) => a.studioModes());
@@ -158,6 +159,11 @@ export const usePickVersion = () =>
   useM((a, v: { documentId: Id; versionId: Id }) => a.pickVersion(v.documentId, v.versionId));
 export const useAddVersion = () =>
   useM((a, v: { documentId: Id; file: File; note: string }) => a.addVersion(v.documentId, v.file, v.note));
+// Graphic design by Fume (FLOWS §33)
+export const useDesignAsk = (documentId: Id, versionId: Id | undefined) =>
+  useQ(["design-ask", documentId, versionId], (a) => a.designAsk(documentId, versionId!), Boolean(versionId));
+export const useDesignVersion = () =>
+  useM((a, v: { documentId: Id; versionId: Id; ask?: string }) => a.designVersion(v.documentId, v.versionId, v.ask));
 export const useOverrideProduct = () =>
   useM((a, v: { documentId: Id; field: string; value: string; scope: "this_render" | "product" }) =>
     a.overrideProduct(v.documentId, v),
@@ -179,7 +185,13 @@ export const useQaQueue = (workspaceId?: Id) =>
   useQ(["studio", "qa", workspaceId ?? "all"], (a) => a.qaQueue(workspaceId));
 export const useQaCheck = () => useM((a, itemId: Id) => a.qaCheck(itemId));
 export const useQaFeedback = () =>
-  useM((a, v: { itemId: Id; text: string; pins?: QaPin[] }) => a.qaFeedback(v.itemId, v.text, v.pins));
+  useM((a, v: { itemId: Id; text: string; pins?: QaPin[]; findingIds?: Id[] }) =>
+    a.qaFeedback(v.itemId, v.text, v.pins, v.findingIds),
+  );
+export const useQaSettleFinding = () =>
+  useM((a, v: { itemId: Id; findingId: Id; status: "accepted" | "open" }) =>
+    a.qaSettleFinding(v.itemId, v.findingId, v.status),
+  );
 export const useQaEdit = () =>
   useM((a, v: { itemId: Id; layers: Parameters<FumeApi["qaEdit"]>[1] }) => a.qaEdit(v.itemId, v.layers));
 export const useQaToStudio = () => useM((a, itemId: Id) => a.qaToStudio(itemId));
@@ -481,6 +493,14 @@ export const useBriefAlternatives = () => {
 export const useSetColourUses = () => useM((a, v: Parameters<FumeApi["setColourUses"]>[0]) => a.setColourUses(v));
 export const useMoveImage = () => useM((a, v: Parameters<FumeApi["moveImage"]>[0]) => a.moveImage(v));
 export const useDecideVoicePart = () => useM((a, v: Parameters<FumeApi["decideVoicePart"]>[0]) => a.decideVoicePart(v));
+
+// The brand's books (FLOWS §30)
+export const useBrandBooks = () => useQ(["brand", "books"], (a) => a.brandBooks());
+export const useWriteBrandBook = () => useM((a, v: Parameters<FumeApi["writeBrandBook"]>[0]) => a.writeBrandBook(v));
+export const useCheckBrandBook = () => useM((a, bookId: Id) => a.checkBrandBook(bookId));
+export const useApproveBrandBook = () => useM((a, bookId: Id) => a.approveBrandBook(bookId));
+export const useAskBrandBookChange = () =>
+  useM((a, v: Parameters<FumeApi["askBrandBookChange"]>[0]) => a.askBrandBookChange(v));
 export const usePassTastePair = () => useM((a, v: Parameters<FumeApi["passTastePair"]>[0]) => a.passTastePair(v));
 export const useUpdateProfile = () => useM((a, v: Parameters<FumeApi["updateProfile"]>[0]) => a.updateProfile(v));
 

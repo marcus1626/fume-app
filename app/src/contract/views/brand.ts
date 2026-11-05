@@ -2,6 +2,8 @@
 
 import type { Board } from "../entities/campaigns";
 import type {
+  BrandBook,
+  BrandBookKind,
   BrandDna,
   BrandIdentity,
   BrandModel,
@@ -41,4 +43,22 @@ export interface BrandAssetsView {
   presets: BrandPreset[];
   models: BrandModel[];
   references: BrandReference[];
+}
+
+/** The brand's books (FLOWS §30), newest version first: only the versions the reader may see. A customer reads a
+ *  version once an expert has checked it. */
+export interface BrandBooksView {
+  voice: BrandBook[];
+  design: BrandBook[];
+  look: BrandBook[];
+  /** To a customer: the newest version of each book on its way that she may not read yet, as its number and state
+   *  only, never its words (brand_book_progress). Fume's own people read those versions themselves. */
+  progress?: BookProgress[];
+}
+
+export interface BookProgress {
+  kind: BrandBookKind;
+  version: number;
+  state: "writing" | "draft" | "failed";
+  updatedAt: string;
 }

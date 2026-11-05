@@ -1820,13 +1820,13 @@ anna openStudio({"campaignId":"c-autumn","slot":"Master 3","workspaceId":"w-lysn
     "by": "u-anna",
     "campaignId": "c-autumn",
     "generations": [],
-    "id": "ss-mvkqu1qo-1",
+    "id": "ss-mvkqu9gg-1",
     "recipe": {"castIds":[],"count":4,"format":"feed","mode":"free","references":[]},
     "slot": "Master 3",
     "updatedAt": "2026-10-14T12:32:00.000Z",
     "workspaceId": "w-lysne"
   }
-anna generate("ss-mvkqu1qo-1", {"castIds":["cm-ane"],"count":2,"creativeTypeId":"ct-packshot","format":"feed","mode":"type","productId":"pr-oil","references":[],"sceneI...)
+anna generate("ss-mvkqu9gg-1", {"castIds":["cm-ane"],"count":2,"creativeTypeId":"ct-packshot","format":"feed","mode":"type","productId":"pr-oil","references":[],"sceneI...)
   {
     "by": "u-anna",
     "campaignId": "c-autumn",
@@ -1836,7 +1836,7 @@ anna generate("ss-mvkqu1qo-1", {"castIds":["cm-ane"],"count":2,"creativeTypeId":
         "branch": 1,
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-        "id": "g-mvkqu1qo-2",
+        "id": "g-mvkqu9gg-2",
         "image": "/demo/lysne/04-02-feed.jpg",
         "recipe": {
           "castIds": ["cm-ane"],
@@ -1848,7 +1848,7 @@ anna generate("ss-mvkqu1qo-1", {"castIds":["cm-ane"],"count":2,"creativeTypeId":
           "references": [],
           "sceneId": "sc-stone"
         },
-        "sessionId": "ss-mvkqu1qo-1",
+        "sessionId": "ss-mvkqu9gg-1",
         "state": "making"
       },
       {
@@ -1856,7 +1856,7 @@ anna generate("ss-mvkqu1qo-1", {"castIds":["cm-ane"],"count":2,"creativeTypeId":
         "branch": 1,
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":["Label edge soft"],"productTruth":"flag"},
-        "id": "g-mvkqu1qo-3",
+        "id": "g-mvkqu9gg-3",
         "image": "/demo/lysne/08-06-feed.jpg",
         "recipe": {
           "castIds": ["cm-ane"],
@@ -1868,11 +1868,11 @@ anna generate("ss-mvkqu1qo-1", {"castIds":["cm-ane"],"count":2,"creativeTypeId":
           "references": [],
           "sceneId": "sc-stone"
         },
-        "sessionId": "ss-mvkqu1qo-1",
+        "sessionId": "ss-mvkqu9gg-1",
         "state": "making"
       }
     ],
-    "id": "ss-mvkqu1qo-1",
+    "id": "ss-mvkqu9gg-1",
     "recipe": {
       "castIds": ["cm-ane"],
       "count": 2,
@@ -1895,7 +1895,7 @@ anna, 5 s later → events
       "branch": 1,
       "cost": 0.12,
       "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-      "id": "g-mvkqu1qo-2",
+      "id": "g-mvkqu9gg-2",
       "image": "/demo/lysne/04-02-feed.jpg",
       "recipe": {
         "castIds": ["cm-ane"],
@@ -1907,7 +1907,7 @@ anna, 5 s later → events
         "references": [],
         "sceneId": "sc-stone"
       },
-      "sessionId": "ss-mvkqu1qo-1",
+      "sessionId": "ss-mvkqu9gg-1",
       "state": "candidate"
     },
     "type": "generation.state"
@@ -1918,7 +1918,7 @@ anna, 5 s later → events
       "branch": 1,
       "cost": 0.12,
       "evaluation": {"artefacts":"none","brandRules":"pass","notes":["Label edge soft"],"productTruth":"flag"},
-      "id": "g-mvkqu1qo-3",
+      "id": "g-mvkqu9gg-3",
       "image": "/demo/lysne/08-06-feed.jpg",
       "recipe": {
         "castIds": ["cm-ane"],
@@ -1930,12 +1930,12 @@ anna, 5 s later → events
         "references": [],
         "sceneId": "sc-stone"
       },
-      "sessionId": "ss-mvkqu1qo-1",
+      "sessionId": "ss-mvkqu9gg-1",
       "state": "candidate"
     },
     "type": "generation.state"
   }
-anna studioSession("ss-mvkqu1qo-1")
+anna studioSession("ss-mvkqu9gg-1")
   {
     "by": "u-anna",
     "campaignId": "c-autumn",
@@ -1945,7 +1945,7 @@ anna studioSession("ss-mvkqu1qo-1")
         "branch": 1,
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-        "id": "g-mvkqu1qo-2",
+        "id": "g-mvkqu9gg-2",
         "image": "/demo/lysne/04-02-feed.jpg",
         "recipe": {
           "castIds": ["cm-ane"],
@@ -1957,7 +1957,7 @@ anna studioSession("ss-mvkqu1qo-1")
           "references": [],
           "sceneId": "sc-stone"
         },
-        "sessionId": "ss-mvkqu1qo-1",
+        "sessionId": "ss-mvkqu9gg-1",
         "state": "candidate"
       },
       {
@@ -1965,7 +1965,7 @@ anna studioSession("ss-mvkqu1qo-1")
         "branch": 1,
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":["Label edge soft"],"productTruth":"flag"},
-        "id": "g-mvkqu1qo-3",
+        "id": "g-mvkqu9gg-3",
         "image": "/demo/lysne/08-06-feed.jpg",
         "recipe": {
           "castIds": ["cm-ane"],
@@ -1977,11 +1977,11 @@ anna studioSession("ss-mvkqu1qo-1")
           "references": [],
           "sceneId": "sc-stone"
         },
-        "sessionId": "ss-mvkqu1qo-1",
+        "sessionId": "ss-mvkqu9gg-1",
         "state": "candidate"
       }
     ],
-    "id": "ss-mvkqu1qo-1",
+    "id": "ss-mvkqu9gg-1",
     "recipe": {
       "castIds": ["cm-ane"],
       "count": 2,
@@ -1996,7 +1996,7 @@ anna studioSession("ss-mvkqu1qo-1")
     "updatedAt": "2026-10-14T12:32:00.000Z",
     "workspaceId": "w-lysne"
   }
-anna repair("ss-mvkqu1qo-1", "g-mvkqu1qo-2", "The cap is gold")
+anna repair("ss-mvkqu9gg-1", "g-mvkqu9gg-2", "The cap is gold")
   {
     "by": "u-anna",
     "campaignId": "c-autumn",
@@ -2006,7 +2006,7 @@ anna repair("ss-mvkqu1qo-1", "g-mvkqu1qo-2", "The cap is gold")
         "branch": 1,
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-        "id": "g-mvkqu1qo-2",
+        "id": "g-mvkqu9gg-2",
         "image": "/demo/lysne/04-02-feed.jpg",
         "recipe": {
           "castIds": ["cm-ane"],
@@ -2018,7 +2018,7 @@ anna repair("ss-mvkqu1qo-1", "g-mvkqu1qo-2", "The cap is gold")
           "references": [],
           "sceneId": "sc-stone"
         },
-        "sessionId": "ss-mvkqu1qo-1",
+        "sessionId": "ss-mvkqu9gg-1",
         "state": "candidate"
       },
       {
@@ -2026,7 +2026,7 @@ anna repair("ss-mvkqu1qo-1", "g-mvkqu1qo-2", "The cap is gold")
         "branch": 1,
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":["Label edge soft"],"productTruth":"flag"},
-        "id": "g-mvkqu1qo-3",
+        "id": "g-mvkqu9gg-3",
         "image": "/demo/lysne/08-06-feed.jpg",
         "recipe": {
           "castIds": ["cm-ane"],
@@ -2038,7 +2038,7 @@ anna repair("ss-mvkqu1qo-1", "g-mvkqu1qo-2", "The cap is gold")
           "references": [],
           "sceneId": "sc-stone"
         },
-        "sessionId": "ss-mvkqu1qo-1",
+        "sessionId": "ss-mvkqu9gg-1",
         "state": "candidate"
       },
       {
@@ -2046,7 +2046,7 @@ anna repair("ss-mvkqu1qo-1", "g-mvkqu1qo-2", "The cap is gold")
         "branch": 2,
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-        "id": "g-mvkqu5lk-4",
+        "id": "g-mvkqudbc-4",
         "image": "/demo/lysne/04-02-feed.jpg",
         "recipe": {
           "castIds": ["cm-ane"],
@@ -2059,11 +2059,11 @@ anna repair("ss-mvkqu1qo-1", "g-mvkqu1qo-2", "The cap is gold")
           "sceneId": "sc-stone"
         },
         "repair": "The cap is gold",
-        "sessionId": "ss-mvkqu1qo-1",
+        "sessionId": "ss-mvkqu9gg-1",
         "state": "making"
       }
     ],
-    "id": "ss-mvkqu1qo-1",
+    "id": "ss-mvkqu9gg-1",
     "recipe": {
       "castIds": ["cm-ane"],
       "count": 2,
@@ -2086,7 +2086,7 @@ anna, 5 s later → events
       "branch": 2,
       "cost": 0.12,
       "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-      "id": "g-mvkqu5lk-4",
+      "id": "g-mvkqudbc-4",
       "image": "/demo/lysne/04-02-feed.jpg",
       "recipe": {
         "castIds": ["cm-ane"],
@@ -2099,12 +2099,12 @@ anna, 5 s later → events
         "sceneId": "sc-stone"
       },
       "repair": "The cap is gold",
-      "sessionId": "ss-mvkqu1qo-1",
+      "sessionId": "ss-mvkqu9gg-1",
       "state": "candidate"
     },
     "type": "generation.state"
   }
-anna pickGeneration("ss-mvkqu1qo-1", "g-mvkqu1qo-2")
+anna pickGeneration("ss-mvkqu9gg-1", "g-mvkqu9gg-2")
   {
     "by": "u-anna",
     "campaignId": "c-autumn",
@@ -2114,7 +2114,7 @@ anna pickGeneration("ss-mvkqu1qo-1", "g-mvkqu1qo-2")
         "branch": 1,
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-        "id": "g-mvkqu1qo-2",
+        "id": "g-mvkqu9gg-2",
         "image": "/demo/lysne/04-02-feed.jpg",
         "recipe": {
           "castIds": ["cm-ane"],
@@ -2126,7 +2126,7 @@ anna pickGeneration("ss-mvkqu1qo-1", "g-mvkqu1qo-2")
           "references": [],
           "sceneId": "sc-stone"
         },
-        "sessionId": "ss-mvkqu1qo-1",
+        "sessionId": "ss-mvkqu9gg-1",
         "state": "picked"
       },
       {
@@ -2134,7 +2134,7 @@ anna pickGeneration("ss-mvkqu1qo-1", "g-mvkqu1qo-2")
         "branch": 1,
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":["Label edge soft"],"productTruth":"flag"},
-        "id": "g-mvkqu1qo-3",
+        "id": "g-mvkqu9gg-3",
         "image": "/demo/lysne/08-06-feed.jpg",
         "recipe": {
           "castIds": ["cm-ane"],
@@ -2146,7 +2146,7 @@ anna pickGeneration("ss-mvkqu1qo-1", "g-mvkqu1qo-2")
           "references": [],
           "sceneId": "sc-stone"
         },
-        "sessionId": "ss-mvkqu1qo-1",
+        "sessionId": "ss-mvkqu9gg-1",
         "state": "candidate"
       },
       {
@@ -2154,7 +2154,7 @@ anna pickGeneration("ss-mvkqu1qo-1", "g-mvkqu1qo-2")
         "branch": 2,
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-        "id": "g-mvkqu5lk-4",
+        "id": "g-mvkqudbc-4",
         "image": "/demo/lysne/04-02-feed.jpg",
         "recipe": {
           "castIds": ["cm-ane"],
@@ -2167,12 +2167,12 @@ anna pickGeneration("ss-mvkqu1qo-1", "g-mvkqu1qo-2")
           "sceneId": "sc-stone"
         },
         "repair": "The cap is gold",
-        "sessionId": "ss-mvkqu1qo-1",
+        "sessionId": "ss-mvkqu9gg-1",
         "state": "candidate"
       }
     ],
-    "id": "ss-mvkqu1qo-1",
-    "pickedId": "g-mvkqu1qo-2",
+    "id": "ss-mvkqu9gg-1",
+    "pickedId": "g-mvkqu9gg-2",
     "recipe": {
       "castIds": ["cm-ane"],
       "count": 2,
@@ -2187,7 +2187,7 @@ anna pickGeneration("ss-mvkqu1qo-1", "g-mvkqu1qo-2")
     "updatedAt": "2026-10-14T12:32:00.000Z",
     "workspaceId": "w-lysne"
   }
-anna sendToCheck("ss-mvkqu1qo-1")
+anna sendToCheck("ss-mvkqu9gg-1")
   {
     "by": "u-anna",
     "campaignId": "c-autumn",
@@ -2197,7 +2197,7 @@ anna sendToCheck("ss-mvkqu1qo-1")
         "branch": 1,
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-        "id": "g-mvkqu1qo-2",
+        "id": "g-mvkqu9gg-2",
         "image": "/demo/lysne/04-02-feed.jpg",
         "recipe": {
           "castIds": ["cm-ane"],
@@ -2209,7 +2209,7 @@ anna sendToCheck("ss-mvkqu1qo-1")
           "references": [],
           "sceneId": "sc-stone"
         },
-        "sessionId": "ss-mvkqu1qo-1",
+        "sessionId": "ss-mvkqu9gg-1",
         "state": "sent_to_check"
       },
       {
@@ -2217,7 +2217,7 @@ anna sendToCheck("ss-mvkqu1qo-1")
         "branch": 1,
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":["Label edge soft"],"productTruth":"flag"},
-        "id": "g-mvkqu1qo-3",
+        "id": "g-mvkqu9gg-3",
         "image": "/demo/lysne/08-06-feed.jpg",
         "recipe": {
           "castIds": ["cm-ane"],
@@ -2229,7 +2229,7 @@ anna sendToCheck("ss-mvkqu1qo-1")
           "references": [],
           "sceneId": "sc-stone"
         },
-        "sessionId": "ss-mvkqu1qo-1",
+        "sessionId": "ss-mvkqu9gg-1",
         "state": "candidate"
       },
       {
@@ -2237,7 +2237,7 @@ anna sendToCheck("ss-mvkqu1qo-1")
         "branch": 2,
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-        "id": "g-mvkqu5lk-4",
+        "id": "g-mvkqudbc-4",
         "image": "/demo/lysne/04-02-feed.jpg",
         "recipe": {
           "castIds": ["cm-ane"],
@@ -2250,12 +2250,12 @@ anna sendToCheck("ss-mvkqu1qo-1")
           "sceneId": "sc-stone"
         },
         "repair": "The cap is gold",
-        "sessionId": "ss-mvkqu1qo-1",
+        "sessionId": "ss-mvkqu9gg-1",
         "state": "candidate"
       }
     ],
-    "id": "ss-mvkqu1qo-1",
-    "pickedId": "g-mvkqu1qo-2",
+    "id": "ss-mvkqu9gg-1",
+    "pickedId": "g-mvkqu9gg-2",
     "recipe": {
       "castIds": ["cm-ane"],
       "count": 2,
@@ -2279,7 +2279,7 @@ anna openStudio({"fromGenerationId":"g4","workspaceId":"w-lysne"})
         "branch": 1,
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-        "id": "g-mvkqu9gg-6",
+        "id": "g-mvkquh68-6",
         "image": "/demo/lysne/04-06-feed.jpg",
         "recipe": {
           "angle": "Front",
@@ -2300,7 +2300,7 @@ anna openStudio({"fromGenerationId":"g4","workspaceId":"w-lysne"})
         "state": "candidate"
       }
     ],
-    "id": "ss-mvkqu9gg-5",
+    "id": "ss-mvkquh68-5",
     "recipe": {
       "angle": "Front",
       "castIds": [],
@@ -2658,7 +2658,7 @@ anna repair("ss-autumn-m3", "g1", "Less glare")
         "branch": 3,
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-        "id": "g-mvkqu9gg-7",
+        "id": "g-mvkquh68-7",
         "image": "/demo/lysne/05-06-feed.jpg",
         "recipe": {
           "angle": "Front",
@@ -2709,7 +2709,7 @@ anna, 5 s later → events
       "branch": 3,
       "cost": 0.12,
       "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-      "id": "g-mvkqu9gg-7",
+      "id": "g-mvkquh68-7",
       "image": "/demo/lysne/05-06-feed.jpg",
       "recipe": {
         "angle": "Front",
@@ -2893,7 +2893,7 @@ anna sendToCheck("ss-autumn-m3")
         "branch": 3,
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-        "id": "g-mvkqu9gg-7",
+        "id": "g-mvkquh68-7",
         "image": "/demo/lysne/05-06-feed.jpg",
         "recipe": {
           "angle": "Front",
@@ -3503,6 +3503,248 @@ anna qaQueue()
         "state": "waiting",
         "studio": "render",
         "title": "Square 2",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":6,"creatives":11,"delivered":0,"inCheck":3},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:26:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":0},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "creativeId": "cr-a-v10",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {
+          "artefacts": "minor",
+          "brandRules": "flag",
+          "evaluated": true,
+          "notes": [
+            "The cap reads glossy",
+            "Light from above, not from the side",
+            "A smeared edge where the bottle meets the ledge"
+          ],
+          "productTruth": "flag"
+        },
+        "feedback": [],
+        "findings": [
+          {
+            "dimension": "product",
+            "expected": "Burgundy matte cap, as in its photographs",
+            "finding": "The cap is glossy; LYSNE's cap is matte.",
+            "id": "fi-1",
+            "observed": "A glossy cap with a bright highlight on top",
+            "severity": "critical",
+            "status": "open"
+          },
+          {
+            "dimension": "brand_brief",
+            "expected": "Warm low light from one side, like a lamp in the evening",
+            "finding": "The light comes from above, not from one side like a lamp.",
+            "id": "fi-2",
+            "observed": "Even, soft light from above",
+            "severity": "minor",
+            "status": "open"
+          },
+          {
+            "dimension": "artefacts",
+            "finding": "A soft, smeared edge where the bottle meets the ledge.",
+            "id": "fi-3",
+            "severity": "minor",
+            "status": "open"
+          }
+        ],
+        "format": "feed",
+        "id": "qa-7",
+        "image": "/demo/lysne/06-10-feed.jpg",
+        "madeAt": "2026-10-14T12:27:00.000Z",
+        "risk": "normal",
+        "slot": "Master 3 · Variant 1",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 8",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":6,"creatives":11,"delivered":0,"inCheck":3},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:26:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":0},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "creativeId": "cr-a-v11",
+        "design": {
+          "at": "2026-10-14T12:28:00.000Z",
+          "book": {"state":"checked","version":1},
+          "checks": [
+            {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
+            {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
+            {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {
+              "check": "contrast",
+              "hard": true,
+              "need": 3,
+              "node": "Headline",
+              "note": "9.4:1 against nine in ten of the pixels under the words (needs 3:1).",
+              "ok": true,
+              "value": 9.4
+            },
+            {
+              "check": "contrast",
+              "hard": true,
+              "need": 4.5,
+              "node": "Subline",
+              "note": "7.8:1 against nine in ten of the pixels under the words (needs 4.5:1).",
+              "ok": true,
+              "value": 7.8
+            },
+            {
+              "check": "font",
+              "hard": false,
+              "node": "h1",
+              "note": "Cormorant is not on file; set in Cormorant Garamond until the brand gives Fume its font.",
+              "ok": false
+            }
+          ],
+          "document": {"name":"feed-9-v2.fig"},
+          "findings": [
+            {
+              "by": "fume_review",
+              "severity": "minor",
+              "what": "The supporting line sits close to the headline; one more step of space would let it breathe."
+            }
+          ],
+          "fromNumber": 1,
+          "fromVersionId": "cv-a-v11-1",
+          "id": "dl-1",
+          "layout": {"align":"left","band":"top","colour":"text","ground":"photo"},
+          "llmUsd": 0.002,
+          "requestedBy": "u-anna",
+          "state": "made",
+          "tried": 6,
+          "verdict": "ready_for_check",
+          "words": {"cta":"Se kveldsoljen","headline":"Den langsomme timen før søvn.","subline":"Night Body Oil · 100 ml"}
+        },
+        "drawn": {
+          "fonts": ["Cormorant Garamond","Inter"],
+          "layers": [
+            {
+              "align": "left",
+              "colour": "#2B1D17",
+              "family": "\"Cormorant\", \"Cormorant Garamond\", Georgia, serif",
+              "lineHeight": 1.05,
+              "role": "headline",
+              "sizePx": 76,
+              "text": "Den langsomme timen før søvn.",
+              "trackingEm": -0.01,
+              "w": 57,
+              "weight": 400,
+              "x": 6.7,
+              "y": 5.3
+            },
+            {
+              "align": "left",
+              "colour": "#2B1D17",
+              "family": "\"Inter\", \"Inter\", system-ui, sans-serif",
+              "lineHeight": 1.3,
+              "role": "subline",
+              "sizePx": 30,
+              "text": "Night Body Oil · 100 ml",
+              "trackingEm": 0,
+              "w": 57,
+              "weight": 400,
+              "x": 6.7,
+              "y": 18.9
+            }
+          ]
+        },
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "feedback": [],
+        "format": "feed",
+        "id": "qa-8",
+        "image": "/demo/lysne/10-08-feed.jpg",
+        "madeAt": "2026-10-14T12:29:00.000Z",
+        "previous": {"image":"/demo/lysne/10-08-feed.jpg","version":1},
+        "risk": "normal",
+        "slot": "Master 2 · Variant 4",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 9",
+        "version": 2,
         "workspaceId": "w-lysne"
       },
       "productName": "Night Body Oil",
@@ -4505,7 +4747,7 @@ anna brandWorkspace("w-lysne")
             "branch": 1,
             "cost": 0.12,
             "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-            "id": "g-mvkqu1qo-2",
+            "id": "g-mvkqu9gg-2",
             "image": "/demo/lysne/04-02-feed.jpg",
             "recipe": {
               "castIds": ["cm-ane"],
@@ -4517,7 +4759,7 @@ anna brandWorkspace("w-lysne")
               "references": [],
               "sceneId": "sc-stone"
             },
-            "sessionId": "ss-mvkqu1qo-1",
+            "sessionId": "ss-mvkqu9gg-1",
             "state": "sent_to_check"
           },
           {
@@ -4525,7 +4767,7 @@ anna brandWorkspace("w-lysne")
             "branch": 1,
             "cost": 0.12,
             "evaluation": {"artefacts":"none","brandRules":"pass","notes":["Label edge soft"],"productTruth":"flag"},
-            "id": "g-mvkqu1qo-3",
+            "id": "g-mvkqu9gg-3",
             "image": "/demo/lysne/08-06-feed.jpg",
             "recipe": {
               "castIds": ["cm-ane"],
@@ -4537,7 +4779,7 @@ anna brandWorkspace("w-lysne")
               "references": [],
               "sceneId": "sc-stone"
             },
-            "sessionId": "ss-mvkqu1qo-1",
+            "sessionId": "ss-mvkqu9gg-1",
             "state": "candidate"
           },
           {
@@ -4545,7 +4787,7 @@ anna brandWorkspace("w-lysne")
             "branch": 2,
             "cost": 0.12,
             "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-            "id": "g-mvkqu5lk-4",
+            "id": "g-mvkqudbc-4",
             "image": "/demo/lysne/04-02-feed.jpg",
             "recipe": {
               "castIds": ["cm-ane"],
@@ -4558,7 +4800,7 @@ anna brandWorkspace("w-lysne")
               "sceneId": "sc-stone"
             },
             "repair": "The cap is gold",
-            "sessionId": "ss-mvkqu1qo-1",
+            "sessionId": "ss-mvkqu9gg-1",
             "state": "candidate"
           },
           {
@@ -4717,7 +4959,7 @@ anna brandWorkspace("w-lysne")
             "branch": 3,
             "cost": 0.12,
             "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-            "id": "g-mvkqu9gg-7",
+            "id": "g-mvkquh68-7",
             "image": "/demo/lysne/05-06-feed.jpg",
             "recipe": {
               "angle": "Front",
@@ -5153,7 +5395,7 @@ anna brandWorkspace("w-lysne")
             "branch": 1,
             "cost": 0.12,
             "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-            "id": "g-mvkqu9gg-6",
+            "id": "g-mvkquh68-6",
             "image": "/demo/lysne/04-06-feed.jpg",
             "recipe": {
               "angle": "Front",
@@ -5174,7 +5416,7 @@ anna brandWorkspace("w-lysne")
             "state": "candidate"
           }
         ],
-        "id": "ss-mvkqu9gg-5",
+        "id": "ss-mvkquh68-5",
         "recipe": {
           "angle": "Front",
           "castIds": [],
@@ -5202,7 +5444,7 @@ anna brandWorkspace("w-lysne")
             "branch": 1,
             "cost": 0.12,
             "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-            "id": "g-mvkqu1qo-2",
+            "id": "g-mvkqu9gg-2",
             "image": "/demo/lysne/04-02-feed.jpg",
             "recipe": {
               "castIds": ["cm-ane"],
@@ -5214,7 +5456,7 @@ anna brandWorkspace("w-lysne")
               "references": [],
               "sceneId": "sc-stone"
             },
-            "sessionId": "ss-mvkqu1qo-1",
+            "sessionId": "ss-mvkqu9gg-1",
             "state": "sent_to_check"
           },
           {
@@ -5222,7 +5464,7 @@ anna brandWorkspace("w-lysne")
             "branch": 1,
             "cost": 0.12,
             "evaluation": {"artefacts":"none","brandRules":"pass","notes":["Label edge soft"],"productTruth":"flag"},
-            "id": "g-mvkqu1qo-3",
+            "id": "g-mvkqu9gg-3",
             "image": "/demo/lysne/08-06-feed.jpg",
             "recipe": {
               "castIds": ["cm-ane"],
@@ -5234,7 +5476,7 @@ anna brandWorkspace("w-lysne")
               "references": [],
               "sceneId": "sc-stone"
             },
-            "sessionId": "ss-mvkqu1qo-1",
+            "sessionId": "ss-mvkqu9gg-1",
             "state": "candidate"
           },
           {
@@ -5242,7 +5484,7 @@ anna brandWorkspace("w-lysne")
             "branch": 2,
             "cost": 0.12,
             "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-            "id": "g-mvkqu5lk-4",
+            "id": "g-mvkqudbc-4",
             "image": "/demo/lysne/04-02-feed.jpg",
             "recipe": {
               "castIds": ["cm-ane"],
@@ -5255,12 +5497,12 @@ anna brandWorkspace("w-lysne")
               "sceneId": "sc-stone"
             },
             "repair": "The cap is gold",
-            "sessionId": "ss-mvkqu1qo-1",
+            "sessionId": "ss-mvkqu9gg-1",
             "state": "candidate"
           }
         ],
-        "id": "ss-mvkqu1qo-1",
-        "pickedId": "g-mvkqu1qo-2",
+        "id": "ss-mvkqu9gg-1",
+        "pickedId": "g-mvkqu9gg-2",
         "recipe": {
           "castIds": ["cm-ane"],
           "count": 2,
@@ -5435,7 +5677,7 @@ anna brandWorkspace("w-lysne")
             "branch": 3,
             "cost": 0.12,
             "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-            "id": "g-mvkqu9gg-7",
+            "id": "g-mvkquh68-7",
             "image": "/demo/lysne/05-06-feed.jpg",
             "recipe": {
               "angle": "Front",

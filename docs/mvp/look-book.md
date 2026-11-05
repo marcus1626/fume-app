@@ -36,3 +36,15 @@ photography, read from its own pictures.
 Nike (test) and Møllers (test), same plan before and after:
 `/mnt/project-files/engine-test/2026-11-04/look-book/`. Better light, lens and grade; still open: highlight banding on
 white cloth, small label text, and lamp bloom.
+
+## Designed, not wired yet (app/FLOWS.md §32, PROPOSED)
+
+- Brand › Look Book (/brand/look) uses the books' shared frame. `BrandBookKind` gains `"look"`, `BrandBook` a
+  `{kind: "look", body?: LookBook}` member and `BrandBooksView` a `look` list; `brandBooks()` splits the `look` rows
+  of `brand_books` into it, and `progress` covers it like the other two.
+- `LookBook` is the stored body as `toLookBody` keeps it: the `LookAnswer` fields as they are, `evidence` with each
+  picture's `url` (a signed or public link; null when there is none) and `kind`, and `pictures`. `BookSource.source`
+  gains `"pictures"`. The UI does not use `brand`.
+- `writeBrandBook({kind: "look"})` is `write_brand_book(ws, 'look')`; check, approve and ask for a change are the same
+  calls as for the other books.
+

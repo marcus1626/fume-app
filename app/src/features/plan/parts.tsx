@@ -146,6 +146,7 @@ export function LineRow({
   tag,
   voice = (t) => t,
   note,
+  anchor,
 }: {
   line: PlanLine;
   campaignId: string;
@@ -153,14 +154,17 @@ export function LineRow({
   tag: ReactNode;
   /** The plan's sentences as this reader says them (words.ts voiceFor). */
   voice?: (text: string) => string;
-  /** A line under the value that asks something of her (a product that waits to be confirmed). */
+  /** A line under the value that asks something of her (a product that waits to be confirmed), or what the expert's
+   *  word check found on it. */
   note?: ReactNode;
+  /** The row's id, for a link that glides to it. */
+  anchor?: string;
 }) {
   const { editing, open, done, opener } = useEditing();
   const id = useId();
   const why = line.why && !line.changedBy ? voice(whyOf(line.why)) : undefined;
   return (
-    <li className="ui-plandoc-line" data-changed={line.changedBy ? "" : undefined}>
+    <li id={anchor} className="ui-plandoc-line" data-changed={line.changedBy ? "" : undefined}>
       <div className="ui-plandoc-line-head">
         <span className="ui-plandoc-line-label" id={`${id}-label`}>
           {line.label}
@@ -239,6 +243,8 @@ export function MasterCard({
   editable,
   people,
   voice = (t) => t,
+  note,
+  anchor,
 }: {
   creative: PlannedCreative;
   products: Product[];
@@ -247,6 +253,10 @@ export function MasterCard({
   editable: boolean;
   people: PlanPeople;
   voice?: (text: string) => string;
+  /** What the expert's word check found in its words. */
+  note?: ReactNode;
+  /** The row's id, for a link that glides to it. */
+  anchor?: string;
 }) {
   const { editing, open, done, opener } = useEditing();
   const shown = creative.productIds
@@ -254,7 +264,7 @@ export function MasterCard({
     .filter((p): p is Product => Boolean(p));
   const productWords = shown.map((p) => p.name).join(" and ");
   return (
-    <li className="ui-plandoc-master" data-changed={creative.changedBy ? "" : undefined}>
+    <li id={anchor} className="ui-plandoc-master" data-changed={creative.changedBy ? "" : undefined}>
       <div
         className="ui-plandoc-stage"
         role="img"
@@ -288,6 +298,7 @@ export function MasterCard({
               {creative.changedBy && <ChangedTag by={creative.changedBy} people={people} />}
             </p>
             <OwnLook look={creative.look} voice={voice} />
+            {note}
           </>
         )}
       </div>

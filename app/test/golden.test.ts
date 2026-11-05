@@ -329,6 +329,7 @@ async function readEverything(p: Person, ids: Universe) {
   await a.session();
   await a.home();
   await a.brandDna();
+  await a.brandBooks();
   await a.campaigns();
   await a.campaigns({ state: ["in_review", "in_production"] });
   await a.campaigns({ search: "gift" });
@@ -981,6 +982,15 @@ scenario("quality gate", async (golden) => {
   await a.qaCheck("qa-5");
   await a.campaign("c-solv");
   await a.creative("cr-a-v9");
+  // The Engine's findings (FLOWS §29.6): an open critical one stops the check; one is set aside and taken back; the
+  // note takes the critical one up, and the Engine's fix resolves it.
+  await a.qaCheck("qa-7");
+  await a.qaSettleFinding("qa-7", "fi-2", "accepted");
+  await a.qaSettleFinding("qa-7", "fi-2", "open");
+  await a.qaSettleFinding("qa-7", "fi-nope", "accepted");
+  await a.qaFeedback("qa-7", "The cap is glossy; LYSNE's cap is matte.", [], ["fi-1", "fi-nope"]);
+  await anna.advance(10_000);
+  await a.qaCheck("qa-7");
 });
 
 scenario("studio", async (golden) => {
@@ -1254,6 +1264,72 @@ scenario("agency brief and clients", async (golden) => {
   await even.approve(["v-cr-a-v1-3"]);
   await even.checkPlan("c-winter");
   await even.agencyHome();
+});
+
+scenario("brand books", async (golden) => {
+  // One brand, and the people who take turns on it: Anna checks, Maja approves or asks for a change.
+  const book = golden.open("anna", { userId: "u-anna" });
+  const a = book.call;
+  await a.checkBrandBook("bb-voice-2");
+  await a.checkBrandBook("bb-voice-2");
+  await a.checkBrandBook("bb-missing");
+  book.signInAs("sander", "u-sander");
+  await a.checkBrandBook("bb-design-1");
+  book.signInAs("jonas", "u-jonas");
+  await a.brandBooks();
+  await a.approveBrandBook("bb-design-1");
+  await a.writeBrandBook({ kind: "voice" });
+  await a.writeBrandBook({ kind: "look" });
+  book.signInAs("maja", "u-maja");
+  // The Look Book (FLOWS §32): Maja approves the version Anna checked, then asks for a night look of its own.
+  await a.approveBrandBook("bb-look-1");
+  await a.askBrandBookChange({ bookId: "bb-look-1", ask: "A night look of its own, for the bedside." });
+  await a.approveBrandBook("bb-voice-2");
+  await a.approveBrandBook("bb-voice-1");
+  await a.askBrandBookChange({ bookId: "bb-design-1", ask: " " });
+  await a.askBrandBookChange({
+    bookId: "bb-design-1",
+    ask: "Burgundy for the price too, not only the call to action.",
+  });
+  await a.brandBooks();
+  book.signInAs("anna", "u-anna");
+  await a.brandBooks();
+  const [draft] = (await a.brandBooks())?.design ?? [];
+  if (draft) await a.checkBrandBook(draft.id);
+  await a.writeBrandBook({ kind: "voice", ask: "Shorter captions for stories." });
+  await a.writeBrandBook({ kind: "voice" });
+  await book.advance(1_000);
+  await a.brandBooks();
+});
+
+scenario("graphic design", async (golden) => {
+  // Anna asks Fume to lay the plan's words on V3 of Master 3 in LYSNE's design system (FLOWS §33). Each call answers
+  // with the version Fume is designing; on this still clock it is made before the next call, so asking again designs
+  // again, and each new try moves the words.
+  const anna = golden.open("anna", { userId: "u-anna" });
+  const a = anna.call;
+  await a.designAsk("doc-autumn-m3", "rv-3");
+  await a.designAsk("doc-autumn-m3", "rv-4");
+  await a.designAsk("doc-bf-1", "rv-bf-1");
+  await a.designVersion("doc-bf-1", "rv-bf-1");
+  anna.signInAs("sander", "u-sander");
+  await a.designAsk("doc-autumn-m3", "rv-3");
+  await a.designVersion("doc-autumn-m3", "rv-3");
+  anna.signInAs("maja", "u-maja");
+  await a.designAsk("doc-autumn-m3", "rv-3");
+  anna.signInAs("anna", "u-anna");
+  const designing = await a.designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the bottle.");
+  const made = designing?.versions.at(-1);
+  await anna.advance(1_000);
+  await a.document("doc-autumn-m3");
+  await a.designVersion("doc-autumn-m3", "rv-3");
+  if (made) {
+    await a.designAsk("doc-autumn-m3", made.id);
+    await a.designVersion("doc-autumn-m3", made.id);
+  }
+  await a.document("doc-autumn-m3");
+  await a.documentToCheck("doc-autumn-m3");
+  await a.qaQueue("w-lysne");
 });
 
 test("the golden master calls every member of the mock", () => {

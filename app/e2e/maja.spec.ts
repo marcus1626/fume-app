@@ -39,3 +39,41 @@ test("Maja approves a creative in Review", async ({ page }) => {
   await expect(sidebar.getByRole("link", { name: "Review 5" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Night Body Oil · Feed 3", exact: true })).toHaveCount(0);
 });
+
+test("Maja approves the design system Anna checked, and asks for a change in the Tone of Voice", async ({ page }) => {
+  await page.goto("/brand/design");
+  await expect(page.getByRole("heading", { level: 1, name: "Design system" })).toBeVisible();
+  await expect(page.getByText("Checked by Anna · yours to approve", { exact: true })).toBeVisible();
+  await expect(page.getByRole("figure", { name: /The evening, launched/ })).toBeVisible();
+
+  await page.getByRole("button", { name: "Approve", exact: true }).click();
+  await expect(page.getByText("Design system approved")).toBeVisible();
+  await expect(page.getByText(/^Approved by you, /)).toBeVisible();
+
+  // The Tone of Voice in use is version 1; the draft Fume wrote since is not hers to read yet
+  await page.goto("/brand/voice");
+  await expect(page.getByText("Version 1", { exact: true })).toBeVisible();
+  await expect(page.getByText(/^Approved by you, /)).toBeVisible();
+  await expect(page.getByText("Anna is checking version 2. You read it once it is checked.")).toBeVisible();
+  await page.getByRole("button", { name: "Ask for a change" }).click();
+  const ask = page.getByRole("dialog", { name: "Ask for a change" });
+  await ask.getByLabel("What should change?").fill("Never “du” in English captions.");
+  await ask.getByRole("button", { name: "Ask Fume" }).click();
+  await expect(page.getByText("With your words. Anna checks it before you read it.")).toBeVisible();
+  await expect(page.getByText("Fume is writing version 3. Anna checks it before you read it.")).toBeVisible();
+});
+
+test("Maja reads the Look Book Fume wrote from LYSNE's pictures, and approves it", async ({ page }) => {
+  await page.goto("/brand#imagery");
+  await page.getByRole("link", { name: "The Look Book" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Look Book" })).toBeVisible();
+  await expect(page.getByText("Checked by Anna · yours to approve", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 2, name: "Read from your pictures" })).toBeVisible();
+  await expect(page.getByText("Turned down in Taste")).toBeVisible();
+  await expect(page.getByRole("list", { name: "Lenses" })).toContainText("85 mm");
+
+  await page.getByRole("button", { name: "Approve", exact: true }).click();
+  await expect(page.getByText("Look Book approved")).toBeVisible();
+  await expect(page.getByText("The Engine shoots every picture from version 1 now.")).toBeVisible();
+  await expect(page.getByText(/^Approved by you, /)).toBeVisible();
+});

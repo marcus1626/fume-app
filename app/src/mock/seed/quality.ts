@@ -1,8 +1,11 @@
 // The Quality Gate: the expert's checks of each creative and what they are checked against, the quality log, and the
 // creatives that wait in Check.
 import type { Check, CheckItem, QaItem, QualityLogEntry } from "../../contract";
+import { voiceBook } from "./brand";
+import { brandBooks } from "./books";
 import { campaigns } from "./campaigns";
-import { at, img, inDays, ok } from "./helpers";
+import { measured, planCopy, wordsOf } from "./design";
+import { at, engineFound, img, inDays, ok } from "./helpers";
 import { batches, creatives, engineMessages } from "./production";
 import { products } from "./products";
 import { layoutLayers } from "./studio";
@@ -189,6 +192,35 @@ const qa = (
   ...extra,
 });
 
+/** The design and the words drawn for Feed 9, from LYSNE's design system as it is now (version 1, checked). */
+function designed(): Pick<QaItem, "design" | "drawn"> {
+  const book = brandBooks(voiceBook((e) => engineFound(e))).find((b) => b.kind === "design");
+  const words = wordsOf(planCopy["c-autumn"]);
+  if (!book || book.kind !== "design" || !book.body || !words) return {};
+  const { drawing, ...made } = measured(book.body, "feed", words, {
+    band: "top",
+    align: "left",
+    colour: "text",
+    ground: "photo",
+  });
+  return {
+    design: {
+      id: "dl-1",
+      state: "made",
+      fromVersionId: "cv-a-v11-1",
+      fromNumber: 1,
+      book: { version: book.version, state: "checked" },
+      words,
+      ...made,
+      document: { name: "feed-9-v2.fig" },
+      requestedBy: "u-anna",
+      at: at(4),
+      llmUsd: 0.002,
+    },
+    drawn: drawing,
+  };
+}
+
 const seeded: QaItem[] = [
   qa("qa-1", "cr-a-v7", "Feed 6", "09-07", 8, { slot: "Master 2 · Variant 2" }),
   qa("qa-2", "cr-a-v8", "Square 2", "09-07", 7, {
@@ -210,6 +242,57 @@ const seeded: QaItem[] = [
       },
     ],
     state: "fixing",
+  }),
+  // The Engine's picture check found three things (FLOWS §29.6): the cap is off, which stops the check until the one
+  // who checks settles it, and two small ones.
+  qa("qa-7", "cr-a-v10", "Feed 8", "06-10", 5, {
+    slot: "Master 3 · Variant 1",
+    evaluation: {
+      productTruth: "flag",
+      brandRules: "flag",
+      artefacts: "minor",
+      notes: [
+        "The cap reads glossy",
+        "Light from above, not from the side",
+        "A smeared edge where the bottle meets the ledge",
+      ],
+      evaluated: true,
+    },
+    findings: [
+      {
+        id: "fi-1",
+        dimension: "product",
+        severity: "critical",
+        finding: "The cap is glossy; LYSNE's cap is matte.",
+        expected: "Burgundy matte cap, as in its photographs",
+        observed: "A glossy cap with a bright highlight on top",
+        status: "open",
+      },
+      {
+        id: "fi-2",
+        dimension: "brand_brief",
+        severity: "minor",
+        finding: "The light comes from above, not from one side like a lamp.",
+        expected: "Warm low light from one side, like a lamp in the evening",
+        observed: "Even, soft light from above",
+        status: "open",
+      },
+      {
+        id: "fi-3",
+        dimension: "artefacts",
+        severity: "minor",
+        finding: "A soft, smeared edge where the bottle meets the ledge.",
+        status: "open",
+      },
+    ],
+  }),
+  // Fume laid Autumn launch's words on a picture in LYSNE's design system (FLOWS §33): every hard check passed, the
+  // brand's own serif is not on file, and Fume's review has one small note. V1 is the picture under it.
+  qa("qa-8", "cr-a-v11", "Feed 9", "10-08", 3, {
+    slot: "Master 2 · Variant 4",
+    version: 2,
+    previous: { image: img("10-08"), version: 1 },
+    ...designed(),
   }),
   qa("qa-4", "cr-doc-autumn-email", "Email header", "05-01", 15, {
     studio: "design",

@@ -62,6 +62,26 @@ Marcus: "Designet var ikke veldig on brand." What changed:
   backdrop, the picture is set at 82%, then 72%, in the bottom right corner, its backdrop carried on from a softened
   copy, and the keep-clear boxes move with it. A scene is never stretched. The expert is told.
 
+## Designed, not wired yet (FLOWS §33)
+
+The Studio and Check screens run on the mock. Wiring them to the backend above:
+
+- `RenderVersion.design` (`VersionDesign`) is a row of `design_layers`: `state` (designing, made, failed), `ask`,
+  `book_version` with the book's state, `words`, `layout`, `checks`, `findings` with the review's verdict,
+  `document_file_id`, `error`, `llm_usd`, `requested_by`. Code's own finding ("No layout passed every check; this is
+  the closest one.") comes with `by: "code"`.
+- `designAsk(documentId, versionId)` reads, without writing: the plan's approved words for the creative (as
+  `wordsOf` in `layer.ts`), `brand_book_in_use` for the design book, and whether a layer is designing on that
+  picture. `blocked` is the reason it cannot be asked: no finished picture, no design book, no headline.
+- `designVersion(documentId, versionId, ask?)` calls `design_candidate`, then the `design` function with
+  `{layerId}`, and answers at once. A designing layer is a version in state `rendering` with `design.state`
+  `designing`; the candidate `design_finish` adds (`designed_from`) is the made version, picked. `design_fail` is a
+  failed version with `design.error`.
+- `design.document.url` is a signed link to `document_file_id`, made when the version is read.
+- `RenderVersion.drawn` and `QaItem.drawn` are the demo's way to draw the words over the photograph; live, the
+  version's picture is the designed PNG and `drawn` is left out.
+- `QaItem.design` is the layer of the version in check, for Fume's people only (`is_staff`, as the table's RLS).
+
 ## Still open
 
 - The brand's own ads: a brand's site rarely shows how it sets words on an ad. Uploads of its ads come first in the

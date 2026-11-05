@@ -21,7 +21,9 @@ import {
   useToast,
 } from "@fume/ui";
 import { Link, useNavigate } from "react-router-dom";
-import { useOpenDocument } from "../../api/hooks";
+import { useOpenDocument, useSession } from "../../api/hooks";
+import { useFrameKind } from "../../shell/scope";
+import { shownVersion } from "./doc/versions";
 import type {
   Board,
   BoardKind,
@@ -149,6 +151,13 @@ export const tileShape = (format: Format) => (format === "square" ? { ratio: "1 
 
 /** Opens the Studio's creative document for a candidate, a planned creative or a campaign, and goes there (FLOWS
  *  §9.2: one document per creative; an existing one is reopened when the creative is known). */
+/** Fume's own people (not an agency's, not a customer): they see the Engine's prompts and teach it (FLOWS §29). */
+export function useFumeTeam(): boolean {
+  const user = useSession().data?.user;
+  const frame = useFrameKind();
+  return frame === "fume" && Boolean(user?.staffRole) && !user?.agency;
+}
+
 export function useOpenInStudio(workspaceId: Id) {
   const open = useOpenDocument();
   const navigate = useNavigate();
@@ -248,7 +257,7 @@ export function SessionRow({
 
 /** A creative document as a row: its title, campaign, version and who changed it last; it opens the desk. */
 export function DocumentRow({ doc, campaign, by }: { doc: CreativeDocument; campaign?: string; by: string }) {
-  const cover = doc.versions.find((v) => v.id === doc.pickedVersionId) ?? doc.versions.at(-1);
+  const cover = shownVersion(doc);
   return (
     <Item as="li" variant="outline" asChild>
       <Link to={`/studio/doc/${doc.id}`}>

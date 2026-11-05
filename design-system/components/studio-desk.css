@@ -281,6 +281,9 @@
 .ui-desk-canvas[data-zoom="full"] .ui-desk-shot > img { max-width: none; max-height: none; }
 .ui-desk-caption { font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
 .ui-desk-empty { margin: 0; max-width: calc(var(--ui-size-hit) * 8); text-align: center; font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+/* Only a version that did not render (FLOWS §29): the line and a way to its reason */
+div.ui-desk-empty { display: grid; justify-items: center; gap: var(--ui-space-md); }
+.ui-desk-empty-text { margin: 0; text-wrap: pretty; }
 
 /* Design: the layers drawn over the render, each a box you can select. Their type is the creative's own, scaled
    to the frame. */
@@ -395,6 +398,110 @@ button.ui-desk-version:disabled { cursor: default; }
 .ui-desk-version-flags { display: flex; align-items: center; gap: var(--ui-space-xs); color: var(--ui-text); }
 .ui-desk-version-flags[data-clean] { color: var(--ui-text-tertiary); }
 .ui-desk-version-flags > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+/* A version that did not render (FLOWS §29): no picture, so the sunken ground holds a quiet picture mark, and Rouge is
+   only the mark before its line (Rouge on Porcelain 4.9:1); the words stay Ink. It still opens: the panel says why. */
+.ui-desk-version-thumb[data-none] { display: grid; place-items: center; aspect-ratio: 1; color: var(--ui-text-tertiary); }
+.ui-desk-version-thumb[data-none] > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-desk-version-flags[data-failed] > svg { color: var(--ui-danger); }
+
+/* The Engine behind a version, in the right panel (FLOWS §29): what was asked, what the prompt had to carry and what
+   the checks said, the prompt itself, and a few facts. On the Smoke glass every word is Porcelain; a finding that
+   works against a rule carries the solid Rouge disc cut with Porcelain, as an error on glass does (round 8). */
+.ui-desk-trace-asked { margin: 0; padding-inline: var(--ui-space-sm); font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-glass-fg); text-wrap: pretty; }
+.ui-desk-trace-head { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); min-width: 0; }
+.ui-desk-trace-list { display: grid; gap: var(--ui-space-md); margin: 0; padding: 0 var(--ui-space-sm); list-style: none; min-width: 0; }
+.ui-desk-trace-list[data-dense] { gap: var(--ui-space-sm); }
+.ui-desk-trace-item { display: grid; grid-template-columns: var(--ui-size-icon-sm) minmax(0, 1fr); align-items: start; gap: var(--ui-space-sm); font-size: var(--ui-type-label); line-height: 1.45; }
+.ui-desk-trace-mark { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); margin-block: calc((1lh - var(--ui-size-icon-sm)) / 2); color: var(--ui-glass-fg-secondary); }
+.ui-desk-trace-item[data-verdict="against"] .ui-desk-trace-mark {
+  border-radius: 50%; color: var(--ui-field-glass-error-mark); background: var(--ui-field-glass-error-cut);
+  box-shadow: inset 0 0 0 1px var(--ui-field-glass-error-mark); /* gate-allow:few-strokes  fills the sub-pixel rim between the drawn disc and its box, so no Porcelain halo shows: not a line */
+}
+.ui-desk-trace-text { display: grid; min-width: 0; }
+.ui-desk-trace-what { color: var(--ui-glass-fg); overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-desk-trace-note { color: var(--ui-glass-fg-secondary); text-wrap: pretty; }
+.ui-desk-trace-prompt {
+  margin: 0; padding: var(--ui-space-md); border-radius: var(--ui-radius-item); background: var(--ui-glass-button-clear);
+  color: var(--ui-glass-fg); font-family: var(--ui-type-family-data); /* gate-allow:mono-is-data  the prompt is the data the Engine sent to the image model */
+  font-size: var(--ui-type-label); line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.ui-desk-trace-prompt:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-size-ring-offset); }
+
+/* The ledger (FLOWS §29.5): one quiet row per group, its count after the title, opened to the pieces. A group with a
+   piece that went in but was not found opens by itself and names it in its count; only that piece carries Rouge. */
+.ui-desk-trace-groups { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-desk-trace-group { gap: var(--ui-space-xs); }
+.ui-desk-trace-group-trigger {
+  display: flex; align-items: center; gap: var(--ui-space-sm); width: 100%; min-width: 0; min-height: var(--ui-size-hit);
+  margin: 0; padding: 0 var(--ui-space-sm); border: 0; border-radius: var(--ui-radius-item); background: transparent;
+  color: var(--ui-glass-fg); font: inherit; font-size: var(--ui-type-control); text-align: start;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+@media (hover: hover) { .ui-desk-trace-group-trigger:hover { background: var(--ui-glass-button-clear); } }
+.ui-desk-trace-group-trigger:active { background: var(--ui-glass-button-clear); }
+.ui-desk-trace-group-trigger:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-size-ring-offset); }
+.ui-desk-trace-group-trigger > .ui-accordion-chevron { color: var(--ui-glass-fg-secondary); }
+.ui-desk-trace-group-title { flex: 1; min-width: 0; }
+.ui-desk-trace-group-meta { flex: none; font-size: var(--ui-type-label); color: var(--ui-glass-fg-secondary); font-variant-numeric: tabular-nums; }
+.ui-desk-trace-group .ui-collapsible-content > div > .ui-desk-trace-list { padding-block: var(--ui-space-xs) var(--ui-space-sm); }
+.ui-desk-trace-item[data-verdict="left"] .ui-desk-trace-what { color: var(--ui-glass-fg-secondary); }
+
+/* ---------- graphic design by Fume (FLOWS §33, PROPOSED 4 Nov 2026) ----------
+   Fume lays the plan's words on a version in the brand's design system; it comes back as a version of its own.
+   Markup: [strip] <button class="ui-btn"> Add graphic design to V3 </button> beside Add a picture made by hand;
+           [tile] <span class="ui-desk-version-thumb" data-designing><img/></span> … Fume is designing | Designed from V3
+           [board] <span class="ui-desk-shot" data-designing><img/></span> | <span class="ui-desk-shot"><img/>
+             <span class="ui-design-drawn"><span class="ui-design-shade" data-from/><span class="ui-design-words"
+             data-role="headline|subline|cta"><span class="ui-design-words-text" data-fill/></span></span></span>
+           [review, on glass or on the page] <ul class="ui-design-list" data-tone="glass|page" data-dense><li
+             class="ui-design-item" data-severity|data-verdict|data-check="ok|soft|failed"><svg class="ui-design-mark"/>
+             <span class="ui-design-text"><span class="ui-design-what"/><span class="ui-design-note"/></span></li></ul>
+           [dialog] <form class="ui-design-form"><section class="ui-design-part"><h3 class="ui-design-head"/>
+             <dl class="ui-design-rows"/> | <p class="ui-design-line"/></section> <p class="ui-design-blocked"/> field </form>
+   The words on a demo picture are drawn here; the live picture is the designed PNG. Never Amber: nothing here is a
+   person's check. Rouge marks only a hard check that failed. */
+.ui-desk-shot[data-designing] > img, .ui-desk-version-thumb[data-designing] > img { opacity: .6; }
+.ui-design-drawn { position: absolute; inset: 0; overflow: hidden; border-radius: var(--ui-radius-item); container-type: inline-size; pointer-events: none; }
+.ui-design-shade { position: absolute; inset-inline: 0; height: 45%; }
+.ui-design-shade[data-from="top"] { inset-block-start: 0; }
+.ui-design-shade[data-from="bottom"] { inset-block-end: 0; }
+.ui-design-words { position: absolute; display: flex; }
+.ui-design-words-text { display: inline-block; text-wrap: balance; }
+.ui-design-words-text[data-fill] { white-space: nowrap; }
+
+.ui-design-list { display: grid; gap: var(--ui-space-md); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.ui-design-list[data-dense] { gap: var(--ui-space-sm); }
+.ui-design-list[data-tone="glass"] { padding-inline: var(--ui-space-sm); }
+.ui-design-item { display: grid; grid-template-columns: var(--ui-size-icon-sm) minmax(0, 1fr); align-items: start; gap: var(--ui-space-sm); font-size: var(--ui-type-label); line-height: 1.45; }
+.ui-design-list[data-tone="page"] .ui-design-item { grid-template-columns: var(--ui-size-icon) minmax(0, 1fr); font-size: var(--ui-type-control); line-height: 1.5; }
+.ui-design-mark { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); margin-block: calc((1lh - var(--ui-size-icon-sm)) / 2); color: var(--ui-glass-fg-secondary); }
+.ui-design-list[data-tone="page"] .ui-design-mark { width: var(--ui-size-icon); height: var(--ui-size-icon); margin-block: calc((1lh - var(--ui-size-icon)) / 2); color: var(--ui-text-tertiary); }
+.ui-design-item:is([data-severity="major"], [data-severity="critical"], [data-verdict="needs_work"], [data-check="soft"]) .ui-design-mark { color: var(--ui-glass-fg); }
+.ui-design-list[data-tone="page"] .ui-design-item:is([data-severity="major"], [data-severity="critical"], [data-verdict="needs_work"], [data-check="soft"]) .ui-design-mark { color: var(--ui-text); }
+.ui-design-item[data-check="failed"] .ui-design-mark { color: var(--ui-danger); }
+.ui-design-text { display: grid; min-width: 0; }
+.ui-design-what { color: var(--ui-glass-fg); overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-design-note { color: var(--ui-glass-fg-secondary); text-wrap: pretty; }
+.ui-design-list[data-tone="page"] .ui-design-what { color: var(--ui-text); }
+.ui-design-list[data-tone="page"] .ui-design-note { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-design-list + .ui-design-list { margin-block-start: var(--ui-space-sm); }
+
+.ui-design-form { display: grid; gap: var(--ui-space-lg); min-width: 0; }
+.ui-design-part { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-design-head { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-glass-fg-secondary); }
+.ui-design-line, .ui-design-quiet, .ui-design-loading, .ui-design-file-line { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-glass-fg); text-wrap: pretty; }
+.ui-design-quiet { color: var(--ui-glass-fg-secondary); }
+.ui-design-file-line { padding-inline: var(--ui-space-sm); font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-glass-fg-secondary); }
+.ui-design-link { color: inherit; text-decoration: underline; text-underline-offset: 0.2em; }
+.ui-design-link:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-size-ring-offset); border-radius: var(--ui-radius-item); }
+.ui-design-rows { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 5fr); gap: var(--ui-space-sm) var(--ui-space-lg); margin: 0; font-size: var(--ui-type-control); line-height: 1.45; }
+.ui-design-rows[data-tone="glass"] { padding-inline: var(--ui-space-sm); font-size: var(--ui-type-label); }
+.ui-design-rows > div { display: contents; }
+.ui-design-rows dt { margin: 0; min-width: 0; color: var(--ui-glass-fg-secondary); }
+.ui-design-rows dd { margin: 0; min-width: 0; color: var(--ui-glass-fg); overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-design-blocked { display: flex; align-items: flex-start; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-glass-fg); text-wrap: pretty; }
+.ui-design-blocked > svg { flex: none; width: var(--ui-size-icon); height: 1lh; color: var(--ui-glass-fg-secondary); }
 
 /* ---------- a phone: the board and the versions, read-only ---------- */
 

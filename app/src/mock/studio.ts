@@ -4,7 +4,11 @@
 import {
   FumeError,
   type CreativeDocument,
+  type DesignAsk,
+  type DesignBook,
+  type DesignBookUsed,
   type EngineEdit,
+  type EnginePrompt,
   type FormatTile,
   type FumeApi,
   type Generation,
@@ -20,6 +24,7 @@ import {
 import type { Mock } from "./context";
 import { POOL } from "./production";
 import { defaults } from "./seed";
+import { measured, planCopy, wordsOf, type Choice } from "./seed/design";
 import { img } from "./seed/helpers";
 
 type Calls =
@@ -29,6 +34,7 @@ type Calls =
   | "generate"
   | "repair"
   | "pickGeneration"
+  | "teachEngine"
   | "sendToCheck"
   | "studioModes"
   | "documents"
@@ -40,6 +46,8 @@ type Calls =
   | "render"
   | "pickVersion"
   | "addVersion"
+  | "designAsk"
+  | "designVersion"
   | "overrideProduct"
   | "documentToCheck"
   | "undoDocumentToCheck"
@@ -77,6 +85,128 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
   const fromCandidate = new Map<Id, Id>();
   /** Before a Send to check: what the QA item showed, so Undo puts it back (or removes the item it added). */
   const beforeSend = new Map<Id, { itemId: Id; was?: QaItem; added: boolean; docState: CreativeDocument["state"] }>();
+
+  // ─── Graphic design by Fume (FLOWS §33) ──────────────────────────────────
+  /** As design_candidate: only a Fume designer asks (the app's experts are Fume's designers; an agency's people never). */
+  const mustDesigner = () => {
+    m.mustStaff();
+    if (m.me().agency || m.me().staffRole !== "expert")
+      throw new FumeError("forbidden", "Only a designer asks Fume for the graphic design.");
+  };
+  /** The design system in use: approved, else checked, else the newest draft (app.brand_book_in_use). */
+  const designInUse = (workspaceId: Id): { used: DesignBookUsed; body: DesignBook } | undefined => {
+    const rows = db.brandBooks.filter((b) => b.workspaceId === workspaceId && b.kind === "design" && b.body);
+    const order = ["approved", "checked", "draft"] as const;
+    for (const state of order) {
+      const b = rows.filter((x) => x.state === state).sort((a, z) => z.version - a.version)[0];
+      if (b && b.kind === "design" && b.body) return { used: { version: b.version, state }, body: b.body };
+    }
+    return undefined;
+  };
+  /** The approved plan's words for the creative, as the design function picks them. */
+  const planWords = (d: CreativeDocument) => {
+    const plan = db.plans.find((p) => p.campaignId === d.campaignId && p.state === "approved");
+    return wordsOf(plan?.content ?? planCopy[d.campaignId ?? ""] ?? []);
+  };
+  function designAskOf(d: CreativeDocument, versionId: Id): DesignAsk {
+    const asked = m.find(d.versions, versionId, "version");
+    // On a designed version, Fume designs again from the picture under it.
+    const from = (asked.design && d.versions.find((v) => v.id === asked.design!.fromVersionId)) || asked;
+    const book = designInUse(d.workspaceId);
+    const words = planWords(d);
+    const designing = d.versions.find((v) => v.state === "rendering" && v.design?.fromVersionId === from.id);
+    const blocked =
+      from.state !== "done" || !from.image || from.design
+        ? "Graphic design goes on a picture."
+        : !book
+          ? "The brand has no design system yet. Ask Fume to write one first."
+          : !words
+            ? "The approved plan has no headline to set on this creative."
+            : undefined;
+    return {
+      fromVersionId: from.id,
+      fromNumber: from.number,
+      ...(words ? { words } : {}),
+      ...(book ? { book: book.used } : {}),
+      ...(blocked ? { blocked } : {}),
+      ...(designing ? { designingVersionId: designing.id } : {}),
+    };
+  }
+  /** Which pictures are light where the words go (dark words on them); the rest take light words on a soft shade. */
+  const LIGHT = /\/(04-06|06-10|09-07|01-03|07-1\d)-/;
+  function startDesign(d: CreativeDocument, ask: DesignAsk, words: string | undefined) {
+    const from = m.find(d.versions, ask.fromVersionId, "version");
+    const n = d.versions.length + 1;
+    const said = (words ?? "").toLowerCase();
+    // Each new try on the same picture moves the words, unless the designer said where.
+    const before = d.versions.filter((v) => v.design?.fromVersionId === from.id && v.design.state === "made").length;
+    const light = LIGHT.test(from.image);
+    const choice: Choice = {
+      band: /bottom|lower|stone|ledge|foot/.test(said)
+        ? "bottom"
+        : /middle/.test(said)
+          ? "middle"
+          : /\btop\b|above|high/.test(said)
+            ? "top"
+            : before % 2
+              ? "bottom"
+              : "top",
+      align: /\bright\b/.test(said) ? "right" : /\bcent(re|er)\b/.test(said) ? "centre" : "left",
+      colour: light ? "text" : "on_photo",
+      ground: light ? "photo" : "gradient",
+    };
+    const v: RenderVersion = {
+      id: m.nextId("rv"),
+      number: n,
+      image: from.image,
+      at: now(),
+      by: m.me().id,
+      state: "rendering",
+      variables: structuredClone(from.variables),
+      specs: structuredClone(from.specs),
+      cost: 0,
+      evaluation: structuredClone(from.evaluation),
+      ...(from.details ? { details: structuredClone(from.details) } : {}),
+      design: {
+        id: m.nextId("dl"),
+        state: "designing",
+        fromVersionId: from.id,
+        fromNumber: from.number,
+        ...(words?.trim() ? { ask: words.trim().slice(0, 1000) } : {}),
+        checks: [],
+        findings: [],
+        requestedBy: m.me().id,
+        at: now(),
+      },
+    };
+    d.versions.push(v);
+    touch(d);
+    later(() => {
+      const book = designInUse(d.workspaceId);
+      const plan = planWords(d);
+      if (!book || !plan) {
+        v.state = "failed";
+        v.failure = !book ? "The brand has no design system." : "The plan has no headline to set.";
+        v.design = { ...v.design!, state: "failed", error: v.failure };
+        touch(d);
+        return;
+      }
+      const { drawing, ...made } = measured(book.body, from.specs.format, plan, choice);
+      v.state = "done";
+      v.design = {
+        ...v.design!,
+        ...made,
+        state: "made",
+        book: book.used,
+        words: plan,
+        document: { name: `${(d.title || "creative").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-v${n}.fig` },
+        llmUsd: 0.002,
+      };
+      v.drawn = drawing;
+      d.pickedVersionId = v.id;
+      touch(d);
+    }, 14);
+  }
 
   /** The demo Engine: reads words from the Engine bar and turns them into variable changes. */
   function readInstruction(d: CreativeDocument, text: string, fallback = true): EngineEdit["changes"] {
@@ -197,6 +327,8 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       cost: 0.12 * Math.max(1, d.specs.count),
       evaluation: { productTruth: "pass", brandRules: "pass", artefacts: "none", notes: [] },
       instruction,
+      // The prompt behind it, as the Engine keeps it (FLOWS §29): the previous one's checks, the new words.
+      prompt: renderedPrompt(d, instruction),
     };
     d.versions.push(v);
     touch(d);
@@ -212,6 +344,24 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       d.pickedVersionId = v.id;
       touch(d);
     }, m.latency * 14);
+  }
+
+  /** The prompt of a new render: the last prompt the Engine wrote for this document, with the instruction's words in
+   *  it, or a plain one when there is none yet. */
+  function renderedPrompt(d: CreativeDocument, instruction?: string): EnginePrompt {
+    const last = [...d.versions].reverse().find((x) => x.prompt?.status === "validated")?.prompt;
+    const base =
+      last?.text ?? "Analog 35 mm photograph, warm light from a single source, the product the one sharp thing.";
+    return {
+      status: "validated",
+      model: last?.model ?? "Nano Banana Pro",
+      method: last?.method ?? "Product on a surface",
+      text: instruction ? `${base} ${instruction}.` : base,
+      tries: 1,
+      findings: last?.findings.filter((f) => f.verdict !== "against") ?? [],
+      codeChecks: last?.codeChecks ?? [{ text: "No words for the picture to print", pass: true }],
+      llmUsd: 0.002,
+    };
   }
 
   /** A document opened from a creative, a candidate, or empty. */
@@ -436,6 +586,16 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       s.pickedId = generationId;
       return wait(s);
     },
+    async teachEngine({ generationId, verdict, why }) {
+      m.mustStaff();
+      if (m.me().agency) throw new FumeError("forbidden", "Only Fume's own team teaches the Engine.");
+      const g = db.sessions.flatMap((s) => s.generations).find((x) => x.id === generationId);
+      if (!g) throw new FumeError("not_found", "That picture is gone.");
+      // Only people's verdicts teach: the lesson is kept for the brand (engine_lessons in the live app).
+      g.taught = verdict;
+      void why;
+      return wait(undefined);
+    },
     async sendToCheck(sessionId) {
       m.mustStaff();
       const s = sessionOf(sessionId);
@@ -583,6 +743,7 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       m.mustStaff();
       const d = doc(id);
       const v = m.find(d.versions, versionId, "version");
+      if (v.state !== "done") throw new FumeError("invalid", "Only a rendered version can be picked.");
       d.pickedVersionId = v.id;
       d.variables = structuredClone(v.variables);
       touch(d);
@@ -609,6 +770,20 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       d.pickedVersionId = v.id;
       touch(d);
       return wait(d);
+    },
+    async designAsk(id, versionId) {
+      mustDesigner();
+      return wait(designAskOf(doc(id), versionId));
+    },
+    async designVersion(id, versionId, words) {
+      mustDesigner();
+      const d = doc(id);
+      const ask = designAskOf(d, versionId);
+      if (ask.designingVersionId) return wait(structuredClone(d));
+      if (ask.blocked) throw new FumeError("invalid", ask.blocked);
+      startDesign(d, ask, words);
+      // Answered at once, with the version Fume is designing.
+      return wait(structuredClone(d));
     },
     async overrideProduct(id, { field, value, scope }) {
       m.mustStaff();
@@ -647,7 +822,8 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       if (item) {
         beforeSend.set(d.id, { itemId: item.id, was: structuredClone(item), added: false, docState });
         const shown = item.version ?? 1;
-        if (version.image !== item.image)
+        // A designed version shares the picture under it in the demo: its words make it another version.
+        if (version.image !== item.image || (version.drawn && version.number !== shown))
           Object.assign(item, {
             previous: { image: item.image, version: shown },
             image: version.image,
@@ -662,6 +838,8 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
           studioBy: undefined,
           studioAt: undefined,
           layers: d.studio === "design" ? structuredClone(d.layers) : item.layers,
+          design: version.design && structuredClone(version.design),
+          drawn: version.drawn && structuredClone(version.drawn),
         });
         m.emit({ type: "qa.state", item: structuredClone(item) });
       } else {
@@ -685,6 +863,8 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
           feedback: [],
           version: version.number,
           layers: d.studio === "design" ? structuredClone(d.layers) : undefined,
+          ...(version.design ? { design: structuredClone(version.design) } : {}),
+          ...(version.drawn ? { drawn: structuredClone(version.drawn) } : {}),
           ...by,
         };
         db.qaItems.push(added);

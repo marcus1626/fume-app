@@ -13,6 +13,20 @@ const scrollerOf = (el: Element | null) =>
 /** How much of the scroller's top the sticky rows cover: the parts say it themselves (scroll-margin-top). */
 const covered = (el: Element | null) => (el ? parseFloat(getComputedStyle(el).scrollMarginTop) || 0 : 0);
 
+/** Glides the page to an element, clear of the sticky rows (its own scroll-margin), and gives it the keyboard's focus. */
+export function glideTo(id: string, from: Element | null): boolean {
+  const el = document.getElementById(id);
+  const s = scrollerOf(from);
+  if (!el || !s) return false;
+  const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  const y = el.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop - covered(el);
+  s.scrollTo({ top: Math.max(0, y), behavior: reduce ? "auto" : "smooth" });
+  // the keyboard lands where the eye does
+  el.setAttribute("tabindex", "-1");
+  el.focus({ preventScroll: true });
+  return true;
+}
+
 export function PlanIndex({
   label = "In this plan",
   parts = partsOf(),
@@ -59,18 +73,11 @@ export function PlanIndex({
 
   const go = (e: MouseEvent<HTMLAnchorElement>, id: string) => {
     if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    const el = document.getElementById(id);
-    const s = scrollerOf(nav.current);
-    if (!el || !s) return;
+    if (!document.getElementById(id) || !scrollerOf(nav.current)) return;
     e.preventDefault();
     picked.current = { id, at: Date.now() };
     setCurrent(id);
-    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const y = el.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop - covered(el);
-    s.scrollTo({ top: Math.max(0, y), behavior: reduce ? "auto" : "smooth" });
-    // the keyboard lands where the eye does
-    el.setAttribute("tabindex", "-1");
-    el.focus({ preventScroll: true });
+    glideTo(id, nav.current);
   };
 
   return (

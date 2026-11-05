@@ -18,6 +18,7 @@ export {
   voiceBook,
 } from "./brand";
 export { brandReferences, models, presets } from "./brandAssets";
+export { brandBooks } from "./books";
 export { firstScan, update as brandUpdate, zipSources } from "./brandReading";
 export { categories, collections, detailTokens, oilAdded, products } from "./products";
 export { fileReads, productKinds, readGuesses } from "./productKinds";

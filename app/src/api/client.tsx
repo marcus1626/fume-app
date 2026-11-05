@@ -195,6 +195,9 @@ function LiveUpdates({ api }: { api: FumeApi }) {
           case "qa.state":
             client.invalidateQueries({ queryKey: ["studio", "qa"] });
             break;
+          case "book.state":
+            client.invalidateQueries({ queryKey: ["brand", "books"] });
+            break;
           case "generation.state":
             client.invalidateQueries({ queryKey: ["studio", "session", event.generation.sessionId] });
             break;

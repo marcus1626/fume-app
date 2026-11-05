@@ -749,8 +749,8 @@ nora sendToClient({"campaignId":"c-autumn","link":true,"note":"Three for the lau
 nora sendToClient({"campaignId":"c-autumn","link":true,"note":"Three for the launch.","to":["u-maja"],"versionIds":["v-cr-a-v1-3","v-cr-a-v2-4","v-cr-a-v3-...)
   {
     "campaignId": "c-autumn",
-    "id": "cs-mvkqvi7k-2",
-    "link": {"expiresAt":"2026-11-13T12:32:00.000Z","token":"lkmvkqvi7k1","url":"https://app.fumecreatives.com/c/lkmvkqvi7k1"},
+    "id": "cs-mvkqvpxc-2",
+    "link": {"expiresAt":"2026-11-13T12:32:00.000Z","token":"lkmvkqvpxc1","url":"https://app.fumecreatives.com/c/lkmvkqvpxc1"},
     "note": "Three for the launch.",
     "sentAt": "2026-10-14T12:32:00.000Z",
     "sentBy": "u-nora",
@@ -764,8 +764,8 @@ nora clientSends("c-autumn")
   [
     {
       "campaignId": "c-autumn",
-      "id": "cs-mvkqvi7k-2",
-      "link": {"expiresAt":"2026-11-13T12:32:00.000Z","token":"lkmvkqvi7k1","url":"https://app.fumecreatives.com/c/lkmvkqvi7k1"},
+      "id": "cs-mvkqvpxc-2",
+      "link": {"expiresAt":"2026-11-13T12:32:00.000Z","token":"lkmvkqvpxc1","url":"https://app.fumecreatives.com/c/lkmvkqvpxc1"},
       "note": "Three for the launch.",
       "sentAt": "2026-10-14T12:32:00.000Z",
       "sentBy": "u-nora",
@@ -784,7 +784,7 @@ nora clientSends("c-autumn")
       "workspaceId": "w-lysne"
     }
   ]
-nora clientLink("lkmvkqvi7k1")
+nora clientLink("lkmvkqvpxc1")
   {
     "agency": {"id":"o-brygga","kind":"agency","name":"Brygga Studio","packageId":"p-core"},
     "campaign": {
@@ -949,8 +949,8 @@ nora clientLink("lkmvkqvi7k1")
     },
     "send": {
       "campaignId": "c-autumn",
-      "id": "cs-mvkqvi7k-2",
-      "link": {"expiresAt":"2026-11-13T12:32:00.000Z","token":"lkmvkqvi7k1","url":"https://app.fumecreatives.com/c/lkmvkqvi7k1"},
+      "id": "cs-mvkqvpxc-2",
+      "link": {"expiresAt":"2026-11-13T12:32:00.000Z","token":"lkmvkqvpxc1","url":"https://app.fumecreatives.com/c/lkmvkqvpxc1"},
       "note": "Three for the launch.",
       "sentAt": "2026-10-14T12:32:00.000Z",
       "sentBy": "u-nora",
@@ -967,7 +967,7 @@ nora clientLink("lkmvkqvi7k1")
       "title": "Creative lead"
     }
   }
-nora answerClientLink({"name":"Nora","token":"lkmvkqvi7k1","verdict":"approve","versionId":"v-cr-a-v1-3"})
+nora answerClientLink({"name":"Nora","token":"lkmvkqvpxc1","verdict":"approve","versionId":"v-cr-a-v1-3"})
   {"error":"forbidden","message":"This is a preview of the client’s page. Only the client answers here."}
 nora recordClientApproval({"clientUserId":"u-maja","note":"Maja said yes in our Monday meeting.","versionIds":["v-cr-a-v2-4"]}) → events
   {
@@ -1166,7 +1166,7 @@ nora recordClientApproval({"clientUserId":"u-even","note":"Not a client","versio
     }
   ]
 -- signed in as maja (agency's client)
-maja (agency's client) clientLink("lkmvkqvi7k1")
+maja (agency's client) clientLink("lkmvkqvpxc1")
   {
     "agency": {"id":"o-brygga","kind":"agency","name":"Brygga Studio","packageId":"p-core"},
     "campaign": {
@@ -1339,8 +1339,8 @@ maja (agency's client) clientLink("lkmvkqvi7k1")
     },
     "send": {
       "campaignId": "c-autumn",
-      "id": "cs-mvkqvi7k-2",
-      "link": {"expiresAt":"2026-11-13T12:32:00.000Z","token":"lkmvkqvi7k1","url":"https://app.fumecreatives.com/c/lkmvkqvi7k1"},
+      "id": "cs-mvkqvpxc-2",
+      "link": {"expiresAt":"2026-11-13T12:32:00.000Z","token":"lkmvkqvpxc1","url":"https://app.fumecreatives.com/c/lkmvkqvpxc1"},
       "note": "Three for the launch.",
       "sentAt": "2026-10-14T12:32:00.000Z",
       "sentBy": "u-nora",
@@ -1357,7 +1357,7 @@ maja (agency's client) clientLink("lkmvkqvi7k1")
       "title": "Creative lead"
     }
   }
-maja (agency's client) answerClientLink({"name":"Maja Lind","token":"lkmvkqvi7k1","verdict":"approve","versionId":"v-cr-a-v1-3"}) → events
+maja (agency's client) answerClientLink({"name":"Maja Lind","token":"lkmvkqvpxc1","verdict":"approve","versionId":"v-cr-a-v1-3"}) → events
   {
     "creativeId": "cr-a-v1",
     "type": "version.state",
@@ -1435,7 +1435,7 @@ maja (agency's client) answerClientLink({"name":"Maja Lind","token":"lkmvkqvi7k1
     },
     "type": "campaign.state"
   }
-maja (agency's client) answerClientLink({"name":"Maja Lind","token":"lkmvkqvi7k1","verdict":"approve","versionId":"v-cr-a-v1-3"})
+maja (agency's client) answerClientLink({"name":"Maja Lind","token":"lkmvkqvpxc1","verdict":"approve","versionId":"v-cr-a-v1-3"})
   {
     "approvedAt": "2026-10-14T12:32:00.000Z",
     "approvedBy": "u-maja",
@@ -1451,7 +1451,7 @@ maja (agency's client) answerClientLink({"name":"Maja Lind","token":"lkmvkqvi7k1
     "state": "approved",
     "width": 1080
   }
-maja (agency's client) answerClientLink({"name":"Maja Lind","text":"Warmer","token":"lkmvkqvi7k1","verdict":"changes","versionId":"v-cr-a-v3-5"}) → events
+maja (agency's client) answerClientLink({"name":"Maja Lind","text":"Warmer","token":"lkmvkqvpxc1","verdict":"changes","versionId":"v-cr-a-v3-5"}) → events
   {
     "creativeId": "cr-a-v3",
     "type": "version.state",
@@ -1526,7 +1526,7 @@ maja (agency's client) answerClientLink({"name":"Maja Lind","text":"Warmer","tok
     },
     "type": "campaign.state"
   }
-maja (agency's client) answerClientLink({"name":"Maja Lind","text":"Warmer","token":"lkmvkqvi7k1","verdict":"changes","versionId":"v-cr-a-v3-5"})
+maja (agency's client) answerClientLink({"name":"Maja Lind","text":"Warmer","token":"lkmvkqvpxc1","verdict":"changes","versionId":"v-cr-a-v3-5"})
   {
     "checkedAt": "2026-10-14T11:52:00.000Z",
     "checkedBy": "u-nora",
@@ -1845,7 +1845,7 @@ maja (agency's client) notifications()
       "actor": {"kind":"person","userId":"u-nora"},
       "at": "2026-10-14T12:32:00.000Z",
       "href": "/campaigns/c-autumn/review",
-      "id": "n-mvkqvi7k-3",
+      "id": "n-mvkqvpxc-3",
       "kind": "checked",
       "read": false,
       "text": "LYSNE: 3 creatives from Brygga Studio to approve in Autumn launch",
@@ -3253,7 +3253,7 @@ nora agencyHome()
         "action": "Check",
         "at": "2026-10-14T12:24:00.000Z",
         "clientId": "w-lysne",
-        "detail": "4 creatives to check",
+        "detail": "6 creatives to check",
         "href": "/studio/b/w-lysne/qa?campaign=c-autumn",
         "id": "an-check-c-autumn",
         "kind": "check",
@@ -3326,13 +3326,13 @@ nora agencyHome()
         "title": "AURÉA · Brand DNA"
       }
     ],
-    "summary": "4 client brands. 1 plan, 8 creatives to check and 2 to send wait on you.",
+    "summary": "4 client brands. 1 plan, 10 creatives to check and 2 to send wait on you.",
     "team": [
       {
         "clientIds": ["w-lysne"],
         "load": 0.82,
         "role": "lead",
-        "thisWeek": "8 creatives to check · 1 plan to check · LYSNE",
+        "thisWeek": "10 creatives to check · 1 plan to check · LYSNE",
         "user": {
           "agency": {"organisationId":"o-brygga","role":"lead"},
           "email": "nora@brygga.example",
