@@ -64,6 +64,10 @@ Marcus: "Designet var ikke veldig on brand." What changed:
 - **The price as the brand's figure** (5 Nov). A copy line labelled Price, which the plan writes only from a verified
   fact, is set under the headline in the book's `price` style (Dressmann: 200 px), fitted to its column like the
   headline, and checked for whole words, one line and contrast. Without a price style it is 1.6 times the headline.
+  The figure is fitted as one line ("NÅ 199,-" never breaks after "NÅ"); the price before it ("TIDLIGERE 399,-") is
+  set small under it in the label style.
+- **A time budget** (5 Nov). The search stops trying once it has a layout and 22 s have gone (40 s with the inset
+  passes), and on an inset picture it tries the top band first, so a layer comes back well inside Vercel's limit.
 - **The brand's own font files** (5 Nov). A TrueType or OpenType file the brand adds as a font source
   (`public.brand_font_files`) is read for the family, weight and italic its own tables hold (`brand-book/fontfile.ts`),
   copied beside the book (`<workspace>/brand/font/`) and named in `body.fonts`; the writer is told the families, and a
