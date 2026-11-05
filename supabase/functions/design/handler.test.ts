@@ -91,6 +91,19 @@ Deno.test("the brand's own layout the model picked goes to the service by name; 
   assertEquals((b.calls.lay[0] as { prefer: { signature?: string } }).prefer.signature, undefined);
 });
 
+Deno.test("where the Engine left room for the words comes before the model's eye", async () => {
+  const roomy = { ...take, room: "Compose the frame so the product sits whole in the top 68% of the frame's height; the bottom 32% of the height is bare." };
+  const a = deps();
+  await designLayer(roomy, a.d);
+  assertEquals((a.calls.lay[0] as { prefer: { band?: string } }).prefer.band, "bottom");
+  const side = deps();
+  await designLayer({ ...take, room: "the left 40% of the width, from top to bottom, is bare" }, side.d);
+  assertEquals((side.calls.lay[0] as { prefer: unknown }).prefer, { band: "top", align: "left", colour: "on_photo" });
+  const none = deps({ choose: () => Promise.reject(new Error("down")) });
+  await designLayer(roomy, none.d);
+  assertEquals((none.calls.lay[0] as { prefer: unknown }).prefer, { band: "bottom" }, "without the model's eye, the room still leads");
+});
+
 Deno.test("a slow service is tried once more; a refusal is not", async () => {
   let n = 0;
   const slow = deps({ lay: (r) => (n++ === 0 ? Promise.resolve({ ok: false, status: 504, body: { error: "slow" } }) : deps().d.lay(r)) });

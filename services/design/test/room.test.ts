@@ -21,6 +21,9 @@ test("a soft fall of light at the edges is a plain backdrop; a scene is not", ()
   assert.equal(plainEdges(soft, 200, 250), true);
   const scene = backdrop(200, 250, (x) => (Math.floor(x / 9) % 2 ? 40 : 220));
   assert.equal(plainEdges(scene, 200, 250), false);
+  // A night street: dark, with a few dim lit windows along its edge. In linear light it looked smooth.
+  const night = backdrop(200, 250, (x, y) => ((x > 60 && x < 70) || (y > 100 && y < 112) ? 50 : 22));
+  assert.equal(plainEdges(night, 200, 250), false, "a dark scene with lights at its edge is not a backdrop");
 });
 
 test("a packshot is set smaller in the corner and the boxes move with it", async () => {

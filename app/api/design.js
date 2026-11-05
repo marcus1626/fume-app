@@ -635,7 +635,7 @@ function cornersFor(first, band, align) {
 function plainEdges(data, width, height) {
   const lumAt = (x, y) => {
     const i = (y * width + x) * 4;
-    return luminance(data[i], data[i + 1], data[i + 2]);
+    return (0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 255;
   };
   const steps = [];
   const walk = (n, at) => {

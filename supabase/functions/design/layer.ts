@@ -25,6 +25,8 @@ export type Take = {
   products: { name: string; variant: string | null }[];
   book: { id: string; version: number; state: string; body: Record<string, unknown> };
   store: { bucket: string; png: string; fig: string };
+  /** The Engine's hard rule "room-for-words" for this picture, when it was made under one. */
+  room?: string | null;
 };
 export type Words = { headline: string; subline?: string; cta?: string; price?: string };
 
@@ -94,6 +96,17 @@ export function layoutsOf(t: Take): BrandLayout[] {
   // The brand's own ads are its graphic design; its shop's layouts are offered only when it has no ads read.
   const ads = carrying.filter((l) => l.source === "pictures");
   return (ads.length ? ads : carrying).slice(0, 5).map((l) => ({ name: l.name, band: l.band, align: l.align, ground: l.ground, words: l.words, cta: l.cta, why: l.why }));
+}
+
+/**
+ * Where the Engine left room for the words, as a place to try first: a band for the top or bottom, a side for the left
+ * or right. The picture was made for it, so it comes before the model's eye.
+ */
+export function roomOf(t: Take): { band?: "top" | "bottom"; align?: "left" | "right" } {
+  const side = /\bthe (left|right|top|bottom) \d+% of the (?:width|height)\b[^.;]*?\bis bare\b/i.exec(t.room ?? "")?.[1]?.toLowerCase();
+  if (side === "top" || side === "bottom") return { band: side };
+  if (side === "left" || side === "right") return { align: side };
+  return {};
 }
 
 /** The model's boxes, in the format's pixels, cut to the frame; nonsense dropped. */

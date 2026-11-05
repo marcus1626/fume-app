@@ -3,7 +3,6 @@
 // frame and carries the backdrop on to the edges, as a retoucher extends a seamless. Only a plain backdrop is
 // carried on: a scene with things at its edges is never stretched.
 import { start } from "./render.ts";
-import { luminance } from "./pixels.ts";
 
 export interface Box {
   x: number;
@@ -17,9 +16,11 @@ export interface Box {
  * be carried on without a seam: neighbouring pixels along the edge barely differ.
  */
 export function plainEdges(data: Uint8Array, width: number, height: number): boolean {
+  // Lightness as the eye sees it (sRGB, not linear light): in linear terms every dark scene looks smooth, so a night
+  // street with lit windows at its edge passed for a studio backdrop.
   const lumAt = (x: number, y: number) => {
     const i = (y * width + x) * 4;
-    return luminance(data[i], data[i + 1], data[i + 2]);
+    return (0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 255;
   };
   const steps: number[] = [];
   const walk = (n: number, at: (k: number) => number) => {

@@ -79,7 +79,8 @@ export function wordsRoom(task: EngineTask): { side: Side; share: number; from: 
   const side = fromScene ?? fromLayout;
   if (!side) return null;
   const width = layout ? Math.min(60, Math.max(25, layout.wordsWidthPct)) / 100 : 0.3;
-  const share = side === "top" || side === "bottom" ? 0.32 : Math.round(Math.min(0.5, Math.max(0.38, width + 0.14)) * 100) / 100;
+  // A band holds a two-line headline, a line under it and the logo: about 450 px of a 1350 px feed, so 40%.
+  const share = side === "top" || side === "bottom" ? 0.4 : Math.round(Math.min(0.5, Math.max(0.38, width + 0.14)) * 100) / 100;
   return { side, share, from: fromScene ? "the plan's scene" : `the brand's layout "${layout!.name}"` };
 }
 
@@ -91,9 +92,11 @@ export function roomRules(task: EngineTask): BrandRule[] {
   const rest = 100 - pct;
   const across = room.side === "left" || room.side === "right";
   const other = { left: "right", right: "left", top: "bottom", bottom: "top" }[room.side];
+  // A scene's own surface (wet asphalt, a lit street) is not room: words read only on ground of one calm tone.
+  const calm = "It is calm and of one tone: no reflections, puddles, lights, highlights, hard shadows or busy texture there, even where the scene has them elsewhere.";
   const statement = across
-    ? `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's width; the ${room.side} ${pct}% of the width, from top to bottom, is bare, even ground with nothing in it, the same ground carried on, for the words set later. The product never fills the frame.`
-    : `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's height; the ${room.side} ${pct}% of the height, edge to edge, is bare, even ground with nothing in it, the same ground carried on, for the words set later. The product never fills the frame.`;
+    ? `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's width; the ${room.side} ${pct}% of the width, from top to bottom, is bare, even ground with nothing in it, the same ground carried on, for the words set later. ${calm} The product never fills the frame.`
+    : `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's height; the ${room.side} ${pct}% of the height, edge to edge, is bare, even ground with nothing in it, the same ground carried on, for the words set later. ${calm} The product never fills the frame.`;
   return [{ id: "room-for-words", dimension: "composition", lookKey: null, statement, binding: "hard", epistemic: "known", scope: "core" }];
 }
 

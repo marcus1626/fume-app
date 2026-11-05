@@ -402,5 +402,6 @@ Deno.test("a picture that carries words is made with room for them, where the pl
   const [rule] = roomRules(withWords("A shirt laid flat on grey."));
   assertEquals([rule.id, rule.binding, rule.dimension], ["room-for-words", "hard", "composition"]);
   assertEquals(/right 61% of the frame's width/.test(rule.statement) && /never fills the frame/.test(rule.statement), true);
+  assertEquals(/no reflections, puddles, lights/.test(rule.statement), true, "a scene's shiny surface is not room for words");
   assertEquals(wordsRoom({ ...withWords("x"), master: { url: "u", title: "V1", picked: true } }), null, "a correction keeps its frame");
 });

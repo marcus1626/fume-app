@@ -45,7 +45,7 @@ wrote "The shirt is the whole picture"; the image model filled the frame, and th
 - `wordsRoom` and `roomRules` (context.ts): a planned creative with words gets a hard composition rule in the scene
   slot. The side comes from the plan's scene when it names one, else from the brand's first layout that sets words
   on the photograph (`public.engine_words_room`, the design system in use). The share is the layout's words width
-  plus a margin (38 to 50% across, 32% for a top or bottom band). The rule says where the product sits, how much
+  plus a margin (38 to 50% across, 40% for a top or bottom band, which holds a two-line headline, a line under it and the logo). The rule says where the product sits, how much
   bare ground is left, and that the product never fills the frame. A correction of a picked version keeps its frame.
 - The composer is told to write the product's place and size where such a rule exists, never "the whole picture".
 - The Look Book's own composition notes (subject placement, negative space) are a soft rule in the scene slot.

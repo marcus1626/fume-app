@@ -3,7 +3,7 @@
 // own token decides whether they may see the layer (design_layers is staff-only); the service role takes the work.
 // The answer comes at once (202); the work goes on in the background. handler.test.ts runs it without Supabase, a
 // model or the design service.
-import { formatOf, keepClearOf, type LayoutChoice, layoutsOf, type Review, type Take, type Words, wordsOf } from "./layer.ts";
+import { formatOf, keepClearOf, type LayoutChoice, layoutsOf, type Review, roomOf, type Take, type Words, wordsOf } from "./layer.ts";
 
 /** A signed link to one of the brand's own font files, with the face it holds (brand-book fontfile.ts). */
 export interface FontLink {
@@ -70,14 +70,18 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
       format,
       book: t.book.body,
       words,
-      prefer: choice
-        ? {
-          band: choice.band,
-          align: choice.align,
-          colour: choice.colour,
-          ...(layoutsOf(t).some((l) => l.name === choice!.layout) ? { signature: choice.layout } : {}),
-        }
-        : {},
+      // Where the Engine left room for the words comes first; the model's eye places the rest.
+      prefer: {
+        ...(choice
+          ? {
+            band: choice.band,
+            align: choice.align,
+            colour: choice.colour,
+            ...(layoutsOf(t).some((l) => l.name === choice!.layout) ? { signature: choice.layout } : {}),
+          }
+          : {}),
+        ...roomOf(t),
+      },
       keepClear: choice ? keepClearOf(choice, format) : [],
       ...(links.logo ? { logo: links.logo } : {}),
       ...(links.fonts?.length ? { fonts: links.fonts } : {}),
