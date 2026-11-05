@@ -33,6 +33,11 @@
   .status-step[data-status="done"]::before { background: var(--ui-action-primary); }
   .status-step-date { font-size: var(--ui-type-label); color: var(--ui-text-secondary); font-variant-numeric: tabular-nums; }
   .status-step-title { font-size: var(--ui-type-body); color: var(--ui-text); }
+  .status-reports { list-style: none; margin: var(--ui-web-group-gap) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--ui-space-lg); }
+  .status-report-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--ui-space-sm) var(--ui-space-md); }
+  .status-report-date { font-size: var(--ui-type-label); color: var(--ui-text-secondary); font-variant-numeric: tabular-nums; }
+  .status-report-list { margin: var(--ui-space-md) 0 0; padding-left: var(--ui-space-lg); display: flex; flex-direction: column; gap: var(--ui-space-sm); }
+  .status-report-list li { font-size: var(--ui-type-body); color: var(--ui-text); }
   @media (max-width: 760px) {
     .status-steps { grid-template-columns: 1fr; }
     .status-count { gap: var(--ui-space-lg); flex-wrap: nowrap; }
@@ -75,6 +80,14 @@
     <p class="web-eyebrow">Roadmap</p>
     <h2 class="web-display">Milestones</h2>
     <ol class="status-steps" id="steps"></ol>
+  </div>
+</section>
+
+<section class="web-section">
+  <div class="web-wrap">
+    <p class="web-eyebrow">Daily reports</p>
+    <h2 class="web-display">What happened each day</h2>
+    <ol class="status-reports" id="reports"></ol>
   </div>
 </section>
 
@@ -144,6 +157,18 @@
     li.append(el("span", "status-step-date", m.date), el("span", "status-step-title", m.title));
     const b = el("span"); b.append(badge(m.status)); li.append(b);
     steps.append(li);
+  }
+
+  // Daily reports, newest first
+  const reports = document.getElementById("reports");
+  for (const r of [...(data.reports || [])].sort((a, b) => b.date.localeCompare(a.date))) {
+    const li = el("li", "ui-card");
+    const head = el("div", "status-report-head");
+    const day = new Date(`${r.date}T12:00:00Z`).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "Europe/Oslo" });
+    head.append(el("h3", "web-title", r.title), el("span", "status-report-date", day));
+    const list = el("ul", "status-report-list");
+    for (const t of r.items) list.append(el("li", null, t));
+    li.append(head, list); reports.append(li);
   }
 
   const when = new Date(data.updated).toLocaleString("en-GB", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Oslo" });

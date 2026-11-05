@@ -1,9 +1,9 @@
 {
-  "updated": "2026-11-04T19:20:00Z",
+  "updated": "2026-11-05T12:40:00Z",
   "deadline": "2026-11-21T23:59:59+01:00",
   "deadlineLabel": "the Fume app is finished",
   "start": "2026-10-26T08:00:00+01:00",
-  "summary": "The whole customer round runs live, and the Engine now learns, knows each brand and makes its first graphic design. Next: graphic design truly on brand, then product details, then video. Target: the whole app finished on 21 November, with 22–23 November held for a full walkthrough.",
+  "summary": "The whole customer round runs live. The Engine learns, knows each brand, sets graphic design that passes its hard checks, and finds and fixes a wrong label on its own. Next: brands' own fonts, formats, then video. Target: the whole app finished on 21 November.",
   "tracks": [
     {
       "id": "app",
@@ -144,20 +144,25 @@
         {
           "status": "now",
           "title": "Graphic design by the Engine with OpenPencil",
-          "note": "Part 3: first version live. Needs Marcus's yes to the Studio screens by 6 Nov",
+          "note": "Part 3: passes all hard checks live on Dressmann, Nike and Møllers. Brands' own font files left",
           "date": "10 Nov"
         },
         {
-          "status": "now",
+          "status": "done",
           "title": "Layouts read from the brand's own ads and website",
           "note": "Type, sizes, placement, buttons, logo",
           "date": "5 Nov"
         },
         {
-          "status": "next",
+          "status": "now",
           "title": "Product details and «Fix with real product»",
-          "note": "Part 4",
+          "note": "Part 4: finds a wrong label itself and fixes it from the real product (live)",
           "date": "11–14 Nov"
+        },
+        {
+          "status": "next",
+          "title": "The Engine makes every format from the approved master",
+          "note": "4:5, 9:16 and more"
         },
         {
           "status": "next",
@@ -209,6 +214,30 @@
       "date": "21 Nov",
       "title": "The Fume app finished (buffer to 23 Nov)",
       "status": "next"
+    }
+  ],
+  "reports": [
+    {
+      "date": "2026-11-05",
+      "title": "Graphic design passes its checks; the Engine fixes labels itself",
+      "items": [
+        "Dressmann, Nike and Møllers pass all hard checks on graphic design, live. Dressmann's green price campaign sets «NÅ 199,-» on one line.",
+        "The Engine now leaves calm space in the picture for the words, and the design uses it first.",
+        "«Fix with the real product» is live: mark a part, only that part is redrawn from the product's own photos. The Dressmann label went from «DRESSMEANN» to «Dressmann» in 55 seconds.",
+        "The picture check reads the small print itself and compares it letter by letter with the product photos. It found and fixed the wrong label with nobody pointing, for about 0.25 cent per picture.",
+        "Next: formats (4:5, 9:16) from an approved master, and the brands' own font files."
+      ]
+    },
+    {
+      "date": "2026-11-04",
+      "title": "First Engine picture, learning and Brand Brain live",
+      "items": [
+        "The Engine made its first real picture: 59 seconds from button to picture.",
+        "Part 1 (learning, Brand Brain) and Part 2 (tone of voice, design system, copy check) went live.",
+        "Look Book per brand: camera, light, grade and composition in every prompt, against the AI look.",
+        "The first graphic design layer (OpenPencil) runs live; it read layouts from the brands' own sites.",
+        "Dates tightened with the dev thread: the whole app finished 21 November."
+      ]
     }
   ]
 }

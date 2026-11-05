@@ -10,3 +10,7 @@ with a countdown to the deadline.
 - **Hosting:** Vercel team Fume, project `fume-status`, root directory `status`, no build step.
 - **Password:** `middleware.js` asks for HTTP Basic auth; the password is the `STATUS_PASSWORD` env var in Vercel
   (never in the repo). Any user name works.
+
+## Daily reports
+
+Add one entry at the top of `reports` in `status.json` each day: `date` (YYYY-MM-DD), `title`, and `items` (short plain sentences). The page shows them newest first. A scheduled task in the project does this every evening from the dev thread's progress.
