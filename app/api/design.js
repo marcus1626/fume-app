@@ -747,9 +747,10 @@ async function inset(picture, frame, scale) {
 // src/design.ts
 var SCALE = 0.25;
 var INSETS = [0.82, 0.72];
+var BUDGET_MS = { first: 22e3, all: 4e4 };
 async function design(asked) {
   const t0 = Date.now();
-  const first = await designOn(asked);
+  const first = await designOn(asked, t0 + BUDGET_MS.first);
   if (first.ok) return first;
   const g = gridOf(asked.book, asked.format);
   let best = first;
@@ -758,7 +759,8 @@ async function design(asked) {
     const room = await inset(asked.picture, g, scale).catch(() => null);
     if (!room) break;
     const keepClear = (asked.keepClear ?? []).map((k) => ({ ...room.move(k), what: k.what }));
-    const next = await designOn({ ...asked, picture: room.picture, keepClear });
+    if (Date.now() > t0 + BUDGET_MS.all - 6e3) break;
+    const next = await designOn({ ...asked, picture: room.picture, keepClear, prefer: { ...asked.prefer ?? {}, band: "top" } }, t0 + BUDGET_MS.all);
     tried += next.tried;
     if (next.ok || hardFails(next) < hardFails(best)) {
       best = {
@@ -776,7 +778,7 @@ async function design(asked) {
 function hardFails(d) {
   return d.checks.filter((c) => !c.ok && c.hard).length;
 }
-async function designOn(asked) {
+async function designOn(asked, until = Infinity) {
   const t0 = Date.now();
   const { familyFor, fonts, book: set } = await familiesOf(asked.book, asked.fonts ?? []);
   const ask = { ...asked, book: set };
@@ -790,7 +792,8 @@ async function designOn(asked) {
   const attempts = [];
   const perBand = /* @__PURE__ */ new Map();
   for (const l of layoutsFor(book, format, ask.prefer ?? {}, Boolean(words.cta))) {
-    if ((perBand.get(l.band) ?? 0) >= 110) continue;
+    if ((perBand.get(l.band) ?? 0) >= 70) continue;
+    if (best && Date.now() > until) break;
     perBand.set(l.band, (perBand.get(l.band) ?? 0) + 1);
     const plan = logo ? logoPlan(book, g, l, logo) : null;
     const c = compose(book, format, words, l, familyFor, {}, plan ?? void 0);
@@ -815,7 +818,7 @@ async function designOn(asked) {
     }
     if (!best || better(t, best.t)) best = { t, doc: made };
     if (best.t.ok && tried >= 6) break;
-    if (tried >= 320) break;
+    if (tried >= 200) break;
   }
   if (!best) throw new Error("No layout could be made.");
   const even = await balance(ask, best.t, familyFor, pixels, keep, logo);

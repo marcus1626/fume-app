@@ -78,9 +78,12 @@ const SCALE = 0.25;
 /** Picture sizes tried, largest first, when the product fills a studio picture and the words have no room. */
 const INSETS = [0.82, 0.72];
 
+// The search stops in time for the function's own limit (60 s on the server): the best layout so far is kept.
+const BUDGET_MS = { first: 22_000, all: 40_000 };
+
 export async function design(asked: Ask): Promise<Designed> {
   const t0 = Date.now();
-  const first = await designOn(asked);
+  const first = await designOn(asked, t0 + BUDGET_MS.first);
   if (first.ok) return first;
   // A packshot the product fills: set the picture smaller on its own backdrop, so the words get room.
   const g = gridOf(asked.book, asked.format);
@@ -90,7 +93,9 @@ export async function design(asked: Ask): Promise<Designed> {
     const room = await inset(asked.picture, g, scale).catch(() => null);
     if (!room) break;
     const keepClear = (asked.keepClear ?? []).map((k) => ({ ...room.move(k), what: k.what }));
-    const next = await designOn({ ...asked, picture: room.picture, keepClear });
+    if (Date.now() > t0 + BUDGET_MS.all - 6_000) break;
+    // The picture moves to the bottom right corner, so the room it leaves is at the top: those places are tried first.
+    const next = await designOn({ ...asked, picture: room.picture, keepClear, prefer: { ...(asked.prefer ?? {}), band: "top" } }, t0 + BUDGET_MS.all);
     tried += next.tried;
     if (next.ok || hardFails(next) < hardFails(best)) {
       best = {
@@ -110,7 +115,7 @@ function hardFails(d: Designed): number {
   return d.checks.filter((c) => !c.ok && c.hard).length;
 }
 
-async function designOn(asked: Ask): Promise<Designed> {
+async function designOn(asked: Ask, until = Infinity): Promise<Designed> {
   const t0 = Date.now();
   const { familyFor, fonts, book: set } = await familiesOf(asked.book, asked.fonts ?? []);
   const ask = { ...asked, book: set };
@@ -128,7 +133,8 @@ async function designOn(asked: Ask): Promise<Designed> {
   // Each place for the words gets its share of the tries, so a place that cannot work never uses them all up.
   const perBand = new Map<string, number>();
   for (const l of layoutsFor(book, format, ask.prefer ?? {}, Boolean(words.cta))) {
-    if ((perBand.get(l.band) ?? 0) >= 110) continue;
+    if ((perBand.get(l.band) ?? 0) >= 70) continue;
+    if (best && Date.now() > until) break;
     perBand.set(l.band, (perBand.get(l.band) ?? 0) + 1);
     const plan = logo ? logoPlan(book, g, l, logo) : null;
     const c = compose(book, format, words, l, familyFor, {}, plan ?? undefined);
@@ -154,7 +160,7 @@ async function designOn(asked: Ask): Promise<Designed> {
     }
     if (!best || better(t, best.t)) best = { t, doc: made };
     if (best.t.ok && tried >= 6) break;
-    if (tried >= 320) break;
+    if (tried >= 200) break;
   }
   if (!best) throw new Error("No layout could be made.");
   const even = await balance(ask, best.t, familyFor, pixels, keep, logo);

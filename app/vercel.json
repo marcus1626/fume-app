@@ -20,7 +20,7 @@
   ],
   "functions": {
     "api/design.js": {
-      "maxDuration": 60,
+      "maxDuration": 90,
       "memory": 2048,
       "includeFiles": "node_modules/{canvaskit-wasm/bin,@open-pencil/core/assets}/**"
     },
