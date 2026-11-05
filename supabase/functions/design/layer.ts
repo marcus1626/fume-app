@@ -66,7 +66,7 @@ export type LayoutChoice = z.infer<typeof LayoutChoice>;
 export const CHOOSE_SYSTEM = `You are Fume's senior art director. You look at a campaign picture before words are set on it, and you say where the words can go and what they must never cover. A Fume expert checks every creative; only the customer approves it.
 
 Rules:
-- The product must stay fully visible: mark it in keepClear first, with a little room around it.
+- The product must stay fully visible: mark it in keepClear first, drawn tight to its edges (with its shadow where it falls on the ground). Fume adds the same small margin around every box, so add none yourself.
 - Also mark faces, any printed label, and bright light only when it is a small source the eye goes to (a lamp, the sun, a candle).
 - A large bright area (a window, a sky, a pale wall) is a place where dark words can sit: never mark it. Never mark the area you pick for the words.
 - Pick the band that is calmest and emptiest, where the words read without fighting the picture. Follow the plan's note on where the words go when the picture allows it.
@@ -109,7 +109,10 @@ export function roomOf(t: Take): { band?: "top" | "bottom"; align?: "left" | "ri
   return {};
 }
 
-/** The model's boxes, in the format's pixels, cut to the frame; nonsense dropped. */
+/** Breathing room around each box the model marks, as a share of the frame's width (about 26 px on a feed). */
+const MARGIN = 0.024;
+
+/** The model's boxes, in the format's pixels, with a margin, cut to the frame; nonsense dropped. */
 export function keepClearOf(c: LayoutChoice, format: Format) {
   const { w, h } = SIZES[format];
   const clamp = (n: number) => Math.min(1, Math.max(0, Number.isFinite(n) ? n : 0));
@@ -118,6 +121,12 @@ export function keepClearOf(c: LayoutChoice, format: Format) {
     .map((b) => ({ ...b, w: Math.min(b.w, 1 - b.x), h: Math.min(b.h, 1 - b.y) }))
     .filter((b) => b.w > 0.01 && b.h > 0.01)
     .slice(0, 8)
+    // The same breathing room around every box, so a loose box from the model never eats the words' room.
+    .map((b) => {
+      const my = MARGIN * (w / h);
+      const x = clamp(b.x - MARGIN), y = clamp(b.y - my);
+      return { what: b.what, x, y, w: clamp(b.x + b.w + MARGIN) - x, h: clamp(b.y + b.h + my) - y };
+    })
     .map((b) => ({ what: b.what, x: Math.round(b.x * w), y: Math.round(b.y * h), w: Math.round(b.w * w), h: Math.round(b.h * h) }));
 }
 

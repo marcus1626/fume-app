@@ -53,9 +53,10 @@ Deno.test("the words are the plan's approved copy, word for word, and nothing el
   assertEquals(wordsOf({ ...take, copy: [{ key: "call_to_action", value: "Kjøp" }] }), null);
 });
 
-Deno.test("what must stay clear becomes boxes in the format's pixels, cut to the frame", () => {
+Deno.test("what must stay clear becomes boxes in the format's pixels, with a margin, cut to the frame", () => {
   const boxes = keepClearOf({ keepClear: [{ what: "shoe", x: 0.5, y: 0.5, w: 0.9, h: 0.2 }, { what: "speck", x: 0, y: 0, w: 0.001, h: 0.5 }], band: "top", align: "left", colour: "text", layout: "", why: "" }, "feed");
-  assertEquals(boxes, [{ what: "shoe", x: 540, y: 675, w: 540, h: 270 }]);
+  // About 26 px of breathing room on every side, cut to the frame on the right.
+  assertEquals(boxes, [{ what: "shoe", x: 514, y: 649, w: 566, h: 322 }]);
 });
 
 Deno.test("a layer is laid out from the plan's words and the model's eye, reviewed, and kept with its cost", async () => {
