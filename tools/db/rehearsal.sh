@@ -19,7 +19,7 @@ end $$;
 -- The tests start from the settings a new project has (the plan written from the brief); rolled back with the rest.
 update app.settings set value = 'false' where key = 'llm_plans';
 SQL
-for f in 10_rules 20_campaigns 30_production_check 40_review_delivery 70_fume_plans 80_file_checks 90_product_pictures 95_notifications 96_conversation 97_agency 98_brand_identity 99_products 9a_brand_brain 9b_taste 9c_team_settings 9d_onboarding 9e_calendar 9f_taste_swipes 9g_meetings 9h_boards 9i_catalogue 9j_product_files 9k_campaign_scope 9l_usage 9m_more_notifications 9n_agency_invite_words 9o_solo_agency 9p_engine 9q_brand_books 9r_copy_lane 9s_product_truth 9t_design_layer 9u_look_book 9v_brand_logo_file 9w_brand_font_files 9x_engine_words_room; do grep -v '^\\' "supabase/tests/$f.sql"; done
+for f in 10_rules 20_campaigns 30_production_check 40_review_delivery 70_fume_plans 80_file_checks 90_product_pictures 95_notifications 96_conversation 97_agency 98_brand_identity 99_products 9a_brand_brain 9b_taste 9c_team_settings 9d_onboarding 9e_calendar 9f_taste_swipes 9g_meetings 9h_boards 9i_catalogue 9j_product_files 9k_campaign_scope 9l_usage 9m_more_notifications 9n_agency_invite_words 9o_solo_agency 9p_engine 9q_brand_books 9r_copy_lane 9s_product_truth 9t_design_layer 9u_look_book 9v_brand_logo_file 9w_brand_font_files 9x_engine_words_room 9y_add_product_fact; do grep -v '^\\' "supabase/tests/$f.sql"; done
 echo "reset role;"
 echo "select count(*) as passed, (select what from test.log order by n desc limit 1) as last from test.log;"
 echo "rollback;"
