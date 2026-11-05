@@ -7,7 +7,7 @@ import { type Layout, type Words } from "./compose.ts";
 import { type Ask, design } from "./design.ts";
 import { type Box } from "./pixels.ts";
 import { type BrandFace } from "./render.ts";
-import { crop, cropFor, decode, encode, type Rect, setBack } from "./fix.ts";
+import { blank, crop, cropFor, decode, encode, type Rect, setBack } from "./fix.ts";
 
 export interface DesignRequest {
   picture: string;
@@ -170,6 +170,8 @@ export interface FixRequest {
   /** The part the designer marked, as shares of the picture; for fix-set, the crop fix-crop answered. */
   box: Rect;
   rect?: Rect;
+  /** fix-crop: blank the marked part in the crop, so the image model draws it anew. */
+  blank?: boolean;
   upload: { crop?: string; png?: string };
 }
 
@@ -222,7 +224,11 @@ async function fixStep(r: FixRequest, deps: Deps): Promise<Response> {
     const picture = await decode(got);
     if (r.op === "fix-crop") {
       const { rect, ratio } = cropFor(r.box, picture.width, picture.height);
-      const part = await encode(crop(picture, rect));
+      let cut = crop(picture, rect);
+      if (r.blank) {
+        cut = blank(cut, { x: r.box.x * picture.width - rect.x, y: r.box.y * picture.height - rect.y, w: r.box.w * picture.width, h: r.box.h * picture.height });
+      }
+      const part = await encode(cut);
       return json(200, { rect, ratio, width: picture.width, height: picture.height, crop: await store(r.upload.crop!, part, deps) });
     }
     const rect = r.rect!;

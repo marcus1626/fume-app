@@ -1283,6 +1283,19 @@ function crop(img, r) {
   }
   return { width: r.w, height: r.h, data: out };
 }
+function blank(img, part) {
+  const x0 = Math.max(0, Math.floor(part.x)), y0 = Math.max(0, Math.floor(part.y));
+  const x1 = Math.min(img.width, Math.ceil(part.x + part.w)), y1 = Math.min(img.height, Math.ceil(part.y + part.h));
+  if (x1 <= x0 || y1 <= y0) return img;
+  const chans = [[], [], []];
+  for (let y = y0; y < y1; y++) {
+    for (let x = x0; x < x1; x++) for (let c = 0; c < 3; c++) chans[c].push(img.data[(y * img.width + x) * 4 + c]);
+  }
+  const median = chans.map((v) => v.sort((a, b) => a - b)[v.length >> 1]);
+  const data = new Uint8Array(img.data);
+  for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) data.set([...median, 255], (y * img.width + x) * 4);
+  return { width: img.width, height: img.height, data };
+}
 function resize(img, w, h) {
   if (img.width === w && img.height === h) return img;
   const out = new Uint8Array(w * h * 4);
@@ -1535,7 +1548,11 @@ async function fixStep(r, deps) {
     const picture = await decode(got);
     if (r.op === "fix-crop") {
       const { rect: rect2, ratio } = cropFor(r.box, picture.width, picture.height);
-      const part = await encode(crop(picture, rect2));
+      let cut = crop(picture, rect2);
+      if (r.blank) {
+        cut = blank(cut, { x: r.box.x * picture.width - rect2.x, y: r.box.y * picture.height - rect2.y, w: r.box.w * picture.width, h: r.box.h * picture.height });
+      }
+      const part = await encode(cut);
       return json(200, { rect: rect2, ratio, width: picture.width, height: picture.height, crop: await store(r.upload.crop, part, deps) });
     }
     const rect = r.rect;

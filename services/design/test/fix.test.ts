@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { crop, cropFor, decode, encode, type Img, setBack } from "../src/fix.ts";
+import { blank, crop, cropFor, decode, encode, type Img, setBack } from "../src/fix.ts";
 import { invalidFix } from "../src/handler.ts";
 import { startWithTestFonts } from "./fonts.ts";
 
@@ -37,6 +37,15 @@ test("only the marked part changes: the redrawn crop is set back with a soft edg
   assert.ok(at(out, 200, 200)[0] > 220, "inside the part, the redrawn pixels");
   assert.ok(Math.abs(at(out, 165, 120)[0] - 100) <= 2, "the drift in light is taken out on the ring around the part");
   assert.ok(drift > 30, "and reported");
+});
+
+test("the marked part is blanked to its own plain colour, so the model draws the letters anew", () => {
+  const label = flat(100, 60, [20, 20, 25]);
+  for (let y = 25; y < 32; y++) for (let x = 20; x < 80; x++) label.data.set([240, 240, 240, 255], (y * 100 + x) * 4);
+  const out = blank(label, { x: 10, y: 15, w: 80, h: 30 });
+  assert.deepEqual(at(out, 50, 28), [20, 20, 25], "the wrong letters are gone, in the label's own colour");
+  assert.deepEqual(at(label, 50, 28), [240, 240, 240], "the crop itself is not changed");
+  assert.deepEqual(at(out, 5, 5), [20, 20, 25]);
 });
 
 test("pictures are read and written as PNG", async () => {

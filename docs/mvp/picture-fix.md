@@ -16,13 +16,21 @@ approves it. Customers never see a fix.
   the picture under the words is fixed. The cost counts in the Engine's week (`app.engine_spent_usd`).
 - The edge function `fix` (`supabase/functions/fix`): the app calls it with `{fixId}` after `fix_candidate`.
   1. The design service crops the marked part with room around it (40% of its size, at least 384 px), in one of the
-     image model's own ratios so nothing is stretched (`services/design/src/fix.ts`, op `fix-crop`).
-  2. Nano Banana Pro on fal redraws the crop at 2K: the crop is image 1, the product's packshots (at most three)
-     follow; the prompt says what is wrong and that everything else stays as it is.
-  3. The model's picture is stored in Fume's storage, and the design service sets it back (op `fix-set`): the new
+     image model's own ratios so nothing is stretched (`services/design/src/fix.ts`, op `fix-crop`). The marked part
+     itself is blanked to its own plain colour: the first live test (5 Nov) showed that the image model keeps wrong
+     letters it can see, even with the right ones beside it.
+  2. Claude Haiku finds the same part on the product's own photographs (`fix/locate.ts`), and finds it again on its own
+     close crop for a tight box; the design service crops it close (`<fix>-ref.png`). A woven label is about 60 px on
+     a whole packshot, too small for the image model to read. Under a tenth of a cent; it counts in the language
+     model's week (`picture_fixes.llm_usd`, `reference` keeps where it was found).
+  3. Nano Banana Pro on fal redraws the crop at 2K: the crop is image 1, the close part is image 2, the product's
+     packshots (at most three) follow; the prompt says what is wrong and that everything else stays as it is.
+  4. The model's picture is stored in Fume's storage, and the design service sets it back (op `fix-set`): the new
      pixels inside the marked box and a little beyond, fading into the picture's own by the crop's edge. The model's
      drift in light and colour is measured on the ring around the box and taken out first.
-  4. `fix_finish` adds the fixed picture. About 15 cents a fix.
+  5. `fix_finish` adds the fixed picture. About 15 cents a fix.
+- The parts of a fix (`-crop`, `-ref`, `-redrawn`) are staff-only reads (`20261105130000_fix_parts_read.sql`), so a
+  designer sees what Fume copied from.
 - The pixel work runs in the design service, not the edge function: decoding and writing a four megapixel PNG takes
   more CPU time than an edge function has.
 

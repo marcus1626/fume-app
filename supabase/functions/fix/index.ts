@@ -1,9 +1,12 @@
 // The edge function `fix` (handler.ts says what it does). Deployed with verify_jwt off: the handler reads the fix with
-// the caller's own token first. Needs the secret FAL_KEY. DESIGN_URL is the design service (as for `design`);
+// the caller's own token first. Needs the secrets FAL_KEY, and ANTHROPIC_API_KEY (with ANTHROPIC_WORKSPACE_ID) to find
+// the part on the product's photographs. DESIGN_URL is the design service (as for `design`);
 // VERCEL_BYPASS_SECRET lets this function past Vercel's deployment protection on previews.
+import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
 import { fal } from "../engine/fal.ts";
 import { handleFix } from "./handler.ts";
+import { claudeLocate } from "./locate.ts";
 
 const url = Deno.env.get("SUPABASE_URL")!;
 const keyOf = (json: string, legacy: string) =>
@@ -15,6 +18,17 @@ const designUrl = Deno.env.get("DESIGN_URL") ?? "https://fume-app-git-claude-pro
 const bypass = Deno.env.get("VERCEL_BYPASS_SECRET");
 const falKey = Deno.env.get("FAL_KEY");
 const provider = falKey ? fal(falKey) : null;
+const workspace = Deno.env.get("ANTHROPIC_WORKSPACE_ID");
+const claude = new Anthropic({
+  timeout: 60_000,
+  maxRetries: 1,
+  ...(workspace ? { defaultHeaders: { "anthropic-workspace-id": workspace } } : {}),
+});
+async function allowed(): Promise<boolean> {
+  const { data, error } = await service.rpc("fume_llm_budget");
+  return !error && Boolean((data as { allowed?: boolean } | null)?.allowed);
+}
+const locate = claudeLocate(claude, allowed);
 
 Deno.serve((req) =>
   handleFix(req, (authorization) => {
@@ -38,7 +52,10 @@ Deno.serve((req) =>
         uploadLink: async (bucket, path) => (await service.storage.from(bucket).createSignedUploadUrl(path, { upsert: true })).data?.signedUrl ?? null,
         store: async (bucket, path, bytes) =>
           !(await service.storage.from(bucket).upload(path, bytes, { contentType: "image/png", upsert: true })).error,
+        spent: async (id, usd, reference) =>
+          await service.rpc("fix_spent", { p_fix_id: id, p_llm_usd: usd, p_reference: reference }),
       },
+      locate,
       step: async (request) => {
         const res = await fetch(designUrl, {
           method: "POST",

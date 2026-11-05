@@ -41,6 +41,24 @@ export function crop(img: Img, r: Rect): Img {
   return { width: r.w, height: r.h, data: out };
 }
 
+/**
+ * Blanks the marked part of a crop to its own plain colour (the median of its pixels), so the image model draws it anew
+ * instead of keeping the wrong letters it sees. `part` is in the crop's own pixels.
+ */
+export function blank(img: Img, part: Rect): Img {
+  const x0 = Math.max(0, Math.floor(part.x)), y0 = Math.max(0, Math.floor(part.y));
+  const x1 = Math.min(img.width, Math.ceil(part.x + part.w)), y1 = Math.min(img.height, Math.ceil(part.y + part.h));
+  if (x1 <= x0 || y1 <= y0) return img;
+  const chans: number[][] = [[], [], []];
+  for (let y = y0; y < y1; y++) {
+    for (let x = x0; x < x1; x++) for (let c = 0; c < 3; c++) chans[c].push(img.data[(y * img.width + x) * 4 + c]);
+  }
+  const median = chans.map((v) => v.sort((a, b) => a - b)[v.length >> 1]);
+  const data = new Uint8Array(img.data);
+  for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) data.set([...median, 255], (y * img.width + x) * 4);
+  return { width: img.width, height: img.height, data };
+}
+
 /** Bilinear resize, enough to bring the model's crop back to the crop's own size. */
 export function resize(img: Img, w: number, h: number): Img {
   if (img.width === w && img.height === h) return img;
