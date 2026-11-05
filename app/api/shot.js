@@ -28,6 +28,20 @@ import { SceneGraph as SceneGraph2 } from "@open-pencil/scene-graph";
 import { renderJSX as renderJSX2 } from "@open-pencil/core/design-jsx";
 import { createSVGNodes } from "@open-pencil/core/io";
 
+// src/fix.ts
+var RATIOS = [
+  ["21:9", 21 / 9],
+  ["16:9", 16 / 9],
+  ["3:2", 1.5],
+  ["4:3", 4 / 3],
+  ["5:4", 1.25],
+  ["1:1", 1],
+  ["4:5", 0.8],
+  ["3:4", 0.75],
+  ["2:3", 2 / 3],
+  ["9:16", 9 / 16]
+];
+
 // src/handler.ts
 function signedLink(link, host, kind) {
   if (typeof link !== "string") return false;
