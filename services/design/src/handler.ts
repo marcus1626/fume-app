@@ -7,6 +7,7 @@ import { type Layout, type Words } from "./compose.ts";
 import { type Ask, design } from "./design.ts";
 import { type Box } from "./pixels.ts";
 import { type BrandFace } from "./render.ts";
+import { crop, cropFor, decode, encode, type Rect, setBack } from "./fix.ts";
 
 export interface DesignRequest {
   picture: string;
@@ -76,6 +77,9 @@ export async function handle(req: Request, deps: Deps): Promise<Response> {
   } catch {
     return json(400, { error: "The request is not JSON." });
   }
+  // A surgical fix's two steps (fix.ts): the crop the image model redraws, and the redrawn crop set back.
+  const op = (r as { op?: unknown }).op;
+  if (op === "fix-crop" || op === "fix-set") return fixStep(r as unknown as FixRequest, deps);
   const why = invalid(r, deps.storageHost);
   if (why) return json(400, { error: why });
   // A 2K picture from storage can be slow while other layers are being made; a slow read is answered, never thrown.
@@ -156,4 +160,79 @@ export function isSfnt(b: Uint8Array): boolean {
 function isBox(b: unknown): b is Box & { what: string } {
   const x = b as Box & { what: string };
   return Boolean(x) && [x.x, x.y, x.w, x.h].every((n) => typeof n === "number" && Number.isFinite(n)) && typeof x.what === "string";
+}
+
+export interface FixRequest {
+  op: "fix-crop" | "fix-set";
+  /** The whole picture, and for fix-set the image model's redrawn crop, as signed links to Fume's storage. */
+  picture: string;
+  redrawn?: string;
+  /** The part the designer marked, as shares of the picture; for fix-set, the crop fix-crop answered. */
+  box: Rect;
+  rect?: Rect;
+  upload: { crop?: string; png?: string };
+}
+
+const isShare = (b: Rect | undefined) =>
+  Boolean(b) && [b!.x, b!.y, b!.w, b!.h].every((n) => typeof n === "number" && Number.isFinite(n) && n >= 0 && n <= 1) &&
+  b!.w > 0 && b!.h > 0 && b!.x + b!.w <= 1.0001 && b!.y + b!.h <= 1.0001;
+
+export function invalidFix(r: Partial<FixRequest>, host: string): string | null {
+  if (!signedLink(r.picture, host, "read")) return "The picture must be a signed link to Fume's storage.";
+  if (!isShare(r.box)) return "Mark the part to fix inside the picture.";
+  if (r.op === "fix-crop" && !signedLink(r.upload?.crop, host, "upload")) return "The crop needs a signed upload link to Fume's storage.";
+  if (r.op === "fix-set") {
+    if (!signedLink(r.redrawn, host, "read")) return "The redrawn part must be a signed link to Fume's storage.";
+    const c = r.rect;
+    if (!c || ![c.x, c.y, c.w, c.h].every((n) => Number.isInteger(n) && n >= 0) || c.w < 16 || c.h < 16) return "The crop is not one Fume made.";
+    if (!signedLink(r.upload?.png, host, "upload")) return "The result needs a signed upload link to Fume's storage.";
+  }
+  return null;
+}
+
+async function read(link: string, deps: Deps, limit = 25_000_000): Promise<Uint8Array | Response> {
+  try {
+    const got = await deps.fetch(link, { signal: AbortSignal.timeout(45_000) });
+    const type = got.headers.get("content-type") ?? "";
+    if (!got.ok || !type.startsWith("image/")) return json(403, { error: "The picture link is not live." });
+    const bytes = new Uint8Array(await got.arrayBuffer());
+    return bytes.byteLength > limit ? json(413, { error: "The picture is too large." }) : bytes;
+  } catch {
+    return json(504, { error: "Reading the picture from storage took too long." });
+  }
+}
+
+async function store(link: string, bytes: Uint8Array, deps: Deps) {
+  const res = await deps.fetch(link, {
+    method: "PUT",
+    headers: { "content-type": "image/png", "x-upsert": "true" },
+    body: new Blob([bytes as Uint8Array<ArrayBuffer>]),
+    signal: AbortSignal.timeout(30_000),
+  });
+  if (!res.ok) throw new Error(`Storing the result failed (${res.status}).`);
+  return { bytes: bytes.byteLength, sha256: createHash("sha256").update(bytes).digest("hex") };
+}
+
+async function fixStep(r: FixRequest, deps: Deps): Promise<Response> {
+  const why = invalidFix(r, deps.storageHost);
+  if (why) return json(400, { error: why });
+  const got = await read(r.picture, deps);
+  if (got instanceof Response) return got;
+  try {
+    const picture = await decode(got);
+    if (r.op === "fix-crop") {
+      const { rect, ratio } = cropFor(r.box, picture.width, picture.height);
+      const part = await encode(crop(picture, rect));
+      return json(200, { rect, ratio, width: picture.width, height: picture.height, crop: await store(r.upload.crop!, part, deps) });
+    }
+    const rect = r.rect!;
+    if (rect.x + rect.w > picture.width || rect.y + rect.h > picture.height) return json(400, { error: "The crop is not one Fume made." });
+    const redrawnBytes = await read(r.redrawn!, deps);
+    if (redrawnBytes instanceof Response) return redrawnBytes;
+    const out = setBack(picture, await decode(redrawnBytes), rect, r.box);
+    const png = await store(r.upload.png!, await encode(out.picture), deps);
+    return json(200, { width: picture.width, height: picture.height, drift: out.drift, png });
+  } catch (e) {
+    return json(502, { error: (e as Error).message });
+  }
 }

@@ -537,16 +537,16 @@ async function logoOf(bytes, light, dark) {
   if (!data || width < 8 || height < 8) return null;
   const t = tone(data);
   if (!t) return null;
-  const encode = (px) => {
+  const encode2 = (px) => {
     const im = ck.MakeImage(info, px, width * 4);
     const out = im?.encodeToBytes() ?? null;
     im?.delete();
     return out;
   };
-  const asIs = encode(data) ?? raster;
+  const asIs = encode2(data) ?? raster;
   const variants = [{ name: "as_is", png: asIs, hash: imageHash(asIs), hex: t.hex }];
   for (const [name, hex] of [["light", light], ["dark", dark]]) {
-    const png2 = encode(t.mono ? tint(data, hex) : reversed(data, hex));
+    const png2 = encode2(t.mono ? tint(data, hex) : reversed(data, hex));
     if (png2) variants.push({ name, png: png2, hash: imageHash(png2), hex });
   }
   return { width, height, mono: t.mono, variants };
@@ -1118,10 +1118,10 @@ function logoPlan(book, g, l, logo) {
   const inside = Boolean(first?.startsWith(l.band)) && (l.ground === "flat" || l.ground === "block");
   return { logo, w: Math.round(w), h: Math.round(h), first, ...inside ? { inside } : {} };
 }
-function preferDrawn(logo, read) {
-  const drawn = read.find((r) => r.v.name === "as_is");
+function preferDrawn(logo, read2) {
+  const drawn = read2.find((r) => r.v.name === "as_is");
   if (drawn && (drawn.contrast >= 3 || logo.mono && drawn.contrast >= 3)) return drawn;
-  return [...read].sort((a, b) => b.contrast - a.contrast)[0];
+  return [...read2].sort((a, b) => b.contrast - a.contrast)[0];
 }
 function boxAt(where, g, w, h) {
   const [v, side] = where.split("_");
@@ -1137,8 +1137,8 @@ function placeLogo(doc, g, plan, boxes, keep, p, shades, l) {
     const box = boxAt(where, g, plan.w, plan.h);
     const pad = { x: box.x - 16, y: box.y - 16, w: box.w + 32, h: box.h + 32 };
     if (avoid.some((a) => overlap(pad, a) > 0)) continue;
-    const read = plan.logo.variants.map((v) => ({ v, contrast: under(p, box, v.hex, shades, Math.max(8, Math.round(plan.h * 0.5))).contrast }));
-    const pick = preferDrawn(plan.logo, read);
+    const read2 = plan.logo.variants.map((v) => ({ v, contrast: under(p, box, v.hex, shades, Math.max(8, Math.round(plan.h * 0.5))).contrast }));
+    const pick = preferDrawn(plan.logo, read2);
     if (!best || pick.contrast > best.contrast + 0.01) best = { where, box, v: pick.v, contrast: pick.contrast };
     if (best && best.where === where && best.contrast >= 3) break;
   }
@@ -1248,6 +1248,132 @@ function uniq(xs) {
   return [...new Set(xs)];
 }
 
+// src/fix.ts
+var RATIOS = [
+  ["21:9", 21 / 9],
+  ["16:9", 16 / 9],
+  ["3:2", 1.5],
+  ["4:3", 4 / 3],
+  ["5:4", 1.25],
+  ["1:1", 1],
+  ["4:5", 0.8],
+  ["3:4", 0.75],
+  ["2:3", 2 / 3],
+  ["9:16", 9 / 16]
+];
+function cropFor(box, width, height) {
+  const bx = box.x * width, by = box.y * height, bw = box.w * width, bh = box.h * height;
+  const pad = Math.max(bw, bh) * 0.4;
+  let w = Math.max(384, bw + 2 * pad), h = Math.max(384, bh + 2 * pad);
+  const [ratio, r] = RATIOS.reduce((a, b) => Math.abs(Math.log(b[1] / (w / h))) < Math.abs(Math.log(a[1] / (w / h))) ? b : a);
+  if (w / h < r) w = h * r;
+  else h = w / r;
+  const k = Math.min(1, width / w, height / h);
+  w = Math.round(w * k);
+  h = Math.round(h * k);
+  const x = Math.round(Math.min(Math.max(0, bx + bw / 2 - w / 2), width - w));
+  const y = Math.round(Math.min(Math.max(0, by + bh / 2 - h / 2), height - h));
+  return { rect: { x, y, w, h }, ratio };
+}
+function crop(img, r) {
+  const out = new Uint8Array(r.w * r.h * 4);
+  for (let y = 0; y < r.h; y++) {
+    const from = ((r.y + y) * img.width + r.x) * 4;
+    out.set(img.data.subarray(from, from + r.w * 4), y * r.w * 4);
+  }
+  return { width: r.w, height: r.h, data: out };
+}
+function resize(img, w, h) {
+  if (img.width === w && img.height === h) return img;
+  const out = new Uint8Array(w * h * 4);
+  const sx = img.width / w, sy = img.height / h;
+  for (let y = 0; y < h; y++) {
+    const fy = Math.min(img.height - 1, Math.max(0, (y + 0.5) * sy - 0.5));
+    const y0 = Math.floor(fy), y1 = Math.min(img.height - 1, y0 + 1), ty = fy - y0;
+    for (let x = 0; x < w; x++) {
+      const fx = Math.min(img.width - 1, Math.max(0, (x + 0.5) * sx - 0.5));
+      const x0 = Math.floor(fx), x1 = Math.min(img.width - 1, x0 + 1), tx = fx - x0;
+      for (let c = 0; c < 4; c++) {
+        const p = (yy, xx) => img.data[(yy * img.width + xx) * 4 + c];
+        const top = p(y0, x0) * (1 - tx) + p(y0, x1) * tx;
+        const bottom = p(y1, x0) * (1 - tx) + p(y1, x1) * tx;
+        out[(y * w + x) * 4 + c] = Math.round(top * (1 - ty) + bottom * ty);
+      }
+    }
+  }
+  return { width: w, height: h, data: out };
+}
+function setBack(picture, redrawn, rect, box) {
+  const patch = resize(redrawn, rect.w, rect.h);
+  const inner = {
+    x0: box.x * picture.width - rect.x,
+    y0: box.y * picture.height - rect.y,
+    x1: (box.x + box.w) * picture.width - rect.x,
+    y1: (box.y + box.h) * picture.height - rect.y
+  };
+  const room = Math.max(1, Math.min(inner.x0, inner.y0, rect.w - inner.x1, rect.h - inner.y1));
+  const hold = room * 0.25;
+  const outside = (x, y) => Math.hypot(Math.max(0, inner.x0 - x, x - inner.x1), Math.max(0, inner.y0 - y, y - inner.y1));
+  const mean = [0, 0, 0];
+  let n = 0;
+  for (let y = 0; y < rect.h; y += 2) {
+    for (let x = 0; x < rect.w; x += 2) {
+      const d = outside(x, y);
+      if (d < hold || d > room) continue;
+      const i = (y * rect.w + x) * 4;
+      const j = ((rect.y + y) * picture.width + rect.x + x) * 4;
+      for (let c = 0; c < 3; c++) mean[c] += picture.data[j + c] - patch.data[i + c];
+      n++;
+    }
+  }
+  const shift = n ? mean.map((m) => m / n) : [0, 0, 0];
+  const out = new Uint8Array(picture.data);
+  for (let y = 0; y < rect.h; y++) {
+    for (let x = 0; x < rect.w; x++) {
+      const d = outside(x, y);
+      const t = d <= hold ? 1 : d >= room ? 0 : 1 - (d - hold) / (room - hold);
+      if (t <= 0) continue;
+      const a = t * t * (3 - 2 * t);
+      const i = (y * rect.w + x) * 4;
+      const j = ((rect.y + y) * picture.width + rect.x + x) * 4;
+      for (let c = 0; c < 3; c++) {
+        const v = Math.min(255, Math.max(0, patch.data[i + c] + shift[c]));
+        out[j + c] = Math.round(picture.data[j + c] * (1 - a) + v * a);
+      }
+    }
+  }
+  return { picture: { ...picture, data: out }, drift: Math.round(Math.hypot(shift[0], shift[1], shift[2]) * 10) / 10 };
+}
+async function decode(bytes) {
+  const { ck } = await start();
+  const img = ck.MakeImageFromEncoded(bytes);
+  if (!img) throw new Error("The picture could not be read.");
+  const width = img.width(), height = img.height();
+  const data = img.readPixels(0, 0, {
+    width,
+    height,
+    colorType: ck.ColorType.RGBA_8888,
+    alphaType: ck.AlphaType.Unpremul,
+    colorSpace: ck.ColorSpace.SRGB
+  });
+  img.delete();
+  if (!data) throw new Error("The picture could not be read.");
+  return { width, height, data: new Uint8Array(data) };
+}
+async function encode(img) {
+  const { ck } = await start();
+  const made = ck.MakeImage(
+    { width: img.width, height: img.height, colorType: ck.ColorType.RGBA_8888, alphaType: ck.AlphaType.Unpremul, colorSpace: ck.ColorSpace.SRGB },
+    img.data,
+    img.width * 4
+  );
+  if (!made) throw new Error("The picture could not be written.");
+  const bytes = made.encodeToBytes(ck.ImageFormat.PNG, 100);
+  made.delete();
+  if (!bytes) throw new Error("The picture could not be written.");
+  return bytes;
+}
+
 // src/handler.ts
 var json = (status, body) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 function signedLink(link, host, kind) {
@@ -1292,6 +1418,8 @@ async function handle(req, deps) {
   } catch {
     return json(400, { error: "The request is not JSON." });
   }
+  const op = r.op;
+  if (op === "fix-crop" || op === "fix-set") return fixStep(r, deps);
   const why = invalid(r, deps.storageHost);
   if (why) return json(400, { error: why });
   let picture;
@@ -1363,6 +1491,63 @@ function isSfnt(b) {
 function isBox(b) {
   const x = b;
   return Boolean(x) && [x.x, x.y, x.w, x.h].every((n) => typeof n === "number" && Number.isFinite(n)) && typeof x.what === "string";
+}
+var isShare = (b) => Boolean(b) && [b.x, b.y, b.w, b.h].every((n) => typeof n === "number" && Number.isFinite(n) && n >= 0 && n <= 1) && b.w > 0 && b.h > 0 && b.x + b.w <= 1.0001 && b.y + b.h <= 1.0001;
+function invalidFix(r, host) {
+  if (!signedLink(r.picture, host, "read")) return "The picture must be a signed link to Fume's storage.";
+  if (!isShare(r.box)) return "Mark the part to fix inside the picture.";
+  if (r.op === "fix-crop" && !signedLink(r.upload?.crop, host, "upload")) return "The crop needs a signed upload link to Fume's storage.";
+  if (r.op === "fix-set") {
+    if (!signedLink(r.redrawn, host, "read")) return "The redrawn part must be a signed link to Fume's storage.";
+    const c = r.rect;
+    if (!c || ![c.x, c.y, c.w, c.h].every((n) => Number.isInteger(n) && n >= 0) || c.w < 16 || c.h < 16) return "The crop is not one Fume made.";
+    if (!signedLink(r.upload?.png, host, "upload")) return "The result needs a signed upload link to Fume's storage.";
+  }
+  return null;
+}
+async function read(link, deps, limit = 25e6) {
+  try {
+    const got = await deps.fetch(link, { signal: AbortSignal.timeout(45e3) });
+    const type = got.headers.get("content-type") ?? "";
+    if (!got.ok || !type.startsWith("image/")) return json(403, { error: "The picture link is not live." });
+    const bytes = new Uint8Array(await got.arrayBuffer());
+    return bytes.byteLength > limit ? json(413, { error: "The picture is too large." }) : bytes;
+  } catch {
+    return json(504, { error: "Reading the picture from storage took too long." });
+  }
+}
+async function store(link, bytes, deps) {
+  const res = await deps.fetch(link, {
+    method: "PUT",
+    headers: { "content-type": "image/png", "x-upsert": "true" },
+    body: new Blob([bytes]),
+    signal: AbortSignal.timeout(3e4)
+  });
+  if (!res.ok) throw new Error(`Storing the result failed (${res.status}).`);
+  return { bytes: bytes.byteLength, sha256: createHash2("sha256").update(bytes).digest("hex") };
+}
+async function fixStep(r, deps) {
+  const why = invalidFix(r, deps.storageHost);
+  if (why) return json(400, { error: why });
+  const got = await read(r.picture, deps);
+  if (got instanceof Response) return got;
+  try {
+    const picture = await decode(got);
+    if (r.op === "fix-crop") {
+      const { rect: rect2, ratio } = cropFor(r.box, picture.width, picture.height);
+      const part = await encode(crop(picture, rect2));
+      return json(200, { rect: rect2, ratio, width: picture.width, height: picture.height, crop: await store(r.upload.crop, part, deps) });
+    }
+    const rect = r.rect;
+    if (rect.x + rect.w > picture.width || rect.y + rect.h > picture.height) return json(400, { error: "The crop is not one Fume made." });
+    const redrawnBytes = await read(r.redrawn, deps);
+    if (redrawnBytes instanceof Response) return redrawnBytes;
+    const out = setBack(picture, await decode(redrawnBytes), rect, r.box);
+    const png2 = await store(r.upload.png, await encode(out.picture), deps);
+    return json(200, { width: picture.width, height: picture.height, drift: out.drift, png: png2 });
+  } catch (e) {
+    return json(502, { error: e.message });
+  }
 }
 
 // src/fonts.ts
