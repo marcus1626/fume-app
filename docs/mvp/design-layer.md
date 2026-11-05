@@ -66,6 +66,10 @@ Marcus: "Designet var ikke veldig on brand." What changed:
   headline, and checked for whole words, one line and contrast. Without a price style it is 1.6 times the headline.
   The figure is fitted as one line ("NÅ 199,-" never breaks after "NÅ"); the price before it ("TIDLIGERE 399,-") is
   set small under it in the label style.
+- **Where the Engine left room** (5 Nov). `design_take` passes the picture's hard rule "room-for-words" (`room`); its
+  bare side is the first band (top, bottom) or alignment (left, right) the search tries, before the model's eye. The
+  brand's own words colour is tried before the model's. The inset for studio pictures reads the edges in sRGB, so a
+  dark scene is never taken for a backdrop.
 - **A time budget** (5 Nov). The search stops trying once it has a layout and 22 s have gone (40 s with the inset
   passes), and on an inset picture it tries the top band first, so a layer comes back well inside Vercel's limit.
 - **The brand's own font files** (5 Nov). A TrueType or OpenType file the brand adds as a font source
