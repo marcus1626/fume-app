@@ -16,10 +16,10 @@ const RATIOS: [string, number][] = [["21:9", 21 / 9], ["16:9", 16 / 9], ["3:2", 
  * and the surface the part sits in), at least 384 px a side, in one of the model's own ratios so nothing is
  * stretched, and inside the picture.
  */
-export function cropFor(box: Rect, width: number, height: number): { rect: Rect; ratio: string } {
+export function cropFor(box: Rect, width: number, height: number, least = 384): { rect: Rect; ratio: string } {
   const bx = box.x * width, by = box.y * height, bw = box.w * width, bh = box.h * height;
   const pad = Math.max(bw, bh) * 0.4;
-  let w = Math.max(384, bw + 2 * pad), h = Math.max(384, bh + 2 * pad);
+  let w = Math.max(least, bw + 2 * pad), h = Math.max(least, bh + 2 * pad);
   const [ratio, r] = RATIOS.reduce((a, b) => (Math.abs(Math.log(b[1] / (w / h))) < Math.abs(Math.log(a[1] / (w / h))) ? b : a));
   // Grow the short side to the ratio, then shrink both if the picture is smaller than that.
   if (w / h < r) w = h * r;

@@ -39,6 +39,11 @@ test("only the marked part changes: the redrawn crop is set back with a soft edg
   assert.ok(drift > 30, "and reported");
 });
 
+test("a crop for reading small print is close", () => {
+  const { rect } = cropFor({ x: 0.5, y: 0.25, w: 0.05, h: 0.02 }, 1856, 2304, 128);
+  assert.ok(rect.w < 384 && rect.w >= 128, "closer than a crop to redraw");
+});
+
 test("the marked part is blanked to its own plain colour, so the model draws the letters anew", () => {
   const label = flat(100, 60, [20, 20, 25]);
   for (let y = 25; y < 32; y++) for (let x = 20; x < 80; x++) label.data.set([240, 240, 240, 255], (y * 100 + x) * 4);

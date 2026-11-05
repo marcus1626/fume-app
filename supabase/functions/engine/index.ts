@@ -97,6 +97,14 @@ Deno.serve((req) =>
         },
         evaluated: async (candidateId, evaluation, llmUsd) =>
           ({ error: err((await service.rpc("engine_evaluated", { p_candidate_id: candidateId, p_evaluation: evaluation, p_llm_usd: llmUsd })).error) }),
+        askDetails: async (candidateId) => {
+          await fetch(`${url}/functions/v1/details`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${secret}`, apikey: secret, "content-type": "application/json" },
+            body: JSON.stringify({ candidateId }),
+            signal: AbortSignal.timeout(20_000),
+          });
+        },
         store: async (path, bytes, contentType) =>
           ({ error: err((await service.storage.from("workspace-files").upload(path, bytes, { contentType, upsert: false })).error) }),
       },

@@ -1261,10 +1261,10 @@ var RATIOS = [
   ["2:3", 2 / 3],
   ["9:16", 9 / 16]
 ];
-function cropFor(box, width, height) {
+function cropFor(box, width, height, least = 384) {
   const bx = box.x * width, by = box.y * height, bw = box.w * width, bh = box.h * height;
   const pad = Math.max(bw, bh) * 0.4;
-  let w = Math.max(384, bw + 2 * pad), h = Math.max(384, bh + 2 * pad);
+  let w = Math.max(least, bw + 2 * pad), h = Math.max(least, bh + 2 * pad);
   const [ratio, r] = RATIOS.reduce((a, b) => Math.abs(Math.log(b[1] / (w / h))) < Math.abs(Math.log(a[1] / (w / h))) ? b : a);
   if (w / h < r) w = h * r;
   else h = w / r;
@@ -1547,8 +1547,12 @@ async function fixStep(r, deps) {
   try {
     const picture = await decode(got);
     if (r.op === "fix-crop") {
-      const { rect: rect2, ratio } = cropFor(r.box, picture.width, picture.height);
+      const { rect: rect2, ratio } = cropFor(r.box, picture.width, picture.height, r.read ? 128 : 384);
       let cut = crop(picture, rect2);
+      if (r.read) {
+        const k = 1024 / Math.max(cut.width, cut.height);
+        if (k > 1) cut = resize(cut, Math.round(cut.width * k), Math.round(cut.height * k));
+      }
       if (r.blank) {
         cut = blank(cut, { x: r.box.x * picture.width - rect2.x, y: r.box.y * picture.height - rect2.y, w: r.box.w * picture.width, h: r.box.h * picture.height });
       }

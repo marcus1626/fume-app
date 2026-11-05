@@ -88,6 +88,8 @@ export interface Deps {
     /** An attempt's pictures that wait to be looked at, with the prompt's manifest (public.engine_to_evaluate). */
     toEvaluate?(attemptId: string): Promise<{ data: ToEvaluate | null; error: Failure }>;
     evaluated?(candidateId: string, evaluation: Evaluation, llmUsd: number): Promise<{ error: Failure }>;
+    /** Asks the details function to read the product's small print on a picture (docs/mvp/detail-read.md). */
+    askDetails?(candidateId: string): Promise<void>;
   };
   models: { compose: Composer; decide: Decider; verify: Verifier; digest?: Digester; evaluate?: Evaluator };
   /** null: no image provider yet (a dry run). */
@@ -255,6 +257,8 @@ async function evaluatePictures(attemptId: string, deps: Deps): Promise<void> {
       const size = c.width && c.height ? { width: c.width, height: c.height } : undefined;
       const { looked, call } = await evaluate({ pictureUrl, productUrls, checks, ...(size ? { size } : {}) });
       await deps.service.evaluated(c.id, toEvaluation(checks, looked), call.costUsd ?? 0);
+      // The small print is read closer, against the product's own photographs, after the picture is evaluated.
+      if (productUrls.length > 0) await deps.service.askDetails?.(c.id).catch(() => undefined);
     }
   } catch {
     // Not evaluated: the expert checks by eye.

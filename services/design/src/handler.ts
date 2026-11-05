@@ -7,7 +7,7 @@ import { type Layout, type Words } from "./compose.ts";
 import { type Ask, design } from "./design.ts";
 import { type Box } from "./pixels.ts";
 import { type BrandFace } from "./render.ts";
-import { blank, crop, cropFor, decode, encode, type Rect, setBack } from "./fix.ts";
+import { blank, crop, cropFor, decode, encode, type Rect, resize, setBack } from "./fix.ts";
 
 export interface DesignRequest {
   picture: string;
@@ -172,6 +172,8 @@ export interface FixRequest {
   rect?: Rect;
   /** fix-crop: blank the marked part in the crop, so the image model draws it anew. */
   blank?: boolean;
+  /** fix-crop for reading small print: a close crop (at least 128 px a side), enlarged to 1024 px on its long side. */
+  read?: boolean;
   upload: { crop?: string; png?: string };
 }
 
@@ -223,8 +225,12 @@ async function fixStep(r: FixRequest, deps: Deps): Promise<Response> {
   try {
     const picture = await decode(got);
     if (r.op === "fix-crop") {
-      const { rect, ratio } = cropFor(r.box, picture.width, picture.height);
+      const { rect, ratio } = cropFor(r.box, picture.width, picture.height, r.read ? 128 : 384);
       let cut = crop(picture, rect);
+      if (r.read) {
+        const k = 1024 / Math.max(cut.width, cut.height);
+        if (k > 1) cut = resize(cut, Math.round(cut.width * k), Math.round(cut.height * k));
+      }
       if (r.blank) {
         cut = blank(cut, { x: r.box.x * picture.width - rect.x, y: r.box.y * picture.height - rect.y, w: r.box.w * picture.width, h: r.box.h * picture.height });
       }
