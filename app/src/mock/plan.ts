@@ -35,6 +35,13 @@ import { NOW } from "./seed";
 import { gen, img } from "./seed/helpers";
 import { line, ref } from "./seed/plans";
 
+/** The plan without its copy check: what everyone but Fume's own people reads (FLOWS §31). */
+export function withoutCopyCheck(p: CampaignPlan): CampaignPlan {
+  if (!p.copyCheck) return p;
+  const { copyCheck: _, ...rest } = p;
+  return rest;
+}
+
 type Calls =
   | "plan"
   | "sendBrief"
@@ -899,14 +906,21 @@ export function planCalls(m: Mock): Pick<FumeApi, Calls> {
     return changes;
   };
 
+  // How the plan's words were read (FLOWS §31) is for Fume's own people only: never the customer, an agency or its
+  // client.
+  const shown = (p: CampaignPlan): CampaignPlan => {
+    const me = m.me();
+    return me.staffRole && !me.agency ? p : withoutCopyCheck(p);
+  };
+
   return {
     async plan(campaignId) {
       const p = planOf(campaignId) ?? null;
       // Before she may read it, the plan says only where it is.
       const c = db.campaigns.find((x) => x.id === campaignId);
       if (p && !seesPlan(m.me(), c && workspaceOf(c), p))
-        return wait({ ...p, directions: [], content: [], rules: [], summary: "" });
-      return wait(p);
+        return wait(withoutCopyCheck({ ...p, directions: [], content: [], rules: [], summary: "" }));
+      return wait(p && shown(p));
     },
     sendBrief,
     // Approving the brief is sending it.
@@ -924,7 +938,7 @@ export function planCalls(m: Mock): Pick<FumeApi, Calls> {
           p.state === "approved" ? "You approved this plan already." : "The plan isn't ready for you yet.",
         );
       approve(c, p, m.userId);
-      return wait(p);
+      return wait(shown(p));
     },
     async answerClientPlan({ token, verdict, text, name }) {
       const send = db.clientSends.find((s) => s.link?.token === token && s.plan);
@@ -949,12 +963,12 @@ export function planCalls(m: Mock): Pick<FumeApi, Calls> {
         if (!text?.trim()) throw new FumeError("invalid", "Say what should change.");
         askChanges(c, p, owner, text.trim(), name.trim() || undefined);
       }
-      return wait(p);
+      return wait(shown(p));
     },
     async undoApprovePlan(campaignId) {
       m.mustApprove();
       const p = must(campaignId);
-      if (!planAllows(p, "undo")) return wait(p);
+      if (!planAllows(p, "undo")) return wait(shown(p));
       const c = m.campaignOf(campaignId);
       if (!canUndoPlanApproval(m.me(), workspaceOf(c)))
         throw new FumeError("forbidden", `${clientName(c)} approved the plan; only she can undo it.`);
@@ -974,7 +988,7 @@ export function planCalls(m: Mock): Pick<FumeApi, Calls> {
         : undefined;
       if (last) db.messages = db.messages.filter((x) => x !== last);
       changed(c);
-      return wait(p);
+      return wait(shown(p));
     },
     async changePlan(campaignId, change) {
       const p = must(campaignId);
@@ -1018,7 +1032,7 @@ export function planCalls(m: Mock): Pick<FumeApi, Calls> {
         );
       }
       changed(c);
-      return wait(p);
+      return wait(shown(p));
     },
     async choosePlanDirection(campaignId, directionId, reason) {
       m.mustApprove();
@@ -1030,7 +1044,7 @@ export function planCalls(m: Mock): Pick<FumeApi, Calls> {
         throw new FumeError("not_found", "No such direction in the plan.");
       Object.assign(p, { chosenDirectionId: directionId, chosenReason: reason?.trim() || undefined });
       changed(c);
-      return wait(p);
+      return wait(shown(p));
     },
     async askPlanChanges(campaignId, note) {
       m.mustApprove();
@@ -1041,7 +1055,7 @@ export function planCalls(m: Mock): Pick<FumeApi, Calls> {
         throw new FumeError("invalid", "The plan can be changed once it is ready for you.");
       if (!note.trim()) throw new FumeError("invalid", "Write what Fume should change.");
       askChanges(c, p, m.userId, note.trim());
-      return wait(p);
+      return wait(shown(p));
     },
     // She asks the expert to check the plan before she approves it (optional); the mock plays the expert's check.
     async askPlanCheck(campaignId) {
@@ -1084,7 +1098,7 @@ export function planCalls(m: Mock): Pick<FumeApi, Calls> {
       setTimeout(() => {
         if (p.state === "in_check" && p.checkAsked) ready(c, p, expert);
       }, PACE.check);
-      return wait(p);
+      return wait(shown(p));
     },
     async checkPlan(campaignId) {
       const p = must(campaignId);
@@ -1104,13 +1118,13 @@ export function planCalls(m: Mock): Pick<FumeApi, Calls> {
         if (!p.checkedBy) Object.assign(p, { checkedBy: m.userId, checkedAt: now() });
         clockTo(c.id, "plan", p.timeline[0]?.at ?? now(), "paused_waiting_on_you", waitsOn(c, p));
         changed(c);
-        return wait(p);
+        return wait(shown(p));
       }
       if (!canCheckPlan(m.me(), workspaceOf(c)).ok)
         throw new FumeError("forbidden", "Only Fume's expert checks a plan.");
       if (!planAllows(p, "expert_check")) throw new FumeError("invalid", "This plan is not in check.");
       ready(m.campaignOf(campaignId), p, m.userId);
-      return wait(p);
+      return wait(shown(p));
     },
     // She changes the plan in the chat before the Engine starts: the number of creatives, how many are videos or
     // carousels, and the dates change at once in a new version that says what changed; anything else goes to Fume as
@@ -1134,7 +1148,7 @@ export function planCalls(m: Mock): Pick<FumeApi, Calls> {
             text: `You sent this plan to ${client}, so it stays as it is while it is with her. If she asks for changes, Fume writes the next version and you check it again.`,
           }),
         );
-        return wait(p);
+        return wait(shown(p));
       }
       if (p.state !== "ready") {
         m.post(t.id, { author: me, text: words });
@@ -1143,7 +1157,7 @@ export function planCalls(m: Mock): Pick<FumeApi, Calls> {
             ? `${agency ? `${client} approved` : "You approved"} this plan, and the Engine has started, so it stays as it is. Ask for a change on a creative once you see it.`
             : `${p.state === "in_check" ? `${expertName()} is checking the plan` : "Fume is still writing the plan"}${p.readyBy ? ` until ${dayWords(p.readyBy)}` : ""}. Tell me again once it is ready, and Fume changes it then.`;
         later(() => m.post(t.id, { author: { kind: "fume" }, text: why }));
-        return wait(p);
+        return wait(shown(p));
       }
       // a copy to try the words on: only a change Fume can make at once is kept
       const trial = structuredClone(p);
@@ -1167,7 +1181,7 @@ export function planCalls(m: Mock): Pick<FumeApi, Calls> {
         });
         m.emit({ type: "campaign.state", campaign: c });
       });
-      return wait(p);
+      return wait(shown(p));
     },
   };
 }

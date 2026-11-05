@@ -2,6 +2,8 @@
 // Only the customer decides on what the Engine proposes (FLOWS §2).
 
 import type {
+  BrandBook,
+  BrandBookKind,
   BrandColour,
   BrandDna,
   BrandImage,
@@ -27,7 +29,7 @@ import type {
   VoicePartId,
 } from "../entities/brand";
 import type { Id } from "../entities/common";
-import type { BrandAssetsView, BrandBoardView, BrandDnaView } from "../views/brand";
+import type { BrandAssetsView, BrandBoardView, BrandBooksView, BrandDnaView } from "../views/brand";
 
 export interface BrandApi {
   // Brand DNA
@@ -63,6 +65,17 @@ export interface BrandApi {
   moveImage(input: { imageId: Id; group: ImageGroup; campaign?: string }): Promise<BrandImage>;
   /** Confirm or Change one part of the voice (Change says what is right in her words). */
   decideVoicePart(input: { part: VoicePartId; verdict: "keep" | "change"; note?: string }): Promise<VoiceBook>;
+
+  // The brand's books (FLOWS §30): a long Tone of Voice and a design system
+  brandBooks(): Promise<BrandBooksView>;
+  /** Fume writes a new version (the people who run the brand, or its owner or approver); one of a kind at a time. */
+  writeBrandBook(input: { kind: BrandBookKind; ask?: string }): Promise<BrandBook>;
+  /** An expert who can check marks a draft checked: the customer sees it then. */
+  checkBrandBook(bookId: Id): Promise<BrandBook>;
+  /** Only the customer's owner or approver approves; the version before is superseded. */
+  approveBrandBook(bookId: Id): Promise<BrandBook>;
+  /** The customer's change: Fume writes the next version with her words; the approved one stays in use meanwhile. */
+  askBrandBookChange(input: { bookId: Id; ask: string }): Promise<BrandBook>;
 
   // Taste keeps learning (FLOWS §14)
   tasteTraining(): Promise<{ cards: TasteCard[]; state: TasteState }>;

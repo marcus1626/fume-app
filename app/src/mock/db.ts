@@ -5,6 +5,7 @@
 import type {
   Batch,
   Board,
+  BrandBook,
   BrandDna,
   BrandIdentity,
   BrandModel,
@@ -108,6 +109,8 @@ export interface Db {
   tasteCards: TasteCard[];
   tasteState: TasteState;
   voiceBook: VoiceBook;
+  /** The brands' books (FLOWS §30), newest first; the mock keeps each one's brand. */
+  brandBooks: (BrandBook & { workspaceId: Id })[];
   scan: BrandScan | null;
   brandUpdate: BrandUpdate | null;
   onboarding: OnboardingProgress;
@@ -190,6 +193,7 @@ export function createDb(options: DbOptions = {}): Db {
     tasteCards: seed.tasteCards,
     tasteState: seed.tasteState,
     voiceBook: undefined as unknown as VoiceBook,
+    brandBooks: [],
     scan: null,
     brandUpdate: null,
     onboarding: { step: "", lines: [] },
@@ -255,6 +259,8 @@ export function createDb(options: DbOptions = {}): Db {
   const found = (evidence: string) => (options.fresh ? seed.proposed(evidence) : seed.engineFound(evidence));
   db.identity.imagery.push(...seed.moreImages(found));
   db.voiceBook = seed.voiceBook(found);
+  // A first run has no books yet: Fume writes them once it has read the brand.
+  if (!options.fresh) db.brandBooks = seed.brandBooks(db.voiceBook).map((b) => ({ ...b, workspaceId: "w-lysne" }));
   db.questions = structuredClone(seed.seedQuestions);
   return db;
 }
