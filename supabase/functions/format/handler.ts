@@ -75,10 +75,53 @@ export const MODEL = "nano-banana-pro";
 
 const NAMES: Record<string, string> = { feed: "feed post", square: "square", story: "story", banner: "banner" };
 const MODEL_RATIO: Record<string, string> = { feed: "4:5", square: "1:1", story: "9:16", banner: "16:9" };
+/** Width over height of each format, and the air the product keeps in it (services/design/src/format.ts). */
+const SHAPE: Record<string, number> = { feed: 4 / 5, square: 1, story: 9 / 16, banner: 16 / 9 };
+const AIR: Record<string, { side: number; top: number; bottom: number }> = {
+  feed: { side: 0.04, top: 0.04, bottom: 0.04 },
+  square: { side: 0.04, top: 0.04, bottom: 0.04 },
+  banner: { side: 0.04, top: 0.04, bottom: 0.04 },
+  story: { side: 0.04, top: 250 / 1920, bottom: 340 / 1920 },
+};
 
 export const REDRAWN_WHY = "Drawn again in the new shape, as the designer chose. The picture is new, so the Engine looked at the product against its photographs; check it as closely as a new picture.";
 
-export function redrawPromptOf(t: Take, photos: number): string {
+/** The why, with whether the product stands where the master has it. */
+export function redrawnWhy(place: Rect | null, off: number | null): string {
+  if (!place || off === null) return `${REDRAWN_WHY} Check that the product stands where the master has it.`;
+  const where = side(place.x + place.w / 2);
+  return off <= PLACE_TOLERANCE
+    ? `${REDRAWN_WHY} The product stands where the master has it, ${where}.`
+    : `${REDRAWN_WHY} The product is not quite where the master has it (${where}); check its place.`;
+}
+
+/** Where the product goes in the new shape: where it stands on the master (its centre, as shares of the frame), at the
+ *  same share of the frame's height, made smaller only to keep air around it and clear of the platform's areas. */
+export function placeFor(box: Rect, format: string, masterRatio: number): Rect {
+  const ratio = SHAPE[format] ?? 1;
+  let w = box.w * (masterRatio / ratio), h = box.h;
+  const air = AIR[format] ?? AIR.square;
+  const k = Math.min(1, (1 - 2 * air.side) / w, (1 - air.top - air.bottom) / h);
+  w *= k;
+  h *= k;
+  const cx = Math.min(Math.max(box.x + box.w / 2, air.side + w / 2), 1 - air.side - w / 2);
+  const cy = Math.min(Math.max(box.y + box.h / 2, air.top + h / 2), 1 - air.bottom - h / 2);
+  return { x: cx - w / 2, y: cy - h / 2, w, h };
+}
+
+/** How far the product's centre is from where it should be, as a share of the frame. */
+export const offBy = (a: Rect, b: Rect) => Math.hypot(a.x + a.w / 2 - (b.x + b.w / 2), a.y + a.h / 2 - (b.y + b.h / 2));
+/** Further than this, the product is not where the master has it. */
+export const PLACE_TOLERANCE = 0.05;
+
+const pct = (v: number) => `${Math.round(v * 100)} %`;
+const side = (cx: number) => (cx < 0.45 ? "left of centre" : cx > 0.55 ? "right of centre" : "in the centre");
+export function placeWords(place: Rect): string {
+  const cx = place.x + place.w / 2, cy = place.y + place.h / 2;
+  return `Place the product where it stands in image 1, ${side(cx)}: its middle ${pct(cx)} of the frame's width from the left edge and ${pct(cy)} of its height from the top, the product about ${pct(place.w)} of the frame wide and ${pct(place.h)} high. Keep this placement; do not centre the product unless it is centred in image 1.`;
+}
+
+export function redrawPromptOf(t: Take, photos: number, place?: Rect | null, missed?: Rect | null): string {
   const name = NAMES[t.format] ?? t.format;
   return [
     `Image 1 is a finished campaign photograph${t.brand.name ? ` for ${t.brand.name}` : ""} that the customer approved.${photos ? ` The next ${photos === 1 ? "image is a photograph" : `${photos} images are photographs`} of the product itself.` : ""}`,
@@ -86,6 +129,8 @@ export function redrawPromptOf(t: Take, photos: number): string {
     "The product must be exactly the product in the photographs: the same shape, proportions, colours, pattern, label and materials.",
     t.format === "story" ? "Keep the product clear of the top eighth and the bottom fifth of the frame, where the platform shows its own controls." : "Keep air around the product.",
     "Add nothing new: no other products, no people, no hands, no text, no logos, no frames or borders.",
+    ...(place ? [placeWords(place)] : []),
+    ...(place && missed ? [`An earlier drawing put the product's middle at ${pct(missed.x + missed.w / 2)} from the left and ${pct(missed.y + missed.h / 2)} from the top, which is wrong. Move it to the place above.`] : []),
   ].join("\n");
 }
 
@@ -230,8 +275,9 @@ async function drawIt(d: Deps, ask: ImageAsk): Promise<{ ok: true; bytes: Uint8A
 async function redraw(t: Take, d: Deps): Promise<"made" | "failed"> {
   const started = d.now();
   let cents = 0;
+  let usd = 0;
   const fail = async (why: string) => {
-    await d.service.fail(t.make_id, why, cents, 0);
+    await d.service.fail(t.make_id, why, cents, usd);
     return "failed" as const;
   };
   const path = (end: string) => `${t.store.prefix}${end}`;
@@ -246,14 +292,43 @@ async function redraw(t: Take, d: Deps): Promise<"made" | "failed"> {
       }
     }
     const model = (await d.service.model?.("regenerate").catch(() => null)) || MODEL;
-    const text = redrawPromptOf(t, photos.length);
-    const drawn = await drawIt(d, {
-      imageModel: model, text, referenceUrls: [picture, ...photos], aspectRatio: MODEL_RATIO[t.format] ?? "1:1", resolution: "2K", seed: null,
-    });
-    if (drawn.ok || drawn.sent) cents = d.image.priceCents(model);
-    if (!drawn.ok) return await fail(drawn.error);
-    if (!(await d.service.store(t.store.bucket, path("-drawn.png"), drawn.bytes))) return await fail("Fume could not store what the image model drew.");
-    const link = await d.service.readLink(t.store.bucket, path("-drawn.png"));
+    // Where the product stands on the master, so the new picture keeps the composition the customer approved.
+    const find = async (pictureUrl: string) => {
+      try {
+        const found = await d.locate({ pictureUrl, format: t.format });
+        usd += found.usd;
+        return found;
+      } catch {
+        return null;
+      }
+    };
+    const onMaster = await find(picture);
+    const masterRatio = t.picture.width && t.picture.height ? t.picture.width / t.picture.height : SHAPE.feed;
+    const place = onMaster?.box ? placeFor(onMaster.box, t.format, masterRatio) : null;
+    // One drawing, and one more when the product is not where it should be; the closer one is kept.
+    let best: { link: string; text: string; off: number | null; at: Rect | null } | null = null;
+    for (let n = 1; n <= (place ? 2 : 1); n++) {
+      const text = redrawPromptOf(t, photos.length, place, best?.at ?? null);
+      const drawn = await drawIt(d, {
+        imageModel: model, text, referenceUrls: [picture, ...photos], aspectRatio: MODEL_RATIO[t.format] ?? "1:1", resolution: "2K", seed: null,
+      });
+      if (drawn.ok || drawn.sent) cents += d.image.priceCents(model);
+      if (!drawn.ok) {
+        if (best) break;
+        return await fail(drawn.error);
+      }
+      const at = path(n === 1 ? "-drawn.png" : `-drawn-${n}.png`);
+      if (!(await d.service.store(t.store.bucket, at, drawn.bytes))) return await fail("Fume could not store what the image model drew.");
+      const link = await d.service.readLink(t.store.bucket, at);
+      if (!link) return await fail("Fume could not make the storage links.");
+      const seen = place ? (await find(link))?.box ?? null : null;
+      const off = place && seen ? offBy(seen, place) : null;
+      console.log(JSON.stringify({ make: t.make_id, redraw: n, place, seen, off }));
+      if (!best || (off !== null && (best.off === null || off < best.off))) best = { link, text, off, at: seen };
+      if (off === null || off <= PLACE_TOLERANCE) break;
+    }
+    if (!best) return await fail("The image model drew nothing.");
+    const { link, text } = best;
     const up = await d.service.uploadLink(t.store.bucket, path(".png"));
     if (!link || !up) return await fail("Fume could not make the storage links.");
     const cut = await d.step({ op: "format-drawn", picture: link, format: t.format, upload: { png: up } });
@@ -262,7 +337,7 @@ async function redraw(t: Take, d: Deps): Promise<"made" | "failed"> {
     const width = Number(cut.body.width), height = Number(cut.body.height);
     const { data, error } = await d.service.finish(t.make_id, {
       png: { path: path(".png"), bytes: png.bytes, sha256: png.sha256 }, width, height,
-      method: "regenerate", why: REDRAWN_WHY, window: null, prompt: text, model, cost_cents: cents, llm_usd: 0, ms: d.now() - started,
+      method: "regenerate", why: redrawnWhy(place, best.off), window: place, prompt: text, model, cost_cents: cents, llm_usd: usd, ms: d.now() - started,
     });
     if (error) return await fail(error.message);
     // The Engine looks at the new picture. A failure here never undoes it: the expert checks it by eye.

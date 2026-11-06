@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertMatch } from "jsr:@std/assert@1";
-import { type Deps, handleFormat, makeFormat, promptOf, redrawPromptOf, type Take, whyOf } from "./handler.ts";
+import { type Deps, handleFormat, makeFormat, offBy, placeFor, promptOf, redrawPromptOf, type Take, whyOf } from "./handler.ts";
 
 const take: Take = {
   make_id: "00000000-0000-0000-0000-0000000000a1",
@@ -153,15 +153,21 @@ Deno.test("a redraw draws the picture again in the new shape, from the master an
     looked.push(r);
     return Promise.resolve({ evaluation: { productTruth: "pass" }, usd: 0.002 });
   };
+  // On the master the shirt stands right of centre; the first drawing centres it, the second puts it back.
+  const seen = [{ x: 0.4, y: 0.25, w: 0.4, h: 0.5 }, { x: 0.2, y: 0.25, w: 0.6, h: 0.5 }, { x: 0.32, y: 0.25, w: 0.56, h: 0.5 }];
+  d.locate = () => Promise.resolve({ box: seen.shift()!, what: "the shirt", usd: 0.001 });
   assertEquals(await makeFormat(t, d), "made");
-  assertEquals(calls.located, 0, "the designer chose; nothing is located");
   assertEquals(calls.submitted[0].referenceUrls, ["https://s/read/ws/engine/j/p.png", "https://s/read/ws/p/front.jpg", "https://s/read/ws/p/back.jpg"]);
   assertEquals(calls.submitted[0].aspectRatio, "9:16");
+  assertMatch(String((calls.submitted[0] as { text?: string }).text), /right of centre: its middle 60 % of the frame's width/);
+  assertMatch(String((calls.submitted[1] as { text?: string }).text), /An earlier drawing put the product's middle at 50 %/);
   assertEquals(calls.steps.map((s) => s.op), ["format-drawn"]);
-  assertEquals(calls.stored, ["ws/format/a1-drawn.png"]);
+  assertEquals(calls.stored, ["ws/format/a1-drawn.png", "ws/format/a1-drawn-2.png"]);
+  assertEquals(calls.steps[0].picture, "https://s/read/ws/format/a1-drawn-2.png", "the drawing with the product in its place is kept");
   const f = calls.finish[0];
-  assertEquals([f.method, f.cost_cents, f.width, f.height, f.model], ["regenerate", 15, 1536, 2731, "nano-banana-pro"]);
-  assertMatch(String(f.why), /Drawn again in the new shape/);
+  assertEquals([f.method, f.cost_cents, f.width, f.height, f.model], ["regenerate", 30, 1536, 2731, "nano-banana-pro"]);
+  assertEquals(f.llm_usd, 0.003);
+  assertMatch(String(f.why), /The product stands where the master has it, right of centre/);
   assertEquals(looked[0].productUrls, ["https://s/read/ws/p/front.jpg", "https://s/read/ws/p/back.jpg"]);
   assertEquals(evaluated[0][0], "c-new");
   assertMatch(redrawPromptOf(t, 2), /The next 2 images are photographs of the product itself/);
@@ -170,11 +176,13 @@ Deno.test("a redraw draws the picture again in the new shape, from the master an
 
 Deno.test("a redraw whose look fails is still made, and a failed drawing says why and what it cost", async () => {
   const t: Take = { ...take, asked: "regenerate", products: [] };
-  const { d, calls } = deps("expand", {}, t);
+  const { d, calls } = deps("expand", { locate: () => Promise.reject(new Error("budget")) }, t);
   d.service.evaluated = () => Promise.resolve({ error: null });
   d.look = () => Promise.reject(new Error("budget"));
   assertEquals(await makeFormat(t, d), "made");
   assertEquals(calls.submitted[0].referenceUrls, ["https://s/read/ws/engine/j/p.png"]);
+  assertEquals(calls.submitted.length, 1, "without the product's place, one drawing");
+  assertMatch(String(calls.finish[0].why), /Check that the product stands where the master has it/);
   const failing: Deps["image"] = {
     priceCents: () => 15,
     submit: () => Promise.resolve({ ok: true, providerJobId: "f" }),
@@ -182,5 +190,17 @@ Deno.test("a redraw whose look fails is still made, and a failed drawing says wh
   };
   const bad = deps("expand", { image: failing }, t);
   assertEquals(await makeFormat(t, bad.d), "failed");
-  assertEquals(bad.calls.fail[0], ["nsfw", 15, 0]);
+  assertEquals(bad.calls.fail[0], ["nsfw", 15, 0.001], "finding the product on the master counts too");
+});
+
+Deno.test("the product keeps its place from the master in the new shape, with air and clear of a story's platform areas", () => {
+  const right = placeFor({ x: 0.4, y: 0.25, w: 0.4, h: 0.5 }, "story", 0.8);
+  assertEquals(Math.round((right.x + right.w / 2) * 100), 60, "right of centre stays right of centre");
+  assertEquals(Math.round(right.h * 100), 50, "the same share of the frame's height");
+  assert(right.w > 0.4 && right.w < 0.6, "wider share in a narrower frame");
+  const tall = placeFor({ x: 0.3, y: 0.02, w: 0.4, h: 0.95 }, "story", 0.8);
+  assert(tall.y >= 250 / 1920 - 1e-9 && tall.y + tall.h <= 1 - 340 / 1920 + 1e-9, "clear of the platform's top and bottom");
+  const wide = placeFor({ x: 0.02, y: 0.3, w: 0.96, h: 0.4 }, "story", 0.8);
+  assert(wide.x >= 0.04 - 1e-9 && wide.x + wide.w <= 0.96 + 1e-9, "air at the sides");
+  assertEquals(offBy(right, right), 0);
 });
