@@ -23,11 +23,22 @@ creative and goes to the expert's check like any other picture.
    the Engine's choice and why; the designer can switch crop and expand, or drag the crop window, and the format is
    made again (`setFormatTile` → `make_format` with the method and window).
 
+### Regenerate (the third way, 6 Nov 2026)
+
+Only the designer chooses it (Regenerate on the tile): when neither a crop nor an expansion works, for example a wide
+banner from a tall master, or a scene that has to be laid out again. The image model (task `regenerate`, Nano Banana
+Pro, about 15 c) draws the picture again in the new shape from the approved master and up to three of the product's
+own photographs (`format_take` gives them). The design service cuts it to the exact shape (`op: "format-drawn"`).
+The picture is new, so nothing of the master's pixels is kept: the Engine looks at the product against its
+photographs (the same look as for any new picture, `engine_evaluated`), and the tile says the expert should check it
+as closely as a new picture.
+
 Costs count in the Engine's week (pictures) and the language model's week. A failed make says why on the tile.
 
 ## Files
 
 - `supabase/migrations/20261105160000_format_make.sql`, test `supabase/tests/9zd_format_make.sql`
+- `supabase/migrations/20261106100000_format_regenerate.sql`, test `supabase/tests/9zg_format_regenerate.sql`
 - `supabase/functions/format/` (handler, models, tests)
 - `services/design/src/format.ts`, ops in `services/design/src/handler.ts`, tests `services/design/test/format.test.ts`
 - `app/src/api/live/production.ts` (`makeFormat`, the tiles), `app/src/api/live/studio.ts` (`setFormatTile`)
