@@ -322,9 +322,11 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
       const region = detail ? grow(detail.box) : brushed;
       if (!region) throw new FumeError("invalid", "Brush the part to fix on the picture.");
       if (region.w * region.h > 0.5) throw new FumeError("invalid", "Draw a smaller box: at most half the picture.");
-      const ask = detail
-        ? `The ${detail.what} reads "${detail.reads || "nothing legible"}". It says "${detail.expected}", as on the product photographs.`
-        : (what ?? "").trim();
+      const ask = !detail
+        ? (what ?? "").trim()
+        : detail.kind === "part"
+          ? `${detail.note ?? `The ${detail.what} is not as on the product.`} Draw the ${detail.what} as on the product photographs: ${detail.expected}`
+          : `The ${detail.what} reads "${detail.reads || "nothing legible"}". It says "${detail.expected}", as on the product photographs.`;
       if (!ask) throw new FumeError("invalid", "Say what to change.");
       const fix = await command<{ id: string }>("fix_candidate", {
         p_candidate_id: versionId,
@@ -386,10 +388,14 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
         productId,
         label: d.what.charAt(0).toUpperCase() + d.what.slice(1),
         value: d.expected,
-        kind: "label",
+        kind: d.kind === "part" ? "part" : "label",
         image: data?.[i]?.signedUrl ?? "",
         region: { x: 0, y: 0, w: 1, h: 1 },
-        provenance: { origin: "engine", state: "proposed", evidence: "Read on the product's own photograph" },
+        provenance: {
+          origin: "engine",
+          state: "proposed",
+          evidence: d.kind === "part" ? "Seen on the product's own photograph" : "Read on the product's own photograph",
+        },
       }));
     },
     async undoDocumentToCheck() {

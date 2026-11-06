@@ -22,7 +22,9 @@ const Mapped = z.object({
 const Where = z.object({
   parts: z.array(z.object({ key: z.string(), shown: z.enum(["yes", "hidden", "missing"]), box: Box.nullable() })),
 });
-const Side = z.object({ shows: z.string(), whole: z.boolean(), count: z.number().int().nullable(), same: z.boolean(), note: z.string() });
+const Side = z.object({
+  shows: z.string(), whole: z.boolean(), count: z.number().int().nullable(), differs: z.enum(["no", "slightly", "clearly"]), note: z.string(),
+});
 
 /** The map is made once per product, so it is made by the careful model; Sonnet 5.5's list price, dollars per million tokens. */
 export const MAP_MODEL = "claude-sonnet-5-5";
@@ -69,7 +71,8 @@ export const MAP_SYSTEM = [
   "collar, a zip, a flap), look when its look is what matters (pattern, fabric, finish, colour, shape); what, its name as a",
   "designer says it (the front buttons); count, how many the product has, counted with care on the photograph that shows",
   "them all, for count only, else null; looks, one plain sentence a designer can check a picture against, with its colour,",
-  "shape, number and material (seven white four-hole buttons down the front placket, none on the collar points); photo,",
+  "shape, number and material as a shopper sees them, no thread or fibre detail (seven white buttons down the front",
+  "placket, none on the collar points); photo,",
   "the photograph where it shows best (1 is the first image); box, a tight box around it there, as shares of that",
   "photograph's width and height (x and y are the top left corner, from 0 to 1). For pattern, fabric and finish, the box is",
   "a plain patch of it about a fifth of the product wide; for shape, the whole product. Never the printed letters",
@@ -89,14 +92,19 @@ export const LOCATE_SYSTEM = [
 
 export const COMPARE_SYSTEM = [
   "You compare one part of a product for Fume's expert. Image 1 is a close crop of a picture an image model made; image 2",
-  "is the same part on the real product's photograph. Look only at the named part. Light, angle, folds, wrinkles and scale",
-  "may differ and are no fault. What counts: the number of things (buttons, eyelets, pockets), whether something is there",
-  "or not (a flap, a zip, a seam, a label), its shape, its colour, its pattern (checks against stripes, the size of the",
-  "checks), its material and its finish (matte or shiny, woven or knit, smooth or ribbed). shows: one plain sentence of how",
-  "the part looks on image 1, with its number, colour and shape. whole: true when image 1 shows the whole part, nothing",
-  "cut by the crop or covered. count: when the part is counted, how many image 1 shows, else null. same: true when the",
-  "part on image 1 is the same as the real one in all that counts, as far as image 1 shows it. note: when same is false,",
-  "one short sentence for a designer in the form: The chest pocket has a flap; on the product it has none. Else empty.",
+  "is the same part on the real product's photograph. Look only at the named part, and judge it as a shopper would who",
+  "gets the real product after seeing the picture at its normal size. A fault is what that shopper would notice: a",
+  "different number (buttons, eyelets, pockets), a part that is missing or added (a pocket, a flap, a zip, a collar's",
+  "points, a strap), a different shape or cut, a clearly different colour, a different pattern (stripes for checks, much",
+  "bigger or smaller checks, other colours in it), a different material (leather for canvas, knit for woven, shiny for",
+  "matte). Never a fault: light, angle, folds, wrinkles, scale; a softer or crisper rendering of the same fabric; the",
+  "fine texture of a weave (brushed, fuzzy, melange); thread-level detail, stitching, raw or clean edges; single or",
+  "double lines in the same pattern; anything image 1 shows too small, blurred, turned away, covered or cut by the crop",
+  "to tell. What image 1 does not show clearly is not a difference. shows: one plain sentence of how the part looks on",
+  "image 1, with its number, colour and shape. whole: true when image 1 shows the whole part. count: when the part is",
+  "counted and image 1 shows them clearly, how many, else null. differs: no; slightly (a small difference the shopper",
+  "would not mind); clearly (a fault as above). note: when differs is clearly, one short sentence for a designer in the",
+  "form: The chest pocket has a flap; on the product it has none. Else empty.",
 ].join(" ");
 
 export function claudeDetails(claude: Anthropic, allowed: () => Promise<boolean>): Pick<Deps, "find" | "read" | "refine" | "map" | "locate" | "compare"> {
@@ -142,7 +150,7 @@ export function claudeDetails(claude: Anthropic, allowed: () => Promise<boolean>
     async compare({ cropUrl, refUrl, part }) {
       const { out, usd } = await ask(COMPARE_SYSTEM, [cropUrl, refUrl],
         `The part: ${part.what}. On the real product: ${part.looks}${part.count != null ? ` The product has ${part.count}.` : ""}`, Side);
-      return { ...out, usd };
+      return { shows: out.shows, whole: out.whole, count: out.count, same: out.differs !== "clearly", note: out.note, usd };
     },
   };
 }

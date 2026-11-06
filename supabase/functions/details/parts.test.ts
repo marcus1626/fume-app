@@ -31,6 +31,7 @@ function deps(over: Partial<Deps> = {}, tones: Record<string, unknown> = {}) {
       finish: () => Promise.resolve({ error: null }),
       readLink: (_b: string, p: string) => Promise.resolve(`https://s/read/${p}`),
       uploadLink: (_b: string, p: string) => Promise.resolve(`https://s/up/${p}`),
+      keep: () => Promise.resolve(false),
       setParts: (...a: unknown[]) => {
         calls.set.push(a);
         return Promise.resolve({ error: null });

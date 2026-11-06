@@ -1,5 +1,5 @@
 import { assertEquals, assertMatch } from "jsr:@std/assert@1";
-import { type Deps, type Detail, handleDetails, readDetails, readsRight, type Take } from "./handler.ts";
+import { type Deps, type Detail, handleDetails, photoLink, readDetails, readsRight, type Take } from "./handler.ts";
 
 const take: Take = {
   candidate_id: "00000000-0000-0000-0000-0000000000c1",
@@ -22,6 +22,7 @@ function deps(over: Partial<Deps> = {}) {
       },
       readLink: (_b, p) => Promise.resolve(`https://s/read/${p}`),
       uploadLink: (_b, p) => Promise.resolve(`https://s/up/${p}`),
+      keep: () => Promise.resolve(false),
       setParts: () => Promise.resolve({ error: null }),
     },
     step: (r) => {
@@ -99,4 +100,21 @@ Deno.test("code compares the letters, so a model that contradicts itself does no
   assertEquals(readsRight({ reads: "Dressmeann", expected: "Dressmann", ok: true, note: "" }), false);
   assertEquals(readsRight({ reads: "", expected: "Dressmann", ok: true, note: "" }), true, "unreadable: the model's word stands");
   assertEquals(readsRight({ reads: "Dress mann.", expected: "dressmann", ok: false, note: "" }), true);
+});
+
+Deno.test("a packshot kept only as a link is fetched into storage once, then read from there", async () => {
+  const kept = new Set<string>();
+  const asked: string[] = [];
+  const { d } = deps({ service: { ...deps().d.service,
+    readLink: (_b, p) => Promise.resolve(p.includes("/p/") || kept.has(p) ? `https://s/read/${p}` : null),
+    keep: (url, _b, p) => {
+      asked.push(url);
+      kept.add(p);
+      return Promise.resolve(true);
+    } } });
+  const pic = { bucket: "workspace-files", path: "ws/check/source-s1.img", url: "https://brand.example/shoe.png" };
+  assertEquals(await photoLink(d, pic), "https://s/read/ws/check/source-s1.img");
+  assertEquals(await photoLink(d, pic), "https://s/read/ws/check/source-s1.img");
+  assertEquals(asked, ["https://brand.example/shoe.png"], "fetched once");
+  assertEquals(await photoLink(d, { bucket: "workspace-files", path: "ws/x.png" }), null, "a missing file with no link is nothing");
 });

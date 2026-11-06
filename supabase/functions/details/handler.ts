@@ -20,7 +20,8 @@ export type Take = {
     id?: string;
     name: string;
     variant: string | null;
-    pictures: { bucket: string; path: string; file_id?: string }[];
+    /** A packshot kept only as a link has its url, and the path where the function keeps its copy. */
+    pictures: { bucket: string; path: string; file_id?: string; url?: string }[];
     /** The product's part map (parts.ts), when one was made from these photographs. */
     parts?: Part[] | null;
   }[];
@@ -53,6 +54,8 @@ export interface Deps {
     finish(candidateId: string, details: Detail[], usd: number): Promise<{ error: Failure }>;
     readLink(bucket: string, path: string): Promise<string | null>;
     uploadLink(bucket: string, path: string): Promise<string | null>;
+    /** Fetches a packshot kept only as a link into Fume's storage; true when it is there. */
+    keep(url: string, bucket: string, path: string): Promise<boolean>;
     /** Keeps a product's part map (product_parts_set). */
     setParts(productId: string, parts: Part[], photos: string[], model: string, usd: number): Promise<{ error: Failure }>;
   };
@@ -68,6 +71,13 @@ export interface Deps {
   /** Compares a part on the picture (crop) with the same part on the product's photograph (ref). */
   compare(r: { cropUrl: string; refUrl: string; part: { what: string; looks: string; count: number | null } }): Promise<Compared & { usd: number }>;
   later(work: Promise<unknown>): void;
+}
+
+/** A link to a product photograph: from Fume's storage, fetched there first when the brand's site is all Fume has. */
+export async function photoLink(d: Deps, p: { bucket: string; path: string; url?: string }): Promise<string | null> {
+  const link = await d.service.readLink(p.bucket, p.path);
+  if (link || !p.url) return link;
+  return (await d.service.keep(p.url, p.bucket, p.path).catch(() => false)) ? await d.service.readLink(p.bucket, p.path) : null;
 }
 
 /** At most this many places are read on one picture. */
@@ -128,7 +138,7 @@ export async function readDetails(t: Take, d: Deps): Promise<Detail[] | null> {
     const picture = await d.service.readLink(t.picture.bucket, t.picture.path);
     // The parts are checked while the print is read; a failure in one keeps the other.
     parts = picture ? checkParts(t, d, picture).catch(() => ({ details: [] as Detail[], usd: 0 })) : null;
-    const photos = (await Promise.all(t.products.flatMap((p) => p.pictures).slice(0, 3).map((p) => d.service.readLink(p.bucket, p.path))))
+    const photos = (await Promise.all(t.products.flatMap((p) => p.pictures).slice(0, 3).map((p) => photoLink(d, p))))
       .filter((u): u is string => Boolean(u));
     if (!picture || photos.length === 0) {
       await withParts();

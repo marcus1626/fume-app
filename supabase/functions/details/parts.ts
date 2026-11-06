@@ -8,7 +8,7 @@
 //      from the product's (measured by the design service, not by a model).
 // It helps the expert; it never checks a picture in their place.
 import type { Rect } from "../fix/handler.ts";
-import type { Deps, Detail, Take } from "./handler.ts";
+import { type Deps, type Detail, photoLink, type Take } from "./handler.ts";
 
 export type PartKind = "count" | "present" | "look";
 /** One part of the product, as mapped from its photographs. `photo` is the file id of the photograph it shows best on. */
@@ -110,7 +110,7 @@ export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ d
   const links = new Map<string, string>();
   for (const x of t.products.flatMap((p) => p.pictures ?? [])) {
     if (x.file_id && !links.has(x.file_id)) {
-      const link = await d.service.readLink(x.bucket, x.path);
+      const link = await photoLink(d, x);
       if (link) links.set(x.file_id, link);
     }
   }
@@ -140,12 +140,16 @@ export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ d
     const box = clean(l.box);
     if (!box) continue;
     if (l.shown === "missing") {
-      n += 1;
-      out.push({ n, kind: "part", part: p.key, what: p.what, box, reads: "Not on the picture.", expected: p.looks, ok: false,
+      const at = (n += 1);
+      out.push({ n: at, kind: "part", part: p.key, what: p.what, box, reads: "Not on the picture.", expected: p.looks, ok: false,
         note: `The ${p.what} is missing; on the product: ${p.looks}`.slice(0, 300) });
+      // The real one is cut from the photograph all the same, so the designer sees what belongs there.
+      const photo = p.photo ? links.get(p.photo) : null;
+      const photoBox = roomy(p.box);
+      if (photo && photoBox) work.push(cut(t, d, photo, photoBox, `${t.store.prefix}-${at}-ref.png`).then(() => undefined));
       continue;
     }
-    if (out.length + work.length >= MOST_PARTS) continue;
+    if (n - FIRST_N + 1 >= MOST_PARTS) continue;
     const at = (n += 1);
     work.push((async () => {
       const onPicture = await cut(t, d, picture, roomy(box)!, `${t.store.prefix}-${at}.png`);

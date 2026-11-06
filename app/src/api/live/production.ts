@@ -69,9 +69,12 @@ export interface CandidateRow {
   /** The product's small print as the picture check read it (docs/mvp/detail-read.md); null until read. */
   details?: StoredDetail[] | null;
 }
-/** One place with print, as `details_finish` keeps it. */
+/** One place with print, or (kind "part") one part of the product, as `details_finish` keeps it. */
 export interface StoredDetail {
   n: number;
+  /** print: letters read against the real ones; part: a part compared with the real one (docs/mvp/product-parts.md). */
+  kind?: "print" | "part";
+  part?: string;
   what: string;
   box: { x: number; y: number; w: number; h: number };
   reads: string;
@@ -316,8 +319,9 @@ export async function readDocuments(
             details: c.details.map((d) => ({
               tokenId: detailId(c.id, d.n),
               region: d.box,
-              read: d.reads || "nothing legible",
+              read: d.kind === "part" ? d.reads || "not compared" : d.reads || "nothing legible",
               ok: d.ok,
+              ...(d.kind === "part" ? { kind: "part" as const, ...(d.note ? { note: d.note } : {}) } : {}),
             })),
           }
         : {}),
