@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertMatch } from "jsr:@std/assert@1";
-import { type Deps, handleFormat, makeFormat, offBy, placeFor, promptOf, redrawPromptOf, type Take, whyOf } from "./handler.ts";
+import { cutByEdge, type Deps, handleFormat, makeFormat, offBy, placeFor, promptOf, redrawPromptOf, type Take, whyOf } from "./handler.ts";
 
 const take: Take = {
   make_id: "00000000-0000-0000-0000-0000000000a1",
@@ -39,6 +39,7 @@ function deps(method: "crop" | "expand", over: Partial<Deps> = {}, t: Take = tak
     },
     step: (r) => {
       calls.steps.push(r);
+      if (r.op === "format-guide") return Promise.resolve({ ok: true, status: 200, body: { width: 864, height: 1536, png: { bytes: 5000, sha256: "gg" } } });
       if (r.op === "format-drawn") return Promise.resolve({ ok: true, status: 200, body: { width: 1536, height: 2731, png: { bytes: 7000, sha256: "ef" } } });
       if (r.op === "format-set") return Promise.resolve({ ok: true, status: 200, body: { width: 1856, height: 3300, at: { x: 0, y: 498, w: 1856, h: 2304 }, drift: 2, png: { bytes: 9000, sha256: "cd" } } });
       return Promise.resolve(method === "crop"
@@ -157,13 +158,15 @@ Deno.test("a redraw draws the picture again in the new shape, from the master an
   const seen = [{ x: 0.4, y: 0.25, w: 0.4, h: 0.5 }, { x: 0.2, y: 0.25, w: 0.6, h: 0.5 }, { x: 0.32, y: 0.25, w: 0.56, h: 0.5 }];
   d.locate = () => Promise.resolve({ box: seen.shift()!, what: "the shirt", usd: 0.001 });
   assertEquals(await makeFormat(t, d), "made");
-  assertEquals(calls.submitted[0].referenceUrls, ["https://s/read/ws/engine/j/p.png", "https://s/read/ws/p/front.jpg", "https://s/read/ws/p/back.jpg"]);
+  assertEquals(calls.submitted[0].referenceUrls, ["https://s/read/ws/format/a1-guide.png", "https://s/read/ws/engine/j/p.png", "https://s/read/ws/p/front.jpg", "https://s/read/ws/p/back.jpg"]);
   assertEquals(calls.submitted[0].aspectRatio, "9:16");
+  assertMatch(String((calls.submitted[0] as { text?: string }).text), /Image 1 is the layout of the new story/);
   assertMatch(String((calls.submitted[0] as { text?: string }).text), /right of centre: its middle 60 % of the frame's width/);
   assertMatch(String((calls.submitted[1] as { text?: string }).text), /An earlier drawing put the product's middle at 50 %/);
-  assertEquals(calls.steps.map((s) => s.op), ["format-drawn"]);
+  assertEquals(calls.steps.map((s) => s.op), ["format-guide", "format-drawn"]);
+  assertEquals(calls.steps[0].place, placeFor({ x: 0.4, y: 0.25, w: 0.4, h: 0.5 }, "story", 1856 / 2304));
   assertEquals(calls.stored, ["ws/format/a1-drawn.png", "ws/format/a1-drawn-2.png"]);
-  assertEquals(calls.steps[0].picture, "https://s/read/ws/format/a1-drawn-2.png", "the drawing with the product in its place is kept");
+  assertEquals(calls.steps[1].picture, "https://s/read/ws/format/a1-drawn-2.png", "the drawing with the product in its place is kept");
   const f = calls.finish[0];
   assertEquals([f.method, f.cost_cents, f.width, f.height, f.model], ["regenerate", 30, 1536, 2731, "nano-banana-pro"]);
   assertEquals(f.llm_usd, 0.003);
@@ -203,6 +206,7 @@ Deno.test("the product keeps its place from the master in the new shape, with ai
   const wide = placeFor({ x: 0.02, y: 0.3, w: 0.96, h: 0.4 }, "story", 0.8);
   assert(wide.x >= 0.04 - 1e-9 && wide.x + wide.w <= 0.96 + 1e-9, "air at the sides");
   assertEquals(offBy(right, right), 0);
+  assert(cutByEdge({ x: 0.23, y: 0.2, w: 0.77, h: 0.6 }) && !cutByEdge(right), "a product cut by the frame's edge is not in its place");
   // Dressmann: the shirt fills 61 % of the master's width, its centre at 61 %. Kept at the same height it would fill
   // the story's width and be centred; its place wins, so it is made only as large as that place allows.
   const shirt = placeFor({ x: 0.31, y: 0.2, w: 0.6, h: 0.61 }, "story", 1856 / 2304);

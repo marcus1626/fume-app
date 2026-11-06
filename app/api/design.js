@@ -1490,6 +1490,24 @@ function setMaster(master, drawn, canvas, seam = 48) {
   }
   return { picture: out, drift: Math.round(Math.hypot(shift[0], shift[1], shift[2]) * 10) / 10 };
 }
+function guide(master, ratio, box, place2, most = 1536) {
+  const W = ratio >= 1 ? most : Math.round(most * ratio);
+  const H = ratio >= 1 ? Math.round(most / ratio) : most;
+  const s = place2.w * W / (box.w * master.width);
+  const mw = Math.max(1, Math.round(master.width * s)), mh = Math.max(1, Math.round(master.height * s));
+  const ox = Math.round((place2.x + place2.w / 2) * W - (box.x + box.w / 2) * master.width * s);
+  const oy = Math.round((place2.y + place2.h / 2) * H - (box.y + box.h / 2) * master.height * s);
+  const scaled = resize(master, mw, mh);
+  const data = new Uint8Array(W * H * 4);
+  for (let i = 0; i < data.length; i += 4) data.set([128, 128, 128, 255], i);
+  for (let y = Math.max(0, oy); y < Math.min(H, oy + mh); y++) {
+    const x0 = Math.max(0, ox), x1 = Math.min(W, ox + mw);
+    if (x1 <= x0) continue;
+    const from = ((y - oy) * mw + (x0 - ox)) * 4;
+    data.set(scaled.data.subarray(from, from + (x1 - x0) * 4), (y * W + x0) * 4);
+  }
+  return { width: W, height: H, data };
+}
 
 // src/handler.ts
 var json = (status, body) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
@@ -1537,7 +1555,7 @@ async function handle(req, deps) {
   }
   const op = r.op;
   if (op === "fix-crop" || op === "fix-set") return fixStep(r, deps);
-  if (op === "format" || op === "format-set" || op === "format-drawn") return formatStep(r, deps);
+  if (op === "format" || op === "format-set" || op === "format-drawn" || op === "format-guide") return formatStep(r, deps);
   const why = invalid(r, deps.storageHost);
   if (why) return json(400, { error: why });
   let picture;
@@ -1684,7 +1702,8 @@ function invalidFormat(r, host) {
   if (r.op === "format" && (!signedLink(r.upload?.png, host, "upload") || !signedLink(r.upload?.padded, host, "upload"))) {
     return "The format needs signed upload links to Fume's storage.";
   }
-  if (r.op === "format-drawn" && !signedLink(r.upload?.png, host, "upload")) return "The format needs a signed upload link to Fume's storage.";
+  if ((r.op === "format-drawn" || r.op === "format-guide") && !signedLink(r.upload?.png, host, "upload")) return "The format needs a signed upload link to Fume's storage.";
+  if (r.op === "format-guide" && (!r.around || !r.place || !isShare(r.place))) return "A layout guide needs the product's box and its place.";
   if (r.op === "format-set" && (!signedLink(r.drawn, host, "read") || !signedLink(r.upload?.png, host, "upload"))) {
     return "The drawing and the result need signed links to Fume's storage.";
   }
@@ -1712,6 +1731,11 @@ async function formatStep(r, deps) {
   if (got instanceof Response) return got;
   try {
     const master = await decode(got);
+    if (r.op === "format-guide") {
+      const g = guide(master, RATIO[r.format], r.around, r.place);
+      const png3 = await store(r.upload.png, await encode(g), deps);
+      return json(200, { width: g.width, height: g.height, png: png3 });
+    }
     if (r.op === "format-drawn") {
       const win = windowFor(master.width, master.height, RATIO[r.format]);
       const png3 = await store(r.upload.png, await encode(crop(master, win)), deps);

@@ -114,7 +114,9 @@ export function placeFor(box: Rect, format: string, masterRatio: number): Rect {
 /** How far the product's centre is from where it should be, as a share of the frame. */
 export const offBy = (a: Rect, b: Rect) => Math.hypot(a.x + a.w / 2 - (b.x + b.w / 2), a.y + a.h / 2 - (b.y + b.h / 2));
 /** Further than this, the product is not where the master has it. */
-export const PLACE_TOLERANCE = 0.05;
+export const PLACE_TOLERANCE = 0.06;
+/** Whether the box runs off the frame: a product cut by the edge is never where it should be. */
+export const cutByEdge = (b: Rect) => b.x < 0.01 || b.y < 0.01 || b.x + b.w > 0.99 || b.y + b.h > 0.99;
 
 const pct = (v: number) => `${Math.round(v * 100)} %`;
 const side = (cx: number) => (cx < 0.45 ? "left of centre" : cx > 0.55 ? "right of centre" : "in the centre");
@@ -123,10 +125,14 @@ export function placeWords(place: Rect): string {
   return `Place the product where it stands in image 1, ${side(cx)}: its middle ${pct(cx)} of the frame's width from the left edge and ${pct(cy)} of its height from the top, the product about ${pct(place.w)} of the frame wide and ${pct(place.h)} high. Keep this placement; do not centre the product unless it is centred in image 1.`;
 }
 
-export function redrawPromptOf(t: Take, photos: number, place?: Rect | null, missed?: Rect | null): string {
+export function redrawPromptOf(t: Take, photos: number, place?: Rect | null, missed?: Rect | null, guided = false): string {
   const name = NAMES[t.format] ?? t.format;
+  const of = (photos: number) => (photos ? ` The next ${photos === 1 ? "image is a photograph" : `${photos} images are photographs`} of the product itself.` : "");
   return [
-    `Image 1 is a finished campaign photograph${t.brand.name ? ` for ${t.brand.name}` : ""} that the customer approved.${photos ? ` The next ${photos === 1 ? "image is a photograph" : `${photos} images are photographs`} of the product itself.` : ""}`,
+    guided
+      ? `Image 1 is the layout of the new ${name}: the approved photograph${t.brand.name ? ` for ${t.brand.name}` : ""}, moved and scaled so the product stands exactly where it must; the plain grey parts are empty. Image 2 is the approved photograph itself.${of(photos)}`
+      : `Image 1 is a finished campaign photograph${t.brand.name ? ` for ${t.brand.name}` : ""} that the customer approved.${of(photos)}`,
+    ...(guided ? ["Draw the whole frame again as one photograph: the product exactly where and exactly as large as it is in image 1, whole and not cut by the frame's edge, and the scene, light and backdrop continued into the grey parts so nothing shows where image 1 ends."] : []),
     `Make the same photograph again as a ${MODEL_RATIO[t.format] ?? ""} ${name}: the same product, scene, light, colours, styling and mood, laid out again for the new shape so nothing important is cut or crowded.`,
     "The product must be exactly the product in the photographs: the same shape, proportions, colours, pattern, label and materials.",
     t.format === "story" ? "Keep the product clear of the top eighth and the bottom fifth of the frame, where the platform shows its own controls." : "Keep air around the product.",
@@ -307,12 +313,19 @@ async function redraw(t: Take, d: Deps): Promise<"made" | "failed"> {
     const onMaster = await find(picture);
     const masterRatio = t.picture.width && t.picture.height ? t.picture.width / t.picture.height : SHAPE.feed;
     const place = onMaster?.box ? placeFor(onMaster.box, t.format, masterRatio) : null;
+    // The layout the model draws from: the master moved and scaled so the product stands at its place.
+    let layout: string | null = null;
+    if (onMaster?.box && place) {
+      const guideUp = await d.service.uploadLink(t.store.bucket, path("-guide.png"));
+      const g = guideUp ? await d.step({ op: "format-guide", picture, format: t.format, around: onMaster.box, place, upload: { png: guideUp } }) : null;
+      if (g?.ok) layout = await d.service.readLink(t.store.bucket, path("-guide.png"));
+    }
     // One drawing, and one more when the product is not where it should be; the closer one is kept.
     let best: { link: string; text: string; off: number | null; at: Rect | null } | null = null;
     for (let n = 1; n <= (place ? 2 : 1); n++) {
-      const text = redrawPromptOf(t, photos.length, place, best?.at ?? null);
+      const text = redrawPromptOf(t, photos.length, place, best?.at ?? null, Boolean(layout));
       const drawn = await drawIt(d, {
-        imageModel: model, text, referenceUrls: [picture, ...photos], aspectRatio: MODEL_RATIO[t.format] ?? "1:1", resolution: "2K", seed: null,
+        imageModel: model, text, referenceUrls: [...(layout ? [layout] : []), picture, ...photos], aspectRatio: MODEL_RATIO[t.format] ?? "1:1", resolution: "2K", seed: null,
       });
       if (drawn.ok || drawn.sent) cents += d.image.priceCents(model);
       if (!drawn.ok) {
@@ -324,7 +337,7 @@ async function redraw(t: Take, d: Deps): Promise<"made" | "failed"> {
       const link = await d.service.readLink(t.store.bucket, at);
       if (!link) return await fail("Fume could not make the storage links.");
       const seen = place ? (await find(link))?.box ?? null : null;
-      const off = place && seen ? offBy(seen, place) : null;
+      const off = place && seen ? (cutByEdge(seen) && !cutByEdge(place) ? 1 : offBy(seen, place)) : null;
       console.log(JSON.stringify({ make: t.make_id, redraw: n, place, seen, off }));
       if (!best || (off !== null && (best.off === null || off < best.off))) best = { link, text, off, at: seen };
       if (off === null || off <= PLACE_TOLERANCE) break;

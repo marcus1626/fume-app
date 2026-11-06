@@ -8,7 +8,7 @@ import { type Ask, design } from "./design.ts";
 import { type Box } from "./pixels.ts";
 import { type BrandFace } from "./render.ts";
 import { blank, crop, cropFor, decode, encode, type Rect, resize, setBack } from "./fix.ts";
-import { AIR, canvasFor, fits, kept, MODEL_RATIO, pad, RATIO, setMaster, windowFor } from "./format.ts";
+import { AIR, canvasFor, fits, guide, kept, MODEL_RATIO, pad, RATIO, setMaster, windowFor } from "./format.ts";
 
 export interface DesignRequest {
   picture: string;
@@ -81,7 +81,7 @@ export async function handle(req: Request, deps: Deps): Promise<Response> {
   // A surgical fix's two steps (fix.ts): the crop the image model redraws, and the redrawn crop set back.
   const op = (r as { op?: unknown }).op;
   if (op === "fix-crop" || op === "fix-set") return fixStep(r as unknown as FixRequest, deps);
-  if (op === "format" || op === "format-set" || op === "format-drawn") return formatStep(r as unknown as FormatRequest, deps);
+  if (op === "format" || op === "format-set" || op === "format-drawn" || op === "format-guide") return formatStep(r as unknown as FormatRequest, deps);
   const why = invalid(r, deps.storageHost);
   if (why) return json(400, { error: why });
   // A 2K picture from storage can be slow while other layers are being made; a slow read is answered, never thrown.
@@ -252,7 +252,7 @@ async function fixStep(r: FixRequest, deps: Deps): Promise<Response> {
 }
 
 export interface FormatRequest {
-  op: "format" | "format-set" | "format-drawn";
+  op: "format" | "format-set" | "format-drawn" | "format-guide";
   /** The master's picture (for format-drawn, the image model's new picture), and for format-set the image model's
    *  drawing, as signed links to Fume's storage. */
   picture: string;
@@ -264,6 +264,8 @@ export interface FormatRequest {
   around?: Rect | null;
   /** format: the designer's own crop window, as shares of the picture. */
   window?: Rect | null;
+  /** format-guide: the product on the master (around), and where it goes in the new frame, as shares. */
+  place?: Rect | null;
   upload: { png?: string; padded?: string };
 }
 
@@ -279,7 +281,8 @@ export function invalidFormat(r: Partial<FormatRequest>, host: string): string |
   if (r.op === "format" && (!signedLink(r.upload?.png, host, "upload") || !signedLink(r.upload?.padded, host, "upload"))) {
     return "The format needs signed upload links to Fume's storage.";
   }
-  if (r.op === "format-drawn" && !signedLink(r.upload?.png, host, "upload")) return "The format needs a signed upload link to Fume's storage.";
+  if ((r.op === "format-drawn" || r.op === "format-guide") && !signedLink(r.upload?.png, host, "upload")) return "The format needs a signed upload link to Fume's storage.";
+  if (r.op === "format-guide" && (!r.around || !r.place || !isShare(r.place))) return "A layout guide needs the product's box and its place.";
   if (r.op === "format-set" && (!signedLink(r.drawn, host, "read") || !signedLink(r.upload?.png, host, "upload"))) {
     return "The drawing and the result need signed links to Fume's storage.";
   }
@@ -312,6 +315,12 @@ async function formatStep(r: FormatRequest, deps: Deps): Promise<Response> {
   if (got instanceof Response) return got;
   try {
     const master = await decode(got);
+    // A redraw's layout: the master moved and scaled so the product stands where it goes in the new frame.
+    if (r.op === "format-guide") {
+      const g = guide(master, RATIO[r.format], r.around!, r.place!);
+      const png = await store(r.upload.png!, await encode(g), deps);
+      return json(200, { width: g.width, height: g.height, png });
+    }
     // A redrawn format: the image model's new picture, cut to the format's exact shape.
     if (r.op === "format-drawn") {
       const win = windowFor(master.width, master.height, RATIO[r.format]);

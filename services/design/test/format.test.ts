@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { type Img } from "../src/fix.ts";
-import { canvasFor, fits, kept, pad, RATIO, setMaster, windowFor } from "../src/format.ts";
+import { canvasFor, fits, guide, kept, pad, RATIO, setMaster, windowFor } from "../src/format.ts";
 import { chooseFormat, invalidFormat } from "../src/handler.ts";
 
 const flat = (width: number, height: number, rgb: [number, number, number]): Img => {
@@ -81,4 +81,16 @@ test("a format request needs Fume's own links and a known shape", () => {
   assert.match(invalidFormat({ op: "format-set", picture: read, format: "story", upload: { png: up } }, host)!, /drawing/);
   assert.equal(invalidFormat({ op: "format-drawn", picture: read, format: "story", upload: { png: up } }, host), null);
   assert.match(invalidFormat({ op: "format-drawn", picture: read, format: "story", upload: {} }, host)!, /upload/);
+});
+
+test("a redraw's layout guide puts the master's product where it goes in the new frame", () => {
+  const master = flat(400, 500, [200, 200, 200]);
+  // The product: a dark block right of centre, 0.5 to 0.9 of the width, 0.3 to 0.7 of the height.
+  for (let y = 150; y < 350; y++) for (let x = 200; x < 360; x++) master.data.set([20, 20, 20, 255], (y * 400 + x) * 4);
+  const g = guide(master, RATIO.story, { x: 0.5, y: 0.3, w: 0.4, h: 0.4 }, { x: 0.35, y: 0.35, w: 0.55, h: 0.3 }, 800);
+  assert.deepEqual([g.width, g.height], [450, 800]);
+  assert.deepEqual(at(g, Math.round(0.62 * 450), 400), [20, 20, 20], "the product, at its place");
+  assert.deepEqual(at(g, Math.round(0.3 * 450), 400), [200, 200, 200], "the master's backdrop beside it");
+  assert.deepEqual(at(g, 225, 5), [128, 128, 128], "grey where the master does not reach");
+  assert.match(invalidFormat({ op: "format-guide", picture: "https://x.supabase.co/storage/v1/object/sign/a.png?token=t", format: "story", upload: { png: "https://x.supabase.co/storage/v1/object/upload/sign/b.png?token=t" } }, "x.supabase.co")!, /box/);
 });

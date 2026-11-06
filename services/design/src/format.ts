@@ -135,3 +135,27 @@ export function setMaster(master: Img, drawn: Img, canvas: { width: number; heig
 
 /** A crop of the master: its own pixels, nothing drawn. */
 export const cut = (master: Img, win: Rect): Img => crop(master, win);
+
+/**
+ * A layout guide for a redraw: the master scaled and moved so that its product (box, shares of the master) lands on
+ * place (shares of the new frame), on a plain grey frame of the new shape, at most `most` px on its long side. What
+ * falls outside the frame is left out; the image model redraws the whole frame from it.
+ */
+export function guide(master: Img, ratio: number, box: Rect, place: Rect, most = 1536): Img {
+  const W = ratio >= 1 ? most : Math.round(most * ratio);
+  const H = ratio >= 1 ? Math.round(most / ratio) : most;
+  const s = (place.w * W) / (box.w * master.width);
+  const mw = Math.max(1, Math.round(master.width * s)), mh = Math.max(1, Math.round(master.height * s));
+  const ox = Math.round((place.x + place.w / 2) * W - (box.x + box.w / 2) * master.width * s);
+  const oy = Math.round((place.y + place.h / 2) * H - (box.y + box.h / 2) * master.height * s);
+  const scaled = resize(master, mw, mh);
+  const data = new Uint8Array(W * H * 4);
+  for (let i = 0; i < data.length; i += 4) data.set([128, 128, 128, 255], i);
+  for (let y = Math.max(0, oy); y < Math.min(H, oy + mh); y++) {
+    const x0 = Math.max(0, ox), x1 = Math.min(W, ox + mw);
+    if (x1 <= x0) continue;
+    const from = ((y - oy) * mw + (x0 - ox)) * 4;
+    data.set(scaled.data.subarray(from, from + (x1 - x0) * 4), (y * W + x0) * 4);
+  }
+  return { width: W, height: H, data };
+}
