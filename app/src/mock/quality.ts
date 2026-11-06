@@ -248,11 +248,15 @@ export function qualityCalls(m: Mock): Pick<FumeApi, Calls> {
     },
     // A check in Check moves the creative itself (its version and the campaign's counts), so what waits to be sent
     // counts it. Once the campaign's set is out, a new check waits for the next send.
-    async qaCheck(itemId) {
+    async qaCheck(itemId, accept) {
       m.mustStaff();
       const item = m.find(db.qaItems, itemId, "QA item");
       if (item.state === "fixing") throw new FumeError("invalid", "The Engine is still fixing it.");
       if (item.state === "checked") return wait(item);
+      // A clear fault on the product stops the check until the expert accepts it (or a new version fixes it).
+      if ((item.holds ?? []).some((h) => !accept?.includes(h.id)))
+        throw new FumeError("conflict", "A critical finding is still open on this version.");
+      delete item.holds;
       Object.assign(item, { state: "checked", checkedBy: m.me().id, checkedAt: m.now() });
       const creative = creativeOf(m, item);
       const check = db.checks.find((c) => c.creativeId === item.creativeId && creative);

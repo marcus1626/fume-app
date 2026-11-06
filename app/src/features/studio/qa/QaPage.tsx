@@ -1395,7 +1395,9 @@ function QaFocus({
                     : `Fume found ${holds.length} faults on the product`}
                 </AlertDialogTitle>
                 <AlertDialogDescription>
-                  {holds.map((h) => h.text).join(" ")} Fix it, or accept it as it is: your name goes with the check.
+                  {holds.map((h) => h.text).join(" ")}{" "}
+                  {holds.length === 1 ? "Fix it, or accept it as it is" : "Fix them, or accept them as they are"}: your
+                  name goes with the check.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
