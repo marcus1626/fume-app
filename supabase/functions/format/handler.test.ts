@@ -128,3 +128,12 @@ Deno.test("an expansion uses the model named for the task", async () => {
   assertEquals((calls.submitted[0] as unknown as { imageModel: string }).imageModel, "nano-banana-2");
   assertEquals(calls.finish[0].model, "nano-banana-2");
 });
+
+Deno.test("an outpainting model gets the master itself and its place on the canvas", async () => {
+  const { d: base, calls } = deps("expand");
+  const d = { ...base, service: { ...base.service, model: () => Promise.resolve("bria-expand") } };
+  assertEquals(await makeFormat(take, d), "made");
+  const sent = calls.submitted[0] as unknown as { referenceUrls: string[]; expand: unknown };
+  assertEquals(sent.referenceUrls, ["https://s/read/ws/engine/j/p.png"]);
+  assertEquals(sent.expand, { canvas: [1856, 3300], size: [1856, 2304], at: [0, 498] });
+});

@@ -8,7 +8,7 @@ import type { Collected, ImageProvider, Submitted } from "./provider.ts";
 const QUEUE = "https://queue.fal.run";
 export const FAL_QUEUE = QUEUE;
 
-type Family = "nano-banana" | "seedream" | "gpt-image";
+type Family = "nano-banana" | "seedream" | "gpt-image" | "bria-expand";
 // Fume's model names to fal's model addresses (fal's catalogue, to be confirmed by the probe; the secret
 // FAL_ENDPOINTS replaces any of them without a deploy).
 export const FAL_ENDPOINTS: Record<string, { text: string; references: string; family?: Family }> = {
@@ -16,12 +16,15 @@ export const FAL_ENDPOINTS: Record<string, { text: string; references: string; f
   "nano-banana-2": { text: "fal-ai/nano-banana-2", references: "fal-ai/nano-banana-2/edit", family: "nano-banana" },
   "seedream-4": { text: "fal-ai/bytedance/seedream/v4/text-to-image", references: "fal-ai/bytedance/seedream/v4/edit", family: "seedream" },
   "gpt-image": { text: "fal-ai/gpt-image-1.5", references: "fal-ai/gpt-image-1.5/edit", family: "gpt-image" },
+  // Extends a picture onto a larger canvas and draws only outside the original (formats, docs/mvp/task-models.md).
+  "bria-expand": { text: "fal-ai/bria/expand", references: "fal-ai/bria/expand", family: "bria-expand" },
 };
 const familyOf = (model: string, e: { family?: Family }): Family =>
   e.family ?? (model.startsWith("seedream") ? "seedream" : model.startsWith("gpt") ? "gpt-image" : "nano-banana");
 
 // Estimates in cents per picture until fal's bill says otherwise (list prices, 2K where there is a choice).
-const PRICES: Record<string, number> = { "nano-banana-pro": 15, "nano-banana-2": 8, "seedream-4": 3, "gpt-image": 13 };
+// Bria Expand: an estimate until fal's bill says.
+const PRICES: Record<string, number> = { "nano-banana-pro": 15, "nano-banana-2": 8, "seedream-4": 3, "gpt-image": 13, "bria-expand": 4 };
 
 const NANO_RATIOS = ["21:9", "16:9", "3:2", "4:3", "5:4", "1:1", "4:5", "3:4", "2:3", "9:16"];
 const value = (r: string) => {
@@ -41,6 +44,14 @@ export function sizeFor(ratio: string, area = 2048 * 2048): { width: number; hei
 
 /** What fal's model is asked for, from the checked prompt (the text goes unchanged; the pictures go first). */
 export function falBody(family: Family, r: ProviderRequest): Record<string, unknown> {
+  // An outpainting model takes the original picture and its place on the canvas; no prompt, so it only continues it.
+  if (family === "bria-expand") {
+    if (!r.expand || !r.referenceUrls[0]) throw new Error("Extending a picture needs the picture and its canvas.");
+    return {
+      image_url: r.referenceUrls[0], canvas_size: r.expand.canvas, original_image_size: r.expand.size,
+      original_image_location: r.expand.at, ...(r.seed !== null ? { seed: r.seed } : {}),
+    };
+  }
   const body: Record<string, unknown> = { prompt: r.text, num_images: 1 };
   if (r.referenceUrls.length) body.image_urls = r.referenceUrls;
   if (r.seed !== null && family !== "gpt-image") body.seed = r.seed;
@@ -112,8 +123,9 @@ export function fal(
         return { state: "failed", error: unsafe ? "The image model refused the picture as unsafe." : `The image model failed: ${clean(why).slice(0, 300)}`,
           final: false, response: clean(text) };
       }
-      const r = JSON.parse(text) as { images?: { url?: string }[]; has_nsfw_concepts?: boolean[] };
-      const urls = (r.images ?? []).map((i) => i.url ?? "").filter(Boolean);
+      // Most models answer with images; some (Bria Expand) with one image.
+      const r = JSON.parse(text) as { images?: { url?: string }[]; image?: { url?: string }; has_nsfw_concepts?: boolean[] };
+      const urls = [...(r.images ?? []), ...(r.image ? [r.image] : [])].map((i) => i.url ?? "").filter(Boolean);
       return urls.length ? { state: "done", urls, response: r }
         : { state: "failed", error: "fal finished without a picture.", final: false, response: r };
     },

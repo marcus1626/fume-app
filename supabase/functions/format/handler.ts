@@ -24,7 +24,13 @@ export type Take = {
 
 type Failure = { message: string } | null;
 
-export type ImageAsk = { imageModel: string; text: string; referenceUrls: string[]; aspectRatio: string; resolution: string | null; seed: number | null };
+export type ImageAsk = {
+  imageModel: string; text: string; referenceUrls: string[]; aspectRatio: string; resolution: string | null; seed: number | null;
+  expand?: { canvas: [number, number]; size: [number, number]; at: [number, number] };
+};
+
+/** Models that only extend a picture: they take the master itself and its place on the canvas, not the padded one. */
+export const OUTPAINTERS = new Set(["bria-expand"]);
 export type Collected =
   | { state: "waiting" }
   | { state: "done"; urls: string[]; response: unknown }
@@ -146,8 +152,12 @@ export async function makeFormat(t: Take, d: Deps): Promise<"made" | "failed"> {
     if (!padded) return await fail("Fume could not read the padded picture back.");
     const text = promptOf(t);
     const model = (await d.service.model?.("expand").catch(() => null)) || MODEL;
+    const canvasW = Number(chose.body.width), canvasH = Number(chose.body.height);
+    const outpaint = OUTPAINTERS.has(model) && at && canvasW > 0 && canvasH > 0;
     const sent = await d.image.submit({
-      imageModel: model, text, referenceUrls: [padded], aspectRatio: String(chose.body.ratio ?? "1:1"), resolution: "2K", seed: null,
+      imageModel: model, text, referenceUrls: [outpaint ? picture : padded], aspectRatio: String(chose.body.ratio ?? "1:1"),
+      resolution: "2K", seed: null,
+      ...(outpaint ? { expand: { canvas: [canvasW, canvasH] as [number, number], size: [at!.w, at!.h] as [number, number], at: [at!.x, at!.y] as [number, number] } } : {}),
     });
     if (!sent.ok) return await fail(sent.error);
     cents = d.image.priceCents(model);

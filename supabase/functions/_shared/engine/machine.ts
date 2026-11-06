@@ -17,6 +17,8 @@ export type ProviderRequest = {
   aspectRatio: string;
   resolution: string | null;
   seed: number | null;
+  /** For a model that only extends a picture (outpainting): the canvas, and where the original sits on it, in pixels. */
+  expand?: { canvas: [number, number]; size: [number, number]; at: [number, number] };
 };
 
 export function renderRequest(pkg: CompilePackage, assembly: Assembly, opts: { seed: number | null }): ProviderRequest {
