@@ -95,17 +95,19 @@ export function redrawnWhy(place: Rect | null, off: number | null): string {
     : `${REDRAWN_WHY} The product is not quite where the master has it (${where}); check its place.`;
 }
 
-/** Where the product goes in the new shape: where it stands on the master (its centre, as shares of the frame), at the
- *  same share of the frame's height, made smaller only to keep air around it and clear of the platform's areas. */
+/** Where the product goes in the new shape: its centre where it stands on the master (as shares of the frame), at the
+ *  same share of the frame's height, made smaller only as far as it must to keep that centre with air around it and
+ *  clear of the platform's areas. The placement is the composition the customer approved, so it wins over size. */
 export function placeFor(box: Rect, format: string, masterRatio: number): Rect {
   const ratio = SHAPE[format] ?? 1;
-  let w = box.w * (masterRatio / ratio), h = box.h;
   const air = AIR[format] ?? AIR.square;
-  const k = Math.min(1, (1 - 2 * air.side) / w, (1 - air.top - air.bottom) / h);
+  const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), hi);
+  const cx = clamp(box.x + box.w / 2, air.side + 0.05, 1 - air.side - 0.05);
+  const cy = clamp(box.y + box.h / 2, air.top + 0.05, 1 - air.bottom - 0.05);
+  let w = box.w * (masterRatio / ratio), h = box.h;
+  const k = Math.min(1, (2 * Math.min(cx - air.side, 1 - air.side - cx)) / w, (2 * Math.min(cy - air.top, 1 - air.bottom - cy)) / h);
   w *= k;
   h *= k;
-  const cx = Math.min(Math.max(box.x + box.w / 2, air.side + w / 2), 1 - air.side - w / 2);
-  const cy = Math.min(Math.max(box.y + box.h / 2, air.top + h / 2), 1 - air.bottom - h / 2);
   return { x: cx - w / 2, y: cy - h / 2, w, h };
 }
 

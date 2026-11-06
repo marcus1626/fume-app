@@ -203,4 +203,9 @@ Deno.test("the product keeps its place from the master in the new shape, with ai
   const wide = placeFor({ x: 0.02, y: 0.3, w: 0.96, h: 0.4 }, "story", 0.8);
   assert(wide.x >= 0.04 - 1e-9 && wide.x + wide.w <= 0.96 + 1e-9, "air at the sides");
   assertEquals(offBy(right, right), 0);
+  // Dressmann: the shirt fills 61 % of the master's width, its centre at 61 %. Kept at the same height it would fill
+  // the story's width and be centred; its place wins, so it is made only as large as that place allows.
+  const shirt = placeFor({ x: 0.31, y: 0.2, w: 0.6, h: 0.61 }, "story", 1856 / 2304);
+  assertEquals(Math.round((shirt.x + shirt.w / 2) * 100), 61);
+  assert(shirt.x + shirt.w <= 0.96 + 1e-9 && shirt.w > 0.6, "as large as it can be there, with air on the right");
 });
