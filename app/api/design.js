@@ -1537,7 +1537,7 @@ async function handle(req, deps) {
   }
   const op = r.op;
   if (op === "fix-crop" || op === "fix-set") return fixStep(r, deps);
-  if (op === "format" || op === "format-set") return formatStep(r, deps);
+  if (op === "format" || op === "format-set" || op === "format-drawn") return formatStep(r, deps);
   const why = invalid(r, deps.storageHost);
   if (why) return json(400, { error: why });
   let picture;
@@ -1684,6 +1684,7 @@ function invalidFormat(r, host) {
   if (r.op === "format" && (!signedLink(r.upload?.png, host, "upload") || !signedLink(r.upload?.padded, host, "upload"))) {
     return "The format needs signed upload links to Fume's storage.";
   }
+  if (r.op === "format-drawn" && !signedLink(r.upload?.png, host, "upload")) return "The format needs a signed upload link to Fume's storage.";
   if (r.op === "format-set" && (!signedLink(r.drawn, host, "read") || !signedLink(r.upload?.png, host, "upload"))) {
     return "The drawing and the result need signed links to Fume's storage.";
   }
@@ -1711,6 +1712,11 @@ async function formatStep(r, deps) {
   if (got instanceof Response) return got;
   try {
     const master = await decode(got);
+    if (r.op === "format-drawn") {
+      const win = windowFor(master.width, master.height, RATIO[r.format]);
+      const png3 = await store(r.upload.png, await encode(crop(master, win)), deps);
+      return json(200, { width: win.w, height: win.h, png: png3 });
+    }
     const canvas = canvasFor(master.width, master.height, RATIO[r.format]);
     if (r.op === "format") {
       const chose = chooseFormat(master.width, master.height, r.format, r);

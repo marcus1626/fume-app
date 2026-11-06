@@ -771,6 +771,9 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       if (change.crop) t.crop = change.crop;
       if (change.method && change.method !== t.method) {
         t.method = change.method;
+        if (change.method === "regenerate")
+          t.why =
+            "Drawn again in the new shape, as the designer chose. The picture is new, so the Engine looked at the product against its photographs; check it as closely as a new picture.";
         t.state = "making";
         later(() => {
           t.state = "done";

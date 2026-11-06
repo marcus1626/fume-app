@@ -398,7 +398,7 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
         "A version sent to check stays there. The expert can ask for a correction, and the next picture becomes the next version.",
       );
     },
-    // The designer switches crop and expand, or moves the crop window: the format is made again from the master.
+    // The designer switches crop, expand or regenerate, or moves the crop window: the format is made again from the master.
     async setFormatTile(documentId, placementId, change) {
       const { creative, doc } = await readDocument(live, documentId);
       if (creative.kind !== "master") throw new FumeError("invalid", "Formats are made from a master.");
@@ -406,8 +406,8 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
       const format = placements.find((p) => p.id === placementId)?.format ?? placementId;
       if (!tile) throw new FumeError("not_found", "Make this format first.");
       const method = change.crop ? "crop" : change.method;
-      if (method !== "crop" && method !== "expand") {
-        throw new FumeError("invalid", "A format is cropped or expanded from the master.");
+      if (method !== "crop" && method !== "expand" && method !== "regenerate") {
+        throw new FumeError("invalid", "A format is cropped, expanded or drawn again from the master.");
       }
       const children = await rows<{ id: Id; format: string }>(
         supabase().from("creatives").select("id, format").eq("master_id", creative.id).eq("kind", "format"),

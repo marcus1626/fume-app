@@ -100,8 +100,8 @@ const MAKE = "id, creative_id, asked, method, why, window, state, error, result_
 type MakeRow = {
   id: Id;
   creative_id: Id;
-  asked: "crop" | "expand" | null;
-  method: "crop" | "expand" | null;
+  asked: "crop" | "expand" | "regenerate" | null;
+  method: "crop" | "expand" | "regenerate" | null;
   why: string | null;
   window: { x: number; y: number; w: number; h: number } | null;
   state: "making" | "made" | "failed";
@@ -462,7 +462,11 @@ export async function addManualVersion(live: Live, documentId: Id, file: File | 
 // ─── Make formats ────────────────────────────────────────────────────────────
 
 /** Asks for a format of the master (make_format) and starts the `format` function on it. */
-export async function makeFormat(creativeId: Id, method: "crop" | "expand" | null, window: FormatTile["crop"] | null) {
+export async function makeFormat(
+  creativeId: Id,
+  method: "crop" | "expand" | "regenerate" | null,
+  window: FormatTile["crop"] | null,
+) {
   const make = await command<{ id: Id; state: string }>("make_format", {
     p_creative_id: creativeId,
     p_method: method,

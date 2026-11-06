@@ -6,7 +6,7 @@ import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
 import { fal } from "../engine/fal.ts";
 import { handleFormat } from "./handler.ts";
-import { claudePlace } from "./models.ts";
+import { claudeLook, claudePlace } from "./models.ts";
 
 const url = Deno.env.get("SUPABASE_URL")!;
 const keyOf = (json: string, legacy: string) =>
@@ -29,6 +29,7 @@ async function allowed(): Promise<boolean> {
   return !error && Boolean((data as { allowed?: boolean } | null)?.allowed);
 }
 const locate = claudePlace(claude, allowed);
+const look = claudeLook(claude, allowed);
 
 Deno.serve((req) =>
   handleFormat(req, (authorization) => {
@@ -54,8 +55,11 @@ Deno.serve((req) =>
         store: async (bucket, path, bytes) =>
           !(await service.storage.from(bucket).upload(path, bytes, { contentType: "image/png", upsert: true })).error,
         model: async (task) => (await service.rpc("task_model", { p_task: task })).data ?? null,
+        evaluated: async (candidateId, evaluation, usd) =>
+          await service.rpc("engine_evaluated", { p_candidate_id: candidateId, p_evaluation: evaluation, p_llm_usd: usd }),
       },
       locate,
+      look,
       step: async (request) => {
         const res = await fetch(designUrl, {
           method: "POST",

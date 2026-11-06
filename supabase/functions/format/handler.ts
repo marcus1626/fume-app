@@ -7,6 +7,9 @@
 //   3. for an expansion, the image model draws only the new edges, and the design service sets every pixel of the
 //      master back on its drawing (format-set),
 //   4. format_finish adds the format as a candidate of the format's job, saying how it was made and why.
+// A redraw (only when the designer asks): the image model draws the picture again in the new shape, from the master
+// and the product's own photographs; the design service cuts it to the exact shape (format-drawn), and the Engine looks
+// at the product against its photographs, as for any new picture (engine_evaluated).
 // handler.test.ts runs it without Supabase, fal, the model or the design service.
 
 export type Rect = { x: number; y: number; w: number; h: number };
@@ -14,10 +17,11 @@ export type Rect = { x: number; y: number; w: number; h: number };
 export type Take = {
   make_id: string;
   workspace_id: string;
-  asked: "crop" | "expand" | null;
+  asked: "crop" | "expand" | "regenerate" | null;
   window: Rect | null;
   format: string;
   brand: { name: string | null };
+  products?: { name: string; variant: string | null; pictures: { bucket: string; path: string }[] }[];
   picture: { bucket: string; path: string; width: number | null; height: number | null };
   store: { bucket: string; prefix: string };
 };
@@ -40,14 +44,18 @@ export interface Deps {
   canRead(makeId: string): Promise<boolean>;
   service: {
     take(makeId: string): Promise<{ data: Take | null; error: Failure }>;
-    finish(makeId: string, result: Record<string, unknown>): Promise<{ data?: unknown; error: Failure }>;
+    finish(makeId: string, result: Record<string, unknown>): Promise<{ data?: { candidate_id?: string } | null; error: Failure }>;
     fail(makeId: string, error: string, cents: number, usd: number): Promise<{ error: Failure }>;
     readLink(bucket: string, path: string): Promise<string | null>;
     uploadLink(bucket: string, path: string): Promise<string | null>;
     store(bucket: string, path: string, bytes: Uint8Array): Promise<boolean>;
     /** The image model named for a task (task_model), when one is. */
-    model?(task: "expand"): Promise<string | null>;
+    model?(task: "expand" | "regenerate"): Promise<string | null>;
+    /** The Engine's look at a new picture, kept on its candidate (engine_evaluated). */
+    evaluated?(candidateId: string, evaluation: Record<string, unknown>, usd: number): Promise<{ error: Failure }>;
   };
+  /** The Engine looks at a redrawn format: is the product the product in its photographs? */
+  look?(r: { pictureUrl: string; productUrls: string[]; size: { width: number; height: number } }): Promise<{ evaluation: Record<string, unknown>; usd: number }>;
   /** The language model finds what must stay whole on the picture: the product, as a box of shares. */
   locate(r: { pictureUrl: string; format: string }): Promise<{ box: Rect | null; what: string; usd: number }>;
   /** The design service (services/design, POST /api/design with op). */
@@ -66,6 +74,20 @@ export interface Deps {
 export const MODEL = "nano-banana-pro";
 
 const NAMES: Record<string, string> = { feed: "feed post", square: "square", story: "story", banner: "banner" };
+const MODEL_RATIO: Record<string, string> = { feed: "4:5", square: "1:1", story: "9:16", banner: "16:9" };
+
+export const REDRAWN_WHY = "Drawn again in the new shape, as the designer chose. The picture is new, so the Engine looked at the product against its photographs; check it as closely as a new picture.";
+
+export function redrawPromptOf(t: Take, photos: number): string {
+  const name = NAMES[t.format] ?? t.format;
+  return [
+    `Image 1 is a finished campaign photograph${t.brand.name ? ` for ${t.brand.name}` : ""} that the customer approved.${photos ? ` The next ${photos === 1 ? "image is a photograph" : `${photos} images are photographs`} of the product itself.` : ""}`,
+    `Make the same photograph again as a ${MODEL_RATIO[t.format] ?? ""} ${name}: the same product, scene, light, colours, styling and mood, laid out again for the new shape so nothing important is cut or crowded.`,
+    "The product must be exactly the product in the photographs: the same shape, proportions, colours, pattern, label and materials.",
+    t.format === "story" ? "Keep the product clear of the top eighth and the bottom fifth of the frame, where the platform shows its own controls." : "Keep air around the product.",
+    "Add nothing new: no other products, no people, no hands, no text, no logos, no frames or borders.",
+  ].join("\n");
+}
 
 /** What the designer is told about the Engine's choice. */
 export function whyOf(method: "crop" | "expand", reason: string, format: string, what: string, at?: Rect): string {
@@ -105,6 +127,7 @@ const errorOf = (body: Record<string, unknown>, status: number) =>
   typeof body.error === "string" ? body.error : `The design service answered ${status}.`;
 
 export async function makeFormat(t: Take, d: Deps): Promise<"made" | "failed"> {
+  if (t.asked === "regenerate") return await redraw(t, d);
   const started = d.now();
   let cents = 0;
   let usd = 0;
@@ -183,6 +206,79 @@ export async function makeFormat(t: Take, d: Deps): Promise<"made" | "failed"> {
       ms: d.now() - started,
     });
     return error ? await fail(error.message) : "made";
+  } catch (e) {
+    return await fail(e instanceof Error ? e.message : String(e));
+  }
+}
+
+/** The image model's picture, collected. */
+async function drawIt(d: Deps, ask: ImageAsk): Promise<{ ok: true; bytes: Uint8Array } | { ok: false; error: string; sent: boolean }> {
+  const sent = await d.image.submit(ask);
+  if (!sent.ok) return { ok: false, error: sent.error, sent: false };
+  let got: Collected = { state: "waiting" };
+  for (let i = 0; i < 40 && got.state === "waiting"; i++) {
+    await d.wait(i < 5 ? 3_000 : 5_000);
+    got = await d.image.collect(sent.providerJobId);
+  }
+  if (got.state === "waiting") return { ok: false, error: "The image model took too long.", sent: true };
+  if (got.state === "failed") return { ok: false, error: got.error, sent: true };
+  const bytes = await d.download(got.urls[0]);
+  return bytes ? { ok: true, bytes } : { ok: false, error: "Fume could not read what the image model drew.", sent: true };
+}
+
+/** A redrawn format: a new picture in the new shape, from the master and the product's photographs. */
+async function redraw(t: Take, d: Deps): Promise<"made" | "failed"> {
+  const started = d.now();
+  let cents = 0;
+  const fail = async (why: string) => {
+    await d.service.fail(t.make_id, why, cents, 0);
+    return "failed" as const;
+  };
+  const path = (end: string) => `${t.store.prefix}${end}`;
+  try {
+    const picture = await d.service.readLink(t.picture.bucket, t.picture.path);
+    if (!picture) return await fail("Fume could not make the storage links.");
+    const photos: string[] = [];
+    for (const p of t.products ?? []) {
+      for (const f of p.pictures.slice(0, 2)) {
+        const link = await d.service.readLink(f.bucket, f.path);
+        if (link && photos.length < 3) photos.push(link);
+      }
+    }
+    const model = (await d.service.model?.("regenerate").catch(() => null)) || MODEL;
+    const text = redrawPromptOf(t, photos.length);
+    const drawn = await drawIt(d, {
+      imageModel: model, text, referenceUrls: [picture, ...photos], aspectRatio: MODEL_RATIO[t.format] ?? "1:1", resolution: "2K", seed: null,
+    });
+    if (drawn.ok || drawn.sent) cents = d.image.priceCents(model);
+    if (!drawn.ok) return await fail(drawn.error);
+    if (!(await d.service.store(t.store.bucket, path("-drawn.png"), drawn.bytes))) return await fail("Fume could not store what the image model drew.");
+    const link = await d.service.readLink(t.store.bucket, path("-drawn.png"));
+    const up = await d.service.uploadLink(t.store.bucket, path(".png"));
+    if (!link || !up) return await fail("Fume could not make the storage links.");
+    const cut = await d.step({ op: "format-drawn", picture: link, format: t.format, upload: { png: up } });
+    if (!cut.ok) return await fail(errorOf(cut.body, cut.status));
+    const png = cut.body.png as { bytes: number; sha256: string };
+    const width = Number(cut.body.width), height = Number(cut.body.height);
+    const { data, error } = await d.service.finish(t.make_id, {
+      png: { path: path(".png"), bytes: png.bytes, sha256: png.sha256 }, width, height,
+      method: "regenerate", why: REDRAWN_WHY, window: null, prompt: text, model, cost_cents: cents, llm_usd: 0, ms: d.now() - started,
+    });
+    if (error) return await fail(error.message);
+    // The Engine looks at the new picture. A failure here never undoes it: the expert checks it by eye.
+    const candidateId = data?.candidate_id;
+    if (candidateId && d.look && d.service.evaluated) {
+      try {
+        const made = await d.service.readLink(t.store.bucket, path(".png"));
+        if (made) {
+          const looked = await d.look({ pictureUrl: made, productUrls: photos.length ? photos : [picture], size: { width, height } });
+          await d.service.evaluated(candidateId, looked.evaluation, looked.usd);
+        }
+      } catch {
+        // not evaluated
+      }
+    }
+    return "made";
   } catch (e) {
     return await fail(e instanceof Error ? e.message : String(e));
   }

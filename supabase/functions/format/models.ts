@@ -4,7 +4,8 @@ import type Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { betaZodOutputFormat } from "npm:@anthropic-ai/sdk@1.3.0/helpers/beta/zod";
 import { z } from "npm:zod@4.6.7";
 import type { Deps } from "./handler.ts";
-import { costOf, MODEL } from "../engine/models.ts";
+import { costOf, Looked, MODEL } from "../engine/models.ts";
+import { checklist, EVALUATOR_SYSTEM, evaluatorPrompt, toEvaluation } from "../_shared/engine/evaluate.ts";
 
 export const PLACE_SYSTEM = [
   "You help Fume make a new format of a product picture a customer approved. Say where the product is on the picture,",
@@ -40,5 +41,27 @@ export function claudePlace(claude: Anthropic, allowed: () => Promise<boolean>):
     const x = Math.max(0, o.x), y = Math.max(0, o.y);
     const box = { x, y, w: Math.min(1 - x, o.w), h: Math.min(1 - y, o.h) };
     return box.w > 0.01 && box.h > 0.01 ? { box, what: o.what.slice(0, 120), usd } : { box: null, what: "", usd };
+  };
+}
+
+/** The Engine's look at a redrawn format, the same as at any new picture of the Engine (engine/handler.ts): with the
+ *  product's photographs, the first thing to hold is that the product is that product. */
+export function claudeLook(claude: Anthropic, allowed: () => Promise<boolean>): NonNullable<Deps["look"]> {
+  return async ({ pictureUrl, productUrls, size }) => {
+    if (!(await allowed())) throw new Error("This week's budget for Fume's language model is used up.");
+    const checks = checklist([], productUrls.length > 0);
+    const images = [...productUrls, pictureUrl].map(
+      (url): Anthropic.Beta.Messages.BetaContentBlockParam => ({ type: "image", source: { type: "url", url } }),
+    );
+    const m = await claude.beta.messages.parse({
+      model: MODEL,
+      max_tokens: 8_000,
+      system: EVALUATOR_SYSTEM,
+      messages: [{ role: "user", content: [...images, { type: "text", text: evaluatorPrompt(checks, productUrls.length > 0, size) }] }],
+      thinking: { type: "adaptive" },
+      output_config: { effort: "low", format: betaZodOutputFormat(Looked) },
+    });
+    if (!m.parsed_output) throw new Error("The Engine's look gave no answer.");
+    return { evaluation: toEvaluation(checks, m.parsed_output) as unknown as Record<string, unknown>, usd: costOf(m.usage) };
   };
 }

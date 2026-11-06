@@ -81,7 +81,7 @@ export async function handle(req: Request, deps: Deps): Promise<Response> {
   // A surgical fix's two steps (fix.ts): the crop the image model redraws, and the redrawn crop set back.
   const op = (r as { op?: unknown }).op;
   if (op === "fix-crop" || op === "fix-set") return fixStep(r as unknown as FixRequest, deps);
-  if (op === "format" || op === "format-set") return formatStep(r as unknown as FormatRequest, deps);
+  if (op === "format" || op === "format-set" || op === "format-drawn") return formatStep(r as unknown as FormatRequest, deps);
   const why = invalid(r, deps.storageHost);
   if (why) return json(400, { error: why });
   // A 2K picture from storage can be slow while other layers are being made; a slow read is answered, never thrown.
@@ -252,8 +252,9 @@ async function fixStep(r: FixRequest, deps: Deps): Promise<Response> {
 }
 
 export interface FormatRequest {
-  op: "format" | "format-set";
-  /** The master's picture, and for format-set the image model's drawing, as signed links to Fume's storage. */
+  op: "format" | "format-set" | "format-drawn";
+  /** The master's picture (for format-drawn, the image model's new picture), and for format-set the image model's
+   *  drawing, as signed links to Fume's storage. */
   picture: string;
   drawn?: string;
   format: string;
@@ -278,6 +279,7 @@ export function invalidFormat(r: Partial<FormatRequest>, host: string): string |
   if (r.op === "format" && (!signedLink(r.upload?.png, host, "upload") || !signedLink(r.upload?.padded, host, "upload"))) {
     return "The format needs signed upload links to Fume's storage.";
   }
+  if (r.op === "format-drawn" && !signedLink(r.upload?.png, host, "upload")) return "The format needs a signed upload link to Fume's storage.";
   if (r.op === "format-set" && (!signedLink(r.drawn, host, "read") || !signedLink(r.upload?.png, host, "upload"))) {
     return "The drawing and the result need signed links to Fume's storage.";
   }
@@ -310,6 +312,12 @@ async function formatStep(r: FormatRequest, deps: Deps): Promise<Response> {
   if (got instanceof Response) return got;
   try {
     const master = await decode(got);
+    // A redrawn format: the image model's new picture, cut to the format's exact shape.
+    if (r.op === "format-drawn") {
+      const win = windowFor(master.width, master.height, RATIO[r.format]);
+      const png = await store(r.upload.png!, await encode(crop(master, win)), deps);
+      return json(200, { width: win.w, height: win.h, png });
+    }
     const canvas = canvasFor(master.width, master.height, RATIO[r.format]);
     if (r.op === "format") {
       const chose = chooseFormat(master.width, master.height, r.format, r);

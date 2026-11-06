@@ -33,7 +33,7 @@ export function costOf(usage: { input_tokens?: number | null; output_tokens?: nu
 const Slots = z.object({ slots: z.array(z.object({ slotKey: z.string(), text: z.string(), sources: z.array(z.string()) })) });
 const Answers = z.object({ answers: z.array(z.object({ n: z.number().int(), probability: z.number().min(0).max(1) })) });
 const Verdict = z.object({ expressed: z.boolean(), probability: z.number().min(0).max(1), reason: z.string() });
-const Looked = z.object({
+export const Looked = z.object({
   answers: z.array(z.object({ n: z.number().int(), verdict: z.enum(["holds", "off", "unclear"]), note: z.string() })),
   artefacts: z.enum(["none", "minor", "major"]),
   artefactNotes: z.array(z.string()),

@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertMatch } from "jsr:@std/assert@1";
-import { type Deps, handleFormat, makeFormat, promptOf, type Take, whyOf } from "./handler.ts";
+import { type Deps, handleFormat, makeFormat, promptOf, redrawPromptOf, type Take, whyOf } from "./handler.ts";
 
 const take: Take = {
   make_id: "00000000-0000-0000-0000-0000000000a1",
@@ -39,6 +39,7 @@ function deps(method: "crop" | "expand", over: Partial<Deps> = {}, t: Take = tak
     },
     step: (r) => {
       calls.steps.push(r);
+      if (r.op === "format-drawn") return Promise.resolve({ ok: true, status: 200, body: { width: 1536, height: 2731, png: { bytes: 7000, sha256: "ef" } } });
       if (r.op === "format-set") return Promise.resolve({ ok: true, status: 200, body: { width: 1856, height: 3300, at: { x: 0, y: 498, w: 1856, h: 2304 }, drift: 2, png: { bytes: 9000, sha256: "cd" } } });
       return Promise.resolve(method === "crop"
         ? { ok: true, status: 200, body: { method, reason: "fits", window: { x: 0.15, y: 0, w: 0.7, h: 1 }, width: 1296, height: 2304, png: { bytes: 8000, sha256: "ab" } } }
@@ -136,4 +137,50 @@ Deno.test("an outpainting model gets the master itself and its place on the canv
   const sent = calls.submitted[0] as unknown as { referenceUrls: string[]; expand: unknown };
   assertEquals(sent.referenceUrls, ["https://s/read/ws/engine/j/p.png"]);
   assertEquals(sent.expand, { canvas: [1856, 3300], size: [1856, 2304], at: [0, 498] });
+});
+
+Deno.test("a redraw draws the picture again in the new shape, from the master and the product's photographs, and the Engine looks at it", async () => {
+  const t: Take = { ...take, asked: "regenerate", products: [{ name: "Flannel shirt", variant: null, pictures: [{ bucket: "workspace-files", path: "ws/p/front.jpg" }, { bucket: "workspace-files", path: "ws/p/back.jpg" }] }] };
+  const looked: { productUrls: string[] }[] = [];
+  const evaluated: [string, Record<string, unknown>, number][] = [];
+  const { d, calls } = deps("expand", {}, t);
+  d.service.model = (task) => Promise.resolve(task === "regenerate" ? "nano-banana-pro" : null);
+  d.service.evaluated = (id, e, usd) => {
+    evaluated.push([id, e, usd]);
+    return Promise.resolve({ error: null });
+  };
+  d.look = (r) => {
+    looked.push(r);
+    return Promise.resolve({ evaluation: { productTruth: "pass" }, usd: 0.002 });
+  };
+  assertEquals(await makeFormat(t, d), "made");
+  assertEquals(calls.located, 0, "the designer chose; nothing is located");
+  assertEquals(calls.submitted[0].referenceUrls, ["https://s/read/ws/engine/j/p.png", "https://s/read/ws/p/front.jpg", "https://s/read/ws/p/back.jpg"]);
+  assertEquals(calls.submitted[0].aspectRatio, "9:16");
+  assertEquals(calls.steps.map((s) => s.op), ["format-drawn"]);
+  assertEquals(calls.stored, ["ws/format/a1-drawn.png"]);
+  const f = calls.finish[0];
+  assertEquals([f.method, f.cost_cents, f.width, f.height, f.model], ["regenerate", 15, 1536, 2731, "nano-banana-pro"]);
+  assertMatch(String(f.why), /Drawn again in the new shape/);
+  assertEquals(looked[0].productUrls, ["https://s/read/ws/p/front.jpg", "https://s/read/ws/p/back.jpg"]);
+  assertEquals(evaluated[0][0], "c-new");
+  assertMatch(redrawPromptOf(t, 2), /The next 2 images are photographs of the product itself/);
+  assertMatch(redrawPromptOf(t, 2), /platform shows its own controls/);
+});
+
+Deno.test("a redraw whose look fails is still made, and a failed drawing says why and what it cost", async () => {
+  const t: Take = { ...take, asked: "regenerate", products: [] };
+  const { d, calls } = deps("expand", {}, t);
+  d.service.evaluated = () => Promise.resolve({ error: null });
+  d.look = () => Promise.reject(new Error("budget"));
+  assertEquals(await makeFormat(t, d), "made");
+  assertEquals(calls.submitted[0].referenceUrls, ["https://s/read/ws/engine/j/p.png"]);
+  const failing: Deps["image"] = {
+    priceCents: () => 15,
+    submit: () => Promise.resolve({ ok: true, providerJobId: "f" }),
+    collect: () => Promise.resolve({ state: "failed", error: "nsfw", final: true, response: {} }),
+  };
+  const bad = deps("expand", { image: failing }, t);
+  assertEquals(await makeFormat(t, bad.d), "failed");
+  assertEquals(bad.calls.fail[0], ["nsfw", 15, 0]);
 });

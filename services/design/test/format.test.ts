@@ -79,4 +79,6 @@ test("a format request needs Fume's own links and a known shape", () => {
   assert.match(invalidFormat({ op: "format", picture: "https://evil.example/a.png", format: "square", upload: { png: up, padded: up } }, host)!, /signed/);
   assert.match(invalidFormat({ op: "format", picture: read, format: "square", window: { x: 0, y: 0, w: 1, h: 1 }, upload: { png: up, padded: up } }, host)!, /window/);
   assert.match(invalidFormat({ op: "format-set", picture: read, format: "story", upload: { png: up } }, host)!, /drawing/);
+  assert.equal(invalidFormat({ op: "format-drawn", picture: read, format: "story", upload: { png: up } }, host), null);
+  assert.match(invalidFormat({ op: "format-drawn", picture: read, format: "story", upload: {} }, host)!, /upload/);
 });
