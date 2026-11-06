@@ -33,6 +33,17 @@ The picture is new, so nothing of the master's pixels is kept: the Engine looks 
 photographs (the same look as for any new picture, `engine_evaluated`), and the tile says the expert should check it
 as closely as a new picture.
 
+The redraw keeps the master's composition. Claude Haiku finds the product on the master; its centre stays where the
+master has it, at the same share of the frame's height, made smaller only as far as that place needs air (in a story,
+clear of the platform's areas). The design service makes a layout guide (`op: "format-guide"`): the master moved and
+scaled so the product stands at its place, its edge drawn out and blurred where it does not reach. The model redraws
+the whole frame from the guide. The product is found again on the drawing; when it is more than 6 % off its place, or
+cut by the frame's edge, it is drawn once more and the closer drawing is kept. The tile says whether it holds.
+
+Live (6 Nov, Dressmann story, shirt right of centre on the master at 61 %): from words alone the model centred it
+(50 %), then made it too large and cut by the edge; with the layout guide it stands at 61 %, whole, with a clean
+backdrop, in 60 s for 15 c. Pictures in /mnt/project-files/engine-test/2026-11-06/formats/.
+
 Costs count in the Engine's week (pictures) and the language model's week. A failed make says why on the tile.
 
 ## Files
