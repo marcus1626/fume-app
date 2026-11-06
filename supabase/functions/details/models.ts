@@ -94,8 +94,9 @@ const Counted = z.object({ count: z.number().int().nullable(), whole: z.boolean(
 export const COUNT_SYSTEM = [
   "You count for Fume's expert. The image is a close crop of a product picture an image model made. Count the named",
   "things on it one by one, carefully, top to bottom: only those you can see, each once, none you expect but cannot",
-  "see. whole: true when the crop shows the whole run of them, none cut by the crop's edge or covered. When you cannot",
-  "count them, count is null.",
+  "see. A sewn or fixed part (a pocket, a flap, a strap) counts only when its edges show as made: a blurred trace, a",
+  "faint partial outline or a smudge where one might have been is not one. whole: true when the crop shows the whole",
+  "run of them, none cut by the crop's edge or covered. When you cannot count them, count is null.",
 ].join(" ");
 
 export const COMPARE_SYSTEM = [
@@ -162,11 +163,16 @@ export function claudeDetails(claude: Anthropic, allowed: () => Promise<boolean>
     async compare({ cropUrl, refUrl, part, careful }) {
       // A count is made blind, on the picture alone, so the product's number does not lead the model to it; a look (a
       // pattern, a fabric, a shape) is the hardest to see, so the careful model looks at it.
+      // The careful second opinion gets no words about the product, only its photograph: a part map's words can be
+      // wrong (the Jordan's toe, 6 Nov), and a fault must show on the two pictures.
+      const about = careful ? "Judge it from image 2 alone." : `On the real product: ${part.looks}`;
       const { out, usd } = await ask(COMPARE_SYSTEM, [cropUrl, refUrl],
-        `The part: ${part.what}. On the real product: ${part.looks}${part.count != null ? " Its number is counted elsewhere: judge only its look." : ""}`,
+        `The part: ${part.what}. ${about}${part.count != null ? " Its number is counted elsewhere: judge only its look." : ""}`,
         Side, careful || part.kind === "look" ? MAP_MODEL : MODEL);
       if (part.count != null) {
-        const blind = await ask(COUNT_SYSTEM, [cropUrl], `Count the ${part.what}.`, Counted);
+        // A few large parts (a pocket, a flap) are counted by the careful model: a trace where one was removed fools
+        // the quick one (the bench, 6 Nov); many small ones (buttons) the quick one counts well.
+        const blind = await ask(COUNT_SYSTEM, [cropUrl], `Count the ${part.what}.`, Counted, part.count <= 3 ? MAP_MODEL : MODEL);
         return { shows: out.shows, whole: blind.out.whole, count: blind.out.count, same: out.differs !== "clearly",
           slightly: out.differs === "slightly", note: out.note, usd: usd + blind.usd };
       }

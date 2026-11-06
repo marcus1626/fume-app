@@ -35,6 +35,9 @@ export type Compared = {
 };
 export type Tone = { l: number; a: number; b: number };
 
+/** How long the parts are compared before what is known is kept (the platform stops a run after a few minutes). */
+export const PARTS_DEADLINE_MS = 120_000;
+
 /** At most this many parts are compared on one picture. */
 export const MOST_PARTS = 8;
 /** The parts' details are numbered from here, after the print's, so their crops have their own names. */
@@ -90,7 +93,10 @@ const HUES: [number, string][] = [
 ];
 /** A model's sentence without the markup or stray brackets it sometimes ends with ("…buttons.}", "…green.</br>"). */
 export function plain(note: string | undefined): string {
-  return (note ?? "").replace(/<[^>]*>/g, " ").replace(/[\s{}\[\]<>]+$/g, "").replace(/\s+/g, " ").trim();
+  const flat = (note ?? "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  // The note is one sentence; what a model runs on with after it ("…into the neck.fill level too.") is cut.
+  const first = flat.match(/^.*?[.!?](?=\s|$|[A-Za-z'])/)?.[0] ?? flat;
+  return first.replace(/[\s{}\[\]<>]+$/g, "").trim();
 }
 
 /** A plain colour word for a Lab colour, for the designer's note. */
@@ -245,7 +251,9 @@ export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ d
         const part = { what: p.what, kind: p.kind, looks: p.looks, count: p.count };
         let crop = onPicture;
         let where = box;
-        let r = await d.compare({ cropUrl: crop.link, refUrl: real.link, part });
+        // One retry: a model that runs on past its answer leaves it unreadable, and the next answer reads.
+        const compare = (r: Parameters<Deps["compare"]>[0]) => d.compare(r).catch(() => d.compare(r));
+        let r = await compare({ cropUrl: crop.link, refUrl: real.link, part });
         usd += r.usd;
         const counted = (c: Compared) => p.count != null && c.whole && c.count != null && countOff(c.count, p.count);
         // None counted where the part was found: the box may be off the part. It is looked for once more, and counted
@@ -259,7 +267,7 @@ export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ d
           if (moved) {
             crop = moved;
             where = box2!;
-            const recount = await d.compare({ cropUrl: crop.link, refUrl: real.link, part });
+            const recount = await compare({ cropUrl: crop.link, refUrl: real.link, part });
             usd += recount.usd;
             r = recount;
           }
@@ -267,7 +275,7 @@ export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ d
         // A part is called different only when the careful model says so too, so a doubt of the quick one does not
         // flag the picture.
         if (!r.same || counted(r)) {
-          const again = await d.compare({ cropUrl: crop.link, refUrl: real.link, part, careful: true });
+          const again = await compare({ cropUrl: crop.link, refUrl: real.link, part, careful: true });
           usd += again.usd;
           if (again.same && !counted(again)) r = again;
         }
@@ -299,6 +307,13 @@ export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ d
       }
     })());
   }
-  await Promise.all(work);
-  return { details: out.sort((a, b) => a.n - b.n), usd };
+  // A run the platform stops leaves no answer at all, so the parts compared by the deadline are kept, and the rest go
+  // to the expert's eye.
+  let timer: number | undefined;
+  await Promise.race([
+    Promise.all(work),
+    new Promise((done) => (timer = setTimeout(done, PARTS_DEADLINE_MS))),
+  ]);
+  clearTimeout(timer);
+  return { details: [...out].sort((a, b) => a.n - b.n), usd };
 }

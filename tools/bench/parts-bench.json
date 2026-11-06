@@ -11,6 +11,7 @@
     { "id": "e44dde8e-d4c8-47d7-adf2-05271de1195a", "what": "Nike: laces drawn white", "wrong": ["laces"] },
     { "id": "f8806735-a2c3-44c3-bc96-432db79cfcc1", "what": "Møllers: Swedish flag on the label", "wrong": ["norwegian-flag"] },
     { "id": "93afb862-aae2-4e68-a1d5-760afda41d3c", "what": "Dressmann: a zip in place of the buttons", "wrong": ["front-buttons"] },
+    { "id": "e2d1cf3c-2789-4c79-924a-ea86cf1d6b01", "what": "Møllers: bottle drawn squat and round", "wrong": ["bottle-shape"] },
     { "id": "cb158076-a413-4750-ba58-3412f4cc3ac6", "what": "Dressmann: the master", "wrong": [] },
     { "id": "9ca78ee6-b88a-4831-adab-c37dc79694ac", "what": "Dressmann: story format, drawn again", "wrong": [] },
     { "id": "53fd8008-1969-4e8e-90e6-b17efde91a81", "what": "Dressmann: pocket redrawn, still there", "wrong": [] },

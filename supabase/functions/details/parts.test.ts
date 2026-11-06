@@ -134,6 +134,10 @@ Deno.test("a model's note is kept as a plain sentence", () => {
   assertEquals(plain("The shirt closes with a zip; on the product it closes with buttons.}"), "The shirt closes with a zip; on the product it closes with buttons.");
   assertEquals(plain("The oil looks dark green.</br>\n"), "The oil looks dark green.");
   assertEquals(plain(undefined), "");
+  assertEquals(plain("The oil is low; on the product it fills the neck.fill level too."), "The oil is low; on the product it fills the neck.");
+  assertEquals(plain("The toe is black; on the product it is blue.'s base panel.'s base panel."), "The toe is black; on the product it is blue.");
+  assertEquals(plain("The toe is black; on the product it is blue.This reverses it.Done.Ok."), "The toe is black; on the product it is blue.");
+  assertEquals(plain("The cap is red; on the product it is 1.5 cm taller."), "The cap is red; on the product it is 1.5 cm taller.");
 });
 
 Deno.test("from five, one off is not a fault; two off is, and any difference below five", () => {
