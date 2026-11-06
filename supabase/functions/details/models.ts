@@ -13,6 +13,22 @@ const Found = z.object({
 });
 const Again = z.object({ found: z.boolean(), box: Box });
 const Reading = z.object({ reads: z.string(), expected: z.string(), ok: z.boolean(), note: z.string() });
+const Mapped = z.object({
+  parts: z.array(z.object({
+    key: z.string(), kind: z.enum(["count", "present", "look"]), what: z.string(), count: z.number().int().nullable(),
+    looks: z.string(), photo: z.number().int().min(1), box: Box.nullable(),
+  })),
+});
+const Where = z.object({
+  parts: z.array(z.object({ key: z.string(), shown: z.enum(["yes", "hidden", "missing"]), box: Box.nullable() })),
+});
+const Side = z.object({ shows: z.string(), whole: z.boolean(), count: z.number().int().nullable(), same: z.boolean(), note: z.string() });
+
+/** The map is made once per product, so it is made by the careful model; Sonnet 5.5's list price, dollars per million tokens. */
+export const MAP_MODEL = "claude-sonnet-5-5";
+const MAP_PRICE = { input: 2, output: 10 };
+const mapCost = (u: { input_tokens?: number | null; output_tokens?: number | null }) =>
+  Math.round(((u.input_tokens ?? 0) * MAP_PRICE.input + (u.output_tokens ?? 0) * MAP_PRICE.output)) / 1_000_000;
 
 export const FIND_SYSTEM = [
   "You help Fume's expert check a product picture an image model made. You get the product's own photographs first and",
@@ -42,20 +58,61 @@ export const REFINE_SYSTEM = [
   "it, found is false.",
 ].join(" ");
 
-export function claudeDetails(claude: Anthropic, allowed: () => Promise<boolean>): Pick<Deps, "find" | "read" | "refine"> {
-  async function ask<T>(system: string, urls: string[], text: string, schema: z.ZodType<T>) {
+export const MAP_SYSTEM = [
+  "You map a product's parts for Fume's expert, from the product's own photographs, so that every picture an image model",
+  "makes of it can be checked part by part against the real product. List the parts an image model could get wrong: for",
+  "a shirt the collar, the buttons on the front, the cuffs, the sleeves, the pockets, the yoke, the hem, the label, the",
+  "pattern and the fabric; for a shoe the laces, the eyelets, the tongue, the sole, the heel, the logo, the stitching and",
+  "the material; for a bottle or a pack the cap, the neck, the label, the shape and what shows through it. Only parts the",
+  "photographs show. At most ten, the most telling first. For each: key, a short lowercase name (buttons, chest-pocket);",
+  "kind: count when how many matters (buttons, eyelets, pockets), present when it must be there and look like this (a",
+  "collar, a zip, a flap), look when its look is what matters (pattern, fabric, finish, colour, shape); what, its name as a",
+  "designer says it (the front buttons); count, how many the product has, counted with care on the photograph that shows",
+  "them all, for count only, else null; looks, one plain sentence a designer can check a picture against, with its colour,",
+  "shape, number and material (seven white four-hole buttons down the front placket, none on the collar points); photo,",
+  "the photograph where it shows best (1 is the first image); box, a tight box around it there, as shares of that",
+  "photograph's width and height (x and y are the top left corner, from 0 to 1). For pattern, fabric and finish, the box is",
+  "a plain patch of it about a fifth of the product wide; for shape, the whole product. Never the printed letters",
+  "themselves: they are read elsewhere; the label as a part (where it sits, its colour and shape) is a part.",
+].join(" ");
+
+export const LOCATE_SYSTEM = [
+  "You help Fume's expert check a product picture an image model made, part by part. The first images are the real",
+  "product's own photographs; the last image is the generated picture. You get a list of the product's parts, each with a",
+  "key and how it looks on the real product. For each part, say whether the generated picture shows it. yes: it is there;",
+  "give a tight box around it on the generated picture. hidden: this view of the product would not show it (it is on the",
+  "back, under an arm, cut by the frame, covered), which is no fault; box null. missing: the picture shows the side of",
+  "the product where the part belongs, uncovered, and the part is not drawn; give a box where it should be. Missing is a",
+  "fault the designer must fix, so say it only when you are sure. Boxes are shares of the generated picture's width and",
+  "height (x and y are the top left corner, from 0 to 1). Answer every key once.",
+].join(" ");
+
+export const COMPARE_SYSTEM = [
+  "You compare one part of a product for Fume's expert. Image 1 is a close crop of a picture an image model made; image 2",
+  "is the same part on the real product's photograph. Look only at the named part. Light, angle, folds, wrinkles and scale",
+  "may differ and are no fault. What counts: the number of things (buttons, eyelets, pockets), whether something is there",
+  "or not (a flap, a zip, a seam, a label), its shape, its colour, its pattern (checks against stripes, the size of the",
+  "checks), its material and its finish (matte or shiny, woven or knit, smooth or ribbed). shows: one plain sentence of how",
+  "the part looks on image 1, with its number, colour and shape. whole: true when image 1 shows the whole part, nothing",
+  "cut by the crop or covered. count: when the part is counted, how many image 1 shows, else null. same: true when the",
+  "part on image 1 is the same as the real one in all that counts, as far as image 1 shows it. note: when same is false,",
+  "one short sentence for a designer in the form: The chest pocket has a flap; on the product it has none. Else empty.",
+].join(" ");
+
+export function claudeDetails(claude: Anthropic, allowed: () => Promise<boolean>): Pick<Deps, "find" | "read" | "refine" | "map" | "locate" | "compare"> {
+  async function ask<T>(system: string, urls: string[], text: string, schema: z.ZodType<T>, model = MODEL) {
     if (!(await allowed())) throw new Error("This week's budget for Fume's language model is used up.");
     const images = urls.map((url): Anthropic.Beta.Messages.BetaContentBlockParam => ({ type: "image", source: { type: "url", url } }));
     const m = await claude.beta.messages.parse({
-      model: MODEL,
+      model,
       max_tokens: 4_000,
       system,
       messages: [{ role: "user", content: [...images, { type: "text", text }] }],
       thinking: { type: "adaptive" },
-      output_config: { effort: "low", format: betaZodOutputFormat(schema) },
+      output_config: { effort: model === MAP_MODEL ? "medium" : "low", format: betaZodOutputFormat(schema) },
     });
     if (!m.parsed_output) throw new Error("The answer could not be read.");
-    return { out: m.parsed_output as T, usd: costOf(m.usage) };
+    return { out: m.parsed_output as T, usd: model === MAP_MODEL ? mapCost(m.usage) : costOf(m.usage) };
   }
   return {
     async find({ pictureUrl, photoUrls, products }) {
@@ -70,6 +127,21 @@ export function claudeDetails(claude: Anthropic, allowed: () => Promise<boolean>
     async read({ cropUrl, refUrl, what }) {
       const { out, usd } = await ask(READ_SYSTEM, refUrl ? [cropUrl, refUrl] : [cropUrl],
         `The part is: ${what}.${refUrl ? "" : " There is no image 2."}`, Reading);
+      return { ...out, usd };
+    },
+    async map({ photoUrls, product }) {
+      const { out, usd } = await ask(MAP_SYSTEM, photoUrls, `The product: ${product}. ${photoUrls.length} photograph(s).`, Mapped, MAP_MODEL);
+      return { parts: out.parts, model: MAP_MODEL, usd };
+    },
+    async locate({ pictureUrl, photoUrls, parts }) {
+      const list = parts.map((p) => `${p.key}: ${p.what}, on the real product ${p.looks}`).join("\n");
+      const { out, usd } = await ask(LOCATE_SYSTEM, [...photoUrls, pictureUrl],
+        `Images 1 to ${photoUrls.length} are the real product's photographs; image ${photoUrls.length + 1} is the generated picture. The parts:\n${list}`, Where);
+      return { parts: out.parts, usd };
+    },
+    async compare({ cropUrl, refUrl, part }) {
+      const { out, usd } = await ask(COMPARE_SYSTEM, [cropUrl, refUrl],
+        `The part: ${part.what}. On the real product: ${part.looks}${part.count != null ? ` The product has ${part.count}.` : ""}`, Side);
       return { ...out, usd };
     },
   };

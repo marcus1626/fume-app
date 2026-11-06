@@ -7,7 +7,7 @@ import { type Layout, type Words } from "./compose.ts";
 import { type Ask, design } from "./design.ts";
 import { type Box } from "./pixels.ts";
 import { type BrandFace } from "./render.ts";
-import { blank, crop, cropFor, decode, encode, type Rect, resize, setBack } from "./fix.ts";
+import { blank, crop, cropFor, decode, encode, type Rect, resize, setBack, toneOf } from "./fix.ts";
 import { AIR, canvasFor, fits, guide, kept, MODEL_RATIO, pad, RATIO, setMaster, windowFor } from "./format.ts";
 
 export interface DesignRequest {
@@ -237,7 +237,7 @@ async function fixStep(r: FixRequest, deps: Deps): Promise<Response> {
         cut = blank(cut, { x: r.box.x * picture.width - rect.x, y: r.box.y * picture.height - rect.y, w: r.box.w * picture.width, h: r.box.h * picture.height });
       }
       const part = await encode(cut);
-      return json(200, { rect, ratio, width: picture.width, height: picture.height, crop: await store(r.upload.crop!, part, deps) });
+      return json(200, { rect, ratio, width: picture.width, height: picture.height, tone: toneOf(picture, r.box), crop: await store(r.upload.crop!, part, deps) });
     }
     const rect = r.rect!;
     if (rect.x + rect.w > picture.width || rect.y + rect.h > picture.height) return json(400, { error: "The crop is not one Fume made." });

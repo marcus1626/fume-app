@@ -22,6 +22,7 @@ function deps(over: Partial<Deps> = {}) {
       },
       readLink: (_b, p) => Promise.resolve(`https://s/read/${p}`),
       uploadLink: (_b, p) => Promise.resolve(`https://s/up/${p}`),
+      setParts: () => Promise.resolve({ error: null }),
     },
     step: (r) => {
       calls.steps.push(r);
@@ -38,6 +39,9 @@ function deps(over: Partial<Deps> = {}) {
         : { reads: "XO", expected: "", ok: false, note: "Something", usd: 0.0005 });
     },
     refine: () => Promise.resolve({ box: { x: 0.4, y: 0.4, w: 0.2, h: 0.1 }, usd: 0.0001 }),
+    map: () => Promise.resolve({ parts: [], model: "m", usd: 0 }),
+    locate: () => Promise.resolve({ parts: [], usd: 0 }),
+    compare: () => Promise.resolve({ shows: "", whole: true, count: null, same: true, note: "", usd: 0 }),
     later: () => {},
     ...over,
   };

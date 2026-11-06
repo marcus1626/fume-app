@@ -1296,6 +1296,25 @@ function blank(img, part) {
   for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) data.set([...median, 255], (y * img.width + x) * 4);
   return { width: img.width, height: img.height, data };
 }
+function labOf([r, g, b]) {
+  const lin2 = (v) => (v /= 255) <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+  const [R, G, B] = [lin2(r), lin2(g), lin2(b)];
+  const f = (t) => t > 216 / 24389 ? Math.cbrt(t) : (24389 / 27 * t + 16) / 116;
+  const x = f((0.4124 * R + 0.3576 * G + 0.1805 * B) / 0.95047), y = f(0.2126 * R + 0.7152 * G + 0.0722 * B), z = f((0.0193 * R + 0.1192 * G + 0.9505 * B) / 1.08883);
+  const round3 = (n) => Math.round(n * 10) / 10 + 0;
+  return { l: round3(116 * y - 16), a: round3(500 * (x - y)), b: round3(200 * (y - z)) };
+}
+function toneOf(img, box) {
+  const x0 = Math.max(0, Math.floor((box.x + box.w / 4) * img.width)), y0 = Math.max(0, Math.floor((box.y + box.h / 4) * img.height));
+  const x1 = Math.min(img.width, Math.ceil((box.x + 3 * box.w / 4) * img.width)), y1 = Math.min(img.height, Math.ceil((box.y + 3 * box.h / 4) * img.height));
+  if (x1 <= x0 || y1 <= y0) return null;
+  const chans = [[], [], []];
+  const step = Math.max(1, Math.floor(Math.sqrt((x1 - x0) * (y1 - y0) / 2e4)));
+  for (let y = y0; y < y1; y += step) {
+    for (let x = x0; x < x1; x += step) for (let c = 0; c < 3; c++) chans[c].push(img.data[(y * img.width + x) * 4 + c]);
+  }
+  return labOf(chans.map((v) => v.sort((a, b) => a - b)[v.length >> 1]));
+}
 function resize(img, w, h) {
   if (img.width === w && img.height === h) return img;
   const out = new Uint8Array(w * h * 4);
@@ -1707,7 +1726,7 @@ async function fixStep(r, deps) {
         cut = blank(cut, { x: r.box.x * picture.width - rect2.x, y: r.box.y * picture.height - rect2.y, w: r.box.w * picture.width, h: r.box.h * picture.height });
       }
       const part = await encode(cut);
-      return json(200, { rect: rect2, ratio, width: picture.width, height: picture.height, crop: await store(r.upload.crop, part, deps) });
+      return json(200, { rect: rect2, ratio, width: picture.width, height: picture.height, tone: toneOf(picture, r.box), crop: await store(r.upload.crop, part, deps) });
     }
     const rect = r.rect;
     if (rect.x + rect.w > picture.width || rect.y + rect.h > picture.height) return json(400, { error: "The crop is not one Fume made." });

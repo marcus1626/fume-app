@@ -59,6 +59,32 @@ export function blank(img: Img, part: Rect): Img {
   return { width: img.width, height: img.height, data };
 }
 
+/** CIE Lab (D65) of an sRGB colour, 0..255 a channel. */
+export function labOf([r, g, b]: number[]): { l: number; a: number; b: number } {
+  const lin = (v: number) => ((v /= 255) <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+  const [R, G, B] = [lin(r), lin(g), lin(b)];
+  const f = (t: number) => (t > 216 / 24389 ? Math.cbrt(t) : (24389 / 27 * t + 16) / 116);
+  const x = f((0.4124 * R + 0.3576 * G + 0.1805 * B) / 0.95047), y = f(0.2126 * R + 0.7152 * G + 0.0722 * B), z = f((0.0193 * R + 0.1192 * G + 0.9505 * B) / 1.08883);
+  const round = (n: number) => Math.round(n * 10) / 10 + 0;
+  return { l: round(116 * y - 16), a: round(500 * (x - y)), b: round(200 * (y - z)) };
+}
+
+/**
+ * The colour of a part, measured by code: the median of the middle half of its box (shares of the picture), in Lab, so
+ * the check can tell a blue shirt drawn green without asking a model.
+ */
+export function toneOf(img: Img, box: Rect): { l: number; a: number; b: number } | null {
+  const x0 = Math.max(0, Math.floor((box.x + box.w / 4) * img.width)), y0 = Math.max(0, Math.floor((box.y + box.h / 4) * img.height));
+  const x1 = Math.min(img.width, Math.ceil((box.x + (3 * box.w) / 4) * img.width)), y1 = Math.min(img.height, Math.ceil((box.y + (3 * box.h) / 4) * img.height));
+  if (x1 <= x0 || y1 <= y0) return null;
+  const chans: number[][] = [[], [], []];
+  const step = Math.max(1, Math.floor(Math.sqrt(((x1 - x0) * (y1 - y0)) / 20_000)));
+  for (let y = y0; y < y1; y += step) {
+    for (let x = x0; x < x1; x += step) for (let c = 0; c < 3; c++) chans[c].push(img.data[(y * img.width + x) * 4 + c]);
+  }
+  return labOf(chans.map((v) => v.sort((a, b) => a - b)[v.length >> 1]));
+}
+
 /** Bilinear resize, enough to bring the model's crop back to the crop's own size. */
 export function resize(img: Img, w: number, h: number): Img {
   if (img.width === w && img.height === h) return img;

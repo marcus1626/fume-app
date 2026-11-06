@@ -6,22 +6,42 @@
 //   3. the language model reads each close crop against the real one, letter for letter,
 //   4. details_finish keeps what it read; a label that reads wrong flags the picture's product truth with a note, and
 //      its place is where the designer fixes it with the real product.
+// While it reads, parts.ts checks every other part of the product against the real one (docs/mvp/product-parts.md).
 // It helps the expert; it never checks a picture in their place. handler.test.ts runs it without Supabase or a model.
 import { generous, type Rect } from "../fix/handler.ts";
+import { checkParts, type Compared, type Located, type MappedPart, type Part } from "./parts.ts";
 
 export type Take = {
   candidate_id: string;
   workspace_id: string;
   brand: { name: string | null; language: string | null };
   picture: { bucket: string; path: string; width: number | null; height: number | null };
-  products: { name: string; variant: string | null; pictures: { bucket: string; path: string }[] }[];
+  products: {
+    id?: string;
+    name: string;
+    variant: string | null;
+    pictures: { bucket: string; path: string; file_id?: string }[];
+    /** The product's part map (parts.ts), when one was made from these photographs. */
+    parts?: Part[] | null;
+  }[];
   store: { bucket: string; prefix: string };
 };
 
 /** A place on the picture where the product shows print, and the same place on one of its photographs. */
 export type Place = { what: string; box: Rect; photo: number; photoBox: Rect | null };
 export type Read = { reads: string; expected: string; ok: boolean; note: string };
-export type Detail = { n: number; what: string; box: Rect; reads: string; expected: string; ok: boolean; note?: string };
+/** What the check found: print read letter for letter, or (kind "part") a part of the product compared with the real one. */
+export type Detail = {
+  n: number;
+  kind?: "print" | "part";
+  part?: string;
+  what: string;
+  box: Rect;
+  reads: string;
+  expected: string;
+  ok: boolean;
+  note?: string;
+};
 
 type Failure = { message: string } | null;
 
@@ -33,12 +53,20 @@ export interface Deps {
     finish(candidateId: string, details: Detail[], usd: number): Promise<{ error: Failure }>;
     readLink(bucket: string, path: string): Promise<string | null>;
     uploadLink(bucket: string, path: string): Promise<string | null>;
+    /** Keeps a product's part map (product_parts_set). */
+    setParts(productId: string, parts: Part[], photos: string[], model: string, usd: number): Promise<{ error: Failure }>;
   };
   step(request: Record<string, unknown>): Promise<{ ok: boolean; status: number; body: Record<string, unknown> }>;
   find(r: { pictureUrl: string; photoUrls: string[]; products: string }): Promise<{ places: Place[]; usd: number }>;
   read(r: { cropUrl: string; refUrl: string | null; what: string }): Promise<Read & { usd: number }>;
   /** Finds the part again on a wider crop, for a tight box there (shares of the crop), or null. */
   refine(r: { cropUrl: string; what: string }): Promise<{ box: Rect | null; usd: number }>;
+  /** Maps the product's parts from its own photographs. */
+  map(r: { photoUrls: string[]; product: string }): Promise<{ parts: MappedPart[]; model: string; usd: number }>;
+  /** Finds each part on the picture: shown, hidden by the view, or missing. */
+  locate(r: { pictureUrl: string; photoUrls: string[]; parts: { key: string; what: string; looks: string }[] }): Promise<{ parts: Located[]; usd: number }>;
+  /** Compares a part on the picture (crop) with the same part on the product's photograph (ref). */
+  compare(r: { cropUrl: string; refUrl: string; part: { what: string; looks: string; count: number | null } }): Promise<Compared & { usd: number }>;
   later(work: Promise<unknown>): void;
 }
 
@@ -88,13 +116,24 @@ async function closeIn(t: Take, d: Deps, picture: string, box: Rect, what: strin
 export async function readDetails(t: Take, d: Deps): Promise<Detail[] | null> {
   let usd = 0;
   const out: Detail[] = [];
+  let parts: Promise<{ details: Detail[]; usd: number }> | null = null;
+  const withParts = async () => {
+    if (!parts) return;
+    const checked = await parts;
+    parts = null;
+    out.push(...checked.details);
+    usd += checked.usd;
+  };
   try {
     const picture = await d.service.readLink(t.picture.bucket, t.picture.path);
+    // The parts are checked while the print is read; a failure in one keeps the other.
+    parts = picture ? checkParts(t, d, picture).catch(() => ({ details: [] as Detail[], usd: 0 })) : null;
     const photos = (await Promise.all(t.products.flatMap((p) => p.pictures).slice(0, 3).map((p) => d.service.readLink(p.bucket, p.path))))
       .filter((u): u is string => Boolean(u));
     if (!picture || photos.length === 0) {
-      await d.service.finish(t.candidate_id, [], 0);
-      return [];
+      await withParts();
+      await d.service.finish(t.candidate_id, out, usd);
+      return out;
     }
     const products = t.products.map((p) => (p.variant ? `${p.name} (${p.variant})` : p.name)).join("; ");
     const found = await d.find({ pictureUrl: picture, photoUrls: photos, products });
@@ -126,16 +165,18 @@ export async function readDetails(t: Take, d: Deps): Promise<Detail[] | null> {
         if (!readsRight(again)) r = again;
       }
       out.push({
-        n, what: place.what.slice(0, 120), box: onPicture.box, reads: r.reads.slice(0, 200), expected: r.expected.slice(0, 200),
+        n, kind: "print", what: place.what.slice(0, 120), box: onPicture.box, reads: r.reads.slice(0, 200), expected: r.expected.slice(0, 200),
         // Without the real one to read against, nothing is called wrong.
         ok: refUrl ? readsRight(r) : true,
         ...(refUrl && !readsRight(r) ? { note: (r.note || `The ${place.what} reads ${r.reads}; on the product it reads ${r.expected}.`).slice(0, 300) } : {}),
       });
     }
+    await withParts();
     await d.service.finish(t.candidate_id, out, usd);
     return out;
   } catch {
-    // Not read: the expert checks the print by eye. What was read so far is kept.
+    // Not read: the expert checks the print by eye. What was read so far, and the parts, are kept.
+    await withParts().catch(() => undefined);
     await d.service.finish(t.candidate_id, out, usd).catch(() => undefined);
     return null;
   }

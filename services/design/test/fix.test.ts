@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { blank, crop, cropFor, decode, encode, type Img, setBack } from "../src/fix.ts";
+import { blank, crop, cropFor, decode, encode, type Img, labOf, setBack, toneOf } from "../src/fix.ts";
 import { invalidFix } from "../src/handler.ts";
 import { startWithTestFonts } from "./fonts.ts";
 
@@ -71,4 +71,14 @@ test("a fix step is taken only with signed links to Fume's storage and a part in
   assert.match(invalidFix({ op: "fix-crop", picture: read, box: { x: 0.9, y: 0, w: 0.2, h: 0.1 }, upload: { crop: up } }, host)!, /inside/);
   assert.match(invalidFix({ op: "fix-set", picture: read, box, redrawn: "https://fal.media/x.png", rect: { x: 0, y: 0, w: 99, h: 99 }, upload: { png: up } }, host)!, /redrawn/);
   assert.equal(invalidFix({ op: "fix-set", picture: read, box, redrawn: read, rect: { x: 0, y: 0, w: 99, h: 99 }, upload: { png: up } }, host), null);
+});
+
+test("the colour of a part is measured by code, in Lab", () => {
+  const w = 40, h = 40, data = new Uint8Array(w * h * 4);
+  for (let i = 0; i < w * h; i++) data.set(i % w < 20 ? [0, 0, 255, 255] : [0, 128, 0, 255], i * 4);
+  const blue = toneOf({ width: w, height: h, data }, { x: 0, y: 0, w: 0.5, h: 1 })!;
+  const green = toneOf({ width: w, height: h, data }, { x: 0.5, y: 0, w: 0.5, h: 1 })!;
+  assert.ok(blue.b < -100 && Math.abs(blue.l - 32.3) < 0.5, "pure blue");
+  assert.ok(green.a < -40 && green.b > 40, "green");
+  assert.deepEqual(labOf([255, 255, 255]), { l: 100, a: 0, b: 0 });
 });

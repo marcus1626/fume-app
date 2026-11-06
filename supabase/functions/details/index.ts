@@ -47,6 +47,8 @@ Deno.serve((req) =>
         finish: async (id, details, usd) => await service.rpc("details_finish", { p_candidate_id: id, p_details: details, p_llm_usd: usd }),
         readLink: async (bucket, path) => (await service.storage.from(bucket).createSignedUrl(path, 900)).data?.signedUrl ?? null,
         uploadLink: async (bucket, path) => (await service.storage.from(bucket).createSignedUploadUrl(path, { upsert: true })).data?.signedUrl ?? null,
+        setParts: async (id, parts, photos, model, usd) =>
+          await service.rpc("product_parts_set", { p_product_id: id, p_parts: parts, p_photos: photos, p_model: model, p_llm_usd: usd }),
       },
       step: async (request) => {
         const res = await fetch(designUrl, {
