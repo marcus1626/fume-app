@@ -106,7 +106,8 @@ Deno.test("a part found once missing and once there is not called missing; a sec
 });
 
 Deno.test("a colour far from the product's is wrong, measured by code; the light of a scene is not", async () => {
-  const { d } = deps({}, { "https://s/read/pic.png": { l: 50, a: -40, b: 30 } });
+  const slight = { compare: () => Promise.resolve({ shows: "checks", whole: true, count: null, same: true, slightly: true, note: "", usd: 0 }) };
+  const { d } = deps(slight, { "https://s/read/pic.png": { l: 50, a: -40, b: 30 } });
   const { details } = await checkParts(shirt, d, "https://s/read/pic.png");
   const pattern = details.find((x) => x.part === "pattern")!;
   assertEquals(pattern.ok, false);
@@ -114,6 +115,10 @@ Deno.test("a colour far from the product's is wrong, measured by code; the light
   assert(!colourOff({ l: 60, a: 0, b: -28 }, { l: 45, a: -6, b: -34 }), "a lighter, warmer blue is still blue");
   assert(colourOff({ l: 60, a: 2, b: 3 }, { l: 45, a: -6, b: -44 }), "a blue part drawn grey");
   assertEquals([colourWord({ l: 90, a: 1, b: 1 }), colourWord({ l: 30, a: 10, b: -40 })], ["white", "dark blue"]);
+  assert(!colourOff({ l: 15, a: 1, b: 1 }, { l: 30, a: 20, b: -50 }), "a dark part in a dark scene loses its colour");
+  const unseen = deps({}, { "https://s/read/pic.png": { l: 50, a: -40, b: 30 } });
+  const quiet = await checkParts(shirt, unseen.d, "https://s/read/pic.png");
+  assertEquals(quiet.details.find((x) => x.part === "pattern")!.ok, true, "a colour the model saw no difference in does not flag");
 });
 
 Deno.test("the map is cleaned: unique keys, counts only where they count, a box kept inside the picture", () => {

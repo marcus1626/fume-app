@@ -12,11 +12,27 @@ import { type Deps, type Detail, photoLink, type Take } from "./handler.ts";
 
 export type PartKind = "count" | "present" | "look";
 /** One part of the product, as mapped from its photographs. `photo` is the file id of the photograph it shows best on. */
-export type Part = { key: string; kind: PartKind; what: string; count: number | null; looks: string; photo: string | null; box: Rect | null };
+export type Part = {
+  key: string;
+  kind: PartKind;
+  what: string;
+  count: number | null;
+  looks: string;
+  photo: string | null;
+  box: Rect | null;
+};
 /** A part as the map model answers it: `photo` is the photograph's number, 1 the first. */
 export type MappedPart = Omit<Part, "photo"> & { photo: number };
 export type Located = { key: string; shown: "yes" | "hidden" | "missing"; box: Rect | null };
-export type Compared = { shows: string; whole: boolean; count: number | null; same: boolean; note: string };
+/** `same` is false for a clear fault; `slightly` marks a small difference the model saw, which alone flags nothing. */
+export type Compared = {
+  shows: string;
+  whole: boolean;
+  count: number | null;
+  same: boolean;
+  slightly?: boolean;
+  note: string;
+};
 export type Tone = { l: number; a: number; b: number };
 
 /** At most this many parts are compared on one picture. */
@@ -49,14 +65,29 @@ export function keepMap(mapped: MappedPart[], photoIds: string[]): Part[] {
     if (!key || seen.has(key)) continue;
     seen.add(key);
     out.push({
-      key, kind: p.kind, what: p.what.slice(0, 80), count: p.kind === "count" && Number.isInteger(p.count) && p.count! > 0 ? p.count : null,
-      looks: p.looks.slice(0, 240), photo: photoIds[p.photo - 1] ?? null, box: clean(p.box),
+      key,
+      kind: p.kind,
+      what: p.what.replace(/^(the|a|an)\s+/i, "").slice(0, 80),
+      count: p.kind === "count" && Number.isInteger(p.count) && p.count! > 0 ? p.count : null,
+      looks: p.looks.slice(0, 240),
+      photo: photoIds[p.photo - 1] ?? null,
+      box: clean(p.box),
     });
   }
   return out.slice(0, 12);
 }
 
-const HUES: [number, string][] = [[20, "red"], [55, "orange"], [100, "yellow"], [160, "green"], [215, "teal"], [290, "blue"], [330, "purple"], [360, "pink"]];
+// Lab hue angles: a royal blue sits near 300 degrees, so blue runs further than the colour wheel suggests.
+const HUES: [number, string][] = [
+  [25, "red"],
+  [60, "orange"],
+  [100, "yellow"],
+  [165, "green"],
+  [225, "teal"],
+  [315, "blue"],
+  [340, "purple"],
+  [360, "pink"],
+];
 /** A plain colour word for a Lab colour, for the designer's note. */
 export function colourWord(t: Tone): string {
   const c = Math.hypot(t.a, t.b);
@@ -68,18 +99,19 @@ export function colourWord(t: Tone): string {
 
 /**
  * Whether the part's colour on the picture is far from the product's, measured by code. The light of a scene moves a
- * colour; a different colour moves its hue or its chroma a long way, so only that is called wrong.
+ * colour and a dark scene takes its colour out, so only two clear colours far apart in hue, or a light part drawn
+ * without colour where the product has a strong one (a blue swoosh drawn white), are called wrong.
  */
 export function colourOff(on: Tone | null, real: Tone | null): boolean {
   if (!on || !real) return false;
   const c1 = Math.hypot(on.a, on.b), c2 = Math.hypot(real.a, real.b);
-  if (c1 >= 20 && c2 >= 20) {
+  if (c1 >= 25 && c2 >= 25) {
     let dh = Math.abs(Math.atan2(on.b, on.a) - Math.atan2(real.b, real.a)) * 180 / Math.PI;
     if (dh > 180) dh = 360 - dh;
-    return dh > 50;
+    return dh > 60;
   }
-  // One of them grey: a coloured part drawn grey, or a grey one drawn coloured.
-  return Math.abs(c1 - c2) > 30;
+  const grey = (c: number, t: Tone) => c < 12 && t.l >= 45;
+  return (grey(c1, on) && c2 >= 35) || (grey(c2, real) && c1 >= 35);
 }
 
 type Crop = { link: string; tone: Tone | null };
@@ -92,7 +124,11 @@ async function cut(t: Take, d: Deps, picture: string, box: Rect, path: string): 
 }
 
 /** Maps each product that has no map for its photographs yet, and keeps it. What it cost counts on the map. */
-async function mapParts(t: Take, d: Deps, links: Map<string, string>): Promise<{ product: Take["products"][number]; parts: Part[] }[]> {
+async function mapParts(
+  t: Take,
+  d: Deps,
+  links: Map<string, string>,
+): Promise<{ product: Take["products"][number]; parts: Part[] }[]> {
   return await Promise.all(t.products.map(async (p) => {
     if (p.parts) return { product: p, parts: p.parts };
     const pictures = (p.pictures ?? []).filter((x) => x.file_id && links.has(x.file_id));
@@ -116,12 +152,17 @@ export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ d
   }
   if (links.size === 0) return { details: [], usd: 0 };
   const maps = await mapParts(t, d, links);
-  const parts = maps.flatMap((m) => m.parts.map((part) => ({ ...part, id: `${m.product.id ?? m.product.name}:${part.key}`, product: m.product.name })));
+  const parts = maps.flatMap((m) =>
+    m.parts.map((part) => ({ ...part, id: `${m.product.id ?? m.product.name}:${part.key}`, product: m.product.name }))
+  );
   if (parts.length === 0) return { details: [], usd: 0 };
   let usd = 0;
   const photoUrls = [...links.values()].slice(0, 3);
   const ask = parts.map((p) => ({ key: p.id, what: `${p.what} of the ${p.product}`, looks: p.looks }));
-  const first = await d.locate({ pictureUrl: picture, photoUrls, parts: ask });
+  // One retry: a busy model answers the next time.
+  const first = await d.locate({ pictureUrl: picture, photoUrls, parts: ask }).catch(() =>
+    d.locate({ pictureUrl: picture, photoUrls, parts: ask })
+  );
   usd += first.usd;
   let found = new Map(first.parts.map((l) => [l.key, l]));
   // A part said to be missing is looked for once more; only a part missing twice is called missing.
@@ -129,7 +170,14 @@ export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ d
     const again = await d.locate({ pictureUrl: picture, photoUrls, parts: ask });
     usd += again.usd;
     const second = new Map(again.parts.map((l) => [l.key, l]));
-    found = new Map([...found].map(([k, l]) => [k, l.shown === "missing" && second.get(k)?.shown !== "missing" ? { ...l, shown: second.get(k)?.shown ?? "hidden", box: second.get(k)?.box ?? l.box } : l]));
+    found = new Map(
+      [...found].map(([k, l]) => [
+        k,
+        l.shown === "missing" && second.get(k)?.shown !== "missing"
+          ? { ...l, shown: second.get(k)?.shown ?? "hidden", box: second.get(k)?.box ?? l.box }
+          : l,
+      ]),
+    );
   }
   const out: Detail[] = [];
   let n = FIRST_N - 1;
@@ -141,49 +189,79 @@ export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ d
     if (!box) continue;
     if (l.shown === "missing") {
       const at = (n += 1);
-      out.push({ n: at, kind: "part", part: p.key, what: p.what, box, reads: "Not on the picture.", expected: p.looks, ok: false,
-        note: `The ${p.what} is missing; on the product: ${p.looks}`.slice(0, 300) });
+      out.push({
+        n: at,
+        kind: "part",
+        part: p.key,
+        what: p.what,
+        box,
+        reads: "Not on the picture.",
+        expected: p.looks,
+        ok: false,
+        note: `The ${p.what} is missing; on the product: ${p.looks}`.slice(0, 300),
+      });
       // The real one is cut from the photograph all the same, so the designer sees what belongs there.
       const photo = p.photo ? links.get(p.photo) : null;
       const photoBox = roomy(p.box);
-      if (photo && photoBox) work.push(cut(t, d, photo, photoBox, `${t.store.prefix}-${at}-ref.png`).then(() => undefined));
+      if (photo && photoBox) {
+        work.push(cut(t, d, photo, photoBox, `${t.store.prefix}-${at}-ref.png`).then(() => undefined));
+      }
       continue;
     }
     if (n - FIRST_N + 1 >= MOST_PARTS) continue;
     const at = (n += 1);
     work.push((async () => {
-      const onPicture = await cut(t, d, picture, roomy(box)!, `${t.store.prefix}-${at}.png`);
-      const photo = p.photo ? links.get(p.photo) : null;
-      const photoBox = roomy(p.box);
-      const real = photo && photoBox ? await cut(t, d, photo, photoBox, `${t.store.prefix}-${at}-ref.png`) : null;
-      if (!onPicture) return;
-      // Without the real one to compare against, nothing is called wrong.
-      if (!real) {
-        out.push({ n: at, kind: "part", part: p.key, what: p.what, box, reads: "", expected: p.looks, ok: true });
-        return;
+      try {
+        const onPicture = await cut(t, d, picture, roomy(box)!, `${t.store.prefix}-${at}.png`);
+        const photo = p.photo ? links.get(p.photo) : null;
+        const photoBox = roomy(p.box);
+        const real = photo && photoBox ? await cut(t, d, photo, photoBox, `${t.store.prefix}-${at}-ref.png`) : null;
+        if (!onPicture) return;
+        // Without the real one to compare against, nothing is called wrong.
+        if (!real) {
+          out.push({ n: at, kind: "part", part: p.key, what: p.what, box, reads: "", expected: p.looks, ok: true });
+          return;
+        }
+        const part = { what: p.what, looks: p.looks, count: p.count };
+        let r = await d.compare({ cropUrl: onPicture.link, refUrl: real.link, part });
+        usd += r.usd;
+        const counted = (c: Compared) => p.count != null && c.whole && c.count != null && c.count !== p.count;
+        // The model is asked twice before a part is called different, so a doubt of its own does not flag the picture.
+        if (!r.same || counted(r)) {
+          const again = await d.compare({ cropUrl: onPicture.link, refUrl: real.link, part });
+          usd += again.usd;
+          if (again.same && !counted(again)) r = again;
+        }
+        // The colour measured by code stands when the model saw a difference too, so a box a little off the part (on a
+        // white bottle beside its label) does not flag a picture.
+        const tone = colourOff(onPicture.tone, real.tone) && (!r.same || Boolean(r.slightly));
+        const wrongCount = counted(r);
+        const ok = r.same && !wrongCount && !tone;
+        const note = wrongCount
+          ? `The picture shows ${r.count} ${p.what}; the product has ${p.count}.`
+          : !r.same
+          ? (r.note || `The ${p.what} looks different from the product: ${p.looks}`)
+          : tone
+          ? `The ${p.what} is ${colourWord(onPicture.tone!)} on the picture; on the product it is ${
+            colourWord(real.tone!)
+          }.`
+          : "";
+        out.push({
+          n: at,
+          kind: "part",
+          part: p.key,
+          what: p.what,
+          box,
+          reads: r.shows.slice(0, 200),
+          expected: p.looks.slice(0, 200),
+          ok,
+          ...(ok ? {} : { note: note.slice(0, 300) }),
+          ...(onPicture.tone && real.tone ? { tones: [onPicture.tone, real.tone] } : {}),
+        });
+      } catch (e) {
+        // One part not compared leaves the others; the expert checks it by eye.
+        console.error(`details: part ${p.key} not compared: ${(e as Error).message}`);
       }
-      const part = { what: p.what, looks: p.looks, count: p.count };
-      let r = await d.compare({ cropUrl: onPicture.link, refUrl: real.link, part });
-      usd += r.usd;
-      const counted = (c: Compared) => p.count != null && c.whole && c.count != null && c.count !== p.count;
-      // The model is asked twice before a part is called different, so a doubt of its own does not flag the picture.
-      if (!r.same || counted(r)) {
-        const again = await d.compare({ cropUrl: onPicture.link, refUrl: real.link, part });
-        usd += again.usd;
-        if (again.same && !counted(again)) r = again;
-      }
-      const tone = colourOff(onPicture.tone, real.tone);
-      const wrongCount = counted(r);
-      const ok = r.same && !wrongCount && !tone;
-      const note = wrongCount
-        ? `The picture shows ${r.count} ${p.what}; the product has ${p.count}.`
-        : !r.same
-        ? (r.note || `The ${p.what} looks different from the product: ${p.looks}`)
-        : tone
-        ? `The ${p.what} is ${colourWord(onPicture.tone!)} on the picture; on the product it is ${colourWord(real.tone!)}.`
-        : "";
-      out.push({ n: at, kind: "part", part: p.key, what: p.what, box, reads: r.shows.slice(0, 200), expected: p.looks.slice(0, 200), ok,
-        ...(ok ? {} : { note: note.slice(0, 300) }) });
     })());
   }
   await Promise.all(work);

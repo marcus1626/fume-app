@@ -150,7 +150,7 @@ export function claudeDetails(claude: Anthropic, allowed: () => Promise<boolean>
     async compare({ cropUrl, refUrl, part }) {
       const { out, usd } = await ask(COMPARE_SYSTEM, [cropUrl, refUrl],
         `The part: ${part.what}. On the real product: ${part.looks}${part.count != null ? ` The product has ${part.count}.` : ""}`, Side);
-      return { shows: out.shows, whole: out.whole, count: out.count, same: out.differs !== "clearly", note: out.note, usd };
+      return { shows: out.shows, whole: out.whole, count: out.count, same: out.differs !== "clearly", slightly: out.differs === "slightly", note: out.note, usd };
     },
   };
 }

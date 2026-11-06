@@ -42,6 +42,8 @@ export type Detail = {
   expected: string;
   ok: boolean;
   note?: string;
+  /** A part's colour as code measured it, on the picture and on the photograph (Lab). */
+  tones?: [{ l: number; a: number; b: number }, { l: number; a: number; b: number }];
 };
 
 type Failure = { message: string } | null;
@@ -137,7 +139,12 @@ export async function readDetails(t: Take, d: Deps): Promise<Detail[] | null> {
   try {
     const picture = await d.service.readLink(t.picture.bucket, t.picture.path);
     // The parts are checked while the print is read; a failure in one keeps the other.
-    parts = picture ? checkParts(t, d, picture).catch(() => ({ details: [] as Detail[], usd: 0 })) : null;
+    parts = picture
+      ? checkParts(t, d, picture).catch((e) => {
+        console.error(`details: parts not checked: ${(e as Error).message}`);
+        return { details: [] as Detail[], usd: 0 };
+      })
+      : null;
     const photos = (await Promise.all(t.products.flatMap((p) => p.pictures).slice(0, 3).map((p) => photoLink(d, p))))
       .filter((u): u is string => Boolean(u));
     if (!picture || photos.length === 0) {
