@@ -1,0 +1,267 @@
+{
+  "updated": "2026-11-06T17:50:00Z",
+  "deadline": "2026-11-21T23:59:59+01:00",
+  "deadlineLabel": "the Fume app is finished",
+  "start": "2026-10-26T08:00:00+01:00",
+  "summary": "The whole customer round runs live. The Engine learns, knows each brand, sets graphic design that passes its hard checks, makes every format from an approved master, and now checks each part of the product against the real one. Next: product size measured by code, brands' own fonts, then video. Target: the whole app finished on 21 November.",
+  "tracks": [
+    {
+      "id": "app",
+      "name": "The Fume app",
+      "lede": "Where the customer, the agency and Fume's people work.",
+      "items": [
+        {
+          "status": "done",
+          "title": "Design and flows for customer, studio and agency",
+          "note": "13 rounds of review and fixes",
+          "date": "22 Oct"
+        },
+        {
+          "status": "done",
+          "title": "Own codebase with design system and tests",
+          "date": "26 Oct"
+        },
+        {
+          "status": "done",
+          "title": "Sign-in, roles and four eyes on everything",
+          "note": "Nobody checks their own work",
+          "date": "27 Oct"
+        },
+        {
+          "status": "done",
+          "title": "Brand DNA from the website, products from the online store",
+          "date": "3 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Campaign from brief to delivery",
+          "note": "Fume writes the plan, the expert checks, the customer approves",
+          "date": "3 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Fume chat with handover to a person, and notifications",
+          "date": "3 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Agencies: seats, client brands, send to client, client link",
+          "date": "3 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Team, calendar, moodboards, catalogue and usage",
+          "date": "3 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Whole round run live without the Engine",
+          "date": "3 Nov"
+        },
+        {
+          "status": "now",
+          "title": "Engine in the Studio: failed versions, the prompt and Teach the Engine",
+          "note": "Design and videos ready; waiting for Marcus's yes (planned by 6 Nov)"
+        },
+        {
+          "status": "next",
+          "title": "Uploaded brand files read into Brand DNA"
+        },
+        {
+          "status": "next",
+          "title": "Where Fume's people answer the customer in chat",
+          "note": "Waiting for Marcus"
+        },
+        {
+          "status": "next",
+          "title": "Email for notifications"
+        },
+        {
+          "status": "next",
+          "title": "Agencies and their clients inside the app",
+          "date": "13 Nov",
+          "note": "Roles, seats and client link live; brand books and design left"
+        },
+        {
+          "status": "next",
+          "title": "The app live on its own address",
+          "date": "21 Nov"
+        },
+        {
+          "status": "next",
+          "title": "Video in the Studio",
+          "note": "After statics and graphic design are finished",
+          "date": "16–20 Nov"
+        }
+      ]
+    },
+    {
+      "id": "engine",
+      "name": "The Engine",
+      "lede": "Makes the creatives. An expert checks every one.",
+      "items": [
+        {
+          "status": "done",
+          "title": "Fume writes the plan and brief with AI",
+          "note": "About 30 seconds and under one cent per plan",
+          "date": "4 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Image models connected",
+          "note": "Nano Banana Pro, Nano Banana 2 and Seedream",
+          "date": "4 Nov"
+        },
+        {
+          "status": "done",
+          "title": "First real picture made by the Engine",
+          "note": "59 seconds from button to picture",
+          "date": "4 Nov"
+        },
+        {
+          "status": "done",
+          "title": "A fixed weekly budget, so cost never runs away",
+          "date": "4 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Learning and the Brand Brain knowledge graph",
+          "note": "Part 1, live",
+          "date": "4 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Tone of voice, design system and copy check for every brand",
+          "note": "Part 2, live",
+          "date": "4 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Look Book per brand: camera, light, grade and composition",
+          "note": "Against the AI look",
+          "date": "4 Nov"
+        },
+        {
+          "status": "now",
+          "title": "Graphic design by the Engine with OpenPencil",
+          "note": "Part 3: passes all hard checks live on Dressmann, Nike and Møllers. Brands' own font files left",
+          "date": "10 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Layouts read from the brand's own ads and website",
+          "note": "Type, sizes, placement, buttons, logo",
+          "date": "5 Nov"
+        },
+        {
+          "status": "now",
+          "title": "Product details and «Fix with real product»",
+          "note": "Part 4: checks each part (buttons, pockets, collar, pattern, cap, logo) against the real product. Caught 59 of 64 planted errors. Size by code left",
+          "date": "11–14 Nov"
+        },
+        {
+          "status": "done",
+          "title": "The Engine makes every format from the approved master",
+          "note": "Crop, extend and regenerate live; the product keeps its place from the master",
+          "date": "6 Nov"
+        },
+        {
+          "status": "done",
+          "title": "Prices with an end date",
+          "note": "A creative with an expired price cannot be checked, sent, approved or delivered",
+          "date": "5 Nov"
+        },
+        {
+          "status": "next",
+          "title": "Statics and graphic design finished",
+          "note": "On brand, fits the campaign, the taste and the picture",
+          "date": "14 Nov"
+        },
+        {
+          "status": "next",
+          "title": "Video",
+          "note": "Only after statics. Needs Higgsfield credits by 16 Nov",
+          "date": "16–20 Nov"
+        }
+      ]
+    }
+  ],
+  "milestones": [
+    {
+      "date": "3 Nov",
+      "title": "Whole customer round live",
+      "status": "done"
+    },
+    {
+      "date": "4 Nov",
+      "title": "First picture, learning and Brand Brain live",
+      "status": "done"
+    },
+    {
+      "date": "10 Nov",
+      "title": "Graphic design on brand",
+      "status": "next"
+    },
+    {
+      "date": "13 Nov",
+      "title": "Agencies and clients inside the app",
+      "status": "next"
+    },
+    {
+      "date": "14 Nov",
+      "title": "Statics and graphic design finished",
+      "status": "next"
+    },
+    {
+      "date": "16–20 Nov",
+      "title": "Video in the Engine",
+      "status": "next"
+    },
+    {
+      "date": "21 Nov",
+      "title": "The Fume app finished (buffer to 23 Nov)",
+      "status": "next"
+    }
+  ],
+  "reports": [
+    {
+      "date": "2026-11-06",
+      "title": "The Engine checks every part of the product",
+      "items": [
+        "Regenerate is live as a third format choice next to crop and extend. The product keeps its place from the master (the Dressmann shirt stays right of centre).",
+        "Bria Expand was tested against Nano Banana Pro for extending. Bria is cheaper but left a visible seam, so Pro stays.",
+        "The Engine now maps each product's parts from its own photos and checks them one by one on the picture: buttons, pocket, collar, cuffs, pattern, logo and cap. Nike and Møllers are checked too.",
+        "On a test bench of planted errors it caught 59 of 64, with one false alarm on 35 correct pictures, for about 5 cents per picture.",
+        "Marcus chose that a clear product error stops «Mark checked» until the expert fixes it or accepts it with their name. This is live.",
+        "«Fix with the real product» now repairs parts too, such as a missing pocket or a wrong cap.",
+        "Still open: product size measured by code, and Marcus's yes to the Studio, brand book and graphic design screens."
+      ]
+    },
+    {
+      "date": "2026-11-05",
+      "title": "Graphic design passes its checks; formats from the master",
+      "items": [
+        "Dressmann, Nike and Møllers pass all hard checks on graphic design, live. Dressmann's green price campaign sets «NÅ 199,-» on one line.",
+        "The Engine now leaves calm space in the picture for the words, and the design uses it first.",
+        "«Fix with the real product» is live: mark a part, only that part is redrawn from the product's own photos. The Dressmann label went from «DRESSMEANN» to «Dressmann» in 55 seconds.",
+        "The picture check reads the small print itself and compares it letter by letter with the product photos. It found and fixed the wrong label with nobody pointing, for about 0.25 cent per picture.",
+        "Formats from an approved master are live. The square was cropped in 9 seconds; the story was extended in 49 seconds for 15 cents, because Instagram covers its top and bottom. The master's own pixels are never changed.",
+        "Prices now have an end date. A creative with an expired price cannot be checked, sent, approved or delivered.",
+        "Each picture task has its own image model. The cheaper Nano Banana 2 left visible stripes, so Nano Banana Pro stays.",
+        "Short videos of the Studio, brand book and graphic design screens are ready for Marcus to approve.",
+        "Next: regenerate as a third format option, text placed on each format, and the brands' own font files."
+      ]
+    },
+    {
+      "date": "2026-11-04",
+      "title": "First Engine picture, learning and Brand Brain live",
+      "items": [
+        "The Engine made its first real picture: 59 seconds from button to picture.",
+        "Part 1 (learning, Brand Brain) and Part 2 (tone of voice, design system, copy check) went live.",
+        "Look Book per brand: camera, light, grade and composition in every prompt, against the AI look.",
+        "The first graphic design layer (OpenPencil) runs live; it read layouts from the brands' own sites.",
+        "Dates tightened with the dev thread: the whole app finished 21 November."
+      ]
+    }
+  ]
+}
