@@ -184,6 +184,7 @@ export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ d
   const work: Promise<void>[] = [];
   for (const p of parts) {
     const l = found.get(p.id);
+    const what = p.what.replace(/^(the|a|an)\s+/i, "");
     if (!l || l.shown === "hidden") continue;
     const box = clean(l.box);
     if (!box) continue;
@@ -193,12 +194,12 @@ export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ d
         n: at,
         kind: "part",
         part: p.key,
-        what: p.what,
+        what,
         box,
         reads: "Not on the picture.",
         expected: p.looks,
         ok: false,
-        note: `The ${p.what} is missing; on the product: ${p.looks}`.slice(0, 300),
+        note: `The ${what} is missing; on the product: ${p.looks}`.slice(0, 300),
       });
       // The real one is cut from the photograph all the same, so the designer sees what belongs there.
       const photo = p.photo ? links.get(p.photo) : null;
@@ -219,10 +220,10 @@ export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ d
         if (!onPicture) return;
         // Without the real one to compare against, nothing is called wrong.
         if (!real) {
-          out.push({ n: at, kind: "part", part: p.key, what: p.what, box, reads: "", expected: p.looks, ok: true });
+          out.push({ n: at, kind: "part", part: p.key, what, box, reads: "", expected: p.looks, ok: true });
           return;
         }
-        const part = { what: p.what, looks: p.looks, count: p.count };
+        const part = { what: p.what, kind: p.kind, looks: p.looks, count: p.count };
         let r = await d.compare({ cropUrl: onPicture.link, refUrl: real.link, part });
         usd += r.usd;
         const counted = (c: Compared) => p.count != null && c.whole && c.count != null && c.count !== p.count;
@@ -232,25 +233,21 @@ export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ d
           usd += again.usd;
           if (again.same && !counted(again)) r = again;
         }
-        // The colour measured by code stands when the model saw a difference too, so a box a little off the part (on a
-        // white bottle beside its label) does not flag a picture.
-        const tone = colourOff(onPicture.tone, real.tone) && (!r.same || Boolean(r.slightly));
+        // The colour measured by code is kept with the finding, for the expert, but flags nothing by itself: on the
+        // bench (6 Nov) a box a little off the part (the green glass beside a yellow label) made every colour alarm
+        // false, and each real colour fault (a white swoosh, a red cap) the model called clearly.
         const wrongCount = counted(r);
-        const ok = r.same && !wrongCount && !tone;
+        const ok = r.same && !wrongCount;
         const note = wrongCount
-          ? `The picture shows ${r.count} ${p.what}; the product has ${p.count}.`
+          ? `The picture shows ${r.count} ${what}; the product has ${p.count}.`
           : !r.same
-          ? (r.note || `The ${p.what} looks different from the product: ${p.looks}`)
-          : tone
-          ? `The ${p.what} is ${colourWord(onPicture.tone!)} on the picture; on the product it is ${
-            colourWord(real.tone!)
-          }.`
+          ? (r.note || `The ${what} looks different from the product: ${p.looks}`)
           : "";
         out.push({
           n: at,
           kind: "part",
           part: p.key,
-          what: p.what,
+          what,
           box,
           reads: r.shows.slice(0, 200),
           expected: p.looks.slice(0, 200),

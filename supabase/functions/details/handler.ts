@@ -9,7 +9,7 @@
 // While it reads, parts.ts checks every other part of the product against the real one (docs/mvp/product-parts.md).
 // It helps the expert; it never checks a picture in their place. handler.test.ts runs it without Supabase or a model.
 import { generous, type Rect } from "../fix/handler.ts";
-import { checkParts, type Compared, type Located, type MappedPart, type Part } from "./parts.ts";
+import { checkParts, type Compared, type Located, type MappedPart, type Part, type PartKind } from "./parts.ts";
 
 export type Take = {
   candidate_id: string;
@@ -71,7 +71,7 @@ export interface Deps {
   /** Finds each part on the picture: shown, hidden by the view, or missing. */
   locate(r: { pictureUrl: string; photoUrls: string[]; parts: { key: string; what: string; looks: string }[] }): Promise<{ parts: Located[]; usd: number }>;
   /** Compares a part on the picture (crop) with the same part on the product's photograph (ref). */
-  compare(r: { cropUrl: string; refUrl: string; part: { what: string; looks: string; count: number | null } }): Promise<Compared & { usd: number }>;
+  compare(r: { cropUrl: string; refUrl: string; part: { what: string; kind: PartKind; looks: string; count: number | null } }): Promise<Compared & { usd: number }>;
   later(work: Promise<unknown>): void;
 }
 
@@ -90,12 +90,16 @@ export const letters = (s: string) => s.normalize("NFKD").replace(/[^\p{L}\p{N}]
 
 /**
  * Whether a detail reads right. Code compares the letters the model read on both crops: the same letters are right,
- * whatever the model said; different letters are wrong. When one of them could not be read, the model's word stands.
+ * whatever the model said; different letters are wrong. A crop that shows only part of the print (the letters on one
+ * are a short piece of the other's) is not compared, nor is one with nothing legible: the part check sees whether the
+ * label is there. A garbled word is about as long as the real one, so it is still called wrong.
  */
 export function readsRight(r: Read): boolean {
   const a = letters(r.reads), b = letters(r.expected);
-  if (a && b) return a === b;
-  return r.ok;
+  if (!a || !b) return true;
+  if (a === b) return true;
+  const [short, long] = a.length < b.length ? [a, b] : [b, a];
+  return long.includes(short) && short.length < 0.6 * long.length;
 }
 
 /**

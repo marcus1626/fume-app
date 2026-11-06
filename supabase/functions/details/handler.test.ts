@@ -98,7 +98,9 @@ Deno.test("only someone who sees the picture asks, and the answer comes at once"
 Deno.test("code compares the letters, so a model that contradicts itself does not decide", () => {
   assertEquals(readsRight({ reads: "DRESSMANN", expected: "Dressmann", ok: false, note: "doubled N" }), true);
   assertEquals(readsRight({ reads: "Dressmeann", expected: "Dressmann", ok: true, note: "" }), false);
-  assertEquals(readsRight({ reads: "", expected: "Dressmann", ok: true, note: "" }), true, "unreadable: the model's word stands");
+  assertEquals(readsRight({ reads: "", expected: "Dressmann", ok: false, note: "" }), true, "nothing legible is not compared");
+  assertEquals(readsRight({ reads: "AIR JORDAN", expected: "AIR", ok: false, note: "" }), true, "a crop with part of the print");
+  assertEquals(readsRight({ reads: "AIR JORDANE", expected: "AIR JORDAN", ok: false, note: "" }), false, "a garbled word is still wrong");
   assertEquals(readsRight({ reads: "Dress mann.", expected: "dressmann", ok: false, note: "" }), true);
 });
 

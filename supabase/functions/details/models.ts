@@ -90,6 +90,14 @@ export const LOCATE_SYSTEM = [
   "height (x and y are the top left corner, from 0 to 1). Answer every key once.",
 ].join(" ");
 
+const Counted = z.object({ count: z.number().int().nullable(), whole: z.boolean() });
+export const COUNT_SYSTEM = [
+  "You count for Fume's expert. The image is a close crop of a product picture an image model made. Count the named",
+  "things on it one by one, carefully, top to bottom: only those you can see, each once, none you expect but cannot",
+  "see. whole: true when the crop shows the whole run of them, none cut by the crop's edge or covered. When you cannot",
+  "count them, count is null.",
+].join(" ");
+
 export const COMPARE_SYSTEM = [
   "You compare one part of a product for Fume's expert. Image 1 is a close crop of a picture an image model made; image 2",
   "is the same part on the real product's photograph. Look only at the named part, and judge it as a shopper would who",
@@ -100,7 +108,9 @@ export const COMPARE_SYSTEM = [
   "matte). Never a fault: light, angle, folds, wrinkles, scale; a softer or crisper rendering of the same fabric; the",
   "fine texture of a weave (brushed, fuzzy, melange); thread-level detail, stitching, raw or clean edges; single or",
   "double lines in the same pattern; anything image 1 shows too small, blurred, turned away, covered or cut by the crop",
-  "to tell. What image 1 does not show clearly is not a difference. shows: one plain sentence of how the part looks on",
+  "to tell. What image 1 does not show clearly is not a difference, with two exceptions that are always clearly: the",
+  "part is absent where it belongs (a smooth shirt front where the pocket should be, only a faint trace or outline of",
+  "it), and a patch of another pattern or colour anywhere on it (a stripe across a check). shows: one plain sentence of how the part looks on",
   "image 1, with its number, colour and shape. whole: true when image 1 shows the whole part. count: when the part is",
   "counted and image 1 shows them clearly, how many, else null. differs: no; slightly (a small difference the shopper",
   "would not mind); clearly (a fault as above). note: when differs is clearly, one short sentence for a designer in the",
@@ -148,8 +158,16 @@ export function claudeDetails(claude: Anthropic, allowed: () => Promise<boolean>
       return { parts: out.parts, usd };
     },
     async compare({ cropUrl, refUrl, part }) {
+      // A count is made blind, on the picture alone, so the product's number does not lead the model to it; a look (a
+      // pattern, a fabric, a shape) is the hardest to see, so the careful model looks at it.
       const { out, usd } = await ask(COMPARE_SYSTEM, [cropUrl, refUrl],
-        `The part: ${part.what}. On the real product: ${part.looks}${part.count != null ? ` The product has ${part.count}.` : ""}`, Side);
+        `The part: ${part.what}. On the real product: ${part.looks}${part.count != null ? " Its number is counted elsewhere: judge only its look." : ""}`,
+        Side, part.kind === "look" ? MAP_MODEL : MODEL);
+      if (part.count != null) {
+        const blind = await ask(COUNT_SYSTEM, [cropUrl], `Count the ${part.what}.`, Counted);
+        return { shows: out.shows, whole: blind.out.whole, count: blind.out.count, same: out.differs !== "clearly",
+          slightly: out.differs === "slightly", note: out.note, usd: usd + blind.usd };
+      }
       return { shows: out.shows, whole: out.whole, count: out.count, same: out.differs !== "clearly", slightly: out.differs === "slightly", note: out.note, usd };
     },
   };
