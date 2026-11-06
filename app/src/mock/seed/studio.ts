@@ -18,6 +18,7 @@ import type {
 import { models } from "./brandAssets";
 import { at, img, ok } from "./helpers";
 import { defaults } from "./studioModes";
+import { videoDocuments } from "./video";
 
 // ─── Creative documents ─────────────────────────────────────────────────────
 
@@ -332,16 +333,19 @@ const fixes: Record<string, ProductFix[]> = {
 
 /** Every document with what the Engine read on its renders, its fixes and its look sources; a feed render is placed in
  *  the Instagram feed. */
-export const documents: CreativeDocument[] = seeded.map((d) => ({
-  ...d,
-  versions:
-    d.id === "doc-autumn-m3"
-      ? d.versions.map((v) => (detailFinds[v.id] ? { ...v, details: detailFinds[v.id] } : v))
-      : d.versions,
-  fixes: fixes[d.id] ?? [],
-  sources: d.sources ?? { Light: "brand", Camera: "brand" },
-  specs: d.studio === "render" && d.specs.format === "feed" ? { ...d.specs, placementId: "pl-ig-feed" } : d.specs,
-}));
+export const documents: CreativeDocument[] = [
+  ...seeded.map((d) => ({
+    ...d,
+    versions:
+      d.id === "doc-autumn-m3"
+        ? d.versions.map((v) => (detailFinds[v.id] ? { ...v, details: detailFinds[v.id] } : v))
+        : d.versions,
+    fixes: fixes[d.id] ?? [],
+    sources: d.sources ?? { Light: "brand", Camera: "brand" },
+    specs: d.studio === "render" && d.specs.format === "feed" ? { ...d.specs, placementId: "pl-ig-feed" } : d.specs,
+  })),
+  ...videoDocuments,
+];
 
 // ─── Placements: the format picker (the one list, in src/domain/placements.ts) ───────
 

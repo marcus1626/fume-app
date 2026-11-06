@@ -216,7 +216,7 @@ export function switchWords(doc: CreativeDocument, from: StudioMode | undefined,
   return `${parts.join("; ")}.${doc.versions.length ? " The versions stay." : ""}`;
 }
 
-function ModePicker({
+export function ModePicker({
   doc,
   mode,
   modes,

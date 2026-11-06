@@ -64,6 +64,9 @@ const ratio = { feed: "4 / 5", square: "1 / 1", story: "9 / 16" } as const;
 export function documentName(doc: CreativeDocument, mode?: StudioMode, productName?: string) {
   // The title first, as Check names the same creative: one name in the Studio, Check and the toast.
   const own = doc.title || doc.slot || "";
+  // A video is named by the format it is cut for: "Night ritual · Reels 9:16" (FLOWS §27).
+  const cut = doc.studio === "video" ? doc.video?.formats.find((f) => f.id === doc.video?.formatId) : undefined;
+  if (cut) return `${own.split(" · ")[0] || "Film"} · ${cut.name.split(" ")[0]} ${cut.ratio}`;
   return mode && mode.output !== "creative"
     ? own
     : copy.creativeName({ title: own, format: doc.specs.format, productName });

@@ -372,7 +372,7 @@ Status: PROPOSED (15 Oct 2026). Where this differs from §0–§8, this wins. Ma
 
 ### 9.1 Three studios, one frame
 Studio has three modes at the top: **Render** (images), **Design** (layouts on the customer's components, OpenPencil
-later) and **Video** (later; the frame and the timeline slot exist, nothing renders yet).
+later) and **Video** (a draft since 27 Oct 2026: the edit, the player and the timeline, see §27).
 
 ```
 ┌ top bar: brand › campaign › creative · Render | Design | Video · version · Send to check ───────────────┐
@@ -969,3 +969,84 @@ approves the creatives. Her approval starts the Engine.
   "Plan approved by Maja", and the agency is told the masters are theirs to check before Maja sees them.
 - **The demo.** Nora (?as=nora): LYSNE › Winter gifting waits for her check and Send to Maja. Maja (?agency&as=maja):
   Black Friday is checked and sent, Approve and start. The seeded link is /c/bfplan.
+
+## 27. Video in the Studio (27 Oct 2026, PROPOSED)
+
+Marcus, 27 Oct: build video into the app from the start, "litt sånn det ble designet i agency dokumentet" (Fume for
+Agencies, page 4: "AI Video Editor", Video · Night ritual, Adapt for, the Video / Captions / Sound timeline). The
+Engine makes shots with video models, cuts them, does the motion design from the brand's design system, and makes
+the formats. A draft for UX; the backend calls are in the contract and the mock.
+
+### 27.1 One creative, one edit
+- A video is a creative document like an image (`studio: "video"`), with an **edit** (`CreativeDocument.video`): the
+  shots in order, the brand's motion, the captions, the sound, one colour grade, the formats, the Engine's checks
+  and asks. Its first frame stands for it where the app shows a picture (Studio home, Check).
+- Three modes: **Product film** (shots the Engine makes from the campaign's masters, with the brand's footage),
+  **Motion from a still** (one picked render that moves) and **Cut from footage** (the brand's own clips). Switching
+  an image creative to Video starts Motion from a still with its picked render as the first shot's start frame.
+- Named by the format it is cut for: "Night ritual · Reels 9:16".
+
+### 27.2 The desk
+- The same desk as Image and Design: the bar (Image · Design · Video, undo, Send to check), the two panels, the
+  Engine bar under the board. The board is the **player**: the frame in the format's ratio, the shot at the playhead
+  playing in it, the motion and the captions drawn over it in the creative's own type, the safe zones on the rail.
+  Under it the transport: play (Space), the time as data, what the edit is made from, the grade.
+- The **timeline** runs the whole width under the panels: a ruler in seconds with the music's beats and the Engine's
+  flags (a Rouge dot), then four tracks: Motion, Shots (a strip of each shot's own frames), Captions, Sound. Click or
+  drag the ruler to move the playhead; click an item to select it; a selected shot has handles to trim either end
+  (the shots after it move up; an end near a beat snaps to it; arrow keys a tenth at a time).
+- **Left panel, what it is made from:** the mode; the shots in order (a flag where the Engine found something); the
+  campaign's checked masters (each starts a new shot); the brand's own footage (added as it is); the brand's motion
+  (title, line, product line, offer, end card), added at the playhead.
+- **Right panel, what is selected.** Nothing: the Engine's checks (a flag jumps to its moment), the format it is cut
+  for and **Adapt for** the others (Feed 4:5, Story 9:16 6 s cut, Ads 1:1 6 s), and the mode's variables (pace, how
+  shots meet, captions on, colour grade, music). A shot: its takes, what the Engine read on the picked take, how to
+  make it again, and the cut (speed, how it comes in, earlier, later, remove). Motion, a caption or a sound: its own
+  few controls (words, motion, how it comes in, place, timing; the level of a sound).
+- Every change of hers is an undo step of the desk (⌘Z), saved after a pause. The takes, the Engine's asks and the
+  formats' progress are the backend's; undo moves her cut, never those.
+
+### 27.3 Shots and takes
+- The Engine makes a shot from a **start frame** (a checked master, so the product is right from the first frame)
+  with a video model: what moves, the camera (still, push in, pull out, orbit, pan, tilt, handheld) and how far, the
+  length (5 or 10 s), and 1 to 4 takes. The model and the cost are Fume's people only ("The Engine picks" by
+  default; Kling 3.0, Kling 4.0, Seedance 2.5, Cinema Studio 4.0, MiniMax H3, Wan 2.6).
+- Takes are versions: nothing is overwritten, she picks one. The Engine reads each take frame by frame and records
+  what looks wrong (`findings`: product, physics, people, text) and the clean stretch (`best`); picking a take cuts
+  to its clean stretch. "Use take 2 from 1.4 s" is offered when another take is clean where this one is not.
+- The brand's footage is a shot used as it is; the grade matches it to the Engine's shots.
+
+### 27.4 Motion, captions, sound
+- Motion comes from the brand's design system: the brand's display face, its colours, soft to sharp (blur 12 → 0, no
+  bounce), a fade or a short rise. The end card is the brand's mark alone on its own ground.
+- Captions are written by the Engine in the brand's voice ("The last light", "of the day", "kept for the night") and
+  sit above the placement's bottom safe zone on a solid step, so they read on any frame. A changed caption is hers.
+- Sound: licensed music with its beats, effects, levels. One grade over every shot.
+
+### 27.5 The Engine bar on a video
+- She says what to change: a length ("Cut it to 6 s on the beat"), the beat, a shot to slow or hold longer, no
+  captions. The Engine shows the change on the timeline and the player, line by line ("Shot 2 ends on the beat at
+  3.00 s"), before anything is kept: Undo (Esc) or Keep (Enter). Meanwhile the panels wait. What it cannot read it
+  says, and nothing changes.
+
+### 27.6 Checks before Check
+- The Engine checks the whole edit before it goes to check: the product is correct in every frame (a finding inside
+  the stretch the edit uses is a flag at its moment), hands and bodies look right, every shot has a take, the length
+  fits the format, the music is licensed for paid social, and the video is marked as made with AI in its own data for
+  every platform. Send to check waits until every shot has a take; a flag goes with it to the expert.
+- The expert checks; only the customer approves.
+
+### 27.7 The contract and the demo
+- Entities in `contract/entities/video.ts` (VideoEdit, VideoClip, ShotTake, TakeFinding, ShotRecipe, MotionLayer,
+  CaptionCue, SoundCue, VideoFormat, EditCheck, VideoEngineEdit, BrandFootage); calls `makeShot` and `adaptVideo`;
+  `updateDocument` takes the edit; `engineEdit` and `decideEdit` take words on a video; `brandAssets` lists the
+  brand's footage. The timeline's arithmetic and the checks are pure rules in `domain/video.ts` (tests in
+  `test/domain/video.test.ts`), shared by the Studio and the renderer.
+- The demo (?as=anna): LYSNE › Autumn launch › **Night ritual**, a 15 s Reel: LYSNE's footage of light on stone, then
+  three shots made with Kling 3.0 from the 9 Oct masters (real takes in `public/demo/lysne/video/`). The drop's first
+  take has oil running out of the bottle's base while the cap is on; the Engine flags it, and take 2 (the bottle
+  turned in the light) is clean from 1.4 s.
+- Open: real playback of a cut (the backend renders it; the player plays the shots in place), voice-over, music
+  search, the formats' own review, video in Check (Check's Video tab), and the video model per shot learning from
+  which takes are picked.
+

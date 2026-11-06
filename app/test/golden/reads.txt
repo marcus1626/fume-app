@@ -6432,29 +6432,196 @@ maja studioModes()
       ]
     },
     {
-      "available": false,
-      "description": "A slow move on a picked render. Coming later.",
-      "id": "m-video",
-      "name": "Motion",
+      "available": true,
+      "description": "Shots the Engine makes from checked masters and the brand's footage, cut to music with the brand's motion.",
+      "id": "m-video-film",
+      "name": "Product film",
       "output": "creative",
-      "sections": ["Motion"],
+      "sections": ["Edit","Look","Sound"],
       "studio": "video",
       "uses": ["product"],
       "variables": [
         {
           "control": "segmented",
-          "default": "push",
-          "key": "move",
-          "label": "Camera move",
-          "options": [{"label":"Push in","value":"push"},{"label":"Orbit","value":"orbit"},{"label":"Still","value":"still"}],
-          "section": "Motion"
+          "default": "calm",
+          "help": "How long shots hold. The Engine cuts on the music's beats.",
+          "key": "pace",
+          "label": "Pace",
+          "options": [{"label":"Calm","value":"calm"},{"label":"Even","value":"even"},{"label":"Quick","value":"quick"}],
+          "section": "Edit"
         },
-        {"control":"slider","default":6,"key":"seconds","label":"Length","max":15,"min":3,"section":"Motion","unit":"s"}
+        {
+          "control": "segmented",
+          "default": "dissolve",
+          "key": "transition",
+          "label": "Shots meet with",
+          "options": [
+            {"label":"A cut","value":"cut"},
+            {"label":"A dissolve","value":"dissolve"},
+            {"label":"A focus pull","value":"focus"}
+          ],
+          "section": "Edit"
+        },
+        {"control":"toggle","default":true,"key":"captions","label":"Captions on the video","section":"Edit"},
+        {
+          "control": "select",
+          "default": "LYSNE warm",
+          "help": "One grade over every shot, so the Engine's shots and the brand's footage match.",
+          "key": "grade",
+          "label": "Colour grade",
+          "options": [
+            {"label":"LYSNE warm","value":"LYSNE warm"},
+            {"label":"Neutral","value":"Neutral"},
+            {"label":"Evening","value":"Evening"}
+          ],
+          "section": "Look"
+        },
+        {
+          "control": "select",
+          "default": "late-light",
+          "key": "music",
+          "label": "Music",
+          "options": [
+            {"label":"Late light · slow piano","value":"late-light"},
+            {"label":"Stone · ambient","value":"stone"},
+            {"label":"No music","value":"none"}
+          ],
+          "section": "Sound"
+        }
+      ]
+    },
+    {
+      "available": true,
+      "description": "One picked render that moves: a slow push, an orbit, or light that travels.",
+      "id": "m-video-still",
+      "name": "Motion from a still",
+      "output": "creative",
+      "sections": ["Edit","Look","Sound"],
+      "studio": "video",
+      "uses": ["product"],
+      "variables": [
+        {
+          "control": "segmented",
+          "default": "calm",
+          "help": "How long shots hold. The Engine cuts on the music's beats.",
+          "key": "pace",
+          "label": "Pace",
+          "options": [{"label":"Calm","value":"calm"},{"label":"Even","value":"even"},{"label":"Quick","value":"quick"}],
+          "section": "Edit"
+        },
+        {
+          "control": "segmented",
+          "default": "dissolve",
+          "key": "transition",
+          "label": "Shots meet with",
+          "options": [
+            {"label":"A cut","value":"cut"},
+            {"label":"A dissolve","value":"dissolve"},
+            {"label":"A focus pull","value":"focus"}
+          ],
+          "section": "Edit"
+        },
+        {"control":"toggle","default":true,"key":"captions","label":"Captions on the video","section":"Edit"},
+        {
+          "control": "select",
+          "default": "LYSNE warm",
+          "help": "One grade over every shot, so the Engine's shots and the brand's footage match.",
+          "key": "grade",
+          "label": "Colour grade",
+          "options": [
+            {"label":"LYSNE warm","value":"LYSNE warm"},
+            {"label":"Neutral","value":"Neutral"},
+            {"label":"Evening","value":"Evening"}
+          ],
+          "section": "Look"
+        },
+        {
+          "control": "select",
+          "default": "late-light",
+          "key": "music",
+          "label": "Music",
+          "options": [
+            {"label":"Late light · slow piano","value":"late-light"},
+            {"label":"Stone · ambient","value":"stone"},
+            {"label":"No music","value":"none"}
+          ],
+          "section": "Sound"
+        }
+      ]
+    },
+    {
+      "available": true,
+      "description": "The brand's own clips from the library, cut and graded, with its motion on top.",
+      "id": "m-video-cut",
+      "name": "Cut from footage",
+      "output": "creative",
+      "sections": ["Edit","Look","Sound"],
+      "studio": "video",
+      "uses": [],
+      "variables": [
+        {
+          "control": "segmented",
+          "default": "calm",
+          "help": "How long shots hold. The Engine cuts on the music's beats.",
+          "key": "pace",
+          "label": "Pace",
+          "options": [{"label":"Calm","value":"calm"},{"label":"Even","value":"even"},{"label":"Quick","value":"quick"}],
+          "section": "Edit"
+        },
+        {
+          "control": "segmented",
+          "default": "dissolve",
+          "key": "transition",
+          "label": "Shots meet with",
+          "options": [
+            {"label":"A cut","value":"cut"},
+            {"label":"A dissolve","value":"dissolve"},
+            {"label":"A focus pull","value":"focus"}
+          ],
+          "section": "Edit"
+        },
+        {"control":"toggle","default":true,"key":"captions","label":"Captions on the video","section":"Edit"},
+        {
+          "control": "select",
+          "default": "LYSNE warm",
+          "help": "One grade over every shot, so the Engine's shots and the brand's footage match.",
+          "key": "grade",
+          "label": "Colour grade",
+          "options": [
+            {"label":"LYSNE warm","value":"LYSNE warm"},
+            {"label":"Neutral","value":"Neutral"},
+            {"label":"Evening","value":"Evening"}
+          ],
+          "section": "Look"
+        },
+        {
+          "control": "select",
+          "default": "late-light",
+          "key": "music",
+          "label": "Music",
+          "options": [
+            {"label":"Late light · slow piano","value":"late-light"},
+            {"label":"Stone · ambient","value":"stone"},
+            {"label":"No music","value":"none"}
+          ],
+          "section": "Sound"
+        }
       ]
     }
   ]
 maja brandAssets()
   {
+    "footage": [
+      {
+        "id": "ft-light",
+        "name": "Light on stone",
+        "poster": "/demo/lysne/video/light.jpg",
+        "ratio": "9:16",
+        "seconds": 5,
+        "video": "/demo/lysne/video/light.mp4",
+        "workspaceId": "w-lysne"
+      }
+    ],
     "models": [
       {
         "angles": [
@@ -22151,7 +22318,7 @@ maja studioKit("w-solv")
 maja documents("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja brandAssets("w-solv")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 maja qaQueue("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja lookPresets("w-solv")
@@ -22216,7 +22383,7 @@ maja studioKit("w-vev")
 maja documents("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja brandAssets("w-vev")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 maja qaQueue("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja lookPresets("w-vev")
@@ -22230,7 +22397,7 @@ maja studioKit("w-halm")
 maja documents("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja brandAssets("w-halm")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 maja qaQueue("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja lookPresets("w-halm")
@@ -22244,7 +22411,7 @@ maja studioKit("w-aurea")
 maja documents("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja brandAssets("w-aurea")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 maja qaQueue("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja lookPresets("w-aurea")
@@ -22258,7 +22425,7 @@ maja studioKit("w-nope")
 maja documents("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja brandAssets("w-nope")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 maja qaQueue("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja lookPresets("w-nope")
@@ -22266,6 +22433,8 @@ maja lookPresets("w-nope")
 maja engineChat("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja document("doc-bf-1")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja document("doc-night-ritual")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja document("doc-autumn-email")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -22806,7 +22975,7 @@ jonas studioKit("w-solv")
 jonas documents("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas brandAssets("w-solv")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 jonas qaQueue("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas lookPresets("w-solv")
@@ -22820,7 +22989,7 @@ jonas studioKit("w-vev")
 jonas documents("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas brandAssets("w-vev")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 jonas qaQueue("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas lookPresets("w-vev")
@@ -22834,7 +23003,7 @@ jonas studioKit("w-halm")
 jonas documents("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas brandAssets("w-halm")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 jonas qaQueue("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas lookPresets("w-halm")
@@ -22848,7 +23017,7 @@ jonas studioKit("w-aurea")
 jonas documents("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas brandAssets("w-aurea")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 jonas qaQueue("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas lookPresets("w-aurea")
@@ -22862,7 +23031,7 @@ jonas studioKit("w-nope")
 jonas documents("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas brandAssets("w-nope")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 jonas qaQueue("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas lookPresets("w-nope")
@@ -22870,6 +23039,8 @@ jonas lookPresets("w-nope")
 jonas engineChat("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas document("doc-bf-1")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+jonas document("doc-night-ritual")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas document("doc-autumn-email")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -23410,7 +23581,7 @@ ida studioKit("w-solv")
 ida documents("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida brandAssets("w-solv")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 ida qaQueue("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida lookPresets("w-solv")
@@ -23424,7 +23595,7 @@ ida studioKit("w-vev")
 ida documents("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida brandAssets("w-vev")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 ida qaQueue("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida lookPresets("w-vev")
@@ -23438,7 +23609,7 @@ ida studioKit("w-halm")
 ida documents("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida brandAssets("w-halm")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 ida qaQueue("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida lookPresets("w-halm")
@@ -23452,7 +23623,7 @@ ida studioKit("w-aurea")
 ida documents("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida brandAssets("w-aurea")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 ida qaQueue("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida lookPresets("w-aurea")
@@ -23466,7 +23637,7 @@ ida studioKit("w-nope")
 ida documents("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida brandAssets("w-nope")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 ida qaQueue("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida lookPresets("w-nope")
@@ -23474,6 +23645,8 @@ ida lookPresets("w-nope")
 ida engineChat("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida document("doc-bf-1")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+ida document("doc-night-ritual")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida document("doc-autumn-email")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -25012,6 +25185,17 @@ anna studioModes()
   = maja studioModes()
 anna brandAssets()
   {
+    "footage": [
+      {
+        "id": "ft-light",
+        "name": "Light on stone",
+        "poster": "/demo/lysne/video/light.jpg",
+        "ratio": "9:16",
+        "seconds": 5,
+        "video": "/demo/lysne/video/light.mp4",
+        "workspaceId": "w-lysne"
+      }
+    ],
     "models": [
       {
         "angles": [
@@ -33822,6 +34006,302 @@ anna documents("w-lysne")
       "by": "u-anna",
       "campaignId": "c-autumn",
       "edits": [],
+      "id": "doc-night-ritual",
+      "layers": [],
+      "modeId": "m-video-film",
+      "overrides": [],
+      "pickedVersionId": "rv-night-1",
+      "slot": "Film 1 · Reels",
+      "specs": {
+        "count": 1,
+        "format": "story",
+        "imageModel": "Kling 3.0",
+        "modelIds": [],
+        "placementId": "pl-ig-reels",
+        "productId": "pr-oil",
+        "referenceIds": [],
+        "variantId": "va-oil-100"
+      },
+      "state": "draft",
+      "studio": "video",
+      "title": "Night ritual",
+      "updatedAt": "2026-10-14T12:22:00.000Z",
+      "variables": {"captions":true,"grade":"LYSNE warm","music":"late-light","pace":"calm","transition":"dissolve"},
+      "versions": [
+        {
+          "at": "2026-10-14T12:20:00.000Z",
+          "by": "u-anna",
+          "cost": 1.68,
+          "evaluation": {"artefacts":"minor","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "id": "rv-night-1",
+          "image": "/demo/lysne/video/bottle.jpg",
+          "instruction": "The Engine's first cut, from the plan's film",
+          "number": 1,
+          "specs": {"count":1,"format":"story","imageModel":"Kling 3.0","modelIds":[],"productId":"pr-oil","referenceIds":[]},
+          "state": "done",
+          "variables": {"captions":true,"grade":"LYSNE warm","music":"late-light","pace":"calm","transition":"dissolve"}
+        }
+      ],
+      "video": {
+        "captions": [
+          {"by":"engine","end":5.6,"id":"cp-1","start":3.7,"text":"The last light"},
+          {"by":"engine","end":7.2,"id":"cp-2","start":5.6,"text":"of the day"},
+          {"by":"engine","end":10.3,"id":"cp-3","start":7.6,"text":"kept for the night"}
+        ],
+        "checks": [
+          {
+            "at": 7.300000000000001,
+            "id": "ck-product",
+            "label": "Product correct in every frame",
+            "note": "Shot 3: Oil runs out of the bottle’s base while the cap is on",
+            "state": "flag"
+          },
+          {"id":"ck-people","label":"Hands and bodies look right","state":"pass"},
+          {"id":"ck-shots","label":"Every shot has a take","state":"pass"},
+          {"id":"ck-length","label":"15 s for Reels and TikTok","state":"pass"},
+          {"id":"ck-music","label":"Music licensed for paid social","state":"pass"},
+          {
+            "id": "ck-label",
+            "label": "Marked as made with AI",
+            "note": "In the video’s own data, for every platform",
+            "state": "pass"
+          }
+        ],
+        "clips": [
+          {
+            "id": "vc-light",
+            "in": 0.5,
+            "name": "Light on stone",
+            "out": 4,
+            "pickedTakeId": "tk-light",
+            "source": "library",
+            "speed": 1,
+            "takes": [
+              {
+                "at": "2026-10-11T12:32:00.000Z",
+                "cost": 0,
+                "findings": [],
+                "id": "tk-light",
+                "model": "LYSNE footage",
+                "number": 1,
+                "poster": "/demo/lysne/video/light.jpg",
+                "seconds": 5,
+                "state": "ready",
+                "video": "/demo/lysne/video/light.mp4"
+              }
+            ],
+            "transition": "cut"
+          },
+          {
+            "id": "vc-hands",
+            "in": 0.4,
+            "name": "Hands in the light",
+            "out": 4.2,
+            "pickedTakeId": "tk-hands-1",
+            "recipe": {
+              "action": "Two hands move slowly through the window light, as if catching the last sun",
+              "amount": 10,
+              "model": "auto",
+              "move": "still",
+              "seconds": 5,
+              "startImage": "/demo/lysne/video/hands.jpg"
+            },
+            "source": "engine",
+            "speed": 1,
+            "takes": [
+              {
+                "at": "2026-10-14T11:40:00.000Z",
+                "cost": 0.42,
+                "findings": [],
+                "id": "tk-hands-1",
+                "model": "Kling 3.0",
+                "number": 1,
+                "poster": "/demo/lysne/video/hands.jpg",
+                "seconds": 5,
+                "state": "ready",
+                "video": "/demo/lysne/video/hands.mp4"
+              }
+            ],
+            "transition": "dissolve"
+          },
+          {
+            "id": "vc-drop",
+            "in": 0.5,
+            "name": "The bottle in the hand",
+            "out": 3.7,
+            "pickedTakeId": "tk-drop-1",
+            "productId": "pr-oil",
+            "recipe": {
+              "action": "The hand turns the closed bottle in the low sun so the label faces the camera. No drops.",
+              "amount": 20,
+              "model": "auto",
+              "move": "push",
+              "seconds": 5,
+              "startImage": "/demo/lysne/video/drop.jpg"
+            },
+            "source": "engine",
+            "speed": 1,
+            "takes": [
+              {
+                "at": "2026-10-14T11:44:00.000Z",
+                "cost": 0.42,
+                "findings": [
+                  {
+                    "from": 0,
+                    "kind": "physics",
+                    "state": "open",
+                    "text": "Oil runs out of the bottle’s base while the cap is on",
+                    "to": 3.4
+                  }
+                ],
+                "id": "tk-drop-1",
+                "model": "Kling 3.0",
+                "number": 1,
+                "poster": "/demo/lysne/video/drop.jpg",
+                "seconds": 5,
+                "state": "ready",
+                "video": "/demo/lysne/video/drop.mp4"
+              },
+              {
+                "at": "2026-10-14T12:20:00.000Z",
+                "best": {"in":1.4,"out":4.6},
+                "cost": 0.42,
+                "findings": [
+                  {
+                    "from": 0,
+                    "kind": "physics",
+                    "state": "open",
+                    "text": "Drops from the start frame run off the base",
+                    "to": 1.2
+                  }
+                ],
+                "id": "tk-drop-2",
+                "model": "Kling 3.0",
+                "number": 2,
+                "poster": "/demo/lysne/video/turn.jpg",
+                "seconds": 5,
+                "state": "ready",
+                "video": "/demo/lysne/video/turn.mp4"
+              }
+            ],
+            "transition": "dissolve"
+          },
+          {
+            "id": "vc-bottle",
+            "in": 0.3,
+            "name": "Night Body Oil",
+            "out": 4.8,
+            "pickedTakeId": "tk-bottle-1",
+            "productId": "pr-oil",
+            "recipe": {
+              "action": "A slow push in on the bottle on travertine; the low sun moves across the stone",
+              "amount": 15,
+              "model": "auto",
+              "move": "push",
+              "seconds": 5,
+              "startImage": "/demo/lysne/video/bottle.jpg"
+            },
+            "source": "engine",
+            "speed": 1,
+            "takes": [
+              {
+                "at": "2026-10-14T11:52:00.000Z",
+                "cost": 0.42,
+                "findings": [],
+                "id": "tk-bottle-1",
+                "model": "Kling 3.0",
+                "number": 1,
+                "poster": "/demo/lysne/video/bottle.jpg",
+                "seconds": 5,
+                "state": "ready",
+                "video": "/demo/lysne/video/bottle.mp4"
+              }
+            ],
+            "transition": "focus"
+          }
+        ],
+        "edits": [],
+        "formatId": "vf-reels",
+        "formats": [
+          {
+            "captions": true,
+            "id": "vf-reels",
+            "name": "Reels and TikTok",
+            "placementId": "pl-ig-reels",
+            "ratio": "9:16",
+            "seconds": 15,
+            "state": "this"
+          },
+          {
+            "captions": true,
+            "id": "vf-feed",
+            "name": "Feed",
+            "placementId": "pl-ig-feed",
+            "ratio": "4:5",
+            "seconds": 15,
+            "state": "planned"
+          },
+          {
+            "captions": true,
+            "id": "vf-story",
+            "name": "Story",
+            "placementId": "pl-ig-story",
+            "ratio": "9:16",
+            "seconds": 6,
+            "state": "planned"
+          },
+          {
+            "captions": true,
+            "id": "vf-ads",
+            "name": "Ads",
+            "placementId": "pl-ig-square",
+            "ratio": "1:1",
+            "seconds": 6,
+            "state": "planned"
+          }
+        ],
+        "grade": "LYSNE warm",
+        "motion": [
+          {
+            "end": 3.3,
+            "enter": "soft",
+            "id": "mo-title",
+            "place": "centre",
+            "start": 0.8,
+            "template": "title",
+            "text": "Night ritual"
+          },
+          {
+            "end": 13.4,
+            "enter": "rise",
+            "id": "mo-product",
+            "place": "top",
+            "start": 11.2,
+            "template": "product",
+            "text": "Night Body Oil · 100 ml"
+          },
+          {"end":15,"enter":"soft","id":"mo-end","place":"centre","start":13.4,"template":"end","text":"LYSNE"}
+        ],
+        "sound": [
+          {
+            "beats": [0,0.75,1.5,2.25,3,3.75,4.5,5.25,6,6.75,7.5,8.25,9,9.75,10.5,11.25,12,12.75,13.5,14.25,15],
+            "end": 15,
+            "id": "sd-music",
+            "kind": "music",
+            "level": -6,
+            "licence": "Licensed for paid social",
+            "name": "Late light · slow piano",
+            "start": 0
+          },
+          {"end":11.4,"id":"sd-glass","kind":"effect","level":-14,"name":"Glass on stone","start":10.6}
+        ]
+      },
+      "workspaceId": "w-lysne"
+    },
+    {
+      "by": "u-anna",
+      "campaignId": "c-autumn",
+      "edits": [],
       "fixes": [],
       "id": "doc-autumn-email",
       "layers": [
@@ -35020,7 +35500,7 @@ anna studioKit("w-solv")
 anna documents("w-solv")
   []
 anna brandAssets("w-solv")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 anna qaQueue("w-solv")
   [
     {
@@ -35145,7 +35625,7 @@ anna studioKit("w-vev")
 anna documents("w-vev")
   []
 anna brandAssets("w-vev")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 anna qaQueue("w-vev")
   []
 anna lookPresets("w-vev")
@@ -35159,7 +35639,7 @@ anna studioKit("w-halm")
 anna documents("w-halm")
   []
 anna brandAssets("w-halm")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 anna qaQueue("w-halm")
   []
 anna lookPresets("w-halm")
@@ -35173,7 +35653,7 @@ anna studioKit("w-aurea")
 anna documents("w-aurea")
   []
 anna brandAssets("w-aurea")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 anna qaQueue("w-aurea")
   []
 anna lookPresets("w-aurea")
@@ -35187,7 +35667,7 @@ anna studioKit("w-nope")
 anna documents("w-nope")
   []
 anna brandAssets("w-nope")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 anna qaQueue("w-nope")
   []
 anna lookPresets("w-nope")
@@ -35273,6 +35753,287 @@ anna document("doc-bf-1")
         }
       }
     ],
+    "workspaceId": "w-lysne"
+  }
+anna document("doc-night-ritual")
+  {
+    "by": "u-anna",
+    "campaignId": "c-autumn",
+    "edits": [],
+    "id": "doc-night-ritual",
+    "layers": [],
+    "modeId": "m-video-film",
+    "overrides": [],
+    "pickedVersionId": "rv-night-1",
+    "slot": "Film 1 · Reels",
+    "specs": {
+      "count": 1,
+      "format": "story",
+      "imageModel": "Kling 3.0",
+      "modelIds": [],
+      "placementId": "pl-ig-reels",
+      "productId": "pr-oil",
+      "referenceIds": [],
+      "variantId": "va-oil-100"
+    },
+    "state": "draft",
+    "studio": "video",
+    "title": "Night ritual",
+    "updatedAt": "2026-10-14T12:22:00.000Z",
+    "variables": {"captions":true,"grade":"LYSNE warm","music":"late-light","pace":"calm","transition":"dissolve"},
+    "versions": [
+      {
+        "at": "2026-10-14T12:20:00.000Z",
+        "by": "u-anna",
+        "cost": 1.68,
+        "evaluation": {"artefacts":"minor","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "id": "rv-night-1",
+        "image": "/demo/lysne/video/bottle.jpg",
+        "instruction": "The Engine's first cut, from the plan's film",
+        "number": 1,
+        "specs": {"count":1,"format":"story","imageModel":"Kling 3.0","modelIds":[],"productId":"pr-oil","referenceIds":[]},
+        "state": "done",
+        "variables": {"captions":true,"grade":"LYSNE warm","music":"late-light","pace":"calm","transition":"dissolve"}
+      }
+    ],
+    "video": {
+      "captions": [
+        {"by":"engine","end":5.6,"id":"cp-1","start":3.7,"text":"The last light"},
+        {"by":"engine","end":7.2,"id":"cp-2","start":5.6,"text":"of the day"},
+        {"by":"engine","end":10.3,"id":"cp-3","start":7.6,"text":"kept for the night"}
+      ],
+      "checks": [
+        {
+          "at": 7.300000000000001,
+          "id": "ck-product",
+          "label": "Product correct in every frame",
+          "note": "Shot 3: Oil runs out of the bottle’s base while the cap is on",
+          "state": "flag"
+        },
+        {"id":"ck-people","label":"Hands and bodies look right","state":"pass"},
+        {"id":"ck-shots","label":"Every shot has a take","state":"pass"},
+        {"id":"ck-length","label":"15 s for Reels and TikTok","state":"pass"},
+        {"id":"ck-music","label":"Music licensed for paid social","state":"pass"},
+        {
+          "id": "ck-label",
+          "label": "Marked as made with AI",
+          "note": "In the video’s own data, for every platform",
+          "state": "pass"
+        }
+      ],
+      "clips": [
+        {
+          "id": "vc-light",
+          "in": 0.5,
+          "name": "Light on stone",
+          "out": 4,
+          "pickedTakeId": "tk-light",
+          "source": "library",
+          "speed": 1,
+          "takes": [
+            {
+              "at": "2026-10-11T12:32:00.000Z",
+              "cost": 0,
+              "findings": [],
+              "id": "tk-light",
+              "model": "LYSNE footage",
+              "number": 1,
+              "poster": "/demo/lysne/video/light.jpg",
+              "seconds": 5,
+              "state": "ready",
+              "video": "/demo/lysne/video/light.mp4"
+            }
+          ],
+          "transition": "cut"
+        },
+        {
+          "id": "vc-hands",
+          "in": 0.4,
+          "name": "Hands in the light",
+          "out": 4.2,
+          "pickedTakeId": "tk-hands-1",
+          "recipe": {
+            "action": "Two hands move slowly through the window light, as if catching the last sun",
+            "amount": 10,
+            "model": "auto",
+            "move": "still",
+            "seconds": 5,
+            "startImage": "/demo/lysne/video/hands.jpg"
+          },
+          "source": "engine",
+          "speed": 1,
+          "takes": [
+            {
+              "at": "2026-10-14T11:40:00.000Z",
+              "cost": 0.42,
+              "findings": [],
+              "id": "tk-hands-1",
+              "model": "Kling 3.0",
+              "number": 1,
+              "poster": "/demo/lysne/video/hands.jpg",
+              "seconds": 5,
+              "state": "ready",
+              "video": "/demo/lysne/video/hands.mp4"
+            }
+          ],
+          "transition": "dissolve"
+        },
+        {
+          "id": "vc-drop",
+          "in": 0.5,
+          "name": "The bottle in the hand",
+          "out": 3.7,
+          "pickedTakeId": "tk-drop-1",
+          "productId": "pr-oil",
+          "recipe": {
+            "action": "The hand turns the closed bottle in the low sun so the label faces the camera. No drops.",
+            "amount": 20,
+            "model": "auto",
+            "move": "push",
+            "seconds": 5,
+            "startImage": "/demo/lysne/video/drop.jpg"
+          },
+          "source": "engine",
+          "speed": 1,
+          "takes": [
+            {
+              "at": "2026-10-14T11:44:00.000Z",
+              "cost": 0.42,
+              "findings": [
+                {
+                  "from": 0,
+                  "kind": "physics",
+                  "state": "open",
+                  "text": "Oil runs out of the bottle’s base while the cap is on",
+                  "to": 3.4
+                }
+              ],
+              "id": "tk-drop-1",
+              "model": "Kling 3.0",
+              "number": 1,
+              "poster": "/demo/lysne/video/drop.jpg",
+              "seconds": 5,
+              "state": "ready",
+              "video": "/demo/lysne/video/drop.mp4"
+            },
+            {
+              "at": "2026-10-14T12:20:00.000Z",
+              "best": {"in":1.4,"out":4.6},
+              "cost": 0.42,
+              "findings": [{"from":0,"kind":"physics","state":"open","text":"Drops from the start frame run off the base","to":1.2}],
+              "id": "tk-drop-2",
+              "model": "Kling 3.0",
+              "number": 2,
+              "poster": "/demo/lysne/video/turn.jpg",
+              "seconds": 5,
+              "state": "ready",
+              "video": "/demo/lysne/video/turn.mp4"
+            }
+          ],
+          "transition": "dissolve"
+        },
+        {
+          "id": "vc-bottle",
+          "in": 0.3,
+          "name": "Night Body Oil",
+          "out": 4.8,
+          "pickedTakeId": "tk-bottle-1",
+          "productId": "pr-oil",
+          "recipe": {
+            "action": "A slow push in on the bottle on travertine; the low sun moves across the stone",
+            "amount": 15,
+            "model": "auto",
+            "move": "push",
+            "seconds": 5,
+            "startImage": "/demo/lysne/video/bottle.jpg"
+          },
+          "source": "engine",
+          "speed": 1,
+          "takes": [
+            {
+              "at": "2026-10-14T11:52:00.000Z",
+              "cost": 0.42,
+              "findings": [],
+              "id": "tk-bottle-1",
+              "model": "Kling 3.0",
+              "number": 1,
+              "poster": "/demo/lysne/video/bottle.jpg",
+              "seconds": 5,
+              "state": "ready",
+              "video": "/demo/lysne/video/bottle.mp4"
+            }
+          ],
+          "transition": "focus"
+        }
+      ],
+      "edits": [],
+      "formatId": "vf-reels",
+      "formats": [
+        {
+          "captions": true,
+          "id": "vf-reels",
+          "name": "Reels and TikTok",
+          "placementId": "pl-ig-reels",
+          "ratio": "9:16",
+          "seconds": 15,
+          "state": "this"
+        },
+        {
+          "captions": true,
+          "id": "vf-feed",
+          "name": "Feed",
+          "placementId": "pl-ig-feed",
+          "ratio": "4:5",
+          "seconds": 15,
+          "state": "planned"
+        },
+        {
+          "captions": true,
+          "id": "vf-story",
+          "name": "Story",
+          "placementId": "pl-ig-story",
+          "ratio": "9:16",
+          "seconds": 6,
+          "state": "planned"
+        },
+        {
+          "captions": true,
+          "id": "vf-ads",
+          "name": "Ads",
+          "placementId": "pl-ig-square",
+          "ratio": "1:1",
+          "seconds": 6,
+          "state": "planned"
+        }
+      ],
+      "grade": "LYSNE warm",
+      "motion": [
+        {"end":3.3,"enter":"soft","id":"mo-title","place":"centre","start":0.8,"template":"title","text":"Night ritual"},
+        {
+          "end": 13.4,
+          "enter": "rise",
+          "id": "mo-product",
+          "place": "top",
+          "start": 11.2,
+          "template": "product",
+          "text": "Night Body Oil · 100 ml"
+        },
+        {"end":15,"enter":"soft","id":"mo-end","place":"centre","start":13.4,"template":"end","text":"LYSNE"}
+      ],
+      "sound": [
+        {
+          "beats": [0,0.75,1.5,2.25,3,3.75,4.5,5.25,6,6.75,7.5,8.25,9,9.75,10.5,11.25,12,12.75,13.5,14.25,15],
+          "end": 15,
+          "id": "sd-music",
+          "kind": "music",
+          "level": -6,
+          "licence": "Licensed for paid social",
+          "name": "Late light · slow piano",
+          "start": 0
+        },
+        {"end":11.4,"id":"sd-glass","kind":"effect","level":-14,"name":"Glass on stone","start":10.6}
+      ]
+    },
     "workspaceId": "w-lysne"
   }
 anna document("doc-autumn-email")
@@ -39964,7 +40725,7 @@ sander studioKit("w-solv")
 sander documents("w-solv")
   []
 sander brandAssets("w-solv")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 sander qaQueue("w-solv")
   = anna qaQueue("w-solv")
 sander lookPresets("w-solv")
@@ -39978,7 +40739,7 @@ sander studioKit("w-vev")
 sander documents("w-vev")
   []
 sander brandAssets("w-vev")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 sander qaQueue("w-vev")
   []
 sander lookPresets("w-vev")
@@ -39992,7 +40753,7 @@ sander studioKit("w-halm")
 sander documents("w-halm")
   []
 sander brandAssets("w-halm")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 sander qaQueue("w-halm")
   []
 sander lookPresets("w-halm")
@@ -40006,7 +40767,7 @@ sander studioKit("w-aurea")
 sander documents("w-aurea")
   []
 sander brandAssets("w-aurea")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 sander qaQueue("w-aurea")
   []
 sander lookPresets("w-aurea")
@@ -40020,7 +40781,7 @@ sander studioKit("w-nope")
 sander documents("w-nope")
   []
 sander brandAssets("w-nope")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 sander qaQueue("w-nope")
   []
 sander lookPresets("w-nope")
@@ -40029,6 +40790,8 @@ sander engineChat("w-nope")
   []
 sander document("doc-bf-1")
   = anna document("doc-bf-1")
+sander document("doc-night-ritual")
+  = anna document("doc-night-ritual")
 sander document("doc-autumn-email")
   = anna document("doc-autumn-email")
 sander document("doc-autumn-m3")
@@ -40571,7 +41334,7 @@ vera studioKit("w-solv")
 vera documents("w-solv")
   []
 vera brandAssets("w-solv")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 vera qaQueue("w-solv")
   = anna qaQueue("w-solv")
 vera lookPresets("w-solv")
@@ -40585,7 +41348,7 @@ vera studioKit("w-vev")
 vera documents("w-vev")
   []
 vera brandAssets("w-vev")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 vera qaQueue("w-vev")
   []
 vera lookPresets("w-vev")
@@ -40599,7 +41362,7 @@ vera studioKit("w-halm")
 vera documents("w-halm")
   []
 vera brandAssets("w-halm")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 vera qaQueue("w-halm")
   []
 vera lookPresets("w-halm")
@@ -40613,7 +41376,7 @@ vera studioKit("w-aurea")
 vera documents("w-aurea")
   []
 vera brandAssets("w-aurea")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 vera qaQueue("w-aurea")
   []
 vera lookPresets("w-aurea")
@@ -40627,7 +41390,7 @@ vera studioKit("w-nope")
 vera documents("w-nope")
   []
 vera brandAssets("w-nope")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 vera qaQueue("w-nope")
   []
 vera lookPresets("w-nope")
@@ -40636,6 +41399,8 @@ vera engineChat("w-nope")
   []
 vera document("doc-bf-1")
   = anna document("doc-bf-1")
+vera document("doc-night-ritual")
+  = anna document("doc-night-ritual")
 vera document("doc-autumn-email")
   = anna document("doc-autumn-email")
 vera document("doc-autumn-m3")
@@ -47307,7 +48072,7 @@ maja (first run) studioKit("w-solv")
 maja (first run) documents("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) brandAssets("w-solv")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 maja (first run) qaQueue("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) lookPresets("w-solv")
@@ -47321,7 +48086,7 @@ maja (first run) studioKit("w-vev")
 maja (first run) documents("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) brandAssets("w-vev")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 maja (first run) qaQueue("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) lookPresets("w-vev")
@@ -47335,7 +48100,7 @@ maja (first run) studioKit("w-halm")
 maja (first run) documents("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) brandAssets("w-halm")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 maja (first run) qaQueue("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) lookPresets("w-halm")
@@ -47349,7 +48114,7 @@ maja (first run) studioKit("w-aurea")
 maja (first run) documents("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) brandAssets("w-aurea")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 maja (first run) qaQueue("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) lookPresets("w-aurea")
@@ -47363,7 +48128,7 @@ maja (first run) studioKit("w-nope")
 maja (first run) documents("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) brandAssets("w-nope")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 maja (first run) qaQueue("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) lookPresets("w-nope")
@@ -47371,6 +48136,8 @@ maja (first run) lookPresets("w-nope")
 maja (first run) engineChat("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) document("doc-bf-1")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja (first run) document("doc-night-ritual")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) document("doc-autumn-email")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -54168,6 +54935,17 @@ nora studioModes()
   = maja studioModes()
 nora brandAssets()
   {
+    "footage": [
+      {
+        "id": "ft-light",
+        "name": "Light on stone",
+        "poster": "/demo/lysne/video/light.jpg",
+        "ratio": "9:16",
+        "seconds": 5,
+        "video": "/demo/lysne/video/light.mp4",
+        "workspaceId": "w-lysne"
+      }
+    ],
     "models": [
       {
         "angles": [
@@ -71907,6 +72685,302 @@ nora documents("w-lysne")
       "by": "u-nora",
       "campaignId": "c-autumn",
       "edits": [],
+      "id": "doc-night-ritual",
+      "layers": [],
+      "modeId": "m-video-film",
+      "overrides": [],
+      "pickedVersionId": "rv-night-1",
+      "slot": "Film 1 · Reels",
+      "specs": {
+        "count": 1,
+        "format": "story",
+        "imageModel": "Kling 3.0",
+        "modelIds": [],
+        "placementId": "pl-ig-reels",
+        "productId": "pr-oil",
+        "referenceIds": [],
+        "variantId": "va-oil-100"
+      },
+      "state": "draft",
+      "studio": "video",
+      "title": "Night ritual",
+      "updatedAt": "2026-10-14T12:22:00.000Z",
+      "variables": {"captions":true,"grade":"LYSNE warm","music":"late-light","pace":"calm","transition":"dissolve"},
+      "versions": [
+        {
+          "at": "2026-10-14T12:20:00.000Z",
+          "by": "u-nora",
+          "cost": 1.68,
+          "evaluation": {"artefacts":"minor","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "id": "rv-night-1",
+          "image": "/demo/lysne/video/bottle.jpg",
+          "instruction": "The Engine's first cut, from the plan's film",
+          "number": 1,
+          "specs": {"count":1,"format":"story","imageModel":"Kling 3.0","modelIds":[],"productId":"pr-oil","referenceIds":[]},
+          "state": "done",
+          "variables": {"captions":true,"grade":"LYSNE warm","music":"late-light","pace":"calm","transition":"dissolve"}
+        }
+      ],
+      "video": {
+        "captions": [
+          {"by":"engine","end":5.6,"id":"cp-1","start":3.7,"text":"The last light"},
+          {"by":"engine","end":7.2,"id":"cp-2","start":5.6,"text":"of the day"},
+          {"by":"engine","end":10.3,"id":"cp-3","start":7.6,"text":"kept for the night"}
+        ],
+        "checks": [
+          {
+            "at": 7.300000000000001,
+            "id": "ck-product",
+            "label": "Product correct in every frame",
+            "note": "Shot 3: Oil runs out of the bottle’s base while the cap is on",
+            "state": "flag"
+          },
+          {"id":"ck-people","label":"Hands and bodies look right","state":"pass"},
+          {"id":"ck-shots","label":"Every shot has a take","state":"pass"},
+          {"id":"ck-length","label":"15 s for Reels and TikTok","state":"pass"},
+          {"id":"ck-music","label":"Music licensed for paid social","state":"pass"},
+          {
+            "id": "ck-label",
+            "label": "Marked as made with AI",
+            "note": "In the video’s own data, for every platform",
+            "state": "pass"
+          }
+        ],
+        "clips": [
+          {
+            "id": "vc-light",
+            "in": 0.5,
+            "name": "Light on stone",
+            "out": 4,
+            "pickedTakeId": "tk-light",
+            "source": "library",
+            "speed": 1,
+            "takes": [
+              {
+                "at": "2026-10-11T12:32:00.000Z",
+                "cost": 0,
+                "findings": [],
+                "id": "tk-light",
+                "model": "LYSNE footage",
+                "number": 1,
+                "poster": "/demo/lysne/video/light.jpg",
+                "seconds": 5,
+                "state": "ready",
+                "video": "/demo/lysne/video/light.mp4"
+              }
+            ],
+            "transition": "cut"
+          },
+          {
+            "id": "vc-hands",
+            "in": 0.4,
+            "name": "Hands in the light",
+            "out": 4.2,
+            "pickedTakeId": "tk-hands-1",
+            "recipe": {
+              "action": "Two hands move slowly through the window light, as if catching the last sun",
+              "amount": 10,
+              "model": "auto",
+              "move": "still",
+              "seconds": 5,
+              "startImage": "/demo/lysne/video/hands.jpg"
+            },
+            "source": "engine",
+            "speed": 1,
+            "takes": [
+              {
+                "at": "2026-10-14T11:40:00.000Z",
+                "cost": 0.42,
+                "findings": [],
+                "id": "tk-hands-1",
+                "model": "Kling 3.0",
+                "number": 1,
+                "poster": "/demo/lysne/video/hands.jpg",
+                "seconds": 5,
+                "state": "ready",
+                "video": "/demo/lysne/video/hands.mp4"
+              }
+            ],
+            "transition": "dissolve"
+          },
+          {
+            "id": "vc-drop",
+            "in": 0.5,
+            "name": "The bottle in the hand",
+            "out": 3.7,
+            "pickedTakeId": "tk-drop-1",
+            "productId": "pr-oil",
+            "recipe": {
+              "action": "The hand turns the closed bottle in the low sun so the label faces the camera. No drops.",
+              "amount": 20,
+              "model": "auto",
+              "move": "push",
+              "seconds": 5,
+              "startImage": "/demo/lysne/video/drop.jpg"
+            },
+            "source": "engine",
+            "speed": 1,
+            "takes": [
+              {
+                "at": "2026-10-14T11:44:00.000Z",
+                "cost": 0.42,
+                "findings": [
+                  {
+                    "from": 0,
+                    "kind": "physics",
+                    "state": "open",
+                    "text": "Oil runs out of the bottle’s base while the cap is on",
+                    "to": 3.4
+                  }
+                ],
+                "id": "tk-drop-1",
+                "model": "Kling 3.0",
+                "number": 1,
+                "poster": "/demo/lysne/video/drop.jpg",
+                "seconds": 5,
+                "state": "ready",
+                "video": "/demo/lysne/video/drop.mp4"
+              },
+              {
+                "at": "2026-10-14T12:20:00.000Z",
+                "best": {"in":1.4,"out":4.6},
+                "cost": 0.42,
+                "findings": [
+                  {
+                    "from": 0,
+                    "kind": "physics",
+                    "state": "open",
+                    "text": "Drops from the start frame run off the base",
+                    "to": 1.2
+                  }
+                ],
+                "id": "tk-drop-2",
+                "model": "Kling 3.0",
+                "number": 2,
+                "poster": "/demo/lysne/video/turn.jpg",
+                "seconds": 5,
+                "state": "ready",
+                "video": "/demo/lysne/video/turn.mp4"
+              }
+            ],
+            "transition": "dissolve"
+          },
+          {
+            "id": "vc-bottle",
+            "in": 0.3,
+            "name": "Night Body Oil",
+            "out": 4.8,
+            "pickedTakeId": "tk-bottle-1",
+            "productId": "pr-oil",
+            "recipe": {
+              "action": "A slow push in on the bottle on travertine; the low sun moves across the stone",
+              "amount": 15,
+              "model": "auto",
+              "move": "push",
+              "seconds": 5,
+              "startImage": "/demo/lysne/video/bottle.jpg"
+            },
+            "source": "engine",
+            "speed": 1,
+            "takes": [
+              {
+                "at": "2026-10-14T11:52:00.000Z",
+                "cost": 0.42,
+                "findings": [],
+                "id": "tk-bottle-1",
+                "model": "Kling 3.0",
+                "number": 1,
+                "poster": "/demo/lysne/video/bottle.jpg",
+                "seconds": 5,
+                "state": "ready",
+                "video": "/demo/lysne/video/bottle.mp4"
+              }
+            ],
+            "transition": "focus"
+          }
+        ],
+        "edits": [],
+        "formatId": "vf-reels",
+        "formats": [
+          {
+            "captions": true,
+            "id": "vf-reels",
+            "name": "Reels and TikTok",
+            "placementId": "pl-ig-reels",
+            "ratio": "9:16",
+            "seconds": 15,
+            "state": "this"
+          },
+          {
+            "captions": true,
+            "id": "vf-feed",
+            "name": "Feed",
+            "placementId": "pl-ig-feed",
+            "ratio": "4:5",
+            "seconds": 15,
+            "state": "planned"
+          },
+          {
+            "captions": true,
+            "id": "vf-story",
+            "name": "Story",
+            "placementId": "pl-ig-story",
+            "ratio": "9:16",
+            "seconds": 6,
+            "state": "planned"
+          },
+          {
+            "captions": true,
+            "id": "vf-ads",
+            "name": "Ads",
+            "placementId": "pl-ig-square",
+            "ratio": "1:1",
+            "seconds": 6,
+            "state": "planned"
+          }
+        ],
+        "grade": "LYSNE warm",
+        "motion": [
+          {
+            "end": 3.3,
+            "enter": "soft",
+            "id": "mo-title",
+            "place": "centre",
+            "start": 0.8,
+            "template": "title",
+            "text": "Night ritual"
+          },
+          {
+            "end": 13.4,
+            "enter": "rise",
+            "id": "mo-product",
+            "place": "top",
+            "start": 11.2,
+            "template": "product",
+            "text": "Night Body Oil · 100 ml"
+          },
+          {"end":15,"enter":"soft","id":"mo-end","place":"centre","start":13.4,"template":"end","text":"LYSNE"}
+        ],
+        "sound": [
+          {
+            "beats": [0,0.75,1.5,2.25,3,3.75,4.5,5.25,6,6.75,7.5,8.25,9,9.75,10.5,11.25,12,12.75,13.5,14.25,15],
+            "end": 15,
+            "id": "sd-music",
+            "kind": "music",
+            "level": -6,
+            "licence": "Licensed for paid social",
+            "name": "Late light · slow piano",
+            "start": 0
+          },
+          {"end":11.4,"id":"sd-glass","kind":"effect","level":-14,"name":"Glass on stone","start":10.6}
+        ]
+      },
+      "workspaceId": "w-lysne"
+    },
+    {
+      "by": "u-nora",
+      "campaignId": "c-autumn",
+      "edits": [],
       "fixes": [],
       "id": "doc-autumn-email",
       "layers": [
@@ -72477,7 +73551,7 @@ nora studioKit("w-solv")
 nora documents("w-solv")
   []
 nora brandAssets("w-solv")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 nora qaQueue("w-solv")
   []
 nora lookPresets("w-solv")
@@ -72505,7 +73579,7 @@ nora studioKit("w-vev")
 nora documents("w-vev")
   []
 nora brandAssets("w-vev")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 nora qaQueue("w-vev")
   []
 nora lookPresets("w-vev")
@@ -72533,7 +73607,7 @@ nora studioKit("w-halm")
 nora documents("w-halm")
   []
 nora brandAssets("w-halm")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 nora qaQueue("w-halm")
   []
 nora lookPresets("w-halm")
@@ -72561,7 +73635,7 @@ nora studioKit("w-aurea")
 nora documents("w-aurea")
   []
 nora brandAssets("w-aurea")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 nora qaQueue("w-aurea")
   []
 nora lookPresets("w-aurea")
@@ -72575,7 +73649,7 @@ nora studioKit("w-nope")
 nora documents("w-nope")
   []
 nora brandAssets("w-nope")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 nora qaQueue("w-nope")
   []
 nora lookPresets("w-nope")
@@ -72661,6 +73735,287 @@ nora document("doc-bf-1")
         }
       }
     ],
+    "workspaceId": "w-lysne"
+  }
+nora document("doc-night-ritual")
+  {
+    "by": "u-nora",
+    "campaignId": "c-autumn",
+    "edits": [],
+    "id": "doc-night-ritual",
+    "layers": [],
+    "modeId": "m-video-film",
+    "overrides": [],
+    "pickedVersionId": "rv-night-1",
+    "slot": "Film 1 · Reels",
+    "specs": {
+      "count": 1,
+      "format": "story",
+      "imageModel": "Kling 3.0",
+      "modelIds": [],
+      "placementId": "pl-ig-reels",
+      "productId": "pr-oil",
+      "referenceIds": [],
+      "variantId": "va-oil-100"
+    },
+    "state": "draft",
+    "studio": "video",
+    "title": "Night ritual",
+    "updatedAt": "2026-10-14T12:22:00.000Z",
+    "variables": {"captions":true,"grade":"LYSNE warm","music":"late-light","pace":"calm","transition":"dissolve"},
+    "versions": [
+      {
+        "at": "2026-10-14T12:20:00.000Z",
+        "by": "u-nora",
+        "cost": 1.68,
+        "evaluation": {"artefacts":"minor","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "id": "rv-night-1",
+        "image": "/demo/lysne/video/bottle.jpg",
+        "instruction": "The Engine's first cut, from the plan's film",
+        "number": 1,
+        "specs": {"count":1,"format":"story","imageModel":"Kling 3.0","modelIds":[],"productId":"pr-oil","referenceIds":[]},
+        "state": "done",
+        "variables": {"captions":true,"grade":"LYSNE warm","music":"late-light","pace":"calm","transition":"dissolve"}
+      }
+    ],
+    "video": {
+      "captions": [
+        {"by":"engine","end":5.6,"id":"cp-1","start":3.7,"text":"The last light"},
+        {"by":"engine","end":7.2,"id":"cp-2","start":5.6,"text":"of the day"},
+        {"by":"engine","end":10.3,"id":"cp-3","start":7.6,"text":"kept for the night"}
+      ],
+      "checks": [
+        {
+          "at": 7.300000000000001,
+          "id": "ck-product",
+          "label": "Product correct in every frame",
+          "note": "Shot 3: Oil runs out of the bottle’s base while the cap is on",
+          "state": "flag"
+        },
+        {"id":"ck-people","label":"Hands and bodies look right","state":"pass"},
+        {"id":"ck-shots","label":"Every shot has a take","state":"pass"},
+        {"id":"ck-length","label":"15 s for Reels and TikTok","state":"pass"},
+        {"id":"ck-music","label":"Music licensed for paid social","state":"pass"},
+        {
+          "id": "ck-label",
+          "label": "Marked as made with AI",
+          "note": "In the video’s own data, for every platform",
+          "state": "pass"
+        }
+      ],
+      "clips": [
+        {
+          "id": "vc-light",
+          "in": 0.5,
+          "name": "Light on stone",
+          "out": 4,
+          "pickedTakeId": "tk-light",
+          "source": "library",
+          "speed": 1,
+          "takes": [
+            {
+              "at": "2026-10-11T12:32:00.000Z",
+              "cost": 0,
+              "findings": [],
+              "id": "tk-light",
+              "model": "LYSNE footage",
+              "number": 1,
+              "poster": "/demo/lysne/video/light.jpg",
+              "seconds": 5,
+              "state": "ready",
+              "video": "/demo/lysne/video/light.mp4"
+            }
+          ],
+          "transition": "cut"
+        },
+        {
+          "id": "vc-hands",
+          "in": 0.4,
+          "name": "Hands in the light",
+          "out": 4.2,
+          "pickedTakeId": "tk-hands-1",
+          "recipe": {
+            "action": "Two hands move slowly through the window light, as if catching the last sun",
+            "amount": 10,
+            "model": "auto",
+            "move": "still",
+            "seconds": 5,
+            "startImage": "/demo/lysne/video/hands.jpg"
+          },
+          "source": "engine",
+          "speed": 1,
+          "takes": [
+            {
+              "at": "2026-10-14T11:40:00.000Z",
+              "cost": 0.42,
+              "findings": [],
+              "id": "tk-hands-1",
+              "model": "Kling 3.0",
+              "number": 1,
+              "poster": "/demo/lysne/video/hands.jpg",
+              "seconds": 5,
+              "state": "ready",
+              "video": "/demo/lysne/video/hands.mp4"
+            }
+          ],
+          "transition": "dissolve"
+        },
+        {
+          "id": "vc-drop",
+          "in": 0.5,
+          "name": "The bottle in the hand",
+          "out": 3.7,
+          "pickedTakeId": "tk-drop-1",
+          "productId": "pr-oil",
+          "recipe": {
+            "action": "The hand turns the closed bottle in the low sun so the label faces the camera. No drops.",
+            "amount": 20,
+            "model": "auto",
+            "move": "push",
+            "seconds": 5,
+            "startImage": "/demo/lysne/video/drop.jpg"
+          },
+          "source": "engine",
+          "speed": 1,
+          "takes": [
+            {
+              "at": "2026-10-14T11:44:00.000Z",
+              "cost": 0.42,
+              "findings": [
+                {
+                  "from": 0,
+                  "kind": "physics",
+                  "state": "open",
+                  "text": "Oil runs out of the bottle’s base while the cap is on",
+                  "to": 3.4
+                }
+              ],
+              "id": "tk-drop-1",
+              "model": "Kling 3.0",
+              "number": 1,
+              "poster": "/demo/lysne/video/drop.jpg",
+              "seconds": 5,
+              "state": "ready",
+              "video": "/demo/lysne/video/drop.mp4"
+            },
+            {
+              "at": "2026-10-14T12:20:00.000Z",
+              "best": {"in":1.4,"out":4.6},
+              "cost": 0.42,
+              "findings": [{"from":0,"kind":"physics","state":"open","text":"Drops from the start frame run off the base","to":1.2}],
+              "id": "tk-drop-2",
+              "model": "Kling 3.0",
+              "number": 2,
+              "poster": "/demo/lysne/video/turn.jpg",
+              "seconds": 5,
+              "state": "ready",
+              "video": "/demo/lysne/video/turn.mp4"
+            }
+          ],
+          "transition": "dissolve"
+        },
+        {
+          "id": "vc-bottle",
+          "in": 0.3,
+          "name": "Night Body Oil",
+          "out": 4.8,
+          "pickedTakeId": "tk-bottle-1",
+          "productId": "pr-oil",
+          "recipe": {
+            "action": "A slow push in on the bottle on travertine; the low sun moves across the stone",
+            "amount": 15,
+            "model": "auto",
+            "move": "push",
+            "seconds": 5,
+            "startImage": "/demo/lysne/video/bottle.jpg"
+          },
+          "source": "engine",
+          "speed": 1,
+          "takes": [
+            {
+              "at": "2026-10-14T11:52:00.000Z",
+              "cost": 0.42,
+              "findings": [],
+              "id": "tk-bottle-1",
+              "model": "Kling 3.0",
+              "number": 1,
+              "poster": "/demo/lysne/video/bottle.jpg",
+              "seconds": 5,
+              "state": "ready",
+              "video": "/demo/lysne/video/bottle.mp4"
+            }
+          ],
+          "transition": "focus"
+        }
+      ],
+      "edits": [],
+      "formatId": "vf-reels",
+      "formats": [
+        {
+          "captions": true,
+          "id": "vf-reels",
+          "name": "Reels and TikTok",
+          "placementId": "pl-ig-reels",
+          "ratio": "9:16",
+          "seconds": 15,
+          "state": "this"
+        },
+        {
+          "captions": true,
+          "id": "vf-feed",
+          "name": "Feed",
+          "placementId": "pl-ig-feed",
+          "ratio": "4:5",
+          "seconds": 15,
+          "state": "planned"
+        },
+        {
+          "captions": true,
+          "id": "vf-story",
+          "name": "Story",
+          "placementId": "pl-ig-story",
+          "ratio": "9:16",
+          "seconds": 6,
+          "state": "planned"
+        },
+        {
+          "captions": true,
+          "id": "vf-ads",
+          "name": "Ads",
+          "placementId": "pl-ig-square",
+          "ratio": "1:1",
+          "seconds": 6,
+          "state": "planned"
+        }
+      ],
+      "grade": "LYSNE warm",
+      "motion": [
+        {"end":3.3,"enter":"soft","id":"mo-title","place":"centre","start":0.8,"template":"title","text":"Night ritual"},
+        {
+          "end": 13.4,
+          "enter": "rise",
+          "id": "mo-product",
+          "place": "top",
+          "start": 11.2,
+          "template": "product",
+          "text": "Night Body Oil · 100 ml"
+        },
+        {"end":15,"enter":"soft","id":"mo-end","place":"centre","start":13.4,"template":"end","text":"LYSNE"}
+      ],
+      "sound": [
+        {
+          "beats": [0,0.75,1.5,2.25,3,3.75,4.5,5.25,6,6.75,7.5,8.25,9,9.75,10.5,11.25,12,12.75,13.5,14.25,15],
+          "end": 15,
+          "id": "sd-music",
+          "kind": "music",
+          "level": -6,
+          "licence": "Licensed for paid social",
+          "name": "Late light · slow piano",
+          "start": 0
+        },
+        {"end":11.4,"id":"sd-glass","kind":"effect","level":-14,"name":"Glass on stone","start":10.6}
+      ]
+    },
     "workspaceId": "w-lysne"
   }
 nora document("doc-autumn-email")
@@ -77588,7 +78943,7 @@ even studioKit("w-solv")
 even documents("w-solv")
   []
 even brandAssets("w-solv")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 even qaQueue("w-solv")
   []
 even lookPresets("w-solv")
@@ -77602,7 +78957,7 @@ even studioKit("w-vev")
 even documents("w-vev")
   []
 even brandAssets("w-vev")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 even qaQueue("w-vev")
   []
 even lookPresets("w-vev")
@@ -77616,7 +78971,7 @@ even studioKit("w-halm")
 even documents("w-halm")
   []
 even brandAssets("w-halm")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 even qaQueue("w-halm")
   []
 even lookPresets("w-halm")
@@ -77630,7 +78985,7 @@ even studioKit("w-aurea")
 even documents("w-aurea")
   []
 even brandAssets("w-aurea")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 even qaQueue("w-aurea")
   []
 even lookPresets("w-aurea")
@@ -77644,7 +78999,7 @@ even studioKit("w-nope")
 even documents("w-nope")
   []
 even brandAssets("w-nope")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 even qaQueue("w-nope")
   []
 even lookPresets("w-nope")
@@ -77653,6 +79008,8 @@ even engineChat("w-nope")
   []
 even document("doc-bf-1")
   = nora document("doc-bf-1")
+even document("doc-night-ritual")
+  = nora document("doc-night-ritual")
 even document("doc-autumn-email")
   = nora document("doc-autumn-email")
 even document("doc-autumn-m3")
@@ -78205,6 +79562,17 @@ maja (agency's client) studioModes()
   = maja studioModes()
 maja (agency's client) brandAssets()
   {
+    "footage": [
+      {
+        "id": "ft-light",
+        "name": "Light on stone",
+        "poster": "/demo/lysne/video/light.jpg",
+        "ratio": "9:16",
+        "seconds": 5,
+        "video": "/demo/lysne/video/light.mp4",
+        "workspaceId": "w-lysne"
+      }
+    ],
     "models": [
       {
         "angles": [
@@ -80205,7 +81573,7 @@ maja (agency's client) studioKit("w-solv")
 maja (agency's client) documents("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) brandAssets("w-solv")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 maja (agency's client) qaQueue("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) lookPresets("w-solv")
@@ -80219,7 +81587,7 @@ maja (agency's client) studioKit("w-vev")
 maja (agency's client) documents("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) brandAssets("w-vev")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 maja (agency's client) qaQueue("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) lookPresets("w-vev")
@@ -80233,7 +81601,7 @@ maja (agency's client) studioKit("w-halm")
 maja (agency's client) documents("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) brandAssets("w-halm")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 maja (agency's client) qaQueue("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) lookPresets("w-halm")
@@ -80247,7 +81615,7 @@ maja (agency's client) studioKit("w-aurea")
 maja (agency's client) documents("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) brandAssets("w-aurea")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 maja (agency's client) qaQueue("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) lookPresets("w-aurea")
@@ -80261,7 +81629,7 @@ maja (agency's client) studioKit("w-nope")
 maja (agency's client) documents("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) brandAssets("w-nope")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 maja (agency's client) qaQueue("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) lookPresets("w-nope")
@@ -80269,6 +81637,8 @@ maja (agency's client) lookPresets("w-nope")
 maja (agency's client) engineChat("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) document("doc-bf-1")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja (agency's client) document("doc-night-ritual")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) document("doc-autumn-email")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -80826,7 +82196,7 @@ jonas (agency's client) studioKit("w-solv")
 jonas (agency's client) documents("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) brandAssets("w-solv")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 jonas (agency's client) qaQueue("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) lookPresets("w-solv")
@@ -80840,7 +82210,7 @@ jonas (agency's client) studioKit("w-vev")
 jonas (agency's client) documents("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) brandAssets("w-vev")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 jonas (agency's client) qaQueue("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) lookPresets("w-vev")
@@ -80854,7 +82224,7 @@ jonas (agency's client) studioKit("w-halm")
 jonas (agency's client) documents("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) brandAssets("w-halm")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 jonas (agency's client) qaQueue("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) lookPresets("w-halm")
@@ -80868,7 +82238,7 @@ jonas (agency's client) studioKit("w-aurea")
 jonas (agency's client) documents("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) brandAssets("w-aurea")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 jonas (agency's client) qaQueue("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) lookPresets("w-aurea")
@@ -80882,7 +82252,7 @@ jonas (agency's client) studioKit("w-nope")
 jonas (agency's client) documents("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) brandAssets("w-nope")
-  {"models":[],"presets":[],"references":[]}
+  {"footage":[],"models":[],"presets":[],"references":[]}
 jonas (agency's client) qaQueue("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) lookPresets("w-nope")
@@ -80890,6 +82260,8 @@ jonas (agency's client) lookPresets("w-nope")
 jonas (agency's client) engineChat("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) document("doc-bf-1")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+jonas (agency's client) document("doc-night-ritual")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) document("doc-autumn-email")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
