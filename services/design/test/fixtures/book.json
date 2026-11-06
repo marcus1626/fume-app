@@ -1,0 +1,39 @@
+{
+  "colours": [
+    { "hex": "#111111", "role": "text" },
+    { "hex": "#FFFFFF", "role": "background" },
+    { "hex": "#1F4E3D", "role": "primary" },
+    { "hex": "#1F4E3D", "role": "secondary" },
+    { "hex": "#5A5A5A", "role": "text_muted" },
+    { "hex": "#F2EFEA", "role": "surface" },
+    { "hex": "#FFFFFF", "role": "on_photo" },
+    { "hex": "#1F4E3D", "role": "cta" },
+    { "hex": "#FFFFFF", "role": "cta_text" }
+  ],
+  "typefaces": [
+    { "role": "display", "family": "Brand Serif Pro", "weights": [700], "fallback": "Libre Baskerville" },
+    { "role": "heading", "family": "Brand Serif Pro", "weights": [700], "fallback": "Libre Baskerville" },
+    { "role": "body", "family": "Nunito Sans", "weights": [400, 700], "fallback": "Inter" }
+  ],
+  "styles": [
+    { "name": "display", "font": "display", "sizePx": 104, "weight": 700, "lineHeight": 1.05, "trackingEm": -0.01, "case": "none" },
+    { "name": "h1", "font": "heading", "sizePx": 84, "weight": 700, "lineHeight": 1.08, "trackingEm": 0, "case": "none" },
+    { "name": "h2", "font": "heading", "sizePx": 60, "weight": 700, "lineHeight": 1.12, "trackingEm": 0, "case": "none" },
+    { "name": "subline", "font": "body", "sizePx": 36, "weight": 400, "lineHeight": 1.3, "trackingEm": 0, "case": "none" },
+    { "name": "body", "font": "body", "sizePx": 30, "weight": 400, "lineHeight": 1.4, "trackingEm": 0, "case": "none" },
+    { "name": "cta", "font": "body", "sizePx": 28, "weight": 700, "lineHeight": 1.2, "trackingEm": 0.02, "case": "upper" }
+  ],
+  "formats": [
+    { "format": "feed", "columns": 12, "gutterPx": 24, "marginPx": 72, "safeTopPx": 72, "safeBottomPx": 72 },
+    { "format": "story", "columns": 12, "gutterPx": 24, "marginPx": 72, "safeTopPx": 250, "safeBottomPx": 340 }
+  ],
+  "components": [
+    { "name": "headline", "style": "display", "colour": "on_photo", "background": null, "radius": "none", "paddingPx": 0 },
+    { "name": "subline", "style": "subline", "colour": "on_photo", "background": null, "radius": "none", "paddingPx": 0 },
+    { "name": "body", "style": "body", "colour": "text", "background": "surface", "radius": "small", "paddingPx": 32 },
+    { "name": "cta", "style": "cta", "colour": "cta_text", "background": "cta", "radius": "pill", "paddingPx": 24 }
+  ],
+  "radiusPx": { "none": 0, "small": 8, "large": 24, "pill": 999 },
+  "photoText": { "rules": ["Words only where the picture is calm."], "scrim": "gradient", "scrimOpacity": 0.5 },
+  "spacing": { "unitPx": 8, "scale": [1, 2, 3, 4, 6, 8] }
+}

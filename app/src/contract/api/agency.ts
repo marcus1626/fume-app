@@ -29,6 +29,10 @@ export interface AgencyApi {
     language?: string;
     people: { name: string; email: string; role: CustomerRole }[];
   }): Promise<AgencyClient>;
+  /** Lead only: someone into the agency itself, as an Admin (the agency's lead) or an Expert (checks the work). An
+   *  Operator runs the Engine, so that role comes with it. Someone new gets the invitation email; someone who already
+   *  uses Fume joins at once. */
+  inviteToAgency(input: { email: string; role: "admin" | "expert" | "operator" }): Promise<{ joined: boolean }>;
 
   // Sending to the client and the client link
   /** Checked creatives to the client: the people named are told in Fume; with link, a client link too. With `plan`

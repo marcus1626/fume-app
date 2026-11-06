@@ -41,6 +41,7 @@ type Calls =
   | "agencyTeam"
   | "licence"
   | "addClient"
+  | "inviteToAgency"
   | "sendToClient"
   | "clientSends"
   | "recordClientApproval"
@@ -672,6 +673,12 @@ export function agencyCalls(m: Mock): Pick<FumeApi, Calls> {
         },
         seats: { used: agencyPeople.length, included: 6 },
       });
+    },
+    // The demo sends nothing: the invitation is said to have gone.
+    async inviteToAgency() {
+      const s = mustAgency();
+      if (s.role !== "lead") throw new FumeError("forbidden", "Only the agency lead invites people to the agency.");
+      return wait({ joined: false });
     },
     // A client the lead adds stays: it joins the clients and Home (recent first), and the licence's usage.
     async addClient({ brandName, website, market, language, people }) {

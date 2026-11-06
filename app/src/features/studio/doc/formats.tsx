@@ -227,7 +227,7 @@ export function SafeZones({ placement, sourceRatio }: { placement: Placement; so
 
 // ─── Make formats ────────────────────────────────────────────────────────────
 
-const methodWord = { native: "Native", crop: "Crop", expand: "Expand" } as const;
+const methodWord = { native: "Native", crop: "Crop", expand: "Expand", regenerate: "Regenerate" } as const;
 
 export function MakeFormats({
   doc,
@@ -348,9 +348,11 @@ function FormatTileView({
   const toast = useToast();
   const making = tile.state === "making";
   const why =
-    tile.method === tile.engineChose
-      ? `The Engine chose ${methodWord[tile.method].toLowerCase()}. ${tile.why}`
-      : `You switched to ${methodWord[tile.method].toLowerCase()}. The Engine chose ${methodWord[tile.engineChose].toLowerCase()}.`;
+    tile.method === "regenerate"
+      ? tile.why
+      : tile.method === tile.engineChose
+        ? `The Engine chose ${methodWord[tile.method].toLowerCase()}. ${tile.why}`
+        : `You switched to ${methodWord[tile.method].toLowerCase()}. The Engine chose ${methodWord[tile.engineChose].toLowerCase()}.`;
   return (
     <li className="ui-fmt-tile" data-state={tile.state} aria-busy={making ? "true" : undefined}>
       <FormatPreview doc={doc} tile={tile} placement={placement} source={source} sourceRatio={sourceRatio} />
@@ -378,12 +380,17 @@ function FormatTileView({
           >
             <SegmentedOption value="crop">Crop</SegmentedOption>
             <SegmentedOption value="expand">Expand</SegmentedOption>
+            <SegmentedOption value="regenerate">Regenerate</SegmentedOption>
           </SegmentedControl>
         )}
         <p className="ui-fmt-tile-why" title={why}>
           {making ? (
             <TextShimmer>
-              {tile.method === "expand" ? "The Engine is extending the scene" : "The Engine is making it"}
+              {tile.method === "expand"
+                ? "The Engine is extending the scene"
+                : tile.method === "regenerate"
+                  ? "The Engine is drawing it again"
+                  : "The Engine is making it"}
             </TextShimmer>
           ) : (
             why

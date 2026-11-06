@@ -23,6 +23,7 @@ import {
   useSession,
   useUndoDocumentToCheck,
 } from "../../../api/hooks";
+import { isDemo } from "../../../api/client";
 import type { CreativeDocument } from "../../../contract";
 import * as copy from "../../../copy";
 
@@ -78,14 +79,19 @@ export function SendToCheck({
               : agency
                 ? "It waits in Check for your team."
                 : "It waits in Check for the expert.",
-          action: {
-            label: "Undo",
-            onClick: () =>
-              undo.mutateAsync(doc.id).then(
-                () => toast.done(`Version ${number ?? ""} is back in the Studio`),
-                (e: Error) => toast.error("It is still in Check", { description: e.message }),
-              ),
-          },
+          // The live backend keeps a version sent to check (the expert asks for a correction instead): no Undo there.
+          ...(isDemo
+            ? {
+                action: {
+                  label: "Undo",
+                  onClick: () =>
+                    undo.mutateAsync(doc.id).then(
+                      () => toast.done(`Version ${number ?? ""} is back in the Studio`),
+                      (e: Error) => toast.error("It is still in Check", { description: e.message }),
+                    ),
+                },
+              }
+            : {}),
         });
         onSent?.();
       },

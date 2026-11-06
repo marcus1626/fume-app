@@ -28,6 +28,7 @@ import type {
   CreativeType,
   Delivery,
   DetailToken,
+  Id,
   Direction,
   EngineMessage,
   EngineRun,
@@ -110,6 +111,8 @@ export interface Db {
   scan: BrandScan | null;
   brandUpdate: BrandUpdate | null;
   onboarding: OnboardingProgress;
+  /** People who have not said who they are yet: "About you" opens for them on sign-in. */
+  unintroduced: Id[];
   presets: BrandPreset[];
   models: BrandModel[];
   brandReferences: BrandReference[];
@@ -190,6 +193,7 @@ export function createDb(options: DbOptions = {}): Db {
     scan: null,
     brandUpdate: null,
     onboarding: { step: "", lines: [] },
+    unintroduced: [],
     presets: seed.presets,
     models: seed.models,
     brandReferences: seed.brandReferences,
@@ -261,6 +265,8 @@ export function createDb(options: DbOptions = {}): Db {
  *  or said before today. A brand read only from its website has no guide to disagree with and no moodboard pins the
  *  Engine proposed. */
 function firstRun(db: Db) {
+  // A brand that has just signed up: Maja is new to Fume too, so she says who she is first.
+  db.unintroduced = ["u-maja"];
   db.brandDna = {
     ...db.brandDna,
     version: 0,

@@ -122,7 +122,11 @@ export function useBriefRows(view: CampaignView | undefined, named: string[] = [
           : {};
       case "market":
         return campaign.market
-          ? { value: campaign.language ? `${campaign.market}, in ${campaign.language}` : campaign.market }
+          ? {
+              value: campaign.language
+                ? `${campaign.market}, in ${copy.languageName(campaign.language)}`
+                : campaign.market,
+            }
           : {};
       case "live":
         if (campaign.dueAt) return { value: date(campaign.dueAt) };

@@ -156,7 +156,7 @@ function BrandTabs() {
           <ProductsContent />
         ) : tab === "taste" ? (
           <TasteContent
-            moodboardId={board.data?.moodboard.id ?? "bd-brand"}
+            moodboardId={board.data?.moodboard.id}
             moodboardItems={
               board.data?.moodboard.items.filter((i) => i.kind === "image" || i.kind === "creative").length
             }

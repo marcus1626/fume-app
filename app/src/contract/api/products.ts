@@ -26,7 +26,7 @@ export interface ProductImportApi {
   startProductImport(input: {
     source: ImportSource;
     url?: string;
-    file?: { name: string; bytes: number };
+    file?: { name: string; bytes: number; blob?: Blob };
   }): Promise<ImportJob>;
   importJob(id: Id): Promise<ImportJob>;
   /** csv: the customer's answer to the column mapping; reading goes on. */
@@ -85,10 +85,18 @@ export interface ProductsApi extends ProductImportApi {
       keepShots?: Id[];
     },
   ): Promise<Product>;
-  /** A reference photo for one angle slot. src: where the upload landed (the mock takes the browser's preview). */
-  uploadShot(productId: Id, slotId: Id, file: { name: string; bytes: number; src?: string }): Promise<Product>;
+  /** A reference photo for one angle slot. src: where the upload landed (the mock takes the browser's preview); blob:
+   *  the picture itself, which the live backend stores. */
+  uploadShot(
+    productId: Id,
+    slotId: Id,
+    file: { name: string; bytes: number; src?: string; blob?: Blob },
+  ): Promise<Product>;
   /** A 3D model, dieline or label artwork. */
-  uploadProductFile(productId: Id, file: { kind: ProductFile["kind"]; name: string; bytes: number }): Promise<Product>;
+  uploadProductFile(
+    productId: Id,
+    file: { kind: ProductFile["kind"]; name: string; bytes: number; blob?: Blob },
+  ): Promise<Product>;
 
   // Product data changed in the Studio (FLOWS §9.5): only the customer approves Product Truth
   /** Product-data changes Fume made in the Studio for this product (scope product, any state), for the customer to decide. */

@@ -32,7 +32,7 @@ import {
 } from "@fume/ui";
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useDemoSignIn } from "../api/client";
+import { isDemo, useDemoSignIn } from "../api/client";
 import { useAgencyClients, useAllBrands, useSession, useStudioCampaigns } from "../api/hooks";
 import type { AgencyClient, Workspace } from "../contract";
 import { useQaWaiting } from "../features/studio/qa/count";
@@ -615,12 +615,18 @@ export function FumePersonMenu({ avatar }: { avatar?: boolean }) {
       <DropdownMenuTrigger asChild>
         {avatar ? (
           <Button variant="quiet" iconOnly aria-label={triggerName}>
-            <Avatar size="sm" ink initials={initials(user.name)} />
+            <Avatar size="sm" ink src={user.avatar} initials={initials(user.name)} />
           </Button>
         ) : (
           <SidebarMenuButton
             size="lg"
-            leading={<SidebarAvatar>{initials(user.name)}</SidebarAvatar>}
+            leading={
+              user.avatar ? (
+                <Avatar size="sm" src={user.avatar} initials={initials(user.name)} />
+              ) : (
+                <SidebarAvatar>{initials(user.name)}</SidebarAvatar>
+              )
+            }
             description={`${user.title} · ${role}`}
             endIcon="chevrons-up-down"
             aria-label={triggerName}
@@ -635,21 +641,25 @@ export function FumePersonMenu({ avatar }: { avatar?: boolean }) {
         <DropdownMenuItem icon="user" onSelect={() => navigate("/studio/settings/profile")}>
           Your profile
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuLabel>Sign in as someone else (demo)</DropdownMenuLabel>
-        {(
-          [
-            ["anna", "Anna, expert"],
-            ["sander", "Sander, operator"],
-            ["vera", "Vera, admin"],
-            ["maja", "Maja, LYSNE"],
-            ["nora", "Nora, agency lead (demo)"],
-          ] as const
-        ).map(([who, label]) => (
-          <DropdownMenuItem key={who} icon="user" onSelect={() => signIn(who)}>
-            {label}
-          </DropdownMenuItem>
-        ))}
+        {isDemo && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel>Sign in as someone else (demo)</DropdownMenuLabel>
+            {(
+              [
+                ["anna", "Anna, expert"],
+                ["sander", "Sander, operator"],
+                ["vera", "Vera, admin"],
+                ["maja", "Maja, LYSNE"],
+                ["nora", "Nora, agency lead (demo)"],
+              ] as const
+            ).map(([who, label]) => (
+              <DropdownMenuItem key={who} icon="user" onSelect={() => signIn(who)}>
+                {label}
+              </DropdownMenuItem>
+            ))}
+          </>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem icon="log-out" onSelect={() => signIn("maja")}>
           Sign out

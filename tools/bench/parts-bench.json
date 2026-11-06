@@ -1,0 +1,25 @@
+{
+  "about": "The validation machine's bench (docs/mvp/product-parts.md). Each case is a candidate in a bench job with no creative, so it never shows in a Studio. `wrong` lists the part keys of which at least one must be flagged; an empty list means the picture is right and no part may be flagged.",
+  "cases": [
+    { "id": "5a7e801a-ed4d-4665-87f2-c4806862f149", "what": "Dressmann: two front buttons removed", "wrong": ["front-buttons"] },
+    { "id": "dc04ce93-ea9a-4e33-9511-434342cce6ee", "what": "Dressmann: chest pocket removed", "wrong": ["chest-pocket"] },
+    { "id": "ab918f2b-0708-4b02-a6cd-5606da47cef1", "what": "Dressmann: striped patch in the check", "wrong": ["check-pattern", "fabric"] },
+    { "id": "e6a850a9-0258-43ef-94a4-0ed2c506d20b", "what": "Dressmann: band collar", "wrong": ["collar"] },
+    { "id": "8cca5584-e1f3-42ab-8941-f400010497e5", "what": "Nike: swoosh drawn white", "wrong": ["swoosh"] },
+    { "id": "48c70be3-f1e7-4323-b4a2-0f99e06983d3", "what": "Møllers: cap drawn red", "wrong": ["cap"] },
+    { "id": "8a55307d-4e5b-4415-b13e-b3938732588e", "what": "Nike: midsole drawn black", "wrong": ["midsole", "outsole"] },
+    { "id": "e44dde8e-d4c8-47d7-adf2-05271de1195a", "what": "Nike: laces drawn white", "wrong": ["laces"] },
+    { "id": "f8806735-a2c3-44c3-bc96-432db79cfcc1", "what": "Møllers: Swedish flag on the label", "wrong": ["norwegian-flag"] },
+    { "id": "93afb862-aae2-4e68-a1d5-760afda41d3c", "what": "Dressmann: a zip in place of the buttons", "wrong": ["front-buttons"] },
+    { "id": "e2d1cf3c-2789-4c79-924a-ea86cf1d6b01", "what": "Møllers: bottle drawn squat and round", "wrong": ["bottle-shape"] },
+    { "id": "cb158076-a413-4750-ba58-3412f4cc3ac6", "what": "Dressmann: the master", "wrong": [] },
+    { "id": "9ca78ee6-b88a-4831-adab-c37dc79694ac", "what": "Dressmann: story format, drawn again", "wrong": [] },
+    { "id": "53fd8008-1969-4e8e-90e6-b17efde91a81", "what": "Dressmann: pocket redrawn, still there", "wrong": [] },
+    { "id": "131be7be-3443-4dc4-88a7-97086a4e535d", "what": "Dressmann: buttons redrawn, still there", "wrong": [] },
+    { "id": "80cde007-6e54-4b69-94f6-505a4de6fc2c", "what": "Nike: Air Jordan 1 Royal, night street", "wrong": [] },
+    { "id": "3dc89681-6eb7-45ec-b825-f07e263c29ea", "what": "Møllers: Tran at breakfast", "wrong": [] },
+    { "id": "1eeb0ec0-aff9-4d19-8db4-6ba02414492e", "what": "Dressmann: pocket fixed, but the fix left seams in the check", "wrong": ["fabric", "check-pattern"] },
+    { "id": "af52bd6f-48f8-43f9-bb88-d130951bd848", "what": "Møllers: cap fixed, but the fix left the neck empty of oil", "wrong": ["liquid"] },
+    { "id": "0b630fb9-09a8-4e05-b618-d9ce4aaad1d6", "what": "Dressmann: sleeve redrawn, still long", "wrong": [] }
+  ]
+}

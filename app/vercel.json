@@ -1,6 +1,33 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "rewrites": [{ "source": "/((?!demo/|assets/|favicon).*)", "destination": "/index.html" }],
-  "headers": [{ "source": "/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] }]
+  "rewrites": [
+    {
+      "source": "/((?!api/|demo/|assets/|favicon).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    }
+  ],
+  "functions": {
+    "api/design.js": {
+      "maxDuration": 90,
+      "memory": 2048,
+      "includeFiles": "node_modules/{canvaskit-wasm/bin,@open-pencil/core/assets}/**"
+    },
+    "api/shot.js": {
+      "maxDuration": 90,
+      "memory": 2048,
+      "includeFiles": "node_modules/@sparticuz/chromium/bin/**"
+    }
+  }
 }

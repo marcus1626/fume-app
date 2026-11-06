@@ -55,7 +55,7 @@ import {
   useUpdateProfile,
   useUpdateWorkspace,
 } from "../../api/hooks";
-import type { Session, SettingsView, TeamView, User } from "../../contract";
+import { FumeError, type Session, type SettingsView, type TeamView, type User } from "../../contract";
 import * as copy from "../../copy";
 import { date, now } from "../../lib/time";
 import { Query } from "../../shell/Page";
@@ -416,11 +416,17 @@ function InviteSection({ view }: { view: TeamView }) {
     invite.mutate(
       { email: email.trim(), role },
       {
-        onSuccess: () => {
-          toast.done(`Invitation sent to ${email.trim()}`);
+        onSuccess: (invitation) => {
+          // Someone who already uses Fume joins at once; everyone else gets the email.
+          toast.done(
+            invitation.state === "accepted"
+              ? `${email.trim()} is on the team now`
+              : `Invitation sent to ${email.trim()}`,
+          );
           setEmail("");
         },
-        onError: () => setProblem("The invitation wasn’t sent. Try again in a moment."),
+        onError: (e) =>
+          setProblem(e instanceof FumeError ? e.message : "The invitation wasn’t sent. Try again in a moment."),
       },
     );
   };

@@ -9,7 +9,8 @@
     "format:check": "prettier --check app packages/ui",
     "gate": "node tools/gate/gate.mjs design-system/components design-system/theme packages",
     "gate:test": "node tools/gate/test.mjs",
-    "sync:design-system": "node tools/sync-design-system.mjs"
+    "sync:design-system": "node tools/sync-design-system.mjs",
+    "db:test": "tools/db/test.sh"
   },
   "devDependencies": {
     "@eslint/js": "9.39.5",

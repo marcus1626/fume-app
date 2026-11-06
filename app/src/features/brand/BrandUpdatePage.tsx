@@ -401,11 +401,14 @@ function Review({ update, identity }: { update: BrandUpdate; identity?: BrandIde
     );
   };
 
+  const one = update.unchanged === 1;
+  const matches = `${copy.count(update.unchanged, "thing")} ${one ? "matches" : "match"} your Brand DNA and ${one ? "is" : "are"} left as ${one ? "it is" : "they are"}`;
+
   return (
     <>
       <FoundReview
         title="What Fume found"
-        summary={`On ${where}: ${counts}. ${copy.count(update.unchanged, "thing")} match your Brand DNA and are left as they are.`}
+        summary={counts ? `On ${where}: ${counts}. ${matches}.` : `On ${where}, nothing is new or changed. ${matches}.`}
         items={items}
         busy={decide.isPending || approve.isPending || !canApprove}
         onApproveAll={() =>

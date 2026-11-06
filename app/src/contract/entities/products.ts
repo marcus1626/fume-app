@@ -404,7 +404,8 @@ export interface DetailToken {
   label: string;
   /** What it must read or look like: "100 ml". */
   value: string;
-  kind: "text" | "label" | "cap" | "logo" | "material";
+  /** part: a part of the product the picture check compares, not only reads (docs/mvp/product-parts.md). */
+  kind: "text" | "label" | "cap" | "logo" | "material" | "part";
   /** The cut-out of the real product. */
   image: string;
   /** Where it sits on the product's main image, 0–1. */
@@ -419,6 +420,9 @@ export interface DetailFind {
   region: { x: number; y: number; w: number; h: number };
   read: string;
   ok: boolean;
+  /** part: a part compared with the real one; `read` says how it looks on the render, `note` what differs. */
+  kind?: "part";
+  note?: string;
 }
 
 /** A fix of one detail on a render: the Engine's automatic pass, or one a designer asked for. */

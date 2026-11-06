@@ -30,6 +30,7 @@ maja session() → events
   }
 maja session()
   {
+    "introduced": true,
     "onboarded": true,
     "organisation": {"id":"o-lysne","name":"LYSNE","packageId":"p-core"},
     "role": "owner",
@@ -22314,6 +22315,7 @@ jonas session() → events
   }
 jonas session()
   {
+    "introduced": true,
     "onboarded": true,
     "organisation": {"id":"o-lysne","name":"LYSNE","packageId":"p-core"},
     "role": "member",
@@ -22917,6 +22919,7 @@ ida session() → events
   }
 ida session()
   {
+    "introduced": true,
     "onboarded": true,
     "organisation": {"id":"o-lysne","name":"LYSNE","packageId":"p-core"},
     "role": "viewer",
@@ -23520,6 +23523,7 @@ anna session() → events
   }
 anna session()
   {
+    "introduced": true,
     "onboarded": true,
     "organisation": {"id":"o-lysne","name":"LYSNE","packageId":"p-core"},
     "role": null,
@@ -36003,6 +36007,7 @@ sander session() → events
   }
 sander session()
   {
+    "introduced": true,
     "onboarded": true,
     "organisation": {"id":"o-lysne","name":"LYSNE","packageId":"p-core"},
     "role": null,
@@ -40072,6 +40077,7 @@ vera session() → events
   }
 vera session()
   {
+    "introduced": true,
     "onboarded": true,
     "organisation": {"id":"o-lysne","name":"LYSNE","packageId":"p-core"},
     "role": null,
@@ -40649,6 +40655,7 @@ vera clientLink("no-such-link")
 -- maja (first run): createMockApi({"fresh":true,"latency":0})
 maja (first run) session()
   {
+    "introduced": false,
     "onboarded": false,
     "organisation": {"id":"o-lysne","name":"LYSNE","packageId":"p-core"},
     "role": "owner",
@@ -47415,6 +47422,7 @@ nora session()
   {
     "agency": {"organisation":{"id":"o-brygga","kind":"agency","name":"Brygga Studio","packageId":"p-core"},"role":"lead"},
     "agencyName": "Brygga Studio",
+    "introduced": true,
     "onboarded": true,
     "organisation": {"id":"o-lysne","name":"LYSNE","packageId":"p-core"},
     "role": "approver",
@@ -73972,6 +73980,7 @@ even session()
   {
     "agency": {"organisation":{"id":"o-brygga","kind":"agency","name":"Brygga Studio","packageId":"p-core"},"role":"creative"},
     "agencyName": "Brygga Studio",
+    "introduced": true,
     "onboarded": true,
     "organisation": {"id":"o-lysne","name":"LYSNE","packageId":"p-core"},
     "role": "approver",
@@ -77693,6 +77702,7 @@ maja (agency's client) session() → events
 maja (agency's client) session()
   {
     "agencyName": "Brygga Studio",
+    "introduced": true,
     "onboarded": true,
     "organisation": {"id":"o-lysne","name":"LYSNE","packageId":"p-core"},
     "role": "owner",
@@ -80309,6 +80319,7 @@ jonas (agency's client) session() → events
 jonas (agency's client) session()
   {
     "agencyName": "Brygga Studio",
+    "introduced": true,
     "onboarded": true,
     "organisation": {"id":"o-lysne","name":"LYSNE","packageId":"p-core"},
     "role": "member",

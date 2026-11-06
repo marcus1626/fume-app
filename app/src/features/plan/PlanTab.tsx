@@ -27,7 +27,7 @@ import {
 import { useCampaignSends } from "../agency/clientFlow";
 import { SendToClientSheet } from "../agency/SendToClient";
 import { AskChanges } from "./AskChanges";
-import type { Brief, Campaign, CampaignPlan, CampaignView } from "../../contract";
+import { FumeError, type Brief, type Campaign, type CampaignPlan, type CampaignView } from "../../contract";
 import * as copy from "../../copy";
 import { Nothing, Query, Section } from "../../shell/Page";
 import { BriefFacts, briefGaps } from "../campaigns/brief-lines";
@@ -177,7 +177,7 @@ function PlanReady({
     }
     if (approve.isPending) return;
     // mutateAsync, not mutate's callbacks: approved, this footer unmounts before they would run (and so does the toast's Undo)
-    void approve.mutateAsync(campaign.id).then(
+    void approve.mutateAsync({ campaignId: campaign.id, version: plan.version }).then(
       () =>
         toast.done("Plan approved", {
           description:
@@ -195,7 +195,13 @@ function PlanReady({
               ),
           },
         }),
-      (e: Error) => toast.error("The plan wasn’t approved", { description: e.message }),
+      (e: Error) =>
+        toast.error("The plan wasn’t approved", {
+          description:
+            e instanceof FumeError && e.code === "conflict"
+              ? "It changed while you read it. Read the new version, then approve it."
+              : e.message,
+        }),
     );
   };
 
@@ -512,7 +518,14 @@ function PlanWaiting({
         steps={steps}
         asked={asked}
         askedBy={asker}
-        more={plan.state !== "changes_asked" ? <ToCome creatives={brief.creatives} /> : undefined}
+        more={
+          plan.state !== "changes_asked" ? (
+            <ToCome
+              creatives={brief.creatives}
+              planned={(plan.directions.find((d) => d.recommended) ?? plan.directions[0])?.creatives}
+            />
+          ) : undefined
+        }
       />
       {plan.state !== "changes_asked" && (
         <aside className="ui-plandoc-waiting-brief" aria-labelledby="plan-sent-brief">
@@ -598,11 +611,11 @@ export function WaitingState({
 }
 
 /** What the plan will hold, in one line of its parts. */
-export function ToCome({ creatives }: { creatives: number }) {
+export function ToCome({ creatives, planned }: { creatives: number; planned?: { kind: "master" | "variant" }[] }) {
   return (
     <p className="ui-plandoc-tocome">
       <span className="ui-plandoc-label">The plan will hold</span>
-      <span className="ui-plandoc-tocome-text">{partsToCome(creatives)}</span>
+      <span className="ui-plandoc-tocome-text">{partsToCome(creatives, planned)}</span>
     </p>
   );
 }

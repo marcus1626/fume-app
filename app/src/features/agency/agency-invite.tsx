@@ -1,5 +1,5 @@
 // Invite someone to the agency, the lead's small right panel (FLOWS §24.3): their email and one of Fume's roles
-// (Expert, Operator, Admin). In the preview it sends nothing: a toast says the invitation went.
+// (Expert, Operator, Admin). The invitation email goes to someone new; someone who already uses Fume joins at once.
 import {
   Button,
   Choice,
@@ -24,6 +24,7 @@ import {
   useToast,
 } from "@fume/ui";
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useInviteToAgency } from "../../api/hooks";
 import { agencyRoleHelp, agencyRoleWords, type AgencyRoleName } from "./agency-parts";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -40,6 +41,7 @@ export function InvitePanel({
   known: string[];
 }) {
   const toast = useToast();
+  const invite = useInviteToAgency();
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<AgencyRoleName>("expert");
   const [tried, setTried] = useState(false);
@@ -68,10 +70,21 @@ export function InvitePanel({
       field.current?.focus();
       return;
     }
-    toast.done(`Invitation sent to ${v}`, {
-      description: `They join ${agencyName} as ${role === "operator" ? "an operator" : role === "admin" ? "an admin" : "an expert"}.`,
-    });
-    onOpenChange(false);
+    const as = role === "operator" ? "an operator" : role === "admin" ? "an admin" : "an expert";
+    invite.mutate(
+      { email: v, role },
+      {
+        onSuccess: ({ joined }) => {
+          toast.done(joined ? `${v} joined ${agencyName}` : `Invitation sent to ${v}`, {
+            description: joined
+              ? `They already use Fume, so they are in now, as ${as}.`
+              : `They join ${agencyName} as ${as}.`,
+          });
+          onOpenChange(false);
+        },
+        onError: (error) => toast.error("The invitation wasn’t sent", { description: error.message }),
+      },
+    );
   };
 
   return (
@@ -120,7 +133,7 @@ export function InvitePanel({
             <SheetClose asChild>
               <Button variant="glass-clear">Cancel</Button>
             </SheetClose>
-            <Button type="submit" variant="glass-white" icon="send">
+            <Button type="submit" variant="glass-white" icon="send" loading={invite.isPending}>
               Send the invitation
             </Button>
           </SheetFooter>

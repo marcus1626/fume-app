@@ -4,7 +4,7 @@ import type { Id, Instant } from "./common";
 import type { MessageAuthor } from "./conversation";
 
 export type NotificationKind =
-  "checked" | "engine_done" | "changes_asked" | "mention" | "waiting_on_you" | "delivered" | "held";
+  "checked" | "engine_done" | "changes_asked" | "mention" | "waiting_on_you" | "delivered" | "held" | "approved";
 
 export interface Notification {
   id: Id;

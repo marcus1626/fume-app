@@ -195,7 +195,7 @@ export function tasteSentence(state: TasteState, brand: string, your = "your") {
   const well = areas.filter((a) => state.confidence[a] >= 0.7).map((a) => areaWords[a]);
   const less = areas.filter((a) => state.confidence[a] < 0.5).map((a) => areaWords[a]);
   const first = well.length ? `Fume knows ${your} ${and(well)} well` : `Fume is getting to know ${your} taste`;
-  return `${first}${less.length ? `, and is still learning ${and(less)}` : ""}. ${state.answered} answers so far.`;
+  return `${first}${less.length ? `, and is still learning ${and(less)}` : ""}. ${state.answered === 1 ? "1 answer" : `${state.answered} answers`} so far.`;
 }
 
 const pairReasons = ["Warmer", "Calmer", "More air", "The product is clearer"];

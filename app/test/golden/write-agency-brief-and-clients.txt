@@ -1212,6 +1212,7 @@ nora switchWorkspace("w-mvkqw0q8-5")
   {
     "agency": {"organisation":{"id":"o-brygga","kind":"agency","name":"Brygga Studio","packageId":"p-core"},"role":"lead"},
     "agencyName": "Brygga Studio",
+    "introduced": true,
     "onboarded": true,
     "organisation": {"id":"o-mvkqw0q8-4","kind":"brand","name":"FJELL","packageId":"p-core"},
     "role": "approver",
@@ -1550,6 +1551,7 @@ nora switchWorkspace("w-vev")
   {
     "agency": {"organisation":{"id":"o-brygga","kind":"agency","name":"Brygga Studio","packageId":"p-core"},"role":"lead"},
     "agencyName": "Brygga Studio",
+    "introduced": true,
     "onboarded": true,
     "organisation": {"id":"o-vev","kind":"brand","name":"VEV","packageId":"p-core"},
     "role": "approver",

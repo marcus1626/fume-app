@@ -39,6 +39,7 @@ type Calls =
   | "decideEdit"
   | "render"
   | "pickVersion"
+  | "addVersion"
   | "overrideProduct"
   | "documentToCheck"
   | "undoDocumentToCheck"
@@ -587,6 +588,28 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       touch(d);
       return wait(d);
     },
+    async addVersion(id, file, note) {
+      m.mustStaff();
+      const d = doc(id);
+      if (!note.trim()) throw new FumeError("invalid", "Say how the picture was made.");
+      const v: RenderVersion = {
+        id: m.nextId("rv"),
+        number: d.versions.length + 1,
+        image: URL.createObjectURL(file),
+        at: now(),
+        by: m.me().id,
+        state: "done",
+        variables: structuredClone(d.variables),
+        specs: structuredClone(d.specs),
+        cost: 0,
+        evaluation: { productTruth: "pass", brandRules: "pass", artefacts: "none", notes: [] },
+        instruction: `Made by hand: ${note.trim()}`,
+      };
+      d.versions.push(v);
+      d.pickedVersionId = v.id;
+      touch(d);
+      return wait(d);
+    },
     async overrideProduct(id, { field, value, scope }) {
       m.mustStaff();
       const d = doc(id);
@@ -748,6 +771,9 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       if (change.crop) t.crop = change.crop;
       if (change.method && change.method !== t.method) {
         t.method = change.method;
+        if (change.method === "regenerate")
+          t.why =
+            "Drawn again in the new shape, as the designer chose. The picture is new, so the Engine looked at the product against its photographs; check it as closely as a new picture.";
         t.state = "making";
         later(() => {
           t.state = "done";

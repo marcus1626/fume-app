@@ -273,8 +273,8 @@ export interface Placement {
 /** One target placement in Make formats (FLOWS §16). */
 export interface FormatTile {
   placementId: Id;
-  /** What the Engine chose and why; the designer can switch. */
-  method: "native" | "crop" | "expand";
+  /** What the Engine chose and why; the designer can switch, or ask for the picture to be drawn again. */
+  method: "native" | "crop" | "expand" | "regenerate";
   engineChose: "native" | "crop" | "expand";
   why: string;
   /** For crop: the window on the source, 0–1. */

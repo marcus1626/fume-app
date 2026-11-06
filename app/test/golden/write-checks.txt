@@ -3115,6 +3115,7 @@ anna allBrands()
   }
 anna switchWorkspace("w-solv")
   {
+    "introduced": true,
     "onboarded": true,
     "organisation": {"id":"o-solv","name":"SOLV","packageId":"p-launch"},
     "role": null,
