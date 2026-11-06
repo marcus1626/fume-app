@@ -130,9 +130,9 @@ export function redrawPromptOf(t: Take, photos: number, place?: Rect | null, mis
   const of = (photos: number) => (photos ? ` The next ${photos === 1 ? "image is a photograph" : `${photos} images are photographs`} of the product itself.` : "");
   return [
     guided
-      ? `Image 1 is the layout of the new ${name}: the approved photograph${t.brand.name ? ` for ${t.brand.name}` : ""}, moved and scaled so the product stands exactly where it must; the plain grey parts are empty. Image 2 is the approved photograph itself.${of(photos)}`
+      ? `Image 1 is the layout of the new ${name}: the approved photograph${t.brand.name ? ` for ${t.brand.name}` : ""}, moved and scaled so the product stands exactly where it must; beyond the photograph's edges its backdrop is only drawn out roughly and blurred. Image 2 is the approved photograph itself.${of(photos)}`
       : `Image 1 is a finished campaign photograph${t.brand.name ? ` for ${t.brand.name}` : ""} that the customer approved.${of(photos)}`,
-    ...(guided ? ["Draw the whole frame again as one photograph: the product exactly where and exactly as large as it is in image 1, whole and not cut by the frame's edge, and the scene, light and backdrop continued into the grey parts so nothing shows where image 1 ends."] : []),
+    ...(guided ? ["Draw the whole frame again as one photograph: the product exactly where and exactly as large as it is in image 1, whole and not cut by the frame's edge, and the scene, light and backdrop redrawn properly in the rough, blurred parts, so nothing shows where the photograph ends: no bands, edges or blur."] : []),
     `Make the same photograph again as a ${MODEL_RATIO[t.format] ?? ""} ${name}: the same product, scene, light, colours, styling and mood, laid out again for the new shape so nothing important is cut or crowded.`,
     "The product must be exactly the product in the photographs: the same shape, proportions, colours, pattern, label and materials.",
     t.format === "story" ? "Keep the product clear of the top eighth and the bottom fifth of the frame, where the platform shows its own controls." : "Keep air around the product.",

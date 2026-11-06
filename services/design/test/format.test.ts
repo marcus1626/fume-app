@@ -91,6 +91,6 @@ test("a redraw's layout guide puts the master's product where it goes in the new
   assert.deepEqual([g.width, g.height], [450, 800]);
   assert.deepEqual(at(g, Math.round(0.62 * 450), 400), [20, 20, 20], "the product, at its place");
   assert.deepEqual(at(g, Math.round(0.3 * 450), 400), [200, 200, 200], "the master's backdrop beside it");
-  assert.deepEqual(at(g, 225, 5), [128, 128, 128], "grey where the master does not reach");
+  assert.deepEqual(at(g, 40, 5), [200, 200, 200], "where the master does not reach, its edge drawn out: no grey to keep");
   assert.match(invalidFormat({ op: "format-guide", picture: "https://x.supabase.co/storage/v1/object/sign/a.png?token=t", format: "story", upload: { png: "https://x.supabase.co/storage/v1/object/upload/sign/b.png?token=t" } }, "x.supabase.co")!, /box/);
 });

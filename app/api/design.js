@@ -1499,13 +1499,40 @@ function guide(master, ratio, box, place2, most = 1536) {
   const oy = Math.round((place2.y + place2.h / 2) * H - (box.y + box.h / 2) * master.height * s);
   const scaled = resize(master, mw, mh);
   const data = new Uint8Array(W * H * 4);
-  for (let i = 0; i < data.length; i += 4) data.set([128, 128, 128, 255], i);
-  for (let y = Math.max(0, oy); y < Math.min(H, oy + mh); y++) {
-    const x0 = Math.max(0, ox), x1 = Math.min(W, ox + mw);
-    if (x1 <= x0) continue;
-    const from = ((y - oy) * mw + (x0 - ox)) * 4;
-    data.set(scaled.data.subarray(from, from + (x1 - x0) * 4), (y * W + x0) * 4);
+  const inside = (x, y) => x >= ox && x < ox + mw && y >= oy && y < oy + mh;
+  for (let y = 0; y < H; y++) {
+    const sy = Math.min(Math.max(y - oy, 0), mh - 1);
+    for (let x = 0; x < W; x++) {
+      const sx = Math.min(Math.max(x - ox, 0), mw - 1);
+      data.set(scaled.data.subarray((sy * mw + sx) * 4, (sy * mw + sx) * 4 + 4), (y * W + x) * 4);
+      data[(y * W + x) * 4 + 3] = 255;
+    }
   }
+  const r = Math.max(4, Math.round(Math.min(W, H) / 40));
+  const blur = (along) => {
+    const copy = data.slice();
+    const n = along === "x" ? W : H, lines = along === "x" ? H : W;
+    for (let l = 0; l < lines; l++) {
+      for (let i = 0; i < n; i++) {
+        const x = along === "x" ? i : l, y = along === "x" ? l : i;
+        if (inside(x, y)) continue;
+        let sum0 = 0, sum1 = 0, sum2 = 0, count = 0;
+        for (let k = Math.max(0, i - r); k <= Math.min(n - 1, i + r); k++) {
+          const j2 = along === "x" ? (y * W + k) * 4 : (k * W + x) * 4;
+          sum0 += copy[j2];
+          sum1 += copy[j2 + 1];
+          sum2 += copy[j2 + 2];
+          count++;
+        }
+        const j = (y * W + x) * 4;
+        data[j] = Math.round(sum0 / count);
+        data[j + 1] = Math.round(sum1 / count);
+        data[j + 2] = Math.round(sum2 / count);
+      }
+    }
+  };
+  blur("x");
+  blur("y");
   return { width: W, height: H, data };
 }
 
