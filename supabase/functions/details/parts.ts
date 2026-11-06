@@ -146,6 +146,20 @@ async function mapParts(
   }));
 }
 
+/**
+ * Whether a count is off. Many small things (seven buttons) are counted one off now and then on a right picture (the
+ * bench, 6 Nov): from five, one off is not a fault; two off is, and so is any difference below five.
+ */
+export function countOff(seen: number, real: number): boolean {
+  return real >= 5 ? Math.abs(seen - real) >= 2 : seen !== real;
+}
+
+/** Whether two boxes are on different places of the picture (their centres further apart than half their size). */
+export function apart(a: Rect, b: Rect): boolean {
+  const dx = Math.abs(a.x + a.w / 2 - (b.x + b.w / 2)), dy = Math.abs(a.y + a.h / 2 - (b.y + b.h / 2));
+  return dx > Math.max(a.w, b.w) / 2 || dy > Math.max(a.h, b.h) / 2;
+}
+
 /** Checks every part of the product on the picture. Answers the details found and what the checks cost. */
 export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ details: Detail[]; usd: number }> {
   const links = new Map<string, string>();
@@ -229,12 +243,31 @@ export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ d
           return;
         }
         const part = { what: p.what, kind: p.kind, looks: p.looks, count: p.count };
-        let r = await d.compare({ cropUrl: onPicture.link, refUrl: real.link, part });
+        let crop = onPicture;
+        let where = box;
+        let r = await d.compare({ cropUrl: crop.link, refUrl: real.link, part });
         usd += r.usd;
-        const counted = (c: Compared) => p.count != null && c.whole && c.count != null && c.count !== p.count;
-        // The model is asked twice before a part is called different, so a doubt of its own does not flag the picture.
+        const counted = (c: Compared) => p.count != null && c.whole && c.count != null && countOff(c.count, p.count);
+        // None counted where the part was found: the box may be off the part. It is looked for once more, and counted
+        // where it is found then; a part not found again is missing.
+        if (p.count != null && p.count > 0 && r.count === 0) {
+          const again = await d.locate({ pictureUrl: picture, photoUrls, parts: [ask.find((a) => a.key === p.id)!] });
+          usd += again.usd;
+          const l2 = again.parts.find((x) => x.key === p.id);
+          const box2 = l2 && l2.shown === "yes" ? clean(l2.box) : null;
+          const moved = box2 && apart(box2, box) ? await cut(t, d, picture, roomy(box2)!, `${t.store.prefix}-${at}.png`) : null;
+          if (moved) {
+            crop = moved;
+            where = box2!;
+            const recount = await d.compare({ cropUrl: crop.link, refUrl: real.link, part });
+            usd += recount.usd;
+            r = recount;
+          }
+        }
+        // A part is called different only when the careful model says so too, so a doubt of the quick one does not
+        // flag the picture.
         if (!r.same || counted(r)) {
-          const again = await d.compare({ cropUrl: onPicture.link, refUrl: real.link, part });
+          const again = await d.compare({ cropUrl: crop.link, refUrl: real.link, part, careful: true });
           usd += again.usd;
           if (again.same && !counted(again)) r = again;
         }
@@ -253,12 +286,12 @@ export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ d
           kind: "part",
           part: p.key,
           what,
-          box,
+          box: where,
           reads: r.shows.slice(0, 200),
           expected: p.looks.slice(0, 200),
           ok,
           ...(ok ? {} : { note: note.slice(0, 300) }),
-          ...(onPicture.tone && real.tone ? { tones: [onPicture.tone, real.tone] } : {}),
+          ...(crop.tone && real.tone ? { tones: [crop.tone, real.tone] } : {}),
         });
       } catch (e) {
         // One part not compared leaves the others; the expert checks it by eye.

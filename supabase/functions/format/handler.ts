@@ -56,6 +56,8 @@ export interface Deps {
   };
   /** The Engine looks at a redrawn format: is the product the product in its photographs? */
   look?(r: { pictureUrl: string; productUrls: string[]; size: { width: number; height: number } }): Promise<{ evaluation: Record<string, unknown>; usd: number }>;
+  /** Asks the picture check to compare the product's parts and print on a redrawn format (docs/mvp/product-parts.md). */
+  askDetails?(candidateId: string): Promise<void>;
   /** The language model finds what must stay whole on the picture: the product, as a box of shares. */
   locate(r: { pictureUrl: string; format: string }): Promise<{ box: Rect | null; what: string; usd: number }>;
   /** The design service (services/design, POST /api/design with op). */
@@ -368,6 +370,9 @@ async function redraw(t: Take, d: Deps): Promise<"made" | "failed"> {
         // not evaluated
       }
     }
+    // A redrawn format draws the product anew, so its parts and print are checked against the real one, after the
+    // Engine's look (which would replace what the check adds to the picture's evaluation).
+    if (candidateId) await d.askDetails?.(candidateId).catch(() => undefined);
     return "made";
   } catch (e) {
     return await fail(e instanceof Error ? e.message : String(e));

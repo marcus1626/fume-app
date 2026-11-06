@@ -109,8 +109,10 @@ export const COMPARE_SYSTEM = [
   "fine texture of a weave (brushed, fuzzy, melange); thread-level detail, stitching, raw or clean edges; single or",
   "double lines in the same pattern; anything image 1 shows too small, blurred, turned away, covered or cut by the crop",
   "to tell. What image 1 does not show clearly is not a difference, with two exceptions that are always clearly: the",
-  "part is absent where it belongs (a smooth shirt front where the pocket should be, only a faint trace or outline of",
-  "it), and a patch of another pattern or colour anywhere on it (a stripe across a check). shows: one plain sentence of how the part looks on",
+  "part is absent where it belongs (a smooth shirt front where the pocket should be), and a patch of another pattern or",
+  "colour anywhere on it (a stripe across a check). Image 2 is the truth: the words about the real product are a short",
+  "description and can be loose or wrong; where they disagree with image 2, image 2 is right, and only when image 2",
+  "does not show the part clearly do the words decide. shows: one plain sentence of how the part looks on",
   "image 1, with its number, colour and shape. whole: true when image 1 shows the whole part. count: when the part is",
   "counted and image 1 shows them clearly, how many, else null. differs: no; slightly (a small difference the shopper",
   "would not mind); clearly (a fault as above). note: when differs is clearly, one short sentence for a designer in the",
@@ -157,12 +159,12 @@ export function claudeDetails(claude: Anthropic, allowed: () => Promise<boolean>
         `Images 1 to ${photoUrls.length} are the real product's photographs; image ${photoUrls.length + 1} is the generated picture. The parts:\n${list}`, Where);
       return { parts: out.parts, usd };
     },
-    async compare({ cropUrl, refUrl, part }) {
+    async compare({ cropUrl, refUrl, part, careful }) {
       // A count is made blind, on the picture alone, so the product's number does not lead the model to it; a look (a
       // pattern, a fabric, a shape) is the hardest to see, so the careful model looks at it.
       const { out, usd } = await ask(COMPARE_SYSTEM, [cropUrl, refUrl],
         `The part: ${part.what}. On the real product: ${part.looks}${part.count != null ? " Its number is counted elsewhere: judge only its look." : ""}`,
-        Side, part.kind === "look" ? MAP_MODEL : MODEL);
+        Side, careful || part.kind === "look" ? MAP_MODEL : MODEL);
       if (part.count != null) {
         const blind = await ask(COUNT_SYSTEM, [cropUrl], `Count the ${part.what}.`, Counted);
         return { shows: out.shows, whole: blind.out.whole, count: blind.out.count, same: out.differs !== "clearly",

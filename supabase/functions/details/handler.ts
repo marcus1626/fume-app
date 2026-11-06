@@ -71,7 +71,8 @@ export interface Deps {
   /** Finds each part on the picture: shown, hidden by the view, or missing. */
   locate(r: { pictureUrl: string; photoUrls: string[]; parts: { key: string; what: string; looks: string }[] }): Promise<{ parts: Located[]; usd: number }>;
   /** Compares a part on the picture (crop) with the same part on the product's photograph (ref). */
-  compare(r: { cropUrl: string; refUrl: string; part: { what: string; kind: PartKind; looks: string; count: number | null } }): Promise<Compared & { usd: number }>;
+  /** careful: the careful model, for a second opinion before a part is called different. */
+  compare(r: { cropUrl: string; refUrl: string; part: { what: string; kind: PartKind; looks: string; count: number | null }; careful?: boolean }): Promise<Compared & { usd: number }>;
   later(work: Promise<unknown>): void;
 }
 

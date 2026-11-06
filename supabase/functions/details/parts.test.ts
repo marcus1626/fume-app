@@ -1,6 +1,6 @@
 import { assert, assertEquals, assertMatch } from "jsr:@std/assert@1";
 import type { Deps, Take } from "./handler.ts";
-import { checkParts, colourOff, colourWord, keepMap, type Part, roomy, plain } from "./parts.ts";
+import { apart, checkParts, colourOff, colourWord, countOff, keepMap, type Part, plain, roomy } from "./parts.ts";
 
 const shirt: Take = {
   candidate_id: "00000000-0000-0000-0000-0000000000c1",
@@ -88,6 +88,7 @@ Deno.test("code decides: a different count and a part missing twice are wrong, a
   assertMatch(details[1].note!, /chest pocket is missing/);
   assertEquals(details.every((x) => x.kind === "part"), true);
   assertEquals(calls.compare.length, 3, "a difference is asked twice before it stands; a match once");
+  assertEquals(calls.compare.filter((c) => (c as { careful?: boolean }).careful).length, 1, "the second opinion is the careful model's");
   assertEquals(Math.round(usd * 10_000) / 10_000, 0.0035, "the map's cost is kept on the map, not on the picture");
   const photoCrop = calls.steps.find((s) => (s.upload as { crop: string }).crop.endsWith("-11-ref.png"))!;
   assertEquals(photoCrop.picture, "https://s/read/ws/p/front.png", "the buttons are cut from the photograph that shows them");
@@ -133,4 +134,31 @@ Deno.test("a model's note is kept as a plain sentence", () => {
   assertEquals(plain("The shirt closes with a zip; on the product it closes with buttons.}"), "The shirt closes with a zip; on the product it closes with buttons.");
   assertEquals(plain("The oil looks dark green.</br>\n"), "The oil looks dark green.");
   assertEquals(plain(undefined), "");
+});
+
+Deno.test("from five, one off is not a fault; two off is, and any difference below five", () => {
+  assertEquals([countOff(6, 7), countOff(5, 7), countOff(8, 7), countOff(0, 1), countOff(2, 3), countOff(7, 7)], [false, true, false, true, true, false]);
+  assertEquals(apart({ x: 0.6, y: 0.4, w: 0.1, h: 0.1 }, { x: 0.62, y: 0.42, w: 0.1, h: 0.1 }), false);
+  assertEquals(apart({ x: 0.6, y: 0.4, w: 0.1, h: 0.1 }, { x: 0.6, y: 0.55, w: 0.07, h: 0.07 }), true);
+});
+
+Deno.test("none counted where a part was found: it is looked for again and counted where it is", async () => {
+  const pocket = [{ key: "pocket", kind: "count" as const, what: "chest pocket", count: 1, looks: "one square pocket", photo: 1, box: { x: 0.6, y: 0.3, w: 0.15, h: 0.15 } }];
+  let looks = 0;
+  const { d, calls } = deps({
+    map: () => Promise.resolve({ parts: pocket, model: "m", usd: 0 }),
+    locate: () => {
+      looks += 1;
+      const box = looks === 1 ? { x: 0.65, y: 0.55, w: 0.07, h: 0.07 } : { x: 0.62, y: 0.38, w: 0.14, h: 0.12 };
+      return Promise.resolve({ usd: 0, parts: [{ key: "p1:pocket", shown: "yes" as const, box }] });
+    },
+    compare: (r: { cropUrl: string; part: { what: string } }) => {
+      calls.compare.push(r);
+      const there = r.cropUrl.includes("-11.png") && calls.compare.length > 1;
+      return Promise.resolve({ shows: there ? "one square pocket" : "plain fabric", whole: true, count: there ? 1 : 0, same: true, note: "", usd: 0 });
+    },
+  });
+  const { details } = await checkParts(shirt, d, "https://s/read/pic.png");
+  assertEquals(looks, 2);
+  assertEquals(details.map((x) => [x.part, x.ok, x.box?.y]), [["pocket", true, 0.38]]);
 });

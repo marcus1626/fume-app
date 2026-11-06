@@ -60,6 +60,14 @@ Deno.serve((req) =>
       },
       locate,
       look,
+      askDetails: async (candidateId) => {
+        await fetch(`${url}/functions/v1/details`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${secret}`, apikey: secret, "content-type": "application/json" },
+          body: JSON.stringify({ candidateId }),
+          signal: AbortSignal.timeout(20_000),
+        });
+      },
       step: async (request) => {
         const res = await fetch(designUrl, {
           method: "POST",

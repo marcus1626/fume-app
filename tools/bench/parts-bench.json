@@ -17,8 +17,8 @@
     { "id": "131be7be-3443-4dc4-88a7-97086a4e535d", "what": "Dressmann: buttons redrawn, still there", "wrong": [] },
     { "id": "80cde007-6e54-4b69-94f6-505a4de6fc2c", "what": "Nike: Air Jordan 1 Royal, night street", "wrong": [] },
     { "id": "3dc89681-6eb7-45ec-b825-f07e263c29ea", "what": "Møllers: Tran at breakfast", "wrong": [] },
-    { "id": "1eeb0ec0-aff9-4d19-8db4-6ba02414492e", "what": "Dressmann: missing pocket fixed with the real product", "wrong": [] },
-    { "id": "af52bd6f-48f8-43f9-bb88-d130951bd848", "what": "Møllers: red cap fixed with the real product", "wrong": [] },
+    { "id": "1eeb0ec0-aff9-4d19-8db4-6ba02414492e", "what": "Dressmann: pocket fixed, but the fix left seams in the check", "wrong": ["fabric", "check-pattern"] },
+    { "id": "af52bd6f-48f8-43f9-bb88-d130951bd848", "what": "Møllers: cap fixed, but the fix left the neck empty of oil", "wrong": ["liquid"] },
     { "id": "0b630fb9-09a8-4e05-b618-d9ce4aaad1d6", "what": "Dressmann: sleeve redrawn, still long", "wrong": [] }
   ]
 }

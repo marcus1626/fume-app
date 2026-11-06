@@ -154,6 +154,11 @@ Deno.test("a redraw draws the picture again in the new shape, from the master an
     looked.push(r);
     return Promise.resolve({ evaluation: { productTruth: "pass" }, usd: 0.002 });
   };
+  const asked: string[] = [];
+  d.askDetails = (id) => {
+    asked.push(`${id} after ${evaluated.length} look`);
+    return Promise.resolve();
+  };
   // On the master the shirt stands right of centre; the first drawing centres it, the second puts it back.
   const seen = [{ x: 0.4, y: 0.25, w: 0.4, h: 0.5 }, { x: 0.2, y: 0.25, w: 0.6, h: 0.5 }, { x: 0.32, y: 0.25, w: 0.56, h: 0.5 }];
   d.locate = () => Promise.resolve({ box: seen.shift()!, what: "the shirt", usd: 0.001 });
@@ -173,6 +178,7 @@ Deno.test("a redraw draws the picture again in the new shape, from the master an
   assertMatch(String(f.why), /The product stands where the master has it, right of centre/);
   assertEquals(looked[0].productUrls, ["https://s/read/ws/p/front.jpg", "https://s/read/ws/p/back.jpg"]);
   assertEquals(evaluated[0][0], "c-new");
+  assertEquals(asked, ["c-new after 1 look"], "the product's parts are checked on the redrawn format, after the Engine's look");
   assertMatch(redrawPromptOf(t, 2), /The next 2 images are photographs of the product itself/);
   assertMatch(redrawPromptOf(t, 2), /platform shows its own controls/);
 });
