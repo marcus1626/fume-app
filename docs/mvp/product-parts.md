@@ -17,10 +17,12 @@ it never checks a picture in their place, and customers never see it.
    photograph (design service `fix-crop`). The model says how it looks, how many it shows, and whether it differs not,
    slightly or clearly. Only a clear fault counts: a different number, a missing or added part, another shape, a clearly
    different colour, another pattern (or a patch of one), another material. Fine texture, stitching and edges never
-   count. A clear fault is asked twice before it stands.
-4. **Code decides.** A count is compared by code (the product's number against what the picture shows, when the whole
-   part shows). The design service measures each part's colour in Lab on both crops; a colour far off (another hue, or a
-   light part drawn without colour where the product has a strong one) counts when the model saw a difference too.
+   count. A clear fault is asked twice before it stands. Patterns, fabric and shape are compared by Sonnet 5.5; the
+   rest by Haiku.
+4. **Code decides.** A count is made blind (the model sees only the picture's crop, never the product's number) and
+   compared by code, when the whole part shows; a different count is counted twice before it stands. The design
+   service measures each part's colour in Lab on both crops; it is kept with the finding as evidence and flags
+   nothing by itself.
 5. **Findings** are kept with the print reads in `candidates.details` (`kind: "part"`, `part`, `reads` = how it
    looks on the picture, `expected` = how it looks on the product, `note`, `tones`). A wrong part flags the picture's
    product truth with its note, like a wrong label.
@@ -36,11 +38,30 @@ an ask made from the note and how the part looks on the product.
 
 ## Measured (6 Nov, bench)
 
-See the bench results below. The bench: deliberately wrong pictures (two buttons removed, the pocket removed, a striped
-patch, a band collar, the Nike swoosh drawn white, the Møllers cap drawn red) and the right ones (the Dressmann master
-and its formats, the Nike and Møllers pictures).
+The bench: six deliberately wrong pictures (two front buttons removed, the chest pocket removed, a striped patch, a
+band collar, the Nike swoosh drawn white, the Møllers cap drawn red) and six right ones (the Dressmann master and its
+story format, two Dressmann fixes that kept the part, the Nike and Møllers pictures). They sit in bench jobs with no
+creative (Dressmann `0453d361`, Nike `7704ccdc`, Møllers `d7f59ee3`), so they never show in a Studio.
+
+| Round | Change | Errors caught | Right pictures with a part alarm |
+| --- | --- | --- | --- |
+| 1 | first version | 2 of 2 (two more fixes did not make their error) | every one (fabric, cuffs, collar edge) |
+| 3 | only clear faults count | 4 of 6 | 0 of 6 (print reads still noisy) |
+| 4 | print reads tolerate a cut crop | 4 of 6 | 1 of 6 |
+| 5 | blind count; Sonnet for pattern and fabric | 6 of 6 | 4 of 6 (three from colour by code) |
+| 6 | colour by code kept as evidence only | 6 of 6 | 1 of 6 (6 buttons counted of 7, not checked by eye) |
+
+What it learned: with the product's number in the prompt, the model counts that number (blind counting caught the two
+missing buttons); Haiku does not see a striped patch in a check, Sonnet does; colour measured by code on a box a little
+off the part gave only false alarms, while every real colour fault the model called itself. About 4 to 9 cents a
+picture with everything on (the part map once per product, about 1.5 cents, comes on top).
 
 ## Still open
+
+- Two rounds in a row at 6 of 6 is a start, not proof: the bench should grow (a zip, a sleeve length, a shoe's eyelets,
+  a size) and run again before Part 4 is called done.
+- The print reader still calls the Nike collar logo garbled ("AIR IORDAN"); it may well be garbled, not yet checked by
+  eye.
 
 - The surgical fix cannot remove a part (the image model keeps buttons and pockets it is asked to remove); a missing
   part it can add.
