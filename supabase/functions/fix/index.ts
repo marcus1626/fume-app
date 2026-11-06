@@ -4,6 +4,7 @@
 // VERCEL_BYPASS_SECRET lets this function past Vercel's deployment protection on previews.
 import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
+import { keepPicture } from "../_shared/keep.ts";
 import { fal } from "../engine/fal.ts";
 import { handleFix } from "./handler.ts";
 import { claudeLocate } from "./locate.ts";
@@ -50,6 +51,7 @@ Deno.serve((req) =>
         fail: async (id, why, cents) => await service.rpc("fix_fail", { p_fix_id: id, p_error: why, p_cost_cents: cents }),
         readLink: async (bucket, path) => (await service.storage.from(bucket).createSignedUrl(path, 900)).data?.signedUrl ?? null,
         uploadLink: async (bucket, path) => (await service.storage.from(bucket).createSignedUploadUrl(path, { upsert: true })).data?.signedUrl ?? null,
+        keep: (link, bucket, path) => keepPicture(service, link, bucket, path),
         store: async (bucket, path, bytes) =>
           !(await service.storage.from(bucket).upload(path, bytes, { contentType: "image/png", upsert: true })).error,
         spent: async (id, usd, reference) =>

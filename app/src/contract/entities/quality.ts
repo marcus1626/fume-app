@@ -137,4 +137,14 @@ export interface QaItem {
   /** Who opened it in the Studio, and when (state in_studio). */
   studioBy?: Id;
   studioAt?: Instant;
+  /** Clear faults the picture check found on the product (a part missing or different, a label that reads wrong).
+   *  They stop the check until the expert decides: a new version fixes them, or the expert accepts them as they
+   *  check, with their name. */
+  holds?: QaHold[];
+}
+
+/** A clear fault on the product that stops the check until the expert decides. */
+export interface QaHold {
+  id: Id;
+  text: string;
 }

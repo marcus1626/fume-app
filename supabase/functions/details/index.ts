@@ -4,6 +4,7 @@
 // lets this function past Vercel's deployment protection on previews.
 import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
+import { keepPicture } from "../_shared/keep.ts";
 import { handleDetails } from "./handler.ts";
 import { claudeDetails } from "./models.ts";
 
@@ -47,15 +48,7 @@ Deno.serve((req) =>
         finish: async (id, details, usd) => await service.rpc("details_finish", { p_candidate_id: id, p_details: details, p_llm_usd: usd }),
         readLink: async (bucket, path) => (await service.storage.from(bucket).createSignedUrl(path, 900)).data?.signedUrl ?? null,
         uploadLink: async (bucket, path) => (await service.storage.from(bucket).createSignedUploadUrl(path, { upsert: true })).data?.signedUrl ?? null,
-        keep: async (link, bucket, path) => {
-          if (!/^https:\/\//.test(link)) return false;
-          const got = await fetch(link, { signal: AbortSignal.timeout(20_000), redirect: "follow" });
-          const type = got.headers.get("content-type") ?? "";
-          if (!got.ok || !type.startsWith("image/")) return false;
-          const bytes = new Uint8Array(await got.arrayBuffer());
-          if (bytes.byteLength > 20_000_000) return false;
-          return !(await service.storage.from(bucket).upload(path, bytes, { contentType: type, upsert: true })).error;
-        },
+        keep: (link, bucket, path) => keepPicture(service, link, bucket, path),
         setParts: async (id, parts, photos, model, usd) =>
           await service.rpc("product_parts_set", { p_product_id: id, p_parts: parts, p_photos: photos, p_model: model, p_llm_usd: usd }),
       },

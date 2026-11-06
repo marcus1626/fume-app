@@ -23,8 +23,9 @@ select test.refuses($$ select public.fix_candidate(test.id('ecand'), '{"x":0,"y"
   'invalid', 'most of the picture is a new picture, not a fix');
 select test.keep('fx', (public.fix_candidate(test.id('ecand'), '{"x":0.5,"y":0.3,"w":0.1,"h":0.06}',
   'The label reads Dresemann; it says Dressmann') ->> 'id')::uuid);
-select test.ok((public.fix_candidate(test.id('ecand'), '{"x":0.5,"y":0.3,"w":0.1,"h":0.06}', 'Again') ->> 'id')::uuid = test.id('fx'),
-  'asking again while one is made returns it');
+select test.ok((public.fix_candidate(test.id('ecand'), '{"x":0.5,"y":0.3,"w":0.1,"h":0.06}',
+  'The label reads Dresemann; it says Dressmann') ->> 'id')::uuid = test.id('fx'),
+  'asking the same again while it is made returns it');
 
 reset role;
 create temp table t9za (k text primary key, v jsonb);

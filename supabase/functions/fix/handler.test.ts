@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertMatch } from "jsr:@std/assert@1";
-import { type Deps, fixPicture, generous, handleFix, promptOf, type Take } from "./handler.ts";
+import { type Deps, fixPicture, generous, handleFix, photoLink, promptOf, type Take } from "./handler.ts";
 
 const take: Take = {
   fix_id: "00000000-0000-0000-0000-0000000000f1",
@@ -146,4 +146,30 @@ Deno.test("only someone who sees the fix starts it, and the answer comes at once
   assertEquals((await handleFix(post({ fixId: "nope" }), () => deps().d)).status, 400);
   assertEquals((await handleFix(post({ fixId: take.fix_id }), () => deps({ canRead: () => Promise.resolve(false) }).d)).status, 404);
   assertEquals((await handleFix(post({ fixId: take.fix_id }), () => deps().d)).status, 202);
+});
+
+Deno.test("a photograph kept only as a link to the brand's site is kept in Fume's storage first, once", async () => {
+  const stored = new Set<string>(["ws/p/1.png"]);
+  const kept: string[] = [];
+  const { d } = deps();
+  d.service.readLink = (_b, p) => Promise.resolve(stored.has(p) ? `https://s/read/${p}` : null);
+  d.service.keep = (url, _b, p) => {
+    kept.push(url);
+    stored.add(p);
+    return Promise.resolve(true);
+  };
+  assertEquals(await photoLink(d, { bucket: "workspace-files", path: "ws/p/1.png" }), "https://s/read/ws/p/1.png");
+  const site = { bucket: "workspace-files", path: "ws/check/source-s1.img", url: "https://nike.com/front.jpg" };
+  assertEquals(await photoLink(d, site), "https://s/read/ws/check/source-s1.img");
+  assertEquals(await photoLink(d, site), "https://s/read/ws/check/source-s1.img");
+  assertEquals(kept, ["https://nike.com/front.jpg"]);
+  d.service.keep = () => Promise.resolve(false);
+  assertEquals(await photoLink(d, { ...site, path: "ws/check/source-s2.img" }), null);
+});
+
+Deno.test("a part is drawn as it is on the product, with no wordmark from elsewhere on it", () => {
+  const text = promptOf(take, 2, { photo: 1, box: { x: 0.5, y: 0.5, w: 0.2, h: 0.2 }, why: "the chest pocket" });
+  assertMatch(text, /shape, size, number, colours, pattern and material/);
+  assertMatch(text, /Add no letters, wordmark or logo that image 2 does not show/);
+  assertMatch(text, /never moves onto the part you draw/);
 });

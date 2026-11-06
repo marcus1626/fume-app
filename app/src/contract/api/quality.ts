@@ -22,7 +22,8 @@ export interface QualityApi {
 
   // Check (FLOWS §10, §25.2)
   qaQueue(workspaceId?: Id): Promise<QaView[]>;
-  qaCheck(itemId: Id): Promise<QaItem>;
+  /** `accept`: the holds the expert accepts as they check (QaItem.holds); a hold not accepted stops the check. */
+  qaCheck(itemId: Id, accept?: Id[]): Promise<QaItem>;
   /** Undo a check just made (the toast's Undo, or Undo in the panel): the creative waits for a check again. */
   qaUncheck(itemId: Id): Promise<QaItem>;
   /** Tell the Engine what to fix; `pins` are located notes on the creative. */

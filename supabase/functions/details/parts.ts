@@ -88,6 +88,11 @@ const HUES: [number, string][] = [
   [340, "purple"],
   [360, "pink"],
 ];
+/** A model's sentence without the markup or stray brackets it sometimes ends with ("…buttons.}", "…green.</br>"). */
+export function plain(note: string | undefined): string {
+  return (note ?? "").replace(/<[^>]*>/g, " ").replace(/[\s{}\[\]<>]+$/g, "").replace(/\s+/g, " ").trim();
+}
+
 /** A plain colour word for a Lab colour, for the designer's note. */
 export function colourWord(t: Tone): string {
   const c = Math.hypot(t.a, t.b);
@@ -241,7 +246,7 @@ export async function checkParts(t: Take, d: Deps, picture: string): Promise<{ d
         const note = wrongCount
           ? `The picture shows ${r.count} ${what}; the product has ${p.count}.`
           : !r.same
-          ? (r.note || `The ${what} looks different from the product: ${p.looks}`)
+          ? (plain(r.note) || `The ${what} looks different from the product: ${p.looks}`)
           : "";
         out.push({
           n: at,

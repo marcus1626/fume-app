@@ -295,8 +295,8 @@ export function QaPage() {
     checking: check.isPending,
     undoing: uncheck.isPending,
     telling: feedback.isPending,
-    check: (v) =>
-      check.mutateAsync(v.item.id).then(() => {
+    check: (v, accept) =>
+      check.mutateAsync({ itemId: v.item.id, accept }).then(() => {
         checkToasts.current.get(v.item.id)?.dismiss();
         const shown = toast.done(`Checked: ${qaName(v)}`, {
           description: `Not sent to ${customerOf(v)} yet.`,
@@ -872,7 +872,8 @@ interface QaActions {
   checking: boolean;
   undoing: boolean;
   telling: boolean;
-  check: (v: QaView) => Promise<void>;
+  /** `accept`: the faults on the product the expert accepts as they check (QaItem.holds). */
+  check: (v: QaView, accept?: Id[]) => Promise<void>;
   undo: (v: QaView) => Promise<void>;
   /** True once the Engine has it. */
   tell: (v: QaView, text: string, pins: QaPin[]) => Promise<boolean>;
@@ -942,13 +943,20 @@ function QaFocus({
       },
     );
 
-  const markChecked = () => {
+  // A clear fault on the product stops the check until the expert decides: they fix it, or accept it with their name.
+  const holds = item.holds ?? [];
+  const [holding, setHolding] = useState(false);
+  const markChecked = (accepted = false) => {
     if (busy || checked) return;
     if (fixing) {
       toast.info(`${fixer.withIt}: nothing to check yet`, { description: "Its fix comes back here." });
       return;
     }
-    const go = () => void act.check(view);
+    if (holds.length && !accepted) {
+      setHolding(true);
+      return;
+    }
+    const go = () => void act.check(view, accepted ? holds.map((h) => h.id) : undefined);
     if (dirty) saveWords(go);
     else go();
   };
@@ -1341,7 +1349,7 @@ function QaFocus({
               <Button
                 className="ui-qa-foot-main ui-qa-mark"
                 icon="fume-check"
-                onClick={markChecked}
+                onClick={() => markChecked()}
                 disabled={fixing}
                 loading={act.checking}
               >
@@ -1378,6 +1386,26 @@ function QaFocus({
               <TextShimmer>{fixer.fixing}</TextShimmer>
             </p>
           )}
+          <AlertDialog open={holding} onOpenChange={setHolding}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  {holds.length === 1
+                    ? "Fume found a fault on the product"
+                    : `Fume found ${holds.length} faults on the product`}
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  {holds.map((h) => h.text).join(" ")} Fix it, or accept it as it is: your name goes with the check.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Fix it first</AlertDialogCancel>
+                <AlertDialogAction variant="white" icon="fume-check" onClick={() => markChecked(true)}>
+                  Accept and mark checked
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           <AlertDialog open={asking} onOpenChange={setAsking}>
             <AlertDialogContent>
               <AlertDialogHeader>

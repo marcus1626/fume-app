@@ -18,7 +18,7 @@ export type Take = {
   ask: string;
   brand: { name: string | null; language: string | null };
   picture: { bucket: string; path: string; width: number | null; height: number | null };
-  products: { name: string; variant: string | null; pictures: { bucket: string; path: string }[] }[];
+  products: { name: string; variant: string | null; pictures: { bucket: string; path: string; url?: string }[] }[];
   store: { bucket: string; png: string; crop: string };
 };
 
@@ -43,6 +43,8 @@ export interface Deps {
     readLink(bucket: string, path: string): Promise<string | null>;
     /** A signed link to upload to a path. */
     uploadLink(bucket: string, path: string): Promise<string | null>;
+    /** Keeps a copy of a photograph that is only a link to the brand's site, at a path. */
+    keep?(url: string, bucket: string, path: string): Promise<boolean>;
     /** Stores bytes the image model made, at a path. */
     store(bucket: string, path: string, bytes: Uint8Array): Promise<boolean>;
     /** Records what finding the part cost, and where it was found. */
@@ -79,10 +81,10 @@ export function promptOf(t: Take, references: number, close: Found | null = null
   const first = close ? 3 : 2;
   const lines: string[] = [];
   if (close) {
-    lines.push(`Image 2 is a close crop of the same part on the product's own photograph (${close.why}). It is the truth: copy its letters, wordmark, logo, weight, spacing, colours and layout exactly, letter for letter, onto the part in image 1, in image 1's angle, light and focus.`);
+    lines.push(`Image 2 is a close crop of the same part on the product's own photograph (${close.why}). It is the truth: copy what it shows onto the part in image 1, in image 1's angle, light and focus: its shape, size, number, colours, pattern and material, and any letters, wordmark or logo on it exactly, letter for letter. Add no letters, wordmark or logo that image 2 does not show.`);
   }
   if (references > 0) {
-    lines.push(`${references === 1 ? `Image ${first} is` : `Images ${first} to ${first + references - 1} are`} the product's own photographs. Every printed label, wordmark, logo, letter, stitch and detail of the product must match them exactly, letter for letter.`);
+    lines.push(`${references === 1 ? `Image ${first} is` : `Images ${first} to ${first + references - 1} are`} the product's own photographs. Every printed label, wordmark, logo, letter, stitch and detail of the product must match them exactly, letter for letter. Each sits where it sits on the product: a label, wordmark or logo from another part of the product never moves onto the part you draw.`);
   } else if (!close) {
     lines.push("Every printed label, wordmark and letter must be crisp, correctly spelled and true to the brand.");
   }
@@ -117,6 +119,14 @@ export function generous(b: Rect): Rect | null {
   return w >= 0.02 && h >= 0.02 && w * h <= 0.5 ? { x: r(x), y: r(y), w: r(w), h: r(h) } : null;
 }
 
+/** A link to read a product photograph; one kept only as a link to the brand's site is kept in Fume's storage first. */
+export async function photoLink(d: Deps, p: { bucket: string; path: string; url?: string }): Promise<string | null> {
+  const link = await d.service.readLink(p.bucket, p.path).catch(() => null);
+  if (link || !p.url || !d.service.keep) return link;
+  const kept = await d.service.keep(p.url, p.bucket, p.path).catch(() => false);
+  return kept ? await d.service.readLink(p.bucket, p.path).catch(() => null) : null;
+}
+
 const refPathOf = (t: Take) => t.store.crop.replace(/-crop\.png$/, "-ref.png");
 
 type Close = { link: string; rect: Rect; width: number; height: number };
@@ -148,7 +158,7 @@ export async function fixPicture(t: Take, d: Deps): Promise<"made" | "failed"> {
     const cropRead = await d.service.readLink(t.store.bucket, t.store.crop);
     if (!cropRead) return await fail("Fume could not read the crop back.");
     // The product's own photographs, at most three, so the label is drawn from the real thing.
-    const refs = (await Promise.all(t.products.flatMap((p) => p.pictures).slice(0, 3).map((p) => d.service.readLink(p.bucket, p.path))))
+    const refs = (await Promise.all(t.products.flatMap((p) => p.pictures).slice(0, 3).map((p) => photoLink(d, p))))
       .filter((u): u is string => Boolean(u));
     // The same part, close, from the product's own photograph: a label is a few dozen pixels on a whole packshot.
     // The language model finds it, and then finds it again on its own close crop, for a tight box.

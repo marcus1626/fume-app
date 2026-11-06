@@ -1,6 +1,6 @@
 import { assert, assertEquals, assertMatch } from "jsr:@std/assert@1";
 import type { Deps, Take } from "./handler.ts";
-import { checkParts, colourOff, colourWord, keepMap, type Part, roomy } from "./parts.ts";
+import { checkParts, colourOff, colourWord, keepMap, type Part, roomy, plain } from "./parts.ts";
 
 const shirt: Take = {
   candidate_id: "00000000-0000-0000-0000-0000000000c1",
@@ -127,4 +127,10 @@ Deno.test("the map is cleaned: unique keys, counts only where they count, a box 
   assertEquals(kept.map((p) => [p.key, p.count, p.photo]), [["front-buttons", 7, null], ["zip", null, "f1"]]);
   assertEquals(kept[0].box, { x: 0, y: 0.2, w: 0.3, h: 1 });
   assertEquals(roomy({ x: 0, y: 0, w: 1, h: 1 }), { x: 0, y: 0, w: 1, h: 1 }, "a part can be the whole product");
+});
+
+Deno.test("a model's note is kept as a plain sentence", () => {
+  assertEquals(plain("The shirt closes with a zip; on the product it closes with buttons.}"), "The shirt closes with a zip; on the product it closes with buttons.");
+  assertEquals(plain("The oil looks dark green.</br>\n"), "The oil looks dark green.");
+  assertEquals(plain(undefined), "");
 });

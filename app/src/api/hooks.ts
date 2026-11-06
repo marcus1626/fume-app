@@ -177,7 +177,7 @@ export const useProductProposals = (productId: Id | undefined) =>
 // QA
 export const useQaQueue = (workspaceId?: Id) =>
   useQ(["studio", "qa", workspaceId ?? "all"], (a) => a.qaQueue(workspaceId));
-export const useQaCheck = () => useM((a, itemId: Id) => a.qaCheck(itemId));
+export const useQaCheck = () => useM((a, r: { itemId: Id; accept?: Id[] }) => a.qaCheck(r.itemId, r.accept));
 export const useQaFeedback = () =>
   useM((a, v: { itemId: Id; text: string; pins?: QaPin[] }) => a.qaFeedback(v.itemId, v.text, v.pins));
 export const useQaEdit = () =>

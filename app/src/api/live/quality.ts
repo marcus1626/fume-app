@@ -101,7 +101,7 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
   const shownIds = shown.map((v) => v.id);
   const previous = (v: VersionRow) => all.find((x) => x.creative_id === v.creative_id && x.number === v.number - 1);
   const candidateIds = shown.flatMap((v) => (v.candidate_id ? [v.candidate_id] : []));
-  const [checks, candidates, changes, files, fileChecks] = await Promise.all([
+  const [checks, candidates, changes, files, fileChecks, holds] = await Promise.all([
     rows<CheckRow & { snapshot_id: string | null }>(
       supabase().from("expert_checks").select(`${CHECK}, snapshot_id`).in("version_id", shownIds),
     ),
@@ -132,7 +132,21 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
         .in("version_id", shownIds)
         .order("created_at"),
     ),
+    // Clear faults the picture check found on the product: they stop the check until the expert decides.
+    rows<{ id: string; version_id: string; finding: string }>(
+      supabase()
+        .from("findings")
+        .select("id, version_id, finding")
+        .eq("method", "automated")
+        .eq("severity", "critical")
+        .eq("status", "open")
+        .not("detail", "is", null)
+        .in("version_id", shownIds)
+        .order("created_at"),
+    ),
   ]);
+  const holdsOf = (versionId: Id) =>
+    holds.filter((h) => h.version_id === versionId).map((h) => ({ id: h.id, text: h.finding }));
   const snapshotIds = [...new Set(checks.flatMap((c) => (c.snapshot_id ? [c.snapshot_id] : [])))];
   const snapshots = snapshotIds.length
     ? await rows<{
@@ -291,6 +305,7 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
         ...(state === "in_studio"
           ? { studioBy: made?.made_by ?? "", studioAt: check?.decided_at ?? v.created_at }
           : {}),
+        ...(holdsOf(v.id).length ? { holds: holdsOf(v.id) } : {}),
       };
       const productName = products.find(
         (p) => campaign.productIds.length === 1 && p.id === campaign.productIds[0],
@@ -318,9 +333,14 @@ export function qualityCalls(live: Live): Pick<FumeApi, Calls> {
       return readQa(live, { workspaceId });
     },
     // Signed by the one who checks, against what the version's job used (its Product Truth and the brand's rules).
-    async qaCheck(itemId) {
+    // A fault on the product the expert accepts is signed with their name first (resolve_finding); one not accepted
+    // stops the check (mark_checked refuses an open critical finding).
+    async qaCheck(itemId, accept) {
       const view = await readItem(live, itemId);
       if (view.item.state === "checked") return view.item;
+      for (const id of (view.item.holds ?? []).map((h) => h.id).filter((id) => accept?.includes(id))) {
+        await command("resolve_finding", { p_finding_id: id, p_status: "accepted" });
+      }
       await command("mark_checked", {
         p_version_id: itemId,
         p_items: (view.against ?? []).map((a) => ({ ...a, result: "pass" })),
