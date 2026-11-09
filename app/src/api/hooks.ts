@@ -508,6 +508,12 @@ export const useCheckBrandBook = () => useM((a, bookId: Id) => a.checkBrandBook(
 export const useApproveBrandBook = () => useM((a, bookId: Id) => a.approveBrandBook(bookId));
 export const useAskBrandBookChange = () =>
   useM((a, v: Parameters<FumeApi["askBrandBookChange"]>[0]) => a.askBrandBookChange(v));
+export const useEditBrandBook = () => useM((a, v: Parameters<FumeApi["editBrandBook"]>[0]) => a.editBrandBook(v));
+/** A reading, not a change: nothing to refetch after it. */
+export const useCheckCopyLine = () => {
+  const api = useApi();
+  return useMutation({ mutationFn: (v: Parameters<FumeApi["checkCopyLine"]>[0]) => api.checkCopyLine(v) });
+};
 export const usePassTastePair = () => useM((a, v: Parameters<FumeApi["passTastePair"]>[0]) => a.passTastePair(v));
 export const useUpdateProfile = () => useM((a, v: Parameters<FumeApi["updateProfile"]>[0]) => a.updateProfile(v));
 

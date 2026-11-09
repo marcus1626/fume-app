@@ -6,6 +6,9 @@
 // - The approved version stays in use until a newer one is approved: the note says which one the Engine writes from.
 // - A customer reads a version once an expert has checked it; never one being written or a draft. ?v=1 opens an older
 //   version. The look is brand-book.css.
+// Round 14 (FLOWS §34.3, PROPOSED): a book reads like a documentation site, its index on the left (as
+// brand.fumecreatives.com and shadcn's docs), and its words are edited in place (edit.tsx): Fume's people straight into
+// a draft, the customer into the version she reads, sent to Fume together as the next version.
 import {
   Button,
   Dialog,
@@ -25,23 +28,36 @@ import {
   Textarea,
   useToast,
 } from "@fume/ui";
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   useApproveBrandBook,
   useAskBrandBookChange,
   useBrandBooks,
   useCheckBrandBook,
+  useEditBrandBook,
   useSession,
   useTeam,
   useWriteBrandBook,
 } from "../../api/hooks";
-import type { BookProgress, BrandBook, BrandBookKind, DesignBook, LookBook, VoiceBook } from "../../contract";
+import type {
+  BookEdit,
+  BookEditMark,
+  BookProgress,
+  BrandBook,
+  BrandBookKind,
+  DesignBook,
+  LookBook,
+  VoiceBook,
+} from "../../contract";
+import { applyEdit } from "../../domain/bookEdits";
 
 type BodyOf = { voice: VoiceBook; design: DesignBook; look: LookBook };
 import { date } from "../../lib/time";
 import { Back, Nothing, Page, Query } from "../../shell/Page";
 import { firstName } from "../../shell/people";
+import { PlanIndex } from "../plan/PlanIndex";
+import { EditProvider, type EditMode } from "./edit";
 import { useRole, useViewer } from "./parts";
 
 export const bookName: Record<BrandBookKind, string> = {
@@ -118,14 +134,18 @@ export interface BookFrameProps<K extends BrandBookKind> {
   /** No version to read yet: what the page shows instead (the voice falls back to the five parts from the onboarding). */
   empty: ReactNode;
   description: string;
+  /** The book's index on the left: its parts under small group titles. Versions is added at its end. */
+  index?: (body: BodyOf[K]) => BookIndexGroup[];
 }
 
+export type BookIndexGroup = { title: string; parts: { id: string; label: string }[] };
+
 /** The frame both books share. */
-export function BookFrame<K extends BrandBookKind>({ kind, children, empty, description }: BookFrameProps<K>) {
+export function BookFrame<K extends BrandBookKind>({ kind, children, empty, description, index }: BookFrameProps<K>) {
   const books = useBrandBooks();
   const title = bookName[kind];
   return (
-    <Page title={`${title} · Brand`} width="reading">
+    <Page title={`${title} · Brand`} width={index ? "default" : "reading"}>
       <Query query={books} loading={`Loading the ${title.toLowerCase()}`}>
         {(view) => (
           <Book
@@ -134,6 +154,7 @@ export function BookFrame<K extends BrandBookKind>({ kind, children, empty, desc
             coming={view.progress?.find((p) => p.kind === kind)}
             empty={empty}
             description={description}
+            index={index}
           >
             {children}
           </Book>
@@ -150,11 +171,12 @@ function Book<K extends BrandBookKind>({
   children,
   empty,
   description,
+  index,
 }: BookFrameProps<K> & { list: BrandBook[]; coming?: BookProgress }) {
   const viewer = useViewer();
   const { canApprove } = useRole();
   const people = useBookPeople();
-  const [params] = useSearchParams();
+  const [params, setParams] = useSearchParams();
   const [asking, setAsking] = useState<"write" | "change" | null>(null);
   const title = bookName[kind];
   const staff = viewer.staff;
@@ -209,33 +231,256 @@ function Book<K extends BrandBookKind>({
     );
 
   const step = foot(shown, people, staff, decides, kind);
+  const next = Math.max(...list.map((b) => b.version)) + 1;
+  // Who may write in the book here, and how (edit.tsx): Fume's people into a draft, or into the newest version when no
+  // draft is open (the first edit starts one); the customer's owner or approver into the version that waits on her or
+  // the one in use, when no other is on its way.
+  const open = list.some((b) => b.state === "draft" || b.state === "writing") || Boolean(coming);
+  const mode: EditMode = !index
+    ? "read"
+    : staff
+      ? shown.state === "draft" || (shown.state === "approved" && shown.id === written[0]?.id && !open)
+        ? "direct"
+        : "read"
+      : decides && !open && (shown.state === "checked" || (shown.state === "approved" && shown.id === inUse?.id))
+        ? "suggest"
+        : "read";
+  const header = (
+    <PageHeader
+      title={title}
+      back={back}
+      description={description}
+      meta={[`Version ${shown.version}`, standing(shown, people, staff, list)]}
+      secondaryActions={actions}
+    />
+  );
   return (
-    <>
-      <PageHeader
-        title={title}
-        back={back}
-        description={description}
-        meta={[`Version ${shown.version}`, standing(shown, people, staff, list)]}
-        secondaryActions={actions}
-      />
-      <Status latest={latest} shown={shown} inUse={inUse} people={people} staff={staff} kind={kind} coming={coming} />
-      {children(shown.body as BodyOf[K], shown)}
-      {written.length > 1 && <Versions list={written} shown={shown} people={people} staff={staff} />}
-      {step === "check" && <CheckFoot book={shown} people={people} />}
-      {step === "decide" && (
-        <DecideFoot book={shown} people={people} kind={kind} onChange={() => setAsking("change")} />
-      )}
-      {asking && shown && (
-        <AskDialog
-          mode={asking}
-          book={shown}
-          kind={kind}
-          next={Math.max(...list.map((b) => b.version)) + 1}
-          people={people}
-          onOpenChange={(open) => !open && setAsking(null)}
-        />
-      )}
-    </>
+    <InPlace
+      book={shown}
+      mode={mode}
+      people={people}
+      onStarted={(made) => setParams({ v: String(made.version) }, { replace: true })}
+    >
+      {(body, edits, local) => {
+        const groups = index?.(body as BodyOf[K]);
+        const main = (
+          <>
+            <Status
+              latest={latest}
+              shown={shown}
+              inUse={inUse}
+              people={people}
+              staff={staff}
+              kind={kind}
+              coming={coming}
+              hint={
+                mode !== "read" && (
+                  <EditNote key="edit" mode={mode} draft={shown.state === "draft"} next={next} people={people} />
+                )
+              }
+            />
+            {children(body as BodyOf[K], shown)}
+            {written.length > 1 && <Versions list={written} shown={shown} people={people} staff={staff} />}
+          </>
+        );
+        return (
+          <>
+            {groups ? (
+              <div className="ui-book-docs">
+                <PlanIndex
+                  label={`In the ${inLine(kind)}`}
+                  className="ui-plandoc-index ui-book-index"
+                  groups={
+                    written.length > 1
+                      ? [
+                          ...groups.slice(0, -1),
+                          {
+                            ...groups[groups.length - 1]!,
+                            parts: [...groups[groups.length - 1]!.parts, { id: "book-versions", label: "Versions" }],
+                          },
+                        ]
+                      : groups
+                  }
+                />
+                <div className="ui-book-main">
+                  {header}
+                  {main}
+                </div>
+              </div>
+            ) : (
+              <>
+                {header}
+                {main}
+              </>
+            )}
+            {local && edits.length > 0 ? (
+              <SendFoot book={shown} edits={edits} next={next} people={people} onDone={local.reset} />
+            ) : (
+              <>
+                {step === "check" && <CheckFoot book={shown} people={people} />}
+                {step === "decide" && (
+                  <DecideFoot book={shown} people={people} kind={kind} onChange={() => setAsking("change")} />
+                )}
+              </>
+            )}
+            {asking && (
+              <AskDialog
+                mode={asking}
+                book={shown}
+                kind={kind}
+                next={next}
+                people={people}
+                onOpenChange={(o) => !o && setAsking(null)}
+              />
+            )}
+          </>
+        );
+      }}
+    </InPlace>
+  );
+}
+
+/** The book's words, editable in place for whoever may (edit.tsx): what children render, the marks, and the
+ *  customer's lines that wait on the page until she sends them. */
+function InPlace({
+  book,
+  mode,
+  people,
+  onStarted,
+  children,
+}: {
+  book: BrandBook;
+  mode: EditMode;
+  people: BookPeople;
+  /** Fume's person's first edit started a new version: show it. */
+  onStarted: (made: BrandBook) => void;
+  children: (body: BrandBook["body"], edits: BookEdit[], local: { reset: () => void } | null) => ReactNode;
+}) {
+  const edit = useEditBrandBook();
+  const toast = useToast();
+  type Local = { bookId: string; body: BrandBook["body"]; marks: BookEditMark[]; edits: BookEdit[] };
+  const [local, setLocal] = useState<Local | null>(null);
+  const reset = () => setLocal(null);
+  // Another version, or another mode: the lines kept on the page belong to the one before.
+  useEffect(() => setLocal(null), [book.id, mode]);
+  const mine = local?.bookId === book.id ? local : null;
+
+  function commit(e: BookEdit, label: string) {
+    if (mode === "suggest") {
+      const base = mine ?? { bookId: book.id, body: book.body, marks: book.edits ?? [], edits: [] };
+      const body = structuredClone(base.body);
+      const marks = structuredClone(base.marks);
+      try {
+        applyEdit(body, marks, e, people.me, new Date().toISOString());
+      } catch {
+        toast.error("That line couldn’t be changed");
+        return;
+      }
+      setLocal({ bookId: book.id, body, marks, edits: [...base.edits, e] });
+      return;
+    }
+    // What undoes it, worked out on a copy before the change goes.
+    let undo: BookEdit | undefined;
+    try {
+      undo = applyEdit(structuredClone(book.body), structuredClone(book.edits ?? []), e, people.me, "");
+    } catch {
+      undo = undefined;
+    }
+    edit.mutateAsync({ bookId: book.id, edits: [e] }).then(
+      (made) => {
+        if (made.id !== book.id) {
+          onStarted(made);
+          toast.done(`Version ${made.version} started from your edit`, {
+            description: `A draft. ${people.expert === "you" ? "You check" : `${cap(people.expert)} checks`} it before the brand reads it.`,
+          });
+          return;
+        }
+        toast.done(e.to === null ? `${label} taken out` : `${label} saved`, {
+          ...(undo
+            ? {
+                action: {
+                  label: "Undo",
+                  onClick: () =>
+                    edit.mutate(
+                      { bookId: made.id, edits: [undo!] },
+                      { onError: (err) => toast.error("It wasn’t undone", { description: err.message }) },
+                    ),
+                },
+              }
+            : {}),
+        });
+      },
+      (err: Error) => toast.error("That line wasn’t saved", { description: err.message }),
+    );
+  }
+
+  return (
+    <EditProvider value={{ mode, marks: mine?.marks ?? book.edits ?? [], commit, who: people.name }}>
+      {children(mine?.body ?? book.body, mine?.edits ?? [], mode === "suggest" ? { reset } : null)}
+    </EditProvider>
+  );
+}
+
+/** One line above the book, for whoever may write in it: how. */
+function EditNote({ mode, draft, next, people }: { mode: EditMode; draft: boolean; next: number; people: BookPeople }) {
+  const checker = people.expert === "you" ? "you check" : `${people.expert} checks`;
+  return (
+    <p className="ui-brandbook-note ui-edit-note" data-tone="quiet">
+      <Icon name="pencil" />
+      <span>
+        {mode === "suggest"
+          ? `Write straight into any line. Your lines go to Fume together, as version ${next}; ${checker} it before you approve it.`
+          : draft
+            ? "Write straight into any line. It is kept when you leave it."
+            : `Write straight into any line. Your first change starts version ${next}, a draft ${checker}.`}
+      </span>
+    </p>
+  );
+}
+
+/** The customer's lines, sent to Fume together: the next version is written with them. */
+function SendFoot({
+  book,
+  edits,
+  next,
+  people,
+  onDone,
+}: {
+  book: BrandBook;
+  edits: BookEdit[];
+  next: number;
+  people: BookPeople;
+  onDone: () => void;
+}) {
+  const change = useAskBrandBookChange();
+  const toast = useToast();
+  const n = edits.length;
+  const lines = `${n} ${n === 1 ? "line" : "lines"}`;
+  return (
+    <PageFooter
+      start={`You changed ${lines}. Fume writes version ${next} with ${n === 1 ? "it" : "them"}; ${people.expert === "you" ? "you check" : `${people.expert} checks`} it before you approve it.`}
+    >
+      <Button variant="secondary" onClick={onDone} disabled={change.isPending}>
+        Discard
+      </Button>
+      <Button
+        icon="send"
+        loading={change.isPending}
+        onClick={() =>
+          change.mutateAsync({ bookId: book.id, ask: `${cap(lines)} changed on the page`, edits }).then(
+            (made) => {
+              onDone();
+              toast.done(`Fume is writing version ${made.version}`, {
+                description: `With your ${lines}. ${cap(people.expert)} checks it before you read it.`,
+              });
+            },
+            (e: Error) => toast.error(`Your lines weren’t sent`, { description: e.message }),
+          )
+        }
+      >
+        Send {lines}
+      </Button>
+    </PageFooter>
   );
 }
 
@@ -255,6 +500,7 @@ function Status({
   staff,
   kind,
   coming,
+  hint,
 }: {
   latest: BrandBook | undefined;
   shown: BrandBook | undefined;
@@ -263,6 +509,8 @@ function Status({
   staff: boolean;
   kind: BrandBookKind;
   coming?: BookProgress;
+  /** How to write in the book, for whoever may: the last line. */
+  hint?: ReactNode;
 }) {
   const lines: ReactNode[] = [];
   // To a customer, a version she cannot read yet is only its number and where it is: never its words.
@@ -321,6 +569,7 @@ function Status({
         </span>
       </p>,
     );
+  if (hint) lines.push(hint);
   if (!lines.length) return null;
   return <div className="ui-brandbook-notes">{lines}</div>;
 }
@@ -338,8 +587,8 @@ function Versions({
   staff: boolean;
 }) {
   return (
-    <section className="ui-brandbook-versions" aria-labelledby="book-versions">
-      <h2 className="ui-voice-sub" id="book-versions">
+    <section className="ui-brandbook-versions" id="book-versions" aria-labelledby="book-versions-title">
+      <h2 className="ui-voice-sub" id="book-versions-title">
         Versions
       </h2>
       <ul className="ui-brandbook-version-list">

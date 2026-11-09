@@ -1289,6 +1289,36 @@ scores, what is "To decide" (each finding: what is wrong, what it should be, a q
 then what holds folded into one line ("3 checks hold"), the Brand DNA list folded, the note to the Engine, and the
 decision at the foot. Part titles are the rows' size in Ink, so they are read first; "In the picture" is gone.
 
+### 34.3 The Tone of Voice is written in place, and copy is a big part of it
+Marcus: the Tone of Voice "føles som click to open edit", static and cold; "ToV og copy trenger en mye større del,
+copy har blitt en stor del av det vi løser".
+
+- **A book reads like documentation.** Its index sits on the left on a desk (as brand.fumecreatives.com and shadcn's
+  docs): three groups with small titles, **Voice** (Identity, How we speak, Where we sit, Rules, Audience), **Copy**
+  (Try a line, Headlines, Calls to action, Channels, On brand off brand, Examples, Our words, Mechanics) and **This
+  version** (Still to know, Where it comes from, Versions). The part in view is lit; a press glides to it. Under 1100 px
+  the index goes and the book is one column. Each group opens with the page's biggest title and one line.
+- **Every line is its own field.** Nothing opens: she clicks a line, writes, and it is kept when she leaves it (Enter
+  or Tab; Escape puts the words back). A list has "Add a line" at its end and × beside a line; an emptied line goes.
+  Words are chips with × and "Add a word". A changed line keeps a dotted underline and says who changed it and what it
+  said before. No colour of its own: Amber stays for a person's check, Rouge for what works against a rule.
+- **Who writes, and where it goes.**
+  - Fume's people write straight into a draft; each line saves with Undo in the toast. On the version in use, when
+    no draft is open, the first change starts the next version, a draft the expert checks
+    (`editBrandBook`, `BrandBook.edits`).
+  - The brand's owner or approver writes into the version that waits on her, or the one in use, the same way. Her
+    lines wait on the page, marked hers, and the foot says "You changed 2 lines. Fume writes version 3 with them; Anna
+    checks it before you approve it", with **Send 2 lines** and Discard. Fume keeps her lines as she wrote them
+    (`askBrandBookChange` with `edits`). The expert still checks every version; only the customer approves.
+  - Nobody else writes in a book, and nobody writes in a version that is replaced.
+- **Copy, bigger.** Headlines read at body-large with their pattern under them; calls to action are cards with the
+  words big and when each is used; each channel shows its example first, then how and how long.
+- **Try a line.** At the top of Copy: write a headline, a call to action or a caption, pick where it runs, and Fume
+  holds it against this Tone of Voice, as the plan's copy check does (§31): the words the voice avoids, a claim no
+  verified fact backs, the mechanics (no exclamation marks, sentence case), and the channel's length ("12 of 6 words").
+  With something found, Fume's version of the line and "Use it". A reading only; it changes nothing
+  (`checkCopyLine`).
+
 ### 34.5 Fume designs in Design, and its design is checked in Designs
 Marcus: "litt rart at man fortsatt er på Image-fanen og ikke Design-fanen når Fume/Engine gjør designen", and "hvorfor
 sjekker man design inne på Images-siden?"

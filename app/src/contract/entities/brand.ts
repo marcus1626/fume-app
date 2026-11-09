@@ -413,6 +413,39 @@ interface BookVersion {
   checkedAt?: Instant;
   approvedBy?: Id;
   approvedAt?: Instant;
+  /** The lines Fume's people changed by hand in this version, edited in place (FLOWS §34.3, PROPOSED). */
+  edits?: BookEditMark[];
+}
+
+/** One edit to a book's words in place (FLOWS §34.3, PROPOSED): the path of a line in the body, as
+ *  "speak.traits.1.do" or "identity.believe.2", and its new words. `to: null` takes an item out of a list; an index one
+ *  past a list's end adds an item; `insert` puts one in before the item at that index (an undo of taking it out). */
+export interface BookEdit {
+  path: string;
+  to: string | null;
+  insert?: boolean;
+}
+
+/** A line someone changed by hand: who, when, and what it said before (null for an item they added). */
+export interface BookEditMark {
+  path: string;
+  by: Id;
+  at: Instant;
+  from: string | null;
+}
+
+/** One line of copy, held against the brand's Tone of Voice (FLOWS §34.3, PROPOSED): the same reading as the plan's
+ *  copy check (§31), for a line someone tries on the Tone of Voice page. */
+export interface CopyLineCheck {
+  text: string;
+  channel?: VoiceChannel;
+  /** "5 of 6 words": its length against the channel's, when the channel has one. */
+  length?: { words: number; max: number };
+  findings: { kind: "avoided_word" | "unbacked_claim" | "off_voice" | "too_long"; words?: string; note: string }[];
+  /** Fume's version of the line in the voice, when it found something. */
+  rewrite?: string;
+  /** The version of the Tone of Voice it read. */
+  version: number;
 }
 
 /** One version of a book; no body while it is being written, or when writing it failed. */

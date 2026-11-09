@@ -3433,7 +3433,7 @@ anna qaQueue()
         "campaignId": "c-autumn",
         "creativeId": "cr-a-v7",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":92,"product":89}},
         "feedback": [],
         "format": "feed",
         "id": "qa-1",
@@ -3492,7 +3492,7 @@ anna qaQueue()
         "campaignId": "c-autumn",
         "creativeId": "cr-a-v8",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":88}},
         "feedback": [],
         "format": "square",
         "id": "qa-2",
@@ -3560,7 +3560,15 @@ anna qaQueue()
             "Light from above, not from the side",
             "A smeared edge where the bottle meets the ledge"
           ],
-          "productTruth": "flag"
+          "productTruth": "flag",
+          "scores": {
+            "engine": 74,
+            "product": 52,
+            "why": [
+              {"score":"product","text":"The cap reads glossy; it is matte"},
+              {"score":"engine","text":"Light from above, not from one side"}
+            ]
+          }
         },
         "feedback": [],
         "findings": [
@@ -3732,7 +3740,7 @@ anna qaQueue()
           ]
         },
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
         "feedback": [],
         "format": "feed",
         "id": "qa-8",
@@ -3794,7 +3802,7 @@ anna qaQueue()
         "creativeId": "cr-doc-autumn-email",
         "documentId": "doc-autumn-email",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":90,"product":89}},
         "feedback": [],
         "format": "story",
         "id": "qa-4",
@@ -3889,7 +3897,7 @@ anna qaQueue()
         "campaignId": "c-solv",
         "creativeId": "cr-solv-1",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":90}},
         "feedback": [],
         "format": "feed",
         "id": "qa-5",
@@ -3944,7 +3952,13 @@ anna qaQueue()
         "campaignId": "c-solv",
         "creativeId": "cr-solv-2",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"minor","brandRules":"pass","notes":["A soft edge on the left cup"],"productTruth":"pass"},
+        "evaluation": {
+          "artefacts": "minor",
+          "brandRules": "pass",
+          "notes": ["A soft edge on the left cup"],
+          "productTruth": "pass",
+          "scores": {"engine":81,"product":90}
+        },
         "feedback": [],
         "format": "feed",
         "id": "qa-6",

@@ -487,7 +487,7 @@ anna render("doc-mvkqul14-1") → events
           "at": "2026-10-14T12:32:03.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquncg-3",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -585,7 +585,7 @@ anna render("doc-mvkqul14-1")
         "at": "2026-10-14T12:32:03.000Z",
         "by": "u-anna",
         "cost": 0.48,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
         "id": "rv-mvkquncg-3",
         "image": "/demo/lysne/05-08-feed.jpg",
         "number": 1,
@@ -678,7 +678,7 @@ anna pickVersion("doc-mvkqul14-1", "rv-mvkquncg-3") → events
           "at": "2026-10-14T12:32:03.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquncg-3",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -776,7 +776,7 @@ anna pickVersion("doc-mvkqul14-1", "rv-mvkquncg-3")
         "at": "2026-10-14T12:32:03.000Z",
         "by": "u-anna",
         "cost": 0.48,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
         "id": "rv-mvkquncg-3",
         "image": "/demo/lysne/05-08-feed.jpg",
         "number": 1,
@@ -878,7 +878,7 @@ anna overrideProduct("doc-mvkqul14-1", {"field":"cap","scope":"product","value":
           "at": "2026-10-14T12:32:03.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquncg-3",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -988,7 +988,7 @@ anna overrideProduct("doc-mvkqul14-1", {"field":"cap","scope":"product","value":
         "at": "2026-10-14T12:32:03.000Z",
         "by": "u-anna",
         "cost": 0.48,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
         "id": "rv-mvkquncg-3",
         "image": "/demo/lysne/05-08-feed.jpg",
         "number": 1,
@@ -1101,7 +1101,7 @@ anna overrideProduct("doc-mvkqul14-1", {"field":"label","scope":"this_render","v
           "at": "2026-10-14T12:32:03.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquncg-3",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -1222,7 +1222,7 @@ anna overrideProduct("doc-mvkqul14-1", {"field":"label","scope":"this_render","v
         "at": "2026-10-14T12:32:03.000Z",
         "by": "u-anna",
         "cost": 0.48,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
         "id": "rv-mvkquncg-3",
         "image": "/demo/lysne/05-08-feed.jpg",
         "number": 1,
@@ -1336,7 +1336,7 @@ anna setSource("doc-mvkqul14-1", "light", "brand") → events
           "at": "2026-10-14T12:32:03.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquncg-3",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -1458,7 +1458,7 @@ anna setSource("doc-mvkqul14-1", "light", "brand")
         "at": "2026-10-14T12:32:03.000Z",
         "by": "u-anna",
         "cost": 0.48,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
         "id": "rv-mvkquncg-3",
         "image": "/demo/lysne/05-08-feed.jpg",
         "number": 1,
@@ -1572,7 +1572,7 @@ anna setSource("doc-mvkqul14-1", "camera", "own") → events
           "at": "2026-10-14T12:32:03.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquncg-3",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -1694,7 +1694,7 @@ anna setSource("doc-mvkqul14-1", "camera", "own")
         "at": "2026-10-14T12:32:03.000Z",
         "by": "u-anna",
         "cost": 0.48,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
         "id": "rv-mvkquncg-3",
         "image": "/demo/lysne/05-08-feed.jpg",
         "number": 1,
@@ -1826,7 +1826,7 @@ anna makeFormats("doc-mvkqul14-1", ["pl-ig-story","pl-pin"]) → events
           "at": "2026-10-14T12:32:03.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquncg-3",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -1968,7 +1968,7 @@ anna makeFormats("doc-mvkqul14-1", ["pl-ig-story","pl-pin"]) → events
           "at": "2026-10-14T12:32:03.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquncg-3",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -2110,7 +2110,7 @@ anna makeFormats("doc-mvkqul14-1", ["pl-ig-story","pl-pin"])
         "at": "2026-10-14T12:32:03.000Z",
         "by": "u-anna",
         "cost": 0.48,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
         "id": "rv-mvkquncg-3",
         "image": "/demo/lysne/05-08-feed.jpg",
         "number": 1,
@@ -2245,7 +2245,7 @@ anna setFormatTile("doc-mvkqul14-1", "pl-ig-story", {"crop":{"h":0.8,"w":1,"x":0
           "at": "2026-10-14T12:32:03.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquncg-3",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -2387,7 +2387,7 @@ anna setFormatTile("doc-mvkqul14-1", "pl-ig-story", {"crop":{"h":0.8,"w":1,"x":0
         "at": "2026-10-14T12:32:03.000Z",
         "by": "u-anna",
         "cost": 0.48,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
         "id": "rv-mvkquncg-3",
         "image": "/demo/lysne/05-08-feed.jpg",
         "number": 1,
@@ -2534,7 +2534,7 @@ anna fixProduct("doc-mvkqul14-1", {"tokenId":"dt-cap","versionId":"rv-mvkquncg-3
           "at": "2026-10-14T12:32:03.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquncg-3",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -2690,7 +2690,7 @@ anna fixProduct("doc-mvkqul14-1", {"tokenId":"dt-cap","versionId":"rv-mvkquncg-3
           "at": "2026-10-14T12:32:03.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquncg-3",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -2737,7 +2737,7 @@ anna fixProduct("doc-mvkqul14-1", {"tokenId":"dt-cap","versionId":"rv-mvkquncg-3
           "at": "2026-10-14T12:32:13.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquv28-7",
           "image": "/demo/lysne/05-08-feed.jpg",
           "instruction": "Fixed cap with the real product: Burgundy, matte",
@@ -2894,7 +2894,7 @@ anna fixProduct("doc-mvkqul14-1", {"tokenId":"dt-cap","versionId":"rv-mvkquncg-3
         "at": "2026-10-14T12:32:03.000Z",
         "by": "u-anna",
         "cost": 0.48,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
         "id": "rv-mvkquncg-3",
         "image": "/demo/lysne/05-08-feed.jpg",
         "number": 1,
@@ -2934,7 +2934,7 @@ anna fixProduct("doc-mvkqul14-1", {"tokenId":"dt-cap","versionId":"rv-mvkquncg-3
         "at": "2026-10-14T12:32:13.000Z",
         "by": "u-anna",
         "cost": 0.48,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
         "id": "rv-mvkquv28-7",
         "image": "/demo/lysne/05-08-feed.jpg",
         "instruction": "Fixed cap with the real product: Burgundy, matte",
@@ -3086,7 +3086,7 @@ anna documentToCheck("doc-mvkqul14-1") → events
           "at": "2026-10-14T12:32:03.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquncg-3",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -3133,7 +3133,7 @@ anna documentToCheck("doc-mvkqul14-1") → events
           "at": "2026-10-14T12:32:13.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquv28-7",
           "image": "/demo/lysne/05-08-feed.jpg",
           "instruction": "Fixed cap with the real product: Burgundy, matte",
@@ -3188,7 +3188,7 @@ anna documentToCheck("doc-mvkqul14-1") → events
       "creativeId": "cr-doc-mvkqul14-1",
       "documentId": "doc-mvkqul14-1",
       "dueAt": "2026-10-17T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
       "feedback": [],
       "format": "feed",
       "id": "qa-mvkquyx4-8",
@@ -3314,7 +3314,7 @@ anna documentToCheck("doc-mvkqul14-1")
         "at": "2026-10-14T12:32:03.000Z",
         "by": "u-anna",
         "cost": 0.48,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
         "id": "rv-mvkquncg-3",
         "image": "/demo/lysne/05-08-feed.jpg",
         "number": 1,
@@ -3354,7 +3354,7 @@ anna documentToCheck("doc-mvkqul14-1")
         "at": "2026-10-14T12:32:13.000Z",
         "by": "u-anna",
         "cost": 0.48,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
         "id": "rv-mvkquv28-7",
         "image": "/demo/lysne/05-08-feed.jpg",
         "instruction": "Fixed cap with the real product: Burgundy, matte",
@@ -3503,7 +3503,7 @@ anna undoDocumentToCheck("doc-mvkqul14-1") → events
           "at": "2026-10-14T12:32:03.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquncg-3",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -3550,7 +3550,7 @@ anna undoDocumentToCheck("doc-mvkqul14-1") → events
           "at": "2026-10-14T12:32:13.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquv28-7",
           "image": "/demo/lysne/05-08-feed.jpg",
           "instruction": "Fixed cap with the real product: Burgundy, matte",
@@ -3605,7 +3605,7 @@ anna undoDocumentToCheck("doc-mvkqul14-1") → events
       "creativeId": "cr-doc-mvkqul14-1",
       "documentId": "doc-mvkqul14-1",
       "dueAt": "2026-10-17T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
       "feedback": [],
       "format": "feed",
       "id": "qa-mvkquyx4-8",
@@ -3731,7 +3731,7 @@ anna undoDocumentToCheck("doc-mvkqul14-1")
         "at": "2026-10-14T12:32:03.000Z",
         "by": "u-anna",
         "cost": 0.48,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
         "id": "rv-mvkquncg-3",
         "image": "/demo/lysne/05-08-feed.jpg",
         "number": 1,
@@ -3771,7 +3771,7 @@ anna undoDocumentToCheck("doc-mvkqul14-1")
         "at": "2026-10-14T12:32:13.000Z",
         "by": "u-anna",
         "cost": 0.48,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
         "id": "rv-mvkquv28-7",
         "image": "/demo/lysne/05-08-feed.jpg",
         "instruction": "Fixed cap with the real product: Burgundy, matte",
@@ -3920,7 +3920,7 @@ anna documentToCheck("doc-mvkqul14-1") → events
           "at": "2026-10-14T12:32:03.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquncg-3",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -3967,7 +3967,7 @@ anna documentToCheck("doc-mvkqul14-1") → events
           "at": "2026-10-14T12:32:13.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquv28-7",
           "image": "/demo/lysne/05-08-feed.jpg",
           "instruction": "Fixed cap with the real product: Burgundy, matte",
@@ -4022,7 +4022,7 @@ anna documentToCheck("doc-mvkqul14-1") → events
       "creativeId": "cr-doc-mvkqul14-1",
       "documentId": "doc-mvkqul14-1",
       "dueAt": "2026-10-17T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
       "feedback": [],
       "format": "feed",
       "id": "qa-mvkquyx4-9",
@@ -4185,7 +4185,13 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo") → events
           "at": "2026-10-14T11:02:00.000Z",
           "by": "u-anna",
           "cost": 0.12,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":["Cap reads glossy"],"productTruth":"flag"},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": ["Cap reads glossy"],
+            "productTruth": "flag",
+            "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+          },
           "id": "rv-1",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -4368,7 +4374,7 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo") → events
             {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
           "id": "rv-2",
           "image": "/demo/lysne/04-06-feed.jpg",
           "instruction": "Make the bottle a little bigger",
@@ -4552,7 +4558,7 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo") → events
             {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
           "id": "rv-3",
           "image": "/demo/lysne/05-01-feed.jpg",
           "instruction": "Move the bottle lower, more air above",
@@ -4725,11 +4731,23 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo") → events
         {
           "at": "2026-10-14T12:26:00.000Z",
           "by": "u-anna",
-          "cost": 0,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-          "failure": "The prompt worked against 2 of LYSNE's rules three tries in a row, so nothing was rendered.",
+          "cost": 0.12,
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "flag",
+            "notes": ["The cap reads glossy"],
+            "productTruth": "flag",
+            "scores": {
+              "engine": 58,
+              "product": 64,
+              "why": [
+                {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
+                {"score":"product","text":"The cap reads glossy; it is matte"}
+              ]
+            }
+          },
           "id": "rv-4",
-          "image": "",
+          "image": "/demo/lysne/05-01g-feed.jpg",
           "instruction": "Add a glossy reflection on the cap",
           "number": 4,
           "prompt": {
@@ -4868,7 +4886,7 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo") → events
             "method": "Product on a surface",
             "model": "Nano Banana Pro",
             "reason": "A glossy cap works against the verified facts and the brand's rule: nothing glossy.",
-            "status": "blocked",
+            "status": "warned",
             "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy cap with a glossy reflection, LYSNE Night Body Oil, stands low in the frame with calm air above it on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
             "tries": 3
           },
@@ -4881,7 +4899,7 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo") → events
             "referenceIds": ["rf-stone"],
             "variantId": "va-oil-100"
           },
-          "state": "failed",
+          "state": "done",
           "variables": {
             "depth": 40,
             "lens": {"focal":50,"height":30,"tilt":-8},
@@ -5014,7 +5032,13 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo")
         "at": "2026-10-14T11:02:00.000Z",
         "by": "u-anna",
         "cost": 0.12,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":["Cap reads glossy"],"productTruth":"flag"},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": ["Cap reads glossy"],
+          "productTruth": "flag",
+          "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+        },
         "id": "rv-1",
         "image": "/demo/lysne/05-08-feed.jpg",
         "number": 1,
@@ -5197,7 +5221,7 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo")
           {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
         "id": "rv-2",
         "image": "/demo/lysne/04-06-feed.jpg",
         "instruction": "Make the bottle a little bigger",
@@ -5381,7 +5405,7 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo")
           {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
         "id": "rv-3",
         "image": "/demo/lysne/05-01-feed.jpg",
         "instruction": "Move the bottle lower, more air above",
@@ -5554,11 +5578,23 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo")
       {
         "at": "2026-10-14T12:26:00.000Z",
         "by": "u-anna",
-        "cost": 0,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-        "failure": "The prompt worked against 2 of LYSNE's rules three tries in a row, so nothing was rendered.",
+        "cost": 0.12,
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "flag",
+          "notes": ["The cap reads glossy"],
+          "productTruth": "flag",
+          "scores": {
+            "engine": 58,
+            "product": 64,
+            "why": [
+              {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
+              {"score":"product","text":"The cap reads glossy; it is matte"}
+            ]
+          }
+        },
         "id": "rv-4",
-        "image": "",
+        "image": "/demo/lysne/05-01g-feed.jpg",
         "instruction": "Add a glossy reflection on the cap",
         "number": 4,
         "prompt": {
@@ -5697,7 +5733,7 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo")
           "method": "Product on a surface",
           "model": "Nano Banana Pro",
           "reason": "A glossy cap works against the verified facts and the brand's rule: nothing glossy.",
-          "status": "blocked",
+          "status": "warned",
           "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy cap with a glossy reflection, LYSNE Night Body Oil, stands low in the frame with calm air above it on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
           "tries": 3
         },
@@ -5710,7 +5746,7 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo")
           "referenceIds": ["rf-stone"],
           "variantId": "va-oil-100"
         },
-        "state": "failed",
+        "state": "done",
         "variables": {
           "depth": 40,
           "lens": {"focal":50,"height":30,"tilt":-8},
@@ -5842,7 +5878,13 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"}) → events
           "at": "2026-10-14T11:02:00.000Z",
           "by": "u-anna",
           "cost": 0.12,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":["Cap reads glossy"],"productTruth":"flag"},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": ["Cap reads glossy"],
+            "productTruth": "flag",
+            "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+          },
           "id": "rv-1",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -6025,7 +6067,7 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"}) → events
             {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
           "id": "rv-2",
           "image": "/demo/lysne/04-06-feed.jpg",
           "instruction": "Make the bottle a little bigger",
@@ -6209,7 +6251,7 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"}) → events
             {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
           "id": "rv-3",
           "image": "/demo/lysne/05-01-feed.jpg",
           "instruction": "Move the bottle lower, more air above",
@@ -6382,11 +6424,23 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"}) → events
         {
           "at": "2026-10-14T12:26:00.000Z",
           "by": "u-anna",
-          "cost": 0,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-          "failure": "The prompt worked against 2 of LYSNE's rules three tries in a row, so nothing was rendered.",
+          "cost": 0.12,
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "flag",
+            "notes": ["The cap reads glossy"],
+            "productTruth": "flag",
+            "scores": {
+              "engine": 58,
+              "product": 64,
+              "why": [
+                {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
+                {"score":"product","text":"The cap reads glossy; it is matte"}
+              ]
+            }
+          },
           "id": "rv-4",
-          "image": "",
+          "image": "/demo/lysne/05-01g-feed.jpg",
           "instruction": "Add a glossy reflection on the cap",
           "number": 4,
           "prompt": {
@@ -6525,7 +6579,7 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"}) → events
             "method": "Product on a surface",
             "model": "Nano Banana Pro",
             "reason": "A glossy cap works against the verified facts and the brand's rule: nothing glossy.",
-            "status": "blocked",
+            "status": "warned",
             "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy cap with a glossy reflection, LYSNE Night Body Oil, stands low in the frame with calm air above it on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
             "tries": 3
           },
@@ -6538,7 +6592,7 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"}) → events
             "referenceIds": ["rf-stone"],
             "variantId": "va-oil-100"
           },
-          "state": "failed",
+          "state": "done",
           "variables": {
             "depth": 40,
             "lens": {"focal":50,"height":30,"tilt":-8},
@@ -6671,7 +6725,13 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"})
         "at": "2026-10-14T11:02:00.000Z",
         "by": "u-anna",
         "cost": 0.12,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":["Cap reads glossy"],"productTruth":"flag"},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": ["Cap reads glossy"],
+          "productTruth": "flag",
+          "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+        },
         "id": "rv-1",
         "image": "/demo/lysne/05-08-feed.jpg",
         "number": 1,
@@ -6854,7 +6914,7 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"})
           {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
         "id": "rv-2",
         "image": "/demo/lysne/04-06-feed.jpg",
         "instruction": "Make the bottle a little bigger",
@@ -7038,7 +7098,7 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"})
           {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
         "id": "rv-3",
         "image": "/demo/lysne/05-01-feed.jpg",
         "instruction": "Move the bottle lower, more air above",
@@ -7211,11 +7271,23 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"})
       {
         "at": "2026-10-14T12:26:00.000Z",
         "by": "u-anna",
-        "cost": 0,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-        "failure": "The prompt worked against 2 of LYSNE's rules three tries in a row, so nothing was rendered.",
+        "cost": 0.12,
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "flag",
+          "notes": ["The cap reads glossy"],
+          "productTruth": "flag",
+          "scores": {
+            "engine": 58,
+            "product": 64,
+            "why": [
+              {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
+              {"score":"product","text":"The cap reads glossy; it is matte"}
+            ]
+          }
+        },
         "id": "rv-4",
-        "image": "",
+        "image": "/demo/lysne/05-01g-feed.jpg",
         "instruction": "Add a glossy reflection on the cap",
         "number": 4,
         "prompt": {
@@ -7354,7 +7426,7 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"})
           "method": "Product on a surface",
           "model": "Nano Banana Pro",
           "reason": "A glossy cap works against the verified facts and the brand's rule: nothing glossy.",
-          "status": "blocked",
+          "status": "warned",
           "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy cap with a glossy reflection, LYSNE Night Body Oil, stands low in the frame with calm air above it on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
           "tries": 3
         },
@@ -7367,7 +7439,7 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"})
           "referenceIds": ["rf-stone"],
           "variantId": "va-oil-100"
         },
-        "state": "failed",
+        "state": "done",
         "variables": {
           "depth": 40,
           "lens": {"focal":50,"height":30,"tilt":-8},
@@ -7498,7 +7570,13 @@ anna updateDocument("doc-autumn-m3", {}) → events
           "at": "2026-10-14T11:02:00.000Z",
           "by": "u-anna",
           "cost": 0.12,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":["Cap reads glossy"],"productTruth":"flag"},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": ["Cap reads glossy"],
+            "productTruth": "flag",
+            "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+          },
           "id": "rv-1",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -7681,7 +7759,7 @@ anna updateDocument("doc-autumn-m3", {}) → events
             {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
           "id": "rv-2",
           "image": "/demo/lysne/04-06-feed.jpg",
           "instruction": "Make the bottle a little bigger",
@@ -7865,7 +7943,7 @@ anna updateDocument("doc-autumn-m3", {}) → events
             {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
           "id": "rv-3",
           "image": "/demo/lysne/05-01-feed.jpg",
           "instruction": "Move the bottle lower, more air above",
@@ -8038,11 +8116,23 @@ anna updateDocument("doc-autumn-m3", {}) → events
         {
           "at": "2026-10-14T12:26:00.000Z",
           "by": "u-anna",
-          "cost": 0,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-          "failure": "The prompt worked against 2 of LYSNE's rules three tries in a row, so nothing was rendered.",
+          "cost": 0.12,
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "flag",
+            "notes": ["The cap reads glossy"],
+            "productTruth": "flag",
+            "scores": {
+              "engine": 58,
+              "product": 64,
+              "why": [
+                {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
+                {"score":"product","text":"The cap reads glossy; it is matte"}
+              ]
+            }
+          },
           "id": "rv-4",
-          "image": "",
+          "image": "/demo/lysne/05-01g-feed.jpg",
           "instruction": "Add a glossy reflection on the cap",
           "number": 4,
           "prompt": {
@@ -8181,7 +8271,7 @@ anna updateDocument("doc-autumn-m3", {}) → events
             "method": "Product on a surface",
             "model": "Nano Banana Pro",
             "reason": "A glossy cap works against the verified facts and the brand's rule: nothing glossy.",
-            "status": "blocked",
+            "status": "warned",
             "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy cap with a glossy reflection, LYSNE Night Body Oil, stands low in the frame with calm air above it on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
             "tries": 3
           },
@@ -8194,7 +8284,7 @@ anna updateDocument("doc-autumn-m3", {}) → events
             "referenceIds": ["rf-stone"],
             "variantId": "va-oil-100"
           },
-          "state": "failed",
+          "state": "done",
           "variables": {
             "depth": 40,
             "lens": {"focal":50,"height":30,"tilt":-8},
@@ -8326,7 +8416,13 @@ anna updateDocument("doc-autumn-m3", {})
         "at": "2026-10-14T11:02:00.000Z",
         "by": "u-anna",
         "cost": 0.12,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":["Cap reads glossy"],"productTruth":"flag"},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": ["Cap reads glossy"],
+          "productTruth": "flag",
+          "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+        },
         "id": "rv-1",
         "image": "/demo/lysne/05-08-feed.jpg",
         "number": 1,
@@ -8509,7 +8605,7 @@ anna updateDocument("doc-autumn-m3", {})
           {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
         "id": "rv-2",
         "image": "/demo/lysne/04-06-feed.jpg",
         "instruction": "Make the bottle a little bigger",
@@ -8693,7 +8789,7 @@ anna updateDocument("doc-autumn-m3", {})
           {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
         "id": "rv-3",
         "image": "/demo/lysne/05-01-feed.jpg",
         "instruction": "Move the bottle lower, more air above",
@@ -8866,11 +8962,23 @@ anna updateDocument("doc-autumn-m3", {})
       {
         "at": "2026-10-14T12:26:00.000Z",
         "by": "u-anna",
-        "cost": 0,
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-        "failure": "The prompt worked against 2 of LYSNE's rules three tries in a row, so nothing was rendered.",
+        "cost": 0.12,
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "flag",
+          "notes": ["The cap reads glossy"],
+          "productTruth": "flag",
+          "scores": {
+            "engine": 58,
+            "product": 64,
+            "why": [
+              {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
+              {"score":"product","text":"The cap reads glossy; it is matte"}
+            ]
+          }
+        },
         "id": "rv-4",
-        "image": "",
+        "image": "/demo/lysne/05-01g-feed.jpg",
         "instruction": "Add a glossy reflection on the cap",
         "number": 4,
         "prompt": {
@@ -9009,7 +9117,7 @@ anna updateDocument("doc-autumn-m3", {})
           "method": "Product on a surface",
           "model": "Nano Banana Pro",
           "reason": "A glossy cap works against the verified facts and the brand's rule: nothing glossy.",
-          "status": "blocked",
+          "status": "warned",
           "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy cap with a glossy reflection, LYSNE Night Body Oil, stands low in the frame with calm air above it on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
           "tries": 3
         },
@@ -9022,7 +9130,7 @@ anna updateDocument("doc-autumn-m3", {})
           "referenceIds": ["rf-stone"],
           "variantId": "va-oil-100"
         },
-        "state": "failed",
+        "state": "done",
         "variables": {
           "depth": 40,
           "lens": {"focal":50,"height":30,"tilt":-8},
@@ -9636,7 +9744,13 @@ anna documents("w-lysne")
           "at": "2026-10-14T11:02:00.000Z",
           "by": "u-anna",
           "cost": 0.12,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":["Cap reads glossy"],"productTruth":"flag"},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": ["Cap reads glossy"],
+            "productTruth": "flag",
+            "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+          },
           "id": "rv-1",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -9819,7 +9933,7 @@ anna documents("w-lysne")
             {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
           "id": "rv-2",
           "image": "/demo/lysne/04-06-feed.jpg",
           "instruction": "Make the bottle a little bigger",
@@ -10003,7 +10117,7 @@ anna documents("w-lysne")
             {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
           "id": "rv-3",
           "image": "/demo/lysne/05-01-feed.jpg",
           "instruction": "Move the bottle lower, more air above",
@@ -10176,11 +10290,23 @@ anna documents("w-lysne")
         {
           "at": "2026-10-14T12:26:00.000Z",
           "by": "u-anna",
-          "cost": 0,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
-          "failure": "The prompt worked against 2 of LYSNE's rules three tries in a row, so nothing was rendered.",
+          "cost": 0.12,
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "flag",
+            "notes": ["The cap reads glossy"],
+            "productTruth": "flag",
+            "scores": {
+              "engine": 58,
+              "product": 64,
+              "why": [
+                {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
+                {"score":"product","text":"The cap reads glossy; it is matte"}
+              ]
+            }
+          },
           "id": "rv-4",
-          "image": "",
+          "image": "/demo/lysne/05-01g-feed.jpg",
           "instruction": "Add a glossy reflection on the cap",
           "number": 4,
           "prompt": {
@@ -10319,7 +10445,7 @@ anna documents("w-lysne")
             "method": "Product on a surface",
             "model": "Nano Banana Pro",
             "reason": "A glossy cap works against the verified facts and the brand's rule: nothing glossy.",
-            "status": "blocked",
+            "status": "warned",
             "text": "Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy cap with a glossy reflection, LYSNE Night Body Oil, stands low in the frame with calm air above it on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.",
             "tries": 3
           },
@@ -10332,7 +10458,7 @@ anna documents("w-lysne")
             "referenceIds": ["rf-stone"],
             "variantId": "va-oil-100"
           },
-          "state": "failed",
+          "state": "done",
           "variables": {
             "depth": 40,
             "lens": {"focal":50,"height":30,"tilt":-8},
@@ -10463,7 +10589,7 @@ anna documents("w-lysne")
           "at": "2026-10-14T12:32:03.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquncg-3",
           "image": "/demo/lysne/05-08-feed.jpg",
           "number": 1,
@@ -10510,7 +10636,7 @@ anna documents("w-lysne")
           "at": "2026-10-14T12:32:13.000Z",
           "by": "u-anna",
           "cost": 0.48,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
           "id": "rv-mvkquv28-7",
           "image": "/demo/lysne/05-08-feed.jpg",
           "instruction": "Fixed cap with the real product: Burgundy, matte",
