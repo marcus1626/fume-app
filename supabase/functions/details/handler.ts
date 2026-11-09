@@ -187,10 +187,16 @@ export async function readDetails(t: Take, d: Deps): Promise<Detail[] | null> {
         // letters right is read once more, and a mismatch in either is what stands.
         let r = await d.read({ cropUrl, refUrl, what: place.what });
         spent.usd += r.usd;
-        if (refUrl && readsRight(r)) {
+        if (refUrl) {
+          // Read twice; when the two disagree, a third read decides. Either crop can be misread: the picture's garbled
+          // word as the right one, or the real photograph's small print as a garbled one (HUERNE for HJERNE, 9 Nov).
           const again = await d.read({ cropUrl, refUrl, what: place.what });
           spent.usd += again.usd;
-          if (!readsRight(again)) r = again;
+          if (readsRight(r) !== readsRight(again)) {
+            const third = await d.read({ cropUrl, refUrl, what: place.what });
+            spent.usd += third.usd;
+            r = readsRight(third) ? (readsRight(r) ? r : again) : (readsRight(r) ? again : r);
+          } else if (!readsRight(r) && readsRight(again)) r = again;
         }
         return {
           n, kind: "print", what: place.what.slice(0, 120), box: onPicture.box, reads: r.reads.slice(0, 200), expected: r.expected.slice(0, 200),
@@ -208,6 +214,14 @@ export async function readDetails(t: Take, d: Deps): Promise<Detail[] | null> {
     };
     const done: (Detail | null)[] = [];
     for (let i = 0; i < places.length; i += AT_ONCE) done.push(...(await Promise.all(places.slice(i, i + AT_ONCE).map(read))));
+    // A word on the picture that the product shows elsewhere is no garbled word: the photograph's crop showed less
+    // (MÖLLER'S Tran on the picture, MÖLLER'S on the photograph's crop).
+    const real = new Set(done.flatMap((x) => (x ? words(x.expected) : [])));
+    for (const x of done) {
+      if (!x || x.ok || !words(x.reads).every((w) => real.has(w))) continue;
+      x.ok = true;
+      delete x.note;
+    }
     out.push(...done.filter((x): x is Detail => x !== null));
     await withParts();
     await d.service.finish(t.candidate_id, out, usd);

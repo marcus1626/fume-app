@@ -42,6 +42,13 @@ reads Dressmann."), and its place on the picture is where the designer fixes it 
   Møllers packs. The new read caught every one: the icon words on Tran, Trankapsler and Geléfisker, "Non originale",
   the seal's year and words, "28 dagodeser", "GELE- FIGKER", and the Dressmann collar label with its small lines.
   On the Nike pictures and the right print it raised no alarm. About 7 to 25 cents a picture with the parts.
+- Each place is read twice, and a third read decides when the two disagree: the real photograph's small print can be
+  misread too (HUERNE for HJERNE on a fixed Tran label). A word on the picture that the product shows in another place
+  is no fault (MÖLLER'S Tran on the picture, MÖLLER'S on the photograph's crop).
+- The fixes (9 Nov): one fix per picture over all its wrong print made the four Møllers labels and the Dressmann
+  label read right. A small box can bring in more than asked from the real photograph's crop (an extra "28 dagsdoser"
+  next to "Kosttilskudd"), and a fix cannot paint that out again; a large box once drew the fish mascot twice, which a
+  second fix took away.
 
 ## Still open
 

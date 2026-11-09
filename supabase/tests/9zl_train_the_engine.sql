@@ -61,7 +61,8 @@ select test.ok(not exists (select 1 from jsonb_array_elements(public.train_cards
       where x ->> 'id' in (select id::text from train_kids)),
   'a picture made into a design or fixed is not shown again, only its newest form');
 reset role;
--- A design made again from the same picture: the old one leaves the deck.
+-- A design made again from the same picture: the old one leaves the deck. (The picture's own fixes are set aside here.)
+update public.candidates set fixed_from = null where id in (select id from train_kids where fixed_from is not null);
 create temp table train_redo as select (jsonb_populate_record(null::public.candidates, to_jsonb(c)
     || jsonb_build_object('id', gen_random_uuid(), 'created_at', now() + interval '1 minute'))).*
   from public.candidates c where c.id = (select id from train_kids where designed_from is not null limit 1);
@@ -74,5 +75,20 @@ select test.ok(exists (select 1 from jsonb_array_elements(public.train_cards(200
       where x ->> 'id' in (select id::text from train_kids where designed_from is not null)),
   'a design made again shows once, the newest');
 reset role;
+-- The picture is fixed after its design was made: the old design leaves the deck too.
+create temp table train_fixed as select (jsonb_populate_record(null::public.candidates, to_jsonb(c)
+    || jsonb_build_object('id', gen_random_uuid(), 'created_at', now() + interval '2 minutes', 'designed_from', null,
+      'fixed_from', (select designed_from from train_redo)))).*
+  from public.candidates c where c.id = (select designed_from from train_redo);
+insert into public.candidates select * from train_fixed;
+grant select on train_fixed to authenticated;
+set role authenticated;
+select test.act('kristian@fumecreatives.com');
+select test.ok(exists (select 1 from jsonb_array_elements(public.train_cards(200) -> 'cards') x where x ->> 'id' = (select id::text from train_fixed))
+    and not exists (select 1 from jsonb_array_elements(public.train_cards(200) -> 'cards') x where x ->> 'id' = (select id::text from train_redo)),
+  'a design made before its picture was fixed leaves the deck; the fixed picture shows');
+reset role;
+delete from public.candidates where id in (select id from train_fixed);
 delete from public.candidates where id in (select id from train_redo);
+update public.candidates c set fixed_from = k.fixed_from from train_kids k where c.id = k.id and k.fixed_from is not null;
 select test.ok(true, 'all of the train-the-engine tests passed');

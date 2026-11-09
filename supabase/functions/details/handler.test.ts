@@ -66,7 +66,7 @@ Deno.test("each place with print is cropped close on the picture and on the real
   assertEquals(out!.map((x) => x.ok), [false, true], "without the real one to read against, nothing is called wrong");
   assertMatch(out![0].note!, /reads DRESSMEANN; on the product it reads Dressmann/);
   assertEquals(out![1].note, undefined);
-  assertEquals(Math.round(calls.finish[0][1] * 10_000) / 10_000, 0.0023, "what reading it cost is counted");
+  assertEquals(Math.round(calls.finish[0][1] * 10_000) / 10_000, 0.0028, "what reading it cost is counted");
 });
 
 Deno.test("a read that finds the letters right is read once more, and a mismatch stands", async () => {
@@ -77,7 +77,22 @@ Deno.test("a read that finds the letters right is read once more, and a mismatch
     ? { reads: "Dressmann", expected: "Dressmann", ok: true, note: "", usd: 0 }
     : { reads: "Dressmeann", expected: "Dressmann", ok: false, note: "", usd: 0 }) });
   const out = await readDetails(take, d);
-  assertEquals([n, out![0].ok, out![0].note], [2, false, "The label reads Dressmeann; on the product it reads Dressmann."]);
+  assertEquals([n, out![0].ok, out![0].note], [3, false, "The label reads Dressmeann; on the product it reads Dressmann."],
+    "the two reads disagree, and a third agrees with the mismatch");
+});
+
+Deno.test("a misread of the real photograph is outvoted, and a word the product shows elsewhere is no fault", async () => {
+  let n = 0;
+  const { d } = deps({ find: () => Promise.resolve({ usd: 0, places: [
+    { what: "icon words", box: { x: 0.58, y: 0.74, w: 0.1, h: 0.02 }, photo: 1, photoBox: { x: 0.46, y: 0.7, w: 0.13, h: 0.05 } },
+    { what: "wordmark", box: { x: 0.5, y: 0.5, w: 0.1, h: 0.04 }, photo: 1, photoBox: { x: 0.46, y: 0.4, w: 0.13, h: 0.05 } },
+    { what: "name", box: { x: 0.5, y: 0.56, w: 0.1, h: 0.04 }, photo: 1, photoBox: { x: 0.46, y: 0.46, w: 0.13, h: 0.05 } },
+  ] }), read: ({ what }) => Promise.resolve(what === "icon words"
+    ? (++n === 1 ? { reads: "HJERNE HJERTE", expected: "HUERNE HUERTE", ok: false, note: "x", usd: 0 } : { reads: "HJERNE HJERTE", expected: "HJERNE HJERTE", ok: true, note: "", usd: 0 })
+    : what === "wordmark" ? { reads: "MÖLLER'S Tran", expected: "MÖLLER'S", ok: false, note: "x", usd: 0 }
+    : { reads: "Tran", expected: "Tran", ok: true, note: "", usd: 0 }) });
+  const out = await readDetails(take, d);
+  assertEquals(out!.map((x) => [x.what, x.ok, x.note]), [["icon words", true, undefined], ["wordmark", true, undefined], ["name", true, undefined]]);
 });
 
 Deno.test("a picture with no product photographs is read as nothing, and a failure keeps what was read", async () => {
