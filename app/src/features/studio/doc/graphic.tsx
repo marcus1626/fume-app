@@ -254,7 +254,7 @@ export function DesignChecks({
   );
 }
 
-/** The passed checks in one line: "Inside the safe area · 2 lines · contrast 6.2:1 and 5.1:1 · calm". */
+/** The passed checks in one line: "Inside the safe area · 2 lines · contrast 6.2:1 and 5.1:1 · calm under the headline". */
 function passedLine(passed: DesignCheck[]) {
   const words: string[] = [];
   if (passed.some((c) => c.check === "fits")) words.push("inside the safe area");
@@ -262,8 +262,14 @@ function passedLine(passed: DesignCheck[]) {
   if (lines.length) words.push(`${lines.join(" and ")} line${lines.length === 1 && lines[0] === 1 ? "" : "s"}`);
   const contrast = passed.filter((c) => c.check === "contrast" && c.value !== undefined).map((c) => `${c.value}:1`);
   if (contrast.length) words.push(`contrast ${contrast.join(" and ")}`);
-  if (passed.some((c) => c.check === "busy")) words.push("calm under the words");
-  if (passed.some((c) => c.check === "covers")) words.push("clear of the product");
+  // Named by part, so a part that failed the same check (listed above) never reads as passed here.
+  const parts = (check: DesignCheck["check"]) => [
+    ...new Set(passed.filter((c) => c.check === check).map((c) => node(c.node))),
+  ];
+  const calm = parts("busy");
+  if (calm.length) words.push(`calm under ${calm.join(" and ")}`);
+  const clear = parts("covers");
+  if (clear.length) words.push(`${clear.join(" and ")} clear of the product`);
   const s = words.join(" · ");
   return s.charAt(0).toUpperCase() + s.slice(1);
 }

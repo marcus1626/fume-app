@@ -22,7 +22,7 @@ import {
   useNarrowScreen,
   useToast,
 } from "@fume/ui";
-import { useCallback, useEffect, useState, type MouseEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import {
   useBrandAssets,
@@ -37,7 +37,7 @@ import {
   useStudioModes,
   useUpdateDocument,
 } from "../../../api/hooks";
-import type { CreativeDocument, Layer, LightRig, StudioKind, StudioMode } from "../../../contract";
+import type { CreativeDocument, Id, Layer, LightRig, StudioKind, StudioMode } from "../../../contract";
 import { Failed, Loading, useBack } from "../../../shell/Page";
 import { directory, firstName } from "../../../shell/people";
 import { Board, documentName, shownVersion, Versions } from "./Board";
@@ -210,10 +210,15 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
   }, [title]);
 
   /** `byFume`: Fume is about to design, so Design starts with no hand-made layers (FLOWS §34.5). */
+  // The mode each studio was last in on this page, so Image to Design and back keeps "Product in scene".
+  const lastMode = useRef<Partial<Record<StudioKind, Id>>>({});
   const switchStudio = (studio: StudioKind, byFume = false) => {
     if (studio === doc.studio) return;
+    lastMode.current[doc.studio] = doc.modeId;
+    const before = modes.find((m) => m.id === lastMode.current[studio] && m.studio === studio && m.available);
     // Into Video from a picture: "Motion from a still" makes the picked render move (FLOWS §27.1).
     const next =
+      before ??
       (studio === "video" && !noVersion ? modes.find((m) => m.id === "m-video-edit" && m.available) : undefined) ??
       modes.find((m) => m.studio === studio && m.available);
     if (!next) return;
