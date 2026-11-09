@@ -49,7 +49,15 @@ import {
   useSession,
   useStudioCampaigns,
 } from "../../api/hooks";
-import type { CreativeDocument, EngineMessage, EngineThread, EngineTopic, Id } from "../../contract";
+import type {
+  CreativeDocument,
+  EngineEdit,
+  EngineMessage,
+  EngineThread,
+  EngineTopic,
+  Id,
+  VideoEngineEdit,
+} from "../../contract";
 import * as copy from "../../copy";
 import { addressBrand, frameRoot, useFrameKind } from "../../shell/scope";
 import { directory } from "../../shell/people";
@@ -58,12 +66,15 @@ import { DocumentTurns, docStarts } from "./changes";
 import { Line } from "./messages";
 import { useSeesEngine } from "./field";
 import {
+  earlierChats,
   enginePanel,
   threadKey,
   topicOf,
   useEngineSees,
   useEngineSight,
   useEngineState,
+  useSessionSplit,
+  type EarlierChat,
   type EngineDesk,
   type EngineSeen,
   type EngineSight,
@@ -80,8 +91,9 @@ export function docTitle(doc: Pick<CreativeDocument, "title" | "slot" | "studio"
 }
 
 /** The Engine button at the end of a bar: opens and closes the panel (⌘J). On the desk, a change that waits for her
- *  while the panel is closed says so on the button. */
-export function EngineToggle() {
+ *  while the panel is closed says so on the button. `labelled` (round 16, the staff frame's bar): while the panel is
+ *  closed it says "Tell the Engine", so the Engine is in sight without opening it. */
+export function EngineToggle({ labelled = false }: { labelled?: boolean }) {
   const open = useEngineState((s) => s.open);
   const desk = useEngineSees().desk;
   const waiting = desk
@@ -94,6 +106,21 @@ export function EngineToggle() {
     return (
       <Button size="sm" variant="secondary" icon="fume-engine" onClick={() => enginePanel.setOpen(true)}>
         {waiting === 1 ? "A change waits" : `${waiting} changes wait`}
+      </Button>
+    );
+  if (labelled && !open)
+    return (
+      <Button
+        variant="secondary"
+        size="sm"
+        icon="fume-engine"
+        className="ui-engine-toggle ui-engine-toggle--labelled"
+        aria-expanded={false}
+        aria-controls="engine-panel"
+        shortcut="⌘J"
+        onClick={() => enginePanel.setOpen(true)}
+      >
+        Tell the Engine
       </Button>
     );
   return (
@@ -161,7 +188,7 @@ export function useEngineFrame(): { barEnd: ReactNode; aside: ReactNode } {
   );
   useEngineSight(sight);
   if (!sees) return { barEnd: null, aside: null };
-  return { barEnd: <EngineToggle />, aside: <EnginePanel /> };
+  return { barEnd: <EngineToggle labelled />, aside: <EnginePanel /> };
 }
 
 /** The Studio's desk with the panel beside it: the desk is a full-screen page of its own, outside the frame. */
@@ -319,7 +346,17 @@ function Panel() {
         ]
       : []),
   ].filter((c) => !off.includes(c.id));
+  // Round 16: earlier chats in this thread, from before this web session; the Engine remembers them
+  const [earlier, setEarlier] = useState(0);
+  if (earlier && !off.includes("memory"))
+    chips.push({
+      id: "memory",
+      icon: "clock",
+      words: earlier === 1 ? "Your earlier chat" : `Your ${earlier} earlier chats`,
+      removable: true,
+    });
   const takeOff = (id: string) => (id === "field" ? enginePanel.dropField() : setOff((o) => [...o, id]));
+  const page = onPage && !off.includes("page") ? sees.seen.find((s) => s.id === "page")?.words : undefined;
 
   const full = `${frameRoot[frame]}/b/${workspaceId}/engine${current === "brand" ? "" : `?thread=${current}`}`;
 
@@ -378,6 +415,7 @@ function Panel() {
           documentId={topic.id}
           thread={current}
           desk={sees.desk?.doc.id === topic.id ? sees.desk : undefined}
+          onEarlier={setEarlier}
         />
       ) : (
         <ChatThread
@@ -388,6 +426,8 @@ function Panel() {
           title={row.title}
           brandName={brandName}
           field={asked && onPage && !off.includes("field") ? asked.field : undefined}
+          page={page}
+          onEarlier={setEarlier}
         />
       )}
     </aside>
@@ -465,6 +505,8 @@ function ChatThread({
   title,
   brandName,
   field,
+  page,
+  onEarlier,
 }: {
   workspaceId: Id;
   topic?: EngineTopic;
@@ -472,6 +514,10 @@ function ChatThread({
   title: string;
   brandName: string;
   field?: import("../../contract").EngineField;
+  /** The part of the project she writes from ("The plan"): an earlier chat is named by it. */
+  page?: string;
+  /** How many earlier chats the thread has, for the panel's "Sees" line. */
+  onEarlier?: (n: number) => void;
 }) {
   const session = useSession().data!;
   const people = directory(usePeople().data);
@@ -480,8 +526,16 @@ function ChatThread({
   const answer = useAnswerEngineWidget();
   const scroller = useRef<MessageScrollerHandle>(null);
   const [waiting, setWaiting] = useState(false);
-  const items = chat.data ?? [];
-  const last = items[items.length - 1];
+  const all = chat.data ?? [];
+  const last = all[all.length - 1];
+  // Round 16: this web session's chat; what came before is listed under Earlier, named by what it was about
+  const split = useSessionSplit(thread, chat.data);
+  const items = split.now;
+  const earlier = useMemo(
+    () => earlierChats(split.earlier.map((m) => ({ ...m, mine: m.author.kind === "person" }))),
+    [split.earlier],
+  );
+  useEffect(() => onEarlier?.(earlier.length), [earlier.length, onEarlier]);
 
   useEffect(() => {
     if (last?.author.kind === "engine") setWaiting(false);
@@ -509,8 +563,9 @@ function ChatThread({
   };
   const write = (words: string) => {
     if (!words.trim()) return;
-    say.mutate({ workspaceId, text: words, topic, field }, { onSuccess: sent });
+    say.mutate({ workspaceId, text: words, topic, field, page }, { onSuccess: sent });
   };
+  useOutbox(thread, split.ready, write);
   const reply = (messageId: Id, a: { picked?: Id[]; choice?: string }) =>
     answer.mutate({ workspaceId, messageId, ...a }, { onSuccess: sent });
   const pending = say.isPending || answer.isPending;
@@ -536,12 +591,27 @@ function ChatThread({
             last ? `${last.author.kind === "engine" ? "Engine" : people.author(last.author)}: ${last.text}` : undefined
           }
         >
+          {earlier.length > 0 && (
+            <EarlierList
+              chats={earlier}
+              fallback={title}
+              render={(list) =>
+                list.map((m) => (
+                  <Line key={m.id} message={m} workspaceId={workspaceId} people={people} meId={session.user.id} />
+                ))
+              }
+            />
+          )}
           {items.length === 0 && (
             <Marker icon="fume-engine">
               <span>
-                {topic
-                  ? `This thread is about ${title}. The Engine knows its brief, its plan and its creatives; ask it, or ask it to write a line.`
-                  : `Everything for ${brandName}: tell the Engine what to make, or ask what waits for a check.`}
+                {earlier.length
+                  ? topic
+                    ? `A new chat about ${title}. The Engine remembers your earlier chats about it; ask it, or ask it to write a line.`
+                    : `A new chat for ${brandName}. The Engine remembers your earlier chats; tell it what to make, or ask what waits for a check.`
+                  : topic
+                    ? `This thread is about ${title}. The Engine knows its brief, its plan and its creatives; ask it, or ask it to write a line.`
+                    : `Everything for ${brandName}: tell the Engine what to make, or ask what waits for a check.`}
               </span>
             </Marker>
           )}
@@ -591,7 +661,17 @@ function ChatThread({
 
 /** A Studio document's thread: its Engine changes, the one that waits as a card to keep or undo. Also the Engine page's
  *  view of the thread, where the creative is not open beside it. */
-export function DocumentThread({ documentId, thread, desk }: { documentId: Id; thread: string; desk?: EngineDesk }) {
+export function DocumentThread({
+  documentId,
+  thread,
+  desk,
+  onEarlier,
+}: {
+  documentId: Id;
+  thread: string;
+  desk?: EngineDesk;
+  onEarlier?: (n: number) => void;
+}) {
   const session = useSession().data!;
   const people = directory(usePeople().data);
   const fetched = useDocument(desk ? undefined : documentId).data;
@@ -599,24 +679,25 @@ export function DocumentThread({ documentId, thread, desk }: { documentId: Id; t
   const ask = useEngineEdit();
   const toast = useToast();
   const scroller = useRef<MessageScrollerHandle>(null);
-  const edits = doc ? (doc.video ? doc.video.edits : doc.edits) : [];
-  const last = edits[edits.length - 1];
-  const waits = edits.some((e) => e.state === "proposed");
+  const edits: (EngineEdit | VideoEngineEdit)[] | undefined = doc
+    ? doc.video
+      ? doc.video.edits
+      : doc.edits
+    : undefined;
+  const last = edits?.[edits.length - 1];
+  const waits = Boolean(edits?.some((e) => e.state === "proposed"));
+  // Round 16: this web session's changes; a change that still waits stays in it, whenever it was asked for
+  const split = useSessionSplit(thread, edits, stillWaits);
+  const earlier = useMemo(() => earlierChats(split.earlier.map((e) => ({ ...e, mine: true }))), [split.earlier]);
+  useEffect(() => onEarlier?.(earlier.length), [earlier.length, onEarlier]);
   useEffect(() => {
     const timer = window.setTimeout(() => scroller.current?.scrollToEnd(Boolean(last)), 150);
     return () => window.clearTimeout(timer);
   }, [last?.id, last?.state]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!doc)
-    return (
-      <div className="ui-engine-panel-body">
-        <MessageText>Opening the creative’s thread</MessageText>
-      </div>
-    );
-  const title = docTitle(doc);
   const send = (words: string) => {
     const said = words.trim();
-    if (!said) return;
+    if (!said || !doc) return;
     desk?.onBefore();
     ask.mutate(
       { documentId: doc.id, text: said },
@@ -626,6 +707,14 @@ export function DocumentThread({ documentId, thread, desk }: { documentId: Id; t
       },
     );
   };
+  useOutbox(thread, Boolean(doc) && split.ready, send);
+  if (!doc)
+    return (
+      <div className="ui-engine-panel-body">
+        <MessageText>Opening the creative’s thread</MessageText>
+      </div>
+    );
+  const title = docTitle(doc);
   return (
     <>
       <div className="ui-engine-panel-body">
@@ -638,15 +727,39 @@ export function DocumentThread({ documentId, thread, desk }: { documentId: Id; t
               : undefined
           }
         >
+          {earlier.length > 0 && (
+            <EarlierList
+              chats={earlier}
+              fallback={title}
+              render={(list) => (
+                <DocumentTurns
+                  doc={doc}
+                  edits={list}
+                  mode={desk?.mode}
+                  desk={desk}
+                  people={people}
+                  meId={session.user.id}
+                />
+              )}
+            />
+          )}
           <Marker icon="fume-engine">
             <span>
+              {earlier.length ? "A new chat. " : ""}
               {doc.studio === "video"
                 ? `One thread for ${title}. Every change shows on the timeline first: keep it or undo it here.`
                 : `One thread for ${title}. Every change shows on the board first: keep it and render, or undo it here.`}
               {desk ? "" : " Open the creative in the Studio to see it."}
             </span>
           </Marker>
-          <DocumentTurns doc={doc} mode={desk?.mode} desk={desk} people={people} meId={session.user.id} />
+          <DocumentTurns
+            doc={doc}
+            edits={split.now}
+            mode={desk?.mode}
+            desk={desk}
+            people={people}
+            meId={session.user.id}
+          />
           {ask.isPending && (
             <Message state="thinking">
               <MessageHeader author="engine" />
@@ -672,5 +785,63 @@ export function DocumentThread({ documentId, thread, desk }: { documentId: Id; t
         onSend={send}
       />
     </>
+  );
+}
+
+/** A change that still waits for her stays in this session's chat. */
+const stillWaits = (e: { state: string }) => e.state === "proposed";
+
+/** Sends what "Tell the Engine" wrote for this thread, once the thread is ready (round 16). */
+function useOutbox(thread: string, ready: boolean, send: (words: string) => void) {
+  const outbox = useEngineState((s) => s.outbox);
+  const sendRef = useRef(send);
+  sendRef.current = send;
+  useEffect(() => {
+    if (!ready || !outbox) return;
+    const text = enginePanel.claimOutbox(thread);
+    // Sent once the thread has settled in, so its own "reading" line and its answer follow as usual
+    if (text) window.setTimeout(() => sendRef.current(text), 0);
+  }, [ready, outbox, thread]);
+}
+
+/** Earlier chats in the thread, from before this web session (round 16): one row each, named by what it was about
+ *  and the day, her first words under it; a row opens to read it. The newest first. */
+function EarlierList<T>({
+  chats,
+  fallback,
+  render,
+}: {
+  chats: EarlierChat<T>[];
+  fallback: string;
+  render: (items: T[]) => ReactNode;
+}) {
+  const [open, setOpen] = useState<string>();
+  return (
+    <section className="ui-engine-earlier" aria-label="Earlier chats">
+      <h3 className="ui-engine-earlier-title">Earlier</h3>
+      <ul className="ui-engine-earlier-list">
+        {chats.map((c) => {
+          const shown = open === c.id;
+          return (
+            <li key={c.id} className="ui-engine-earlier-item" data-open={shown ? "" : undefined}>
+              <button
+                type="button"
+                className="ui-engine-earlier-row"
+                aria-expanded={shown}
+                onClick={() => setOpen(shown ? undefined : c.id)}
+              >
+                <Icon name="clock" />
+                <span className="ui-engine-earlier-words">
+                  <span className="ui-engine-earlier-about">{`${c.about ?? fallback} · ${dayLabel(c.at)}`}</span>
+                  {c.said && <span className="ui-engine-earlier-said">{`“${c.said}”`}</span>}
+                </span>
+                <Icon name="chevron-down" className="ui-engine-earlier-chevron" />
+              </button>
+              {shown && <div className="ui-engine-earlier-chat">{render(c.items)}</div>}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }

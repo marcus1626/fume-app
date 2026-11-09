@@ -264,8 +264,12 @@ export const useEngineChat = (workspaceId: Id | undefined, topic?: EngineTopic) 
     Boolean(workspaceId),
   );
 export const useEngineSay = () =>
-  useM((a, v: { workspaceId: Id; text: string; topic?: EngineTopic; field?: EngineField }) =>
-    a.engineSay(v.workspaceId, v.text, v.topic || v.field ? { topic: v.topic, field: v.field } : undefined),
+  useM((a, v: { workspaceId: Id; text: string; topic?: EngineTopic; field?: EngineField; page?: string }) =>
+    a.engineSay(
+      v.workspaceId,
+      v.text,
+      v.topic || v.field || v.page ? { topic: v.topic, field: v.field, page: v.page } : undefined,
+    ),
   );
 export const useEngineThreads = (workspaceId: Id | undefined) =>
   useQ(["engine", "chat", workspaceId, "threads"], (a) => a.engineThreads(workspaceId!), Boolean(workspaceId));

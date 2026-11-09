@@ -207,4 +207,7 @@ export interface EngineMessage {
   topic?: EngineTopic;
   /** The field she asked about with it ("Ask about this"). */
   field?: EngineField;
+  /** The part of the project she wrote it from ("The plan", "Tone of Voice"): earlier chats are named by it
+   *  (round 16, PROPOSED 9 Nov 2026). */
+  page?: string;
 }

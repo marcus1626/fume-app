@@ -523,6 +523,7 @@ export function productionCalls(m: Mock): Pick<FumeApi, Calls> {
       m.mustStaff();
       const topic = about?.topic?.kind === "campaign" ? about.topic : undefined;
       const field = about?.field;
+      const page = about?.page;
       const msg: EngineMessage = {
         id: m.nextId("em"),
         workspaceId,
@@ -531,6 +532,7 @@ export function productionCalls(m: Mock): Pick<FumeApi, Calls> {
         at: now(),
         ...(topic ? { topic } : {}),
         ...(field ? { field } : {}),
+        ...(page ? { page } : {}),
       };
       db.engineMessages.push(msg);
       const t = text.toLowerCase();

@@ -62,10 +62,27 @@ anna engineThreads("w-lysne")
       "topic": {"id":"doc-night-ritual","kind":"document"}
     },
     {"count":4,"lastAt":"2026-10-14T12:10:00.000Z","title":"Master 3","topic":{"id":"doc-autumn-m3","kind":"document"}},
-    {"count":2,"lastAt":"2026-10-14T09:33:00.000Z","title":"Winter gifting","topic":{"id":"c-winter","kind":"campaign"}}
+    {"count":4,"lastAt":"2026-10-14T09:33:00.000Z","title":"Winter gifting","topic":{"id":"c-winter","kind":"campaign"}}
   ]
 anna engineChat("w-lysne", {"id":"c-winter","kind":"campaign"})
   [
+    {
+      "at": "2026-10-13T10:32:00.000Z",
+      "author": {"kind":"person","userId":"u-anna"},
+      "id": "em-w0a",
+      "page": "The plan",
+      "text": "Is the hook on brand?",
+      "topic": {"id":"c-winter","kind":"campaign"},
+      "workspaceId": "w-lysne"
+    },
+    {
+      "at": "2026-10-13T10:33:00.000Z",
+      "author": {"kind":"engine"},
+      "id": "em-w0b",
+      "text": "Yes. “The candle is lit before the gift is opened” is LYSNE's voice: quiet, close, a moment rather than a claim. Keep “luxury” out of the line under it; it is on LYSNE's list of words to avoid.",
+      "topic": {"id":"c-winter","kind":"campaign"},
+      "workspaceId": "w-lysne"
+    },
     {
       "at": "2026-10-14T09:32:00.000Z",
       "author": {"kind":"person","userId":"u-anna"},
@@ -77,6 +94,7 @@ anna engineChat("w-lysne", {"id":"c-winter","kind":"campaign"})
         "value": "50 mm at table height, close. The bottle sharp, the window soft behind it."
       },
       "id": "em-w1",
+      "page": "The plan",
       "text": "Is the camera close enough for a gift?",
       "topic": {"id":"c-winter","kind":"campaign"},
       "workspaceId": "w-lysne"
@@ -221,6 +239,23 @@ anna engineSay("w-lysne", "Packshots of the gift sets", {"topic":{"id":"c-winter
 anna engineChat("w-lysne", {"id":"c-winter","kind":"campaign"})
   [
     {
+      "at": "2026-10-13T10:32:00.000Z",
+      "author": {"kind":"person","userId":"u-anna"},
+      "id": "em-w0a",
+      "page": "The plan",
+      "text": "Is the hook on brand?",
+      "topic": {"id":"c-winter","kind":"campaign"},
+      "workspaceId": "w-lysne"
+    },
+    {
+      "at": "2026-10-13T10:33:00.000Z",
+      "author": {"kind":"engine"},
+      "id": "em-w0b",
+      "text": "Yes. “The candle is lit before the gift is opened” is LYSNE's voice: quiet, close, a moment rather than a claim. Keep “luxury” out of the line under it; it is on LYSNE's list of words to avoid.",
+      "topic": {"id":"c-winter","kind":"campaign"},
+      "workspaceId": "w-lysne"
+    },
+    {
       "at": "2026-10-14T09:32:00.000Z",
       "author": {"kind":"person","userId":"u-anna"},
       "field": {
@@ -231,6 +266,7 @@ anna engineChat("w-lysne", {"id":"c-winter","kind":"campaign"})
         "value": "50 mm at table height, close. The bottle sharp, the window soft behind it."
       },
       "id": "em-w1",
+      "page": "The plan",
       "text": "Is the camera close enough for a gift?",
       "topic": {"id":"c-winter","kind":"campaign"},
       "workspaceId": "w-lysne"
@@ -386,7 +422,7 @@ anna engineThreads("w-lysne")
   [
     {"count":5,"lastAt":"2026-10-14T06:32:00.000Z","title":"Everything"},
     {
-      "count": 10,
+      "count": 12,
       "lastAt": "2026-10-14T12:32:09.000Z",
       "title": "Winter gifting",
       "topic": {"id":"c-winter","kind":"campaign"}

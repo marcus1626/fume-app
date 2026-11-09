@@ -77,6 +77,8 @@ export interface EnginePanelState {
   offers: Record<string, string>;
   /** Asks the panel's composer to take the focus. */
   focus: number;
+  /** Words from "Tell the Engine" (round 16), for the thread they go to; it sends them as it opens. */
+  outbox?: { thread: string; text: string; n: number };
 }
 
 let state: EnginePanelState = { open: false, sights: [], drafts: {}, offers: {}, focus: 0 };
@@ -113,7 +115,7 @@ function signedIn(id: string) {
   } catch {
     /* no storage: closed */
   }
-  state = { ...state, open, asked: undefined, chosen: undefined, offers: {}, drafts: {} };
+  state = { ...state, open, asked: undefined, chosen: undefined, offers: {}, drafts: {}, outbox: undefined };
   queueMicrotask(notify);
 }
 
@@ -147,6 +149,25 @@ export const enginePanel = {
   takeOffer(key: string) {
     const { [key]: _, ...rest } = state.offers;
     set({ offers: rest });
+  },
+  /** "Tell the Engine" (round 16): words written while the panel was closed go to the page's own thread, which opens
+   *  and sends them, so the answer and any change card are where they always are. */
+  send(thread: string, text: string) {
+    remember(true);
+    set({
+      open: true,
+      chosen: undefined,
+      drafts: { ...state.drafts, [thread]: text },
+      outbox: { thread, text, n: (state.outbox?.n ?? 0) + 1 },
+      focus: state.focus + 1,
+    });
+  },
+  /** The words waiting for this thread, taken once (a second call, as React's checks make in development, gets none). */
+  claimOutbox(thread: string): string | undefined {
+    const o = state.outbox;
+    if (!o || o.thread !== thread) return undefined;
+    set({ outbox: undefined });
+    return o.text;
   },
   /** A new page: the field asked about belonged to the last one. */
   leftPage() {
@@ -198,4 +219,88 @@ export function useEngineSight(sight: EngineSight | undefined, rank = 0) {
     const entry = { id: id.current, rank, sight };
     set({ sights: at < 0 ? [...others, entry] : state.sights.map((s, i) => (i === at ? entry : s)) });
   }, [sight, rank]);
+}
+
+// ─── A web session's chat (round 16, PROPOSED 9 Nov 2026) ───────────────────
+// Marcus, 9 Nov: "The chat log can stay in the chat within the same web session. But if you have left Fume completely
+// and come back, the chat should be empty, BUT remember earlier chats that were about 'The plan', for example."
+// A session is this browser tab's (sessionStorage): a reload keeps it, closing Fume ends it. The first time a session
+// opens a thread, the newest message there marks where this session's chat begins; what came before is "Earlier", listed
+// by what it was about, and the Engine remembers it unless she takes the chip off.
+
+const SESSION_KEY = "fume.engine.session";
+/** Where each thread's chat begins in this session, by thread. Kept in memory too, for a browser without storage. */
+let marks: Record<string, string> | undefined;
+function readMarks(): Record<string, string> {
+  if (marks) return marks;
+  try {
+    marks = JSON.parse(sessionStorage.getItem(SESSION_KEY) ?? "{}") as Record<string, string>;
+  } catch {
+    marks = {};
+  }
+  return marks;
+}
+/** The id this session's chat in a thread begins after ("" when the thread was empty); set once, the first time. */
+function sessionMark(thread: string, lastId: string): string {
+  const m = readMarks();
+  if (thread in m) return m[thread]!;
+  m[thread] = lastId;
+  try {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(m));
+  } catch {
+    /* no storage: this page load is the session */
+  }
+  return lastId;
+}
+
+/** A thread's messages (or changes) in two: before this session, and in it. `stays` keeps one in the session's chat
+ *  whenever it was made (a change that still waits for her). */
+export function useSessionSplit<T extends { id: string }>(
+  thread: string,
+  items: T[] | undefined,
+  stays?: (item: T) => boolean,
+): { earlier: T[]; now: T[]; ready: boolean } {
+  return useMemo(() => {
+    if (!items) return { earlier: [], now: [], ready: false };
+    const mark = sessionMark(thread, items.at(-1)?.id ?? "");
+    const at = mark ? items.findIndex((x) => x.id === mark) : -1;
+    // A mark no longer there (the thread was cleared): all of it is this session's
+    if (mark && at < 0) return { earlier: [], now: items, ready: true };
+    const before = items.slice(0, at + 1);
+    return {
+      earlier: before.filter((x) => !stays?.(x)),
+      now: [...before.filter((x) => stays?.(x)), ...items.slice(at + 1)],
+      ready: true,
+    };
+  }, [thread, items, stays]);
+}
+
+/** One earlier chat: messages close in time about one thing ("The plan"), named by it and by the day. */
+export interface EarlierChat<T> {
+  id: string;
+  about?: string;
+  at: string;
+  /** Her first words in it. */
+  said?: string;
+  items: T[];
+}
+
+/** Earlier messages as chats: a new one begins after three quiet hours or when she writes from another part. */
+export function earlierChats<T extends { id: string; at: string; page?: string; text?: string; mine?: boolean }>(
+  items: T[],
+): EarlierChat<T>[] {
+  const chats: EarlierChat<T>[] = [];
+  for (const x of items) {
+    const last = chats.at(-1);
+    const gap = last ? Date.parse(x.at) - Date.parse(last.items.at(-1)!.at) : Infinity;
+    const elsewhere = Boolean(x.page && last?.about && x.page !== last.about);
+    if (!last || gap > 3 * 3_600_000 || elsewhere) chats.push({ id: x.id, about: x.page, at: x.at, items: [x] });
+    else {
+      last.items.push(x);
+      last.about ??= x.page;
+    }
+    const chat = chats.at(-1)!;
+    if (!chat.said && x.mine) chat.said = x.text;
+  }
+  return chats.reverse();
 }

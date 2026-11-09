@@ -54,15 +54,18 @@ export function DocumentTurns({
   desk,
   people,
   meId,
+  edits: only,
 }: {
   doc: CreativeDocument;
+  /** The changes to show (round 16: this session's, or an earlier chat's); all of them when left out. */
+  edits?: (EngineEdit | VideoEngineEdit)[];
   mode?: StudioMode;
   /** The desk's hands, when the document is open beside the panel. */
   desk?: EngineDesk;
   people: People;
   meId?: string;
 }) {
-  const edits: (EngineEdit | VideoEngineEdit)[] = doc.video ? doc.video.edits : doc.edits;
+  const edits: (EngineEdit | VideoEngineEdit)[] = only ?? (doc.video ? doc.video.edits : doc.edits);
   return (
     <>
       {edits.map((e) => {

@@ -335,6 +335,25 @@ export const engineMessages: EngineMessage[] = [
     at: at(60 * 6),
     widget: { kind: "batch", batchId: "bt-1" },
   },
+  // Round 16 (PROPOSED 9 Nov 2026): an earlier chat about Winter gifting's plan, yesterday. A new web session starts the
+  // thread empty; this one is listed under Earlier, and the Engine remembers it.
+  {
+    id: "em-w0a",
+    workspaceId: "w-lysne",
+    author: { kind: "person", userId: "u-anna" },
+    text: "Is the hook on brand?",
+    at: at(60 * 26),
+    topic: { kind: "campaign", id: "c-winter" },
+    page: "The plan",
+  },
+  {
+    id: "em-w0b",
+    workspaceId: "w-lysne",
+    author: { kind: "engine" },
+    text: "Yes. “The candle is lit before the gift is opened” is LYSNE's voice: quiet, close, a moment rather than a claim. Keep “luxury” out of the line under it; it is on LYSNE's list of words to avoid.",
+    at: at(60 * 26 - 1),
+    topic: { kind: "campaign", id: "c-winter" },
+  },
   // Round 15 (PROPOSED 9 Nov 2026): Winter gifting's own thread, where Anna asked about the plan's camera line.
   {
     id: "em-w1",
@@ -343,6 +362,7 @@ export const engineMessages: EngineMessage[] = [
     text: "Is the camera close enough for a gift?",
     at: at(60 * 3),
     topic: { kind: "campaign", id: "c-winter" },
+    page: "The plan",
     field: {
       kind: "plan_line",
       campaignId: "c-winter",
