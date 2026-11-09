@@ -36,21 +36,28 @@ export const FIND_SYSTEM = [
   "You help Fume's expert check a product picture an image model made. You get the product's own photographs first and",
   "the generated picture last. Find the places on the generated picture where the product itself shows printed or",
   "woven letters, a wordmark, a logo or a number: a label, a tag, a print on the pack. Never anything outside the product.",
-  "At most three, the most visible first. For each, give a tight box around just that part on the generated picture, as",
-  "shares of its width and height (x and y are the top left corner, from 0 to 1), then the photograph where the same",
-  "part shows largest (photo 1 is the first image) and a tight box around it there. When no photograph shows it, photo 0",
-  "and photoBox null. When the product shows no print in the picture, answer no places.",
+  "A woven or printed label inside a collar or on a seam counts, however small.",
+  "Each block of print is its own place: the wordmark, the product name, a banner or badge, the words around a seal or",
+  "an emblem, a line of small words under icons, a count, a line of small print. Go over the whole product top to",
+  "bottom and list every block you see, up to eight, the small print first:",
+  "image models garble small letters most, so a line of small words is never left out for a big one. For each, what",
+  "names that one block so it can be found again (the small words under the three icons), then a tight box around just",
+  "it on the generated picture, as shares of its width and height (x and y are the top left corner, from 0 to 1), then",
+  "the photograph where the same block shows largest (photo 1 is the first image) and a tight box around it there. When",
+  "no photograph shows it, photo 0 and photoBox null. When the product shows no print in the picture, answer no places.",
 ].join(" ");
 
 export const READ_SYSTEM = [
-  "You read small print for Fume's expert. Image 1 is a close crop of a generated product picture; image 2, when given,",
-  "is the same part on the real product's photograph. Read image 1 as it is, not as it should be: image models garble letters,",
-  "and a garbled word must be written garbled. In reads, write only the letters of the main word or words on",
-  "image 1, exactly as printed, letter for letter: no description, no quotes, no small lines you cannot read. In",
-  "expected, the same for image 2. Leave either empty when its letters cannot be read. ok is true when the letters are",
-  "the same (case and spacing aside) and a logo has the same shape; a garbled, missing, extra or swapped letter is not",
-  "ok. The note says in one short sentence what is wrong, for a designer, in the form: The collar label reads",
-  "DRESSMEANN; on the product it reads Dressmann. When ok is true, or there is no image 2, the note is empty.",
+  "You read print for Fume's expert. Image 1 is a close crop of a generated product picture; image 2, when given, is the",
+  "same part on the real product's photograph. Read only the named part, the same words on both. Read image 1 as it is,",
+  "not as it should be: image models garble letters, and a garbled word must be written garbled, letter for letter,",
+  "even when it looks almost like the right word. In reads, write every word and number of the named part on image 1,",
+  "exactly as printed, small lines too, in reading order: no description, no quotes; leave out a footnote mark. In",
+  "expected, the same for image 2. Leave either empty when its letters cannot be made out at all. ok is true when the",
+  "letters are the same (case and spacing aside) and a logo has the same shape; a garbled, missing, extra or swapped",
+  "letter or digit is not ok. The note says in one short sentence what is wrong, for a designer, in the form: The",
+  "collar label reads DRESSMEANN; on the product it reads Dressmann. When ok is true, or there is no image 2, the note",
+  "is empty.",
 ].join(" ");
 
 export const REFINE_SYSTEM = [
@@ -137,9 +144,13 @@ export function claudeDetails(claude: Anthropic, allowed: () => Promise<boolean>
   }
   return {
     async find({ pictureUrl, photoUrls, products }) {
-      const { out, usd } = await ask(FIND_SYSTEM, [...photoUrls, pictureUrl],
-        `Images 1 to ${photoUrls.length} are the product's own photographs (${products}); image ${photoUrls.length + 1} is the generated picture.`, Found);
-      return { places: out.places, usd };
+      // The careful model finds the print: the quick one listed the big words and left the small lines out (9 Nov).
+      const text = `Images 1 to ${photoUrls.length} are the product's own photographs (${products}); image ${photoUrls.length + 1} is the generated picture.`;
+      const { out, usd } = await ask(FIND_SYSTEM, [...photoUrls, pictureUrl], text, Found, MAP_MODEL);
+      if (out.places.length > 0) return { places: out.places, usd };
+      // The careful model passed over a shirt's small collar label that the quick one finds (Dressmann, 9 Nov).
+      const quick = await ask(FIND_SYSTEM, [...photoUrls, pictureUrl], text, Found);
+      return { places: quick.out.places, usd: usd + quick.usd };
     },
     async refine({ cropUrl, what }) {
       const { out, usd } = await ask(REFINE_SYSTEM, [cropUrl], `The part is: ${what}.`, Again);

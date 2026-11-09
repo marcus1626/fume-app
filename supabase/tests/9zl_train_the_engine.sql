@@ -61,4 +61,18 @@ select test.ok(not exists (select 1 from jsonb_array_elements(public.train_cards
       where x ->> 'id' in (select id::text from train_kids)),
   'a picture made into a design or fixed is not shown again, only its newest form');
 reset role;
+-- A design made again from the same picture: the old one leaves the deck.
+create temp table train_redo as select (jsonb_populate_record(null::public.candidates, to_jsonb(c)
+    || jsonb_build_object('id', gen_random_uuid(), 'created_at', now() + interval '1 minute'))).*
+  from public.candidates c where c.id = (select id from train_kids where designed_from is not null limit 1);
+insert into public.candidates select * from train_redo;
+grant select on train_redo to authenticated;
+set role authenticated;
+select test.act('kristian@fumecreatives.com');
+select test.ok(exists (select 1 from jsonb_array_elements(public.train_cards(200) -> 'cards') x where x ->> 'id' = (select id::text from train_redo))
+    and not exists (select 1 from jsonb_array_elements(public.train_cards(200) -> 'cards') x
+      where x ->> 'id' in (select id::text from train_kids where designed_from is not null)),
+  'a design made again shows once, the newest');
+reset role;
+delete from public.candidates where id in (select id from train_redo);
 select test.ok(true, 'all of the train-the-engine tests passed');

@@ -52,13 +52,15 @@ function deps(over: Partial<Deps> = {}) {
 Deno.test("each place with print is cropped close on the picture and on the real product, and read against it", async () => {
   const { d, calls } = deps();
   const out = await readDetails(take, d);
-  assertEquals(calls.steps.map((s) => [(s.upload as { crop: string }).crop, Boolean(s.read)]), [
-    ["https://s/up/ws/check/c1-1.png", false], ["https://s/up/ws/check/c1-1.png", true],
-    ["https://s/up/ws/check/c1-1-ref.png", false], ["https://s/up/ws/check/c1-1-ref.png", true],
-    ["https://s/up/ws/check/c1-2.png", false], ["https://s/up/ws/check/c1-2.png", true],
-  ], "a wider crop, where the part is found again, then a close one to read");
-  assertEquals(calls.steps[2].picture, "https://s/read/ws/p/1.png", "the same part, cut from the product's own photograph");
-  const close = calls.steps[1].box as { x: number; w: number };
+  // The places are read at once, so their steps interleave; each place's own steps keep their order.
+  const crop = (s: Record<string, unknown>) => (s.upload as { crop: string }).crop;
+  const of = (path: string) => calls.steps.filter((s) => crop(s) === `https://s/up/ws/check/${path}`);
+  assertEquals(calls.steps.length, 6);
+  for (const path of ["c1-1.png", "c1-1-ref.png", "c1-2.png"]) {
+    assertEquals(of(path).map((s) => Boolean(s.read)), [false, true], "a wider crop, where the part is found again, then a close one to read");
+  }
+  assertEquals(of("c1-1-ref.png")[0].picture, "https://s/read/ws/p/1.png", "the same part, cut from the product's own photograph");
+  const close = of("c1-1.png")[1].box as { x: number; w: number };
   assertEquals(Math.round(close.x * 1856), Math.round(0.4 * 384 - 0.25 * 0.2 * 384), "the close box is where it was found again");
   assertEquals(Math.round(out![0].box.x * 1856), Math.round(0.4 * 384), "and that place is kept, without the room");
   assertEquals(out!.map((x) => x.ok), [false, true], "without the real one to read against, nothing is called wrong");
@@ -102,6 +104,13 @@ Deno.test("code compares the letters, so a model that contradicts itself does no
   assertEquals(readsRight({ reads: "AIR JORDAN", expected: "AIR", ok: false, note: "" }), true, "a crop with part of the print");
   assertEquals(readsRight({ reads: "AIR JORDANE", expected: "AIR JORDAN", ok: false, note: "" }), false, "a garbled word is still wrong");
   assertEquals(readsRight({ reads: "Dress mann.", expected: "dressmann", ok: false, note: "" }), true);
+  assertEquals(readsRight({ reads: "HJEBNE IMHUNEOSEVAN HJEDTE", expected: "HJERNE¹ IMMUNFORSVAR² HJERTE³", ok: false, note: "" }), false,
+    "small words under icons, garbled");
+  assertEquals(readsRight({ reads: "HJERNE IMMUNFORSVAR HJERTE", expected: "HJERNE¹ IMMUNFORSVAR² HJERTE³", ok: false, note: "" }), true,
+    "a footnote mark read on one side only");
+  assertEquals(readsRight({ reads: "PETER MØLLER GRUNNLAGT 1864", expected: "PETER MØLLER GRUNNLAGT 1854", ok: true, note: "" }), false, "a wrong year");
+  assertEquals(readsRight({ reads: "Omega-3", expected: "Omega-3 Vitamin D+A+E", ok: false, note: "" }), true, "the picture's crop shows fewer words");
+  assertEquals(readsRight({ reads: "Omega-3 Vitamin D+A+E XQ", expected: "Omega-3 Vitamin D+A+E", ok: true, note: "" }), false, "an extra word");
 });
 
 Deno.test("a packshot kept only as a link is fetched into storage once, then read from there", async () => {

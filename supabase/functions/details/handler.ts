@@ -83,24 +83,33 @@ export async function photoLink(d: Deps, p: { bucket: string; path: string; url?
   return (await d.service.keep(p.url, p.bucket, p.path).catch(() => false)) ? await d.service.readLink(p.bucket, p.path) : null;
 }
 
-/** At most this many places are read on one picture. */
-export const MOST = 3;
+/** At most this many places are read on one picture: every block of print, the small lines too (Møllers, 9 Nov: the
+ * words under the icons and around the emblem were garbled while the wordmark read right). */
+export const MOST = 8;
+/** Places read at once. */
+const AT_ONCE = 4;
 
 /** The letters alone, for comparing what two crops read: case, spacing and marks aside. */
 export const letters = (s: string) => s.normalize("NFKD").replace(/[^\p{L}\p{N}]/gu, "").toLowerCase();
 
+/** The words, for a crop with several: marks aside, and a footnote mark on a word (HJERNE¹) is not part of it. */
+const words = (s: string) =>
+  s.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().split(/[^\p{L}\p{N}]+/u)
+    .map((w) => (/\p{L}/u.test(w) ? w.replace(/\P{L}/gu, "") : w)).filter(Boolean);
+
 /**
- * Whether a detail reads right. Code compares the letters the model read on both crops: the same letters are right,
- * whatever the model said; different letters are wrong. A crop that shows only part of the print (the letters on one
- * are a short piece of the other's) is not compared, nor is one with nothing legible: the part check sees whether the
- * label is there. A garbled word is about as long as the real one, so it is still called wrong.
+ * Whether a detail reads right. Code compares what the model read on both crops: the same letters are right, whatever
+ * the model said. Otherwise word by word: every word on the picture must be a word on the product, so a garbled one
+ * (HJEBNE for HJERNE, 1864 for 1854) is wrong. A picture's crop that shows fewer of the words is not wrong, nor is a
+ * photograph's crop that shows only a short piece of the print, nor a crop with nothing legible: the part check sees
+ * whether the label is there.
  */
 export function readsRight(r: Read): boolean {
   const a = letters(r.reads), b = letters(r.expected);
-  if (!a || !b) return true;
-  if (a === b) return true;
-  const [short, long] = a.length < b.length ? [a, b] : [b, a];
-  return long.includes(short) && short.length < 0.6 * long.length;
+  if (!a || !b || a === b) return true;
+  const shown = words(r.reads), real = words(r.expected);
+  if (shown.every((w) => real.includes(w))) return true;
+  return real.every((w) => shown.includes(w)) && b.length < 0.6 * a.length;
 }
 
 /**
@@ -160,43 +169,51 @@ export async function readDetails(t: Take, d: Deps): Promise<Detail[] | null> {
     const products = t.products.map((p) => (p.variant ? `${p.name} (${p.variant})` : p.name)).join("; ");
     const found = await d.find({ pictureUrl: picture, photoUrls: photos, products });
     usd += found.usd;
-    let n = 0;
-    for (const place of found.places.slice(0, MOST)) {
+    // Each place is numbered in the order the model gave it, and read a few at a time.
+    const places = found.places.slice(0, MOST).map((place, i) => ({ place, n: i + 1 }));
+    const read = async ({ place, n }: { place: Place; n: number }): Promise<Detail | null> => {
       const box = generous(place.box);
-      if (!box) continue;
-      n += 1;
+      if (!box) return null;
       const spent = { usd: 0 };
-      const onPicture = await closeIn(t, d, picture, box, place.what, `${t.store.prefix}-${n}.png`, spent);
-      const cropUrl = onPicture?.link ?? null;
-      if (!onPicture || !cropUrl) {
+      try {
+        const onPicture = await closeIn(t, d, picture, box, place.what, `${t.store.prefix}-${n}.png`, spent);
+        const cropUrl = onPicture?.link ?? null;
+        if (!onPicture || !cropUrl) return null;
+        // The same place on the product's own photograph, when the model found it there.
+        const photoBox = place.photoBox ? generous(place.photoBox) : null;
+        const photo = place.photo >= 1 && place.photo <= photos.length ? photos[place.photo - 1] : null;
+        const refUrl = photo && photoBox ? (await closeIn(t, d, photo, photoBox, place.what, `${t.store.prefix}-${n}-ref.png`, spent))?.link ?? null : null;
+        // The model tends to read a garbled word as the word it should be, never the other way: a read that finds the
+        // letters right is read once more, and a mismatch in either is what stands.
+        let r = await d.read({ cropUrl, refUrl, what: place.what });
+        spent.usd += r.usd;
+        if (refUrl && readsRight(r)) {
+          const again = await d.read({ cropUrl, refUrl, what: place.what });
+          spent.usd += again.usd;
+          if (!readsRight(again)) r = again;
+        }
+        return {
+          n, kind: "print", what: place.what.slice(0, 120), box: onPicture.box, reads: r.reads.slice(0, 200), expected: r.expected.slice(0, 200),
+          // Without the real one to read against, nothing is called wrong.
+          ok: refUrl ? readsRight(r) : true,
+          ...(refUrl && !readsRight(r) ? { note: (r.note || `The ${place.what} reads ${r.reads}; on the product it reads ${r.expected}.`).slice(0, 300) } : {}),
+        };
+      } catch (e) {
+        // One place that cannot be read is left to the expert's eye; the other places still count.
+        console.error(`details: place ${n} not read: ${(e as Error).message}`);
+        return null;
+      } finally {
         usd += spent.usd;
-        continue;
       }
-      // The same place on the product's own photograph, when the model found it there.
-      const photoBox = place.photoBox ? generous(place.photoBox) : null;
-      const photo = place.photo >= 1 && place.photo <= photos.length ? photos[place.photo - 1] : null;
-      const refUrl = photo && photoBox ? (await closeIn(t, d, photo, photoBox, place.what, `${t.store.prefix}-${n}-ref.png`, spent))?.link ?? null : null;
-      usd += spent.usd;
-      // The model tends to read a garbled word as the word it should be, never the other way: a read that finds the
-      // letters right is read once more, and a mismatch in either is what stands.
-      let r = await d.read({ cropUrl, refUrl, what: place.what });
-      usd += r.usd;
-      if (refUrl && readsRight(r)) {
-        const again = await d.read({ cropUrl, refUrl, what: place.what });
-        usd += again.usd;
-        if (!readsRight(again)) r = again;
-      }
-      out.push({
-        n, kind: "print", what: place.what.slice(0, 120), box: onPicture.box, reads: r.reads.slice(0, 200), expected: r.expected.slice(0, 200),
-        // Without the real one to read against, nothing is called wrong.
-        ok: refUrl ? readsRight(r) : true,
-        ...(refUrl && !readsRight(r) ? { note: (r.note || `The ${place.what} reads ${r.reads}; on the product it reads ${r.expected}.`).slice(0, 300) } : {}),
-      });
-    }
+    };
+    const done: (Detail | null)[] = [];
+    for (let i = 0; i < places.length; i += AT_ONCE) done.push(...(await Promise.all(places.slice(i, i + AT_ONCE).map(read))));
+    out.push(...done.filter((x): x is Detail => x !== null));
     await withParts();
     await d.service.finish(t.candidate_id, out, usd);
     return out;
-  } catch {
+  } catch (e) {
+    console.error(`details: print not read: ${(e as Error).message}`);
     // Not read: the expert checks the print by eye. What was read so far, and the parts, are kept.
     await withParts().catch(() => undefined);
     await d.service.finish(t.candidate_id, out, usd).catch(() => undefined);
