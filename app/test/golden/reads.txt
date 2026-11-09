@@ -23247,6 +23247,8 @@ maja lookPresets("w-nope")
   = maja lookPresets("w-solv")
 maja engineChat("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja document("doc-night-story")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja document("doc-bf-1")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja document("doc-night-ritual")
@@ -23855,6 +23857,8 @@ jonas lookPresets("w-nope")
   = maja lookPresets("w-solv")
 jonas engineChat("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+jonas document("doc-night-story")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas document("doc-bf-1")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas document("doc-night-ritual")
@@ -24462,6 +24466,8 @@ ida qaQueue("w-nope")
 ida lookPresets("w-nope")
   = maja lookPresets("w-solv")
 ida engineChat("w-nope")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+ida document("doc-night-story")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida document("doc-bf-1")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -26377,7 +26383,7 @@ anna teamLoad()
       "brandIds": ["w-lysne"],
       "capacity": 4,
       "checksToday": 6,
-      "doing": "10 creatives to check · 1 plan to check · LYSNE",
+      "doing": "11 creatives to check · 1 plan to check · LYSNE",
       "follows": false,
       "load": 1.5,
       "minutesPerCheck": 4,
@@ -26433,7 +26439,7 @@ anna allBrands()
           "name": "Autumn launch",
           "progress": 0.18181818181818182
         },
-        "inCheck": 10,
+        "inCheck": 11,
         "nextDue": "2026-10-17T12:32:00.000Z",
         "picture": "/demo/lysne/05-06-feed.jpg",
         "readyToRelease": 0,
@@ -26614,7 +26620,7 @@ anna allBrands()
         "action": "Check",
         "at": "2026-10-14T12:24:00.000Z",
         "clientId": "w-lysne",
-        "detail": "6 creatives to check",
+        "detail": "7 creatives to check",
         "href": "/studio/b/w-lysne/qa?campaign=c-autumn",
         "id": "on-check-c-autumn",
         "kind": "check",
@@ -27094,7 +27100,7 @@ anna allBrands()
         "brandIds": ["w-lysne"],
         "capacity": 4,
         "checksToday": 6,
-        "doing": "10 creatives to check · 1 plan to check · LYSNE",
+        "doing": "11 creatives to check · 1 plan to check · LYSNE",
         "follows": false,
         "load": 1.5,
         "minutesPerCheck": 4,
@@ -27860,6 +27866,87 @@ anna qaQueue()
         "studio": "render",
         "title": "Feed 9",
         "version": 2,
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":6,"creatives":11,"delivered":0,"inCheck":3},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:26:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":0},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "creativeId": "cr-night-story",
+        "documentId": "doc-night-story",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","evaluated":true,"notes":[],"productTruth":"flag"},
+        "feedback": [],
+        "findings": [
+          {
+            "dimension": "product",
+            "expected": "A closed bottle: no oil leaves it",
+            "finding": "Shot 1: oil runs out of the bottle’s base while the cap is on.",
+            "id": "fi-v1",
+            "observed": "A thin run of oil down the base, from the first frame",
+            "seconds": {"from":0,"to":2.9},
+            "severity": "critical",
+            "status": "open"
+          },
+          {
+            "dimension": "brand_brief",
+            "expected": "Words and the button come in on a beat, as in LYSNE’s motion",
+            "finding": "The button comes in a quarter second after the beat.",
+            "id": "fi-v2",
+            "seconds": {"from":4,"to":4.25},
+            "severity": "minor",
+            "status": "open"
+          }
+        ],
+        "format": "story",
+        "id": "qa-9",
+        "image": "/demo/lysne/video/drop.jpg",
+        "madeAt": "2026-10-14T12:26:00.000Z",
+        "risk": "normal",
+        "slot": "Film 1 · Story",
+        "state": "waiting",
+        "studio": "video",
+        "title": "Night ritual · Story 9:16",
         "workspaceId": "w-lysne"
       },
       "productName": "Night Body Oil",
@@ -36195,6 +36282,250 @@ anna documents("w-lysne")
   [
     {
       "by": "u-anna",
+      "campaignId": "c-autumn",
+      "creativeId": "cr-night-story",
+      "edits": [],
+      "id": "doc-night-story",
+      "layers": [],
+      "modeId": "m-video-edit",
+      "overrides": [],
+      "pickedVersionId": "rv-story-1",
+      "slot": "Film 1 · Story",
+      "specs": {
+        "count": 1,
+        "format": "story",
+        "imageModel": "Kling 3.0",
+        "modelIds": [],
+        "placementId": "pl-ig-story",
+        "productId": "pr-oil",
+        "referenceIds": [],
+        "variantId": "va-oil-100"
+      },
+      "state": "in_check",
+      "studio": "video",
+      "title": "Night ritual · Story 9:16",
+      "updatedAt": "2026-10-14T12:26:00.000Z",
+      "variables": {"captions":true,"grade":"LYSNE warm","music":"late-light","pace":"calm","transition":"dissolve"},
+      "versions": [
+        {
+          "at": "2026-10-14T12:26:00.000Z",
+          "by": "u-anna",
+          "cost": 0.84,
+          "evaluation": {"artefacts":"none","brandRules":"pass","evaluated":true,"notes":[],"productTruth":"flag"},
+          "id": "rv-story-1",
+          "image": "/demo/lysne/video/drop.jpg",
+          "instruction": "The Engine's Story, cut from the film's shots",
+          "number": 1,
+          "specs": {"count":1,"format":"story","imageModel":"Kling 3.0","modelIds":[],"productId":"pr-oil","referenceIds":[]},
+          "state": "done",
+          "variables": {"captions":true,"grade":"LYSNE warm","music":"late-light","pace":"calm","transition":"dissolve"}
+        }
+      ],
+      "video": {
+        "captions": [{"by":"engine","end":2.8,"id":"cs-1","start":0.4,"text":"kept for the night"}],
+        "checks": [
+          {
+            "at": 0,
+            "id": "ck-product",
+            "label": "Product correct in every frame",
+            "note": "Shot 1: Oil runs out of the bottle’s base while the cap is on",
+            "state": "flag"
+          },
+          {"id":"ck-people","label":"Hands and bodies look right","state":"pass"},
+          {"id":"ck-shots","label":"Every shot has a take","state":"pass"},
+          {"id":"ck-length","label":"6 s for Story","state":"pass"},
+          {"id":"ck-music","label":"Music licensed for paid social","state":"pass"},
+          {
+            "id": "ck-label",
+            "label": "Marked as made with AI",
+            "note": "In the video’s own data, for every platform",
+            "state": "pass"
+          }
+        ],
+        "clips": [
+          {
+            "id": "vs-drop",
+            "in": 0.5,
+            "name": "The bottle in the hand",
+            "out": 3.7,
+            "pickedTakeId": "tk-drop-1-s",
+            "productId": "pr-oil",
+            "recipe": {
+              "action": "The hand turns the closed bottle in the low sun so the label faces the camera. No drops.",
+              "amount": 20,
+              "model": "auto",
+              "move": "push",
+              "seconds": 5,
+              "startImage": "/demo/lysne/video/drop.jpg"
+            },
+            "source": "engine",
+            "speed": 1,
+            "takes": [
+              {
+                "at": "2026-10-14T11:44:00.000Z",
+                "cost": 0.42,
+                "findings": [
+                  {
+                    "from": 0,
+                    "kind": "physics",
+                    "state": "open",
+                    "text": "Oil runs out of the bottle’s base while the cap is on",
+                    "to": 3.4
+                  }
+                ],
+                "id": "tk-drop-1-s",
+                "model": "Kling 3.0",
+                "number": 1,
+                "poster": "/demo/lysne/video/drop.jpg",
+                "seconds": 5,
+                "state": "ready",
+                "video": "/demo/lysne/video/drop.mp4"
+              },
+              {
+                "at": "2026-10-14T12:20:00.000Z",
+                "best": {"in":1.4,"out":4.6},
+                "cost": 0.42,
+                "findings": [
+                  {
+                    "from": 0,
+                    "kind": "physics",
+                    "state": "open",
+                    "text": "Drops from the start frame run off the base",
+                    "to": 1.2
+                  }
+                ],
+                "id": "tk-drop-2-s",
+                "model": "Kling 3.0",
+                "number": 2,
+                "poster": "/demo/lysne/video/turn.jpg",
+                "seconds": 5,
+                "state": "ready",
+                "video": "/demo/lysne/video/turn.mp4"
+              }
+            ],
+            "transition": "cut"
+          },
+          {
+            "id": "vs-bottle",
+            "in": 0.3,
+            "name": "Night Body Oil",
+            "out": 3.1,
+            "pickedTakeId": "tk-bottle-1-s",
+            "productId": "pr-oil",
+            "recipe": {
+              "action": "A slow push in on the bottle on travertine; the low sun moves across the stone",
+              "amount": 15,
+              "model": "auto",
+              "move": "push",
+              "seconds": 5,
+              "startImage": "/demo/lysne/video/bottle.jpg"
+            },
+            "source": "engine",
+            "speed": 1,
+            "takes": [
+              {
+                "at": "2026-10-14T11:52:00.000Z",
+                "cost": 0.42,
+                "findings": [],
+                "id": "tk-bottle-1-s",
+                "model": "Kling 3.0",
+                "number": 1,
+                "poster": "/demo/lysne/video/bottle.jpg",
+                "seconds": 5,
+                "state": "ready",
+                "video": "/demo/lysne/video/bottle.mp4"
+              }
+            ],
+            "transition": "cut"
+          }
+        ],
+        "edits": [],
+        "formatId": "vf-story",
+        "formats": [
+          {
+            "captions": true,
+            "id": "vf-reels",
+            "name": "Reels and TikTok",
+            "placementId": "pl-ig-reels",
+            "ratio": "9:16",
+            "seconds": 15,
+            "state": "planned"
+          },
+          {
+            "captions": true,
+            "id": "vf-feed",
+            "name": "Feed",
+            "placementId": "pl-ig-feed",
+            "ratio": "4:5",
+            "seconds": 15,
+            "state": "planned"
+          },
+          {
+            "captions": true,
+            "id": "vf-story",
+            "name": "Story",
+            "placementId": "pl-ig-story",
+            "ratio": "9:16",
+            "seconds": 6,
+            "state": "this"
+          },
+          {
+            "captions": true,
+            "id": "vf-ads",
+            "name": "Ads",
+            "placementId": "pl-ig-square",
+            "ratio": "1:1",
+            "seconds": 6,
+            "state": "planned"
+          }
+        ],
+        "grade": "LYSNE warm",
+        "motion": [
+          {
+            "clipId": "vs-bottle",
+            "ease": "soft-out",
+            "end": 5,
+            "enter": "rise",
+            "exit": "fade",
+            "id": "ms-product",
+            "place": "top",
+            "start": 3.4,
+            "template": "product",
+            "text": "Night Body Oil · 100 ml"
+          },
+          {
+            "clipId": "vs-bottle",
+            "ease": "soft-out",
+            "end": 5,
+            "enter": "rise",
+            "exit": "fade",
+            "id": "ms-cta",
+            "place": "bottom",
+            "start": 4,
+            "template": "cta",
+            "text": "Se oljen"
+          },
+          {"end":6,"enter":"soft","id":"ms-end","place":"centre","start":5,"template":"end","text":"LYSNE"}
+        ],
+        "sound": [
+          {
+            "beats": [0,0.75,1.5,2.25,3,3.75,4.5,5.25,6],
+            "end": 6,
+            "id": "ss-music",
+            "kind": "music",
+            "level": -6,
+            "licence": "Licensed for paid social",
+            "name": "Late light · slow piano",
+            "start": 0
+          },
+          {"end":3.5,"id":"ss-glass","kind":"effect","level":-14,"name":"Glass on stone","start":2.9}
+        ],
+        "style": {"energy":35,"id":"showcase","pace":35}
+      },
+      "workspaceId": "w-lysne"
+    },
+    {
+      "by": "u-anna",
       "campaignId": "c-bf",
       "edits": [],
       "fixes": [],
@@ -38420,6 +38751,87 @@ anna qaQueue("w-lysne")
       },
       "item": {
         "campaignId": "c-autumn",
+        "creativeId": "cr-night-story",
+        "documentId": "doc-night-story",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","evaluated":true,"notes":[],"productTruth":"flag"},
+        "feedback": [],
+        "findings": [
+          {
+            "dimension": "product",
+            "expected": "A closed bottle: no oil leaves it",
+            "finding": "Shot 1: oil runs out of the bottle’s base while the cap is on.",
+            "id": "fi-v1",
+            "observed": "A thin run of oil down the base, from the first frame",
+            "seconds": {"from":0,"to":2.9},
+            "severity": "critical",
+            "status": "open"
+          },
+          {
+            "dimension": "brand_brief",
+            "expected": "Words and the button come in on a beat, as in LYSNE’s motion",
+            "finding": "The button comes in a quarter second after the beat.",
+            "id": "fi-v2",
+            "seconds": {"from":4,"to":4.25},
+            "severity": "minor",
+            "status": "open"
+          }
+        ],
+        "format": "story",
+        "id": "qa-9",
+        "image": "/demo/lysne/video/drop.jpg",
+        "madeAt": "2026-10-14T12:26:00.000Z",
+        "risk": "normal",
+        "slot": "Film 1 · Story",
+        "state": "waiting",
+        "studio": "video",
+        "title": "Night ritual · Story 9:16",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":6,"creatives":11,"delivered":0,"inCheck":3},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:26:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":0},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
         "creativeId": "cr-doc-autumn-email",
         "documentId": "doc-autumn-email",
         "dueAt": "2026-10-15T12:32:00.000Z",
@@ -39058,6 +39470,243 @@ anna lookPresets("w-nope")
   = maja lookPresets("w-solv")
 anna engineChat("w-nope")
   []
+anna document("doc-night-story")
+  {
+    "by": "u-anna",
+    "campaignId": "c-autumn",
+    "creativeId": "cr-night-story",
+    "edits": [],
+    "id": "doc-night-story",
+    "layers": [],
+    "modeId": "m-video-edit",
+    "overrides": [],
+    "pickedVersionId": "rv-story-1",
+    "slot": "Film 1 · Story",
+    "specs": {
+      "count": 1,
+      "format": "story",
+      "imageModel": "Kling 3.0",
+      "modelIds": [],
+      "placementId": "pl-ig-story",
+      "productId": "pr-oil",
+      "referenceIds": [],
+      "variantId": "va-oil-100"
+    },
+    "state": "in_check",
+    "studio": "video",
+    "title": "Night ritual · Story 9:16",
+    "updatedAt": "2026-10-14T12:26:00.000Z",
+    "variables": {"captions":true,"grade":"LYSNE warm","music":"late-light","pace":"calm","transition":"dissolve"},
+    "versions": [
+      {
+        "at": "2026-10-14T12:26:00.000Z",
+        "by": "u-anna",
+        "cost": 0.84,
+        "evaluation": {"artefacts":"none","brandRules":"pass","evaluated":true,"notes":[],"productTruth":"flag"},
+        "id": "rv-story-1",
+        "image": "/demo/lysne/video/drop.jpg",
+        "instruction": "The Engine's Story, cut from the film's shots",
+        "number": 1,
+        "specs": {"count":1,"format":"story","imageModel":"Kling 3.0","modelIds":[],"productId":"pr-oil","referenceIds":[]},
+        "state": "done",
+        "variables": {"captions":true,"grade":"LYSNE warm","music":"late-light","pace":"calm","transition":"dissolve"}
+      }
+    ],
+    "video": {
+      "captions": [{"by":"engine","end":2.8,"id":"cs-1","start":0.4,"text":"kept for the night"}],
+      "checks": [
+        {
+          "at": 0,
+          "id": "ck-product",
+          "label": "Product correct in every frame",
+          "note": "Shot 1: Oil runs out of the bottle’s base while the cap is on",
+          "state": "flag"
+        },
+        {"id":"ck-people","label":"Hands and bodies look right","state":"pass"},
+        {"id":"ck-shots","label":"Every shot has a take","state":"pass"},
+        {"id":"ck-length","label":"6 s for Story","state":"pass"},
+        {"id":"ck-music","label":"Music licensed for paid social","state":"pass"},
+        {
+          "id": "ck-label",
+          "label": "Marked as made with AI",
+          "note": "In the video’s own data, for every platform",
+          "state": "pass"
+        }
+      ],
+      "clips": [
+        {
+          "id": "vs-drop",
+          "in": 0.5,
+          "name": "The bottle in the hand",
+          "out": 3.7,
+          "pickedTakeId": "tk-drop-1-s",
+          "productId": "pr-oil",
+          "recipe": {
+            "action": "The hand turns the closed bottle in the low sun so the label faces the camera. No drops.",
+            "amount": 20,
+            "model": "auto",
+            "move": "push",
+            "seconds": 5,
+            "startImage": "/demo/lysne/video/drop.jpg"
+          },
+          "source": "engine",
+          "speed": 1,
+          "takes": [
+            {
+              "at": "2026-10-14T11:44:00.000Z",
+              "cost": 0.42,
+              "findings": [
+                {
+                  "from": 0,
+                  "kind": "physics",
+                  "state": "open",
+                  "text": "Oil runs out of the bottle’s base while the cap is on",
+                  "to": 3.4
+                }
+              ],
+              "id": "tk-drop-1-s",
+              "model": "Kling 3.0",
+              "number": 1,
+              "poster": "/demo/lysne/video/drop.jpg",
+              "seconds": 5,
+              "state": "ready",
+              "video": "/demo/lysne/video/drop.mp4"
+            },
+            {
+              "at": "2026-10-14T12:20:00.000Z",
+              "best": {"in":1.4,"out":4.6},
+              "cost": 0.42,
+              "findings": [{"from":0,"kind":"physics","state":"open","text":"Drops from the start frame run off the base","to":1.2}],
+              "id": "tk-drop-2-s",
+              "model": "Kling 3.0",
+              "number": 2,
+              "poster": "/demo/lysne/video/turn.jpg",
+              "seconds": 5,
+              "state": "ready",
+              "video": "/demo/lysne/video/turn.mp4"
+            }
+          ],
+          "transition": "cut"
+        },
+        {
+          "id": "vs-bottle",
+          "in": 0.3,
+          "name": "Night Body Oil",
+          "out": 3.1,
+          "pickedTakeId": "tk-bottle-1-s",
+          "productId": "pr-oil",
+          "recipe": {
+            "action": "A slow push in on the bottle on travertine; the low sun moves across the stone",
+            "amount": 15,
+            "model": "auto",
+            "move": "push",
+            "seconds": 5,
+            "startImage": "/demo/lysne/video/bottle.jpg"
+          },
+          "source": "engine",
+          "speed": 1,
+          "takes": [
+            {
+              "at": "2026-10-14T11:52:00.000Z",
+              "cost": 0.42,
+              "findings": [],
+              "id": "tk-bottle-1-s",
+              "model": "Kling 3.0",
+              "number": 1,
+              "poster": "/demo/lysne/video/bottle.jpg",
+              "seconds": 5,
+              "state": "ready",
+              "video": "/demo/lysne/video/bottle.mp4"
+            }
+          ],
+          "transition": "cut"
+        }
+      ],
+      "edits": [],
+      "formatId": "vf-story",
+      "formats": [
+        {
+          "captions": true,
+          "id": "vf-reels",
+          "name": "Reels and TikTok",
+          "placementId": "pl-ig-reels",
+          "ratio": "9:16",
+          "seconds": 15,
+          "state": "planned"
+        },
+        {
+          "captions": true,
+          "id": "vf-feed",
+          "name": "Feed",
+          "placementId": "pl-ig-feed",
+          "ratio": "4:5",
+          "seconds": 15,
+          "state": "planned"
+        },
+        {
+          "captions": true,
+          "id": "vf-story",
+          "name": "Story",
+          "placementId": "pl-ig-story",
+          "ratio": "9:16",
+          "seconds": 6,
+          "state": "this"
+        },
+        {
+          "captions": true,
+          "id": "vf-ads",
+          "name": "Ads",
+          "placementId": "pl-ig-square",
+          "ratio": "1:1",
+          "seconds": 6,
+          "state": "planned"
+        }
+      ],
+      "grade": "LYSNE warm",
+      "motion": [
+        {
+          "clipId": "vs-bottle",
+          "ease": "soft-out",
+          "end": 5,
+          "enter": "rise",
+          "exit": "fade",
+          "id": "ms-product",
+          "place": "top",
+          "start": 3.4,
+          "template": "product",
+          "text": "Night Body Oil · 100 ml"
+        },
+        {
+          "clipId": "vs-bottle",
+          "ease": "soft-out",
+          "end": 5,
+          "enter": "rise",
+          "exit": "fade",
+          "id": "ms-cta",
+          "place": "bottom",
+          "start": 4,
+          "template": "cta",
+          "text": "Se oljen"
+        },
+        {"end":6,"enter":"soft","id":"ms-end","place":"centre","start":5,"template":"end","text":"LYSNE"}
+      ],
+      "sound": [
+        {
+          "beats": [0,0.75,1.5,2.25,3,3.75,4.5,5.25,6],
+          "end": 6,
+          "id": "ss-music",
+          "kind": "music",
+          "level": -6,
+          "licence": "Licensed for paid social",
+          "name": "Late light · slow piano",
+          "start": 0
+        },
+        {"end":3.5,"id":"ss-glass","kind":"effect","level":-14,"name":"Glass on stone","start":2.9}
+      ],
+      "style": {"energy":35,"id":"showcase","pace":35}
+    },
+    "workspaceId": "w-lysne"
+  }
 anna document("doc-bf-1")
   {
     "by": "u-anna",
@@ -41692,7 +42341,7 @@ sander allBrands()
           "name": "Autumn launch",
           "progress": 0.18181818181818182
         },
-        "inCheck": 10,
+        "inCheck": 11,
         "nextDue": "2026-10-17T12:32:00.000Z",
         "picture": "/demo/lysne/05-06-feed.jpg",
         "readyToRelease": 0,
@@ -41873,7 +42522,7 @@ sander allBrands()
         "action": "Check",
         "at": "2026-10-14T12:24:00.000Z",
         "clientId": "w-lysne",
-        "detail": "6 creatives to check",
+        "detail": "7 creatives to check",
         "href": "/studio/b/w-lysne/qa?campaign=c-autumn",
         "id": "on-check-c-autumn",
         "kind": "check",
@@ -42583,7 +43232,7 @@ sander allBrands()
         "brandIds": ["w-lysne"],
         "capacity": 4,
         "checksToday": 6,
-        "doing": "10 creatives to check · 1 plan to check · LYSNE",
+        "doing": "11 creatives to check · 1 plan to check · LYSNE",
         "follows": false,
         "load": 1.5,
         "minutesPerCheck": 4,
@@ -45039,6 +45688,8 @@ sander lookPresets("w-nope")
   = maja lookPresets("w-solv")
 sander engineChat("w-nope")
   []
+sander document("doc-night-story")
+  = anna document("doc-night-story")
 sander document("doc-bf-1")
   = anna document("doc-bf-1")
 sander document("doc-night-ritual")
@@ -45650,6 +46301,8 @@ vera lookPresets("w-nope")
   = maja lookPresets("w-solv")
 vera engineChat("w-nope")
   []
+vera document("doc-night-story")
+  = anna document("doc-night-story")
 vera document("doc-bf-1")
   = anna document("doc-bf-1")
 vera document("doc-night-ritual")
@@ -52390,6 +53043,8 @@ maja (first run) lookPresets("w-nope")
   = maja lookPresets("w-solv")
 maja (first run) engineChat("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja (first run) document("doc-night-story")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) document("doc-bf-1")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) document("doc-night-ritual")
@@ -56357,7 +57012,7 @@ nora teamLoad()
       "brandIds": ["w-lysne","w-aurea","w-halm","w-vev"],
       "capacity": 4,
       "checksToday": 2,
-      "doing": "10 creatives to check · LYSNE, AURÉA, HALM, VEV",
+      "doing": "11 creatives to check · LYSNE, AURÉA, HALM, VEV",
       "follows": false,
       "load": 6,
       "minutesPerCheck": 6,
@@ -56374,7 +57029,7 @@ nora teamLoad()
       "brandIds": ["w-lysne","w-aurea","w-halm","w-vev"],
       "capacity": 4,
       "checksToday": 2,
-      "doing": "10 creatives to check · LYSNE, AURÉA, HALM, VEV",
+      "doing": "11 creatives to check · LYSNE, AURÉA, HALM, VEV",
       "follows": false,
       "load": 6,
       "minutesPerCheck": 6,
@@ -56391,7 +57046,7 @@ nora teamLoad()
       "brandIds": ["w-lysne","w-aurea","w-halm","w-vev"],
       "capacity": 4,
       "checksToday": 2,
-      "doing": "10 creatives to check · LYSNE, AURÉA, HALM, VEV",
+      "doing": "11 creatives to check · LYSNE, AURÉA, HALM, VEV",
       "follows": false,
       "load": 6,
       "minutesPerCheck": 6,
@@ -58445,7 +59100,7 @@ nora allBrands()
           "name": "Autumn launch",
           "progress": 0.18181818181818182
         },
-        "inCheck": 10,
+        "inCheck": 11,
         "nextDue": "2026-10-17T12:32:00.000Z",
         "picture": "/demo/lysne/05-06-feed.jpg",
         "readyToRelease": 2,
@@ -59122,7 +59777,7 @@ nora allBrands()
         "brandIds": ["w-lysne","w-aurea","w-halm","w-vev"],
         "capacity": 4,
         "checksToday": 2,
-        "doing": "10 creatives to check · LYSNE, AURÉA, HALM, VEV",
+        "doing": "11 creatives to check · LYSNE, AURÉA, HALM, VEV",
         "follows": false,
         "load": 6,
         "minutesPerCheck": 6,
@@ -59139,7 +59794,7 @@ nora allBrands()
         "brandIds": ["w-lysne","w-aurea","w-halm","w-vev"],
         "capacity": 4,
         "checksToday": 2,
-        "doing": "10 creatives to check · LYSNE, AURÉA, HALM, VEV",
+        "doing": "11 creatives to check · LYSNE, AURÉA, HALM, VEV",
         "follows": false,
         "load": 6,
         "minutesPerCheck": 6,
@@ -59156,7 +59811,7 @@ nora allBrands()
         "brandIds": ["w-lysne","w-aurea","w-halm","w-vev"],
         "capacity": 4,
         "checksToday": 2,
-        "doing": "10 creatives to check · LYSNE, AURÉA, HALM, VEV",
+        "doing": "11 creatives to check · LYSNE, AURÉA, HALM, VEV",
         "follows": false,
         "load": 6,
         "minutesPerCheck": 6,
@@ -59944,6 +60599,94 @@ nora qaQueue()
         "studio": "render",
         "title": "Feed 9",
         "version": 2,
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {
+        "agencyId": "o-brygga",
+        "brandName": "LYSNE",
+        "id": "w-lysne",
+        "language": "Norwegian",
+        "market": "Norway",
+        "organisationId": "o-lysne"
+      }
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":6,"creatives":11,"delivered":0,"inCheck":3},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:26:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":2},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "creativeId": "cr-night-story",
+        "documentId": "doc-night-story",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {"artefacts":"none","brandRules":"pass","evaluated":true,"notes":[],"productTruth":"flag"},
+        "feedback": [],
+        "findings": [
+          {
+            "dimension": "product",
+            "expected": "A closed bottle: no oil leaves it",
+            "finding": "Shot 1: oil runs out of the bottle’s base while the cap is on.",
+            "id": "fi-v1",
+            "observed": "A thin run of oil down the base, from the first frame",
+            "seconds": {"from":0,"to":2.9},
+            "severity": "critical",
+            "status": "open"
+          },
+          {
+            "dimension": "brand_brief",
+            "expected": "Words and the button come in on a beat, as in LYSNE’s motion",
+            "finding": "The button comes in a quarter second after the beat.",
+            "id": "fi-v2",
+            "seconds": {"from":4,"to":4.25},
+            "severity": "minor",
+            "status": "open"
+          }
+        ],
+        "format": "story",
+        "id": "qa-9",
+        "image": "/demo/lysne/video/drop.jpg",
+        "madeAt": "2026-10-14T12:26:00.000Z",
+        "risk": "normal",
+        "slot": "Film 1 · Story",
+        "state": "waiting",
+        "studio": "video",
+        "title": "Night ritual · Story 9:16",
         "workspaceId": "w-lysne"
       },
       "productName": "Night Body Oil",
@@ -60869,7 +61612,7 @@ nora agencyHome()
         "action": "Check",
         "at": "2026-10-14T12:24:00.000Z",
         "clientId": "w-lysne",
-        "detail": "6 creatives to check",
+        "detail": "7 creatives to check",
         "href": "/studio/b/w-lysne/qa?campaign=c-autumn",
         "id": "an-check-c-autumn",
         "kind": "check",
@@ -60942,13 +61685,13 @@ nora agencyHome()
         "title": "AURÉA · Brand DNA"
       }
     ],
-    "summary": "4 client brands. 1 plan, 10 creatives to check and 2 to send wait on you; 4 creatives with Maja.",
+    "summary": "4 client brands. 1 plan, 11 creatives to check and 2 to send wait on you; 4 creatives with Maja.",
     "team": [
       {
         "clientIds": ["w-lysne"],
         "load": 0.82,
         "role": "lead",
-        "thisWeek": "10 creatives to check · 1 plan to check · LYSNE",
+        "thisWeek": "11 creatives to check · 1 plan to check · LYSNE",
         "user": {
           "agency": {"organisationId":"o-brygga","role":"lead"},
           "email": "nora@brygga.example",
@@ -61432,7 +62175,7 @@ nora agencyTeam()
       "clientIds": ["w-lysne"],
       "load": 0.82,
       "role": "lead",
-      "thisWeek": "10 creatives to check · 1 plan to check · LYSNE",
+      "thisWeek": "11 creatives to check · 1 plan to check · LYSNE",
       "user": {
         "agency": {"organisationId":"o-brygga","role":"lead"},
         "email": "nora@brygga.example",
@@ -77135,6 +77878,250 @@ nora documents("w-lysne")
   [
     {
       "by": "u-nora",
+      "campaignId": "c-autumn",
+      "creativeId": "cr-night-story",
+      "edits": [],
+      "id": "doc-night-story",
+      "layers": [],
+      "modeId": "m-video-edit",
+      "overrides": [],
+      "pickedVersionId": "rv-story-1",
+      "slot": "Film 1 · Story",
+      "specs": {
+        "count": 1,
+        "format": "story",
+        "imageModel": "Kling 3.0",
+        "modelIds": [],
+        "placementId": "pl-ig-story",
+        "productId": "pr-oil",
+        "referenceIds": [],
+        "variantId": "va-oil-100"
+      },
+      "state": "in_check",
+      "studio": "video",
+      "title": "Night ritual · Story 9:16",
+      "updatedAt": "2026-10-14T12:26:00.000Z",
+      "variables": {"captions":true,"grade":"LYSNE warm","music":"late-light","pace":"calm","transition":"dissolve"},
+      "versions": [
+        {
+          "at": "2026-10-14T12:26:00.000Z",
+          "by": "u-nora",
+          "cost": 0.84,
+          "evaluation": {"artefacts":"none","brandRules":"pass","evaluated":true,"notes":[],"productTruth":"flag"},
+          "id": "rv-story-1",
+          "image": "/demo/lysne/video/drop.jpg",
+          "instruction": "The Engine's Story, cut from the film's shots",
+          "number": 1,
+          "specs": {"count":1,"format":"story","imageModel":"Kling 3.0","modelIds":[],"productId":"pr-oil","referenceIds":[]},
+          "state": "done",
+          "variables": {"captions":true,"grade":"LYSNE warm","music":"late-light","pace":"calm","transition":"dissolve"}
+        }
+      ],
+      "video": {
+        "captions": [{"by":"engine","end":2.8,"id":"cs-1","start":0.4,"text":"kept for the night"}],
+        "checks": [
+          {
+            "at": 0,
+            "id": "ck-product",
+            "label": "Product correct in every frame",
+            "note": "Shot 1: Oil runs out of the bottle’s base while the cap is on",
+            "state": "flag"
+          },
+          {"id":"ck-people","label":"Hands and bodies look right","state":"pass"},
+          {"id":"ck-shots","label":"Every shot has a take","state":"pass"},
+          {"id":"ck-length","label":"6 s for Story","state":"pass"},
+          {"id":"ck-music","label":"Music licensed for paid social","state":"pass"},
+          {
+            "id": "ck-label",
+            "label": "Marked as made with AI",
+            "note": "In the video’s own data, for every platform",
+            "state": "pass"
+          }
+        ],
+        "clips": [
+          {
+            "id": "vs-drop",
+            "in": 0.5,
+            "name": "The bottle in the hand",
+            "out": 3.7,
+            "pickedTakeId": "tk-drop-1-s",
+            "productId": "pr-oil",
+            "recipe": {
+              "action": "The hand turns the closed bottle in the low sun so the label faces the camera. No drops.",
+              "amount": 20,
+              "model": "auto",
+              "move": "push",
+              "seconds": 5,
+              "startImage": "/demo/lysne/video/drop.jpg"
+            },
+            "source": "engine",
+            "speed": 1,
+            "takes": [
+              {
+                "at": "2026-10-14T11:44:00.000Z",
+                "cost": 0.42,
+                "findings": [
+                  {
+                    "from": 0,
+                    "kind": "physics",
+                    "state": "open",
+                    "text": "Oil runs out of the bottle’s base while the cap is on",
+                    "to": 3.4
+                  }
+                ],
+                "id": "tk-drop-1-s",
+                "model": "Kling 3.0",
+                "number": 1,
+                "poster": "/demo/lysne/video/drop.jpg",
+                "seconds": 5,
+                "state": "ready",
+                "video": "/demo/lysne/video/drop.mp4"
+              },
+              {
+                "at": "2026-10-14T12:20:00.000Z",
+                "best": {"in":1.4,"out":4.6},
+                "cost": 0.42,
+                "findings": [
+                  {
+                    "from": 0,
+                    "kind": "physics",
+                    "state": "open",
+                    "text": "Drops from the start frame run off the base",
+                    "to": 1.2
+                  }
+                ],
+                "id": "tk-drop-2-s",
+                "model": "Kling 3.0",
+                "number": 2,
+                "poster": "/demo/lysne/video/turn.jpg",
+                "seconds": 5,
+                "state": "ready",
+                "video": "/demo/lysne/video/turn.mp4"
+              }
+            ],
+            "transition": "cut"
+          },
+          {
+            "id": "vs-bottle",
+            "in": 0.3,
+            "name": "Night Body Oil",
+            "out": 3.1,
+            "pickedTakeId": "tk-bottle-1-s",
+            "productId": "pr-oil",
+            "recipe": {
+              "action": "A slow push in on the bottle on travertine; the low sun moves across the stone",
+              "amount": 15,
+              "model": "auto",
+              "move": "push",
+              "seconds": 5,
+              "startImage": "/demo/lysne/video/bottle.jpg"
+            },
+            "source": "engine",
+            "speed": 1,
+            "takes": [
+              {
+                "at": "2026-10-14T11:52:00.000Z",
+                "cost": 0.42,
+                "findings": [],
+                "id": "tk-bottle-1-s",
+                "model": "Kling 3.0",
+                "number": 1,
+                "poster": "/demo/lysne/video/bottle.jpg",
+                "seconds": 5,
+                "state": "ready",
+                "video": "/demo/lysne/video/bottle.mp4"
+              }
+            ],
+            "transition": "cut"
+          }
+        ],
+        "edits": [],
+        "formatId": "vf-story",
+        "formats": [
+          {
+            "captions": true,
+            "id": "vf-reels",
+            "name": "Reels and TikTok",
+            "placementId": "pl-ig-reels",
+            "ratio": "9:16",
+            "seconds": 15,
+            "state": "planned"
+          },
+          {
+            "captions": true,
+            "id": "vf-feed",
+            "name": "Feed",
+            "placementId": "pl-ig-feed",
+            "ratio": "4:5",
+            "seconds": 15,
+            "state": "planned"
+          },
+          {
+            "captions": true,
+            "id": "vf-story",
+            "name": "Story",
+            "placementId": "pl-ig-story",
+            "ratio": "9:16",
+            "seconds": 6,
+            "state": "this"
+          },
+          {
+            "captions": true,
+            "id": "vf-ads",
+            "name": "Ads",
+            "placementId": "pl-ig-square",
+            "ratio": "1:1",
+            "seconds": 6,
+            "state": "planned"
+          }
+        ],
+        "grade": "LYSNE warm",
+        "motion": [
+          {
+            "clipId": "vs-bottle",
+            "ease": "soft-out",
+            "end": 5,
+            "enter": "rise",
+            "exit": "fade",
+            "id": "ms-product",
+            "place": "top",
+            "start": 3.4,
+            "template": "product",
+            "text": "Night Body Oil · 100 ml"
+          },
+          {
+            "clipId": "vs-bottle",
+            "ease": "soft-out",
+            "end": 5,
+            "enter": "rise",
+            "exit": "fade",
+            "id": "ms-cta",
+            "place": "bottom",
+            "start": 4,
+            "template": "cta",
+            "text": "Se oljen"
+          },
+          {"end":6,"enter":"soft","id":"ms-end","place":"centre","start":5,"template":"end","text":"LYSNE"}
+        ],
+        "sound": [
+          {
+            "beats": [0,0.75,1.5,2.25,3,3.75,4.5,5.25,6],
+            "end": 6,
+            "id": "ss-music",
+            "kind": "music",
+            "level": -6,
+            "licence": "Licensed for paid social",
+            "name": "Late light · slow piano",
+            "start": 0
+          },
+          {"end":3.5,"id":"ss-glass","kind":"effect","level":-14,"name":"Glass on stone","start":2.9}
+        ],
+        "style": {"energy":35,"id":"showcase","pace":35}
+      },
+      "workspaceId": "w-lysne"
+    },
+    {
+      "by": "u-nora",
       "campaignId": "c-bf",
       "edits": [],
       "fixes": [],
@@ -79045,6 +80032,243 @@ nora lookPresets("w-nope")
   = maja lookPresets("w-solv")
 nora engineChat("w-nope")
   []
+nora document("doc-night-story")
+  {
+    "by": "u-nora",
+    "campaignId": "c-autumn",
+    "creativeId": "cr-night-story",
+    "edits": [],
+    "id": "doc-night-story",
+    "layers": [],
+    "modeId": "m-video-edit",
+    "overrides": [],
+    "pickedVersionId": "rv-story-1",
+    "slot": "Film 1 · Story",
+    "specs": {
+      "count": 1,
+      "format": "story",
+      "imageModel": "Kling 3.0",
+      "modelIds": [],
+      "placementId": "pl-ig-story",
+      "productId": "pr-oil",
+      "referenceIds": [],
+      "variantId": "va-oil-100"
+    },
+    "state": "in_check",
+    "studio": "video",
+    "title": "Night ritual · Story 9:16",
+    "updatedAt": "2026-10-14T12:26:00.000Z",
+    "variables": {"captions":true,"grade":"LYSNE warm","music":"late-light","pace":"calm","transition":"dissolve"},
+    "versions": [
+      {
+        "at": "2026-10-14T12:26:00.000Z",
+        "by": "u-nora",
+        "cost": 0.84,
+        "evaluation": {"artefacts":"none","brandRules":"pass","evaluated":true,"notes":[],"productTruth":"flag"},
+        "id": "rv-story-1",
+        "image": "/demo/lysne/video/drop.jpg",
+        "instruction": "The Engine's Story, cut from the film's shots",
+        "number": 1,
+        "specs": {"count":1,"format":"story","imageModel":"Kling 3.0","modelIds":[],"productId":"pr-oil","referenceIds":[]},
+        "state": "done",
+        "variables": {"captions":true,"grade":"LYSNE warm","music":"late-light","pace":"calm","transition":"dissolve"}
+      }
+    ],
+    "video": {
+      "captions": [{"by":"engine","end":2.8,"id":"cs-1","start":0.4,"text":"kept for the night"}],
+      "checks": [
+        {
+          "at": 0,
+          "id": "ck-product",
+          "label": "Product correct in every frame",
+          "note": "Shot 1: Oil runs out of the bottle’s base while the cap is on",
+          "state": "flag"
+        },
+        {"id":"ck-people","label":"Hands and bodies look right","state":"pass"},
+        {"id":"ck-shots","label":"Every shot has a take","state":"pass"},
+        {"id":"ck-length","label":"6 s for Story","state":"pass"},
+        {"id":"ck-music","label":"Music licensed for paid social","state":"pass"},
+        {
+          "id": "ck-label",
+          "label": "Marked as made with AI",
+          "note": "In the video’s own data, for every platform",
+          "state": "pass"
+        }
+      ],
+      "clips": [
+        {
+          "id": "vs-drop",
+          "in": 0.5,
+          "name": "The bottle in the hand",
+          "out": 3.7,
+          "pickedTakeId": "tk-drop-1-s",
+          "productId": "pr-oil",
+          "recipe": {
+            "action": "The hand turns the closed bottle in the low sun so the label faces the camera. No drops.",
+            "amount": 20,
+            "model": "auto",
+            "move": "push",
+            "seconds": 5,
+            "startImage": "/demo/lysne/video/drop.jpg"
+          },
+          "source": "engine",
+          "speed": 1,
+          "takes": [
+            {
+              "at": "2026-10-14T11:44:00.000Z",
+              "cost": 0.42,
+              "findings": [
+                {
+                  "from": 0,
+                  "kind": "physics",
+                  "state": "open",
+                  "text": "Oil runs out of the bottle’s base while the cap is on",
+                  "to": 3.4
+                }
+              ],
+              "id": "tk-drop-1-s",
+              "model": "Kling 3.0",
+              "number": 1,
+              "poster": "/demo/lysne/video/drop.jpg",
+              "seconds": 5,
+              "state": "ready",
+              "video": "/demo/lysne/video/drop.mp4"
+            },
+            {
+              "at": "2026-10-14T12:20:00.000Z",
+              "best": {"in":1.4,"out":4.6},
+              "cost": 0.42,
+              "findings": [{"from":0,"kind":"physics","state":"open","text":"Drops from the start frame run off the base","to":1.2}],
+              "id": "tk-drop-2-s",
+              "model": "Kling 3.0",
+              "number": 2,
+              "poster": "/demo/lysne/video/turn.jpg",
+              "seconds": 5,
+              "state": "ready",
+              "video": "/demo/lysne/video/turn.mp4"
+            }
+          ],
+          "transition": "cut"
+        },
+        {
+          "id": "vs-bottle",
+          "in": 0.3,
+          "name": "Night Body Oil",
+          "out": 3.1,
+          "pickedTakeId": "tk-bottle-1-s",
+          "productId": "pr-oil",
+          "recipe": {
+            "action": "A slow push in on the bottle on travertine; the low sun moves across the stone",
+            "amount": 15,
+            "model": "auto",
+            "move": "push",
+            "seconds": 5,
+            "startImage": "/demo/lysne/video/bottle.jpg"
+          },
+          "source": "engine",
+          "speed": 1,
+          "takes": [
+            {
+              "at": "2026-10-14T11:52:00.000Z",
+              "cost": 0.42,
+              "findings": [],
+              "id": "tk-bottle-1-s",
+              "model": "Kling 3.0",
+              "number": 1,
+              "poster": "/demo/lysne/video/bottle.jpg",
+              "seconds": 5,
+              "state": "ready",
+              "video": "/demo/lysne/video/bottle.mp4"
+            }
+          ],
+          "transition": "cut"
+        }
+      ],
+      "edits": [],
+      "formatId": "vf-story",
+      "formats": [
+        {
+          "captions": true,
+          "id": "vf-reels",
+          "name": "Reels and TikTok",
+          "placementId": "pl-ig-reels",
+          "ratio": "9:16",
+          "seconds": 15,
+          "state": "planned"
+        },
+        {
+          "captions": true,
+          "id": "vf-feed",
+          "name": "Feed",
+          "placementId": "pl-ig-feed",
+          "ratio": "4:5",
+          "seconds": 15,
+          "state": "planned"
+        },
+        {
+          "captions": true,
+          "id": "vf-story",
+          "name": "Story",
+          "placementId": "pl-ig-story",
+          "ratio": "9:16",
+          "seconds": 6,
+          "state": "this"
+        },
+        {
+          "captions": true,
+          "id": "vf-ads",
+          "name": "Ads",
+          "placementId": "pl-ig-square",
+          "ratio": "1:1",
+          "seconds": 6,
+          "state": "planned"
+        }
+      ],
+      "grade": "LYSNE warm",
+      "motion": [
+        {
+          "clipId": "vs-bottle",
+          "ease": "soft-out",
+          "end": 5,
+          "enter": "rise",
+          "exit": "fade",
+          "id": "ms-product",
+          "place": "top",
+          "start": 3.4,
+          "template": "product",
+          "text": "Night Body Oil · 100 ml"
+        },
+        {
+          "clipId": "vs-bottle",
+          "ease": "soft-out",
+          "end": 5,
+          "enter": "rise",
+          "exit": "fade",
+          "id": "ms-cta",
+          "place": "bottom",
+          "start": 4,
+          "template": "cta",
+          "text": "Se oljen"
+        },
+        {"end":6,"enter":"soft","id":"ms-end","place":"centre","start":5,"template":"end","text":"LYSNE"}
+      ],
+      "sound": [
+        {
+          "beats": [0,0.75,1.5,2.25,3,3.75,4.5,5.25,6],
+          "end": 6,
+          "id": "ss-music",
+          "kind": "music",
+          "level": -6,
+          "licence": "Licensed for paid social",
+          "name": "Late light · slow piano",
+          "start": 0
+        },
+        {"end":3.5,"id":"ss-glass","kind":"effect","level":-14,"name":"Glass on stone","start":2.9}
+      ],
+      "style": {"energy":35,"id":"showcase","pace":35}
+    },
+    "workspaceId": "w-lysne"
+  }
 nora document("doc-bf-1")
   {
     "by": "u-nora",
@@ -81708,7 +82932,7 @@ even allBrands()
           "name": "Autumn launch",
           "progress": 0.18181818181818182
         },
-        "inCheck": 10,
+        "inCheck": 11,
         "nextDue": "2026-10-17T12:32:00.000Z",
         "picture": "/demo/lysne/05-06-feed.jpg",
         "readyToRelease": 2,
@@ -81983,7 +83207,7 @@ even allBrands()
         "brandIds": ["w-lysne","w-aurea","w-halm","w-vev"],
         "capacity": 4,
         "checksToday": 2,
-        "doing": "10 creatives to check · LYSNE, AURÉA, HALM, VEV",
+        "doing": "11 creatives to check · LYSNE, AURÉA, HALM, VEV",
         "follows": false,
         "load": 6,
         "minutesPerCheck": 6,
@@ -82000,7 +83224,7 @@ even allBrands()
         "brandIds": ["w-lysne","w-aurea","w-halm","w-vev"],
         "capacity": 4,
         "checksToday": 2,
-        "doing": "10 creatives to check · LYSNE, AURÉA, HALM, VEV",
+        "doing": "11 creatives to check · LYSNE, AURÉA, HALM, VEV",
         "follows": false,
         "load": 6,
         "minutesPerCheck": 6,
@@ -82017,7 +83241,7 @@ even allBrands()
         "brandIds": ["w-lysne","w-aurea","w-halm","w-vev"],
         "capacity": 4,
         "checksToday": 2,
-        "doing": "10 creatives to check · LYSNE, AURÉA, HALM, VEV",
+        "doing": "11 creatives to check · LYSNE, AURÉA, HALM, VEV",
         "follows": false,
         "load": 6,
         "minutesPerCheck": 6,
@@ -85273,6 +86497,8 @@ even lookPresets("w-nope")
   = maja lookPresets("w-solv")
 even engineChat("w-nope")
   []
+even document("doc-night-story")
+  = nora document("doc-night-story")
 even document("doc-bf-1")
   = nora document("doc-bf-1")
 even document("doc-night-ritual")
@@ -87905,6 +89131,8 @@ maja (agency's client) lookPresets("w-nope")
   = maja lookPresets("w-solv")
 maja (agency's client) engineChat("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja (agency's client) document("doc-night-story")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) document("doc-bf-1")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) document("doc-night-ritual")
@@ -88529,6 +89757,8 @@ jonas (agency's client) qaQueue("w-nope")
 jonas (agency's client) lookPresets("w-nope")
   = maja lookPresets("w-solv")
 jonas (agency's client) engineChat("w-nope")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+jonas (agency's client) document("doc-night-story")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) document("doc-bf-1")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}

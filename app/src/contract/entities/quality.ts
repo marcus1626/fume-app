@@ -112,6 +112,9 @@ export interface QaFinding {
   status: "open" | "accepted" | "resolved";
   by?: Id;
   at?: Instant;
+  /** On a video: where it is on the timeline, in the video's seconds, so the one who checks can go to it (FLOWS §34.7,
+   *  PROPOSED). */
+  seconds?: { from: number; to: number };
 }
 
 /** A spot on a creative in Check: a numbered pin, 0–1 from the top left, with what is wrong there. It goes to the
@@ -121,6 +124,8 @@ export interface QaPin {
   x: number;
   y: number;
   text: string;
+  /** On a video: the second it is pinned on (FLOWS §34.7, PROPOSED). */
+  at?: number;
 }
 
 /** What a checker told the Engine to fix. */

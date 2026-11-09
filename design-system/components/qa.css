@@ -197,6 +197,74 @@
 .ui-qa-pinbox[data-side="center"][data-flip-y] { translate: -50% calc(-100% - var(--ui-qg-pin) - var(--ui-space-sm)); }
 .ui-qa-pinbox-foot { display: flex; justify-content: flex-end; gap: var(--ui-space-sm); }
 
+/* FLOWS §34.7 a video in Check: the player fills the creative's box in the well (the box keeps the fit and the pins);
+   under it the transport and one strip of the shots, with the Engine's findings as marks over their stretch and her pins
+   at their second; the strip is the scrubber, the Ink line is the playhead */
+/* a video has no width of its own (a picture has its pixels): it takes the format's width in the well; on a desk the fit
+   below sizes it like a picture */
+.ui-qa-creative[data-video] { width: var(--qa-media); max-width: 100%; }
+.ui-qa-creative[data-video] > .ui-video-frame { width: 100%; height: 100%; border-radius: inherit; box-shadow: none; }
+.ui-qa-reel { --len: 1; --t: 0; flex: none; display: grid; gap: var(--ui-space-xs); min-width: 0; user-select: none; }
+.ui-qa-reel-bar { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qa-reel-track { position: relative; display: grid; grid-template-rows: var(--ui-size-control-sm) var(--ui-size-hit); gap: var(--ui-space-xs); min-width: 0; }
+.ui-qa-reel-marks { position: relative; min-width: 0; }
+.ui-qa-reel-mark {
+  position: absolute; top: 25%; bottom: 25%; left: calc(var(--from) / var(--len) * 100%);
+  width: max(var(--ui-space-sm), calc((var(--to) - var(--from)) / var(--len) * 100%)); margin: 0; padding: 0; border: 0;
+  border-radius: var(--ui-radius-action); background: var(--ui-text-tertiary); cursor: pointer;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-qa-reel-mark[data-severity="critical"] { background: var(--ui-danger); }
+.ui-qa-reel-mark::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+@media (hover: hover) { .ui-qa-reel-mark:hover { background: var(--ui-text-secondary); } .ui-qa-reel-mark[data-severity="critical"]:hover { background: var(--ui-danger-hover); } }
+.ui-qa-reel-mark:active { transform: scaleY(var(--ui-motion-press-scale)); }
+.ui-qa-reel-mark:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-qa-reel-pin {
+  position: absolute; top: 0; left: calc(var(--at) / var(--len) * 100%); z-index: 1; translate: 0 0;
+  display: grid; place-items: center; width: var(--ui-qg-marker); height: var(--ui-qg-marker); margin: 0; padding: 0; border: 0;
+  border-radius: 50%; border-bottom-left-radius: 0; background: var(--ui-action-primary); color: var(--ui-action-primary-fg);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; font-variant-numeric: tabular-nums;
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none;
+}
+.ui-qa-reel-pin::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: 50%; }
+@media (hover: hover) { .ui-qa-reel-pin:hover { background: var(--ui-action-primary-hover); } }
+.ui-qa-reel-pin:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-qa-reel-pin:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-qa-reel-shots {
+  position: relative; display: flex; gap: var(--ui-space-xs); min-width: 0; border-radius: var(--ui-radius-item);
+  cursor: pointer; touch-action: none; outline: none; -webkit-tap-highlight-color: transparent;
+}
+.ui-qa-reel-shots:active { cursor: grabbing; }
+.ui-qa-reel-shots:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+/* a shot: a strip of its own frames, its name on a small Ink step (the timeline's shot, studio-video.css) */
+.ui-qa-reel-shot {
+  flex: var(--dur) 1 0; display: flex; align-items: flex-end; min-width: 0; padding: var(--ui-space-xs); border-radius: var(--ui-radius-item);
+  background-color: var(--ui-text); background-image: var(--poster); background-size: auto 100%; background-repeat: repeat-x; background-position: left center;
+}
+.ui-qa-reel-shot > span {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 1px var(--ui-space-xs); /* gate-allow:space-from-tokens a hairline of air around a 12 px name */
+  border-radius: var(--ui-radius-check); background: var(--ui-text); color: var(--ui-text-on-ink); font-size: var(--ui-type-label); line-height: 1.2;
+}
+.ui-qa-reel-head {
+  position: absolute; top: 0; bottom: 0; left: calc(var(--t) / var(--len) * 100%); z-index: 2; width: var(--ui-size-ring); translate: -50% 0;
+  background: var(--ui-action-primary); pointer-events: none; /* gate-allow:few-strokes the playhead is a position, not a decoration */
+}
+/* a second in the panel (a finding's stretch, a flag, a pin): data, and a quiet button that takes the playhead there */
+.ui-qa-time {
+  position: relative; display: inline; margin: 0; padding: 0; border: 0; background: none; color: inherit; cursor: pointer;
+  font-family: var(--ui-type-family-data); font-size: inherit; font-variant-numeric: tabular-nums; /* gate-allow:mono-is-data a second on the video is data */
+  text-decoration: underline; text-decoration-color: var(--ui-text-tertiary); text-underline-offset: 0.2em;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.ui-qa-time::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+@media (hover: hover) { .ui-qa-time:hover { text-decoration-color: currentColor; } }
+.ui-qa-time:active { opacity: 0.7; }
+.ui-qa-time:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); border-radius: var(--ui-radius-check); }
+.ui-qa-pin-text > .ui-qa-time { margin-inline-end: var(--ui-space-xs); color: var(--ui-text-secondary); }
+@media (pointer: coarse) { .ui-qa-reel-track { grid-template-rows: var(--ui-size-hit) var(--ui-size-hit); } .ui-qa-reel-shots { height: var(--ui-size-hit); } }
+@media (prefers-reduced-motion: reduce) { .ui-qa-reel-mark { transition: none; } .ui-qa-reel-mark:active, .ui-qa-reel-pin:active { transform: none; } }
+
 /* the pinned notes in the panel: the pin's number as the same drop, smaller, then the note */
 .ui-qa-pins { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; min-width: 0; }
 .ui-qa-pin-row {

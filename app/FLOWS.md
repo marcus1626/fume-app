@@ -880,7 +880,7 @@ Video and video renders inside Video; Check's tabs are Plans · Images · Design
 ### 26.5 Studio: Check, the desk, staff Campaigns (builder E)
 
 - **Check.**
-  - Tabs: Plans · Images · Designs (Video later), each with how many wait.
+  - Tabs: Plans · Images · Designs · Video (§34.7), each with how many wait.
   - The panel reads: where it stands → what the Engine found → tell the Engine (words and numbered pins on the creative, in the customer's pin look) → actions.
   - Mark checked shows the Amber check, and a checked creative's head carries it.
   - A campaign filter is a chip with ×, and "Show all" is a quiet link.
@@ -1403,3 +1403,25 @@ are references for when that engine is built). Fume owns the motion as data, so 
   move.
 - **Not yet**: groups and components she makes herself (precomps), split and roll edits, speed ramps, masks, a curve
   editor, export of the project as one file. They come with the engine.
+
+### 34.7 Video in Check
+
+A video is checked the same way as a picture, on a clock. It waits in Check's **Video** tab with how many wait, like
+the others; nothing else about Check changes.
+
+- **The well** plays the video, fitted like a picture of its format. Under it: play (Space), the time as data, and
+  **one strip of its shots** in order, each with its frames and its name. The strip is the scrubber. The tracks stay in
+  the Studio: Check is for looking, deciding and saying what is wrong.
+- **What the Engine found** lies over the strip as marks on the stretch it is on (Rouge for one that stops the check,
+  grey for a small one). A mark, or the time on a finding in the panel ("0:00.0 to 0:02.9"), takes the playhead
+  there, past the way in, so the frame shown is the one with the fault.
+- **The panel** is Check's panel: findings first (a critical one stops Mark checked until it is decided), then the
+  Engine's checks on the edit (the product in every frame, hands, every shot has a take, the length for the format,
+  the music's licence, made with AI), folded where they hold; a flag carries its second.
+- **Pins** go on the frame where the playhead stands: the video stops while she writes. A pin shows on the frame
+  around its second, and on the strip at its second; in the panel it carries its time. Tell the Engine sends the pins
+  with their seconds.
+- **Open in Studio** opens the video in the Video studio, where she picks another take, trims or tells the Engine.
+- Seeded: LYSNE's "Night ritual · Story 9:16", the Story the Engine cut from the film's shots (6 s). Its first shot is
+  the take with oil running from the closed bottle (critical); its button comes in a quarter second after the beat
+  (minor).

@@ -5,10 +5,11 @@
 // the timeline follow. Every change of hers is an undo step of the desk (⌘Z), saved after a short pause.
 import { Glass, Icon, Toggle, WithTooltip } from "@fume/ui";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { useBrandBooks, usePlacements } from "../../../../api/hooks";
+import { usePlacements } from "../../../../api/hooks";
 import type { CreativeDocument, EditCheck, StudioMode, Variables, VideoClip, VideoEdit } from "../../../../contract";
 import { clipAt, editLength, placed, timecode } from "../../../../domain/video";
 import { lockProps } from "../lock";
+import { useBrandCta, useVideoClock } from "./play";
 import { checked, type Selection } from "./edit";
 import { VideoEngineBar } from "./EngineBar";
 import { EnginePanel } from "./EnginePanel";
@@ -64,68 +65,19 @@ export function VideoDesk({
 }) {
   const placements = usePlacements().data ?? [];
   // The brand's call to action as its design system sets it, for the CTA on the video.
-  const books = useBrandBooks().data;
-  const cta = useMemo(() => {
-    const book = books?.design.find((b) => b.kind === "design" && b.body);
-    const colours = book?.kind === "design" ? book.body?.colours : undefined;
-    const fill = colours?.find((c) => c.role === "cta")?.hex;
-    const ink = colours?.find((c) => c.role === "cta_text")?.hex;
-    return fill && ink ? { fill, ink } : undefined;
-  }, [books]);
+  const cta = useBrandCta();
   const [selected, setSelected] = useState<Selection>();
   // Storyboard or Timeline: two ways to see the same shots (FLOWS §34.6).
   const [board, setBoard] = useState(false);
   // The video conversation: the Engine's side panel, one per creative.
   const [talking, setTalking] = useState(false);
   const [safe, setSafe] = useState(false);
-  const [playing, setPlaying] = useState(false);
-  const [t, setT] = useState(0);
-  const time = useRef(0);
 
   // The Engine's ask is shown on the timeline and the player until she keeps or undoes it.
   const proposed = [...edit.edits].reverse().find((e) => e.state === "proposed");
   const view = useMemo(() => (proposed ? checked({ ...edit, ...proposed.after }) : edit), [edit, proposed]);
   const length = editLength(view);
-  const lengthRef = useRef(length);
-  lengthRef.current = length;
-  // A shorter edit (a cut, a trim, the Engine's ask) brings the playhead back inside it.
-  useEffect(() => {
-    if (time.current > length) {
-      time.current = Math.max(0, length - 0.05);
-      setT(time.current);
-    }
-  }, [length]);
-
-  const seek = useCallback((to: number) => {
-    time.current = Math.max(0, to);
-    setT(time.current);
-  }, []);
-  const toggle = useCallback(() => {
-    setPlaying((p) => {
-      if (!p && time.current >= lengthRef.current - 0.05) seek(0);
-      return !p;
-    });
-  }, [seek]);
-
-  // The clock: one frame at a time while playing; it stops at the end.
-  useEffect(() => {
-    if (!playing) return;
-    let raf = 0;
-    let last = performance.now();
-    const tick = (now: number) => {
-      const next = time.current + (now - last) / 1000;
-      last = now;
-      if (next >= lengthRef.current) {
-        seek(lengthRef.current);
-        setPlaying(false);
-        return;
-      }
-      seek(next);
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [playing, seek]);
+  const { t, time, playing, seek, toggle } = useVideoClock(length);
 
   // Space plays and pauses; Esc puts the selection down. Never while she types or works a control.
   useEffect(() => {

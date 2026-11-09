@@ -5,7 +5,7 @@ import { voiceBook } from "./brand";
 import { brandBooks } from "./books";
 import { campaigns } from "./campaigns";
 import { measured, planCopy, wordsOf } from "./design";
-import { at, engineFound, img, inDays, ok } from "./helpers";
+import { at, engineFound, img, inDays, ok, poster } from "./helpers";
 import { batches, creatives, engineMessages } from "./production";
 import { products } from "./products";
 import { layoutLayers } from "./studio";
@@ -306,6 +306,37 @@ const seeded: QaItem[] = [
     version: 2,
     previous: { image: img("10-08"), version: 1 },
     ...designed(),
+  }),
+  // A video (FLOWS §34.7): the Story the Engine cut from the film's shots. Its first shot has oil running from the
+  // closed bottle, which stops the check; its button comes in a quarter second after the beat.
+  qa("qa-9", "cr-night-story", "Night ritual · Story 9:16", "", 6, {
+    slot: "Film 1 · Story",
+    studio: "video",
+    documentId: "doc-night-story",
+    format: "story",
+    image: poster("drop"),
+    evaluation: { productTruth: "flag", brandRules: "pass", artefacts: "none", notes: [], evaluated: true },
+    findings: [
+      {
+        id: "fi-v1",
+        dimension: "product",
+        severity: "critical",
+        finding: "Shot 1: oil runs out of the bottle’s base while the cap is on.",
+        expected: "A closed bottle: no oil leaves it",
+        observed: "A thin run of oil down the base, from the first frame",
+        status: "open",
+        seconds: { from: 0, to: 2.9 },
+      },
+      {
+        id: "fi-v2",
+        dimension: "brand_brief",
+        severity: "minor",
+        finding: "The button comes in a quarter second after the beat.",
+        expected: "Words and the button come in on a beat, as in LYSNE’s motion",
+        status: "open",
+        seconds: { from: 4, to: 4.25 },
+      },
+    ],
   }),
   qa("qa-4", "cr-doc-autumn-email", "Email header", "05-01", 15, {
     studio: "design",

@@ -210,6 +210,118 @@ const edit: Omit<VideoEdit, "checks"> = {
   edits: [],
 };
 
+// FLOWS §34.7: the Story the Engine cut from the same shots, 6 s, waiting in Check. It opens on the drop's first take,
+// the one with oil running from the closed bottle, and its button comes in a quarter second after the beat.
+const storyClip = (id: string, from: string, cut: Pick<VideoClip, "in" | "out">): VideoClip => {
+  const c = clips.find((x) => x.id === from)!;
+  const takes = c.takes.map((k) => ({ ...k, id: `${k.id}-s` }));
+  return { ...c, id, takes, pickedTakeId: `${c.pickedTakeId}-s`, ...cut, transition: "cut" };
+};
+const story: Omit<VideoEdit, "checks"> = {
+  formatId: "vf-story",
+  formats: videoFormats("vf-story"),
+  clips: [
+    storyClip("vs-drop", "vc-drop", { in: 0.5, out: 3.7 }),
+    storyClip("vs-bottle", "vc-bottle", { in: 0.3, out: 3.1 }),
+  ],
+  style: { id: "showcase", energy: 35, pace: 35 },
+  motion: [
+    {
+      id: "ms-product",
+      template: "product",
+      text: "Night Body Oil · 100 ml",
+      start: 3.4,
+      end: 5,
+      enter: "rise",
+      exit: "fade",
+      place: "top",
+      ease: "soft-out",
+      clipId: "vs-bottle",
+    },
+    {
+      id: "ms-cta",
+      template: "cta",
+      text: "Se oljen",
+      start: 4,
+      end: 5,
+      enter: "rise",
+      exit: "fade",
+      place: "bottom",
+      ease: "soft-out",
+      clipId: "vs-bottle",
+    },
+    { id: "ms-end", template: "end", text: "LYSNE", start: 5, end: 6, enter: "soft", place: "centre" },
+  ],
+  captions: [{ id: "cs-1", text: "kept for the night", start: 0.4, end: 2.8, by: "engine" }],
+  sound: [
+    {
+      id: "ss-music",
+      kind: "music",
+      name: "Late light · slow piano",
+      start: 0,
+      end: 6,
+      level: -6,
+      licence: "Licensed for paid social",
+      beats: beats.filter((b) => b <= 6),
+    },
+    { id: "ss-glass", kind: "effect", name: "Glass on stone", start: 2.9, end: 3.5, level: -14 },
+  ],
+  grade: "LYSNE warm",
+  edits: [],
+};
+
+const storyDocument: CreativeDocument = {
+  id: "doc-night-story",
+  workspaceId: "w-lysne",
+  campaignId: "c-autumn",
+  creativeId: "cr-night-story",
+  title: "Night ritual · Story 9:16",
+  slot: "Film 1 · Story",
+  studio: "video",
+  modeId: "m-video-edit",
+  variables: defaults("m-video-edit"),
+  specs: {
+    format: "story",
+    count: 1,
+    imageModel: "Kling 3.0",
+    referenceIds: [],
+    modelIds: [],
+    productId: "pr-oil",
+    variantId: "va-oil-100",
+    placementId: "pl-ig-story",
+  },
+  overrides: [],
+  layers: [],
+  versions: [
+    {
+      id: "rv-story-1",
+      number: 1,
+      image: poster("drop"),
+      at: at(6),
+      by: "u-anna",
+      state: "done",
+      variables: defaults("m-video-edit"),
+      specs: {
+        format: "story",
+        count: 1,
+        imageModel: "Kling 3.0",
+        referenceIds: [],
+        modelIds: [],
+        productId: "pr-oil",
+      },
+      evaluation: { productTruth: "flag", brandRules: "pass", artefacts: "none", notes: [], evaluated: true },
+      instruction: "The Engine's Story, cut from the film's shots",
+      cost: 0.84,
+    },
+  ],
+  pickedVersionId: "rv-story-1",
+  edits: [],
+  video: { ...story, checks: editChecks({ ...story, checks: [] }) },
+  state: "in_check",
+  by: "u-anna",
+  updatedAt: at(6),
+};
+
 export const videoDocuments: CreativeDocument[] = [
   {
     id: "doc-night-ritual",
@@ -277,6 +389,7 @@ export const videoDocuments: CreativeDocument[] = [
     by: "u-anna",
     updatedAt: at(10),
   },
+  storyDocument,
 ];
 
 /** LYSNE's own footage in its library: light moving on travertine, shot by LYSNE. */

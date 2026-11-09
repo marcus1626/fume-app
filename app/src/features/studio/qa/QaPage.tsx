@@ -1,7 +1,7 @@
 // Check (FLOWS §10, §24.3): the one check workspace for Fume's experts and an agency's creatives, the same page in both
 // frames. Everything the Engine made that waits for a check, by due date and risk, grouped by campaign. /studio/qa and
 // /agency/check show every brand or client; /studio/b/:id/qa and /agency/b/:id/check one.
-// - Tabs at the top, Plans · Images · Designs (Video later), each with how many wait; the list shows that kind only,
+// - Tabs at the top, Plans · Images · Designs · Video, each with how many wait; the list shows that kind only,
 //   and the keys and "the next one" stay inside it. Plans that wait on Fume's expert are Fume's only; a plan opens
 //   beside the list with "Check the plan".
 // - On a desk (1024 px and wider) a fixed-height workspace, never a scrolling page: the list | the creative fitted to
@@ -18,6 +18,8 @@
 //   located notes.
 // - A version sent back from the Studio comes back to the same creative ("Version 2 from the Studio · Anna, 14:32"),
 //   with Before | After over the creative.
+// - A video (FLOWS §34.7) is checked the same way, on a clock: it plays in the well, the strip under it shows its shots
+//   with the Engine's findings and her pins at their second (QaVideo.tsx).
 // - ?run=<batch> shows one Engine run's creatives, ?campaign=<id> one campaign's: a filter pill with its ×, and "Show
 //   all" as a quiet link.
 import {
@@ -96,6 +98,9 @@ import { underBar } from "../../../domain/scores";
 import { formatName } from "../parts";
 import { useNames } from "./names";
 import { fixer } from "../../../lib/fixer";
+import { Player } from "../doc/video/Player";
+import { landOn, PIN_NEAR, QaReel, stretch, useQaVideo } from "./QaVideo";
+import { timecode } from "../../../domain/video";
 
 /** The end card's place in the address (?item=end): past the last creative that waits. */
 const END = "end";
@@ -111,17 +116,19 @@ export const qaName = (v: QaView) =>
  *  declare). */
 const runOf = (item: QaItem) => (item as QaItem & { runId?: Id }).runId;
 
-/** What Check holds, as its tabs. Video comes later. */
-type Kind = "plans" | "images" | "designs";
+/** What Check holds, as its tabs. */
+type Kind = "plans" | "images" | "designs" | "video";
 const KINDS: { id: Kind; label: string; noun: string }[] = [
   { id: "plans", label: "Plans", noun: "plans" },
   { id: "images", label: "Images", noun: "images" },
   { id: "designs", label: "Designs", noun: "designs" },
+  { id: "video", label: "Video", noun: "videos" },
 ];
-const isKind = (k: string | null): k is Kind => k === "plans" || k === "images" || k === "designs";
-/** A creative's tab: a Design creative's or one Fume designed (round 14: a design is checked in Designs), else Images. */
+const isKind = (k: string | null): k is Kind => KINDS.some((x) => x.id === k);
+/** A creative's tab: a video in Video (FLOWS §34.7); a Design creative's or one Fume designed in Designs (round 14);
+ *  else Images. */
 const kindOf = (v: QaView): Exclude<Kind, "plans"> =>
-  v.item.studio === "design" || v.item.design ? "designs" : "images";
+  v.item.studio === "video" ? "video" : v.item.studio === "design" || v.item.design ? "designs" : "images";
 const planWaits = (r: StudioCampaignRow) => r.campaign.waits?.plan === "in_check";
 
 export function QaPage() {
@@ -175,6 +182,7 @@ export function QaPage() {
     plans: plans.filter(planWaits).length,
     images: all.filter((v) => kindOf(v) === "images" && open(v)).length,
     designs: all.filter((v) => kindOf(v) === "designs" && open(v)).length,
+    video: all.filter((v) => kindOf(v) === "video" && open(v)).length,
   };
   const asked = params.get("kind");
   const selectedAny = all.find((v) => v.item.id === selectedId);
@@ -182,15 +190,17 @@ export function QaPage() {
     ? "images"
     : counts.designs
       ? "designs"
-      : counts.plans
-        ? "plans"
-        : all.some((v) => kindOf(v) === "images")
-          ? "images"
-          : all.length
-            ? "designs"
-            : plans.length
-              ? "plans"
-              : "images";
+      : counts.video
+        ? "video"
+        : counts.plans
+          ? "plans"
+          : all.some((v) => kindOf(v) === "images")
+            ? "images"
+            : all.length
+              ? "designs"
+              : plans.length
+                ? "plans"
+                : "images";
   const kind: Kind = isKind(asked)
     ? asked
     : selectedAny
@@ -401,9 +411,6 @@ export function QaPage() {
                     {k.label}
                   </SegmentedOption>
                 ))}
-                <SegmentedOption value="video" disabled aria-disabled="true" title="Video is coming later">
-                  Video <span className="ui-desk-later">Later</span>
-                </SegmentedOption>
               </SegmentedControl>
               {filtered && only && (
                 <div className="ui-qa-filter" role="group" aria-label="Filter">
@@ -923,10 +930,14 @@ function QaFocus({
     y: number;
     side: "right" | "left" | "center";
     flipY: boolean;
+    /** On a video, the second it is dropped on. */
+    at?: number;
   } | null>(null);
   const [draftText, setDraftText] = useState("");
   const [activePin, setActivePin] = useState<number>();
   const dirty = textLayers.some((l) => words[l.id] !== undefined && words[l.id] !== l.text);
+  // A video (FLOWS §34.7): its edit, its clock and the brand's call to action, to play it in the well.
+  const { video, edit: reel, clock, cta } = useQaVideo(item);
   // Words on a photograph take the brand's chosen light ground colour (its packshot white).
   const ink = useBrandAssets(item.workspaceId).data?.presets.find((p) => p.kind === "background")?.hex;
   const busy = act.busy || edit.isPending || toStudio.isPending;
@@ -1047,14 +1058,17 @@ function QaFocus({
     const right = well.right - e.clientX;
     const left = e.clientX - well.left;
     const side = right >= ROOM_X ? "right" : left >= ROOM_X ? "left" : "center";
-    setDraft({ x, y, side, flipY: well.bottom - e.clientY < ROOM_Y });
+    // On a video the pin goes on the frame shown: the video stops there while she writes.
+    if (video) clock.setPlaying(false);
+    const at = video ? Math.round(clock.t * 10) / 10 : undefined;
+    setDraft({ x, y, side, flipY: well.bottom - e.clientY < ROOM_Y, at });
     setDraftText("");
     setActivePin(undefined);
   };
   const addPin = () => {
     const note = draftText.trim();
     if (!draft || !note) return;
-    setPins((p) => [...p, { n: p.length + 1, x: draft.x, y: draft.y, text: note }]);
+    setPins((p) => [...p, { n: p.length + 1, x: draft.x, y: draft.y, text: note, at: draft.at }]);
     setDraft(null);
     setDraftText("");
   };
@@ -1088,6 +1102,20 @@ function QaFocus({
   const version = before ? item.previous!.version : (item.version ?? 1);
   const pinStyle = (p: { x: number; y: number }) =>
     ({ "--x": `${p.x * 100}%`, "--y": `${p.y * 100}%` }) as CSSProperties;
+  // On a video a pin shows on the frame around its second; the strip under it shows them all.
+  const onFrame = (p: QaPin) => p.at === undefined || Math.abs(clock.t - p.at) <= PIN_NEAR;
+  const seek = (at: number) => {
+    clock.setPlaying(false);
+    clock.seek(at);
+  };
+  // The Engine's checks on the edit, as rows with their second (what a finding says already is left out).
+  const videoRows = (reel?.checks ?? [])
+    .filter((c) => !(c.id === "ck-product" && findings.some((f) => f.dimension === "product")))
+    .map((c) => ({
+      result: c.state,
+      text: c.state === "flag" && c.note ? `${c.label}: ${c.note}` : c.label,
+      at: c.at,
+    }));
 
   return (
     <>
@@ -1141,10 +1169,23 @@ function QaFocus({
               data-format={item.format}
               data-pinnable={pinnable ? "" : undefined}
               style={ink ? vars({ "--layer-ink": ink }) : undefined}
+              data-video={reel ? "" : undefined}
               onClick={dropPin}
-              title={pinnable ? "Click to pin a note" : undefined}
+              title={pinnable ? (video ? "Click to pin a note on this frame" : "Click to pin a note") : undefined}
             >
-              <img src={image} alt={`${name}, version ${version}`} draggable={false} />
+              {reel ? (
+                <Player
+                  edit={reel}
+                  t={clock.t}
+                  playing={clock.playing}
+                  safe={false}
+                  brandName={workspace.brandName}
+                  title={name}
+                  cta={cta}
+                />
+              ) : (
+                <img src={image} alt={`${name}, version ${version}`} draggable={false} />
+              )}
               {!before && item.drawn && <DrawnWords drawing={item.drawn} />}
               {!before &&
                 (item.layers ?? [])
@@ -1164,7 +1205,7 @@ function QaFocus({
                   ))}
             </figure>
             {!before &&
-              pins.map((p) => (
+              pins.filter(onFrame).map((p) => (
                 <button
                   key={p.n}
                   type="button"
@@ -1221,6 +1262,17 @@ function QaFocus({
             )}
           </div>
         </div>
+        {reel && (
+          <QaReel
+            edit={reel}
+            t={clock.t}
+            playing={clock.playing}
+            findings={findings}
+            pins={pins}
+            onToggle={clock.toggle}
+            onSeek={seek}
+          />
+        )}
       </section>
 
       <aside className="ui-qa-panel" aria-label={`Check ${name}`}>
@@ -1269,6 +1321,8 @@ function QaFocus({
             brandDna={campaign.brandDnaVersion}
             findings={findings}
             who={names.who}
+            more={videoRows}
+            onSeek={reel ? seek : undefined}
             actions={(f) =>
               checked || fixing ? null : f.status === "open" ? (
                 <div className="ui-qa-finding-actions">
@@ -1399,7 +1453,19 @@ function QaFocus({
                       <span className="ui-qa-pin-num" aria-hidden="true">
                         {p.n}
                       </span>
-                      <span className="ui-qa-pin-text">{p.text}</span>
+                      <span className="ui-qa-pin-text">
+                        {p.at !== undefined && (
+                          <button
+                            type="button"
+                            className="ui-qa-time"
+                            aria-label={`Go to ${timecode(p.at, true)}`}
+                            onClick={() => seek(p.at!)}
+                          >
+                            {timecode(p.at, true)}
+                          </button>
+                        )}
+                        {p.text}
+                      </span>
                       <Button
                         size="sm"
                         variant="quiet"
@@ -1416,7 +1482,11 @@ function QaFocus({
                 ref={tellRef}
                 aria-labelledby={`${item.id}-tell`}
                 placeholder={
-                  pins.length ? "Anything else, in words" : "What is wrong? Or click the creative to pin it."
+                  pins.length
+                    ? "Anything else, in words"
+                    : video
+                      ? "What is wrong? Or pause and click the frame to pin it."
+                      : "What is wrong? Or click the creative to pin it."
                 }
                 value={text}
                 disabled={fixing}
@@ -1609,6 +1679,8 @@ function Evaluated({
   findings = [],
   who,
   actions,
+  more = [],
+  onSeek,
   children,
 }: {
   evaluation: Evaluation;
@@ -1621,6 +1693,10 @@ function Evaluated({
   who?: (id?: Id) => string;
   /** Each finding's buttons (none once it is checked, or while the Engine fixes it). */
   actions?: (f: QaFinding) => ReactNode;
+  /** More rows, from the Engine's checks on a video's edit: a flag there carries its second. */
+  more?: { result: "pass" | "flag"; text: string; at?: number }[];
+  /** On a video: takes the playhead to a finding's or a flag's second. */
+  onSeek?: (t: number) => void;
   /** Folds that belong with the findings (what was said to the Engine), 8 under them rather than 24. */
   children?: ReactNode;
 }) {
@@ -1628,7 +1704,7 @@ function Evaluated({
   const byEye = evaluation.evaluated === false;
   // An area the Engine's findings speak to is said by them, with what they found; its summary line and the notes go.
   const covered = new Set(findings.map((f) => f.dimension));
-  const rows: { result: "pass" | "flag"; text: string }[] = [
+  const rows: { result: "pass" | "flag"; text: string; at?: number }[] = [
     ...(byEye
       ? [
           { result: "flag" as const, text: "Product Truth: not evaluated by Fume, check it by eye" },
@@ -1669,6 +1745,7 @@ function Evaluated({
       ? []
       : evaluation.notes.map((n) => ({ result: byEye ? ("pass" as const) : ("flag" as const), text: n }))),
     ...(evaluation.checks ?? []),
+    ...more,
   ];
   // By eye, the two "check it by eye" rows are not flags of their own: only what Fume found on the file counts.
   const flagged =
@@ -1715,7 +1792,22 @@ function Evaluated({
                     <span className="ui-qa-finding-label">Should be</span> {f.expected}
                   </p>
                 )}
-                <p className="ui-qa-finding-meta">{findingMeta(f, who)}</p>
+                <p className="ui-qa-finding-meta">
+                  {f.seconds && onSeek && (
+                    <>
+                      <button
+                        type="button"
+                        className="ui-qa-time"
+                        aria-label={`Go to ${stretch(f.seconds)}`}
+                        onClick={() => onSeek(landOn(f.seconds!))}
+                      >
+                        {stretch(f.seconds)}
+                      </button>
+                      {" · "}
+                    </>
+                  )}
+                  {findingMeta(f, who)}
+                </p>
                 {actions?.(f)}
               </div>
             </li>
@@ -1727,7 +1819,22 @@ function Evaluated({
           {flags.map((r, i) => (
             <li key={i} className="ui-qa-note" data-result={r.result}>
               <Icon name="circle-alert" />
-              {r.text}
+              <span>
+                {r.text}
+                {r.at !== undefined && onSeek && (
+                  <>
+                    {" · "}
+                    <button
+                      type="button"
+                      className="ui-qa-time"
+                      aria-label={`Go to ${timecode(r.at, true)}`}
+                      onClick={() => onSeek(r.at!)}
+                    >
+                      {timecode(r.at, true)}
+                    </button>
+                  </>
+                )}
+              </span>
             </li>
           ))}
         </ul>
