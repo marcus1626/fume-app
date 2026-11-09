@@ -25,10 +25,11 @@ import {
 } from "@fume/ui";
 import { useId, useState, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
 import { useBrandBoard, useCheckCopyLine, useDecideVoicePart } from "../../api/hooks";
-import type { VoiceBook, VoiceChannel, VoicePartId } from "../../contract";
+import type { BrandBook, VoiceBook, VoiceChannel, VoicePartId } from "../../contract";
 import { Query } from "../../shell/Page";
 import { BookFrame, NoBook, type BookIndexGroup } from "./books";
-import { Editable, EditList, EditWords } from "./edit";
+import { AddedTag, BlockTools, openProposals, ProposedBlock } from "./blocks";
+import { Editable, EditList, EditProvider, EditWords, useBookEdit } from "./edit";
 import { ProvenanceTag } from "./decide";
 import { useRole, useViewer } from "./parts";
 
@@ -382,7 +383,16 @@ export function voiceIndex(book: VoiceBook): BookIndexGroup[] {
 
 /** The whole voice, a section per part. A version of the Tone of Voice reads as a book in three groups (FLOWS §34.3):
  *  the voice, the copy written from it, and this version; its lines are edited in place. */
-export function VoiceBookView({ book, inBook }: { book: VoiceBook; inBook?: boolean }) {
+export function VoiceBookView({
+  book,
+  inBook,
+  version,
+}: {
+  book: VoiceBook;
+  inBook?: boolean;
+  /** The version shown, for the Engine's suggested blocks on a draft (Round 15). */
+  version?: BrandBook;
+}) {
   const lang = book.speak.languages.toLowerCase().includes("norw") ? "nb" : undefined;
   const level = inBook ? 3 : 2;
   return (
@@ -411,32 +421,7 @@ export function VoiceBookView({ book, inBook }: { book: VoiceBook; inBook?: bool
       </PartSection>
 
       <PartSection book={book} id="speak" bare={inBook} level={level}>
-        <ul className="ui-voice-traits" aria-label="Tone">
-          {book.speak.traits.map((t, i) => (
-            <li key={`${i}-${t.trait}`} className="ui-voice-trait">
-              <Line
-                path={`speak.traits.${i}.trait`}
-                value={t.trait}
-                label={`Trait ${i + 1}`}
-                className="ui-voice-trait-name"
-              />
-              <Line
-                path={`speak.traits.${i}.means`}
-                value={t.means}
-                label={`What ${t.trait} means`}
-                className="ui-voice-trait-means"
-              />
-              <p className="ui-voice-say" data-say="do">
-                <span className="ui-voice-say-label">Do</span>
-                <Line path={`speak.traits.${i}.do`} value={t.do} label={`${t.trait}: do`} quote lang={lang} />
-              </p>
-              <p className="ui-voice-say" data-say="dont">
-                <span className="ui-voice-say-label">Don’t</span>
-                <Line path={`speak.traits.${i}.dont`} value={t.dont} label={`${t.trait}: don’t`} quote lang={lang} />
-              </p>
-            </li>
-          ))}
-        </ul>
+        <Blocks book={book} lang={lang} version={version} />
         <div className="ui-voice-cols">
           <div className="ui-voice-block">
             <h4 className="ui-voice-sub">Words we use</h4>
@@ -534,6 +519,126 @@ export function VoiceBookView({ book, inBook }: { book: VoiceBook; inBook?: bool
       )}
       <BookEnd gaps={book.gaps} sources={book.sources} level={level} editable />
     </div>
+  );
+}
+
+/** The voice's blocks (Round 15, PROPOSED 9 Nov 2026; Marcus, 9 Nov: "Can you add more blocks? Or only control the
+ *  four?"): each a trait with what it means, a do and a don't. Whoever may write in the book adds a block and names
+ *  it, moves it and takes it out, with Undo in the toast; the Engine's suggested block lies beside them for Fume's
+ *  people on a draft, with Add it and Not now. */
+function Blocks({ book, lang, version }: { book: VoiceBook; lang?: string; version?: BrandBook }) {
+  const { mode, marks, commit } = useBookEdit();
+  const [adding, setAdding] = useState(false);
+  // The block just added: its first empty line takes the cursor once it is in the book.
+  const [fresh, setFresh] = useState<number | null>(null);
+  const traits = book.speak.traits;
+  const suggested = openProposals(version, "block");
+  const writing = mode !== "read";
+  return (
+    <>
+      <ul className="ui-voice-traits" aria-label="Tone">
+        {traits.map((t, i) => {
+          const name = t.trait || `Block ${i + 1}`;
+          return (
+            <li key={`${i}-${t.trait}`} className="ui-voice-trait" data-fresh={fresh === i ? "" : undefined}>
+              <div className="ui-block-head">
+                <Line
+                  path={`speak.traits.${i}.trait`}
+                  value={t.trait}
+                  label={`Trait ${i + 1}`}
+                  className="ui-voice-trait-name"
+                />
+                <BlockTools head="speak.traits" index={i} count={traits.length} name={name} />
+              </div>
+              <AddedTag mark={marks.find((x) => x.path === `speak.traits.${i}`)} />
+              <Editable
+                path={`speak.traits.${i}.means`}
+                value={t.means}
+                label={`What ${name} means`}
+                className="ui-voice-trait-means"
+                autoFocus={fresh === i && !t.means}
+              />
+              {(writing || t.do) && (
+                <p className="ui-voice-say" data-say="do">
+                  <span className="ui-voice-say-label">Do</span>
+                  <Line path={`speak.traits.${i}.do`} value={t.do} label={`${name}: do`} quote lang={lang} />
+                </p>
+              )}
+              {(writing || t.dont) && (
+                <p className="ui-voice-say" data-say="dont">
+                  <span className="ui-voice-say-label">Don’t</span>
+                  <Line path={`speak.traits.${i}.dont`} value={t.dont} label={`${name}: don’t`} quote lang={lang} />
+                </p>
+              )}
+            </li>
+          );
+        })}
+        {version &&
+          suggested.map((p) => (
+            <ProposedBlock
+              key={p.id}
+              as="li"
+              book={version}
+              proposal={p}
+              name={p.block!.trait}
+              className="ui-voice-trait"
+            >
+              <p className="ui-voice-trait-name">{p.block!.trait}</p>
+              <p className="ui-voice-trait-means">{p.block!.means}</p>
+              <p className="ui-voice-say" data-say="do" lang={lang}>
+                <span className="ui-voice-say-label">Do</span>
+                <span className="ui-voice-q">{p.block!.do}</span>
+              </p>
+              <p className="ui-voice-say" data-say="dont" lang={lang}>
+                <span className="ui-voice-say-label">Don’t</span>
+                <span className="ui-voice-q">{p.block!.dont}</span>
+              </p>
+            </ProposedBlock>
+          ))}
+        {adding && (
+          <li className="ui-voice-trait">
+            {/* The name is the block's first line: kept, it puts the whole block in, its other lines empty. */}
+            <EditProvider
+              value={{
+                mode,
+                marks,
+                who: () => "you",
+                commit: (e) => {
+                  setFresh(traits.length);
+                  commit(
+                    {
+                      path: `speak.traits.${traits.length}`,
+                      to: null,
+                      item: { trait: e.to ?? "", means: "", do: "", dont: "" },
+                    },
+                    e.to ?? "The block",
+                  );
+                },
+              }}
+            >
+              <Editable
+                path={`speak.traits.${traits.length}.trait`}
+                value=""
+                label="Name the block"
+                className="ui-voice-trait-name"
+                autoFocus
+                onDone={() => setAdding(false)}
+                onEmpty={() => setAdding(false)}
+                onCancel={() => setAdding(false)}
+              />
+            </EditProvider>
+            <p className="ui-voice-trait-means ui-block-hint">What it means, a do and a don’t come next.</p>
+          </li>
+        )}
+      </ul>
+      {writing && !adding && (
+        <div className="ui-block-add-row">
+          <Button size="sm" variant="quiet" icon="plus" className="ui-edit-add" onClick={() => setAdding(true)}>
+            Add a block
+          </Button>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -897,7 +1002,7 @@ export function VoicePage() {
       empty={<FiveParts />}
       index={voiceIndex}
     >
-      {(body) => <VoiceBookView book={body} inBook />}
+      {(body, book) => <VoiceBookView book={body} inBook version={book} />}
     </BookFrame>
   );
 }

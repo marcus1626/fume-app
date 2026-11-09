@@ -509,6 +509,9 @@ export const useApproveBrandBook = () => useM((a, bookId: Id) => a.approveBrandB
 export const useAskBrandBookChange = () =>
   useM((a, v: Parameters<FumeApi["askBrandBookChange"]>[0]) => a.askBrandBookChange(v));
 export const useEditBrandBook = () => useM((a, v: Parameters<FumeApi["editBrandBook"]>[0]) => a.editBrandBook(v));
+/** Round 15 (PROPOSED 9 Nov 2026): Add it or Not now on the Engine's proposal for a book. */
+export const useAnswerBookProposal = () =>
+  useM((a, v: Parameters<FumeApi["answerBookProposal"]>[0]) => a.answerBookProposal(v));
 /** A reading, not a change: nothing to refetch after it. */
 export const useCheckCopyLine = () => {
   const api = useApi();

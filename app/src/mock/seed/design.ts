@@ -11,6 +11,7 @@ import type {
   PlanLine,
   VersionDesign,
 } from "../../contract";
+import { componentFor } from "../../domain/designComponents";
 
 /** Autumn launch's plan is older than the demo's plans; these are its approved words, as the plan keeps them. */
 export const planCopy: Record<string, Pick<PlanLine, "key" | "label" | "value">[]> = {
@@ -67,9 +68,10 @@ export function laidOut(book: DesignBook, format: Format, words: DesignWords, ch
     };
   };
   const hex = (role: string) => book.colours.find((c) => c.role === role)?.hex ?? "#000000";
-  const head = style(book.components.find((c) => c.name === "headline")?.style ?? "h1") ?? book.styles[0];
-  const sub = style(book.components.find((c) => c.name === "subline")?.style ?? "subline") ?? book.styles[0];
-  const ctaComp = book.components.find((c) => c.name === "cta");
+  // By role, not by name: the brand may rename a component, and its own ones are placed by a designer (Round 15).
+  const head = style(componentFor(book, "headline")?.style ?? "h1") ?? book.styles[0];
+  const sub = style(componentFor(book, "subline")?.style ?? "subline") ?? book.styles[0];
+  const ctaComp = componentFor(book, "cta");
   const ctaStyle = style(ctaComp?.style ?? "cta");
   const onFeed = ctaComp?.rules.some((r) => /never on a feed/i.test(r)) && format === "feed";
   const cta = words.cta && !onFeed ? words.cta : undefined;

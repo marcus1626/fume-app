@@ -130,3 +130,42 @@
 .ui-copylab-against { margin: 0; font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
 .ui-book-main > .ui-brandbook-notes { margin-block-end: 0; }
 .ui-voice-say:has(.ui-edit) { gap: var(--ui-space-xs); }
+
+/* ── A book's blocks are the brand's own (Round 15, PROPOSED 9 Nov 2026) ── */
+/* Marcus, 9 Nov: "Can you add more blocks? Or only control the four?" and "Are the components hard-coded?"
+   Markup:
+     <li class="ui-voice-trait"><div class="ui-block-head"> name (.ui-edit)
+       <div class="ui-block-tools" role="group"> [↑] [↓] [trash] (ui-btn sm quiet, icon only) </div></div>
+       <span class="ui-proposal-tag ui-block-tag"><svg/> Anna added this</span> … </li>
+     <li class="ui-voice-trait ui-block-proposal" data-state="proposed"> <span class="ui-proposal-tag"><svg/> The Engine
+       proposes this · …</span> the block … <p class="ui-block-proposal-why"/> <div class="ui-proposal-actions"> Add it ·
+       Not now </div></li>
+     <div class="ui-block-add-row"> [Add a block] </div>
+   Decisions:
+   - A block's tools sit beside its name and come with the pointer or the keyboard, as × beside a line does; on touch
+     they stay. Nothing jumps: the tools take their place in the row whether they show or not.
+   - The Engine's proposal reads like a block of the book in quieter ink, its tag on top and Add it · Not now at its
+     foot (proposal.css): words and depth, never a stroke, never Amber. A component's proposal lies on the sunken
+     surface, since the components themselves sit on the page.
+   - A block that comes in pulls into focus, as a lens does (blur to sharp), slowly and without a bounce. */
+.ui-block-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ui-space-sm); min-width: 0; }
+.ui-block-head > .ui-edit, .ui-block-head > .ui-voice-trait-name { min-width: 0; }
+.ui-block-tools { display: flex; flex: none; align-items: center; gap: 0; margin-block: calc(var(--ui-space-xs) * -1); opacity: 0; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-block-tools .ui-btn { color: var(--ui-text-tertiary); }
+.ui-voice-trait:focus-within .ui-block-tools, .ui-ds-part .ui-block-tools, .ui-block-tools:focus-within { opacity: 1; }
+@media (hover: hover) { .ui-voice-trait:hover .ui-block-tools { opacity: 1; } }
+@media (hover: none) { .ui-block-tools { opacity: 1; } }
+.ui-block-tag { justify-self: start; }
+.ui-block-hint { color: var(--ui-text-tertiary); }
+.ui-block-add-row { display: flex; margin-block-start: calc(var(--ui-space-sm) * -1); }
+
+/* the Engine's proposal */
+.ui-block-proposal { display: grid; gap: var(--ui-space-sm); align-content: start; min-width: 0; }
+.ui-block-proposal .ui-proposal-tag { color: var(--ui-text-secondary); }
+.ui-voice-trait.ui-block-proposal .ui-voice-trait-name, .ui-voice-trait.ui-block-proposal .ui-voice-say:not([data-say="dont"]) { color: var(--ui-text-secondary); }
+.ui-block-proposal-why { flex: 1 1 18rem; margin: 0; max-inline-size: 40rem; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+
+/* a block that comes in pulls into focus */
+.ui-voice-trait[data-fresh], .ui-ds-part[data-fresh] { animation: ui-block-in var(--ui-motion-slow) var(--ui-motion-ease) both; }
+@keyframes ui-block-in { from { opacity: 0; filter: blur(var(--ui-motion-enter-blur)); } to { opacity: 1; filter: blur(0); } }
+@media (prefers-reduced-motion: reduce) { .ui-block-tools { transition: none; } .ui-voice-trait[data-fresh], .ui-ds-part[data-fresh] { animation: none; } }

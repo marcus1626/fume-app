@@ -44,3 +44,36 @@
 .ui-ds-colour { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs); }
 .ui-ds-colour-dot { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); } /* gate-allow:few-strokes  a light brand colour vanishes on the page without a creative's edge */
 .ui-ds-code { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-secondary); } /* gate-allow:mono-is-data  sizes and colour codes are data */
+
+/* ── Round 15 (PROPOSED 9 Nov 2026): the brand's own components, and the logo once ─────────────── */
+/* Marcus, 9 Nov: "What is the difference between Design system and Brand DNA? Logo is in both? Are the components
+   hard-coded? Can the Engine add components to the design system?"
+   Markup:
+     <span class="ui-ds-sample" data-base="text|button|badge|shape|image|logo" [data-round]> words, or <img/> </span>
+     <p class="ui-ds-words"><span class="ui-voice-say-label">Words in the preview</span><span class="ui-edit"/></p>
+     <section class="ui-voice-part ui-ds-part ui-block-proposal" data-state="proposed"> the Engine's component </section>
+     <form class="ui-ds-add"> Built from [segmented] · Name [input] · [Add the component] [Cancel] </form>
+     <div class="ui-brandbook-examples ui-ds-logo-uses"> a frame per format, the wordmark where it goes </div>
+   Decisions:
+   - A component of the brand's own is drawn from its base: words (on a ground), a round mark (pill corners and a size),
+     a form in a colour, a picture in its corners, or the wordmark. Its settings are selects of the brand's own tokens,
+     in the same row of small facts the read page has.
+   - The Engine's proposed component lies on the sunken surface, the one filled panel among the components.
+   - The logo's frames are smaller than the examples': they show where it goes, not a picture.
+   Rule gate: space-from-tokens, type-from-tokens, radius-from-tokens, tokens-only-color, few-strokes. */
+.ui-ds-sample[data-round] { display: inline-grid; place-items: center; aspect-ratio: 1; text-align: center; line-height: 1.05; }
+.ui-ds-sample[data-base="shape"] { display: inline-grid; place-items: center; }
+.ui-ds-sample[data-base="image"] { display: block; aspect-ratio: 4 / 5; overflow: hidden; }
+.ui-ds-sample[data-base="image"] > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ui-ds-sample[data-base="logo"] { letter-spacing: .12em; }
+.ui-ds-props[data-editing] { grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); }
+.ui-ds-props .ui-native-select-wrap { flex: 1 1 auto; min-width: 0; max-width: 100%; }
+.ui-ds-props .ui-ds-colour { flex-wrap: nowrap; min-width: 0; }
+.ui-ds-colour-dot[data-none] { background: transparent; }
+.ui-ds-words { display: grid; gap: var(--ui-space-2xs); margin: 0; font-size: var(--ui-type-body); color: var(--ui-text); }
+.ui-ds-part.ui-block-proposal { padding: var(--ui-inset-panel); border-radius: var(--ui-radius-card); background: var(--ui-card-bg); }
+.ui-ds-add { display: grid; gap: var(--ui-space-md); max-inline-size: 36rem; padding: var(--ui-inset-panel); border-radius: var(--ui-radius-card); background: var(--ui-card-bg); }
+.ui-ds-add .ui-seg { max-inline-size: 100%; overflow-x: auto; scrollbar-width: none; }
+.ui-ds-add-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-sm); }
+.ui-ds-logo-uses { --ui-brandbook-row: 11rem; }
+.ui-ds-logo-uses .ui-brandbook-layer { justify-content: center; }

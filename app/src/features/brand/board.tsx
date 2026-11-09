@@ -192,8 +192,16 @@ function LogoFace({ logo, identity }: { logo: BrandLogo; identity: BrandIdentity
 }
 
 export function LogoPart({ identity, rules, visit, open, onOpen }: PartProps) {
+  // Round 15 (PROPOSED 9 Nov 2026): Brand DNA holds the logo's files; how a creative uses them is the design system's.
   return (
-    <BoardPart id="logo" title="Logo" open={open} onOpen={onOpen}>
+    <BoardPart
+      id="logo"
+      title="Logo"
+      open={open}
+      onOpen={onOpen}
+      to="/brand/design#design-logo"
+      linkLabel="How creatives use it"
+    >
       <div className="ui-brand-logos" data-mode="board">
         {drawn(identity.logos, visit).map((l) =>
           isFind(l, visit) ? (

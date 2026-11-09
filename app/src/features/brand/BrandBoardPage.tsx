@@ -102,6 +102,7 @@ function BrandTabs() {
   const session = useSession().data!;
   const board = useBrandBoard();
   const { canApprove } = useRole();
+  const viewer = useViewer();
   const finds = useFinds(board.data);
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   const header = useRef<HTMLElement>(null);
@@ -130,6 +131,13 @@ function BrandTabs() {
         ref={header}
         title="Brand"
         meta={[session.workspace.brandName]}
+        // Round 15 (PROPOSED 9 Nov 2026), Marcus: "What is the difference between Design system and Brand DNA?" One
+        // line says what Brand DNA is for; the design system's own line says what it is for.
+        description={
+          tab === "board"
+            ? `${viewer.Your} facts and files, as found: the logo, colours, type, voice and pictures. The design system sets how creatives use them.`
+            : undefined
+        }
         actions={
           <>
             {tab === "board" && canApprove && finds.count > 0 && (

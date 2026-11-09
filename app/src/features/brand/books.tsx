@@ -134,8 +134,9 @@ export interface BookFrameProps<K extends BrandBookKind> {
   /** No version to read yet: what the page shows instead (the voice falls back to the five parts from the onboarding). */
   empty: ReactNode;
   description: string;
-  /** The book's index on the left: its parts under small group titles. Versions is added at its end. */
-  index?: (body: BodyOf[K]) => BookIndexGroup[];
+  /** The book's index on the left: its parts under small group titles. Versions is added at its end. Round 15: with
+   *  the version shown, for what the Engine proposes on a draft. */
+  index?: (body: BodyOf[K], book: BrandBook) => BookIndexGroup[];
 }
 
 export type BookIndexGroup = { title: string; parts: { id: string; label: string }[] };
@@ -236,9 +237,10 @@ function Book<K extends BrandBookKind>({
   // draft is open (the first edit starts one); the customer's owner or approver into the version that waits on her or
   // the one in use, when no other is on its way.
   const open = list.some((b) => b.state === "draft" || b.state === "writing") || Boolean(coming);
-  // Only the Tone of Voice is written in place so far; the design system and the Look Book read (FLOWS §34.4).
+  // The Tone of Voice is written in place; Round 15 (PROPOSED 9 Nov 2026): Fume's people edit the design system's
+  // components in place too (the customer asks for a change there); the Look Book reads (FLOWS §34.4).
   const mode: EditMode =
-    !index || kind !== "voice"
+    !index || kind === "look" || (kind === "design" && !staff)
       ? "read"
       : staff
         ? shown.state === "draft" || (shown.state === "approved" && shown.id === written[0]?.id && !open)
@@ -264,7 +266,7 @@ function Book<K extends BrandBookKind>({
       onStarted={(made) => setParams({ v: String(made.version) }, { replace: true })}
     >
       {(body, edits, local) => {
-        const groups = index?.(body as BodyOf[K]);
+        const groups = index?.(body as BodyOf[K], shown);
         const main = (
           <>
             <Status
@@ -277,7 +279,14 @@ function Book<K extends BrandBookKind>({
               coming={coming}
               hint={
                 mode !== "read" && (
-                  <EditNote key="edit" mode={mode} draft={shown.state === "draft"} next={next} people={people} />
+                  <EditNote
+                    key="edit"
+                    kind={kind}
+                    mode={mode}
+                    draft={shown.state === "draft"}
+                    next={next}
+                    people={people}
+                  />
                 )
               }
             />
@@ -397,7 +406,9 @@ function InPlace({
           });
           return;
         }
-        toast.done(e.to === null ? `${label} taken out` : `${label} saved`, {
+        // Round 15: a whole block is added, moved or taken out; a setting or a line is saved.
+        const done = e.item ? "added" : e.moveTo !== undefined ? "moved" : e.to === null ? "taken out" : "saved";
+        toast.done(`${label} ${done}`, {
           ...(undo
             ? {
                 action: {
@@ -424,17 +435,31 @@ function InPlace({
 }
 
 /** One line above the book, for whoever may write in it: how. */
-function EditNote({ mode, draft, next, people }: { mode: EditMode; draft: boolean; next: number; people: BookPeople }) {
+function EditNote({
+  kind,
+  mode,
+  draft,
+  next,
+  people,
+}: {
+  kind: BrandBookKind;
+  mode: EditMode;
+  draft: boolean;
+  next: number;
+  people: BookPeople;
+}) {
   const checker = people.expert === "you" ? "you check" : `${people.expert} checks`;
+  // Round 15: in the design system it is the components that are written in place.
+  const what = kind === "design" ? "Add, change or take out a component." : "Write straight into any line.";
   return (
     <p className="ui-brandbook-note ui-edit-note" data-tone="quiet">
       <Icon name="pencil" />
       <span>
         {mode === "suggest"
-          ? `Write straight into any line. Your lines go to Fume together, as version ${next}; ${checker} it before you approve it.`
+          ? `${what} Your lines go to Fume together, as version ${next}; ${checker} it before you approve it.`
           : draft
-            ? "Write straight into any line. It is kept when you leave it."
-            : `Write straight into any line. Your first change starts version ${next}, a draft ${checker}.`}
+            ? `${what} It is kept as you go.`
+            : `${what} Your first change starts version ${next}, a draft ${checker}.`}
       </span>
     </p>
   );
@@ -616,8 +641,15 @@ function CheckFoot({ book, people }: { book: BrandBook; people: BookPeople }) {
   const check = useCheckBrandBook();
   const toast = useToast();
   const name = bookName[book.kind];
+  // Round 15: what the Engine proposed and nobody added stays out of the version.
+  const open = book.proposals?.filter((p) => p.state === "open").length ?? 0;
+  const left = open
+    ? open === 1
+      ? " The Engine’s proposal stays out of it unless you add it."
+      : ` The Engine’s ${open} proposals stay out of it unless you add them.`
+    : "";
   return (
-    <PageFooter start={`Marked checked, ${people.approver} reads version ${book.version} and approves it.`}>
+    <PageFooter start={`Marked checked, ${people.approver} reads version ${book.version} and approves it.${left}`}>
       <Button
         icon="check"
         loading={check.isPending}

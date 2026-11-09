@@ -85,6 +85,10 @@ export interface BrandApi {
   editBrandBook(input: { bookId: Id; edits: BookEdit[] }): Promise<BrandBook>;
   /** Hold one line of copy against the Tone of Voice in use (Fume's people read the newest written one). */
   checkCopyLine(input: { text: string; channel?: VoiceChannel }): Promise<CopyLineCheck>;
+  /** Round 15 (PROPOSED 9 Nov 2026): Fume's people answer the Engine's proposal on a draft. "add" puts the block at the
+   *  end of its list, marked as added from the proposal; "not_now" sets it aside; "open" undoes either (an added block
+   *  comes out again). Only a draft takes an answer. */
+  answerBookProposal(input: { bookId: Id; proposalId: Id; answer: "add" | "not_now" | "open" }): Promise<BrandBook>;
 
   // Taste keeps learning (FLOWS §14)
   tasteTraining(): Promise<{ cards: TasteCard[]; state: TasteState }>;
