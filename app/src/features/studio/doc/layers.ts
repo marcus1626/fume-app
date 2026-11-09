@@ -191,7 +191,8 @@ export function bandOf(layers: Layer[], book: DesignBook | undefined, format: Fo
   return middle < 0.4 ? "top" : middle > 0.6 ? "bottom" : "centre";
 }
 
-/** The block of words moved to the top, the middle or the foot, inside the design system's safe area. */
+/** The block of words moved to the top, the middle or the foot, inside the design system's safe area. It keeps clear
+ *  of a shown logo or call to action in that band, and the shade turns to come from the side the words are on. */
 export function moveBlock(layers: Layer[], to: Band, book: DesignBook | undefined, format: Format): Layer[] {
   const b = wordBlock(layers, book, format);
   if (!b) return layers;
@@ -199,10 +200,23 @@ export function moveBlock(layers: Layer[], to: Band, book: DesignBook | undefine
   const grid = book?.formats.find((f) => f.format === format);
   const safeTop = grid ? grid.safeTopPx / H : 0.07;
   const safeBottom = grid ? grid.safeBottomPx / H : 0.07;
+  const gap = 24 / H;
   const height = b.bottom - b.top;
-  const top = to === "top" ? safeTop : to === "bottom" ? 1 - safeBottom - height : (1 - height) / 2;
+  // A logo or a call to action already in the band the words go to: the words sit above (or below) it
+  const marks = layers
+    .filter((l) => l.visible && ["logo", "cta"].includes(roleOf(l)))
+    .map((l) => ({ top: l.y, bottom: l.y + heightOf(l, book, format) }));
+  const floor = Math.min(1 - safeBottom, ...marks.filter((m) => m.top > 0.5).map((m) => m.top - gap));
+  const ceiling = Math.max(safeTop, ...marks.filter((m) => m.bottom < 0.5).map((m) => m.bottom + gap));
+  const top = to === "top" ? ceiling : to === "bottom" ? floor - height : (1 - height) / 2;
   const by = top - b.top;
-  return layers.map((l) => (b.words.includes(l) ? { ...l, y: round(l.y + by) } : l));
+  return layers.map((l) =>
+    b.words.includes(l)
+      ? { ...l, y: round(l.y + by) }
+      : roleOf(l) === "shade" && l.shade && to !== "centre"
+        ? { ...l, shade: { ...l.shade, from: to } }
+        : l,
+  );
 }
 
 const round = (n: number) => Math.round(n * 10000) / 10000;

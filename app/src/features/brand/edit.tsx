@@ -156,7 +156,9 @@ export function Editable({
       onKeyDown={keys}
     />
   );
-  if (!withEngine.tools) return field;
+  // The wrapper stays while the line is edited, even before it has words: swapping it in when the first words land
+  // would mount a new field and leave the typed words beside it (a new Tone of Voice block read its line twice).
+  if (mode !== "direct" || engine === false) return field;
   return (
     <span className="ui-engine-field">
       {field}

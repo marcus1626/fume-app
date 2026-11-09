@@ -307,7 +307,8 @@ function Panel() {
   const chips: (EngineSeen & { removable?: boolean })[] = [
     ...(!topic ? [{ id: "brand", icon: "folder" as IconName, words: brandName }] : []),
     ...(onPage ? sees.seen.map((s) => ({ ...s, removable: true })) : []),
-    ...(asked
+    // The field she asked about belongs to this page's thread; another thread does not see it
+    ...(asked && onPage
       ? [
           {
             id: "field",
@@ -386,7 +387,7 @@ function Panel() {
           thread={current}
           title={row.title}
           brandName={brandName}
-          field={asked && !off.includes("field") ? asked.field : undefined}
+          field={asked && onPage && !off.includes("field") ? asked.field : undefined}
         />
       )}
     </aside>

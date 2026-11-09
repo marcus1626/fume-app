@@ -30,7 +30,9 @@ type People = ReturnType<typeof directory>;
 
 const changeWords = (c: { key: string; label: string; from: VarValue; to: VarValue }, mode?: StudioMode) => {
   const v = mode?.variables.find((x) => x.key === c.key) as StudioVariable | undefined;
-  return `${c.label} ${studioValueWords(v, c.from as never)} → ${studioValueWords(v, c.to as never)}`;
+  // A value keeps its unit on its line: "28 %", never "28 / %"
+  const value = (x: VarValue) => studioValueWords(v, x as never).replace(/ (?=%|px\b|s\b|°)/g, "\u00a0");
+  return `${c.label} ${value(c.from)} → ${value(c.to)}`;
 };
 
 /** An example to start with that fits the creative. */

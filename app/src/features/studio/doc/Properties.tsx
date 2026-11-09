@@ -486,7 +486,13 @@ function frameSections(p: PropertiesProps, openDesign: (versionId: string) => vo
       title: "Layout",
       children: (
         <>
-          {design?.design ? (
+          {design?.design && design.state === "rendering" ? (
+            <StudioRow
+              label="Laid out by"
+              readout={`Fume · V${design.number}`}
+              help={`Fume is laying the plan’s words on V${design.design.fromNumber}. Its layers and checks come with it.`}
+            />
+          ) : design?.design ? (
             <StudioRow
               label="Laid out by"
               readout={`Fume · V${design.number}`}
@@ -521,7 +527,7 @@ function frameSections(p: PropertiesProps, openDesign: (versionId: string) => vo
             options={bands}
             help={
               band
-                ? "Where the headline and its line sit. The call to action and the logo keep their place."
+                ? "Where the headline and its line sit. They keep clear of a shown logo and call to action, and the shade follows them."
                 : "No words are showing."
             }
             onChange={(to) => {
