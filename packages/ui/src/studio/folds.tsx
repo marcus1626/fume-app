@@ -32,10 +32,13 @@ export function StudioFolds({ sections, label, initialOpen, newest, newestKey, c
   // Ordered oldest → newest; the oldest folds first when space runs out.
   const [open, setOpen] = useState<string[]>(() => [...(initialOpen ?? sections.map((s) => s.id))].reverse());
   const root = useRef<HTMLDivElement>(null);
+  // The open folds as they are now, so fitting stops once only one is open (a short window looped forever, 9 Nov).
+  const openNow = useRef(open);
+  openNow.current = open;
 
   const fit = useCallback(() => {
     const el = root.current;
-    if (!el) return;
+    if (!el || openNow.current.length < 2) return;
     if (el.scrollHeight > el.clientHeight + 1) setOpen((o) => (o.length > 1 ? o.slice(1) : o));
   }, []);
   useLayoutEffect(fit);
