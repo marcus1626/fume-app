@@ -1,6 +1,7 @@
 // The Studio: the expert's sessions with candidates, and creative documents with a mode, versions and Engine edits;
 // placements and Make formats, the product fix with detail tokens, light and camera presets, and the brand's own
 // presets, models and references.
+import { designEvaluation, designFindings, withMeasures } from "./measures";
 import {
   FumeError,
   type CreativeDocument,
@@ -15,6 +16,7 @@ import {
   type Id,
   type LightAngle,
   type Lens,
+  type QaFormat,
   type QaItem,
   type RenderVersion,
   type StudioSession,
@@ -197,6 +199,7 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       }
       const { drawing, ...made } = measured(book.body, from.specs.format, plan, choice);
       v.state = "done";
+      v.evaluation = designEvaluation(v.evaluation, made.checks, n);
       v.design = {
         ...v.design!,
         ...made,
@@ -355,6 +358,7 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
             ],
           },
         };
+        v.evaluation = withMeasures(v.evaluation, d.studio, n);
         v.prompt = {
           ...v.prompt!,
           status: "warned",
@@ -372,6 +376,7 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
           notes: n % 3 === 0 ? ["A soft edge on the label"] : [],
           scores: { product: 84 + ((n * 7) % 12), engine: 82 + ((n * 5) % 14) },
         };
+      v.evaluation = withMeasures(v.evaluation, d.studio, n);
       d.pickedVersionId = v.id;
       touch(d);
     }, m.latency * 14);
@@ -930,6 +935,20 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
     // ("Version 2 from the Studio · Anna, 14:32"), with the old one kept for Before | After; a document that is not in
     // Check yet comes in as a new creative to check, and one with no campaign lands in "Product page".
     async documentToCheck(id) {
+      // An ad's formats made from its master go with it, as one ad (FLOWS §35.2).
+      const formatsOf = (d: CreativeDocument): { formats?: QaFormat[] } => {
+        const made = (d.formats ?? [])
+          .filter((t) => t.state === "done" && t.image)
+          .map((t) => ({ t, p: m.find(db.placements, t.placementId, "placement") }))
+          .filter(({ p }) => p.format !== d.specs.format)
+          .map(({ t, p }): QaFormat => ({
+            placementId: t.placementId,
+            format: p.format,
+            image: t.image!,
+            method: t.method,
+          }));
+        return made.length ? { formats: made } : {};
+      };
       m.mustStaff();
       const d = doc(id);
       if (!d.pickedVersionId) throw new FumeError("invalid", "Pick a version first.");
@@ -939,15 +958,19 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       const version = d.versions.find((v) => v.id === d.pickedVersionId)!;
       const item = db.qaItems.find((i) => i.documentId === d.id);
       const by = { sentBy: m.me().id, sentAt: now() };
+      // Round 15 (FLOWS §35.1): Check names versions as the Studio does. A designed version's Before is the picture it
+      // was designed on ("Before · V3", "After · V5"), so the numbers in Check and in the Studio are the same.
+      const under = version.design ? d.versions.find((v) => v.id === version.design!.fromVersionId) : undefined;
+      const designedOn = under ? { image: under.image, version: under.number } : undefined;
       if (item) {
         beforeSend.set(d.id, { itemId: item.id, was: structuredClone(item), added: false, docState });
         const shown = item.version ?? 1;
         // A designed version shares the picture under it in the demo: its words make it another version.
         if (version.image !== item.image || (version.drawn && version.number !== shown))
           Object.assign(item, {
-            previous: { image: item.image, version: shown },
+            previous: designedOn ?? { image: item.image, version: shown },
             image: version.image,
-            version: Math.max(version.number, shown + 1),
+            version: version.number > shown ? version.number : shown + 1,
           });
         Object.assign(item, by, {
           state: "waiting",
@@ -960,6 +983,8 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
           layers: d.studio === "design" ? structuredClone(d.layers) : item.layers,
           design: version.design && structuredClone(version.design),
           drawn: version.drawn && structuredClone(version.drawn),
+          ...(version.design ? { findings: designFindings(version.design.checks, version.id) } : {}),
+          ...formatsOf(d),
         });
         m.emit({ type: "qa.state", item: structuredClone(item) });
       } else {
@@ -982,9 +1007,13 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
           evaluation: version.evaluation,
           feedback: [],
           version: version.number,
+          ...(designedOn ? { previous: designedOn } : {}),
           layers: d.studio === "design" ? structuredClone(d.layers) : undefined,
-          ...(version.design ? { design: structuredClone(version.design) } : {}),
+          ...(version.design
+            ? { design: structuredClone(version.design), findings: designFindings(version.design.checks, version.id) }
+            : {}),
           ...(version.drawn ? { drawn: structuredClone(version.drawn) } : {}),
+          ...formatsOf(d),
           ...by,
         };
         db.qaItems.push(added);

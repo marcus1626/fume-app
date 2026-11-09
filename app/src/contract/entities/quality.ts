@@ -93,6 +93,32 @@ export interface Scores {
   engine: number;
   /** Why a score is under the bar, one short line each, the worst first ("The cap reads glossy"). */
   why?: { score: "product" | "engine"; text: string }[];
+  /** Round 15 (FLOWS §35.3, PROPOSED 9 Nov 2026): what the finished version is scored on, by the studio that made it.
+   *  A picture: Product (part by part), Brand, Craft. A design: Readability, Design system, Placement, Words. A video:
+   *  Product, Brand, First second, Rhythm, Text on screen. When it is there, screens show it instead of the two
+   *  scores above, which stay for the pictures scored before it. */
+  measures?: ScoreMeasure[];
+}
+
+/** One thing a version is scored on, 0 to 100, with the bar (SCORE_BAR) the same for all (FLOWS §35.3, PROPOSED). */
+export interface ScoreMeasure {
+  id:
+    | "product"
+    | "brand"
+    | "craft"
+    | "readability"
+    | "system"
+    | "placement"
+    | "words"
+    | "first_second"
+    | "rhythm"
+    | "text_on_screen";
+  label: string;
+  value: number;
+  /** The product, part by part from its verified facts and photographs: the label, the cap, the glass, the size. */
+  parts?: { label: string; value: number }[];
+  /** Why it is under the bar, in one short line ("The words sit over the bottle"). */
+  why?: string;
 }
 
 /** What the Engine's picture check found, as a finding the one who checks settles (findings with method automated;
@@ -100,8 +126,10 @@ export interface Scores {
 export interface QaFinding {
   id: Id;
   /** product: the product against its own photographs; brand_brief: the brand's rules and the planned scene;
-   *  artefacts: something the image model got wrong; text_claims: printed words nobody asked for. */
-  dimension: "product" | "brand_brief" | "artefacts" | "text_claims";
+   *  artefacts: something the image model got wrong; text_claims: printed words nobody asked for; design (round 15,
+   *  PROPOSED): the words and layout against the design system, measured by code (they cover the product, too little
+   *  contrast, outside the safe area). */
+  dimension: "product" | "brand_brief" | "artefacts" | "text_claims" | "design";
   /** critical: the creative cannot be marked checked while it is open. */
   severity: "critical" | "major" | "minor";
   finding: string;
@@ -115,6 +143,18 @@ export interface QaFinding {
   /** On a video: where it is on the timeline, in the video's seconds, so the one who checks can go to it (FLOWS §34.7,
    *  PROPOSED). */
   seconds?: { from: number; to: number };
+  /** Where on the creative, 0–1 from the top left (FLOWS §35.1, PROPOSED): the Engine's finding is a comment with a
+   *  pin, like a person's, in Check's one comment thread. */
+  spot?: { x: number; y: number };
+}
+
+/** One of an ad's formats in Check (FLOWS §35.2, PROPOSED): how it was made from the master, and its picture. */
+export interface QaFormat {
+  placementId: Id;
+  format: Format;
+  image: string;
+  /** The same picture, cropped from the master, or the scene extended by the Engine (Make formats, FLOWS §16). */
+  method: "native" | "crop" | "expand";
 }
 
 /** A spot on a creative in Check: a numbered pin, 0–1 from the top left, with what is wrong there. It goes to the
@@ -126,6 +166,8 @@ export interface QaPin {
   text: string;
   /** On a video: the second it is pinned on (FLOWS §34.7, PROPOSED). */
   at?: number;
+  /** On an ad with several formats: the format it is pinned on, when not the master (FLOWS §35.2, PROPOSED). */
+  format?: Format;
 }
 
 /** What a checker told the Engine to fix. */
@@ -178,6 +220,10 @@ export interface QaItem {
   version?: number;
   /** The version it replaced, when the Studio sent a new one to check (Before | After). */
   previous?: { image: string; version: number };
+  /** The ad's other formats, made from this one (FLOWS §35.2, PROPOSED 9 Nov 2026): Marcus, round 15, an ad with
+   *  several formats comes to Check as one ad, and the one who checks goes through its formats there. Its own image
+   *  and format are the master; Mark checked checks the ad with every format. */
+  formats?: QaFormat[];
   /** Who sent the version shown from the Studio, and when. */
   sentBy?: Id;
   sentAt?: Instant;

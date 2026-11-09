@@ -1,5 +1,6 @@
 // The Studio: creative documents with their versions and the Engine's reads, the placements a creative is made for,
 // and the kit and sessions of the earlier Studio.
+import { designEvaluation, withMeasures } from "../measures";
 import type {
   CastMember,
   CreativeDocument,
@@ -497,15 +498,22 @@ const fixes: Record<string, ProductFix[]> = {
   ],
 };
 
+/** A version's scores as its studio scores it (FLOWS §35.3): a design by what code measured on it, else a picture or
+ *  a video from its two scores. */
+function scored(d: CreativeDocument, v: CreativeDocument["versions"][number]) {
+  if (v.design?.state === "made") return designEvaluation(v.evaluation, v.design.checks, v.number);
+  return withMeasures(v.evaluation, d.studio, v.number);
+}
+
 /** Every document with what the Engine read on its renders, its fixes and its look sources; a feed render is placed in
  *  the Instagram feed. */
 export const documents: CreativeDocument[] = [
   ...seeded.map((d) => ({
     ...d,
-    versions:
-      d.id === "doc-autumn-m3"
-        ? d.versions.map((v) => (detailFinds[v.id] ? { ...v, details: detailFinds[v.id] } : v))
-        : d.versions,
+    versions: (d.id === "doc-autumn-m3"
+      ? d.versions.map((v) => (detailFinds[v.id] ? { ...v, details: detailFinds[v.id] } : v))
+      : d.versions
+    ).map((v) => ({ ...v, evaluation: scored(d, v) })),
     fixes: fixes[d.id] ?? [],
     sources: d.sources ?? { Light: "brand", Camera: "brand" },
     specs: d.studio === "render" && d.specs.format === "feed" ? { ...d.specs, placementId: "pl-ig-feed" } : d.specs,

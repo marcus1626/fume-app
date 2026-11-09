@@ -10,13 +10,16 @@
                    <span class="ui-qa-layer" data-style="headline" style="--x:.08;--y:.72;--w:.84;--h:.1">For the hour before sleep.</span></figure></div></section>
                <aside class="ui-qa-panel">
                  <div class="ui-qa-panel-body">
-                   <header class="ui-qa-head"><h2 class="ui-qa-title"/><p class="ui-qa-sub"/><p class="ui-qa-state"> one line </p>
-                     <div class="ui-qa-badges"/></header>
-                   <section class="ui-qa-part"><h3 class="ui-qa-part-title">What the Engine found</h3><ul class="ui-qa-notes">
-                     <li class="ui-qa-note" data-result="pass|flag"/></ul>
-                     <div class="ui-collapsible ui-qa-against"> trigger · <dl class="ui-qa-against-list"><div class="ui-qa-against-row">
-                       <dt/><dd/></div></dl></div></section>
-                   words · Tell the Engine (textarea, .ui-qa-tell-foot) · <ol class="ui-qa-history"><li class="ui-qa-said"/></ol></div>
+                   <header class="ui-qa-head"><h2 class="ui-qa-title"/><p class="ui-qa-sub"/><p class="ui-qa-state" hidden?> one line </p>
+                     <div class="ui-qa-badges"> due · <button class="ui-badge ui-qa-score-chip" aria-expanded/> </div>
+                     <div class="ui-qa-scores"> the score board (scores.css) </div></header>
+                   <section class="ui-qa-thread"><div class="ui-qa-thread-head"><h3 class="ui-qa-part-title">Comments</h3> count </div>
+                     <ol class="ui-qa-comments"><li class="ui-qa-c" data-from="engine|person" data-active data-chosen data-resolved>
+                       <div class="ui-qa-c-head"><span class="ui-qa-c-num">1</span> avatar <span class="ui-qa-c-who">Engine</span>
+                         <span class="ui-qa-c-tag" data-stops>Product · decide first</span></div><p class="ui-qa-c-text"/>
+                       <p class="ui-qa-c-should"><span class="ui-qa-c-label">Should be</span> …</p><div class="ui-qa-c-actions"/></li></ol>
+                     folds (.ui-qa-against): earlier comments · n checks hold · Brand DNA v3 · the graphic design · words</section></div>
+                 <form class="ui-qa-compose"><div class="ui-qa-compose-row"> textarea · the real product · add </div></form>
                  <footer class="ui-qa-foot" data-ui-foot><button class="ui-btn ui-btn--primary ui-qa-foot-main">Mark checked
                    <kbd class="ui-kbd ui-qa-key">C</kbd></button><div class="ui-qa-foot-row"> Tell the Engine F · Open in Studio S </div>
                  </footer></aside>
@@ -88,6 +91,7 @@
 .ui-qa-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.3; color: var(--ui-text); overflow-wrap: anywhere; text-wrap: balance; }
 .ui-qa-sub { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); }
 .ui-qa-state { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs); min-height: 1.5em; margin: 0; padding-top: var(--ui-space-xs); font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); }
+.ui-qa-state[hidden] { display: none; }
 .ui-qa-badges { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); padding-top: var(--ui-space-xs); }
 
 /* parts: 24 apart, 8 inside */
@@ -150,6 +154,99 @@
 .ui-qa-foot > .ui-qa-foot-note:first-child { padding-block-start: var(--ui-space-sm); }
 .ui-qa-key { margin-inline-start: var(--ui-space-xs); }
 .ui-btn--primary .ui-qa-key { background: var(--ui-qg-key-on-ink); color: var(--ui-qg-key-on-ink-fg); }
+
+/* ---------- round 15: Check is one comment thread, like the customer's viewer (FLOWS §35.1, PROPOSED 9 Nov 2026) ----------
+   Marcus: the panel was "rotete" with much scrolling; the expert's check should be "litt som kunden sin, et kommentarfelt
+   og sånt som i Frame.io". So: the head (name, state, due, the score chip that opens the board), then Comments: the
+   Engine's findings as its comments with their pins, her own comments, and quiet folds for what was settled before, what
+   holds, the graphic design and the words. A field to write in sits over the decision. No boxes: a comment lifts onto
+   the sunken step only while it is open (its pin is open on the creative). Rouge only on the mark of a finding that
+   stops the check. The score chip is a quiet badge button; under the bar it carries the warning mark, never Rouge. */
+.ui-qa-score-chip { cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease); }
+.ui-qa-score-chip::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+@media (hover: hover) { .ui-qa-score-chip:hover { background: var(--bg-hover); } }
+.ui-qa-score-chip:active { background: var(--bg-pressed); transform: scale(var(--ui-motion-press-scale)); }
+.ui-qa-score-chip > svg:last-child { margin-inline-end: calc(var(--ui-space-xs) * -1); color: var(--ui-text-secondary); }
+.ui-qa-score-chip:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-qa-head .ui-qa-scores { margin-block-start: var(--ui-space-sm); }
+
+.ui-qa-thread { display: grid; align-content: start; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qa-thread-head { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qa-comments { display: grid; gap: var(--ui-space-xs); margin: 0 calc(var(--ui-space-sm) * -1); padding: 0; list-style: none; min-width: 0; }
+.ui-qa-c {
+  display: grid; gap: var(--ui-space-xs); min-width: 0; padding: var(--ui-space-md) var(--ui-space-sm); border-radius: var(--ui-radius-item);
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-qa-c[data-active] { background: var(--ui-surface-sunken); }
+.ui-qa-c-head { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; min-height: var(--ui-size-control-sm); }
+.ui-qa-c-who { flex: none; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text); white-space: nowrap; }
+.ui-qa-c-tag { display: inline-flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; overflow: hidden; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); white-space: nowrap; text-overflow: ellipsis; }
+.ui-qa-c-tag > svg { flex: none; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-qa-c-tag[data-stops] { color: var(--ui-text); }
+.ui-qa-c-tag[data-stops] > svg { color: var(--ui-danger); }
+.ui-qa-c-when, .ui-qa-c-time, .ui-qa-c-remove { margin-inline-start: auto; }
+.ui-qa-c-when + .ui-qa-c-remove { margin-inline-start: 0; }
+.ui-qa-c :is(.ui-qa-c-when, .ui-qa-c-meta) .ui-qa-time { font-size: var(--ui-type-label); }
+.ui-qa-c-time { flex: none; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; white-space: nowrap; } /* gate-allow:mono-is-data  a time is data */
+.ui-qa-c-text { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-qa-c[data-resolved] .ui-qa-c-text { color: var(--ui-text-secondary); }
+.ui-qa-c-should { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text); overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-qa-c-label { color: var(--ui-text-tertiary); }
+.ui-qa-c-meta { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-qa-c-pinline { display: flex; align-items: baseline; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); overflow-wrap: anywhere; }
+.ui-qa-c-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); margin-inline-start: calc(var(--ui-size-pad-sm) * -1); padding-block-start: var(--ui-space-xs); }
+.ui-qa-c-info { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+/* the Engine's avatar: its mark on the sunken step; a person's is their avatar (avatar.css) */
+.ui-qa-c-engine { display: inline-grid; place-items: center; flex: none; background: var(--ui-surface-sunken); color: var(--ui-text); }
+.ui-qa-c-engine > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+/* a pin's number beside its comment: the same drop as on the creative, smaller, on the sunken step; Ink while open */
+.ui-qa-c-num {
+  display: inline-grid; place-items: center; flex: none; width: var(--ui-qg-marker); height: var(--ui-qg-marker);
+  border-radius: 50%; border-bottom-left-radius: 0; background: var(--ui-surface-sunken); color: var(--ui-text);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; font-variant-numeric: tabular-nums;
+}
+.ui-qa-c[data-active] .ui-qa-c-num { background: var(--ui-qg-pin-active); color: var(--ui-action-primary-fg); }
+/* her comment's remove comes forward with a mouse on it, with focus in it, or while it is open; always on touch */
+@media (hover: hover) {
+  .ui-qa-c-remove { opacity: 0; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+  .ui-qa-c:is(:hover, :focus-within, [data-active]) .ui-qa-c-remove { opacity: 1; }
+}
+.ui-qa-thread > .ui-qa-against { padding-block-start: var(--ui-space-xs); }
+.ui-qa-fold-body { display: grid; gap: var(--ui-space-sm); min-width: 0; padding-block-start: var(--ui-space-sm); }
+.ui-qa-against .ui-qa-comments { padding-block-start: var(--ui-space-xs); }
+
+/* the field to write in, over the decision */
+.ui-qa-compose { display: grid; min-width: 0; }
+.ui-qa-compose-row { display: flex; align-items: flex-end; gap: var(--ui-space-xs); min-width: 0; }
+.ui-qa-compose-row .ui-textarea { flex: 1 1 auto; min-height: var(--ui-field-height); padding-block: var(--ui-space-sm); resize: none; }
+@media (prefers-reduced-motion: reduce) { .ui-qa-c, .ui-qa-c-remove, .ui-qa-score-chip { transition: none; } .ui-qa-score-chip:active { transform: none; } }
+
+/* An ad's formats under the well (FLOWS §35.2, PROPOSED 9 Nov 2026). Marcus, round 15: an ad with several formats is one
+   ad in Check, its formats checked inside it. The master first, then each format made from it, a small picture at its
+   own ratio with its name and how it was made; the one shown lifts onto the surface with depth (as the list's selected
+   row), never a line and never Amber. Markup: <div class="ui-qa-formats" role="group"><button class="ui-qa-format"
+   aria-pressed><img class="ui-qa-format-media" data-format/><span class="ui-qa-format-text"><span
+   class="ui-qa-format-name">Square 1:1</span><span class="ui-qa-format-how">Cropped</span></span></button></div> */
+.ui-qa-formats { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--ui-space-xs); min-width: 0; flex: none; }
+.ui-qa-format {
+  position: relative; display: inline-flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; margin: 0;
+  padding: var(--ui-space-xs) var(--ui-space-md) var(--ui-space-xs) var(--ui-space-xs); border: 0; border-radius: var(--ui-radius-item);
+  background: transparent; color: var(--ui-text); font: inherit; text-align: start; cursor: pointer;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), box-shadow var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-qa-format::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+@media (hover: hover) { .ui-qa-format:hover { background: var(--ui-surface-sunken); } }
+.ui-qa-format[aria-pressed="true"] { background: var(--ui-surface); box-shadow: var(--ui-depth-raised); }
+.ui-qa-format:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-qa-format:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-qa-format-media { display: block; flex: none; height: var(--ui-size-control-lg); width: auto; aspect-ratio: var(--ui-creative-ratio-feed); border-radius: var(--ui-radius-check); object-fit: cover; background: var(--ui-creative-bg); }
+.ui-qa-format-media[data-format="square"] { aspect-ratio: var(--ui-creative-ratio-square); }
+.ui-qa-format-media[data-format="story"] { aspect-ratio: var(--ui-creative-ratio-story); }
+.ui-qa-format-text { display: grid; min-width: 0; }
+.ui-qa-format-name { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.35; white-space: nowrap; }
+.ui-qa-format-how { font-size: var(--ui-type-label); line-height: 1.35; color: var(--ui-text-tertiary); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .ui-qa-format { transition: none; } .ui-qa-format:active { transform: none; } }
 
 /* the end of the queue: what comes next, in the well where the creative was */
 .ui-qa-end {
@@ -327,6 +424,7 @@
     flex: 1 1 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: var(--ui-inset-float) var(--ui-inset-float) var(--ui-space-lg); scrollbar-width: thin;
   }
   .ui-qa-page .ui-qa-panel .ui-qa-said { background: var(--ui-ground); }
+  .ui-qa-page .ui-qa-compose { flex: none; padding: 0 var(--ui-inset-float) var(--ui-space-md); }
   .ui-qa-page .ui-qa-foot { flex: none; padding: 0 var(--ui-inset-float) var(--ui-inset-float); }
 
   .ui-qa-page .ui-qa-end { align-self: stretch; }
@@ -342,7 +440,7 @@
   .ui-qa-page .ui-qa-row { justify-content: center; }
 }
 @container ui-qa-page (min-width: 1100px) {
-  .ui-qa-page > .ui-qa { --qa-list: 272px; --qa-panel: 300px; } /* gate-allow:space-from-tokens  layout widths */
+  .ui-qa-page > .ui-qa { --qa-list: 256px; --qa-panel: 320px; } /* gate-allow:space-from-tokens  layout widths; round 15: the panel is a comment thread, its two answers on one line */
 }
 @container ui-qa-page (min-width: 1500px) {
   .ui-qa-page > .ui-qa { --qa-list: 304px; --qa-panel: 340px; } /* gate-allow:space-from-tokens  layout widths */

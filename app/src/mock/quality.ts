@@ -1,6 +1,7 @@
 // The Quality Gate: Fume's experts (or an agency's own people) check every creative before the customer sees it. The
 // per-creative checks of the first Studio, and Check: the QA items, each sent from the Studio or landed by an Engine
 // run, checked, sent back to the Engine with feedback, or opened in the Studio.
+import { withMeasures } from "./measures";
 import {
   FumeError,
   type Campaign,
@@ -139,13 +140,17 @@ export function fixLater(m: Mock, item: QaItem, delay: number, only?: QaItem["fe
     item.state = "waiting";
     // The fixed version is scored again (FLOWS §34.1): over the bar now, so Check still shows where it stands.
     const was = item.evaluation.scores;
-    item.evaluation = {
-      productTruth: "pass",
-      brandRules: "pass",
-      artefacts: "none",
-      notes: [],
-      ...(was ? { scores: { product: Math.max(was.product, 88), engine: Math.max(was.engine, 86) } } : {}),
-    };
+    item.evaluation = withMeasures(
+      {
+        productTruth: "pass",
+        brandRules: "pass",
+        artefacts: "none",
+        notes: [],
+        ...(was ? { scores: { product: Math.max(was.product, 88), engine: Math.max(was.engine, 86) } } : {}),
+      },
+      item.design ? "design" : item.studio,
+      item.id.length,
+    );
     m.emit({ type: "qa.state", item: structuredClone(item) });
   }, delay);
 }

@@ -9,23 +9,41 @@
    On the board: <div class="ui-glass ui-score-warn" role="status"><svg/><span class="ui-score-warn-title">Under the
    bar</span><span class="ui-score-warn-nums">Engine 58 · Product 64</span></div> above the picture, never over it.
    Decisions:
-   - The number is the loudest thing, in the data face with tabular numbers; the name is a label beside it.
-   - The meter is the progress track (4 px pill, sunken), Ink fill over the bar and Rouge under it, with the bar
-     drawn as a short Ink tick. Rouge marks what works against a rule (F-D067); never Amber, nothing here is a
-     person's check. Colour is never the only signal: under the bar, the number turns Rouge and a line says why.
+   - Round 15 (PROPOSED 9 Nov 2026, Marcus: "litt off brand"): the board says where the version stands in words
+     first; each row is a name, a number in GT Standard medium with tabular figures, and a thin Ink ranking bar on
+     the chart track with the bar as a short Ink tick. Rouge is for errors and delete only (F-D067), so a score under
+     the bar is said in words, with a warning mark and a line on why; never Amber, nothing here is a person's check.
    - The warning on the board is a Smoke pill above the picture: the designer always sees the whole picture.
    Rule gate: space-from-tokens, type-from-tokens, radius-from-tokens, mono-is-data, few-strokes. */
 
 .ui-score-board { display: grid; gap: var(--ui-space-md); min-width: 0; }
+/* Round 15 (PROPOSED 9 Nov 2026): the board answers in words first, then one row per thing scored. */
+.ui-score-head { display: flex; align-items: center; gap: var(--ui-space-sm); margin: 0; font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-score-head > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-score-rows, .ui-score-parts { display: grid; gap: var(--ui-space-md); margin: 0; padding: 0; list-style: none; min-width: 0; }
 .ui-score { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; column-gap: var(--ui-space-md); row-gap: var(--ui-space-xs); min-width: 0; }
-.ui-score-name { font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
-.ui-score-num { font-family: var(--ui-type-family-data); font-size: var(--ui-type-title); font-variant-numeric: tabular-nums; line-height: 1.1; color: var(--ui-text); }
-.ui-score[data-under] .ui-score-num { color: var(--ui-danger); }
-.ui-score-meter { --score: 0; --bar: 80; position: relative; grid-column: 1 / -1; display: block; height: var(--ui-progress-height); border-radius: var(--ui-radius-action); background: var(--ui-progress-track); }
-.ui-score-fill { position: absolute; inset-block: 0; inset-inline-start: 0; width: calc(var(--score) * 1%); border-radius: var(--ui-radius-action); background: var(--ui-progress-fill); transition: width var(--ui-motion-slow) var(--ui-motion-ease); }
-.ui-score[data-under] .ui-score-fill { background: var(--ui-danger); }
+.ui-score-name { display: inline-flex; align-items: center; gap: var(--ui-space-xs); justify-self: start; font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); }
+.ui-score-toggle { position: relative; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; border-radius: var(--ui-radius-check); }
+.ui-score-toggle::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-score-toggle svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+@media (hover: hover) { .ui-score-toggle:hover { color: var(--ui-text); } }
+.ui-score-toggle:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+/* A number is GT Standard at medium weight with tabular figures (the brand book's numbers and data), not Mono. */
+.ui-score-num { display: inline-flex; align-items: center; gap: var(--ui-space-xs); font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); font-variant-numeric: tabular-nums; line-height: 1.1; color: var(--ui-text); }
+.ui-score-mark { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text); }
+/* The ranking bar: Ink on the chart track, the bar a short Ink tick. Under the bar the fill steps back to secondary
+   ink and a mark and a line say why; colour is never the only signal and never Rouge (errors and delete only). */
+.ui-score-meter { --score: 0; --bar: 80; position: relative; grid-column: 1 / -1; display: block; height: var(--ui-progress-height); border-radius: var(--ui-radius-action); background: var(--ui-chart-track); }
+.ui-score-meter[data-size="sm"] { height: calc(var(--ui-progress-height) / 2); }
+.ui-score-fill { position: absolute; inset-block: 0; inset-inline-start: 0; width: calc(var(--score) * 1%); border-radius: var(--ui-radius-action); background: var(--ui-text); transition: width var(--ui-motion-slow) var(--ui-motion-ease); }
+.ui-score[data-under] > .ui-score-meter .ui-score-fill, .ui-score-part[data-under] .ui-score-fill { background: var(--ui-text-secondary); }
 .ui-score-bar { position: absolute; inset-inline-start: calc(var(--bar) * 1%); inset-block: calc(var(--ui-space-xs) * -1); width: 2px; border-radius: var(--ui-radius-action); background: var(--ui-text); transform: translateX(-50%); } /* gate-allow:space-from-tokens a 2 px tick, the track's own weight */
 .ui-score-why { grid-column: 1 / -1; margin: 0; font-family: var(--ui-type-family); font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+/* the product part by part, a step in and smaller */
+.ui-score-parts { grid-column: 1 / -1; gap: var(--ui-space-sm); padding-inline-start: var(--ui-space-md); padding-block-start: var(--ui-space-xs); }
+.ui-score-part { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; column-gap: var(--ui-space-md); row-gap: var(--ui-space-xs); }
+.ui-score-part-name { font-family: var(--ui-type-family); font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+.ui-score-part-num { font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; color: var(--ui-text); }
 .ui-score-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); min-width: 0; font-family: var(--ui-type-family); font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
 .ui-score-foot > span { display: inline-flex; align-items: center; gap: var(--ui-space-xs); white-space: nowrap; }
 .ui-score-foot-mark { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text); transform: rotate(90deg); }

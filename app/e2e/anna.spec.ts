@@ -44,11 +44,11 @@ test("Anna fixes the shot the Engine flagged in a video", async ({ page }) => {
 test("Anna sees a version under the bar, with its scores, and the prompt behind it", async ({ page }) => {
   // The Engine never stops the designer (FLOWS §34.1): a version under the bar is made and shown, with a warning
   await page.goto("/studio/doc/doc-autumn-m3?as=anna");
-  const under = page.getByRole("button", { name: /^Version 4\b.*Under the bar · Engine 58 · Product 64/ });
+  const under = page.getByRole("button", { name: /^Version 4\b.*Under the bar · Brand 58 · Product 64/ });
   await expect(under).toBeVisible();
   await under.click();
   await expect(page.getByText("Version 4 is under LYSNE’s bar")).toBeVisible();
-  await expect(page.getByRole("meter", { name: "Engine" })).toHaveAttribute("aria-valuenow", "58");
+  await expect(page.getByRole("meter", { name: "Brand" })).toHaveAttribute("aria-valuenow", "58");
   await expect(page.getByRole("meter", { name: "Product" })).toHaveAttribute("aria-valuenow", "64");
 
   // Its prompt went to the image model with a warning; the Engine's rules it worked against are named
@@ -88,41 +88,51 @@ test("Anna sees what went into a warned prompt and what its check didn't find", 
   await expect(panel.getByText("Word for word, not found in the prompt")).toBeVisible();
 });
 
-test("Anna settles the Engine's findings in Check", async ({ page }) => {
+test("Anna settles the Engine's comments in Check", async ({ page }) => {
   await page.goto("/studio/b/w-lysne/qa?as=anna&item=qa-7");
   await expect(page.getByRole("heading", { level: 2, name: "Night Body Oil · Feed 8" })).toBeVisible();
-  const findings = page.getByRole("list", { name: "The Engine’s findings" });
-  const finding = (text: string) => findings.getByRole("listitem").filter({ hasText: text });
+  // One thread, like the customer's viewer (FLOWS §35.1): the Engine's findings are its comments, pinned on the creative
+  const thread = page.getByRole("region", { name: "Comments" });
+  const comment = (text: string | RegExp) => thread.getByRole("listitem").filter({ hasText: text });
+  await expect(comment("The cap is glossy").getByText("Product · decide first")).toBeVisible();
+  await page.getByRole("button", { name: /^Pin 1, from the Engine: The cap is glossy/ }).click();
+  await expect(comment("The cap is glossy")).toHaveAttribute("data-active", "");
+
+  // The scores are a chip in the head that opens the board: the cap is the part under the bar
+  await page.getByRole("button", { name: /^Under the bar · Product 52/ }).click();
+  await expect(page.getByRole("meter", { name: "Product" })).toHaveAttribute("aria-valuenow", "52");
+  await expect(page.getByRole("meter", { name: "Cap" })).toHaveAttribute("aria-valuenow", "44");
+
   // The cap is off: the product finding is decided first, before the creative is marked checked
-  await expect(page.getByRole("heading", { name: /^To decide · 3/ })).toBeVisible();
-  await expect(finding("The cap is glossy").getByText("Product · decide first")).toBeVisible();
   await expect(page.getByRole("button", { name: /^Mark checked/ })).toBeDisabled();
   await expect(page.getByText("Decide the product finding first: a fix, or not a problem.")).toBeVisible();
 
-  // The light is not a problem here, and Undo takes that back
-  await finding("The light comes from above").getByRole("button", { name: "Not a problem" }).click();
-  await expect(finding("The light comes from above").getByText(/^Brand · not a problem, said you/)).toBeVisible();
-  await finding("The light comes from above").getByRole("button", { name: "Undo" }).click();
-  await expect(finding("The light comes from above").getByText("Brand · minor")).toBeVisible();
+  // The light is not a problem here: it folds away with the earlier comments, and Undo brings it back
+  await comment("The light comes from above").getByRole("button", { name: "Not a problem" }).click();
+  await page.getByRole("button", { name: "1 earlier comment" }).click();
+  await expect(comment("The light comes from above").getByText(/^Not a problem, said you/)).toBeVisible();
+  await comment("The light comes from above").getByRole("button", { name: "Undo" }).click();
+  await expect(comment("The light comes from above").getByText("Brand · minor")).toBeVisible();
 
-  // The cap goes to the Engine in the note, and its fix settles it
-  await finding("The cap is glossy").getByRole("button", { name: "Add to the note" }).click();
-  await expect(page.getByRole("textbox", { name: "Tell the Engine" })).toHaveValue(
-    "The cap is glossy; LYSNE's cap is matte. It should be: Burgundy matte cap, as in its photographs.",
-  );
-  await expect(finding("The cap is glossy").getByRole("button", { name: "In the note" })).toHaveAttribute(
+  // The cap goes to the Engine with her own comment, and its fix settles it
+  await comment("The cap is glossy").getByRole("button", { name: "Fix with the Engine" }).click();
+  await expect(comment("The cap is glossy").getByRole("button", { name: "Goes to the Engine" })).toHaveAttribute(
     "aria-pressed",
     "true",
   );
-  await page.getByRole("button", { name: /^Tell the Engine/ }).click();
+  const write = page.getByRole("textbox", { name: "A comment for the Engine" });
+  await write.fill("Keep the warm side light");
+  await write.press("Enter");
+  await expect(comment("Keep the warm side light").getByText("You", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: /^Tell the Engine · 2/ }).click();
   // Check moves on while the Engine fixes it; back to it once the fix is in
   await expect(page.getByRole("heading", { level: 2, name: "Night Body Oil · Feed 8" })).toBeHidden();
   await page
     .getByRole("button", { name: /^Night Body Oil · Feed 8 .*The Engine’s fix is back$/ })
     .click({ timeout: 15_000 });
-  await expect(finding("The cap is glossy").getByText("Product · fixed by the Engine")).toBeVisible({
-    timeout: 15_000,
-  });
+  await page.getByRole("button", { name: "2 earlier comments" }).click({ timeout: 15_000 });
+  await expect(comment(/^Engine.*The cap is glossy/).getByText("The Engine fixed it")).toBeVisible();
+  await expect(comment("Keep the warm side light").getByText("The Engine fixed it")).toBeVisible();
   await expect(page.getByRole("button", { name: /^Mark checked/ })).toBeEnabled();
 });
 
@@ -199,6 +209,6 @@ test("Anna asks Fume for the graphic design on a picture, and reads what came ba
 
   // In Check, the expert reads the same findings beside the creative
   await page.goto("/studio/qa?as=anna&item=qa-8");
-  await expect(page.getByText(/^The graphic design · design system version 1/)).toBeVisible();
+  await page.getByRole("button", { name: /^The graphic design · design system version 1/ }).click();
   await expect(page.getByRole("list", { name: "What code measured" })).toContainText("checks passed");
 });

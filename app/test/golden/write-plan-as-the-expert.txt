@@ -5,7 +5,31 @@ anna plan("c-bf") → events
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v9",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
+      "evaluation": {
+        "artefacts": "none",
+        "brandRules": "pass",
+        "notes": [],
+        "productTruth": "pass",
+        "scores": {
+          "engine": 86,
+          "measures": [
+            {
+              "id": "product",
+              "label": "Product",
+              "parts": [
+                {"label":"Label","value":89},
+                {"label":"Cap","value":96},
+                {"label":"Glass","value":93},
+                {"label":"Size","value":90}
+              ],
+              "value": 88
+            },
+            {"id":"brand","label":"Brand","value":86},
+            {"id":"craft","label":"Craft","value":95}
+          ],
+          "product": 88
+        }
+      },
       "feedback": [
         {
           "at": "2026-10-14T12:21:00.000Z",

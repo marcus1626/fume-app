@@ -53,8 +53,8 @@ test("Nora's own view of the client link is a preview with its buttons off", asy
 test("Nora sees a version under the bar and its scores, but never the Engine's prompt", async ({ page }) => {
   await page.goto("/agency/doc/doc-autumn-m3?as=nora");
   await expect(page.getByRole("button", { name: "The Engine’s prompt and checks" })).toHaveCount(0);
-  await page.getByRole("button", { name: /^Version 4\b.*Under the bar · Engine 58 · Product 64/ }).click();
+  await page.getByRole("button", { name: /^Version 4\b.*Under the bar · Brand 58 · Product 64/ }).click();
   await expect(page.getByText("Version 4 is under LYSNE’s bar")).toBeVisible();
-  await expect(page.getByRole("meter", { name: "Engine" })).toHaveAttribute("aria-valuenow", "58");
+  await expect(page.getByRole("meter", { name: "Brand" })).toHaveAttribute("aria-valuenow", "58");
   await expect(page.getByRole("button", { name: "The Engine’s prompt and checks" })).toHaveCount(0);
 });

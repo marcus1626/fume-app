@@ -210,8 +210,18 @@ export function measured(
     need: 0.12,
     note: value <= 0.12 ? "Calm under the words." : "The picture is busy under the words.",
   });
+  // Round 15 (FLOWS §35.1): code measures whether the words keep the product clear. In the demo the bottle stands in
+  // the middle of the picture, so words in the middle band cover it; at the top or the bottom they keep it clear.
+  const covers: DesignCheck = {
+    check: "covers",
+    node: "Words",
+    ok: choice.band !== "middle",
+    hard: true,
+    note: choice.band !== "middle" ? "Clear of the product." : "The words sit over the bottle.",
+  };
   const all: DesignCheck[] = [
     ...checks,
+    covers,
     contrast("Headline", light ? 9.4 : low ? 3.6 : 6.2, 3),
     ...(words.subline ? [contrast("Subline", light ? 7.8 : low ? 4.6 : 5.1, 4.5)] : []),
     ...(light ? [] : [busy("Headline", low ? 0.14 : 0.07)]),

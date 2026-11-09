@@ -5,7 +5,31 @@ anna designAsk("doc-autumn-m3", "rv-3") → events
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v9",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
+      "evaluation": {
+        "artefacts": "none",
+        "brandRules": "pass",
+        "notes": [],
+        "productTruth": "pass",
+        "scores": {
+          "engine": 86,
+          "measures": [
+            {
+              "id": "product",
+              "label": "Product",
+              "parts": [
+                {"label":"Label","value":89},
+                {"label":"Cap","value":96},
+                {"label":"Glass","value":93},
+                {"label":"Size","value":90}
+              ],
+              "value": 88
+            },
+            {"id":"brand","label":"Brand","value":86},
+            {"id":"craft","label":"Craft","value":95}
+          ],
+          "product": 88
+        }
+      },
       "feedback": [
         {
           "at": "2026-10-14T12:21:00.000Z",
@@ -173,7 +197,27 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
             "brandRules": "pass",
             "notes": ["Cap reads glossy"],
             "productTruth": "flag",
-            "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+            "scores": {
+              "engine": 85,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":88},
+                    {"label":"Cap","value":66},
+                    {"label":"Glass","value":92},
+                    {"label":"Size","value":89}
+                  ],
+                  "value": 74,
+                  "why": "The cap reads glossy; it is matte"
+                },
+                {"id":"brand","label":"Brand","value":85},
+                {"id":"craft","label":"Craft","value":96}
+              ],
+              "product": 74,
+              "why": [{"score":"product","text":"The cap reads glossy; it is matte"}]
+            }
           },
           "id": "rv-1",
           "image": "/demo/lysne/05-08-feed.jpg",
@@ -357,7 +401,31 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
             {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 87,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":95},
+                    {"label":"Cap","value":92},
+                    {"label":"Glass","value":89},
+                    {"label":"Size","value":96}
+                  ],
+                  "value": 88
+                },
+                {"id":"brand","label":"Brand","value":87},
+                {"id":"craft","label":"Craft","value":92}
+              ],
+              "product": 88
+            }
+          },
           "id": "rv-2",
           "image": "/demo/lysne/04-06-feed.jpg",
           "instruction": "Make the bottle a little bigger",
@@ -541,7 +609,31 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
             {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":92},
+                    {"label":"Cap","value":89},
+                    {"label":"Glass","value":96},
+                    {"label":"Size","value":93}
+                  ],
+                  "value": 82
+                },
+                {"id":"brand","label":"Brand","value":91},
+                {"id":"craft","label":"Craft","value":88}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-3",
           "image": "/demo/lysne/05-01-feed.jpg",
           "instruction": "Move the bottle lower, more air above",
@@ -722,6 +814,22 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
             "productTruth": "flag",
             "scores": {
               "engine": 58,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":89},
+                    {"label":"Cap","value":56},
+                    {"label":"Glass","value":93},
+                    {"label":"Size","value":90}
+                  ],
+                  "value": 64,
+                  "why": "The cap reads glossy; it is matte"
+                },
+                {"id":"brand","label":"Brand","value":58,"why":"A glossy reflection, where LYSNE allows nothing glossy"},
+                {"id":"craft","label":"Craft","value":95}
+              ],
               "product": 64,
               "why": [
                 {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
@@ -928,7 +1036,31 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
             {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":92},
+                    {"label":"Cap","value":89},
+                    {"label":"Glass","value":96},
+                    {"label":"Size","value":93}
+                  ],
+                  "value": 82
+                },
+                {"id":"brand","label":"Brand","value":91},
+                {"id":"craft","label":"Craft","value":88}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-mvkqwbj4-1",
           "image": "/demo/lysne/05-01-feed.jpg",
           "number": 5,
@@ -1079,7 +1211,27 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
             "brandRules": "pass",
             "notes": ["Cap reads glossy"],
             "productTruth": "flag",
-            "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+            "scores": {
+              "engine": 85,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":88},
+                    {"label":"Cap","value":66},
+                    {"label":"Glass","value":92},
+                    {"label":"Size","value":89}
+                  ],
+                  "value": 74,
+                  "why": "The cap reads glossy; it is matte"
+                },
+                {"id":"brand","label":"Brand","value":85},
+                {"id":"craft","label":"Craft","value":96}
+              ],
+              "product": 74,
+              "why": [{"score":"product","text":"The cap reads glossy; it is matte"}]
+            }
           },
           "id": "rv-1",
           "image": "/demo/lysne/05-08-feed.jpg",
@@ -1263,7 +1415,31 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
             {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 87,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":95},
+                    {"label":"Cap","value":92},
+                    {"label":"Glass","value":89},
+                    {"label":"Size","value":96}
+                  ],
+                  "value": 88
+                },
+                {"id":"brand","label":"Brand","value":87},
+                {"id":"craft","label":"Craft","value":92}
+              ],
+              "product": 88
+            }
+          },
           "id": "rv-2",
           "image": "/demo/lysne/04-06-feed.jpg",
           "instruction": "Make the bottle a little bigger",
@@ -1447,7 +1623,31 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
             {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":92},
+                    {"label":"Cap","value":89},
+                    {"label":"Glass","value":96},
+                    {"label":"Size","value":93}
+                  ],
+                  "value": 82
+                },
+                {"id":"brand","label":"Brand","value":91},
+                {"id":"craft","label":"Craft","value":88}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-3",
           "image": "/demo/lysne/05-01-feed.jpg",
           "instruction": "Move the bottle lower, more air above",
@@ -1628,6 +1828,22 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
             "productTruth": "flag",
             "scores": {
               "engine": 58,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":89},
+                    {"label":"Cap","value":56},
+                    {"label":"Glass","value":93},
+                    {"label":"Size","value":90}
+                  ],
+                  "value": 64,
+                  "why": "The cap reads glossy; it is matte"
+                },
+                {"id":"brand","label":"Brand","value":58,"why":"A glossy reflection, where LYSNE allows nothing glossy"},
+                {"id":"craft","label":"Craft","value":95}
+              ],
               "product": 64,
               "why": [
                 {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
@@ -1821,6 +2037,7 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
               {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
               {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
               {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+              {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
               {
                 "check": "contrast",
                 "hard": true,
@@ -1928,7 +2145,22 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
             ],
             "shade": {"from":"top","opacity":0.3}
           },
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+                {"id":"system","label":"Design system","value":82},
+                {"id":"placement","label":"Placement","value":90},
+                {"id":"words","label":"Words","value":95}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-mvkqwbj4-1",
           "image": "/demo/lysne/05-01-feed.jpg",
           "number": 5,
@@ -2079,7 +2311,27 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
           "brandRules": "pass",
           "notes": ["Cap reads glossy"],
           "productTruth": "flag",
-          "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+          "scores": {
+            "engine": 85,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":88},
+                  {"label":"Cap","value":66},
+                  {"label":"Glass","value":92},
+                  {"label":"Size","value":89}
+                ],
+                "value": 74,
+                "why": "The cap reads glossy; it is matte"
+              },
+              {"id":"brand","label":"Brand","value":85},
+              {"id":"craft","label":"Craft","value":96}
+            ],
+            "product": 74,
+            "why": [{"score":"product","text":"The cap reads glossy; it is matte"}]
+          }
         },
         "id": "rv-1",
         "image": "/demo/lysne/05-08-feed.jpg",
@@ -2263,7 +2515,31 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
           {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 87,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":95},
+                  {"label":"Cap","value":92},
+                  {"label":"Glass","value":89},
+                  {"label":"Size","value":96}
+                ],
+                "value": 88
+              },
+              {"id":"brand","label":"Brand","value":87},
+              {"id":"craft","label":"Craft","value":92}
+            ],
+            "product": 88
+          }
+        },
         "id": "rv-2",
         "image": "/demo/lysne/04-06-feed.jpg",
         "instruction": "Make the bottle a little bigger",
@@ -2447,7 +2723,31 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
           {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":92},
+                  {"label":"Cap","value":89},
+                  {"label":"Glass","value":96},
+                  {"label":"Size","value":93}
+                ],
+                "value": 82
+              },
+              {"id":"brand","label":"Brand","value":91},
+              {"id":"craft","label":"Craft","value":88}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-3",
         "image": "/demo/lysne/05-01-feed.jpg",
         "instruction": "Move the bottle lower, more air above",
@@ -2628,6 +2928,22 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
           "productTruth": "flag",
           "scores": {
             "engine": 58,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":89},
+                  {"label":"Cap","value":56},
+                  {"label":"Glass","value":93},
+                  {"label":"Size","value":90}
+                ],
+                "value": 64,
+                "why": "The cap reads glossy; it is matte"
+              },
+              {"id":"brand","label":"Brand","value":58,"why":"A glossy reflection, where LYSNE allows nothing glossy"},
+              {"id":"craft","label":"Craft","value":95}
+            ],
             "product": 64,
             "why": [
               {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
@@ -2834,7 +3150,31 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
           {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":92},
+                  {"label":"Cap","value":89},
+                  {"label":"Glass","value":96},
+                  {"label":"Size","value":93}
+                ],
+                "value": 82
+              },
+              {"id":"brand","label":"Brand","value":91},
+              {"id":"craft","label":"Craft","value":88}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-mvkqwbj4-1",
         "image": "/demo/lysne/05-01-feed.jpg",
         "number": 5,
@@ -2984,7 +3324,27 @@ anna document("doc-autumn-m3")
           "brandRules": "pass",
           "notes": ["Cap reads glossy"],
           "productTruth": "flag",
-          "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+          "scores": {
+            "engine": 85,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":88},
+                  {"label":"Cap","value":66},
+                  {"label":"Glass","value":92},
+                  {"label":"Size","value":89}
+                ],
+                "value": 74,
+                "why": "The cap reads glossy; it is matte"
+              },
+              {"id":"brand","label":"Brand","value":85},
+              {"id":"craft","label":"Craft","value":96}
+            ],
+            "product": 74,
+            "why": [{"score":"product","text":"The cap reads glossy; it is matte"}]
+          }
         },
         "id": "rv-1",
         "image": "/demo/lysne/05-08-feed.jpg",
@@ -3168,7 +3528,31 @@ anna document("doc-autumn-m3")
           {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 87,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":95},
+                  {"label":"Cap","value":92},
+                  {"label":"Glass","value":89},
+                  {"label":"Size","value":96}
+                ],
+                "value": 88
+              },
+              {"id":"brand","label":"Brand","value":87},
+              {"id":"craft","label":"Craft","value":92}
+            ],
+            "product": 88
+          }
+        },
         "id": "rv-2",
         "image": "/demo/lysne/04-06-feed.jpg",
         "instruction": "Make the bottle a little bigger",
@@ -3352,7 +3736,31 @@ anna document("doc-autumn-m3")
           {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":92},
+                  {"label":"Cap","value":89},
+                  {"label":"Glass","value":96},
+                  {"label":"Size","value":93}
+                ],
+                "value": 82
+              },
+              {"id":"brand","label":"Brand","value":91},
+              {"id":"craft","label":"Craft","value":88}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-3",
         "image": "/demo/lysne/05-01-feed.jpg",
         "instruction": "Move the bottle lower, more air above",
@@ -3533,6 +3941,22 @@ anna document("doc-autumn-m3")
           "productTruth": "flag",
           "scores": {
             "engine": 58,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":89},
+                  {"label":"Cap","value":56},
+                  {"label":"Glass","value":93},
+                  {"label":"Size","value":90}
+                ],
+                "value": 64,
+                "why": "The cap reads glossy; it is matte"
+              },
+              {"id":"brand","label":"Brand","value":58,"why":"A glossy reflection, where LYSNE allows nothing glossy"},
+              {"id":"craft","label":"Craft","value":95}
+            ],
             "product": 64,
             "why": [
               {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
@@ -3726,6 +4150,7 @@ anna document("doc-autumn-m3")
             {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
             {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
             {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
             {
               "check": "contrast",
               "hard": true,
@@ -3833,7 +4258,22 @@ anna document("doc-autumn-m3")
           ],
           "shade": {"from":"top","opacity":0.3}
         },
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+              {"id":"system","label":"Design system","value":82},
+              {"id":"placement","label":"Placement","value":90},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-mvkqwbj4-1",
         "image": "/demo/lysne/05-01-feed.jpg",
         "number": 5,
@@ -3983,7 +4423,27 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             "brandRules": "pass",
             "notes": ["Cap reads glossy"],
             "productTruth": "flag",
-            "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+            "scores": {
+              "engine": 85,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":88},
+                    {"label":"Cap","value":66},
+                    {"label":"Glass","value":92},
+                    {"label":"Size","value":89}
+                  ],
+                  "value": 74,
+                  "why": "The cap reads glossy; it is matte"
+                },
+                {"id":"brand","label":"Brand","value":85},
+                {"id":"craft","label":"Craft","value":96}
+              ],
+              "product": 74,
+              "why": [{"score":"product","text":"The cap reads glossy; it is matte"}]
+            }
           },
           "id": "rv-1",
           "image": "/demo/lysne/05-08-feed.jpg",
@@ -4167,7 +4627,31 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 87,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":95},
+                    {"label":"Cap","value":92},
+                    {"label":"Glass","value":89},
+                    {"label":"Size","value":96}
+                  ],
+                  "value": 88
+                },
+                {"id":"brand","label":"Brand","value":87},
+                {"id":"craft","label":"Craft","value":92}
+              ],
+              "product": 88
+            }
+          },
           "id": "rv-2",
           "image": "/demo/lysne/04-06-feed.jpg",
           "instruction": "Make the bottle a little bigger",
@@ -4351,7 +4835,31 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":92},
+                    {"label":"Cap","value":89},
+                    {"label":"Glass","value":96},
+                    {"label":"Size","value":93}
+                  ],
+                  "value": 82
+                },
+                {"id":"brand","label":"Brand","value":91},
+                {"id":"craft","label":"Craft","value":88}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-3",
           "image": "/demo/lysne/05-01-feed.jpg",
           "instruction": "Move the bottle lower, more air above",
@@ -4532,6 +5040,22 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             "productTruth": "flag",
             "scores": {
               "engine": 58,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":89},
+                    {"label":"Cap","value":56},
+                    {"label":"Glass","value":93},
+                    {"label":"Size","value":90}
+                  ],
+                  "value": 64,
+                  "why": "The cap reads glossy; it is matte"
+                },
+                {"id":"brand","label":"Brand","value":58,"why":"A glossy reflection, where LYSNE allows nothing glossy"},
+                {"id":"craft","label":"Craft","value":95}
+              ],
               "product": 64,
               "why": [
                 {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
@@ -4725,6 +5249,7 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
               {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
               {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
               {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+              {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
               {
                 "check": "contrast",
                 "hard": true,
@@ -4832,7 +5357,22 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             ],
             "shade": {"from":"top","opacity":0.3}
           },
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+                {"id":"system","label":"Design system","value":82},
+                {"id":"placement","label":"Placement","value":90},
+                {"id":"words","label":"Words","value":95}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-mvkqwbj4-1",
           "image": "/demo/lysne/05-01-feed.jpg",
           "number": 5,
@@ -4890,7 +5430,31 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":92},
+                    {"label":"Cap","value":89},
+                    {"label":"Glass","value":96},
+                    {"label":"Size","value":93}
+                  ],
+                  "value": 82
+                },
+                {"id":"brand","label":"Brand","value":91},
+                {"id":"craft","label":"Craft","value":88}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-mvkqwcaw-3",
           "image": "/demo/lysne/05-01-feed.jpg",
           "number": 6,
@@ -5041,7 +5605,27 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             "brandRules": "pass",
             "notes": ["Cap reads glossy"],
             "productTruth": "flag",
-            "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+            "scores": {
+              "engine": 85,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":88},
+                    {"label":"Cap","value":66},
+                    {"label":"Glass","value":92},
+                    {"label":"Size","value":89}
+                  ],
+                  "value": 74,
+                  "why": "The cap reads glossy; it is matte"
+                },
+                {"id":"brand","label":"Brand","value":85},
+                {"id":"craft","label":"Craft","value":96}
+              ],
+              "product": 74,
+              "why": [{"score":"product","text":"The cap reads glossy; it is matte"}]
+            }
           },
           "id": "rv-1",
           "image": "/demo/lysne/05-08-feed.jpg",
@@ -5225,7 +5809,31 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 87,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":95},
+                    {"label":"Cap","value":92},
+                    {"label":"Glass","value":89},
+                    {"label":"Size","value":96}
+                  ],
+                  "value": 88
+                },
+                {"id":"brand","label":"Brand","value":87},
+                {"id":"craft","label":"Craft","value":92}
+              ],
+              "product": 88
+            }
+          },
           "id": "rv-2",
           "image": "/demo/lysne/04-06-feed.jpg",
           "instruction": "Make the bottle a little bigger",
@@ -5409,7 +6017,31 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":92},
+                    {"label":"Cap","value":89},
+                    {"label":"Glass","value":96},
+                    {"label":"Size","value":93}
+                  ],
+                  "value": 82
+                },
+                {"id":"brand","label":"Brand","value":91},
+                {"id":"craft","label":"Craft","value":88}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-3",
           "image": "/demo/lysne/05-01-feed.jpg",
           "instruction": "Move the bottle lower, more air above",
@@ -5590,6 +6222,22 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             "productTruth": "flag",
             "scores": {
               "engine": 58,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":89},
+                    {"label":"Cap","value":56},
+                    {"label":"Glass","value":93},
+                    {"label":"Size","value":90}
+                  ],
+                  "value": 64,
+                  "why": "The cap reads glossy; it is matte"
+                },
+                {"id":"brand","label":"Brand","value":58,"why":"A glossy reflection, where LYSNE allows nothing glossy"},
+                {"id":"craft","label":"Craft","value":95}
+              ],
               "product": 64,
               "why": [
                 {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
@@ -5783,6 +6431,7 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
               {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
               {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
               {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+              {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
               {
                 "check": "contrast",
                 "hard": true,
@@ -5890,7 +6539,22 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             ],
             "shade": {"from":"top","opacity":0.3}
           },
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+                {"id":"system","label":"Design system","value":82},
+                {"id":"placement","label":"Placement","value":90},
+                {"id":"words","label":"Words","value":95}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-mvkqwbj4-1",
           "image": "/demo/lysne/05-01-feed.jpg",
           "number": 5,
@@ -5935,6 +6599,7 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
               {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
               {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
               {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+              {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
               {
                 "check": "contrast",
                 "hard": true,
@@ -6043,7 +6708,22 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             ],
             "shade": {"from":"bottom","opacity":0.3}
           },
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+                {"id":"system","label":"Design system","value":82},
+                {"id":"placement","label":"Placement","value":97},
+                {"id":"words","label":"Words","value":95}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-mvkqwcaw-3",
           "image": "/demo/lysne/05-01-feed.jpg",
           "number": 6,
@@ -6194,7 +6874,27 @@ anna designVersion("doc-autumn-m3", "rv-3")
           "brandRules": "pass",
           "notes": ["Cap reads glossy"],
           "productTruth": "flag",
-          "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+          "scores": {
+            "engine": 85,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":88},
+                  {"label":"Cap","value":66},
+                  {"label":"Glass","value":92},
+                  {"label":"Size","value":89}
+                ],
+                "value": 74,
+                "why": "The cap reads glossy; it is matte"
+              },
+              {"id":"brand","label":"Brand","value":85},
+              {"id":"craft","label":"Craft","value":96}
+            ],
+            "product": 74,
+            "why": [{"score":"product","text":"The cap reads glossy; it is matte"}]
+          }
         },
         "id": "rv-1",
         "image": "/demo/lysne/05-08-feed.jpg",
@@ -6378,7 +7078,31 @@ anna designVersion("doc-autumn-m3", "rv-3")
           {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 87,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":95},
+                  {"label":"Cap","value":92},
+                  {"label":"Glass","value":89},
+                  {"label":"Size","value":96}
+                ],
+                "value": 88
+              },
+              {"id":"brand","label":"Brand","value":87},
+              {"id":"craft","label":"Craft","value":92}
+            ],
+            "product": 88
+          }
+        },
         "id": "rv-2",
         "image": "/demo/lysne/04-06-feed.jpg",
         "instruction": "Make the bottle a little bigger",
@@ -6562,7 +7286,31 @@ anna designVersion("doc-autumn-m3", "rv-3")
           {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":92},
+                  {"label":"Cap","value":89},
+                  {"label":"Glass","value":96},
+                  {"label":"Size","value":93}
+                ],
+                "value": 82
+              },
+              {"id":"brand","label":"Brand","value":91},
+              {"id":"craft","label":"Craft","value":88}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-3",
         "image": "/demo/lysne/05-01-feed.jpg",
         "instruction": "Move the bottle lower, more air above",
@@ -6743,6 +7491,22 @@ anna designVersion("doc-autumn-m3", "rv-3")
           "productTruth": "flag",
           "scores": {
             "engine": 58,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":89},
+                  {"label":"Cap","value":56},
+                  {"label":"Glass","value":93},
+                  {"label":"Size","value":90}
+                ],
+                "value": 64,
+                "why": "The cap reads glossy; it is matte"
+              },
+              {"id":"brand","label":"Brand","value":58,"why":"A glossy reflection, where LYSNE allows nothing glossy"},
+              {"id":"craft","label":"Craft","value":95}
+            ],
             "product": 64,
             "why": [
               {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
@@ -6936,6 +7700,7 @@ anna designVersion("doc-autumn-m3", "rv-3")
             {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
             {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
             {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
             {
               "check": "contrast",
               "hard": true,
@@ -7043,7 +7808,22 @@ anna designVersion("doc-autumn-m3", "rv-3")
           ],
           "shade": {"from":"top","opacity":0.3}
         },
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+              {"id":"system","label":"Design system","value":82},
+              {"id":"placement","label":"Placement","value":90},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-mvkqwbj4-1",
         "image": "/demo/lysne/05-01-feed.jpg",
         "number": 5,
@@ -7101,7 +7881,31 @@ anna designVersion("doc-autumn-m3", "rv-3")
           {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":92},
+                  {"label":"Cap","value":89},
+                  {"label":"Glass","value":96},
+                  {"label":"Size","value":93}
+                ],
+                "value": 82
+              },
+              {"id":"brand","label":"Brand","value":91},
+              {"id":"craft","label":"Craft","value":88}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-mvkqwcaw-3",
         "image": "/demo/lysne/05-01-feed.jpg",
         "number": 6,
@@ -7253,7 +8057,27 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             "brandRules": "pass",
             "notes": ["Cap reads glossy"],
             "productTruth": "flag",
-            "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+            "scores": {
+              "engine": 85,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":88},
+                    {"label":"Cap","value":66},
+                    {"label":"Glass","value":92},
+                    {"label":"Size","value":89}
+                  ],
+                  "value": 74,
+                  "why": "The cap reads glossy; it is matte"
+                },
+                {"id":"brand","label":"Brand","value":85},
+                {"id":"craft","label":"Craft","value":96}
+              ],
+              "product": 74,
+              "why": [{"score":"product","text":"The cap reads glossy; it is matte"}]
+            }
           },
           "id": "rv-1",
           "image": "/demo/lysne/05-08-feed.jpg",
@@ -7437,7 +8261,31 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 87,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":95},
+                    {"label":"Cap","value":92},
+                    {"label":"Glass","value":89},
+                    {"label":"Size","value":96}
+                  ],
+                  "value": 88
+                },
+                {"id":"brand","label":"Brand","value":87},
+                {"id":"craft","label":"Craft","value":92}
+              ],
+              "product": 88
+            }
+          },
           "id": "rv-2",
           "image": "/demo/lysne/04-06-feed.jpg",
           "instruction": "Make the bottle a little bigger",
@@ -7621,7 +8469,31 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":92},
+                    {"label":"Cap","value":89},
+                    {"label":"Glass","value":96},
+                    {"label":"Size","value":93}
+                  ],
+                  "value": 82
+                },
+                {"id":"brand","label":"Brand","value":91},
+                {"id":"craft","label":"Craft","value":88}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-3",
           "image": "/demo/lysne/05-01-feed.jpg",
           "instruction": "Move the bottle lower, more air above",
@@ -7802,6 +8674,22 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             "productTruth": "flag",
             "scores": {
               "engine": 58,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":89},
+                    {"label":"Cap","value":56},
+                    {"label":"Glass","value":93},
+                    {"label":"Size","value":90}
+                  ],
+                  "value": 64,
+                  "why": "The cap reads glossy; it is matte"
+                },
+                {"id":"brand","label":"Brand","value":58,"why":"A glossy reflection, where LYSNE allows nothing glossy"},
+                {"id":"craft","label":"Craft","value":95}
+              ],
               "product": 64,
               "why": [
                 {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
@@ -7995,6 +8883,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
               {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
               {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
               {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+              {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
               {
                 "check": "contrast",
                 "hard": true,
@@ -8102,7 +8991,22 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             ],
             "shade": {"from":"top","opacity":0.3}
           },
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+                {"id":"system","label":"Design system","value":82},
+                {"id":"placement","label":"Placement","value":90},
+                {"id":"words","label":"Words","value":95}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-mvkqwbj4-1",
           "image": "/demo/lysne/05-01-feed.jpg",
           "number": 5,
@@ -8147,6 +9051,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
               {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
               {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
               {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+              {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
               {
                 "check": "contrast",
                 "hard": true,
@@ -8255,7 +9160,22 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             ],
             "shade": {"from":"bottom","opacity":0.3}
           },
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+                {"id":"system","label":"Design system","value":82},
+                {"id":"placement","label":"Placement","value":97},
+                {"id":"words","label":"Words","value":95}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-mvkqwcaw-3",
           "image": "/demo/lysne/05-01-feed.jpg",
           "number": 6,
@@ -8313,7 +9233,31 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":92},
+                    {"label":"Cap","value":89},
+                    {"label":"Glass","value":96},
+                    {"label":"Size","value":93}
+                  ],
+                  "value": 82
+                },
+                {"id":"brand","label":"Brand","value":91},
+                {"id":"craft","label":"Craft","value":88}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-mvkqwcaw-5",
           "image": "/demo/lysne/05-01-feed.jpg",
           "number": 7,
@@ -8464,7 +9408,27 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             "brandRules": "pass",
             "notes": ["Cap reads glossy"],
             "productTruth": "flag",
-            "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+            "scores": {
+              "engine": 85,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":88},
+                    {"label":"Cap","value":66},
+                    {"label":"Glass","value":92},
+                    {"label":"Size","value":89}
+                  ],
+                  "value": 74,
+                  "why": "The cap reads glossy; it is matte"
+                },
+                {"id":"brand","label":"Brand","value":85},
+                {"id":"craft","label":"Craft","value":96}
+              ],
+              "product": 74,
+              "why": [{"score":"product","text":"The cap reads glossy; it is matte"}]
+            }
           },
           "id": "rv-1",
           "image": "/demo/lysne/05-08-feed.jpg",
@@ -8648,7 +9612,31 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 87,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":95},
+                    {"label":"Cap","value":92},
+                    {"label":"Glass","value":89},
+                    {"label":"Size","value":96}
+                  ],
+                  "value": 88
+                },
+                {"id":"brand","label":"Brand","value":87},
+                {"id":"craft","label":"Craft","value":92}
+              ],
+              "product": 88
+            }
+          },
           "id": "rv-2",
           "image": "/demo/lysne/04-06-feed.jpg",
           "instruction": "Make the bottle a little bigger",
@@ -8832,7 +9820,31 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":92},
+                    {"label":"Cap","value":89},
+                    {"label":"Glass","value":96},
+                    {"label":"Size","value":93}
+                  ],
+                  "value": 82
+                },
+                {"id":"brand","label":"Brand","value":91},
+                {"id":"craft","label":"Craft","value":88}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-3",
           "image": "/demo/lysne/05-01-feed.jpg",
           "instruction": "Move the bottle lower, more air above",
@@ -9013,6 +10025,22 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             "productTruth": "flag",
             "scores": {
               "engine": 58,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":89},
+                    {"label":"Cap","value":56},
+                    {"label":"Glass","value":93},
+                    {"label":"Size","value":90}
+                  ],
+                  "value": 64,
+                  "why": "The cap reads glossy; it is matte"
+                },
+                {"id":"brand","label":"Brand","value":58,"why":"A glossy reflection, where LYSNE allows nothing glossy"},
+                {"id":"craft","label":"Craft","value":95}
+              ],
               "product": 64,
               "why": [
                 {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
@@ -9206,6 +10234,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
               {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
               {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
               {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+              {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
               {
                 "check": "contrast",
                 "hard": true,
@@ -9313,7 +10342,22 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             ],
             "shade": {"from":"top","opacity":0.3}
           },
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+                {"id":"system","label":"Design system","value":82},
+                {"id":"placement","label":"Placement","value":90},
+                {"id":"words","label":"Words","value":95}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-mvkqwbj4-1",
           "image": "/demo/lysne/05-01-feed.jpg",
           "number": 5,
@@ -9358,6 +10402,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
               {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
               {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
               {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+              {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
               {
                 "check": "contrast",
                 "hard": true,
@@ -9466,7 +10511,22 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             ],
             "shade": {"from":"bottom","opacity":0.3}
           },
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+                {"id":"system","label":"Design system","value":82},
+                {"id":"placement","label":"Placement","value":97},
+                {"id":"words","label":"Words","value":95}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-mvkqwcaw-3",
           "image": "/demo/lysne/05-01-feed.jpg",
           "number": 6,
@@ -9511,6 +10571,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
               {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
               {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
               {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+              {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
               {
                 "check": "contrast",
                 "hard": true,
@@ -9618,7 +10679,22 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             ],
             "shade": {"from":"top","opacity":0.3}
           },
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+                {"id":"system","label":"Design system","value":82},
+                {"id":"placement","label":"Placement","value":92},
+                {"id":"words","label":"Words","value":95}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-mvkqwcaw-5",
           "image": "/demo/lysne/05-01-feed.jpg",
           "number": 7,
@@ -9769,7 +10845,27 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
           "brandRules": "pass",
           "notes": ["Cap reads glossy"],
           "productTruth": "flag",
-          "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+          "scores": {
+            "engine": 85,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":88},
+                  {"label":"Cap","value":66},
+                  {"label":"Glass","value":92},
+                  {"label":"Size","value":89}
+                ],
+                "value": 74,
+                "why": "The cap reads glossy; it is matte"
+              },
+              {"id":"brand","label":"Brand","value":85},
+              {"id":"craft","label":"Craft","value":96}
+            ],
+            "product": 74,
+            "why": [{"score":"product","text":"The cap reads glossy; it is matte"}]
+          }
         },
         "id": "rv-1",
         "image": "/demo/lysne/05-08-feed.jpg",
@@ -9953,7 +11049,31 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
           {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 87,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":95},
+                  {"label":"Cap","value":92},
+                  {"label":"Glass","value":89},
+                  {"label":"Size","value":96}
+                ],
+                "value": 88
+              },
+              {"id":"brand","label":"Brand","value":87},
+              {"id":"craft","label":"Craft","value":92}
+            ],
+            "product": 88
+          }
+        },
         "id": "rv-2",
         "image": "/demo/lysne/04-06-feed.jpg",
         "instruction": "Make the bottle a little bigger",
@@ -10137,7 +11257,31 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
           {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":92},
+                  {"label":"Cap","value":89},
+                  {"label":"Glass","value":96},
+                  {"label":"Size","value":93}
+                ],
+                "value": 82
+              },
+              {"id":"brand","label":"Brand","value":91},
+              {"id":"craft","label":"Craft","value":88}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-3",
         "image": "/demo/lysne/05-01-feed.jpg",
         "instruction": "Move the bottle lower, more air above",
@@ -10318,6 +11462,22 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
           "productTruth": "flag",
           "scores": {
             "engine": 58,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":89},
+                  {"label":"Cap","value":56},
+                  {"label":"Glass","value":93},
+                  {"label":"Size","value":90}
+                ],
+                "value": 64,
+                "why": "The cap reads glossy; it is matte"
+              },
+              {"id":"brand","label":"Brand","value":58,"why":"A glossy reflection, where LYSNE allows nothing glossy"},
+              {"id":"craft","label":"Craft","value":95}
+            ],
             "product": 64,
             "why": [
               {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
@@ -10511,6 +11671,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
             {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
             {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
             {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
             {
               "check": "contrast",
               "hard": true,
@@ -10618,7 +11779,22 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
           ],
           "shade": {"from":"top","opacity":0.3}
         },
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+              {"id":"system","label":"Design system","value":82},
+              {"id":"placement","label":"Placement","value":90},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-mvkqwbj4-1",
         "image": "/demo/lysne/05-01-feed.jpg",
         "number": 5,
@@ -10663,6 +11839,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
             {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
             {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
             {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
             {
               "check": "contrast",
               "hard": true,
@@ -10771,7 +11948,22 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
           ],
           "shade": {"from":"bottom","opacity":0.3}
         },
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+              {"id":"system","label":"Design system","value":82},
+              {"id":"placement","label":"Placement","value":97},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-mvkqwcaw-3",
         "image": "/demo/lysne/05-01-feed.jpg",
         "number": 6,
@@ -10829,7 +12021,31 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
           {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":92},
+                  {"label":"Cap","value":89},
+                  {"label":"Glass","value":96},
+                  {"label":"Size","value":93}
+                ],
+                "value": 82
+              },
+              {"id":"brand","label":"Brand","value":91},
+              {"id":"craft","label":"Craft","value":88}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-mvkqwcaw-5",
         "image": "/demo/lysne/05-01-feed.jpg",
         "number": 7,
@@ -10978,7 +12194,27 @@ anna document("doc-autumn-m3")
           "brandRules": "pass",
           "notes": ["Cap reads glossy"],
           "productTruth": "flag",
-          "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+          "scores": {
+            "engine": 85,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":88},
+                  {"label":"Cap","value":66},
+                  {"label":"Glass","value":92},
+                  {"label":"Size","value":89}
+                ],
+                "value": 74,
+                "why": "The cap reads glossy; it is matte"
+              },
+              {"id":"brand","label":"Brand","value":85},
+              {"id":"craft","label":"Craft","value":96}
+            ],
+            "product": 74,
+            "why": [{"score":"product","text":"The cap reads glossy; it is matte"}]
+          }
         },
         "id": "rv-1",
         "image": "/demo/lysne/05-08-feed.jpg",
@@ -11162,7 +12398,31 @@ anna document("doc-autumn-m3")
           {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 87,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":95},
+                  {"label":"Cap","value":92},
+                  {"label":"Glass","value":89},
+                  {"label":"Size","value":96}
+                ],
+                "value": 88
+              },
+              {"id":"brand","label":"Brand","value":87},
+              {"id":"craft","label":"Craft","value":92}
+            ],
+            "product": 88
+          }
+        },
         "id": "rv-2",
         "image": "/demo/lysne/04-06-feed.jpg",
         "instruction": "Make the bottle a little bigger",
@@ -11346,7 +12606,31 @@ anna document("doc-autumn-m3")
           {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":92},
+                  {"label":"Cap","value":89},
+                  {"label":"Glass","value":96},
+                  {"label":"Size","value":93}
+                ],
+                "value": 82
+              },
+              {"id":"brand","label":"Brand","value":91},
+              {"id":"craft","label":"Craft","value":88}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-3",
         "image": "/demo/lysne/05-01-feed.jpg",
         "instruction": "Move the bottle lower, more air above",
@@ -11527,6 +12811,22 @@ anna document("doc-autumn-m3")
           "productTruth": "flag",
           "scores": {
             "engine": 58,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":89},
+                  {"label":"Cap","value":56},
+                  {"label":"Glass","value":93},
+                  {"label":"Size","value":90}
+                ],
+                "value": 64,
+                "why": "The cap reads glossy; it is matte"
+              },
+              {"id":"brand","label":"Brand","value":58,"why":"A glossy reflection, where LYSNE allows nothing glossy"},
+              {"id":"craft","label":"Craft","value":95}
+            ],
             "product": 64,
             "why": [
               {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
@@ -11720,6 +13020,7 @@ anna document("doc-autumn-m3")
             {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
             {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
             {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
             {
               "check": "contrast",
               "hard": true,
@@ -11827,7 +13128,22 @@ anna document("doc-autumn-m3")
           ],
           "shade": {"from":"top","opacity":0.3}
         },
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+              {"id":"system","label":"Design system","value":82},
+              {"id":"placement","label":"Placement","value":90},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-mvkqwbj4-1",
         "image": "/demo/lysne/05-01-feed.jpg",
         "number": 5,
@@ -11872,6 +13188,7 @@ anna document("doc-autumn-m3")
             {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
             {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
             {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
             {
               "check": "contrast",
               "hard": true,
@@ -11980,7 +13297,22 @@ anna document("doc-autumn-m3")
           ],
           "shade": {"from":"bottom","opacity":0.3}
         },
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+              {"id":"system","label":"Design system","value":82},
+              {"id":"placement","label":"Placement","value":97},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-mvkqwcaw-3",
         "image": "/demo/lysne/05-01-feed.jpg",
         "number": 6,
@@ -12025,6 +13357,7 @@ anna document("doc-autumn-m3")
             {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
             {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
             {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
             {
               "check": "contrast",
               "hard": true,
@@ -12132,7 +13465,22 @@ anna document("doc-autumn-m3")
           ],
           "shade": {"from":"top","opacity":0.3}
         },
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+              {"id":"system","label":"Design system","value":82},
+              {"id":"placement","label":"Placement","value":92},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-mvkqwcaw-5",
         "image": "/demo/lysne/05-01-feed.jpg",
         "number": 7,
@@ -12282,7 +13630,27 @@ anna documentToCheck("doc-autumn-m3") → events
             "brandRules": "pass",
             "notes": ["Cap reads glossy"],
             "productTruth": "flag",
-            "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+            "scores": {
+              "engine": 85,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":88},
+                    {"label":"Cap","value":66},
+                    {"label":"Glass","value":92},
+                    {"label":"Size","value":89}
+                  ],
+                  "value": 74,
+                  "why": "The cap reads glossy; it is matte"
+                },
+                {"id":"brand","label":"Brand","value":85},
+                {"id":"craft","label":"Craft","value":96}
+              ],
+              "product": 74,
+              "why": [{"score":"product","text":"The cap reads glossy; it is matte"}]
+            }
           },
           "id": "rv-1",
           "image": "/demo/lysne/05-08-feed.jpg",
@@ -12466,7 +13834,31 @@ anna documentToCheck("doc-autumn-m3") → events
             {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 87,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":95},
+                    {"label":"Cap","value":92},
+                    {"label":"Glass","value":89},
+                    {"label":"Size","value":96}
+                  ],
+                  "value": 88
+                },
+                {"id":"brand","label":"Brand","value":87},
+                {"id":"craft","label":"Craft","value":92}
+              ],
+              "product": 88
+            }
+          },
           "id": "rv-2",
           "image": "/demo/lysne/04-06-feed.jpg",
           "instruction": "Make the bottle a little bigger",
@@ -12650,7 +14042,31 @@ anna documentToCheck("doc-autumn-m3") → events
             {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
             {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
           ],
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":92},
+                    {"label":"Cap","value":89},
+                    {"label":"Glass","value":96},
+                    {"label":"Size","value":93}
+                  ],
+                  "value": 82
+                },
+                {"id":"brand","label":"Brand","value":91},
+                {"id":"craft","label":"Craft","value":88}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-3",
           "image": "/demo/lysne/05-01-feed.jpg",
           "instruction": "Move the bottle lower, more air above",
@@ -12831,6 +14247,22 @@ anna documentToCheck("doc-autumn-m3") → events
             "productTruth": "flag",
             "scores": {
               "engine": 58,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":89},
+                    {"label":"Cap","value":56},
+                    {"label":"Glass","value":93},
+                    {"label":"Size","value":90}
+                  ],
+                  "value": 64,
+                  "why": "The cap reads glossy; it is matte"
+                },
+                {"id":"brand","label":"Brand","value":58,"why":"A glossy reflection, where LYSNE allows nothing glossy"},
+                {"id":"craft","label":"Craft","value":95}
+              ],
               "product": 64,
               "why": [
                 {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
@@ -13024,6 +14456,7 @@ anna documentToCheck("doc-autumn-m3") → events
               {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
               {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
               {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+              {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
               {
                 "check": "contrast",
                 "hard": true,
@@ -13131,7 +14564,22 @@ anna documentToCheck("doc-autumn-m3") → events
             ],
             "shade": {"from":"top","opacity":0.3}
           },
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+                {"id":"system","label":"Design system","value":82},
+                {"id":"placement","label":"Placement","value":90},
+                {"id":"words","label":"Words","value":95}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-mvkqwbj4-1",
           "image": "/demo/lysne/05-01-feed.jpg",
           "number": 5,
@@ -13176,6 +14624,7 @@ anna documentToCheck("doc-autumn-m3") → events
               {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
               {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
               {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+              {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
               {
                 "check": "contrast",
                 "hard": true,
@@ -13284,7 +14733,22 @@ anna documentToCheck("doc-autumn-m3") → events
             ],
             "shade": {"from":"bottom","opacity":0.3}
           },
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+                {"id":"system","label":"Design system","value":82},
+                {"id":"placement","label":"Placement","value":97},
+                {"id":"words","label":"Words","value":95}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-mvkqwcaw-3",
           "image": "/demo/lysne/05-01-feed.jpg",
           "number": 6,
@@ -13329,6 +14793,7 @@ anna documentToCheck("doc-autumn-m3") → events
               {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
               {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
               {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+              {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
               {
                 "check": "contrast",
                 "hard": true,
@@ -13436,7 +14901,22 @@ anna documentToCheck("doc-autumn-m3") → events
             ],
             "shade": {"from":"top","opacity":0.3}
           },
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+                {"id":"system","label":"Design system","value":82},
+                {"id":"placement","label":"Placement","value":92},
+                {"id":"words","label":"Words","value":95}
+              ],
+              "product": 82
+            }
+          },
           "id": "rv-mvkqwcaw-5",
           "image": "/demo/lysne/05-01-feed.jpg",
           "number": 7,
@@ -13486,6 +14966,7 @@ anna documentToCheck("doc-autumn-m3") → events
           {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
           {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
           {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+          {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
           {
             "check": "contrast",
             "hard": true,
@@ -13585,12 +15066,29 @@ anna documentToCheck("doc-autumn-m3") → events
         "shade": {"from":"top","opacity":0.3}
       },
       "dueAt": "2026-10-17T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+      "evaluation": {
+        "artefacts": "none",
+        "brandRules": "pass",
+        "notes": [],
+        "productTruth": "pass",
+        "scores": {
+          "engine": 91,
+          "measures": [
+            {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+            {"id":"system","label":"Design system","value":82},
+            {"id":"placement","label":"Placement","value":92},
+            {"id":"words","label":"Words","value":95}
+          ],
+          "product": 82
+        }
+      },
       "feedback": [],
+      "findings": [],
       "format": "feed",
       "id": "qa-mvkqwcaw-7",
       "image": "/demo/lysne/05-01-feed.jpg",
       "madeAt": "2026-10-14T12:32:01.000Z",
+      "previous": {"image":"/demo/lysne/05-01-feed.jpg","version":3},
       "risk": "normal",
       "sentAt": "2026-10-14T12:32:01.000Z",
       "sentBy": "u-anna",
@@ -13715,7 +15213,27 @@ anna documentToCheck("doc-autumn-m3")
           "brandRules": "pass",
           "notes": ["Cap reads glossy"],
           "productTruth": "flag",
-          "scores": {"engine":85,"product":74,"why":[{"score":"product","text":"The cap reads glossy; it is matte"}]}
+          "scores": {
+            "engine": 85,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":88},
+                  {"label":"Cap","value":66},
+                  {"label":"Glass","value":92},
+                  {"label":"Size","value":89}
+                ],
+                "value": 74,
+                "why": "The cap reads glossy; it is matte"
+              },
+              {"id":"brand","label":"Brand","value":85},
+              {"id":"craft","label":"Craft","value":96}
+            ],
+            "product": 74,
+            "why": [{"score":"product","text":"The cap reads glossy; it is matte"}]
+          }
         },
         "id": "rv-1",
         "image": "/demo/lysne/05-08-feed.jpg",
@@ -13899,7 +15417,31 @@ anna documentToCheck("doc-autumn-m3")
           {"ok":true,"read":"100 ml","region":{"h":0.027,"w":0.05,"x":0.345,"y":0.692},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.165,"w":0.16,"x":0.23,"y":0.252},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":88}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 87,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":95},
+                  {"label":"Cap","value":92},
+                  {"label":"Glass","value":89},
+                  {"label":"Size","value":96}
+                ],
+                "value": 88
+              },
+              {"id":"brand","label":"Brand","value":87},
+              {"id":"craft","label":"Craft","value":92}
+            ],
+            "product": 88
+          }
+        },
         "id": "rv-2",
         "image": "/demo/lysne/04-06-feed.jpg",
         "instruction": "Make the bottle a little bigger",
@@ -14083,7 +15625,31 @@ anna documentToCheck("doc-autumn-m3")
           {"ok":false,"read":"200 ml","region":{"h":0.035,"w":0.06,"x":0.65,"y":0.755},"tokenId":"dt-size"},
           {"ok":true,"read":"Burgundy, matte","region":{"h":0.195,"w":0.205,"x":0.42,"y":0.12},"tokenId":"dt-cap"}
         ],
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":92},
+                  {"label":"Cap","value":89},
+                  {"label":"Glass","value":96},
+                  {"label":"Size","value":93}
+                ],
+                "value": 82
+              },
+              {"id":"brand","label":"Brand","value":91},
+              {"id":"craft","label":"Craft","value":88}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-3",
         "image": "/demo/lysne/05-01-feed.jpg",
         "instruction": "Move the bottle lower, more air above",
@@ -14264,6 +15830,22 @@ anna documentToCheck("doc-autumn-m3")
           "productTruth": "flag",
           "scores": {
             "engine": 58,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":89},
+                  {"label":"Cap","value":56},
+                  {"label":"Glass","value":93},
+                  {"label":"Size","value":90}
+                ],
+                "value": 64,
+                "why": "The cap reads glossy; it is matte"
+              },
+              {"id":"brand","label":"Brand","value":58,"why":"A glossy reflection, where LYSNE allows nothing glossy"},
+              {"id":"craft","label":"Craft","value":95}
+            ],
             "product": 64,
             "why": [
               {"score":"engine","text":"A glossy reflection, where LYSNE allows nothing glossy"},
@@ -14457,6 +16039,7 @@ anna documentToCheck("doc-autumn-m3")
             {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
             {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
             {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
             {
               "check": "contrast",
               "hard": true,
@@ -14564,7 +16147,22 @@ anna documentToCheck("doc-autumn-m3")
           ],
           "shade": {"from":"top","opacity":0.3}
         },
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+              {"id":"system","label":"Design system","value":82},
+              {"id":"placement","label":"Placement","value":90},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-mvkqwbj4-1",
         "image": "/demo/lysne/05-01-feed.jpg",
         "number": 5,
@@ -14609,6 +16207,7 @@ anna documentToCheck("doc-autumn-m3")
             {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
             {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
             {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
             {
               "check": "contrast",
               "hard": true,
@@ -14717,7 +16316,22 @@ anna documentToCheck("doc-autumn-m3")
           ],
           "shade": {"from":"bottom","opacity":0.3}
         },
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+              {"id":"system","label":"Design system","value":82},
+              {"id":"placement","label":"Placement","value":97},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-mvkqwcaw-3",
         "image": "/demo/lysne/05-01-feed.jpg",
         "number": 6,
@@ -14762,6 +16376,7 @@ anna documentToCheck("doc-autumn-m3")
             {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
             {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
             {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
             {
               "check": "contrast",
               "hard": true,
@@ -14869,7 +16484,22 @@ anna documentToCheck("doc-autumn-m3")
           ],
           "shade": {"from":"top","opacity":0.3}
         },
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+              {"id":"system","label":"Design system","value":82},
+              {"id":"placement","label":"Placement","value":92},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 82
+          }
+        },
         "id": "rv-mvkqwcaw-5",
         "image": "/demo/lysne/05-01-feed.jpg",
         "number": 7,
@@ -14951,7 +16581,31 @@ anna qaQueue("w-lysne")
         "campaignId": "c-autumn",
         "creativeId": "cr-a-v9",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 86,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":89},
+                  {"label":"Cap","value":96},
+                  {"label":"Glass","value":93},
+                  {"label":"Size","value":90}
+                ],
+                "value": 88
+              },
+              {"id":"brand","label":"Brand","value":86},
+              {"id":"craft","label":"Craft","value":95}
+            ],
+            "product": 88
+          }
+        },
         "feedback": [
           {
             "at": "2026-10-14T12:21:00.000Z",
@@ -15018,7 +16672,31 @@ anna qaQueue("w-lysne")
         "campaignId": "c-autumn",
         "creativeId": "cr-a-v7",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":92,"product":89}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 92,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":91},
+                  {"label":"Cap","value":88},
+                  {"label":"Glass","value":95},
+                  {"label":"Size","value":92}
+                ],
+                "value": 89
+              },
+              {"id":"brand","label":"Brand","value":92},
+              {"id":"craft","label":"Craft","value":89}
+            ],
+            "product": 89
+          }
+        },
         "feedback": [],
         "format": "feed",
         "id": "qa-1",
@@ -15077,7 +16755,31 @@ anna qaQueue("w-lysne")
         "campaignId": "c-autumn",
         "creativeId": "cr-a-v8",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":88}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":88},
+                  {"label":"Cap","value":95},
+                  {"label":"Glass","value":92},
+                  {"label":"Size","value":89}
+                ],
+                "value": 88
+              },
+              {"id":"brand","label":"Brand","value":91},
+              {"id":"craft","label":"Craft","value":96}
+            ],
+            "product": 88
+          }
+        },
         "feedback": [],
         "format": "square",
         "id": "qa-2",
@@ -15148,6 +16850,22 @@ anna qaQueue("w-lysne")
           "productTruth": "flag",
           "scores": {
             "engine": 74,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":92},
+                  {"label":"Cap","value":44},
+                  {"label":"Glass","value":96},
+                  {"label":"Size","value":93}
+                ],
+                "value": 52,
+                "why": "The cap reads glossy; it is matte"
+              },
+              {"id":"brand","label":"Brand","value":74,"why":"Light from above, not from one side"},
+              {"id":"craft","label":"Craft","value":88}
+            ],
             "product": 52,
             "why": [
               {"score":"product","text":"The cap reads glossy; it is matte"},
@@ -15164,6 +16882,7 @@ anna qaQueue("w-lysne")
             "id": "fi-1",
             "observed": "A glossy cap with a bright highlight on top",
             "severity": "critical",
+            "spot": {"x":0.52,"y":0.06},
             "status": "open"
           },
           {
@@ -15173,6 +16892,7 @@ anna qaQueue("w-lysne")
             "id": "fi-2",
             "observed": "Even, soft light from above",
             "severity": "minor",
+            "spot": {"x":0.24,"y":0.18},
             "status": "open"
           },
           {
@@ -15180,10 +16900,15 @@ anna qaQueue("w-lysne")
             "finding": "A soft, smeared edge where the bottle meets the ledge.",
             "id": "fi-3",
             "severity": "minor",
+            "spot": {"x":0.5,"y":0.66},
             "status": "open"
           }
         ],
         "format": "feed",
+        "formats": [
+          {"format":"square","image":"/demo/lysne/06-10-square.jpg","method":"crop","placementId":"pl-ig-square"},
+          {"format":"story","image":"/demo/lysne/06-10-story.jpg","method":"expand","placementId":"pl-ig-story"}
+        ],
         "id": "qa-7",
         "image": "/demo/lysne/06-10-feed.jpg",
         "madeAt": "2026-10-14T12:27:00.000Z",
@@ -15246,6 +16971,7 @@ anna qaQueue("w-lysne")
             {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
             {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
             {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
             {
               "check": "contrast",
               "hard": true,
@@ -15325,7 +17051,22 @@ anna qaQueue("w-lysne")
           ]
         },
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":87,"product":91}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 87,
+            "measures": [
+              {"id":"readability","label":"Readability","value":89},
+              {"id":"system","label":"Design system","value":82},
+              {"id":"placement","label":"Placement","value":95},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 91
+          }
+        },
         "feedback": [],
         "format": "feed",
         "id": "qa-8",
@@ -15387,7 +17128,36 @@ anna qaQueue("w-lysne")
         "creativeId": "cr-night-story",
         "documentId": "doc-night-story",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","evaluated":true,"notes":[],"productTruth":"flag"},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "evaluated": true,
+          "notes": [],
+          "productTruth": "flag",
+          "scores": {
+            "engine": 86,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":96},
+                  {"label":"Cap","value":93},
+                  {"label":"Glass","value":50},
+                  {"label":"Size","value":97}
+                ],
+                "value": 58,
+                "why": "Oil leaks from the glass at the base in shot 1"
+              },
+              {"id":"brand","label":"Brand","value":86},
+              {"id":"first_second","label":"First second","value":86},
+              {"id":"rhythm","label":"Rhythm","value":76,"why":"The button comes in a quarter second after the beat"},
+              {"id":"text_on_screen","label":"Text on screen","value":88}
+            ],
+            "product": 58,
+            "why": [{"score":"product","text":"Oil leaks from the glass at the base in shot 1"}]
+          }
+        },
         "feedback": [],
         "findings": [
           {
@@ -15468,8 +17238,35 @@ anna qaQueue("w-lysne")
         "creativeId": "cr-doc-autumn-email",
         "documentId": "doc-autumn-email",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":90,"product":89}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 90,
+            "measures": [
+              {"id":"readability","label":"Readability","value":93},
+              {"id":"system","label":"Design system","value":95},
+              {"id":"placement","label":"Placement","value":58,"why":"The headline sits over the bottle’s label"},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 89
+          }
+        },
         "feedback": [],
+        "findings": [
+          {
+            "dimension": "design",
+            "expected": "Words clear of the product, in the calm space above or below it",
+            "finding": "The headline sits over the bottle’s label.",
+            "id": "fi-d1",
+            "observed": "“For the hour before sleep.” covers “Night Body Oil”",
+            "severity": "major",
+            "spot": {"x":0.62,"y":0.74},
+            "status": "open"
+          }
+        ],
         "format": "story",
         "id": "qa-4",
         "image": "/demo/lysne/05-01-story.jpg",
@@ -15784,6 +17581,7 @@ anna qaQueue("w-lysne")
             {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
             {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
             {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
             {
               "check": "contrast",
               "hard": true,
@@ -15883,12 +17681,29 @@ anna qaQueue("w-lysne")
           "shade": {"from":"top","opacity":0.3}
         },
         "dueAt": "2026-10-17T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":82}},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {"id":"readability","label":"Readability","value":64,"why":"The picture is busy under the words."},
+              {"id":"system","label":"Design system","value":82},
+              {"id":"placement","label":"Placement","value":92},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 82
+          }
+        },
         "feedback": [],
+        "findings": [],
         "format": "feed",
         "id": "qa-mvkqwcaw-7",
         "image": "/demo/lysne/05-01-feed.jpg",
         "madeAt": "2026-10-14T12:32:01.000Z",
+        "previous": {"image":"/demo/lysne/05-01-feed.jpg","version":3},
         "risk": "normal",
         "sentAt": "2026-10-14T12:32:01.000Z",
         "sentBy": "u-anna",

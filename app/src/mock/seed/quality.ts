@@ -1,5 +1,6 @@
 // The Quality Gate: the expert's checks of each creative and what they are checked against, the quality log, and the
 // creatives that wait in Check.
+import { designEvaluation, withMeasures } from "../measures";
 import type { Check, CheckItem, QaItem, QualityLogEntry } from "../../contract";
 import { voiceBook } from "./brand";
 import { brandBooks } from "./books";
@@ -252,6 +253,11 @@ const seeded: QaItem[] = [
   // who checks settles it, and two small ones.
   qa("qa-7", "cr-a-v10", "Feed 8", "06-10", 5, {
     slot: "Master 3 · Variant 1",
+    // One ad, three formats (FLOWS §35.2): the square is cropped from the master, the story extended by the Engine.
+    formats: [
+      { placementId: "pl-ig-square", format: "square", image: img("06-10", "square"), method: "crop" },
+      { placementId: "pl-ig-story", format: "story", image: img("06-10", "story"), method: "expand" },
+    ],
     evaluation: {
       productTruth: "flag",
       brandRules: "flag",
@@ -280,6 +286,7 @@ const seeded: QaItem[] = [
         expected: "Burgundy matte cap, as in its photographs",
         observed: "A glossy cap with a bright highlight on top",
         status: "open",
+        spot: { x: 0.52, y: 0.06 },
       },
       {
         id: "fi-2",
@@ -289,6 +296,7 @@ const seeded: QaItem[] = [
         expected: "Warm low light from one side, like a lamp in the evening",
         observed: "Even, soft light from above",
         status: "open",
+        spot: { x: 0.24, y: 0.18 },
       },
       {
         id: "fi-3",
@@ -296,6 +304,7 @@ const seeded: QaItem[] = [
         severity: "minor",
         finding: "A soft, smeared edge where the bottle meets the ledge.",
         status: "open",
+        spot: { x: 0.5, y: 0.66 },
       },
     ],
   }),
@@ -315,7 +324,18 @@ const seeded: QaItem[] = [
     documentId: "doc-night-story",
     format: "story",
     image: poster("drop"),
-    evaluation: { productTruth: "flag", brandRules: "pass", artefacts: "none", notes: [], evaluated: true },
+    evaluation: {
+      productTruth: "flag",
+      brandRules: "pass",
+      artefacts: "none",
+      notes: [],
+      evaluated: true,
+      scores: {
+        product: 58,
+        engine: 86,
+        why: [{ score: "product", text: "Oil leaks from the glass at the base in shot 1" }],
+      },
+    },
     findings: [
       {
         id: "fi-v1",
@@ -338,12 +358,26 @@ const seeded: QaItem[] = [
       },
     ],
   }),
+  // A hand-laid design (round 15): code measured that its headline sits over the bottle, so it comes to Check as the
+  // Engine's comment, pinned where the words cover the label.
   qa("qa-4", "cr-doc-autumn-email", "Email header", "05-01", 15, {
     studio: "design",
     documentId: "doc-autumn-email",
     format: "story",
     image: img("05-01", "story"),
     layers: structuredClone(layoutLayers),
+    findings: [
+      {
+        id: "fi-d1",
+        dimension: "design",
+        severity: "major",
+        finding: "The headline sits over the bottle’s label.",
+        expected: "Words clear of the product, in the calm space above or below it",
+        observed: "“For the hour before sleep.” covers “Night Body Oil”",
+        status: "open",
+        spot: { x: 0.62, y: 0.74 },
+      },
+    ],
   }),
   {
     ...qa("qa-5", "cr-solv-1", "Feed 1", "10-08", 30, { slot: "Master 1" }),
@@ -396,4 +430,26 @@ const fromEngineChat: QaItem[] = batches
     });
   });
 
-export const qaItems: QaItem[] = [...seeded, ...fromEngineChat];
+/** Each creative's scores as its studio scores it (FLOWS §35.3): a design on what code measured, else its two scores
+ *  turned into the picture's or the video's measures. The Email header's words sit over the bottle. */
+function scored(item: QaItem, i: number): QaItem {
+  if (item.design?.state === "made")
+    return { ...item, evaluation: designEvaluation(item.evaluation, item.design.checks, i) };
+  if (item.id === "qa-4")
+    return {
+      ...item,
+      evaluation: withMeasures(item.evaluation, "design", i, {
+        placement: { value: 58, why: "The headline sits over the bottle’s label" },
+      }),
+    };
+  if (item.id === "qa-9")
+    return {
+      ...item,
+      evaluation: withMeasures(item.evaluation, "video", i, {
+        rhythm: { value: 76, why: "The button comes in a quarter second after the beat" },
+      }),
+    };
+  return { ...item, evaluation: withMeasures(item.evaluation, item.studio, i) };
+}
+
+export const qaItems: QaItem[] = [...seeded, ...fromEngineChat].map(scored);
