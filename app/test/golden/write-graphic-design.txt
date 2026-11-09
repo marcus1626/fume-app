@@ -621,10 +621,10 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":74},
+                    {"label":"Label","value":92},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
-                    {"label":"Size","value":93}
+                    {"label":"Size","value":74}
                   ],
                   "value": 74,
                   "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -1050,10 +1050,10 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":74},
+                    {"label":"Label","value":92},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
-                    {"label":"Size","value":93}
+                    {"label":"Size","value":74}
                   ],
                   "value": 74,
                   "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -1639,10 +1639,10 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":74},
+                    {"label":"Label","value":92},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
-                    {"label":"Size","value":93}
+                    {"label":"Size","value":74}
                   ],
                   "value": 74,
                   "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -2742,10 +2742,10 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":74},
+                  {"label":"Label","value":92},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
-                  {"label":"Size","value":93}
+                  {"label":"Size","value":74}
                 ],
                 "value": 74,
                 "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -3171,10 +3171,10 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":74},
+                  {"label":"Label","value":92},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
-                  {"label":"Size","value":93}
+                  {"label":"Size","value":74}
                 ],
                 "value": 74,
                 "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -3759,10 +3759,10 @@ anna document("doc-autumn-m3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":74},
+                  {"label":"Label","value":92},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
-                  {"label":"Size","value":93}
+                  {"label":"Size","value":74}
                 ],
                 "value": 74,
                 "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -4861,10 +4861,10 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":74},
+                    {"label":"Label","value":92},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
-                    {"label":"Size","value":93}
+                    {"label":"Size","value":74}
                   ],
                   "value": 74,
                   "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -5459,10 +5459,10 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":74},
+                    {"label":"Label","value":92},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
-                    {"label":"Size","value":93}
+                    {"label":"Size","value":74}
                   ],
                   "value": 74,
                   "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -6048,10 +6048,10 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":74},
+                    {"label":"Label","value":92},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
-                    {"label":"Size","value":93}
+                    {"label":"Size","value":74}
                   ],
                   "value": 74,
                   "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -7321,10 +7321,10 @@ anna designVersion("doc-autumn-m3", "rv-3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":74},
+                  {"label":"Label","value":92},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
-                  {"label":"Size","value":93}
+                  {"label":"Size","value":74}
                 ],
                 "value": 74,
                 "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -7919,10 +7919,10 @@ anna designVersion("doc-autumn-m3", "rv-3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":74},
+                  {"label":"Label","value":92},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
-                  {"label":"Size","value":93}
+                  {"label":"Size","value":74}
                 ],
                 "value": 74,
                 "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -8509,10 +8509,10 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":74},
+                    {"label":"Label","value":92},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
-                    {"label":"Size","value":93}
+                    {"label":"Size","value":74}
                   ],
                   "value": 74,
                   "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -9277,10 +9277,10 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":74},
+                    {"label":"Label","value":92},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
-                    {"label":"Size","value":93}
+                    {"label":"Size","value":74}
                   ],
                   "value": 74,
                   "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -9866,10 +9866,10 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":74},
+                    {"label":"Label","value":92},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
-                    {"label":"Size","value":93}
+                    {"label":"Size","value":74}
                   ],
                   "value": 74,
                   "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -11308,10 +11308,10 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":74},
+                  {"label":"Label","value":92},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
-                  {"label":"Size","value":93}
+                  {"label":"Size","value":74}
                 ],
                 "value": 74,
                 "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -12076,10 +12076,10 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":74},
+                  {"label":"Label","value":92},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
-                  {"label":"Size","value":93}
+                  {"label":"Size","value":74}
                 ],
                 "value": 74,
                 "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -12663,10 +12663,10 @@ anna document("doc-autumn-m3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":74},
+                  {"label":"Label","value":92},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
-                  {"label":"Size","value":93}
+                  {"label":"Size","value":74}
                 ],
                 "value": 74,
                 "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -14104,10 +14104,10 @@ anna documentToCheck("doc-autumn-m3") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":74},
+                    {"label":"Label","value":92},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
-                    {"label":"Size","value":93}
+                    {"label":"Size","value":74}
                   ],
                   "value": 74,
                   "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -15693,10 +15693,10 @@ anna documentToCheck("doc-autumn-m3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":74},
+                  {"label":"Label","value":92},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
-                  {"label":"Size","value":93}
+                  {"label":"Size","value":74}
                 ],
                 "value": 74,
                 "why": "The size on the label reads 200 ml; it is 100 ml"

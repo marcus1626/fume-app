@@ -38567,10 +38567,10 @@ anna documents("w-lysne")
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":74},
+                    {"label":"Label","value":92},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
-                    {"label":"Size","value":93}
+                    {"label":"Size","value":74}
                   ],
                   "value": 74,
                   "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -42099,10 +42099,10 @@ anna document("doc-autumn-m3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":74},
+                  {"label":"Label","value":92},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
-                  {"label":"Size","value":93}
+                  {"label":"Size","value":74}
                 ],
                 "value": 74,
                 "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -80913,10 +80913,10 @@ nora documents("w-lysne")
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":74},
+                    {"label":"Label","value":92},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
-                    {"label":"Size","value":93}
+                    {"label":"Size","value":74}
                   ],
                   "value": 74,
                   "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -83167,10 +83167,10 @@ nora document("doc-autumn-m3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":74},
+                  {"label":"Label","value":92},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
-                  {"label":"Size","value":93}
+                  {"label":"Size","value":74}
                 ],
                 "value": 74,
                 "why": "The size on the label reads 200 ml; it is 100 ml"

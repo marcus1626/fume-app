@@ -1420,7 +1420,7 @@ function QaFocus({
                 onToggle={() => setScoresOpen((o) => !o)}
               />
             </div>
-            {scoresOpen && <ScorePanel id={item.id} evaluation={item.evaluation} />}
+            {scoresOpen && <ScorePanel key={item.id} id={item.id} evaluation={item.evaluation} />}
           </header>
 
           {/* 2. The thread: the Engine's comments, then hers; what was settled before folds under them */}

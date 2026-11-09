@@ -5481,10 +5481,10 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":74},
+                    {"label":"Label","value":92},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
-                    {"label":"Size","value":93}
+                    {"label":"Size","value":74}
                   ],
                   "value": 74,
                   "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -6414,10 +6414,10 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":74},
+                  {"label":"Label","value":92},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
-                  {"label":"Size","value":93}
+                  {"label":"Size","value":74}
                 ],
                 "value": 74,
                 "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -7346,10 +7346,10 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"}) → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":74},
+                    {"label":"Label","value":92},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
-                    {"label":"Size","value":93}
+                    {"label":"Size","value":74}
                   ],
                   "value": 74,
                   "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -8279,10 +8279,10 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"})
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":74},
+                  {"label":"Label","value":92},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
-                  {"label":"Size","value":93}
+                  {"label":"Size","value":74}
                 ],
                 "value": 74,
                 "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -9210,10 +9210,10 @@ anna updateDocument("doc-autumn-m3", {}) → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":74},
+                    {"label":"Label","value":92},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
-                    {"label":"Size","value":93}
+                    {"label":"Size","value":74}
                   ],
                   "value": 74,
                   "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -10142,10 +10142,10 @@ anna updateDocument("doc-autumn-m3", {})
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":74},
+                  {"label":"Label","value":92},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
-                  {"label":"Size","value":93}
+                  {"label":"Size","value":74}
                 ],
                 "value": 74,
                 "why": "The size on the label reads 200 ml; it is 100 ml"
@@ -11556,10 +11556,10 @@ anna documents("w-lysne")
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":74},
+                    {"label":"Label","value":92},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
-                    {"label":"Size","value":93}
+                    {"label":"Size","value":74}
                   ],
                   "value": 74,
                   "why": "The size on the label reads 200 ml; it is 100 ml"

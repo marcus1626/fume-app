@@ -260,6 +260,7 @@ export function Board({
               />
             </header>
             <ScoreBoard
+              key={scored.id}
               id={scored.id}
               evaluation={scored.evaluation}
               onWhy={seesPrompt && scored.prompt ? () => promptAt.open(scored.id) : undefined}

@@ -47,8 +47,10 @@ export function useQaVideo(item: QaItem) {
 export const stretch = (s: { from: number; to: number }) =>
   s.to - s.from < 0.3 ? timecode(s.from, true) : `${timecode(s.from, true)} to ${timecode(s.to, true)}`;
 
-/** Past the way in (a dissolve, a focus pull), so the frame she lands on shows what was found. */
-export const landOn = (s: { from: number; to: number }) => Math.min(s.to, s.from + Math.min(0.7, (s.to - s.from) / 2));
+/** Past the way in (a dissolve, a focus pull), so the frame she lands on shows what was found. A moment, shown as one
+ *  time, lands on that time, so the playhead reads what the link said. */
+export const landOn = (s: { from: number; to: number }) =>
+  s.to - s.from < 0.3 ? s.from : Math.min(s.to, s.from + Math.min(0.7, (s.to - s.from) / 2));
 
 export function QaReel({
   edit,

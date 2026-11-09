@@ -16,11 +16,13 @@ function measure(id: ScoreMeasure["id"], label: string, value: number, extra: Pa
   return { id, label, value, ...extra } satisfies ScoreMeasure;
 }
 
-/** The product, part by part. The product scores as its weakest part (round 15): the part a reason names ("the cap")
- *  carries the product's score, the rest hold above it; with no part named, the label does. */
+/** The product, part by part. The product scores as its weakest part (round 15): the part a reason names first ("the
+ *  size on the label" is the size) carries the product's score, the rest hold above it; with no part named, the label
+ *  does. */
 function productParts(scores: Scores, seed: number): ScoreMeasure["parts"] {
   const why = scores.why?.find((w) => w.score === "product")?.text.toLowerCase() ?? "";
-  const named = PARTS.find((p) => why.includes(p.toLowerCase())) ?? "Label";
+  const at = (p: string) => (why.includes(p.toLowerCase()) ? why.indexOf(p.toLowerCase()) : Infinity);
+  const named = [...PARTS].sort((a, b) => at(a) - at(b)).find((p) => at(p) < Infinity) ?? "Label";
   return PARTS.map((label, i) => ({
     label,
     value: label === named ? scores.product : Math.max(scores.product, steady(seed + i, 88, 10)),
