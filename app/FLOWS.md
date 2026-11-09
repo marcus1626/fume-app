@@ -1319,6 +1319,26 @@ copy har blitt en stor del av det vi løser".
   With something found, Fume's version of the line and "Use it". A reading only; it changes nothing
   (`checkCopyLine`).
 
+### 34.4 The design system reads like a component library
+Marcus: the design system page "føles som et rotete Word-dokument"; he wants it like shadcn or
+brand.fumecreatives.com, with a part for components (buttons and the rest).
+
+- **The same index as the Tone of Voice** (§34.3), in five groups: **Overview** (In use), **Foundations** (Colour, Type,
+  Layout, Logo, Words on photographs), **Components** (one entry per component the book has: Headline, Subline, Price,
+  Call to action, Badge, Product name, Small print, Logo), **Rules and code** (Do and don't, CSS) and **This version**
+  (Still to know, Where it comes from, Versions). The index scrolls on its own when it is longer than the window.
+- **Every component is shown live**, in the brand's own colours and type, at the size it has on a frame 1080 wide:
+  the words an example uses it with ("Se settet"), on the brand's wall, or **On a photograph** of the brand's where an
+  example has one. **Preview | CSS** sits above it: the CSS is the component on the brand's tokens
+  (`.brand .cta { font-family: var(--font-label); … background: var(--color-cta); border-radius: var(--radius-pill) }`)
+  with Copy. Under it, what it is made of as a row of small facts (Style, Words, Ground, Corners and padding, colours
+  as a dot with the code), then its rules.
+- **Colour** shows each colour's token beside its code (`--color-cta`). **CSS** at the end holds the tokens and every
+  component, so a designer or developer takes the whole system in one copy.
+- The page reads; it is not edited in place yet. A change still goes through "Ask for a change" or "Write a new
+  version" (§30). The component CSS is built by code from the book (the mock builds it in the page; live, the API
+  builds it with `css`).
+
 ### 34.5 Fume designs in Design, and its design is checked in Designs
 Marcus: "litt rart at man fortsatt er på Image-fanen og ikke Design-fanen når Fume/Engine gjør designen", and "hvorfor
 sjekker man design inne på Images-siden?"
