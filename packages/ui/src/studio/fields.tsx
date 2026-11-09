@@ -91,8 +91,28 @@ export function StudioNumber({
   presets,
 }: StudioNumberProps) {
   const sid = studioId(label, id);
-  if (presets?.length)
-    return <PresetNumber {...{ value, onChange, label, sid, disabled, min, max, step, unit, help, presets }} />;
+  const props = { value, onChange, label, sid, disabled, min, max, step, unit, help };
+  // Two components, so a field that gains or loses its presets never changes the order of its hooks
+  return presets?.length ? <PresetNumber {...props} presets={presets} /> : <PlainNumber {...props} />;
+}
+
+function PlainNumber({
+  value,
+  onChange,
+  label,
+  sid,
+  disabled,
+  min,
+  max,
+  step,
+  unit,
+  help,
+}: Omit<StudioNumberProps, "id" | "presets" | "min" | "max" | "step"> & {
+  sid: string;
+  min: number;
+  max: number;
+  step: number;
+}) {
   // The field keeps what is typed until it is a number in range; the value changes only then.
   const [draft, setDraft] = useState(String(value));
   useEffect(() => setDraft(String(value)), [value]);

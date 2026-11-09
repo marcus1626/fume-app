@@ -1770,6 +1770,9 @@ it. Everything here is PROPOSED until he chooses.
 - **The letters beside X, Y, W and the grid's values are handles**: drag right or up for more, a step for every two
   pixels, Shift for ten. The field stays the keyboard's and the screen reader's control.
 - **A hidden layer's eye is struck through** (eye-off), as well as going quiet; an unlocked layer's lock is open.
+- **The section she works in stays open.** A panel's sections fold the one opened longest ago when they no longer fit
+  (§9.1); now using a section (a press or focus inside it, its popovers too) also makes it the newest, so picking a
+  colour of her own no longer folds Fill away under her.
 - New icons, PROPOSED with the round: eye-off, lock-open, text-align-start, text-align-center, text-align-end.
 
 ### 36.2 The Engine at hand, and a chat per web session
