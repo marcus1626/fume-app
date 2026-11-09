@@ -73,6 +73,8 @@ export interface PlanTask {
   column?: WordsColumn | null;
   /** The headlines of the brand's other recent plans, newest first, so a new one is its own (not one more of a kind). */
   recent?: string[];
+  /** The scenes of the brand's other recent plans, newest first, so a new picture is not one more of the same shot. */
+  scenes?: string[];
   /** The brand's own layouts for words on its pictures (its design book in use), so each creative is planned in one. */
   layouts?: BrandLayout[];
 }
@@ -117,6 +119,7 @@ How to write:
 - Plan exactly as many creatives as the brief asks for, across its formats: a master in the first format, and variants of a master for the other formats or angles. A variant's "of" is its master's id in the same direction. Use only the campaign's product ids.
 - People: real models only when the brief allows people. Never fake customers, testimonials or user-generated content. When in doubt, no people or hands only.
 - Scenes are photographic and concrete: subject, setting, light, composition, where the text sits. No vague adjectives.
+- Masters in one plan differ as a photographer's set does: each takes another shot size (wide, a figure, a close detail), another angle or another light, never the same build twice.
 - Write in the brief's language (English unless it says otherwise), plainly and briefly. No hype, no exclamation marks.`;
 
 /** What Fume knows about the brand (public.brain_context): confirmed, or only proposed. */
@@ -234,6 +237,20 @@ export function layoutPart(layouts: BrandLayout[] | undefined): string[] {
   ];
 }
 
+/**
+ * The brand's recent pictures from its other campaigns, as shots the new ones must not repeat. Anthem, 9 Nov (Marcus:
+ * "litt repetetivt"): six plans were each written alone, and every one became a sideline long-lens shot in bright sun
+ * of a player leaping at the product, because each writer read the same Look Book and nothing else.
+ */
+export function scenesPart(scenes: string[] | undefined): string[] {
+  const lines = [...new Set((scenes ?? []).map((l) => l.trim().replace(/\s+/g, " ").slice(0, 220)).filter(Boolean))].slice(0, 10);
+  if (!lines.length) return [];
+  return [
+    `<recent_pictures>\n${lines.map((l) => `- ${l}`).join("\n")}\n</recent_pictures>`,
+    "These are the pictures planned for the brand's other recent campaigns. They run in the same feed, so plan pictures that are not one more of these: within the brand's look, change at least two of the shot's size and distance (a wide scene, a figure, a close detail of hands and product), the camera's angle and height, the time of day and its light, and what the people do. The brand's look is its light, grade and texture, not one camera position.",
+  ];
+}
+
 /** The brand's recent headlines from its other campaigns, as lines the new headline must not repeat. */
 export function recentPart(recent: string[] | undefined): string[] {
   const lines = [...new Set((recent ?? []).map((l) => l.trim()).filter(Boolean))].slice(0, 12);
@@ -265,6 +282,7 @@ export function prompt(task: PlanTask): string {
     ...brainPart(task.brain),
     ...voicePart(task.voice),
     ...recentPart(task.recent),
+    ...scenesPart(task.scenes),
     ...layoutPart(task.layouts),
     ...columnPart(task.column),
   ];

@@ -2,7 +2,7 @@
 import { assertEquals } from "jsr:@std/assert@1";
 import { type Deps, handlePlan, type Written } from "./handler.ts";
 import { type ClaimRead, copyLines, judgeCopy, layoutsOf, type PlanAnswer, type PlanTask, prompt, toBody } from "./plan.ts";
-import { columnOf as columnOfFn, columnPart, recentPart, repeatsHeadline, tooLongFor } from "./plan.ts";
+import { columnOf as columnOfFn, columnPart, recentPart, repeatsHeadline, scenesPart, tooLongFor } from "./plan.ts";
 
 const task: PlanTask = {
   run_id: "r1",
@@ -450,4 +450,12 @@ Deno.test("a layout's own call to action, as the brand's creatives set it, is th
   const p = prompt({ ...task, layouts });
   assertEquals(p.includes("\"cta\":\"SHOP NOW\"") && p.includes("words the brand itself sets on its button"), true);
   assertEquals(prompt({ ...task, layouts: layoutsOf([{ name: "Tile", band: "middle", align: "left", wordsWidthPct: 40, ground: "photo" }]) }).includes("its button"), false);
+});
+
+Deno.test("the brand's other recent pictures are shown so a new plan is not one more of the same shot", () => {
+  assertEquals(scenesPart(undefined), []);
+  const part = scenesPart(["Sideline long-lens photograph in bright sun.", "Sideline long-lens photograph in bright sun.", ""]).join("\n");
+  assertEquals(part.split("Sideline long-lens").length - 1, 1, "each picture once");
+  assertEquals(part.includes("not one more of these"), true);
+  assertEquals(prompt({ ...task, scenes: ["A player leaps at the hoop."] }).includes("<recent_pictures>"), true);
 });

@@ -111,13 +111,14 @@ Deno.serve((req) =>
           // a headline that fits it, and the copy check holds it). Read through the database: the service role has no
           // rights on the tables themselves.
           const extras = await service.rpc("fume_plan_extras", { p_campaign_id: campaignId });
-          const x = (extras.error ? null : extras.data) as { recent?: string[]; layouts?: unknown } | null;
+          const x = (extras.error ? null : extras.data) as { recent?: string[]; scenes?: string[]; layouts?: unknown } | null;
           return {
             data: {
               ...data,
               brain: brain.error ? null : brain.data,
               voice: voice.error ? null : voice.data,
               recent: x?.recent ?? [],
+              scenes: Array.isArray(x?.scenes) ? x!.scenes.filter((v): v is string => typeof v === "string") : [],
               column: columnOf(x?.layouts),
               layouts: layoutsOf(x?.layouts),
             },

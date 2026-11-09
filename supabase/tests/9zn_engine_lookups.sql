@@ -18,6 +18,21 @@ select test.ok((select x -> 'layouts' -> 0 ->> 'name' = 'Narrow stack' and jsonb
   from (select public.fume_plan_extras(test.id('campaign')) x) y), 'the plan writer gets the brand''s column of words');
 select test.ok(public.fume_plan_extras(gen_random_uuid()) is null, 'and nothing for a campaign that is not there');
 
+-- The plan writer sees the masters planned for the brand's other campaigns, so a new plan is not the same shot again.
+create temp table t9zn_plan as
+select pv.id, pv.body from public.plan_versions pv
+where pv.workspace_id = (select workspace_id from public.campaigns where id = test.id('campaign'))
+  and pv.campaign_id <> test.id('campaign') and pv.state <> 'superseded'
+order by pv.created_at desc limit 1;
+update public.plan_versions set body = body || '{"chosen_direction_id":"a","directions":[{"id":"a","creatives":[
+  {"id":"pc1","kind":"master","scene":"A wide sideline shot in bright sun."},{"id":"pc2","kind":"variant","of":"pc1","scene":"The same, as a story."}]},
+  {"id":"b","creatives":[{"id":"pc1","kind":"master","scene":"Not chosen."}]}]}'::jsonb
+where id = (select id from t9zn_plan);
+select test.ok((select x -> 'scenes' ? 'A wide sideline shot in bright sun.' and not x -> 'scenes' ? 'The same, as a story.'
+    and not x -> 'scenes' ? 'Not chosen.'
+  from (select public.fume_plan_extras(test.id('campaign')) x) y), 'the plan writer gets the masters of the brand''s other recent plans');
+update public.plan_versions set body = (select body from t9zn_plan) where id = (select id from t9zn_plan);
+
 -- A picture designed again keeps the layout of its first design; a designer's ask sets it anew.
 insert into public.design_layers (workspace_id, candidate_id, job_id, creative_id, requested_by, ask, state, choice, created_at, finished_at)
 select workspace_id, candidate_id, job_id, creative_id, requested_by, null, 'made', jsonb_build_object('layout', 'First ' || n, 'band', 'bottom'),
