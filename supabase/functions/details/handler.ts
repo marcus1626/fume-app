@@ -30,7 +30,8 @@ export type Take = {
 
 /** A place on the picture where the product shows print, and the same place on one of its photographs. */
 export type Place = { what: string; box: Rect; photo: number; photoBox: Rect | null };
-export type Read = { reads: string; expected: string; ok: boolean; note: string };
+/** marks: the icons, symbols or logo shapes on the part, against the real one (absent when the reader was not asked). */
+export type Read = { reads: string; expected: string; ok: boolean; note: string; marks?: "same" | "different" | "none" };
 /** What the check found: print read letter for letter, or (kind "part") a part of the product compared with the real one. */
 export type Detail = {
   n: number;
@@ -42,6 +43,8 @@ export type Detail = {
   expected: string;
   ok: boolean;
   note?: string;
+  /** Print whose icons differ from the product's. */
+  marks?: "different";
   /** A part's colour as code measured it, on the picture and on the photograph (Lab). */
   tones?: [{ l: number; a: number; b: number }, { l: number; a: number; b: number }];
 };
@@ -104,6 +107,10 @@ const words = (s: string) =>
  * photograph's crop that shows only a short piece of the print, nor a crop with nothing legible: the part check sees
  * whether the label is there.
  */
+/** Whether the place is right: its words read right and its icons are the product's own (a shield with a tick where the
+ * product has a shield with a cross is wrong, Trankapsler 9 Nov). */
+export const placeRight = (r: Read) => readsRight(r) && r.marks !== "different";
+
 export function readsRight(r: Read): boolean {
   const a = letters(r.reads), b = letters(r.expected);
   if (!a || !b || a === b) return true;
@@ -192,17 +199,20 @@ export async function readDetails(t: Take, d: Deps): Promise<Detail[] | null> {
           // word as the right one, or the real photograph's small print as a garbled one (HUERNE for HJERNE, 9 Nov).
           const again = await d.read({ cropUrl, refUrl, what: place.what });
           spent.usd += again.usd;
-          if (readsRight(r) !== readsRight(again)) {
+          if (placeRight(r) !== placeRight(again)) {
             const third = await d.read({ cropUrl, refUrl, what: place.what });
             spent.usd += third.usd;
-            r = readsRight(third) ? (readsRight(r) ? r : again) : (readsRight(r) ? again : r);
-          } else if (!readsRight(r) && readsRight(again)) r = again;
+            r = placeRight(third) ? (placeRight(r) ? r : again) : (placeRight(r) ? again : r);
+          } else if (!placeRight(r) && placeRight(again)) r = again;
         }
         return {
           n, kind: "print", what: place.what.slice(0, 120), box: onPicture.box, reads: r.reads.slice(0, 200), expected: r.expected.slice(0, 200),
           // Without the real one to read against, nothing is called wrong.
-          ok: refUrl ? readsRight(r) : true,
-          ...(refUrl && !readsRight(r) ? { note: (r.note || `The ${place.what} reads ${r.reads}; on the product it reads ${r.expected}.`).slice(0, 300) } : {}),
+          ok: refUrl ? placeRight(r) : true,
+          ...(refUrl && r.marks === "different" ? { marks: "different" as const } : {}),
+          ...(refUrl && !placeRight(r)
+            ? { note: (r.note || (readsRight(r) ? `The icons in the ${place.what} differ from the product's.` : `The ${place.what} reads ${r.reads}; on the product it reads ${r.expected}.`)).slice(0, 300) }
+            : {}),
         };
       } catch (e) {
         // One place that cannot be read is left to the expert's eye; the other places still count.
@@ -218,7 +228,7 @@ export async function readDetails(t: Take, d: Deps): Promise<Detail[] | null> {
     // (MÖLLER'S Tran on the picture, MÖLLER'S on the photograph's crop).
     const real = new Set(done.flatMap((x) => (x ? words(x.expected) : [])));
     for (const x of done) {
-      if (!x || x.ok || !words(x.reads).every((w) => real.has(w))) continue;
+      if (!x || x.ok || x.marks === "different" || !words(x.reads).every((w) => real.has(w))) continue;
       x.ok = true;
       delete x.note;
     }

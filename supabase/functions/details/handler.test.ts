@@ -144,3 +144,13 @@ Deno.test("a packshot kept only as a link is fetched into storage once, then rea
   assertEquals(asked, ["https://brand.example/shoe.png"], "fetched once");
   assertEquals(await photoLink(d, { bucket: "workspace-files", path: "ws/x.png" }), null, "a missing file with no link is nothing");
 });
+
+Deno.test("words that read right with icons drawn differently are wrong", async () => {
+  const { d } = deps({ find: () => Promise.resolve({ usd: 0, places: [
+    { what: "icon words", box: { x: 0.58, y: 0.74, w: 0.1, h: 0.02 }, photo: 1, photoBox: { x: 0.46, y: 0.7, w: 0.13, h: 0.05 } },
+  ] }), read: () => Promise.resolve({ reads: "HJERNE IMMUNFORSVAR HJERTE", expected: "HJERNE IMMUNFORSVAR HJERTE", marks: "different" as const,
+    ok: false, note: "", usd: 0 }) });
+  const out = await readDetails(take, d);
+  assertEquals([out![0].ok, out![0].marks, out![0].note], [false, "different", "The icons in the icon words differ from the product's."]);
+});
+

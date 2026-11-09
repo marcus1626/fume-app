@@ -12,7 +12,7 @@ const Found = z.object({
   places: z.array(z.object({ what: z.string(), box: Box, photo: z.number().int().min(0), photoBox: Box.nullable() })),
 });
 const Again = z.object({ found: z.boolean(), box: Box });
-const Reading = z.object({ reads: z.string(), expected: z.string(), ok: z.boolean(), note: z.string() });
+const Reading = z.object({ reads: z.string(), expected: z.string(), marks: z.enum(["same", "different", "none"]), ok: z.boolean(), note: z.string() });
 const Mapped = z.object({
   parts: z.array(z.object({
     key: z.string(), kind: z.enum(["count", "present", "look"]), what: z.string(), count: z.number().int().nullable(),
@@ -42,7 +42,7 @@ export const FIND_SYSTEM = [
   "bottom and list every block you see, up to eight, the small print first:",
   "image models garble small letters most, so a line of small words is never left out for a big one. For each, what",
   "names that one block so it can be found again (the small words under the three icons), then a tight box around just",
-  "it on the generated picture, as shares of its width and height (x and y are the top left corner, from 0 to 1), then",
+  "it (with the icons that go with its words) on the generated picture, as shares of its width and height (x and y are the top left corner, from 0 to 1), then",
   "the photograph where the same block shows largest (photo 1 is the first image) and a tight box around it there. When",
   "no photograph shows it, photo 0 and photoBox null. When the product shows no print in the picture, answer no places.",
 ].join(" ");
@@ -55,14 +55,18 @@ export const READ_SYSTEM = [
   "exactly as printed, small lines too, in reading order: no description, no quotes; leave out a footnote mark. In",
   "expected, the same for image 2. Leave either empty when its letters cannot be made out at all. ok is true when the",
   "letters are the same (case and spacing aside) and a logo has the same shape; a garbled, missing, extra or swapped",
-  "letter or digit is not ok. The note says in one short sentence what is wrong, for a designer, in the form: The",
+  "letter or digit is not ok. marks: when the named part has icons, symbols or a logo beside its words, compare their",
+  "shapes on image 1 with image 2: same (the same drawings, whatever the size or light), different (another drawing:",
+  "a tick for a cross, a head for a brain, a pulse line added to a heart), or none (no icons, or no image 2). A",
+  "different icon is not ok. The note says in one short sentence what is wrong, for a designer, in the form: The",
   "collar label reads DRESSMEANN; on the product it reads Dressmann. When ok is true, or there is no image 2, the note",
   "is empty.",
 ].join(" ");
 
 export const REFINE_SYSTEM = [
   "You help Fume's expert read small print on a product picture. You get a crop of the picture and the name of a part",
-  "of the product with print on it (a label, a tag, a wordmark). Give a tight box around just its letters on this crop, as",
+  "of the product with print on it (a label, a tag, a wordmark). Give a tight box around just its letters, and the icons or",
+  "symbols that go with them, on this crop, as",
   "shares of the crop's width and height (x and y are the top left corner, from 0 to 1). When the crop does not show",
   "it, found is false.",
 ].join(" ");
