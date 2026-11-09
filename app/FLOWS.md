@@ -1444,7 +1444,9 @@ panelet her er rotete … 'Mark checked' 'Tell the Engine' og 'Open in Studio' e
   and weight ("Product · decide first" with a small Rouge mark only when it stops the check). Then what it saw, one
   quiet "Should be" line, and two words: **Fix with the Engine** (it goes with Tell the Engine; it says "Goes to the
   Engine" once chosen) and **Not a problem**. A finding with a place on the creative is a numbered pin there; a pin and
-  its comment light up together.
+  its comment light up together. Pin numbers stay put when a comment is settled. On a video the strip under it marks each
+  finding's stretch in a quiet grey; the one that stops the check carries a small Rouge dot, never a red bar. A link to
+  one moment ("0:04.0") takes the playhead to that moment; a stretch lands a little inside it.
 - **Her own comments.** She writes in the box at the foot (Enter adds it, Cmd+Enter tells the Engine at once) or clicks
   the creative to pin one; on a video the pin carries its second. Each says "You", its format and time, and can be
   taken out. They go with Tell the Engine.
@@ -1478,7 +1480,7 @@ burde være synlig inne i Studio", and "score kommer etter man har laget noe".
 - **The board looks like Fume.** It answers in words first ("Under the bar on Brand and Product"), then one row per
   measure: the name, the number in GT Standard with tabular figures, a thin Ink meter with a tick at the bar, and one
   line on why when it is under. A small warning mark, never Rouge (a low score is the Engine's view, not an error),
-  never Amber, never Mono. The product opens part by part, by itself when a part is under the bar.
+  never Amber, never Mono. The product opens part by part, by itself when a part is under the bar; the product scores as its weakest part.
 - **In the Studio** the scores come once a version is made: "Scores" on the board's rail opens the shown version's
   board at the board's right edge, and the warning above a version under the bar opens the same board. The picture
   makes room; nothing floats over it. Every made version is scored, a picture made by hand too. The side panel never
@@ -1544,7 +1546,8 @@ design system: its text styles, typefaces, colours, logo versions and its call t
 - **The shade.** Where it comes from, and its strength.
 - **Nothing picked: the frame.** *Layout*: on a creative laid out by hand, its template; on Fume's design, "Laid out by
   Fume · V5" and "Its checks" (the design sheet). Align (Top, Centre, Bottom) says where the headline and its line are
-  on the canvas, and moves them inside the safe area; the call to action and the logo keep their place. Before, Align
+  on the canvas, and moves them inside the safe area, clear of a shown logo or call to action (those keep their
+  place); the shade turns to come from the words' side. While Fume is still laying out, the frame says so. Before, Align
   said Bottom while the words sat at the top. *Words*: one colour for every word layer ("Mixed" when they differ); the
   call to action keeps its own.
 - **The words' source is gone** (Brand, Fume, Own, Engine). In Design every colour and type is the brand's design
