@@ -363,3 +363,14 @@ test("a redo keeps the earlier layout's place but not a headline smaller than th
   assert.equal(first.headline, "display");
   assert.equal(first.band, "top");
 });
+
+test("a button with no fill of its own is read against the picture under it, and moves where it cannot be read", async () => {
+  // Dark words on a pale top; the brand's button corner (bottom right) is dark, so a dark outline there cannot be read.
+  const signature = { name: "Tile", band: "top", align: "left", wordsWidthPct: 50, ground: "photo", words: "dark", cta: "slant_double", ctaAt: "bottom_right" } as const;
+  const b = { ...book, onPictures: { ...(book.onPictures ?? {}), layouts: [signature] } } as DesignBook;
+  const out = await design({ picture: await picture("#F4F1EC", "#15171A"), format: "feed", book: b, words: { headline: "Game on", cta: "Shop now" }, prefer: { signature: "Tile", band: "top", colour: "text" }, keepClear: [product] });
+  const button = out.checks.find((c) => c.check === "contrast" && c.node === "CTA");
+  assert.ok(button, JSON.stringify(out.checks));
+  assert.ok(button.ok, button.note);
+  assert.ok(!(out.layout.cta === "bottom" && out.layout.colour === "text"), "a dark button never stays on the dark corner");
+});

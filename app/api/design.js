@@ -1166,6 +1166,19 @@ function measure(doc, c, l, book, p, keep, logo = null) {
       });
     }
   }
+  const seeThrough = ["outline", "slant", "slant_double", "underline", "text"].includes(l.ctaLook ?? "pill");
+  if (onPhoto && seeThrough && boxes.CTA && c.colours.CTA) {
+    const u = under(p, boxes.CTA, c.colours.CTA, shades, Math.max(12, (c.sizes.CTA ?? 24) * 0.5));
+    checks.push({
+      check: "contrast",
+      node: "CTA",
+      ok: u.contrast >= 3 && u.worst >= 2,
+      hard: true,
+      value: Math.min(u.contrast, u.worst >= 2 ? u.contrast : u.worst),
+      need: 3,
+      note: u.contrast < 3 ? `The button reads ${u.contrast}:1 against the picture under it (needs 3:1).` : u.worst < 2 ? `A bright or dark spot under the button: ${u.worst}:1 at the worst patch.` : `The button reads ${u.contrast}:1 against the picture under it.`
+    });
+  }
   for (const k of keep) {
     for (const n of ["Words", "CTA", "Action"]) {
       const b = boxes[n];
