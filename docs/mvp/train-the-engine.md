@@ -16,7 +16,9 @@ people only (never an agency's, never a customer's).
    photograph. The person says **Right** or **Wrong**, and why. When the check found nothing, they say **Right** or
    **Missed something** (and what). A picture the check has not read says so.
 
-The pictures the check has read come first, then the newest; ten to a round. Answered pictures leave the deck.
+The pictures the check has read come first, then the newest; ten to a round. Answered pictures leave the deck. Each
+picture shows once, in its newest form: not the picture a design or a fix was made from, not its formats, and not the
+bench's test pictures (Marcus, 9 Nov: the pictures were almost the same).
 
 ## Where the answers go
 
@@ -34,7 +36,7 @@ from public.detail_labels l group by 1 order by wrong desc;
   A wrong call with a why is the next bench case (`tools/bench/parts-bench.json`).
 
 Migrations: `20261106160000_train_the_engine.sql`, `20261106161000_train_cards_close_ups.sql`,
-`20261109100000_train_cards_faster.sql` (the deck in about 0.1 s). Test: `supabase/tests/9zl_train_the_engine.sql`.
+`20261109100000_train_cards_faster.sql` (the deck in about 0.1 s), `20261109110000_train_cards_one_per_picture.sql`. Test: `supabase/tests/9zl_train_the_engine.sql`.
 
 ## Who
 

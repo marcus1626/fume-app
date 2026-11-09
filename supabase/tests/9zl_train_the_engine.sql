@@ -7,6 +7,14 @@ delete from public.engine_lessons where source_candidate_id = test.id('ecand') a
 update public.candidates set details = '[
   {"n":1,"kind":"part","part":"chest-pocket","what":"chest pocket","reads":"no pocket","expected":"A square patch pocket","ok":false,"note":"The picture shows 0 chest pocket; the product has 1."}]'
 where id = test.id('ecand');
+-- The deck shows a picture in its newest form only: here the picture stands alone (the earlier tests made designs and
+-- fixes from it).
+create temp table train_kids as select id, designed_from, fixed_from from public.candidates
+  where designed_from = test.id('ecand') or fixed_from = test.id('ecand');
+update public.candidates set designed_from = null, fixed_from = null where id in (select id from train_kids);
+grant select on train_kids to authenticated;
+select test.ok((select j.creative_id is not null and j.kind <> 'format' from public.candidates c join public.production_jobs j on j.id = c.job_id
+  where c.id = test.id('ecand')), 'the picture belongs to a creative');
 
 set role authenticated;
 select test.act('kristian@fumecreatives.com');
@@ -44,4 +52,13 @@ select test.refuses($$ select public.judge_detail(test.id('ecand'), 'chest-pocke
 select test.ok((select count(*) = 0 from public.detail_labels), 'nor reads the words on it');
 reset role;
 update public.candidates set details = '[]' where id = test.id('ecand');
+update public.candidates c set designed_from = k.designed_from, fixed_from = k.fixed_from from train_kids k where c.id = k.id;
+delete from public.engine_lessons where source_candidate_id = test.id('ecand') and created_by = (select id from public.profiles where email = 'kristian@fumecreatives.com');
+set role authenticated;
+select test.act('kristian@fumecreatives.com');
+select test.ok(not exists (select 1 from jsonb_array_elements(public.train_cards(200) -> 'cards') x where x ->> 'id' = test.id('ecand')::text)
+    and exists (select 1 from jsonb_array_elements(public.train_cards(200) -> 'cards') x
+      where x ->> 'id' in (select id::text from train_kids)),
+  'a picture made into a design or fixed is not shown again, only its newest form');
+reset role;
 select test.ok(true, 'all of the train-the-engine tests passed');
