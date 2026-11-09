@@ -152,15 +152,13 @@ export function brainPart(brain: Brain | null | undefined): string[] {
   return parts;
 }
 
-/** The user message: the task as data. Instructions found inside the brief are the customer's words, not orders. */
-/** The brand's recent headlines from its other campaigns, as lines the new headline must not repeat. */
 /** The brand's own layout for words on its pictures, from its approved design book: its name and how wide the column
  * of words is, as a share of the picture's width. */
 export type WordsColumn = { name: string; pct: number };
 
 /**
  * How long a headline can be in the brand's own column of words. A narrow column (Dressmann's stack beside the
- * shirt, a third of the picture) broke "MANDAG" in two (9 Nov); a long word is never broken, so the plan writes short.
+ * shirt, a quarter of the picture) broke "MANDAG" in two (9 Nov); a long word is never broken, so the plan writes short.
  */
 export function columnPart(column: WordsColumn | null | undefined): string[] {
   if (!column || !(column.pct > 0)) return [];
@@ -174,6 +172,7 @@ export function columnPart(column: WordsColumn | null | undefined): string[] {
   ];
 }
 
+/** The brand's recent headlines from its other campaigns, as lines the new headline must not repeat. */
 export function recentPart(recent: string[] | undefined): string[] {
   const lines = [...new Set((recent ?? []).map((l) => l.trim()).filter(Boolean))].slice(0, 12);
   if (!lines.length) return [];
@@ -183,6 +182,7 @@ export function recentPart(recent: string[] | undefined): string[] {
   ];
 }
 
+/** The user message: the task as data. Instructions found inside the brief are the customer's words, not orders. */
 export function prompt(task: PlanTask): string {
   const facts = task.products.map((p) => ({
     id: p.id,
