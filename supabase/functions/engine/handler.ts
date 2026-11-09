@@ -48,6 +48,8 @@ export type Taken = Omit<EngineTask, "products" | "master" | "composition"> & {
   composition?: ({ id: string; note?: string } & ({ path: string; bucket?: string; url?: undefined } | { url: string; path?: undefined })) | null;
   /** A correction's problem and what must change and stay; `ask` and `direction` are the designer's words with Render. */
   change: { problem: string; must_change: string[]; must_stay: string[]; ask?: string; direction?: string } | null;
+  /** What Fume's own picture check found on the brand's recent pictures, newest first (public.engine_recent_checks). */
+  seen?: string[];
 };
 /** A person's answer on one of the Engine's pictures, with the prompt behind it. */
 export type Pending = { id: string; verdict: "yes" | "no"; why: string; image_model: string | null; updated_at: string; concept: string; slots: { slotKey: string; text: string }[] };
@@ -333,6 +335,23 @@ async function digestAnswers(t: Taken, deps: Deps): Promise<void> {
   }
 }
 
+/** What the picture check found on the brand's last pictures, as things this prompt avoids. People's lessons come first;
+ *  these are the Engine's own, few and plain (long lists of what to avoid make image models worse). Anthem, 9 Nov: 24 of
+ *  26 pictures had the same marks of a generated picture, and nothing carried that to the next one. */
+export function seenLessons(seen: string[] | undefined): Taken["lessons"] {
+  const out: Taken["lessons"] = [];
+  const said = new Set<string>();
+  for (const raw of seen ?? []) {
+    const note = String(raw).trim().replace(/\s+/g, " ");
+    const key = note.toLowerCase();
+    if (note.length < 12 || said.has(key)) continue;
+    said.add(key);
+    out.push({ id: `seen-${out.length + 1}`, statement: /[.!?]$/.test(note) ? note : `${note}.`, polarity: "avoid", reason: "Fume's own check found this on the brand's last pictures." });
+    if (out.length === 4) break;
+  }
+  return out;
+}
+
 async function attempt(t: Taken, deps: Deps): Promise<RunOutcome> {
   const calls: ModelCall[] = [];
   const keep = <A, R extends { call: ModelCall | null }>(f: (a: A) => Promise<R>) => async (a: A) => {
@@ -351,6 +370,7 @@ async function attempt(t: Taken, deps: Deps): Promise<RunOutcome> {
   let recorded = false;
   try {
     await digestAnswers(t, deps);
+    t.lessons = [...t.lessons, ...seenLessons(t.seen)];
     const task = await signTask(t, deps);
     // Words on a picture already made change that picture, and a format reshapes its master; everything else is a new
     // campaign still.

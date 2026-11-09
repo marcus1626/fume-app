@@ -1,5 +1,5 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
-import { type Deps, enforcedOf, handleEngine, NO_PROVIDER, runJob, type Taken } from "./handler.ts";
+import { type Deps, enforcedOf, handleEngine, NO_PROVIDER, runJob, seenLessons, type Taken } from "./handler.ts";
 import { byModel, higgsfield, ratioFor } from "./provider.ts";
 import { fal, sizeFor } from "./fal.ts";
 import type { Composer, Decider, SlotText, Verifier } from "../_shared/engine/index.ts";
@@ -446,4 +446,19 @@ Deno.test("a format reshapes its approved master: the master goes first and the 
   const p = f.prompts[0] as { compile_package: { grammar: { imageType: string }; manifest: { requirement: string }[] } };
   assertEquals(p.compile_package.grammar.imageType, "picture_edit");
   assert(p.compile_package.manifest.some((m) => m.requirement.startsWith("Make the first picture in the story format, 9:16")));
+});
+
+Deno.test("what the picture check found on the brand's last pictures is avoided in the next prompt, after people's lessons", async () => {
+  assertEquals(seenLessons(undefined), []);
+  const five = ["Skin looks waxy", "Skin looks waxy", "Grass too clean to be real.", "Glow on the net.", "x", "Concrete too smooth.", "Warped goal frame."];
+  assertEquals(seenLessons(five).map((l) => l.statement), ["Skin looks waxy.", "Grass too clean to be real.", "Glow on the net.", "Concrete too smooth."]);
+  const t = { ...taken(), lessons: [{ id: "p1", statement: "Keep the cap matte.", polarity: "avoid" as const, reason: "A designer said so." }], seen: ["Skin looks waxy and plastic."] };
+  const f = fake({ takes: [t] });
+  const seen: string[][] = [];
+  f.deps.models.compose = async (input) => {
+    seen.push(input.compilePackage.knowledge.lessons.map((l) => l.statement));
+    return compose(input);
+  };
+  assertEquals(await runJob(JOB, f.deps), "dry");
+  assertEquals(seen[0].slice(0, 2), ["Keep the cap matte.", "Skin looks waxy and plastic."]);
 });

@@ -33,6 +33,17 @@ select test.ok((select x -> 'scenes' ? 'A wide sideline shot in bright sun.' and
   from (select public.fume_plan_extras(test.id('campaign')) x) y), 'the plan writer gets the masters of the brand''s other recent plans');
 update public.plan_versions set body = (select body from t9zn_plan) where id = (select id from t9zn_plan);
 
+-- The Engine reads what its own picture check found on the brand's recent pictures, once each, for the next prompt.
+select test.ok(not has_function_privilege('authenticated', 'public.engine_recent_checks(uuid)', 'execute')
+  and has_function_privilege('service_role', 'public.engine_recent_checks(uuid)', 'execute'), 'only the Engine reads its own checks');
+create temp table t9zn_cand as
+select id, job_id, evaluation from public.candidates where origin = 'engine' and attempt_id is not null order by created_at desc limit 1;
+update public.candidates set evaluation = coalesce(evaluation, '{}'::jsonb) || '{"artefactNotes":["Skin looks waxy and plastic.","skin looks waxy and plastic.","x"]}'
+where id = (select id from t9zn_cand);
+select test.ok((select public.engine_recent_checks(job_id) from t9zn_cand) ? 'Skin looks waxy and plastic.'
+  and jsonb_array_length((select public.engine_recent_checks(job_id) from t9zn_cand)) = 1, 'the Engine reads what its check found, once');
+update public.candidates set evaluation = (select evaluation from t9zn_cand) where id = (select id from t9zn_cand);
+
 -- A picture designed again keeps the layout of its first design; a designer's ask sets it anew.
 insert into public.design_layers (workspace_id, candidate_id, job_id, creative_id, requested_by, ask, state, choice, created_at, finished_at)
 select workspace_id, candidate_id, job_id, creative_id, requested_by, null, 'made', jsonb_build_object('layout', 'First ' || n, 'band', 'bottom'),
