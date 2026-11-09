@@ -27,6 +27,7 @@ import { questionCalls } from "./questions";
 import { brandUpdateCalls } from "./brand-update";
 import { boardCalls } from "./boards";
 import { trainCalls } from "./train";
+import { bookCalls } from "./books";
 
 /** The calls not moved yet, answered by an empty mock workspace that loads on the first such call. */
 function notYetCalls(): FumeApi {
@@ -59,6 +60,7 @@ export function createLiveApi(): FumeApi {
     ...deliveryCalls(live),
     ...brandCalls(live),
     ...brandUpdateCalls(live),
+    ...bookCalls(live),
     ...notificationCalls(),
     ...conversationCalls(live),
     ...agencyCalls(live),

@@ -4,6 +4,7 @@
 // chat and a new line in the bell come the same way, as they are.
 import type { FumeApi, FumeEvent } from "../../contract";
 import type { Live } from "./context";
+import { type BookRow, toBook } from "./books";
 import { type MessageRow, toMessage } from "./conversation";
 import { readCampaigns } from "./map";
 import { type NotificationRow, toNotification } from "./notifications";
@@ -50,6 +51,13 @@ export function eventCalls(live: Live): Pick<FumeApi, "subscribe"> {
           if (!row?.id) return;
           forgetReads();
           handler({ type: "notification.new", notification: toNotification(row) });
+        })
+        // A book written, checked or approved: the open book pages read it again (its pictures come with that read).
+        .on("postgres_changes", { event: "*", schema: "public", table: "brand_books" }, (payload) => {
+          const row = payload.new as BookRow | undefined;
+          if (!row?.id) return;
+          forgetReads();
+          handler({ type: "book.state", book: toBook(row) });
         })
         .subscribe();
       return () => {
