@@ -116,16 +116,27 @@ async function siteShots(task: Parameters<typeof voicePrompt>[0]): Promise<{ sho
   const paths = SHOT_VIEWS.map((v) => `${task.book.workspace_id}/brand/shots/${task.book.id}-${v}.jpg`);
   // The logo in the site's header is kept beside the screenshots, as the brand's own mark for the design layer.
   const logoPath = `${task.book.workspace_id}/brand/logo/${task.book.id}-site`;
+  // The screenshots an earlier try at this book already took, when the site cannot be opened again.
+  const stored = async () => {
+    const { data } = await service.storage.from(bucket).list(`${task.book.workspace_id}/brand/shots`, { search: task.book.id });
+    const names = new Set((data ?? []).map((f) => f.name));
+    const shots = SHOT_VIEWS.flatMap((v, i) =>
+      names.has(`${task.book.id}-${v}.jpg`) ? [{ bucket, path: paths[i], kind: "screenshot" as const, note: `The brand's own website, ${v.replace("_", " ")}` }] : []
+    );
+    return { shots, logo: null };
+  };
   try {
-    const links = await Promise.all([...paths, logoPath].map((p) => service.storage.from(bucket).createSignedUploadUrl(p)));
-    if (links.some((l) => l.error || !l.data)) return none;
+    // A second try at the same book writes over the first try's screenshots: without upsert the upload links were
+    // refused and the book was written without ever seeing the site (Anthem, 9 Nov: a retake read only product cut-outs).
+    const links = await Promise.all([...paths, logoPath].map((p) => service.storage.from(bucket).createSignedUploadUrl(p, { upsert: true })));
+    if (links.some((l) => l.error || !l.data)) return stored();
     const res = await fetch(shotUrl, {
       method: "POST",
       headers: { "content-type": "application/json", ...(bypass ? { "x-vercel-protection-bypass": bypass } : {}) },
       body: JSON.stringify({ url: task.website, upload: links.slice(0, -1).map((l) => l.data!.signedUrl), logo: links.at(-1)!.data!.signedUrl }),
       signal: AbortSignal.timeout(95_000),
     });
-    if (!res.ok) return none;
+    if (!res.ok) return stored();
     const out = (await res.json()) as { shots?: { view: string }[]; logo?: { type: string; from: string } | null };
     const taken = new Set((out.shots ?? []).map((s) => s.view));
     const shots = SHOT_VIEWS.flatMap((v, i) =>
@@ -134,9 +145,9 @@ async function siteShots(task: Parameters<typeof voicePrompt>[0]): Promise<{ sho
     const logo = out.logo && LOGO_TYPES.test(out.logo.type)
       ? { bucket, path: logoPath, type: out.logo.type, from: `the header of ${new URL(task.website).hostname}` }
       : null;
-    return { shots, logo };
+    return shots.length ? { shots, logo } : stored();
   } catch {
-    return none;
+    return stored();
   }
 }
 
@@ -362,6 +373,11 @@ async function write(task: Parameters<typeof voicePrompt>[0], read: PageText[]):
   const onBrand = seen?.answer ? withCreatives(design, seen.answer, seen.pictures) : { ...design, onPictures: null };
   // The logo file the design layer sets on every creative, or none yet.
   const body = withFontFiles({ ...onBrand, logo: seen?.logo ?? null }, fonts);
+  // A book that never saw the brand's website or its own ads says so, so the expert does not take Fume's proposals for
+  // the brand's own design.
+  if (seen?.answer && !seen.pictures.some((p) => p.kind === "screenshot" || p.kind === "liked")) {
+    (body as { gaps: string[] }).gaps = [...((body as { gaps?: string[] }).gaps ?? joined.gaps), "Fume did not see the brand's website or its own ads for this book; its layouts are Fume's proposals. Write the book again or upload the brand's ads."];
+  }
   if (!seen?.answer) (body as { gaps: string[] }).gaps = [...((body as { gaps?: string[] }).gaps ?? joined.gaps), "Fume could not read how the brand sets words on its pictures; upload a few of the brand's own ads."];
   const sources = { sources: [...joined.sources, ...(seen?.answer?.sources ?? [])], pictures: (seen?.pictures ?? []).map((p) => p.url ?? p.path) };
   return { ok: true, body, sources, usage };

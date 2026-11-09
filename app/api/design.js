@@ -11,7 +11,7 @@ var SIZES = {
   banner: { w: 1920, h: 1080 }
 };
 function signatureOf(book, name, hasCta) {
-  const all = (book.onPictures?.layouts ?? []).filter((l) => carriesWords(l));
+  const all = brandLayouts(book);
   const named = all.find((l) => l.name === name);
   if (named) return named;
   const rank = (l) => l.source === "pictures" ? 0 : l.source === "site" ? 1 : 2;
@@ -19,6 +19,11 @@ function signatureOf(book, name, hasCta) {
   const first = best[0];
   const fits2 = hasCta && first ? best.find((l) => rank(l) === rank(first) && l.cta !== "none") : void 0;
   return fits2 ?? first ?? null;
+}
+function brandLayouts(book) {
+  const all = (book.onPictures?.layouts ?? []).filter((l) => carriesWords(l));
+  const seen = all.filter((l) => l.source !== "fume");
+  return seen.length ? seen : all;
 }
 function carriesWords(l) {
   return l.hasWords ?? !/\b(no|without) (words|text|copy)\b|\b(logo|swoosh|mark) alone\b/i.test(l.name);
@@ -118,7 +123,7 @@ function compose(book, format, words, l, family, widths = {}, logo) {
     const py = Math.max(Math.round(pad3 * 0.6), Math.ceil((56 - line) / 2));
     if (look === "slant" || look === "slant_double") {
       colours.CTA = wordsHex;
-      const stroke = Math.max(2, Math.round(s.sizePx / 14));
+      const stroke = Math.max(1.5, Math.round(s.sizePx / 24 * 2) / 2);
       const lean = Math.round(line * 0.45);
       return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(s.sizePx * 0.9) + lean}} py={${Math.round(s.sizePx * 0.6)}}><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
         s.trackingEm * s.sizePx
@@ -486,7 +491,7 @@ async function slants(graph, root) {
   const walk = (id) => {
     const n = graph.getNode(id);
     if (!n) return;
-    const m = /^Slant (#[0-9A-Fa-f]{6}) (\d+) ([12])$/.exec(n.name ?? "");
+    const m = /^Slant (#[0-9A-Fa-f]{6}) (\d+(?:\.\d+)?) ([12])$/.exec(n.name ?? "");
     if (m && n.parentId) marks.push({ id, parent: n.parentId, hex: m[1], stroke: Number(m[2]), lines: Number(m[3]) });
     for (const c of graph.getChildren(id)) walk(c.id);
   };
@@ -506,7 +511,7 @@ function slantJSX(w, h, hex, stroke, lines) {
   const side = Math.max(W, H);
   const i = stroke / 2;
   const off = lines === 2 ? Math.round(stroke * 1.5) : 0;
-  const lean = Math.round(H * 0.16);
+  const lean = Math.round(H * 0.125);
   const shape = (top, bottom, k, shift) => {
     const a = (lean - k) / 2;
     return `M${r(k + a + shift + i)} ${r(top + i)} L${r(W - a + shift - i)} ${r(top + i)} L${r(W - k - a + shift - i)} ${r(bottom - i)} L${r(a + shift + i)} ${r(bottom - i)} Z`;
@@ -979,7 +984,7 @@ function* layoutsFor(book, format, prefer, hasCta) {
   const sigColumns = sig && sigWidth ? Math.min(g.columns, Math.max(4, Math.round(sigWidth / 100 * g.columns))) : null;
   const sigAt = sig?.box && sig.box.y > 0 ? sig.box.y : void 0;
   const sigGround = sig ? sig.ground === "colour_block" ? "block" : sig.ground : null;
-  const blockSig = sigGround === "block" ? sig : (book.onPictures?.layouts ?? []).find((x) => carriesWords(x) && x.ground === "colour_block" && /^#[0-9a-f]{6}$/i.test(x.groundHex ?? "")) ?? null;
+  const blockSig = sigGround === "block" ? sig : brandLayouts(book).find((x) => x.ground === "colour_block" && /^#[0-9a-f]{6}$/i.test(x.groundHex ?? "")) ?? null;
   const sigColour = sig ? { light: "on_photo", dark: "text", brand_colour: "accent" }[sig.words] : null;
   const ctaLook = sig && sig.cta !== "none" ? sig.cta : void 0;
   const noCta = sig?.cta === "none";
@@ -997,7 +1002,9 @@ function* layoutsFor(book, format, prefer, hasCta) {
     "photo",
     ...scrim === "gradient" ? ["gradient"] : [],
     ...blockSig ? ["block"] : [],
-    "flat"
+    // A panel behind the words only where the brand sets one: a box is not a designer's answer to a busy picture
+    // (Marcus, 9 Nov). Without one, a picture with no calm room is one to make again, not one to cover.
+    ...scrim === "flat" || brandLayouts(book).some((x) => x.ground === "flat") ? ["flat"] : []
   ]).filter((x) => x !== "block" || blockSig);
   const widths = prefer.columns ? [prefer.columns] : uniq([...sigColumns ? [sigColumns] : [], ...format === "banner" ? [6, 8] : [9, 7, 5, 12]]);
   const ctaSide = sig?.ctaAt === "bottom_right" ? "right" : sig?.ctaAt === "bottom_left" ? "left" : void 0;

@@ -158,7 +158,8 @@ export function compose(
       // A slanted outline in the words' own colour, one thin line or two that cross, as sports retailers set their
       // buttons (Anthem's SHOP NOW, 9 Nov). The lines are drawn once the button has its size (see slants in render.ts).
       colours.CTA = wordsHex;
-      const stroke = Math.max(2, Math.round(s.sizePx / 14));
+      // Hairlines, as the site draws them: about a 24th of the words' size (SHOP NOW at 28 px: 1.5 px lines).
+      const stroke = Math.max(1.5, Math.round((s.sizePx / 24) * 2) / 2);
       const lean = Math.round(line * 0.45);
       return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(s.sizePx * 0.9) + lean}} py={${Math.round(s.sizePx * 0.6)}}><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
         s.trackingEm * s.sizePx,

@@ -205,7 +205,7 @@ async function slants(graph: SceneGraph, root: string): Promise<boolean> {
   const walk = (id: string) => {
     const n = graph.getNode(id);
     if (!n) return;
-    const m = /^Slant (#[0-9A-Fa-f]{6}) (\d+) ([12])$/.exec(n.name ?? "");
+    const m = /^Slant (#[0-9A-Fa-f]{6}) (\d+(?:\.\d+)?) ([12])$/.exec(n.name ?? "");
     if (m && n.parentId) marks.push({ id, parent: n.parentId, hex: m[1], stroke: Number(m[2]), lines: Number(m[3]) });
     for (const c of graph.getChildren(id)) walk(c.id);
   };
@@ -228,7 +228,8 @@ export function slantJSX(w: number, h: number, hex: string, stroke: number, line
   const i = stroke / 2;
   // Two lines sit a stroke and a half apart, the second leaning less, so they cross as the brand's do.
   const off = lines === 2 ? Math.round(stroke * 1.5) : 0;
-  const lean = Math.round(H * 0.16);
+  // Measured on anthem-sports.com: the outer line leans about an eighth of the button's height.
+  const lean = Math.round(H * 0.125);
   const shape = (top: number, bottom: number, k: number, shift: number) => {
     const a = (lean - k) / 2;
     return `M${r(k + a + shift + i)} ${r(top + i)} L${r(W - a + shift - i)} ${r(top + i)} L${r(W - k - a + shift - i)} ${r(bottom - i)} L${r(a + shift + i)} ${r(bottom - i)} Z`;

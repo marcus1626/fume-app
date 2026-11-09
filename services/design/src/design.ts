@@ -2,7 +2,7 @@
 // by name (where the words go, which headline style, which colour role); code tries the layouts in that order, measures
 // each one in the picture (contrast under every line of words, how busy it is, what it covers, whether it fits the
 // safe area), and keeps the best that passes. What did not pass is said, for the expert.
-import { type DesignBook, type Format, type Grid, type Style, carriesWords, colourOf, componentOf, gridOf, headlineSteps, signatureOf, styleOf } from "./book.ts";
+import { type DesignBook, type Format, type Grid, type Style, brandLayouts, colourOf, componentOf, gridOf, headlineSteps, signatureOf, styleOf } from "./book.ts";
 import { type Band, type Composed, type FamilyFor, type Ground, type Layout, type Words, compose, shadeFill, shadeFor } from "./compose.ts";
 import { type Box, type Pixels, type Shade, contrast, luminance, overlap, rgbOf, under } from "./pixels.ts";
 import { type BrandFace, type Doc, boxOf, build, fig, capHeightOf, hasFont, pixelsOf, place, png, lineWidth, splitWords, useBrandFaces, wordWidths } from "./render.ts";
@@ -283,7 +283,7 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
   // model chose another of its layouts (Anthem's navy block behind a short line).
   const blockSig = sigGround === "block"
     ? sig
-    : (book.onPictures?.layouts ?? []).find((x) => carriesWords(x) && x.ground === "colour_block" && /^#[0-9a-f]{6}$/i.test(x.groundHex ?? "")) ?? null;
+    : brandLayouts(book).find((x) => x.ground === "colour_block" && /^#[0-9a-f]{6}$/i.test(x.groundHex ?? "")) ?? null;
   const sigColour = sig ? ({ light: "on_photo", dark: "text", brand_colour: "accent" } as const)[sig.words] : null;
   const ctaLook = sig && sig.cta !== "none" ? sig.cta : undefined;
   // A brand whose ads carry no call to action on the picture (Nike: it sits in the ad's own button) gets none.
@@ -304,7 +304,9 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
     "photo",
     ...(scrim === "gradient" ? ["gradient"] : []),
     ...(blockSig ? ["block"] : []),
-    "flat",
+    // A panel behind the words only where the brand sets one: a box is not a designer's answer to a busy picture
+    // (Marcus, 9 Nov). Without one, a picture with no calm room is one to make again, not one to cover.
+    ...(scrim === "flat" || brandLayouts(book).some((x) => x.ground === "flat") ? ["flat"] : []),
   ]).filter((x) => x !== "block" || blockSig) as Ground[];
   const widths = prefer.columns
     ? [prefer.columns]

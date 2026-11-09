@@ -246,7 +246,7 @@ test("a slanted call to action is drawn as the brand's two thin lines once the b
   const button = boxOf(doc, "CTA")!;
   const outline = boxOf(doc, "Outline")!;
   assert.deepEqual([outline.x, outline.y, outline.w, outline.h], [button.x, button.y, button.w, button.h], "the outline takes the button's own box");
-  assert.ok(!doc.ids.has(`Slant #FFFFFF 2 2`), "the placeholder is gone");
+  assert.ok(![...doc.ids.keys()].some((n) => n.startsWith("Slant ")), "the placeholder is gone");
   const lines = slantJSX(button.w, button.h, "#FFFFFF", 2, 2).match(/<path /g) ?? [];
   assert.equal(lines.length, 2);
   assert.equal((slantJSX(200, 60, "#FFFFFF", 2, 1).match(/<path /g) ?? []).length, 1);
@@ -262,6 +262,19 @@ test("a button the brand sets apart sits in its own corner at the bottom, beside
   const action = c.jsx.slice(c.jsx.indexOf('<Frame name="Action"'));
   assert.match(action, /items="end"/);
   assert.ok(!c.jsx.slice(c.jsx.indexOf('<Frame name="Words"'), c.jsx.indexOf('<Frame name="Action"')).includes('name="CTA"'), "the button is not in the block of words");
+});
+
+test("a device Fume proposed is never set as the brand's own where the book saw the brand's work", () => {
+  const seen = { name: "Tile", band: "bottom", align: "left", wordsWidthPct: 50, ground: "photo", words: "light", cta: "outline", source: "pictures" } as const;
+  const proposed = { name: "Navy block", band: "bottom", align: "left", wordsWidthPct: 60, ground: "colour_block", groundHex: "#11213A", words: "light", cta: "outline", source: "fume" } as const;
+  const b = { ...book, photoText: { ...book.photoText, scrim: "none" }, onPictures: { layouts: [proposed, seen] } } as DesignBook;
+  const all = [...layoutsFor(b, "feed", { signature: "Navy block" }, true)];
+  assert.ok(all.length > 0);
+  assert.ok(all.every((l) => l.ground !== "block" && l.ground !== "flat"), "no box behind the words");
+  assert.ok(all.every((l) => l.signature === "Tile"));
+  // A brand Fume has seen nothing of still gets the proposal.
+  const unseen = { ...b, onPictures: { layouts: [proposed] } } as DesignBook;
+  assert.ok([...layoutsFor(unseen, "feed", {}, true)].some((l) => l.ground === "block"));
 });
 
 test("a short word held to the next is measured with it, so the pair is never broken inside a word", async () => {
