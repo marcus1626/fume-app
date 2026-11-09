@@ -4,11 +4,20 @@
 // the playhead; click a track's empty part to go there; click an item to select it. A selected shot has handles at
 // both ends: drag to trim (the shots after it move up), with the arrow keys a tenth at a time. A trimmed end that
 // lands near a beat snaps to it.
-import { Icon } from "@fume/ui";
+// Round 14 (FLOWS §34.6, PROPOSED 9 Nov 2026): the tracks are named as in an editor: Text and Brand (the brand's
+// components: its call to action, its end card) over Main (the shots, magnetic: a trim closes the gap), then the
+// captions and the sound. A layer that follows a shot moves with it, and carries a small link. A layer's keyframes are
+// diamonds on its item. In Motion mode each layer has its own track, as in After Effects. The corner switches to the
+// Storyboard: the same shots as cards. A 3D track shows only behind the 3d flag (?flags=3d), off in production.
+import { Icon, Toggle, WithTooltip, type IconName } from "@fume/ui";
 import { useRef, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
-import type { EditCheck, VideoClip, VideoEdit } from "../../../../contract";
+import type { EditCheck, MotionLayer, VideoClip, VideoEdit } from "../../../../contract";
 import { MIN_SHOT, editLength, nearestBeat, pickedTake, placed, timecode } from "../../../../domain/video";
-import { openFindings, wavePath, type Selection } from "./edit";
+import { MOTION, flagOn, openFindings, wavePath, type Selection } from "./edit";
+
+const BRAND = new Set<MotionLayer["template"]>(["cta", "end"]);
+
+type Lane = { id: string; name: string; icon: IconName; size: "sm" | "shot" | "md"; layers?: MotionLayer[] };
 
 const SNAP = 0.12;
 
@@ -18,10 +27,12 @@ export function Timeline({
   selected,
   readOnly,
   proposed,
+  motionMode,
   onSelect,
   onSeek,
   onTrim,
   onFlag,
+  onBoard,
 }: {
   edit: VideoEdit;
   t: number;
@@ -29,13 +40,16 @@ export function Timeline({
   readOnly: boolean;
   /** The Engine's ask is shown on the timeline until she keeps or undoes it; nothing else moves meanwhile. */
   proposed: boolean;
+  /** Motion mode: a track for each layer. */
+  motionMode?: boolean;
   onSelect: (s: Selection | undefined) => void;
   onSeek: (t: number) => void;
   onTrim: (clipId: string, change: Pick<VideoClip, "in" | "out">, key: string) => void;
   onFlag: (check: EditCheck) => void;
+  onBoard: (on: boolean) => void;
 }) {
   const length = Math.max(editLength(edit), ...edit.sound.map((s) => s.end), 1);
-  const lanes = useRef<HTMLDivElement>(null);
+  const track = useRef<HTMLDivElement>(null);
   const shots = placed(edit.clips);
   const beats = edit.sound.find((s) => s.kind === "music")?.beats?.filter((b) => b <= length) ?? [];
   const step = length > 40 ? 10 : length > 20 ? 5 : 3;
@@ -44,7 +58,7 @@ export function Timeline({
   const still = readOnly || proposed;
 
   const timeAt = (clientX: number) => {
-    const r = lanes.current?.getBoundingClientRect();
+    const r = track.current?.getBoundingClientRect();
     if (!r) return 0;
     return Math.min(length, Math.max(0, ((clientX - r.left) / r.width) * length));
   };
@@ -101,34 +115,96 @@ export function Timeline({
   };
 
   const sel = selected?.kind === "shot" ? shots.find((s) => s.clip.id === selected.id) : undefined;
+  const shotNo = new Map(shots.map((s) => [s.clip.id, s.index + 1]));
+
+  // The tracks, top to bottom.
+  const lanes: Lane[] = [
+    ...(motionMode
+      ? edit.motion.map((m) => ({
+          id: m.id,
+          name: m.template === "cta" ? "CTA" : MOTION[m.template].name,
+          icon: "type" as const,
+          size: "sm" as const,
+          layers: [m],
+        }))
+      : [
+          {
+            id: "text",
+            name: "Text",
+            icon: "type" as const,
+            size: "sm" as const,
+            layers: edit.motion.filter((m) => !BRAND.has(m.template)),
+          },
+          {
+            id: "brand",
+            name: "Brand",
+            icon: "layers" as const,
+            size: "sm" as const,
+            layers: edit.motion.filter((m) => BRAND.has(m.template)),
+          },
+        ]),
+    { id: "main", name: "Main", icon: "film", size: "shot" },
+    ...(motionMode ? [] : [{ id: "captions", name: "Captions", icon: "captions" as const, size: "sm" as const }]),
+    { id: "sound", name: "Sound", icon: "music", size: "md" },
+    ...(flagOn("3d") ? [{ id: "3d", name: "3D", icon: "package" as const, size: "sm" as const }] : []),
+  ];
+
+  const layerLane = (lane: Lane) => (
+    <div key={lane.id} className="ui-video-lane" data-lane="motion" onClick={laneClick}>
+      {lane.layers!.map((m) => {
+        const dur = Math.max(0.1, m.end - m.start);
+        const keys = [...new Set((m.keys ?? []).map((k) => k.at))]
+          .filter((k) => k >= 0 && k <= dur)
+          .sort((a, b) => a - b);
+        const follows = m.clipId ? shotNo.get(m.clipId) : undefined;
+        return (
+          <button
+            key={m.id}
+            {...item(
+              { kind: "motion", id: m.id },
+              m.start,
+              m.end,
+              `${m.text}${follows ? `, follows shot ${follows}` : ""}`,
+            )}
+            data-template={m.template}
+            data-keys={keys.length ? "" : undefined}
+            style={at(m.start, m.end)}
+          >
+            {follows && <Icon name="link" className="ui-video-item-link" />}
+            <span>{m.text}</span>
+            {keys.map((k) => (
+              <i key={k} className="ui-video-key" style={{ "--k": k / dur } as CSSProperties} aria-hidden="true" />
+            ))}
+          </button>
+        );
+      })}
+    </div>
+  );
 
   return (
     <section
       className="ui-video-timeline"
       aria-label="Timeline"
       data-proposed={proposed ? "" : undefined}
-      style={{ "--len": length, "--t": Math.min(t, length) } as CSSProperties}
+      data-mode={motionMode ? "motion" : "edit"}
+      style={
+        {
+          "--len": length,
+          "--t": Math.min(t, length),
+          "--video-lanes": lanes.map((l) => `var(--lane-${l.size})`).join(" "),
+        } as CSSProperties
+      }
     >
-      <div className="ui-video-heads" aria-hidden="true">
-        <span />
-        <span>
-          <Icon name="type" />
-          Motion
-        </span>
-        <span>
-          <Icon name="film" />
-          Shots
-        </span>
-        <span>
-          <Icon name="captions" />
-          Captions
-        </span>
-        <span>
-          <Icon name="music" />
-          Sound
-        </span>
+      <div className="ui-video-heads">
+        <Views board={false} onBoard={onBoard} />
+        {lanes.map((l) => (
+          <span key={l.id} aria-hidden="true" title={l.name}>
+            <Icon name={l.icon} />
+            <span>{l.name}</span>
+          </span>
+        ))}
       </div>
-      <div className="ui-video-lanes" ref={lanes}>
+      <div className="ui-video-lanes" ref={track}>
         <div className="ui-video-ruler">
           <div
             className="ui-video-scrub"
@@ -164,17 +240,7 @@ export function Timeline({
           ))}
         </div>
 
-        <div className="ui-video-lane" data-lane="motion" onClick={laneClick}>
-          {edit.motion.map((m) => (
-            <button
-              key={m.id}
-              {...item({ kind: "motion", id: m.id }, m.start, m.end, m.text)}
-              style={at(m.start, m.end)}
-            >
-              <span>{m.text}</span>
-            </button>
-          ))}
-        </div>
+        {lanes.filter((l) => l.layers).map(layerLane)}
 
         <div className="ui-video-lane" data-lane="shots" onClick={laneClick}>
           {shots.map(({ clip, index, start, end }) => {
@@ -216,17 +282,19 @@ export function Timeline({
           )}
         </div>
 
-        <div className="ui-video-lane" data-lane="captions" onClick={laneClick}>
-          {edit.captions.map((c) => (
-            <button
-              key={c.id}
-              {...item({ kind: "caption", id: c.id }, c.start, c.end, c.text)}
-              style={at(c.start, c.end)}
-            >
-              <span>{c.text}</span>
-            </button>
-          ))}
-        </div>
+        {!motionMode && (
+          <div className="ui-video-lane" data-lane="captions" onClick={laneClick}>
+            {edit.captions.map((c) => (
+              <button
+                key={c.id}
+                {...item({ kind: "caption", id: c.id }, c.start, c.end, c.text)}
+                style={at(c.start, c.end)}
+              >
+                <span>{c.text}</span>
+              </button>
+            ))}
+          </div>
+        )}
 
         <div className="ui-video-lane" data-lane="sound" onClick={laneClick}>
           {edit.sound.map((s) => (
@@ -245,9 +313,43 @@ export function Timeline({
           ))}
         </div>
 
+        {lanes.some((l) => l.id === "3d") && (
+          <div className="ui-video-lane" data-lane="3d">
+            <span className="ui-video-lane-note">The product’s 3D model with a camera move. Behind a flag.</span>
+          </div>
+        )}
+
         <span className="ui-video-head" aria-hidden="true" />
       </div>
     </section>
+  );
+}
+
+/** The corner of the tracks: Timeline or Storyboard, two ways to see the same shots. */
+export function Views({ board, onBoard }: { board: boolean; onBoard: (on: boolean) => void }) {
+  return (
+    <div className="ui-video-views" role="group" aria-label="View">
+      <WithTooltip label="Timeline">
+        <Toggle
+          size="sm"
+          iconOnly
+          icon="layers"
+          aria-label="Timeline"
+          pressed={!board}
+          onPressedChange={() => onBoard(false)}
+        />
+      </WithTooltip>
+      <WithTooltip label="Storyboard">
+        <Toggle
+          size="sm"
+          iconOnly
+          icon="layout-grid"
+          aria-label="Storyboard"
+          pressed={board}
+          onPressedChange={() => onBoard(true)}
+        />
+      </WithTooltip>
+    </div>
   );
 }
 

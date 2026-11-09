@@ -37,7 +37,20 @@ export function shotLine(clip: VideoClip, staff = true): string {
   const seconds = `${((clip.out - clip.in) / (clip.speed || 1)).toFixed(1)} s`;
   if (!take) return making ? "The Engine is making it" : "No take yet";
   if (clip.source === "library") return `Footage · ${seconds}`;
-  return [staff ? take.model : "Engine", `take ${take.number}`, seconds].join(" · ");
+  return [takeWords(clip), staff ? take.model : undefined, seconds].filter(Boolean).join(" · ");
+}
+
+/** "Take 2 of 3": which take of the shot is used (FLOWS §34.6). */
+export function takeWords(clip: VideoClip): string {
+  const take = pickedTake(clip);
+  if (!take) return "No take yet";
+  return `Take ${take.number} of ${clip.takes.length}`;
+}
+
+/** A feature behind a flag, on in the address (?flags=3d), off in production until it works (FLOWS §34.6). */
+export function flagOn(name: string): boolean {
+  if (typeof location === "undefined") return false;
+  return (new URLSearchParams(location.search).get("flags") ?? "").split(",").includes(name);
 }
 
 /** The open findings on the part of the picked take the edit uses. */
@@ -55,6 +68,12 @@ export const MOTION: Record<MotionTemplate, { name: string; line: string; start:
     seconds: 2.2,
   },
   offer: { name: "Offer", line: "A price or an offer, when the plan has one", start: "New this autumn", seconds: 2 },
+  cta: {
+    name: "Call to action",
+    line: "The brand’s button: its words change, its look stays",
+    start: "Se oljen",
+    seconds: 2,
+  },
   end: { name: "End card", line: "The brand’s mark, last", start: "LYSNE", seconds: 1.6 },
 };
 

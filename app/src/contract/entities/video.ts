@@ -79,8 +79,28 @@ export interface VideoClip {
   productId?: Id;
 }
 
-/** The brand's motion design: words and marks that come from its design system (FLOWS §27.4). */
-export type MotionTemplate = "title" | "line" | "product" | "offer" | "end";
+/** The brand's motion design: words and marks that come from its design system (FLOWS §27.4). The call to action is
+ *  the brand's own button, a component from its design system: its words change, its look and motion are the brand's
+ *  (FLOWS §34.6). */
+export type MotionTemplate = "title" | "line" | "product" | "offer" | "cta" | "end";
+
+/** A named easing from the brand's motion, never a bounce (FLOWS §34.6). */
+export type EaseId = "soft-out" | "settle" | "in-out" | "even";
+
+/** What a keyframe moves. */
+export type MotionProp = "x" | "y" | "scale" | "opacity";
+
+/** One keyframe: a value at a time counted from the layer's own start, so the motion moves with the layer. x and y are
+ *  per cent of the frame from where the layer sits; scale is 1 at its size; opacity 0 to 1. */
+export interface MotionKey {
+  prop: MotionProp;
+  at: number;
+  value: number;
+}
+
+/** A motion style (FLOWS §34.6): a set of motion, not a template: easing, pace, how words come in and go, how scenes
+ *  meet. Made in the brand's colours and type. */
+export type MotionStyleId = "saas" | "explainer" | "kinetic" | "showcase" | "stats" | "sting";
 
 export interface MotionLayer {
   id: Id;
@@ -92,6 +112,16 @@ export interface MotionLayer {
   /** How it comes in: soft to sharp, a fade, or a short rise. */
   enter: "soft" | "fade" | "rise";
   place: "top" | "centre" | "bottom";
+  /** How it goes (FLOWS §34.6); none is a cut. Kept as it is when the layer is made longer: the middle stretches. */
+  exit?: "soft" | "fade" | "fall";
+  /** How it lives while it is on. */
+  loop?: "still" | "drift" | "breathe";
+  /** The easing of its keyframes and its way in and out. */
+  ease?: EaseId;
+  /** Keyframes, counted from the layer's start. */
+  keys?: MotionKey[];
+  /** The shot it sits on: it moves with that shot when the shot moves (FLOWS §34.6). */
+  clipId?: Id;
 }
 
 export interface CaptionCue {
@@ -167,6 +197,8 @@ export interface VideoEdit {
   grade: string;
   checks: EditCheck[];
   edits: VideoEngineEdit[];
+  /** The motion style and its knobs, 0–100 (FLOWS §34.6). */
+  style?: { id: MotionStyleId; energy: number; pace: number };
 }
 
 /** A piece of the brand's own footage in its library (Fume for Agencies, 05): a shot the edit can use as it is. */

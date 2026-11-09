@@ -223,6 +223,11 @@ const listWords = (xs: string[]) => (xs.length < 2 ? xs.join("") : `${xs.slice(0
 /** What a switch from one mode to another does, in one sentence: the sections that carry over, the ones set aside (the
  *  last version keeps them, so going back or reopening that version brings them back), the versions. */
 export function switchWords(doc: CreativeDocument, from: StudioMode | undefined, to: StudioMode): string {
+  // A video's two modes show the same edit in other panels (FLOWS §34.6): a switch never changes the edit.
+  if (doc.studio === "video")
+    return `The same video in other panels: ${
+      to.id === "m-video-motion" ? "the styles, and a track for each layer" : "the library, and the shots on one track"
+    }. Nothing in the edit changes.`;
   const keys = new Set(to.variables.map((v) => v.key));
   const sections = from?.sections ?? [];
   // A mode's "Product" section is where the product sits in the frame; the product itself is a spec.

@@ -599,12 +599,13 @@ export const modes: StudioMode[] = [
     ],
   },
   // Video (FLOWS §27): the mode's variables are the edit's own settings, shown when no shot is selected.
+  // Round 14 (FLOWS §34.6): two modes, as Image has modes. Edit is footage first: her own video and the Engine's shots,
+  // cut on a timeline with the brand's motion on top. Motion is motion design first, from a style, with layers.
   {
-    id: "m-video-film",
+    id: "m-video-edit",
     studio: "video",
-    name: "Product film",
-    description:
-      "Shots the Engine makes from checked masters and the brand's footage, cut to music with the brand's motion.",
+    name: "Edit",
+    description: "Your footage and the Engine's shots, cut on the music, with the brand's motion on top.",
     output: "creative",
     sections: ["Edit", "Look", "Sound"],
     available: true,
@@ -612,21 +613,10 @@ export const modes: StudioMode[] = [
     variables: videoVariables,
   },
   {
-    id: "m-video-still",
+    id: "m-video-motion",
     studio: "video",
-    name: "Motion from a still",
-    description: "One picked render that moves: a slow push, an orbit, or light that travels.",
-    output: "creative",
-    sections: ["Edit", "Look", "Sound"],
-    available: true,
-    uses: ["product"],
-    variables: videoVariables,
-  },
-  {
-    id: "m-video-cut",
-    studio: "video",
-    name: "Cut from footage",
-    description: "The brand's own clips from the library, cut and graded, with its motion on top.",
+    name: "Motion",
+    description: "Motion design from a style: Product showcase, Explainer, SaaS demo, Kinetic type, Stats, Logo sting.",
     output: "creative",
     sections: ["Edit", "Look", "Sound"],
     available: true,

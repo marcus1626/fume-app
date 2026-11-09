@@ -11,7 +11,7 @@
                <div class="ui-desk-stage"><div class="ui-video-frame" data-grade style="--ratio">
                  <video data-on data-front style="--mix --blur"/> | <img class="ui-video-still"/> …
                  <div class="ui-video-words"><p class="ui-video-motion"
-                 data-template data-place data-enter/> <p class="ui-video-caption"/></div> [SafeZones]</div></div>
+                 data-template data-place><span class="ui-video-motion-key" style="--kx --ky --ks --ko --kb"/></p> <p class="ui-video-caption"/></div> [SafeZones]</div></div>
                <div class="ui-video-transport"> play · <span class="ui-video-time"/> · <span class="ui-video-made"/>
                  <span class="ui-video-grade"/></div></section>
                <div class="ui-desk-engine"> the Engine bar </div></main>
@@ -88,9 +88,19 @@
   inset: 0; top: 0; bottom: 0; display: grid; place-items: center; transform: none; background: var(--ui-text); color: var(--ui-text-on-ink);
   font-size: 14cqi; letter-spacing: .12em; /* gate-allow:type-from-tokens the brand's wordmark on the end card, scaled to the frame */
 }
-.ui-video-motion[data-enter="soft"] { animation: ui-video-soft var(--ui-motion-slow) var(--ui-motion-ease) both; }
-.ui-video-motion[data-enter="fade"] { animation: ui-video-fade var(--ui-motion-slow) var(--ui-motion-ease) both; }
-.ui-video-motion[data-enter="rise"] { animation: ui-video-rise var(--ui-motion-slow) var(--ui-motion-ease) both; }
+/* A layer's motion is drawn from the clock (FLOWS §34.6): its keyframes, its way in, its life and its way out set
+   --kx --ky (a share of the frame), --ks, --ko and --kb on the words, so a paused frame is the film's frame */
+.ui-video-motion-key {
+  display: inline-block; translate: var(--kx, 0) var(--ky, 0); scale: var(--ks, 1); opacity: var(--ko, 1); filter: blur(var(--kb, 0px));
+}
+/* The brand's call to action: its pill and its words in the colours its design system sets; only the words change */
+.ui-video-motion[data-template="cta"] {
+  font-family: var(--ui-type-family); font-weight: var(--ui-type-weight-medium); font-size: 5.2cqi; /* gate-allow:type-from-tokens the brand's button, scaled to the frame */
+}
+.ui-video-motion[data-template="cta"] > .ui-video-motion-key {
+  padding: 2.2cqi 5.4cqi; /* gate-allow:space-from-tokens the brand's button, scaled to the frame */
+  border-radius: var(--ui-radius-action); background: var(--cta-fill, var(--ui-text-on-ink)); color: var(--cta-ink, var(--ui-text));
+}
 .ui-video-caption {
   position: absolute; inset-inline: 0; bottom: calc(var(--safe-bottom, .2) * 100% + 3%); margin: 0 auto; width: fit-content; max-width: 84%;
   padding: .5cqi 2.4cqi; /* gate-allow:space-from-tokens a caption burnt into the video, scaled to the frame */
@@ -99,9 +109,7 @@
   font-size: 4.4cqi; /* gate-allow:type-from-tokens a caption burnt into the video, scaled to the frame */
   animation: ui-video-fade var(--ui-motion-fast) var(--ui-motion-ease) both;
 }
-@keyframes ui-video-soft { from { opacity: 0; filter: blur(12px); } to { opacity: 1; filter: blur(0); } }
 @keyframes ui-video-fade { from { opacity: 0; } to { opacity: 1; } }
-@keyframes ui-video-rise { from { opacity: 0; translate: 0 6%; } to { opacity: 1; translate: 0 0; } }
 
 /* The transport under the player: play, the time as data, the format it is cut for */
 .ui-video-transport {
@@ -130,14 +138,17 @@
   border-radius: var(--ui-radius-card); background: var(--ui-ground); box-shadow: var(--ui-depth-sheet);
   user-select: none;
 }
-.ui-video-heads { display: grid; grid-template-rows: var(--ui-size-control-sm) var(--video-lanes); gap: var(--ui-space-xs); }
+.ui-video-heads { display: grid; grid-template-rows: var(--ui-size-control-sm) var(--video-lanes); gap: var(--ui-space-xs); min-width: 0; }
 .ui-video-heads > span {
   display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0;
   font-size: var(--ui-type-label); line-height: 1.3; color: var(--ui-text-tertiary);
 }
 .ui-video-heads > span > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
-.ui-video-timeline, .ui-video-heads {
-  --video-lanes: var(--ui-size-control-sm) calc(var(--ui-size-hit) + var(--ui-space-md)) var(--ui-size-control-sm) var(--ui-size-control-md);
+.ui-video-heads > span > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* The tracks' heights: the page sets --video-lanes from these, a track at a time (Text, Brand, Main, Captions, Sound) */
+.ui-video-timeline {
+  --lane-sm: var(--ui-size-control-sm); --lane-shot: calc(var(--ui-size-hit) + var(--ui-space-md)); --lane-md: var(--ui-size-control-md);
+  --video-lanes: var(--lane-sm) var(--lane-sm) var(--lane-shot) var(--lane-sm) var(--lane-md);
 }
 .ui-video-lanes { position: relative; display: grid; grid-template-rows: var(--ui-size-control-sm) var(--video-lanes); gap: var(--ui-space-xs); min-width: 0; }
 .ui-video-ruler { position: relative; }
@@ -313,6 +324,166 @@ button.ui-video-check:focus-visible { outline: var(--ui-size-ring) solid var(--u
 .ui-video-format-name { font-weight: var(--ui-type-weight-medium); }
 .ui-video-format-meta { color: var(--ui-text-secondary); font-variant-numeric: tabular-nums; white-space: nowrap; }
 
+/* ---------- round 14 (FLOWS §34.6, PROPOSED 9 Nov 2026): the editor ---------- */
+
+/* The corner of the tracks: Timeline or Storyboard */
+.ui-video-views { display: flex; align-items: center; gap: var(--ui-space-xs); }
+
+/* A layer's keyframes on its item: small Ink diamonds; a layer that follows a shot carries a link */
+/* An item with keys keeps its words in the top part; the keys sit on a row along its foot */
+.ui-video-item[data-keys] { align-items: flex-start; padding-block-start: var(--ui-space-xs); }
+.ui-video-key {
+  position: absolute; bottom: var(--ui-space-xs); left: clamp(var(--ui-space-xs), calc(var(--k) * 100%), calc(100% - var(--ui-space-xs)));
+  width: calc(var(--ui-space-xs) * 1.5); height: calc(var(--ui-space-xs) * 1.5);
+  translate: -50% 0; rotate: 45deg; border-radius: 1px; background: var(--ui-text); pointer-events: none; /* gate-allow:radius-from-tokens a diamond's corner */
+}
+.ui-video-item[aria-pressed="true"] > .ui-video-key { background: var(--ui-action-primary); }
+.ui-video-item > .ui-video-item-link { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-tertiary); }
+/* The brand's components on the Brand track step forward a little: they are the brand's, not her words */
+.ui-video-item[data-template="cta"], .ui-video-item[data-template="end"] { background: var(--ui-text); color: var(--ui-text-on-ink); box-shadow: none; }
+@media (hover: hover) { .ui-video-item[data-template="cta"]:hover, .ui-video-item[data-template="end"]:hover { background: var(--ui-action-primary-hover); } }
+.ui-video-item[data-template="cta"][aria-pressed="true"], .ui-video-item[data-template="end"][aria-pressed="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary), inset 0 0 0 calc(var(--ui-size-ring) * 2) var(--ui-text-on-ink); }
+.ui-video-item[data-template="cta"] > .ui-video-key, .ui-video-item[data-template="end"] > .ui-video-key { background: var(--ui-text-on-ink); }
+.ui-video-item[data-template="cta"] > .ui-video-item-link, .ui-video-item[data-template="end"] > .ui-video-item-link { color: var(--ui-text-on-ink); }
+/* The 3D track behind its flag: a quiet line until it works */
+.ui-video-lane[data-lane="3d"] { display: flex; align-items: center; padding-inline: var(--ui-space-sm); }
+.ui-video-lane-note { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+
+/* The Storyboard: the same shots as cards, in order, in the timeline's place */
+.ui-video-board { grid-template-rows: auto; }
+.ui-video-board > .ui-video-heads { grid-template-rows: var(--ui-size-control-sm); align-content: start; }
+.ui-video-cards {
+  display: flex; gap: var(--ui-space-sm); min-width: 0; margin: 0; padding: var(--ui-space-xs) var(--ui-space-xs) var(--ui-space-sm); list-style: none;
+  overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin;
+}
+.ui-video-cards > li { flex: 0 0 auto; display: flex; }
+.ui-video-card {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: var(--ui-space-sm);
+  width: calc(var(--ui-size-hit) * 5.5); margin: 0; padding: var(--ui-space-sm); border: 0;
+  border-radius: var(--ui-radius-item); background: var(--ui-ground); box-shadow: var(--ui-depth-raised); color: var(--ui-text);
+  font-family: var(--ui-type-family); text-align: start; cursor: pointer; outline: none; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+@media (hover: hover) { .ui-video-card:hover:not(:disabled) { background: var(--ui-action-secondary-hover); } }
+.ui-video-card:active:not(:disabled) { transform: scale(var(--ui-motion-press-scale)); }
+.ui-video-card:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-video-card:disabled { cursor: default; }
+.ui-video-card[aria-pressed="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); }
+/* The picture, with the shot's other takes as a stack behind it */
+.ui-video-card-img {
+  position: relative; display: block; width: calc(var(--ui-size-hit) * 1.4); aspect-ratio: 9 / 16;
+  margin-inline-end: calc(var(--stack, 0) * var(--ui-space-sm)); margin-block-start: calc(var(--stack, 0) * var(--ui-space-sm));
+  border-radius: var(--ui-radius-check); background: var(--ui-surface-sunken);
+}
+.ui-video-card-img > img { position: relative; z-index: 2; display: block; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+/* The other takes: their own first frames, a step behind and up, quieter the further back */
+.ui-video-card-img > img[data-behind] { position: absolute; inset: 0; z-index: 1; translate: var(--ui-space-sm) calc(-1 * var(--ui-space-sm)); opacity: .55; }
+.ui-video-card-img > img[data-behind="2"] { z-index: 0; translate: var(--ui-space-lg) calc(-1 * var(--ui-space-lg)); opacity: .3; }
+.ui-video-card-text { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-video-card-name { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.3; text-wrap: balance; }
+.ui-video-card-from { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-video-card-chips { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); }
+.ui-video-card-flag { display: inline-flex; align-items: center; gap: var(--ui-space-xs); font-size: var(--ui-type-label); color: var(--ui-danger); }
+.ui-video-card-flag > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-video-card-add {
+  display: flex; align-items: flex-start; gap: var(--ui-space-sm); width: calc(var(--ui-size-hit) * 5); padding: var(--ui-space-sm);
+  border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken);
+  font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty;
+}
+.ui-video-card-add > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); margin-top: 2px; } /* gate-allow:space-from-tokens the icon on the first line's x-height */
+
+/* The library's small headings, and the brand's call to action as its own thumb */
+.ui-video-sub {
+  margin: var(--ui-space-sm) 0 0; padding-inline: var(--ui-space-sm);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-tertiary);
+}
+.ui-video-row-img.ui-video-row-cta { display: grid; place-items: center; aspect-ratio: 1; background: var(--ui-surface-sunken); }
+.ui-video-row-cta > span { width: 72%; height: 30%; border-radius: var(--ui-radius-action); background: var(--cta-fill, var(--ui-text-on-ink)); }
+.ui-video-row-img[data-glyph][data-ink] { background: var(--ui-text); color: var(--ui-text-on-ink); }
+
+/* Motion mode's styles: a card each, the picked one with the Ink ring */
+.ui-video-styles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
+.ui-video-style {
+  position: relative; display: grid; align-content: start; gap: 2px; width: 100%; height: 100%; margin: 0; padding: var(--ui-space-sm); border: 0; /* gate-allow:space-from-tokens a name and its line, set close */
+  border-radius: var(--ui-radius-item); background: var(--ui-ground); box-shadow: var(--ui-depth-raised); color: var(--ui-text);
+  font-family: var(--ui-type-family); text-align: start; cursor: pointer; outline: none; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+@media (hover: hover) { .ui-video-style:hover { background: var(--ui-action-secondary-hover); } }
+.ui-video-style:active { transform: scale(var(--ui-motion-press-scale)); }
+@media (pointer: coarse) { .ui-video-style { min-height: var(--ui-size-hit); } }
+.ui-video-style:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-video-style[aria-pressed="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); }
+.ui-video-style-name { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.3; }
+.ui-video-style-line { font-size: var(--ui-type-label); line-height: 1.35; color: var(--ui-text-secondary); }
+
+/* The inspector's title and the line under it: what the shot is made from, whose component it is */
+.ui-video-inspector-title { display: grid; min-width: 0; margin: 0; }
+.ui-video-inspector-title > p { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+
+/* Keyframes: a row a property, the diamond that sets or takes out the key at the playhead, the value there, and the
+   layer's own short track with its keys */
+.ui-video-keys { display: grid; gap: var(--ui-space-sm); }
+.ui-video-keys > .ui-video-help { padding: 0; }
+.ui-video-keyrow {
+  display: grid; grid-template-columns: var(--ui-size-control-sm) minmax(0, 1fr) calc(var(--ui-size-hit) * 2); align-items: center; gap: 0 var(--ui-space-xs);
+}
+.ui-video-keytoggle {
+  position: relative; display: grid; place-items: center; width: var(--ui-size-control-sm); height: var(--ui-size-control-sm); margin: 0; padding: 0; border: 0;
+  border-radius: var(--ui-radius-action); background: transparent; cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent;
+}
+.ui-video-keytoggle::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-video-keytoggle:active:not(:disabled) { background: var(--ui-item-bg-pressed); }
+.ui-video-keytoggle::before {
+  content: ""; width: var(--ui-space-sm); height: var(--ui-space-sm); rotate: 45deg; border-radius: var(--ui-radius-check);
+  background: transparent; box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-text-tertiary); /* gate-allow:few-strokes an empty key is an outline, as in every editor */
+}
+.ui-video-keytoggle[aria-pressed="true"]::before { background: var(--ui-text); box-shadow: none; }
+@media (hover: hover) { .ui-video-keytoggle:hover:not(:disabled) { background: var(--ui-action-secondary-hover); } }
+.ui-video-keytoggle:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+.ui-video-keytoggle:disabled { cursor: default; opacity: .4; }
+.ui-video-keyname { font-size: var(--ui-type-label); color: var(--ui-text); }
+.ui-video-keyvalue { display: flex; align-items: center; gap: var(--ui-space-xs); }
+.ui-video-keyunit { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-video-keytrack {
+  position: relative; grid-column: 2 / -1; height: var(--ui-space-md); margin-block-start: var(--ui-space-xs);
+  border-radius: var(--ui-radius-check); background: var(--ui-surface-sunken);
+}
+.ui-video-keytrack::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: calc(var(--p, 0) * 100%); width: var(--ui-size-ring); translate: -50% 0;
+  background: var(--ui-action-primary); pointer-events: none; /* gate-allow:few-strokes the playhead on the layer is a position */
+}
+.ui-video-keydot {
+  position: absolute; top: 50%; left: calc(var(--k) * 100%); width: var(--ui-space-sm); height: var(--ui-space-sm); margin: 0; padding: 0; border: 0;
+  translate: -50% -50%; rotate: 45deg; border-radius: var(--ui-radius-check); background: var(--ui-text); cursor: pointer; outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.ui-video-keydot::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-video-keydot:active { background: var(--ui-action-primary-pressed); }
+.ui-video-keydot:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+
+/* The video conversation: the Engine's side panel, on the sheet's glass, the chat's own messages */
+.ui-video-talk-body { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; }
+.ui-video-talk-body > * { flex: 1 1 auto; min-height: 0; }
+.ui-video-talk-turn { display: grid; gap: var(--ui-space-md); }
+.ui-video-talk-changes { display: grid; gap: var(--ui-space-xs); margin: 0; padding-inline-start: var(--ui-space-lg); font-size: var(--ui-type-control); line-height: 1.45; }
+.ui-video-talk-state { display: inline-flex; align-items: center; gap: var(--ui-space-xs); margin: 0; font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+.ui-video-talk-state > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-video-talk-foot { display: grid; gap: var(--ui-space-sm); padding-inline: var(--ui-space-xs); }
+.ui-video-talk-foot > .ui-chat-chips { flex-wrap: wrap; overflow: visible; padding-inline: 0; }
+.ui-video-talk-context { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
+.ui-video-talk-chip { padding-inline-end: var(--ui-space-xs); }
+.ui-video-talk-chip > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-secondary); }
+.ui-video-talk-chip-x {
+  position: relative; display: grid; place-items: center; width: var(--ui-space-lg); height: var(--ui-space-lg); margin: 0; padding: 0; border: 0;
+  border-radius: var(--ui-radius-action); background: transparent; color: inherit; opacity: .55; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.ui-video-talk-chip-x::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-video-talk-chip-x > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+@media (hover: hover) { .ui-video-talk-chip-x:hover { opacity: 1; } }
+.ui-video-talk-chip-x:active { opacity: 1; background: var(--ui-badge-pressed); }
+.ui-video-talk-chip-x:focus-visible { opacity: 1; outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+
 @media (max-width: 899px) {
   .ui-video-timeline { grid-template-columns: minmax(0, 1fr); }
   .ui-video-heads, .ui-video-beat { display: none; }
@@ -320,10 +491,11 @@ button.ui-video-check:focus-visible { outline: var(--ui-size-ring) solid var(--u
 }
 /* Touch (an iPad at the desk): every control is 44 to touch; the timeline's tracks grow to it */
 @media (pointer: coarse) {
-  .ui-video-timeline, .ui-video-heads { --video-lanes: var(--ui-size-hit) var(--ui-size-hit) var(--ui-size-hit) var(--ui-size-hit); }
+  .ui-video-timeline { --lane-sm: var(--ui-size-hit); --lane-shot: var(--ui-size-hit); --lane-md: var(--ui-size-hit); }
   .ui-video-scrub, .ui-video-flag, .ui-video-item, .ui-video-take, .ui-video-check, .ui-video-format, .ui-video-trim { min-height: var(--ui-size-hit); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ui-video-motion[data-enter], .ui-video-caption { animation: none; }
-  .ui-video-item, .ui-video-row, .ui-video-format { transition: none; }
+  .ui-video-caption { animation: none; }
+  .ui-video-item, .ui-video-row, .ui-video-format, .ui-video-card, .ui-video-style { transition: none; }
+  .ui-video-card:active:not(:disabled), .ui-video-style:active { transform: none; }
 }

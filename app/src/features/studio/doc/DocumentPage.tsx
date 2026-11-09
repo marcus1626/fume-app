@@ -214,7 +214,7 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
     if (studio === doc.studio) return;
     // Into Video from a picture: "Motion from a still" makes the picked render move (FLOWS §27.1).
     const next =
-      (studio === "video" && !noVersion ? modes.find((m) => m.id === "m-video-still" && m.available) : undefined) ??
+      (studio === "video" && !noVersion ? modes.find((m) => m.id === "m-video-edit" && m.available) : undefined) ??
       modes.find((m) => m.studio === studio && m.available);
     if (!next) return;
     history.flush();

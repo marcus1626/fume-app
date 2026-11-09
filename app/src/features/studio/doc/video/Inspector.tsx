@@ -2,6 +2,8 @@
 // (the format it is cut for, the Engine's checks, the mode's variables, and the other formats made from it). A shot:
 // its takes (the Engine makes a few; she picks one, and picking cuts to its clean part), what the Engine read on the
 // take, how to make it again, and how it sits in the cut. A word on the video or a sound: its own few controls.
+// Round 14 (FLOWS §34.6): a shot is named by its take ("Shot 2 · Take 2 of 3"); a motion layer has its way in, its life
+// and its way out, the brand's easing, the shot it follows, and its keyframes.
 import {
   Button,
   Icon,
@@ -34,7 +36,9 @@ import type {
   VideoEdit,
 } from "../../../../contract";
 import { editLength, pickedTake, placed, timecode } from "../../../../domain/video";
-import { MOTION, openFindings, type Selection } from "./edit";
+import { MOTION, openFindings, takeWords, type Selection } from "./edit";
+import { Keys } from "./Keys";
+import { EASES } from "./motion";
 
 /** Staff only: the video models the Engine can make a shot with (Higgsfield's list, 27 Oct 2026). */
 const VIDEO_MODELS = ["auto", "Kling 3.0", "Kling 4.0", "Seedance 2.5", "Cinema Studio 4.0", "MiniMax H3", "Wan 2.6"];
@@ -67,6 +71,8 @@ export const VideoInspector = memo(function VideoInspector({
   onSelect,
   onFlag,
   onBefore,
+  t,
+  onSeek,
 }: {
   doc: CreativeDocument;
   edit: VideoEdit;
@@ -79,10 +85,14 @@ export const VideoInspector = memo(function VideoInspector({
   onFlag: (c: EditCheck) => void;
   /** Saves her edit at once, before the Engine starts on it. */
   onBefore: () => void;
+  /** The playhead, to a tenth, while a motion layer is picked (its keyframes are set there). */
+  t: number;
+  onSeek: (t: number) => void;
 }) {
   const me = useSession().data?.user.id;
   const set = (video: VideoEdit, key: string) => onChange({ video }, key);
   let title = "The edit";
+  let sub: string | undefined;
   let sections: StudioFold[];
   let foldKey = "edit";
 
@@ -94,12 +104,19 @@ export const VideoInspector = memo(function VideoInspector({
 
   if (clip) {
     const index = edit.clips.indexOf(clip);
-    title = `Shot ${index + 1} · ${clip.name}`;
+    title =
+      clip.takes.length && clip.source === "engine" ? `Shot ${index + 1} · ${takeWords(clip)}` : `Shot ${index + 1}`;
+    sub = `${clip.name} · ${clip.source === "library" ? `an upload of ${brandName}’s` : "made by the Engine"}`;
     foldKey = clip.id;
     sections = shotSections({ doc, edit, clip, index, brandName, set, onSelect, onBefore });
   } else if (motion) {
     title = MOTION[motion.template].name;
+    sub =
+      motion.template === "cta" || motion.template === "end"
+        ? `A component from ${brandName}’s design system`
+        : `Text in ${brandName}’s type`;
     foldKey = motion.id;
+    const shots = placed(edit.clips);
     const setM = (change: Partial<MotionLayer>, key: string) =>
       set(
         { ...edit, motion: edit.motion.map((m) => (m.id === motion.id ? { ...m, ...change } : m)) },
@@ -127,17 +144,6 @@ export const VideoInspector = memo(function VideoInspector({
               onChange={(template) => setM({ template: template as MotionLayer["template"] }, "template")}
             />
             <StudioSegmented
-              label="Comes in"
-              id="mo-enter"
-              value={motion.enter}
-              options={[
-                { value: "soft", label: "Soft to sharp" },
-                { value: "fade", label: "Fade" },
-                { value: "rise", label: "Rise" },
-              ]}
-              onChange={(enter) => setM({ enter: enter as MotionLayer["enter"] }, "enter")}
-            />
-            <StudioSegmented
               label="Place"
               id="mo-place"
               value={motion.place}
@@ -150,6 +156,80 @@ export const VideoInspector = memo(function VideoInspector({
             />
           </>
         ),
+      },
+      {
+        id: "Motion",
+        title: "Motion",
+        meta: EASES[motion.ease ?? "soft-out"].name,
+        children: (
+          <>
+            <StudioSegmented
+              label="In"
+              id="mo-enter"
+              value={motion.enter}
+              options={[
+                { value: "soft", label: "Soft to sharp" },
+                { value: "fade", label: "Fade" },
+                { value: "rise", label: "Rise" },
+              ]}
+              onChange={(enter) => setM({ enter: enter as MotionLayer["enter"] }, "enter")}
+            />
+            <StudioSegmented
+              label="While on"
+              id="mo-loop"
+              value={motion.loop ?? "still"}
+              options={[
+                { value: "still", label: "Still" },
+                { value: "drift", label: "Drift" },
+                { value: "breathe", label: "Breathe" },
+              ]}
+              onChange={(loop) => setM({ loop: loop as MotionLayer["loop"] }, "loop")}
+            />
+            <StudioSegmented
+              label="Out"
+              id="mo-exit"
+              value={motion.exit ?? "cut"}
+              options={[
+                { value: "cut", label: "Cut" },
+                { value: "soft", label: "Soft" },
+                { value: "fade", label: "Fade" },
+                { value: "fall", label: "Fall" },
+              ]}
+              onChange={(exit) =>
+                setM({ exit: exit === "cut" ? undefined : (exit as NonNullable<MotionLayer["exit"]>) }, "exit")
+              }
+            />
+            <StudioSelect
+              label="Easing"
+              id="mo-ease"
+              value={motion.ease ?? "soft-out"}
+              options={Object.entries(EASES).map(([value, e]) => ({ value, label: e.name }))}
+              help={`${EASES[motion.ease ?? "soft-out"].line}. From ${brandName}’s motion.`}
+              onChange={(ease) => setM({ ease: ease as MotionLayer["ease"] }, "ease")}
+            />
+            <StudioSelect
+              label="Follows"
+              id="mo-follows"
+              value={motion.clipId ?? "video"}
+              options={[
+                { value: "video", label: "The video’s own time" },
+                ...shots.map((p) => ({ value: p.clip.id, label: `Shot ${p.index + 1} · ${p.clip.name}` })),
+              ]}
+              help={
+                motion.clipId
+                  ? "It moves with the shot when the shot is trimmed or moved."
+                  : "It stays at its time whatever the shots do."
+              }
+              onChange={(v) => setM({ clipId: v === "video" ? undefined : v }, "follows")}
+            />
+          </>
+        ),
+      },
+      {
+        id: "Keyframes",
+        title: "Keyframes",
+        meta: motion.keys?.length || undefined,
+        children: <Keys layer={motion} t={t} onKeys={(keys, key) => setM({ keys }, key)} onSeek={onSeek} />,
       },
       timing(
         motion,
@@ -265,7 +345,10 @@ export const VideoInspector = memo(function VideoInspector({
   return (
     <aside className="ui-desk-panel ui-desk-vars" aria-label="Inspector">
       <div className="ui-video-inspector-head">
-        <h2 className="ui-desk-panel-title">{title}</h2>
+        <hgroup className="ui-video-inspector-title">
+          <h2 className="ui-desk-panel-title">{title}</h2>
+          {sub && <p>{sub}</p>}
+        </hgroup>
         {selected && (
           <Button
             size="sm"

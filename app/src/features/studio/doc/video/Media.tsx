@@ -2,13 +2,21 @@
 // the edit's shots in order (a flag where the Engine found something); the campaign's checked masters, each a start
 // frame for a new shot the Engine makes; the brand's own footage, used as it is; and the brand's motion design,
 // added at the playhead.
-import { Icon, StudioFolds, type StudioFold } from "@fume/ui";
-import { memo } from "react";
+// Round 14 (FLOWS §34.6, PROPOSED 9 Nov 2026): the library of an editor. Edit mode: Shots, Uploads (the brand's own
+// video), Masters, and Brand: the brand's components (its call to action, its end card) and its text, each added at
+// the playhead on the shot there, which it then follows. Motion mode: Styles (a set of motion in the brand's colours
+// and type, with its energy and pace), the Layers, and Brand.
+import { Icon, StudioFolds, StudioSlider, type StudioFold } from "@fume/ui";
+import { memo, type CSSProperties } from "react";
 import { useBrandAssets, useDocuments } from "../../../../api/hooks";
 import type { CreativeDocument, MotionTemplate, StudioMode, VideoClip, VideoEdit } from "../../../../contract";
-import { pickedTake } from "../../../../domain/video";
+import { clipAt, pickedTake } from "../../../../domain/video";
 import { ModePicker } from "../Specs";
 import { MOTION, localId, openFindings, shotLine, type Selection } from "./edit";
+import { EASES, STYLES, withStyle } from "./motion";
+
+const COMPONENTS: MotionTemplate[] = ["cta", "end"];
+const TEXT: MotionTemplate[] = ["title", "line", "product", "offer"];
 
 export const VideoMedia = memo(function VideoMedia({
   doc,
@@ -22,6 +30,7 @@ export const VideoMedia = memo(function VideoMedia({
   onSelect,
   onEdit,
   timeNow,
+  cta,
 }: {
   doc: CreativeDocument;
   edit: VideoEdit;
@@ -35,7 +44,10 @@ export const VideoMedia = memo(function VideoMedia({
   onEdit: (next: VideoEdit, key: string) => void;
   /** The playhead, read when something is added there. */
   timeNow: () => number;
+  /** The brand's call to action as its design system sets it. */
+  cta?: { fill: string; ink: string };
 }) {
+  const motionMode = mode?.id === "m-video-motion";
   const assets = useBrandAssets(doc.workspaceId).data;
   const others = useDocuments(doc.workspaceId).data ?? [];
   const footage = assets?.footage ?? [];
@@ -96,14 +108,23 @@ export const VideoMedia = memo(function VideoMedia({
     const m = MOTION[template];
     const start = Math.round(timeNow() * 10) / 10;
     const text = template === "end" ? brandName : template === "product" && productName ? productName : m.start;
+    const style = edit.style ? STYLES[edit.style.id] : undefined;
     const layer = {
       id: localId("mo"),
       template,
       text,
       start,
       end: Math.round((start + m.seconds) * 10) / 10,
-      enter: template === "product" ? ("rise" as const) : ("soft" as const),
-      place: template === "product" || template === "offer" ? ("bottom" as const) : ("centre" as const),
+      enter: style?.enter ?? (template === "product" || template === "cta" ? ("rise" as const) : ("soft" as const)),
+      exit: style?.exit ?? ("fade" as const),
+      loop: style?.loop,
+      ease: style?.ease ?? ("soft-out" as const),
+      place:
+        template === "product" || template === "offer" || template === "cta"
+          ? ("bottom" as const)
+          : ("centre" as const),
+      // It follows the shot it lands on, so it moves when the shot does.
+      clipId: clipAt(edit.clips, start)?.clip.id,
     };
     onEdit({ ...edit, motion: [...edit.motion, layer] }, `add-${layer.id}`);
     onSelect({ kind: "motion", id: layer.id });
@@ -187,27 +208,79 @@ export const VideoMedia = memo(function VideoMedia({
       ),
     },
     {
-      id: "Footage",
-      title: `${brandName}’s footage`,
+      id: "Uploads",
+      title: "Uploads",
       meta: footage.length || undefined,
-      children: footage.length ? (
-        <ul className="ui-video-list" aria-label={`${brandName}’s footage`}>
-          {footage.map((f) => (
-            <li key={f.id}>
+      children: (
+        <>
+          <p className="ui-video-help">
+            {brandName}’s own video, used as it is. Ask the Engine for takes of one when you want options.
+          </p>
+          {footage.length ? (
+            <ul className="ui-video-list" aria-label={`${brandName}’s uploads`}>
+              {footage.map((f) => (
+                <li key={f.id}>
+                  <button
+                    type="button"
+                    className="ui-video-row"
+                    onClick={() => addFootage(f)}
+                    aria-label={`Add ${f.name} to the edit`}
+                  >
+                    <span className="ui-video-row-img">
+                      <img src={f.poster} alt="" draggable={false} />
+                    </span>
+                    <span className="ui-video-row-text">
+                      <span className="ui-video-row-name">{f.name}</span>
+                      <span className="ui-video-row-meta">
+                        {f.seconds} s · {f.ratio}
+                      </span>
+                    </span>
+                    <span className="ui-video-row-end">
+                      <Icon name="plus" />
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="ui-video-help">{brandName} has no video in its library yet.</p>
+          )}
+        </>
+      ),
+    },
+  ];
+
+  const brand: StudioFold = {
+    id: "Brand",
+    title: "Brand",
+    children: (
+      <>
+        <p className="ui-video-help">From {brandName}’s design system. Added at the playhead, on the shot there.</p>
+        <p className="ui-video-sub">Components</p>
+        <ul className="ui-video-list" aria-label="Components">
+          {COMPONENTS.map((k) => (
+            <li key={k}>
               <button
                 type="button"
                 className="ui-video-row"
-                onClick={() => addFootage(f)}
-                aria-label={`Add ${f.name} to the edit`}
+                aria-label={`Add ${MOTION[k].name.toLowerCase()} at the playhead`}
+                onClick={() => addMotion(k)}
               >
-                <span className="ui-video-row-img">
-                  <img src={f.poster} alt="" draggable={false} />
-                </span>
-                <span className="ui-video-row-text">
-                  <span className="ui-video-row-name">{f.name}</span>
-                  <span className="ui-video-row-meta">
-                    {f.seconds} s · {f.ratio}
+                {k === "cta" ? (
+                  <span
+                    className="ui-video-row-img ui-video-row-cta"
+                    style={cta ? ({ "--cta-fill": cta.fill, "--cta-ink": cta.ink } as CSSProperties) : undefined}
+                  >
+                    <span aria-hidden="true" />
                   </span>
+                ) : (
+                  <span className="ui-video-row-img" data-glyph="" data-ink="">
+                    {brandName.slice(0, 1)}
+                  </span>
+                )}
+                <span className="ui-video-row-text">
+                  <span className="ui-video-row-name">{MOTION[k].name}</span>
+                  <span className="ui-video-row-meta">{MOTION[k].line}</span>
                 </span>
                 <span className="ui-video-row-end">
                   <Icon name="plus" />
@@ -216,47 +289,128 @@ export const VideoMedia = memo(function VideoMedia({
             </li>
           ))}
         </ul>
-      ) : (
-        <p className="ui-video-help">{brandName} has no footage in its library yet.</p>
-      ),
-    },
-    {
-      id: "Motion",
-      title: "Brand motion",
-      children: (
-        <>
-          <p className="ui-video-help">From {brandName}’s design system. Added at the playhead.</p>
-          <ul className="ui-video-list" aria-label="Brand motion">
-            {(Object.keys(MOTION) as MotionTemplate[]).map((k) => (
-              <li key={k}>
-                <button type="button" className="ui-video-row" onClick={() => addMotion(k)}>
-                  <span className="ui-video-row-img" data-glyph="">
-                    {k === "end" ? brandName.slice(0, 1) : "Aa"}
-                  </span>
-                  <span className="ui-video-row-text">
-                    <span className="ui-video-row-name">{MOTION[k].name}</span>
-                    <span className="ui-video-row-meta">{MOTION[k].line}</span>
-                  </span>
-                  <span className="ui-video-row-end">
-                    <Icon name="plus" />
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </>
-      ),
-    },
-  ];
+        <p className="ui-video-sub">Text</p>
+        <ul className="ui-video-list" aria-label="Text">
+          {TEXT.map((k) => (
+            <li key={k}>
+              <button
+                type="button"
+                className="ui-video-row"
+                aria-label={`Add ${MOTION[k].name.toLowerCase()} at the playhead`}
+                onClick={() => addMotion(k)}
+              >
+                <span className="ui-video-row-img" data-glyph="">
+                  Aa
+                </span>
+                <span className="ui-video-row-text">
+                  <span className="ui-video-row-name">{MOTION[k].name}</span>
+                  <span className="ui-video-row-meta">{MOTION[k].line}</span>
+                </span>
+                <span className="ui-video-row-end">
+                  <Icon name="plus" />
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </>
+    ),
+  };
+
+  // Motion mode: the style for the whole film, then its layers.
+  const style = edit.style ?? { id: "showcase" as const, energy: STYLES.showcase.energy, pace: STYLES.showcase.pace };
+  const setStyle = (change: Partial<NonNullable<VideoEdit["style"]>>, key: string) =>
+    onEdit({ ...edit, style: { ...style, ...change } }, `style-${key}`);
+  const styles: StudioFold = {
+    id: "Styles",
+    title: "Styles",
+    meta: STYLES[style.id].name,
+    children: (
+      <>
+        <p className="ui-video-help">
+          A set of motion in {brandName}’s colours and type. Try another: the words, the timing and the keys stay.
+        </p>
+        <ul className="ui-video-styles" aria-label="Motion styles">
+          {(Object.keys(STYLES) as (keyof typeof STYLES)[]).map((id) => (
+            <li key={id}>
+              <button
+                type="button"
+                className="ui-video-style"
+                data-style={id}
+                aria-pressed={style.id === id}
+                onClick={() => onEdit(withStyle(edit, id), `style-${id}`)}
+              >
+                <span className="ui-video-style-name">{STYLES[id].name}</span>
+                <span className="ui-video-style-line">{STYLES[id].line}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+        <StudioSlider
+          label="Energy"
+          id="style-energy"
+          value={style.energy}
+          min={0}
+          max={100}
+          help="How far the words travel, and how soft they start"
+          onChange={(energy) => setStyle({ energy }, "energy")}
+        />
+        <StudioSlider
+          label="Pace"
+          id="style-pace"
+          value={style.pace}
+          min={0}
+          max={100}
+          help={`How quickly they come in and go out · ${EASES[STYLES[style.id].ease].name}`}
+          onChange={(pace) => setStyle({ pace }, "pace")}
+        />
+      </>
+    ),
+  };
+  const layers: StudioFold = {
+    id: "Layers",
+    title: "Layers",
+    meta: edit.motion.length || undefined,
+    children: edit.motion.length ? (
+      <ol className="ui-video-list" aria-label="The layers">
+        {edit.motion.map((m) => (
+          <li key={m.id}>
+            <button
+              type="button"
+              className="ui-video-row"
+              aria-pressed={selected?.kind === "motion" && selected.id === m.id}
+              onClick={() => onSelect({ kind: "motion", id: m.id })}
+            >
+              <span className="ui-video-row-img" data-glyph="">
+                {m.template === "end" ? brandName.slice(0, 1) : "Aa"}
+              </span>
+              <span className="ui-video-row-text">
+                <span className="ui-video-row-name">{m.text}</span>
+                <span className="ui-video-row-meta">
+                  {[MOTION[m.template].name, m.keys?.length ? `${m.keys.length} keys` : undefined]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </span>
+              </span>
+            </button>
+          </li>
+        ))}
+      </ol>
+    ) : (
+      <p className="ui-video-help">No layers yet. Add text or a component from Brand.</p>
+    ),
+  };
+
+  const folds = motionMode ? [styles, layers, brand] : [...sections, brand];
 
   return (
-    <aside className="ui-desk-panel ui-desk-specs" aria-label="Media">
+    <aside className="ui-desk-panel ui-desk-specs" aria-label="Library">
       <ModePicker doc={doc} mode={mode} modes={modes.filter((m) => m.studio === "video")} onMode={onMode} />
       <StudioFolds
-        key={doc.modeId}
-        label="Media"
-        sections={sections}
-        initialOpen={["Shots", "Masters", "Motion", "Footage"]}
+        key={motionMode ? "motion" : "edit"}
+        label="Library"
+        sections={folds}
+        initialOpen={motionMode ? ["Styles", "Layers"] : ["Shots", "Uploads", "Brand"]}
       />
     </aside>
   );

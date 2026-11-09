@@ -7307,9 +7307,9 @@ maja studioModes()
     },
     {
       "available": true,
-      "description": "Shots the Engine makes from checked masters and the brand's footage, cut to music with the brand's motion.",
-      "id": "m-video-film",
-      "name": "Product film",
+      "description": "Your footage and the Engine's shots, cut on the music, with the brand's motion on top.",
+      "id": "m-video-edit",
+      "name": "Edit",
       "output": "creative",
       "sections": ["Edit","Look","Sound"],
       "studio": "video",
@@ -7366,68 +7366,9 @@ maja studioModes()
     },
     {
       "available": true,
-      "description": "One picked render that moves: a slow push, an orbit, or light that travels.",
-      "id": "m-video-still",
-      "name": "Motion from a still",
-      "output": "creative",
-      "sections": ["Edit","Look","Sound"],
-      "studio": "video",
-      "uses": ["product"],
-      "variables": [
-        {
-          "control": "segmented",
-          "default": "calm",
-          "help": "How long shots hold. The Engine cuts on the music's beats.",
-          "key": "pace",
-          "label": "Pace",
-          "options": [{"label":"Calm","value":"calm"},{"label":"Even","value":"even"},{"label":"Quick","value":"quick"}],
-          "section": "Edit"
-        },
-        {
-          "control": "segmented",
-          "default": "dissolve",
-          "key": "transition",
-          "label": "Shots meet with",
-          "options": [
-            {"label":"A cut","value":"cut"},
-            {"label":"A dissolve","value":"dissolve"},
-            {"label":"A focus pull","value":"focus"}
-          ],
-          "section": "Edit"
-        },
-        {"control":"toggle","default":true,"key":"captions","label":"Captions on the video","section":"Edit"},
-        {
-          "control": "select",
-          "default": "LYSNE warm",
-          "help": "One grade over every shot, so the Engine's shots and the brand's footage match.",
-          "key": "grade",
-          "label": "Colour grade",
-          "options": [
-            {"label":"LYSNE warm","value":"LYSNE warm"},
-            {"label":"Neutral","value":"Neutral"},
-            {"label":"Evening","value":"Evening"}
-          ],
-          "section": "Look"
-        },
-        {
-          "control": "select",
-          "default": "late-light",
-          "key": "music",
-          "label": "Music",
-          "options": [
-            {"label":"Late light · slow piano","value":"late-light"},
-            {"label":"Stone · ambient","value":"stone"},
-            {"label":"No music","value":"none"}
-          ],
-          "section": "Sound"
-        }
-      ]
-    },
-    {
-      "available": true,
-      "description": "The brand's own clips from the library, cut and graded, with its motion on top.",
-      "id": "m-video-cut",
-      "name": "Cut from footage",
+      "description": "Motion design from a style: Product showcase, Explainer, SaaS demo, Kinetic type, Stats, Logo sting.",
+      "id": "m-video-motion",
+      "name": "Motion",
       "output": "creative",
       "sections": ["Edit","Look","Sound"],
       "studio": "video",
@@ -36338,7 +36279,7 @@ anna documents("w-lysne")
       "edits": [],
       "id": "doc-night-ritual",
       "layers": [],
-      "modeId": "m-video-film",
+      "modeId": "m-video-edit",
       "overrides": [],
       "pickedVersionId": "rv-night-1",
       "slot": "Film 1 · Reels",
@@ -36550,7 +36491,235 @@ anna documents("w-lysne")
             "transition": "focus"
           }
         ],
-        "edits": [],
+        "edits": [
+          {
+            "after": {
+              "captions": [
+                {"by":"engine","end":5.6,"id":"cp-1","start":3.7,"text":"The last light"},
+                {"by":"engine","end":7.2,"id":"cp-2","start":5.6,"text":"of the day"},
+                {"by":"engine","end":10.3,"id":"cp-3","start":7.6,"text":"kept for the night"}
+              ],
+              "clips": [
+                {
+                  "id": "vc-light",
+                  "in": 0.5,
+                  "name": "Light on stone",
+                  "out": 4,
+                  "pickedTakeId": "tk-light",
+                  "source": "library",
+                  "speed": 1,
+                  "takes": [
+                    {
+                      "at": "2026-10-11T12:32:00.000Z",
+                      "cost": 0,
+                      "findings": [],
+                      "id": "tk-light",
+                      "model": "LYSNE footage",
+                      "number": 1,
+                      "poster": "/demo/lysne/video/light.jpg",
+                      "seconds": 5,
+                      "state": "ready",
+                      "video": "/demo/lysne/video/light.mp4"
+                    }
+                  ],
+                  "transition": "cut"
+                },
+                {
+                  "id": "vc-hands",
+                  "in": 0.4,
+                  "name": "Hands in the light",
+                  "out": 4.2,
+                  "pickedTakeId": "tk-hands-1",
+                  "recipe": {
+                    "action": "Two hands move slowly through the window light, as if catching the last sun",
+                    "amount": 10,
+                    "model": "auto",
+                    "move": "still",
+                    "seconds": 5,
+                    "startImage": "/demo/lysne/video/hands.jpg"
+                  },
+                  "source": "engine",
+                  "speed": 1,
+                  "takes": [
+                    {
+                      "at": "2026-10-14T11:40:00.000Z",
+                      "cost": 0.42,
+                      "findings": [],
+                      "id": "tk-hands-1",
+                      "model": "Kling 3.0",
+                      "number": 1,
+                      "poster": "/demo/lysne/video/hands.jpg",
+                      "seconds": 5,
+                      "state": "ready",
+                      "video": "/demo/lysne/video/hands.mp4"
+                    }
+                  ],
+                  "transition": "dissolve"
+                },
+                {
+                  "id": "vc-drop",
+                  "in": 0.5,
+                  "name": "The bottle in the hand",
+                  "out": 3.7,
+                  "pickedTakeId": "tk-drop-1",
+                  "productId": "pr-oil",
+                  "recipe": {
+                    "action": "The hand turns the closed bottle in the low sun so the label faces the camera. No drops.",
+                    "amount": 20,
+                    "model": "auto",
+                    "move": "push",
+                    "seconds": 5,
+                    "startImage": "/demo/lysne/video/drop.jpg"
+                  },
+                  "source": "engine",
+                  "speed": 1,
+                  "takes": [
+                    {
+                      "at": "2026-10-14T11:44:00.000Z",
+                      "cost": 0.42,
+                      "findings": [
+                        {
+                          "from": 0,
+                          "kind": "physics",
+                          "state": "open",
+                          "text": "Oil runs out of the bottle’s base while the cap is on",
+                          "to": 3.4
+                        }
+                      ],
+                      "id": "tk-drop-1",
+                      "model": "Kling 3.0",
+                      "number": 1,
+                      "poster": "/demo/lysne/video/drop.jpg",
+                      "seconds": 5,
+                      "state": "ready",
+                      "video": "/demo/lysne/video/drop.mp4"
+                    },
+                    {
+                      "at": "2026-10-14T12:20:00.000Z",
+                      "best": {"in":1.4,"out":4.6},
+                      "cost": 0.42,
+                      "findings": [
+                        {
+                          "from": 0,
+                          "kind": "physics",
+                          "state": "open",
+                          "text": "Drops from the start frame run off the base",
+                          "to": 1.2
+                        }
+                      ],
+                      "id": "tk-drop-2",
+                      "model": "Kling 3.0",
+                      "number": 2,
+                      "poster": "/demo/lysne/video/turn.jpg",
+                      "seconds": 5,
+                      "state": "ready",
+                      "video": "/demo/lysne/video/turn.mp4"
+                    }
+                  ],
+                  "transition": "dissolve"
+                },
+                {
+                  "id": "vc-bottle",
+                  "in": 0.3,
+                  "name": "Night Body Oil",
+                  "out": 4.8,
+                  "pickedTakeId": "tk-bottle-1",
+                  "productId": "pr-oil",
+                  "recipe": {
+                    "action": "A slow push in on the bottle on travertine; the low sun moves across the stone",
+                    "amount": 15,
+                    "model": "auto",
+                    "move": "push",
+                    "seconds": 5,
+                    "startImage": "/demo/lysne/video/bottle.jpg"
+                  },
+                  "source": "engine",
+                  "speed": 1,
+                  "takes": [
+                    {
+                      "at": "2026-10-14T11:52:00.000Z",
+                      "cost": 0.42,
+                      "findings": [],
+                      "id": "tk-bottle-1",
+                      "model": "Kling 3.0",
+                      "number": 1,
+                      "poster": "/demo/lysne/video/bottle.jpg",
+                      "seconds": 5,
+                      "state": "ready",
+                      "video": "/demo/lysne/video/bottle.mp4"
+                    }
+                  ],
+                  "transition": "focus"
+                }
+              ],
+              "motion": [
+                {
+                  "clipId": "vc-light",
+                  "ease": "soft-out",
+                  "end": 3.3,
+                  "enter": "soft",
+                  "exit": "soft",
+                  "id": "mo-title",
+                  "keys": [
+                    {"at":0,"prop":"scale","value":0.94},
+                    {"at":2.5,"prop":"scale","value":1},
+                    {"at":0,"prop":"y","value":3},
+                    {"at":1.6,"prop":"y","value":0}
+                  ],
+                  "loop": "drift",
+                  "place": "centre",
+                  "start": 0.8,
+                  "template": "title",
+                  "text": "Night ritual"
+                },
+                {
+                  "clipId": "vc-bottle",
+                  "ease": "soft-out",
+                  "end": 13.4,
+                  "enter": "rise",
+                  "exit": "fade",
+                  "id": "mo-product",
+                  "place": "top",
+                  "start": 11.2,
+                  "template": "product",
+                  "text": "Night Body Oil · 100 ml"
+                },
+                {
+                  "clipId": "vc-bottle",
+                  "ease": "soft-out",
+                  "end": 13.4,
+                  "enter": "rise",
+                  "exit": "fade",
+                  "id": "mo-cta",
+                  "place": "bottom",
+                  "start": 11.8,
+                  "template": "cta",
+                  "text": "Se oljen"
+                },
+                {"end":15,"enter":"soft","id":"mo-end","place":"centre","start":13.4,"template":"end","text":"LYSNE"}
+              ],
+              "sound": [
+                {
+                  "beats": [0,0.75,1.5,2.25,3,3.75,4.5,5.25,6,6.75,7.5,8.25,9,9.75,10.5,11.25,12,12.75,13.5,14.25,15],
+                  "end": 15,
+                  "id": "sd-music",
+                  "kind": "music",
+                  "level": -6,
+                  "licence": "Licensed for paid social",
+                  "name": "Late light · slow piano",
+                  "start": 0
+                },
+                {"end":11.4,"id":"sd-glass","kind":"effect","level":-14,"name":"Glass on stone","start":10.6}
+              ]
+            },
+            "at": "2026-10-14T12:21:00.000Z",
+            "by": "u-anna",
+            "changes": ["Se oljen, LYSNE’s button, on shot 4 from 0:11.8 to 0:13.4","It follows shot 4 if the shot moves"],
+            "id": "ve-cta",
+            "state": "kept",
+            "text": "Put the call to action on the last shot, before the end card"
+          }
+        ],
         "formatId": "vf-reels",
         "formats": [
           {
@@ -36593,22 +36762,47 @@ anna documents("w-lysne")
         "grade": "LYSNE warm",
         "motion": [
           {
+            "clipId": "vc-light",
+            "ease": "soft-out",
             "end": 3.3,
             "enter": "soft",
+            "exit": "soft",
             "id": "mo-title",
+            "keys": [
+              {"at":0,"prop":"scale","value":0.94},
+              {"at":2.5,"prop":"scale","value":1},
+              {"at":0,"prop":"y","value":3},
+              {"at":1.6,"prop":"y","value":0}
+            ],
+            "loop": "drift",
             "place": "centre",
             "start": 0.8,
             "template": "title",
             "text": "Night ritual"
           },
           {
+            "clipId": "vc-bottle",
+            "ease": "soft-out",
             "end": 13.4,
             "enter": "rise",
+            "exit": "fade",
             "id": "mo-product",
             "place": "top",
             "start": 11.2,
             "template": "product",
             "text": "Night Body Oil · 100 ml"
+          },
+          {
+            "clipId": "vc-bottle",
+            "ease": "soft-out",
+            "end": 13.4,
+            "enter": "rise",
+            "exit": "fade",
+            "id": "mo-cta",
+            "place": "bottom",
+            "start": 11.8,
+            "template": "cta",
+            "text": "Se oljen"
           },
           {"end":15,"enter":"soft","id":"mo-end","place":"centre","start":13.4,"template":"end","text":"LYSNE"}
         ],
@@ -36624,7 +36818,8 @@ anna documents("w-lysne")
             "start": 0
           },
           {"end":11.4,"id":"sd-glass","kind":"effect","level":-14,"name":"Glass on stone","start":10.6}
-        ]
+        ],
+        "style": {"energy":35,"id":"showcase","pace":35}
       },
       "workspaceId": "w-lysne"
     },
@@ -38951,7 +39146,7 @@ anna document("doc-night-ritual")
     "edits": [],
     "id": "doc-night-ritual",
     "layers": [],
-    "modeId": "m-video-film",
+    "modeId": "m-video-edit",
     "overrides": [],
     "pickedVersionId": "rv-night-1",
     "slot": "Film 1 · Reels",
@@ -39155,7 +39350,235 @@ anna document("doc-night-ritual")
           "transition": "focus"
         }
       ],
-      "edits": [],
+      "edits": [
+        {
+          "after": {
+            "captions": [
+              {"by":"engine","end":5.6,"id":"cp-1","start":3.7,"text":"The last light"},
+              {"by":"engine","end":7.2,"id":"cp-2","start":5.6,"text":"of the day"},
+              {"by":"engine","end":10.3,"id":"cp-3","start":7.6,"text":"kept for the night"}
+            ],
+            "clips": [
+              {
+                "id": "vc-light",
+                "in": 0.5,
+                "name": "Light on stone",
+                "out": 4,
+                "pickedTakeId": "tk-light",
+                "source": "library",
+                "speed": 1,
+                "takes": [
+                  {
+                    "at": "2026-10-11T12:32:00.000Z",
+                    "cost": 0,
+                    "findings": [],
+                    "id": "tk-light",
+                    "model": "LYSNE footage",
+                    "number": 1,
+                    "poster": "/demo/lysne/video/light.jpg",
+                    "seconds": 5,
+                    "state": "ready",
+                    "video": "/demo/lysne/video/light.mp4"
+                  }
+                ],
+                "transition": "cut"
+              },
+              {
+                "id": "vc-hands",
+                "in": 0.4,
+                "name": "Hands in the light",
+                "out": 4.2,
+                "pickedTakeId": "tk-hands-1",
+                "recipe": {
+                  "action": "Two hands move slowly through the window light, as if catching the last sun",
+                  "amount": 10,
+                  "model": "auto",
+                  "move": "still",
+                  "seconds": 5,
+                  "startImage": "/demo/lysne/video/hands.jpg"
+                },
+                "source": "engine",
+                "speed": 1,
+                "takes": [
+                  {
+                    "at": "2026-10-14T11:40:00.000Z",
+                    "cost": 0.42,
+                    "findings": [],
+                    "id": "tk-hands-1",
+                    "model": "Kling 3.0",
+                    "number": 1,
+                    "poster": "/demo/lysne/video/hands.jpg",
+                    "seconds": 5,
+                    "state": "ready",
+                    "video": "/demo/lysne/video/hands.mp4"
+                  }
+                ],
+                "transition": "dissolve"
+              },
+              {
+                "id": "vc-drop",
+                "in": 0.5,
+                "name": "The bottle in the hand",
+                "out": 3.7,
+                "pickedTakeId": "tk-drop-1",
+                "productId": "pr-oil",
+                "recipe": {
+                  "action": "The hand turns the closed bottle in the low sun so the label faces the camera. No drops.",
+                  "amount": 20,
+                  "model": "auto",
+                  "move": "push",
+                  "seconds": 5,
+                  "startImage": "/demo/lysne/video/drop.jpg"
+                },
+                "source": "engine",
+                "speed": 1,
+                "takes": [
+                  {
+                    "at": "2026-10-14T11:44:00.000Z",
+                    "cost": 0.42,
+                    "findings": [
+                      {
+                        "from": 0,
+                        "kind": "physics",
+                        "state": "open",
+                        "text": "Oil runs out of the bottle’s base while the cap is on",
+                        "to": 3.4
+                      }
+                    ],
+                    "id": "tk-drop-1",
+                    "model": "Kling 3.0",
+                    "number": 1,
+                    "poster": "/demo/lysne/video/drop.jpg",
+                    "seconds": 5,
+                    "state": "ready",
+                    "video": "/demo/lysne/video/drop.mp4"
+                  },
+                  {
+                    "at": "2026-10-14T12:20:00.000Z",
+                    "best": {"in":1.4,"out":4.6},
+                    "cost": 0.42,
+                    "findings": [
+                      {
+                        "from": 0,
+                        "kind": "physics",
+                        "state": "open",
+                        "text": "Drops from the start frame run off the base",
+                        "to": 1.2
+                      }
+                    ],
+                    "id": "tk-drop-2",
+                    "model": "Kling 3.0",
+                    "number": 2,
+                    "poster": "/demo/lysne/video/turn.jpg",
+                    "seconds": 5,
+                    "state": "ready",
+                    "video": "/demo/lysne/video/turn.mp4"
+                  }
+                ],
+                "transition": "dissolve"
+              },
+              {
+                "id": "vc-bottle",
+                "in": 0.3,
+                "name": "Night Body Oil",
+                "out": 4.8,
+                "pickedTakeId": "tk-bottle-1",
+                "productId": "pr-oil",
+                "recipe": {
+                  "action": "A slow push in on the bottle on travertine; the low sun moves across the stone",
+                  "amount": 15,
+                  "model": "auto",
+                  "move": "push",
+                  "seconds": 5,
+                  "startImage": "/demo/lysne/video/bottle.jpg"
+                },
+                "source": "engine",
+                "speed": 1,
+                "takes": [
+                  {
+                    "at": "2026-10-14T11:52:00.000Z",
+                    "cost": 0.42,
+                    "findings": [],
+                    "id": "tk-bottle-1",
+                    "model": "Kling 3.0",
+                    "number": 1,
+                    "poster": "/demo/lysne/video/bottle.jpg",
+                    "seconds": 5,
+                    "state": "ready",
+                    "video": "/demo/lysne/video/bottle.mp4"
+                  }
+                ],
+                "transition": "focus"
+              }
+            ],
+            "motion": [
+              {
+                "clipId": "vc-light",
+                "ease": "soft-out",
+                "end": 3.3,
+                "enter": "soft",
+                "exit": "soft",
+                "id": "mo-title",
+                "keys": [
+                  {"at":0,"prop":"scale","value":0.94},
+                  {"at":2.5,"prop":"scale","value":1},
+                  {"at":0,"prop":"y","value":3},
+                  {"at":1.6,"prop":"y","value":0}
+                ],
+                "loop": "drift",
+                "place": "centre",
+                "start": 0.8,
+                "template": "title",
+                "text": "Night ritual"
+              },
+              {
+                "clipId": "vc-bottle",
+                "ease": "soft-out",
+                "end": 13.4,
+                "enter": "rise",
+                "exit": "fade",
+                "id": "mo-product",
+                "place": "top",
+                "start": 11.2,
+                "template": "product",
+                "text": "Night Body Oil · 100 ml"
+              },
+              {
+                "clipId": "vc-bottle",
+                "ease": "soft-out",
+                "end": 13.4,
+                "enter": "rise",
+                "exit": "fade",
+                "id": "mo-cta",
+                "place": "bottom",
+                "start": 11.8,
+                "template": "cta",
+                "text": "Se oljen"
+              },
+              {"end":15,"enter":"soft","id":"mo-end","place":"centre","start":13.4,"template":"end","text":"LYSNE"}
+            ],
+            "sound": [
+              {
+                "beats": [0,0.75,1.5,2.25,3,3.75,4.5,5.25,6,6.75,7.5,8.25,9,9.75,10.5,11.25,12,12.75,13.5,14.25,15],
+                "end": 15,
+                "id": "sd-music",
+                "kind": "music",
+                "level": -6,
+                "licence": "Licensed for paid social",
+                "name": "Late light · slow piano",
+                "start": 0
+              },
+              {"end":11.4,"id":"sd-glass","kind":"effect","level":-14,"name":"Glass on stone","start":10.6}
+            ]
+          },
+          "at": "2026-10-14T12:21:00.000Z",
+          "by": "u-anna",
+          "changes": ["Se oljen, LYSNE’s button, on shot 4 from 0:11.8 to 0:13.4","It follows shot 4 if the shot moves"],
+          "id": "ve-cta",
+          "state": "kept",
+          "text": "Put the call to action on the last shot, before the end card"
+        }
+      ],
       "formatId": "vf-reels",
       "formats": [
         {
@@ -39197,15 +39620,48 @@ anna document("doc-night-ritual")
       ],
       "grade": "LYSNE warm",
       "motion": [
-        {"end":3.3,"enter":"soft","id":"mo-title","place":"centre","start":0.8,"template":"title","text":"Night ritual"},
         {
+          "clipId": "vc-light",
+          "ease": "soft-out",
+          "end": 3.3,
+          "enter": "soft",
+          "exit": "soft",
+          "id": "mo-title",
+          "keys": [
+            {"at":0,"prop":"scale","value":0.94},
+            {"at":2.5,"prop":"scale","value":1},
+            {"at":0,"prop":"y","value":3},
+            {"at":1.6,"prop":"y","value":0}
+          ],
+          "loop": "drift",
+          "place": "centre",
+          "start": 0.8,
+          "template": "title",
+          "text": "Night ritual"
+        },
+        {
+          "clipId": "vc-bottle",
+          "ease": "soft-out",
           "end": 13.4,
           "enter": "rise",
+          "exit": "fade",
           "id": "mo-product",
           "place": "top",
           "start": 11.2,
           "template": "product",
           "text": "Night Body Oil · 100 ml"
+        },
+        {
+          "clipId": "vc-bottle",
+          "ease": "soft-out",
+          "end": 13.4,
+          "enter": "rise",
+          "exit": "fade",
+          "id": "mo-cta",
+          "place": "bottom",
+          "start": 11.8,
+          "template": "cta",
+          "text": "Se oljen"
         },
         {"end":15,"enter":"soft","id":"mo-end","place":"centre","start":13.4,"template":"end","text":"LYSNE"}
       ],
@@ -39221,7 +39677,8 @@ anna document("doc-night-ritual")
           "start": 0
         },
         {"end":11.4,"id":"sd-glass","kind":"effect","level":-14,"name":"Glass on stone","start":10.6}
-      ]
+      ],
+      "style": {"energy":35,"id":"showcase","pace":35}
     },
     "workspaceId": "w-lysne"
   }
@@ -76762,7 +77219,7 @@ nora documents("w-lysne")
       "edits": [],
       "id": "doc-night-ritual",
       "layers": [],
-      "modeId": "m-video-film",
+      "modeId": "m-video-edit",
       "overrides": [],
       "pickedVersionId": "rv-night-1",
       "slot": "Film 1 · Reels",
@@ -76974,7 +77431,235 @@ nora documents("w-lysne")
             "transition": "focus"
           }
         ],
-        "edits": [],
+        "edits": [
+          {
+            "after": {
+              "captions": [
+                {"by":"engine","end":5.6,"id":"cp-1","start":3.7,"text":"The last light"},
+                {"by":"engine","end":7.2,"id":"cp-2","start":5.6,"text":"of the day"},
+                {"by":"engine","end":10.3,"id":"cp-3","start":7.6,"text":"kept for the night"}
+              ],
+              "clips": [
+                {
+                  "id": "vc-light",
+                  "in": 0.5,
+                  "name": "Light on stone",
+                  "out": 4,
+                  "pickedTakeId": "tk-light",
+                  "source": "library",
+                  "speed": 1,
+                  "takes": [
+                    {
+                      "at": "2026-10-11T12:32:00.000Z",
+                      "cost": 0,
+                      "findings": [],
+                      "id": "tk-light",
+                      "model": "LYSNE footage",
+                      "number": 1,
+                      "poster": "/demo/lysne/video/light.jpg",
+                      "seconds": 5,
+                      "state": "ready",
+                      "video": "/demo/lysne/video/light.mp4"
+                    }
+                  ],
+                  "transition": "cut"
+                },
+                {
+                  "id": "vc-hands",
+                  "in": 0.4,
+                  "name": "Hands in the light",
+                  "out": 4.2,
+                  "pickedTakeId": "tk-hands-1",
+                  "recipe": {
+                    "action": "Two hands move slowly through the window light, as if catching the last sun",
+                    "amount": 10,
+                    "model": "auto",
+                    "move": "still",
+                    "seconds": 5,
+                    "startImage": "/demo/lysne/video/hands.jpg"
+                  },
+                  "source": "engine",
+                  "speed": 1,
+                  "takes": [
+                    {
+                      "at": "2026-10-14T11:40:00.000Z",
+                      "cost": 0.42,
+                      "findings": [],
+                      "id": "tk-hands-1",
+                      "model": "Kling 3.0",
+                      "number": 1,
+                      "poster": "/demo/lysne/video/hands.jpg",
+                      "seconds": 5,
+                      "state": "ready",
+                      "video": "/demo/lysne/video/hands.mp4"
+                    }
+                  ],
+                  "transition": "dissolve"
+                },
+                {
+                  "id": "vc-drop",
+                  "in": 0.5,
+                  "name": "The bottle in the hand",
+                  "out": 3.7,
+                  "pickedTakeId": "tk-drop-1",
+                  "productId": "pr-oil",
+                  "recipe": {
+                    "action": "The hand turns the closed bottle in the low sun so the label faces the camera. No drops.",
+                    "amount": 20,
+                    "model": "auto",
+                    "move": "push",
+                    "seconds": 5,
+                    "startImage": "/demo/lysne/video/drop.jpg"
+                  },
+                  "source": "engine",
+                  "speed": 1,
+                  "takes": [
+                    {
+                      "at": "2026-10-14T11:44:00.000Z",
+                      "cost": 0.42,
+                      "findings": [
+                        {
+                          "from": 0,
+                          "kind": "physics",
+                          "state": "open",
+                          "text": "Oil runs out of the bottle’s base while the cap is on",
+                          "to": 3.4
+                        }
+                      ],
+                      "id": "tk-drop-1",
+                      "model": "Kling 3.0",
+                      "number": 1,
+                      "poster": "/demo/lysne/video/drop.jpg",
+                      "seconds": 5,
+                      "state": "ready",
+                      "video": "/demo/lysne/video/drop.mp4"
+                    },
+                    {
+                      "at": "2026-10-14T12:20:00.000Z",
+                      "best": {"in":1.4,"out":4.6},
+                      "cost": 0.42,
+                      "findings": [
+                        {
+                          "from": 0,
+                          "kind": "physics",
+                          "state": "open",
+                          "text": "Drops from the start frame run off the base",
+                          "to": 1.2
+                        }
+                      ],
+                      "id": "tk-drop-2",
+                      "model": "Kling 3.0",
+                      "number": 2,
+                      "poster": "/demo/lysne/video/turn.jpg",
+                      "seconds": 5,
+                      "state": "ready",
+                      "video": "/demo/lysne/video/turn.mp4"
+                    }
+                  ],
+                  "transition": "dissolve"
+                },
+                {
+                  "id": "vc-bottle",
+                  "in": 0.3,
+                  "name": "Night Body Oil",
+                  "out": 4.8,
+                  "pickedTakeId": "tk-bottle-1",
+                  "productId": "pr-oil",
+                  "recipe": {
+                    "action": "A slow push in on the bottle on travertine; the low sun moves across the stone",
+                    "amount": 15,
+                    "model": "auto",
+                    "move": "push",
+                    "seconds": 5,
+                    "startImage": "/demo/lysne/video/bottle.jpg"
+                  },
+                  "source": "engine",
+                  "speed": 1,
+                  "takes": [
+                    {
+                      "at": "2026-10-14T11:52:00.000Z",
+                      "cost": 0.42,
+                      "findings": [],
+                      "id": "tk-bottle-1",
+                      "model": "Kling 3.0",
+                      "number": 1,
+                      "poster": "/demo/lysne/video/bottle.jpg",
+                      "seconds": 5,
+                      "state": "ready",
+                      "video": "/demo/lysne/video/bottle.mp4"
+                    }
+                  ],
+                  "transition": "focus"
+                }
+              ],
+              "motion": [
+                {
+                  "clipId": "vc-light",
+                  "ease": "soft-out",
+                  "end": 3.3,
+                  "enter": "soft",
+                  "exit": "soft",
+                  "id": "mo-title",
+                  "keys": [
+                    {"at":0,"prop":"scale","value":0.94},
+                    {"at":2.5,"prop":"scale","value":1},
+                    {"at":0,"prop":"y","value":3},
+                    {"at":1.6,"prop":"y","value":0}
+                  ],
+                  "loop": "drift",
+                  "place": "centre",
+                  "start": 0.8,
+                  "template": "title",
+                  "text": "Night ritual"
+                },
+                {
+                  "clipId": "vc-bottle",
+                  "ease": "soft-out",
+                  "end": 13.4,
+                  "enter": "rise",
+                  "exit": "fade",
+                  "id": "mo-product",
+                  "place": "top",
+                  "start": 11.2,
+                  "template": "product",
+                  "text": "Night Body Oil · 100 ml"
+                },
+                {
+                  "clipId": "vc-bottle",
+                  "ease": "soft-out",
+                  "end": 13.4,
+                  "enter": "rise",
+                  "exit": "fade",
+                  "id": "mo-cta",
+                  "place": "bottom",
+                  "start": 11.8,
+                  "template": "cta",
+                  "text": "Se oljen"
+                },
+                {"end":15,"enter":"soft","id":"mo-end","place":"centre","start":13.4,"template":"end","text":"LYSNE"}
+              ],
+              "sound": [
+                {
+                  "beats": [0,0.75,1.5,2.25,3,3.75,4.5,5.25,6,6.75,7.5,8.25,9,9.75,10.5,11.25,12,12.75,13.5,14.25,15],
+                  "end": 15,
+                  "id": "sd-music",
+                  "kind": "music",
+                  "level": -6,
+                  "licence": "Licensed for paid social",
+                  "name": "Late light · slow piano",
+                  "start": 0
+                },
+                {"end":11.4,"id":"sd-glass","kind":"effect","level":-14,"name":"Glass on stone","start":10.6}
+              ]
+            },
+            "at": "2026-10-14T12:21:00.000Z",
+            "by": "u-nora",
+            "changes": ["Se oljen, LYSNE’s button, on shot 4 from 0:11.8 to 0:13.4","It follows shot 4 if the shot moves"],
+            "id": "ve-cta",
+            "state": "kept",
+            "text": "Put the call to action on the last shot, before the end card"
+          }
+        ],
         "formatId": "vf-reels",
         "formats": [
           {
@@ -77017,22 +77702,47 @@ nora documents("w-lysne")
         "grade": "LYSNE warm",
         "motion": [
           {
+            "clipId": "vc-light",
+            "ease": "soft-out",
             "end": 3.3,
             "enter": "soft",
+            "exit": "soft",
             "id": "mo-title",
+            "keys": [
+              {"at":0,"prop":"scale","value":0.94},
+              {"at":2.5,"prop":"scale","value":1},
+              {"at":0,"prop":"y","value":3},
+              {"at":1.6,"prop":"y","value":0}
+            ],
+            "loop": "drift",
             "place": "centre",
             "start": 0.8,
             "template": "title",
             "text": "Night ritual"
           },
           {
+            "clipId": "vc-bottle",
+            "ease": "soft-out",
             "end": 13.4,
             "enter": "rise",
+            "exit": "fade",
             "id": "mo-product",
             "place": "top",
             "start": 11.2,
             "template": "product",
             "text": "Night Body Oil · 100 ml"
+          },
+          {
+            "clipId": "vc-bottle",
+            "ease": "soft-out",
+            "end": 13.4,
+            "enter": "rise",
+            "exit": "fade",
+            "id": "mo-cta",
+            "place": "bottom",
+            "start": 11.8,
+            "template": "cta",
+            "text": "Se oljen"
           },
           {"end":15,"enter":"soft","id":"mo-end","place":"centre","start":13.4,"template":"end","text":"LYSNE"}
         ],
@@ -77048,7 +77758,8 @@ nora documents("w-lysne")
             "start": 0
           },
           {"end":11.4,"id":"sd-glass","kind":"effect","level":-14,"name":"Glass on stone","start":10.6}
-        ]
+        ],
+        "style": {"energy":35,"id":"showcase","pace":35}
       },
       "workspaceId": "w-lysne"
     },
@@ -78422,7 +79133,7 @@ nora document("doc-night-ritual")
     "edits": [],
     "id": "doc-night-ritual",
     "layers": [],
-    "modeId": "m-video-film",
+    "modeId": "m-video-edit",
     "overrides": [],
     "pickedVersionId": "rv-night-1",
     "slot": "Film 1 · Reels",
@@ -78626,7 +79337,235 @@ nora document("doc-night-ritual")
           "transition": "focus"
         }
       ],
-      "edits": [],
+      "edits": [
+        {
+          "after": {
+            "captions": [
+              {"by":"engine","end":5.6,"id":"cp-1","start":3.7,"text":"The last light"},
+              {"by":"engine","end":7.2,"id":"cp-2","start":5.6,"text":"of the day"},
+              {"by":"engine","end":10.3,"id":"cp-3","start":7.6,"text":"kept for the night"}
+            ],
+            "clips": [
+              {
+                "id": "vc-light",
+                "in": 0.5,
+                "name": "Light on stone",
+                "out": 4,
+                "pickedTakeId": "tk-light",
+                "source": "library",
+                "speed": 1,
+                "takes": [
+                  {
+                    "at": "2026-10-11T12:32:00.000Z",
+                    "cost": 0,
+                    "findings": [],
+                    "id": "tk-light",
+                    "model": "LYSNE footage",
+                    "number": 1,
+                    "poster": "/demo/lysne/video/light.jpg",
+                    "seconds": 5,
+                    "state": "ready",
+                    "video": "/demo/lysne/video/light.mp4"
+                  }
+                ],
+                "transition": "cut"
+              },
+              {
+                "id": "vc-hands",
+                "in": 0.4,
+                "name": "Hands in the light",
+                "out": 4.2,
+                "pickedTakeId": "tk-hands-1",
+                "recipe": {
+                  "action": "Two hands move slowly through the window light, as if catching the last sun",
+                  "amount": 10,
+                  "model": "auto",
+                  "move": "still",
+                  "seconds": 5,
+                  "startImage": "/demo/lysne/video/hands.jpg"
+                },
+                "source": "engine",
+                "speed": 1,
+                "takes": [
+                  {
+                    "at": "2026-10-14T11:40:00.000Z",
+                    "cost": 0.42,
+                    "findings": [],
+                    "id": "tk-hands-1",
+                    "model": "Kling 3.0",
+                    "number": 1,
+                    "poster": "/demo/lysne/video/hands.jpg",
+                    "seconds": 5,
+                    "state": "ready",
+                    "video": "/demo/lysne/video/hands.mp4"
+                  }
+                ],
+                "transition": "dissolve"
+              },
+              {
+                "id": "vc-drop",
+                "in": 0.5,
+                "name": "The bottle in the hand",
+                "out": 3.7,
+                "pickedTakeId": "tk-drop-1",
+                "productId": "pr-oil",
+                "recipe": {
+                  "action": "The hand turns the closed bottle in the low sun so the label faces the camera. No drops.",
+                  "amount": 20,
+                  "model": "auto",
+                  "move": "push",
+                  "seconds": 5,
+                  "startImage": "/demo/lysne/video/drop.jpg"
+                },
+                "source": "engine",
+                "speed": 1,
+                "takes": [
+                  {
+                    "at": "2026-10-14T11:44:00.000Z",
+                    "cost": 0.42,
+                    "findings": [
+                      {
+                        "from": 0,
+                        "kind": "physics",
+                        "state": "open",
+                        "text": "Oil runs out of the bottle’s base while the cap is on",
+                        "to": 3.4
+                      }
+                    ],
+                    "id": "tk-drop-1",
+                    "model": "Kling 3.0",
+                    "number": 1,
+                    "poster": "/demo/lysne/video/drop.jpg",
+                    "seconds": 5,
+                    "state": "ready",
+                    "video": "/demo/lysne/video/drop.mp4"
+                  },
+                  {
+                    "at": "2026-10-14T12:20:00.000Z",
+                    "best": {"in":1.4,"out":4.6},
+                    "cost": 0.42,
+                    "findings": [
+                      {
+                        "from": 0,
+                        "kind": "physics",
+                        "state": "open",
+                        "text": "Drops from the start frame run off the base",
+                        "to": 1.2
+                      }
+                    ],
+                    "id": "tk-drop-2",
+                    "model": "Kling 3.0",
+                    "number": 2,
+                    "poster": "/demo/lysne/video/turn.jpg",
+                    "seconds": 5,
+                    "state": "ready",
+                    "video": "/demo/lysne/video/turn.mp4"
+                  }
+                ],
+                "transition": "dissolve"
+              },
+              {
+                "id": "vc-bottle",
+                "in": 0.3,
+                "name": "Night Body Oil",
+                "out": 4.8,
+                "pickedTakeId": "tk-bottle-1",
+                "productId": "pr-oil",
+                "recipe": {
+                  "action": "A slow push in on the bottle on travertine; the low sun moves across the stone",
+                  "amount": 15,
+                  "model": "auto",
+                  "move": "push",
+                  "seconds": 5,
+                  "startImage": "/demo/lysne/video/bottle.jpg"
+                },
+                "source": "engine",
+                "speed": 1,
+                "takes": [
+                  {
+                    "at": "2026-10-14T11:52:00.000Z",
+                    "cost": 0.42,
+                    "findings": [],
+                    "id": "tk-bottle-1",
+                    "model": "Kling 3.0",
+                    "number": 1,
+                    "poster": "/demo/lysne/video/bottle.jpg",
+                    "seconds": 5,
+                    "state": "ready",
+                    "video": "/demo/lysne/video/bottle.mp4"
+                  }
+                ],
+                "transition": "focus"
+              }
+            ],
+            "motion": [
+              {
+                "clipId": "vc-light",
+                "ease": "soft-out",
+                "end": 3.3,
+                "enter": "soft",
+                "exit": "soft",
+                "id": "mo-title",
+                "keys": [
+                  {"at":0,"prop":"scale","value":0.94},
+                  {"at":2.5,"prop":"scale","value":1},
+                  {"at":0,"prop":"y","value":3},
+                  {"at":1.6,"prop":"y","value":0}
+                ],
+                "loop": "drift",
+                "place": "centre",
+                "start": 0.8,
+                "template": "title",
+                "text": "Night ritual"
+              },
+              {
+                "clipId": "vc-bottle",
+                "ease": "soft-out",
+                "end": 13.4,
+                "enter": "rise",
+                "exit": "fade",
+                "id": "mo-product",
+                "place": "top",
+                "start": 11.2,
+                "template": "product",
+                "text": "Night Body Oil · 100 ml"
+              },
+              {
+                "clipId": "vc-bottle",
+                "ease": "soft-out",
+                "end": 13.4,
+                "enter": "rise",
+                "exit": "fade",
+                "id": "mo-cta",
+                "place": "bottom",
+                "start": 11.8,
+                "template": "cta",
+                "text": "Se oljen"
+              },
+              {"end":15,"enter":"soft","id":"mo-end","place":"centre","start":13.4,"template":"end","text":"LYSNE"}
+            ],
+            "sound": [
+              {
+                "beats": [0,0.75,1.5,2.25,3,3.75,4.5,5.25,6,6.75,7.5,8.25,9,9.75,10.5,11.25,12,12.75,13.5,14.25,15],
+                "end": 15,
+                "id": "sd-music",
+                "kind": "music",
+                "level": -6,
+                "licence": "Licensed for paid social",
+                "name": "Late light · slow piano",
+                "start": 0
+              },
+              {"end":11.4,"id":"sd-glass","kind":"effect","level":-14,"name":"Glass on stone","start":10.6}
+            ]
+          },
+          "at": "2026-10-14T12:21:00.000Z",
+          "by": "u-nora",
+          "changes": ["Se oljen, LYSNE’s button, on shot 4 from 0:11.8 to 0:13.4","It follows shot 4 if the shot moves"],
+          "id": "ve-cta",
+          "state": "kept",
+          "text": "Put the call to action on the last shot, before the end card"
+        }
+      ],
       "formatId": "vf-reels",
       "formats": [
         {
@@ -78668,15 +79607,48 @@ nora document("doc-night-ritual")
       ],
       "grade": "LYSNE warm",
       "motion": [
-        {"end":3.3,"enter":"soft","id":"mo-title","place":"centre","start":0.8,"template":"title","text":"Night ritual"},
         {
+          "clipId": "vc-light",
+          "ease": "soft-out",
+          "end": 3.3,
+          "enter": "soft",
+          "exit": "soft",
+          "id": "mo-title",
+          "keys": [
+            {"at":0,"prop":"scale","value":0.94},
+            {"at":2.5,"prop":"scale","value":1},
+            {"at":0,"prop":"y","value":3},
+            {"at":1.6,"prop":"y","value":0}
+          ],
+          "loop": "drift",
+          "place": "centre",
+          "start": 0.8,
+          "template": "title",
+          "text": "Night ritual"
+        },
+        {
+          "clipId": "vc-bottle",
+          "ease": "soft-out",
           "end": 13.4,
           "enter": "rise",
+          "exit": "fade",
           "id": "mo-product",
           "place": "top",
           "start": 11.2,
           "template": "product",
           "text": "Night Body Oil · 100 ml"
+        },
+        {
+          "clipId": "vc-bottle",
+          "ease": "soft-out",
+          "end": 13.4,
+          "enter": "rise",
+          "exit": "fade",
+          "id": "mo-cta",
+          "place": "bottom",
+          "start": 11.8,
+          "template": "cta",
+          "text": "Se oljen"
         },
         {"end":15,"enter":"soft","id":"mo-end","place":"centre","start":13.4,"template":"end","text":"LYSNE"}
       ],
@@ -78692,7 +79664,8 @@ nora document("doc-night-ritual")
           "start": 0
         },
         {"end":11.4,"id":"sd-glass","kind":"effect","level":-14,"name":"Glass on stone","start":10.6}
-      ]
+      ],
+      "style": {"energy":35,"id":"showcase","pace":35}
     },
     "workspaceId": "w-lysne"
   }

@@ -1,7 +1,8 @@
 // The player: the Video studio's board (FLOWS §27.2). The frame in the format's ratio, the shots stacked in it and
 // the one at the playhead shown (a dissolve lays the next over the last for half a second, a focus pull brings it in
 // soft to sharp), the brand's motion and the captions drawn over them in the creative's own type, and the placement's
-// safe zones when they are on. The desk owns the clock; the player follows it, seeking each video to the second of
+// safe zones when they are on. Each motion layer is drawn from the clock (FLOWS §34.6): its keyframes, its way in,
+// its life and its way out, so a paused frame shows what the film shows there. The desk owns the clock; the player follows it, seeking each video to the second of
 // its take that the playhead stands on.
 import { TextShimmer } from "@fume/ui";
 import { useEffect, useRef, type CSSProperties } from "react";
@@ -9,6 +10,7 @@ import type { Placement, VideoEdit } from "../../../../contract";
 import { clipAt, pickedTake, placed } from "../../../../domain/video";
 import { SafeZones } from "../formats";
 import { gradeLook, ratioOf } from "./edit";
+import { layerAt } from "./motion";
 
 const DISSOLVE = 0.5;
 const FOCUS = 0.7;
@@ -21,6 +23,7 @@ export function Player({
   safe,
   brandName,
   title,
+  cta,
 }: {
   edit: VideoEdit;
   t: number;
@@ -29,6 +32,8 @@ export function Player({
   safe: boolean;
   brandName: string;
   title: string;
+  /** The brand's call to action as its design system sets it (the pill's colour and its words' colour). */
+  cta?: { fill: string; ink: string };
 }) {
   const format = edit.formats.find((f) => f.id === edit.formatId) ?? edit.formats[0];
   const shots = placed(edit.clips);
@@ -127,17 +132,28 @@ export function Player({
       <div className="ui-video-words" aria-hidden="true">
         {edit.motion
           .filter((m) => t >= m.start && t < m.end)
-          .map((m) => (
-            <p
-              key={m.id}
-              className="ui-video-motion"
-              data-template={m.template}
-              data-place={m.place}
-              data-enter={playing ? m.enter : undefined}
-            >
-              {m.template === "end" ? m.text.toUpperCase() : m.text}
-            </p>
-          ))}
+          .map((m) => {
+            const k = layerAt(m, t, edit.style);
+            return (
+              <p key={m.id} className="ui-video-motion" data-template={m.template} data-place={m.place}>
+                <span
+                  className="ui-video-motion-key"
+                  style={
+                    {
+                      "--kx": `${k.x}%`,
+                      "--ky": `${k.y}%`,
+                      "--ks": k.scale,
+                      "--ko": k.opacity,
+                      "--kb": `${k.blur.toFixed(1)}px`,
+                      ...(m.template === "cta" && cta ? { "--cta-fill": cta.fill, "--cta-ink": cta.ink } : {}),
+                    } as CSSProperties
+                  }
+                >
+                  {m.template === "end" ? m.text.toUpperCase() : m.text}
+                </span>
+              </p>
+            );
+          })}
         {captionsOn &&
           edit.captions
             .filter((c) => t >= c.start && t < c.end)

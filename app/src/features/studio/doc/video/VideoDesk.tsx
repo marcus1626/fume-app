@@ -5,15 +5,18 @@
 // the timeline follow. Every change of hers is an undo step of the desk (⌘Z), saved after a short pause.
 import { Glass, Icon, Toggle, WithTooltip } from "@fume/ui";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { usePlacements } from "../../../../api/hooks";
+import { useBrandBooks, usePlacements } from "../../../../api/hooks";
 import type { CreativeDocument, EditCheck, StudioMode, Variables, VideoClip, VideoEdit } from "../../../../contract";
 import { clipAt, editLength, placed, timecode } from "../../../../domain/video";
 import { lockProps } from "../lock";
 import { checked, type Selection } from "./edit";
 import { VideoEngineBar } from "./EngineBar";
+import { EnginePanel } from "./EnginePanel";
 import { VideoInspector, type VideoChange } from "./Inspector";
 import { VideoMedia } from "./Media";
+import { follow } from "./motion";
 import { Player } from "./Player";
+import { Storyboard } from "./Storyboard";
 import { Timeline } from "./Timeline";
 
 /** The latest value of a callback behind a stable function, so the panels need not draw again on every frame. */
@@ -60,7 +63,20 @@ export function VideoDesk({
   onBefore: () => void;
 }) {
   const placements = usePlacements().data ?? [];
+  // The brand's call to action as its design system sets it, for the CTA on the video.
+  const books = useBrandBooks().data;
+  const cta = useMemo(() => {
+    const book = books?.design.find((b) => b.kind === "design" && b.body);
+    const colours = book?.kind === "design" ? book.body?.colours : undefined;
+    const fill = colours?.find((c) => c.role === "cta")?.hex;
+    const ink = colours?.find((c) => c.role === "cta_text")?.hex;
+    return fill && ink ? { fill, ink } : undefined;
+  }, [books]);
   const [selected, setSelected] = useState<Selection>();
+  // Storyboard or Timeline: two ways to see the same shots (FLOWS §34.6).
+  const [board, setBoard] = useState(false);
+  // The video conversation: the Engine's side panel, one per creative.
+  const [talking, setTalking] = useState(false);
   const [safe, setSafe] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [t, setT] = useState(0);
@@ -139,8 +155,9 @@ export function VideoDesk({
           : view.sound.some((s) => s.id === selected.id));
   const shown = exists ? selected : undefined;
 
+  // Layers that follow a shot move with it, whatever moved the shot (FLOWS §34.6).
   const change = useStable((part: VideoChange, key: string) =>
-    onChange({ ...part, ...(part.video ? { video: checked(part.video) } : {}) }, key),
+    onChange({ ...part, ...(part.video ? { video: checked(follow(edit, part.video)) } : {}) }, key),
   );
   const setEdit = useStable((next: VideoEdit, key: string) => change({ video: next }, key));
   const select = useStable((s: Selection | undefined, seekTo?: "start") => {
@@ -191,6 +208,7 @@ export function VideoDesk({
             onSelect={select}
             onEdit={setEdit}
             timeNow={timeNow}
+            cta={cta}
           />
         </div>
       )}
@@ -226,6 +244,7 @@ export function VideoDesk({
               safe={safe}
               brandName={brandName}
               title={title}
+              cta={cta}
             />
           </div>
           <div className="ui-video-transport">
@@ -253,10 +272,24 @@ export function VideoDesk({
             </span>
           </div>
         </section>
-        {!readOnly && (lock ?? <VideoEngineBar doc={doc} proposed={proposed} onBefore={before} />)}
+        {!readOnly &&
+          (lock ?? (
+            <VideoEngineBar doc={doc} proposed={proposed} onBefore={before} onTalk={() => setTalking((on) => !on)} />
+          ))}
       </main>
 
-      {!readOnly && !bare && (
+      {!readOnly && !bare && talking && (
+        <EnginePanel
+          doc={doc}
+          edit={view}
+          mode={mode}
+          selected={shown}
+          t={Math.round(t * 10) / 10}
+          onClose={() => setTalking(false)}
+          onBefore={before}
+        />
+      )}
+      {!readOnly && !bare && !talking && (
         <div className="ui-desk-lockable" {...lockProps(locked || Boolean(proposed))}>
           <VideoInspector
             doc={doc}
@@ -269,22 +302,36 @@ export function VideoDesk({
             onSelect={select}
             onFlag={flag}
             onBefore={before}
+            t={shown?.kind === "motion" ? Math.round(t * 10) / 10 : 0}
+            onSeek={seek}
           />
         </div>
       )}
-
       <div className="ui-desk-lockable" {...lockProps(locked)}>
-        <Timeline
-          edit={view}
-          t={t}
-          selected={shown}
-          readOnly={readOnly}
-          proposed={Boolean(proposed)}
-          onSelect={select}
-          onSeek={seek}
-          onTrim={trim}
-          onFlag={flag}
-        />
+        {board ? (
+          <Storyboard
+            edit={view}
+            selected={shown}
+            readOnly={readOnly}
+            brandName={brandName}
+            onSelect={select}
+            onBoard={setBoard}
+          />
+        ) : (
+          <Timeline
+            edit={view}
+            t={t}
+            selected={shown}
+            readOnly={readOnly}
+            proposed={Boolean(proposed)}
+            motionMode={mode?.id === "m-video-motion"}
+            onSelect={select}
+            onSeek={seek}
+            onTrim={trim}
+            onFlag={flag}
+            onBoard={setBoard}
+          />
+        )}
       </div>
     </>
   );

@@ -1362,3 +1362,44 @@ sjekker man design inne på Images-siden?"
   each with its words, then the picture under them, locked. The words are the plan's; the design file is where they
   move.
 - **Check.** A creative Fume designed waits in Designs, not Images, beside the creatives laid out by hand.
+
+### 34.6 The video editor: Edit and Motion, Storyboard and Timeline
+Marcus, 9 Nov: "Sørg for at den er logisk", like CapCut; existing video as well as the Engine's shots; pure motion in
+its own mode, with predefined styles; a Storyboard; the Engine as a bar and as a conversation; precomps, the brand's
+CTA, keyframes and easing. The proposal (artifact "Video-editoren") holds the reasoning and what was looked at; this is
+what the mock does. The engine that plays and renders the motion is not chosen (Marcus 9 Nov: motion.dev and Anime.js
+are references for when that engine is built). Fume owns the motion as data, so the engine can change.
+
+- **Two modes, one video.** Edit is footage first: her uploads and the Engine's shots on the main track, with text and
+  the brand's components over them. Motion is graphics first: the styles, and a track for each layer, as in After
+  Effects. The mode changes the panels, never the edit: the switch says so ("Nothing in the edit changes").
+- **Shots and takes.** A shot is a place in the cut with takes. It is named by its take, plainly: "Shot 3 · Take 1 of
+  2", with what it is and where it came from under it ("The bottle in the hand · made by the Engine"). An upload is a
+  clip used as it is ("Upload · LYSNE's footage") until she asks the Engine for takes of it.
+- **The library** (left, Edit): Shots, Uploads, Masters and Brand. Brand holds the brand's components (its call to
+  action, its end card) and its text (title, line, product line, offer), from its design system; each is added at the
+  playhead, on the shot there.
+- **The call to action** is a locked component: its words change (the plan's CTA), its pill and colours are the
+  design system's (LYSNE: Burgundy cap, Linen words). It sits on the Brand track with the end card.
+- **Tracks** (Edit): Text, Brand, Main, Captions, Sound. A layer follows the shot it was added on (a small link on its
+  item, "Follows" in the inspector): trim or move the shot and the layer moves with it. "The video's own time" unlinks
+  it.
+- **Motion on a layer.** In, While on (still, drift, breathe) and Out, each from the brand's choices; Easing from the
+  brand's motion (Soft out, Settle, In and out, Even; never a bounce). **Keyframes** on Across, Up and down, Size and
+  Opacity: a diamond sets or takes out the key at the playhead, the value there is a field, and the layer's own short
+  track shows its keys (press one to go there). Keys live on the layer in its own seconds, so they move with it. The
+  player draws every layer from the clock, so a paused frame is the film's frame.
+- **Motion mode's styles**: Product showcase, Explainer, SaaS demo, Kinetic type, Stats, Logo sting. A style is a set
+  of motion (in, out, while on, easing) with Energy (how far words travel) and Pace (how quickly they come and go).
+  Trying another keeps the words, the timing and the keys.
+- **Storyboard** sits in the timeline's place, switched in its corner: a card per shot in order, its picture with the
+  other takes stacked behind it, "Take 1 of 2" or "Upload", its length and its camera, and a flag where the Engine
+  found something. Picking a card picks the shot; a change shows in both views.
+- **The Engine, three ways in, one context.** The bar under the player takes one change, shown before it is kept. The
+  **video conversation** opens from the bar's end and takes the inspector's place: one conversation per creative, the
+  same changes (kept or undone show as such), and chips for what the Engine sees (what is picked, the playhead, the
+  format, the mode), each removable. In the tools: Make it again on a shot. Staff only.
+- **3D** is a track behind a flag (`?flags=3d`), off in production until it works: the product's 3D model with a camera
+  move.
+- **Not yet**: groups and components she makes herself (precomps), split and roll edits, speed ramps, masks, a curve
+  editor, export of the project as one file. They come with the engine.

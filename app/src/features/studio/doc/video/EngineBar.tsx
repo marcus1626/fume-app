@@ -1,6 +1,7 @@
 // The Engine bar on a video (FLOWS §27.5): she says what to change ("Cut it to 6 s on the beat", "Hold the last shot
 // longer", "No captions"); the Engine shows the change on the timeline, line by line, before anything is kept. Undo
-// (Esc) or Keep (Enter), as on a picture. The Engine never talks in its bar.
+// (Esc) or Keep (Enter), as on a picture. The Engine never talks in its bar: for a longer back and forth, the button at
+// its end opens the video conversation, the Engine's side panel with the same context (FLOWS §34.6).
 import { Button, Icon, WithTooltip, useToast } from "@fume/ui";
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { useDecideEdit, useEngineEdit } from "../../../../api/hooks";
@@ -10,10 +11,13 @@ export function VideoEngineBar({
   doc,
   proposed,
   onBefore,
+  onTalk,
 }: {
   doc: CreativeDocument;
   proposed?: VideoEngineEdit;
   onBefore: () => void;
+  /** Opens the video conversation. */
+  onTalk?: () => void;
 }) {
   const [text, setText] = useState("");
   const ask = useEngineEdit();
@@ -132,6 +136,19 @@ export function VideoEngineBar({
         >
           Send
         </Button>
+        {onTalk && (
+          <WithTooltip label="The video conversation">
+            <Button
+              type="button"
+              size="sm"
+              variant="quiet"
+              icon="message-square"
+              iconOnly
+              aria-label="Open the video conversation"
+              onClick={onTalk}
+            />
+          </WithTooltip>
+        )}
       </form>
     </div>
   );
