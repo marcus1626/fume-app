@@ -1733,3 +1733,74 @@ Engine (and neither does Fume's person while she looks through Customer view).
 - The panel's Everything thread follows the address's brand, else the person's current brand.
 - Leaving a chip out lasts while she is on the page; it is not remembered.
 - The mock writes in LYSNE's voice from a few lines per kind of field; live, the Engine writes with the brand's context.
+
+## 36. Round 16 (9 Nov 2026, PROPOSED): Marcus's 11 comments on the round 15 walkthrough
+Marcus watched the round 15 walkthrough and left 11 comments (9 Nov, evening). Under them lay four things. The design
+studio must be a pro tool: the brand's choices first, but presets, previews and a value of her own always there, as in
+Figma and OpenPencil ("designer har alltid siste ord"). The Engine must be at hand without opening its panel, and keep a
+chat per web session while remembering earlier ones. "Noted for round 16" read as dropped: the video editor he described
+in round 14 is built now (§36.4). And a button outside its card's padding should never reach him again: a test looks for
+it. Everything here is PROPOSED until he chooses.
+
+### 36.1 The design studio as a pro tool
+- **Size** is a number with presets, as in Figma's and OpenPencil's font size: the brand's sizes first (each named by
+  its text style: "76 · Heading 1"), then a type scale (12 to 240). She types it, nudges it with the arrow keys (Shift
+  for ten), drags its handle, or picks from the list; minus and plus step to the next preset. A size set by hand says
+  so: "Set by hand; Heading 1 is 76 px."
+- **Text style, Typeface and Weight** are lists that show each choice as itself: a style at its size and case, a typeface
+  in its face, each weight in the layer's face at that weight, the value as data beside it ("Medium 500"). The closed
+  field stays in the interface's type.
+- **Fill** keeps the brand's colours first and ends with a plus: a colour of her own (a picker and a hex field). One not
+  among the brand's shows as its own swatch, "Custom · #HEX", and its help says the design check counts it under
+  Design system. Hers to choose.
+- **Align is a box of nine places**, not tabs: top left to bottom right, inside the design system's safe area. On a layer
+  (Position) it places the layer; words take the side's alignment. On the frame (Layout) it places the block of words,
+  clear of a shown logo and call to action, the shade following. A layer between places marks none ("Between
+  places"). Text alignment is its own three icons (Text align).
+- **A layout grid** (Frame · Layout grid), as Figma's: shown and hidden from the panel, the board's rail, or Shift+G
+  anywhere in Design. Templates per format: the brand's grid from its design system ("LYSNE's grid · 4:5", 6 columns,
+  24 gutter, 72 margin), thirds, 4 and 12 columns (story: 4 and 6). Or her own values (columns, rows, gutter, margin):
+  change one and the grid is hers ("Custom"). Columns are drawn as a light tint over the picture, a grid without
+  gutters as lines. The grid lives in the creative's variables (`grid`, `gridCustom`); whether it shows and whether
+  layers snap are remembered on this computer.
+- **On the canvas** a layer is dragged with the mouse and snaps to the grid's columns, the safe area and the frame's
+  middle, by its start, middle or end, within 8 px; the line it snapped to shows as a guide. Cmd held places it freely;
+  Shift keeps it on one axis. The picked layer has a handle on each side for its width. The arrow keys nudge it a pixel,
+  Shift ten. A locked layer only shows. Each drag is one undo step.
+- **The letters beside X, Y, W and the grid's values are handles**: drag right or up for more, a step for every two
+  pixels, Shift for ten. The field stays the keyboard's and the screen reader's control.
+- **A hidden layer's eye is struck through** (eye-off), as well as going quiet; an unlocked layer's lock is open.
+- New icons, PROPOSED with the round: eye-off, lock-open, text-align-start, text-align-center, text-align-end.
+
+### 36.2 The Engine at hand, and a chat per web session
+- **"Tell the Engine" while the panel is closed.** In the Studio a field lies right under the board, where the Engine
+  bar was: "Tell the Engine what to change in Master 3 · Feed 4:5", with ⌘J beside it. It is the page's own thread's
+  composer, with the same draft: sending opens the panel on that thread, where the answer and its change card are, and
+  ⌘J opens it with what she has written. While the panel is open the field steps aside (one composer). While the Engine
+  fixes the creative from Check, or a change waits for her, it says so and does not take more. In the staff frame the
+  Engine button at the bar's end says "Tell the Engine" while the panel is closed.
+- **A web session keeps its chat.** Within one session (this browser tab: a reload keeps it, leaving Fume ends it) the
+  panel shows the conversation as it was. A new session starts each thread empty: "A new chat about Winter gifting. The
+  Engine remembers your earlier chats about it."
+- **Earlier chats are listed, and remembered.** At the top of the thread, under Earlier: one row per earlier chat, named
+  by what it was about and the day ("The plan · Yesterday") with her first words under it; a row opens to read it. A
+  chat is messages close in time from one part of the project: a new one begins after three quiet hours, or when she
+  writes from another part. "Sees" carries "Your 2 earlier chats": the Engine reads them with what she asks, unless she
+  takes the chip off. A Studio creative's thread works the same way with its changes; a change that still waits for her
+  stays in the new chat, whenever it was asked for.
+- **Asked back, it answers from them.** "What did we say about the hook?" gets "Yesterday, in the plan, you asked
+  “Is the hook on brand?” I said: …", with its own words from then. Without the chip, it answers from this chat only
+  (live wiring: the mock does not yet know the chip is off).
+- **A change card takes the keyboard without covering its words.** When a change comes, Enter keeps it and Esc undoes
+  it, as before; the Keep button's tooltip no longer opens over the change on that focus (a Tab to it still shows it).
+- **For the dev thread:** an Engine message carries the part of the project it was written from (`page`, "The plan",
+  "Tone of Voice"; `engineSay` takes it in `about`). The session's start is kept per thread in sessionStorage
+  (`fume.engine.session`). Wiring the memory live means the Engine's context for a thread gets a summary of its earlier
+  chats when the chip is on. The full-screen Engine page still shows a thread's whole history.
+
+### 36.3 Nothing leaves its card
+- The chosen "Goes to the Engine" pill sat past the comment card's padding (a negative margin meant to line up a quiet
+  button's text). The comment's buttons now sit inside its padding.
+- An end-to-end test (`e2e/layout.spec.ts`) looks, at 1440 × 900, for any button, link, field or tab whose box goes past
+  the nearest ancestor that draws a surface, on Check (a comment answered, designs, video), the three studios, a plan
+  (with the Engine open) and the brand books. What a scroller clips away is left out.

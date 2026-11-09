@@ -177,8 +177,8 @@ function CustomColour({
               value={hex}
               spellCheck={false}
               onChange={(e) => {
-                const v = e.target.value.trim();
-                setHex(v.startsWith("#") ? v : `#${v}`);
+                // One # in front, however it was typed or pasted ("D9B48F", "#D9B48F", "##D9B48F")
+                setHex(`#${e.target.value.trim().replace(/#/g, "").toUpperCase()}`);
               }}
             />
           </InputGroup>

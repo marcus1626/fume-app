@@ -241,3 +241,5 @@
   .ui-scrub, .ui-sc-place-cell, .ui-sc-place-mark { transition: none; }
 }
 .ui-select-item .ui-sc-preview + small { margin-inline-start: var(--ui-space-sm); }
+/* A list row's data beside its words (Radix drops the item text's class, so the select.css rule does not reach it) */
+.ui-select-item small { margin-inline-start: var(--ui-space-sm); }

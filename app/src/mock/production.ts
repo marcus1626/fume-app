@@ -24,6 +24,23 @@ import { writeFor } from "./engineWrite";
 type Calls =
   "engineChat" | "engineSay" | "answerEngineWidget" | "engineThreads" | "engineWrite" | "batches" | "startBatch";
 
+/** Words that ask back about an earlier chat, left out when finding what it was about. */
+const BACK_WORDS = new Set([
+  "what",
+  "said",
+  "about",
+  "earlier",
+  "last",
+  "time",
+  "remind",
+  "agree",
+  "decide",
+  "that",
+  "this",
+  "with",
+  "again",
+]);
+
 /** Whether two messages are in the same thread: the same project, or both in the brand's Everything. */
 const sameTopic = (a?: EngineTopic, b?: EngineTopic) => a?.kind === b?.kind && a?.id === b?.id;
 
@@ -594,6 +611,25 @@ export function productionCalls(m: Mock): Pick<FumeApi, Calls> {
           ok.run = { ...said, asking: open?.run?.asking };
           if (!waits) later(() => askNext(workspaceId, topic), 3);
           return;
+        }
+        // Asked back about an earlier chat ("What did we say about the hook?"): the Engine remembers what it said, in
+        // a chat from before this web session too (round 16).
+        if (/\b(what did (we|you|i) (say|agree|decide)|remind me|last time|earlier)\b/.test(t)) {
+          const words = (t.match(/[a-z]{4,}/g) ?? []).filter((w) => !BACK_WORDS.has(w));
+          const thread = db.engineMessages.filter(
+            (x) => x.workspaceId === workspaceId && sameTopic(x.topic, topic) && x.id !== msg.id,
+          );
+          const asked = [...thread]
+            .reverse()
+            .find((x) => x.author.kind === "person" && words.some((w) => x.text.toLowerCase().includes(w)));
+          const answer = asked && thread.find((x) => x.author.kind === "engine" && x.at >= asked.at);
+          if (asked && answer) {
+            const days = Math.round((Date.parse(now().slice(0, 10)) - Date.parse(asked.at.slice(0, 10))) / 864e5);
+            const when = days === 0 ? "Today" : days === 1 ? "Yesterday" : `${days} days ago`;
+            return says(
+              `${when}${asked.page ? `, in ${asked.page.charAt(0).toLowerCase()}${asked.page.slice(1)}` : ""}, you asked “${asked.text}” I said: ${answer.text}`,
+            );
+          }
         }
         if (/(open|studio)/.test(t) && !isWorkOrder(t)) {
           const d = db.documents

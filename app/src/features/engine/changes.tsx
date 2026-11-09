@@ -18,7 +18,7 @@ import {
   useToast,
   type StudioVariable,
 } from "@fume/ui";
-import { Fragment, useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { Fragment, useEffect, useRef, useState, type FocusEvent, type KeyboardEvent } from "react";
 import { useDecideEdit } from "../../api/hooks";
 import type { CreativeDocument, EngineEdit, StudioMode, VarValue, VideoEngineEdit } from "../../contract";
 import { time } from "../../lib/time";
@@ -124,7 +124,7 @@ function PictureChange({
   desk?: EngineDesk;
 }) {
   const decide = useDecideEdit();
-  const keep = useRef<HTMLButtonElement>(null);
+  const keep = useQuietFocus();
   // The suggestions she took with Yes, by variable: undone with the card.
   const [taken, setTaken] = useState<Record<string, VarValue>>({});
   const proposed = edit.state === "proposed";
@@ -136,8 +136,8 @@ function PictureChange({
 
   // The card takes the keyboard when it comes: Enter keeps and renders, Esc undoes.
   useEffect(() => {
-    if (proposed && canKeep) keep.current?.focus({ preventScroll: true });
-  }, [proposed, canKeep]);
+    if (proposed && canKeep) keep.focus();
+  }, [proposed, canKeep, keep]);
 
   const undo = () => {
     for (const [key, from] of Object.entries(taken)) desk?.onVariable(key, from);
@@ -226,7 +226,8 @@ function PictureChange({
         {canKeep && (
           <WithTooltip label="Keep it and render a new version" shortcut="↵">
             <Button
-              ref={keep}
+              ref={keep.ref}
+              onFocus={keep.onFocus}
               size="sm"
               variant="secondary"
               icon="refresh-cw"
@@ -247,12 +248,12 @@ function PictureChange({
 function VideoChange({ doc, edit, desk }: { doc: CreativeDocument; edit: VideoEngineEdit; desk?: EngineDesk }) {
   const decide = useDecideEdit();
   const toast = useToast();
-  const keep = useRef<HTMLButtonElement>(null);
+  const keep = useQuietFocus();
   const proposed = edit.state === "proposed";
   const canKeep = edit.changes.length > 0;
   useEffect(() => {
-    if (proposed && canKeep) keep.current?.focus({ preventScroll: true });
-  }, [proposed, canKeep]);
+    if (proposed && canKeep) keep.focus();
+  }, [proposed, canKeep, keep]);
   const verdict = (v: "keep" | "undo") => {
     desk?.onBefore();
     decide.mutate(
@@ -299,7 +300,8 @@ function VideoChange({ doc, edit, desk }: { doc: CreativeDocument; edit: VideoEn
         {canKeep && (
           <WithTooltip label="Keep the change in the edit" shortcut="↵">
             <Button
-              ref={keep}
+              ref={keep.ref}
+              onFocus={keep.onFocus}
               size="sm"
               variant="secondary"
               icon="check"
@@ -313,4 +315,25 @@ function VideoChange({ doc, edit, desk }: { doc: CreativeDocument; edit: VideoEn
       </div>
     </div>
   );
+}
+
+/** Focus a button for the keyboard (Enter keeps) without opening its tooltip over the words she is reading. Radix
+ *  opens a tooltip on any focus; a focus handler that prevents the default stops it. A Tab to the button still shows
+ *  the tooltip. */
+function useQuietFocus() {
+  const ref = useRef<HTMLButtonElement>(null);
+  const quiet = useRef(false);
+  // One object for the card's life, so an effect that focuses it runs only when the card changes
+  const [api] = useState(() => ({
+    ref,
+    focus: () => {
+      quiet.current = true;
+      ref.current?.focus({ preventScroll: true });
+      quiet.current = false;
+    },
+    onFocus: (e: FocusEvent<HTMLButtonElement>) => {
+      if (quiet.current) e.preventDefault();
+    },
+  }));
+  return api;
 }
