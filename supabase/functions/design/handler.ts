@@ -63,12 +63,15 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     // Dressmann's redone designs moved their words and broke "MANDAG"). A designer's own ask gets a fresh look.
     let choice: LayoutChoice | null = null;
     let kept = false;
+    let keptWhy: string | null = null;
     if (!t.ask && d.before) {
       try {
         choice = await d.before(t);
         kept = Boolean(choice);
-      } catch {
+        if (!choice) keptWhy = "no earlier design";
+      } catch (e) {
         choice = null;
+        keptWhy = e instanceof Error ? e.message.slice(0, 200) : String(e).slice(0, 200);
       }
     }
     // The model's eye is a help, not a gate: without it the service still finds a layout that passes its checks.
@@ -130,7 +133,7 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     const { error } = await d.service.finish(t.layer_id, {
       name: `${t.creative.title ?? "Creative"}, graphic design`,
       words,
-      choice: choice ? { ...choice, verdict, ...(kept ? { kept: true } : {}) } : { verdict },
+      choice: { ...(choice ?? {}), verdict, ...(kept ? { kept: true } : {}), ...(keptWhy ? { not_kept: keptWhy } : {}) },
       layout: out.layout ?? null,
       checks: out.checks ?? [],
       attempts: out.attempts ?? [],

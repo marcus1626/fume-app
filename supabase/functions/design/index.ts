@@ -98,7 +98,8 @@ Deno.serve((req) =>
       },
       choose: (t, words, picture, spent) => look<LayoutChoice>(CHOOSE_SYSTEM, choosePrompt(t, words), picture, LayoutChoice, spent),
       before: async (t) => {
-        const { data: layer } = await service.from("design_layers").select("candidate_id").eq("id", t.layer_id).maybeSingle();
+        const { data: layer, error: e1 } = await service.from("design_layers").select("candidate_id").eq("id", t.layer_id).maybeSingle();
+        if (e1) throw new Error(`layer: ${e1.message}`);
         let id = (layer as { candidate_id?: string } | null)?.candidate_id;
         // The picture's line: itself, then up its fixes (a fix of a fix) to the picture the Engine made.
         const line: string[] = [];
@@ -108,13 +109,15 @@ Deno.serve((req) =>
           id = (c as { fixed_from?: string | null } | null)?.fixed_from ?? undefined;
         }
         if (!line.length) return null;
-        const { data: made } = await service.from("design_layers").select("choice, ask, created_at").in("candidate_id", line)
+        const { data: made, error: e2 } = await service.from("design_layers").select("choice, ask, created_at").in("candidate_id", line)
           .eq("state", "made").neq("id", t.layer_id).order("created_at", { ascending: true }).limit(40);
+        if (e2) throw new Error(`layers: ${e2.message}`);
         const layers = (made ?? []) as { choice: unknown; ask: string | null }[];
         // A designer's own ask set the layout last; without one, the first design of the line is the one kept.
         const pick = [...layers].reverse().find((l) => l.ask) ?? layers[0];
         const parsed = LayoutChoice.safeParse(pick?.choice);
         if (parsed.success) return parsed.data;
+        if (pick) throw new Error(`unreadable earlier choice: ${parsed.error.message.slice(0, 120)}`);
         return null;
       },
       review: (t, words, png, spent, set) => look<Review>(REVIEW_SYSTEM, reviewPrompt(t, words, set), png, Review, spent),
