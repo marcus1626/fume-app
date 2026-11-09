@@ -82,5 +82,20 @@ the athlete quotes and "Shop Now" (about $0.05).
 
 ## Not yet
 
-The Engine reading the approved design system, the expert's view of the copy check and the screens to read, check and approve a book (design
-thread), and graphic design from the tokens (OpenPencil, Del 3).
+The Engine reading the approved design system, the screens to read, check and approve a book (design thread), and
+graphic design from the tokens (OpenPencil, Del 3).
+
+- The screens to read, check, approve and ask for a change are designed, not wired yet (app/FLOWS.md §30, PROPOSED):
+  `brandBooks()` reads `brand_books` for the workspace as `BrandBook` rows, newest first, split by kind; `body` is the
+  voice answer (with `parts`, as `VoiceBook`) or the design answer with `css` and `checks` (as `DesignBook`), and
+  `askedBy` is `created_by` when the row has an ask. `writeBrandBook` maps to `write_brand_book`, `checkBrandBook` to
+  `check_brand_book`, `approveBrandBook` to `approve_brand_book`, `askBrandBookChange` to `ask_brand_book_change`; a
+  `book.state` event on every change. An example's `image` is one of the brand's own photographs the live API picks,
+  and a layer may carry `colour` (a role) when the photograph needs another colour than the component's. To a customer,
+  `BrandBooksView.progress` carries the newest version of each book on its way that she may not read yet: kind,
+  version, state (writing, draft or failed) and updatedAt, never its body, from `brand_book_progress` (the dev thread
+  adds it when this is wired). She reads "Fume is writing version 3. Anna checks it before you read it."
+- The expert's view of the copy check is designed, not wired yet (app/FLOWS.md §31, PROPOSED): `CampaignPlan.copyCheck`
+  maps the plan run's `task_runs.copy_check` as it is (read, error, rewritten, rewrote_for, voice_book, lines with their
+  claims, findings), sent to Fume's own people only. A claim's `backedBy` is the verified fact's statement in words,
+  looked up from its id. A line's ref is `copy:<the plan line's key>` or `<direction id>/<creative id>`.

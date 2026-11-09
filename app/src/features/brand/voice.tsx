@@ -14,14 +14,14 @@ import {
   Field,
   FieldDescription,
   FieldLabel,
-  PageHeader,
   Textarea,
   useToast,
 } from "@fume/ui";
 import { useId, useState, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
 import { useBrandBoard, useDecideVoicePart } from "../../api/hooks";
 import type { VoiceBook, VoicePartId } from "../../contract";
-import { Back, Nothing, Page, Query } from "../../shell/Page";
+import { Query } from "../../shell/Page";
+import { BookFrame, NoBook } from "./books";
 import { ProvenanceTag } from "./decide";
 import { useRole, useViewer } from "./parts";
 
@@ -211,7 +211,49 @@ export function VoicePartCard({ book, id }: { book: VoiceBook; id: VoicePartId }
 }
 
 /** A part's section on the voice page: its title and line, where it came from, Confirm · Change, then the part. */
-function PartSection({ book, id, children }: { book: VoiceBook; id: VoicePartId; children: ReactNode }) {
+function PartSection({
+  book,
+  id,
+  bare,
+  children,
+}: {
+  book: VoiceBook;
+  id: VoicePartId;
+  /** In a version of the Tone of Voice: the book is approved as a whole, so a part has no Confirm · Change. */
+  bare?: boolean;
+  children: ReactNode;
+}) {
+  if (bare)
+    return (
+      <Section id={id} title={voicePartTitle[id]} line={voicePartLine[id]}>
+        {children}
+      </Section>
+    );
+  return (
+    <DecidedPart book={book} id={id}>
+      {children}
+    </DecidedPart>
+  );
+}
+
+/** A section of the Tone of Voice: its title, its line, then what it holds. */
+function Section({ id, title, line, children }: { id: string; title: string; line?: string; children: ReactNode }) {
+  return (
+    <section className="ui-voice-part" id={`voice-${id}`} aria-labelledby={`voice-${id}-title`}>
+      <div className="ui-voice-part-head">
+        <div className="ui-voice-part-words">
+          <h2 className="ui-voice-part-title" id={`voice-${id}-title`}>
+            {title}
+          </h2>
+          {line && <p className="ui-voice-part-line">{line}</p>}
+        </div>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function DecidedPart({ book, id, children }: { book: VoiceBook; id: VoicePartId; children: ReactNode }) {
   const a = usePartActions(book, id);
   const viewer = useViewer();
   return (
@@ -258,11 +300,12 @@ const Words = ({ items, avoid }: { items: string[]; avoid?: boolean }) => (
   </p>
 );
 
-/** The whole voice, a section per part. */
-export function VoiceBookView({ book }: { book: VoiceBook }) {
+/** The whole voice, a section per part; a version of the Tone of Voice also holds the voice at work. */
+export function VoiceBookView({ book, inBook }: { book: VoiceBook; inBook?: boolean }) {
   return (
     <div className="ui-voice-book">
-      <PartSection book={book} id="identity">
+      {book.summary && <p className="ui-voice-lead ui-brandbook-summary">{book.summary}</p>}
+      <PartSection book={book} id="identity" bare={inBook}>
         <p className="ui-voice-lead">{book.identity.who}</p>
         <div className="ui-voice-cols">
           <div className="ui-voice-block">
@@ -276,7 +319,7 @@ export function VoiceBookView({ book }: { book: VoiceBook }) {
         </div>
       </PartSection>
 
-      <PartSection book={book} id="speak">
+      <PartSection book={book} id="speak" bare={inBook}>
         <ul className="ui-voice-traits" aria-label="Tone">
           {book.speak.traits.map((t) => (
             <li key={t.trait} className="ui-voice-trait">
@@ -308,7 +351,7 @@ export function VoiceBookView({ book }: { book: VoiceBook }) {
         </DataList>
       </PartSection>
 
-      <PartSection book={book} id="rules">
+      <PartSection book={book} id="rules" bare={inBook}>
         <div className="ui-voice-cols" data-cols="3">
           <div className="ui-voice-block">
             <h3 className="ui-voice-sub">Every line must</h3>
@@ -325,7 +368,7 @@ export function VoiceBookView({ book }: { book: VoiceBook }) {
         </div>
       </PartSection>
 
-      <PartSection book={book} id="audience">
+      <PartSection book={book} id="audience" bare={inBook}>
         <p className="ui-voice-lead">{book.audience.who}</p>
         <div className="ui-voice-cols">
           <div className="ui-voice-block">
@@ -339,7 +382,7 @@ export function VoiceBookView({ book }: { book: VoiceBook }) {
         </div>
       </PartSection>
 
-      <PartSection book={book} id="examples">
+      <PartSection book={book} id="examples" bare={inBook}>
         <ul className="ui-voice-lines">
           {book.examples.map((e) => (
             <li key={e.line} lang={e.language === "no" ? "nb" : "en"}>
@@ -351,34 +394,216 @@ export function VoiceBookView({ book }: { book: VoiceBook }) {
           ))}
         </ul>
       </PartSection>
+      <VoiceAtWork book={book} />
     </div>
   );
 }
 
-/** Brand › Voice (/brand/voice): the whole voice. */
+const channelWord: Record<NonNullable<VoiceBook["channels"]>[number]["channel"], string> = {
+  instagram_feed: "Instagram feed",
+  instagram_story: "Instagram story",
+  tiktok: "TikTok",
+  paid_social: "Paid social",
+  email: "Email",
+  website: "Website",
+  packaging: "Packaging",
+  print: "Print",
+};
+
+const sourceWord: Record<NonNullable<VoiceBook["sources"]>[number]["source"], string> = {
+  site: "The website",
+  brand_dna: "Brand DNA",
+  rules: "The rules",
+  products: "The products",
+  taste: "Taste",
+  memory: "Past campaigns",
+  fume: "Fume’s proposal",
+  pictures: "The brand’s pictures",
+};
+
+/** The long Tone of Voice's other parts: where the voice sits, its mechanics, its words, the channels, headlines and
+ *  calls to action, on brand against off brand, and what Fume still needs to know. Each shows only when it is there. */
+function VoiceAtWork({ book }: { book: VoiceBook }) {
+  const lang = book.speak.languages.toLowerCase().includes("norw") ? "nb" : undefined;
+  return (
+    <>
+      {book.scale && book.scale.length > 0 && (
+        <Section id="scale" title="Where we sit" line="Between two words, where the voice sits.">
+          <ul className="ui-brandbook-scales">
+            {book.scale.map((x) => (
+              <li key={`${x.from}-${x.to}`} className="ui-brandbook-scale">
+                <span className="ui-brandbook-scale-word">{x.from}</span>
+                <span
+                  className="ui-brandbook-scale-track"
+                  role="img"
+                  aria-label={`${x.at} of 5, from ${x.from} to ${x.to}`}
+                >
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <span key={n} className="ui-brandbook-scale-step" data-at={n === x.at ? "" : undefined} />
+                  ))}
+                </span>
+                <span className="ui-brandbook-scale-word" data-end="">
+                  {x.to}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+      {book.mechanics && (
+        <Section id="mechanics" title="Mechanics" line="Casing, punctuation, numbers and names.">
+          <DataList variant="stacked" className="ui-voice-facts">
+            <DataListItem label="Casing">{book.mechanics.casing}</DataListItem>
+            <DataListItem label="Punctuation">{book.mechanics.punctuation}</DataListItem>
+            <DataListItem label="Numbers">{book.mechanics.numbers}</DataListItem>
+            <DataListItem label="Emoji">{book.mechanics.emoji}</DataListItem>
+            <DataListItem label="Names">{book.mechanics.names}</DataListItem>
+          </DataList>
+        </Section>
+      )}
+      {book.vocabulary && book.vocabulary.length > 0 && (
+        <Section id="vocabulary" title="Our words" line="The brand’s own words, and how to use them.">
+          <DataList variant="stacked" className="ui-voice-facts">
+            {book.vocabulary.map((v) => (
+              <DataListItem key={v.word} label={v.word}>
+                {v.use}
+              </DataListItem>
+            ))}
+          </DataList>
+        </Section>
+      )}
+      {book.channels && book.channels.length > 0 && (
+        <Section id="channels" title="Channels" line="How the voice works in each place, and how long it may be.">
+          <ul className="ui-brandbook-cards">
+            {book.channels.map((c) => (
+              <li key={c.channel} className="ui-voice-trait">
+                <p className="ui-voice-trait-name">{channelWord[c.channel]}</p>
+                <p className="ui-voice-trait-means">{c.how}</p>
+                <p className="ui-brandbook-length">{c.length}</p>
+                <p className="ui-voice-say" lang={lang}>
+                  <span className="ui-voice-say-label">For example</span>“{c.example}”
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+      {((book.headlines?.length ?? 0) > 0 || (book.ctas?.length ?? 0) > 0) && (
+        <Section id="headlines" title="Headlines and calls to action" line="Patterns to write from.">
+          <div className="ui-voice-cols">
+            {book.headlines && book.headlines.length > 0 && (
+              <div className="ui-voice-block">
+                <h3 className="ui-voice-sub">Headlines</h3>
+                <ul className="ui-brandbook-rows">
+                  {book.headlines.map((h) => (
+                    <li key={h.pattern}>
+                      <span className="ui-brandbook-row-main" lang={lang}>
+                        “{h.example}”
+                      </span>
+                      <span className="ui-brandbook-row-meta">{h.pattern}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {book.ctas && book.ctas.length > 0 && (
+              <div className="ui-voice-block">
+                <h3 className="ui-voice-sub">Calls to action</h3>
+                <ul className="ui-brandbook-rows">
+                  {book.ctas.map((c) => (
+                    <li key={c.cta}>
+                      <span className="ui-brandbook-row-main" lang={lang}>
+                        {c.cta}
+                      </span>
+                      <span className="ui-brandbook-row-meta">{c.when}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </Section>
+      )}
+      {book.pairs && book.pairs.length > 0 && (
+        <Section id="pairs" title="On brand, off brand" line="The same thing said two ways, and why one is ours.">
+          <ul className="ui-brandbook-pairs">
+            {book.pairs.map((x) => (
+              <li key={x.good} className="ui-brandbook-pair">
+                <p className="ui-voice-say" lang={lang}>
+                  <span className="ui-voice-say-label">On brand</span>“{x.good}”
+                </p>
+                <p className="ui-voice-say" data-say="dont" lang={lang}>
+                  <span className="ui-voice-say-label">Off brand</span>“{x.bad}”
+                </p>
+                <p className="ui-voice-trait-means">{x.why}</p>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+      <BookEnd gaps={book.gaps} sources={book.sources} />
+    </>
+  );
+}
+
+/** What Fume still needs to know, and where each part comes from: the end of both books. */
+export function BookEnd({ gaps, sources }: { gaps?: string[]; sources?: VoiceBook["sources"] }) {
+  return (
+    <>
+      {gaps && gaps.length > 0 && (
+        <Section
+          id="gaps"
+          title="What Fume still needs to know"
+          line="Questions for the brand. An answer goes into the next version."
+        >
+          <List items={gaps} />
+        </Section>
+      )}
+      {sources && sources.length > 0 && (
+        <Section id="sources" title="Where it comes from">
+          <DataList variant="stacked" className="ui-voice-facts">
+            {sources.map((x) => (
+              <DataListItem key={`${x.part}-${x.evidence}`} label={cap(x.part)}>
+                {sourceWord[x.source]} · {x.evidence}
+              </DataListItem>
+            ))}
+          </DataList>
+        </Section>
+      )}
+    </>
+  );
+}
+
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** Brand › Tone of Voice (/brand/voice): the version in use or the one on its way (FLOWS §30). Before Fume has written
+ *  a version, the voice in five parts from the onboarding. */
 export function VoicePage() {
+  const viewer = useViewer();
+  return (
+    <BookFrame
+      kind="voice"
+      description={`How ${viewer.staff ? viewer.brand : "your brand"} writes. Every word on a creative is held against it.`}
+      empty={<FiveParts />}
+    >
+      {(body) => <VoiceBookView book={body} inBook />}
+    </BookFrame>
+  );
+}
+
+/** The voice from the onboarding, before the long Tone of Voice. */
+function FiveParts() {
   const board = useBrandBoard();
   const viewer = useViewer();
   return (
-    <Page title="Voice · Brand" width="reading">
-      <PageHeader
-        title="Voice"
-        back={<Back to="/brand" label="Brand" />}
-        description={`${viewer.staff ? `${viewer.brand}’s voice` : "Your voice"} in five parts. Every word on a creative is held against it.`}
-      />
-      <Query query={board} loading="Loading the voice">
-        {(view) =>
-          view.identity.voiceBook ? (
-            <VoiceBookView book={view.identity.voiceBook} />
-          ) : (
-            <Nothing
-              icon="message-square"
-              title="No voice yet"
-              text="Fume reads it from your website and the material you give it."
-            />
-          )
-        }
-      </Query>
-    </Page>
+    <Query query={board} loading="Loading the voice">
+      {(view) =>
+        view.identity.voiceBook ? (
+          <VoiceBookView book={view.identity.voiceBook} />
+        ) : (
+          <NoBook kind="voice" staff={viewer.staff} brand={viewer.brand} />
+        )
+      }
+    </Query>
   );
 }

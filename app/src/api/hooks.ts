@@ -481,6 +481,14 @@ export const useBriefAlternatives = () => {
 export const useSetColourUses = () => useM((a, v: Parameters<FumeApi["setColourUses"]>[0]) => a.setColourUses(v));
 export const useMoveImage = () => useM((a, v: Parameters<FumeApi["moveImage"]>[0]) => a.moveImage(v));
 export const useDecideVoicePart = () => useM((a, v: Parameters<FumeApi["decideVoicePart"]>[0]) => a.decideVoicePart(v));
+
+// The brand's books (FLOWS §30)
+export const useBrandBooks = () => useQ(["brand", "books"], (a) => a.brandBooks());
+export const useWriteBrandBook = () => useM((a, v: Parameters<FumeApi["writeBrandBook"]>[0]) => a.writeBrandBook(v));
+export const useCheckBrandBook = () => useM((a, bookId: Id) => a.checkBrandBook(bookId));
+export const useApproveBrandBook = () => useM((a, bookId: Id) => a.approveBrandBook(bookId));
+export const useAskBrandBookChange = () =>
+  useM((a, v: Parameters<FumeApi["askBrandBookChange"]>[0]) => a.askBrandBookChange(v));
 export const usePassTastePair = () => useM((a, v: Parameters<FumeApi["passTastePair"]>[0]) => a.passTastePair(v));
 export const useUpdateProfile = () => useM((a, v: Parameters<FumeApi["updateProfile"]>[0]) => a.updateProfile(v));
 

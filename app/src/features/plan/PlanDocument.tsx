@@ -17,6 +17,7 @@ import type { Brief, Campaign, CampaignPlan, PlanLine, Product } from "../../con
 import * as copy from "../../copy";
 import { BriefFacts } from "../campaigns/brief-lines";
 import { useOpenProductCheck } from "../check/ProductCheckHost";
+import { changedAfter, CopyNotes, creativeRef, lineRef, wordsAnchor } from "./copy-check";
 import { GoLive } from "./GoLive";
 import {
   ChangedTag,
@@ -84,6 +85,17 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
   const yours = viewer === "customer";
   // The strategist's task and open questions are for whoever makes and checks the plan, never for the one who approves.
   const team = viewer === "staff" || viewer === "agency";
+  // How the words were read for claims and against the Tone of Voice: Fume's own expert only (FLOWS §31).
+  const check = viewer === "staff" && mode === "staff" ? plan.copyCheck : undefined;
+  const copyNotes = (ref: string, changed: { changedBy?: string; changedAt?: string }) =>
+    check ? (
+      <CopyNotes
+        check={check}
+        refId={ref}
+        changedBy={changedAfter(plan, changed) ? changed.changedBy : undefined}
+        people={people}
+      />
+    ) : undefined;
 
   // A product the plan uses whose details still wait to be confirmed: the Products line names it.
   const waiting = campaign.productIds
@@ -213,7 +225,8 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
                         editable={edit}
                         voice={voice}
                         tag={<LineTag line={l} tag={tag} people={people} />}
-                        note={l.key === "products" ? productNote : undefined}
+                        note={l.key === "products" ? productNote : copyNotes(lineRef(l), l)}
+                        anchor={check ? wordsAnchor(lineRef(l)) : undefined}
                       />
                     ))}
                   </ul>
@@ -250,6 +263,8 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
                   editable={edit}
                   people={people}
                   voice={voice}
+                  note={copyNotes(creativeRef(direction.id, m), m)}
+                  anchor={check ? wordsAnchor(creativeRef(direction.id, m)) : undefined}
                 />
               ))}
             </ul>

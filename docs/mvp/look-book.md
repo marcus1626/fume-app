@@ -49,3 +49,15 @@ wrote "The shirt is the whole picture"; the image model filled the frame, and th
   bare ground is left, and that the product never fills the frame. A correction of a picked version keeps its frame.
 - The composer is told to write the product's place and size where such a rule exists, never "the whole picture".
 - The Look Book's own composition notes (subject placement, negative space) are a soft rule in the scene slot.
+
+## Designed, not wired yet (app/FLOWS.md §32, PROPOSED)
+
+- Brand › Look Book (/brand/look) uses the books' shared frame. `BrandBookKind` gains `"look"`, `BrandBook` a
+  `{kind: "look", body?: LookBook}` member and `BrandBooksView` a `look` list; `brandBooks()` splits the `look` rows
+  of `brand_books` into it, and `progress` covers it like the other two.
+- `LookBook` is the stored body as `toLookBody` keeps it: the `LookAnswer` fields as they are, `evidence` with each
+  picture's `url` (a signed or public link; null when there is none) and `kind`, and `pictures`. `BookSource.source`
+  gains `"pictures"`. The UI does not use `brand`.
+- `writeBrandBook({kind: "look"})` is `write_brand_book(ws, 'look')`; check, approve and ask for a change are the same
+  calls as for the other books.
+

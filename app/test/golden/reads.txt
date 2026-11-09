@@ -2273,6 +2273,880 @@ maja brandDna()
       "version": 3
     }
   }
+maja brandBooks()
+  {
+    "design": [
+      {
+        "body": {
+          "checks": {
+            "contrast": [
+              {"need":4.5,"ok":true,"pair":"text on background","ratio":13.17},
+              {"need":4.5,"ok":true,"pair":"text on surface","ratio":14.6},
+              {"need":4.5,"ok":true,"pair":"on_primary on primary","ratio":13.17},
+              {"need":4.5,"ok":true,"pair":"cta_text on cta","ratio":10.09},
+              {"need":4.5,"ok":true,"pair":"text_muted on background","ratio":5.26},
+              {"need":4.5,"ok":true,"pair":"on_primary on secondary","ratio":10.09}
+            ],
+            "fails": [],
+            "missingRoles": []
+          },
+          "colours": [
+            {
+              "hex": "#2B1D17",
+              "name": "Night brown",
+              "role": "primary",
+              "source": "brand_dna",
+              "use": "The brand's dark: words, the logo on light."
+            },
+            {
+              "hex": "#5C1F2A",
+              "name": "Burgundy cap",
+              "role": "secondary",
+              "source": "brand_dna",
+              "use": "The cap's colour; a badge, a price."
+            },
+            {
+              "hex": "#A8642B",
+              "name": "Amber glass",
+              "role": "accent",
+              "source": "brand_dna",
+              "use": "A thin rule or a small mark, never words."
+            },
+            {
+              "hex": "#EFE6DA",
+              "name": "Linen",
+              "role": "background",
+              "source": "brand_dna",
+              "use": "A flat ground when there is no photograph."
+            },
+            {"hex":"#F7F2EA","name":"Warm paper","role":"surface","source":"fume","use":"A card or a panel on Linen."},
+            {
+              "hex": "#2B1D17",
+              "name": "Night brown",
+              "role": "text",
+              "source": "brand_dna",
+              "use": "Words on a light wall or on Linen."
+            },
+            {
+              "hex": "#6B5B4E",
+              "name": "Walnut",
+              "role": "text_muted",
+              "source": "fume",
+              "use": "A size, a caption, the small print."
+            },
+            {"hex":"#EFE6DA","name":"Linen","role":"on_primary","source":"brand_dna","use":"Words on Night brown."},
+            {"hex":"#F7F2EA","name":"Warm paper","role":"on_photo","source":"fume","use":"Words on a dark photograph."},
+            {"hex":"#5C1F2A","name":"Burgundy cap","role":"cta","source":"brand_dna","use":"The call to action's pill."},
+            {
+              "hex": "#EFE6DA",
+              "name": "Linen",
+              "role": "cta_text",
+              "source": "brand_dna",
+              "use": "The words on the call to action."
+            },
+            {"hex":"#B5A691","name":"Evening stone","role":"border","source":"brand_dna","use":"A hairline on Linen."},
+            {
+              "hex": "#3E4A5C",
+              "name": "Dusk blue",
+              "role": "support",
+              "source": "brand_dna",
+              "use": "A quiet accent in winter, sparingly."
+            }
+          ],
+          "components": [
+            {
+              "background": null,
+              "colour": "text",
+              "name": "headline",
+              "paddingPx": 0,
+              "purpose": "The one line that says the idea.",
+              "radius": "none",
+              "rules": ["One line, two at most.","Ends with a full stop."],
+              "style": "h1"
+            },
+            {
+              "background": null,
+              "colour": "text",
+              "name": "subline",
+              "paddingPx": 0,
+              "purpose": "The product as printed, or a short second line.",
+              "radius": "none",
+              "rules": ["Never longer than the headline."],
+              "style": "subline"
+            },
+            {
+              "background": null,
+              "colour": "secondary",
+              "name": "price",
+              "paddingPx": 0,
+              "purpose": "A price or an offer, stated plainly.",
+              "radius": "none",
+              "rules": ["Figures, a space before %."],
+              "style": "price"
+            },
+            {
+              "background": "cta",
+              "colour": "cta_text",
+              "name": "cta",
+              "paddingPx": 22,
+              "purpose": "The call to action, on a story or a banner.",
+              "radius": "pill",
+              "rules": ["Two words.","Never on a feed picture."],
+              "style": "cta"
+            },
+            {
+              "background": "secondary",
+              "colour": "on_primary",
+              "name": "badge",
+              "paddingPx": 12,
+              "purpose": "A small mark: a set, a season.",
+              "radius": "small",
+              "rules": ["One per creative at most."],
+              "style": "label"
+            },
+            {
+              "background": null,
+              "colour": "text_muted",
+              "name": "product_name",
+              "paddingPx": 0,
+              "purpose": "The name and size, as on the label.",
+              "radius": "none",
+              "rules": ["As printed: Night Body Oil · 100 ml."],
+              "style": "label"
+            },
+            {
+              "background": null,
+              "colour": "text_muted",
+              "name": "legal",
+              "paddingPx": 0,
+              "purpose": "The offer's terms.",
+              "radius": "none",
+              "rules": ["Only when the offer needs it."],
+              "style": "legal"
+            },
+            {
+              "background": null,
+              "colour": "primary",
+              "name": "logo",
+              "paddingPx": 0,
+              "purpose": "The wordmark, where the label does not show it.",
+              "radius": "none",
+              "rules": ["Never twice on one creative."],
+              "style": "label"
+            }
+          ],
+          "css": ".brand {\n  --color-primary: #2B1D17;\n  --color-secondary: #5C1F2A;\n  --color-accent: #A8642B;\n  --color-background: #EFE6DA;\n  --color-surface: #F7F2EA;\n  --color-text: #2B1D17;\n  --color-text-muted: #6B5B4E;\n  --color-on-primary: #EFE6DA;\n  --color-on-photo: #F7F2EA;\n  --color-cta: #5C1F2A;\n  --color-cta-text: #EFE6DA;\n  --color-border: #B5A691;\n  --color-support: #3E4A5C;\n  --font-display: \"Cormorant\", \"Cormorant Garamond\", serif;\n  --font-body: \"Inter\", sans-serif;\n  --type-display-size: 104px;\n  --type-display-line: 1;\n  --type-display-tracking: -0.01em;\n  --type-display-weight: 400;\n  --type-h1-size: 76px;\n  --type-h1-line: 1.05;\n  --type-h1-tracking: -0.01em;\n  --type-h1-weight: 400;\n  --type-h2-size: 52px;\n  --type-h2-line: 1.1;\n  --type-h2-tracking: 0em;\n  --type-h2-weight: 400;\n  --type-subline-size: 30px;\n  --type-subline-line: 1.3;\n  --type-subline-tracking: 0em;\n  --type-subline-weight: 400;\n  --type-body-size: 28px;\n  --type-body-line: 1.45;\n  --type-body-tracking: 0em;\n  --type-body-weight: 400;\n  --type-caption-size: 22px;\n  --type-caption-line: 1.35;\n  --type-caption-tracking: 0em;\n  --type-caption-weight: 400;\n  --type-label-size: 20px;\n  --type-label-line: 1.2;\n  --type-label-tracking: 0.08em;\n  --type-label-weight: 500;\n  --type-cta-size: 26px;\n  --type-cta-line: 1;\n  --type-cta-tracking: 0.01em;\n  --type-cta-weight: 500;\n  --type-price-size: 30px;\n  --type-price-line: 1.2;\n  --type-price-tracking: 0em;\n  --type-price-weight: 500;\n  --type-legal-size: 16px;\n  --type-legal-line: 1.35;\n  --type-legal-tracking: 0em;\n  --type-legal-weight: 400;\n  --space-1: 8px;\n  --space-2: 16px;\n  --space-3: 24px;\n  --space-4: 32px;\n  --space-6: 48px;\n  --space-8: 64px;\n  --space-12: 96px;\n  --radius-none: 0px;\n  --radius-small: 4px;\n  --radius-large: 16px;\n  --radius-pill: 999px;\n}",
+          "examples": [
+            {
+              "format": "feed",
+              "image": "/demo/lysne/02-01-feed.jpg",
+              "layers": [
+                {
+                  "align": "right",
+                  "component": "headline",
+                  "h": 14,
+                  "text": "Kvelden din, litt langsommere.",
+                  "w": 56,
+                  "x": 37,
+                  "y": 6
+                },
+                {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":56,"x":37,"y":22}
+              ],
+              "name": "The evening, launched",
+              "picture": "The bottle low on evening stone; the light wall above it, to the right, is calm.",
+              "purpose": "Launch",
+              "why": "The headline on the lightest part of the wall, the bottle keeps the lower half; no logo, since the label shows it."
+            },
+            {
+              "format": "story",
+              "image": "/demo/lysne/01-03-story.jpg",
+              "layers": [
+                {"align":"left","component":"headline","h":9,"text":"Gi bort en roligere kveld.","w":60,"x":8,"y":15},
+                {"align":"left","component":"price","h":3,"text":"Kveldssettet · 25 % av","w":60,"x":8,"y":26},
+                {"align":"left","component":"cta","h":4.5,"text":"Se settet","w":32,"x":8,"y":31},
+                {"align":"left","component":"legal","h":2,"text":"Til og med mandag 30. november.","w":60,"x":8,"y":37}
+              ],
+              "name": "The set, as an offer",
+              "picture": "The bottle low in a corner of light; the wall above it is calm.",
+              "purpose": "Offer",
+              "why": "Every word above the bottle and below the 250 pixels the platform covers at the top."
+            },
+            {
+              "format": "square",
+              "image": "/demo/lysne/04-06-square.jpg",
+              "layers": [
+                {
+                  "align": "right",
+                  "component": "headline",
+                  "h": 22,
+                  "text": "Mandelolje og squalan. Ikke noe mer.",
+                  "w": 50,
+                  "x": 44,
+                  "y": 7
+                },
+                {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":50,"x":44,"y":31}
+              ],
+              "name": "What is in it",
+              "picture": "The bottle to the left, a hand on the stone; the wall above the hand is calm.",
+              "purpose": "Product story",
+              "why": "The words to the right, over the calm wall, the bottle to the left; aligned to the right margin."
+            },
+            {
+              "format": "story",
+              "image": "/demo/lysne/07-11-story.jpg",
+              "layers": [
+                {
+                  "align": "left",
+                  "component": "headline",
+                  "h": 14,
+                  "text": "Varm oljen i hendene. Pust ut.",
+                  "w": 40,
+                  "x": 8,
+                  "y": 15
+                }
+              ],
+              "name": "An everyday post",
+              "picture": "The bottle to the right, its shadow behind it; the wall to the left is calm from top to bottom.",
+              "purpose": "Everyday post",
+              "why": "One line on the calm side, no call to action; the bottle and its shadow are left to speak."
+            },
+            {
+              "format": "feed",
+              "image": "/demo/lysne/07-10-feed.jpg",
+              "layers": [
+                {
+                  "align": "centre",
+                  "colour": "on_photo",
+                  "component": "headline",
+                  "h": 10,
+                  "text": "Til noen som fortjener kvelden.",
+                  "w": 80,
+                  "x": 10,
+                  "y": 74
+                },
+                {"align":"centre","colour":"on_photo","component":"logo","h":3,"text":"","w":22,"x":39,"y":88}
+              ],
+              "name": "A gift",
+              "picture": "Hands and a drop of oil against the wall; below them the wall is in shade. No bottle, so no label.",
+              "purpose": "Gift season",
+              "why": "Warm paper words in the shade below the hands; the wordmark, since no label shows it."
+            }
+          ],
+          "formats": [
+            {"columns":6,"format":"feed","gutterPx":24,"marginPx":72,"safeBottomPx":96,"safeTopPx":72},
+            {"columns":6,"format":"square","gutterPx":24,"marginPx":64,"safeBottomPx":64,"safeTopPx":64},
+            {"columns":6,"format":"story","gutterPx":24,"marginPx":72,"safeBottomPx":340,"safeTopPx":250},
+            {"columns":12,"format":"banner","gutterPx":32,"marginPx":96,"safeBottomPx":80,"safeTopPx":80}
+          ],
+          "gaps": [
+            "Can we have Cormorant's font files, or do we keep Cormorant Garamond?",
+            "Is there a version of the wordmark for small sizes?"
+          ],
+          "logo": {
+            "clearSpace": "The height of the L on every side.",
+            "minWidthPx": 160,
+            "placements": [
+              {"format":"banner","where":"top_left","widthPct":12},
+              {"format":"feed","where":"bottom_centre","widthPct":22}
+            ],
+            "versions": [
+              {"name":"Wordmark","use":"Night brown, on Linen or a light wall."},
+              {"name":"Wordmark, reversed","use":"Linen, on Night brown or a dark photograph."}
+            ]
+          },
+          "photoText": {
+            "rules": [
+              "Words sit where the picture is calm: the wall above the bottle, or the stone in front of it.",
+              "Never over the bottle, the cap or the label.",
+              "On a busy picture, a soft shade from the edge, never a box.",
+              "Only where the label does not show the name is the wordmark added."
+            ],
+            "scrim": "gradient",
+            "scrimOpacity": 0.3
+          },
+          "radiusPx": {"large":16,"none":0,"pill":999,"small":4},
+          "rules": {
+            "do": [
+              "Let the photograph carry the creative; words are the smaller part.",
+              "Keep words on one side, aligned to the margin.",
+              "Use Burgundy only for the call to action."
+            ],
+            "dont": [
+              "Words over the bottle or the label.",
+              "More than three layers of words.",
+              "Amber glass for words: it is too light to read."
+            ]
+          },
+          "sources": [
+            {"evidence":"Brand DNA colours, approved by Maja","part":"colours","source":"brand_dna"},
+            {"evidence":"LYSNE brand guide 2026.pdf","part":"typefaces","source":"brand_dna"},
+            {"evidence":"Fume's scale for the formats","part":"styles","source":"fume"},
+            {"evidence":"Autumn launch, the approved creatives","part":"examples","source":"memory"}
+          ],
+          "spacing": {"scale":[1,2,3,4,6,8,12],"unitPx":8},
+          "styles": [
+            {
+              "case": "none",
+              "font": "display",
+              "lineHeight": 1,
+              "name": "display",
+              "sizePx": 104,
+              "trackingEm": -0.01,
+              "weight": 400
+            },
+            {"case":"none","font":"display","lineHeight":1.05,"name":"h1","sizePx":76,"trackingEm":-0.01,"weight":400},
+            {"case":"none","font":"display","lineHeight":1.1,"name":"h2","sizePx":52,"trackingEm":0,"weight":400},
+            {"case":"none","font":"body","lineHeight":1.3,"name":"subline","sizePx":30,"trackingEm":0,"weight":400},
+            {"case":"none","font":"body","lineHeight":1.45,"name":"body","sizePx":28,"trackingEm":0,"weight":400},
+            {"case":"none","font":"body","lineHeight":1.35,"name":"caption","sizePx":22,"trackingEm":0,"weight":400},
+            {"case":"upper","font":"body","lineHeight":1.2,"name":"label","sizePx":20,"trackingEm":0.08,"weight":500},
+            {"case":"none","font":"body","lineHeight":1,"name":"cta","sizePx":26,"trackingEm":0.01,"weight":500},
+            {"case":"none","font":"body","lineHeight":1.2,"name":"price","sizePx":30,"trackingEm":0,"weight":500},
+            {"case":"none","font":"body","lineHeight":1.35,"name":"legal","sizePx":16,"trackingEm":0,"weight":400}
+          ],
+          "summary": "LYSNE's creatives are the photograph first: warm, low light and one bottle, with a few words where the wall is calm. Cormorant for what the brand says, Inter for names, sizes and buttons. Night brown words on light walls, Linen on dark ones, and Burgundy only for the call to action.",
+          "typefaces": [
+            {
+              "fallback": "Cormorant Garamond",
+              "family": "Cormorant",
+              "note": "LYSNE's own serif, from the brand guide; Cormorant Garamond on Google Fonts draws it the same.",
+              "role": "display",
+              "source": "brand",
+              "weights": [400,500]
+            },
+            {
+              "fallback": "Inter",
+              "family": "Inter",
+              "note": "Names, sizes, prices and buttons.",
+              "role": "body",
+              "source": "brand",
+              "weights": [400,500]
+            }
+          ]
+        },
+        "checkedAt": "2026-10-14T07:32:00.000Z",
+        "checkedBy": "u-anna",
+        "createdAt": "2026-10-13T10:32:00.000Z",
+        "id": "bb-design-1",
+        "kind": "design",
+        "state": "checked",
+        "version": 1,
+        "writtenAt": "2026-10-13T10:33:00.000Z"
+      }
+    ],
+    "look": [
+      {
+        "body": {
+          "camera": {
+            "aperture": "f/2.8 to f/4: the bottle sharp from cap to base, the background soft but still stone.",
+            "capture": "Full-frame digital with a 35 mm film look: clean files, fine grain added in the grade.",
+            "distance": "Close: the bottle fills a third to half of the frame. A crop cuts the light, never the cap.",
+            "height": "At the bottle’s height or a little below. Top-down only for oil on stone, never for the bottle.",
+            "lenses": [
+              {"focalMm":35,"use":"A room: the bedside, the bath, the window."},
+              {"focalMm":50,"use":"The bottle on stone, at its own height."},
+              {"focalMm":85,"use":"Close: the label, the cap, a hand with the bottle."},
+              {"focalMm":100,"use":"Macro: oil, drops and the stone’s texture."}
+            ],
+            "motion": "Still and locked off. Only oil or water moves, frozen."
+          },
+          "colour": {
+            "blacks": "Rich, never crushed: the deepest shadow is a warm brown with detail in it.",
+            "grade": "Warm and golden, like a print from a slow 35 mm film: honey highlights, terracotta mid-tones, umber shadows.",
+            "highlights": "Roll off softly into warm cream. The sun’s patterns may bloom a little at their edge, never clip to white.",
+            "palette": [
+              "Honey amber #B5651D",
+              "Sunlit gold #E8B04A",
+              "Travertine sand #D9C4A3",
+              "Label cream #EFE6D6",
+              "Burgundy cap #4E1B23",
+              "Umber shadow #4A2C1A"
+            ],
+            "saturation": "Rich in the ambers and held back everywhere else. The cream label stays cream.",
+            "whiteBalance": "Warm, set for daylight so the sun reads gold. The label is the neutral."
+          },
+          "composition": {
+            "negativeSpace": "A calm third of the frame in stone or plaster, where words can sit.",
+            "rules": [
+              "The bottle off centre, on a third, with the light’s pattern on the other side.",
+              "One product, one surface, one light.",
+              "Diagonals from the shadows and the sun’s shapes.",
+              "Crops close: the frame never shows the edge of the set."
+            ],
+            "subjectPlacement": "On the lower third, a little left or right. A bottle on its side lies on the diagonal."
+          },
+          "evidence": [
+            {
+              "kind": "brand",
+              "picture": 1,
+              "shows": "Window shapes across the plaster, the bottle on the right third.",
+              "url": "/demo/lysne/02-01-square.jpg"
+            },
+            {
+              "kind": "brand",
+              "picture": 2,
+              "shows": "Oil and drops on travertine, the light’s patterns through the glass.",
+              "url": "/demo/lysne/05-03-square.jpg"
+            },
+            {
+              "kind": "brand",
+              "picture": 3,
+              "shows": "A hand in the low sun: real skin, and no face.",
+              "url": "/demo/lysne/04-06-square.jpg"
+            },
+            {
+              "kind": "site",
+              "picture": 4,
+              "shows": "Oil running from a hand into the light. One source, a hard shadow.",
+              "url": "/demo/lysne/07-10-square.jpg"
+            },
+            {
+              "kind": "site",
+              "picture": 5,
+              "shows": "A bottle on its side in water’s patterns, its cap to the top.",
+              "url": "/demo/lysne/09-13-square.jpg"
+            },
+            {
+              "kind": "brand",
+              "picture": 6,
+              "shows": "The label close: cream and crisp, the glass soft around it.",
+              "url": "/demo/lysne/03-08-square.jpg"
+            },
+            {
+              "kind": "brand",
+              "picture": 7,
+              "shows": "A stone ledge in warm shade, the bottle small in a calm frame.",
+              "url": "/demo/lysne/10-08-square.jpg"
+            },
+            {
+              "kind": "site",
+              "picture": 8,
+              "shows": "The bottle on the diagonal, the light’s pattern on the stone.",
+              "url": "/demo/lysne/01-12-square.jpg"
+            },
+            {
+              "kind": "liked",
+              "picture": 9,
+              "shows": "Travertine blocks and linen in warm light from the side.",
+              "url": "/demo/lysne/gen/taste-stone.jpg"
+            },
+            {
+              "kind": "liked",
+              "picture": 10,
+              "shows": "Hands with oil at the bedside, in lamp light.",
+              "url": "/demo/lysne/gen/taste-hands.jpg"
+            },
+            {
+              "kind": "liked",
+              "picture": 11,
+              "shows": "The bedroom at dusk with one lamp.",
+              "url": "/demo/lysne/gen/taste-bedroom.jpg"
+            },
+            {
+              "kind": "not_us",
+              "picture": 12,
+              "shows": "Cool, clinical white with glass and a lab: what LYSNE is not.",
+              "url": "/demo/lysne/gen/taste-clinical.jpg"
+            }
+          ],
+          "gaps": [
+            "Does LYSNE show people beyond hands? None of its pictures has a face.",
+            "Is there a night look of its own? Only two liked pictures are at night.",
+            "Which lenses does LYSNE’s photographer use? Fume read them from the pictures."
+          ],
+          "light": {
+            "colourTemperatureK": "2700 to 3200 K sun against a 4500 K shade; 2400 K from the bedside lamp at night.",
+            "contrast": "High, about 4:1 from the sun to the shade. The shadows are deep but keep the stone’s detail.",
+            "direction": "From one side, about 30° above the bottle, often from behind it so the oil glows.",
+            "key": "The sun, low through a window or a slatted blind. No flash; at night only the bedside lamp.",
+            "quality": "Hard, with clean edges, falling off fast into warm shade.",
+            "rules": [
+              "One source, and you can tell where it is.",
+              "The light passes through the glass: the oil glows from inside.",
+              "Window shapes and patterns on the stone come from the light, never from an overlay.",
+              "No light from the front or from the camera."
+            ],
+            "timeOfDay": "The last hour of sun, or a lamp after dark."
+          },
+          "never": [
+            "Cool or blue light",
+            "A flash look, or light from the camera",
+            "A white seamless backdrop, or marble",
+            "Smoothed, plastic skin",
+            "Light with no source in the scene",
+            "A glossy cap: LYSNE’s cap is matte",
+            "Everything sharp from front to back",
+            "Glow or haze laid over the picture"
+          ],
+          "people": {
+            "casting": "Hands only, adult, of any skin. Never a face.",
+            "direction": "A hand reaches into the light or holds the bottle as one would at night; never posed for the camera.",
+            "shows": true,
+            "skin": "Real skin: pores, fine lines and veins, the light catching the oil on it. No smoothing."
+          },
+          "pictures": 12,
+          "recipes": [
+            {
+              "camera": "50 mm at f/4, at the bottle’s height, a metre away",
+              "composition": "The bottle on the lower right third, window shapes across the left",
+              "grade": "Golden, rich blacks, fine grain",
+              "light": "Low sun from behind on the left through a window, 3000 K, hard, 4:1",
+              "scene": "The bottle on stone in the last sun"
+            },
+            {
+              "camera": "85 mm at f/2.8, from 30° above",
+              "composition": "The bottle on the diagonal, its cap to the top right",
+              "grade": "Golden, honey highlights that bloom a little",
+              "light": "Sun through water or ribbed glass, 3200 K, patterns across the stone",
+              "scene": "A bottle on its side in the light’s patterns"
+            },
+            {
+              "camera": "100 mm macro at f/5.6; top-down allowed",
+              "composition": "The oil’s edge across the frame; no bottle, or only a part of it",
+              "grade": "The amber held rich, fine grain",
+              "light": "Raking sun from the side, 3000 K",
+              "scene": "Oil on stone, close"
+            },
+            {
+              "camera": "85 mm at f/2.8, at the hand’s height",
+              "composition": "The hand comes in from the edge; the bottle sharp, the hand a little soft",
+              "grade": "Golden, the skin kept true",
+              "light": "One shaft of low sun, 2900 K, the rest in warm shade",
+              "scene": "A hand in the light"
+            },
+            {
+              "camera": "35 mm at f/2, at the table’s height",
+              "composition": "The bottle by the lamp’s foot, the bed soft behind",
+              "grade": "Warm, deep umber shadows, a little more grain",
+              "light": "The bedside lamp, 2400 K, the only light, falling off fast",
+              "scene": "The bedside at night"
+            }
+          ],
+          "retouch": "Clean the dust from the label and the glass; keep the stone’s pits, the oil’s runs and the skin as they are. Never change the bottle’s shape, the cap’s colour or the label’s words.",
+          "signature": [
+            "Low sun from one side through a window, always from a source you could point to.",
+            "Light broken by glass or water into patterns on the stone.",
+            "Travertine and sand-coloured plaster, never a seamless backdrop.",
+            "The amber bottle with its matte burgundy cap sharp, the rest falling soft.",
+            "Long, hard shadows that go warm brown, never black.",
+            "Hands in the light, never a face."
+          ],
+          "sources": [
+            {
+              "evidence": "Pictures 1, 2, 4, 5 and 8: low sun from one side and hard shadows.",
+              "part": "light",
+              "source": "pictures"
+            },
+            {
+              "evidence": "Every picture has honey ambers and warm shadows; picture 12, cool white, was turned down.",
+              "part": "colour",
+              "source": "pictures"
+            },
+            {
+              "evidence": "Hands were liked (picture 10); none of the brand’s own pictures shows a face.",
+              "part": "people",
+              "source": "taste"
+            },
+            {
+              "evidence": "Imagery: travertine, plaster and linen; the cap is matte burgundy.",
+              "part": "styling",
+              "source": "brand_dna"
+            },
+            {
+              "evidence": "Pictures 10 and 11, both liked; none of the brand’s own pictures is at night.",
+              "part": "the bedside at night",
+              "source": "taste"
+            },
+            {"evidence":"Fume’s proposal: the pictures show no retouching to read.","part":"retouching","source":"fume"}
+          ],
+          "styling": {
+            "props": "Few: a glass of water, a dried branch, a folded linen towel. Nothing with a brand on it.",
+            "settings": [
+              "A stone ledge by a window",
+              "The edge of a travertine bath",
+              "A bedside table at night",
+              "Plaster walls in sand"
+            ],
+            "surfaces": "Travertine, plaster, ribbed glass and still water. Never marble, never a seamless backdrop.",
+            "wardrobe": "Hands only, bare: no rings, no nail colour."
+          },
+          "summary": "LYSNE is shot in the last hour of sun: one low, warm light through a window, falling across travertine and through amber glass. The bottle is the one sharp thing, close and at its own height, and the light’s patterns around it do the talking. Everything is real and a little worn: stone with pits, oil that runs, a hand that is a hand.",
+          "texture": {
+            "grain": "fine",
+            "grainCharacter": "Fine 35 mm film grain, even in the shadows.",
+            "lensCharacter": "A little softness at the edges. No flare stars and no added vignette.",
+            "sharpness": "The label’s words crisp; everything else falls off with the depth of field, never sharpened.",
+            "surfaces": "The pits and veins of travertine, dust in the light, oil that has run, drops on the glass."
+          }
+        },
+        "checkedAt": "2026-10-14T10:32:00.000Z",
+        "checkedBy": "u-anna",
+        "createdAt": "2026-10-14T05:32:00.000Z",
+        "id": "bb-look-1",
+        "kind": "look",
+        "state": "checked",
+        "version": 1,
+        "writtenAt": "2026-10-14T05:34:00.000Z"
+      }
+    ],
+    "progress": [{"kind":"voice","state":"draft","updatedAt":"2026-10-14T09:33:00.000Z","version":2}],
+    "voice": [
+      {
+        "approvedAt": "2026-10-08T12:32:00.000Z",
+        "approvedBy": "u-maja",
+        "body": {
+          "audience": {
+            "cares": [
+              "A calm end to the day",
+              "Few, honest ingredients",
+              "Things that look good on a bedside",
+              "Gifts that feel personal"
+            ],
+            "notFor": "Not for quick fixes or results-led skincare.",
+            "who": "Women 30 to 55 in Norway who keep an evening ritual."
+          },
+          "channels": [
+            {
+              "channel": "instagram_feed",
+              "example": "Kvelden din, litt langsommere.",
+              "how": "One line on the picture, or none. The caption carries the rest in two or three short lines.",
+              "length": "Headline up to 6 words; caption up to 40 words; no call to action on the picture."
+            },
+            {
+              "channel": "instagram_story",
+              "example": "Gi bort en roligere kveld. · Se settet",
+              "how": "One line and one call to action, low in the calm part of the picture.",
+              "length": "Headline up to 6 words; call to action 2 words."
+            },
+            {
+              "channel": "paid_social",
+              "example": "Kveldssettet. 25 % av, til mandag.",
+              "how": "The product named as printed, one calm line, the offer stated plainly when there is one.",
+              "length": "Headline up to 6 words; primary text up to 25 words."
+            },
+            {
+              "channel": "email",
+              "example": "Litt mer kveld i uka som kommer.",
+              "how": "A subject line like a note from a friend; the body in short paragraphs, one picture.",
+              "length": "Subject up to 6 words; body up to 80 words."
+            },
+            {
+              "channel": "website",
+              "example": "Mandelolje og squalan. Ikke noe mer.",
+              "how": "The product page says what is in it and how it feels; nothing about results.",
+              "length": "Headline up to 8 words; body up to 60 words."
+            },
+            {
+              "channel": "packaging",
+              "example": "Til timen før du sovner.",
+              "how": "As few words as the label allows: the name, the size, the hour.",
+              "length": "Up to 6 words besides the name."
+            }
+          ],
+          "ctas": [
+            {"cta":"Se oljen","when":"The product page, from a picture of the oil."},
+            {"cta":"Se settet","when":"A set or an offer."},
+            {"cta":"Gi den bort","when":"The gift season."},
+            {"cta":"Les mer","when":"A story or a journal post."}
+          ],
+          "examples": [
+            {"language":"no","line":"Varm oljen i hendene. Pust ut.","where":"lysne.no, Night Body Oil"},
+            {"language":"en","line":"Warm the oil in your hands. Breathe out.","where":"Instagram, Autumn launch"},
+            {"language":"no","line":"Til timen før du sovner.","where":"The label, Night Body Oil"},
+            {"language":"en","line":"For the hour before sleep.","where":"The approved claims list"},
+            {"language":"no","line":"Kvelden din, litt langsommere.","where":"Newsletter, September"},
+            {"language":"en","line":"Your evening, slowed down.","where":"lysne.no, front page"}
+          ],
+          "gaps": [
+            "Do you write «du» in English captions too, or only in Norwegian?",
+            "May an offer name a date, or only “til mandag”?",
+            "Which words do you use for the candle: «lys» or «duftlys»?"
+          ],
+          "headlines": [
+            {"example":"Kvelden din, litt langsommere.","pattern":"Your [moment], [slowed down]."},
+            {"example":"Mandelolje og squalan. Ikke noe mer.","pattern":"[Ingredient] and [ingredient]. Nothing else."},
+            {"example":"Varm oljen i hendene. Pust ut.","pattern":"[A small act]. [A breath]."},
+            {"example":"Til noen som fortjener kvelden.","pattern":"For [someone who deserves it]."},
+            {"example":"Gi bort en roligere kveld.","pattern":"[Give] a calmer [evening]."}
+          ],
+          "identity": {
+            "believe": [
+              "The evening is worth slowing down for.",
+              "Fewer, better things: a short list, made well.",
+              "Care is a habit, not a promise of results."
+            ],
+            "personality": ["Calm","Warm","Close","Quietly sure"],
+            "who": "LYSNE makes body oils and small rituals for the hour before sleep. Made in Norway, sold in Norway and the Nordics."
+          },
+          "mechanics": {
+            "casing": "Sentence case everywhere, headlines and buttons too. LYSNE in capitals; product names as printed.",
+            "emoji": "None.",
+            "names": "LYSNE, never Lysne. Night Body Oil · 100 ml, as on the label.",
+            "numbers": "Figures for sizes and prices: 100 ml, 450 kr. A space before % in Norwegian: 25 %.",
+            "punctuation": "A full stop at the end of a line, also in a headline. No exclamation marks. A middle dot between a name and its size."
+          },
+          "pairs": [
+            {
+              "bad": "Gi huden din en luksuriøs boost i kveld!",
+              "good": "Varm oljen i hendene. Pust ut.",
+              "why": "A small act and a breath, not a result; no exclamation mark."
+            },
+            {
+              "bad": "SISTE SJANSE! Spar 25 % nå!",
+              "good": "Kveldssettet. 25 % av, til mandag.",
+              "why": "The offer stated plainly, without urgency or capitals."
+            },
+            {
+              "bad": "Sov bedre med LYSNE.",
+              "good": "Til timen før du sovner.",
+              "why": "The moment, never a promise about sleep."
+            },
+            {
+              "bad": "En transformerende eliksir for huden.",
+              "good": "Mandelolje og squalan. Ikke noe mer.",
+              "why": "Plain words: what is in it, not a transformation."
+            }
+          ],
+          "parts": [
+            {
+              "found": "Calm, warm and close: a brand for the hour before sleep.",
+              "id": "identity",
+              "provenance": {
+                "at": "2026-10-05T12:32:00.000Z",
+                "by": "u-maja",
+                "evidence": "lysne.no/about",
+                "origin": "engine",
+                "state": "approved"
+              }
+            },
+            {
+              "found": "Short, quiet sentences. “You”, rarely “we”; informal «du» in Norwegian.",
+              "id": "speak",
+              "provenance": {
+                "at": "2026-10-05T12:32:00.000Z",
+                "by": "u-maja",
+                "evidence": "lysne.no, 14 pages",
+                "origin": "engine",
+                "state": "approved"
+              }
+            },
+            {
+              "found": "No result claims, no urgency, no exclamation marks.",
+              "id": "rules",
+              "provenance": {
+                "at": "2026-10-05T12:32:00.000Z",
+                "by": "u-maja",
+                "evidence": "lysne.no/about and product pages",
+                "origin": "engine",
+                "state": "approved"
+              }
+            },
+            {
+              "found": "Women 30 to 55 in Norway who keep an evening ritual.",
+              "id": "audience",
+              "provenance": {
+                "at": "2026-10-05T12:32:00.000Z",
+                "by": "u-maja",
+                "evidence": "lysne.no/about",
+                "origin": "engine",
+                "state": "approved"
+              }
+            },
+            {
+              "found": "6 good lines, in Norwegian and English.",
+              "id": "examples",
+              "provenance": {
+                "at": "2026-10-05T12:32:00.000Z",
+                "by": "u-maja",
+                "evidence": "lysne.no, Instagram",
+                "origin": "engine",
+                "state": "approved"
+              }
+            }
+          ],
+          "rules": {
+            "claims": ["For the hour before sleep.","100 % natural oils.","Made in Norway."],
+            "must": [
+              "Name the product as it is printed: Night Body Oil · 100 ml.",
+              "Say “you”, rarely “we”.",
+              "End a line with a full stop."
+            ],
+            "never": [
+              "Skin-result claims, or before-and-after.",
+              "Urgency: “now”, “hurry”, “last chance”.",
+              "Exclamation marks and emojis."
+            ]
+          },
+          "scale": [
+            {"at":1,"from":"Warm","to":"Cool"},
+            {"at":1,"from":"Quiet","to":"Loud"},
+            {"at":2,"from":"Close","to":"Formal"},
+            {"at":2,"from":"Plain","to":"Ornate"},
+            {"at":2,"from":"Serious","to":"Playful"}
+          ],
+          "sources": [
+            {
+              "evidence": "lysne.no/about: “Made in Norway, for the hour before sleep.”",
+              "part": "identity",
+              "source": "site"
+            },
+            {"evidence":"lysne.no, 14 pages read; short lines with full stops","part":"speak","source":"site"},
+            {"evidence":"Brand DNA rules: no result claims, no urgency","part":"rules","source":"rules"},
+            {"evidence":"Autumn launch, approved captions","part":"channels","source":"memory"},
+            {"evidence":"Fume's patterns from the brand's own lines","part":"headlines","source":"fume"}
+          ],
+          "speak": {
+            "avoid": ["anti-ageing","miracle","results","luxury","hurry","transform","best ever"],
+            "formality": "Informal and close: «du» in Norwegian, “you” in English. Never «dere» or “customers”.",
+            "languages": "Norwegian (bokmål) first, on lysne.no and in Norway; English for the Nordics and Instagram. Never both in one line.",
+            "sentences": "Short: two to eight words, one idea a line. A full stop where others use a comma.",
+            "traits": [
+              {
+                "do": "Warm the oil in your hands. Breathe out.",
+                "dont": "Don’t miss out. Order tonight!",
+                "means": "We never hurry the reader.",
+                "trait": "Calm"
+              },
+              {
+                "do": "Your evening, slowed down.",
+                "dont": "Our customers love our bestselling oil.",
+                "means": "We write to one person, as a friend would.",
+                "trait": "Close"
+              },
+              {
+                "do": "Almond oil and squalane. Nothing else.",
+                "dont": "A luxurious, transformative elixir.",
+                "means": "Simple words; the product speaks for itself.",
+                "trait": "Plain"
+              },
+              {
+                "do": "Golden, slow, warm on the skin.",
+                "dont": "Visibly firmer skin in 7 days.",
+                "means": "We say what it feels like, not what it does.",
+                "trait": "Sensory"
+              }
+            ],
+            "use": ["evening","slow","warm","your hands","breathe","kveld","ro","varme"]
+          },
+          "summary": "LYSNE speaks quietly, to one person, about the hour before sleep. Short lines, one idea each, ending in a full stop. It says what the oil feels like, never what it does to the skin.",
+          "vocabulary": [
+            {"use":"The brand's moment. Use it before “night”.","word":"kveld / evening"},
+            {"use":"Calm, as a feeling, not a promise: «litt ro», never «total ro».","word":"ro"},
+            {"use":"Sparingly, once a text at most. Never “self-care routine”.","word":"ritual"},
+            {"use":"For the light and the oil in the hands.","word":"varm / warm"}
+          ]
+        },
+        "checkedAt": "2026-10-07T12:32:00.000Z",
+        "checkedBy": "u-anna",
+        "createdAt": "2026-10-06T12:32:00.000Z",
+        "id": "bb-voice-1",
+        "kind": "voice",
+        "state": "approved",
+        "version": 1,
+        "writtenAt": "2026-10-06T12:33:00.000Z"
+      }
+    ]
+  }
 maja campaigns()
   [
     {
@@ -22327,6 +23201,8 @@ jonas home()
   = maja home()
 jonas brandDna()
   = maja brandDna()
+jonas brandBooks()
+  = maja brandBooks()
 jonas campaigns()
   = maja campaigns()
 jonas campaigns({"state":["in_review","in_production"]})
@@ -22931,6 +23807,8 @@ ida home()
   = maja home()
 ida brandDna()
   = maja brandDna()
+ida brandBooks()
+  = maja brandBooks()
 ida campaigns()
   = maja campaigns()
 ida campaigns({"state":["in_review","in_production"]})
@@ -23535,6 +24413,1138 @@ anna home()
   = maja home()
 anna brandDna()
   = maja brandDna()
+anna brandBooks()
+  {
+    "design": [
+      {
+        "body": {
+          "checks": {
+            "contrast": [
+              {"need":4.5,"ok":true,"pair":"text on background","ratio":13.17},
+              {"need":4.5,"ok":true,"pair":"text on surface","ratio":14.6},
+              {"need":4.5,"ok":true,"pair":"on_primary on primary","ratio":13.17},
+              {"need":4.5,"ok":true,"pair":"cta_text on cta","ratio":10.09},
+              {"need":4.5,"ok":true,"pair":"text_muted on background","ratio":5.26},
+              {"need":4.5,"ok":true,"pair":"on_primary on secondary","ratio":10.09}
+            ],
+            "fails": [],
+            "missingRoles": []
+          },
+          "colours": [
+            {
+              "hex": "#2B1D17",
+              "name": "Night brown",
+              "role": "primary",
+              "source": "brand_dna",
+              "use": "The brand's dark: words, the logo on light."
+            },
+            {
+              "hex": "#5C1F2A",
+              "name": "Burgundy cap",
+              "role": "secondary",
+              "source": "brand_dna",
+              "use": "The cap's colour; a badge, a price."
+            },
+            {
+              "hex": "#A8642B",
+              "name": "Amber glass",
+              "role": "accent",
+              "source": "brand_dna",
+              "use": "A thin rule or a small mark, never words."
+            },
+            {
+              "hex": "#EFE6DA",
+              "name": "Linen",
+              "role": "background",
+              "source": "brand_dna",
+              "use": "A flat ground when there is no photograph."
+            },
+            {"hex":"#F7F2EA","name":"Warm paper","role":"surface","source":"fume","use":"A card or a panel on Linen."},
+            {
+              "hex": "#2B1D17",
+              "name": "Night brown",
+              "role": "text",
+              "source": "brand_dna",
+              "use": "Words on a light wall or on Linen."
+            },
+            {
+              "hex": "#6B5B4E",
+              "name": "Walnut",
+              "role": "text_muted",
+              "source": "fume",
+              "use": "A size, a caption, the small print."
+            },
+            {"hex":"#EFE6DA","name":"Linen","role":"on_primary","source":"brand_dna","use":"Words on Night brown."},
+            {"hex":"#F7F2EA","name":"Warm paper","role":"on_photo","source":"fume","use":"Words on a dark photograph."},
+            {"hex":"#5C1F2A","name":"Burgundy cap","role":"cta","source":"brand_dna","use":"The call to action's pill."},
+            {
+              "hex": "#EFE6DA",
+              "name": "Linen",
+              "role": "cta_text",
+              "source": "brand_dna",
+              "use": "The words on the call to action."
+            },
+            {"hex":"#B5A691","name":"Evening stone","role":"border","source":"brand_dna","use":"A hairline on Linen."},
+            {
+              "hex": "#3E4A5C",
+              "name": "Dusk blue",
+              "role": "support",
+              "source": "brand_dna",
+              "use": "A quiet accent in winter, sparingly."
+            }
+          ],
+          "components": [
+            {
+              "background": null,
+              "colour": "text",
+              "name": "headline",
+              "paddingPx": 0,
+              "purpose": "The one line that says the idea.",
+              "radius": "none",
+              "rules": ["One line, two at most.","Ends with a full stop."],
+              "style": "h1"
+            },
+            {
+              "background": null,
+              "colour": "text",
+              "name": "subline",
+              "paddingPx": 0,
+              "purpose": "The product as printed, or a short second line.",
+              "radius": "none",
+              "rules": ["Never longer than the headline."],
+              "style": "subline"
+            },
+            {
+              "background": null,
+              "colour": "secondary",
+              "name": "price",
+              "paddingPx": 0,
+              "purpose": "A price or an offer, stated plainly.",
+              "radius": "none",
+              "rules": ["Figures, a space before %."],
+              "style": "price"
+            },
+            {
+              "background": "cta",
+              "colour": "cta_text",
+              "name": "cta",
+              "paddingPx": 22,
+              "purpose": "The call to action, on a story or a banner.",
+              "radius": "pill",
+              "rules": ["Two words.","Never on a feed picture."],
+              "style": "cta"
+            },
+            {
+              "background": "secondary",
+              "colour": "on_primary",
+              "name": "badge",
+              "paddingPx": 12,
+              "purpose": "A small mark: a set, a season.",
+              "radius": "small",
+              "rules": ["One per creative at most."],
+              "style": "label"
+            },
+            {
+              "background": null,
+              "colour": "text_muted",
+              "name": "product_name",
+              "paddingPx": 0,
+              "purpose": "The name and size, as on the label.",
+              "radius": "none",
+              "rules": ["As printed: Night Body Oil · 100 ml."],
+              "style": "label"
+            },
+            {
+              "background": null,
+              "colour": "text_muted",
+              "name": "legal",
+              "paddingPx": 0,
+              "purpose": "The offer's terms.",
+              "radius": "none",
+              "rules": ["Only when the offer needs it."],
+              "style": "legal"
+            },
+            {
+              "background": null,
+              "colour": "primary",
+              "name": "logo",
+              "paddingPx": 0,
+              "purpose": "The wordmark, where the label does not show it.",
+              "radius": "none",
+              "rules": ["Never twice on one creative."],
+              "style": "label"
+            }
+          ],
+          "css": ".brand {\n  --color-primary: #2B1D17;\n  --color-secondary: #5C1F2A;\n  --color-accent: #A8642B;\n  --color-background: #EFE6DA;\n  --color-surface: #F7F2EA;\n  --color-text: #2B1D17;\n  --color-text-muted: #6B5B4E;\n  --color-on-primary: #EFE6DA;\n  --color-on-photo: #F7F2EA;\n  --color-cta: #5C1F2A;\n  --color-cta-text: #EFE6DA;\n  --color-border: #B5A691;\n  --color-support: #3E4A5C;\n  --font-display: \"Cormorant\", \"Cormorant Garamond\", serif;\n  --font-body: \"Inter\", sans-serif;\n  --type-display-size: 104px;\n  --type-display-line: 1;\n  --type-display-tracking: -0.01em;\n  --type-display-weight: 400;\n  --type-h1-size: 76px;\n  --type-h1-line: 1.05;\n  --type-h1-tracking: -0.01em;\n  --type-h1-weight: 400;\n  --type-h2-size: 52px;\n  --type-h2-line: 1.1;\n  --type-h2-tracking: 0em;\n  --type-h2-weight: 400;\n  --type-subline-size: 30px;\n  --type-subline-line: 1.3;\n  --type-subline-tracking: 0em;\n  --type-subline-weight: 400;\n  --type-body-size: 28px;\n  --type-body-line: 1.45;\n  --type-body-tracking: 0em;\n  --type-body-weight: 400;\n  --type-caption-size: 22px;\n  --type-caption-line: 1.35;\n  --type-caption-tracking: 0em;\n  --type-caption-weight: 400;\n  --type-label-size: 20px;\n  --type-label-line: 1.2;\n  --type-label-tracking: 0.08em;\n  --type-label-weight: 500;\n  --type-cta-size: 26px;\n  --type-cta-line: 1;\n  --type-cta-tracking: 0.01em;\n  --type-cta-weight: 500;\n  --type-price-size: 30px;\n  --type-price-line: 1.2;\n  --type-price-tracking: 0em;\n  --type-price-weight: 500;\n  --type-legal-size: 16px;\n  --type-legal-line: 1.35;\n  --type-legal-tracking: 0em;\n  --type-legal-weight: 400;\n  --space-1: 8px;\n  --space-2: 16px;\n  --space-3: 24px;\n  --space-4: 32px;\n  --space-6: 48px;\n  --space-8: 64px;\n  --space-12: 96px;\n  --radius-none: 0px;\n  --radius-small: 4px;\n  --radius-large: 16px;\n  --radius-pill: 999px;\n}",
+          "examples": [
+            {
+              "format": "feed",
+              "image": "/demo/lysne/02-01-feed.jpg",
+              "layers": [
+                {
+                  "align": "right",
+                  "component": "headline",
+                  "h": 14,
+                  "text": "Kvelden din, litt langsommere.",
+                  "w": 56,
+                  "x": 37,
+                  "y": 6
+                },
+                {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":56,"x":37,"y":22}
+              ],
+              "name": "The evening, launched",
+              "picture": "The bottle low on evening stone; the light wall above it, to the right, is calm.",
+              "purpose": "Launch",
+              "why": "The headline on the lightest part of the wall, the bottle keeps the lower half; no logo, since the label shows it."
+            },
+            {
+              "format": "story",
+              "image": "/demo/lysne/01-03-story.jpg",
+              "layers": [
+                {"align":"left","component":"headline","h":9,"text":"Gi bort en roligere kveld.","w":60,"x":8,"y":15},
+                {"align":"left","component":"price","h":3,"text":"Kveldssettet · 25 % av","w":60,"x":8,"y":26},
+                {"align":"left","component":"cta","h":4.5,"text":"Se settet","w":32,"x":8,"y":31},
+                {"align":"left","component":"legal","h":2,"text":"Til og med mandag 30. november.","w":60,"x":8,"y":37}
+              ],
+              "name": "The set, as an offer",
+              "picture": "The bottle low in a corner of light; the wall above it is calm.",
+              "purpose": "Offer",
+              "why": "Every word above the bottle and below the 250 pixels the platform covers at the top."
+            },
+            {
+              "format": "square",
+              "image": "/demo/lysne/04-06-square.jpg",
+              "layers": [
+                {
+                  "align": "right",
+                  "component": "headline",
+                  "h": 22,
+                  "text": "Mandelolje og squalan. Ikke noe mer.",
+                  "w": 50,
+                  "x": 44,
+                  "y": 7
+                },
+                {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":50,"x":44,"y":31}
+              ],
+              "name": "What is in it",
+              "picture": "The bottle to the left, a hand on the stone; the wall above the hand is calm.",
+              "purpose": "Product story",
+              "why": "The words to the right, over the calm wall, the bottle to the left; aligned to the right margin."
+            },
+            {
+              "format": "story",
+              "image": "/demo/lysne/07-11-story.jpg",
+              "layers": [
+                {
+                  "align": "left",
+                  "component": "headline",
+                  "h": 14,
+                  "text": "Varm oljen i hendene. Pust ut.",
+                  "w": 40,
+                  "x": 8,
+                  "y": 15
+                }
+              ],
+              "name": "An everyday post",
+              "picture": "The bottle to the right, its shadow behind it; the wall to the left is calm from top to bottom.",
+              "purpose": "Everyday post",
+              "why": "One line on the calm side, no call to action; the bottle and its shadow are left to speak."
+            },
+            {
+              "format": "feed",
+              "image": "/demo/lysne/07-10-feed.jpg",
+              "layers": [
+                {
+                  "align": "centre",
+                  "colour": "on_photo",
+                  "component": "headline",
+                  "h": 10,
+                  "text": "Til noen som fortjener kvelden.",
+                  "w": 80,
+                  "x": 10,
+                  "y": 74
+                },
+                {"align":"centre","colour":"on_photo","component":"logo","h":3,"text":"","w":22,"x":39,"y":88}
+              ],
+              "name": "A gift",
+              "picture": "Hands and a drop of oil against the wall; below them the wall is in shade. No bottle, so no label.",
+              "purpose": "Gift season",
+              "why": "Warm paper words in the shade below the hands; the wordmark, since no label shows it."
+            }
+          ],
+          "formats": [
+            {"columns":6,"format":"feed","gutterPx":24,"marginPx":72,"safeBottomPx":96,"safeTopPx":72},
+            {"columns":6,"format":"square","gutterPx":24,"marginPx":64,"safeBottomPx":64,"safeTopPx":64},
+            {"columns":6,"format":"story","gutterPx":24,"marginPx":72,"safeBottomPx":340,"safeTopPx":250},
+            {"columns":12,"format":"banner","gutterPx":32,"marginPx":96,"safeBottomPx":80,"safeTopPx":80}
+          ],
+          "gaps": [
+            "Can we have Cormorant's font files, or do we keep Cormorant Garamond?",
+            "Is there a version of the wordmark for small sizes?"
+          ],
+          "logo": {
+            "clearSpace": "The height of the L on every side.",
+            "minWidthPx": 160,
+            "placements": [
+              {"format":"banner","where":"top_left","widthPct":12},
+              {"format":"feed","where":"bottom_centre","widthPct":22}
+            ],
+            "versions": [
+              {"name":"Wordmark","use":"Night brown, on Linen or a light wall."},
+              {"name":"Wordmark, reversed","use":"Linen, on Night brown or a dark photograph."}
+            ]
+          },
+          "photoText": {
+            "rules": [
+              "Words sit where the picture is calm: the wall above the bottle, or the stone in front of it.",
+              "Never over the bottle, the cap or the label.",
+              "On a busy picture, a soft shade from the edge, never a box.",
+              "Only where the label does not show the name is the wordmark added."
+            ],
+            "scrim": "gradient",
+            "scrimOpacity": 0.3
+          },
+          "radiusPx": {"large":16,"none":0,"pill":999,"small":4},
+          "rules": {
+            "do": [
+              "Let the photograph carry the creative; words are the smaller part.",
+              "Keep words on one side, aligned to the margin.",
+              "Use Burgundy only for the call to action."
+            ],
+            "dont": [
+              "Words over the bottle or the label.",
+              "More than three layers of words.",
+              "Amber glass for words: it is too light to read."
+            ]
+          },
+          "sources": [
+            {"evidence":"Brand DNA colours, approved by Maja","part":"colours","source":"brand_dna"},
+            {"evidence":"LYSNE brand guide 2026.pdf","part":"typefaces","source":"brand_dna"},
+            {"evidence":"Fume's scale for the formats","part":"styles","source":"fume"},
+            {"evidence":"Autumn launch, the approved creatives","part":"examples","source":"memory"}
+          ],
+          "spacing": {"scale":[1,2,3,4,6,8,12],"unitPx":8},
+          "styles": [
+            {
+              "case": "none",
+              "font": "display",
+              "lineHeight": 1,
+              "name": "display",
+              "sizePx": 104,
+              "trackingEm": -0.01,
+              "weight": 400
+            },
+            {"case":"none","font":"display","lineHeight":1.05,"name":"h1","sizePx":76,"trackingEm":-0.01,"weight":400},
+            {"case":"none","font":"display","lineHeight":1.1,"name":"h2","sizePx":52,"trackingEm":0,"weight":400},
+            {"case":"none","font":"body","lineHeight":1.3,"name":"subline","sizePx":30,"trackingEm":0,"weight":400},
+            {"case":"none","font":"body","lineHeight":1.45,"name":"body","sizePx":28,"trackingEm":0,"weight":400},
+            {"case":"none","font":"body","lineHeight":1.35,"name":"caption","sizePx":22,"trackingEm":0,"weight":400},
+            {"case":"upper","font":"body","lineHeight":1.2,"name":"label","sizePx":20,"trackingEm":0.08,"weight":500},
+            {"case":"none","font":"body","lineHeight":1,"name":"cta","sizePx":26,"trackingEm":0.01,"weight":500},
+            {"case":"none","font":"body","lineHeight":1.2,"name":"price","sizePx":30,"trackingEm":0,"weight":500},
+            {"case":"none","font":"body","lineHeight":1.35,"name":"legal","sizePx":16,"trackingEm":0,"weight":400}
+          ],
+          "summary": "LYSNE's creatives are the photograph first: warm, low light and one bottle, with a few words where the wall is calm. Cormorant for what the brand says, Inter for names, sizes and buttons. Night brown words on light walls, Linen on dark ones, and Burgundy only for the call to action.",
+          "typefaces": [
+            {
+              "fallback": "Cormorant Garamond",
+              "family": "Cormorant",
+              "note": "LYSNE's own serif, from the brand guide; Cormorant Garamond on Google Fonts draws it the same.",
+              "role": "display",
+              "source": "brand",
+              "weights": [400,500]
+            },
+            {
+              "fallback": "Inter",
+              "family": "Inter",
+              "note": "Names, sizes, prices and buttons.",
+              "role": "body",
+              "source": "brand",
+              "weights": [400,500]
+            }
+          ]
+        },
+        "checkedAt": "2026-10-14T07:32:00.000Z",
+        "checkedBy": "u-anna",
+        "createdAt": "2026-10-13T10:32:00.000Z",
+        "id": "bb-design-1",
+        "kind": "design",
+        "state": "checked",
+        "version": 1,
+        "writtenAt": "2026-10-13T10:33:00.000Z"
+      }
+    ],
+    "look": [
+      {
+        "body": {
+          "camera": {
+            "aperture": "f/2.8 to f/4: the bottle sharp from cap to base, the background soft but still stone.",
+            "capture": "Full-frame digital with a 35 mm film look: clean files, fine grain added in the grade.",
+            "distance": "Close: the bottle fills a third to half of the frame. A crop cuts the light, never the cap.",
+            "height": "At the bottle’s height or a little below. Top-down only for oil on stone, never for the bottle.",
+            "lenses": [
+              {"focalMm":35,"use":"A room: the bedside, the bath, the window."},
+              {"focalMm":50,"use":"The bottle on stone, at its own height."},
+              {"focalMm":85,"use":"Close: the label, the cap, a hand with the bottle."},
+              {"focalMm":100,"use":"Macro: oil, drops and the stone’s texture."}
+            ],
+            "motion": "Still and locked off. Only oil or water moves, frozen."
+          },
+          "colour": {
+            "blacks": "Rich, never crushed: the deepest shadow is a warm brown with detail in it.",
+            "grade": "Warm and golden, like a print from a slow 35 mm film: honey highlights, terracotta mid-tones, umber shadows.",
+            "highlights": "Roll off softly into warm cream. The sun’s patterns may bloom a little at their edge, never clip to white.",
+            "palette": [
+              "Honey amber #B5651D",
+              "Sunlit gold #E8B04A",
+              "Travertine sand #D9C4A3",
+              "Label cream #EFE6D6",
+              "Burgundy cap #4E1B23",
+              "Umber shadow #4A2C1A"
+            ],
+            "saturation": "Rich in the ambers and held back everywhere else. The cream label stays cream.",
+            "whiteBalance": "Warm, set for daylight so the sun reads gold. The label is the neutral."
+          },
+          "composition": {
+            "negativeSpace": "A calm third of the frame in stone or plaster, where words can sit.",
+            "rules": [
+              "The bottle off centre, on a third, with the light’s pattern on the other side.",
+              "One product, one surface, one light.",
+              "Diagonals from the shadows and the sun’s shapes.",
+              "Crops close: the frame never shows the edge of the set."
+            ],
+            "subjectPlacement": "On the lower third, a little left or right. A bottle on its side lies on the diagonal."
+          },
+          "evidence": [
+            {
+              "kind": "brand",
+              "picture": 1,
+              "shows": "Window shapes across the plaster, the bottle on the right third.",
+              "url": "/demo/lysne/02-01-square.jpg"
+            },
+            {
+              "kind": "brand",
+              "picture": 2,
+              "shows": "Oil and drops on travertine, the light’s patterns through the glass.",
+              "url": "/demo/lysne/05-03-square.jpg"
+            },
+            {
+              "kind": "brand",
+              "picture": 3,
+              "shows": "A hand in the low sun: real skin, and no face.",
+              "url": "/demo/lysne/04-06-square.jpg"
+            },
+            {
+              "kind": "site",
+              "picture": 4,
+              "shows": "Oil running from a hand into the light. One source, a hard shadow.",
+              "url": "/demo/lysne/07-10-square.jpg"
+            },
+            {
+              "kind": "site",
+              "picture": 5,
+              "shows": "A bottle on its side in water’s patterns, its cap to the top.",
+              "url": "/demo/lysne/09-13-square.jpg"
+            },
+            {
+              "kind": "brand",
+              "picture": 6,
+              "shows": "The label close: cream and crisp, the glass soft around it.",
+              "url": "/demo/lysne/03-08-square.jpg"
+            },
+            {
+              "kind": "brand",
+              "picture": 7,
+              "shows": "A stone ledge in warm shade, the bottle small in a calm frame.",
+              "url": "/demo/lysne/10-08-square.jpg"
+            },
+            {
+              "kind": "site",
+              "picture": 8,
+              "shows": "The bottle on the diagonal, the light’s pattern on the stone.",
+              "url": "/demo/lysne/01-12-square.jpg"
+            },
+            {
+              "kind": "liked",
+              "picture": 9,
+              "shows": "Travertine blocks and linen in warm light from the side.",
+              "url": "/demo/lysne/gen/taste-stone.jpg"
+            },
+            {
+              "kind": "liked",
+              "picture": 10,
+              "shows": "Hands with oil at the bedside, in lamp light.",
+              "url": "/demo/lysne/gen/taste-hands.jpg"
+            },
+            {
+              "kind": "liked",
+              "picture": 11,
+              "shows": "The bedroom at dusk with one lamp.",
+              "url": "/demo/lysne/gen/taste-bedroom.jpg"
+            },
+            {
+              "kind": "not_us",
+              "picture": 12,
+              "shows": "Cool, clinical white with glass and a lab: what LYSNE is not.",
+              "url": "/demo/lysne/gen/taste-clinical.jpg"
+            }
+          ],
+          "gaps": [
+            "Does LYSNE show people beyond hands? None of its pictures has a face.",
+            "Is there a night look of its own? Only two liked pictures are at night.",
+            "Which lenses does LYSNE’s photographer use? Fume read them from the pictures."
+          ],
+          "light": {
+            "colourTemperatureK": "2700 to 3200 K sun against a 4500 K shade; 2400 K from the bedside lamp at night.",
+            "contrast": "High, about 4:1 from the sun to the shade. The shadows are deep but keep the stone’s detail.",
+            "direction": "From one side, about 30° above the bottle, often from behind it so the oil glows.",
+            "key": "The sun, low through a window or a slatted blind. No flash; at night only the bedside lamp.",
+            "quality": "Hard, with clean edges, falling off fast into warm shade.",
+            "rules": [
+              "One source, and you can tell where it is.",
+              "The light passes through the glass: the oil glows from inside.",
+              "Window shapes and patterns on the stone come from the light, never from an overlay.",
+              "No light from the front or from the camera."
+            ],
+            "timeOfDay": "The last hour of sun, or a lamp after dark."
+          },
+          "never": [
+            "Cool or blue light",
+            "A flash look, or light from the camera",
+            "A white seamless backdrop, or marble",
+            "Smoothed, plastic skin",
+            "Light with no source in the scene",
+            "A glossy cap: LYSNE’s cap is matte",
+            "Everything sharp from front to back",
+            "Glow or haze laid over the picture"
+          ],
+          "people": {
+            "casting": "Hands only, adult, of any skin. Never a face.",
+            "direction": "A hand reaches into the light or holds the bottle as one would at night; never posed for the camera.",
+            "shows": true,
+            "skin": "Real skin: pores, fine lines and veins, the light catching the oil on it. No smoothing."
+          },
+          "pictures": 12,
+          "recipes": [
+            {
+              "camera": "50 mm at f/4, at the bottle’s height, a metre away",
+              "composition": "The bottle on the lower right third, window shapes across the left",
+              "grade": "Golden, rich blacks, fine grain",
+              "light": "Low sun from behind on the left through a window, 3000 K, hard, 4:1",
+              "scene": "The bottle on stone in the last sun"
+            },
+            {
+              "camera": "85 mm at f/2.8, from 30° above",
+              "composition": "The bottle on the diagonal, its cap to the top right",
+              "grade": "Golden, honey highlights that bloom a little",
+              "light": "Sun through water or ribbed glass, 3200 K, patterns across the stone",
+              "scene": "A bottle on its side in the light’s patterns"
+            },
+            {
+              "camera": "100 mm macro at f/5.6; top-down allowed",
+              "composition": "The oil’s edge across the frame; no bottle, or only a part of it",
+              "grade": "The amber held rich, fine grain",
+              "light": "Raking sun from the side, 3000 K",
+              "scene": "Oil on stone, close"
+            },
+            {
+              "camera": "85 mm at f/2.8, at the hand’s height",
+              "composition": "The hand comes in from the edge; the bottle sharp, the hand a little soft",
+              "grade": "Golden, the skin kept true",
+              "light": "One shaft of low sun, 2900 K, the rest in warm shade",
+              "scene": "A hand in the light"
+            },
+            {
+              "camera": "35 mm at f/2, at the table’s height",
+              "composition": "The bottle by the lamp’s foot, the bed soft behind",
+              "grade": "Warm, deep umber shadows, a little more grain",
+              "light": "The bedside lamp, 2400 K, the only light, falling off fast",
+              "scene": "The bedside at night"
+            }
+          ],
+          "retouch": "Clean the dust from the label and the glass; keep the stone’s pits, the oil’s runs and the skin as they are. Never change the bottle’s shape, the cap’s colour or the label’s words.",
+          "signature": [
+            "Low sun from one side through a window, always from a source you could point to.",
+            "Light broken by glass or water into patterns on the stone.",
+            "Travertine and sand-coloured plaster, never a seamless backdrop.",
+            "The amber bottle with its matte burgundy cap sharp, the rest falling soft.",
+            "Long, hard shadows that go warm brown, never black.",
+            "Hands in the light, never a face."
+          ],
+          "sources": [
+            {
+              "evidence": "Pictures 1, 2, 4, 5 and 8: low sun from one side and hard shadows.",
+              "part": "light",
+              "source": "pictures"
+            },
+            {
+              "evidence": "Every picture has honey ambers and warm shadows; picture 12, cool white, was turned down.",
+              "part": "colour",
+              "source": "pictures"
+            },
+            {
+              "evidence": "Hands were liked (picture 10); none of the brand’s own pictures shows a face.",
+              "part": "people",
+              "source": "taste"
+            },
+            {
+              "evidence": "Imagery: travertine, plaster and linen; the cap is matte burgundy.",
+              "part": "styling",
+              "source": "brand_dna"
+            },
+            {
+              "evidence": "Pictures 10 and 11, both liked; none of the brand’s own pictures is at night.",
+              "part": "the bedside at night",
+              "source": "taste"
+            },
+            {"evidence":"Fume’s proposal: the pictures show no retouching to read.","part":"retouching","source":"fume"}
+          ],
+          "styling": {
+            "props": "Few: a glass of water, a dried branch, a folded linen towel. Nothing with a brand on it.",
+            "settings": [
+              "A stone ledge by a window",
+              "The edge of a travertine bath",
+              "A bedside table at night",
+              "Plaster walls in sand"
+            ],
+            "surfaces": "Travertine, plaster, ribbed glass and still water. Never marble, never a seamless backdrop.",
+            "wardrobe": "Hands only, bare: no rings, no nail colour."
+          },
+          "summary": "LYSNE is shot in the last hour of sun: one low, warm light through a window, falling across travertine and through amber glass. The bottle is the one sharp thing, close and at its own height, and the light’s patterns around it do the talking. Everything is real and a little worn: stone with pits, oil that runs, a hand that is a hand.",
+          "texture": {
+            "grain": "fine",
+            "grainCharacter": "Fine 35 mm film grain, even in the shadows.",
+            "lensCharacter": "A little softness at the edges. No flare stars and no added vignette.",
+            "sharpness": "The label’s words crisp; everything else falls off with the depth of field, never sharpened.",
+            "surfaces": "The pits and veins of travertine, dust in the light, oil that has run, drops on the glass."
+          }
+        },
+        "checkedAt": "2026-10-14T10:32:00.000Z",
+        "checkedBy": "u-anna",
+        "createdAt": "2026-10-14T05:32:00.000Z",
+        "id": "bb-look-1",
+        "kind": "look",
+        "state": "checked",
+        "version": 1,
+        "writtenAt": "2026-10-14T05:34:00.000Z"
+      }
+    ],
+    "voice": [
+      {
+        "ask": "Add the gift season's words: calls to action and headlines for a gift.",
+        "askedBy": "u-anna",
+        "body": {
+          "audience": {
+            "cares": [
+              "A calm end to the day",
+              "Few, honest ingredients",
+              "Things that look good on a bedside",
+              "Gifts that feel personal"
+            ],
+            "notFor": "Not for quick fixes or results-led skincare.",
+            "who": "Women 30 to 55 in Norway who keep an evening ritual."
+          },
+          "channels": [
+            {
+              "channel": "instagram_feed",
+              "example": "Kvelden din, litt langsommere.",
+              "how": "One line on the picture, or none. The caption carries the rest in two or three short lines.",
+              "length": "Headline up to 6 words; caption up to 40 words; no call to action on the picture."
+            },
+            {
+              "channel": "instagram_story",
+              "example": "Gi bort en roligere kveld. · Se settet",
+              "how": "One line and one call to action, low in the calm part of the picture.",
+              "length": "Headline up to 6 words; call to action 2 words."
+            },
+            {
+              "channel": "paid_social",
+              "example": "Kveldssettet. 25 % av, til mandag.",
+              "how": "The product named as printed, one calm line, the offer stated plainly when there is one.",
+              "length": "Headline up to 6 words; primary text up to 25 words."
+            },
+            {
+              "channel": "email",
+              "example": "Litt mer kveld i uka som kommer.",
+              "how": "A subject line like a note from a friend; the body in short paragraphs, one picture.",
+              "length": "Subject up to 6 words; body up to 80 words."
+            },
+            {
+              "channel": "website",
+              "example": "Mandelolje og squalan. Ikke noe mer.",
+              "how": "The product page says what is in it and how it feels; nothing about results.",
+              "length": "Headline up to 8 words; body up to 60 words."
+            },
+            {
+              "channel": "packaging",
+              "example": "Til timen før du sovner.",
+              "how": "As few words as the label allows: the name, the size, the hour.",
+              "length": "Up to 6 words besides the name."
+            }
+          ],
+          "ctas": [
+            {"cta":"Se oljen","when":"The product page, from a picture of the oil."},
+            {"cta":"Se settet","when":"A set or an offer."},
+            {"cta":"Gi den bort","when":"The gift season."},
+            {"cta":"Les mer","when":"A story or a journal post."},
+            {"cta":"Gi kvelden bort","when":"A gift card or a set as a gift."}
+          ],
+          "examples": [
+            {"language":"no","line":"Varm oljen i hendene. Pust ut.","where":"lysne.no, Night Body Oil"},
+            {"language":"en","line":"Warm the oil in your hands. Breathe out.","where":"Instagram, Autumn launch"},
+            {"language":"no","line":"Til timen før du sovner.","where":"The label, Night Body Oil"},
+            {"language":"en","line":"For the hour before sleep.","where":"The approved claims list"},
+            {"language":"no","line":"Kvelden din, litt langsommere.","where":"Newsletter, September"},
+            {"language":"en","line":"Your evening, slowed down.","where":"lysne.no, front page"}
+          ],
+          "gaps": [
+            "Do you write «du» in English captions too, or only in Norwegian?",
+            "May an offer name a date, or only “til mandag”?",
+            "Will gift cards have their own words on the card itself?"
+          ],
+          "headlines": [
+            {"example":"Kvelden din, litt langsommere.","pattern":"Your [moment], [slowed down]."},
+            {"example":"Mandelolje og squalan. Ikke noe mer.","pattern":"[Ingredient] and [ingredient]. Nothing else."},
+            {"example":"Varm oljen i hendene. Pust ut.","pattern":"[A small act]. [A breath]."},
+            {"example":"Til noen som fortjener kvelden.","pattern":"For [someone who deserves it]."},
+            {"example":"Gi bort en roligere kveld.","pattern":"[Give] a calmer [evening]."},
+            {"example":"En gave som gir deg en kveld.","pattern":"[A gift] that [gives time]."}
+          ],
+          "identity": {
+            "believe": [
+              "The evening is worth slowing down for.",
+              "Fewer, better things: a short list, made well.",
+              "Care is a habit, not a promise of results."
+            ],
+            "personality": ["Calm","Warm","Close","Quietly sure"],
+            "who": "LYSNE makes body oils and small rituals for the hour before sleep. Made in Norway, sold in Norway and the Nordics."
+          },
+          "mechanics": {
+            "casing": "Sentence case everywhere, headlines and buttons too. LYSNE in capitals; product names as printed.",
+            "emoji": "None.",
+            "names": "LYSNE, never Lysne. Night Body Oil · 100 ml, as on the label.",
+            "numbers": "Figures for sizes and prices: 100 ml, 450 kr. A space before % in Norwegian: 25 %.",
+            "punctuation": "A full stop at the end of a line, also in a headline. No exclamation marks. A middle dot between a name and its size."
+          },
+          "pairs": [
+            {
+              "bad": "Gi huden din en luksuriøs boost i kveld!",
+              "good": "Varm oljen i hendene. Pust ut.",
+              "why": "A small act and a breath, not a result; no exclamation mark."
+            },
+            {
+              "bad": "SISTE SJANSE! Spar 25 % nå!",
+              "good": "Kveldssettet. 25 % av, til mandag.",
+              "why": "The offer stated plainly, without urgency or capitals."
+            },
+            {
+              "bad": "Sov bedre med LYSNE.",
+              "good": "Til timen før du sovner.",
+              "why": "The moment, never a promise about sleep."
+            },
+            {
+              "bad": "En transformerende eliksir for huden.",
+              "good": "Mandelolje og squalan. Ikke noe mer.",
+              "why": "Plain words: what is in it, not a transformation."
+            },
+            {
+              "bad": "Årets mest populære julegave!",
+              "good": "En gave som gir deg en kveld.",
+              "why": "No popularity claim the brand cannot back."
+            }
+          ],
+          "parts": [
+            {
+              "found": "Calm, warm and close: a brand for the hour before sleep.",
+              "id": "identity",
+              "provenance": {
+                "at": "2026-10-05T12:32:00.000Z",
+                "by": "u-maja",
+                "evidence": "lysne.no/about",
+                "origin": "engine",
+                "state": "approved"
+              }
+            },
+            {
+              "found": "Short, quiet sentences. “You”, rarely “we”; informal «du» in Norwegian.",
+              "id": "speak",
+              "provenance": {
+                "at": "2026-10-05T12:32:00.000Z",
+                "by": "u-maja",
+                "evidence": "lysne.no, 14 pages",
+                "origin": "engine",
+                "state": "approved"
+              }
+            },
+            {
+              "found": "No result claims, no urgency, no exclamation marks.",
+              "id": "rules",
+              "provenance": {
+                "at": "2026-10-05T12:32:00.000Z",
+                "by": "u-maja",
+                "evidence": "lysne.no/about and product pages",
+                "origin": "engine",
+                "state": "approved"
+              }
+            },
+            {
+              "found": "Women 30 to 55 in Norway who keep an evening ritual.",
+              "id": "audience",
+              "provenance": {
+                "at": "2026-10-05T12:32:00.000Z",
+                "by": "u-maja",
+                "evidence": "lysne.no/about",
+                "origin": "engine",
+                "state": "approved"
+              }
+            },
+            {
+              "found": "6 good lines, in Norwegian and English.",
+              "id": "examples",
+              "provenance": {
+                "at": "2026-10-05T12:32:00.000Z",
+                "by": "u-maja",
+                "evidence": "lysne.no, Instagram",
+                "origin": "engine",
+                "state": "approved"
+              }
+            }
+          ],
+          "rules": {
+            "claims": ["For the hour before sleep.","100 % natural oils.","Made in Norway."],
+            "must": [
+              "Name the product as it is printed: Night Body Oil · 100 ml.",
+              "Say “you”, rarely “we”.",
+              "End a line with a full stop."
+            ],
+            "never": [
+              "Skin-result claims, or before-and-after.",
+              "Urgency: “now”, “hurry”, “last chance”.",
+              "Exclamation marks and emojis."
+            ]
+          },
+          "scale": [
+            {"at":1,"from":"Warm","to":"Cool"},
+            {"at":1,"from":"Quiet","to":"Loud"},
+            {"at":2,"from":"Close","to":"Formal"},
+            {"at":2,"from":"Plain","to":"Ornate"},
+            {"at":2,"from":"Serious","to":"Playful"}
+          ],
+          "sources": [
+            {
+              "evidence": "lysne.no/about: “Made in Norway, for the hour before sleep.”",
+              "part": "identity",
+              "source": "site"
+            },
+            {"evidence":"lysne.no, 14 pages read; short lines with full stops","part":"speak","source":"site"},
+            {"evidence":"Brand DNA rules: no result claims, no urgency","part":"rules","source":"rules"},
+            {"evidence":"Autumn launch, approved captions","part":"channels","source":"memory"},
+            {"evidence":"Fume's patterns from the brand's own lines","part":"headlines","source":"fume"}
+          ],
+          "speak": {
+            "avoid": ["anti-ageing","miracle","results","luxury","hurry","transform","best ever"],
+            "formality": "Informal and close: «du» in Norwegian, “you” in English. Never «dere» or “customers”.",
+            "languages": "Norwegian (bokmål) first, on lysne.no and in Norway; English for the Nordics and Instagram. Never both in one line.",
+            "sentences": "Short: two to eight words, one idea a line. A full stop where others use a comma.",
+            "traits": [
+              {
+                "do": "Warm the oil in your hands. Breathe out.",
+                "dont": "Don’t miss out. Order tonight!",
+                "means": "We never hurry the reader.",
+                "trait": "Calm"
+              },
+              {
+                "do": "Your evening, slowed down.",
+                "dont": "Our customers love our bestselling oil.",
+                "means": "We write to one person, as a friend would.",
+                "trait": "Close"
+              },
+              {
+                "do": "Almond oil and squalane. Nothing else.",
+                "dont": "A luxurious, transformative elixir.",
+                "means": "Simple words; the product speaks for itself.",
+                "trait": "Plain"
+              },
+              {
+                "do": "Golden, slow, warm on the skin.",
+                "dont": "Visibly firmer skin in 7 days.",
+                "means": "We say what it feels like, not what it does.",
+                "trait": "Sensory"
+              }
+            ],
+            "use": ["evening","slow","warm","your hands","breathe","kveld","ro","varme"]
+          },
+          "summary": "LYSNE speaks quietly, to one person, about the hour before sleep. Short lines, one idea each, ending in a full stop. It says what the oil feels like, never what it does to the skin.",
+          "vocabulary": [
+            {"use":"The brand's moment. Use it before “night”.","word":"kveld / evening"},
+            {"use":"Calm, as a feeling, not a promise: «litt ro», never «total ro».","word":"ro"},
+            {"use":"Sparingly, once a text at most. Never “self-care routine”.","word":"ritual"},
+            {"use":"For the light and the oil in the hands.","word":"varm / warm"}
+          ]
+        },
+        "createdAt": "2026-10-14T09:32:00.000Z",
+        "id": "bb-voice-2",
+        "kind": "voice",
+        "state": "draft",
+        "version": 2,
+        "writtenAt": "2026-10-14T09:33:00.000Z"
+      },
+      {
+        "approvedAt": "2026-10-08T12:32:00.000Z",
+        "approvedBy": "u-maja",
+        "body": {
+          "audience": {
+            "cares": [
+              "A calm end to the day",
+              "Few, honest ingredients",
+              "Things that look good on a bedside",
+              "Gifts that feel personal"
+            ],
+            "notFor": "Not for quick fixes or results-led skincare.",
+            "who": "Women 30 to 55 in Norway who keep an evening ritual."
+          },
+          "channels": [
+            {
+              "channel": "instagram_feed",
+              "example": "Kvelden din, litt langsommere.",
+              "how": "One line on the picture, or none. The caption carries the rest in two or three short lines.",
+              "length": "Headline up to 6 words; caption up to 40 words; no call to action on the picture."
+            },
+            {
+              "channel": "instagram_story",
+              "example": "Gi bort en roligere kveld. · Se settet",
+              "how": "One line and one call to action, low in the calm part of the picture.",
+              "length": "Headline up to 6 words; call to action 2 words."
+            },
+            {
+              "channel": "paid_social",
+              "example": "Kveldssettet. 25 % av, til mandag.",
+              "how": "The product named as printed, one calm line, the offer stated plainly when there is one.",
+              "length": "Headline up to 6 words; primary text up to 25 words."
+            },
+            {
+              "channel": "email",
+              "example": "Litt mer kveld i uka som kommer.",
+              "how": "A subject line like a note from a friend; the body in short paragraphs, one picture.",
+              "length": "Subject up to 6 words; body up to 80 words."
+            },
+            {
+              "channel": "website",
+              "example": "Mandelolje og squalan. Ikke noe mer.",
+              "how": "The product page says what is in it and how it feels; nothing about results.",
+              "length": "Headline up to 8 words; body up to 60 words."
+            },
+            {
+              "channel": "packaging",
+              "example": "Til timen før du sovner.",
+              "how": "As few words as the label allows: the name, the size, the hour.",
+              "length": "Up to 6 words besides the name."
+            }
+          ],
+          "ctas": [
+            {"cta":"Se oljen","when":"The product page, from a picture of the oil."},
+            {"cta":"Se settet","when":"A set or an offer."},
+            {"cta":"Gi den bort","when":"The gift season."},
+            {"cta":"Les mer","when":"A story or a journal post."}
+          ],
+          "examples": [
+            {"language":"no","line":"Varm oljen i hendene. Pust ut.","where":"lysne.no, Night Body Oil"},
+            {"language":"en","line":"Warm the oil in your hands. Breathe out.","where":"Instagram, Autumn launch"},
+            {"language":"no","line":"Til timen før du sovner.","where":"The label, Night Body Oil"},
+            {"language":"en","line":"For the hour before sleep.","where":"The approved claims list"},
+            {"language":"no","line":"Kvelden din, litt langsommere.","where":"Newsletter, September"},
+            {"language":"en","line":"Your evening, slowed down.","where":"lysne.no, front page"}
+          ],
+          "gaps": [
+            "Do you write «du» in English captions too, or only in Norwegian?",
+            "May an offer name a date, or only “til mandag”?",
+            "Which words do you use for the candle: «lys» or «duftlys»?"
+          ],
+          "headlines": [
+            {"example":"Kvelden din, litt langsommere.","pattern":"Your [moment], [slowed down]."},
+            {"example":"Mandelolje og squalan. Ikke noe mer.","pattern":"[Ingredient] and [ingredient]. Nothing else."},
+            {"example":"Varm oljen i hendene. Pust ut.","pattern":"[A small act]. [A breath]."},
+            {"example":"Til noen som fortjener kvelden.","pattern":"For [someone who deserves it]."},
+            {"example":"Gi bort en roligere kveld.","pattern":"[Give] a calmer [evening]."}
+          ],
+          "identity": {
+            "believe": [
+              "The evening is worth slowing down for.",
+              "Fewer, better things: a short list, made well.",
+              "Care is a habit, not a promise of results."
+            ],
+            "personality": ["Calm","Warm","Close","Quietly sure"],
+            "who": "LYSNE makes body oils and small rituals for the hour before sleep. Made in Norway, sold in Norway and the Nordics."
+          },
+          "mechanics": {
+            "casing": "Sentence case everywhere, headlines and buttons too. LYSNE in capitals; product names as printed.",
+            "emoji": "None.",
+            "names": "LYSNE, never Lysne. Night Body Oil · 100 ml, as on the label.",
+            "numbers": "Figures for sizes and prices: 100 ml, 450 kr. A space before % in Norwegian: 25 %.",
+            "punctuation": "A full stop at the end of a line, also in a headline. No exclamation marks. A middle dot between a name and its size."
+          },
+          "pairs": [
+            {
+              "bad": "Gi huden din en luksuriøs boost i kveld!",
+              "good": "Varm oljen i hendene. Pust ut.",
+              "why": "A small act and a breath, not a result; no exclamation mark."
+            },
+            {
+              "bad": "SISTE SJANSE! Spar 25 % nå!",
+              "good": "Kveldssettet. 25 % av, til mandag.",
+              "why": "The offer stated plainly, without urgency or capitals."
+            },
+            {
+              "bad": "Sov bedre med LYSNE.",
+              "good": "Til timen før du sovner.",
+              "why": "The moment, never a promise about sleep."
+            },
+            {
+              "bad": "En transformerende eliksir for huden.",
+              "good": "Mandelolje og squalan. Ikke noe mer.",
+              "why": "Plain words: what is in it, not a transformation."
+            }
+          ],
+          "parts": [
+            {
+              "found": "Calm, warm and close: a brand for the hour before sleep.",
+              "id": "identity",
+              "provenance": {
+                "at": "2026-10-05T12:32:00.000Z",
+                "by": "u-maja",
+                "evidence": "lysne.no/about",
+                "origin": "engine",
+                "state": "approved"
+              }
+            },
+            {
+              "found": "Short, quiet sentences. “You”, rarely “we”; informal «du» in Norwegian.",
+              "id": "speak",
+              "provenance": {
+                "at": "2026-10-05T12:32:00.000Z",
+                "by": "u-maja",
+                "evidence": "lysne.no, 14 pages",
+                "origin": "engine",
+                "state": "approved"
+              }
+            },
+            {
+              "found": "No result claims, no urgency, no exclamation marks.",
+              "id": "rules",
+              "provenance": {
+                "at": "2026-10-05T12:32:00.000Z",
+                "by": "u-maja",
+                "evidence": "lysne.no/about and product pages",
+                "origin": "engine",
+                "state": "approved"
+              }
+            },
+            {
+              "found": "Women 30 to 55 in Norway who keep an evening ritual.",
+              "id": "audience",
+              "provenance": {
+                "at": "2026-10-05T12:32:00.000Z",
+                "by": "u-maja",
+                "evidence": "lysne.no/about",
+                "origin": "engine",
+                "state": "approved"
+              }
+            },
+            {
+              "found": "6 good lines, in Norwegian and English.",
+              "id": "examples",
+              "provenance": {
+                "at": "2026-10-05T12:32:00.000Z",
+                "by": "u-maja",
+                "evidence": "lysne.no, Instagram",
+                "origin": "engine",
+                "state": "approved"
+              }
+            }
+          ],
+          "rules": {
+            "claims": ["For the hour before sleep.","100 % natural oils.","Made in Norway."],
+            "must": [
+              "Name the product as it is printed: Night Body Oil · 100 ml.",
+              "Say “you”, rarely “we”.",
+              "End a line with a full stop."
+            ],
+            "never": [
+              "Skin-result claims, or before-and-after.",
+              "Urgency: “now”, “hurry”, “last chance”.",
+              "Exclamation marks and emojis."
+            ]
+          },
+          "scale": [
+            {"at":1,"from":"Warm","to":"Cool"},
+            {"at":1,"from":"Quiet","to":"Loud"},
+            {"at":2,"from":"Close","to":"Formal"},
+            {"at":2,"from":"Plain","to":"Ornate"},
+            {"at":2,"from":"Serious","to":"Playful"}
+          ],
+          "sources": [
+            {
+              "evidence": "lysne.no/about: “Made in Norway, for the hour before sleep.”",
+              "part": "identity",
+              "source": "site"
+            },
+            {"evidence":"lysne.no, 14 pages read; short lines with full stops","part":"speak","source":"site"},
+            {"evidence":"Brand DNA rules: no result claims, no urgency","part":"rules","source":"rules"},
+            {"evidence":"Autumn launch, approved captions","part":"channels","source":"memory"},
+            {"evidence":"Fume's patterns from the brand's own lines","part":"headlines","source":"fume"}
+          ],
+          "speak": {
+            "avoid": ["anti-ageing","miracle","results","luxury","hurry","transform","best ever"],
+            "formality": "Informal and close: «du» in Norwegian, “you” in English. Never «dere» or “customers”.",
+            "languages": "Norwegian (bokmål) first, on lysne.no and in Norway; English for the Nordics and Instagram. Never both in one line.",
+            "sentences": "Short: two to eight words, one idea a line. A full stop where others use a comma.",
+            "traits": [
+              {
+                "do": "Warm the oil in your hands. Breathe out.",
+                "dont": "Don’t miss out. Order tonight!",
+                "means": "We never hurry the reader.",
+                "trait": "Calm"
+              },
+              {
+                "do": "Your evening, slowed down.",
+                "dont": "Our customers love our bestselling oil.",
+                "means": "We write to one person, as a friend would.",
+                "trait": "Close"
+              },
+              {
+                "do": "Almond oil and squalane. Nothing else.",
+                "dont": "A luxurious, transformative elixir.",
+                "means": "Simple words; the product speaks for itself.",
+                "trait": "Plain"
+              },
+              {
+                "do": "Golden, slow, warm on the skin.",
+                "dont": "Visibly firmer skin in 7 days.",
+                "means": "We say what it feels like, not what it does.",
+                "trait": "Sensory"
+              }
+            ],
+            "use": ["evening","slow","warm","your hands","breathe","kveld","ro","varme"]
+          },
+          "summary": "LYSNE speaks quietly, to one person, about the hour before sleep. Short lines, one idea each, ending in a full stop. It says what the oil feels like, never what it does to the skin.",
+          "vocabulary": [
+            {"use":"The brand's moment. Use it before “night”.","word":"kveld / evening"},
+            {"use":"Calm, as a feeling, not a promise: «litt ro», never «total ro».","word":"ro"},
+            {"use":"Sparingly, once a text at most. Never “self-care routine”.","word":"ritual"},
+            {"use":"For the light and the oil in the hands.","word":"varm / warm"}
+          ]
+        },
+        "checkedAt": "2026-10-07T12:32:00.000Z",
+        "checkedBy": "u-anna",
+        "createdAt": "2026-10-06T12:32:00.000Z",
+        "id": "bb-voice-1",
+        "kind": "voice",
+        "state": "approved",
+        "version": 1,
+        "writtenAt": "2026-10-06T12:33:00.000Z"
+      }
+    ]
+  }
 anna campaigns()
   = maja campaigns()
 anna campaigns({"state":["in_review","in_production"]})
@@ -27199,6 +29209,14 @@ anna plan("c-bf")
         "source": "brief",
         "value": "One short line in Norwegian on each creative, from your brief’s message “One evening, wrapped”."
       },
+      {"key":"headline","label":"Headline","source":"fume","value":"Én kveld, pakket inn."},
+      {
+        "key": "support",
+        "label": "Supporting line",
+        "source": "fume",
+        "value": "Kveldsoljen og lyset, i én eske. 25 % av til mandag."
+      },
+      {"key":"cta","label":"Call to action","source":"fume","value":"Gi den bort nå!"},
       {
         "key": "logo",
         "label": "Logo",
@@ -27207,6 +29225,59 @@ anna plan("c-bf")
       },
       {"key":"language","label":"Language","source":"brief","value":"Norwegian, for Norway."}
     ],
+    "copyCheck": {
+      "findings": [
+        {
+          "kind": "unbacked_claim",
+          "note": "“roligere søvn” is a claim (health) that no verified fact states.",
+          "ref": "pd-c-bf-a/pc-c-bf-a-m2"
+        },
+        {"kind":"off_voice","note":"An exclamation mark and “nå”: LYSNE never hurries the reader.","ref":"copy:cta"},
+        {"kind":"avoided_word","note":"The voice avoids “luxury”.","ref":"pd-c-bf-a/pc-c-bf-a-m3"}
+      ],
+      "lines": [
+        {"claims":[],"ref":"copy:headline","text":"Én kveld, pakket inn.","voice":"on","where":"Headline"},
+        {
+          "claims": [{"kind":"offer","verdict":"brand_says","words":"25 % av til mandag"}],
+          "ref": "copy:support",
+          "text": "Kveldsoljen og lyset, i én eske. 25 % av til mandag.",
+          "voice": "on",
+          "where": "Supporting line"
+        },
+        {"claims":[],"ref":"copy:cta","text":"Gi den bort nå!","voice":"off","where":"Call to action"},
+        {
+          "claims": [],
+          "ref": "pd-c-bf-a/pc-c-bf-a-m1",
+          "text": "Oljen og lyset. Én kveld.",
+          "voice": "on",
+          "where": "Direction A: Master 1"
+        },
+        {
+          "claims": [{"kind":"health","verdict":"unbacked","words":"roligere søvn"}],
+          "ref": "pd-c-bf-a/pc-c-bf-a-m2",
+          "text": "For en roligere søvn.",
+          "voice": "on",
+          "where": "Direction A: Master 2"
+        },
+        {
+          "claims": [{"backedBy":"Night Body Oil · 100 ml","kind":"other","verdict":"backed","words":"100 ml"}],
+          "ref": "pd-c-bf-a/pc-c-bf-a-m3",
+          "text": "Kveldens lille luxury. 100 ml.",
+          "voice": "on",
+          "where": "Direction A: Master 3"
+        }
+      ],
+      "read": true,
+      "rewritten": true,
+      "rewroteFor": [
+        {
+          "note": "“Norges beste kveldsolje” is a claim (superlative) that no verified fact states.",
+          "ref": "copy:headline",
+          "text": "Norges beste kveldsolje, nå i et sett."
+        }
+      ],
+      "voiceBook": {"state":"approved","version":1}
+    },
     "directions": [
       {
         "creatives": [
@@ -27217,7 +29288,8 @@ anna plan("c-bf")
             "name": "Master 1",
             "people": "No people",
             "productIds": ["pr-oil"],
-            "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above."
+            "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above.",
+            "text": "Oljen og lyset. Én kveld."
           },
           {
             "format": "story",
@@ -27226,7 +29298,8 @@ anna plan("c-bf")
             "name": "Master 2",
             "people": "No people",
             "productIds": ["pr-candle"],
-            "scene": "Evening Candle on folded linen, the light from the left."
+            "scene": "Evening Candle on folded linen, the light from the left.",
+            "text": "For en roligere søvn."
           },
           {
             "format": "square",
@@ -27235,7 +29308,8 @@ anna plan("c-bf")
             "name": "Master 3",
             "people": "No people",
             "productIds": ["pr-oil"],
-            "scene": "The products together, seen from above on linen."
+            "scene": "The products together, seen from above on linen.",
+            "text": "Kveldens lille luxury. 100 ml."
           },
           {
             "format": "story",
@@ -36022,6 +38096,8 @@ sander home()
   = maja home()
 sander brandDna()
   = maja brandDna()
+sander brandBooks()
+  = anna brandBooks()
 sander campaigns()
   = maja campaigns()
 sander campaigns({"state":["in_review","in_production"]})
@@ -40092,6 +42168,8 @@ vera home()
   = maja home()
 vera brandDna()
   = maja brandDna()
+vera brandBooks()
+  = anna brandBooks()
 vera campaigns()
   = maja campaigns()
 vera campaigns({"state":["in_review","in_production"]})
@@ -42218,6 +44296,8 @@ maja (first run) brandDna()
       "version": 1
     }
   }
+maja (first run) brandBooks()
+  {"design":[],"look":[],"progress":[],"voice":[]}
 maja (first run) campaigns()
   []
 maja (first run) campaigns({"state":["in_review","in_production"]})
@@ -49643,6 +51723,8 @@ nora brandDna()
       "version": 3
     }
   }
+nora brandBooks()
+  = anna brandBooks()
 nora campaigns()
   [
     {
@@ -58884,6 +60966,14 @@ nora plan("c-bf")
         "source": "brief",
         "value": "One short line in Norwegian on each creative, from your brief’s message “One evening, wrapped”."
       },
+      {"key":"headline","label":"Headline","source":"fume","value":"Én kveld, pakket inn."},
+      {
+        "key": "support",
+        "label": "Supporting line",
+        "source": "fume",
+        "value": "Kveldsoljen og lyset, i én eske. 25 % av til mandag."
+      },
+      {"key":"cta","label":"Call to action","source":"fume","value":"Gi den bort nå!"},
       {
         "key": "logo",
         "label": "Logo",
@@ -58902,7 +60992,8 @@ nora plan("c-bf")
             "name": "Master 1",
             "people": "No people",
             "productIds": ["pr-oil"],
-            "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above."
+            "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above.",
+            "text": "Oljen og lyset. Én kveld."
           },
           {
             "format": "story",
@@ -58911,7 +61002,8 @@ nora plan("c-bf")
             "name": "Master 2",
             "people": "No people",
             "productIds": ["pr-candle"],
-            "scene": "Evening Candle on folded linen, the light from the left."
+            "scene": "Evening Candle on folded linen, the light from the left.",
+            "text": "For en roligere søvn."
           },
           {
             "format": "square",
@@ -58920,7 +61012,8 @@ nora plan("c-bf")
             "name": "Master 3",
             "people": "No people",
             "productIds": ["pr-oil"],
-            "scene": "The products together, seen from above on linen."
+            "scene": "The products together, seen from above on linen.",
+            "text": "Kveldens lille luxury. 100 ml."
           },
           {
             "format": "story",
@@ -73450,6 +75543,14 @@ nora clientLink("bfplan")
           "source": "brief",
           "value": "One short line in Norwegian on each creative, from your brief’s message “One evening, wrapped”."
         },
+        {"key":"headline","label":"Headline","source":"fume","value":"Én kveld, pakket inn."},
+        {
+          "key": "support",
+          "label": "Supporting line",
+          "source": "fume",
+          "value": "Kveldsoljen og lyset, i én eske. 25 % av til mandag."
+        },
+        {"key":"cta","label":"Call to action","source":"fume","value":"Gi den bort nå!"},
         {
           "key": "logo",
           "label": "Logo",
@@ -73468,7 +75569,8 @@ nora clientLink("bfplan")
               "name": "Master 1",
               "people": "No people",
               "productIds": ["pr-oil"],
-              "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above."
+              "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above.",
+              "text": "Oljen og lyset. Én kveld."
             },
             {
               "format": "story",
@@ -73477,7 +75579,8 @@ nora clientLink("bfplan")
               "name": "Master 2",
               "people": "No people",
               "productIds": ["pr-candle"],
-              "scene": "Evening Candle on folded linen, the light from the left."
+              "scene": "Evening Candle on folded linen, the light from the left.",
+              "text": "For en roligere søvn."
             },
             {
               "format": "square",
@@ -73486,7 +75589,8 @@ nora clientLink("bfplan")
               "name": "Master 3",
               "people": "No people",
               "productIds": ["pr-oil"],
-              "scene": "The products together, seen from above on linen."
+              "scene": "The products together, seen from above on linen.",
+              "text": "Kveldens lille luxury. 100 ml."
             },
             {
               "format": "story",
@@ -74039,6 +76143,8 @@ even home()
   = nora home()
 even brandDna()
   = nora brandDna()
+even brandBooks()
+  = anna brandBooks()
 even campaigns()
   = nora campaigns()
 even campaigns({"state":["in_review","in_production"]})
@@ -77950,6 +80056,8 @@ maja (agency's client) home()
   }
 maja (agency's client) brandDna()
   = nora brandDna()
+maja (agency's client) brandBooks()
+  = maja brandBooks()
 maja (agency's client) campaigns()
   = nora campaigns()
 maja (agency's client) campaigns({"state":["in_review","in_production"]})
@@ -80347,6 +82455,8 @@ jonas (agency's client) home()
   = maja (agency's client) home()
 jonas (agency's client) brandDna()
   = nora brandDna()
+jonas (agency's client) brandBooks()
+  = maja brandBooks()
 jonas (agency's client) campaigns()
   = nora campaigns()
 jonas (agency's client) campaigns({"state":["in_review","in_production"]})

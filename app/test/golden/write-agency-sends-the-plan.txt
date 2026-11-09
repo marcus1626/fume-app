@@ -4074,6 +4074,14 @@ maja (agency's client) approvePlan("c-bf")
         "source": "brief",
         "value": "One short line in Norwegian on each creative, from your brief’s message “One evening, wrapped”."
       },
+      {"key":"headline","label":"Headline","source":"fume","value":"Én kveld, pakket inn."},
+      {
+        "key": "support",
+        "label": "Supporting line",
+        "source": "fume",
+        "value": "Kveldsoljen og lyset, i én eske. 25 % av til mandag."
+      },
+      {"key":"cta","label":"Call to action","source":"fume","value":"Gi den bort nå!"},
       {
         "key": "logo",
         "label": "Logo",
@@ -4092,7 +4100,8 @@ maja (agency's client) approvePlan("c-bf")
             "name": "Master 1",
             "people": "No people",
             "productIds": ["pr-oil"],
-            "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above."
+            "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above.",
+            "text": "Oljen og lyset. Én kveld."
           },
           {
             "format": "story",
@@ -4101,7 +4110,8 @@ maja (agency's client) approvePlan("c-bf")
             "name": "Master 2",
             "people": "No people",
             "productIds": ["pr-candle"],
-            "scene": "Evening Candle on folded linen, the light from the left."
+            "scene": "Evening Candle on folded linen, the light from the left.",
+            "text": "For en roligere søvn."
           },
           {
             "format": "square",
@@ -4110,7 +4120,8 @@ maja (agency's client) approvePlan("c-bf")
             "name": "Master 3",
             "people": "No people",
             "productIds": ["pr-oil"],
-            "scene": "The products together, seen from above on linen."
+            "scene": "The products together, seen from above on linen.",
+            "text": "Kveldens lille luxury. 100 ml."
           },
           {
             "format": "story",
@@ -4617,6 +4628,14 @@ maja (agency's client) undoApprovePlan("c-bf")
         "source": "brief",
         "value": "One short line in Norwegian on each creative, from your brief’s message “One evening, wrapped”."
       },
+      {"key":"headline","label":"Headline","source":"fume","value":"Én kveld, pakket inn."},
+      {
+        "key": "support",
+        "label": "Supporting line",
+        "source": "fume",
+        "value": "Kveldsoljen og lyset, i én eske. 25 % av til mandag."
+      },
+      {"key":"cta","label":"Call to action","source":"fume","value":"Gi den bort nå!"},
       {
         "key": "logo",
         "label": "Logo",
@@ -4635,7 +4654,8 @@ maja (agency's client) undoApprovePlan("c-bf")
             "name": "Master 1",
             "people": "No people",
             "productIds": ["pr-oil"],
-            "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above."
+            "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above.",
+            "text": "Oljen og lyset. Én kveld."
           },
           {
             "format": "story",
@@ -4644,7 +4664,8 @@ maja (agency's client) undoApprovePlan("c-bf")
             "name": "Master 2",
             "people": "No people",
             "productIds": ["pr-candle"],
-            "scene": "Evening Candle on folded linen, the light from the left."
+            "scene": "Evening Candle on folded linen, the light from the left.",
+            "text": "For en roligere søvn."
           },
           {
             "format": "square",
@@ -4653,7 +4674,8 @@ maja (agency's client) undoApprovePlan("c-bf")
             "name": "Master 3",
             "people": "No people",
             "productIds": ["pr-oil"],
-            "scene": "The products together, seen from above on linen."
+            "scene": "The products together, seen from above on linen.",
+            "text": "Kveldens lille luxury. 100 ml."
           },
           {
             "format": "story",
@@ -5168,6 +5190,14 @@ maja (agency's client) clientLink("bfplan")
           "source": "brief",
           "value": "One short line in Norwegian on each creative, from your brief’s message “One evening, wrapped”."
         },
+        {"key":"headline","label":"Headline","source":"fume","value":"Én kveld, pakket inn."},
+        {
+          "key": "support",
+          "label": "Supporting line",
+          "source": "fume",
+          "value": "Kveldsoljen og lyset, i én eske. 25 % av til mandag."
+        },
+        {"key":"cta","label":"Call to action","source":"fume","value":"Gi den bort nå!"},
         {
           "key": "logo",
           "label": "Logo",
@@ -5186,7 +5216,8 @@ maja (agency's client) clientLink("bfplan")
               "name": "Master 1",
               "people": "No people",
               "productIds": ["pr-oil"],
-              "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above."
+              "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above.",
+              "text": "Oljen og lyset. Én kveld."
             },
             {
               "format": "story",
@@ -5195,7 +5226,8 @@ maja (agency's client) clientLink("bfplan")
               "name": "Master 2",
               "people": "No people",
               "productIds": ["pr-candle"],
-              "scene": "Evening Candle on folded linen, the light from the left."
+              "scene": "Evening Candle on folded linen, the light from the left.",
+              "text": "For en roligere søvn."
             },
             {
               "format": "square",
@@ -5204,7 +5236,8 @@ maja (agency's client) clientLink("bfplan")
               "name": "Master 3",
               "people": "No people",
               "productIds": ["pr-oil"],
-              "scene": "The products together, seen from above on linen."
+              "scene": "The products together, seen from above on linen.",
+              "text": "Kveldens lille luxury. 100 ml."
             },
             {
               "format": "story",
@@ -5771,6 +5804,14 @@ maja (agency's client) answerClientPlan({"name":"Maja Lind","token":"bfplan","ve
         "source": "brief",
         "value": "One short line in Norwegian on each creative, from your brief’s message “One evening, wrapped”."
       },
+      {"key":"headline","label":"Headline","source":"fume","value":"Én kveld, pakket inn."},
+      {
+        "key": "support",
+        "label": "Supporting line",
+        "source": "fume",
+        "value": "Kveldsoljen og lyset, i én eske. 25 % av til mandag."
+      },
+      {"key":"cta","label":"Call to action","source":"fume","value":"Gi den bort nå!"},
       {
         "key": "logo",
         "label": "Logo",
@@ -5789,7 +5830,8 @@ maja (agency's client) answerClientPlan({"name":"Maja Lind","token":"bfplan","ve
             "name": "Master 1",
             "people": "No people",
             "productIds": ["pr-oil"],
-            "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above."
+            "scene": "Night Body Oil low in the frame on pale stone, warm side light, air above.",
+            "text": "Oljen og lyset. Én kveld."
           },
           {
             "format": "story",
@@ -5798,7 +5840,8 @@ maja (agency's client) answerClientPlan({"name":"Maja Lind","token":"bfplan","ve
             "name": "Master 2",
             "people": "No people",
             "productIds": ["pr-candle"],
-            "scene": "Evening Candle on folded linen, the light from the left."
+            "scene": "Evening Candle on folded linen, the light from the left.",
+            "text": "For en roligere søvn."
           },
           {
             "format": "square",
@@ -5807,7 +5850,8 @@ maja (agency's client) answerClientPlan({"name":"Maja Lind","token":"bfplan","ve
             "name": "Master 3",
             "people": "No people",
             "productIds": ["pr-oil"],
-            "scene": "The products together, seen from above on linen."
+            "scene": "The products together, seen from above on linen.",
+            "text": "Kveldens lille luxury. 100 ml."
           },
           {
             "format": "story",
