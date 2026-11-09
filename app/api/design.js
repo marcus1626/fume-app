@@ -166,7 +166,7 @@ function splitPrice(line) {
   return m && m[1].trim() ? { now: m[1].trim(), was: m[2].trim() } : { now: line.trim(), was: null };
 }
 function fitted(s, k) {
-  return k && k < 1 ? { ...s, sizePx: Math.round(s.sizePx * k) } : s;
+  return k && k < 1 ? { ...s, sizePx: Math.floor(s.sizePx * k) } : s;
 }
 function bindShort(text) {
   return text.replace(new RegExp("(?<=^|\\s)(\\p{L}{1,2}) (?=\\S)", "gu"), "$1\xA0");
@@ -836,7 +836,7 @@ async function designOn(asked, until = Infinity) {
   const fitted2 = best.t.layout.fit;
   if (fitted2) {
     for (const [node, k] of [["Headline", fitted2.headline], ["CTA", fitted2.cta]]) {
-      if (k) best.t.checks.push({ check: "fits", node, ok: true, hard: false, note: `Set at ${Math.round(k * 100)}% of its style's size, so its longest word fits the column whole.` });
+      if (k) best.t.checks.push({ check: "fits", node, ok: true, hard: false, note: `Set at ${Math.round(k * 100)}% of its style's size, so ${node === "CTA" ? "its words fit the button on one line" : "its longest word fits the column whole"}.` });
     }
   }
   const used = /* @__PURE__ */ new Set([best.t.layout.headline, best.t.layout.subline ?? "subline", componentOf(book, "cta")?.style ?? "cta"]);
@@ -1008,6 +1008,10 @@ function measure(doc, c, l, book, p, keep, logo = null) {
   }
   if (boxes.Action && overlap(boxes.Action, words) > 0) {
     checks.push({ check: "fits", node: "CTA", ok: false, hard: true, note: "The call to action runs into the words." });
+  }
+  const ctaLine = lineWidth(doc, "CTA words");
+  if (ctaLine && ctaLine.width > ctaLine.box + 2) {
+    checks.push({ check: "fits", node: "CTA", ok: false, hard: true, note: "The button's words do not fit on one line." });
   }
   for (const n of ["Headline", "Price", "Was", "Subline", "CTA words"]) {
     const split = splitWords(doc, n);
@@ -1198,7 +1202,17 @@ function fitFor(doc, sizes = {}) {
   };
   const over = sizes.Headline && sizes.Subline ? sizes.Subline * 1.25 / sizes.Headline : 0;
   const headline = need("Headline", Math.max(FIT_FLOOR, over));
-  const cta = need("CTA words");
+  let cta = need("CTA words");
+  const ctaLine = lineWidth(doc, "CTA words");
+  if (ctaLine && ctaLine.width > ctaLine.box + 2) {
+    const frame = boxOf(doc, "CTA");
+    const words = boxOf(doc, "Words");
+    const pad2 = frame ? frame.w - ctaLine.box : 0;
+    const inside = frame && words && frame.x >= words.x - 1 && frame.x + frame.w <= words.x + words.w + 1;
+    const room = inside ? words.w - pad2 - 2 * (frame.x - words.x) : ctaLine.box;
+    const k = Math.min(1, (Math.max(room, ctaLine.box) - 2) / ctaLine.width);
+    if (k < 1 && k >= FIT_FLOOR) cta = Math.min(cta ?? 1, Math.floor(k * 100) / 100);
+  }
   const line = lineWidth(doc, "Price");
   const whole = line ? Math.min(1, (line.box - 2) / line.width) : 1;
   const price = whole < 1 && whole >= PRICE_FLOOR ? Math.floor(whole * 100) / 100 : need("Price");
