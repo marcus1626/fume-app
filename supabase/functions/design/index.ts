@@ -37,15 +37,23 @@ async function download(bucket: string, path: string): Promise<Uint8Array | null
   return error || !data ? null : new Uint8Array(await data.arrayBuffer());
 }
 
+/** Base64 grows a picture by a third, and the model takes at most 10 MB that way: a bigger picture goes as a link the
+ *  model reads itself, as the Engine's picture check does (Anthem "Two on two", 9 Nov: a 7.9 MB picture was refused,
+ *  and the words were set with nothing kept clear). */
+const INLINE_MAX = 7_000_000;
+
 async function look<T>(
   system: string,
   text: string,
-  bytes: Uint8Array,
+  bytes: Uint8Array | string,
   schema: Parameters<typeof betaZodOutputFormat>[0],
   spent: { usd: number },
   opts: { refs?: Uint8Array[]; careful?: boolean } = {},
 ) {
-  const image = (b: Uint8Array) => ({ type: "image" as const, source: { type: "base64" as const, media_type: typeOf(b) as "image/png", data: base64(b) } });
+  const image = (b: Uint8Array | string) =>
+    typeof b === "string"
+      ? { type: "image" as const, source: { type: "url" as const, url: b } }
+      : { type: "image" as const, source: { type: "base64" as const, media_type: typeOf(b) as "image/png", data: base64(b) } };
   const message = await claude.beta.messages.parse({
     model: opts.careful ? REVIEW_MODEL : MODEL,
     max_tokens: 4_000,
@@ -109,7 +117,15 @@ Deno.serve((req) =>
         read: download,
         picture: (t) => download(t.picture.bucket, t.picture.path),
       },
-      choose: (t, words, picture, spent) => look<LayoutChoice>(CHOOSE_SYSTEM, choosePrompt(t, words), picture, LayoutChoice, spent),
+      choose: async (t, words, picture, spent) => {
+        let seen: Uint8Array | string = picture;
+        if (picture.length > INLINE_MAX) {
+          const { data, error } = await service.storage.from(t.picture.bucket).createSignedUrl(t.picture.path, 600);
+          if (error || !data) throw new Error("Fume could not make a link to the picture.");
+          seen = data.signedUrl;
+        }
+        return look<LayoutChoice>(CHOOSE_SYSTEM, choosePrompt(t, words), seen, LayoutChoice, spent);
+      },
       // The layout chosen before for this picture's line, read through the database (the service role has no rights
       // on the tables themselves).
       before: async (t) => {
