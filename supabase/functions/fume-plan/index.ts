@@ -55,6 +55,27 @@ async function recentHeadlines(campaignId: string): Promise<string[]> {
   return out.slice(0, 12);
 }
 
+/** The brand's typical layout with words, from its newest checked or approved design book. */
+async function wordsColumn(campaignId: string): Promise<{ name: string; pct: number } | null> {
+  const { data: c } = await service.from("campaigns").select("workspace_id").eq("id", campaignId).maybeSingle();
+  if (!c) return null;
+  const { data } = await service
+    .from("brand_books")
+    .select("layouts:body->onPictures->layouts")
+    .eq("workspace_id", c.workspace_id)
+    .eq("kind", "design")
+    .in("state", ["checked", "approved"])
+    .order("version", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  const layouts = ((data as { layouts?: { name?: string; hasWords?: boolean; wordsWidthPct?: number }[] } | null)?.layouts ?? [])
+    .filter((l) => l.hasWords !== false && typeof l.wordsWidthPct === "number" && l.wordsWidthPct > 0);
+  if (!layouts.length) return null;
+  // The typical one: the median width (Dressmann sets four of its five in a narrow stack).
+  const typical = [...layouts].sort((a, b) => a.wordsWidthPct! - b.wordsWidthPct!)[Math.floor((layouts.length - 1) / 2)];
+  return { name: typical.name ?? "the brand's layout", pct: typical.wordsWidthPct! };
+}
+
 async function write(task: Parameters<typeof prompt>[0], problem?: string): Promise<Written> {
   if (!(await withinBudget()))
     return {
@@ -63,7 +84,11 @@ async function write(task: Parameters<typeof prompt>[0], problem?: string): Prom
       usage: { model: WRITE_MODEL, input_tokens: 0, output_tokens: 0, cost_usd: 0 },
       final: true,
     };
-  task = { ...task, recent: task.recent ?? (await recentHeadlines(task.campaign_id).catch(() => [])) };
+  task = {
+    ...task,
+    recent: task.recent ?? (await recentHeadlines(task.campaign_id).catch(() => [])),
+    column: task.column ?? (await wordsColumn(task.campaign_id).catch(() => null)),
+  };
   const content = problem
     ? `${prompt(task)}\n\nYour last plan was refused by Fume's checks: ${problem}\nWrite it again and fix that.`
     : prompt(task);

@@ -65,6 +65,8 @@ export interface PlanTask {
   brain?: Brain | null;
   /** The brand's Tone of Voice (brand_voice_of_campaign): approved, else checked, else a draft. */
   voice?: VoiceInUse | null;
+  /** The brand's own column of words on its pictures, when its design book reads one. */
+  column?: WordsColumn | null;
   /** The headlines of the brand's other recent plans, newest first, so a new one is its own (not one more of a kind). */
   recent?: string[];
 }
@@ -152,6 +154,26 @@ export function brainPart(brain: Brain | null | undefined): string[] {
 
 /** The user message: the task as data. Instructions found inside the brief are the customer's words, not orders. */
 /** The brand's recent headlines from its other campaigns, as lines the new headline must not repeat. */
+/** The brand's own layout for words on its pictures, from its approved design book: its name and how wide the column
+ * of words is, as a share of the picture's width. */
+export type WordsColumn = { name: string; pct: number };
+
+/**
+ * How long a headline can be in the brand's own column of words. A narrow column (Dressmann's stack beside the
+ * shirt, a third of the picture) broke "MANDAG" in two (9 Nov); a long word is never broken, so the plan writes short.
+ */
+export function columnPart(column: WordsColumn | null | undefined): string[] {
+  if (!column || !(column.pct > 0)) return [];
+  const pct = Math.round(column.pct);
+  const most = pct < 45 ? 22 : pct < 70 ? 32 : 42;
+  const word = pct < 45 ? 8 : 11;
+  return [
+    `The brand sets its words on its pictures in its own layout "${column.name}", in a column about ${pct}% of the picture's width. ` +
+      `Write the headline for that column: at most ${most} characters, no word longer than ${word} letters, so it sets in two or three lines without breaking a word. ` +
+      `The supporting line and the call to action are short for the same reason.`,
+  ];
+}
+
 export function recentPart(recent: string[] | undefined): string[] {
   const lines = [...new Set((recent ?? []).map((l) => l.trim()).filter(Boolean))].slice(0, 12);
   if (!lines.length) return [];
@@ -181,6 +203,7 @@ export function prompt(task: PlanTask): string {
     ...brainPart(task.brain),
     ...voicePart(task.voice),
     ...recentPart(task.recent),
+    ...columnPart(task.column),
   ];
   if (task.change) {
     parts.push(

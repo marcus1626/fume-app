@@ -2,7 +2,7 @@
 import { assertEquals } from "jsr:@std/assert@1";
 import { type Deps, handlePlan, type Written } from "./handler.ts";
 import { type ClaimRead, copyLines, judgeCopy, type PlanAnswer, type PlanTask, prompt, toBody } from "./plan.ts";
-import { recentPart, repeatsHeadline } from "./plan.ts";
+import { columnPart, recentPart, repeatsHeadline } from "./plan.ts";
 
 const task: PlanTask = {
   run_id: "r1",
@@ -383,4 +383,12 @@ Deno.test("the brand's recent headlines go in the prompt as lines not to repeat"
   const part = recentPart(["Trends change. Grails don't.", "Trends change. Grails don't.", " "]).join("\n");
   assertEquals(part.split("- Trends change").length, 2);
   assertEquals(part.includes("not the same build of sentence"), true);
+});
+
+Deno.test("a narrow column of words asks for a short headline", () => {
+  const narrow = columnPart({ name: "Green stack beside the model, left", pct: 25 }).join(" ");
+  assertEquals(narrow.includes("at most 22 characters") && narrow.includes("no word longer than 8 letters"), true);
+  assertEquals(columnPart({ name: "Quote stack bottom left", pct: 82 }).join(" ").includes("at most 42 characters"), true);
+  assertEquals(columnPart(null), []);
+  assertEquals(prompt({ ...task, column: { name: "Green stack", pct: 25 } }).includes("Green stack"), true);
 });
