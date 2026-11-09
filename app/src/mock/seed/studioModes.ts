@@ -583,7 +583,6 @@ export const modes: StudioMode[] = [
           { value: "bottom", label: "Bottom" },
         ],
       },
-      { key: "logo", label: "Show the logo", control: "toggle", section: "Layout", default: true },
       {
         key: "textColour",
         label: "Text colour",

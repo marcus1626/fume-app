@@ -937,6 +937,13 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       d.state = "in_check";
       touch(d);
       const version = d.versions.find((v) => v.id === d.pickedVersionId)!;
+      // The layers that go with the version sent (round 15): the hand layers on a picture; on Fume's design, its
+      // layers once they were changed in the Design studio, which then stand for Fume's drawing.
+      const layers =
+        d.studio === "design"
+          ? structuredClone(d.layers.filter((l) => l.belongsTo === (version.design ? version.id : undefined)))
+          : undefined;
+      const drawn = version.drawn && !(version.design && layers?.length) ? structuredClone(version.drawn) : undefined;
       const item = db.qaItems.find((i) => i.documentId === d.id);
       const by = { sentBy: m.me().id, sentAt: now() };
       if (item) {
@@ -957,9 +964,9 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
           checkedAt: undefined,
           studioBy: undefined,
           studioAt: undefined,
-          layers: d.studio === "design" ? structuredClone(d.layers) : item.layers,
+          layers: layers ?? item.layers,
           design: version.design && structuredClone(version.design),
-          drawn: version.drawn && structuredClone(version.drawn),
+          drawn,
         });
         m.emit({ type: "qa.state", item: structuredClone(item) });
       } else {
@@ -982,9 +989,9 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
           evaluation: version.evaluation,
           feedback: [],
           version: version.number,
-          layers: d.studio === "design" ? structuredClone(d.layers) : undefined,
+          layers,
           ...(version.design ? { design: structuredClone(version.design) } : {}),
-          ...(version.drawn ? { drawn: structuredClone(version.drawn) } : {}),
+          ...(drawn ? { drawn } : {}),
           ...by,
         };
         db.qaItems.push(added);

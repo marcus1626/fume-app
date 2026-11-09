@@ -37,10 +37,10 @@ import {
   useStudioModes,
   useUpdateDocument,
 } from "../../../api/hooks";
-import type { CreativeDocument, Id, Layer, LightRig, StudioKind, StudioMode } from "../../../contract";
+import type { CreativeDocument, Id, Layer, LightRig, StudioKind, StudioMode, Variables } from "../../../contract";
 import { Failed, Loading, useBack } from "../../../shell/Page";
 import { directory, firstName } from "../../../shell/people";
-import { Board, documentName, shownVersion, Versions } from "./Board";
+import { Board, documentName, Versions } from "./Board";
 import { CampaignChip, CampaignLookChip } from "./campaign";
 import { CanvasLight, type LightView } from "./CanvasLight";
 import { MakeFormats } from "./formats";
@@ -52,6 +52,10 @@ import { DesignSheet } from "./graphic";
 import { PromptSheet } from "./prompt";
 import { SpecsPanel } from "./Specs";
 import { VariablesPanel } from "./Variables";
+import { LayersPanel, useDesignSystem } from "./Layers";
+import { PropertiesPanel } from "./Properties";
+import { bandOf, inkOf, layersOn, roleOf } from "./layers";
+import { tabShown } from "./versions";
 import { frameRoot } from "../../../shell/scope";
 import { withServer } from "./video/edit";
 import { VideoDesk } from "./video/VideoDesk";
@@ -82,35 +86,38 @@ function DocumentScreen() {
   return <Desk key={doc.data.id} doc={doc.data} modes={modes.data ?? []} />;
 }
 
-/** A new Design document starts from the picked render with a headline, a line and the logo on it. */
-function startLayers(doc: CreativeDocument): Layer[] {
-  const v = shownVersion(doc);
+/** A new Design document starts from the picked render with the logo, a headline and a line on it (round 15: each a
+ *  layer of the design system's components; the picture is named by its version where it is shown, "V3"). */
+function startLayers(): Layer[] {
   return [
+    { id: "ly-img", kind: "image", name: "Picture", x: 0, y: 0, w: 1, h: 1, visible: true, locked: true, fit: "fill" },
     {
-      id: "ly-img",
-      kind: "image",
-      name: v ? `Image v${v.number}` : "Image",
-      x: 0,
-      y: 0,
-      w: 1,
-      h: 1,
-      image: v?.image,
+      id: "ly-body",
+      kind: "text",
+      component: "subline",
+      style: "small",
+      name: "Line",
+      x: 0.08,
+      y: 0.84,
+      w: 0.6,
+      h: 0.05,
+      text: "A supporting line",
       visible: true,
-      locked: true,
     },
     {
       id: "ly-head",
       kind: "text",
+      component: "headline",
+      style: "headline",
       name: "Headline",
       x: 0.08,
       y: 0.72,
       w: 0.84,
       h: 0.1,
       text: "A headline",
-      style: "headline",
       visible: true,
     },
-    { id: "ly-logo", kind: "logo", name: "Logo", x: 0.08, y: 0.07, w: 0.2, h: 0.05, visible: true },
+    { id: "ly-logo", kind: "logo", component: "logo", name: "Logo", x: 0.08, y: 0.07, w: 0.2, h: 0.05, visible: true },
   ];
 }
 
@@ -185,6 +192,48 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
   const locked = Boolean(work) && !readOnly;
   const { state } = history;
   const noVersion = !doc.versions.some((v) => v.state === "done");
+  // Design (round 15): the layers of the version on the board, Fume's or laid out by hand, in the design system.
+  const book = useDesignSystem();
+  const onBoard = tabShown(doc);
+  const design = layersOn(doc, state.layers, onBoard, book, state.specs.format);
+  const picture = design.design
+    ? doc.versions.find((v) => v.id === design.design!.design!.fromVersionId)
+    : onBoard?.design
+      ? undefined
+      : onBoard;
+  const selected = design.layers.some((l) => l.id === selectedLayer) ? selectedLayer : undefined;
+  /** A change to the layers, kept with what the Engine reads from them: where the words sit and their one colour. */
+  const setLayers = (next: Layer[], key: string) => {
+    const vars: Variables = {};
+    const band = bandOf(next, book, state.specs.format);
+    if (band && band !== state.variables.align) vars.align = band;
+    const inks = [
+      ...new Set(
+        next
+          .filter((l) => ["headline", "subline", "text"].includes(roleOf(l)))
+          .map((l) => inkOf(l, book, state.variables)),
+      ),
+    ];
+    if (inks.length === 1 && inks[0] && inks[0] !== state.variables.textColour) vars.textColour = inks[0];
+    history.change(
+      {
+        layers: design.write(next),
+        ...(Object.keys(vars).length ? { variables: { ...state.variables, ...vars } } : {}),
+      },
+      key,
+    );
+  };
+  // Escape lets go of the picked layer (the frame shows), as in Figma.
+  useEffect(() => {
+    if (doc.studio !== "design" || !selected) return;
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (e.key !== "Escape" || (t && t.closest("input, textarea, [role='dialog'], [role='listbox']"))) return;
+      setSelectedLayer(undefined);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [doc.studio, selected]);
   // A video goes to check once every shot has a take (FLOWS §27.6); its first frame stands for it in Check.
   const video = doc.studio === "video" ? (state.video ? withServer(state.video, doc.video) : doc.video) : undefined;
   const videoNotReady = Boolean(
@@ -229,7 +278,10 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
         change: {
           studio,
           modeId: next.id,
-          ...(studio === "design" && !doc.layers.length && !byFume ? { layers: startLayers(doc) } : {}),
+          // Fume's designs bring their own layers (FLOWS §34.5); a layout by hand starts from these.
+          ...(studio === "design" && !doc.layers.length && !byFume && !doc.versions.some((v) => v.design)
+            ? { layers: startLayers() }
+            : {}),
         },
       },
       { onSuccess: () => history.reset() },
@@ -476,22 +528,32 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
         <>
           {!readOnly && !bare && (
             <div className="ui-desk-lockable" {...lockProps(locked)}>
-              <SpecsPanel
-                doc={doc}
-                mode={mode}
-                modes={modes}
-                specs={state.specs}
-                layers={state.layers}
-                assets={assets}
-                brandName={brandName}
-                approver={approver}
-                name={name}
-                onSpecs={(specs, key) => history.change({ specs }, `spec-${key}`)}
-                onLayers={(layers, key) => history.change({ layers }, key)}
-                onMode={switchMode}
-                selectedLayer={selectedLayer}
-                onSelectLayer={setSelectedLayer}
-              />
+              {doc.studio === "design" ? (
+                <LayersPanel
+                  doc={doc}
+                  specs={state.specs}
+                  onSpecs={(specs, key) => history.change({ specs }, `spec-${key}`)}
+                  layers={design.layers}
+                  design={design.design}
+                  pictureNumber={picture?.number}
+                  selected={selected}
+                  onSelect={setSelectedLayer}
+                  onLayers={setLayers}
+                />
+              ) : (
+                <SpecsPanel
+                  doc={doc}
+                  mode={mode}
+                  modes={modes}
+                  specs={state.specs}
+                  assets={assets}
+                  brandName={brandName}
+                  approver={approver}
+                  name={name}
+                  onSpecs={(specs, key) => history.change({ specs }, `spec-${key}`)}
+                  onMode={switchMode}
+                />
+              )}
             </div>
           )}
 
@@ -499,9 +561,9 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
             <Board
               doc={{ ...doc, variables: state.variables, specs: state.specs }}
               mode={mode}
-              layers={state.layers}
+              layers={design.layers}
               brandName={brandName}
-              selectedLayer={selectedLayer}
+              selectedLayer={selected}
               onSelectLayer={setSelectedLayer}
               readOnly={readOnly}
               onBeforeRender={history.flush}
@@ -540,28 +602,42 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
 
           {!readOnly && !bare && (
             <div className="ui-desk-lockable" {...lockProps(locked)}>
-              <VariablesPanel
-                key={doc.campaignId ?? "no-campaign"}
-                doc={doc}
-                mode={mode}
-                variables={state.variables}
-                layers={state.layers}
-                selectedLayer={selectedLayer}
-                assets={assets}
-                brandName={brandName}
-                campaign={
-                  doc.campaignId && campaign.data
-                    ? { name: campaign.data.campaign.name, look: campaign.data.campaign.look }
-                    : undefined
-                }
-                proposed={proposedKeys(doc)}
-                onVariable={(key, value) =>
-                  history.change({ variables: { ...state.variables, [key]: value } }, `var-${key}`)
-                }
-                onVariables={(patch, key) => history.change({ variables: { ...state.variables, ...patch } }, key)}
-                onLayers={(layers, key) => history.change({ layers }, key)}
-                onLightView={setLightView}
-              />
+              {doc.studio === "design" ? (
+                <PropertiesPanel
+                  doc={doc}
+                  mode={mode}
+                  variables={state.variables}
+                  format={state.specs.format}
+                  layers={design.layers}
+                  design={design.design}
+                  picture={picture}
+                  selected={selected}
+                  book={book}
+                  brandName={brandName}
+                  onLayers={setLayers}
+                  onVariables={(patch, key) => history.change({ variables: { ...state.variables, ...patch } }, key)}
+                />
+              ) : (
+                <VariablesPanel
+                  key={doc.campaignId ?? "no-campaign"}
+                  doc={doc}
+                  mode={mode}
+                  variables={state.variables}
+                  assets={assets}
+                  brandName={brandName}
+                  campaign={
+                    doc.campaignId && campaign.data
+                      ? { name: campaign.data.campaign.name, look: campaign.data.campaign.look }
+                      : undefined
+                  }
+                  proposed={proposedKeys(doc)}
+                  onVariable={(key, value) =>
+                    history.change({ variables: { ...state.variables, [key]: value } }, `var-${key}`)
+                  }
+                  onVariables={(patch, key) => history.change({ variables: { ...state.variables, ...patch } }, key)}
+                  onLightView={setLightView}
+                />
+              )}
             </div>
           )}
         </>

@@ -185,7 +185,17 @@ test("Anna asks Fume for the graphic design on a picture, and reads what came ba
   // Fume designs it as a new version, and it comes back picked, with its words on the picture
   await expect(page.getByText("Fume is designing version 5 on V3")).toBeVisible();
   await expect(page.getByRole("button", { name: /Designed from V3/ })).toBeVisible({ timeout: 15_000 });
-  await expect(page.locator(".ui-design-drawn").first()).toContainText("Den langsomme timen før søvn.");
+  await expect(page.getByRole("button", { name: "Headline layer" })).toContainText("Den langsomme timen før søvn.");
+
+  // Its layers, as in Figma: the logo is a layer (hidden, as Fume left it), and the eye shows it on the canvas
+  const layers = page.getByRole("complementary", { name: "Layers" });
+  await expect(layers.getByRole("button", { name: /^Picture/ })).toContainText("V3");
+  await expect(page.getByRole("button", { name: "Logo layer" })).toHaveCount(0);
+  await layers.getByRole("button", { name: "Show Logo" }).click();
+  await expect(page.getByRole("button", { name: "Logo layer" })).toBeVisible();
+  // Nothing picked, the right panel shows the frame: Align says where the words are; no generator on a layout
+  await expect(page.getByRole("tab", { name: "Top", selected: true })).toBeVisible();
+  await expect(page.getByText("Generator")).toHaveCount(0);
 
   await page.getByRole("button", { name: "The graphic design and its checks" }).click();
   const sheet = page.getByRole("dialog", { name: "The graphic design on version 5" });

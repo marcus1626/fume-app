@@ -155,26 +155,40 @@ const scenePrompt = (place: string) =>
 
 const sceneVars = { ...defaults("m-scene") };
 
-/** The email header's layers in the Design studio. */
+/** The email header's layers in the Design studio: the words at the top, clear of the label; the logo reversed on
+ *  the dark picture, as LYSNE's design system asks. */
 export const layoutLayers: Layer[] = [
   {
     id: "ly-img",
     kind: "image",
-    name: "Image v3",
+    name: "Picture",
     x: 0,
     y: 0,
     w: 1,
     h: 1,
-    image: img("05-01"),
+    image: img("05-01", "story"),
     visible: true,
     locked: true,
+    fit: "fill",
+  },
+  {
+    id: "ly-body",
+    kind: "text",
+    name: "Line",
+    x: 0.08,
+    y: 0.24,
+    w: 0.6,
+    h: 0.05,
+    text: "Night Body Oil · 100 ml",
+    style: "small",
+    visible: true,
   },
   {
     id: "ly-head",
     kind: "text",
     name: "Headline",
     x: 0.08,
-    y: 0.72,
+    y: 0.13,
     w: 0.84,
     h: 0.1,
     text: "For the hour before sleep.",
@@ -182,18 +196,16 @@ export const layoutLayers: Layer[] = [
     visible: true,
   },
   {
-    id: "ly-body",
-    kind: "text",
-    name: "Line",
+    id: "ly-logo",
+    kind: "logo",
+    name: "LYSNE logo",
     x: 0.08,
-    y: 0.83,
-    w: 0.6,
+    y: 0.07,
+    w: 0.2,
     h: 0.05,
-    text: "Night Body Oil · 100 ml",
-    style: "small",
     visible: true,
+    variant: "Wordmark, reversed",
   },
-  { id: "ly-logo", kind: "logo", name: "LYSNE logo", x: 0.08, y: 0.07, w: 0.2, h: 0.05, visible: true },
 ];
 
 const seeded: CreativeDocument[] = [
@@ -442,12 +454,18 @@ const seeded: CreativeDocument[] = [
     slot: "Email · header",
     studio: "design",
     modeId: "m-layout",
-    variables: defaults("m-layout"),
+    // The words sit at the top, clear of the label (round 15: Align is where they are on the canvas).
+    variables: { ...defaults("m-layout"), align: "top" },
     specs: specs({ format: "story", count: 1 }),
     overrides: [],
     layers: layoutLayers,
     edits: [],
-    versions: [version("rv-email-1", 1, "05-01", 15, defaults("m-layout"), { specs: specs({ format: "story" }) })],
+    versions: [
+      version("rv-email-1", 1, "05-01", 15, defaults("m-layout"), {
+        image: img("05-01", "story"),
+        specs: specs({ format: "story" }),
+      }),
+    ],
     pickedVersionId: "rv-email-1",
     state: "draft",
     by: "u-anna",

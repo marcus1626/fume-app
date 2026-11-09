@@ -58,6 +58,7 @@ import { frameRoot } from "../../../shell/scope";
 import { DetailsOverlay, useFixDone } from "./fix";
 import { placementOf, SafeZones, versionRatio } from "./formats";
 import { AddGraphicDesign, designFlags, designLine, DrawnWords, useDesignAddress, useSeesDesign } from "./graphic";
+import { CanvasLayers } from "./Layers";
 import { failedWords, usePromptAddress, useSeesPrompt } from "./prompt";
 import { scoreLine } from "./scores";
 import { isUnderBar } from "../../../domain/scores";
@@ -153,9 +154,9 @@ export function Board({
   const comparing = compared.length + (withReal ? 1 : 0) > 1 || (withReal && !compared.length);
   const figures = comparing ? (compared.length ? compared : shown ? [shown] : []).length + (withReal ? 1 : 0) : 1;
   const isDesign = doc.studio === "design";
-  const logoOn = doc.variables.logo !== false;
-  const ink = typeof doc.variables.textColour === "string" ? doc.variables.textColour : undefined;
   const format = mode?.output === "creative" ? doc.specs.format : "square";
+  // Design (round 15): the picture is a layer too; the frame is the format's, the picture fills it or fits in it.
+  const pictureLayer = isDesign ? layers.find((l) => l.kind === "image") : undefined;
   // Formats (FLOWS §15) and product fix (FLOWS §17): safe zones of the chosen placement, the product's details.
   const [search] = useSearchParams();
   const [safe, setSafe] = useState(false);
@@ -184,9 +185,14 @@ export function Board({
 
   const figure = (v: RenderVersion, label: string | undefined, withLayers: boolean) => (
     <figure className="ui-desk-figure" key={v.id}>
-      <span className="ui-desk-shot" style={{ "--ratio": ratio[format] } as CSSProperties}>
+      <span
+        className="ui-desk-shot"
+        data-fit={withLayers && isDesign ? (pictureLayer?.fit ?? "fill") : undefined}
+        data-picture-hidden={withLayers && pictureLayer && !pictureLayer.visible ? "" : undefined}
+        style={{ "--ratio": ratio[format] } as CSSProperties}
+      >
         <img src={v.image} alt={`${doc.title}, version ${v.number}`} draggable={false} />
-        {v.drawn && <DrawnWords drawing={v.drawn} />}
+        {v.drawn && !(withLayers && isDesign) && <DrawnWords drawing={v.drawn} />}
         {withLayers && safe && placement && !readOnly && (
           <SafeZones placement={placement} sourceRatio={versionRatio(v, placements)} />
         )}
@@ -202,27 +208,16 @@ export function Board({
             readOnly={readOnly}
           />
         )}
-        {withLayers && isDesign && !v.drawn && (
-          <span className="ui-desk-layers" style={ink ? ({ "--layer-ink": ink } as CSSProperties) : undefined}>
-            {layers
-              .filter((l) => l.kind !== "image" && l.visible && (l.kind !== "logo" || logoOn))
-              .map((l) => (
-                <button
-                  key={l.id}
-                  type="button"
-                  className="ui-desk-layer"
-                  data-kind={l.kind}
-                  data-style={l.style}
-                  aria-pressed={selectedLayer === l.id}
-                  aria-label={`${l.name} layer`}
-                  disabled={readOnly}
-                  style={{ "--x": l.x, "--y": l.y, "--w": l.w, "--h": l.h } as CSSProperties}
-                  onClick={() => onSelectLayer(selectedLayer === l.id ? undefined : l.id)}
-                >
-                  {l.kind === "logo" ? brandName.toUpperCase() : l.text}
-                </button>
-              ))}
-          </span>
+        {withLayers && isDesign && (
+          <CanvasLayers
+            layers={layers}
+            variables={doc.variables}
+            format={format}
+            brandName={brandName}
+            selected={selectedLayer}
+            onSelect={onSelectLayer}
+            readOnly={readOnly}
+          />
         )}
       </span>
       {label && <figcaption className="ui-desk-caption">{label}</figcaption>}
@@ -317,7 +312,11 @@ export function Board({
           </Glass>
         )}
 
-        <div className="ui-desk-stage" onClick={(e) => e.target === e.currentTarget && onSelectLayer(undefined)}>
+        <div
+          className="ui-desk-stage"
+          // A click beside the layers (the board, or the picture, which is locked) lets go of the picked one.
+          onClick={(e) => !(e.target as HTMLElement).closest("button, a, input") && onSelectLayer(undefined)}
+        >
           {rendering?.design && !comparing ? (
             <figure className="ui-desk-figure" aria-busy="true">
               <span className="ui-desk-shot" data-designing="" style={{ "--ratio": ratio[format] } as CSSProperties}>

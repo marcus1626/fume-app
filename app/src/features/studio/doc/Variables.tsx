@@ -1,6 +1,7 @@
 // The desk's right panel (FLOWS §9.1): the mode's variables, grouped by section in folding sections like Photoshop's
 // panels, each drawn by the control library (ModeControl) from its `control` kind. The brand's presets lead every
-// swatch and select (FLOWS §9.4). In Design, the selected layer's words sit on top.
+// swatch and select (FLOWS §9.4). Design has its own right panel since round 15: the properties of what is picked,
+// as in Figma (Properties.tsx).
 // Every look section (Light, Camera, a section with a brand preset) says where its look comes from (FLOWS §18):
 // Campaign · Brand · Fume · Own · Engine. When the creative belongs to a campaign with a look of its own, Campaign
 // comes first and is the default: its colours and backgrounds lead every swatch under the campaign's name, and its
@@ -18,10 +19,8 @@ import {
   StudioFolds,
   StudioLightboard,
   StudioPresetPicker,
-  StudioSegmented,
   StudioSource,
   StudioSummary,
-  StudioText,
   StudioToggle,
   lookSourceNames,
   studioValueWords,
@@ -41,7 +40,6 @@ import type {
   CameraPreset,
   CampaignLook,
   CreativeDocument,
-  Layer,
   LightRig,
   LookSource,
   ModeVariable,
@@ -59,8 +57,6 @@ export interface VariablesProps {
   doc: CreativeDocument;
   mode?: StudioMode;
   variables: Variables;
-  layers: Layer[];
-  selectedLayer?: string;
   assets?: BrandAssetsView;
   brandName: string;
   /** The creative's campaign, when it has one; its look (if any) is the first source. */
@@ -68,7 +64,6 @@ export interface VariablesProps {
   onVariable: (key: string, value: VarValue) => void;
   /** Several variables in one undo step (a preset sets light and camera at once). */
   onVariables: (patch: Variables, key: string) => void;
-  onLayers: (layers: Layer[], key: string) => void;
   /** A light on the advanced board is dragged or let go: the board draws it on the creative. */
   onLightView?: (view: LightView) => void;
   /** The variables the Engine's open change touches: their section opens, the controls are marked. */
@@ -126,14 +121,11 @@ export function VariablesPanel({
   doc,
   mode,
   variables,
-  layers,
-  selectedLayer,
   assets,
   brandName,
   campaign,
   onVariable,
   onVariables,
-  onLayers,
   onLightView,
   proposed = [],
 }: VariablesProps) {
@@ -270,51 +262,6 @@ export function VariablesPanel({
   };
 
   const sections: StudioFold[] = [];
-  const layer = layers.find((l) => l.id === selectedLayer);
-  if (layer) {
-    const set = (change: Partial<Layer>, key: string) =>
-      onLayers(
-        layers.map((l) => (l.id === layer.id ? { ...l, ...change } : l)),
-        `layer-${layer.id}-${key}`,
-      );
-    sections.push({
-      id: "layer",
-      title: layer.name,
-      meta: "Layer",
-      children: (
-        <>
-          {layer.kind === "text" && (
-            <StudioText
-              label="Words"
-              id="layer-text"
-              value={layer.text ?? ""}
-              onChange={(text) => set({ text }, "text")}
-            />
-          )}
-          {layer.kind === "text" && (
-            <StudioSegmented
-              label="Type"
-              id="layer-style"
-              value={layer.style ?? "body"}
-              options={[
-                { value: "headline", label: "Headline" },
-                { value: "body", label: "Body" },
-                { value: "small", label: "Small" },
-              ]}
-              onChange={(style) => set({ style: style as Layer["style"] }, "style")}
-            />
-          )}
-          <StudioToggle
-            label="Show"
-            id="layer-visible"
-            value={layer.visible}
-            onChange={(visible) => set({ visible }, "visible")}
-          />
-        </>
-      ),
-    });
-  }
-
   const control = (v: ModeVariable) => (
     <div key={v.key} className="ui-desk-var" data-proposed={proposed.includes(v.key) ? "" : undefined}>
       <ModeControl
@@ -467,13 +414,7 @@ export function VariablesPanel({
     <aside className="ui-desk-panel ui-desk-vars" aria-label="Variables">
       <h2 className="ui-desk-panel-title">{mode ? `${mode.name} variables` : "Variables"}</h2>
       {sections.length ? (
-        <StudioFolds
-          key={`${mode?.id}-${layer?.id ?? ""}`}
-          label="Variables"
-          sections={sections}
-          newest={focus?.id}
-          newestKey={focus?.n}
-        />
+        <StudioFolds key={mode?.id} label="Variables" sections={sections} newest={focus?.id} newestKey={focus?.n} />
       ) : (
         <p className="ui-sc-help">This mode has no variables yet.</p>
       )}

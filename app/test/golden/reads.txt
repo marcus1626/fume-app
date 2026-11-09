@@ -7290,7 +7290,6 @@ maja studioModes()
           "options": [{"label":"Top","value":"top"},{"label":"Centre","value":"centre"},{"label":"Bottom","value":"bottom"}],
           "section": "Layout"
         },
-        {"control":"toggle","default":true,"key":"logo","label":"Show the logo","section":"Layout"},
         {
           "brandPreset": "colour",
           "control": "swatch",
@@ -28003,28 +28002,17 @@ anna qaQueue()
         "image": "/demo/lysne/05-01-story.jpg",
         "layers": [
           {
+            "fit": "fill",
             "h": 1,
             "id": "ly-img",
-            "image": "/demo/lysne/05-01-feed.jpg",
+            "image": "/demo/lysne/05-01-story.jpg",
             "kind": "image",
             "locked": true,
-            "name": "Image v3",
+            "name": "Picture",
             "visible": true,
             "w": 1,
             "x": 0,
             "y": 0
-          },
-          {
-            "h": 0.1,
-            "id": "ly-head",
-            "kind": "text",
-            "name": "Headline",
-            "style": "headline",
-            "text": "For the hour before sleep.",
-            "visible": true,
-            "w": 0.84,
-            "x": 0.08,
-            "y": 0.72
           },
           {
             "h": 0.05,
@@ -28036,9 +28024,31 @@ anna qaQueue()
             "visible": true,
             "w": 0.6,
             "x": 0.08,
-            "y": 0.83
+            "y": 0.24
           },
-          {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+          {
+            "h": 0.1,
+            "id": "ly-head",
+            "kind": "text",
+            "name": "Headline",
+            "style": "headline",
+            "text": "For the hour before sleep.",
+            "visible": true,
+            "w": 0.84,
+            "x": 0.08,
+            "y": 0.13
+          },
+          {
+            "h": 0.05,
+            "id": "ly-logo",
+            "kind": "logo",
+            "name": "LYSNE logo",
+            "variant": "Wordmark, reversed",
+            "visible": true,
+            "w": 0.2,
+            "x": 0.08,
+            "y": 0.07
+          }
         ],
         "madeAt": "2026-10-14T12:17:00.000Z",
         "risk": "normal",
@@ -37162,28 +37172,17 @@ anna documents("w-lysne")
       "id": "doc-autumn-email",
       "layers": [
         {
+          "fit": "fill",
           "h": 1,
           "id": "ly-img",
-          "image": "/demo/lysne/05-01-feed.jpg",
+          "image": "/demo/lysne/05-01-story.jpg",
           "kind": "image",
           "locked": true,
-          "name": "Image v3",
+          "name": "Picture",
           "visible": true,
           "w": 1,
           "x": 0,
           "y": 0
-        },
-        {
-          "h": 0.1,
-          "id": "ly-head",
-          "kind": "text",
-          "name": "Headline",
-          "style": "headline",
-          "text": "For the hour before sleep.",
-          "visible": true,
-          "w": 0.84,
-          "x": 0.08,
-          "y": 0.72
         },
         {
           "h": 0.05,
@@ -37195,9 +37194,31 @@ anna documents("w-lysne")
           "visible": true,
           "w": 0.6,
           "x": 0.08,
-          "y": 0.83
+          "y": 0.24
         },
-        {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+        {
+          "h": 0.1,
+          "id": "ly-head",
+          "kind": "text",
+          "name": "Headline",
+          "style": "headline",
+          "text": "For the hour before sleep.",
+          "visible": true,
+          "w": 0.84,
+          "x": 0.08,
+          "y": 0.13
+        },
+        {
+          "h": 0.05,
+          "id": "ly-logo",
+          "kind": "logo",
+          "name": "LYSNE logo",
+          "variant": "Wordmark, reversed",
+          "visible": true,
+          "w": 0.2,
+          "x": 0.08,
+          "y": 0.07
+        }
       ],
       "modeId": "m-layout",
       "overrides": [],
@@ -37217,7 +37238,7 @@ anna documents("w-lysne")
       "studio": "design",
       "title": "Email header",
       "updatedAt": "2026-10-14T12:17:00.000Z",
-      "variables": {"align":"bottom","logo":true,"template":"quiet","textColour":"#EFE6DA"},
+      "variables": {"align":"top","template":"quiet","textColour":"#EFE6DA"},
       "versions": [
         {
           "at": "2026-10-14T12:17:00.000Z",
@@ -37225,7 +37246,7 @@ anna documents("w-lysne")
           "cost": 0.12,
           "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
           "id": "rv-email-1",
-          "image": "/demo/lysne/05-01-feed.jpg",
+          "image": "/demo/lysne/05-01-story.jpg",
           "number": 1,
           "specs": {
             "count": 4,
@@ -37237,7 +37258,7 @@ anna documents("w-lysne")
             "variantId": "va-oil-100"
           },
           "state": "done",
-          "variables": {"align":"bottom","logo":true,"template":"quiet","textColour":"#EFE6DA"}
+          "variables": {"align":"bottom","template":"quiet","textColour":"#EFE6DA"}
         }
       ],
       "workspaceId": "w-lysne"
@@ -38842,28 +38863,17 @@ anna qaQueue("w-lysne")
         "image": "/demo/lysne/05-01-story.jpg",
         "layers": [
           {
+            "fit": "fill",
             "h": 1,
             "id": "ly-img",
-            "image": "/demo/lysne/05-01-feed.jpg",
+            "image": "/demo/lysne/05-01-story.jpg",
             "kind": "image",
             "locked": true,
-            "name": "Image v3",
+            "name": "Picture",
             "visible": true,
             "w": 1,
             "x": 0,
             "y": 0
-          },
-          {
-            "h": 0.1,
-            "id": "ly-head",
-            "kind": "text",
-            "name": "Headline",
-            "style": "headline",
-            "text": "For the hour before sleep.",
-            "visible": true,
-            "w": 0.84,
-            "x": 0.08,
-            "y": 0.72
           },
           {
             "h": 0.05,
@@ -38875,9 +38885,31 @@ anna qaQueue("w-lysne")
             "visible": true,
             "w": 0.6,
             "x": 0.08,
-            "y": 0.83
+            "y": 0.24
           },
-          {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+          {
+            "h": 0.1,
+            "id": "ly-head",
+            "kind": "text",
+            "name": "Headline",
+            "style": "headline",
+            "text": "For the hour before sleep.",
+            "visible": true,
+            "w": 0.84,
+            "x": 0.08,
+            "y": 0.13
+          },
+          {
+            "h": 0.05,
+            "id": "ly-logo",
+            "kind": "logo",
+            "name": "LYSNE logo",
+            "variant": "Wordmark, reversed",
+            "visible": true,
+            "w": 0.2,
+            "x": 0.08,
+            "y": 0.07
+          }
         ],
         "madeAt": "2026-10-14T12:17:00.000Z",
         "risk": "normal",
@@ -40340,28 +40372,17 @@ anna document("doc-autumn-email")
     "id": "doc-autumn-email",
     "layers": [
       {
+        "fit": "fill",
         "h": 1,
         "id": "ly-img",
-        "image": "/demo/lysne/05-01-feed.jpg",
+        "image": "/demo/lysne/05-01-story.jpg",
         "kind": "image",
         "locked": true,
-        "name": "Image v3",
+        "name": "Picture",
         "visible": true,
         "w": 1,
         "x": 0,
         "y": 0
-      },
-      {
-        "h": 0.1,
-        "id": "ly-head",
-        "kind": "text",
-        "name": "Headline",
-        "style": "headline",
-        "text": "For the hour before sleep.",
-        "visible": true,
-        "w": 0.84,
-        "x": 0.08,
-        "y": 0.72
       },
       {
         "h": 0.05,
@@ -40373,9 +40394,31 @@ anna document("doc-autumn-email")
         "visible": true,
         "w": 0.6,
         "x": 0.08,
-        "y": 0.83
+        "y": 0.24
       },
-      {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+      {
+        "h": 0.1,
+        "id": "ly-head",
+        "kind": "text",
+        "name": "Headline",
+        "style": "headline",
+        "text": "For the hour before sleep.",
+        "visible": true,
+        "w": 0.84,
+        "x": 0.08,
+        "y": 0.13
+      },
+      {
+        "h": 0.05,
+        "id": "ly-logo",
+        "kind": "logo",
+        "name": "LYSNE logo",
+        "variant": "Wordmark, reversed",
+        "visible": true,
+        "w": 0.2,
+        "x": 0.08,
+        "y": 0.07
+      }
     ],
     "modeId": "m-layout",
     "overrides": [],
@@ -40395,7 +40438,7 @@ anna document("doc-autumn-email")
     "studio": "design",
     "title": "Email header",
     "updatedAt": "2026-10-14T12:17:00.000Z",
-    "variables": {"align":"bottom","logo":true,"template":"quiet","textColour":"#EFE6DA"},
+    "variables": {"align":"top","template":"quiet","textColour":"#EFE6DA"},
     "versions": [
       {
         "at": "2026-10-14T12:17:00.000Z",
@@ -40403,7 +40446,7 @@ anna document("doc-autumn-email")
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
         "id": "rv-email-1",
-        "image": "/demo/lysne/05-01-feed.jpg",
+        "image": "/demo/lysne/05-01-story.jpg",
         "number": 1,
         "specs": {
           "count": 4,
@@ -40415,7 +40458,7 @@ anna document("doc-autumn-email")
           "variantId": "va-oil-100"
         },
         "state": "done",
-        "variables": {"align":"bottom","logo":true,"template":"quiet","textColour":"#EFE6DA"}
+        "variables": {"align":"bottom","template":"quiet","textColour":"#EFE6DA"}
       }
     ],
     "workspaceId": "w-lysne"
@@ -60750,28 +60793,17 @@ nora qaQueue()
         "image": "/demo/lysne/05-01-story.jpg",
         "layers": [
           {
+            "fit": "fill",
             "h": 1,
             "id": "ly-img",
-            "image": "/demo/lysne/05-01-feed.jpg",
+            "image": "/demo/lysne/05-01-story.jpg",
             "kind": "image",
             "locked": true,
-            "name": "Image v3",
+            "name": "Picture",
             "visible": true,
             "w": 1,
             "x": 0,
             "y": 0
-          },
-          {
-            "h": 0.1,
-            "id": "ly-head",
-            "kind": "text",
-            "name": "Headline",
-            "style": "headline",
-            "text": "For the hour before sleep.",
-            "visible": true,
-            "w": 0.84,
-            "x": 0.08,
-            "y": 0.72
           },
           {
             "h": 0.05,
@@ -60783,9 +60815,31 @@ nora qaQueue()
             "visible": true,
             "w": 0.6,
             "x": 0.08,
-            "y": 0.83
+            "y": 0.24
           },
-          {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+          {
+            "h": 0.1,
+            "id": "ly-head",
+            "kind": "text",
+            "name": "Headline",
+            "style": "headline",
+            "text": "For the hour before sleep.",
+            "visible": true,
+            "w": 0.84,
+            "x": 0.08,
+            "y": 0.13
+          },
+          {
+            "h": 0.05,
+            "id": "ly-logo",
+            "kind": "logo",
+            "name": "LYSNE logo",
+            "variant": "Wordmark, reversed",
+            "visible": true,
+            "w": 0.2,
+            "x": 0.08,
+            "y": 0.07
+          }
         ],
         "madeAt": "2026-10-14T12:17:00.000Z",
         "risk": "normal",
@@ -78758,28 +78812,17 @@ nora documents("w-lysne")
       "id": "doc-autumn-email",
       "layers": [
         {
+          "fit": "fill",
           "h": 1,
           "id": "ly-img",
-          "image": "/demo/lysne/05-01-feed.jpg",
+          "image": "/demo/lysne/05-01-story.jpg",
           "kind": "image",
           "locked": true,
-          "name": "Image v3",
+          "name": "Picture",
           "visible": true,
           "w": 1,
           "x": 0,
           "y": 0
-        },
-        {
-          "h": 0.1,
-          "id": "ly-head",
-          "kind": "text",
-          "name": "Headline",
-          "style": "headline",
-          "text": "For the hour before sleep.",
-          "visible": true,
-          "w": 0.84,
-          "x": 0.08,
-          "y": 0.72
         },
         {
           "h": 0.05,
@@ -78791,9 +78834,31 @@ nora documents("w-lysne")
           "visible": true,
           "w": 0.6,
           "x": 0.08,
-          "y": 0.83
+          "y": 0.24
         },
-        {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+        {
+          "h": 0.1,
+          "id": "ly-head",
+          "kind": "text",
+          "name": "Headline",
+          "style": "headline",
+          "text": "For the hour before sleep.",
+          "visible": true,
+          "w": 0.84,
+          "x": 0.08,
+          "y": 0.13
+        },
+        {
+          "h": 0.05,
+          "id": "ly-logo",
+          "kind": "logo",
+          "name": "LYSNE logo",
+          "variant": "Wordmark, reversed",
+          "visible": true,
+          "w": 0.2,
+          "x": 0.08,
+          "y": 0.07
+        }
       ],
       "modeId": "m-layout",
       "overrides": [],
@@ -78813,7 +78878,7 @@ nora documents("w-lysne")
       "studio": "design",
       "title": "Email header",
       "updatedAt": "2026-10-14T12:17:00.000Z",
-      "variables": {"align":"bottom","logo":true,"template":"quiet","textColour":"#EFE6DA"},
+      "variables": {"align":"top","template":"quiet","textColour":"#EFE6DA"},
       "versions": [
         {
           "at": "2026-10-14T12:17:00.000Z",
@@ -78821,7 +78886,7 @@ nora documents("w-lysne")
           "cost": 0.12,
           "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
           "id": "rv-email-1",
-          "image": "/demo/lysne/05-01-feed.jpg",
+          "image": "/demo/lysne/05-01-story.jpg",
           "number": 1,
           "specs": {
             "count": 4,
@@ -78833,7 +78898,7 @@ nora documents("w-lysne")
             "variantId": "va-oil-100"
           },
           "state": "done",
-          "variables": {"align":"bottom","logo":true,"template":"quiet","textColour":"#EFE6DA"}
+          "variables": {"align":"bottom","template":"quiet","textColour":"#EFE6DA"}
         }
       ],
       "workspaceId": "w-lysne"
@@ -80902,28 +80967,17 @@ nora document("doc-autumn-email")
     "id": "doc-autumn-email",
     "layers": [
       {
+        "fit": "fill",
         "h": 1,
         "id": "ly-img",
-        "image": "/demo/lysne/05-01-feed.jpg",
+        "image": "/demo/lysne/05-01-story.jpg",
         "kind": "image",
         "locked": true,
-        "name": "Image v3",
+        "name": "Picture",
         "visible": true,
         "w": 1,
         "x": 0,
         "y": 0
-      },
-      {
-        "h": 0.1,
-        "id": "ly-head",
-        "kind": "text",
-        "name": "Headline",
-        "style": "headline",
-        "text": "For the hour before sleep.",
-        "visible": true,
-        "w": 0.84,
-        "x": 0.08,
-        "y": 0.72
       },
       {
         "h": 0.05,
@@ -80935,9 +80989,31 @@ nora document("doc-autumn-email")
         "visible": true,
         "w": 0.6,
         "x": 0.08,
-        "y": 0.83
+        "y": 0.24
       },
-      {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+      {
+        "h": 0.1,
+        "id": "ly-head",
+        "kind": "text",
+        "name": "Headline",
+        "style": "headline",
+        "text": "For the hour before sleep.",
+        "visible": true,
+        "w": 0.84,
+        "x": 0.08,
+        "y": 0.13
+      },
+      {
+        "h": 0.05,
+        "id": "ly-logo",
+        "kind": "logo",
+        "name": "LYSNE logo",
+        "variant": "Wordmark, reversed",
+        "visible": true,
+        "w": 0.2,
+        "x": 0.08,
+        "y": 0.07
+      }
     ],
     "modeId": "m-layout",
     "overrides": [],
@@ -80957,7 +81033,7 @@ nora document("doc-autumn-email")
     "studio": "design",
     "title": "Email header",
     "updatedAt": "2026-10-14T12:17:00.000Z",
-    "variables": {"align":"bottom","logo":true,"template":"quiet","textColour":"#EFE6DA"},
+    "variables": {"align":"top","template":"quiet","textColour":"#EFE6DA"},
     "versions": [
       {
         "at": "2026-10-14T12:17:00.000Z",
@@ -80965,7 +81041,7 @@ nora document("doc-autumn-email")
         "cost": 0.12,
         "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
         "id": "rv-email-1",
-        "image": "/demo/lysne/05-01-feed.jpg",
+        "image": "/demo/lysne/05-01-story.jpg",
         "number": 1,
         "specs": {
           "count": 4,
@@ -80977,7 +81053,7 @@ nora document("doc-autumn-email")
           "variantId": "va-oil-100"
         },
         "state": "done",
-        "variables": {"align":"bottom","logo":true,"template":"quiet","textColour":"#EFE6DA"}
+        "variables": {"align":"bottom","template":"quiet","textColour":"#EFE6DA"}
       }
     ],
     "workspaceId": "w-lysne"
