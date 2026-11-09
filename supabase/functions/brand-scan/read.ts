@@ -228,6 +228,11 @@ const GENERIC = new Set([
 
 function readTypefaces(pages: Page[], brand: string): Read["typefaces"] {
   const count = new Map<string, { n: number; display: number; serif: boolean; weights: Set<string> }>();
+  // A face the site loads itself (@font-face) is the brand's choice, however common the face: Anthem sets its headlines
+  // and buttons in Roboto from its own files, and the reader took Roboto for a system face (9 Nov).
+  const hosted = new Set<string>();
+  for (const p of pages)
+    for (const m of p.css.matchAll(/@font-face\s*\{[^}]*?font-family\s*:\s*["']?([^;"'}]+)/gi)) hosted.add(m[1]!.trim().toLowerCase());
   const add = (raw: string, display: boolean, block = "") => {
     const families = raw.split(",").map((f) =>
       nextFont(
@@ -242,7 +247,7 @@ function readTypefaces(pages: Page[], brand: string): Read["typefaces"] {
         f &&
         f.length <= 40 &&
         !/[:;(){}]/.test(f) &&
-        !GENERIC.has(f.toLowerCase()) &&
+        (!GENERIC.has(f.toLowerCase()) || hosted.has(f.toLowerCase())) &&
         !NOT_TEXT_FACE.test(f),
     );
     if (!name) return;

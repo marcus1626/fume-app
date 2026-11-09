@@ -105,6 +105,15 @@ Deno.test("a video player's or a carousel's own face is never taken for the bran
   assertEquals(r.typefaces.map((t) => [t.name, t.role]), [["Helvetica Now Display", "display"], ["Helvetica Now Text", "body"]]);
 });
 
+Deno.test("a common face the site loads from its own files is the brand's, not a system face", () => {
+  const css = `@font-face{font-family:'Roboto';src:url('fonts/Roboto-Bold.woff2') format('woff2');font-weight:700}
+    h1{font-family:'Roboto','Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:700} button{font-family:'Roboto',Arial,sans-serif}
+    .hero-title{font-family:'Roboto',sans-serif} body{font-family:'Noto Sans','Helvetica Neue',Arial,sans-serif}
+    .x{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}`;
+  const r = readBrand([{ url: "https://team.test/", html: "<html><head><title>Team</title></head><body></body></html>", css }], "Team");
+  assertEquals(r.typefaces.map((t) => [t.name, t.role]), [["Roboto", "display"], ["Noto Sans", "body"]]);
+});
+
 Deno.test("a face as Next.js names it is the face it loads, and its fallback copy is no face at all", () => {
   assertEquals(nextFont("__Open_Sans_227a9f"), "Open Sans");
   assertEquals(nextFont("__Inter_Fallback_e8ce0c"), "");

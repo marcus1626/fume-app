@@ -64,6 +64,14 @@ select public.approve_brand_dna(test.id('client'));
 select test.ok((select count(*) filter (where state = 'superseded') = 1 and count(*) filter (where state = 'approved') = 1
   from public.brand_dna_versions where workspace_id = test.id('client')), 'approving it again replaces the old version');
 
+select test.act('nora@brygga.test');
+select public.save_brand_scan(test.id('client'), 'https://halm.test', jsonb_build_object(
+  'colours', jsonb_build_array(jsonb_build_object('name', 'Sand', 'hex', '#D8C3A5', 'role', 'support', 'usage', 'Panels'))));
+select test.ok((select bool_or(x ->> 'name' = 'Linen') and bool_or(x ->> 'name' = 'Sand')
+  from public.brand_dna_versions, jsonb_array_elements(identity -> 'colours') x
+  where workspace_id = test.id('client') and state = 'draft'),
+  'reading an approved brand again keeps what the approved Brand DNA holds, answered one by one or not');
+
 select test.act('user+solv@fumecreatives.com');
 select test.refuses($$ select public.save_brand_scan(test.id('client'), 'x', '{}') $$, 'not_found', 'another brand cannot read this one in');
 select test.ok(not exists (select 1 from public.brand_scans where workspace_id = test.id('client')), 'nor see its readings');
