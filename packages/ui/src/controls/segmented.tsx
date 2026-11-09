@@ -9,6 +9,7 @@ import {
   forwardRef,
   useCallback,
   useContext,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -91,6 +92,14 @@ export const SegmentedOption = forwardRef<HTMLButtonElement, SegmentedOptionProp
   const seg = useContext(SegmentedContext);
   if (!seg) throw new Error("SegmentedOption must be inside a SegmentedControl");
   const selected = seg.value === value;
+  // A count that changes while the page is open (a creative back from the Engine) comes into focus, so the change is
+  // seen; the first count does not move.
+  const last = useRef<ReactNode>(undefined);
+  const [arrived, setArrived] = useState(false);
+  useLayoutEffect(() => {
+    if (last.current !== undefined && count !== undefined && last.current !== count) setArrived(true);
+    last.current = count;
+  }, [count]);
   return (
     <button
       ref={ref}
@@ -110,7 +119,13 @@ export const SegmentedOption = forwardRef<HTMLButtonElement, SegmentedOptionProp
       {count !== undefined ? (
         <>
           {" "}
-          <span className="ui-seg-count">{count}</span>
+          <span
+            key={typeof count === "number" || typeof count === "string" ? count : undefined}
+            className="ui-seg-count"
+            data-arrived={arrived ? "" : undefined}
+          >
+            {count}
+          </span>
         </>
       ) : null}
     </button>
