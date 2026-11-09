@@ -126,7 +126,7 @@ export async function handle(req: Request, deps: Deps): Promise<Response> {
     book: r.book!,
     words: r.words!,
     prefer: r.prefer ?? {},
-    keepClear: (r.keepClear ?? []).filter(isBox).slice(0, 8),
+    keepClear: (r.keepClear ?? []).filter(isBox).slice(0, 12),
     ...(logo ? { logo } : {}),
     ...(fonts.length ? { fonts } : {}),
   });

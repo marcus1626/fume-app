@@ -194,7 +194,7 @@ Deno.test("the brand's layouts from its own ads are offered before its shop's", 
 
 Deno.test("a fixed picture keeps the layout its earlier design chose; a designer's ask gets a fresh look", async () => {
   const branded = { ...take, book: { ...take.book, body: { ...take.book.body, onPictures: { layouts: [{ name: "Green stack", band: "middle", align: "left", ground: "photo", words: "brand_colour", cta: "box" }] } } } };
-  const earlier = { keepClear: [], band: "middle" as const, align: "left" as const, colour: "accent" as const, layout: "Green stack", why: "before" };
+  const earlier = { keepClear: [], people: [], band: "middle" as const, align: "left" as const, colour: "accent" as const, layout: "Green stack", why: "before" };
   let looked = 0;
   const a = deps({ before: () => Promise.resolve(earlier), choose: () => (looked++, Promise.resolve(null)) });
   await designLayer(branded, a.d);
@@ -207,6 +207,21 @@ Deno.test("a fixed picture keeps the layout its earlier design chose; a designer
   const none = deps({ before: () => Promise.resolve(null) });
   await designLayer(branded, none.d);
   assertEquals((none.calls.lay[0] as { prefer: { band?: string } }).prefer.band, "top", "a first design looks afresh");
+});
+
+Deno.test("a choice from before people were marked whole is not kept", async () => {
+  const branded = { ...take, book: { ...take.book, body: { ...take.book.body, onPictures: { layouts: [{ name: "Green stack", band: "middle", align: "left", ground: "photo", words: "brand_colour", cta: "box" }] } } } };
+  const faceOnly = { keepClear: [{ what: "the player's face", x: 0.2, y: 0.33, w: 0.1, h: 0.1 }], band: "middle" as const, align: "left" as const, colour: "accent" as const, layout: "Green stack", why: "before" };
+  let looked = 0;
+  const a = deps({ before: () => Promise.resolve(faceOnly), choose: () => (looked++, Promise.resolve(null)) });
+  await designLayer(branded, a.d);
+  assertEquals(looked, 1, "the model looks again and marks the whole figure");
+});
+
+Deno.test("each person's whole figure is kept clear with the product", () => {
+  const boxes = keepClearOf({ keepClear: [{ what: "hoop", x: 0.5, y: 0, w: 0.4, h: 0.8 }], people: [{ x: 0.1, y: 0.2, w: 0.2, h: 0.7 }], band: "top", align: "left", colour: "text", layout: "", why: "" }, "feed");
+  assertEquals(boxes.map((b) => b.what), ["hoop", "a person"]);
+  assertEquals(boxes[1].h > 0.7 * 1350, true, "head to feet, not the face");
 });
 
 Deno.test("a layout from a design book the brand has since replaced is not kept", async () => {

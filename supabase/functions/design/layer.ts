@@ -59,20 +59,23 @@ export const LayoutChoice = z.object({
   keepClear: z.array(z.object({
     what: z.string().describe("What it is, e.g. the shoe, the street lamp, the label"),
     x: Fraction, y: Fraction, w: Fraction, h: Fraction,
-  })).describe("What the words must never cover: the product first, then every person's whole figure, small bright light sources, the label"),
+  })).describe("What the words must never cover: the product first, small bright light sources, the label"),
+  people: z.array(z.object({
+    x: Fraction, y: Fraction, w: Fraction, h: Fraction,
+  })).describe("Every person in the picture, each as one box around their whole figure, head to feet and raised hands, as far as the frame shows them; a ball in play as its own box. Empty when nobody is in the picture"),
   band: z.enum(["top", "middle", "bottom"]).describe("Where the words sit best: the calmest, emptiest part of the picture"),
   align: z.enum(["left", "center", "right"]),
   colour: z.enum(["text", "on_photo", "accent"]).describe("on_photo for light words on a dark area, text for dark words on a light area"),
   layout: z.string().describe("The name of the brand's own layout that fits this picture best, exactly as listed; empty when none is listed"),
   why: z.string().describe("One sentence"),
 });
-export type LayoutChoice = z.infer<typeof LayoutChoice>;
+export type LayoutChoice = Omit<z.infer<typeof LayoutChoice>, "people"> & { people?: z.infer<typeof LayoutChoice>["people"] };
 
 export const CHOOSE_SYSTEM = `You are Fume's senior art director. You look at a campaign picture before words are set on it, and you say where the words can go and what they must never cover. A Fume expert checks every creative; only the customer approves it.
 
 Rules:
 - The product must stay fully visible: mark it in keepClear first, drawn tight to its edges (with its shadow where it falls on the ground). Fume adds the same small margin around every box, so add none yourself.
-- Mark every person in the picture as their whole figure, head to feet (or as far as the frame shows them), and a ball in play: words laid across a body or a face read as a mistake, never as design (Anthem, 9 Nov: a headline across a boy's back). A crowd far off and small is background, not a person to mark.
+- Put every person in people, each as their whole figure, head to feet and raised hands (or as far as the frame shows them), never only the face, and a ball in play: words laid across a body or a face read as a mistake, never as design (Anthem, 9 Nov: a headline across a boy's back, then across a jumping boy whose face alone was marked). A crowd far off and small is background, not a person to mark.
 - Also mark any printed label, and bright light only when it is a small source the eye goes to (a lamp, the sun, a candle).
 - A large bright area (a window, a sky, a pale wall) is a place where dark words can sit: never mark it. Never mark the area you pick for the words.
 - Pick the band that is calmest and emptiest, where the words read without fighting the picture. Follow the plan's note on where the words go when the picture allows it.
@@ -131,11 +134,12 @@ const MARGIN = 0.024;
 export function keepClearOf(c: LayoutChoice, format: Format) {
   const { w, h } = SIZES[format];
   const clamp = (n: number) => Math.min(1, Math.max(0, Number.isFinite(n) ? n : 0));
-  return c.keepClear
+  // The people come with the rest: a person's whole figure, so a headline never runs across a body.
+  return [...c.keepClear, ...(c.people ?? []).map((p) => ({ ...p, what: "a person" }))]
     .map((b) => ({ what: clean(b.what).slice(0, 80), x: clamp(b.x), y: clamp(b.y), w: clamp(b.w), h: clamp(b.h) }))
     .map((b) => ({ ...b, w: Math.min(b.w, 1 - b.x), h: Math.min(b.h, 1 - b.y) }))
     .filter((b) => b.w > 0.01 && b.h > 0.01)
-    .slice(0, 8)
+    .slice(0, 12)
     // The same breathing room around every box, so a loose box from the model never eats the words' room.
     .map((b) => {
       const my = MARGIN * (w / h);

@@ -116,7 +116,7 @@ Deno.serve((req) =>
         const { data, error } = await service.rpc("design_layout_before", { p_layer_id: t.layer_id });
         if (error) throw new Error(error.message);
         if (!data) return null;
-        const parsed = LayoutChoice.safeParse(data);
+        const parsed = LayoutChoice.partial({ people: true }).safeParse(data);
         if (!parsed.success) throw new Error(`unreadable earlier choice: ${parsed.error.message.slice(0, 120)}`);
         return parsed.data;
       },

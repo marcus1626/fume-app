@@ -74,6 +74,11 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
           choice = null;
           keptWhy = "the design book no longer has the earlier layout";
         }
+        // A choice made before people were marked as whole figures marked only faces (Anthem v12, 9 Nov): look again.
+        if (choice && !choice.people) {
+          choice = null;
+          keptWhy = "the earlier design did not mark the people";
+        }
         kept = Boolean(choice);
         if (!choice && !keptWhy) keptWhy = "no earlier design";
       } catch (e) {

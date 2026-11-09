@@ -1778,7 +1778,7 @@ async function handle(req, deps) {
     book: r2.book,
     words: r2.words,
     prefer: r2.prefer ?? {},
-    keepClear: (r2.keepClear ?? []).filter(isBox).slice(0, 8),
+    keepClear: (r2.keepClear ?? []).filter(isBox).slice(0, 12),
     ...logo ? { logo } : {},
     ...fonts.length ? { fonts } : {}
   });
