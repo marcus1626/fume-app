@@ -18,39 +18,26 @@ test("Anna checks a creative in the studio's Check", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 2, name: "Night Body Oil · Square 2" })).toBeVisible();
 });
 
-test("Anna sees what Fume's word check found in a plan, and changes the line it flags", async ({ page }) => {
-  await page.goto("/studio/b/w-lysne/campaigns/c-bf/plan?as=anna");
-  const words = page.getByRole("region", { name: "The words, checked" });
-  await expect(words).toContainText("6 lines read · 1 claim nothing backs · 1 off the voice · 1 word the voice avoids");
-  await expect(words).toContainText("Written in the Tone of Voice, version 1 (approved).");
-  const foot = page.locator(".ui-page-footer");
-  await expect(foot).toContainText("1 claim nothing backs is still in the plan.");
+test("Anna fixes the shot the Engine flagged in a video", async ({ page }) => {
+  await page.goto("/studio/doc/doc-night-ritual?as=anna");
+  await expect(page.getByRole("heading", { level: 1, name: "Night ritual · Reels 9:16" })).toBeVisible();
+  const checks = page.getByRole("list", { name: "The Engine’s checks" });
+  await expect(checks).toContainText("Shot 3: Oil runs out of the bottle’s base while the cap is on");
 
-  // The finding glides to its master, where the note says what is wrong
-  await words.getByRole("link", { name: /^Master 2 A claim nothing backs/ }).click();
-  const master = page.locator("#plan-words-pd-c-bf-a-pc-c-bf-a-m2");
-  await expect(master).toBeFocused();
-  await expect(master).toContainText("No verified fact says this: “roligere søvn”. A health claim needs one.");
+  // The flag on the ruler jumps to the shot; the clean take replaces it and the check clears
+  await page.getByRole("button", { name: /^Shot 3: Oil runs out/ }).click();
+  await expect(page.getByRole("heading", { level: 2, name: "Shot 3 · The bottle in the hand" })).toBeVisible();
+  await page.getByRole("button", { name: "Use take 2 from 1.4 s" }).click();
+  await page.getByRole("button", { name: "Back to the edit" }).click();
+  await expect(checks).not.toContainText("Oil runs out");
+  await expect(page.getByRole("button", { name: /^Shot 3: Oil runs out/ })).toHaveCount(0);
 
-  // She changes the words; the note stays, muted, and the foot no longer counts it
-  await master.getByRole("button", { name: "Change Master 2" }).click();
-  await master.getByLabel("The words on it").fill("Til timen før du sovner.");
-  await master.getByRole("button", { name: "Save" }).click();
-  await expect(master).toContainText("You changed this line after the check.");
-  await expect(foot).not.toContainText("claim nothing backs");
-});
-
-test("Anna checks Fume's new Tone of Voice before Maja reads it", async ({ page }) => {
-  await page.goto("/studio/b/w-lysne/brand/voice?as=anna");
-  await expect(page.getByRole("heading", { level: 1, name: "Tone of Voice" })).toBeVisible();
-  // The header says which version and where it stands
-  await expect(page.getByText("Draft · waits on your check", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText("Version 1 stays in use until Maja approves this one")).toBeVisible();
-
-  await page.getByRole("button", { name: "Mark checked" }).click();
-  await expect(page.getByText("Tone of Voice, version 2 checked")).toBeVisible();
-  await expect(page.getByText("Checked by you · waits on Maja", { exact: true }).first()).toBeVisible();
-  await expect(page.getByRole("button", { name: "Mark checked" })).toHaveCount(0);
+  // The Engine bar shows a cut before it is kept
+  await page.getByLabel("Tell the Engine what to change").fill("Cut it to 6 s on the beat");
+  await page.getByRole("button", { name: "Send", exact: true }).click();
+  await expect(page.getByText("The edit from 15.0 s to 6.0 s; every shot gives up the same share")).toBeVisible();
+  await page.getByRole("button", { name: "Keep" }).click();
+  await expect(page.getByText(/\/ 0:06\.0$/)).toBeVisible();
 });
 
 test("Anna sees why a version didn't render, and the prompt behind it", async ({ page }) => {
@@ -135,6 +122,41 @@ test("Anna teaches the Engine with yes or no on its pictures", async ({ page }) 
   await page.getByRole("button", { name: "The light" }).click();
   await page.getByRole("button", { name: "Done" }).click();
   await expect(page.getByRole("button", { name: "Teach the Engine · 5" })).toBeVisible();
+});
+
+test("Anna sees what Fume's word check found in a plan, and changes the line it flags", async ({ page }) => {
+  await page.goto("/studio/b/w-lysne/campaigns/c-bf/plan?as=anna");
+  const words = page.getByRole("region", { name: "The words, checked" });
+  await expect(words).toContainText("6 lines read · 1 claim nothing backs · 1 off the voice · 1 word the voice avoids");
+  await expect(words).toContainText("Written in the Tone of Voice, version 1 (approved).");
+  const foot = page.locator(".ui-page-footer");
+  await expect(foot).toContainText("1 claim nothing backs is still in the plan.");
+
+  // The finding glides to its master, where the note says what is wrong
+  await words.getByRole("link", { name: /^Master 2 A claim nothing backs/ }).click();
+  const master = page.locator("#plan-words-pd-c-bf-a-pc-c-bf-a-m2");
+  await expect(master).toBeFocused();
+  await expect(master).toContainText("No verified fact says this: “roligere søvn”. A health claim needs one.");
+
+  // She changes the words; the note stays, muted, and the foot no longer counts it
+  await master.getByRole("button", { name: "Change Master 2" }).click();
+  await master.getByLabel("The words on it").fill("Til timen før du sovner.");
+  await master.getByRole("button", { name: "Save" }).click();
+  await expect(master).toContainText("You changed this line after the check.");
+  await expect(foot).not.toContainText("claim nothing backs");
+});
+
+test("Anna checks Fume's new Tone of Voice before Maja reads it", async ({ page }) => {
+  await page.goto("/studio/b/w-lysne/brand/voice?as=anna");
+  await expect(page.getByRole("heading", { level: 1, name: "Tone of Voice" })).toBeVisible();
+  // The header says which version and where it stands
+  await expect(page.getByText("Draft · waits on your check", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Version 1 stays in use until Maja approves this one")).toBeVisible();
+
+  await page.getByRole("button", { name: "Mark checked" }).click();
+  await expect(page.getByText("Tone of Voice, version 2 checked")).toBeVisible();
+  await expect(page.getByText("Checked by you · waits on Maja", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: "Mark checked" })).toHaveCount(0);
 });
 
 test("Anna asks Fume for the graphic design on a picture, and reads what came back", async ({ page }) => {
