@@ -138,7 +138,7 @@ async function designOn(asked: Ask, until = Infinity): Promise<Designed> {
   // work never uses them all up (Anthem, 9 Nov: the photo used every try and the brand's navy block got none).
   const perBand = new Map<string, number>();
   for (const l of layoutsFor(book, format, ask.prefer ?? {}, Boolean(words.cta))) {
-    const share = `${l.band}|${l.ground}`;
+    const share = `${l.band}|${l.ground}|${l.cta}|${l.ctaSide ?? ""}`;
     if ((perBand.get(share) ?? 0) >= 36) continue;
     if (best && Date.now() > until) break;
     perBand.set(share, (perBand.get(share) ?? 0) + 1);
@@ -320,6 +320,12 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
   // A brand that sets its button apart from the words, in a bottom corner (Anthem's SHOP NOW), gets it there.
   const ctaSide: Layout["align"] | undefined = sig?.ctaAt === "bottom_right" ? "right" : sig?.ctaAt === "bottom_left" ? "left" : undefined;
   const cta = hasCta && !noCta ? (prefer.cta === "none" ? "none" : ctaSide ? "bottom" : (prefer.cta ?? "with_words")) : "none";
+  // The brand's corner first. Where the picture puts a figure or the product's foot there, the button goes with the
+  // words, then to the other bottom corner, as a designer moves it rather than set it over a player's shoes (Anthem
+  // v9, 9 Nov: SHOP NOW on feet and a hoop's base in three of six).
+  const places: { cta: Layout["cta"]; ctaSide?: Layout["align"] }[] = cta === "bottom" && ctaSide
+    ? [{ cta, ctaSide }, { cta: "with_words" }, { cta, ctaSide: ctaSide === "right" ? "left" : "right" }]
+    : [{ cta }];
   // A long line from the plan may step down to the book's body size before the words move.
   const sublines = uniq(["subline", "body"].filter((n) => styleOf(book, n)));
   if (!sublines.length) sublines.push("subline");
@@ -327,27 +333,29 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
   // other places. A big headline stacks in a narrower column before it steps down a size, as a designer sets it
   // beside the product (Anthem, 9 Nov: "teksten er litt lite"); the words move last.
   for (const band of bands) {
-    for (const ground of grounds) {
-      if (ground === "gradient" && band === "middle") continue;
-      for (const align of aligns) {
-        for (const headline of steps.slice(0, 3)) {
-          for (const columns of widths) {
-            for (const subline of sublines) {
-              for (const colour of ground === "flat" ? ["text"] : ground === "block" ? ["on_primary"] : colours) {
-                const own = ground === "block" && blockSig && blockSig !== sig ? blockSig : null;
-                const hex = own ? own.groundHex : groundHex;
-                yield {
-                  band, align, headline, colour, ground, cta, columns,
-                  ...(subline === "subline" ? {} : { subline }),
-                  ...(ctaLook ? { ctaLook } : {}),
-                  ...(ctaFill ? { ctaFill } : {}),
-                  ...(ctaSide && cta === "bottom" ? { ctaSide } : {}),
-                  ...(hex && (ground === "block" || ground === "flat") ? { groundHex: hex } : {}),
-                  ...(own ? { signature: own.name } : sig ? { signature: sig.name } : {}),
-                  ...(own
-                    ? own.box && own.box.y > 0 && band === own.band ? { at: own.box.y } : {}
-                    : sigAt !== undefined && band === sig?.band ? { at: sigAt } : {}),
-                };
+    for (const place of places) {
+      for (const ground of grounds) {
+        if (ground === "gradient" && band === "middle") continue;
+        for (const align of aligns) {
+          for (const headline of steps.slice(0, 3)) {
+            for (const columns of widths) {
+              for (const subline of sublines) {
+                for (const colour of ground === "flat" ? ["text"] : ground === "block" ? ["on_primary"] : colours) {
+                  const own = ground === "block" && blockSig && blockSig !== sig ? blockSig : null;
+                  const hex = own ? own.groundHex : groundHex;
+                  yield {
+                    band, align, headline, colour, ground, cta: place.cta, columns,
+                    ...(subline === "subline" ? {} : { subline }),
+                    ...(ctaLook ? { ctaLook } : {}),
+                    ...(ctaFill ? { ctaFill } : {}),
+                    ...(place.ctaSide && place.cta === "bottom" ? { ctaSide: place.ctaSide } : {}),
+                    ...(hex && (ground === "block" || ground === "flat") ? { groundHex: hex } : {}),
+                    ...(own ? { signature: own.name } : sig ? { signature: sig.name } : {}),
+                    ...(own
+                      ? own.box && own.box.y > 0 && band === own.band ? { at: own.box.y } : {}
+                      : sigAt !== undefined && band === sig?.band ? { at: sigAt } : {}),
+                  };
+                }
               }
             }
           }

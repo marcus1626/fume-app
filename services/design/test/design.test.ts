@@ -264,6 +264,17 @@ test("a button the brand sets apart sits in its own corner at the bottom, beside
   assert.ok(!c.jsx.slice(c.jsx.indexOf('<Frame name="Words"'), c.jsx.indexOf('<Frame name="Action"')).includes('name="CTA"'), "the button is not in the block of words");
 });
 
+test("where the brand's button corner is taken, the button goes with the words, then to the other corner", () => {
+  const signature = { name: "Tile", band: "bottom", align: "left", wordsWidthPct: 50, ground: "photo", words: "light", cta: "slant_double", ctaAt: "bottom_right" } as const;
+  const b = { ...book, onPictures: { ...(book.onPictures ?? {}), layouts: [signature] } } as DesignBook;
+  const seen: string[] = [];
+  for (const l of layoutsFor(b, "feed", { signature: "Tile" }, true)) {
+    const place = `${l.cta}${l.ctaSide ? `:${l.ctaSide}` : ""}`;
+    if (!seen.includes(place)) seen.push(place);
+  }
+  assert.deepEqual(seen, ["bottom:right", "with_words", "bottom:left"]);
+});
+
 test("a device Fume proposed is never set as the brand's own where the book saw the brand's work", () => {
   const seen = { name: "Tile", band: "bottom", align: "left", wordsWidthPct: 50, ground: "photo", words: "light", cta: "outline", source: "pictures" } as const;
   const proposed = { name: "Navy block", band: "bottom", align: "left", wordsWidthPct: 60, ground: "colour_block", groundHex: "#11213A", words: "light", cta: "outline", source: "fume" } as const;

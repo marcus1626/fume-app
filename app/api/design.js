@@ -869,7 +869,7 @@ async function designOn(asked, until = Infinity) {
   const attempts = [];
   const perBand = /* @__PURE__ */ new Map();
   for (const l of layoutsFor(book, format, ask.prefer ?? {}, Boolean(words.cta))) {
-    const share = `${l.band}|${l.ground}`;
+    const share = `${l.band}|${l.ground}|${l.cta}|${l.ctaSide ?? ""}`;
     if ((perBand.get(share) ?? 0) >= 36) continue;
     if (best && Date.now() > until) break;
     perBand.set(share, (perBand.get(share) ?? 0) + 1);
@@ -1017,34 +1017,37 @@ function* layoutsFor(book, format, prefer, hasCta) {
   const widths = prefer.columns ? [prefer.columns] : uniq([...sigColumns ? [sigColumns] : [], ...format === "banner" ? [6, 8] : [9, 7, 5, 12]]);
   const ctaSide = sig?.ctaAt === "bottom_right" ? "right" : sig?.ctaAt === "bottom_left" ? "left" : void 0;
   const cta = hasCta && !noCta ? prefer.cta === "none" ? "none" : ctaSide ? "bottom" : prefer.cta ?? "with_words" : "none";
+  const places = cta === "bottom" && ctaSide ? [{ cta, ctaSide }, { cta: "with_words" }, { cta, ctaSide: ctaSide === "right" ? "left" : "right" }] : [{ cta }];
   const sublines = uniq(["subline", "body"].filter((n) => styleOf(book, n)));
   if (!sublines.length) sublines.push("subline");
   for (const band of bands) {
-    for (const ground of grounds) {
-      if (ground === "gradient" && band === "middle") continue;
-      for (const align of aligns) {
-        for (const headline of steps.slice(0, 3)) {
-          for (const columns of widths) {
-            for (const subline of sublines) {
-              for (const colour of ground === "flat" ? ["text"] : ground === "block" ? ["on_primary"] : colours) {
-                const own = ground === "block" && blockSig && blockSig !== sig ? blockSig : null;
-                const hex = own ? own.groundHex : groundHex;
-                yield {
-                  band,
-                  align,
-                  headline,
-                  colour,
-                  ground,
-                  cta,
-                  columns,
-                  ...subline === "subline" ? {} : { subline },
-                  ...ctaLook ? { ctaLook } : {},
-                  ...ctaFill ? { ctaFill } : {},
-                  ...ctaSide && cta === "bottom" ? { ctaSide } : {},
-                  ...hex && (ground === "block" || ground === "flat") ? { groundHex: hex } : {},
-                  ...own ? { signature: own.name } : sig ? { signature: sig.name } : {},
-                  ...own ? own.box && own.box.y > 0 && band === own.band ? { at: own.box.y } : {} : sigAt !== void 0 && band === sig?.band ? { at: sigAt } : {}
-                };
+    for (const place2 of places) {
+      for (const ground of grounds) {
+        if (ground === "gradient" && band === "middle") continue;
+        for (const align of aligns) {
+          for (const headline of steps.slice(0, 3)) {
+            for (const columns of widths) {
+              for (const subline of sublines) {
+                for (const colour of ground === "flat" ? ["text"] : ground === "block" ? ["on_primary"] : colours) {
+                  const own = ground === "block" && blockSig && blockSig !== sig ? blockSig : null;
+                  const hex = own ? own.groundHex : groundHex;
+                  yield {
+                    band,
+                    align,
+                    headline,
+                    colour,
+                    ground,
+                    cta: place2.cta,
+                    columns,
+                    ...subline === "subline" ? {} : { subline },
+                    ...ctaLook ? { ctaLook } : {},
+                    ...ctaFill ? { ctaFill } : {},
+                    ...place2.ctaSide && place2.cta === "bottom" ? { ctaSide: place2.ctaSide } : {},
+                    ...hex && (ground === "block" || ground === "flat") ? { groundHex: hex } : {},
+                    ...own ? { signature: own.name } : sig ? { signature: sig.name } : {},
+                    ...own ? own.box && own.box.y > 0 && band === own.band ? { at: own.box.y } : {} : sigAt !== void 0 && band === sig?.band ? { at: sigAt } : {}
+                  };
+                }
               }
             }
           }
