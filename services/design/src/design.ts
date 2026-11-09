@@ -2,7 +2,7 @@
 // by name (where the words go, which headline style, which colour role); code tries the layouts in that order, measures
 // each one in the picture (contrast under every line of words, how busy it is, what it covers, whether it fits the
 // safe area), and keeps the best that passes. What did not pass is said, for the expert.
-import { type DesignBook, type Format, type Grid, type Style, brandLayouts, seesBrand, colourOf, componentOf, gridOf, headlineSteps, signatureOf, styleOf } from "./book.ts";
+import { type DesignBook, type Format, type Grid, type Style, brandLayouts, seesBrand, colourOf, componentOf, gridOf, headlineSteps, signatureOf, STEP_FLOOR, styleOf } from "./book.ts";
 import { type Band, type Composed, type FamilyFor, type Ground, type Layout, type Words, compose, shadeFill, shadeFor } from "./compose.ts";
 import { type Box, type Pixels, type Shade, contrast, luminance, overlap, rgbOf, under } from "./pixels.ts";
 import { type BrandFace, type Doc, boxOf, build, fig, capHeightOf, hasFont, pixelsOf, place, png, lineWidth, splitWords, useBrandFaces, wordWidths } from "./render.ts";
@@ -270,7 +270,11 @@ export async function balance(
 /** The layouts to try, the model's choice first, then the rest of what the book allows. */
 export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<Layout>, hasCta: boolean): Generator<Layout> {
   const comp = componentOf(book, "headline");
-  const first = prefer.headline && styleOf(book, prefer.headline) ? prefer.headline : (comp?.style ?? "h1");
+  // The book's own headline size first; a size from the model or an earlier design (a redo keeps its layout) only
+  // where it still reads as the headline (Anthem, 9 Nov: redos kept a 48px headline the book sets at 110px).
+  const own = comp?.style && styleOf(book, comp.style) ? comp.style : "h1";
+  const asked = prefer.headline ? styleOf(book, prefer.headline) : null;
+  const first = asked && asked.sizePx >= (styleOf(book, own)?.sizePx ?? 0) * STEP_FLOOR ? asked.name : own;
   const steps = headlineSteps(book, first).map((s) => s.name);
   // The brand's own way of setting words on pictures comes before Fume's defaults; the picture's calm place, from the
   // model's eye, comes before both.
@@ -547,7 +551,10 @@ export function logoPlan(book: DesignBook, g: Grid, l: Layout, logo: Logo): Logo
   const sig = signatureOf(book, l.signature);
   if (sig && sig.logo === "none") return null;
   const first = sig && CORNERS.includes(sig.logo as Where) ? (sig.logo as Where) : null;
-  const pct = sig?.logoWidthPct && sig.logoWidthPct > 0 ? Math.min(30, Math.max(4, sig.logoWidthPct)) : 12;
+  // Without the brand's own size, a wide wordmark gets a wider share than a compact mark, so its letters read at feed
+  // size (Anthem, 9 Nov: the wordmark at 12% of the width was "tiny").
+  const wide = logo.width >= logo.height * 3;
+  const pct = sig?.logoWidthPct && sig.logoWidthPct > 0 ? Math.min(30, Math.max(4, sig.logoWidthPct)) : wide ? 20 : 12;
   let w = (g.w * pct) / 100;
   let h = (w * logo.height) / logo.width;
   const most = g.h * 0.08;
@@ -720,6 +727,10 @@ export function tasteOf(t: Tried, book: DesignBook, prefer: Partial<Layout>): nu
   if (prefer.signature && t.layout.signature && t.layout.signature !== prefer.signature) s -= 1;
   if (prefer.band && t.layout.band === prefer.band) s += 1;
   if (prefer.align && t.layout.align === prefer.align) s += 0.5;
+  // The brand's own colour for words on pictures over another that also reads (Anthem, 9 Nov: navy words on the sky
+  // read, yet the brand sets white on its photographs).
+  const own = sig ? ({ light: "on_photo", dark: "text", brand_colour: "accent" } as const)[sig.words] : null;
+  if (own && (t.layout.ground === "photo" || t.layout.ground === "gradient") && t.layout.colour !== own) s -= 2;
   return Math.round(s * 100) / 100;
 }
 

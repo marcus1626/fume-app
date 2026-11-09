@@ -59,10 +59,13 @@ function styleOf(book, name) {
 function componentOf(book, name) {
   return book.components.find((c) => c.name === name) ?? null;
 }
+var STEP_FLOOR = 0.7;
 function headlineSteps(book, first) {
   const order = ["display", "h1", "h2", "subline"];
   const start2 = Math.max(0, order.indexOf(first));
-  return order.slice(start2).map((n) => styleOf(book, n)).filter((s) => s !== null);
+  const steps = order.slice(start2).map((n) => styleOf(book, n)).filter((s) => s !== null);
+  const top = steps[0]?.sizePx ?? 0;
+  return steps.filter((s, i) => i === 0 || s.sizePx >= top * STEP_FLOOR);
 }
 function radiusOf(book, name) {
   const r2 = book.radiusPx?.[name];
@@ -980,7 +983,9 @@ async function balance(ask, base, familyFor, pixels, keep, logo = null) {
 }
 function* layoutsFor(book, format, prefer, hasCta) {
   const comp = componentOf(book, "headline");
-  const first = prefer.headline && styleOf(book, prefer.headline) ? prefer.headline : comp?.style ?? "h1";
+  const own = comp?.style && styleOf(book, comp.style) ? comp.style : "h1";
+  const asked = prefer.headline ? styleOf(book, prefer.headline) : null;
+  const first = asked && asked.sizePx >= (styleOf(book, own)?.sizePx ?? 0) * STEP_FLOOR ? asked.name : own;
   const steps = headlineSteps(book, first).map((s) => s.name);
   const sig = signatureOf(book, prefer.signature, hasCta);
   const g = gridOf(book, format);
@@ -1029,8 +1034,8 @@ function* layoutsFor(book, format, prefer, hasCta) {
             for (const columns of widths) {
               for (const subline of sublines) {
                 for (const colour of ground === "flat" ? ["text"] : ground === "block" ? ["on_primary"] : colours) {
-                  const own = ground === "block" && blockSig && blockSig !== sig ? blockSig : null;
-                  const hex = own ? own.groundHex : groundHex;
+                  const own2 = ground === "block" && blockSig && blockSig !== sig ? blockSig : null;
+                  const hex = own2 ? own2.groundHex : groundHex;
                   yield {
                     band,
                     align,
@@ -1044,8 +1049,8 @@ function* layoutsFor(book, format, prefer, hasCta) {
                     ...ctaFill ? { ctaFill } : {},
                     ...place2.ctaSide && place2.cta === "bottom" ? { ctaSide: place2.ctaSide } : {},
                     ...hex && (ground === "block" || ground === "flat") ? { groundHex: hex } : {},
-                    ...own ? { signature: own.name } : sig ? { signature: sig.name } : {},
-                    ...own ? own.box && own.box.y > 0 && band === own.band ? { at: own.box.y } : {} : sigAt !== void 0 && band === sig?.band ? { at: sigAt } : {}
+                    ...own2 ? { signature: own2.name } : sig ? { signature: sig.name } : {},
+                    ...own2 ? own2.box && own2.box.y > 0 && band === own2.band ? { at: own2.box.y } : {} : sigAt !== void 0 && band === sig?.band ? { at: sigAt } : {}
                   };
                 }
               }
@@ -1205,7 +1210,8 @@ function logoPlan(book, g, l, logo) {
   const sig = signatureOf(book, l.signature);
   if (sig && sig.logo === "none") return null;
   const first = sig && CORNERS.includes(sig.logo) ? sig.logo : null;
-  const pct = sig?.logoWidthPct && sig.logoWidthPct > 0 ? Math.min(30, Math.max(4, sig.logoWidthPct)) : 12;
+  const wide = logo.width >= logo.height * 3;
+  const pct = sig?.logoWidthPct && sig.logoWidthPct > 0 ? Math.min(30, Math.max(4, sig.logoWidthPct)) : wide ? 20 : 12;
   let w = g.w * pct / 100;
   let h = w * logo.height / logo.width;
   const most = g.h * 0.08;
@@ -1328,6 +1334,8 @@ function tasteOf(t, book, prefer) {
   if (prefer.signature && t.layout.signature && t.layout.signature !== prefer.signature) s -= 1;
   if (prefer.band && t.layout.band === prefer.band) s += 1;
   if (prefer.align && t.layout.align === prefer.align) s += 0.5;
+  const own = sig ? { light: "on_photo", dark: "text", brand_colour: "accent" }[sig.words] : null;
+  if (own && (t.layout.ground === "photo" || t.layout.ground === "gradient") && t.layout.colour !== own) s -= 2;
   return Math.round(s * 100) / 100;
 }
 async function pictureAt(picture, format, scale) {

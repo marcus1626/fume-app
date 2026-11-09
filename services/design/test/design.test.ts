@@ -338,3 +338,28 @@ test("among layouts that fail, the one over the product loses to one on a poor g
   assert.ok(better(poorGround, overProduct));
   assert.ok(!better(overProduct, poorGround));
 });
+
+test("the headline never steps down to a size that reads as another level of the type", () => {
+  // Anthem, 9 Nov: a 110px headline stepped down to 48px, "all design har for liten størrelse".
+  const anthem = { ...book, styles: book.styles.map((s) => (s.name === "display" ? { ...s, sizePx: 110 } : s.name === "h1" ? { ...s, sizePx: 96 } : s.name === "h2" ? { ...s, sizePx: 48 } : s)) } as DesignBook;
+  const sizes = new Set([...layoutsFor(anthem, "feed", { headline: "display" }, true)].map((l) => l.headline));
+  assert.deepEqual([...sizes], ["display", "h1"]);
+});
+
+test("words in the brand's own colour for pictures beat another colour that also reads", () => {
+  const branded = { ...book, onPictures: { layouts: [{ name: "Hero", band: "middle", align: "left", wordsWidthPct: 40, ground: "photo", words: "light", cta: "box", headlineLines: 2 }] } } as DesignBook;
+  const tried = (colour: "on_photo" | "text"): Tried => ({
+    layout: { band: "middle", align: "left", headline: "display", colour, ground: "photo", cta: "with_words", columns: 5, signature: "Hero" },
+    ok: true, score: 8, shades: [],
+    checks: [{ check: "lines", node: "Headline", ok: true, hard: true, value: 2, need: 3, note: "" }],
+    boxes: { Headline: { x: 64, y: 64, w: 400, h: 220 } },
+  });
+  assert.ok(tasteOf(tried("on_photo"), branded, {}) > tasteOf(tried("text"), branded, {}));
+});
+
+test("a redo keeps the earlier layout's place but not a headline smaller than the book's", () => {
+  const anthem = { ...book, styles: book.styles.map((s) => (s.name === "h2" ? { ...s, sizePx: 40 } : s)), components: [...book.components.filter((c) => c.name !== "headline"), { name: "headline", style: "display", colour: "on_photo" }] } as DesignBook;
+  const first = layoutsFor(anthem, "feed", { headline: "h2", band: "top", align: "left" }, true).next().value!;
+  assert.equal(first.headline, "display");
+  assert.equal(first.band, "top");
+});

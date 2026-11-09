@@ -168,14 +168,22 @@ export function familyOf(book: DesignBook, style: Style, has: (family: string) =
   return { family: t.fallback && has(t.fallback) ? t.fallback : "Inter", fallback: true };
 }
 
-/** The headline styles from the largest down, as a layout steps down when the words do not fit. */
+/** The smallest share of the first headline style's size a step down may be: a step that halves the headline is
+ *  another level of the hierarchy, not the headline set smaller (Anthem, 9 Nov: 110px stepped to 48px, "all design
+ *  har for liten størrelse"). */
+export const STEP_FLOOR = 0.7;
+
+/** The headline styles from the largest down, as a layout steps down when the words do not fit; only the steps that
+ *  still read as the headline. */
 export function headlineSteps(book: DesignBook, first: string): Style[] {
   const order = ["display", "h1", "h2", "subline"];
   const start = Math.max(0, order.indexOf(first));
-  return order
+  const steps = order
     .slice(start)
     .map((n) => styleOf(book, n))
     .filter((s): s is Style => s !== null);
+  const top = steps[0]?.sizePx ?? 0;
+  return steps.filter((s, i) => i === 0 || s.sizePx >= top * STEP_FLOOR);
 }
 
 export function radiusOf(book: DesignBook, name: string): number {
