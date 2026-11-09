@@ -26,7 +26,7 @@ export interface Words {
 export type Band = "top" | "middle" | "bottom";
 export type Align = "left" | "center" | "right";
 export type Ground = "photo" | "gradient" | "flat" | "block";
-export type CtaLook = "pill" | "box" | "underline" | "text";
+export type CtaLook = "pill" | "box" | "outline" | "underline" | "text";
 
 /** One way to lay the words out. */
 export interface Layout {
@@ -147,8 +147,17 @@ export function compose(
         s.trackingEm * s.sizePx,
       )}} color=${q(wordsHex)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} />${rule}</Frame>`;
     }
-    colours.CTA = fg;
     const py = Math.max(Math.round(pad * 0.6), Math.ceil((56 - line) / 2));
+    if (look === "outline") {
+      // A thin border in the words' own colour and no fill, as the brand's own tiles set it (Anthem's SHOP NOW box).
+      colours.CTA = wordsHex;
+      return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(pad * 1.5)}} py={${py}} rounded={${radiusOf(book, "small")}} stroke=${q(
+        wordsHex,
+      )} strokeWidth={${Math.max(2, Math.round(s.sizePx / 12))}} strokeAlign="INSIDE"><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
+        s.trackingEm * s.sizePx,
+      )}} color=${q(wordsHex)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} /></Frame>`;
+    }
+    colours.CTA = fg;
     return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(pad * 1.5)}} py={${py}} rounded={${radiusOf(
       book,
       look === "box" ? "small" : (c?.radius ?? "pill"),

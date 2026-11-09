@@ -185,7 +185,7 @@ export const DesignAnswer = z.object({
   styles: z.array(z.object({
     name: StyleName,
     font: TypeRole,
-    sizePx: z.number().describe("At a frame 1080 pixels wide"),
+    sizePx: z.number().describe("At a frame 1080 pixels wide. A feed ad must stop a thumb: the display headline is 72 to 130 px, the call to action at least 26 px"),
     lineHeight: z.number().describe("As a multiple, e.g. 1.1"),
     trackingEm: z.number().describe("e.g. -0.01 or 0.08"),
     weight: z.number().int(),

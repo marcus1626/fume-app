@@ -113,8 +113,16 @@ function compose(book, format, words, l, family, widths = {}, logo) {
         s.trackingEm * s.sizePx
       )}} color=${q(wordsHex)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} />${rule}</Frame>`;
     }
-    colours.CTA = fg;
     const py = Math.max(Math.round(pad3 * 0.6), Math.ceil((56 - line) / 2));
+    if (look === "outline") {
+      colours.CTA = wordsHex;
+      return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(pad3 * 1.5)}} py={${py}} rounded={${radiusOf(book, "small")}} stroke=${q(
+        wordsHex
+      )} strokeWidth={${Math.max(2, Math.round(s.sizePx / 12))}} strokeAlign="INSIDE"><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
+        s.trackingEm * s.sizePx
+      )}} color=${q(wordsHex)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} /></Frame>`;
+    }
+    colours.CTA = fg;
     return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(pad3 * 1.5)}} py={${py}} rounded={${radiusOf(
       book,
       look === "box" ? "small" : c?.radius ?? "pill"

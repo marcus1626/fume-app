@@ -129,12 +129,20 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     };
     let findings: { severity: string; what: string; by: string }[] = [];
     let verdict: string | null = null;
+    let scores: { onBrand: number; craft: number | null; like: string[] } | null = null;
     try {
       const png = await d.service.read(t.store.bucket, t.store.png);
       const r = png ? await d.review(t, words, png, spent, out.layout as { cta?: string } | null) : null;
       if (r) {
         findings = r.findings.map((f) => ({ ...f, by: "fume_review" }));
         verdict = r.verdict;
+        // On brand is judged against the brand's own pages and ads: what they do that this creative does not is a
+        // finding the expert sees, major when the creative does not look like the brand made it.
+        if (r.onBrand) {
+          const weak = r.onBrand.score <= 2;
+          for (const what of r.onBrand.unlike.slice(0, 4)) findings.push({ severity: weak ? "major" : "minor", what: `Not like the brand's own work: ${what}`, by: "fume_review" });
+          scores = { onBrand: r.onBrand.score, craft: r.craft ?? null, like: r.onBrand.like.slice(0, 4) };
+        }
       }
     } catch {
       // The expert still checks it; the layer is kept without Fume's own review.
@@ -143,7 +151,7 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     const { error } = await d.service.finish(t.layer_id, {
       name: `${t.creative.title ?? "Creative"}, graphic design`,
       words,
-      choice: { ...(choice ?? {}), verdict, ...(kept ? { kept: true } : {}), ...(keptWhy ? { not_kept: keptWhy } : {}), ...(planned ? { planned: true } : {}) },
+      choice: { ...(choice ?? {}), verdict, ...(scores ? { review: scores } : {}), ...(kept ? { kept: true } : {}), ...(keptWhy ? { not_kept: keptWhy } : {}), ...(planned ? { planned: true } : {}) },
       layout: out.layout ?? null,
       checks: out.checks ?? [],
       attempts: out.attempts ?? [],

@@ -7,7 +7,7 @@ import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { betaZodOutputFormat } from "npm:@anthropic-ai/sdk@1.3.0/helpers/beta/zod";
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
 import { handleDesign } from "./handler.ts";
-import { CHOOSE_SYSTEM, choosePrompt, costOf, LayoutChoice, MODEL, Review, REVIEW_SYSTEM, reviewPrompt, type Take } from "./layer.ts";
+import { CHOOSE_SYSTEM, choosePrompt, costOf, LayoutChoice, MODEL, Review, REVIEW_MODEL, REVIEW_SYSTEM, reviewCostOf, reviewPrompt, type Take } from "./layer.ts";
 
 const url = Deno.env.get("SUPABASE_URL")!;
 const keyOf = (json: string, legacy: string) =>
@@ -37,22 +37,35 @@ async function download(bucket: string, path: string): Promise<Uint8Array | null
   return error || !data ? null : new Uint8Array(await data.arrayBuffer());
 }
 
-async function look<T>(system: string, text: string, bytes: Uint8Array, schema: Parameters<typeof betaZodOutputFormat>[0], spent: { usd: number }) {
+async function look<T>(
+  system: string,
+  text: string,
+  bytes: Uint8Array,
+  schema: Parameters<typeof betaZodOutputFormat>[0],
+  spent: { usd: number },
+  opts: { refs?: Uint8Array[]; careful?: boolean } = {},
+) {
+  const image = (b: Uint8Array) => ({ type: "image" as const, source: { type: "base64" as const, media_type: typeOf(b) as "image/png", data: base64(b) } });
   const message = await claude.beta.messages.parse({
-    model: MODEL,
+    model: opts.careful ? REVIEW_MODEL : MODEL,
     max_tokens: 4_000,
     system,
     messages: [{
       role: "user",
-      content: [
-        { type: "image", source: { type: "base64", media_type: typeOf(bytes) as "image/png", data: base64(bytes) } },
-        { type: "text", text },
-      ],
+      content: [...(opts.refs ?? []).map(image), image(bytes), { type: "text", text }],
     }],
     output_config: { format: betaZodOutputFormat(schema) },
   });
-  spent.usd += costOf(message.usage);
+  spent.usd += opts.careful ? reviewCostOf(message.usage) : costOf(message.usage);
   return (message.parsed_output ?? null) as T | null;
+}
+
+/** The brand's own website as the design book read it (brand-book: <book>-desktop.jpg and -mobile.jpg), the measure
+ *  of on brand for the review. Read from the brand's own folder only. */
+async function brandRefs(t: Take): Promise<Uint8Array[]> {
+  const views = ["desktop", "mobile"];
+  const read = await Promise.all(views.map((v) => download("workspace-files", `${t.workspace_id}/brand/shots/${t.book.id}-${v}.jpg`).catch(() => null)));
+  return read.filter((b): b is Uint8Array => Boolean(b && b.length > 1000));
 }
 
 Deno.serve((req) =>
@@ -107,7 +120,10 @@ Deno.serve((req) =>
         if (!parsed.success) throw new Error(`unreadable earlier choice: ${parsed.error.message.slice(0, 120)}`);
         return parsed.data;
       },
-      review: (t, words, png, spent, set) => look<Review>(REVIEW_SYSTEM, reviewPrompt(t, words, set), png, Review, spent),
+      review: async (t, words, png, spent, set) => {
+        const refs = await brandRefs(t);
+        return look<Review>(REVIEW_SYSTEM, reviewPrompt(t, words, set, refs.length), png, Review, spent, { refs, careful: true });
+      },
       lay: async (request) => {
         const res = await fetch(designUrl, {
           method: "POST",

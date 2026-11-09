@@ -210,3 +210,11 @@ test("a long call to action stays on one line inside its button", async () => {
   const fitted = lineWidth(await build(cf.jsx, pic), "CTA words")!;
   assert.ok(fitted.width <= fitted.box + 2, `set smaller, the words fit on one line (${fitted.width} in ${fitted.box})`);
 });
+
+test("an outlined call to action is a thin border in the words' colour, with no fill", () => {
+  const c = compose(book, "feed", { headline: "Game on", cta: "Shop now" }, { band: "top", align: "left", headline: "h1", colour: "on_photo", ground: "photo", cta: "with_words", columns: 6, ctaLook: "outline" }, () => "Inter");
+  const frame = c.jsx.slice(c.jsx.indexOf('<Frame name="CTA"'), c.jsx.indexOf('<Text name="CTA words"'));
+  assert.match(frame, /stroke="#FFFFFF"/);
+  assert.doesNotMatch(frame, /\bbg=/);
+  assert.equal(c.colours.CTA, "#FFFFFF");
+});

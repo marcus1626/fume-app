@@ -29,7 +29,7 @@ export const CreativesAnswer = z.object({
     condensed: z.boolean(),
     trackingEm: z.number().describe("e.g. -0.02 tight, 0 normal, 0.06 open"),
     lineHeight: z.number().describe("As a multiple, e.g. 0.9 tight stacks, 1.1 normal"),
-    sizePctOfWidth: z.number().describe("The headline's font size as a share of the creative's width, in per cent, e.g. 12 for very big, 6 for modest"),
+    sizePctOfWidth: z.number().describe("The headline's font size as a share of the width of the picture it sits on, in per cent, e.g. 12 for very big, 6 for modest. On a website, measure against the promo tile or banner the words sit on, never the whole page"),
     source: Source,
   }),
   body: z.object({
@@ -53,7 +53,7 @@ export const CreativesAnswer = z.object({
     ground: z.enum(["photo", "gradient", "flat", "colour_block"]).describe("Words straight on the photo, on a shade, on a flat panel, or on a block of brand colour"),
     words: z.enum(["light", "dark", "brand_colour"]),
     groundHex: z.string().describe("The colour of the block or panel the words stand on, as #RRGGBB read from the pictures; empty when they stand on the photo or a shade"),
-    cta: z.enum(["pill", "box", "underline", "text", "none"]).describe("How the call to action looks, or none when the brand's creatives carry no call to action"),
+    cta: z.enum(["pill", "box", "outline", "underline", "text", "none"]).describe("How the call to action looks: a filled pill or box, an outline (a thin border in the words' colour with no fill), underlined words, words alone, or none when the brand's creatives carry no call to action"),
     ctaFill: z.enum(["light", "dark", "brand_colour", "none"]).describe("The button's own colour: light (e.g. a white pill with dark words), dark, the brand's colour, or none for words alone"),
     logo: Where,
     logoWidthPct: z.number().describe("The logo's width as a share of the creative's width, in per cent; 0 when there is none"),
