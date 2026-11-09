@@ -75,6 +75,11 @@ Deno.test("the former price goes on the price line, where the design sets it und
     "a former price without a price is not set");
 });
 
+Deno.test("a call to action the plan wrote as none is not set", () => {
+  const copy = [{ key: "headline", value: "Home Court Starts Here" }, { key: "cta", label: "Call to action", value: "None on the picture" }];
+  assertEquals(wordsOf({ ...take, copy })!.cta, undefined);
+});
+
 Deno.test("what must stay clear becomes boxes in the format's pixels, with a margin, cut to the frame", () => {
   const boxes = keepClearOf({ keepClear: [{ what: "shoe", x: 0.5, y: 0.5, w: 0.9, h: 0.2 }, { what: "speck", x: 0, y: 0, w: 0.001, h: 0.5 }], band: "top", align: "left", colour: "text", layout: "", why: "" }, "feed");
   // About 26 px of breathing room on every side, cut to the frame on the right.

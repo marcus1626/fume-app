@@ -38,7 +38,9 @@ export function wordsOf(t: Take): Words | null {
   const headline = pick(t.copy, /headline|overskrift/i);
   if (!headline) return null;
   const subline = pick(t.copy, /support|subline|sub_?head|body|undertekst|st(ø|_)tte/i);
-  const cta = pick(t.copy, /call_?to_?action|\bcta\b|knapp|handlingsoppfordring/i);
+  // A plan that leaves the button off says so in words ("None on the picture"): that is no call to action to set.
+  const asked = pick(t.copy, /call_?to_?action|\bcta\b|knapp|handlingsoppfordring/i);
+  const cta = /^(none|no (button|cta|call to action)|n\/a|ingen)\b/i.test(asked) ? "" : asked;
   // A price is in the copy only when the plan wrote it from a verified fact (fume-plan's copy check). The former price
   // is its own line in the plan ("Former price: TIDLIGERE 399,-"); the design sets it under the price, as "Was".
   const former = /former|f(ø|o)rpris|tidligere|was_?price|ordin(æ|ae)r/i;
