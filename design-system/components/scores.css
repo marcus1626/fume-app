@@ -55,4 +55,4 @@
 .ui-score-warn { display: inline-flex; align-items: center; gap: var(--ui-space-sm); max-width: 100%; padding: var(--ui-space-xs) var(--ui-space-xs) var(--ui-space-xs) var(--ui-space-md); border-radius: var(--ui-radius-action); color: var(--ui-glass-fg); font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.4; }
 .ui-score-warn > svg { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); }
 .ui-score-warn-title { font-weight: var(--ui-type-weight-medium); white-space: nowrap; }
-.ui-score-warn-nums { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; color: var(--ui-glass-fg-secondary); }
+.ui-score-warn-nums { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; color: var(--ui-glass-fg-secondary); }

@@ -888,7 +888,18 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
         variables: structuredClone(d.variables),
         specs: structuredClone(d.specs),
         cost: 0,
-        evaluation: { productTruth: "pass", brandRules: "pass", artefacts: "none", notes: [] },
+        // Round 15: a picture made by hand is scored like any other, once it is in
+        evaluation: withMeasures(
+          {
+            productTruth: "pass",
+            brandRules: "pass",
+            artefacts: "none",
+            notes: [],
+            scores: { product: 88, engine: 86 },
+          },
+          "render",
+          d.versions.length + 1,
+        ),
         instruction: `Made by hand: ${note.trim()}`,
       };
       d.versions.push(v);

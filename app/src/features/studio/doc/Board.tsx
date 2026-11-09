@@ -11,6 +11,9 @@
 // - Compare on the rail starts with the picked version and the one before; while it is on, a tap on a version in the
 //   strip adds it to the board or takes it off (up to four side by side). "Compare with the real product" puts the
 //   product's own photo (its packshot) beside the creative.
+// - Round 15 (PROPOSED 9 Nov 2026), Marcus: scores come once something is made, and they belong in the Studio. Every
+//   made version is scored by itself; "Scores" on the rail opens the shown version's board at the board's right edge,
+//   and the warning above a version under the bar opens the same board. Nothing scores a version still being made.
 import {
   Button,
   Glass,
@@ -60,8 +63,8 @@ import { placementOf, SafeZones, versionRatio } from "./formats";
 import { AddGraphicDesign, designFlags, designLine, DrawnWords, useDesignAddress, useSeesDesign } from "./graphic";
 import { CanvasLayers } from "./Layers";
 import { failedWords, usePromptAddress, useSeesPrompt } from "./prompt";
-import { scoreLine } from "./scores";
-import { isUnderBar } from "../../../domain/scores";
+import { ScoreBoard, scoreLine } from "./scores";
+import { isUnderBar, measuresOf } from "../../../domain/scores";
 import { shownVersion, tabShown, tabVersions } from "./versions";
 
 const ratio = { feed: "4 / 5", square: "1 / 1", story: "9 / 16" } as const;
@@ -182,6 +185,10 @@ export function Board({
   const failed = shown ? undefined : [...doc.versions].reverse().find((v) => v.state === "failed");
   // A picture under the bar is shown whole, with the warning above it (FLOWS §34.1)
   const warn = !comparing && !rendering && isUnderBar(shown) ? shown : undefined;
+  // The shown version's scores, once it is made (round 15): from the rail, or from the warning
+  const [scoresOn, setScoresOn] = useState(false);
+  const scored = !comparing && shown?.state === "done" && measuresOf(shown.evaluation).length > 0 ? shown : undefined;
+  const scoresOpen = scoresOn && Boolean(scored);
 
   const figure = (v: RenderVersion, label: string | undefined, withLayers: boolean) => (
     <figure className="ui-desk-figure" key={v.id}>
@@ -231,15 +238,45 @@ export function Board({
         data-zoom={zoom}
         data-compare={comparing ? "" : undefined}
         data-warn={warn ? "" : undefined}
+        data-scores={scoresOpen ? "" : undefined}
         style={comparing ? ({ "--compare-n": figures } as CSSProperties) : undefined}
         aria-label="Board"
       >
         {warn && (
           <Glass className="ui-score-warn ui-desk-score-warn" role="status">
-            <Icon name="triangle-alert" />
-            <span className="ui-score-warn-title">{`Version ${warn.number} is under ${brandName}’s bar`}</span>
-            <span className="ui-score-warn-nums">{scoreLine(warn)}</span>
+            <button
+              type="button"
+              className="ui-score-warn-open"
+              aria-expanded={scoresOpen}
+              aria-controls="desk-scores"
+              onClick={() => setScoresOn((o) => !o)}
+            >
+              <Icon name="triangle-alert" />
+              <span className="ui-score-warn-title">{`Version ${warn.number} is under ${brandName}’s bar`}</span>
+              <span className="ui-score-warn-nums">{scoreLine(warn)}</span>
+              <Icon name={scoresOpen ? "chevron-up" : "chevron-down"} />
+            </button>
           </Glass>
+        )}
+        {scoresOpen && scored && (
+          <section className="ui-desk-scores" id="desk-scores" aria-label={`Scores · version ${scored.number}`}>
+            <header className="ui-desk-scores-head">
+              <h3 className="ui-desk-scores-title">{`Scores · V${scored.number}`}</h3>
+              <Button
+                size="sm"
+                variant="quiet"
+                iconOnly
+                icon="x"
+                aria-label="Close the scores"
+                onClick={() => setScoresOn(false)}
+              />
+            </header>
+            <ScoreBoard
+              id={scored.id}
+              evaluation={scored.evaluation}
+              onWhy={seesPrompt && scored.prompt ? () => promptAt.open(scored.id) : undefined}
+            />
+          </section>
         )}
         {!readOnly && (
           <Glass className="ui-desk-rail" role="toolbar" aria-orientation="vertical" aria-label="View">
@@ -248,6 +285,13 @@ export function Board({
               icon={zoom === "full" ? "minimize-2" : "zoom-in"}
               pressed={zoom === "full"}
               onPressedChange={(on) => setZoom(on ? "full" : "fit")}
+            />
+            <RailToggle
+              label={scored ? `Scores · V${scored.number}` : "Scores come once a version is made"}
+              icon="chart-column"
+              pressed={scoresOpen}
+              disabled={!scored}
+              onPressedChange={setScoresOn}
             />
             <RailToggle
               label="Compare versions: tap them in the strip"
@@ -411,7 +455,8 @@ function RailToggle({
     | "pencil"
     | "image"
     | "file-text"
-    | "type";
+    | "type"
+    | "chart-column";
   shortcut?: string;
   pressed: boolean;
   disabled?: boolean;
@@ -783,7 +828,7 @@ export function Versions({
                   <span
                     className="ui-desk-version-flags"
                     data-clean={flags.clean ? "" : undefined}
-                    data-failed={failed || under ? "" : undefined}
+                    data-failed={failed ? "" : undefined}
                   >
                     <Icon name={failed ? "circle-x" : flags.clean ? "circle-check" : "triangle-alert"} />
                     {flags.words}

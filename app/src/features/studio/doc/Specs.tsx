@@ -54,10 +54,6 @@ import { partLine, Swatch } from "../../products/specs";
 import { useOpenFlags } from "./sendCheck";
 import { FixHistory } from "./fix";
 import { PlacementPicker, placementOf } from "./formats";
-import { usePromptAddress, useSeesPrompt } from "./prompt";
-import { ScoreBoard } from "./scores";
-import { tabShown } from "./versions";
-import { underBar } from "../../../domain/scores";
 
 /** Staff only: the image models the Engine can route to. Never shown to a customer. */
 const IMAGE_MODELS = ["Nano Banana Pro", "Seedream 4", "FLUX Kontext Pro", "Imagen 4"];
@@ -83,23 +79,8 @@ export function SpecsPanel(props: SpecsProps) {
   const sections: StudioFold[] = [];
   const placements = usePlacements().data;
   const placement = placements && mode?.output === "creative" ? placementOf(specs, placements) : undefined;
-  // The shown version's scores come first: the Engine's judgement, with the bar (FLOWS §34.1)
-  const shown = tabShown(doc);
-  const seesPrompt = useSeesPrompt();
-  const promptAt = usePromptAddress();
-  if (!isDesign && shown?.state === "done" && shown.evaluation.scores)
-    sections.push({
-      id: "Scores",
-      title: "Scores",
-      meta: `V${shown.number}${underBar(shown.evaluation).length ? " · under the bar" : ""}`,
-      children: (
-        <ScoreBoard
-          id={shown.id}
-          evaluation={shown.evaluation}
-          onWhy={seesPrompt && shown.prompt ? () => promptAt.open(shown.id) : undefined}
-        />
-      ),
-    });
+  // Round 15 (PROPOSED 9 Nov 2026), Marcus: scores come after something is made, so they are never this panel's first
+  // section; the shown version's scores open from the board ("Scores" on the rail, or the warning above the picture).
 
   sections.push({
     id: "Output",

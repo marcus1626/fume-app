@@ -47,9 +47,18 @@ test("Anna sees a version under the bar, with its scores, and the prompt behind 
   const under = page.getByRole("button", { name: /^Version 4\b.*Under the bar · Brand 58 · Product 64/ });
   await expect(under).toBeVisible();
   await under.click();
-  await expect(page.getByText("Version 4 is under LYSNE’s bar")).toBeVisible();
-  await expect(page.getByRole("meter", { name: "Brand" })).toHaveAttribute("aria-valuenow", "58");
-  await expect(page.getByRole("meter", { name: "Product" })).toHaveAttribute("aria-valuenow", "64");
+  // Scores come once a version is made (round 15): the warning opens them on the board, never the first panel
+  await expect(page.getByRole("button", { name: "Scores", exact: true })).toHaveCount(0);
+  await page.getByRole("button", { name: /Version 4 is under LYSNE’s bar/ }).click();
+  const scores = page.getByRole("region", { name: "Scores · version 4" });
+  await expect(scores.getByRole("meter", { name: "Brand" })).toHaveAttribute("aria-valuenow", "58");
+  await expect(scores.getByRole("meter", { name: "Product" })).toHaveAttribute("aria-valuenow", "64");
+  await expect(scores.getByRole("meter", { name: "Cap" })).toBeVisible();
+  await page.getByRole("button", { name: "Close the scores" }).click();
+  await expect(scores).toHaveCount(0);
+  // "Scores" on the rail opens the same board
+  await page.getByRole("button", { name: "Scores · V4" }).click();
+  await expect(scores).toBeVisible();
 
   // Its prompt went to the image model with a warning; the Engine's rules it worked against are named
   await page.getByRole("button", { name: "The Engine’s prompt and checks" }).click();

@@ -542,3 +542,22 @@ button.ui-desk-version:disabled { cursor: default; }
 @media (prefers-reduced-transparency: reduce) {
   .ui-desk-rail { background: var(--ui-glass-bg-solid); }
 }
+
+/* Round 15 (PROPOSED 9 Nov 2026): the shown version's scores open on the board, from "Scores" on the rail or from the
+   warning above a version under the bar. A light card at the board's right edge, never over the rail; the picture
+   stays whole behind it. Markup: <section class="ui-desk-scores"><header class="ui-desk-scores-head"><h3/><button/>
+   </header><div class="ui-score-board"/></section>. */
+.ui-score-warn-open { position: relative; display: inline-flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; padding: 0; border: 0; border-radius: var(--ui-radius-action); background: none; color: inherit; font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.ui-score-warn-open::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-score-warn-open > svg { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-score-warn-open:active { transform: scale(0.97); }
+.ui-score-warn-open:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-desk-scores { position: absolute; z-index: 3; inset-block-start: var(--ui-space-md); inset-inline-end: var(--ui-space-md); display: grid; gap: var(--ui-space-md); width: min(304px, calc(100% - 2 * var(--ui-space-md))); max-height: calc(100% - 2 * var(--ui-space-md)); overflow-y: auto; padding: var(--ui-inset-float); border-radius: var(--ui-radius-card); background: var(--ui-surface); box-shadow: var(--ui-depth-sheet); }
+.ui-desk-scores-head { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); margin-block: calc(var(--ui-space-xs) * -1); }
+.ui-desk-scores-title { margin: 0; font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+/* the picture makes room for the scores, so nothing floats over it; the warning centres on what is left */
+.ui-desk-canvas[data-scores] { --desk-scores: calc(min(304px, 50%) + var(--ui-space-md)); }
+.ui-desk-canvas[data-scores] .ui-desk-stage { padding-inline-end: var(--desk-scores); }
+.ui-desk-canvas[data-scores] .ui-desk-score-warn { inset-inline-end: calc(var(--desk-scores) + var(--ui-space-md)); }
+.ui-desk-canvas[data-scores] .ui-desk-scores { width: min(304px, 50%); }
+@media (prefers-reduced-motion: reduce) { .ui-score-warn-open:active { transform: none; } }
