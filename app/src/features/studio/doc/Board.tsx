@@ -61,7 +61,7 @@ import { AddGraphicDesign, designFlags, designLine, DrawnWords, useDesignAddress
 import { failedWords, usePromptAddress, useSeesPrompt } from "./prompt";
 import { scoreLine } from "./scores";
 import { isUnderBar } from "../../../domain/scores";
-import { shownVersion } from "./versions";
+import { shownVersion, tabShown, tabVersions } from "./versions";
 
 const ratio = { feed: "4 / 5", square: "1 / 1", story: "9 / 16" } as const;
 
@@ -142,8 +142,8 @@ export function Board({
 }) {
   const [zoom, setZoom] = useState<"fit" | "full">("fit");
   const [real, setReal] = useState(false);
-  const shown = shownVersion(doc);
-  const rendering = doc.versions.find((v) => v.state === "rendering");
+  const shown = tabShown(doc);
+  const rendering = tabVersions(doc).find((v) => v.state === "rendering");
   const before = shown
     ? [...doc.versions].reverse().find((v) => v.number < shown.number && v.state === "done")
     : undefined;
@@ -202,7 +202,7 @@ export function Board({
             readOnly={readOnly}
           />
         )}
-        {withLayers && isDesign && (
+        {withLayers && isDesign && !v.drawn && (
           <span className="ui-desk-layers" style={ink ? ({ "--layer-ink": ink } as CSSProperties) : undefined}>
             {layers
               .filter((l) => l.kind !== "image" && l.visible && (l.kind !== "logo" || logoOn))
@@ -681,18 +681,23 @@ export function Versions({
   readOnly,
   compare = [],
   onCompare,
+  onDesign,
 }: {
   doc: CreativeDocument;
   readOnly: boolean;
   compare?: string[];
   onCompare?: (ids: string[]) => void;
+  /** Fume started a graphic design: the Studio goes to Design, where it lands (FLOWS §34.5). */
+  onDesign?: () => void;
 }) {
   const pick = usePickVersion();
   const tokens = useDetailTokens(doc.specs.productId).data ?? [];
   const promptAt = usePromptAddress();
   const designAt = useDesignAddress();
   const strip = useRef<HTMLOListElement>(null);
-  const count = doc.versions.length;
+  const versions = tabVersions(doc);
+  const shownId = tabShown(doc)?.id;
+  const count = versions.length;
   // Newest right: keep the newest in view when one arrives.
   useEffect(() => {
     const el = strip.current;
@@ -705,7 +710,7 @@ export function Versions({
         <p className="ui-desk-versions ui-desk-versions--empty">
           No versions yet. Each render becomes a version here; nothing is ever overwritten.
         </p>
-        {!readOnly && <AddPicture doc={doc} />}
+        {!readOnly && <AddPicture doc={doc} onDesign={onDesign} />}
       </>
     );
   // While comparing, a tap adds a version to the board or takes it off; otherwise it picks.
@@ -720,10 +725,11 @@ export function Versions({
         aria-label={comparing ? "Versions: tap to compare" : "Versions"}
         data-comparing={comparing ? "" : undefined}
       >
-        {doc.versions.map((v) => {
+        {versions.map((v) => {
           const failed = v.state === "failed";
-          // A version that did not render is never the picked one, even if the address says so
-          const picked = v.id === doc.pickedVersionId && !failed;
+          // A version that did not render is never the picked one, even if the address says so; in Image, the
+          // picture under a picked design stands for it
+          const picked = (v.id === doc.pickedVersionId || v.id === shownId) && !failed;
           const designed = v.design;
           const under = !designed && isUnderBar(v);
           const flags = failed
@@ -830,13 +836,13 @@ export function Versions({
           );
         })}
       </ol>
-      {!readOnly && <AddPicture doc={doc} />}
+      {!readOnly && <AddPicture doc={doc} onDesign={onDesign} />}
     </>
   );
 }
 
 /** A picture made by hand (outside the Engine) becomes the newest version, picked, with how it was made. */
-function AddPicture({ doc }: { doc: CreativeDocument }) {
+function AddPicture({ doc, onDesign }: { doc: CreativeDocument; onDesign?: () => void }) {
   const add = useAddVersion();
   const toast = useToast();
   const input = useRef<HTMLInputElement>(null);
@@ -891,7 +897,7 @@ function AddPicture({ doc }: { doc: CreativeDocument }) {
           <Button size="sm" variant="quiet" icon="image-plus" onClick={() => input.current?.click()}>
             Add a picture made by hand
           </Button>
-          <AddGraphicDesign doc={doc} base={`${frameRoot.fume}/b/${doc.workspaceId}`} />
+          <AddGraphicDesign doc={doc} base={`${frameRoot.fume}/b/${doc.workspaceId}`} onStarted={onDesign} />
         </>
       )}
     </form>

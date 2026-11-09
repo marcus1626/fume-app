@@ -49,6 +49,7 @@ import {
 import type {
   BrandAssetsView,
   CreativeDocument,
+  RenderVersion,
   Format,
   Layer,
   ProductOverride,
@@ -64,7 +65,7 @@ import { FixHistory } from "./fix";
 import { PlacementPicker, placementOf } from "./formats";
 import { usePromptAddress, useSeesPrompt } from "./prompt";
 import { ScoreBoard } from "./scores";
-import { shownVersion } from "./versions";
+import { tabShown } from "./versions";
 import { underBar } from "../../../domain/scores";
 
 /** Staff only: the image models the Engine can route to. Never shown to a customer. */
@@ -96,7 +97,7 @@ export function SpecsPanel(props: SpecsProps) {
   const placements = usePlacements().data;
   const placement = placements && mode?.output === "creative" ? placementOf(specs, placements) : undefined;
   // The shown version's scores come first: the Engine's judgement, with the bar (FLOWS §34.1)
-  const shown = shownVersion(doc);
+  const shown = tabShown(doc);
   const seesPrompt = useSeesPrompt();
   const promptAt = usePromptAddress();
   if (!isDesign && shown?.state === "done" && shown.evaluation.scores)
@@ -157,7 +158,16 @@ export function SpecsPanel(props: SpecsProps) {
     ),
   });
 
-  if (isDesign)
+  // Fume's design (FLOWS §34.5): its words are the layers, read from the design file Fume made
+  const designed = isDesign && shown?.design?.state === "made" ? shown : undefined;
+  if (designed?.design)
+    sections.push({
+      id: "Layers",
+      title: "Layers",
+      meta: `By Fume · V${designed.number}`,
+      children: <DesignLayers version={designed} />,
+    });
+  else if (isDesign)
     sections.push({ id: "Layers", title: "Layers", meta: props.layers.length, children: <LayerList {...props} /> });
   else if (uses.has("product"))
     sections.push({
@@ -825,6 +835,33 @@ function Models({ specs, onSpecs, assets, name, approver }: SpecsProps) {
 // ─── Layers (Design) ─────────────────────────────────────────────────────────
 
 const layerIcon = { image: "image", text: "type", logo: "tag", shape: "square" } as const;
+
+/** The layers of Fume's design, top first: the words as Fume set them, then the picture under them. */
+function DesignLayers({ version }: { version: RenderVersion }) {
+  const d = version.design!;
+  const rows: { kind: Layer["kind"]; name: string; text?: string; locked?: boolean }[] = [
+    ...(d.words?.cta ? [{ kind: "text" as const, name: "Button", text: d.words.cta }] : []),
+    ...(d.words?.subline ? [{ kind: "text" as const, name: "Line", text: d.words.subline }] : []),
+    ...(d.words?.headline ? [{ kind: "text" as const, name: "Headline", text: d.words.headline }] : []),
+    { kind: "image", name: `Image v${d.fromNumber}`, locked: true },
+  ];
+  return (
+    <ul className="ui-desk-layer-list" aria-label="Layers">
+      {rows.map((l) => (
+        <li key={l.name} className="ui-desk-layer-row">
+          <span className="ui-desk-layer-pick">
+            <Icon name={layerIcon[l.kind]} />
+            <span className="ui-desk-layer-name">
+              {l.name}
+              {l.text && <span className="ui-desk-layer-text">{l.text}</span>}
+            </span>
+            {l.locked && <Icon name="lock" className="ui-desk-layer-lock" />}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 function LayerList({ layers, onLayers, selectedLayer, onSelectLayer }: SpecsProps) {
   return (

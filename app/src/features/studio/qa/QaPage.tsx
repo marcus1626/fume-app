@@ -119,8 +119,9 @@ const KINDS: { id: Kind; label: string; noun: string }[] = [
   { id: "designs", label: "Designs", noun: "designs" },
 ];
 const isKind = (k: string | null): k is Kind => k === "plans" || k === "images" || k === "designs";
-/** A creative's tab: a Design creative's, else Images (what Image renders). */
-const kindOf = (v: QaView): Exclude<Kind, "plans"> => (v.item.studio === "design" ? "designs" : "images");
+/** A creative's tab: a Design creative's or one Fume designed (round 14: a design is checked in Designs), else Images. */
+const kindOf = (v: QaView): Exclude<Kind, "plans"> =>
+  v.item.studio === "design" || v.item.design ? "designs" : "images";
 const planWaits = (r: StudioCampaignRow) => r.campaign.waits?.plan === "in_check";
 
 export function QaPage() {

@@ -4,6 +4,8 @@
 // for Fume's people only, here and in Check; an agency's people and customers never see them.
 // - The action sits under the strip, beside "Add a picture made by hand", and opens a dialog that says what Fume
 //   lays on the picture and with what: the plan's words word for word, the design system in use, the designer's ask.
+// - Fume designs in the Design studio (round 14, FLOWS §34.5): from Image, starting a design takes the Studio to
+//   Design, whose strip holds the designs; Image keeps the pictures.
 // - While Fume designs, the version is in the strip with the picture under it and "Fume is designing".
 // - The panel (?design=<version id>) is a peek, like the prompt's: what Fume's review found, what code measured, the
 //   words, the design file and Design again. A version that could not be designed opens it with why.
@@ -294,11 +296,20 @@ function Words({ words, tone }: { words: DesignWords; tone?: "glass" }) {
 // ─── Add graphic design ──────────────────────────────────────────────────────
 
 /** Under the strip: Fume lays the plan's words on the picked picture. Fume's designers only. */
-export function AddGraphicDesign({ doc, base }: { doc: CreativeDocument; base: string }) {
+export function AddGraphicDesign({
+  doc,
+  base,
+  onStarted,
+}: {
+  doc: CreativeDocument;
+  base: string;
+  /** Fume started: the Studio goes to Design, where the design lands (FLOWS §34.5). */
+  onStarted?: () => void;
+}) {
   const sees = useSeesDesign();
   const [open, setOpen] = useState(false);
   const picked = doc.versions.find((v) => v.id === doc.pickedVersionId && v.state === "done");
-  if (!sees || doc.studio !== "render") return null;
+  if (!sees || doc.studio === "video") return null;
   const under = picked?.design ? doc.versions.find((v) => v.id === picked.design!.fromVersionId) : picked;
   const designing = under && doc.versions.find((v) => v.state === "rendering" && v.design?.fromVersionId === under.id);
   return (
@@ -319,7 +330,9 @@ export function AddGraphicDesign({ doc, base }: { doc: CreativeDocument; base: s
               ? `Design again from V${under.number}`
               : `Add graphic design to V${under.number}`}
       </Button>
-      {open && picked && <DesignDialog doc={doc} version={picked} base={base} onOpenChange={setOpen} />}
+      {open && picked && (
+        <DesignDialog doc={doc} version={picked} base={base} onOpenChange={setOpen} onStarted={onStarted} />
+      )}
     </>
   );
 }
@@ -330,12 +343,14 @@ function DesignDialog({
   version,
   base,
   onOpenChange,
+  onStarted,
 }: {
   doc: CreativeDocument;
   version: RenderVersion;
   /** The brand's root in this frame, for the design system's page. */
   base: string;
   onOpenChange: (open: boolean) => void;
+  onStarted?: () => void;
 }) {
   const ask = useDesignAsk(doc.id, version.id);
   const design = useDesignVersion();
@@ -352,6 +367,7 @@ function DesignDialog({
       .then(
         (d) => {
           onOpenChange(false);
+          onStarted?.();
           const made = [...d.versions].reverse().find((v) => v.design?.fromVersionId === a.fromVersionId);
           toast.done(made ? `Fume is designing version ${made.number}` : "Fume is designing it", {
             description: `On V${n}, in the design system. V${n} stays as it is.`,

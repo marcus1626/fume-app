@@ -209,7 +209,8 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
     document.title = `${title} · Studio · Fume`;
   }, [title]);
 
-  const switchStudio = (studio: StudioKind) => {
+  /** `byFume`: Fume is about to design, so Design starts with no hand-made layers (FLOWS §34.5). */
+  const switchStudio = (studio: StudioKind, byFume = false) => {
     if (studio === doc.studio) return;
     // Into Video from a picture: "Motion from a still" makes the picked render move (FLOWS §27.1).
     const next =
@@ -223,7 +224,7 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
         change: {
           studio,
           modeId: next.id,
-          ...(studio === "design" && !doc.layers.length ? { layers: startLayers(doc) } : {}),
+          ...(studio === "design" && !doc.layers.length && !byFume ? { layers: startLayers(doc) } : {}),
         },
       },
       { onSuccess: () => history.reset() },
@@ -518,7 +519,13 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
               />
             ) : (
               <div className="ui-desk-lockable" {...lockProps(locked)}>
-                <Versions doc={doc} readOnly={readOnly} compare={compare} onCompare={setCompare} />
+                <Versions
+                  doc={doc}
+                  readOnly={readOnly}
+                  compare={compare}
+                  onCompare={setCompare}
+                  onDesign={() => switchStudio("design", true)}
+                />
               </div>
             )}
             <CanvasLight rig={state.variables.rig as LightRig | undefined} view={lightView} />

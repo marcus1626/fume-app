@@ -233,6 +233,11 @@
 .ui-desk-layer-pick:active:not(:disabled) { background: var(--ui-item-bg-pressed); }
 .ui-desk-layer-pick:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: calc(var(--ui-size-ring) * -1); }
 .ui-desk-layer-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* A layer of Fume's design (FLOWS §34.5): its name, and its words under it in secondary */
+span.ui-desk-layer-pick { cursor: default; padding-block: var(--ui-space-xs); }
+span.ui-desk-layer-pick:has(.ui-desk-layer-text) > svg { align-self: flex-start; margin-block-start: var(--ui-space-xs); }
+.ui-desk-layer-name:has(.ui-desk-layer-text) { display: grid; white-space: normal; }
+.ui-desk-layer-text { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); overflow-wrap: anywhere; }
 .ui-desk-layer-eye[data-hidden] { opacity: .4; }
 
 /* ---------- the middle: board, Engine bar, versions ---------- */

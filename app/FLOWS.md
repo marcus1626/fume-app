@@ -1288,3 +1288,16 @@ Marcus: "vet ikke helt hvor jeg skal se, mye tekst overalt." The panel reads top
 scores, what is "To decide" (each finding: what is wrong, what it should be, a quiet kind line, two small buttons),
 then what holds folded into one line ("3 checks hold"), the Brand DNA list folded, the note to the Engine, and the
 decision at the foot. Part titles are the rows' size in Ink, so they are read first; "In the picture" is gone.
+
+### 34.5 Fume designs in Design, and its design is checked in Designs
+Marcus: "litt rart at man fortsatt er på Image-fanen og ikke Design-fanen når Fume/Engine gjør designen", and "hvorfor
+sjekker man design inne på Images-siden?"
+
+- **The Studio.** "Add graphic design to V3" stays under Image's strip, and the dialog is the same; once Fume starts,
+  the Studio goes to Design (with no hand-made layers in the way). Design's strip holds what Fume designed ("V5 ·
+  Designed from V3"), Image's strip holds the pictures, and in Image a picked design shows the picture under it.
+  A creative laid out by hand, with nothing designed by Fume, shows every version in Design as before.
+- **Layers.** Design's left panel lists the design's layers, "By Fume · V5": the button, the line and the headline,
+  each with its words, then the picture under them, locked. The words are the plan's; the design file is where they
+  move.
+- **Check.** A creative Fume designed waits in Designs, not Images, beside the creatives laid out by hand.
