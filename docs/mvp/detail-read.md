@@ -55,3 +55,6 @@ reads Dressmann."), and its place on the picture is where the designer fixes it 
 - Print the product's photographs do not show (a small tag on a shoe's side) is read but not compared, so a garbled
   word there is not flagged.
 - Size against the scene (a pack too big for the hand) is not measured.
+- Letters embossed in glass (Tran's "Peter Møller" shoulder, 9 Nov): the read finds them but reads the garbled ones
+  as the right name, and the product's own photograph shows them too faint to read against. The expert's eye and a
+  brushed fix are the answer for now; setting the real packshot into the scene would settle it.
