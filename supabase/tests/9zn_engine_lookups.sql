@@ -32,6 +32,10 @@ select test.ok((select public.design_layout_before(test.id('dlnew')) ->> 'layout
       where candidate_id = (select candidate_id from public.design_layers where id = test.id('dl')) and state = 'made'
         and choice is not null order by created_at limit 1),
   'a picture designed again keeps the layout of its first design');
+-- The design that went into a creative is the one people saw: it is kept before the first.
+update public.design_layers set result_candidate_id = (select candidate_id from public.creative_versions where candidate_id is not null limit 1)
+where candidate_id = (select candidate_id from public.design_layers where id = test.id('dl')) and choice ->> 'layout' = 'First 2';
+select test.ok(public.design_layout_before(test.id('dlnew')) ->> 'layout' = 'First 2', 'the design in a creative is kept before the first');
 insert into public.design_layers (workspace_id, candidate_id, job_id, creative_id, requested_by, ask, state, choice, created_at, finished_at)
 select workspace_id, candidate_id, job_id, creative_id, requested_by, 'Words on the right', 'made', '{"layout":"Asked"}', now() - interval '5 minutes', now()
 from public.design_layers where id = test.id('dl');
