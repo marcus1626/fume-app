@@ -107,6 +107,7 @@ export function AgencyCampaignsPage() {
             return (
               <Nothing
                 icon="megaphone"
+                scene={filter ? undefined : "start"}
                 title={filter ? "No campaigns for this client yet" : "No campaigns yet"}
                 text="A campaign starts in a client’s Fume conversation, or from a brief you write."
               />

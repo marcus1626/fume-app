@@ -31,6 +31,7 @@ import type { AgencyNeed, AllBrandsView, Id, StudioCampaignRow, User, Workspace 
 import * as copy from "../../copy";
 import { due } from "../../lib/time";
 import { Nothing, Page, Query, Section } from "../../shell/Page";
+import { dayScene, osloHour } from "../../shell/scenes";
 import { firstName, initials } from "../../shell/people";
 import { brandBase, campaignHref, hrefIn, type StaffFrameKind } from "../../shell/scope";
 import { AddClientPanel, useAddClientParam } from "../agency/agency-add-client";
@@ -498,6 +499,7 @@ function Overview({ model }: { model: OverviewModel }) {
               ) : (
                 <Nothing
                   icon="circle-check"
+                  scene={dayScene(osloHour())}
                   title="Nothing needs you"
                   text="A plan to check, a creative to check or an answer shows here first."
                 />

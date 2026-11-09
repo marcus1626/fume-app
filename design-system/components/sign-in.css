@@ -1,6 +1,7 @@
 /* Sign in. PROPOSED 26 Oct 2026 (Claude, for Marcus): the one screen before Fume, for invited people only.
    Desktop: the form on Porcelain on the left, a Fume Engine light image on the right (an inset panel with the
-   card radius, labelled "Made with Fume Engine" under it). Under 900 px the image goes and the form stands alone.
+   card radius; no label since 28 Oct 2026, Marcus, as on the empty pages). Under 900 px the image goes and the form
+   stands alone.
    The form is one narrow column: title and lede, Google (primary, Ink), "or", the work email and its link
    (secondary). "Check your email" and "About you" (the first sign-in: name and title) take the same column. Problems show as an alert over the actions, or under
    the field when they are about the address. No lines: groups are separated by space.
@@ -11,7 +12,7 @@
                  alert? · <div class="ui-signin-ways"> buttons, FieldSeparator "or", form </div> </main>
                <footer class="ui-signin-foot"> one line </footer>
              </div>
-             <figure class="ui-signin-art"><div class="ui-signin-art-media"><img/></div><figcaption/></figure>
+             <div class="ui-signin-art"><div class="ui-signin-art-media"><img/></div></div>
            </div> */
 
 .ui-signin {
@@ -70,15 +71,13 @@
 .ui-signin-foot { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-tertiary); }
 
 /* The image: an inset panel, never edge to edge, so the page keeps its Porcelain frame. It sits on the same 32 px
-   inset as the lockup, and its label sits under it on Porcelain, on one line with the footer on the left (Paper
-   text over the light photograph would not reach 4.5:1). */
+   inset as the lockup, top to bottom. */
 .ui-signin-art {
-  display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: var(--ui-space-md); min-width: 0;
+  display: grid; grid-template-rows: minmax(0, 1fr); min-width: 0;
   margin: var(--ui-space-2xl); margin-inline-start: 0;
 }
 .ui-signin-art-media { position: relative; border-radius: var(--ui-radius-card); overflow: hidden; background: var(--ui-surface-sunken); }
 .ui-signin-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; }
-.ui-signin-art figcaption { font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-tertiary); }
 
 @media (max-width: 900px) {
   .ui-signin { grid-template-columns: minmax(0, 1fr); }
