@@ -1501,7 +1501,8 @@ It builds on §34.5.
 
 Marcus: "Layers should be on the right, since people are used to Figma, with more control. Look at OpenPencil for
 that." And: "'Show the logo' should not be a button, it is a layer, and we should keep control and logic." The design
-thread then chose Figma's own order: the layers on the left, what is picked set on the right. The names and the
+thread then proposed Figma's own order, and Marcus chose it on 9 Nov (DECIDED): the layers on the left, what is
+picked set on the right. The names and the
 grouping are borrowed from Figma and OpenPencil (Layers; Text, Typography, Fill, Position; the page's properties when
 nothing is picked), never their look: the panels are the desk's own.
 
