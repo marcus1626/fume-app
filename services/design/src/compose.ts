@@ -160,7 +160,7 @@ export function compose(
       colours.CTA = wordsHex;
       const stroke = Math.max(2, Math.round(s.sizePx / 14));
       const lean = Math.round(line * 0.45);
-      return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(s.sizePx * 1.3) + lean}} py={${Math.round(s.sizePx * 0.7)}}><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
+      return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(s.sizePx * 0.9) + lean}} py={${Math.round(s.sizePx * 0.6)}}><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
         s.trackingEm * s.sizePx,
       )}} color=${q(wordsHex)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} /><Rectangle name=${q(
         `Slant ${wordsHex} ${stroke} ${look === "slant_double" ? 2 : 1}`,
