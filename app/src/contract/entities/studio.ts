@@ -3,7 +3,7 @@
 // sessions of generations from a recipe (FLOWS §3.4).
 
 import type { Id, Instant } from "./common";
-import type { BrandPresetKind } from "./brand";
+import type { BrandPresetKind, DesignComponentName, DesignStyleName } from "./brand";
 import type { Format, FormatTile } from "./campaigns";
 import type { DetailFind, ProductFix, ProductOverride } from "./products";
 import type { LightAngle, Lens, LightRig, LookSource } from "./production";
@@ -82,22 +82,46 @@ export interface Specs {
   placementId?: Id;
 }
 
-/** A layer of a Design creative (and the picked render under it). */
+/** A layer of a Design creative (and the picked render under it). Round 15 (PROPOSED 9 Nov 2026): the Design studio
+ *  is laid out like Figma, so a layer also keeps what its properties panel sets, each from the brand's design system.
+ *  All of it is optional and stored as it is given; what is not set follows the design system. */
 export interface Layer {
   id: Id;
+  /** The call to action is a `text` layer whose `component` is "cta"; a shade is a `shape`. */
   kind: "image" | "text" | "logo" | "shape";
   name: string;
-  /** Position and size, 0–1 of the frame. */
+  /** Position and size, 0–1 of the frame. Words take the height their lines need; `h` is kept for older layers. */
   x: number;
   y: number;
   w: number;
   h: number;
   text?: string;
   image?: string;
-  /** For text: the role in the brand's type scale. */
+  /** For text: the role in the brand's type scale (before round 15; `textStyle` names the design system's style). */
   style?: "headline" | "body" | "small";
   visible: boolean;
+  /** Not picked or moved on the canvas; still chosen in the layers list (as in Figma). */
   locked?: boolean;
+  /** The design system's component this layer is: headline, supporting line, call to action, logo. */
+  component?: DesignComponentName;
+  /** Words: the design system's text style, and what was set over it. */
+  textStyle?: DesignStyleName;
+  /** The typeface, by its role in the design system. */
+  font?: "display" | "heading" | "body" | "label";
+  weight?: number;
+  /** In pixels at a frame 1080 wide. */
+  sizePx?: number;
+  align?: "left" | "centre" | "right";
+  /** One of the design system's colours, by its code. */
+  colour?: string;
+  /** The logo: which of the design system's logo versions ("Wordmark, reversed"). */
+  variant?: string;
+  /** The picture: filling the frame (cropped) or fitted inside it. */
+  fit?: "fill" | "fit";
+  /** A shade: the design system's scrim, from one edge. */
+  shade?: { from: "top" | "bottom"; opacity: number };
+  /** The version of Fume's design these layers belong to (FLOWS §34.5); none for a layout made by hand. */
+  belongsTo?: Id;
 }
 
 /** One render: a version in the strip at the bottom. Nothing is overwritten (FLOWS §9.2). */

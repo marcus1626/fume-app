@@ -57,8 +57,8 @@ export const useSeesDesign = useFumeTeam;
 
 // ─── The words drawn on the picture (demo only) ─────────────────────────────
 
-/** The faces of a drawing, from Google Fonts, once. */
-function useFonts(fonts: string[]) {
+/** The faces of a drawing (or of the design system, on the Design canvas), from Google Fonts, once. */
+export function useFonts(fonts: string[]) {
   const families = fonts.map((f) => `family=${encodeURIComponent(f).replace(/%20/g, "+")}:wght@400;500`).join("&");
   useEffect(() => {
     if (!families) return;

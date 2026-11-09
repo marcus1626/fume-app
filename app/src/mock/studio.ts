@@ -956,6 +956,13 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       d.state = "in_check";
       touch(d);
       const version = d.versions.find((v) => v.id === d.pickedVersionId)!;
+      // The layers that go with the version sent (round 15): the hand layers on a picture; on Fume's design, its
+      // layers once they were changed in the Design studio, which then stand for Fume's drawing.
+      const layers =
+        d.studio === "design"
+          ? structuredClone(d.layers.filter((l) => l.belongsTo === (version.design ? version.id : undefined)))
+          : undefined;
+      const drawn = version.drawn && !(version.design && layers?.length) ? structuredClone(version.drawn) : undefined;
       const item = db.qaItems.find((i) => i.documentId === d.id);
       const by = { sentBy: m.me().id, sentAt: now() };
       // Round 15 (FLOWS §35.1): Check names versions as the Studio does. A designed version's Before is the picture it
@@ -980,9 +987,9 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
           checkedAt: undefined,
           studioBy: undefined,
           studioAt: undefined,
-          layers: d.studio === "design" ? structuredClone(d.layers) : item.layers,
+          layers: layers ?? item.layers,
           design: version.design && structuredClone(version.design),
-          drawn: version.drawn && structuredClone(version.drawn),
+          drawn,
           ...(version.design ? { findings: designFindings(version.design.checks, version.id) } : {}),
           ...formatsOf(d),
         });
@@ -1008,11 +1015,11 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
           feedback: [],
           version: version.number,
           ...(designedOn ? { previous: designedOn } : {}),
-          layers: d.studio === "design" ? structuredClone(d.layers) : undefined,
+          layers,
           ...(version.design
             ? { design: structuredClone(version.design), findings: designFindings(version.design.checks, version.id) }
             : {}),
-          ...(version.drawn ? { drawn: structuredClone(version.drawn) } : {}),
+          ...(drawn ? { drawn } : {}),
           ...formatsOf(d),
           ...by,
         };

@@ -365,7 +365,16 @@ export function qualityCalls(m: Mock): Pick<FumeApi, Calls> {
       m.mustStaff();
       const item = m.find(db.qaItems, itemId, "QA item");
       item.layers = layers;
-      if (item.documentId) m.find(db.documents, item.documentId, "creative document").layers = structuredClone(layers);
+      // The edit lands on the layers it carries; the creative's other layers stay (round 15: a Fume design's layers
+      // are kept beside the hand ones).
+      if (item.documentId) {
+        const d = m.find(db.documents, item.documentId, "creative document");
+        const edited = new Map(layers.map((l) => [l.id, l]));
+        d.layers = structuredClone([
+          ...d.layers.map((l) => edited.get(l.id) ?? l),
+          ...layers.filter((l) => !d.layers.some((x) => x.id === l.id)),
+        ]);
+      }
       return wait(item);
     },
     // While the Engine fixes it, the desk opens locked; only Take over takes it (and the fix stops).

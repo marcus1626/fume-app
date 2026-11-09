@@ -23,10 +23,12 @@
 .ui-score-rows, .ui-score-parts { display: grid; gap: var(--ui-space-md); margin: 0; padding: 0; list-style: none; min-width: 0; }
 .ui-score { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; column-gap: var(--ui-space-md); row-gap: var(--ui-space-xs); min-width: 0; }
 .ui-score-name { display: inline-flex; align-items: center; gap: var(--ui-space-xs); justify-self: start; font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); color: var(--ui-text-secondary); }
-.ui-score-toggle { position: relative; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; border-radius: var(--ui-radius-check); }
+.ui-score-toggle { position: relative; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; border-radius: var(--ui-radius-action); }
 .ui-score-toggle::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
 .ui-score-toggle svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
 @media (hover: hover) { .ui-score-toggle:hover { color: var(--ui-text); } }
+.ui-score-toggle:active { transform: scale(0.97); }
+@media (prefers-reduced-motion: reduce) { .ui-score-toggle:active { transform: none; } }
 .ui-score-toggle:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
 /* A number is GT Standard at medium weight with tabular figures (the brand book's numbers and data), not Mono. */
 .ui-score-num { display: inline-flex; align-items: center; gap: var(--ui-space-xs); font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); font-variant-numeric: tabular-nums; line-height: 1.1; color: var(--ui-text); }

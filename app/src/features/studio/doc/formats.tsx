@@ -103,10 +103,13 @@ export function PlacementPicker({
   placements,
   specs,
   onPick,
+  compact = false,
 }: {
   placements: Placement[];
   specs: Specs;
   onPick: (p: Placement) => void;
+  /** The Design studio's frame (round 15): the picker and where words may go, never how a picture is rendered. */
+  compact?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const current = placementOf(specs, placements);
@@ -115,12 +118,14 @@ export function PlacementPicker({
       label="Format"
       labelId="spec-placement-l"
       help={
-        current ? (
+        !current ? undefined : compact ? (
+          current.textLimit
+        ) : (
           <>
             {howMade(current, specs.imageModel)}
             {current.textLimit && <span className="ui-fmt-limit">{current.textLimit}</span>}
           </>
-        ) : undefined
+        )
       }
     >
       <Popover open={open} onOpenChange={setOpen}>

@@ -1,0 +1,92 @@
+/* Studio layers: the Design studio laid out like Figma (app, FLOWS-r15-design). Round 15 (PROPOSED 9 Nov 2026).
+   Marcus: layers with more control, as people know from Figma; the logo is a layer, never a switch. As in Figma and
+   OpenPencil, the layers sit on the left and what is picked is set on the right.
+   Markup: <aside class="ui-desk-panel ui-desk-specs ui-desk-layerbar">
+             <div class="ui-desk-frame-set"> the format picker (studio-formats.css), compact </div>
+             <div class="ui-desk-layerbar-head"><h2 class="ui-desk-panel-title">Layers</h2>
+               <span class="ui-desk-layerbar-meta">By Fume · V5</span></div>
+             <ul class="ui-desk-layer-list ui-desk-layer-tree"><li class="ui-desk-layer-row" data-row="frame"
+               aria-current><button class="ui-desk-layer-pick"><svg/><span class="ui-desk-layer-name"> Frame
+               <span class="ui-desk-layer-text">1080 × 1350</span></span></button></li>
+               <li class="ui-desk-layer-row" data-depth="1" data-hidden aria-current><button class="ui-desk-layer-pick"/>
+               <button class="ui-btn ui-desk-layer-lock" data-on/> <button class="ui-btn ui-desk-layer-eye" data-hidden/></li></ul></aside>
+           <aside class="ui-desk-panel ui-desk-vars ui-desk-props"><h2 class="ui-desk-panel-title">Headline</h2> folds:
+             Text · Typography · Fill · Position <div class="ui-desk-px-row"><div class="ui-input-group ui-desk-px">
+             <span class="ui-input-group-text">X</span><input/></div> × 3</div></aside>
+           [board] <span class="ui-desk-shot" data-fit="fill|fit" data-picture-hidden style="--ratio"><img/>
+             <span class="ui-desk-layers"><span class="ui-desk-layer-shade" data-from style="--shade"/>
+             <button class="ui-desk-layer" data-kind data-role data-typo data-align data-upper aria-pressed style="--x --y
+             --w --h --layer-font --layer-size --layer-weight --layer-leading --layer-tracking --layer-ink --layer-fill
+             --layer-radius --layer-pad"><span class="ui-desk-layer-words"/></button></span></span>
+   Fume decisions: the rows are the desk's own (studio-desk.css .ui-desk-layer-row): the picked one on the sunken
+   step, the frame first and its layers under it a step in; a hidden layer's name and eye go quiet; a lock shows where
+   a layer is locked, and on a row under the pointer. X, Y and W are small fields side by side, in pixels of the
+   frame. On the canvas the words are the creative's own, never Fume's: the brand's typefaces, sizes and colours
+   (custom properties the app reads from the brand's design system), its call to action as its pill. The frame is the
+   format's ratio; the picture fills it or fits in it. The selection box is the desk's Ink ring.
+   Rule gate: few-strokes, space-from-tokens, radius-from-tokens, type-from-tokens, hover-needs-hover,
+   focus-is-sharp, reduced-motion, no-gradient, tokens-only-color. */
+
+/* ---------- the left panel: the frame and its layers ---------- */
+
+.ui-desk-layerbar { gap: var(--ui-space-sm); }
+.ui-desk-frame-set { flex-shrink: 0; padding-inline: var(--ui-space-sm); padding-block-end: var(--ui-space-sm); }
+.ui-desk-layerbar-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--ui-space-sm); flex-shrink: 0; padding-inline-end: var(--ui-space-sm); }
+.ui-desk-layerbar-meta { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-desk-layerbar-note { padding-inline: var(--ui-space-sm); }
+.ui-desk-layer-tree { gap: 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--ui-scroll-thumb) transparent; }
+.ui-desk-layer-tree .ui-desk-layer-row { gap: 0; padding-inline-end: var(--ui-space-xs); }
+.ui-desk-layer-tree .ui-desk-layer-pick { padding-block: var(--ui-space-xs); }
+.ui-desk-layer-tree .ui-desk-layer-pick > svg { align-self: flex-start; margin-block-start: calc((1lh - var(--ui-size-icon-sm)) / 2); }
+.ui-desk-layer-tree .ui-desk-layer-row[data-depth="1"] .ui-desk-layer-pick { padding-inline-start: calc(var(--ui-space-sm) + var(--ui-space-lg)); }
+.ui-desk-layer-tree .ui-desk-layer-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; overflow-wrap: normal; }
+.ui-desk-layer-tree .ui-desk-layer-row[data-hidden] .ui-desk-layer-name,
+.ui-desk-layer-tree .ui-desk-layer-row[data-hidden] .ui-desk-layer-text { color: var(--ui-text-tertiary); }
+.ui-desk-layer-tree .ui-desk-layer-eye, .ui-desk-layer-tree .ui-desk-layer-lock { flex-shrink: 0; color: var(--ui-text-tertiary); }
+.ui-desk-layer-tree .ui-desk-layer-eye[data-hidden] { opacity: .4; }
+/* a lock shows where it holds, and on the row under the pointer or the keyboard, to lock it there */
+.ui-desk-layer-tree .ui-desk-layer-lock:not([data-on]) { opacity: 0; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-desk-layer-tree .ui-desk-layer-row:focus-within .ui-desk-layer-lock { opacity: 1; }
+@media (hover: hover) { .ui-desk-layer-tree .ui-desk-layer-row:hover .ui-desk-layer-lock { opacity: 1; } }
+
+/* ---------- the right panel: the properties of what is picked ---------- */
+
+.ui-desk-props-note { margin: 0; padding-inline: var(--ui-space-sm); }
+.ui-desk-props-action { justify-self: start; }
+.ui-desk-px-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ui-space-xs); min-width: 0; }
+.ui-desk-px { min-width: 0; }
+.ui-desk-px .ui-input-group-text { font-variant-numeric: tabular-nums; }
+.ui-desk-px .ui-input-group-input { min-width: 0; font-variant-numeric: tabular-nums; }
+
+/* ---------- the canvas: the frame in the format's ratio, the layers in the brand's design system ---------- */
+
+.ui-desk-shot[data-fit] > img { aspect-ratio: var(--ratio); object-fit: cover; }
+.ui-desk-shot[data-fit="fit"] > img { object-fit: contain; }
+/* the picture hidden: the empty frame stays, so the words keep their place */
+.ui-desk-shot[data-picture-hidden]::before { content: ""; position: absolute; inset: 0; border-radius: var(--ui-radius-item); background: var(--ui-surface-creative); }
+
+.ui-desk-layer[data-typo] {
+  min-height: 0; align-items: flex-start; color: var(--layer-ink, var(--ui-text-on-ink));
+  font-family: var(--layer-font); font-weight: var(--layer-weight, 400); line-height: var(--layer-leading, 1.1); letter-spacing: var(--layer-tracking, 0);
+  font-size: calc(var(--layer-size) * 100cqi / 1080); /* gate-allow:type-from-tokens the brand's own type on its creative, in pixels at a frame 1080 wide */
+}
+.ui-desk-layer[data-align="centre"] { justify-content: center; text-align: center; }
+.ui-desk-layer[data-align="right"] { justify-content: flex-end; text-align: end; }
+.ui-desk-layer[data-upper] { text-transform: uppercase; }
+.ui-desk-layer-words { display: inline-block; max-width: 100%; text-wrap: balance; }
+.ui-desk-layer[data-kind="logo"][data-typo] { font-weight: 500; letter-spacing: .24em; white-space: nowrap; }
+/* the call to action is the brand's button component: its pill, its colours, its padding */
+.ui-desk-layer[data-role="cta"][data-typo] .ui-desk-layer-words {
+  white-space: nowrap; background: var(--layer-fill); color: var(--layer-ink);
+  padding: calc(var(--layer-pad) * 100cqi / 1080) calc(var(--layer-pad) * 1.6 * 100cqi / 1080);
+  border-radius: calc(var(--layer-radius) * 100cqi / 1080); /* gate-allow:radius-from-tokens the brand's own pill on its creative, from its design system */
+}
+/* the design system's shade behind words on a busy picture: the brand's scrim on its creative, not Fume's interface */
+.ui-desk-layer-shade { position: absolute; inset-inline: 0; height: 45%; pointer-events: none; }
+.ui-desk-layer-shade[data-from="top"] { inset-block-start: 0; background: linear-gradient(to bottom, rgb(0 0 0 / var(--shade)), transparent); /* gate-allow:no-gradient gate-allow:tokens-only-color the brand's scrim (its design system's photo text) */ }
+.ui-desk-layer-shade[data-from="bottom"] { inset-block-end: 0; background: linear-gradient(to top, rgb(0 0 0 / var(--shade)), transparent); /* gate-allow:no-gradient gate-allow:tokens-only-color the brand's scrim (its design system's photo text) */ }
+.ui-desk-layer-shade[data-selected] { outline: var(--ui-size-ring) solid var(--ui-action-primary-fg); outline-offset: calc(var(--ui-size-ring) * -1); /* gate-allow:few-strokes the picked layer's box, as in Figma */ }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-desk-layer-tree .ui-desk-layer-lock:not([data-on]) { transition: none; }
+}

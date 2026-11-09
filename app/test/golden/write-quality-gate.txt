@@ -1179,28 +1179,17 @@ anna qaQueue()
         "image": "/demo/lysne/05-01-story.jpg",
         "layers": [
           {
+            "fit": "fill",
             "h": 1,
             "id": "ly-img",
-            "image": "/demo/lysne/05-01-feed.jpg",
+            "image": "/demo/lysne/05-01-story.jpg",
             "kind": "image",
             "locked": true,
-            "name": "Image v3",
+            "name": "Picture",
             "visible": true,
             "w": 1,
             "x": 0,
             "y": 0
-          },
-          {
-            "h": 0.1,
-            "id": "ly-head",
-            "kind": "text",
-            "name": "Headline",
-            "style": "headline",
-            "text": "For the hour before sleep.",
-            "visible": true,
-            "w": 0.84,
-            "x": 0.08,
-            "y": 0.72
           },
           {
             "h": 0.05,
@@ -1212,9 +1201,31 @@ anna qaQueue()
             "visible": true,
             "w": 0.6,
             "x": 0.08,
-            "y": 0.83
+            "y": 0.24
           },
-          {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+          {
+            "h": 0.1,
+            "id": "ly-head",
+            "kind": "text",
+            "name": "Headline",
+            "style": "headline",
+            "text": "For the hour before sleep.",
+            "visible": true,
+            "w": 0.84,
+            "x": 0.08,
+            "y": 0.13
+          },
+          {
+            "h": 0.05,
+            "id": "ly-logo",
+            "kind": "logo",
+            "name": "LYSNE logo",
+            "variant": "Wordmark, reversed",
+            "visible": true,
+            "w": 0.2,
+            "x": 0.08,
+            "y": 0.07
+          }
         ],
         "madeAt": "2026-10-14T12:17:00.000Z",
         "risk": "normal",
@@ -1726,28 +1737,17 @@ anna qaCheck("qa-4") → events
       "image": "/demo/lysne/05-01-story.jpg",
       "layers": [
         {
+          "fit": "fill",
           "h": 1,
           "id": "ly-img",
-          "image": "/demo/lysne/05-01-feed.jpg",
+          "image": "/demo/lysne/05-01-story.jpg",
           "kind": "image",
           "locked": true,
-          "name": "Image v3",
+          "name": "Picture",
           "visible": true,
           "w": 1,
           "x": 0,
           "y": 0
-        },
-        {
-          "h": 0.1,
-          "id": "ly-head",
-          "kind": "text",
-          "name": "Headline",
-          "style": "headline",
-          "text": "For the hour before sleep.",
-          "visible": true,
-          "w": 0.84,
-          "x": 0.08,
-          "y": 0.72
         },
         {
           "h": 0.05,
@@ -1759,9 +1759,31 @@ anna qaCheck("qa-4") → events
           "visible": true,
           "w": 0.6,
           "x": 0.08,
-          "y": 0.83
+          "y": 0.24
         },
-        {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+        {
+          "h": 0.1,
+          "id": "ly-head",
+          "kind": "text",
+          "name": "Headline",
+          "style": "headline",
+          "text": "For the hour before sleep.",
+          "visible": true,
+          "w": 0.84,
+          "x": 0.08,
+          "y": 0.13
+        },
+        {
+          "h": 0.05,
+          "id": "ly-logo",
+          "kind": "logo",
+          "name": "LYSNE logo",
+          "variant": "Wordmark, reversed",
+          "visible": true,
+          "w": 0.2,
+          "x": 0.08,
+          "y": 0.07
+        }
       ],
       "madeAt": "2026-10-14T12:17:00.000Z",
       "risk": "normal",
@@ -1815,28 +1837,17 @@ anna qaCheck("qa-4")
     "image": "/demo/lysne/05-01-story.jpg",
     "layers": [
       {
+        "fit": "fill",
         "h": 1,
         "id": "ly-img",
-        "image": "/demo/lysne/05-01-feed.jpg",
+        "image": "/demo/lysne/05-01-story.jpg",
         "kind": "image",
         "locked": true,
-        "name": "Image v3",
+        "name": "Picture",
         "visible": true,
         "w": 1,
         "x": 0,
         "y": 0
-      },
-      {
-        "h": 0.1,
-        "id": "ly-head",
-        "kind": "text",
-        "name": "Headline",
-        "style": "headline",
-        "text": "For the hour before sleep.",
-        "visible": true,
-        "w": 0.84,
-        "x": 0.08,
-        "y": 0.72
       },
       {
         "h": 0.05,
@@ -1848,9 +1859,31 @@ anna qaCheck("qa-4")
         "visible": true,
         "w": 0.6,
         "x": 0.08,
-        "y": 0.83
+        "y": 0.24
       },
-      {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+      {
+        "h": 0.1,
+        "id": "ly-head",
+        "kind": "text",
+        "name": "Headline",
+        "style": "headline",
+        "text": "For the hour before sleep.",
+        "visible": true,
+        "w": 0.84,
+        "x": 0.08,
+        "y": 0.13
+      },
+      {
+        "h": 0.05,
+        "id": "ly-logo",
+        "kind": "logo",
+        "name": "LYSNE logo",
+        "variant": "Wordmark, reversed",
+        "visible": true,
+        "w": 0.2,
+        "x": 0.08,
+        "y": 0.07
+      }
     ],
     "madeAt": "2026-10-14T12:17:00.000Z",
     "risk": "normal",
@@ -1860,7 +1893,7 @@ anna qaCheck("qa-4")
     "title": "Email header",
     "workspaceId": "w-lysne"
   }
-anna qaEdit("qa-4", [{"h":1,"id":"ly-img","image":"/demo/lysne/05-01-feed.jpg","kind":"image","locked":true,"name":"Image v3","visible":true,"w":1,"x":0,"y":...)
+anna qaEdit("qa-4", [{"fit":"fill","h":1,"id":"ly-img","image":"/demo/lysne/05-01-story.jpg","kind":"image","locked":true,"name":"Picture","visible":true,"w"...)
   {
     "campaignId": "c-autumn",
     "checkedAt": "2026-10-14T12:32:10.000Z",
@@ -1902,28 +1935,17 @@ anna qaEdit("qa-4", [{"h":1,"id":"ly-img","image":"/demo/lysne/05-01-feed.jpg","
     "image": "/demo/lysne/05-01-story.jpg",
     "layers": [
       {
+        "fit": "fill",
         "h": 1,
         "id": "ly-img",
-        "image": "/demo/lysne/05-01-feed.jpg",
+        "image": "/demo/lysne/05-01-story.jpg",
         "kind": "image",
         "locked": true,
-        "name": "Image v3",
+        "name": "Picture",
         "visible": true,
         "w": 1,
         "x": 0,
         "y": 0
-      },
-      {
-        "h": 0.1,
-        "id": "ly-head",
-        "kind": "text",
-        "name": "Headline",
-        "style": "headline",
-        "text": "Autumn",
-        "visible": true,
-        "w": 0.84,
-        "x": 0.08,
-        "y": 0.72
       },
       {
         "h": 0.05,
@@ -1935,9 +1957,31 @@ anna qaEdit("qa-4", [{"h":1,"id":"ly-img","image":"/demo/lysne/05-01-feed.jpg","
         "visible": true,
         "w": 0.6,
         "x": 0.08,
-        "y": 0.83
+        "y": 0.24
       },
-      {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+      {
+        "h": 0.1,
+        "id": "ly-head",
+        "kind": "text",
+        "name": "Headline",
+        "style": "headline",
+        "text": "Autumn",
+        "visible": true,
+        "w": 0.84,
+        "x": 0.08,
+        "y": 0.13
+      },
+      {
+        "h": 0.05,
+        "id": "ly-logo",
+        "kind": "logo",
+        "name": "LYSNE logo",
+        "variant": "Wordmark, reversed",
+        "visible": true,
+        "w": 0.2,
+        "x": 0.08,
+        "y": 0.07
+      }
     ],
     "madeAt": "2026-10-14T12:17:00.000Z",
     "risk": "normal",
@@ -3397,28 +3441,17 @@ anna qaQueue()
         "image": "/demo/lysne/05-01-story.jpg",
         "layers": [
           {
+            "fit": "fill",
             "h": 1,
             "id": "ly-img",
-            "image": "/demo/lysne/05-01-feed.jpg",
+            "image": "/demo/lysne/05-01-story.jpg",
             "kind": "image",
             "locked": true,
-            "name": "Image v3",
+            "name": "Picture",
             "visible": true,
             "w": 1,
             "x": 0,
             "y": 0
-          },
-          {
-            "h": 0.1,
-            "id": "ly-head",
-            "kind": "text",
-            "name": "Headline",
-            "style": "headline",
-            "text": "Autumn",
-            "visible": true,
-            "w": 0.84,
-            "x": 0.08,
-            "y": 0.72
           },
           {
             "h": 0.05,
@@ -3430,9 +3463,31 @@ anna qaQueue()
             "visible": true,
             "w": 0.6,
             "x": 0.08,
-            "y": 0.83
+            "y": 0.24
           },
-          {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+          {
+            "h": 0.1,
+            "id": "ly-head",
+            "kind": "text",
+            "name": "Headline",
+            "style": "headline",
+            "text": "Autumn",
+            "visible": true,
+            "w": 0.84,
+            "x": 0.08,
+            "y": 0.13
+          },
+          {
+            "h": 0.05,
+            "id": "ly-logo",
+            "kind": "logo",
+            "name": "LYSNE logo",
+            "variant": "Wordmark, reversed",
+            "visible": true,
+            "w": 0.2,
+            "x": 0.08,
+            "y": 0.07
+          }
         ],
         "madeAt": "2026-10-14T12:17:00.000Z",
         "risk": "normal",
