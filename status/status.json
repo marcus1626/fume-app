@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-06T17:50:00Z",
+  "updated": "2026-11-09T17:50:00Z",
   "deadline": "2026-11-21T23:59:59+01:00",
   "deadlineLabel": "the Fume app is finished",
   "start": "2026-10-26T08:00:00+01:00",
@@ -144,7 +144,7 @@
         {
           "status": "now",
           "title": "Graphic design by the Engine with OpenPencil",
-          "note": "Part 3: passes all hard checks live on Dressmann, Nike and Møllers. Brands' own font files left",
+          "note": "Part 3: text placement planned with the picture, headlines fit the brand's column, design scored against the brand's own site. Anthem test: 3–4 of 5 on brand",
           "date": "10 Nov"
         },
         {
@@ -224,6 +224,19 @@
     }
   ],
   "reports": [
+    {
+      "date": "2026-11-09",
+      "title": "Text placement, and a first test on a real prospect",
+      "items": [
+        "Dressmann price designs now show the old price too («NÅ 199,-» with «TIDLIGERE 399,-»).",
+        "The plan writer knows how narrow each brand's text column is and writes short enough headlines. A redone design now keeps its layout.",
+        "Text placement is being rebuilt: the layout is chosen first, the picture is made with space exactly there, and the best of several layouts is picked.",
+        "For tomorrow's sales meeting, the Engine made six creatives for Anthem Sports from its website alone. The product check stopped two pictures with the wrong product; both were remade and pass.",
+        "The design is now scored against the brand's own website. After a second round with bigger titles, Anthem's real logo and its red and navy, all six scored 3–4 of 5 on brand.",
+        "Still weak: a coloured block can cover a player. Inserting the real product photo will be built after 14 November.",
+        "Design thread: round 14 changes and a first video editor in the mock-up, plus video in Check."
+      ]
+    },
     {
       "date": "2026-11-06",
       "title": "The Engine checks every part of the product",
