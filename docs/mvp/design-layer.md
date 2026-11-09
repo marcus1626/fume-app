@@ -38,6 +38,12 @@ Marcus, 4 Nov 2026: the service goes into the existing fume-app Vercel project, 
   protection closes to server calls. The function sends Vercel's automation bypass (`VERCEL_BYPASS_SECRET`, Marcus
   chose this 4 Nov); it is harmless once the service runs in production.
 - A 500 or 504 from the service is tried once more; a refusal is not.
+- At most three layers are designed at a time (9 Nov: fourteen at once ran the function out of memory and left the
+  layers waiting). A fourth answers 503 "unavailable" and stays waiting; the caller asks again in a minute. A layer
+  started more than four minutes ago and never finished is taken again on the next call. When the Studio is wired
+  live, it asks again for a waiting layer when it reads it.
+- The words are picked by the plan's English or Norwegian labels (Headline/Overskrift, Supporting line/Støttelinje,
+  Call to action/Handlingsoppfordring/CTA). A price may be set down to 35% of its style so it stays on one line.
 - First live runs from Supabase, 4 Nov: Nike (test) passed every check in about 26 s; Møllers (test) gave only the
   closest layout (the call to action sits close to the bottle cap). About $0.0015 a layer.
 
