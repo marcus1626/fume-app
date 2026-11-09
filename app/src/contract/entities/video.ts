@@ -87,11 +87,12 @@ export type MotionTemplate = "title" | "line" | "product" | "offer" | "cta" | "e
 /** A named easing from the brand's motion, never a bounce (FLOWS §34.6). */
 export type EaseId = "soft-out" | "settle" | "in-out" | "even";
 
-/** What a keyframe moves. */
-export type MotionProp = "x" | "y" | "scale" | "opacity";
+/** What a keyframe moves, named as in After Effects' Transform (round 15): Position X and Y, Scale, Rotation (degrees),
+ *  Opacity. */
+export type MotionProp = "x" | "y" | "scale" | "rotate" | "opacity";
 
 /** One keyframe: a value at a time counted from the layer's own start, so the motion moves with the layer. x and y are
- *  per cent of the frame from where the layer sits; scale is 1 at its size; opacity 0 to 1. */
+ *  per cent of the frame from where the layer sits; scale is 1 at its size; rotate is degrees; opacity 0 to 1. */
 export interface MotionKey {
   prop: MotionProp;
   at: number;

@@ -38,7 +38,7 @@ import type {
 import { editLength, pickedTake, placed, timecode } from "../../../../domain/video";
 import { MOTION, openFindings, takeWords, type Selection } from "./edit";
 import { Keys } from "./Keys";
-import { EASES } from "./motion";
+import { EASES, curveWords } from "./motion";
 
 /** Staff only: the video models the Engine can make a shot with (Higgsfield's list, 27 Oct 2026). */
 const VIDEO_MODELS = ["auto", "Kling 3.0", "Kling 4.0", "Seedance 2.5", "Cinema Studio 4.0", "MiniMax H3", "Wan 2.6"];
@@ -204,7 +204,7 @@ export const VideoInspector = memo(function VideoInspector({
               id="mo-ease"
               value={motion.ease ?? "soft-out"}
               options={Object.entries(EASES).map(([value, e]) => ({ value, label: e.name }))}
-              help={`${EASES[motion.ease ?? "soft-out"].line}. From ${brandName}’s motion.`}
+              help={`${EASES[motion.ease ?? "soft-out"].line} · cubic-bezier ${curveWords(motion.ease ?? "soft-out")}. From ${brandName}’s motion; never a bounce.`}
               onChange={(ease) => setM({ ease: ease as MotionLayer["ease"] }, "ease")}
             />
             <StudioSelect

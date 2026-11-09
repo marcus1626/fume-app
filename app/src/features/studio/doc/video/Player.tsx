@@ -143,6 +143,7 @@ export function Player({
                       "--kx": `${k.x}%`,
                       "--ky": `${k.y}%`,
                       "--ks": k.scale,
+                      "--kr": `${k.rotate}deg`,
                       "--ko": k.opacity,
                       "--kb": `${k.blur.toFixed(1)}px`,
                       ...(m.template === "cta" && cta ? { "--cta-fill": cta.fill, "--cta-ink": cta.ink } : {}),

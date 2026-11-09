@@ -1191,7 +1191,7 @@ function QaFocus({
 
   return (
     <>
-      <section className="ui-qa-stage" aria-label={`${name}, ${formatName(item.format)}`} data-ui-toast-anchor>
+      <section className="ui-qa-stage" aria-label={`${name}, ${formatName(item.format)}`}>
         <div className="ui-qa-stage-bar">
           <div className="ui-qa-stage-start">
             {item.previous ? (
@@ -1381,7 +1381,9 @@ function QaFocus({
         )}
       </section>
 
-      <aside className="ui-qa-panel" aria-label={`Check ${name}`}>
+      {/* Round 15: toasts rise in the panel, above the comment box and the decision, next to the Undo's own button;
+          never over the creative or its formats */}
+      <aside className="ui-qa-panel" aria-label={`Check ${name}`} data-ui-toast-anchor>
         <div className="ui-qa-panel-body">
           {/* 1. Where it stands: its name, one line on its state, when it is due and how it scored */}
           <header className="ui-qa-head">
@@ -1562,6 +1564,7 @@ function QaFocus({
         {acting && (
           <form
             className="ui-qa-compose"
+            data-ui-foot
             onSubmit={(e) => {
               e.preventDefault();
               addNote();

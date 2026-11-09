@@ -118,7 +118,7 @@ function bezier([x1, y1, x2, y2]: [number, number, number, number]) {
   };
 }
 
-export const REST: Record<MotionProp, number> = { x: 0, y: 0, scale: 1, opacity: 1 };
+export const REST: Record<MotionProp, number> = { x: 0, y: 0, scale: 1, rotate: 0, opacity: 1 };
 
 /** A property's value at a moment of the layer (seconds from its start), from its keyframes and easing. */
 export function valueAt(layer: MotionLayer, prop: MotionProp, local: number): number {
@@ -134,13 +134,18 @@ export function valueAt(layer: MotionLayer, prop: MotionProp, local: number): nu
   return a.value + (b.value - a.value) * ease((local - a.at) / (b.at - a.at));
 }
 
-/** The props a layer has keyframes on, in the inspector's order. */
+/** The props a layer has keyframes on, named and ordered as After Effects' Transform (round 15, Marcus: "som i after
+ *  effects, transform, opacity, rotate"). */
 export const PROPS: { prop: MotionProp; name: string; unit: string }[] = [
-  { prop: "x", name: "Across", unit: "%" },
-  { prop: "y", name: "Up and down", unit: "%" },
-  { prop: "scale", name: "Size", unit: "×" },
+  { prop: "x", name: "Position X", unit: "%" },
+  { prop: "y", name: "Position Y", unit: "%" },
+  { prop: "scale", name: "Scale", unit: "×" },
+  { prop: "rotate", name: "Rotation", unit: "°" },
   { prop: "opacity", name: "Opacity", unit: "" },
 ];
+
+/** An easing's numbers, as a designer types them: "0.16, 1, 0.30, 1" (cubic-bezier). */
+export const curveWords = (id: EaseId) => EASES[id].curve.map((n) => String(n)).join(", ");
 
 /** Put a keyframe at a moment (replacing one there), or take it out. */
 export function setKey(keys: MotionKey[] = [], key: MotionKey): MotionKey[] {
@@ -162,6 +167,7 @@ export function layerAt(layer: MotionLayer, t: number, style?: VideoEdit["style"
   const x = valueAt(layer, "x", local);
   let y = valueAt(layer, "y", local);
   let scale = valueAt(layer, "scale", local);
+  const rotate = valueAt(layer, "rotate", local);
   let opacity = valueAt(layer, "opacity", local);
   let blur = 0;
   // The style's energy sets how far words travel and how soft they start; its pace, how long they take.
@@ -182,7 +188,7 @@ export function layerAt(layer: MotionLayer, t: number, style?: VideoEdit["style"
   }
   if (layer.loop === "drift") scale *= 1 + 0.03 * Math.min(1, local / dur);
   if (layer.loop === "breathe") scale *= 1 + 0.012 * Math.sin((2 * Math.PI * local) / 2.4);
-  return { x, y, scale, opacity, blur };
+  return { x, y, scale, rotate, opacity, blur };
 }
 
 /** Layers that follow a shot (clipId) move with it: after a trim, a reorder or a shot taken out, each such layer keeps

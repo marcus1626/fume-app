@@ -32,8 +32,8 @@
    pill carries its key). The creative is fitted by width and by height in the Quality Gate's well (--ui-qg-well),
    white with its hairline, up to its real pixels. The list sits on the page ground; the selected row lifts onto the
    surface with depth (never a line, never Amber); an answered row stays in place. The panel lies on the surface; the
-   toasts rise at the foot of the well, beside the decision and wide enough to read (data-ui-toast-anchor), never over
-   the list. A Design creative's words sit on the creative at
+   toasts rise in the panel above the comment box and the decision (data-ui-toast-anchor on the panel, round 15), never
+   over the creative, its formats or the list. A Design creative's words sit on the creative at
    their own place and size (the layer's box reaches the stylesheet as --x --y --w --h, data). Amber only as the
    checked triangle on a checked creative (badge.css, creative.css). The end card sits in the well where the creative
    was. The phone sheet is the page ground, not glass: it is a page of its own, not a floating panel.

@@ -313,7 +313,8 @@ function Book<K extends BrandBookKind>({
                       : groups
                   }
                 />
-                <div className="ui-book-main">
+                {/* Round 15: toasts rise at the foot of the reading column, never over the page index */}
+                <div className="ui-book-main" data-ui-toast-anchor>
                   {header}
                   {main}
                 </div>

@@ -11,7 +11,7 @@
                <div class="ui-desk-stage"><div class="ui-video-frame" data-grade style="--ratio">
                  <video data-on data-front style="--mix --blur"/> | <img class="ui-video-still"/> …
                  <div class="ui-video-words"><p class="ui-video-motion"
-                 data-template data-place><span class="ui-video-motion-key" style="--kx --ky --ks --ko --kb"/></p> <p class="ui-video-caption"/></div> [SafeZones]</div></div>
+                 data-template data-place><span class="ui-video-motion-key" style="--kx --ky --ks --kr --ko --kb"/></p> <p class="ui-video-caption"/></div> [SafeZones]</div></div>
                <div class="ui-video-transport"> play · <span class="ui-video-time"/> · <span class="ui-video-made"/>
                  <span class="ui-video-grade"/></div></section>
                <div class="ui-desk-engine"> the Engine bar </div></main>
@@ -89,9 +89,9 @@
   font-size: 14cqi; letter-spacing: .12em; /* gate-allow:type-from-tokens the brand's wordmark on the end card, scaled to the frame */
 }
 /* A layer's motion is drawn from the clock (FLOWS §34.6): its keyframes, its way in, its life and its way out set
-   --kx --ky (a share of the frame), --ks, --ko and --kb on the words, so a paused frame is the film's frame */
+   --kx --ky (a share of the frame), --ks, --kr (degrees), --ko and --kb on the words, so a paused frame is the film's frame */
 .ui-video-motion-key {
-  display: inline-block; translate: var(--kx, 0) var(--ky, 0); scale: var(--ks, 1); opacity: var(--ko, 1); filter: blur(var(--kb, 0px));
+  display: inline-block; translate: var(--kx, 0) var(--ky, 0); scale: var(--ks, 1); rotate: var(--kr, 0deg); opacity: var(--ko, 1); filter: blur(var(--kb, 0px));
 }
 /* The brand's call to action: its pill and its words in the colours its design system sets; only the words change */
 .ui-video-motion[data-template="cta"] {

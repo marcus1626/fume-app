@@ -1,5 +1,5 @@
 // A motion layer's keyframes in the inspector (FLOWS §34.6, PROPOSED 9 Nov 2026), as in an editor: a row for each
-// property it can move (across, up and down, size, opacity). Each row has the diamond that puts a key at the playhead
+// property it can move, named as After Effects' Transform (Position X, Position Y, Scale, Rotation, Opacity; round 15). Each row has the diamond that puts a key at the playhead
 // or takes the one there out, the value at the playhead (writing a value puts a key there), and the layer's own short
 // track with its keys as diamonds: press one to go to it. The keys sit on the layer, in its own seconds, so they move
 // with it. The easing between keys is the layer's (the Motion fold). The look is studio-video.css.
@@ -13,9 +13,11 @@ const RANGE: Record<MotionProp, { min: number; max: number; step: number }> = {
   x: { min: -50, max: 50, step: 1 },
   y: { min: -50, max: 50, step: 1 },
   scale: { min: 0.2, max: 3, step: 0.01 },
+  rotate: { min: -180, max: 180, step: 1 },
   opacity: { min: 0, max: 1, step: 0.05 },
 };
-const shown = (prop: MotionProp, v: number) => (prop === "x" || prop === "y" ? String(Math.round(v)) : v.toFixed(2));
+const shown = (prop: MotionProp, v: number) =>
+  prop === "x" || prop === "y" || prop === "rotate" ? String(Math.round(v)) : v.toFixed(2);
 
 export function Keys({
   layer,
