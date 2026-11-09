@@ -1425,3 +1425,307 @@ the others; nothing else about Check changes.
 - Seeded: LYSNE's "Night ritual · Story 9:16", the Story the Engine cut from the film's shots (6 s). Its first shot is
   the take with oil running from the closed bottle (critical); its button comes in a quarter second after the beat
   (minor).
+
+## 35. Round 15 (9 Nov 2026, PROPOSED): Marcus's 22 comments on the round 14 walkthrough
+Marcus watched the round 14 walkthrough and left 22 comments (9 Nov). Under them lay four patterns: panels that say too
+much at once (Check), things that are fixed where they should be open (components, Tone of Voice blocks, the logo as a
+switch, two scores), the Engine in too many places (a bar, a chat and a conversation per desk), and scores that came
+before anything was made. He chose to wire the brand books live now (card, 9 Nov) and to see the rest first. Everything
+here is PROPOSED until he chooses.
+
+### 35.1 Check is a comment thread, like the customer's viewer
+Marcus: "kan ikke designeren sin sjekk her være litt som kunden sin, et kommentarfelt og sånt som i Frame.io" and "hele
+panelet her er rotete … 'Mark checked' 'Tell the Engine' og 'Open in Studio' er fine".
+
+- **The panel is one thread.** Its head: the title, the brand and campaign (and "3 formats"), the due and risk badges
+  and the score chip (§35.3). Then **Comments** with a count, a numbered list, and a comment box at the foot. The
+  decision at the foot does not change: Mark checked (C), Tell the Engine · n (F), Open in Studio (S).
+- **The Engine's findings are its comments.** Each is numbered, signed "Engine" with its mark, and tagged with its kind
+  and weight ("Product · decide first" with a small Rouge mark only when it stops the check). Then what it saw, one
+  quiet "Should be" line, and two words: **Fix with the Engine** (it goes with Tell the Engine; it says "Goes to the
+  Engine" once chosen) and **Not a problem**. A finding with a place on the creative is a numbered pin there; a pin and
+  its comment light up together.
+- **Her own comments.** She writes in the box at the foot (Enter adds it, Cmd+Enter tells the Engine at once) or clicks
+  the creative to pin one; on a video the pin carries its second. Each says "You", its format and time, and can be
+  taken out. They go with Tell the Engine.
+- **What is settled folds away.** "n earlier comments" (fixed or not a problem, each with Undo), "n checks hold ·
+  Brand DNA v3", the graphic design and the words on the creative each fold into one line. Nothing is repeated.
+- **Mark checked** with a finding still to decide opens that comment instead of a note.
+- **Toasts** rise in the panel above the comment box, next to the decision that made them, never over the creative.
+
+### 35.2 An ad's formats are one ad in Check
+Marcus: "Hvis denne annonsen har flere formater (1x1, 4x5, etc) kommer de opp som forskjellige annonser inne på check
+her? De burde komme opp som en annonse, så går man inn å checker de forskjellige formatene."
+
+- One row in the list per ad, with "3 formats". Under the creative a strip of its formats (Feed 4:5 · Master, Square
+  1:1 · Cropped, Story 9:16 · Extended), each a small picture in its own ratio; the shown one is lifted.
+- A pin belongs to the format it was put on, and says so in its comment. Mark checked checks the ad with all its
+  formats (they were made from the checked master, §28).
+- `QaItem.formats?: QaFormat[]` (placement, format, picture, how it was made: native, crop or expand); `QaPin.format`.
+
+### 35.3 Scores are typed per studio, and live in the Studio
+Marcus: "Må ha flere scores. Kvalitet. Product fidelity. On brand … en mini scoreboard under Product … per produkt
+dataen", "Hvorfor … endrer image scores seg inne på Design? … Kontrast, on brand", "Scoreboardet er litt off brand. Og
+burde være synlig inne i Studio", and "score kommer etter man har laget noe".
+
+- **Each studio has its own measures.** A picture: Product (part by part from the product's verified facts: label,
+  cap, glass, size), Brand, Craft. A design: Readability (contrast, a calm ground), Design system, Placement (inside
+  the safe area, clear of the product), Words. A video: Product, Brand, First second, Rhythm, Text on screen.
+  `Scores.measures?: ScoreMeasure[]`; the two old numbers still read as Product and Brand where a version has nothing
+  more. The bar stays 80 (`domain/scores.ts`).
+- **A design is never scored as a picture.** Words over the product are measured ("covers") and cost Placement, and
+  come to Check as the Engine's comment ("The headline sits over the bottle's label").
+- **The board looks like Fume.** It answers in words first ("Under the bar on Brand and Product"), then one row per
+  measure: the name, the number in GT Standard with tabular figures, a thin Ink meter with a tick at the bar, and one
+  line on why when it is under. A small warning mark, never Rouge (a low score is the Engine's view, not an error),
+  never Amber, never Mono. The product opens part by part, by itself when a part is under the bar.
+- **In the Studio** the scores come once a version is made: "Scores" on the board's rail opens the shown version's
+  board at the board's right edge, and the warning above a version under the bar opens the same board. The picture
+  makes room; nothing floats over it. Every made version is scored, a picture made by hand too. The side panel never
+  starts with Scores.
+- **In Check** the scores are a chip in the head ("Under the bar · Product 52", "Over the bar · lowest 86") that opens
+  the board under the head. Check's version numbers are the Studio's ("Before · V3", "After · V5").
+
+### 35.4 Smaller things
+- The video's keys are named as in After Effects' Transform: Position X, Position Y, Scale, Rotation (new) and
+  Opacity; the easing shows its numbers (cubic-bezier) beside its name. Custom curves, text animators and presets
+  come with the video editor round (round 16), with the storyboard as its own canvas and the timeline as layers.
+- In the brand books a toast rises at the foot of the reading column, never over the page index.
+- Check's tab pill re-places on every resize; a new word we avoid is a chip, with no focus ring left behind.
+
+### 35.5 The Design studio, laid out like Figma
+
+It builds on §34.5.
+
+Marcus: "Layers should be on the right, since people are used to Figma, with more control. Look at OpenPencil for
+that." And: "'Show the logo' should not be a button, it is a layer, and we should keep control and logic." The design
+thread then chose Figma's own order: the layers on the left, what is picked set on the right. The names and the
+grouping are borrowed from Figma and OpenPencil (Layers; Text, Typography, Fill, Position; the page's properties when
+nothing is picked), never their look: the panels are the desk's own.
+
+Only Design changes. Image and Video keep their panels.
+
+#### The left panel: the frame and its layers
+
+- **The frame on top.** The format picker sits first, compact: the format and its ratio, and under it only where
+  words may go ("Keep words out of the top 250 px and bottom 340 px"). How a picture is rendered (the generator, the
+  product, the output count) belongs to Image, not here.
+- **Layers.** A title, and beside it whose layers they are: "By Fume · V5" on a version Fume designed, "4 layers" on a
+  creative laid out by hand. Then the frame ("Frame · 1080 × 1350") and its layers a step in, as they stack, the top
+  one first: the logo, the headline, the line under it, the call to action, the shade, the picture.
+- **A row.** Its icon, its name, a second line (the words; the logo's version, "Wordmark, reversed"; the picture's
+  version, "V3"; where the shade comes from), a lock and an eye. A click picks the layer, and the canvas shows it
+  picked; a click on the canvas picks the row. Up and Down move through the rows. The frame row, Escape, or a click on
+  the board outside the layers picks nothing.
+- **The eye** hides a layer: its row goes quiet and the canvas leaves it out. **The lock** keeps a layer from being
+  picked on the canvas; it is still picked in the list, as in Figma. A lock shows where a layer is locked, and on the
+  row under the pointer or the keyboard. The picture and the shade come locked.
+- **Every layer listed is on the canvas, or listed as hidden.** Fume keeps what it left out as a hidden layer: the
+  call to action where the design system keeps it off the format (LYSNE: "Never on a feed picture"), the logo where
+  the label shows the name. Before, the list said "Button: Se kveldsoljen" with no button on the picture.
+- **The logo is a layer.** The "Show the logo" switch is gone from the Layout mode; its eye shows or hides it.
+- While Fume designs a version, the list waits: "Fume is designing V5. Its layers come with it."
+
+#### The right panel: the properties of what is picked
+
+The panel's title is the layer's name ("Headline", "Logo · hidden"), or "Frame". Every choice comes from the brand's
+design system: its text styles, typefaces, colours, logo versions and its call to action. Nothing else is offered.
+
+- **Words (headline, line, other text).** *Text*: Content. *Typography*: Text style (the design system's styles, with
+  their size: "Heading 1 · 76"), Typeface (the brand's typefaces), Weight (the weights the typeface has), Size in px,
+  Align (Left, Centre, Right). A new text style clears the typeface, weight and size set by hand. *Fill*: Colour, the
+  brand's colours for words only. *Position*: X, Y and W in px of the frame (Up and Down step 1, with Shift 10).
+- **The logo.** *Logo*: Version (Wordmark or Reversed), with what the design system says each is for and its rule for
+  logos on a photograph. *Position*: X, Y, W, never under the design system's least width, with its clear space.
+- **The call to action.** *Component*: the brand's call to action (its colours and rules, "Two words. Never on a feed
+  picture."), and its Content. *Position*: X and Y; its width is its pill's.
+- **The picture.** *Picture*: Version ("V3"); on Fume's design it stays the picture Fume designed on ("For another
+  picture, design again from it in Image"). Fit: Fill (crops to the frame) or Fit (the whole picture).
+- **The shade.** Where it comes from, and its strength.
+- **Nothing picked: the frame.** *Layout*: on a creative laid out by hand, its template; on Fume's design, "Laid out by
+  Fume · V5" and "Its checks" (the design sheet). Align (Top, Centre, Bottom) says where the headline and its line are
+  on the canvas, and moves them inside the safe area; the call to action and the logo keep their place. Before, Align
+  said Bottom while the words sat at the top. *Words*: one colour for every word layer ("Mixed" when they differ); the
+  call to action keeps its own.
+- **The words' source is gone** (Brand, Fume, Own, Engine). In Design every colour and type is the brand's design
+  system's, so there is nothing left for it to choose between.
+
+#### The canvas
+
+The frame is the format's ratio, and the picture fills it or fits in it. The layers are drawn as the creative will be:
+the brand's typefaces (their stand-ins on Google Fonts), sizes in px at 1080 wide, its colours, its call to action as
+its pill, its shade. The picked layer has the desk's selection ring. On a phone the canvas only shows.
+
+#### Names
+
+A version is "V3" where it is short (rows, readouts) and "Version 3" in a sentence. The picture layer is "Picture",
+never "Image v3". The generator ("Nano Banana Pro") shows only where a picture is generated, never on a layout.
+
+#### What is kept, and how
+
+- **Layer** (contract) has new optional fields, kept as they are given; what is not set follows the design system:
+  `locked`, `component` (headline, subline, cta, logo), `textStyle`, `font`, `weight`, `sizePx`, `align`, `colour`,
+  `variant` (the logo's version), `fit`, `shade`, and `belongsTo` (the version a layer of Fume's design belongs to).
+- **Fume's design as layers.** Until it is changed, a design's layers are read from the version Fume designed (its
+  words and where it drew them). The first change keeps them in the creative's layers with `belongsTo` set to that
+  version; hand layers have none. Undo and Redo hold every change, as before.
+- The Layout mode's `align` and `textColour` follow the layers in the same step, so they never say one thing while the
+  canvas shows another.
+- **Send to check** sends the layers of the version sent: the hand layers on a picture; on Fume's design, its layers
+  once changed, which then stand for Fume's drawing (no words twice). An edit in Check lands on the layers it carries
+  and keeps the creative's others.
+- **Demo.** The email header is a Story picture in a Story frame, its words at the top clear of the label, the logo
+  reversed on the dark picture (as LYSNE's design system asks).
+
+#### Open
+
+- Check draws changed layers in its own plain type, not yet the brand's typefaces and shade.
+- The live backend keeps layers as given, but its Send to check still sends all of them (`api/live/production.ts`).
+- Moving a layer by dragging it on the canvas; for now X, Y and W are typed.
+- An eye-off and an unlocked icon: the hidden eye is dimmed. A new icon goes to Fume-Brand first.
+
+### 35.6 The brand books are open and the brand's own
+
+Marcus watched the round 14 walkthrough and asked about the brand books (9 Nov): "Confusing: what is the difference
+between Design system and Brand DNA? Logo is in both? Are the components hard-coded? Can the Engine add components to
+the design system? Like drop badge, and make a 'Wheel'…" and, of the Tone of Voice, "Can you add more blocks? Or only
+control the four?" The pattern behind both: hard-coded structures should be open and the brand's own. Everything here
+is an addition to the contract (new optional fields, one new call), so the live wiring of today's books still holds.
+
+#### Brand DNA and the design system, apart
+- **One line on each page says what it is for.** Brand DNA: "LYSNE's facts and files, as found: the logo, colours,
+  type, voice and pictures. The design system sets how creatives use them." The design system: "The rules for using
+  LYSNE's Brand DNA in creatives. The Engine lays out every creative from it." (For the customer: "Your …".)
+- **The logo is shown once as a file, once as a use.** Brand DNA's Logo part keeps the wordmark tiles (the files, with
+  where Fume found them) and gains a way, "How creatives use it", to the design system's logo part. The design
+  system's Logo (under Foundations) never shows the tiles again: it shows where the logo goes on each format, as small
+  frames in the brand's ground with the wordmark at its place and width, then each version's use, the clear space, the
+  smallest size and the rules. Its first line links back: "How a creative uses the logo. The file itself is in Brand
+  DNA." The logo component is folded in here and is not listed again under Components.
+
+#### The design system's components are the brand's own
+- **Fume writes nine, the brand adds its own.** The nine the design engine places words with (headline, subline,
+  body, call to action, price, badge, product name, small print, logo) keep their role (`DesignComponent.role`, or the
+  role they are named by). The brand's people add components of their own under Components, each built from a base:
+  text, button, badge, shape, image or logo (`DesignComponent.base`).
+- **Adding one.** "Add a component" opens a small form on the card surface: Built from (a segmented control, one line
+  on what that base is) and Name, then **Add the component**. A name that is taken says so ("There is a component
+  called Headline already."). The new component starts in the brand's own tokens (the first fitting colour, style and
+  spacing step it has) and the page glides to it, with "You added this" under its purpose.
+- **Setting one.** Each component shows its settings as the brand's tokens only: Placed by (a role, or "A designer"),
+  Style, Words, Ground or Fill (or None), Corners, Padding (the brand's spacing steps) and Size. Each is a native
+  select, saved as it changes, with Undo in the toast. A brand-made component's name and the words in its preview are
+  written in place like a line. The preview draws it live in the brand's colours and type, on the wall or on a
+  photograph; the CSS tab shows it as code, and the book's CSS gains its class (`.brand .wheel`).
+- **Taking one out.** The bin at a component's head takes it out; Undo puts it back where it was with its marks.
+- **Who.** Fume's people edit the design system in place on a draft (as the Tone of Voice, §34.3); the first change on
+  the version in use starts the next draft. The customer reads it and approves the version the expert checked.
+
+#### The Engine proposes a component
+- The Engine may propose a component from the brand's own material. It shows on the draft, in Components, as a panel
+  on the card surface: "The Engine proposes this, from the set's offer story and 3 past offers", the component drawn
+  live with its settings and rules, then why in one sentence and **Add it** / **Not now**. Words and depth, never a
+  stroke, never Amber.
+- **Add it** puts it into the draft as the last component, marked "You added this from the Engine's proposal"; the
+  toast says "In version 2 now. It reaches creatives once the version is checked." with Undo. **Not now** sets it
+  aside for this version. The check foot says "The Engine's proposal stays out of it unless you add it."
+- A proposal never reaches a creative before it is added and its version is checked. It lives outside the book's body
+  (`BookVersion.proposals`), so the design engine never reads it; the customer never sees one; once a version is
+  checked, what was not added is gone. Seeded for LYSNE: **Wheel**, a round Burgundy offer mark ("25 % av").
+
+#### The Tone of Voice's blocks are open
+- How we speak holds as many blocks as the brand wants. **Add a block** at the end asks for its name ("Name the block";
+  "What it means, a do and a don't come next."); the block appears with the cursor in its first line.
+- A block's head has, on hover or focus, move up, move down and take out. Taking out has Undo, which puts the block
+  back in its place with its changed lines still marked. Empty do and don't lines are hidden when reading.
+- The Engine may suggest a block the same way as a component (seeded: **Giving**, "In the gift season we give time,
+  never things."), with **Add it** / **Not now** on the draft.
+
+#### The contract (additions only)
+- `DesignComponent`: optional `role`, `base`, `sizePx`, `sample`; `name` also takes the brand's own names.
+- `BookVersion.proposals?: BookProposal[]` (`component` or `block`, `why`, `from`, `state` open, added or set_aside).
+- `BookEdit`: optional `item` (put a whole block in), `moveTo` (move it), `marks` (an undo's marks); `to: null` on a
+  block path takes it out. Settings take words: a token's name, figures, or "none". `BookEditMark.proposal`.
+- `answerBookProposal({ bookId, proposalId, answer: "add" | "not_now" | "open" })`; "open" is the undo of either.
+  Fume's people only, on a draft only.
+- One rule for the page, the mock and the server: `domain/designComponents.ts` (a role is held by one component, every
+  setting is one of the brand's tokens, names are unique) and `domain/bookEdits.ts`.
+
+### 35.7 One Engine, in one panel on the right
+
+Marcus, on the video editor showing the Engine bar and a conversation at once: "Either or. Ideally the right side
+should be a panel that can be opened and closed for the whole app, tied to the main Engine chat. With a choice of a
+global session or a project session, so the thread continues the next time we come back to it." And on the plan:
+"Every field should have a button where you can ask the Engine to write it. Then perhaps also open a chat (a mini chat
+by the field, or the right-side panel with a reference to the field)."
+
+Everything here is PROPOSED 9 Nov 2026 until Marcus chooses. Only Fume's people and an agency's designers have the
+Engine. A customer never sees the panel, its button or a field's Engine buttons: customers talk to Fume, never to the
+Engine (and neither does Fume's person while she looks through Customer view).
+
+#### The Engine panel
+- **One button, one panel.** The Engine's button sits at the end of the staff bar, before Search, and at the end of
+  the Studio's top bar. It opens and closes a panel on the right; ⌘J (Ctrl+J off a Mac) does the same from anywhere.
+  It stays open from page to page until she closes it, and opens as she left it next time, per person on this
+  computer (a convenience; losing it only closes the panel).
+- **The same conversation as the Engine page.** The panel is the Engine chat (§19), not a second chat: the same
+  messages, widgets (products to tick, a question, the run, a creative, the creatives in Check) and composer. The
+  Engine page is its full-screen view: the expand button opens it on the same thread (`?thread=campaign:c-winter`).
+  On the Engine page itself the button and the panel step aside.
+- **Threads.** One "Everything" thread per brand, and one thread per project: a campaign, or a Studio document. On a
+  project's page the panel opens on that project's thread; the thread's name is the panel's title and a quiet switch
+  to the others (Everything, this page's project, then every other thread, latest first, with how many turns it
+  holds). A switch holds until she goes to another project's page, which opens its own thread again. A thread keeps
+  its history, so coming back to a project continues it.
+- **What the Engine sees.** One line of small chips under the title: the brand (Everything), what the page shows ("The
+  plan", "Its creatives in review", "What waits in Check"), on the desk the picked version and the mode, on a video the
+  picked shot or layer, the playhead while it stands still, the format and the mode, and the field she asked about.
+  Each chip but the brand has an ×: she can leave it out. Nothing the Engine reads is hidden.
+- **Under 1024 px** the panel floats over the page's right edge instead of narrowing it.
+
+#### The Studio talks to the Engine in the panel
+- **No Engine bar under the board, no conversation in the video's inspector.** Both are gone; their work goes through
+  the panel, in the creative's own thread. The panel knows the open document (its name, version, mode; the video's
+  playhead) and lends the desk's hands to the change card.
+- **A change is still shown before it is kept.** She says what to change in the panel; the change lands on the board
+  (a picture) or the timeline and the player (a video) as before, and the panel shows it as a card: each part of what
+  she said, what it changed, and for a part it did not read, why and the change it would make if asked (Yes); Undo
+  (Esc) and Keep and render (Enter) for a picture, Undo and Keep for a video. Once decided the card stays in the thread
+  as one quiet line ("Kept, and rendered as a new version.", "Kept in the edit.", "Undone."), so the thread reads as a
+  record. While a change waits and the panel is closed, the Engine button on the desk says "A change waits".
+- **Render moved to the desk's top bar**, beside Make formats: it was the Engine bar's second button and must work
+  with the panel closed. It saves the desk's changes first and waits while a version renders.
+- **While the Engine fixes a creative from Check**, the lock bar (Wait · Take over) still lies under the board, and
+  the panel's composer waits too.
+- "Write a new instruction" on a version that did not render now opens the panel with its composer ready.
+
+#### Write with Engine, and Ask about this
+- **Two small buttons by each field** Fume's people may change: every line of the plan (the look, the products,
+  formats and words), each master's scene and its words, and every line of a brand book that is edited in place
+  (Editable, where Fume's people edit directly). On a desk they show with the row's hover and keyboard focus, like the
+  plan's pencil; always on a touch screen.
+- **Write with Engine** asks the Engine to write the field from what it knows (the brief, the plan, the Brand DNA, the
+  Tone of Voice). While it writes, the field says "The Engine is writing the light" in the text shimmer. Its words come
+  under the field, never in it: "The Engine suggests", the words, and what it wrote them from, with **Keep it** (saved
+  as if she wrote it, through the field's own save, with its toast) and **Drop**. When it would not change a word, it
+  says so ("The Engine would keep it as it is") with Close. The products, formats and language lines are facts it does
+  not write; they have Ask about this only.
+- **Ask about this** opens the panel on the page's thread with the field as context (a chip "Light · Winter gifting's
+  plan"). Her message carries the field; in the thread it reads "About Light, in the plan" above her words. Asked to
+  write ("Write it shorter"), the Engine answers with a card of its words for the field and **Put it by the field**,
+  which puts them under the field to keep or drop there (and **Go to the field** from another page). Asked a question
+  ("Is it on brand?"), it answers in words. The field leaves the context when she takes its chip off or leaves the page.
+
+#### The contract (all new calls fall back to the mock until the live API has them)
+- `engineChat(workspaceId, topic?)`: a thread's messages; no topic is Everything.
+- `engineSay(workspaceId, text, { topic?, field? })`: her message in a campaign's thread, about a field.
+- `engineThreads(workspaceId)`: Everything first, then the campaign and document threads, latest first.
+- `engineWrite(field)`: the Engine's words for one field and what it wrote them from; nothing is saved.
+- `EngineTopic` (campaign or document), `EngineThread`, `EngineField` (a plan line, a planned creative's scene or words,
+  a book line by path), `EngineWriting`, and the widget `suggestion`. A document's thread is its Engine edits.
+
+#### Defaults to confirm
+- ⌘J for the panel; 360 px wide; closed until she first opens it.
+- The panel's Everything thread follows the address's brand, else the person's current brand.
+- Leaving a chip out lasts while she is on the page; it is not remembered.
+- The mock writes in LYSNE's voice from a few lines per kind of field; live, the Engine writes with the brand's context.
