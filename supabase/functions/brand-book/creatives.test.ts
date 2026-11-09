@@ -67,3 +67,11 @@ Deno.test("a headline size read from the brand's website is a floor for a feed a
   const ads = withCreatives(body, small, [{ url: "https://x/1.jpg", kind: "liked" }]);
   assertEquals(ads.styles.find((s) => s.name === "display")!.sizePx, 65, "the brand's own ads set it");
 });
+
+Deno.test("a website tile without a logo leaves the logo free in an ad; the brand's own ads without one keep it off", () => {
+  const a = answer("site");
+  const bare = { ...a, layouts: [{ ...a.layouts[0], logo: "none" as const, logoWidthPct: 0 }] };
+  const logoOf = (out: ReturnType<typeof withCreatives>) => (out.onPictures as { layouts: { logo: string }[] }).layouts[0].logo;
+  assertEquals(logoOf(withCreatives(body, bare, [{ url: "https://x/1.jpg", kind: "screenshot" }])), "any");
+  assertEquals(logoOf(withCreatives(body, bare, [{ url: "https://x/1.jpg", kind: "liked" }])), "none");
+});

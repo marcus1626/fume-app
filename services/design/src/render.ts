@@ -80,7 +80,9 @@ export function wordWidths(doc: Doc, name: string): { word: string; width: numbe
   const node = id ? doc.graph.getNode(id) : null;
   if (!measurer || !node || node.type !== "TEXT" || !node.text || !node.width) return [];
   const out: { word: string; width: number; box: number }[] = [];
-  for (const word of new Set(node.text.split(/\s+/).filter(Boolean))) {
+  // A short word held to the next by a no-break space ("to\u00A0Grow.") is one unit the renderer cannot break between,
+  // so it is measured as one (Anthem, 9 Nov: "to Gr / ow." passed as two words that each fit).
+  for (const word of new Set(node.text.split(/[^\S\u00A0]+/).filter(Boolean))) {
     // Its own id, so the measure cache never answers with the whole text's width.
     const m = measurer.measureTextNode({ ...node, id: `${node.id}:word:${word}`, text: word } as typeof node, 1e6);
     if (m) out.push({ word, width: m.width, box: node.width });

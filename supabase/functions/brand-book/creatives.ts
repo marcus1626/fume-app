@@ -165,6 +165,9 @@ export function withCreatives<T extends DesignBody>(body: T, c: CreativesAnswer,
     headlineLines: Math.round(clamp(l.headlineLines, 1, 3)),
     box: boxOf(l.box),
     groundHex: /^#[0-9a-f]{6}$/i.test(l.groundHex ?? "") ? l.groundHex.toUpperCase() : "",
+    // A tile on the brand's website carries no logo because the page's header does; an ad carries it where it reads
+    // (Anthem, 9 Nov). Only the brand's own ads can say an ad goes without it.
+    logo: !fromAds && l.logo === "none" ? "any" : l.logo,
     logoWidthPct: l.logo === "none" ? 0 : round(clamp(l.logoWidthPct, 4, 30), 0),
   }));
   return {

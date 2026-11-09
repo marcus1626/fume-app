@@ -385,7 +385,7 @@ function wordWidths(doc, name) {
   const node = id ? doc.graph.getNode(id) : null;
   if (!measurer || !node || node.type !== "TEXT" || !node.text || !node.width) return [];
   const out = [];
-  for (const word of new Set(node.text.split(/\s+/).filter(Boolean))) {
+  for (const word of new Set(node.text.split(/[^\S\u00A0]+/).filter(Boolean))) {
     const m = measurer.measureTextNode({ ...node, id: `${node.id}:word:${word}`, text: word }, 1e6);
     if (m) out.push({ word, width: m.width, box: node.width });
   }
@@ -809,9 +809,10 @@ async function designOn(asked, until = Infinity) {
   const attempts = [];
   const perBand = /* @__PURE__ */ new Map();
   for (const l of layoutsFor(book, format, ask.prefer ?? {}, Boolean(words.cta))) {
-    if ((perBand.get(l.band) ?? 0) >= 70) continue;
+    const share = `${l.band}|${l.ground}`;
+    if ((perBand.get(share) ?? 0) >= 36) continue;
     if (best && Date.now() > until) break;
-    perBand.set(l.band, (perBand.get(l.band) ?? 0) + 1);
+    perBand.set(share, (perBand.get(share) ?? 0) + 1);
     const plan = logo ? logoPlan(book, g, l, logo) : null;
     const c = compose(book, format, words, l, familyFor, {}, plan ?? void 0);
     const doc = await build(c.jsx, ask.picture, plan?.logo.variants);
@@ -927,6 +928,7 @@ function* layoutsFor(book, format, prefer, hasCta) {
   const sigColumns = sig && sigWidth ? Math.min(g.columns, Math.max(4, Math.round(sigWidth / 100 * g.columns))) : null;
   const sigAt = sig?.box && sig.box.y > 0 ? sig.box.y : void 0;
   const sigGround = sig ? sig.ground === "colour_block" ? "block" : sig.ground : null;
+  const blockSig = sigGround === "block" ? sig : (book.onPictures?.layouts ?? []).find((x) => carriesWords(x) && x.ground === "colour_block" && /^#[0-9a-f]{6}$/i.test(x.groundHex ?? "")) ?? null;
   const sigColour = sig ? { light: "on_photo", dark: "text", brand_colour: "accent" }[sig.words] : null;
   const ctaLook = sig && sig.cta !== "none" ? sig.cta : void 0;
   const noCta = sig?.cta === "none";
@@ -943,9 +945,10 @@ function* layoutsFor(book, format, prefer, hasCta) {
     sigGround ?? "photo",
     "photo",
     ...scrim === "gradient" ? ["gradient"] : [],
+    ...blockSig ? ["block"] : [],
     "flat"
-  ]).filter((x) => x !== "block" || sigGround === "block");
-  const widths = prefer.columns ? [prefer.columns] : uniq([...sigColumns ? [sigColumns] : [], ...format === "banner" ? [6, 8] : [9, 7, 12]]);
+  ]).filter((x) => x !== "block" || blockSig);
+  const widths = prefer.columns ? [prefer.columns] : uniq([...sigColumns ? [sigColumns] : [], ...format === "banner" ? [6, 8] : [9, 7, 5, 12]]);
   const cta = hasCta && !noCta ? prefer.cta ?? "with_words" : "none";
   const sublines = uniq(["subline", "body"].filter((n) => styleOf(book, n)));
   if (!sublines.length) sublines.push("subline");
@@ -953,10 +956,12 @@ function* layoutsFor(book, format, prefer, hasCta) {
     for (const ground of grounds) {
       if (ground === "gradient" && band === "middle") continue;
       for (const align of aligns) {
-        for (const columns of widths) {
-          for (const headline of steps.slice(0, 3)) {
+        for (const headline of steps.slice(0, 3)) {
+          for (const columns of widths) {
             for (const subline of sublines) {
               for (const colour of ground === "flat" ? ["text"] : ground === "block" ? ["on_primary"] : colours) {
+                const own = ground === "block" && blockSig && blockSig !== sig ? blockSig : null;
+                const hex = own ? own.groundHex : groundHex;
                 yield {
                   band,
                   align,
@@ -968,9 +973,9 @@ function* layoutsFor(book, format, prefer, hasCta) {
                   ...subline === "subline" ? {} : { subline },
                   ...ctaLook ? { ctaLook } : {},
                   ...ctaFill ? { ctaFill } : {},
-                  ...groundHex && (ground === "block" || ground === "flat") ? { groundHex } : {},
-                  ...sig ? { signature: sig.name } : {},
-                  ...sigAt !== void 0 && band === sig?.band ? { at: sigAt } : {}
+                  ...hex && (ground === "block" || ground === "flat") ? { groundHex: hex } : {},
+                  ...own ? { signature: own.name } : sig ? { signature: sig.name } : {},
+                  ...own ? own.box && own.box.y > 0 && band === own.band ? { at: own.box.y } : {} : sigAt !== void 0 && band === sig?.band ? { at: sigAt } : {}
                 };
               }
             }
@@ -1028,7 +1033,7 @@ function measure(doc, c, l, book, p, keep, logo = null) {
   }
   const tall = c.grid.h > c.grid.w * 1.5;
   for (const [n, style, most] of [
-    ["Headline", l.headline, tall ? 3 : 2],
+    ["Headline", l.headline, c.grid.h > c.grid.w ? 3 : 2],
     ["Price", "price", 1],
     ["Subline", "subline", tall ? 4 : 3]
   ]) {
@@ -1238,9 +1243,10 @@ function tasteOf(t, book, prefer) {
   const head = t.boxes.Headline;
   const size = head && lines > 0 ? head.h / lines / 1080 : 0;
   let s = t.score / 4;
-  s -= Math.max(0, lines - want) * 3;
-  s += Math.min(size, 0.2) * 20;
+  s -= Math.max(0, lines - want);
+  s += Math.min(size, 0.2) * 50;
   if (t.layout.fit?.headline) s -= (1 - t.layout.fit.headline) * 4;
+  if (prefer.signature && t.layout.signature && t.layout.signature !== prefer.signature) s -= 1;
   if (prefer.band && t.layout.band === prefer.band) s += 1;
   if (prefer.align && t.layout.align === prefer.align) s += 0.5;
   return Math.round(s * 100) / 100;

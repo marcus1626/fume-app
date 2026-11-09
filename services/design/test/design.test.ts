@@ -2,8 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { design, fitFor, layoutsFor, tasteOf, type Tried } from "../src/design.ts";
-import { compose } from "../src/compose.ts";
-import { build, lineWidth, png, pixelsOf } from "../src/render.ts";
+import { bindShort, compose } from "../src/compose.ts";
+import { build, lineWidth, png, pixelsOf, splitWords } from "../src/render.ts";
 import { type DesignBook } from "../src/book.ts";
 import { startWithTestFonts } from "./fonts.ts";
 
@@ -193,6 +193,20 @@ test("of the layouts that pass, the one a designer would pick: the headline in t
   const narrow = tasteOf(tried(2, 70, "middle"), branded, { band: "middle", align: "left" });
   const wide = tasteOf(tried(1, 110, "top"), branded, { band: "middle", align: "left" });
   assert.ok(wide > narrow, `one big line (${wide}) beats two small ones in the brand's own band (${narrow})`);
+  // Anthem, 9 Nov: a one-line brand's headline was set at half its size to stay on one line.
+  const small = tasteOf(tried(1, 49, "middle"), branded, { band: "middle", align: "left" });
+  const stacked = tasteOf(tried(3, 105, "middle"), branded, { band: "middle", align: "left" });
+  const tower = tasteOf(tried(4, 105, "middle"), branded, { band: "middle", align: "left" });
+  assert.ok(stacked > small, `three big lines (${stacked}) beat one small line (${small})`);
+  assert.ok(small > tower, `but four (${tower}) do not`);
+});
+
+test("a big headline stacks in a narrower column before it steps down a size", () => {
+  const all = [...layoutsFor(book, "feed", { band: "top", align: "left" }, true)];
+  const first = all.findIndex((l) => l.headline !== all[0].headline);
+  const before = all.slice(0, first);
+  assert.ok(new Set(before.map((l) => l.columns)).size >= 4, "every column width is tried at the first size");
+  assert.ok(before.some((l) => l.columns === 5));
 });
 
 test("a long call to action stays on one line inside its button", async () => {
@@ -217,4 +231,23 @@ test("an outlined call to action is a thin border in the words' colour, with no 
   assert.match(frame, /stroke="#FFFFFF"/);
   assert.doesNotMatch(frame, /\bbg=/);
   assert.equal(c.colours.CTA, "#FFFFFF");
+});
+
+test("a short word held to the next is measured with it, so the pair is never broken inside a word", async () => {
+  // Anthem, 9 Nov: "Room to Grow." was drawn "to Gr / ow." in a column each word fitted on its own.
+  const pic = await picture("#F4F1EC", "#15171A");
+  const doc = await build(`<Frame name="f" w={1080} h={1350}><Text name="Headline" w={282} font="Inter" weight={700} size={88} lineHeight={97} text={${JSON.stringify(bindShort("Room to Grow."))}} /></Frame>`, pic);
+  assert.deepEqual(splitWords(doc, "Headline"), ["to Grow."]);
+});
+
+test("where the photo gives the words no calm place, the brand's own block of colour is tried", () => {
+  const branded = { ...book, onPictures: { layouts: [
+    { name: "On the photo", band: "middle", align: "left", wordsWidthPct: 50, ground: "photo", words: "light", cta: "box", headlineLines: 1 },
+    { name: "Navy block", band: "bottom", align: "left", wordsWidthPct: 60, ground: "colour_block", groundHex: "#11213A", words: "light", cta: "box", headlineLines: 2, box: { x: 0.06, y: 0.68, w: 0.6, h: 0.26 } },
+  ] } } as DesignBook;
+  const all = [...layoutsFor(branded, "feed", { signature: "On the photo" }, true)];
+  assert.equal(all[0].ground, "photo", "the model's own layout first");
+  const block = all.find((l) => l.ground === "block")!;
+  assert.deepEqual([block.signature, block.groundHex], ["Navy block", "#11213A"]);
+  assert.ok(all.filter((l) => l.ground === "block" && l.band === "bottom").every((l) => l.at === 0.68), "at the block's own place");
 });

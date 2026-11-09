@@ -23,7 +23,7 @@ import {
 } from "./book.ts";
 import { CREATIVES_SYSTEM, CreativesAnswer, creativesPrompt, withCreatives } from "./creatives.ts";
 import { AdWords, ADWORDS_SYSTEM, adWordsPage, adWordsPrompt } from "./adwords.ts";
-import { type BookLogo, dnaLogoUrl, LOGO_TYPES, safeSvg } from "./logo.ts";
+import { type BookLogo, dnaLogoUrl, LOGO_TYPES, logoFile } from "./logo.ts";
 import { type BookFont, faceOf, fontFilesPage, withFontFiles } from "./fontfile.ts";
 import { handleBook, type Written } from "./handler.ts";
 import { LOOK_MODEL, LOOK_PARTS, LOOK_SYSTEM, type LookAnswer, type LookPicture, lookCostOf, lookPrompt, pageImages, toLookBody } from "./look.ts";
@@ -148,17 +148,14 @@ async function dnaLogo(task: Parameters<typeof voicePrompt>[0]): Promise<BookLog
     const res = await openFetch(url, { signal: AbortSignal.timeout(10_000) });
     const type = (res?.headers.get("content-type") ?? "").split(";")[0].trim();
     if (!res?.ok || !LOGO_TYPES.test(type)) return null;
-    let bytes = new Uint8Array(await res.arrayBuffer());
-    if (bytes.byteLength > 3_000_000) return null;
-    if (type === "image/svg+xml") {
-      const svg = safeSvg(new TextDecoder().decode(bytes));
-      if (!svg) return null;
-      bytes = new TextEncoder().encode(svg);
-    }
+    const raw = new Uint8Array(await res.arrayBuffer());
+    if (raw.byteLength > 3_000_000) return null;
+    const kept = logoFile(raw, type);
+    if (!kept) return null;
     const bucket = "workspace-files";
     const path = `${task.book.workspace_id}/brand/logo/${task.book.id}-dna`;
-    const { error } = await service.storage.from(bucket).upload(path, bytes, { contentType: type, upsert: true });
-    return error ? null : { bucket, path, type, from: "the Brand DNA" };
+    const { error } = await service.storage.from(bucket).upload(path, kept.bytes, { contentType: kept.type, upsert: true });
+    return error ? null : { bucket, path, type: kept.type, from: "the Brand DNA" };
   } catch {
     return null;
   }
@@ -174,17 +171,13 @@ async function fileLogo(task: Parameters<typeof voicePrompt>[0]): Promise<BookLo
     const { data: blob, error: e3 } = await service.storage.from(f.bucket).download(f.path);
     if (e3) console.error("brand-book logo file", e3.message);
     if (!blob || blob.size > 3_000_000) return null;
-    let bytes = new Uint8Array(await blob.arrayBuffer());
-    if (f.type === "image/svg+xml") {
-      const svg = safeSvg(new TextDecoder().decode(bytes));
-      if (!svg) return null;
-      bytes = new TextEncoder().encode(svg);
-    }
+    const kept = logoFile(new Uint8Array(await blob.arrayBuffer()), f.type);
+    if (!kept) return null;
     const bucket = "workspace-files";
     const path = `${task.book.workspace_id}/brand/logo/${task.book.id}-file`;
-    const { error } = await service.storage.from(bucket).upload(path, bytes, { contentType: f.type, upsert: true });
+    const { error } = await service.storage.from(bucket).upload(path, kept.bytes, { contentType: kept.type, upsert: true });
     if (error) console.error("brand-book logo file", error.message);
-    return error ? null : { bucket, path, type: f.type, from: `the brand's own file ${src.name ?? ""}`.trim() };
+    return error ? null : { bucket, path, type: kept.type, from: `the brand's own file ${src.name ?? ""}`.trim() };
   } catch (e) {
     console.error("brand-book logo file", e instanceof Error ? e.message : String(e));
     return null;

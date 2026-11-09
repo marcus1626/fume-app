@@ -2,7 +2,7 @@
 // by name (where the words go, which headline style, which colour role); code tries the layouts in that order, measures
 // each one in the picture (contrast under every line of words, how busy it is, what it covers, whether it fits the
 // safe area), and keeps the best that passes. What did not pass is said, for the expert.
-import { type DesignBook, type Format, type Grid, type Style, colourOf, componentOf, gridOf, headlineSteps, signatureOf, styleOf } from "./book.ts";
+import { type DesignBook, type Format, type Grid, type Style, carriesWords, colourOf, componentOf, gridOf, headlineSteps, signatureOf, styleOf } from "./book.ts";
 import { type Band, type Composed, type FamilyFor, type Ground, type Layout, type Words, compose, shadeFill, shadeFor } from "./compose.ts";
 import { type Box, type Pixels, type Shade, contrast, luminance, overlap, rgbOf, under } from "./pixels.ts";
 import { type BrandFace, type Doc, boxOf, build, fig, capHeightOf, hasFont, pixelsOf, place, png, lineWidth, splitWords, useBrandFaces, wordWidths } from "./render.ts";
@@ -132,12 +132,14 @@ async function designOn(asked: Ask, until = Infinity): Promise<Designed> {
   let passed = 0;
   const taste = (t: Tried) => tasteOf(t, book, ask.prefer ?? {});
   const attempts: Designed["attempts"] = [];
-  // Each place for the words gets its share of the tries, so a place that cannot work never uses them all up.
+  // Each place for the words, and each ground there, gets its share of the tries, so a place or a ground that cannot
+  // work never uses them all up (Anthem, 9 Nov: the photo used every try and the brand's navy block got none).
   const perBand = new Map<string, number>();
   for (const l of layoutsFor(book, format, ask.prefer ?? {}, Boolean(words.cta))) {
-    if ((perBand.get(l.band) ?? 0) >= 70) continue;
+    const share = `${l.band}|${l.ground}`;
+    if ((perBand.get(share) ?? 0) >= 36) continue;
     if (best && Date.now() > until) break;
-    perBand.set(l.band, (perBand.get(l.band) ?? 0) + 1);
+    perBand.set(share, (perBand.get(share) ?? 0) + 1);
     const plan = logo ? logoPlan(book, g, l, logo) : null;
     const c = compose(book, format, words, l, familyFor, {}, plan ?? undefined);
     const doc = await build(c.jsx, ask.picture, plan?.logo.variants);
@@ -277,6 +279,11 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
   // The brand's own place down the frame for its words, in its own band (9 Nov: measured from its ads).
   const sigAt = sig?.box && sig.box.y > 0 ? sig.box.y : undefined;
   const sigGround: Ground | null = sig ? (sig.ground === "colour_block" ? "block" : sig.ground) : null;
+  // The brand's own block of colour is a ground for words wherever the picture gives them no calm place, even when the
+  // model chose another of its layouts (Anthem's navy block behind a short line).
+  const blockSig = sigGround === "block"
+    ? sig
+    : (book.onPictures?.layouts ?? []).find((x) => carriesWords(x) && x.ground === "colour_block" && /^#[0-9a-f]{6}$/i.test(x.groundHex ?? "")) ?? null;
   const sigColour = sig ? ({ light: "on_photo", dark: "text", brand_colour: "accent" } as const)[sig.words] : null;
   const ctaLook = sig && sig.cta !== "none" ? sig.cta : undefined;
   // A brand whose ads carry no call to action on the picture (Nike: it sits in the ad's own button) gets none.
@@ -296,33 +303,39 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
     sigGround ?? "photo",
     "photo",
     ...(scrim === "gradient" ? ["gradient"] : []),
+    ...(blockSig ? ["block"] : []),
     "flat",
-  ]).filter((x) => x !== "block" || sigGround === "block") as Ground[];
+  ]).filter((x) => x !== "block" || blockSig) as Ground[];
   const widths = prefer.columns
     ? [prefer.columns]
-    : uniq([...(sigColumns ? [sigColumns] : []), ...(format === "banner" ? [6, 8] : [9, 7, 12])]);
+    : uniq([...(sigColumns ? [sigColumns] : []), ...(format === "banner" ? [6, 8] : [9, 7, 5, 12])]);
   const cta = hasCta && !noCta ? (prefer.cta ?? "with_words") : "none";
   // A long line from the plan may step down to the book's body size before the words move.
   const sublines = uniq(["subline", "body"].filter((n) => styleOf(book, n)));
   if (!sublines.length) sublines.push("subline");
   // The model's place for the words first; there, the picture as it is, then a shade, then a panel; then the
-  // other places. The headline steps down a size before the words move.
+  // other places. A big headline stacks in a narrower column before it steps down a size, as a designer sets it
+  // beside the product (Anthem, 9 Nov: "teksten er litt lite"); the words move last.
   for (const band of bands) {
     for (const ground of grounds) {
       if (ground === "gradient" && band === "middle") continue;
       for (const align of aligns) {
-        for (const columns of widths) {
-          for (const headline of steps.slice(0, 3)) {
+        for (const headline of steps.slice(0, 3)) {
+          for (const columns of widths) {
             for (const subline of sublines) {
               for (const colour of ground === "flat" ? ["text"] : ground === "block" ? ["on_primary"] : colours) {
+                const own = ground === "block" && blockSig && blockSig !== sig ? blockSig : null;
+                const hex = own ? own.groundHex : groundHex;
                 yield {
                   band, align, headline, colour, ground, cta, columns,
                   ...(subline === "subline" ? {} : { subline }),
                   ...(ctaLook ? { ctaLook } : {}),
                   ...(ctaFill ? { ctaFill } : {}),
-                  ...(groundHex && (ground === "block" || ground === "flat") ? { groundHex } : {}),
-                  ...(sig ? { signature: sig.name } : {}),
-                  ...(sigAt !== undefined && band === sig?.band ? { at: sigAt } : {}),
+                  ...(hex && (ground === "block" || ground === "flat") ? { groundHex: hex } : {}),
+                  ...(own ? { signature: own.name } : sig ? { signature: sig.name } : {}),
+                  ...(own
+                    ? own.box && own.box.y > 0 && band === own.band ? { at: own.box.y } : {}
+                    : sigAt !== undefined && band === sig?.band ? { at: sigAt } : {}),
                 };
               }
             }
@@ -397,8 +410,9 @@ export function measure(
       checks.push({ check: "fits", node: n === "CTA words" ? "CTA" : n, ok: false, hard: true, note: `Breaks inside a word: ${split.join(", ")}.` });
   }
   const tall = c.grid.h > c.grid.w * 1.5;
+  // A portrait feed ad carries a three-line stack as well as a story does (Anthem, 9 Nov: big titles beside the hoop).
   for (const [n, style, most] of [
-    ["Headline", l.headline, tall ? 3 : 2],
+    ["Headline", l.headline, c.grid.h > c.grid.w ? 3 : 2],
     ["Price", "price", 1],
     ["Subline", "subline", tall ? 4 : 3],
   ] as const) {
@@ -663,10 +677,14 @@ export function tasteOf(t: Tried, book: DesignBook, prefer: Partial<Layout>): nu
   const head = t.boxes.Headline;
   // The headline's size, as its line's height against the frame's width.
   const size = head && lines > 0 ? head.h / lines / 1080 : 0;
+  // A line more than the brand's own costs less than a headline half the size: two or three big lines beat one
+  // small one (Anthem, 9 Nov), four do not.
   let s = t.score / 4;
-  s -= Math.max(0, lines - want) * 3;
-  s += Math.min(size, 0.2) * 20;
+  s -= Math.max(0, lines - want);
+  s += Math.min(size, 0.2) * 50;
   if (t.layout.fit?.headline) s -= (1 - t.layout.fit.headline) * 4;
+  // The layout the model chose for this picture over another of the brand's, when both pass and read as big.
+  if (prefer.signature && t.layout.signature && t.layout.signature !== prefer.signature) s -= 1;
   if (prefer.band && t.layout.band === prefer.band) s += 1;
   if (prefer.align && t.layout.align === prefer.align) s += 0.5;
   return Math.round(s * 100) / 100;

@@ -40,3 +40,27 @@ export function safeSvg(raw: string): string | null {
 }
 
 export const LOGO_TYPES = /^image\/(png|jpeg|webp|svg\+xml)$/;
+
+/**
+ * A logo file as Fume keeps it. An SVG that only wraps a picture of the logo (Anthem's: one <image> with a PNG inside,
+ * 9 Nov) is kept as that picture, since the safe SVG would lose it and keep an empty frame; any other SVG is kept
+ * without anything that runs. Null when there is no logo in it.
+ */
+export function logoFile(bytes: Uint8Array, type: string): { bytes: Uint8Array; type: string } | null {
+  if (type !== "image/svg+xml") return { bytes, type };
+  const raw = new TextDecoder().decode(bytes);
+  const drawn = /<(path|rect|circle|ellipse|polygon|polyline|line|text)\b/i.test(raw);
+  const images = [...raw.matchAll(/<image\b[^>]*?(?:xlink:)?href\s*=\s*["']data:(image\/(?:png|jpeg|webp));base64,([A-Za-z0-9+/=\s]+)["']/gi)];
+  if (!drawn && images.length === 1) {
+    try {
+      const bin = atob(images[0][2].replace(/\s+/g, ""));
+      const out = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+      return out.length > 100 ? { bytes: out, type: images[0][1].toLowerCase() } : null;
+    } catch {
+      return null;
+    }
+  }
+  const svg = safeSvg(raw);
+  return svg ? { bytes: new TextEncoder().encode(svg), type } : null;
+}
