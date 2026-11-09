@@ -58,3 +58,12 @@ Deno.test("the brand's own site, seen as a visitor sees it, sets the headline to
   assertEquals([out.typefaces[0].family, out.typefaces[0].fallback, out.typefaces[0].source], ["Anton", "Anton", "stand_in"]);
   assertEquals(out.typefaces[1].family, "Brand Text", "a real face is kept");
 });
+
+Deno.test("a headline size read from the brand's website is a floor for a feed ad; one read from its own ads is the size", () => {
+  const a = answer("site");
+  const small = { ...a, headline: { ...a.headline, sizePctOfWidth: 6 } };
+  const site = withCreatives(body, small, [{ url: "https://x/1.jpg", kind: "screenshot" }]);
+  assertEquals(site.styles.find((s) => s.name === "display")!.sizePx, 96, "the writer's feed size stands over a desktop tile's");
+  const ads = withCreatives(body, small, [{ url: "https://x/1.jpg", kind: "liked" }]);
+  assertEquals(ads.styles.find((s) => s.name === "display")!.sizePx, 65, "the brand's own ads set it");
+});

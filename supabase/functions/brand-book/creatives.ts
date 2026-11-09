@@ -126,16 +126,24 @@ export function withCreatives<T extends DesignBody>(body: T, c: CreativesAnswer,
   // The brand's own site, seen as a visitor sees it, is its own graphic design as much as an ad is.
   const fromBrand = c.headline.source === "pictures" || c.headline.source === "site";
   const seen = fromBrand && c.headline.seenAsHeadline && c.headline.sizePctOfWidth >= 5 && carryingWords >= 2;
+  const read = c.read
+    .filter((r) => Number.isInteger(r.picture) && r.picture >= 1 && r.picture <= pictures.length)
+    .map((r) => ({ ...r, url: pictures[r.picture - 1].url ?? null, kind: pictures[r.picture - 1].kind }));
+  // A size read from the brand's own ads is the size. One read from its website is a floor, not the size: a tile on a
+  // page seen on a desktop is several times larger than an ad seen in a phone's feed (Anthem, 9 Nov: "teksten er litt
+  // lite"), so the writer's own size for a feed ad stands when it is larger.
+  const fromAds = read.some((r) => (r.kind === "liked" || r.kind === "brand") && (r.carries === "words" || r.carries === "words_and_logo"));
   const styles = body.styles.map((s) => {
     if (!seen || !["display", "h1", "h2"].includes(s.name)) return s;
     const scale = s.name === "display" ? 1 : s.name === "h1" ? 0.78 : 0.6;
+    const seenPx = Math.round(clamp(c.headline.sizePctOfWidth, 4, 20) * 10.8 * scale);
     return {
       ...s,
       case: c.headline.case,
       weight: clamp(Math.round(c.headline.weight / 100) * 100, 100, 900),
       trackingEm: round(clamp(c.headline.trackingEm, -0.06, 0.2), 3),
       lineHeight: round(clamp(c.headline.lineHeight, 0.8, 1.5)),
-      sizePx: Math.round(clamp(c.headline.sizePctOfWidth, 4, 20) * 10.8 * scale),
+      sizePx: fromAds ? seenPx : Math.max(seenPx, s.sizePx),
     };
   });
   const headlineFonts = new Set(styles.filter((s) => ["display", "h1", "h2"].includes(s.name)).map((s) => s.font));
@@ -150,9 +158,6 @@ export function withCreatives<T extends DesignBody>(body: T, c: CreativesAnswer,
     }
     return { ...t, fallback: near };
   });
-  const read = c.read
-    .filter((r) => Number.isInteger(r.picture) && r.picture >= 1 && r.picture <= pictures.length)
-    .map((r) => ({ ...r, url: pictures[r.picture - 1].url ?? null, kind: pictures[r.picture - 1].kind }));
   const layouts = c.layouts.slice(0, 5).map((l) => ({
     ...l,
     pictures: l.pictures.filter((n) => Number.isInteger(n) && n >= 1 && n <= pictures.length),
