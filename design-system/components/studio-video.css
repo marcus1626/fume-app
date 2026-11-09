@@ -14,7 +14,7 @@
                  data-template data-place><span class="ui-video-motion-key" style="--kx --ky --ks --kr --ko --kb"/></p> <p class="ui-video-caption"/></div> [SafeZones]</div></div>
                <div class="ui-video-transport"> play · <span class="ui-video-time"/> · <span class="ui-video-made"/>
                  <span class="ui-video-grade"/></div></section>
-               <div class="ui-desk-engine"> the Engine bar </div></main>
+               [the Engine's lock bar while it fixes the video from Check]</main>
              <aside class="ui-desk-panel ui-desk-vars"> the inspector </aside>
              <section class="ui-video-timeline" style="--len --t"><div class="ui-video-heads"/> <div class="ui-video-lanes">
                <div class="ui-video-ruler"><div class="ui-video-scrub" role="slider"/> <span class="ui-video-tick"
@@ -30,7 +30,9 @@
    shadow on words: captions sit on a solid Ink step so they read on any frame.
    Rule gate: few-strokes, air, space-from-tokens, radius-from-tokens, type-from-tokens, mono-is-data,
    amber-is-a-point, glass-only-floating, touch-target, hover-needs-hover, focus-is-sharp, reduced-motion,
-   no-gradient, tokens-only-color. */
+   no-gradient, tokens-only-color.
+   Round 15 (PROPOSED 9 Nov 2026): no Engine bar under the player and no video conversation in the inspector's place;
+   she talks to the Engine in the Engine panel beside the desk (engine-panel.css), which took the conversation's chips. */
 
 /* ---------- the desk: the timeline takes the whole width under the panels ---------- */
 
@@ -461,28 +463,6 @@ button.ui-video-check:focus-visible { outline: var(--ui-size-ring) solid var(--u
 .ui-video-keydot::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
 .ui-video-keydot:active { background: var(--ui-action-primary-pressed); }
 .ui-video-keydot:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
-
-/* The video conversation: the Engine's side panel, on the sheet's glass, the chat's own messages */
-.ui-video-talk-body { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; }
-.ui-video-talk-body > * { flex: 1 1 auto; min-height: 0; }
-.ui-video-talk-turn { display: grid; gap: var(--ui-space-md); }
-.ui-video-talk-changes { display: grid; gap: var(--ui-space-xs); margin: 0; padding-inline-start: var(--ui-space-lg); font-size: var(--ui-type-control); line-height: 1.45; }
-.ui-video-talk-state { display: inline-flex; align-items: center; gap: var(--ui-space-xs); margin: 0; font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
-.ui-video-talk-state > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
-.ui-video-talk-foot { display: grid; gap: var(--ui-space-sm); padding-inline: var(--ui-space-xs); }
-.ui-video-talk-foot > .ui-chat-chips { flex-wrap: wrap; overflow: visible; padding-inline: 0; }
-.ui-video-talk-context { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
-.ui-video-talk-chip { padding-inline-end: var(--ui-space-xs); }
-.ui-video-talk-chip > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-secondary); }
-.ui-video-talk-chip-x {
-  position: relative; display: grid; place-items: center; width: var(--ui-space-lg); height: var(--ui-space-lg); margin: 0; padding: 0; border: 0;
-  border-radius: var(--ui-radius-action); background: transparent; color: inherit; opacity: .55; cursor: pointer; -webkit-tap-highlight-color: transparent;
-}
-.ui-video-talk-chip-x::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
-.ui-video-talk-chip-x > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
-@media (hover: hover) { .ui-video-talk-chip-x:hover { opacity: 1; } }
-.ui-video-talk-chip-x:active { opacity: 1; background: var(--ui-badge-pressed); }
-.ui-video-talk-chip-x:focus-visible { opacity: 1; outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
 
 @media (max-width: 899px) {
   .ui-video-timeline { grid-template-columns: minmax(0, 1fr); }

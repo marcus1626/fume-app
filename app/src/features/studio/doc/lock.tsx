@@ -1,6 +1,6 @@
 // One creative, one worker at a time: the Engine never works on a creative while a designer does. While the Engine
 // works on this creative (the expert told it what to fix in Check), the desk says so over the board, the panels and the
-// Engine bar are locked, and she can Wait (the desk opens again when the fix is back) or Take over (the creative comes
+// Engine panel's composer are locked, and she can Wait (the desk opens again when the fix is back) or Take over (the creative comes
 // to her in the Studio and the Engine's fix stops).
 import { Button, Icon, TextShimmer, useToast } from "@fume/ui";
 import { useEffect, useRef, useState } from "react";

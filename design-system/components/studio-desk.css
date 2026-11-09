@@ -20,15 +20,16 @@
                    <img/><span class="ui-desk-layers" style="--layer-ink"><button class="ui-desk-layer" data-kind
                    style="--x --y --w --h"></button></span></span>[<figcaption class="ui-desk-caption"/> comparing]</figure></div>
                </section>
-               <div class="ui-desk-engine" data-proposed><div class="ui-desk-engine-change"><div class="ui-desk-engine-words">
-                 <p class="ui-desk-engine-line"> The Engine changed … </p> | <ul class="ui-desk-engine-parts"><li
-                 class="ui-desk-engine-part" data-read><svg/><span class="ui-desk-engine-part-text"><span
-                 class="ui-desk-engine-said">"…"</span><span class="ui-desk-engine-what"/><span class="ui-desk-engine-note"/>
-                 </span> Yes </li></ul></div><div class="ui-desk-engine-actions"> Undo · Keep and render </div></div>
-                 <form class="ui-desk-engine-form"><svg class="ui-desk-engine-mark"/> input · Send · Render </form></div>
+               [the Engine's lock bar while it fixes the creative from Check]
                <ol class="ui-desk-versions"><li><button class="ui-desk-version" aria-current> thumb · V3 · line · flags
                </button></li></ol></main>
              <aside class="ui-desk-panel ui-desk-vars"><h2 class="ui-desk-panel-title"/> folds </aside></div>
+   The Engine's change card (round 15: in the Engine panel's thread, engine-panel.css):
+             <div class="ui-desk-engine-change ui-engine-change"><div class="ui-desk-engine-words"> <p class="ui-message-text">
+               On the board now: <span class="ui-desk-engine-what"/></p> | <ul class="ui-desk-engine-parts"><li
+               class="ui-desk-engine-part" data-read><svg/><span class="ui-desk-engine-part-text"><span
+               class="ui-desk-engine-said">"…"</span><span class="ui-desk-engine-what"/><span class="ui-desk-engine-note"/>
+               </span> Yes </li></ul></div><div class="ui-desk-engine-actions"> Undo · Keep and render </div></div>
    Round 12 (UX review DLAY-3, DLAY-6, DWAY-10, DLOAD-15; PROPOSED 20 Oct 2026): no breadcrumb: the back arrow names
    where she came from, the creative's name is plain text with the brand and mode quiet under it, and the campaign is
    a chip. The board belongs to the creative: its view tools sit on a narrow glass rail at its left edge (their names
@@ -240,7 +241,7 @@ span.ui-desk-layer-pick:has(.ui-desk-layer-text) > svg { align-self: flex-start;
 .ui-desk-layer-text { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); overflow-wrap: anywhere; }
 .ui-desk-layer-eye[data-hidden] { opacity: .4; }
 
-/* ---------- the middle: board, Engine bar, versions ---------- */
+/* ---------- the middle: board, versions ---------- */
 
 .ui-desk-centre { grid-area: centre; display: flex; flex-direction: column; gap: var(--ui-space-sm); min-width: 0; min-height: 0; }
 .ui-desk-canvas {
@@ -314,18 +315,13 @@ div.ui-desk-empty { display: grid; justify-items: center; gap: var(--ui-space-md
 .ui-desk-layer:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-space-xs); }
 .ui-desk-layer:disabled { cursor: default; }
 
-/* The Engine bar: docked in its own row under the board, on the panels' Porcelain, so nothing floats over the
-   creative. The change card sits over the field, part by part; Send and Render say what they do. */
-.ui-desk-engine {
-  display: grid; flex-shrink: 0; gap: var(--ui-space-sm); min-width: 0; padding: var(--ui-space-sm);
-  border-radius: var(--ui-radius-card); background: var(--ui-ground); box-shadow: var(--ui-depth-sheet);
-}
+/* The Engine's change card, part by part (round 15, PROPOSED 9 Nov 2026: in the Engine panel's thread; the Engine bar
+   under the board is gone, and Render is in the top bar). */
 .ui-desk-engine-change {
   display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--ui-space-sm) var(--ui-space-lg); min-width: 0;
   padding: var(--ui-space-sm) var(--ui-space-sm) var(--ui-space-xs) var(--ui-space-md); outline: none;
 }
 .ui-desk-engine-words { flex: 1 1 calc(var(--ui-size-hit) * 6); min-width: 0; }
-.ui-desk-engine-line { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.45; color: var(--ui-text-secondary); }
 .ui-desk-engine-what { color: var(--ui-text); font-weight: var(--ui-type-weight-medium); }
 .ui-desk-engine-parts { display: grid; gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; min-width: 0; }
 .ui-desk-engine-part { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); }
@@ -335,9 +331,6 @@ div.ui-desk-empty { display: grid; justify-items: center; gap: var(--ui-space-md
 .ui-desk-engine-said { color: var(--ui-text-secondary); }
 .ui-desk-engine-note { color: var(--ui-text-tertiary); }
 .ui-desk-engine-actions { display: flex; align-items: center; gap: var(--ui-space-xs); margin-inline-start: auto; }
-.ui-desk-engine-form { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; padding-inline-start: var(--ui-space-sm); }
-.ui-desk-engine-mark { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-secondary); }
-.ui-desk-engine-input { flex: 1 1 auto; min-width: 0; border-radius: var(--ui-radius-action); }
 
 /* A control the Engine proposes to change waits on the sunken step until she keeps or undoes it */
 .ui-desk-var { min-width: 0; border-radius: var(--ui-radius-item); transition: background-color var(--ui-motion-slow) var(--ui-motion-ease); }

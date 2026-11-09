@@ -22,6 +22,7 @@ import { useAgencyHome, useAllBrands, useBoard, useQaQueue, useSession, useStudi
 import type { AgencyNeed, Id } from "../contract";
 import * as copy from "../copy";
 import { dayGroup, when } from "../lib/time";
+import { useEngineFrame } from "../features/engine/EnginePanel";
 import { agencyBell, AgencyPersonMenu } from "./AgencySidebar";
 import { SummaryClientNotice } from "./agencyNotice";
 import { ShellFrame, paletteParts, type PaletteParts } from "./Frame";
@@ -80,6 +81,7 @@ function StaffFrame({ frame }: { frame: StaffFrameKind }) {
   const needs = useStaffNeeds(frame);
   const extra = useStaffPaletteItems(scope, needs);
   const bell = useStaffBell(frame, needs);
+  const engine = useEngineFrame(); // the Engine's button and panel, for Fume's people and an agency's (Round 15)
 
   // Every status sentence under this frame reads the frame's way: an agency's "6 creatives with Maja", Fume's the staff's
   if (frame === "agency")
@@ -149,6 +151,8 @@ function StaffFrame({ frame }: { frame: StaffFrameKind }) {
       drawer
       scopeName={name}
       bell={bell}
+      barEnd={engine.barEnd}
+      aside={engine.aside}
       barStart={({ phone, away }) => (phone && !away ? <ScopePicker scope={scope} compact /> : null)}
       account={() => (frame === "agency" ? <AgencyPersonMenu avatar /> : <FumePersonMenu avatar />)}
       content={content}

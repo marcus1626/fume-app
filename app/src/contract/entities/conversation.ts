@@ -134,7 +134,46 @@ export type EngineWidget =
   | { kind: "products"; productIds: Id[]; picked?: Id[] }
   | { kind: "choice"; question: string; options: string[]; answer?: string }
   | { kind: "batch"; batchId: Id }
-  | { kind: "document"; documentId: Id };
+  | { kind: "document"; documentId: Id }
+  /** Words the Engine wrote for a field she asked about: she puts them by the field, where she keeps or drops them. */
+  | { kind: "suggestion"; field: EngineField; text: string };
+
+/** What one of the Engine's threads is about (Round 15, PROPOSED 9 Nov 2026): a campaign or a Studio document. A
+ *  message without one is in the brand's "Everything" thread. A document's thread is its Engine changes
+ *  (CreativeDocument.edits, or its video's), so it needs no messages of its own. */
+export type EngineTopic = { kind: "campaign"; id: Id } | { kind: "document"; id: Id };
+
+/** One of a brand's Engine threads, for the panel's switch: Everything first, then the projects, latest first. */
+export interface EngineThread {
+  /** None: the brand's Everything thread. */
+  topic?: EngineTopic;
+  /** "Everything", "Winter gifting", "Night ritual" */
+  title: string;
+  /** How many turns it holds (her words and the Engine's answers). */
+  count: number;
+  lastAt?: Instant;
+}
+
+/** A field the Engine is asked to write, or asked about (Round 15): a line of a plan, a planned creative's scene or
+ *  words, a line of a brand book. `value` is what the field says now. */
+export type EngineField =
+  | { kind: "plan_line"; campaignId: Id; key: string; label: string; value: string }
+  | {
+      kind: "plan_creative";
+      campaignId: Id;
+      creativeId: Id;
+      part: "scene" | "text";
+      label: string;
+      value: string;
+    }
+  | { kind: "book_line"; workspaceId: Id; path: string; label: string; value: string };
+
+/** What the Engine wrote for a field: a suggestion she keeps or drops; it is never written over her words. */
+export interface EngineWriting {
+  text: string;
+  /** One short line on what it wrote from ("From the brief: warm, low light"). */
+  why: string;
+}
 
 /** The Engine chat's answer to a question about the work: the items in Check it is about. */
 export interface EngineCheckAnswer {
@@ -164,4 +203,8 @@ export interface EngineMessage {
   answer?: EngineCheckAnswer;
   /** What the next run has been told so far. */
   run?: EngineRunDraft;
+  /** The project thread it is in; none: the brand's Everything thread. */
+  topic?: EngineTopic;
+  /** The field she asked about with it ("Ask about this"). */
+  field?: EngineField;
 }

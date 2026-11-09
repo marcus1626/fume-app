@@ -25,6 +25,7 @@ import { useSearchParams } from "react-router-dom";
 import type { CreativeDocument, EnginePrompt, PromptLedgerEntry, RenderVersion } from "../../../contract";
 import * as copy from "../../../copy";
 import { useFumeTeam } from "../shared";
+import { enginePanel } from "../../engine/panel";
 
 /** The Engine checks a prompt this many times before it gives up. */
 const TRIES = 3;
@@ -211,7 +212,7 @@ export function PromptSheet({ doc }: { doc: CreativeDocument }) {
           if (!toEngine.current) return;
           toEngine.current = false;
           e.preventDefault();
-          document.getElementById("engine-bar")?.focus();
+          enginePanel.setOpen(true); // the Engine panel, its composer ready (Round 15)
         }}
       >
         {v && (

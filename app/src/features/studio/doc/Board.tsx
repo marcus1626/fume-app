@@ -1,60 +1,24 @@
 // The middle of the desk (FLOWS §9.1): the board with the picked version large (fit or 100 %, side by side with the
-// version before it), the layers of a Design creative on top, the Engine bar under it, and the versions strip. The
-// Engine never talks in its bar: it shows what it changed ("The Engine changed Hair length 40 → 65").
+// version before it), the layers of a Design creative on top, and the versions strip.
 // - The creative takes the board. The view tools sit on a glass rail at the board's left edge (icons, their names in
-//   tooltips), the Engine bar is docked in its own row under the board, and nothing floats over the picture; the rail
-//   also hides both panels (⌘\). The version is named once, in the strip.
-// - The Engine bar's change card lists each part of the instruction: what it changed, and for a part it did not read,
-//   why and the change it would make if asked (Yes). Enter on the card keeps and renders; Esc undoes.
-// - A version whose product details read wrong is never "Clean": the strip says "1 flag · size reads 200 ml"; the
-//   Engine bar's two buttons say what they do (Send, Render).
+//   tooltips), and nothing floats over the picture; the rail also hides both panels (⌘\). The version is named once,
+//   in the strip.
+// - Round 15 (PROPOSED 9 Nov 2026): no Engine bar under the board. She talks to the Engine in the Engine panel beside
+//   the desk, in the creative's own thread; the board tells the panel what it shows and lends it its hands, so the
+//   change card there (each part of what she said, Yes, Undo with Esc, Keep and render with Enter) works as the bar's
+//   did (engine/changes.tsx). Render moved to the desk's top bar (RenderButton, below).
+// - A version whose product details read wrong is never "Clean": the strip says "1 flag · size reads 200 ml".
 // - Compare on the rail starts with the picked version and the one before; while it is on, a tap on a version in the
 //   strip adds it to the board or takes it off (up to four side by side). "Compare with the real product" puts the
 //   product's own photo (its packshot) beside the creative.
 // - Round 15 (PROPOSED 9 Nov 2026), Marcus: scores come once something is made, and they belong in the Studio. Every
 //   made version is scored by itself; "Scores" on the rail opens the shown version's board at the board's right edge,
 //   and the warning above a version under the bar opens the same board. Nothing scores a version still being made.
-import {
-  Button,
-  Glass,
-  Icon,
-  Input,
-  Skeleton,
-  TextShimmer,
-  Toggle,
-  WithTooltip,
-  studioValueWords,
-  useToast,
-  type StudioVariable,
-} from "@fume/ui";
-import {
-  useEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-  type FormEvent,
-  type KeyboardEvent,
-  type ReactNode,
-} from "react";
+import { Button, Glass, Icon, Input, Skeleton, TextShimmer, Toggle, WithTooltip, useToast } from "@fume/ui";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
-import {
-  useAddVersion,
-  useDecideEdit,
-  useDetailTokens,
-  useEngineEdit,
-  usePlacements,
-  useRender,
-  usePickVersion,
-} from "../../../api/hooks";
-import type {
-  CreativeDocument,
-  DetailToken,
-  EngineEdit,
-  Layer,
-  RenderVersion,
-  StudioMode,
-  VarValue,
-} from "../../../contract";
+import { useAddVersion, useDetailTokens, usePlacements, useRender, usePickVersion } from "../../../api/hooks";
+import type { CreativeDocument, DetailToken, Layer, RenderVersion, StudioMode, VarValue } from "../../../contract";
 import * as copy from "../../../copy";
 import { when } from "../../../lib/time";
 import { frameRoot } from "../../../shell/scope";
@@ -66,6 +30,7 @@ import { failedWords, usePromptAddress, useSeesPrompt } from "./prompt";
 import { ScoreBoard, scoreLine } from "./scores";
 import { isUnderBar, measuresOf } from "../../../domain/scores";
 import { shownVersion, tabShown, tabVersions } from "./versions";
+import { useEngineSight, type EngineSight } from "../../engine/panel";
 
 const ratio = { feed: "4 / 5", square: "1 / 1", story: "9 / 16" } as const;
 
@@ -141,7 +106,7 @@ export function Board({
   onCompare: (ids: string[]) => void;
   /** The product's own photo, to compare the creative with. */
   realProduct?: { name: string; image: string };
-  /** While the Engine works on the creative, this takes the Engine bar's place (Wait · Take over). */
+  /** While the Engine works on the creative, this lies under the board (Wait · Take over). */
   lock?: ReactNode;
 }) {
   const [zoom, setZoom] = useState<"fit" | "full">("fit");
@@ -171,9 +136,32 @@ export function Board({
   const hasProduct = Boolean(doc.specs.productId) && mode?.output === "creative";
   // A new creative starts with no product; it renders once one is picked
   // (Free renders without one: it may be a mood picture)
-  const needsProduct =
-    Boolean(mode?.uses.includes("product")) && doc.studio === "render" && mode?.id !== "m-free" && !doc.specs.productId;
+  const needsProduct = needsAProduct(doc, mode);
   useFixDone(doc);
+  // What the Engine panel sees on the board, and the board's hands for its change card (Round 15)
+  const hands = useRef({ onBeforeRender, onVariable });
+  hands.current = { onBeforeRender, onVariable };
+  const sight = useMemo<EngineSight>(
+    () => ({
+      workspaceId: doc.workspaceId,
+      topic: { kind: "document", id: doc.id },
+      title: documentName(doc, mode),
+      seen: [
+        ...(shown ? [{ id: "version", icon: "image" as const, words: `Version ${shown.number}` }] : []),
+        ...(mode ? [{ id: "mode", icon: "layers" as const, words: `${mode.name} mode` }] : []),
+      ],
+      desk: {
+        doc,
+        mode,
+        busy: Boolean(rendering),
+        locked: Boolean(lock),
+        onBefore: () => hands.current.onBeforeRender(),
+        onVariable: (key, value) => hands.current.onVariable(key, value),
+      },
+    }),
+    [doc, mode, shown, rendering, lock],
+  );
+  useEngineSight(sight);
   // The prompt behind the shown version, for Fume's own people (FLOWS §29)
   const seesPrompt = useSeesPrompt();
   const promptAt = usePromptAddress();
@@ -422,18 +410,49 @@ export function Board({
         </div>
       </section>
 
-      {!readOnly &&
-        (lock ?? (
-          <EngineBar
-            doc={doc}
-            mode={mode}
-            busy={Boolean(rendering)}
-            needsProduct={needsProduct}
-            onBeforeRender={onBeforeRender}
-            onVariable={onVariable}
-          />
-        ))}
+      {!readOnly && lock}
     </>
+  );
+}
+
+/** A new creative starts with no product; it renders once one is picked (Free renders without one: it may be a mood
+ *  picture). */
+const needsAProduct = (doc: CreativeDocument, mode?: StudioMode) =>
+  Boolean(mode?.uses.includes("product")) && doc.studio === "render" && mode?.id !== "m-free" && !doc.specs.productId;
+
+/** Render, in the desk's top bar: a new version from the variables as they are (it was the Engine bar's second button
+ *  until Round 15). Saves the desk's changes first. */
+export function RenderButton({
+  doc,
+  mode,
+  onBefore,
+}: {
+  doc: CreativeDocument;
+  mode?: StudioMode;
+  onBefore: () => void;
+}) {
+  const render = useRender();
+  const toast = useToast();
+  const needsProduct = needsAProduct(doc, mode);
+  const busy = tabVersions(doc).some((v) => v.state === "rendering");
+  return (
+    <WithTooltip label={needsProduct ? "Pick a product first" : "Render a new version from the variables as they are"}>
+      <Button
+        size="sm"
+        variant="secondary"
+        icon="refresh-cw"
+        loading={render.isPending}
+        disabled={busy || needsProduct}
+        onClick={() => {
+          onBefore();
+          render.mutate(doc.id, {
+            onError: (err) => toast.error("The render didn’t start", { description: err.message }),
+          });
+        }}
+      >
+        Render
+      </Button>
+    </WithTooltip>
   );
 }
 
@@ -466,252 +485,6 @@ function RailToggle({
     <WithTooltip label={label} shortcut={shortcut} side="right">
       <Toggle size="sm" iconOnly icon={icon} className="ui-desk-rail-tool" aria-label={label} {...props} />
     </WithTooltip>
-  );
-}
-
-// ─── The Engine bar ──────────────────────────────────────────────────────────
-
-const changeWords = (c: { key: string; label: string; from: VarValue; to: VarValue }, mode?: StudioMode) => {
-  const v = mode?.variables.find((x) => x.key === c.key) as StudioVariable | undefined;
-  return `${c.label} ${studioValueWords(v, c.from as never)} → ${studioValueWords(v, c.to as never)}`;
-};
-
-/** An example for the Engine bar that fits the mode. */
-const example = (doc: CreativeDocument, mode?: StudioMode) =>
-  doc.studio === "design"
-    ? "Hide the logo"
-    : mode?.output === "model"
-      ? "Make her hair longer"
-      : mode?.output === "reference"
-        ? "Make it in oak"
-        : "Make the light warmer";
-
-function EngineBar({
-  doc,
-  mode,
-  busy,
-  needsProduct,
-  onBeforeRender,
-  onVariable,
-}: {
-  doc: CreativeDocument;
-  mode?: StudioMode;
-  busy: boolean;
-  needsProduct?: boolean;
-  onBeforeRender: () => void;
-  onVariable: (key: string, value: VarValue) => void;
-}) {
-  const [text, setText] = useState("");
-  const engineEdit = useEngineEdit();
-  const render = useRender();
-  const toast = useToast();
-  const input = useRef<HTMLInputElement>(null);
-  const proposed = [...doc.edits].reverse().find((e) => e.state === "proposed");
-
-  const submit = (e: FormEvent) => {
-    e.preventDefault();
-    const words = text.trim();
-    if (!words) return;
-    onBeforeRender();
-    engineEdit.mutate(
-      { documentId: doc.id, text: words },
-      {
-        onSuccess: () => setText(""),
-        onError: (err) => toast.error("The Engine didn’t take that", { description: err.message }),
-      },
-    );
-  };
-
-  return (
-    <div className="ui-desk-engine" data-proposed={proposed ? "" : undefined}>
-      {proposed && (
-        <ChangeCard
-          key={proposed.id}
-          doc={doc}
-          edit={proposed}
-          mode={mode}
-          busy={busy}
-          onBeforeRender={onBeforeRender}
-          onVariable={onVariable}
-          onDone={() => input.current?.focus()}
-        />
-      )}
-      <form className="ui-desk-engine-form" onSubmit={submit}>
-        <Icon name="fume-engine" className="ui-desk-engine-mark" />
-        <label className="ui-sr-only" htmlFor="engine-bar">
-          Tell the Engine what to change
-        </label>
-        <input
-          ref={input}
-          id="engine-bar"
-          className="ui-input ui-input--sm ui-desk-engine-input"
-          placeholder={`Tell the Engine what to change, e.g. ${example(doc, mode)}`}
-          value={text}
-          autoComplete="off"
-          onChange={(e) => setText(e.target.value)}
-        />
-        <Button
-          type="submit"
-          size="sm"
-          variant="secondary"
-          icon="arrow-up"
-          loading={engineEdit.isPending}
-          disabled={!text.trim()}
-        >
-          Send
-        </Button>
-        <WithTooltip
-          label={needsProduct ? "Pick a product first" : "Render a new version from the variables as they are"}
-        >
-          <Button
-            size="sm"
-            variant="secondary"
-            icon="refresh-cw"
-            loading={render.isPending}
-            disabled={busy || needsProduct}
-            onClick={() => {
-              onBeforeRender();
-              render.mutate(doc.id, {
-                onError: (err) => toast.error("The render didn’t start", { description: err.message }),
-              });
-            }}
-          >
-            Render
-          </Button>
-        </WithTooltip>
-      </form>
-    </div>
-  );
-}
-
-/** The Engine's change, shown before it renders (FLOWS §9.1), part by part. */
-function ChangeCard({
-  doc,
-  edit,
-  mode,
-  busy,
-  onBeforeRender,
-  onVariable,
-  onDone,
-}: {
-  doc: CreativeDocument;
-  edit: EngineEdit;
-  mode?: StudioMode;
-  busy: boolean;
-  onBeforeRender: () => void;
-  onVariable: (key: string, value: VarValue) => void;
-  onDone: () => void;
-}) {
-  const decide = useDecideEdit();
-  const keep = useRef<HTMLButtonElement>(null);
-  // The suggestions she took with Yes, by variable: undone with the card.
-  const [taken, setTaken] = useState<Record<string, VarValue>>({});
-  const parts = edit.parts?.length ? edit.parts : [{ text: edit.text, keys: edit.changes.map((c) => c.key) }];
-  const canKeep = edit.changes.length > 0 || Object.keys(taken).length > 0;
-  const many = parts.length > 1 || parts.some((p) => !p.keys.length);
-  const byKey = (key: string) => edit.changes.find((c) => c.key === key);
-
-  // The card takes the keyboard when it comes: Enter keeps and renders, Esc undoes.
-  useEffect(() => {
-    if (canKeep) keep.current?.focus({ preventScroll: true });
-  }, [canKeep]);
-
-  const undo = () => {
-    for (const [key, from] of Object.entries(taken)) onVariable(key, from);
-    decide.mutate({ documentId: doc.id, editId: edit.id, verdict: "undo" }, { onSuccess: onDone });
-  };
-  const keepIt = () => {
-    onBeforeRender();
-    decide.mutate({ documentId: doc.id, editId: edit.id, verdict: "keep" }, { onSuccess: onDone });
-  };
-  const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key !== "Escape") return;
-    e.preventDefault();
-    e.stopPropagation();
-    undo();
-  };
-
-  return (
-    <div className="ui-desk-engine-change" aria-live="polite" onKeyDown={onKey}>
-      <div className="ui-desk-engine-words">
-        {!many ? (
-          <p className="ui-desk-engine-line">
-            {edit.changes.length ? (
-              <>
-                The Engine changed{" "}
-                <span className="ui-desk-engine-what">{edit.changes.map((c) => changeWords(c, mode)).join(" · ")}</span>
-              </>
-            ) : (
-              "The Engine found nothing to change for that"
-            )}
-          </p>
-        ) : (
-          <ul className="ui-desk-engine-parts" aria-label="What the Engine read">
-            {parts.map((p, i) => {
-              const s = p.suggestion;
-              const took = s && s.key in taken;
-              return (
-                <li key={i} className="ui-desk-engine-part" data-read={p.keys.length || took ? "" : undefined}>
-                  <Icon name={p.keys.length || took ? "circle-check" : "minus"} className="ui-desk-engine-part-icon" />
-                  <span className="ui-desk-engine-part-text">
-                    <span className="ui-desk-engine-said">“{p.text}”</span>
-                    {p.keys.length > 0 && (
-                      <span className="ui-desk-engine-what">
-                        {p.keys
-                          .map((k) => byKey(k))
-                          .filter(Boolean)
-                          .map((c) => changeWords(c!, mode))
-                          .join(" · ")}
-                      </span>
-                    )}
-                    {!p.keys.length && p.note && <span className="ui-desk-engine-note">{p.note}.</span>}
-                    {!p.keys.length && s && (
-                      <span className="ui-desk-engine-what">
-                        {took ? changeWords(s, mode) : `${changeWords(s, mode)}?`}
-                      </span>
-                    )}
-                  </span>
-                  {!p.keys.length && s && !took && (
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => {
-                        setTaken((t) => ({ ...t, [s.key]: s.from }));
-                        onVariable(s.key, s.to);
-                      }}
-                    >
-                      Yes
-                    </Button>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
-      <div className="ui-desk-engine-actions">
-        <WithTooltip label="Undo the change" shortcut="Esc">
-          <Button size="sm" variant="quiet" icon="undo-2" disabled={decide.isPending} onClick={undo}>
-            Undo
-          </Button>
-        </WithTooltip>
-        {canKeep && (
-          <WithTooltip label="Keep it and render a new version" shortcut="↵">
-            <Button
-              ref={keep}
-              size="sm"
-              variant="secondary"
-              icon="refresh-cw"
-              loading={decide.isPending}
-              disabled={busy}
-              onClick={keepIt}
-            >
-              Keep and render
-            </Button>
-          </WithTooltip>
-        )}
-      </div>
-    </div>
   );
 }
 

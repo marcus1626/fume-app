@@ -414,6 +414,7 @@ async function readEverything(p: Person, ids: Universe) {
     await a.qaQueue(id);
     await a.lookPresets(id);
     await a.engineChat(id);
+    await a.engineThreads(id);
   }
   for (const id of ids.documents) await a.document(id);
   for (const id of ids.sessions) await a.studioSession(id);
@@ -1345,4 +1346,53 @@ test("the golden master calls every member of the mock", () => {
   console.log(`golden master: ${members.length - missing.length} of ${members.length} FumeApi members called`);
   if (missing.length) console.log(`not called: ${missing.join(", ")}`);
   expect(members.length).toBeGreaterThan(0);
+});
+
+// Round 15 (PROPOSED 9 Nov 2026): the Engine panel's threads (Everything, a campaign's, a creative's) and "Write with
+// Engine" on a field: a suggestion she keeps or drops, and a question with the field as context.
+scenario("engine threads and writing a field", async (golden) => {
+  const anna = golden.open("anna", { userId: "u-anna" });
+  const a = anna.call;
+  const winter = { kind: "campaign", id: "c-winter" } as const;
+  const light = {
+    kind: "plan_line",
+    campaignId: "c-winter",
+    key: "light",
+    label: "Light",
+    value: "Low, warm side light from a window at dusk.",
+  } as const;
+  await a.engineThreads("w-lysne");
+  await a.engineChat("w-lysne", winter);
+  await a.engineChat("w-lysne", { kind: "document", id: "doc-autumn-m3" });
+  await a.engineWrite(light);
+  await a.engineWrite({
+    kind: "plan_creative",
+    campaignId: "c-winter",
+    creativeId: "pc-w-a-m1",
+    part: "text",
+    label: "Master 1’s words",
+    value: "En rolig kveld.",
+  });
+  await a.engineWrite({
+    kind: "book_line",
+    workspaceId: "w-lysne",
+    path: "identity.who",
+    label: "Who we are",
+    value: "LYSNE makes body oils. Made in Norway.",
+  });
+  await a.engineSay("w-lysne", "Write it shorter", { topic: winter, field: light });
+  await anna.advance(3_000);
+  await a.engineSay("w-lysne", "Is it on brand?", { topic: winter, field: light });
+  await anna.advance(3_000);
+  await a.engineSay("w-lysne", "What waits for a check?", { topic: winter });
+  await anna.advance(3_000);
+  await a.engineSay("w-lysne", "Packshots of the gift sets", { topic: winter });
+  await anna.advance(3_000);
+  await a.engineChat("w-lysne", winter);
+  await a.engineChat("w-lysne");
+  await a.engineThreads("w-lysne");
+  // A customer never talks to the Engine
+  const maja = golden.open("maja", {}).call;
+  await maja.engineThreads("w-lysne");
+  await maja.engineWrite(light);
 });

@@ -33,12 +33,44 @@ test("Anna fixes the shot the Engine flagged in a video", async ({ page }) => {
   await expect(checks).not.toContainText("Oil runs out");
   await expect(page.getByRole("button", { name: /^Shot 3: Oil runs out/ })).toHaveCount(0);
 
-  // The Engine bar shows a cut before it is kept
-  await page.getByLabel("Tell the Engine what to change").fill("Cut it to 6 s on the beat");
-  await page.getByRole("button", { name: "Send", exact: true }).click();
-  await expect(page.getByText("The edit from 15.0 s to 6.0 s; every shot gives up the same share")).toBeVisible();
-  await page.getByRole("button", { name: "Keep" }).click();
+  // The Engine panel (round 15, in place of the Engine bar) shows a cut before it is kept
+  await page.getByRole("button", { name: "Open the Engine" }).click();
+  const engine = page.getByRole("complementary", { name: "Engine" });
+  await engine.getByRole("textbox", { name: "Message to the Engine" }).fill("Cut it to 6 s on the beat");
+  await engine.getByRole("button", { name: "Send to the Engine" }).click();
+  await expect(
+    engine.getByText("The edit from 15.0 s to 6.0 s; every shot gives up the same share", { exact: true }),
+  ).toBeVisible();
+  await engine.getByRole("button", { name: "Keep", exact: true }).click();
   await expect(page.getByText(/\/ 0:06\.0$/)).toBeVisible();
+  await expect(engine.getByText("Kept in the edit.").last()).toBeVisible();
+});
+
+test("Anna asks the Engine about a line of the plan, and has it write one", async ({ page }) => {
+  await page.goto("/studio/b/w-lysne/campaigns/c-winter/plan?as=anna");
+  // Write with Engine: a suggestion under the line, kept with the line's own save
+  await page.getByRole("button", { name: "Write light with Engine" }).click();
+  const suggestion = page.getByRole("status", { name: "The Engine’s suggestion for light" });
+  await expect(suggestion).toContainText("One warm source, low and to the side");
+  await suggestion.getByRole("button", { name: "Keep it" }).click();
+  await expect(page.getByText("Light changed")).toBeVisible();
+  await expect(page.getByText(/^One warm source, low and to the side/)).toBeVisible();
+
+  // Ask about this: the panel opens on the campaign's thread with the line as context
+  await page.getByRole("button", { name: "Ask the Engine about camera" }).click();
+  const engine = page.getByRole("complementary", { name: "Engine" });
+  await expect(engine.getByRole("button", { name: /^Thread: Winter gifting/ })).toBeVisible();
+  await expect(engine.getByRole("list", { name: "What the Engine sees" })).toContainText(
+    "Camera · Winter gifting’s plan",
+  );
+  await engine.getByRole("button", { name: "Write it shorter" }).click();
+  await expect(engine.getByText("For camera")).toBeVisible();
+
+  // The same thread is on the Engine page, its full-screen view
+  await engine.getByRole("link", { name: "Open the Engine full screen" }).click();
+  await expect(page).toHaveURL(/\/engine\?thread=campaign:c-winter/);
+  await expect(page.getByRole("button", { name: /^Thread: Winter gifting/ })).toBeVisible();
+  await expect(page.getByText("Write it shorter")).toBeVisible();
 });
 
 test("Anna sees a version under the bar, with its scores, and the prompt behind it", async ({ page }) => {
