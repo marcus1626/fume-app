@@ -54,6 +54,7 @@ export const CreativesAnswer = z.object({
     words: z.enum(["light", "dark", "brand_colour"]),
     groundHex: z.string().describe("The colour of the block or panel the words stand on, as #RRGGBB read from the pictures; empty when they stand on the photo or a shade"),
     cta: z.enum(["pill", "box", "outline", "slant", "slant_double", "underline", "text", "none"]).describe("How the call to action looks: a filled pill or box, an outline (a thin straight border in the words' colour with no fill), slant (a slanted outline, a parallelogram border with no fill), slant_double (two thin slanted outlines that cross, as some sports retailers set their buttons), underlined words, words alone, or none when the brand's creatives carry no call to action. Look closely at the button's edges: slanted sides and doubled lines are the brand's own device"),
+    ctaWords: z.string().describe("The call to action's words exactly as the pictures that show this layout set them, in the brand's own case (e.g. SHOP NOW); empty when they show no call to action"),
     ctaAt: z.enum(["with_words", "bottom_left", "bottom_right"]).describe("Where the call to action sits: under the words, or apart from them in a bottom corner of the picture (some brands set the headline bottom left and the button bottom right)"),
     ctaFill: z.enum(["light", "dark", "brand_colour", "none"]).describe("The button's own colour: light (e.g. a white pill with dark words), dark, the brand's colour, or none for words alone"),
     logo: Where,
@@ -173,6 +174,9 @@ export function withCreatives<T extends DesignBody>(body: T, c: CreativesAnswer,
     // (Anthem, 9 Nov). Only the brand's own ads can say an ad goes without it.
     logo: !fromAds && l.logo === "none" ? "any" : l.logo,
     logoWidthPct: l.logo === "none" ? 0 : round(clamp(l.logoWidthPct, 4, 30), 0),
+    // The brand's own words on its button, as its creatives set them (Anthem, 9 Nov: its tiles say SHOP NOW, the plan
+    // wrote "Shop Basketball Hoops" from its pages). Only words seen on the brand's pictures or site count.
+    ctaWords: l.cta !== "none" && (l.source === "pictures" || l.source === "site") ? (l.ctaWords ?? "").trim().replace(/^["'“]|["'”]$/g, "").slice(0, 40) : "",
   }));
   return {
     ...body,

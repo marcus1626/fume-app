@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { design, fitFor, layoutsFor, tasteOf, type Tried } from "../src/design.ts";
+import { better, design, fitFor, layoutsFor, tasteOf, type Tried } from "../src/design.ts";
 import { bindShort, compose } from "../src/compose.ts";
 import { boxOf, build, lineWidth, png, pixelsOf, slantJSX, splitWords } from "../src/render.ts";
 import { type DesignBook } from "../src/book.ts";
@@ -311,4 +311,19 @@ test("a headline keeps the brand's headline case when it steps down a size", () 
   const c = compose(upper, "feed", { headline: "Own the court", cta: "Go" }, { band: "top", align: "left", headline: "h1", colour: "on_photo", ground: "photo", cta: "with_words", columns: 9 }, () => "Inter");
   const head = c.jsx.slice(c.jsx.indexOf('name="Headline"'), c.jsx.indexOf("/>", c.jsx.indexOf('name="Headline"')));
   assert.ok(head.includes('textCase="upper"'), head);
+});
+
+test("among layouts that fail, the one over the product loses to one on a poor ground", () => {
+  const base = { ok: false, layout: { band: "top", align: "left" }, boxes: {} } as unknown as Tried;
+  const overProduct = { ...base, score: 0, checks: [{ check: "covers", node: "Words", ok: false, hard: true, value: 0.3, note: "Covers the hoop." }] } as Tried;
+  const poorGround = {
+    ...base,
+    score: -25,
+    checks: [
+      { check: "contrast", node: "Subline", ok: false, hard: true, value: 2.2, note: "" },
+      { check: "contrast", node: "Headline", ok: false, hard: true, value: 2.5, note: "" },
+    ],
+  } as Tried;
+  assert.ok(better(poorGround, overProduct));
+  assert.ok(!better(overProduct, poorGround));
 });

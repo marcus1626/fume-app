@@ -82,3 +82,14 @@ Deno.test("one product photo read as carrying words is not the brand's ads", () 
   const out = withCreatives(body, small, [{ url: "https://x/1.jpg", kind: "screenshot" }, { url: "https://x/2.jpg", kind: "brand" }, { url: "https://x/3.jpg", kind: "screenshot" }]);
   assertEquals(out.styles.find((s) => s.name === "display")!.sizePx, 96);
 });
+
+Deno.test("the words on the brand's own button are kept with its layout, never a proposal's", () => {
+  const ctaOf = (out: ReturnType<typeof withCreatives>) => (out.onPictures as { layouts: { ctaWords: string }[] }).layouts[0].ctaWords;
+  const seen = (source: "site" | "fume", cta: "slant_double" | "none" = "slant_double") => {
+    const a = answer(source);
+    return { ...a, layouts: [{ ...a.layouts[0], cta, ctaWords: "“SHOP NOW”" }] };
+  };
+  assertEquals(ctaOf(withCreatives(body, seen("site"), [{ url: "https://x/1.jpg", kind: "screenshot" }])), "SHOP NOW");
+  assertEquals(ctaOf(withCreatives(body, seen("fume"), [{ url: "https://x/1.jpg", kind: "screenshot" }])), "");
+  assertEquals(ctaOf(withCreatives(body, seen("site", "none"), [{ url: "https://x/1.jpg", kind: "screenshot" }])), "");
+});

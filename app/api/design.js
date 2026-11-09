@@ -650,8 +650,8 @@ function tone(px) {
   const mean = lums.reduce((a, x) => a + x, 0) / n;
   const spread = Math.sqrt(lums.reduce((a, x) => a + (x - mean) ** 2, 0) / n);
   const hex = `#${[r2, g, b].map((c) => Math.round(c / n).toString(16).padStart(2, "0")).join("")}`.toUpperCase();
-  const covered = n / (px.length / 16);
-  return { hex, mono: spread < 0.06 && covered < 0.9 };
+  const covered2 = n / (px.length / 16);
+  return { hex, mono: spread < 0.06 && covered2 < 0.9 };
 }
 function tint(px, hex) {
   const n = parseInt(hex.replace("#", ""), 16);
@@ -836,7 +836,8 @@ async function design(asked) {
     if (Date.now() > t0 + BUDGET_MS.all - 6e3) break;
     const next = await designOn({ ...asked, picture: room.picture, keepClear, prefer: { ...asked.prefer ?? {}, band: "top" } }, t0 + BUDGET_MS.all);
     tried += next.tried;
-    if (next.ok || hardFails(next) < hardFails(best)) {
+    const fewer = covered(next.checks) < covered(best.checks) - 1e-3 || Math.abs(covered(next.checks) - covered(best.checks)) <= 1e-3 && hardFails(next) < hardFails(best);
+    if (next.ok || fewer) {
       best = {
         ...next,
         checks: [
@@ -885,7 +886,7 @@ async function designOn(asked, until = Infinity) {
       const df = await build(cf.jsx, ask.picture, plan?.logo.variants);
       const tf = measure(df, cf, lf, book, pixels, keep, plan);
       tried++;
-      if (better(tf, t, taste) || tf.ok === t.ok && !tf.ok && tf.score >= t.score) {
+      if (better(tf, t, taste) || tf.ok === t.ok && !tf.ok && covered(tf.checks) <= covered(t.checks) && tf.score >= t.score) {
         t = tf;
         made = df;
       }
@@ -1300,9 +1301,14 @@ function fitFor(doc, sizes = {}) {
   const price = whole < 1 && whole >= PRICE_FLOOR ? Math.floor(whole * 100) / 100 : need("Price");
   return headline || cta || price ? { ...headline ? { headline } : {}, ...cta ? { cta } : {}, ...price ? { price } : {} } : null;
 }
+function covered(checks) {
+  return checks.filter((c) => c.check === "covers" && !c.ok && c.node !== "Picture").reduce((s, c) => s + (c.value ?? 1), 0);
+}
 function better(a, b, taste) {
   if (a.ok !== b.ok) return a.ok;
   if (a.ok) return taste ? taste(a) > taste(b) + 0.05 : false;
+  const ca = covered(a.checks), cb = covered(b.checks);
+  if (Math.abs(ca - cb) > 1e-3) return ca < cb;
   return a.score > b.score;
 }
 function tasteOf(t, book, prefer) {

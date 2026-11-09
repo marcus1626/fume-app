@@ -78,7 +78,7 @@ export interface PlanTask {
 }
 
 /** One of the brand's layouts for words on its pictures, as the plan writer is shown it. */
-export type BrandLayout = { name: string; band: string; align: string; wordsWidthPct: number; ground: string; why?: string };
+export type BrandLayout = { name: string; band: string; align: string; wordsWidthPct: number; ground: string; why?: string; cta?: string };
 
 export interface VoiceInUse {
   id: string;
@@ -213,6 +213,7 @@ export function layoutsOf(layouts: unknown): BrandLayout[] {
         wordsWidthPct: Number(x.wordsWidthPct) || 40,
         ground: String(x.ground ?? ""),
         ...(typeof x.why === "string" ? { why: x.why.slice(0, 200) } : {}),
+        ...(typeof x.ctaWords === "string" && x.ctaWords.trim() ? { cta: x.ctaWords.trim().slice(0, 40) } : {}),
       };
     });
 }
@@ -227,6 +228,9 @@ export function layoutPart(layouts: BrandLayout[] | undefined): string[] {
   return [
     `<brand_layouts>\n${JSON.stringify(layouts)}\n</brand_layouts>`,
     "These are the brand's own layouts for words on its pictures: where the words sit (band and align), how wide their column is (a share of the picture's width) and what they stand on. For every creative with words, choose the layout that suits its scene and name it in layout, exactly as listed. Write the scene for it: the product and anything that matters stay clear of that place, and the ground there is calm, so the words can be set there later.",
+    ...(layouts.some((l) => l.cta)
+      ? ["Where a layout lists cta, those are the words the brand itself sets on its button, as its own creatives show them. A creative set in that layout carries them as its call to action, word for word in the brand's case, unless the brief asks for another action; the tone of voice's other calls to action are for its pages, not its creatives."]
+      : []),
   ];
 }
 

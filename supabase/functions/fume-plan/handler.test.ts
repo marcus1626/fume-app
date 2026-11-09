@@ -443,3 +443,11 @@ Deno.test("each creative with words is planned in one of the brand's own layouts
   const master = ((toBody(plan, layouts).directions as { creatives: Record<string, unknown>[] }[])[0].creatives)[0];
   assertEquals("layout" in master, false, "a creative without words has no layout");
 });
+
+Deno.test("a layout's own call to action, as the brand's creatives set it, is the plan's", () => {
+  const layouts = layoutsOf([{ name: "Tile", band: "middle", align: "left", wordsWidthPct: 40, ground: "photo", hasWords: true, ctaWords: " SHOP NOW " }]);
+  assertEquals(layouts[0].cta, "SHOP NOW");
+  const p = prompt({ ...task, layouts });
+  assertEquals(p.includes("\"cta\":\"SHOP NOW\"") && p.includes("words the brand itself sets on its button"), true);
+  assertEquals(prompt({ ...task, layouts: layoutsOf([{ name: "Tile", band: "middle", align: "left", wordsWidthPct: 40, ground: "photo" }]) }).includes("its button"), false);
+});

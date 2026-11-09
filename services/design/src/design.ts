@@ -97,7 +97,9 @@ export async function design(asked: Ask): Promise<Designed> {
     // The picture moves to the bottom right corner, so the room it leaves is at the top: those places are tried first.
     const next = await designOn({ ...asked, picture: room.picture, keepClear, prefer: { ...(asked.prefer ?? {}), band: "top" } }, t0 + BUDGET_MS.all);
     tried += next.tried;
-    if (next.ok || hardFails(next) < hardFails(best)) {
+    const fewer = covered(next.checks) < covered(best.checks) - 0.001 ||
+      (Math.abs(covered(next.checks) - covered(best.checks)) <= 0.001 && hardFails(next) < hardFails(best));
+    if (next.ok || fewer) {
       best = {
         ...next,
         checks: [
@@ -154,7 +156,7 @@ async function designOn(asked: Ask, until = Infinity): Promise<Designed> {
       const df = await build(cf.jsx, ask.picture, plan?.logo.variants);
       const tf = measure(df, cf, lf, book, pixels, keep, plan);
       tried++;
-      if (better(tf, t, taste) || (tf.ok === t.ok && !tf.ok && tf.score >= t.score)) {
+      if (better(tf, t, taste) || (tf.ok === t.ok && !tf.ok && covered(tf.checks) <= covered(t.checks) && tf.score >= t.score)) {
         t = tf;
         made = df;
       }
@@ -670,10 +672,19 @@ export function fitFor(doc: Doc, sizes: Record<string, number> = {}): Layout["fi
   return headline || cta || price ? { ...(headline ? { headline } : {}), ...(cta ? { cta } : {}), ...(price ? { price } : {}) } : null;
 }
 
-/** The first passing layout in the model's order wins; among failing ones, the one that fails least. */
-function better(a: Tried, b: Tried, taste?: (t: Tried) => number): boolean {
+/** How much of what must stay clear (the product, a face) the words cover. */
+export function covered(checks: Check[]): number {
+  return checks.filter((c) => c.check === "covers" && !c.ok && c.node !== "Picture").reduce((s, c) => s + (c.value ?? 1), 0);
+}
+
+/** The first passing layout in the model's order wins; among failing ones, the one that fails least. Words over the
+ *  product are the worst failure of all: a designer sets them on a poor ground before they cover what is sold (Anthem,
+ *  9 Nov: a contrast patch and covering the hoop cost the same, and the words went over the backboard). */
+export function better(a: Tried, b: Tried, taste?: (t: Tried) => number): boolean {
   if (a.ok !== b.ok) return a.ok;
   if (a.ok) return taste ? taste(a) > taste(b) + 0.05 : false;
+  const ca = covered(a.checks), cb = covered(b.checks);
+  if (Math.abs(ca - cb) > 0.001) return ca < cb;
   return a.score > b.score;
 }
 
