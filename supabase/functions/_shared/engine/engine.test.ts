@@ -401,8 +401,10 @@ Deno.test("a picture that carries words is made with room for them, where the pl
   assertEquals([fromBrand?.side, fromBrand?.share], ["left", 0.39]);
   const [rule] = roomRules(withWords("A shirt laid flat on grey."));
   assertEquals([rule.id, rule.binding, rule.dimension], ["room-for-words", "hard", "composition"]);
-  assertEquals(/right 61% of the frame's width/.test(rule.statement) && /never fills the frame/.test(rule.statement), true);
+  assertEquals(/right 61% of the frame.s width/.test(rule.statement) && /never fills the frame/.test(rule.statement), true);
   assertEquals(/no reflections, puddles, lights/.test(rule.statement), true, "a scene's shiny surface is not room for words");
+  assertEquals(/never a flat panel, a blank slab, a split frame/.test(rule.statement), true, "the room is the scene's own background, not a slab");
+  assertEquals(/button/.test(rule.statement), false, "no button corner when the brand sets none apart");
   assertEquals(wordsRoom({ ...withWords("x"), master: { url: "u", title: "V1", picked: true } }), null, "a correction keeps its frame");
   // The layout the plan chose for the creative wins over the scene's words and the brand's first layout.
   const planned = { ...task, room, plan: { ...task.plan, planned_creatives: [{ ...pc, text: "HELG", scene: "Right side kept clear.", layout: "Panel" }] } };
@@ -415,4 +417,10 @@ Deno.test("a picture that carries words is made with room for them, where the pl
   const measured = { ...room, layouts: [{ ...room.layouts[1], box: { x: 0.07, y: 0.3, w: 0.3, h: 0.35 } }] };
   const boxed = wordsRoom({ ...withWords("A shirt laid flat on grey."), room: measured });
   assertEquals([boxed?.side, boxed?.share], ["left", 0.43], "the room reaches just past the brand's own block of words");
+  // Anthem: a big block of words and SHOP NOW apart in the bottom right.
+  const anthem = { ...room, layouts: [{ ...room.layouts[1], box: { x: 0.15, y: 0.3, w: 0.4, h: 0.28 }, ctaAt: "bottom_right" }] };
+  const wide = wordsRoom({ ...withWords("A hoop in a driveway."), room: anthem });
+  assertEquals([wide?.side, wide?.share, wide?.button], ["left", 0.5, "right"], "never more than half the frame");
+  const [corner] = roomRules({ ...withWords("A hoop in a driveway."), room: anthem });
+  assertEquals(/bottom right corner, the lowest eighth of the frame's height across the right half/.test(corner.statement), true);
 });
