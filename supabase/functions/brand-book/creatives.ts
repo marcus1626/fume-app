@@ -132,7 +132,10 @@ export function withCreatives<T extends DesignBody>(body: T, c: CreativesAnswer,
   // A size read from the brand's own ads is the size. One read from its website is a floor, not the size: a tile on a
   // page seen on a desktop is several times larger than an ad seen in a phone's feed (Anthem, 9 Nov: "teksten er litt
   // lite"), so the writer's own size for a feed ad stands when it is larger.
-  const fromAds = read.some((r) => (r.kind === "liked" || r.kind === "brand") && (r.carries === "words" || r.carries === "words_and_logo"));
+  // A product photo with the maker's printing on it is easily read as carrying words (Anthem, 9 Nov: a football), so one
+  // ad the brand's people marked as theirs counts, or two of its own pictures.
+  const withWords = (kind: string) => read.filter((r) => r.kind === kind && (r.carries === "words" || r.carries === "words_and_logo")).length;
+  const fromAds = withWords("liked") >= 1 || withWords("brand") >= 2;
   const styles = body.styles.map((s) => {
     if (!seen || !["display", "h1", "h2"].includes(s.name)) return s;
     const scale = s.name === "display" ? 1 : s.name === "h1" ? 0.78 : 0.6;

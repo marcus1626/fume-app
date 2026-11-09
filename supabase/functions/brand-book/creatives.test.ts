@@ -75,3 +75,10 @@ Deno.test("a website tile without a logo leaves the logo free in an ad; the bran
   assertEquals(logoOf(withCreatives(body, bare, [{ url: "https://x/1.jpg", kind: "screenshot" }])), "any");
   assertEquals(logoOf(withCreatives(body, bare, [{ url: "https://x/1.jpg", kind: "liked" }])), "none");
 });
+
+Deno.test("one product photo read as carrying words is not the brand's ads", () => {
+  const a = answer("site");
+  const small = { ...a, headline: { ...a.headline, sizePctOfWidth: 6 }, read: [{ picture: 1, carries: "words_and_logo" as const, what: "site" }, { picture: 2, carries: "words" as const, what: "a football's printing" }, { picture: 3, carries: "words" as const, what: "site" }] };
+  const out = withCreatives(body, small, [{ url: "https://x/1.jpg", kind: "screenshot" }, { url: "https://x/2.jpg", kind: "brand" }, { url: "https://x/3.jpg", kind: "screenshot" }]);
+  assertEquals(out.styles.find((s) => s.name === "display")!.sizePx, 96);
+});
