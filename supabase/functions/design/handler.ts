@@ -87,13 +87,20 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
       }
     }
     // The model's eye is a help, not a gate: without it the service still finds a layout that passes its checks.
-    if (!choice) {
+    // A failed look is tried once more: without it nothing in the picture is kept clear, and the words can land on a
+    // person or the product while every measured check still passes (Anthem "Two on two", 9 Nov: a headline across
+    // the father's body, no keep-clear box at all).
+    let blind: string | null = null;
+    for (let i = 0; !choice && !kept && i < 2; i++) {
       try {
         choice = await d.choose(t, words, picture, spent);
-      } catch {
+        if (!choice) blind = "the model gave no answer";
+      } catch (e) {
         choice = null;
+        blind = e instanceof Error ? e.message.slice(0, 200) : String(e).slice(0, 200);
       }
     }
+    if (choice) blind = null;
     // The layout the plan chose is the one the Engine left room for (9 Nov): the words go there. The model's eye still
     // marks what to keep clear and the colour; only an earlier design kept above, or a designer's ask, sets it apart.
     const planned = kept || t.ask ? null : plannedLayout(t);
@@ -160,10 +167,17 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
       // The expert still checks it; the layer is kept without Fume's own review.
     }
     if (!out.ok) findings.unshift({ severity: "major", what: "No layout passed every check; this is the closest one.", by: "code" });
+    if (blind) {
+      findings.unshift({
+        severity: "major",
+        what: "Fume could not read the picture, so nothing in it was kept clear: check that the words cover no person and not the product.",
+        by: "code",
+      });
+    }
     const { error } = await d.service.finish(t.layer_id, {
       name: `${t.creative.title ?? "Creative"}, graphic design`,
       words,
-      choice: { ...(choice ?? {}), verdict, ...(scores ? { review: scores } : {}), ...(kept ? { kept: true } : {}), ...(keptWhy ? { not_kept: keptWhy } : {}), ...(planned ? { planned: true } : {}) },
+      choice: { ...(choice ?? {}), verdict, ...(scores ? { review: scores } : {}), ...(kept ? { kept: true } : {}), ...(keptWhy ? { not_kept: keptWhy } : {}), ...(planned ? { planned: true } : {}), ...(blind ? { blind } : {}) },
       layout: out.layout ?? null,
       checks: out.checks ?? [],
       attempts: out.attempts ?? [],
