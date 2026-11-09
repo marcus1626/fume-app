@@ -14,3 +14,5 @@ export * from "./folds";
 export * from "./lightboard";
 export * from "./source";
 export * from "./camera-presets";
+export * from "./scrub";
+export * from "./place";

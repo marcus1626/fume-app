@@ -43,6 +43,7 @@ import { Failed, Loading, useBack } from "../../../shell/Page";
 import { directory, firstName } from "../../../shell/people";
 import { Board, documentName, RenderButton, Versions } from "./Board";
 import { EngineToggle } from "../../engine/EnginePanel";
+import { EnginePrompt } from "../../engine/prompt";
 import { CampaignChip, CampaignLookChip } from "./campaign";
 import { CanvasLight, type LightView } from "./CanvasLight";
 import { MakeFormats } from "./formats";
@@ -158,6 +159,30 @@ function useBare() {
   return [bare, toggle] as const;
 }
 
+/** A view setting of the Design studio, remembered on this computer (round 16: the layout grid, snapping). */
+function useViewFlag(key: string, start: boolean) {
+  const [on, setOn] = useState(() => {
+    try {
+      const v = localStorage.getItem(key);
+      return v === null ? start : v === "1";
+    } catch {
+      return start;
+    }
+  });
+  const set = useCallback(
+    (next: boolean) => {
+      setOn(next);
+      try {
+        localStorage.setItem(key, next ? "1" : "0");
+      } catch {
+        /* private mode: it lasts until the page closes */
+      }
+    },
+    [key],
+  );
+  return [on, set] as const;
+}
+
 function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
   const session = useSession().data;
   const campaign = useCampaign(doc.campaignId);
@@ -175,6 +200,21 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
   const [formatsOpen, setFormatsOpen] = useState(false);
   const [lightView, setLightView] = useState<LightView>();
   const [bare, toggleBare] = useBare();
+  // Design (round 16): the layout grid over the canvas (⇧G, as in Figma) and snapping a dragged layer to it
+  const [gridShown, setGridShown] = useViewFlag("fume.desk.grid", false);
+  const [snap, setSnap] = useViewFlag("fume.desk.snap", true);
+  useEffect(() => {
+    if (doc.studio !== "design") return;
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (!e.shiftKey || e.metaKey || e.ctrlKey || e.altKey || e.key.toLowerCase() !== "g") return;
+      if (t && t.closest("input, textarea, select, [contenteditable='true'], [role='dialog']")) return;
+      e.preventDefault();
+      setGridShown(!gridShown);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [doc.studio, gridShown, setGridShown]);
   // The versions compared side by side on the board; the strip adds and removes them.
   const [compare, setCompare] = useState<string[]>([]);
   const placements = usePlacements().data ?? [];
@@ -571,6 +611,8 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
               brandName={brandName}
               selectedLayer={selected}
               onSelectLayer={setSelectedLayer}
+              onLayers={setLayers}
+              grid={{ shown: gridShown, snap, onShown: setGridShown }}
               readOnly={readOnly}
               onBeforeRender={history.flush}
               onVariable={(key, value) =>
@@ -583,6 +625,7 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
               realProduct={product?.images[0] ? { name: product.name, image: product.images[0] } : undefined}
               lock={locked && work ? <EngineLockBar item={work} title={title} /> : undefined}
             />
+            {!readOnly && <EnginePrompt />}
             {formatsOpen && !readOnly ? (
               <MakeFormats
                 doc={doc}
@@ -622,6 +665,10 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
                   brandName={brandName}
                   onLayers={setLayers}
                   onVariables={(patch, key) => history.change({ variables: { ...state.variables, ...patch } }, key)}
+                  gridShown={gridShown}
+                  onGridShown={setGridShown}
+                  snap={snap}
+                  onSnap={setSnap}
                 />
               ) : (
                 <VariablesPanel

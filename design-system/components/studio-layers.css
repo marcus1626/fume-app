@@ -90,3 +90,9 @@
 @media (prefers-reduced-motion: reduce) {
   .ui-desk-layer-tree .ui-desk-layer-lock:not([data-on]) { transition: none; }
 }
+
+/* Round 16 (PROPOSED 9 Nov 2026), as in Figma. The layout grid's four numbers sit two by two; a layer's eye shows a
+   cut line when it is hidden (eye-off), as well as going quiet. */
+.ui-desk-grid-values { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ui-desk-px .ui-scrub { padding-inline: var(--ui-space-xs); }
+.ui-desk-grid-key { margin-inline: var(--ui-space-xs); }

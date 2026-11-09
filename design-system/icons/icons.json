@@ -327,6 +327,41 @@
       "note": ""
     },
     {
+      "name": "lock-open",
+      "lucide": "lock-open",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "An unlocked layer, on the row under the pointer (round 16)."
+    },
+    {
+      "name": "eye-off",
+      "lucide": "eye-off",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "A hidden layer: the filled eye with Lucide's slash, cut clear of the eye (round 16, Marcus 9 Nov)."
+    },
+    {
+      "name": "text-align-start",
+      "lucide": "text-align-start",
+      "kind": "line",
+      "status": "PROPOSED",
+      "note": "Words set to the left (round 16)."
+    },
+    {
+      "name": "text-align-center",
+      "lucide": "text-align-center",
+      "kind": "line",
+      "status": "PROPOSED",
+      "note": "Words centred (round 16)."
+    },
+    {
+      "name": "text-align-end",
+      "lucide": "text-align-end",
+      "kind": "line",
+      "status": "PROPOSED",
+      "note": "Words set to the right (round 16)."
+    },
+    {
       "name": "mail",
       "lucide": "mail",
       "kind": "filled",

@@ -309,7 +309,7 @@ div.ui-desk-empty { display: grid; justify-items: center; gap: var(--ui-space-md
 .ui-desk-layer[data-kind="logo"] { font-size: 4cqi; letter-spacing: .24em; /* gate-allow:type-from-tokens the brand's mark, scaled to the frame */ }
 /* the selection box: the one place the desk draws a line, as Photoshop does, because a selection has no surface */
 .ui-desk-layer::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
-@media (hover: hover) { .ui-desk-layer:hover:not(:disabled) { outline: var(--ui-size-ring) dashed var(--ui-glass-fg-secondary); outline-offset: var(--ui-space-xs); /* gate-allow:few-strokes a selection box over a creative has no surface to step */ } }
+@media (hover: hover) { .ui-desk-layer:hover:not(:disabled):not([aria-pressed="true"]) { outline: var(--ui-size-ring) dashed var(--ui-glass-fg-secondary); outline-offset: var(--ui-space-xs); /* gate-allow:few-strokes a selection box over a creative has no surface to step */ } }
 .ui-desk-layer:active:not(:disabled) { opacity: .8; }
 .ui-desk-layer[aria-pressed="true"] { outline: var(--ui-size-ring) solid var(--ui-action-primary-fg); outline-offset: var(--ui-space-xs); /* gate-allow:few-strokes the selected layer's box, as in Photoshop */ }
 .ui-desk-layer:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-space-xs); }
@@ -554,3 +554,36 @@ button.ui-desk-version:disabled { cursor: default; }
 .ui-desk-canvas[data-scores] .ui-desk-score-warn { inset-inline-end: calc(var(--desk-scores) + var(--ui-space-md)); }
 .ui-desk-canvas[data-scores] .ui-desk-scores { width: min(304px, 50%); }
 @media (prefers-reduced-motion: reduce) { .ui-score-warn-open:active { transform: none; } }
+
+/* ---------- on the canvas, round 16 (PROPOSED 9 Nov 2026), as in Figma ----------
+   <span class="ui-desk-layers" data-dragging>
+     <span class="ui-desk-grid" [data-lines]><span class="ui-desk-grid-col" style="--start --end"/> <span class="ui-desk-grid-row"/></span>
+     <span class="ui-desk-guide" data-axis="x|y" style="--at"/>
+     <button class="ui-desk-layer" data-movable data-dragged> words <span class="ui-desk-layer-handle" data-edge="start|end"/></button>
+   The grid is a light tint over the picture (its columns, its rows); a grid without gutters (thirds) is drawn as lines.
+   A guide is the line a dragged layer snapped to. Both use difference blending, so they read on a light or a dark
+   picture without a colour of their own. */
+.ui-desk-layer[data-movable] { touch-action: none; user-select: none; }
+.ui-desk-layer[data-movable]:not(:disabled) { cursor: grab; }
+.ui-desk-layers[data-dragging], .ui-desk-layers[data-dragging] .ui-desk-layer { cursor: grabbing; }
+.ui-desk-layer[data-dragged] { opacity: 1; }
+.ui-desk-grid { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: difference; }
+.ui-desk-grid-col, .ui-desk-grid-row { position: absolute; background: var(--ui-text-on-ink); opacity: .14; }
+.ui-desk-grid-col { inset-block: 0; left: calc(var(--start) * 100%); width: calc((var(--end) - var(--start)) * 100%); }
+.ui-desk-grid-row { inset-inline: 0; top: calc(var(--start) * 100%); height: calc((var(--end) - var(--start)) * 100%); }
+.ui-desk-grid[data-lines] .ui-desk-grid-col, .ui-desk-grid[data-lines] .ui-desk-grid-row { background: transparent; opacity: .5; }
+.ui-desk-grid[data-lines] .ui-desk-grid-col:not(:last-of-type) { box-shadow: inset calc(var(--ui-size-ring) * -0.5) 0 0 var(--ui-text-on-ink); }
+.ui-desk-grid[data-lines] .ui-desk-grid-row:not(:last-of-type) { box-shadow: inset 0 calc(var(--ui-size-ring) * -0.5) 0 var(--ui-text-on-ink); }
+.ui-desk-guide { position: absolute; pointer-events: none; background: var(--ui-text-on-ink); mix-blend-mode: difference; }
+.ui-desk-guide[data-axis="x"] { inset-block: 0; left: calc(var(--at) * 100%); width: calc(var(--ui-size-ring) * .5); transform: translateX(-50%); }
+.ui-desk-guide[data-axis="y"] { inset-inline: 0; top: calc(var(--at) * 100%); height: calc(var(--ui-size-ring) * .5); transform: translateY(-50%); }
+/* the width handles: a short bar on each side of the picked layer, its hit area wider than it looks */
+.ui-desk-layer-handle {
+  position: absolute; inset-block-start: 50%; width: var(--ui-space-xs); height: calc(var(--ui-space-md) + var(--ui-space-sm));
+  border-radius: var(--ui-radius-check); background: var(--ui-action-primary-fg); cursor: ew-resize; touch-action: none;
+  transform: translate(-50%, -50%); -webkit-tap-highlight-color: transparent;
+}
+.ui-desk-layer-handle[data-edge="start"] { inset-inline-start: calc(var(--ui-space-xs) * -1); }
+.ui-desk-layer-handle[data-edge="end"] { inset-inline-start: calc(100% + var(--ui-space-xs)); }
+.ui-desk-layer-handle::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-desk-layer-handle:active { transform: translate(-50%, -50%) scaleY(1.15); }

@@ -168,3 +168,76 @@
   .ui-sc-swatch:active, .ui-sc-mode:active { transform: none; }
   .ui-sc-dial:active .ui-sc-dial-point { transform: translate(-50%, -50%); }
 }
+
+/* ---------- round 16 (PROPOSED 9 Nov 2026): pro controls, as in Figma and OpenPencil ----------
+   Marcus: presets on size, dropdowns that show the difference, a box of places to align, a colour of her own, a
+   handle to drag a value. Markup:
+     <span class="ui-scrub" data-scrubbing>X</span>                       a number's handle (scrub.tsx)
+     <div class="ui-sc-number" data-presets>[−] <div class="ui-input-group ui-sc-number-group"> handle · field ·
+       <button class="ui-input-group-button ui-sc-number-menu"/> </div> [+]</div>
+     <div class="ui-sc-place" role="radiogroup"><button class="ui-sc-place-cell" role="radio" aria-checked>
+       <span class="ui-sc-place-mark"/></button> × 9</div>
+     <span class="ui-sc-preview" style="font-family; font-weight; --preview-size">Cormorant</span>  in a select's list
+     <span class="ui-sc-swatch-group" data-custom><button class="ui-sc-swatch ui-sc-swatch-add"/></span> */
+.ui-scrub {
+  display: inline-grid; place-items: center; min-width: 1lh; align-self: stretch; border-radius: var(--ui-radius-check);
+  color: var(--ui-text-tertiary); cursor: ns-resize; touch-action: none; user-select: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-scrub > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+@media (hover: hover) { .ui-scrub:hover:not([data-disabled]) { background: var(--ui-item-bg-hover); color: var(--ui-text); } }
+.ui-scrub:active:not([data-disabled]) { background: var(--ui-item-bg-pressed); color: var(--ui-text); }
+.ui-scrub[data-disabled] { cursor: default; }
+.ui-sc-number-group { flex: 1 1 auto; min-width: 0; }
+.ui-sc-number-group .ui-input-group-addon:not([data-align]) { padding-inline-start: var(--ui-space-xs); }
+.ui-sc-number-group .ui-input-group-addon[data-align="inline-end"] { padding-inline-end: var(--ui-space-xs); }
+.ui-sc-number-group .ui-sc-number-field { text-align: start; }
+.ui-sc-number-menu.ui-btn { --h: calc(var(--ui-field-height-sm) - var(--ui-space-sm)); --icon: var(--ui-size-icon-sm); }
+.ui-sc-number-list { min-width: calc(var(--ui-size-control-lg) * 4); max-height: min(var(--ui-field-list-max), 60vh); overflow-y: auto; }
+.ui-sc-number-value { font-variant-numeric: tabular-nums; }
+.ui-sc-number-meta { margin-inline-start: auto; padding-inline-start: var(--ui-space-md); font-size: var(--ui-type-label); color: var(--ui-glass-fg-secondary); /* the list is Smoke glass */ }
+
+/* a select's options drawn as what they are; the closed field keeps the panel's own size */
+/* Drawn as itself in the list only; the closed field keeps the interface's type, so it reads at a glance. */
+.ui-select-item .ui-sc-preview {
+  font-family: var(--pv-font-family, inherit); font-weight: var(--pv-font-weight, inherit); text-transform: var(--pv-text-transform, none);
+  letter-spacing: var(--pv-letter-spacing, normal); font-size: var(--preview-size, inherit); line-height: 1.2; /* gate-allow:type-from-tokens a text style shown at its own size, scaled to the list */
+}
+/* The closed field's words shrink before its icon does (Radix drops the value's class, so it is reached by place). */
+.ui-sc-select .ui-select-trigger > span:first-child { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+
+/* the box of nine places: a dot where it can go, a bar where it is */
+.ui-sc-place {
+  --cell: calc(var(--ui-size-control-sm) - var(--ui-space-xs));
+  display: grid; grid-template-columns: repeat(3, var(--cell)); grid-auto-rows: var(--cell); gap: 0;
+  justify-self: start; padding: var(--ui-space-xs); border-radius: var(--ui-radius-field); background: var(--ui-surface-sunken);
+}
+.ui-sc-place-cell {
+  position: relative; display: grid; place-items: center; margin: 0; padding: 0; border: 0; border-radius: var(--ui-radius-check);
+  background: transparent; color: var(--ui-text-tertiary); cursor: pointer; -webkit-tap-highlight-color: transparent; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-sc-place-cell::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-sc-place-mark { width: var(--ui-space-xs); height: var(--ui-space-xs); border-radius: 50%; background: currentColor; transition: width var(--ui-motion-fast) var(--ui-motion-ease), border-radius var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-sc-place-cell[aria-checked="true"] { background: var(--ui-surface); color: var(--ui-text); }
+.ui-sc-place-cell[aria-checked="true"] .ui-sc-place-mark { width: calc(var(--ui-space-md) + var(--ui-space-xs)); height: var(--ui-space-xs); border-radius: var(--ui-radius-check); }
+@media (hover: hover) { .ui-sc-place-cell:hover:not(:disabled):not([aria-checked="true"]) { color: var(--ui-text); } }
+.ui-sc-place-cell:active:not(:disabled) { background: var(--ui-item-bg-pressed); }
+.ui-sc-place-cell:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: calc(var(--ui-size-ring) * -1); }
+.ui-sc-place-cell:disabled { cursor: default; opacity: .4; }
+
+/* a colour of her own: the last swatch, a plus on the sunken step; the picker opens beside it */
+.ui-sc-swatch-add { display: inline-grid; place-items: center; background: var(--ui-surface-sunken); color: var(--ui-text-secondary); box-shadow: none; }
+.ui-sc-swatch-add > .ico { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-sc-swatch-add[data-state="open"] { color: var(--ui-text); background: var(--ui-item-bg-pressed); }
+.ui-sc-custom-row { display: flex; align-items: center; gap: var(--ui-space-sm); }
+.ui-sc-custom-pick { position: relative; flex: none; width: var(--ui-size-control-sm); height: var(--ui-size-control-sm); margin: 0; padding: 0; border: 0; border-radius: var(--ui-radius-action); background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.ui-sc-custom-pick::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-sc-custom-pick:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-sc-custom-pick::-webkit-color-swatch-wrapper { padding: 0; }
+.ui-sc-custom-pick::-webkit-color-swatch { border: 0; border-radius: var(--ui-radius-action); }
+.ui-sc-custom-hex { width: calc(var(--ui-size-control-lg) * 3); }
+@media (prefers-reduced-motion: reduce) {
+  .ui-scrub, .ui-sc-place-cell, .ui-sc-place-mark { transition: none; }
+}
+.ui-select-item .ui-sc-preview + small { margin-inline-start: var(--ui-space-sm); }

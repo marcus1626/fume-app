@@ -244,8 +244,11 @@ test("Anna asks Fume for the graphic design on a picture, and reads what came ba
   await expect(page.getByRole("button", { name: "Logo layer" })).toHaveCount(0);
   await layers.getByRole("button", { name: "Show Logo" }).click();
   await expect(page.getByRole("button", { name: "Logo layer" })).toBeVisible();
-  // Nothing picked, the right panel shows the frame: Align says where the words are; no generator on a layout
-  await expect(page.getByRole("tab", { name: "Top", selected: true })).toBeVisible();
+  // Nothing picked, the right panel shows the frame: Align's nine places mark where the words are (round 16); no
+  // generator on a layout
+  await expect(
+    page.getByRole("radiogroup", { name: "Align" }).getByRole("radio", { name: /^Top/, checked: true }),
+  ).toBeVisible();
   await expect(page.getByText("Generator")).toHaveCount(0);
 
   await page.getByRole("button", { name: "The graphic design and its checks" }).click();

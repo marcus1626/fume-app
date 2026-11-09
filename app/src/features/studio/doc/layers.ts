@@ -1,6 +1,7 @@
 // The Design studio's layers (round 15, PROPOSED 9 Nov 2026; app/FLOWS-r15-design.md). What each layer is, how it
 // looks in the brand's design system, where the words sit, and the layers of Fume's design read from what Fume laid
 // out. Pure functions: the panels and the board share them, so a control always says what the canvas shows.
+import type { StudioPlaceValue } from "@fume/ui";
 import type {
   CreativeDocument,
   DesignBook,
@@ -357,3 +358,201 @@ export function layersOn(
 /** A position in pixels of the frame, and back. */
 export const toPx = (n: number, of: number) => Math.round(n * of);
 export const fromPx = (px: number, of: number) => round(px / of);
+
+// ─── Places, the layout grid and snapping (round 16, PROPOSED 9 Nov 2026) ─────
+// Marcus: "Align as a box grid with different places" and "a grid to align things, on and off, with templates for
+// each aspect ratio or custom values". The safe area is the design system's: its margin on the sides, its safe
+// zones at the top and the foot.
+
+export type Place = StudioPlaceValue;
+type Side = "left" | "centre" | "right";
+type Row = "top" | "middle" | "bottom";
+
+/** The design system's safe area for a format, 0–1 of the frame. */
+export function safeArea(book: DesignBook | undefined, format: Format) {
+  const [W, H] = FRAME[format];
+  const g = book?.formats.find((f) => f.format === format);
+  return {
+    left: (g?.marginPx ?? 72) / W,
+    right: 1 - (g?.marginPx ?? 72) / W,
+    top: (g?.safeTopPx ?? 72) / H,
+    bottom: 1 - (g?.safeBottomPx ?? 96) / H,
+  };
+}
+
+/** Where a box sits among the nine places of the safe area; none when it is between them. */
+function placeOfBox(box: { x: number; y: number; w: number; h: number }, book: DesignBook | undefined, format: Format) {
+  const [W, H] = FRAME[format];
+  const s = safeArea(book, format);
+  const tx = 12 / W;
+  const ty = 12 / H;
+  const side: Side | undefined =
+    Math.abs(box.x - s.left) < tx
+      ? "left"
+      : Math.abs(box.x + box.w - s.right) < tx
+        ? "right"
+        : Math.abs(box.x + box.w / 2 - 0.5) < tx
+          ? "centre"
+          : undefined;
+  const row: Row | undefined =
+    Math.abs(box.y - s.top) < ty
+      ? "top"
+      : Math.abs(box.y + box.h - s.bottom) < ty
+        ? "bottom"
+        : Math.abs(box.y + box.h / 2 - 0.5) < ty
+          ? "middle"
+          : undefined;
+  return side && row ? (`${row}-${side}` as Place) : undefined;
+}
+
+/** A layer's place in the frame, read from where it is drawn. */
+export function placeOf(l: Layer, book: DesignBook | undefined, format: Format): Place | undefined {
+  return placeOfBox({ x: l.x, y: l.y, w: l.w, h: heightOf(l, book, format) }, book, format);
+}
+
+/** The box moved to a place in the safe area. */
+function boxAt(place: Place, w: number, h: number, book: DesignBook | undefined, format: Format) {
+  const s = safeArea(book, format);
+  const [row, side] = place.split("-") as [Row, Side];
+  const x = side === "left" ? s.left : side === "right" ? s.right - w : (1 - w) / 2;
+  const y = row === "top" ? s.top : row === "bottom" ? s.bottom - h : (1 - h) / 2;
+  return { x: round(x), y: round(y), side };
+}
+
+/** One layer to a place. Words take the alignment of their side, as a designer sets a headline in a corner. */
+export function placeLayer(layers: Layer[], id: string, place: Place, book: DesignBook | undefined, format: Format) {
+  return layers.map((l) => {
+    if (l.id !== id) return l;
+    const { x, y, side } = boxAt(place, l.w, heightOf(l, book, format), book, format);
+    return { ...l, x, y, ...(isWords(l) ? { align: side } : {}) };
+  });
+}
+
+/** Where the block of words sits among the nine places. */
+export function blockPlaceOf(layers: Layer[], book: DesignBook | undefined, format: Format): Place | undefined {
+  const b = wordBlock(layers, book, format);
+  if (!b) return undefined;
+  const x = Math.min(...b.words.map((l) => l.x));
+  const right = Math.max(...b.words.map((l) => l.x + l.w));
+  return placeOfBox({ x, y: b.top, w: right - x, h: b.bottom - b.top }, book, format);
+}
+
+/** The block of words to a place: up and down as moveBlock (clear of the logo and the call to action, the shade
+ *  following), across to its side, each line set to that side. */
+export function placeBlock(layers: Layer[], place: Place, book: DesignBook | undefined, format: Format): Layer[] {
+  const [row, side] = place.split("-") as [Row, Side];
+  const moved = moveBlock(layers, row === "middle" ? "centre" : row, book, format);
+  const s = safeArea(book, format);
+  return moved.map((l) => {
+    if (!l.visible || !isWords(l)) return l;
+    const x = side === "left" ? s.left : side === "right" ? s.right - l.w : (1 - l.w) / 2;
+    return { ...l, x: round(x), align: side };
+  });
+}
+
+/** A layout grid: columns and rows inside a margin, in pixels of the frame. Rows 0 is columns only. */
+export interface LayoutGrid {
+  columns: number;
+  rows: number;
+  gutterPx: number;
+  marginPx: number;
+}
+
+export interface GridTemplate {
+  id: string;
+  name: string;
+  /** What it is, in a few words ("6 columns · 24 gutter"). */
+  meta: string;
+  grid: LayoutGrid;
+}
+
+const gridWords = (g: LayoutGrid) =>
+  [
+    g.columns && `${g.columns} columns`,
+    g.rows && `${g.rows} rows`,
+    g.gutterPx && `${g.gutterPx} gutter`,
+    g.marginPx && `${g.marginPx} margin`,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
+/** The grids that fit this format: the brand's own first (its design system's columns for the ratio), then the
+ *  thirds, and the common column grids at the brand's margin. */
+export function gridTemplates(book: DesignBook | undefined, format: Format, brandName: string): GridTemplate[] {
+  const g = book?.formats.find((f) => f.format === format);
+  const margin = g?.marginPx ?? 72;
+  const gutter = g?.gutterPx ?? 24;
+  const ratio = { feed: "4:5", square: "1:1", story: "9:16" }[format];
+  const list: GridTemplate[] = [];
+  if (g) {
+    const grid = { columns: g.columns, rows: 0, gutterPx: g.gutterPx, marginPx: g.marginPx };
+    list.push({ id: "brand", name: `${brandName}’s grid · ${ratio}`, meta: gridWords(grid), grid });
+  }
+  const thirds = { columns: 3, rows: 3, gutterPx: 0, marginPx: 0 };
+  list.push({ id: "thirds", name: "Thirds", meta: "3 × 3, the whole frame", grid: thirds });
+  for (const columns of format === "story" ? [4, 6] : [4, 12]) {
+    const grid = { columns, rows: 0, gutterPx: gutter, marginPx: margin };
+    list.push({ id: `cols-${columns}`, name: `${columns} columns · ${ratio}`, meta: gridWords(grid), grid });
+  }
+  return list;
+}
+
+/** The creative's grid: a template's, or the values set by hand ("custom"), kept in its variables. */
+export function gridOf(variables: Variables, book: DesignBook | undefined, format: Format, brandName: string) {
+  const templates = gridTemplates(book, format, brandName);
+  const id = typeof variables.grid === "string" ? variables.grid : (templates[0]?.id ?? "thirds");
+  if (id === "custom" && typeof variables.gridCustom === "string") {
+    const [columns = 6, rows = 0, gutterPx = 24, marginPx = 72] = variables.gridCustom.split(",").map(Number);
+    return { id, name: "Custom", grid: { columns, rows, gutterPx, marginPx }, templates };
+  }
+  const t = templates.find((x) => x.id === id) ?? templates[0]!;
+  return { id: t.id, name: t.name, grid: t.grid, templates };
+}
+
+export const gridValue = (g: LayoutGrid) => [g.columns, g.rows, g.gutterPx, g.marginPx].join(",");
+
+/** The grid's tracks, 0–1 of the frame: each column's left and right, each row's top and bottom. */
+export function gridTracks(g: LayoutGrid, format: Format) {
+  const [W, H] = FRAME[format];
+  const track = (n: number, size: number) => {
+    if (!n) return [];
+    const inner = size - 2 * g.marginPx - (n - 1) * g.gutterPx;
+    const each = inner / n;
+    return Array.from({ length: n }, (_, i) => {
+      const start = g.marginPx + i * (each + g.gutterPx);
+      return { start: start / size, end: (start + each) / size };
+    });
+  };
+  return { columns: track(g.columns, W), rows: track(g.rows, H) };
+}
+
+/** Lines a dragged box snaps to, 0–1 of the frame: the grid's edges, the safe area and the frame's middle. */
+export function snapLines(g: LayoutGrid | undefined, book: DesignBook | undefined, format: Format) {
+  const s = safeArea(book, format);
+  const xs = new Set<number>([0.5, s.left, s.right]);
+  const ys = new Set<number>([0.5, s.top, s.bottom]);
+  if (g) {
+    const t = gridTracks(g, format);
+    for (const c of t.columns) {
+      xs.add(c.start);
+      xs.add(c.end);
+    }
+    for (const r of t.rows) {
+      ys.add(r.start);
+      ys.add(r.end);
+    }
+  }
+  return { xs: [...xs], ys: [...ys] };
+}
+
+/** A box's start snapped to the nearest line by its start, middle or end, within 8 px of the frame. */
+export function snapAxis(start: number, size: number, lines: number[], px: number) {
+  const reach = 8 / px;
+  let best: { by: number; line: number } | undefined;
+  for (const line of lines)
+    for (const at of [start, start + size / 2, start + size]) {
+      const by = line - at;
+      if (Math.abs(by) <= reach && (!best || Math.abs(by) < Math.abs(best.by))) best = { by, line };
+    }
+  return best ? { at: round(start + best.by), line: best.line } : { at: round(start), line: undefined };
+}

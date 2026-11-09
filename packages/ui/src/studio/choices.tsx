@@ -4,6 +4,7 @@
 //                    with the brand's name
 //   StudioToggle     on or off (Switch, small, on the label line)
 //   StudioChips      several of a few (ToggleGroup multiple, small pills that wrap)
+import type { CSSProperties, ReactNode } from "react";
 import { SegmentedControl, SegmentedOption } from "../controls/segmented";
 import {
   Select,
@@ -15,11 +16,29 @@ import {
   SelectValue,
 } from "../controls/select";
 import { Switch } from "../controls/switch";
+import { Icon } from "../icons";
 import { ToggleGroup, ToggleGroupItem } from "../controls/toggle";
 import { StudioRow } from "./row";
 import { studioId, type StudioControlProps, type StudioOption, type StudioPreset } from "./types";
 
 const labelOf = (options: StudioOption[], value: string) => options.find((o) => o.value === value)?.label ?? value;
+/** A preview's styles as custom properties: the list draws them, the closed field stays in the interface's type. */
+const previewVars = (preview: NonNullable<StudioOption["preview"]>) =>
+  Object.fromEntries(
+    Object.entries(preview).map(([k, v]) => [
+      k.startsWith("--") ? k : `--pv-${k.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`,
+      v,
+    ]),
+  ) as CSSProperties;
+/** An option's words, drawn as what it is when it has a preview (round 16). */
+const words = (o: StudioOption): ReactNode =>
+  o.preview ? (
+    <span className="ui-sc-preview" style={previewVars(o.preview)}>
+      {o.label}
+    </span>
+  ) : (
+    o.label
+  );
 
 export interface StudioSegmentedProps extends StudioControlProps<string> {
   options: StudioOption[];
@@ -38,8 +57,21 @@ export function StudioSegmented({ value, onChange, label, id, disabled, options,
         onValueChange={(v) => !disabled && onChange(v)}
       >
         {options.map((o) => (
-          <SegmentedOption key={o.value} value={o.value} disabled={disabled}>
-            {o.label}
+          <SegmentedOption
+            key={o.value}
+            value={o.value}
+            disabled={disabled}
+            title={o.icon ? o.label : undefined}
+            data-icon={o.icon ? "" : undefined}
+          >
+            {o.icon ? (
+              <>
+                <Icon name={o.icon} />
+                <span className="ui-sr-only">{o.label}</span>
+              </>
+            ) : (
+              o.label
+            )}
           </SegmentedOption>
         ))}
       </SegmentedControl>
@@ -81,8 +113,8 @@ export function StudioSelect({
             <SelectGroup>
               <SelectLabel>{presets[0]!.brand}’s choice</SelectLabel>
               {brandOptions.map((o) => (
-                <SelectItem key={o.value} value={o.value} meta={presets[0]!.brand}>
-                  {o.label}
+                <SelectItem key={o.value} value={o.value} meta={o.meta ?? presets[0]!.brand}>
+                  {words(o)}
                 </SelectItem>
               ))}
             </SelectGroup>
@@ -91,8 +123,8 @@ export function StudioSelect({
             <SelectGroup>
               {brandOptions.length > 0 && <SelectLabel>More</SelectLabel>}
               {rest.map((o) => (
-                <SelectItem key={o.value} value={o.value}>
-                  {o.label}
+                <SelectItem key={o.value} value={o.value} meta={o.meta}>
+                  {words(o)}
                 </SelectItem>
               ))}
             </SelectGroup>

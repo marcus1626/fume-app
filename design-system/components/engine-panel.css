@@ -192,3 +192,44 @@
   .ui-engine-thread, .ui-engine-field-tools { transition: none; }
   .ui-engine-thread:active { transform: none; }
 }
+
+/* ---------- round 16 (PROPOSED 9 Nov 2026) ----------
+   "Tell the Engine" while the panel is closed: in the Studio a field right under the board, where the Engine bar was (the
+   page's own thread's composer, the same draft); in the staff bar the Engine button carries the words.
+     <form class="ui-engine-prompt"><div class="ui-input-group ui-engine-prompt-field"> mark · input · ⌘J · send </div></form>
+   Earlier chats, from before this web session, at the top of the thread: one row each, opened to read.
+     <section class="ui-engine-earlier"><h3 class="ui-engine-earlier-title">Earlier</h3><ul class="ui-engine-earlier-list">
+       <li class="ui-engine-earlier-item" data-open><button class="ui-engine-earlier-row" aria-expanded><svg clock/>
+       <span class="ui-engine-earlier-words"><span class="ui-engine-earlier-about">The plan · Yesterday</span>
+       <span class="ui-engine-earlier-said">"Is the hook on brand?"</span></span><svg chevron/></button>
+       <div class="ui-engine-earlier-chat"> its messages </div></li></ul></section> */
+.ui-engine-prompt { flex: none; min-width: 0; margin: 0; }
+.ui-engine-prompt-field { width: 100%; }
+.ui-engine-prompt-mark { width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-secondary); }
+.ui-engine-prompt-key { margin-inline-end: var(--ui-space-xs); }
+.ui-engine-toggle--labelled { flex-shrink: 0; }
+
+.ui-engine-earlier { display: grid; gap: var(--ui-space-xs); padding-block-end: var(--ui-space-md); }
+.ui-engine-earlier-title { margin: 0; padding-inline: var(--ui-space-sm); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-engine-earlier-list { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
+.ui-engine-earlier-item { min-width: 0; border-radius: var(--ui-radius-item); }
+.ui-engine-earlier-item[data-open] .ui-engine-earlier-row { color: var(--ui-text); }
+.ui-engine-earlier-row {
+  position: relative; display: flex; align-items: flex-start; gap: var(--ui-space-sm); width: 100%; min-width: 0; margin: 0;
+  padding: var(--ui-space-sm); border: 0; border-radius: var(--ui-radius-item); background: transparent; color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); text-align: start; cursor: pointer; outline: none;
+  -webkit-tap-highlight-color: transparent; transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-engine-earlier-row::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+.ui-engine-earlier-row > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: 1lh; color: var(--ui-text-tertiary); }
+@media (hover: hover) { .ui-engine-earlier-row:hover { background: var(--ui-item-bg-hover); } }
+.ui-engine-earlier-row:active { background: var(--ui-item-bg-pressed); }
+.ui-engine-earlier-row:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: calc(var(--ui-size-ring) * -1); }
+.ui-engine-earlier-words { display: grid; flex: 1 1 auto; min-width: 0; }
+.ui-engine-earlier-row { line-height: 1.4; }
+.ui-engine-earlier-about { font-weight: var(--ui-type-weight-medium); }
+.ui-engine-earlier-said { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ui-text-secondary); }
+.ui-engine-earlier-chevron { transition: transform var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-engine-earlier-row[aria-expanded="true"] .ui-engine-earlier-chevron { transform: rotate(180deg); }
+.ui-engine-earlier-chat { display: grid; gap: var(--ui-space-md); padding: var(--ui-space-xs) var(--ui-space-sm) var(--ui-space-md) calc(var(--ui-space-sm) * 2 + var(--ui-size-icon-sm)); }
+@media (prefers-reduced-motion: reduce) { .ui-engine-earlier-row, .ui-engine-earlier-chevron { transition: none; } }

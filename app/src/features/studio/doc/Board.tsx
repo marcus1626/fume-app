@@ -78,6 +78,8 @@ export function Board({
   brandName,
   selectedLayer,
   onSelectLayer,
+  onLayers,
+  grid,
   readOnly,
   onBeforeRender,
   onVariable,
@@ -94,6 +96,10 @@ export function Board({
   brandName: string;
   selectedLayer?: string;
   onSelectLayer: (id: string | undefined) => void;
+  /** Design (round 16): a layer dragged on the canvas, or its width pulled by its handle. */
+  onLayers?: (layers: Layer[], key: string) => void;
+  /** Design (round 16): the layout grid shown over the canvas (⇧G), and snapping to it. */
+  grid?: { shown: boolean; snap: boolean; onShown: (on: boolean) => void };
   readOnly: boolean;
   onBeforeRender: () => void;
   /** A change the Engine only suggested, taken with Yes (an undo step of the desk). */
@@ -211,6 +217,9 @@ export function Board({
             brandName={brandName}
             selected={selectedLayer}
             onSelect={onSelectLayer}
+            onLayers={onLayers}
+            gridShown={Boolean(grid?.shown)}
+            snap={grid?.snap ?? true}
             readOnly={readOnly}
           />
         )}
@@ -324,6 +333,15 @@ export function Board({
                 pressed={Boolean(shown && promptFor === shown.id)}
                 disabled={!shown?.prompt}
                 onPressedChange={(on) => (on && shown ? promptAt.open(shown.id) : promptAt.close())}
+              />
+            )}
+            {isDesign && grid && (
+              <RailToggle
+                label="Layout grid"
+                shortcut="⇧G"
+                icon="layout-grid"
+                pressed={grid.shown}
+                onPressedChange={grid.onShown}
               />
             )}
             {seesDesign && shown?.design && (
@@ -476,6 +494,7 @@ function RailToggle({
     | "image"
     | "file-text"
     | "type"
+    | "layout-grid"
     | "chart-column";
   shortcut?: string;
   pressed: boolean;

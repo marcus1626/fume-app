@@ -194,7 +194,8 @@
 .ui-qa-c-label { color: var(--ui-text-tertiary); }
 .ui-qa-c-meta { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
 .ui-qa-c-pinline { display: flex; align-items: baseline; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); overflow-wrap: anywhere; }
-.ui-qa-c-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); margin-inline-start: calc(var(--ui-size-pad-sm) * -1); padding-block-start: var(--ui-space-xs); }
+/* a comment's buttons sit inside its padding: a chosen fix turns into a pill, and the open comment is a sunken card */
+.ui-qa-c-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); padding-block-start: var(--ui-space-xs); }
 .ui-qa-c-info { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
 /* the Engine's avatar: its mark on the sunken step; a person's is their avatar (avatar.css) */
 .ui-qa-c-engine { display: inline-grid; place-items: center; flex: none; background: var(--ui-surface-sunken); color: var(--ui-text); }

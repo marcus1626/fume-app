@@ -7,20 +7,28 @@
 // - Nothing picked: the frame. Layout (the template, or what Fume laid out; Align of the words, read from the canvas
 //   and moving them when changed) and Words (one colour for every word).
 // What a control says is what the canvas shows: Align reads where the words sit, not what was last asked.
+// Round 16 (PROPOSED 9 Nov 2026), Marcus's comments on round 15: the controls work as pros know them from Figma and
+// OpenPencil. Size has the brand's sizes and the type scale as presets, and minus and plus step between them; the
+// text style, typeface and weight lists show each one as it looks; Align is a box of nine places; a colour of her own
+// is always there after the brand's; every number has a handle to drag it; the frame has a layout grid with
+// templates for its ratio, or values of her own.
 import {
   Button,
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-  InputGroupText,
+  Kbd,
   ModeControl,
+  ScrubHandle,
   StudioFolds,
   StudioNumber,
+  StudioPlace,
   StudioRow,
   StudioSegmented,
   StudioSelect,
   StudioSwatch,
   StudioText,
+  StudioToggle,
   useToast,
   type StudioFold,
   type StudioVariable,
@@ -39,20 +47,25 @@ import type {
 } from "../../../contract";
 import { bookWords, useDesignAddress } from "./graphic";
 import {
-  bandOf,
+  blockPlaceOf,
   ctaOf,
+  familyOf,
   FRAME,
   fromPx,
+  gridOf,
+  gridValue,
   inkOf,
   layerName,
   logoVersions,
-  moveBlock,
+  placeBlock,
+  placeLayer,
+  placeOf,
   roleOf,
   styleNames,
   toPx,
   typeOf,
   wordColours,
-  type Band,
+  type LayoutGrid,
 } from "./layers";
 
 export interface PropertiesProps {
@@ -70,6 +83,11 @@ export interface PropertiesProps {
   brandName: string;
   onLayers: (layers: Layer[], key: string) => void;
   onVariables: (patch: Variables, key: string) => void;
+  /** The layout grid drawn over the canvas (⇧G), and snapping to it while a layer is dragged. */
+  gridShown: boolean;
+  onGridShown: (on: boolean) => void;
+  snap: boolean;
+  onSnap: (on: boolean) => void;
 }
 
 const weightNames: Record<number, string> = {
@@ -79,11 +97,8 @@ const weightNames: Record<number, string> = {
   600: "Semibold",
   700: "Bold",
 };
-const bands: { value: Band; label: string }[] = [
-  { value: "top", label: "Top" },
-  { value: "centre", label: "Centre" },
-  { value: "bottom", label: "Bottom" },
-];
+/** The classic type scale (as print designers set it, doubled past 72 for a frame 1080 wide): the natural steps. */
+const TYPE_SCALE = [12, 14, 16, 18, 21, 24, 30, 36, 48, 60, 72, 96, 120, 144, 192, 240];
 
 export function PropertiesPanel(props: PropertiesProps) {
   const { layers, selected, brandName, book } = props;
@@ -184,7 +199,11 @@ function layerSections(p: PropertiesProps, l: Layer): StudioFold[] {
   if (role === "headline" || role === "subline" || role === "text") {
     sections.push({ id: "text", title: "Text", children: <TextField {...p} layer={l} set={set} rows={2} /> });
     if (book) {
-      sections.push({ id: "type", title: "Typography", children: <TypeFields book={book} layer={l} set={set} /> });
+      sections.push({
+        id: "type",
+        title: "Typography",
+        children: <TypeFields book={book} layer={l} brandName={p.brandName} set={set} />,
+      });
       const colours = wordColours(book);
       sections.push({
         id: "fill",
@@ -193,9 +212,11 @@ function layerSections(p: PropertiesProps, l: Layer): StudioFold[] {
           <StudioSwatch
             label="Colour"
             id="layer-colour"
+            custom
             value={inkOf(l, book, p.variables) ?? ""}
             options={[]}
             presets={colours.map((c) => ({ name: c.name, hex: c.hex, brand: p.brandName }))}
+            help={offBrand(inkOf(l, book, p.variables), colours, p.brandName)}
             onChange={(colour) => set({ colour }, "colour")}
           />
         ),
@@ -211,6 +232,12 @@ function layerSections(p: PropertiesProps, l: Layer): StudioFold[] {
 }
 
 const capital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** A colour of her own is hers to choose; the help says it is not the brand's, and the design check counts it. */
+function offBrand(hex: string | undefined, colours: { hex: string }[], brandName: string) {
+  if (!hex || colours.some((c) => c.hex.toLowerCase() === hex.toLowerCase())) return undefined;
+  return `Not one of ${brandName}’s colours. Yours to choose; the design check counts it under Design system.`;
+}
 
 /** The words of a layer. On Fume's design they are the approved plan's; a change says what the plan says. */
 function TextField({
@@ -243,25 +270,43 @@ function TextField({
   );
 }
 
-/** The design system's text style, then what is set over it: typeface, weight, size and alignment. */
+/** The design system's text style, then what is set over it: typeface, weight, size and alignment. Each list shows
+ *  its choices as they look (round 16): a text style in its face and weight, a typeface in itself, a weight in it. */
 function TypeFields({
   book,
   layer,
+  brandName,
   set,
 }: {
   book: DesignBook;
   layer: Layer;
+  brandName: string;
   set: (c: Partial<Layer>, key: string) => void;
 }) {
   const t = typeOf(layer, book);
   const weights = t.typeface.weights.length ? t.typeface.weights : [t.weight];
+  const scale = [...book.styles].sort((a, b) => b.sizePx - a.sizePx);
   return (
     <>
       <StudioSelect
         label="Text style"
         id="layer-style"
         value={t.style}
-        options={book.styles.map((s) => ({ value: s.name, label: `${styleNames[s.name]} · ${s.sizePx}` }))}
+        options={book.styles.map((s) => {
+          const face = book.typefaces.find((f) => f.role === s.font) ?? t.typeface;
+          return {
+            value: s.name,
+            label: styleNames[s.name],
+            meta: String(s.sizePx),
+            preview: {
+              fontFamily: familyOf(face),
+              fontWeight: s.weight,
+              textTransform: s.case === "upper" ? "uppercase" : "none",
+              letterSpacing: `${s.trackingEm}em`,
+              "--preview-size": `${Math.round(Math.min(26, Math.max(13, s.sizePx / 3.2)))}px`,
+            },
+          };
+        })}
         onChange={(s) =>
           set(
             {
@@ -279,7 +324,12 @@ function TypeFields({
         label="Typeface"
         id="layer-font"
         value={t.typeface.role}
-        options={book.typefaces.map((f) => ({ value: f.role, label: f.family }))}
+        options={book.typefaces.map((f) => ({
+          value: f.role,
+          label: f.family,
+          meta: capital(f.role),
+          preview: { fontFamily: familyOf(f), "--preview-size": "18px" },
+        }))}
         onChange={(role) => {
           const face = book.typefaces.find((f) => f.role === role);
           set(
@@ -291,11 +341,16 @@ function TypeFields({
           );
         }}
       />
-      <StudioSegmented
+      <StudioSelect
         label="Weight"
         id="layer-weight"
         value={String(t.weight)}
-        options={weights.map((w) => ({ value: String(w), label: weightNames[w] ?? String(w) }))}
+        options={weights.map((w) => ({
+          value: String(w),
+          label: weightNames[w] ?? String(w),
+          meta: String(w),
+          preview: { fontFamily: t.family, fontWeight: w, "--preview-size": "18px" },
+        }))}
         onChange={(w) => set({ weight: Number(w) }, "weight")}
       />
       <StudioNumber
@@ -305,16 +360,30 @@ function TypeFields({
         min={12}
         max={240}
         value={t.sizePx}
+        presets={[
+          {
+            label: `${brandName}’s sizes`,
+            items: scale
+              .filter((s, i) => scale.findIndex((x) => x.sizePx === s.sizePx) === i)
+              .map((s) => ({ value: s.sizePx, meta: styleNames[s.name] })),
+          },
+          { label: "Type scale", items: TYPE_SCALE.map((value) => ({ value })) },
+        ]}
+        help={
+          t.sizePx === styleOfSize(book, t.style)
+            ? undefined
+            : `Set by hand; ${styleNames[t.style]} is ${styleOfSize(book, t.style)} px.`
+        }
         onChange={(sizePx) => set({ sizePx }, "size")}
       />
       <StudioSegmented
-        label="Align"
+        label="Text align"
         id="layer-align"
         value={layer.align ?? "left"}
         options={[
-          { value: "left", label: "Left" },
-          { value: "centre", label: "Centre" },
-          { value: "right", label: "Right" },
+          { value: "left", label: "Left", icon: "text-align-start" },
+          { value: "centre", label: "Centre", icon: "text-align-center" },
+          { value: "right", label: "Right", icon: "text-align-end" },
         ]}
         onChange={(align) => set({ align: align as Layer["align"] }, "align")}
       />
@@ -322,60 +391,77 @@ function TypeFields({
   );
 }
 
-/** X, Y and the width, in pixels of the frame (1080 wide), as in Figma. */
+const styleOfSize = (book: DesignBook, style: DesignStyleName) => book.styles.find((s) => s.name === style)?.sizePx;
+
+/** Where the layer sits (a box of nine places in the safe area), then X, Y and the width in pixels of the frame
+ *  (1080 wide), as in Figma. Each number's letter is a handle to drag it. */
 function PositionFields({
   layer,
+  layers,
   format,
   book,
+  onLayers,
   set,
 }: PropertiesProps & { layer: Layer; set: (c: Partial<Layer>, key: string) => void }) {
   const [W, H] = FRAME[format];
   const role = roleOf(layer);
   const min = role === "logo" ? (book?.logo.minWidthPx ?? 80) : 40;
+  const words = ["headline", "subline", "text"].includes(role);
   return (
-    <StudioRow
-      label="Position"
-      labelId="layer-position-l"
-      readout={`px of ${W} × ${H}`}
-      help={
-        role === "logo" && book
-          ? `At least ${book.logo.minWidthPx} px wide. Clear space: ${book.logo.clearSpace.charAt(0).toLowerCase()}${book.logo.clearSpace.slice(1)}`
-          : undefined
-      }
-    >
-      <div className="ui-desk-px-row" role="group" aria-labelledby="layer-position-l">
-        <PxField
-          short="X"
-          name="X, from the left edge"
-          value={toPx(layer.x, W)}
-          max={W}
-          onChange={(x) => set({ x: fromPx(x, W) }, "x")}
-        />
-        <PxField
-          short="Y"
-          name="Y, from the top edge"
-          value={toPx(layer.y, H)}
-          max={H}
-          onChange={(y) => set({ y: fromPx(y, H) }, "y")}
-        />
-        {role !== "cta" && (
+    <>
+      <StudioPlace
+        label="Align"
+        id="layer-place"
+        value={placeOf(layer, book, format)}
+        help={`In the frame, inside ${book ? "the design system’s" : "the"} safe area.${
+          words ? " Words take the side’s alignment." : ""
+        }`}
+        onChange={(place) => onLayers(placeLayer(layers, layer.id, place, book, format), `layer-${layer.id}-place`)}
+      />
+      <StudioRow
+        label="Position"
+        labelId="layer-position-l"
+        readout={`px of ${W} × ${H}`}
+        help={
+          role === "logo" && book
+            ? `At least ${book.logo.minWidthPx} px wide. Clear space: ${book.logo.clearSpace.charAt(0).toLowerCase()}${book.logo.clearSpace.slice(1)}`
+            : "Drag a letter, or the layer on the canvas."
+        }
+      >
+        <div className="ui-desk-px-row" role="group" aria-labelledby="layer-position-l">
           <PxField
-            short="W"
-            name={role === "logo" ? "Width of the logo" : "Width"}
-            value={toPx(layer.w, W)}
-            min={min}
+            short="X"
+            name="X, from the left edge"
+            value={toPx(layer.x, W)}
             max={W}
-            onChange={(w) =>
-              set({ w: fromPx(w, W), ...(role === "logo" ? { h: (fromPx(w, W) * W * 0.24) / H } : {}) }, "w")
-            }
+            onChange={(x) => set({ x: fromPx(x, W) }, "x")}
           />
-        )}
-      </div>
-    </StudioRow>
+          <PxField
+            short="Y"
+            name="Y, from the top edge"
+            value={toPx(layer.y, H)}
+            max={H}
+            onChange={(y) => set({ y: fromPx(y, H) }, "y")}
+          />
+          {role !== "cta" && (
+            <PxField
+              short="W"
+              name={role === "logo" ? "Width of the logo" : "Width"}
+              value={toPx(layer.w, W)}
+              min={min}
+              max={W}
+              onChange={(w) =>
+                set({ w: fromPx(w, W), ...(role === "logo" ? { h: (fromPx(w, W) * W * 0.24) / H } : {}) }, "w")
+              }
+            />
+          )}
+        </div>
+      </StudioRow>
+    </>
   );
 }
 
-/** One number in pixels: typed, or nudged with the arrow keys (Shift for ten). */
+/** One number: typed, nudged with the arrow keys (Shift for ten), or dragged by its letter. */
 function PxField({
   short,
   name,
@@ -403,7 +489,9 @@ function PxField({
   return (
     <InputGroup size="sm" className="ui-desk-px">
       <InputGroupAddon>
-        <InputGroupText aria-hidden="true">{short}</InputGroupText>
+        <ScrubHandle value={value} min={min} max={max} onChange={(n) => onChange(clamp(n))}>
+          {short}
+        </ScrubHandle>
       </InputGroupAddon>
       <InputGroupInput
         inputMode="numeric"
@@ -476,7 +564,8 @@ function PictureFields({
 
 function frameSections(p: PropertiesProps, openDesign: (versionId: string) => void): StudioFold[] {
   const { book, layers, format, design } = p;
-  const band = bandOf(layers, book, format);
+  const place = blockPlaceOf(layers, book, format);
+  const hasWords = layers.some((l) => l.visible && ["headline", "subline", "text"].includes(roleOf(l)));
   const template = p.mode?.variables.find((v) => v.key === "template");
   const words = layers.filter((l) => ["headline", "subline", "text"].includes(roleOf(l)));
   const inks = [...new Set(words.map((l) => (book ? inkOf(l, book, p.variables) : l.colour)).filter(Boolean))];
@@ -519,21 +608,17 @@ function frameSections(p: PropertiesProps, openDesign: (versionId: string) => vo
               />
             )
           )}
-          <StudioSegmented
+          <StudioPlace
             label="Align"
             id="frame-align"
-            value={band ?? ""}
-            disabled={!band}
-            options={bands}
+            value={place}
+            disabled={!hasWords}
             help={
-              band
-                ? "Where the headline and its line sit. They keep clear of a shown logo and call to action, and the shade follows them."
+              hasWords
+                ? "Where the headline and its line sit, inside the safe area. They keep clear of a shown logo and call to action, take the side’s alignment, and the shade follows them."
                 : "No words are showing."
             }
-            onChange={(to) => {
-              if (to === band) return;
-              p.onLayers(moveBlock(layers, to as Band, book, format), "frame-align");
-            }}
+            onChange={(to) => to !== place && p.onLayers(placeBlock(layers, to, book, format), "frame-align")}
           />
         </>
       ),
@@ -564,5 +649,91 @@ function frameSections(p: PropertiesProps, openDesign: (versionId: string) => vo
         />
       ),
     });
+  sections.push({ id: "grid", title: "Layout grid", children: <GridFields {...p} /> });
   return sections;
+}
+
+/** The frame's layout grid (round 16): shown or not (⇧G), a template for the format's ratio (the brand's own grid
+ *  first) or values of her own, and whether a dragged layer snaps to it. */
+function GridFields(p: PropertiesProps) {
+  const { book, format, brandName, variables } = p;
+  const g = gridOf(variables, book, format, brandName);
+  const setGrid = (patch: Partial<LayoutGrid>) =>
+    p.onVariables({ grid: "custom", gridCustom: gridValue({ ...g.grid, ...patch }) }, "grid-custom");
+  const [W] = FRAME[format];
+  return (
+    <>
+      <StudioToggle
+        label="Show the grid"
+        id="frame-grid-shown"
+        value={p.gridShown}
+        help={undefined}
+        onChange={p.onGridShown}
+      />
+      <p className="ui-sc-help ui-desk-grid-key">
+        <Kbd>⇧G</Kbd> shows and hides it anywhere in Design.
+      </p>
+      <StudioSelect
+        label="Template"
+        id="frame-grid"
+        value={g.id}
+        options={[
+          ...g.templates.map((t) => ({ value: t.id, label: t.name, meta: t.meta })),
+          ...(g.id === "custom" ? [{ value: "custom", label: "Custom", meta: gridValue(g.grid) }] : []),
+        ]}
+        onChange={(id) => {
+          p.onVariables({ grid: id }, "grid-template");
+          if (!p.gridShown) p.onGridShown(true);
+        }}
+      />
+      <StudioRow
+        label="Values"
+        labelId="frame-grid-values-l"
+        readout={g.id === "custom" ? "Custom" : "From the template"}
+        help="Change one and the grid is your own."
+      >
+        <div className="ui-desk-px-row ui-desk-grid-values" role="group" aria-labelledby="frame-grid-values-l">
+          <PxField
+            short="Columns"
+            name="Columns"
+            value={g.grid.columns}
+            min={0}
+            max={24}
+            onChange={(columns) => setGrid({ columns })}
+          />
+          <PxField
+            short="Rows"
+            name="Rows"
+            value={g.grid.rows}
+            min={0}
+            max={24}
+            onChange={(rows) => setGrid({ rows })}
+          />
+          <PxField
+            short="Gutter"
+            name="Gutter in px"
+            value={g.grid.gutterPx}
+            min={0}
+            max={200}
+            onChange={(gutterPx) => setGrid({ gutterPx })}
+          />
+          <PxField
+            short="Margin"
+            name="Margin in px"
+            value={g.grid.marginPx}
+            min={0}
+            max={Math.round(W / 3)}
+            onChange={(marginPx) => setGrid({ marginPx })}
+          />
+        </div>
+      </StudioRow>
+      <StudioToggle
+        label="Snap to the grid"
+        id="frame-grid-snap"
+        value={p.snap}
+        help="A dragged layer snaps to the columns, the safe area and the middle. Hold ⌘ to place it freely."
+        onChange={p.onSnap}
+      />
+    </>
+  );
 }

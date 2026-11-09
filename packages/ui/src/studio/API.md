@@ -16,7 +16,7 @@ structurally, so a backend mode can be passed straight in and packages/ui never 
 - `StudioLensValue` — `{ focal, height, tilt }`: mm, cm from the surface, degrees (negative looks down).
 - `StudioLight` — `{ id, kind: "key" | "fill" | "rim" | "practical", x, y, height, warmth, strength, softness }`: one light on the advanced board. `x`/`y` 0–1 on the board seen from above (0,0 back left; the camera at the foot, y = 1), `height` 0–90°, `warmth` in K, `strength` and `softness` 0–100. `StudioLightRig` — `{ lights: StudioLight[] }` (= the contract's `LightRig`).
 - `StudioLookSource` — `"brand" | "fume" | "own" | "engine"` (= the contract's `LookSource`): where a look section comes from (FLOWS §18).
-- `StudioOption` — `{ value, label, hex? }`.
+- `StudioOption` — `{ value, label, hex?, preview?, meta?, icon? }`. Round 16: `preview` draws the option as itself in a select's list (a typeface in its face, a weight at its weight; the closed field stays in the interface's type), `meta` is the data beside it ("76", "400"), `icon` shows a segmented option as an icon with its label for screen readers.
 - `StudioPreset` — `{ name, hex?, brand }`: one of the brand's chosen colours or settings (FLOWS §9.4); `brand` is the brand's name shown on it ("LYSNE").
 - `StudioControlProps<V>` — what every control takes: `value: V`, `onChange(value: V)`, `label: string`, `disabled?`, `id?` (default from the label).
 
@@ -28,11 +28,13 @@ structurally, so a backend mode can be passed straight in and packages/ui never 
 - `StudioSlider` — `min?` (0), `max?` (100), `step?` (1), `unit?` ("%", "K", "mm", "°", "years"), `help?`, `format?(value) => string` (the readout in words), `bare?` (the track alone, inside another control). The design system's slider (slider.css): drag anywhere on the track; arrows, Page Up/Down, Home/End. `withUnit(value, unit)` writes "60 %", "2700 K", "20°".
 - `StudioSegmented` — `options`, `help?`. One of a few; the SegmentedControl made full width.
 - `StudioSelect` — `options`, `presets?`, `placeholder?`, `help?`. One of many, on the small Select. Options whose label is a preset's name come first under "LYSNE’s choice", marked with the brand.
-- `StudioSwatch` — `options`, `presets?`, `help?`. Round swatches, a radio group (arrow keys). The brand's chosen colours lead in a sunken pill named by the brand, then the mode's other colours. The colour is data: `style="--swatch: #F4EFE8"`.
+- `StudioSwatch` — `options`, `presets?`, `help?`, `custom?` (round 16: a plus at the end opens a colour of her own, a picker and a hex field; a colour not among the options shows as its own swatch, "Custom · #HEX"). Round swatches, a radio group (arrow keys). The brand's chosen colours lead in a sunken pill named by the brand, then the mode's other colours. The colour is data: `style="--swatch: #F4EFE8"`.
 - `StudioToggle` — `help?`. A small Switch on the label line.
 - `StudioChips` — `options`, `help?`. Several of a few: small outline pills that wrap (ToggleGroup multiple); the readout counts them ("2 of 5").
 - `StudioText` — `placeholder?`, `rows?: 1 | 2 | 3` (2), `help?`. Words: a direction, what to make.
-- `StudioNumber` — `min?`, `max?`, `step?`, `unit?`, `help?`. A count with a minus and a plus pill.
+- `StudioNumber` — `min?`, `max?`, `step?`, `unit?`, `help?`, `presets?`. A count with a minus and a plus pill. Round 16, `presets: { label, items: { value, meta? }[] }[]` (a brand's type sizes, a type scale): the field gets a scrub handle and a list of the presets; minus and plus step to the previous and next one.
+- `StudioPlace` — `value?: StudioPlaceValue` (none when between places), `onChange(place)`, `without?`, `help?`. Round 16: where something sits, as a box of nine places (top left to bottom right), a radio group the arrow keys move across and down. `studioPlaces`, `placeWords(p)` ("Top left", "Centre").
+- `ScrubHandle` / `useScrub({ value, onChange, min?, max?, step?, disabled? })` — round 16: the short label beside a number ("X", "W") drags its value, right or up for more, a step per 2 px, Shift ×10, Alt a tenth. aria-hidden: the field beside it is the control.
 - `StudioAngle` — `step?` (5), `help?`. The light direction dial: a sunken disc seen from above, the subject in the middle and the camera at its foot; drag the Ink light point round it (azimuth), set its height with the small slider beside it (elevation). Arrow keys turn it. `angleWords(value)` → "70° from the right".
 - `StudioLens` — `focal?: [min, max]` ([14, 200]), `height?` ([0, 200]), `tilt?` ([-45, 45]), `help?`. Focal length, camera height and tilt as three small sliders under one label.
 
