@@ -97,6 +97,21 @@ Deno.serve((req) =>
         picture: (t) => download(t.picture.bucket, t.picture.path),
       },
       choose: (t, words, picture, spent) => look<LayoutChoice>(CHOOSE_SYSTEM, choosePrompt(t, words), picture, LayoutChoice, spent),
+      before: async (t) => {
+        const { data: layer } = await service.from("design_layers").select("candidate_id").eq("id", t.layer_id).maybeSingle();
+        let id = (layer as { candidate_id?: string } | null)?.candidate_id;
+        // Up the line of fixes (a fix of a fix), to the newest design made on an earlier form of the picture.
+        for (let i = 0; id && i < 4; i++) {
+          const { data: c } = await service.from("candidates").select("fixed_from").eq("id", id).maybeSingle();
+          id = (c as { fixed_from?: string | null } | null)?.fixed_from ?? undefined;
+          if (!id) return null;
+          const { data: made } = await service.from("design_layers").select("choice").eq("candidate_id", id).eq("state", "made")
+            .order("created_at", { ascending: false }).limit(1).maybeSingle();
+          const parsed = LayoutChoice.safeParse((made as { choice?: unknown } | null)?.choice);
+          if (parsed.success) return parsed.data;
+        }
+        return null;
+      },
       review: (t, words, png, spent, set) => look<Review>(REVIEW_SYSTEM, reviewPrompt(t, words, set), png, Review, spent),
       lay: async (request) => {
         const res = await fetch(designUrl, {

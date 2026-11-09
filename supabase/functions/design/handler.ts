@@ -29,6 +29,8 @@ export interface Deps {
     picture(t: Take): Promise<Uint8Array | null>;
   };
   choose(t: Take, words: Words, picture: Uint8Array, spent: Spent): Promise<LayoutChoice | null>;
+  /** For a fixed picture: the layout chosen for the design of the picture it was fixed from, so the redo keeps it. */
+  before?(t: Take): Promise<LayoutChoice | null>;
   review(t: Take, words: Words, png: Uint8Array, spent: Spent, set?: { cta?: string } | null): Promise<Review | null>;
   /** The design service (services/design): POST /api/design. */
   lay(request: Record<string, unknown>): Promise<{ ok: boolean; status: number; body: Record<string, unknown> }>;
@@ -57,12 +59,25 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     const format = formatOf(t);
     const picture = await d.service.picture(t);
     if (!picture) return await fail("The picture could not be read.");
-    // The model's eye is a help, not a gate: without it the service still finds a layout that passes its checks.
+    // A fix changes a small part of the picture, so its design keeps the layout chosen before (9 Nov: Dressmann's
+    // redone designs moved their words and broke "MANDAG"). A designer's own ask gets a fresh look.
     let choice: LayoutChoice | null = null;
-    try {
-      choice = await d.choose(t, words, picture, spent);
-    } catch {
-      choice = null;
+    let kept = false;
+    if (!t.ask && d.before) {
+      try {
+        choice = await d.before(t);
+        kept = Boolean(choice);
+      } catch {
+        choice = null;
+      }
+    }
+    // The model's eye is a help, not a gate: without it the service still finds a layout that passes its checks.
+    if (!choice) {
+      try {
+        choice = await d.choose(t, words, picture, spent);
+      } catch {
+        choice = null;
+      }
     }
     const links = await d.service.links(t);
     const request = {
@@ -115,7 +130,7 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     const { error } = await d.service.finish(t.layer_id, {
       name: `${t.creative.title ?? "Creative"}, graphic design`,
       words,
-      choice: choice ? { ...choice, verdict } : { verdict },
+      choice: choice ? { ...choice, verdict, ...(kept ? { kept: true } : {}) } : { verdict },
       layout: out.layout ?? null,
       checks: out.checks ?? [],
       attempts: out.attempts ?? [],

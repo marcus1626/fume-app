@@ -191,3 +191,20 @@ Deno.test("the brand's layouts from its own ads are offered before its shop's", 
   const shopOnly = { book: { body: { onPictures: { layouts: [{ name: "Hero centred with pills", band: "middle", align: "center", source: "site" }] } } } } as unknown as Take;
   assertEquals(layoutsOf(shopOnly).length, 1);
 });
+
+Deno.test("a fixed picture keeps the layout its earlier design chose; a designer's ask gets a fresh look", async () => {
+  const branded = { ...take, book: { ...take.book, body: { ...take.book.body, onPictures: { layouts: [{ name: "Green stack", band: "middle", align: "left", ground: "photo", words: "brand_colour", cta: "box" }] } } } };
+  const earlier = { keepClear: [], band: "middle" as const, align: "left" as const, colour: "accent" as const, layout: "Green stack", why: "before" };
+  let looked = 0;
+  const a = deps({ before: () => Promise.resolve(earlier), choose: () => (looked++, Promise.resolve(null)) });
+  await designLayer(branded, a.d);
+  assertEquals(looked, 0, "the model is not asked again");
+  assertEquals((a.calls.lay[0] as { prefer: unknown }).prefer, { band: "middle", align: "left", colour: "accent", signature: "Green stack" });
+  assertEquals((a.calls.finish[0] as { choice: { kept?: boolean } }).choice.kept, true);
+  const asked = deps({ before: () => Promise.resolve(earlier), choose: () => (looked++, Promise.resolve(null)) });
+  await designLayer({ ...branded, ask: "Words on the right" }, asked.d);
+  assertEquals(looked, 1);
+  const none = deps({ before: () => Promise.resolve(null) });
+  await designLayer(branded, none.d);
+  assertEquals((none.calls.lay[0] as { prefer: { band?: string } }).prefer.band, "top", "a first design looks afresh");
+});
