@@ -17217,7 +17217,7 @@ anna qaQueue("w-lysne")
                 "id": "text_on_screen",
                 "label": "Text on screen",
                 "value": 68,
-                "why": "The button sits over the name on the label from 0:04"
+                "why": "The button sits over the name on the label"
               }
             ],
             "product": 58,
@@ -17248,9 +17248,9 @@ anna qaQueue("w-lysne")
           {
             "dimension": "design",
             "expected": "The button clear of the label, as LYSNE’s design system places it",
-            "finding": "From 0:04 the button sits over the name on the label.",
+            "finding": "Once it is in, the button sits over the name on the label.",
             "id": "fi-v3",
-            "seconds": {"from":4,"to":6},
+            "seconds": {"from":4.3,"to":6},
             "severity": "major",
             "status": "open"
           }

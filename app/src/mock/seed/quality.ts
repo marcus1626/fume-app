@@ -360,10 +360,10 @@ const seeded: QaItem[] = [
         id: "fi-v3",
         dimension: "design",
         severity: "major",
-        finding: "From 0:04 the button sits over the name on the label.",
+        finding: "Once it is in, the button sits over the name on the label.",
         expected: "The button clear of the label, as LYSNE’s design system places it",
         status: "open",
-        seconds: { from: 4, to: 6 },
+        seconds: { from: 4.3, to: 6 },
       },
     ],
   }),
@@ -463,7 +463,7 @@ function scored(item: QaItem, i: number): QaItem {
       ...item,
       evaluation: withMeasures(item.evaluation, "video", i, {
         rhythm: { value: 76, why: "The button comes in a quarter second after the beat" },
-        text_on_screen: { value: 68, why: "The button sits over the name on the label from 0:04" },
+        text_on_screen: { value: 68, why: "The button sits over the name on the label" },
       }),
     };
   return { ...item, evaluation: withMeasures(item.evaluation, item.studio, i) };
