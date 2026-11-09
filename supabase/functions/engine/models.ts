@@ -93,11 +93,16 @@ export function claudeModels(
       const { out, call } = await ask("verify", VERIFIER_SYSTEM, verifierPrompt(prompt, requirement), Verdict, "low");
       return { ...out, call };
     },
-    async evaluate({ pictureUrl, productUrls, checks, size }) {
-      const images = [...productUrls, pictureUrl].map(
-        (url): Anthropic.Beta.Messages.BetaContentBlockParam => ({ type: "image", source: { type: "url", url } }),
+    async evaluate({ pictureUrl, productPhotos, checks, size }) {
+      const images = [...productPhotos, { url: pictureUrl }].map(
+        (p): Anthropic.Beta.Messages.BetaContentBlockParam => ({
+          type: "image",
+          source: "url" in p
+            ? { type: "url", url: p.url }
+            : { type: "base64", media_type: p.mediaType as "image/jpeg" | "image/png" | "image/gif" | "image/webp", data: p.data },
+        }),
       );
-      const content = [...images, { type: "text" as const, text: evaluatorPrompt(checks, productUrls.length > 0, size) }];
+      const content = [...images, { type: "text" as const, text: evaluatorPrompt(checks, productPhotos.length > 0, size) }];
       const { out, call } = await ask("evaluate", EVALUATOR_SYSTEM, content, Looked, "low");
       return { looked: out, call };
     },

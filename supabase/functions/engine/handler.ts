@@ -53,10 +53,12 @@ export type Taken = Omit<EngineTask, "products" | "master" | "composition"> & {
 export type Pending = { id: string; verdict: "yes" | "no"; why: string; image_model: string | null; updated_at: string; concept: string; slots: { slotKey: string; text: string }[] };
 export type DigestLesson = { statement: string; polarity: "do" | "avoid"; reason: string; scope: "brand" | "brand_and_model" };
 /** Looks at a picture against the prompt's checklist (and the product's own photograph). */
+/** A photograph handed to the vision model: its bytes when the Engine could fetch it, else its address. */
+export type Shown = { url: string } | { data: string; mediaType: string };
 export type Evaluator = (input: {
   pictureUrl: string;
   /** The product's own photographs, at most three. */
-  productUrls: string[];
+  productPhotos: Shown[];
   checks: ReturnType<typeof checklist>;
   size?: { width: number; height: number };
 }) => Promise<{ looked: Looked; call: ModelCall }>;
@@ -88,6 +90,8 @@ export interface Deps {
     /** An attempt's pictures that wait to be looked at, with the prompt's manifest (public.engine_to_evaluate). */
     toEvaluate?(attemptId: string): Promise<{ data: ToEvaluate | null; error: Failure }>;
     evaluated?(candidateId: string, evaluation: Evaluation, llmUsd: number): Promise<{ error: Failure }>;
+    /** The job's attempts with Engine pictures nobody has looked at yet. */
+    unevaluated?(jobId: string): Promise<string[]>;
     /** Asks the details function to read the product's small print on a picture (docs/mvp/detail-read.md). */
     askDetails?(candidateId: string): Promise<void>;
   };
@@ -237,32 +241,77 @@ export async function runJob(jobId: string, deps: Deps): Promise<RunOutcome> {
   return outcome;
 }
 
-/** The Engine looks at the pictures it just kept. A failure here never undoes the picture: it is simply not evaluated,
- *  and the expert checks it by eye as with any picture. */
-async function evaluatePictures(attemptId: string, deps: Deps): Promise<void> {
-  const evaluate = deps.models.evaluate;
-  if (!evaluate || !deps.service.toEvaluate || !deps.service.evaluated) return;
+/** Photographs the Engine hands over itself are at most this big; a bigger one goes by its address. */
+const INLINE_MAX = 3_500_000;
+const SIGNED = /\/storage\/v1\/object\/sign\/([^/]+)\/([^?]+)/;
+
+function imageType(b: Uint8Array): string | null {
+  if (b[0] === 0xff && b[1] === 0xd8) return "image/jpeg";
+  if (b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47) return "image/png";
+  if (b[0] === 0x47 && b[1] === 0x49 && b[2] === 0x46) return "image/gif";
+  if (b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46 && b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50) return "image/webp";
+  return null;
+}
+function base64(b: Uint8Array): string {
+  let s = "";
+  for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode(...b.subarray(i, i + 0x8000));
+  return btoa(s);
+}
+
+/** The Engine fetches a product photograph itself and hands the model its bytes. The model's own fetcher is not let in
+ *  by every brand's website (Anthem, 9 Nov: no picture of theirs was looked at, because their product photos never
+ *  reached the model), and a workspace link signed for an hour is signed again. A photo that cannot be fetched is left
+ *  out rather than failing the whole look. */
+async function shown(url: string, deps: Deps): Promise<Shown | null> {
   try {
-    const { data } = await deps.service.toEvaluate(attemptId);
-    if (!data?.candidates.length) return;
+    const signed = SIGNED.exec(url);
+    const fresh = signed ? await deps.service.sign({ bucket: signed[1], path: decodeURIComponent(signed[2]) }) : url;
+    const { bytes } = await deps.download(fresh);
+    const mediaType = imageType(bytes);
+    if (!mediaType) throw new Error("not a picture");
+    return bytes.length > INLINE_MAX ? { url: fresh } : { data: base64(bytes), mediaType };
+  } catch (e) {
+    console.error(`engine: product photo left out of the look (${url.slice(0, 80)}): ${(e as Error).message}`);
+    return null;
+  }
+}
+
+/** The Engine looks at the pictures it just kept. A failure here never undoes the picture: it is simply not evaluated,
+ *  and the expert checks it by eye as with any picture. The reason goes to the function's log. */
+async function evaluatePictures(attemptId: string, deps: Deps): Promise<number> {
+  const evaluate = deps.models.evaluate;
+  if (!evaluate || !deps.service.toEvaluate || !deps.service.evaluated) return 0;
+  let looked = 0;
+  try {
+    const { data, error } = await deps.service.toEvaluate(attemptId);
+    if (error) throw new Error(error.message);
+    if (!data?.candidates.length) return 0;
     // The product's photographs (the picture this is made from is not one: context.ts names it "the approved …" or "the
     // picture of …").
     const productUrls = (data.references ?? [])
       .filter((r) => !r.role.startsWith("the approved ") && !r.role.startsWith("the picture of ") && r.role !== COMPOSITION_ROLE)
       .map((r) => r.url)
       .slice(0, 3);
-    const checks = checklist(data.manifest ?? [], productUrls.length > 0);
+    const productPhotos = (await Promise.all(productUrls.map((u) => shown(u, deps)))).filter((p): p is Shown => p !== null);
+    const checks = checklist(data.manifest ?? [], productPhotos.length > 0);
     for (const c of data.candidates) {
-      const pictureUrl = await deps.service.sign({ path: c.path });
-      const size = c.width && c.height ? { width: c.width, height: c.height } : undefined;
-      const { looked, call } = await evaluate({ pictureUrl, productUrls, checks, ...(size ? { size } : {}) });
-      await deps.service.evaluated(c.id, toEvaluation(checks, looked), call.costUsd ?? 0);
-      // The small print is read closer, against the product's own photographs, after the picture is evaluated.
-      if (productUrls.length > 0) await deps.service.askDetails?.(c.id).catch(() => undefined);
+      try {
+        const pictureUrl = await deps.service.sign({ path: c.path });
+        const size = c.width && c.height ? { width: c.width, height: c.height } : undefined;
+        const { looked: seen, call } = await evaluate({ pictureUrl, productPhotos, checks, ...(size ? { size } : {}) });
+        const { error: notKept } = await deps.service.evaluated(c.id, toEvaluation(checks, seen), call.costUsd ?? 0);
+        if (notKept) throw new Error(notKept.message);
+        looked++;
+        // The small print is read closer, against the product's own photographs, after the picture is evaluated.
+        if (productPhotos.length > 0) await deps.service.askDetails?.(c.id).catch(() => undefined);
+      } catch (e) {
+        console.error(`engine: picture ${c.id} not evaluated: ${(e as Error).message}`);
+      }
     }
-  } catch {
-    // Not evaluated: the expert checks by eye.
+  } catch (e) {
+    console.error(`engine: attempt ${attemptId} not evaluated: ${(e as Error).message}`);
   }
+  return looked;
 }
 
 /** Before a prompt is written, the brand's answers that say why become lessons, and this prompt already uses them. A
@@ -377,11 +426,13 @@ export function handleEngine(req: Request, deps: (authorization: string) => Deps
   return (async () => {
     let jobId: unknown;
     let probe = false;
+    let evaluate = false;
     let routes: string[] | undefined;
     try {
-      const body = (await req.json()) as { jobId?: unknown; probe?: unknown; routes?: unknown };
+      const body = (await req.json()) as { jobId?: unknown; probe?: unknown; routes?: unknown; evaluate?: unknown };
       jobId = body.jobId;
       probe = body.probe === true;
+      evaluate = body.evaluate === true;
       if (Array.isArray(body.routes)) routes = body.routes.filter((r): r is string => typeof r === "string" && /^(https:\/\/[a-z0-9-]+\.higgsfield\.ai)?[\w./-]{1,160}$/.test(r)).slice(0, 40);
     } catch {
       return answer(400, { error: "Send the job's id." });
@@ -391,6 +442,14 @@ export function handleEngine(req: Request, deps: (authorization: string) => Deps
     if (!(await d.canRead(jobId))) return answer(404, { error: "No such job." });
     // Fume's people check the image provider's key without making a picture.
     if (probe) return answer(200, { provider: d.provider?.name ?? null, probe: d.provider?.probe ? await d.provider.probe(routes) : null });
+    // The pictures of the job nobody looked at yet are looked at again (a look that failed, or one from before a fix).
+    if (evaluate) {
+      const attempts = (await d.service.unevaluated?.(jobId)) ?? [];
+      d.later((async () => {
+        for (const a of attempts) await evaluatePictures(a, d);
+      })());
+      return answer(202, { evaluating: attempts.length });
+    }
     d.later(runJob(jobId, d).catch(() => undefined));
     return answer(202, { ok: true });
   })();

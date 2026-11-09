@@ -18,7 +18,8 @@ const service = createClient(url, secret, { auth: { persistSession: false, autoR
 const workspace = Deno.env.get("ANTHROPIC_WORKSPACE_ID");
 const claude = new Anthropic({
   timeout: 60_000,
-  maxRetries: 1,
+  // Several renders at once can meet the organisation's limit on requests in flight (429): wait and try again.
+  maxRetries: 3,
   ...(workspace ? { defaultHeaders: { "anthropic-workspace-id": workspace } } : {}),
 });
 const json = (name: string) => {
@@ -94,6 +95,10 @@ Deno.serve((req) =>
         toEvaluate: async (attemptId) => {
           const { data, error } = await service.rpc("engine_to_evaluate", { p_attempt_id: attemptId });
           return { data, error: err(error) };
+        },
+        unevaluated: async (jobId) => {
+          const { data } = await service.from("candidates").select("attempt_id").eq("job_id", jobId).eq("origin", "engine").is("evaluation", null);
+          return [...new Set((data ?? []).map((r: { attempt_id: string | null }) => r.attempt_id).filter((a): a is string => Boolean(a)))];
         },
         evaluated: async (candidateId, evaluation, llmUsd) =>
           ({ error: err((await service.rpc("engine_evaluated", { p_candidate_id: candidateId, p_evaluation: evaluation, p_llm_usd: llmUsd })).error) }),

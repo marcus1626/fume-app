@@ -300,7 +300,7 @@ Deno.test("a failed digest never stops the render", async () => {
 
 Deno.test("the Engine looks at the picture it kept, against what the prompt had to carry", async () => {
   const f = fake({ takes: [taken()], provider: fakeProvider(["done"]) });
-  const seen: { pictureUrl: string; productUrls: string[]; checks: { area: string; requirement: string }[] }[] = [];
+  const seen: { pictureUrl: string; productPhotos: unknown[]; checks: { area: string; requirement: string }[] }[] = [];
   const kept: unknown[] = [];
   f.deps.models.evaluate = async (input) => {
     seen.push(input);
@@ -334,13 +334,68 @@ Deno.test("the Engine looks at the picture it kept, against what the prompt had 
   f.deps.service.evaluated = async (...a) => (kept.push(a), { error: null });
   assertEquals(await runJob(JOB, f.deps), "made");
   assertEquals(seen[0].pictureUrl, "https://signed/ws1/engine/x.png");
-  assertEquals(seen[0].productUrls, ["https://signed/ws1/oil.png", "https://signed/ws1/oil-back.png"]);
+  // The Engine fetched the product's photographs itself and handed over their bytes.
+  assertEquals(seen[0].productPhotos.map((p) => (p as { mediaType: string }).mediaType), ["image/png", "image/png"]);
   assertEquals(seen[0].checks.map((c) => c.requirement).slice(1), ["A small amber glass bottle", "No people"]);
   assert(seen[0].checks[0].requirement.startsWith("The product in the picture is the product in the photographs"));
   const [id, evaluation, usd] = kept[0] as [string, { productTruth: string; brandRules: string; notes: string[]; evaluated: boolean }, number];
   assertEquals([id, evaluation.productTruth, evaluation.brandRules, evaluation.evaluated, usd], ["cand-1", "flag", "pass", true, 0.0008]);
   assertEquals(evaluation.notes, ["The label is hidden."]);
   assertEquals((seen[0] as { size?: unknown }).size, { width: 1080, height: 1350 });
+});
+
+Deno.test("a product photo on a website that keeps the model out is fetched by the Engine, and a stale workspace link is signed again", async () => {
+  const f = fake({ takes: [taken()], provider: fakeProvider(["done"]) });
+  const fetched: string[] = [];
+  const shownToModel: unknown[][] = [];
+  f.deps.download = async (u) => {
+    fetched.push(u);
+    if (u.includes("broken")) throw new Error("403");
+    return { bytes: new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3]), contentType: "application/octet-stream" };
+  };
+  f.deps.service.sign = async (file) => `https://fresh/${file.bucket ?? "workspace-files"}/${file.path}`;
+  f.deps.models.evaluate = async (input) => {
+    shownToModel.push(input.productPhotos);
+    return { looked: { answers: [], artefacts: "none", artefactNotes: [], printedText: false }, call: { ...call, costUsd: 0 } };
+  };
+  f.deps.service.toEvaluate = async () => ({
+    data: {
+      candidates: [{ id: "c", path: "ws1/engine/x.png" }],
+      manifest: [],
+      references: [
+        { url: "https://www.anthem-sports.com/media/a11-210.jpg", role: "Goal, front" },
+        { url: "https://x.supabase.co/storage/v1/object/sign/workspace-files/ws1/products/oil%20front.jpg?token=old", role: "Oil, front" },
+        { url: "https://broken.example/photo.jpg", role: "Oil, back" },
+      ],
+    },
+    error: null,
+  });
+  f.deps.service.evaluated = async () => ({ error: null });
+  assertEquals(await runJob(JOB, f.deps), "made");
+  assert(fetched.includes("https://www.anthem-sports.com/media/a11-210.jpg"));
+  assert(fetched.includes("https://fresh/workspace-files/ws1/products/oil front.jpg"));
+  assertEquals(shownToModel[0], [
+    { data: btoa(String.fromCharCode(0xff, 0xd8, 0xff, 0xe0, 1, 2, 3)), mediaType: "image/jpeg" },
+    { data: btoa(String.fromCharCode(0xff, 0xd8, 0xff, 0xe0, 1, 2, 3)), mediaType: "image/jpeg" },
+  ]);
+});
+
+Deno.test("the pictures of a job nobody looked at are looked at on request", async () => {
+  const f = fake({ takes: [], provider: fakeProvider([]) });
+  const looked: string[] = [];
+  f.deps.service.unevaluated = async () => ["att-1", "att-2"];
+  f.deps.service.toEvaluate = async (a) => ({ data: { candidates: [{ id: `${a}-c`, path: "p" }], manifest: [], references: [] }, error: null });
+  f.deps.models.evaluate = async () => ({ looked: { answers: [], artefacts: "none", artefactNotes: [], printedText: false }, call: { ...call, costUsd: 0 } });
+  f.deps.service.evaluated = async (id) => (looked.push(id), { error: null });
+  const later: Promise<unknown>[] = [];
+  f.deps.later = (w) => void later.push(w);
+  const res = await handleEngine(
+    new Request("http://x", { method: "POST", headers: { Authorization: "Bearer t" }, body: JSON.stringify({ jobId: JOB, evaluate: true }) }),
+    () => f.deps,
+  );
+  assertEquals([res.status, await res.json()], [202, { evaluating: 2 }]);
+  await Promise.all(later);
+  assertEquals(looked, ["att-1-c", "att-2-c"]);
 });
 
 Deno.test("a picture the model cannot look at stays made, for the expert to check by eye", async () => {
