@@ -123,6 +123,33 @@ export interface MotionLayer {
   keys?: MotionKey[];
   /** The shot it sits on: it moves with that shot when the shot moves (FLOWS §34.6). */
   clipId?: Id;
+  /** Round 16: the track it lies on; none is its kind's first track (Text, or Brand for a component). */
+  trackId?: Id;
+  /** Round 16: her own easing curve (cubic-bezier x1, y1, x2, y2), drawn in the curve editor; it overrides `ease`. */
+  curve?: [number, number, number, number];
+  /** Round 16: the anchor point, in per cent of the layer's box (50, 50 is its centre), as in After Effects. */
+  anchor?: { x: number; y: number };
+  /** Round 16: a property's value while its stopwatch is off (no keys), as in After Effects' Transform. A property
+   *  with keys takes its value from them; one with neither is at rest (no move, 100 % scale, no turn, fully seen). */
+  transform?: Partial<Record<MotionProp, number>>;
+  /** Round 16: a text animator (Typewriter, Fade up by word, …): the words come in a letter, a word or a line at a
+   *  time. While it is on, it is the layer's way in. */
+  animate?: TextAnimator;
+}
+
+/** Round 16: the text animators, as in After Effects' Animate menu and its presets. */
+export type TextAnimatorId = "typewriter" | "fade-up" | "blur-in" | "slide-up" | "tracking-in" | "scale-down";
+
+/** A text animator with its range selector: which part of the words it moves (start and end, per cent of the
+ *  letters, words or lines), an offset, and how long it takes to run through them. */
+export interface TextAnimator {
+  preset: TextAnimatorId;
+  by: "letter" | "word" | "line";
+  start: number;
+  end: number;
+  offset: number;
+  /** Seconds from the layer's start until the last letter, word or line is in. */
+  over: number;
 }
 
 export interface CaptionCue {
@@ -132,6 +159,8 @@ export interface CaptionCue {
   end: number;
   /** The Engine wrote it, or a person changed it. */
   by: Id;
+  /** Round 16: the track it lies on; none is the first Captions track. */
+  trackId?: Id;
 }
 
 export interface SoundCue {
@@ -146,6 +175,72 @@ export interface SoundCue {
   licence?: string;
   /** Beats in seconds, for cutting on the music. */
   beats?: number[];
+  /** Round 16: the audio track it lies on; none is its kind's track (Music, Effects or Voice). */
+  trackId?: Id;
+}
+
+/** Round 16 (Marcus, 9 Nov: "Tidslinjen sin høyde burde representere hva som er over hverandre, som layers"): the
+ *  timeline's tracks, top to bottom as they lie over each other in the frame, then the audio tracks under a line. */
+export type TrackKind = "text" | "brand" | "captions" | "video" | "audio";
+
+export interface VideoTrack {
+  id: Id;
+  kind: TrackKind;
+  name: string;
+  /** Left out of the frame (a visual track) while she works; never deleted. */
+  hidden?: boolean;
+  /** Nothing on it can be picked or moved. */
+  locked?: boolean;
+  /** Audio: not heard. */
+  muted?: boolean;
+  /** Audio: only the solo tracks are heard. */
+  solo?: boolean;
+}
+
+/** A marker on the ruler: a named moment ("Beat drop", "Label in"), as in Premiere. */
+export interface VideoMarker {
+  id: Id;
+  at: number;
+  name: string;
+}
+
+/** Round 16: a clip over the video, on a video track above Main (video over video): her footage or a take, at its
+ *  own time, the whole frame or a picture in the picture, with its opacity. */
+export interface VideoOverlay {
+  id: Id;
+  trackId: Id;
+  name: string;
+  source: ShotSource;
+  takes: ShotTake[];
+  pickedTakeId?: Id;
+  in: number;
+  out: number;
+  speed: number;
+  /** Seconds on the timeline. */
+  start: number;
+  /** The whole frame, or a smaller picture in a corner. */
+  size?: "full" | "inset";
+  /** 0 to 1. */
+  opacity?: number;
+}
+
+/** Round 16 (Marcus, 9 Nov: "en egen side, med et board, som dekker hele siden, litt som et lite figma canvas"): the
+ *  storyboard as its own board. Its sections hold the shots in the order of the edit; notes lie where she put them. */
+export interface StoryboardSection {
+  id: Id;
+  name: string;
+  clipIds: Id[];
+}
+export interface StoryboardNote {
+  id: Id;
+  text: string;
+  /** Where it lies on the board, in board pixels. */
+  x: number;
+  y: number;
+}
+export interface Storyboard {
+  sections: StoryboardSection[];
+  notes: StoryboardNote[];
 }
 
 /** One format the edit is made into: the Engine reframes and cuts it down; the expert looks it over. */
@@ -200,6 +295,14 @@ export interface VideoEdit {
   edits: VideoEngineEdit[];
   /** The motion style and its knobs, 0–100 (FLOWS §34.6). */
   style?: { id: MotionStyleId; energy: number; pace: number };
+  /** Round 16: the tracks, top to bottom; none is the default set (Brand, Captions, Text, Main, Music, Effects). */
+  tracks?: VideoTrack[];
+  /** Round 16: named moments on the ruler. */
+  markers?: VideoMarker[];
+  /** Round 16: clips over the video, on video tracks above Main. */
+  overlays?: VideoOverlay[];
+  /** Round 16: the storyboard's sections and notes; none is one section per part of the film. */
+  board?: Storyboard;
 }
 
 /** A piece of the brand's own footage in its library (Fume for Agencies, 05): a shot the edit can use as it is. */

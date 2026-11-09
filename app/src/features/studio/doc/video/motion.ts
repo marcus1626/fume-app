@@ -2,7 +2,16 @@
 // layer's keyframes worked out at a moment. Fume owns the motion as data (keyframes and easing on the layer); whatever
 // plays it in the browser or renders it frame by frame reads the same data.
 import { placed } from "../../../../domain/video";
-import type { EaseId, MotionKey, MotionLayer, MotionProp, MotionStyleId, VideoEdit } from "../../../../contract";
+import type {
+  EaseId,
+  MotionKey,
+  MotionLayer,
+  MotionProp,
+  MotionStyleId,
+  TextAnimator,
+  TextAnimatorId,
+  VideoEdit,
+} from "../../../../contract";
 
 /** The brand's easings: slow, continuous, never a bounce. The curve is a CSS cubic-bezier. */
 export const EASES: Record<EaseId, { name: string; line: string; curve: [number, number, number, number] }> = {
@@ -95,12 +104,46 @@ export function withStyle(edit: VideoEdit, id: MotionStyleId): VideoEdit {
   return {
     ...edit,
     style: { id, energy: s.energy, pace: s.pace },
-    motion: edit.motion.map((m) => ({ ...m, enter: s.enter, exit: s.exit, loop: s.loop, ease: s.ease })),
+    // The style's easing replaces her own curve too; the curve editor draws it again from there.
+    motion: edit.motion.map((m) => ({
+      ...m,
+      enter: s.enter,
+      exit: s.exit,
+      loop: s.loop,
+      ease: s.ease,
+      curve: undefined,
+    })),
   };
 }
 
+/** A layer's curve: her own (the curve editor), else its named easing's. */
+export const curveOf = (layer: Pick<MotionLayer, "curve" | "ease">): [number, number, number, number] =>
+  layer.curve ?? EASES[layer.ease ?? "soft-out"].curve;
+
+/** The named easing a curve is, if it is one. */
+export const easeNamed = (curve: [number, number, number, number]): EaseId | undefined =>
+  (Object.keys(EASES) as EaseId[]).find((id) => EASES[id].curve.every((n, i) => Math.abs(n - curve[i]!) < 0.005));
+
+/** A curve that goes past where it starts or lands (a y outside 0–1) overshoots: a bounce, which the brand's motion
+ *  never has. She may still use it (the designer has the last word); the editor says it is off the brand's motion. */
+export const overshoots = (curve: [number, number, number, number]) =>
+  curve[1] < 0 || curve[1] > 1 || curve[3] < 0 || curve[3] > 1;
+
+/** After Effects' ease out of a key and ease into the next, as influence in per cent: x1 and 1 − x2 of the curve. */
+export const influence = (curve: [number, number, number, number]) => ({
+  out: Math.round(curve[0] * 100),
+  in: Math.round((1 - curve[2]) * 100),
+});
+/** A curve from the two influences, at speed 0 on both keys (After Effects' Easy Ease is 33 and 33). */
+export const fromInfluence = (out: number, into: number): [number, number, number, number] => [
+  Math.round(Math.min(100, Math.max(0, out))) / 100,
+  0,
+  Math.round(100 - Math.min(100, Math.max(0, into))) / 100,
+  1,
+];
+
 /** A cubic-bezier easing as a function of progress 0–1. */
-function bezier([x1, y1, x2, y2]: [number, number, number, number]) {
+export function bezier([x1, y1, x2, y2]: [number, number, number, number]) {
   const at = (a: number, b: number, t: number) => 3 * a * (1 - t) ** 2 * t + 3 * b * (1 - t) * t ** 2 + t ** 3;
   return (x: number) => {
     if (x <= 0 || x >= 1) return Math.min(1, Math.max(0, x));
@@ -123,14 +166,14 @@ export const REST: Record<MotionProp, number> = { x: 0, y: 0, scale: 1, rotate: 
 /** A property's value at a moment of the layer (seconds from its start), from its keyframes and easing. */
 export function valueAt(layer: MotionLayer, prop: MotionProp, local: number): number {
   const keys = (layer.keys ?? []).filter((k) => k.prop === prop).sort((a, b) => a.at - b.at);
-  if (!keys.length) return REST[prop];
+  if (!keys.length) return layer.transform?.[prop] ?? REST[prop];
   if (local <= keys[0]!.at) return keys[0]!.value;
   const last = keys[keys.length - 1]!;
   if (local >= last.at) return last.value;
   const i = keys.findIndex((k) => k.at > local);
   const a = keys[i - 1]!;
   const b = keys[i]!;
-  const ease = bezier(EASES[layer.ease ?? "soft-out"].curve);
+  const ease = bezier(curveOf(layer));
   return a.value + (b.value - a.value) * ease((local - a.at) / (b.at - a.at));
 }
 
@@ -163,7 +206,7 @@ export const inOut = (pace = 40) => 0.9 - 0.006 * pace;
 export function layerAt(layer: MotionLayer, t: number, style?: VideoEdit["style"]) {
   const local = t - layer.start;
   const dur = Math.max(0.1, layer.end - layer.start);
-  const ease = bezier(EASES[layer.ease ?? "soft-out"].curve);
+  const ease = bezier(curveOf(layer));
   const x = valueAt(layer, "x", local);
   let y = valueAt(layer, "y", local);
   let scale = valueAt(layer, "scale", local);
@@ -174,7 +217,8 @@ export function layerAt(layer: MotionLayer, t: number, style?: VideoEdit["style"
   const span = inOut(style?.pace);
   const reach = 0.5 + (style?.energy ?? 40) / 100;
 
-  const enter = ease(Math.min(1, Math.max(0, local / span)));
+  // A text animator is the layer's way in while it is on (round 16).
+  const enter = layer.animate ? 1 : ease(Math.min(1, Math.max(0, local / span)));
   if (enter < 1) {
     opacity *= enter;
     if (layer.enter === "soft") blur += 12 * reach * (1 - enter);
@@ -213,4 +257,71 @@ export function follow(before: VideoEdit, after: VideoEdit): VideoEdit {
     return { ...m, start: Math.max(0, m.start + d), end: Math.max(0.1, m.end + d) };
   });
   return moved ? { ...after, motion } : after;
+}
+
+// ─── Round 16: text animators ───────────────────────────────────────────────
+
+/** The text animators and presets, as in After Effects' Animate menu: each comes in by letter, word or line. Typewriter
+ *  is hard (a letter is there or not); the rest are soft, a few units at a time, on the layer's curve. */
+export const ANIMATORS: Record<
+  TextAnimatorId,
+  { name: string; line: string; by: TextAnimator["by"]; over: number; soft: number }
+> = {
+  typewriter: { name: "Typewriter", line: "A letter at a time, as it is typed", by: "letter", over: 1.2, soft: 1 },
+  "fade-up": { name: "Fade up by word", line: "Each word rises a little as it fades in", by: "word", over: 1, soft: 2 },
+  "blur-in": { name: "Blur in by letter", line: "Soft to sharp, a letter at a time", by: "letter", over: 1.2, soft: 4 },
+  "slide-up": {
+    name: "Slide up by line",
+    line: "Each line slides up from under itself",
+    by: "line",
+    over: 0.9,
+    soft: 1.5,
+  },
+  "tracking-in": { name: "Tracking in", line: "Wide letters draw together", by: "letter", over: 1.4, soft: 6 },
+  "scale-down": {
+    name: "Scale down by word",
+    line: "Each word settles from a little larger",
+    by: "word",
+    over: 1,
+    soft: 2,
+  },
+};
+
+/** A new animator from a preset, over the whole of the words. */
+export const animator = (preset: TextAnimatorId): TextAnimator => ({
+  preset,
+  by: ANIMATORS[preset].by,
+  start: 0,
+  end: 100,
+  offset: 0,
+  over: ANIMATORS[preset].over,
+});
+
+/** The words cut into what the animator moves: letters (a space stays with the letter before it), words, or lines. */
+export function unitsOf(text: string, by: TextAnimator["by"]): string[] {
+  if (by === "line") return text.split("\n");
+  if (by === "word") return text.split(/(?<=\s)/);
+  return [...text];
+}
+
+/** How far each unit still is from being in, 0 (in) to 1 (not yet), at a moment of the layer (seconds from its
+ *  start). The range selector picks which units move (start and end, per cent of them); the offset moves the range. */
+export function unitsAt(layer: MotionLayer, local: number): number[] {
+  const a = layer.animate;
+  if (!a) return [];
+  const n = unitsOf(layer.text, a.by).length;
+  const shift = Math.round((a.offset / 100) * n);
+  const from = Math.min(n, Math.max(0, Math.floor((a.start / 100) * n) + shift));
+  const to = Math.min(n, Math.max(from, Math.ceil((a.end / 100) * n) + shift));
+  const m = Math.max(1, to - from);
+  const soft = ANIMATORS[a.preset].soft;
+  const ease = bezier(curveOf(layer));
+  const p = Math.min(1, Math.max(0, local / Math.max(0.1, a.over)));
+  const front = p * (m + soft);
+  return Array.from({ length: n }, (_, i) => {
+    if (i < from || i >= to) return 0;
+    const k = i - from;
+    if (soft <= 1) return front >= k + 1 ? 0 : 1;
+    return 1 - ease(Math.min(1, Math.max(0, (front - k) / soft)));
+  });
 }

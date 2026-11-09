@@ -3,9 +3,10 @@
 import { editChecks, pickedTake } from "../../../../domain/video";
 import type { MotionTemplate, VideoClip, VideoEdit } from "../../../../contract";
 
-/** One thing picked on the timeline; nothing picked shows the edit's own settings. */
+/** One thing picked on the timeline; nothing picked shows the edit's own settings. Round 16: a clip over the video, a
+ *  marker on the ruler, or a track by its head. */
 export interface Selection {
-  kind: "shot" | "motion" | "caption" | "sound";
+  kind: "shot" | "motion" | "caption" | "sound" | "overlay" | "marker" | "track";
   id: string;
 }
 

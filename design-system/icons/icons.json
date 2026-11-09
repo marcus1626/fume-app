@@ -635,6 +635,48 @@
       "note": "captions in the Video studio (FLOWS §27)"
     },
     {
+      "name": "volume-2",
+      "lucide": "volume-2",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "an audio track that is heard (round 16, the video editor)"
+    },
+    {
+      "name": "volume-x",
+      "lucide": "volume-x",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "a muted audio track (round 16, the video editor)"
+    },
+    {
+      "name": "timer",
+      "lucide": "timer",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "the stopwatch: a property with keyframes, as in After Effects (round 16)"
+    },
+    {
+      "name": "hand",
+      "lucide": "hand",
+      "kind": "line",
+      "status": "PROPOSED",
+      "note": "move around the storyboard (round 16)"
+    },
+    {
+      "name": "mouse-pointer-2",
+      "lucide": "mouse-pointer-2",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "pick and move on the storyboard (round 16)"
+    },
+    {
+      "name": "spline",
+      "lucide": "spline",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "an easing curve (round 16, the curve editor)"
+    },
+    {
       "name": "mic",
       "lucide": "mic",
       "kind": "filled",

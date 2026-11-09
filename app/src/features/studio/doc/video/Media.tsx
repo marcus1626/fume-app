@@ -6,17 +6,38 @@
 // video), Masters, and Brand: the brand's components (its call to action, its end card) and its text, each added at
 // the playhead on the shot there, which it then follows. Motion mode: Styles (a set of motion in the brand's colours
 // and type, with its energy and pace), the Layers, and Brand.
-import { Icon, StudioFolds, StudioSlider, type StudioFold } from "@fume/ui";
+// Round 16 (PROPOSED 9 Nov 2026): an upload can also be laid over the video (a clip on a video track above Main, at the
+// playhead); Sounds adds an effect at the playhead on an audio track; Text presets are the text animators (Typewriter
+// and the rest): on the picked words, or on a new line at the playhead.
+import { Button, Icon, StudioFolds, StudioSlider, WithTooltip, type StudioFold } from "@fume/ui";
 import { memo, type CSSProperties } from "react";
 import { useBrandAssets, useDocuments } from "../../../../api/hooks";
-import type { CreativeDocument, MotionTemplate, StudioMode, VideoClip, VideoEdit } from "../../../../contract";
+import type {
+  CreativeDocument,
+  MotionLayer,
+  MotionTemplate,
+  SoundCue,
+  StudioMode,
+  TextAnimatorId,
+  VideoClip,
+  VideoEdit,
+  VideoOverlay,
+} from "../../../../contract";
 import { clipAt, pickedTake } from "../../../../domain/video";
 import { ModePicker } from "../Specs";
 import { MOTION, localId, openFindings, shotLine, type Selection } from "./edit";
-import { EASES, STYLES, withStyle } from "./motion";
+import { ANIMATORS, EASES, STYLES, animator, withStyle } from "./motion";
+import { MAIN, isAudio, placeNew } from "./tracks";
 
 const COMPONENTS: MotionTemplate[] = ["cta", "end"];
 const TEXT: MotionTemplate[] = ["title", "line", "product", "offer"];
+/** The sound library's effects (a stand-in until the backend sends the brand's and the licensed library's). */
+const SOUNDS: { name: string; seconds: number; line: string }[] = [
+  { name: "Glass on stone", seconds: 0.8, line: "The bottle set down" },
+  { name: "Cap off", seconds: 0.5, line: "A soft click" },
+  { name: "Oil on skin", seconds: 1.2, line: "Close and quiet" },
+  { name: "Room tone, evening", seconds: 4, line: "A still room, for under words" },
+];
 
 export const VideoMedia = memo(function VideoMedia({
   doc,
@@ -109,12 +130,25 @@ export const VideoMedia = memo(function VideoMedia({
     const start = Math.round(timeNow() * 10) / 10;
     const text = template === "end" ? brandName : template === "product" && productName ? productName : m.start;
     const style = edit.style ? STYLES[edit.style.id] : undefined;
+    const end = Math.round((start + m.seconds) * 10) / 10;
+    // On its kind's track when that is free there, else on a free one, else on a new text track above.
+    const brandish = template === "cta" || template === "end";
+    const placed = placeNew(
+      edit,
+      (k) => k.kind === "text" || (brandish && k.kind === "brand"),
+      brandish ? "t-brand" : "t-text",
+      "text",
+      start,
+      end,
+      localId("t"),
+    );
     const layer = {
       id: localId("mo"),
       template,
       text,
       start,
-      end: Math.round((start + m.seconds) * 10) / 10,
+      end,
+      trackId: placed.trackId,
       enter: style?.enter ?? (template === "product" || template === "cta" ? ("rise" as const) : ("soft" as const)),
       exit: style?.exit ?? ("fade" as const),
       loop: style?.loop,
@@ -126,7 +160,110 @@ export const VideoMedia = memo(function VideoMedia({
       // It follows the shot it lands on, so it moves when the shot does.
       clipId: clipAt(edit.clips, start)?.clip.id,
     };
-    onEdit({ ...edit, motion: [...edit.motion, layer] }, `add-${layer.id}`);
+    onEdit({ ...placed.edit, motion: [...placed.edit.motion, layer] }, `add-${layer.id}`);
+    onSelect({ kind: "motion", id: layer.id });
+  };
+  // An upload over the video: on the top video track over Main, or a new one ("Video 2") when there is none.
+  const layOver = (f: (typeof footage)[number]) => {
+    const start = Math.round(timeNow() * 10) / 10;
+    const out = Math.min(f.seconds, 2.5);
+    // The top video track over Main that is free there, else a new one above it.
+    const { edit: next, trackId } = placeNew(
+      edit,
+      (k) => k.kind === "video" && k.id !== MAIN,
+      undefined,
+      "video",
+      start,
+      start + out,
+      localId("t"),
+    );
+    const takeId = localId("tk");
+    const over: VideoOverlay = {
+      id: localId("ov"),
+      trackId,
+      name: f.name,
+      source: "library",
+      takes: [
+        {
+          id: takeId,
+          number: 1,
+          video: f.video,
+          poster: f.poster,
+          seconds: f.seconds,
+          state: "ready",
+          model: `${brandName} footage`,
+          cost: 0,
+          findings: [],
+          at: new Date().toISOString(),
+        },
+      ],
+      pickedTakeId: takeId,
+      in: 0,
+      out,
+      speed: 1,
+      start,
+      size: "inset",
+      opacity: 1,
+    };
+    onEdit({ ...next, overlays: [...(next.overlays ?? []), over] }, `add-${over.id}`);
+    onSelect({ kind: "overlay", id: over.id });
+  };
+  // A sound effect at the playhead, on the first audio track that is not the music's.
+  const addSound = (x: (typeof SOUNDS)[number]) => {
+    const start = Math.round(timeNow() * 10) / 10;
+    const end = Math.round((start + x.seconds) * 10) / 10;
+    const placed = placeNew(
+      edit,
+      (k) => isAudio(k) && k.id !== "t-music",
+      "t-effects",
+      "audio",
+      start,
+      end,
+      localId("t"),
+    );
+    const cue: SoundCue = {
+      id: localId("sd"),
+      kind: "effect",
+      name: x.name,
+      start,
+      end,
+      level: -14,
+      licence: "Licensed for paid social",
+      trackId: placed.trackId,
+    };
+    onEdit({ ...placed.edit, sound: [...placed.edit.sound, cue] }, `add-${cue.id}`);
+    onSelect({ kind: "sound", id: cue.id });
+  };
+  // A text preset: on the picked words, or on a new line at the playhead.
+  const pickedText = selected?.kind === "motion" ? edit.motion.find((m) => m.id === selected.id) : undefined;
+  const textTarget =
+    pickedText && pickedText.template !== "cta" && pickedText.template !== "end" ? pickedText : undefined;
+  const preset = (id: TextAnimatorId) => {
+    if (textTarget) {
+      onEdit(
+        { ...edit, motion: edit.motion.map((m) => (m.id === textTarget.id ? { ...m, animate: animator(id) } : m)) },
+        `mo-${textTarget.id}-anim-${id}`,
+      );
+      return;
+    }
+    const start = Math.round(timeNow() * 10) / 10;
+    const end = Math.round((start + Math.max(2, ANIMATORS[id].over + 1)) * 10) / 10;
+    const placed = placeNew(edit, (k) => k.kind === "text", "t-text", "text", start, end, localId("t"));
+    const layer: MotionLayer = {
+      id: localId("mo"),
+      template: "line",
+      text: MOTION.line.start,
+      start,
+      end,
+      trackId: placed.trackId,
+      enter: "fade",
+      exit: "fade",
+      ease: "soft-out",
+      place: "centre",
+      animate: animator(id),
+      clipId: clipAt(edit.clips, start)?.clip.id,
+    };
+    onEdit({ ...placed.edit, motion: [...placed.edit.motion, layer] }, `add-${layer.id}`);
     onSelect({ kind: "motion", id: layer.id });
   };
 
@@ -214,12 +351,13 @@ export const VideoMedia = memo(function VideoMedia({
       children: (
         <>
           <p className="ui-video-help">
-            {brandName}’s own video, used as it is. Ask the Engine for takes of one when you want options.
+            {brandName}’s own video, used as it is: added after the shots, or laid over them at the playhead (the layers
+            button). Ask the Engine for takes of one when you want options.
           </p>
           {footage.length ? (
             <ul className="ui-video-list" aria-label={`${brandName}’s uploads`}>
               {footage.map((f) => (
-                <li key={f.id}>
+                <li key={f.id} className="ui-video-row-pair">
                   <button
                     type="button"
                     className="ui-video-row"
@@ -239,6 +377,16 @@ export const VideoMedia = memo(function VideoMedia({
                       <Icon name="plus" />
                     </span>
                   </button>
+                  <WithTooltip label="Lay it over the video, at the playhead">
+                    <Button
+                      size="sm"
+                      variant="quiet"
+                      iconOnly
+                      icon="layers"
+                      aria-label={`Lay ${f.name} over the video at the playhead`}
+                      onClick={() => layOver(f)}
+                    />
+                  </WithTooltip>
                 </li>
               ))}
             </ul>
@@ -401,7 +549,75 @@ export const VideoMedia = memo(function VideoMedia({
     ),
   };
 
-  const folds = motionMode ? [styles, layers, brand] : [...sections, brand];
+  const presets: StudioFold = {
+    id: "Text presets",
+    title: "Text presets",
+    children: (
+      <>
+        <p className="ui-video-help">
+          {textTarget
+            ? `On “${textTarget.text}”: the words come in a letter, a word or a line at a time.`
+            : "A new line at the playhead with the preset on. Pick words first to put it on them."}
+        </p>
+        <ul className="ui-video-styles" aria-label="Text presets">
+          {(Object.keys(ANIMATORS) as TextAnimatorId[]).map((id) => (
+            <li key={id}>
+              <button
+                type="button"
+                className="ui-video-style"
+                data-animator={id}
+                aria-pressed={textTarget?.animate?.preset === id}
+                aria-label={
+                  textTarget ? `${ANIMATORS[id].name} on ${textTarget.text}` : `Add a line with ${ANIMATORS[id].name}`
+                }
+                onClick={() => preset(id)}
+              >
+                <span className="ui-video-style-name">{ANIMATORS[id].name}</span>
+                <span className="ui-video-style-line">{ANIMATORS[id].line}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </>
+    ),
+  };
+  const sounds: StudioFold = {
+    id: "Sounds",
+    title: "Sounds",
+    meta: SOUNDS.length,
+    children: (
+      <>
+        <p className="ui-video-help">Added at the playhead on an audio track. The music is the mode’s.</p>
+        <ul className="ui-video-list" aria-label="Sounds">
+          {SOUNDS.map((x) => (
+            <li key={x.name}>
+              <button
+                type="button"
+                className="ui-video-row"
+                aria-label={`Add the sound ${x.name} at the playhead`}
+                onClick={() => addSound(x)}
+              >
+                <span className="ui-video-row-img" data-glyph="">
+                  <Icon name="music" />
+                </span>
+                <span className="ui-video-row-text">
+                  <span className="ui-video-row-name">{x.name}</span>
+                  <span className="ui-video-row-meta">
+                    {x.line} · {x.seconds} s
+                  </span>
+                </span>
+                <span className="ui-video-row-end">
+                  <Icon name="plus" />
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </>
+    ),
+  };
+
+  const folds = motionMode ? [styles, layers, presets, brand] : [...sections, brand, presets, sounds];
 
   return (
     <aside className="ui-desk-panel ui-desk-specs" aria-label="Library">

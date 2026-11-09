@@ -1773,8 +1773,8 @@ it. Everything here is PROPOSED until he chooses.
 - New icons, PROPOSED with the round: eye-off, lock-open, text-align-start, text-align-center, text-align-end.
 
 ### 36.2 The Engine at hand, and a chat per web session
-- **"Tell the Engine" while the panel is closed.** In the Studio a field lies right under the board, where the Engine
-  bar was: "Tell the Engine what to change in Master 3 · Feed 4:5", with ⌘J beside it. It is the page's own thread's
+- **"Tell the Engine" while the panel is closed.** In the Studio a field lies right under the board (under the player
+  and its transport in Video), where the Engine bar was: "Tell the Engine what to change in Master 3 · Feed 4:5", with ⌘J beside it. It is the page's own thread's
   composer, with the same draft: sending opens the panel on that thread, where the answer and its change card are, and
   ⌘J opens it with what she has written. While the panel is open the field steps aside (one composer). While the Engine
   fixes the creative from Check, or a change waits for her, it says so and does not take more. In the staff frame the
@@ -1804,3 +1804,109 @@ it. Everything here is PROPOSED until he chooses.
 - An end-to-end test (`e2e/layout.spec.ts`) looks, at 1440 × 900, for any button, link, field or tab whose box goes past
   the nearest ancestor that draws a surface, on Check (a comment answered, designs, video), the three studios, a plan
   (with the Engine open) and the brand books. What a scroller clips away is left out.
+
+### 36.4 The video editor: tracks as layers, a storyboard of its own, and motion as After Effects has it (PROPOSED 9 Nov 2026)
+
+Marcus on the round 14 walkthrough: the storyboard need not sit where the timeline sits ("en egen side, med et board,
+som dekker hele siden, litt som et lite figma canvas"); no manual motion control, no ease in and ease out numbers;
+better controls, as in After Effects (transform, opacity, rotate) and text of its own (presets, typewriter); and on the
+timeline: how many tracks, zoom across and up, markers, more audio tracks, more videos over each other, why the
+captions lie under Main ("Tidslinjen sin høyde burde representere hva som er over hverandre, som layers"). Round 16
+answers each. The editor stays CapCut-logical: one magnetic main track of shots, everything else on tracks above or
+below it, Edit and Motion modes as before, one Engine panel (no chat in the editor), takes, Follows and the video's
+Check as they were.
+
+**The tracks are the frame's layers.** The timeline lists its tracks top to bottom in the order they lie in the frame:
+Brand (the brand's components, such as the locked call to action and the end card), Captions, Text, the video tracks
+over Main, then Main. Under a short "Audio" heading: Music, Effects, and Voice when there is one. The captions no
+longer lie under Main. The player draws the tracks in the same order, so what is higher on the timeline is higher in
+the frame. A track's head has a grip (drag it up or down, or Alt and the arrow keys), its name (click picks the track,
+double-click renames), and its switches: the eye (hide) and the lock for a visual track; mute and solo ("S") for an
+audio track. Its "…" menu has Rename, Move up, Move down and "Remove the track". A visual track never goes under the
+audio, and Main cannot be removed. "+ Track" adds "Video, over the shots" (a video track straight over Main), "Text"
+(over the top text track) or "Audio" (at the bottom), named by kind and number: "Video 2", "Text 2", "Audio 3". There
+is no limit on the number of tracks. A picked track shows in the inspector with its name, its switches, Up, Down and
+"Remove the track"; removing a track removes what lies on it.
+
+**Things on one track never overlap.** As in CapCut, a thing that would lie over another goes on a track above it, so
+the timeline's height always says what lies over what. A dragged caption, text layer, sound or clip stops against its
+neighbour on the track; when there is no room near, it keeps its last place. Anything added at the playhead (a text
+layer, a component, a text preset's line, a sound, an upload laid over the video) goes on the first free track of its
+kind, and a new track is made above the others of its kind when none is free. The inspector's "Track" select offers
+only the tracks where the thing's time is free.
+
+**Moving things.** Every item except a shot can be dragged along its track and onto another track of its kind (words
+on a text or brand track, captions on a captions track, sound on an audio track, a clip over the video on a video
+track other than Main). Its ends snap to the playhead, the markers, the shots' cuts, the music's beats and the other
+items' ends. A text layer that follows a shot follows the shot under its new start. A locked track's items do not
+move. Shots stay magnetic on Main and are trimmed by their handles, as before.
+
+**Zoom, height and markers.** The toolbar over the tracks has the two views (Timeline and Storyboard), "+ Track",
+"Markers", and on the right the zoom (Zoom out, a slider, Zoom in, "Fit") and the tracks' height (S, M, L). Zoom goes
+from the whole film across the width up to twelve times that, and keeps the moment under the pointer (or the
+playhead) in place; ⌘ or Ctrl and the wheel zoom, = and − zoom from the keyboard, \ fits. The heads stick to the left
+and the ruler to the top while the tracks scroll under them. M puts a marker at the playhead and picks it: the
+inspector has its Name, its time ("At"), "Go to it" and "Remove". A marker is a small bookmark on the ruler with its
+name beside it while it is picked; drag it along the ruler. The "Markers" menu adds one, goes to the one before (⌘⇧M)
+or the next (⇧M), and lists them all. Delete or Backspace removes what is picked (not the music, not Main); Escape
+lets go of it; Space plays and pauses.
+
+**Video over video, and more sound.** In Uploads, each upload has a second button: lay it over the video at the
+playhead. It lands on the top free video track over Main ("Video 2" is made when there is none), as a picture in
+picture. The inspector has its picture, Size ("The whole frame" or "Picture in picture"), Opacity, and its timing
+within the take. The library's new "Sounds" fold adds a sound at the playhead on an audio track other than the music's.
+
+**The storyboard is a page of its own.** "Storyboard" (next to "Timeline" over the tracks) covers the whole desk with
+a board, as a small Figma canvas: the player, the library and the inspector make way for it. The shots stand as cards
+in sections, in the film's order: Hook, Story and End card by default (one section, Story, for a film of fewer than
+three shots). A card shows the picture with its takes stacked behind it, the shot's number, its length and camera move,
+a flag when the Engine found something, and the words on screen. Drag a card to another place or section and the film
+changes with it; the first shot always starts on a cut. A picked card has "Earlier", "Later" and "Open in the edit"
+(back to the timeline with the shot picked; a double-click does the same). Sections are added ("Section"), renamed (a
+double-click on the name) and taken out (their shots join the section before). Notes can lie anywhere on the board:
+the Note tool, then a click; drag one by its top; its × takes it away. The tools at the board's foot: Pointer (V),
+Hand (H, or hold Space), Note (N), Section, the zoom with its per cent, and "Fit" (⇧1). The wheel pans; ⌘ or Ctrl and
+the wheel zoom around the pointer. Undo works on the board as everywhere in the editor.
+
+**Transform, as After Effects lays it out.** A text layer's inspector has a Transform fold: the anchor point (X and Y,
+in per cent of the layer), then a row each for Position X, Position Y, Scale, Rotation and Opacity. Each row has its
+stopwatch, its name and its value. Drag the name sideways to change the value (Shift for ten times, Alt for a tenth),
+or type it; the arrow keys step it. The stopwatch off: the value is the layer's own, whatever the time. Turning it on
+puts a key at the playhead with the value there; from then on a change puts a key where the playhead is. Turning it
+off takes the keys out and keeps the value at the playhead. An animated row has the key navigator (the key before, a
+key here or not, the key after) and the property's keys on a short track under it; press one to go to it.
+
+**Easing with its numbers and its curve.** The Motion fold keeps In, While on and Out, and has an "Easing" part: the
+brand's easings as choices (Soft out, Settle, In and out, Even), "Easy ease" as in After Effects, and the curve itself:
+time across, progress up, with two handles to drag. Under it, the four numbers (x1, y1, x2, y2, as CSS writes them)
+and After Effects' influence in per cent ("Ease out" of the first key, "Ease into" the next; Easy ease is 33 and 33).
+A curve of her own reads "Custom". "Try it" runs a dot along the curve. A curve that goes past its mark and back is a
+bounce: allowed, with the line "This curve goes past its mark and back: a bounce. LYSNE's motion never bounces, so
+keep it only if you mean it."
+
+**Text of its own: animators and presets.** A text layer's "Animate" fold has None and six animators: Typewriter, Fade
+up by word, Blur in by letter, Slide up by line, Tracking in, Scale down by word. With one on: "By" (Letters, Words,
+Lines), and a "Range" as After Effects' text animator has it: Start, End and Offset, which choose the units that move,
+and "Over", the time from the layer's start until the last unit is in. An animator is the layer's way in while it is
+on. The library has "Text presets": on the picked words, the preset goes on them; with nothing picked, it adds a line
+at the playhead with the preset on. Motion mode's library shows Styles, Layers, Text presets and Brand; Edit mode's
+shows Shots, Masters, Uploads, Brand, Text presets and Sounds. In Motion mode the text and brand tracks open into one
+row per layer, and the captions row is hidden.
+
+**Contract.** All optional, so an edit from before round 16 reads as it did (it gets the default tracks, and every
+item lies on its kind's first track): `VideoEdit.tracks` (`VideoTrack`: id, kind brand, captions, text, video or
+audio, name, hidden, locked, muted, solo), `VideoEdit.markers` (`VideoMarker`: id, at, name), `VideoEdit.overlays`
+(`VideoOverlay`: a clip over the video with its takes, in, out, speed, start, track, size "full" or "inset", opacity),
+`VideoEdit.board` (`Storyboard`: sections with their shots, and notes with their place); `trackId` on a motion layer,
+a caption and a sound; on a motion layer `transform` (a property's value while its stopwatch is off), `anchor`,
+`curve` (a cubic-bezier of her own) and `animate` (`TextAnimator`: preset, by, start, end, offset, over). The demo's
+"Night ritual" has two markers ("Words in", "Product") and a board with a note.
+
+**Defaults to confirm.** The track order front to back (Brand, Captions, Text, video tracks, Main; then Music,
+Effects, Voice). Audio always under the visual tracks. The anchor point does not animate. An animator replaces the
+layer's In. A bounce is allowed with a note rather than blocked. The board hides the player and the panels rather than
+sharing the desk. Delete also removes shots and tracks, but never the music or Main. The demo plays no sound, so mute
+and solo only dim their lanes. The four sounds in "Sounds" stand in for a real library.
+
+**Open.** Precomps (a group of layers as one item, opened in its own timeline) are not built. The Timing sliders in
+the inspector can still stretch a thing over its neighbour on the same track. The 3D track stays behind its flag.

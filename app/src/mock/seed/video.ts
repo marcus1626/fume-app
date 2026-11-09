@@ -208,6 +208,22 @@ const edit: Omit<VideoEdit, "checks"> = {
   ],
   grade: "LYSNE warm",
   edits: [],
+  // Round 16: two named moments on the ruler, and the storyboard's sections with a note (the tracks are the default
+  // set: Brand, Captions, Text, Main, Music, Effects).
+  markers: [
+    { id: "mk-words", at: 3.7, name: "Words in" },
+    { id: "mk-product", at: 11.2, name: "Product" },
+  ],
+  board: {
+    sections: [
+      { id: "sb-hook", name: "Hook", clipIds: ["vc-light"] },
+      { id: "sb-story", name: "Story", clipIds: ["vc-hands", "vc-drop"] },
+      { id: "sb-end", name: "End card", clipIds: ["vc-bottle"] },
+    ],
+    notes: [
+      { id: "nt-hook", text: "The first second is light on stone: no words until it has landed.", x: 24, y: 330 },
+    ],
+  },
 };
 
 // FLOWS §34.7: the Story the Engine cut from the same shots, 6 s, waiting in Check. It opens on the drop's first take,

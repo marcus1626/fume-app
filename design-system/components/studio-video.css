@@ -16,12 +16,15 @@
                  <span class="ui-video-grade"/></div></section>
                [the Engine's lock bar while it fixes the video from Check]</main>
              <aside class="ui-desk-panel ui-desk-vars"> the inspector </aside>
-             <section class="ui-video-timeline" style="--len --t"><div class="ui-video-heads"/> <div class="ui-video-lanes">
-               <div class="ui-video-ruler"><div class="ui-video-scrub" role="slider"/> <span class="ui-video-tick"
-               style="--at"/> <span class="ui-video-beat"/> <button class="ui-video-flag"/></div>
-               <div class="ui-video-lane" data-lane="motion|shots|captions|sound"><button class="ui-video-item"
-               data-kind style="--start --dur --poster" aria-pressed/> <button class="ui-video-trim" data-end="in|out"/></div>
-               <span class="ui-video-head"/></div></section>
+             <section class="ui-video-timeline" style="--len --t --zoom --vz"><div class="ui-video-tools"/> (round 16)
+               <div class="ui-video-scroll"><div class="ui-video-grid" style="grid-template-rows">
+               <span class="ui-video-corner"/> <div class="ui-video-ruler"><div class="ui-video-scrub" role="slider"/>
+               <span class="ui-video-tick" style="--at"/> <span class="ui-video-beat"/> <button class="ui-video-marker"/>
+               <button class="ui-video-flag"/></div>
+               <div class="ui-video-track" data-kind data-audio data-hidden data-drop> grip · name · eye/lock or mute/solo · …</div>
+               <div class="ui-video-lane" data-track data-kind data-hidden data-locked data-muted data-target><button
+               class="ui-video-item" data-kind style="--start --dur --poster" aria-pressed/> <button class="ui-video-trim"
+               data-end="in|out"/></div> <div class="ui-video-headcol"><span class="ui-video-head"/></div></div></div></section>
    Fume decisions: the timeline is a Porcelain sheet like the panels, its items on the sunken step, a shot a strip of
    its own frames; the selected item carries the Ink ring the desk uses for a picked version, never Amber. The
    playhead is the one Ink line (a position, not a decoration). A flag the Engine raised is a Rouge dot on the ruler
@@ -32,7 +35,13 @@
    amber-is-a-point, glass-only-floating, touch-target, hover-needs-hover, focus-is-sharp, reduced-motion,
    no-gradient, tokens-only-color.
    Round 15 (PROPOSED 9 Nov 2026): no Engine bar under the player and no video conversation in the inspector's place;
-   she talks to the Engine in the Engine panel beside the desk (engine-panel.css), which took the conversation's chips. */
+   she talks to the Engine in the Engine panel beside the desk (engine-panel.css), which took the conversation's chips.
+   Round 16 (PROPOSED 9 Nov 2026), from Marcus's comments on the editor: the timeline's tracks lie as the frame's
+   layers (the top track in front, the captions over the video, audio under a gap), as many as she adds, each with its
+   head (eye, lock, mute, solo, a grip to move it); it zooms across and in height and carries named markers. The
+   storyboard is a page of its own over the desk: a canvas she pans and zooms, the shots as cards in sections, notes.
+   The inspector has After Effects' Transform (stopwatches, scrub handles, the key navigator), the easing as a curve
+   with its numbers, and text animators. Overshoot is allowed and said so, never drawn in a warning colour. */
 
 /* ---------- the desk: the timeline takes the whole width under the panels ---------- */
 
@@ -132,39 +141,62 @@
 }
 .ui-video-grade > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-secondary); }
 
-/* ---------- the timeline ---------- */
+/* ---------- the timeline (round 16: the tracks as the frame's layers) ---------- */
 
 .ui-video-timeline {
-  grid-area: timeline; display: grid; grid-template-columns: calc(var(--ui-size-hit) * 2) minmax(0, 1fr); gap: var(--ui-space-xs) var(--ui-space-sm);
+  grid-area: timeline; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: var(--ui-space-xs);
   min-width: 0; padding: var(--ui-space-sm) var(--ui-space-md) var(--ui-space-md);
   border-radius: var(--ui-radius-card); background: var(--ui-ground); box-shadow: var(--ui-depth-sheet);
   user-select: none;
+  /* The track heads' column, and the tracks' heights: the height control (S, M, L) sets --vz */
+  --head: calc(var(--ui-size-hit) * 3.75);
+  --lane-ruler: var(--ui-size-control-sm);
+  --lane-sm: calc(var(--ui-size-control-sm) * var(--vz, 1));
+  --lane-md: calc(var(--ui-size-control-md) * var(--vz, 1));
+  --lane-shot: calc((var(--ui-size-hit) + var(--ui-space-md)) * var(--vz, 1));
+  --lane-gap: var(--ui-space-xl);
 }
-.ui-video-heads { display: grid; grid-template-rows: var(--ui-size-control-sm) var(--video-lanes); gap: var(--ui-space-xs); min-width: 0; }
-.ui-video-heads > span {
-  display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0;
-  font-size: var(--ui-type-label); line-height: 1.3; color: var(--ui-text-tertiary);
+/* The tools over the tracks: the views, + Track, the markers, then the zoom and the tracks' height */
+.ui-video-tools { display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; }
+.ui-video-tools-gap { flex: 1; }
+.ui-video-zoom { display: flex; align-items: center; gap: var(--ui-space-xs); }
+.ui-video-zoom-range { width: calc(var(--ui-size-hit) * 2.5); }
+.ui-video-heights { flex-shrink: 0; }
+/* One scroller: the heads stick to the left, the ruler to the top; the tracks scroll under both */
+.ui-video-scroll {
+  position: relative; min-height: 0; max-height: 34vh; overflow: auto; container-type: inline-size;
+  overscroll-behavior: contain; scrollbar-width: thin;
+  /* What scrolls into view lands clear of the sticky ruler and heads */
+  scroll-padding: var(--lane-ruler) 0 0 calc(var(--head) + var(--ui-space-sm));
 }
-.ui-video-heads > span > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
-.ui-video-heads > span > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-/* The tracks' heights: the page sets --video-lanes from these, a track at a time (Text, Brand, Main, Captions, Sound) */
-.ui-video-timeline {
-  --lane-sm: var(--ui-size-control-sm); --lane-shot: calc(var(--ui-size-hit) + var(--ui-space-md)); --lane-md: var(--ui-size-control-md);
-  --video-lanes: var(--lane-sm) var(--lane-sm) var(--lane-shot) var(--lane-sm) var(--lane-md);
+.ui-video-grid {
+  position: relative; display: grid; column-gap: var(--ui-space-sm); row-gap: var(--ui-space-xs);
+  grid-template-columns: var(--head) calc((100cqi - var(--head) - var(--ui-space-sm)) * var(--zoom, 1));
 }
-.ui-video-lanes { position: relative; display: grid; grid-template-rows: var(--ui-size-control-sm) var(--video-lanes); gap: var(--ui-space-xs); min-width: 0; }
-.ui-video-ruler { position: relative; }
+/* The corner and the heads reach over the column gap too, square, so nothing that scrolls under them shows beside them */
+.ui-video-corner {
+  grid-row: 1; grid-column: 1; position: sticky; top: 0; left: 0; z-index: 7; display: flex; align-items: center;
+  margin-right: calc(-1 * var(--ui-space-sm)); padding-inline: var(--ui-space-sm) var(--ui-space-md); background: var(--ui-ground);
+  font-family: var(--ui-type-family-data); /* gate-allow:mono-is-data the playhead's time is data */
+  font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; color: var(--ui-text-secondary);
+}
+.ui-video-ruler { grid-row: 1; grid-column: 2; position: sticky; top: 0; z-index: 4; background: var(--ui-ground); }
+/* The playhead's dot rides on the ruler */
+.ui-video-ruler::after {
+  content: ""; position: absolute; bottom: 0; left: calc(var(--t) / var(--len) * 100%); width: var(--ui-space-sm); height: var(--ui-space-sm);
+  translate: -50% 50%; border-radius: 50%; background: var(--ui-action-primary); pointer-events: none;
+}
 .ui-video-scrub { position: absolute; inset: 0; cursor: pointer; touch-action: none; border-radius: var(--ui-radius-item); outline: none; -webkit-tap-highlight-color: transparent; }
 .ui-video-scrub:active { cursor: grabbing; }
 .ui-video-scrub:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
 .ui-video-tick, .ui-video-beat { pointer-events: none; }
 .ui-video-tick {
-  position: absolute; left: calc(var(--at) / var(--len) * 100%); bottom: 0; translate: -50% 0;
+  position: absolute; left: calc(var(--at) / var(--len) * 100%); bottom: var(--ui-space-xs); translate: -50% 0;
   font-family: var(--ui-type-family-data); /* gate-allow:mono-is-data seconds on the ruler are data */
   font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; line-height: 1; color: var(--ui-text-tertiary);
 }
-.ui-video-tick:first-child { translate: 0 0; }
-.ui-video-tick:last-of-type { translate: -100% 0; }
+.ui-video-tick[data-edge="start"] { translate: 0 0; }
+.ui-video-tick[data-edge="end"] { translate: -100% 0; }
 .ui-video-beat { position: absolute; left: calc(var(--at) / var(--len) * 100%); bottom: 0; width: 1px; height: var(--ui-space-xs); background: var(--ui-text-tertiary); } /* gate-allow:few-strokes a beat mark is a position on the ruler */ /* gate-allow:space-from-tokens a hairline mark */
 .ui-video-flag {
   position: absolute; top: 0; left: calc(var(--at) / var(--len) * 100%); translate: -50% 0;
@@ -175,37 +207,123 @@
 @media (hover: hover) { .ui-video-flag:hover { background: var(--ui-action-secondary-hover); } }
 .ui-video-flag:active { transform: scale(var(--ui-motion-press-scale)); }
 .ui-video-flag:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+/* A marker: a small Ink tab on the ruler, its name beside it while it is picked; drag it along */
+.ui-video-marker {
+  position: absolute; top: 0; left: calc(var(--at) / var(--len) * 100%); z-index: 2; translate: -50% 0;
+  display: flex; align-items: center; width: var(--ui-size-icon); height: var(--ui-size-icon); margin: 0; padding: 0; border: 0;
+  border-radius: var(--ui-radius-check); background: transparent; color: var(--ui-text); cursor: grab; touch-action: none;
+  outline: none; -webkit-tap-highlight-color: transparent;
+}
+.ui-video-marker > svg { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); }
+/* Its hit area is wide and stays in the ruler's top half, so a press under it still moves the playhead; on touch it is 44 */
+.ui-video-marker::after { content: ""; position: absolute; inset: calc(-1 * var(--ui-space-xs)) calc(-1 * var(--ui-space-md)); }
+@media (pointer: coarse) { .ui-video-marker::after { inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); } }
+.ui-video-marker:active { cursor: grabbing; color: var(--ui-action-primary-pressed); }
+.ui-video-marker:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-video-marker[aria-pressed="true"] { background: var(--ui-surface-sunken); }
+.ui-video-marker-name {
+  position: absolute; left: calc(100% + var(--ui-space-xs)); padding: 0 var(--ui-space-xs); border-radius: var(--ui-radius-check);
+  background: var(--ui-text); color: var(--ui-text-on-ink); font-size: var(--ui-type-label); line-height: 1.4; white-space: nowrap;
+}
 
-.ui-video-lane { position: relative; min-width: 0; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+/* A track's head: the grip, the name (picks the track), and its switches. It sticks to the left as the tracks scroll */
+.ui-video-track {
+  grid-column: 1; position: sticky; left: 0; z-index: 6; display: flex; align-items: center; gap: 0; min-width: 0;
+  margin-right: calc(-1 * var(--ui-space-sm)); padding-right: var(--ui-space-sm); background: var(--ui-ground);
+}
+.ui-video-track[data-grabbed] { background: var(--ui-surface-sunken); }
+.ui-video-track[data-drop="above"] { box-shadow: inset 0 var(--ui-size-ring) 0 var(--ui-action-primary); }
+.ui-video-track[data-drop="below"] { box-shadow: inset 0 calc(-1 * var(--ui-size-ring)) 0 var(--ui-action-primary); }
+.ui-video-track-grip {
+  position: relative; display: grid; place-items: center; flex-shrink: 0; width: var(--ui-space-lg); height: 100%; max-height: var(--ui-size-control-sm);
+  margin: 0; padding: 0; border: 0; border-radius: var(--ui-radius-check); background: transparent; color: var(--ui-text-disabled);
+  cursor: grab; touch-action: none; outline: none; -webkit-tap-highlight-color: transparent;
+}
+.ui-video-track-grip::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-video-track-grip > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+@media (hover: hover) { .ui-video-track:hover > .ui-video-track-grip { color: var(--ui-text-secondary); } }
+.ui-video-track-grip:active { cursor: grabbing; color: var(--ui-text); }
+.ui-video-track-grip:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; color: var(--ui-text); }
+.ui-video-track-name {
+  position: relative; display: flex; flex: 1; align-items: center; gap: var(--ui-space-xs); min-width: 0; height: min(100%, var(--ui-size-control-sm));
+  margin: 0; padding: 0 var(--ui-space-xs); border: 0; border-radius: var(--ui-radius-action); background: transparent; color: var(--ui-text-secondary);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); line-height: 1.2; text-align: start; cursor: pointer; outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.ui-video-track-name::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+.ui-video-track-name > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-video-track-name > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (hover: hover) { button.ui-video-track-name:hover { background: var(--ui-action-secondary-hover); color: var(--ui-text); } }
+button.ui-video-track-name:active { background: var(--ui-item-bg-pressed); }
+.ui-video-track-name:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+.ui-video-track-name[aria-pressed="true"] { background: var(--ui-surface-sunken); color: var(--ui-text); box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); }
+.ui-video-track-name[data-static] { cursor: default; padding-inline-start: var(--ui-space-lg); }
+.ui-video-track[data-hidden] .ui-video-track-name, .ui-video-track[data-muted] .ui-video-track-name { color: var(--ui-text-tertiary); }
+.ui-video-track-input {
+  flex: 1; min-width: 0; height: min(100%, var(--ui-size-control-sm)); margin: 0; padding: 0 var(--ui-space-xs); border: 0; border-radius: var(--ui-radius-field);
+  background: var(--ui-surface-sunken); color: var(--ui-text); font-family: var(--ui-type-family); font-size: var(--ui-type-label); outline: none;
+}
+.ui-video-track-input:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+.ui-video-track-tools { display: flex; align-items: center; flex-shrink: 0; }
+.ui-video-track-btn {
+  position: relative; display: grid; place-items: center; width: calc(var(--ui-size-control-sm) * .75); height: calc(var(--ui-size-control-sm) * .75);
+  margin: 0; padding: 0; border: 0; border-radius: var(--ui-radius-action); background: transparent; color: var(--ui-text-secondary);
+  cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent;
+}
+.ui-video-track-btn::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-video-track-btn > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+@media (hover: hover) { .ui-video-track-btn:hover:not(:disabled) { background: var(--ui-action-secondary-hover); color: var(--ui-text); } }
+.ui-video-track-btn:active:not(:disabled) { background: var(--ui-item-bg-pressed); }
+.ui-video-track-btn:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+.ui-video-track-btn:disabled { cursor: default; opacity: .4; }
+/* A switch that is on reads as Ink; the eye of a hidden track is dimmed; an open lock stays faint until the row is
+   under the pointer (as in Figma) */
+.ui-video-track-btn[aria-pressed="true"] { color: var(--ui-text); background: var(--ui-surface-sunken); }
+.ui-video-track-btn[data-off] { color: var(--ui-text-tertiary); background: transparent; }
+.ui-video-track-btn[data-quiet] { color: var(--ui-text-disabled); }
+@media (hover: hover) { .ui-video-track:hover .ui-video-track-btn[data-quiet] { color: var(--ui-text-secondary); } }
+.ui-video-track-letter { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; }
+/* The line between the picture and the sound */
+.ui-video-track-gap {
+  grid-column: 1; position: sticky; left: 0; z-index: 6; display: flex; align-items: flex-end; padding-inline: var(--ui-space-sm);
+  background: var(--ui-ground); font-size: var(--ui-type-label); line-height: 1.2; color: var(--ui-text-tertiary);
+}
+
+.ui-video-lane { grid-column: 2; position: relative; min-width: 0; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-video-lane[data-hidden] > *, .ui-video-lane[data-muted] > * { opacity: .4; }
+.ui-video-lane[data-locked] .ui-video-item { cursor: default; }
+.ui-video-lane[data-target] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); }
 .ui-video-item {
   position: absolute; top: 0; bottom: 0; left: calc(var(--start) / var(--len) * 100%); width: calc(var(--dur) / var(--len) * 100%);
   display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; margin: 0; padding: 0 var(--ui-space-sm); border: 0;
   border-radius: var(--ui-radius-item); background: var(--ui-ground); box-shadow: var(--ui-depth-raised); color: var(--ui-text);
   font-family: var(--ui-type-family); font-size: var(--ui-type-label); line-height: 1.2; text-align: start; overflow: hidden;
-  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none;
+  cursor: pointer; touch-action: none; -webkit-tap-highlight-color: transparent; outline: none;
   transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
 }
+.ui-video-item[data-kind="shot"] { touch-action: manipulation; }
 .ui-video-item > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (hover: hover) { .ui-video-item:hover { background: var(--ui-action-secondary-hover); } }
 .ui-video-item:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); z-index: 1; }
 .ui-video-item:disabled { cursor: default; }
 .ui-video-item:active:not(:disabled) { background-color: var(--ui-item-bg-pressed); }
 .ui-video-item[aria-pressed="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); z-index: 1; }
-/* A shot: a strip of its own frames, its name on a small Ink step */
-.ui-video-item[data-kind="shot"] {
+.ui-video-item[data-dragging] { z-index: 3; cursor: grabbing; box-shadow: var(--ui-depth-raised), inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); }
+/* A shot, and a clip over the video: a strip of its own frames, its name on a small Ink step */
+.ui-video-item[data-kind="shot"], .ui-video-item[data-kind="overlay"] {
   align-items: flex-end; padding: var(--ui-space-xs);
   background-color: var(--ui-text); background-image: var(--poster); background-size: auto 100%; background-repeat: repeat-x; background-position: left center;
 }
-.ui-video-item[data-kind="shot"] > span {
+.ui-video-item[data-kind="shot"] > span, .ui-video-item[data-kind="overlay"] > span {
   padding: 1px var(--ui-space-xs); border-radius: var(--ui-radius-check); background: var(--ui-text); color: var(--ui-text-on-ink); /* gate-allow:space-from-tokens a hairline of air around a 12 px name */
 }
-.ui-video-item[data-kind="shot"][aria-pressed="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary), inset 0 0 0 calc(var(--ui-size-ring) * 2) var(--ui-text-on-ink); }
+.ui-video-item[data-kind="shot"][aria-pressed="true"], .ui-video-item[data-kind="overlay"][aria-pressed="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary), inset 0 0 0 calc(var(--ui-size-ring) * 2) var(--ui-text-on-ink); }
 .ui-video-item[data-kind="shot"][data-making] > span { color: var(--ui-text-on-ink); }
 .ui-video-item > .ui-video-item-flag { flex-shrink: 0; width: var(--ui-space-sm); height: var(--ui-space-sm); border-radius: 50%; background: var(--ui-danger); }
 .ui-video-item[data-kind="sound"] { align-items: stretch; padding: 0; }
 .ui-video-wave { position: absolute; inset: var(--ui-space-xs) 0; width: 100%; height: calc(100% - 2 * var(--ui-space-xs)); color: var(--ui-text-disabled); }
-/* An effect or a voice over the music: its own short clip on the lane, named on hover and to a screen reader */
-.ui-video-item[data-kind="sound"]:not([data-sound="music"]) { top: var(--ui-space-xs); bottom: var(--ui-space-xs); z-index: 1; background: var(--ui-surface-sunken); box-shadow: none; }
+/* An effect or a voice: its own short clip on its track, named on hover and to a screen reader */
+.ui-video-item[data-kind="sound"]:not([data-sound="music"]) { top: var(--ui-space-xs); bottom: var(--ui-space-xs); z-index: 1; background: var(--ui-ground); box-shadow: var(--ui-depth-raised); }
 .ui-video-item[data-kind="sound"]:not([data-sound="music"]) > .ui-video-wave { inset: 0; height: 100%; color: var(--ui-text-secondary); }
 .ui-video-item[data-kind="sound"]:not([data-sound="music"]) > span { display: none; }
 .ui-video-item[data-kind="sound"] > span { position: relative; align-self: center; margin-inline: var(--ui-space-sm); padding: 1px var(--ui-space-xs); border-radius: var(--ui-radius-check); background: var(--ui-ground); } /* gate-allow:space-from-tokens a hairline of air */
@@ -222,14 +340,15 @@
 .ui-video-trim[data-end="in"] { left: calc(var(--start) / var(--len) * 100%); }
 .ui-video-trim[data-end="out"] { left: calc((var(--start) + var(--dur)) / var(--len) * 100% - var(--ui-space-md)); }
 .ui-video-trim:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
-/* The playhead: the one Ink line, across every lane */
+/* The playhead: the one Ink line, across every track; the markers' quiet lines with it */
+.ui-video-headcol { grid-column: 2; grid-row: 1 / -1; position: relative; z-index: 5; pointer-events: none; }
 .ui-video-head {
-  position: absolute; top: 0; bottom: 0; left: calc(var(--t) / var(--len) * 100%); z-index: 3; width: var(--ui-size-ring); translate: -50% 0;
-  background: var(--ui-action-primary); pointer-events: none; /* gate-allow:few-strokes the playhead is a position, not a decoration */
+  position: absolute; top: 0; bottom: 0; left: calc(var(--t) / var(--len) * 100%); width: var(--ui-size-ring); translate: -50% 0;
+  background: var(--ui-action-primary); /* gate-allow:few-strokes the playhead is a position, not a decoration */
 }
-.ui-video-head::before {
-  content: ""; position: absolute; top: 0; left: 50%; width: var(--ui-space-sm); height: var(--ui-space-sm); translate: -50% 0;
-  border-radius: 50%; background: var(--ui-action-primary);
+.ui-video-marker-line {
+  position: absolute; top: var(--lane-ruler); bottom: 0; left: calc(var(--at) / var(--len) * 100%); width: 1px; translate: -50% 0;
+  background: var(--ui-text-disabled); /* gate-allow:few-strokes a marker is a position across the tracks */
 }
 
 /* ---------- the panels ---------- */
@@ -351,29 +470,74 @@ button.ui-video-check:focus-visible { outline: var(--ui-size-ring) solid var(--u
 .ui-video-lane[data-lane="3d"] { display: flex; align-items: center; padding-inline: var(--ui-space-sm); }
 .ui-video-lane-note { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
 
-/* The Storyboard: the same shots as cards, in order, in the timeline's place */
-.ui-video-board { grid-template-rows: auto; }
-.ui-video-board > .ui-video-heads { grid-template-rows: var(--ui-size-control-sm); align-content: start; }
-.ui-video-cards {
-  display: flex; gap: var(--ui-space-sm); min-width: 0; margin: 0; padding: var(--ui-space-xs) var(--ui-space-xs) var(--ui-space-sm); list-style: none;
-  overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin;
+/* The Storyboard (round 16): a page of its own over the desk under the bar, a canvas she pans and zooms. The board is
+   the sunken step; each section a Porcelain frame on it, as in Figma; the cards on the frames; notes where she put them */
+.ui-video-board {
+  grid-row: 2 / -1; grid-column: 1 / -1; position: relative; display: grid; grid-template-rows: auto minmax(0, 1fr); min-width: 0; min-height: 0; overflow: hidden;
+  border-radius: var(--ui-radius-card); background: var(--ui-ground); box-shadow: var(--ui-depth-sheet); user-select: none;
 }
-.ui-video-cards > li { flex: 0 0 auto; display: flex; }
+.ui-video-board-head { display: flex; align-items: center; gap: var(--ui-space-md); min-width: 0; padding: var(--ui-space-sm) var(--ui-space-md); }
+.ui-video-board-title { display: flex; align-items: baseline; gap: var(--ui-space-sm); min-width: 0; margin: 0; }
+.ui-video-board-title > h2 { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.3; }
+.ui-video-board-title > p { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); color: var(--ui-text-secondary); font-variant-numeric: tabular-nums; }
+.ui-video-board-canvas { position: relative; min-height: 0; overflow: hidden; background: var(--ui-surface-sunken); touch-action: none; outline: none; }
+.ui-video-board-canvas:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: calc(-1 * var(--ui-size-ring)); }
+.ui-video-board[data-tool="hand"] .ui-video-board-canvas, .ui-video-board[data-tool="hand"] .ui-video-card { cursor: grab; }
+.ui-video-board[data-panning] .ui-video-board-canvas { cursor: grabbing; }
+.ui-video-board[data-tool="note"] .ui-video-board-canvas { cursor: crosshair; }
+.ui-video-board-world {
+  position: absolute; top: 0; left: 0; display: flex; align-items: flex-start; gap: var(--ui-space-2xl); width: max-content;
+  transform: translate(var(--vx, 0), var(--vy, 0)) scale(var(--vz, 1)); transform-origin: 0 0;
+}
+.ui-video-section {
+  display: grid; gap: var(--ui-space-md); padding: var(--ui-space-md) var(--ui-space-lg) var(--ui-space-lg);
+  border-radius: var(--ui-radius-card); background: var(--ui-ground); box-shadow: var(--ui-depth-raised);
+}
+.ui-video-section-head { display: flex; align-items: center; gap: var(--ui-space-sm); min-height: var(--ui-size-control-sm); }
+.ui-video-section-name {
+  position: relative; margin: 0; padding: 0 var(--ui-space-xs); border: 0; border-radius: var(--ui-radius-check); background: transparent; color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.6; cursor: text; outline: none;
+}
+.ui-video-section-name::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+@media (hover: hover) { .ui-video-section-name:hover:not(:disabled) { background: var(--ui-action-secondary-hover); } }
+.ui-video-section-name:active:not(:disabled) { background: var(--ui-item-bg-pressed); }
+.ui-video-section-name:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+.ui-video-section-name:disabled { cursor: default; }
+.ui-video-section-input {
+  min-width: 0; width: calc(var(--ui-size-hit) * 4); height: var(--ui-size-control-sm); margin: 0; padding: 0 var(--ui-space-sm); border: 0;
+  border-radius: var(--ui-radius-field); background: var(--ui-surface-sunken); color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); outline: none;
+}
+.ui-video-section-input:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+.ui-video-section-meta { margin-inline-end: auto; font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; color: var(--ui-text-tertiary); }
+.ui-video-section-cards { display: flex; align-items: stretch; gap: var(--ui-space-lg); margin: 0; padding: 0; list-style: none; }
+.ui-video-section-cards > li { position: relative; display: flex; }
+/* Where a dragged card lands: the Ink line before or after a card */
+.ui-video-section-cards > li[data-drop]::before {
+  content: ""; position: absolute; top: 0; bottom: 0; width: var(--ui-size-ring); border-radius: var(--ui-radius-action); background: var(--ui-action-primary);
+}
+.ui-video-section-cards > li[data-drop="before"]::before { left: calc(-1 * var(--ui-space-sm) - var(--ui-size-ring) / 2); }
+.ui-video-section-cards > li[data-drop="after"]::before { right: calc(-1 * var(--ui-space-sm) - var(--ui-size-ring) / 2); }
+.ui-video-section-empty {
+  display: grid; place-items: center; width: calc(var(--ui-size-hit) * 4); min-height: calc(var(--ui-size-hit) * 3); padding: var(--ui-space-md);
+  border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); font-size: var(--ui-type-label); color: var(--ui-text-tertiary);
+}
 .ui-video-card {
-  display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: var(--ui-space-sm);
-  width: calc(var(--ui-size-hit) * 5.5); margin: 0; padding: var(--ui-space-sm); border: 0;
+  display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: var(--ui-space-md);
+  width: calc(var(--ui-size-hit) * 6.5); margin: 0; padding: var(--ui-space-sm); border: 0;
   border-radius: var(--ui-radius-item); background: var(--ui-ground); box-shadow: var(--ui-depth-raised); color: var(--ui-text);
-  font-family: var(--ui-type-family); text-align: start; cursor: pointer; outline: none; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  font-family: var(--ui-type-family); text-align: start; cursor: pointer; outline: none; touch-action: none; -webkit-tap-highlight-color: transparent;
   transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
 }
 @media (hover: hover) { .ui-video-card:hover:not(:disabled) { background: var(--ui-action-secondary-hover); } }
-.ui-video-card:active:not(:disabled) { transform: scale(var(--ui-motion-press-scale)); }
+.ui-video-card:active:not(:disabled) { background: var(--ui-item-bg-pressed); }
 .ui-video-card:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
 .ui-video-card:disabled { cursor: default; }
 .ui-video-card[aria-pressed="true"] { box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); }
+.ui-video-card[data-dragging] { position: relative; z-index: 5; translate: var(--dx, 0) var(--dy, 0); pointer-events: none; cursor: grabbing; box-shadow: var(--ui-depth-floating), inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); }
 /* The picture, with the shot's other takes as a stack behind it */
 .ui-video-card-img {
-  position: relative; display: block; width: calc(var(--ui-size-hit) * 1.4); aspect-ratio: 9 / 16;
+  position: relative; display: block; width: calc(var(--ui-size-hit) * 2); aspect-ratio: 9 / 16;
   margin-inline-end: calc(var(--stack, 0) * var(--ui-space-sm)); margin-block-start: calc(var(--stack, 0) * var(--ui-space-sm));
   border-radius: var(--ui-radius-check); background: var(--ui-surface-sunken);
 }
@@ -382,17 +546,57 @@ button.ui-video-check:focus-visible { outline: var(--ui-size-ring) solid var(--u
 .ui-video-card-img > img[data-behind] { position: absolute; inset: 0; z-index: 1; translate: var(--ui-space-sm) calc(-1 * var(--ui-space-sm)); opacity: .55; }
 .ui-video-card-img > img[data-behind="2"] { z-index: 0; translate: var(--ui-space-lg) calc(-1 * var(--ui-space-lg)); opacity: .3; }
 .ui-video-card-text { display: grid; gap: var(--ui-space-xs); min-width: 0; }
-.ui-video-card-name { font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.3; text-wrap: balance; }
+.ui-video-card-name { display: flex; align-items: baseline; gap: var(--ui-space-xs); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.3; text-wrap: balance; }
+.ui-video-card-no {
+  flex-shrink: 0; min-width: var(--ui-space-lg); padding: 0 var(--ui-space-xs); border-radius: var(--ui-radius-check); background: var(--ui-text); color: var(--ui-text-on-ink);
+  font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; line-height: 1.5; text-align: center;
+}
 .ui-video-card-from { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
 .ui-video-card-chips { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); }
 .ui-video-card-flag { display: inline-flex; align-items: center; gap: var(--ui-space-xs); font-size: var(--ui-type-label); color: var(--ui-danger); }
 .ui-video-card-flag > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+/* What is on screen while it plays: the words over it and the captions, quoted */
+.ui-video-card-words { display: grid; gap: 2px; padding-top: var(--ui-space-xs); font-size: var(--ui-type-label); line-height: 1.35; color: var(--ui-text-secondary); } /* gate-allow:space-from-tokens lines of one list, set close */
+.ui-video-card-words > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ui-video-card-add {
   display: flex; align-items: flex-start; gap: var(--ui-space-sm); width: calc(var(--ui-size-hit) * 5); padding: var(--ui-space-sm);
   border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken);
   font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty;
 }
 .ui-video-card-add > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); margin-top: 2px; } /* gate-allow:space-from-tokens the icon on the first line's x-height */
+/* A note: a Porcelain slip with a grip along its top, where she put it */
+.ui-video-note {
+  position: absolute; top: calc(var(--ny) * 1px); left: calc(var(--nx) * 1px); display: grid; grid-template-rows: auto 1fr;
+  width: calc(var(--ui-size-hit) * 4.5); border-radius: var(--ui-radius-item); background: var(--ui-ground); box-shadow: var(--ui-depth-raised);
+}
+.ui-video-note[data-moving] { box-shadow: var(--ui-depth-floating); }
+.ui-video-note { overflow: hidden; }
+.ui-video-note-grip { height: var(--ui-space-md); background: var(--ui-surface); cursor: grab; touch-action: none; }
+.ui-video-note[data-moving] .ui-video-note-grip { cursor: grabbing; }
+.ui-video-note-text {
+  min-height: calc(var(--ui-size-hit) * 1.75); margin: 0; padding: var(--ui-space-sm) var(--ui-space-md); border: 0; border-radius: 0;
+  background: transparent; color: var(--ui-text); font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.45; resize: none; outline: none;
+}
+.ui-video-note-text:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: calc(-1 * var(--ui-size-ring)); }
+.ui-video-note-x {
+  position: absolute; top: 0; right: 0; display: grid; place-items: center; width: var(--ui-space-lg); height: var(--ui-space-md); margin: 0; padding: 0; border: 0;
+  border-radius: 0; background: transparent; color: var(--ui-text-tertiary); cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent;
+}
+.ui-video-note-x::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-video-note-x > svg { width: var(--ui-space-md); height: var(--ui-space-md); }
+@media (hover: hover) { .ui-video-note-x:hover { color: var(--ui-danger); } }
+.ui-video-note-x:active { color: var(--ui-danger); }
+.ui-video-note-x:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+/* The tools float over the board's foot; the picked card's few actions over them */
+.ui-video-board-tools, .ui-video-board-picked {
+  position: absolute; left: 50%; z-index: 2; display: flex; align-items: center; gap: var(--ui-space-xs); translate: -50% 0;
+  padding: var(--ui-space-xs); border-radius: var(--ui-radius-action);
+}
+.ui-video-board-tools { bottom: var(--ui-space-lg); }
+.ui-video-board-picked { bottom: calc(var(--ui-space-lg) + var(--ui-size-control-sm) + var(--ui-space-xs) * 2 + var(--ui-space-sm)); padding-inline-start: var(--ui-space-md); }
+.ui-video-board-tools-gap { width: 1px; height: var(--ui-space-lg); margin-inline: var(--ui-space-xs); background: currentColor; opacity: .2; } /* gate-allow:few-strokes the one rule between the tools and the zoom, as in Figma */
+.ui-video-board-zoom { min-width: calc(var(--ui-size-hit) * 1.1); font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; text-align: center; }
+.ui-video-board-picked-name { display: flex; align-items: baseline; gap: var(--ui-space-xs); max-width: calc(var(--ui-size-hit) * 5); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); }
 
 /* The library's small headings, and the brand's call to action as its own thumb */
 .ui-video-sub {
@@ -423,13 +627,52 @@ button.ui-video-check:focus-visible { outline: var(--ui-size-ring) solid var(--u
 .ui-video-inspector-title { display: grid; min-width: 0; margin: 0; }
 .ui-video-inspector-title > p { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
 
-/* Keyframes: a row a property, the diamond that sets or takes out the key at the playhead, the value there, and the
-   layer's own short track with its keys */
-.ui-video-keys { display: grid; gap: var(--ui-space-sm); }
-.ui-video-keys > .ui-video-help { padding: 0; }
-.ui-video-keyrow {
-  display: grid; grid-template-columns: var(--ui-size-control-sm) minmax(0, 1fr) calc(var(--ui-size-hit) * 2); align-items: center; gap: 0 var(--ui-space-xs);
+/* Transform (round 16), as After Effects lays it out: the stopwatch, the name (drag it to change the value), the value
+   at the playhead, and the key navigator; an animated property has the layer's own short track with its keys under it */
+.ui-video-tf { display: grid; gap: var(--ui-space-xs); }
+.ui-video-tf > .ui-video-help { padding: 0 0 var(--ui-space-xs); }
+.ui-video-tf-row {
+  display: grid; grid-template-columns: var(--ui-size-control-sm) minmax(0, 1fr) auto; align-items: center; gap: 0 var(--ui-space-xs);
+  min-height: var(--ui-size-control-sm);
 }
+.ui-video-tf-row[data-anchor] > .ui-video-tf-pair { grid-column: 2 / -1; }
+.ui-video-tf-name { font-size: var(--ui-type-label); color: var(--ui-text); }
+.ui-video-tf-pair { display: flex; gap: var(--ui-space-md); }
+.ui-video-tf-watch {
+  position: relative; display: grid; place-items: center; width: var(--ui-size-control-sm); height: var(--ui-size-control-sm); margin: 0; padding: 0; border: 0;
+  border-radius: var(--ui-radius-action); background: transparent; color: var(--ui-text-tertiary); cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent;
+}
+span.ui-video-tf-watch { cursor: default; }
+button.ui-video-tf-watch::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-video-tf-watch > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+@media (hover: hover) { button.ui-video-tf-watch:hover { background: var(--ui-action-secondary-hover); color: var(--ui-text); } }
+button.ui-video-tf-watch:active { background: var(--ui-item-bg-pressed); }
+button.ui-video-tf-watch:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+/* The stopwatch: faint while the property is still, Ink on its sunken step while it is animated */
+button.ui-video-tf-watch { color: var(--ui-text-disabled); }
+.ui-video-tf-watch[aria-pressed="true"] { background: var(--ui-surface-sunken); color: var(--ui-text); }
+.ui-video-tf-field { display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; }
+.ui-video-tf-field[data-named] > .ui-video-tf-scrub { flex: 1; min-width: 0; }
+.ui-video-tf-scrub {
+  display: block; place-items: initial; text-align: start; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-type-label); color: var(--ui-text);
+  text-decoration: underline dotted var(--ui-text-disabled); text-underline-offset: var(--ui-space-xs);
+}
+.ui-video-tf-field:not([data-named]) > .ui-video-tf-scrub { min-width: var(--ui-space-lg); color: var(--ui-text-secondary); text-decoration: none; }
+.ui-video-tf-field > .ui-video-tf-input { flex: 0 0 auto; width: calc(var(--ui-size-hit) * 1.35); text-align: end; font-variant-numeric: tabular-nums; }
+.ui-video-tf-unit { min-width: 1ch; font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+/* The key navigator keeps its room on every row, so the values stand in one column */
+.ui-video-tf-nav { display: flex; align-items: center; justify-content: flex-end; min-width: calc(var(--ui-size-control-sm) * 2.25); }
+.ui-video-tf-step {
+  position: relative; display: grid; place-items: center; width: calc(var(--ui-size-control-sm) * .625); height: var(--ui-size-control-sm); margin: 0; padding: 0; border: 0;
+  border-radius: var(--ui-radius-action); background: transparent; color: var(--ui-text-secondary); cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent;
+}
+.ui-video-tf-step::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+.ui-video-tf-step > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+@media (hover: hover) { .ui-video-tf-step:hover:not(:disabled) { background: var(--ui-action-secondary-hover); color: var(--ui-text); } }
+.ui-video-tf-step:active:not(:disabled) { background: var(--ui-item-bg-pressed); }
+.ui-video-tf-step:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+.ui-video-tf-step:disabled { cursor: default; opacity: .35; }
+.ui-video-tf-row > .ui-video-keytrack { grid-column: 2 / -1; }
 .ui-video-keytoggle {
   position: relative; display: grid; place-items: center; width: var(--ui-size-control-sm); height: var(--ui-size-control-sm); margin: 0; padding: 0; border: 0;
   border-radius: var(--ui-radius-action); background: transparent; cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent;
@@ -444,11 +687,8 @@ button.ui-video-check:focus-visible { outline: var(--ui-size-ring) solid var(--u
 @media (hover: hover) { .ui-video-keytoggle:hover:not(:disabled) { background: var(--ui-action-secondary-hover); } }
 .ui-video-keytoggle:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
 .ui-video-keytoggle:disabled { cursor: default; opacity: .4; }
-.ui-video-keyname { font-size: var(--ui-type-label); color: var(--ui-text); }
-.ui-video-keyvalue { display: flex; align-items: center; gap: var(--ui-space-xs); }
-.ui-video-keyunit { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
 .ui-video-keytrack {
-  position: relative; grid-column: 2 / -1; height: var(--ui-space-md); margin-block-start: var(--ui-space-xs);
+  position: relative; height: var(--ui-space-md); margin-block: var(--ui-space-xs);
   border-radius: var(--ui-radius-check); background: var(--ui-surface-sunken);
 }
 .ui-video-keytrack::after {
@@ -464,18 +704,72 @@ button.ui-video-check:focus-visible { outline: var(--ui-size-ring) solid var(--u
 .ui-video-keydot:active { background: var(--ui-action-primary-pressed); }
 .ui-video-keydot:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
 
+/* The curve editor (round 16): time across, progress up; two handles, the four numbers, After Effects' influence */
+.ui-video-curve { display: grid; gap: var(--ui-space-sm); }
+.ui-video-curve > .ui-video-help { padding: 0; }
+.ui-video-curve-presets { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); }
+.ui-video-chip {
+  position: relative; display: inline-flex; align-items: center; height: calc(var(--ui-size-control-sm) * .875); margin: 0; padding: 0 var(--ui-space-md); border: 0;
+  border-radius: var(--ui-radius-action); background: var(--ui-surface-sunken); color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); white-space: nowrap;
+  cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent;
+}
+button.ui-video-chip::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+@media (hover: hover) { button.ui-video-chip:hover:not(:disabled) { background: var(--ui-action-secondary-hover); } }
+button.ui-video-chip:active:not(:disabled) { background: var(--ui-item-bg-pressed); }
+.ui-video-chip:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-video-chip[aria-pressed="true"], .ui-video-chip[aria-current] { background: var(--ui-ground); box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-action-primary); }
+.ui-video-chip[data-static] { cursor: default; }
+.ui-video-chip:disabled { cursor: default; opacity: .4; }
+.ui-video-curve-graph { display: block; width: 100%; height: auto; overflow: visible; touch-action: none; }
+.ui-video-curve-box { fill: var(--ui-surface-sunken); }
+.ui-video-curve-arm { stroke: var(--ui-text-tertiary); stroke-width: 1; } /* gate-allow:few-strokes a handle's arm, as in every curve editor */
+.ui-video-curve-line { fill: none; stroke: var(--ui-text); stroke-width: 2; stroke-linecap: round; }
+.ui-video-curve-end { fill: var(--ui-text); }
+.ui-video-curve-handle { fill: var(--ui-ground); stroke: var(--ui-action-primary); stroke-width: 2; cursor: grab; }
+.ui-video-curve-handle[data-grabbed] { fill: var(--ui-action-primary); cursor: grabbing; }
+.ui-video-curve[data-disabled] .ui-video-curve-handle { cursor: default; }
+.ui-video-curve-numbers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-xs) var(--ui-space-md); }
+.ui-video-curve-influence { display: grid; gap: var(--ui-space-xs); }
+.ui-video-curve-try { display: flex; align-items: center; gap: var(--ui-space-sm); }
+.ui-video-curve-track { position: relative; flex: 1; height: var(--ui-space-sm); border-radius: var(--ui-radius-action); background: var(--ui-surface-sunken); }
+.ui-video-curve-dot {
+  position: absolute; top: 50%; left: 0; width: var(--ui-space-md); height: var(--ui-space-md); translate: 0 -50%; border-radius: 50%; background: var(--ui-text);
+  transition: left 1.2s var(--curve, ease); /* gate-allow:motion-from-tokens the dot runs her own curve, so its timing is the curve's */
+}
+.ui-video-curve-dot[data-go] { left: calc(100% - var(--ui-space-md)); }
+
+/* Text animators on the player (round 16): each letter, word or line carries --u, 0 (in) to 1 (not yet) */
+.ui-video-motion-key { transform-origin: var(--ka, 50% 50%); }
+.ui-video-unit { display: inline-block; white-space: pre; opacity: calc(1 - var(--u, 0)); }
+.ui-video-motion-key[data-animate="fade-up"] > .ui-video-unit { translate: 0 calc(var(--u, 0) * .35em); }
+.ui-video-motion-key[data-animate="blur-in"] > .ui-video-unit { filter: blur(calc(var(--u, 0) * .3em)); }
+.ui-video-motion-key[data-animate="slide-up"] > .ui-video-unit { display: block; translate: 0 calc(var(--u, 0) * .8em); }
+.ui-video-motion-key[data-animate="scale-down"] > .ui-video-unit { scale: calc(1 + var(--u, 0) * .35); }
+.ui-video-motion-key[data-animate="tracking-in"] { letter-spacing: calc(var(--spread, 0) * .5em); }
+/* A clip over the video: the whole frame, or a picture in the picture at the top right */
+.ui-video-over { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ui-video-over[data-size="inset"] { inset: 6% 6% auto auto; width: 38%; height: auto; aspect-ratio: 9 / 16; border-radius: var(--ui-radius-item); box-shadow: var(--ui-depth-raised); }
+/* The Engine's making note and the safe zones stay over every track */
+.ui-video-frame > .ui-video-making { z-index: 60; }
+.ui-video-frame > .ui-fmt-safe { z-index: 61; }
+.ui-video-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-sm); }
+.ui-video-row-pair { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--ui-space-xs); }
+.ui-video-anim { display: grid; gap: var(--ui-space-sm); }
+
 @media (max-width: 899px) {
-  .ui-video-timeline { grid-template-columns: minmax(0, 1fr); }
-  .ui-video-heads, .ui-video-beat { display: none; }
+  .ui-video-timeline { --head: calc(var(--ui-size-hit) * 2.5); }
+  .ui-video-beat, .ui-video-heights, .ui-video-zoom-range { display: none; }
   .ui-video-frame { width: 100%; }
 }
 /* Touch (an iPad at the desk): every control is 44 to touch; the timeline's tracks grow to it */
 @media (pointer: coarse) {
-  .ui-video-timeline { --lane-sm: var(--ui-size-hit); --lane-shot: var(--ui-size-hit); --lane-md: var(--ui-size-hit); }
+  .ui-video-timeline { --lane-sm: max(var(--ui-size-hit), calc(var(--ui-size-control-sm) * var(--vz, 1))); --lane-shot: max(var(--ui-size-hit), calc((var(--ui-size-hit) + var(--ui-space-md)) * var(--vz, 1))); --lane-md: max(var(--ui-size-hit), calc(var(--ui-size-control-md) * var(--vz, 1))); }
   .ui-video-scrub, .ui-video-flag, .ui-video-item, .ui-video-take, .ui-video-check, .ui-video-format, .ui-video-trim { min-height: var(--ui-size-hit); }
 }
 @media (prefers-reduced-motion: reduce) {
   .ui-video-caption { animation: none; }
+  .ui-video-curve-dot { transition: none; }
   .ui-video-item, .ui-video-row, .ui-video-format, .ui-video-card, .ui-video-style { transition: none; }
   .ui-video-card:active:not(:disabled), .ui-video-style:active { transform: none; }
 }

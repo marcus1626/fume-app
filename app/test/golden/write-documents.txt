@@ -12582,6 +12582,14 @@ anna documents("w-lysne")
         }
       ],
       "video": {
+        "board": {
+          "notes": [{"id":"nt-hook","text":"The first second is light on stone: no words until it has landed.","x":24,"y":330}],
+          "sections": [
+            {"clipIds":["vc-light"],"id":"sb-hook","name":"Hook"},
+            {"clipIds":["vc-hands","vc-drop"],"id":"sb-story","name":"Story"},
+            {"clipIds":["vc-bottle"],"id":"sb-end","name":"End card"}
+          ]
+        },
         "captions": [
           {"by":"engine","end":5.6,"id":"cp-1","start":3.7,"text":"The last light"},
           {"by":"engine","end":7.2,"id":"cp-2","start":5.6,"text":"of the day"},
@@ -13028,6 +13036,7 @@ anna documents("w-lysne")
           }
         ],
         "grade": "LYSNE warm",
+        "markers": [{"at":3.7,"id":"mk-words","name":"Words in"},{"at":11.2,"id":"mk-product","name":"Product"}],
         "motion": [
           {
             "clipId": "vc-light",

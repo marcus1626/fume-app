@@ -4,6 +4,9 @@
 // take, how to make it again, and how it sits in the cut. A word on the video or a sound: its own few controls.
 // Round 14 (FLOWS §34.6): a shot is named by its take ("Shot 2 · Take 2 of 3"); a motion layer has its way in, its life
 // and its way out, the brand's easing, the shot it follows, and its keyframes.
+// Round 16 (PROPOSED 9 Nov 2026): a layer's Transform as After Effects lays it out (Transform.tsx), its easing as a
+// curve with its numbers (Curve.tsx), and for words a text animator (Animate.tsx). Anything on a track can move to
+// another track of its kind (Timing). A track, a marker and a clip over the video have their own few controls.
 import {
   Button,
   Icon,
@@ -15,12 +18,13 @@ import {
   StudioSelect,
   StudioSlider,
   StudioText,
+  StudioToggle,
   TextShimmer,
   useToast,
   type StudioFold,
   type StudioVariable,
 } from "@fume/ui";
-import { memo, useState } from "react";
+import { memo, useState, type ReactNode } from "react";
 import { useAdaptVideo, useMakeShot, useSession } from "../../../../api/hooks";
 import type {
   CameraMove,
@@ -34,11 +38,28 @@ import type {
   Variables,
   VideoClip,
   VideoEdit,
+  VideoTrack,
 } from "../../../../contract";
 import { editLength, pickedTake, placed, timecode } from "../../../../domain/video";
+import { Animate } from "./Animate";
+import { CurveEditor } from "./Curve";
 import { MOTION, openFindings, takeWords, type Selection } from "./edit";
-import { Keys } from "./Keys";
-import { EASES, curveWords } from "./motion";
+import { ANIMATORS, EASES, curveOf, easeNamed } from "./motion";
+import {
+  MAIN,
+  captionTrack,
+  isAudio,
+  isFree,
+  motionTrack,
+  moveTrack,
+  onTrack,
+  overlayEnd,
+  removeTrack,
+  soundTrack,
+  tracksOf,
+  withTrack,
+} from "./tracks";
+import { Transform } from "./Transform";
 
 /** Staff only: the video models the Engine can make a shot with (Higgsfield's list, 27 Oct 2026). */
 const VIDEO_MODELS = ["auto", "Kling 3.0", "Kling 4.0", "Seedance 2.5", "Cinema Studio 4.0", "MiniMax H3", "Wan 2.6"];
@@ -57,6 +78,15 @@ const TRANSITIONS = [
   { value: "focus", label: "A focus pull" },
 ];
 const MUSIC: Record<string, string> = { "late-light": "Late light · slow piano", stone: "Stone · ambient" };
+/** What a track holds, under its name in the inspector. */
+const TRACK_LINE: Record<VideoTrack["kind"] | "main", string> = {
+  main: "The shots, one after another. It stays.",
+  video: "A clip over the shots: the whole frame or a picture in the picture",
+  text: "Words over the video",
+  brand: "The brand’s components: its call to action and its end card",
+  captions: "What is said, as words on the video",
+  audio: "Music, sound effects or a voice",
+};
 
 export type VideoChange = { video?: VideoEdit; variables?: Variables };
 
@@ -100,7 +130,36 @@ export const VideoInspector = memo(function VideoInspector({
   const motion = selected?.kind === "motion" ? edit.motion.find((m) => m.id === selected.id) : undefined;
   const caption = selected?.kind === "caption" ? edit.captions.find((c) => c.id === selected.id) : undefined;
   const sound = selected?.kind === "sound" ? edit.sound.find((s) => s.id === selected.id) : undefined;
+  const overlay = selected?.kind === "overlay" ? edit.overlays?.find((o) => o.id === selected.id) : undefined;
+  const marker = selected?.kind === "marker" ? edit.markers?.find((m) => m.id === selected.id) : undefined;
+  const track = selected?.kind === "track" ? tracksOf(edit).find((k) => k.id === selected.id) : undefined;
   const length = editLength(edit);
+  const tracks = tracksOf(edit);
+  // The tracks a thing may move to: its kind's, where its time is free (things on one track never overlap).
+  const trackPick = (
+    kinds: VideoTrack["kind"][],
+    item: { id: string; start: number; end: number },
+    value: string,
+    onPick: (id: string) => void,
+    help?: string,
+  ) => {
+    const list = tracks.filter(
+      (k) =>
+        kinds.includes(k.kind) &&
+        k.id !== MAIN &&
+        (k.id === value || (!k.locked && isFree(edit, k.id, item.start, item.end, item.id))),
+    );
+    return list.length > 1 ? (
+      <StudioSelect
+        label="Track"
+        id="item-track"
+        value={value}
+        options={list.map((k) => ({ value: k.id, label: k.name }))}
+        help={help ?? "Higher tracks lie over lower ones in the frame."}
+        onChange={onPick}
+      />
+    ) : null;
+  };
 
   if (clip) {
     const index = edit.clips.indexOf(clip);
@@ -110,7 +169,7 @@ export const VideoInspector = memo(function VideoInspector({
     foldKey = clip.id;
     sections = shotSections({ doc, edit, clip, index, brandName, set, onSelect, onBefore });
   } else if (motion) {
-    title = MOTION[motion.template].name;
+    title = motion.template === "cta" ? "Call to action" : MOTION[motion.template].name;
     sub =
       motion.template === "cta" || motion.template === "end"
         ? `A component from ${brandName}’s design system`
@@ -157,10 +216,23 @@ export const VideoInspector = memo(function VideoInspector({
           </>
         ),
       },
+      ...(motion.template === "cta" || motion.template === "end"
+        ? []
+        : [
+            {
+              id: "Animate",
+              title: "Animate",
+              meta: motion.animate ? ANIMATORS[motion.animate.preset].name : undefined,
+              children: <Animate layer={motion} onAnimate={(animate, key) => setM({ animate }, key)} />,
+            },
+          ]),
       {
         id: "Motion",
         title: "Motion",
-        meta: EASES[motion.ease ?? "soft-out"].name,
+        meta: (() => {
+          const named = easeNamed(curveOf(motion));
+          return named ? EASES[named].name : "Custom curve";
+        })(),
         children: (
           <>
             <StudioSegmented
@@ -172,6 +244,11 @@ export const VideoInspector = memo(function VideoInspector({
                 { value: "fade", label: "Fade" },
                 { value: "rise", label: "Rise" },
               ]}
+              help={
+                motion.animate
+                  ? `${ANIMATORS[motion.animate.preset].name} brings it in while it is on (Animate).`
+                  : undefined
+              }
               onChange={(enter) => setM({ enter: enter as MotionLayer["enter"] }, "enter")}
             />
             <StudioSegmented
@@ -199,13 +276,12 @@ export const VideoInspector = memo(function VideoInspector({
                 setM({ exit: exit === "cut" ? undefined : (exit as NonNullable<MotionLayer["exit"]>) }, "exit")
               }
             />
-            <StudioSelect
-              label="Easing"
-              id="mo-ease"
-              value={motion.ease ?? "soft-out"}
-              options={Object.entries(EASES).map(([value, e]) => ({ value, label: e.name }))}
-              help={`${EASES[motion.ease ?? "soft-out"].line} · cubic-bezier ${curveWords(motion.ease ?? "soft-out")}. From ${brandName}’s motion; never a bounce.`}
-              onChange={(ease) => setM({ ease: ease as MotionLayer["ease"] }, "ease")}
+            <p className="ui-video-sub">Easing</p>
+            <CurveEditor
+              curve={curveOf(motion)}
+              brandName={brandName}
+              onCurve={(curve, key) => setM({ curve }, key)}
+              onEase={(ease) => setM({ ease, curve: undefined }, "ease")}
             />
             <StudioSelect
               label="Follows"
@@ -226,10 +302,10 @@ export const VideoInspector = memo(function VideoInspector({
         ),
       },
       {
-        id: "Keyframes",
-        title: "Keyframes",
-        meta: motion.keys?.length || undefined,
-        children: <Keys layer={motion} t={t} onKeys={(keys, key) => setM({ keys }, key)} onSeek={onSeek} />,
+        id: "Transform",
+        title: "Transform",
+        meta: motion.keys?.length ? `${motion.keys.length} ${motion.keys.length === 1 ? "key" : "keys"}` : undefined,
+        children: <Transform layer={motion} t={t} onLayer={(change, key) => setM(change, key)} onSeek={onSeek} />,
       },
       timing(
         motion,
@@ -239,6 +315,7 @@ export const VideoInspector = memo(function VideoInspector({
           set({ ...edit, motion: edit.motion.filter((m) => m.id !== motion.id) }, `mo-${motion.id}-remove`);
           onSelect(undefined);
         },
+        trackPick(["text", "brand"], motion, motionTrack(motion), (trackId) => setM({ trackId }, "track")),
       ),
     ];
   } else if (caption) {
@@ -276,6 +353,7 @@ export const VideoInspector = memo(function VideoInspector({
           set({ ...edit, captions: edit.captions.filter((c) => c.id !== caption.id) }, `cp-${caption.id}-remove`);
           onSelect(undefined);
         },
+        trackPick(["captions"], caption, captionTrack(caption), (trackId) => setC({ trackId }, "track")),
       ),
     ];
   } else if (sound) {
@@ -301,6 +379,17 @@ export const VideoInspector = memo(function VideoInspector({
                 )
               }
             />
+            {trackPick(
+              ["audio"],
+              sound,
+              soundTrack(sound),
+              (trackId) =>
+                set(
+                  { ...edit, sound: edit.sound.map((s) => (s.id === sound.id ? { ...s, trackId } : s)) },
+                  `sd-${sound.id}-track`,
+                ),
+              "Every audio track plays at once; mute or solo one on its head.",
+            )}
             <dl className="ui-desk-sheet-rows ui-video-facts">
               {sound.licence && (
                 <div>
@@ -334,6 +423,234 @@ export const VideoInspector = memo(function VideoInspector({
                 Remove
               </Button>
             )}
+          </>
+        ),
+      },
+    ];
+  } else if (overlay) {
+    title = overlay.name;
+    sub = "Over the video";
+    foldKey = overlay.id;
+    const setO = (change: Partial<typeof overlay>, key: string) =>
+      set(
+        { ...edit, overlays: (edit.overlays ?? []).map((o) => (o.id === overlay.id ? { ...o, ...change } : o)) },
+        `ov-${overlay.id}-${key}`,
+      );
+    const take = overlay.takes.find((k) => k.id === overlay.pickedTakeId) ?? overlay.takes[0];
+    const seconds = Math.round(((overlay.out - overlay.in) / (overlay.speed || 1)) * 10) / 10;
+    sections = [
+      {
+        id: "Picture",
+        title: "Picture",
+        children: (
+          <>
+            {take?.poster && (
+              <div className="ui-video-start">
+                <span className="ui-video-row-img">
+                  <img src={take.poster} alt="" draggable={false} />
+                </span>
+                <p className="ui-video-help">
+                  {overlay.source === "library" ? `${brandName}’s footage` : "A take the Engine made"} · {seconds} s. It
+                  lies over the shots on {tracks.find((k) => k.id === overlay.trackId)?.name ?? "its track"}.
+                </p>
+              </div>
+            )}
+            <StudioSegmented
+              label="Size"
+              id="ov-size"
+              value={overlay.size ?? "full"}
+              options={[
+                { value: "full", label: "The whole frame" },
+                { value: "inset", label: "Picture in picture" },
+              ]}
+              onChange={(size) => setO({ size: size as "full" | "inset" }, "size")}
+            />
+            <StudioSlider
+              label="Opacity"
+              id="ov-opacity"
+              value={Math.round((overlay.opacity ?? 1) * 100)}
+              min={0}
+              max={100}
+              unit="%"
+              help="Under 100 % the shot under it shows through"
+              onChange={(n) => setO({ opacity: n / 100 }, "opacity")}
+            />
+          </>
+        ),
+      },
+      timing(
+        { start: overlay.start, end: overlayEnd(overlay) },
+        length,
+        (start, end, key) => {
+          // Longer or shorter: the clip's out point moves, within the take.
+          const max = take?.seconds ?? overlay.out;
+          const out = Math.min(max, overlay.in + (end - start) * (overlay.speed || 1));
+          setO({ start, out: Math.round(out * 100) / 100 }, key);
+        },
+        () => {
+          set(
+            { ...edit, overlays: (edit.overlays ?? []).filter((o) => o.id !== overlay.id) },
+            `ov-${overlay.id}-remove`,
+          );
+          onSelect(undefined);
+        },
+        trackPick(["video"], { ...overlay, end: overlayEnd(overlay) }, overlay.trackId, (trackId) =>
+          setO({ trackId }, "track"),
+        ),
+      ),
+    ];
+  } else if (marker) {
+    title = marker.name;
+    sub = `A marker at ${timecode(marker.at, true)}`;
+    foldKey = marker.id;
+    const setK = (change: Partial<typeof marker>, key: string) =>
+      set(
+        { ...edit, markers: (edit.markers ?? []).map((m) => (m.id === marker.id ? { ...m, ...change } : m)) },
+        `mk-${marker.id}-${key}`,
+      );
+    sections = [
+      {
+        id: "Marker",
+        title: "Marker",
+        children: (
+          <>
+            <StudioText
+              label="Name"
+              id="mk-name"
+              rows={1}
+              value={marker.name}
+              onChange={(name) => setK({ name }, "name")}
+            />
+            <StudioSlider
+              label="At"
+              id="mk-at"
+              value={Math.round(marker.at * 10) / 10}
+              min={0}
+              max={Math.max(0.1, Math.round(length * 10) / 10)}
+              step={0.1}
+              unit="s"
+              help="Drag it on the ruler too. M puts a new one at the playhead; ⇧M goes to the next."
+              onChange={(at) => setK({ at }, "at")}
+            />
+            <div className="ui-video-actions">
+              <Button size="sm" variant="secondary" icon="play" onClick={() => onSeek(marker.at)}>
+                Go to it
+              </Button>
+              <Button
+                size="sm"
+                variant="quiet"
+                icon="trash"
+                onClick={() => {
+                  set(
+                    { ...edit, markers: (edit.markers ?? []).filter((m) => m.id !== marker.id) },
+                    `mk-${marker.id}-remove`,
+                  );
+                  onSelect(undefined);
+                }}
+              >
+                Remove
+              </Button>
+            </div>
+          </>
+        ),
+      },
+    ];
+  } else if (track) {
+    title = track.name;
+    sub = TRACK_LINE[track.id === MAIN ? "main" : track.kind];
+    foldKey = track.id;
+    const audio = isAudio(track);
+    const group = tracks.filter((k) => isAudio(k) === audio);
+    const at = group.findIndex((k) => k.id === track.id);
+    const items = onTrack(edit, track.id);
+    const setT = (change: Partial<VideoTrack>, key: string) =>
+      set(withTrack(edit, track.id, change), `track-${track.id}-${key}`);
+    sections = [
+      {
+        id: "Track",
+        title: "Track",
+        meta: `${items} ${track.id === MAIN ? (items === 1 ? "shot" : "shots") : items === 1 ? "item" : "items"}`,
+        children: (
+          <>
+            <StudioText
+              label="Name"
+              id="tk-name"
+              rows={1}
+              value={track.name}
+              onChange={(name) => setT({ name }, "name")}
+            />
+            {audio ? (
+              <>
+                <StudioToggle
+                  label="Muted"
+                  id="tk-muted"
+                  value={Boolean(track.muted)}
+                  onChange={(muted) => setT({ muted }, "mute")}
+                />
+                <StudioToggle
+                  label="Solo"
+                  id="tk-solo"
+                  value={Boolean(track.solo)}
+                  help="Only the solo tracks are heard"
+                  onChange={(solo) => setT({ solo }, "solo")}
+                />
+              </>
+            ) : (
+              <>
+                <StudioToggle
+                  label="Hidden"
+                  id="tk-hidden"
+                  value={Boolean(track.hidden)}
+                  help="Out of the frame while you work. The film is made with every track."
+                  onChange={(hidden) => setT({ hidden }, "hide")}
+                />
+                <StudioToggle
+                  label="Locked"
+                  id="tk-locked"
+                  value={Boolean(track.locked)}
+                  help="Nothing on it moves"
+                  onChange={(locked) => setT({ locked }, "lock")}
+                />
+              </>
+            )}
+            <div className="ui-video-actions">
+              <Button
+                size="sm"
+                variant="secondary"
+                icon="arrow-up"
+                disabled={at <= 0}
+                onClick={() => set(moveTrack(edit, track.id, at - 1), `track-${track.id}-order`)}
+              >
+                Up
+              </Button>
+              <Button
+                size="sm"
+                variant="secondary"
+                icon="arrow-down"
+                disabled={at >= group.length - 1}
+                onClick={() => set(moveTrack(edit, track.id, at + 1), `track-${track.id}-order`)}
+              >
+                Down
+              </Button>
+              {track.id !== MAIN && (
+                <Button
+                  size="sm"
+                  variant="quiet"
+                  icon="trash"
+                  onClick={() => {
+                    set(removeTrack(edit, track.id), `track-${track.id}-remove`);
+                    onSelect(undefined);
+                  }}
+                >
+                  Remove the track
+                </Button>
+              )}
+            </div>
+            <p className="ui-video-help">
+              {audio
+                ? "Audio tracks lie under the picture. Higher ones are listed first; all are mixed."
+                : "Higher tracks lie over lower ones in the frame. Drag a track’s grip on the timeline, or use Up and Down."}
+            </p>
           </>
         ),
       },
@@ -872,6 +1189,8 @@ function timing(
   length: number,
   onTime: (start: number, end: number, key: string) => void,
   onRemove: () => void,
+  /** The track it lies on, when it may move to another (round 16). */
+  track?: ReactNode,
 ): StudioFold {
   const lasts = Math.round((item.end - item.start) * 10) / 10;
   return {
@@ -900,6 +1219,7 @@ function timing(
           unit="s"
           onChange={(d) => onTime(item.start, Math.round((item.start + d) * 10) / 10, "lasts")}
         />
+        {track}
         <Button size="sm" variant="quiet" icon="trash" onClick={onRemove}>
           Remove
         </Button>
