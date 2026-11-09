@@ -2,7 +2,10 @@
 // The model proposes; public.fume_finish_plan checks the body against the campaign's products and verified claims.
 import { z } from "npm:zod@4.6.7";
 
-const Source = z.enum(["brief", "brand_dna", "product", "fume"]);
+// Where a reason comes from. A plain string: the model once named a source of its own (9 Nov) and the whole plan
+// failed to parse; toBody keeps the four and reads anything else as Fume's own.
+const SOURCES = ["brief", "brand_dna", "product", "fume"] as const;
+const Source = z.string().describe("One of: brief, brand_dna, product, fume");
 const Line = z.object({
   label: z.string().describe("Short label, e.g. Light, Setting, Headline"),
   value: z.string(),
@@ -239,7 +242,7 @@ export function toBody(a: PlanAnswer): Record<string, unknown> {
     idea: d.idea,
     hook: d.hook,
     productRole: d.productRole,
-    why: d.why,
+    why: d.why.map((w) => ({ text: w.text, source: (SOURCES as readonly string[]).includes(w.source) ? w.source : "fume" })),
     risks: d.risks,
     references: [],
     look: lines(d.look),

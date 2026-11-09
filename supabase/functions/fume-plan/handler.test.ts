@@ -403,3 +403,14 @@ Deno.test("a headline too long for the brand's column is sent back once", () => 
   assertEquals(tooLongFor(head("Samme skjorte, fredag og mandag"), { name: "Quote stack", pct: 82 }), null);
   assertEquals(tooLongFor(head("Samme skjorte, fredag og mandag"), null), null);
 });
+
+Deno.test("a reason from a source of the model's own reads as Fume's", () => {
+  const body = toBody({
+    summary: "s", strategicTask: "t", chosenDirectionId: "a", chosenReason: "r", copy: [], openQuestions: [], changes: [],
+    directions: [{
+      id: "a", name: "n", idea: "i", hook: "h", productRole: "p", risks: [], look: [], creatives: [], recommended: true,
+      why: [{ text: "x", source: "design_book" }, { text: "y", source: "brief" }],
+    }],
+  }) as { directions: { why: { source: string }[] }[] };
+  assertEquals(body.directions[0].why.map((w) => w.source), ["fume", "brief"]);
+});
