@@ -97,6 +97,19 @@ Marcus: "Designet var ikke veldig on brand." What changed:
   price line, where the design sets it under the price as "Was". A bare figure is marked "Tidligere" or "Was"; a former
   price without a price is not set. It is never taken for the price itself.
 - No call to action on the picture is on purpose for a brand whose own ads carry none (Møllers, Nike): it sits in the
-  ad's own button. Still open: a long headline in a narrow brand column (Dressmann's stack beside the shirt) can break
-  a word ("MAND / AG") when every wider layout would cover the product; the review calls it critical.
+  ad's own button.
+- A long headline in a narrow brand column (Dressmann's stack beside the shirt, 9 Nov) broke a word ("MAND / AG").
+  Since then the plan writer is told the brand's column (the median width of the design book's layouts that carry
+  words, read through `fume_plan_extras`) and asked for a headline that fits it: under 45% of the width at most 22
+  characters and no word over 8 letters, under 70% 32 and 11, else 42 and 11. Code holds it (`tooLongFor`, kind
+  `too_long`): a headline over that by more than a little is written again once, as for a claim. The run's copy check
+  keeps the column. Live test on Dressmann (25%): Sonnet wrote "SKJORTE HELE UKA" on the first try.
+- A picture designed again (new words) or fixed (a small part redrawn) keeps the layout people saw: the newest design
+  in the picture's line (up its `fixed_from`) that went into a creative or was made with a designer's ask; with
+  neither, the first design. Read through `design_layout_before`; the layer's choice says `kept: true`, or
+  `not_kept` with why. A designer's own ask always gets a fresh look. Live test: Dressmann kontor, its label fixed,
+  kept "Hero over lower body, white" exactly as before.
+- The service role has no rights on the tables (plan_versions, brand_books, design_layers). An edge function that
+  needs more than its task reads it through a SECURITY DEFINER function granted only to service_role
+  (20261109150000_engine_lookups.sql); a direct read fails on permissions and, caught, silently gives nothing.
 
