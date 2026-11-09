@@ -2,7 +2,7 @@
 import { assertEquals } from "jsr:@std/assert@1";
 import { type Deps, handlePlan, type Written } from "./handler.ts";
 import { type ClaimRead, copyLines, judgeCopy, type PlanAnswer, type PlanTask, prompt, toBody } from "./plan.ts";
-import { columnPart, recentPart, repeatsHeadline } from "./plan.ts";
+import { columnPart, recentPart, repeatsHeadline, tooLongFor } from "./plan.ts";
 
 const task: PlanTask = {
   run_id: "r1",
@@ -391,4 +391,15 @@ Deno.test("a narrow column of words asks for a short headline", () => {
   assertEquals(columnPart({ name: "Quote stack bottom left", pct: 82 }).join(" ").includes("at most 42 characters"), true);
   assertEquals(columnPart(null), []);
   assertEquals(prompt({ ...task, column: { name: "Green stack", pct: 25 } }).includes("Green stack"), true);
+});
+
+Deno.test("a headline too long for the brand's column is sent back once", () => {
+  const col = { name: "Green stack beside the model, left", pct: 25 };
+  const head = (text: string) => [{ ref: "copy:headline", where: "Headline", text }];
+  assertEquals(tooLongFor(head("Samme skjorte, fredag og mandag"), col)?.kind, "too_long");
+  assertEquals(tooLongFor(head("Fredag. Mandag. Samme skjorte."), col)?.blocking, true);
+  assertEquals(tooLongFor(head("Fra fredag til mandag"), col), null);
+  assertEquals(tooLongFor(head("Arbeidsskjortesesongen"), col)?.note.includes("a word of 22 letters"), true);
+  assertEquals(tooLongFor(head("Samme skjorte, fredag og mandag"), { name: "Quote stack", pct: 82 }), null);
+  assertEquals(tooLongFor(head("Samme skjorte, fredag og mandag"), null), null);
 });

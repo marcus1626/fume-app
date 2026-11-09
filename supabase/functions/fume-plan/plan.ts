@@ -160,11 +160,16 @@ export type WordsColumn = { name: string; pct: number };
  * How long a headline can be in the brand's own column of words. A narrow column (Dressmann's stack beside the
  * shirt, a quarter of the picture) broke "MANDAG" in two (9 Nov); a long word is never broken, so the plan writes short.
  */
-export function columnPart(column: WordsColumn | null | undefined): string[] {
-  if (!column || !(column.pct > 0)) return [];
+export function columnFit(column: WordsColumn | null | undefined): { pct: number; most: number; word: number } | null {
+  if (!column || !(column.pct > 0)) return null;
   const pct = Math.round(column.pct);
-  const most = pct < 45 ? 22 : pct < 70 ? 32 : 42;
-  const word = pct < 45 ? 8 : 11;
+  return { pct, most: pct < 45 ? 22 : pct < 70 ? 32 : 42, word: pct < 45 ? 8 : 11 };
+}
+
+export function columnPart(column: WordsColumn | null | undefined): string[] {
+  const fit = columnFit(column);
+  if (!column || !fit) return [];
+  const { pct, most, word } = fit;
   return [
     `The brand sets its words on its pictures in its own layout "${column.name}", in a column about ${pct}% of the picture's width. ` +
       `Write the headline for that column: at most ${most} characters, no word longer than ${word} letters, so it sets in two or three lines without breaking a word. ` +
@@ -337,7 +342,7 @@ export function claimPrompt(task: PlanTask, lines: CopyLine[]): string {
 export interface CopyFinding {
   ref: string;
   text: string;
-  kind: "unbacked_claim" | "off_voice" | "avoided_word" | "language" | "repeats_headline";
+  kind: "unbacked_claim" | "off_voice" | "avoided_word" | "language" | "repeats_headline" | "too_long";
   blocking: boolean;
   note: string;
 }
@@ -384,6 +389,8 @@ export function judgeCopy(task: PlanTask, lines: CopyLine[], read: ClaimRead | n
   });
   const repeat = repeatsHeadline(lines, task.voice?.body?.ctas ?? []);
   if (repeat) findings.push(repeat);
+  const long = tooLongFor(lines, task.column);
+  if (long) findings.push(long);
   return { findings, lines: out };
 }
 
@@ -403,6 +410,24 @@ export function repeatsHeadline(lines: CopyLine[], ctas: { cta: string; when: st
   return {
     ref: cta.ref, text: cta.text, kind: "repeats_headline", blocking: true,
     note: `The call to action says the headline again ("${head.text}"). Write a short call to action that says what to do, from the brand's own calls to action.`,
+  };
+}
+
+/**
+ * A headline longer than the brand's column holds sets in four or five lines (Dressmann's 25% stack, 9 Nov: "Samme
+ * skjorte, fredag og mandag" in five, the brand's at most two). The prompt asks for it short; code holds it to that,
+ * and the plan is rewritten once, as for a claim. A little over is let through: the design layer sizes the type.
+ */
+export function tooLongFor(lines: CopyLine[], column: WordsColumn | null | undefined): CopyFinding | null {
+  const fit = columnFit(column);
+  const head = lines.find((l) => /^copy:(headline|overskrift)/.test(l.ref));
+  if (!fit || !head) return null;
+  const text = head.text.trim();
+  const longest = Math.max(0, ...text.split(/\s+/).map((w) => w.replace(/[^\p{L}\p{N}]/gu, "").length));
+  if (text.length <= fit.most + 4 && longest <= fit.word + 1) return null;
+  return {
+    ref: head.ref, text, kind: "too_long", blocking: true,
+    note: `The headline has ${text.length} characters${longest > fit.word + 1 ? ` and a word of ${longest} letters` : ""}; the brand's column (${fit.pct}% of the picture's width) holds at most ${fit.most} characters, no word over ${fit.word} letters. Write it shorter, keeping the idea.`,
   };
 }
 
