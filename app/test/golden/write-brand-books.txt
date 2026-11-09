@@ -254,6 +254,21 @@ anna checkBrandBook("bb-voice-2") → events
       "createdAt": "2026-10-14T09:32:00.000Z",
       "id": "bb-voice-2",
       "kind": "voice",
+      "proposals": [
+        {
+          "block": {
+            "do": "Give someone a calmer evening.",
+            "dont": "This year's most popular Christmas gift!",
+            "means": "In the gift season we give time, never things.",
+            "trait": "Giving"
+          },
+          "createdAt": "2026-10-14T09:34:00.000Z",
+          "from": "the gift lines in this version and the Autumn launch's captions",
+          "id": "bp-voice-giving",
+          "state": "open",
+          "why": "This version adds the gift season's words, and no block says how the voice sounds when it gives."
+        }
+      ],
       "state": "checked",
       "version": 2,
       "writtenAt": "2026-10-14T09:33:00.000Z"
@@ -566,6 +581,21 @@ anna checkBrandBook("bb-voice-2")
     "createdAt": "2026-10-14T09:32:00.000Z",
     "id": "bb-voice-2",
     "kind": "voice",
+    "proposals": [
+      {
+        "block": {
+          "do": "Give someone a calmer evening.",
+          "dont": "This year's most popular Christmas gift!",
+          "means": "In the gift season we give time, never things.",
+          "trait": "Giving"
+        },
+        "createdAt": "2026-10-14T09:34:00.000Z",
+        "from": "the gift lines in this version and the Autumn launch's captions",
+        "id": "bp-voice-giving",
+        "state": "open",
+        "why": "This version adds the gift season's words, and no block says how the voice sounds when it gives."
+      }
+    ],
     "state": "checked",
     "version": 2,
     "writtenAt": "2026-10-14T09:33:00.000Z"
@@ -1194,7 +1224,7 @@ jonas brandBooks()
         "writtenAt": "2026-10-14T05:34:00.000Z"
       }
     ],
-    "progress": [],
+    "progress": [{"kind":"design","state":"draft","updatedAt":"2026-10-14T10:32:00.000Z","version":2}],
     "voice": [
       {
         "ask": "Add the gift season's words: calls to action and headlines for a gift.",
@@ -3185,6 +3215,18 @@ maja askBrandBookChange({"ask":"Burgundy for the price too, not only the call to
             "radius": "none",
             "rules": ["Never twice on one creative."],
             "style": "label"
+          },
+          {
+            "background": null,
+            "base": "text",
+            "colour": "text_muted",
+            "name": "Ingredients",
+            "paddingPx": 0,
+            "purpose": "What is in the oil, as the label says it, under the product's name.",
+            "radius": "none",
+            "rules": ["Only on a product story.","A middle dot between the ingredients, as on the label."],
+            "sample": "Mandelolje · Squalan",
+            "style": "caption"
           }
         ],
         "css": ".brand {\n  --color-primary: #2B1D17;\n  --color-secondary: #5C1F2A;\n  --color-accent: #A8642B;\n  --color-background: #EFE6DA;\n  --color-surface: #F7F2EA;\n  --color-text: #2B1D17;\n  --color-text-muted: #6B5B4E;\n  --color-on-primary: #EFE6DA;\n  --color-on-photo: #F7F2EA;\n  --color-cta: #5C1F2A;\n  --color-cta-text: #EFE6DA;\n  --color-border: #B5A691;\n  --color-support: #3E4A5C;\n  --font-display: \"Cormorant\", \"Cormorant Garamond\", serif;\n  --font-body: \"Inter\", sans-serif;\n  --type-display-size: 104px;\n  --type-display-line: 1;\n  --type-display-tracking: -0.01em;\n  --type-display-weight: 400;\n  --type-h1-size: 76px;\n  --type-h1-line: 1.05;\n  --type-h1-tracking: -0.01em;\n  --type-h1-weight: 400;\n  --type-h2-size: 52px;\n  --type-h2-line: 1.1;\n  --type-h2-tracking: 0em;\n  --type-h2-weight: 400;\n  --type-subline-size: 30px;\n  --type-subline-line: 1.3;\n  --type-subline-tracking: 0em;\n  --type-subline-weight: 400;\n  --type-body-size: 28px;\n  --type-body-line: 1.45;\n  --type-body-tracking: 0em;\n  --type-body-weight: 400;\n  --type-caption-size: 22px;\n  --type-caption-line: 1.35;\n  --type-caption-tracking: 0em;\n  --type-caption-weight: 400;\n  --type-label-size: 20px;\n  --type-label-line: 1.2;\n  --type-label-tracking: 0.08em;\n  --type-label-weight: 500;\n  --type-cta-size: 26px;\n  --type-cta-line: 1;\n  --type-cta-tracking: 0.01em;\n  --type-cta-weight: 500;\n  --type-price-size: 30px;\n  --type-price-line: 1.2;\n  --type-price-tracking: 0em;\n  --type-price-weight: 500;\n  --type-legal-size: 16px;\n  --type-legal-line: 1.35;\n  --type-legal-tracking: 0em;\n  --type-legal-weight: 400;\n  --space-1: 8px;\n  --space-2: 16px;\n  --space-3: 24px;\n  --space-4: 32px;\n  --space-6: 48px;\n  --space-8: 64px;\n  --space-12: 96px;\n  --radius-none: 0px;\n  --radius-small: 4px;\n  --radius-large: 16px;\n  --radius-pill: 999px;\n}",
@@ -3359,7 +3401,7 @@ maja askBrandBookChange({"ask":"Burgundy for the price too, not only the call to
       "id": "bb-mvkqwarc-2",
       "kind": "design",
       "state": "draft",
-      "version": 2,
+      "version": 3,
       "writtenAt": "2026-10-14T12:32:00.000Z"
     },
     "type": "book.state"
@@ -3372,7 +3414,7 @@ maja askBrandBookChange({"ask":"Burgundy for the price too, not only the call to
     "id": "bb-mvkqwarc-2",
     "kind": "design",
     "state": "writing",
-    "version": 2
+    "version": 3
   }
 maja brandBooks()
   {
@@ -3635,7 +3677,7 @@ maja brandBooks()
       }
     ],
     "progress": [
-      {"kind":"design","state":"draft","updatedAt":"2026-10-14T12:32:00.000Z","version":2},
+      {"kind":"design","state":"draft","updatedAt":"2026-10-14T12:32:00.000Z","version":3},
       {"kind":"look","state":"draft","updatedAt":"2026-10-14T12:32:00.000Z","version":2}
     ],
     "voice": [
@@ -4321,6 +4363,18 @@ anna brandBooks()
               "radius": "none",
               "rules": ["Never twice on one creative."],
               "style": "label"
+            },
+            {
+              "background": null,
+              "base": "text",
+              "colour": "text_muted",
+              "name": "Ingredients",
+              "paddingPx": 0,
+              "purpose": "What is in the oil, as the label says it, under the product's name.",
+              "radius": "none",
+              "rules": ["Only on a product story.","A middle dot between the ingredients, as on the label."],
+              "sample": "Mandelolje · Squalan",
+              "style": "caption"
             }
           ],
           "css": ".brand {\n  --color-primary: #2B1D17;\n  --color-secondary: #5C1F2A;\n  --color-accent: #A8642B;\n  --color-background: #EFE6DA;\n  --color-surface: #F7F2EA;\n  --color-text: #2B1D17;\n  --color-text-muted: #6B5B4E;\n  --color-on-primary: #EFE6DA;\n  --color-on-photo: #F7F2EA;\n  --color-cta: #5C1F2A;\n  --color-cta-text: #EFE6DA;\n  --color-border: #B5A691;\n  --color-support: #3E4A5C;\n  --font-display: \"Cormorant\", \"Cormorant Garamond\", serif;\n  --font-body: \"Inter\", sans-serif;\n  --type-display-size: 104px;\n  --type-display-line: 1;\n  --type-display-tracking: -0.01em;\n  --type-display-weight: 400;\n  --type-h1-size: 76px;\n  --type-h1-line: 1.05;\n  --type-h1-tracking: -0.01em;\n  --type-h1-weight: 400;\n  --type-h2-size: 52px;\n  --type-h2-line: 1.1;\n  --type-h2-tracking: 0em;\n  --type-h2-weight: 400;\n  --type-subline-size: 30px;\n  --type-subline-line: 1.3;\n  --type-subline-tracking: 0em;\n  --type-subline-weight: 400;\n  --type-body-size: 28px;\n  --type-body-line: 1.45;\n  --type-body-tracking: 0em;\n  --type-body-weight: 400;\n  --type-caption-size: 22px;\n  --type-caption-line: 1.35;\n  --type-caption-tracking: 0em;\n  --type-caption-weight: 400;\n  --type-label-size: 20px;\n  --type-label-line: 1.2;\n  --type-label-tracking: 0.08em;\n  --type-label-weight: 500;\n  --type-cta-size: 26px;\n  --type-cta-line: 1;\n  --type-cta-tracking: 0.01em;\n  --type-cta-weight: 500;\n  --type-price-size: 30px;\n  --type-price-line: 1.2;\n  --type-price-tracking: 0em;\n  --type-price-weight: 500;\n  --type-legal-size: 16px;\n  --type-legal-line: 1.35;\n  --type-legal-tracking: 0em;\n  --type-legal-weight: 400;\n  --space-1: 8px;\n  --space-2: 16px;\n  --space-3: 24px;\n  --space-4: 32px;\n  --space-6: 48px;\n  --space-8: 64px;\n  --space-12: 96px;\n  --radius-none: 0px;\n  --radius-small: 4px;\n  --radius-large: 16px;\n  --radius-pill: 999px;\n}",
@@ -4516,8 +4570,404 @@ anna brandBooks()
         "id": "bb-mvkqwarc-2",
         "kind": "design",
         "state": "draft",
-        "version": 2,
+        "version": 3,
         "writtenAt": "2026-10-14T12:32:00.000Z"
+      },
+      {
+        "ask": "Edited from version 1",
+        "askedBy": "u-anna",
+        "body": {
+          "checks": {
+            "contrast": [
+              {"need":4.5,"ok":true,"pair":"text on background","ratio":13.17},
+              {"need":4.5,"ok":true,"pair":"text on surface","ratio":14.6},
+              {"need":4.5,"ok":true,"pair":"on_primary on primary","ratio":13.17},
+              {"need":4.5,"ok":true,"pair":"cta_text on cta","ratio":10.09},
+              {"need":4.5,"ok":true,"pair":"text_muted on background","ratio":5.26},
+              {"need":4.5,"ok":true,"pair":"on_primary on secondary","ratio":10.09}
+            ],
+            "fails": [],
+            "missingRoles": []
+          },
+          "colours": [
+            {
+              "hex": "#2B1D17",
+              "name": "Night brown",
+              "role": "primary",
+              "source": "brand_dna",
+              "use": "The brand's dark: words, the logo on light."
+            },
+            {
+              "hex": "#5C1F2A",
+              "name": "Burgundy cap",
+              "role": "secondary",
+              "source": "brand_dna",
+              "use": "The cap's colour; a badge, a price."
+            },
+            {
+              "hex": "#A8642B",
+              "name": "Amber glass",
+              "role": "accent",
+              "source": "brand_dna",
+              "use": "A thin rule or a small mark, never words."
+            },
+            {
+              "hex": "#EFE6DA",
+              "name": "Linen",
+              "role": "background",
+              "source": "brand_dna",
+              "use": "A flat ground when there is no photograph."
+            },
+            {"hex":"#F7F2EA","name":"Warm paper","role":"surface","source":"fume","use":"A card or a panel on Linen."},
+            {
+              "hex": "#2B1D17",
+              "name": "Night brown",
+              "role": "text",
+              "source": "brand_dna",
+              "use": "Words on a light wall or on Linen."
+            },
+            {
+              "hex": "#6B5B4E",
+              "name": "Walnut",
+              "role": "text_muted",
+              "source": "fume",
+              "use": "A size, a caption, the small print."
+            },
+            {"hex":"#EFE6DA","name":"Linen","role":"on_primary","source":"brand_dna","use":"Words on Night brown."},
+            {"hex":"#F7F2EA","name":"Warm paper","role":"on_photo","source":"fume","use":"Words on a dark photograph."},
+            {"hex":"#5C1F2A","name":"Burgundy cap","role":"cta","source":"brand_dna","use":"The call to action's pill."},
+            {
+              "hex": "#EFE6DA",
+              "name": "Linen",
+              "role": "cta_text",
+              "source": "brand_dna",
+              "use": "The words on the call to action."
+            },
+            {"hex":"#B5A691","name":"Evening stone","role":"border","source":"brand_dna","use":"A hairline on Linen."},
+            {
+              "hex": "#3E4A5C",
+              "name": "Dusk blue",
+              "role": "support",
+              "source": "brand_dna",
+              "use": "A quiet accent in winter, sparingly."
+            }
+          ],
+          "components": [
+            {
+              "background": null,
+              "colour": "text",
+              "name": "headline",
+              "paddingPx": 0,
+              "purpose": "The one line that says the idea.",
+              "radius": "none",
+              "rules": ["One line, two at most.","Ends with a full stop."],
+              "style": "h1"
+            },
+            {
+              "background": null,
+              "colour": "text",
+              "name": "subline",
+              "paddingPx": 0,
+              "purpose": "The product as printed, or a short second line.",
+              "radius": "none",
+              "rules": ["Never longer than the headline."],
+              "style": "subline"
+            },
+            {
+              "background": null,
+              "colour": "secondary",
+              "name": "price",
+              "paddingPx": 0,
+              "purpose": "A price or an offer, stated plainly.",
+              "radius": "none",
+              "rules": ["Figures, a space before %."],
+              "style": "price"
+            },
+            {
+              "background": "cta",
+              "colour": "cta_text",
+              "name": "cta",
+              "paddingPx": 22,
+              "purpose": "The call to action, on a story or a banner.",
+              "radius": "pill",
+              "rules": ["Two words.","Never on a feed picture."],
+              "style": "cta"
+            },
+            {
+              "background": "secondary",
+              "colour": "on_primary",
+              "name": "badge",
+              "paddingPx": 12,
+              "purpose": "A small mark: a set, a season.",
+              "radius": "small",
+              "rules": ["One per creative at most."],
+              "style": "label"
+            },
+            {
+              "background": null,
+              "colour": "text_muted",
+              "name": "product_name",
+              "paddingPx": 0,
+              "purpose": "The name and size, as on the label.",
+              "radius": "none",
+              "rules": ["As printed: Night Body Oil · 100 ml."],
+              "style": "label"
+            },
+            {
+              "background": null,
+              "colour": "text_muted",
+              "name": "legal",
+              "paddingPx": 0,
+              "purpose": "The offer's terms.",
+              "radius": "none",
+              "rules": ["Only when the offer needs it."],
+              "style": "legal"
+            },
+            {
+              "background": null,
+              "colour": "primary",
+              "name": "logo",
+              "paddingPx": 0,
+              "purpose": "The wordmark, where the label does not show it.",
+              "radius": "none",
+              "rules": ["Never twice on one creative."],
+              "style": "label"
+            },
+            {
+              "background": null,
+              "base": "text",
+              "colour": "text_muted",
+              "name": "Ingredients",
+              "paddingPx": 0,
+              "purpose": "What is in the oil, as the label says it, under the product's name.",
+              "radius": "none",
+              "rules": ["Only on a product story.","A middle dot between the ingredients, as on the label."],
+              "sample": "Mandelolje · Squalan",
+              "style": "caption"
+            }
+          ],
+          "css": ".brand {\n  --color-primary: #2B1D17;\n  --color-secondary: #5C1F2A;\n  --color-accent: #A8642B;\n  --color-background: #EFE6DA;\n  --color-surface: #F7F2EA;\n  --color-text: #2B1D17;\n  --color-text-muted: #6B5B4E;\n  --color-on-primary: #EFE6DA;\n  --color-on-photo: #F7F2EA;\n  --color-cta: #5C1F2A;\n  --color-cta-text: #EFE6DA;\n  --color-border: #B5A691;\n  --color-support: #3E4A5C;\n  --font-display: \"Cormorant\", \"Cormorant Garamond\", serif;\n  --font-body: \"Inter\", sans-serif;\n  --type-display-size: 104px;\n  --type-display-line: 1;\n  --type-display-tracking: -0.01em;\n  --type-display-weight: 400;\n  --type-h1-size: 76px;\n  --type-h1-line: 1.05;\n  --type-h1-tracking: -0.01em;\n  --type-h1-weight: 400;\n  --type-h2-size: 52px;\n  --type-h2-line: 1.1;\n  --type-h2-tracking: 0em;\n  --type-h2-weight: 400;\n  --type-subline-size: 30px;\n  --type-subline-line: 1.3;\n  --type-subline-tracking: 0em;\n  --type-subline-weight: 400;\n  --type-body-size: 28px;\n  --type-body-line: 1.45;\n  --type-body-tracking: 0em;\n  --type-body-weight: 400;\n  --type-caption-size: 22px;\n  --type-caption-line: 1.35;\n  --type-caption-tracking: 0em;\n  --type-caption-weight: 400;\n  --type-label-size: 20px;\n  --type-label-line: 1.2;\n  --type-label-tracking: 0.08em;\n  --type-label-weight: 500;\n  --type-cta-size: 26px;\n  --type-cta-line: 1;\n  --type-cta-tracking: 0.01em;\n  --type-cta-weight: 500;\n  --type-price-size: 30px;\n  --type-price-line: 1.2;\n  --type-price-tracking: 0em;\n  --type-price-weight: 500;\n  --type-legal-size: 16px;\n  --type-legal-line: 1.35;\n  --type-legal-tracking: 0em;\n  --type-legal-weight: 400;\n  --space-1: 8px;\n  --space-2: 16px;\n  --space-3: 24px;\n  --space-4: 32px;\n  --space-6: 48px;\n  --space-8: 64px;\n  --space-12: 96px;\n  --radius-none: 0px;\n  --radius-small: 4px;\n  --radius-large: 16px;\n  --radius-pill: 999px;\n}",
+          "examples": [
+            {
+              "format": "feed",
+              "image": "/demo/lysne/02-01-feed.jpg",
+              "layers": [
+                {
+                  "align": "right",
+                  "component": "headline",
+                  "h": 14,
+                  "text": "Kvelden din, litt langsommere.",
+                  "w": 56,
+                  "x": 37,
+                  "y": 6
+                },
+                {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":56,"x":37,"y":22}
+              ],
+              "name": "The evening, launched",
+              "picture": "The bottle low on evening stone; the light wall above it, to the right, is calm.",
+              "purpose": "Launch",
+              "why": "The headline on the lightest part of the wall, the bottle keeps the lower half; no logo, since the label shows it."
+            },
+            {
+              "format": "story",
+              "image": "/demo/lysne/01-03-story.jpg",
+              "layers": [
+                {"align":"left","component":"headline","h":9,"text":"Gi bort en roligere kveld.","w":60,"x":8,"y":15},
+                {"align":"left","component":"price","h":3,"text":"Kveldssettet · 25 % av","w":60,"x":8,"y":26},
+                {"align":"left","component":"cta","h":4.5,"text":"Se settet","w":32,"x":8,"y":31},
+                {"align":"left","component":"legal","h":2,"text":"Til og med mandag 30. november.","w":60,"x":8,"y":37}
+              ],
+              "name": "The set, as an offer",
+              "picture": "The bottle low in a corner of light; the wall above it is calm.",
+              "purpose": "Offer",
+              "why": "Every word above the bottle and below the 250 pixels the platform covers at the top."
+            },
+            {
+              "format": "square",
+              "image": "/demo/lysne/04-06-square.jpg",
+              "layers": [
+                {
+                  "align": "right",
+                  "component": "headline",
+                  "h": 22,
+                  "text": "Mandelolje og squalan. Ikke noe mer.",
+                  "w": 50,
+                  "x": 44,
+                  "y": 7
+                },
+                {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":50,"x":44,"y":31}
+              ],
+              "name": "What is in it",
+              "picture": "The bottle to the left, a hand on the stone; the wall above the hand is calm.",
+              "purpose": "Product story",
+              "why": "The words to the right, over the calm wall, the bottle to the left; aligned to the right margin."
+            },
+            {
+              "format": "story",
+              "image": "/demo/lysne/07-11-story.jpg",
+              "layers": [
+                {
+                  "align": "left",
+                  "component": "headline",
+                  "h": 14,
+                  "text": "Varm oljen i hendene. Pust ut.",
+                  "w": 40,
+                  "x": 8,
+                  "y": 15
+                }
+              ],
+              "name": "An everyday post",
+              "picture": "The bottle to the right, its shadow behind it; the wall to the left is calm from top to bottom.",
+              "purpose": "Everyday post",
+              "why": "One line on the calm side, no call to action; the bottle and its shadow are left to speak."
+            },
+            {
+              "format": "feed",
+              "image": "/demo/lysne/07-10-feed.jpg",
+              "layers": [
+                {
+                  "align": "centre",
+                  "colour": "on_photo",
+                  "component": "headline",
+                  "h": 10,
+                  "text": "Til noen som fortjener kvelden.",
+                  "w": 80,
+                  "x": 10,
+                  "y": 74
+                },
+                {"align":"centre","colour":"on_photo","component":"logo","h":3,"text":"","w":22,"x":39,"y":88}
+              ],
+              "name": "A gift",
+              "picture": "Hands and a drop of oil against the wall; below them the wall is in shade. No bottle, so no label.",
+              "purpose": "Gift season",
+              "why": "Warm paper words in the shade below the hands; the wordmark, since no label shows it."
+            }
+          ],
+          "formats": [
+            {"columns":6,"format":"feed","gutterPx":24,"marginPx":72,"safeBottomPx":96,"safeTopPx":72},
+            {"columns":6,"format":"square","gutterPx":24,"marginPx":64,"safeBottomPx":64,"safeTopPx":64},
+            {"columns":6,"format":"story","gutterPx":24,"marginPx":72,"safeBottomPx":340,"safeTopPx":250},
+            {"columns":12,"format":"banner","gutterPx":32,"marginPx":96,"safeBottomPx":80,"safeTopPx":80}
+          ],
+          "gaps": [
+            "Can we have Cormorant's font files, or do we keep Cormorant Garamond?",
+            "Is there a version of the wordmark for small sizes?"
+          ],
+          "logo": {
+            "clearSpace": "The height of the L on every side.",
+            "minWidthPx": 160,
+            "placements": [
+              {"format":"banner","where":"top_left","widthPct":12},
+              {"format":"feed","where":"bottom_centre","widthPct":22}
+            ],
+            "versions": [
+              {"name":"Wordmark","use":"Night brown, on Linen or a light wall."},
+              {"name":"Wordmark, reversed","use":"Linen, on Night brown or a dark photograph."}
+            ]
+          },
+          "photoText": {
+            "rules": [
+              "Words sit where the picture is calm: the wall above the bottle, or the stone in front of it.",
+              "Never over the bottle, the cap or the label.",
+              "On a busy picture, a soft shade from the edge, never a box.",
+              "Only where the label does not show the name is the wordmark added."
+            ],
+            "scrim": "gradient",
+            "scrimOpacity": 0.3
+          },
+          "radiusPx": {"large":16,"none":0,"pill":999,"small":4},
+          "rules": {
+            "do": [
+              "Let the photograph carry the creative; words are the smaller part.",
+              "Keep words on one side, aligned to the margin.",
+              "Use Burgundy only for the call to action."
+            ],
+            "dont": [
+              "Words over the bottle or the label.",
+              "More than three layers of words.",
+              "Amber glass for words: it is too light to read."
+            ]
+          },
+          "sources": [
+            {"evidence":"Brand DNA colours, approved by Maja","part":"colours","source":"brand_dna"},
+            {"evidence":"LYSNE brand guide 2026.pdf","part":"typefaces","source":"brand_dna"},
+            {"evidence":"Fume's scale for the formats","part":"styles","source":"fume"},
+            {"evidence":"Autumn launch, the approved creatives","part":"examples","source":"memory"}
+          ],
+          "spacing": {"scale":[1,2,3,4,6,8,12],"unitPx":8},
+          "styles": [
+            {
+              "case": "none",
+              "font": "display",
+              "lineHeight": 1,
+              "name": "display",
+              "sizePx": 104,
+              "trackingEm": -0.01,
+              "weight": 400
+            },
+            {"case":"none","font":"display","lineHeight":1.05,"name":"h1","sizePx":76,"trackingEm":-0.01,"weight":400},
+            {"case":"none","font":"display","lineHeight":1.1,"name":"h2","sizePx":52,"trackingEm":0,"weight":400},
+            {"case":"none","font":"body","lineHeight":1.3,"name":"subline","sizePx":30,"trackingEm":0,"weight":400},
+            {"case":"none","font":"body","lineHeight":1.45,"name":"body","sizePx":28,"trackingEm":0,"weight":400},
+            {"case":"none","font":"body","lineHeight":1.35,"name":"caption","sizePx":22,"trackingEm":0,"weight":400},
+            {"case":"upper","font":"body","lineHeight":1.2,"name":"label","sizePx":20,"trackingEm":0.08,"weight":500},
+            {"case":"none","font":"body","lineHeight":1,"name":"cta","sizePx":26,"trackingEm":0.01,"weight":500},
+            {"case":"none","font":"body","lineHeight":1.2,"name":"price","sizePx":30,"trackingEm":0,"weight":500},
+            {"case":"none","font":"body","lineHeight":1.35,"name":"legal","sizePx":16,"trackingEm":0,"weight":400}
+          ],
+          "summary": "LYSNE's creatives are the photograph first: warm, low light and one bottle, with a few words where the wall is calm. Cormorant for what the brand says, Inter for names, sizes and buttons. Night brown words on light walls, Linen on dark ones, and Burgundy only for the call to action.",
+          "typefaces": [
+            {
+              "fallback": "Cormorant Garamond",
+              "family": "Cormorant",
+              "note": "LYSNE's own serif, from the brand guide; Cormorant Garamond on Google Fonts draws it the same.",
+              "role": "display",
+              "source": "brand",
+              "weights": [400,500]
+            },
+            {
+              "fallback": "Inter",
+              "family": "Inter",
+              "note": "Names, sizes, prices and buttons.",
+              "role": "body",
+              "source": "brand",
+              "weights": [400,500]
+            }
+          ]
+        },
+        "createdAt": "2026-10-14T10:32:00.000Z",
+        "edits": [{"at":"2026-10-14T10:32:00.000Z","by":"u-anna","from":null,"path":"components.8"}],
+        "id": "bb-design-2",
+        "kind": "design",
+        "proposals": [
+          {
+            "component": {
+              "background": "secondary",
+              "base": "badge",
+              "colour": "on_primary",
+              "name": "Wheel",
+              "paddingPx": 16,
+              "purpose": "A round mark for an offer: the figure big, a word or two with it.",
+              "radius": "pill",
+              "rules": [
+                "Beside the bottle on the calm wall, never over the label.",
+                "Only with an offer, and one per creative.",
+                "The figure and at most two words."
+              ],
+              "sample": "25 % av",
+              "sizePx": 200,
+              "style": "price"
+            },
+            "createdAt": "2026-10-14T10:37:00.000Z",
+            "from": "the set's offer story and 3 past offers",
+            "id": "bp-design-wheel",
+            "state": "open",
+            "why": "LYSNE's offers are a line of small words today. A round mark in Burgundy carries the offer at a glance, without a box over the picture."
+          }
+        ],
+        "state": "draft",
+        "version": 2,
+        "writtenAt": "2026-10-14T10:32:00.000Z"
       },
       {
         "body": {
@@ -5647,6 +6097,21 @@ anna brandBooks()
         "createdAt": "2026-10-14T09:32:00.000Z",
         "id": "bb-voice-2",
         "kind": "voice",
+        "proposals": [
+          {
+            "block": {
+              "do": "Give someone a calmer evening.",
+              "dont": "This year's most popular Christmas gift!",
+              "means": "In the gift season we give time, never things.",
+              "trait": "Giving"
+            },
+            "createdAt": "2026-10-14T09:34:00.000Z",
+            "from": "the gift lines in this version and the Autumn launch's captions",
+            "id": "bp-voice-giving",
+            "state": "open",
+            "why": "This version adds the gift season's words, and no block says how the voice sounds when it gives."
+          }
+        ],
         "state": "approved",
         "version": 2,
         "writtenAt": "2026-10-14T09:33:00.000Z"
@@ -6070,6 +6535,18 @@ anna checkBrandBook("bb-mvkqwarc-2") → events
             "radius": "none",
             "rules": ["Never twice on one creative."],
             "style": "label"
+          },
+          {
+            "background": null,
+            "base": "text",
+            "colour": "text_muted",
+            "name": "Ingredients",
+            "paddingPx": 0,
+            "purpose": "What is in the oil, as the label says it, under the product's name.",
+            "radius": "none",
+            "rules": ["Only on a product story.","A middle dot between the ingredients, as on the label."],
+            "sample": "Mandelolje · Squalan",
+            "style": "caption"
           }
         ],
         "css": ".brand {\n  --color-primary: #2B1D17;\n  --color-secondary: #5C1F2A;\n  --color-accent: #A8642B;\n  --color-background: #EFE6DA;\n  --color-surface: #F7F2EA;\n  --color-text: #2B1D17;\n  --color-text-muted: #6B5B4E;\n  --color-on-primary: #EFE6DA;\n  --color-on-photo: #F7F2EA;\n  --color-cta: #5C1F2A;\n  --color-cta-text: #EFE6DA;\n  --color-border: #B5A691;\n  --color-support: #3E4A5C;\n  --font-display: \"Cormorant\", \"Cormorant Garamond\", serif;\n  --font-body: \"Inter\", sans-serif;\n  --type-display-size: 104px;\n  --type-display-line: 1;\n  --type-display-tracking: -0.01em;\n  --type-display-weight: 400;\n  --type-h1-size: 76px;\n  --type-h1-line: 1.05;\n  --type-h1-tracking: -0.01em;\n  --type-h1-weight: 400;\n  --type-h2-size: 52px;\n  --type-h2-line: 1.1;\n  --type-h2-tracking: 0em;\n  --type-h2-weight: 400;\n  --type-subline-size: 30px;\n  --type-subline-line: 1.3;\n  --type-subline-tracking: 0em;\n  --type-subline-weight: 400;\n  --type-body-size: 28px;\n  --type-body-line: 1.45;\n  --type-body-tracking: 0em;\n  --type-body-weight: 400;\n  --type-caption-size: 22px;\n  --type-caption-line: 1.35;\n  --type-caption-tracking: 0em;\n  --type-caption-weight: 400;\n  --type-label-size: 20px;\n  --type-label-line: 1.2;\n  --type-label-tracking: 0.08em;\n  --type-label-weight: 500;\n  --type-cta-size: 26px;\n  --type-cta-line: 1;\n  --type-cta-tracking: 0.01em;\n  --type-cta-weight: 500;\n  --type-price-size: 30px;\n  --type-price-line: 1.2;\n  --type-price-tracking: 0em;\n  --type-price-weight: 500;\n  --type-legal-size: 16px;\n  --type-legal-line: 1.35;\n  --type-legal-tracking: 0em;\n  --type-legal-weight: 400;\n  --space-1: 8px;\n  --space-2: 16px;\n  --space-3: 24px;\n  --space-4: 32px;\n  --space-6: 48px;\n  --space-8: 64px;\n  --space-12: 96px;\n  --radius-none: 0px;\n  --radius-small: 4px;\n  --radius-large: 16px;\n  --radius-pill: 999px;\n}",
@@ -6246,7 +6723,7 @@ anna checkBrandBook("bb-mvkqwarc-2") → events
       "id": "bb-mvkqwarc-2",
       "kind": "design",
       "state": "checked",
-      "version": 2,
+      "version": 3,
       "writtenAt": "2026-10-14T12:32:00.000Z"
     },
     "type": "book.state"
@@ -6405,6 +6882,18 @@ anna checkBrandBook("bb-mvkqwarc-2")
           "radius": "none",
           "rules": ["Never twice on one creative."],
           "style": "label"
+        },
+        {
+          "background": null,
+          "base": "text",
+          "colour": "text_muted",
+          "name": "Ingredients",
+          "paddingPx": 0,
+          "purpose": "What is in the oil, as the label says it, under the product's name.",
+          "radius": "none",
+          "rules": ["Only on a product story.","A middle dot between the ingredients, as on the label."],
+          "sample": "Mandelolje · Squalan",
+          "style": "caption"
         }
       ],
       "css": ".brand {\n  --color-primary: #2B1D17;\n  --color-secondary: #5C1F2A;\n  --color-accent: #A8642B;\n  --color-background: #EFE6DA;\n  --color-surface: #F7F2EA;\n  --color-text: #2B1D17;\n  --color-text-muted: #6B5B4E;\n  --color-on-primary: #EFE6DA;\n  --color-on-photo: #F7F2EA;\n  --color-cta: #5C1F2A;\n  --color-cta-text: #EFE6DA;\n  --color-border: #B5A691;\n  --color-support: #3E4A5C;\n  --font-display: \"Cormorant\", \"Cormorant Garamond\", serif;\n  --font-body: \"Inter\", sans-serif;\n  --type-display-size: 104px;\n  --type-display-line: 1;\n  --type-display-tracking: -0.01em;\n  --type-display-weight: 400;\n  --type-h1-size: 76px;\n  --type-h1-line: 1.05;\n  --type-h1-tracking: -0.01em;\n  --type-h1-weight: 400;\n  --type-h2-size: 52px;\n  --type-h2-line: 1.1;\n  --type-h2-tracking: 0em;\n  --type-h2-weight: 400;\n  --type-subline-size: 30px;\n  --type-subline-line: 1.3;\n  --type-subline-tracking: 0em;\n  --type-subline-weight: 400;\n  --type-body-size: 28px;\n  --type-body-line: 1.45;\n  --type-body-tracking: 0em;\n  --type-body-weight: 400;\n  --type-caption-size: 22px;\n  --type-caption-line: 1.35;\n  --type-caption-tracking: 0em;\n  --type-caption-weight: 400;\n  --type-label-size: 20px;\n  --type-label-line: 1.2;\n  --type-label-tracking: 0.08em;\n  --type-label-weight: 500;\n  --type-cta-size: 26px;\n  --type-cta-line: 1;\n  --type-cta-tracking: 0.01em;\n  --type-cta-weight: 500;\n  --type-price-size: 30px;\n  --type-price-line: 1.2;\n  --type-price-tracking: 0em;\n  --type-price-weight: 500;\n  --type-legal-size: 16px;\n  --type-legal-line: 1.35;\n  --type-legal-tracking: 0em;\n  --type-legal-weight: 400;\n  --space-1: 8px;\n  --space-2: 16px;\n  --space-3: 24px;\n  --space-4: 32px;\n  --space-6: 48px;\n  --space-8: 64px;\n  --space-12: 96px;\n  --radius-none: 0px;\n  --radius-small: 4px;\n  --radius-large: 16px;\n  --radius-pill: 999px;\n}",
@@ -6573,7 +7062,7 @@ anna checkBrandBook("bb-mvkqwarc-2")
     "id": "bb-mvkqwarc-2",
     "kind": "design",
     "state": "checked",
-    "version": 2,
+    "version": 3,
     "writtenAt": "2026-10-14T12:32:00.000Z"
   }
 anna writeBrandBook({"ask":"Shorter captions for stories.","kind":"voice"}) → events
@@ -7267,6 +7756,18 @@ anna brandBooks()
               "radius": "none",
               "rules": ["Never twice on one creative."],
               "style": "label"
+            },
+            {
+              "background": null,
+              "base": "text",
+              "colour": "text_muted",
+              "name": "Ingredients",
+              "paddingPx": 0,
+              "purpose": "What is in the oil, as the label says it, under the product's name.",
+              "radius": "none",
+              "rules": ["Only on a product story.","A middle dot between the ingredients, as on the label."],
+              "sample": "Mandelolje · Squalan",
+              "style": "caption"
             }
           ],
           "css": ".brand {\n  --color-primary: #2B1D17;\n  --color-secondary: #5C1F2A;\n  --color-accent: #A8642B;\n  --color-background: #EFE6DA;\n  --color-surface: #F7F2EA;\n  --color-text: #2B1D17;\n  --color-text-muted: #6B5B4E;\n  --color-on-primary: #EFE6DA;\n  --color-on-photo: #F7F2EA;\n  --color-cta: #5C1F2A;\n  --color-cta-text: #EFE6DA;\n  --color-border: #B5A691;\n  --color-support: #3E4A5C;\n  --font-display: \"Cormorant\", \"Cormorant Garamond\", serif;\n  --font-body: \"Inter\", sans-serif;\n  --type-display-size: 104px;\n  --type-display-line: 1;\n  --type-display-tracking: -0.01em;\n  --type-display-weight: 400;\n  --type-h1-size: 76px;\n  --type-h1-line: 1.05;\n  --type-h1-tracking: -0.01em;\n  --type-h1-weight: 400;\n  --type-h2-size: 52px;\n  --type-h2-line: 1.1;\n  --type-h2-tracking: 0em;\n  --type-h2-weight: 400;\n  --type-subline-size: 30px;\n  --type-subline-line: 1.3;\n  --type-subline-tracking: 0em;\n  --type-subline-weight: 400;\n  --type-body-size: 28px;\n  --type-body-line: 1.45;\n  --type-body-tracking: 0em;\n  --type-body-weight: 400;\n  --type-caption-size: 22px;\n  --type-caption-line: 1.35;\n  --type-caption-tracking: 0em;\n  --type-caption-weight: 400;\n  --type-label-size: 20px;\n  --type-label-line: 1.2;\n  --type-label-tracking: 0.08em;\n  --type-label-weight: 500;\n  --type-cta-size: 26px;\n  --type-cta-line: 1;\n  --type-cta-tracking: 0.01em;\n  --type-cta-weight: 500;\n  --type-price-size: 30px;\n  --type-price-line: 1.2;\n  --type-price-tracking: 0em;\n  --type-price-weight: 500;\n  --type-legal-size: 16px;\n  --type-legal-line: 1.35;\n  --type-legal-tracking: 0em;\n  --type-legal-weight: 400;\n  --space-1: 8px;\n  --space-2: 16px;\n  --space-3: 24px;\n  --space-4: 32px;\n  --space-6: 48px;\n  --space-8: 64px;\n  --space-12: 96px;\n  --radius-none: 0px;\n  --radius-small: 4px;\n  --radius-large: 16px;\n  --radius-pill: 999px;\n}",
@@ -7464,8 +7965,404 @@ anna brandBooks()
         "id": "bb-mvkqwarc-2",
         "kind": "design",
         "state": "checked",
-        "version": 2,
+        "version": 3,
         "writtenAt": "2026-10-14T12:32:00.000Z"
+      },
+      {
+        "ask": "Edited from version 1",
+        "askedBy": "u-anna",
+        "body": {
+          "checks": {
+            "contrast": [
+              {"need":4.5,"ok":true,"pair":"text on background","ratio":13.17},
+              {"need":4.5,"ok":true,"pair":"text on surface","ratio":14.6},
+              {"need":4.5,"ok":true,"pair":"on_primary on primary","ratio":13.17},
+              {"need":4.5,"ok":true,"pair":"cta_text on cta","ratio":10.09},
+              {"need":4.5,"ok":true,"pair":"text_muted on background","ratio":5.26},
+              {"need":4.5,"ok":true,"pair":"on_primary on secondary","ratio":10.09}
+            ],
+            "fails": [],
+            "missingRoles": []
+          },
+          "colours": [
+            {
+              "hex": "#2B1D17",
+              "name": "Night brown",
+              "role": "primary",
+              "source": "brand_dna",
+              "use": "The brand's dark: words, the logo on light."
+            },
+            {
+              "hex": "#5C1F2A",
+              "name": "Burgundy cap",
+              "role": "secondary",
+              "source": "brand_dna",
+              "use": "The cap's colour; a badge, a price."
+            },
+            {
+              "hex": "#A8642B",
+              "name": "Amber glass",
+              "role": "accent",
+              "source": "brand_dna",
+              "use": "A thin rule or a small mark, never words."
+            },
+            {
+              "hex": "#EFE6DA",
+              "name": "Linen",
+              "role": "background",
+              "source": "brand_dna",
+              "use": "A flat ground when there is no photograph."
+            },
+            {"hex":"#F7F2EA","name":"Warm paper","role":"surface","source":"fume","use":"A card or a panel on Linen."},
+            {
+              "hex": "#2B1D17",
+              "name": "Night brown",
+              "role": "text",
+              "source": "brand_dna",
+              "use": "Words on a light wall or on Linen."
+            },
+            {
+              "hex": "#6B5B4E",
+              "name": "Walnut",
+              "role": "text_muted",
+              "source": "fume",
+              "use": "A size, a caption, the small print."
+            },
+            {"hex":"#EFE6DA","name":"Linen","role":"on_primary","source":"brand_dna","use":"Words on Night brown."},
+            {"hex":"#F7F2EA","name":"Warm paper","role":"on_photo","source":"fume","use":"Words on a dark photograph."},
+            {"hex":"#5C1F2A","name":"Burgundy cap","role":"cta","source":"brand_dna","use":"The call to action's pill."},
+            {
+              "hex": "#EFE6DA",
+              "name": "Linen",
+              "role": "cta_text",
+              "source": "brand_dna",
+              "use": "The words on the call to action."
+            },
+            {"hex":"#B5A691","name":"Evening stone","role":"border","source":"brand_dna","use":"A hairline on Linen."},
+            {
+              "hex": "#3E4A5C",
+              "name": "Dusk blue",
+              "role": "support",
+              "source": "brand_dna",
+              "use": "A quiet accent in winter, sparingly."
+            }
+          ],
+          "components": [
+            {
+              "background": null,
+              "colour": "text",
+              "name": "headline",
+              "paddingPx": 0,
+              "purpose": "The one line that says the idea.",
+              "radius": "none",
+              "rules": ["One line, two at most.","Ends with a full stop."],
+              "style": "h1"
+            },
+            {
+              "background": null,
+              "colour": "text",
+              "name": "subline",
+              "paddingPx": 0,
+              "purpose": "The product as printed, or a short second line.",
+              "radius": "none",
+              "rules": ["Never longer than the headline."],
+              "style": "subline"
+            },
+            {
+              "background": null,
+              "colour": "secondary",
+              "name": "price",
+              "paddingPx": 0,
+              "purpose": "A price or an offer, stated plainly.",
+              "radius": "none",
+              "rules": ["Figures, a space before %."],
+              "style": "price"
+            },
+            {
+              "background": "cta",
+              "colour": "cta_text",
+              "name": "cta",
+              "paddingPx": 22,
+              "purpose": "The call to action, on a story or a banner.",
+              "radius": "pill",
+              "rules": ["Two words.","Never on a feed picture."],
+              "style": "cta"
+            },
+            {
+              "background": "secondary",
+              "colour": "on_primary",
+              "name": "badge",
+              "paddingPx": 12,
+              "purpose": "A small mark: a set, a season.",
+              "radius": "small",
+              "rules": ["One per creative at most."],
+              "style": "label"
+            },
+            {
+              "background": null,
+              "colour": "text_muted",
+              "name": "product_name",
+              "paddingPx": 0,
+              "purpose": "The name and size, as on the label.",
+              "radius": "none",
+              "rules": ["As printed: Night Body Oil · 100 ml."],
+              "style": "label"
+            },
+            {
+              "background": null,
+              "colour": "text_muted",
+              "name": "legal",
+              "paddingPx": 0,
+              "purpose": "The offer's terms.",
+              "radius": "none",
+              "rules": ["Only when the offer needs it."],
+              "style": "legal"
+            },
+            {
+              "background": null,
+              "colour": "primary",
+              "name": "logo",
+              "paddingPx": 0,
+              "purpose": "The wordmark, where the label does not show it.",
+              "radius": "none",
+              "rules": ["Never twice on one creative."],
+              "style": "label"
+            },
+            {
+              "background": null,
+              "base": "text",
+              "colour": "text_muted",
+              "name": "Ingredients",
+              "paddingPx": 0,
+              "purpose": "What is in the oil, as the label says it, under the product's name.",
+              "radius": "none",
+              "rules": ["Only on a product story.","A middle dot between the ingredients, as on the label."],
+              "sample": "Mandelolje · Squalan",
+              "style": "caption"
+            }
+          ],
+          "css": ".brand {\n  --color-primary: #2B1D17;\n  --color-secondary: #5C1F2A;\n  --color-accent: #A8642B;\n  --color-background: #EFE6DA;\n  --color-surface: #F7F2EA;\n  --color-text: #2B1D17;\n  --color-text-muted: #6B5B4E;\n  --color-on-primary: #EFE6DA;\n  --color-on-photo: #F7F2EA;\n  --color-cta: #5C1F2A;\n  --color-cta-text: #EFE6DA;\n  --color-border: #B5A691;\n  --color-support: #3E4A5C;\n  --font-display: \"Cormorant\", \"Cormorant Garamond\", serif;\n  --font-body: \"Inter\", sans-serif;\n  --type-display-size: 104px;\n  --type-display-line: 1;\n  --type-display-tracking: -0.01em;\n  --type-display-weight: 400;\n  --type-h1-size: 76px;\n  --type-h1-line: 1.05;\n  --type-h1-tracking: -0.01em;\n  --type-h1-weight: 400;\n  --type-h2-size: 52px;\n  --type-h2-line: 1.1;\n  --type-h2-tracking: 0em;\n  --type-h2-weight: 400;\n  --type-subline-size: 30px;\n  --type-subline-line: 1.3;\n  --type-subline-tracking: 0em;\n  --type-subline-weight: 400;\n  --type-body-size: 28px;\n  --type-body-line: 1.45;\n  --type-body-tracking: 0em;\n  --type-body-weight: 400;\n  --type-caption-size: 22px;\n  --type-caption-line: 1.35;\n  --type-caption-tracking: 0em;\n  --type-caption-weight: 400;\n  --type-label-size: 20px;\n  --type-label-line: 1.2;\n  --type-label-tracking: 0.08em;\n  --type-label-weight: 500;\n  --type-cta-size: 26px;\n  --type-cta-line: 1;\n  --type-cta-tracking: 0.01em;\n  --type-cta-weight: 500;\n  --type-price-size: 30px;\n  --type-price-line: 1.2;\n  --type-price-tracking: 0em;\n  --type-price-weight: 500;\n  --type-legal-size: 16px;\n  --type-legal-line: 1.35;\n  --type-legal-tracking: 0em;\n  --type-legal-weight: 400;\n  --space-1: 8px;\n  --space-2: 16px;\n  --space-3: 24px;\n  --space-4: 32px;\n  --space-6: 48px;\n  --space-8: 64px;\n  --space-12: 96px;\n  --radius-none: 0px;\n  --radius-small: 4px;\n  --radius-large: 16px;\n  --radius-pill: 999px;\n}",
+          "examples": [
+            {
+              "format": "feed",
+              "image": "/demo/lysne/02-01-feed.jpg",
+              "layers": [
+                {
+                  "align": "right",
+                  "component": "headline",
+                  "h": 14,
+                  "text": "Kvelden din, litt langsommere.",
+                  "w": 56,
+                  "x": 37,
+                  "y": 6
+                },
+                {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":56,"x":37,"y":22}
+              ],
+              "name": "The evening, launched",
+              "picture": "The bottle low on evening stone; the light wall above it, to the right, is calm.",
+              "purpose": "Launch",
+              "why": "The headline on the lightest part of the wall, the bottle keeps the lower half; no logo, since the label shows it."
+            },
+            {
+              "format": "story",
+              "image": "/demo/lysne/01-03-story.jpg",
+              "layers": [
+                {"align":"left","component":"headline","h":9,"text":"Gi bort en roligere kveld.","w":60,"x":8,"y":15},
+                {"align":"left","component":"price","h":3,"text":"Kveldssettet · 25 % av","w":60,"x":8,"y":26},
+                {"align":"left","component":"cta","h":4.5,"text":"Se settet","w":32,"x":8,"y":31},
+                {"align":"left","component":"legal","h":2,"text":"Til og med mandag 30. november.","w":60,"x":8,"y":37}
+              ],
+              "name": "The set, as an offer",
+              "picture": "The bottle low in a corner of light; the wall above it is calm.",
+              "purpose": "Offer",
+              "why": "Every word above the bottle and below the 250 pixels the platform covers at the top."
+            },
+            {
+              "format": "square",
+              "image": "/demo/lysne/04-06-square.jpg",
+              "layers": [
+                {
+                  "align": "right",
+                  "component": "headline",
+                  "h": 22,
+                  "text": "Mandelolje og squalan. Ikke noe mer.",
+                  "w": 50,
+                  "x": 44,
+                  "y": 7
+                },
+                {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":50,"x":44,"y":31}
+              ],
+              "name": "What is in it",
+              "picture": "The bottle to the left, a hand on the stone; the wall above the hand is calm.",
+              "purpose": "Product story",
+              "why": "The words to the right, over the calm wall, the bottle to the left; aligned to the right margin."
+            },
+            {
+              "format": "story",
+              "image": "/demo/lysne/07-11-story.jpg",
+              "layers": [
+                {
+                  "align": "left",
+                  "component": "headline",
+                  "h": 14,
+                  "text": "Varm oljen i hendene. Pust ut.",
+                  "w": 40,
+                  "x": 8,
+                  "y": 15
+                }
+              ],
+              "name": "An everyday post",
+              "picture": "The bottle to the right, its shadow behind it; the wall to the left is calm from top to bottom.",
+              "purpose": "Everyday post",
+              "why": "One line on the calm side, no call to action; the bottle and its shadow are left to speak."
+            },
+            {
+              "format": "feed",
+              "image": "/demo/lysne/07-10-feed.jpg",
+              "layers": [
+                {
+                  "align": "centre",
+                  "colour": "on_photo",
+                  "component": "headline",
+                  "h": 10,
+                  "text": "Til noen som fortjener kvelden.",
+                  "w": 80,
+                  "x": 10,
+                  "y": 74
+                },
+                {"align":"centre","colour":"on_photo","component":"logo","h":3,"text":"","w":22,"x":39,"y":88}
+              ],
+              "name": "A gift",
+              "picture": "Hands and a drop of oil against the wall; below them the wall is in shade. No bottle, so no label.",
+              "purpose": "Gift season",
+              "why": "Warm paper words in the shade below the hands; the wordmark, since no label shows it."
+            }
+          ],
+          "formats": [
+            {"columns":6,"format":"feed","gutterPx":24,"marginPx":72,"safeBottomPx":96,"safeTopPx":72},
+            {"columns":6,"format":"square","gutterPx":24,"marginPx":64,"safeBottomPx":64,"safeTopPx":64},
+            {"columns":6,"format":"story","gutterPx":24,"marginPx":72,"safeBottomPx":340,"safeTopPx":250},
+            {"columns":12,"format":"banner","gutterPx":32,"marginPx":96,"safeBottomPx":80,"safeTopPx":80}
+          ],
+          "gaps": [
+            "Can we have Cormorant's font files, or do we keep Cormorant Garamond?",
+            "Is there a version of the wordmark for small sizes?"
+          ],
+          "logo": {
+            "clearSpace": "The height of the L on every side.",
+            "minWidthPx": 160,
+            "placements": [
+              {"format":"banner","where":"top_left","widthPct":12},
+              {"format":"feed","where":"bottom_centre","widthPct":22}
+            ],
+            "versions": [
+              {"name":"Wordmark","use":"Night brown, on Linen or a light wall."},
+              {"name":"Wordmark, reversed","use":"Linen, on Night brown or a dark photograph."}
+            ]
+          },
+          "photoText": {
+            "rules": [
+              "Words sit where the picture is calm: the wall above the bottle, or the stone in front of it.",
+              "Never over the bottle, the cap or the label.",
+              "On a busy picture, a soft shade from the edge, never a box.",
+              "Only where the label does not show the name is the wordmark added."
+            ],
+            "scrim": "gradient",
+            "scrimOpacity": 0.3
+          },
+          "radiusPx": {"large":16,"none":0,"pill":999,"small":4},
+          "rules": {
+            "do": [
+              "Let the photograph carry the creative; words are the smaller part.",
+              "Keep words on one side, aligned to the margin.",
+              "Use Burgundy only for the call to action."
+            ],
+            "dont": [
+              "Words over the bottle or the label.",
+              "More than three layers of words.",
+              "Amber glass for words: it is too light to read."
+            ]
+          },
+          "sources": [
+            {"evidence":"Brand DNA colours, approved by Maja","part":"colours","source":"brand_dna"},
+            {"evidence":"LYSNE brand guide 2026.pdf","part":"typefaces","source":"brand_dna"},
+            {"evidence":"Fume's scale for the formats","part":"styles","source":"fume"},
+            {"evidence":"Autumn launch, the approved creatives","part":"examples","source":"memory"}
+          ],
+          "spacing": {"scale":[1,2,3,4,6,8,12],"unitPx":8},
+          "styles": [
+            {
+              "case": "none",
+              "font": "display",
+              "lineHeight": 1,
+              "name": "display",
+              "sizePx": 104,
+              "trackingEm": -0.01,
+              "weight": 400
+            },
+            {"case":"none","font":"display","lineHeight":1.05,"name":"h1","sizePx":76,"trackingEm":-0.01,"weight":400},
+            {"case":"none","font":"display","lineHeight":1.1,"name":"h2","sizePx":52,"trackingEm":0,"weight":400},
+            {"case":"none","font":"body","lineHeight":1.3,"name":"subline","sizePx":30,"trackingEm":0,"weight":400},
+            {"case":"none","font":"body","lineHeight":1.45,"name":"body","sizePx":28,"trackingEm":0,"weight":400},
+            {"case":"none","font":"body","lineHeight":1.35,"name":"caption","sizePx":22,"trackingEm":0,"weight":400},
+            {"case":"upper","font":"body","lineHeight":1.2,"name":"label","sizePx":20,"trackingEm":0.08,"weight":500},
+            {"case":"none","font":"body","lineHeight":1,"name":"cta","sizePx":26,"trackingEm":0.01,"weight":500},
+            {"case":"none","font":"body","lineHeight":1.2,"name":"price","sizePx":30,"trackingEm":0,"weight":500},
+            {"case":"none","font":"body","lineHeight":1.35,"name":"legal","sizePx":16,"trackingEm":0,"weight":400}
+          ],
+          "summary": "LYSNE's creatives are the photograph first: warm, low light and one bottle, with a few words where the wall is calm. Cormorant for what the brand says, Inter for names, sizes and buttons. Night brown words on light walls, Linen on dark ones, and Burgundy only for the call to action.",
+          "typefaces": [
+            {
+              "fallback": "Cormorant Garamond",
+              "family": "Cormorant",
+              "note": "LYSNE's own serif, from the brand guide; Cormorant Garamond on Google Fonts draws it the same.",
+              "role": "display",
+              "source": "brand",
+              "weights": [400,500]
+            },
+            {
+              "fallback": "Inter",
+              "family": "Inter",
+              "note": "Names, sizes, prices and buttons.",
+              "role": "body",
+              "source": "brand",
+              "weights": [400,500]
+            }
+          ]
+        },
+        "createdAt": "2026-10-14T10:32:00.000Z",
+        "edits": [{"at":"2026-10-14T10:32:00.000Z","by":"u-anna","from":null,"path":"components.8"}],
+        "id": "bb-design-2",
+        "kind": "design",
+        "proposals": [
+          {
+            "component": {
+              "background": "secondary",
+              "base": "badge",
+              "colour": "on_primary",
+              "name": "Wheel",
+              "paddingPx": 16,
+              "purpose": "A round mark for an offer: the figure big, a word or two with it.",
+              "radius": "pill",
+              "rules": [
+                "Beside the bottle on the calm wall, never over the label.",
+                "Only with an offer, and one per creative.",
+                "The figure and at most two words."
+              ],
+              "sample": "25 % av",
+              "sizePx": 200,
+              "style": "price"
+            },
+            "createdAt": "2026-10-14T10:37:00.000Z",
+            "from": "the set's offer story and 3 past offers",
+            "id": "bp-design-wheel",
+            "state": "open",
+            "why": "LYSNE's offers are a line of small words today. A round mark in Burgundy carries the offer at a glance, without a box over the picture."
+          }
+        ],
+        "state": "draft",
+        "version": 2,
+        "writtenAt": "2026-10-14T10:32:00.000Z"
       },
       {
         "body": {
@@ -9111,6 +10008,21 @@ anna brandBooks()
         "createdAt": "2026-10-14T09:32:00.000Z",
         "id": "bb-voice-2",
         "kind": "voice",
+        "proposals": [
+          {
+            "block": {
+              "do": "Give someone a calmer evening.",
+              "dont": "This year's most popular Christmas gift!",
+              "means": "In the gift season we give time, never things.",
+              "trait": "Giving"
+            },
+            "createdAt": "2026-10-14T09:34:00.000Z",
+            "from": "the gift lines in this version and the Autumn launch's captions",
+            "id": "bp-voice-giving",
+            "state": "open",
+            "why": "This version adds the gift season's words, and no block says how the voice sounds when it gives."
+          }
+        ],
         "state": "approved",
         "version": 2,
         "writtenAt": "2026-10-14T09:33:00.000Z"
@@ -9371,3 +10283,2279 @@ anna brandBooks()
       }
     ]
   }
+anna answerBookProposal({"answer":"add","bookId":"bb-design-2","proposalId":"bp-design-wheel"}) → events
+  {
+    "book": {
+      "ask": "Edited from version 1",
+      "askedBy": "u-anna",
+      "body": {
+        "checks": {
+          "contrast": [
+            {"need":4.5,"ok":true,"pair":"text on background","ratio":13.17},
+            {"need":4.5,"ok":true,"pair":"text on surface","ratio":14.6},
+            {"need":4.5,"ok":true,"pair":"on_primary on primary","ratio":13.17},
+            {"need":4.5,"ok":true,"pair":"cta_text on cta","ratio":10.09},
+            {"need":4.5,"ok":true,"pair":"text_muted on background","ratio":5.26},
+            {"need":4.5,"ok":true,"pair":"on_primary on secondary","ratio":10.09}
+          ],
+          "fails": [],
+          "missingRoles": []
+        },
+        "colours": [
+          {
+            "hex": "#2B1D17",
+            "name": "Night brown",
+            "role": "primary",
+            "source": "brand_dna",
+            "use": "The brand's dark: words, the logo on light."
+          },
+          {
+            "hex": "#5C1F2A",
+            "name": "Burgundy cap",
+            "role": "secondary",
+            "source": "brand_dna",
+            "use": "The cap's colour; a badge, a price."
+          },
+          {
+            "hex": "#A8642B",
+            "name": "Amber glass",
+            "role": "accent",
+            "source": "brand_dna",
+            "use": "A thin rule or a small mark, never words."
+          },
+          {
+            "hex": "#EFE6DA",
+            "name": "Linen",
+            "role": "background",
+            "source": "brand_dna",
+            "use": "A flat ground when there is no photograph."
+          },
+          {"hex":"#F7F2EA","name":"Warm paper","role":"surface","source":"fume","use":"A card or a panel on Linen."},
+          {
+            "hex": "#2B1D17",
+            "name": "Night brown",
+            "role": "text",
+            "source": "brand_dna",
+            "use": "Words on a light wall or on Linen."
+          },
+          {
+            "hex": "#6B5B4E",
+            "name": "Walnut",
+            "role": "text_muted",
+            "source": "fume",
+            "use": "A size, a caption, the small print."
+          },
+          {"hex":"#EFE6DA","name":"Linen","role":"on_primary","source":"brand_dna","use":"Words on Night brown."},
+          {"hex":"#F7F2EA","name":"Warm paper","role":"on_photo","source":"fume","use":"Words on a dark photograph."},
+          {"hex":"#5C1F2A","name":"Burgundy cap","role":"cta","source":"brand_dna","use":"The call to action's pill."},
+          {
+            "hex": "#EFE6DA",
+            "name": "Linen",
+            "role": "cta_text",
+            "source": "brand_dna",
+            "use": "The words on the call to action."
+          },
+          {"hex":"#B5A691","name":"Evening stone","role":"border","source":"brand_dna","use":"A hairline on Linen."},
+          {
+            "hex": "#3E4A5C",
+            "name": "Dusk blue",
+            "role": "support",
+            "source": "brand_dna",
+            "use": "A quiet accent in winter, sparingly."
+          }
+        ],
+        "components": [
+          {
+            "background": null,
+            "colour": "text",
+            "name": "headline",
+            "paddingPx": 0,
+            "purpose": "The one line that says the idea.",
+            "radius": "none",
+            "rules": ["One line, two at most.","Ends with a full stop."],
+            "style": "h1"
+          },
+          {
+            "background": null,
+            "colour": "text",
+            "name": "subline",
+            "paddingPx": 0,
+            "purpose": "The product as printed, or a short second line.",
+            "radius": "none",
+            "rules": ["Never longer than the headline."],
+            "style": "subline"
+          },
+          {
+            "background": null,
+            "colour": "secondary",
+            "name": "price",
+            "paddingPx": 0,
+            "purpose": "A price or an offer, stated plainly.",
+            "radius": "none",
+            "rules": ["Figures, a space before %."],
+            "style": "price"
+          },
+          {
+            "background": "cta",
+            "colour": "cta_text",
+            "name": "cta",
+            "paddingPx": 22,
+            "purpose": "The call to action, on a story or a banner.",
+            "radius": "pill",
+            "rules": ["Two words.","Never on a feed picture."],
+            "style": "cta"
+          },
+          {
+            "background": "secondary",
+            "colour": "on_primary",
+            "name": "badge",
+            "paddingPx": 12,
+            "purpose": "A small mark: a set, a season.",
+            "radius": "small",
+            "rules": ["One per creative at most."],
+            "style": "label"
+          },
+          {
+            "background": null,
+            "colour": "text_muted",
+            "name": "product_name",
+            "paddingPx": 0,
+            "purpose": "The name and size, as on the label.",
+            "radius": "none",
+            "rules": ["As printed: Night Body Oil · 100 ml."],
+            "style": "label"
+          },
+          {
+            "background": null,
+            "colour": "text_muted",
+            "name": "legal",
+            "paddingPx": 0,
+            "purpose": "The offer's terms.",
+            "radius": "none",
+            "rules": ["Only when the offer needs it."],
+            "style": "legal"
+          },
+          {
+            "background": null,
+            "colour": "primary",
+            "name": "logo",
+            "paddingPx": 0,
+            "purpose": "The wordmark, where the label does not show it.",
+            "radius": "none",
+            "rules": ["Never twice on one creative."],
+            "style": "label"
+          },
+          {
+            "background": null,
+            "base": "text",
+            "colour": "text_muted",
+            "name": "Ingredients",
+            "paddingPx": 0,
+            "purpose": "What is in the oil, as the label says it, under the product's name.",
+            "radius": "none",
+            "rules": ["Only on a product story.","A middle dot between the ingredients, as on the label."],
+            "sample": "Mandelolje · Squalan",
+            "style": "caption"
+          },
+          {
+            "background": "secondary",
+            "base": "badge",
+            "colour": "on_primary",
+            "name": "Wheel",
+            "paddingPx": 16,
+            "purpose": "A round mark for an offer: the figure big, a word or two with it.",
+            "radius": "pill",
+            "rules": [
+              "Beside the bottle on the calm wall, never over the label.",
+              "Only with an offer, and one per creative.",
+              "The figure and at most two words."
+            ],
+            "sample": "25 % av",
+            "sizePx": 200,
+            "style": "price"
+          }
+        ],
+        "css": ".brand {\n  --color-primary: #2B1D17;\n  --color-secondary: #5C1F2A;\n  --color-accent: #A8642B;\n  --color-background: #EFE6DA;\n  --color-surface: #F7F2EA;\n  --color-text: #2B1D17;\n  --color-text-muted: #6B5B4E;\n  --color-on-primary: #EFE6DA;\n  --color-on-photo: #F7F2EA;\n  --color-cta: #5C1F2A;\n  --color-cta-text: #EFE6DA;\n  --color-border: #B5A691;\n  --color-support: #3E4A5C;\n  --font-display: \"Cormorant\", \"Cormorant Garamond\", serif;\n  --font-body: \"Inter\", sans-serif;\n  --type-display-size: 104px;\n  --type-display-line: 1;\n  --type-display-tracking: -0.01em;\n  --type-display-weight: 400;\n  --type-h1-size: 76px;\n  --type-h1-line: 1.05;\n  --type-h1-tracking: -0.01em;\n  --type-h1-weight: 400;\n  --type-h2-size: 52px;\n  --type-h2-line: 1.1;\n  --type-h2-tracking: 0em;\n  --type-h2-weight: 400;\n  --type-subline-size: 30px;\n  --type-subline-line: 1.3;\n  --type-subline-tracking: 0em;\n  --type-subline-weight: 400;\n  --type-body-size: 28px;\n  --type-body-line: 1.45;\n  --type-body-tracking: 0em;\n  --type-body-weight: 400;\n  --type-caption-size: 22px;\n  --type-caption-line: 1.35;\n  --type-caption-tracking: 0em;\n  --type-caption-weight: 400;\n  --type-label-size: 20px;\n  --type-label-line: 1.2;\n  --type-label-tracking: 0.08em;\n  --type-label-weight: 500;\n  --type-cta-size: 26px;\n  --type-cta-line: 1;\n  --type-cta-tracking: 0.01em;\n  --type-cta-weight: 500;\n  --type-price-size: 30px;\n  --type-price-line: 1.2;\n  --type-price-tracking: 0em;\n  --type-price-weight: 500;\n  --type-legal-size: 16px;\n  --type-legal-line: 1.35;\n  --type-legal-tracking: 0em;\n  --type-legal-weight: 400;\n  --space-1: 8px;\n  --space-2: 16px;\n  --space-3: 24px;\n  --space-4: 32px;\n  --space-6: 48px;\n  --space-8: 64px;\n  --space-12: 96px;\n  --radius-none: 0px;\n  --radius-small: 4px;\n  --radius-large: 16px;\n  --radius-pill: 999px;\n}",
+        "examples": [
+          {
+            "format": "feed",
+            "image": "/demo/lysne/02-01-feed.jpg",
+            "layers": [
+              {
+                "align": "right",
+                "component": "headline",
+                "h": 14,
+                "text": "Kvelden din, litt langsommere.",
+                "w": 56,
+                "x": 37,
+                "y": 6
+              },
+              {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":56,"x":37,"y":22}
+            ],
+            "name": "The evening, launched",
+            "picture": "The bottle low on evening stone; the light wall above it, to the right, is calm.",
+            "purpose": "Launch",
+            "why": "The headline on the lightest part of the wall, the bottle keeps the lower half; no logo, since the label shows it."
+          },
+          {
+            "format": "story",
+            "image": "/demo/lysne/01-03-story.jpg",
+            "layers": [
+              {"align":"left","component":"headline","h":9,"text":"Gi bort en roligere kveld.","w":60,"x":8,"y":15},
+              {"align":"left","component":"price","h":3,"text":"Kveldssettet · 25 % av","w":60,"x":8,"y":26},
+              {"align":"left","component":"cta","h":4.5,"text":"Se settet","w":32,"x":8,"y":31},
+              {"align":"left","component":"legal","h":2,"text":"Til og med mandag 30. november.","w":60,"x":8,"y":37}
+            ],
+            "name": "The set, as an offer",
+            "picture": "The bottle low in a corner of light; the wall above it is calm.",
+            "purpose": "Offer",
+            "why": "Every word above the bottle and below the 250 pixels the platform covers at the top."
+          },
+          {
+            "format": "square",
+            "image": "/demo/lysne/04-06-square.jpg",
+            "layers": [
+              {
+                "align": "right",
+                "component": "headline",
+                "h": 22,
+                "text": "Mandelolje og squalan. Ikke noe mer.",
+                "w": 50,
+                "x": 44,
+                "y": 7
+              },
+              {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":50,"x":44,"y":31}
+            ],
+            "name": "What is in it",
+            "picture": "The bottle to the left, a hand on the stone; the wall above the hand is calm.",
+            "purpose": "Product story",
+            "why": "The words to the right, over the calm wall, the bottle to the left; aligned to the right margin."
+          },
+          {
+            "format": "story",
+            "image": "/demo/lysne/07-11-story.jpg",
+            "layers": [{"align":"left","component":"headline","h":14,"text":"Varm oljen i hendene. Pust ut.","w":40,"x":8,"y":15}],
+            "name": "An everyday post",
+            "picture": "The bottle to the right, its shadow behind it; the wall to the left is calm from top to bottom.",
+            "purpose": "Everyday post",
+            "why": "One line on the calm side, no call to action; the bottle and its shadow are left to speak."
+          },
+          {
+            "format": "feed",
+            "image": "/demo/lysne/07-10-feed.jpg",
+            "layers": [
+              {
+                "align": "centre",
+                "colour": "on_photo",
+                "component": "headline",
+                "h": 10,
+                "text": "Til noen som fortjener kvelden.",
+                "w": 80,
+                "x": 10,
+                "y": 74
+              },
+              {"align":"centre","colour":"on_photo","component":"logo","h":3,"text":"","w":22,"x":39,"y":88}
+            ],
+            "name": "A gift",
+            "picture": "Hands and a drop of oil against the wall; below them the wall is in shade. No bottle, so no label.",
+            "purpose": "Gift season",
+            "why": "Warm paper words in the shade below the hands; the wordmark, since no label shows it."
+          }
+        ],
+        "formats": [
+          {"columns":6,"format":"feed","gutterPx":24,"marginPx":72,"safeBottomPx":96,"safeTopPx":72},
+          {"columns":6,"format":"square","gutterPx":24,"marginPx":64,"safeBottomPx":64,"safeTopPx":64},
+          {"columns":6,"format":"story","gutterPx":24,"marginPx":72,"safeBottomPx":340,"safeTopPx":250},
+          {"columns":12,"format":"banner","gutterPx":32,"marginPx":96,"safeBottomPx":80,"safeTopPx":80}
+        ],
+        "gaps": [
+          "Can we have Cormorant's font files, or do we keep Cormorant Garamond?",
+          "Is there a version of the wordmark for small sizes?"
+        ],
+        "logo": {
+          "clearSpace": "The height of the L on every side.",
+          "minWidthPx": 160,
+          "placements": [{"format":"banner","where":"top_left","widthPct":12},{"format":"feed","where":"bottom_centre","widthPct":22}],
+          "versions": [
+            {"name":"Wordmark","use":"Night brown, on Linen or a light wall."},
+            {"name":"Wordmark, reversed","use":"Linen, on Night brown or a dark photograph."}
+          ]
+        },
+        "photoText": {
+          "rules": [
+            "Words sit where the picture is calm: the wall above the bottle, or the stone in front of it.",
+            "Never over the bottle, the cap or the label.",
+            "On a busy picture, a soft shade from the edge, never a box.",
+            "Only where the label does not show the name is the wordmark added."
+          ],
+          "scrim": "gradient",
+          "scrimOpacity": 0.3
+        },
+        "radiusPx": {"large":16,"none":0,"pill":999,"small":4},
+        "rules": {
+          "do": [
+            "Let the photograph carry the creative; words are the smaller part.",
+            "Keep words on one side, aligned to the margin.",
+            "Use Burgundy only for the call to action."
+          ],
+          "dont": [
+            "Words over the bottle or the label.",
+            "More than three layers of words.",
+            "Amber glass for words: it is too light to read."
+          ]
+        },
+        "sources": [
+          {"evidence":"Brand DNA colours, approved by Maja","part":"colours","source":"brand_dna"},
+          {"evidence":"LYSNE brand guide 2026.pdf","part":"typefaces","source":"brand_dna"},
+          {"evidence":"Fume's scale for the formats","part":"styles","source":"fume"},
+          {"evidence":"Autumn launch, the approved creatives","part":"examples","source":"memory"}
+        ],
+        "spacing": {"scale":[1,2,3,4,6,8,12],"unitPx":8},
+        "styles": [
+          {"case":"none","font":"display","lineHeight":1,"name":"display","sizePx":104,"trackingEm":-0.01,"weight":400},
+          {"case":"none","font":"display","lineHeight":1.05,"name":"h1","sizePx":76,"trackingEm":-0.01,"weight":400},
+          {"case":"none","font":"display","lineHeight":1.1,"name":"h2","sizePx":52,"trackingEm":0,"weight":400},
+          {"case":"none","font":"body","lineHeight":1.3,"name":"subline","sizePx":30,"trackingEm":0,"weight":400},
+          {"case":"none","font":"body","lineHeight":1.45,"name":"body","sizePx":28,"trackingEm":0,"weight":400},
+          {"case":"none","font":"body","lineHeight":1.35,"name":"caption","sizePx":22,"trackingEm":0,"weight":400},
+          {"case":"upper","font":"body","lineHeight":1.2,"name":"label","sizePx":20,"trackingEm":0.08,"weight":500},
+          {"case":"none","font":"body","lineHeight":1,"name":"cta","sizePx":26,"trackingEm":0.01,"weight":500},
+          {"case":"none","font":"body","lineHeight":1.2,"name":"price","sizePx":30,"trackingEm":0,"weight":500},
+          {"case":"none","font":"body","lineHeight":1.35,"name":"legal","sizePx":16,"trackingEm":0,"weight":400}
+        ],
+        "summary": "LYSNE's creatives are the photograph first: warm, low light and one bottle, with a few words where the wall is calm. Cormorant for what the brand says, Inter for names, sizes and buttons. Night brown words on light walls, Linen on dark ones, and Burgundy only for the call to action.",
+        "typefaces": [
+          {
+            "fallback": "Cormorant Garamond",
+            "family": "Cormorant",
+            "note": "LYSNE's own serif, from the brand guide; Cormorant Garamond on Google Fonts draws it the same.",
+            "role": "display",
+            "source": "brand",
+            "weights": [400,500]
+          },
+          {
+            "fallback": "Inter",
+            "family": "Inter",
+            "note": "Names, sizes, prices and buttons.",
+            "role": "body",
+            "source": "brand",
+            "weights": [400,500]
+          }
+        ]
+      },
+      "createdAt": "2026-10-14T10:32:00.000Z",
+      "edits": [
+        {"at":"2026-10-14T10:32:00.000Z","by":"u-anna","from":null,"path":"components.8"},
+        {"at":"2026-10-14T12:32:01.000Z","by":"u-anna","from":null,"path":"components.9","proposal":"bp-design-wheel"}
+      ],
+      "id": "bb-design-2",
+      "kind": "design",
+      "proposals": [
+        {
+          "answeredAt": "2026-10-14T12:32:01.000Z",
+          "answeredBy": "u-anna",
+          "component": {
+            "background": "secondary",
+            "base": "badge",
+            "colour": "on_primary",
+            "name": "Wheel",
+            "paddingPx": 16,
+            "purpose": "A round mark for an offer: the figure big, a word or two with it.",
+            "radius": "pill",
+            "rules": [
+              "Beside the bottle on the calm wall, never over the label.",
+              "Only with an offer, and one per creative.",
+              "The figure and at most two words."
+            ],
+            "sample": "25 % av",
+            "sizePx": 200,
+            "style": "price"
+          },
+          "createdAt": "2026-10-14T10:37:00.000Z",
+          "from": "the set's offer story and 3 past offers",
+          "id": "bp-design-wheel",
+          "state": "added",
+          "why": "LYSNE's offers are a line of small words today. A round mark in Burgundy carries the offer at a glance, without a box over the picture."
+        }
+      ],
+      "state": "draft",
+      "version": 2,
+      "writtenAt": "2026-10-14T10:32:00.000Z"
+    },
+    "type": "book.state"
+  }
+anna answerBookProposal({"answer":"add","bookId":"bb-design-2","proposalId":"bp-design-wheel"})
+  {
+    "ask": "Edited from version 1",
+    "askedBy": "u-anna",
+    "body": {
+      "checks": {
+        "contrast": [
+          {"need":4.5,"ok":true,"pair":"text on background","ratio":13.17},
+          {"need":4.5,"ok":true,"pair":"text on surface","ratio":14.6},
+          {"need":4.5,"ok":true,"pair":"on_primary on primary","ratio":13.17},
+          {"need":4.5,"ok":true,"pair":"cta_text on cta","ratio":10.09},
+          {"need":4.5,"ok":true,"pair":"text_muted on background","ratio":5.26},
+          {"need":4.5,"ok":true,"pair":"on_primary on secondary","ratio":10.09}
+        ],
+        "fails": [],
+        "missingRoles": []
+      },
+      "colours": [
+        {
+          "hex": "#2B1D17",
+          "name": "Night brown",
+          "role": "primary",
+          "source": "brand_dna",
+          "use": "The brand's dark: words, the logo on light."
+        },
+        {
+          "hex": "#5C1F2A",
+          "name": "Burgundy cap",
+          "role": "secondary",
+          "source": "brand_dna",
+          "use": "The cap's colour; a badge, a price."
+        },
+        {
+          "hex": "#A8642B",
+          "name": "Amber glass",
+          "role": "accent",
+          "source": "brand_dna",
+          "use": "A thin rule or a small mark, never words."
+        },
+        {
+          "hex": "#EFE6DA",
+          "name": "Linen",
+          "role": "background",
+          "source": "brand_dna",
+          "use": "A flat ground when there is no photograph."
+        },
+        {"hex":"#F7F2EA","name":"Warm paper","role":"surface","source":"fume","use":"A card or a panel on Linen."},
+        {
+          "hex": "#2B1D17",
+          "name": "Night brown",
+          "role": "text",
+          "source": "brand_dna",
+          "use": "Words on a light wall or on Linen."
+        },
+        {
+          "hex": "#6B5B4E",
+          "name": "Walnut",
+          "role": "text_muted",
+          "source": "fume",
+          "use": "A size, a caption, the small print."
+        },
+        {"hex":"#EFE6DA","name":"Linen","role":"on_primary","source":"brand_dna","use":"Words on Night brown."},
+        {"hex":"#F7F2EA","name":"Warm paper","role":"on_photo","source":"fume","use":"Words on a dark photograph."},
+        {"hex":"#5C1F2A","name":"Burgundy cap","role":"cta","source":"brand_dna","use":"The call to action's pill."},
+        {"hex":"#EFE6DA","name":"Linen","role":"cta_text","source":"brand_dna","use":"The words on the call to action."},
+        {"hex":"#B5A691","name":"Evening stone","role":"border","source":"brand_dna","use":"A hairline on Linen."},
+        {
+          "hex": "#3E4A5C",
+          "name": "Dusk blue",
+          "role": "support",
+          "source": "brand_dna",
+          "use": "A quiet accent in winter, sparingly."
+        }
+      ],
+      "components": [
+        {
+          "background": null,
+          "colour": "text",
+          "name": "headline",
+          "paddingPx": 0,
+          "purpose": "The one line that says the idea.",
+          "radius": "none",
+          "rules": ["One line, two at most.","Ends with a full stop."],
+          "style": "h1"
+        },
+        {
+          "background": null,
+          "colour": "text",
+          "name": "subline",
+          "paddingPx": 0,
+          "purpose": "The product as printed, or a short second line.",
+          "radius": "none",
+          "rules": ["Never longer than the headline."],
+          "style": "subline"
+        },
+        {
+          "background": null,
+          "colour": "secondary",
+          "name": "price",
+          "paddingPx": 0,
+          "purpose": "A price or an offer, stated plainly.",
+          "radius": "none",
+          "rules": ["Figures, a space before %."],
+          "style": "price"
+        },
+        {
+          "background": "cta",
+          "colour": "cta_text",
+          "name": "cta",
+          "paddingPx": 22,
+          "purpose": "The call to action, on a story or a banner.",
+          "radius": "pill",
+          "rules": ["Two words.","Never on a feed picture."],
+          "style": "cta"
+        },
+        {
+          "background": "secondary",
+          "colour": "on_primary",
+          "name": "badge",
+          "paddingPx": 12,
+          "purpose": "A small mark: a set, a season.",
+          "radius": "small",
+          "rules": ["One per creative at most."],
+          "style": "label"
+        },
+        {
+          "background": null,
+          "colour": "text_muted",
+          "name": "product_name",
+          "paddingPx": 0,
+          "purpose": "The name and size, as on the label.",
+          "radius": "none",
+          "rules": ["As printed: Night Body Oil · 100 ml."],
+          "style": "label"
+        },
+        {
+          "background": null,
+          "colour": "text_muted",
+          "name": "legal",
+          "paddingPx": 0,
+          "purpose": "The offer's terms.",
+          "radius": "none",
+          "rules": ["Only when the offer needs it."],
+          "style": "legal"
+        },
+        {
+          "background": null,
+          "colour": "primary",
+          "name": "logo",
+          "paddingPx": 0,
+          "purpose": "The wordmark, where the label does not show it.",
+          "radius": "none",
+          "rules": ["Never twice on one creative."],
+          "style": "label"
+        },
+        {
+          "background": null,
+          "base": "text",
+          "colour": "text_muted",
+          "name": "Ingredients",
+          "paddingPx": 0,
+          "purpose": "What is in the oil, as the label says it, under the product's name.",
+          "radius": "none",
+          "rules": ["Only on a product story.","A middle dot between the ingredients, as on the label."],
+          "sample": "Mandelolje · Squalan",
+          "style": "caption"
+        },
+        {
+          "background": "secondary",
+          "base": "badge",
+          "colour": "on_primary",
+          "name": "Wheel",
+          "paddingPx": 16,
+          "purpose": "A round mark for an offer: the figure big, a word or two with it.",
+          "radius": "pill",
+          "rules": [
+            "Beside the bottle on the calm wall, never over the label.",
+            "Only with an offer, and one per creative.",
+            "The figure and at most two words."
+          ],
+          "sample": "25 % av",
+          "sizePx": 200,
+          "style": "price"
+        }
+      ],
+      "css": ".brand {\n  --color-primary: #2B1D17;\n  --color-secondary: #5C1F2A;\n  --color-accent: #A8642B;\n  --color-background: #EFE6DA;\n  --color-surface: #F7F2EA;\n  --color-text: #2B1D17;\n  --color-text-muted: #6B5B4E;\n  --color-on-primary: #EFE6DA;\n  --color-on-photo: #F7F2EA;\n  --color-cta: #5C1F2A;\n  --color-cta-text: #EFE6DA;\n  --color-border: #B5A691;\n  --color-support: #3E4A5C;\n  --font-display: \"Cormorant\", \"Cormorant Garamond\", serif;\n  --font-body: \"Inter\", sans-serif;\n  --type-display-size: 104px;\n  --type-display-line: 1;\n  --type-display-tracking: -0.01em;\n  --type-display-weight: 400;\n  --type-h1-size: 76px;\n  --type-h1-line: 1.05;\n  --type-h1-tracking: -0.01em;\n  --type-h1-weight: 400;\n  --type-h2-size: 52px;\n  --type-h2-line: 1.1;\n  --type-h2-tracking: 0em;\n  --type-h2-weight: 400;\n  --type-subline-size: 30px;\n  --type-subline-line: 1.3;\n  --type-subline-tracking: 0em;\n  --type-subline-weight: 400;\n  --type-body-size: 28px;\n  --type-body-line: 1.45;\n  --type-body-tracking: 0em;\n  --type-body-weight: 400;\n  --type-caption-size: 22px;\n  --type-caption-line: 1.35;\n  --type-caption-tracking: 0em;\n  --type-caption-weight: 400;\n  --type-label-size: 20px;\n  --type-label-line: 1.2;\n  --type-label-tracking: 0.08em;\n  --type-label-weight: 500;\n  --type-cta-size: 26px;\n  --type-cta-line: 1;\n  --type-cta-tracking: 0.01em;\n  --type-cta-weight: 500;\n  --type-price-size: 30px;\n  --type-price-line: 1.2;\n  --type-price-tracking: 0em;\n  --type-price-weight: 500;\n  --type-legal-size: 16px;\n  --type-legal-line: 1.35;\n  --type-legal-tracking: 0em;\n  --type-legal-weight: 400;\n  --space-1: 8px;\n  --space-2: 16px;\n  --space-3: 24px;\n  --space-4: 32px;\n  --space-6: 48px;\n  --space-8: 64px;\n  --space-12: 96px;\n  --radius-none: 0px;\n  --radius-small: 4px;\n  --radius-large: 16px;\n  --radius-pill: 999px;\n}",
+      "examples": [
+        {
+          "format": "feed",
+          "image": "/demo/lysne/02-01-feed.jpg",
+          "layers": [
+            {"align":"right","component":"headline","h":14,"text":"Kvelden din, litt langsommere.","w":56,"x":37,"y":6},
+            {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":56,"x":37,"y":22}
+          ],
+          "name": "The evening, launched",
+          "picture": "The bottle low on evening stone; the light wall above it, to the right, is calm.",
+          "purpose": "Launch",
+          "why": "The headline on the lightest part of the wall, the bottle keeps the lower half; no logo, since the label shows it."
+        },
+        {
+          "format": "story",
+          "image": "/demo/lysne/01-03-story.jpg",
+          "layers": [
+            {"align":"left","component":"headline","h":9,"text":"Gi bort en roligere kveld.","w":60,"x":8,"y":15},
+            {"align":"left","component":"price","h":3,"text":"Kveldssettet · 25 % av","w":60,"x":8,"y":26},
+            {"align":"left","component":"cta","h":4.5,"text":"Se settet","w":32,"x":8,"y":31},
+            {"align":"left","component":"legal","h":2,"text":"Til og med mandag 30. november.","w":60,"x":8,"y":37}
+          ],
+          "name": "The set, as an offer",
+          "picture": "The bottle low in a corner of light; the wall above it is calm.",
+          "purpose": "Offer",
+          "why": "Every word above the bottle and below the 250 pixels the platform covers at the top."
+        },
+        {
+          "format": "square",
+          "image": "/demo/lysne/04-06-square.jpg",
+          "layers": [
+            {
+              "align": "right",
+              "component": "headline",
+              "h": 22,
+              "text": "Mandelolje og squalan. Ikke noe mer.",
+              "w": 50,
+              "x": 44,
+              "y": 7
+            },
+            {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":50,"x":44,"y":31}
+          ],
+          "name": "What is in it",
+          "picture": "The bottle to the left, a hand on the stone; the wall above the hand is calm.",
+          "purpose": "Product story",
+          "why": "The words to the right, over the calm wall, the bottle to the left; aligned to the right margin."
+        },
+        {
+          "format": "story",
+          "image": "/demo/lysne/07-11-story.jpg",
+          "layers": [{"align":"left","component":"headline","h":14,"text":"Varm oljen i hendene. Pust ut.","w":40,"x":8,"y":15}],
+          "name": "An everyday post",
+          "picture": "The bottle to the right, its shadow behind it; the wall to the left is calm from top to bottom.",
+          "purpose": "Everyday post",
+          "why": "One line on the calm side, no call to action; the bottle and its shadow are left to speak."
+        },
+        {
+          "format": "feed",
+          "image": "/demo/lysne/07-10-feed.jpg",
+          "layers": [
+            {
+              "align": "centre",
+              "colour": "on_photo",
+              "component": "headline",
+              "h": 10,
+              "text": "Til noen som fortjener kvelden.",
+              "w": 80,
+              "x": 10,
+              "y": 74
+            },
+            {"align":"centre","colour":"on_photo","component":"logo","h":3,"text":"","w":22,"x":39,"y":88}
+          ],
+          "name": "A gift",
+          "picture": "Hands and a drop of oil against the wall; below them the wall is in shade. No bottle, so no label.",
+          "purpose": "Gift season",
+          "why": "Warm paper words in the shade below the hands; the wordmark, since no label shows it."
+        }
+      ],
+      "formats": [
+        {"columns":6,"format":"feed","gutterPx":24,"marginPx":72,"safeBottomPx":96,"safeTopPx":72},
+        {"columns":6,"format":"square","gutterPx":24,"marginPx":64,"safeBottomPx":64,"safeTopPx":64},
+        {"columns":6,"format":"story","gutterPx":24,"marginPx":72,"safeBottomPx":340,"safeTopPx":250},
+        {"columns":12,"format":"banner","gutterPx":32,"marginPx":96,"safeBottomPx":80,"safeTopPx":80}
+      ],
+      "gaps": [
+        "Can we have Cormorant's font files, or do we keep Cormorant Garamond?",
+        "Is there a version of the wordmark for small sizes?"
+      ],
+      "logo": {
+        "clearSpace": "The height of the L on every side.",
+        "minWidthPx": 160,
+        "placements": [{"format":"banner","where":"top_left","widthPct":12},{"format":"feed","where":"bottom_centre","widthPct":22}],
+        "versions": [
+          {"name":"Wordmark","use":"Night brown, on Linen or a light wall."},
+          {"name":"Wordmark, reversed","use":"Linen, on Night brown or a dark photograph."}
+        ]
+      },
+      "photoText": {
+        "rules": [
+          "Words sit where the picture is calm: the wall above the bottle, or the stone in front of it.",
+          "Never over the bottle, the cap or the label.",
+          "On a busy picture, a soft shade from the edge, never a box.",
+          "Only where the label does not show the name is the wordmark added."
+        ],
+        "scrim": "gradient",
+        "scrimOpacity": 0.3
+      },
+      "radiusPx": {"large":16,"none":0,"pill":999,"small":4},
+      "rules": {
+        "do": [
+          "Let the photograph carry the creative; words are the smaller part.",
+          "Keep words on one side, aligned to the margin.",
+          "Use Burgundy only for the call to action."
+        ],
+        "dont": [
+          "Words over the bottle or the label.",
+          "More than three layers of words.",
+          "Amber glass for words: it is too light to read."
+        ]
+      },
+      "sources": [
+        {"evidence":"Brand DNA colours, approved by Maja","part":"colours","source":"brand_dna"},
+        {"evidence":"LYSNE brand guide 2026.pdf","part":"typefaces","source":"brand_dna"},
+        {"evidence":"Fume's scale for the formats","part":"styles","source":"fume"},
+        {"evidence":"Autumn launch, the approved creatives","part":"examples","source":"memory"}
+      ],
+      "spacing": {"scale":[1,2,3,4,6,8,12],"unitPx":8},
+      "styles": [
+        {"case":"none","font":"display","lineHeight":1,"name":"display","sizePx":104,"trackingEm":-0.01,"weight":400},
+        {"case":"none","font":"display","lineHeight":1.05,"name":"h1","sizePx":76,"trackingEm":-0.01,"weight":400},
+        {"case":"none","font":"display","lineHeight":1.1,"name":"h2","sizePx":52,"trackingEm":0,"weight":400},
+        {"case":"none","font":"body","lineHeight":1.3,"name":"subline","sizePx":30,"trackingEm":0,"weight":400},
+        {"case":"none","font":"body","lineHeight":1.45,"name":"body","sizePx":28,"trackingEm":0,"weight":400},
+        {"case":"none","font":"body","lineHeight":1.35,"name":"caption","sizePx":22,"trackingEm":0,"weight":400},
+        {"case":"upper","font":"body","lineHeight":1.2,"name":"label","sizePx":20,"trackingEm":0.08,"weight":500},
+        {"case":"none","font":"body","lineHeight":1,"name":"cta","sizePx":26,"trackingEm":0.01,"weight":500},
+        {"case":"none","font":"body","lineHeight":1.2,"name":"price","sizePx":30,"trackingEm":0,"weight":500},
+        {"case":"none","font":"body","lineHeight":1.35,"name":"legal","sizePx":16,"trackingEm":0,"weight":400}
+      ],
+      "summary": "LYSNE's creatives are the photograph first: warm, low light and one bottle, with a few words where the wall is calm. Cormorant for what the brand says, Inter for names, sizes and buttons. Night brown words on light walls, Linen on dark ones, and Burgundy only for the call to action.",
+      "typefaces": [
+        {
+          "fallback": "Cormorant Garamond",
+          "family": "Cormorant",
+          "note": "LYSNE's own serif, from the brand guide; Cormorant Garamond on Google Fonts draws it the same.",
+          "role": "display",
+          "source": "brand",
+          "weights": [400,500]
+        },
+        {
+          "fallback": "Inter",
+          "family": "Inter",
+          "note": "Names, sizes, prices and buttons.",
+          "role": "body",
+          "source": "brand",
+          "weights": [400,500]
+        }
+      ]
+    },
+    "createdAt": "2026-10-14T10:32:00.000Z",
+    "edits": [
+      {"at":"2026-10-14T10:32:00.000Z","by":"u-anna","from":null,"path":"components.8"},
+      {"at":"2026-10-14T12:32:01.000Z","by":"u-anna","from":null,"path":"components.9","proposal":"bp-design-wheel"}
+    ],
+    "id": "bb-design-2",
+    "kind": "design",
+    "proposals": [
+      {
+        "answeredAt": "2026-10-14T12:32:01.000Z",
+        "answeredBy": "u-anna",
+        "component": {
+          "background": "secondary",
+          "base": "badge",
+          "colour": "on_primary",
+          "name": "Wheel",
+          "paddingPx": 16,
+          "purpose": "A round mark for an offer: the figure big, a word or two with it.",
+          "radius": "pill",
+          "rules": [
+            "Beside the bottle on the calm wall, never over the label.",
+            "Only with an offer, and one per creative.",
+            "The figure and at most two words."
+          ],
+          "sample": "25 % av",
+          "sizePx": 200,
+          "style": "price"
+        },
+        "createdAt": "2026-10-14T10:37:00.000Z",
+        "from": "the set's offer story and 3 past offers",
+        "id": "bp-design-wheel",
+        "state": "added",
+        "why": "LYSNE's offers are a line of small words today. A round mark in Burgundy carries the offer at a glance, without a box over the picture."
+      }
+    ],
+    "state": "draft",
+    "version": 2,
+    "writtenAt": "2026-10-14T10:32:00.000Z"
+  }
+anna answerBookProposal({"answer":"open","bookId":"bb-design-2","proposalId":"bp-design-wheel"}) → events
+  {
+    "book": {
+      "ask": "Edited from version 1",
+      "askedBy": "u-anna",
+      "body": {
+        "checks": {
+          "contrast": [
+            {"need":4.5,"ok":true,"pair":"text on background","ratio":13.17},
+            {"need":4.5,"ok":true,"pair":"text on surface","ratio":14.6},
+            {"need":4.5,"ok":true,"pair":"on_primary on primary","ratio":13.17},
+            {"need":4.5,"ok":true,"pair":"cta_text on cta","ratio":10.09},
+            {"need":4.5,"ok":true,"pair":"text_muted on background","ratio":5.26},
+            {"need":4.5,"ok":true,"pair":"on_primary on secondary","ratio":10.09}
+          ],
+          "fails": [],
+          "missingRoles": []
+        },
+        "colours": [
+          {
+            "hex": "#2B1D17",
+            "name": "Night brown",
+            "role": "primary",
+            "source": "brand_dna",
+            "use": "The brand's dark: words, the logo on light."
+          },
+          {
+            "hex": "#5C1F2A",
+            "name": "Burgundy cap",
+            "role": "secondary",
+            "source": "brand_dna",
+            "use": "The cap's colour; a badge, a price."
+          },
+          {
+            "hex": "#A8642B",
+            "name": "Amber glass",
+            "role": "accent",
+            "source": "brand_dna",
+            "use": "A thin rule or a small mark, never words."
+          },
+          {
+            "hex": "#EFE6DA",
+            "name": "Linen",
+            "role": "background",
+            "source": "brand_dna",
+            "use": "A flat ground when there is no photograph."
+          },
+          {"hex":"#F7F2EA","name":"Warm paper","role":"surface","source":"fume","use":"A card or a panel on Linen."},
+          {
+            "hex": "#2B1D17",
+            "name": "Night brown",
+            "role": "text",
+            "source": "brand_dna",
+            "use": "Words on a light wall or on Linen."
+          },
+          {
+            "hex": "#6B5B4E",
+            "name": "Walnut",
+            "role": "text_muted",
+            "source": "fume",
+            "use": "A size, a caption, the small print."
+          },
+          {"hex":"#EFE6DA","name":"Linen","role":"on_primary","source":"brand_dna","use":"Words on Night brown."},
+          {"hex":"#F7F2EA","name":"Warm paper","role":"on_photo","source":"fume","use":"Words on a dark photograph."},
+          {"hex":"#5C1F2A","name":"Burgundy cap","role":"cta","source":"brand_dna","use":"The call to action's pill."},
+          {
+            "hex": "#EFE6DA",
+            "name": "Linen",
+            "role": "cta_text",
+            "source": "brand_dna",
+            "use": "The words on the call to action."
+          },
+          {"hex":"#B5A691","name":"Evening stone","role":"border","source":"brand_dna","use":"A hairline on Linen."},
+          {
+            "hex": "#3E4A5C",
+            "name": "Dusk blue",
+            "role": "support",
+            "source": "brand_dna",
+            "use": "A quiet accent in winter, sparingly."
+          }
+        ],
+        "components": [
+          {
+            "background": null,
+            "colour": "text",
+            "name": "headline",
+            "paddingPx": 0,
+            "purpose": "The one line that says the idea.",
+            "radius": "none",
+            "rules": ["One line, two at most.","Ends with a full stop."],
+            "style": "h1"
+          },
+          {
+            "background": null,
+            "colour": "text",
+            "name": "subline",
+            "paddingPx": 0,
+            "purpose": "The product as printed, or a short second line.",
+            "radius": "none",
+            "rules": ["Never longer than the headline."],
+            "style": "subline"
+          },
+          {
+            "background": null,
+            "colour": "secondary",
+            "name": "price",
+            "paddingPx": 0,
+            "purpose": "A price or an offer, stated plainly.",
+            "radius": "none",
+            "rules": ["Figures, a space before %."],
+            "style": "price"
+          },
+          {
+            "background": "cta",
+            "colour": "cta_text",
+            "name": "cta",
+            "paddingPx": 22,
+            "purpose": "The call to action, on a story or a banner.",
+            "radius": "pill",
+            "rules": ["Two words.","Never on a feed picture."],
+            "style": "cta"
+          },
+          {
+            "background": "secondary",
+            "colour": "on_primary",
+            "name": "badge",
+            "paddingPx": 12,
+            "purpose": "A small mark: a set, a season.",
+            "radius": "small",
+            "rules": ["One per creative at most."],
+            "style": "label"
+          },
+          {
+            "background": null,
+            "colour": "text_muted",
+            "name": "product_name",
+            "paddingPx": 0,
+            "purpose": "The name and size, as on the label.",
+            "radius": "none",
+            "rules": ["As printed: Night Body Oil · 100 ml."],
+            "style": "label"
+          },
+          {
+            "background": null,
+            "colour": "text_muted",
+            "name": "legal",
+            "paddingPx": 0,
+            "purpose": "The offer's terms.",
+            "radius": "none",
+            "rules": ["Only when the offer needs it."],
+            "style": "legal"
+          },
+          {
+            "background": null,
+            "colour": "primary",
+            "name": "logo",
+            "paddingPx": 0,
+            "purpose": "The wordmark, where the label does not show it.",
+            "radius": "none",
+            "rules": ["Never twice on one creative."],
+            "style": "label"
+          },
+          {
+            "background": null,
+            "base": "text",
+            "colour": "text_muted",
+            "name": "Ingredients",
+            "paddingPx": 0,
+            "purpose": "What is in the oil, as the label says it, under the product's name.",
+            "radius": "none",
+            "rules": ["Only on a product story.","A middle dot between the ingredients, as on the label."],
+            "sample": "Mandelolje · Squalan",
+            "style": "caption"
+          }
+        ],
+        "css": ".brand {\n  --color-primary: #2B1D17;\n  --color-secondary: #5C1F2A;\n  --color-accent: #A8642B;\n  --color-background: #EFE6DA;\n  --color-surface: #F7F2EA;\n  --color-text: #2B1D17;\n  --color-text-muted: #6B5B4E;\n  --color-on-primary: #EFE6DA;\n  --color-on-photo: #F7F2EA;\n  --color-cta: #5C1F2A;\n  --color-cta-text: #EFE6DA;\n  --color-border: #B5A691;\n  --color-support: #3E4A5C;\n  --font-display: \"Cormorant\", \"Cormorant Garamond\", serif;\n  --font-body: \"Inter\", sans-serif;\n  --type-display-size: 104px;\n  --type-display-line: 1;\n  --type-display-tracking: -0.01em;\n  --type-display-weight: 400;\n  --type-h1-size: 76px;\n  --type-h1-line: 1.05;\n  --type-h1-tracking: -0.01em;\n  --type-h1-weight: 400;\n  --type-h2-size: 52px;\n  --type-h2-line: 1.1;\n  --type-h2-tracking: 0em;\n  --type-h2-weight: 400;\n  --type-subline-size: 30px;\n  --type-subline-line: 1.3;\n  --type-subline-tracking: 0em;\n  --type-subline-weight: 400;\n  --type-body-size: 28px;\n  --type-body-line: 1.45;\n  --type-body-tracking: 0em;\n  --type-body-weight: 400;\n  --type-caption-size: 22px;\n  --type-caption-line: 1.35;\n  --type-caption-tracking: 0em;\n  --type-caption-weight: 400;\n  --type-label-size: 20px;\n  --type-label-line: 1.2;\n  --type-label-tracking: 0.08em;\n  --type-label-weight: 500;\n  --type-cta-size: 26px;\n  --type-cta-line: 1;\n  --type-cta-tracking: 0.01em;\n  --type-cta-weight: 500;\n  --type-price-size: 30px;\n  --type-price-line: 1.2;\n  --type-price-tracking: 0em;\n  --type-price-weight: 500;\n  --type-legal-size: 16px;\n  --type-legal-line: 1.35;\n  --type-legal-tracking: 0em;\n  --type-legal-weight: 400;\n  --space-1: 8px;\n  --space-2: 16px;\n  --space-3: 24px;\n  --space-4: 32px;\n  --space-6: 48px;\n  --space-8: 64px;\n  --space-12: 96px;\n  --radius-none: 0px;\n  --radius-small: 4px;\n  --radius-large: 16px;\n  --radius-pill: 999px;\n}",
+        "examples": [
+          {
+            "format": "feed",
+            "image": "/demo/lysne/02-01-feed.jpg",
+            "layers": [
+              {
+                "align": "right",
+                "component": "headline",
+                "h": 14,
+                "text": "Kvelden din, litt langsommere.",
+                "w": 56,
+                "x": 37,
+                "y": 6
+              },
+              {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":56,"x":37,"y":22}
+            ],
+            "name": "The evening, launched",
+            "picture": "The bottle low on evening stone; the light wall above it, to the right, is calm.",
+            "purpose": "Launch",
+            "why": "The headline on the lightest part of the wall, the bottle keeps the lower half; no logo, since the label shows it."
+          },
+          {
+            "format": "story",
+            "image": "/demo/lysne/01-03-story.jpg",
+            "layers": [
+              {"align":"left","component":"headline","h":9,"text":"Gi bort en roligere kveld.","w":60,"x":8,"y":15},
+              {"align":"left","component":"price","h":3,"text":"Kveldssettet · 25 % av","w":60,"x":8,"y":26},
+              {"align":"left","component":"cta","h":4.5,"text":"Se settet","w":32,"x":8,"y":31},
+              {"align":"left","component":"legal","h":2,"text":"Til og med mandag 30. november.","w":60,"x":8,"y":37}
+            ],
+            "name": "The set, as an offer",
+            "picture": "The bottle low in a corner of light; the wall above it is calm.",
+            "purpose": "Offer",
+            "why": "Every word above the bottle and below the 250 pixels the platform covers at the top."
+          },
+          {
+            "format": "square",
+            "image": "/demo/lysne/04-06-square.jpg",
+            "layers": [
+              {
+                "align": "right",
+                "component": "headline",
+                "h": 22,
+                "text": "Mandelolje og squalan. Ikke noe mer.",
+                "w": 50,
+                "x": 44,
+                "y": 7
+              },
+              {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":50,"x":44,"y":31}
+            ],
+            "name": "What is in it",
+            "picture": "The bottle to the left, a hand on the stone; the wall above the hand is calm.",
+            "purpose": "Product story",
+            "why": "The words to the right, over the calm wall, the bottle to the left; aligned to the right margin."
+          },
+          {
+            "format": "story",
+            "image": "/demo/lysne/07-11-story.jpg",
+            "layers": [{"align":"left","component":"headline","h":14,"text":"Varm oljen i hendene. Pust ut.","w":40,"x":8,"y":15}],
+            "name": "An everyday post",
+            "picture": "The bottle to the right, its shadow behind it; the wall to the left is calm from top to bottom.",
+            "purpose": "Everyday post",
+            "why": "One line on the calm side, no call to action; the bottle and its shadow are left to speak."
+          },
+          {
+            "format": "feed",
+            "image": "/demo/lysne/07-10-feed.jpg",
+            "layers": [
+              {
+                "align": "centre",
+                "colour": "on_photo",
+                "component": "headline",
+                "h": 10,
+                "text": "Til noen som fortjener kvelden.",
+                "w": 80,
+                "x": 10,
+                "y": 74
+              },
+              {"align":"centre","colour":"on_photo","component":"logo","h":3,"text":"","w":22,"x":39,"y":88}
+            ],
+            "name": "A gift",
+            "picture": "Hands and a drop of oil against the wall; below them the wall is in shade. No bottle, so no label.",
+            "purpose": "Gift season",
+            "why": "Warm paper words in the shade below the hands; the wordmark, since no label shows it."
+          }
+        ],
+        "formats": [
+          {"columns":6,"format":"feed","gutterPx":24,"marginPx":72,"safeBottomPx":96,"safeTopPx":72},
+          {"columns":6,"format":"square","gutterPx":24,"marginPx":64,"safeBottomPx":64,"safeTopPx":64},
+          {"columns":6,"format":"story","gutterPx":24,"marginPx":72,"safeBottomPx":340,"safeTopPx":250},
+          {"columns":12,"format":"banner","gutterPx":32,"marginPx":96,"safeBottomPx":80,"safeTopPx":80}
+        ],
+        "gaps": [
+          "Can we have Cormorant's font files, or do we keep Cormorant Garamond?",
+          "Is there a version of the wordmark for small sizes?"
+        ],
+        "logo": {
+          "clearSpace": "The height of the L on every side.",
+          "minWidthPx": 160,
+          "placements": [{"format":"banner","where":"top_left","widthPct":12},{"format":"feed","where":"bottom_centre","widthPct":22}],
+          "versions": [
+            {"name":"Wordmark","use":"Night brown, on Linen or a light wall."},
+            {"name":"Wordmark, reversed","use":"Linen, on Night brown or a dark photograph."}
+          ]
+        },
+        "photoText": {
+          "rules": [
+            "Words sit where the picture is calm: the wall above the bottle, or the stone in front of it.",
+            "Never over the bottle, the cap or the label.",
+            "On a busy picture, a soft shade from the edge, never a box.",
+            "Only where the label does not show the name is the wordmark added."
+          ],
+          "scrim": "gradient",
+          "scrimOpacity": 0.3
+        },
+        "radiusPx": {"large":16,"none":0,"pill":999,"small":4},
+        "rules": {
+          "do": [
+            "Let the photograph carry the creative; words are the smaller part.",
+            "Keep words on one side, aligned to the margin.",
+            "Use Burgundy only for the call to action."
+          ],
+          "dont": [
+            "Words over the bottle or the label.",
+            "More than three layers of words.",
+            "Amber glass for words: it is too light to read."
+          ]
+        },
+        "sources": [
+          {"evidence":"Brand DNA colours, approved by Maja","part":"colours","source":"brand_dna"},
+          {"evidence":"LYSNE brand guide 2026.pdf","part":"typefaces","source":"brand_dna"},
+          {"evidence":"Fume's scale for the formats","part":"styles","source":"fume"},
+          {"evidence":"Autumn launch, the approved creatives","part":"examples","source":"memory"}
+        ],
+        "spacing": {"scale":[1,2,3,4,6,8,12],"unitPx":8},
+        "styles": [
+          {"case":"none","font":"display","lineHeight":1,"name":"display","sizePx":104,"trackingEm":-0.01,"weight":400},
+          {"case":"none","font":"display","lineHeight":1.05,"name":"h1","sizePx":76,"trackingEm":-0.01,"weight":400},
+          {"case":"none","font":"display","lineHeight":1.1,"name":"h2","sizePx":52,"trackingEm":0,"weight":400},
+          {"case":"none","font":"body","lineHeight":1.3,"name":"subline","sizePx":30,"trackingEm":0,"weight":400},
+          {"case":"none","font":"body","lineHeight":1.45,"name":"body","sizePx":28,"trackingEm":0,"weight":400},
+          {"case":"none","font":"body","lineHeight":1.35,"name":"caption","sizePx":22,"trackingEm":0,"weight":400},
+          {"case":"upper","font":"body","lineHeight":1.2,"name":"label","sizePx":20,"trackingEm":0.08,"weight":500},
+          {"case":"none","font":"body","lineHeight":1,"name":"cta","sizePx":26,"trackingEm":0.01,"weight":500},
+          {"case":"none","font":"body","lineHeight":1.2,"name":"price","sizePx":30,"trackingEm":0,"weight":500},
+          {"case":"none","font":"body","lineHeight":1.35,"name":"legal","sizePx":16,"trackingEm":0,"weight":400}
+        ],
+        "summary": "LYSNE's creatives are the photograph first: warm, low light and one bottle, with a few words where the wall is calm. Cormorant for what the brand says, Inter for names, sizes and buttons. Night brown words on light walls, Linen on dark ones, and Burgundy only for the call to action.",
+        "typefaces": [
+          {
+            "fallback": "Cormorant Garamond",
+            "family": "Cormorant",
+            "note": "LYSNE's own serif, from the brand guide; Cormorant Garamond on Google Fonts draws it the same.",
+            "role": "display",
+            "source": "brand",
+            "weights": [400,500]
+          },
+          {
+            "fallback": "Inter",
+            "family": "Inter",
+            "note": "Names, sizes, prices and buttons.",
+            "role": "body",
+            "source": "brand",
+            "weights": [400,500]
+          }
+        ]
+      },
+      "createdAt": "2026-10-14T10:32:00.000Z",
+      "edits": [{"at":"2026-10-14T10:32:00.000Z","by":"u-anna","from":null,"path":"components.8"}],
+      "id": "bb-design-2",
+      "kind": "design",
+      "proposals": [
+        {
+          "component": {
+            "background": "secondary",
+            "base": "badge",
+            "colour": "on_primary",
+            "name": "Wheel",
+            "paddingPx": 16,
+            "purpose": "A round mark for an offer: the figure big, a word or two with it.",
+            "radius": "pill",
+            "rules": [
+              "Beside the bottle on the calm wall, never over the label.",
+              "Only with an offer, and one per creative.",
+              "The figure and at most two words."
+            ],
+            "sample": "25 % av",
+            "sizePx": 200,
+            "style": "price"
+          },
+          "createdAt": "2026-10-14T10:37:00.000Z",
+          "from": "the set's offer story and 3 past offers",
+          "id": "bp-design-wheel",
+          "state": "open",
+          "why": "LYSNE's offers are a line of small words today. A round mark in Burgundy carries the offer at a glance, without a box over the picture."
+        }
+      ],
+      "state": "draft",
+      "version": 2,
+      "writtenAt": "2026-10-14T10:32:00.000Z"
+    },
+    "type": "book.state"
+  }
+anna answerBookProposal({"answer":"open","bookId":"bb-design-2","proposalId":"bp-design-wheel"})
+  {
+    "ask": "Edited from version 1",
+    "askedBy": "u-anna",
+    "body": {
+      "checks": {
+        "contrast": [
+          {"need":4.5,"ok":true,"pair":"text on background","ratio":13.17},
+          {"need":4.5,"ok":true,"pair":"text on surface","ratio":14.6},
+          {"need":4.5,"ok":true,"pair":"on_primary on primary","ratio":13.17},
+          {"need":4.5,"ok":true,"pair":"cta_text on cta","ratio":10.09},
+          {"need":4.5,"ok":true,"pair":"text_muted on background","ratio":5.26},
+          {"need":4.5,"ok":true,"pair":"on_primary on secondary","ratio":10.09}
+        ],
+        "fails": [],
+        "missingRoles": []
+      },
+      "colours": [
+        {
+          "hex": "#2B1D17",
+          "name": "Night brown",
+          "role": "primary",
+          "source": "brand_dna",
+          "use": "The brand's dark: words, the logo on light."
+        },
+        {
+          "hex": "#5C1F2A",
+          "name": "Burgundy cap",
+          "role": "secondary",
+          "source": "brand_dna",
+          "use": "The cap's colour; a badge, a price."
+        },
+        {
+          "hex": "#A8642B",
+          "name": "Amber glass",
+          "role": "accent",
+          "source": "brand_dna",
+          "use": "A thin rule or a small mark, never words."
+        },
+        {
+          "hex": "#EFE6DA",
+          "name": "Linen",
+          "role": "background",
+          "source": "brand_dna",
+          "use": "A flat ground when there is no photograph."
+        },
+        {"hex":"#F7F2EA","name":"Warm paper","role":"surface","source":"fume","use":"A card or a panel on Linen."},
+        {
+          "hex": "#2B1D17",
+          "name": "Night brown",
+          "role": "text",
+          "source": "brand_dna",
+          "use": "Words on a light wall or on Linen."
+        },
+        {
+          "hex": "#6B5B4E",
+          "name": "Walnut",
+          "role": "text_muted",
+          "source": "fume",
+          "use": "A size, a caption, the small print."
+        },
+        {"hex":"#EFE6DA","name":"Linen","role":"on_primary","source":"brand_dna","use":"Words on Night brown."},
+        {"hex":"#F7F2EA","name":"Warm paper","role":"on_photo","source":"fume","use":"Words on a dark photograph."},
+        {"hex":"#5C1F2A","name":"Burgundy cap","role":"cta","source":"brand_dna","use":"The call to action's pill."},
+        {"hex":"#EFE6DA","name":"Linen","role":"cta_text","source":"brand_dna","use":"The words on the call to action."},
+        {"hex":"#B5A691","name":"Evening stone","role":"border","source":"brand_dna","use":"A hairline on Linen."},
+        {
+          "hex": "#3E4A5C",
+          "name": "Dusk blue",
+          "role": "support",
+          "source": "brand_dna",
+          "use": "A quiet accent in winter, sparingly."
+        }
+      ],
+      "components": [
+        {
+          "background": null,
+          "colour": "text",
+          "name": "headline",
+          "paddingPx": 0,
+          "purpose": "The one line that says the idea.",
+          "radius": "none",
+          "rules": ["One line, two at most.","Ends with a full stop."],
+          "style": "h1"
+        },
+        {
+          "background": null,
+          "colour": "text",
+          "name": "subline",
+          "paddingPx": 0,
+          "purpose": "The product as printed, or a short second line.",
+          "radius": "none",
+          "rules": ["Never longer than the headline."],
+          "style": "subline"
+        },
+        {
+          "background": null,
+          "colour": "secondary",
+          "name": "price",
+          "paddingPx": 0,
+          "purpose": "A price or an offer, stated plainly.",
+          "radius": "none",
+          "rules": ["Figures, a space before %."],
+          "style": "price"
+        },
+        {
+          "background": "cta",
+          "colour": "cta_text",
+          "name": "cta",
+          "paddingPx": 22,
+          "purpose": "The call to action, on a story or a banner.",
+          "radius": "pill",
+          "rules": ["Two words.","Never on a feed picture."],
+          "style": "cta"
+        },
+        {
+          "background": "secondary",
+          "colour": "on_primary",
+          "name": "badge",
+          "paddingPx": 12,
+          "purpose": "A small mark: a set, a season.",
+          "radius": "small",
+          "rules": ["One per creative at most."],
+          "style": "label"
+        },
+        {
+          "background": null,
+          "colour": "text_muted",
+          "name": "product_name",
+          "paddingPx": 0,
+          "purpose": "The name and size, as on the label.",
+          "radius": "none",
+          "rules": ["As printed: Night Body Oil · 100 ml."],
+          "style": "label"
+        },
+        {
+          "background": null,
+          "colour": "text_muted",
+          "name": "legal",
+          "paddingPx": 0,
+          "purpose": "The offer's terms.",
+          "radius": "none",
+          "rules": ["Only when the offer needs it."],
+          "style": "legal"
+        },
+        {
+          "background": null,
+          "colour": "primary",
+          "name": "logo",
+          "paddingPx": 0,
+          "purpose": "The wordmark, where the label does not show it.",
+          "radius": "none",
+          "rules": ["Never twice on one creative."],
+          "style": "label"
+        },
+        {
+          "background": null,
+          "base": "text",
+          "colour": "text_muted",
+          "name": "Ingredients",
+          "paddingPx": 0,
+          "purpose": "What is in the oil, as the label says it, under the product's name.",
+          "radius": "none",
+          "rules": ["Only on a product story.","A middle dot between the ingredients, as on the label."],
+          "sample": "Mandelolje · Squalan",
+          "style": "caption"
+        }
+      ],
+      "css": ".brand {\n  --color-primary: #2B1D17;\n  --color-secondary: #5C1F2A;\n  --color-accent: #A8642B;\n  --color-background: #EFE6DA;\n  --color-surface: #F7F2EA;\n  --color-text: #2B1D17;\n  --color-text-muted: #6B5B4E;\n  --color-on-primary: #EFE6DA;\n  --color-on-photo: #F7F2EA;\n  --color-cta: #5C1F2A;\n  --color-cta-text: #EFE6DA;\n  --color-border: #B5A691;\n  --color-support: #3E4A5C;\n  --font-display: \"Cormorant\", \"Cormorant Garamond\", serif;\n  --font-body: \"Inter\", sans-serif;\n  --type-display-size: 104px;\n  --type-display-line: 1;\n  --type-display-tracking: -0.01em;\n  --type-display-weight: 400;\n  --type-h1-size: 76px;\n  --type-h1-line: 1.05;\n  --type-h1-tracking: -0.01em;\n  --type-h1-weight: 400;\n  --type-h2-size: 52px;\n  --type-h2-line: 1.1;\n  --type-h2-tracking: 0em;\n  --type-h2-weight: 400;\n  --type-subline-size: 30px;\n  --type-subline-line: 1.3;\n  --type-subline-tracking: 0em;\n  --type-subline-weight: 400;\n  --type-body-size: 28px;\n  --type-body-line: 1.45;\n  --type-body-tracking: 0em;\n  --type-body-weight: 400;\n  --type-caption-size: 22px;\n  --type-caption-line: 1.35;\n  --type-caption-tracking: 0em;\n  --type-caption-weight: 400;\n  --type-label-size: 20px;\n  --type-label-line: 1.2;\n  --type-label-tracking: 0.08em;\n  --type-label-weight: 500;\n  --type-cta-size: 26px;\n  --type-cta-line: 1;\n  --type-cta-tracking: 0.01em;\n  --type-cta-weight: 500;\n  --type-price-size: 30px;\n  --type-price-line: 1.2;\n  --type-price-tracking: 0em;\n  --type-price-weight: 500;\n  --type-legal-size: 16px;\n  --type-legal-line: 1.35;\n  --type-legal-tracking: 0em;\n  --type-legal-weight: 400;\n  --space-1: 8px;\n  --space-2: 16px;\n  --space-3: 24px;\n  --space-4: 32px;\n  --space-6: 48px;\n  --space-8: 64px;\n  --space-12: 96px;\n  --radius-none: 0px;\n  --radius-small: 4px;\n  --radius-large: 16px;\n  --radius-pill: 999px;\n}",
+      "examples": [
+        {
+          "format": "feed",
+          "image": "/demo/lysne/02-01-feed.jpg",
+          "layers": [
+            {"align":"right","component":"headline","h":14,"text":"Kvelden din, litt langsommere.","w":56,"x":37,"y":6},
+            {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":56,"x":37,"y":22}
+          ],
+          "name": "The evening, launched",
+          "picture": "The bottle low on evening stone; the light wall above it, to the right, is calm.",
+          "purpose": "Launch",
+          "why": "The headline on the lightest part of the wall, the bottle keeps the lower half; no logo, since the label shows it."
+        },
+        {
+          "format": "story",
+          "image": "/demo/lysne/01-03-story.jpg",
+          "layers": [
+            {"align":"left","component":"headline","h":9,"text":"Gi bort en roligere kveld.","w":60,"x":8,"y":15},
+            {"align":"left","component":"price","h":3,"text":"Kveldssettet · 25 % av","w":60,"x":8,"y":26},
+            {"align":"left","component":"cta","h":4.5,"text":"Se settet","w":32,"x":8,"y":31},
+            {"align":"left","component":"legal","h":2,"text":"Til og med mandag 30. november.","w":60,"x":8,"y":37}
+          ],
+          "name": "The set, as an offer",
+          "picture": "The bottle low in a corner of light; the wall above it is calm.",
+          "purpose": "Offer",
+          "why": "Every word above the bottle and below the 250 pixels the platform covers at the top."
+        },
+        {
+          "format": "square",
+          "image": "/demo/lysne/04-06-square.jpg",
+          "layers": [
+            {
+              "align": "right",
+              "component": "headline",
+              "h": 22,
+              "text": "Mandelolje og squalan. Ikke noe mer.",
+              "w": 50,
+              "x": 44,
+              "y": 7
+            },
+            {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":50,"x":44,"y":31}
+          ],
+          "name": "What is in it",
+          "picture": "The bottle to the left, a hand on the stone; the wall above the hand is calm.",
+          "purpose": "Product story",
+          "why": "The words to the right, over the calm wall, the bottle to the left; aligned to the right margin."
+        },
+        {
+          "format": "story",
+          "image": "/demo/lysne/07-11-story.jpg",
+          "layers": [{"align":"left","component":"headline","h":14,"text":"Varm oljen i hendene. Pust ut.","w":40,"x":8,"y":15}],
+          "name": "An everyday post",
+          "picture": "The bottle to the right, its shadow behind it; the wall to the left is calm from top to bottom.",
+          "purpose": "Everyday post",
+          "why": "One line on the calm side, no call to action; the bottle and its shadow are left to speak."
+        },
+        {
+          "format": "feed",
+          "image": "/demo/lysne/07-10-feed.jpg",
+          "layers": [
+            {
+              "align": "centre",
+              "colour": "on_photo",
+              "component": "headline",
+              "h": 10,
+              "text": "Til noen som fortjener kvelden.",
+              "w": 80,
+              "x": 10,
+              "y": 74
+            },
+            {"align":"centre","colour":"on_photo","component":"logo","h":3,"text":"","w":22,"x":39,"y":88}
+          ],
+          "name": "A gift",
+          "picture": "Hands and a drop of oil against the wall; below them the wall is in shade. No bottle, so no label.",
+          "purpose": "Gift season",
+          "why": "Warm paper words in the shade below the hands; the wordmark, since no label shows it."
+        }
+      ],
+      "formats": [
+        {"columns":6,"format":"feed","gutterPx":24,"marginPx":72,"safeBottomPx":96,"safeTopPx":72},
+        {"columns":6,"format":"square","gutterPx":24,"marginPx":64,"safeBottomPx":64,"safeTopPx":64},
+        {"columns":6,"format":"story","gutterPx":24,"marginPx":72,"safeBottomPx":340,"safeTopPx":250},
+        {"columns":12,"format":"banner","gutterPx":32,"marginPx":96,"safeBottomPx":80,"safeTopPx":80}
+      ],
+      "gaps": [
+        "Can we have Cormorant's font files, or do we keep Cormorant Garamond?",
+        "Is there a version of the wordmark for small sizes?"
+      ],
+      "logo": {
+        "clearSpace": "The height of the L on every side.",
+        "minWidthPx": 160,
+        "placements": [{"format":"banner","where":"top_left","widthPct":12},{"format":"feed","where":"bottom_centre","widthPct":22}],
+        "versions": [
+          {"name":"Wordmark","use":"Night brown, on Linen or a light wall."},
+          {"name":"Wordmark, reversed","use":"Linen, on Night brown or a dark photograph."}
+        ]
+      },
+      "photoText": {
+        "rules": [
+          "Words sit where the picture is calm: the wall above the bottle, or the stone in front of it.",
+          "Never over the bottle, the cap or the label.",
+          "On a busy picture, a soft shade from the edge, never a box.",
+          "Only where the label does not show the name is the wordmark added."
+        ],
+        "scrim": "gradient",
+        "scrimOpacity": 0.3
+      },
+      "radiusPx": {"large":16,"none":0,"pill":999,"small":4},
+      "rules": {
+        "do": [
+          "Let the photograph carry the creative; words are the smaller part.",
+          "Keep words on one side, aligned to the margin.",
+          "Use Burgundy only for the call to action."
+        ],
+        "dont": [
+          "Words over the bottle or the label.",
+          "More than three layers of words.",
+          "Amber glass for words: it is too light to read."
+        ]
+      },
+      "sources": [
+        {"evidence":"Brand DNA colours, approved by Maja","part":"colours","source":"brand_dna"},
+        {"evidence":"LYSNE brand guide 2026.pdf","part":"typefaces","source":"brand_dna"},
+        {"evidence":"Fume's scale for the formats","part":"styles","source":"fume"},
+        {"evidence":"Autumn launch, the approved creatives","part":"examples","source":"memory"}
+      ],
+      "spacing": {"scale":[1,2,3,4,6,8,12],"unitPx":8},
+      "styles": [
+        {"case":"none","font":"display","lineHeight":1,"name":"display","sizePx":104,"trackingEm":-0.01,"weight":400},
+        {"case":"none","font":"display","lineHeight":1.05,"name":"h1","sizePx":76,"trackingEm":-0.01,"weight":400},
+        {"case":"none","font":"display","lineHeight":1.1,"name":"h2","sizePx":52,"trackingEm":0,"weight":400},
+        {"case":"none","font":"body","lineHeight":1.3,"name":"subline","sizePx":30,"trackingEm":0,"weight":400},
+        {"case":"none","font":"body","lineHeight":1.45,"name":"body","sizePx":28,"trackingEm":0,"weight":400},
+        {"case":"none","font":"body","lineHeight":1.35,"name":"caption","sizePx":22,"trackingEm":0,"weight":400},
+        {"case":"upper","font":"body","lineHeight":1.2,"name":"label","sizePx":20,"trackingEm":0.08,"weight":500},
+        {"case":"none","font":"body","lineHeight":1,"name":"cta","sizePx":26,"trackingEm":0.01,"weight":500},
+        {"case":"none","font":"body","lineHeight":1.2,"name":"price","sizePx":30,"trackingEm":0,"weight":500},
+        {"case":"none","font":"body","lineHeight":1.35,"name":"legal","sizePx":16,"trackingEm":0,"weight":400}
+      ],
+      "summary": "LYSNE's creatives are the photograph first: warm, low light and one bottle, with a few words where the wall is calm. Cormorant for what the brand says, Inter for names, sizes and buttons. Night brown words on light walls, Linen on dark ones, and Burgundy only for the call to action.",
+      "typefaces": [
+        {
+          "fallback": "Cormorant Garamond",
+          "family": "Cormorant",
+          "note": "LYSNE's own serif, from the brand guide; Cormorant Garamond on Google Fonts draws it the same.",
+          "role": "display",
+          "source": "brand",
+          "weights": [400,500]
+        },
+        {
+          "fallback": "Inter",
+          "family": "Inter",
+          "note": "Names, sizes, prices and buttons.",
+          "role": "body",
+          "source": "brand",
+          "weights": [400,500]
+        }
+      ]
+    },
+    "createdAt": "2026-10-14T10:32:00.000Z",
+    "edits": [{"at":"2026-10-14T10:32:00.000Z","by":"u-anna","from":null,"path":"components.8"}],
+    "id": "bb-design-2",
+    "kind": "design",
+    "proposals": [
+      {
+        "component": {
+          "background": "secondary",
+          "base": "badge",
+          "colour": "on_primary",
+          "name": "Wheel",
+          "paddingPx": 16,
+          "purpose": "A round mark for an offer: the figure big, a word or two with it.",
+          "radius": "pill",
+          "rules": [
+            "Beside the bottle on the calm wall, never over the label.",
+            "Only with an offer, and one per creative.",
+            "The figure and at most two words."
+          ],
+          "sample": "25 % av",
+          "sizePx": 200,
+          "style": "price"
+        },
+        "createdAt": "2026-10-14T10:37:00.000Z",
+        "from": "the set's offer story and 3 past offers",
+        "id": "bp-design-wheel",
+        "state": "open",
+        "why": "LYSNE's offers are a line of small words today. A round mark in Burgundy carries the offer at a glance, without a box over the picture."
+      }
+    ],
+    "state": "draft",
+    "version": 2,
+    "writtenAt": "2026-10-14T10:32:00.000Z"
+  }
+anna answerBookProposal({"answer":"not_now","bookId":"bb-design-2","proposalId":"bp-design-wheel"}) → events
+  {
+    "book": {
+      "ask": "Edited from version 1",
+      "askedBy": "u-anna",
+      "body": {
+        "checks": {
+          "contrast": [
+            {"need":4.5,"ok":true,"pair":"text on background","ratio":13.17},
+            {"need":4.5,"ok":true,"pair":"text on surface","ratio":14.6},
+            {"need":4.5,"ok":true,"pair":"on_primary on primary","ratio":13.17},
+            {"need":4.5,"ok":true,"pair":"cta_text on cta","ratio":10.09},
+            {"need":4.5,"ok":true,"pair":"text_muted on background","ratio":5.26},
+            {"need":4.5,"ok":true,"pair":"on_primary on secondary","ratio":10.09}
+          ],
+          "fails": [],
+          "missingRoles": []
+        },
+        "colours": [
+          {
+            "hex": "#2B1D17",
+            "name": "Night brown",
+            "role": "primary",
+            "source": "brand_dna",
+            "use": "The brand's dark: words, the logo on light."
+          },
+          {
+            "hex": "#5C1F2A",
+            "name": "Burgundy cap",
+            "role": "secondary",
+            "source": "brand_dna",
+            "use": "The cap's colour; a badge, a price."
+          },
+          {
+            "hex": "#A8642B",
+            "name": "Amber glass",
+            "role": "accent",
+            "source": "brand_dna",
+            "use": "A thin rule or a small mark, never words."
+          },
+          {
+            "hex": "#EFE6DA",
+            "name": "Linen",
+            "role": "background",
+            "source": "brand_dna",
+            "use": "A flat ground when there is no photograph."
+          },
+          {"hex":"#F7F2EA","name":"Warm paper","role":"surface","source":"fume","use":"A card or a panel on Linen."},
+          {
+            "hex": "#2B1D17",
+            "name": "Night brown",
+            "role": "text",
+            "source": "brand_dna",
+            "use": "Words on a light wall or on Linen."
+          },
+          {
+            "hex": "#6B5B4E",
+            "name": "Walnut",
+            "role": "text_muted",
+            "source": "fume",
+            "use": "A size, a caption, the small print."
+          },
+          {"hex":"#EFE6DA","name":"Linen","role":"on_primary","source":"brand_dna","use":"Words on Night brown."},
+          {"hex":"#F7F2EA","name":"Warm paper","role":"on_photo","source":"fume","use":"Words on a dark photograph."},
+          {"hex":"#5C1F2A","name":"Burgundy cap","role":"cta","source":"brand_dna","use":"The call to action's pill."},
+          {
+            "hex": "#EFE6DA",
+            "name": "Linen",
+            "role": "cta_text",
+            "source": "brand_dna",
+            "use": "The words on the call to action."
+          },
+          {"hex":"#B5A691","name":"Evening stone","role":"border","source":"brand_dna","use":"A hairline on Linen."},
+          {
+            "hex": "#3E4A5C",
+            "name": "Dusk blue",
+            "role": "support",
+            "source": "brand_dna",
+            "use": "A quiet accent in winter, sparingly."
+          }
+        ],
+        "components": [
+          {
+            "background": null,
+            "colour": "text",
+            "name": "headline",
+            "paddingPx": 0,
+            "purpose": "The one line that says the idea.",
+            "radius": "none",
+            "rules": ["One line, two at most.","Ends with a full stop."],
+            "style": "h1"
+          },
+          {
+            "background": null,
+            "colour": "text",
+            "name": "subline",
+            "paddingPx": 0,
+            "purpose": "The product as printed, or a short second line.",
+            "radius": "none",
+            "rules": ["Never longer than the headline."],
+            "style": "subline"
+          },
+          {
+            "background": null,
+            "colour": "secondary",
+            "name": "price",
+            "paddingPx": 0,
+            "purpose": "A price or an offer, stated plainly.",
+            "radius": "none",
+            "rules": ["Figures, a space before %."],
+            "style": "price"
+          },
+          {
+            "background": "cta",
+            "colour": "cta_text",
+            "name": "cta",
+            "paddingPx": 22,
+            "purpose": "The call to action, on a story or a banner.",
+            "radius": "pill",
+            "rules": ["Two words.","Never on a feed picture."],
+            "style": "cta"
+          },
+          {
+            "background": "secondary",
+            "colour": "on_primary",
+            "name": "badge",
+            "paddingPx": 12,
+            "purpose": "A small mark: a set, a season.",
+            "radius": "small",
+            "rules": ["One per creative at most."],
+            "style": "label"
+          },
+          {
+            "background": null,
+            "colour": "text_muted",
+            "name": "product_name",
+            "paddingPx": 0,
+            "purpose": "The name and size, as on the label.",
+            "radius": "none",
+            "rules": ["As printed: Night Body Oil · 100 ml."],
+            "style": "label"
+          },
+          {
+            "background": null,
+            "colour": "text_muted",
+            "name": "legal",
+            "paddingPx": 0,
+            "purpose": "The offer's terms.",
+            "radius": "none",
+            "rules": ["Only when the offer needs it."],
+            "style": "legal"
+          },
+          {
+            "background": null,
+            "colour": "primary",
+            "name": "logo",
+            "paddingPx": 0,
+            "purpose": "The wordmark, where the label does not show it.",
+            "radius": "none",
+            "rules": ["Never twice on one creative."],
+            "style": "label"
+          },
+          {
+            "background": null,
+            "base": "text",
+            "colour": "text_muted",
+            "name": "Ingredients",
+            "paddingPx": 0,
+            "purpose": "What is in the oil, as the label says it, under the product's name.",
+            "radius": "none",
+            "rules": ["Only on a product story.","A middle dot between the ingredients, as on the label."],
+            "sample": "Mandelolje · Squalan",
+            "style": "caption"
+          }
+        ],
+        "css": ".brand {\n  --color-primary: #2B1D17;\n  --color-secondary: #5C1F2A;\n  --color-accent: #A8642B;\n  --color-background: #EFE6DA;\n  --color-surface: #F7F2EA;\n  --color-text: #2B1D17;\n  --color-text-muted: #6B5B4E;\n  --color-on-primary: #EFE6DA;\n  --color-on-photo: #F7F2EA;\n  --color-cta: #5C1F2A;\n  --color-cta-text: #EFE6DA;\n  --color-border: #B5A691;\n  --color-support: #3E4A5C;\n  --font-display: \"Cormorant\", \"Cormorant Garamond\", serif;\n  --font-body: \"Inter\", sans-serif;\n  --type-display-size: 104px;\n  --type-display-line: 1;\n  --type-display-tracking: -0.01em;\n  --type-display-weight: 400;\n  --type-h1-size: 76px;\n  --type-h1-line: 1.05;\n  --type-h1-tracking: -0.01em;\n  --type-h1-weight: 400;\n  --type-h2-size: 52px;\n  --type-h2-line: 1.1;\n  --type-h2-tracking: 0em;\n  --type-h2-weight: 400;\n  --type-subline-size: 30px;\n  --type-subline-line: 1.3;\n  --type-subline-tracking: 0em;\n  --type-subline-weight: 400;\n  --type-body-size: 28px;\n  --type-body-line: 1.45;\n  --type-body-tracking: 0em;\n  --type-body-weight: 400;\n  --type-caption-size: 22px;\n  --type-caption-line: 1.35;\n  --type-caption-tracking: 0em;\n  --type-caption-weight: 400;\n  --type-label-size: 20px;\n  --type-label-line: 1.2;\n  --type-label-tracking: 0.08em;\n  --type-label-weight: 500;\n  --type-cta-size: 26px;\n  --type-cta-line: 1;\n  --type-cta-tracking: 0.01em;\n  --type-cta-weight: 500;\n  --type-price-size: 30px;\n  --type-price-line: 1.2;\n  --type-price-tracking: 0em;\n  --type-price-weight: 500;\n  --type-legal-size: 16px;\n  --type-legal-line: 1.35;\n  --type-legal-tracking: 0em;\n  --type-legal-weight: 400;\n  --space-1: 8px;\n  --space-2: 16px;\n  --space-3: 24px;\n  --space-4: 32px;\n  --space-6: 48px;\n  --space-8: 64px;\n  --space-12: 96px;\n  --radius-none: 0px;\n  --radius-small: 4px;\n  --radius-large: 16px;\n  --radius-pill: 999px;\n}",
+        "examples": [
+          {
+            "format": "feed",
+            "image": "/demo/lysne/02-01-feed.jpg",
+            "layers": [
+              {
+                "align": "right",
+                "component": "headline",
+                "h": 14,
+                "text": "Kvelden din, litt langsommere.",
+                "w": 56,
+                "x": 37,
+                "y": 6
+              },
+              {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":56,"x":37,"y":22}
+            ],
+            "name": "The evening, launched",
+            "picture": "The bottle low on evening stone; the light wall above it, to the right, is calm.",
+            "purpose": "Launch",
+            "why": "The headline on the lightest part of the wall, the bottle keeps the lower half; no logo, since the label shows it."
+          },
+          {
+            "format": "story",
+            "image": "/demo/lysne/01-03-story.jpg",
+            "layers": [
+              {"align":"left","component":"headline","h":9,"text":"Gi bort en roligere kveld.","w":60,"x":8,"y":15},
+              {"align":"left","component":"price","h":3,"text":"Kveldssettet · 25 % av","w":60,"x":8,"y":26},
+              {"align":"left","component":"cta","h":4.5,"text":"Se settet","w":32,"x":8,"y":31},
+              {"align":"left","component":"legal","h":2,"text":"Til og med mandag 30. november.","w":60,"x":8,"y":37}
+            ],
+            "name": "The set, as an offer",
+            "picture": "The bottle low in a corner of light; the wall above it is calm.",
+            "purpose": "Offer",
+            "why": "Every word above the bottle and below the 250 pixels the platform covers at the top."
+          },
+          {
+            "format": "square",
+            "image": "/demo/lysne/04-06-square.jpg",
+            "layers": [
+              {
+                "align": "right",
+                "component": "headline",
+                "h": 22,
+                "text": "Mandelolje og squalan. Ikke noe mer.",
+                "w": 50,
+                "x": 44,
+                "y": 7
+              },
+              {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":50,"x":44,"y":31}
+            ],
+            "name": "What is in it",
+            "picture": "The bottle to the left, a hand on the stone; the wall above the hand is calm.",
+            "purpose": "Product story",
+            "why": "The words to the right, over the calm wall, the bottle to the left; aligned to the right margin."
+          },
+          {
+            "format": "story",
+            "image": "/demo/lysne/07-11-story.jpg",
+            "layers": [{"align":"left","component":"headline","h":14,"text":"Varm oljen i hendene. Pust ut.","w":40,"x":8,"y":15}],
+            "name": "An everyday post",
+            "picture": "The bottle to the right, its shadow behind it; the wall to the left is calm from top to bottom.",
+            "purpose": "Everyday post",
+            "why": "One line on the calm side, no call to action; the bottle and its shadow are left to speak."
+          },
+          {
+            "format": "feed",
+            "image": "/demo/lysne/07-10-feed.jpg",
+            "layers": [
+              {
+                "align": "centre",
+                "colour": "on_photo",
+                "component": "headline",
+                "h": 10,
+                "text": "Til noen som fortjener kvelden.",
+                "w": 80,
+                "x": 10,
+                "y": 74
+              },
+              {"align":"centre","colour":"on_photo","component":"logo","h":3,"text":"","w":22,"x":39,"y":88}
+            ],
+            "name": "A gift",
+            "picture": "Hands and a drop of oil against the wall; below them the wall is in shade. No bottle, so no label.",
+            "purpose": "Gift season",
+            "why": "Warm paper words in the shade below the hands; the wordmark, since no label shows it."
+          }
+        ],
+        "formats": [
+          {"columns":6,"format":"feed","gutterPx":24,"marginPx":72,"safeBottomPx":96,"safeTopPx":72},
+          {"columns":6,"format":"square","gutterPx":24,"marginPx":64,"safeBottomPx":64,"safeTopPx":64},
+          {"columns":6,"format":"story","gutterPx":24,"marginPx":72,"safeBottomPx":340,"safeTopPx":250},
+          {"columns":12,"format":"banner","gutterPx":32,"marginPx":96,"safeBottomPx":80,"safeTopPx":80}
+        ],
+        "gaps": [
+          "Can we have Cormorant's font files, or do we keep Cormorant Garamond?",
+          "Is there a version of the wordmark for small sizes?"
+        ],
+        "logo": {
+          "clearSpace": "The height of the L on every side.",
+          "minWidthPx": 160,
+          "placements": [{"format":"banner","where":"top_left","widthPct":12},{"format":"feed","where":"bottom_centre","widthPct":22}],
+          "versions": [
+            {"name":"Wordmark","use":"Night brown, on Linen or a light wall."},
+            {"name":"Wordmark, reversed","use":"Linen, on Night brown or a dark photograph."}
+          ]
+        },
+        "photoText": {
+          "rules": [
+            "Words sit where the picture is calm: the wall above the bottle, or the stone in front of it.",
+            "Never over the bottle, the cap or the label.",
+            "On a busy picture, a soft shade from the edge, never a box.",
+            "Only where the label does not show the name is the wordmark added."
+          ],
+          "scrim": "gradient",
+          "scrimOpacity": 0.3
+        },
+        "radiusPx": {"large":16,"none":0,"pill":999,"small":4},
+        "rules": {
+          "do": [
+            "Let the photograph carry the creative; words are the smaller part.",
+            "Keep words on one side, aligned to the margin.",
+            "Use Burgundy only for the call to action."
+          ],
+          "dont": [
+            "Words over the bottle or the label.",
+            "More than three layers of words.",
+            "Amber glass for words: it is too light to read."
+          ]
+        },
+        "sources": [
+          {"evidence":"Brand DNA colours, approved by Maja","part":"colours","source":"brand_dna"},
+          {"evidence":"LYSNE brand guide 2026.pdf","part":"typefaces","source":"brand_dna"},
+          {"evidence":"Fume's scale for the formats","part":"styles","source":"fume"},
+          {"evidence":"Autumn launch, the approved creatives","part":"examples","source":"memory"}
+        ],
+        "spacing": {"scale":[1,2,3,4,6,8,12],"unitPx":8},
+        "styles": [
+          {"case":"none","font":"display","lineHeight":1,"name":"display","sizePx":104,"trackingEm":-0.01,"weight":400},
+          {"case":"none","font":"display","lineHeight":1.05,"name":"h1","sizePx":76,"trackingEm":-0.01,"weight":400},
+          {"case":"none","font":"display","lineHeight":1.1,"name":"h2","sizePx":52,"trackingEm":0,"weight":400},
+          {"case":"none","font":"body","lineHeight":1.3,"name":"subline","sizePx":30,"trackingEm":0,"weight":400},
+          {"case":"none","font":"body","lineHeight":1.45,"name":"body","sizePx":28,"trackingEm":0,"weight":400},
+          {"case":"none","font":"body","lineHeight":1.35,"name":"caption","sizePx":22,"trackingEm":0,"weight":400},
+          {"case":"upper","font":"body","lineHeight":1.2,"name":"label","sizePx":20,"trackingEm":0.08,"weight":500},
+          {"case":"none","font":"body","lineHeight":1,"name":"cta","sizePx":26,"trackingEm":0.01,"weight":500},
+          {"case":"none","font":"body","lineHeight":1.2,"name":"price","sizePx":30,"trackingEm":0,"weight":500},
+          {"case":"none","font":"body","lineHeight":1.35,"name":"legal","sizePx":16,"trackingEm":0,"weight":400}
+        ],
+        "summary": "LYSNE's creatives are the photograph first: warm, low light and one bottle, with a few words where the wall is calm. Cormorant for what the brand says, Inter for names, sizes and buttons. Night brown words on light walls, Linen on dark ones, and Burgundy only for the call to action.",
+        "typefaces": [
+          {
+            "fallback": "Cormorant Garamond",
+            "family": "Cormorant",
+            "note": "LYSNE's own serif, from the brand guide; Cormorant Garamond on Google Fonts draws it the same.",
+            "role": "display",
+            "source": "brand",
+            "weights": [400,500]
+          },
+          {
+            "fallback": "Inter",
+            "family": "Inter",
+            "note": "Names, sizes, prices and buttons.",
+            "role": "body",
+            "source": "brand",
+            "weights": [400,500]
+          }
+        ]
+      },
+      "createdAt": "2026-10-14T10:32:00.000Z",
+      "edits": [{"at":"2026-10-14T10:32:00.000Z","by":"u-anna","from":null,"path":"components.8"}],
+      "id": "bb-design-2",
+      "kind": "design",
+      "proposals": [
+        {
+          "answeredAt": "2026-10-14T12:32:01.000Z",
+          "answeredBy": "u-anna",
+          "component": {
+            "background": "secondary",
+            "base": "badge",
+            "colour": "on_primary",
+            "name": "Wheel",
+            "paddingPx": 16,
+            "purpose": "A round mark for an offer: the figure big, a word or two with it.",
+            "radius": "pill",
+            "rules": [
+              "Beside the bottle on the calm wall, never over the label.",
+              "Only with an offer, and one per creative.",
+              "The figure and at most two words."
+            ],
+            "sample": "25 % av",
+            "sizePx": 200,
+            "style": "price"
+          },
+          "createdAt": "2026-10-14T10:37:00.000Z",
+          "from": "the set's offer story and 3 past offers",
+          "id": "bp-design-wheel",
+          "state": "set_aside",
+          "why": "LYSNE's offers are a line of small words today. A round mark in Burgundy carries the offer at a glance, without a box over the picture."
+        }
+      ],
+      "state": "draft",
+      "version": 2,
+      "writtenAt": "2026-10-14T10:32:00.000Z"
+    },
+    "type": "book.state"
+  }
+anna answerBookProposal({"answer":"not_now","bookId":"bb-design-2","proposalId":"bp-design-wheel"})
+  {
+    "ask": "Edited from version 1",
+    "askedBy": "u-anna",
+    "body": {
+      "checks": {
+        "contrast": [
+          {"need":4.5,"ok":true,"pair":"text on background","ratio":13.17},
+          {"need":4.5,"ok":true,"pair":"text on surface","ratio":14.6},
+          {"need":4.5,"ok":true,"pair":"on_primary on primary","ratio":13.17},
+          {"need":4.5,"ok":true,"pair":"cta_text on cta","ratio":10.09},
+          {"need":4.5,"ok":true,"pair":"text_muted on background","ratio":5.26},
+          {"need":4.5,"ok":true,"pair":"on_primary on secondary","ratio":10.09}
+        ],
+        "fails": [],
+        "missingRoles": []
+      },
+      "colours": [
+        {
+          "hex": "#2B1D17",
+          "name": "Night brown",
+          "role": "primary",
+          "source": "brand_dna",
+          "use": "The brand's dark: words, the logo on light."
+        },
+        {
+          "hex": "#5C1F2A",
+          "name": "Burgundy cap",
+          "role": "secondary",
+          "source": "brand_dna",
+          "use": "The cap's colour; a badge, a price."
+        },
+        {
+          "hex": "#A8642B",
+          "name": "Amber glass",
+          "role": "accent",
+          "source": "brand_dna",
+          "use": "A thin rule or a small mark, never words."
+        },
+        {
+          "hex": "#EFE6DA",
+          "name": "Linen",
+          "role": "background",
+          "source": "brand_dna",
+          "use": "A flat ground when there is no photograph."
+        },
+        {"hex":"#F7F2EA","name":"Warm paper","role":"surface","source":"fume","use":"A card or a panel on Linen."},
+        {
+          "hex": "#2B1D17",
+          "name": "Night brown",
+          "role": "text",
+          "source": "brand_dna",
+          "use": "Words on a light wall or on Linen."
+        },
+        {
+          "hex": "#6B5B4E",
+          "name": "Walnut",
+          "role": "text_muted",
+          "source": "fume",
+          "use": "A size, a caption, the small print."
+        },
+        {"hex":"#EFE6DA","name":"Linen","role":"on_primary","source":"brand_dna","use":"Words on Night brown."},
+        {"hex":"#F7F2EA","name":"Warm paper","role":"on_photo","source":"fume","use":"Words on a dark photograph."},
+        {"hex":"#5C1F2A","name":"Burgundy cap","role":"cta","source":"brand_dna","use":"The call to action's pill."},
+        {"hex":"#EFE6DA","name":"Linen","role":"cta_text","source":"brand_dna","use":"The words on the call to action."},
+        {"hex":"#B5A691","name":"Evening stone","role":"border","source":"brand_dna","use":"A hairline on Linen."},
+        {
+          "hex": "#3E4A5C",
+          "name": "Dusk blue",
+          "role": "support",
+          "source": "brand_dna",
+          "use": "A quiet accent in winter, sparingly."
+        }
+      ],
+      "components": [
+        {
+          "background": null,
+          "colour": "text",
+          "name": "headline",
+          "paddingPx": 0,
+          "purpose": "The one line that says the idea.",
+          "radius": "none",
+          "rules": ["One line, two at most.","Ends with a full stop."],
+          "style": "h1"
+        },
+        {
+          "background": null,
+          "colour": "text",
+          "name": "subline",
+          "paddingPx": 0,
+          "purpose": "The product as printed, or a short second line.",
+          "radius": "none",
+          "rules": ["Never longer than the headline."],
+          "style": "subline"
+        },
+        {
+          "background": null,
+          "colour": "secondary",
+          "name": "price",
+          "paddingPx": 0,
+          "purpose": "A price or an offer, stated plainly.",
+          "radius": "none",
+          "rules": ["Figures, a space before %."],
+          "style": "price"
+        },
+        {
+          "background": "cta",
+          "colour": "cta_text",
+          "name": "cta",
+          "paddingPx": 22,
+          "purpose": "The call to action, on a story or a banner.",
+          "radius": "pill",
+          "rules": ["Two words.","Never on a feed picture."],
+          "style": "cta"
+        },
+        {
+          "background": "secondary",
+          "colour": "on_primary",
+          "name": "badge",
+          "paddingPx": 12,
+          "purpose": "A small mark: a set, a season.",
+          "radius": "small",
+          "rules": ["One per creative at most."],
+          "style": "label"
+        },
+        {
+          "background": null,
+          "colour": "text_muted",
+          "name": "product_name",
+          "paddingPx": 0,
+          "purpose": "The name and size, as on the label.",
+          "radius": "none",
+          "rules": ["As printed: Night Body Oil · 100 ml."],
+          "style": "label"
+        },
+        {
+          "background": null,
+          "colour": "text_muted",
+          "name": "legal",
+          "paddingPx": 0,
+          "purpose": "The offer's terms.",
+          "radius": "none",
+          "rules": ["Only when the offer needs it."],
+          "style": "legal"
+        },
+        {
+          "background": null,
+          "colour": "primary",
+          "name": "logo",
+          "paddingPx": 0,
+          "purpose": "The wordmark, where the label does not show it.",
+          "radius": "none",
+          "rules": ["Never twice on one creative."],
+          "style": "label"
+        },
+        {
+          "background": null,
+          "base": "text",
+          "colour": "text_muted",
+          "name": "Ingredients",
+          "paddingPx": 0,
+          "purpose": "What is in the oil, as the label says it, under the product's name.",
+          "radius": "none",
+          "rules": ["Only on a product story.","A middle dot between the ingredients, as on the label."],
+          "sample": "Mandelolje · Squalan",
+          "style": "caption"
+        }
+      ],
+      "css": ".brand {\n  --color-primary: #2B1D17;\n  --color-secondary: #5C1F2A;\n  --color-accent: #A8642B;\n  --color-background: #EFE6DA;\n  --color-surface: #F7F2EA;\n  --color-text: #2B1D17;\n  --color-text-muted: #6B5B4E;\n  --color-on-primary: #EFE6DA;\n  --color-on-photo: #F7F2EA;\n  --color-cta: #5C1F2A;\n  --color-cta-text: #EFE6DA;\n  --color-border: #B5A691;\n  --color-support: #3E4A5C;\n  --font-display: \"Cormorant\", \"Cormorant Garamond\", serif;\n  --font-body: \"Inter\", sans-serif;\n  --type-display-size: 104px;\n  --type-display-line: 1;\n  --type-display-tracking: -0.01em;\n  --type-display-weight: 400;\n  --type-h1-size: 76px;\n  --type-h1-line: 1.05;\n  --type-h1-tracking: -0.01em;\n  --type-h1-weight: 400;\n  --type-h2-size: 52px;\n  --type-h2-line: 1.1;\n  --type-h2-tracking: 0em;\n  --type-h2-weight: 400;\n  --type-subline-size: 30px;\n  --type-subline-line: 1.3;\n  --type-subline-tracking: 0em;\n  --type-subline-weight: 400;\n  --type-body-size: 28px;\n  --type-body-line: 1.45;\n  --type-body-tracking: 0em;\n  --type-body-weight: 400;\n  --type-caption-size: 22px;\n  --type-caption-line: 1.35;\n  --type-caption-tracking: 0em;\n  --type-caption-weight: 400;\n  --type-label-size: 20px;\n  --type-label-line: 1.2;\n  --type-label-tracking: 0.08em;\n  --type-label-weight: 500;\n  --type-cta-size: 26px;\n  --type-cta-line: 1;\n  --type-cta-tracking: 0.01em;\n  --type-cta-weight: 500;\n  --type-price-size: 30px;\n  --type-price-line: 1.2;\n  --type-price-tracking: 0em;\n  --type-price-weight: 500;\n  --type-legal-size: 16px;\n  --type-legal-line: 1.35;\n  --type-legal-tracking: 0em;\n  --type-legal-weight: 400;\n  --space-1: 8px;\n  --space-2: 16px;\n  --space-3: 24px;\n  --space-4: 32px;\n  --space-6: 48px;\n  --space-8: 64px;\n  --space-12: 96px;\n  --radius-none: 0px;\n  --radius-small: 4px;\n  --radius-large: 16px;\n  --radius-pill: 999px;\n}",
+      "examples": [
+        {
+          "format": "feed",
+          "image": "/demo/lysne/02-01-feed.jpg",
+          "layers": [
+            {"align":"right","component":"headline","h":14,"text":"Kvelden din, litt langsommere.","w":56,"x":37,"y":6},
+            {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":56,"x":37,"y":22}
+          ],
+          "name": "The evening, launched",
+          "picture": "The bottle low on evening stone; the light wall above it, to the right, is calm.",
+          "purpose": "Launch",
+          "why": "The headline on the lightest part of the wall, the bottle keeps the lower half; no logo, since the label shows it."
+        },
+        {
+          "format": "story",
+          "image": "/demo/lysne/01-03-story.jpg",
+          "layers": [
+            {"align":"left","component":"headline","h":9,"text":"Gi bort en roligere kveld.","w":60,"x":8,"y":15},
+            {"align":"left","component":"price","h":3,"text":"Kveldssettet · 25 % av","w":60,"x":8,"y":26},
+            {"align":"left","component":"cta","h":4.5,"text":"Se settet","w":32,"x":8,"y":31},
+            {"align":"left","component":"legal","h":2,"text":"Til og med mandag 30. november.","w":60,"x":8,"y":37}
+          ],
+          "name": "The set, as an offer",
+          "picture": "The bottle low in a corner of light; the wall above it is calm.",
+          "purpose": "Offer",
+          "why": "Every word above the bottle and below the 250 pixels the platform covers at the top."
+        },
+        {
+          "format": "square",
+          "image": "/demo/lysne/04-06-square.jpg",
+          "layers": [
+            {
+              "align": "right",
+              "component": "headline",
+              "h": 22,
+              "text": "Mandelolje og squalan. Ikke noe mer.",
+              "w": 50,
+              "x": 44,
+              "y": 7
+            },
+            {"align":"right","component":"product_name","h":3,"text":"Night Body Oil · 100 ml","w":50,"x":44,"y":31}
+          ],
+          "name": "What is in it",
+          "picture": "The bottle to the left, a hand on the stone; the wall above the hand is calm.",
+          "purpose": "Product story",
+          "why": "The words to the right, over the calm wall, the bottle to the left; aligned to the right margin."
+        },
+        {
+          "format": "story",
+          "image": "/demo/lysne/07-11-story.jpg",
+          "layers": [{"align":"left","component":"headline","h":14,"text":"Varm oljen i hendene. Pust ut.","w":40,"x":8,"y":15}],
+          "name": "An everyday post",
+          "picture": "The bottle to the right, its shadow behind it; the wall to the left is calm from top to bottom.",
+          "purpose": "Everyday post",
+          "why": "One line on the calm side, no call to action; the bottle and its shadow are left to speak."
+        },
+        {
+          "format": "feed",
+          "image": "/demo/lysne/07-10-feed.jpg",
+          "layers": [
+            {
+              "align": "centre",
+              "colour": "on_photo",
+              "component": "headline",
+              "h": 10,
+              "text": "Til noen som fortjener kvelden.",
+              "w": 80,
+              "x": 10,
+              "y": 74
+            },
+            {"align":"centre","colour":"on_photo","component":"logo","h":3,"text":"","w":22,"x":39,"y":88}
+          ],
+          "name": "A gift",
+          "picture": "Hands and a drop of oil against the wall; below them the wall is in shade. No bottle, so no label.",
+          "purpose": "Gift season",
+          "why": "Warm paper words in the shade below the hands; the wordmark, since no label shows it."
+        }
+      ],
+      "formats": [
+        {"columns":6,"format":"feed","gutterPx":24,"marginPx":72,"safeBottomPx":96,"safeTopPx":72},
+        {"columns":6,"format":"square","gutterPx":24,"marginPx":64,"safeBottomPx":64,"safeTopPx":64},
+        {"columns":6,"format":"story","gutterPx":24,"marginPx":72,"safeBottomPx":340,"safeTopPx":250},
+        {"columns":12,"format":"banner","gutterPx":32,"marginPx":96,"safeBottomPx":80,"safeTopPx":80}
+      ],
+      "gaps": [
+        "Can we have Cormorant's font files, or do we keep Cormorant Garamond?",
+        "Is there a version of the wordmark for small sizes?"
+      ],
+      "logo": {
+        "clearSpace": "The height of the L on every side.",
+        "minWidthPx": 160,
+        "placements": [{"format":"banner","where":"top_left","widthPct":12},{"format":"feed","where":"bottom_centre","widthPct":22}],
+        "versions": [
+          {"name":"Wordmark","use":"Night brown, on Linen or a light wall."},
+          {"name":"Wordmark, reversed","use":"Linen, on Night brown or a dark photograph."}
+        ]
+      },
+      "photoText": {
+        "rules": [
+          "Words sit where the picture is calm: the wall above the bottle, or the stone in front of it.",
+          "Never over the bottle, the cap or the label.",
+          "On a busy picture, a soft shade from the edge, never a box.",
+          "Only where the label does not show the name is the wordmark added."
+        ],
+        "scrim": "gradient",
+        "scrimOpacity": 0.3
+      },
+      "radiusPx": {"large":16,"none":0,"pill":999,"small":4},
+      "rules": {
+        "do": [
+          "Let the photograph carry the creative; words are the smaller part.",
+          "Keep words on one side, aligned to the margin.",
+          "Use Burgundy only for the call to action."
+        ],
+        "dont": [
+          "Words over the bottle or the label.",
+          "More than three layers of words.",
+          "Amber glass for words: it is too light to read."
+        ]
+      },
+      "sources": [
+        {"evidence":"Brand DNA colours, approved by Maja","part":"colours","source":"brand_dna"},
+        {"evidence":"LYSNE brand guide 2026.pdf","part":"typefaces","source":"brand_dna"},
+        {"evidence":"Fume's scale for the formats","part":"styles","source":"fume"},
+        {"evidence":"Autumn launch, the approved creatives","part":"examples","source":"memory"}
+      ],
+      "spacing": {"scale":[1,2,3,4,6,8,12],"unitPx":8},
+      "styles": [
+        {"case":"none","font":"display","lineHeight":1,"name":"display","sizePx":104,"trackingEm":-0.01,"weight":400},
+        {"case":"none","font":"display","lineHeight":1.05,"name":"h1","sizePx":76,"trackingEm":-0.01,"weight":400},
+        {"case":"none","font":"display","lineHeight":1.1,"name":"h2","sizePx":52,"trackingEm":0,"weight":400},
+        {"case":"none","font":"body","lineHeight":1.3,"name":"subline","sizePx":30,"trackingEm":0,"weight":400},
+        {"case":"none","font":"body","lineHeight":1.45,"name":"body","sizePx":28,"trackingEm":0,"weight":400},
+        {"case":"none","font":"body","lineHeight":1.35,"name":"caption","sizePx":22,"trackingEm":0,"weight":400},
+        {"case":"upper","font":"body","lineHeight":1.2,"name":"label","sizePx":20,"trackingEm":0.08,"weight":500},
+        {"case":"none","font":"body","lineHeight":1,"name":"cta","sizePx":26,"trackingEm":0.01,"weight":500},
+        {"case":"none","font":"body","lineHeight":1.2,"name":"price","sizePx":30,"trackingEm":0,"weight":500},
+        {"case":"none","font":"body","lineHeight":1.35,"name":"legal","sizePx":16,"trackingEm":0,"weight":400}
+      ],
+      "summary": "LYSNE's creatives are the photograph first: warm, low light and one bottle, with a few words where the wall is calm. Cormorant for what the brand says, Inter for names, sizes and buttons. Night brown words on light walls, Linen on dark ones, and Burgundy only for the call to action.",
+      "typefaces": [
+        {
+          "fallback": "Cormorant Garamond",
+          "family": "Cormorant",
+          "note": "LYSNE's own serif, from the brand guide; Cormorant Garamond on Google Fonts draws it the same.",
+          "role": "display",
+          "source": "brand",
+          "weights": [400,500]
+        },
+        {
+          "fallback": "Inter",
+          "family": "Inter",
+          "note": "Names, sizes, prices and buttons.",
+          "role": "body",
+          "source": "brand",
+          "weights": [400,500]
+        }
+      ]
+    },
+    "createdAt": "2026-10-14T10:32:00.000Z",
+    "edits": [{"at":"2026-10-14T10:32:00.000Z","by":"u-anna","from":null,"path":"components.8"}],
+    "id": "bb-design-2",
+    "kind": "design",
+    "proposals": [
+      {
+        "answeredAt": "2026-10-14T12:32:01.000Z",
+        "answeredBy": "u-anna",
+        "component": {
+          "background": "secondary",
+          "base": "badge",
+          "colour": "on_primary",
+          "name": "Wheel",
+          "paddingPx": 16,
+          "purpose": "A round mark for an offer: the figure big, a word or two with it.",
+          "radius": "pill",
+          "rules": [
+            "Beside the bottle on the calm wall, never over the label.",
+            "Only with an offer, and one per creative.",
+            "The figure and at most two words."
+          ],
+          "sample": "25 % av",
+          "sizePx": 200,
+          "style": "price"
+        },
+        "createdAt": "2026-10-14T10:37:00.000Z",
+        "from": "the set's offer story and 3 past offers",
+        "id": "bp-design-wheel",
+        "state": "set_aside",
+        "why": "LYSNE's offers are a line of small words today. A round mark in Burgundy carries the offer at a glance, without a box over the picture."
+      }
+    ],
+    "state": "draft",
+    "version": 2,
+    "writtenAt": "2026-10-14T10:32:00.000Z"
+  }
+anna answerBookProposal({"answer":"add","bookId":"bb-voice-2","proposalId":"bp-voice-giving"})
+  {"error":"conflict","message":"Only a draft takes the Engine's proposals."}
+-- signed in as maja
+maja answerBookProposal({"answer":"add","bookId":"bb-voice-1","proposalId":"bp-voice-giving"})
+  {"error":"forbidden","message":"Fume’s people answer the Engine’s proposals; the brand asks for a change."}

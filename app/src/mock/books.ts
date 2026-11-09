@@ -9,6 +9,7 @@ import {
   type BrandBookKind,
   type BrandBooksView,
   type CopyLineCheck,
+  type DesignBook,
   type FumeApi,
   type Id,
   type VoiceBook,
@@ -24,7 +25,8 @@ type Calls =
   | "approveBrandBook"
   | "askBrandBookChange"
   | "editBrandBook"
-  | "checkCopyLine";
+  | "checkCopyLine"
+  | "answerBookProposal";
 type Row = BrandBook & { workspaceId: Id };
 
 /** What a customer reads: a version an expert checked, the one in use, and the ones before it. */
@@ -33,7 +35,9 @@ const customerReads = (b: BrandBook) => b.state === "checked" || b.state === "ap
 export function bookCalls(m: Mock): Pick<FumeApi, Calls> {
   const { db, wait } = m;
   const later = (fn: () => void, ticks = 12) => setTimeout(fn, m.latency * ticks);
-  const out = ({ workspaceId: _, ...b }: Row): BrandBook => b as BrandBook;
+  // A customer never reads what the Engine proposes (Round 15): it is Fume's people's to add or set aside.
+  const out = ({ workspaceId: _, proposals, ...b }: Row): BrandBook =>
+    (m.isStaff() && proposals ? { ...b, proposals } : b) as BrandBook;
   const mine = () => db.brandBooks.filter((b) => b.workspaceId === m.workspaceId);
   const readable = (b: Row) => b.workspaceId === m.workspaceId && (m.isStaff() || customerReads(b));
   const find = (bookId: Id) => {
@@ -198,6 +202,43 @@ export function bookCalls(m: Mock): Pick<FumeApi, Calls> {
       Object.assign(row, row === b ? next : edited(row, edits, m.userId));
       m.emit({ type: "book.state", book: out(row) });
       return wait(out(row));
+    },
+    async answerBookProposal({ bookId, proposalId, answer }) {
+      const b = find(bookId);
+      if (!m.isStaff())
+        throw new FumeError("forbidden", "Fume’s people answer the Engine’s proposals; the brand asks for a change.");
+      if (b.state !== "draft") throw new FumeError("conflict", "Only a draft takes the Engine's proposals.");
+      const p = b.proposals?.find((x) => x.id === proposalId);
+      if (!p) throw new FumeError("not_found", "No such proposal.");
+      const head = p.component ? "components" : "speak.traits";
+      const list =
+        (p.component
+          ? (b.body as DesignBook | undefined)?.components
+          : (b.body as VoiceBook | undefined)?.speak.traits) ?? [];
+      if (answer === "add") {
+        if (p.state !== "open") throw new FumeError("conflict", "It was answered already.");
+        const path = `${head}.${list.length}`;
+        const next = edited(b, [{ path, to: null, item: p.component ?? p.block }], m.userId);
+        const mark = next.edits?.find((x) => x.path === path);
+        if (mark) mark.proposal = p.id;
+        Object.assign(b, next);
+        Object.assign(p, { state: "added", answeredBy: m.userId, answeredAt: m.now() });
+      } else if (answer === "not_now") {
+        if (p.state !== "open") throw new FumeError("conflict", "It was answered already.");
+        Object.assign(p, { state: "set_aside", answeredBy: m.userId, answeredAt: m.now() });
+      } else {
+        // The undo of either: a block added from it comes out again, where it is now.
+        const mark =
+          p.state === "added"
+            ? b.edits?.find((x) => x.proposal === p.id && !x.path.includes(".", head.length + 1))
+            : undefined;
+        if (mark) Object.assign(b, edited(b, [{ path: mark.path, to: null }], m.userId));
+        p.state = "open";
+        delete p.answeredBy;
+        delete p.answeredAt;
+      }
+      m.emit({ type: "book.state", book: out(b) });
+      return wait(out(b));
     },
     async checkCopyLine({ text, channel }) {
       const line = text?.trim() ?? "";

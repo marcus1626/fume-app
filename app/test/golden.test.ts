@@ -1300,6 +1300,14 @@ scenario("brand books", async (golden) => {
   await a.writeBrandBook({ kind: "voice" });
   await book.advance(1_000);
   await a.brandBooks();
+  // Round 15 (PROPOSED 9 Nov 2026): the Engine proposes a component; Anna adds the Wheel to the draft, takes it back
+  // out, then sets it aside. An approved version takes no proposal, and a customer never answers one.
+  await a.answerBookProposal({ bookId: "bb-design-2", proposalId: "bp-design-wheel", answer: "add" });
+  await a.answerBookProposal({ bookId: "bb-design-2", proposalId: "bp-design-wheel", answer: "open" });
+  await a.answerBookProposal({ bookId: "bb-design-2", proposalId: "bp-design-wheel", answer: "not_now" });
+  await a.answerBookProposal({ bookId: "bb-voice-2", proposalId: "bp-voice-giving", answer: "add" });
+  book.signInAs("maja", "u-maja");
+  await a.answerBookProposal({ bookId: "bb-voice-1", proposalId: "bp-voice-giving", answer: "add" });
 });
 
 scenario("graphic design", async (golden) => {

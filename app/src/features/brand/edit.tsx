@@ -36,6 +36,8 @@ const Ctx = createContext<EditContext>({ mode: "read", marks: [], commit: () => 
 
 export const EditProvider = Ctx.Provider;
 export const useEditMode = () => useContext(Ctx).mode;
+/** Round 15 (PROPOSED 9 Nov 2026): the whole context, for a book's blocks (blocks.tsx): put in, moved, taken out. */
+export const useBookEdit = () => useContext(Ctx);
 
 /** The title a changed line carries: who changed it, and what it said before. */
 function markTitle(mark: BookEditMark | undefined, who: (id: string) => string): string | undefined {

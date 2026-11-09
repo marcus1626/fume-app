@@ -3,7 +3,12 @@
 // The design system's version 1 is checked by Anna and waits on Maja. Code builds the CSS and measures the contrast,
 // as the brand-book function does (supabase/functions/brand-book/book.ts). The Look Book's version 1 (FLOWS §32),
 // written from twelve of LYSNE's pictures, is checked by Anna and waits on Maja too.
-import type { BrandBook, DesignRole, DesignBook, VoiceBook } from "../../contract";
+// Round 15 (PROPOSED 9 Nov 2026): the books' blocks are the brand's own. The design system's version 2 is Anna's draft:
+// she added a component of LYSNE's own (Ingredients), and the Engine proposes another (a round Wheel for an offer). The
+// Tone of Voice's draft carries the Engine's suggested block for the gift season. Proposals sit beside a version's body,
+// so nothing proposed reaches a creative before the expert adds it and checks the version.
+import type { BookProposal, BrandBook, DesignRole, DesignBook, VoiceBook } from "../../contract";
+import { componentRole } from "../../domain/designComponents";
 import { at, img } from "./helpers";
 import { lysneLook } from "./look";
 
@@ -507,7 +512,8 @@ export function builtDesign(a: Answer): DesignBook {
   measure("on_primary", "primary", 4.5);
   measure("cta_text", "cta", 4.5);
   measure("text_muted", "background", 4.5);
-  for (const c of a.components) if (c.background) measure(c.colour, c.background, c.name === "headline" ? 3 : 4.5);
+  for (const c of a.components)
+    if (c.background) measure(c.colour, c.background, componentRole(c) === "headline" ? 3 : 4.5);
   return {
     ...a,
     css: lines.join("\n"),
@@ -519,9 +525,73 @@ export function builtDesign(a: Answer): DesignBook {
   };
 }
 
+/** The Engine's suggested block for the gift season's Tone of Voice, read from the version's own gift lines. */
+const givingBlock = (): BookProposal => ({
+  id: "bp-voice-giving",
+  block: {
+    trait: "Giving",
+    means: "In the gift season we give time, never things.",
+    do: "Give someone a calmer evening.",
+    dont: "This year's most popular Christmas gift!",
+  },
+  why: "This version adds the gift season's words, and no block says how the voice sounds when it gives.",
+  from: "the gift lines in this version and the Autumn launch's captions",
+  state: "open",
+  createdAt: at(60 * 3 - 2),
+});
+
+/** Version 2 of the design system, Anna's draft: a component of LYSNE's own beside the nine Fume writes. */
+function withIngredients(v: DesignBook): DesignBook {
+  return {
+    ...v,
+    components: [
+      ...v.components,
+      {
+        name: "Ingredients",
+        base: "text",
+        purpose: "What is in the oil, as the label says it, under the product's name.",
+        style: "caption",
+        colour: "text_muted",
+        background: null,
+        radius: "none",
+        paddingPx: 0,
+        sample: "Mandelolje · Squalan",
+        rules: ["Only on a product story.", "A middle dot between the ingredients, as on the label."],
+      },
+    ],
+  };
+}
+
+/** The Engine's proposed component: a round mark for an offer, in place of a line of small words. */
+const wheelComponent = (): BookProposal => ({
+  id: "bp-design-wheel",
+  component: {
+    name: "Wheel",
+    base: "badge",
+    purpose: "A round mark for an offer: the figure big, a word or two with it.",
+    style: "price",
+    colour: "on_primary",
+    background: "secondary",
+    radius: "pill",
+    paddingPx: 16,
+    sizePx: 200,
+    sample: "25 % av",
+    rules: [
+      "Beside the bottle on the calm wall, never over the label.",
+      "Only with an offer, and one per creative.",
+      "The figure and at most two words.",
+    ],
+  },
+  why: "LYSNE's offers are a line of small words today. A round mark in Burgundy carries the offer at a glance, without a box over the picture.",
+  from: "the set's offer story and 3 past offers",
+  state: "open",
+  createdAt: at(60 * 2 - 5),
+});
+
 /** LYSNE's books, newest version first per kind. */
 export function brandBooks(voice: VoiceBook): BrandBook[] {
   const v1: VoiceBook = { ...voice, ...voiceAtWork() };
+  const design1 = builtDesign(lysneDesign());
   return [
     {
       id: "bb-voice-2",
@@ -533,6 +603,7 @@ export function brandBooks(voice: VoiceBook): BrandBook[] {
       createdAt: at(60 * 3),
       writtenAt: at(60 * 3 - 1),
       body: giftSeason(v1),
+      proposals: [givingBlock()],
     },
     {
       id: "bb-voice-1",
@@ -548,6 +619,19 @@ export function brandBooks(voice: VoiceBook): BrandBook[] {
       body: v1,
     },
     {
+      id: "bb-design-2",
+      kind: "design",
+      version: 2,
+      state: "draft",
+      ask: "Edited from version 1",
+      askedBy: "u-anna",
+      createdAt: at(60 * 2),
+      writtenAt: at(60 * 2),
+      body: withIngredients(design1),
+      edits: [{ path: `components.${design1.components.length}`, by: "u-anna", at: at(60 * 2), from: null }],
+      proposals: [wheelComponent()],
+    },
+    {
       id: "bb-design-1",
       kind: "design",
       version: 1,
@@ -556,7 +640,7 @@ export function brandBooks(voice: VoiceBook): BrandBook[] {
       writtenAt: at(60 * 26 - 1),
       checkedBy: "u-anna",
       checkedAt: at(60 * 5),
-      body: builtDesign(lysneDesign()),
+      body: design1,
     },
     {
       id: "bb-look-1",

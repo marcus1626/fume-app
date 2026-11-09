@@ -195,7 +195,7 @@ const qa = (
 
 /** The design and the words drawn for Feed 9, from LYSNE's design system as it is now (version 1, checked). */
 function designed(): Pick<QaItem, "design" | "drawn"> {
-  const book = brandBooks(voiceBook((e) => engineFound(e))).find((b) => b.kind === "design");
+  const book = brandBooks(voiceBook((e) => engineFound(e))).find((b) => b.kind === "design" && b.state === "checked");
   const words = wordsOf(planCopy["c-autumn"]);
   if (!book || book.kind !== "design" || !book.body || !words) return {};
   const { drawing, ...made } = measured(book.body, "feed", words, {
