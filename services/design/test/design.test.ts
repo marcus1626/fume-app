@@ -281,6 +281,7 @@ test("the writer's own panel for busy pictures gives way to what Fume saw the br
   const seen = { name: "Tile", band: "bottom", align: "left", wordsWidthPct: 50, ground: "photo", words: "light", cta: "outline", source: "site" } as const;
   const b = { ...book, photoText: { ...book.photoText, scrim: "flat" }, onPictures: { layouts: [seen] } } as DesignBook;
   assert.ok([...layoutsFor(b, "feed", {}, true)].every((l) => l.ground !== "flat"), "no panel where the brand sets words on the photo");
+  assert.ok([...layoutsFor(b, "feed", { ground: "flat" }, true)].every((l) => l.ground !== "flat"), "nor from an earlier design kept in a redo");
   // A brand Fume saw nothing of keeps the writer's panel.
   const unseen = { ...b, onPictures: { layouts: [{ ...seen, source: "fume" }] } } as DesignBook;
   assert.ok([...layoutsFor(unseen, "feed", {}, true)].some((l) => l.ground === "flat"));

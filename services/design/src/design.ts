@@ -298,6 +298,7 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
     book.colours.some((c) => c.role === r),
   );
   const scrim = book.photoText?.scrim ?? "gradient";
+  const panel = brandLayouts(book).some((x) => x.ground === "flat") || (scrim === "flat" && !seesBrand(book));
   const grounds: Ground[] = uniq([
     prefer.ground ?? sigGround ?? "photo",
     sigGround ?? "photo",
@@ -308,8 +309,9 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
     // (Marcus, 9 Nov). Without one, a picture with no calm room is one to make again, not one to cover. The book's
     // own scrim is the writer's proposal; where Fume saw how the brand sets its words, that wins (Anthem: words
     // straight on the photo, yet the writer kept a navy panel for busy pictures).
-    ...(brandLayouts(book).some((x) => x.ground === "flat") || (scrim === "flat" && !seesBrand(book)) ? ["flat"] : []),
-  ]).filter((x) => x !== "block" || blockSig) as Ground[];
+    ...(panel ? ["flat"] : []),
+    // A layout kept from an earlier design (a redo) keeps no box the book no longer has.
+  ]).filter((x) => (x !== "block" || blockSig) && (x !== "flat" || panel)) as Ground[];
   const widths = prefer.columns
     ? [prefer.columns]
     : uniq([...(sigColumns ? [sigColumns] : []), ...(format === "banner" ? [6, 8] : [9, 7, 5, 12])]);
