@@ -2,7 +2,7 @@
 import { assertEquals } from "jsr:@std/assert@1";
 import { type Deps, handlePlan, type Written } from "./handler.ts";
 import { type ClaimRead, copyLines, judgeCopy, layoutsOf, type PlanAnswer, type PlanTask, prompt, toBody } from "./plan.ts";
-import { columnOf as columnOfFn, columnPart, recentPart, repeatsHeadline, scenesPart, tooLongFor } from "./plan.ts";
+import { columnOf as columnOfFn, columnPart, type LookForPlan, lookPart, offLook, recentPart, repeatsHeadline, scenesPart, tooLongFor } from "./plan.ts";
 
 const task: PlanTask = {
   run_id: "r1",
@@ -458,4 +458,50 @@ Deno.test("the brand's other recent pictures are shown so a new plan is not one 
   assertEquals(part.split("Sideline long-lens").length - 1, 1, "each picture once");
   assertEquals(part.includes("not one more of these"), true);
   assertEquals(prompt({ ...task, scenes: ["A player leaps at the hoop."] }).includes("<recent_pictures>"), true);
+});
+
+// Anthem's Look Book, as far as the plan reads it (9 Nov): afternoon sun, sideline heights, a never list.
+const anthemLook: LookForPlan = {
+  summary: "Real team-sports photographs from the sideline in afternoon daylight.",
+  light: {
+    key: "Direct afternoon sun in a blue sky",
+    timeOfDay: "Mid-morning to mid-afternoon, sun high; never golden hour, sunset, dusk or night",
+    rules: ["No rim light, no backlit glow, no golden or blue-hour light", "Shadows fall one way"],
+  },
+  camera: { height: "Eye or kneeling height. Never the dramatic low wide hero angle looking up, never top-down or drone." },
+  never: ["Golden hour, sunset, dusk, blue hour or night scenes", "Lens flare as decoration"],
+};
+
+Deno.test("the plan writer reads the brand's Look Book and keeps every picture inside it", () => {
+  assertEquals(lookPart(null), []);
+  assertEquals(lookPart({}), []);
+  const p = prompt({ ...task, look: anthemLook });
+  assertEquals(p.includes("<look_book>") && p.includes("never golden hour, sunset, dusk or night"), true);
+  assertEquals(p.includes("find the variety inside it"), true);
+  assertEquals(scenesPart(["A."]).join(" ").includes("time of day and its light"), false, "variety never asks for another light");
+});
+
+Deno.test("a planned picture the Look Book rules out is a finding; one that rules it out itself is not", () => {
+  const withScene = (scene: string, look = "Afternoon sun"): PlanAnswer => ({
+    ...plan,
+    directions: plan.directions.map((d) => ({ ...d, look: [{ label: "Light", value: look, why: "w" }], creatives: d.creatives.map((c) => ({ ...c, scene })) })),
+  });
+  const golden = offLook(withScene("Low-angle photograph from the lawn at golden hour."), anthemLook);
+  assertEquals(golden.map((f) => `${f.ref} ${f.kind} ${f.blocking}`), ["a/pc1 off_look true", "a/pc2 off_look true"]);
+  assertEquals(golden[0].note.includes("golden hour, looking up from a low angle"), true);
+  assertEquals(offLook(withScene("Sideline at 135 mm in afternoon sun, no rim light, no lens flare."), anthemLook), []);
+  assertEquals(offLook(withScene("s", "Dark blue dusk"), anthemLook).map((f) => f.ref), ["a/look:Light"]);
+  assertEquals(offLook(withScene("At golden hour."), null), [], "no Look Book, nothing to hold");
+  assertEquals(offLook(withScene("At golden hour."), { never: ["Studio white"] }), [], "only what the Look Book rules out");
+});
+
+Deno.test("a plan with a picture outside the Look Book is written once more inside it", async () => {
+  const off: PlanAnswer = { ...plan, directions: plan.directions.map((d) => ({ ...d, creatives: d.creatives.map((c) => ({ ...c, scene: "A hoop at dusk." })) })) };
+  const f = fake({ task: { ...task, look: anthemLook }, answers: [{ ok: true, answer: off, usage }, { ok: true, answer: plan, usage }], reads: [noClaims(off), noClaims(plan)] });
+  await handlePlan(post({ campaignId: "c1" }), f.deps);
+  await f.done();
+  assertEquals(f.calls[2].startsWith("write (Pictures outside the brand's Look Book: a/pc1"), true);
+  assertEquals(f.checks[0].rewritten, true);
+  assertEquals(f.checks[0].look_book, true);
+  assertEquals((f.checks[0].rewrote_for as { kind: string }[]).map((x) => x.kind), ["off_look", "off_look"]);
 });

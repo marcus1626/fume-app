@@ -4,7 +4,7 @@
 // the service role takes the work, and the database checks the model's plan before it becomes the version.
 // The answer comes at once (202); the writing goes on in the background. handler.test.ts runs it without Supabase.
 import type { BrandLayout, ClaimRead, CopyLine, PlanAnswer, PlanTask } from "./plan.ts";
-import { copyLines, copyProblem, judgeCopy } from "./plan.ts";
+import { copyLines, copyProblem, judgeCopy, offLook } from "./plan.ts";
 
 type Failure = { message: string; details?: string | null } | null;
 export interface Usage {
@@ -87,6 +87,8 @@ export async function writePlan(task: PlanTask, deps: Deps): Promise<"written" |
         }
       }
       const judged = judgeCopy(task, lines, read);
+      // The planned pictures against the brand's Look Book: one it rules out is rewritten once, as a claim is.
+      judged.findings.push(...offLook(written.answer, task.look));
       const blocking = judged.findings.filter((f) => f.blocking);
       if (blocking.length && !rewroteCopy && round < 2) {
         rewroteCopy = true;
@@ -94,10 +96,12 @@ export async function writePlan(task: PlanTask, deps: Deps): Promise<"written" |
         const claims = blocking.filter((f) => f.kind === "unbacked_claim");
         const language = blocking.filter((f) => f.kind === "language");
         const repeats = blocking.filter((f) => f.kind === "repeats_headline" || f.kind === "too_long");
+        const offBook = blocking.filter((f) => f.kind === "off_look");
         problem = [
           claims.length ? `Words that make a claim no verified fact states: ${copyProblem(claims)} Rewrite those words without the claim, or keep to the product name, the moment and the brief's message.` : "",
           language.length ? `Words with a mistake in their language: ${copyProblem(language)} Write them correctly.` : "",
           repeats.length ? `${copyProblem(repeats)}` : "",
+          offBook.length ? `Pictures outside the brand's Look Book: ${copyProblem(offBook)}` : "",
         ].filter(Boolean).join(" ");
         continue;
       }
@@ -108,6 +112,8 @@ export async function writePlan(task: PlanTask, deps: Deps): Promise<"written" |
         ...(rewroteCopy ? { rewrote_for: rewroteFor } : {}),
         unbacked: blocking.filter((f) => f.kind === "unbacked_claim").length,
         language: blocking.filter((f) => f.kind === "language").length,
+        off_look: blocking.filter((f) => f.kind === "off_look").length,
+        look_book: Boolean(task.look),
         voice_book: task.voice ? { id: task.voice.id, version: task.voice.version, state: task.voice.state } : null,
         column: task.column ?? null,
         lines: judged.lines,

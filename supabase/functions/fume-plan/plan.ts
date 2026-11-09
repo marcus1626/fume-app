@@ -77,7 +77,19 @@ export interface PlanTask {
   scenes?: string[];
   /** The brand's own layouts for words on its pictures (its design book in use), so each creative is planned in one. */
   layouts?: BrandLayout[];
+  /** The brand's Look Book in use: how its photographs are made, so every planned picture is one of its own. */
+  look?: LookForPlan | null;
 }
+
+/** The parts of a Look Book the plan writer reads (brand_books kind look, body). */
+export type LookForPlan = {
+  summary?: string;
+  signature?: string[];
+  light?: { key?: string; timeOfDay?: string; direction?: string; rules?: string[] };
+  camera?: { height?: string; distance?: string; lenses?: { focalMm?: number; use?: string }[] };
+  people?: Record<string, unknown>;
+  never?: string[];
+};
 
 /** One of the brand's layouts for words on its pictures, as the plan writer is shown it. */
 export type BrandLayout = { name: string; band: string; align: string; wordsWidthPct: number; ground: string; why?: string; cta?: string };
@@ -119,7 +131,7 @@ How to write:
 - Plan exactly as many creatives as the brief asks for, across its formats: a master in the first format, and variants of a master for the other formats or angles. A variant's "of" is its master's id in the same direction. Use only the campaign's product ids.
 - People: real models only when the brief allows people. Never fake customers, testimonials or user-generated content. When in doubt, no people or hands only.
 - Scenes are photographic and concrete: subject, setting, light, composition, where the text sits. No vague adjectives.
-- Masters in one plan differ as a photographer's set does: each takes another shot size (wide, a figure, a close detail), another angle or another light, never the same build twice.
+- Masters in one plan differ as a photographer's set does: each takes another shot size (wide, a figure, a close detail), another moment, place or angle, never the same build twice. With a Look Book, every one stays in its light and its camera.
 - Write in the brief's language (English unless it says otherwise), plainly and briefly. No hype, no exclamation marks.`;
 
 /** What Fume knows about the brand (public.brain_context): confirmed, or only proposed. */
@@ -247,8 +259,91 @@ export function scenesPart(scenes: string[] | undefined): string[] {
   if (!lines.length) return [];
   return [
     `<recent_pictures>\n${lines.map((l) => `- ${l}`).join("\n")}\n</recent_pictures>`,
-    "These are the pictures planned for the brand's other recent campaigns. They run in the same feed, so plan pictures that are not one more of these: within the brand's look, change at least two of the shot's size and distance (a wide scene, a figure, a close detail of hands and product), the camera's angle and height, the time of day and its light, and what the people do. The brand's look is its light, grade and texture, not one camera position.",
+    "These are the pictures planned for the brand's other recent campaigns. They run in the same feed, so plan pictures that are not one more of these: change at least two of the shot's size and distance (a wide scene, a figure, a close detail of hands and product), the place, the moment and what the people do, and the lens and position among those the brand's Look Book uses. Never leave the Look Book to be different: its light, its time of day and its never list stand for every picture.",
   ];
+}
+
+/**
+ * The brand's Look Book in use for the plan writer. Anthem, 9 Nov: the plan writer never saw it, so with only "be
+ * different" to go on it planned golden hour, dusk and low hero angles, all on the Look Book's never list, and the
+ * picture model followed the plan's scene over the Look Book's softer light rule.
+ */
+export function lookPart(look: LookForPlan | null | undefined): string[] {
+  if (!look || typeof look !== "object") return [];
+  const l = look.light ?? {};
+  const c = look.camera ?? {};
+  const body = {
+    summary: look.summary,
+    signature: (look.signature ?? []).slice(0, 6),
+    light: { key: l.key, timeOfDay: l.timeOfDay, direction: l.direction, rules: (l.rules ?? []).slice(0, 6) },
+    camera: {
+      height: c.height,
+      distance: c.distance,
+      lenses: (c.lenses ?? []).slice(0, 5).map((x) => `${x.focalMm} mm: ${x.use}`),
+    },
+    never: (look.never ?? []).slice(0, 12),
+  };
+  if (!body.summary && !l.key && !body.never.length) return [];
+  return [
+    `<look_book>\n${JSON.stringify(body, null, 2)}\n</look_book>`,
+    "This is the brand's Look Book: how its photographs are made. Every scene and every look line in the plan is a picture the brand's own photographer would make with it: in its light and time of day, from its camera heights with its lenses, of its kind of moment, and never one of its never items. Write the light of a scene in the Look Book's words. A picture outside the Look Book is off brand however good the idea: find the variety inside it, in the moment, the place, the shot size and what the people do.",
+  ];
+}
+
+/** Light and camera words a Look Book can rule out, as a scene writes them. */
+const LOOK_TERMS: [string, RegExp][] = [
+  ["golden hour", /golden[- ]hour/i],
+  ["sunset", /sunset/i],
+  ["sunrise", /sunrise/i],
+  ["dusk", /\bdusk\b/i],
+  ["dawn", /\bdawn\b/i],
+  ["blue hour", /blue[- ]hour/i],
+  ["twilight", /twilight/i],
+  ["night", /\bnight\b|nighttime/i],
+  ["looking up from a low angle", /looking up|low[- ]angle|worm'?s[- ]eye/i],
+  ["top-down or drone view", /top[- ]down|bird'?s[- ]eye|\bdrone\b/i],
+  ["backlight or rim light", /backlit|backlight|rim[- ]light/i],
+  ["lens flare", /lens flare/i],
+  ["wet or reflective ground", /\bpuddles?\b|wet (?:asphalt|ground|court|pavement)/i],
+];
+
+/** What the Look Book says never, as one text: its never list, its "No ..." light rules and what follows "never". */
+function lookNever(look: LookForPlan): string {
+  const after = (t: string | undefined) => (t && /never/i.test(t) ? t.slice(t.search(/never/i)) : "");
+  return [
+    ...(look.never ?? []),
+    ...(look.light?.rules ?? []).filter((r) => /^\s*no\b|never/i.test(r)),
+    after(look.light?.timeOfDay),
+    after(look.light?.direction),
+    after(look.camera?.height),
+  ].join(" ");
+}
+
+/**
+ * Planned pictures that ask for what the brand's Look Book rules out. Code decides from the Look Book's own never words;
+ * the plan is rewritten once, as for a claim.
+ */
+export function offLook(a: PlanAnswer, look: LookForPlan | null | undefined): CopyFinding[] {
+  if (!look) return [];
+  const never = lookNever(look);
+  const banned = LOOK_TERMS.filter(([, re]) => re.test(never));
+  if (!banned.length) return [];
+  const out: CopyFinding[] = [];
+  const test = (ref: string, text: string) => {
+    // What a scene rules out itself ("no rim light, no flare") is not asked for.
+    const asked = text.replace(/\b(?:no|never|without|not|avoid|avoiding)\b[^.;,]*/gi, " ");
+    const hits = banned.filter(([, re]) => re.test(asked)).map(([name]) => name);
+    if (hits.length)
+      out.push({
+        ref, text: text.slice(0, 160), kind: "off_look", blocking: true,
+        note: `It asks for ${hits.join(", ")}, which the brand's Look Book never uses. Write this picture inside the Look Book: its light, its time of day and its camera.`,
+      });
+  };
+  for (const d of a.directions) {
+    for (const line of d.look) test(`${d.id}/look:${line.label}`, line.value);
+    for (const c of d.creatives) test(`${d.id}/${c.id}`, c.scene);
+  }
+  return out;
 }
 
 /** The brand's recent headlines from its other campaigns, as lines the new headline must not repeat. */
@@ -282,6 +377,7 @@ export function prompt(task: PlanTask): string {
     ...brainPart(task.brain),
     ...voicePart(task.voice),
     ...recentPart(task.recent),
+    ...lookPart(task.look),
     ...scenesPart(task.scenes),
     ...layoutPart(task.layouts),
     ...columnPart(task.column),
@@ -422,7 +518,7 @@ export function claimPrompt(task: PlanTask, lines: CopyLine[]): string {
 export interface CopyFinding {
   ref: string;
   text: string;
-  kind: "unbacked_claim" | "off_voice" | "avoided_word" | "language" | "repeats_headline" | "too_long";
+  kind: "unbacked_claim" | "off_voice" | "avoided_word" | "language" | "repeats_headline" | "too_long" | "off_look";
   blocking: boolean;
   note: string;
 }

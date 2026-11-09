@@ -4,7 +4,7 @@ import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { betaZodOutputFormat } from "npm:@anthropic-ai/sdk@1.3.0/helpers/beta/zod";
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
 import { handlePlan, type Written } from "./handler.ts";
-import { CLAIM_SYSTEM, ClaimRead, claimPrompt, columnOf, costOf, layoutsOf, type CopyLine, PlanAnswer, type PlanTask, prompt, SYSTEM, toBody } from "./plan.ts";
+import { CLAIM_SYSTEM, ClaimRead, claimPrompt, columnOf, costOf, layoutsOf, type CopyLine, type LookForPlan, PlanAnswer, type PlanTask, prompt, SYSTEM, toBody } from "./plan.ts";
 
 // The cheap model first (Marcus, 3 Nov), and a stronger one where the work is creative: the plan's ideas and words
 // (Marcus, 9 Nov: "Virkelig bruk Engine ... kreativitet"). The claim check stays on the cheap model.
@@ -111,7 +111,7 @@ Deno.serve((req) =>
           // a headline that fits it, and the copy check holds it). Read through the database: the service role has no
           // rights on the tables themselves.
           const extras = await service.rpc("fume_plan_extras", { p_campaign_id: campaignId });
-          const x = (extras.error ? null : extras.data) as { recent?: string[]; scenes?: string[]; layouts?: unknown } | null;
+          const x = (extras.error ? null : extras.data) as { recent?: string[]; scenes?: string[]; layouts?: unknown; look?: unknown } | null;
           return {
             data: {
               ...data,
@@ -121,6 +121,7 @@ Deno.serve((req) =>
               scenes: Array.isArray(x?.scenes) ? x!.scenes.filter((v): v is string => typeof v === "string") : [],
               column: columnOf(x?.layouts),
               layouts: layoutsOf(x?.layouts),
+              look: x?.look && typeof x.look === "object" && !Array.isArray(x.look) ? (x.look as LookForPlan) : null,
             },
             error: null,
           };
