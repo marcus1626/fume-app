@@ -109,6 +109,7 @@ export async function writePlan(task: PlanTask, deps: Deps): Promise<"written" |
         unbacked: blocking.filter((f) => f.kind === "unbacked_claim").length,
         language: blocking.filter((f) => f.kind === "language").length,
         voice_book: task.voice ? { id: task.voice.id, version: task.voice.version, state: task.voice.state } : null,
+        column: task.column ?? null,
         lines: judged.lines,
         findings: judged.findings,
       });
