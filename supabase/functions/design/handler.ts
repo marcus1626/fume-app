@@ -29,7 +29,7 @@ export interface Deps {
     picture(t: Take): Promise<Uint8Array | null>;
   };
   choose(t: Take, words: Words, picture: Uint8Array, spent: Spent): Promise<LayoutChoice | null>;
-  /** For a fixed picture: the layout chosen for the design of the picture it was fixed from, so the redo keeps it. */
+  /** The layout chosen for the picture's earlier design (its own, or the one before its fix), so a redo keeps it. */
   before?(t: Take): Promise<LayoutChoice | null>;
   review(t: Take, words: Words, png: Uint8Array, spent: Spent, set?: { cta?: string } | null): Promise<Review | null>;
   /** The design service (services/design): POST /api/design. */
@@ -59,8 +59,8 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     const format = formatOf(t);
     const picture = await d.service.picture(t);
     if (!picture) return await fail("The picture could not be read.");
-    // A fix changes a small part of the picture, so its design keeps the layout chosen before (9 Nov: Dressmann's
-    // redone designs moved their words and broke "MANDAG"). A designer's own ask gets a fresh look.
+    // A picture designed again (new words) or fixed (a small part redrawn) keeps the layout chosen before (9 Nov:
+    // Dressmann's redone designs moved their words and broke "MANDAG"). A designer's own ask gets a fresh look.
     let choice: LayoutChoice | null = null;
     let kept = false;
     if (!t.ask && d.before) {

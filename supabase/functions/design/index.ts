@@ -100,15 +100,15 @@ Deno.serve((req) =>
       before: async (t) => {
         const { data: layer } = await service.from("design_layers").select("candidate_id").eq("id", t.layer_id).maybeSingle();
         let id = (layer as { candidate_id?: string } | null)?.candidate_id;
-        // Up the line of fixes (a fix of a fix), to the newest design made on an earlier form of the picture.
-        for (let i = 0; id && i < 4; i++) {
-          const { data: c } = await service.from("candidates").select("fixed_from").eq("id", id).maybeSingle();
-          id = (c as { fixed_from?: string | null } | null)?.fixed_from ?? undefined;
-          if (!id) return null;
+        // The picture's own newest design (it is designed again, e.g. for new words), then up the line of fixes (a fix
+        // of a fix) to the newest design made on an earlier form of the picture.
+        for (let i = 0; id && i < 5; i++) {
           const { data: made } = await service.from("design_layers").select("choice").eq("candidate_id", id).eq("state", "made")
-            .order("created_at", { ascending: false }).limit(1).maybeSingle();
+            .neq("id", t.layer_id).order("created_at", { ascending: false }).limit(1).maybeSingle();
           const parsed = LayoutChoice.safeParse((made as { choice?: unknown } | null)?.choice);
           if (parsed.success) return parsed.data;
+          const { data: c } = await service.from("candidates").select("fixed_from").eq("id", id).maybeSingle();
+          id = (c as { fixed_from?: string | null } | null)?.fixed_from ?? undefined;
         }
         return null;
       },
