@@ -116,6 +116,7 @@ describe("the music and the clock", () => {
   test("times as the timeline writes them", () => {
     expect(timecode(0)).toBe("0:00");
     expect(timecode(12.56, true)).toBe("0:12.5");
+    expect(timecode(4.1, true)).toBe("0:04.1");
     expect(timecode(75)).toBe("1:15");
   });
 });

@@ -17,7 +17,7 @@ maja session() → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -23326,7 +23326,7 @@ jonas session() → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -23972,7 +23972,7 @@ ida session() → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -24618,7 +24618,7 @@ anna session() → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -28036,7 +28036,7 @@ anna qaQueue()
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":89},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":96},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
@@ -28127,8 +28127,8 @@ anna qaQueue()
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":91},
-                  {"label":"Cap","value":88},
+                  {"label":"Label","value":89},
+                  {"label":"Cap","value":89},
                   {"label":"Glass","value":95},
                   {"label":"Size","value":92}
                 ],
@@ -28299,7 +28299,7 @@ anna qaQueue()
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":92},
-                  {"label":"Cap","value":44},
+                  {"label":"Cap","value":52},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
@@ -28586,7 +28586,7 @@ anna qaQueue()
                 "parts": [
                   {"label":"Label","value":96},
                   {"label":"Cap","value":93},
-                  {"label":"Glass","value":50},
+                  {"label":"Glass","value":58},
                   {"label":"Size","value":97}
                 ],
                 "value": 58,
@@ -28595,7 +28595,12 @@ anna qaQueue()
               {"id":"brand","label":"Brand","value":86},
               {"id":"first_second","label":"First second","value":86},
               {"id":"rhythm","label":"Rhythm","value":76,"why":"The button comes in a quarter second after the beat"},
-              {"id":"text_on_screen","label":"Text on screen","value":88}
+              {
+                "id": "text_on_screen",
+                "label": "Text on screen",
+                "value": 68,
+                "why": "The button sits over the name on the label from 0:04"
+              }
             ],
             "product": 58,
             "why": [{"score":"product","text":"Oil leaks from the glass at the base in shot 1"}]
@@ -28620,6 +28625,15 @@ anna qaQueue()
             "id": "fi-v2",
             "seconds": {"from":4,"to":4.25},
             "severity": "minor",
+            "status": "open"
+          },
+          {
+            "dimension": "design",
+            "expected": "The button clear of the label, as LYSNE’s design system places it",
+            "finding": "From 0:04 the button sits over the name on the label.",
+            "id": "fi-v3",
+            "seconds": {"from":4,"to":6},
+            "severity": "major",
             "status": "open"
           }
         ],
@@ -28735,9 +28749,9 @@ anna qaQueue()
             "style": "small",
             "text": "Night Body Oil · 100 ml",
             "visible": true,
-            "w": 0.6,
-            "x": 0.08,
-            "y": 0.24
+            "w": 0.5,
+            "x": 0.3,
+            "y": 0.73
           },
           {
             "h": 0.1,
@@ -28747,9 +28761,9 @@ anna qaQueue()
             "style": "headline",
             "text": "For the hour before sleep.",
             "visible": true,
-            "w": 0.84,
-            "x": 0.08,
-            "y": 0.13
+            "w": 0.62,
+            "x": 0.3,
+            "y": 0.62
           },
           {
             "h": 0.05,
@@ -28905,10 +28919,10 @@ anna qaQueue()
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":97},
+                  {"label":"Label","value":90},
                   {"label":"Cap","value":94},
                   {"label":"Glass","value":91},
-                  {"label":"Size","value":88}
+                  {"label":"Size","value":90}
                 ],
                 "value": 90
               },
@@ -38137,7 +38151,7 @@ anna documents("w-lysne")
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":88},
-                    {"label":"Cap","value":66},
+                    {"label":"Cap","value":74},
                     {"label":"Glass","value":92},
                     {"label":"Size","value":89}
                   ],
@@ -38345,7 +38359,7 @@ anna documents("w-lysne")
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":95},
+                    {"label":"Label","value":88},
                     {"label":"Cap","value":92},
                     {"label":"Glass","value":89},
                     {"label":"Size","value":96}
@@ -38545,7 +38559,7 @@ anna documents("w-lysne")
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -38553,17 +38567,19 @@ anna documents("w-lysne")
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":92},
+                    {"label":"Label","value":74},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
                     {"label":"Size","value":93}
                   ],
-                  "value": 82
+                  "value": 74,
+                  "why": "The size on the label reads 200 ml; it is 100 ml"
                 },
                 {"id":"brand","label":"Brand","value":91},
                 {"id":"craft","label":"Craft","value":88}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-3",
@@ -38752,7 +38768,7 @@ anna documents("w-lysne")
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":89},
-                    {"label":"Cap","value":56},
+                    {"label":"Cap","value":64},
                     {"label":"Glass","value":93},
                     {"label":"Size","value":90}
                   ],
@@ -39190,7 +39206,7 @@ anna qaQueue("w-lysne")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":89},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":96},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
@@ -39281,8 +39297,8 @@ anna qaQueue("w-lysne")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":91},
-                  {"label":"Cap","value":88},
+                  {"label":"Label","value":89},
+                  {"label":"Cap","value":89},
                   {"label":"Glass","value":95},
                   {"label":"Size","value":92}
                 ],
@@ -39453,7 +39469,7 @@ anna qaQueue("w-lysne")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":92},
-                  {"label":"Cap","value":44},
+                  {"label":"Cap","value":52},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
@@ -39740,7 +39756,7 @@ anna qaQueue("w-lysne")
                 "parts": [
                   {"label":"Label","value":96},
                   {"label":"Cap","value":93},
-                  {"label":"Glass","value":50},
+                  {"label":"Glass","value":58},
                   {"label":"Size","value":97}
                 ],
                 "value": 58,
@@ -39749,7 +39765,12 @@ anna qaQueue("w-lysne")
               {"id":"brand","label":"Brand","value":86},
               {"id":"first_second","label":"First second","value":86},
               {"id":"rhythm","label":"Rhythm","value":76,"why":"The button comes in a quarter second after the beat"},
-              {"id":"text_on_screen","label":"Text on screen","value":88}
+              {
+                "id": "text_on_screen",
+                "label": "Text on screen",
+                "value": 68,
+                "why": "The button sits over the name on the label from 0:04"
+              }
             ],
             "product": 58,
             "why": [{"score":"product","text":"Oil leaks from the glass at the base in shot 1"}]
@@ -39774,6 +39795,15 @@ anna qaQueue("w-lysne")
             "id": "fi-v2",
             "seconds": {"from":4,"to":4.25},
             "severity": "minor",
+            "status": "open"
+          },
+          {
+            "dimension": "design",
+            "expected": "The button clear of the label, as LYSNE’s design system places it",
+            "finding": "From 0:04 the button sits over the name on the label.",
+            "id": "fi-v3",
+            "seconds": {"from":4,"to":6},
+            "severity": "major",
             "status": "open"
           }
         ],
@@ -39889,9 +39919,9 @@ anna qaQueue("w-lysne")
             "style": "small",
             "text": "Night Body Oil · 100 ml",
             "visible": true,
-            "w": 0.6,
-            "x": 0.08,
-            "y": 0.24
+            "w": 0.5,
+            "x": 0.3,
+            "y": 0.73
           },
           {
             "h": 0.1,
@@ -39901,9 +39931,9 @@ anna qaQueue("w-lysne")
             "style": "headline",
             "text": "For the hour before sleep.",
             "visible": true,
-            "w": 0.84,
-            "x": 0.08,
-            "y": 0.13
+            "w": 0.62,
+            "x": 0.3,
+            "y": 0.62
           },
           {
             "h": 0.05,
@@ -40474,10 +40504,10 @@ anna qaQueue("w-solv")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":97},
+                  {"label":"Label","value":90},
                   {"label":"Cap","value":94},
                   {"label":"Glass","value":91},
-                  {"label":"Size","value":88}
+                  {"label":"Size","value":90}
                 ],
                 "value": 90
               },
@@ -41653,7 +41683,7 @@ anna document("doc-autumn-m3")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":88},
-                  {"label":"Cap","value":66},
+                  {"label":"Cap","value":74},
                   {"label":"Glass","value":92},
                   {"label":"Size","value":89}
                 ],
@@ -41861,7 +41891,7 @@ anna document("doc-autumn-m3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":95},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":92},
                   {"label":"Glass","value":89},
                   {"label":"Size","value":96}
@@ -42061,7 +42091,7 @@ anna document("doc-autumn-m3")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -42069,17 +42099,19 @@ anna document("doc-autumn-m3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":92},
+                  {"label":"Label","value":74},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
-                "value": 82
+                "value": 74,
+                "why": "The size on the label reads 200 ml; it is 100 ml"
               },
               {"id":"brand","label":"Brand","value":91},
               {"id":"craft","label":"Craft","value":88}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-3",
@@ -42268,7 +42300,7 @@ anna document("doc-autumn-m3")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":89},
-                  {"label":"Cap","value":56},
+                  {"label":"Cap","value":64},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
                 ],
@@ -42850,7 +42882,7 @@ sander session() → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -46962,7 +46994,7 @@ vera session() → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -54365,7 +54397,7 @@ nora session() → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -61501,7 +61533,7 @@ nora qaQueue()
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":89},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":96},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
@@ -61599,8 +61631,8 @@ nora qaQueue()
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":91},
-                  {"label":"Cap","value":88},
+                  {"label":"Label","value":89},
+                  {"label":"Cap","value":89},
                   {"label":"Glass","value":95},
                   {"label":"Size","value":92}
                 ],
@@ -61785,7 +61817,7 @@ nora qaQueue()
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":92},
-                  {"label":"Cap","value":44},
+                  {"label":"Cap","value":52},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
@@ -62086,7 +62118,7 @@ nora qaQueue()
                 "parts": [
                   {"label":"Label","value":96},
                   {"label":"Cap","value":93},
-                  {"label":"Glass","value":50},
+                  {"label":"Glass","value":58},
                   {"label":"Size","value":97}
                 ],
                 "value": 58,
@@ -62095,7 +62127,12 @@ nora qaQueue()
               {"id":"brand","label":"Brand","value":86},
               {"id":"first_second","label":"First second","value":86},
               {"id":"rhythm","label":"Rhythm","value":76,"why":"The button comes in a quarter second after the beat"},
-              {"id":"text_on_screen","label":"Text on screen","value":88}
+              {
+                "id": "text_on_screen",
+                "label": "Text on screen",
+                "value": 68,
+                "why": "The button sits over the name on the label from 0:04"
+              }
             ],
             "product": 58,
             "why": [{"score":"product","text":"Oil leaks from the glass at the base in shot 1"}]
@@ -62120,6 +62157,15 @@ nora qaQueue()
             "id": "fi-v2",
             "seconds": {"from":4,"to":4.25},
             "severity": "minor",
+            "status": "open"
+          },
+          {
+            "dimension": "design",
+            "expected": "The button clear of the label, as LYSNE’s design system places it",
+            "finding": "From 0:04 the button sits over the name on the label.",
+            "id": "fi-v3",
+            "seconds": {"from":4,"to":6},
+            "severity": "major",
             "status": "open"
           }
         ],
@@ -62242,9 +62288,9 @@ nora qaQueue()
             "style": "small",
             "text": "Night Body Oil · 100 ml",
             "visible": true,
-            "w": 0.6,
-            "x": 0.08,
-            "y": 0.24
+            "w": 0.5,
+            "x": 0.3,
+            "y": 0.73
           },
           {
             "h": 0.1,
@@ -62254,9 +62300,9 @@ nora qaQueue()
             "style": "headline",
             "text": "For the hour before sleep.",
             "visible": true,
-            "w": 0.84,
-            "x": 0.08,
-            "y": 0.13
+            "w": 0.62,
+            "x": 0.3,
+            "y": 0.62
           },
           {
             "h": 0.05,
@@ -80451,7 +80497,7 @@ nora documents("w-lysne")
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":88},
-                    {"label":"Cap","value":66},
+                    {"label":"Cap","value":74},
                     {"label":"Glass","value":92},
                     {"label":"Size","value":89}
                   ],
@@ -80659,7 +80705,7 @@ nora documents("w-lysne")
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":95},
+                    {"label":"Label","value":88},
                     {"label":"Cap","value":92},
                     {"label":"Glass","value":89},
                     {"label":"Size","value":96}
@@ -80859,7 +80905,7 @@ nora documents("w-lysne")
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -80867,17 +80913,19 @@ nora documents("w-lysne")
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":92},
+                    {"label":"Label","value":74},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
                     {"label":"Size","value":93}
                   ],
-                  "value": 82
+                  "value": 74,
+                  "why": "The size on the label reads 200 ml; it is 100 ml"
                 },
                 {"id":"brand","label":"Brand","value":91},
                 {"id":"craft","label":"Craft","value":88}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-3",
@@ -81066,7 +81114,7 @@ nora documents("w-lysne")
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":89},
-                    {"label":"Cap","value":56},
+                    {"label":"Cap","value":64},
                     {"label":"Glass","value":93},
                     {"label":"Size","value":90}
                   ],
@@ -82703,7 +82751,7 @@ nora document("doc-autumn-m3")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":88},
-                  {"label":"Cap","value":66},
+                  {"label":"Cap","value":74},
                   {"label":"Glass","value":92},
                   {"label":"Size","value":89}
                 ],
@@ -82911,7 +82959,7 @@ nora document("doc-autumn-m3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":95},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":92},
                   {"label":"Glass","value":89},
                   {"label":"Size","value":96}
@@ -83111,7 +83159,7 @@ nora document("doc-autumn-m3")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -83119,17 +83167,19 @@ nora document("doc-autumn-m3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":92},
+                  {"label":"Label","value":74},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
-                "value": 82
+                "value": 74,
+                "why": "The size on the label reads 200 ml; it is 100 ml"
               },
               {"id":"brand","label":"Brand","value":91},
               {"id":"craft","label":"Craft","value":88}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-3",
@@ -83318,7 +83368,7 @@ nora document("doc-autumn-m3")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":89},
-                  {"label":"Cap","value":56},
+                  {"label":"Cap","value":64},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
                 ],
@@ -84494,7 +84544,7 @@ even session() → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -88259,7 +88309,7 @@ maja (agency's client) session() → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -90929,7 +90979,7 @@ jonas (agency's client) session() → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}

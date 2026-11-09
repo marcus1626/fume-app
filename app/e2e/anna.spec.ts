@@ -142,7 +142,7 @@ test("Anna settles the Engine's comments in Check", async ({ page }) => {
   // The scores are a chip in the head that opens the board: the cap is the part under the bar
   await page.getByRole("button", { name: /^Under the bar · Product 52/ }).click();
   await expect(page.getByRole("meter", { name: "Product" })).toHaveAttribute("aria-valuenow", "52");
-  await expect(page.getByRole("meter", { name: "Cap" })).toHaveAttribute("aria-valuenow", "44");
+  await expect(page.getByRole("meter", { name: "Cap" })).toHaveAttribute("aria-valuenow", "52");
 
   // The cap is off: the product finding is decided first, before the creative is marked checked
   await expect(page.getByRole("button", { name: /^Mark checked/ })).toBeDisabled();

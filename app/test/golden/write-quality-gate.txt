@@ -64,8 +64,8 @@ anna qaCheck("qa-1") → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":91},
-                {"label":"Cap","value":88},
+                {"label":"Label","value":89},
+                {"label":"Cap","value":89},
                 {"label":"Glass","value":95},
                 {"label":"Size","value":92}
               ],
@@ -108,7 +108,7 @@ anna qaCheck("qa-1") → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -162,8 +162,8 @@ anna qaCheck("qa-1")
             "id": "product",
             "label": "Product",
             "parts": [
-              {"label":"Label","value":91},
-              {"label":"Cap","value":88},
+              {"label":"Label","value":89},
+              {"label":"Cap","value":89},
               {"label":"Glass","value":95},
               {"label":"Size","value":92}
             ],
@@ -248,8 +248,8 @@ anna qaUncheck("qa-1") → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":91},
-                {"label":"Cap","value":88},
+                {"label":"Label","value":89},
+                {"label":"Cap","value":89},
                 {"label":"Glass","value":95},
                 {"label":"Size","value":92}
               ],
@@ -292,8 +292,8 @@ anna qaUncheck("qa-1")
             "id": "product",
             "label": "Product",
             "parts": [
-              {"label":"Label","value":91},
-              {"label":"Cap","value":88},
+              {"label":"Label","value":89},
+              {"label":"Cap","value":89},
               {"label":"Glass","value":95},
               {"label":"Size","value":92}
             ],
@@ -382,8 +382,8 @@ anna qaCheck("qa-1") → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":91},
-                {"label":"Cap","value":88},
+                {"label":"Label","value":89},
+                {"label":"Cap","value":89},
                 {"label":"Glass","value":95},
                 {"label":"Size","value":92}
               ],
@@ -429,7 +429,7 @@ anna qaFeedback("qa-2", "The cap reads gold, not burgundy", [{"n":1,"text":"Cap"
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -482,7 +482,7 @@ anna qaFeedback("qa-2", "The cap reads gold, not burgundy", [{"n":1,"text":"Cap"
             "id": "product",
             "label": "Product",
             "parts": [
-              {"label":"Label","value":89},
+              {"label":"Label","value":88},
               {"label":"Cap","value":96},
               {"label":"Glass","value":93},
               {"label":"Size","value":90}
@@ -574,7 +574,7 @@ anna qaQueue()
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":89},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":96},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
@@ -665,7 +665,7 @@ anna qaQueue()
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":89},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":96},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
@@ -763,7 +763,7 @@ anna qaQueue()
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":92},
-                  {"label":"Cap","value":44},
+                  {"label":"Cap","value":52},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
@@ -1050,7 +1050,7 @@ anna qaQueue()
                 "parts": [
                   {"label":"Label","value":96},
                   {"label":"Cap","value":93},
-                  {"label":"Glass","value":50},
+                  {"label":"Glass","value":58},
                   {"label":"Size","value":97}
                 ],
                 "value": 58,
@@ -1059,7 +1059,12 @@ anna qaQueue()
               {"id":"brand","label":"Brand","value":86},
               {"id":"first_second","label":"First second","value":86},
               {"id":"rhythm","label":"Rhythm","value":76,"why":"The button comes in a quarter second after the beat"},
-              {"id":"text_on_screen","label":"Text on screen","value":88}
+              {
+                "id": "text_on_screen",
+                "label": "Text on screen",
+                "value": 68,
+                "why": "The button sits over the name on the label from 0:04"
+              }
             ],
             "product": 58,
             "why": [{"score":"product","text":"Oil leaks from the glass at the base in shot 1"}]
@@ -1084,6 +1089,15 @@ anna qaQueue()
             "id": "fi-v2",
             "seconds": {"from":4,"to":4.25},
             "severity": "minor",
+            "status": "open"
+          },
+          {
+            "dimension": "design",
+            "expected": "The button clear of the label, as LYSNE’s design system places it",
+            "finding": "From 0:04 the button sits over the name on the label.",
+            "id": "fi-v3",
+            "seconds": {"from":4,"to":6},
+            "severity": "major",
             "status": "open"
           }
         ],
@@ -1199,9 +1213,9 @@ anna qaQueue()
             "style": "small",
             "text": "Night Body Oil · 100 ml",
             "visible": true,
-            "w": 0.6,
-            "x": 0.08,
-            "y": 0.24
+            "w": 0.5,
+            "x": 0.3,
+            "y": 0.73
           },
           {
             "h": 0.1,
@@ -1211,9 +1225,9 @@ anna qaQueue()
             "style": "headline",
             "text": "For the hour before sleep.",
             "visible": true,
-            "w": 0.84,
-            "x": 0.08,
-            "y": 0.13
+            "w": 0.62,
+            "x": 0.3,
+            "y": 0.62
           },
           {
             "h": 0.05,
@@ -1369,10 +1383,10 @@ anna qaQueue()
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":97},
+                  {"label":"Label","value":90},
                   {"label":"Cap","value":94},
                   {"label":"Glass","value":91},
-                  {"label":"Size","value":88}
+                  {"label":"Size","value":90}
                 ],
                 "value": 90
               },
@@ -1665,8 +1679,8 @@ anna qaQueue()
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":91},
-                  {"label":"Cap","value":88},
+                  {"label":"Label","value":89},
+                  {"label":"Cap","value":89},
                   {"label":"Glass","value":95},
                   {"label":"Size","value":92}
                 ],
@@ -1757,9 +1771,9 @@ anna qaCheck("qa-4") → events
           "style": "small",
           "text": "Night Body Oil · 100 ml",
           "visible": true,
-          "w": 0.6,
-          "x": 0.08,
-          "y": 0.24
+          "w": 0.5,
+          "x": 0.3,
+          "y": 0.73
         },
         {
           "h": 0.1,
@@ -1769,9 +1783,9 @@ anna qaCheck("qa-4") → events
           "style": "headline",
           "text": "For the hour before sleep.",
           "visible": true,
-          "w": 0.84,
-          "x": 0.08,
-          "y": 0.13
+          "w": 0.62,
+          "x": 0.3,
+          "y": 0.62
         },
         {
           "h": 0.05,
@@ -1857,9 +1871,9 @@ anna qaCheck("qa-4")
         "style": "small",
         "text": "Night Body Oil · 100 ml",
         "visible": true,
-        "w": 0.6,
-        "x": 0.08,
-        "y": 0.24
+        "w": 0.5,
+        "x": 0.3,
+        "y": 0.73
       },
       {
         "h": 0.1,
@@ -1869,9 +1883,9 @@ anna qaCheck("qa-4")
         "style": "headline",
         "text": "For the hour before sleep.",
         "visible": true,
-        "w": 0.84,
-        "x": 0.08,
-        "y": 0.13
+        "w": 0.62,
+        "x": 0.3,
+        "y": 0.62
       },
       {
         "h": 0.05,
@@ -1955,9 +1969,9 @@ anna qaEdit("qa-4", [{"fit":"fill","h":1,"id":"ly-img","image":"/demo/lysne/05-0
         "style": "small",
         "text": "Autumn",
         "visible": true,
-        "w": 0.6,
-        "x": 0.08,
-        "y": 0.24
+        "w": 0.5,
+        "x": 0.3,
+        "y": 0.73
       },
       {
         "h": 0.1,
@@ -1967,9 +1981,9 @@ anna qaEdit("qa-4", [{"fit":"fill","h":1,"id":"ly-img","image":"/demo/lysne/05-0
         "style": "headline",
         "text": "Autumn",
         "visible": true,
-        "w": 0.84,
-        "x": 0.08,
-        "y": 0.13
+        "w": 0.62,
+        "x": 0.3,
+        "y": 0.62
       },
       {
         "h": 0.05,
@@ -2010,7 +2024,7 @@ anna qaToStudio("qa-2") → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -2102,7 +2116,7 @@ anna qaToStudio("qa-2")
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":89},
+                    {"label":"Label","value":88},
                     {"label":"Cap","value":96},
                     {"label":"Glass","value":93},
                     {"label":"Size","value":90}
@@ -2160,7 +2174,7 @@ anna qaToStudio("qa-2")
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -2372,7 +2386,7 @@ anna qaQueue()
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":89},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":96},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
@@ -2469,7 +2483,7 @@ anna qaQueue()
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":92},
-                  {"label":"Cap","value":44},
+                  {"label":"Cap","value":52},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
@@ -2756,7 +2770,7 @@ anna qaQueue()
                 "parts": [
                   {"label":"Label","value":96},
                   {"label":"Cap","value":93},
-                  {"label":"Glass","value":50},
+                  {"label":"Glass","value":58},
                   {"label":"Size","value":97}
                 ],
                 "value": 58,
@@ -2765,7 +2779,12 @@ anna qaQueue()
               {"id":"brand","label":"Brand","value":86},
               {"id":"first_second","label":"First second","value":86},
               {"id":"rhythm","label":"Rhythm","value":76,"why":"The button comes in a quarter second after the beat"},
-              {"id":"text_on_screen","label":"Text on screen","value":88}
+              {
+                "id": "text_on_screen",
+                "label": "Text on screen",
+                "value": 68,
+                "why": "The button sits over the name on the label from 0:04"
+              }
             ],
             "product": 58,
             "why": [{"score":"product","text":"Oil leaks from the glass at the base in shot 1"}]
@@ -2790,6 +2809,15 @@ anna qaQueue()
             "id": "fi-v2",
             "seconds": {"from":4,"to":4.25},
             "severity": "minor",
+            "status": "open"
+          },
+          {
+            "dimension": "design",
+            "expected": "The button clear of the label, as LYSNE’s design system places it",
+            "finding": "From 0:04 the button sits over the name on the label.",
+            "id": "fi-v3",
+            "seconds": {"from":4,"to":6},
+            "severity": "major",
             "status": "open"
           }
         ],
@@ -2938,10 +2966,10 @@ anna qaQueue()
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":97},
+                  {"label":"Label","value":90},
                   {"label":"Cap","value":94},
                   {"label":"Glass","value":91},
-                  {"label":"Size","value":88}
+                  {"label":"Size","value":90}
                 ],
                 "value": 90
               },
@@ -3180,7 +3208,7 @@ anna qaQueue()
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":89},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":96},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
@@ -3333,8 +3361,8 @@ anna qaQueue()
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":91},
-                  {"label":"Cap","value":88},
+                  {"label":"Label","value":89},
+                  {"label":"Cap","value":89},
                   {"label":"Glass","value":95},
                   {"label":"Size","value":92}
                 ],
@@ -3461,9 +3489,9 @@ anna qaQueue()
             "style": "small",
             "text": "Autumn",
             "visible": true,
-            "w": 0.6,
-            "x": 0.08,
-            "y": 0.24
+            "w": 0.5,
+            "x": 0.3,
+            "y": 0.73
           },
           {
             "h": 0.1,
@@ -3473,9 +3501,9 @@ anna qaQueue()
             "style": "headline",
             "text": "Autumn",
             "visible": true,
-            "w": 0.84,
-            "x": 0.08,
-            "y": 0.13
+            "w": 0.62,
+            "x": 0.3,
+            "y": 0.62
           },
           {
             "h": 0.05,
@@ -3634,10 +3662,10 @@ anna qaQueue("w-solv")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":97},
+                  {"label":"Label","value":90},
                   {"label":"Cap","value":94},
                   {"label":"Glass","value":91},
-                  {"label":"Size","value":88}
+                  {"label":"Size","value":90}
                 ],
                 "value": 90
               },
@@ -4013,7 +4041,7 @@ anna qaSettleFinding("qa-7", "fi-2", "accepted") → events
               "label": "Product",
               "parts": [
                 {"label":"Label","value":92},
-                {"label":"Cap","value":44},
+                {"label":"Cap","value":52},
                 {"label":"Glass","value":96},
                 {"label":"Size","value":93}
               ],
@@ -4099,7 +4127,7 @@ anna qaSettleFinding("qa-7", "fi-2", "accepted")
             "label": "Product",
             "parts": [
               {"label":"Label","value":92},
-              {"label":"Cap","value":44},
+              {"label":"Cap","value":52},
               {"label":"Glass","value":96},
               {"label":"Size","value":93}
             ],
@@ -4184,7 +4212,7 @@ anna qaSettleFinding("qa-7", "fi-2", "open") → events
               "label": "Product",
               "parts": [
                 {"label":"Label","value":92},
-                {"label":"Cap","value":44},
+                {"label":"Cap","value":52},
                 {"label":"Glass","value":96},
                 {"label":"Size","value":93}
               ],
@@ -4268,7 +4296,7 @@ anna qaSettleFinding("qa-7", "fi-2", "open")
             "label": "Product",
             "parts": [
               {"label":"Label","value":92},
-              {"label":"Cap","value":44},
+              {"label":"Cap","value":52},
               {"label":"Glass","value":96},
               {"label":"Size","value":93}
             ],
@@ -4351,7 +4379,7 @@ anna qaFeedback("qa-7", "The cap is glossy; LYSNE's cap is matte.", [], ["fi-1",
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -4439,7 +4467,7 @@ anna qaFeedback("qa-7", "The cap is glossy; LYSNE's cap is matte.", [], ["fi-1",
             "id": "product",
             "label": "Product",
             "parts": [
-              {"label":"Label","value":89},
+              {"label":"Label","value":88},
               {"label":"Cap","value":96},
               {"label":"Glass","value":93},
               {"label":"Size","value":90}
@@ -4529,7 +4557,7 @@ anna qaCheck("qa-7") → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -4619,7 +4647,7 @@ anna qaCheck("qa-7")
             "id": "product",
             "label": "Product",
             "parts": [
-              {"label":"Label","value":89},
+              {"label":"Label","value":88},
               {"label":"Cap","value":96},
               {"label":"Glass","value":93},
               {"label":"Size","value":90}

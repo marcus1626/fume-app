@@ -345,9 +345,11 @@ export function QaPage() {
     tell: (v, text, pins, findingIds) =>
       feedback.mutateAsync({ itemId: v.item.id, text, pins, findingIds }).then(
         () => {
+          // Everything that went: her comments, the pins and the Engine's comments she chose (round 15)
+          const went = (text ? text.split("\n").filter((l) => l.trim()).length : 0) + pins.length;
           toast.done(`${fixer.withIt}: ${qaName(v)}`, {
-            description: pins.length
-              ? `${copy.count(pins.length, "pinned note")} with it. Its fix comes back here.`
+            description: went
+              ? `${copy.count(went, "comment")} with it. Its fix comes back here.`
               : "Its fix comes back here to check.",
           });
           if (shownId.current === v.item.id) after(v.item.id);
@@ -999,10 +1001,15 @@ function QaFocus({
   const videoHolds = (reel?.checks ?? []).filter((c) => c.state === "pass").map((c) => c.label);
   const { byEye, flags, holds } = engineRows(item.evaluation, findings, videoFlags);
 
-  // Numbers on the creative: the Engine's pins first, then hers, in the order they were made.
-  const spotted = openFindings.filter((f) => f.spot && !video);
+  // Numbers on the creative: the Engine's pins first, then hers, in the order they were made. A number never moves
+  // (round 15, as in Frame.io): a comment set aside keeps its number, and only the open ones show.
+  const numbered = [...findings]
+    .filter((f) => f.spot && !video)
+    .sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
+  const spotted = numbered.filter((f) => f.status === "open");
+  const pinNo = (f: QaFinding) => numbered.indexOf(f) + 1;
   const pinned = notes.filter((n) => n.spot);
-  const numberOf = (n: QaNote) => spotted.length + pinned.indexOf(n) + 1;
+  const numberOf = (n: QaNote) => numbered.length + pinned.indexOf(n) + 1;
   const pins: QaPin[] = pinned.map((n) => ({
     n: numberOf(n),
     x: n.spot!.x,
@@ -1279,18 +1286,18 @@ function QaFocus({
             </figure>
             {!before &&
               !shownFormat &&
-              spotted.map((f, i) => (
+              spotted.map((f) => (
                 <button
                   key={f.id}
                   type="button"
                   className={focus === `f:${f.id}` ? "ui-qg-pin is-active" : "ui-qg-pin"}
                   data-from="engine"
                   style={pinStyle(f.spot!)}
-                  aria-label={`Pin ${i + 1}, from the ${fixer.author}: ${f.finding}`}
+                  aria-label={`Pin ${pinNo(f)}, from the ${fixer.author}: ${f.finding}`}
                   title={f.finding}
                   onClick={() => openComment(`f:${f.id}`)}
                 >
-                  {i + 1}
+                  {pinNo(f)}
                 </button>
               ))}
             {!before &&
@@ -1312,7 +1319,7 @@ function QaFocus({
             {draft && (
               <>
                 <span className="ui-qg-pin" data-state="draft" style={pinStyle(draft)} aria-hidden="true">
-                  {spotted.length + pinned.length + 1}
+                  {numbered.length + pinned.length + 1}
                 </span>
                 <Glass
                   className="ui-qa-pinbox"
@@ -1320,12 +1327,12 @@ function QaFocus({
                   data-side={draft.side}
                   data-flip-y={draft.flipY ? "" : undefined}
                   role="group"
-                  aria-label={`Pin ${spotted.length + pinned.length + 1}`}
+                  aria-label={`Pin ${numbered.length + pinned.length + 1}`}
                 >
                   <Textarea
                     autoFocus
                     rows={2}
-                    aria-label={`What is wrong here, pin ${spotted.length + pinned.length + 1}`}
+                    aria-label={`What is wrong here, pin ${numbered.length + pinned.length + 1}`}
                     placeholder="What is wrong here?"
                     value={draftText}
                     onChange={(e) => setDraftText(e.target.value)}
@@ -1428,7 +1435,7 @@ function QaFocus({
                   <EngineComment
                     key={f.id}
                     f={f}
-                    n={f.spot && !video ? spotted.indexOf(f) + 1 : undefined}
+                    n={f.spot && !video ? pinNo(f) : undefined}
                     dom={dom(`f:${f.id}`)}
                     active={focus === `f:${f.id}`}
                     chosen={isChosen(`f:${f.id}`)}
@@ -1633,7 +1640,9 @@ function QaFocus({
             <>
               {stopping && !fixing && (
                 <p className="ui-qa-foot-note" id={`${item.id}-stops`}>
-                  {`Decide the ${findingKind[stopping.dimension].toLowerCase()} finding first: a fix, or not a problem.`}
+                  {isChosen(`f:${stopping.id}`)
+                    ? `The ${findingKind[stopping.dimension].toLowerCase()} finding goes with Tell the Engine. Mark checked once it is fixed.`
+                    : `Decide the ${findingKind[stopping.dimension].toLowerCase()} finding first: a fix, or not a problem.`}
                 </p>
               )}
               <Button
@@ -1722,7 +1731,7 @@ function QaStatus({ item, who }: { item: QaItem; who: (id?: Id) => string }) {
         {said?.text
           ? `: “${said.text.replace(/[.\s]+$/, "")}”`
           : said?.pins?.length
-            ? `: ${copy.count(said.pins.length, "pinned note")}`
+            ? `: ${copy.count(said.pins.length, "pinned comment")}`
             : ""}
       </>
     );

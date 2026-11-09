@@ -17,7 +17,7 @@ anna openDocument({"campaignId":"c-autumn","modeId":"m-scene","slot":"Master 4",
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -523,10 +523,10 @@ anna render("doc-mvkqul14-1") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -645,10 +645,10 @@ anna render("doc-mvkqul14-1")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":88},
+                  {"label":"Label","value":91},
                   {"label":"Cap","value":95},
                   {"label":"Glass","value":92},
-                  {"label":"Size","value":89}
+                  {"label":"Size","value":91}
                 ],
                 "value": 91
               },
@@ -762,10 +762,10 @@ anna pickVersion("doc-mvkqul14-1", "rv-mvkquncg-3") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -884,10 +884,10 @@ anna pickVersion("doc-mvkqul14-1", "rv-mvkquncg-3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":88},
+                  {"label":"Label","value":91},
                   {"label":"Cap","value":95},
                   {"label":"Glass","value":92},
-                  {"label":"Size","value":89}
+                  {"label":"Size","value":91}
                 ],
                 "value": 91
               },
@@ -1010,10 +1010,10 @@ anna overrideProduct("doc-mvkqul14-1", {"field":"cap","scope":"product","value":
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -1144,10 +1144,10 @@ anna overrideProduct("doc-mvkqul14-1", {"field":"cap","scope":"product","value":
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":88},
+                  {"label":"Label","value":91},
                   {"label":"Cap","value":95},
                   {"label":"Glass","value":92},
-                  {"label":"Size","value":89}
+                  {"label":"Size","value":91}
                 ],
                 "value": 91
               },
@@ -1281,10 +1281,10 @@ anna overrideProduct("doc-mvkqul14-1", {"field":"label","scope":"this_render","v
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -1426,10 +1426,10 @@ anna overrideProduct("doc-mvkqul14-1", {"field":"label","scope":"this_render","v
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":88},
+                  {"label":"Label","value":91},
                   {"label":"Cap","value":95},
                   {"label":"Glass","value":92},
-                  {"label":"Size","value":89}
+                  {"label":"Size","value":91}
                 ],
                 "value": 91
               },
@@ -1564,10 +1564,10 @@ anna setSource("doc-mvkqul14-1", "light", "brand") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -1710,10 +1710,10 @@ anna setSource("doc-mvkqul14-1", "light", "brand")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":88},
+                  {"label":"Label","value":91},
                   {"label":"Cap","value":95},
                   {"label":"Glass","value":92},
-                  {"label":"Size","value":89}
+                  {"label":"Size","value":91}
                 ],
                 "value": 91
               },
@@ -1848,10 +1848,10 @@ anna setSource("doc-mvkqul14-1", "camera", "own") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -1994,10 +1994,10 @@ anna setSource("doc-mvkqul14-1", "camera", "own")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":88},
+                  {"label":"Label","value":91},
                   {"label":"Cap","value":95},
                   {"label":"Glass","value":92},
-                  {"label":"Size","value":89}
+                  {"label":"Size","value":91}
                 ],
                 "value": 91
               },
@@ -2150,10 +2150,10 @@ anna makeFormats("doc-mvkqul14-1", ["pl-ig-story","pl-pin"]) → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -2316,10 +2316,10 @@ anna makeFormats("doc-mvkqul14-1", ["pl-ig-story","pl-pin"]) → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -2482,10 +2482,10 @@ anna makeFormats("doc-mvkqul14-1", ["pl-ig-story","pl-pin"])
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":88},
+                  {"label":"Label","value":91},
                   {"label":"Cap","value":95},
                   {"label":"Glass","value":92},
-                  {"label":"Size","value":89}
+                  {"label":"Size","value":91}
                 ],
                 "value": 91
               },
@@ -2641,10 +2641,10 @@ anna setFormatTile("doc-mvkqul14-1", "pl-ig-story", {"crop":{"h":0.8,"w":1,"x":0
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -2807,10 +2807,10 @@ anna setFormatTile("doc-mvkqul14-1", "pl-ig-story", {"crop":{"h":0.8,"w":1,"x":0
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":88},
+                  {"label":"Label","value":91},
                   {"label":"Cap","value":95},
                   {"label":"Glass","value":92},
-                  {"label":"Size","value":89}
+                  {"label":"Size","value":91}
                 ],
                 "value": 91
               },
@@ -2978,10 +2978,10 @@ anna fixProduct("doc-mvkqul14-1", {"tokenId":"dt-cap","versionId":"rv-mvkquncg-3
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -3158,10 +3158,10 @@ anna fixProduct("doc-mvkqul14-1", {"tokenId":"dt-cap","versionId":"rv-mvkquncg-3
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -3229,10 +3229,10 @@ anna fixProduct("doc-mvkqul14-1", {"tokenId":"dt-cap","versionId":"rv-mvkquncg-3
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -3410,10 +3410,10 @@ anna fixProduct("doc-mvkqul14-1", {"tokenId":"dt-cap","versionId":"rv-mvkquncg-3
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":88},
+                  {"label":"Label","value":91},
                   {"label":"Cap","value":95},
                   {"label":"Glass","value":92},
-                  {"label":"Size","value":89}
+                  {"label":"Size","value":91}
                 ],
                 "value": 91
               },
@@ -3474,10 +3474,10 @@ anna fixProduct("doc-mvkqul14-1", {"tokenId":"dt-cap","versionId":"rv-mvkquncg-3
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":88},
+                  {"label":"Label","value":91},
                   {"label":"Cap","value":95},
                   {"label":"Glass","value":92},
-                  {"label":"Size","value":89}
+                  {"label":"Size","value":91}
                 ],
                 "value": 91
               },
@@ -3650,10 +3650,10 @@ anna documentToCheck("doc-mvkqul14-1") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -3721,10 +3721,10 @@ anna documentToCheck("doc-mvkqul14-1") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -3800,10 +3800,10 @@ anna documentToCheck("doc-mvkqul14-1") → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":88},
+                {"label":"Label","value":91},
                 {"label":"Cap","value":95},
                 {"label":"Glass","value":92},
-                {"label":"Size","value":89}
+                {"label":"Size","value":91}
               ],
               "value": 91
             },
@@ -3951,10 +3951,10 @@ anna documentToCheck("doc-mvkqul14-1")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":88},
+                  {"label":"Label","value":91},
                   {"label":"Cap","value":95},
                   {"label":"Glass","value":92},
-                  {"label":"Size","value":89}
+                  {"label":"Size","value":91}
                 ],
                 "value": 91
               },
@@ -4015,10 +4015,10 @@ anna documentToCheck("doc-mvkqul14-1")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":88},
+                  {"label":"Label","value":91},
                   {"label":"Cap","value":95},
                   {"label":"Glass","value":92},
-                  {"label":"Size","value":89}
+                  {"label":"Size","value":91}
                 ],
                 "value": 91
               },
@@ -4188,10 +4188,10 @@ anna undoDocumentToCheck("doc-mvkqul14-1") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -4259,10 +4259,10 @@ anna undoDocumentToCheck("doc-mvkqul14-1") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -4338,10 +4338,10 @@ anna undoDocumentToCheck("doc-mvkqul14-1") → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":88},
+                {"label":"Label","value":91},
                 {"label":"Cap","value":95},
                 {"label":"Glass","value":92},
-                {"label":"Size","value":89}
+                {"label":"Size","value":91}
               ],
               "value": 91
             },
@@ -4489,10 +4489,10 @@ anna undoDocumentToCheck("doc-mvkqul14-1")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":88},
+                  {"label":"Label","value":91},
                   {"label":"Cap","value":95},
                   {"label":"Glass","value":92},
-                  {"label":"Size","value":89}
+                  {"label":"Size","value":91}
                 ],
                 "value": 91
               },
@@ -4553,10 +4553,10 @@ anna undoDocumentToCheck("doc-mvkqul14-1")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":88},
+                  {"label":"Label","value":91},
                   {"label":"Cap","value":95},
                   {"label":"Glass","value":92},
-                  {"label":"Size","value":89}
+                  {"label":"Size","value":91}
                 ],
                 "value": 91
               },
@@ -4726,10 +4726,10 @@ anna documentToCheck("doc-mvkqul14-1") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -4797,10 +4797,10 @@ anna documentToCheck("doc-mvkqul14-1") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -4876,10 +4876,10 @@ anna documentToCheck("doc-mvkqul14-1") → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":88},
+                {"label":"Label","value":91},
                 {"label":"Cap","value":95},
                 {"label":"Glass","value":92},
-                {"label":"Size","value":89}
+                {"label":"Size","value":91}
               ],
               "value": 91
             },
@@ -5065,7 +5065,7 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo") → events
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":88},
-                    {"label":"Cap","value":66},
+                    {"label":"Cap","value":74},
                     {"label":"Glass","value":92},
                     {"label":"Size","value":89}
                   ],
@@ -5273,7 +5273,7 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":95},
+                    {"label":"Label","value":88},
                     {"label":"Cap","value":92},
                     {"label":"Glass","value":89},
                     {"label":"Size","value":96}
@@ -5473,7 +5473,7 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -5481,17 +5481,19 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":92},
+                    {"label":"Label","value":74},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
                     {"label":"Size","value":93}
                   ],
-                  "value": 82
+                  "value": 74,
+                  "why": "The size on the label reads 200 ml; it is 100 ml"
                 },
                 {"id":"brand","label":"Brand","value":91},
                 {"id":"craft","label":"Craft","value":88}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-3",
@@ -5680,7 +5682,7 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo") → events
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":89},
-                    {"label":"Cap","value":56},
+                    {"label":"Cap","value":64},
                     {"label":"Glass","value":93},
                     {"label":"Size","value":90}
                   ],
@@ -5996,7 +5998,7 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":88},
-                  {"label":"Cap","value":66},
+                  {"label":"Cap","value":74},
                   {"label":"Glass","value":92},
                   {"label":"Size","value":89}
                 ],
@@ -6204,7 +6206,7 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":95},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":92},
                   {"label":"Glass","value":89},
                   {"label":"Size","value":96}
@@ -6404,7 +6406,7 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -6412,17 +6414,19 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":92},
+                  {"label":"Label","value":74},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
-                "value": 82
+                "value": 74,
+                "why": "The size on the label reads 200 ml; it is 100 ml"
               },
               {"id":"brand","label":"Brand","value":91},
               {"id":"craft","label":"Craft","value":88}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-3",
@@ -6611,7 +6615,7 @@ anna decideEdit("doc-autumn-m3", "ed-1", "undo")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":89},
-                  {"label":"Cap","value":56},
+                  {"label":"Cap","value":64},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
                 ],
@@ -6926,7 +6930,7 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"}) → events
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":88},
-                    {"label":"Cap","value":66},
+                    {"label":"Cap","value":74},
                     {"label":"Glass","value":92},
                     {"label":"Size","value":89}
                   ],
@@ -7134,7 +7138,7 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"}) → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":95},
+                    {"label":"Label","value":88},
                     {"label":"Cap","value":92},
                     {"label":"Glass","value":89},
                     {"label":"Size","value":96}
@@ -7334,7 +7338,7 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"}) → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -7342,17 +7346,19 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"}) → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":92},
+                    {"label":"Label","value":74},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
                     {"label":"Size","value":93}
                   ],
-                  "value": 82
+                  "value": 74,
+                  "why": "The size on the label reads 200 ml; it is 100 ml"
                 },
                 {"id":"brand","label":"Brand","value":91},
                 {"id":"craft","label":"Craft","value":88}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-3",
@@ -7541,7 +7547,7 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"}) → events
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":89},
-                    {"label":"Cap","value":56},
+                    {"label":"Cap","value":64},
                     {"label":"Glass","value":93},
                     {"label":"Size","value":90}
                   ],
@@ -7857,7 +7863,7 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"})
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":88},
-                  {"label":"Cap","value":66},
+                  {"label":"Cap","value":74},
                   {"label":"Glass","value":92},
                   {"label":"Size","value":89}
                 ],
@@ -8065,7 +8071,7 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"})
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":95},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":92},
                   {"label":"Glass","value":89},
                   {"label":"Size","value":96}
@@ -8265,7 +8271,7 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"})
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -8273,17 +8279,19 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"})
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":92},
+                  {"label":"Label","value":74},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
-                "value": 82
+                "value": 74,
+                "why": "The size on the label reads 200 ml; it is 100 ml"
               },
               {"id":"brand","label":"Brand","value":91},
               {"id":"craft","label":"Craft","value":88}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-3",
@@ -8472,7 +8480,7 @@ anna updateDocument("doc-autumn-m3", {"campaignId":"c-bf"})
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":89},
-                  {"label":"Cap","value":56},
+                  {"label":"Cap","value":64},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
                 ],
@@ -8786,7 +8794,7 @@ anna updateDocument("doc-autumn-m3", {}) → events
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":88},
-                    {"label":"Cap","value":66},
+                    {"label":"Cap","value":74},
                     {"label":"Glass","value":92},
                     {"label":"Size","value":89}
                   ],
@@ -8994,7 +9002,7 @@ anna updateDocument("doc-autumn-m3", {}) → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":95},
+                    {"label":"Label","value":88},
                     {"label":"Cap","value":92},
                     {"label":"Glass","value":89},
                     {"label":"Size","value":96}
@@ -9194,7 +9202,7 @@ anna updateDocument("doc-autumn-m3", {}) → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -9202,17 +9210,19 @@ anna updateDocument("doc-autumn-m3", {}) → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":92},
+                    {"label":"Label","value":74},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
                     {"label":"Size","value":93}
                   ],
-                  "value": 82
+                  "value": 74,
+                  "why": "The size on the label reads 200 ml; it is 100 ml"
                 },
                 {"id":"brand","label":"Brand","value":91},
                 {"id":"craft","label":"Craft","value":88}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-3",
@@ -9401,7 +9411,7 @@ anna updateDocument("doc-autumn-m3", {}) → events
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":89},
-                    {"label":"Cap","value":56},
+                    {"label":"Cap","value":64},
                     {"label":"Glass","value":93},
                     {"label":"Size","value":90}
                   ],
@@ -9716,7 +9726,7 @@ anna updateDocument("doc-autumn-m3", {})
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":88},
-                  {"label":"Cap","value":66},
+                  {"label":"Cap","value":74},
                   {"label":"Glass","value":92},
                   {"label":"Size","value":89}
                 ],
@@ -9924,7 +9934,7 @@ anna updateDocument("doc-autumn-m3", {})
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":95},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":92},
                   {"label":"Glass","value":89},
                   {"label":"Size","value":96}
@@ -10124,7 +10134,7 @@ anna updateDocument("doc-autumn-m3", {})
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -10132,17 +10142,19 @@ anna updateDocument("doc-autumn-m3", {})
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":92},
+                  {"label":"Label","value":74},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
-                "value": 82
+                "value": 74,
+                "why": "The size on the label reads 200 ml; it is 100 ml"
               },
               {"id":"brand","label":"Brand","value":91},
               {"id":"craft","label":"Craft","value":88}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-3",
@@ -10331,7 +10343,7 @@ anna updateDocument("doc-autumn-m3", {})
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":89},
-                  {"label":"Cap","value":56},
+                  {"label":"Cap","value":64},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
                 ],
@@ -11128,7 +11140,7 @@ anna documents("w-lysne")
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":88},
-                    {"label":"Cap","value":66},
+                    {"label":"Cap","value":74},
                     {"label":"Glass","value":92},
                     {"label":"Size","value":89}
                   ],
@@ -11336,7 +11348,7 @@ anna documents("w-lysne")
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":95},
+                    {"label":"Label","value":88},
                     {"label":"Cap","value":92},
                     {"label":"Glass","value":89},
                     {"label":"Size","value":96}
@@ -11536,7 +11548,7 @@ anna documents("w-lysne")
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -11544,17 +11556,19 @@ anna documents("w-lysne")
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":92},
+                    {"label":"Label","value":74},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
                     {"label":"Size","value":93}
                   ],
-                  "value": 82
+                  "value": 74,
+                  "why": "The size on the label reads 200 ml; it is 100 ml"
                 },
                 {"id":"brand","label":"Brand","value":91},
                 {"id":"craft","label":"Craft","value":88}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-3",
@@ -11743,7 +11757,7 @@ anna documents("w-lysne")
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":89},
-                    {"label":"Cap","value":56},
+                    {"label":"Cap","value":64},
                     {"label":"Glass","value":93},
                     {"label":"Size","value":90}
                   ],
@@ -12056,10 +12070,10 @@ anna documents("w-lysne")
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },
@@ -12127,10 +12141,10 @@ anna documents("w-lysne")
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":88},
+                    {"label":"Label","value":91},
                     {"label":"Cap","value":95},
                     {"label":"Glass","value":92},
-                    {"label":"Size","value":89}
+                    {"label":"Size","value":91}
                   ],
                   "value": 91
                 },

@@ -16,13 +16,15 @@ function measure(id: ScoreMeasure["id"], label: string, value: number, extra: Pa
   return { id, label, value, ...extra } satisfies ScoreMeasure;
 }
 
-/** The product, part by part: the part a reason names ("the cap") carries the low score, the rest hold. */
+/** The product, part by part. The product scores as its weakest part (round 15): the part a reason names ("the cap")
+ *  carries the product's score, the rest hold above it; with no part named, the label does. */
 function productParts(scores: Scores, seed: number): ScoreMeasure["parts"] {
   const why = scores.why?.find((w) => w.score === "product")?.text.toLowerCase() ?? "";
-  return PARTS.map((label, i) => {
-    const named = why.includes(label.toLowerCase());
-    return { label, value: named ? Math.max(30, scores.product - 8) : steady(seed + i, 88, 10) };
-  });
+  const named = PARTS.find((p) => why.includes(p.toLowerCase())) ?? "Label";
+  return PARTS.map((label, i) => ({
+    label,
+    value: label === named ? scores.product : Math.max(scores.product, steady(seed + i, 88, 10)),
+  }));
 }
 
 /** The measures for a version of this studio, from its two scores; `over` sets one measure where the seed knows it. */

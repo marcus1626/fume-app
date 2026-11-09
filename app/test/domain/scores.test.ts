@@ -51,12 +51,13 @@ describe("the bar", () => {
 describe("each studio is scored on its own measures", () => {
   const scores = { product: 64, engine: 86, why: [{ score: "product" as const, text: "The cap is too tall" }] };
 
-  test("a picture: Product part by part, Brand, Craft; the part the Engine names carries the low score", () => {
+  test("a picture: Product part by part, Brand, Craft; the product scores as the part the Engine names", () => {
     const list = measuresFor(scores, "render", 3);
     expect(list.map((x) => x.id)).toEqual(["product", "brand", "craft"]);
     const parts = list[0]!.parts!;
     expect(parts.map((p) => p.label)).toEqual(["Label", "Cap", "Glass", "Size"]);
-    expect(parts.find((p) => p.label === "Cap")!.value).toBeLessThan(SCORE_BAR);
+    expect(parts.find((p) => p.label === "Cap")!.value).toBe(64);
+    expect(Math.min(...parts.map((p) => p.value))).toBe(list[0]!.value);
     expect(parts.filter((p) => p.label !== "Cap").every((p) => p.value >= SCORE_BAR)).toBe(true);
   });
 

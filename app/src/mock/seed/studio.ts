@@ -275,7 +275,16 @@ const seeded: CreativeDocument[] = [
         { ...sceneVars, productSize: 28, productPlace: "low" },
         {
           instruction: "Move the bottle lower, more air above",
-          evaluation: { ...ok, scores: { product: 82, engine: 91 } },
+          // The size on the label reads 200 ml (the product fix's demo), so the product is under the bar on Size
+          evaluation: {
+            ...ok,
+            productTruth: "flag",
+            scores: {
+              product: 74,
+              engine: 91,
+              why: [{ score: "product", text: "The size on the label reads 200 ml; it is 100 ml" }],
+            },
+          },
           prompt: prompt(scenePrompt("low in the frame with calm air above it")),
         },
       ),

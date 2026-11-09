@@ -312,9 +312,14 @@
   touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none;
   transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
 }
-.ui-qa-reel-mark[data-severity="critical"] { background: var(--ui-danger); }
+/* a finding that stops the check: the bar stays quiet, a small Rouge mark at its start says it stops (FLOWS §35.1) */
+.ui-qa-reel-mark[data-severity="critical"] { background: var(--ui-text-secondary); }
+.ui-qa-reel-mark[data-severity="critical"]::before {
+  content: ""; position: absolute; top: 50%; left: 0; width: var(--ui-space-sm); height: var(--ui-space-sm); translate: 0 -50%;
+  border-radius: 50%; background: var(--ui-danger);
+}
 .ui-qa-reel-mark::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
-@media (hover: hover) { .ui-qa-reel-mark:hover { background: var(--ui-text-secondary); } .ui-qa-reel-mark[data-severity="critical"]:hover { background: var(--ui-danger-hover); } }
+@media (hover: hover) { .ui-qa-reel-mark:hover { background: var(--ui-text-secondary); } .ui-qa-reel-mark[data-severity="critical"]:hover { background: var(--ui-text); } }
 .ui-qa-reel-mark:active { transform: scaleY(var(--ui-motion-press-scale)); }
 .ui-qa-reel-mark:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
 .ui-qa-reel-pin {
@@ -380,7 +385,7 @@
 
 /* #52 the expert's check on Mark checked: the Focus pointer in Amber (the check); once checked, the head's state line
    carries the Amber pointer and "Checked by …" (CheckMark), and the foot keeps only Undo */
-.ui-qa-mark > .ico:first-child { color: var(--ui-check); } /* gate-allow:amber-is-a-point  the Amber checked triangle (fume-check) on the expert's Mark checked, beside its label (Marcus #52) */
+.ui-qa-mark:not(:disabled) > .ico:first-child { color: var(--ui-check); } /* gate-allow:amber-is-a-point  the Amber checked triangle (fume-check) on the expert's Mark checked, beside its label (Marcus #52) */
 
 /* the Plans tab: the plan picked, in the well */
 .ui-qa-plan .ui-qa-end-title { overflow-wrap: anywhere; }

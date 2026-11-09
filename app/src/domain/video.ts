@@ -63,12 +63,13 @@ export function nearestBeat(beats: number[] | undefined, t: number, reach = 0.25
 
 /** A time as the timeline writes it: 0:06, 0:12.5 when it falls between seconds. */
 export function timecode(t: number, tenths = false): string {
-  const s = Math.max(0, t);
-  const whole = Math.floor(s);
+  // Counted in whole tenths, so 4.1 s reads 0:04.1 (4.1 − 4 is 0.0999… in floating point)
+  const tens = Math.floor(Math.max(0, t) * 10 + 1e-6);
+  const whole = Math.floor(tens / 10);
   const m = Math.floor(whole / 60);
   const rest = whole % 60;
   const head = `${m}:${String(rest).padStart(2, "0")}`;
-  return tenths ? `${head}.${Math.floor((s - whole) * 10)}` : head;
+  return tenths ? `${head}.${tens % 10}` : head;
 }
 
 /** What the Engine checks on the whole edit before it goes to check (FLOWS §27.6). The findings on the picked takes

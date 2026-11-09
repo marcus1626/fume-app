@@ -17,7 +17,7 @@ anna designAsk("doc-autumn-m3", "rv-3") → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -205,7 +205,7 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":88},
-                    {"label":"Cap","value":66},
+                    {"label":"Cap","value":74},
                     {"label":"Glass","value":92},
                     {"label":"Size","value":89}
                   ],
@@ -413,7 +413,7 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":95},
+                    {"label":"Label","value":88},
                     {"label":"Cap","value":92},
                     {"label":"Glass","value":89},
                     {"label":"Size","value":96}
@@ -613,7 +613,7 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -621,17 +621,19 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":92},
+                    {"label":"Label","value":74},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
                     {"label":"Size","value":93}
                   ],
-                  "value": 82
+                  "value": 74,
+                  "why": "The size on the label reads 200 ml; it is 100 ml"
                 },
                 {"id":"brand","label":"Brand","value":91},
                 {"id":"craft","label":"Craft","value":88}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-3",
@@ -820,7 +822,7 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":89},
-                    {"label":"Cap","value":56},
+                    {"label":"Cap","value":64},
                     {"label":"Glass","value":93},
                     {"label":"Size","value":90}
                   ],
@@ -1040,7 +1042,7 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -1048,17 +1050,19 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":92},
+                    {"label":"Label","value":74},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
                     {"label":"Size","value":93}
                   ],
-                  "value": 82
+                  "value": 74,
+                  "why": "The size on the label reads 200 ml; it is 100 ml"
                 },
                 {"id":"brand","label":"Brand","value":91},
                 {"id":"craft","label":"Craft","value":88}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-mvkqwbj4-1",
@@ -1219,7 +1223,7 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":88},
-                    {"label":"Cap","value":66},
+                    {"label":"Cap","value":74},
                     {"label":"Glass","value":92},
                     {"label":"Size","value":89}
                   ],
@@ -1427,7 +1431,7 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":95},
+                    {"label":"Label","value":88},
                     {"label":"Cap","value":92},
                     {"label":"Glass","value":89},
                     {"label":"Size","value":96}
@@ -1627,7 +1631,7 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -1635,17 +1639,19 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":92},
+                    {"label":"Label","value":74},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
                     {"label":"Size","value":93}
                   ],
-                  "value": 82
+                  "value": 74,
+                  "why": "The size on the label reads 200 ml; it is 100 ml"
                 },
                 {"id":"brand","label":"Brand","value":91},
                 {"id":"craft","label":"Craft","value":88}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-3",
@@ -1834,7 +1840,7 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":89},
-                    {"label":"Cap","value":56},
+                    {"label":"Cap","value":64},
                     {"label":"Glass","value":93},
                     {"label":"Size","value":90}
                   ],
@@ -2149,7 +2155,7 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -2158,7 +2164,8 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                 {"id":"placement","label":"Placement","value":90},
                 {"id":"words","label":"Words","value":95}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-mvkqwbj4-1",
@@ -2319,7 +2326,7 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":88},
-                  {"label":"Cap","value":66},
+                  {"label":"Cap","value":74},
                   {"label":"Glass","value":92},
                   {"label":"Size","value":89}
                 ],
@@ -2527,7 +2534,7 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":95},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":92},
                   {"label":"Glass","value":89},
                   {"label":"Size","value":96}
@@ -2727,7 +2734,7 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -2735,17 +2742,19 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":92},
+                  {"label":"Label","value":74},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
-                "value": 82
+                "value": 74,
+                "why": "The size on the label reads 200 ml; it is 100 ml"
               },
               {"id":"brand","label":"Brand","value":91},
               {"id":"craft","label":"Craft","value":88}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-3",
@@ -2934,7 +2943,7 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":89},
-                  {"label":"Cap","value":56},
+                  {"label":"Cap","value":64},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
                 ],
@@ -3154,7 +3163,7 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -3162,17 +3171,19 @@ anna designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the b
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":92},
+                  {"label":"Label","value":74},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
-                "value": 82
+                "value": 74,
+                "why": "The size on the label reads 200 ml; it is 100 ml"
               },
               {"id":"brand","label":"Brand","value":91},
               {"id":"craft","label":"Craft","value":88}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-mvkqwbj4-1",
@@ -3332,7 +3343,7 @@ anna document("doc-autumn-m3")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":88},
-                  {"label":"Cap","value":66},
+                  {"label":"Cap","value":74},
                   {"label":"Glass","value":92},
                   {"label":"Size","value":89}
                 ],
@@ -3540,7 +3551,7 @@ anna document("doc-autumn-m3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":95},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":92},
                   {"label":"Glass","value":89},
                   {"label":"Size","value":96}
@@ -3740,7 +3751,7 @@ anna document("doc-autumn-m3")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -3748,17 +3759,19 @@ anna document("doc-autumn-m3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":92},
+                  {"label":"Label","value":74},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
-                "value": 82
+                "value": 74,
+                "why": "The size on the label reads 200 ml; it is 100 ml"
               },
               {"id":"brand","label":"Brand","value":91},
               {"id":"craft","label":"Craft","value":88}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-3",
@@ -3947,7 +3960,7 @@ anna document("doc-autumn-m3")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":89},
-                  {"label":"Cap","value":56},
+                  {"label":"Cap","value":64},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
                 ],
@@ -4262,7 +4275,7 @@ anna document("doc-autumn-m3")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -4271,7 +4284,8 @@ anna document("doc-autumn-m3")
               {"id":"placement","label":"Placement","value":90},
               {"id":"words","label":"Words","value":95}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-mvkqwbj4-1",
@@ -4431,7 +4445,7 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":88},
-                    {"label":"Cap","value":66},
+                    {"label":"Cap","value":74},
                     {"label":"Glass","value":92},
                     {"label":"Size","value":89}
                   ],
@@ -4639,7 +4653,7 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":95},
+                    {"label":"Label","value":88},
                     {"label":"Cap","value":92},
                     {"label":"Glass","value":89},
                     {"label":"Size","value":96}
@@ -4839,7 +4853,7 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -4847,17 +4861,19 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":92},
+                    {"label":"Label","value":74},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
                     {"label":"Size","value":93}
                   ],
-                  "value": 82
+                  "value": 74,
+                  "why": "The size on the label reads 200 ml; it is 100 ml"
                 },
                 {"id":"brand","label":"Brand","value":91},
                 {"id":"craft","label":"Craft","value":88}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-3",
@@ -5046,7 +5062,7 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":89},
-                    {"label":"Cap","value":56},
+                    {"label":"Cap","value":64},
                     {"label":"Glass","value":93},
                     {"label":"Size","value":90}
                   ],
@@ -5361,7 +5377,7 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -5370,7 +5386,8 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
                 {"id":"placement","label":"Placement","value":90},
                 {"id":"words","label":"Words","value":95}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-mvkqwbj4-1",
@@ -5434,7 +5451,7 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -5442,17 +5459,19 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":92},
+                    {"label":"Label","value":74},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
                     {"label":"Size","value":93}
                   ],
-                  "value": 82
+                  "value": 74,
+                  "why": "The size on the label reads 200 ml; it is 100 ml"
                 },
                 {"id":"brand","label":"Brand","value":91},
                 {"id":"craft","label":"Craft","value":88}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-mvkqwcaw-3",
@@ -5613,7 +5632,7 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":88},
-                    {"label":"Cap","value":66},
+                    {"label":"Cap","value":74},
                     {"label":"Glass","value":92},
                     {"label":"Size","value":89}
                   ],
@@ -5821,7 +5840,7 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":95},
+                    {"label":"Label","value":88},
                     {"label":"Cap","value":92},
                     {"label":"Glass","value":89},
                     {"label":"Size","value":96}
@@ -6021,7 +6040,7 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -6029,17 +6048,19 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":92},
+                    {"label":"Label","value":74},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
                     {"label":"Size","value":93}
                   ],
-                  "value": 82
+                  "value": 74,
+                  "why": "The size on the label reads 200 ml; it is 100 ml"
                 },
                 {"id":"brand","label":"Brand","value":91},
                 {"id":"craft","label":"Craft","value":88}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-3",
@@ -6228,7 +6249,7 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":89},
-                    {"label":"Cap","value":56},
+                    {"label":"Cap","value":64},
                     {"label":"Glass","value":93},
                     {"label":"Size","value":90}
                   ],
@@ -6543,7 +6564,7 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -6552,7 +6573,8 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
                 {"id":"placement","label":"Placement","value":90},
                 {"id":"words","label":"Words","value":95}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-mvkqwbj4-1",
@@ -6712,7 +6734,7 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -6721,7 +6743,8 @@ anna designVersion("doc-autumn-m3", "rv-3") → events
                 {"id":"placement","label":"Placement","value":97},
                 {"id":"words","label":"Words","value":95}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-mvkqwcaw-3",
@@ -6882,7 +6905,7 @@ anna designVersion("doc-autumn-m3", "rv-3")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":88},
-                  {"label":"Cap","value":66},
+                  {"label":"Cap","value":74},
                   {"label":"Glass","value":92},
                   {"label":"Size","value":89}
                 ],
@@ -7090,7 +7113,7 @@ anna designVersion("doc-autumn-m3", "rv-3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":95},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":92},
                   {"label":"Glass","value":89},
                   {"label":"Size","value":96}
@@ -7290,7 +7313,7 @@ anna designVersion("doc-autumn-m3", "rv-3")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -7298,17 +7321,19 @@ anna designVersion("doc-autumn-m3", "rv-3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":92},
+                  {"label":"Label","value":74},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
-                "value": 82
+                "value": 74,
+                "why": "The size on the label reads 200 ml; it is 100 ml"
               },
               {"id":"brand","label":"Brand","value":91},
               {"id":"craft","label":"Craft","value":88}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-3",
@@ -7497,7 +7522,7 @@ anna designVersion("doc-autumn-m3", "rv-3")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":89},
-                  {"label":"Cap","value":56},
+                  {"label":"Cap","value":64},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
                 ],
@@ -7812,7 +7837,7 @@ anna designVersion("doc-autumn-m3", "rv-3")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -7821,7 +7846,8 @@ anna designVersion("doc-autumn-m3", "rv-3")
               {"id":"placement","label":"Placement","value":90},
               {"id":"words","label":"Words","value":95}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-mvkqwbj4-1",
@@ -7885,7 +7911,7 @@ anna designVersion("doc-autumn-m3", "rv-3")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -7893,17 +7919,19 @@ anna designVersion("doc-autumn-m3", "rv-3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":92},
+                  {"label":"Label","value":74},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
-                "value": 82
+                "value": 74,
+                "why": "The size on the label reads 200 ml; it is 100 ml"
               },
               {"id":"brand","label":"Brand","value":91},
               {"id":"craft","label":"Craft","value":88}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-mvkqwcaw-3",
@@ -8065,7 +8093,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":88},
-                    {"label":"Cap","value":66},
+                    {"label":"Cap","value":74},
                     {"label":"Glass","value":92},
                     {"label":"Size","value":89}
                   ],
@@ -8273,7 +8301,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":95},
+                    {"label":"Label","value":88},
                     {"label":"Cap","value":92},
                     {"label":"Glass","value":89},
                     {"label":"Size","value":96}
@@ -8473,7 +8501,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -8481,17 +8509,19 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":92},
+                    {"label":"Label","value":74},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
                     {"label":"Size","value":93}
                   ],
-                  "value": 82
+                  "value": 74,
+                  "why": "The size on the label reads 200 ml; it is 100 ml"
                 },
                 {"id":"brand","label":"Brand","value":91},
                 {"id":"craft","label":"Craft","value":88}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-3",
@@ -8680,7 +8710,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":89},
-                    {"label":"Cap","value":56},
+                    {"label":"Cap","value":64},
                     {"label":"Glass","value":93},
                     {"label":"Size","value":90}
                   ],
@@ -8995,7 +9025,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -9004,7 +9034,8 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                 {"id":"placement","label":"Placement","value":90},
                 {"id":"words","label":"Words","value":95}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-mvkqwbj4-1",
@@ -9164,7 +9195,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -9173,7 +9204,8 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                 {"id":"placement","label":"Placement","value":97},
                 {"id":"words","label":"Words","value":95}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-mvkqwcaw-3",
@@ -9237,7 +9269,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -9245,17 +9277,19 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":92},
+                    {"label":"Label","value":74},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
                     {"label":"Size","value":93}
                   ],
-                  "value": 82
+                  "value": 74,
+                  "why": "The size on the label reads 200 ml; it is 100 ml"
                 },
                 {"id":"brand","label":"Brand","value":91},
                 {"id":"craft","label":"Craft","value":88}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-mvkqwcaw-5",
@@ -9416,7 +9450,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":88},
-                    {"label":"Cap","value":66},
+                    {"label":"Cap","value":74},
                     {"label":"Glass","value":92},
                     {"label":"Size","value":89}
                   ],
@@ -9624,7 +9658,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":95},
+                    {"label":"Label","value":88},
                     {"label":"Cap","value":92},
                     {"label":"Glass","value":89},
                     {"label":"Size","value":96}
@@ -9824,7 +9858,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -9832,17 +9866,19 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":92},
+                    {"label":"Label","value":74},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
                     {"label":"Size","value":93}
                   ],
-                  "value": 82
+                  "value": 74,
+                  "why": "The size on the label reads 200 ml; it is 100 ml"
                 },
                 {"id":"brand","label":"Brand","value":91},
                 {"id":"craft","label":"Craft","value":88}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-3",
@@ -10031,7 +10067,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":89},
-                    {"label":"Cap","value":56},
+                    {"label":"Cap","value":64},
                     {"label":"Glass","value":93},
                     {"label":"Size","value":90}
                   ],
@@ -10346,7 +10382,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -10355,7 +10391,8 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                 {"id":"placement","label":"Placement","value":90},
                 {"id":"words","label":"Words","value":95}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-mvkqwbj4-1",
@@ -10515,7 +10552,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -10524,7 +10561,8 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                 {"id":"placement","label":"Placement","value":97},
                 {"id":"words","label":"Words","value":95}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-mvkqwcaw-3",
@@ -10683,7 +10721,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -10692,7 +10730,8 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1") → events
                 {"id":"placement","label":"Placement","value":92},
                 {"id":"words","label":"Words","value":95}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-mvkqwcaw-5",
@@ -10853,7 +10892,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":88},
-                  {"label":"Cap","value":66},
+                  {"label":"Cap","value":74},
                   {"label":"Glass","value":92},
                   {"label":"Size","value":89}
                 ],
@@ -11061,7 +11100,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":95},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":92},
                   {"label":"Glass","value":89},
                   {"label":"Size","value":96}
@@ -11261,7 +11300,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -11269,17 +11308,19 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":92},
+                  {"label":"Label","value":74},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
-                "value": 82
+                "value": 74,
+                "why": "The size on the label reads 200 ml; it is 100 ml"
               },
               {"id":"brand","label":"Brand","value":91},
               {"id":"craft","label":"Craft","value":88}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-3",
@@ -11468,7 +11509,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":89},
-                  {"label":"Cap","value":56},
+                  {"label":"Cap","value":64},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
                 ],
@@ -11783,7 +11824,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -11792,7 +11833,8 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
               {"id":"placement","label":"Placement","value":90},
               {"id":"words","label":"Words","value":95}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-mvkqwbj4-1",
@@ -11952,7 +11994,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -11961,7 +12003,8 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
               {"id":"placement","label":"Placement","value":97},
               {"id":"words","label":"Words","value":95}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-mvkqwcaw-3",
@@ -12025,7 +12068,7 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -12033,17 +12076,19 @@ anna designVersion("doc-autumn-m3", "rv-mvkqwbj4-1")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":92},
+                  {"label":"Label","value":74},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
-                "value": 82
+                "value": 74,
+                "why": "The size on the label reads 200 ml; it is 100 ml"
               },
               {"id":"brand","label":"Brand","value":91},
               {"id":"craft","label":"Craft","value":88}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-mvkqwcaw-5",
@@ -12202,7 +12247,7 @@ anna document("doc-autumn-m3")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":88},
-                  {"label":"Cap","value":66},
+                  {"label":"Cap","value":74},
                   {"label":"Glass","value":92},
                   {"label":"Size","value":89}
                 ],
@@ -12410,7 +12455,7 @@ anna document("doc-autumn-m3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":95},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":92},
                   {"label":"Glass","value":89},
                   {"label":"Size","value":96}
@@ -12610,7 +12655,7 @@ anna document("doc-autumn-m3")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -12618,17 +12663,19 @@ anna document("doc-autumn-m3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":92},
+                  {"label":"Label","value":74},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
-                "value": 82
+                "value": 74,
+                "why": "The size on the label reads 200 ml; it is 100 ml"
               },
               {"id":"brand","label":"Brand","value":91},
               {"id":"craft","label":"Craft","value":88}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-3",
@@ -12817,7 +12864,7 @@ anna document("doc-autumn-m3")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":89},
-                  {"label":"Cap","value":56},
+                  {"label":"Cap","value":64},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
                 ],
@@ -13132,7 +13179,7 @@ anna document("doc-autumn-m3")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -13141,7 +13188,8 @@ anna document("doc-autumn-m3")
               {"id":"placement","label":"Placement","value":90},
               {"id":"words","label":"Words","value":95}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-mvkqwbj4-1",
@@ -13301,7 +13349,7 @@ anna document("doc-autumn-m3")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -13310,7 +13358,8 @@ anna document("doc-autumn-m3")
               {"id":"placement","label":"Placement","value":97},
               {"id":"words","label":"Words","value":95}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-mvkqwcaw-3",
@@ -13469,7 +13518,7 @@ anna document("doc-autumn-m3")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -13478,7 +13527,8 @@ anna document("doc-autumn-m3")
               {"id":"placement","label":"Placement","value":92},
               {"id":"words","label":"Words","value":95}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-mvkqwcaw-5",
@@ -13638,7 +13688,7 @@ anna documentToCheck("doc-autumn-m3") → events
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":88},
-                    {"label":"Cap","value":66},
+                    {"label":"Cap","value":74},
                     {"label":"Glass","value":92},
                     {"label":"Size","value":89}
                   ],
@@ -13846,7 +13896,7 @@ anna documentToCheck("doc-autumn-m3") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":95},
+                    {"label":"Label","value":88},
                     {"label":"Cap","value":92},
                     {"label":"Glass","value":89},
                     {"label":"Size","value":96}
@@ -14046,7 +14096,7 @@ anna documentToCheck("doc-autumn-m3") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -14054,17 +14104,19 @@ anna documentToCheck("doc-autumn-m3") → events
                   "id": "product",
                   "label": "Product",
                   "parts": [
-                    {"label":"Label","value":92},
+                    {"label":"Label","value":74},
                     {"label":"Cap","value":89},
                     {"label":"Glass","value":96},
                     {"label":"Size","value":93}
                   ],
-                  "value": 82
+                  "value": 74,
+                  "why": "The size on the label reads 200 ml; it is 100 ml"
                 },
                 {"id":"brand","label":"Brand","value":91},
                 {"id":"craft","label":"Craft","value":88}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-3",
@@ -14253,7 +14305,7 @@ anna documentToCheck("doc-autumn-m3") → events
                   "label": "Product",
                   "parts": [
                     {"label":"Label","value":89},
-                    {"label":"Cap","value":56},
+                    {"label":"Cap","value":64},
                     {"label":"Glass","value":93},
                     {"label":"Size","value":90}
                   ],
@@ -14568,7 +14620,7 @@ anna documentToCheck("doc-autumn-m3") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -14577,7 +14629,8 @@ anna documentToCheck("doc-autumn-m3") → events
                 {"id":"placement","label":"Placement","value":90},
                 {"id":"words","label":"Words","value":95}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-mvkqwbj4-1",
@@ -14737,7 +14790,7 @@ anna documentToCheck("doc-autumn-m3") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -14746,7 +14799,8 @@ anna documentToCheck("doc-autumn-m3") → events
                 {"id":"placement","label":"Placement","value":97},
                 {"id":"words","label":"Words","value":95}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-mvkqwcaw-3",
@@ -14905,7 +14959,7 @@ anna documentToCheck("doc-autumn-m3") → events
             "artefacts": "none",
             "brandRules": "pass",
             "notes": [],
-            "productTruth": "pass",
+            "productTruth": "flag",
             "scores": {
               "engine": 91,
               "measures": [
@@ -14914,7 +14968,8 @@ anna documentToCheck("doc-autumn-m3") → events
                 {"id":"placement","label":"Placement","value":92},
                 {"id":"words","label":"Words","value":95}
               ],
-              "product": 82
+              "product": 74,
+              "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
             }
           },
           "id": "rv-mvkqwcaw-5",
@@ -15070,7 +15125,7 @@ anna documentToCheck("doc-autumn-m3") → events
         "artefacts": "none",
         "brandRules": "pass",
         "notes": [],
-        "productTruth": "pass",
+        "productTruth": "flag",
         "scores": {
           "engine": 91,
           "measures": [
@@ -15079,7 +15134,8 @@ anna documentToCheck("doc-autumn-m3") → events
             {"id":"placement","label":"Placement","value":92},
             {"id":"words","label":"Words","value":95}
           ],
-          "product": 82
+          "product": 74,
+          "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
         }
       },
       "feedback": [],
@@ -15221,7 +15277,7 @@ anna documentToCheck("doc-autumn-m3")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":88},
-                  {"label":"Cap","value":66},
+                  {"label":"Cap","value":74},
                   {"label":"Glass","value":92},
                   {"label":"Size","value":89}
                 ],
@@ -15429,7 +15485,7 @@ anna documentToCheck("doc-autumn-m3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":95},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":92},
                   {"label":"Glass","value":89},
                   {"label":"Size","value":96}
@@ -15629,7 +15685,7 @@ anna documentToCheck("doc-autumn-m3")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -15637,17 +15693,19 @@ anna documentToCheck("doc-autumn-m3")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":92},
+                  {"label":"Label","value":74},
                   {"label":"Cap","value":89},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
-                "value": 82
+                "value": 74,
+                "why": "The size on the label reads 200 ml; it is 100 ml"
               },
               {"id":"brand","label":"Brand","value":91},
               {"id":"craft","label":"Craft","value":88}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-3",
@@ -15836,7 +15894,7 @@ anna documentToCheck("doc-autumn-m3")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":89},
-                  {"label":"Cap","value":56},
+                  {"label":"Cap","value":64},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
                 ],
@@ -16151,7 +16209,7 @@ anna documentToCheck("doc-autumn-m3")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -16160,7 +16218,8 @@ anna documentToCheck("doc-autumn-m3")
               {"id":"placement","label":"Placement","value":90},
               {"id":"words","label":"Words","value":95}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-mvkqwbj4-1",
@@ -16320,7 +16379,7 @@ anna documentToCheck("doc-autumn-m3")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -16329,7 +16388,8 @@ anna documentToCheck("doc-autumn-m3")
               {"id":"placement","label":"Placement","value":97},
               {"id":"words","label":"Words","value":95}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-mvkqwcaw-3",
@@ -16488,7 +16548,7 @@ anna documentToCheck("doc-autumn-m3")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -16497,7 +16557,8 @@ anna documentToCheck("doc-autumn-m3")
               {"id":"placement","label":"Placement","value":92},
               {"id":"words","label":"Words","value":95}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "id": "rv-mvkqwcaw-5",
@@ -16593,7 +16654,7 @@ anna qaQueue("w-lysne")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":89},
+                  {"label":"Label","value":88},
                   {"label":"Cap","value":96},
                   {"label":"Glass","value":93},
                   {"label":"Size","value":90}
@@ -16684,8 +16745,8 @@ anna qaQueue("w-lysne")
                 "id": "product",
                 "label": "Product",
                 "parts": [
-                  {"label":"Label","value":91},
-                  {"label":"Cap","value":88},
+                  {"label":"Label","value":89},
+                  {"label":"Cap","value":89},
                   {"label":"Glass","value":95},
                   {"label":"Size","value":92}
                 ],
@@ -16856,7 +16917,7 @@ anna qaQueue("w-lysne")
                 "label": "Product",
                 "parts": [
                   {"label":"Label","value":92},
-                  {"label":"Cap","value":44},
+                  {"label":"Cap","value":52},
                   {"label":"Glass","value":96},
                   {"label":"Size","value":93}
                 ],
@@ -17143,7 +17204,7 @@ anna qaQueue("w-lysne")
                 "parts": [
                   {"label":"Label","value":96},
                   {"label":"Cap","value":93},
-                  {"label":"Glass","value":50},
+                  {"label":"Glass","value":58},
                   {"label":"Size","value":97}
                 ],
                 "value": 58,
@@ -17152,7 +17213,12 @@ anna qaQueue("w-lysne")
               {"id":"brand","label":"Brand","value":86},
               {"id":"first_second","label":"First second","value":86},
               {"id":"rhythm","label":"Rhythm","value":76,"why":"The button comes in a quarter second after the beat"},
-              {"id":"text_on_screen","label":"Text on screen","value":88}
+              {
+                "id": "text_on_screen",
+                "label": "Text on screen",
+                "value": 68,
+                "why": "The button sits over the name on the label from 0:04"
+              }
             ],
             "product": 58,
             "why": [{"score":"product","text":"Oil leaks from the glass at the base in shot 1"}]
@@ -17177,6 +17243,15 @@ anna qaQueue("w-lysne")
             "id": "fi-v2",
             "seconds": {"from":4,"to":4.25},
             "severity": "minor",
+            "status": "open"
+          },
+          {
+            "dimension": "design",
+            "expected": "The button clear of the label, as LYSNE’s design system places it",
+            "finding": "From 0:04 the button sits over the name on the label.",
+            "id": "fi-v3",
+            "seconds": {"from":4,"to":6},
+            "severity": "major",
             "status": "open"
           }
         ],
@@ -17292,9 +17367,9 @@ anna qaQueue("w-lysne")
             "style": "small",
             "text": "Night Body Oil · 100 ml",
             "visible": true,
-            "w": 0.6,
-            "x": 0.08,
-            "y": 0.24
+            "w": 0.5,
+            "x": 0.3,
+            "y": 0.73
           },
           {
             "h": 0.1,
@@ -17304,9 +17379,9 @@ anna qaQueue("w-lysne")
             "style": "headline",
             "text": "For the hour before sleep.",
             "visible": true,
-            "w": 0.84,
-            "x": 0.08,
-            "y": 0.13
+            "w": 0.62,
+            "x": 0.3,
+            "y": 0.62
           },
           {
             "h": 0.05,
@@ -17696,7 +17771,7 @@ anna qaQueue("w-lysne")
           "artefacts": "none",
           "brandRules": "pass",
           "notes": [],
-          "productTruth": "pass",
+          "productTruth": "flag",
           "scores": {
             "engine": 91,
             "measures": [
@@ -17705,7 +17780,8 @@ anna qaQueue("w-lysne")
               {"id":"placement","label":"Placement","value":92},
               {"id":"words","label":"Words","value":95}
             ],
-            "product": 82
+            "product": 74,
+            "why": [{"score":"product","text":"The size on the label reads 200 ml; it is 100 ml"}]
           }
         },
         "feedback": [],

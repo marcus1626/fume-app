@@ -356,6 +356,15 @@ const seeded: QaItem[] = [
         status: "open",
         seconds: { from: 4, to: 4.25 },
       },
+      {
+        id: "fi-v3",
+        dimension: "design",
+        severity: "major",
+        finding: "From 0:04 the button sits over the name on the label.",
+        expected: "The button clear of the label, as LYSNE’s design system places it",
+        status: "open",
+        seconds: { from: 4, to: 6 },
+      },
     ],
   }),
   // A hand-laid design (round 15): code measured that its headline sits over the bottle, so it comes to Check as the
@@ -365,7 +374,14 @@ const seeded: QaItem[] = [
     documentId: "doc-autumn-email",
     format: "story",
     image: img("05-01", "story"),
-    layers: structuredClone(layoutLayers),
+    // The version sent before the words were moved: the headline and its line sit over the bottle's label
+    layers: structuredClone(layoutLayers).map((l) =>
+      l.id === "ly-head"
+        ? { ...l, x: 0.3, y: 0.62, w: 0.62 }
+        : l.id === "ly-body"
+          ? { ...l, x: 0.3, y: 0.73, w: 0.5 }
+          : l,
+    ),
     findings: [
       {
         id: "fi-d1",
@@ -447,6 +463,7 @@ function scored(item: QaItem, i: number): QaItem {
       ...item,
       evaluation: withMeasures(item.evaluation, "video", i, {
         rhythm: { value: 76, why: "The button comes in a quarter second after the beat" },
+        text_on_screen: { value: 68, why: "The button sits over the name on the label from 0:04" },
       }),
     };
   return { ...item, evaluation: withMeasures(item.evaluation, item.studio, i) };

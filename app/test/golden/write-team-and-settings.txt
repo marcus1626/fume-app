@@ -18,7 +18,7 @@ jonas invite("someone@lysne.example", "member") → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
@@ -73,7 +73,7 @@ maja invite("kari@lysne.example", "approver") → events
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}

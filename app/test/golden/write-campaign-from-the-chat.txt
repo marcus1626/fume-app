@@ -27,7 +27,7 @@ maja startCampaign({"productIds":["pr-face"],"text":"A spring campaign for the f
               "id": "product",
               "label": "Product",
               "parts": [
-                {"label":"Label","value":89},
+                {"label":"Label","value":88},
                 {"label":"Cap","value":96},
                 {"label":"Glass","value":93},
                 {"label":"Size","value":90}
