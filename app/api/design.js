@@ -1181,6 +1181,7 @@ function scoreOf(l, checks) {
   return s;
 }
 var FIT_FLOOR = 0.6;
+var PRICE_FLOOR = 0.35;
 function fitFor(doc, sizes = {}) {
   const need = (name, floor = FIT_FLOOR) => {
     const ws = wordWidths(doc, name);
@@ -1192,7 +1193,7 @@ function fitFor(doc, sizes = {}) {
   const cta = need("CTA words");
   const line = lineWidth(doc, "Price");
   const whole = line ? Math.min(1, (line.box - 2) / line.width) : 1;
-  const price = whole < 1 && whole >= FIT_FLOOR ? Math.floor(whole * 100) / 100 : need("Price");
+  const price = whole < 1 && whole >= PRICE_FLOOR ? Math.floor(whole * 100) / 100 : need("Price");
   return headline || cta || price ? { ...headline ? { headline } : {}, ...cta ? { cta } : {}, ...price ? { price } : {} } : null;
 }
 function better(a, b) {
