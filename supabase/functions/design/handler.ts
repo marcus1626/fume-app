@@ -67,8 +67,15 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     if (!t.ask && d.before) {
       try {
         choice = await d.before(t);
+        // A layout from an earlier book the brand has since replaced is not the brand's any more (Anthem, 9 Nov: the
+        // new book's navy block never showed because every redo kept the old book's layout).
+        const current = layoutsOf(t);
+        if (choice && current.length && !current.some((l) => l.name === choice!.layout)) {
+          choice = null;
+          keptWhy = "the design book no longer has the earlier layout";
+        }
         kept = Boolean(choice);
-        if (!choice) keptWhy = "no earlier design";
+        if (!choice && !keptWhy) keptWhy = "no earlier design";
       } catch (e) {
         choice = null;
         keptWhy = e instanceof Error ? e.message.slice(0, 200) : String(e).slice(0, 200);

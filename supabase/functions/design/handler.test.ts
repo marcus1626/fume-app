@@ -209,6 +209,16 @@ Deno.test("a fixed picture keeps the layout its earlier design chose; a designer
   assertEquals((none.calls.lay[0] as { prefer: { band?: string } }).prefer.band, "top", "a first design looks afresh");
 });
 
+Deno.test("a layout from a design book the brand has since replaced is not kept", async () => {
+  const branded = { ...take, book: { ...take.book, body: { ...take.book.body, onPictures: { layouts: [{ name: "Navy block", band: "bottom", align: "left", ground: "colour_block", words: "light", cta: "outline" }] } } } };
+  const earlier = { keepClear: [], band: "middle" as const, align: "left" as const, colour: "accent" as const, layout: "Single line, button right", why: "before" };
+  let looked = 0;
+  const a = deps({ before: () => Promise.resolve(earlier), choose: () => (looked++, Promise.resolve(null)) });
+  await designLayer(branded, a.d);
+  assertEquals(looked, 1, "the model looks again");
+  assertEquals((a.calls.finish[0] as { choice: { kept?: boolean } | null }).choice?.kept ?? false, false);
+});
+
 Deno.test("the words go in the layout the plan chose, where the Engine left room for them", async () => {
   const two = [
     { name: "Green stack", band: "middle", align: "left", ground: "photo", words: "brand_colour", cta: "box" },
