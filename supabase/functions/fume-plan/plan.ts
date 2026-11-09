@@ -242,9 +242,9 @@ export function layoutPart(layouts: BrandLayout[] | undefined): string[] {
   if (!layouts?.length) return [];
   return [
     `<brand_layouts>\n${JSON.stringify(layouts)}\n</brand_layouts>`,
-    "These are the brand's own layouts for words on its pictures: where the words sit (band and align), how wide their column is (a share of the picture's width) and what they stand on. For every creative with words, choose the layout that suits its scene and name it in layout, exactly as listed. Write the scene for it: the product and anything that matters stay clear of that place, and the ground there is calm, so the words can be set there later.",
+    "These are the brand's own layouts for words on its pictures: where the words sit (band and align), how wide their column is (a share of the picture's width) and what they stand on. For every creative with words, choose the layout that suits its scene and name it in layout, exactly as listed. Write the scene for it: the product, every person and the ball stay clear of that place (people go beside the product, never in the words' room), and the ground there is calm, so the words can be set there later.",
     ...(layouts.some((l) => l.cta)
-      ? ["Where a layout lists cta, those are the words the brand itself sets on its button, as its own creatives show them. A creative set in that layout carries them as its call to action, word for word in the brand's case, unless the brief asks for another action; the tone of voice's other calls to action are for its pages, not its creatives."]
+      ? ["Where a layout lists cta, those are the words the brand itself sets on its button, as its own creatives show them. A creative set in that layout carries them as its call to action, word for word in the brand's case, unless the brief asks for another action; the tone of voice's other calls to action are for its pages, not its creatives. An ad asks for an action: set every creative with words in a layout that carries the brand's button, and keep the layouts without one for a picture the brief wants without a call to action. The call to action is always words to act on, never a note such as \"none\"."]
       : []),
   ];
 }
@@ -330,8 +330,9 @@ export function offLook(a: PlanAnswer, look: LookForPlan | null | undefined): Co
   if (!banned.length) return [];
   const out: CopyFinding[] = [];
   const test = (ref: string, text: string) => {
-    // What a scene rules out itself ("no rim light, no flare") is not asked for.
-    const asked = text.replace(/\b(?:no|never|without|not|avoid|avoiding)\b[^.;,]*/gi, " ");
+    // What a scene rules out itself ("no rim light, no flare") or sets itself against ("new against recent low-angle
+    // pictures") is not asked for.
+    const asked = text.replace(/\b(?:no|never|without|not|avoid|avoiding|against|unlike|instead of|rather than)\b[^.;,]*/gi, " ");
     const hits = banned.filter(([, re]) => re.test(asked)).map(([name]) => name);
     if (hits.length)
       out.push({
@@ -343,6 +344,34 @@ export function offLook(a: PlanAnswer, look: LookForPlan | null | undefined): Co
     for (const line of d.look) test(`${d.id}/look:${line.label}`, line.value);
     for (const c of d.creatives) test(`${d.id}/${c.id}`, c.scene);
   }
+  return out;
+}
+
+/**
+ * An ad set in a layout without the brand's button, where the brand has one (Anthem v8, 9 Nov: five of six plans chose
+ * the brand's category tile, a tile on its own website with no button, and the creatives went out with no call to
+ * action at all; one carried "None on the picture" as its call to action). Code decides; the plan is rewritten once.
+ */
+export function noButton(a: PlanAnswer, layouts: BrandLayout[] | undefined): CopyFinding[] {
+  const withButton = (layouts ?? []).filter((l) => l.cta);
+  if (!withButton.length) return [];
+  const byName = new Map((layouts ?? []).map((l) => [l.name.trim().toLowerCase(), l]));
+  const out: CopyFinding[] = [];
+  const chosen = a.directions.find((d) => d.id === a.chosenDirectionId) ?? a.directions[0];
+  for (const c of chosen?.creatives ?? []) {
+    const l = c.text?.trim() && c.layout ? byName.get(c.layout.trim().toLowerCase()) : undefined;
+    if (l && !l.cta)
+      out.push({
+        ref: `${chosen.id}/${c.id}`, text: c.layout ?? "", kind: "no_button", blocking: true,
+        note: `It is set in "${l.name}", which has no button, so the ad would ask for nothing. Set it in ${withButton.map((b) => `"${b.name}" (${b.cta})`).join(" or ")}, or say in the plan why the brief wants no call to action.`,
+      });
+  }
+  const cta = a.copy.find((l) => /call.to.action|^cta$|knapp/i.test(l.label));
+  if (cta && /^\s*(none|no call to action|n\/a|ingen)\b/i.test(cta.value))
+    out.push({
+      ref: `copy:${keyOf(cta.label, 0)}`, text: cta.value, kind: "no_button", blocking: true,
+      note: `The call to action says "${cta.value}": write the brand's button words, ${withButton[0].cta}.`,
+    });
   return out;
 }
 
@@ -518,7 +547,7 @@ export function claimPrompt(task: PlanTask, lines: CopyLine[]): string {
 export interface CopyFinding {
   ref: string;
   text: string;
-  kind: "unbacked_claim" | "off_voice" | "avoided_word" | "language" | "repeats_headline" | "too_long" | "off_look";
+  kind: "unbacked_claim" | "off_voice" | "avoided_word" | "language" | "repeats_headline" | "too_long" | "off_look" | "no_button";
   blocking: boolean;
   note: string;
 }

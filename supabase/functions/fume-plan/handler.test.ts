@@ -2,7 +2,7 @@
 import { assertEquals } from "jsr:@std/assert@1";
 import { type Deps, handlePlan, type Written } from "./handler.ts";
 import { type ClaimRead, copyLines, judgeCopy, layoutsOf, type PlanAnswer, type PlanTask, prompt, toBody } from "./plan.ts";
-import { columnOf as columnOfFn, columnPart, type LookForPlan, lookPart, offLook, recentPart, repeatsHeadline, scenesPart, tooLongFor } from "./plan.ts";
+import { columnOf as columnOfFn, columnPart, type LookForPlan, lookPart, noButton, offLook, recentPart, repeatsHeadline, scenesPart, tooLongFor } from "./plan.ts";
 
 const task: PlanTask = {
   run_id: "r1",
@@ -490,6 +490,7 @@ Deno.test("a planned picture the Look Book rules out is a finding; one that rule
   assertEquals(golden.map((f) => `${f.ref} ${f.kind} ${f.blocking}`), ["a/pc1 off_look true", "a/pc2 off_look true"]);
   assertEquals(golden[0].note.includes("golden hour, looking up from a low angle"), true);
   assertEquals(offLook(withScene("Sideline at 135 mm in afternoon sun, no rim light, no lens flare."), anthemLook), []);
+  assertEquals(offLook(withScene("Kneeling height, level, which is new against recent low-angle pictures."), anthemLook), []);
   assertEquals(offLook(withScene("s", "Dark blue dusk"), anthemLook).map((f) => f.ref), ["a/look:Light"]);
   assertEquals(offLook(withScene("At golden hour."), null), [], "no Look Book, nothing to hold");
   assertEquals(offLook(withScene("At golden hour."), { never: ["Studio white"] }), [], "only what the Look Book rules out");
@@ -504,4 +505,24 @@ Deno.test("a plan with a picture outside the Look Book is written once more insi
   assertEquals(f.checks[0].rewritten, true);
   assertEquals(f.checks[0].look_book, true);
   assertEquals((f.checks[0].rewrote_for as { kind: string }[]).map((x) => x.kind), ["off_look", "off_look"]);
+});
+
+Deno.test("an ad set in a layout without the brand's button, where it has one, is written again in one with it", () => {
+  const layouts = layoutsOf([
+    { name: "Hero tile", band: "middle", align: "left", wordsWidthPct: 40, ground: "photo", ctaWords: "SHOP NOW" },
+    { name: "Category tile", band: "bottom", align: "left", wordsWidthPct: 50, ground: "photo" },
+  ]);
+  const inLayout = (layout: string, cta = "SHOP NOW"): PlanAnswer => ({
+    ...plan,
+    copy: [{ label: "Call to action", value: cta, why: "w" }],
+    directions: plan.directions.map((d) => ({ ...d, creatives: d.creatives.map((c) => ({ ...c, text: "Home court", layout })) })),
+  });
+  const tile = noButton(inLayout("Category tile"), layouts);
+  assertEquals(tile.map((f) => `${f.ref} ${f.kind} ${f.blocking}`), ["a/pc1 no_button true", "a/pc2 no_button true"]);
+  assertEquals(tile[0].note.includes('"Hero tile" (SHOP NOW)'), true);
+  assertEquals(noButton(inLayout("hero tile"), layouts), [], "a layout with the button, in any case");
+  assertEquals(noButton(inLayout("Hero tile", "None on the picture"), layouts).map((f) => f.ref), ["copy:call_to_action"]);
+  assertEquals(noButton(inLayout("Category tile"), layoutsOf([{ name: "Category tile", band: "bottom", align: "left", wordsWidthPct: 50, ground: "photo" }])), [],
+    "a brand with no button on its pictures is never asked for one");
+  assertEquals(prompt({ ...task, layouts }).includes("set every creative with words in a layout that carries the brand's button"), true);
 });

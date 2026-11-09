@@ -59,7 +59,7 @@ export const LayoutChoice = z.object({
   keepClear: z.array(z.object({
     what: z.string().describe("What it is, e.g. the shoe, the street lamp, the label"),
     x: Fraction, y: Fraction, w: Fraction, h: Fraction,
-  })).describe("What the words must never cover: the product first, then small bright light sources, faces, the label"),
+  })).describe("What the words must never cover: the product first, then every person's whole figure, small bright light sources, the label"),
   band: z.enum(["top", "middle", "bottom"]).describe("Where the words sit best: the calmest, emptiest part of the picture"),
   align: z.enum(["left", "center", "right"]),
   colour: z.enum(["text", "on_photo", "accent"]).describe("on_photo for light words on a dark area, text for dark words on a light area"),
@@ -72,7 +72,8 @@ export const CHOOSE_SYSTEM = `You are Fume's senior art director. You look at a 
 
 Rules:
 - The product must stay fully visible: mark it in keepClear first, drawn tight to its edges (with its shadow where it falls on the ground). Fume adds the same small margin around every box, so add none yourself.
-- Also mark faces, any printed label, and bright light only when it is a small source the eye goes to (a lamp, the sun, a candle).
+- Mark every person in the picture as their whole figure, head to feet (or as far as the frame shows them), and a ball in play: words laid across a body or a face read as a mistake, never as design (Anthem, 9 Nov: a headline across a boy's back). A crowd far off and small is background, not a person to mark.
+- Also mark any printed label, and bright light only when it is a small source the eye goes to (a lamp, the sun, a candle).
 - A large bright area (a window, a sky, a pale wall) is a place where dark words can sit: never mark it. Never mark the area you pick for the words.
 - Pick the band that is calmest and emptiest, where the words read without fighting the picture. Follow the plan's note on where the words go when the picture allows it.
 - The brand sets words on its pictures in its own layouts (brand_layouts): pick the one that fits this picture, so the creative looks like the brand made it.
