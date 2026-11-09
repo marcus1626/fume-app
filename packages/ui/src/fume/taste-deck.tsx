@@ -71,6 +71,9 @@ export interface TasteDeckProps extends Omit<HTMLAttributes<HTMLDivElement>, "on
   disabled?: boolean;
   /** A pair's third answer, when neither picture is the brand ("Neither feels like LYSNE"); key N. */
   neitherLabel?: string;
+  /** More about the card shown, under its answers (Train the Engine: what Fume's check found); gone with the deck.
+   *  The page places it (its own class). */
+  aside?: ReactNode;
 }
 
 type Leaving = "left" | "right" | "a" | "b" | "neither" | null;
@@ -90,6 +93,7 @@ export function TasteDeck({
   end,
   disabled,
   neitherLabel,
+  aside,
   className,
   ...props
 }: TasteDeckProps) {
@@ -470,6 +474,7 @@ export function TasteDeck({
       )}
 
       {foot}
+      {!done && aside}
       <span className="ui-td-live" aria-live="polite">
         {said}
       </span>

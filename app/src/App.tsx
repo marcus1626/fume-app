@@ -167,6 +167,7 @@ const routes = [
             lazy: page(() => import("./features/studio/StudioDeliveriesPage"), "StudioDeliveriesPage"),
           },
           { path: "studio/quality", lazy: page(() => import("./features/studio/QualityLogPage"), "QualityLogPage") },
+          { path: "studio/train", lazy: page(() => import("./features/train/TrainPage"), "TrainPage") },
           { path: "studio/team", lazy: page(() => import("./features/studio/TeamLoadPage"), "TeamLoadPage") },
           { path: "studio/usage", lazy: page(() => import("./features/studio/UsagePage"), "UsagePage") },
           // A Fume person's own profile, in the studio

@@ -1,0 +1,20 @@
+/* Train the Engine (app/src/features/train/TrainPage.tsx; Marcus, 6 Nov 2026): Fume's own people go through the Engine's
+   pictures in the taste deck and say whether Fume's check is right about the product. The app's own screen; composed
+   with taste-deck.css, card.css, creative.css, toggle.css and field.css.
+   Markup: <div class="ui-train"> <div class="ui-td"> … the deck … <aside class="ui-train-check"> cards </aside></div></div>
+   Fume decisions: the picture is the biggest thing on the screen, so the page's own header is short and the deck uses
+   the page's whole width; what the check found stands under the answers, beside the picture, so the expert looks
+   from one to the other without scrolling. Two cards' close-ups sit side by side: the part on the picture, then the
+   same part on the product's photograph. No Amber: training is not a check.
+   Rule gate: air, proximity, space-from-tokens. */
+
+/* the page's header is one line and its meta, so the picture may be taller than the deck's default */
+.ui-train > .ui-td { --td-chrome: calc(var(--ui-space-2xl) * 7); }
+
+.ui-train-check { display: grid; align-content: start; gap: var(--ui-space-md); width: min(100%, var(--td-width)); min-width: 0; }
+.ui-train-check .ui-card-media { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); } /* the product and each close-up at half the width, two side by side */
+
+@media (min-width: 1024px) {
+  .ui-train > .ui-td:not([data-done]) > .ui-train-check { grid-column: 2; grid-row: 6; width: min(100%, calc(var(--ui-space-2xl) * 12)); }
+}
+.ui-train-check > .ui-btn { justify-self: start; }

@@ -196,7 +196,19 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
       icon: "megaphone",
       keywords: "campaigns across brands clients calendar plans",
     };
-    if (limited) return [overview, campaigns, deliveries, team, usage, quality];
+    // Train the Engine: Fume's own people only, never an agency's
+    const train: NavItem[] =
+      frame === "agency"
+        ? []
+        : [
+            {
+              to: `${root}/train`,
+              label: "Train the Engine",
+              icon: "fume-engine",
+              keywords: "train teach engine swipe yes no why lessons check right wrong",
+            },
+          ];
+    if (limited) return [overview, campaigns, deliveries, team, usage, quality, ...train];
     return [
       overview,
       {
@@ -222,6 +234,7 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
       team,
       usage,
       quality,
+      ...train,
       // The agency's Settings is a place of its own (its plan with Fume, its people)
       ...(frame === "agency"
         ? [

@@ -492,3 +492,23 @@ export const useAskFume = () => useM((a, v: Parameters<FumeApi["askFume"]>[0]) =
 export const useMeetingTopics = () => useQ(["meetings", "topics"], (a) => a.meetingTopics());
 export const useChangePlanWithFume = () =>
   useM((a, v: { campaignId: Id; text: string }) => a.changePlanWithFume(v.campaignId, v.text));
+
+// Train the Engine. The deck is read once per visit and kept as it was (an answer must not move the cards under her);
+// the answers save without refreshing anything else.
+export const useTrainDeck = () => {
+  const api = useApi();
+  return useQuery({
+    queryKey: ["train"],
+    queryFn: () => api.trainDeck(),
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+};
+export const useTrainAnswer = () => {
+  const api = useApi();
+  return useMutation({ mutationFn: (v: Parameters<FumeApi["trainAnswer"]>[0]) => api.trainAnswer(v) });
+};
+export const useTrainJudge = () => {
+  const api = useApi();
+  return useMutation({ mutationFn: (v: Parameters<FumeApi["trainJudge"]>[0]) => api.trainJudge(v) });
+};

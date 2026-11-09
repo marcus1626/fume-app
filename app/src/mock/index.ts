@@ -18,6 +18,7 @@ import { fixLater, qualityCalls } from "./quality";
 import { settleQuestions } from "./questions";
 import { reviewCalls } from "./review";
 import { studioCalls } from "./studio";
+import { trainCalls } from "./train";
 
 export type { MockOptions } from "./context";
 
@@ -49,6 +50,7 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
     ...conversationCalls(m),
     ...agencyCalls(m),
     ...notificationCalls(m),
+    ...trainCalls(m),
     subscribe(handler) {
       m.listeners.add(handler);
       return () => m.listeners.delete(handler);
