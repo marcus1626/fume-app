@@ -423,4 +423,9 @@ Deno.test("a picture that carries words is made with room for them, where the pl
   assertEquals([wide?.side, wide?.share, wide?.button], ["left", 0.5, "right"], "never more than half the frame");
   const [corner] = roomRules({ ...withWords("A hoop in a driveway."), room: anthem });
   assertEquals(/bottom right corner, the lowest eighth of the frame's height across the right half/.test(corner.statement), true);
+  assertEquals(/white/.test(corner.statement), false, "no tone where the brand's words tone is not known");
+  // Anthem sets white words: the room is darker than they are, never bright sky.
+  const light = { ...anthem, layouts: [{ ...anthem.layouts[0], words: "light" }] };
+  const [white] = roomRules({ ...withWords("A hoop in a driveway."), room: light });
+  assertEquals(/set in white, so that part of the picture is mid to deep in tone.*never bright sky/.test(white.statement), true);
 });

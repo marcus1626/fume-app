@@ -16,5 +16,10 @@ select test.ok(
   (select coalesce(bool_and(coalesce(e ->> 'ctaAt', 'bottom_right') in ('bottom_left', 'bottom_right')), true)
      from jsonb_array_elements(coalesce(public.engine_words_room(test.id('ej')) -> 'layouts', '[]'::jsonb)) e),
   'a button corner, where one is given, is a bottom corner');
+-- 20261110020000_words_room_tone.sql: a layout's words tone comes with it, only as one of the book's tones.
+select test.ok(
+  (select coalesce(bool_and(coalesce(e ->> 'words', 'light') in ('light', 'dark', 'brand_colour')), true)
+     from jsonb_array_elements(coalesce(public.engine_words_room(test.id('ej')) -> 'layouts', '[]'::jsonb)) e),
+  'a words tone, where one is given, is light, dark or the brand colour');
 set role authenticated;
 select test.ok(true, 'all of the words room tests passed');

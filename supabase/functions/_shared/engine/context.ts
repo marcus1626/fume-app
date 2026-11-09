@@ -72,6 +72,8 @@ export type RoomLayout = {
   box?: { x: number; y: number; w: number; h: number };
   /** Where the brand sets its button apart from the words (Anthem's SHOP NOW, bottom right). */
   ctaAt?: string | null;
+  /** The tone of the brand's words on its pictures: light (white words) or dark. */
+  words?: string | null;
 };
 export type Side = "left" | "right" | "top" | "bottom";
 
@@ -81,7 +83,7 @@ export type Side = "left" | "right" | "top" | "bottom";
  * ("Left side of the frame kept clear"), else the brand's first layout that sets words on the photograph. Null for a
  * picture without words.
  */
-export function wordsRoom(task: EngineTask): { side: Side; share: number; from: string; button?: "left" | "right" } | null {
+export function wordsRoom(task: EngineTask): { side: Side; share: number; from: string; button?: "left" | "right"; tone?: "dark" | "light" } | null {
   const planned = plannedCreative(task);
   if (!planned?.text?.trim() || task.master?.picked) return null;
   const scene = planned.scene ?? "";
@@ -106,7 +108,10 @@ export function wordsRoom(task: EngineTask): { side: Side; share: number; from: 
   }
   // A button the brand sets apart in a bottom corner needs that corner too.
   const button = layout?.ctaAt === "bottom_right" ? "right" : layout?.ctaAt === "bottom_left" ? "left" : undefined;
-  return { side, share, from: chosen || !fromScene ? `the brand's layout "${layout!.name}"` : "the plan's scene", ...(button ? { button } : {}) };
+  // White words need a room darker than they are; dark words a light one (Anthem v11, 9 Nov: the room was bright sky,
+  // white could not be read on it, and the words were set in navy, off the brand).
+  const tone = layout?.words === "light" ? "dark" : layout?.words === "dark" ? "light" : undefined;
+  return { side, share, from: chosen || !fromScene ? `the brand's layout "${layout!.name}"` : "the plan's scene", ...(button ? { button } : {}), ...(tone ? { tone } : {}) };
 }
 
 /** The room for the words as a rule the prompt must carry: where the product sits and how much bare ground is left. */
@@ -122,10 +127,15 @@ export function roomRules(task: EngineTask): BrandRule[] {
   // the scene, a split frame no designer would set words on (Anthem v9, 9 Nov). A scene's shiny surface (wet asphalt,
   // a lit street) is not room either: words read only on calm ground.
   const calm = "It is the same continuous photograph, the scene's own open background carried on (the sky, a far field, a wall or trees softly out of focus), calm and low in detail: no reflections, puddles, lights, highlights, hard shadows or busy texture there. It is never a flat panel, a blank slab, a split frame or a border.";
+  const tone = room.tone === "dark"
+    ? " The words there are set in white, so that part of the picture is mid to deep in tone: the shaded side of the scene, a darker tree line, hedge or wall softly out of focus, never bright sky, a pale wall or sunlit concrete."
+    : room.tone === "light"
+      ? " The words there are set in a dark colour, so that part of the picture is light in tone: open sky, a pale wall or light ground, never deep shade."
+      : "";
   const button = room.button ? ` The bottom ${room.button} corner, the lowest eighth of the frame's height across ${room.button === room.side ? "that side" : `the ${room.button} half`}, holds only ground (grass, court, floor), with no person, feet, ball or base of the product in it, for the brand's button.` : "";
   const statement = across
-    ? `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's width; the ${room.side} ${pct}% of the width, around the middle of the frame's height, has no person, product or object in it, for the words set later. ${calm}${button} The product never fills the frame.`
-    : `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's height; the ${room.side} ${pct}% of the height, edge to edge, has no person, product or object in it, for the words set later. ${calm}${button} The product never fills the frame.`;
+    ? `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's width; the ${room.side} ${pct}% of the width, around the middle of the frame's height, has no person, product or object in it, for the words set later. ${calm}${tone}${button} The product never fills the frame.`
+    : `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's height; the ${room.side} ${pct}% of the height, edge to edge, has no person, product or object in it, for the words set later. ${calm}${tone}${button} The product never fills the frame.`;
   return [{ id: "room-for-words", dimension: "composition", lookKey: null, statement, binding: "hard", epistemic: "known", scope: "core" }];
 }
 
