@@ -25,6 +25,9 @@ function brandLayouts(book) {
   const seen = all.filter((l) => l.source !== "fume");
   return seen.length ? seen : all;
 }
+function seesBrand(book) {
+  return (book.onPictures?.layouts ?? []).some((l) => carriesWords(l) && l.source !== "fume");
+}
 function carriesWords(l) {
   return l.hasWords ?? !/\b(no|without) (words|text|copy)\b|\b(logo|swoosh|mark) alone\b/i.test(l.name);
 }
@@ -1003,8 +1006,10 @@ function* layoutsFor(book, format, prefer, hasCta) {
     ...scrim === "gradient" ? ["gradient"] : [],
     ...blockSig ? ["block"] : [],
     // A panel behind the words only where the brand sets one: a box is not a designer's answer to a busy picture
-    // (Marcus, 9 Nov). Without one, a picture with no calm room is one to make again, not one to cover.
-    ...scrim === "flat" || brandLayouts(book).some((x) => x.ground === "flat") ? ["flat"] : []
+    // (Marcus, 9 Nov). Without one, a picture with no calm room is one to make again, not one to cover. The book's
+    // own scrim is the writer's proposal; where Fume saw how the brand sets its words, that wins (Anthem: words
+    // straight on the photo, yet the writer kept a navy panel for busy pictures).
+    ...brandLayouts(book).some((x) => x.ground === "flat") || scrim === "flat" && !seesBrand(book) ? ["flat"] : []
   ]).filter((x) => x !== "block" || blockSig);
   const widths = prefer.columns ? [prefer.columns] : uniq([...sigColumns ? [sigColumns] : [], ...format === "banner" ? [6, 8] : [9, 7, 5, 12]]);
   const ctaSide = sig?.ctaAt === "bottom_right" ? "right" : sig?.ctaAt === "bottom_left" ? "left" : void 0;

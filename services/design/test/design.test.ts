@@ -277,6 +277,15 @@ test("a device Fume proposed is never set as the brand's own where the book saw 
   assert.ok([...layoutsFor(unseen, "feed", {}, true)].some((l) => l.ground === "block"));
 });
 
+test("the writer's own panel for busy pictures gives way to what Fume saw the brand do", () => {
+  const seen = { name: "Tile", band: "bottom", align: "left", wordsWidthPct: 50, ground: "photo", words: "light", cta: "outline", source: "site" } as const;
+  const b = { ...book, photoText: { ...book.photoText, scrim: "flat" }, onPictures: { layouts: [seen] } } as DesignBook;
+  assert.ok([...layoutsFor(b, "feed", {}, true)].every((l) => l.ground !== "flat"), "no panel where the brand sets words on the photo");
+  // A brand Fume saw nothing of keeps the writer's panel.
+  const unseen = { ...b, onPictures: { layouts: [{ ...seen, source: "fume" }] } } as DesignBook;
+  assert.ok([...layoutsFor(unseen, "feed", {}, true)].some((l) => l.ground === "flat"));
+});
+
 test("a short word held to the next is measured with it, so the pair is never broken inside a word", async () => {
   // Anthem, 9 Nov: "Room to Grow." was drawn "to Gr / ow." in a column each word fitted on its own.
   const pic = await picture("#F4F1EC", "#15171A");

@@ -2,7 +2,7 @@
 // by name (where the words go, which headline style, which colour role); code tries the layouts in that order, measures
 // each one in the picture (contrast under every line of words, how busy it is, what it covers, whether it fits the
 // safe area), and keeps the best that passes. What did not pass is said, for the expert.
-import { type DesignBook, type Format, type Grid, type Style, brandLayouts, colourOf, componentOf, gridOf, headlineSteps, signatureOf, styleOf } from "./book.ts";
+import { type DesignBook, type Format, type Grid, type Style, brandLayouts, seesBrand, colourOf, componentOf, gridOf, headlineSteps, signatureOf, styleOf } from "./book.ts";
 import { type Band, type Composed, type FamilyFor, type Ground, type Layout, type Words, compose, shadeFill, shadeFor } from "./compose.ts";
 import { type Box, type Pixels, type Shade, contrast, luminance, overlap, rgbOf, under } from "./pixels.ts";
 import { type BrandFace, type Doc, boxOf, build, fig, capHeightOf, hasFont, pixelsOf, place, png, lineWidth, splitWords, useBrandFaces, wordWidths } from "./render.ts";
@@ -305,8 +305,10 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
     ...(scrim === "gradient" ? ["gradient"] : []),
     ...(blockSig ? ["block"] : []),
     // A panel behind the words only where the brand sets one: a box is not a designer's answer to a busy picture
-    // (Marcus, 9 Nov). Without one, a picture with no calm room is one to make again, not one to cover.
-    ...(scrim === "flat" || brandLayouts(book).some((x) => x.ground === "flat") ? ["flat"] : []),
+    // (Marcus, 9 Nov). Without one, a picture with no calm room is one to make again, not one to cover. The book's
+    // own scrim is the writer's proposal; where Fume saw how the brand sets its words, that wins (Anthem: words
+    // straight on the photo, yet the writer kept a navy panel for busy pictures).
+    ...(brandLayouts(book).some((x) => x.ground === "flat") || (scrim === "flat" && !seesBrand(book)) ? ["flat"] : []),
   ]).filter((x) => x !== "block" || blockSig) as Ground[];
   const widths = prefer.columns
     ? [prefer.columns]

@@ -114,6 +114,11 @@ export function brandLayouts(book: DesignBook): Signature[] {
   return seen.length ? seen : all;
 }
 
+/** Whether Fume saw how the brand itself sets words on its pictures (its site or its ads), not only proposed it. */
+export function seesBrand(book: DesignBook): boolean {
+  return (book.onPictures?.layouts ?? []).some((l) => carriesWords(l) && l.source !== "fume");
+}
+
 /** Books written before hasWords say it in the name. */
 export function carriesWords(l: Signature): boolean {
   return l.hasWords ?? !/\b(no|without) (words|text|copy)\b|\b(logo|swoosh|mark) alone\b/i.test(l.name);
