@@ -57,6 +57,12 @@ export interface Signature {
   band: "top" | "middle" | "bottom";
   align: "left" | "center" | "right";
   wordsWidthPct: number;
+  /** How many lines the brand's headline runs in this layout, read from its ads (9 Nov); absent in older books. */
+  headlineLines?: number;
+  /** The block of words in the brand's ads, as shares of the frame from its top left (9 Nov); absent in older books. */
+  box?: { x: number; y: number; w: number; h: number } | null;
+  /** How big the price is set against the headline in the brand's ads, when they show one. */
+  priceVsHeadline?: "larger" | "same" | "smaller" | "none";
   ground: "photo" | "gradient" | "flat" | "colour_block";
   words: "light" | "dark" | "brand_colour";
   /** The block's or panel's own colour, read from the brand's ads (Møllers' green), when the words stand on one. */

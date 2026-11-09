@@ -22,6 +22,7 @@ const Creative = z.object({
   text: z.string().nullable().describe("The words on the creative, or null for none"),
   claimRefs: z.array(z.string()).describe("Ids of the verified claim facts the words rely on; empty when none"),
   people: z.string().describe("'No people', 'Hands only', or who"),
+  layout: z.string().nullable().describe("For a creative with words: the name of the brand's layout the words are set in, exactly as listed in brand_layouts; null when none is listed or there are no words"),
 });
 const Direction = z.object({
   id: z.enum(["a", "b", "c"]),
@@ -72,7 +73,12 @@ export interface PlanTask {
   column?: WordsColumn | null;
   /** The headlines of the brand's other recent plans, newest first, so a new one is its own (not one more of a kind). */
   recent?: string[];
+  /** The brand's own layouts for words on its pictures (its design book in use), so each creative is planned in one. */
+  layouts?: BrandLayout[];
 }
+
+/** One of the brand's layouts for words on its pictures, as the plan writer is shown it. */
+export type BrandLayout = { name: string; band: string; align: string; wordsWidthPct: number; ground: string; why?: string };
 
 export interface VoiceInUse {
   id: string;
@@ -193,6 +199,37 @@ export function columnPart(column: WordsColumn | null | undefined): string[] {
   ];
 }
 
+/** The layouts of the brand's design book that carry words, as the plan writer is shown them (at most six). */
+export function layoutsOf(layouts: unknown): BrandLayout[] {
+  return (Array.isArray(layouts) ? layouts : [])
+    .filter((l) => Boolean(l) && typeof l === "object" && (l as { hasWords?: boolean }).hasWords !== false && typeof (l as { name?: unknown }).name === "string")
+    .slice(0, 6)
+    .map((l) => {
+      const x = l as Record<string, unknown>;
+      return {
+        name: String(x.name),
+        band: String(x.band ?? ""),
+        align: String(x.align ?? ""),
+        wordsWidthPct: Number(x.wordsWidthPct) || 40,
+        ground: String(x.ground ?? ""),
+        ...(typeof x.why === "string" ? { why: x.why.slice(0, 200) } : {}),
+      };
+    });
+}
+
+/**
+ * The layout first (9 Nov, Marcus: "sørge for å generere space til tekst"): the plan names the brand's layout for each
+ * creative, the Engine leaves bare ground exactly where that layout sets the words, and the design layer sets them in
+ * it. Before, the picture and the layout were chosen apart, and the words did not always land where the room was.
+ */
+export function layoutPart(layouts: BrandLayout[] | undefined): string[] {
+  if (!layouts?.length) return [];
+  return [
+    `<brand_layouts>\n${JSON.stringify(layouts)}\n</brand_layouts>`,
+    "These are the brand's own layouts for words on its pictures: where the words sit (band and align), how wide their column is (a share of the picture's width) and what they stand on. For every creative with words, choose the layout that suits its scene and name it in layout, exactly as listed. Write the scene for it: the product and anything that matters stay clear of that place, and the ground there is calm, so the words can be set there later.",
+  ];
+}
+
 /** The brand's recent headlines from its other campaigns, as lines the new headline must not repeat. */
 export function recentPart(recent: string[] | undefined): string[] {
   const lines = [...new Set((recent ?? []).map((l) => l.trim()).filter(Boolean))].slice(0, 12);
@@ -224,6 +261,7 @@ export function prompt(task: PlanTask): string {
     ...brainPart(task.brain),
     ...voicePart(task.voice),
     ...recentPart(task.recent),
+    ...layoutPart(task.layouts),
     ...columnPart(task.column),
   ];
   if (task.change) {
@@ -246,8 +284,11 @@ const keyOf = (label: string, i: number) =>
 const lines = (xs: z.infer<typeof Line>[]) =>
   xs.map((l, i) => ({ key: keyOf(l.label, i), label: l.label, value: l.value, why: l.why, source: "fume" }));
 
-/** The model's answer as a plan body (the shape app/src/api/live/plan.ts reads). Rules are added by the database. */
-export function toBody(a: PlanAnswer): Record<string, unknown> {
+/** The model's answer as a plan body (the shape app/src/api/live/plan.ts reads). Rules are added by the database.
+ * A layout is kept only when it is one of the brand's own (case aside), in the brand's own spelling. */
+export function toBody(a: PlanAnswer, layouts: BrandLayout[] = []): Record<string, unknown> {
+  const layoutOf = (name: string | null | undefined) =>
+    name ? layouts.find((l) => l.name.trim().toLowerCase() === name.trim().toLowerCase())?.name : undefined;
   const directions = a.directions.map((d, i) => ({
     id: d.id,
     letter: (["A", "B", "C"] as const)[i] ?? "C",
@@ -270,6 +311,7 @@ export function toBody(a: PlanAnswer): Record<string, unknown> {
       ...(c.text ? { text: c.text } : {}),
       claimRefs: c.claimRefs,
       people: c.people,
+      ...(c.text && layoutOf(c.layout) ? { layout: layoutOf(c.layout) } : {}),
     })),
     ...(d.recommended ? { recommended: true } : {}),
   }));

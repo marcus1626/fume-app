@@ -1,7 +1,7 @@
 // The plan handler without Supabase or the model: deno test supabase/functions/fume-plan/
 import { assertEquals } from "jsr:@std/assert@1";
 import { type Deps, handlePlan, type Written } from "./handler.ts";
-import { type ClaimRead, copyLines, judgeCopy, type PlanAnswer, type PlanTask, prompt, toBody } from "./plan.ts";
+import { type ClaimRead, copyLines, judgeCopy, layoutsOf, type PlanAnswer, type PlanTask, prompt, toBody } from "./plan.ts";
 import { columnOf as columnOfFn, columnPart, recentPart, repeatsHeadline, tooLongFor } from "./plan.ts";
 
 const task: PlanTask = {
@@ -65,6 +65,7 @@ const plan: PlanAnswer = {
           text: null,
           claimRefs: [],
           people: "No people",
+          layout: null,
         },
         {
           id: "pc2",
@@ -77,6 +78,7 @@ const plan: PlanAnswer = {
           text: "For the hour before sleep.",
           claimRefs: ["f1"],
           people: "No people",
+          layout: "Narrow stack",
         },
       ],
       recommended: true,
@@ -422,4 +424,22 @@ Deno.test("the brand's column is the median width of its layouts that carry word
   assertEquals(columnOf([]), null);
   assertEquals(columnOf(null), null);
   assertEquals(columnOf([{ name: "x" }]), null);
+});
+
+Deno.test("each creative with words is planned in one of the brand's own layouts, and the Engine and the design follow it", () => {
+  const layouts = layoutsOf([
+    { name: "Narrow stack", band: "middle", align: "left", wordsWidthPct: 25, ground: "photo", hasWords: true },
+    { name: "Logo alone", band: "bottom", align: "center", wordsWidthPct: 10, ground: "photo", hasWords: false },
+  ]);
+  assertEquals(layouts.map((l) => l.name), ["Narrow stack"], "a layout without words is not offered");
+  const p = prompt({ ...task, layouts });
+  assertEquals(p.includes("<brand_layouts>") && p.includes("Narrow stack") && p.includes("name it in layout"), true);
+  const story = (b: Record<string, unknown>) =>
+    ((b.directions as { creatives: Record<string, unknown>[] }[])[0].creatives).find((c) => c.id === "pc2")!;
+  assertEquals(story(toBody(plan, layouts)).layout, "Narrow stack");
+  assertEquals(story(toBody({ ...plan, directions: plan.directions.map((d) => ({ ...d, creatives: d.creatives.map((c) => ({ ...c, layout: "narrow STACK " })) })) }, layouts)).layout,
+    "Narrow stack", "the brand's own spelling");
+  assertEquals("layout" in story(toBody(plan, [])), false, "a layout the brand does not have is dropped");
+  const master = ((toBody(plan, layouts).directions as { creatives: Record<string, unknown>[] }[])[0].creatives)[0];
+  assertEquals("layout" in master, false, "a creative without words has no layout");
 });

@@ -52,6 +52,8 @@ export interface Layout {
   cta: "with_words" | "bottom" | "none";
   /** How many of the grid's columns the words span. */
   columns: number;
+  /** Where the block of words starts down the frame, as a share of its height: the brand's own place, from its ads. */
+  at?: number;
   /**
    * The headline or the call to action set smaller than its style, so a long word fits the column whole
    * ("FLANELLSKJORTER"), as a designer sizes a headline to its measure. 1 is the style's own size.

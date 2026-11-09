@@ -45,6 +45,11 @@ export const CreativesAnswer = z.object({
     band: z.enum(["top", "middle", "bottom"]),
     align: z.enum(["left", "center", "right"]),
     wordsWidthPct: z.number().describe("How much of the width the words take, in per cent"),
+    headlineLines: z.number().int().describe("How many lines the headline runs in this layout, as the pictures show it: 1, 2 or 3"),
+    box: z.object({
+      x: z.number(), y: z.number(), w: z.number(), h: z.number(),
+    }).describe("The whole block of words (headline down to the call to action) as shares of the picture's width and height, 0 to 1, from its top left corner, as in the pictures that show it"),
+    priceVsHeadline: z.enum(["larger", "same", "smaller", "none"]).describe("How big a price is set against the headline in this layout; none when its pictures show no price"),
     ground: z.enum(["photo", "gradient", "flat", "colour_block"]).describe("Words straight on the photo, on a shade, on a flat panel, or on a block of brand colour"),
     words: z.enum(["light", "dark", "brand_colour"]),
     groundHex: z.string().describe("The colour of the block or panel the words stand on, as #RRGGBB read from the pictures; empty when they stand on the photo or a shade"),
@@ -68,7 +73,7 @@ export const CREATIVES_SYSTEM = `You are Fume's senior art director. You read ho
 Look at every picture as a designer studies a brand's past work:
 1. Which pictures carry words or a logo set on the picture itself. A plain product photo carries none: say so.
 2. The headline: what the face looks like (condensed or wide, grotesque or serif, weight), its case, tracking, line height, and how big it is against the frame.
-3. The layouts the brand repeats: where the words sit, how wide, on the photo or on a shade or a block of colour, light or dark words, how the call to action looks, where the logo sits and how big.
+3. The layouts the brand repeats: where the words sit, how wide, on the photo or on a shade or a block of colour, light or dark words, how the call to action looks, where the logo sits and how big. Measure each as a designer would before copying it: the box the block of words takes in the frame, how many lines its headline runs, and how big a price is against the headline.
 4. What it always and never does.
 
 Screenshots of the brand's own website show how it sets its headlines, buttons and type over its pictures: read the hero and the campaign blocks as the brand's own graphic design, and leave out menus, cookie banners, prices and the shop's interface.
@@ -100,6 +105,14 @@ type DesignBody = { styles: Style[]; typefaces: Typeface[]; [k: string]: unknown
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, Number.isFinite(n) ? n : lo));
 const round = (n: number, d = 2) => Math.round(n * 10 ** d) / 10 ** d;
+
+/** The block of words as shares of the frame, cut to the frame; null when it is no box at all. */
+export function boxOf(b: { x: number; y: number; w: number; h: number } | null | undefined) {
+  if (!b) return null;
+  const x = round(clamp(b.x, 0, 0.95)), y = round(clamp(b.y, 0, 0.95));
+  const w = round(Math.min(clamp(b.w, 0, 1), 1 - x)), h = round(Math.min(clamp(b.h, 0, 1), 1 - y));
+  return w >= 0.05 && h >= 0.03 ? { x, y, w, h } : null;
+}
 
 /**
  * The book with the brand's way of setting words on pictures. What the pictures show wins over what the stylesheets
@@ -144,6 +157,8 @@ export function withCreatives<T extends DesignBody>(body: T, c: CreativesAnswer,
     ...l,
     pictures: l.pictures.filter((n) => Number.isInteger(n) && n >= 1 && n <= pictures.length),
     wordsWidthPct: round(clamp(l.wordsWidthPct, 25, 100), 0),
+    headlineLines: Math.round(clamp(l.headlineLines, 1, 3)),
+    box: boxOf(l.box),
     groundHex: /^#[0-9a-f]{6}$/i.test(l.groundHex ?? "") ? l.groundHex.toUpperCase() : "",
     logoWidthPct: l.logo === "none" ? 0 : round(clamp(l.logoWidthPct, 4, 30), 0),
   }));

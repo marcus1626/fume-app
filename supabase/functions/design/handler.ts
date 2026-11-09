@@ -3,7 +3,7 @@
 // own token decides whether they may see the layer (design_layers is staff-only); the service role takes the work.
 // The answer comes at once (202); the work goes on in the background. handler.test.ts runs it without Supabase, a
 // model or the design service.
-import { formatOf, keepClearOf, type LayoutChoice, layoutsOf, type Review, roomOf, type Take, type Words, wordsOf } from "./layer.ts";
+import { formatOf, keepClearOf, type LayoutChoice, layoutsOf, plannedLayout, type Review, roomOf, type Take, type Words, wordsOf } from "./layer.ts";
 
 /** A signed link to one of the brand's own font files, with the face it holds (brand-book fontfile.ts). */
 export interface FontLink {
@@ -82,6 +82,14 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
         choice = null;
       }
     }
+    // The layout the plan chose is the one the Engine left room for (9 Nov): the words go there. The model's eye still
+    // marks what to keep clear and the colour; only an earlier design kept above, or a designer's ask, sets it apart.
+    const planned = kept || t.ask ? null : plannedLayout(t);
+    const plannedBand = (["top", "middle", "bottom"] as const).find((b) => b === planned?.band);
+    const plannedAlign = (["left", "center", "right"] as const).find((a) => a === planned?.align);
+    if (planned && choice) {
+      choice = { ...choice, layout: planned.name, band: plannedBand ?? choice.band, align: plannedAlign ?? choice.align };
+    }
     const links = await d.service.links(t);
     const request = {
       picture: links.picture,
@@ -97,6 +105,8 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
             colour: choice.colour,
             ...(layoutsOf(t).some((l) => l.name === choice!.layout) ? { signature: choice.layout } : {}),
           }
+          : planned
+          ? { ...(plannedBand ? { band: plannedBand } : {}), ...(plannedAlign ? { align: plannedAlign } : {}), signature: planned.name }
           : {}),
         ...roomOf(t),
       },
@@ -133,7 +143,7 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     const { error } = await d.service.finish(t.layer_id, {
       name: `${t.creative.title ?? "Creative"}, graphic design`,
       words,
-      choice: { ...(choice ?? {}), verdict, ...(kept ? { kept: true } : {}), ...(keptWhy ? { not_kept: keptWhy } : {}) },
+      choice: { ...(choice ?? {}), verdict, ...(kept ? { kept: true } : {}), ...(keptWhy ? { not_kept: keptWhy } : {}), ...(planned ? { planned: true } : {}) },
       layout: out.layout ?? null,
       checks: out.checks ?? [],
       attempts: out.attempts ?? [],

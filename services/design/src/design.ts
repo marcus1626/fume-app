@@ -129,6 +129,8 @@ async function designOn(asked: Ask, until = Infinity): Promise<Designed> {
 
   let best: { t: Tried; doc: Doc } | null = null;
   let tried = 0;
+  let passed = 0;
+  const taste = (t: Tried) => tasteOf(t, book, ask.prefer ?? {});
   const attempts: Designed["attempts"] = [];
   // Each place for the words gets its share of the tries, so a place that cannot work never uses them all up.
   const perBand = new Map<string, number>();
@@ -150,7 +152,7 @@ async function designOn(asked: Ask, until = Infinity): Promise<Designed> {
       const df = await build(cf.jsx, ask.picture, plan?.logo.variants);
       const tf = measure(df, cf, lf, book, pixels, keep, plan);
       tried++;
-      if (better(tf, t) || (tf.ok === t.ok && tf.score >= t.score)) {
+      if (better(tf, t, taste) || (tf.ok === t.ok && !tf.ok && tf.score >= t.score)) {
         t = tf;
         made = df;
       }
@@ -158,8 +160,11 @@ async function designOn(asked: Ask, until = Infinity): Promise<Designed> {
     if (attempts.length < 30) {
       attempts.push({ layout: l, failed: t.checks.filter((x) => !x.ok && x.hard).map((x) => `${x.node}: ${x.note}`) });
     }
-    if (!best || better(t, best.t)) best = { t, doc: made };
-    if (best.t.ok && tried >= 6) break;
+    if (t.ok) passed++;
+    if (!best || better(t, best.t, taste)) best = { t, doc: made };
+    // Several layouts that pass are compared as a designer would (9 Nov, Marcus: the first that passed was not the
+    // best); the search stops after a few, or when the time is up.
+    if (best.t.ok && passed >= 4 && tried >= 6) break;
     if (tried >= 200) break;
   }
   if (!best) throw new Error("No layout could be made.");
@@ -267,7 +272,10 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
   // model's eye, comes before both.
   const sig = signatureOf(book, prefer.signature, hasCta);
   const g = gridOf(book, format);
-  const sigColumns = sig ? Math.min(g.columns, Math.max(4, Math.round((sig.wordsWidthPct / 100) * g.columns))) : null;
+  const sigWidth = sig?.box?.w ? sig.box.w * 100 : sig?.wordsWidthPct;
+  const sigColumns = sig && sigWidth ? Math.min(g.columns, Math.max(4, Math.round((sigWidth / 100) * g.columns))) : null;
+  // The brand's own place down the frame for its words, in its own band (9 Nov: measured from its ads).
+  const sigAt = sig?.box && sig.box.y > 0 ? sig.box.y : undefined;
   const sigGround: Ground | null = sig ? (sig.ground === "colour_block" ? "block" : sig.ground) : null;
   const sigColour = sig ? ({ light: "on_photo", dark: "text", brand_colour: "accent" } as const)[sig.words] : null;
   const ctaLook = sig && sig.cta !== "none" ? sig.cta : undefined;
@@ -314,6 +322,7 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
                   ...(ctaFill ? { ctaFill } : {}),
                   ...(groundHex && (ground === "block" || ground === "flat") ? { groundHex } : {}),
                   ...(sig ? { signature: sig.name } : {}),
+                  ...(sigAt !== undefined && band === sig?.band ? { at: sigAt } : {}),
                 };
               }
             }
@@ -341,8 +350,11 @@ export function measure(
   // The brand's logo in the words' own band sits beside them as the brand sets it: the Swoosh under the quote,
   // Møllers' logo over the headline. The words make room for it.
   const shareBand = !logo?.inside && logo?.first?.startsWith(l.band === "middle" ? "-" : l.band) ? logo.h + 40 : 0;
-  const y =
-    l.band === "top"
+  const low = l.band === "top" ? g.top + shareBand : g.top;
+  const high = g.h - g.bottom - words0.h - (action0 ? action0.h + 32 : 0) - (l.band === "bottom" ? shareBand : 0);
+  const y = l.at !== undefined && high >= low
+    ? Math.round(Math.min(high, Math.max(low, l.at * g.h)))
+    : l.band === "top"
       ? g.top + shareBand
       : l.band === "bottom"
         ? g.h - g.bottom - words0.h - (action0 ? action0.h + 32 : 0) - shareBand
@@ -616,10 +628,31 @@ export function fitFor(doc: Doc, sizes: Record<string, number> = {}): Layout["fi
 }
 
 /** The first passing layout in the model's order wins; among failing ones, the one that fails least. */
-function better(a: Tried, b: Tried): boolean {
+function better(a: Tried, b: Tried, taste?: (t: Tried) => number): boolean {
   if (a.ok !== b.ok) return a.ok;
-  if (a.ok) return false;
+  if (a.ok) return taste ? taste(a) > taste(b) + 0.05 : false;
   return a.score > b.score;
+}
+
+/**
+ * Which of the layouts that pass a designer would pick: the headline in as few lines as the brand's own ads set it,
+ * and big; the brand's own place for the words; then the measured score (contrast, a calm ground). 9 Nov, Dressmann's
+ * "HELG PÅ HYTTA": the layout that passed first broke it in two in a narrow column, where one wide line read better.
+ */
+export function tasteOf(t: Tried, book: DesignBook, prefer: Partial<Layout>): number {
+  const sig = signatureOf(book, t.layout.signature ?? prefer.signature);
+  const lines = t.checks.find((c) => c.check === "lines" && c.node === "Headline")?.value ?? 1;
+  const want = Math.max(1, Math.min(3, Math.round(sig?.headlineLines ?? 2)));
+  const head = t.boxes.Headline;
+  // The headline's size, as its line's height against the frame's width.
+  const size = head && lines > 0 ? head.h / lines / 1080 : 0;
+  let s = t.score / 4;
+  s -= Math.max(0, lines - want) * 3;
+  s += Math.min(size, 0.2) * 20;
+  if (t.layout.fit?.headline) s -= (1 - t.layout.fit.headline) * 4;
+  if (prefer.band && t.layout.band === prefer.band) s += 1;
+  if (prefer.align && t.layout.align === prefer.align) s += 0.5;
+  return Math.round(s * 100) / 100;
 }
 
 /** The picture as the layout crops it (filling the frame), at a small scale, as pixels. */

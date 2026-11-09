@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { design, layoutsFor } from "../src/design.ts";
+import { design, layoutsFor, tasteOf, type Tried } from "../src/design.ts";
 import { compose } from "../src/compose.ts";
 import { build, png, pixelsOf } from "../src/render.ts";
 import { type DesignBook } from "../src/book.ts";
@@ -180,4 +180,17 @@ test("the price before is set small under the figure", async () => {
   const pic = await picture("#EDE6DA", "#2B2B2B");
   const out = await design({ picture: pic, format: "feed", book, words: { ...words, price: "NÅ 199,- før 399,-" }, keepClear: [product] });
   assert.ok(out.boxes.Was && out.boxes.Was.y > out.boxes.Price.y && out.boxes.Was.h < out.boxes.Price.h);
+});
+
+test("of the layouts that pass, the one a designer would pick: the headline in the brand's lines, and big", () => {
+  const branded = { ...book, onPictures: { layouts: [{ name: "Stack", band: "middle", align: "left", wordsWidthPct: 25, ground: "photo", words: "dark", cta: "box", headlineLines: 1 }] } } as DesignBook;
+  const tried = (lines: number, lineH: number, band: "top" | "middle"): Tried => ({
+    layout: { band, align: "left", headline: "h1", colour: "text", ground: "photo", cta: "with_words", columns: 4, signature: "Stack" },
+    ok: true, score: 8, shades: [],
+    checks: [{ check: "lines", node: "Headline", ok: true, hard: true, value: lines, need: 3, note: "" }],
+    boxes: { Headline: { x: 64, y: 64, w: 400, h: lines * lineH } },
+  });
+  const narrow = tasteOf(tried(2, 70, "middle"), branded, { band: "middle", align: "left" });
+  const wide = tasteOf(tried(1, 110, "top"), branded, { band: "middle", align: "left" });
+  assert.ok(wide > narrow, `one big line (${wide}) beats two small ones in the brand's own band (${narrow})`);
 });

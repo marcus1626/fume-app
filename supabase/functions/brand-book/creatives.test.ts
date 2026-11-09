@@ -16,7 +16,7 @@ const answer = (source: "pictures" | "site" | "fume"): CreativesAnswer => ({
   read: [{ picture: 1, carries: "words_and_logo", what: "Big stack bottom left" }, { picture: 1, carries: "words", what: "Same" }, { picture: 9, carries: "none", what: "not shown" }],
   headline: { seenAsHeadline: true, looksLike: "condensed grotesque, extra bold", closestGoogleFont: "Anton", weight: 840, case: "upper", condensed: true, trackingEm: -0.01, lineHeight: 0.88, sizePctOfWidth: 12, source },
   body: { looksLike: "neo-grotesque", closestGoogleFont: "Inter Tight", weight: 400, source },
-  layouts: [{ name: "Big stack", hasWords: true, pictures: [1, 7], band: "bottom", align: "left", wordsWidthPct: 140, ground: "photo", words: "light", groundHex: "", cta: "pill", ctaFill: "light", logo: "top_left", logoWidthPct: 9, why: "", source }],
+  layouts: [{ name: "Big stack", hasWords: true, pictures: [1, 7], band: "bottom", align: "left", wordsWidthPct: 140, headlineLines: 5, box: { x: 0.06, y: 0.7, w: 1.2, h: 0.2 }, priceVsHeadline: "none", ground: "photo", words: "light", groundHex: "", cta: "pill", ctaFill: "light", logo: "top_left", logoWidthPct: 9, why: "", source }],
   rules: ["Never more than six words in the headline"],
   sources: [],
   gaps: [],
@@ -33,6 +33,8 @@ Deno.test("what the brand's pictures show sets the headline: case, weight, size,
   assertEquals(on.read.length, 2, "only pictures that were shown");
   assertEquals(on.layouts[0].pictures, [1]);
   assertEquals(on.layouts[0].wordsWidthPct, 100);
+  const first = on.layouts[0] as unknown as { headlineLines: number; box: unknown };
+  assertEquals([first.headlineLines, first.box], [3, { x: 0.06, y: 0.7, w: 0.94, h: 0.2 }], "measured, and cut to the frame");
   assertEquals(on.carrying, 2);
 });
 

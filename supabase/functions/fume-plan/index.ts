@@ -4,7 +4,7 @@ import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { betaZodOutputFormat } from "npm:@anthropic-ai/sdk@1.3.0/helpers/beta/zod";
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
 import { handlePlan, type Written } from "./handler.ts";
-import { CLAIM_SYSTEM, ClaimRead, claimPrompt, columnOf, costOf, type CopyLine, PlanAnswer, type PlanTask, prompt, SYSTEM, toBody } from "./plan.ts";
+import { CLAIM_SYSTEM, ClaimRead, claimPrompt, columnOf, costOf, layoutsOf, type CopyLine, PlanAnswer, type PlanTask, prompt, SYSTEM, toBody } from "./plan.ts";
 
 // The cheap model first (Marcus, 3 Nov), and a stronger one where the work is creative: the plan's ideas and words
 // (Marcus, 9 Nov: "Virkelig bruk Engine ... kreativitet"). The claim check stays on the cheap model.
@@ -119,6 +119,7 @@ Deno.serve((req) =>
               voice: voice.error ? null : voice.data,
               recent: x?.recent ?? [],
               column: columnOf(x?.layouts),
+              layouts: layoutsOf(x?.layouts),
             },
             error: null,
           };

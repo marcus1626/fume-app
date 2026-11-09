@@ -796,6 +796,8 @@ async function designOn(asked, until = Infinity) {
   const logo = ask.logo ? await logoOf(ask.logo, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000").catch(() => null) : null;
   let best = null;
   let tried = 0;
+  let passed = 0;
+  const taste = (t) => tasteOf(t, book, ask.prefer ?? {});
   const attempts = [];
   const perBand = /* @__PURE__ */ new Map();
   for (const l of layoutsFor(book, format, ask.prefer ?? {}, Boolean(words.cta))) {
@@ -815,7 +817,7 @@ async function designOn(asked, until = Infinity) {
       const df = await build(cf.jsx, ask.picture, plan?.logo.variants);
       const tf = measure(df, cf, lf, book, pixels, keep, plan);
       tried++;
-      if (better(tf, t) || tf.ok === t.ok && tf.score >= t.score) {
+      if (better(tf, t, taste) || tf.ok === t.ok && !tf.ok && tf.score >= t.score) {
         t = tf;
         made = df;
       }
@@ -823,8 +825,9 @@ async function designOn(asked, until = Infinity) {
     if (attempts.length < 30) {
       attempts.push({ layout: l, failed: t.checks.filter((x) => !x.ok && x.hard).map((x) => `${x.node}: ${x.note}`) });
     }
-    if (!best || better(t, best.t)) best = { t, doc: made };
-    if (best.t.ok && tried >= 6) break;
+    if (t.ok) passed++;
+    if (!best || better(t, best.t, taste)) best = { t, doc: made };
+    if (best.t.ok && passed >= 4 && tried >= 6) break;
     if (tried >= 200) break;
   }
   if (!best) throw new Error("No layout could be made.");
@@ -912,7 +915,9 @@ function* layoutsFor(book, format, prefer, hasCta) {
   const steps = headlineSteps(book, first).map((s) => s.name);
   const sig = signatureOf(book, prefer.signature, hasCta);
   const g = gridOf(book, format);
-  const sigColumns = sig ? Math.min(g.columns, Math.max(4, Math.round(sig.wordsWidthPct / 100 * g.columns))) : null;
+  const sigWidth = sig?.box?.w ? sig.box.w * 100 : sig?.wordsWidthPct;
+  const sigColumns = sig && sigWidth ? Math.min(g.columns, Math.max(4, Math.round(sigWidth / 100 * g.columns))) : null;
+  const sigAt = sig?.box && sig.box.y > 0 ? sig.box.y : void 0;
   const sigGround = sig ? sig.ground === "colour_block" ? "block" : sig.ground : null;
   const sigColour = sig ? { light: "on_photo", dark: "text", brand_colour: "accent" }[sig.words] : null;
   const ctaLook = sig && sig.cta !== "none" ? sig.cta : void 0;
@@ -956,7 +961,8 @@ function* layoutsFor(book, format, prefer, hasCta) {
                   ...ctaLook ? { ctaLook } : {},
                   ...ctaFill ? { ctaFill } : {},
                   ...groundHex && (ground === "block" || ground === "flat") ? { groundHex } : {},
-                  ...sig ? { signature: sig.name } : {}
+                  ...sig ? { signature: sig.name } : {},
+                  ...sigAt !== void 0 && band === sig?.band ? { at: sigAt } : {}
                 };
               }
             }
@@ -972,7 +978,9 @@ function measure(doc, c, l, book, p, keep, logo = null) {
   const action0 = boxOf(doc, "Action");
   const room = g.h - g.top - g.bottom - (action0 ? action0.h + 32 : 0);
   const shareBand = !logo?.inside && logo?.first?.startsWith(l.band === "middle" ? "-" : l.band) ? logo.h + 40 : 0;
-  const y = l.band === "top" ? g.top + shareBand : l.band === "bottom" ? g.h - g.bottom - words0.h - (action0 ? action0.h + 32 : 0) - shareBand : Math.round(g.top + (room - words0.h) / 2);
+  const low = l.band === "top" ? g.top + shareBand : g.top;
+  const high = g.h - g.bottom - words0.h - (action0 ? action0.h + 32 : 0) - (l.band === "bottom" ? shareBand : 0);
+  const y = l.at !== void 0 && high >= low ? Math.round(Math.min(high, Math.max(low, l.at * g.h))) : l.band === "top" ? g.top + shareBand : l.band === "bottom" ? g.h - g.bottom - words0.h - (action0 ? action0.h + 32 : 0) - shareBand : Math.round(g.top + (room - words0.h) / 2);
   place(doc, "Words", { y });
   if (action0) place(doc, "Action", { y: g.h - g.bottom - action0.h });
   const words = boxOf(doc, "Words");
@@ -1196,10 +1204,24 @@ function fitFor(doc, sizes = {}) {
   const price = whole < 1 && whole >= PRICE_FLOOR ? Math.floor(whole * 100) / 100 : need("Price");
   return headline || cta || price ? { ...headline ? { headline } : {}, ...cta ? { cta } : {}, ...price ? { price } : {} } : null;
 }
-function better(a, b) {
+function better(a, b, taste) {
   if (a.ok !== b.ok) return a.ok;
-  if (a.ok) return false;
+  if (a.ok) return taste ? taste(a) > taste(b) + 0.05 : false;
   return a.score > b.score;
+}
+function tasteOf(t, book, prefer) {
+  const sig = signatureOf(book, t.layout.signature ?? prefer.signature);
+  const lines = t.checks.find((c) => c.check === "lines" && c.node === "Headline")?.value ?? 1;
+  const want = Math.max(1, Math.min(3, Math.round(sig?.headlineLines ?? 2)));
+  const head = t.boxes.Headline;
+  const size = head && lines > 0 ? head.h / lines / 1080 : 0;
+  let s = t.score / 4;
+  s -= Math.max(0, lines - want) * 3;
+  s += Math.min(size, 0.2) * 20;
+  if (t.layout.fit?.headline) s -= (1 - t.layout.fit.headline) * 4;
+  if (prefer.band && t.layout.band === prefer.band) s += 1;
+  if (prefer.align && t.layout.align === prefer.align) s += 0.5;
+  return Math.round(s * 100) / 100;
 }
 async function pictureAt(picture, format, scale) {
   const { w, h } = { w: gridSize(format).w, h: gridSize(format).h };

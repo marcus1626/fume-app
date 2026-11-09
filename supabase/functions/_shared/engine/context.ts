@@ -18,6 +18,8 @@ export type PlannedCreative = {
   scene: string;
   text?: string;
   people?: string;
+  /** The brand's layout the plan sets this creative's words in (fume-plan, 9 Nov). */
+  layout?: string;
 };
 export type PlanBody = {
   chosen_direction_id?: string;
@@ -59,13 +61,23 @@ export type EngineTask = {
   room?: { id: string; version: number; layouts: RoomLayout[] } | null;
 };
 
-export type RoomLayout = { name: string; band: "top" | "middle" | "bottom"; align: "left" | "center" | "right"; wordsWidthPct: number; ground: string; why?: string };
+export type RoomLayout = {
+  name: string;
+  band: "top" | "middle" | "bottom";
+  align: "left" | "center" | "right";
+  wordsWidthPct: number;
+  ground: string;
+  why?: string;
+  /** The block of words in the brand's ads, as shares of the frame from its top left (books read from 9 Nov). */
+  box?: { x: number; y: number; w: number; h: number };
+};
 export type Side = "left" | "right" | "top" | "bottom";
 
 /**
- * Where the words will go on a picture that carries them, and how much of the frame they need: the plan's own scene
- * first ("Left side of the frame kept clear"), else the brand's first layout that sets words on the photograph. Null
- * for a picture without words or a layout that sets them on its own panel.
+ * Where the words will go on a picture that carries them, and how much of the frame they need: the brand's layout the
+ * plan chose for this creative first (the design layer sets the words in the same one), then the plan's own scene
+ * ("Left side of the frame kept clear"), else the brand's first layout that sets words on the photograph. Null for a
+ * picture without words.
  */
 export function wordsRoom(task: EngineTask): { side: Side; share: number; from: string } | null {
   const planned = plannedCreative(task);
@@ -73,15 +85,23 @@ export function wordsRoom(task: EngineTask): { side: Side; share: number; from: 
   const scene = planned.scene ?? "";
   const said = scene.match(/\b(left|right|top|bottom|upper|lower)\b[^.]*\b(clear|empty|free|space|room)\b/i)?.[1]?.toLowerCase();
   const fromScene: Side | undefined = said === "upper" ? "top" : said === "lower" ? "bottom" : (said as Side | undefined);
-  const layout = (task.room?.layouts ?? []).find((l) => l.ground === "photo");
+  const layouts = task.room?.layouts ?? [];
+  const chosen = planned.layout ? layouts.find((l) => l.name === planned.layout) : undefined;
+  const layout = chosen ?? layouts.find((l) => l.ground === "photo");
   const fromLayout: Side | undefined = !layout ? undefined
     : layout.band === "top" ? "top" : layout.band === "bottom" ? "bottom" : layout.align === "right" ? "right" : "left";
-  const side = fromScene ?? fromLayout;
+  const side = chosen ? fromLayout : fromScene ?? fromLayout;
   if (!side) return null;
   const width = layout ? Math.min(60, Math.max(25, layout.wordsWidthPct)) / 100 : 0.3;
   // A band holds a two-line headline, a line under it and the logo: about 450 px of a 1350 px feed, so 40%.
-  const share = side === "top" || side === "bottom" ? 0.4 : Math.round(Math.min(0.5, Math.max(0.38, width + 0.14)) * 100) / 100;
-  return { side, share, from: fromScene ? "the plan's scene" : `the brand's layout "${layout!.name}"` };
+  let share = side === "top" || side === "bottom" ? 0.4 : Math.round(Math.min(0.5, Math.max(0.38, width + 0.14)) * 100) / 100;
+  // Where the brand's ads show the block of words, the room reaches just past it, with a margin.
+  const b = layout?.box;
+  if (b && layout && side === fromLayout) {
+    const reach = { left: b.x + b.w, right: 1 - b.x, top: b.y + b.h, bottom: 1 - b.y }[side] + 0.06;
+    share = Math.round(Math.min(0.55, Math.max(0.25, reach)) * 100) / 100;
+  }
+  return { side, share, from: chosen || !fromScene ? `the brand's layout "${layout!.name}"` : "the plan's scene" };
 }
 
 /** The room for the words as a rule the prompt must carry: where the product sits and how much bare ground is left. */

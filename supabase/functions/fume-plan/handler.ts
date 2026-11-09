@@ -3,7 +3,7 @@
 // came back is taken again after four minutes). The caller's own token decides whether they may see the campaign;
 // the service role takes the work, and the database checks the model's plan before it becomes the version.
 // The answer comes at once (202); the writing goes on in the background. handler.test.ts runs it without Supabase.
-import type { ClaimRead, CopyLine, PlanAnswer, PlanTask } from "./plan.ts";
+import type { BrandLayout, ClaimRead, CopyLine, PlanAnswer, PlanTask } from "./plan.ts";
 import { copyLines, copyProblem, judgeCopy } from "./plan.ts";
 
 type Failure = { message: string; details?: string | null } | null;
@@ -32,7 +32,7 @@ export interface Deps {
   checkCopy?(task: PlanTask, lines: CopyLine[]): Promise<{ read: ClaimRead | null; usage: Usage }>;
   /** Asks the model; `problem` is set on the second try after the database refused the first plan. */
   write(task: PlanTask, problem?: string): Promise<Written>;
-  toBody(answer: PlanAnswer): Record<string, unknown>;
+  toBody(answer: PlanAnswer, layouts?: BrandLayout[]): Record<string, unknown>;
   /** Keeps the work running after the answer (EdgeRuntime.waitUntil). */
   later(work: Promise<unknown>): void;
 }
@@ -116,7 +116,7 @@ export async function writePlan(task: PlanTask, deps: Deps): Promise<"written" |
     }
     const { error } = await deps.service.finish(
       task.run_id,
-      deps.toBody(written.answer),
+      deps.toBody(written.answer, task.layouts ?? []),
       task.change ? written.answer.changes : [],
       usage,
     );

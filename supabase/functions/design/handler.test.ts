@@ -208,3 +208,23 @@ Deno.test("a fixed picture keeps the layout its earlier design chose; a designer
   await designLayer(branded, none.d);
   assertEquals((none.calls.lay[0] as { prefer: { band?: string } }).prefer.band, "top", "a first design looks afresh");
 });
+
+Deno.test("the words go in the layout the plan chose, where the Engine left room for them", async () => {
+  const two = [
+    { name: "Green stack", band: "middle", align: "left", ground: "photo", words: "brand_colour", cta: "box" },
+    { name: "Top line", band: "top", align: "left", ground: "photo", words: "dark", cta: "box" },
+  ];
+  const branded = { ...take, planned: { ...take.planned, layout: "Top line" }, book: { ...take.book, body: { ...take.book.body, onPictures: { layouts: two } } } };
+  const eye = { keepClear: [], band: "bottom" as const, align: "right" as const, colour: "text" as const, layout: "Green stack", why: "calm" };
+  const a = deps({ before: () => Promise.resolve(null), choose: () => Promise.resolve(eye) });
+  await designLayer(branded, a.d);
+  const prefer = (a.calls.lay[0] as { prefer: Record<string, unknown> }).prefer;
+  assertEquals([prefer.band, prefer.align, prefer.signature, prefer.colour], ["top", "left", "Top line", "text"]);
+  assertEquals((a.calls.finish[0] as { choice: { planned?: boolean } }).choice.planned, true);
+  const blind = deps({ before: () => Promise.resolve(null), choose: () => Promise.resolve(null) });
+  await designLayer(branded, blind.d);
+  assertEquals((blind.calls.lay[0] as { prefer: Record<string, unknown> }).prefer.signature, "Top line", "without the model's eye too");
+  const gone = deps({ before: () => Promise.resolve(null), choose: () => Promise.resolve(eye) });
+  await designLayer({ ...branded, planned: { ...take.planned, layout: "Not in the book" } }, gone.d);
+  assertEquals((gone.calls.lay[0] as { prefer: Record<string, unknown> }).prefer.signature, "Green stack", "a layout the book lost gives way to the eye");
+});

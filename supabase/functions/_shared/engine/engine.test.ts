@@ -404,4 +404,15 @@ Deno.test("a picture that carries words is made with room for them, where the pl
   assertEquals(/right 61% of the frame's width/.test(rule.statement) && /never fills the frame/.test(rule.statement), true);
   assertEquals(/no reflections, puddles, lights/.test(rule.statement), true, "a scene's shiny surface is not room for words");
   assertEquals(wordsRoom({ ...withWords("x"), master: { url: "u", title: "V1", picked: true } }), null, "a correction keeps its frame");
+  // The layout the plan chose for the creative wins over the scene's words and the brand's first layout.
+  const planned = { ...task, room, plan: { ...task.plan, planned_creatives: [{ ...pc, text: "HELG", scene: "Right side kept clear.", layout: "Panel" }] } };
+  const chosen = wordsRoom(planned);
+  assertEquals([chosen?.side, chosen?.from], ["left", 'the brand\'s layout "Panel"']);
+  const top = { ...room, layouts: [...room.layouts, { name: "Top line", band: "top" as const, align: "left" as const, wordsWidthPct: 70, ground: "photo" }] };
+  assertEquals(wordsRoom({ ...planned, room: top, plan: { ...planned.plan, planned_creatives: [{ ...pc, text: "HELG", scene: "x", layout: "Top line" }] } })?.side, "top");
+  assertEquals(wordsRoom({ ...planned, plan: { ...planned.plan, planned_creatives: [{ ...pc, text: "HELG", scene: "Right side kept clear.", layout: "Not the brand's" }] } })?.side, "right",
+    "a layout the brand does not have is not used");
+  const measured = { ...room, layouts: [{ ...room.layouts[1], box: { x: 0.07, y: 0.3, w: 0.3, h: 0.35 } }] };
+  const boxed = wordsRoom({ ...withWords("A shirt laid flat on grey."), room: measured });
+  assertEquals([boxed?.side, boxed?.share], ["left", 0.43], "the room reaches just past the brand's own block of words");
 });
