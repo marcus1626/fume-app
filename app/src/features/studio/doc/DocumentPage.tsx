@@ -2,8 +2,9 @@
 // sidebar. Top bar: the way back to where she came from, the creative's one name with the brand under it, its campaign
 // as a chip (picked right there, with its own look beside it), the three studios (Render, Design, Video later), undo
 // and redo, and the one action that moves the work on (Send to check; for a model Save as draft / Save to the brand's
-// models; for a reference Save to references). Left: specs. Middle: the board with its view tools on a rail, the Engine
-// bar docked under it, and the versions. Right: the mode's variables. The page never scrolls; each panel scrolls on its
+// models; for a reference Save to references). Left: specs. Middle: the board with its view tools on a rail, and the
+// versions. Right: the mode's variables. Round 15 (PROPOSED 9 Nov 2026): Render and the Engine's button in the top bar;
+// the Engine panel opens beside the desk (features/engine/EnginePanel.tsx), in the creative's own thread. The page never scrolls; each panel scrolls on its
 // own when its open part is tall. Renders are versions (nothing is overwritten); edits between renders are undo and
 // redo (⌘Z, ⌘⇧Z); ⌘\ hides both panels so the board takes the screen.
 // - No breadcrumb: the back arrow follows history and names the page she came from ("← Check" lands on the item she
@@ -40,7 +41,8 @@ import {
 import type { CreativeDocument, Id, Layer, LightRig, StudioKind, StudioMode } from "../../../contract";
 import { Failed, Loading, useBack } from "../../../shell/Page";
 import { directory, firstName } from "../../../shell/people";
-import { Board, documentName, shownVersion, Versions } from "./Board";
+import { Board, documentName, RenderButton, shownVersion, Versions } from "./Board";
+import { EngineToggle } from "../../engine/EnginePanel";
 import { CampaignChip, CampaignLookChip } from "./campaign";
 import { CanvasLight, type LightView } from "./CanvasLight";
 import { MakeFormats } from "./formats";
@@ -435,7 +437,11 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
                   Make formats
                 </Toggle>
               )}
+              {doc.studio !== "video" && (
+                <RenderButton doc={{ ...doc, specs: state.specs }} mode={mode} onBefore={history.flush} />
+              )}
               {actions}
+              <EngineToggle />
             </>
           )}
         </div>

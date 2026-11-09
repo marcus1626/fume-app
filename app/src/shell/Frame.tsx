@@ -3,6 +3,8 @@
 // title; search with ⌘K; the bell; the person on a phone), the phone's tab bar, ⌘K and the product card beside the
 // page. The folded sidebar is remembered (storageKey). In a brand or client scope the frame names the brand to the
 // page, so the browser tab says "Autumn launch · LYSNE · Fume".
+// Round 15 (PROPOSED 9 Nov 2026): a staff frame may put a button at the bar's end (the Engine) and a panel beside the
+// page, on the layer behind as the page is (the Engine panel, features/engine/EnginePanel.tsx).
 import {
   Button,
   CommandPalette,
@@ -76,6 +78,8 @@ export function ShellFrame({
   drawer,
   bell,
   scopeName,
+  barEnd,
+  aside,
 }: {
   label: string;
   tabs: NavItem[];
@@ -91,6 +95,10 @@ export function ShellFrame({
   bell?: { items: NotificationData[]; unread: number };
   /** The brand or client the scope is in, for the browser tab's title ("Autumn launch · LYSNE · Fume"). */
   scopeName?: string;
+  /** Before search at the bar's end: the Engine's button in a staff frame. */
+  barEnd?: ReactNode;
+  /** Beside the page, on the layer behind: the Engine panel in a staff frame. */
+  aside?: ReactNode;
 }) {
   const notified = useNotificationItems();
   const shownBell = bell ?? notified;
@@ -130,6 +138,7 @@ export function ShellFrame({
             </div>
           )}
           <div className="ui-app-bar-end">
+            {barEnd}
             <Button
               variant="quiet"
               iconOnly
@@ -151,6 +160,7 @@ export function ShellFrame({
           <PageBarProvider value={setBar}>{content ?? <Outlet />}</PageBarProvider>
         </PageScopeProvider>
       </SidebarInset>
+      {aside}
       <TabBar aria-label={label}>
         {tabs.map((item) => (
           <TabBarItem key={item.to} asChild icon={item.icon} isActive={isActive(item)} count={item.count}>

@@ -23126,6 +23126,8 @@ maja lookPresets("w-lysne")
   }
 maja engineChat("w-lysne")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja engineThreads("w-lysne")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja brandWorkspace("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja studioKit("w-solv")
@@ -23191,6 +23193,8 @@ maja lookPresets("w-solv")
   }
 maja engineChat("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja engineThreads("w-solv")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja brandWorkspace("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja studioKit("w-vev")
@@ -23204,6 +23208,8 @@ maja qaQueue("w-vev")
 maja lookPresets("w-vev")
   = maja lookPresets("w-solv")
 maja engineChat("w-vev")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja engineThreads("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja brandWorkspace("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -23219,6 +23225,8 @@ maja lookPresets("w-halm")
   = maja lookPresets("w-solv")
 maja engineChat("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja engineThreads("w-halm")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja brandWorkspace("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja studioKit("w-aurea")
@@ -23233,6 +23241,8 @@ maja lookPresets("w-aurea")
   = maja lookPresets("w-solv")
 maja engineChat("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja engineThreads("w-aurea")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja brandWorkspace("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja studioKit("w-nope")
@@ -23246,6 +23256,8 @@ maja qaQueue("w-nope")
 maja lookPresets("w-nope")
   = maja lookPresets("w-solv")
 maja engineChat("w-nope")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja engineThreads("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja document("doc-night-story")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -23787,6 +23799,8 @@ jonas lookPresets("w-lysne")
   = maja lookPresets("w-lysne")
 jonas engineChat("w-lysne")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+jonas engineThreads("w-lysne")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas brandWorkspace("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas studioKit("w-solv")
@@ -23800,6 +23814,8 @@ jonas qaQueue("w-solv")
 jonas lookPresets("w-solv")
   = maja lookPresets("w-solv")
 jonas engineChat("w-solv")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+jonas engineThreads("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas brandWorkspace("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -23815,6 +23831,8 @@ jonas lookPresets("w-vev")
   = maja lookPresets("w-solv")
 jonas engineChat("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+jonas engineThreads("w-vev")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas brandWorkspace("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas studioKit("w-halm")
@@ -23828,6 +23846,8 @@ jonas qaQueue("w-halm")
 jonas lookPresets("w-halm")
   = maja lookPresets("w-solv")
 jonas engineChat("w-halm")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+jonas engineThreads("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas brandWorkspace("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -23843,6 +23863,8 @@ jonas lookPresets("w-aurea")
   = maja lookPresets("w-solv")
 jonas engineChat("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+jonas engineThreads("w-aurea")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas brandWorkspace("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas studioKit("w-nope")
@@ -23856,6 +23878,8 @@ jonas qaQueue("w-nope")
 jonas lookPresets("w-nope")
   = maja lookPresets("w-solv")
 jonas engineChat("w-nope")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+jonas engineThreads("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas document("doc-night-story")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -24397,6 +24421,8 @@ ida lookPresets("w-lysne")
   = maja lookPresets("w-lysne")
 ida engineChat("w-lysne")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+ida engineThreads("w-lysne")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida brandWorkspace("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida studioKit("w-solv")
@@ -24410,6 +24436,8 @@ ida qaQueue("w-solv")
 ida lookPresets("w-solv")
   = maja lookPresets("w-solv")
 ida engineChat("w-solv")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+ida engineThreads("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida brandWorkspace("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -24425,6 +24453,8 @@ ida lookPresets("w-vev")
   = maja lookPresets("w-solv")
 ida engineChat("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+ida engineThreads("w-vev")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida brandWorkspace("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida studioKit("w-halm")
@@ -24438,6 +24468,8 @@ ida qaQueue("w-halm")
 ida lookPresets("w-halm")
   = maja lookPresets("w-solv")
 ida engineChat("w-halm")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+ida engineThreads("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida brandWorkspace("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -24453,6 +24485,8 @@ ida lookPresets("w-aurea")
   = maja lookPresets("w-solv")
 ida engineChat("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+ida engineThreads("w-aurea")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida brandWorkspace("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida studioKit("w-nope")
@@ -24466,6 +24500,8 @@ ida qaQueue("w-nope")
 ida lookPresets("w-nope")
   = maja lookPresets("w-solv")
 ida engineChat("w-nope")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+ida engineThreads("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 ida document("doc-night-story")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -39152,6 +39188,18 @@ anna engineChat("w-lysne")
       "workspaceId": "w-lysne"
     }
   ]
+anna engineThreads("w-lysne")
+  [
+    {"count":5,"lastAt":"2026-10-14T06:32:00.000Z","title":"Everything"},
+    {
+      "count": 2,
+      "lastAt": "2026-10-14T12:21:00.000Z",
+      "title": "Night ritual",
+      "topic": {"id":"doc-night-ritual","kind":"document"}
+    },
+    {"count":4,"lastAt":"2026-10-14T12:10:00.000Z","title":"Master 3","topic":{"id":"doc-autumn-m3","kind":"document"}},
+    {"count":2,"lastAt":"2026-10-14T09:33:00.000Z","title":"Winter gifting","topic":{"id":"c-winter","kind":"campaign"}}
+  ]
 anna brandWorkspace("w-solv")
   {
     "boards": [],
@@ -39414,6 +39462,8 @@ anna lookPresets("w-solv")
   = maja lookPresets("w-solv")
 anna engineChat("w-solv")
   []
+anna engineThreads("w-solv")
+  [{"count":0,"title":"Everything"}]
 anna brandWorkspace("w-vev")
   {"error":"not_found","message":"No workspace w-vev"}
 anna studioKit("w-vev")
@@ -39428,6 +39478,8 @@ anna lookPresets("w-vev")
   = maja lookPresets("w-solv")
 anna engineChat("w-vev")
   []
+anna engineThreads("w-vev")
+  [{"count":0,"title":"Everything"}]
 anna brandWorkspace("w-halm")
   {"error":"not_found","message":"No workspace w-halm"}
 anna studioKit("w-halm")
@@ -39442,6 +39494,8 @@ anna lookPresets("w-halm")
   = maja lookPresets("w-solv")
 anna engineChat("w-halm")
   []
+anna engineThreads("w-halm")
+  [{"count":0,"title":"Everything"}]
 anna brandWorkspace("w-aurea")
   {"error":"not_found","message":"No workspace w-aurea"}
 anna studioKit("w-aurea")
@@ -39456,6 +39510,8 @@ anna lookPresets("w-aurea")
   = maja lookPresets("w-solv")
 anna engineChat("w-aurea")
   []
+anna engineThreads("w-aurea")
+  [{"count":0,"title":"Everything"}]
 anna brandWorkspace("w-nope")
   {"error":"not_found","message":"No workspace w-nope"}
 anna studioKit("w-nope")
@@ -39470,6 +39526,8 @@ anna lookPresets("w-nope")
   = maja lookPresets("w-solv")
 anna engineChat("w-nope")
   []
+anna engineThreads("w-nope")
+  [{"count":0,"title":"Everything"}]
 anna document("doc-night-story")
   {
     "by": "u-anna",
@@ -45348,6 +45406,8 @@ sander lookPresets("w-lysne")
   = maja lookPresets("w-lysne")
 sander engineChat("w-lysne")
   = anna engineChat("w-lysne")
+sander engineThreads("w-lysne")
+  = anna engineThreads("w-lysne")
 sander brandWorkspace("w-solv")
   {
     "boards": [],
@@ -45632,6 +45692,8 @@ sander lookPresets("w-solv")
   = maja lookPresets("w-solv")
 sander engineChat("w-solv")
   []
+sander engineThreads("w-solv")
+  [{"count":0,"title":"Everything"}]
 sander brandWorkspace("w-vev")
   {"error":"not_found","message":"No workspace w-vev"}
 sander studioKit("w-vev")
@@ -45646,6 +45708,8 @@ sander lookPresets("w-vev")
   = maja lookPresets("w-solv")
 sander engineChat("w-vev")
   []
+sander engineThreads("w-vev")
+  [{"count":0,"title":"Everything"}]
 sander brandWorkspace("w-halm")
   {"error":"not_found","message":"No workspace w-halm"}
 sander studioKit("w-halm")
@@ -45660,6 +45724,8 @@ sander lookPresets("w-halm")
   = maja lookPresets("w-solv")
 sander engineChat("w-halm")
   []
+sander engineThreads("w-halm")
+  [{"count":0,"title":"Everything"}]
 sander brandWorkspace("w-aurea")
   {"error":"not_found","message":"No workspace w-aurea"}
 sander studioKit("w-aurea")
@@ -45674,6 +45740,8 @@ sander lookPresets("w-aurea")
   = maja lookPresets("w-solv")
 sander engineChat("w-aurea")
   []
+sander engineThreads("w-aurea")
+  [{"count":0,"title":"Everything"}]
 sander brandWorkspace("w-nope")
   {"error":"not_found","message":"No workspace w-nope"}
 sander studioKit("w-nope")
@@ -45688,6 +45756,8 @@ sander lookPresets("w-nope")
   = maja lookPresets("w-solv")
 sander engineChat("w-nope")
   []
+sander engineThreads("w-nope")
+  [{"count":0,"title":"Everything"}]
 sander document("doc-night-story")
   = anna document("doc-night-story")
 sander document("doc-bf-1")
@@ -46231,6 +46301,8 @@ vera lookPresets("w-lysne")
   = maja lookPresets("w-lysne")
 vera engineChat("w-lysne")
   = anna engineChat("w-lysne")
+vera engineThreads("w-lysne")
+  = anna engineThreads("w-lysne")
 vera brandWorkspace("w-solv")
   = sander brandWorkspace("w-solv")
 vera studioKit("w-solv")
@@ -46245,6 +46317,8 @@ vera lookPresets("w-solv")
   = maja lookPresets("w-solv")
 vera engineChat("w-solv")
   []
+vera engineThreads("w-solv")
+  [{"count":0,"title":"Everything"}]
 vera brandWorkspace("w-vev")
   {"error":"not_found","message":"No workspace w-vev"}
 vera studioKit("w-vev")
@@ -46259,6 +46333,8 @@ vera lookPresets("w-vev")
   = maja lookPresets("w-solv")
 vera engineChat("w-vev")
   []
+vera engineThreads("w-vev")
+  [{"count":0,"title":"Everything"}]
 vera brandWorkspace("w-halm")
   {"error":"not_found","message":"No workspace w-halm"}
 vera studioKit("w-halm")
@@ -46273,6 +46349,8 @@ vera lookPresets("w-halm")
   = maja lookPresets("w-solv")
 vera engineChat("w-halm")
   []
+vera engineThreads("w-halm")
+  [{"count":0,"title":"Everything"}]
 vera brandWorkspace("w-aurea")
   {"error":"not_found","message":"No workspace w-aurea"}
 vera studioKit("w-aurea")
@@ -46287,6 +46365,8 @@ vera lookPresets("w-aurea")
   = maja lookPresets("w-solv")
 vera engineChat("w-aurea")
   []
+vera engineThreads("w-aurea")
+  [{"count":0,"title":"Everything"}]
 vera brandWorkspace("w-nope")
   {"error":"not_found","message":"No workspace w-nope"}
 vera studioKit("w-nope")
@@ -46301,6 +46381,8 @@ vera lookPresets("w-nope")
   = maja lookPresets("w-solv")
 vera engineChat("w-nope")
   []
+vera engineThreads("w-nope")
+  [{"count":0,"title":"Everything"}]
 vera document("doc-night-story")
   = anna document("doc-night-story")
 vera document("doc-bf-1")
@@ -52973,6 +53055,8 @@ maja (first run) lookPresets("w-lysne")
   = maja lookPresets("w-lysne")
 maja (first run) engineChat("w-lysne")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja (first run) engineThreads("w-lysne")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) brandWorkspace("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) studioKit("w-solv")
@@ -52986,6 +53070,8 @@ maja (first run) qaQueue("w-solv")
 maja (first run) lookPresets("w-solv")
   = maja lookPresets("w-solv")
 maja (first run) engineChat("w-solv")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja (first run) engineThreads("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) brandWorkspace("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -53001,6 +53087,8 @@ maja (first run) lookPresets("w-vev")
   = maja lookPresets("w-solv")
 maja (first run) engineChat("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja (first run) engineThreads("w-vev")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) brandWorkspace("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) studioKit("w-halm")
@@ -53014,6 +53102,8 @@ maja (first run) qaQueue("w-halm")
 maja (first run) lookPresets("w-halm")
   = maja lookPresets("w-solv")
 maja (first run) engineChat("w-halm")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja (first run) engineThreads("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) brandWorkspace("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -53029,6 +53119,8 @@ maja (first run) lookPresets("w-aurea")
   = maja lookPresets("w-solv")
 maja (first run) engineChat("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja (first run) engineThreads("w-aurea")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) brandWorkspace("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) studioKit("w-nope")
@@ -53042,6 +53134,8 @@ maja (first run) qaQueue("w-nope")
 maja (first run) lookPresets("w-nope")
   = maja lookPresets("w-solv")
 maja (first run) engineChat("w-nope")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja (first run) engineThreads("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (first run) document("doc-night-story")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -79920,6 +80014,8 @@ nora engineChat("w-lysne")
       "workspaceId": "w-lysne"
     }
   ]
+nora engineThreads("w-lysne")
+  = anna engineThreads("w-lysne")
 nora brandWorkspace("w-solv")
   = anna brandWorkspace("w-solv")
 nora studioKit("w-solv")
@@ -79934,6 +80030,8 @@ nora lookPresets("w-solv")
   = maja lookPresets("w-solv")
 nora engineChat("w-solv")
   []
+nora engineThreads("w-solv")
+  [{"count":0,"title":"Everything"}]
 nora brandWorkspace("w-vev")
   {
     "boards": [],
@@ -79962,6 +80060,8 @@ nora lookPresets("w-vev")
   = maja lookPresets("w-solv")
 nora engineChat("w-vev")
   []
+nora engineThreads("w-vev")
+  [{"count":0,"title":"Everything"}]
 nora brandWorkspace("w-halm")
   {
     "boards": [],
@@ -79990,6 +80090,8 @@ nora lookPresets("w-halm")
   = maja lookPresets("w-solv")
 nora engineChat("w-halm")
   []
+nora engineThreads("w-halm")
+  [{"count":0,"title":"Everything"}]
 nora brandWorkspace("w-aurea")
   {
     "boards": [],
@@ -80018,6 +80120,8 @@ nora lookPresets("w-aurea")
   = maja lookPresets("w-solv")
 nora engineChat("w-aurea")
   []
+nora engineThreads("w-aurea")
+  [{"count":0,"title":"Everything"}]
 nora brandWorkspace("w-nope")
   {"error":"not_found","message":"No workspace w-nope"}
 nora studioKit("w-nope")
@@ -80032,6 +80136,8 @@ nora lookPresets("w-nope")
   = maja lookPresets("w-solv")
 nora engineChat("w-nope")
   []
+nora engineThreads("w-nope")
+  [{"count":0,"title":"Everything"}]
 nora document("doc-night-story")
   {
     "by": "u-nora",
@@ -86427,6 +86533,8 @@ even lookPresets("w-lysne")
   = maja lookPresets("w-lysne")
 even engineChat("w-lysne")
   = nora engineChat("w-lysne")
+even engineThreads("w-lysne")
+  = anna engineThreads("w-lysne")
 even brandWorkspace("w-solv")
   = anna brandWorkspace("w-solv")
 even studioKit("w-solv")
@@ -86441,6 +86549,8 @@ even lookPresets("w-solv")
   = maja lookPresets("w-solv")
 even engineChat("w-solv")
   []
+even engineThreads("w-solv")
+  [{"count":0,"title":"Everything"}]
 even brandWorkspace("w-vev")
   = nora brandWorkspace("w-vev")
 even studioKit("w-vev")
@@ -86455,6 +86565,8 @@ even lookPresets("w-vev")
   = maja lookPresets("w-solv")
 even engineChat("w-vev")
   []
+even engineThreads("w-vev")
+  [{"count":0,"title":"Everything"}]
 even brandWorkspace("w-halm")
   = nora brandWorkspace("w-halm")
 even studioKit("w-halm")
@@ -86469,6 +86581,8 @@ even lookPresets("w-halm")
   = maja lookPresets("w-solv")
 even engineChat("w-halm")
   []
+even engineThreads("w-halm")
+  [{"count":0,"title":"Everything"}]
 even brandWorkspace("w-aurea")
   = nora brandWorkspace("w-aurea")
 even studioKit("w-aurea")
@@ -86483,6 +86597,8 @@ even lookPresets("w-aurea")
   = maja lookPresets("w-solv")
 even engineChat("w-aurea")
   []
+even engineThreads("w-aurea")
+  [{"count":0,"title":"Everything"}]
 even brandWorkspace("w-nope")
   {"error":"not_found","message":"No workspace w-nope"}
 even studioKit("w-nope")
@@ -86497,6 +86613,8 @@ even lookPresets("w-nope")
   = maja lookPresets("w-solv")
 even engineChat("w-nope")
   []
+even engineThreads("w-nope")
+  [{"count":0,"title":"Everything"}]
 even document("doc-night-story")
   = nora document("doc-night-story")
 even document("doc-bf-1")
@@ -89061,6 +89179,8 @@ maja (agency's client) lookPresets("w-lysne")
   = maja lookPresets("w-lysne")
 maja (agency's client) engineChat("w-lysne")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja (agency's client) engineThreads("w-lysne")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) brandWorkspace("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) studioKit("w-solv")
@@ -89074,6 +89194,8 @@ maja (agency's client) qaQueue("w-solv")
 maja (agency's client) lookPresets("w-solv")
   = maja lookPresets("w-solv")
 maja (agency's client) engineChat("w-solv")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja (agency's client) engineThreads("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) brandWorkspace("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -89089,6 +89211,8 @@ maja (agency's client) lookPresets("w-vev")
   = maja lookPresets("w-solv")
 maja (agency's client) engineChat("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja (agency's client) engineThreads("w-vev")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) brandWorkspace("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) studioKit("w-halm")
@@ -89102,6 +89226,8 @@ maja (agency's client) qaQueue("w-halm")
 maja (agency's client) lookPresets("w-halm")
   = maja lookPresets("w-solv")
 maja (agency's client) engineChat("w-halm")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja (agency's client) engineThreads("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) brandWorkspace("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -89117,6 +89243,8 @@ maja (agency's client) lookPresets("w-aurea")
   = maja lookPresets("w-solv")
 maja (agency's client) engineChat("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja (agency's client) engineThreads("w-aurea")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) brandWorkspace("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) studioKit("w-nope")
@@ -89130,6 +89258,8 @@ maja (agency's client) qaQueue("w-nope")
 maja (agency's client) lookPresets("w-nope")
   = maja lookPresets("w-solv")
 maja (agency's client) engineChat("w-nope")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+maja (agency's client) engineThreads("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 maja (agency's client) document("doc-night-story")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -89688,6 +89818,8 @@ jonas (agency's client) lookPresets("w-lysne")
   = maja lookPresets("w-lysne")
 jonas (agency's client) engineChat("w-lysne")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+jonas (agency's client) engineThreads("w-lysne")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) brandWorkspace("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) studioKit("w-solv")
@@ -89701,6 +89833,8 @@ jonas (agency's client) qaQueue("w-solv")
 jonas (agency's client) lookPresets("w-solv")
   = maja lookPresets("w-solv")
 jonas (agency's client) engineChat("w-solv")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+jonas (agency's client) engineThreads("w-solv")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) brandWorkspace("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -89716,6 +89850,8 @@ jonas (agency's client) lookPresets("w-vev")
   = maja lookPresets("w-solv")
 jonas (agency's client) engineChat("w-vev")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+jonas (agency's client) engineThreads("w-vev")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) brandWorkspace("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) studioKit("w-halm")
@@ -89729,6 +89865,8 @@ jonas (agency's client) qaQueue("w-halm")
 jonas (agency's client) lookPresets("w-halm")
   = maja lookPresets("w-solv")
 jonas (agency's client) engineChat("w-halm")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+jonas (agency's client) engineThreads("w-halm")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) brandWorkspace("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
@@ -89744,6 +89882,8 @@ jonas (agency's client) lookPresets("w-aurea")
   = maja lookPresets("w-solv")
 jonas (agency's client) engineChat("w-aurea")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+jonas (agency's client) engineThreads("w-aurea")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) brandWorkspace("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) studioKit("w-nope")
@@ -89757,6 +89897,8 @@ jonas (agency's client) qaQueue("w-nope")
 jonas (agency's client) lookPresets("w-nope")
   = maja lookPresets("w-solv")
 jonas (agency's client) engineChat("w-nope")
+  {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
+jonas (agency's client) engineThreads("w-nope")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}
 jonas (agency's client) document("doc-night-story")
   {"error":"forbidden","message":"The Quality Gate is for Fume's experts."}

@@ -1,6 +1,16 @@
 // Typed hooks over FumeApi, one per call. Query keys are the cache's names; mutations refresh what they change.
 import { useMutation, useQuery, useQueryClient, type QueryKey } from "@tanstack/react-query";
-import type { CampaignFilter, ChangeTag, CustomerRole, FumeApi, Id, Pin, QaPin } from "../contract";
+import type {
+  CampaignFilter,
+  ChangeTag,
+  CustomerRole,
+  EngineField,
+  EngineTopic,
+  FumeApi,
+  Id,
+  Pin,
+  QaPin,
+} from "../contract";
 import { useApi } from "./client";
 
 const useQ = <T>(key: QueryKey, fn: (api: FumeApi) => Promise<T>, enabled = true) => {
@@ -246,10 +256,24 @@ export const useSetSource = () =>
   useM((a, v: { documentId: Id; section: string; source: Parameters<FumeApi["setSource"]>[2] }) =>
     a.setSource(v.documentId, v.section, v.source),
   );
-// The Engine chat
-export const useEngineChat = (workspaceId: Id | undefined) =>
-  useQ(["engine", "chat", workspaceId], (a) => a.engineChat(workspaceId!), Boolean(workspaceId));
-export const useEngineSay = () => useM((a, v: { workspaceId: Id; text: string }) => a.engineSay(v.workspaceId, v.text));
+// The Engine chat, in threads (Round 15): the brand's Everything (no topic), a campaign's, a document's
+export const useEngineChat = (workspaceId: Id | undefined, topic?: EngineTopic) =>
+  useQ(
+    ["engine", "chat", workspaceId, topic?.kind ?? "brand", topic?.id],
+    (a) => a.engineChat(workspaceId!, topic),
+    Boolean(workspaceId),
+  );
+export const useEngineSay = () =>
+  useM((a, v: { workspaceId: Id; text: string; topic?: EngineTopic; field?: EngineField }) =>
+    a.engineSay(v.workspaceId, v.text, v.topic || v.field ? { topic: v.topic, field: v.field } : undefined),
+  );
+export const useEngineThreads = (workspaceId: Id | undefined) =>
+  useQ(["engine", "chat", workspaceId, "threads"], (a) => a.engineThreads(workspaceId!), Boolean(workspaceId));
+/** "Write with Engine": a suggestion for one field. It changes nothing, so it refreshes nothing. */
+export const useEngineWrite = () => {
+  const api = useApi();
+  return useMutation({ mutationFn: (field: EngineField) => api.engineWrite(field) });
+};
 export const useAnswerEngineWidget = () =>
   useM((a, v: { workspaceId: Id; messageId: Id; picked?: Id[]; choice?: string }) =>
     a.answerEngineWidget(v.workspaceId, v.messageId, v),

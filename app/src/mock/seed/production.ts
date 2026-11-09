@@ -335,6 +335,30 @@ export const engineMessages: EngineMessage[] = [
     at: at(60 * 6),
     widget: { kind: "batch", batchId: "bt-1" },
   },
+  // Round 15 (PROPOSED 9 Nov 2026): Winter gifting's own thread, where Anna asked about the plan's camera line.
+  {
+    id: "em-w1",
+    workspaceId: "w-lysne",
+    author: { kind: "person", userId: "u-anna" },
+    text: "Is the camera close enough for a gift?",
+    at: at(60 * 3),
+    topic: { kind: "campaign", id: "c-winter" },
+    field: {
+      kind: "plan_line",
+      campaignId: "c-winter",
+      key: "camera",
+      label: "Camera",
+      value: "50 mm at table height, close. The bottle sharp, the window soft behind it.",
+    },
+  },
+  {
+    id: "em-w2",
+    workspaceId: "w-lysne",
+    author: { kind: "engine" },
+    text: "Close enough: 50 mm at table height keeps the sleeve and the label in one frame, as Maja's brief asks. Closer, the ribbon leaves the picture.",
+    at: at(60 * 3 - 1),
+    topic: { kind: "campaign", id: "c-winter" },
+  },
 ];
 
 export const usage: UsageRow[] = [

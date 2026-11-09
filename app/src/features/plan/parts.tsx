@@ -10,6 +10,9 @@
 // Fume recommends. A creative can have its own look (its light, the light's direction, its camera) beside the plan's
 // look, which still holds for every other creative. A step the expert checks carries the Focus pointer (Amber once
 // checked).
+// Round 15 (PROPOSED 9 Nov 2026): for Fume's people (and an agency's), each line and each master's scene and words
+// carries two small Engine buttons beside the pencil: Write with Engine (its words come under the field to keep or
+// drop, never written over hers) and Ask about this (the Engine panel, with the field as context). engine/field.tsx.
 import { Button, Field, FieldLabel, Icon, Input, Textarea, submitOnModEnter, useToast } from "@fume/ui";
 import {
   useEffect,
@@ -32,6 +35,7 @@ import type {
   PlanSource,
   Product,
 } from "../../contract";
+import { useEngineField } from "../engine/field";
 import type { PlanPeople } from "./people";
 import { formatWord, plannedName, sourceIcon } from "./words";
 
@@ -147,6 +151,7 @@ export function LineRow({
   voice = (t) => t,
   note,
   anchor,
+  where,
 }: {
   line: PlanLine;
   campaignId: string;
@@ -159,10 +164,20 @@ export function LineRow({
   note?: ReactNode;
   /** The row's id, for a link that glides to it. */
   anchor?: string;
+  /** Where the plan is, for the Engine ("Winter gifting’s plan"): with it, the line can be written with the Engine. */
+  where?: string;
 }) {
   const { editing, open, done, opener } = useEditing();
   const id = useId();
   const why = line.why && !line.changedBy ? voice(whyOf(line.why)) : undefined;
+  const keep = useKeepLine(campaignId, line);
+  const engine = useEngineField({
+    field: { kind: "plan_line", campaignId, key: line.key, label: line.label, value: line.value },
+    where: where ?? "",
+    enabled: editable && Boolean(where) && !editing,
+    writes: !FACT_LINES.includes(line.key),
+    onKeep: keep,
+  });
   return (
     <li id={anchor} className="ui-plandoc-line" data-changed={line.changedBy ? "" : undefined}>
       <div className="ui-plandoc-line-head">
@@ -179,14 +194,45 @@ export function LineRow({
             <p className="ui-plandoc-line-value">{voice(line.value)}</p>
             {why && <p className="ui-plandoc-line-why">{why}</p>}
             {note}
+            {engine.suggestion}
           </>
         )}
       </div>
       {editable && !editing && (
-        <ChangePencil opener={opener} label={`Change the ${line.label.toLowerCase()}`} onClick={open} />
+        <Tools engine={engine.tools}>
+          <ChangePencil opener={opener} label={`Change the ${line.label.toLowerCase()}`} onClick={open} />
+        </Tools>
       )}
     </li>
   );
+}
+
+/** Lines of facts the Engine does not write: what is in the picture, its formats, its language. It answers about them. */
+const FACT_LINES = ["products", "formats", "language"];
+
+/** The pencil alone, or with the Engine's two buttons before it (plan.css .ui-plandoc-actions). */
+function Tools({ engine, children }: { engine: ReactNode; children: ReactNode }) {
+  if (!engine) return <>{children}</>;
+  return (
+    <span className="ui-plandoc-actions">
+      {engine}
+      {children}
+    </span>
+  );
+}
+
+/** Keeps the Engine's words for a line, as Save would. */
+function useKeepLine(campaignId: string, line: PlanLine) {
+  const change = useChangePlan();
+  const toast = useToast();
+  return (value: string) =>
+    change.mutate(
+      { campaignId, line: line.key, value },
+      {
+        onSuccess: () => toast.done(`${line.label} changed`, { description: "Every creative keeps to the new line." }),
+        onError: (err) => toast.error(`${line.label} wasn’t changed`, { description: err.message }),
+      },
+    );
 }
 
 function LineEdit({
@@ -245,6 +291,7 @@ export function MasterCard({
   voice = (t) => t,
   note,
   anchor,
+  where,
 }: {
   creative: PlannedCreative;
   products: Product[];
@@ -257,8 +304,45 @@ export function MasterCard({
   note?: ReactNode;
   /** The row's id, for a link that glides to it. */
   anchor?: string;
+  /** Where the plan is, for the Engine: with it, the scene and the words can be written with the Engine. */
+  where?: string;
 }) {
   const { editing, open, done, opener } = useEditing();
+  const change = useChangePlan();
+  const toast = useToast();
+  const engineOn = editable && Boolean(where) && !editing;
+  const keepPart = (part: "scene" | "text") => (value: string) =>
+    change.mutate(
+      {
+        campaignId,
+        creativeId: creative.id,
+        creative: { scene: part === "scene" ? value : creative.scene, text: part === "text" ? value : creative.text },
+      },
+      {
+        onSuccess: () => toast.done(`${creative.name} changed`),
+        onError: (err) => toast.error(`${creative.name} wasn’t changed`, { description: err.message }),
+      },
+    );
+  const partField = (part: "scene" | "text") => ({
+    kind: "plan_creative" as const,
+    campaignId,
+    creativeId: creative.id,
+    part,
+    label: part === "scene" ? `${creative.name}’s scene` : `${creative.name}’s words`,
+    value: (part === "scene" ? creative.scene : creative.text) ?? "",
+  });
+  const scene = useEngineField({
+    field: partField("scene"),
+    where: where ?? "",
+    enabled: engineOn,
+    onKeep: keepPart("scene"),
+  });
+  const words = useEngineField({
+    field: partField("text"),
+    where: where ?? "",
+    enabled: engineOn && Boolean(creative.text),
+    onKeep: keepPart("text"),
+  });
   const shown = creative.productIds
     .map((id) => products.find((p) => p.id === id))
     .filter((p): p is Product => Boolean(p));
@@ -285,24 +369,31 @@ export function MasterCard({
         ) : (
           <>
             <p className="ui-plandoc-scene">{voice(creative.scene)}</p>
+            {scene.suggestion}
             <p className="ui-plandoc-master-meta">
               {creative.text && (
                 <span className="ui-plandoc-words" lang={langOf(language)}>
                   “{creative.text.replace(/^[“"]|[”"]$/g, "")}”
                 </span>
               )}
+              {words.tools}
               <span className="ui-plandoc-people">
                 <Icon name="user" />
                 {creative.people}
               </span>
               {creative.changedBy && <ChangedTag by={creative.changedBy} people={people} />}
             </p>
+            {words.suggestion}
             <OwnLook look={creative.look} voice={voice} />
             {note}
           </>
         )}
       </div>
-      {editable && !editing && <ChangePencil opener={opener} label={`Change ${creative.name}`} onClick={open} />}
+      {editable && !editing && (
+        <Tools engine={scene.tools}>
+          <ChangePencil opener={opener} label={`Change ${creative.name}`} onClick={open} />
+        </Tools>
+      )}
     </li>
   );
 }

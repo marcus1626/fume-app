@@ -7,6 +7,10 @@
 // - A line someone changed keeps a quiet mark (a dotted underline), and says who changed it and what it said before.
 // - In a list, "Add" puts a new line at its end; an emptied line, or its ×, takes the line out.
 // The look is book-edit.css.
+// Round 15 (PROPOSED 9 Nov 2026): where Fume's people edit directly, a line carries the Engine's two small buttons after
+// it, on hover and focus (always on a touch screen): Write with Engine, whose words come under the line to keep (saved
+// as if she wrote them) or drop, and Ask about this, the Engine panel with the line as context (engine/field.tsx). A
+// customer never has them. `engine={false}` leaves them off a line.
 import { Button, cx, Icon } from "@fume/ui";
 import {
   createContext,
@@ -19,7 +23,10 @@ import {
   type FocusEvent,
   type KeyboardEvent,
 } from "react";
+import { useParams } from "react-router-dom";
+import { useSession } from "../../api/hooks";
 import type { BookEdit, BookEditMark } from "../../contract";
+import { useEngineField } from "../engine/field";
 
 export type EditMode = "direct" | "suggest" | "read";
 
@@ -57,6 +64,7 @@ export function Editable({
   onEmpty,
   onCancel,
   onDone,
+  engine,
 }: {
   path: string;
   value: string;
@@ -72,10 +80,22 @@ export function Editable({
   onCancel?: () => void;
   /** The line was kept (a new line's row closes then). */
   onDone?: () => void;
+  /** The Engine's buttons by the line, where Fume's people edit directly (Round 15): on unless false; `where` names
+   *  the book for the Engine panel ("LYSNE’s Tone of Voice"). */
+  engine?: false | { where?: string };
 }) {
   const { mode, marks, commit, who } = useContext(Ctx);
   const ref = useRef<HTMLElement>(null);
   const mark = marks.find((m) => m.path === path);
+  const session = useSession().data;
+  const { workspaceId = session?.workspace.id ?? "" } = useParams();
+  const brandName = session?.workspaces.find((w) => w.id === workspaceId)?.brandName ?? "The brand";
+  const withEngine = useEngineField({
+    field: { kind: "book_line", workspaceId, path, label, value },
+    where: (engine && engine.where) || `${brandName}’s brand book`,
+    enabled: mode === "direct" && engine !== false && Boolean(value),
+    onKeep: (text) => commit({ path, to: text }, label),
+  });
 
   // The words live in the element, not in React's children, so writing never fights a render.
   useLayoutEffect(() => {
@@ -117,7 +137,7 @@ export function Editable({
       e.currentTarget.blur();
     }
   }
-  return (
+  const field = (
     <As
       ref={ref}
       className={cx(className, "ui-edit")}
@@ -133,6 +153,14 @@ export function Editable({
       onBlur={leave}
       onKeyDown={keys}
     />
+  );
+  if (!withEngine.tools) return field;
+  return (
+    <span className="ui-engine-field">
+      {field}
+      {withEngine.tools}
+      {withEngine.suggestion}
+    </span>
   );
 }
 

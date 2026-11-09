@@ -1,18 +1,21 @@
 // The Video studio (FLOWS §27, PROPOSED 27 Oct 2026): the desk's body when the creative is a video. The same desk as
-// Image and Design (the bar, the two panels, the Engine bar under the board), with the player as the board and the
-// timeline across the whole width under it, as in the agency concept ("Video · Night ritual"). Left: what the edit is
-// made from. Right: what is selected. The desk owns the clock: play runs it, the ruler moves it, and the player and
-// the timeline follow. Every change of hers is an undo step of the desk (⌘Z), saved after a short pause.
+// Image and Design (the bar, the two panels), with the player as the board and the timeline across the whole width
+// under it, as in the agency concept ("Video · Night ritual"). Left: what the edit is made from. Right: what is
+// selected. The desk owns the clock: play runs it, the ruler moves it, and the player and the timeline follow. Every
+// change of hers is an undo step of the desk (⌘Z), saved after a short pause.
+// Round 15 (PROPOSED 9 Nov 2026): no Engine bar under the player and no conversation in the inspector's place: she
+// talks to the Engine in the Engine panel beside the desk, in the video's own thread. The desk tells the panel what
+// she sees (the picked shot or layer, the playhead when stopped, the format, the mode), and a change the Engine
+// proposes still shows on the timeline and the player first, kept or undone in the panel (engine/changes.tsx).
 import { Glass, Icon, Toggle, WithTooltip } from "@fume/ui";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { usePlacements } from "../../../../api/hooks";
+import { useEngineSight, type EngineSeen, type EngineSight } from "../../../engine/panel";
 import type { CreativeDocument, EditCheck, StudioMode, Variables, VideoClip, VideoEdit } from "../../../../contract";
 import { clipAt, editLength, placed, timecode } from "../../../../domain/video";
 import { lockProps } from "../lock";
 import { useBrandCta, useVideoClock } from "./play";
-import { checked, type Selection } from "./edit";
-import { VideoEngineBar } from "./EngineBar";
-import { EnginePanel } from "./EnginePanel";
+import { checked, MOTION, takeWords, type Selection } from "./edit";
 import { VideoInspector, type VideoChange } from "./Inspector";
 import { VideoMedia } from "./Media";
 import { follow } from "./motion";
@@ -56,7 +59,7 @@ export function VideoDesk({
   readOnly: boolean;
   bare: boolean;
   locked: boolean;
-  /** While the Engine works on the creative, this takes the Engine bar's place. */
+  /** While the Engine works on the creative, this lies under the player (Wait · Take over). */
   lock?: ReactNode;
   onToggleBare: () => void;
   onChange: (part: VideoChange, key: string) => void;
@@ -69,8 +72,6 @@ export function VideoDesk({
   const [selected, setSelected] = useState<Selection>();
   // Storyboard or Timeline: two ways to see the same shots (FLOWS §34.6).
   const [board, setBoard] = useState(false);
-  // The video conversation: the Engine's side panel, one per creative.
-  const [talking, setTalking] = useState(false);
   const [safe, setSafe] = useState(false);
 
   // The Engine's ask is shown on the timeline and the player until she keeps or undoes it.
@@ -87,7 +88,7 @@ export function VideoDesk({
       if (e.key === " " && !el?.closest("button, [role=slider], a")) {
         e.preventDefault();
         toggle();
-      } else if (e.key === "Escape" && !el?.closest(".ui-desk-engine")) {
+      } else if (e.key === "Escape" && !el?.closest(".ui-engine-panel")) {
         setSelected(undefined);
       }
     };
@@ -135,6 +136,33 @@ export function VideoDesk({
 
   const format = view.formats.find((f) => f.id === view.formatId);
   const placement = placements.find((p) => p.id === format?.placementId);
+
+  // What the Engine panel sees on the video: what is picked, the playhead while it stands still, the format, the mode
+  const clip = shown?.kind === "shot" ? view.clips.find((c) => c.id === shown.id) : undefined;
+  const layer = shown?.kind === "motion" ? view.motion.find((m) => m.id === shown.id) : undefined;
+  const shotNo = clip ? placed(view.clips).findIndex((p) => p.clip.id === clip.id) + 1 : 0;
+  const picked = clip
+    ? `Shot ${shotNo} · ${takeWords(clip)}`
+    : layer
+      ? `${MOTION[layer.template].name}: ${layer.text}`
+      : "";
+  const at = playing ? "" : timecode(Math.round(t * 10) / 10, true);
+  const cut = format ? `${format.name} ${format.ratio}` : "";
+  const sight = useMemo<EngineSight>(() => {
+    const seen: EngineSeen[] = [];
+    if (picked) seen.push({ id: "picked", icon: picked.startsWith("Shot") ? "film" : "type", words: picked });
+    if (at) seen.push({ id: "time", icon: "clock", words: `At ${at}` });
+    if (cut) seen.push({ id: "format", icon: "crop", words: cut });
+    if (mode) seen.push({ id: "mode", icon: "layers", words: `${mode.name} mode` });
+    return {
+      workspaceId: doc.workspaceId,
+      topic: { kind: "document", id: doc.id },
+      title,
+      seen,
+      desk: { doc, mode, busy: false, locked, onBefore: before, onVariable: () => {} },
+    };
+  }, [doc, mode, title, picked, at, cut, before, locked]);
+  useEngineSight(sight);
   const fromLibrary = view.clips.filter((c) => c.source === "library").length;
   const fromEngine = view.clips.length - fromLibrary;
   const made = [
@@ -224,24 +252,10 @@ export function VideoDesk({
             </span>
           </div>
         </section>
-        {!readOnly &&
-          (lock ?? (
-            <VideoEngineBar doc={doc} proposed={proposed} onBefore={before} onTalk={() => setTalking((on) => !on)} />
-          ))}
+        {!readOnly && lock}
       </main>
 
-      {!readOnly && !bare && talking && (
-        <EnginePanel
-          doc={doc}
-          edit={view}
-          mode={mode}
-          selected={shown}
-          t={Math.round(t * 10) / 10}
-          onClose={() => setTalking(false)}
-          onBefore={before}
-        />
-      )}
-      {!readOnly && !bare && !talking && (
+      {!readOnly && !bare && (
         <div className="ui-desk-lockable" {...lockProps(locked || Boolean(proposed))}>
           <VideoInspector
             doc={doc}
