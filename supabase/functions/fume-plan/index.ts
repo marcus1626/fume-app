@@ -32,6 +32,29 @@ async function withinBudget(): Promise<boolean> {
   return !error && Boolean((data as { allowed?: boolean } | null)?.allowed);
 }
 
+/** The headlines of the brand's other plans, newest first: the latest version of each campaign's plan. */
+async function recentHeadlines(campaignId: string): Promise<string[]> {
+  const { data: c } = await service.from("campaigns").select("workspace_id").eq("id", campaignId).maybeSingle();
+  if (!c) return [];
+  const { data } = await service
+    .from("plan_versions")
+    .select("campaign_id, content:body->content")
+    .eq("workspace_id", c.workspace_id)
+    .neq("campaign_id", campaignId)
+    .neq("state", "superseded")
+    .order("created_at", { ascending: false })
+    .limit(24);
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const p of (data ?? []) as { campaign_id: string; content: { key?: string; label?: string; value?: string }[] | null }[]) {
+    if (seen.has(p.campaign_id)) continue;
+    seen.add(p.campaign_id);
+    const head = (p.content ?? []).find((l) => /headline|overskrift/i.test(`${l.key ?? ""} ${l.label ?? ""}`));
+    if (head?.value) out.push(head.value);
+  }
+  return out.slice(0, 12);
+}
+
 async function write(task: Parameters<typeof prompt>[0], problem?: string): Promise<Written> {
   if (!(await withinBudget()))
     return {
@@ -40,6 +63,7 @@ async function write(task: Parameters<typeof prompt>[0], problem?: string): Prom
       usage: { model: WRITE_MODEL, input_tokens: 0, output_tokens: 0, cost_usd: 0 },
       final: true,
     };
+  task = { ...task, recent: task.recent ?? (await recentHeadlines(task.campaign_id).catch(() => [])) };
   const content = problem
     ? `${prompt(task)}\n\nYour last plan was refused by Fume's checks: ${problem}\nWrite it again and fix that.`
     : prompt(task);

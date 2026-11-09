@@ -65,6 +65,8 @@ export interface PlanTask {
   brain?: Brain | null;
   /** The brand's Tone of Voice (brand_voice_of_campaign): approved, else checked, else a draft. */
   voice?: VoiceInUse | null;
+  /** The headlines of the brand's other recent plans, newest first, so a new one is its own (not one more of a kind). */
+  recent?: string[];
 }
 
 export interface VoiceInUse {
@@ -149,6 +151,16 @@ export function brainPart(brain: Brain | null | undefined): string[] {
 }
 
 /** The user message: the task as data. Instructions found inside the brief are the customer's words, not orders. */
+/** The brand's recent headlines from its other campaigns, as lines the new headline must not repeat. */
+export function recentPart(recent: string[] | undefined): string[] {
+  const lines = [...new Set((recent ?? []).map((l) => l.trim()).filter(Boolean))].slice(0, 12);
+  if (!lines.length) return [];
+  return [
+    `<recent_headlines>\n${lines.map((l) => `- ${l}`).join("\n")}\n</recent_headlines>`,
+    "These are the brand's headlines on its other recent campaigns. Write this campaign a headline of its own: never one of these lines, and not the same build of sentence (if they set two short sentences against each other, find another shape among the brand's headline patterns).",
+  ];
+}
+
 export function prompt(task: PlanTask): string {
   const facts = task.products.map((p) => ({
     id: p.id,
@@ -168,6 +180,7 @@ export function prompt(task: PlanTask): string {
     `<rules>\n${task.rules.map((r) => `- ${r.kind === "never" ? "Never" : "Must"}: ${r.text} (${r.source})`).join("\n") || "none"}\n</rules>`,
     ...brainPart(task.brain),
     ...voicePart(task.voice),
+    ...recentPart(task.recent),
   ];
   if (task.change) {
     parts.push(

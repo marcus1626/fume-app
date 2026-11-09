@@ -2,7 +2,7 @@
 import { assertEquals } from "jsr:@std/assert@1";
 import { type Deps, handlePlan, type Written } from "./handler.ts";
 import { type ClaimRead, copyLines, judgeCopy, type PlanAnswer, type PlanTask, prompt, toBody } from "./plan.ts";
-import { repeatsHeadline } from "./plan.ts";
+import { recentPart, repeatsHeadline } from "./plan.ts";
 
 const task: PlanTask = {
   run_id: "r1",
@@ -376,4 +376,11 @@ Deno.test("a price is never backed by the brand's words for other products, only
   assertEquals(judgeCopy(task, lines, read(null)).findings.map((f) => `${f.kind} ${f.blocking}`), ["unbacked_claim true"]);
   const fact = task.products[0].facts.find((f) => f.status === "verified")!;
   assertEquals(judgeCopy(task, lines, read(fact.id)).findings, []);
+});
+
+Deno.test("the brand's recent headlines go in the prompt as lines not to repeat", () => {
+  assertEquals(recentPart([]), []);
+  const part = recentPart(["Trends change. Grails don't.", "Trends change. Grails don't.", " "]).join("\n");
+  assertEquals(part.split("- Trends change").length, 2);
+  assertEquals(part.includes("not the same build of sentence"), true);
 });
