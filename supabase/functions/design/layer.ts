@@ -37,8 +37,8 @@ const pick = (copy: CopyItem[], keys: RegExp) => clean(copy.find((c) => keys.tes
 export function wordsOf(t: Take): Words | null {
   const headline = pick(t.copy, /headline|overskrift/i);
   if (!headline) return null;
-  const subline = pick(t.copy, /support|subline|sub_?head|body|undertekst/i);
-  const cta = pick(t.copy, /call_?to_?action|\bcta\b|knapp/i);
+  const subline = pick(t.copy, /support|subline|sub_?head|body|undertekst|st(ø|_)tte/i);
+  const cta = pick(t.copy, /call_?to_?action|\bcta\b|knapp|handlingsoppfordring/i);
   // A price is in the copy only when the plan wrote it from a verified fact (fume-plan's copy check).
   const price = pick(t.copy, /\bprice\b|\bpris\b|\boffer\b|tilbud/i);
   return { headline, ...(subline ? { subline } : {}), ...(cta ? { cta } : {}), ...(price ? { price } : {}) };

@@ -589,6 +589,8 @@ function scoreOf(l: Layout, checks: Check[]): number {
 
 /** The smallest share of a style's size a long word may be set at to fit its column. */
 const FIT_FLOOR = 0.6;
+/** The smallest share of the price style's size the price may be set at to stay on one line. */
+const PRICE_FLOOR = 0.35;
 
 /**
  * How much smaller the headline and the button must be set so their longest word fits on a line, or null when
@@ -607,7 +609,9 @@ export function fitFor(doc: Doc, sizes: Record<string, number> = {}): Layout["fi
   // The price is one figure: the whole line fits its column, not only its longest word ("NÅ / 199,-" fails).
   const line = lineWidth(doc, "Price");
   const whole = line ? Math.min(1, (line.box - 2) / line.width) : 1;
-  const price = whole < 1 && whole >= FIT_FLOOR ? Math.floor(whole * 100) / 100 : need("Price");
+  // A price set smaller is still the price; a price broken over two lines is a wrong price ("NÅ 1 / 99,-"), so it
+  // may go down further than a headline before it gives up.
+  const price = whole < 1 && whole >= PRICE_FLOOR ? Math.floor(whole * 100) / 100 : need("Price");
   return headline || cta || price ? { ...(headline ? { headline } : {}), ...(cta ? { cta } : {}), ...(price ? { price } : {}) } : null;
 }
 

@@ -98,6 +98,8 @@ How to write:
 - A price or an offer is written only from a verified claim fact that states it, word for word in its figures, and listed in claimRefs. When there is one and the brand's tone of voice sets prices on its ads, add a copy line labelled "Price" with the price as the brand writes it (for example NÅ 199,-), and keep the price out of the headline. Without such a fact, no price and no offer.
 - Words on a creative may only use claims from the verified claim facts. List the fact ids you rely on in claimRefs. Never promise a result (skin, health, sleep) that is not one of those facts. With no verified claims, keep the words to the product name, the moment, or the brief's message.
 - Directions must differ in idea, not only in look. Mark exactly one as recommended, and choose it.
+- The headline carries the recommended direction's idea: a line written for this campaign from the brief's message and the moment, in one of the brand's own headline patterns, as the brand's best copywriter would write it. Never the product's name alone, and never the brand's tagline or sign-off alone: those are lines of their own. A message, a mood, a moment or a play on words is not a claim and needs no fact.
+- Each line has one job: the headline the idea, the supporting line a verified fact or the moment in the brand's voice (never a spec sheet read aloud), the call to action what to do.
 - Follow the brand's own style. Do not import a house style. Respect every "never" rule from the brief and the brand.
 - Plan exactly as many creatives as the brief asks for, across its formats: a master in the first format, and variants of a master for the other formats or angles. A variant's "of" is its master's id in the same direction. Use only the campaign's product ids.
 - People: real models only when the brief allows people. Never fake customers, testimonials or user-generated content. When in doubt, no people or hands only.
@@ -226,9 +228,14 @@ export function toBody(a: PlanAnswer): Record<string, unknown> {
 }
 
 /** Claude Haiku 5.5's list price for prompts up to 100K tokens, in dollars per million tokens. */
-const PRICE = { input: 0.1, output: 0.5 };
-export function costOf(usage: { input_tokens?: number | null; output_tokens?: number | null }): number {
-  const cost = ((usage.input_tokens ?? 0) * PRICE.input + (usage.output_tokens ?? 0) * PRICE.output) / 1_000_000;
+// Dollars per million tokens, by model family.
+const PRICES: Record<string, { input: number; output: number }> = {
+  haiku: { input: 0.1, output: 0.5 },
+  sonnet: { input: 2, output: 10 },
+};
+export function costOf(usage: { input_tokens?: number | null; output_tokens?: number | null }, model = "haiku"): number {
+  const price = PRICES[Object.keys(PRICES).find((k) => model.includes(k)) ?? "haiku"];
+  const cost = ((usage.input_tokens ?? 0) * price.input + (usage.output_tokens ?? 0) * price.output) / 1_000_000;
   return Math.round(cost * 10_000) / 10_000;
 }
 

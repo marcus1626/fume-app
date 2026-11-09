@@ -6,8 +6,10 @@ import { createClient } from "npm:@supabase/supabase-js@2.117.3";
 import { handlePlan, type Written } from "./handler.ts";
 import { CLAIM_SYSTEM, ClaimRead, claimPrompt, costOf, type CopyLine, PlanAnswer, type PlanTask, prompt, SYSTEM, toBody } from "./plan.ts";
 
-// The cheap model first (Marcus, 3 Nov); Opus only where it is needed.
+// The cheap model first (Marcus, 3 Nov), and a stronger one where the work is creative: the plan's ideas and words
+// (Marcus, 9 Nov: "Virkelig bruk Engine ... kreativitet"). The claim check stays on the cheap model.
 const MODEL = "claude-haiku-5-5";
+const WRITE_MODEL = "claude-sonnet-5-5";
 const url = Deno.env.get("SUPABASE_URL")!;
 const keyOf = (json: string, legacy: string) =>
   (Deno.env.get(json) && JSON.parse(Deno.env.get(json)!).default) || Deno.env.get(legacy)!;
@@ -35,14 +37,14 @@ async function write(task: Parameters<typeof prompt>[0], problem?: string): Prom
     return {
       ok: false,
       error: "This week's budget for Fume's language model is used up.",
-      usage: { model: MODEL, input_tokens: 0, output_tokens: 0, cost_usd: 0 },
+      usage: { model: WRITE_MODEL, input_tokens: 0, output_tokens: 0, cost_usd: 0 },
       final: true,
     };
   const content = problem
     ? `${prompt(task)}\n\nYour last plan was refused by Fume's checks: ${problem}\nWrite it again and fix that.`
     : prompt(task);
   const message = await claude.beta.messages.parse({
-    model: MODEL,
+    model: WRITE_MODEL,
     max_tokens: 16_000,
     system: SYSTEM,
     messages: [{ role: "user", content }],
@@ -53,7 +55,7 @@ async function write(task: Parameters<typeof prompt>[0], problem?: string): Prom
     model: message.model,
     input_tokens: message.usage.input_tokens,
     output_tokens: message.usage.output_tokens,
-    cost_usd: costOf(message.usage),
+    cost_usd: costOf(message.usage, message.model),
   };
   if (message.stop_reason === "refusal")
     return { ok: false, error: "The model declined to write this plan.", usage, final: true };

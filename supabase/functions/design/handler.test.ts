@@ -53,6 +53,15 @@ Deno.test("the words are the plan's approved copy, word for word, and nothing el
   assertEquals(wordsOf({ ...take, copy: [{ key: "call_to_action", value: "Kjøp" }] }), null);
 });
 
+Deno.test("a plan written with Norwegian labels gives the same words", () => {
+  const copy = [
+    { key: "overskrift", label: "Overskrift", value: "All tranen, ingen skje" },
+    { key: "st_ttelinje", label: "Støttelinje", value: "Kilde til omega-3." },
+    { key: "handlingsoppfordring", label: "Handlingsoppfordring", value: "Les mer" },
+  ];
+  assertEquals(wordsOf({ ...take, copy }), { headline: "All tranen, ingen skje", subline: "Kilde til omega-3.", cta: "Les mer" });
+});
+
 Deno.test("what must stay clear becomes boxes in the format's pixels, with a margin, cut to the frame", () => {
   const boxes = keepClearOf({ keepClear: [{ what: "shoe", x: 0.5, y: 0.5, w: 0.9, h: 0.2 }, { what: "speck", x: 0, y: 0, w: 0.001, h: 0.5 }], band: "top", align: "left", colour: "text", layout: "", why: "" }, "feed");
   // About 26 px of breathing room on every side, cut to the frame on the right.
