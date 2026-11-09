@@ -187,7 +187,7 @@ const qa = (
   dueAt: inDays(1),
   risk: "normal",
   state: "waiting",
-  evaluation: ok,
+  evaluation: { ...ok, scores: { product: 88 + (minutesAgo % 7), engine: 84 + (minutesAgo % 9) } },
   feedback: [],
   ...extra,
 });
@@ -231,7 +231,12 @@ const seeded: QaItem[] = [
   qa("qa-3", "cr-a-v9", "Feed 7", "06-10", 12, {
     slot: "Master 2 · Variant 3",
     risk: "high",
-    evaluation: { ...ok, productTruth: "flag", notes: ["The cap reads glossy"] },
+    evaluation: {
+      ...ok,
+      productTruth: "flag",
+      notes: ["The cap reads glossy"],
+      scores: { product: 66, engine: 84, why: [{ score: "product", text: "The cap reads glossy; it is matte" }] },
+    },
     feedback: [
       {
         id: "fb-1",
@@ -257,6 +262,14 @@ const seeded: QaItem[] = [
         "A smeared edge where the bottle meets the ledge",
       ],
       evaluated: true,
+      scores: {
+        product: 52,
+        engine: 74,
+        why: [
+          { score: "product", text: "The cap reads glossy; it is matte" },
+          { score: "engine", text: "Light from above, not from one side" },
+        ],
+      },
     },
     findings: [
       {
@@ -309,7 +322,12 @@ const seeded: QaItem[] = [
   {
     ...qa("qa-6", "cr-solv-2", "Feed 2", "10-06", 28, {
       slot: "Master 2",
-      evaluation: { ...ok, artefacts: "minor", notes: ["A soft edge on the left cup"] },
+      evaluation: {
+        ...ok,
+        artefacts: "minor",
+        notes: ["A soft edge on the left cup"],
+        scores: { product: 90, engine: 81 },
+      },
     }),
     workspaceId: "w-solv",
     campaignId: "c-solv",

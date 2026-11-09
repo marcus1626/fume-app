@@ -117,7 +117,8 @@ export interface RenderVersion {
   cost: number;
   /** The product details the Engine masked and read on this render (FLOWS §17). */
   details?: DetailFind[];
-  /** Why a failed version did not render, in one sentence ("The prompt missed 2 of LYSNE's rules after three tries"). */
+  /** Why a failed version did not render, in one sentence ("The image model did not answer"). Only for a picture that
+   *  could not be made: a check the Engine is unhappy with never stops a render (FLOWS §34.1). */
   failure?: string;
   /** How the Engine wrote and checked the prompt behind it (engine_prompts). Fume's staff only: never an agency's
    *  people, never a customer (FLOWS §29). */
@@ -258,9 +259,11 @@ export interface DesignAsk {
 
 /** The prompt behind a render and its checks, as the Engine kept them (engine_prompts; FLOWS §29, PROPOSED). */
 export interface EnginePrompt {
-  /** validated: it passed and went to the image model; escalated: a person had to judge it; blocked: it did not
-   *  pass, and nothing was rendered. */
-  status: "validated" | "escalated" | "blocked";
+  /** validated: it passed and went to the image model; warned: it works against a rule (often the designer's own ask)
+   *  and went to the image model anyway, so the version carries a warning (FLOWS §34.1, PROPOSED); escalated: a person
+   *  had to judge it; blocked: it did not pass, and nothing was rendered (superseded by warned: the Engine never stops
+   *  a designer's ask). */
+  status: "validated" | "warned" | "escalated" | "blocked";
   /** Why it was blocked or escalated, in words. */
   reason?: string;
   /** The image model, by its name ("Nano Banana Pro"). */

@@ -234,7 +234,12 @@ const seeded: CreativeDocument[] = [
     layers: [],
     versions: [
       version("rv-1", 1, "05-08", 90, sceneVars, {
-        evaluation: { ...ok, productTruth: "flag", notes: ["Cap reads glossy"] },
+        evaluation: {
+          ...ok,
+          productTruth: "flag",
+          notes: ["Cap reads glossy"],
+          scores: { product: 74, engine: 85, why: [{ score: "product", text: "The cap reads glossy; it is matte" }] },
+        },
         prompt: prompt(scenePrompt("in the centre")),
       }),
       version(
@@ -245,6 +250,7 @@ const seeded: CreativeDocument[] = [
         { ...sceneVars, productSize: 34 },
         {
           instruction: "Make the bottle a little bigger",
+          evaluation: { ...ok, scores: { product: 88, engine: 87 } },
           prompt: prompt(scenePrompt("a little larger in the frame, in the centre"), { tries: 2 }),
         },
       ),
@@ -256,29 +262,41 @@ const seeded: CreativeDocument[] = [
         { ...sceneVars, productSize: 28, productPlace: "low" },
         {
           instruction: "Move the bottle lower, more air above",
+          evaluation: { ...ok, scores: { product: 82, engine: 91 } },
           prompt: prompt(scenePrompt("low in the frame with calm air above it")),
         },
       ),
-      // A render that did not start: the prompt kept working against two of LYSNE's rules, three tries in a row.
+      // Anna's ask works against two of LYSNE's rules. The Engine says so and renders it anyway: the picture carries a
+      // warning and its scores, and Anna decides (FLOWS §34.1, PROPOSED).
       version(
         "rv-4",
         4,
-        "05-01",
+        "05-01g",
         6,
         { ...sceneVars, productSize: 28, productPlace: "low" },
         {
-          state: "failed",
-          image: "",
-          cost: 0,
           instruction: "Add a glossy reflection on the cap",
-          failure: "The prompt worked against 2 of LYSNE's rules three tries in a row, so nothing was rendered.",
+          evaluation: {
+            productTruth: "flag",
+            brandRules: "flag",
+            artefacts: "none",
+            notes: ["The cap reads glossy"],
+            scores: {
+              product: 64,
+              engine: 58,
+              why: [
+                { score: "engine", text: "A glossy reflection, where LYSNE allows nothing glossy" },
+                { score: "product", text: "The cap reads glossy; it is matte" },
+              ],
+            },
+          },
           prompt: prompt(
             scenePrompt("low in the frame with calm air above it").replace(
               "a burgundy matte cap",
               "a burgundy cap with a glossy reflection",
             ),
             {
-              status: "blocked",
+              status: "warned",
               reason: "A glossy cap works against the verified facts and the brand's rule: nothing glossy.",
               tries: 3,
               llmUsd: 0.006,

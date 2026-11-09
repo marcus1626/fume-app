@@ -1,0 +1,38 @@
+/* Scores: the Engine's two scores of a picture, with the bar (FLOWS §34.1). PROPOSED 9 Nov 2026.
+   Marcus, 9 Nov: the Engine's judgement never stops the designer. A picture under the bar is shown with a clear
+   warning, and the board says why. The Studio's left panel and Check's panel use the same board.
+   Markup: <div class="ui-score-board">
+             <div class="ui-score" data-under><span class="ui-score-name">Engine</span><span class="ui-score-num">58</span>
+               <span class="ui-score-meter" role="meter" style="--score: 58; --bar: 80"><span class="ui-score-fill"/>
+               <span class="ui-score-bar"/></span><p class="ui-score-why">A glossy reflection, …</p></div>
+             <div class="ui-score-foot"><span>The bar is 80</span> [button] </div></div>
+   On the board: <div class="ui-glass ui-score-warn" role="status"><svg/><span class="ui-score-warn-title">Under the
+   bar</span><span class="ui-score-warn-nums">Engine 58 · Product 64</span></div> above the picture, never over it.
+   Decisions:
+   - The number is the loudest thing, in the data face with tabular numbers; the name is a label beside it.
+   - The meter is the progress track (4 px pill, sunken), Ink fill over the bar and Rouge under it, with the bar
+     drawn as a short Ink tick. Rouge marks what works against a rule (F-D067); never Amber, nothing here is a
+     person's check. Colour is never the only signal: under the bar, the number turns Rouge and a line says why.
+   - The warning on the board is a Smoke pill above the picture: the designer always sees the whole picture.
+   Rule gate: space-from-tokens, type-from-tokens, radius-from-tokens, mono-is-data, few-strokes. */
+
+.ui-score-board { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-score { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; column-gap: var(--ui-space-md); row-gap: var(--ui-space-xs); min-width: 0; }
+.ui-score-name { font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-score-num { font-family: var(--ui-type-family-data); font-size: var(--ui-type-title); font-variant-numeric: tabular-nums; line-height: 1.1; color: var(--ui-text); }
+.ui-score[data-under] .ui-score-num { color: var(--ui-danger); }
+.ui-score-meter { --score: 0; --bar: 80; position: relative; grid-column: 1 / -1; display: block; height: var(--ui-progress-height); border-radius: var(--ui-radius-action); background: var(--ui-progress-track); }
+.ui-score-fill { position: absolute; inset-block: 0; inset-inline-start: 0; width: calc(var(--score) * 1%); border-radius: var(--ui-radius-action); background: var(--ui-progress-fill); transition: width var(--ui-motion-slow) var(--ui-motion-ease); }
+.ui-score[data-under] .ui-score-fill { background: var(--ui-danger); }
+.ui-score-bar { position: absolute; inset-inline-start: calc(var(--bar) * 1%); inset-block: calc(var(--ui-space-xs) * -1); width: 2px; border-radius: var(--ui-radius-action); background: var(--ui-text); transform: translateX(-50%); } /* gate-allow:space-from-tokens a 2 px tick, the track's own weight */
+.ui-score-why { grid-column: 1 / -1; margin: 0; font-family: var(--ui-type-family); font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-score-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); min-width: 0; font-family: var(--ui-type-family); font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-score-foot > span { display: inline-flex; align-items: center; gap: var(--ui-space-xs); white-space: nowrap; }
+.ui-score-foot-mark { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text); transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) { .ui-score-fill { transition: none; } }
+
+/* the warning on the board, above the picture */
+.ui-score-warn { display: inline-flex; align-items: center; gap: var(--ui-space-sm); max-width: 100%; padding: var(--ui-space-xs) var(--ui-space-xs) var(--ui-space-xs) var(--ui-space-md); border-radius: var(--ui-radius-action); color: var(--ui-glass-fg); font-family: var(--ui-type-family); font-size: var(--ui-type-control); line-height: 1.4; }
+.ui-score-warn > svg { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-score-warn-title { font-weight: var(--ui-type-weight-medium); white-space: nowrap; }
+.ui-score-warn-nums { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-variant-numeric: tabular-nums; color: var(--ui-glass-fg-secondary); }

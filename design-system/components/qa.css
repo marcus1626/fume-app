@@ -92,7 +92,11 @@
 
 /* parts: 24 apart, 8 inside */
 .ui-qa-part { display: grid; gap: var(--ui-space-sm); min-width: 0; }
-.ui-qa-part-title { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-qa-part-title { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text); } /* round 14: a part's name is read before its rows, so it is the rows' size, in Ink */
+/* The scores come first, on a sunken step (FLOWS §34.1); under the bar the title says so */
+.ui-qa-scores { gap: var(--ui-space-md); padding: var(--ui-inset-float); border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); }
+.ui-qa-scores .ui-score-meter { background: var(--ui-surface); } /* the track stays seen on the sunken step */
+.ui-qa-holds { padding-block-start: var(--ui-space-sm); }
 .ui-qa-notes, .ui-qa-history { display: grid; gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; min-width: 0; }
 .ui-qa-note { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--ui-space-sm); font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); }
 .ui-qa-note > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-tertiary); }
@@ -109,7 +113,7 @@
 .ui-qa-finding-body { display: grid; gap: var(--ui-space-xs); min-width: 0; }
 .ui-qa-finding-text { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); text-wrap: pretty; }
 .ui-qa-finding:not([data-status="open"]) .ui-qa-finding-text { color: var(--ui-text-secondary); }
-.ui-qa-finding-meta { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-qa-finding-meta { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
 .ui-qa-finding-evidence { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text); overflow-wrap: anywhere; text-wrap: pretty; }
 .ui-qa-finding-label { color: var(--ui-text-tertiary); }
 .ui-qa-finding-meta + .ui-qa-finding-evidence { margin-block-start: var(--ui-space-xs); }

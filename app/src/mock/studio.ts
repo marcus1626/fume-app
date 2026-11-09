@@ -336,14 +336,41 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
     };
     d.versions.push(v);
     touch(d);
+    // An ask against the brand's rules still renders: the version carries the warning and its scores (FLOWS §34.1).
+    const against = /\b(gloss|glossy|shiny|shine|neon)\b/i.test(instruction ?? "");
     setTimeout(() => {
       v.state = "done";
-      if (n % 3 === 0)
+      if (against) {
+        v.evaluation = {
+          productTruth: "flag",
+          brandRules: "flag",
+          artefacts: "none",
+          notes: ["Works against the brand's rules"],
+          scores: {
+            product: 66,
+            engine: 57,
+            why: [
+              { score: "engine", text: "Something glossy, where the brand allows nothing glossy" },
+              { score: "product", text: "The cap reads glossy; it is matte" },
+            ],
+          },
+        };
+        v.prompt = {
+          ...v.prompt!,
+          status: "warned",
+          reason: "The ask works against the brand's rule: nothing glossy.",
+          findings: [
+            { item: "Nothing glossy", verdict: "against", note: `The ask: “${instruction}”` },
+            ...v.prompt!.findings,
+          ],
+        };
+      } else
         v.evaluation = {
           productTruth: "pass",
           brandRules: "pass",
-          artefacts: "minor",
-          notes: ["A soft edge on the label"],
+          artefacts: n % 3 === 0 ? "minor" : "none",
+          notes: n % 3 === 0 ? ["A soft edge on the label"] : [],
+          scores: { product: 84 + ((n * 7) % 12), engine: 82 + ((n * 5) % 14) },
         };
       d.pickedVersionId = v.id;
       touch(d);

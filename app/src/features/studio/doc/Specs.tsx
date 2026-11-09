@@ -62,6 +62,10 @@ import { partLine, Swatch } from "../../products/specs";
 import { useOpenFlags } from "./sendCheck";
 import { FixHistory } from "./fix";
 import { PlacementPicker, placementOf } from "./formats";
+import { usePromptAddress, useSeesPrompt } from "./prompt";
+import { ScoreBoard } from "./scores";
+import { shownVersion } from "./versions";
+import { underBar } from "../../../domain/scores";
 
 /** Staff only: the image models the Engine can route to. Never shown to a customer. */
 const IMAGE_MODELS = ["Nano Banana Pro", "Seedream 4", "FLUX Kontext Pro", "Imagen 4"];
@@ -91,6 +95,23 @@ export function SpecsPanel(props: SpecsProps) {
   const sections: StudioFold[] = [];
   const placements = usePlacements().data;
   const placement = placements && mode?.output === "creative" ? placementOf(specs, placements) : undefined;
+  // The shown version's scores come first: the Engine's judgement, with the bar (FLOWS §34.1)
+  const shown = shownVersion(doc);
+  const seesPrompt = useSeesPrompt();
+  const promptAt = usePromptAddress();
+  if (!isDesign && shown?.state === "done" && shown.evaluation.scores)
+    sections.push({
+      id: "Scores",
+      title: "Scores",
+      meta: `V${shown.number}${underBar(shown.evaluation).length ? " · under the bar" : ""}`,
+      children: (
+        <ScoreBoard
+          id={shown.id}
+          evaluation={shown.evaluation}
+          onWhy={seesPrompt && shown.prompt ? () => promptAt.open(shown.id) : undefined}
+        />
+      ),
+    });
 
   sections.push({
     id: "Output",
@@ -175,7 +196,7 @@ export function SpecsPanel(props: SpecsProps) {
         key={`${doc.modeId}-${doc.studio}`}
         label="Specs"
         sections={sections}
-        initialOpen={["Product", "Layers", "Output", "References", "Models"].filter((id) =>
+        initialOpen={["Scores", "Product", "Layers", "Output", "References", "Models"].filter((id) =>
           sections.some((s) => s.id === id),
         )}
       />

@@ -91,6 +91,8 @@ import { Nothing, Page, Query } from "../../../shell/Page";
 import { brandBase, checkPath, frameRoot, type StaffFrameKind } from "../../../shell/scope";
 import { vars } from "../../brand/board";
 import { bookWords, DesignChecks, DesignFindings, DrawnWords, useSeesDesign } from "../doc/graphic";
+import { ScoreBoard } from "../doc/scores";
+import { underBar } from "../../../domain/scores";
 import { formatName } from "../parts";
 import { useNames } from "./names";
 import { fixer } from "../../../lib/fixer";
@@ -987,7 +989,7 @@ function QaFocus({
       return;
     }
     if (stopping) {
-      toast.info(`${findingKind[stopping.dimension]} finding stops the check`, {
+      toast.info(`Decide the ${findingKind[stopping.dimension].toLowerCase()} finding first`, {
         description: "Add it to the note to the Engine, or say it is not a problem.",
       });
       return;
@@ -1239,6 +1241,24 @@ function QaFocus({
             )}
           </header>
 
+          {/* 1b. The Engine's scores, with the bar (FLOWS §34.1): where to look first */}
+          {item.evaluation.scores && (
+            <section
+              className="ui-qa-part ui-qa-scores"
+              aria-labelledby={`${item.id}-scores`}
+              data-under={underBar(item.evaluation).length ? "" : undefined}
+            >
+              <h3 className="ui-qa-part-title" id={`${item.id}-scores`}>
+                {underBar(item.evaluation).length
+                  ? item.sentBy
+                    ? `Under the bar · sent by ${names.who(item.sentBy)}`
+                    : "Under the bar"
+                  : "Scores"}
+              </h3>
+              <ScoreBoard id={item.id} evaluation={item.evaluation} why={false} />
+            </section>
+          )}
+
           {/* 2. What the Engine found */}
           <Evaluated
             evaluation={item.evaluation}
@@ -1444,7 +1464,7 @@ function QaFocus({
             <>
               {stopping && !fixing && (
                 <p className="ui-qa-foot-note" id={`${item.id}-stops`}>
-                  {`The ${findingKind[stopping.dimension].toLowerCase()} finding stops the check.`}
+                  {`Decide the ${findingKind[stopping.dimension].toLowerCase()} finding first: a fix, or not a problem.`}
                 </p>
               )}
               <Button
@@ -1560,7 +1580,7 @@ const findingKind: Record<QaFinding["dimension"], string> = {
 };
 const severityOrder: Record<QaFinding["severity"], number> = { critical: 0, major: 1, minor: 2 };
 const severityWords: Record<QaFinding["severity"], string> = {
-  critical: "stops the check",
+  critical: "decide first",
   major: "major",
   minor: "minor",
 };
@@ -1665,17 +1685,22 @@ function Evaluated({
   const lines = (against ?? []).map((a) =>
     a.area === "channel" ? { ...a, against: `${f.label} ${f.size}; nothing important in the outer 6 %.` } : a,
   );
+  // What holds folds into one line, so the eye lands on what needs her (round 14: less text, clearer order).
+  const flags = rows.filter((r) => r.result === "flag");
+  const holds = rows.filter((r) => r.result === "pass");
+  const open = findings.filter((x) => x.status === "open").length;
   return (
     <section className="ui-qa-part" aria-labelledby={`${id}-found`}>
       <h3 className="ui-qa-part-title" id={`${id}-found`}>
-        {fixer.found}{" "}
         {byEye
-          ? `· ${flagged ? `${copy.count(flagged, "flag")}, the rest by eye` : "check it by eye"}`
-          : flagged
-            ? `· ${copy.count(flagged, "flag")}`
-            : findings.length
-              ? "· nothing open"
-              : "· nothing flagged"}
+          ? `${fixer.found} · ${flagged ? `${copy.count(flagged, "flag")}, the rest by eye` : "check it by eye"}`
+          : open
+            ? `To decide · ${open}`
+            : flagged
+              ? `${fixer.found} · ${copy.count(flagged, "flag")}`
+              : findings.length
+                ? `${fixer.found} · nothing open`
+                : `${fixer.found} · nothing flagged`}
       </h3>
       {shown.length > 0 && (
         <ul className="ui-qa-findings" aria-label="The Engine’s findings">
@@ -1684,31 +1709,51 @@ function Evaluated({
               <Icon name={f.status === "open" ? "circle-alert" : f.status === "resolved" ? "circle-check" : "minus"} />
               <div className="ui-qa-finding-body">
                 <p className="ui-qa-finding-text">{f.finding}</p>
-                <p className="ui-qa-finding-meta">{findingMeta(f, who)}</p>
                 {f.status === "open" && f.expected && (
                   <p className="ui-qa-finding-evidence">
                     <span className="ui-qa-finding-label">Should be</span> {f.expected}
                   </p>
                 )}
-                {f.status === "open" && f.observed && f.observed !== f.finding && (
-                  <p className="ui-qa-finding-evidence">
-                    <span className="ui-qa-finding-label">In the picture</span> {f.observed}
-                  </p>
-                )}
+                <p className="ui-qa-finding-meta">{findingMeta(f, who)}</p>
                 {actions?.(f)}
               </div>
             </li>
           ))}
         </ul>
       )}
-      <ul className="ui-qa-notes">
-        {rows.map((r, i) => (
-          <li key={i} className="ui-qa-note" data-result={r.result}>
-            <Icon name={r.result === "pass" ? "circle-check" : "circle-alert"} />
-            {r.text}
+      {flags.length > 0 && (
+        <ul className="ui-qa-notes">
+          {flags.map((r, i) => (
+            <li key={i} className="ui-qa-note" data-result={r.result}>
+              <Icon name="circle-alert" />
+              {r.text}
+            </li>
+          ))}
+        </ul>
+      )}
+      {holds.length === 1 && (
+        <ul className="ui-qa-notes">
+          <li className="ui-qa-note" data-result="pass">
+            <Icon name="circle-check" />
+            {holds[0].text}
           </li>
-        ))}
-      </ul>
+        </ul>
+      )}
+      {holds.length > 1 && (
+        <Collapsible className="ui-qa-against">
+          <CollapsibleTrigger>{`${holds.length} checks hold`}</CollapsibleTrigger>
+          <CollapsibleContent>
+            <ul className="ui-qa-notes ui-qa-holds">
+              {holds.map((r, i) => (
+                <li key={i} className="ui-qa-note" data-result={r.result}>
+                  <Icon name="circle-check" />
+                  {r.text}
+                </li>
+              ))}
+            </ul>
+          </CollapsibleContent>
+        </Collapsible>
+      )}
       {lines.length > 0 && (
         <Collapsible className="ui-qa-against">
           <CollapsibleTrigger>

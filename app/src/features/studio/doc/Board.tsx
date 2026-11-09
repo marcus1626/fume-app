@@ -59,6 +59,8 @@ import { DetailsOverlay, useFixDone } from "./fix";
 import { placementOf, SafeZones, versionRatio } from "./formats";
 import { AddGraphicDesign, designFlags, designLine, DrawnWords, useDesignAddress, useSeesDesign } from "./graphic";
 import { failedWords, usePromptAddress, useSeesPrompt } from "./prompt";
+import { scoreLine } from "./scores";
+import { isUnderBar } from "../../../domain/scores";
 import { shownVersion } from "./versions";
 
 const ratio = { feed: "4 / 5", square: "1 / 1", story: "9 / 16" } as const;
@@ -177,6 +179,8 @@ export function Board({
   const promptFor = promptAt.id && doc.versions.some((v) => v.id === promptAt.id) ? promptAt.id : undefined;
   // No picture to show, only a version that did not render: say so on the board (FLOWS §29)
   const failed = shown ? undefined : [...doc.versions].reverse().find((v) => v.state === "failed");
+  // A picture under the bar is shown whole, with the warning above it (FLOWS §34.1)
+  const warn = !comparing && !rendering && isUnderBar(shown) ? shown : undefined;
 
   const figure = (v: RenderVersion, label: string | undefined, withLayers: boolean) => (
     <figure className="ui-desk-figure" key={v.id}>
@@ -231,9 +235,17 @@ export function Board({
         className="ui-desk-canvas"
         data-zoom={zoom}
         data-compare={comparing ? "" : undefined}
+        data-warn={warn ? "" : undefined}
         style={comparing ? ({ "--compare-n": figures } as CSSProperties) : undefined}
         aria-label="Board"
       >
+        {warn && (
+          <Glass className="ui-score-warn ui-desk-score-warn" role="status">
+            <Icon name="triangle-alert" />
+            <span className="ui-score-warn-title">{`Version ${warn.number} is under ${brandName}’s bar`}</span>
+            <span className="ui-score-warn-nums">{scoreLine(warn)}</span>
+          </Glass>
+        )}
         {!readOnly && (
           <Glass className="ui-desk-rail" role="toolbar" aria-orientation="vertical" aria-label="View">
             <RailToggle
@@ -713,9 +725,12 @@ export function Versions({
           // A version that did not render is never the picked one, even if the address says so
           const picked = v.id === doc.pickedVersionId && !failed;
           const designed = v.design;
+          const under = !designed && isUnderBar(v);
           const flags = failed
             ? { clean: false, words: designed ? "Not designed" : failedWords(v) }
-            : designFlags(v, flagWords(v, tokens));
+            : under
+              ? { clean: false, words: `Under the bar · ${scoreLine(v)}` }
+              : designFlags(v, flagWords(v, tokens));
           const busy = v.state === "rendering";
           const body = (
             <>
@@ -763,7 +778,7 @@ export function Versions({
                   <span
                     className="ui-desk-version-flags"
                     data-clean={flags.clean ? "" : undefined}
-                    data-failed={failed ? "" : undefined}
+                    data-failed={failed || under ? "" : undefined}
                   >
                     <Icon name={failed ? "circle-x" : flags.clean ? "circle-check" : "triangle-alert"} />
                     {flags.words}

@@ -79,6 +79,20 @@ export interface Evaluation {
   evaluated?: boolean;
   /** Checks Fume ran on the file itself (its kind, shape, size and weight against the format), each with its result. */
   checks?: { result: "pass" | "flag"; text: string }[];
+  /** The Engine's two scores of the picture, 0 to 100 (FLOWS §34.1, PROPOSED): the product against its own photographs
+   *  and verified facts, and the Engine's read of the brand's rules, taste and the planned scene. Under the bar
+   *  (SCORE_BAR) the version carries a warning; it is never held back from the designer. */
+  scores?: Scores;
+}
+
+/** The Engine's scores of one picture (FLOWS §34.1, PROPOSED). */
+export interface Scores {
+  /** The product: shape, label, cap, size and colour against its photographs and verified facts. */
+  product: number;
+  /** The Engine: the brand's rules, its taste and the planned scene. */
+  engine: number;
+  /** Why a score is under the bar, one short line each, the worst first ("The cap reads glossy"). */
+  why?: { score: "product" | "engine"; text: string }[];
 }
 
 /** What the Engine's picture check found, as a finding the one who checks settles (findings with method automated;

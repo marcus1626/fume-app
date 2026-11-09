@@ -1257,3 +1257,34 @@ it: the customer, an agency and its client never do. Only a Fume designer asks f
 - **The demo.** Anna (?as=anna): LYSNE › Autumn launch › Master 3 (/studio/doc/doc-autumn-m3), Add graphic design to
   V3; the second try moves the words to the foot, where the review says it needs work. In Check, Night Body Oil ·
   Feed 9 (?item=qa-8) is a designed version 2 waiting for a check.
+
+## 34. Round 14 (9 Nov 2026, PROPOSED): Marcus's comments on the approval videos
+Marcus watched the walkthroughs of PR #6, #8, #10 and #11 and left ten comments (9 Nov). He chose to see these changes
+before any of the four is wired live.
+
+### 34.1 The Engine never stops the designer
+Marcus: "Å flagge er en ting. Men jeg synes ikke at Engine sin evaluering skal stoppe designeren fra å bruke den.
+Designer har alltid siste ord." Under the bar it is not "Stopped": the designer must see it before the customer does,
+with a clear warning, and a score board in a side panel shows the product's score and the Engine's.
+
+- **Rendered, always.** A prompt that works against a rule (often the designer's own ask, "Add a glossy reflection on
+  the cap") goes to the image model anyway, as `EnginePrompt.status` `warned`; `blocked` is no longer used. Only a
+  picture that could not be made at all (the image model did not answer) is a failed version.
+- **Two scores, one bar.** `Evaluation.scores`: the product (against its photographs and verified facts) and the
+  Engine (the brand's rules, taste and the planned scene), 0 to 100, with one short line on why a score is low. The
+  bar is 80, the Engine's own pass line for a check (`domain/scores.ts`).
+- **The Studio.** The board shows the whole picture; above it, never over it, a Smoke pill: "Version 4 is under
+  LYSNE's bar · Engine 58 · Product 64". The strip's tile says "Under the bar". The left panel opens with Scores: each
+  score's number (Rouge under the bar), a meter with the bar on it, the why, and (Fume's people) the Engine's checks.
+- **Before anyone else sees it.** Send to check asks once: "Version 4 is under the bar. Engine 58 · Product 64, the
+  bar is 80. … It's your call: the expert sees the warning in Check." Later, or Send anyway. The customer never sees a
+  creative before it is checked (F-D025), so the expert in Check is the next person to see it.
+- **Check.** Scores come first in the panel, on a sunken step, titled "Under the bar" (and who sent it) when one is.
+  A clear product fault still waits for the expert's word (DECIDED 6 Nov): it now says "decide first", never "stops
+  the check".
+
+### 34.2 Clearer order and fewer words in Check
+Marcus: "vet ikke helt hvor jeg skal se, mye tekst overalt." The panel reads top to bottom: where it stands, the
+scores, what is "To decide" (each finding: what is wrong, what it should be, a quiet kind line, two small buttons),
+then what holds folded into one line ("3 checks hold"), the Brand DNA list folded, the note to the Engine, and the
+decision at the foot. Part titles are the rows' size in Ink, so they are read first; "In the picture" is gone.

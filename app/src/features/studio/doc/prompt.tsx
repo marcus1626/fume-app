@@ -51,11 +51,12 @@ export function usePromptAddress() {
 
 const against = (p?: EnginePrompt) => p?.findings.filter((f) => f.verdict === "against").length ?? 0;
 
-/** A failed version's line in the strip, short enough for its tile: "Stopped by 2 rules". */
+/** A failed version's line in the strip, short enough for its tile. Only a picture that could not be made fails: a
+ *  rule the prompt works against never stops it (FLOWS §34.1), so the rules are named only for an older blocked try. */
 export function failedWords(v: RenderVersion): string {
   const p = v.prompt;
   const n = against(p);
-  if (n) return `Stopped by ${copy.count(n, "rule")}`;
+  if (p?.status === "blocked" && n) return `Not rendered · ${copy.count(n, "rule")}`;
   if (p?.status === "escalated") return "Waits for a person";
   return "Not rendered";
 }
@@ -155,8 +156,9 @@ function Ledger({ ledger }: { ledger: PromptLedgerEntry[] }) {
 
 const status: Record<EnginePrompt["status"], string> = {
   validated: "Passed, sent to the image model",
+  warned: "Works against a rule, sent to the image model with a warning",
   escalated: "Waits for a person",
-  blocked: "Stopped, never sent",
+  blocked: "Not sent",
 };
 
 /** The panel: why a version did not render, and (Fume's people) the prompt and its checks. */
@@ -177,7 +179,7 @@ export function PromptSheet({ doc }: { doc: CreativeDocument }) {
     <section className="ui-desk-sheet-part" aria-labelledby="trace-prompt">
       <div className="ui-desk-trace-head">
         <h3 className="ui-desk-sheet-head" id="trace-prompt">
-          {p.status === "validated" ? "The prompt" : "The last try, never sent"}
+          {p.status === "validated" || p.status === "warned" ? "The prompt" : "The last try, never sent"}
         </h3>
         <Button size="sm" variant="glass-clear" icon="copy" onClick={copyPrompt}>
           Copy
