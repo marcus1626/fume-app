@@ -17,7 +17,8 @@ const secret = keyOf("SUPABASE_SECRET_KEYS", "SUPABASE_SERVICE_ROLE_KEY");
 const service = createClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
 const workspace = Deno.env.get("ANTHROPIC_WORKSPACE_ID");
 const claude = new Anthropic({
-  timeout: 60_000,
+  // A compose of up to 12,000 tokens takes about a minute (models.ts).
+  timeout: 90_000,
   // Several renders at once can meet the organisation's limit on requests in flight (429): wait and try again.
   maxRetries: 3,
   ...(workspace ? { defaultHeaders: { "anthropic-workspace-id": workspace } } : {}),

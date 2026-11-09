@@ -58,7 +58,9 @@ export function claudeModels(
     const started = Date.now();
     const m = await claude.beta.messages.parse({
       model: MODEL,
-      max_tokens: 8_000,
+      // Room for its thinking and the answer: the compose prompt grew with the Look Book and the brand's lessons, and at
+      // 8,000 it was cut off mid-answer (Anthem v9, 9 Nov: two of six pictures never made). index.ts gives it the time.
+      max_tokens: 12_000,
       system,
       messages: [{ role: "user", content }],
       thinking: { type: "adaptive" },
@@ -74,6 +76,7 @@ export function claudeModels(
       outputTokens: m.usage.output_tokens,
     };
     if (m.stop_reason === "refusal") throw Object.assign(new Error(`The model declined the ${task}.`), { call });
+    if (m.stop_reason === "max_tokens") throw Object.assign(new Error(`The ${task} answer was cut off.`), { call });
     if (!m.parsed_output) throw Object.assign(new Error(`The ${task} answer could not be read.`), { call });
     return { out: m.parsed_output as T, call };
   }
