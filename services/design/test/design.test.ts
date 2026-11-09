@@ -247,6 +247,18 @@ test("a slanted call to action is drawn as the brand's two thin lines once the b
   assert.equal((slantJSX(200, 60, "#FFFFFF", 2, 1).match(/<path /g) ?? []).length, 1);
 });
 
+test("a button the brand sets apart sits in its own corner at the bottom, beside the words, not under them", () => {
+  const signature = { name: "Tile", band: "bottom", align: "left", wordsWidthPct: 50, ground: "photo", words: "light", cta: "slant_double", ctaAt: "bottom_right" } as const;
+  const b = { ...book, onPictures: { ...(book.onPictures ?? {}), layouts: [signature] } } as DesignBook;
+  const first = layoutsFor(b, "feed", { signature: "Tile", cta: "with_words" }, true).next().value!;
+  assert.equal(first.cta, "bottom");
+  assert.equal(first.ctaSide, "right");
+  const c = compose(b, "feed", { headline: "Soccer Gear", cta: "Shop now" }, first, () => "Inter");
+  const action = c.jsx.slice(c.jsx.indexOf('<Frame name="Action"'));
+  assert.match(action, /items="end"/);
+  assert.ok(!c.jsx.slice(c.jsx.indexOf('<Frame name="Words"'), c.jsx.indexOf('<Frame name="Action"')).includes('name="CTA"'), "the button is not in the block of words");
+});
+
 test("a short word held to the next is measured with it, so the pair is never broken inside a word", async () => {
   // Anthem, 9 Nov: "Room to Grow." was drawn "to Gr / ow." in a column each word fitted on its own.
   const pic = await picture("#F4F1EC", "#15171A");

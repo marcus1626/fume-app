@@ -309,7 +309,9 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
   const widths = prefer.columns
     ? [prefer.columns]
     : uniq([...(sigColumns ? [sigColumns] : []), ...(format === "banner" ? [6, 8] : [9, 7, 5, 12])]);
-  const cta = hasCta && !noCta ? (prefer.cta ?? "with_words") : "none";
+  // A brand that sets its button apart from the words, in a bottom corner (Anthem's SHOP NOW), gets it there.
+  const ctaSide: Layout["align"] | undefined = sig?.ctaAt === "bottom_right" ? "right" : sig?.ctaAt === "bottom_left" ? "left" : undefined;
+  const cta = hasCta && !noCta ? (prefer.cta === "none" ? "none" : ctaSide ? "bottom" : (prefer.cta ?? "with_words")) : "none";
   // A long line from the plan may step down to the book's body size before the words move.
   const sublines = uniq(["subline", "body"].filter((n) => styleOf(book, n)));
   if (!sublines.length) sublines.push("subline");
@@ -331,6 +333,7 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
                   ...(subline === "subline" ? {} : { subline }),
                   ...(ctaLook ? { ctaLook } : {}),
                   ...(ctaFill ? { ctaFill } : {}),
+                  ...(ctaSide && cta === "bottom" ? { ctaSide } : {}),
                   ...(hex && (ground === "block" || ground === "flat") ? { groundHex: hex } : {}),
                   ...(own ? { signature: own.name } : sig ? { signature: sig.name } : {}),
                   ...(own
@@ -359,18 +362,21 @@ export function measure(
   const g = c.grid;
   const words0 = boxOf(doc, "Words")!;
   const action0 = boxOf(doc, "Action");
-  const room = g.h - g.top - g.bottom - (action0 ? action0.h + 32 : 0);
-  // The brand's logo in the words' own band sits beside them as the brand sets it: the Swoosh under the quote,
+  // A button set apart in the other corner (Anthem's SHOP NOW) shares the bottom with the words instead of sitting under them.
+  const beside = Boolean(action0 && l.cta === "bottom" && l.ctaSide && l.ctaSide !== l.align);
+  const below = action0 && !beside ? action0.h + 32 : 0;
+  const room = g.h - g.top - g.bottom - below;
+  // The brand's logo in the words' own band sits beside them as the brand sets it: the Swoosh below the quote,
   // Møllers' logo over the headline. The words make room for it.
   const shareBand = !logo?.inside && logo?.first?.startsWith(l.band === "middle" ? "-" : l.band) ? logo.h + 40 : 0;
   const low = l.band === "top" ? g.top + shareBand : g.top;
-  const high = g.h - g.bottom - words0.h - (action0 ? action0.h + 32 : 0) - (l.band === "bottom" ? shareBand : 0);
+  const high = g.h - g.bottom - words0.h - below - (l.band === "bottom" ? shareBand : 0);
   const y = l.at !== undefined && high >= low
     ? Math.round(Math.min(high, Math.max(low, l.at * g.h)))
     : l.band === "top"
       ? g.top + shareBand
       : l.band === "bottom"
-        ? g.h - g.bottom - words0.h - (action0 ? action0.h + 32 : 0) - shareBand
+        ? g.h - g.bottom - words0.h - below - shareBand
         : Math.round(g.top + (room - words0.h) / 2);
   place(doc, "Words", { y });
   if (action0) place(doc, "Action", { y: g.h - g.bottom - action0.h });

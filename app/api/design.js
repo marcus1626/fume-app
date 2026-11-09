@@ -161,7 +161,9 @@ function compose(book, format, words, l, family, widths = {}, logo) {
     colours.Subline = subHex;
     sizes.Subline = sub.sizePx;
   }
-  const ctaWithWords = words.cta && (l.cta === "with_words" || l.cta === "bottom" && l.band === "bottom");
+  const apart = l.cta === "bottom" && l.ctaSide !== void 0 && l.ctaSide !== l.align;
+  const ctaWithWords = words.cta && (l.cta === "with_words" || l.cta === "bottom" && l.band === "bottom" && !apart);
+  const side = l.cta === "bottom" && l.ctaSide ? l.ctaSide : l.align;
   const pad2 = onPanel ? panel?.paddingPx ?? 32 : 0;
   const panelHex = ownGround ? ownGround : isBlock ? colourOf(book, "primary") ?? "#000000" : colourOf(book, panel?.background ?? "surface") ?? colourOf(book, "background") ?? "#FFFFFF";
   const panelBg = onPanel ? ` bg=${q(panelHex)}` : "";
@@ -173,7 +175,7 @@ function compose(book, format, words, l, family, widths = {}, logo) {
     '<Frame name="Lines"',
     `${insideLogo}<Frame name="Lines"`
   );
-  const alone = words.cta && !ctaWithWords && l.cta !== "none" ? `<Frame name="Action" position="absolute" x={${l.align === "left" ? g.margin : 0}} y={${g.h - g.bottom - 80}} w={${l.align === "left" ? '"hug"' : l.align === "right" ? g.w - g.margin : g.w}} h="hug" flex="col" items=${q(items)}>${cta()}</Frame>` : "";
+  const alone = words.cta && !ctaWithWords && l.cta !== "none" ? `<Frame name="Action" position="absolute" x={${side === "left" ? g.margin : 0}} y={${g.h - g.bottom - 80}} w={${side === "left" ? '"hug"' : side === "right" ? g.w - g.margin : g.w}} h="hug" flex="col" items=${q(side === "left" ? "start" : side === "right" ? "end" : "center")}>${cta()}</Frame>` : "";
   const shade = l.ground === "gradient" ? `<Rectangle name="Shade" position="absolute" x={0} y={0} w={${g.w}} h={${Math.round(g.h / 2)}} fills={[]} />` : "";
   const logoNode = logo && !logo.inside ? `<Rectangle name="Logo" position="absolute" x={${g.margin}} y={${g.top}} w={${Math.round(logo.w)}} h={${Math.round(
     logo.h
@@ -998,7 +1000,8 @@ function* layoutsFor(book, format, prefer, hasCta) {
     "flat"
   ]).filter((x) => x !== "block" || blockSig);
   const widths = prefer.columns ? [prefer.columns] : uniq([...sigColumns ? [sigColumns] : [], ...format === "banner" ? [6, 8] : [9, 7, 5, 12]]);
-  const cta = hasCta && !noCta ? prefer.cta ?? "with_words" : "none";
+  const ctaSide = sig?.ctaAt === "bottom_right" ? "right" : sig?.ctaAt === "bottom_left" ? "left" : void 0;
+  const cta = hasCta && !noCta ? prefer.cta === "none" ? "none" : ctaSide ? "bottom" : prefer.cta ?? "with_words" : "none";
   const sublines = uniq(["subline", "body"].filter((n) => styleOf(book, n)));
   if (!sublines.length) sublines.push("subline");
   for (const band of bands) {
@@ -1022,6 +1025,7 @@ function* layoutsFor(book, format, prefer, hasCta) {
                   ...subline === "subline" ? {} : { subline },
                   ...ctaLook ? { ctaLook } : {},
                   ...ctaFill ? { ctaFill } : {},
+                  ...ctaSide && cta === "bottom" ? { ctaSide } : {},
                   ...hex && (ground === "block" || ground === "flat") ? { groundHex: hex } : {},
                   ...own ? { signature: own.name } : sig ? { signature: sig.name } : {},
                   ...own ? own.box && own.box.y > 0 && band === own.band ? { at: own.box.y } : {} : sigAt !== void 0 && band === sig?.band ? { at: sigAt } : {}
@@ -1038,11 +1042,13 @@ function measure(doc, c, l, book, p, keep, logo = null) {
   const g = c.grid;
   const words0 = boxOf(doc, "Words");
   const action0 = boxOf(doc, "Action");
-  const room = g.h - g.top - g.bottom - (action0 ? action0.h + 32 : 0);
+  const beside = Boolean(action0 && l.cta === "bottom" && l.ctaSide && l.ctaSide !== l.align);
+  const below = action0 && !beside ? action0.h + 32 : 0;
+  const room = g.h - g.top - g.bottom - below;
   const shareBand = !logo?.inside && logo?.first?.startsWith(l.band === "middle" ? "-" : l.band) ? logo.h + 40 : 0;
   const low = l.band === "top" ? g.top + shareBand : g.top;
-  const high = g.h - g.bottom - words0.h - (action0 ? action0.h + 32 : 0) - (l.band === "bottom" ? shareBand : 0);
-  const y = l.at !== void 0 && high >= low ? Math.round(Math.min(high, Math.max(low, l.at * g.h))) : l.band === "top" ? g.top + shareBand : l.band === "bottom" ? g.h - g.bottom - words0.h - (action0 ? action0.h + 32 : 0) - shareBand : Math.round(g.top + (room - words0.h) / 2);
+  const high = g.h - g.bottom - words0.h - below - (l.band === "bottom" ? shareBand : 0);
+  const y = l.at !== void 0 && high >= low ? Math.round(Math.min(high, Math.max(low, l.at * g.h))) : l.band === "top" ? g.top + shareBand : l.band === "bottom" ? g.h - g.bottom - words0.h - below - shareBand : Math.round(g.top + (room - words0.h) / 2);
   place(doc, "Words", { y });
   if (action0) place(doc, "Action", { y: g.h - g.bottom - action0.h });
   const words = boxOf(doc, "Words");

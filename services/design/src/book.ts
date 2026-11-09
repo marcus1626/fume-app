@@ -69,6 +69,8 @@ export interface Signature {
   groundHex?: string;
   cta: "pill" | "box" | "outline" | "slant" | "slant_double" | "underline" | "text" | "none";
   ctaFill?: "light" | "dark" | "brand_colour" | "none";
+  /** Where the call to action sits: under the words, or apart in a bottom corner as Anthem's tiles set SHOP NOW. */
+  ctaAt?: "with_words" | "bottom_left" | "bottom_right";
   logo?: string;
   logoWidthPct?: number;
   /** Where it was read: the brand's own ads and pictures, its site, or Fume's proposal. */

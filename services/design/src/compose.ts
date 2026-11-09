@@ -50,6 +50,8 @@ export interface Layout {
   subline?: string;
   /** The call to action under the words, or alone at the bottom of the frame. */
   cta: "with_words" | "bottom" | "none";
+  /** The side of the frame a call to action alone at the bottom sits on, when the brand sets it apart from the words. */
+  ctaSide?: Align;
   /** How many of the grid's columns the words span. */
   columns: number;
   /** Where the block of words starts down the frame, as a share of its height: the brand's own place, from its ads. */
@@ -203,7 +205,9 @@ export function compose(
     colours.Subline = subHex;
     sizes.Subline = sub.sizePx;
   }
-  const ctaWithWords = words.cta && (l.cta === "with_words" || (l.cta === "bottom" && l.band === "bottom"));
+  const apart = l.cta === "bottom" && l.ctaSide !== undefined && l.ctaSide !== l.align;
+  const ctaWithWords = words.cta && (l.cta === "with_words" || (l.cta === "bottom" && l.band === "bottom" && !apart));
+  const side = l.cta === "bottom" && l.ctaSide ? l.ctaSide : l.align;
   const pad = onPanel ? (panel?.paddingPx ?? 32) : 0;
   const panelHex = ownGround
     ? ownGround
@@ -226,9 +230,9 @@ export function compose(
   );
   const alone =
     words.cta && !ctaWithWords && l.cta !== "none"
-      ? `<Frame name="Action" position="absolute" x={${l.align === "left" ? g.margin : 0}} y={${g.h - g.bottom - 80}} w={${
-          l.align === "left" ? "\"hug\"" : l.align === "right" ? g.w - g.margin : g.w
-        }} h="hug" flex="col" items=${q(items)}>${cta()}</Frame>`
+      ? `<Frame name="Action" position="absolute" x={${side === "left" ? g.margin : 0}} y={${g.h - g.bottom - 80}} w={${
+          side === "left" ? "\"hug\"" : side === "right" ? g.w - g.margin : g.w
+        }} h="hug" flex="col" items=${q(side === "left" ? "start" : side === "right" ? "end" : "center")}>${cta()}</Frame>`
       : "";
   const shade =
     l.ground === "gradient"
