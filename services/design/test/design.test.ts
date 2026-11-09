@@ -1,9 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { design, layoutsFor, tasteOf, type Tried } from "../src/design.ts";
+import { design, fitFor, layoutsFor, tasteOf, type Tried } from "../src/design.ts";
 import { compose } from "../src/compose.ts";
-import { build, png, pixelsOf } from "../src/render.ts";
+import { build, lineWidth, png, pixelsOf } from "../src/render.ts";
 import { type DesignBook } from "../src/book.ts";
 import { startWithTestFonts } from "./fonts.ts";
 
@@ -193,4 +193,20 @@ test("of the layouts that pass, the one a designer would pick: the headline in t
   const narrow = tasteOf(tried(2, 70, "middle"), branded, { band: "middle", align: "left" });
   const wide = tasteOf(tried(1, 110, "top"), branded, { band: "middle", align: "left" });
   assert.ok(wide > narrow, `one big line (${wide}) beats two small ones in the brand's own band (${narrow})`);
+});
+
+test("a long call to action stays on one line inside its button", async () => {
+  // Anthem, 9 Nov: "SHOP BASKETBALL HOOPS" was laid out on two lines, drawn on one, and ran out of its button.
+  const l = { band: "top", align: "left", headline: "h1", colour: "text", ground: "photo", cta: "with_words", columns: 5 } as const;
+  const long = { ...words, cta: "Shop basketball hoops" };
+  const pic = await picture("#F4F1EC", "#15171A");
+  const c = compose(book, "feed", long, l, () => "Inter");
+  const doc = await build(c.jsx, pic);
+  const line = lineWidth(doc, "CTA words")!;
+  assert.ok(line.width > line.box + 2, "the narrow column breaks the button's words");
+  const fit = fitFor(doc, c.sizes);
+  assert.ok(fit?.cta && fit.cta < 1, JSON.stringify(fit));
+  const cf = compose(book, "feed", long, { ...l, fit }, () => "Inter");
+  const fitted = lineWidth(await build(cf.jsx, pic), "CTA words")!;
+  assert.ok(fitted.width <= fitted.box + 2, `set smaller, the words fit on one line (${fitted.width} in ${fitted.box})`);
 });

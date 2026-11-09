@@ -173,7 +173,7 @@ async function designOn(asked: Ask, until = Infinity): Promise<Designed> {
   const fitted = best.t.layout.fit;
   if (fitted) {
     for (const [node, k] of [["Headline", fitted.headline], ["CTA", fitted.cta]] as const) {
-      if (k) best.t.checks.push({ check: "fits", node, ok: true, hard: false, note: `Set at ${Math.round(k * 100)}% of its style's size, so its longest word fits the column whole.` });
+      if (k) best.t.checks.push({ check: "fits", node, ok: true, hard: false, note: `Set at ${Math.round(k * 100)}% of its style's size, so ${node === "CTA" ? "its words fit the button on one line" : "its longest word fits the column whole"}.` });
     }
   }
   const used = new Set([best.t.layout.headline, best.t.layout.subline ?? "subline", componentOf(book, "cta")?.style ?? "cta"]);
@@ -386,6 +386,10 @@ export function measure(
   }
   if (boxes.Action && overlap(boxes.Action, words) > 0) {
     checks.push({ check: "fits", node: "CTA", ok: false, hard: true, note: "The call to action runs into the words." });
+  }
+  const ctaLine = lineWidth(doc, "CTA words");
+  if (ctaLine && ctaLine.width > ctaLine.box + 2) {
+    checks.push({ check: "fits", node: "CTA", ok: false, hard: true, note: "The button's words do not fit on one line." });
   }
   for (const n of ["Headline", "Price", "Was", "Subline", "CTA words"]) {
     const split = splitWords(doc, n);
@@ -617,7 +621,20 @@ export function fitFor(doc: Doc, sizes: Record<string, number> = {}): Layout["fi
   // The headline stays clearly bigger than the line under it, or the order of reading is lost.
   const over = sizes.Headline && sizes.Subline ? (sizes.Subline * 1.25) / sizes.Headline : 0;
   const headline = need("Headline", Math.max(FIT_FLOOR, over));
-  const cta = need("CTA words");
+  // A button's words stay on one line: the renderer draws them on one line even where the layout broke them, so the
+  // button would be sized for two lines and its words would run out of it (Anthem, 9 Nov: "SHOP BASKETBALL HOOPS").
+  let cta = need("CTA words");
+  const ctaLine = lineWidth(doc, "CTA words");
+  if (ctaLine && ctaLine.width > ctaLine.box + 2) {
+    const frame = boxOf(doc, "CTA");
+    const words = boxOf(doc, "Words");
+    const pad = frame ? frame.w - ctaLine.box : 0;
+    // Set at the left of the words' column, the button may grow to the column's width; elsewhere to its own box.
+    const inside = frame && words && frame.x >= words.x - 1 && frame.x + frame.w <= words.x + words.w + 1;
+    const room = inside ? words.w - pad - 2 * (frame.x - words.x) : ctaLine.box;
+    const k = Math.min(1, (Math.max(room, ctaLine.box) - 2) / ctaLine.width);
+    if (k < 1 && k >= FIT_FLOOR) cta = Math.min(cta ?? 1, Math.floor(k * 100) / 100);
+  }
   // The price is one figure: the whole line fits its column, not only its longest word ("NÅ / 199,-" fails).
   const line = lineWidth(doc, "Price");
   const whole = line ? Math.min(1, (line.box - 2) / line.width) : 1;

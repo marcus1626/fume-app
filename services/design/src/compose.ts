@@ -225,8 +225,9 @@ export function splitPrice(line: string): { now: string; was: string | null } {
   return m && m[1].trim() ? { now: m[1].trim(), was: m[2].trim() } : { now: line.trim(), was: null };
 }
 
+// Rounded down: a size rounded up can be just too wide again for the column it was fitted to.
 function fitted(s: Style, k?: number): Style {
-  return k && k < 1 ? { ...s, sizePx: Math.round(s.sizePx * k) } : s;
+  return k && k < 1 ? { ...s, sizePx: Math.floor(s.sizePx * k) } : s;
 }
 
 /**
