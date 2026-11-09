@@ -1301,6 +1301,7 @@ function tasteOf(t, book, prefer) {
   s -= Math.max(0, lines - want);
   s += Math.min(size, 0.2) * 50;
   if (t.layout.fit?.headline) s -= (1 - t.layout.fit.headline) * 4;
+  if (t.layout.fit?.cta) s -= (1 - t.layout.fit.cta) * 8;
   if (prefer.signature && t.layout.signature && t.layout.signature !== prefer.signature) s -= 1;
   if (prefer.band && t.layout.band === prefer.band) s += 1;
   if (prefer.align && t.layout.align === prefer.align) s += 0.5;

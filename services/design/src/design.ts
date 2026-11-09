@@ -689,6 +689,8 @@ export function tasteOf(t: Tried, book: DesignBook, prefer: Partial<Layout>): nu
   s -= Math.max(0, lines - want);
   s += Math.min(size, 0.2) * 50;
   if (t.layout.fit?.headline) s -= (1 - t.layout.fit.headline) * 4;
+  // A button shrunk to fit a narrow column reads as small print (Anthem, 9 Nov): a wider column that keeps it whole wins.
+  if (t.layout.fit?.cta) s -= (1 - t.layout.fit.cta) * 8;
   // The layout the model chose for this picture over another of the brand's, when both pass and read as big.
   if (prefer.signature && t.layout.signature && t.layout.signature !== prefer.signature) s -= 1;
   if (prefer.band && t.layout.band === prefer.band) s += 1;

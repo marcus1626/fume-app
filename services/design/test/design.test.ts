@@ -198,6 +198,11 @@ test("of the layouts that pass, the one a designer would pick: the headline in t
   const stacked = tasteOf(tried(3, 105, "middle"), branded, { band: "middle", align: "left" });
   const tower = tasteOf(tried(4, 105, "middle"), branded, { band: "middle", align: "left" });
   assert.ok(stacked > small, `three big lines (${stacked}) beat one small line (${small})`);
+  // Anthem, 9 Nov: SHOP BASKETBALL HOOPS set at 60% to fit a narrow block read as small print.
+  const t3 = tried(3, 105, "middle");
+  const shrunk = tasteOf({ ...t3, layout: { ...t3.layout, fit: { cta: 0.6 } } }, branded, { band: "middle", align: "left" });
+  const wider = tasteOf(tried(2, 105, "middle"), branded, { band: "middle", align: "left" });
+  assert.ok(wider > shrunk, `a button kept whole in a wider column (${wider}) beats one shrunk to fit (${shrunk})`);
   assert.ok(small > tower, `but four (${tower}) do not`);
 });
 
