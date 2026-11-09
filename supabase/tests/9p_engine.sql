@@ -242,8 +242,11 @@ set role authenticated;
 
 reset role;
 select test.ok(not has_function_privilege('authenticated', 'public.engine_to_evaluate(uuid)', 'execute')
-  and not has_function_privilege('authenticated', 'public.engine_evaluated(uuid, jsonb, numeric)', 'execute'),
+  and not has_function_privilege('authenticated', 'public.engine_evaluated(uuid, jsonb, numeric)', 'execute')
+  and not has_function_privilege('authenticated', 'public.engine_unevaluated(uuid)', 'execute'),
   'only the Engine looks at its pictures');
+select test.ok(public.engine_unevaluated((select job_id from public.candidates where id = test.id('ecand'))) ? test.id('ea3')::text,
+  'a job names the attempts whose pictures nobody looked at');
 select test.ok(public.engine_to_evaluate(test.id('ea3')) #>> '{candidates,0,id}' = test.id('ecand')::text
   and public.engine_to_evaluate(test.id('ea3')) #>> '{candidates,0,path}' like '%/engine/e1.png', 'a kept picture waits to be looked at');
 select test.refuses($$ select public.engine_evaluated(test.id('ecand'), '{"productTruth":"fine"}', 0) $$, 'invalid', 'an evaluation says what it must');
@@ -251,6 +254,8 @@ select public.engine_evaluated(test.id('ecand'),
   '{"productTruth":"flag","brandRules":"pass","artefacts":"none","notes":["The label is hidden."],"evaluated":true,"items":[]}', 0.0009);
 select test.ok((select evaluation ->> 'productTruth' = 'flag' and evaluation_usd = 0.0009 from public.candidates where id = test.id('ecand'))
   and jsonb_array_length(public.engine_to_evaluate(test.id('ea3')) -> 'candidates') = 0, 'the picture keeps what the Engine saw, once');
+select test.ok(not public.engine_unevaluated((select job_id from public.candidates where id = test.id('ecand'))) ? test.id('ea3')::text,
+  'a picture looked at is not looked at again');
 select test.ok((public.fume_llm_budget() ->> 'spent_usd')::numeric >= 0.0066, 'the language model''s week counts looking');
 
 -- ─── The picture check as findings (20261104210000_engine_findings.sql) ─

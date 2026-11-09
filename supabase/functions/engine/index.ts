@@ -97,8 +97,9 @@ Deno.serve((req) =>
           return { data, error: err(error) };
         },
         unevaluated: async (jobId) => {
-          const { data } = await service.from("candidates").select("attempt_id").eq("job_id", jobId).eq("origin", "engine").is("evaluation", null);
-          return [...new Set((data ?? []).map((r: { attempt_id: string | null }) => r.attempt_id).filter((a): a is string => Boolean(a)))];
+          const { data, error } = await service.rpc("engine_unevaluated", { p_job_id: jobId });
+          if (error) console.error(`engine: unevaluated pictures not listed: ${error.message}`);
+          return (data as string[] | null) ?? [];
         },
         evaluated: async (candidateId, evaluation, llmUsd) =>
           ({ error: err((await service.rpc("engine_evaluated", { p_candidate_id: candidateId, p_evaluation: evaluation, p_llm_usd: llmUsd })).error) }),
