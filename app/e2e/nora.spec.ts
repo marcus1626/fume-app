@@ -50,12 +50,11 @@ test("Nora's own view of the client link is a preview with its buttons off", asy
   await expect(page).toHaveURL(/\/agency\/b\/w-lysne\/campaigns\/c-bf/);
 });
 
-test("Nora sees why a version didn't render, but never the Engine's prompt", async ({ page }) => {
+test("Nora sees a version under the bar and its scores, but never the Engine's prompt", async ({ page }) => {
   await page.goto("/agency/doc/doc-autumn-m3?as=nora");
   await expect(page.getByRole("button", { name: "The Engine’s prompt and checks" })).toHaveCount(0);
-  await page.getByRole("button", { name: /^Version 4\. .*Stopped by 2 rules/ }).click();
-  const panel = page.getByRole("dialog", { name: "Version 4 didn’t render" });
-  await expect(panel).toBeVisible();
-  await expect(panel.getByText("Add a glossy reflection on the cap", { exact: false })).toBeVisible();
-  await expect(panel.getByText("The last try, never sent")).toHaveCount(0);
+  await page.getByRole("button", { name: /^Version 4\b.*Under the bar · Engine 58 · Product 64/ }).click();
+  await expect(page.getByText("Version 4 is under LYSNE’s bar")).toBeVisible();
+  await expect(page.getByRole("meter", { name: "Engine" })).toHaveAttribute("aria-valuenow", "58");
+  await expect(page.getByRole("button", { name: "The Engine’s prompt and checks" })).toHaveCount(0);
 });

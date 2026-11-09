@@ -26,7 +26,8 @@ test("Anna fixes the shot the Engine flagged in a video", async ({ page }) => {
 
   // The flag on the ruler jumps to the shot; the clean take replaces it and the check clears
   await page.getByRole("button", { name: /^Shot 3: Oil runs out/ }).click();
-  await expect(page.getByRole("heading", { level: 2, name: "Shot 3 · The bottle in the hand" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 2, name: "Shot 3 · Take 1 of 2" })).toBeVisible();
+  await expect(page.getByText("The bottle in the hand · made by the Engine")).toBeVisible();
   await page.getByRole("button", { name: "Use take 2 from 1.4 s" }).click();
   await page.getByRole("button", { name: "Back to the edit" }).click();
   await expect(checks).not.toContainText("Oil runs out");
@@ -40,21 +41,31 @@ test("Anna fixes the shot the Engine flagged in a video", async ({ page }) => {
   await expect(page.getByText(/\/ 0:06\.0$/)).toBeVisible();
 });
 
-test("Anna sees why a version didn't render, and the prompt behind it", async ({ page }) => {
+test("Anna sees a version under the bar, with its scores, and the prompt behind it", async ({ page }) => {
+  // The Engine never stops the designer (FLOWS §34.1): a version under the bar is made and shown, with a warning
   await page.goto("/studio/doc/doc-autumn-m3?as=anna");
-  const failed = page.getByRole("button", { name: /^Version 4\. .*Stopped by 2 rules/ });
-  await expect(failed).toBeVisible();
-  await failed.click();
+  const under = page.getByRole("button", { name: /^Version 4\b.*Under the bar · Engine 58 · Product 64/ });
+  await expect(under).toBeVisible();
+  await under.click();
+  await expect(page.getByText("Version 4 is under LYSNE’s bar")).toBeVisible();
+  await expect(page.getByRole("meter", { name: "Engine" })).toHaveAttribute("aria-valuenow", "58");
+  await expect(page.getByRole("meter", { name: "Product" })).toHaveAttribute("aria-valuenow", "64");
 
-  const panel = page.getByRole("dialog", { name: "Version 4 didn’t render" });
-  await expect(panel).toBeVisible();
-  await expect(panel.getByText("Burgundy matte cap, never glossy (verified fact)")).toBeVisible();
-  await expect(panel.getByRole("heading", { name: "The last try, never sent" })).toBeVisible();
-  await panel.getByRole("button", { name: "Write a new instruction" }).click();
-  await expect(panel).toBeHidden();
-  await expect(page.getByLabel("Tell the Engine what to change")).toBeFocused();
+  // Its prompt went to the image model with a warning; the Engine's rules it worked against are named
+  await page.getByRole("button", { name: "The Engine’s prompt and checks" }).click();
+  const warned = page.getByRole("dialog", { name: "The prompt behind version 4" });
+  await expect(warned.getByText("Burgundy matte cap, never glossy (verified fact)")).toBeVisible();
+  await expect(warned.getByText("Works against a rule, sent to the image model with a warning")).toBeVisible();
+  await warned.getByRole("button", { name: "Close" }).click();
 
-  // The picked version's prompt, from the board's rail, with everything the Engine had for it
+  // The designer has the last word: sending it asks once, and the expert sees the warning in Check
+  await page.getByRole("button", { name: /^Send to check/ }).click();
+  await expect(page.getByText("Version 4 is under the bar")).toBeVisible();
+  await page.getByRole("button", { name: "Send anyway" }).click();
+  await expect(page.getByText("In check", { exact: true })).toBeVisible();
+
+  // Another version's prompt, from the board's rail, with everything the Engine had for it
+  await page.getByRole("button", { name: /^Version 3\b/ }).click();
   await page.getByRole("button", { name: "The Engine’s prompt and checks" }).click();
   const prompt = page.getByRole("dialog", { name: "The prompt behind version 3" });
   await expect(prompt).toBeVisible();
@@ -63,9 +74,9 @@ test("Anna sees why a version didn't render, and the prompt behind it", async ({
   await expect(prompt.getByText("A scent fact is for the words, not the picture.")).toBeVisible();
 });
 
-test("Anna sees what went into a stopped prompt and what its check didn't find", async ({ page }) => {
+test("Anna sees what went into a warned prompt and what its check didn't find", async ({ page }) => {
   await page.goto("/studio/doc/doc-autumn-m3?as=anna&prompt=rv-4");
-  const panel = page.getByRole("dialog", { name: "Version 4 didn’t render" });
+  const panel = page.getByRole("dialog", { name: "The prompt behind version 4" });
   await expect(
     panel.getByRole("heading", { name: /What the Engine had · 17 of 26 went in · 2 not found/ }),
   ).toBeVisible();
@@ -82,10 +93,11 @@ test("Anna settles the Engine's findings in Check", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 2, name: "Night Body Oil · Feed 8" })).toBeVisible();
   const findings = page.getByRole("list", { name: "The Engine’s findings" });
   const finding = (text: string) => findings.getByRole("listitem").filter({ hasText: text });
-  // The cap is off, so the creative can't be marked checked yet
-  await expect(finding("The cap is glossy").getByText("Product · stops the check")).toBeVisible();
+  // The cap is off: the product finding is decided first, before the creative is marked checked
+  await expect(page.getByRole("heading", { name: /^To decide · 3/ })).toBeVisible();
+  await expect(finding("The cap is glossy").getByText("Product · decide first")).toBeVisible();
   await expect(page.getByRole("button", { name: /^Mark checked/ })).toBeDisabled();
-  await expect(page.getByText("The product finding stops the check.")).toBeVisible();
+  await expect(page.getByText("Decide the product finding first: a fix, or not a problem.")).toBeVisible();
 
   // The light is not a problem here, and Undo takes that back
   await finding("The light comes from above").getByRole("button", { name: "Not a problem" }).click();
@@ -127,8 +139,10 @@ test("Anna teaches the Engine with yes or no on its pictures", async ({ page }) 
 test("Anna sees what Fume's word check found in a plan, and changes the line it flags", async ({ page }) => {
   await page.goto("/studio/b/w-lysne/campaigns/c-bf/plan?as=anna");
   const words = page.getByRole("region", { name: "The words, checked" });
-  await expect(words).toContainText("6 lines read · 1 claim nothing backs · 1 off the voice · 1 word the voice avoids");
-  await expect(words).toContainText("Written in the Tone of Voice, version 1 (approved).");
+  await expect(words).toContainText("3 to look at, in 6 lines");
+  // How Fume wrote them folds under the findings
+  await words.getByRole("button", { name: "How Fume wrote them" }).click();
+  await expect(words).toContainText("In the Tone of Voice, version 1 (approved).");
   const foot = page.locator(".ui-page-footer");
   await expect(foot).toContainText("1 claim nothing backs is still in the plan.");
 
@@ -169,7 +183,7 @@ test("Anna asks Fume for the graphic design on a picture, and reads what came ba
   await dialog.getByRole("button", { name: "Add graphic design", exact: true }).click();
 
   // Fume designs it as a new version, and it comes back picked, with its words on the picture
-  await expect(page.getByText("Fume is designing version 5")).toBeVisible();
+  await expect(page.getByText("Fume is designing version 5 on V3")).toBeVisible();
   await expect(page.getByRole("button", { name: /Designed from V3/ })).toBeVisible({ timeout: 15_000 });
   await expect(page.locator(".ui-design-drawn").first()).toContainText("Den langsomme timen før søvn.");
 
@@ -178,7 +192,8 @@ test("Anna asks Fume for the graphic design on a picture, and reads what came ba
   await expect(sheet.getByRole("list", { name: "What Fume’s review found" })).toContainText(
     "Ready for the expert’s check",
   );
-  await expect(sheet.getByText(/^What code measured · \d+ of \d+ passed/)).toBeVisible();
+  // What code measured: only what did not pass one by one, the rest in one row
+  await expect(sheet.getByRole("list", { name: "What code measured" })).toContainText(/\d+ checks passed/);
   await expect(sheet.getByText("“Keep the words high, clear of the bottle.”")).toBeVisible();
   await expect(sheet.getByRole("button", { name: "Design again" })).toBeVisible();
 
