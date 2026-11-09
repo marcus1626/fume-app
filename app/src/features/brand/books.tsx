@@ -236,15 +236,17 @@ function Book<K extends BrandBookKind>({
   // draft is open (the first edit starts one); the customer's owner or approver into the version that waits on her or
   // the one in use, when no other is on its way.
   const open = list.some((b) => b.state === "draft" || b.state === "writing") || Boolean(coming);
-  const mode: EditMode = !index
-    ? "read"
-    : staff
-      ? shown.state === "draft" || (shown.state === "approved" && shown.id === written[0]?.id && !open)
-        ? "direct"
-        : "read"
-      : decides && !open && (shown.state === "checked" || (shown.state === "approved" && shown.id === inUse?.id))
-        ? "suggest"
-        : "read";
+  // Only the Tone of Voice is written in place so far; the design system and the Look Book read (FLOWS §34.4).
+  const mode: EditMode =
+    !index || kind !== "voice"
+      ? "read"
+      : staff
+        ? shown.state === "draft" || (shown.state === "approved" && shown.id === written[0]?.id && !open)
+          ? "direct"
+          : "read"
+        : decides && !open && (shown.state === "checked" || (shown.state === "approved" && shown.id === inUse?.id))
+          ? "suggest"
+          : "read";
   const header = (
     <PageHeader
       title={title}

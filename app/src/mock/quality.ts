@@ -137,7 +137,15 @@ export function fixLater(m: Mock, item: QaItem, delay: number, only?: QaItem["fe
     for (const f of item.findings ?? [])
       if (taken.has(f.id) && f.status === "open") Object.assign(f, { status: "resolved", by: undefined, at: m.now() });
     item.state = "waiting";
-    item.evaluation = { productTruth: "pass", brandRules: "pass", artefacts: "none", notes: [] };
+    // The fixed version is scored again (FLOWS §34.1): over the bar now, so Check still shows where it stands.
+    const was = item.evaluation.scores;
+    item.evaluation = {
+      productTruth: "pass",
+      brandRules: "pass",
+      artefacts: "none",
+      notes: [],
+      ...(was ? { scores: { product: Math.max(was.product, 88), engine: Math.max(was.engine, 86) } } : {}),
+    };
     m.emit({ type: "qa.state", item: structuredClone(item) });
   }, delay);
 }

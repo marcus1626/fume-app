@@ -57,7 +57,10 @@ export function applyEdit(body: unknown, marks: BookEditMark[], e: BookEdit, by:
     if (e.to === null) throw new BookEditError("Nothing to put in.");
     list.splice(n, 0, e.to);
     shift(marks, e.path, n, 1);
-    marks.push({ path: e.path, by, at, from: null });
+    // Put back as it was (an undo), or added as a new line.
+    if (e.mark !== undefined) {
+      if (e.mark) marks.push({ ...e.mark, path: e.path });
+    } else marks.push({ path: e.path, by, at, from: null });
     return { path: e.path, to: null };
   }
   const before = list ? (n < list.length ? list[n] : null) : ((parent as Record<string, string>)[key] ?? null);
@@ -67,7 +70,7 @@ export function applyEdit(body: unknown, marks: BookEditMark[], e: BookEdit, by:
     list.splice(n, 1);
     if (mark) marks.splice(marks.indexOf(mark), 1);
     shift(marks, e.path, n + 1, -1);
-    return { path: e.path, to: before, insert: true };
+    return { path: e.path, to: before, insert: true, mark: mark ? { ...mark } : null };
   }
   if (e.to === null) throw new BookEditError("Only an item of a list can be taken out.");
   if (list) {

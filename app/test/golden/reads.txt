@@ -5,7 +5,7 @@ maja session() → events
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v9",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:21:00.000Z",
@@ -23276,7 +23276,7 @@ jonas session() → events
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v9",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:21:00.000Z",
@@ -23886,7 +23886,7 @@ ida session() → events
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v9",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:21:00.000Z",
@@ -24496,7 +24496,7 @@ anna session() → events
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v9",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:21:00.000Z",
@@ -27479,7 +27479,7 @@ anna qaQueue()
         "campaignId": "c-autumn",
         "creativeId": "cr-a-v9",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
         "feedback": [
           {
             "at": "2026-10-14T12:21:00.000Z",
@@ -38318,7 +38318,7 @@ anna qaQueue("w-lysne")
         "campaignId": "c-autumn",
         "creativeId": "cr-a-v9",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
         "feedback": [
           {
             "at": "2026-10-14T12:21:00.000Z",
@@ -41641,7 +41641,7 @@ sander session() → events
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v9",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:21:00.000Z",
@@ -45717,7 +45717,7 @@ vera session() → events
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v9",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:21:00.000Z",
@@ -53072,7 +53072,7 @@ nora session() → events
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v9",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:21:00.000Z",
@@ -60184,7 +60184,7 @@ nora qaQueue()
         "campaignId": "c-autumn",
         "creativeId": "cr-a-v9",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
         "feedback": [
           {
             "at": "2026-10-14T12:21:00.000Z",
@@ -82797,7 +82797,7 @@ even session() → events
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v9",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:21:00.000Z",
@@ -86526,7 +86526,7 @@ maja (agency's client) session() → events
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v9",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:21:00.000Z",
@@ -89160,7 +89160,7 @@ jonas (agency's client) session() → events
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v9",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:21:00.000Z",

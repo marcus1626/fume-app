@@ -72,7 +72,7 @@ anna qaCheck("qa-1") → events
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v9",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:21:00.000Z",
@@ -273,7 +273,7 @@ anna qaFeedback("qa-2", "The cap reads gold, not burgundy", [{"n":1,"text":"Cap"
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v8",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:32:00.000Z",
@@ -302,7 +302,7 @@ anna qaFeedback("qa-2", "The cap reads gold, not burgundy", [{"n":1,"text":"Cap"
     "campaignId": "c-autumn",
     "creativeId": "cr-a-v8",
     "dueAt": "2026-10-15T12:32:00.000Z",
-    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":88}},
     "feedback": [
       {
         "at": "2026-10-14T12:32:00.000Z",
@@ -370,7 +370,7 @@ anna qaQueue()
         "campaignId": "c-autumn",
         "creativeId": "cr-a-v9",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
         "feedback": [
           {
             "at": "2026-10-14T12:21:00.000Z",
@@ -437,7 +437,7 @@ anna qaQueue()
         "campaignId": "c-autumn",
         "creativeId": "cr-a-v8",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":88}},
         "feedback": [
           {
             "at": "2026-10-14T12:32:00.000Z",
@@ -1472,7 +1472,7 @@ anna qaToStudio("qa-2") → events
       "creativeId": "cr-a-v8",
       "documentId": "doc-mvkqu1qo-4",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:32:00.000Z",
@@ -1540,7 +1540,7 @@ anna qaToStudio("qa-2")
           "at": "2026-10-14T12:25:00.000Z",
           "by": "u-anna",
           "cost": 0.12,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":88}},
           "id": "rv-mvkqu1qo-5",
           "image": "/demo/lysne/09-07-square.jpg",
           "number": 1,
@@ -1574,7 +1574,7 @@ anna qaToStudio("qa-2")
       "creativeId": "cr-a-v8",
       "documentId": "doc-mvkqu1qo-4",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:32:00.000Z",
@@ -1762,7 +1762,7 @@ anna qaQueue()
         "campaignId": "c-autumn",
         "creativeId": "cr-a-v9",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
         "feedback": [
           {
             "at": "2026-10-14T12:21:00.000Z",
@@ -2436,7 +2436,7 @@ anna qaQueue()
         "creativeId": "cr-a-v8",
         "documentId": "doc-mvkqu1qo-4",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":91,"product":88}},
         "feedback": [
           {
             "at": "2026-10-14T12:32:00.000Z",
@@ -3339,7 +3339,7 @@ anna qaFeedback("qa-7", "The cap is glossy; LYSNE's cap is matte.", [], ["fi-1",
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v10",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:32:10.000Z",
@@ -3396,7 +3396,7 @@ anna qaFeedback("qa-7", "The cap is glossy; LYSNE's cap is matte.", [], ["fi-1",
     "campaignId": "c-autumn",
     "creativeId": "cr-a-v10",
     "dueAt": "2026-10-15T12:32:00.000Z",
-    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
     "feedback": [
       {
         "at": "2026-10-14T12:32:10.000Z",
@@ -3455,7 +3455,7 @@ anna qaCheck("qa-7") → events
       "checkedBy": "u-anna",
       "creativeId": "cr-a-v10",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:32:10.000Z",
@@ -3514,7 +3514,7 @@ anna qaCheck("qa-7")
     "checkedBy": "u-anna",
     "creativeId": "cr-a-v10",
     "dueAt": "2026-10-15T12:32:00.000Z",
-    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
     "feedback": [
       {
         "at": "2026-10-14T12:32:10.000Z",

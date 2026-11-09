@@ -424,6 +424,9 @@ export interface BookEdit {
   path: string;
   to: string | null;
   insert?: boolean;
+  /** With insert, the undo of taking a line out: the line comes back as it was, with the mark it had (null: a line
+   *  nobody had changed), not as a new line. */
+  mark?: BookEditMark | null;
 }
 
 /** A line someone changed by hand: who, when, and what it said before (null for an item they added). */

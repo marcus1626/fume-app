@@ -5,7 +5,7 @@ anna studioKit("w-lysne") → events
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v9",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
       "feedback": [
         {
           "at": "2026-10-14T12:21:00.000Z",
@@ -3366,7 +3366,7 @@ anna qaQueue()
         "campaignId": "c-autumn",
         "creativeId": "cr-a-v9",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass","scores":{"engine":86,"product":88}},
         "feedback": [
           {
             "at": "2026-10-14T12:21:00.000Z",

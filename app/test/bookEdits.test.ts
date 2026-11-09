@@ -43,6 +43,19 @@ describe("editing a book in place", () => {
     expect(b.identity.believe).toEqual(["One", "Two", "Three, changed"]);
     expect(lineAt(b, "identity.believe.2")).toBe("Three, changed");
     expect(marks.find((x) => x.path === "identity.believe.2")).toMatchObject({ from: "Three" });
+    // The line that came back was never changed, so it has no mark.
+    expect(marks.map((x) => x.path)).toEqual(["identity.believe.2"]);
+  });
+
+  it("undo of taking out a changed line brings back its mark, not a new one", () => {
+    const b = body();
+    const marks: BookEditMark[] = [];
+    applyEdit(b, marks, { path: "identity.believe.1", to: "Two, changed" }, "anna", "t1");
+    const undo = applyEdit(b, marks, { path: "identity.believe.1", to: null }, "maja", "t2");
+    expect(marks).toEqual([]);
+    applyEdit(b, marks, undo, "maja", "t3");
+    expect(b.identity.believe).toEqual(["One", "Two, changed", "Three"]);
+    expect(marks).toEqual([{ path: "identity.believe.1", by: "anna", at: "t1", from: "Two" }]);
   });
 
   it("refuses what is not a line", () => {

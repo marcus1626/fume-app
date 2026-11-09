@@ -27,7 +27,5 @@ export const tabShown = (doc: CreativeDocument) => {
     const under = doc.versions.find((v) => v.id === picked.design!.fromVersionId && v.state === "done");
     if (under) return under;
   }
-  return (
-    [...list].reverse().find((v) => v.state === "done") ?? list.find((v) => v.state === "rendering") ?? undefined
-  );
+  return [...list].reverse().find((v) => v.state === "done") ?? list.find((v) => v.state === "rendering") ?? undefined;
 };
