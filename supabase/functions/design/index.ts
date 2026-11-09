@@ -100,16 +100,21 @@ Deno.serve((req) =>
       before: async (t) => {
         const { data: layer } = await service.from("design_layers").select("candidate_id").eq("id", t.layer_id).maybeSingle();
         let id = (layer as { candidate_id?: string } | null)?.candidate_id;
-        // The picture's own newest design (it is designed again, e.g. for new words), then up the line of fixes (a fix
-        // of a fix) to the newest design made on an earlier form of the picture.
+        // The picture's line: itself, then up its fixes (a fix of a fix) to the picture the Engine made.
+        const line: string[] = [];
         for (let i = 0; id && i < 5; i++) {
-          const { data: made } = await service.from("design_layers").select("choice").eq("candidate_id", id).eq("state", "made")
-            .neq("id", t.layer_id).order("created_at", { ascending: false }).limit(1).maybeSingle();
-          const parsed = LayoutChoice.safeParse((made as { choice?: unknown } | null)?.choice);
-          if (parsed.success) return parsed.data;
+          line.push(id);
           const { data: c } = await service.from("candidates").select("fixed_from").eq("id", id).maybeSingle();
           id = (c as { fixed_from?: string | null } | null)?.fixed_from ?? undefined;
         }
+        if (!line.length) return null;
+        const { data: made } = await service.from("design_layers").select("choice, ask, created_at").in("candidate_id", line)
+          .eq("state", "made").neq("id", t.layer_id).order("created_at", { ascending: true }).limit(40);
+        const layers = (made ?? []) as { choice: unknown; ask: string | null }[];
+        // A designer's own ask set the layout last; without one, the first design of the line is the one kept.
+        const pick = [...layers].reverse().find((l) => l.ask) ?? layers[0];
+        const parsed = LayoutChoice.safeParse(pick?.choice);
+        if (parsed.success) return parsed.data;
         return null;
       },
       review: (t, words, png, spent, set) => look<Review>(REVIEW_SYSTEM, reviewPrompt(t, words, set), png, Review, spent),

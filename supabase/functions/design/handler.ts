@@ -29,7 +29,7 @@ export interface Deps {
     picture(t: Take): Promise<Uint8Array | null>;
   };
   choose(t: Take, words: Words, picture: Uint8Array, spent: Spent): Promise<LayoutChoice | null>;
-  /** The layout chosen for the picture's earlier design (its own, or the one before its fix), so a redo keeps it. */
+  /** The layout of the picture's first design (or of a designer's latest ask), up its line of fixes, so a redo keeps it. */
   before?(t: Take): Promise<LayoutChoice | null>;
   review(t: Take, words: Words, png: Uint8Array, spent: Spent, set?: { cta?: string } | null): Promise<Review | null>;
   /** The design service (services/design): POST /api/design. */
