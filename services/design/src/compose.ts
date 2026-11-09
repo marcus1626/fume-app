@@ -89,7 +89,11 @@ export function compose(
 ): Composed {
   const g = gridOf(book, format);
   const unit = book.spacing?.unitPx ?? 8;
-  const hl = fitted(styleOf(book, l.headline) ?? styleOf(book, "h1") ?? book.styles[0], l.fit?.headline);
+  // A headline keeps the brand's headline case at every size: a title that steps down from display to h1 is still the
+  // same headline (Anthem, 9 Nov: two creatives in capitals, four in title case).
+  const head = styleOf(book, l.headline) ?? styleOf(book, "h1") ?? book.styles[0];
+  const display = styleOf(book, "display");
+  const hl = fitted(display && ["h1", "h2"].includes(head.name) ? { ...head, case: display.case } : head, l.fit?.headline);
   const sub = styleOf(book, l.subline ?? "subline") ?? styleOf(book, "subline") ?? styleOf(book, "body") ?? hl;
   const panel = componentOf(book, "body");
   const isBlock = l.ground === "block";

@@ -251,3 +251,10 @@ test("where the photo gives the words no calm place, the brand's own block of co
   assert.deepEqual([block.signature, block.groundHex], ["Navy block", "#11213A"]);
   assert.ok(all.filter((l) => l.ground === "block" && l.band === "bottom").every((l) => l.at === 0.68), "at the block's own place");
 });
+
+test("a headline keeps the brand's headline case when it steps down a size", () => {
+  const upper = { ...book, styles: book.styles.map((s) => (s.name === "display" ? { ...s, case: "upper" as const } : s.name === "h1" ? { ...s, case: "title" as const } : s)) };
+  const c = compose(upper, "feed", { headline: "Own the court", cta: "Go" }, { band: "top", align: "left", headline: "h1", colour: "on_photo", ground: "photo", cta: "with_words", columns: 9 }, () => "Inter");
+  const head = c.jsx.slice(c.jsx.indexOf('name="Headline"'), c.jsx.indexOf("/>", c.jsx.indexOf('name="Headline"')));
+  assert.ok(head.includes('textCase="upper"'), head);
+});
