@@ -32,10 +32,14 @@ export function StudioFolds({ sections, label, initialOpen, newest, newestKey, c
   // Ordered oldest → newest; the oldest folds first when space runs out.
   const [open, setOpen] = useState<string[]>(() => [...(initialOpen ?? sections.map((s) => s.id))].reverse());
   const root = useRef<HTMLDivElement>(null);
+  const openNow = useRef(open);
+  openNow.current = open;
 
+  // Only when there is a section left to fold: with one open, a panel shorter than it scrolls instead. Asking React for
+  // the same state on every layout looped on a short window (round 14: the Video desk at 700 px high).
   const fit = useCallback(() => {
     const el = root.current;
-    if (!el) return;
+    if (!el || openNow.current.length < 2) return;
     if (el.scrollHeight > el.clientHeight + 1) setOpen((o) => (o.length > 1 ? o.slice(1) : o));
   }, []);
   useLayoutEffect(fit);
