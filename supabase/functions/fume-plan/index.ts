@@ -4,7 +4,7 @@ import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { betaZodOutputFormat } from "npm:@anthropic-ai/sdk@1.3.0/helpers/beta/zod";
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
 import { handlePlan, type Written } from "./handler.ts";
-import { CLAIM_SYSTEM, ClaimRead, claimPrompt, costOf, type CopyLine, PlanAnswer, type PlanTask, prompt, SYSTEM, toBody } from "./plan.ts";
+import { CLAIM_SYSTEM, ClaimRead, claimPrompt, columnOf, costOf, type CopyLine, PlanAnswer, type PlanTask, prompt, SYSTEM, toBody } from "./plan.ts";
 
 // The cheap model first (Marcus, 3 Nov), and a stronger one where the work is creative: the plan's ideas and words
 // (Marcus, 9 Nov: "Virkelig bruk Engine ... kreativitet"). The claim check stays on the cheap model.
@@ -32,50 +32,6 @@ async function withinBudget(): Promise<boolean> {
   return !error && Boolean((data as { allowed?: boolean } | null)?.allowed);
 }
 
-/** The headlines of the brand's other plans, newest first: the latest version of each campaign's plan. */
-async function recentHeadlines(campaignId: string): Promise<string[]> {
-  const { data: c } = await service.from("campaigns").select("workspace_id").eq("id", campaignId).maybeSingle();
-  if (!c) return [];
-  const { data } = await service
-    .from("plan_versions")
-    .select("campaign_id, content:body->content")
-    .eq("workspace_id", c.workspace_id)
-    .neq("campaign_id", campaignId)
-    .neq("state", "superseded")
-    .order("created_at", { ascending: false })
-    .limit(24);
-  const seen = new Set<string>();
-  const out: string[] = [];
-  for (const p of (data ?? []) as { campaign_id: string; content: { key?: string; label?: string; value?: string }[] | null }[]) {
-    if (seen.has(p.campaign_id)) continue;
-    seen.add(p.campaign_id);
-    const head = (p.content ?? []).find((l) => /headline|overskrift/i.test(`${l.key ?? ""} ${l.label ?? ""}`));
-    if (head?.value) out.push(head.value);
-  }
-  return out.slice(0, 12);
-}
-
-/** The brand's typical layout with words, from its newest checked or approved design book. */
-async function wordsColumn(campaignId: string): Promise<{ name: string; pct: number } | null> {
-  const { data: c } = await service.from("campaigns").select("workspace_id").eq("id", campaignId).maybeSingle();
-  if (!c) return null;
-  const { data } = await service
-    .from("brand_books")
-    .select("layouts:body->onPictures->layouts")
-    .eq("workspace_id", c.workspace_id)
-    .eq("kind", "design")
-    .in("state", ["checked", "approved"])
-    .order("version", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-  const layouts = ((data as { layouts?: { name?: string; hasWords?: boolean; wordsWidthPct?: number }[] } | null)?.layouts ?? [])
-    .filter((l) => l.hasWords !== false && typeof l.wordsWidthPct === "number" && l.wordsWidthPct > 0);
-  if (!layouts.length) return null;
-  // The typical one: the median width (Dressmann sets four of its five in a narrow stack).
-  const typical = [...layouts].sort((a, b) => a.wordsWidthPct! - b.wordsWidthPct!)[Math.floor((layouts.length - 1) / 2)];
-  return { name: typical.name ?? "the brand's layout", pct: typical.wordsWidthPct! };
-}
-
 async function write(task: Parameters<typeof prompt>[0], problem?: string): Promise<Written> {
   if (!(await withinBudget()))
     return {
@@ -84,10 +40,6 @@ async function write(task: Parameters<typeof prompt>[0], problem?: string): Prom
       usage: { model: WRITE_MODEL, input_tokens: 0, output_tokens: 0, cost_usd: 0 },
       final: true,
     };
-  task = {
-    ...task,
-    recent: task.recent ?? (await recentHeadlines(task.campaign_id).catch(() => [])),
-  };
   const content = problem
     ? `${prompt(task)}\n\nYour last plan was refused by Fume's checks: ${problem}\nWrite it again and fix that.`
     : prompt(task);
@@ -155,10 +107,19 @@ Deno.serve((req) =>
           const brain = await service.rpc("brain_context_of_campaign", { p_campaign_id: campaignId });
           // The brand's Tone of Voice for the words; without it the plan keeps to the brief's.
           const voice = await service.rpc("brand_voice_of_campaign", { p_campaign_id: campaignId });
-          // The brand's column of words: the prompt asks for a headline that fits it, and the copy check holds it.
-          const column = await wordsColumn(campaignId).catch(() => null);
+          // The brand's other recent headlines (the new one is its own) and its column of words (the prompt asks for
+          // a headline that fits it, and the copy check holds it). Read through the database: the service role has no
+          // rights on the tables themselves.
+          const extras = await service.rpc("fume_plan_extras", { p_campaign_id: campaignId });
+          const x = (extras.error ? null : extras.data) as { recent?: string[]; layouts?: unknown } | null;
           return {
-            data: { ...data, brain: brain.error ? null : brain.data, voice: voice.error ? null : voice.data, column },
+            data: {
+              ...data,
+              brain: brain.error ? null : brain.data,
+              voice: voice.error ? null : voice.data,
+              recent: x?.recent ?? [],
+              column: columnOf(x?.layouts),
+            },
             error: null,
           };
         },

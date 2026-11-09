@@ -97,28 +97,15 @@ Deno.serve((req) =>
         picture: (t) => download(t.picture.bucket, t.picture.path),
       },
       choose: (t, words, picture, spent) => look<LayoutChoice>(CHOOSE_SYSTEM, choosePrompt(t, words), picture, LayoutChoice, spent),
+      // The layout chosen before for this picture's line, read through the database (the service role has no rights
+      // on the tables themselves).
       before: async (t) => {
-        const { data: layer, error: e1 } = await service.from("design_layers").select("candidate_id").eq("id", t.layer_id).maybeSingle();
-        if (e1) throw new Error(`layer: ${e1.message}`);
-        let id = (layer as { candidate_id?: string } | null)?.candidate_id;
-        // The picture's line: itself, then up its fixes (a fix of a fix) to the picture the Engine made.
-        const line: string[] = [];
-        for (let i = 0; id && i < 5; i++) {
-          line.push(id);
-          const { data: c } = await service.from("candidates").select("fixed_from").eq("id", id).maybeSingle();
-          id = (c as { fixed_from?: string | null } | null)?.fixed_from ?? undefined;
-        }
-        if (!line.length) return null;
-        const { data: made, error: e2 } = await service.from("design_layers").select("choice, ask, created_at").in("candidate_id", line)
-          .eq("state", "made").neq("id", t.layer_id).order("created_at", { ascending: true }).limit(40);
-        if (e2) throw new Error(`layers: ${e2.message}`);
-        const layers = (made ?? []) as { choice: unknown; ask: string | null }[];
-        // A designer's own ask set the layout last; without one, the first design of the line is the one kept.
-        const pick = [...layers].reverse().find((l) => l.ask) ?? layers[0];
-        const parsed = LayoutChoice.safeParse(pick?.choice);
-        if (parsed.success) return parsed.data;
-        if (pick) throw new Error(`unreadable earlier choice: ${parsed.error.message.slice(0, 120)}`);
-        return null;
+        const { data, error } = await service.rpc("design_layout_before", { p_layer_id: t.layer_id });
+        if (error) throw new Error(error.message);
+        if (!data) return null;
+        const parsed = LayoutChoice.safeParse(data);
+        if (!parsed.success) throw new Error(`unreadable earlier choice: ${parsed.error.message.slice(0, 120)}`);
+        return parsed.data;
       },
       review: (t, words, png, spent, set) => look<Review>(REVIEW_SYSTEM, reviewPrompt(t, words, set), png, Review, spent),
       lay: async (request) => {

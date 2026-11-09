@@ -2,7 +2,7 @@
 import { assertEquals } from "jsr:@std/assert@1";
 import { type Deps, handlePlan, type Written } from "./handler.ts";
 import { type ClaimRead, copyLines, judgeCopy, type PlanAnswer, type PlanTask, prompt, toBody } from "./plan.ts";
-import { columnPart, recentPart, repeatsHeadline, tooLongFor } from "./plan.ts";
+import { columnOf as columnOfFn, columnPart, recentPart, repeatsHeadline, tooLongFor } from "./plan.ts";
 
 const task: PlanTask = {
   run_id: "r1",
@@ -413,4 +413,13 @@ Deno.test("a reason from a source of the model's own reads as Fume's", () => {
     }],
   }) as { directions: { why: { source: string }[] }[] };
   assertEquals(body.directions[0].why.map((w) => w.source), ["fume", "brief"]);
+});
+
+Deno.test("the brand's column is the median width of its layouts that carry words", () => {
+  const { columnOf } = { columnOf: columnOfFn };
+  assertEquals(columnOf([{ name: "A", wordsWidthPct: 25 }, { name: "B", wordsWidthPct: 70 }, { name: "C", wordsWidthPct: 25 },
+    { name: "Plain", hasWords: false, wordsWidthPct: 90 }, { name: "D", wordsWidthPct: 38 }])?.pct, 25);
+  assertEquals(columnOf([]), null);
+  assertEquals(columnOf(null), null);
+  assertEquals(columnOf([{ name: "x" }]), null);
 });

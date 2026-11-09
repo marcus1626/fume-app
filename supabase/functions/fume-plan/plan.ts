@@ -159,6 +159,19 @@ export function brainPart(brain: Brain | null | undefined): string[] {
  * of words is, as a share of the picture's width. */
 export type WordsColumn = { name: string; pct: number };
 
+/** The brand's typical column of words from its design system's layouts: the median width of those that carry words
+ * (Dressmann sets four of its five in a narrow stack). */
+export function columnOf(layouts: unknown): WordsColumn | null {
+  const carrying = (Array.isArray(layouts) ? layouts : [])
+    .filter((l): l is { name?: string; hasWords?: boolean; wordsWidthPct: number } =>
+      Boolean(l) && typeof l === "object" && (l as { hasWords?: boolean }).hasWords !== false &&
+      typeof (l as { wordsWidthPct?: unknown }).wordsWidthPct === "number" && (l as { wordsWidthPct: number }).wordsWidthPct > 0)
+    .sort((a, b) => a.wordsWidthPct - b.wordsWidthPct);
+  if (!carrying.length) return null;
+  const typical = carrying[Math.floor((carrying.length - 1) / 2)];
+  return { name: typical.name ?? "the brand's layout", pct: typical.wordsWidthPct };
+}
+
 /**
  * How long a headline can be in the brand's own column of words. A narrow column (Dressmann's stack beside the
  * shirt, a quarter of the picture) broke "MANDAG" in two (9 Nov); a long word is never broken, so the plan writes short.
