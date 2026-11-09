@@ -39,9 +39,14 @@ export function wordsOf(t: Take): Words | null {
   if (!headline) return null;
   const subline = pick(t.copy, /support|subline|sub_?head|body|undertekst|st(ø|_)tte/i);
   const cta = pick(t.copy, /call_?to_?action|\bcta\b|knapp|handlingsoppfordring/i);
-  // A price is in the copy only when the plan wrote it from a verified fact (fume-plan's copy check).
-  const price = pick(t.copy, /\bprice\b|\bpris\b|\boffer\b|tilbud/i);
-  return { headline, ...(subline ? { subline } : {}), ...(cta ? { cta } : {}), ...(price ? { price } : {}) };
+  // A price is in the copy only when the plan wrote it from a verified fact (fume-plan's copy check). The former price
+  // is its own line in the plan ("Former price: TIDLIGERE 399,-"); the design sets it under the price, as "Was".
+  const former = /former|f(ø|o)rpris|tidligere|was_?price|ordin(æ|ae)r/i;
+  const price = pick(t.copy.filter((c) => !former.test(`${c.key ?? ""} ${c.label ?? ""}`)), /\bprice\b|\bpris\b|\boffer\b|tilbud/i);
+  const was = price ? pick(t.copy, former) : "";
+  const marked = /^(tidligere|f(ø|o)r|ord|was|before)\b/i.test(was) ? was : was ? `${/[æøå]|,-|\bkr\b|\bnå\b/i.test(price) ? "Tidligere" : "Was"} ${was}` : "";
+  const line = price && marked && !/\b(tidligere|f(ø|o)r|was|before)\b/i.test(price) ? `${price} ${marked}` : price;
+  return { headline, ...(subline ? { subline } : {}), ...(cta ? { cta } : {}), ...(line ? { price: line } : {}) };
 }
 
 export function formatOf(t: Take): Format {

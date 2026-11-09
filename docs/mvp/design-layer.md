@@ -92,3 +92,11 @@ Marcus: "Designet var ikke veldig on brand." What changed:
   book's pictures when the customer adds them.
 - Layouts for a tall product in the middle of the frame (Møllers): the words need a smaller block or a side column.
 - The UI (owned by the design thread): "Add graphic design" on a candidate, the Look Book screens, the copy check.
+
+- Former price (9 Nov): the plan writes it as its own line ("Former price: TIDLIGERE 399,-"); the layer puts it on the
+  price line, where the design sets it under the price as "Was". A bare figure is marked "Tidligere" or "Was"; a former
+  price without a price is not set. It is never taken for the price itself.
+- No call to action on the picture is on purpose for a brand whose own ads carry none (Møllers, Nike): it sits in the
+  ad's own button. Still open: a long headline in a narrow brand column (Dressmann's stack beside the shirt) can break
+  a word ("MAND / AG") when every wider layout would cover the product; the review calls it critical.
+

@@ -62,6 +62,19 @@ Deno.test("a plan written with Norwegian labels gives the same words", () => {
   assertEquals(wordsOf({ ...take, copy }), { headline: "All tranen, ingen skje", subline: "Kilde til omega-3.", cta: "Les mer" });
 });
 
+Deno.test("the former price goes on the price line, where the design sets it under the price", () => {
+  const copy = [
+    { key: "headline", label: "Headline", value: "HELG PÅ HYTTA" },
+    { key: "former_price", label: "Former price", value: "TIDLIGERE 399,-" },
+    { key: "price", label: "Price", value: "NÅ 199,-" },
+  ];
+  assertEquals(wordsOf({ ...take, copy })!.price, "NÅ 199,- TIDLIGERE 399,-", "the former price is never taken for the price");
+  assertEquals(wordsOf({ ...take, copy: [copy[0], copy[2], { key: "former_price", label: "Former price", value: "399,-" }] })!.price,
+    "NÅ 199,- Tidligere 399,-", "a bare figure is marked as the former price");
+  assertEquals(wordsOf({ ...take, copy: [copy[0], { key: "former_price", label: "Former price", value: "399,-" }] })!.price, undefined,
+    "a former price without a price is not set");
+});
+
 Deno.test("what must stay clear becomes boxes in the format's pixels, with a margin, cut to the frame", () => {
   const boxes = keepClearOf({ keepClear: [{ what: "shoe", x: 0.5, y: 0.5, w: 0.9, h: 0.2 }, { what: "speck", x: 0, y: 0, w: 0.001, h: 0.5 }], band: "top", align: "left", colour: "text", layout: "", why: "" }, "feed");
   // About 26 px of breathing room on every side, cut to the frame on the right.
