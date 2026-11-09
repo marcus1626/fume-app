@@ -87,7 +87,6 @@ async function write(task: Parameters<typeof prompt>[0], problem?: string): Prom
   task = {
     ...task,
     recent: task.recent ?? (await recentHeadlines(task.campaign_id).catch(() => [])),
-    column: task.column ?? (await wordsColumn(task.campaign_id).catch(() => null)),
   };
   const content = problem
     ? `${prompt(task)}\n\nYour last plan was refused by Fume's checks: ${problem}\nWrite it again and fix that.`
@@ -156,8 +155,10 @@ Deno.serve((req) =>
           const brain = await service.rpc("brain_context_of_campaign", { p_campaign_id: campaignId });
           // The brand's Tone of Voice for the words; without it the plan keeps to the brief's.
           const voice = await service.rpc("brand_voice_of_campaign", { p_campaign_id: campaignId });
+          // The brand's column of words: the prompt asks for a headline that fits it, and the copy check holds it.
+          const column = await wordsColumn(campaignId).catch(() => null);
           return {
-            data: { ...data, brain: brain.error ? null : brain.data, voice: voice.error ? null : voice.data },
+            data: { ...data, brain: brain.error ? null : brain.data, voice: voice.error ? null : voice.data, column },
             error: null,
           };
         },
