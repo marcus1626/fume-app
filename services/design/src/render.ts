@@ -177,6 +177,7 @@ export async function build(jsx: string, picture: Uint8Array, logo?: { hash: str
   graph.applyDerivedLayoutDuring?.(() => computeAllLayouts(graph));
   const fonts = await prepareGraphFonts(graph, [root]);
   graph.applyDerivedLayoutDuring?.(() => computeAllLayouts(graph));
+  if (await slants(graph, root)) graph.applyDerivedLayoutDuring?.(() => computeAllLayouts(graph));
   const ids = new Map<string, string>();
   const walk = (id: string) => {
     const n = graph.getNode(id);
@@ -194,6 +195,51 @@ export async function build(jsx: string, picture: Uint8Array, logo?: { hash: str
     warnings: results.flatMap((r) => (r.warnings ?? []).map(String)).slice(0, 10),
   };
 }
+
+/**
+ * A slanted button's outline, drawn once its frame has its size: one thin parallelogram, or two that cross as
+ * Anthem's SHOP NOW does. The frame marks it with a "Slant <colour> <stroke> <lines>" placeholder.
+ */
+async function slants(graph: SceneGraph, root: string): Promise<boolean> {
+  const marks: { id: string; parent: string; hex: string; stroke: number; lines: number }[] = [];
+  const walk = (id: string) => {
+    const n = graph.getNode(id);
+    if (!n) return;
+    const m = /^Slant (#[0-9A-Fa-f]{6}) (\d+) ([12])$/.exec(n.name ?? "");
+    if (m && n.parentId) marks.push({ id, parent: n.parentId, hex: m[1], stroke: Number(m[2]), lines: Number(m[3]) });
+    for (const c of graph.getChildren(id)) walk(c.id);
+  };
+  walk(root);
+  for (const mark of marks) {
+    const frame = graph.getNode(mark.parent);
+    graph.deleteNode(mark.id);
+    if (!frame?.width || !frame.height) continue;
+    const jsx = slantJSX(frame.width, frame.height, mark.hex, mark.stroke, mark.lines);
+    await renderJSX(graph, jsx, { parentId: mark.parent });
+  }
+  return marks.length > 0;
+}
+
+/** The outline as inline SVG over a w x h button. Its viewBox is square, as the renderer sizes inline artwork. */
+export function slantJSX(w: number, h: number, hex: string, stroke: number, lines: number): string {
+  const W = Math.round(w);
+  const H = Math.round(h);
+  const side = Math.max(W, H);
+  const i = stroke / 2;
+  // Two lines sit a stroke and a half apart, the second leaning less, so they cross as the brand's do.
+  const off = lines === 2 ? Math.round(stroke * 1.5) : 0;
+  const lean = Math.round(H * 0.16);
+  const shape = (top: number, bottom: number, k: number, shift: number) => {
+    const a = (lean - k) / 2;
+    return `M${r(k + a + shift + i)} ${r(top + i)} L${r(W - a + shift - i)} ${r(top + i)} L${r(W - k - a + shift - i)} ${r(bottom - i)} L${r(a + shift + i)} ${r(bottom - i)} Z`;
+  };
+  const paths = [shape(0, H - off, lean, 0)];
+  if (lines === 2) paths.push(shape(off, H, Math.round(lean * 0.4), 0));
+  const body = paths.map((d) => `<path d="${d}" fill="none" stroke="${hex}" stroke-width="${stroke}" stroke-linejoin="miter" />`).join("");
+  return `<svg name="Outline" viewBox="0 0 ${side} ${side}" w={${W}} h={${H}} position="absolute" x={0} y={0} color=${JSON.stringify(hex)} body={${JSON.stringify(body)}} />`;
+}
+
+const r = (n: number) => Math.round(n * 10) / 10;
 
 export function boxOf(doc: Doc, name: string): Box | null {
   const id = doc.ids.get(name);

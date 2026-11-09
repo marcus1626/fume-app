@@ -57,8 +57,8 @@ function headlineSteps(book, first) {
   return order.slice(start2).map((n) => styleOf(book, n)).filter((s) => s !== null);
 }
 function radiusOf(book, name) {
-  const r = book.radiusPx?.[name];
-  return typeof r === "number" ? r : 0;
+  const r2 = book.radiusPx?.[name];
+  return typeof r2 === "number" ? r2 : 0;
 }
 function clamp(n, lo, hi) {
   return Math.min(hi, Math.max(lo, n));
@@ -116,6 +116,16 @@ function compose(book, format, words, l, family, widths = {}, logo) {
       )}} color=${q(wordsHex)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} />${rule}</Frame>`;
     }
     const py = Math.max(Math.round(pad3 * 0.6), Math.ceil((56 - line) / 2));
+    if (look === "slant" || look === "slant_double") {
+      colours.CTA = wordsHex;
+      const stroke = Math.max(2, Math.round(s.sizePx / 14));
+      const lean = Math.round(line * 0.45);
+      return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(s.sizePx * 1.3) + lean}} py={${Math.round(s.sizePx * 0.7)}}><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
+        s.trackingEm * s.sizePx
+      )}} color=${q(wordsHex)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} /><Rectangle name=${q(
+        `Slant ${wordsHex} ${stroke} ${look === "slant_double" ? 2 : 1}`
+      )} position="absolute" x={0} y={0} w={1} h={1} fills={[]} /></Frame>`;
+    }
     if (look === "outline") {
       colours.CTA = wordsHex;
       return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(pad3 * 1.5)}} py={${py}} rounded={${radiusOf(book, "small")}} stroke=${q(
@@ -193,13 +203,13 @@ function shadeFor(book, l, g, words) {
   return { hex, from, edge: "top", full: words.y + words.h + 24, zero: Math.min(g.h, words.y + words.h + 24 + fade) };
 }
 function shadeFill(s, h, y) {
-  const { r, g, b } = rgb01(s.hex);
-  const at = (pos, a) => ({ position: clamp01(pos), color: { r, g, b, a } });
+  const { r: r2, g, b } = rgb01(s.hex);
+  const at = (pos, a) => ({ position: clamp01(pos), color: { r: r2, g, b, a } });
   const stops = s.edge === "top" ? [at(0, s.from), at((s.full - y) / h, s.from), at(1, 0)] : [at(0, 0), at((s.full - y) / h, s.from), at(1, s.from)];
   return [
     {
       type: "GRADIENT_LINEAR",
-      color: { r, g, b, a: 1 },
+      color: { r: r2, g, b, a: 1 },
       opacity: 1,
       visible: true,
       gradientStops: stops,
@@ -208,14 +218,14 @@ function shadeFill(s, h, y) {
   ];
 }
 function isLight(hex) {
-  const { r, g, b } = rgb01(hex);
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.5;
+  const { r: r2, g, b } = rgb01(hex);
+  return 0.2126 * r2 + 0.7152 * g + 0.0722 * b > 0.5;
 }
 function readableOn(ground, light, dark) {
   const lum = (h) => {
-    const { r, g, b } = rgb01(h);
+    const { r: r2, g, b } = rgb01(h);
     const lin2 = (c) => c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-    return 0.2126 * lin2(r) + 0.7152 * lin2(g) + 0.0722 * lin2(b);
+    return 0.2126 * lin2(r2) + 0.7152 * lin2(g) + 0.0722 * lin2(b);
   };
   const ratio = (a, b) => {
     const [x, y] = [lum(a), lum(b)].sort((m, n) => n - m);
@@ -224,8 +234,8 @@ function readableOn(ground, light, dark) {
   return ratio(light, ground) >= ratio(dark, ground) ? light : dark;
 }
 function isDark(hex) {
-  const { r, g, b } = rgb01(hex);
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b < 0.2;
+  const { r: r2, g, b } = rgb01(hex);
+  return 0.2126 * r2 + 0.7152 * g + 0.0722 * b < 0.2;
 }
 function rgb01(hex) {
   const n = parseInt(hex.replace("#", ""), 16);
@@ -256,14 +266,14 @@ function rgbOf(hex) {
   const n = parseInt(hex.replace("#", ""), 16);
   return [n >> 16 & 255, n >> 8 & 255, n & 255];
 }
-function luminance(r, g, b) {
-  return 0.2126 * LIN[r] + 0.7152 * LIN[g] + 0.0722 * LIN[b];
+function luminance(r2, g, b) {
+  return 0.2126 * LIN[r2] + 0.7152 * LIN[g] + 0.0722 * LIN[b];
 }
 function contrast(l1, l2) {
   const [hi, lo] = l1 > l2 ? [l1, l2] : [l2, l1];
   return (hi + 0.05) / (lo + 0.05);
 }
-function shaded(r, g, b, y, x, shades) {
+function shaded(r2, g, b, y, x, shades) {
   for (const s of shades) {
     let a = 0;
     if (s.box) {
@@ -273,11 +283,11 @@ function shaded(r, g, b, y, x, shades) {
     }
     if (a <= 0) continue;
     const [sr, sg, sb] = rgbOf(s.hex);
-    r = Math.round(r * (1 - a) + sr * a);
+    r2 = Math.round(r2 * (1 - a) + sr * a);
     g = Math.round(g * (1 - a) + sg * a);
     b = Math.round(b * (1 - a) + sb * a);
   }
-  return [r, g, b];
+  return [r2, g, b];
 }
 function under(p, box, textHex, shades = [], patch = 24) {
   const [tr, tg, tb] = rgbOf(textHex);
@@ -295,8 +305,8 @@ function under(p, box, textHex, shades = [], patch = 24) {
   for (let y = y0; y < y1; y++) {
     for (let x = x0; x < x1; x++) {
       const i = (y * p.width + x) * 4;
-      const [r, g, b] = shaded(p.data[i], p.data[i + 1], p.data[i + 2], y / p.scale, x / p.scale, shades);
-      const l = luminance(r, g, b);
+      const [r2, g, b] = shaded(p.data[i], p.data[i + 1], p.data[i + 2], y / p.scale, x / p.scale, shades);
+      const l = luminance(r2, g, b);
       sum += l;
       sum2 += l * l;
       ratios.push(contrast(lt, l));
@@ -424,10 +434,10 @@ function capOf(v) {
     let os2 = -1;
     let head = -1;
     for (let i = 0; i < n; i++) {
-      const r = 12 + i * 16;
-      const tag = String.fromCharCode(v.getUint8(r), v.getUint8(r + 1), v.getUint8(r + 2), v.getUint8(r + 3));
-      if (tag === "OS/2") os2 = v.getUint32(r + 8);
-      if (tag === "head") head = v.getUint32(r + 8);
+      const r2 = 12 + i * 16;
+      const tag = String.fromCharCode(v.getUint8(r2), v.getUint8(r2 + 1), v.getUint8(r2 + 2), v.getUint8(r2 + 3));
+      if (tag === "OS/2") os2 = v.getUint32(r2 + 8);
+      if (tag === "head") head = v.getUint32(r2 + 8);
     }
     if (os2 < 0 || head < 0 || v.getUint16(os2) < 2) return null;
     const upm = v.getUint16(head + 18);
@@ -451,6 +461,7 @@ async function build(jsx, picture, logo) {
   graph.applyDerivedLayoutDuring?.(() => computeAllLayouts(graph));
   const fonts = await prepareGraphFonts(graph, [root]);
   graph.applyDerivedLayoutDuring?.(() => computeAllLayouts(graph));
+  if (await slants(graph, root)) graph.applyDerivedLayoutDuring?.(() => computeAllLayouts(graph));
   const ids = /* @__PURE__ */ new Map();
   const walk = (id) => {
     const n = graph.getNode(id);
@@ -465,14 +476,50 @@ async function build(jsx, picture, logo) {
     ids,
     faithful: Boolean(fonts.faithful),
     fontIssues: (fonts.issues ?? []).map((f) => `${f.family} ${f.style}`),
-    warnings: results.flatMap((r) => (r.warnings ?? []).map(String)).slice(0, 10)
+    warnings: results.flatMap((r2) => (r2.warnings ?? []).map(String)).slice(0, 10)
   };
 }
+async function slants(graph, root) {
+  const marks = [];
+  const walk = (id) => {
+    const n = graph.getNode(id);
+    if (!n) return;
+    const m = /^Slant (#[0-9A-Fa-f]{6}) (\d+) ([12])$/.exec(n.name ?? "");
+    if (m && n.parentId) marks.push({ id, parent: n.parentId, hex: m[1], stroke: Number(m[2]), lines: Number(m[3]) });
+    for (const c of graph.getChildren(id)) walk(c.id);
+  };
+  walk(root);
+  for (const mark of marks) {
+    const frame = graph.getNode(mark.parent);
+    graph.deleteNode(mark.id);
+    if (!frame?.width || !frame.height) continue;
+    const jsx = slantJSX(frame.width, frame.height, mark.hex, mark.stroke, mark.lines);
+    await renderJSX(graph, jsx, { parentId: mark.parent });
+  }
+  return marks.length > 0;
+}
+function slantJSX(w, h, hex, stroke, lines) {
+  const W = Math.round(w);
+  const H = Math.round(h);
+  const side = Math.max(W, H);
+  const i = stroke / 2;
+  const off = lines === 2 ? Math.round(stroke * 1.5) : 0;
+  const lean = Math.round(H * 0.16);
+  const shape = (top, bottom, k, shift) => {
+    const a = (lean - k) / 2;
+    return `M${r(k + a + shift + i)} ${r(top + i)} L${r(W - a + shift - i)} ${r(top + i)} L${r(W - k - a + shift - i)} ${r(bottom - i)} L${r(a + shift + i)} ${r(bottom - i)} Z`;
+  };
+  const paths = [shape(0, H - off, lean, 0)];
+  if (lines === 2) paths.push(shape(off, H, Math.round(lean * 0.4), 0));
+  const body = paths.map((d) => `<path d="${d}" fill="none" stroke="${hex}" stroke-width="${stroke}" stroke-linejoin="miter" />`).join("");
+  return `<svg name="Outline" viewBox="0 0 ${side} ${side}" w={${W}} h={${H}} position="absolute" x={0} y={0} color=${JSON.stringify(hex)} body={${JSON.stringify(body)}} />`;
+}
+var r = (n) => Math.round(n * 10) / 10;
 function boxOf(doc, name) {
   const id = doc.ids.get(name);
   if (!id) return null;
-  const r = doc.graph.getAbsoluteBounds(id);
-  return { x: r.x, y: r.y, w: r.width, h: r.height };
+  const r2 = doc.graph.getAbsoluteBounds(id);
+  return { x: r2.x, y: r2.y, w: r2.width, h: r2.height };
 }
 function place(doc, name, changes) {
   const id = doc.ids.get(name);
@@ -577,14 +624,14 @@ async function rasterise(svg) {
 }
 function tone(px) {
   let n = 0;
-  let r = 0;
+  let r2 = 0;
   let g = 0;
   let b = 0;
   const lums = [];
   for (let i = 0; i < px.length; i += 16) {
     if (px[i + 3] < 160) continue;
     n++;
-    r += px[i];
+    r2 += px[i];
     g += px[i + 1];
     b += px[i + 2];
     lums.push(luminance(px[i], px[i + 1], px[i + 2]));
@@ -592,7 +639,7 @@ function tone(px) {
   if (n < 20) return null;
   const mean = lums.reduce((a, x) => a + x, 0) / n;
   const spread = Math.sqrt(lums.reduce((a, x) => a + (x - mean) ** 2, 0) / n);
-  const hex = `#${[r, g, b].map((c) => Math.round(c / n).toString(16).padStart(2, "0")).join("")}`.toUpperCase();
+  const hex = `#${[r2, g, b].map((c) => Math.round(c / n).toString(16).padStart(2, "0")).join("")}`.toUpperCase();
   const covered = n / (px.length / 16);
   return { hex, mono: spread < 0.06 && covered < 0.9 };
 }
@@ -939,7 +986,7 @@ function* layoutsFor(book, format, prefer, hasCta) {
   const bands = uniq([prefer.band ?? sig?.band ?? "top", sig?.band ?? "top", "top", "bottom", "middle"]);
   const aligns = uniq([prefer.align ?? sig?.align ?? "left", sig?.align ?? "left", "left", "right", "center"]);
   const colours = uniq([...sigColour ? [sigColour] : [], prefer.colour ?? "on_photo", "on_photo", comp?.colour ?? "text", "text"]).filter(
-    (r) => book.colours.some((c) => c.role === r)
+    (r2) => book.colours.some((c) => c.role === r2)
   );
   const scrim = book.photoText?.scrim ?? "gradient";
   const grounds = uniq([
@@ -1146,7 +1193,7 @@ function logoPlan(book, g, l, logo) {
   return { logo, w: Math.round(w), h: Math.round(h), first, ...inside ? { inside } : {} };
 }
 function preferDrawn(logo, read2) {
-  const drawn = read2.find((r) => r.v.name === "as_is");
+  const drawn = read2.find((r2) => r2.v.name === "as_is");
   if (drawn && (drawn.contrast >= 3 || logo.mono && drawn.contrast >= 3)) return drawn;
   return [...read2].sort((a, b) => b.contrast - a.contrast)[0];
 }
@@ -1318,9 +1365,9 @@ function cropFor(box, width, height, least = 384) {
   const bx = box.x * width, by = box.y * height, bw = box.w * width, bh = box.h * height;
   const pad2 = Math.max(bw, bh) * 0.4;
   let w = Math.max(least, bw + 2 * pad2), h = Math.max(least, bh + 2 * pad2);
-  const [ratio, r] = RATIOS.reduce((a, b) => Math.abs(Math.log(b[1] / (w / h))) < Math.abs(Math.log(a[1] / (w / h))) ? b : a);
-  if (w / h < r) w = h * r;
-  else h = w / r;
+  const [ratio, r2] = RATIOS.reduce((a, b) => Math.abs(Math.log(b[1] / (w / h))) < Math.abs(Math.log(a[1] / (w / h))) ? b : a);
+  if (w / h < r2) w = h * r2;
+  else h = w / r2;
   const k = Math.min(1, width / w, height / h);
   w = Math.round(w * k);
   h = Math.round(h * k);
@@ -1328,13 +1375,13 @@ function cropFor(box, width, height, least = 384) {
   const y = Math.round(Math.min(Math.max(0, by + bh / 2 - h / 2), height - h));
   return { rect: { x, y, w, h }, ratio };
 }
-function crop(img, r) {
-  const out = new Uint8Array(r.w * r.h * 4);
-  for (let y = 0; y < r.h; y++) {
-    const from = ((r.y + y) * img.width + r.x) * 4;
-    out.set(img.data.subarray(from, from + r.w * 4), y * r.w * 4);
+function crop(img, r2) {
+  const out = new Uint8Array(r2.w * r2.h * 4);
+  for (let y = 0; y < r2.h; y++) {
+    const from = ((r2.y + y) * img.width + r2.x) * 4;
+    out.set(img.data.subarray(from, from + r2.w * 4), y * r2.w * 4);
   }
-  return { width: r.w, height: r.h, data: out };
+  return { width: r2.w, height: r2.h, data: out };
 }
 function blank(img, part) {
   const x0 = Math.max(0, Math.floor(part.x)), y0 = Math.max(0, Math.floor(part.y));
@@ -1349,9 +1396,9 @@ function blank(img, part) {
   for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) data.set([...median, 255], (y * img.width + x) * 4);
   return { width: img.width, height: img.height, data };
 }
-function labOf([r, g, b]) {
+function labOf([r2, g, b]) {
   const lin2 = (v) => (v /= 255) <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
-  const [R, G, B] = [lin2(r), lin2(g), lin2(b)];
+  const [R, G, B] = [lin2(r2), lin2(g), lin2(b)];
   const f = (t) => t > 216 / 24389 ? Math.cbrt(t) : (24389 / 27 * t + 16) / 116;
   const x = f((0.4124 * R + 0.3576 * G + 0.1805 * B) / 0.95047), y = f(0.2126 * R + 0.7152 * G + 0.0722 * B), z = f((0.0193 * R + 0.1192 * G + 0.9505 * B) / 1.08883);
   const round3 = (n) => Math.round(n * 10) / 10 + 0;
@@ -1580,7 +1627,7 @@ function guide(master, ratio, box, place2, most = 1536) {
       data[(y * W + x) * 4 + 3] = 255;
     }
   }
-  const r = Math.max(4, Math.round(Math.min(W, H) / 40));
+  const r2 = Math.max(4, Math.round(Math.min(W, H) / 40));
   const blur = (along) => {
     const copy = data.slice();
     const n = along === "x" ? W : H, lines = along === "x" ? H : W;
@@ -1589,7 +1636,7 @@ function guide(master, ratio, box, place2, most = 1536) {
         const x = along === "x" ? i : l, y = along === "x" ? l : i;
         if (inside(x, y)) continue;
         let sum0 = 0, sum1 = 0, sum2 = 0, count = 0;
-        for (let k = Math.max(0, i - r); k <= Math.min(n - 1, i + r); k++) {
+        for (let k = Math.max(0, i - r2); k <= Math.min(n - 1, i + r2); k++) {
           const j2 = along === "x" ? (y * W + k) * 4 : (k * W + x) * 4;
           sum0 += copy[j2];
           sum1 += copy[j2 + 1];
@@ -1620,46 +1667,46 @@ function signedLink(link, host, kind) {
     return false;
   }
 }
-function invalid(r, host) {
-  if (!signedLink(r.picture, host, "read")) return "The picture must be a signed link to Fume's storage.";
-  if (!signedLink(r.upload?.png, host, "upload") || !signedLink(r.upload?.fig, host, "upload")) {
+function invalid(r2, host) {
+  if (!signedLink(r2.picture, host, "read")) return "The picture must be a signed link to Fume's storage.";
+  if (!signedLink(r2.upload?.png, host, "upload") || !signedLink(r2.upload?.fig, host, "upload")) {
     return "The result needs signed upload links to Fume's storage.";
   }
-  if (r.logo != null && !signedLink(r.logo, host, "read")) return "The logo must be a signed link to Fume's storage.";
-  if (r.fonts != null) {
-    if (!Array.isArray(r.fonts) || r.fonts.length > 12) return "Too many font files.";
-    for (const f of r.fonts) {
+  if (r2.logo != null && !signedLink(r2.logo, host, "read")) return "The logo must be a signed link to Fume's storage.";
+  if (r2.fonts != null) {
+    if (!Array.isArray(r2.fonts) || r2.fonts.length > 12) return "Too many font files.";
+    for (const f of r2.fonts) {
       if (!signedLink(f?.url, host, "read")) return "A font file must be a signed link to Fume's storage.";
       if (typeof f.family !== "string" || !/^[\p{L}\p{N} ._'&-]{1,60}$/u.test(f.family)) return "A font file's family is not one Fume reads.";
       if (!Number.isInteger(f.weight) || f.weight < 100 || f.weight > 900 || typeof f.italic !== "boolean") return "A font file's face is not one Fume reads.";
     }
   }
-  if (!r.format || !(r.format in SIZES)) return "Unknown format.";
-  if (!r.book || !Array.isArray(r.book.styles) || !Array.isArray(r.book.colours) || !Array.isArray(r.book.typefaces)) {
+  if (!r2.format || !(r2.format in SIZES)) return "Unknown format.";
+  if (!r2.book || !Array.isArray(r2.book.styles) || !Array.isArray(r2.book.colours) || !Array.isArray(r2.book.typefaces)) {
     return "The brand's design system is missing.";
   }
-  if (!r.words || typeof r.words.headline !== "string" || !r.words.headline.trim()) return "A layout needs a headline.";
-  for (const w of [r.words.headline, r.words.subline, r.words.cta, r.words.price]) {
+  if (!r2.words || typeof r2.words.headline !== "string" || !r2.words.headline.trim()) return "A layout needs a headline.";
+  for (const w of [r2.words.headline, r2.words.subline, r2.words.cta, r2.words.price]) {
     if (w != null && (typeof w !== "string" || w.length > 400)) return "The words are too long.";
   }
   return null;
 }
 async function handle(req, deps) {
   if (req.method !== "POST") return json(405, { error: "POST only." });
-  let r;
+  let r2;
   try {
-    r = await req.json();
+    r2 = await req.json();
   } catch {
     return json(400, { error: "The request is not JSON." });
   }
-  const op = r.op;
-  if (op === "fix-crop" || op === "fix-set") return fixStep(r, deps);
-  if (op === "format" || op === "format-set" || op === "format-drawn" || op === "format-guide") return formatStep(r, deps);
-  const why = invalid(r, deps.storageHost);
+  const op = r2.op;
+  if (op === "fix-crop" || op === "fix-set") return fixStep(r2, deps);
+  if (op === "format" || op === "format-set" || op === "format-drawn" || op === "format-guide") return formatStep(r2, deps);
+  const why = invalid(r2, deps.storageHost);
   if (why) return json(400, { error: why });
   let picture;
   try {
-    const got = await deps.fetch(r.picture, { signal: AbortSignal.timeout(45e3) });
+    const got = await deps.fetch(r2.picture, { signal: AbortSignal.timeout(45e3) });
     const type = got.headers.get("content-type") ?? "";
     if (!got.ok || !type.startsWith("image/")) return json(403, { error: "The picture link is not live." });
     picture = new Uint8Array(await got.arrayBuffer());
@@ -1668,9 +1715,9 @@ async function handle(req, deps) {
   }
   if (picture.byteLength > 25e6) return json(413, { error: "The picture is too large." });
   let logo;
-  if (r.logo) {
+  if (r2.logo) {
     try {
-      const got = await deps.fetch(r.logo, { signal: AbortSignal.timeout(15e3) });
+      const got = await deps.fetch(r2.logo, { signal: AbortSignal.timeout(15e3) });
       const type = got.headers.get("content-type") ?? "";
       const bytes = got.ok && type.startsWith("image/") ? new Uint8Array(await got.arrayBuffer()) : null;
       if (bytes && bytes.byteLength <= 3e6) logo = bytes;
@@ -1679,7 +1726,7 @@ async function handle(req, deps) {
     }
   }
   const fonts = [];
-  for (const f of r.fonts ?? []) {
+  for (const f of r2.fonts ?? []) {
     try {
       const got = await deps.fetch(f.url, { signal: AbortSignal.timeout(15e3) });
       const bytes = got.ok ? new Uint8Array(await got.arrayBuffer()) : null;
@@ -1689,11 +1736,11 @@ async function handle(req, deps) {
   }
   const out = await (deps.design ?? design)({
     picture,
-    format: r.format,
-    book: r.book,
-    words: r.words,
-    prefer: r.prefer ?? {},
-    keepClear: (r.keepClear ?? []).filter(isBox).slice(0, 8),
+    format: r2.format,
+    book: r2.book,
+    words: r2.words,
+    prefer: r2.prefer ?? {},
+    keepClear: (r2.keepClear ?? []).filter(isBox).slice(0, 8),
     ...logo ? { logo } : {},
     ...fonts.length ? { fonts } : {}
   });
@@ -1709,8 +1756,8 @@ async function handle(req, deps) {
   };
   try {
     const [png2, fig2] = await Promise.all([
-      put(r.upload.png, out.png, "image/png"),
-      put(r.upload.fig, out.fig, "application/octet-stream")
+      put(r2.upload.png, out.png, "image/png"),
+      put(r2.upload.fig, out.fig, "application/octet-stream")
     ]);
     const { png: _p, fig: _f, ...rest } = out;
     return json(200, { ...rest, png: png2, fig: fig2 });
@@ -1728,15 +1775,15 @@ function isBox(b) {
   return Boolean(x) && [x.x, x.y, x.w, x.h].every((n) => typeof n === "number" && Number.isFinite(n)) && typeof x.what === "string";
 }
 var isShare = (b) => Boolean(b) && [b.x, b.y, b.w, b.h].every((n) => typeof n === "number" && Number.isFinite(n) && n >= 0 && n <= 1) && b.w > 0 && b.h > 0 && b.x + b.w <= 1.0001 && b.y + b.h <= 1.0001;
-function invalidFix(r, host) {
-  if (!signedLink(r.picture, host, "read")) return "The picture must be a signed link to Fume's storage.";
-  if (!isShare(r.box)) return "Mark the part to fix inside the picture.";
-  if (r.op === "fix-crop" && !signedLink(r.upload?.crop, host, "upload")) return "The crop needs a signed upload link to Fume's storage.";
-  if (r.op === "fix-set") {
-    if (!signedLink(r.redrawn, host, "read")) return "The redrawn part must be a signed link to Fume's storage.";
-    const c = r.rect;
+function invalidFix(r2, host) {
+  if (!signedLink(r2.picture, host, "read")) return "The picture must be a signed link to Fume's storage.";
+  if (!isShare(r2.box)) return "Mark the part to fix inside the picture.";
+  if (r2.op === "fix-crop" && !signedLink(r2.upload?.crop, host, "upload")) return "The crop needs a signed upload link to Fume's storage.";
+  if (r2.op === "fix-set") {
+    if (!signedLink(r2.redrawn, host, "read")) return "The redrawn part must be a signed link to Fume's storage.";
+    const c = r2.rect;
     if (!c || ![c.x, c.y, c.w, c.h].every((n) => Number.isInteger(n) && n >= 0) || c.w < 16 || c.h < 16) return "The crop is not one Fume made.";
-    if (!signedLink(r.upload?.png, host, "upload")) return "The result needs a signed upload link to Fume's storage.";
+    if (!signedLink(r2.upload?.png, host, "upload")) return "The result needs a signed upload link to Fume's storage.";
   }
   return null;
 }
@@ -1761,109 +1808,109 @@ async function store(link, bytes, deps) {
   if (!res.ok) throw new Error(`Storing the result failed (${res.status}).`);
   return { bytes: bytes.byteLength, sha256: createHash2("sha256").update(bytes).digest("hex") };
 }
-async function fixStep(r, deps) {
-  const why = invalidFix(r, deps.storageHost);
+async function fixStep(r2, deps) {
+  const why = invalidFix(r2, deps.storageHost);
   if (why) return json(400, { error: why });
-  const got = await read(r.picture, deps);
+  const got = await read(r2.picture, deps);
   if (got instanceof Response) return got;
   try {
     const picture = await decode(got);
-    if (r.op === "fix-crop") {
-      const { rect: rect2, ratio } = cropFor(r.box, picture.width, picture.height, r.read ? 128 : 384);
+    if (r2.op === "fix-crop") {
+      const { rect: rect2, ratio } = cropFor(r2.box, picture.width, picture.height, r2.read ? 128 : 384);
       let cut = crop(picture, rect2);
-      if (r.read) {
+      if (r2.read) {
         const k = 1024 / Math.max(cut.width, cut.height);
         if (k > 1) cut = resize(cut, Math.round(cut.width * k), Math.round(cut.height * k));
       }
-      if (r.blank) {
-        cut = blank(cut, { x: r.box.x * picture.width - rect2.x, y: r.box.y * picture.height - rect2.y, w: r.box.w * picture.width, h: r.box.h * picture.height });
+      if (r2.blank) {
+        cut = blank(cut, { x: r2.box.x * picture.width - rect2.x, y: r2.box.y * picture.height - rect2.y, w: r2.box.w * picture.width, h: r2.box.h * picture.height });
       }
       const part = await encode(cut);
-      return json(200, { rect: rect2, ratio, width: picture.width, height: picture.height, tone: toneOf(picture, r.box), crop: await store(r.upload.crop, part, deps) });
+      return json(200, { rect: rect2, ratio, width: picture.width, height: picture.height, tone: toneOf(picture, r2.box), crop: await store(r2.upload.crop, part, deps) });
     }
-    const rect = r.rect;
+    const rect = r2.rect;
     if (rect.x + rect.w > picture.width || rect.y + rect.h > picture.height) return json(400, { error: "The crop is not one Fume made." });
-    const redrawnBytes = await read(r.redrawn, deps);
+    const redrawnBytes = await read(r2.redrawn, deps);
     if (redrawnBytes instanceof Response) return redrawnBytes;
-    const out = setBack(picture, await decode(redrawnBytes), rect, r.box);
-    const png2 = await store(r.upload.png, await encode(out.picture), deps);
+    const out = setBack(picture, await decode(redrawnBytes), rect, r2.box);
+    const png2 = await store(r2.upload.png, await encode(out.picture), deps);
     return json(200, { width: picture.width, height: picture.height, drift: out.drift, png: png2 });
   } catch (e) {
     return json(502, { error: e.message });
   }
 }
-function invalidFormat(r, host) {
-  if (!signedLink(r.picture, host, "read")) return "The picture must be a signed link to Fume's storage.";
-  if (!r.format || !(r.format in RATIO)) return "Unknown format.";
-  if (r.method != null && r.method !== "crop" && r.method !== "expand") return "Crop or expand.";
-  if (r.around != null && !isShare(r.around)) return "The product's box lies inside the picture.";
-  if (r.window != null && (!isShare(r.window) || r.method !== "crop")) return "A crop window lies inside the picture.";
-  if (r.op === "format" && (!signedLink(r.upload?.png, host, "upload") || !signedLink(r.upload?.padded, host, "upload"))) {
+function invalidFormat(r2, host) {
+  if (!signedLink(r2.picture, host, "read")) return "The picture must be a signed link to Fume's storage.";
+  if (!r2.format || !(r2.format in RATIO)) return "Unknown format.";
+  if (r2.method != null && r2.method !== "crop" && r2.method !== "expand") return "Crop or expand.";
+  if (r2.around != null && !isShare(r2.around)) return "The product's box lies inside the picture.";
+  if (r2.window != null && (!isShare(r2.window) || r2.method !== "crop")) return "A crop window lies inside the picture.";
+  if (r2.op === "format" && (!signedLink(r2.upload?.png, host, "upload") || !signedLink(r2.upload?.padded, host, "upload"))) {
     return "The format needs signed upload links to Fume's storage.";
   }
-  if ((r.op === "format-drawn" || r.op === "format-guide") && !signedLink(r.upload?.png, host, "upload")) return "The format needs a signed upload link to Fume's storage.";
-  if (r.op === "format-guide" && (!r.around || !r.place || !isShare(r.place))) return "A layout guide needs the product's box and its place.";
-  if (r.op === "format-set" && (!signedLink(r.drawn, host, "read") || !signedLink(r.upload?.png, host, "upload"))) {
+  if ((r2.op === "format-drawn" || r2.op === "format-guide") && !signedLink(r2.upload?.png, host, "upload")) return "The format needs a signed upload link to Fume's storage.";
+  if (r2.op === "format-guide" && (!r2.around || !r2.place || !isShare(r2.place))) return "A layout guide needs the product's box and its place.";
+  if (r2.op === "format-set" && (!signedLink(r2.drawn, host, "read") || !signedLink(r2.upload?.png, host, "upload"))) {
     return "The drawing and the result need signed links to Fume's storage.";
   }
   return null;
 }
-function chooseFormat(width, height, format, r) {
+function chooseFormat(width, height, format, r2) {
   const ratio = RATIO[format];
-  if (r.window) {
-    const w = { x: Math.round(r.window.x * width), y: Math.round(r.window.y * height), w: Math.round(r.window.w * width), h: 0 };
+  if (r2.window) {
+    const w = { x: Math.round(r2.window.x * width), y: Math.round(r2.window.y * height), w: Math.round(r2.window.w * width), h: 0 };
     w.h = Math.min(height - w.y, Math.round(w.w / ratio));
     return { method: "crop", window: w, reason: "asked" };
   }
-  const win = windowFor(width, height, ratio, r.around ?? void 0);
-  if (r.method) return { method: r.method, window: win, reason: "asked" };
-  if (!r.around) return { method: "expand", window: win, reason: "unknown" };
+  const win = windowFor(width, height, ratio, r2.around ?? void 0);
+  if (r2.method) return { method: r2.method, window: win, reason: "asked" };
+  if (!r2.around) return { method: "expand", window: win, reason: "unknown" };
   if (kept(width, height, ratio) < 0.6) return { method: "expand", window: win, reason: "little" };
-  if (fits(r.around, win, width, height, AIR[format])) return { method: "crop", window: win, reason: "fits" };
-  const safe = AIR[format].top > AIR.square.top && fits(r.around, win, width, height, { ...AIR[format], top: AIR.square.top, bottom: AIR.square.bottom });
+  if (fits(r2.around, win, width, height, AIR[format])) return { method: "crop", window: win, reason: "fits" };
+  const safe = AIR[format].top > AIR.square.top && fits(r2.around, win, width, height, { ...AIR[format], top: AIR.square.top, bottom: AIR.square.bottom });
   return { method: "expand", window: win, reason: safe ? "safe" : "cuts" };
 }
-async function formatStep(r, deps) {
-  const why = invalidFormat(r, deps.storageHost);
+async function formatStep(r2, deps) {
+  const why = invalidFormat(r2, deps.storageHost);
   if (why) return json(400, { error: why });
-  const got = await read(r.picture, deps);
+  const got = await read(r2.picture, deps);
   if (got instanceof Response) return got;
   try {
     const master = await decode(got);
-    if (r.op === "format-guide") {
-      const g = guide(master, RATIO[r.format], r.around, r.place);
-      const png3 = await store(r.upload.png, await encode(g), deps);
+    if (r2.op === "format-guide") {
+      const g = guide(master, RATIO[r2.format], r2.around, r2.place);
+      const png3 = await store(r2.upload.png, await encode(g), deps);
       return json(200, { width: g.width, height: g.height, png: png3 });
     }
-    if (r.op === "format-drawn") {
-      const win = windowFor(master.width, master.height, RATIO[r.format]);
-      const png3 = await store(r.upload.png, await encode(crop(master, win)), deps);
+    if (r2.op === "format-drawn") {
+      const win = windowFor(master.width, master.height, RATIO[r2.format]);
+      const png3 = await store(r2.upload.png, await encode(crop(master, win)), deps);
       return json(200, { width: win.w, height: win.h, png: png3 });
     }
-    const canvas = canvasFor(master.width, master.height, RATIO[r.format]);
-    if (r.op === "format") {
-      const chose = chooseFormat(master.width, master.height, r.format, r);
+    const canvas = canvasFor(master.width, master.height, RATIO[r2.format]);
+    if (r2.op === "format") {
+      const chose = chooseFormat(master.width, master.height, r2.format, r2);
       const share = (w) => ({ x: w.x / master.width, y: w.y / master.height, w: w.w / master.width, h: w.h / master.height });
       if (chose.method === "crop") {
-        const png3 = await store(r.upload.png, await encode(crop(master, chose.window)), deps);
+        const png3 = await store(r2.upload.png, await encode(crop(master, chose.window)), deps);
         return json(200, { method: "crop", reason: chose.reason, window: share(chose.window), width: chose.window.w, height: chose.window.h, png: png3 });
       }
-      const padded = await store(r.upload.padded, await encode(pad(master, canvas)), deps);
+      const padded = await store(r2.upload.padded, await encode(pad(master, canvas)), deps);
       return json(200, {
         method: "expand",
         reason: chose.reason,
         window: share(chose.window),
-        ratio: MODEL_RATIO[r.format],
+        ratio: MODEL_RATIO[r2.format],
         width: canvas.width,
         height: canvas.height,
         at: canvas.at,
         padded
       });
     }
-    const drawn = await read(r.drawn, deps);
+    const drawn = await read(r2.drawn, deps);
     if (drawn instanceof Response) return drawn;
     const out = setMaster(master, await decode(drawn), canvas);
-    const png2 = await store(r.upload.png, await encode(out.picture), deps);
+    const png2 = await store(r2.upload.png, await encode(out.picture), deps);
     return json(200, { width: canvas.width, height: canvas.height, at: canvas.at, drift: out.drift, png: png2 });
   } catch (e) {
     return json(502, { error: e.message });

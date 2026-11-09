@@ -26,7 +26,7 @@ export interface Words {
 export type Band = "top" | "middle" | "bottom";
 export type Align = "left" | "center" | "right";
 export type Ground = "photo" | "gradient" | "flat" | "block";
-export type CtaLook = "pill" | "box" | "outline" | "underline" | "text";
+export type CtaLook = "pill" | "box" | "outline" | "slant" | "slant_double" | "underline" | "text";
 
 /** One way to lay the words out. */
 export interface Layout {
@@ -152,6 +152,18 @@ export function compose(
       )}} color=${q(wordsHex)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} />${rule}</Frame>`;
     }
     const py = Math.max(Math.round(pad * 0.6), Math.ceil((56 - line) / 2));
+    if (look === "slant" || look === "slant_double") {
+      // A slanted outline in the words' own colour, one thin line or two that cross, as sports retailers set their
+      // buttons (Anthem's SHOP NOW, 9 Nov). The lines are drawn once the button has its size (see slants in render.ts).
+      colours.CTA = wordsHex;
+      const stroke = Math.max(2, Math.round(s.sizePx / 14));
+      const lean = Math.round(line * 0.45);
+      return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(s.sizePx * 1.3) + lean}} py={${Math.round(s.sizePx * 0.7)}}><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
+        s.trackingEm * s.sizePx,
+      )}} color=${q(wordsHex)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} /><Rectangle name=${q(
+        `Slant ${wordsHex} ${stroke} ${look === "slant_double" ? 2 : 1}`,
+      )} position="absolute" x={0} y={0} w={1} h={1} fills={[]} /></Frame>`;
+    }
     if (look === "outline") {
       // A thin border in the words' own colour and no fill, as the brand's own tiles set it (Anthem's SHOP NOW box).
       colours.CTA = wordsHex;

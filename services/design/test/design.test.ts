@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { design, fitFor, layoutsFor, tasteOf, type Tried } from "../src/design.ts";
 import { bindShort, compose } from "../src/compose.ts";
-import { build, lineWidth, png, pixelsOf, splitWords } from "../src/render.ts";
+import { boxOf, build, lineWidth, png, pixelsOf, slantJSX, splitWords } from "../src/render.ts";
 import { type DesignBook } from "../src/book.ts";
 import { startWithTestFonts } from "./fonts.ts";
 
@@ -231,6 +231,20 @@ test("an outlined call to action is a thin border in the words' colour, with no 
   assert.match(frame, /stroke="#FFFFFF"/);
   assert.doesNotMatch(frame, /\bbg=/);
   assert.equal(c.colours.CTA, "#FFFFFF");
+});
+
+test("a slanted call to action is drawn as the brand's two thin lines once the button has its size", async () => {
+  const pic = await picture("#1E88E5", "#3A6B2A");
+  const c = compose(book, "feed", { headline: "Game on", cta: "Shop now" }, { band: "top", align: "left", headline: "h1", colour: "on_photo", ground: "photo", cta: "with_words", columns: 6, ctaLook: "slant_double" }, () => "Inter");
+  assert.equal(c.colours.CTA, "#FFFFFF");
+  const doc = await build(c.jsx, pic);
+  const button = boxOf(doc, "CTA")!;
+  const outline = boxOf(doc, "Outline")!;
+  assert.deepEqual([outline.x, outline.y, outline.w, outline.h], [button.x, button.y, button.w, button.h], "the outline takes the button's own box");
+  assert.ok(!doc.ids.has(`Slant #FFFFFF 2 2`), "the placeholder is gone");
+  const lines = slantJSX(button.w, button.h, "#FFFFFF", 2, 2).match(/<path /g) ?? [];
+  assert.equal(lines.length, 2);
+  assert.equal((slantJSX(200, 60, "#FFFFFF", 2, 1).match(/<path /g) ?? []).length, 1);
 });
 
 test("a short word held to the next is measured with it, so the pair is never broken inside a word", async () => {

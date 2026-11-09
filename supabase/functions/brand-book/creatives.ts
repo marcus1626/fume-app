@@ -53,7 +53,7 @@ export const CreativesAnswer = z.object({
     ground: z.enum(["photo", "gradient", "flat", "colour_block"]).describe("Words straight on the photo, on a shade, on a flat panel, or on a block of brand colour"),
     words: z.enum(["light", "dark", "brand_colour"]),
     groundHex: z.string().describe("The colour of the block or panel the words stand on, as #RRGGBB read from the pictures; empty when they stand on the photo or a shade"),
-    cta: z.enum(["pill", "box", "outline", "underline", "text", "none"]).describe("How the call to action looks: a filled pill or box, an outline (a thin border in the words' colour with no fill), underlined words, words alone, or none when the brand's creatives carry no call to action"),
+    cta: z.enum(["pill", "box", "outline", "slant", "slant_double", "underline", "text", "none"]).describe("How the call to action looks: a filled pill or box, an outline (a thin straight border in the words' colour with no fill), slant (a slanted outline, a parallelogram border with no fill), slant_double (two thin slanted outlines that cross, as some sports retailers set their buttons), underlined words, words alone, or none when the brand's creatives carry no call to action. Look closely at the button's edges: slanted sides and doubled lines are the brand's own device"),
     ctaFill: z.enum(["light", "dark", "brand_colour", "none"]).describe("The button's own colour: light (e.g. a white pill with dark words), dark, the brand's colour, or none for words alone"),
     logo: Where,
     logoWidthPct: z.number().describe("The logo's width as a share of the creative's width, in per cent; 0 when there is none"),
