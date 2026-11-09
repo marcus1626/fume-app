@@ -355,7 +355,9 @@ div.ui-desk-empty { display: grid; justify-items: center; gap: var(--ui-space-md
 .ui-desk-sheet .ui-sheet-body { display: grid; align-content: start; gap: var(--ui-space-xl); }
 .ui-desk-sheet-ready { display: grid; gap: var(--ui-space-sm); font-size: var(--ui-type-label); color: var(--ui-glass-fg-secondary); }
 .ui-desk-sheet-part { display: grid; gap: var(--ui-space-sm); min-width: 0; }
-.ui-desk-sheet-head { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-glass-fg-secondary); }
+/* round 14 (FLOWS §34.2): a part's title is the rows' size in the glass's own colour, so it is read first */
+.ui-desk-sheet-head { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-glass-fg); }
+.ui-desk-sheet-note { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-glass-fg-secondary); text-wrap: pretty; }
 .ui-desk-sheet .ui-desk-fact, .ui-desk-sheet .ui-desk-fact-text { color: var(--ui-glass-fg); } /* r13 #62: every word on the glass is light */
 .ui-desk-sheet .ui-desk-fact-label, .ui-desk-sheet .ui-desk-fact-icon { color: var(--ui-glass-fg-secondary); }
 @media (hover: hover) { .ui-desk-sheet .ui-desk-fact:hover { background: var(--ui-glass-item-hover); } }
@@ -497,7 +499,7 @@ button.ui-desk-version:disabled { cursor: default; }
 
 .ui-design-form { display: grid; gap: var(--ui-space-lg); min-width: 0; }
 .ui-design-part { display: grid; gap: var(--ui-space-sm); min-width: 0; }
-.ui-design-head { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-glass-fg-secondary); }
+.ui-design-head { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-glass-fg); }
 .ui-design-line, .ui-design-quiet, .ui-design-loading, .ui-design-file-line { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-glass-fg); text-wrap: pretty; }
 .ui-design-quiet { color: var(--ui-glass-fg-secondary); }
 .ui-design-file-line { padding-inline: var(--ui-space-sm); font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-glass-fg-secondary); }

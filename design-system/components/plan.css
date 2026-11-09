@@ -272,6 +272,11 @@
 
 .ui-plandoc-copy { display: grid; gap: var(--ui-space-sm); min-width: 0; }
 .ui-plandoc-copy > .ui-plandoc-index-title { margin: 0; font-weight: var(--ui-type-weight-regular); }
+/* round 14 (FLOWS §34.2): the check is the aside's clearest title; the Tone of Voice and the rewrite fold away */
+.ui-plandoc-copy-title { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text); }
+.ui-plandoc-copy-more { justify-items: start; min-width: 0; }
+.ui-plandoc-copy-more > .ui-collapsible-trigger { justify-self: start; max-width: calc(100% + var(--ui-size-pad-sm)); margin-inline-start: calc(var(--ui-size-pad-sm) * -1); white-space: normal; text-align: start; }
+.ui-plandoc-copy-more .ui-plandoc-copy-sub + .ui-plandoc-copy-sub { margin-block-start: var(--ui-space-xs); }
 .ui-plandoc-copy-line { margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text); text-wrap: pretty; }
 .ui-plandoc-copy-sub { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
 .ui-plandoc-copy-list { display: grid; min-width: 0; margin: 0; padding: 0; list-style: none; }

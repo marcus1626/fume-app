@@ -237,10 +237,7 @@ export function DesignChecks({
           <Icon name={mark(c)} className="ui-design-mark" />
           <span className="ui-design-text">
             <span className="ui-design-what">{checkName(c)}</span>
-            <span className="ui-design-note">
-              {c.note}
-              {!c.ok && !c.hard ? " Said to the expert; it does not rule the layout out." : ""}
-            </span>
+            <span className="ui-design-note">{c.note}</span>
           </span>
         </li>
       ))}
@@ -382,7 +379,7 @@ function DesignDialog({
         <DialogHeader>
           <DialogTitle>{version.design ? `Design again from V${n}` : `Add graphic design to V${n}`}</DialogTitle>
           <DialogDescription>
-            {`Fume lays the plan’s words on V${n} in the brand’s design system and checks the layout by code. It comes back as a new version with a design file you can change by hand; V${n} stays as it is.`}
+            {`Fume lays the plan’s words on V${n} and checks the layout. You get a new version, with a file you can change by hand; V${n} stays as it is.`}
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
@@ -409,12 +406,7 @@ function DesignDialog({
                 {a.book ? (
                   <p className="ui-design-line">
                     {bookWords(a.book)}
-                    {a.book.state !== "approved" && (
-                      <span className="ui-design-quiet">
-                        {" "}
-                        · the customer has not approved it yet, so Fume uses the {a.book.state} one
-                      </span>
-                    )}
+                    {a.book.state !== "approved" && <span className="ui-design-quiet">, not approved yet</span>}
                     {" · "}
                     <Link className="ui-design-link" to={`${base}/brand/design`}>
                       Open it
@@ -533,7 +525,6 @@ export function DesignSheet({ doc }: { doc: CreativeDocument }) {
       });
   };
   const hardFailed = d?.checks.filter((c) => c.hard && !c.ok).length ?? 0;
-  const passed = d?.checks.filter((c) => c.ok).length ?? 0;
   return (
     <Sheet open={open} onOpenChange={(o) => !o && close()} modal={false}>
       <SheetContent side="right" size="lg" className="ui-desk-sheet ui-desk-trace">
@@ -546,7 +537,7 @@ export function DesignSheet({ doc }: { doc: CreativeDocument }) {
               <SheetDescription>
                 {failed
                   ? (d.error ?? v.failure ?? "Fume could not lay the words on the picture.")
-                  : `Fume laid the plan’s words on V${d.fromNumber} in the design system${d.book ? `, version ${d.book.version}` : ""}. Only Fume’s team sees this.`}
+                  : `Fume laid the plan’s words on V${d.fromNumber}. Only Fume’s team sees this.`}
               </SheetDescription>
             </SheetHeader>
             <SheetBody>
@@ -561,10 +552,12 @@ export function DesignSheet({ doc }: { doc: CreativeDocument }) {
               {!failed && d.checks.length > 0 && (
                 <section className="ui-desk-sheet-part" aria-labelledby="design-checks">
                   <h3 className="ui-desk-sheet-head" id="design-checks">
-                    {`What code measured · ${passed} of ${d.checks.length} passed`}
-                    {hardFailed > 0 && " · no layout passed every check; this is the closest one"}
+                    What code measured
                   </h3>
-                  <DesignChecks checks={d.checks} tone="glass" />
+                  {hardFailed > 0 && (
+                    <p className="ui-desk-sheet-note">No layout passed every check; this is the closest one.</p>
+                  )}
+                  <DesignChecks checks={d.checks} tone="glass" compact />
                 </section>
               )}
               {d.words && (

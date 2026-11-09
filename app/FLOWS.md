@@ -1289,6 +1289,17 @@ scores, what is "To decide" (each finding: what is wrong, what it should be, a q
 then what holds folded into one line ("3 checks hold"), the Brand DNA list folded, the note to the Engine, and the
 decision at the foot. Part titles are the rows' size in Ink, so they are read first; "In the picture" is gone.
 
+The same order holds in the plan and the drawers ("gjennomgående"):
+- **The plan's aside:** "The words, checked" is its clearest title, then one quiet line ("3 to look at, in 6 lines")
+  and the findings that glide to their lines. The Tone of Voice it wrote in and the rewrite Fume made fold under
+  "How Fume wrote them".
+- **The graphic design drawer and its dialog:** part titles at the rows' size in the glass's own colour. What code
+  measured shows only what did not pass, one by one, and the rest in one row ("6 checks passed: inside the safe area ·
+  contrast 6.2:1 and 5.1:1 · calm under the words"); no check repeats that it does not rule the layout out. The
+  dialog says what happens in one sentence ("Fume lays the plan's words on V3 and checks the layout. You get a new
+  version, with a file you can change by hand; V3 stays as it is.") and the design system in a line ("Version 1 ·
+  checked, not approved yet · Open it").
+
 ### 34.3 The Tone of Voice is written in place, and copy is a big part of it
 Marcus: the Tone of Voice "føles som click to open edit", static and cold; "ToV og copy trenger en mye større del,
 copy har blitt en stor del av det vi løser".
