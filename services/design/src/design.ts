@@ -780,7 +780,9 @@ export function better(a: Tried, b: Tried, taste?: (t: Tried) => number): boolea
   // "Leagu/e" in five lines won on its score over a layout that read).
   const ua = unreadable(a.checks), ub = unreadable(b.checks);
   if (ua !== ub) return ua < ub;
-  return a.score > b.score;
+  // Then as a designer would pick among the passing ones: the brand's own colour, the size (Anthem, 10 Nov: where every
+  // layout covered some of the product, navy words won on the measured score alone).
+  return taste ? taste(a) > taste(b) : a.score > b.score;
 }
 
 /**

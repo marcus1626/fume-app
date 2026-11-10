@@ -433,3 +433,15 @@ test("on a bright picture, the brand's white words stand on its flat tint, never
   const contrast = out.checks.find((c) => c.check === "contrast" && c.node === "Headline")!;
   assert.ok(contrast.ok, contrast.note);
 });
+
+test("among layouts that fail alike, the brand's own colour wins", () => {
+  const branded = { ...book, onPictures: { layouts: [{ name: "Hero", band: "top", align: "left", wordsWidthPct: 40, ground: "photo", words: "light", cta: "box", headlineLines: 2 }] } } as DesignBook;
+  const tried = (colour: "on_photo" | "text", ground: "photo" | "tint", score: number): Tried => ({
+    layout: { band: "top", align: "left", headline: "display", colour, ground, cta: "with_words", columns: 5, signature: "Hero", ...(ground === "tint" ? { tint: 0.35 } : {}) },
+    ok: false, score, shades: [],
+    checks: [{ check: "covers", node: "Words", ok: false, hard: true, value: 0.1, note: "Covers the cage." }],
+    boxes: { Headline: { x: 64, y: 64, w: 400, h: 220 } },
+  });
+  const taste = (t: Tried) => tasteOf(t, branded, {});
+  assert.ok(better(tried("on_photo", "tint", -8), tried("text", "photo", -6), taste));
+});

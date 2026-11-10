@@ -1394,7 +1394,7 @@ function better(a, b, taste) {
   if (Math.abs(ca - cb) > 1e-3) return ca < cb;
   const ua = unreadable(a.checks), ub = unreadable(b.checks);
   if (ua !== ub) return ua < ub;
-  return a.score > b.score;
+  return taste ? taste(a) > taste(b) : a.score > b.score;
 }
 function tasteOf(t, book, prefer) {
   const sig = signatureOf(book, t.layout.signature ?? prefer.signature);
