@@ -63,9 +63,38 @@ most.
 
 Proof is counted like with like (`proofOf`): only the brand's pictures with a photograph in them (a card of type
 alone says nothing about how the brand shoots), and only the fields a photograph carries, not the words and the logo
-set on it. It waits until the brand has six such pictures. It is still too kind: many fields are the same in every
-tidy advertising picture (no flash, no border), so any competent photograph fits most of a profile. What it needs is a
-floor: the fit of pictures the Engine makes without knowing the brand. Never another customer's pictures.
+set on it. It waits until the brand has six such pictures.
+
+Coverage holds a read field against the pictures that were read: a picture that was only measured answers no read
+field, and that is not knowledge that the brand leaves the thing out.
+
+### Kinds of picture
+
+A brand does not make every kind of picture the same way. With 195 Nike pictures read (10 Nov 2026) the profile
+counted over everything kept 96 fields `always` and left 216 `free`: a shoe alone is a studio picture, an athlete is
+outdoors, and together they cancel out, so the Engine's wet-street product pictures fitted as well as Nike's own
+(0.86 against 0.86). The brand's pictures are therefore also counted kind by kind (`KINDS`, `kindOf`, `byKind` in
+`profile.ts`), once a kind has 15 pictures (`MIN_KIND`):
+
+- `product_alone`: the product with no people in the picture.
+- `people`: a picture with people in it.
+
+The kind comes from what the picture shows (the `idea` pass), for a picture to be made from what the plan says of its
+people. A picture that shows neither (type alone, a place) has no kind and is held against the whole. Nike's product
+kind keeps 134 fields `always`; its people kind is tested by no Engine picture yet.
+
+- **Proof** holds each of the Engine's pictures against the brand's pictures of its own kind (`Proof.kinds`), and has
+  a **floor**: how the brand's pictures of its other kinds fit this kind, which is what a picture scores that is the
+  brand's but not this kind. The share of proof is how far the Engine's pictures have come from the floor to the
+  brand's own: Nike's product kind 0.82 for the Engine, 0.91 for Nike's own, floor 0.61, so two thirds, 14 of 20.
+  A brand with one kind has no floor and keeps the plain ratio. Still not built: a floor from pictures the Engine
+  makes without knowing the brand. Never another customer's pictures.
+- **Direction** carries one direction a kind beside the whole (`Direction.kinds`), each compared with the Engine's
+  pictures of that kind (three or more). `directionFor(d, planned)` picks the kind for one picture.
+- Nothing changes for a brand with fewer pictures: no kinds, the whole profile as before.
+
+A caution on the source: Nike's 185 new pictures are launch imagery from its newsroom, where the product alone is a
+studio hero picture. Paid social ads may show the product in a scene more often. The brief still wins.
 
 ## Direction: what the Engine is told
 
@@ -89,6 +118,8 @@ Who reads it:
   avoid make image models worse). They are soft brand rules with ids `schema-<field>`, routed to the camera, people
   and scene slots by their group. The plan wins over a habit; the ledger says which lines went in and which did not.
 - The picture check does not judge them. Whether a picture keeps the brand's habits is for `fit` to say.
+- Where the brand has kinds, the prompt takes its lines from the kind the picture will be, and the plan writer is
+  told the whole first and then, under a heading for each kind, what the brand does only in that kind.
 
 ## Reading with a vision model
 
@@ -220,6 +251,11 @@ FUME_ACCESS_TOKEN=… deno run -A tools/taste/keep.ts <cards.json> --workspace <
 FUME_ACCESS_TOKEN=… deno run -A tools/taste/refcards.ts --workspace <id> [--reader <reader>]   reference cards
 ```
 
+`read.ts --passes idea --reader jev` asks only what a picture shows and what kind it is (under a tenth of a cent):
+enough to sort a large set before the pictures worth reading are read in full. On 10 Nov 2026 it sorted 700 pictures
+from Nike's newsroom; 185 were then read with `gpt-terra` (2.4 cents a picture at their size). Decoding large JPEGs in
+Deno is slow: make 1568 px copies first and read those.
+
 `keep.ts` sends cards made on disk to `taste-read`, which keeps them as the brand's readings and counts its profile
 again; no model is asked. `taste-read` with `keep` does the same for a picture it has just read.
 
@@ -241,10 +277,11 @@ without the tables: until the migration is applied a reading comes back unkept a
 2. Reading a brand's pictures by itself when the customer adds them (today a tool sends them), and the Engine's own
    pictures after each round, so the direction learns without anyone running a tool.
 3. The finish step: grain, black point, tint and sharpness put on the pixels by code after the picture is made,
-   brought to the direction's targets. It needs targets worth trusting first: five or more of the brand's photographs
-   at delivery size (Nike UK (test) has four).
+   brought to the direction's targets. Nike UK (test) has targets since 10 Nov 2026 (80 product photographs at full
+   size): its grain has almost no colour noise (0.07, at most 0.35) where the Engine's pictures have 0.48.
 4. Best of four with the profile as the judge (`fit`), before the expert sees a picture.
-5. A floor for proof: pictures the Engine makes without knowing the brand.
+5. A second floor for proof: pictures the Engine makes without knowing the brand (the first, the brand's other kinds
+   of picture, is built). Finer kinds: the product alone in a studio against the product alone in a scene.
 6. Calibration per image model: which wording of a line moves a model, remembered per brand and model.
 7. A human answer key on about 50 pictures, to settle the reader.
 8. `.fig` upload: the design fields read from the file itself.
