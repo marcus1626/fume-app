@@ -2,7 +2,7 @@
 // snapshot, the approved plan, the product's verified facts and pictures, the Brand DNA's rules, the taste model and
 // the lessons people's verdicts taught). Built by code, never by a model: the product text is the verified facts
 // word for word, so the model can only describe the scene around the product, never the product itself.
-import { type Direction, promptLines, type PromptLine } from "../taste/direction.ts";
+import { type Direction, type Planned, promptLines, type PromptLine } from "../taste/direction.ts";
 import { type Candidate, cardOf, choose, needOf, says } from "./references.ts";
 import type { BrandContext, BrandRule, Concept, FormatSpec, Knowledge, ProductContext } from "./types.ts";
 
@@ -80,9 +80,14 @@ export const SCHEMA_LINES = { most: 12, absences: 2 };
 /** The taste schema's lines for this picture: what applies to what the plan says it shows, the weightiest first. */
 export function schemaLines(task: EngineTask): PromptLine[] {
   if (!task.tasteDirection?.lines?.length) return [];
+  return promptLines(task.tasteDirection, plannedShows(task), SCHEMA_LINES.most, SCHEMA_LINES.absences);
+}
+/** What the plan says the picture will show, as the taste schema asks it: it decides which habits apply, and which
+ *  kind of the brand's pictures this one is held to (the product alone, or a picture with people). */
+export function plannedShows(task: EngineTask): Planned {
   const people = plannedCreative(task)?.people?.trim() ?? "";
   const shown = Boolean(people) && !/^no people/i.test(people);
-  return promptLines(task.tasteDirection, { people: shown, face: shown && !/^hands? only/i.test(people), product: task.products.length > 0 }, SCHEMA_LINES.most, SCHEMA_LINES.absences);
+  return { people: shown, face: shown && !/^hands? only/i.test(people), product: task.products.length > 0 };
 }
 
 export type RoomLayout = {

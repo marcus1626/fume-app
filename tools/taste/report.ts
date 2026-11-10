@@ -36,5 +36,7 @@ console.log(`${brandSet}: ${brand.pictures} pictures, ${brand.campaigns} campaig
 console.log(`taste score ${score.score}/100`, score.parts.map((p) => `${p.label} ${p.points}/${p.of}`).join(", "));
 console.log("standing", standing, "own fit over all pictures", ownFit.toFixed(2));
 console.log(proof ? `proof on ${proof.own} photographs (${proof.left} left out): engine fit ${proof.engineFit.toFixed(2)}, own fit ${proof.ownFit.toFixed(2)}` : "no proof: too few photographs of the brand, or no Engine pictures");
+for (const [k, p] of Object.entries(proof?.kinds ?? {})) console.log(`  ${k}: ${p.engine} of the Engine's against ${p.own} of the brand's: engine fit ${p.engineFit.toFixed(2)}, own fit ${p.ownFit.toFixed(2)}, floor ${p.floor?.toFixed(2) ?? "none"}`);
+console.log(score.parts.map((p) => `${p.label}: ${p.why}`).join("\n"));
 for (const g of gaps.slice(0, 25)) console.log(`  ${g.distance.toFixed(2)} ${g.standing.padEnd(8)} ${g.key.padEnd(34)} brand ${g.brand} | other ${g.other}`);
 if (out) await Deno.writeTextFile(out, JSON.stringify({ brand, other, score, proof, gaps }, null, 1));

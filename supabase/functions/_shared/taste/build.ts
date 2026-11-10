@@ -3,7 +3,7 @@
 // the same way. Also what a card sent from outside is cleaned to before it is kept: only the schema's own fields, and
 // only answers the schema lists.
 import { direction, type Direction } from "./direction.ts";
-import { buildProfile, type Card, photographic, type Profile, type Proof, proofOf, tasteScore, type TasteScore, word } from "./profile.ts";
+import { buildProfile, byKind, type Card, type Kind, kindOf, photographic, type Profile, type Proof, proofOf, tasteScore, type TasteScore, word } from "./profile.ts";
 import { type Answer, FIELD, type Shows, TASTE_SCHEMA_VERSION } from "./schema.ts";
 
 export type Built = { schema_version: number; profile: Profile; engine: Profile | null; proof: Proof | null; score: TasteScore; direction: Direction };
@@ -20,7 +20,17 @@ export function build(brand: Card[], engine: Card[] = []): Built {
   const profile = buildProfile(finishOfPhotographs(brand));
   const own = engine.length ? buildProfile(finishOfPhotographs(engine)) : null;
   const proof = proofOf(brand, engine);
-  return { schema_version: TASTE_SCHEMA_VERSION, profile, engine: own, proof, score: tasteScore(profile, proof), direction: direction(profile, own) };
+  // Kind by kind: the brand's pictures of a kind against the Engine's of the same kind (three or more, else untested).
+  const kinds: Partial<Record<Kind, Direction>> = {};
+  for (const [k, cards] of Object.entries(byKind(brand)) as [Kind, Card[]][]) {
+    const theirs = engine.filter((c) => kindOf(c.shows) === k);
+    kinds[k] = direction(buildProfile(finishOfPhotographs(cards)), theirs.length >= 3 ? buildProfile(finishOfPhotographs(theirs)) : null);
+  }
+  const whole = direction(profile, own);
+  return {
+    schema_version: TASTE_SCHEMA_VERSION, profile, engine: own, proof, score: tasteScore(profile, proof),
+    direction: Object.keys(kinds).length ? { ...whole, kinds } : whole,
+  };
 }
 
 /** The measured half of a card as sent: the schema's measured fields with a number, nothing else. */

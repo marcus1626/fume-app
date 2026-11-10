@@ -8,7 +8,7 @@
 //
 // All of it is counting and fixed wording: the same profile always gives the same direction.
 import { applies, FIELD, type Field, type Lever, type Shows, TASTE_SCHEMA_VERSION, type When } from "./schema.ts";
-import { compare, type FieldProfile, type Profile, type SetGap } from "./profile.ts";
+import { compare, type FieldProfile, type Kind, kindOf, KINDS, type Profile, type SetGap } from "./profile.ts";
 
 export type Line = {
   key: string;
@@ -56,11 +56,18 @@ export type Direction = {
   choices: Choice[];
   /** Options the brand has never used, with pictures enough to say so. */
   never: { key: string; label: string; options: string[] }[];
+  /** The same for each kind of picture the brand has enough of (profile.ts KINDS): how it makes the product alone, how
+   *  it makes pictures with people. A picture of a kind takes its direction from here. */
+  kinds?: Partial<Record<Kind, Direction>>;
 };
 
 const NOUN: Record<string, string> = {
   kind: "Picture", concept: "Idea", mood: "Mood", people: "People", styling: "Wardrobe", product: "Product", setting: "Setting",
   camera: "Camera", light: "Light", colour: "Colour", finish: "Finish", composition: "Composition", design: "Design", format: "Format",
+};
+const KIND_HEAD: Record<Kind, string> = {
+  product_alone: "WHEN THE PICTURE IS THE PRODUCT WITH NO PEOPLE, the brand does this",
+  people: "WHEN THE PICTURE HAS PEOPLE IN IT, the brand does this",
 };
 const GONE = new Set(["none", "nothing", "no"]);
 const UNSEEN = new Set(["not_visible", "not_shown"]);
@@ -134,6 +141,11 @@ export function direction(profile: Profile, engine: Profile | null = null): Dire
 export type Planned = Partial<Shows>;
 const shown = (p: Planned): Shows => ({ people: false, face: false, severalPeople: false, product: true, words: false, logo: false, outdoors: false, ...p });
 
+/** The direction for one picture: its own kind's where the brand has pictures enough of that kind, else the brand's whole. */
+export function directionFor(d: Direction, planned: Planned = {}): Direction {
+  return d.kinds?.[kindOf(shown(planned)) ?? ("" as Kind)] ?? d;
+}
+
 /** The dimension of a brand rule (engine/context.ts) a group's lines belong to: it decides the slot of the prompt. */
 const DIMENSION: Record<string, string> = {
   camera: "camera", light: "light", colour: "colour grade", finish: "texture", composition: "composition", people: "people", styling: "people",
@@ -149,7 +161,7 @@ export function promptLines(d: Direction, planned: Planned = {}, most = 16, most
   const s = shown(planned);
   const out: PromptLine[] = [];
   let absences = 0;
-  for (const l of d.lines) {
+  for (const l of directionFor(d, planned).lines) {
     if (out.length >= most) break;
     if (l.lever !== "prompt" && l.lever !== "reference") continue;
     const f = FIELD.get(l.key);
@@ -167,14 +179,27 @@ export function promptLines(d: Direction, planned: Planned = {}, most = 16, most
  * what a campaign chooses, and what the brand has never done. The plan decides the idea, the people and the place, so
  * it gets every lever but the finish step.
  */
-export function planBrief(d: Direction, most = 80): string {
-  const byGroup = new Map<string, string[]>();
-  for (const l of d.lines.filter((x) => x.lever !== "finish" && x.lever !== "select").slice(0, most)) {
-    const share = l.standing === "always" ? "always" : `${Math.round(l.share * 100)} %`;
-    const miss = l.miss && l.miss.distance >= 0.3 ? `; earlier Engine pictures: ${l.miss.engine}` : "";
-    byGroup.set(l.group, [...(byGroup.get(l.group) ?? []), `- ${l.says} (${share}${miss})`]);
+export function planBrief(d: Direction, most = 80, mostOfAKind = 40): string {
+  const planLines = (x: Direction) => x.lines.filter((l) => l.lever !== "finish" && l.lever !== "select");
+  const grouped = (ls: Line[]) => {
+    const byGroup = new Map<string, string[]>();
+    for (const l of ls) {
+      const share = l.standing === "always" ? "always" : `${Math.round(l.share * 100)} %`;
+      const miss = l.miss && l.miss.distance >= 0.3 ? `; earlier Engine pictures: ${l.miss.engine}` : "";
+      byGroup.set(l.group, [...(byGroup.get(l.group) ?? []), `- ${l.says} (${share}${miss})`]);
+    }
+    return [...byGroup].map(([g, ls]) => `${NOUN[g] ?? g}\n${ls.join("\n")}`);
+  };
+  const whole = planLines(d).slice(0, most);
+  const parts = grouped(whole);
+  // What the brand does only in one kind of picture: said under that kind, and only what the whole did not say already.
+  const saidOfAll = new Set(whole.map((l) => `${l.key}=${l.says}`));
+  for (const k of KINDS) {
+    const own = d.kinds?.[k];
+    if (!own) continue;
+    const only = planLines(own).filter((l) => !saidOfAll.has(`${l.key}=${l.says}`)).slice(0, mostOfAKind);
+    if (only.length) parts.push(`${KIND_HEAD[k]} (${own.pictures} of the brand's pictures)\n${grouped(only).join("\n")}`);
   }
-  const parts = [...byGroup].map(([g, ls]) => `${NOUN[g] ?? g}\n${ls.join("\n")}`);
   // A campaign's numbers (its sharpness, its size) are for the finish step and the judge, not for the plan.
   const chosen = d.choices.filter((c) => Object.values(c.campaigns).every((v) => typeof v === "string"));
   if (chosen.length)

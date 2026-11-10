@@ -263,3 +263,42 @@ Deno.test("a card of type alone has no finish of a photograph: its finish number
   const unread = Array.from({ length: 6 }, (_, i) => card(`u${i}`, {}, { "finish.black_point": 0 }));
   assertEquals(finishOfPhotographs(unread), unread);
 });
+
+Deno.test("a brand's kinds of picture are counted apart: a picture is held against its own kind, and takes its direction from it", () => {
+  const product = { people: false, face: false, severalPeople: false, product: true, words: false, logo: false, outdoors: false };
+  const people = { ...product, people: true, face: true, outdoors: true };
+  // The brand: the product alone always inside and sharp front to back, people always outside with shallow focus; the
+  // camera is low in both. Counted together, where and how sharp look free.
+  const of = (id: string, inside: boolean, i: number, shows: Shows): Card => ({
+    ...card(id, { "kind.type": "photograph", "setting.inside_outside": inside ? "inside" : "outside", "camera.depth_of_field": inside ? "deep" : "shallow", "camera.height": "low" }, {}, `k${i % 4}`),
+    shows,
+  });
+  const brand: Card[] = [...Array.from({ length: 20 }, (_, i) => of(`p${i}`, true, i, product)), ...Array.from({ length: 20 }, (_, i) => of(`h${i}`, false, i, people))];
+  assertEquals(buildProfile(brand).fields["camera.depth_of_field"]!.standing, "free");
+  // The Engine made the product alone, outside, with shallow focus.
+  const engine: Card[] = Array.from({ length: 4 }, (_, i) => of(`e${i}`, false, i, product));
+  const built = build(brand, engine);
+  // Against everything it would fit; against the brand's own product pictures it does not.
+  assert(built.proof!.kinds!.product_alone!.engineFit < 0.7, JSON.stringify(built.proof));
+  assert(built.proof!.kinds!.product_alone!.ownFit > 0.95);
+  assert(built.proof!.engineFit < built.proof!.ownFit);
+  // The floor is what the brand's other kind scores against this one; the Engine's pictures did no better, so no proof.
+  assert(built.proof!.kinds!.product_alone!.floor! < 0.7);
+  assert(built.score.parts.find((p) => p.key === "proof")!.points <= 2, JSON.stringify(built.score.parts));
+  assert(built.score.parts.find((p) => p.key === "proof")!.why.includes("the brand's other pictures"));
+  // The direction of the kind says what the whole cannot, and names what the Engine did instead.
+  assert(!built.direction.lines.some((l) => l.key === "camera.depth_of_field"));
+  const line = built.direction.kinds!.product_alone!.lines.find((l) => l.key === "camera.depth_of_field")!;
+  assertEquals(line.says, "Camera, depth of field: deep");
+  assert(line.miss!.engine.includes("shallow"));
+  // A prompt for the product alone takes the kind's line; one with people takes the people's.
+  assert(promptLines(built.direction, { product: true }).some((l) => l.statement.startsWith("Camera, depth of field: deep")));
+  assert(promptLines(built.direction, { product: true, people: true }).some((l) => l.statement.startsWith("Camera, depth of field: shallow")));
+  // The plan writer is told both, each under its kind, and not twice what holds for all.
+  const brief = planBrief(built.direction);
+  assert(brief.includes("WHEN THE PICTURE IS THE PRODUCT WITH NO PEOPLE") && brief.includes("WHEN THE PICTURE HAS PEOPLE IN IT"));
+  assert(brief.includes("inside outside: inside") && brief.includes("inside outside: outside"));
+  assertEquals(brief.split("height: low").length - 1, 1);
+  // A small brand has no kinds: nothing changes for it.
+  assertEquals(build(brand.slice(0, 8)).direction.kinds, undefined);
+});

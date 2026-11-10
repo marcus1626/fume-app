@@ -160,7 +160,7 @@ export type TasteScore = {
  * how many campaigns, so a campaign's choice is not taken for the brand. Proof: how close the Engine's own pictures
  * come to the brand's (fit, 0 to 1), which is the only part that shows the knowledge works; none until it is tested.
  */
-export function tasteScore(profile: Profile, proof: { engineFit: number; ownFit: number; own?: number; left?: number } | null = null): TasteScore {
+export function tasteScore(profile: Profile, proof: { engineFit: number; ownFit: number; own?: number; left?: number; kinds?: Proof["kinds"] } | null = null): TasteScore {
   const fs = Object.values(profile.fields);
   const n = profile.pictures;
   const evidence = n / (n + 40);
@@ -177,14 +177,24 @@ export function tasteScore(profile: Profile, proof: { engineFit: number; ownFit:
   const settled = known.filter((f) => f.standing === "always" || f.standing === "by_campaign" || (f.n >= 20 && f.standing !== "unknown"));
   const certainty = known.length ? settled.length / fs.length : 0;
   const breadth = Math.min(1, profile.campaigns / 5);
-  const proven = proof && proof.ownFit > 0 ? Math.min(1, proof.engineFit / proof.ownFit) : 0;
+  // Where the pictures were held against their own kind, proof is how far the Engine's come from the floor (the brand's
+  // other kinds of picture) to the brand's own of that kind; else how close they come to the brand's own at all.
+  const ofKinds = Object.values(proof?.kinds ?? {}).filter((k) => k.ownFit > 0);
+  const share = (k: KindProof) => Math.max(0, Math.min(1, k.floor !== undefined && k.ownFit > k.floor ? (k.engineFit - k.floor) / (k.ownFit - k.floor) : k.engineFit / k.ownFit));
+  const proven = ofKinds.length
+    ? ofKinds.reduce((s, k) => s + k.engine * share(k), 0) / ofKinds.reduce((s, k) => s + k.engine, 0)
+    : proof && proof.ownFit > 0 ? Math.min(1, proof.engineFit / proof.ownFit) : 0;
+  const kindWords: Record<string, string> = { product_alone: "product pictures", people: "pictures with people" };
+  const proofWhy = !proof ? "Not tested yet" : ofKinds.length
+    ? Object.entries(proof.kinds!).map(([k, p]) => `The Engine's ${kindWords[k] ?? k} fit ${Math.round(p.engineFit * 100)}%, the brand's own ${Math.round(p.ownFit * 100)}%${p.floor !== undefined ? `, the brand's other pictures ${Math.round(p.floor * 100)}%` : ""} (${p.engine} against ${p.own})`).join("; ")
+    : `The Engine's pictures fit ${Math.round(proof.engineFit * 100)}%, the brand's own ${Math.round(proof.ownFit * 100)}%${proof.own ? `, counted on ${proof.own} photographs${proof.left ? ` (${proof.left} other pictures left out)` : ""}` : ""}`;
   const part = (key: TasteScore["parts"][number]["key"], label: string, share: number, of: number, why: string) => ({ key, label, points: Math.round(share * of), of, why });
   const parts = [
     part("evidence", "Pictures", evidence, 30, `${n} picture${n === 1 ? "" : "s"} read`),
     part("coverage", "Coverage", coverage, 20, `${known.length} of ${fs.length} fields answered by ${MIN_PICTURES} pictures or more`),
     part("certainty", "Certainty", certainty, 20, `${settled.length} fields settled`),
     part("breadth", "Breadth", breadth, 10, `${profile.campaigns} campaign${profile.campaigns === 1 ? "" : "s"}`),
-    part("proof", "Proof", proven, 20, proof ? `The Engine's pictures fit ${Math.round(proof.engineFit * 100)}%, the brand's own ${Math.round(proof.ownFit * 100)}%${proof.own ? `, counted on ${proof.own} photographs${proof.left ? ` (${proof.left} other pictures left out)` : ""}` : ""}` : "Not tested yet"),
+    part("proof", "Proof", proven, 20, proofWhy),
   ];
   const next: string[] = [];
   if (n < 40) next.push(`Add pictures: ${n} read, the score climbs fastest up to about 100.`);
@@ -261,7 +271,48 @@ export function photographic(c: Card): boolean {
   const type = c.read["kind.type"], under = c.read["kind.picture_under_graphics"];
   return type === "photograph" || type === "photograph_with_graphics" || type === "video_frame" || under === "full_photograph";
 }
-export type Proof = { engineFit: number; ownFit: number; own: number; engine: number; left: number };
+
+// A brand does not make every kind of picture the same way: Nike's shoe alone is a studio picture on a plain ground,
+// its athletes are outdoors and in motion. Counted together, the two cancel out, every field looks free, and any
+// picture fits. So the brand's pictures are also counted kind by kind, and a picture is held against its own kind.
+export const KINDS = ["product_alone", "people"] as const;
+export type Kind = (typeof KINDS)[number];
+/** Pictures of a kind a brand needs before the kind has habits of its own. */
+export const MIN_KIND = 15;
+/** The kind of a picture from what it shows: people in it, or the product with no one. Null for anything else (type
+ *  alone, a place) and for a picture nobody read. */
+export function kindOf(shows: Partial<Shows> | null | undefined): Kind | null {
+  if (!shows) return null;
+  return shows.people ? "people" : shows.product ? "product_alone" : null;
+}
+/** The brand's cards of each kind it has pictures enough of. */
+export function byKind(cards: Card[]): Partial<Record<Kind, Card[]>> {
+  const out: Partial<Record<Kind, Card[]>> = {};
+  for (const k of KINDS) {
+    const own = cards.filter((c) => kindOf(c.shows) === k);
+    if (own.length >= MIN_KIND) out[k] = own;
+  }
+  return out;
+}
+
+export type KindProof = {
+  engineFit: number;
+  ownFit: number;
+  own: number;
+  engine: number;
+  /** How the brand's pictures of its other kinds fit this kind: what a picture scores that is the brand's but not this
+   *  kind. The Engine's pictures have shown they know the kind only by as much as they fit better than that. */
+  floor?: number;
+};
+export type Proof = {
+  engineFit: number;
+  ownFit: number;
+  own: number;
+  engine: number;
+  left: number;
+  /** The same, for each kind of picture both the brand and the Engine have: the Engine's against the brand's of that kind. */
+  kinds?: Partial<Record<Kind, KindProof>>;
+};
 /** What the Engine's picture carries before the design layer sets words on it. */
 const PICTURE_LEVERS: Field["lever"][] = ["plan", "prompt", "reference", "finish", "select"];
 
@@ -278,12 +329,30 @@ export function proofOf(brand: Card[], engine: Card[]): Proof | null {
   const whole = buildProfile(like);
   // Whether words are set on the picture is the design layer's doing, although the plan decides it.
   const opts = { levers: PICTURE_LEVERS, skip: ["kind.type"] };
+  // A picture is held against the brand's pictures of its own kind where the brand has enough of them, else against all.
+  const sets = byKind(like);
+  const profiles = Object.fromEntries(Object.entries(sets).map(([k, cs]) => [k, buildProfile(cs)])) as Partial<Record<Kind, Profile>>;
+  const against = (c: Card) => profiles[kindOf(c.shows) ?? ("" as Kind)] ?? whole;
+  const without = (c: Card) => buildProfile((sets[kindOf(c.shows) ?? ("" as Kind)] ?? like).filter((x) => x.id !== c.id));
+  const engineFits = engine.map((c) => ({ kind: kindOf(c.shows), fit: fit(against(c), c, opts).fit }));
+  const ownFits = like.map((c) => ({ kind: kindOf(c.shows), fit: fit(without(c), c, opts).fit }));
+  const kinds: Partial<Record<Kind, KindProof>> = {};
+  for (const k of KINDS) {
+    const e = engineFits.filter((x) => x.kind === k), o = ownFits.filter((x) => x.kind === k);
+    if (!sets[k] || !e.length) continue;
+    const others = like.filter((c) => kindOf(c.shows) !== null && kindOf(c.shows) !== k);
+    kinds[k] = {
+      engineFit: mean(e.map((x) => x.fit)), ownFit: mean(o.map((x) => x.fit)), own: o.length, engine: e.length,
+      ...(others.length >= MIN_PICTURES ? { floor: mean(others.map((c) => fit(profiles[k]!, c, opts).fit)) } : {}),
+    };
+  }
   return {
-    engineFit: mean(engine.map((c) => fit(whole, c, opts).fit)),
-    ownFit: mean(like.map((c) => fit(buildProfile(like.filter((x) => x.id !== c.id)), c, opts).fit)),
+    engineFit: mean(engineFits.map((x) => x.fit)),
+    ownFit: mean(ownFits.map((x) => x.fit)),
     own: like.length,
     engine: engine.length,
     left: brand.length - like.length,
+    ...(Object.keys(kinds).length ? { kinds } : {}),
   };
 }
 

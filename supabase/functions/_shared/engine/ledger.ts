@@ -2,7 +2,8 @@
 // how it was checked there, and why it was left out when it was not. Built by code from the task and the compile
 // package, so a person (and the prompt graph) can see that the brand and the product were in the prompt, not take it
 // on trust.
-import { brainImagery, brainLessons, brainNotes, brainPalette, type EngineTask, NO_BRAIN, plannedCreative, referenceCandidates, SCHEMA_LINES, schemaLines } from "./context.ts";
+import { brainImagery, brainLessons, brainNotes, brainPalette, type EngineTask, NO_BRAIN, plannedCreative, plannedShows, referenceCandidates, SCHEMA_LINES, schemaLines } from "./context.ts";
+import { directionFor } from "../taste/direction.ts";
 import { needOf, whyNot } from "./references.ts";
 import type { CoverageDecision } from "./coverage.ts";
 import type { CompilePackage, ManifestItem } from "./types.ts";
@@ -89,7 +90,7 @@ export function buildLedger(task: EngineTask, pkg: CompilePackage, decisions: Co
 
   // The taste schema: every habit the photograph could carry, and whether this prompt took it.
   const taken = new Set(schemaLines(task).map((l) => l.id));
-  for (const l of task.tasteDirection?.lines ?? []) {
+  for (const l of task.tasteDirection ? directionFor(task.tasteDirection, plannedShows(task)).lines : []) {
     if (l.lever !== "prompt" && l.lever !== "reference") continue;
     const ref = `schema-${l.key}`;
     if (taken.has(ref)) inManifest(ref, "taste", l.says, edit ? "A change to a picture keeps its look." : "Not in the prompt.");
