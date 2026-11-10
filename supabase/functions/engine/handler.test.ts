@@ -1,5 +1,5 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
-import { type Deps, enforcedOf, handleEngine, NO_PROVIDER, runJob, seenLessons, type Taken } from "./handler.ts";
+import { type Deps, enforcedOf, handleEngine, NO_PROVIDER, roomLesson, runJob, seenLessons, type Taken } from "./handler.ts";
 import { byModel, higgsfield, ratioFor } from "./provider.ts";
 import { fal, sizeFor } from "./fal.ts";
 import type { Composer, Decider, SlotText, Verifier } from "../_shared/engine/index.ts";
@@ -461,4 +461,57 @@ Deno.test("what the picture check found on the brand's last pictures is avoided 
   };
   assertEquals(await runJob(JOB, f.deps), "dry");
   assertEquals(seen[0].slice(0, 2), ["Keep the cap matte.", "Skin looks waxy and plastic."]);
+});
+
+Deno.test("a picture that left no room for the words is made once more, told what stood in the room", async () => {
+  const room = { id: "brand-room", kind: "brand_rule_hard" as const, refId: "room-for-words", required: true, check: "decision" as const, requirement: "The left 40% of the width is bare ground for the words.", suggestedSlot: "scene" as const };
+  const run = async (verdicts: ("holds" | "off" | "unclear")[], queue = true) => {
+    const f = fake({ takes: [taken()], provider: fakeProvider(["done"]) });
+    const asked: [string, string][] = [];
+    const ran: string[] = [];
+    const later: Promise<unknown>[] = [];
+    f.deps.later = (w) => void later.push(w);
+    let picture = 0;
+    f.deps.models.evaluate = async (input) => {
+      const verdict = verdicts[picture++];
+      return {
+        looked: {
+          answers: input.checks.map((c) => ({ n: c.n, verdict: c.requirement === room.requirement ? verdict : "holds", note: c.requirement === room.requirement ? "The sled fills the left side." : "" })),
+          artefacts: "none", artefactNotes: [], printedText: false,
+        },
+        call,
+      };
+    };
+    f.deps.service.toEvaluate = async () => ({
+      data: { candidates: verdicts.map((_, i) => ({ id: `cand-${i}`, path: `ws1/engine/${i}.png` })), manifest: [room], references: [] },
+      error: null,
+    });
+    f.deps.service.evaluated = async () => ({ error: null });
+    f.deps.service.again = async (attemptId, why) => (asked.push([attemptId, why]), queue);
+    f.deps.service.runAgain = async (jobId) => void ran.push(jobId);
+    assertEquals(await runJob(JOB, f.deps), "made");
+    await Promise.all(later);
+    return { asked, ran };
+  };
+  const off = await run(["off"]);
+  assertEquals(off.asked.map((a) => a[1]), ["The sled fills the left side."], "the job is queued once more with what stood in the room");
+  assertEquals(off.ran, [JOB], "and the next picture starts at once");
+  assertEquals((await run(["off", "holds"])).asked, [], "one picture with room is enough for the expert");
+  assertEquals((await run(["unclear"])).asked, [], "a room the check cannot tell is left to the expert");
+  assertEquals((await run(["off"], false)).ran, [], "nothing starts when the job may not be made again");
+});
+
+Deno.test("the next prompt reads first what filled the room on the last picture", async () => {
+  assertEquals(roomLesson(null), []);
+  const [lesson] = roomLesson("The sled fills the left side");
+  assertEquals([lesson.polarity, lesson.statement.endsWith("On the last picture: The sled fills the left side.")], ["do", true]);
+  const t = { ...taken(), lessons: [{ id: "p1", statement: "Keep the cap matte.", polarity: "avoid" as const, reason: "A designer said so." }], again: "The sled fills the left side." };
+  const f = fake({ takes: [t] });
+  const seen: string[][] = [];
+  f.deps.models.compose = async (input) => {
+    seen.push(input.compilePackage.knowledge.lessons.map((l) => l.id));
+    return compose(input);
+  };
+  assertEquals(await runJob(JOB, f.deps), "dry");
+  assertEquals(seen[0].slice(0, 2), ["room-again", "p1"]);
 });

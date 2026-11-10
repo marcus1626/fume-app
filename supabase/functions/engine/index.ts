@@ -56,6 +56,7 @@ Deno.serve((req) =>
     });
     return {
       canRead: async (jobId) => {
+        if (authorization === `Bearer ${secret}`) return true; // the Engine itself, making a picture once more
         const { data } = await asCaller.from("production_jobs").select("id").eq("id", jobId).maybeSingle();
         return Boolean(data);
       },
@@ -72,6 +73,9 @@ Deno.serve((req) =>
             // What the picture check found on the brand's last pictures, so this one avoids it.
             const { data: seen } = await service.rpc("engine_recent_checks", { p_job_id: jobId });
             if (Array.isArray(seen) && seen.length) data.seen = seen;
+            // What filled the room for the words on this job's last picture, when it is made once more for that.
+            const { data: again } = await service.rpc("engine_again_note", { p_job_id: jobId });
+            if (typeof again === "string" && again) data.again = again;
           }
           return { data, error: err(error) };
         },
@@ -112,6 +116,19 @@ Deno.serve((req) =>
             method: "POST",
             headers: { Authorization: `Bearer ${secret}`, apikey: secret, "content-type": "application/json" },
             body: JSON.stringify({ candidateId }),
+            signal: AbortSignal.timeout(20_000),
+          });
+        },
+        again: async (attemptId, why) => {
+          const { data, error } = await service.rpc("engine_again", { p_attempt_id: attemptId, p_reason: why });
+          if (error) console.error(`engine: not made again: ${error.message}`);
+          return data === true;
+        },
+        runAgain: async (jobId) => {
+          await fetch(`${url}/functions/v1/engine`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${secret}`, apikey: secret, "content-type": "application/json" },
+            body: JSON.stringify({ jobId }),
             signal: AbortSignal.timeout(20_000),
           });
         },

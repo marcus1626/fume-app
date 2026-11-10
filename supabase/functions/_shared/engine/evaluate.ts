@@ -10,7 +10,8 @@ export type Evaluation = {
   artefacts: "none" | "minor" | "major";
   notes: string[];
   evaluated: true;
-  items: { item: string; area: "product" | "brand" | "scene"; verdict: "holds" | "off" | "unclear"; note?: string; hard?: boolean }[];
+  /** `ref` names the prompt's item the answer is about, where code acts on it (the room for the words). */
+  items: { item: string; area: "product" | "brand" | "scene"; verdict: "holds" | "off" | "unclear"; note?: string; hard?: boolean; ref?: string }[];
   /** What the model named as artefacts, and whether it saw printed words nobody asked for: findings on the version. */
   artefactNotes?: string[];
   printedText?: boolean;
@@ -24,7 +25,12 @@ export type Looked = {
   printedText: boolean;
 };
 
-type Check = { n: number; area: Evaluation["items"][number]["area"]; requirement: string; hard: boolean };
+type Check = { n: number; area: Evaluation["items"][number]["area"]; requirement: string; hard: boolean; ref?: string };
+
+/** The prompt's rule that keeps bare ground where the brand sets its words (context.ts roomRules). */
+export const ROOM_REF = "room-for-words";
+/** Refs code acts on; the rest stay out of the stored evaluation. */
+const KEPT_REFS = new Set([ROOM_REF]);
 
 /** The checklist from the prompt's manifest: what a picture can show (word-for-word text and the format are code's). */
 export function checklist(manifest: Pick<ManifestItem, "kind" | "requirement" | "required" | "refId">[], withProductPhoto = false): Check[] {
@@ -38,7 +44,7 @@ export function checklist(manifest: Pick<ManifestItem, "kind" | "requirement" | 
     const area = m.kind === "product_invariant" || m.kind === "product_colour" ? "product"
       : m.kind === "brand_rule_hard" || m.kind === "brand_rule_soft" || m.kind === "lesson_enforced" ? "brand"
       : m.kind === "concept" ? "scene" : null;
-    if (area) out.push({ n: out.length + 1, area, requirement: m.requirement, hard: m.required || area === "product" });
+    if (area) out.push({ n: out.length + 1, area, requirement: m.requirement, hard: m.required || area === "product", ...(m.refId && KEPT_REFS.has(m.refId) ? { ref: m.refId } : {}) });
   }
   return out;
 }
@@ -73,7 +79,7 @@ export function toEvaluation(checks: Check[], looked: Looked): Evaluation {
   const items = checks.map((c) => {
     const a = looked.answers.find((x) => x.n === c.n);
     const verdict = a?.verdict ?? "unclear";
-    return { item: c.requirement, area: c.area, verdict, ...(a?.note && verdict !== "holds" ? { note: a.note } : {}), ...(c.hard ? { hard: true } : {}) };
+    return { item: c.requirement, area: c.area, verdict, ...(a?.note && verdict !== "holds" ? { note: a.note } : {}), ...(c.hard ? { hard: true } : {}), ...(c.ref ? { ref: c.ref } : {}) };
   });
   const product = items.filter((i) => i.area === "product");
   const brandOff = checks.filter((c, i) => c.area === "brand" && c.hard && items[i].verdict === "off");
@@ -98,4 +104,13 @@ export function toEvaluation(checks: Check[], looked: Looked): Evaluation {
     artefactNotes: looked.artefactNotes.slice(0, 6),
     printedText: looked.printedText,
   };
+}
+
+/** What filled the room kept for the words, when the picture check says the room is not bare; null when it holds, cannot
+ *  be told, or the prompt kept no room. Anthem, 10 Nov: six of eight pictures put the product where the words go, and the
+ *  words then covered it. */
+export function roomTaken(e: Pick<Evaluation, "items">): string | null {
+  const room = e.items.find((i) => i.ref === ROOM_REF);
+  if (!room || room.verdict !== "off") return null;
+  return room.note?.trim() || "Something stands in the room kept for the words.";
 }
