@@ -35,6 +35,8 @@ export type JevAnswer = { type?: string; choice?: string; noul?: number; confide
 
 const part = (key: string) => key.slice(key.indexOf(".") + 1);
 const plain = (option: string) => option.replaceAll("_", " ");
+/** An option that says the thing is not in the picture. */
+const ABSENT = /^(none|nothing|no|absent|nowhere|not_visible|not_shown|not_present|does_not_apply|none_.+|no_.+)$/;
 const HOW = `Answer from what is visible in this picture only, never from what the brand is known for. If the picture is a screenshot of an ad in an app or a feed, read the ad itself and ignore the app around it. If words or shapes are set on a photograph, questions about camera, light, colour and finish are about the photograph underneath. Describe people only by what is visible.`;
 
 /** A pass as Jev is asked it: the picture and how to read it, the questions by a plain name, and what each name stands for. */
@@ -50,10 +52,13 @@ export function jevAsk(pass: Pass, fields: Field[], placeholder: string): { stat
     const about = f.ask ?? `${f.label}.`;
     const options = f.options ?? [];
     if (f.type === "choice" && options.length) {
+      // A list that can say the thing is not there ("none", "not visible") needs no "cannot tell" beside it: in the
+      // first test Jev chose "cannot tell" for a picture with no price on it, where the answer is "none".
+      const open = options.some((o) => ABSENT.test(o));
       put({
         type: "choice",
         instructions: `${f.group}, ${f.label.toLowerCase()}: ${about} Choose the option that fits best; a hard call is still a call.`,
-        criteria: { ...Object.fromEntries(options.map((o) => [o, null])), [CANNOT_TELL]: "Only when the picture truly does not show it." },
+        criteria: { ...Object.fromEntries(options.map((o) => [o, null])), ...(open ? {} : { [CANNOT_TELL]: "Only when the picture is too unclear to answer. A hard call is still a call." }) },
       }, { kind: "choice", field: f });
     } else if (f.type === "choices") {
       for (const o of options) put({ type: "noul", instructions: `${f.group}, ${f.label.toLowerCase()}: ${about} Does "${plain(o)}" clearly hold for this picture?` }, { kind: "option", field: f, option: o });

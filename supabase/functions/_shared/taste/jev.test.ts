@@ -20,6 +20,11 @@ Deno.test("a pass becomes questions Jev can answer: one choice per field, one ye
   assert(!Object.values(slots).some((s) => s.kind !== "shows" && s.field.type === "words"));
   const first = asked.find((q) => q.type === "choice")!;
   assert(first.type === "choice" && CANNOT_TELL in first.criteria && Object.keys(first.criteria).length <= 255);
+  // A list that can already say the thing is not there is asked without "cannot tell".
+  const design = jevAsk("design", passFields("design"), "PIC");
+  const price = Object.entries(design.slots).find(([, s]) => s.kind === "choice" && s.field.key === "design.price_or_offer")![0];
+  const q = design.questions[price]!;
+  assert(q.type === "choice" && "none" in q.criteria && !(CANNOT_TELL in q.criteria));
   // Names a request can carry whatever the API allows in a name.
   assert(Object.keys(questions).every((n) => /^q\d+$/.test(n)));
 });
