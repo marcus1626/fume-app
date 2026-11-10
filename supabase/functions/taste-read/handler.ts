@@ -1,0 +1,117 @@
+// The edge function `taste-read`: a vision model reads one picture against the taste schema's read fields
+// (_shared/taste/schema.ts, read.ts) and the answers go back as the read half of the picture's card. Fume's own people
+// only, for a brand they work on. `idea` is asked first because it says what the picture shows; the passes that apply
+// are then asked side by side. Every question is counted against the week's budget for the language model, and what
+// it cost is kept. handler.test.ts runs it without Supabase or the model.
+import { answersOf, laterPasses, passFields, showsOf } from "../_shared/taste/read.ts";
+import { type Answer, type Pass, PASSES, type Shows, TASTE_SCHEMA_VERSION } from "../_shared/taste/schema.ts";
+
+export interface Usage {
+  model: string;
+  input_tokens: number;
+  output_tokens: number;
+  cost_usd: number;
+}
+export type Picture = { base64: string; mediaType: "image/jpeg" | "image/png" | "image/webp" } | { url: string };
+export type Asked = { ok: true; out: Record<string, Record<string, unknown>>; usage: Usage } | { ok: false; error: string; usage: Usage };
+/** The readers the bake-off compares (docs/mvp/taste-schema.md); the cheap one unless asked. */
+export const READERS = ["haiku", "sonnet", "opus"] as const;
+export type Reader = (typeof READERS)[number];
+export const EFFORTS = ["low", "medium", "high"] as const;
+export type Effort = (typeof EFFORTS)[number];
+
+export interface Deps {
+  /** As the caller: true when they are one of Fume's own people on this brand. */
+  staff(workspaceId: string): Promise<boolean>;
+  withinBudget(): Promise<boolean>;
+  ask(pass: Pass, shows: Shows | undefined, picture: Picture, reader: Reader, effort: Effort): Promise<Asked>;
+  keep(run: { workspaceId: string; input: unknown; output: unknown; error: string | null; usage: Usage }): Promise<void>;
+}
+
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+const reply = (status: number, body: unknown) =>
+  new Response(JSON.stringify(body), { status, headers: { ...CORS, "Content-Type": "application/json" } });
+const NONE: Usage = { model: "", input_tokens: 0, output_tokens: 0, cost_usd: 0 };
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+/** About 6 MB of picture: over that the model would not take it. */
+const MOST_BASE64 = 8_000_000;
+
+function pictureOf(p: unknown): Picture | null {
+  if (typeof p !== "object" || p === null) return null;
+  const { base64, mediaType, url } = p as { base64?: unknown; mediaType?: unknown; url?: unknown };
+  if (typeof url === "string" && /^https:\/\/[^\s]+$/.test(url) && url.length < 2000) return { url };
+  if (typeof base64 === "string" && base64.length > 100 && base64.length <= MOST_BASE64 && /^[A-Za-z0-9+/=]+$/.test(base64.slice(0, 400)) &&
+    (mediaType === "image/jpeg" || mediaType === "image/png" || mediaType === "image/webp")) return { base64, mediaType };
+  return null;
+}
+const add = (a: Usage, b: Usage): Usage => ({
+  model: b.model || a.model,
+  input_tokens: a.input_tokens + b.input_tokens,
+  output_tokens: a.output_tokens + b.output_tokens,
+  cost_usd: Math.round((a.cost_usd + b.cost_usd) * 10_000) / 10_000,
+});
+async function tried(f: () => Promise<Asked>): Promise<Asked> {
+  try {
+    return await f();
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : String(e), usage: NONE };
+  }
+}
+
+export async function handleTasteRead(req: Request, signedIn: boolean, deps: Deps): Promise<Response> {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+  if (req.method !== "POST") return reply(400, { code: "invalid", message: "Use POST." });
+  if (!signedIn) return reply(403, { code: "forbidden", message: "Sign in first." });
+  let body: { workspaceId?: unknown; picture?: unknown; reader?: unknown; effort?: unknown; passes?: unknown };
+  try {
+    body = (await req.json()) ?? {};
+  } catch {
+    return reply(400, { code: "invalid", message: "The request could not be read." });
+  }
+  const workspaceId = typeof body.workspaceId === "string" && UUID.test(body.workspaceId) ? body.workspaceId : null;
+  const picture = pictureOf(body.picture);
+  const reader = READERS.find((r) => r === (body.reader ?? "haiku"));
+  const effort = EFFORTS.find((e) => e === (body.effort ?? "low"));
+  const only = Array.isArray(body.passes) ? PASSES.filter((p) => (body.passes as unknown[]).includes(p)) : null;
+  if (!workspaceId || !picture || !reader || !effort || (only && !only.length))
+    return reply(400, { code: "invalid", message: "Send a brand, a picture (a JPEG, PNG or WebP, or an https address), and a reader Fume knows." });
+  if (!(await deps.staff(workspaceId))) return reply(403, { code: "forbidden", message: "Only Fume's own people on this brand can read its pictures." });
+  if (!(await deps.withinBudget())) return reply(429, { code: "budget", message: "This week's budget for Fume's language model is used up." });
+
+  const read: Record<string, Answer> = {};
+  const failed: { pass: Pass; error: string }[] = [];
+  let usage: Usage = NONE;
+  const take = (pass: Pass, shows: Shows | undefined, a: Asked) => {
+    usage = add(usage, a.usage);
+    if (a.ok) Object.assign(read, answersOf(passFields(pass, shows), a.out));
+    else failed.push({ pass, error: a.error });
+  };
+
+  // `idea` first: what the picture shows decides what else can be asked of it.
+  const idea = await tried(() => deps.ask("idea", undefined, picture, reader, effort));
+  take("idea", undefined, idea);
+  let shows: Shows | null = null;
+  if (idea.ok) {
+    shows = showsOf(idea.out);
+    const s = shows;
+    const later = laterPasses(s).filter((p) => !only || only.includes(p));
+    // The budget is asked once more before the larger half, so a full week stops here and not five questions later.
+    if (later.length && !(await deps.withinBudget())) for (const pass of later) failed.push({ pass, error: "This week's budget is used up." });
+    else (await Promise.all(later.map((pass) => tried(() => deps.ask(pass, s, picture, reader, effort))))).forEach((a, i) => take(later[i]!, s, a));
+  }
+
+  const answered = Object.values(read).filter((v) => v !== null).length;
+  await deps.keep({
+    workspaceId,
+    input: { task: "taste_read", schema: TASTE_SCHEMA_VERSION, reader, effort, picture: "url" in picture ? picture.url : `${picture.mediaType}, ${picture.base64.length} characters` },
+    output: { fields: Object.keys(read).length, answered, failed },
+    error: idea.ok ? null : idea.error,
+    usage,
+  });
+  if (!idea.ok) return reply(502, { code: "unavailable", message: "Fume could not read the picture just now.", detail: idea.error, usage });
+  return reply(200, { schema: TASTE_SCHEMA_VERSION, reader, effort, shows, read, fields: Object.keys(read).length, answered, failed, usage });
+}
