@@ -20,8 +20,9 @@ export interface Usage {
 export type Picture = { base64: string; mediaType: "image/jpeg" | "image/png" | "image/webp" } | { url: string };
 export type Asked = { ok: true; out: Record<string, Record<string, unknown>>; usage: Usage } | { ok: false; error: string; usage: Usage };
 /** The readers the bake-off compares (docs/mvp/taste-schema.md, index.ts says which model each is); the cheap one unless
- *  asked. The first three are asked of Anthropic directly; the rest through fal's router, so no reader is a lock-in. */
-export const READERS = ["haiku", "sonnet", "opus", "gemini-flash", "gemini", "gpt-luna", "gpt-terra", "gpt-sol", "grok", "haiku-r", "sonnet-r", "opus-r"] as const;
+ *  asked. The first three are asked of Anthropic directly; the next through fal's router, so no reader is a lock-in;
+ *  `jev` is TypeSafe's decision model (_shared/taste/jev.ts), which picks from the lists and writes no free words. */
+export const READERS = ["haiku", "sonnet", "opus", "gemini-flash", "gemini", "gpt-luna", "gpt-terra", "gpt-sol", "grok", "haiku-r", "sonnet-r", "opus-r", "jev"] as const;
 export type Reader = (typeof READERS)[number];
 export const EFFORTS = ["low", "medium", "high"] as const;
 export type Effort = (typeof EFFORTS)[number];

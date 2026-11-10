@@ -2,7 +2,8 @@
 // how it was checked there, and why it was left out when it was not. Built by code from the task and the compile
 // package, so a person (and the prompt graph) can see that the brand and the product were in the prompt, not take it
 // on trust.
-import { brainImagery, brainLessons, brainNotes, brainPalette, type EngineTask, NO_BRAIN, SCHEMA_LINES, schemaLines } from "./context.ts";
+import { brainImagery, brainLessons, brainNotes, brainPalette, type EngineTask, NO_BRAIN, plannedCreative, referenceCandidates, SCHEMA_LINES, schemaLines } from "./context.ts";
+import { needOf, whyNot } from "./references.ts";
 import type { CoverageDecision } from "./coverage.ts";
 import type { CompilePackage, ManifestItem } from "./types.ts";
 
@@ -56,8 +57,13 @@ export function buildLedger(task: EngineTask, pkg: CompilePackage, decisions: Co
       } else out.push({ ref: f.id, source: "product_fact", what, used: false, why: `A ${f.area} fact is for the words, not the picture.` });
     }
   }
-  for (const r of pkg.references)
-    out.push({ ref: r.url.split("?")[0].split("/").slice(-2).join("/"), source: "picture", what: r.role, used: true, how: "reference" });
+  const pictureRef = (url: string) => url.split("?")[0].split("/").slice(-2).join("/");
+  for (const r of pkg.references) out.push({ ref: pictureRef(r.url), source: "picture", what: r.role, used: true, how: "reference" });
+  // The product's and the models' pictures that were not sent, and why: the wrong side, a person in a picture with none, or no room.
+  const sent = new Set(pkg.references.map((r) => r.url));
+  const need = needOf(plannedCreative(task));
+  for (const c of referenceCandidates(task))
+    if (!sent.has(c.url)) out.push({ ref: pictureRef(c.url), source: "picture", what: c.role, used: false, why: whyNot(c.card, need, c.subject, pkg.dialect.maxReferences) });
 
   // The Brand DNA's rules: those about pictures are in the prompt; the others shape words and layouts.
   for (const r of task.rules) {

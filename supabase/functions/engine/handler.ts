@@ -10,6 +10,7 @@ import {
   buildKnowledge,
   buildLedger,
   chooseVariants,
+  CAST_ROLE,
   COMPOSITION_ROLE,
   buildProduct,
   checklist,
@@ -302,7 +303,7 @@ async function evaluatePictures(attemptId: string, deps: Deps): Promise<{ looked
     // The product's photographs (the picture this is made from is not one: context.ts names it "the approved …" or "the
     // picture of …").
     const productUrls = (data.references ?? [])
-      .filter((r) => !r.role.startsWith("the approved ") && !r.role.startsWith("the picture of ") && r.role !== COMPOSITION_ROLE)
+      .filter((r) => !r.role.startsWith("the approved ") && !r.role.startsWith("the picture of ") && !r.role.startsWith(CAST_ROLE) && r.role !== COMPOSITION_ROLE)
       .map((r) => r.url)
       .slice(0, 3);
     const productPhotos = (await Promise.all(productUrls.map((u) => shown(u, deps)))).filter((p): p is Shown => p !== null);

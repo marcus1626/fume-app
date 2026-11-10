@@ -13,7 +13,8 @@ export const CANNOT_TELL = "cannot_tell";
 /** The most options a `choices` field keeps, and the most phrases a `words` field keeps. */
 export const MOST = { choices: 4, words: 5 };
 
-const SHOWS: [keyof Shows, string][] = [
+/** What `idea` says a picture shows, as the statements a reader answers yes or no to. */
+export const SHOWS: [keyof Shows, string][] = [
   ["people", "At least one person, or a part of one, is in the picture."],
   ["face", "At least one face can be seen well enough to read its expression."],
   ["severalPeople", "Two or more people are in the picture."],

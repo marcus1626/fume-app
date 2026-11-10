@@ -8,6 +8,7 @@ import {
   buildLedger,
   buildProduct,
   beta,
+  CAST_ROLE,
   CAMPAIGN_STILL_V1,
   chooseVariants,
   classifyFindings,
@@ -27,6 +28,7 @@ import {
   type SlotText,
   type Verifier,
 } from "./index.ts";
+import { cardFromAnswers, CROPS, needOf, OFS, REF_QUESTIONS, VIEWS } from "./references.ts";
 
 const task: EngineTask = {
   brand: { name: "Nordlys Kaffe (test)" },
@@ -461,4 +463,74 @@ Deno.test("the taste schema's habits become soft rules in the photograph's slots
   assertMatch(ledger.find((e) => e.ref === "schema-light.catchlights")!.why!, /weightiest habits that apply/);
   // Whether a picture keeps the habits is judged by reading it against the schema, not by the picture check.
   assert(!checklist(compilePackage.manifest).some((c) => /depth of field/.test(c.requirement)));
+});
+
+Deno.test("the Engine sends the reference pictures the planned picture needs: the right side, with or without people", () => {
+  const scene = (s: string, people = "No people", extra: Partial<EngineTask> = {}): EngineTask => ({
+    ...task, ...extra,
+    plan: { ...task.plan, planned_creatives: [{ ...task.plan.planned_creatives![0]!, scene: s, people, ...(extra.cast ? { castIds: ["m1"] } : {}) }] },
+  });
+  assertEquals(needOf({ id: "x", name: "x", format: "feed", scene: "She walks away from the camera, seen from behind", people: "One woman, full body" }), { view: "back", crop: "whole", people: true });
+  assertEquals(needOf({ id: "x", name: "x", format: "feed", scene: "A cup on a bench" }), { view: null, crop: null, people: false });
+
+  // A plan that names no side leaves every picture in (the test at the top: front, then back).
+  // From the front: the back would put the wrong side in the frame, so it is left out, and the ledger says why.
+  const front = scene("The bag seen from the front on a bench");
+  assertEquals(buildProduct(front, 3).references.map((r) => r.url), ["https://x/front.png"]);
+  const { compilePackage } = buildCompilePackage({ ...inputOf(front), grammar: CAMPAIGN_STILL_V1, dialect: DIALECTS[0] });
+  assertEquals(buildLedger(front, compilePackage).find((e) => e.ref === "x/back.png"), {
+    ref: "x/back.png", source: "picture", what: "Morning Roast, back", used: false, why: "It is seen from the back, and this picture is from the front.",
+  });
+  // From behind: the back first, and the front still, for it is the truth about the product.
+  assertEquals(buildProduct(scene("The bag from behind, its back to camera"), 3).references.map((r) => r.url), ["https://x/back.png", "https://x/front.png"]);
+
+  // Pictures a classifier has looked at: a web import's "site-3" says nothing, its card does.
+  const read: EngineTask["products"] = [{ ...task.products[0]!, pictures: [
+    { slot: "front", url: "https://x/front.png" },
+    { slot: "site-2", url: "https://x/worn.png", card: { of: "product_on_person", view: "front", crop: "whole" } },
+    { slot: "site-3", url: "https://x/unknown.png" },
+    { slot: "site-4", url: "https://x/chart.png", card: { of: "other", view: null, crop: null } },
+  ] }];
+  // No people in the picture: a product on a person would bring the person, and a size chart is not the product.
+  const still = buildProduct(scene("The bag on a bench", "No people", { products: read }), 3);
+  assertEquals(still.references.map((r) => r.url), ["https://x/front.png", "https://x/unknown.png"]);
+  // People in the picture: how it is worn is shown, and the model is told what it is looking at.
+  const worn = buildProduct(scene("A woman holds the bag, facing the camera", "One woman, waist up", { products: read }), 3);
+  assertEquals(worn.references.map((r) => r.role), ["Morning Roast, front", "Morning Roast, worn by a person, the whole figure, seen from the front", "Morning Roast, site-3"]);
+  assertMatch(worn.lockedReferenceText, /The second picture is the product itself \(Morning Roast, worn by a person[^)]*\) and the only truth about its shape, colours and label; the person in it and its background are not used\./);
+  // Two products share the places: each one's best picture before either one's second.
+  const two = buildProduct({ ...front, products: [...read, { id: "p2", name: "Evening Roast", facts: [], pictures: [{ slot: "front", url: "https://x/evening.png" }] }],
+    plan: { ...front.plan, planned_creatives: [{ ...front.plan.planned_creatives![0]!, productIds: ["p1", "p2"] }] } }, 2);
+  assertEquals(two.references.map((r) => r.url), ["https://x/front.png", "https://x/evening.png"]);
+});
+
+Deno.test("a model the plan casts is sent from the side the picture needs, and never without being cast", () => {
+  const cast = [{ id: "m1", name: "Ane", pictures: [
+    { slot: "front", url: "https://x/ane-front.png", card: { of: "person", view: "front", crop: "half" } },
+    { slot: "back", url: "https://x/ane-back.png", card: { of: "person", view: "back", crop: "whole" } },
+    { slot: "profile", url: "https://x/ane-side.png" },
+  ] }];
+  const planned = (s: string, people: string, castIds?: string[]): EngineTask => ({
+    ...task, cast, plan: { ...task.plan, planned_creatives: [{ ...task.plan.planned_creatives![0]!, scene: s, people, ...(castIds ? { castIds } : {}) }] },
+  });
+  // From the front: her front first among her own pictures, never her back; the product keeps its place.
+  const p = buildProduct(planned("A woman drinks coffee by the window, facing the camera", "One woman, waist up", ["m1"]), 4);
+  assertEquals(p.references.map((r) => r.url), ["https://x/front.png", "https://x/ane-front.png", "https://x/ane-side.png"]);
+  assertMatch(p.lockedReferenceText, /The second picture is the model Ane, seen from the front, an AI person: keep this same person's face, hair, skin and build; their clothes, their pose and the place are not used\./);
+  // From behind: only her back.
+  const behind = buildProduct(planned("A woman walks to the window, seen from behind", "One woman, full body", ["m1"]), 3);
+  assertEquals(behind.references.filter((r) => r.role.startsWith(CAST_ROLE)).map((r) => r.url), ["https://x/ane-back.png"]);
+  // Not cast, or no people: nobody is put in the picture.
+  assert(!buildProduct(planned("A woman drinks coffee", "One woman"), 4).references.some((r) => r.role.startsWith(CAST_ROLE)));
+  assert(!buildProduct(planned("A cup on a bench", "No people", ["m1"]), 4).references.some((r) => r.role.startsWith(CAST_ROLE)));
+});
+
+Deno.test("a classifier's answers about a reference picture become its card", () => {
+  assertEquals(cardFromAnswers({ of: "product_on_person", view: "three_quarter", crop: "half" }), { of: "product_on_person", view: "three_quarter", crop: "half" });
+  assertEquals(cardFromAnswers({ of: "product", view: "cannot_tell", crop: "whole" }), { of: "product", view: null, crop: "whole" });
+  assertEquals(cardFromAnswers({ of: "a cat" }), null);
+  // The lists a classifier is asked are the lists a card keeps.
+  assertEquals(Object.keys(REF_QUESTIONS.of.options), [...OFS]);
+  assertEquals(Object.keys(REF_QUESTIONS.view.options), [...VIEWS, "cannot_tell"]);
+  assertEquals(Object.keys(REF_QUESTIONS.crop.options), [...CROPS]);
 });

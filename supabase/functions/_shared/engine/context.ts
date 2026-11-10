@@ -3,10 +3,14 @@
 // the lessons people's verdicts taught). Built by code, never by a model: the product text is the verified facts
 // word for word, so the model can only describe the scene around the product, never the product itself.
 import { type Direction, promptLines, type PromptLine } from "../taste/direction.ts";
+import { type Candidate, cardOf, choose, needOf, says } from "./references.ts";
 import type { BrandContext, BrandRule, Concept, FormatSpec, Knowledge, ProductContext } from "./types.ts";
 
 export type Fact = { id: string; product_id?: string; area: string; label: string; statement: string; status: string };
-export type Picture = { slot: string | null; url: string; name?: string };
+/** `card` is what a classifier read of the picture (references.ts RefCard), where one has looked at it. */
+export type Picture = { slot: string | null; url: string; name?: string; card?: unknown };
+/** One of the brand's models: an AI person, never a real one, with the pictures that say who they are. */
+export type CastMember = { id: string; name: string; pictures: Picture[] };
 export type TaskProduct = { id: string; name: string; variant?: string | null; facts: Fact[]; pictures: Picture[] };
 export type PlanLine = { label: string; value: string };
 export type PlannedCreative = {
@@ -21,6 +25,8 @@ export type PlannedCreative = {
   people?: string;
   /** The brand's layout the plan sets this creative's words in (fume-plan, 9 Nov). */
   layout?: string;
+  /** The brand's models this picture is of, where the plan names them. */
+  castIds?: string[];
 };
 export type PlanBody = {
   chosen_direction_id?: string;
@@ -62,6 +68,8 @@ export type EngineTask = {
   room?: { id: string; version: number; layouts: RoomLayout[] } | null;
   /** What the brand's pictures keep to, read against the taste schema (public.engine_taste, taste/direction.ts). */
   tasteDirection?: Direction | null;
+  /** The brand's models, for the pictures the plan casts them in. Nobody is put in a picture the plan did not name. */
+  cast?: CastMember[];
 };
 
 /** How many of the taste schema's lines one prompt takes, and how many of them may be absences. */
@@ -220,6 +228,8 @@ export function lookRules(task: EngineTask): BrandRule[] {
 }
 
 export const COMPOSITION_ROLE = "the moodboard's picture for composition, light and mood";
+/** How a reference picture of one of the brand's models is named; the picture check does not take it for the product. */
+export const CAST_ROLE = "the model ";
 
 export const FORMATS: Record<string, FormatSpec> = {
   feed: { aspectRatio: "4:5", resolution: null },
@@ -256,6 +266,30 @@ export function plannedCreative(task: EngineTask): PlannedCreative | undefined {
   return (task.plan.planned_creatives ?? []).find((c) => c.id === task.creative.slot);
 }
 
+/** Every picture the Engine could send for this creative, with its card: the shown products' own, front first, and
+ *  those of the models the plan casts in it. references.ts chooses among them. */
+export function referenceCandidates(task: EngineTask): Candidate[] {
+  const planned = plannedCreative(task);
+  const out: Candidate[] = [];
+  const named = (pic: Picture) => {
+    const card = cardOf(pic);
+    const said = card && pic.card ? says(card) : "";
+    return { card, tail: said ? `, ${said}` : pic.slot ? `, ${pic.slot}` : "" };
+  };
+  for (const p of shown(task, planned))
+    for (const pic of [...p.pictures].sort((a, b) => slotRank(a.slot) - slotRank(b.slot))) {
+      const { card, tail } = named(pic);
+      out.push({ url: pic.url, role: `${p.name}${tail}`, subject: "product", owner: p.id, card, order: out.length });
+    }
+  const cast = needOf(planned).people ? (task.cast ?? []).filter((m) => planned?.castIds?.includes(m.id)) : [];
+  for (const m of cast)
+    for (const pic of m.pictures) {
+      const { card, tail } = named(pic);
+      out.push({ url: pic.url, role: `${CAST_ROLE}${m.name}${tail}`, subject: "person", owner: m.id, card, order: out.length });
+    }
+  return out;
+}
+
 export function buildProduct(task: EngineTask, maxReferences: number): ProductContext {
   const planned = plannedCreative(task);
   const products = shown(task, planned);
@@ -281,21 +315,22 @@ export function buildProduct(task: EngineTask, maxReferences: number): ProductCo
     )
   );
 
-  // The pictures: the version this is made from first, then each product's pictures front first.
-  const pictures: { url: string; role: string }[] = [];
+  // The pictures: the version this is made from first, then the product's and the models' own pictures that serve
+  // this picture (references.ts: the side it is seen from, how close, with or without people), the best of each first.
+  const references: { url: string; role: string }[] = [];
   if (task.master)
-    pictures.push({
+    references.push({
       url: task.master.url,
       role: task.master.picked ? `the picture of ${task.master.title} that this changes` : `the approved ${task.master.title}, whose picture this keeps`,
     });
-  for (const p of products)
-    for (const pic of [...p.pictures].sort((a, b) => slotRank(a.slot) - slotRank(b.slot)))
-      pictures.push({ url: pic.url, role: `${p.name}${pic.slot ? `, ${pic.slot}` : ""}` });
+  const candidates = referenceCandidates(task);
   // A composition reference takes the last place, after at least one of the product's own pictures.
   const composition = !task.master && task.composition ? task.composition : null;
-  const room = composition && pictures.length > 0 ? maxReferences - 1 : maxReferences;
-  const references = pictures.slice(0, room);
+  const room = (composition && candidates.length > 0 ? maxReferences - 1 : maxReferences) - references.length;
+  const chosen = choose(candidates, needOf(planned), room);
+  for (const c of chosen) references.push({ url: c.url, role: c.role });
   if (composition && references.length < maxReferences) references.push({ url: composition.url, role: COMPOSITION_ROLE });
+  const onPerson = new Set(chosen.filter((c) => c.card?.of === "product_on_person").map((c) => c.url));
 
   const lockedReferenceText = references.length
     ? references.map((r, i) => {
@@ -306,6 +341,10 @@ export function buildProduct(task: EngineTask, maxReferences: number): ProductCo
           : `The ${n} picture is ${r.role}: keep its scene, light and product exactly; change only what is asked.`;
       if (r.role === COMPOSITION_ROLE)
         return `The ${n} picture is ${r.role} only: take its framing, camera angle, light and mood, never its objects, products, people, words or brand.`;
+      if (r.role.startsWith(CAST_ROLE))
+        return `The ${n} picture is ${r.role}, an AI person: keep this same person's face, hair, skin and build; their clothes, their pose and the place are not used.`;
+      if (onPerson.has(r.url))
+        return `The ${n} picture is the product itself (${r.role}) and the only truth about its shape, colours and label; the person in it and its background are not used.`;
       return `The ${n} picture is the product itself (${r.role}) and the only truth about its shape, colours and label; its background is not used.`;
     }).join(" ")
     : "There is no picture of the product; follow the description of it exactly.";

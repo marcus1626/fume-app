@@ -1,11 +1,12 @@
 // The edge function `taste-read` (handler.ts says what it does). Deployed with verify_jwt off: the handler asks
 // Supabase Auth who the caller is and reads their staff roles with their own token. Needs the secret ANTHROPIC_API_KEY
-// for the readers asked of Anthropic and FAL_KEY for the ones asked through fal's router.
+// for the readers asked of Anthropic, FAL_KEY for the ones asked through fal's router and TYPESAFE_API_KEY for Jev.
 import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { betaZodOutputFormat } from "npm:@anthropic-ai/sdk@1.3.0/helpers/beta/zod";
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
 import { signedIn as isSignedIn } from "../_shared/net.ts";
 import { build } from "../_shared/taste/build.ts";
+import { askJev, JEV } from "../_shared/taste/jev.ts";
 import type { Card } from "../_shared/taste/profile.ts";
 import { parseAnswer, passFields, passPrompt, passPromptWithShape, passShape, READ_SYSTEM } from "../_shared/taste/read.ts";
 import { TASTE_SCHEMA_VERSION } from "../_shared/taste/schema.ts";
@@ -15,7 +16,7 @@ import { type Asked, handleTasteRead, type Picture, type Reader, type Usage } fr
  *  `anthropic` is asked directly and answers in the shape; `router` is fal's router to any vision model, which
  *  answers in text, so the shape is written into the question. Qwen is not here: the router keeps to providers that
  *  store nothing, and none of Qwen's does. */
-const MODELS: Record<Reader, { via: "anthropic" | "router"; id: string; input: number; output: number }> = {
+const MODELS: Record<Reader, { via: "anthropic" | "router" | "jev"; id: string; input: number; output: number }> = {
   haiku: { via: "anthropic", id: "claude-haiku-5-5", input: 0.1, output: 0.5 },
   sonnet: { via: "anthropic", id: "claude-sonnet-5-5", input: 2, output: 10 },
   opus: { via: "anthropic", id: "claude-opus-5-5", input: 4, output: 20 },
@@ -28,6 +29,7 @@ const MODELS: Record<Reader, { via: "anthropic" | "router"; id: string; input: n
   "haiku-r": { via: "router", id: "anthropic/claude-haiku-5.5", input: 0.1, output: 0.5 },
   "sonnet-r": { via: "router", id: "anthropic/claude-sonnet-5.5", input: 2, output: 10 },
   "opus-r": { via: "router", id: "anthropic/claude-opus-5.5", input: 4, output: 20 },
+  jev: { via: "jev", id: JEV.model, input: JEV.input, output: 0 },
 };
 const ROUTER = "https://fal.run/openrouter/router/vision";
 const cents = (usd: number) => Math.round(usd * 10_000) / 10_000;
@@ -113,6 +115,7 @@ Deno.serve(async (req) => {
     },
     ask: async (pass, shows, picture, reader, effort): Promise<Asked> => {
       const model = MODELS[reader];
+      if (model.via === "jev") return askJev(Deno.env.get("TYPESAFE_API_KEY"), pass, shows, picture);
       if (model.via === "router") return askRouter(model, READ_SYSTEM, passPromptWithShape(pass, passFields(pass, shows)), picture);
       const m = await claude.beta.messages.parse({
         model: model.id,
