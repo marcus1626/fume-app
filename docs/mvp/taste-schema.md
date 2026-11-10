@@ -113,18 +113,27 @@ picture read twice gives the same answer (steady), its answer is the one the oth
 reading rises with the number where code measures the same thing (measured), and what it cost.
 
 Bake-off of 10 Nov 2026: six pictures of Nike UK (test), each read twice by each reader, 254 choice fields a picture.
+Jev joined the same day, so "agrees" is counted among seven readers.
 
 | Reader | Steady | Agrees | Filled | $ a picture | s a picture |
 | --- | --- | --- | --- | --- | --- |
-| `sonnet-r` (Claude Sonnet, router) | 0.954 | 0.916 | 0.993 | 0.0815 | 14 |
-| `gemini` | 0.938 | 0.886 | 0.986 | 0.0527 | 25 |
-| `gpt-terra` | 0.923 | 0.914 | 0.972 | 0.0156 | 14 |
-| `haiku-r` (Claude Haiku, router) | 0.909 | 0.776 | 0.925 | 0.0040 | 9 |
-| `gemini-flash` | 0.901 | 0.918 | 0.993 | 0.0728 | 41 |
-| `gpt-luna` | 0.865 | 0.832 | 0.963 | 0.0015 | 11 |
+| `jev` (TypeSafe Jev) | 0.956 | 0.815 | 0.996 | 0.0023 | 2 |
+| `sonnet-r` (Claude Sonnet, router) | 0.954 | 0.873 | 0.993 | 0.0815 | 14 |
+| `gemini` | 0.938 | 0.862 | 0.986 | 0.0527 | 25 |
+| `gpt-terra` | 0.923 | 0.889 | 0.972 | 0.0156 | 14 |
+| `haiku-r` (Claude Haiku, router) | 0.909 | 0.750 | 0.925 | 0.0040 | 9 |
+| `gemini-flash` | 0.901 | 0.884 | 0.993 | 0.0728 | 41 |
+| `gpt-luna` | 0.865 | 0.811 | 0.963 | 0.0015 | 11 |
 
-Recommended standard reader: **`gpt-terra`**. It is nearly as steady and as agreed-with as Claude Sonnet at a fifth of the
-price, about 1.6 cents a picture. PROPOSED until Marcus says yes.
+Recommended standard reader of the taste schema: **`gpt-terra`**. It is nearly as steady and as agreed-with as Claude
+Sonnet at a fifth of the price, about 1.6 cents a picture. PROPOSED until Marcus says yes.
+
+Jev is the steadiest and by far the fastest (2 seconds and 0.2 cents a picture), and it fills in the most, but its
+answer is the one the others agree on less often: 0.81 against 0.89 for `gpt-terra`. The gap is widest where the
+prompt gets its craft from (light 0.77, colour 0.77, composition 0.75, against 0.82 to 0.92 for `gpt-terra`). At 1.6
+cents a picture price does not decide it, so the taste reading stays with `gpt-terra`, and Jev does the plain
+classification it was chosen for (the reference cards, below). The human answer key settles it: Jev can be scored
+against it again for a cent.
 
 What this does not show:
 
@@ -156,8 +165,16 @@ requests of at most 40 questions side by side. Its answers come back in the shap
 What Jev cannot do: write. The 11 free-word fields stay empty on a card it read. It takes a JPEG or a PNG sent as the
 picture itself, not a WebP and not a link. It needs the secret `TYPESAFE_API_KEY` (Supabase, Edge Functions, Secrets).
 
-Not known until it has run with the key: how it does against `gpt-terra` on the same six pictures (steady, agrees,
-filled), whether 40 questions a request is within its limits, and what a picture costs in tokens.
+First run with the key, 10 Nov 2026 (the six bake-off pictures twice, then all 18 Nike test pictures): no pass
+failed, 2 seconds and $0.0023 a picture (about 55,000 tokens: the picture goes with each of a pass's requests), 40
+questions a request were taken. On the first run Jev chose "cannot tell" where the answer is "none" (no price, no
+badge, no sky): 58 of its 259 departures from what the other readers agree on. A list that can already say the thing
+is absent is therefore asked without "cannot tell" (84 of the 254 choice fields), which took its agreement from 0.76
+to 0.81 and its filled share from 0.94 to 0.996. Read by Jev, Nike UK (test) has 43 fields that are always the brand
+and 112 that usually are (`gpt-terra`: 38 and 93), and no proof: Jev reads the two Meta ads of a model on plain grey
+as a cut-out on colour, both the same way, where `gpt-terra` read one as a full photograph and one as none, so only
+five of the ten ads count as photographs and proof needs six. On the fields both answered, Jev and `gpt-terra` gave
+the same answer on 76 % across the 18 pictures.
 
 ## Reference pictures chosen for the picture to be made
 
@@ -219,8 +236,8 @@ without the tables: until the migration is applied a reading comes back unkept a
 
 1. Applying the two migrations (`taste_schema`, `reference_cards`) and deploying `taste-read`, `engine` and `fume-plan`
    with them (needs Marcus's go), then reading the reference cards of the brands in use.
-   Jev against `gpt-terra` on the same pictures: its key is in Supabase since 10 Nov 2026, and the test runs once
-   `taste-read` is deployed.
+   `taste-read` is deployed with the reader `jev` since 10 Nov 2026 (the test above); its reference-card reading
+   waits for the `reference_cards` migration.
 2. Reading a brand's pictures by itself when the customer adds them (today a tool sends them), and the Engine's own
    pictures after each round, so the direction learns without anyone running a tool.
 3. The finish step: grain, black point, tint and sharpness put on the pixels by code after the picture is made,
