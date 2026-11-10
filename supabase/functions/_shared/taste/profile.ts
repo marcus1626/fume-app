@@ -315,6 +315,8 @@ export type Proof = {
 };
 /** What the Engine's picture carries before the design layer sets words on it. */
 const PICTURE_LEVERS: Field["lever"][] = ["plan", "prompt", "reference", "finish", "select"];
+/** How a brand's own pictures are held against itself: one left out at a time up to this many, else in this many groups. */
+const LEAVE_ONE = 24, FOLDS = 8;
 
 /**
  * How close the Engine's pictures come to the brand's, counted like with like: only the brand's pictures with a
@@ -333,7 +335,17 @@ export function proofOf(brand: Card[], engine: Card[]): Proof | null {
   const sets = byKind(like);
   const profiles = Object.fromEntries(Object.entries(sets).map(([k, cs]) => [k, buildProfile(cs)])) as Partial<Record<Kind, Profile>>;
   const against = (c: Card) => profiles[kindOf(c.shows) ?? ("" as Kind)] ?? whole;
-  const without = (c: Card) => buildProfile((sets[kindOf(c.shows) ?? ("" as Kind)] ?? like).filter((x) => x.id !== c.id));
+  // Up to LEAVE_ONE pictures each is left out alone; over that they are left out a group at a time (every eighth
+  // picture together), so a brand with hundreds of pictures is still counted in well under a second.
+  const held = new Map<string, Profile>();
+  const without = (c: Card) => {
+    const kind = kindOf(c.shows) ?? ("" as Kind);
+    const set = sets[kind] ?? like;
+    if (set.length <= LEAVE_ONE) return buildProfile(set.filter((x) => x.id !== c.id));
+    const fold = set.indexOf(c) % FOLDS, key = `${sets[kind] ? kind : ""}:${fold}`;
+    if (!held.has(key)) held.set(key, buildProfile(set.filter((_, i) => i % FOLDS !== fold)));
+    return held.get(key)!;
+  };
   const engineFits = engine.map((c) => ({ kind: kindOf(c.shows), fit: fit(against(c), c, opts).fit }));
   const ownFits = like.map((c) => ({ kind: kindOf(c.shows), fit: fit(without(c), c, opts).fit }));
   const kinds: Partial<Record<Kind, KindProof>> = {};
