@@ -6,6 +6,7 @@ import type { FumeApi, FumeEvent } from "../../contract";
 import type { Live } from "./context";
 import { type BookRow, toBook } from "./books";
 import { type MessageRow, toMessage } from "./conversation";
+import { type EngineMessageRow, toEngineMessage } from "./engine-chat";
 import { readCampaigns } from "./map";
 import { type NotificationRow, toNotification } from "./notifications";
 import { forgetReads, supabase } from "./supabase";
@@ -45,6 +46,11 @@ export function eventCalls(live: Live): Pick<FumeApi, "subscribe"> {
         .on("postgres_changes", { event: "INSERT", schema: "public", table: "conversation_messages" }, (payload) => {
           forgetReads();
           handler({ type: "message.new", message: toMessage(payload.new as MessageRow) });
+        })
+        // The Engine's answer, or her words from another tab: the open Engine panel reads its thread again.
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: "engine_messages" }, (payload) => {
+          forgetReads();
+          handler({ type: "engine.message", message: toEngineMessage(payload.new as EngineMessageRow) });
         })
         .on("postgres_changes", { event: "*", schema: "public", table: "notifications" }, (payload) => {
           const row = payload.new as NotificationRow | undefined;

@@ -151,7 +151,8 @@ set role authenticated;
 select test.act('marcus@fumecreatives.com');
 select test.refuses($$ select public.render_creative(test.id('em')) $$, 'unavailable', 'over the week''s ceiling, nothing renders');
 reset role;
-update app.settings set value = '20' where key = 'engine_week_usd';
+-- Well above what the tests spend: the live rehearsal adds them to the week's real spend.
+update app.settings set value = '1000' where key = 'engine_week_usd';
 set role authenticated;
 
 -- ─── Teaching the Engine; the prompt is Fume's own (20261104150000_engine_studio.sql) ─────────────────────

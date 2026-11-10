@@ -20,6 +20,7 @@ import { deliveryCalls } from "./delivery";
 import { brandCalls } from "./brand";
 import { notificationCalls } from "./notifications";
 import { conversationCalls } from "./conversation";
+import { engineChatCalls } from "./engine-chat";
 import { agencyCalls } from "./agency";
 import { calendarCalls } from "./calendar";
 import { tasteCalls } from "./taste";
@@ -65,6 +66,7 @@ export function createLiveApi(): FumeApi {
     ...bookCalls(live),
     ...notificationCalls(),
     ...conversationCalls(live),
+    ...engineChatCalls(live),
     ...agencyCalls(live),
     ...calendarCalls(live),
     ...tasteCalls(live),
