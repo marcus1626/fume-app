@@ -147,8 +147,10 @@ image model's limit, whatever the picture to be made showed. Now (`_shared/engin
   (close, half, whole). The card comes from the picture's slot where the slot says it ("front", "back", "detail"), or
   from a classifier that looked at the picture. A picture with neither is unknown: sent when there is room, never
   preferred over one known to fit.
-- The plan's own words say what the picture **needs**: "from behind", "in profile", "top-down", "facing the camera",
-  "close-up", "full body", and whether people are in it. A plan that names no side leaves the side open.
+- The plan says what the picture **needs**: each planned picture carries `view` and `crop` from the same closed lists
+  (the plan writer sets them beside the scene), and whether people are in it. A plan written before 10 Nov says it in
+  its scene's words ("seen from behind", "in three-quarter view", "back mostly to camera"), which are read instead. A
+  plan that names no side leaves the side open, and then no picture is held to be the wrong side.
 - Code holds the two against each other (`serves`): the side the picture needs comes first; the product's front is
   always worth sending, for it is the truth about the product; the opposite side is left out; a product worn by a
   person is left out of a picture with no people, and sent, named as such, in one with people; a size chart or a
@@ -208,5 +210,4 @@ without the tables: until the migration is applied a reading comes back unkept a
 9. A picture skill per brand beside the copy skill.
 10. The taste score and the profile in the app (the design thread owns the screens).
 11. Reference cards read by themselves when a product picture is added (today a tool starts it).
-12. The plan naming the side and the crop of each picture as fields, so the need is not read out of its words.
-13. A brand's models kept in the database with their pictures, and the plan casting them (FLOWS §9.6).
+12. A brand's models kept in the database with their pictures, and the plan casting them (FLOWS §9.6).
