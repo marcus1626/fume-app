@@ -57,10 +57,12 @@ export function cardOf(pic: Pictured): RefCard | null {
   return SLOT_CARD[(pic.slot ?? "").toLowerCase().replaceAll(/[\s-]+/g, "_")] ?? null;
 }
 
-// The plan's words for where the camera stands to its subject. The first that is said wins; a plan that says none
-// leaves the view open, and then no picture is held to be the wrong side.
+// The plan's words for where the camera stands to its subject, as the plan writer writes them ("seen from behind and
+// the side", "back mostly to camera", "in three-quarter view", "seen in profile"). The first that is said wins; a plan
+// that says none leaves the view open, and then no picture is held to be the wrong side. "Faces turned away" says
+// nothing of the side: the plans say it of people seen from anywhere.
 const VIEW_WORDS: [View, RegExp][] = [
-  ["back", /\bfrom (behind|the back(?! of))\b|\bback view\b|\bback (is )?to (the )?camera\b|\bwalking away\b|\bover[- ]the[- ]shoulder\b|\bturned away\b/i],
+  ["back", /\bfrom (behind|the back(?! of))\b|\bback view\b|\bback (is |mostly )?to (the )?camera\b|\bwalk(s|ing) away\b|\bover[- ]the[- ]shoulder\b/i],
   ["top", /\bfrom (above|overhead)\b|\btop[- ]down\b|\boverhead (shot|view|angle)\b|\bflat[- ]?lay\b|\bbird'?s[- ]eye\b/i],
   ["bottom", /\bfrom (below|underneath)\b|\bunderside\b/i],
   ["side", /\bin profile\b|\bside view\b|\bfrom the side\b|\bside[- ]on\b|\bprofile (shot|view)\b/i],

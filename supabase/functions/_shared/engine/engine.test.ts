@@ -472,6 +472,10 @@ Deno.test("the Engine sends the reference pictures the planned picture needs: th
   });
   assertEquals(needOf({ name: "x", scene: "She walks away from the camera, seen from behind", people: "One woman, full body" }), { view: "back", crop: "whole", people: true });
   assertEquals(needOf({ name: "x", scene: "A cup on a bench" }), { view: null, crop: null, people: false });
+  // The plan writer's own phrases.
+  const view = (scene: string) => needOf({ scene, people: "Cast models, faces small or turned away" }).view;
+  assertEquals([view("A teen, back mostly to camera, stands under the hoop"), view("A volunteer walks away toward the pitch"), view("One shoe in three-quarter profile on wet paving"),
+    view("A player seen in profile and small, eyes on the rim"), view("Photograph from the sideline at kneeling height, faces turned away")], ["back", "back", "three_quarter", "side", null]);
 
   // A plan that names no side leaves every picture in (the test at the top: front, then back).
   // From the front: the back would put the wrong side in the frame, so it is left out, and the ledger says why.
