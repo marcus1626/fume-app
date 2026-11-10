@@ -24,7 +24,7 @@ export interface DeckReport {
   fields: FieldReport[];
   /** Every [placeholder] in the deck, once: the assumptions list starts here. */
   placeholders: string[];
-  /** Pieces with no anchored headline-like line: another brand could sign them. */
+  /** Pieces with no line at all that carries an anchor: another brand could sign them. */
   swapFailures: string[];
   counts: { error: number; warn: number; info: number; fields: number; pieces: number };
   /** No errors. Warnings are for the expert's eye. */
@@ -46,7 +46,7 @@ export function checkDeck(deck: CopyDeck, ctx: CopyContext): DeckReport {
   const groups = new Map<string, { ref: string; text: string }[]>();
 
   for (const piece of deck.pieces) {
-    let anchoredHeadline = false, hasHeadline = false;
+    let anchoredHeadline = false, hasHeadline = false, anchoredAnywhere = false;
     for (const f of piece.fields) {
       const spec = resolveFormat(f.format, ctx.formatOverrides);
       const lang = f.lang ?? ctx.lang;
@@ -55,6 +55,7 @@ export function checkDeck(deck: CopyDeck, ctx: CopyContext): DeckReport {
       findings.push(...truthCheck(f.ref, f.text, ctx));
       for (const p of placeholders(f.text)) if (p && p !== "..." && p !== "…") allPlaceholders.add(p);
       let swap: SwapResult | undefined;
+      if (swapTest(f.text, ctx, vocab).verdict === "anchored") anchoredAnywhere = true;
       if (spec?.headline || f.format === "image.sl" || f.format === "landing.sl") {
         swap = swapTest(f.text, ctx, vocab);
         hasHeadline = true;
@@ -68,7 +69,7 @@ export function checkDeck(deck: CopyDeck, ctx: CopyContext): DeckReport {
         groups.set(key, [...(groups.get(key) ?? []), { ref: f.ref, text: f.text }]);
       }
     }
-    if (hasHeadline && !anchoredHeadline) swapFailures.push(piece.id);
+    if (hasHeadline && !anchoredHeadline && !anchoredAnywhere) swapFailures.push(piece.id);
   }
 
   for (const id of swapFailures)

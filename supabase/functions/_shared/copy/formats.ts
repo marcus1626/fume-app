@@ -70,7 +70,7 @@ export const FORMATS: Record<string, FormatSpec> = {
   "whatsapp.body": { id: "whatsapp.body", channel: "whatsapp", label: "WhatsApp message", max: 300, source: "proposed", note: "WhatsApp allows 1024 in a template body." },
   "whatsapp.button": { id: "whatsapp.button", channel: "whatsapp", label: "WhatsApp button", max: 20, source: "platform", plain: true, noEmoji: true, cta: true },
   "video.hook": { id: "video.hook", channel: "video", label: "Hook (first three seconds, on screen)", max: 42, source: "practice", headline: true },
-  "video.onscreen": { id: "video.onscreen", channel: "video", label: "Text on screen", max: 42, source: "practice", note: "One caption line reads in about two seconds." },
+  "video.onscreen": { id: "video.onscreen", channel: "video", label: "Text on screen", recommended: 42, max: 84, source: "practice", note: "Two caption lines of about 42 characters at most; one line reads in about two seconds." },
   "video.spoken": { id: "video.spoken", channel: "video", label: "Spoken line", source: "proposed" },
   "plain.idea": { id: "plain.idea", channel: "thinking", label: "Idea in one sentence", recommended: 140, source: "proposed" },
   "plain.summary": { id: "plain.summary", channel: "thinking", label: "Summary (100 words or fewer)", source: "proposed" },

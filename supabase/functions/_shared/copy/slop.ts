@@ -143,7 +143,7 @@ export function slopCheck(ref: string, text: string, opts: SlopOptions): CopyFin
     const words = contentWords(text);
     const brief = new Set(contentWords(opts.briefText));
     const echoed = words.filter((w) => brief.has(w));
-    if (words.length >= 3 && echoed.length / words.length >= 0.75)
+    if (words.length >= 4 && echoed.length / words.length >= 0.75)
       out.push({
         code: "brief_echo", severity: "warn", ref,
         message: `The headline is mostly the brief's own words (${echoed.length} of ${words.length}).`,
