@@ -155,6 +155,10 @@ export interface QaFormat {
   image: string;
   /** The same picture, cropped from the master, the scene extended by the Engine, or made again by the designer (FLOWS §16). */
   method: "native" | "crop" | "expand" | "regenerate";
+  /** Live: the format's own version, which is checked and corrected as part of the ad. */
+  versionId?: Id;
+  /** Live: where the format itself stands; the ad waits while any of its formats does. */
+  state?: "waiting" | "fixing" | "checked" | "in_studio";
 }
 
 /** A spot on a creative in Check: a numbered pin, 0–1 from the top left, with what is wrong there. It goes to the

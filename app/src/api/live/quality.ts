@@ -15,6 +15,7 @@ import {
   type Id,
   type QaFeedback,
   type QaFinding,
+  type QaFormat,
   type QaItem,
   type QaPin,
   type QaView,
@@ -35,6 +36,7 @@ import {
   type StudioCreativeRow,
 } from "./production";
 import { command, requestKey, rows, supabase } from "./supabase";
+import { placements } from "../../domain/placements";
 
 type Calls =
   "qaQueue" | "qaCheck" | "qaUncheck" | "qaFeedback" | "qaSettleFinding" | "qaToStudio" | "release" | "qualityLog";
@@ -82,8 +84,21 @@ export function withToSend(campaign: Campaign, toSend: number): Campaign {
 
 // ─── Reading Check ───────────────────────────────────────────────────────────
 
+/** A version as Check reads it, before an ad's formats are gathered under it: a format names its master. */
+type Read = QaView & { masterId?: Id; method?: QaFormat["method"] };
+
+/** How a format was made from the master, from its picture's note (format_finish). */
+const methodOf = (note: string | null | undefined): QaFormat["method"] =>
+  /^Cropped/i.test(note ?? "")
+    ? "crop"
+    : /^Expanded/i.test(note ?? "")
+      ? "expand"
+      : /^Redrawn/i.test(note ?? "")
+        ? "regenerate"
+        : "native";
+
 /** Creatives in Check as QA views: the newest version of each creative in a workspace, or the versions named. */
-async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] }): Promise<QaView[]> {
+async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] }): Promise<Read[]> {
   let q = supabase().from("creative_versions").select(VERSION);
   if (filter.versionIds) q = q.in("id", filter.versionIds);
   else q = q.in("state", [...IN_CHECK]);
@@ -261,9 +276,8 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
     ? await rows<{ id: string; name: string }>(supabase().from("products").select("id, name").in("id", productIds))
     : [];
 
-  const order: Record<QaItem["state"], number> = { waiting: 0, fixing: 1, in_studio: 2, checked: 3 };
   return shown
-    .flatMap((v): QaView[] => {
+    .flatMap((v): Read[] => {
       const cr = creatives.find((c) => c.id === v.creative_id);
       const campaign = cr && campaigns.find((c) => c.id === cr.campaign_id);
       const workspace = workspaces.find((w) => w.id === v.workspace_id);
@@ -346,27 +360,153 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
       const productName = products.find(
         (p) => campaign.productIds.length === 1 && p.id === campaign.productIds[0],
       )?.name;
-      return [{ item, campaign, workspace, against, ...(productName ? { productName } : {}) }];
+      const format =
+        cr.kind === "format" && cr.master_id ? { masterId: cr.master_id, method: methodOf(made?.note) } : {};
+      return [{ item, campaign, workspace, against, ...(productName ? { productName } : {}), ...format }];
     })
-    .sort(
-      (a, b) =>
-        order[a.item.state] - order[b.item.state] ||
-        a.item.dueAt.localeCompare(b.item.dueAt) ||
-        a.item.madeAt.localeCompare(b.item.madeAt),
+    .sort(inOrder);
+}
+
+const ORDER: Record<QaItem["state"], number> = { waiting: 0, fixing: 1, in_studio: 2, checked: 3 };
+/** Check's order: what waits first, then the soonest due, then the oldest made. */
+const inOrder = (a: QaView, b: QaView) =>
+  ORDER[a.item.state] - ORDER[b.item.state] ||
+  a.item.dueAt.localeCompare(b.item.dueAt) ||
+  a.item.madeAt.localeCompare(b.item.madeAt);
+
+// ─── An ad's formats are one ad (FLOWS §35.2) ────────────────────────────────
+
+const FORMAT_ORDER: Format[] = ["feed", "square", "story"];
+
+/** The newest version of each creative named, when it is in Check. */
+async function newestInCheck(creativeIds: Id[]): Promise<Id[]> {
+  if (creativeIds.length === 0) return [];
+  const all = await rows<{ id: string; creative_id: string; number: number; state: string }>(
+    supabase().from("creative_versions").select("id, creative_id, number, state").in("creative_id", creativeIds),
+  );
+  return creativeIds.flatMap((id) => {
+    const newest = all.filter((v) => v.creative_id === id).sort((a, b) => b.number - a.number)[0];
+    return newest && (IN_CHECK as readonly string[]).includes(newest.state) ? [newest.id] : [];
+  });
+}
+
+/** The newest version of each master named, in Check or not (its formats are made once the customer approved it). */
+async function newestOf(creativeIds: Id[]): Promise<Id[]> {
+  if (creativeIds.length === 0) return [];
+  const all = await rows<{ id: string; creative_id: string; number: number }>(
+    supabase().from("creative_versions").select("id, creative_id, number").in("creative_id", creativeIds),
+  );
+  return creativeIds.flatMap((id) => {
+    const newest = all.filter((v) => v.creative_id === id).sort((a, b) => b.number - a.number)[0];
+    return newest ? [newest.id] : [];
+  });
+}
+
+/**
+ * Check as the one who checks sees it: an ad once, with its formats inside it (Marcus, round 15: "De burde komme opp
+ * som en annonse, så går man inn å checker de forskjellige formatene"). Each format is a creative of its own, made from
+ * the master the customer approved, and waits in Check as its own version; here it is gathered under its master, which
+ * leads with its own picture. The ad waits while any format waits. Each format keeps its version, so a check and a
+ * correction still name the exact picture.
+ */
+async function readAds(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] }): Promise<QaView[]> {
+  const read = await readQa(live, filter);
+  const formats = read.filter((r) => r.masterId);
+  const leads = read.filter((r) => !r.masterId);
+  // A master named by its version brings its formats in Check; a format named brings its master.
+  if (filter.versionIds) {
+    const more = await newestInCheck(
+      (
+        await rows<{ id: string }>(
+          supabase()
+            .from("creatives")
+            .select("id")
+            .eq("kind", "format")
+            .in(
+              "master_id",
+              leads.map((l) => l.item.creativeId),
+            ),
+        )
+      ).map((c) => c.id),
     );
+    const missing = more.filter((id) => !formats.some((f) => f.item.id === id));
+    if (missing.length) formats.push(...(await readQa(live, { versionIds: missing })).filter((r) => r.masterId));
+  }
+  const masterIds = [...new Set(formats.map((f) => f.masterId!))].filter(
+    (id) => !leads.some((l) => l.item.creativeId === id),
+  );
+  if (masterIds.length) leads.push(...(await readQa(live, { versionIds: await newestOf(masterIds) })));
+  const gathered = new Set<Id>();
+  const ads = leads.map((lead): QaView => {
+    const mine = formats
+      .filter((f) => f.masterId === lead.item.creativeId && f.item.format !== lead.item.format)
+      .sort((a, b) => FORMAT_ORDER.indexOf(a.item.format) - FORMAT_ORDER.indexOf(b.item.format));
+    const { masterId: _m, method: _h, ...view } = lead;
+    if (mine.length === 0) return view;
+    mine.forEach((f) => gathered.add(f.item.id));
+    const items = [lead.item, ...mine.map((f) => f.item)];
+    // The master the customer approved counts as checked; the ad stands where its least advanced part stands.
+    const state = items.map((i) => i.state).sort((a, b) => ORDER[a] - ORDER[b])[0];
+    const all = <T>(pick: (i: QaItem) => T[] | undefined) => items.flatMap((i) => pick(i) ?? []);
+    const holds = all((i) => i.holds);
+    const findings = all((i) => i.findings);
+    const item: QaItem = {
+      ...lead.item,
+      state,
+      madeAt: items
+        .map((i) => i.madeAt)
+        .sort()
+        .at(-1)!,
+      feedback: all((i) => i.feedback).sort((a, b) => a.at.localeCompare(b.at)),
+      formats: mine.map((f): QaFormat => ({
+        placementId: placements.find((p) => p.format === f.item.format)?.id ?? f.item.format,
+        format: f.item.format,
+        image: f.item.image,
+        method: f.method ?? "native",
+        versionId: f.item.id,
+        state: f.item.state,
+      })),
+      ...(holds.length ? { holds } : {}),
+      ...(findings.length ? { findings } : {}),
+    };
+    if (state !== "checked") {
+      delete item.checkedBy;
+      delete item.checkedAt;
+    }
+    return { ...view, item };
+  });
+  // A format whose master could not be read stays on its own.
+  const alone = formats.filter((f) => !gathered.has(f.item.id)).map(({ masterId: _m, method: _h, ...v }) => v);
+  return [...ads, ...alone].sort(inOrder);
 }
 
 async function readItem(live: Live, itemId: Id): Promise<QaView> {
-  const view = (await readQa(live, { versionIds: [mustBeId(itemId, "creative in Check")] }))[0];
+  const id = mustBeId(itemId, "creative in Check");
+  const views = await readAds(live, { versionIds: [id] });
+  const view = views.find((v) => v.item.id === id || v.item.formats?.some((f) => f.versionId === id));
   if (!view) throw new FumeError("not_found", "No such creative in Check.");
   return view;
+}
+
+/** The versions of an ad that a check or a correction names: the master's own when it is in Check, and each format's. */
+const partsOf = (item: QaItem) => [
+  { versionId: item.id, format: undefined as Format | undefined },
+  ...(item.formats ?? []).flatMap((f) => (f.versionId ? [{ versionId: f.versionId, format: f.format }] : [])),
+];
+
+/** Each version's own state in the database (an approved master counts as checked in Check, but is not one). */
+async function versionStates(ids: Id[]): Promise<Map<Id, string>> {
+  const found = await rows<{ id: string; state: string }>(
+    supabase().from("creative_versions").select("id, state").in("id", ids),
+  );
+  return new Map(found.map((v) => [v.id, v.state]));
 }
 
 export function qualityCalls(live: Live): Pick<FumeApi, Calls> {
   return {
     async qaQueue(workspaceId) {
       if (!(await live.me()).staffRole) throw new FumeError("forbidden", "Check is for Fume's people.");
-      return readQa(live, { workspaceId });
+      return readAds(live, { workspaceId });
     },
     // Signed by the one who checks, against what the version's job used (its Product Truth and the brand's rules).
     // A fault on the product the expert accepts is signed with their name first (resolve_finding); one not accepted
@@ -377,37 +517,87 @@ export function qualityCalls(live: Live): Pick<FumeApi, Calls> {
       for (const id of (view.item.holds ?? []).map((h) => h.id).filter((id) => accept?.includes(id))) {
         await command("resolve_finding", { p_finding_id: id, p_status: "accepted" });
       }
-      await command("mark_checked", {
-        p_version_id: itemId,
-        p_items: (view.against ?? []).map((a) => ({ ...a, result: "pass" })),
-        p_key: requestKey(),
-      });
-      return (await readItem(live, itemId)).item;
+      // An ad is checked with all its formats (FLOWS §35.2): each version that waits, against what its own job used.
+      const parts = partsOf(view.item);
+      const states = await versionStates(parts.map((p) => p.versionId));
+      if (parts.length > 1 && parts.some((p) => states.get(p.versionId) === "correcting"))
+        throw new FumeError("conflict", "A format is with a designer for a fix. Check the ad when it is back.");
+      const waiting = parts.length > 1 ? parts.filter((p) => states.get(p.versionId) === "in_check") : parts;
+      const raws = await readQa(live, { versionIds: waiting.map((p) => p.versionId) });
+      for (const r of raws) {
+        await command("mark_checked", {
+          p_version_id: r.item.id,
+          p_items: (r.against ?? []).map((a) => ({ ...a, result: "pass" })),
+          p_key: requestKey(),
+        });
+      }
+      return (await readItem(live, view.item.id)).item;
     },
-    // Only the one who checked it, and only before it is sent to the customer.
+    // Only the one who checked it, and only before it is sent to the customer. An ad's formats are unchecked with it.
     async qaUncheck(itemId) {
       const view = await readItem(live, itemId);
       if (view.item.state !== "checked") return view.item;
-      await command("uncheck_version", { p_version_id: itemId });
-      return (await readItem(live, itemId)).item;
+      const parts = partsOf(view.item);
+      const states = await versionStates(parts.map((p) => p.versionId));
+      const checked = parts.length > 1 ? parts.filter((p) => states.get(p.versionId) === "checked") : parts;
+      for (const p of checked) await command("uncheck_version", { p_version_id: p.versionId });
+      return (await readItem(live, view.item.id)).item;
     },
     // The expert's correction: Fume's own fix, no round used. The pins go with it as located notes.
     // The Engine's own findings the note takes up go with it, in its words, as what must change.
+    // On an ad with formats, each pin's correction goes to the format it was put on; words with no pin go to every
+    // part that waits.
     async qaFeedback(itemId, text, pins, findingIds) {
-      const taken = findingIds?.length
-        ? ((await readItem(live, itemId)).item.findings ?? []).filter((f) => findingIds.includes(f.id))
+      const view = await readItem(live, itemId);
+      const parts = partsOf(view.item);
+      const taken = findingIds?.length ? (view.item.findings ?? []).filter((f) => findingIds.includes(f.id)) : [];
+      const foundOn = taken.length
+        ? await rows<{ id: string; version_id: string }>(
+            supabase()
+              .from("findings")
+              .select("id, version_id")
+              .in(
+                "id",
+                taken.map((f) => f.id),
+              ),
+          )
         : [];
-      const said =
-        text.trim() || [...(pins ?? []).map((p) => `${p.n}. ${p.text}`), ...taken.map((f) => f.finding)].join(" ");
-      if (!said) throw new FumeError("invalid", "Say what to fix.");
-      await command("request_correction", {
-        p_version_id: mustBeId(itemId, "creative in Check"),
-        p_problem: said,
-        p_must_change: [...(pins ?? []).map((p) => p.text), ...taken.map((f) => f.finding)],
-        p_must_stay: [],
-        p_pins: pins ?? [],
-      });
-      return (await readItem(live, itemId)).item;
+      const states = parts.length > 1 ? await versionStates(parts.map((p) => p.versionId)) : undefined;
+      const asked = new Map<Id, { pins: QaPin[]; findings: QaFinding[] }>();
+      const on = (versionId: Id) => {
+        const was = asked.get(versionId) ?? { pins: [], findings: [] };
+        asked.set(versionId, was);
+        return was;
+      };
+      for (const pin of pins ?? [])
+        on((parts.find((p) => p.format === pin.format) ?? parts[0]).versionId).pins.push(pin);
+      for (const f of taken) on(foundOn.find((x) => x.id === f.id)?.version_id ?? parts[0].versionId).findings.push(f);
+      if (asked.size === 0) {
+        const open = states ? parts.filter((p) => states.get(p.versionId) === "in_check") : [];
+        for (const p of open.length ? open : [parts[0]]) on(p.versionId);
+      }
+      for (const versionId of asked.keys()) {
+        if (states && states.get(versionId) !== "in_check")
+          throw new FumeError(
+            "invalid",
+            versionId === parts[0].versionId
+              ? "The master is approved by the customer. Pin the format that needs the fix."
+              : "That format is not waiting for a check.",
+          );
+      }
+      for (const [versionId, a] of asked) {
+        const said =
+          text.trim() || [...a.pins.map((p) => `${p.n}. ${p.text}`), ...a.findings.map((f) => f.finding)].join(" ");
+        if (!said) throw new FumeError("invalid", "Say what to fix.");
+        await command("request_correction", {
+          p_version_id: versionId,
+          p_problem: said,
+          p_must_change: [...a.pins.map((p) => p.text), ...a.findings.map((f) => f.finding)],
+          p_must_stay: [],
+          p_pins: a.pins,
+        });
+      }
+      return (await readItem(live, view.item.id)).item;
     },
     // "Not a problem": the one who checks sets the finding aside, with their name (resolve_finding); taking that back
     // opens it again (reopen_finding).
