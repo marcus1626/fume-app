@@ -2,7 +2,7 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import { z } from "npm:zod@4.6.7";
 import { buildProfile, type Card, compare, fit, lowerBound, tasteScore } from "./profile.ts";
-import { answersOf, CANNOT_TELL, laterPasses, passFields, passShape, showsOf } from "./read.ts";
+import { answersOf, CANNOT_TELL, laterPasses, parseAnswer, passFields, passPromptWithShape, passShape, showsOf } from "./read.ts";
 import { FIELD, FIELDS, GROUPS, measuredFields, PASSES, readFields, type Shows } from "./schema.ts";
 import { measureCard } from "./card.ts";
 
@@ -107,4 +107,14 @@ Deno.test("a pass's answer is kept by schema key; what the schema does not list,
   assertEquals(read["concept.scene_words"], ["wet track", "floodlights"]);
   assertEquals(Object.keys(read).length, fields.length);
   assertEquals(showsOf({ shows: { people: false, face: true, severalPeople: true, product: true } }), { ...NOTHING, product: true });
+});
+
+Deno.test("a model that answers in text gets the shape in the question, and its answer is read out of what it wrote", () => {
+  const q = passPromptWithShape("idea", passFields("idea"));
+  assert(q.includes('"photograph_with_graphics"') && q.includes('"shows"'));
+  assertEquals(parseAnswer('```json\n{"kind":{"type":"photograph"}}\n```'), { kind: { type: "photograph" } });
+  assertEquals(parseAnswer('The options are {a, b}; I choose a.\n{"kind":{"type":"photograph"}}'), { kind: { type: "photograph" } });
+  assertEquals(parseAnswer("I cannot read this picture."), null);
+  assertEquals(parseAnswer("[1, 2]"), null);
+  assertEquals(parseAnswer('{"kind": {'), null);
 });

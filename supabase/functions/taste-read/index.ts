@@ -1,18 +1,81 @@
 // The edge function `taste-read` (handler.ts says what it does). Deployed with verify_jwt off: the handler asks
-// Supabase Auth who the caller is and reads their staff roles with their own token. Needs the secret ANTHROPIC_API_KEY.
+// Supabase Auth who the caller is and reads their staff roles with their own token. Needs the secret ANTHROPIC_API_KEY
+// for the readers asked of Anthropic and FAL_KEY for the ones asked through fal's router.
 import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { betaZodOutputFormat } from "npm:@anthropic-ai/sdk@1.3.0/helpers/beta/zod";
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
 import { signedIn as isSignedIn } from "../_shared/net.ts";
-import { passFields, passPrompt, passShape, READ_SYSTEM } from "../_shared/taste/read.ts";
-import { type Asked, handleTasteRead, type Reader, type Usage } from "./handler.ts";
+import { parseAnswer, passFields, passPrompt, passPromptWithShape, passShape, READ_SYSTEM } from "../_shared/taste/read.ts";
+import { type Asked, handleTasteRead, type Picture, type Reader, type Usage } from "./handler.ts";
 
-/** The readers, with their list prices in dollars per million tokens (prompts up to 100K tokens). */
-const MODELS: Record<Reader, { id: string; input: number; output: number }> = {
-  haiku: { id: "claude-haiku-5-5", input: 0.1, output: 0.5 },
-  sonnet: { id: "claude-sonnet-5-5", input: 2, output: 10 },
-  opus: { id: "claude-opus-5-5", input: 4, output: 20 },
+/** The readers: which model each is, where it is asked, and its list price in dollars per million tokens (10 Nov 2026).
+ *  `anthropic` is asked directly and answers in the shape; `router` is fal's router to any vision model, which
+ *  answers in text, so the shape is written into the question. Qwen is not here: the router keeps to providers that
+ *  store nothing, and none of Qwen's does. */
+const MODELS: Record<Reader, { via: "anthropic" | "router"; id: string; input: number; output: number }> = {
+  haiku: { via: "anthropic", id: "claude-haiku-5-5", input: 0.1, output: 0.5 },
+  sonnet: { via: "anthropic", id: "claude-sonnet-5-5", input: 2, output: 10 },
+  opus: { via: "anthropic", id: "claude-opus-5-5", input: 4, output: 20 },
+  "gemini-flash": { via: "router", id: "google/gemini-3.8-flash", input: 0.83, output: 4.12 },
+  gemini: { via: "router", id: "google/gemini-4-argon", input: 2, output: 10 },
+  "gpt-luna": { via: "router", id: "openai/gpt-6-luna", input: 0.1, output: 0.5 },
+  "gpt-terra": { via: "router", id: "openai/gpt-6.1-terra", input: 1, output: 5 },
+  "gpt-sol": { via: "router", id: "openai/gpt-6.1-sol", input: 2, output: 10 },
+  grok: { via: "router", id: "x-ai/grok-4.7", input: 2, output: 6 },
+  "haiku-r": { via: "router", id: "anthropic/claude-haiku-5.5", input: 0.1, output: 0.5 },
+  "sonnet-r": { via: "router", id: "anthropic/claude-sonnet-5.5", input: 2, output: 10 },
+  "opus-r": { via: "router", id: "anthropic/claude-opus-5.5", input: 4, output: 20 },
 };
+const ROUTER = "https://fal.run/openrouter/router/vision";
+const cents = (usd: number) => Math.round(usd * 10_000) / 10_000;
+
+/** One question through fal's router. The picture goes as a data address; the answer comes back as text. */
+async function askRouter(model: (typeof MODELS)[Reader], system: string, prompt: string, picture: Picture): Promise<Asked> {
+  const key = Deno.env.get("FAL_KEY");
+  const none: Usage = { model: model.id, input_tokens: 0, output_tokens: 0, cost_usd: 0 };
+  if (!key) return { ok: false, error: "No key for fal.", usage: none };
+  const send = (steady: boolean, reasoning: boolean) =>
+    fetch(ROUTER, {
+      method: "POST",
+      signal: AbortSignal.timeout(110_000),
+      headers: { Authorization: `Key ${key}`, "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        model: model.id,
+        system_prompt: system,
+        prompt,
+        image_urls: ["url" in picture ? picture.url : `data:${picture.mediaType};base64,${picture.base64}`],
+        // The same picture should read the same twice; a model that takes no temperature is asked again without one.
+        ...(steady ? { temperature: 0 } : {}),
+        // Some models cannot answer without reasoning; they are asked again with it, and it then comes with the answer.
+        ...(reasoning ? { reasoning: true } : {}),
+        max_tokens: reasoning ? 16_000 : 8_000,
+      }),
+    });
+  let steady = true, reasoning = false;
+  let res = await send(steady, reasoning);
+  let text = await res.text();
+  for (let again = 0; again < 2 && !res.ok; again++) {
+    if (steady && /temperature/i.test(text)) steady = false;
+    else if (!reasoning && /reasoning/i.test(text)) reasoning = true;
+    else break;
+    res = await send(steady, reasoning);
+    text = await res.text();
+  }
+  if (!res.ok) return { ok: false, error: `fal answered ${res.status}: ${text.replaceAll(key, "[key]").slice(0, 300)}`, usage: none };
+  let body: { output?: string; error?: string; usage?: { prompt_tokens?: number; completion_tokens?: number; cost?: number } };
+  try {
+    body = JSON.parse(text);
+  } catch {
+    return { ok: false, error: "fal's answer could not be read.", usage: none };
+  }
+  const input_tokens = body.usage?.prompt_tokens ?? 0, output_tokens = body.usage?.completion_tokens ?? 0;
+  // fal's own figure where it gives one; else the list price.
+  const usage: Usage = { model: model.id, input_tokens, output_tokens, cost_usd: cents(body.usage?.cost ?? (input_tokens * model.input + output_tokens * model.output) / 1_000_000) };
+  if (body.error || !body.output) return { ok: false, error: (body.error ?? "The model gave no answer.").slice(0, 300), usage };
+  const out = parseAnswer(body.output);
+  return out ? { ok: true, out, usage } : { ok: false, error: "The answer could not be read.", usage };
+}
+
 const url = Deno.env.get("SUPABASE_URL")!;
 const keyOf = (json: string, legacy: string) =>
   (Deno.env.get(json) && JSON.parse(Deno.env.get(json)!).default) || Deno.env.get(legacy)!;
@@ -47,6 +110,7 @@ Deno.serve(async (req) => {
     },
     ask: async (pass, shows, picture, reader, effort): Promise<Asked> => {
       const model = MODELS[reader];
+      if (model.via === "router") return askRouter(model, READ_SYSTEM, passPromptWithShape(pass, passFields(pass, shows)), picture);
       const m = await claude.beta.messages.parse({
         model: model.id,
         max_tokens: 12_000,
@@ -65,7 +129,7 @@ Deno.serve(async (req) => {
         model: m.model,
         input_tokens: u.input_tokens,
         output_tokens: u.output_tokens,
-        cost_usd: Math.round(((u.input_tokens * model.input + u.output_tokens * model.output) / 1_000_000) * 10_000) / 10_000,
+        cost_usd: cents((u.input_tokens * model.input + u.output_tokens * model.output) / 1_000_000),
       };
       if (m.stop_reason === "refusal") return { ok: false, error: "The model declined.", usage };
       if (m.stop_reason === "max_tokens" || !m.parsed_output) return { ok: false, error: "The answer could not be read.", usage };

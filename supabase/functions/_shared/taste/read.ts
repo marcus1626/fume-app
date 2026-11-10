@@ -69,6 +69,24 @@ const ABOUT: Record<Pass, string> = {
 /** The question of a pass. The fields themselves are in the answer shape. */
 export const passPrompt = (pass: Pass) => `Read the picture. This question is about: ${ABOUT[pass]}\nFill in every field.`;
 
+/** The question of a pass for a model that takes no answer shape: the same question with the shape written out. */
+export function passPromptWithShape(pass: Pass, fields: Field[]): string {
+  return `${passPrompt(pass)}\n\nAnswer with one JSON object that follows this JSON Schema exactly: every listed property, only the listed options. No other text and no code fence.\n${JSON.stringify(z.toJSONSchema(passShape(pass, fields)))}`;
+}
+/** The JSON object in a model's free answer, or null. answersOf then keeps only what the schema lists. */
+export function parseAnswer(text: string): Record<string, Record<string, unknown>> | null {
+  const to = text.lastIndexOf("}");
+  // The answer is the last thing written; words before it (a model's reasoning) may hold braces of their own, so
+  // each opening brace is tried in turn until one starts an object that reads.
+  for (let from = text.indexOf("{"), tries = 0; from >= 0 && from < to && tries < 40; from = text.indexOf("{", from + 1), tries++) {
+    try {
+      const out = JSON.parse(text.slice(from, to + 1));
+      if (typeof out === "object" && out !== null && !Array.isArray(out)) return out;
+    } catch { /* not here; try the next */ }
+  }
+  return null;
+}
+
 /** What `idea` said the picture shows. */
 export function showsOf(out: Record<string, Record<string, unknown>>): Shows {
   const s = (out.shows ?? {}) as Record<string, unknown>;
