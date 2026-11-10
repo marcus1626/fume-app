@@ -970,7 +970,7 @@ approves the creatives. Her approval starts the Engine.
 - **The demo.** Nora (?as=nora): LYSNE › Winter gifting waits for her check and Send to Maja. Maja (?agency&as=maja):
   Black Friday is checked and sent, Approve and start. The seeded link is /c/bfplan.
 
-## 27. Video in the Studio (27 Oct 2026, PROPOSED)
+## 27. Video in the Studio (27 Oct 2026; DECIDED 10 Nov 2026 as amended by §34–§36)
 
 Marcus, 27 Oct: build video into the app from the start, "litt sånn det ble designet i agency dokumentet" (Fume for
 Agencies, page 4: "AI Video Editor", Video · Night ritual, Adapt for, the Video / Captions / Sound timeline). The
@@ -1050,7 +1050,7 @@ the formats. A draft for UX; the backend calls are in the contract and the mock.
   search, the formats' own review, video in Check (Check's Video tab), and the video model per shot learning from
   which takes are picked.
 
-## 29. The Engine in the Studio and Check: a failed version, the prompt behind a version, teaching the Engine, the Engine's findings (4 Nov 2026)
+## 29. The Engine in the Studio and Check: a failed version, the prompt behind a version, teaching the Engine, the Engine's findings (4 Nov 2026; DECIDED 10 Nov 2026 as amended by §34–§36)
 
 Status: PROPOSED (design thread, from the Engine v1 handover: docs/mvp/engine.md, "Not yet"). Numbered 29 so it does not
 clash with §27 (video) and §28 (empty pages) on their own branches.
@@ -1225,7 +1225,7 @@ Brand › Look Book (/brand/look) with "The Look Book".
 - **The demo.** LYSNE's Look Book, version 1, read from twelve pictures, is checked by Anna and waits on Maja. Maja
   (/brand/look): Approve or Ask for a change. Anna (?as=anna): "Checked by you · waits on Maja".
 
-## 33. Graphic design by Fume (4 Nov 2026, PROPOSED)
+## 33. Graphic design by Fume (4 Nov 2026; DECIDED 10 Nov 2026 as amended by §34–§36)
 Fume lays the plan's approved words on a picture the Engine made, in the brand's design system, measures the layout
 by code and has its review look at it as a designer would (docs/mvp/design-layer.md). Only Fume's people see any of
 it: the customer, an agency and its client never do. Only a Fume designer asks for it.
@@ -1258,7 +1258,7 @@ it: the customer, an agency and its client never do. Only a Fume designer asks f
   V3; the second try moves the words to the foot, where the review says it needs work. In Check, Night Body Oil ·
   Feed 9 (?item=qa-8) is a designed version 2 waiting for a check.
 
-## 34. Round 14 (9 Nov 2026, PROPOSED): Marcus's comments on the approval videos
+## 34. Round 14 (9 Nov 2026; DECIDED 10 Nov 2026): Marcus's comments on the approval videos
 Marcus watched the walkthroughs of PR #6, #8, #10 and #11 and left ten comments (9 Nov). He chose to see these changes
 before any of the four is wired live.
 
@@ -1426,12 +1426,12 @@ the others; nothing else about Check changes.
   the take with oil running from the closed bottle (critical); its button comes in a quarter second after the beat
   (minor).
 
-## 35. Round 15 (9 Nov 2026, PROPOSED): Marcus's 22 comments on the round 14 walkthrough
+## 35. Round 15 (9 Nov 2026; DECIDED 10 Nov 2026): Marcus's 22 comments on the round 14 walkthrough
 Marcus watched the round 14 walkthrough and left 22 comments (9 Nov). Under them lay four patterns: panels that say too
 much at once (Check), things that are fixed where they should be open (components, Tone of Voice blocks, the logo as a
 switch, two scores), the Engine in too many places (a bar, a chat and a conversation per desk), and scores that came
-before anything was made. He chose to wire the brand books live now (card, 9 Nov) and to see the rest first. Everything
-here is PROPOSED until he chooses.
+before anything was made. He chose to wire the brand books live now (card, 9 Nov) and to see the rest first. He approved it
+all on 10 Nov 2026 (§36).
 
 ### 35.1 Check is a comment thread, like the customer's viewer
 Marcus: "kan ikke designeren sin sjekk her være litt som kunden sin, et kommentarfelt og sånt som i Frame.io" and "hele
@@ -1663,7 +1663,7 @@ global session or a project session, so the thread continues the next time we co
 "Every field should have a button where you can ask the Engine to write it. Then perhaps also open a chat (a mini chat
 by the field, or the right-side panel with a reference to the field)."
 
-Everything here is PROPOSED 9 Nov 2026 until Marcus chooses. Only Fume's people and an agency's designers have the
+Decided 10 Nov 2026 with the round (§36). Only Fume's people and an agency's designers have the
 Engine. A customer never sees the panel, its button or a field's Engine buttons: customers talk to Fume, never to the
 Engine (and neither does Fume's person while she looks through Customer view).
 
@@ -1734,13 +1734,19 @@ Engine (and neither does Fume's person while she looks through Customer view).
 - Leaving a chip out lasts while she is on the page; it is not remembered.
 - The mock writes in LYSNE's voice from a few lines per kind of field; live, the Engine writes with the brand's context.
 
-## 36. Round 16 (9 Nov 2026, PROPOSED): Marcus's 11 comments on the round 15 walkthrough
+## 36. Round 16 (9 Nov 2026; DECIDED 10 Nov 2026): Marcus's 11 comments on the round 15 walkthrough
 Marcus watched the round 15 walkthrough and left 11 comments (9 Nov, evening). Under them lay four things. The design
 studio must be a pro tool: the brand's choices first, but presets, previews and a value of her own always there, as in
 Figma and OpenPencil ("designer har alltid siste ord"). The Engine must be at hand without opening its panel, and keep a
 chat per web session while remembering earlier ones. "Noted for round 16" read as dropped: the video editor he described
 in round 14 is built now (§36.4). And a button outside its card's padding should never reach him again: a test looks for
-it. Everything here is PROPOSED until he chooses.
+it.
+
+**Decided.** Marcus approved the design rounds on 10 Nov 2026 ("Godkjent", after the round 16 walkthrough and the dev
+thread's ask for a yes on the design PRs): §27, §29, §33 and §34 to §36, as the later rounds amended them, which is
+what the branch of PR #13 holds (it contains #6, #8, #11 and #12; the brand books, #10, were wired live on 9 Nov). The
+empty pages (#7) are not part of it. The defaults named in each section were shown in the walkthroughs and are decided
+with them; the dev thread wires all of it live, statics and design first, video after.
 
 ### 36.1 The design studio as a pro tool
 - **Size** is a number with presets, as in Figma's and OpenPencil's font size: the brand's sizes first (each named by
@@ -1773,7 +1779,7 @@ it. Everything here is PROPOSED until he chooses.
 - **The section she works in stays open.** A panel's sections fold the one opened longest ago when they no longer fit
   (§9.1); now using a section (a press or focus inside it, its popovers too) also makes it the newest, so picking a
   colour of her own no longer folds Fill away under her.
-- New icons, PROPOSED with the round: eye-off, lock-open, text-align-start, text-align-center, text-align-end.
+- New icons, decided with the round: eye-off, lock-open, text-align-start, text-align-center, text-align-end.
 
 ### 36.2 The Engine at hand, and a chat per web session
 - **"Tell the Engine" while the panel is closed.** In the Studio a field lies right under the board (under the player
@@ -1808,7 +1814,7 @@ it. Everything here is PROPOSED until he chooses.
   the nearest ancestor that draws a surface, on Check (a comment answered, designs, video), the three studios, a plan
   (with the Engine open) and the brand books. What a scroller clips away is left out.
 
-### 36.4 The video editor: tracks as layers, a storyboard of its own, and motion as After Effects has it (PROPOSED 9 Nov 2026)
+### 36.4 The video editor: tracks as layers, a storyboard of its own, and motion as After Effects has it (DECIDED 10 Nov 2026)
 
 Marcus on the round 14 walkthrough: the storyboard need not sit where the timeline sits ("en egen side, med et board,
 som dekker hele siden, litt som et lite figma canvas"); no manual motion control, no ease in and ease out numbers;
