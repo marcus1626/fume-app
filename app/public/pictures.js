@@ -28,7 +28,10 @@ async function picture(url, place) {
   if (hit) return hit;
   let response = null;
   if (SMALLER && !/\.svg$/i.test(place)) {
-    response = await fetch(`/_vercel/image?url=${encodeURIComponent(url.href)}&w=2048&q=80`).catch(() => null);
+    // The image service picks WebP from Accept, which a fetch from here does not send by itself.
+    response = await fetch(`/_vercel/image?url=${encodeURIComponent(url.href)}&w=2048&q=80`, {
+      headers: { Accept: "image/webp,image/*;q=0.8" },
+    }).catch(() => null);
     if (response && !response.ok) response = null;
   }
   if (!response) response = await fetch(url.href, { mode: "cors", credentials: "omit" });
