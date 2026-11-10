@@ -458,6 +458,17 @@ Deno.test("a layout's own call to action, as the brand's creatives set it, is th
   assertEquals(prompt({ ...task, layouts: layoutsOf([{ name: "Tile", band: "middle", align: "left", wordsWidthPct: 40, ground: "photo" }]) }).includes("its button"), false);
 });
 
+Deno.test("the plan writer is told the tone the place for the words needs, from the colour of the brand's words", () => {
+  const layouts = layoutsOf([{ name: "Hero", band: "bottom", align: "center", wordsWidthPct: 38, ground: "photo", hasWords: true, words: "light" }]);
+  assertEquals(layouts[0].words, "light");
+  const p = prompt({ ...task, layouts });
+  assertEquals(p.includes("\"words\":\"light\"") && p.includes("mid to deep in tone") && p.includes("never bright sky, a pale wall or a light studio floor"), true);
+  // A tone the Engine does not hold a picture to (the brand's colour) is not passed on.
+  const other = layoutsOf([{ name: "Slogan", band: "middle", align: "center", wordsWidthPct: 90, ground: "flat", words: "brand_colour" }]);
+  assertEquals("words" in other[0], false);
+  assertEquals(prompt({ ...task, layouts: other }).includes("mid to deep in tone"), false);
+});
+
 Deno.test("the brand's other recent pictures are shown so a new plan is not one more of the same shot", () => {
   assertEquals(scenesPart(undefined), []);
   const part = scenesPart(["Sideline long-lens photograph in bright sun.", "Sideline long-lens photograph in bright sun.", ""]).join("\n");

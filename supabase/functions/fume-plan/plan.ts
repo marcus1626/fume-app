@@ -97,7 +97,7 @@ export type LookForPlan = {
 };
 
 /** One of the brand's layouts for words on its pictures, as the plan writer is shown it. */
-export type BrandLayout = { name: string; band: string; align: string; wordsWidthPct: number; ground: string; why?: string; cta?: string };
+export type BrandLayout = { name: string; band: string; align: string; wordsWidthPct: number; ground: string; why?: string; cta?: string; words?: "light" | "dark" };
 
 export interface VoiceInUse {
   id: string;
@@ -246,6 +246,8 @@ export function layoutsOf(layouts: unknown): BrandLayout[] {
         ground: String(x.ground ?? ""),
         ...(typeof x.why === "string" ? { why: x.why.slice(0, 200) } : {}),
         ...(typeof x.ctaWords === "string" && x.ctaWords.trim() ? { cta: x.ctaWords.trim().slice(0, 40) } : {}),
+        // The tone of the brand's words there: white words need a darker place, dark words a light one.
+        ...(x.words === "light" || x.words === "dark" ? { words: x.words } : {}),
       };
     });
 }
@@ -260,6 +262,11 @@ export function layoutPart(layouts: BrandLayout[] | undefined): string[] {
   return [
     `<brand_layouts>\n${JSON.stringify(layouts)}\n</brand_layouts>`,
     "These are the brand's own layouts for words on its pictures: where the words sit (band and align), how wide their column is (a share of the picture's width) and what they stand on. For every creative with words, choose the layout that suits its scene and name it in layout, exactly as listed. Write the scene for it: the product, every person and the ball stay clear of that place (people go beside the product, never in the words' room), and the ground there is calm, so the words can be set there later.",
+    // The Engine holds the picture to the tone the words need (engine/context.ts roomRules). A plan that put white
+    // words on a seamless light grey studio ground could not be written as a prompt at all (Nike UK, P-6000, 10 Nov).
+    ...(layouts.some((l) => l.words)
+      ? ["Where a layout lists words as light, the brand sets its words there in white: in the scene you write, the place where they sit is mid to deep in tone (the shaded side of the scene, a darker wall, a mid-grey or dark studio ground that falls off darker there), never bright sky, a pale wall or a light studio floor. Where it lists words as dark, that place is light in tone. Say the tone of that place in the scene."]
+      : []),
     ...(layouts.some((l) => l.cta)
       ? ["Where a layout lists cta, those are the words the brand itself sets on its button, as its own creatives show them. A creative set in that layout carries them as its call to action, word for word in the brand's case, unless the brief asks for another action; the tone of voice's other calls to action are for its pages, not its creatives. An ad asks for an action: set every creative with words in a layout that carries the brand's button, and keep the layouts without one for a picture the brief wants without a call to action. The call to action is always words to act on, never a note such as \"none\"."]
       : []),

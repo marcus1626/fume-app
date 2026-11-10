@@ -219,6 +219,10 @@ async function collect(
         const ext = EXT[contentType] ?? "png";
         const path = `${c.workspaceId}/engine/${c.jobId}/${c.attemptId}-${i + 1}.${ext}`;
         const { error } = await deps.service.store(path, bytes, contentType);
+        // The path is this attempt's own, so a picture already there was kept by another run of the Engine that
+        // collects the same attempt at this moment (the Studio asks again while a Render waits). That run finishes it;
+        // failing the attempt here threw away a picture that was made and paid for (Nike UK, 10 Nov).
+        if (error && /already exists|duplicate/i.test(error.message)) return "waiting";
         if (error) {
           await deps.service.fail(c.attemptId, `The picture could not be kept: ${error.message}`, r.response, 0, false);
           return "failed";

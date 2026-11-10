@@ -136,6 +136,16 @@ Deno.test("a picture still being made is left for the next call, which collects 
   assertEquals(g.log.at(-1), "finish att-1 15");
 });
 
+Deno.test("a picture another run of the Engine kept at the same moment is left to that run, and the attempt does not fail", async () => {
+  const f = fake({
+    takes: [{ collect: { job_id: JOB, attempt_id: "att-1", workspace_id: "ws1", provider: "fake", model: "nano-banana-pro", provider_job_id: "req-1", started_at: "" } }],
+    provider: fakeProvider(["done"]),
+  });
+  f.deps.service.store = async (p) => (f.log.push(`store ${p}`), { error: { message: "The resource already exists" } });
+  assertEquals(await runJob(JOB, f.deps), "waiting");
+  assertEquals(f.log, [`store ws1/engine/${JOB}/att-1-1.png`]);
+});
+
 Deno.test("a prompt that does not pass is recorded and nothing is rendered", async () => {
   const f = fake({ takes: [taken()], provider: fakeProvider(["done"]) });
   f.deps.models.decide = async ({ questions }) => ({ probabilities: Object.fromEntries(Object.keys(questions).map((k) => [k, 0.1])), call });
