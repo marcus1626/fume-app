@@ -5,7 +5,10 @@ import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { betaZodOutputFormat } from "npm:@anthropic-ai/sdk@1.3.0/helpers/beta/zod";
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
 import { signedIn as isSignedIn } from "../_shared/net.ts";
+import { build } from "../_shared/taste/build.ts";
+import type { Card } from "../_shared/taste/profile.ts";
 import { parseAnswer, passFields, passPrompt, passPromptWithShape, passShape, READ_SYSTEM } from "../_shared/taste/read.ts";
+import { TASTE_SCHEMA_VERSION } from "../_shared/taste/schema.ts";
 import { type Asked, handleTasteRead, type Picture, type Reader, type Usage } from "./handler.ts";
 
 /** The readers: which model each is, where it is asked, and its list price in dollars per million tokens (10 Nov 2026).
@@ -134,6 +137,17 @@ Deno.serve(async (req) => {
       if (m.stop_reason === "refusal") return { ok: false, error: "The model declined.", usage };
       if (m.stop_reason === "max_tokens" || !m.parsed_output) return { ok: false, error: "The answer could not be read.", usage };
       return { ok: true, out: m.parsed_output as Record<string, Record<string, unknown>>, usage };
+    },
+    save: async (workspaceId, reading) => {
+      const saved = await service.rpc("taste_reading_save", { p_workspace_id: workspaceId, p_reading: reading });
+      if (saved.error) return { error: saved.error.message };
+      const cards = await service.rpc("taste_cards", { p_workspace_id: workspaceId, p_schema_version: TASTE_SCHEMA_VERSION });
+      if (cards.error) return { error: cards.error.message };
+      const { brand, engine } = cards.data as { brand: Card[]; engine: Card[] };
+      const built = build(brand, engine);
+      const profiled = await service.rpc("taste_profile_save", { p_workspace_id: workspaceId, p_built: built });
+      if (profiled.error) return { error: profiled.error.message };
+      return { score: built.score.score, pictures: brand.length, enginePictures: engine.length };
     },
     keep: async (r) => {
       // Until the taste tables are live the cost is kept as a `facts` run (a reading of a source, the nearest kind the

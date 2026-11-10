@@ -70,6 +70,9 @@ Deno.serve((req) =>
             // How the brand sets words on its pictures, so a picture that carries words leaves room for them.
             const { data: room } = await service.rpc("engine_words_room", { p_job_id: jobId });
             if (room) data.room = room;
+            // What the brand's pictures keep to, read against the taste schema; none until the brand has a profile.
+            const { data: taste } = await service.rpc("engine_taste", { p_job_id: jobId });
+            if (taste && typeof taste === "object") data.tasteDirection = taste;
             // What the picture check found on the brand's last pictures, so this one avoids it.
             const { data: seen } = await service.rpc("engine_recent_checks", { p_job_id: jobId });
             if (Array.isArray(seen) && seen.length) data.seen = seen;

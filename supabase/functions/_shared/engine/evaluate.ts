@@ -39,8 +39,10 @@ export function checklist(manifest: Pick<ManifestItem, "kind" | "requirement" | 
   if (withProductPhoto)
     out.push({ n: 1, area: "product", hard: true, requirement: "The product in the picture is the product in the photographs: the same shape, proportions, colours, label and materials, and it can be recognised. It may be seen from another side or opened, as the scene asks." });
   for (const m of manifest) {
-    // The taste model's words are measured on the picture by code (taste_model), not judged by eye.
-    if (m.refId?.startsWith("taste-")) continue;
+    // The taste model's words are measured on the picture by code (taste_model), not judged by eye. The taste
+    // schema's habits are judged by reading the picture against the schema (taste/profile.ts fit), not here: a habit
+    // the plan chose to leave would otherwise be called off.
+    if (m.refId?.startsWith("taste-") || m.refId?.startsWith("schema-")) continue;
     const area = m.kind === "product_invariant" || m.kind === "product_colour" ? "product"
       : m.kind === "brand_rule_hard" || m.kind === "brand_rule_soft" || m.kind === "lesson_enforced" ? "brand"
       : m.kind === "concept" ? "scene" : null;

@@ -160,7 +160,7 @@ export type TasteScore = {
  * how many campaigns, so a campaign's choice is not taken for the brand. Proof: how close the Engine's own pictures
  * come to the brand's (fit, 0 to 1), which is the only part that shows the knowledge works; none until it is tested.
  */
-export function tasteScore(profile: Profile, proof: { engineFit: number; ownFit: number } | null = null): TasteScore {
+export function tasteScore(profile: Profile, proof: { engineFit: number; ownFit: number; own?: number; left?: number } | null = null): TasteScore {
   const fs = Object.values(profile.fields);
   const n = profile.pictures;
   const evidence = n / (n + 40);
@@ -178,7 +178,7 @@ export function tasteScore(profile: Profile, proof: { engineFit: number; ownFit:
     part("coverage", "Coverage", coverage, 20, `${known.length} of ${fs.length} fields answered by ${MIN_PICTURES} pictures or more`),
     part("certainty", "Certainty", certainty, 20, `${settled.length} fields settled`),
     part("breadth", "Breadth", breadth, 10, `${profile.campaigns} campaign${profile.campaigns === 1 ? "" : "s"}`),
-    part("proof", "Proof", proven, 20, proof ? `The Engine's pictures fit ${Math.round(proof.engineFit * 100)}%, the brand's own ${Math.round(proof.ownFit * 100)}%` : "Not tested yet"),
+    part("proof", "Proof", proven, 20, proof ? `The Engine's pictures fit ${Math.round(proof.engineFit * 100)}%, the brand's own ${Math.round(proof.ownFit * 100)}%${proof.own ? `, counted on ${proof.own} photographs${proof.left ? ` (${proof.left} other pictures left out)` : ""}` : ""}` : "Not tested yet"),
   ];
   const next: string[] = [];
   if (n < 40) next.push(`Add pictures: ${n} read, the score climbs fastest up to about 100.`);
@@ -224,13 +224,13 @@ const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.l
  * The fit of a picture to the brand, 0 to 1, over the fields the brand keeps to (always or usually), each weighed by
  * how sure Fume is of it; and the gaps, widest first. Free words and fields a campaign chooses are left out.
  */
-export function fit(profile: Profile, card: Card, opts: { levers?: Field["lever"][] } = {}): { fit: number; counted: number; gaps: Gap[] } {
+export function fit(profile: Profile, card: Card, opts: { levers?: Field["lever"][]; skip?: string[] } = {}): { fit: number; counted: number; gaps: Gap[] } {
   const gaps: Gap[] = [];
   let sum = 0, weights = 0;
   for (const fp of Object.values(profile.fields)) {
     const f = FIELD.get(fp.key);
     if (!f || f.type === "words" || (fp.standing !== "always" && fp.standing !== "usually")) continue;
-    if (opts.levers && !opts.levers.includes(f.lever)) continue;
+    if ((opts.levers && !opts.levers.includes(f.lever)) || opts.skip?.includes(f.key)) continue;
     const c = closeness(f, fp, card);
     if (c === null) continue;
     const weight = fp.confidence * (fp.standing === "always" ? 1 : 0.6);
@@ -245,6 +245,40 @@ export function fit(profile: Profile, card: Card, opts: { levers?: Field["lever"
   }
   gaps.sort((a, b) => b.weight * (1 - b.closeness) - a.weight * (1 - a.closeness));
   return { fit: weights ? sum / weights : 0, counted: gaps.length, gaps };
+}
+
+// ─── Proof: the Engine's pictures against the brand's, like with like ────────
+
+/** A picture with a photograph in it, alone or under words: what a picture the Engine made can be held against. A
+ *  card of type alone, or a screenshot with no photograph, says nothing about how the brand shoots. */
+export function photographic(c: Card): boolean {
+  const type = c.read["kind.type"], under = c.read["kind.picture_under_graphics"];
+  return type === "photograph" || type === "photograph_with_graphics" || type === "video_frame" || under === "full_photograph";
+}
+export type Proof = { engineFit: number; ownFit: number; own: number; engine: number; left: number };
+/** What the Engine's picture carries before the design layer sets words on it. */
+const PICTURE_LEVERS: Field["lever"][] = ["plan", "prompt", "reference", "finish", "select"];
+
+/**
+ * How close the Engine's pictures come to the brand's, counted like with like: only the brand's pictures with a
+ * photograph in them, and only the fields a photograph carries (not the words and the logo set on it). The brand's own
+ * fit is each of its pictures against a profile built without it, so it does not praise itself. Null until the brand
+ * has photographs enough to say what its habit is.
+ */
+export function proofOf(brand: Card[], engine: Card[]): Proof | null {
+  const told = brand.some((c) => c.read["kind.type"]);
+  const like = told ? brand.filter(photographic) : brand;
+  if (like.length <= MIN_PICTURES || engine.length === 0) return null;
+  const whole = buildProfile(like);
+  // Whether words are set on the picture is the design layer's doing, although the plan decides it.
+  const opts = { levers: PICTURE_LEVERS, skip: ["kind.type"] };
+  return {
+    engineFit: mean(engine.map((c) => fit(whole, c, opts).fit)),
+    ownFit: mean(like.map((c) => fit(buildProfile(like.filter((x) => x.id !== c.id)), c, opts).fit)),
+    own: like.length,
+    engine: engine.length,
+    left: brand.length - like.length,
+  };
 }
 
 // ─── Two sets of pictures against each other ─────────────────────────────────

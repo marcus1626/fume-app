@@ -1,7 +1,8 @@
 // The taste schema, its profile and its questions, without pictures or a model: deno test supabase/functions/_shared/taste/
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import { z } from "npm:zod@4.6.7";
-import { buildProfile, type Card, compare, fit, lowerBound, tasteScore } from "./profile.ts";
+import { direction, finishTargets, planBrief, promptLines } from "./direction.ts";
+import { buildProfile, type Card, compare, fit, lowerBound, proofOf, tasteScore } from "./profile.ts";
 import { answersOf, CANNOT_TELL, laterPasses, parseAnswer, passFields, passPromptWithShape, passShape, showsOf } from "./read.ts";
 import { FIELD, FIELDS, GROUPS, measuredFields, PASSES, readFields, type Shows } from "./schema.ts";
 import { measureCard } from "./card.ts";
@@ -117,4 +118,78 @@ Deno.test("a model that answers in text gets the shape in the question, and its 
   assertEquals(parseAnswer("I cannot read this picture."), null);
   assertEquals(parseAnswer("[1, 2]"), null);
   assertEquals(parseAnswer('{"kind": {'), null);
+});
+
+// ─── Direction: the profile said to whoever makes the next picture ───────────
+
+const brandCards = () =>
+  Array.from({ length: 12 }, (_, i) =>
+    card(`b${i}`, {
+      "kind.type": "photograph",
+      "camera.depth_of_field": "deep",
+      "camera.height": "eye",
+      "light.lamps_in_frame": "none",
+      "setting.ground_shown": "not_shown",
+      "styling.wardrobe": "sportswear",
+      "people.framing": "full_body",
+      "design.button": "none",
+      "design.button_place": "none",
+      "people.gaze": i % 2 ? "into_the_camera" : "down",
+      "mood.temperature": i < 6 ? "cold" : "warm",
+    }, { "finish.grain_overall": 0.4 + (i % 3) * 0.01 }, i < 6 ? "winter" : "summer"));
+
+Deno.test("direction says what the brand keeps to in plain words, sets absences apart, and leaves out what is free", () => {
+  const d = direction(buildProfile(brandCards()));
+  const says = new Map(d.lines.map((l) => [l.key, l]));
+  assertEquals(says.get("camera.depth_of_field")!.says, "Camera, depth of field: deep");
+  assertEquals(says.get("styling.wardrobe")!.says, "Wardrobe: sportswear");
+  assertEquals([says.get("light.lamps_in_frame")!.says, says.get("light.lamps_in_frame")!.absence], ["Light: no lamps in frame", true]);
+  assertEquals(says.get("setting.ground_shown")!.says, "Setting: ground not shown");
+  assert(!says.has("people.gaze"), "a free field gives no direction");
+  assert(says.has("design.button") && !says.has("design.button_place"), "no button already says there is no place for one");
+  assert(says.get("camera.depth_of_field")!.weight > says.get("light.lamps_in_frame")!.weight, "what the picture has weighs more than what it leaves out");
+  assertEquals(d.choices.map((c) => [c.key, c.campaigns]), [["mood.temperature", { winter: "cold", summer: "warm" }]]);
+  assertEquals(finishTargets(d).map((t) => t.key), ["finish.grain_overall"]);
+  assert(!d.tested);
+});
+
+Deno.test("a prompt takes only what the photograph carries and the picture will show; the plan gets the campaign's choices", () => {
+  const d = direction(buildProfile(brandCards()));
+  const product = promptLines(d).map((l) => l.key);
+  assert(product.includes("camera.depth_of_field") && !product.includes("people.framing") && !product.includes("design.button"));
+  const withPeople = promptLines(d, { people: true });
+  assertEquals(withPeople.find((l) => l.key === "people.framing")!.dimension, "people");
+  assertEquals(withPeople.find((l) => l.key === "camera.height")!, { id: "schema-camera.height", dimension: "camera", statement: "Camera, height: eye.", key: "camera.height", weight: withPeople.find((l) => l.key === "camera.height")!.weight });
+  assertEquals(promptLines(d, { people: true }, 16, 1).filter((l) => /: no | not shown/.test(l.statement)).length, 1);
+  const brief = planBrief(d);
+  assert(brief.includes("- Camera, depth of field: deep (always)") && brief.includes("Mood, temperature: winter: cold; summer: warm") && brief.includes("Design: no button"));
+});
+
+Deno.test("what the Engine missed last time is said first, with what it did instead; what it already does is said last", () => {
+  const brand = buildProfile(brandCards());
+  const engine = buildProfile(Array.from({ length: 6 }, (_, i) =>
+    card(`e${i}`, { "kind.type": "photograph", "camera.depth_of_field": "shallow", "camera.height": "eye", "light.lamps_in_frame": "none", "setting.ground_shown": "half_or_more" }, { "finish.grain_overall": 3 })));
+  const d = direction(brand, engine);
+  assert(d.tested);
+  const lines = promptLines(d);
+  assertEquals(lines[0]!.key, "camera.depth_of_field");
+  assert(lines[0]!.statement.endsWith("Earlier Engine pictures had shallow 100%."), lines[0]!.statement);
+  const at = (k: string) => lines.findIndex((l) => l.key === k);
+  assert(at("setting.ground_shown") < at("camera.height"), "a missed absence comes before a habit the Engine already keeps");
+  assertEquals(finishTargets(d)[0]!.miss!.engine, 3);
+  // A field the Engine's pictures could not answer is not taken as learned.
+  assertEquals(d.lines.find((l) => l.key === "styling.wardrobe")!.weight, direction(brand).lines.find((l) => l.key === "styling.wardrobe")!.weight);
+});
+
+Deno.test("proof holds the Engine's pictures against the brand's photographs only, and waits until there are enough", () => {
+  const photo = (id: string, depth: string) => card(id, { "kind.type": "photograph_with_graphics", "camera.depth_of_field": depth, "design.button": "solid_button" });
+  const typeCard = (id: string) => card(id, { "kind.type": "graphics_only", "design.button": "none" });
+  const brand = [...Array.from({ length: 8 }, (_, i) => photo(`p${i}`, "deep")), ...Array.from({ length: 5 }, (_, i) => typeCard(`t${i}`))];
+  const good = proofOf(brand, [card("e1", { "kind.type": "photograph", "camera.depth_of_field": "deep" })])!;
+  const bad = proofOf(brand, [card("e2", { "kind.type": "photograph", "camera.depth_of_field": "shallow" })])!;
+  assertEquals([good.own, good.left, good.engine], [8, 5, 1]);
+  assertEquals([good.engineFit, good.ownFit], [1, 1]);
+  assert(bad.engineFit < 0.5, "the words set on the brand's pictures are not held against a picture without words");
+  assertEquals(proofOf(brand.slice(0, 5), [card("e3", {})]), null);
+  assert(tasteScore(buildProfile(brand), good).parts.find((p) => p.key === "proof")!.why.includes("8 photographs (5 other pictures left out)"));
 });

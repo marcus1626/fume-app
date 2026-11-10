@@ -16,6 +16,9 @@ see it.
 | Profile | `profile.ts` `buildProfile` | The brand's cards counted field by field: the value, its shares or range, how sure, and a standing. |
 | Score | `profile.ts` `tasteScore` | 0 to 100: how well Fume knows the brand's taste. |
 | Fit and gap | `profile.ts` `fit`, `compare` | One picture against the profile; one set of pictures (the Engine's) against another (the brand's). |
+| Proof | `profile.ts` `proofOf` | How close the Engine's pictures come to the brand's, like with like. |
+| Direction | `direction.ts` | The profile said to whoever makes the next picture: lines for the plan and the prompt, numbers for the finish step. |
+| Kept | `build.ts`, migration `20261110070000_taste_schema.sql` | `taste_readings` (a card per picture) and `taste_profiles` (profile, score, direction per brand). |
 
 ## Brand or campaign: the standing of a field
 
@@ -38,6 +41,35 @@ breadth 10 (campaigns, five for full marks), proof 20 (how close the Engine's ow
 against how close the brand's own come when each is left out of the profile it is held against). Proof is the only
 part that shows the knowledge works, and it is 0 until the Engine has been tested. The score says what would raise it
 most.
+
+Proof is counted like with like (`proofOf`): only the brand's pictures with a photograph in them (a card of type
+alone says nothing about how the brand shoots), and only the fields a photograph carries, not the words and the logo
+set on it. It waits until the brand has six such pictures. It is still too kind: many fields are the same in every
+tidy advertising picture (no flash, no border), so any competent photograph fits most of a profile. What it needs is a
+floor: the fit of pictures the Engine makes without knowing the brand. Never another customer's pictures.
+
+## Direction: what the Engine is told
+
+`direction(profile, engineProfile)` turns the profile into what the next picture is made from.
+
+- **Lines**: one for each read field the brand keeps to (`always` or `usually`), in fixed words built from the
+  registry: "Camera, depth of field: deep". A habit that something is not there is an absence ("Design: no badge").
+- **Order**: how sure Fume is, times 0.7 for `usually`, times 0.5 for an absence. Once the Engine's own pictures for
+  the brand were read against the schema, a field they missed weighs up to twice as much and a field they already
+  keep weighs a third, and the line says what they did instead. This is how a test round teaches the next prompt.
+- **Targets**: the measured numbers the brand keeps to, with the middle four fifths as the range; the finish step
+  takes the ones with the lever `finish`.
+- **Choices**: fields a campaign chooses. The plan takes them from the campaign, never from habit.
+
+Who reads it:
+
+- The plan writer (`fume-plan`, `tastePart`) gets every lever but the finish step as a `<taste_schema>` block, with
+  the campaign's choices. The brief wins where it asks for something else.
+- The picture prompt (`engine/context.ts` `schemaLines`) gets the twelve weightiest lines of the levers `prompt` and
+  `reference` that apply to what the plan says the picture shows, at most two of them absences (long lists of what to
+  avoid make image models worse). They are soft brand rules with ids `schema-<field>`, routed to the camera, people
+  and scene slots by their group. The plan wins over a habit; the ledger says which lines went in and which did not.
+- The picture check does not judge them. Whether a picture keeps the brand's habits is for `fit` to say.
 
 ## Reading with a vision model
 
@@ -84,11 +116,10 @@ What this does not show:
 - Not tested: the direct Anthropic readers (the key was rejected that day), `gpt-sol`, `opus-r`, and `grok` (the function
   ran out of compute). Qwen is refused by the router's zero-data-retention policy.
 
-First full read with `gpt-terra`, Nike UK (test), 10 real ads and 8 Engine pictures: taste score 50 of 100 (pictures 6 of
-30, coverage 18 of 20, certainty 3 of 20, breadth 4 of 10, proof 19 of 20). The brand's own pictures fit their profile
-0.81 and the Engine's 0.77. Proof is too kind here: the ten ads are of mixed kinds (type cards, ad-library screenshots,
-photographs), so they fit their own profile poorly and the Engine looks closer than it is. Proof should compare pictures
-of the same kind.
+First full read with `gpt-terra`, Nike UK (test), 10 real ads and 8 Engine pictures: taste score 49 of 100 (pictures 6 of
+30, coverage 18 of 20, certainty 3 of 20, breadth 4 of 10, proof 18 of 20). Counted like with like on the six ads
+with a photograph in them, the brand's own pictures fit their profile 0.76 and the Engine's 0.69. The direction it
+gives has 113 lines, 64 of them for the prompt, 6 finish targets and 9 campaign choices.
 
 ## Tools
 
@@ -98,18 +129,32 @@ FUME_ACCESS_TOKEN=… deno run -A tools/taste/read.ts <manifest.json> <reads.jso
 deno run -A tools/taste/merge.ts <cards.json> <reads.json> <out cards.json> both halves on one card
 deno run -A tools/taste/report.ts <cards.json> <brand set> [other set]      profile, score, gap
 deno run -A tools/taste/bake.ts <cards.json> <dir with read-<reader>-<a|b>.json>
+FUME_ACCESS_TOKEN=… deno run -A tools/taste/keep.ts <cards.json> --workspace <id> --brand <set> [--engine <set>]
 ```
+
+`keep.ts` sends cards made on disk to `taste-read`, which keeps them as the brand's readings and counts its profile
+again; no model is asked. `taste-read` with `keep` does the same for a picture it has just read.
+
+## Kept in the database
+
+`taste_readings` holds one card per picture (the brand's own, or one the Engine made for it); a picture read again
+replaces its card, and a half that is not sent keeps what was there. `taste_profiles` holds one row per brand: the
+profile, the Engine's own profile, the score and the direction, counted again by `taste-read` after every reading.
+Fume's people on the brand read both; a customer never does; only the function writes them. `engine_taste(job)` and
+`taste_direction_of_campaign(campaign)` hand the direction to the Engine and to the plan writer. The functions work
+without the tables: until the migration is applied a reading comes back unkept and the Engine is told nothing.
 
 ## Not built yet
 
-1. Tables for cards and profiles and a spend kind of its own (a migration; needs Marcus's go). The profile is then
-   rebuilt whenever the customer adds pictures.
-2. The profile into the plan and the prompt: `always` fields as hard lines, `by_campaign` fields from the campaign,
-   `free` left to the plan.
+1. Applying the migration and deploying `taste-read`, `engine` and `fume-plan` with it (needs Marcus's go).
+2. Reading a brand's pictures by itself when the customer adds them (today a tool sends them), and the Engine's own
+   pictures after each round, so the direction learns without anyone running a tool.
 3. The finish step: grain, black point, tint and sharpness put on the pixels by code after the picture is made,
-   measured against the brand's numbers.
+   brought to the direction's targets.
 4. Best of four with the profile as the judge (`fit`), before the expert sees a picture.
-5. Calibration: test-generate for the brand, measure the gap, change the prompt, and remember what worked per brand
-   and image model.
-6. `.fig` upload: the design fields read from the file itself.
-7. A picture skill per brand beside the copy skill.
+5. A floor for proof: pictures the Engine makes without knowing the brand.
+6. Calibration per image model: which wording of a line moves a model, remembered per brand and model.
+7. A human answer key on about 50 pictures, to settle the reader.
+8. `.fig` upload: the design fields read from the file itself.
+9. A picture skill per brand beside the copy skill.
+10. The taste score and the profile in the app (the design thread owns the screens).

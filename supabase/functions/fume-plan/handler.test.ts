@@ -526,3 +526,22 @@ Deno.test("an ad set in a layout without the brand's button, where it has one, i
     "a brand with no button on its pictures is never asked for one");
   assertEquals(prompt({ ...task, layouts }).includes("set every creative with words in a layout that carries the brand's button"), true);
 });
+
+Deno.test("the plan writer reads the brand's taste schema: its habits, what a campaign chooses, and where the Engine missed", async () => {
+  const { tastePart } = await import("./plan.ts");
+  const { buildProfile } = await import("../_shared/taste/profile.ts");
+  const { direction } = await import("../_shared/taste/direction.ts");
+  const cards = Array.from({ length: 12 }, (_, i) => ({
+    id: `b${i}`, measured: {}, campaign: i < 6 ? "winter" : "summer",
+    read: { "people.count": "one", "camera.depth_of_field": "deep", "mood.temperature": i < 6 ? "cold" : "warm", "finish.grain_feel": "fine" },
+  }));
+  const engine = Array.from({ length: 6 }, (_, i) => ({ id: `e${i}`, measured: {}, read: { "people.count": "none", "camera.depth_of_field": "deep" } }));
+  const [block, how] = tastePart(direction(buildProfile(cards), buildProfile(engine)));
+  assertEquals(block!.startsWith('<taste_schema pictures="12" campaigns="2">'), true);
+  assertEquals(block!.includes("- People, count: one (always; earlier Engine pictures: none 100%)"), true);
+  assertEquals(block!.includes("- Mood, temperature: winter: cold; summer: warm"), true);
+  assertEquals(block!.includes("grain"), false, "the finish step's fields are not the plan's");
+  assertEquals(/the brief wins/.test(how!), true);
+  assertEquals(tastePart(null), []);
+  assertEquals(tastePart(direction(buildProfile(cards.slice(0, 3)))), [], "too few pictures give no direction");
+});

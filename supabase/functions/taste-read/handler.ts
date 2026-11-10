@@ -3,6 +3,11 @@
 // only, for a brand they work on. `idea` is asked first because it says what the picture shows; the passes that apply
 // are then asked side by side. Every question is counted against the week's budget for the language model, and what
 // it cost is kept. handler.test.ts runs it without Supabase or the model.
+//
+// With `keep` the reading is kept as the picture's card (the brand's own picture or one the Engine made for it) and the
+// brand's profile, score and direction are counted again. With `card` and no picture a reading made before is kept
+// as it is, and no model is asked.
+import { cleanMeasured, cleanRead, cleanShows } from "../_shared/taste/build.ts";
 import { answersOf, laterPasses, passFields, showsOf } from "../_shared/taste/read.ts";
 import { type Answer, type Pass, PASSES, type Shows, TASTE_SCHEMA_VERSION } from "../_shared/taste/schema.ts";
 
@@ -21,12 +26,32 @@ export type Reader = (typeof READERS)[number];
 export const EFFORTS = ["low", "medium", "high"] as const;
 export type Effort = (typeof EFFORTS)[number];
 
+/** One picture's card as it is kept (public.taste_reading_save). */
+export type Reading = {
+  source: "brand" | "engine";
+  ref: string;
+  title?: string;
+  campaign?: string;
+  signal_id?: string;
+  file_id?: string;
+  schema_version: number;
+  reader?: string;
+  shows?: Shows | null;
+  measured?: Record<string, number>;
+  read?: Record<string, Answer>;
+  failed?: { pass: string; error: string }[];
+  cost_usd?: number;
+};
+export type Kept = { score: number; pictures: number; enginePictures: number } | { error: string };
+
 export interface Deps {
   /** As the caller: true when they are one of Fume's own people on this brand. */
   staff(workspaceId: string): Promise<boolean>;
   withinBudget(): Promise<boolean>;
   ask(pass: Pass, shows: Shows | undefined, picture: Picture, reader: Reader, effort: Effort): Promise<Asked>;
   keep(run: { workspaceId: string; input: unknown; output: unknown; error: string | null; usage: Usage }): Promise<void>;
+  /** Keeps the reading as the picture's card and counts the brand's profile again. */
+  save(workspaceId: string, reading: Reading): Promise<Kept>;
 }
 
 const CORS = {
@@ -49,6 +74,21 @@ function pictureOf(p: unknown): Picture | null {
     (mediaType === "image/jpeg" || mediaType === "image/png" || mediaType === "image/webp")) return { base64, mediaType };
   return null;
 }
+/** Whose picture it is and what to call it, so reading it again replaces its card. */
+function keepOf(k: unknown): Omit<Reading, "schema_version"> | null {
+  if (typeof k !== "object" || k === null) return null;
+  const { source, ref, title, campaign, signalId, fileId, measured } = k as Record<string, unknown>;
+  if ((source !== "brand" && source !== "engine") || typeof ref !== "string" || !ref.trim() || ref.length > 200) return null;
+  const text = (v: unknown, most: number) => (typeof v === "string" && v.trim() ? v.trim().slice(0, most) : undefined);
+  const id = (v: unknown) => (typeof v === "string" && UUID.test(v) ? v : undefined);
+  const m = cleanMeasured(measured);
+  return {
+    source, ref: ref.trim(),
+    ...(text(title, 200) ? { title: text(title, 200) } : {}), ...(text(campaign, 120) ? { campaign: text(campaign, 120) } : {}),
+    ...(id(signalId) ? { signal_id: id(signalId) } : {}), ...(id(fileId) ? { file_id: id(fileId) } : {}),
+    ...(Object.keys(m).length ? { measured: m } : {}),
+  };
+}
 const add = (a: Usage, b: Usage): Usage => ({
   model: b.model || a.model,
   input_tokens: a.input_tokens + b.input_tokens,
@@ -67,7 +107,7 @@ export async function handleTasteRead(req: Request, signedIn: boolean, deps: Dep
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   if (req.method !== "POST") return reply(400, { code: "invalid", message: "Use POST." });
   if (!signedIn) return reply(403, { code: "forbidden", message: "Sign in first." });
-  let body: { workspaceId?: unknown; picture?: unknown; reader?: unknown; effort?: unknown; passes?: unknown };
+  let body: { workspaceId?: unknown; picture?: unknown; reader?: unknown; effort?: unknown; passes?: unknown; keep?: unknown; card?: unknown };
   try {
     body = (await req.json()) ?? {};
   } catch {
@@ -78,6 +118,24 @@ export async function handleTasteRead(req: Request, signedIn: boolean, deps: Dep
   const reader = READERS.find((r) => r === (body.reader ?? "haiku"));
   const effort = EFFORTS.find((e) => e === (body.effort ?? "low"));
   const only = Array.isArray(body.passes) ? PASSES.filter((p) => (body.passes as unknown[]).includes(p)) : null;
+  const keep = body.keep === undefined ? undefined : keepOf(body.keep);
+  if (keep === null) return reply(400, { code: "invalid", message: "To keep a reading, say whose picture it is (brand or engine) and give it a name." });
+
+  // A reading made before, kept as it is: no picture, no model, no cost.
+  if (workspaceId && keep && !body.picture && typeof body.card === "object" && body.card !== null) {
+    const card = body.card as { read?: unknown; shows?: unknown; reader?: unknown; failed?: unknown; cost_usd?: unknown };
+    const stored = cleanRead(card.read);
+    if (!Object.keys(stored).length && !keep.measured) return reply(400, { code: "invalid", message: "The card has nothing the schema lists." });
+    if (!(await deps.staff(workspaceId))) return reply(403, { code: "forbidden", message: "Only Fume's own people on this brand can read its pictures." });
+    const kept = await deps.save(workspaceId, {
+      ...keep, schema_version: TASTE_SCHEMA_VERSION, read: stored, shows: cleanShows(card.shows),
+      ...(typeof card.reader === "string" && card.reader.length <= 40 ? { reader: card.reader } : {}),
+      ...(typeof card.cost_usd === "number" && card.cost_usd >= 0 ? { cost_usd: card.cost_usd } : {}),
+    });
+    if ("error" in kept) return reply(502, { code: "unavailable", message: "Fume could not keep the reading just now.", detail: kept.error });
+    return reply(200, { schema: TASTE_SCHEMA_VERSION, kept: true, fields: Object.keys(stored).length, ...kept });
+  }
+
   if (!workspaceId || !picture || !reader || !effort || (only && !only.length))
     return reply(400, { code: "invalid", message: "Send a brand, a picture (a JPEG, PNG or WebP, or an https address), and a reader Fume knows." });
   if (!(await deps.staff(workspaceId))) return reply(403, { code: "forbidden", message: "Only Fume's own people on this brand can read its pictures." });
@@ -114,5 +172,12 @@ export async function handleTasteRead(req: Request, signedIn: boolean, deps: Dep
     usage,
   });
   if (!idea.ok) return reply(502, { code: "unavailable", message: "Fume could not read the picture just now.", detail: idea.error, usage });
-  return reply(200, { schema: TASTE_SCHEMA_VERSION, reader, effort, shows, read, fields: Object.keys(read).length, answered, failed, usage });
+  // Kept only when every pass was asked for: a card with half its questions would count as a picture that shows
+  // less. A pass that failed is named on the card, to be asked again.
+  let kept: Kept | null = null;
+  if (keep && !only) kept = await deps.save(workspaceId, { ...keep, schema_version: TASTE_SCHEMA_VERSION, reader, shows, read, failed, cost_usd: usage.cost_usd });
+  return reply(200, {
+    schema: TASTE_SCHEMA_VERSION, reader, effort, shows, read, fields: Object.keys(read).length, answered, failed, usage,
+    ...(kept ? ("error" in kept ? { kept: false, keepError: kept.error } : { kept: true, ...kept }) : {}),
+  });
 }

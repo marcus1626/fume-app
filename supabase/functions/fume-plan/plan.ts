@@ -1,6 +1,7 @@
 // What Fume asks the model for, and how the answer becomes a plan body (docs/mvp/library.md B06–B08, T03 and T04).
 // The model proposes; public.fume_finish_plan checks the body against the campaign's products and verified claims.
 import { z } from "npm:zod@4.6.7";
+import { type Direction, planBrief } from "../_shared/taste/direction.ts";
 
 // Where a reason comes from. A plain string: the model once named a source of its own (9 Nov) and the whole plan
 // failed to parse; toBody keeps the four and reads anything else as Fume's own.
@@ -79,6 +80,8 @@ export interface PlanTask {
   layouts?: BrandLayout[];
   /** The brand's Look Book in use: how its photographs are made, so every planned picture is one of its own. */
   look?: LookForPlan | null;
+  /** What the brand's pictures keep to, counted against the taste schema (public.taste_direction_of_campaign). */
+  taste?: Direction | null;
 }
 
 /** The parts of a Look Book the plan writer reads (brand_books kind look, body). */
@@ -174,6 +177,18 @@ export function brainPart(brain: Brain | null | undefined): string[] {
       "The taste profile is measured in the pictures she kept, approved and turned down: each do and don't has a target (in its unit), a range, a confidence from 0 to 1, and how many pictures it rests on. from says what the pictures were (packshots count for less than scenes). Lean on what is confident (0.5 and up), treat the rest as a hint, and say the look in words a photographer would use; reasons are her own words about what she did not like.",
     );
   return parts;
+}
+
+/** The brand's taste as counted from its own pictures against the taste schema (_shared/taste/direction.ts); empty
+ * until the brand has a profile. */
+export function tastePart(d: Direction | null | undefined): string[] {
+  if (!d?.lines?.length) return [];
+  const brief = planBrief(d);
+  if (!brief) return [];
+  return [
+    `<taste_schema pictures="${d.pictures}" campaigns="${d.campaigns}">\n${brief}\n</taste_schema>`,
+    "The taste schema is counted from the brand's own pictures, field by field: what they always do, and what most of them do, with the share. Plan scenes, people, places and looks that keep to these habits. A habit most pictures keep is a default, not a law: the brief may ask for something else, and then the brief wins. Where a line says what earlier Engine pictures did instead, Fume's own pictures departed from the brand there before: plan so the next ones do not. What a campaign chooses is this campaign's to choose. Never write a field's name into the plan; write what the picture shows.",
+  ];
 }
 
 /** The brand's own layout for words on its pictures, from its approved design book: its name and how wide the column
@@ -404,6 +419,7 @@ export function prompt(task: PlanTask): string {
     }.`,
     `<rules>\n${task.rules.map((r) => `- ${r.kind === "never" ? "Never" : "Must"}: ${r.text} (${r.source})`).join("\n") || "none"}\n</rules>`,
     ...brainPart(task.brain),
+    ...tastePart(task.taste),
     ...voicePart(task.voice),
     ...recentPart(task.recent),
     ...lookPart(task.look),

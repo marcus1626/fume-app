@@ -2,6 +2,7 @@
 // snapshot, the approved plan, the product's verified facts and pictures, the Brand DNA's rules, the taste model and
 // the lessons people's verdicts taught). Built by code, never by a model: the product text is the verified facts
 // word for word, so the model can only describe the scene around the product, never the product itself.
+import { type Direction, promptLines, type PromptLine } from "../taste/direction.ts";
 import type { BrandContext, BrandRule, Concept, FormatSpec, Knowledge, ProductContext } from "./types.ts";
 
 export type Fact = { id: string; product_id?: string; area: string; label: string; statement: string; status: string };
@@ -59,7 +60,19 @@ export type EngineTask = {
   look?: { id: string; version: number; state: string; body: LookBody } | null;
   /** How the brand sets words on its pictures, from its design system in use (public.engine_words_room). */
   room?: { id: string; version: number; layouts: RoomLayout[] } | null;
+  /** What the brand's pictures keep to, read against the taste schema (public.engine_taste, taste/direction.ts). */
+  tasteDirection?: Direction | null;
 };
+
+/** How many of the taste schema's lines one prompt takes, and how many of them may be absences. */
+export const SCHEMA_LINES = { most: 12, absences: 2 };
+/** The taste schema's lines for this picture: what applies to what the plan says it shows, the weightiest first. */
+export function schemaLines(task: EngineTask): PromptLine[] {
+  if (!task.tasteDirection?.lines?.length) return [];
+  const people = plannedCreative(task)?.people?.trim() ?? "";
+  const shown = Boolean(people) && !/^no people/i.test(people);
+  return promptLines(task.tasteDirection, { people: shown, face: shown && !/^hands? only/i.test(people), product: task.products.length > 0 }, SCHEMA_LINES.most, SCHEMA_LINES.absences);
+}
 
 export type RoomLayout = {
   name: string;
@@ -373,6 +386,11 @@ export function buildBrand(task: EngineTask, lookKey: string | null): BrandConte
     if (t.avoid_words && t.avoid_confidence >= confident)
       rules.push({ id: `taste-${t.key}-avoid`, dimension: "taste", lookKey: null, statement: sentence(`Avoid ${t.avoid_words}`), binding: "soft", epistemic: "inferred", scope: "core" });
   }
+
+  // The taste schema: the brand's habits counted from its own pictures, field by field, and first of all the ones
+  // the Engine's earlier pictures missed. Soft: the plan may ask for something else, and then the plan wins.
+  for (const l of schemaLines(task))
+    rules.push({ id: l.id, dimension: l.dimension, lookKey: null, statement: l.statement, binding: "soft", epistemic: "inferred", scope: "core" });
 
   rules.push(...brainRules(task.brain ?? NO_BRAIN));
   rules.push(...lookRules(task));

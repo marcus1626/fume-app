@@ -429,3 +429,36 @@ Deno.test("a picture that carries words is made with room for them, where the pl
   const [white] = roomRules({ ...withWords("A hoop in a driveway."), room: light });
   assertEquals(/set in white, so that part of the picture is mid to deep in tone.*never bright sky/.test(white.statement), true);
 });
+
+Deno.test("the taste schema's habits become soft rules in the photograph's slots: what applies to this picture, what the Engine missed first", async () => {
+  const { buildProfile } = await import("../taste/profile.ts");
+  const { direction } = await import("../taste/direction.ts");
+  const { checklist } = await import("./evaluate.ts");
+  const card = (id: string, read: Record<string, string>) => ({ id, read, measured: {} });
+  const brandCards = Array.from({ length: 12 }, (_, i) => card(`b${i}`, {
+    "camera.depth_of_field": "deep", "colour.temperature": "warm", "light.lamps_in_frame": "none", "people.framing": "full_body",
+    "light.catchlights": "not_visible", "design.button": "none", "kind.use": "brand_campaign",
+  }));
+  const engineCards = Array.from({ length: 6 }, (_, i) => card(`e${i}`, { "camera.depth_of_field": "shallow", "colour.temperature": "warm", "light.lamps_in_frame": "none" }));
+  const t: EngineTask = { ...task, tasteDirection: direction(buildProfile(brandCards), buildProfile(engineCards)) };
+  const schema = buildBrand(t, "a").rules.filter((r) => r.id.startsWith("schema-"));
+  assertEquals(schema[0], {
+    id: "schema-camera.depth_of_field", dimension: "camera", lookKey: null, binding: "soft", epistemic: "inferred", scope: "core",
+    statement: "Camera, depth of field: deep. Earlier Engine pictures had shallow 100%.",
+  });
+  // Hands only: people are in the frame, a face is not. The plan's and the design layer's fields are not the prompt's.
+  const ids = schema.map((r) => r.id);
+  assert(ids.includes("schema-people.framing") && !ids.includes("schema-light.catchlights") && !ids.includes("schema-design.button") && !ids.includes("schema-kind.use"));
+  assertEquals(schema.find((r) => r.id === "schema-people.framing")!.dimension, "people");
+  assert(!buildBrand({ ...t, plan: { ...t.plan, planned_creatives: [{ ...t.plan.planned_creatives![0]!, people: "No people" }] } }, "a").rules.some((r) => r.id === "schema-people.framing"));
+  assertEquals(buildBrand(task, "a").rules.filter((r) => r.id.startsWith("schema-")), []);
+
+  const { compilePackage } = buildCompilePackage({ ...inputOf(t), grammar: GRAMMARS.find((g) => g.imageType === "campaign_still" && g.version === 2)!, dialect: DIALECTS[0] });
+  const item = compilePackage.manifest.find((m) => m.id === "brand-schema-camera.depth_of_field")!;
+  assertEquals([item.kind, item.required, item.suggestedSlot], ["brand_rule_soft", false, "camera"]);
+  const ledger = buildLedger(t, compilePackage);
+  assertEquals(ledger.find((e) => e.ref === "schema-camera.depth_of_field")!.used, true);
+  assertMatch(ledger.find((e) => e.ref === "schema-light.catchlights")!.why!, /weightiest habits that apply/);
+  // Whether a picture keeps the habits is judged by reading it against the schema, not by the picture check.
+  assert(!checklist(compilePackage.manifest).some((c) => /depth of field/.test(c.requirement)));
+});
