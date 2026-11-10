@@ -266,7 +266,7 @@ const brandPlaces = (frame: StaffFrameKind): { rest: string; label: string; icon
  *  across brands, each opening where it is worked on. */
 function useStaffPaletteItems(scope: StaffScope, needs: AgencyNeed[]): CommandPaletteItem[] {
   const navigate = useNavigate();
-  const qa = useQaQueue();
+  const qa = useQaQueue(undefined, true);
   const campaigns = useStudioCampaigns();
   const { frame, entries, limited, noun } = scope;
   const here = scope.entry?.workspace.id;

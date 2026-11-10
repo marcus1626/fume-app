@@ -19,7 +19,7 @@ export function overviewCalls(live: Live): Pick<FumeApi, Calls> {
       const [workspaces, campaignRows, qa] = await Promise.all([
         live.workspaces(),
         studio.studioCampaigns(),
-        quality.qaQueue(),
+        quality.qaQueue(undefined, { light: true }),
       ]);
       const waiting = qa.filter((q) => q.item.state === "waiting");
       const brandOf = (id: Id) => workspaces.find((w) => w.id === id)?.brandName ?? "";

@@ -198,8 +198,11 @@ export const useDecideOverride = () =>
 export const useProductProposals = (productId: Id | undefined) =>
   useQ(["product", productId, "proposals"], (a) => a.productProposals(productId!), Boolean(productId));
 // QA
-export const useQaQueue = (workspaceId?: Id) =>
-  useQ(["studio", "qa", workspaceId ?? "all"], (a) => a.qaQueue(workspaceId));
+/** `light` for a count or a list beside the page (the menu's number, search): far fewer reads than Check's own. */
+export const useQaQueue = (workspaceId?: Id, light = false) =>
+  useQ(["studio", "qa", workspaceId ?? "all", ...(light ? ["light"] : [])], (a) =>
+    a.qaQueue(workspaceId, light ? { light } : undefined),
+  );
 export const useQaCheck = () => useM((a, r: { itemId: Id; accept?: Id[] }) => a.qaCheck(r.itemId, r.accept));
 export const useQaFeedback = () =>
   useM((a, v: { itemId: Id; text: string; pins?: QaPin[]; findingIds?: Id[] }) =>

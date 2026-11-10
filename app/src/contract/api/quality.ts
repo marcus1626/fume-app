@@ -21,7 +21,9 @@ export interface QualityApi {
   qualityLog(): Promise<QualityLogEntry[]>;
 
   // Check (FLOWS §10, §25.2)
-  qaQueue(workspaceId?: Id): Promise<QaView[]>;
+  /** `light`: what a count, a list or search needs, without the Engine's design and what changed since the version
+   *  was made (Check itself reads it whole). */
+  qaQueue(workspaceId?: Id, options?: { light?: boolean }): Promise<QaView[]>;
   /** `accept`: the holds the expert accepts as they check (QaItem.holds); a hold not accepted stops the check. */
   qaCheck(itemId: Id, accept?: Id[]): Promise<QaItem>;
   /** Undo a check just made (the toast's Undo, or Undo in the panel): the creative waits for a check again. */
