@@ -3,7 +3,10 @@
 // cheap reader, twenty to forty with the large ones), so the run prints what it spent.
 //   FUME_ACCESS_TOKEN=<a Fume designer's session token> deno run -A tools/taste/read.ts <manifest.json> <out.json>
 //       --workspace <brand id> [--reader haiku|sonnet|opus] [--effort low|medium|high] [--sets a,b] [--only <id part>,...]
-// The manifest is the one measure.ts takes. A picture already in <out.json> is not read again.
+//       [--passes idea,...]
+// The manifest is the one measure.ts takes. A picture already in <out.json> is not read again. With --passes only
+// those passes are asked: `idea` alone says what a picture shows and what kind it is, which is enough to sort a large
+// set before the pictures worth reading are read in full.
 import jpeg from "npm:jpeg-js@0.4.4";
 import { shrink } from "../../supabase/functions/taste-learn/measure.ts";
 import { decode } from "./decode.ts";
@@ -17,6 +20,7 @@ const reader = flag("reader") ?? "haiku";
 const effort = flag("effort") ?? "low";
 const sets = flag("sets")?.split(",");
 const only = flag("only")?.split(",");
+const passes = flag("passes")?.split(",");
 
 const env = Object.fromEntries(
   (await Deno.readTextFile(new URL("../../app/.env.local", import.meta.url))).split("\n").filter((l) => l.includes("=")).map((l) => [l.slice(0, l.indexOf("=")).trim(), l.slice(l.indexOf("=") + 1).trim()]),
@@ -54,7 +58,7 @@ for (const set of manifest.sets) {
       res = await fetch(endpoint, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}`, apikey: env.VITE_SUPABASE_PUBLISHABLE_KEY, "Content-Type": "application/json" },
-        body: JSON.stringify({ workspaceId, reader, effort, picture }),
+        body: JSON.stringify({ workspaceId, reader, effort, picture, ...(passes ? { passes } : {}) }),
       });
       body = await res.json().catch(() => ({}));
       seconds = Math.round((Date.now() - started) / 1000);

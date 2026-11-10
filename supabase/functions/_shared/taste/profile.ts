@@ -165,8 +165,14 @@ export function tasteScore(profile: Profile, proof: { engineFit: number; ownFit:
   const n = profile.pictures;
   const evidence = n / (n + 40);
   const known = fs.filter((f) => f.n >= MIN_PICTURES);
-  // A field no picture could answer (people fields for a brand that shows none) is knowledge too, once there are pictures enough.
-  const absent = n >= 20 ? fs.filter((f) => f.n / n < 0.1) : [];
+  // A field no picture could answer (people fields for a brand that shows none) is knowledge too, once there are pictures
+  // enough. A read field is held against the pictures that were read: a picture only measured answers no read field,
+  // and that says nothing of the brand.
+  const read = Math.max(0, ...fs.filter((f) => FIELD.get(f.key)?.type !== "number").map((f) => f.n));
+  const absent = fs.filter((f) => {
+    const of = FIELD.get(f.key)?.type === "number" ? n : read;
+    return of >= 20 && f.n / of < 0.1;
+  });
   const coverage = (known.length + absent.filter((f) => f.n < MIN_PICTURES).length) / fs.length;
   const settled = known.filter((f) => f.standing === "always" || f.standing === "by_campaign" || (f.n >= 20 && f.standing !== "unknown"));
   const certainty = known.length ? settled.length / fs.length : 0;

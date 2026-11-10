@@ -84,6 +84,16 @@ Deno.test("the taste score climbs with pictures, campaigns and proof, and says w
   assertEquals(thin.parts.reduce((s, p) => s + p.of, 0), 100);
 });
 
+Deno.test("pictures that were only measured say nothing of the read fields: they are not counted as covered", () => {
+  const measuredOnly = Array.from({ length: 60 }, (_, i) => card(`m${i}`, {}, { "finish.grain_overall": 0.5 }, `k${i % 5}`));
+  const read = Array.from({ length: 60 }, (_, i) => card(`r${i}`, { "people.framing": "full_body" }, { "finish.grain_overall": 0.5 }, `k${i % 5}`));
+  const points = (cards: Card[]) => tasteScore(buildProfile(cards)).parts.find((p) => p.key === "coverage")!.points;
+  // (The few points left are measured fields these test cards do not carry.)
+  assert(points(measuredOnly) <= 5, String(points(measuredOnly)));
+  // Read pictures that never answer a field (no people in any of them) do say the brand leaves it out.
+  assert(points(read) > 15, String(points(read)));
+});
+
 Deno.test("the answer shape has no optional and no either-or parts, and asks only what the picture can answer", () => {
   for (const pass of PASSES) {
     const js = JSON.stringify(z.toJSONSchema(passShape(pass, passFields(pass))));
