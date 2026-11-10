@@ -7,6 +7,11 @@
 // With `keep` the reading is kept as the picture's card (the brand's own picture or one the Engine made for it) and the
 // brand's profile, score and direction are counted again. With `card` and no picture a reading made before is kept
 // as it is, and no model is asked.
+//
+// With `references` no picture is sent: the brand's product pictures that have no reference card yet are fetched and
+// read one by one (what each is of, from where, how close: _shared/engine/references.ts), and the cards are kept, so
+// the Engine can send the pictures a planned picture needs.
+import type { RefCard } from "../_shared/engine/references.ts";
 import { cleanMeasured, cleanRead, cleanShows } from "../_shared/taste/build.ts";
 import { answersOf, laterPasses, passFields, showsOf } from "../_shared/taste/read.ts";
 import { type Answer, type Pass, PASSES, type Shows, TASTE_SCHEMA_VERSION } from "../_shared/taste/schema.ts";
@@ -45,6 +50,15 @@ export type Reading = {
 };
 export type Kept = { score: number; pictures: number; enginePictures: number } | { error: string };
 
+/** A product picture waiting for its reference card: in Fume's storage, or kept only as a link. */
+export type RefPicture = { source_id: string; product: string; slot: string | null; bucket?: string; path?: string; url?: string };
+/** `by` when another reader than the one asked for read it (Jev takes no WebP). */
+export type RefAsked = { ok: true; card: RefCard | null; usage: Usage; by?: Reader } | { ok: false; error: string; usage: Usage };
+/** A picture nobody could fetch or read is marked so, and is not asked again each time. */
+export type RefKept = RefCard | { unread: string };
+/** How many reference pictures one call reads, and how many at a time. */
+export const REFERENCES = { most: 40, usual: 20, together: 4 };
+
 export interface Deps {
   /** As the caller: true when they are one of Fume's own people on this brand. */
   staff(workspaceId: string): Promise<boolean>;
@@ -53,6 +67,13 @@ export interface Deps {
   keep(run: { workspaceId: string; input: unknown; output: unknown; error: string | null; usage: Usage }): Promise<void>;
   /** Keeps the reading as the picture's card and counts the brand's profile again. */
   save(workspaceId: string, reading: Reading): Promise<Kept>;
+  /** The brand's product pictures with no reference card yet, and how many there are in all. */
+  referencePictures(workspaceId: string, most: number): Promise<{ pictures: RefPicture[]; waiting: number } | { error: string }>;
+  /** The picture's bytes, or null when it cannot be fetched or is not a picture a reader takes. */
+  fetchPicture(p: RefPicture): Promise<Picture | null>;
+  askReference(picture: Picture, reader: Reader): Promise<RefAsked>;
+  /** Keeps the card on the picture; an error's words, or null when kept. */
+  saveReferenceCard(workspaceId: string, sourceId: string, card: RefKept, reader: Reader): Promise<string | null>;
 }
 
 const CORS = {
@@ -74,6 +95,17 @@ function pictureOf(p: unknown): Picture | null {
   if (typeof base64 === "string" && base64.length > 100 && base64.length <= MOST_BASE64 && /^[A-Za-z0-9+/=]+$/.test(base64.slice(0, 400)) &&
     (mediaType === "image/jpeg" || mediaType === "image/png" || mediaType === "image/webp")) return { base64, mediaType };
   return null;
+}
+/** Fetched bytes as a picture a reader takes: a JPEG, a PNG or a WebP of at most about 6 MB; else null. */
+export function pictureOfBytes(b: Uint8Array): Extract<Picture, { base64: string }> | null {
+  const mediaType: "image/jpeg" | "image/png" | "image/webp" | null = b[0] === 0xff && b[1] === 0xd8 ? "image/jpeg"
+    : b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47 ? "image/png"
+    : b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46 && b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50 ? "image/webp"
+    : null;
+  if (!mediaType || b.length < 100 || b.length > (MOST_BASE64 / 4) * 3) return null;
+  let s = "";
+  for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode(...b.subarray(i, i + 0x8000));
+  return { base64: btoa(s), mediaType };
 }
 /** Whose picture it is and what to call it, so reading it again replaces its card. */
 function keepOf(k: unknown): Omit<Reading, "schema_version"> | null {
@@ -108,7 +140,7 @@ export async function handleTasteRead(req: Request, signedIn: boolean, deps: Dep
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   if (req.method !== "POST") return reply(400, { code: "invalid", message: "Use POST." });
   if (!signedIn) return reply(403, { code: "forbidden", message: "Sign in first." });
-  let body: { workspaceId?: unknown; picture?: unknown; reader?: unknown; effort?: unknown; passes?: unknown; keep?: unknown; card?: unknown };
+  let body: { workspaceId?: unknown; picture?: unknown; reader?: unknown; effort?: unknown; passes?: unknown; keep?: unknown; card?: unknown; references?: unknown };
   try {
     body = (await req.json()) ?? {};
   } catch {
@@ -116,11 +148,59 @@ export async function handleTasteRead(req: Request, signedIn: boolean, deps: Dep
   }
   const workspaceId = typeof body.workspaceId === "string" && UUID.test(body.workspaceId) ? body.workspaceId : null;
   const picture = pictureOf(body.picture);
-  const reader = READERS.find((r) => r === (body.reader ?? "haiku"));
+  // Classification is Jev's (Marcus, 10 Nov 2026); a full reading keeps the cheap reader unless another is asked for.
+  const reader = READERS.find((r) => r === (body.reader ?? (body.references !== undefined ? "jev" : "haiku")));
   const effort = EFFORTS.find((e) => e === (body.effort ?? "low"));
   const only = Array.isArray(body.passes) ? PASSES.filter((p) => (body.passes as unknown[]).includes(p)) : null;
   const keep = body.keep === undefined ? undefined : keepOf(body.keep);
   if (keep === null) return reply(400, { code: "invalid", message: "To keep a reading, say whose picture it is (brand or engine) and give it a name." });
+
+  // The brand's product pictures without a reference card: fetched, read and kept, a few at a time.
+  if (body.references !== undefined) {
+    if (!workspaceId || !reader) return reply(400, { code: "invalid", message: "Send a brand and a reader Fume knows." });
+    const asked = typeof body.references === "object" && body.references !== null ? (body.references as { most?: unknown }).most : undefined;
+    const most = typeof asked === "number" && asked >= 1 ? Math.min(Math.floor(asked), REFERENCES.most) : REFERENCES.usual;
+    if (!(await deps.staff(workspaceId))) return reply(403, { code: "forbidden", message: "Only Fume's own people on this brand can read its pictures." });
+    if (!(await deps.withinBudget())) return reply(429, { code: "budget", message: "This week's budget for Fume's language model is used up." });
+    const waiting = await deps.referencePictures(workspaceId, most);
+    if ("error" in waiting) return reply(502, { code: "unavailable", message: "Fume could not list the brand's pictures just now.", detail: waiting.error });
+    let usage: Usage = NONE;
+    const cards: { source_id: string; product: string; slot: string | null; card?: RefKept; error?: string }[] = [];
+    const one = async (p: RefPicture) => {
+      const row = { source_id: p.source_id, product: p.product, slot: p.slot };
+      const picture = await deps.fetchPicture(p).catch(() => null);
+      // A picture that cannot be fetched is marked, so it is not fetched again every time; a reader that failed is
+      // not, so the picture is asked again.
+      if (!picture) {
+        const card: RefKept = { unread: "The picture could not be fetched, or is not a JPEG, PNG or WebP." };
+        const error = await deps.saveReferenceCard(workspaceId, p.source_id, card, reader);
+        return error ? { ...row, error } : { ...row, card };
+      }
+      let a: RefAsked;
+      try {
+        a = await deps.askReference(picture, reader);
+      } catch (e) {
+        a = { ok: false, error: e instanceof Error ? e.message : String(e), usage: NONE };
+      }
+      usage = add(usage, a.usage);
+      if (!a.ok) return { ...row, error: a.error };
+      // A reader that could not say what it is of: something else than the product or a person.
+      const card: RefCard = a.card ?? { of: "other", view: null, crop: null };
+      const error = await deps.saveReferenceCard(workspaceId, p.source_id, card, a.by ?? reader);
+      return error ? { ...row, error } : { ...row, card };
+    };
+    for (let i = 0; i < waiting.pictures.length; i += REFERENCES.together) cards.push(...await Promise.all(waiting.pictures.slice(i, i + REFERENCES.together).map(one)));
+    const read = cards.filter((c) => c.card && !("unread" in c.card)).length, failed = cards.filter((c) => c.error).length;
+    if (waiting.pictures.length)
+      await deps.keep({
+        workspaceId,
+        input: { task: "reference_cards", reader, pictures: waiting.pictures.length },
+        output: { read, unread: cards.length - read - failed, failed },
+        error: cards.length > 0 && failed === cards.length ? cards[0]!.error ?? null : null,
+        usage,
+      });
+    return reply(200, { reader, read, unread: cards.length - read - failed, failed, left: Math.max(0, waiting.waiting - (cards.length - failed)), cards, usage });
+  }
 
   // A reading made before, kept as it is: no picture, no model, no cost.
   if (workspaceId && keep && !body.picture && typeof body.card === "object" && body.card !== null) {

@@ -1,6 +1,6 @@
 // Jev as a reader, without Jev: the questions a pass becomes, and its answers back in the shape every reader answers in.
 import { assert, assertEquals } from "jsr:@std/assert@1.0.19";
-import { askJev, JEV, jevAsk, jevOut } from "./jev.ts";
+import { askJev, askJevRef, JEV, jevAsk, jevOut } from "./jev.ts";
 import { answersOf, CANNOT_TELL, passFields, showsOf } from "./read.ts";
 import type { Shows } from "./schema.ts";
 
@@ -75,4 +75,23 @@ Deno.test("Jev says so plainly when it has no key, cannot take the picture, or a
   assert(!address.ok && address.error.includes("JPEG or a PNG"));
   const refused = await askJev("secret", "idea", undefined, PICTURE, (() => Promise.resolve(new Response(JSON.stringify({ detail: "bad token secret" }), { status: 401 }))) as unknown as typeof fetch);
   assert(!refused.ok && refused.error.startsWith("Jev answered 401") && !refused.error.includes("secret"));
+});
+
+Deno.test("a reference picture is three choices in one request, and the answers are its card", async () => {
+  let sent: { questions: Record<string, { type: string; criteria: Record<string, string> }>; state: string; assets: Record<string, unknown> } | null = null;
+  const send = ((_url: string, init: RequestInit) => {
+    sent = JSON.parse(init.body as string);
+    return Promise.resolve(new Response(JSON.stringify({ model: "jev-1.14", usage: { input_tokens: 2400, output_tokens: 3 }, answers: {
+      of: { type: "choice", choice: "product_on_person", confidence: 0.93 }, view: { type: "choice", choice: "cannot_tell", confidence: 0.6 }, crop: { type: "choice", choice: "half", confidence: 0.8 },
+    } })));
+  }) as unknown as typeof fetch;
+  const a = await askJevRef("secret", PICTURE, send);
+  assert(a.ok);
+  assertEquals(a.card, { of: "product_on_person", view: null, crop: "half" });
+  assertEquals(a.usage, { model: "jev-1.14", input_tokens: 2400, output_tokens: 0, cost_usd: 0.0001 });
+  assertEquals(Object.keys(sent!.questions), ["of", "view", "crop"]);
+  assert(Object.values(sent!.questions).every((q) => q.type === "choice") && "back" in sent!.questions.view!.criteria);
+  assert(sent!.state.includes(Object.keys(sent!.assets)[0]!));
+  const webp = await askJevRef("secret", { base64: "A".repeat(200), mediaType: "image/webp" }, send);
+  assert(!webp.ok && webp.error.includes("JPEG or a PNG"));
 });

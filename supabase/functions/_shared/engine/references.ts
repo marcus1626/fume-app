@@ -8,7 +8,11 @@
 // A card comes from the picture's slot where the slot says it ("front", "back", "detail"), or from a classifier that
 // looked at the picture (Jev: REF_QUESTIONS below). A picture with neither ("site-3" from a web import) is unknown: it
 // is sent when there is room and never preferred over one that is known to fit.
-import type { Picture, PlannedCreative } from "./context.ts";
+// It imports nothing, so the function that reads the cards (taste-read) and the Engine share it as it is.
+
+/** The parts of a reference picture and of a planned creative this file reads (context.ts has the whole of both). */
+type Pictured = { slot: string | null; card?: unknown };
+type Planned = { scene?: string; people?: string; name?: string };
 
 export const VIEWS = ["front", "three_quarter", "side", "back", "top", "bottom"] as const;
 export type View = (typeof VIEWS)[number];
@@ -48,7 +52,7 @@ const isCard = (c: unknown): c is RefCard =>
   ((c as RefCard).view === null || (VIEWS as readonly string[]).includes((c as RefCard).view!)) &&
   ((c as RefCard).crop === null || (CROPS as readonly string[]).includes((c as RefCard).crop!));
 /** A picture's card: what a classifier read of it, else what its slot says, else nothing. */
-export function cardOf(pic: Picture): RefCard | null {
+export function cardOf(pic: Pictured): RefCard | null {
   if (isCard(pic.card)) return pic.card;
   return SLOT_CARD[(pic.slot ?? "").toLowerCase().replaceAll(/[\s-]+/g, "_")] ?? null;
 }
@@ -69,7 +73,7 @@ const CROP_WORDS: [NonNullable<RefCard["crop"]>, RegExp][] = [
   ["whole", /\bfull[- ]body\b|\bfull[- ]length\b|\bhead to toe\b|\bwide (shot|scene|view)\b/i],
 ];
 /** What the planned picture needs: the side its subject is seen from and how close, where the plan says so. */
-export function needOf(planned: PlannedCreative | undefined): Need {
+export function needOf(planned: Planned | undefined): Need {
   const words = `${planned?.scene ?? ""}. ${planned?.people ?? ""}. ${planned?.name ?? ""}`;
   const people = Boolean(planned?.people?.trim()) && !/^no people/i.test(planned!.people!.trim());
   return {
@@ -176,6 +180,13 @@ export const REF_QUESTIONS = {
     },
   },
 } as const;
+export const REF_SYSTEM = "You look at one reference picture of a brand's product or of a model, for Fume, and say what it shows by choosing from closed lists. Answer from what is visible in this picture only. Never name anyone and never say who a person is.";
+/** The three questions for a reader that answers in text: one JSON object, one option each. */
+export function refPrompt(): string {
+  const lines = Object.entries(REF_QUESTIONS).map(([name, q]) =>
+    `"${name}": ${q.ask} One of:\n${Object.entries(q.options).map(([o, about]) => `  - "${o}": ${about}`).join("\n")}`);
+  return `Look at the picture and answer three questions.\n\n${lines.join("\n\n")}\n\nAnswer with one JSON object with exactly the keys "of", "view" and "crop", each one of its listed options. No other text and no code fence.`;
+}
 /** A classifier's three answers as a card; null when it could not say what the picture is of. */
 export function cardFromAnswers(a: { of?: unknown; view?: unknown; crop?: unknown }): RefCard | null {
   if (!(OFS as readonly unknown[]).includes(a.of)) return null;

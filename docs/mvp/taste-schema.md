@@ -121,6 +121,52 @@ First full read with `gpt-terra`, Nike UK (test), 10 real ads and 8 Engine pictu
 with a photograph in them, the brand's own pictures fit their profile 0.76 and the Engine's 0.69. The direction it
 gives has 113 lines, 64 of them for the prompt, 6 finish targets and 9 campaign choices.
 
+### Jev (TypeSafe), the classifier
+
+DECIDED by Marcus, 10 Nov 2026: classification in Fume uses TypeSafe's model Jev. Jev is a decision model, not a
+writing one: it is sent the picture with named questions and answers each with a choice from a closed list or a yes/no
+probability, and how sure it is (docs.typesafe.ai/api/system-one). It costs $0.042 per million tokens sent and nothing
+for what it answers, and answers in under a second. The reader `jev` in `taste-read` (`_shared/taste/jev.ts`) turns a
+pass into Jev questions: a `choice` field is one choice question, a `choices` field one yes/no per option (kept where a
+yes is more likely than a no, the likeliest first), and what a picture shows one yes/no per statement. A pass goes as
+requests of at most 40 questions side by side. Its answers come back in the shape every reader answers in.
+
+What Jev cannot do: write. The 11 free-word fields stay empty on a card it read. It takes a JPEG or a PNG sent as the
+picture itself, not a WebP and not a link. It needs the secret `TYPESAFE_API_KEY` (Supabase, Edge Functions, Secrets).
+
+Not known until it has run with the key: how it does against `gpt-terra` on the same six pictures (steady, agrees,
+filled), whether 40 questions a request is within its limits, and what a picture costs in tokens.
+
+## Reference pictures chosen for the picture to be made
+
+An image model copies what it is shown. Until 10 Nov the Engine sent a product's pictures front first, up to the
+image model's limit, whatever the picture to be made showed. Now (`_shared/engine/references.ts`):
+
+- Every reference picture has a **card**: what it is of (the product alone, on a person, in a scene, a person,
+  something else), from where its subject is seen (front, three-quarter, side, back, top, bottom) and how close
+  (close, half, whole). The card comes from the picture's slot where the slot says it ("front", "back", "detail"), or
+  from a classifier that looked at the picture. A picture with neither is unknown: sent when there is room, never
+  preferred over one known to fit.
+- The plan's own words say what the picture **needs**: "from behind", "in profile", "top-down", "facing the camera",
+  "close-up", "full body", and whether people are in it. A plan that names no side leaves the side open.
+- Code holds the two against each other (`serves`): the side the picture needs comes first; the product's front is
+  always worth sending, for it is the truth about the product; the opposite side is left out; a product worn by a
+  person is left out of a picture with no people, and sent, named as such, in one with people; a size chart or a
+  drawing is never sent. Each shown product's best picture comes before any product's second.
+- The image model is told what each picture is ("Pegasus, worn by a person, seen from the back"), and the prompt's
+  ledger says why a picture was not sent.
+- A brand's **models** (AI people, never real ones) are chosen the same way, and only for a picture the plan casts them
+  in (`castIds` on the planned creative, `cast` on the Engine's task). The Engine side is built and tested; where a
+  brand's models are kept and made (FLOWS §9.6) is not built, so no picture is cast yet.
+
+The cards are read by `taste-read` with `references`: the brand's product pictures that have no card yet are fetched
+(from Fume's storage, or from the link they were imported with), asked three questions (Jev unless another reader is
+named; a WebP goes to the spare reader `gpt-luna`), and kept in `reference_cards`. A picture that cannot be fetched is
+marked so and not fetched again; one the reader failed on is asked again next time. `engine_reference_cards(job)`
+hands the cards to the Engine by the picture's address. Fume's people on the brand read the cards; a customer never
+does. On 10 Nov the live products had 469 pictures: 230 with the slot "front", 235 from web imports with slots that say
+nothing ("site-2" to "site-4"), and four others, so most of the gain waits for the cards.
+
 ## Tools
 
 ```
@@ -130,6 +176,7 @@ deno run -A tools/taste/merge.ts <cards.json> <reads.json> <out cards.json> both
 deno run -A tools/taste/report.ts <cards.json> <brand set> [other set]      profile, score, gap
 deno run -A tools/taste/bake.ts <cards.json> <dir with read-<reader>-<a|b>.json>
 FUME_ACCESS_TOKEN=… deno run -A tools/taste/keep.ts <cards.json> --workspace <id> --brand <set> [--engine <set>]
+FUME_ACCESS_TOKEN=… deno run -A tools/taste/refcards.ts --workspace <id> [--reader <reader>]   reference cards
 ```
 
 `keep.ts` sends cards made on disk to `taste-read`, which keeps them as the brand's readings and counts its profile
@@ -146,7 +193,9 @@ without the tables: until the migration is applied a reading comes back unkept a
 
 ## Not built yet
 
-1. Applying the migration and deploying `taste-read`, `engine` and `fume-plan` with it (needs Marcus's go).
+1. Applying the two migrations (`taste_schema`, `reference_cards`) and deploying `taste-read`, `engine` and `fume-plan`
+   with them (needs Marcus's go), then reading the reference cards of the brands in use.
+   Jev against `gpt-terra` on the same pictures, once its key is in Supabase.
 2. Reading a brand's pictures by itself when the customer adds them (today a tool sends them), and the Engine's own
    pictures after each round, so the direction learns without anyone running a tool.
 3. The finish step: grain, black point, tint and sharpness put on the pixels by code after the picture is made,
@@ -158,3 +207,6 @@ without the tables: until the migration is applied a reading comes back unkept a
 8. `.fig` upload: the design fields read from the file itself.
 9. A picture skill per brand beside the copy skill.
 10. The taste score and the profile in the app (the design thread owns the screens).
+11. Reference cards read by themselves when a product picture is added (today a tool starts it).
+12. The plan naming the side and the crop of each picture as fields, so the need is not read out of its words.
+13. A brand's models kept in the database with their pictures, and the plan casting them (FLOWS §9.6).

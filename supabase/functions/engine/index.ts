@@ -73,6 +73,15 @@ Deno.serve((req) =>
             // What the brand's pictures keep to, read against the taste schema; none until the brand has a profile.
             const { data: taste } = await service.rpc("engine_taste", { p_job_id: jobId });
             if (taste && typeof taste === "object") data.tasteDirection = taste;
+            // What each product picture shows (from where, how close, with or without a person), by its address; none
+            // until the pictures have been looked at.
+            const { data: cards } = await service.rpc("engine_reference_cards", { p_job_id: jobId });
+            if (cards && typeof cards === "object")
+              for (const p of data.products ?? [])
+                for (const pic of p.pictures ?? []) {
+                  const card = (cards as Record<string, unknown>)[pic.path ?? pic.url ?? ""];
+                  if (card) pic.card = card;
+                }
             // What the picture check found on the brand's last pictures, so this one avoids it.
             const { data: seen } = await service.rpc("engine_recent_checks", { p_job_id: jobId });
             if (Array.isArray(seen) && seen.length) data.seen = seen;

@@ -37,7 +37,7 @@ import type { ImageProvider } from "./provider.ts";
 type Failure = { message: string } | null;
 type Stored = { path: string; bucket?: string };
 /** A product picture: a file in the workspace's folder, or an address on the brand's own website. */
-type Picture = { slot: string | null; name?: string } & ({ path: string; bucket?: string; url?: undefined } | { url: string; path?: undefined });
+type Picture = { slot: string | null; name?: string; card?: unknown } & ({ path: string; bucket?: string; url?: undefined } | { url: string; path?: undefined });
 
 /** What public.engine_take hands over, before the pictures' addresses are signed. */
 export type Taken = Omit<EngineTask, "products" | "master" | "composition"> & {
@@ -138,6 +138,8 @@ async function signTask(t: Taken, deps: Deps): Promise<EngineTask> {
         slot: pic.slot,
         name: pic.name,
         url: pic.url ?? (await deps.service.sign({ path: pic.path!, bucket: pic.bucket })),
+        // What a classifier read of the picture (references.ts), so the right ones are sent.
+        ...(pic.card ? { card: pic.card } : {}),
       }))),
     }))),
     master: t.master

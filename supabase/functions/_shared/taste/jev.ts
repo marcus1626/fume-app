@@ -9,6 +9,7 @@
 // The answers go back in the shape every reader answers in (read.ts answersOf, showsOf), so the card, the profile and
 // the bake-off do not know which reader it was.
 import type { Asked, Picture, Usage } from "../../taste-read/handler.ts";
+import { cardFromAnswers, type RefCard, REF_QUESTIONS } from "../engine/references.ts";
 import { CANNOT_TELL, MOST, passFields, passPrompt, SHOWS } from "./read.ts";
 import type { Field, Pass, Shows } from "./schema.ts";
 
@@ -125,4 +126,37 @@ export async function askJev(key: string | undefined, pass: Pass, shows: Shows |
   // Half a pass would read as a picture that shows less, so one request that failed fails the pass; it is asked again whole.
   if (error) return { ok: false, error, usage };
   return { ok: true, out: jevOut(slots, answers), usage };
+}
+
+/** One reference picture asked of Jev: what it is of, from where, how close (engine/references.ts). One request. */
+export async function askJevRef(key: string | undefined, picture: Picture, send: typeof fetch = fetch): Promise<{ ok: true; card: RefCard | null; usage: Usage } | { ok: false; error: string; usage: Usage }> {
+  const none: Usage = { model: JEV.model, input_tokens: 0, output_tokens: 0, cost_usd: 0 };
+  if (!key) return { ok: false, error: "No key for Jev.", usage: none };
+  if ("url" in picture || picture.mediaType === "image/webp") return { ok: false, error: "Jev reads a JPEG or a PNG sent as the picture itself.", usage: none };
+  const placeholder = crypto.randomUUID();
+  const questions = Object.fromEntries(Object.entries(REF_QUESTIONS).map(([name, q]) => [name, { type: "choice", instructions: q.ask, criteria: q.options }]));
+  const res = await send(JEV.url, {
+    method: "POST",
+    signal: AbortSignal.timeout(60_000),
+    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json", Accept: "application/json", "TypeSafe-Danger-Zone-Images": "true" },
+    body: JSON.stringify({
+      model: JEV.model,
+      state: `A reference picture of a brand's product or of a model:\n${placeholder}`,
+      questions,
+      assets: { [placeholder]: { type: "image", format: picture.mediaType === "image/png" ? "png" : "jpeg", data_base64: picture.base64 } },
+    }),
+  });
+  const text = await res.text();
+  if (!res.ok) return { ok: false, error: `Jev answered ${res.status}: ${text.replaceAll(key, "[key]").slice(0, 300)}`, usage: none };
+  let body: { model?: string; answers?: Record<string, JevAnswer>; usage?: { input_tokens?: number } };
+  try {
+    body = JSON.parse(text);
+  } catch {
+    return { ok: false, error: "Jev's answer could not be read.", usage: none };
+  }
+  const tokens = body.usage?.input_tokens ?? 0;
+  const usage: Usage = { model: body.model ?? JEV.model, input_tokens: tokens, output_tokens: 0, cost_usd: Math.round(tokens * JEV.input / 100) / 10_000 };
+  if (!body.answers || typeof body.answers !== "object") return { ok: false, error: "Jev gave no answers.", usage };
+  const a = body.answers;
+  return { ok: true, card: cardFromAnswers({ of: a.of?.choice, view: a.view?.choice, crop: a.crop?.choice }), usage };
 }

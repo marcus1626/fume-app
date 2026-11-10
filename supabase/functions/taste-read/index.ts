@@ -4,13 +4,14 @@
 import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { betaZodOutputFormat } from "npm:@anthropic-ai/sdk@1.3.0/helpers/beta/zod";
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
-import { signedIn as isSignedIn } from "../_shared/net.ts";
+import { cardFromAnswers, REF_SYSTEM, refPrompt } from "../_shared/engine/references.ts";
+import { openFetch, signedIn as isSignedIn } from "../_shared/net.ts";
 import { build } from "../_shared/taste/build.ts";
-import { askJev, JEV } from "../_shared/taste/jev.ts";
+import { askJev, askJevRef, JEV } from "../_shared/taste/jev.ts";
 import type { Card } from "../_shared/taste/profile.ts";
 import { parseAnswer, passFields, passPrompt, passPromptWithShape, passShape, READ_SYSTEM } from "../_shared/taste/read.ts";
 import { TASTE_SCHEMA_VERSION } from "../_shared/taste/schema.ts";
-import { type Asked, handleTasteRead, type Picture, type Reader, type Usage } from "./handler.ts";
+import { type Asked, handleTasteRead, type Picture, pictureOfBytes, type Reader, type RefAsked, type RefPicture, type Usage } from "./handler.ts";
 
 /** The readers: which model each is, where it is asked, and its list price in dollars per million tokens (10 Nov 2026).
  *  `anthropic` is asked directly and answers in the shape; `router` is fal's router to any vision model, which
@@ -32,6 +33,8 @@ const MODELS: Record<Reader, { via: "anthropic" | "router" | "jev"; id: string; 
   jev: { via: "jev", id: JEV.model, input: JEV.input, output: 0 },
 };
 const ROUTER = "https://fal.run/openrouter/router/vision";
+/** The reader that reads a reference picture Jev cannot take (a WebP), and a brand's when no other is named. */
+const SPARE: Reader = "gpt-luna";
 const cents = (usd: number) => Math.round(usd * 10_000) / 10_000;
 
 /** One question through fal's router. The picture goes as a data address; the answer comes back as text. */
@@ -140,6 +143,38 @@ Deno.serve(async (req) => {
       if (m.stop_reason === "refusal") return { ok: false, error: "The model declined.", usage };
       if (m.stop_reason === "max_tokens" || !m.parsed_output) return { ok: false, error: "The answer could not be read.", usage };
       return { ok: true, out: m.parsed_output as Record<string, Record<string, unknown>>, usage };
+    },
+    referencePictures: async (workspaceId, most) => {
+      const { data, error } = await service.rpc("reference_pictures", { p_workspace_id: workspaceId, p_limit: most });
+      if (error) return { error: error.message };
+      const d = data as { pictures?: RefPicture[]; waiting?: number } | null;
+      return { pictures: d?.pictures ?? [], waiting: d?.waiting ?? 0 };
+    },
+    fetchPicture: async (p) => {
+      if (p.path) {
+        const { data } = await service.storage.from(p.bucket ?? "workspace-files").download(p.path);
+        return data ? pictureOfBytes(new Uint8Array(await data.arrayBuffer())) : null;
+      }
+      if (!p.url) return null;
+      // A link someone gave: only a public address, and never more than a picture's worth of it.
+      const res = await openFetch(p.url, { signal: AbortSignal.timeout(20_000), headers: { Accept: "image/jpeg,image/png,image/webp,image/*;q=0.5" } });
+      if (!res?.ok || Number(res.headers.get("content-length") ?? 0) > 6_000_000) {
+        await res?.body?.cancel();
+        return null;
+      }
+      return pictureOfBytes(new Uint8Array(await res.arrayBuffer()));
+    },
+    askReference: async (picture, reader): Promise<RefAsked> => {
+      const jev = MODELS[reader].via === "jev";
+      if (jev && !("url" in picture) && picture.mediaType !== "image/webp") return askJevRef(Deno.env.get("TYPESAFE_API_KEY"), picture);
+      // Jev takes no WebP, and Anthropic's own readers are not set up for this: such a picture goes to the spare reader.
+      const by = MODELS[reader].via === "router" ? reader : SPARE;
+      const a = await askRouter(MODELS[by], REF_SYSTEM, refPrompt(), picture);
+      return a.ok ? { ok: true, card: cardFromAnswers(a.out as { of?: unknown; view?: unknown; crop?: unknown }), usage: a.usage, ...(by === reader ? {} : { by }) } : a;
+    },
+    saveReferenceCard: async (workspaceId, sourceId, card, reader) => {
+      const { error } = await service.rpc("reference_card_save", { p_workspace_id: workspaceId, p_source_id: sourceId, p_card: card, p_reader: reader });
+      return error ? error.message : null;
     },
     save: async (workspaceId, reading) => {
       const saved = await service.rpc("taste_reading_save", { p_workspace_id: workspaceId, p_reading: reading });

@@ -1,6 +1,6 @@
 // The reading handler without Supabase or the model: deno test supabase/functions/taste-read/
 import { assert, assertEquals } from "jsr:@std/assert@1";
-import { type Asked, type Deps, handleTasteRead, type Reading, type Usage } from "./handler.ts";
+import { type Asked, type Deps, handleTasteRead, pictureOfBytes, type Reading, type RefKept, type RefPicture, type Usage } from "./handler.ts";
 import type { Pass } from "../_shared/taste/schema.ts";
 
 const WS = "26681c6c-4558-4359-847d-da160006bc56";
@@ -28,6 +28,10 @@ function deps(over: Partial<Deps> = {}) {
       return Promise.resolve({ ok: true, usage: usage(0.01), out });
     },
     keep: (r) => (kept.push(r), Promise.resolve()),
+    referencePictures: () => Promise.resolve({ pictures: [], waiting: 0 }),
+    fetchPicture: () => Promise.resolve(null),
+    askReference: () => Promise.resolve({ ok: false, error: "not set up", usage: usage(0) }),
+    saveReferenceCard: () => Promise.resolve(null),
     ...over,
   };
   return { d, asked, kept, saved };
@@ -118,4 +122,65 @@ Deno.test("a reading made before is kept as it is: no model is asked, and only w
   assertEquals((await handleTasteRead(post({ workspaceId: WS, keep: { source: "engine", ref: "e-1" }, card }), true, { ...d, staff: () => Promise.resolve(false) })).status, 403);
   assertEquals((await handleTasteRead(post({ workspaceId: WS, keep: { source: "engine", ref: "e-2" }, card: { read: { "x.y": "z" } } }), true, d)).status, 400);
   assertEquals((await handleTasteRead(post({ workspaceId: WS, keep: { source: "engine", ref: "e-1" }, card }), true, { ...d, save: () => Promise.resolve({ error: "down" }) })).status, 502);
+});
+
+Deno.test("the brand's product pictures without a card are fetched, read and kept; what failed is asked again next time", async () => {
+  const waiting: RefPicture[] = [
+    { source_id: "s1", product: "Pegasus", slot: "front", path: "ws/front.jpg" },
+    { source_id: "s2", product: "Pegasus", slot: "site-2", url: "https://brand.example/worn.jpg" },
+    { source_id: "s3", product: "Pegasus", slot: "site-3", url: "https://brand.example/gone.jpg" },
+    { source_id: "s4", product: "Pegasus", slot: "site-4", url: "https://brand.example/busy.webp" },
+    { source_id: "s5", product: "Pegasus", slot: "site-5", url: "https://brand.example/chart.png" },
+  ];
+  const savedCards: Record<string, { card: RefKept; reader: string }> = {};
+  let listed = 0, answered = 0;
+  const { d, kept, asked } = deps({
+    referencePictures: (_ws, most) => (listed = most, Promise.resolve({ pictures: waiting, waiting: 12 })),
+    fetchPicture: (p) => Promise.resolve(p.source_id === "s3" ? null : { base64: "A".repeat(200), mediaType: p.source_id === "s4" ? "image/webp" : "image/jpeg" }),
+    askReference: (pic) => {
+      if (!("url" in pic) && pic.mediaType === "image/webp") return Promise.resolve({ ok: false, error: "fal answered 503", usage: usage(0) });
+      const n = answered++;
+      // The second picture is read by another reader than the one asked for; the last could not be told.
+      return Promise.resolve(n === 0 ? { ok: true, card: { of: "product", view: "front", crop: "whole" }, usage: usage(0.0001) }
+        : n === 1 ? { ok: true, card: { of: "product_on_person", view: "back", crop: "half" }, usage: usage(0.0001), by: "gpt-luna" }
+        : { ok: true, card: null, usage: usage(0.0001) });
+    },
+    saveReferenceCard: (_ws, id, card, reader) => (savedCards[id] = { card, reader }, Promise.resolve(null)),
+  });
+  const res = await handleTasteRead(post({ workspaceId: WS, references: { most: 5 } }), true, d);
+  const body = await res.json();
+  assertEquals(res.status, 200);
+  assertEquals(listed, 5);
+  // Classification is Jev's unless another reader is named.
+  assertEquals([body.reader, body.read, body.unread, body.failed, body.left], ["jev", 3, 1, 1, 8]);
+  assertEquals(savedCards.s1, { card: { of: "product", view: "front", crop: "whole" }, reader: "jev" });
+  assert(Object.values(savedCards).some((c) => c.reader === "gpt-luna"));
+  // A picture that cannot be fetched is marked so; one the reader failed on is not kept, to be asked again.
+  assert("unread" in savedCards.s3!.card && !("s4" in savedCards));
+  assertEquals(body.cards.find((c: { source_id: string }) => c.source_id === "s4").error, "fal answered 503");
+  // A reader that could not say what it is of: something else than the product.
+  assertEquals(Object.values(savedCards).filter((c) => "of" in c.card && c.card.of === "other").length, 1);
+  assertEquals(asked, []);
+  assertEquals(kept.length, 1);
+  assertEquals((kept[0]!.input as { task: string }).task, "reference_cards");
+  assertEquals(kept[0]!.usage.cost_usd, 0.0003);
+
+  // Staff only, within budget, and nothing is kept as a run when nothing waits.
+  assertEquals((await handleTasteRead(post({ workspaceId: WS, references: {} }), true, { ...d, staff: () => Promise.resolve(false) })).status, 403);
+  assertEquals((await handleTasteRead(post({ workspaceId: WS, references: {} }), true, { ...d, withinBudget: () => Promise.resolve(false) })).status, 429);
+  const none = deps();
+  const empty = await (await handleTasteRead(post({ workspaceId: WS, references: {} }), true, none.d)).json();
+  assertEquals([empty.read, empty.left, none.kept.length], [0, 0, 0]);
+});
+
+Deno.test("fetched bytes are a picture only when they are a JPEG, a PNG or a WebP of a size a reader takes", () => {
+  const bytes = (head: number[], length = 400) => Uint8Array.from({ length }, (_, i) => head[i] ?? 0);
+  assertEquals(pictureOfBytes(bytes([0xff, 0xd8, 0xff]))?.mediaType, "image/jpeg");
+  assertEquals(pictureOfBytes(bytes([0x89, 0x50, 0x4e, 0x47]))?.mediaType, "image/png");
+  assertEquals(pictureOfBytes(bytes([0x52, 0x49, 0x46, 0x46, 0, 0, 0, 0, 0x57, 0x45, 0x42, 0x50]))?.mediaType, "image/webp");
+  // A page saying "not found", a GIF, and a picture too large to send.
+  assertEquals(pictureOfBytes(new TextEncoder().encode("<!doctype html>" + " ".repeat(400))), null);
+  assertEquals(pictureOfBytes(bytes([0x47, 0x49, 0x46])), null);
+  assertEquals(pictureOfBytes(bytes([0xff, 0xd8], 6_500_000)), null);
+  assertEquals(atob(pictureOfBytes(bytes([0xff, 0xd8, 0xff]))!.base64).length, 400);
 });

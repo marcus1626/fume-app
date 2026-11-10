@@ -470,8 +470,8 @@ Deno.test("the Engine sends the reference pictures the planned picture needs: th
     ...task, ...extra,
     plan: { ...task.plan, planned_creatives: [{ ...task.plan.planned_creatives![0]!, scene: s, people, ...(extra.cast ? { castIds: ["m1"] } : {}) }] },
   });
-  assertEquals(needOf({ id: "x", name: "x", format: "feed", scene: "She walks away from the camera, seen from behind", people: "One woman, full body" }), { view: "back", crop: "whole", people: true });
-  assertEquals(needOf({ id: "x", name: "x", format: "feed", scene: "A cup on a bench" }), { view: null, crop: null, people: false });
+  assertEquals(needOf({ name: "x", scene: "She walks away from the camera, seen from behind", people: "One woman, full body" }), { view: "back", crop: "whole", people: true });
+  assertEquals(needOf({ name: "x", scene: "A cup on a bench" }), { view: null, crop: null, people: false });
 
   // A plan that names no side leaves every picture in (the test at the top: front, then back).
   // From the front: the back would put the wrong side in the frame, so it is left out, and the ledger says why.
