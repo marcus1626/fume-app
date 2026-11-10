@@ -32,6 +32,7 @@ import { defaults, modes } from "../../mock/seed/studioModes";
 import type { Live } from "./context";
 import { CREATIVE, VERSION, fileUrls, uploadFile, type CreativeRow, type VersionRow } from "./map";
 import { failureOf, modelName, readPrompts, toEnginePrompt } from "./engine";
+import { readDesigns, withDesigns } from "./design";
 import { askEngine, command, requestKey, rows, supabase } from "./supabase";
 
 // ─── Rows ────────────────────────────────────────────────────────────────────
@@ -257,7 +258,7 @@ export async function readDocuments(
   const candidates = jobIds.length
     ? await rows<CandidateRow>(supabase().from("candidates").select(CANDIDATE).in("job_id", jobIds).order("created_at"))
     : [];
-  const [files, fixRows, prompts] = await Promise.all([
+  const [files, fixRows, prompts, designs] = await Promise.all([
     fileUrls([
       ...candidates.map((c) => c.file_id),
       ...childVersions.map((v) => v.file_id),
@@ -277,6 +278,8 @@ export async function readDocuments(
       : Promise.resolve([] as FixRow[]),
     // The prompts behind the Engine's renders: Fume's own people get them, anyone else none.
     readPrompts(jobs.filter((j) => j.mode === "engine").map((j) => j.id)),
+    // Fume's graphic design on these creatives (Fume's own people only).
+    readDesigns(ids),
   ]);
 
   return creatives.map((cr) => {
@@ -376,6 +379,7 @@ export async function readDocuments(
     // Numbered in the order they were made; the one rendering is the newest.
     list.sort((a, b) => Number(a.state === "rendering") - Number(b.state === "rendering") || a.at.localeCompare(b.at));
     list.forEach((v, i) => (v.number = i + 1));
+    const shown = withDesigns(list, designs, cr.id, cr.title);
     // The picture that goes to check: the one picked, else the newest not sent yet; once sent, the one in Check.
     const picked =
       (desk.picked && unsent.some((c) => c.id === desk.picked) ? desk.picked : undefined) ??
@@ -448,7 +452,7 @@ export async function readDocuments(
       specs,
       overrides: [],
       layers: desk.layers ?? [],
-      versions: list,
+      versions: shown,
       ...(picked ? { pickedVersionId: picked } : {}),
       edits: desk.edits ?? [],
       ...(formats.length ? { formats } : {}),

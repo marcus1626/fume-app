@@ -28,6 +28,8 @@ import { brandUpdateCalls } from "./brand-update";
 import { boardCalls } from "./boards";
 import { trainCalls } from "./train";
 import { bookCalls } from "./books";
+import { designCalls } from "./design";
+import { readDocument } from "./production";
 
 /** The calls not moved yet, answered by an empty mock workspace that loads on the first such call. */
 function notYetCalls(): FumeApi {
@@ -69,6 +71,7 @@ export function createLiveApi(): FumeApi {
     ...questionCalls(live),
     ...boardCalls(live),
     ...trainCalls(live),
+    ...designCalls(live, async (id) => (await readDocument(live, id)).doc),
   };
   return new Proxy(own as FumeApi, {
     get: (target, key, receiver) => (key in target ? Reflect.get(target, key, receiver) : Reflect.get(notYet, key)),

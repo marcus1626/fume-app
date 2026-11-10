@@ -14,6 +14,7 @@ import {
   type FumeApi,
   type Id,
   type QaFeedback,
+  type QaFinding,
   type QaItem,
   type QaPin,
   type QaView,
@@ -28,13 +29,15 @@ import {
   evaluationOf,
   mustBeId,
   readDocument,
+  readDocuments,
   toFormat,
   type CandidateRow,
   type StudioCreativeRow,
 } from "./production";
 import { command, requestKey, rows, supabase } from "./supabase";
 
-type Calls = "qaQueue" | "qaCheck" | "qaUncheck" | "qaFeedback" | "qaToStudio" | "release" | "qualityLog";
+type Calls =
+  "qaQueue" | "qaCheck" | "qaUncheck" | "qaFeedback" | "qaSettleFinding" | "qaToStudio" | "release" | "qualityLog";
 
 /** The versions Check holds: waiting for a check, back with a designer for a correction, held, or checked. */
 const IN_CHECK = ["in_check", "correcting", "held", "checked"] as const;
@@ -132,21 +135,39 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
         .in("version_id", shownIds)
         .order("created_at"),
     ),
-    // Clear faults the picture check found on the product: they stop the check until the expert decides.
-    rows<{ id: string; version_id: string; finding: string }>(
+    // What the Engine's checks found on each version (findings with method automated): each is a comment the one who
+    // checks settles (FLOWS §29.6, §35.1). A clear fault on the product is critical and stops the check until the
+    // expert decides: a new version fixes it, or they set it aside with their name.
+    rows<FindingRow>(
       supabase()
         .from("findings")
-        .select("id, version_id, finding")
+        .select(
+          "id, version_id, dimension, severity, finding, region, expected, observed, status, resolved_by, resolved_at, created_at, detail",
+        )
         .eq("method", "automated")
-        .eq("severity", "critical")
-        .eq("status", "open")
-        .not("detail", "is", null)
+        .neq("dimension", "file_spec")
         .in("version_id", shownIds)
         .order("created_at"),
     ),
   ]);
   const holdsOf = (versionId: Id) =>
-    holds.filter((h) => h.version_id === versionId).map((h) => ({ id: h.id, text: h.finding }));
+    holds
+      .filter((h) => h.version_id === versionId && h.severity === "critical" && h.status === "open" && h.detail)
+      .map((h) => ({ id: h.id, text: h.finding }));
+  const findingsOf = (versionId: Id): QaFinding[] => holds.filter((h) => h.version_id === versionId).map(toFinding);
+  // Fume's graphic design on the versions in Check, numbered as the Studio numbers them (Fume's people only).
+  const designed = new Set(
+    candidates.filter((c) => c.origin === "engine" && /graphic design/i.test(c.note ?? "")).map((c) => c.id),
+  );
+  const designDocs = designed.size
+    ? await readDocuments(live, {
+        creativeIds: [
+          ...new Set(shown.filter((v) => v.candidate_id && designed.has(v.candidate_id)).map((v) => v.creative_id)),
+        ],
+      }).catch(() => [])
+    : [];
+  const designOf = (v: VersionRow) =>
+    v.candidate_id ? designDocs.flatMap((d) => d.doc.versions).find((x) => x.id === v.candidate_id)?.design : undefined;
   const snapshotIds = [...new Set(checks.flatMap((c) => (c.snapshot_id ? [c.snapshot_id] : [])))];
   const snapshots = snapshotIds.length
     ? await rows<{
@@ -306,6 +327,8 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
           ? { studioBy: made?.made_by ?? "", studioAt: check?.decided_at ?? v.created_at }
           : {}),
         ...(holdsOf(v.id).length ? { holds: holdsOf(v.id) } : {}),
+        ...(findingsOf(v.id).length ? { findings: findingsOf(v.id) } : {}),
+        ...(designOf(v) ? { design: designOf(v) } : {}),
       };
       const productName = products.find(
         (p) => campaign.productIds.length === 1 && p.id === campaign.productIds[0],
@@ -356,16 +379,29 @@ export function qualityCalls(live: Live): Pick<FumeApi, Calls> {
       return (await readItem(live, itemId)).item;
     },
     // The expert's correction: Fume's own fix, no round used. The pins go with it as located notes.
-    async qaFeedback(itemId, text, pins) {
-      const said = text.trim() || (pins ?? []).map((p) => `${p.n}. ${p.text}`).join(" ");
+    // The Engine's own findings the note takes up go with it, in its words, as what must change.
+    async qaFeedback(itemId, text, pins, findingIds) {
+      const taken = findingIds?.length
+        ? ((await readItem(live, itemId)).item.findings ?? []).filter((f) => findingIds.includes(f.id))
+        : [];
+      const said =
+        text.trim() || [...(pins ?? []).map((p) => `${p.n}. ${p.text}`), ...taken.map((f) => f.finding)].join(" ");
       if (!said) throw new FumeError("invalid", "Say what to fix.");
       await command("request_correction", {
         p_version_id: mustBeId(itemId, "creative in Check"),
         p_problem: said,
-        p_must_change: (pins ?? []).map((p) => p.text),
+        p_must_change: [...(pins ?? []).map((p) => p.text), ...taken.map((f) => f.finding)],
         p_must_stay: [],
         p_pins: pins ?? [],
       });
+      return (await readItem(live, itemId)).item;
+    },
+    // "Not a problem": the one who checks sets the finding aside, with their name (resolve_finding); taking that back
+    // opens it again (reopen_finding).
+    async qaSettleFinding(itemId, findingId, status) {
+      const id = mustBeId(findingId, "finding");
+      if (status === "accepted") await command("resolve_finding", { p_finding_id: id, p_status: "accepted" });
+      else await command("reopen_finding", { p_finding_id: id });
       return (await readItem(live, itemId)).item;
     },
     // The creative's document. Nothing is taken from anyone: no Engine works on it this week.
@@ -483,6 +519,54 @@ export function qualityCalls(live: Live): Pick<FumeApi, Calls> {
       ];
       return entries.sort((a, b) => b.at.localeCompare(a.at));
     },
+  };
+}
+
+interface FindingRow {
+  id: string;
+  version_id: string;
+  dimension: string;
+  severity: "critical" | "major" | "minor";
+  finding: string;
+  region: { x?: number; y?: number; w?: number; h?: number } | null;
+  expected: string | null;
+  observed: string | null;
+  status: "open" | "resolved" | "accepted";
+  resolved_by: string | null;
+  resolved_at: string | null;
+  created_at: string;
+  detail: string | null;
+}
+
+/** The database's dimensions as Check names them: composition is the design; rights sit with the brand's rules. */
+const DIMENSION: Record<string, QaFinding["dimension"]> = {
+  product: "product",
+  text_claims: "text_claims",
+  brand_brief: "brand_brief",
+  artefacts: "artefacts",
+  composition: "design",
+  rights: "brand_brief",
+};
+
+export function toFinding(f: FindingRow): QaFinding {
+  const r = f.region;
+  // A region kept as shares of the picture becomes the pin's place, at its middle.
+  const share = (n: unknown) => typeof n === "number" && n >= 0 && n <= 1;
+  const spot =
+    r && share(r.x) && share(r.y) && share(r.w) && share(r.h)
+      ? { x: Math.min(1, r.x! + r.w! / 2), y: Math.min(1, r.y! + r.h! / 2) }
+      : undefined;
+  return {
+    id: f.id,
+    dimension: DIMENSION[f.dimension] ?? "brand_brief",
+    severity: f.severity,
+    finding: f.finding,
+    ...(f.expected ? { expected: f.expected } : {}),
+    ...(f.observed ? { observed: f.observed } : {}),
+    status: f.status,
+    ...(f.resolved_by ? { by: f.resolved_by } : {}),
+    at: f.resolved_at ?? f.created_at,
+    ...(spot ? { spot } : {}),
   };
 }
 
