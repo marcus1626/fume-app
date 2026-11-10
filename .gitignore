@@ -13,3 +13,4 @@ dist-check/
 # Playwright's output (app/test-results, app/playwright-report)
 test-results/
 playwright-report/
+*.tsbuildinfo
