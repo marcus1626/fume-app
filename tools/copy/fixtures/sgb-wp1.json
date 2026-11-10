@@ -9,10 +9,19 @@
       "eyebrow": "The two ideas, first",
       "title": "Two ways in. One promise each.",
       "blocks": [
-        { "type": "cards", "cards": [
-          { "title": "Track B · Even ours", "text": "Your SGB advisor calls before every notice date, even on SGB's own contracts. We make the notice date the hero: the day that passes during lunch service, and the one call that works for the owner." },
-          { "title": "Track A · Meet your supplier", "text": "Every supplier a restaurant trusts comes to the door: the butcher, the brewery, the wine merchant. Energy is the one big bill with no face. SGB's advisors visit on site, by name." }
-        ] }
+        {
+          "type": "cards",
+          "cards": [
+            {
+              "title": "Track B · Even ours",
+              "text": "Your SGB advisor calls before every notice date, even on SGB's own contracts. We make the notice date the hero: the day that passes during lunch service, and the one call that works for the owner."
+            },
+            {
+              "title": "Track A · Meet your supplier",
+              "text": "Every supplier a restaurant trusts comes to the door: the butcher, the brewery, the wine merchant. Energy is the one big bill with no face. SGB's advisors visit on site, by name."
+            }
+          ]
+        }
       ]
     },
     {
@@ -20,12 +29,37 @@
       "eyebrow": "The voice we propose",
       "title": "Calm. Personal. Straight.",
       "blocks": [
-        { "type": "text", "html": "<p>Built from SGB's own line <em>Starke Tarife. Entspannte Entscheidungen.</em> and from how its customers talk: one fixed contact person, someone who takes care of everything, half the rent in running the place. Short sentences. First and second person. Concrete things from the owner's day. No exclamation marks, no energy jargon, no promise we cannot prove.</p>" },
-        { "type": "piece", "piece": { "id": "voice/lines", "title": "Three sample lines", "fields": [
-          { "ref": "voice/1", "format": "plain.text", "label": "Calm", "text": "Your contract has a date. Your advisor has it in the diary." },
-          { "ref": "voice/2", "format": "plain.text", "label": "Personal", "text": "One name, one number, and someone who has seen your kitchen." },
-          { "ref": "voice/3", "format": "plain.text", "label": "Straight", "text": "We call before you can leave us. Even when the contract is ours." }
-        ] } }
+        {
+          "type": "text",
+          "html": "<p>Built from SGB's own line <em>Starke Tarife. Entspannte Entscheidungen.</em> and from how its customers talk: one fixed contact person, someone who takes care of everything, half the rent in running the place. Short sentences. First and second person. Concrete things from the owner's day. No exclamation marks, no energy jargon, no promise we cannot prove.</p>"
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "voice/lines",
+            "title": "Three sample lines",
+            "fields": [
+              {
+                "ref": "voice/1",
+                "format": "plain.text",
+                "label": "Calm",
+                "text": "Your contract has a date. Your advisor has it in the diary."
+              },
+              {
+                "ref": "voice/2",
+                "format": "plain.text",
+                "label": "Personal",
+                "text": "One name, one number, and someone who has seen your kitchen."
+              },
+              {
+                "ref": "voice/3",
+                "format": "plain.text",
+                "label": "Straight",
+                "text": "We call before you can leave us. Even when the contract is ours."
+              }
+            ]
+          }
+        }
       ]
     },
     {
@@ -33,102 +67,529 @@
       "eyebrow": "Track B · your insight, our execution",
       "title": "Even ours",
       "blocks": [
-        { "type": "piece", "piece": { "id": "trackB/summary", "title": "Summary", "fields": [
-          { "ref": "trackB/summary", "format": "plain.summary", "label": "Summary", "text": "Owners rarely choose to stay with their energy supplier. The notice date passes during service, and the contract runs on. A business contract has none of the protection a household has: it renews as written. SGB's advisors call before every notice date, SGB's own contracts included. We make that the whole campaign: an energy supplier that tells you when you can leave it. It answers the owner's distrust of energy calls with the one call that works for the owner, and it shows the personal advisor at work instead of claiming one." },
-          { "ref": "trackB/idea", "format": "plain.idea", "label": "How we bring your idea to life, in one sentence", "text": "Every piece shows the notice date that slips by in service, and the SGB advisor who calls before it, even on SGB's own contracts." }
-        ] } },
-        { "type": "h3", "text": "The evidence check" },
-        { "type": "table", "head": ["Question", "What we found", "Source"], "rows": [
-          ["Do business contracts renew when the owner misses the notice date?", "Yes. Since March 2022 a household's energy contract may only roll on month by month after its first term. That rule protects consumers only. A business gets what its contract says, and a common clause renews it by 12 months with three months' notice. SGB's own Portfolio tariff renews by 12 months without notice.", "energiehelden24.nrw, Gewerbestrom und Gewerbegas kündigen (read 10 Nov 2026); Verbraucherzentrale Niedersachsen; SGB news post (ref 1.3)"],
-          ["Do owners miss it?", "Partly supported. A broker writes that many businesses assume the household rule applies to them and then find another year added. We found no survey with a share. We list it as an assumption and propose that SGB's advisors count, in week 1 to 4, how many new leads had a contract that renewed without a choice: [share of leads with an unchosen renewal].", "energiehelden24.nrw (a broker's statement, not research); assumption"],
-          ["Is there a second date owners miss?", "Yes. When a supplier raises prices, a business may cancel without notice, but the supplier only has to tell a business two weeks ahead (a household: one month). A letter opened late closes that window too.", "energiehelden24.nrw, Sonderkündigung (read 10 Nov 2026); to be confirmed by SGB"],
-          ["Why do owners hang up on energy calls?", "Energy contracts are among the products most sold by cold call in Germany. The Federal Network Agency can only fine cold calls to consumers; calls to businesses are not fined. So an owner hears from energy companies mostly when a stranger calls.", "Bundesnetzagentur, Unerlaubte Telefonwerbung (read 10 Nov 2026)"],
-          ["Could another supplier sign the idea?", "A reminder alone, no: brokers already offer to note contract ends and remind. The twist is what nobody else can say. A broker is not the supplier, and a supplier does not remind you to leave it. Every piece keeps the twist.", "energiehelden24.nrw offers reminders; swap test"]
-        ] },
-        { "type": "h3", "text": "The six asks: one headline, six calls to action" },
-        { "type": "text", "html": "<p>The visual and the headline stay the same in all six cells. The subline changes only where the ask needs it.</p>" },
-        { "type": "piece", "piece": { "id": "trackB/cellA", "title": "Cell A · Callback", "fields": [
-          { "ref": "trackB/cellA/hl", "format": "image.hl", "label": "HL", "text": "We'll remind you when you can leave us.", "group": "trackB" },
-          { "ref": "trackB/cellA/sl", "format": "image.sl", "label": "SL", "text": "Your SGB advisor calls before every notice date. Even on SGB's own contracts." },
-          { "ref": "trackB/cellA/cta", "format": "landing.cta", "label": "Call to action", "text": "Ask for a callback" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackB/cellB", "title": "Cell B · Bill check", "fields": [
-          { "ref": "trackB/cellB/hl", "format": "image.hl", "label": "HL", "text": "We'll remind you when you can leave us.", "group": "trackB" },
-          { "ref": "trackB/cellB/sl", "format": "image.sl", "label": "SL", "text": "Your SGB advisor reads your bill, finds your notice date and shows what SGB would cost." },
-          { "ref": "trackB/cellB/cta", "format": "landing.cta", "label": "Call to action", "text": "Have my bill checked" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackB/cellC", "title": "Cell C · Instant form", "fields": [
-          { "ref": "trackB/cellC/hl", "format": "image.hl", "label": "HL", "text": "We'll remind you when you can leave us.", "group": "trackB" },
-          { "ref": "trackB/cellC/sl", "format": "image.sl", "label": "SL", "text": "Your SGB advisor calls before every notice date. Even on SGB's own contracts." },
-          { "ref": "trackB/cellC/cta", "format": "plain.text", "label": "Call to action (in the primary text)", "text": "Leave your number here. Your advisor calls you back." },
-          { "ref": "trackB/cellC/button", "format": "meta.button", "label": "Button", "text": "Sign Up" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackB/cellD", "title": "Cell D · Quiz", "fields": [
-          { "ref": "trackB/cellD/hl", "format": "image.hl", "label": "HL", "text": "We'll remind you when you can leave us.", "group": "trackB" },
-          { "ref": "trackB/cellD/sl", "format": "image.sl", "label": "SL", "text": "Six taps: your price model and your notice date. SGB's advisor takes it from there." },
-          { "ref": "trackB/cellD/cta", "format": "landing.cta", "label": "Call to action", "text": "Find my price model" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackB/cellE", "title": "Cell E · Book a call", "fields": [
-          { "ref": "trackB/cellE/hl", "format": "image.hl", "label": "HL", "text": "We'll remind you when you can leave us.", "group": "trackB" },
-          { "ref": "trackB/cellE/sl", "format": "image.sl", "label": "SL", "text": "Your SGB advisor calls before every notice date. Even on SGB's own contracts." },
-          { "ref": "trackB/cellE/cta", "format": "landing.cta", "label": "Call to action", "text": "Pick a time to talk" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackB/cellF", "title": "Cell F · Sign online", "fields": [
-          { "ref": "trackB/cellF/hl", "format": "image.hl", "label": "HL", "text": "We'll remind you when you can leave us.", "group": "trackB" },
-          { "ref": "trackB/cellF/sl", "format": "image.sl", "label": "SL", "text": "Sign online today. SGB cancels your old contract or takes it over." },
-          { "ref": "trackB/cellF/cta", "format": "landing.cta", "label": "Call to action", "text": "Sign online" }
-        ] } },
-        { "type": "h3", "text": "The static, with its full copy set (cell A)" },
-        { "type": "visual", "text": "4:5 master. A kitchen pass at 12:40. Order tickets on the rail. On the steel, between two plates, a phone lights up: “[advisor name] · SGB”. Taped to the tiles above it, the first page of an energy contract with one date circled in kitchen marker. Real kitchen, real owner with written consent, available light, shot handheld. No actors posing as customers, no generated people. HL top left, SL under it, SGB logo bottom right." },
-        { "type": "piece", "piece": { "id": "trackB/static", "title": "Ad copy around the image", "job": "Make a busy owner stop on the date they forgot, and ask for a callback.", "fields": [
-          { "ref": "trackB/static/primary.1", "format": "meta.primary", "label": "Meta primary text 1", "text": "Most owners don't choose to stay with their energy supplier. They miss the day they could leave. Your SGB advisor calls before every notice date, even on SGB's own contracts. One name, one number, and a call that works for you for once." },
-          { "ref": "trackB/static/primary.2", "format": "meta.primary", "label": "Meta primary text 2", "text": "Your notice date passes on a Tuesday, mid-service. Then the contract runs on as written. Your SGB advisor calls before that day comes. Even when the contract is ours." },
-          { "ref": "trackB/static/primary.3", "format": "meta.primary", "label": "Meta primary text 3", "text": "“My personal SGB advisor takes care of everything.” Henning Wagner, Wagner Hotel zur Post (translated). That includes the day you could leave us. Your advisor calls before every notice date, SGB's own included." },
-          { "ref": "trackB/static/headline.1", "format": "meta.headline", "label": "Meta headline 1", "text": "The reminder to leave us" },
-          { "ref": "trackB/static/headline.2", "format": "meta.headline", "label": "Meta headline 2", "text": "Even on SGB's own contracts" },
-          { "ref": "trackB/static/headline.3", "format": "meta.headline", "label": "Meta headline 3", "text": "A call before the date" },
-          { "ref": "trackB/static/description", "format": "meta.description", "label": "Meta description", "text": "One advisor, one number" },
-          { "ref": "trackB/static/button", "format": "meta.button", "label": "Meta button", "text": "Contact Us" },
-          { "ref": "trackB/static/li.intro", "format": "linkedin.intro", "label": "LinkedIn intro text", "text": "Business energy contracts rarely renew because the owner chose to stay. They renew because the notice date passed during service. Your SGB advisor calls before every notice date, even on SGB's own contracts." },
-          { "ref": "trackB/static/li.headline", "format": "linkedin.headline", "label": "LinkedIn headline", "text": "The energy supplier that tells you when you can leave it" },
-          { "ref": "trackB/static/li.button", "format": "linkedin.button", "label": "LinkedIn button", "text": "Learn More" }
-        ] } },
-        { "type": "h3", "text": "UGC script, 25 seconds. Who speaks: a real SGB advisor" },
-        { "type": "text", "html": "<p>Filmed on a phone by the advisor in their own car and diary. Captions burnt in. It works with the sound off. A real advisor with consent, never an AI person and never an actor posing as one.</p>" },
-        { "type": "beats", "id": "trackB/ugc", "rows": [
-          { "beat": "Hook", "s": "0–3", "see": "Close-up of a paper diary, a finger on a line: a restaurant's name and a date.", "said": "This is the day my customer can leave me.", "screen": "The day my customer can leave me" },
-          { "beat": "Who", "s": "3–8", "see": "The advisor, in the car outside a restaurant, phone held at arm's length.", "said": "I'm [advisor name], SGB advisor for restaurants in [region].", "screen": "[advisor name] · SGB advisor" },
-          { "beat": "Twist", "s": "8–15", "see": "Back to the diary. The finger taps the entry. A small SGB stamp next to it.", "said": "This contract is with SGB. I'll call anyway, [weeks before] before the date.", "screen": "It's an SGB contract. I call anyway." },
-          { "beat": "Why", "s": "15–21", "see": "Through the windscreen: the restaurant at lunch, people at the window tables.", "said": "Miss that date in service, and the contract runs on. Nobody chose that.", "screen": "Miss it, and the contract runs on" },
-          { "beat": "Ask", "s": "21–25", "see": "The advisor to camera, getting out of the car.", "said": "Want a call like that? Leave your number. I'll call you back.", "screen": "Ask for a callback" }
-        ] },
-        { "type": "text", "html": "<p><strong>Cut under 15 seconds:</strong> Hook, Twist, Ask (0–3, 8–15, 21–25). The ask changes per cell: “Pick a time”, “Send me your bill”, “Take the quiz”, “Sign online”.</p>" },
-        { "type": "h3", "text": "Landing page heroes" },
-        { "type": "piece", "piece": { "id": "trackB/heroA", "title": "Hero · cell A", "fields": [
-          { "ref": "trackB/heroA/hl", "format": "landing.hl", "label": "HL", "text": "We'll remind you when you can leave us.", "group": "trackB-hero" },
-          { "ref": "trackB/heroA/sl", "format": "landing.sl", "label": "SL", "text": "Your SGB advisor calls before every notice date. Even on SGB's own contracts. Leave your number and your advisor calls you back." },
-          { "ref": "trackB/heroA/cta", "format": "landing.cta", "label": "Button", "text": "Ask for a callback" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackB/heroB", "title": "Hero · cell B", "fields": [
-          { "ref": "trackB/heroB/hl", "format": "landing.hl", "label": "HL", "text": "We'll remind you when you can leave us.", "group": "trackB-hero" },
-          { "ref": "trackB/heroB/sl", "format": "landing.sl", "label": "SL", "text": "Your SGB advisor reads your current bill with you, finds your notice date and shows what SGB would cost." },
-          { "ref": "trackB/heroB/cta", "format": "landing.cta", "label": "Button", "text": "Have my bill checked" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackB/heroD", "title": "Hero · cell D", "fields": [
-          { "ref": "trackB/heroD/hl", "format": "landing.hl", "label": "HL", "text": "We'll remind you when you can leave us.", "group": "trackB-hero" },
-          { "ref": "trackB/heroD/sl", "format": "landing.sl", "label": "SL", "text": "Six taps tell you which price model fits your place. Your SGB advisor confirms it and notes your notice date." },
-          { "ref": "trackB/heroD/cta", "format": "landing.cta", "label": "Button", "text": "Find my price model" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackB/heroE", "title": "Hero · cell E", "fields": [
-          { "ref": "trackB/heroE/hl", "format": "landing.hl", "label": "HL", "text": "We'll remind you when you can leave us.", "group": "trackB-hero" },
-          { "ref": "trackB/heroE/sl", "format": "landing.sl", "label": "SL", "text": "Pick a time outside service. Your SGB advisor calls then, and calls again before every notice date." },
-          { "ref": "trackB/heroE/cta", "format": "landing.cta", "label": "Button", "text": "Pick a time to talk" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackB/heroF", "title": "Hero · cell F", "fields": [
-          { "ref": "trackB/heroF/hl", "format": "landing.hl", "label": "HL", "text": "We'll remind you when you can leave us.", "group": "trackB-hero" },
-          { "ref": "trackB/heroF/sl", "format": "landing.sl", "label": "SL", "text": "Sign online today, even if your old contract still runs. SGB cancels it or takes it over." },
-          { "ref": "trackB/heroF/cta", "format": "landing.cta", "label": "Button", "text": "Sign online" }
-        ] } }
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackB/summary",
+            "title": "Summary",
+            "fields": [
+              {
+                "ref": "trackB/summary",
+                "format": "plain.summary",
+                "label": "Summary",
+                "text": "Owners rarely choose to stay with their energy supplier. The notice date passes during service, and the contract runs on. A business contract has none of the protection a household has: it renews as written. SGB's advisors call before every notice date, SGB's own contracts included. We make that the whole campaign: an energy supplier that tells you when you can leave it. It answers the owner's distrust of energy calls with the one call that works for the owner, and it shows the personal advisor at work instead of claiming one."
+              },
+              {
+                "ref": "trackB/idea",
+                "format": "plain.idea",
+                "label": "How we bring your idea to life, in one sentence",
+                "text": "Every piece shows the notice date that slips by in service, and the SGB advisor who calls before it, even on SGB's own contracts."
+              }
+            ]
+          }
+        },
+        {
+          "type": "h3",
+          "text": "The evidence check"
+        },
+        {
+          "type": "table",
+          "head": [
+            "Question",
+            "What we found",
+            "Source"
+          ],
+          "rows": [
+            [
+              "Do business contracts renew when the owner misses the notice date?",
+              "Yes. Since March 2022 a household's energy contract may only roll on month by month after its first term. That rule protects consumers only. A business gets what its contract says, and a common clause renews it by 12 months with three months' notice. SGB's own Portfolio tariff renews by 12 months without notice.",
+              "energiehelden24.nrw, Gewerbestrom und Gewerbegas kündigen (read 10 Nov 2026); Verbraucherzentrale Niedersachsen; SGB news post (ref 1.3)"
+            ],
+            [
+              "Do owners miss it?",
+              "Partly supported. A broker writes that many businesses assume the household rule applies to them and then find another year added. We found no survey with a share. We list it as an assumption and propose that SGB's advisors count, in week 1 to 4, how many new leads had a contract that renewed without a choice: [share of leads with an unchosen renewal].",
+              "energiehelden24.nrw (a broker's statement, not research); assumption"
+            ],
+            [
+              "Is there a second date owners miss?",
+              "Yes. When a supplier raises prices, a business may cancel without notice, but the supplier only has to tell a business two weeks ahead (a household: one month). A letter opened late closes that window too.",
+              "energiehelden24.nrw, Sonderkündigung (read 10 Nov 2026); to be confirmed by SGB"
+            ],
+            [
+              "Why do owners hang up on energy calls?",
+              "Energy contracts are among the products most sold by cold call in Germany. The Federal Network Agency can only fine cold calls to consumers; calls to businesses are not fined. So an owner hears from energy companies mostly when a stranger calls.",
+              "Bundesnetzagentur, Unerlaubte Telefonwerbung (read 10 Nov 2026)"
+            ],
+            [
+              "Could another supplier sign the idea?",
+              "A reminder alone, no: brokers already offer to note contract ends and remind. The twist is what nobody else can say. A broker is not the supplier, and a supplier does not remind you to leave it. Every piece keeps the twist.",
+              "energiehelden24.nrw offers reminders; swap test"
+            ]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "The six asks: one headline, six calls to action"
+        },
+        {
+          "type": "text",
+          "html": "<p>The visual and the headline stay the same in all six cells. The subline changes only where the ask needs it.</p>"
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackB/cellA",
+            "title": "Cell A · Callback",
+            "fields": [
+              {
+                "ref": "trackB/cellA/hl",
+                "format": "image.hl",
+                "label": "HL",
+                "text": "We'll remind you when you can leave us.",
+                "group": "trackB"
+              },
+              {
+                "ref": "trackB/cellA/sl",
+                "format": "image.sl",
+                "label": "SL",
+                "text": "Your SGB advisor calls before every notice date. Even on SGB's own contracts."
+              },
+              {
+                "ref": "trackB/cellA/cta",
+                "format": "landing.cta",
+                "label": "Call to action",
+                "text": "Ask for a callback"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackB/cellB",
+            "title": "Cell B · Bill check",
+            "fields": [
+              {
+                "ref": "trackB/cellB/hl",
+                "format": "image.hl",
+                "label": "HL",
+                "text": "We'll remind you when you can leave us.",
+                "group": "trackB"
+              },
+              {
+                "ref": "trackB/cellB/sl",
+                "format": "image.sl",
+                "label": "SL",
+                "text": "Your SGB advisor reads your bill, finds your notice date and shows what SGB would cost."
+              },
+              {
+                "ref": "trackB/cellB/cta",
+                "format": "landing.cta",
+                "label": "Call to action",
+                "text": "Have my bill checked"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackB/cellC",
+            "title": "Cell C · Instant form",
+            "fields": [
+              {
+                "ref": "trackB/cellC/hl",
+                "format": "image.hl",
+                "label": "HL",
+                "text": "We'll remind you when you can leave us.",
+                "group": "trackB"
+              },
+              {
+                "ref": "trackB/cellC/sl",
+                "format": "image.sl",
+                "label": "SL",
+                "text": "Your SGB advisor calls before every notice date. Even on SGB's own contracts."
+              },
+              {
+                "ref": "trackB/cellC/cta",
+                "format": "plain.text",
+                "label": "Call to action (in the primary text)",
+                "text": "Leave your number here. Your advisor calls you back."
+              },
+              {
+                "ref": "trackB/cellC/button",
+                "format": "meta.button",
+                "label": "Button",
+                "text": "Sign Up"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackB/cellD",
+            "title": "Cell D · Quiz",
+            "fields": [
+              {
+                "ref": "trackB/cellD/hl",
+                "format": "image.hl",
+                "label": "HL",
+                "text": "We'll remind you when you can leave us.",
+                "group": "trackB"
+              },
+              {
+                "ref": "trackB/cellD/sl",
+                "format": "image.sl",
+                "label": "SL",
+                "text": "Six taps: your price model and your notice date. SGB's advisor takes it from there."
+              },
+              {
+                "ref": "trackB/cellD/cta",
+                "format": "landing.cta",
+                "label": "Call to action",
+                "text": "Find my price model"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackB/cellE",
+            "title": "Cell E · Book a call",
+            "fields": [
+              {
+                "ref": "trackB/cellE/hl",
+                "format": "image.hl",
+                "label": "HL",
+                "text": "We'll remind you when you can leave us.",
+                "group": "trackB"
+              },
+              {
+                "ref": "trackB/cellE/sl",
+                "format": "image.sl",
+                "label": "SL",
+                "text": "Your SGB advisor calls before every notice date. Even on SGB's own contracts."
+              },
+              {
+                "ref": "trackB/cellE/cta",
+                "format": "landing.cta",
+                "label": "Call to action",
+                "text": "Pick a time to talk"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackB/cellF",
+            "title": "Cell F · Sign online",
+            "fields": [
+              {
+                "ref": "trackB/cellF/hl",
+                "format": "image.hl",
+                "label": "HL",
+                "text": "We'll remind you when you can leave us.",
+                "group": "trackB"
+              },
+              {
+                "ref": "trackB/cellF/sl",
+                "format": "image.sl",
+                "label": "SL",
+                "text": "Sign online today. SGB cancels your old contract or takes it over."
+              },
+              {
+                "ref": "trackB/cellF/cta",
+                "format": "landing.cta",
+                "label": "Call to action",
+                "text": "Sign online"
+              }
+            ]
+          }
+        },
+        {
+          "type": "h3",
+          "text": "The static, with its full copy set (cell A)"
+        },
+        {
+          "type": "visual",
+          "text": "4:5 master. A kitchen pass at 12:40. Order tickets on the rail. On the steel, between two plates, a phone lights up: “[advisor name] · SGB”. Taped to the tiles above it, the first page of an energy contract with one date circled in kitchen marker. Real kitchen, real owner with written consent, available light, shot handheld. No actors posing as customers, no generated people. HL top left, SL under it, SGB logo bottom right."
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackB/static",
+            "title": "Ad copy around the image",
+            "job": "Make a busy owner stop on the date they forgot, and ask for a callback.",
+            "fields": [
+              {
+                "ref": "trackB/static/primary.1",
+                "format": "meta.primary",
+                "label": "Meta primary text 1",
+                "text": "Most owners don't choose to stay with their energy supplier. They miss the day they could leave. Your SGB advisor calls before every notice date, even on SGB's own contracts. One name, one number, and a call that works for you for once."
+              },
+              {
+                "ref": "trackB/static/primary.2",
+                "format": "meta.primary",
+                "label": "Meta primary text 2",
+                "text": "Your notice date passes on a Tuesday, mid-service. Then the contract runs on as written. Your SGB advisor calls before that day comes. Even when the contract is ours."
+              },
+              {
+                "ref": "trackB/static/primary.3",
+                "format": "meta.primary",
+                "label": "Meta primary text 3",
+                "text": "“My personal SGB advisor takes care of everything.” Henning Wagner, Wagner Hotel zur Post (translated). That includes the day you could leave us. Your advisor calls before every notice date, SGB's own included."
+              },
+              {
+                "ref": "trackB/static/headline.1",
+                "format": "meta.headline",
+                "label": "Meta headline 1",
+                "text": "The reminder to leave us"
+              },
+              {
+                "ref": "trackB/static/headline.2",
+                "format": "meta.headline",
+                "label": "Meta headline 2",
+                "text": "Even on SGB's own contracts"
+              },
+              {
+                "ref": "trackB/static/headline.3",
+                "format": "meta.headline",
+                "label": "Meta headline 3",
+                "text": "A call before the date"
+              },
+              {
+                "ref": "trackB/static/description",
+                "format": "meta.description",
+                "label": "Meta description",
+                "text": "One advisor, one number"
+              },
+              {
+                "ref": "trackB/static/button",
+                "format": "meta.button",
+                "label": "Meta button",
+                "text": "Contact Us"
+              },
+              {
+                "ref": "trackB/static/li.intro",
+                "format": "linkedin.intro",
+                "label": "LinkedIn intro text",
+                "text": "Business energy contracts rarely renew because the owner chose to stay. They renew because the notice date passed during service. Your SGB advisor calls before every notice date, even on SGB's own contracts."
+              },
+              {
+                "ref": "trackB/static/li.headline",
+                "format": "linkedin.headline",
+                "label": "LinkedIn headline",
+                "text": "The energy supplier that tells you when you can leave it"
+              },
+              {
+                "ref": "trackB/static/li.button",
+                "format": "linkedin.button",
+                "label": "LinkedIn button",
+                "text": "Learn More"
+              }
+            ]
+          }
+        },
+        {
+          "type": "h3",
+          "text": "UGC script, 25 seconds. Who speaks: a real SGB advisor"
+        },
+        {
+          "type": "text",
+          "html": "<p>Filmed on a phone by the advisor in their own car and diary. Captions burnt in. It works with the sound off. A real advisor with consent, never an AI person and never an actor posing as one.</p>"
+        },
+        {
+          "type": "beats",
+          "id": "trackB/ugc",
+          "rows": [
+            {
+              "beat": "Hook",
+              "s": "0–3",
+              "see": "Close-up of a paper diary, a finger on a line: a restaurant's name and a date.",
+              "said": "This is the day my customer can leave me.",
+              "screen": "The day my customer can leave me"
+            },
+            {
+              "beat": "Who",
+              "s": "3–8",
+              "see": "The advisor, in the car outside a restaurant, phone held at arm's length.",
+              "said": "I'm [advisor name], SGB advisor for restaurants in [region].",
+              "screen": "[advisor name] · SGB advisor"
+            },
+            {
+              "beat": "Twist",
+              "s": "8–15",
+              "see": "Back to the diary. The finger taps the entry. A small SGB stamp next to it.",
+              "said": "This contract is with SGB. I'll call anyway, [weeks before] before the date.",
+              "screen": "It's an SGB contract. I call anyway."
+            },
+            {
+              "beat": "Why",
+              "s": "15–21",
+              "see": "Through the windscreen: the restaurant at lunch, people at the window tables.",
+              "said": "Miss that date in service, and the contract runs on. Nobody chose that.",
+              "screen": "Miss it, and the contract runs on"
+            },
+            {
+              "beat": "Ask",
+              "s": "21–25",
+              "see": "The advisor to camera, getting out of the car.",
+              "said": "Want a call like that? Leave your number. I'll call you back.",
+              "screen": "Ask for a callback"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "html": "<p><strong>Cut under 15 seconds:</strong> Hook, Twist, Ask (0–3, 8–15, 21–25). The ask changes per cell: “Pick a time”, “Send me your bill”, “Take the quiz”, “Sign online”.</p>"
+        },
+        {
+          "type": "h3",
+          "text": "Landing page heroes"
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackB/heroA",
+            "title": "Hero · cell A",
+            "fields": [
+              {
+                "ref": "trackB/heroA/hl",
+                "format": "landing.hl",
+                "label": "HL",
+                "text": "We'll remind you when you can leave us.",
+                "group": "trackB-hero"
+              },
+              {
+                "ref": "trackB/heroA/sl",
+                "format": "landing.sl",
+                "label": "SL",
+                "text": "Your SGB advisor calls before every notice date. Even on SGB's own contracts. Leave your number and your advisor calls you back."
+              },
+              {
+                "ref": "trackB/heroA/cta",
+                "format": "landing.cta",
+                "label": "Button",
+                "text": "Ask for a callback"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackB/heroB",
+            "title": "Hero · cell B",
+            "fields": [
+              {
+                "ref": "trackB/heroB/hl",
+                "format": "landing.hl",
+                "label": "HL",
+                "text": "We'll remind you when you can leave us.",
+                "group": "trackB-hero"
+              },
+              {
+                "ref": "trackB/heroB/sl",
+                "format": "landing.sl",
+                "label": "SL",
+                "text": "Your SGB advisor reads your current bill with you, finds your notice date and shows what SGB would cost."
+              },
+              {
+                "ref": "trackB/heroB/cta",
+                "format": "landing.cta",
+                "label": "Button",
+                "text": "Have my bill checked"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackB/heroD",
+            "title": "Hero · cell D",
+            "fields": [
+              {
+                "ref": "trackB/heroD/hl",
+                "format": "landing.hl",
+                "label": "HL",
+                "text": "We'll remind you when you can leave us.",
+                "group": "trackB-hero"
+              },
+              {
+                "ref": "trackB/heroD/sl",
+                "format": "landing.sl",
+                "label": "SL",
+                "text": "Six taps tell you which price model fits your place. Your SGB advisor confirms it and notes your notice date."
+              },
+              {
+                "ref": "trackB/heroD/cta",
+                "format": "landing.cta",
+                "label": "Button",
+                "text": "Find my price model"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackB/heroE",
+            "title": "Hero · cell E",
+            "fields": [
+              {
+                "ref": "trackB/heroE/hl",
+                "format": "landing.hl",
+                "label": "HL",
+                "text": "We'll remind you when you can leave us.",
+                "group": "trackB-hero"
+              },
+              {
+                "ref": "trackB/heroE/sl",
+                "format": "landing.sl",
+                "label": "SL",
+                "text": "Pick a time outside service. Your SGB advisor calls then, and calls again before every notice date."
+              },
+              {
+                "ref": "trackB/heroE/cta",
+                "format": "landing.cta",
+                "label": "Button",
+                "text": "Pick a time to talk"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackB/heroF",
+            "title": "Hero · cell F",
+            "fields": [
+              {
+                "ref": "trackB/heroF/hl",
+                "format": "landing.hl",
+                "label": "HL",
+                "text": "We'll remind you when you can leave us.",
+                "group": "trackB-hero"
+              },
+              {
+                "ref": "trackB/heroF/sl",
+                "format": "landing.sl",
+                "label": "SL",
+                "text": "Sign online today, even if your old contract still runs. SGB cancels it or takes it over."
+              },
+              {
+                "ref": "trackB/heroF/cta",
+                "format": "landing.cta",
+                "label": "Button",
+                "text": "Sign online"
+              }
+            ]
+          }
+        }
       ]
     },
     {
@@ -136,102 +597,526 @@
       "eyebrow": "Track A · our insight, our idea",
       "title": "Meet your supplier",
       "blocks": [
-        { "type": "piece", "piece": { "id": "trackA/summary", "title": "Summary", "fields": [
-          { "ref": "trackA/summary", "format": "plain.summary", "label": "Summary", "text": "A restaurant runs on suppliers the owner knows by name. The butcher, the brewery's driver and the wine merchant come to the door. Energy is one of the biggest bills on the desk, and it has no face: the energy people who call are strangers, and owners hang up. SGB is the exception. Its advisors visit on site and stay the one contact person. We introduce SGB the way every good supplier is introduced in hospitality: in person, at the door, by name." },
-          { "ref": "trackA/insight", "format": "plain.idea", "label": "Our insight, in one sentence", "text": "Owners trust the suppliers they have met, and energy is the one big supplier they never meet." },
-          { "ref": "trackA/idea", "format": "plain.idea", "label": "Our idea, in one sentence", "text": "SGB is the energy supplier that comes to the door like every other supplier, so owners meet their advisor before they hear a sales pitch." }
-        ] } },
-        { "type": "h3", "text": "The research behind it" },
-        { "type": "table", "head": ["Finding", "Source", "What it means"], "rows": [
-          ["Energy contracts are among the products most sold by cold call in Germany, and calls to businesses cannot be fined by the regulator.", "Bundesnetzagentur, Unerlaubte Telefonwerbung (read 10 Nov 2026)", "The energy voice an owner knows is a stranger's voice on the phone."],
-          ["Restaurants and hotels felt energy hardest: in a DEHOGA survey of 3,850 businesses (September 2022), energy costs rose 55% on average from October 2022 and 96% from January 2023. 48.8% of businesses then put energy at 10% of turnover or more.", "DEHOGA via Meininger (2022); DEHOGA member survey via super44.ai (2026)", "Energy is big and remembered. The cost is not the gap; the relationship is."],
-          ["SGB's hospitality customers name the person first: one fixed contact person they do not know from other suppliers (Augustiner Klosterwirt), a personal advisor who takes care of everything (Wagner Hotel zur Post).", "SGB home page, appendix B", "The proof is about a person, so the idea is about a person."],
-          ["Owners distrust energy sales calls.", "Brief hypothesis; not yet tested", "We propose five short calls with owners from SGB's customer list before launch."]
-        ] },
-        { "type": "h3", "text": "The six asks" },
-        { "type": "piece", "piece": { "id": "trackA/cellA", "title": "Cell A · Callback", "fields": [
-          { "ref": "trackA/cellA/hl", "format": "image.hl", "label": "HL", "text": "Meet your energy supplier. In person.", "group": "trackA" },
-          { "ref": "trackA/cellA/sl", "format": "image.sl", "label": "SL", "text": "Your SGB advisor visits your restaurant or hotel on site and stays your one contact." },
-          { "ref": "trackA/cellA/cta", "format": "landing.cta", "label": "Call to action", "text": "Ask for a callback" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackA/cellB", "title": "Cell B · Bill check", "fields": [
-          { "ref": "trackA/cellB/hl", "format": "image.hl", "label": "HL", "text": "Meet your energy supplier. In person.", "group": "trackA" },
-          { "ref": "trackA/cellB/sl", "format": "image.sl", "label": "SL", "text": "Your SGB advisor sits down with your bill and shows what SGB would cost." },
-          { "ref": "trackA/cellB/cta", "format": "landing.cta", "label": "Call to action", "text": "Have my bill checked" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackA/cellC", "title": "Cell C · Instant form", "fields": [
-          { "ref": "trackA/cellC/hl", "format": "image.hl", "label": "HL", "text": "Meet your energy supplier. In person.", "group": "trackA" },
-          { "ref": "trackA/cellC/sl", "format": "image.sl", "label": "SL", "text": "Your SGB advisor visits your restaurant or hotel on site and stays your one contact." },
-          { "ref": "trackA/cellC/button", "format": "meta.button", "label": "Button", "text": "Sign Up" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackA/cellD", "title": "Cell D · Quiz", "fields": [
-          { "ref": "trackA/cellD/hl", "format": "image.hl", "label": "HL", "text": "Meet your energy supplier. In person.", "group": "trackA" },
-          { "ref": "trackA/cellD/sl", "format": "image.sl", "label": "SL", "text": "Six taps first, so your SGB advisor knows your place before the visit." },
-          { "ref": "trackA/cellD/cta", "format": "landing.cta", "label": "Call to action", "text": "Find my price model" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackA/cellE", "title": "Cell E · Book a call", "fields": [
-          { "ref": "trackA/cellE/hl", "format": "image.hl", "label": "HL", "text": "Meet your energy supplier. In person.", "group": "trackA" },
-          { "ref": "trackA/cellE/sl", "format": "image.sl", "label": "SL", "text": "Pick a time outside service. Your SGB advisor calls then, and comes by if you like." },
-          { "ref": "trackA/cellE/cta", "format": "landing.cta", "label": "Call to action", "text": "Pick a time to talk" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackA/cellF", "title": "Cell F · Sign online", "fields": [
-          { "ref": "trackA/cellF/hl", "format": "image.hl", "label": "HL", "text": "Meet your energy supplier. In person.", "group": "trackA" },
-          { "ref": "trackA/cellF/sl", "format": "image.sl", "label": "SL", "text": "Sign online now. You still get your own SGB advisor, by name." },
-          { "ref": "trackA/cellF/cta", "format": "landing.cta", "label": "Call to action", "text": "Sign online" }
-        ] } },
-        { "type": "h3", "text": "The static, with its full copy set (cell A)" },
-        { "type": "visual", "text": "4:5 master. The back door of a restaurant, mid-morning. The sign above it: Lieferanteneingang. A crate of vegetables waits on the step. In the doorway, the owner in an apron shakes hands with an SGB advisor holding a folder. Shot from the yard, at eye level, real people with written consent, available light. HL top, SL under it, SGB logo bottom right." },
-        { "type": "piece", "piece": { "id": "trackA/static", "title": "Ad copy around the image", "job": "Make SGB the first energy supplier an owner has met, and ask for a callback.", "fields": [
-          { "ref": "trackA/static/primary.1", "format": "meta.primary", "label": "Meta primary text 1", "text": "You know your butcher by name. And your wine merchant. Your energy supplier is a bill. At SGB you get an advisor who visits your restaurant on site and stays your one contact person." },
-          { "ref": "trackA/static/primary.2", "format": "meta.primary", "label": "Meta primary text 2", "text": "The energy people who call you are strangers. So you hang up. Fair enough. Your SGB advisor comes to the door first, and you decide from there." },
-          { "ref": "trackA/static/primary.3", "format": "meta.primary", "label": "Meta primary text 3", "text": "“At SGB, I have one fixed contact person. I do not know that from other suppliers.” Christian Bleitner, Augustiner Klosterwirt, München (translated). Meet yours." },
-          { "ref": "trackA/static/headline.1", "format": "meta.headline", "label": "Meta headline 1", "text": "Energy with a face" },
-          { "ref": "trackA/static/headline.2", "format": "meta.headline", "label": "Meta headline 2", "text": "Your SGB advisor, on site" },
-          { "ref": "trackA/static/headline.3", "format": "meta.headline", "label": "Meta headline 3", "text": "One name. One number." },
-          { "ref": "trackA/static/description", "format": "meta.description", "label": "Meta description", "text": "Visits on site" },
-          { "ref": "trackA/static/button", "format": "meta.button", "label": "Meta button", "text": "Contact Us" },
-          { "ref": "trackA/static/li.intro", "format": "linkedin.intro", "label": "LinkedIn intro text", "text": "Every supplier a restaurant trusts comes to the door. Energy is the one big bill with no face. Your SGB advisor visits on site and stays your one contact person." },
-          { "ref": "trackA/static/li.headline", "format": "linkedin.headline", "label": "LinkedIn headline", "text": "Meet your energy supplier, in person, at your place" },
-          { "ref": "trackA/static/li.button", "format": "linkedin.button", "label": "LinkedIn button", "text": "Learn More" }
-        ] } },
-        { "type": "h3", "text": "UGC script, 22 seconds. Who speaks: a real SGB advisor and a real SGB customer" },
-        { "type": "beats", "id": "trackA/ugc", "rows": [
-          { "beat": "Hook", "s": "0–3", "see": "Phone camera walks up to a back door. The sign: Lieferanteneingang.", "said": "Every supplier here comes through this door.", "screen": "Every supplier comes through this door" },
-          { "beat": "Who", "s": "3–9", "see": "The door opens. The owner, apron on, nods: “Morning.”", "said": "The butcher. The brewery. And me. I'm [advisor name], I do the energy.", "screen": "[advisor name] · SGB advisor" },
-          { "beat": "Proof", "s": "9–16", "see": "At the bar, the owner to camera, coffee in hand.", "said": "[owner's own words, recorded on the day, used only if verbatim and approved]", "screen": "[owner's own words]" },
-          { "beat": "Ask", "s": "16–22", "see": "The advisor walks back across the yard.", "said": "Want to meet yours? Leave your number. I'll call you back.", "screen": "Meet your SGB advisor" }
-        ] },
-        { "type": "h3", "text": "Landing page heroes" },
-        { "type": "piece", "piece": { "id": "trackA/heroA", "title": "Hero · cell A", "fields": [
-          { "ref": "trackA/heroA/hl", "format": "landing.hl", "label": "HL", "text": "Meet your energy supplier. In person.", "group": "trackA-hero" },
-          { "ref": "trackA/heroA/sl", "format": "landing.sl", "label": "SL", "text": "Your SGB advisor visits your restaurant or hotel on site and stays your one contact. Leave your number to start." },
-          { "ref": "trackA/heroA/cta", "format": "landing.cta", "label": "Button", "text": "Ask for a callback" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackA/heroB", "title": "Hero · cell B", "fields": [
-          { "ref": "trackA/heroB/hl", "format": "landing.hl", "label": "HL", "text": "Meet your energy supplier. In person.", "group": "trackA-hero" },
-          { "ref": "trackA/heroB/sl", "format": "landing.sl", "label": "SL", "text": "Your SGB advisor sits down with your current bill and shows what SGB would cost." },
-          { "ref": "trackA/heroB/cta", "format": "landing.cta", "label": "Button", "text": "Have my bill checked" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackA/heroD", "title": "Hero · cell D", "fields": [
-          { "ref": "trackA/heroD/hl", "format": "landing.hl", "label": "HL", "text": "Meet your energy supplier. In person.", "group": "trackA-hero" },
-          { "ref": "trackA/heroD/sl", "format": "landing.sl", "label": "SL", "text": "Six taps first, so your SGB advisor knows your place before you meet." },
-          { "ref": "trackA/heroD/cta", "format": "landing.cta", "label": "Button", "text": "Find my price model" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackA/heroE", "title": "Hero · cell E", "fields": [
-          { "ref": "trackA/heroE/hl", "format": "landing.hl", "label": "HL", "text": "Meet your energy supplier. In person.", "group": "trackA-hero" },
-          { "ref": "trackA/heroE/sl", "format": "landing.sl", "label": "SL", "text": "Pick a time outside service. Your SGB advisor calls then, and visits on site if you like." },
-          { "ref": "trackA/heroE/cta", "format": "landing.cta", "label": "Button", "text": "Pick a time to talk" }
-        ] } },
-        { "type": "piece", "piece": { "id": "trackA/heroF", "title": "Hero · cell F", "fields": [
-          { "ref": "trackA/heroF/hl", "format": "landing.hl", "label": "HL", "text": "Meet your energy supplier. In person.", "group": "trackA-hero" },
-          { "ref": "trackA/heroF/sl", "format": "landing.sl", "label": "SL", "text": "Sign online now. You still get your own SGB advisor, by name, and SGB handles your old contract." },
-          { "ref": "trackA/heroF/cta", "format": "landing.cta", "label": "Button", "text": "Sign online" }
-        ] } },
-        { "type": "h3", "text": "Two approaches we dropped" },
-        { "type": "table", "head": ["Approach", "Why we dropped it"], "rows": [
-          ["The bill nobody reads: make the hidden energy cost of a kitchen visible, in the spirit of E.ON Italia's Floating Boat.", "It pulls every line toward a savings promise, which the brief rules out, and any supplier could sign it."],
-          ["Spot or fixed, explained: teach owners the price mix.", "Every supplier explains its tariffs, it fails the swap test, and it asks the most effort of the busiest owner."]
-        ] }
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackA/summary",
+            "title": "Summary",
+            "fields": [
+              {
+                "ref": "trackA/summary",
+                "format": "plain.summary",
+                "label": "Summary",
+                "text": "A restaurant runs on suppliers the owner knows by name. The butcher, the brewery's driver and the wine merchant come to the door. Energy is one of the biggest bills on the desk, and it has no face: the energy people who call are strangers, and owners hang up. SGB is the exception. Its advisors visit on site and stay the one contact person. We introduce SGB the way every good supplier is introduced in hospitality: in person, at the door, by name."
+              },
+              {
+                "ref": "trackA/insight",
+                "format": "plain.idea",
+                "label": "Our insight, in one sentence",
+                "text": "Owners trust the suppliers they have met, and energy is the one big supplier they never meet."
+              },
+              {
+                "ref": "trackA/idea",
+                "format": "plain.idea",
+                "label": "Our idea, in one sentence",
+                "text": "SGB is the energy supplier that comes to the door like every other supplier, so owners meet their advisor before they hear a sales pitch."
+              }
+            ]
+          }
+        },
+        {
+          "type": "h3",
+          "text": "The research behind it"
+        },
+        {
+          "type": "table",
+          "head": [
+            "Finding",
+            "Source",
+            "What it means"
+          ],
+          "rows": [
+            [
+              "Energy contracts are among the products most sold by cold call in Germany, and calls to businesses cannot be fined by the regulator.",
+              "Bundesnetzagentur, Unerlaubte Telefonwerbung (read 10 Nov 2026)",
+              "The energy voice an owner knows is a stranger's voice on the phone."
+            ],
+            [
+              "Restaurants and hotels felt energy hardest: in a DEHOGA survey of 3,850 businesses (September 2022), energy costs rose 55% on average from October 2022 and 96% from January 2023. 48.8% of businesses then put energy at 10% of turnover or more.",
+              "DEHOGA via Meininger (2022); DEHOGA member survey via super44.ai (2026)",
+              "Energy is big and remembered. The cost is not the gap; the relationship is."
+            ],
+            [
+              "SGB's hospitality customers name the person first: one fixed contact person they do not know from other suppliers (Augustiner Klosterwirt), a personal advisor who takes care of everything (Wagner Hotel zur Post).",
+              "SGB home page, appendix B",
+              "The proof is about a person, so the idea is about a person."
+            ],
+            [
+              "Owners distrust energy sales calls.",
+              "Brief hypothesis; not yet tested",
+              "We propose five short calls with owners from SGB's customer list before launch."
+            ]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "The six asks"
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackA/cellA",
+            "title": "Cell A · Callback",
+            "fields": [
+              {
+                "ref": "trackA/cellA/hl",
+                "format": "image.hl",
+                "label": "HL",
+                "text": "Meet your energy supplier. In person.",
+                "group": "trackA"
+              },
+              {
+                "ref": "trackA/cellA/sl",
+                "format": "image.sl",
+                "label": "SL",
+                "text": "Your SGB advisor visits your restaurant or hotel on site and stays your one contact."
+              },
+              {
+                "ref": "trackA/cellA/cta",
+                "format": "landing.cta",
+                "label": "Call to action",
+                "text": "Ask for a callback"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackA/cellB",
+            "title": "Cell B · Bill check",
+            "fields": [
+              {
+                "ref": "trackA/cellB/hl",
+                "format": "image.hl",
+                "label": "HL",
+                "text": "Meet your energy supplier. In person.",
+                "group": "trackA"
+              },
+              {
+                "ref": "trackA/cellB/sl",
+                "format": "image.sl",
+                "label": "SL",
+                "text": "Your SGB advisor sits down with your bill and shows what SGB would cost."
+              },
+              {
+                "ref": "trackA/cellB/cta",
+                "format": "landing.cta",
+                "label": "Call to action",
+                "text": "Have my bill checked"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackA/cellC",
+            "title": "Cell C · Instant form",
+            "fields": [
+              {
+                "ref": "trackA/cellC/hl",
+                "format": "image.hl",
+                "label": "HL",
+                "text": "Meet your energy supplier. In person.",
+                "group": "trackA"
+              },
+              {
+                "ref": "trackA/cellC/sl",
+                "format": "image.sl",
+                "label": "SL",
+                "text": "Your SGB advisor visits your restaurant or hotel on site and stays your one contact."
+              },
+              {
+                "ref": "trackA/cellC/button",
+                "format": "meta.button",
+                "label": "Button",
+                "text": "Sign Up"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackA/cellD",
+            "title": "Cell D · Quiz",
+            "fields": [
+              {
+                "ref": "trackA/cellD/hl",
+                "format": "image.hl",
+                "label": "HL",
+                "text": "Meet your energy supplier. In person.",
+                "group": "trackA"
+              },
+              {
+                "ref": "trackA/cellD/sl",
+                "format": "image.sl",
+                "label": "SL",
+                "text": "Six taps first, so your SGB advisor knows your place before the visit."
+              },
+              {
+                "ref": "trackA/cellD/cta",
+                "format": "landing.cta",
+                "label": "Call to action",
+                "text": "Find my price model"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackA/cellE",
+            "title": "Cell E · Book a call",
+            "fields": [
+              {
+                "ref": "trackA/cellE/hl",
+                "format": "image.hl",
+                "label": "HL",
+                "text": "Meet your energy supplier. In person.",
+                "group": "trackA"
+              },
+              {
+                "ref": "trackA/cellE/sl",
+                "format": "image.sl",
+                "label": "SL",
+                "text": "Pick a time outside service. Your SGB advisor calls then, and comes by if you like."
+              },
+              {
+                "ref": "trackA/cellE/cta",
+                "format": "landing.cta",
+                "label": "Call to action",
+                "text": "Pick a time to talk"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackA/cellF",
+            "title": "Cell F · Sign online",
+            "fields": [
+              {
+                "ref": "trackA/cellF/hl",
+                "format": "image.hl",
+                "label": "HL",
+                "text": "Meet your energy supplier. In person.",
+                "group": "trackA"
+              },
+              {
+                "ref": "trackA/cellF/sl",
+                "format": "image.sl",
+                "label": "SL",
+                "text": "Sign online now. You still get your own SGB advisor, by name."
+              },
+              {
+                "ref": "trackA/cellF/cta",
+                "format": "landing.cta",
+                "label": "Call to action",
+                "text": "Sign online"
+              }
+            ]
+          }
+        },
+        {
+          "type": "h3",
+          "text": "The static, with its full copy set (cell A)"
+        },
+        {
+          "type": "visual",
+          "text": "4:5 master. The back door of a restaurant, mid-morning. The sign above it: Lieferanteneingang. A crate of vegetables waits on the step. In the doorway, the owner in an apron shakes hands with an SGB advisor holding a folder. Shot from the yard, at eye level, real people with written consent, available light. HL top, SL under it, SGB logo bottom right."
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackA/static",
+            "title": "Ad copy around the image",
+            "job": "Make SGB the first energy supplier an owner has met, and ask for a callback.",
+            "fields": [
+              {
+                "ref": "trackA/static/primary.1",
+                "format": "meta.primary",
+                "label": "Meta primary text 1",
+                "text": "You know your butcher by name. And your wine merchant. Your energy supplier is a bill. At SGB you get an advisor who visits your restaurant on site and stays your one contact person."
+              },
+              {
+                "ref": "trackA/static/primary.2",
+                "format": "meta.primary",
+                "label": "Meta primary text 2",
+                "text": "The energy people who call you are strangers. So you hang up. Fair enough. Your SGB advisor comes to the door first, and you decide from there."
+              },
+              {
+                "ref": "trackA/static/primary.3",
+                "format": "meta.primary",
+                "label": "Meta primary text 3",
+                "text": "“At SGB, I have one fixed contact person. I do not know that from other suppliers.” Christian Bleitner, Augustiner Klosterwirt, München (translated). Meet yours."
+              },
+              {
+                "ref": "trackA/static/headline.1",
+                "format": "meta.headline",
+                "label": "Meta headline 1",
+                "text": "Energy with a face"
+              },
+              {
+                "ref": "trackA/static/headline.2",
+                "format": "meta.headline",
+                "label": "Meta headline 2",
+                "text": "Your SGB advisor, on site"
+              },
+              {
+                "ref": "trackA/static/headline.3",
+                "format": "meta.headline",
+                "label": "Meta headline 3",
+                "text": "One name. One number."
+              },
+              {
+                "ref": "trackA/static/description",
+                "format": "meta.description",
+                "label": "Meta description",
+                "text": "Visits on site"
+              },
+              {
+                "ref": "trackA/static/button",
+                "format": "meta.button",
+                "label": "Meta button",
+                "text": "Contact Us"
+              },
+              {
+                "ref": "trackA/static/li.intro",
+                "format": "linkedin.intro",
+                "label": "LinkedIn intro text",
+                "text": "Every supplier a restaurant trusts comes to the door. Energy is the one big bill with no face. Your SGB advisor visits on site and stays your one contact person."
+              },
+              {
+                "ref": "trackA/static/li.headline",
+                "format": "linkedin.headline",
+                "label": "LinkedIn headline",
+                "text": "Meet your energy supplier, in person, at your place"
+              },
+              {
+                "ref": "trackA/static/li.button",
+                "format": "linkedin.button",
+                "label": "LinkedIn button",
+                "text": "Learn More"
+              }
+            ]
+          }
+        },
+        {
+          "type": "h3",
+          "text": "UGC script, 22 seconds. Who speaks: a real SGB advisor and a real SGB customer"
+        },
+        {
+          "type": "beats",
+          "id": "trackA/ugc",
+          "rows": [
+            {
+              "beat": "Hook",
+              "s": "0–3",
+              "see": "Phone camera walks up to a back door. The sign: Lieferanteneingang.",
+              "said": "Every supplier here comes through this door.",
+              "screen": "Every supplier comes through this door"
+            },
+            {
+              "beat": "Who",
+              "s": "3–9",
+              "see": "The door opens. The owner, apron on, nods: “Morning.”",
+              "said": "The butcher. The brewery. And me. I'm [advisor name], I do the energy.",
+              "screen": "[advisor name] · SGB advisor"
+            },
+            {
+              "beat": "Proof",
+              "s": "9–16",
+              "see": "At the bar, the owner to camera, coffee in hand.",
+              "said": "[owner's own words, recorded on the day, used only if verbatim and approved]",
+              "screen": "[owner's own words]"
+            },
+            {
+              "beat": "Ask",
+              "s": "16–22",
+              "see": "The advisor walks back across the yard.",
+              "said": "Want to meet yours? Leave your number. I'll call you back.",
+              "screen": "Meet your SGB advisor"
+            }
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Landing page heroes"
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackA/heroA",
+            "title": "Hero · cell A",
+            "fields": [
+              {
+                "ref": "trackA/heroA/hl",
+                "format": "landing.hl",
+                "label": "HL",
+                "text": "Meet your energy supplier. In person.",
+                "group": "trackA-hero"
+              },
+              {
+                "ref": "trackA/heroA/sl",
+                "format": "landing.sl",
+                "label": "SL",
+                "text": "Your SGB advisor visits your restaurant or hotel on site and stays your one contact. Leave your number to start."
+              },
+              {
+                "ref": "trackA/heroA/cta",
+                "format": "landing.cta",
+                "label": "Button",
+                "text": "Ask for a callback"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackA/heroB",
+            "title": "Hero · cell B",
+            "fields": [
+              {
+                "ref": "trackA/heroB/hl",
+                "format": "landing.hl",
+                "label": "HL",
+                "text": "Meet your energy supplier. In person.",
+                "group": "trackA-hero"
+              },
+              {
+                "ref": "trackA/heroB/sl",
+                "format": "landing.sl",
+                "label": "SL",
+                "text": "Your SGB advisor sits down with your current bill and shows what SGB would cost."
+              },
+              {
+                "ref": "trackA/heroB/cta",
+                "format": "landing.cta",
+                "label": "Button",
+                "text": "Have my bill checked"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackA/heroD",
+            "title": "Hero · cell D",
+            "fields": [
+              {
+                "ref": "trackA/heroD/hl",
+                "format": "landing.hl",
+                "label": "HL",
+                "text": "Meet your energy supplier. In person.",
+                "group": "trackA-hero"
+              },
+              {
+                "ref": "trackA/heroD/sl",
+                "format": "landing.sl",
+                "label": "SL",
+                "text": "Six taps first, so your SGB advisor knows your place before you meet."
+              },
+              {
+                "ref": "trackA/heroD/cta",
+                "format": "landing.cta",
+                "label": "Button",
+                "text": "Find my price model"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackA/heroE",
+            "title": "Hero · cell E",
+            "fields": [
+              {
+                "ref": "trackA/heroE/hl",
+                "format": "landing.hl",
+                "label": "HL",
+                "text": "Meet your energy supplier. In person.",
+                "group": "trackA-hero"
+              },
+              {
+                "ref": "trackA/heroE/sl",
+                "format": "landing.sl",
+                "label": "SL",
+                "text": "Pick a time outside service. Your SGB advisor calls then, and visits on site if you like."
+              },
+              {
+                "ref": "trackA/heroE/cta",
+                "format": "landing.cta",
+                "label": "Button",
+                "text": "Pick a time to talk"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "trackA/heroF",
+            "title": "Hero · cell F",
+            "fields": [
+              {
+                "ref": "trackA/heroF/hl",
+                "format": "landing.hl",
+                "label": "HL",
+                "text": "Meet your energy supplier. In person.",
+                "group": "trackA-hero"
+              },
+              {
+                "ref": "trackA/heroF/sl",
+                "format": "landing.sl",
+                "label": "SL",
+                "text": "Sign online now. You still get your own SGB advisor, by name, and SGB handles your old contract."
+              },
+              {
+                "ref": "trackA/heroF/cta",
+                "format": "landing.cta",
+                "label": "Button",
+                "text": "Sign online"
+              }
+            ]
+          }
+        },
+        {
+          "type": "h3",
+          "text": "Two approaches we dropped"
+        },
+        {
+          "type": "table",
+          "head": [
+            "Approach",
+            "Why we dropped it"
+          ],
+          "rows": [
+            [
+              "The bill nobody reads: make the hidden energy cost of a kitchen visible, in the spirit of E.ON Italia's Floating Boat.",
+              "It pulls every line toward a savings promise, which the brief rules out, and any supplier could sign it."
+            ],
+            [
+              "Spot or fixed, explained: teach owners the price mix.",
+              "Every supplier explains its tariffs, it fails the swap test, and it asks the most effort of the busiest owner."
+            ]
+          ]
+        }
       ]
     },
     {
@@ -239,116 +1124,594 @@
       "eyebrow": "Shared, built once",
       "title": "The page, the form, the quiz and the search ad",
       "blocks": [
-        { "type": "h3", "text": "Entry match" },
-        { "type": "table", "head": ["Where the owner comes from", "The promise of the ad", "The first block repeats"], "rows": [
-          ["Track B ads, cells A, B, D, E, F", "We'll remind you when you can leave us.", "The same headline, word for word, with the cell's subline and button"],
-          ["Track A ads, cells A, B, D, E, F", "Meet your energy supplier. In person.", "The same headline, word for word, with the cell's subline and button"],
-          ["Search ad", "Your SGB advisor calls before every notice date.", "Track B hero, cell A"],
-          ["Cell C (both tracks)", "The ad's headline", "No page: the instant form's first screen repeats it"]
-        ] },
-        { "type": "h3", "text": "Block ladder" },
-        { "type": "table", "head": ["Block", "Its one job", "Done when the owner"], "rows": [
-          ["1 Hero", "Repeat the ad's promise and carry the ask", "recognises the ad and sees one button"],
-          ["2 The date", "Show how a business contract renews if nobody acts (Track B) or who the advisor is (Track A)", "knows why this matters to them today"],
-          ["3 How it works", "Three steps: you leave your number, your advisor calls or visits, SGB handles the switch", "sees that the next step costs little"],
-          ["4 Proof", "Three verbatim quotes, hospitality first: Bleitner, Wagner, von Godin, beside the form", "hears it from owners like them"],
-          ["5 The switch", "Free for all customers, 100% digital, SGB cancels the old contract or takes it over", "has no paperwork worry left"],
-          ["6 The ask again", "The form, short", "fills it in"]
-        ] },
-        { "type": "piece", "piece": { "id": "shared/form", "title": "The form (phone first)", "fields": [
-          { "ref": "shared/form/name", "format": "form.label", "label": "Field 1", "text": "Your name" },
-          { "ref": "shared/form/business", "format": "form.label", "label": "Field 2", "text": "Your restaurant, hotel or business" },
-          { "ref": "shared/form/phone", "format": "form.label", "label": "Field 3 (required)", "text": "Phone, so your advisor can call" },
-          { "ref": "shared/form/email", "format": "form.label", "label": "Field 4 (optional)", "text": "Email (optional)" },
-          { "ref": "shared/form/end", "format": "form.label", "label": "Field 5", "text": "When does your contract end?" },
-          { "ref": "shared/form/endhelp", "format": "plain.text", "label": "Help under field 5", "text": "Month and year is enough. Not sure? Pick “I don't know” and your advisor finds it with you." },
-          { "ref": "shared/form/consent", "format": "plain.text", "label": "Consent", "text": "[SGB's consent wording for email and WhatsApp]" },
-          { "ref": "shared/form/submit", "format": "landing.cta", "label": "Button", "text": "Ask for a callback" }
-        ] } },
-        { "type": "h3", "text": "The page as a video, 75 seconds (Track B; Track A swaps beats 2 and 3)" },
-        { "type": "beats", "id": "shared/video", "rows": [
-          { "beat": "Hook", "s": "0–5", "see": "A kitchen at full service. A phone on the steel lights up: “[advisor name] · SGB”. Nobody picks up.", "said": "", "screen": "The call you'd want to take" },
-          { "beat": "The date", "s": "5–20", "see": "The contract on the office desk, one date circled. Days flip on a wall calendar behind the pass.", "said": "Every energy contract has a day you can leave. In a business contract, miss it and the contract runs on as written.", "screen": "Miss the date, the contract runs on" },
-          { "beat": "The call", "s": "20–38", "see": "The advisor in the car, then at the back door with a folder.", "said": "Your SGB advisor calls before every notice date. Even when the contract is SGB's own. Same person, every time, and on site when you want.", "screen": "Even on SGB's own contracts" },
-          { "beat": "Proof", "s": "38–55", "see": "Three owners' quotes on screen over their own places, each marked translated.", "said": "", "screen": "“My personal SGB advisor takes care of everything.” Henning Wagner, translated" },
-          { "beat": "The switch", "s": "55–67", "see": "A phone signing a document. The old contract slides into an envelope.", "said": "Switching is free. Everything is digital. SGB cancels your old contract or takes it over.", "screen": "Free. 100% digital." },
-          { "beat": "Ask", "s": "67–75", "see": "The form on a phone, filled in at the bar.", "said": "Leave your number. Your advisor calls you back.", "screen": "Ask for a callback" }
-        ] },
-        { "type": "piece", "piece": { "id": "shared/search", "title": "Search ad (one promise: the advisor who calls before your notice date)", "fields": [
-          { "ref": "shared/search/h1", "format": "google.rsa.headline", "label": "Headline 1", "text": "SGB Business Energy" },
-          { "ref": "shared/search/h2", "format": "google.rsa.headline", "label": "Headline 2", "text": "Your Advisor Calls First" },
-          { "ref": "shared/search/h3", "format": "google.rsa.headline", "label": "Headline 3", "text": "Before Every Notice Date" },
-          { "ref": "shared/search/h4", "format": "google.rsa.headline", "label": "Headline 4", "text": "Even on SGB's Own Contracts" },
-          { "ref": "shared/search/h5", "format": "google.rsa.headline", "label": "Headline 5", "text": "Electricity and Gas" },
-          { "ref": "shared/search/h6", "format": "google.rsa.headline", "label": "Headline 6", "text": "Free Switch, Done by SGB" },
-          { "ref": "shared/search/h7", "format": "google.rsa.headline", "label": "Headline 7", "text": "For Restaurants and Hotels" },
-          { "ref": "shared/search/h8", "format": "google.rsa.headline", "label": "Headline 8", "text": "One Advisor, One Number" },
-          { "ref": "shared/search/d1", "format": "google.rsa.description", "label": "Description 1", "text": "Your SGB advisor calls before every notice date, even on SGB's own contracts." },
-          { "ref": "shared/search/d2", "format": "google.rsa.description", "label": "Description 2", "text": "Switching is free and digital. SGB cancels your old contract or takes it over." },
-          { "ref": "shared/search/p1", "format": "google.rsa.path", "label": "Path 1", "text": "business-energy" },
-          { "ref": "shared/search/p2", "format": "google.rsa.path", "label": "Path 2", "text": "your-advisor" }
-        ] } },
-        { "type": "piece", "piece": { "id": "shared/instant", "title": "Instant form (cell C)", "fields": [
-          { "ref": "shared/instant/headline", "format": "instant.headline", "label": "First screen headline", "text": "[the ad's headline, word for word]" },
-          { "ref": "shared/instant/intro", "format": "instant.body", "label": "First screen text", "text": "Four short fields. Your SGB advisor calls you back, and notes your notice date so you hear from them before it." },
-          { "ref": "shared/instant/fields", "format": "plain.text", "label": "Fields", "text": "Name, business, phone (required), email (optional), contract end month, consent: the page form's fields, in the same order." },
-          { "ref": "shared/instant/done.hl", "format": "instant.headline", "label": "Completion headline", "text": "Thank you. Your advisor calls you back." },
-          { "ref": "shared/instant/done.sl", "format": "instant.body", "label": "Completion text", "text": "Within [callback time], Monday to Friday, 9:00 to 18:00. Sent after hours? Your advisor calls the next working day." }
-        ] } },
-        { "type": "piece", "piece": { "id": "shared/thanks", "title": "Thank-you screens", "fields": [
-          { "ref": "shared/thanks/AD.hl", "format": "landing.hl", "label": "A to D · HL", "text": "Thank you. [advisor name] calls you back." },
-          { "ref": "shared/thanks/AD.sl", "format": "landing.sl", "label": "A to D · SL", "text": "Within [callback time], Monday to Friday, 9:00 to 18:00. Want the next steps on WhatsApp? Tap below." },
-          { "ref": "shared/thanks/AD.wa", "format": "plain.text", "label": "A to D · WhatsApp opt-in", "text": "Yes, SGB Energie GmbH may send me messages on WhatsApp about my switch." },
-          { "ref": "shared/thanks/E.hl", "format": "landing.hl", "label": "E · HL", "text": "Booked. [advisor name] calls you on [booked time]." },
-          { "ref": "shared/thanks/E.sl", "format": "landing.sl", "label": "E · SL", "text": "Have your current contract or a recent bill nearby. That's all you need." },
-          { "ref": "shared/thanks/F.hl", "format": "landing.hl", "label": "F · HL", "text": "Signed. Welcome to SGB." },
-          { "ref": "shared/thanks/F.sl", "format": "landing.sl", "label": "F · SL", "text": "SGB now cancels your old contract or takes it over. Your advisor, [advisor name], gets in touch about what happens next." }
-        ] } },
-        { "type": "h3", "text": "The quiz (cell D): 6 screens, contact after the result" },
-        { "type": "text", "html": "<p><strong>Where the contact sits:</strong> after the result. The owner distrusts energy companies that ask for a phone number first; the result is what they give us the number for. If quiz completions are high but contacts low in week 2, test the contact before the result.</p>" },
-        { "type": "piece", "piece": { "id": "shared/quiz", "title": "Questions and answers", "fields": [
-          { "ref": "shared/quiz/q1", "format": "quiz.question", "label": "Q1 · business type", "text": "What kind of place do you run?" },
-          { "ref": "shared/quiz/q1a", "format": "plain.text", "label": "Q1 answers", "text": "Restaurant or café / Hotel / Farm / Shop, office or trade / Large industrial site / It's my home" },
-          { "ref": "shared/quiz/q2", "format": "quiz.question", "label": "Q2 · size", "text": "Roughly how much is your energy bill a month?" },
-          { "ref": "shared/quiz/q2a", "format": "plain.text", "label": "Q2 answers", "text": "[band 1] / [band 2] / [band 3] / [band 4] / I don't know" },
-          { "ref": "shared/quiz/q3", "format": "quiz.question", "label": "Q3 · contract end", "text": "When does your current contract end?" },
-          { "ref": "shared/quiz/q3a", "format": "plain.text", "label": "Q3 answers", "text": "Month and year picker / I don't know" },
-          { "ref": "shared/quiz/q4", "format": "quiz.question", "label": "Q4 · price model", "text": "How is your price set today?" },
-          { "ref": "shared/quiz/q4a", "format": "plain.text", "label": "Q4 answers", "text": "A fixed price / It follows the exchange / I don't know" },
-          { "ref": "shared/quiz/q5", "format": "quiz.question", "label": "Q5 · what matters", "text": "What matters more to you?" },
-          { "ref": "shared/quiz/q5a", "format": "plain.text", "label": "Q5 answers", "text": "Pay as little as possible over the year / A price I can plan with / Both, in a mix" }
-        ] } },
-        { "type": "table", "head": ["Answers", "Result"], "rows": [
-          ["Q5 “A price I can plan with”, or Q4 fixed and Q5 not “lowest”", "More fixed"],
-          ["Q5 “Pay as little as possible over the year” and Q1 not hotel-only seasonal [to confirm with SGB]", "More spot"],
-          ["Q5 “Both”, or any “I don't know” in Q4", "A mix"],
-          ["Q1 “It's my home”", "Exit: private household"],
-          ["Q1 “Large industrial site”, or Q2 top band", "Exit: straight to an advisor call"]
-        ] },
-        { "type": "piece", "piece": { "id": "shared/quizresults", "title": "Result, contact and exit screens", "fields": [
-          { "ref": "shared/quizresults/fixed.hl", "format": "landing.hl", "label": "Result · more fixed · HL", "text": "You'd sleep better on a fixed price." },
-          { "ref": "shared/quizresults/fixed.sl", "format": "landing.sl", "label": "Result · more fixed · SL", "text": "Most of your energy at a fixed price, the rest flexible. Your SGB advisor confirms the fit in a call." },
-          { "ref": "shared/quizresults/spot.hl", "format": "landing.hl", "label": "Result · more spot · HL", "text": "You could let the exchange work for you." },
-          { "ref": "shared/quizresults/spot.sl", "format": "landing.sl", "label": "Result · more spot · SL", "text": "More of your energy at exchange prices. Your SGB advisor confirms the fit in a call." },
-          { "ref": "shared/quizresults/mix.hl", "format": "landing.hl", "label": "Result · a mix · HL", "text": "You'd do well with a mix." },
-          { "ref": "shared/quizresults/mix.sl", "format": "landing.sl", "label": "Result · a mix · SL", "text": "Part fixed, part exchange, set for your place. Your SGB advisor confirms the fit in a call." },
-          { "ref": "shared/quizresults/contact.hl", "format": "landing.hl", "label": "Contact · HL", "text": "Who should your advisor call?" },
-          { "ref": "shared/quizresults/contact.sl", "format": "landing.sl", "label": "Contact · SL", "text": "Your advisor confirms your result and notes your notice date. No price on the phone before you have seen the offer." },
-          { "ref": "shared/quizresults/home.hl", "format": "landing.hl", "label": "Exit · household · HL", "text": "This one is for businesses." },
-          { "ref": "shared/quizresults/home.sl", "format": "landing.sl", "label": "Exit · household · SL", "text": "For your home, SGB Solution can help. We pass on none of your answers." },
-          { "ref": "shared/quizresults/home.cta", "format": "landing.cta", "label": "Exit · household · button", "text": "Go to SGB Solution" },
-          { "ref": "shared/quizresults/large.hl", "format": "landing.hl", "label": "Exit · large site · HL", "text": "A site your size needs a conversation." },
-          { "ref": "shared/quizresults/large.sl", "format": "landing.sl", "label": "Exit · large site · SL", "text": "Leave your number and an SGB advisor calls you directly." }
-        ] } },
-        { "type": "h3", "text": "Four-week test plan" },
-        { "type": "table", "head": ["Item", "Our proposal"], "rows": [
-          ["What runs", "Weeks 1–2: both tracks, cells A to F, on Meta (Facebook and Instagram, 4:5 and 9:16) and LinkedIn (4:5), one audience: owners and managers of restaurants and hotels in Germany. Search runs on its own budget line, Track B promise."],
-          ["Budget split", "Tracks 50/50. Within a track: A 20%, B 15%, C 20%, D 15%, E 15%, F 15%. Meta 70%, LinkedIn 30%. Search outside the split. Same daily caps for both tracks."],
-          ["Main metric", "Cost per qualified lead for A to E. Cost per signed contract for F."],
-          ["Lead status feedback", "The advisor marks each lead qualified or not within two working days in SGB's CRM. The status goes back daily as an offline conversion: Meta Conversions API, LinkedIn Conversions API, Google offline conversion import. Bidding learns from qualified leads, not from forms."],
-          ["Decision rule", "Week 3: stop a cell when its cost per qualified lead is more than 1.5 times the track's median after at least [minimum leads per cell] leads. Never stop on clicks. Week 4: move the stopped budget to the best two cells of each track; compare tracks on cost per qualified lead at equal spend."],
-          ["Weekly report", "Per track and cell: spend, impressions, clicks, page visits, form starts, leads, qualified leads, cost per qualified lead, signed contracts (F), quiz starts and completions (D), and the share of leads with an unchosen renewal."]
-        ] }
+        {
+          "type": "h3",
+          "text": "Entry match"
+        },
+        {
+          "type": "table",
+          "head": [
+            "Where the owner comes from",
+            "The promise of the ad",
+            "The first block repeats"
+          ],
+          "rows": [
+            [
+              "Track B ads, cells A, B, D, E, F",
+              "We'll remind you when you can leave us.",
+              "The same headline, word for word, with the cell's subline and button"
+            ],
+            [
+              "Track A ads, cells A, B, D, E, F",
+              "Meet your energy supplier. In person.",
+              "The same headline, word for word, with the cell's subline and button"
+            ],
+            [
+              "Search ad",
+              "Your SGB advisor calls before every notice date.",
+              "Track B hero, cell A"
+            ],
+            [
+              "Cell C (both tracks)",
+              "The ad's headline",
+              "No page: the instant form's first screen repeats it"
+            ]
+          ]
+        },
+        {
+          "type": "h3",
+          "text": "Block ladder"
+        },
+        {
+          "type": "table",
+          "head": [
+            "Block",
+            "Its one job",
+            "Done when the owner"
+          ],
+          "rows": [
+            [
+              "1 Hero",
+              "Repeat the ad's promise and carry the ask",
+              "recognises the ad and sees one button"
+            ],
+            [
+              "2 The date",
+              "Show how a business contract renews if nobody acts (Track B) or who the advisor is (Track A)",
+              "knows why this matters to them today"
+            ],
+            [
+              "3 How it works",
+              "Three steps: you leave your number, your advisor calls or visits, SGB handles the switch",
+              "sees that the next step costs little"
+            ],
+            [
+              "4 Proof",
+              "Three verbatim quotes, hospitality first: Bleitner, Wagner, von Godin, beside the form",
+              "hears it from owners like them"
+            ],
+            [
+              "5 The switch",
+              "Free for all customers, 100% digital, SGB cancels the old contract or takes it over",
+              "has no paperwork worry left"
+            ],
+            [
+              "6 The ask again",
+              "The form, short",
+              "fills it in"
+            ]
+          ]
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "shared/form",
+            "title": "The form (phone first)",
+            "fields": [
+              {
+                "ref": "shared/form/name",
+                "format": "form.label",
+                "label": "Field 1",
+                "text": "Your name"
+              },
+              {
+                "ref": "shared/form/business",
+                "format": "form.label",
+                "label": "Field 2",
+                "text": "Your restaurant, hotel or business"
+              },
+              {
+                "ref": "shared/form/phone",
+                "format": "form.label",
+                "label": "Field 3 (required)",
+                "text": "Phone, so your advisor can call"
+              },
+              {
+                "ref": "shared/form/email",
+                "format": "form.label",
+                "label": "Field 4 (optional)",
+                "text": "Email (optional)"
+              },
+              {
+                "ref": "shared/form/end",
+                "format": "form.label",
+                "label": "Field 5",
+                "text": "When does your contract end?"
+              },
+              {
+                "ref": "shared/form/endhelp",
+                "format": "plain.text",
+                "label": "Help under field 5",
+                "text": "Month and year is enough. Not sure? Pick “I don't know” and your advisor finds it with you."
+              },
+              {
+                "ref": "shared/form/consent",
+                "format": "plain.text",
+                "label": "Consent",
+                "text": "[SGB's consent wording for email and WhatsApp]"
+              },
+              {
+                "ref": "shared/form/submit",
+                "format": "landing.cta",
+                "label": "Button",
+                "text": "Ask for a callback"
+              }
+            ]
+          }
+        },
+        {
+          "type": "h3",
+          "text": "The page as a video, 75 seconds (Track B; Track A swaps beats 2 and 3)"
+        },
+        {
+          "type": "beats",
+          "id": "shared/video",
+          "rows": [
+            {
+              "beat": "Hook",
+              "s": "0–5",
+              "see": "A kitchen at full service. A phone on the steel lights up: “[advisor name] · SGB”. Nobody picks up.",
+              "said": "",
+              "screen": "The call you'd want to take"
+            },
+            {
+              "beat": "The date",
+              "s": "5–20",
+              "see": "The contract on the office desk, one date circled. Days flip on a wall calendar behind the pass.",
+              "said": "Every energy contract has a day you can leave. In a business contract, miss it and the contract runs on as written.",
+              "screen": "Miss the date, the contract runs on"
+            },
+            {
+              "beat": "The call",
+              "s": "20–38",
+              "see": "The advisor in the car, then at the back door with a folder.",
+              "said": "Your SGB advisor calls before every notice date. Even when the contract is SGB's own. Same person, every time, and on site when you want.",
+              "screen": "Even on SGB's own contracts"
+            },
+            {
+              "beat": "Proof",
+              "s": "38–55",
+              "see": "Three owners' quotes on screen over their own places, each marked translated.",
+              "said": "",
+              "screen": "“My personal SGB advisor takes care of everything.” Henning Wagner, translated"
+            },
+            {
+              "beat": "The switch",
+              "s": "55–67",
+              "see": "A phone signing a document. The old contract slides into an envelope.",
+              "said": "Switching is free. Everything is digital. SGB cancels your old contract or takes it over.",
+              "screen": "Free. 100% digital."
+            },
+            {
+              "beat": "Ask",
+              "s": "67–75",
+              "see": "The form on a phone, filled in at the bar.",
+              "said": "Leave your number. Your advisor calls you back.",
+              "screen": "Ask for a callback"
+            }
+          ]
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "shared/search",
+            "title": "Search ad (one promise: the advisor who calls before your notice date)",
+            "fields": [
+              {
+                "ref": "shared/search/h1",
+                "format": "google.rsa.headline",
+                "label": "Headline 1",
+                "text": "SGB Business Energy"
+              },
+              {
+                "ref": "shared/search/h2",
+                "format": "google.rsa.headline",
+                "label": "Headline 2",
+                "text": "Your Advisor Calls First"
+              },
+              {
+                "ref": "shared/search/h3",
+                "format": "google.rsa.headline",
+                "label": "Headline 3",
+                "text": "Before Every Notice Date"
+              },
+              {
+                "ref": "shared/search/h4",
+                "format": "google.rsa.headline",
+                "label": "Headline 4",
+                "text": "Even on SGB's Own Contracts"
+              },
+              {
+                "ref": "shared/search/h5",
+                "format": "google.rsa.headline",
+                "label": "Headline 5",
+                "text": "Electricity and Gas"
+              },
+              {
+                "ref": "shared/search/h6",
+                "format": "google.rsa.headline",
+                "label": "Headline 6",
+                "text": "Free Switch, Done by SGB"
+              },
+              {
+                "ref": "shared/search/h7",
+                "format": "google.rsa.headline",
+                "label": "Headline 7",
+                "text": "For Restaurants and Hotels"
+              },
+              {
+                "ref": "shared/search/h8",
+                "format": "google.rsa.headline",
+                "label": "Headline 8",
+                "text": "One Advisor, One Number"
+              },
+              {
+                "ref": "shared/search/d1",
+                "format": "google.rsa.description",
+                "label": "Description 1",
+                "text": "Your SGB advisor calls before every notice date, even on SGB's own contracts."
+              },
+              {
+                "ref": "shared/search/d2",
+                "format": "google.rsa.description",
+                "label": "Description 2",
+                "text": "Switching is free and digital. SGB cancels your old contract or takes it over."
+              },
+              {
+                "ref": "shared/search/p1",
+                "format": "google.rsa.path",
+                "label": "Path 1",
+                "text": "business-energy"
+              },
+              {
+                "ref": "shared/search/p2",
+                "format": "google.rsa.path",
+                "label": "Path 2",
+                "text": "your-advisor"
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "shared/instant",
+            "title": "Instant form (cell C)",
+            "fields": [
+              {
+                "ref": "shared/instant/headline",
+                "format": "instant.headline",
+                "label": "First screen headline",
+                "text": "[the ad's headline, word for word]"
+              },
+              {
+                "ref": "shared/instant/intro",
+                "format": "instant.body",
+                "label": "First screen text",
+                "text": "Four short fields. Your SGB advisor calls you back, and notes your notice date so you hear from them before it."
+              },
+              {
+                "ref": "shared/instant/fields",
+                "format": "plain.text",
+                "label": "Fields",
+                "text": "Name, business, phone (required), email (optional), contract end month, consent: the page form's fields, in the same order."
+              },
+              {
+                "ref": "shared/instant/done.hl",
+                "format": "instant.headline",
+                "label": "Completion headline",
+                "text": "Thank you. Your advisor calls you back."
+              },
+              {
+                "ref": "shared/instant/done.sl",
+                "format": "instant.body",
+                "label": "Completion text",
+                "text": "Within [callback time], Monday to Friday, 9:00 to 18:00. Sent after hours? Your advisor calls the next working day."
+              }
+            ]
+          }
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "shared/thanks",
+            "title": "Thank-you screens",
+            "fields": [
+              {
+                "ref": "shared/thanks/AD.hl",
+                "format": "landing.hl",
+                "label": "A to D · HL",
+                "text": "Thank you. [advisor name] calls you back."
+              },
+              {
+                "ref": "shared/thanks/AD.sl",
+                "format": "landing.sl",
+                "label": "A to D · SL",
+                "text": "Within [callback time], Monday to Friday, 9:00 to 18:00. Want the next steps on WhatsApp? Tap below."
+              },
+              {
+                "ref": "shared/thanks/AD.wa",
+                "format": "plain.text",
+                "label": "A to D · WhatsApp opt-in",
+                "text": "Yes, SGB Energie GmbH may send me messages on WhatsApp about my switch."
+              },
+              {
+                "ref": "shared/thanks/E.hl",
+                "format": "landing.hl",
+                "label": "E · HL",
+                "text": "Booked. [advisor name] calls you on [booked time]."
+              },
+              {
+                "ref": "shared/thanks/E.sl",
+                "format": "landing.sl",
+                "label": "E · SL",
+                "text": "Have your current contract or a recent bill nearby. That's all you need."
+              },
+              {
+                "ref": "shared/thanks/F.hl",
+                "format": "landing.hl",
+                "label": "F · HL",
+                "text": "Signed. Welcome to SGB."
+              },
+              {
+                "ref": "shared/thanks/F.sl",
+                "format": "landing.sl",
+                "label": "F · SL",
+                "text": "SGB now cancels your old contract or takes it over. Your advisor, [advisor name], gets in touch about what happens next."
+              }
+            ]
+          }
+        },
+        {
+          "type": "h3",
+          "text": "The quiz (cell D): 6 screens, contact after the result"
+        },
+        {
+          "type": "text",
+          "html": "<p><strong>Where the contact sits:</strong> after the result. The owner distrusts energy companies that ask for a phone number first; the result is what they give us the number for. If quiz completions are high but contacts low in week 2, test the contact before the result.</p>"
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "shared/quiz",
+            "title": "Questions and answers",
+            "fields": [
+              {
+                "ref": "shared/quiz/q1",
+                "format": "quiz.question",
+                "label": "Q1 · business type",
+                "text": "What kind of place do you run?"
+              },
+              {
+                "ref": "shared/quiz/q1a",
+                "format": "plain.text",
+                "label": "Q1 answers",
+                "text": "Restaurant or café / Hotel / Farm / Shop, office or trade / Large industrial site / It's my home"
+              },
+              {
+                "ref": "shared/quiz/q2",
+                "format": "quiz.question",
+                "label": "Q2 · size",
+                "text": "Roughly how much is your energy bill a month?"
+              },
+              {
+                "ref": "shared/quiz/q2a",
+                "format": "plain.text",
+                "label": "Q2 answers",
+                "text": "[band 1] / [band 2] / [band 3] / [band 4] / I don't know"
+              },
+              {
+                "ref": "shared/quiz/q3",
+                "format": "quiz.question",
+                "label": "Q3 · contract end",
+                "text": "When does your current contract end?"
+              },
+              {
+                "ref": "shared/quiz/q3a",
+                "format": "plain.text",
+                "label": "Q3 answers",
+                "text": "Month and year picker / I don't know"
+              },
+              {
+                "ref": "shared/quiz/q4",
+                "format": "quiz.question",
+                "label": "Q4 · price model",
+                "text": "How is your price set today?"
+              },
+              {
+                "ref": "shared/quiz/q4a",
+                "format": "plain.text",
+                "label": "Q4 answers",
+                "text": "A fixed price / It follows the exchange / I don't know"
+              },
+              {
+                "ref": "shared/quiz/q5",
+                "format": "quiz.question",
+                "label": "Q5 · what matters",
+                "text": "What matters more to you?"
+              },
+              {
+                "ref": "shared/quiz/q5a",
+                "format": "plain.text",
+                "label": "Q5 answers",
+                "text": "Pay as little as possible over the year / A price I can plan with / Both, in a mix"
+              }
+            ]
+          }
+        },
+        {
+          "type": "table",
+          "head": [
+            "Answers",
+            "Result"
+          ],
+          "rows": [
+            [
+              "Q5 “A price I can plan with”, or Q4 fixed and Q5 not “lowest”",
+              "More fixed"
+            ],
+            [
+              "Q5 “Pay as little as possible over the year” and Q1 not hotel-only seasonal [to confirm with SGB]",
+              "More spot"
+            ],
+            [
+              "Q5 “Both”, or any “I don't know” in Q4",
+              "A mix"
+            ],
+            [
+              "Q1 “It's my home”",
+              "Exit: private household"
+            ],
+            [
+              "Q1 “Large industrial site”, or Q2 top band",
+              "Exit: straight to an advisor call"
+            ]
+          ]
+        },
+        {
+          "type": "piece",
+          "piece": {
+            "id": "shared/quizresults",
+            "title": "Result, contact and exit screens",
+            "fields": [
+              {
+                "ref": "shared/quizresults/fixed.hl",
+                "format": "landing.hl",
+                "label": "Result · more fixed · HL",
+                "text": "You'd sleep better on a fixed price."
+              },
+              {
+                "ref": "shared/quizresults/fixed.sl",
+                "format": "landing.sl",
+                "label": "Result · more fixed · SL",
+                "text": "Most of your energy at a fixed price, the rest flexible. Your SGB advisor confirms the fit in a call."
+              },
+              {
+                "ref": "shared/quizresults/spot.hl",
+                "format": "landing.hl",
+                "label": "Result · more spot · HL",
+                "text": "You could let the exchange work for you."
+              },
+              {
+                "ref": "shared/quizresults/spot.sl",
+                "format": "landing.sl",
+                "label": "Result · more spot · SL",
+                "text": "More of your energy at exchange prices. Your SGB advisor confirms the fit in a call."
+              },
+              {
+                "ref": "shared/quizresults/mix.hl",
+                "format": "landing.hl",
+                "label": "Result · a mix · HL",
+                "text": "You'd do well with a mix."
+              },
+              {
+                "ref": "shared/quizresults/mix.sl",
+                "format": "landing.sl",
+                "label": "Result · a mix · SL",
+                "text": "Part fixed, part exchange, set for your place. Your SGB advisor confirms the fit in a call."
+              },
+              {
+                "ref": "shared/quizresults/contact.hl",
+                "format": "landing.hl",
+                "label": "Contact · HL",
+                "text": "Who should your advisor call?"
+              },
+              {
+                "ref": "shared/quizresults/contact.sl",
+                "format": "landing.sl",
+                "label": "Contact · SL",
+                "text": "Your advisor confirms your result and notes your notice date. No price on the phone before you have seen the offer."
+              },
+              {
+                "ref": "shared/quizresults/home.hl",
+                "format": "landing.hl",
+                "label": "Exit · household · HL",
+                "text": "This one is for businesses."
+              },
+              {
+                "ref": "shared/quizresults/home.sl",
+                "format": "landing.sl",
+                "label": "Exit · household · SL",
+                "text": "For your home, SGB Solution can help. We pass on none of your answers."
+              },
+              {
+                "ref": "shared/quizresults/home.cta",
+                "format": "landing.cta",
+                "label": "Exit · household · button",
+                "text": "Go to SGB Solution"
+              },
+              {
+                "ref": "shared/quizresults/large.hl",
+                "format": "landing.hl",
+                "label": "Exit · large site · HL",
+                "text": "A site your size needs a conversation."
+              },
+              {
+                "ref": "shared/quizresults/large.sl",
+                "format": "landing.sl",
+                "label": "Exit · large site · SL",
+                "text": "Leave your number and an SGB advisor calls you directly."
+              }
+            ]
+          }
+        },
+        {
+          "type": "h3",
+          "text": "Four-week test plan"
+        },
+        {
+          "type": "table",
+          "head": [
+            "Item",
+            "Our proposal"
+          ],
+          "rows": [
+            [
+              "What runs",
+              "Weeks 1–2: both tracks, cells A to F, on Meta (Facebook and Instagram, 4:5 and 9:16) and LinkedIn (4:5), one audience: owners and managers of restaurants and hotels in Germany. Search runs on its own budget line, Track B promise."
+            ],
+            [
+              "Budget split",
+              "Tracks 50/50. Within a track: A 20%, B 15%, C 20%, D 15%, E 15%, F 15%. Meta 70%, LinkedIn 30%. Search outside the split. Same daily caps for both tracks."
+            ],
+            [
+              "Main metric",
+              "Cost per qualified lead for A to E. Cost per signed contract for F."
+            ],
+            [
+              "Lead status feedback",
+              "The advisor marks each lead qualified or not within two working days in SGB's CRM. The status goes back daily as an offline conversion: Meta Conversions API, LinkedIn Conversions API, Google offline conversion import. Bidding learns from qualified leads, not from forms."
+            ],
+            [
+              "Decision rule",
+              "Week 3: stop a cell when its cost per qualified lead is more than 1.5 times the track's median after at least [minimum leads per cell] leads. Never stop on clicks. Week 4: move the stopped budget to the best two cells of each track; compare tracks on cost per qualified lead at equal spend."
+            ],
+            [
+              "Weekly report",
+              "Per track and cell: spend, impressions, clicks, page visits, form starts, leads, qualified leads, cost per qualified lead, signed contracts (F), quiz starts and completions (D), and the share of leads with an unchosen renewal."
+            ]
+          ]
+        }
       ]
     },
     {
@@ -356,20 +1719,35 @@
       "eyebrow": "Assumptions, one line each",
       "title": "What we assumed",
       "blocks": [
-        { "type": "list", "items": [
-          "[callback time]: SGB's callback time for a lead.",
-          "[advisor name], [region]: a real advisor who agrees to appear, with written consent.",
-          "[weeks before]: how long before a notice date the advisor calls.",
-          "[share of leads with an unchosen renewal]: to be counted by advisors from week 1.",
-          "[band 1] to [band 4]: monthly bill bands that split SLP from RLM; SGB sets them.",
-          "[minimum leads per cell]: the smallest count before a stop decision; set with SGB's media budget.",
-          "The quiz fits (more fixed, more spot, a mix) are proposed; SGB has not confirmed them.",
-          "Owners distrust energy calls: brief hypothesis, not yet tested.",
-          "The two-week notice for price changes to businesses: from a broker's guide, to be confirmed by SGB.",
-          "Cell B's offer (the bill check) is proposed; SGB has not confirmed it.",
-          "All photography is shot for SGB with real owners and advisors, with written consent."
-        ] }
+        {
+          "type": "list",
+          "items": [
+            "[callback time]: SGB's callback time for a lead.",
+            "[advisor name], [region]: a real advisor who agrees to appear, with written consent.",
+            "[weeks before]: how long before a notice date the advisor calls.",
+            "[share of leads with an unchosen renewal]: to be counted by advisors from week 1.",
+            "[band 1] to [band 4]: monthly bill bands that split SLP from RLM; SGB sets them.",
+            "[minimum leads per cell]: the smallest count before a stop decision; set with SGB's media budget.",
+            "The quiz fits (more fixed, more spot, a mix) are proposed; SGB has not confirmed them.",
+            "Owners distrust energy calls: brief hypothesis, not yet tested.",
+            "The two-week notice for price changes to businesses: from a broker's guide, to be confirmed by SGB.",
+            "Cell B's offer (the bill check) is proposed; SGB has not confirmed it.",
+            "All photography is shot for SGB with real owners and advisors, with written consent."
+          ]
+        }
       ]
+    }
+  ],
+  "eyebrow": "SGB Energie · Work package 1: from stranger to lead",
+  "heroTitle": "Even ours. And meet your supplier.",
+  "actions": [
+    {
+      "label": "Track B",
+      "href": "#trackB"
+    },
+    {
+      "label": "Track A",
+      "href": "#trackA"
     }
   ]
 }
