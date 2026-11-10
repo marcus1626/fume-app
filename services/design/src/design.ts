@@ -3,7 +3,7 @@
 // each one in the picture (contrast under every line of words, how busy it is, what it covers, whether it fits the
 // safe area), and keeps the best that passes. What did not pass is said, for the expert.
 import { type DesignBook, type Format, type Grid, type Style, brandLayouts, seesBrand, colourOf, componentOf, gridOf, headlineSteps, signatureOf, STEP_FLOOR, styleOf } from "./book.ts";
-import { type Band, type Composed, type FamilyFor, type Ground, type Layout, type Words, compose, shadeFill, shadeFor } from "./compose.ts";
+import { type Band, type Composed, type FamilyFor, type Ground, type Layout, type Words, compose, shadeFill, shadeFor, tintOf } from "./compose.ts";
 import { type Box, type Pixels, type Shade, contrast, luminance, overlap, rgbOf, under } from "./pixels.ts";
 import { type BrandFace, type Doc, boxOf, build, fig, capHeightOf, hasFont, pixelsOf, place, png, lineWidth, splitWords, useBrandFaces, wordWidths } from "./render.ts";
 import { type Logo, type Where, CORNERS, cornersFor, logoOf } from "./logo.ts";
@@ -198,6 +198,20 @@ async function designOn(asked: Ask, until = Infinity): Promise<Designed> {
   if (!best) throw new Error("No layout could be made.");
   const even = await balance(ask, best.t, familyFor, pixels, keep, logo);
   if (even) best = even;
+  // The expert sees when the tint went deeper than the brand's book, and why.
+  const tinted = best.t.layout.ground === "tint" ? best.t.layout.tint ?? tintOf(book) : undefined;
+  if (tinted !== undefined) {
+    const own = tintOf(book);
+    best.t.checks.push({
+      check: "contrast",
+      node: "Words",
+      ok: true,
+      hard: false,
+      note: tinted > own
+        ? `A flat tint at ${Math.round(tinted * 100)}% over the picture, deeper than the book's ${Math.round(own * 100)}%, so the light words read.`
+        : `The book's flat tint at ${Math.round(own * 100)}% over the picture, so the light words read.`,
+    });
+  }
   const fitted = best.t.layout.fit;
   if (fitted) {
     for (const [node, k] of [["Headline", fitted.headline], ["CTA", fitted.cta]] as const) {
@@ -328,12 +342,18 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
     book.colours.some((c) => c.role === r),
   );
   const scrim = book.photoText?.scrim ?? "gradient";
+  // The book's own tint first; a step deeper only where its light words would not read on a bright picture.
+  const tints = uniq([tintOf(book), 0.5, 0.6].filter((t) => t >= tintOf(book)));
   const panel = brandLayouts(book).some((x) => x.ground === "flat") || (scrim === "flat" && !seesBrand(book));
   const grounds: Ground[] = uniq([
     prefer.ground ?? sigGround ?? "photo",
     sigGround ?? "photo",
     "photo",
     ...(scrim === "gradient" ? ["gradient"] : []),
+    // Where the brand's book darkens a bright picture with a flat tint and sets no panel, its light words keep their
+    // colour on the tint (Anthem, 10 Nov: with no tint, every design on bright sand fell back to navy words, which the
+    // brand never sets on a photograph).
+    ...(scrim === "flat" && !panel && book.colours.some((c) => c.role === "on_photo") ? ["tint"] : []),
     ...(blockSig ? ["block"] : []),
     // A panel behind the words only where the brand sets one: a box is not a designer's answer to a busy picture
     // (Marcus, 9 Nov). Without one, a picture with no calm room is one to make again, not one to cover. The book's
@@ -369,10 +389,10 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
           for (const headline of steps.slice(0, 3)) {
             for (const columns of widths) {
               for (const subline of sublines) {
-                for (const colour of ground === "flat" ? ["text"] : ground === "block" ? ["on_primary"] : colours) {
+                for (const colour of ground === "flat" ? ["text"] : ground === "block" ? ["on_primary"] : ground === "tint" ? ["on_photo"] : colours) {
                   const own = ground === "block" && blockSig && blockSig !== sig ? blockSig : null;
                   const hex = own ? own.groundHex : groundHex;
-                  yield {
+                  for (const tint of ground === "tint" ? tints : [undefined]) yield {
                     band, align, headline, colour, ground, cta: place.cta, columns,
                     ...(subline === "subline" ? {} : { subline }),
                     ...(ctaLook ? { ctaLook } : {}),
@@ -383,6 +403,7 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
                     ...(own
                       ? own.box && own.box.y > 0 && band === own.band ? { at: own.box.y } : {}
                       : sigAt !== undefined && band === sig?.band ? { at: sigAt } : {}),
+                    ...(tint !== undefined ? { tint } : {}),
                   };
                 }
               }
@@ -430,7 +451,9 @@ export function measure(
   const shade = shadeFor(book, l, g, words);
   if (shade) {
     const id = doc.ids.get("Shade");
-    if (shade.edge === "left" || shade.edge === "right") {
+    if (shade.even) {
+      if (id) doc.graph.updateNode(id, { x: 0, y: 0, width: g.w, height: g.h, fills: shadeFill(shade, g.h, 0) as never });
+    } else if (shade.edge === "left" || shade.edge === "right") {
       const left = shade.edge === "left" ? 0 : shade.zero;
       const w = shade.edge === "left" ? shade.zero : g.w - shade.zero;
       if (id) doc.graph.updateNode(id, { x: left, y: 0, width: w, height: g.h, fills: shadeFill(shade, w, left) as never });
@@ -486,7 +509,7 @@ export function measure(
       note: `${lines} line${lines === 1 ? "" : "s"} (at most ${most}).`,
     });
   }
-  const onPhoto = l.ground === "photo" || l.ground === "gradient";
+  const onPhoto = l.ground === "photo" || l.ground === "gradient" || l.ground === "tint";
   for (const n of ["Headline", "Price", "Was", "Subline"]) {
     const b = boxes[n];
     if (!b) continue;
@@ -690,7 +713,7 @@ function scoreOf(l: Layout, checks: Check[]): number {
     if (c.check === "busy" && c.value !== undefined) s -= c.value * 10;
   }
   if (l.ground === "photo") s += 2;
-  if (l.ground === "gradient") s += 1;
+  if (l.ground === "gradient" || l.ground === "tint") s += 1;
   return s;
 }
 
@@ -787,7 +810,11 @@ export function tasteOf(t: Tried, book: DesignBook, prefer: Partial<Layout>): nu
   // The brand's own colour for words on pictures over another that also reads (Anthem, 9 Nov: navy words on the sky
   // read, yet the brand sets white on its photographs).
   const own = sig ? ({ light: "on_photo", dark: "text", brand_colour: "accent" } as const)[sig.words] : null;
-  if (own && (t.layout.ground === "photo" || t.layout.ground === "gradient") && t.layout.colour !== own) s -= 2;
+  // Anthem, 10 Nov: with a tint to stand on, navy words on bright sand still won by a hair; the brand never sets them
+  // on a photograph, so the brand's own colour weighs more than a bigger headline.
+  if (own && (t.layout.ground === "photo" || t.layout.ground === "gradient" || t.layout.ground === "tint") && t.layout.colour !== own) s -= 4;
+  // A tint deeper than the book's darkens the picture more than the brand does: only where it must.
+  if (t.layout.ground === "tint" && t.layout.tint !== undefined) s -= Math.max(0, t.layout.tint - tintOf(book)) * 4;
   return Math.round(s * 100) / 100;
 }
 

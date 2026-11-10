@@ -160,7 +160,13 @@ export function toVersionDesign(
             band,
             align: align === "right" ? "right" : align === "center" || align === "centre" ? "centre" : "left",
             // The brand's own block of colour is a flat ground under the words.
-            ground: ground === "gradient" ? "gradient" : ground === "flat" || ground === "block" ? "flat" : "photo",
+            // The brand's flat tint over the whole picture darkens it as a shade does.
+            ground:
+              ground === "gradient" || ground === "tint"
+                ? "gradient"
+                : ground === "flat" || ground === "block"
+                  ? "flat"
+                  : "photo",
             colour: str(l.colour) ?? "on_photo",
             ...placedOf(l),
           },

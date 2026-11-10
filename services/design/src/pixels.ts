@@ -28,10 +28,13 @@ export interface Shade {
   full: number;
   zero: number;
   box?: Box;
+  /** As dark everywhere: the brand's flat tint over the whole picture. */
+  even?: boolean;
 }
 
 /** The shade's opacity at a place in the layout: its height, or for a shade from the side, its distance across. */
 export function shadeAt(s: Shade, y: number, x = 0): number {
+  if (s.even) return s.from;
   if (s.edge === "left" || s.edge === "right") return shadeAt({ ...s, edge: s.edge === "left" ? "top" : "bottom" }, x);
   if (s.edge === "top") {
     if (y <= s.full) return s.from;

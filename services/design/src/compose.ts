@@ -25,7 +25,10 @@ export interface Words {
 
 export type Band = "top" | "middle" | "bottom";
 export type Align = "left" | "center" | "right";
-export type Ground = "photo" | "gradient" | "flat" | "block";
+/** `tint`: the brand's flat tint over the whole picture, at the book's scrim opacity, for its light words where the
+ *  picture is too bright for them (Anthem's book: "a flat navy tint at 35 per cent covers the picture behind the words;
+ *  never a gradient, never a solid box"). */
+export type Ground = "photo" | "gradient" | "flat" | "block" | "tint";
 export type CtaLook = "pill" | "box" | "outline" | "slant" | "slant_double" | "underline" | "text";
 
 /** One way to lay the words out. */
@@ -56,6 +59,8 @@ export interface Layout {
   columns: number;
   /** Where the block of words starts down the frame, as a share of its height: the brand's own place, from its ads. */
   at?: number;
+  /** How dark the tint is, 0–1: the book's own first, deeper only where its light words would not read. */
+  tint?: number;
   /**
    * The headline or the call to action set smaller than its style, so a long word fits the column whole
    * ("FLANELLSKJORTER"), as a designer sizes a headline to its measure. 1 is the style's own size.
@@ -236,7 +241,7 @@ export function compose(
         }} h="hug" flex="col" items=${q(side === "left" ? "start" : side === "right" ? "end" : "center")}>${cta()}</Frame>`
       : "";
   const shade =
-    l.ground === "gradient"
+    l.ground === "gradient" || l.ground === "tint"
       ? `<Rectangle name="Shade" position="absolute" x={0} y={0} w={${g.w}} h={${Math.round(g.h / 2)}} fills={[]} />`
       : "";
   const logoNode = logo && !logo.inside
@@ -274,9 +279,14 @@ export function bindShort(text: string): string {
  * only ever tried at the top or the bottom, so words in the middle stood on bright sand with nothing under them).
  */
 export function shadeFor(book: DesignBook, l: Layout, g: Grid, words: { x?: number; y: number; w?: number; h: number }): Shade | null {
-  if (l.ground !== "gradient") return null;
+  if (l.ground !== "gradient" && l.ground !== "tint") return null;
   const dark = colourOf(book, "text");
   const hex = dark && isDark(dark) ? dark : "#000000";
+  // The tint is even over the whole frame: as dark at every place, with no edge to fade from.
+  if (l.ground === "tint") {
+    const at = l.tint ?? tintOf(book);
+    return { hex, from: at, edge: "top", full: g.h, zero: g.h, even: true };
+  }
   const from = Math.min(0.75, Math.max(0.3, book.photoText?.scrimOpacity ?? 0.5));
   if (l.band === "middle") {
     if (l.align === "center" || words.x === undefined || words.w === undefined) return null;
@@ -291,10 +301,17 @@ export function shadeFor(book: DesignBook, l: Layout, g: Grid, words: { x?: numb
   return { hex, from, edge: "top", full: words.y + words.h + 24, zero: Math.min(g.h, words.y + words.h + 24 + fade) };
 }
 
+/** The book's own tint for words on a picture. */
+export function tintOf(book: DesignBook): number {
+  return Math.min(0.6, Math.max(0.2, book.photoText?.scrimOpacity ?? 0.35));
+}
+
 /** The shade as an OpenPencil fill on a rectangle from y to y + h, or for a shade from the side, from x = y to y + h. */
 export function shadeFill(s: Shade, h: number, y: number) {
   const across = s.edge === "left" || s.edge === "right";
   const { r, g, b } = rgb01(s.hex);
+  // A tint is one flat colour, never a gradient: a designer opening the file finds it as the brand set it.
+  if (s.even) return [{ type: "SOLID", color: { r, g, b, a: 1 }, opacity: s.from, visible: true }];
   const at = (pos: number, a: number) => ({ position: clamp01(pos), color: { r, g, b, a } });
   const stops =
     s.edge === "top" || s.edge === "left"

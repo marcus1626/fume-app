@@ -414,3 +414,22 @@ test("among layouts that fail, a broken word loses to words that read", () => {
   assert.ok(better(tight, broken));
   assert.ok(!better(broken, tight));
 });
+
+test("on a bright picture, the brand's white words stand on its flat tint, never turn navy", async () => {
+  // Anthem, 10 Nov: white words on its photos, "a flat navy tint at 35 per cent" where the picture is busy, no panel.
+  // With no tint the search fell back to navy words on bright sand, which the brand never sets on a photograph.
+  const seen = { name: "Hero", band: "top", align: "left", wordsWidthPct: 50, ground: "photo", words: "light", cta: "outline", source: "pictures" } as const;
+  const b = { ...book, photoText: { ...book.photoText, scrim: "flat", scrimOpacity: 0.35 }, onPictures: { layouts: [seen] } } as DesignBook;
+  const all = [...layoutsFor(b, "feed", { signature: "Hero" }, true)];
+  assert.ok(all.some((l) => l.ground === "tint"), "a tint is tried");
+  assert.ok(all.filter((l) => l.ground === "tint").every((l) => l.colour === "on_photo"), "on the tint the words keep the brand's colour");
+  assert.ok(all.every((l) => l.ground !== "flat"), "and still no panel");
+  const tint = shadeFor(b, { ...all.find((l) => l.ground === "tint")!, ground: "tint" }, { w: 1080, h: 1350 } as never, { y: 100, h: 300 })!;
+  assert.deepEqual([tint.even, tint.from], [true, 0.35]);
+  // A pale picture everywhere: white reads only on the tint.
+  const out = await design({ picture: await picture("#F4F1EC", "#E8E2D6"), format: "feed", book: b, words, prefer: { signature: "Hero", band: "top" }, keepClear: [product] });
+  assert.equal(out.layout.colour, "on_photo", JSON.stringify(out.layout));
+  assert.equal(out.layout.ground, "tint");
+  const contrast = out.checks.find((c) => c.check === "contrast" && c.node === "Headline")!;
+  assert.ok(contrast.ok, contrast.note);
+});

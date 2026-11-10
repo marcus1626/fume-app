@@ -187,7 +187,7 @@ function compose(book, format, words, l, family, widths = {}, logo) {
     `${insideLogo}<Frame name="Lines"`
   );
   const alone = words.cta && !ctaWithWords && l.cta !== "none" ? `<Frame name="Action" position="absolute" x={${side === "left" ? g.margin : 0}} y={${g.h - g.bottom - 80}} w={${side === "left" ? '"hug"' : side === "right" ? g.w - g.margin : g.w}} h="hug" flex="col" items=${q(side === "left" ? "start" : side === "right" ? "end" : "center")}>${cta()}</Frame>` : "";
-  const shade = l.ground === "gradient" ? `<Rectangle name="Shade" position="absolute" x={0} y={0} w={${g.w}} h={${Math.round(g.h / 2)}} fills={[]} />` : "";
+  const shade = l.ground === "gradient" || l.ground === "tint" ? `<Rectangle name="Shade" position="absolute" x={0} y={0} w={${g.w}} h={${Math.round(g.h / 2)}} fills={[]} />` : "";
   const logoNode = logo && !logo.inside ? `<Rectangle name="Logo" position="absolute" x={${g.margin}} y={${g.top}} w={${Math.round(logo.w)}} h={${Math.round(
     logo.h
   )}} fills={[{ type: "IMAGE", imageHash: "LOGO", imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />` : "";
@@ -205,9 +205,13 @@ function bindShort(text) {
   return text.replace(new RegExp("(?<=^|\\s)(\\p{L}{1,2}) (?=\\S)", "gu"), "$1\xA0");
 }
 function shadeFor(book, l, g, words) {
-  if (l.ground !== "gradient") return null;
+  if (l.ground !== "gradient" && l.ground !== "tint") return null;
   const dark = colourOf(book, "text");
   const hex = dark && isDark(dark) ? dark : "#000000";
+  if (l.ground === "tint") {
+    const at = l.tint ?? tintOf(book);
+    return { hex, from: at, edge: "top", full: g.h, zero: g.h, even: true };
+  }
   const from = Math.min(0.75, Math.max(0.3, book.photoText?.scrimOpacity ?? 0.5));
   if (l.band === "middle") {
     if (l.align === "center" || words.x === void 0 || words.w === void 0) return null;
@@ -221,9 +225,13 @@ function shadeFor(book, l, g, words) {
   }
   return { hex, from, edge: "top", full: words.y + words.h + 24, zero: Math.min(g.h, words.y + words.h + 24 + fade) };
 }
+function tintOf(book) {
+  return Math.min(0.6, Math.max(0.2, book.photoText?.scrimOpacity ?? 0.35));
+}
 function shadeFill(s, h, y) {
   const across = s.edge === "left" || s.edge === "right";
   const { r: r2, g, b } = rgb01(s.hex);
+  if (s.even) return [{ type: "SOLID", color: { r: r2, g, b, a: 1 }, opacity: s.from, visible: true }];
   const at = (pos, a) => ({ position: clamp01(pos), color: { r: r2, g, b, a } });
   const stops = s.edge === "top" || s.edge === "left" ? [at(0, s.from), at((s.full - y) / h, s.from), at(1, 0)] : [at(0, 0), at((s.full - y) / h, s.from), at(1, s.from)];
   return [
@@ -268,6 +276,7 @@ var caseOf = (s) => s.case === "upper" ? ` textCase="upper"` : s.case === "lower
 
 // src/pixels.ts
 function shadeAt(s, y, x = 0) {
+  if (s.even) return s.from;
   if (s.edge === "left" || s.edge === "right") return shadeAt({ ...s, edge: s.edge === "left" ? "top" : "bottom" }, x);
   if (s.edge === "top") {
     if (y <= s.full) return s.from;
@@ -929,6 +938,17 @@ async function designOn(asked, until = Infinity) {
   if (!best) throw new Error("No layout could be made.");
   const even = await balance(ask, best.t, familyFor, pixels, keep, logo);
   if (even) best = even;
+  const tinted = best.t.layout.ground === "tint" ? best.t.layout.tint ?? tintOf(book) : void 0;
+  if (tinted !== void 0) {
+    const own = tintOf(book);
+    best.t.checks.push({
+      check: "contrast",
+      node: "Words",
+      ok: true,
+      hard: false,
+      note: tinted > own ? `A flat tint at ${Math.round(tinted * 100)}% over the picture, deeper than the book's ${Math.round(own * 100)}%, so the light words read.` : `The book's flat tint at ${Math.round(own * 100)}% over the picture, so the light words read.`
+    });
+  }
   const fitted2 = best.t.layout.fit;
   if (fitted2) {
     for (const [node, k] of [["Headline", fitted2.headline], ["CTA", fitted2.cta]]) {
@@ -1029,12 +1049,17 @@ function* layoutsFor(book, format, prefer, hasCta) {
     (r2) => book.colours.some((c) => c.role === r2)
   );
   const scrim = book.photoText?.scrim ?? "gradient";
+  const tints = uniq([tintOf(book), 0.5, 0.6].filter((t) => t >= tintOf(book)));
   const panel = brandLayouts(book).some((x) => x.ground === "flat") || scrim === "flat" && !seesBrand(book);
   const grounds = uniq([
     prefer.ground ?? sigGround ?? "photo",
     sigGround ?? "photo",
     "photo",
     ...scrim === "gradient" ? ["gradient"] : [],
+    // Where the brand's book darkens a bright picture with a flat tint and sets no panel, its light words keep their
+    // colour on the tint (Anthem, 10 Nov: with no tint, every design on bright sand fell back to navy words, which the
+    // brand never sets on a photograph).
+    ...scrim === "flat" && !panel && book.colours.some((c) => c.role === "on_photo") ? ["tint"] : [],
     ...blockSig ? ["block"] : [],
     // A panel behind the words only where the brand sets one: a box is not a designer's answer to a busy picture
     // (Marcus, 9 Nov). Without one, a picture with no calm room is one to make again, not one to cover. The book's
@@ -1057,10 +1082,10 @@ function* layoutsFor(book, format, prefer, hasCta) {
           for (const headline of steps.slice(0, 3)) {
             for (const columns of widths) {
               for (const subline of sublines) {
-                for (const colour of ground === "flat" ? ["text"] : ground === "block" ? ["on_primary"] : colours) {
+                for (const colour of ground === "flat" ? ["text"] : ground === "block" ? ["on_primary"] : ground === "tint" ? ["on_photo"] : colours) {
                   const own2 = ground === "block" && blockSig && blockSig !== sig ? blockSig : null;
                   const hex = own2 ? own2.groundHex : groundHex;
-                  yield {
+                  for (const tint2 of ground === "tint" ? tints : [void 0]) yield {
                     band,
                     align,
                     headline,
@@ -1074,7 +1099,8 @@ function* layoutsFor(book, format, prefer, hasCta) {
                     ...place2.ctaSide && place2.cta === "bottom" ? { ctaSide: place2.ctaSide } : {},
                     ...hex && (ground === "block" || ground === "flat") ? { groundHex: hex } : {},
                     ...own2 ? { signature: own2.name } : sig ? { signature: sig.name } : {},
-                    ...own2 ? own2.box && own2.box.y > 0 && band === own2.band ? { at: own2.box.y } : {} : sigAt !== void 0 && band === sig?.band ? { at: sigAt } : {}
+                    ...own2 ? own2.box && own2.box.y > 0 && band === own2.band ? { at: own2.box.y } : {} : sigAt !== void 0 && band === sig?.band ? { at: sigAt } : {},
+                    ...tint2 !== void 0 ? { tint: tint2 } : {}
                   };
                 }
               }
@@ -1103,7 +1129,9 @@ function measure(doc, c, l, book, p, keep, logo = null) {
   const shade = shadeFor(book, l, g, words);
   if (shade) {
     const id = doc.ids.get("Shade");
-    if (shade.edge === "left" || shade.edge === "right") {
+    if (shade.even) {
+      if (id) doc.graph.updateNode(id, { x: 0, y: 0, width: g.w, height: g.h, fills: shadeFill(shade, g.h, 0) });
+    } else if (shade.edge === "left" || shade.edge === "right") {
       const left = shade.edge === "left" ? 0 : shade.zero;
       const w = shade.edge === "left" ? shade.zero : g.w - shade.zero;
       if (id) doc.graph.updateNode(id, { x: left, y: 0, width: w, height: g.h, fills: shadeFill(shade, w, left) });
@@ -1158,7 +1186,7 @@ function measure(doc, c, l, book, p, keep, logo = null) {
       note: `${lines} line${lines === 1 ? "" : "s"} (at most ${most}).`
     });
   }
-  const onPhoto = l.ground === "photo" || l.ground === "gradient";
+  const onPhoto = l.ground === "photo" || l.ground === "gradient" || l.ground === "tint";
   for (const n of ["Headline", "Price", "Was", "Subline"]) {
     const b = boxes[n];
     if (!b) continue;
@@ -1324,7 +1352,7 @@ function scoreOf(l, checks) {
     if (c.check === "busy" && c.value !== void 0) s -= c.value * 10;
   }
   if (l.ground === "photo") s += 2;
-  if (l.ground === "gradient") s += 1;
+  if (l.ground === "gradient" || l.ground === "tint") s += 1;
   return s;
 }
 var FIT_FLOOR = 0.6;
@@ -1383,7 +1411,8 @@ function tasteOf(t, book, prefer) {
   if (prefer.band && t.layout.band === prefer.band) s += 1;
   if (prefer.align && t.layout.align === prefer.align) s += 0.5;
   const own = sig ? { light: "on_photo", dark: "text", brand_colour: "accent" }[sig.words] : null;
-  if (own && (t.layout.ground === "photo" || t.layout.ground === "gradient") && t.layout.colour !== own) s -= 2;
+  if (own && (t.layout.ground === "photo" || t.layout.ground === "gradient" || t.layout.ground === "tint") && t.layout.colour !== own) s -= 4;
+  if (t.layout.ground === "tint" && t.layout.tint !== void 0) s -= Math.max(0, t.layout.tint - tintOf(book)) * 4;
   return Math.round(s * 100) / 100;
 }
 async function pictureAt(picture, format, scale) {
