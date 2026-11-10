@@ -273,3 +273,49 @@ Deno.test("the words go in the layout the plan chose, where the Engine left room
   await designLayer({ ...branded, planned: { ...take.planned, layout: "Not in the book" } }, gone.d);
   assertEquals((gone.calls.lay[0] as { prefer: Record<string, unknown> }).prefer.signature, "Green stack", "a layout the book lost gives way to the eye");
 });
+
+Deno.test("a design Fume's own review sends back is laid out once more, and the better of the two is kept", async () => {
+  const settled: unknown[] = [];
+  const looks: unknown[] = [];
+  let reviews = 0;
+  const bad = { findings: [{ severity: "critical" as const, what: "The headline breaks mid-word over bright sand." }], verdict: "needs_work" as const, onBrand: { score: 2, like: [], unlike: [] }, craft: 1 };
+  const good = { findings: [{ severity: "minor" as const, what: "Logo a touch small." }], verdict: "ready_for_check" as const, onBrand: { score: 4, like: [], unlike: [] }, craft: 4 };
+  const two = deps({
+    choose: (_t, _w, _p, _s, earlier) => (looks.push(earlier ?? null), Promise.resolve({ keepClear: [], band: earlier ? "top" : "middle", align: "left", colour: "on_photo", layout: "", why: "" })),
+    review: () => Promise.resolve(reviews++ ? good : bad),
+  });
+  two.d.service.settle = (_t, alt, keep) => (settled.push({ alt, keep }), Promise.resolve());
+  two.d.service.links = (_t, alt) => Promise.resolve({ picture: "p", png: alt ? "alt-png" : "png", fig: alt ? "alt-fig" : "fig" });
+  two.d.lay = (r) => (two.calls.lay.push(r), Promise.resolve({ ok: true, status: 200, body: { ok: false, layout: { band: (r as { prefer: { band: string } }).prefer.band, align: "left" }, checks: [], attempts: [], png: { bytes: 1, sha256: "a" }, fig: { bytes: 1, sha256: "b" } } }));
+  assertEquals(await designLayer(take, two.d), "made");
+  assertEquals(two.calls.lay.length, 2);
+  assertEquals((two.calls.lay[1] as { upload: { png: string } }).upload.png, "alt-png");
+  assertEquals((looks[1] as { faults: string[]; band: string }).faults, ["The headline breaks mid-word over bright sand."]);
+  assertEquals((looks[1] as { band: string }).band, "middle");
+  assertEquals(settled, [{ alt: { png: "ws/design/aa-2.png", fig: "ws/design/aa-2.fig" }, keep: true }]);
+  const r = two.calls.finish[0] as { choice: { verdict: string; band: string; second: { won: boolean } }; png: { path: string } };
+  assertEquals(r.choice.verdict, "ready_for_check");
+  assertEquals(r.choice.band, "top");
+  assertEquals(r.choice.second.won, true);
+  assertEquals(r.png.path, "ws/design/aa.png", "the kept design takes the first one's place");
+
+  // A second try that is no better is removed, and the first is kept.
+  const settled2: unknown[] = [];
+  const worse = deps({ review: () => Promise.resolve(bad) });
+  worse.d.service.settle = (_t, _alt, keep) => (settled2.push(keep), Promise.resolve());
+  await designLayer(take, worse.d);
+  assertEquals(worse.calls.lay.length, 2);
+  assertEquals(settled2, [false]);
+  assertEquals((worse.calls.finish[0] as { choice: { second: { won: boolean } } }).choice.second.won, false);
+
+  // No second round for a design that passed the review, or once the function is short of time.
+  const fine = deps();
+  fine.d.service.settle = () => Promise.resolve();
+  await designLayer(take, fine.d);
+  assertEquals(fine.calls.lay.length, 1);
+  let clock = 0;
+  const late = deps({ review: () => Promise.resolve(bad), now: () => (clock += 60_000) });
+  late.d.service.settle = () => Promise.resolve();
+  await designLayer(take, late.d);
+  assertEquals(late.calls.lay.length, 1);
+});

@@ -94,10 +94,10 @@ Deno.serve((req) =>
         },
         finish: async (id, result) => (await service.rpc("design_finish", { p_layer_id: id, p_result: result })),
         fail: async (id, why, usd) => (await service.rpc("design_fail", { p_layer_id: id, p_error: why, p_llm_usd: usd })),
-        links: async (t) => {
+        links: async (t, alt) => {
           const read = await service.storage.from(t.picture.bucket).createSignedUrl(t.picture.path, 600);
-          const png = await service.storage.from(t.store.bucket).createSignedUploadUrl(t.store.png);
-          const fig = await service.storage.from(t.store.bucket).createSignedUploadUrl(t.store.fig);
+          const png = await service.storage.from(t.store.bucket).createSignedUploadUrl(alt?.png ?? t.store.png, { upsert: true });
+          const fig = await service.storage.from(t.store.bucket).createSignedUploadUrl(alt?.fig ?? t.store.fig, { upsert: true });
           if (read.error || png.error || fig.error) throw new Error("Fume could not make the storage links.");
           // The brand's logo, as its design system names it; without one the layout is made without it.
           const mark = (t.book.body as { logo?: { bucket?: string; path?: string } | null }).logo;
@@ -114,17 +114,31 @@ Deno.serve((req) =>
           );
           return { picture: read.data.signedUrl, png: png.data.signedUrl, fig: fig.data.signedUrl, logo: logo?.data?.signedUrl ?? null, fonts };
         },
+        // The second try takes the first one's place, or goes; only ever beside the layer's own files.
+        settle: async (t, alt, keep) => {
+          const bucket = service.storage.from(t.store.bucket);
+          if (keep) {
+            const gone = await bucket.remove([t.store.png, t.store.fig]);
+            if (gone.error) throw new Error(gone.error.message);
+            for (const [from, to] of [[alt.png, t.store.png], [alt.fig, t.store.fig]]) {
+              const moved = await bucket.move(from, to);
+              if (moved.error) throw new Error(moved.error.message);
+            }
+          } else {
+            await bucket.remove([alt.png, alt.fig]);
+          }
+        },
         read: download,
         picture: (t) => download(t.picture.bucket, t.picture.path),
       },
-      choose: async (t, words, picture, spent) => {
+      choose: async (t, words, picture, spent, earlier) => {
         let seen: Uint8Array | string = picture;
         if (picture.length > INLINE_MAX) {
           const { data, error } = await service.storage.from(t.picture.bucket).createSignedUrl(t.picture.path, 600);
           if (error || !data) throw new Error("Fume could not make a link to the picture.");
           seen = data.signedUrl;
         }
-        return look<LayoutChoice>(CHOOSE_SYSTEM, choosePrompt(t, words), seen, LayoutChoice, spent);
+        return look<LayoutChoice>(CHOOSE_SYSTEM, choosePrompt(t, words, earlier), seen, LayoutChoice, spent);
       },
       // The layout chosen before for this picture's line, read through the database (the service role has no rights
       // on the tables themselves).

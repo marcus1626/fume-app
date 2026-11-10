@@ -3,7 +3,7 @@
 // own token decides whether they may see the layer (design_layers is staff-only); the service role takes the work.
 // The answer comes at once (202); the work goes on in the background. handler.test.ts runs it without Supabase, a
 // model or the design service.
-import { formatOf, keepClearOf, type LayoutChoice, layoutsOf, plannedLayout, type Review, roomOf, type Take, type Words, wordsOf } from "./layer.ts";
+import { type Earlier, formatOf, keepClearOf, type LayoutChoice, layoutsOf, plannedLayout, type Review, roomOf, type Take, type Words, wordsOf } from "./layer.ts";
 
 /** A signed link to one of the brand's own font files, with the face it holds (brand-book fontfile.ts). */
 export interface FontLink {
@@ -23,12 +23,14 @@ export interface Deps {
     finish(layerId: string, result: Record<string, unknown>): Promise<{ error: Failure }>;
     fail(layerId: string, error: string, usd: number): Promise<{ error: Failure }>;
     /** A link to read the picture, links to store the result where design_take said, and one to read the brand's logo. */
-    links(t: Take): Promise<{ picture: string; png: string; fig: string; logo?: string | null; fonts?: FontLink[] }>;
+    links(t: Take, alt?: { png: string; fig: string }): Promise<{ picture: string; png: string; fig: string; logo?: string | null; fonts?: FontLink[] }>;
+    /** After a second try stored at `alt`: keep it in the first one's place (true), or remove it (false). */
+    settle?(t: Take, alt: { png: string; fig: string }, keep: boolean): Promise<void>;
     /** The stored result, to look at it. */
     read(bucket: string, path: string): Promise<Uint8Array | null>;
     picture(t: Take): Promise<Uint8Array | null>;
   };
-  choose(t: Take, words: Words, picture: Uint8Array, spent: Spent): Promise<LayoutChoice | null>;
+  choose(t: Take, words: Words, picture: Uint8Array, spent: Spent, earlier?: Earlier): Promise<LayoutChoice | null>;
   /** The layout of the picture's first design (or of a designer's latest ask), up its line of fixes, so a redo keeps it. */
   before?(t: Take): Promise<LayoutChoice | null>;
   review(t: Take, words: Words, png: Uint8Array, spent: Spent, set?: { cta?: string } | null): Promise<Review | null>;
@@ -109,63 +111,45 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     if (planned && choice) {
       choice = { ...choice, layout: planned.name, band: plannedBand ?? choice.band, align: plannedAlign ?? choice.align };
     }
-    const links = await d.service.links(t);
-    const request = {
-      picture: links.picture,
-      format,
-      book: t.book.body,
-      words,
-      // Where the Engine left room for the words comes first; the model's eye places the rest.
-      prefer: {
-        ...(choice
-          ? {
-            band: choice.band,
-            align: choice.align,
-            colour: choice.colour,
-            ...(layoutsOf(t).some((l) => l.name === choice!.layout) ? { signature: choice.layout } : {}),
+    const first = await attempt(t, d, words, format, choice, planned ? { name: planned.name, band: plannedBand, align: plannedAlign } : null, null, spent);
+    if ("failed" in first) return await fail(first.failed);
+    let won = first;
+    let second: Record<string, unknown> | null = null;
+    // Fume's own review sent it back: a designer would move the words, not hand it on (Anthem Sand league, 10 Nov: two
+    // needs_work designs went to the expert as they were). The model looks again with the review's faults, the service
+    // lays it out once more, and the better of the two is kept. Not for a kept layout or a designer's own ask, and only
+    // while the function has time for it.
+    const faults = first.findings.filter((f) => f.by === "fume_review" && (f.severity === "critical" || f.severity === "major") && !f.what.startsWith("Not like the brand"));
+    if (
+      first.verdict === "needs_work" && first.findings.some((f) => f.by === "fume_review" && f.severity === "critical") &&
+      !kept && !t.ask && d.service.settle && d.now() - started < AGAIN_BEFORE_MS
+    ) {
+      const was = first.out.layout as { band?: string; align?: string; ground?: string } | null;
+      let again: LayoutChoice | null = null;
+      try {
+        again = await d.choose(t, words, picture, spent, { band: was?.band, align: was?.align, ground: was?.ground, faults: faults.slice(0, 6).map((f) => f.what) });
+      } catch {
+        again = null;
+      }
+      // The brand's layout the plan chose stays the look; only its place may move.
+      if (again && planned) again = { ...again, layout: planned.name };
+      if (again) {
+        const alt = { png: t.store.png.replace(/\.png$/, "-2.png"), fig: t.store.fig.replace(/\.fig$/, "-2.fig") };
+        const next = await attempt(t, d, words, format, again, planned ? { name: planned.name } : null, alt, spent).catch((e) => ({ failed: String(e) }));
+        const better = !("failed" in next) && rank(next) > rank(first);
+        second = { first_verdict: first.verdict, first_layout: was, ...(("failed" in next) ? { failed: next.failed.slice(0, 200) } : { verdict: next.verdict, won: better }) };
+        try {
+          await d.service.settle(t, alt, better);
+          if (better && !("failed" in next)) {
+            won = next;
+            choice = again;
           }
-          : planned
-          ? { ...(plannedBand ? { band: plannedBand } : {}), ...(plannedAlign ? { align: plannedAlign } : {}), signature: planned.name }
-          : {}),
-        ...roomOf(t),
-      },
-      keepClear: choice ? keepClearOf(choice, format) : [],
-      ...(links.logo ? { logo: links.logo } : {}),
-      ...(links.fonts?.length ? { fonts: links.fonts } : {}),
-      upload: { png: links.png, fig: links.fig },
-    };
-    let res = await d.lay(request);
-    // A slow read or a cold start is worth one more try; a refusal (4xx) is not.
-    if (res.status === 500 || res.status === 504) res = await d.lay(request);
-    if (!res.ok) {
-      const e = res.body.error as unknown;
-      const why = typeof e === "string" ? e : e && typeof e === "object" ? String((e as { message?: unknown }).message ?? JSON.stringify(e)) : "";
-      return await fail(`The design service answered ${res.status}${why ? `: ${why}` : "."}`);
-    }
-    const out = res.body as {
-      ok?: boolean; width?: number; height?: number; layout?: unknown; checks?: unknown[]; attempts?: unknown[];
-      png: { bytes: number; sha256: string }; fig: { bytes: number; sha256: string };
-    };
-    let findings: { severity: string; what: string; by: string }[] = [];
-    let verdict: string | null = null;
-    let scores: { onBrand: number; craft: number | null; like: string[] } | null = null;
-    try {
-      const png = await d.service.read(t.store.bucket, t.store.png);
-      const r = png ? await d.review(t, words, png, spent, out.layout as { cta?: string } | null) : null;
-      if (r) {
-        findings = r.findings.map((f) => ({ ...f, by: "fume_review" }));
-        verdict = r.verdict;
-        // On brand is judged against the brand's own pages and ads: what they do that this creative does not is a
-        // finding the expert sees, major when the creative does not look like the brand made it.
-        if (r.onBrand) {
-          const weak = r.onBrand.score <= 2;
-          for (const what of r.onBrand.unlike.slice(0, 4)) findings.push({ severity: weak ? "major" : "minor", what: `Not like the brand's own work: ${what}`, by: "fume_review" });
-          scores = { onBrand: r.onBrand.score, craft: r.craft ?? null, like: r.onBrand.like.slice(0, 4) };
+        } catch (e) {
+          second.settle = e instanceof Error ? e.message.slice(0, 200) : String(e).slice(0, 200);
         }
       }
-    } catch {
-      // The expert still checks it; the layer is kept without Fume's own review.
     }
+    const { out, findings, verdict, scores } = won;
     if (!out.ok) findings.unshift({ severity: "major", what: "No layout passed every check; this is the closest one.", by: "code" });
     if (blind) {
       findings.unshift({
@@ -177,7 +161,7 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     const { error } = await d.service.finish(t.layer_id, {
       name: `${t.creative.title ?? "Creative"}, graphic design`,
       words,
-      choice: { ...(choice ?? {}), verdict, ...(scores ? { review: scores } : {}), ...(kept ? { kept: true } : {}), ...(keptWhy ? { not_kept: keptWhy } : {}), ...(planned ? { planned: true } : {}), ...(blind ? { blind } : {}) },
+      choice: { ...(choice ?? {}), verdict, ...(scores ? { review: scores } : {}), ...(kept ? { kept: true } : {}), ...(keptWhy ? { not_kept: keptWhy } : {}), ...(planned ? { planned: true } : {}), ...(blind ? { blind } : {}), ...(second ? { second } : {}) },
       layout: out.layout ?? null,
       checks: out.checks ?? [],
       attempts: out.attempts ?? [],
@@ -195,6 +179,87 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
   } catch (e) {
     return await fail(e instanceof Error ? e.message : String(e));
   }
+}
+
+/** A second look only while the function has time for it: the first round takes about 30 s, at most about 90 s. */
+const AGAIN_BEFORE_MS = 55_000;
+
+type Laid = {
+  out: {
+    ok?: boolean; width?: number; height?: number; layout?: unknown; checks?: unknown[]; attempts?: unknown[];
+    png: { bytes: number; sha256: string }; fig: { bytes: number; sha256: string };
+  };
+  findings: { severity: string; what: string; by: string }[];
+  verdict: string | null;
+  scores: { onBrand: number; craft: number | null; like: string[] } | null;
+};
+
+/** How good a laid-out design is, from the service's checks and Fume's own review: the higher, the better. */
+export function rank(a: Laid): number {
+  const count = (sev: string) => a.findings.filter((f) => f.by === "fume_review" && f.severity === sev).length;
+  return (a.verdict === "ready_for_check" ? 10 : 0) + (a.out.ok ? 3 : 0) - 4 * count("critical") - count("major") + (a.scores?.onBrand ?? 0) + (a.scores?.craft ?? 0);
+}
+
+/** One layout by the service, stored where `alt` says (else where design_take said), and Fume's own review of it. */
+async function attempt(
+  t: Take, d: Deps, words: Words, format: ReturnType<typeof formatOf>, choice: LayoutChoice | null,
+  planned: { name: string; band?: string; align?: string } | null, alt: { png: string; fig: string } | null, spent: Spent,
+): Promise<Laid | { failed: string }> {
+  const links = await d.service.links(t, alt ?? undefined);
+  const request = {
+    picture: links.picture,
+    format,
+    book: t.book.body,
+    words,
+    // Where the Engine left room for the words comes first; the model's eye places the rest.
+    prefer: {
+      ...(choice
+        ? {
+          band: choice.band,
+          align: choice.align,
+          colour: choice.colour,
+          ...(layoutsOf(t).some((l) => l.name === choice.layout) ? { signature: choice.layout } : {}),
+        }
+        : planned
+        ? { ...(planned.band ? { band: planned.band } : {}), ...(planned.align ? { align: planned.align } : {}), signature: planned.name }
+        : {}),
+      ...(alt ? {} : roomOf(t)),
+    },
+    keepClear: choice ? keepClearOf(choice, format) : [],
+    ...(links.logo ? { logo: links.logo } : {}),
+    ...(links.fonts?.length ? { fonts: links.fonts } : {}),
+    upload: { png: links.png, fig: links.fig },
+  };
+  let res = await d.lay(request);
+  // A slow read or a cold start is worth one more try; a refusal (4xx) is not.
+  if (res.status === 500 || res.status === 504) res = await d.lay(request);
+  if (!res.ok) {
+    const e = res.body.error as unknown;
+    const why = typeof e === "string" ? e : e && typeof e === "object" ? String((e as { message?: unknown }).message ?? JSON.stringify(e)) : "";
+    return { failed: `The design service answered ${res.status}${why ? `: ${why}` : "."}` };
+  }
+  const out = res.body as Laid["out"];
+  let findings: Laid["findings"] = [];
+  let verdict: string | null = null;
+  let scores: Laid["scores"] = null;
+  try {
+    const png = await d.service.read(t.store.bucket, alt?.png ?? t.store.png);
+    const r = png ? await d.review(t, words, png, spent, out.layout as { cta?: string } | null) : null;
+    if (r) {
+      findings = r.findings.map((f) => ({ ...f, by: "fume_review" }));
+      verdict = r.verdict;
+      // On brand is judged against the brand's own pages and ads: what they do that this creative does not is a
+      // finding the expert sees, major when the creative does not look like the brand made it.
+      if (r.onBrand) {
+        const weak = r.onBrand.score <= 2;
+        for (const what of r.onBrand.unlike.slice(0, 4)) findings.push({ severity: weak ? "major" : "minor", what: `Not like the brand's own work: ${what}`, by: "fume_review" });
+        scores = { onBrand: r.onBrand.score, craft: r.craft ?? null, like: r.onBrand.like.slice(0, 4) };
+      }
+    }
+  } catch {
+    // The expert still checks it; the layer is kept without Fume's own review.
+  }
+  return { out, findings, verdict, scores };
 }
 
 export async function handleDesign(req: Request, deps: (authorization: string) => Deps): Promise<Response> {
