@@ -19,7 +19,8 @@ export const JEV = {
   /** Dollars per million tokens sent; what it answers is free (docs.typesafe.ai/models, 10 Nov 2026). */
   input: 0.042,
   /** Questions in one request. Jev's docs give no limit by count, only by tokens (64,000 a request); a pass has up to
-   *  63, so it goes as two requests side by side. */
+   *  63, so it goes as two requests side by side. A request Jev will not take as it is (too many questions, too many
+   *  tokens) is asked again as two halves. */
   most: 40,
   /** A `choices` option and a thing shown are kept when a yes is more likely than a no. */
   yes: 0.5,
@@ -94,7 +95,8 @@ export async function askJev(key: string | undefined, pass: Pass, shows: Shows |
   const groups: string[][] = [];
   for (let i = 0; i < names.length; i += JEV.most) groups.push(names.slice(i, i + JEV.most));
 
-  const one = async (group: string[]): Promise<{ answers: Record<string, JevAnswer>; model: string; tokens: number } | { error: string }> => {
+  type Got = { answers: Record<string, JevAnswer>; model: string; tokens: number } | { error: string };
+  const one = async (group: string[]): Promise<Got> => {
     const res = await send(JEV.url, {
       method: "POST",
       signal: AbortSignal.timeout(60_000),
@@ -102,6 +104,14 @@ export async function askJev(key: string | undefined, pass: Pass, shows: Shows |
       body: JSON.stringify({ model: JEV.model, state, questions: Object.fromEntries(group.map((n) => [n, questions[n]])), assets }),
     });
     const text = await res.text();
+    // Too much in one request: the same questions as two halves, down to four at a time.
+    if ((res.status === 400 || res.status === 413 || res.status === 422) && group.length > 4) {
+      const half = Math.ceil(group.length / 2);
+      const [a, b] = await Promise.all([one(group.slice(0, half)), one(group.slice(half))]);
+      if ("error" in a) return a;
+      if ("error" in b) return b;
+      return { answers: { ...a.answers, ...b.answers }, model: b.model, tokens: a.tokens + b.tokens };
+    }
     if (!res.ok) return { error: `Jev answered ${res.status}: ${text.replaceAll(key, "[key]").slice(0, 300)}` };
     try {
       const body = JSON.parse(text) as { model?: string; answers?: Record<string, JevAnswer>; usage?: { input_tokens?: number } };

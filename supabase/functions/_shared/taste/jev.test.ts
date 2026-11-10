@@ -67,6 +67,26 @@ Deno.test("a pass is sent to Jev with the picture and the header that allows pic
   assertEquals(a.usage, { model: "jev-1.14", input_tokens: 100_000, output_tokens: 0, cost_usd: 0.0042 });
 });
 
+Deno.test("a request Jev will not take is asked again as two halves, and every question still gets its answer", async () => {
+  const sizes: number[] = [];
+  const send = ((_url: string, init: RequestInit) => {
+    const questions = JSON.parse(init.body as string).questions as Record<string, { type: string; criteria: Record<string, unknown> }>;
+    const names = Object.keys(questions);
+    sizes.push(names.length);
+    // This Jev takes at most twelve questions a request.
+    if (names.length > 12) return Promise.resolve(new Response(JSON.stringify({ detail: "too many questions" }), { status: 422 }));
+    const answers = Object.fromEntries(names.map((n) => [n, questions[n]!.type === "choice" ? { type: "choice", choice: Object.keys(questions[n]!.criteria)[0], confidence: 0.8 } : { type: "noul", noul: 0.9 }]));
+    return Promise.resolve(new Response(JSON.stringify({ model: "jev-1.14", answers, usage: { input_tokens: 1000 } })));
+  }) as unknown as typeof fetch;
+  const a = await askJev("secret", "look", ALL, PICTURE, send);
+  assert(a.ok);
+  const fields = passFields("look", ALL);
+  assert(sizes.some((n) => n > 12) && sizes.filter((n) => n <= 12).length >= 4);
+  const read = answersOf(fields, a.out);
+  assert(fields.filter((f) => f.type === "choice").every((f) => read[f.key] === f.options![0]));
+  assertEquals(a.usage.input_tokens, sizes.filter((n) => n <= 12).length * 1000);
+});
+
 Deno.test("Jev says so plainly when it has no key, cannot take the picture, or a request fails", async () => {
   const never = (() => Promise.reject(new Error("not asked"))) as unknown as typeof fetch;
   const noKey = await askJev(undefined, "idea", undefined, PICTURE, never);
