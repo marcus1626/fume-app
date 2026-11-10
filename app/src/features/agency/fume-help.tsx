@@ -74,8 +74,8 @@ export const helpWays: { kind: HelpKind; label: string; icon: IconName; detail: 
 ];
 
 /** The person at Fume who answers the agency ("Sander"), once the plan has come. */
-function useContact(): string | undefined {
-  const contact = useAgencyPlan().data?.contact;
+function useContact(enabled = true): string | undefined {
+  const contact = useAgencyPlan(enabled).data?.contact;
   return contact ? firstName(contact.name) : undefined;
 }
 
@@ -97,10 +97,12 @@ export function useFumeHelp() {
 export function AgencyHelpMenu() {
   const help = useFumeHelp();
   const navigate = useNavigate();
-  const contact = useContact();
+  // The agency's plan names its contact: read once the menu first opens, not on every page.
+  const [opened, setOpened] = useState(false);
+  const contact = useContact(opened);
   return (
     <>
-      <DropdownMenu>
+      <DropdownMenu onOpenChange={(o) => o && setOpened(true)}>
         <DropdownMenuTrigger asChild>
           <SidebarMenuButton
             icon="info"
@@ -194,10 +196,10 @@ function BorrowPanel({ open, onOpenChange }: { open: boolean; onOpenChange: (ope
   const id = useId();
   const toast = useToast();
   const ask = useAskFume();
-  const contact = useContact();
+  const contact = useContact(open);
   const { pathname } = useLocation();
   const clients = useAgencyClients(open).data ?? [];
-  const campaigns = useAgencyCampaigns().data ?? [];
+  const campaigns = useAgencyCampaigns(open).data ?? [];
   const [client, setClient] = useState<Id>("");
   const [campaign, setCampaign] = useState<string>(NONE);
   const [work, setWork] = useState<Set<BorrowedWork>>(new Set());
@@ -416,7 +418,7 @@ function SupportPanel({ open, onOpenChange }: { open: boolean; onOpenChange: (op
   const id = useId();
   const toast = useToast();
   const ask = useAskFume();
-  const contact = useContact();
+  const contact = useContact(open);
   const [topic, setTopic] = useState<string>(TOPICS[0]);
   const [text, setText] = useState("");
   const [tried, setTried] = useState(false);

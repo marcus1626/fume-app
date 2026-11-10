@@ -491,7 +491,8 @@ export const usePlans = (ids: Id[]) =>
 // client link.
 export const useAgencyHome = (enabled = true) => useQ(["agency", "home"], (a) => a.agencyHome(), enabled);
 export const useAgencyClients = (enabled = true) => useQ(["agency", "clients"], (a) => a.agencyClients(), enabled);
-export const useAgencyCampaigns = () => useQ(["agency", "campaigns"], (a) => a.agencyCampaigns());
+export const useAgencyCampaigns = (enabled = true) =>
+  useQ(["agency", "campaigns"], (a) => a.agencyCampaigns(), enabled);
 export const useAgencyTeam = () => useQ(["agency", "team"], (a) => a.agencyTeam());
 export const useLicence = () => useQ(["agency", "licence"], (a) => a.licence());
 export const useAddClient = () => useM((a, v: Parameters<FumeApi["addClient"]>[0]) => a.addClient(v));

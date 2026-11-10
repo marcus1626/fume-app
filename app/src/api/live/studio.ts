@@ -35,6 +35,7 @@ import {
 } from "./production";
 import { readProducts } from "./products";
 import { unsentChecked, withToSend } from "./quality";
+import { signedLinks } from "./signed";
 import { askEngine, command, requestKey, rows, supabase } from "./supabase";
 
 type Calls =
@@ -396,19 +397,15 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
       );
       const found = read.flatMap((c) => (c.details ?? []).filter((d) => d.expected).map((d) => ({ c, d })));
       if (!found.length) return [];
-      const { data } = await supabase()
-        .storage.from("workspace-files")
-        .createSignedUrls(
-          found.map(({ c, d }) => `${c.workspace_id}/check/${c.id}-${d.n}-ref.png`),
-          3600,
-        );
-      return found.map(({ c, d }, i): DetailToken => ({
+      const refPath = ({ c, d }: (typeof found)[number]) => `${c.workspace_id}/check/${c.id}-${d.n}-ref.png`;
+      const links = await signedLinks("workspace-files", found.map(refPath));
+      return found.map(({ c, d }): DetailToken => ({
         id: detailId(c.id, d.n),
         productId,
         label: d.what.charAt(0).toUpperCase() + d.what.slice(1),
         value: d.expected,
         kind: d.kind === "part" ? "part" : "label",
-        image: data?.[i]?.signedUrl ?? "",
+        image: links.get(refPath({ c, d })) ?? "",
         region: { x: 0, y: 0, w: 1, h: 1 },
         provenance: {
           origin: "engine",

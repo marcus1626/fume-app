@@ -151,7 +151,7 @@ function StudioStart({ workspaceId }: { workspaceId: string }) {
                   </SegmentedControl>
                 </div>
                 {campaign.isPending ? (
-                  <Loading label="Loading the slots" />
+                  <Loading spinner label="Loading the slots" />
                 ) : campaign.data && campaign.data.creatives.length > 0 ? (
                   <ItemGroup as="ul">
                     {campaign.data.creatives.map((c) => {

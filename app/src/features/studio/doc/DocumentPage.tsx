@@ -567,7 +567,7 @@ function Desk({ doc, modes }: { doc: CreativeDocument; modes: StudioMode[] }) {
           />
         ) : (
           <main className="ui-desk-centre">
-            <Loading label="Setting up the edit" />
+            <Loading spinner label="Setting up the edit" />
           </main>
         )
       ) : (

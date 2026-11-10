@@ -8,6 +8,7 @@ import { IconSprite, ToastProvider, TooltipProvider } from "@fume/ui";
 import { createBrowserRouter, createMemoryRouter, Navigate, RouterProvider, useParams } from "react-router-dom";
 import type { ComponentType } from "react";
 import { ApiProvider, demoStartPath } from "./api/client";
+import { isOldCode, loadNewCode } from "./lib/newCode";
 import { NotFound } from "./shell/NotFound";
 import { ProductRedirect, Redirect } from "./shell/Redirect";
 import { Root } from "./shell/Root";
@@ -22,7 +23,15 @@ type Loader = () => Promise<Record<string, unknown>>;
 const loaders = new Set<Loader>();
 function page(load: Loader, name: string) {
   loaders.add(load);
-  return () => load().then((m) => ({ Component: m[name] as ComponentType }));
+  return () =>
+    load().then(
+      (m) => ({ Component: m[name] as ComponentType }),
+      (error: unknown) => {
+        // Fume shipped new code while the tab was open: load it, rather than show the error page.
+        if (isOldCode(error) && loadNewCode()) return new Promise<never>(() => undefined);
+        throw error;
+      },
+    );
 }
 let warmed = false;
 function warmPages() {

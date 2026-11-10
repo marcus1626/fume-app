@@ -3,7 +3,8 @@
 // close-ups are short-lived signed links; a product kept only as a link to the brand's site shows from that link.
 import type { FumeApi, TrainCard, TrainDeck, TrainFinding } from "../../contract";
 import type { Live } from "./context";
-import { command, supabase } from "./supabase";
+import { signedLinks } from "./signed";
+import { command } from "./supabase";
 
 type Calls = "trainDeck" | "trainAnswer" | "trainJudge";
 
@@ -36,24 +37,19 @@ interface CardRow {
   labels: { detail: string; verdict: "right" | "wrong"; note: string | null }[];
 }
 
-/** A link lives an hour: a deck is gone through in one sitting. */
-const LINK_SECONDS = 3600;
-
 /** The finding's key, as the check names it on the version (findings.detail). */
 const keyOf = (d: Detail) => (d.kind === "part" && d.part ? d.part : `print:${d.expected ?? d.what}`);
 
 const capital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-/** Signs many paths, bucket by bucket, in one call each; a path that cannot be read gets "". */
+/** Signs many paths, bucket by bucket, in one call each; a path that cannot be read gets none. */
 async function sign(paths: { bucket: string; path: string }[]): Promise<Map<string, string>> {
   const out = new Map<string, string>();
   const buckets = new Map<string, string[]>();
   for (const p of paths) buckets.set(p.bucket, [...(buckets.get(p.bucket) ?? []), p.path]);
   await Promise.all(
     [...buckets].map(async ([bucket, list]) => {
-      const unique = [...new Set(list)];
-      const { data } = await supabase().storage.from(bucket).createSignedUrls(unique, LINK_SECONDS);
-      for (const d of data ?? []) if (d.path && d.signedUrl) out.set(`${bucket}/${d.path}`, d.signedUrl);
+      for (const [path, url] of await signedLinks(bucket, list)) out.set(`${bucket}/${path}`, url);
     }),
   );
   return out;

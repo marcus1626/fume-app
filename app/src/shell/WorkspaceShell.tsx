@@ -42,6 +42,7 @@ import { Lockup, Mark } from "./Logo";
 import { initials } from "./people";
 import { customerAddress, customerViewOn, setCustomerView, under } from "./scope";
 import { StudioShell } from "./StudioShell";
+import { useNotificationItems } from "./notifications";
 import { useWaitingOnYou } from "./waiting";
 
 /** A campaign's review (/campaigns/c-autumn/review) belongs to Review, not Campaigns. */
@@ -76,6 +77,7 @@ function useCampaignBoard(pathname: string) {
 function CustomerWorkspace() {
   const session = useSession().data!;
   const waiting = useWaitingOnYou();
+  const bell = useNotificationItems();
   const { pathname } = useLocation();
   const campaignBoard = useCampaignBoard(pathname);
   const staff = Boolean(session.user.staffRole);
@@ -134,6 +136,7 @@ function CustomerWorkspace() {
     <ShellFrame
       label={place}
       tabs={tabs}
+      bell={bell}
       barStart={staff ? <Badge dot="live">Fume view</Badge> : null}
       account={(f) => <AccountMenu onBookMeeting={f.openMeeting} avatar />}
       palette={{ nav, parts: agencyClient ? paletteParts.client : paletteParts.customer }}
