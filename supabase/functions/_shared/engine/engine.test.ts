@@ -472,6 +472,9 @@ Deno.test("the Engine sends the reference pictures the planned picture needs: th
   });
   assertEquals(needOf({ name: "x", scene: "She walks away from the camera, seen from behind", people: "One woman, full body" }), { view: "back", crop: "whole", people: true });
   assertEquals(needOf({ name: "x", scene: "A cup on a bench" }), { view: null, crop: null, people: false });
+  // The plan's own fields win over its words; a value it does not list is not a side.
+  assertEquals(needOf({ scene: "A woman seen from behind", people: "One woman", view: "side", crop: "half" }), { view: "side", crop: "half", people: true });
+  assertEquals(needOf({ scene: "A woman seen from behind", people: "One woman", view: "sideways" }).view, "back");
   // The plan writer's own phrases.
   const view = (scene: string) => needOf({ scene, people: "Cast models, faces small or turned away" }).view;
   assertEquals([view("A teen, back mostly to camera, stands under the hoop"), view("A volunteer walks away toward the pitch"), view("One shoe in three-quarter profile on wet paving"),

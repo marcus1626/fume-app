@@ -65,6 +65,8 @@ const plan: PlanAnswer = {
           text: null,
           claimRefs: [],
           people: "No people",
+          view: "three_quarter",
+          crop: "not_set",
           layout: null,
         },
         {
@@ -78,6 +80,8 @@ const plan: PlanAnswer = {
           text: "For the hour before sleep.",
           claimRefs: ["f1"],
           people: "No people",
+          view: "not_set",
+          crop: "close",
           layout: "Narrow stack",
         },
       ],
@@ -209,6 +213,8 @@ Deno.test("the prompt lists only verified claims as usable, and the body keeps t
     ["of" in m!, v!.of, v!.text, (body.content as { key: string }[])[0]!.key],
     [false, "pc1", "For the hour before sleep.", "call_to_action"],
   );
+  // The side and the crop the Engine chooses reference pictures by: kept where the plan set them.
+  assertEquals([m!.view, "crop" in m!, "view" in v!, v!.crop], ["three_quarter", false, false, "close"]);
 });
 
 Deno.test("the plan writer reads the brand brain, and what is only proposed is marked", async () => {

@@ -25,6 +25,9 @@ export type PlannedCreative = {
   people?: string;
   /** The brand's layout the plan sets this creative's words in (fume-plan, 9 Nov). */
   layout?: string;
+  /** From where the camera sees the main subject and how much of it, where the plan says (references.ts). */
+  view?: string;
+  crop?: string;
   /** The brand's models this picture is of, where the plan names them. */
   castIds?: string[];
 };

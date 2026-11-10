@@ -12,7 +12,7 @@
 
 /** The parts of a reference picture and of a planned creative this file reads (context.ts has the whole of both). */
 type Pictured = { slot: string | null; card?: unknown };
-type Planned = { scene?: string; people?: string; name?: string };
+type Planned = { scene?: string; people?: string; name?: string; view?: string; crop?: string };
 
 export const VIEWS = ["front", "three_quarter", "side", "back", "top", "bottom"] as const;
 export type View = (typeof VIEWS)[number];
@@ -74,13 +74,16 @@ const CROP_WORDS: [NonNullable<RefCard["crop"]>, RegExp][] = [
   ["half", /\bwaist[- ]up\b|\bhalf[- ]body\b|\bfrom the waist\b|\bmedium shot\b/i],
   ["whole", /\bfull[- ]body\b|\bfull[- ]length\b|\bhead to toe\b|\bwide (shot|scene|view)\b/i],
 ];
-/** What the planned picture needs: the side its subject is seen from and how close, where the plan says so. */
+/** What the planned picture needs: the side its subject is seen from and how close. The plan says so as fields
+ *  (`view`, `crop`) since 10 Nov 2026; a plan written before that says it in its scene's words, or not at all. */
 export function needOf(planned: Planned | undefined): Need {
   const words = `${planned?.scene ?? ""}. ${planned?.people ?? ""}. ${planned?.name ?? ""}`;
   const people = Boolean(planned?.people?.trim()) && !/^no people/i.test(planned!.people!.trim());
+  const view = (VIEWS as readonly string[]).includes(planned?.view ?? "") ? (planned!.view as View) : null;
+  const crop = (CROPS as readonly string[]).includes(planned?.crop ?? "") ? (planned!.crop as RefCard["crop"]) : null;
   return {
-    view: VIEW_WORDS.find(([, re]) => re.test(words))?.[0] ?? null,
-    crop: CROP_WORDS.find(([, re]) => re.test(words))?.[0] ?? null,
+    view: view ?? VIEW_WORDS.find(([, re]) => re.test(words))?.[0] ?? null,
+    crop: crop ?? CROP_WORDS.find(([, re]) => re.test(words))?.[0] ?? null,
     people,
   };
 }

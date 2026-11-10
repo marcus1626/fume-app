@@ -23,6 +23,8 @@ const Creative = z.object({
   text: z.string().nullable().describe("The words on the creative, or null for none"),
   claimRefs: z.array(z.string()).describe("Ids of the verified claim facts the words rely on; empty when none"),
   people: z.string().describe("'No people', 'Hands only', or who"),
+  view: z.enum(["front", "three_quarter", "side", "back", "top", "bottom", "not_set"]).describe("From where the camera sees the picture's main subject (the person where there is one, else the product), as the scene describes it. The Engine sends the reference pictures of that side. not_set when the scene names no side"),
+  crop: z.enum(["close", "half", "whole", "not_set"]).describe("How much of the main subject is in the frame: close (a detail, or a face), half (a person from the waist up), whole (all of it). not_set when the scene does not say"),
   layout: z.string().nullable().describe("For a creative with words: the name of the brand's layout the words are set in, exactly as listed in brand_layouts; null when none is listed or there are no words"),
 });
 const Direction = z.object({
@@ -474,6 +476,9 @@ export function toBody(a: PlanAnswer, layouts: BrandLayout[] = []): Record<strin
       ...(c.text ? { text: c.text } : {}),
       claimRefs: c.claimRefs,
       people: c.people,
+      // Where the camera stands to the subject and how close, for the Engine's choice of reference pictures.
+      ...(c.view && c.view !== "not_set" ? { view: c.view } : {}),
+      ...(c.crop && c.crop !== "not_set" ? { crop: c.crop } : {}),
       ...(c.text && layoutOf(c.layout) ? { layout: layoutOf(c.layout) } : {}),
     })),
     ...(d.recommended ? { recommended: true } : {}),
