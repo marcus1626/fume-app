@@ -11,7 +11,7 @@ see it.
 | Part | Where | What |
 | --- | --- | --- |
 | Registry | `supabase/functions/_shared/taste/schema.ts` | 349 fields in 14 groups. 77 are `measured` by code from the pixels, 272 are `read` by a vision model from closed lists of options (a few are free words). Each field says where the Engine can act on it (`lever`: plan, prompt, reference, finish, design, select) and of which pictures it can be asked (`when`). |
-| Card | `card.ts`, `finish.ts`, `taste-learn/measure.ts` | One per picture: `{id, source, campaign, shows, measured, read}`. The measured half is the same number every time. |
+| Card | `card.ts`, `finish.ts`, `taste-learn/measure.ts` | One per picture: `{id, source, campaign, shows, measured, read}`. The measured half is the same number every time. Grain and sharpness are read at one viewing size (see below). |
 | Reading | `read.ts`, `taste-read/` | The read half. Six questions a picture: `idea` first, which also says what the picture shows, then the passes that apply, side by side. |
 | Profile | `profile.ts` `buildProfile` | The brand's cards counted field by field: the value, its shares or range, how sure, and a standing. |
 | Score | `profile.ts` `tasteScore` | 0 to 100: how well Fume knows the brand's taste. |
@@ -19,6 +19,25 @@ see it.
 | Proof | `profile.ts` `proofOf` | How close the Engine's pictures come to the brand's, like with like. |
 | Direction | `direction.ts` | The profile said to whoever makes the next picture: lines for the plan and the prompt, numbers for the finish step. |
 | Kept | `build.ts`, migration `20261110070000_taste_schema.sql` | `taste_readings` (a card per picture) and `taste_profiles` (profile, score, direction per brand). |
+
+### Measured at one viewing size
+
+Grain and sharpness are numbers per pixel, so they depend on the size a picture was delivered at: the same photograph
+at 18 megapixels and at 4 measures as two different finishes. `finish.ts` therefore brings every picture to 1536 px on
+its long side before it reads them (`resizeTo`, each new pixel the mean of the area it covers; a picture is never made
+larger). A picture delivered under 1000 px on its long side (a screenshot of an ad in a feed) has no finish to read:
+its grain and sharpness are left unmeasured (-1), and a profile leaves them out. Compression is read from the file as
+it was delivered.
+
+A card with no photograph in it (type alone, a drawing) has no finish of a photograph either: its black point and its
+grain are a designer's flat colours. Where the cards were read, `build.ts` `finishOfPhotographs` leaves the
+finish-lever numbers of such a card out of the profile, so the finish targets say how the brand finishes its
+photographs.
+
+Found 10 Nov 2026 on Nike UK (test): before this, the brand's ads (3840 px wide JPEGs, three of them type on black)
+measured grain 0.07 against the Engine's 0.65 (1856 px PNGs), and the direction would have told the finish step to
+take the grain out. At the same size the four photographs measure 0.19 to 0.54 in the shadows and the Engine's 0.23 to
+0.86: much the same. Four photographs are too few for a grain target (a field needs five), so there is none yet.
 
 ## Brand or campaign: the standing of a field
 
@@ -116,10 +135,13 @@ What this does not show:
 - Not tested: the direct Anthropic readers (the key was rejected that day), `gpt-sol`, `opus-r`, and `grok` (the function
   ran out of compute). Qwen is refused by the router's zero-data-retention policy.
 
-First full read with `gpt-terra`, Nike UK (test), 10 real ads and 8 Engine pictures: taste score 49 of 100 (pictures 6 of
-30, coverage 18 of 20, certainty 3 of 20, breadth 4 of 10, proof 18 of 20). Counted like with like on the six ads
-with a photograph in them, the brand's own pictures fit their profile 0.76 and the Engine's 0.69. The direction it
-gives has 113 lines, 64 of them for the prompt, 6 finish targets and 9 campaign choices.
+First full read with `gpt-terra`, Nike UK (test), 10 real ads and 8 Engine pictures: taste score 48 of 100 (pictures 6 of
+30, coverage 17 of 20, certainty 3 of 20, breadth 4 of 10, proof 18 of 20; it was 49 before the finish numbers of the
+type cards were left out). Counted like with like on the six ads with a photograph in them, the brand's own pictures
+fit their profile 0.76 and the Engine's 0.69. The direction it gives has 113 lines, 64 of them for the prompt, 8
+finish targets and 7 campaign choices. The measured gaps that hold are sharpness and local contrast: the Engine's
+pictures are softer (shallow focus, blurred backgrounds) where Nike's are sharp from front to back, which the read
+fields say too and the prompt can ask for.
 
 ### Jev (TypeSafe), the classifier
 
@@ -197,11 +219,13 @@ without the tables: until the migration is applied a reading comes back unkept a
 
 1. Applying the two migrations (`taste_schema`, `reference_cards`) and deploying `taste-read`, `engine` and `fume-plan`
    with them (needs Marcus's go), then reading the reference cards of the brands in use.
-   Jev against `gpt-terra` on the same pictures, once its key is in Supabase.
+   Jev against `gpt-terra` on the same pictures: its key is in Supabase since 10 Nov 2026, and the test runs once
+   `taste-read` is deployed.
 2. Reading a brand's pictures by itself when the customer adds them (today a tool sends them), and the Engine's own
    pictures after each round, so the direction learns without anyone running a tool.
 3. The finish step: grain, black point, tint and sharpness put on the pixels by code after the picture is made,
-   brought to the direction's targets.
+   brought to the direction's targets. It needs targets worth trusting first: five or more of the brand's photographs
+   at delivery size (Nike UK (test) has four).
 4. Best of four with the profile as the judge (`fit`), before the expert sees a picture.
 5. A floor for proof: pictures the Engine makes without knowing the brand.
 6. Calibration per image model: which wording of a line moves a model, remembered per brand and model.

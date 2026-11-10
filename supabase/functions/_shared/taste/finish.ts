@@ -1,8 +1,73 @@
-// What Fume measures in a picture at its own size, without a model: grain by tone, the black and white points, the
+// What Fume measures in a picture at viewing size, without a model: grain by tone, the black and white points, the
 // tint of shadows and highlights, how much of the frame is sharp, glow around highlights, where the calm areas and the
 // lines are. measure.ts reads the picture made small (256 px), which erases grain and fine sharpness; these numbers
-// need the pixels as they were delivered. The same picture always gives the same numbers.
+// need the fine detail. The same picture always gives the same numbers.
+//
+// Grain and sharpness are read at one size (VIEW px on the long side), because they are numbers per pixel: the same
+// photograph delivered at 18 megapixels and at 4 would otherwise measure as two different finishes, and a brand's own
+// pictures could not be held against the Engine's. A picture delivered smaller than SMALLEST has no finish to read (a
+// screenshot of an ad in a feed): its grain and sharpness are left unmeasured.
 import { lab, type Pixels, shrink } from "../../taste-learn/measure.ts";
+
+/** The long side grain and sharpness are read at, and the smallest picture they are read of. */
+export const VIEW = 1536;
+export const SMALLEST = 1000;
+
+/** The picture at exactly `long` px on its long side, each new pixel the mean of the area it covers. Never made larger. */
+export function resizeTo(px: Pixels, long: number): Pixels {
+  const scale = Math.max(px.width, px.height) / long;
+  if (scale <= 1) return px;
+  const w = Math.max(1, Math.round(px.width / scale)), h = Math.max(1, Math.round(px.height / scale));
+  // Across, then down: each pass weighs every old pixel by how much of the new one it covers.
+  const pass = (src: Float32Array, sw: number, sh: number, dw: number): Float32Array => {
+    const out = new Float32Array(dw * sh * 3), k = sw / dw;
+    for (let x = 0; x < dw; x++) {
+      const from = x * k, to = Math.min(sw, (x + 1) * k);
+      for (let y = 0; y < sh; y++) {
+        let r = 0, g = 0, b = 0;
+        for (let sx = Math.floor(from); sx < to; sx++) {
+          const weight = Math.min(sx + 1, to) - Math.max(sx, from), i = (y * sw + sx) * 3;
+          r += src[i]! * weight;
+          g += src[i + 1]! * weight;
+          b += src[i + 2]! * weight;
+        }
+        const o = (y * dw + x) * 3, all = to - from;
+        out[o] = r / all;
+        out[o + 1] = g / all;
+        out[o + 2] = b / all;
+      }
+    }
+    return out;
+  };
+  const turn = (src: Float32Array, sw: number, sh: number): Float32Array => {
+    const out = new Float32Array(src.length);
+    for (let y = 0; y < sh; y++)
+      for (let x = 0; x < sw; x++) {
+        const i = (y * sw + x) * 3, o = (x * sh + y) * 3;
+        out[o] = src[i]!;
+        out[o + 1] = src[i + 1]!;
+        out[o + 2] = src[i + 2]!;
+      }
+    return out;
+  };
+  const rgb = new Float32Array(px.width * px.height * 3);
+  for (let i = 0; i < px.width * px.height; i++) {
+    rgb[i * 3] = px.data[i * 4]!;
+    rgb[i * 3 + 1] = px.data[i * 4 + 1]!;
+    rgb[i * 3 + 2] = px.data[i * 4 + 2]!;
+  }
+  const across = pass(rgb, px.width, px.height, w);
+  // Down is across on the picture turned on its side.
+  const down = turn(pass(turn(across, w, px.height), px.height, w, h), h, w);
+  const data = new Uint8ClampedArray(w * h * 4);
+  for (let i = 0; i < w * h; i++) {
+    data[i * 4] = Math.round(down[i * 3]!);
+    data[i * 4 + 1] = Math.round(down[i * 3 + 1]!);
+    data[i * 4 + 2] = Math.round(down[i * 3 + 2]!);
+    data[i * 4 + 3] = 255;
+  }
+  return { width: w, height: h, data };
+}
 
 const round = (x: number, d = 3) => (Number.isFinite(x) ? Math.round(x * 10 ** d) / 10 ** d : 0);
 const quantile = (sorted: Float32Array, q: number) => sorted[Math.min(sorted.length - 1, Math.max(0, Math.floor(q * (sorted.length - 1))))] ?? 0;
@@ -99,12 +164,15 @@ function boxBlur(v: Float32Array, w: number, h: number, r: number): Float32Array
 const PATCH = 96;
 const GRID = 7;
 
-/** The numbers of schema.ts that need the picture at its own size. Keys are the schema's. */
-export function measureFinish(px: Pixels, palette: { hex: string; share: number }[] = []): Record<string, number> {
+/** The numbers of schema.ts that need the picture's fine detail. Keys are the schema's. */
+export function measureFinish(delivered: Pixels, palette: { hex: string; share: number }[] = []): Record<string, number> {
   const v: Record<string, number> = {};
-  v["format.megapixels"] = round((px.width * px.height) / 1e6, 2);
+  v["format.megapixels"] = round((delivered.width * delivered.height) / 1e6, 2);
+  // Too small to have a finish: grain and sharpness stay unmeasured (-1; profile.ts leaves such a value out).
+  const fine = Math.max(delivered.width, delivered.height) >= SMALLEST;
+  const px = resizeTo(delivered, VIEW);
 
-  // ── At its own size: grain, sharpness, compression ──
+  // ── At viewing size: grain and sharpness ──
   const size = Math.min(PATCH, Math.floor(Math.min(px.width, px.height) / 2));
   const cells: { cx: number; cy: number; flat: number; sharp: number; l: number; nL: number; nC: number }[] = [];
   if (size >= 24)
@@ -127,25 +195,26 @@ export function measureFinish(px: Pixels, palette: { hex: string; share: number 
   const calm = [...cells].sort((a, b) => a.flat - b.flat).slice(0, Math.max(3, Math.floor(cells.length / 3)));
   const band = (lo: number, hi: number) => {
     const own = calm.filter((c) => c.l >= lo && c.l < hi);
-    return own.length ? round(mean(own.map((c) => c.nL))) : -1;
+    return fine && own.length ? round(mean(own.map((c) => c.nL))) : -1;
   };
-  // -1 where the picture has no flat area of that tone; profile.ts leaves such a value out.
+  // -1 where the picture has no flat area of that tone, or is too small to say.
   v["finish.grain_shadows"] = band(0, 35);
   v["finish.grain_mids"] = band(35, 70);
   v["finish.grain_highlights"] = band(70, 101);
-  v["finish.grain_chroma"] = calm.length ? round(mean(calm.map((c) => c.nC))) : -1;
+  v["finish.grain_chroma"] = fine && calm.length ? round(mean(calm.map((c) => c.nC))) : -1;
   const sharps = Float32Array.from(cells.map((c) => Math.log10(1 + c.sharp))).sort();
   const peak = quantile(sharps, 0.95);
-  v["finish.sharpness_peak"] = round(peak);
+  v["finish.sharpness_peak"] = fine ? round(peak) : -1;
   v["finish.sharp_share"] = cells.length ? round(cells.filter((c) => Math.log10(1 + c.sharp) > peak * 0.6).length / cells.length) : 0;
   const centre = cells.filter((c) => Math.abs(c.cx - 0.5) < 0.3 && Math.abs(c.cy - 0.5) < 0.3).map((c) => Math.log10(1 + c.sharp));
   const border = cells.filter((c) => !(Math.abs(c.cx - 0.5) < 0.3 && Math.abs(c.cy - 0.5) < 0.3)).map((c) => Math.log10(1 + c.sharp));
   const mc = mean(centre), mb = mean(border);
   v["finish.sharp_centre"] = mc + mb > 0 ? round((mc - mb) / (mc + mb)) : 0;
-  v["finish.blockiness"] = round(blockiness(px));
+  // Compression is in the file as it was delivered.
+  v["finish.blockiness"] = round(blockiness(delivered));
 
   // ── At 512 px: tone, tint, shares, lines, calm areas ──
-  const s = shrink(px, 512);
+  const s = shrink(delivered, 512);
   const p = planes(s);
   const { w, h } = p, n = w * h;
   const Ls = Float32Array.from(p.L).sort();

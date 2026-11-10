@@ -3,14 +3,22 @@
 // the same way. Also what a card sent from outside is cleaned to before it is kept: only the schema's own fields, and
 // only answers the schema lists.
 import { direction, type Direction } from "./direction.ts";
-import { buildProfile, type Card, type Profile, type Proof, proofOf, tasteScore, type TasteScore, word } from "./profile.ts";
+import { buildProfile, type Card, photographic, type Profile, type Proof, proofOf, tasteScore, type TasteScore, word } from "./profile.ts";
 import { type Answer, FIELD, type Shows, TASTE_SCHEMA_VERSION } from "./schema.ts";
 
 export type Built = { schema_version: number; profile: Profile; engine: Profile | null; proof: Proof | null; score: TasteScore; direction: Direction };
 
+/** A card with no photograph in it (type alone, a drawing) has no finish of a photograph: its grain, black point and
+ *  tints are a designer's flat colours, and would be taken for how the brand finishes its photographs. Where the
+ *  cards were read, such a card's finish numbers are not counted. */
+export function finishOfPhotographs(cards: Card[]): Card[] {
+  if (!cards.some((c) => c.read["kind.type"])) return cards;
+  return cards.map((c) => (photographic(c) ? c : { ...c, measured: Object.fromEntries(Object.entries(c.measured).filter(([k]) => FIELD.get(k)?.lever !== "finish")) }));
+}
+
 export function build(brand: Card[], engine: Card[] = []): Built {
-  const profile = buildProfile(brand);
-  const own = engine.length ? buildProfile(engine) : null;
+  const profile = buildProfile(finishOfPhotographs(brand));
+  const own = engine.length ? buildProfile(finishOfPhotographs(engine)) : null;
   const proof = proofOf(brand, engine);
   return { schema_version: TASTE_SCHEMA_VERSION, profile, engine: own, proof, score: tasteScore(profile, proof), direction: direction(profile, own) };
 }

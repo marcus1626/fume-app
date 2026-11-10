@@ -1,6 +1,7 @@
 // Reads the cards a measuring or reading run wrote and prints what the schema says: the brand's profile, its taste
 // score, and where another set (the Engine's pictures) departs from it.
 //   deno run -A tools/taste/report.ts <cards.json> <brand set> [other set] [out.json]
+import { finishOfPhotographs } from "../../supabase/functions/_shared/taste/build.ts";
 import { buildProfile, type Card, compare, fit, type Proof, proofOf, tasteScore } from "../../supabase/functions/_shared/taste/profile.ts";
 
 const [file, brandSet, otherSet, out] = Deno.args;
@@ -14,7 +15,8 @@ const cardsOf = (name: string) => {
 const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
 
 const brandCards = cardsOf(brandSet);
-const brand = buildProfile(brandCards);
+// As build() counts: a card with no photograph in it keeps no finish numbers.
+const brand = buildProfile(finishOfPhotographs(brandCards));
 // The brand's own fit is counted on a profile built without the picture, so it does not praise itself.
 const ownFit = mean(brandCards.map((c) => fit(buildProfile(brandCards.filter((x) => x.id !== c.id)), c).fit));
 // Proof is counted like with like: the brand's pictures with a photograph in them against the Engine's.
@@ -23,7 +25,7 @@ let gaps: ReturnType<typeof compare> = [];
 let other = null;
 if (otherSet) {
   const otherCards = cardsOf(otherSet);
-  other = buildProfile(otherCards);
+  other = buildProfile(finishOfPhotographs(otherCards));
   proof = proofOf(brandCards, otherCards);
   gaps = compare(brand, other);
 }

@@ -5,7 +5,9 @@ import { direction, finishTargets, planBrief, promptLines } from "./direction.ts
 import { buildProfile, type Card, compare, fit, lowerBound, proofOf, tasteScore } from "./profile.ts";
 import { answersOf, CANNOT_TELL, laterPasses, parseAnswer, passFields, passPromptWithShape, passShape, showsOf } from "./read.ts";
 import { FIELD, FIELDS, GROUPS, measuredFields, PASSES, readFields, type Shows } from "./schema.ts";
+import { build, finishOfPhotographs } from "./build.ts";
 import { measureCard } from "./card.ts";
+import { resizeTo, SMALLEST, VIEW } from "./finish.ts";
 
 const card = (id: string, read: Card["read"], measured: Card["measured"] = {}, campaign?: string): Card => ({ id, read, measured, campaign });
 const NOTHING: Shows = { people: false, face: false, severalPeople: false, product: false, words: false, logo: false, outdoors: false };
@@ -192,4 +194,62 @@ Deno.test("proof holds the Engine's pictures against the brand's photographs onl
   assert(bad.engineFit < 0.5, "the words set on the brand's pictures are not held against a picture without words");
   assertEquals(proofOf(brand.slice(0, 5), [card("e3", {})]), null);
   assert(tasteScore(buildProfile(brand), good).parts.find((p) => p.key === "proof")!.why.includes("8 photographs (5 other pictures left out)"));
+});
+
+/** A grey picture with the same noise in every pixel at any size (a fixed, seeded scatter). */
+function noisy(width: number, height: number, spread: number): { width: number; height: number; data: Uint8ClampedArray } {
+  const data = new Uint8ClampedArray(width * height * 4);
+  let seed = 7;
+  const next = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296 - 0.5) * 2 * spread;
+  for (let i = 0; i < width * height; i++) {
+    const v = 120 + next();
+    data.set([v, v, v, 255], i * 4);
+  }
+  return { width, height, data };
+}
+
+Deno.test("grain is read at one viewing size: the same picture delivered three times as large measures the same, not finer", () => {
+  const small = noisy(1024, VIEW, 30);
+  // The same picture delivered larger: every pixel three times as wide and as high.
+  const W = 1024 * 3, H = VIEW * 3;
+  const large = { width: W, height: H, data: new Uint8ClampedArray(W * H * 4) };
+  for (let y = 0; y < H; y++)
+    for (let x = 0; x < W; x++) {
+      const from = (Math.floor(y / 3) * 1024 + Math.floor(x / 3)) * 4;
+      large.data.set(small.data.subarray(from, from + 4), (y * W + x) * 4);
+    }
+  const a = measureCard(small).measured, b = measureCard(large).measured;
+  assert(a["finish.grain_mids"]! > 1, "the noise is there to be read");
+  assertEquals(b["finish.grain_mids"], a["finish.grain_mids"]);
+  assertEquals(b["finish.sharpness_peak"], a["finish.sharpness_peak"]);
+  assertEquals([b["format.megapixels"], a["format.megapixels"]], [14.16, 1.57]);
+  const sized = resizeTo(large, VIEW);
+  assertEquals([sized.width, sized.height], [1024, VIEW]);
+  assertEquals(resizeTo(small, VIEW), small, "a picture is never made larger");
+  // A size that does not divide evenly still lands on the long side asked for.
+  const odd = resizeTo(noisy(2000, 1300, 10), 1536);
+  assertEquals([odd.width, odd.height], [1536, 998]);
+});
+
+Deno.test("a picture too small to have a finish leaves grain and sharpness unmeasured, and a profile leaves them out", () => {
+  const tiny = measureCard(noisy(360, 440, 30)).measured;
+  assert(360 < SMALLEST);
+  assertEquals([tiny["finish.grain_shadows"], tiny["finish.grain_mids"], tiny["finish.grain_chroma"], tiny["finish.sharpness_peak"]], [-1, -1, -1, -1]);
+  assert(tiny["finish.black_point"]! > 0, "tone is still read");
+  const cards = Array.from({ length: 6 }, (_, i) => card(`s${i}`, {}, tiny));
+  assertEquals(buildProfile(cards).fields["finish.grain_mids"]!.n, 0);
+});
+
+Deno.test("a card of type alone has no finish of a photograph: its finish numbers are not counted, its other numbers are", () => {
+  const photo = (id: string) => card(id, { "kind.type": "photograph" }, { "finish.black_point": 4, "composition.space": 0.3 });
+  const type = (id: string) => card(id, { "kind.type": "graphics_only" }, { "finish.black_point": 0, "composition.space": 0.8 });
+  const cards = [...Array.from({ length: 6 }, (_, i) => photo(`p${i}`)), ...Array.from({ length: 6 }, (_, i) => type(`t${i}`))];
+  const profile = build(cards).profile;
+  assertEquals([profile.fields["finish.black_point"]!.n, profile.fields["finish.black_point"]!.value], [6, 4]);
+  // How much of the frame is empty is the layout's, not the finish step's: it is counted on every card.
+  assertEquals([FIELD.get("finish.black_point")!.lever, FIELD.get("composition.space")!.lever], ["finish", "prompt"]);
+  assertEquals(profile.fields["composition.space"]!.n, 12);
+  // Cards nobody has read are counted as they are: nothing says which are photographs.
+  const unread = Array.from({ length: 6 }, (_, i) => card(`u${i}`, {}, { "finish.black_point": 0 }));
+  assertEquals(finishOfPhotographs(unread), unread);
 });
