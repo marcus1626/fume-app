@@ -18,6 +18,7 @@ import {
 import type { Live } from "./context";
 import { fileUrls } from "./map";
 import { command, rows, supabase } from "./supabase";
+import { designScores } from "./scores";
 
 type Json = Record<string, unknown>;
 
@@ -203,7 +204,7 @@ export function withDesigns(
     const from = out.find((v) => v.id === l.candidate_id);
     if (l.state === "made" && l.result_candidate_id) {
       const v = out.find((x) => x.id === l.result_candidate_id);
-      if (v)
+      if (v) {
         v.design = toVersionDesign(
           l,
           from?.number ?? 0,
@@ -211,6 +212,11 @@ export function withDesigns(
           l.document_file_id ? read.docs.get(l.document_file_id) : undefined,
           title,
         );
+        // A design is scored as a design, never as a picture (FLOWS §35.3).
+        const review = l.choice?.review as { onBrand?: number | null } | undefined;
+        const scores = designScores(v.design, review);
+        if (scores) v.evaluation = { ...v.evaluation, scores };
+      }
       continue;
     }
     // A layer that never came back (the function stopped) is not shown as at work forever.

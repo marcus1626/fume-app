@@ -33,6 +33,7 @@ import type { Live } from "./context";
 import { CREATIVE, VERSION, fileUrls, uploadFile, type CreativeRow, type VersionRow } from "./map";
 import { failureOf, modelName, readPrompts, toEnginePrompt } from "./engine";
 import { readDesigns, withDesigns } from "./design";
+import { pictureScores, type StoredLook } from "./scores";
 import { askEngine, command, requestKey, rows, supabase } from "./supabase";
 
 // ─── Rows ────────────────────────────────────────────────────────────────────
@@ -115,9 +116,10 @@ type MakeRow = {
   result_candidate_id: Id | null;
   created_at: string;
 };
-type StoredEvaluation = Pick<Evaluation, "productTruth" | "brandRules" | "artefacts" | "notes"> & {
-  evaluated?: boolean;
-};
+type StoredEvaluation = Pick<Evaluation, "productTruth" | "brandRules" | "artefacts" | "notes"> &
+  StoredLook & {
+    evaluated?: boolean;
+  };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 /** An id the database can hold; anything else (an old link, a demo id) is simply not there. */
@@ -131,16 +133,22 @@ export const toFormat = (f: CreativeRow["format"]): Format => (f === "banner" ? 
 /** A picture's evaluation: what the Engine saw when it looked at its own picture. A picture made by hand, or one the
  *  Engine has not looked at yet, has none: nothing is said to hold or to be off, the expert checks Product Truth, the
  *  brand rules and artefacts by eye, and the note says how the picture was made. */
-export function evaluationOf(c: Pick<CandidateRow, "origin" | "note" | "evaluation"> | undefined): Evaluation {
+export function evaluationOf(
+  c: (Pick<CandidateRow, "origin" | "note" | "evaluation"> & Partial<Pick<CandidateRow, "details">>) | undefined,
+): Evaluation {
   const e = c?.evaluation;
-  if (c?.origin === "engine" && e?.evaluated)
+  if (c?.origin === "engine" && e?.evaluated) {
+    // Scored from what the picture check saw and the product's parts compared with the real ones (FLOWS §35.3).
+    const scores = pictureScores(e, c.details);
     return {
       productTruth: e.productTruth,
       brandRules: e.brandRules,
       artefacts: e.artefacts,
       notes: e.notes,
       evaluated: true,
+      ...(scores ? { scores } : {}),
     };
+  }
   const how = c?.origin === "engine" ? "Made by the Engine" : "Made by hand";
   return {
     productTruth: "flag",

@@ -166,8 +166,21 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
         ],
       }).catch(() => [])
     : [];
-  const designOf = (v: VersionRow) =>
-    v.candidate_id ? designDocs.flatMap((d) => d.doc.versions).find((x) => x.id === v.candidate_id)?.design : undefined;
+  const designedVersion = (v: VersionRow) =>
+    v.candidate_id ? designDocs.flatMap((d) => d.doc.versions).find((x) => x.id === v.candidate_id) : undefined;
+  const designOf = (v: VersionRow) => designedVersion(v)?.design;
+  // A design is scored as a design (FLOWS §35.3), and what the Engine saw on the picture under it still holds: the
+  // product and the brand were looked at there, not on the words laid over them.
+  const scored = (e: Evaluation, v: VersionRow): Evaluation => {
+    const designed = designedVersion(v);
+    if (!designed?.design) return e;
+    const under = designDocs
+      .flatMap((d) => d.doc.versions)
+      .find((x) => x.id === designed.design!.fromVersionId)?.evaluation;
+    const base = !e.evaluated && under?.evaluated ? under : e;
+    const scores = designed.evaluation.scores;
+    return scores ? { ...base, scores } : base;
+  };
   const snapshotIds = [...new Set(checks.flatMap((c) => (c.snapshot_id ? [c.snapshot_id] : [])))];
   const snapshots = snapshotIds.length
     ? await rows<{
@@ -307,7 +320,7 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
         state,
         evaluation: withChanges(
           withFileCheck(
-            evaluationOf(made),
+            scored(evaluationOf(made), v),
             fileChecks.filter((f) => f.version_id === v.id),
             Boolean(v.file_id),
             toFormat(cr.format),
