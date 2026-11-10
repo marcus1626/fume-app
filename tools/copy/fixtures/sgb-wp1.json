@@ -5,6 +5,53 @@
   "status": "Work package 1, main work first, optional work at the end. For the call on 10 November 2026.",
   "sections": [
     {
+      "id": "engine",
+      "eyebrow": "Fume Engine · Copy module · prototype",
+      "title": "From brief to copy",
+      "lede": "How this work was made. A language model writes. Code decides whether a line holds. A person decides what goes out. In this hand-in: 219 lines, 0 errors, 3 warnings left open on the last page.",
+      "blocks": [
+        {
+          "type": "flow",
+          "steps": [
+            {
+              "title": "Read the brief",
+              "text": "The brief becomes a brand file: 11 SGB facts with their source, 13 customer quotes word for word, every field limit, and what is ruled out.",
+              "status": "By hand in the prototype"
+            },
+            {
+              "title": "Research",
+              "text": "Law, regulator, trade body, competitors. Each finding keeps its source, or it becomes an assumption.",
+              "status": "By hand in the prototype"
+            },
+            {
+              "title": "Write",
+              "text": "A language model writes each line into its own field: headline, subline, button, script beat. It may only use facts from the brand file.",
+              "status": "Language model"
+            },
+            {
+              "title": "Check",
+              "text": "Code reads every line: the length of its field, quotes word for word, no number without a source, no price or saving, stock phrases, and the swap test.",
+              "status": "Code today"
+            },
+            {
+              "title": "Send back",
+              "text": "A line that fails goes back to be rewritten. Here the first run stopped four lines, and the swap test sent Track A's first headline back.",
+              "status": "By hand in the prototype"
+            },
+            {
+              "title": "A person decides",
+              "text": "A person reads the copy next to the report and decides what goes out. The Engine sends nothing on its own.",
+              "status": "A person"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "html": "<p>Next: every edit and every “no” becomes a lesson for the next brief. That part is built and not switched on yet. The full report of the check is on the last page.</p>"
+        }
+      ]
+    },
+    {
       "id": "ideas",
       "eyebrow": "The two ideas, first",
       "title": "Two ways in. One promise each.",
@@ -35,7 +82,37 @@
       "blocks": [
         {
           "type": "text",
-          "html": "<p>Built from SGB's own line <em>Starke Tarife. Entspannte Entscheidungen.</em> and from how its customers talk: one fixed contact person, someone who takes care of everything, half the rent in running the place. Short sentences. First and second person. Concrete things from the owner's day. No exclamation marks, no energy jargon, no promise we cannot prove.</p>"
+          "html": "<p>SGB has no brand guide yet, so the voice is built from the two sources the brief names: SGB's own lines and the 13 customer quotes. Short sentences. First and second person. Concrete things from the owner's day. No exclamation marks, no energy jargon, no promise we cannot prove.</p>"
+        },
+        {
+          "type": "table",
+          "head": [
+            "Our word",
+            "Where it comes from in SGB",
+            "What it does in the copy"
+          ],
+          "rows": [
+            [
+              "Calm",
+              "SGB's line “STARKE TARIFE. ENTSPANNTE ENTSCHEIDUNGEN.” (relaxed decisions). Tobias Averbeck: “Whoever has secure energy and secure costs is halfway there in running the operation.” (translated)",
+              "Nothing is urgent, nothing shouts. The advisor has the date, so the owner can stop thinking about it."
+            ],
+            [
+              "Personal",
+              "SGB's pillar “PERSÖNLICHE BERATUNG”. Christian Bleitner: “At SGB, I have one fixed contact person. I do not know that from other suppliers.” Henning Wagner: “My personal SGB advisor takes care of everything.” (both translated)",
+              "Always “your SGB advisor”, never “our team”. One name, one number."
+            ],
+            [
+              "Straight",
+              "SGB's line “Ihre Energie, einfach besser.” (simply better). Gordon von Godin: “Transparent billing and personal contact are important to me.” (translated)",
+              "We say the uncomfortable part first: you can leave us, and we will tell you when."
+            ],
+            [
+              "Left out",
+              "SGB's pillars “KOSTEN MINIMIEREN / EINSPARUNGEN MAXIMIEREN”.",
+              "The voice never promises a saving. Section 1 gives no figure."
+            ]
+          ]
         },
         {
           "type": "piece",

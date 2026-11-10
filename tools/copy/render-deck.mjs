@@ -59,6 +59,7 @@ function block(b) {
     case "visual": return `<div class="ui-card ui-card--lg cd-block"><p class="web-eyebrow">The visual</p><p class="web-text">${esc(b.text)}</p></div>`;
     case "list": return `<ul class="web-text cd-list">${b.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>`;
     case "static": return staticSketch(b);
+    case "flow": return `<ol class="cd-flow">${b.steps.map((st, i) => `<li class="ui-card ui-card--lg"><p class="web-eyebrow">Step ${i + 1}</p><h3 class="web-title">${esc(st.title)}</h3><p class="web-text">${esc(st.text)}</p><p><span class="ui-badge">${esc(st.status)}</span></p></li>`).join("")}</ol>`;
     case "beats": return table(["Beat", "Seconds", "What we see", "What is said", "Text on screen"], b.rows.map((r) => [r.beat, r.s, r.see, r.said || "(no voice)", r.screen]));
     default: return "";
   }
@@ -96,6 +97,8 @@ const html = `<!doctype html>
 .cd-prose p + p { margin-top: var(--ui-space-sm); }
 .cd-staticwrap { display: grid; grid-template-columns: minmax(0, 320px) minmax(0, 1fr); gap: var(--ui-space-xl); align-items: start; }
 .cd-static { display: block; width: 100%; height: auto; }
+.cd-flow { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ui-space-lg); }
+.cd-flow li { display: grid; gap: var(--ui-space-sm); align-content: start; }
 .cd-list { padding-left: var(--ui-space-lg); display: grid; gap: var(--ui-space-xs); }
 @media print {
   .cd-table tr, .cd-staticwrap, .ui-card { break-inside: avoid; }
@@ -106,6 +109,7 @@ const html = `<!doctype html>
 }
 @media (max-width: 720px) {
   .cd-staticwrap { grid-template-columns: minmax(0, 1fr); }
+  .cd-flow { grid-template-columns: minmax(0, 1fr); }
   .cd-table th[scope="row"], .cd-copy, .cd-meta { display: block; width: auto; padding-top: 0; }
   .cd-table tr { display: block; padding-top: var(--ui-space-md); }
 }
