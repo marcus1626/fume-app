@@ -1,9 +1,9 @@
 {
-  "updated": "2026-11-09T17:50:00Z",
+  "updated": "2026-11-10T17:50:00Z",
   "deadline": "2026-11-21T23:59:59+01:00",
   "deadlineLabel": "the Fume app is finished",
   "start": "2026-10-26T08:00:00+01:00",
-  "summary": "The whole customer round runs live. The Engine learns, knows each brand, sets graphic design that passes its hard checks, makes every format from an approved master, and now checks each part of the product against the real one. Next: product size measured by code, brands' own fonts, then video. Target: the whole app finished on 21 November.",
+  "summary": "The whole customer round runs live. The Engine learns, knows each brand, sets graphic design that passes its hard checks, makes every format from an approved master, and checks each part of the product against the real one. Now it is learning each brand's taste from the brand's own pictures, so graphic design on brand moves to 11–14 November. Then video. Target: the whole app finished on 21 November.",
   "tracks": [
     {
       "id": "app",
@@ -144,8 +144,8 @@
         {
           "status": "now",
           "title": "Graphic design by the Engine with OpenPencil",
-          "note": "Part 3: text placement planned with the picture, headlines fit the brand's column, design scored against the brand's own site. Anthem test: 3–4 of 5 on brand",
-          "date": "10 Nov"
+          "note": "Scores 3–4 of 5 on brand in the Anthem test. Now adding each brand's taste (taste schema and reference pictures) before it counts as on brand.",
+          "date": "11–14 Nov"
         },
         {
           "status": "done",
@@ -198,7 +198,7 @@
       "status": "done"
     },
     {
-      "date": "10 Nov",
+      "date": "11–14 Nov",
       "title": "Graphic design on brand",
       "status": "next"
     },
@@ -224,6 +224,20 @@
     }
   ],
   "reports": [
+    {
+      "date": "2026-11-10",
+      "title": "Teaching the Engine each brand's taste",
+      "items": [
+        "A taste schema per brand: 349 things read from every picture (camera, distance, posing, light, grain, colour and more), 77 measured by code and the rest read by a vision model.",
+        "First taste score: Nike gets 50 of 100. The Engine shows the product alone, quiet and cool, where Nike shows people in motion, warm and sharp.",
+        "Six vision models were tested on the same pictures. The best value reads a picture for under 2 cents. A second reader (Jev) is now live and being compared with it.",
+        "The taste profile is now written as instructions the plan and the Engine follow, with what the Engine missed last time first.",
+        "The Engine now picks the brand's own reference pictures by angle, crop and whether people are in them. Turning this on in the real app waits for Marcus's yes.",
+        "A measuring error for grain and sharpness was found and fixed.",
+        "The language model key stopped working in the afternoon; a new key was added and everything runs again.",
+        "Design thread: a Library, one place for everything that has been made, with search and filters. It is in the preview and waits for Marcus's yes."
+      ]
+    },
     {
       "date": "2026-11-09",
       "title": "Text placement, and a first test on a real prospect",
