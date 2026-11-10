@@ -33,6 +33,22 @@ function table(head, rows) {
   return `<div class="cd-scroll"><table class="cd-table cd-grid"><thead><tr>${head.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 
+// A 4:5 layout sketch of a static, in the client's own colours. Drawn as SVG: the page around it stays Fume's.
+function staticSketch(b) {
+  const W = 400, H = 500, pad = 28;
+  const hlSize = b.hlSize ?? 34, slSize = 15;
+  const photoH = b.photoH ?? 250;
+  let y = photoH + 52;
+  const hl = b.hl.map((l) => { const t = `<text x="${pad}" y="${y}" font-size="${hlSize}" font-weight="700" fill="#ffffff">${esc(l)}</text>`; y += hlSize * 1.12; return t; }).join("");
+  y += 6;
+  const sl = b.sl.map((l) => { const t = `<text x="${pad}" y="${y}" font-size="${slSize}" fill="#ffffff" fill-opacity="0.86">${esc(l)}</text>`; y += slSize * 1.4; return t; }).join("");
+  let py = photoH / 2 - (b.photo.length - 1) * 9;
+  const photo = b.photo.map((l, i) => { const t = `<text x="${W / 2}" y="${py}" font-size="12.5" text-anchor="middle" fill="#ffffff" fill-opacity="${i ? 0.8 : 1}" font-weight="${i ? 400 : 700}">${esc(l)}</text>`; py += 18; return t; }).join("");
+  const svg = `<svg class="cd-static" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(b.alt ?? "Layout sketch of the static")}" font-family="Helvetica Neue, Helvetica, Arial, sans-serif"><rect width="${W}" height="${H}" fill="${b.bg ?? "#132f51"}"/><rect width="${W}" height="${photoH}" fill="${b.photoFill ?? "#30649f"}"/>${photo}${hl}${sl}<rect x="${W - pad - 86}" y="${H - pad - 22}" width="86" height="22" fill="#ffffff" fill-opacity="0.14"/><text x="${W - pad - 43}" y="${H - pad - 7}" font-size="11" text-anchor="middle" fill="#ffffff">SGB logo</text><rect x="${pad}" y="${H - pad - 5}" width="44" height="5" fill="${b.accent ?? "#95a434"}"/></svg>`;
+  const frame = b.frame ? `<table class="cd-table">${b.frame.map(([k, v]) => `<tr><th scope="row">${esc(k)}</th><td>${esc(v)}</td></tr>`).join("")}</table>` : "";
+  return `<div class="ui-card ui-card--lg cd-block cd-staticwrap"><div>${svg}</div><div><p class="web-eyebrow">${esc(b.title ?? "Layout sketch")}</p><p class="web-text cd-job">${esc(b.note ?? "")}</p>${frame}</div></div>`;
+}
+
 function block(b) {
   switch (b.type) {
     case "text": return `<div class="web-text cd-prose">${b.html}</div>`;
@@ -42,6 +58,7 @@ function block(b) {
     case "table": return table(b.head, b.rows);
     case "visual": return `<div class="ui-card ui-card--lg cd-block"><p class="web-eyebrow">The visual</p><p class="web-text">${esc(b.text)}</p></div>`;
     case "list": return `<ul class="web-text cd-list">${b.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>`;
+    case "static": return staticSketch(b);
     case "beats": return table(["Beat", "Seconds", "What we see", "What is said", "Text on screen"], b.rows.map((r) => [r.beat, r.s, r.see, r.said || "(no voice)", r.screen]));
     default: return "";
   }
@@ -50,7 +67,7 @@ function block(b) {
 let warm = true;
 const sections = deck.sections.map((s) => {
   warm = !warm;
-  return `<section class="web-section${warm ? " web-section--warm" : ""}" id="${s.id}"><div class="web-wrap"><p class="web-eyebrow">${esc(s.eyebrow)}</p><h2 class="web-display">${esc(s.title)}</h2><div class="web-group cd-stack">${s.blocks.map(block).join("\n")}</div></div></section>`;
+  return `<section class="web-section${warm ? " web-section--warm" : ""}" id="${s.id}"><div class="web-wrap"><p class="web-eyebrow">${esc(s.eyebrow)}</p><h2 class="web-display">${esc(s.title)}</h2>${s.lede ? `<p class="web-lede">${esc(s.lede)}</p>` : ""}<div class="web-group cd-stack">${s.blocks.map(block).join("\n")}</div></div></section>`;
 });
 
 const c = report.counts ?? {};
@@ -77,8 +94,18 @@ const html = `<!doctype html>
 .cd-meta .ui-badge { margin: 0 var(--ui-space-xs) var(--ui-space-xs) 0; }
 .cd-note { display: block; color: var(--ui-text-tertiary); margin-top: var(--ui-space-xs); }
 .cd-prose p + p { margin-top: var(--ui-space-sm); }
+.cd-staticwrap { display: grid; grid-template-columns: minmax(0, 320px) minmax(0, 1fr); gap: var(--ui-space-xl); align-items: start; }
+.cd-static { display: block; width: 100%; height: auto; }
 .cd-list { padding-left: var(--ui-space-lg); display: grid; gap: var(--ui-space-xs); }
+@media print {
+  .cd-table tr, .cd-staticwrap, .ui-card { break-inside: avoid; }
+  .web-section { padding-top: var(--ui-space-xl); padding-bottom: var(--ui-space-xl); }
+  .web-eyebrow, .web-display, .web-lede, .cd-h3, .cd-prose { break-after: avoid; }
+  .web-hero { min-height: 0; }
+  fume-light { display: none; }
+}
 @media (max-width: 720px) {
+  .cd-staticwrap { grid-template-columns: minmax(0, 1fr); }
   .cd-table th[scope="row"], .cd-copy, .cd-meta { display: block; width: auto; padding-top: 0; }
   .cd-table tr { display: block; padding-top: var(--ui-space-md); }
 }
