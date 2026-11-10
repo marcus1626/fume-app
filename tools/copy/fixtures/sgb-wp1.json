@@ -14,7 +14,7 @@
           "cards": [
             {
               "title": "Track B · Even ours",
-              "text": "Your SGB advisor calls before every notice date, even on SGB's own contracts. We put the twist in the headline: We'll remind you when you can leave us. A sentence no supplier says about itself."
+              "text": "Your SGB advisor calls before every notice date, even on SGB's own contracts. We put the twist in the headline: We'll remind you when you can leave us. We found no supplier that says this about itself."
             },
             {
               "title": "Track A · Meet your supplier",
@@ -750,7 +750,7 @@
             [
               "Of the 13 customer quotes SGB gave us, four name the person first: one fixed contact person, “I do not know that from other suppliers” (Bleitner, translated), a personal advisor who takes care of everything (Wagner), personal care (Sagdic), personal contact (von Godin). Five name money.",
               "SGB home page, appendix B",
-              "The proof is about a person, and one customer says other suppliers do not have it. That is our swap test, in a customer's words."
+              "The proof is about a person. But competitors promise a personal advisor too (see the competitor scan under sources). So Track A stands on its execution, the supplier at the door, and not on the claim."
             ],
             [
               "Owners distrust energy sales calls.",
@@ -2123,6 +2123,40 @@
               "The Homeless Bank Account, Cannes Lions 2021 (the brief's reference, appendix C)"
             ]
           ]
+        },
+        {
+          "type": "h3",
+          "text": "What competitors say (a quick scan on 10 November 2026, not a market study)"
+        },
+        {
+          "type": "table",
+          "head": [
+            "Who",
+            "What they promise",
+            "What it means for us"
+          ],
+          "rows": [
+            [
+              "Vattenfall, page for hotels and restaurants",
+              "Personal advisors, and “Kein Callcenter, sondern persönliche Beratung”.",
+              "A personal advisor is a category claim. Track A cannot stand on the claim alone."
+            ],
+            [
+              "Stromeus, a broker for business electricity",
+              "One contact person in place of a call centre, advice on site on request, and it tracks the notice period and renewal date.",
+              "Brokers watch the date for the customer. A reminder alone does not pass the swap test."
+            ],
+            [
+              "mwenergy and Ampere (Gastro Strom)",
+              "They talk to the owner in person and advise on site.",
+              "On-site visits are a category claim too."
+            ],
+            [
+              "Any supplier or broker we read",
+              "None promises to remind a customer before its own notice date.",
+              "The twist of Track B is the one promise we did not find elsewhere. SGB should confirm that."
+            ]
+          ]
         }
       ]
     },
@@ -2163,7 +2197,7 @@
           "cards": [
             {
               "title": "Why these two ideas",
-              "text": "Track B: we put the twist in the headline, where it cannot be cut. “We'll remind you when you can leave us” is a sentence no supplier says about itself, and it gives the owner a reason to take one energy call. Track A: SGB's customers name a person before they name a price, and hospitality already has a ritual for a supplier it trusts. They come to the door."
+              "text": "Track B: we put the twist in the headline, where it cannot be cut. “We'll remind you when you can leave us” is a sentence we found no supplier saying about itself, and it gives the owner a reason to take one energy call. Track A: SGB's customers name a person before they name a price. Competitors claim a personal advisor too, so Track A stands on its execution: the supplier at the door. Track B is the stronger idea."
             },
             {
               "title": "What we left out",
