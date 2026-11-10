@@ -1,38 +1,221 @@
 {
   "brand": "SGB",
   "lang": "en",
-  "anchors": ["SGB", "SGB's", "VZ FLEX", "SGB Portfolio", "500 experts", "on site", "even ours", "even SGB's own", "SGB's own"],
+  "anchors": [
+    "SGB",
+    "SGB's",
+    "VZ FLEX",
+    "SGB Portfolio",
+    "500 experts",
+    "on site",
+    "even ours",
+    "even SGB's own",
+    "SGB's own"
+  ],
   "noPriceOrSavings": true,
   "emojiAllowed": false,
-  "avoidWords": ["hassle", "solutions", "partner", "journey", "cheap", "deal"],
+  "avoidWords": [
+    "hassle",
+    "solutions",
+    "partner",
+    "journey",
+    "cheap",
+    "deal"
+  ],
   "briefText": "SGB Energie GmbH sells electricity and gas to businesses in Germany. Its price model is a mix of exchange prices and fixed prices. A personal advisor from a network of over 500 experts looks after each customer. The switch to SGB is free and digital. An owner can book a call with an advisor, or sign a contract online. We believe that energy is a big cost for a restaurant or a hotel. Yet the owner rarely looks at it: the bill arrives, and they pay it. And when someone calls about energy, they hang up. Make these owners want to find out what SGB would mean for them. Owners do not choose to stay with their supplier. They miss the day they could leave. My SGB advisor calls me before every notice date, even SGB's own.",
   "facts": [
-    { "id": "experts", "statement": "A Germany-wide network of over 500 experts", "source": "sgb-energie.de home page (brief ref 1.3)", "verified": true, "numbers": ["500"] },
-    { "id": "visits", "statement": "Advisors visit the customer on site", "source": "home page (ref 1.3)", "verified": true },
-    { "id": "reminder", "statement": "Advisors call the customer before every notice date, SGB's own contracts included", "source": "SGB via Eike Cotte, 8 Nov 2026 (ref 1.3)", "verified": true },
-    { "id": "free", "statement": "The switch to SGB is free for all customers", "source": "tariff page (ref 1.4)", "verified": true },
-    { "id": "digital", "statement": "100% digital documents", "source": "home page (ref 1.4)", "verified": true, "numbers": ["100"] },
-    { "id": "oldcontract", "statement": "After the signature, SGB cancels the old contract or takes it over", "source": "SGB via Eike Cotte, 8 Nov 2026 (ref 1.3)", "verified": true },
-    { "id": "mix", "statement": "An individual mix of spot and fixed prices, terms from 1 to 60 months", "source": "tariff page (ref 1.3)", "verified": true, "numbers": ["1", "60"] },
-    { "id": "vzflex", "statement": "SGB VZ FLEX: cancel every month", "source": "VZ FLEX page (ref 1.3)", "verified": true },
-    { "id": "portfolio", "statement": "SGB Portfolio: terms of 12, 24 or 36 months; one month notice; without notice it renews by 12 months", "source": "SGB news post, 5 Oct 2026 (ref 1.3)", "verified": true, "numbers": ["12", "24", "36"] },
-    { "id": "hours", "statement": "Monday to Friday, 9:00 to 18:00", "source": "home and tariff pages (ref 1.2)", "verified": true, "numbers": ["9", "00", "18"] },
-    { "id": "consumer-law", "statement": "Since March 2022 a household energy contract may only roll on month by month; a business contract renews as written", "source": "energiehelden24.nrw, Gewerbestrom kündigen (read 10 Nov 2026); Verbraucherzentrale Niedersachsen", "verified": true }
+    {
+      "id": "experts",
+      "statement": "A Germany-wide network of over 500 experts",
+      "source": "sgb-energie.de home page (brief ref 1.3)",
+      "verified": true,
+      "numbers": [
+        "500"
+      ]
+    },
+    {
+      "id": "visits",
+      "statement": "Advisors visit the customer on site",
+      "source": "home page (ref 1.3)",
+      "verified": true
+    },
+    {
+      "id": "reminder",
+      "statement": "Advisors call the customer before every notice date, SGB's own contracts included",
+      "source": "SGB via Eike Cotte, 8 Nov 2026 (ref 1.3)",
+      "verified": true
+    },
+    {
+      "id": "free",
+      "statement": "The switch to SGB is free for all customers",
+      "source": "tariff page (ref 1.4)",
+      "verified": true
+    },
+    {
+      "id": "digital",
+      "statement": "100% digital documents",
+      "source": "home page (ref 1.4)",
+      "verified": true,
+      "numbers": [
+        "100"
+      ]
+    },
+    {
+      "id": "oldcontract",
+      "statement": "After the signature, SGB cancels the old contract or takes it over",
+      "source": "SGB via Eike Cotte, 8 Nov 2026 (ref 1.3)",
+      "verified": true
+    },
+    {
+      "id": "mix",
+      "statement": "An individual mix of spot and fixed prices, terms from 1 to 60 months",
+      "source": "tariff page (ref 1.3)",
+      "verified": true,
+      "numbers": [
+        "1",
+        "60"
+      ]
+    },
+    {
+      "id": "vzflex",
+      "statement": "SGB VZ FLEX: cancel every month",
+      "source": "VZ FLEX page (ref 1.3)",
+      "verified": true
+    },
+    {
+      "id": "portfolio",
+      "statement": "SGB Portfolio: terms of 12, 24 or 36 months; one month notice; without notice it renews by 12 months",
+      "source": "SGB news post, 5 Oct 2026 (ref 1.3)",
+      "verified": true,
+      "numbers": [
+        "12",
+        "24",
+        "36"
+      ]
+    },
+    {
+      "id": "hours",
+      "statement": "Monday to Friday, 9:00 to 18:00",
+      "source": "home and tariff pages (ref 1.2)",
+      "verified": true,
+      "numbers": [
+        "9",
+        "00",
+        "18"
+      ]
+    },
+    {
+      "id": "consumer-law",
+      "statement": "Since March 2022 a household energy contract may only roll on month by month; a business contract renews as written",
+      "source": "energiehelden24.nrw, Gewerbestrom kündigen (read 10 Nov 2026); Verbraucherzentrale Niedersachsen",
+      "verified": true
+    }
   ],
   "quotes": [
-    { "id": "bleitner", "speaker": "Christian Bleitner", "business": "Betriebsleiter, Augustiner Klosterwirt, München", "original": "Bei der SGB habe ich einen festen Ansprechpartner. So etwas kenne ich nicht von anderen Versorgern.", "translation": "At SGB, I have one fixed contact person. I do not know that from other suppliers.", "source": "home page" },
-    { "id": "andresen", "speaker": "Christian Andresen", "business": "The Mandala Hotel Berlin", "original": "Dank der SGB konnten wir von den günstigen Spotmarkt-Preisen profitieren.", "translation": "Thanks to SGB, we could profit from the low spot market prices.", "source": "tariff page" },
-    { "id": "goedtel", "speaker": "Thomas Gödtel", "business": "Inhaber, Tenno Sushi Lounge", "original": "Durch die SGB kann ich einiges an Geld sparen.", "translation": "Through SGB, I can save a good amount of money.", "source": "home page" },
-    { "id": "wagner", "speaker": "Henning Wagner", "business": "Inhaber, Wagner Hotel zur Post", "original": "Mein persönlicher SGB-Berater kümmert sich um alles.", "translation": "My personal SGB advisor takes care of everything.", "source": "home page" },
-    { "id": "wallendorf", "speaker": "Wolf Wallendorf", "business": "Pureburrito GmbH", "original": "Dank SGB haben wir wieder Mittel, um zu investieren.", "translation": "Thanks to SGB, we have money to invest again.", "source": "home page" },
-    { "id": "pichlmeyer", "speaker": "Karl Pichlmeyer", "business": "Hopfenbauer", "original": "SGB analysiert den ganzjährigen Lastgang und kauft Strom nicht zum höchsten Preis ein.", "translation": "SGB analyses the load profile across the whole year and does not buy electricity at the highest price.", "source": "home page" },
-    { "id": "riem", "speaker": "Catharina Riem", "business": "Islandpferdehof Vindholar", "original": "Der Wechsel zu SGB spart uns Arbeitszeit und bringt finanzielle Vorteile.", "translation": "The switch to SGB saves us working time and brings financial benefits.", "source": "home page" },
-    { "id": "averbeck", "speaker": "Tobias Averbeck", "business": "Bürgermeister der Gemeinde Bakum", "original": "Wer Energiesicherheit und Kostensicherheit hat, hat die halbe Miete im Betriebsablauf.", "translation": "Whoever has secure energy and secure costs is halfway there in running the operation.", "source": "home page" },
-    { "id": "stock", "speaker": "Christian Stock", "business": "Eigentümer der Bürokomplexe Stockwerk", "original": "Ich habe durch den Wechsel zu SGB deutlich Geld gespart.", "translation": "Through the switch to SGB, I saved a noticeable amount of money.", "source": "home page" },
-    { "id": "pleis", "speaker": "Cord Pleis", "business": "Haustechnik Johann Pleis GmbH", "original": "Ich muss mir keine Sorgen um falsch berechnete Energiekosten machen.", "translation": "I do not have to worry about wrongly calculated energy costs.", "source": "home page" },
-    { "id": "sagdic", "speaker": "Tolga Sagdic", "business": "MAHLE chargeBIG GmbH", "original": "Bei der SGB überzeugte mich die persönliche und lösungsorientierte Kundenbetreuung.", "translation": "At SGB, the personal and solution-focused customer care convinced me.", "source": "home page" },
-    { "id": "vongodin", "speaker": "Gordon von Godin", "business": "DDR Museum Berlin", "original": "Transparente Abrechnung und persönlicher Kontakt sind mir wichtig.", "translation": "Transparent billing and personal contact are important to me.", "source": "home page" },
-    { "id": "kuschur", "speaker": "Mirja Kuschur", "business": "EK Group GmbH", "original": "Ich kann jedem nur raten, mit der SGB Energie zusammenzuarbeiten.", "translation": "I can only advise everyone to work with SGB Energie.", "source": "home page" }
+    {
+      "id": "bleitner",
+      "speaker": "Christian Bleitner",
+      "business": "Betriebsleiter, Augustiner Klosterwirt, München",
+      "original": "Bei der SGB habe ich einen festen Ansprechpartner. So etwas kenne ich nicht von anderen Versorgern.",
+      "translation": "At SGB, I have one fixed contact person. I do not know that from other suppliers.",
+      "source": "home page"
+    },
+    {
+      "id": "andresen",
+      "speaker": "Christian Andresen",
+      "business": "The Mandala Hotel Berlin",
+      "original": "Dank der SGB konnten wir von den günstigen Spotmarkt-Preisen profitieren.",
+      "translation": "Thanks to SGB, we could profit from the low spot market prices.",
+      "source": "tariff page"
+    },
+    {
+      "id": "goedtel",
+      "speaker": "Thomas Gödtel",
+      "business": "Inhaber, Tenno Sushi Lounge",
+      "original": "Durch die SGB kann ich einiges an Geld sparen.",
+      "translation": "Through SGB, I can save a good amount of money.",
+      "source": "home page"
+    },
+    {
+      "id": "wagner",
+      "speaker": "Henning Wagner",
+      "business": "Inhaber, Wagner Hotel zur Post",
+      "original": "Mein persönlicher SGB-Berater kümmert sich um alles.",
+      "translation": "My personal SGB advisor takes care of everything.",
+      "source": "home page"
+    },
+    {
+      "id": "wallendorf",
+      "speaker": "Wolf Wallendorf",
+      "business": "Pureburrito GmbH",
+      "original": "Dank SGB haben wir wieder Mittel, um zu investieren.",
+      "translation": "Thanks to SGB, we have money to invest again.",
+      "source": "home page"
+    },
+    {
+      "id": "pichlmeyer",
+      "speaker": "Karl Pichlmeyer",
+      "business": "Hopfenbauer",
+      "original": "SGB analysiert den ganzjährigen Lastgang und kauft Strom nicht zum höchsten Preis ein.",
+      "translation": "SGB analyses the load profile across the whole year and does not buy electricity at the highest price.",
+      "source": "home page"
+    },
+    {
+      "id": "riem",
+      "speaker": "Catharina Riem",
+      "business": "Islandpferdehof Vindholar",
+      "original": "Der Wechsel zu SGB spart uns Arbeitszeit und bringt finanzielle Vorteile.",
+      "translation": "The switch to SGB saves us working time and brings financial benefits.",
+      "source": "home page"
+    },
+    {
+      "id": "averbeck",
+      "speaker": "Tobias Averbeck",
+      "business": "Bürgermeister der Gemeinde Bakum",
+      "original": "Wer Energiesicherheit und Kostensicherheit hat, hat die halbe Miete im Betriebsablauf.",
+      "translation": "Whoever has secure energy and secure costs is halfway there in running the operation.",
+      "source": "home page"
+    },
+    {
+      "id": "stock",
+      "speaker": "Christian Stock",
+      "business": "Eigentümer der Bürokomplexe Stockwerk",
+      "original": "Ich habe durch den Wechsel zu SGB deutlich Geld gespart.",
+      "translation": "Through the switch to SGB, I saved a noticeable amount of money.",
+      "source": "home page"
+    },
+    {
+      "id": "pleis",
+      "speaker": "Cord Pleis",
+      "business": "Haustechnik Johann Pleis GmbH",
+      "original": "Ich muss mir keine Sorgen um falsch berechnete Energiekosten machen.",
+      "translation": "I do not have to worry about wrongly calculated energy costs.",
+      "source": "home page"
+    },
+    {
+      "id": "sagdic",
+      "speaker": "Tolga Sagdic",
+      "business": "MAHLE chargeBIG GmbH",
+      "original": "Bei der SGB überzeugte mich die persönliche und lösungsorientierte Kundenbetreuung.",
+      "translation": "At SGB, the personal and solution-focused customer care convinced me.",
+      "source": "home page"
+    },
+    {
+      "id": "vongodin",
+      "speaker": "Gordon von Godin",
+      "business": "DDR Museum Berlin",
+      "original": "Transparente Abrechnung und persönlicher Kontakt sind mir wichtig.",
+      "translation": "Transparent billing and personal contact are important to me.",
+      "source": "home page"
+    },
+    {
+      "id": "kuschur",
+      "speaker": "Mirja Kuschur",
+      "business": "EK Group GmbH",
+      "original": "Ich kann jedem nur raten, mit der SGB Energie zusammenzuarbeiten.",
+      "translation": "I can only advise everyone to work with SGB Energie.",
+      "source": "home page"
+    }
   ],
   "categoryLines": [
     "Switch your business energy supplier now and save on energy costs",
@@ -49,12 +232,32 @@
     "Fixed prices, planning security for your business"
   ],
   "forbidden": [
-    { "pattern": "sustainab|green (electricity|energy|power)|climate|carbon", "why": "every supplier leads with sustainability (brief 1.1)" },
-    { "pattern": "below (the )?(usual )?market price|lowest price|low prices", "why": "do not lead with low market prices (brief 1.1)" },
-    { "pattern": "light ?bulbs?|wind turbines?|piggy banks?|power lines?", "why": "category clichés (ref 3.9)" },
-    { "pattern": "\\b(more than|over) (500|five hundred) (advisors|consultants)\\b", "why": "use SGB's word, experts, and do not make the number bigger (ref 1.4)" }
+    {
+      "pattern": "sustainab|green (electricity|energy|power)|climate|carbon",
+      "why": "every supplier leads with sustainability (brief 1.1)"
+    },
+    {
+      "pattern": "below (the )?(usual )?market price|lowest price|low prices",
+      "why": "do not lead with low market prices (brief 1.1)"
+    },
+    {
+      "pattern": "light ?bulbs?|wind turbines?|piggy banks?|power lines?",
+      "why": "category clichés (ref 3.9)"
+    },
+    {
+      "pattern": "\\b(more than|over) (500|five hundred) (advisors|consultants)\\b",
+      "why": "use SGB's word, experts, and do not make the number bigger (ref 1.4)"
+    }
   ],
   "formatOverrides": {
-    "meta.description": { "recommended": 25, "max": 30, "source": "proposed" }
+    "meta.description": {
+      "recommended": 25,
+      "max": 30,
+      "source": "proposed"
+    },
+    "linkedin.headline": {
+      "max": 70,
+      "source": "brief D.1"
+    }
   }
 }
