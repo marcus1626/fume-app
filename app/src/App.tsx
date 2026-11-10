@@ -90,6 +90,7 @@ function brandPages(frame: "studio" | "agency") {
     },
     { path: `${b}/queue`, lazy: page(() => import("./features/studio/QueuePage"), "QueuePage") },
     ...campaigns,
+    { path: `${b}/library`, lazy: page(() => import("./features/library/LibraryPage"), "LibraryPage") },
     { path: `${b}/studio`, lazy: page(() => import("./features/studio/doc/StudioHomePage"), "StudioHomePage") },
     { path: `${b}/studio/session/:sessionId`, lazy: page(() => import("./features/studio/StudioPage"), "StudioPage") },
     { path: `${b}/engine`, lazy: page(() => import("./features/engine/EngineChatPage"), "EngineChatPage") },
@@ -157,6 +158,8 @@ const routes = [
           // the quality log
           { path: "studio", lazy: page(() => import("./features/studio/AllBrandsPage"), "AllBrandsPage") },
           { path: "studio/qa", lazy: page(() => import("./features/studio/qa/QaPage"), "QaPage") },
+          // Everything made, in one place (FLOWS §37)
+          { path: "studio/library", lazy: page(() => import("./features/library/LibraryPage"), "LibraryPage") },
           { path: "studio/queue", element: <Navigate to="/studio/qa" replace /> },
           {
             path: "studio/campaigns",
@@ -182,6 +185,7 @@ const routes = [
           { path: "agency", lazy: agencyPage("AgencyHomePage") },
           { path: "agency/check", lazy: agencyPage("AgencyCheckPage") },
           { path: "agency/campaigns", lazy: agencyPage("AgencyCampaignsPage") },
+          { path: "agency/library", lazy: page(() => import("./features/library/LibraryPage"), "LibraryPage") },
           {
             path: "agency/deliveries",
             lazy: page(() => import("./features/studio/StudioDeliveriesPage"), "StudioDeliveriesPage"),

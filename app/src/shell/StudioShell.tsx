@@ -107,7 +107,8 @@ function StaffFrame({ frame }: { frame: StaffFrameKind }) {
       // A campaign of another brand under this brand's prefix: the campaign's own (an old link, a hand-typed address)
       const own = workspaceOf(campaignIn(brand.rest));
       if (own && own !== brand.workspaceId) return `${brandBase(frame, own)}${brand.rest}${tail}`;
-      if (scope.limited && brand.rest !== "" && brand.rest !== "/campaigns") return brandBase(frame, brand.workspaceId);
+      if (scope.limited && !["", "/campaigns", "/library"].includes(brand.rest))
+        return brandBase(frame, brand.workspaceId);
     } else if (scope.limited && /^\/studio\/(qa|queue)(\/|$)/.test(pathname)) return frameRoot[frame];
     return undefined;
   })();
@@ -251,6 +252,12 @@ const brandPlaces = (frame: StaffFrameKind): { rest: string; label: string; icon
     keywords: "check qa queue to check",
   },
   { rest: "/campaigns", label: "Campaigns", icon: "megaphone", keywords: "campaigns plans" },
+  {
+    rest: "/library",
+    label: "Library",
+    icon: "folder",
+    keywords: "library assets creatives ads made checked approved delivered all",
+  },
   { rest: "/brand", label: "Brand", icon: "palette", keywords: "brand dna products" },
   { rest: "/studio", label: "Studio", icon: "layers", keywords: "studio desk documents" },
   { rest: "/engine", label: "Engine", icon: "fume-engine", keywords: "engine chat make" },
@@ -294,7 +301,7 @@ function useStaffPaletteItems(scope: StaffScope, needs: AgencyNeed[]): CommandPa
     // Each brand's places, by name (the brand you are in has them as its own places above); the admin's is Campaigns
     for (const e of entries) {
       if (e.summary || e.workspace.id === here) continue;
-      for (const p of brandPlaces(frame).filter((x) => !limited || x.rest === "/campaigns"))
+      for (const p of brandPlaces(frame).filter((x) => !limited || x.rest === "/campaigns" || x.rest === "/library"))
         items.push({
           id: `place-${e.workspace.id}${p.rest}`,
           group: "Go to",

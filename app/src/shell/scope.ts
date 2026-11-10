@@ -148,7 +148,7 @@ export function customerAddress(pathname: string, tail = ""): string {
 
 // ─── One place, kept across a change of scope ───────────────────────────────
 
-export type PlaceKey = "home" | "check" | "campaigns" | "brand" | "studio" | "engine" | "fume" | "other";
+export type PlaceKey = "home" | "check" | "campaigns" | "library" | "brand" | "studio" | "engine" | "fume" | "other";
 
 /** The place an address is in, in either scope. */
 export function placeOf(pathname: string): PlaceKey {
@@ -157,6 +157,7 @@ export function placeOf(pathname: string): PlaceKey {
   if (brand && rest === "") return "home";
   if (/^\/(qa|check|queue)(\/|$)/.test(rest) && !/^\/check\/products/.test(rest)) return "check";
   if (/^\/(campaigns|deliveries|calendar)(\/|$)/.test(rest)) return "campaigns";
+  if (/^\/library(\/|$)/.test(rest)) return "library";
   if (brand && /^\/(brand|assets|boards|products|check\/products)(\/|$)/.test(rest)) return "brand";
   if (brand && /^\/studio(\/|$)/.test(rest)) return "studio";
   if (brand && /^\/(engine|output)(\/|$)/.test(rest)) return "engine";
@@ -167,8 +168,9 @@ export function placeOf(pathname: string): PlaceKey {
 /**
  * The same place in another scope, one rule for both pickers: Check, Campaigns, Studio, Engine and Brand map to the
  * same place in the new brand; a campaign, a plan or a document maps to that brand's Campaigns (or its Studio); from a
- * brand to all: Check to all Check, Campaigns to all Campaigns, anything else to the overview. `limited` (Fume's admin,
- * who follows the brands but has no Check, Studio or Engine) keeps Campaigns and lands on the first place else.
+ * brand to all: Check to all Check, Campaigns to all Campaigns, the Library to all the Library, anything else to the
+ * overview. `limited` (Fume's admin, who follows the brands but has no Check, Studio or Engine) keeps Campaigns and the
+ * Library and lands on the first place else.
  */
 export function equivalent(
   pathname: string,
@@ -177,7 +179,7 @@ export function equivalent(
   limited = false,
 ): string {
   const found = placeOf(pathname);
-  const place = limited && found !== "campaigns" ? "other" : found;
+  const place = limited && found !== "campaigns" && found !== "library" ? "other" : found;
   if (workspaceId) {
     const base = brandBase(frame, workspaceId);
     switch (place) {
@@ -185,6 +187,8 @@ export function equivalent(
         return `${base}/${checkSegment[frame]}`;
       case "campaigns":
         return `${base}/campaigns`;
+      case "library":
+        return `${base}/library`;
       case "brand":
         return `${base}/brand`;
       case "studio":
@@ -199,6 +203,7 @@ export function equivalent(
   }
   if (place === "check") return checkPath(frame);
   if (place === "campaigns") return `${frameRoot[frame]}/campaigns`;
+  if (place === "library") return `${frameRoot[frame]}/library`;
   return frameRoot[frame];
 }
 

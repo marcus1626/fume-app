@@ -1919,3 +1919,45 @@ and solo only dim their lanes. The four sounds in "Sounds" stand in for a real l
 
 **Open.** Precomps (a group of layers as one item, opened in its own timeline) are not built. The Timing sliders in
 the inspector can still stretch a thing over its neighbour on the same track. The 3D track stays behind its flag.
+
+## 37. The Library: everything made, in one place (10 Nov 2026, PROPOSED)
+
+Marcus tested the live app on 10 Nov: "I don't know where the asset library is, or where I find already-checked
+ads. It was a bit chaotic; I can't find the Nike ads you made." What it showed:
+- **No one place holds what was made.** A creative lived in Check, a campaign, the Studio, Engine output or
+  Deliveries, depending on how far it had come. Nothing answered "show me everything for Nike" or "show me what is
+  checked". The 8 Nike UK masters sat inside their campaigns, made but never sent to Check.
+- **The admin saw too little.** §20 gives Fume's admin no Check, Studio or Engine, and a campaign opens the brand's
+  Home. Marcus tests the app as the admin, so he was shut out of the work itself.
+- **Names did not tell creatives apart.** Every Nike master was "Master 1".
+
+### 37.1 The Library
+A place of its own in the sidebar, after Campaigns, in every scope and for every staff role (the admin too) and an
+agency's people: **All brands › Library** (`/studio/library`, `/agency/library`) and **a brand › Library**
+(`/studio/b/:id/library`, `/agency/b/:id/library`). In ⌘K as "Library" and "<brand> · Library". Changing brand keeps
+you in the Library.
+- **Where it stands first**, as a segmented row with counts: All · In the Studio · Being made · To check · Checked ·
+  Changes asked · Approved · Delivered. A stage with nothing in it is left out. `?show=checked` keeps the choice in
+  the address, so "the checked ads" can be linked to.
+- **Then the filter bar**, as on a campaign: search (creative, campaign, product and brand), Brand (all brands only),
+  Campaign, Format, Kind (Picture, Design, Video), and the sort: Newest first, Oldest first, By campaign.
+- **The grid**: smaller tiles than a campaign's (five or six to a row on a desk), each in its own format. Under it the
+  campaign (the brand first, on all brands) over the format and version, and at its end where it stands, in the
+  check's own words: the Amber triangle and the checker's name only on checked work, "In check" grey, "Maja approved",
+  and a draft still in the Studio says "In the Studio" with no triangle.
+- **A tile opens the viewer**: the creative large, with the arrows through what the filters show. Its info says the
+  check, the format, where it stands (when the check line does not already), the version, who made it, the kind, the
+  file name, and the way to work on it: **Open in Check** while it waits for a check, **Open in Studio** for a draft,
+  and **The campaign**. The admin reads the same viewer without those ways. Download as in every viewer.
+
+### 37.2 What it reads
+`library(workspaceId?)` → `LibraryItem[]`, newest first: every creative's current version (its state mapped to the
+seven stages: making; in_check, correcting and held are To check; checked; changes_requested; approved; delivered),
+and every Studio document that never went to check (In the Studio, its picked version, or its newest). An agency gets
+its own clients only. Live it is the creatives with their newest version, plus the creatives with pictures and no
+version yet (the Nike masters), which read as In the Studio.
+
+**Defaults to confirm.** The Library holds creatives only; the brand's own files (logo, product photos, models and
+references) stay under Brand. Drafts are in it. Its icon is the folder.
+
+**Open.** Whether the admin should see every place (Check, Studio, Engine) to read, or only the Library added to §20.

@@ -100,6 +100,7 @@ export const useRequestCorrection = () => useM((a, checkId: Id) => a.requestCorr
 export const useHold = () => useM((a, v: { checkId: Id; reason: string }) => a.hold(v.checkId, v.reason));
 export const useRelease = () => useM((a, campaignId: Id) => a.release(campaignId));
 export const useStudioCampaigns = () => useQ(["studio", "campaigns"], (a) => a.studioCampaigns());
+export const useLibrary = (workspaceId?: Id) => useQ(["studio", "library", workspaceId], (a) => a.library(workspaceId));
 export const useQualityLog = () => useQ(["studio", "quality"], (a) => a.qualityLog());
 export const useTeamLoad = () => useQ(["studio", "team"], (a) => a.teamLoad());
 

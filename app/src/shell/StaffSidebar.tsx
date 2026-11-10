@@ -1,7 +1,8 @@
 // The one sidebar of Fume's studio and an agency (FLOWS §25.1), with one list of places per scope and the same names in
-// both frames. All brands or all clients: Overview · Check · Campaigns · Deliveries · (Clients) · Team · Usage ·
-// Quality log; Fume's admin follows and does not check, so has no Check. One brand or client: Home · Check · Campaigns
-// · Brand · Studio · Engine (· Fume for an agency). Brand holds the Brand DNA, the products, the models and references
+// both frames. All brands or all clients: Overview · Check · Campaigns · Library · Deliveries · (Clients) · Team ·
+// Usage · Quality log; Fume's admin follows and does not check, so has no Check. One brand or client: Home · Check ·
+// Campaigns · Library · Brand · Studio · Engine (· Fume for an agency). The Library (FLOWS §37) holds everything made,
+// whatever stage it is at, and the admin reads it too. Brand holds the Brand DNA, the products, the models and references
 // and the boards; the Engine holds what it made; while one of them is the current place, its places inside show under
 // it. Fume's people have Customer view at the foot of a brand; the admin has a brand's Home and its Campaigns, to read.
 // The top of the sidebar is one picker for both: the Fume mark and "All brands" or "All clients", or the brand's mark
@@ -196,6 +197,12 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
       icon: "megaphone",
       keywords: "campaigns across brands clients calendar plans",
     };
+    const library: NavItem = {
+      to: `${root}/library`,
+      label: "Library",
+      icon: "folder",
+      keywords: "library assets creatives ads made checked approved delivered all brands",
+    };
     // Train the Engine: Fume's own people only, never an agency's
     const train: NavItem[] =
       frame === "agency"
@@ -208,7 +215,7 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
               keywords: "train teach engine swipe yes no why lessons check right wrong",
             },
           ];
-    if (limited) return [overview, campaigns, deliveries, team, usage, quality, ...train];
+    if (limited) return [overview, campaigns, library, deliveries, team, usage, quality, ...train];
     return [
       overview,
       {
@@ -220,6 +227,7 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
         keywords: "check qa queue creatives plans to check mark checked",
       },
       campaigns,
+      library,
       deliveries,
       ...(frame === "agency"
         ? [
@@ -249,6 +257,12 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
     ];
   }
   const base = brandBase(frame, workspaceId);
+  const library: NavItem = {
+    to: `${base}/library`,
+    label: "Library",
+    icon: "folder",
+    keywords: "library assets creatives ads made checked approved delivered",
+  };
   const home: NavItem = {
     to: base,
     label: "Home",
@@ -268,6 +282,7 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
         end: true,
         keywords: "campaigns brief plan creatives delivery",
       },
+      library,
     ];
   const boards = `${base}/boards`;
   return [
@@ -288,6 +303,7 @@ export function useStaffPlaces(scope: StaffScope, campaignBoard = false): NavIte
       holds: [`${base}/deliveries`, `${base}/calendar`, ...(campaignBoard ? [boards] : [])],
       keywords: "campaigns brief plan creatives delivery calendar",
     },
+    library,
     {
       to: `${base}/brand`,
       label: "Brand",

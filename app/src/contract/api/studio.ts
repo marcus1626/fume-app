@@ -5,12 +5,15 @@ import type { Id } from "../entities/common";
 import type { ProductOverride } from "../entities/products";
 import type { CreativeDocument, DesignAsk, Recipe, StudioKind, StudioMode, StudioSession } from "../entities/studio";
 import type { ShotRecipe } from "../entities/video";
-import type { BrandWorkspaceView, StudioCampaignRow, StudioKit } from "../views/studio";
+import type { BrandWorkspaceView, LibraryItem, StudioCampaignRow, StudioKit } from "../views/studio";
 
 export interface StudioApi {
   // The brand's studio workspace (Fume's people)
   brandWorkspace(workspaceId: Id): Promise<BrandWorkspaceView>;
   studioCampaigns(): Promise<StudioCampaignRow[]>;
+  /** The Library (FLOWS §37): every creative made for one brand, or for every brand the person works on, newest first.
+   *  Fume's people and an agency's (its own clients); the admin reads it too. */
+  library(workspaceId?: Id): Promise<LibraryItem[]>;
 
   // Creative documents
   studioModes(): Promise<StudioMode[]>;

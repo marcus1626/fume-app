@@ -5,9 +5,12 @@ import type {
   AllBrandsView,
   BrandWorkspaceView,
   Campaign,
+  Creative,
   FumeApi,
   HomeView,
   Id,
+  LibraryItem,
+  LibraryState,
   StudioCampaignRow,
   TeamLoadRow,
   WaitingItem,
@@ -19,7 +22,7 @@ import { queueItems } from "./quality";
 import { openQuestion } from "./questions";
 import { inDays } from "./seed";
 
-type Calls = "home" | "allBrands" | "brandWorkspace" | "studioCampaigns" | "teamLoad" | "usage";
+type Calls = "home" | "allBrands" | "brandWorkspace" | "studioCampaigns" | "library" | "teamLoad" | "usage";
 
 /** Every campaign, done ones too, with who works on it and who approves it. */
 export function studioRows(m: Mock): StudioCampaignRow[] {
@@ -93,6 +96,79 @@ export function agencyBrands(m: Mock): Set<Id> | undefined {
   const seat = m.db.users.find((u) => u.id === m.userId)?.agency;
   if (!seat) return undefined;
   return new Set(m.db.workspaces.filter((w) => w.agencyId === seat.organisationId).map((w) => w.id));
+}
+
+const libraryState: Record<Creative["current"]["state"], LibraryState> = {
+  making: "making",
+  in_check: "to_check",
+  correcting: "to_check",
+  held: "to_check",
+  checked: "checked",
+  changes_requested: "changes",
+  approved: "approved",
+  delivered: "delivered",
+};
+
+/** The Library (FLOWS §37): every creative of the brands in scope, newest first. A creative is its current version;
+ *  a document that never went to check is a draft in the Studio, with the version picked (or its newest). */
+export function libraryItems(m: Mock, workspaceId?: Id): LibraryItem[] {
+  const { db } = m;
+  const keep = agencyBrands(m);
+  const inScope = (id: Id) => (!workspaceId || id === workspaceId) && (!keep || keep.has(id));
+  const items: LibraryItem[] = [];
+  for (const c of db.creatives) {
+    const campaign = db.campaigns.find((k) => k.id === c.campaignId);
+    if (!campaign || !inScope(campaign.workspaceId)) continue;
+    const v = c.current;
+    const doc = db.documents.find((d) => d.creativeId === c.id);
+    const qa = db.qaItems.find((q) => q.creativeId === c.id);
+    const product = db.products.find((p) => campaign.productIds.includes(p.id));
+    items.push({
+      id: c.id,
+      workspaceId: campaign.workspaceId,
+      campaignId: campaign.id,
+      campaignName: campaign.name,
+      creativeId: c.id,
+      ...(doc ? { documentId: doc.id } : {}),
+      ...(qa && libraryState[v.state] === "to_check" ? { checkItemId: qa.id } : {}),
+      title: c.title,
+      name: c.name,
+      format: c.format,
+      studio: doc?.studio ?? qa?.studio ?? "render",
+      kind: c.kind,
+      image: v.image,
+      state: libraryState[v.state],
+      version: v.number,
+      at: v.approvedAt ?? v.checkedAt ?? v.madeAt,
+      ...(qa?.sentBy ? { madeBy: qa.sentBy } : doc ? { madeBy: doc.by } : {}),
+      ...(v.checkedBy ? { checkedBy: v.checkedBy, checkedAt: v.checkedAt } : {}),
+      ...(v.approvedBy ? { approvedBy: v.approvedBy, approvedAt: v.approvedAt } : {}),
+      ...(product ? { productName: product.name } : {}),
+    });
+  }
+  for (const d of db.documents) {
+    if (d.state !== "draft" || !inScope(d.workspaceId)) continue;
+    if (d.creativeId && db.creatives.some((c) => c.id === d.creativeId)) continue;
+    const done = d.versions.filter((v) => v.state === "done" && v.image);
+    const shown = done.find((v) => v.id === d.pickedVersionId) ?? done.at(-1);
+    const campaign = d.campaignId ? db.campaigns.find((k) => k.id === d.campaignId) : undefined;
+    items.push({
+      id: d.id,
+      workspaceId: d.workspaceId,
+      ...(campaign ? { campaignId: campaign.id, campaignName: campaign.name } : {}),
+      documentId: d.id,
+      title: d.title,
+      format: d.specs.format,
+      studio: d.studio,
+      kind: "draft",
+      ...(shown ? { image: shown.image } : {}),
+      state: "studio",
+      version: shown?.number ?? 0,
+      at: d.updatedAt,
+      madeBy: d.by,
+    });
+  }
+  return items.sort((a, b) => b.at.localeCompare(a.at));
 }
 
 export function homeCalls(m: Mock): Pick<FumeApi, Calls> {
@@ -391,6 +467,10 @@ export function homeCalls(m: Mock): Pick<FumeApi, Calls> {
       const rows = studioRows(m);
       const keep = agencyBrands(m);
       return wait(keep ? rows.filter((r) => keep.has(r.workspace.id)) : rows);
+    },
+    async library(workspaceId) {
+      m.mustStaff();
+      return wait(libraryItems(m, workspaceId));
     },
     async teamLoad() {
       m.mustStaff();

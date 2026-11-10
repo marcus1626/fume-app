@@ -1,0 +1,27 @@
+/* The Library (app FLOWS §37, PROPOSED 10 Nov 2026): everything made for a brand in one place.
+   Markup: div.ui-library > .ui-library-stages (a SegmentedControl of where it stands, with counts), the filter bar,
+   then ul.ui-creative-grid of tiles. A tile's caption holds span.ui-library-caption (the campaign over the format) and
+   the check, or span.ui-library-state for a draft still in the Studio (no triangle: it has not been checked).
+   The viewer's info list holds span.ui-library-ways, the way to the place to work on it. */
+
+.ui-library { display: flex; flex-direction: column; gap: var(--ui-space-md); min-width: 0; }
+/* a library is for looking through many: smaller tiles than a campaign's, five or six to a row on a desk */
+@media (min-width: 1024px) {
+  .ui-library .ui-creative-grid { --ui-creative-tile-min: 184px; } /* gate-allow:space-from-tokens the Library's smallest tile on a desk, a layout size like DLAY-2's 240 */
+}
+
+/* where it stands: one row, scrolling sideways on a narrow screen instead of wrapping into two */
+.ui-library-stages { align-self: flex-start; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.ui-library-stages::-webkit-scrollbar { display: none; }
+
+/* the caption: the campaign on its own line, then the format, so a long campaign name never pushes the check away */
+.ui-library-caption { display: flex; flex-direction: column; min-width: 0; flex: 1 1 0; }
+.ui-library-campaign { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ui-text); font-weight: var(--ui-type-weight-medium); }
+.ui-library-format { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ui-text-tertiary); }
+.ui-library-caption + .ui-creative-check, .ui-library-caption + .ui-library-state { align-self: flex-start; }
+
+/* a draft in the Studio: words only, the tertiary text of a state that is not a check */
+.ui-library-state { display: inline-flex; align-items: center; white-space: nowrap; color: var(--ui-text-tertiary); }
+
+/* the ways out of the viewer, on the info list */
+.ui-library-ways { display: inline-flex; flex-wrap: wrap; gap: var(--ui-space-xs); }
