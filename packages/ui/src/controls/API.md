@@ -66,6 +66,7 @@ Import from `@fume/ui` (or `@fume/ui/src/controls`). Icons are `IconName`s from 
 - `InputGroup` *ref div* — `size?: "sm" | "md" (default) | "lg"`, `invalid?: boolean`, `disabled?: boolean` (both also follow the control inside). Add `role="search"` for search.
 - `InputGroupAddon` *ref div* — `align?: "inline-start" (default) | "inline-end" | "block-start" | "block-end"`. A click on it (not on a button) focuses the control.
 - `InputGroupText` *ref span* — quiet words: "https://", "kr".
+- `InputOTP` *ref input* — `value: string`, `onChange(value)`, `onComplete?(value)` when every slot is filled, `length?: number` (default 6, two groups), `invalid?: boolean`. A sign-in code: one real input (`autocomplete="one-time-code"`) over the slots, digits only (input-otp.css). Give it an `aria-label`.
 - `InputGroupInput` *ref input* — native input props; `onClear?: () => void` (Escape while it holds text). Needs a `placeholder` for the clear button to hide when empty.
 - `InputGroupTextarea` *ref textarea* — native textarea props; grows. Buttons go under it in an `align="block-end"` addon.
 - `InputGroupButton` *ref button* — all `Button` props (variant defaults to "quiet"; "primary" for the Ink send button), `clear?: boolean` (circle-x, shown only while the field holds text, refocuses the field; you empty the value in `onClick`). Icon-only automatically when `clear`, or `icon` without children: give it `aria-label`.

@@ -416,7 +416,7 @@ export function BriefFacts({
           <DataListData>{creatives}</DataListData>
         </DataListItem>
         <DataListItem label={briefLabel.market}>
-          {campaign.market}, in {campaign.language}
+          {campaign.market}, in {copy.languageName(campaign.language)}
         </DataListItem>
         <DataListItem label={briefLabel.live}>{campaign.dueAt ? due(campaign.dueAt) : "Not set yet"}</DataListItem>
       </DataList>

@@ -192,8 +192,16 @@ function LogoFace({ logo, identity }: { logo: BrandLogo; identity: BrandIdentity
 }
 
 export function LogoPart({ identity, rules, visit, open, onOpen }: PartProps) {
+  // Round 15 (PROPOSED 9 Nov 2026): Brand DNA holds the logo's files; how a creative uses them is the design system's.
   return (
-    <BoardPart id="logo" title="Logo" open={open} onOpen={onOpen}>
+    <BoardPart
+      id="logo"
+      title="Logo"
+      open={open}
+      onOpen={onOpen}
+      to="/brand/design#design-logo"
+      linkLabel="How creatives use it"
+    >
       <div className="ui-brand-logos" data-mode="board">
         {drawn(identity.logos, visit).map((l) =>
           isFind(l, visit) ? (
@@ -311,7 +319,7 @@ export function TypePart({ identity, rules, visit, open, onOpen }: PartProps) {
   const settled = list.filter((t) => !isFind(t, visit));
   const finds = list.filter((t) => isFind(t, visit));
   return (
-    <BoardPart id="type" title="Type" open={open} onOpen={onOpen}>
+    <BoardPart id="type" title="Type" open={open} onOpen={onOpen} to="/brand/design" linkLabel="The design system">
       <div className="ui-brand-types" data-mode="board">
         {settled.map((t) => (
           <Proposal key={t.id} state={t.provenance.state} bare className="ui-brand-type">
@@ -365,7 +373,7 @@ export function VoicePart({ identity, rules, visit, open, onOpen }: PartProps) {
   const settled = list.filter((v) => !isFind(v, visit));
   const finds = list.filter((v) => isFind(v, visit));
   return (
-    <BoardPart id="voice" title="Voice" open={open} onOpen={onOpen} to="/brand/voice" linkLabel="The whole voice">
+    <BoardPart id="voice" title="Voice" open={open} onOpen={onOpen} to="/brand/voice" linkLabel="The Tone of Voice">
       <div className="ui-brand-voice" data-mode="board">
         {settled.map((v) => (
           <Proposal key={v.id} state={v.provenance.state} bare className="ui-brand-voice-line">
@@ -402,7 +410,15 @@ export function ImageryPart({ identity, rules, visit, open, onOpen }: PartProps)
   const { canEdit } = useRole();
   const campaigns = campaignsOf(identity.imagery);
   return (
-    <BoardPart id="imagery" title="Imagery" span="full" open={open} onOpen={onOpen}>
+    <BoardPart
+      id="imagery"
+      title="Imagery"
+      span="full"
+      open={open}
+      onOpen={onOpen}
+      to="/brand/look"
+      linkLabel="The Look Book"
+    >
       {byGroup(drawn(identity.imagery, visit)).map((g) => (
         <section key={g.group} className="ui-image-group" aria-labelledby={`brand-group-${g.group}`}>
           <div className="ui-image-group-head">

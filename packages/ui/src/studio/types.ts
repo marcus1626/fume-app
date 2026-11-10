@@ -1,3 +1,5 @@
+import type { IconName } from "../icons";
+
 // The Studio control library's shapes (FLOWS §9.3). These mirror the app contract's ModeVariable and VarValue
 // (app/src/contract) structurally, so packages/ui never imports app code: a ModeVariable from the backend is a
 // StudioVariable here, and a VarValue a StudioValue.
@@ -57,6 +59,13 @@ export interface StudioOption {
   label: string;
   /** For swatches: the colour, shown through a CSS custom property, never as a class. */
   hex?: string;
+  /** For selects: the option drawn as what it is (a typeface in its face, a weight in its weight). The list may read
+   *  --preview-size for a size of its own; the closed field keeps its own size. (Round 16.) */
+  preview?: Record<string, string | number>;
+  /** For selects: data beside the option ("76" for a text style's size). */
+  meta?: string;
+  /** For segmented choices: an icon instead of the words (the words stay for screen readers and the tooltip). */
+  icon?: IconName;
 }
 
 /** One variable of a mode: what it is called, which control edits it and its range. */

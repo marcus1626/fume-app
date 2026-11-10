@@ -61,6 +61,11 @@ export function sourceLabel(
   return viewer === "customer" ? sourceWords[source] : neutralWords[source];
 }
 
+/** Whether the plan has lines of its own: the chosen direction's look, or the products, formats and words. */
+export function hasLines(plan: CampaignPlan): boolean {
+  return (chosenOf(plan)?.look.length ?? 0) > 0 || plan.content.length > 0;
+}
+
 /** The parts of the plan, in order: its index (in the summary aside) says each part's own heading. The ids stay as they
  *  were, so links to a part keep working. */
 export function partsOf(plan?: CampaignPlan): { id: string; label: string }[] {
@@ -69,8 +74,9 @@ export function partsOf(plan?: CampaignPlan): { id: string; label: string }[] {
   return [
     { id: "plan-brief", label: "The brief" },
     { id: "plan-direction", label: direction?.name ?? "The direction" },
-    { id: "plan-variables", label: "How it looks" },
-    { id: "plan-creatives", label: total ? `The ${total} creatives` : "The creatives" },
+    // A plan built from the brief alone (no language model) has no lines of its own yet.
+    ...(plan && !hasLines(plan) ? [] : [{ id: "plan-variables", label: "How it looks" }]),
+    { id: "plan-creatives", label: total ? `The ${copy.creatives(total)}` : "The creatives" },
     { id: "plan-rules", label: "Rules" },
     { id: "plan-when", label: "When" },
   ];
@@ -136,8 +142,14 @@ export const sentOn = (iso: string) => date(iso);
 export const byDay = (iso: string) => due(iso);
 
 /** What the plan will hold, in one line: the waiting state says it while Fume writes and the expert checks. */
-export function partsToCome(creatives: number): string {
-  const masters = Math.max(1, Math.min(3, Math.ceil(creatives / 3)));
+export function partsToCome(creatives: number, planned?: { kind: "master" | "variant" }[]): string {
+  // Once Fume has written the plan, its own counts; before that, a guess from the brief.
+  if (planned?.length) {
+    creatives = planned.length;
+  }
+  const masters = planned?.length
+    ? Math.max(1, planned.filter((c) => c.kind === "master").length)
+    : Math.max(1, Math.min(3, Math.ceil(creatives / 3)));
   const made =
     creatives > 0
       ? `the ${copy.creatives(creatives)}, ${copy.count(masters, "master")} first`

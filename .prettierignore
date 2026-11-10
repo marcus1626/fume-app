@@ -12,3 +12,5 @@ tools/gate/
 # Long-form documents keep their own line breaks.
 *.md
 app/public/
+# Built from services/design by its tools/build.mjs.
+app/api/

@@ -19,6 +19,9 @@ export interface Session {
   role: CustomerRole | null;
   /** Workspaces this user can open (Fume's people: every assigned one). */
   workspaces: Workspace[];
+  /** True once the person has said who they are (name and title) on their first sign-in; until then the app opens
+   *  "About you" before anything else. */
+  introduced: boolean;
   /** True once Brand DNA v1 is approved; until then the app opens the first run. */
   onboarded: boolean;
   /** Agency people: their agency and their role in it. */

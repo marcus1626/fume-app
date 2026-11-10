@@ -1,6 +1,16 @@
 // Typed hooks over FumeApi, one per call. Query keys are the cache's names; mutations refresh what they change.
 import { useMutation, useQuery, useQueryClient, type QueryKey } from "@tanstack/react-query";
-import type { CampaignFilter, ChangeTag, CustomerRole, FumeApi, Id, Pin, QaPin } from "../contract";
+import type {
+  CampaignFilter,
+  ChangeTag,
+  CustomerRole,
+  EngineField,
+  EngineTopic,
+  FumeApi,
+  Id,
+  Pin,
+  QaPin,
+} from "../contract";
 import { useApi } from "./client";
 
 const useQ = <T>(key: QueryKey, fn: (api: FumeApi) => Promise<T>, enabled = true) => {
@@ -136,6 +146,7 @@ export const useRepair = () =>
 export const usePickGeneration = () =>
   useM((a, v: { sessionId: Id; generationId: Id }) => a.pickGeneration(v.sessionId, v.generationId));
 export const useSendToCheck = () => useM((a, sessionId: Id) => a.sendToCheck(sessionId));
+export const useTeachEngine = () => useM((a, v: Parameters<FumeApi["teachEngine"]>[0]) => a.teachEngine(v));
 
 // Studio documents
 export const useStudioModes = () => useQ(["studio", "modes"], (a) => a.studioModes());
@@ -149,6 +160,13 @@ export const useUpdateDocument = () =>
     a.updateDocument(v.documentId, v.change),
   );
 export const useEngineEdit = () => useM((a, v: { documentId: Id; text: string }) => a.engineEdit(v.documentId, v.text));
+export const useMakeShot = () =>
+  useM((a, v: { documentId: Id } & Parameters<FumeApi["makeShot"]>[1]) => {
+    const { documentId, ...input } = v;
+    return a.makeShot(documentId, input);
+  });
+export const useAdaptVideo = () =>
+  useM((a, v: { documentId: Id; formatIds: Id[] }) => a.adaptVideo(v.documentId, v.formatIds));
 export const useDecideEdit = () =>
   useM((a, v: { documentId: Id; editId: Id; verdict: "keep" | "undo" }) =>
     a.decideEdit(v.documentId, v.editId, v.verdict),
@@ -156,6 +174,13 @@ export const useDecideEdit = () =>
 export const useRender = () => useM((a, documentId: Id) => a.render(documentId));
 export const usePickVersion = () =>
   useM((a, v: { documentId: Id; versionId: Id }) => a.pickVersion(v.documentId, v.versionId));
+export const useAddVersion = () =>
+  useM((a, v: { documentId: Id; file: File; note: string }) => a.addVersion(v.documentId, v.file, v.note));
+// Graphic design by Fume (FLOWS §33)
+export const useDesignAsk = (documentId: Id, versionId: Id | undefined) =>
+  useQ(["design-ask", documentId, versionId], (a) => a.designAsk(documentId, versionId!), Boolean(versionId));
+export const useDesignVersion = () =>
+  useM((a, v: { documentId: Id; versionId: Id; ask?: string }) => a.designVersion(v.documentId, v.versionId, v.ask));
 export const useOverrideProduct = () =>
   useM((a, v: { documentId: Id; field: string; value: string; scope: "this_render" | "product" }) =>
     a.overrideProduct(v.documentId, v),
@@ -173,11 +198,20 @@ export const useDecideOverride = () =>
 export const useProductProposals = (productId: Id | undefined) =>
   useQ(["product", productId, "proposals"], (a) => a.productProposals(productId!), Boolean(productId));
 // QA
-export const useQaQueue = (workspaceId?: Id) =>
-  useQ(["studio", "qa", workspaceId ?? "all"], (a) => a.qaQueue(workspaceId));
-export const useQaCheck = () => useM((a, itemId: Id) => a.qaCheck(itemId));
+/** `light` for a count or a list beside the page (the menu's number, search): far fewer reads than Check's own. */
+export const useQaQueue = (workspaceId?: Id, light = false) =>
+  useQ(["studio", "qa", workspaceId ?? "all", ...(light ? ["light"] : [])], (a) =>
+    a.qaQueue(workspaceId, light ? { light } : undefined),
+  );
+export const useQaCheck = () => useM((a, r: { itemId: Id; accept?: Id[] }) => a.qaCheck(r.itemId, r.accept));
 export const useQaFeedback = () =>
-  useM((a, v: { itemId: Id; text: string; pins?: QaPin[] }) => a.qaFeedback(v.itemId, v.text, v.pins));
+  useM((a, v: { itemId: Id; text: string; pins?: QaPin[]; findingIds?: Id[] }) =>
+    a.qaFeedback(v.itemId, v.text, v.pins, v.findingIds),
+  );
+export const useQaSettleFinding = () =>
+  useM((a, v: { itemId: Id; findingId: Id; status: "accepted" | "open" }) =>
+    a.qaSettleFinding(v.itemId, v.findingId, v.status),
+  );
 export const useQaEdit = () =>
   useM((a, v: { itemId: Id; layers: Parameters<FumeApi["qaEdit"]>[1] }) => a.qaEdit(v.itemId, v.layers));
 export const useQaToStudio = () => useM((a, itemId: Id) => a.qaToStudio(itemId));
@@ -225,10 +259,28 @@ export const useSetSource = () =>
   useM((a, v: { documentId: Id; section: string; source: Parameters<FumeApi["setSource"]>[2] }) =>
     a.setSource(v.documentId, v.section, v.source),
   );
-// The Engine chat
-export const useEngineChat = (workspaceId: Id | undefined) =>
-  useQ(["engine", "chat", workspaceId], (a) => a.engineChat(workspaceId!), Boolean(workspaceId));
-export const useEngineSay = () => useM((a, v: { workspaceId: Id; text: string }) => a.engineSay(v.workspaceId, v.text));
+// The Engine chat, in threads (Round 15): the brand's Everything (no topic), a campaign's, a document's
+export const useEngineChat = (workspaceId: Id | undefined, topic?: EngineTopic) =>
+  useQ(
+    ["engine", "chat", workspaceId, topic?.kind ?? "brand", topic?.id],
+    (a) => a.engineChat(workspaceId!, topic),
+    Boolean(workspaceId),
+  );
+export const useEngineSay = () =>
+  useM((a, v: { workspaceId: Id; text: string; topic?: EngineTopic; field?: EngineField; page?: string }) =>
+    a.engineSay(
+      v.workspaceId,
+      v.text,
+      v.topic || v.field || v.page ? { topic: v.topic, field: v.field, page: v.page } : undefined,
+    ),
+  );
+export const useEngineThreads = (workspaceId: Id | undefined) =>
+  useQ(["engine", "chat", workspaceId, "threads"], (a) => a.engineThreads(workspaceId!), Boolean(workspaceId));
+/** "Write with Engine": a suggestion for one field. It changes nothing, so it refreshes nothing. */
+export const useEngineWrite = () => {
+  const api = useApi();
+  return useMutation({ mutationFn: (field: EngineField) => api.engineWrite(field) });
+};
 export const useAnswerEngineWidget = () =>
   useM((a, v: { workspaceId: Id; messageId: Id; picked?: Id[]; choice?: string }) =>
     a.answerEngineWidget(v.workspaceId, v.messageId, v),
@@ -254,8 +306,8 @@ export const useReadProduct = () => useM((a, v: Parameters<FumeApi["readProduct"
 export const useSaveProductSpecs = () =>
   useM((a, v: { productId: Id } & Parameters<FumeApi["saveProductSpecs"]>[1]) => a.saveProductSpecs(v.productId, v));
 export const useUploadShot = () =>
-  useM((a, v: { productId: Id; slotId: Id; name: string; bytes: number; src?: string }) =>
-    a.uploadShot(v.productId, v.slotId, { name: v.name, bytes: v.bytes, src: v.src }),
+  useM((a, v: { productId: Id; slotId: Id; name: string; bytes: number; src?: string; blob?: Blob }) =>
+    a.uploadShot(v.productId, v.slotId, { name: v.name, bytes: v.bytes, src: v.src, blob: v.blob }),
   );
 export const useUploadProductFile = () =>
   useM((a, v: { productId: Id } & Parameters<FumeApi["uploadProductFile"]>[1]) => a.uploadProductFile(v.productId, v));
@@ -410,7 +462,15 @@ export function useDraftBriefs(): { data: DraftBrief[] | undefined; isPending: b
 export const usePlan = (campaignId: Id | undefined) =>
   useQ(["plan", campaignId], (a) => a.plan(campaignId!), Boolean(campaignId));
 export const useSendBrief = () => useM((a, campaignId: Id) => a.sendBrief(campaignId));
-export const useApprovePlan = () => useM((a, campaignId: Id) => a.approvePlan(campaignId));
+/** Approves the version she read; when a newer one came meanwhile, nothing is approved and the plan is read again. */
+export const useApprovePlan = () => {
+  const api = useApi();
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (v: { campaignId: Id; version: number }) => api.approvePlan(v.campaignId, v.version),
+    onSettled: () => client.invalidateQueries(),
+  });
+};
 export const useUndoApprovePlan = () => useM((a, campaignId: Id) => a.undoApprovePlan(campaignId));
 export const useChangePlan = () =>
   useM((a, v: { campaignId: Id } & import("../contract").PlanChange) => {
@@ -434,10 +494,12 @@ export const usePlans = (ids: Id[]) =>
 // client link.
 export const useAgencyHome = (enabled = true) => useQ(["agency", "home"], (a) => a.agencyHome(), enabled);
 export const useAgencyClients = (enabled = true) => useQ(["agency", "clients"], (a) => a.agencyClients(), enabled);
-export const useAgencyCampaigns = () => useQ(["agency", "campaigns"], (a) => a.agencyCampaigns());
+export const useAgencyCampaigns = (enabled = true) =>
+  useQ(["agency", "campaigns"], (a) => a.agencyCampaigns(), enabled);
 export const useAgencyTeam = () => useQ(["agency", "team"], (a) => a.agencyTeam());
 export const useLicence = () => useQ(["agency", "licence"], (a) => a.licence());
 export const useAddClient = () => useM((a, v: Parameters<FumeApi["addClient"]>[0]) => a.addClient(v));
+export const useInviteToAgency = () => useM((a, v: Parameters<FumeApi["inviteToAgency"]>[0]) => a.inviteToAgency(v));
 export const useSendToClient = () => useM((a, v: Parameters<FumeApi["sendToClient"]>[0]) => a.sendToClient(v));
 export const useClientSends = (campaignId?: Id) =>
   useQ(["agency", "sends", campaignId], (a) => a.clientSends(campaignId!), Boolean(campaignId));
@@ -470,6 +532,23 @@ export const useBriefAlternatives = () => {
 export const useSetColourUses = () => useM((a, v: Parameters<FumeApi["setColourUses"]>[0]) => a.setColourUses(v));
 export const useMoveImage = () => useM((a, v: Parameters<FumeApi["moveImage"]>[0]) => a.moveImage(v));
 export const useDecideVoicePart = () => useM((a, v: Parameters<FumeApi["decideVoicePart"]>[0]) => a.decideVoicePart(v));
+
+// The brand's books (FLOWS §30)
+export const useBrandBooks = () => useQ(["brand", "books"], (a) => a.brandBooks());
+export const useWriteBrandBook = () => useM((a, v: Parameters<FumeApi["writeBrandBook"]>[0]) => a.writeBrandBook(v));
+export const useCheckBrandBook = () => useM((a, bookId: Id) => a.checkBrandBook(bookId));
+export const useApproveBrandBook = () => useM((a, bookId: Id) => a.approveBrandBook(bookId));
+export const useAskBrandBookChange = () =>
+  useM((a, v: Parameters<FumeApi["askBrandBookChange"]>[0]) => a.askBrandBookChange(v));
+export const useEditBrandBook = () => useM((a, v: Parameters<FumeApi["editBrandBook"]>[0]) => a.editBrandBook(v));
+/** Round 15 (PROPOSED 9 Nov 2026): Add it or Not now on the Engine's proposal for a book. */
+export const useAnswerBookProposal = () =>
+  useM((a, v: Parameters<FumeApi["answerBookProposal"]>[0]) => a.answerBookProposal(v));
+/** A reading, not a change: nothing to refetch after it. */
+export const useCheckCopyLine = () => {
+  const api = useApi();
+  return useMutation({ mutationFn: (v: Parameters<FumeApi["checkCopyLine"]>[0]) => api.checkCopyLine(v) });
+};
 export const usePassTastePair = () => useM((a, v: Parameters<FumeApi["passTastePair"]>[0]) => a.passTastePair(v));
 export const useUpdateProfile = () => useM((a, v: Parameters<FumeApi["updateProfile"]>[0]) => a.updateProfile(v));
 
@@ -481,3 +560,23 @@ export const useAskFume = () => useM((a, v: Parameters<FumeApi["askFume"]>[0]) =
 export const useMeetingTopics = () => useQ(["meetings", "topics"], (a) => a.meetingTopics());
 export const useChangePlanWithFume = () =>
   useM((a, v: { campaignId: Id; text: string }) => a.changePlanWithFume(v.campaignId, v.text));
+
+// Train the Engine. The deck is read once per visit and kept as it was (an answer must not move the cards under her);
+// the answers save without refreshing anything else.
+export const useTrainDeck = () => {
+  const api = useApi();
+  return useQuery({
+    queryKey: ["train"],
+    queryFn: () => api.trainDeck(),
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+};
+export const useTrainAnswer = () => {
+  const api = useApi();
+  return useMutation({ mutationFn: (v: Parameters<FumeApi["trainAnswer"]>[0]) => api.trainAnswer(v) });
+};
+export const useTrainJudge = () => {
+  const api = useApi();
+  return useMutation({ mutationFn: (v: Parameters<FumeApi["trainJudge"]>[0]) => api.trainJudge(v) });
+};

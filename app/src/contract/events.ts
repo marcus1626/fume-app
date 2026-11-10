@@ -2,7 +2,7 @@
 
 import type { Id } from "./entities/common";
 import type { Campaign } from "./entities/campaigns";
-import type { BrandScan } from "./entities/brand";
+import type { BrandBook, BrandScan } from "./entities/brand";
 import type { EngineMessage, Message } from "./entities/conversation";
 import type { Notification } from "./entities/notifications";
 import type { Batch, EngineRun } from "./entities/production";
@@ -21,7 +21,8 @@ export type FumeEvent =
   | { type: "document.state"; document: CreativeDocument }
   | { type: "batch.progress"; batch: Batch }
   | { type: "qa.state"; item: QaItem }
-  | { type: "engine.message"; message: EngineMessage };
+  | { type: "engine.message"; message: EngineMessage }
+  | { type: "book.state"; book: BrandBook };
 
 export type Unsubscribe = () => void;
 

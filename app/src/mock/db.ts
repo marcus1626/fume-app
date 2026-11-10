@@ -5,6 +5,7 @@
 import type {
   Batch,
   Board,
+  BrandBook,
   BrandDna,
   BrandIdentity,
   BrandModel,
@@ -28,6 +29,7 @@ import type {
   CreativeType,
   Delivery,
   DetailToken,
+  Id,
   Direction,
   EngineMessage,
   EngineRun,
@@ -107,9 +109,13 @@ export interface Db {
   tasteCards: TasteCard[];
   tasteState: TasteState;
   voiceBook: VoiceBook;
+  /** The brands' books (FLOWS §30), newest first; the mock keeps each one's brand. */
+  brandBooks: (BrandBook & { workspaceId: Id })[];
   scan: BrandScan | null;
   brandUpdate: BrandUpdate | null;
   onboarding: OnboardingProgress;
+  /** People who have not said who they are yet: "About you" opens for them on sign-in. */
+  unintroduced: Id[];
   presets: BrandPreset[];
   models: BrandModel[];
   brandReferences: BrandReference[];
@@ -187,9 +193,11 @@ export function createDb(options: DbOptions = {}): Db {
     tasteCards: seed.tasteCards,
     tasteState: seed.tasteState,
     voiceBook: undefined as unknown as VoiceBook,
+    brandBooks: [],
     scan: null,
     brandUpdate: null,
     onboarding: { step: "", lines: [] },
+    unintroduced: [],
     presets: seed.presets,
     models: seed.models,
     brandReferences: seed.brandReferences,
@@ -251,6 +259,8 @@ export function createDb(options: DbOptions = {}): Db {
   const found = (evidence: string) => (options.fresh ? seed.proposed(evidence) : seed.engineFound(evidence));
   db.identity.imagery.push(...seed.moreImages(found));
   db.voiceBook = seed.voiceBook(found);
+  // A first run has no books yet: Fume writes them once it has read the brand.
+  if (!options.fresh) db.brandBooks = seed.brandBooks(db.voiceBook).map((b) => ({ ...b, workspaceId: "w-lysne" }));
   db.questions = structuredClone(seed.seedQuestions);
   return db;
 }
@@ -261,6 +271,8 @@ export function createDb(options: DbOptions = {}): Db {
  *  or said before today. A brand read only from its website has no guide to disagree with and no moodboard pins the
  *  Engine proposed. */
 function firstRun(db: Db) {
+  // A brand that has just signed up: Maja is new to Fume too, so she says who she is first.
+  db.unintroduced = ["u-maja"];
   db.brandDna = {
     ...db.brandDna,
     version: 0,

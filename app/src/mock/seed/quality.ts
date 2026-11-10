@@ -1,8 +1,12 @@
 // The Quality Gate: the expert's checks of each creative and what they are checked against, the quality log, and the
 // creatives that wait in Check.
+import { designEvaluation, withMeasures } from "../measures";
 import type { Check, CheckItem, QaItem, QualityLogEntry } from "../../contract";
+import { voiceBook } from "./brand";
+import { brandBooks } from "./books";
 import { campaigns } from "./campaigns";
-import { at, img, inDays, ok } from "./helpers";
+import { measured, planCopy, wordsOf } from "./design";
+import { at, engineFound, img, inDays, ok, poster } from "./helpers";
 import { batches, creatives, engineMessages } from "./production";
 import { products } from "./products";
 import { layoutLayers } from "./studio";
@@ -184,10 +188,39 @@ const qa = (
   dueAt: inDays(1),
   risk: "normal",
   state: "waiting",
-  evaluation: ok,
+  evaluation: { ...ok, scores: { product: 88 + (minutesAgo % 7), engine: 84 + (minutesAgo % 9) } },
   feedback: [],
   ...extra,
 });
+
+/** The design and the words drawn for Feed 9, from LYSNE's design system as it is now (version 1, checked). */
+function designed(): Pick<QaItem, "design" | "drawn"> {
+  const book = brandBooks(voiceBook((e) => engineFound(e))).find((b) => b.kind === "design" && b.state === "checked");
+  const words = wordsOf(planCopy["c-autumn"]);
+  if (!book || book.kind !== "design" || !book.body || !words) return {};
+  const { drawing, ...made } = measured(book.body, "feed", words, {
+    band: "top",
+    align: "left",
+    colour: "text",
+    ground: "photo",
+  });
+  return {
+    design: {
+      id: "dl-1",
+      state: "made",
+      fromVersionId: "cv-a-v11-1",
+      fromNumber: 1,
+      book: { version: book.version, state: "checked" },
+      words,
+      ...made,
+      document: { name: "feed-9-v2.fig" },
+      requestedBy: "u-anna",
+      at: at(4),
+      llmUsd: 0.002,
+    },
+    drawn: drawing,
+  };
+}
 
 const seeded: QaItem[] = [
   qa("qa-1", "cr-a-v7", "Feed 6", "09-07", 8, { slot: "Master 2 · Variant 2" }),
@@ -199,7 +232,12 @@ const seeded: QaItem[] = [
   qa("qa-3", "cr-a-v9", "Feed 7", "06-10", 12, {
     slot: "Master 2 · Variant 3",
     risk: "high",
-    evaluation: { ...ok, productTruth: "flag", notes: ["The cap reads glossy"] },
+    evaluation: {
+      ...ok,
+      productTruth: "flag",
+      notes: ["The cap reads glossy"],
+      scores: { product: 66, engine: 84, why: [{ score: "product", text: "The cap reads glossy; it is matte" }] },
+    },
     feedback: [
       {
         id: "fb-1",
@@ -211,12 +249,151 @@ const seeded: QaItem[] = [
     ],
     state: "fixing",
   }),
+  // The Engine's picture check found three things (FLOWS §29.6): the cap is off, which stops the check until the one
+  // who checks settles it, and two small ones.
+  qa("qa-7", "cr-a-v10", "Feed 8", "06-10", 5, {
+    slot: "Master 3 · Variant 1",
+    // One ad, three formats (FLOWS §35.2): the square is cropped from the master, the story extended by the Engine.
+    formats: [
+      { placementId: "pl-ig-square", format: "square", image: img("06-10", "square"), method: "crop" },
+      { placementId: "pl-ig-story", format: "story", image: img("06-10", "story"), method: "expand" },
+    ],
+    evaluation: {
+      productTruth: "flag",
+      brandRules: "flag",
+      artefacts: "minor",
+      notes: [
+        "The cap reads glossy",
+        "Light from above, not from the side",
+        "A smeared edge where the bottle meets the ledge",
+      ],
+      evaluated: true,
+      scores: {
+        product: 52,
+        engine: 74,
+        why: [
+          { score: "product", text: "The cap reads glossy; it is matte" },
+          { score: "engine", text: "Light from above, not from one side" },
+        ],
+      },
+    },
+    findings: [
+      {
+        id: "fi-1",
+        dimension: "product",
+        severity: "critical",
+        finding: "The cap is glossy; LYSNE's cap is matte.",
+        expected: "Burgundy matte cap, as in its photographs",
+        observed: "A glossy cap with a bright highlight on top",
+        status: "open",
+        spot: { x: 0.52, y: 0.06 },
+      },
+      {
+        id: "fi-2",
+        dimension: "brand_brief",
+        severity: "minor",
+        finding: "The light comes from above, not from one side like a lamp.",
+        expected: "Warm low light from one side, like a lamp in the evening",
+        observed: "Even, soft light from above",
+        status: "open",
+        spot: { x: 0.24, y: 0.18 },
+      },
+      {
+        id: "fi-3",
+        dimension: "artefacts",
+        severity: "minor",
+        finding: "A soft, smeared edge where the bottle meets the ledge.",
+        status: "open",
+        spot: { x: 0.5, y: 0.66 },
+      },
+    ],
+  }),
+  // Fume laid Autumn launch's words on a picture in LYSNE's design system (FLOWS §33): every hard check passed, the
+  // brand's own serif is not on file, and Fume's review has one small note. V1 is the picture under it.
+  qa("qa-8", "cr-a-v11", "Feed 9", "10-08", 3, {
+    slot: "Master 2 · Variant 4",
+    version: 2,
+    previous: { image: img("10-08"), version: 1 },
+    ...designed(),
+  }),
+  // A video (FLOWS §34.7): the Story the Engine cut from the film's shots. Its first shot has oil running from the
+  // closed bottle, which stops the check; its button comes in a quarter second after the beat.
+  qa("qa-9", "cr-night-story", "Night ritual · Story 9:16", "", 6, {
+    slot: "Film 1 · Story",
+    studio: "video",
+    documentId: "doc-night-story",
+    format: "story",
+    image: poster("drop"),
+    evaluation: {
+      productTruth: "flag",
+      brandRules: "pass",
+      artefacts: "none",
+      notes: [],
+      evaluated: true,
+      scores: {
+        product: 58,
+        engine: 86,
+        why: [{ score: "product", text: "Oil leaks from the glass at the base in shot 1" }],
+      },
+    },
+    findings: [
+      {
+        id: "fi-v1",
+        dimension: "product",
+        severity: "critical",
+        finding: "Shot 1: oil runs out of the bottle’s base while the cap is on.",
+        expected: "A closed bottle: no oil leaves it",
+        observed: "A thin run of oil down the base, from the first frame",
+        status: "open",
+        seconds: { from: 0, to: 2.9 },
+      },
+      {
+        id: "fi-v2",
+        dimension: "brand_brief",
+        severity: "minor",
+        finding: "The button comes in a quarter second after the beat.",
+        expected: "Words and the button come in on a beat, as in LYSNE’s motion",
+        status: "open",
+        seconds: { from: 4, to: 4.25 },
+      },
+      {
+        id: "fi-v3",
+        dimension: "design",
+        severity: "major",
+        finding: "Once it is in, the button sits over the name on the label.",
+        expected: "The button clear of the label, as LYSNE’s design system places it",
+        status: "open",
+        seconds: { from: 4.3, to: 6 },
+      },
+    ],
+  }),
+  // A hand-laid design (round 15): code measured that its headline sits over the bottle, so it comes to Check as the
+  // Engine's comment, pinned where the words cover the label.
   qa("qa-4", "cr-doc-autumn-email", "Email header", "05-01", 15, {
     studio: "design",
     documentId: "doc-autumn-email",
     format: "story",
     image: img("05-01", "story"),
-    layers: structuredClone(layoutLayers),
+    // The version sent before the words were moved: the headline and its line sit over the bottle's label
+    layers: structuredClone(layoutLayers).map((l) =>
+      l.id === "ly-head"
+        ? { ...l, x: 0.3, y: 0.62, w: 0.62 }
+        : l.id === "ly-body"
+          ? { ...l, x: 0.3, y: 0.73, w: 0.5 }
+          : l,
+    ),
+    findings: [
+      {
+        id: "fi-d1",
+        dimension: "design",
+        severity: "major",
+        finding: "The headline sits over the bottle’s label.",
+        expected: "Words clear of the product, in the calm space above or below it",
+        observed: "“For the hour before sleep.” covers “Night Body Oil”",
+        status: "open",
+        spot: { x: 0.62, y: 0.74 },
+      },
+    ],
   }),
   {
     ...qa("qa-5", "cr-solv-1", "Feed 1", "10-08", 30, { slot: "Master 1" }),
@@ -226,7 +403,12 @@ const seeded: QaItem[] = [
   {
     ...qa("qa-6", "cr-solv-2", "Feed 2", "10-06", 28, {
       slot: "Master 2",
-      evaluation: { ...ok, artefacts: "minor", notes: ["A soft edge on the left cup"] },
+      evaluation: {
+        ...ok,
+        artefacts: "minor",
+        notes: ["A soft edge on the left cup"],
+        scores: { product: 90, engine: 81 },
+      },
     }),
     workspaceId: "w-solv",
     campaignId: "c-solv",
@@ -264,4 +446,27 @@ const fromEngineChat: QaItem[] = batches
     });
   });
 
-export const qaItems: QaItem[] = [...seeded, ...fromEngineChat];
+/** Each creative's scores as its studio scores it (FLOWS §35.3): a design on what code measured, else its two scores
+ *  turned into the picture's or the video's measures. The Email header's words sit over the bottle. */
+function scored(item: QaItem, i: number): QaItem {
+  if (item.design?.state === "made")
+    return { ...item, evaluation: designEvaluation(item.evaluation, item.design.checks, i) };
+  if (item.id === "qa-4")
+    return {
+      ...item,
+      evaluation: withMeasures(item.evaluation, "design", i, {
+        placement: { value: 58, why: "The headline sits over the bottle’s label" },
+      }),
+    };
+  if (item.id === "qa-9")
+    return {
+      ...item,
+      evaluation: withMeasures(item.evaluation, "video", i, {
+        rhythm: { value: 76, why: "The button comes in a quarter second after the beat" },
+        text_on_screen: { value: 68, why: "The button sits over the name on the label" },
+      }),
+    };
+  return { ...item, evaluation: withMeasures(item.evaluation, item.studio, i) };
+}
+
+export const qaItems: QaItem[] = [...seeded, ...fromEngineChat].map(scored);

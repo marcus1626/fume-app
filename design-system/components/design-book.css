@@ -1,0 +1,79 @@
+/* The design system as a component library's docs (app FLOWS §34.4). PROPOSED 9 Nov 2026, round 14.
+   Marcus, 9 Nov: the design system page felt like a messy Word document; he wants it like shadcn or
+   brand.fumecreatives.com, with a part for components (buttons and the rest).
+   Markup (inside the book's docs, book-edit.css):
+     <section class="ui-voice-part ui-ds-part" id="design-c-cta"> title, purpose
+       <div class="ui-ds-demo"><div class="ui-ds-demo-bar"> [Preview | CSS] [On the wall | On a photograph] </div>
+         <div class="ui-ds-stage" data-ground="wall|photo"><img class="ui-ds-stage-photo"/><span class="ui-ds-sample"/></div>
+         or the CSS (brand-book.css .ui-brandbook-code) </div>
+       <dl class="ui-ds-props"><div><dt>Style</dt><dd>…</dd></div> …</dl>
+       <ul class="ui-voice-list"> its rules </ul></section>
+   Decisions:
+   - Each component is shown live, in the brand's own colours and type, at the size it has on a frame 1080 wide (the
+     stage is the frame's width, so container units scale it). The brand's wall is the ground; one of its photographs is
+     the other, where the component is used on one.
+   - The CSS is a tab away, as in a component library: the component on the brand's tokens, with Copy.
+   - What it is made of reads as a row of small facts, not a table: style, words, ground, corners. Colours show as a dot.
+   - No hairlines between regions (few strokes): the stage is the only filled area.
+   Rule gate: space-from-tokens, type-from-tokens, radius-from-tokens, tokens-only-color, few-strokes. */
+
+/* the index holds every component: it scrolls on its own when it is longer than the window */
+@media (min-width: 1100px) {
+  .ui-book-docs > .ui-book-index { max-height: calc(100dvh - var(--ui-book-stick) - var(--ui-space-2xl)); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+}
+
+.ui-ds-part { gap: var(--ui-space-md); }
+.ui-ds-demo { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-ds-demo-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); min-width: 0; }
+
+/* the stage: the brand's wall, or one of its photographs, a frame's width */
+.ui-ds-stage {
+  position: relative; display: grid; place-items: center; min-height: 14rem; padding: var(--ui-space-2xl) var(--ui-space-xl);
+  overflow: hidden; border-radius: var(--ui-radius-card); container-type: inline-size;
+  box-shadow: inset 0 0 0 1px var(--ui-creative-edge); /* gate-allow:few-strokes  the brand's wall can be the page's own colour; a creative's edge, as on the swatches */
+}
+.ui-ds-stage[data-ground="photo"] { min-height: 18rem; }
+.ui-ds-stage-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ui-ds-sample { position: relative; display: inline-block; max-width: 80%; text-align: center; text-wrap: balance; }
+
+/* what it is made of */
+.ui-ds-props { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: var(--ui-space-md) var(--ui-space-lg); margin: 0; }
+.ui-ds-props > div { display: grid; gap: var(--ui-space-2xs); align-content: start; min-width: 0; }
+.ui-ds-props dt { font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-ds-props dd { margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text); }
+.ui-ds-colour { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs); }
+.ui-ds-colour-dot { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--ui-creative-edge); } /* gate-allow:few-strokes  a light brand colour vanishes on the page without a creative's edge */
+.ui-ds-code { font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-secondary); } /* gate-allow:mono-is-data  sizes and colour codes are data */
+
+/* ── Round 15 (PROPOSED 9 Nov 2026): the brand's own components, and the logo once ─────────────── */
+/* Marcus, 9 Nov: "What is the difference between Design system and Brand DNA? Logo is in both? Are the components
+   hard-coded? Can the Engine add components to the design system?"
+   Markup:
+     <span class="ui-ds-sample" data-base="text|button|badge|shape|image|logo" [data-round]> words, or <img/> </span>
+     <p class="ui-ds-words"><span class="ui-voice-say-label">Words in the preview</span><span class="ui-edit"/></p>
+     <section class="ui-voice-part ui-ds-part ui-block-proposal" data-state="proposed"> the Engine's component </section>
+     <form class="ui-ds-add"> Built from [segmented] · Name [input] · [Add the component] [Cancel] </form>
+     <div class="ui-brandbook-examples ui-ds-logo-uses"> a frame per format, the wordmark where it goes </div>
+   Decisions:
+   - A component of the brand's own is drawn from its base: words (on a ground), a round mark (pill corners and a size),
+     a form in a colour, a picture in its corners, or the wordmark. Its settings are selects of the brand's own tokens,
+     in the same row of small facts the read page has.
+   - The Engine's proposed component lies on the sunken surface, the one filled panel among the components.
+   - The logo's frames are smaller than the examples': they show where it goes, not a picture.
+   Rule gate: space-from-tokens, type-from-tokens, radius-from-tokens, tokens-only-color, few-strokes. */
+.ui-ds-sample[data-round] { display: inline-grid; place-items: center; aspect-ratio: 1; text-align: center; line-height: 1.05; }
+.ui-ds-sample[data-base="shape"] { display: inline-grid; place-items: center; }
+.ui-ds-sample[data-base="image"] { display: block; aspect-ratio: 4 / 5; overflow: hidden; }
+.ui-ds-sample[data-base="image"] > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ui-ds-sample[data-base="logo"] { letter-spacing: .12em; }
+.ui-ds-props[data-editing] { grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); }
+.ui-ds-props .ui-native-select-wrap { flex: 1 1 auto; min-width: 0; max-width: 100%; }
+.ui-ds-props .ui-ds-colour { flex-wrap: nowrap; min-width: 0; }
+.ui-ds-colour-dot[data-none] { background: transparent; }
+.ui-ds-words { display: grid; gap: var(--ui-space-2xs); margin: 0; font-size: var(--ui-type-body); color: var(--ui-text); }
+.ui-ds-part.ui-block-proposal { padding: var(--ui-inset-panel); border-radius: var(--ui-radius-card); background: var(--ui-card-bg); }
+.ui-ds-add { display: grid; gap: var(--ui-space-md); max-inline-size: 36rem; padding: var(--ui-inset-panel); border-radius: var(--ui-radius-card); background: var(--ui-card-bg); }
+.ui-ds-add .ui-seg { max-inline-size: 100%; overflow-x: auto; scrollbar-width: none; }
+.ui-ds-add-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-sm); }
+.ui-ds-logo-uses { --ui-brandbook-row: 11rem; }
+.ui-ds-logo-uses .ui-brandbook-layer { justify-content: center; }

@@ -8,7 +8,7 @@
 //   action.
 // - The tab row sticks under the app bar (≥ 1024 px) with, on Brand DNA, an index that jumps to each part and lights
 //   the part in view. Tabs switch with replace, so Back leaves Brand instead of stepping through its tabs.
-// Voice (/brand/voice), Rules (/brand/rules), What Fume learned (/brand/memory), Brand DNA summary
+// Tone of Voice (/brand/voice), Design system (/brand/design, FLOWS §30), Look Book (/brand/look, §32), Rules (/brand/rules), What Fume learned (/brand/memory), Brand DNA summary
 // (/brand/understanding) and Update the brand (/brand/update) are pages of their own.
 import { Button, Icon, PageHeader, Tabs, TabsList, TabsTrigger } from "@fume/ui";
 import { useEffect, useRef, useState } from "react";
@@ -25,6 +25,8 @@ import { Models, useHasModels } from "./models";
 import { BrandHeaderSlotProvider, useModelsHeldBack, useRole, useViewer, versionLine } from "./parts";
 import { ProductsContent } from "./ProductsPage";
 import { TasteContent } from "./TastePage";
+import { DesignSystemPage } from "./design";
+import { LookBookPage } from "./look";
 import { VoicePage } from "./voice";
 
 /** The three tabs: the only Brand pages with a tab row. */
@@ -83,6 +85,8 @@ export function BrandBoardPage() {
   if (tab === "memory") return <MemoryPage />;
   // the whole voice, in five parts (voice.tsx)
   if (tab === "voice") return <VoicePage />;
+  if (tab === "design") return <DesignSystemPage />;
+  if (tab === "look") return <LookBookPage />;
   if (isPart(tab)) return <Navigate to={{ pathname: "/brand", hash: tab }} replace />;
   return <BrandTabs />;
 }
@@ -98,6 +102,7 @@ function BrandTabs() {
   const session = useSession().data!;
   const board = useBrandBoard();
   const { canApprove } = useRole();
+  const viewer = useViewer();
   const finds = useFinds(board.data);
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   const header = useRef<HTMLElement>(null);
@@ -126,6 +131,13 @@ function BrandTabs() {
         ref={header}
         title="Brand"
         meta={[session.workspace.brandName]}
+        // Round 15 (PROPOSED 9 Nov 2026), Marcus: "What is the difference between Design system and Brand DNA?" One
+        // line says what Brand DNA is for; the design system's own line says what it is for.
+        description={
+          tab === "board"
+            ? `${viewer.Your} facts and files, as found: the logo, colours, type, voice and pictures. The design system sets how creatives use them.`
+            : undefined
+        }
         actions={
           <>
             {tab === "board" && canApprove && finds.count > 0 && (
@@ -156,7 +168,7 @@ function BrandTabs() {
           <ProductsContent />
         ) : tab === "taste" ? (
           <TasteContent
-            moodboardId={board.data?.moodboard.id ?? "bd-brand"}
+            moodboardId={board.data?.moodboard.id}
             moodboardItems={
               board.data?.moodboard.items.filter((i) => i.kind === "image" || i.kind === "creative").length
             }

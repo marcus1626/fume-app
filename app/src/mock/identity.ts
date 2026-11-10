@@ -34,6 +34,7 @@ export function identityCalls(m: Mock): Pick<FumeApi, Calls> {
         organisation: m.find(db.organisations, workspace.organisationId, "organisation"),
         role: m.role(),
         workspaces,
+        introduced: !db.unintroduced.includes(m.userId),
         onboarded: db.brandDna.state === "approved" || db.brandDna.version > 0,
       };
       // It says which agency runs the brand, and the agency person's own seat.
@@ -140,6 +141,7 @@ export function identityCalls(m: Mock): Pick<FumeApi, Calls> {
       if (!/^\S+@\S+\.\S+$/.test(email.trim()))
         throw new FumeError("invalid", "That email address doesn’t look right.");
       Object.assign(u, { name: name.trim(), title: title.trim(), email: email.trim() });
+      db.unintroduced = db.unintroduced.filter((id) => id !== u.id);
       return wait(structuredClone(u));
     },
   };

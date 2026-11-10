@@ -21,12 +21,18 @@ export interface QualityApi {
   qualityLog(): Promise<QualityLogEntry[]>;
 
   // Check (FLOWS §10, §25.2)
-  qaQueue(workspaceId?: Id): Promise<QaView[]>;
-  qaCheck(itemId: Id): Promise<QaItem>;
+  /** `light`: what a count, a list or search needs, without the Engine's design and what changed since the version
+   *  was made (Check itself reads it whole). */
+  qaQueue(workspaceId?: Id, options?: { light?: boolean }): Promise<QaView[]>;
+  /** `accept`: the holds the expert accepts as they check (QaItem.holds); a hold not accepted stops the check. */
+  qaCheck(itemId: Id, accept?: Id[]): Promise<QaItem>;
   /** Undo a check just made (the toast's Undo, or Undo in the panel): the creative waits for a check again. */
   qaUncheck(itemId: Id): Promise<QaItem>;
-  /** Tell the Engine what to fix; `pins` are located notes on the creative. */
-  qaFeedback(itemId: Id, text: string, pins?: QaPin[]): Promise<QaItem>;
+  /** Tell the Engine what to fix; `pins` are located notes on the creative; `findingIds` are the Engine's own findings
+   *  the note takes up (the one who checks agrees with them). */
+  qaFeedback(itemId: Id, text: string, pins?: QaPin[], findingIds?: Id[]): Promise<QaItem>;
+  /** Set one of the Engine's findings aside as not a problem here (accepted), or take that back (open). */
+  qaSettleFinding(itemId: Id, findingId: Id, status: "accepted" | "open"): Promise<QaItem>;
   qaEdit(itemId: Id, layers: Layer[]): Promise<QaItem>;
   /** Open the creative in the Studio. While the Engine fixes it, it opens without taking it; `takeOver` takes it from
    *  the Engine. */

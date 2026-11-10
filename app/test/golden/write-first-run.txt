@@ -4110,6 +4110,7 @@ maja saveOnboardingProgress({"step":"taste"})
   {"lines":[{"id":"brand","verdict":"right"},{"id":"light","reason":"Warmer","verdict":"not_quite"}],"step":"taste"}
 maja session()
   {
+    "introduced": false,
     "onboarded": true,
     "organisation": {"id":"o-lysne","name":"LYSNE","packageId":"p-core"},
     "role": "owner",

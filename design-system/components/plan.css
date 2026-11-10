@@ -247,6 +247,54 @@
 .ui-plandoc-line-ask > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex-shrink: 0; }
 .ui-plandoc-line-ask > span { flex: 1 1 16em; min-width: 0; }
 .ui-plandoc-line:has(.ui-plandoc-edit) > .ui-plandoc-line-body { grid-column: 2 / -1; }
+
+/* ---------- the copy check (FLOWS §31, PROPOSED 4 Nov 2026): what Fume's word check found, for Fume's own expert only.
+   On the line: <ul class="ui-plandoc-copy-notes" [data-stale]>[<li class="ui-plandoc-copy-stale">You changed this line
+   after the check.</li>]<li class="ui-plandoc-copy-note" data-kind="unbacked_claim|off_voice|avoided_word"><svg/>
+   <span>No verified fact says this: “…”. A health claim needs one.</span></li></ul>. In the aside, above the brief:
+   <section class="ui-plandoc-copy"><h3 class="ui-plandoc-index-title">The words, checked</h3><p class="ui-plandoc-copy-line">6 lines
+   read · 1 claim nothing backs</p><ul class="ui-plandoc-copy-list"><li data-kind="…"><a class="ui-plandoc-copy-link"><svg/>
+   <span><span class="ui-plandoc-copy-link-text">Master 2</span><span class="ui-plandoc-copy-link-sub">A claim nothing
+   backs</span></span></a></li></ul>
+   <p class="ui-plandoc-copy-sub">Written again once, …</p></section>. A claim nothing backs is Rouge (its mark and its
+   words), the rest secondary; a line changed since the check keeps its notes, muted. Never Amber: nothing here is checked. */
+.ui-plandoc-line[id], .ui-plandoc-master[id] { scroll-margin-top: var(--ui-plandoc-stick); }
+.ui-plandoc-line[id]:focus, .ui-plandoc-master[id]:focus { outline: none; }
+.ui-plandoc-copy-notes { display: grid; gap: var(--ui-space-xs); min-width: 0; margin: var(--ui-space-xs) 0 0; padding: 0; list-style: none; }
+.ui-plandoc-copy-note {
+  display: flex; align-items: flex-start; gap: var(--ui-space-sm); min-width: 0;
+  font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty;
+}
+.ui-plandoc-copy-note > svg { position: relative; inset-block-start: .1em; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; }
+.ui-plandoc-copy-note[data-kind="unbacked_claim"] { color: var(--ui-danger); }
+.ui-plandoc-copy-stale { font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); }
+.ui-plandoc-copy-notes[data-stale] > .ui-plandoc-copy-note { color: var(--ui-text-tertiary); }
+
+.ui-plandoc-copy { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-plandoc-copy > .ui-plandoc-index-title { margin: 0; font-weight: var(--ui-type-weight-regular); }
+/* round 14 (FLOWS §34.2): the check is the aside's clearest title; the Tone of Voice and the rewrite fold away */
+.ui-plandoc-copy-title { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text); }
+.ui-plandoc-copy-more { justify-items: start; min-width: 0; }
+.ui-plandoc-copy-more > .ui-collapsible-trigger { justify-self: start; max-width: calc(100% + var(--ui-size-pad-sm)); margin-inline-start: calc(var(--ui-size-pad-sm) * -1); white-space: normal; text-align: start; }
+.ui-plandoc-copy-more .ui-plandoc-copy-sub + .ui-plandoc-copy-sub { margin-block-start: var(--ui-space-xs); }
+.ui-plandoc-copy-line { margin: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text); text-wrap: pretty; }
+.ui-plandoc-copy-sub { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-plandoc-copy-list { display: grid; min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-plandoc-copy-link {
+  position: relative; display: flex; align-items: flex-start; gap: var(--ui-space-sm); min-width: 0; padding-block: var(--ui-space-xs);
+  font-size: var(--ui-type-control); line-height: 1.4; color: var(--ui-text); text-decoration: none;
+  border-radius: var(--ui-radius-item); cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+/* a 44 hit around the row (the rows overlap their neighbours' edge, as the plan's index does) */
+.ui-plandoc-copy-link::after { content: ""; position: absolute; inset: 50% 0 auto; height: var(--ui-size-hit); transform: translateY(-50%); }
+.ui-plandoc-copy-link:active { color: var(--ui-text-secondary); }
+.ui-plandoc-copy-link > svg { position: relative; inset-block-start: .15em; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); flex-shrink: 0; color: var(--ui-text-secondary); }
+.ui-plandoc-copy-list > [data-kind="unbacked_claim"] .ui-plandoc-copy-link > svg { color: var(--ui-danger); }
+.ui-plandoc-copy-list > [data-stale] .ui-plandoc-copy-link > svg { color: var(--ui-text-tertiary); }
+.ui-plandoc-copy-link > span { display: grid; min-width: 0; }
+.ui-plandoc-copy-link-sub { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-plandoc-copy-link:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+@media (hover: hover) { .ui-plandoc-copy-link:hover .ui-plandoc-copy-link-text { text-decoration: underline; text-underline-offset: .2em; } }
 .ui-plandoc-edit { display: grid; gap: var(--ui-space-sm); min-width: 0; }
 .ui-plandoc-edit-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); }
 

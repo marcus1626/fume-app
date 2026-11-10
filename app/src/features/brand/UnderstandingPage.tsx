@@ -353,6 +353,7 @@ export function UnderstandingCheck({ view, editing = false }: { view: BrandDnaVi
   const toast = useToast();
   const dir = directory(usePeople().data);
   const u = view.understanding;
+  const lines = understoodLines(view, scan.data);
   const open = u.unknowns.filter((x) => !x.answer);
   const unanswered = u.testDirections.filter((d) => !d.verdict);
   const approved = view.dna.state === "approved";
@@ -377,24 +378,26 @@ export function UnderstandingCheck({ view, editing = false }: { view: BrandDnaVi
 
   return (
     <>
-      <Section
-        title="What Fume read"
-        titleId="und-summary"
-        text={
-          canEdit
-            ? "From your brand material and your answers. Confirm each line, or change one that is not quite right."
-            : undefined
-        }
-      >
-        <UnderstoodLines lines={understoodLines(view, scan.data)} canEdit={canEdit} onSaved={changed} />
-        {canEdit && (
-          <div className="ui-app-row">
-            <Button asChild variant="quiet" size="sm" icon="message-square">
-              <Link to="/fume">Something else is off? Tell Fume</Link>
-            </Button>
-          </div>
-        )}
-      </Section>
+      {(lines.length > 0 || canEdit) && (
+        <Section
+          title="What Fume read"
+          titleId="und-summary"
+          text={
+            canEdit
+              ? "From your brand material and your answers. Confirm each line, or change one that is not quite right."
+              : undefined
+          }
+        >
+          <UnderstoodLines lines={lines} canEdit={canEdit} onSaved={changed} />
+          {canEdit && (
+            <div className="ui-app-row">
+              <Button asChild variant="quiet" size="sm" icon="message-square">
+                <Link to="/fume">Something else is off? Tell Fume</Link>
+              </Button>
+            </div>
+          )}
+        </Section>
+      )}
 
       {open.length > 0 && (
         <Section
@@ -433,18 +436,20 @@ export function UnderstandingCheck({ view, editing = false }: { view: BrandDnaVi
         </Section>
       )}
 
-      <Section
-        title="Three test directions"
-        meta={canEdit && unanswered.length ? `${unanswered.length} to answer` : undefined}
-        titleId="und-directions"
-        text={canEdit ? "Deliberately different, so your yes and no teach Fume where the edges are." : undefined}
-      >
-        <div className="ui-app-grid">
-          {u.testDirections.map((d) => (
-            <DirectionCard key={d.id} direction={d} canEdit={canEdit} onSaved={changed} />
-          ))}
-        </div>
-      </Section>
+      {u.testDirections.length > 0 && (
+        <Section
+          title="Three test directions"
+          meta={canEdit && unanswered.length ? `${unanswered.length} to answer` : undefined}
+          titleId="und-directions"
+          text={canEdit ? "Deliberately different, so your yes and no teach Fume where the edges are." : undefined}
+        >
+          <div className="ui-app-grid">
+            {u.testDirections.map((d) => (
+              <DirectionCard key={d.id} direction={d} canEdit={canEdit} onSaved={changed} />
+            ))}
+          </div>
+        </Section>
+      )}
 
       {u.unknowns.some((x) => x.answer) && (
         <Section title="What you told Fume" titleId="und-answers">

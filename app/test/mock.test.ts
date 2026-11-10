@@ -120,7 +120,10 @@ test("the Engine starts only after the customer approves the plan; the plan is c
     assert.equal(winter?.state, "ready");
     assert.equal(winter?.checkedBy, "u-anna");
     assert.equal((await api.campaign("c-winter")).runs.filter((r) => r.state === "running").length, 0);
-    const approved = await api.approvePlan("c-winter");
+    // She approves the version she read; an older version is not approved as the plan is now.
+    await assert.rejects(api.approvePlan("c-winter", winter!.version - 1), /has changed since/);
+    assert.equal((await api.plan("c-winter"))?.state, "ready");
+    const approved = await api.approvePlan("c-winter", winter!.version);
     assert.equal(approved.state, "approved");
     const after = await api.campaign("c-winter");
     assert.equal(after.campaign.stage, "masters");
@@ -377,4 +380,25 @@ test("a client link names each creative as the client reads it in Fume, never Ma
     names.join(", "),
   );
   assert.equal(new Set(names).size, names.length);
+});
+
+test("train the Engine: Fume's own people answer the Engine's pictures and the check; customers and agencies do not", async () => {
+  const api = anna();
+  const deck = await api.trainDeck();
+  assert.ok(deck.cards.length > 1 && new Set(deck.cards.map((c) => c.id)).size === deck.cards.length);
+  const [first, second] = deck.cards;
+  assert.ok(first && second && first.findings.length > 0);
+  await api.trainJudge({
+    cardId: first.id,
+    key: first.findings[0]!.key,
+    verdict: "wrong",
+    note: "Seven, one under the collar",
+  });
+  await api.trainAnswer({ cardId: first.id, verdict: "no", why: "The buttons" });
+  const after = await api.trainDeck();
+  assert.ok(!after.cards.some((c) => c.id === first.id), "an answered picture leaves the deck");
+  assert.equal(after.answered, 1);
+  assert.equal(after.judged, 1);
+  await assert.rejects(api.trainAnswer({ cardId: second.id, verdict: "maybe" as never }), /yes or no/);
+  await assert.rejects(maja().trainDeck(), /Fume’s own team/);
 });

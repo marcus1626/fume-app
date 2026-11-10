@@ -1,0 +1,2083 @@
+// Built by tools/build.mjs from api-src/design.ts and src/. Do not edit.
+
+// src/handler.ts
+import { createHash as createHash2 } from "node:crypto";
+
+// src/book.ts
+var SIZES = {
+  feed: { w: 1080, h: 1350 },
+  square: { w: 1080, h: 1080 },
+  story: { w: 1080, h: 1920 },
+  banner: { w: 1920, h: 1080 }
+};
+function signatureOf(book, name, hasCta) {
+  const all = brandLayouts(book);
+  const named = all.find((l) => l.name === name);
+  if (named) return named;
+  const rank = (l) => l.source === "pictures" ? 0 : l.source === "site" ? 1 : 2;
+  const best = [...all].sort((a, b) => rank(a) - rank(b));
+  const first = best[0];
+  const fits2 = hasCta && first ? best.find((l) => rank(l) === rank(first) && l.cta !== "none") : void 0;
+  return fits2 ?? first ?? null;
+}
+function brandLayouts(book) {
+  const all = (book.onPictures?.layouts ?? []).filter((l) => carriesWords(l));
+  const seen = all.filter((l) => l.source !== "fume");
+  return seen.length ? seen : all;
+}
+function seesBrand(book) {
+  return (book.onPictures?.layouts ?? []).some((l) => carriesWords(l) && l.source !== "fume");
+}
+function carriesWords(l) {
+  return l.hasWords ?? !/\b(no|without) (words|text|copy)\b|\b(logo|swoosh|mark) alone\b/i.test(l.name);
+}
+function gridOf(book, format) {
+  const size = SIZES[format];
+  const f = book.formats.find((x) => x.format === format);
+  const margin = clamp(f?.marginPx ?? 64, 32, size.w / 8);
+  const platform = format === "story" ? { top: 250, bottom: 340 } : { top: 0, bottom: 0 };
+  return {
+    ...size,
+    columns: f?.columns ?? 12,
+    gutter: f?.gutterPx ?? 24,
+    margin,
+    top: Math.max(margin, f?.safeTopPx ?? 0, platform.top),
+    bottom: Math.max(margin, f?.safeBottomPx ?? 0, platform.bottom)
+  };
+}
+function columnsWidth(g, n) {
+  const col = (g.w - 2 * g.margin - (g.columns - 1) * g.gutter) / g.columns;
+  return Math.round(n * col + (n - 1) * g.gutter);
+}
+function colourOf(book, role) {
+  const c = book.colours.find((x) => x.role === role);
+  return c && /^#[0-9a-f]{6}$/i.test(c.hex) ? c.hex.toUpperCase() : null;
+}
+function styleOf(book, name) {
+  return book.styles.find((s) => s.name === name) ?? null;
+}
+function componentOf(book, name) {
+  return book.components.find((c) => c.name === name) ?? null;
+}
+var STEP_FLOOR = 0.7;
+function headlineSteps(book, first) {
+  const order = ["display", "h1", "h2", "subline"];
+  const start2 = Math.max(0, order.indexOf(first));
+  const steps = order.slice(start2).map((n) => styleOf(book, n)).filter((s) => s !== null);
+  const top = steps[0]?.sizePx ?? 0;
+  return steps.filter((s, i) => i === 0 || s.sizePx >= top * STEP_FLOOR);
+}
+function radiusOf(book, name) {
+  const r2 = book.radiusPx?.[name];
+  return typeof r2 === "number" ? r2 : 0;
+}
+function clamp(n, lo, hi) {
+  return Math.min(hi, Math.max(lo, n));
+}
+
+// src/compose.ts
+function compose(book, format, words, l, family, widths = {}, logo) {
+  const g = gridOf(book, format);
+  const unit = book.spacing?.unitPx ?? 8;
+  const head = styleOf(book, l.headline) ?? styleOf(book, "h1") ?? book.styles[0];
+  const display = styleOf(book, "display");
+  const hl = fitted(display && ["h1", "h2"].includes(head.name) ? { ...head, case: display.case } : head, l.fit?.headline);
+  const sub = styleOf(book, l.subline ?? "subline") ?? styleOf(book, "subline") ?? styleOf(book, "body") ?? hl;
+  const panel = componentOf(book, "body");
+  const isBlock = l.ground === "block";
+  const onPanel = l.ground === "flat" || isBlock;
+  const ownGround = onPanel && l.groundHex && /^#[0-9a-f]{6}$/i.test(l.groundHex) ? l.groundHex.toUpperCase() : null;
+  const wordsHex = ownGround ? readableOn(ownGround, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000") : isBlock ? colourOf(book, "on_primary") ?? "#FFFFFF" : onPanel ? colourOf(book, "text") ?? "#000000" : colourOf(book, l.colour) ?? "#FFFFFF";
+  const subHex = isBlock || ownGround ? wordsHex : onPanel ? colourOf(book, "text_muted") ?? wordsHex : wordsHex;
+  const width = columnsWidth(g, Math.min(g.columns, Math.max(4, l.columns)));
+  const x = l.align === "left" ? g.margin : l.align === "right" ? g.w - g.margin - width : Math.round((g.w - width) / 2);
+  const textAlign = l.align;
+  const items = l.align === "left" ? "start" : l.align === "right" ? "end" : "center";
+  const fonts = [];
+  const colours = { Headline: wordsHex };
+  const sizes = { Headline: hl.sizePx };
+  const text = (name, s, value, hex) => {
+    const fam = family(s);
+    fonts.push({ family: fam, weight: s.weight });
+    const w = (name === "Headline" || name === "Subline") && widths[name] ? `{${Math.round(widths[name])}}` : `"fill"`;
+    return `<Text name=${q(name)} w=${w} font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${Math.round(
+      s.sizePx * s.lineHeight
+    )}} letterSpacing={${round(s.trackingEm * s.sizePx)}} color=${q(hex)}${caseOf(s)} textAlign=${q(textAlign)} text={${JSON.stringify(
+      bindShort(value)
+    )}} />`;
+  };
+  const cta = () => {
+    const c = componentOf(book, "cta");
+    const s = fitted(styleOf(book, c?.style ?? "cta") ?? sub, l.fit?.cta);
+    const fam = family(s);
+    fonts.push({ family: fam, weight: s.weight });
+    const look = l.ctaLook ?? "pill";
+    const light = colourOf(book, "on_photo") ?? "#FFFFFF";
+    const dark = colourOf(book, "text") ?? "#000000";
+    const bg = l.ctaFill === "light" ? light : l.ctaFill === "dark" ? dark : colourOf(book, c?.background ?? "cta") ?? colourOf(book, "primary") ?? "#000000";
+    const fg = l.ctaFill === "light" ? ownGround && !isLight(ownGround) ? ownGround : dark : l.ctaFill === "dark" ? light : colourOf(book, c?.colour ?? "cta_text") ?? "#FFFFFF";
+    sizes.CTA = s.sizePx;
+    const pad3 = c?.paddingPx ?? 24;
+    const line = Math.round(s.sizePx * s.lineHeight);
+    if (look === "underline" || look === "text") {
+      colours.CTA = wordsHex;
+      const rule = look === "underline" ? `<Rectangle name="Rule" w="fill" h={${Math.max(2, Math.round(s.sizePx / 14))}} bg=${q(wordsHex)} />` : "";
+      return `<Frame name="CTA" w="hug" h="hug" flex="col" gap={${Math.round(s.sizePx / 4)}}><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
+        s.trackingEm * s.sizePx
+      )}} color=${q(wordsHex)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} />${rule}</Frame>`;
+    }
+    const py = Math.max(Math.round(pad3 * 0.6), Math.ceil((56 - line) / 2));
+    if (look === "slant" || look === "slant_double") {
+      colours.CTA = wordsHex;
+      const stroke = Math.max(1.5, Math.round(s.sizePx / 24 * 2) / 2);
+      const lean = Math.round(line * 0.45);
+      return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(s.sizePx * 0.9) + lean}} py={${Math.round(s.sizePx * 0.6)}}><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
+        s.trackingEm * s.sizePx
+      )}} color=${q(wordsHex)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} /><Rectangle name=${q(
+        `Slant ${wordsHex} ${stroke} ${look === "slant_double" ? 2 : 1}`
+      )} position="absolute" x={0} y={0} w={1} h={1} fills={[]} /></Frame>`;
+    }
+    if (look === "outline") {
+      colours.CTA = wordsHex;
+      return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(pad3 * 1.5)}} py={${py}} rounded={${radiusOf(book, "small")}} stroke=${q(
+        wordsHex
+      )} strokeWidth={${Math.max(2, Math.round(s.sizePx / 12))}} strokeAlign="INSIDE"><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
+        s.trackingEm * s.sizePx
+      )}} color=${q(wordsHex)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} /></Frame>`;
+    }
+    colours.CTA = fg;
+    return `<Frame name="CTA" w="hug" h="hug" px={${Math.round(pad3 * 1.5)}} py={${py}} rounded={${radiusOf(
+      book,
+      look === "box" ? "small" : c?.radius ?? "pill"
+    )}} bg=${q(bg)}><Text name="CTA words" font=${q(fam)} weight={${s.weight}} size={${s.sizePx}} lineHeight={${line}} letterSpacing={${round(
+      s.trackingEm * s.sizePx
+    )}} color=${q(fg)}${caseOf(s)} text={${JSON.stringify(words.cta ?? "")}} /></Frame>`;
+  };
+  const inner = [text("Headline", hl, words.headline, wordsHex)];
+  if (words.price) {
+    const { now, was } = splitPrice(words.price);
+    const ps = fitted(styleOf(book, "price") ?? { ...hl, name: "price", sizePx: Math.round(hl.sizePx * 1.6), case: "none" }, l.fit?.price);
+    inner.push(text("Price", ps, now, wordsHex));
+    colours.Price = wordsHex;
+    sizes.Price = ps.sizePx;
+    if (was) {
+      const ws = styleOf(book, "label") ?? sub;
+      inner.push(text("Was", ws, was, wordsHex));
+      colours.Was = wordsHex;
+      sizes.Was = ws.sizePx;
+    }
+  }
+  if (words.subline) {
+    inner.push(text("Subline", sub, words.subline, subHex));
+    colours.Subline = subHex;
+    sizes.Subline = sub.sizePx;
+  }
+  const apart = l.cta === "bottom" && l.ctaSide !== void 0 && l.ctaSide !== l.align;
+  const ctaWithWords = words.cta && (l.cta === "with_words" || l.cta === "bottom" && l.band === "bottom" && !apart);
+  const side = l.cta === "bottom" && l.ctaSide ? l.ctaSide : l.align;
+  const pad2 = onPanel ? panel?.paddingPx ?? 32 : 0;
+  const panelHex = ownGround ? ownGround : isBlock ? colourOf(book, "primary") ?? "#000000" : colourOf(book, panel?.background ?? "surface") ?? colourOf(book, "background") ?? "#FFFFFF";
+  const panelBg = onPanel ? ` bg=${q(panelHex)}` : "";
+  const insideLogo = logo?.inside ? `<Rectangle name="Logo" w={${Math.round(logo.w)}} h={${Math.round(logo.h)}} fills={[{ type: "IMAGE", imageHash: "LOGO", imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />` : "";
+  const panelRadius = onPanel ? ` rounded={${radiusOf(book, panel?.radius ?? "none")}}` : "";
+  const block = `<Frame name="Words" position="absolute" x={${x}} y={${g.top}} w={${width}} h="hug" flex="col" items=${q(
+    items
+  )} gap={${unit * 5}}${panelBg}${panelRadius} p={${pad2}}><Frame name="Lines" w="fill" h="hug" flex="col" items=${q(items)} gap={${unit * 3}}>${inner.join("")}</Frame>${ctaWithWords ? cta() : ""}</Frame>`.replace(
+    '<Frame name="Lines"',
+    `${insideLogo}<Frame name="Lines"`
+  );
+  const alone = words.cta && !ctaWithWords && l.cta !== "none" ? `<Frame name="Action" position="absolute" x={${side === "left" ? g.margin : 0}} y={${g.h - g.bottom - 80}} w={${side === "left" ? '"hug"' : side === "right" ? g.w - g.margin : g.w}} h="hug" flex="col" items=${q(side === "left" ? "start" : side === "right" ? "end" : "center")}>${cta()}</Frame>` : "";
+  const shade = l.ground === "gradient" || l.ground === "tint" ? `<Rectangle name="Shade" position="absolute" x={0} y={0} w={${g.w}} h={${Math.round(g.h / 2)}} fills={[]} />` : "";
+  const logoNode = logo && !logo.inside ? `<Rectangle name="Logo" position="absolute" x={${g.margin}} y={${g.top}} w={${Math.round(logo.w)}} h={${Math.round(
+    logo.h
+  )}} fills={[{ type: "IMAGE", imageHash: "LOGO", imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />` : "";
+  const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${shade}${block}${alone}${logoNode}</Frame>`;
+  return { jsx, grid: g, fonts, colours, sizes, ...onPanel ? { panel: panelHex } : {} };
+}
+function splitPrice(line) {
+  const m = line.match(/^(.*?)\s+((?:tidligere|før|ord(?:inær|\.)?\s*pris|was|before)\b.*)$/i);
+  return m && m[1].trim() ? { now: m[1].trim(), was: m[2].trim() } : { now: line.trim(), was: null };
+}
+function fitted(s, k) {
+  return k && k < 1 ? { ...s, sizePx: Math.floor(s.sizePx * k) } : s;
+}
+function bindShort(text) {
+  return text.replace(new RegExp("(?<=^|\\s)(\\p{L}{1,2}) (?=\\S)", "gu"), "$1\xA0");
+}
+function shadeFor(book, l, g, words) {
+  if (l.ground !== "gradient" && l.ground !== "tint") return null;
+  const dark = colourOf(book, "text");
+  const hex = dark && isDark(dark) ? dark : "#000000";
+  if (l.ground === "tint") {
+    const at = l.tint ?? tintOf(book);
+    return { hex, from: at, edge: "top", full: g.h, zero: g.h, even: true };
+  }
+  const from = Math.min(0.75, Math.max(0.3, book.photoText?.scrimOpacity ?? 0.5));
+  if (l.band === "middle") {
+    if (l.align === "center" || words.x === void 0 || words.w === void 0) return null;
+    const fade2 = Math.max(200, Math.round(words.w * 0.5));
+    if (l.align === "left") return { hex, from, edge: "left", full: words.x + words.w + 24, zero: Math.min(g.w, words.x + words.w + 24 + fade2) };
+    return { hex, from, edge: "right", full: words.x - 24, zero: Math.max(0, words.x - 24 - fade2) };
+  }
+  const fade = Math.max(160, Math.round(words.h * 0.8));
+  if (l.band === "bottom") {
+    return { hex, from, edge: "bottom", full: words.y - 24, zero: Math.max(0, words.y - 24 - fade) };
+  }
+  return { hex, from, edge: "top", full: words.y + words.h + 24, zero: Math.min(g.h, words.y + words.h + 24 + fade) };
+}
+function tintOf(book) {
+  return Math.min(0.6, Math.max(0.2, book.photoText?.scrimOpacity ?? 0.35));
+}
+function shadeFill(s, h, y) {
+  const across = s.edge === "left" || s.edge === "right";
+  const { r: r2, g, b } = rgb01(s.hex);
+  if (s.even) return [{ type: "SOLID", color: { r: r2, g, b, a: 1 }, opacity: s.from, visible: true }];
+  const at = (pos, a) => ({ position: clamp01(pos), color: { r: r2, g, b, a } });
+  const stops = s.edge === "top" || s.edge === "left" ? [at(0, s.from), at((s.full - y) / h, s.from), at(1, 0)] : [at(0, 0), at((s.full - y) / h, s.from), at(1, s.from)];
+  return [
+    {
+      type: "GRADIENT_LINEAR",
+      color: { r: r2, g, b, a: 1 },
+      opacity: 1,
+      visible: true,
+      gradientStops: stops,
+      gradientTransform: across ? { m00: 1, m01: 0, m02: 0, m10: 0, m11: 1, m12: 0 } : { m00: 0, m01: 1, m02: 0, m10: -1, m11: 0, m12: 1 }
+    }
+  ];
+}
+function isLight(hex) {
+  const { r: r2, g, b } = rgb01(hex);
+  return 0.2126 * r2 + 0.7152 * g + 0.0722 * b > 0.5;
+}
+function readableOn(ground, light, dark) {
+  const lum = (h) => {
+    const { r: r2, g, b } = rgb01(h);
+    const lin2 = (c) => c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    return 0.2126 * lin2(r2) + 0.7152 * lin2(g) + 0.0722 * lin2(b);
+  };
+  const ratio = (a, b) => {
+    const [x, y] = [lum(a), lum(b)].sort((m, n) => n - m);
+    return (x + 0.05) / (y + 0.05);
+  };
+  return ratio(light, ground) >= ratio(dark, ground) ? light : dark;
+}
+function isDark(hex) {
+  const { r: r2, g, b } = rgb01(hex);
+  return 0.2126 * r2 + 0.7152 * g + 0.0722 * b < 0.2;
+}
+function rgb01(hex) {
+  const n = parseInt(hex.replace("#", ""), 16);
+  return { r: (n >> 16 & 255) / 255, g: (n >> 8 & 255) / 255, b: (n & 255) / 255 };
+}
+var clamp01 = (n) => Math.min(1, Math.max(0, Math.round(n * 1e3) / 1e3));
+var round = (n) => Math.round(n * 100) / 100;
+var q = (s) => JSON.stringify(s);
+var caseOf = (s) => s.case === "upper" ? ` textCase="upper"` : s.case === "lower" ? ` textCase="lower"` : "";
+
+// src/pixels.ts
+function shadeAt(s, y, x = 0) {
+  if (s.even) return s.from;
+  if (s.edge === "left" || s.edge === "right") return shadeAt({ ...s, edge: s.edge === "left" ? "top" : "bottom" }, x);
+  if (s.edge === "top") {
+    if (y <= s.full) return s.from;
+    if (y >= s.zero) return 0;
+    return s.from * (1 - (y - s.full) / (s.zero - s.full));
+  }
+  if (y >= s.full) return s.from;
+  if (y <= s.zero) return 0;
+  return s.from * ((y - s.zero) / (s.full - s.zero));
+}
+var lin = (c) => {
+  const s = c / 255;
+  return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+};
+var LIN = Array.from({ length: 256 }, (_, i) => lin(i));
+function rgbOf(hex) {
+  const n = parseInt(hex.replace("#", ""), 16);
+  return [n >> 16 & 255, n >> 8 & 255, n & 255];
+}
+function luminance(r2, g, b) {
+  return 0.2126 * LIN[r2] + 0.7152 * LIN[g] + 0.0722 * LIN[b];
+}
+function contrast(l1, l2) {
+  const [hi, lo] = l1 > l2 ? [l1, l2] : [l2, l1];
+  return (hi + 0.05) / (lo + 0.05);
+}
+function shaded(r2, g, b, y, x, shades) {
+  for (const s of shades) {
+    let a = 0;
+    if (s.box) {
+      if (x >= s.box.x && x < s.box.x + s.box.w && y >= s.box.y && y < s.box.y + s.box.h) a = 1;
+    } else {
+      a = shadeAt(s, y, x);
+    }
+    if (a <= 0) continue;
+    const [sr, sg, sb] = rgbOf(s.hex);
+    r2 = Math.round(r2 * (1 - a) + sr * a);
+    g = Math.round(g * (1 - a) + sg * a);
+    b = Math.round(b * (1 - a) + sb * a);
+  }
+  return [r2, g, b];
+}
+function under(p, box, textHex, shades = [], patch = 24) {
+  const [tr, tg, tb] = rgbOf(textHex);
+  const lt = luminance(tr, tg, tb);
+  const x0 = Math.max(0, Math.floor(box.x * p.scale));
+  const y0 = Math.max(0, Math.floor(box.y * p.scale));
+  const x1 = Math.min(p.width, Math.ceil((box.x + box.w) * p.scale));
+  const y1 = Math.min(p.height, Math.ceil((box.y + box.h) * p.scale));
+  const ratios = [];
+  let sum = 0;
+  let sum2 = 0;
+  const cell = Math.max(2, Math.round(patch * p.scale));
+  const cols = Math.max(1, Math.ceil((x1 - x0) / cell));
+  const cells = new Float64Array(cols * Math.max(1, Math.ceil((y1 - y0) / cell)) * 2);
+  for (let y = y0; y < y1; y++) {
+    for (let x = x0; x < x1; x++) {
+      const i = (y * p.width + x) * 4;
+      const [r2, g, b] = shaded(p.data[i], p.data[i + 1], p.data[i + 2], y / p.scale, x / p.scale, shades);
+      const l = luminance(r2, g, b);
+      sum += l;
+      sum2 += l * l;
+      ratios.push(contrast(lt, l));
+      const c = Math.floor((y - y0) / cell) * cols + Math.floor((x - x0) / cell);
+      cells[c * 2] += l;
+      cells[c * 2 + 1] += 1;
+    }
+  }
+  const n = ratios.length;
+  if (n === 0) return { contrast: 21, meanContrast: 21, busy: 0, luminance: 0, poor: 0, worst: 21 };
+  let worst = 21;
+  for (let c = 0; c < cells.length; c += 2) {
+    if (cells[c + 1] >= cell * cell / 2) worst = Math.min(worst, contrast(lt, cells[c] / cells[c + 1]));
+  }
+  ratios.sort((a, b) => a - b);
+  const mean = sum / n;
+  let poor = 0;
+  while (poor < n && ratios[poor] < 2) poor++;
+  return {
+    contrast: round2(ratios[Math.floor(n * 0.1)]),
+    meanContrast: round2(contrast(lt, mean)),
+    busy: round2(Math.sqrt(Math.max(0, sum2 / n - mean * mean))),
+    luminance: round2(mean),
+    poor: round2(poor / n),
+    worst: round2(worst)
+  };
+}
+function overlap(a, b) {
+  const w = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
+  const h = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
+  if (w <= 0 || h <= 0) return 0;
+  return w * h / Math.max(1, a.w * a.h);
+}
+var round2 = (n) => Math.round(n * 100) / 100;
+
+// src/render.ts
+import { createHash } from "node:crypto";
+import { SceneGraph } from "@open-pencil/scene-graph";
+import { renderJSX } from "@open-pencil/core/design-jsx";
+import { IORegistry, BUILTIN_IO_FORMATS, initCanvasKit } from "@open-pencil/core/io";
+import { computeAllLayouts, installTextMeasurer } from "@open-pencil/core/layout";
+import { SkiaRenderer } from "@open-pencil/core/canvas";
+import { prepareGraphFonts, fontManager, weightToStyle } from "@open-pencil/core/text";
+var engine = null;
+var source = null;
+function start(opts = {}) {
+  source = opts.fonts ?? source;
+  fontManager.setOnlineFontProviders({ google: opts.online ?? false, fontsource: false, bunny: false });
+  fontManager.setHostFontLoader(async (family, style) => {
+    const weight = weightOf(style);
+    const italic = /italic/i.test(style);
+    const own = brandFaces.get(family);
+    if (own) return nearestFace(own, weight, italic);
+    if (!source) return null;
+    return source(family, weight, italic);
+  });
+  engine ??= (async () => {
+    const ck = await initCanvasKit();
+    const renderer = new SkiaRenderer(ck, ck.MakeSurface(1, 1));
+    await renderer.loadFonts();
+    measurer = renderer;
+    installTextMeasurer((node, maxWidth) => renderer.measureTextNode(node, maxWidth));
+    return { ck, renderer, io: new IORegistry(BUILTIN_IO_FORMATS) };
+  })();
+  return engine;
+}
+var measurer = null;
+var brandFaces = /* @__PURE__ */ new Map();
+function nearestFace(faces, weight, italic) {
+  const best = [...faces].sort((a, b) => Number(a.italic !== italic) - Number(b.italic !== italic) || Math.abs(a.weight - weight) - Math.abs(b.weight - weight))[0];
+  return best.bytes.slice().buffer;
+}
+function useBrandFaces(faces) {
+  const names = /* @__PURE__ */ new Map();
+  const byFamily = /* @__PURE__ */ new Map();
+  for (const f of faces) byFamily.set(f.family, [...byFamily.get(f.family) ?? [], f]);
+  for (const [family, list] of byFamily) {
+    const h = createHash("sha1");
+    for (const f of list) h.update(f.bytes);
+    const name = `${family} ${h.digest("hex").slice(0, 8)}`;
+    brandFaces.set(name, list);
+    names.set(family, name);
+  }
+  return names;
+}
+function wordWidths(doc, name) {
+  const id = doc.ids.get(name);
+  const node = id ? doc.graph.getNode(id) : null;
+  if (!measurer || !node || node.type !== "TEXT" || !node.text || !node.width) return [];
+  const out = [];
+  for (const word of new Set(node.text.split(/[^\S\u00A0]+/).filter(Boolean))) {
+    const m = measurer.measureTextNode({ ...node, id: `${node.id}:word:${word}`, text: word }, 1e6);
+    if (m) out.push({ word, width: m.width, box: node.width });
+  }
+  return out;
+}
+function lineWidth(doc, name) {
+  const id = doc.ids.get(name);
+  const node = id ? doc.graph.getNode(id) : null;
+  if (!measurer || !node || node.type !== "TEXT" || !node.text || !node.width) return null;
+  const m = measurer.measureTextNode({ ...node, id: `${node.id}:line`, text: node.text.replace(/\s+/g, " ").trim() }, 1e6);
+  return m ? { width: m.width, box: node.width } : null;
+}
+function splitWords(doc, name) {
+  return wordWidths(doc, name).filter((w) => w.width > w.box + 1).map((w) => w.word);
+}
+var loaded = /* @__PURE__ */ new Map();
+function hasFont(family, weight) {
+  const key = `${family}|${weight}`;
+  if (!loaded.has(key)) {
+    loaded.set(
+      key,
+      fontManager.loadFont(family, weightToStyle(weight)).then((b) => b !== null && b.byteLength > 0).catch(() => false)
+    );
+  }
+  return loaded.get(key);
+}
+async function capHeightOf(family, weight) {
+  const file = source ? await source(family, weight, false).catch(() => null) : null;
+  return file ? capOf(new DataView(file)) : null;
+}
+function capOf(v) {
+  try {
+    const n = v.getUint16(4);
+    let os2 = -1;
+    let head = -1;
+    for (let i = 0; i < n; i++) {
+      const r2 = 12 + i * 16;
+      const tag = String.fromCharCode(v.getUint8(r2), v.getUint8(r2 + 1), v.getUint8(r2 + 2), v.getUint8(r2 + 3));
+      if (tag === "OS/2") os2 = v.getUint32(r2 + 8);
+      if (tag === "head") head = v.getUint32(r2 + 8);
+    }
+    if (os2 < 0 || head < 0 || v.getUint16(os2) < 2) return null;
+    const upm = v.getUint16(head + 18);
+    const cap = v.getInt16(os2 + 88);
+    return upm > 0 && cap > 0 ? cap / upm : null;
+  } catch {
+    return null;
+  }
+}
+function imageHash(bytes) {
+  return createHash("sha1").update(bytes).digest("hex");
+}
+async function build(jsx, picture, logo) {
+  await start();
+  const graph = new SceneGraph();
+  const hash = imageHash(picture);
+  graph.images.set(hash, picture);
+  for (const v of logo ?? []) graph.images.set(v.hash, v.png);
+  const results = await renderJSX(graph, jsx.replaceAll("PHOTO", hash).replaceAll('"LOGO"', JSON.stringify(logo?.[0]?.hash ?? hash)));
+  const root = results[0].id;
+  graph.applyDerivedLayoutDuring?.(() => computeAllLayouts(graph));
+  const fonts = await prepareGraphFonts(graph, [root]);
+  graph.applyDerivedLayoutDuring?.(() => computeAllLayouts(graph));
+  if (await slants(graph, root)) graph.applyDerivedLayoutDuring?.(() => computeAllLayouts(graph));
+  const ids = /* @__PURE__ */ new Map();
+  const walk = (id) => {
+    const n = graph.getNode(id);
+    if (!n) return;
+    if (n.name && !ids.has(n.name)) ids.set(n.name, id);
+    for (const c of graph.getChildren(id)) walk(c.id);
+  };
+  walk(root);
+  return {
+    graph,
+    root,
+    ids,
+    faithful: Boolean(fonts.faithful),
+    fontIssues: (fonts.issues ?? []).map((f) => `${f.family} ${f.style}`),
+    warnings: results.flatMap((r2) => (r2.warnings ?? []).map(String)).slice(0, 10)
+  };
+}
+async function slants(graph, root) {
+  const marks = [];
+  const walk = (id) => {
+    const n = graph.getNode(id);
+    if (!n) return;
+    const m = /^Slant (#[0-9A-Fa-f]{6}) (\d+(?:\.\d+)?) ([12])$/.exec(n.name ?? "");
+    if (m && n.parentId) marks.push({ id, parent: n.parentId, hex: m[1], stroke: Number(m[2]), lines: Number(m[3]) });
+    for (const c of graph.getChildren(id)) walk(c.id);
+  };
+  walk(root);
+  for (const mark of marks) {
+    const frame = graph.getNode(mark.parent);
+    graph.deleteNode(mark.id);
+    if (!frame?.width || !frame.height) continue;
+    const jsx = slantJSX(frame.width, frame.height, mark.hex, mark.stroke, mark.lines);
+    await renderJSX(graph, jsx, { parentId: mark.parent });
+  }
+  return marks.length > 0;
+}
+function slantJSX(w, h, hex, stroke, lines) {
+  const W = Math.round(w);
+  const H = Math.round(h);
+  const side = Math.max(W, H);
+  const i = stroke / 2;
+  const off = lines === 2 ? Math.round(stroke * 1.5) : 0;
+  const lean = Math.round(H * 0.125);
+  const shape = (top, bottom, k, shift) => {
+    const a = (lean - k) / 2;
+    return `M${r(k + a + shift + i)} ${r(top + i)} L${r(W - a + shift - i)} ${r(top + i)} L${r(W - k - a + shift - i)} ${r(bottom - i)} L${r(a + shift + i)} ${r(bottom - i)} Z`;
+  };
+  const paths = [shape(0, H - off, lean, 0)];
+  if (lines === 2) paths.push(shape(off, H, Math.round(lean * 0.4), 0));
+  const body = paths.map((d) => `<path d="${d}" fill="none" stroke="${hex}" stroke-width="${stroke}" stroke-linejoin="miter" />`).join("");
+  return `<svg name="Outline" viewBox="0 0 ${side} ${side}" w={${W}} h={${H}} position="absolute" x={0} y={0} color=${JSON.stringify(hex)} body={${JSON.stringify(body)}} />`;
+}
+var r = (n) => Math.round(n * 10) / 10;
+function boxOf(doc, name) {
+  const id = doc.ids.get(name);
+  if (!id) return null;
+  const r2 = doc.graph.getAbsoluteBounds(id);
+  return { x: r2.x, y: r2.y, w: r2.width, h: r2.height };
+}
+function place(doc, name, changes) {
+  const id = doc.ids.get(name);
+  if (!id) return;
+  doc.graph.updateNode(id, changes);
+  doc.graph.applyDerivedLayoutDuring?.(() => computeAllLayouts(doc.graph));
+}
+async function png(doc, scale = 1) {
+  const { io } = await start();
+  const res = await io.exportContent(
+    "png",
+    { graph: doc.graph, target: { scope: "node", nodeId: doc.root } },
+    { format: "PNG", scale }
+  );
+  return res.data;
+}
+async function fig(doc) {
+  const { io } = await start();
+  const res = await io.writeDocument("fig", doc.graph);
+  return res.data;
+}
+async function pixelsOf(bytes, scale) {
+  const { ck } = await start();
+  const img = ck.MakeImageFromEncoded(bytes);
+  if (!img) throw new Error("The picture could not be read.");
+  const width = img.width();
+  const height = img.height();
+  const data = img.readPixels(0, 0, {
+    width,
+    height,
+    colorType: ck.ColorType.RGBA_8888,
+    alphaType: ck.AlphaType.Unpremul,
+    colorSpace: ck.ColorSpace.SRGB
+  });
+  img.delete();
+  return { data, width, height, scale };
+}
+function weightOf(style) {
+  const s = style.toLowerCase();
+  const table = [
+    [/thin|hairline/, 100],
+    [/extra ?light|ultra ?light/, 200],
+    [/light/, 300],
+    [/medium/, 500],
+    [/semi ?bold|demi ?bold/, 600],
+    [/extra ?bold|ultra ?bold/, 800],
+    [/black|heavy/, 900],
+    [/bold/, 700]
+  ];
+  for (const [re, w] of table) if (re.test(s)) return w;
+  const n = parseInt(s, 10);
+  return Number.isFinite(n) ? n : 400;
+}
+
+// src/logo.ts
+import { SceneGraph as SceneGraph2 } from "@open-pencil/scene-graph";
+import { renderJSX as renderJSX2 } from "@open-pencil/core/design-jsx";
+import { createSVGNodes } from "@open-pencil/core/io";
+var CORNERS = ["top_left", "top_right", "bottom_left", "bottom_right", "top_centre", "bottom_centre"];
+var MAX = 1200;
+async function logoOf(bytes, light, dark) {
+  const { ck } = await start();
+  const raster = isSvg(bytes) ? await rasterise(new TextDecoder().decode(bytes)) : bytes;
+  if (!raster) return null;
+  const img = ck.MakeImageFromEncoded(raster);
+  if (!img) return null;
+  const width = img.width();
+  const height = img.height();
+  const info = { width, height, colorType: ck.ColorType.RGBA_8888, alphaType: ck.AlphaType.Unpremul, colorSpace: ck.ColorSpace.SRGB };
+  const data = img.readPixels(0, 0, info);
+  img.delete();
+  if (!data || width < 8 || height < 8) return null;
+  const t = tone(data);
+  if (!t) return null;
+  const encode2 = (px) => {
+    const im = ck.MakeImage(info, px, width * 4);
+    const out = im?.encodeToBytes() ?? null;
+    im?.delete();
+    return out;
+  };
+  const asIs = encode2(data) ?? raster;
+  const variants = [{ name: "as_is", png: asIs, hash: imageHash(asIs), hex: t.hex }];
+  for (const [name, hex] of [["light", light], ["dark", dark]]) {
+    const png2 = encode2(t.mono ? tint(data, hex) : reversed(data, hex));
+    if (png2) variants.push({ name, png: png2, hash: imageHash(png2), hex });
+  }
+  return { width, height, mono: t.mono, variants };
+}
+function isSvg(bytes) {
+  const head = new TextDecoder().decode(bytes.subarray(0, 512)).trimStart().toLowerCase();
+  return head.startsWith("<svg") || head.startsWith("<?xml") && head.includes("<svg");
+}
+async function rasterise(svg) {
+  if (svg.length > 4e5) return null;
+  const graph = new SceneGraph2();
+  const [root] = await renderJSX2(graph, `<Frame name="Logo" w={10} h={10} />`);
+  const node = createSVGNodes(graph, root.id, svg, { name: "Logo", x: 0, y: 0 });
+  if (!node || !node.width || !node.height) return null;
+  graph.updateNode(node.id, { fills: [] });
+  const scale = Math.min(8, MAX / Math.max(node.width, node.height));
+  return png({ graph, root: node.id, ids: /* @__PURE__ */ new Map(), faithful: true, fontIssues: [], warnings: [] }, scale);
+}
+function tone(px) {
+  let n = 0;
+  let r2 = 0;
+  let g = 0;
+  let b = 0;
+  const lums = [];
+  for (let i = 0; i < px.length; i += 16) {
+    if (px[i + 3] < 160) continue;
+    n++;
+    r2 += px[i];
+    g += px[i + 1];
+    b += px[i + 2];
+    lums.push(luminance(px[i], px[i + 1], px[i + 2]));
+  }
+  if (n < 20) return null;
+  const mean = lums.reduce((a, x) => a + x, 0) / n;
+  const spread = Math.sqrt(lums.reduce((a, x) => a + (x - mean) ** 2, 0) / n);
+  const hex = `#${[r2, g, b].map((c) => Math.round(c / n).toString(16).padStart(2, "0")).join("")}`.toUpperCase();
+  const covered2 = n / (px.length / 16);
+  return { hex, mono: spread < 0.06 && covered2 < 0.9 };
+}
+function tint(px, hex) {
+  const n = parseInt(hex.replace("#", ""), 16);
+  const out = new Uint8Array(px.length);
+  for (let i = 0; i < px.length; i += 4) {
+    out[i] = n >> 16 & 255;
+    out[i + 1] = n >> 8 & 255;
+    out[i + 2] = n & 255;
+    out[i + 3] = px[i + 3];
+  }
+  return out;
+}
+function reversed(px, hex) {
+  let lo = 1;
+  let hi = 0;
+  for (let i = 0; i < px.length; i += 4) {
+    if (px[i + 3] < 160) continue;
+    const l = luminance(px[i], px[i + 1], px[i + 2]);
+    if (l < lo) lo = l;
+    if (l > hi) hi = l;
+  }
+  const out = tint(px, hex);
+  if (hi - lo < 0.15) return out;
+  for (let i = 0; i < px.length; i += 4) {
+    const t = Math.min(1, Math.max(0, (hi - luminance(px[i], px[i + 1], px[i + 2])) / (hi - lo)));
+    const k = t < 0.25 ? 0 : t > 0.55 ? 1 : (t - 0.25) / 0.3;
+    out[i + 3] = Math.round(px[i + 3] * k);
+  }
+  return out;
+}
+function cornersFor(first, band, align) {
+  const side = align === "center" ? "centre" : align;
+  const away = band === "top" ? "bottom" : "top";
+  const near = band === "top" ? "top" : "bottom";
+  const order = [
+    ...first ? [first] : [],
+    `${away}_${side}`,
+    `${away}_left`,
+    `${away}_right`,
+    ...align !== "left" ? [`${near}_left`] : [],
+    ...align !== "right" ? [`${near}_right`] : [],
+    `${away}_centre`
+  ];
+  return [...new Set(order)];
+}
+
+// src/room.ts
+function plainEdges(data, width, height) {
+  const lumAt = (x, y) => {
+    const i = (y * width + x) * 4;
+    return (0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 255;
+  };
+  const steps = [];
+  const walk = (n, at) => {
+    let prev = at(0);
+    for (let k = 3; k < n; k += 3) {
+      const l = at(k);
+      steps.push(Math.abs(l - prev));
+      prev = l;
+    }
+  };
+  for (const d of [0, 2]) {
+    walk(width, (x) => lumAt(x, d));
+    walk(height, (y) => lumAt(d, y));
+  }
+  const mean = steps.reduce((a, x) => a + x, 0) / steps.length;
+  const worst = [...steps].sort((a, b) => a - b)[Math.floor(steps.length * 0.99)] ?? 0;
+  return mean < 0.015 && worst < 0.04;
+}
+async function inset(picture, frame, scale) {
+  const { ck } = await start();
+  const img = ck.MakeImageFromEncoded(picture);
+  if (!img) return null;
+  const iw = img.width();
+  const ih = img.height();
+  const data = img.readPixels(0, 0, {
+    width: iw,
+    height: ih,
+    colorType: ck.ColorType.RGBA_8888,
+    alphaType: ck.AlphaType.Unpremul,
+    colorSpace: ck.ColorSpace.SRGB
+  });
+  if (!data || !plainEdges(data, iw, ih)) {
+    img.delete();
+    return null;
+  }
+  const fit = Math.max(frame.w / iw, frame.h / ih);
+  const sw = frame.w / fit;
+  const sh = frame.h / fit;
+  const sx = (iw - sw) / 2;
+  const sy = (ih - sh) / 2;
+  const w = Math.round(frame.w * scale);
+  const h = Math.round(frame.h * scale);
+  const ox = frame.w - w;
+  const oy = frame.h - h;
+  const surface = ck.MakeSurface(frame.w, frame.h);
+  if (!surface) {
+    img.delete();
+    return null;
+  }
+  const canvas = surface.getCanvas();
+  const paint = new ck.Paint();
+  const softSurface = ck.MakeSurface(iw, ih);
+  if (!softSurface) {
+    paint.delete();
+    surface.delete();
+    img.delete();
+    return null;
+  }
+  const soft = new ck.Paint();
+  soft.setImageFilter(ck.ImageFilter.MakeBlur(12, 12, ck.TileMode.Clamp, null));
+  softSurface.getCanvas().drawImage(img, 0, 0, soft);
+  const blurred = softSurface.makeImageSnapshot();
+  const ground = ck.MakeSurface(frame.w, frame.h);
+  if (!ground) {
+    paint.delete();
+    soft.delete();
+    blurred.delete();
+    softSurface.delete();
+    surface.delete();
+    img.delete();
+    return null;
+  }
+  const gc = ground.getCanvas();
+  const drawOn = (to, from, src, dst) => to.drawImageRectOptions(from, ck.XYWHRect(src[0], src[1], src[2], src[3]), ck.XYWHRect(dst[0], dst[1], dst[2], dst[3]), ck.FilterMode.Linear, ck.MipmapMode.None, paint);
+  const e = 6;
+  drawOn(gc, blurred, [sx + e, sy + e, 2, 2], [0, 0, ox + 1, oy + 1]);
+  drawOn(gc, blurred, [sx, sy + e, sw, 2], [ox, 0, w, oy + 1]);
+  drawOn(gc, blurred, [sx + e, sy, 2, sh], [0, oy, ox + 1, h]);
+  drawOn(gc, blurred, [sx, sy, sw, sh], [ox, oy, w, h]);
+  const groundImg = ground.makeImageSnapshot();
+  const wide = new ck.Paint();
+  wide.setImageFilter(ck.ImageFilter.MakeBlur(Math.round(frame.w / 24), Math.round(frame.w / 24), ck.TileMode.Clamp, null));
+  canvas.drawImage(groundImg, 0, 0, wide);
+  const f = Math.round(frame.w / 14);
+  canvas.saveLayer();
+  drawOn(canvas, img, [sx, sy, sw, sh], [ox, oy, w, h]);
+  const fade = new ck.Paint();
+  fade.setBlendMode(ck.BlendMode.DstIn);
+  const clear = ck.Color(0, 0, 0, 0);
+  const solid = ck.Color(0, 0, 0, 1);
+  fade.setShader(ck.Shader.MakeLinearGradient([ox, 0], [ox + f, 0], [clear, solid], null, ck.TileMode.Clamp));
+  canvas.drawRect(ck.XYWHRect(ox, oy, f, h), fade);
+  fade.setShader(ck.Shader.MakeLinearGradient([0, oy], [0, oy + f], [clear, solid], null, ck.TileMode.Clamp));
+  canvas.drawRect(ck.XYWHRect(ox + f, oy, w - f, f), fade);
+  canvas.restore();
+  fade.delete();
+  wide.delete();
+  groundImg.delete();
+  ground.delete();
+  const snap = surface.makeImageSnapshot();
+  const bytes = snap.encodeToBytes();
+  snap.delete();
+  paint.delete();
+  soft.delete();
+  blurred.delete();
+  softSurface.delete();
+  surface.delete();
+  img.delete();
+  if (!bytes) return null;
+  return {
+    picture: bytes,
+    move: (b) => ({ x: Math.round(ox + b.x * scale), y: Math.round(oy + b.y * scale), w: Math.round(b.w * scale), h: Math.round(b.h * scale) })
+  };
+}
+
+// src/design.ts
+var SCALE = 0.25;
+var INSETS = [0.82, 0.72];
+var BUDGET_MS = { first: 22e3, all: 4e4 };
+async function design(asked) {
+  const t0 = Date.now();
+  const first = await designOn(asked, t0 + BUDGET_MS.first);
+  if (first.ok) return first;
+  const g = gridOf(asked.book, asked.format);
+  let best = first;
+  let tried = first.tried;
+  for (const scale of INSETS) {
+    const room = await inset(asked.picture, g, scale).catch(() => null);
+    if (!room) break;
+    const keepClear = (asked.keepClear ?? []).map((k) => ({ ...room.move(k), what: k.what }));
+    if (Date.now() > t0 + BUDGET_MS.all - 6e3) break;
+    const next = await designOn({ ...asked, picture: room.picture, keepClear, prefer: { ...asked.prefer ?? {}, band: "top" } }, t0 + BUDGET_MS.all);
+    tried += next.tried;
+    const fewer = covered(next.checks) < covered(best.checks) - 1e-3 || Math.abs(covered(next.checks) - covered(best.checks)) <= 1e-3 && hardFails(next) < hardFails(best);
+    if (next.ok || fewer) {
+      best = {
+        ...next,
+        checks: [
+          ...next.checks,
+          { check: "covers", node: "Picture", ok: true, hard: false, note: `The picture is set at ${Math.round(scale * 100)}% on its own backdrop, carried on to the edges, so the words have room.` }
+        ]
+      };
+    }
+    if (next.ok) break;
+  }
+  return { ...best, tried, ms: Date.now() - t0 };
+}
+function searchOrder(all, hasSubline, rounds = [2, 4, 8, 36]) {
+  const shares = /* @__PURE__ */ new Map();
+  const seen = /* @__PURE__ */ new Set();
+  for (const l of all) {
+    const key = JSON.stringify(hasSubline ? l : { ...l, subline: void 0 });
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const share = `${l.band}|${l.ground}|${l.cta}|${l.ctaSide ?? ""}`;
+    const list = shares.get(share) ?? [];
+    list.push(l);
+    shares.set(share, list);
+  }
+  const out = [];
+  let from = 0;
+  for (const upto of rounds) {
+    for (const list of shares.values()) out.push(...list.slice(from, upto));
+    from = upto;
+  }
+  return out;
+}
+function hardFails(d) {
+  return d.checks.filter((c) => !c.ok && c.hard).length;
+}
+async function designOn(asked, until = Infinity) {
+  const t0 = Date.now();
+  const { familyFor, fonts, book: set } = await familiesOf(asked.book, asked.fonts ?? []);
+  const ask = { ...asked, book: set };
+  const { book, format, words } = ask;
+  const g = gridOf(book, format);
+  const pixels = await pictureAt(ask.picture, format, SCALE);
+  const keep = ask.keepClear ?? [];
+  const logo = ask.logo ? await logoOf(ask.logo, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000").catch(() => null) : null;
+  let best = null;
+  let tried = 0;
+  let passed = 0;
+  const taste = (t) => tasteOf(t, book, ask.prefer ?? {});
+  const attempts = [];
+  for (const l of searchOrder(layoutsFor(book, format, ask.prefer ?? {}, Boolean(words.cta)), Boolean(words.subline))) {
+    if (best && Date.now() > until) break;
+    const plan = logo ? logoPlan(book, g, l, logo) : null;
+    const c = compose(book, format, words, l, familyFor, {}, plan ?? void 0);
+    const doc = await build(c.jsx, ask.picture, plan?.logo.variants);
+    let t = measure(doc, c, l, book, pixels, keep, plan);
+    let made = doc;
+    tried++;
+    const fit = fitFor(doc, c.sizes);
+    if (fit) {
+      const lf = { ...l, fit };
+      const cf = compose(book, format, words, lf, familyFor, {}, plan ?? void 0);
+      const df = await build(cf.jsx, ask.picture, plan?.logo.variants);
+      const tf = measure(df, cf, lf, book, pixels, keep, plan);
+      tried++;
+      if (better(tf, t, taste) || tf.ok === t.ok && !tf.ok && covered(tf.checks) <= covered(t.checks) && tf.score >= t.score) {
+        t = tf;
+        made = df;
+      }
+    }
+    if (attempts.length < 30) {
+      attempts.push({ layout: l, failed: t.checks.filter((x) => !x.ok && x.hard).map((x) => `${x.node}: ${x.note}`) });
+    }
+    if (t.ok) passed++;
+    if (!best || better(t, best.t, taste)) best = { t, doc: made };
+    if (best.t.ok && passed >= 4 && tried >= 6) break;
+    if (tried >= 200) break;
+  }
+  if (!best) throw new Error("No layout could be made.");
+  const even = await balance(ask, best.t, familyFor, pixels, keep, logo);
+  if (even) best = even;
+  const tinted = best.t.layout.ground === "tint" ? best.t.layout.tint ?? tintOf(book) : void 0;
+  if (tinted !== void 0) {
+    const own = tintOf(book);
+    best.t.checks.push({
+      check: "contrast",
+      node: "Words",
+      ok: true,
+      hard: false,
+      note: tinted > own ? `A flat tint at ${Math.round(tinted * 100)}% over the picture, deeper than the book's ${Math.round(own * 100)}%, so the light words read.` : `The book's flat tint at ${Math.round(own * 100)}% over the picture, so the light words read.`
+    });
+  }
+  const fitted2 = best.t.layout.fit;
+  if (fitted2) {
+    for (const [node, k] of [["Headline", fitted2.headline], ["CTA", fitted2.cta]]) {
+      if (k) best.t.checks.push({ check: "fits", node, ok: true, hard: false, note: `Set at ${Math.round(k * 100)}% of its style's size, so ${node === "CTA" ? "its words fit the button on one line" : "its longest word fits the column whole"}.` });
+    }
+  }
+  const used = /* @__PURE__ */ new Set([best.t.layout.headline, best.t.layout.subline ?? "subline", componentOf(book, "cta")?.style ?? "cta"]);
+  const seen = /* @__PURE__ */ new Set();
+  if (ask.logo && !logo) {
+    best.t.checks.push({ check: "logo", node: "Logo", ok: false, hard: false, note: "The logo file could not be read; set it by hand." });
+  }
+  const fontChecks = fonts.filter((f) => used.has(f.style) && f.asked !== f.used && !seen.has(f.asked) && seen.add(f.asked)).map((f) => ({
+    check: "font",
+    node: f.style,
+    ok: false,
+    hard: false,
+    note: `${f.asked} is not on file; set in ${f.used} until the brand gives Fume its font.`
+  }));
+  const standIns = [...new Set(fonts.filter((f) => f.standIn && f.asked === f.used && used.has(f.style)).map((f) => f.used))];
+  if (standIns.length) {
+    fontChecks.push({ check: "font", node: "Words", ok: false, hard: false, note: `Set in ${standIns.join(", ")}, the closest Google Font to the brand's own face, until the brand gives Fume its font file.` });
+  }
+  const ownFaces = [...new Set(fonts.filter((f) => f.own && used.has(f.style)).map((f) => f.asked))];
+  if (ownFaces.length) {
+    fontChecks.push({ check: "font", node: "Words", ok: true, hard: false, note: `Set in the brand's own font file: ${ownFaces.join(", ")}.` });
+  }
+  const out = best.doc;
+  return {
+    png: await png(out, 1),
+    fig: await fig(out),
+    width: g.w,
+    height: g.h,
+    layout: best.t.layout,
+    ok: best.t.ok,
+    checks: [...best.t.checks, ...fontChecks],
+    boxes: best.t.boxes,
+    tried,
+    attempts,
+    fonts,
+    logo: best.t.logo ?? null,
+    ms: Date.now() - t0
+  };
+}
+async function balance(ask, base, familyFor, pixels, keep, logo = null) {
+  const { book, format, words } = ask;
+  const l = base.layout;
+  const plan = logo ? logoPlan(book, gridOf(book, format), l, logo) : null;
+  const widths = {};
+  let longest = 0;
+  const heightOf = async (w, name) => {
+    const c2 = compose(book, format, words, l, familyFor, w);
+    const doc2 = await build(c2.jsx, ask.picture);
+    longest = Math.max(0, ...wordWidths(doc2, name).map((x) => x.width));
+    return boxOf(doc2, name)?.h ?? Infinity;
+  };
+  for (const name of ["Headline", "Subline"]) {
+    const box = base.boxes[name];
+    if (!box) continue;
+    const full = box.w;
+    const one = await heightOf({ ...widths, [name]: full * 4 }, name);
+    if (box.h <= one + 1) continue;
+    let lo = Math.max(Math.round(full * 0.5), Math.ceil(longest) + 2);
+    let hi = Math.round(full);
+    while (hi - lo > 12) {
+      const mid = Math.round((lo + hi) / 2);
+      if (await heightOf({ ...widths, [name]: mid }, name) <= box.h + 1) hi = mid;
+      else lo = mid;
+    }
+    if (hi < full - 12) widths[name] = Math.min(full, hi + 4);
+  }
+  if (!Object.keys(widths).length) return null;
+  const c = compose(book, format, words, l, familyFor, widths, plan ?? void 0);
+  const doc = await build(c.jsx, ask.picture, plan?.logo.variants);
+  const t = measure(doc, c, l, book, pixels, keep, plan);
+  return t.ok || !base.ok ? { t, doc } : null;
+}
+function* layoutsFor(book, format, prefer, hasCta) {
+  const comp = componentOf(book, "headline");
+  const own = comp?.style && styleOf(book, comp.style) ? comp.style : "h1";
+  const asked = prefer.headline ? styleOf(book, prefer.headline) : null;
+  const first = asked && asked.sizePx >= (styleOf(book, own)?.sizePx ?? 0) * STEP_FLOOR ? asked.name : own;
+  const steps = headlineSteps(book, first).map((s) => s.name);
+  const sig = signatureOf(book, prefer.signature, hasCta);
+  const g = gridOf(book, format);
+  const sigWidth = sig?.box?.w ? sig.box.w * 100 : sig?.wordsWidthPct;
+  const sigColumns = sig && sigWidth ? Math.min(g.columns, Math.max(4, Math.round(sigWidth / 100 * g.columns))) : null;
+  const sigAt = sig?.box && sig.box.y > 0 ? sig.box.y : void 0;
+  const sigGround = sig ? sig.ground === "colour_block" ? "block" : sig.ground : null;
+  const blockSig = sigGround === "block" ? sig : brandLayouts(book).find((x) => x.ground === "colour_block" && /^#[0-9a-f]{6}$/i.test(x.groundHex ?? "")) ?? null;
+  const sigColour = sig ? { light: "on_photo", dark: "text", brand_colour: "accent" }[sig.words] : null;
+  const ctaLook = sig && sig.cta !== "none" ? sig.cta : void 0;
+  const noCta = sig?.cta === "none";
+  const groundHex = sig?.groundHex && /^#[0-9a-f]{6}$/i.test(sig.groundHex) ? sig.groundHex : void 0;
+  const ctaFill = sig?.ctaFill && sig.ctaFill !== "none" ? sig.ctaFill : void 0;
+  const bands = uniq([prefer.band ?? sig?.band ?? "top", sig?.band ?? "top", "top", "bottom", "middle"]);
+  const aligns = uniq([prefer.align ?? sig?.align ?? "left", sig?.align ?? "left", "left", "right", "center"]);
+  const colours = uniq([...sigColour ? [sigColour] : [], prefer.colour ?? "on_photo", "on_photo", comp?.colour ?? "text", "text"]).filter(
+    (r2) => book.colours.some((c) => c.role === r2)
+  );
+  const scrim = book.photoText?.scrim ?? "gradient";
+  const tints = uniq([tintOf(book), 0.5, 0.6].filter((t) => t >= tintOf(book)));
+  const panel = brandLayouts(book).some((x) => x.ground === "flat") || scrim === "flat" && !seesBrand(book);
+  const grounds = uniq([
+    prefer.ground ?? sigGround ?? "photo",
+    sigGround ?? "photo",
+    "photo",
+    ...scrim === "gradient" ? ["gradient"] : [],
+    // Where the brand's book darkens a bright picture with a flat tint and sets no panel, its light words keep their
+    // colour on the tint (Anthem, 10 Nov: with no tint, every design on bright sand fell back to navy words, which the
+    // brand never sets on a photograph).
+    ...scrim === "flat" && !panel && book.colours.some((c) => c.role === "on_photo") ? ["tint"] : [],
+    ...blockSig ? ["block"] : [],
+    // A panel behind the words only where the brand sets one: a box is not a designer's answer to a busy picture
+    // (Marcus, 9 Nov). Without one, a picture with no calm room is one to make again, not one to cover. The book's
+    // own scrim is the writer's proposal; where Fume saw how the brand sets its words, that wins (Anthem: words
+    // straight on the photo, yet the writer kept a navy panel for busy pictures).
+    ...panel ? ["flat"] : []
+    // A layout kept from an earlier design (a redo) keeps no box the book no longer has.
+  ]).filter((x) => (x !== "block" || blockSig) && (x !== "flat" || panel));
+  const widths = prefer.columns ? [prefer.columns] : uniq([...sigColumns ? [sigColumns] : [], ...format === "banner" ? [6, 8] : [9, 7, 5, 12]]);
+  const ctaSide = sig?.ctaAt === "bottom_right" ? "right" : sig?.ctaAt === "bottom_left" ? "left" : void 0;
+  const cta = hasCta && !noCta ? prefer.cta === "none" ? "none" : ctaSide ? "bottom" : prefer.cta ?? "with_words" : "none";
+  const places = cta === "bottom" && ctaSide ? [{ cta, ctaSide }, { cta: "with_words" }, { cta, ctaSide: ctaSide === "right" ? "left" : "right" }] : [{ cta }];
+  const sublines = uniq(["subline", "body"].filter((n) => styleOf(book, n)));
+  if (!sublines.length) sublines.push("subline");
+  for (const band of bands) {
+    for (const place2 of places) {
+      for (const ground of grounds) {
+        for (const align of aligns) {
+          if (ground === "gradient" && band === "middle" && align === "center") continue;
+          for (const headline of steps.slice(0, 3)) {
+            for (const columns of widths) {
+              for (const subline of sublines) {
+                for (const colour of ground === "flat" ? ["text"] : ground === "block" ? ["on_primary"] : ground === "tint" ? ["on_photo"] : colours) {
+                  const own2 = ground === "block" && blockSig && blockSig !== sig ? blockSig : null;
+                  const hex = own2 ? own2.groundHex : groundHex;
+                  for (const tint2 of ground === "tint" ? tints : [void 0]) yield {
+                    band,
+                    align,
+                    headline,
+                    colour,
+                    ground,
+                    cta: place2.cta,
+                    columns,
+                    ...subline === "subline" ? {} : { subline },
+                    ...ctaLook ? { ctaLook } : {},
+                    ...ctaFill ? { ctaFill } : {},
+                    ...place2.ctaSide && place2.cta === "bottom" ? { ctaSide: place2.ctaSide } : {},
+                    ...hex && (ground === "block" || ground === "flat") ? { groundHex: hex } : {},
+                    ...own2 ? { signature: own2.name } : sig ? { signature: sig.name } : {},
+                    ...own2 ? own2.box && own2.box.y > 0 && band === own2.band ? { at: own2.box.y } : {} : sigAt !== void 0 && band === sig?.band ? { at: sigAt } : {},
+                    ...tint2 !== void 0 ? { tint: tint2 } : {}
+                  };
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+function measure(doc, c, l, book, p, keep, logo = null) {
+  const g = c.grid;
+  const words0 = boxOf(doc, "Words");
+  const action0 = boxOf(doc, "Action");
+  const beside = Boolean(action0 && l.cta === "bottom" && l.ctaSide && l.ctaSide !== l.align);
+  const below = action0 && !beside ? action0.h + 32 : 0;
+  const room = g.h - g.top - g.bottom - below;
+  const shareBand = !logo?.inside && logo?.first?.startsWith(l.band === "middle" ? "-" : l.band) ? logo.h + 40 : 0;
+  const low = l.band === "top" ? g.top + shareBand : g.top;
+  const high = g.h - g.bottom - words0.h - below - (l.band === "bottom" ? shareBand : 0);
+  const y = l.at !== void 0 && high >= low ? Math.round(Math.min(high, Math.max(low, l.at * g.h))) : l.band === "top" ? g.top + shareBand : l.band === "bottom" ? g.h - g.bottom - words0.h - below - shareBand : Math.round(g.top + (room - words0.h) / 2);
+  place(doc, "Words", { y });
+  if (action0) place(doc, "Action", { y: g.h - g.bottom - action0.h });
+  const words = boxOf(doc, "Words");
+  const shades = [];
+  const shade = shadeFor(book, l, g, words);
+  if (shade) {
+    const id = doc.ids.get("Shade");
+    if (shade.even) {
+      if (id) doc.graph.updateNode(id, { x: 0, y: 0, width: g.w, height: g.h, fills: shadeFill(shade, g.h, 0) });
+    } else if (shade.edge === "left" || shade.edge === "right") {
+      const left = shade.edge === "left" ? 0 : shade.zero;
+      const w = shade.edge === "left" ? shade.zero : g.w - shade.zero;
+      if (id) doc.graph.updateNode(id, { x: left, y: 0, width: w, height: g.h, fills: shadeFill(shade, w, left) });
+    } else {
+      const top = shade.edge === "top" ? 0 : shade.zero;
+      const h = shade.edge === "top" ? shade.zero : g.h - shade.zero;
+      if (id) doc.graph.updateNode(id, { y: top, height: h, fills: shadeFill(shade, h, top) });
+    }
+    shades.push(shade);
+  }
+  const boxes = { Words: words };
+  for (const n of ["Headline", "Price", "Was", "Subline", "CTA", "Action"]) {
+    const b = boxOf(doc, n);
+    if (b) boxes[n] = b;
+  }
+  const checks = [];
+  const safe = { x: g.margin - 1, y: g.top - 1, w: g.w - 2 * g.margin + 2, h: g.h - g.top - g.bottom + 2 };
+  for (const n of ["Words", "CTA"]) {
+    const b = boxes[n];
+    if (!b) continue;
+    const inside = overlap(b, safe) > 0.999;
+    checks.push({ check: "fits", node: n, ok: inside, hard: true, note: inside ? "Inside the safe area." : "Runs out of the safe area." });
+  }
+  if (boxes.Action && overlap(boxes.Action, words) > 0) {
+    checks.push({ check: "fits", node: "CTA", ok: false, hard: true, note: "The call to action runs into the words." });
+  }
+  const ctaLine = lineWidth(doc, "CTA words");
+  if (ctaLine && ctaLine.width > ctaLine.box + 2) {
+    checks.push({ check: "fits", node: "CTA", ok: false, hard: true, note: "The button's words do not fit on one line." });
+  }
+  for (const n of ["Headline", "Price", "Was", "Subline", "CTA words"]) {
+    const split = splitWords(doc, n);
+    if (split.length)
+      checks.push({ check: "fits", node: n === "CTA words" ? "CTA" : n, ok: false, hard: true, note: `Breaks inside a word: ${split.join(", ")}.` });
+  }
+  const tall = c.grid.h > c.grid.w * 1.5;
+  for (const [n, style, most] of [
+    ["Headline", l.headline, c.grid.h > c.grid.w ? 3 : 2],
+    ["Price", "price", 1],
+    ["Subline", "subline", tall ? 4 : 3]
+  ]) {
+    const s = n === "Price" && c.sizes.Price ? { sizePx: c.sizes.Price, lineHeight: styleOf(book, "price")?.lineHeight ?? 1 } : styleOf(book, style) ?? styleOf(book, "body");
+    if (!boxes[n] || !s) continue;
+    const lines = Math.round(boxes[n].h / (s.sizePx * s.lineHeight));
+    checks.push({
+      check: "lines",
+      node: n,
+      ok: lines <= most,
+      hard: true,
+      value: lines,
+      need: most,
+      note: `${lines} line${lines === 1 ? "" : "s"} (at most ${most}).`
+    });
+  }
+  const onPhoto = l.ground === "photo" || l.ground === "gradient" || l.ground === "tint";
+  for (const n of ["Headline", "Price", "Was", "Subline"]) {
+    const b = boxes[n];
+    if (!b) continue;
+    const u = !onPhoto && c.panel ? { contrast: contrastOf(c.colours[n], c.panel), poor: 0, worst: 21, busy: 0 } : under(p, b, c.colours[n], shades, Math.max(16, c.sizes[n] * 0.5));
+    const need = n === "Subline" || n === "Was" ? 4.5 : 3;
+    checks.push({
+      check: "contrast",
+      node: n,
+      ok: u.contrast >= need,
+      hard: true,
+      value: u.contrast,
+      need,
+      note: `${u.contrast}:1 against nine in ten of the pixels under the words (needs ${need}:1).`
+    });
+    if (onPhoto && (u.poor > 0.02 || u.worst < 2)) {
+      checks.push({
+        check: "contrast",
+        node: n,
+        ok: false,
+        hard: true,
+        value: u.worst,
+        need: 2,
+        note: `A bright or dark spot under the words: ${u.worst}:1 at the worst patch.`
+      });
+    }
+    if (onPhoto) {
+      checks.push({
+        check: "busy",
+        node: n,
+        ok: u.busy <= 0.12,
+        hard: false,
+        value: u.busy,
+        need: 0.12,
+        note: u.busy <= 0.12 ? "Calm under the words." : "The picture is busy under the words."
+      });
+    }
+  }
+  const seeThrough = ["outline", "slant", "slant_double", "underline", "text"].includes(l.ctaLook ?? "pill");
+  if (onPhoto && seeThrough && boxes.CTA && c.colours.CTA) {
+    const u = under(p, boxes.CTA, c.colours.CTA, shades, Math.max(12, (c.sizes.CTA ?? 24) * 0.5));
+    checks.push({
+      check: "contrast",
+      node: "CTA",
+      ok: u.contrast >= 3 && u.worst >= 2,
+      hard: true,
+      value: Math.min(u.contrast, u.worst >= 2 ? u.contrast : u.worst),
+      need: 3,
+      note: u.contrast < 3 ? `The button reads ${u.contrast}:1 against the picture under it (needs 3:1).` : u.worst < 2 ? `A bright or dark spot under the button: ${u.worst}:1 at the worst patch.` : `The button reads ${u.contrast}:1 against the picture under it.`
+    });
+  }
+  for (const k of keep) {
+    for (const n of ["Words", "CTA", "Action"]) {
+      const b = boxes[n];
+      if (!b) continue;
+      const o = overlap(b, k);
+      if (o > 0.01) {
+        checks.push({ check: "covers", node: n, ok: false, hard: true, value: Math.round(o * 100) / 100, note: `Covers ${k.what}.` });
+      }
+    }
+  }
+  let placed = null;
+  if (logo?.inside && c.panel) {
+    const id = doc.ids.get("Logo");
+    const { v, contrast: value } = preferDrawn(logo.logo, logo.logo.variants.map((x) => ({ v: x, contrast: contrastOf(x.hex, c.panel) })));
+    if (id) {
+      doc.graph.updateNode(id, {
+        fills: [{ type: "IMAGE", imageHash: v.hash, imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]
+      });
+    }
+    const box = boxOf(doc, "Logo");
+    if (box) boxes.Logo = box;
+    checks.push({
+      check: "logo",
+      node: "Logo",
+      ok: value >= 3,
+      hard: false,
+      value,
+      need: 3,
+      note: value < 3 ? `The logo is hard to see on the panel (${value}:1).` : `In the panel over the headline, ${v.name === "as_is" ? "as drawn" : `the ${v.name} version`}, ${value}:1.${v.name !== "as_is" && !logo.logo.mono ? " Made in one colour from the brand's logo; ask the brand for its reversed logo." : ""}`
+    });
+    placed = { where: logo.first ?? "top_left", variant: v.name, contrast: value };
+  } else if (logo) {
+    const at = placeLogo(doc, g, logo, boxes, keep, p, shades, l);
+    checks.push(at.check);
+    if (at.box) boxes.Logo = at.box;
+    placed = at.placed;
+  }
+  const ok = checks.every((x) => x.ok || !x.hard);
+  return { layout: l, ok, score: scoreOf(l, checks), checks, boxes, shades, logo: placed };
+}
+function logoPlan(book, g, l, logo) {
+  const sig = signatureOf(book, l.signature);
+  if (sig && sig.logo === "none") return null;
+  const first = sig && CORNERS.includes(sig.logo) ? sig.logo : null;
+  const wide = logo.width >= logo.height * 3;
+  const pct = sig?.logoWidthPct && sig.logoWidthPct > 0 ? Math.min(30, Math.max(4, sig.logoWidthPct)) : wide ? 20 : 12;
+  let w = g.w * pct / 100;
+  let h = w * logo.height / logo.width;
+  const most = g.h * 0.08;
+  if (h > most) {
+    w = w * most / h;
+    h = most;
+  }
+  const inside = Boolean(first?.startsWith(l.band)) && (l.ground === "flat" || l.ground === "block");
+  return { logo, w: Math.round(w), h: Math.round(h), first, ...inside ? { inside } : {} };
+}
+function preferDrawn(logo, read2) {
+  const drawn = read2.find((r2) => r2.v.name === "as_is");
+  if (drawn && (drawn.contrast >= 3 || logo.mono && drawn.contrast >= 3)) return drawn;
+  return [...read2].sort((a, b) => b.contrast - a.contrast)[0];
+}
+function boxAt(where, g, w, h) {
+  const [v, side] = where.split("_");
+  const x = side === "left" ? g.margin : side === "right" ? g.w - g.margin - w : Math.round((g.w - w) / 2);
+  const y = v === "top" ? g.top : g.h - g.bottom - h;
+  return { x, y, w, h };
+}
+function placeLogo(doc, g, plan, boxes, keep, p, shades, l) {
+  const id = doc.ids.get("Logo");
+  const avoid = [...["Words", "CTA", "Action"].map((n) => boxes[n]).filter(Boolean), ...keep];
+  let best = null;
+  for (const where of cornersFor(plan.first, l.band, l.align)) {
+    const box = boxAt(where, g, plan.w, plan.h);
+    const pad2 = { x: box.x - 16, y: box.y - 16, w: box.w + 32, h: box.h + 32 };
+    if (avoid.some((a) => overlap(pad2, a) > 0)) continue;
+    const read2 = plan.logo.variants.map((v) => ({ v, contrast: under(p, box, v.hex, shades, Math.max(8, Math.round(plan.h * 0.5))).contrast }));
+    const pick = preferDrawn(plan.logo, read2);
+    if (!best || pick.contrast > best.contrast + 0.01) best = { where, box, v: pick.v, contrast: pick.contrast };
+    if (best && best.where === where && best.contrast >= 3) break;
+  }
+  if (!id || !best || best.contrast < 3) {
+    if (id) doc.graph.updateNode(id, { visible: false });
+    return {
+      check: { check: "logo", node: "Logo", ok: false, hard: false, value: best?.contrast, need: 3, note: "No calm corner reads for the logo; it is left off for the designer to place." },
+      box: null,
+      placed: null
+    };
+  }
+  place(doc, "Logo", { x: best.box.x, y: best.box.y });
+  doc.graph.updateNode(id, {
+    fills: [{ type: "IMAGE", imageHash: best.v.hash, imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]
+  });
+  const own = plan.first === best.where;
+  return {
+    check: {
+      check: "logo",
+      node: "Logo",
+      ok: true,
+      hard: false,
+      value: best.contrast,
+      need: 3,
+      note: `${own ? "In the brand's own corner" : "In a calm corner"} (${best.where.replace("_", " ")}), ${best.v.name === "as_is" ? "as drawn" : `the ${best.v.name} version`}, ${best.contrast}:1.`
+    },
+    box: best.box,
+    placed: { where: best.where, variant: best.v.name, contrast: best.contrast }
+  };
+}
+function scoreOf(l, checks) {
+  let s = 0;
+  for (const c of checks) {
+    if (!c.ok) s -= c.hard ? 10 : 2;
+    if (c.check === "contrast" && c.value) s += Math.min(c.value, 7) / 7;
+    if (c.check === "busy" && c.value !== void 0) s -= c.value * 10;
+  }
+  if (l.ground === "photo") s += 2;
+  if (l.ground === "gradient" || l.ground === "tint") s += 1;
+  return s;
+}
+var FIT_FLOOR = 0.6;
+var PRICE_FLOOR = 0.35;
+function fitFor(doc, sizes = {}) {
+  const need = (name, floor = FIT_FLOOR) => {
+    const ws = wordWidths(doc, name);
+    const worst = Math.min(1, ...ws.map((w) => (w.box - 2) / w.width));
+    return worst < 1 && worst >= floor ? Math.floor(worst * 100) / 100 : void 0;
+  };
+  const over = sizes.Headline && sizes.Subline ? sizes.Subline * 1.25 / sizes.Headline : 0;
+  const headline = need("Headline", Math.max(FIT_FLOOR, over));
+  let cta = need("CTA words");
+  const ctaLine = lineWidth(doc, "CTA words");
+  if (ctaLine && ctaLine.width > ctaLine.box + 2) {
+    const frame = boxOf(doc, "CTA");
+    const words = boxOf(doc, "Words");
+    const pad2 = frame ? frame.w - ctaLine.box : 0;
+    const inside = frame && words && frame.x >= words.x - 1 && frame.x + frame.w <= words.x + words.w + 1;
+    const room = inside ? words.w - pad2 - 2 * (frame.x - words.x) : ctaLine.box;
+    const k = Math.min(1, (Math.max(room, ctaLine.box) - 2) / ctaLine.width);
+    if (k < 1 && k >= FIT_FLOOR) cta = Math.min(cta ?? 1, Math.floor(k * 100) / 100);
+  }
+  const line = lineWidth(doc, "Price");
+  const whole = line ? Math.min(1, (line.box - 2) / line.width) : 1;
+  const price = whole < 1 && whole >= PRICE_FLOOR ? Math.floor(whole * 100) / 100 : need("Price");
+  return headline || cta || price ? { ...headline ? { headline } : {}, ...cta ? { cta } : {}, ...price ? { price } : {} } : null;
+}
+function unreadable(checks) {
+  return checks.filter((c) => !c.ok && c.hard && (c.check === "fits" || c.check === "lines" || c.check === "contrast")).length;
+}
+function covered(checks) {
+  return checks.filter((c) => c.check === "covers" && !c.ok && c.node !== "Picture").reduce((s, c) => s + (c.value ?? 1), 0);
+}
+function better(a, b, taste) {
+  if (a.ok !== b.ok) return a.ok;
+  if (a.ok) return taste ? taste(a) > taste(b) + 0.05 : false;
+  const ca = covered(a.checks), cb = covered(b.checks);
+  if (Math.abs(ca - cb) > 1e-3) return ca < cb;
+  const ua = unreadable(a.checks), ub = unreadable(b.checks);
+  if (ua !== ub) return ua < ub;
+  return taste ? taste(a) > taste(b) : a.score > b.score;
+}
+function tasteOf(t, book, prefer) {
+  const sig = signatureOf(book, t.layout.signature ?? prefer.signature);
+  const lines = t.checks.find((c) => c.check === "lines" && c.node === "Headline")?.value ?? 1;
+  const want = Math.max(1, Math.min(3, Math.round(sig?.headlineLines ?? 2)));
+  const head = t.boxes.Headline;
+  const size = head && lines > 0 ? head.h / lines / 1080 : 0;
+  let s = t.score / 4;
+  s -= Math.max(0, lines - want);
+  s += Math.min(size, 0.2) * 50;
+  if (t.layout.fit?.headline) s -= (1 - t.layout.fit.headline) * 4;
+  if (t.layout.fit?.cta) s -= (1 - t.layout.fit.cta) * 8;
+  if (prefer.signature && t.layout.signature && t.layout.signature !== prefer.signature) s -= 1;
+  if (prefer.band && t.layout.band === prefer.band) s += 1;
+  if (prefer.align && t.layout.align === prefer.align) s += 0.5;
+  const own = sig ? { light: "on_photo", dark: "text", brand_colour: "accent" }[sig.words] : null;
+  if (own && (t.layout.ground === "photo" || t.layout.ground === "gradient" || t.layout.ground === "tint") && t.layout.colour !== own) s -= 4;
+  if (t.layout.ground === "tint" && t.layout.tint !== void 0) s -= Math.max(0, t.layout.tint - tintOf(book)) * 4;
+  return Math.round(s * 100) / 100;
+}
+async function pictureAt(picture, format, scale) {
+  const { w, h } = { w: gridSize(format).w, h: gridSize(format).h };
+  const doc = await build(
+    `<Frame name="Picture only" w={${w}} h={${h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${w}} h={${h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} /></Frame>`,
+    picture
+  );
+  return pixelsOf(await png(doc, scale), scale);
+}
+function gridSize(format) {
+  return { feed: { w: 1080, h: 1350 }, square: { w: 1080, h: 1080 }, story: { w: 1080, h: 1920 }, banner: { w: 1920, h: 1080 } }[format];
+}
+var sameFamily = (a, b) => a.toLowerCase().replace(/[\s_-]+/g, "") === b.toLowerCase().replace(/[\s_-]+/g, "");
+async function familiesOf(book, files = []) {
+  const fonts = [];
+  const chosen = /* @__PURE__ */ new Map();
+  const styles = [];
+  const own = useBrandFaces(files);
+  const ownFor = (family) => family ? [...own].find(([f]) => sameFamily(f, family))?.[1] : void 0;
+  for (const s of book.styles) {
+    const t = book.typefaces.find((x) => x.role === s.font) ?? book.typefaces[0];
+    const asked = t?.family ?? "Inter";
+    const file = ownFor(asked);
+    let used = "Inter";
+    for (const f of [file, asked, t?.fallback, "Inter"]) {
+      if (f && await hasFont(f, s.weight)) {
+        used = f;
+        break;
+      }
+    }
+    chosen.set(s.name, used);
+    const isOwn = Boolean(file) && used === file;
+    fonts.push({ style: s.name, asked, used: isOwn ? asked : used, ...isOwn ? { own: true } : t?.source === "stand_in" ? { standIn: true } : {} });
+    styles.push(!isOwn && (used !== asked || t?.source === "stand_in") && s.case === "upper" ? { ...s, lineHeight: standInLeading(s.lineHeight, await capHeightOf(used, s.weight)) } : s);
+  }
+  return { familyFor: (s) => chosen.get(s.name) ?? "Inter", fonts, book: { ...book, styles } };
+}
+var BRAND_CAP = 0.72;
+function standInLeading(lineHeight, cap) {
+  if (!cap || cap <= BRAND_CAP) return lineHeight;
+  return Math.round((lineHeight + cap - BRAND_CAP) * 100) / 100;
+}
+function contrastOf(a, b) {
+  return Math.round(contrast(luminance(...rgbOf(a)), luminance(...rgbOf(b))) * 100) / 100;
+}
+function uniq(xs) {
+  return [...new Set(xs)];
+}
+
+// src/fix.ts
+var RATIOS = [
+  ["21:9", 21 / 9],
+  ["16:9", 16 / 9],
+  ["3:2", 1.5],
+  ["4:3", 4 / 3],
+  ["5:4", 1.25],
+  ["1:1", 1],
+  ["4:5", 0.8],
+  ["3:4", 0.75],
+  ["2:3", 2 / 3],
+  ["9:16", 9 / 16]
+];
+function cropFor(box, width, height, least = 384) {
+  const bx = box.x * width, by = box.y * height, bw = box.w * width, bh = box.h * height;
+  const pad2 = Math.max(bw, bh) * 0.4;
+  let w = Math.max(least, bw + 2 * pad2), h = Math.max(least, bh + 2 * pad2);
+  const [ratio, r2] = RATIOS.reduce((a, b) => Math.abs(Math.log(b[1] / (w / h))) < Math.abs(Math.log(a[1] / (w / h))) ? b : a);
+  if (w / h < r2) w = h * r2;
+  else h = w / r2;
+  const k = Math.min(1, width / w, height / h);
+  w = Math.round(w * k);
+  h = Math.round(h * k);
+  const x = Math.round(Math.min(Math.max(0, bx + bw / 2 - w / 2), width - w));
+  const y = Math.round(Math.min(Math.max(0, by + bh / 2 - h / 2), height - h));
+  return { rect: { x, y, w, h }, ratio };
+}
+function crop(img, r2) {
+  const out = new Uint8Array(r2.w * r2.h * 4);
+  for (let y = 0; y < r2.h; y++) {
+    const from = ((r2.y + y) * img.width + r2.x) * 4;
+    out.set(img.data.subarray(from, from + r2.w * 4), y * r2.w * 4);
+  }
+  return { width: r2.w, height: r2.h, data: out };
+}
+function blank(img, part) {
+  const x0 = Math.max(0, Math.floor(part.x)), y0 = Math.max(0, Math.floor(part.y));
+  const x1 = Math.min(img.width, Math.ceil(part.x + part.w)), y1 = Math.min(img.height, Math.ceil(part.y + part.h));
+  if (x1 <= x0 || y1 <= y0) return img;
+  const chans = [[], [], []];
+  for (let y = y0; y < y1; y++) {
+    for (let x = x0; x < x1; x++) for (let c = 0; c < 3; c++) chans[c].push(img.data[(y * img.width + x) * 4 + c]);
+  }
+  const median = chans.map((v) => v.sort((a, b) => a - b)[v.length >> 1]);
+  const data = new Uint8Array(img.data);
+  for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) data.set([...median, 255], (y * img.width + x) * 4);
+  return { width: img.width, height: img.height, data };
+}
+function labOf([r2, g, b]) {
+  const lin2 = (v) => (v /= 255) <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+  const [R, G, B] = [lin2(r2), lin2(g), lin2(b)];
+  const f = (t) => t > 216 / 24389 ? Math.cbrt(t) : (24389 / 27 * t + 16) / 116;
+  const x = f((0.4124 * R + 0.3576 * G + 0.1805 * B) / 0.95047), y = f(0.2126 * R + 0.7152 * G + 0.0722 * B), z = f((0.0193 * R + 0.1192 * G + 0.9505 * B) / 1.08883);
+  const round3 = (n) => Math.round(n * 10) / 10 + 0;
+  return { l: round3(116 * y - 16), a: round3(500 * (x - y)), b: round3(200 * (y - z)) };
+}
+function toneOf(img, box) {
+  const x0 = Math.max(0, Math.floor((box.x + box.w / 4) * img.width)), y0 = Math.max(0, Math.floor((box.y + box.h / 4) * img.height));
+  const x1 = Math.min(img.width, Math.ceil((box.x + 3 * box.w / 4) * img.width)), y1 = Math.min(img.height, Math.ceil((box.y + 3 * box.h / 4) * img.height));
+  if (x1 <= x0 || y1 <= y0) return null;
+  const chans = [[], [], []];
+  const step = Math.max(1, Math.floor(Math.sqrt((x1 - x0) * (y1 - y0) / 2e4)));
+  for (let y = y0; y < y1; y += step) {
+    for (let x = x0; x < x1; x += step) for (let c = 0; c < 3; c++) chans[c].push(img.data[(y * img.width + x) * 4 + c]);
+  }
+  return labOf(chans.map((v) => v.sort((a, b) => a - b)[v.length >> 1]));
+}
+function resize(img, w, h) {
+  if (img.width === w && img.height === h) return img;
+  const out = new Uint8Array(w * h * 4);
+  const sx = img.width / w, sy = img.height / h;
+  for (let y = 0; y < h; y++) {
+    const fy = Math.min(img.height - 1, Math.max(0, (y + 0.5) * sy - 0.5));
+    const y0 = Math.floor(fy), y1 = Math.min(img.height - 1, y0 + 1), ty = fy - y0;
+    for (let x = 0; x < w; x++) {
+      const fx = Math.min(img.width - 1, Math.max(0, (x + 0.5) * sx - 0.5));
+      const x0 = Math.floor(fx), x1 = Math.min(img.width - 1, x0 + 1), tx = fx - x0;
+      for (let c = 0; c < 4; c++) {
+        const p = (yy, xx) => img.data[(yy * img.width + xx) * 4 + c];
+        const top = p(y0, x0) * (1 - tx) + p(y0, x1) * tx;
+        const bottom = p(y1, x0) * (1 - tx) + p(y1, x1) * tx;
+        out[(y * w + x) * 4 + c] = Math.round(top * (1 - ty) + bottom * ty);
+      }
+    }
+  }
+  return { width: w, height: h, data: out };
+}
+function setBack(picture, redrawn, rect, box) {
+  const patch = resize(redrawn, rect.w, rect.h);
+  const inner = {
+    x0: box.x * picture.width - rect.x,
+    y0: box.y * picture.height - rect.y,
+    x1: (box.x + box.w) * picture.width - rect.x,
+    y1: (box.y + box.h) * picture.height - rect.y
+  };
+  const room = Math.max(1, Math.min(inner.x0, inner.y0, rect.w - inner.x1, rect.h - inner.y1));
+  const hold = room * 0.25;
+  const outside = (x, y) => Math.hypot(Math.max(0, inner.x0 - x, x - inner.x1), Math.max(0, inner.y0 - y, y - inner.y1));
+  const mean = [0, 0, 0];
+  let n = 0;
+  for (let y = 0; y < rect.h; y += 2) {
+    for (let x = 0; x < rect.w; x += 2) {
+      const d = outside(x, y);
+      if (d < hold || d > room) continue;
+      const i = (y * rect.w + x) * 4;
+      const j = ((rect.y + y) * picture.width + rect.x + x) * 4;
+      for (let c = 0; c < 3; c++) mean[c] += picture.data[j + c] - patch.data[i + c];
+      n++;
+    }
+  }
+  const shift = n ? mean.map((m) => m / n) : [0, 0, 0];
+  const out = new Uint8Array(picture.data);
+  for (let y = 0; y < rect.h; y++) {
+    for (let x = 0; x < rect.w; x++) {
+      const d = outside(x, y);
+      const t = d <= hold ? 1 : d >= room ? 0 : 1 - (d - hold) / (room - hold);
+      if (t <= 0) continue;
+      const a = t * t * (3 - 2 * t);
+      const i = (y * rect.w + x) * 4;
+      const j = ((rect.y + y) * picture.width + rect.x + x) * 4;
+      for (let c = 0; c < 3; c++) {
+        const v = Math.min(255, Math.max(0, patch.data[i + c] + shift[c]));
+        out[j + c] = Math.round(picture.data[j + c] * (1 - a) + v * a);
+      }
+    }
+  }
+  return { picture: { ...picture, data: out }, drift: Math.round(Math.hypot(shift[0], shift[1], shift[2]) * 10) / 10 };
+}
+async function decode(bytes) {
+  const { ck } = await start();
+  const img = ck.MakeImageFromEncoded(bytes);
+  if (!img) throw new Error("The picture could not be read.");
+  const width = img.width(), height = img.height();
+  const data = img.readPixels(0, 0, {
+    width,
+    height,
+    colorType: ck.ColorType.RGBA_8888,
+    alphaType: ck.AlphaType.Unpremul,
+    colorSpace: ck.ColorSpace.SRGB
+  });
+  img.delete();
+  if (!data) throw new Error("The picture could not be read.");
+  return { width, height, data: new Uint8Array(data) };
+}
+async function encode(img) {
+  const { ck } = await start();
+  const made = ck.MakeImage(
+    { width: img.width, height: img.height, colorType: ck.ColorType.RGBA_8888, alphaType: ck.AlphaType.Unpremul, colorSpace: ck.ColorSpace.SRGB },
+    img.data,
+    img.width * 4
+  );
+  if (!made) throw new Error("The picture could not be written.");
+  const bytes = made.encodeToBytes(ck.ImageFormat.PNG, 100);
+  made.delete();
+  if (!bytes) throw new Error("The picture could not be written.");
+  return bytes;
+}
+
+// src/format.ts
+var RATIO = { feed: 4 / 5, square: 1, story: 9 / 16, banner: 16 / 9 };
+var MODEL_RATIO = { feed: "4:5", square: "1:1", story: "9:16", banner: "16:9" };
+function windowFor(width, height, ratio, around) {
+  let w = width, h = Math.round(width / ratio);
+  if (h > height) {
+    h = height;
+    w = Math.round(height * ratio);
+  }
+  const cx = around ? (around.x + around.w / 2) * width : width / 2;
+  const cy = around ? (around.y + around.h / 2) * height : height / 2;
+  const x = Math.round(Math.min(Math.max(0, cx - w / 2), width - w));
+  const y = Math.round(Math.min(Math.max(0, cy - h / 2), height - h));
+  return { x, y, w, h };
+}
+var AIR = {
+  feed: { side: 0.04, top: 0.04, bottom: 0.04 },
+  square: { side: 0.04, top: 0.04, bottom: 0.04 },
+  banner: { side: 0.04, top: 0.04, bottom: 0.04 },
+  // Instagram's story: 250 px of 1920 at the top and 340 at the bottom (book.ts, the format's grid).
+  story: { side: 0.04, top: 250 / 1920, bottom: 340 / 1920 }
+};
+function fits(box, win, width, height, air = AIR.square) {
+  const bx0 = box.x * width, by0 = box.y * height, bx1 = (box.x + box.w) * width, by1 = (box.y + box.h) * height;
+  return bx0 >= win.x + win.w * air.side - 0.5 && bx1 <= win.x + win.w * (1 - air.side) + 0.5 && by0 >= win.y + win.h * air.top - 0.5 && by1 <= win.y + win.h * (1 - air.bottom) + 0.5;
+}
+var kept = (width, height, ratio) => {
+  const w = windowFor(width, height, ratio);
+  return w.w * w.h / (width * height);
+};
+function canvasFor(width, height, ratio) {
+  if (width / height > ratio) {
+    const H = Math.round(width / ratio);
+    return { width, height: H, at: { x: 0, y: Math.round((H - height) / 2), w: width, h: height } };
+  }
+  const W = Math.round(height * ratio);
+  return { width: W, height, at: { x: Math.round((W - width) / 2), y: 0, w: width, h: height } };
+}
+function pad(master, canvas, most = 2048) {
+  const data = new Uint8Array(canvas.width * canvas.height * 4);
+  for (let i = 0; i < data.length; i += 4) data.set([128, 128, 128, 255], i);
+  for (let y = 0; y < master.height; y++) {
+    const from = y * master.width * 4;
+    data.set(master.data.subarray(from, from + master.width * 4), ((canvas.at.y + y) * canvas.width + canvas.at.x) * 4);
+  }
+  const out = { width: canvas.width, height: canvas.height, data };
+  const k = most / Math.max(canvas.width, canvas.height);
+  return k < 1 ? resize(out, Math.round(canvas.width * k), Math.round(canvas.height * k)) : out;
+}
+function setMaster(master, drawn, canvas, seam = 48) {
+  const out = resize(drawn, canvas.width, canvas.height);
+  const at = canvas.at;
+  const counts = [new Uint32Array(511), new Uint32Array(511), new Uint32Array(511)];
+  let n = 0;
+  for (let y = 0; y < master.height; y += 4) {
+    for (let x = 0; x < master.width; x += 4) {
+      const i = (y * master.width + x) * 4;
+      const j = ((at.y + y) * canvas.width + at.x + x) * 4;
+      for (let c = 0; c < 3; c++) counts[c][master.data[i + c] - out.data[j + c] + 255]++;
+      n++;
+    }
+  }
+  const median = (h) => {
+    let seen = 0;
+    for (let v = 0; v < h.length; v++) if ((seen += h[v]) * 2 >= n) return v - 255;
+    return 0;
+  };
+  const shift = n ? counts.map(median) : [0, 0, 0];
+  for (let y = 0; y < canvas.height; y++) {
+    for (let x = 0; x < canvas.width; x++) {
+      if (x >= at.x && x < at.x + at.w && y >= at.y && y < at.y + at.h) continue;
+      const j = (y * canvas.width + x) * 4;
+      for (let c = 0; c < 3; c++) out.data[j + c] = Math.min(255, Math.max(0, Math.round(out.data[j + c] + shift[c])));
+      out.data[j + 3] = 255;
+    }
+  }
+  const open = { left: at.x > 0, right: at.x + at.w < canvas.width, top: at.y > 0, bottom: at.y + at.h < canvas.height };
+  for (let y = 0; y < master.height; y++) {
+    for (let x = 0; x < master.width; x++) {
+      const d = Math.min(
+        open.left ? x : Infinity,
+        open.right ? master.width - 1 - x : Infinity,
+        open.top ? y : Infinity,
+        open.bottom ? master.height - 1 - y : Infinity
+      );
+      const i = (y * master.width + x) * 4;
+      const j = ((at.y + y) * canvas.width + at.x + x) * 4;
+      if (d >= seam) {
+        out.data.set(master.data.subarray(i, i + 4), j);
+        out.data[j + 3] = 255;
+        continue;
+      }
+      const t = d / seam;
+      const a = t * t * (3 - 2 * t);
+      for (let c = 0; c < 3; c++) {
+        const v = Math.min(255, Math.max(0, out.data[j + c] + shift[c]));
+        out.data[j + c] = Math.round(v * (1 - a) + master.data[i + c] * a);
+      }
+      out.data[j + 3] = 255;
+    }
+  }
+  return { picture: out, drift: Math.round(Math.hypot(shift[0], shift[1], shift[2]) * 10) / 10 };
+}
+function guide(master, ratio, box, place2, most = 1536) {
+  const W = ratio >= 1 ? most : Math.round(most * ratio);
+  const H = ratio >= 1 ? Math.round(most / ratio) : most;
+  const s = place2.w * W / (box.w * master.width);
+  const mw = Math.max(1, Math.round(master.width * s)), mh = Math.max(1, Math.round(master.height * s));
+  const ox = Math.round((place2.x + place2.w / 2) * W - (box.x + box.w / 2) * master.width * s);
+  const oy = Math.round((place2.y + place2.h / 2) * H - (box.y + box.h / 2) * master.height * s);
+  const scaled = resize(master, mw, mh);
+  const data = new Uint8Array(W * H * 4);
+  const inside = (x, y) => x >= ox && x < ox + mw && y >= oy && y < oy + mh;
+  for (let y = 0; y < H; y++) {
+    const sy = Math.min(Math.max(y - oy, 0), mh - 1);
+    for (let x = 0; x < W; x++) {
+      const sx = Math.min(Math.max(x - ox, 0), mw - 1);
+      data.set(scaled.data.subarray((sy * mw + sx) * 4, (sy * mw + sx) * 4 + 4), (y * W + x) * 4);
+      data[(y * W + x) * 4 + 3] = 255;
+    }
+  }
+  const r2 = Math.max(4, Math.round(Math.min(W, H) / 40));
+  const blur = (along) => {
+    const copy = data.slice();
+    const n = along === "x" ? W : H, lines = along === "x" ? H : W;
+    for (let l = 0; l < lines; l++) {
+      for (let i = 0; i < n; i++) {
+        const x = along === "x" ? i : l, y = along === "x" ? l : i;
+        if (inside(x, y)) continue;
+        let sum0 = 0, sum1 = 0, sum2 = 0, count = 0;
+        for (let k = Math.max(0, i - r2); k <= Math.min(n - 1, i + r2); k++) {
+          const j2 = along === "x" ? (y * W + k) * 4 : (k * W + x) * 4;
+          sum0 += copy[j2];
+          sum1 += copy[j2 + 1];
+          sum2 += copy[j2 + 2];
+          count++;
+        }
+        const j = (y * W + x) * 4;
+        data[j] = Math.round(sum0 / count);
+        data[j + 1] = Math.round(sum1 / count);
+        data[j + 2] = Math.round(sum2 / count);
+      }
+    }
+  };
+  blur("x");
+  blur("y");
+  return { width: W, height: H, data };
+}
+
+// src/handler.ts
+var json = (status, body) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
+function signedLink(link, host, kind) {
+  if (typeof link !== "string") return false;
+  try {
+    const u = new URL(link);
+    const path = kind === "read" ? "/storage/v1/object/sign/" : "/storage/v1/object/upload/sign/";
+    return u.protocol === "https:" && u.host === host && u.pathname.startsWith(path) && u.searchParams.has("token");
+  } catch {
+    return false;
+  }
+}
+function invalid(r2, host) {
+  if (!signedLink(r2.picture, host, "read")) return "The picture must be a signed link to Fume's storage.";
+  if (!signedLink(r2.upload?.png, host, "upload") || !signedLink(r2.upload?.fig, host, "upload")) {
+    return "The result needs signed upload links to Fume's storage.";
+  }
+  if (r2.logo != null && !signedLink(r2.logo, host, "read")) return "The logo must be a signed link to Fume's storage.";
+  if (r2.fonts != null) {
+    if (!Array.isArray(r2.fonts) || r2.fonts.length > 12) return "Too many font files.";
+    for (const f of r2.fonts) {
+      if (!signedLink(f?.url, host, "read")) return "A font file must be a signed link to Fume's storage.";
+      if (typeof f.family !== "string" || !/^[\p{L}\p{N} ._'&-]{1,60}$/u.test(f.family)) return "A font file's family is not one Fume reads.";
+      if (!Number.isInteger(f.weight) || f.weight < 100 || f.weight > 900 || typeof f.italic !== "boolean") return "A font file's face is not one Fume reads.";
+    }
+  }
+  if (!r2.format || !(r2.format in SIZES)) return "Unknown format.";
+  if (!r2.book || !Array.isArray(r2.book.styles) || !Array.isArray(r2.book.colours) || !Array.isArray(r2.book.typefaces)) {
+    return "The brand's design system is missing.";
+  }
+  if (!r2.words || typeof r2.words.headline !== "string" || !r2.words.headline.trim()) return "A layout needs a headline.";
+  for (const w of [r2.words.headline, r2.words.subline, r2.words.cta, r2.words.price]) {
+    if (w != null && (typeof w !== "string" || w.length > 400)) return "The words are too long.";
+  }
+  return null;
+}
+async function handle(req, deps) {
+  if (req.method !== "POST") return json(405, { error: "POST only." });
+  let r2;
+  try {
+    r2 = await req.json();
+  } catch {
+    return json(400, { error: "The request is not JSON." });
+  }
+  const op = r2.op;
+  if (op === "fix-crop" || op === "fix-set") return fixStep(r2, deps);
+  if (op === "format" || op === "format-set" || op === "format-drawn" || op === "format-guide") return formatStep(r2, deps);
+  const why = invalid(r2, deps.storageHost);
+  if (why) return json(400, { error: why });
+  let picture;
+  try {
+    const got = await deps.fetch(r2.picture, { signal: AbortSignal.timeout(45e3) });
+    const type = got.headers.get("content-type") ?? "";
+    if (!got.ok || !type.startsWith("image/")) return json(403, { error: "The picture link is not live." });
+    picture = new Uint8Array(await got.arrayBuffer());
+  } catch {
+    return json(504, { error: "Reading the picture from storage took too long." });
+  }
+  if (picture.byteLength > 25e6) return json(413, { error: "The picture is too large." });
+  let logo;
+  if (r2.logo) {
+    try {
+      const got = await deps.fetch(r2.logo, { signal: AbortSignal.timeout(15e3) });
+      const type = got.headers.get("content-type") ?? "";
+      const bytes = got.ok && type.startsWith("image/") ? new Uint8Array(await got.arrayBuffer()) : null;
+      if (bytes && bytes.byteLength <= 3e6) logo = bytes;
+    } catch {
+      logo = void 0;
+    }
+  }
+  const fonts = [];
+  for (const f of r2.fonts ?? []) {
+    try {
+      const got = await deps.fetch(f.url, { signal: AbortSignal.timeout(15e3) });
+      const bytes = got.ok ? new Uint8Array(await got.arrayBuffer()) : null;
+      if (bytes && bytes.byteLength <= 8e6 && isSfnt(bytes)) fonts.push({ family: f.family, weight: f.weight, italic: f.italic, bytes });
+    } catch {
+    }
+  }
+  const out = await (deps.design ?? design)({
+    picture,
+    format: r2.format,
+    book: r2.book,
+    words: r2.words,
+    prefer: r2.prefer ?? {},
+    keepClear: (r2.keepClear ?? []).filter(isBox).slice(0, 12),
+    ...logo ? { logo } : {},
+    ...fonts.length ? { fonts } : {}
+  });
+  const put = async (link, bytes, contentType) => {
+    const res = await deps.fetch(link, {
+      method: "PUT",
+      headers: { "content-type": contentType, "x-upsert": "false" },
+      body: new Blob([bytes]),
+      signal: AbortSignal.timeout(3e4)
+    });
+    if (!res.ok) throw new Error(`Storing the result failed (${res.status}).`);
+    return { bytes: bytes.byteLength, sha256: createHash2("sha256").update(bytes).digest("hex") };
+  };
+  try {
+    const [png2, fig2] = await Promise.all([
+      put(r2.upload.png, out.png, "image/png"),
+      put(r2.upload.fig, out.fig, "application/octet-stream")
+    ]);
+    const { png: _p, fig: _f, ...rest } = out;
+    return json(200, { ...rest, png: png2, fig: fig2 });
+  } catch (e) {
+    return json(502, { error: e.message });
+  }
+}
+function isSfnt(b) {
+  if (b.length < 12) return false;
+  const tag = String.fromCharCode(b[0], b[1], b[2], b[3]);
+  return tag === "OTTO" || tag === "true" || b[0] === 0 && b[1] === 1 && b[2] === 0 && b[3] === 0;
+}
+function isBox(b) {
+  const x = b;
+  return Boolean(x) && [x.x, x.y, x.w, x.h].every((n) => typeof n === "number" && Number.isFinite(n)) && typeof x.what === "string";
+}
+var isShare = (b) => Boolean(b) && [b.x, b.y, b.w, b.h].every((n) => typeof n === "number" && Number.isFinite(n) && n >= 0 && n <= 1) && b.w > 0 && b.h > 0 && b.x + b.w <= 1.0001 && b.y + b.h <= 1.0001;
+function invalidFix(r2, host) {
+  if (!signedLink(r2.picture, host, "read")) return "The picture must be a signed link to Fume's storage.";
+  if (!isShare(r2.box)) return "Mark the part to fix inside the picture.";
+  if (r2.op === "fix-crop" && !signedLink(r2.upload?.crop, host, "upload")) return "The crop needs a signed upload link to Fume's storage.";
+  if (r2.op === "fix-set") {
+    if (!signedLink(r2.redrawn, host, "read")) return "The redrawn part must be a signed link to Fume's storage.";
+    const c = r2.rect;
+    if (!c || ![c.x, c.y, c.w, c.h].every((n) => Number.isInteger(n) && n >= 0) || c.w < 16 || c.h < 16) return "The crop is not one Fume made.";
+    if (!signedLink(r2.upload?.png, host, "upload")) return "The result needs a signed upload link to Fume's storage.";
+  }
+  return null;
+}
+async function read(link, deps, limit = 25e6) {
+  try {
+    const got = await deps.fetch(link, { signal: AbortSignal.timeout(45e3) });
+    const type = got.headers.get("content-type") ?? "";
+    if (!got.ok || !type.startsWith("image/")) return json(403, { error: "The picture link is not live." });
+    const bytes = new Uint8Array(await got.arrayBuffer());
+    return bytes.byteLength > limit ? json(413, { error: "The picture is too large." }) : bytes;
+  } catch {
+    return json(504, { error: "Reading the picture from storage took too long." });
+  }
+}
+async function store(link, bytes, deps) {
+  const res = await deps.fetch(link, {
+    method: "PUT",
+    headers: { "content-type": "image/png", "x-upsert": "true" },
+    body: new Blob([bytes]),
+    signal: AbortSignal.timeout(3e4)
+  });
+  if (!res.ok) throw new Error(`Storing the result failed (${res.status}).`);
+  return { bytes: bytes.byteLength, sha256: createHash2("sha256").update(bytes).digest("hex") };
+}
+async function fixStep(r2, deps) {
+  const why = invalidFix(r2, deps.storageHost);
+  if (why) return json(400, { error: why });
+  const got = await read(r2.picture, deps);
+  if (got instanceof Response) return got;
+  try {
+    const picture = await decode(got);
+    if (r2.op === "fix-crop") {
+      const { rect: rect2, ratio } = cropFor(r2.box, picture.width, picture.height, r2.read ? 128 : 384);
+      let cut = crop(picture, rect2);
+      if (r2.read) {
+        const k = 1024 / Math.max(cut.width, cut.height);
+        if (k > 1) cut = resize(cut, Math.round(cut.width * k), Math.round(cut.height * k));
+      }
+      if (r2.blank) {
+        cut = blank(cut, { x: r2.box.x * picture.width - rect2.x, y: r2.box.y * picture.height - rect2.y, w: r2.box.w * picture.width, h: r2.box.h * picture.height });
+      }
+      const part = await encode(cut);
+      return json(200, { rect: rect2, ratio, width: picture.width, height: picture.height, tone: toneOf(picture, r2.box), crop: await store(r2.upload.crop, part, deps) });
+    }
+    const rect = r2.rect;
+    if (rect.x + rect.w > picture.width || rect.y + rect.h > picture.height) return json(400, { error: "The crop is not one Fume made." });
+    const redrawnBytes = await read(r2.redrawn, deps);
+    if (redrawnBytes instanceof Response) return redrawnBytes;
+    const out = setBack(picture, await decode(redrawnBytes), rect, r2.box);
+    const png2 = await store(r2.upload.png, await encode(out.picture), deps);
+    return json(200, { width: picture.width, height: picture.height, drift: out.drift, png: png2 });
+  } catch (e) {
+    return json(502, { error: e.message });
+  }
+}
+function invalidFormat(r2, host) {
+  if (!signedLink(r2.picture, host, "read")) return "The picture must be a signed link to Fume's storage.";
+  if (!r2.format || !(r2.format in RATIO)) return "Unknown format.";
+  if (r2.method != null && r2.method !== "crop" && r2.method !== "expand") return "Crop or expand.";
+  if (r2.around != null && !isShare(r2.around)) return "The product's box lies inside the picture.";
+  if (r2.window != null && (!isShare(r2.window) || r2.method !== "crop")) return "A crop window lies inside the picture.";
+  if (r2.op === "format" && (!signedLink(r2.upload?.png, host, "upload") || !signedLink(r2.upload?.padded, host, "upload"))) {
+    return "The format needs signed upload links to Fume's storage.";
+  }
+  if ((r2.op === "format-drawn" || r2.op === "format-guide") && !signedLink(r2.upload?.png, host, "upload")) return "The format needs a signed upload link to Fume's storage.";
+  if (r2.op === "format-guide" && (!r2.around || !r2.place || !isShare(r2.place))) return "A layout guide needs the product's box and its place.";
+  if (r2.op === "format-set" && (!signedLink(r2.drawn, host, "read") || !signedLink(r2.upload?.png, host, "upload"))) {
+    return "The drawing and the result need signed links to Fume's storage.";
+  }
+  return null;
+}
+function chooseFormat(width, height, format, r2) {
+  const ratio = RATIO[format];
+  if (r2.window) {
+    const w = { x: Math.round(r2.window.x * width), y: Math.round(r2.window.y * height), w: Math.round(r2.window.w * width), h: 0 };
+    w.h = Math.min(height - w.y, Math.round(w.w / ratio));
+    return { method: "crop", window: w, reason: "asked" };
+  }
+  const win = windowFor(width, height, ratio, r2.around ?? void 0);
+  if (r2.method) return { method: r2.method, window: win, reason: "asked" };
+  if (!r2.around) return { method: "expand", window: win, reason: "unknown" };
+  if (kept(width, height, ratio) < 0.6) return { method: "expand", window: win, reason: "little" };
+  if (fits(r2.around, win, width, height, AIR[format])) return { method: "crop", window: win, reason: "fits" };
+  const safe = AIR[format].top > AIR.square.top && fits(r2.around, win, width, height, { ...AIR[format], top: AIR.square.top, bottom: AIR.square.bottom });
+  return { method: "expand", window: win, reason: safe ? "safe" : "cuts" };
+}
+async function formatStep(r2, deps) {
+  const why = invalidFormat(r2, deps.storageHost);
+  if (why) return json(400, { error: why });
+  const got = await read(r2.picture, deps);
+  if (got instanceof Response) return got;
+  try {
+    const master = await decode(got);
+    if (r2.op === "format-guide") {
+      const g = guide(master, RATIO[r2.format], r2.around, r2.place);
+      const png3 = await store(r2.upload.png, await encode(g), deps);
+      return json(200, { width: g.width, height: g.height, png: png3 });
+    }
+    if (r2.op === "format-drawn") {
+      const win = windowFor(master.width, master.height, RATIO[r2.format]);
+      const png3 = await store(r2.upload.png, await encode(crop(master, win)), deps);
+      return json(200, { width: win.w, height: win.h, png: png3 });
+    }
+    const canvas = canvasFor(master.width, master.height, RATIO[r2.format]);
+    if (r2.op === "format") {
+      const chose = chooseFormat(master.width, master.height, r2.format, r2);
+      const share = (w) => ({ x: w.x / master.width, y: w.y / master.height, w: w.w / master.width, h: w.h / master.height });
+      if (chose.method === "crop") {
+        const png3 = await store(r2.upload.png, await encode(crop(master, chose.window)), deps);
+        return json(200, { method: "crop", reason: chose.reason, window: share(chose.window), width: chose.window.w, height: chose.window.h, png: png3 });
+      }
+      const padded = await store(r2.upload.padded, await encode(pad(master, canvas)), deps);
+      return json(200, {
+        method: "expand",
+        reason: chose.reason,
+        window: share(chose.window),
+        ratio: MODEL_RATIO[r2.format],
+        width: canvas.width,
+        height: canvas.height,
+        at: canvas.at,
+        padded
+      });
+    }
+    const drawn = await read(r2.drawn, deps);
+    if (drawn instanceof Response) return drawn;
+    const out = setMaster(master, await decode(drawn), canvas);
+    const png2 = await store(r2.upload.png, await encode(out.picture), deps);
+    return json(200, { width: canvas.width, height: canvas.height, at: canvas.at, drift: out.drift, png: png2 });
+  } catch (e) {
+    return json(502, { error: e.message });
+  }
+}
+
+// src/fonts.ts
+var UA = "Mozilla/4.0";
+var WEIGHTS = [100, 200, 300, 400, 500, 600, 700, 800, 900];
+function googleFonts(get = fetch) {
+  const files = /* @__PURE__ */ new Map();
+  const cssOf = async (query) => {
+    const res = await get(`https://fonts.googleapis.com/css2?family=${query}&display=swap`, {
+      headers: { "user-agent": UA },
+      signal: AbortSignal.timeout(8e3)
+    }).catch(() => null);
+    return res?.ok ? res.text() : null;
+  };
+  const fileOf = (css) => css?.match(/url\((https:\/\/fonts\.gstatic\.com\/[^)\s]+\.ttf)\)/)?.[1] ?? null;
+  const load = async (family, weight, italic) => {
+    if (!/^[\p{L}\p{N} ]{1,60}$/u.test(family)) return null;
+    const name = encodeURIComponent(family.trim()).replace(/%20/g, "+");
+    const order = [...WEIGHTS].sort((a, b) => Math.abs(a - weight) - Math.abs(b - weight) || b - a);
+    let url = null;
+    for (const w of order.slice(0, 9)) {
+      url = fileOf(await cssOf(`${name}:ital,wght@${italic ? 1 : 0},${w}`));
+      if (url) break;
+      if (w === order[0]) {
+        url = fileOf(await cssOf(name));
+        if (url) break;
+      }
+    }
+    if (!url) return null;
+    const res = await get(url, { signal: AbortSignal.timeout(1e4) }).catch(() => null);
+    return res?.ok ? res.arrayBuffer() : null;
+  };
+  return (family, weight, italic) => {
+    const key = `${family}|${weight}|${italic}`;
+    if (!files.has(key)) files.set(key, load(family, weight, italic).catch(() => null));
+    return files.get(key);
+  };
+}
+
+// api-src/design.ts
+start({ fonts: googleFonts(fetch), online: false });
+async function POST(req) {
+  return handle(req, { storageHost: process.env.FUME_STORAGE_HOST ?? "vkusmctftfzsrxbcxtdz.supabase.co", fetch });
+}
+async function GET() {
+  return new Response(JSON.stringify({ service: "fume-design", ok: true }), { headers: { "content-type": "application/json" } });
+}
+export {
+  GET,
+  POST
+};

@@ -107,8 +107,8 @@ export function ImportSourceDialog({
 }) {
   const start = useStartProductImport();
   const toast = useToast();
-  const [url, setUrl] = useState("https://lysne.no");
-  const [file, setFile] = useState<{ name: string; bytes: number } | null>(null);
+  const [url, setUrl] = useState("");
+  const [file, setFile] = useState<{ name: string; bytes: number; blob?: Blob } | null>(null);
   const open = source !== null;
 
   function close() {
@@ -177,7 +177,9 @@ export function ImportSourceDialog({
                   moreCopy="Choose another"
                   compact={Boolean(file)}
                   items={file ? [{ id: "f", name: file.name, bytes: file.bytes, state: "done" }] : []}
-                  onFiles={(files) => files[0] && setFile({ name: files[0].name, bytes: files[0].size })}
+                  onFiles={(files) =>
+                    files[0] && setFile({ name: files[0].name, bytes: files[0].size, blob: files[0] })
+                  }
                   onRemove={() => setFile(null)}
                 />
               )
@@ -712,21 +714,24 @@ function ImportResult({ job }: { job: ImportJob }) {
   const toConfirm = landed.filter((p) => p.state !== "verified");
   const added = job.result?.added ?? 0;
   const updated = job.result?.updated ?? 0;
+  // While the catalogue loads, the count comes from the import itself.
+  const shown = catalogue ? landed.length : added + updated;
   const what = [added && `${added} new`, updated && `${updated} updated`].filter(Boolean).join(", ");
 
   return (
     <section className="ui-import" data-state="done" aria-labelledby="import-title">
       <div className="ui-import-head">
         <h2 className="ui-import-title" id="import-title">
-          {copy.count(landed.length, "product")} from {fromWords(job)} {landed.length === 1 ? "is" : "are"} in your
-          catalogue
+          {copy.count(shown, "product")} from {fromWords(job)} {shown === 1 ? "is" : "are"} in your catalogue
         </h2>
       </div>
       <p className="ui-import-text">
         {what ? `${what[0]!.toUpperCase()}${what.slice(1)}. ` : ""}
-        {toConfirm.length
-          ? `Fume read ${toConfirm.length === 1 ? "it" : "them"}; confirm ${toConfirm.length === 1 ? "it" : "them"} before ${toConfirm.length === 1 ? "it goes" : "they go"} into a campaign, one at a time.`
-          : "Every one is confirmed."}
+        {!catalogue
+          ? ""
+          : toConfirm.length
+            ? `Fume read ${toConfirm.length === 1 ? "it" : "them"}; confirm ${toConfirm.length === 1 ? "it" : "them"} before ${toConfirm.length === 1 ? "it goes" : "they go"} into a campaign, one at a time.`
+            : "Every one is confirmed."}
       </p>
       {landed.length > 0 && (
         <PickGrid size="sm" aria-label="Imported products">

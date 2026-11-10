@@ -8,7 +8,8 @@
 // A product the plan uses that still waits to be confirmed is named on the Products line, with the way to confirm it.
 // Who approves follows who reads it (people.ts); the expert and the agency read the brand's lines about the customer by
 // her name. The expert's check is optional (FLOWS §26.2), so "Checked by Anna" (the Focus pointer in Amber) shows only
-// when someone checked it. A new version says what changed in it.
+// when someone checked it. A new version says what changed in it. The team (Fume's, or the agency) also reads the
+// strategist's task and the brief's open questions under the brief; the one who approves never does.
 import { Button, CheckMark, Collapsible, CollapsibleContent, CollapsibleTrigger, Icon, useToast } from "@fume/ui";
 import { useMemo, type ReactNode } from "react";
 import { useCampaigns, useCatalogue, useChoosePlanDirection, useStudioKit } from "../../api/hooks";
@@ -16,6 +17,7 @@ import type { Brief, Campaign, CampaignPlan, PlanLine, Product } from "../../con
 import * as copy from "../../copy";
 import { BriefFacts } from "../campaigns/brief-lines";
 import { useOpenProductCheck } from "../check/ProductCheckHost";
+import { changedAfter, CopyNotes, creativeRef, lineRef, wordsAnchor } from "./copy-check";
 import { GoLive } from "./GoLive";
 import {
   ChangedTag,
@@ -30,7 +32,18 @@ import {
 } from "./parts";
 import { PlanIndex } from "./PlanIndex";
 import type { PlanPeople } from "./people";
-import { byDay, chosenOf, countWords, creativesOf, onDay, partsOf, sentOn, sourceLabel, voiceFor } from "./words";
+import {
+  byDay,
+  chosenOf,
+  countWords,
+  creativesOf,
+  hasLines,
+  onDay,
+  partsOf,
+  sentOn,
+  sourceLabel,
+  voiceFor,
+} from "./words";
 
 export type PlanMode = "ready" | "approved" | "previous" | "staff";
 
@@ -70,6 +83,19 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
   // Who approves the creatives (the customer, the agency's client): "you" for her, her name for everyone else.
   const approvesCreatives = people.name(campaign.approverId);
   const yours = viewer === "customer";
+  // The strategist's task and open questions are for whoever makes and checks the plan, never for the one who approves.
+  const team = viewer === "staff" || viewer === "agency";
+  // How the words were read for claims and against the Tone of Voice: Fume's own expert only (FLOWS §31).
+  const check = viewer === "staff" && mode === "staff" ? plan.copyCheck : undefined;
+  const copyNotes = (ref: string, changed: { changedBy?: string; changedAt?: string }) =>
+    check ? (
+      <CopyNotes
+        check={check}
+        refId={ref}
+        changedBy={changedAfter(plan, changed) ? changed.changedBy : undefined}
+        people={people}
+      />
+    ) : undefined;
 
   // A product the plan uses whose details still wait to be confirmed: the Products line names it.
   const waiting = campaign.productIds
@@ -120,6 +146,31 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
               The brief
             </h2>
             <p className="ui-plandoc-summary">{voice(plan.summary)}</p>
+            {team && plan.strategicTask && (
+              <div className="ui-plandoc-group">
+                <h3 className="ui-plandoc-group-title">The task</h3>
+                <p className="ui-plandoc-words">{plan.strategicTask}</p>
+              </div>
+            )}
+            {team &&
+              plan.openQuestions &&
+              plan.openQuestions.length > 0 &&
+              mode !== "approved" &&
+              mode !== "previous" && (
+                <div className="ui-plandoc-group">
+                  <h3 className="ui-plandoc-group-title">Open questions</h3>
+                  <p className="ui-plandoc-label">
+                    What the brief leaves open. Settle them with {customer} before production.
+                  </p>
+                  <ul className="ui-plandoc-rule-list">
+                    {plan.openQuestions.map((q) => (
+                      <li key={q} className="ui-plandoc-rule">
+                        {q}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             <Collapsible className="ui-plandoc-brief">
               <CollapsibleTrigger>
                 {briefWho}
@@ -134,48 +185,57 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
           {/* 2. The direction */}
           <DirectionPart plan={plan} campaign={campaign} people={people} choose={choose} tag={tag} voice={voice} />
 
-          {/* 3. How every creative looks (the variables) */}
-          <section className="ui-plandoc-part" id="plan-variables" aria-labelledby="plan-variables-title">
-            <div className="ui-plandoc-part-head">
-              <h2 className="ui-plandoc-part-title" id="plan-variables-title">
-                How it looks
-              </h2>
-              <p className="ui-plandoc-part-lead">
-                Every creative keeps to these lines.{edit ? " Change any of them." : ""}
-              </p>
-            </div>
-            <div className="ui-plandoc-group">
-              <h3 className="ui-plandoc-group-title">The look</h3>
-              <ul className="ui-plandoc-lines">
-                {direction.look.map((l) => (
-                  <LineRow
-                    key={`${direction.id}-${l.key}`}
-                    line={l}
-                    campaignId={campaign.id}
-                    editable={edit}
-                    voice={voice}
-                    tag={<LineTag line={l} tag={tag} people={people} />}
-                  />
-                ))}
-              </ul>
-            </div>
-            <div className="ui-plandoc-group">
-              <h3 className="ui-plandoc-group-title">Products, formats and words</h3>
-              <ul className="ui-plandoc-lines">
-                {plan.content.map((l) => (
-                  <LineRow
-                    key={l.key}
-                    line={l}
-                    campaignId={campaign.id}
-                    editable={edit}
-                    voice={voice}
-                    tag={<LineTag line={l} tag={tag} people={people} />}
-                    note={l.key === "products" ? productNote : undefined}
-                  />
-                ))}
-              </ul>
-            </div>
-          </section>
+          {/* 3. How every creative looks (the variables); a plan built from the brief alone has none yet */}
+          {hasLines(plan) && (
+            <section className="ui-plandoc-part" id="plan-variables" aria-labelledby="plan-variables-title">
+              <div className="ui-plandoc-part-head">
+                <h2 className="ui-plandoc-part-title" id="plan-variables-title">
+                  How it looks
+                </h2>
+                <p className="ui-plandoc-part-lead">
+                  Every creative keeps to these lines.{edit ? " Change any of them." : ""}
+                </p>
+              </div>
+              {direction.look.length > 0 && (
+                <div className="ui-plandoc-group">
+                  <h3 className="ui-plandoc-group-title">The look</h3>
+                  <ul className="ui-plandoc-lines">
+                    {direction.look.map((l) => (
+                      <LineRow
+                        key={`${direction.id}-${l.key}`}
+                        line={l}
+                        campaignId={campaign.id}
+                        editable={edit}
+                        voice={voice}
+                        where={`${campaign.name}’s plan`}
+                        tag={<LineTag line={l} tag={tag} people={people} />}
+                      />
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {plan.content.length > 0 && (
+                <div className="ui-plandoc-group">
+                  <h3 className="ui-plandoc-group-title">Products, formats and words</h3>
+                  <ul className="ui-plandoc-lines">
+                    {plan.content.map((l) => (
+                      <LineRow
+                        key={l.key}
+                        line={l}
+                        campaignId={campaign.id}
+                        editable={edit}
+                        voice={voice}
+                        where={`${campaign.name}’s plan`}
+                        tag={<LineTag line={l} tag={tag} people={people} />}
+                        note={l.key === "products" ? productNote : copyNotes(lineRef(l), l)}
+                        anchor={check ? wordsAnchor(lineRef(l)) : undefined}
+                      />
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </section>
+          )}
 
           {/* 4. The creatives: the masters, then what follows them */}
           <section className="ui-plandoc-part" id="plan-creatives" aria-labelledby="plan-creatives-title">
@@ -205,6 +265,9 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
                   editable={edit}
                   people={people}
                   voice={voice}
+                  where={`${campaign.name}’s plan`}
+                  note={copyNotes(creativeRef(direction.id, m), m)}
+                  anchor={check ? wordsAnchor(creativeRef(direction.id, m)) : undefined}
                 />
               ))}
             </ul>

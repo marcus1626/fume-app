@@ -82,6 +82,61 @@ const background: ModeVariable = {
 
 // ─── The modes: schemas the Engine prompts from ─────────────────────────────
 
+/** A video's own settings (FLOWS §27.2): how it is paced, how shots meet, its look and its sound. */
+const videoVariables: ModeVariable[] = [
+  {
+    key: "pace",
+    label: "Pace",
+    control: "segmented",
+    section: "Edit",
+    default: "calm",
+    options: [
+      { value: "calm", label: "Calm" },
+      { value: "even", label: "Even" },
+      { value: "quick", label: "Quick" },
+    ],
+    help: "How long shots hold. The Engine cuts on the music's beats.",
+  },
+  {
+    key: "transition",
+    label: "Shots meet with",
+    control: "segmented",
+    section: "Edit",
+    default: "dissolve",
+    options: [
+      { value: "cut", label: "A cut" },
+      { value: "dissolve", label: "A dissolve" },
+      { value: "focus", label: "A focus pull" },
+    ],
+  },
+  { key: "captions", label: "Captions on the video", control: "toggle", section: "Edit", default: true },
+  {
+    key: "grade",
+    label: "Colour grade",
+    control: "select",
+    section: "Look",
+    default: "LYSNE warm",
+    options: [
+      { value: "LYSNE warm", label: "LYSNE warm" },
+      { value: "Neutral", label: "Neutral" },
+      { value: "Evening", label: "Evening" },
+    ],
+    help: "One grade over every shot, so the Engine's shots and the brand's footage match.",
+  },
+  {
+    key: "music",
+    label: "Music",
+    control: "select",
+    section: "Sound",
+    default: "late-light",
+    options: [
+      { value: "late-light", label: "Late light · slow piano" },
+      { value: "stone", label: "Stone · ambient" },
+      { value: "none", label: "No music" },
+    ],
+  },
+];
+
 export const modes: StudioMode[] = [
   {
     id: "m-free",
@@ -528,7 +583,6 @@ export const modes: StudioMode[] = [
           { value: "bottom", label: "Bottom" },
         ],
       },
-      { key: "logo", label: "Show the logo", control: "toggle", section: "Layout", default: true },
       {
         key: "textColour",
         label: "Text colour",
@@ -543,30 +597,30 @@ export const modes: StudioMode[] = [
       },
     ],
   },
+  // Video (FLOWS §27): the mode's variables are the edit's own settings, shown when no shot is selected.
+  // Round 14 (FLOWS §34.6): two modes, as Image has modes. Edit is footage first: her own video and the Engine's shots,
+  // cut on a timeline with the brand's motion on top. Motion is motion design first, from a style, with layers.
   {
-    id: "m-video",
+    id: "m-video-edit",
+    studio: "video",
+    name: "Edit",
+    description: "Your footage and the Engine's shots, cut on the music, with the brand's motion on top.",
+    output: "creative",
+    sections: ["Edit", "Look", "Sound"],
+    available: true,
+    uses: ["product"],
+    variables: videoVariables,
+  },
+  {
+    id: "m-video-motion",
     studio: "video",
     name: "Motion",
-    description: "A slow move on a picked render. Coming later.",
+    description: "Motion design from a style: Product showcase, Explainer, SaaS demo, Kinetic type, Stats, Logo sting.",
     output: "creative",
-    sections: ["Motion"],
-    available: false,
-    uses: ["product"],
-    variables: [
-      {
-        key: "move",
-        label: "Camera move",
-        control: "segmented",
-        section: "Motion",
-        default: "push",
-        options: [
-          { value: "push", label: "Push in" },
-          { value: "orbit", label: "Orbit" },
-          { value: "still", label: "Still" },
-        ],
-      },
-      { key: "seconds", label: "Length", control: "slider", section: "Motion", default: 6, min: 3, max: 15, unit: "s" },
-    ],
+    sections: ["Edit", "Look", "Sound"],
+    available: true,
+    uses: [],
+    variables: videoVariables,
   },
 ];
 

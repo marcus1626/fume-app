@@ -193,7 +193,326 @@ export interface VoiceBook {
   rules: { must: string[]; never: string[]; claims: string[] };
   audience: { who: string; cares: string[]; notFor: string };
   examples: VoiceExample[];
+  // The long Tone of Voice Fume writes (FLOWS §30, brand_books.body): the voice at work, besides the five parts.
+  /** The voice in three sentences a copywriter can work from. */
+  summary?: string;
+  /** Where the brand sits between two words, 1 (from) to 5 (to). */
+  scale?: { from: string; to: string; at: number }[];
+  mechanics?: { casing: string; punctuation: string; numbers: string; emoji: string; names: string };
+  /** The brand's own words and how to use them. */
+  vocabulary?: { word: string; use: string }[];
+  channels?: { channel: VoiceChannel; how: string; length: string; example: string }[];
+  headlines?: { pattern: string; example: string }[];
+  ctas?: { cta: string; when: string }[];
+  /** On brand against off brand, and why. */
+  pairs?: { good: string; bad: string; why: string }[];
+  sources?: BookSource[];
+  /** What Fume could not find, as questions for the brand. */
+  gaps?: string[];
 }
+
+export type VoiceChannel =
+  "instagram_feed" | "instagram_story" | "tiktok" | "paid_social" | "email" | "website" | "packaging" | "print";
+
+/** Where a part of a book comes from: the brand's own pages, its Brand DNA, its rules, its products, its taste, its
+ *  past campaigns, or Fume's proposal where the data is thin. */
+export interface BookSource {
+  part: string;
+  source: "site" | "brand_dna" | "rules" | "products" | "taste" | "memory" | "fume" | "pictures";
+  evidence: string;
+}
+
+// ─── The brand's books (FLOWS §30): a long Tone of Voice and a design system ──
+// Fume writes them; an expert checks a draft; only the customer's owner or approver approves one. The approved
+// version stays in use until a newer one is approved. A customer never sees a book being written or a draft.
+
+export type DesignRole =
+  | "primary"
+  | "secondary"
+  | "accent"
+  | "background"
+  | "surface"
+  | "text"
+  | "text_muted"
+  | "on_primary"
+  | "on_photo"
+  | "cta"
+  | "cta_text"
+  | "border"
+  | "support";
+export type DesignFormat = "feed" | "square" | "story" | "banner";
+export type DesignStyleName =
+  "display" | "h1" | "h2" | "subline" | "body" | "caption" | "label" | "cta" | "price" | "legal";
+/** The nine parts of a creative the design engine places words with. Round 15 (PROPOSED 9 Nov 2026): a component's
+ *  `role`; the components Fume writes are still named by it. */
+export type DesignComponentName =
+  "headline" | "subline" | "body" | "cta" | "price" | "badge" | "legal" | "product_name" | "logo";
+
+/** Round 15 (PROPOSED 9 Nov 2026): what a component of the brand's own is built from. */
+export type DesignComponentBase = "text" | "button" | "badge" | "shape" | "image" | "logo";
+
+/** One component of the design system. Round 15 (PROPOSED 9 Nov 2026): components are the brand's own. Fume writes
+ *  the nine the design engine knows, each named by its role; the brand's people add their own from a base, name them,
+ *  set them in the brand's tokens and take any out. Code that places words finds a component by its role
+ *  (domain/designComponents.ts `componentFor`), never by a name the brand may change. */
+export interface DesignComponent {
+  /** One of the nine roles for the components Fume writes; any name the brand gives one of its own ("Wheel"). */
+  name: DesignComponentName | (string & {});
+  purpose: string;
+  style: DesignStyleName;
+  colour: DesignRole;
+  background: DesignRole | null;
+  radius: "none" | "small" | "large" | "pill";
+  paddingPx: number;
+  rules: string[];
+  /** Round 15: what the design engine places with it. Left out on the nine Fume writes (their name is their role) and
+   *  on a component of the brand's own that only a designer places. One component per role. */
+  role?: DesignComponentName;
+  /** Round 15: what it is built from; left out on the nine Fume writes (read from the role). */
+  base?: DesignComponentBase;
+  /** Round 15: its width and height at a frame 1080 wide, when its words do not set them: a shape, an image, a round
+   *  badge (with pill corners it is a circle). */
+  sizePx?: number;
+  /** Round 15: the words the book shows it with ("25 %"); the nine take theirs from the examples. */
+  sample?: string;
+}
+
+/** The brand's design system for its campaign creatives. Sizes are in pixels at a frame 1080 pixels wide; code builds
+ *  the CSS and measures the contrast of every pair that carries words. */
+export interface DesignBook {
+  summary: string;
+  colours: { name: string; hex: string; role: DesignRole; use: string; source: BookSource["source"] }[];
+  typefaces: {
+    role: "display" | "heading" | "body" | "label";
+    family: string;
+    /** A Google Font close to it when the brand's own face cannot be loaded. */
+    fallback: string;
+    weights: number[];
+    source: "brand" | "stand_in";
+    note: string;
+  }[];
+  styles: {
+    name: DesignStyleName;
+    font: "display" | "heading" | "body" | "label";
+    sizePx: number;
+    lineHeight: number;
+    trackingEm: number;
+    weight: number;
+    case: "none" | "upper" | "title" | "lower";
+  }[];
+  spacing: { unitPx: number; scale: number[] };
+  radiusPx: { none: number; small: number; large: number; pill: number };
+  formats: {
+    format: DesignFormat;
+    marginPx: number;
+    safeTopPx: number;
+    safeBottomPx: number;
+    columns: number;
+    gutterPx: number;
+  }[];
+  logo: {
+    versions: { name: string; use: string }[];
+    clearSpace: string;
+    minWidthPx: number;
+    placements: { format: DesignFormat; where: LogoPlace; widthPct: number }[];
+  };
+  photoText: { rules: string[]; scrim: "none" | "gradient" | "flat"; scrimOpacity: number };
+  components: DesignComponent[];
+  rules: { do: string[]; dont: string[] };
+  /** Examples of graphic design: the layers on a photograph, in per cent of the frame. */
+  examples: {
+    name: string;
+    format: DesignFormat;
+    purpose: string;
+    /** What the photograph behind it shows, and where it is calm. */
+    picture: string;
+    /** A photograph of the brand's to draw it on; the live API picks one of the brand's own. */
+    image?: string;
+    layers: {
+      component: DesignComponentName;
+      text: string;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      align: "left" | "centre" | "right";
+      /** The colour when the photograph asks for another than the component's: Linen words on a dark wall. */
+      colour?: DesignRole;
+    }[];
+    why: string;
+  }[];
+  /** The tokens as CSS variables on a `.brand` class, built by code. */
+  css: string;
+  checks: {
+    contrast: { pair: string; ratio: number; ok: boolean; need: number }[];
+    missingRoles: DesignRole[];
+    fails: string[];
+  };
+  sources: BookSource[];
+  gaps: string[];
+}
+
+export type LogoPlace = "top_left" | "top_centre" | "top_right" | "bottom_left" | "bottom_centre" | "bottom_right";
+
+/** The brand's photography, read from its own pictures (FLOWS §32, PROPOSED; brand-book/look.ts): every picture the
+ *  Engine makes is shot the way the brand shoots. Fume reads at most twelve of the brand's pictures (its Brand DNA
+ *  imagery, the ones its people liked or turned down, the large ones on its website) and writes the look as a
+ *  photographer and a colourist would brief it. */
+export interface LookBook {
+  /** The photography in three sentences a photographer could shoot from. */
+  summary: string;
+  /** Four to six things that make a picture unmistakably the brand's. */
+  signature: string[];
+  camera: {
+    capture: string;
+    lenses: { focalMm: number; use: string }[];
+    aperture: string;
+    height: string;
+    distance: string;
+    motion: string;
+  };
+  light: {
+    key: string;
+    quality: string;
+    direction: string;
+    /** In words with the kelvin: "2700 K sun low through a window". */
+    colourTemperatureK: string;
+    contrast: string;
+    timeOfDay: string;
+    rules: string[];
+  };
+  colour: {
+    grade: string;
+    saturation: string;
+    blacks: string;
+    highlights: string;
+    whiteBalance: string;
+    /** The colours the pictures are built from, in words, with a hex where it is clear ("Honey amber #B5651D"). */
+    palette: string[];
+  };
+  texture: {
+    grain: "none" | "fine" | "medium" | "heavy";
+    grainCharacter: string;
+    sharpness: string;
+    surfaces: string;
+    lensCharacter: string;
+  };
+  composition: { rules: string[]; negativeSpace: string; subjectPlacement: string };
+  styling: { settings: string[]; props: string; surfaces: string; wardrobe: string };
+  people: { shows: boolean; casting: string; direction: string; skin: string };
+  retouch: string;
+  /** What the brand's pictures never do, the marks of generated pictures included. */
+  never: string[];
+  /** Four to eight recipes, one per kind of scene the brand shoots. */
+  recipes: { scene: string; camera: string; light: string; grade: string; composition: string }[];
+  /** What each picture Fume read shows of the look, by its number from 1; only pictures it was shown. */
+  evidence: { picture: number; shows: string; url: string | null; kind: LookPictureKind }[];
+  sources: BookSource[];
+  gaps: string[];
+  /** How many pictures Fume read. */
+  pictures: number;
+}
+
+/** Where a picture Fume read comes from: the Brand DNA's imagery, a picture the brand's people liked or turned down
+ *  (Taste), or the brand's website. */
+export type LookPictureKind = "brand" | "liked" | "not_us" | "site";
+
+export type BrandBookKind = "voice" | "design" | "look";
+export type BrandBookState = "writing" | "failed" | "draft" | "checked" | "changes_asked" | "approved" | "superseded";
+
+interface BookVersion {
+  id: Id;
+  version: number;
+  state: BrandBookState;
+  /** The words this version was written for: the customer's change, or Fume's own ask. */
+  ask?: string;
+  askedBy?: Id;
+  /** Why it could not be written (state failed). */
+  error?: string;
+  createdAt: Instant;
+  writtenAt?: Instant;
+  checkedBy?: Id;
+  checkedAt?: Instant;
+  approvedBy?: Id;
+  approvedAt?: Instant;
+  /** The lines Fume's people changed by hand in this version, edited in place (FLOWS §34.3, PROPOSED). */
+  edits?: BookEditMark[];
+  /** Round 15 (PROPOSED 9 Nov 2026): what the Engine proposes for this version. Only Fume's people read them. */
+  proposals?: BookProposal[];
+}
+
+/** Round 15 (PROPOSED 9 Nov 2026): a block the Engine proposes for a draft of a book, read from the brand's own
+ *  material: a component for the design system, or a block of the Tone of Voice. It sits beside the book, never in its
+ *  body: Fume's expert adds it ("Add it", `answerBookProposal`) or sets it aside ("Not now"). So nothing proposed
+ *  reaches a creative before it is added and its version is checked, and a customer never reads a proposal. */
+export interface BookProposal {
+  id: Id;
+  /** A component for the design system. */
+  component?: DesignComponent;
+  /** A block for the Tone of Voice's How we speak. */
+  block?: VoiceTrait;
+  /** Why the Engine proposes it, in a sentence. */
+  why: string;
+  /** What it read it from, as the end of "The Engine proposes this, from …": "the set's offer story and 3 past offers". */
+  from: string;
+  state: "open" | "added" | "set_aside";
+  createdAt: Instant;
+  answeredBy?: Id;
+  answeredAt?: Instant;
+}
+
+/** One edit to a book's words in place (FLOWS §34.3, PROPOSED): the path of a line in the body, as
+ *  "speak.traits.1.do" or "identity.believe.2", and its new words. `to: null` takes an item out of a list; an index one
+ *  past a list's end adds an item; `insert` puts one in before the item at that index (an undo of taking it out). */
+export interface BookEdit {
+  path: string;
+  to: string | null;
+  insert?: boolean;
+  /** With insert, the undo of taking a line out: the line comes back as it was, with the mark it had (null: a line
+   *  nobody had changed), not as a new line. */
+  mark?: BookEditMark | null;
+  // Round 15 (PROPOSED 9 Nov 2026): a book's blocks are open. Two lists hold blocks, not lines: the Tone of Voice's
+  // blocks ("speak.traits") and the design system's components ("components"). In them a block is put in whole, moved,
+  // or taken out whole (`to: null` on its path, as a line). A component's settings ("components.8.style",
+  // ".colour", ".background", ".radius", ".paddingPx", ".sizePx", ".role", ".name") take words: the brand's token's
+  // name, figures for pixels, "none" for no ground or no role (domain/bookEdits.ts).
+  /** A whole block, put in before the block at the path's index (added at the end at the list's length); `to` is null. */
+  item?: VoiceTrait | DesignComponent;
+  /** With item, the undo of taking a block out: the marks its lines had, at the place it comes back to. */
+  marks?: BookEditMark[];
+  /** The block at the path moves to this place in its list; `to` is null. */
+  moveTo?: number;
+}
+
+/** A line someone changed by hand: who, when, and what it said before (null for an item they added). */
+export interface BookEditMark {
+  path: string;
+  by: Id;
+  at: Instant;
+  from: string | null;
+  /** Round 15 (PROPOSED 9 Nov 2026): a block that came in from the Engine's proposal, by "Add it". */
+  proposal?: Id;
+}
+
+/** One line of copy, held against the brand's Tone of Voice (FLOWS §34.3, PROPOSED): the same reading as the plan's
+ *  copy check (§31), for a line someone tries on the Tone of Voice page. */
+export interface CopyLineCheck {
+  text: string;
+  channel?: VoiceChannel;
+  /** "5 of 6 words": its length against the channel's, when the channel has one. */
+  length?: { words: number; max: number };
+  findings: { kind: "avoided_word" | "unbacked_claim" | "off_voice" | "too_long"; words?: string; note: string }[];
+  /** Fume's version of the line in the voice, when it found something. */
+  rewrite?: string;
+  /** The version of the Tone of Voice it read. */
+  version: number;
+}
+
+/** One version of a book; no body while it is being written, or when writing it failed. */
+export type BrandBook =
+  | (BookVersion & { kind: "voice"; body?: VoiceBook })
+  | (BookVersion & { kind: "design"; body?: DesignBook })
+  | (BookVersion & { kind: "look"; body?: LookBook });
 
 // ─── Taste (FLOWS §14: taste keeps learning) ────────────────────────────────
 

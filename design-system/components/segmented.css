@@ -21,6 +21,10 @@
 .ui-seg-option[aria-selected="true"], .ui-seg-option[aria-pressed="true"], .ui-seg-option[data-state="active"] { color: var(--ui-text); }
 .ui-seg-option:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
 .ui-seg-option .ui-seg-count { color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; }
+/* Round 15 (PROPOSED 9 Nov 2026): a count that changes while the page is open comes into focus, like a lens, so a
+   creative arriving is seen; the first count stays still. */
+.ui-seg-option .ui-seg-count[data-arrived] { display: inline-block; animation: ui-seg-count-in var(--ui-motion-slow) var(--ui-motion-ease); }
+@keyframes ui-seg-count-in { from { opacity: 0; filter: blur(var(--ui-motion-enter-blur)); } to { opacity: 1; filter: blur(0); } }
 .ui-seg-indicator {
   position: absolute; z-index: 0; top: var(--ui-inset-seg); bottom: var(--ui-inset-seg); left: 0; width: var(--w, 0px);
   transform: translateX(var(--x, 0px)); border-radius: var(--ui-radius-action);
@@ -34,6 +38,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .ui-seg-option, .ui-seg-indicator { transition: none; }
+  .ui-seg-option .ui-seg-count[data-arrived] { animation: none; }
 }
 
 /* Round 13 (Marcus #65, #66, PROPOSED 22 Oct 2026): on Smoke glass (a dialog, a popover) the control is glass too: the

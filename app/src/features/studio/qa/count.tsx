@@ -20,7 +20,7 @@ import { due, time } from "../../../lib/time";
 
 /** QA items waiting for a check, per brand; `total` is every brand together. */
 export function useQaWaiting(workspaceId?: Id): { total: number; of: (workspaceId: Id) => number; loaded: boolean } {
-  const queue = useQaQueue(workspaceId);
+  const queue = useQaQueue(workspaceId, true);
   const waiting = (queue.data ?? []).filter((v) => v.item.state === "waiting");
   return {
     total: waiting.length,

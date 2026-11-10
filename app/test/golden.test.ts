@@ -329,6 +329,7 @@ async function readEverything(p: Person, ids: Universe) {
   await a.session();
   await a.home();
   await a.brandDna();
+  await a.brandBooks();
   await a.campaigns();
   await a.campaigns({ state: ["in_review", "in_production"] });
   await a.campaigns({ search: "gift" });
@@ -413,6 +414,7 @@ async function readEverything(p: Person, ids: Universe) {
     await a.qaQueue(id);
     await a.lookPresets(id);
     await a.engineChat(id);
+    await a.engineThreads(id);
   }
   for (const id of ids.documents) await a.document(id);
   for (const id of ids.sessions) await a.studioSession(id);
@@ -981,6 +983,15 @@ scenario("quality gate", async (golden) => {
   await a.qaCheck("qa-5");
   await a.campaign("c-solv");
   await a.creative("cr-a-v9");
+  // The Engine's findings (FLOWS §29.6): an open critical one stops the check; one is set aside and taken back; the
+  // note takes the critical one up, and the Engine's fix resolves it.
+  await a.qaCheck("qa-7");
+  await a.qaSettleFinding("qa-7", "fi-2", "accepted");
+  await a.qaSettleFinding("qa-7", "fi-2", "open");
+  await a.qaSettleFinding("qa-7", "fi-nope", "accepted");
+  await a.qaFeedback("qa-7", "The cap is glossy; LYSNE's cap is matte.", [], ["fi-1", "fi-nope"]);
+  await anna.advance(10_000);
+  await a.qaCheck("qa-7");
 });
 
 scenario("studio", async (golden) => {
@@ -1256,9 +1267,132 @@ scenario("agency brief and clients", async (golden) => {
   await even.agencyHome();
 });
 
+scenario("brand books", async (golden) => {
+  // One brand, and the people who take turns on it: Anna checks, Maja approves or asks for a change.
+  const book = golden.open("anna", { userId: "u-anna" });
+  const a = book.call;
+  await a.checkBrandBook("bb-voice-2");
+  await a.checkBrandBook("bb-voice-2");
+  await a.checkBrandBook("bb-missing");
+  book.signInAs("sander", "u-sander");
+  await a.checkBrandBook("bb-design-1");
+  book.signInAs("jonas", "u-jonas");
+  await a.brandBooks();
+  await a.approveBrandBook("bb-design-1");
+  await a.writeBrandBook({ kind: "voice" });
+  await a.writeBrandBook({ kind: "look" });
+  book.signInAs("maja", "u-maja");
+  // The Look Book (FLOWS §32): Maja approves the version Anna checked, then asks for a night look of its own.
+  await a.approveBrandBook("bb-look-1");
+  await a.askBrandBookChange({ bookId: "bb-look-1", ask: "A night look of its own, for the bedside." });
+  await a.approveBrandBook("bb-voice-2");
+  await a.approveBrandBook("bb-voice-1");
+  await a.askBrandBookChange({ bookId: "bb-design-1", ask: " " });
+  await a.askBrandBookChange({
+    bookId: "bb-design-1",
+    ask: "Burgundy for the price too, not only the call to action.",
+  });
+  await a.brandBooks();
+  book.signInAs("anna", "u-anna");
+  await a.brandBooks();
+  const [draft] = (await a.brandBooks())?.design ?? [];
+  if (draft) await a.checkBrandBook(draft.id);
+  await a.writeBrandBook({ kind: "voice", ask: "Shorter captions for stories." });
+  await a.writeBrandBook({ kind: "voice" });
+  await book.advance(1_000);
+  await a.brandBooks();
+  // Round 15 (PROPOSED 9 Nov 2026): the Engine proposes a component; Anna adds the Wheel to the draft, takes it back
+  // out, then sets it aside. An approved version takes no proposal, and a customer never answers one.
+  await a.answerBookProposal({ bookId: "bb-design-2", proposalId: "bp-design-wheel", answer: "add" });
+  await a.answerBookProposal({ bookId: "bb-design-2", proposalId: "bp-design-wheel", answer: "open" });
+  await a.answerBookProposal({ bookId: "bb-design-2", proposalId: "bp-design-wheel", answer: "not_now" });
+  await a.answerBookProposal({ bookId: "bb-voice-2", proposalId: "bp-voice-giving", answer: "add" });
+  book.signInAs("maja", "u-maja");
+  await a.answerBookProposal({ bookId: "bb-voice-1", proposalId: "bp-voice-giving", answer: "add" });
+});
+
+scenario("graphic design", async (golden) => {
+  // Anna asks Fume to lay the plan's words on V3 of Master 3 in LYSNE's design system (FLOWS §33). Each call answers
+  // with the version Fume is designing; on this still clock it is made before the next call, so asking again designs
+  // again, and each new try moves the words.
+  const anna = golden.open("anna", { userId: "u-anna" });
+  const a = anna.call;
+  await a.designAsk("doc-autumn-m3", "rv-3");
+  await a.designAsk("doc-autumn-m3", "rv-4");
+  await a.designAsk("doc-bf-1", "rv-bf-1");
+  await a.designVersion("doc-bf-1", "rv-bf-1");
+  anna.signInAs("sander", "u-sander");
+  await a.designAsk("doc-autumn-m3", "rv-3");
+  await a.designVersion("doc-autumn-m3", "rv-3");
+  anna.signInAs("maja", "u-maja");
+  await a.designAsk("doc-autumn-m3", "rv-3");
+  anna.signInAs("anna", "u-anna");
+  const designing = await a.designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the bottle.");
+  const made = designing?.versions.at(-1);
+  await anna.advance(1_000);
+  await a.document("doc-autumn-m3");
+  await a.designVersion("doc-autumn-m3", "rv-3");
+  if (made) {
+    await a.designAsk("doc-autumn-m3", made.id);
+    await a.designVersion("doc-autumn-m3", made.id);
+  }
+  await a.document("doc-autumn-m3");
+  await a.documentToCheck("doc-autumn-m3");
+  await a.qaQueue("w-lysne");
+});
+
 test("the golden master calls every member of the mock", () => {
   const missing = members.filter((m) => !covered.has(m));
   console.log(`golden master: ${members.length - missing.length} of ${members.length} FumeApi members called`);
   if (missing.length) console.log(`not called: ${missing.join(", ")}`);
   expect(members.length).toBeGreaterThan(0);
+});
+
+// Round 15 (PROPOSED 9 Nov 2026): the Engine panel's threads (Everything, a campaign's, a creative's) and "Write with
+// Engine" on a field: a suggestion she keeps or drops, and a question with the field as context.
+scenario("engine threads and writing a field", async (golden) => {
+  const anna = golden.open("anna", { userId: "u-anna" });
+  const a = anna.call;
+  const winter = { kind: "campaign", id: "c-winter" } as const;
+  const light = {
+    kind: "plan_line",
+    campaignId: "c-winter",
+    key: "light",
+    label: "Light",
+    value: "Low, warm side light from a window at dusk.",
+  } as const;
+  await a.engineThreads("w-lysne");
+  await a.engineChat("w-lysne", winter);
+  await a.engineChat("w-lysne", { kind: "document", id: "doc-autumn-m3" });
+  await a.engineWrite(light);
+  await a.engineWrite({
+    kind: "plan_creative",
+    campaignId: "c-winter",
+    creativeId: "pc-w-a-m1",
+    part: "text",
+    label: "Master 1’s words",
+    value: "En rolig kveld.",
+  });
+  await a.engineWrite({
+    kind: "book_line",
+    workspaceId: "w-lysne",
+    path: "identity.who",
+    label: "Who we are",
+    value: "LYSNE makes body oils. Made in Norway.",
+  });
+  await a.engineSay("w-lysne", "Write it shorter", { topic: winter, field: light });
+  await anna.advance(3_000);
+  await a.engineSay("w-lysne", "Is it on brand?", { topic: winter, field: light });
+  await anna.advance(3_000);
+  await a.engineSay("w-lysne", "What waits for a check?", { topic: winter });
+  await anna.advance(3_000);
+  await a.engineSay("w-lysne", "Packshots of the gift sets", { topic: winter });
+  await anna.advance(3_000);
+  await a.engineChat("w-lysne", winter);
+  await a.engineChat("w-lysne");
+  await a.engineThreads("w-lysne");
+  // A customer never talks to the Engine
+  const maja = golden.open("maja", {}).call;
+  await maja.engineThreads("w-lysne");
+  await maja.engineWrite(light);
 });

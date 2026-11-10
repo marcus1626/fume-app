@@ -32,9 +32,11 @@ import { directory } from "../../shell/people";
 
 /** Owner, approver and member sort the catalogue; only owner and approver decide on Fume's proposals. */
 export function useCatalogueRights() {
-  const role = useSession().data?.role ?? null;
+  const session = useSession().data;
+  const role = session?.role ?? null;
   return {
-    canEdit: role === "owner" || role === "approver" || role === "member",
+    // The agency sets up its client's products, as it sets up the client.
+    canEdit: role === "owner" || role === "approver" || role === "member" || Boolean(session?.agency),
     canDecide: role === "owner" || role === "approver",
   };
 }

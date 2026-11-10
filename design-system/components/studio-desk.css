@@ -20,15 +20,16 @@
                    <img/><span class="ui-desk-layers" style="--layer-ink"><button class="ui-desk-layer" data-kind
                    style="--x --y --w --h"></button></span></span>[<figcaption class="ui-desk-caption"/> comparing]</figure></div>
                </section>
-               <div class="ui-desk-engine" data-proposed><div class="ui-desk-engine-change"><div class="ui-desk-engine-words">
-                 <p class="ui-desk-engine-line"> The Engine changed … </p> | <ul class="ui-desk-engine-parts"><li
-                 class="ui-desk-engine-part" data-read><svg/><span class="ui-desk-engine-part-text"><span
-                 class="ui-desk-engine-said">"…"</span><span class="ui-desk-engine-what"/><span class="ui-desk-engine-note"/>
-                 </span> Yes </li></ul></div><div class="ui-desk-engine-actions"> Undo · Keep and render </div></div>
-                 <form class="ui-desk-engine-form"><svg class="ui-desk-engine-mark"/> input · Send · Render </form></div>
+               [the Engine's lock bar while it fixes the creative from Check]
                <ol class="ui-desk-versions"><li><button class="ui-desk-version" aria-current> thumb · V3 · line · flags
                </button></li></ol></main>
              <aside class="ui-desk-panel ui-desk-vars"><h2 class="ui-desk-panel-title"/> folds </aside></div>
+   The Engine's change card (round 15: in the Engine panel's thread, engine-panel.css):
+             <div class="ui-desk-engine-change ui-engine-change"><div class="ui-desk-engine-words"> <p class="ui-message-text">
+               On the board now: <span class="ui-desk-engine-what"/></p> | <ul class="ui-desk-engine-parts"><li
+               class="ui-desk-engine-part" data-read><svg/><span class="ui-desk-engine-part-text"><span
+               class="ui-desk-engine-said">"…"</span><span class="ui-desk-engine-what"/><span class="ui-desk-engine-note"/>
+               </span> Yes </li></ul></div><div class="ui-desk-engine-actions"> Undo · Keep and render </div></div>
    Round 12 (UX review DLAY-3, DLAY-6, DWAY-10, DLOAD-15; PROPOSED 20 Oct 2026): no breadcrumb: the back arrow names
    where she came from, the creative's name is plain text with the brand and mode quiet under it, and the campaign is
    a chip. The board belongs to the creative: its view tools sit on a narrow glass rail at its left edge (their names
@@ -233,9 +234,14 @@
 .ui-desk-layer-pick:active:not(:disabled) { background: var(--ui-item-bg-pressed); }
 .ui-desk-layer-pick:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: calc(var(--ui-size-ring) * -1); }
 .ui-desk-layer-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* A layer of Fume's design (FLOWS §34.5): its name, and its words under it in secondary */
+span.ui-desk-layer-pick { cursor: default; padding-block: var(--ui-space-xs); }
+span.ui-desk-layer-pick:has(.ui-desk-layer-text) > svg { align-self: flex-start; margin-block-start: var(--ui-space-xs); }
+.ui-desk-layer-name:has(.ui-desk-layer-text) { display: grid; white-space: normal; }
+.ui-desk-layer-text { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); overflow-wrap: anywhere; }
 .ui-desk-layer-eye[data-hidden] { opacity: .4; }
 
-/* ---------- the middle: board, Engine bar, versions ---------- */
+/* ---------- the middle: board, versions ---------- */
 
 .ui-desk-centre { grid-area: centre; display: flex; flex-direction: column; gap: var(--ui-space-sm); min-width: 0; min-height: 0; }
 .ui-desk-canvas {
@@ -280,7 +286,13 @@
 .ui-desk-canvas[data-zoom="full"] .ui-desk-stage { overflow: auto; align-items: flex-start; justify-content: flex-start; scrollbar-width: thin; scrollbar-color: var(--ui-scroll-thumb) transparent; }
 .ui-desk-canvas[data-zoom="full"] .ui-desk-shot > img { max-width: none; max-height: none; }
 .ui-desk-caption { font-size: var(--ui-type-label); color: var(--ui-text-secondary); }
+/* A picture under the bar (FLOWS §34.1): the warning floats at the board's top, the picture shrinks to stay whole */
+.ui-desk-score-warn { position: absolute; z-index: 2; inset-block-start: var(--ui-space-md); inset-inline: var(--ui-space-md); width: max-content; max-width: calc(100% - 2 * var(--ui-space-md)); margin-inline: auto; }
+.ui-desk-canvas[data-warn] .ui-desk-stage { padding-block-start: calc(var(--ui-space-md) + var(--ui-size-control-sm) + var(--ui-space-md)); }
 .ui-desk-empty { margin: 0; max-width: calc(var(--ui-size-hit) * 8); text-align: center; font-size: var(--ui-type-control); color: var(--ui-text-secondary); }
+/* Only a version that did not render (FLOWS §29): the line and a way to its reason */
+div.ui-desk-empty { display: grid; justify-items: center; gap: var(--ui-space-md); }
+.ui-desk-empty-text { margin: 0; text-wrap: pretty; }
 
 /* Design: the layers drawn over the render, each a box you can select. Their type is the creative's own, scaled
    to the frame. */
@@ -297,24 +309,19 @@
 .ui-desk-layer[data-kind="logo"] { font-size: 4cqi; letter-spacing: .24em; /* gate-allow:type-from-tokens the brand's mark, scaled to the frame */ }
 /* the selection box: the one place the desk draws a line, as Photoshop does, because a selection has no surface */
 .ui-desk-layer::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
-@media (hover: hover) { .ui-desk-layer:hover:not(:disabled) { outline: var(--ui-size-ring) dashed var(--ui-glass-fg-secondary); outline-offset: var(--ui-space-xs); /* gate-allow:few-strokes a selection box over a creative has no surface to step */ } }
+@media (hover: hover) { .ui-desk-layer:hover:not(:disabled):not([aria-pressed="true"]) { outline: var(--ui-size-ring) dashed var(--ui-glass-fg-secondary); outline-offset: var(--ui-space-xs); /* gate-allow:few-strokes a selection box over a creative has no surface to step */ } }
 .ui-desk-layer:active:not(:disabled) { opacity: .8; }
 .ui-desk-layer[aria-pressed="true"] { outline: var(--ui-size-ring) solid var(--ui-action-primary-fg); outline-offset: var(--ui-space-xs); /* gate-allow:few-strokes the selected layer's box, as in Photoshop */ }
 .ui-desk-layer:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-space-xs); }
 .ui-desk-layer:disabled { cursor: default; }
 
-/* The Engine bar: docked in its own row under the board, on the panels' Porcelain, so nothing floats over the
-   creative. The change card sits over the field, part by part; Send and Render say what they do. */
-.ui-desk-engine {
-  display: grid; flex-shrink: 0; gap: var(--ui-space-sm); min-width: 0; padding: var(--ui-space-sm);
-  border-radius: var(--ui-radius-card); background: var(--ui-ground); box-shadow: var(--ui-depth-sheet);
-}
+/* The Engine's change card, part by part (round 15, PROPOSED 9 Nov 2026: in the Engine panel's thread; the Engine bar
+   under the board is gone, and Render is in the top bar). */
 .ui-desk-engine-change {
   display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--ui-space-sm) var(--ui-space-lg); min-width: 0;
   padding: var(--ui-space-sm) var(--ui-space-sm) var(--ui-space-xs) var(--ui-space-md); outline: none;
 }
 .ui-desk-engine-words { flex: 1 1 calc(var(--ui-size-hit) * 6); min-width: 0; }
-.ui-desk-engine-line { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.45; color: var(--ui-text-secondary); }
 .ui-desk-engine-what { color: var(--ui-text); font-weight: var(--ui-type-weight-medium); }
 .ui-desk-engine-parts { display: grid; gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; min-width: 0; }
 .ui-desk-engine-part { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); }
@@ -324,9 +331,6 @@
 .ui-desk-engine-said { color: var(--ui-text-secondary); }
 .ui-desk-engine-note { color: var(--ui-text-tertiary); }
 .ui-desk-engine-actions { display: flex; align-items: center; gap: var(--ui-space-xs); margin-inline-start: auto; }
-.ui-desk-engine-form { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; padding-inline-start: var(--ui-space-sm); }
-.ui-desk-engine-mark { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-secondary); }
-.ui-desk-engine-input { flex: 1 1 auto; min-width: 0; border-radius: var(--ui-radius-action); }
 
 /* A control the Engine proposes to change waits on the sunken step until she keeps or undoes it */
 .ui-desk-var { min-width: 0; border-radius: var(--ui-radius-item); transition: background-color var(--ui-motion-slow) var(--ui-motion-ease); }
@@ -344,7 +348,9 @@
 .ui-desk-sheet .ui-sheet-body { display: grid; align-content: start; gap: var(--ui-space-xl); }
 .ui-desk-sheet-ready { display: grid; gap: var(--ui-space-sm); font-size: var(--ui-type-label); color: var(--ui-glass-fg-secondary); }
 .ui-desk-sheet-part { display: grid; gap: var(--ui-space-sm); min-width: 0; }
-.ui-desk-sheet-head { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-glass-fg-secondary); }
+/* round 14 (FLOWS §34.2): a part's title is the rows' size in the glass's own colour, so it is read first */
+.ui-desk-sheet-head { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-glass-fg); }
+.ui-desk-sheet-note { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-glass-fg-secondary); text-wrap: pretty; }
 .ui-desk-sheet .ui-desk-fact, .ui-desk-sheet .ui-desk-fact-text { color: var(--ui-glass-fg); } /* r13 #62: every word on the glass is light */
 .ui-desk-sheet .ui-desk-fact-label, .ui-desk-sheet .ui-desk-fact-icon { color: var(--ui-glass-fg-secondary); }
 @media (hover: hover) { .ui-desk-sheet .ui-desk-fact:hover { background: var(--ui-glass-item-hover); } }
@@ -395,6 +401,110 @@ button.ui-desk-version:disabled { cursor: default; }
 .ui-desk-version-flags { display: flex; align-items: center; gap: var(--ui-space-xs); color: var(--ui-text); }
 .ui-desk-version-flags[data-clean] { color: var(--ui-text-tertiary); }
 .ui-desk-version-flags > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+/* A version that did not render (FLOWS §29): no picture, so the sunken ground holds a quiet picture mark, and Rouge is
+   only the mark before its line (Rouge on Porcelain 4.9:1); the words stay Ink. It still opens: the panel says why. */
+.ui-desk-version-thumb[data-none] { display: grid; place-items: center; aspect-ratio: 1; color: var(--ui-text-tertiary); }
+.ui-desk-version-thumb[data-none] > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-desk-version-flags[data-failed] > svg { color: var(--ui-danger); }
+
+/* The Engine behind a version, in the right panel (FLOWS §29): what was asked, what the prompt had to carry and what
+   the checks said, the prompt itself, and a few facts. On the Smoke glass every word is Porcelain; a finding that
+   works against a rule carries the solid Rouge disc cut with Porcelain, as an error on glass does (round 8). */
+.ui-desk-trace-asked { margin: 0; padding-inline: var(--ui-space-sm); font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-glass-fg); text-wrap: pretty; }
+.ui-desk-trace-head { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); min-width: 0; }
+.ui-desk-trace-list { display: grid; gap: var(--ui-space-md); margin: 0; padding: 0 var(--ui-space-sm); list-style: none; min-width: 0; }
+.ui-desk-trace-list[data-dense] { gap: var(--ui-space-sm); }
+.ui-desk-trace-item { display: grid; grid-template-columns: var(--ui-size-icon-sm) minmax(0, 1fr); align-items: start; gap: var(--ui-space-sm); font-size: var(--ui-type-label); line-height: 1.45; }
+.ui-desk-trace-mark { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); margin-block: calc((1lh - var(--ui-size-icon-sm)) / 2); color: var(--ui-glass-fg-secondary); }
+.ui-desk-trace-item[data-verdict="against"] .ui-desk-trace-mark {
+  border-radius: 50%; color: var(--ui-field-glass-error-mark); background: var(--ui-field-glass-error-cut);
+  box-shadow: inset 0 0 0 1px var(--ui-field-glass-error-mark); /* gate-allow:few-strokes  fills the sub-pixel rim between the drawn disc and its box, so no Porcelain halo shows: not a line */
+}
+.ui-desk-trace-text { display: grid; min-width: 0; }
+.ui-desk-trace-what { color: var(--ui-glass-fg); overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-desk-trace-note { color: var(--ui-glass-fg-secondary); text-wrap: pretty; }
+.ui-desk-trace-prompt {
+  margin: 0; padding: var(--ui-space-md); border-radius: var(--ui-radius-item); background: var(--ui-glass-button-clear);
+  color: var(--ui-glass-fg); font-family: var(--ui-type-family-data); /* gate-allow:mono-is-data  the prompt is the data the Engine sent to the image model */
+  font-size: var(--ui-type-label); line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.ui-desk-trace-prompt:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-size-ring-offset); }
+
+/* The ledger (FLOWS §29.5): one quiet row per group, its count after the title, opened to the pieces. A group with a
+   piece that went in but was not found opens by itself and names it in its count; only that piece carries Rouge. */
+.ui-desk-trace-groups { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-desk-trace-group { gap: var(--ui-space-xs); }
+.ui-desk-trace-group-trigger {
+  display: flex; align-items: center; gap: var(--ui-space-sm); width: 100%; min-width: 0; min-height: var(--ui-size-hit);
+  margin: 0; padding: 0 var(--ui-space-sm); border: 0; border-radius: var(--ui-radius-item); background: transparent;
+  color: var(--ui-glass-fg); font: inherit; font-size: var(--ui-type-control); text-align: start;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+@media (hover: hover) { .ui-desk-trace-group-trigger:hover { background: var(--ui-glass-button-clear); } }
+.ui-desk-trace-group-trigger:active { background: var(--ui-glass-button-clear); }
+.ui-desk-trace-group-trigger:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-size-ring-offset); }
+.ui-desk-trace-group-trigger > .ui-accordion-chevron { color: var(--ui-glass-fg-secondary); }
+.ui-desk-trace-group-title { flex: 1; min-width: 0; }
+.ui-desk-trace-group-meta { flex: none; font-size: var(--ui-type-label); color: var(--ui-glass-fg-secondary); font-variant-numeric: tabular-nums; }
+.ui-desk-trace-group .ui-collapsible-content > div > .ui-desk-trace-list { padding-block: var(--ui-space-xs) var(--ui-space-sm); }
+.ui-desk-trace-item[data-verdict="left"] .ui-desk-trace-what { color: var(--ui-glass-fg-secondary); }
+
+/* ---------- graphic design by Fume (FLOWS §33, PROPOSED 4 Nov 2026) ----------
+   Fume lays the plan's words on a version in the brand's design system; it comes back as a version of its own.
+   Markup: [strip] <button class="ui-btn"> Add graphic design to V3 </button> beside Add a picture made by hand;
+           [tile] <span class="ui-desk-version-thumb" data-designing><img/></span> … Fume is designing | Designed from V3
+           [board] <span class="ui-desk-shot" data-designing><img/></span> | <span class="ui-desk-shot"><img/>
+             <span class="ui-design-drawn"><span class="ui-design-shade" data-from/><span class="ui-design-words"
+             data-role="headline|subline|cta"><span class="ui-design-words-text" data-fill/></span></span></span>
+           [review, on glass or on the page] <ul class="ui-design-list" data-tone="glass|page" data-dense><li
+             class="ui-design-item" data-severity|data-verdict|data-check="ok|soft|failed"><svg class="ui-design-mark"/>
+             <span class="ui-design-text"><span class="ui-design-what"/><span class="ui-design-note"/></span></li></ul>
+           [dialog] <form class="ui-design-form"><section class="ui-design-part"><h3 class="ui-design-head"/>
+             <dl class="ui-design-rows"/> | <p class="ui-design-line"/></section> <p class="ui-design-blocked"/> field </form>
+   The words on a demo picture are drawn here; the live picture is the designed PNG. Never Amber: nothing here is a
+   person's check. Rouge marks only a hard check that failed. */
+.ui-desk-shot[data-designing] > img, .ui-desk-version-thumb[data-designing] > img { opacity: .6; }
+.ui-design-drawn { position: absolute; inset: 0; overflow: hidden; border-radius: var(--ui-radius-item); container-type: inline-size; pointer-events: none; }
+.ui-design-shade { position: absolute; inset-inline: 0; height: 45%; }
+.ui-design-shade[data-from="top"] { inset-block-start: 0; }
+.ui-design-shade[data-from="bottom"] { inset-block-end: 0; }
+.ui-design-words { position: absolute; display: flex; }
+.ui-design-words-text { display: inline-block; text-wrap: balance; }
+.ui-design-words-text[data-fill] { white-space: nowrap; }
+
+.ui-design-list { display: grid; gap: var(--ui-space-md); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.ui-design-list[data-dense] { gap: var(--ui-space-sm); }
+.ui-design-list[data-tone="glass"] { padding-inline: var(--ui-space-sm); }
+.ui-design-item { display: grid; grid-template-columns: var(--ui-size-icon-sm) minmax(0, 1fr); align-items: start; gap: var(--ui-space-sm); font-size: var(--ui-type-label); line-height: 1.45; }
+.ui-design-list[data-tone="page"] .ui-design-item { grid-template-columns: var(--ui-size-icon) minmax(0, 1fr); font-size: var(--ui-type-control); line-height: 1.5; }
+.ui-design-mark { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); margin-block: calc((1lh - var(--ui-size-icon-sm)) / 2); color: var(--ui-glass-fg-secondary); }
+.ui-design-list[data-tone="page"] .ui-design-mark { width: var(--ui-size-icon); height: var(--ui-size-icon); margin-block: calc((1lh - var(--ui-size-icon)) / 2); color: var(--ui-text-tertiary); }
+.ui-design-item:is([data-severity="major"], [data-severity="critical"], [data-verdict="needs_work"], [data-check="soft"]) .ui-design-mark { color: var(--ui-glass-fg); }
+.ui-design-list[data-tone="page"] .ui-design-item:is([data-severity="major"], [data-severity="critical"], [data-verdict="needs_work"], [data-check="soft"]) .ui-design-mark { color: var(--ui-text); }
+.ui-design-item[data-check="failed"] .ui-design-mark { color: var(--ui-danger); }
+.ui-design-text { display: grid; min-width: 0; }
+.ui-design-what { color: var(--ui-glass-fg); overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-design-note { color: var(--ui-glass-fg-secondary); text-wrap: pretty; }
+.ui-design-list[data-tone="page"] .ui-design-what { color: var(--ui-text); }
+.ui-design-list[data-tone="page"] .ui-design-note { font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-design-list + .ui-design-list { margin-block-start: var(--ui-space-sm); }
+
+.ui-design-form { display: grid; gap: var(--ui-space-lg); min-width: 0; }
+.ui-design-part { display: grid; gap: var(--ui-space-sm); min-width: 0; }
+.ui-design-head { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-glass-fg); }
+.ui-design-line, .ui-design-quiet, .ui-design-loading, .ui-design-file-line { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-glass-fg); text-wrap: pretty; }
+.ui-design-quiet { color: var(--ui-glass-fg-secondary); }
+.ui-design-file-line { padding-inline: var(--ui-space-sm); font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-glass-fg-secondary); }
+.ui-design-link { color: inherit; text-decoration: underline; text-underline-offset: 0.2em; }
+.ui-design-link:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring-on-glass); outline-offset: var(--ui-size-ring-offset); border-radius: var(--ui-radius-item); }
+.ui-design-rows { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 5fr); gap: var(--ui-space-sm) var(--ui-space-lg); margin: 0; font-size: var(--ui-type-control); line-height: 1.45; }
+.ui-design-rows[data-tone="glass"] { padding-inline: var(--ui-space-sm); font-size: var(--ui-type-label); }
+.ui-design-rows > div { display: contents; }
+.ui-design-rows dt { margin: 0; min-width: 0; color: var(--ui-glass-fg-secondary); }
+.ui-design-rows dd { margin: 0; min-width: 0; color: var(--ui-glass-fg); overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-design-blocked { display: flex; align-items: flex-start; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-glass-fg); text-wrap: pretty; }
+.ui-design-blocked > svg { flex: none; width: var(--ui-size-icon); height: 1lh; color: var(--ui-glass-fg-secondary); }
 
 /* ---------- a phone: the board and the versions, read-only ---------- */
 
@@ -425,3 +535,55 @@ button.ui-desk-version:disabled { cursor: default; }
 @media (prefers-reduced-transparency: reduce) {
   .ui-desk-rail { background: var(--ui-glass-bg-solid); }
 }
+
+/* Round 15 (PROPOSED 9 Nov 2026): the shown version's scores open on the board, from "Scores" on the rail or from the
+   warning above a version under the bar. A light card at the board's right edge, never over the rail; the picture
+   stays whole behind it. Markup: <section class="ui-desk-scores"><header class="ui-desk-scores-head"><h3/><button/>
+   </header><div class="ui-score-board"/></section>. */
+.ui-score-warn-open { position: relative; display: inline-flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; padding: 0; border: 0; border-radius: var(--ui-radius-action); background: none; color: inherit; font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.ui-score-warn-open::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-score-warn-open > svg { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); }
+.ui-score-warn-open:active { transform: scale(0.97); }
+.ui-score-warn-open:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-desk-scores { position: absolute; z-index: 3; inset-block-start: var(--ui-space-md); inset-inline-end: var(--ui-space-md); display: grid; gap: var(--ui-space-md); width: min(304px, calc(100% - 2 * var(--ui-space-md))); max-height: calc(100% - 2 * var(--ui-space-md)); overflow-y: auto; padding: var(--ui-inset-float); border-radius: var(--ui-radius-card); background: var(--ui-surface); box-shadow: var(--ui-depth-sheet); }
+.ui-desk-scores-head { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); margin-block: calc(var(--ui-space-xs) * -1); }
+.ui-desk-scores-title { margin: 0; font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+/* the picture makes room for the scores, so nothing floats over it; the warning centres on what is left */
+.ui-desk-canvas[data-scores] { --desk-scores: calc(min(304px, 50%) + var(--ui-space-md)); }
+.ui-desk-canvas[data-scores] .ui-desk-stage { padding-inline-end: var(--desk-scores); }
+.ui-desk-canvas[data-scores] .ui-desk-score-warn { inset-inline-end: calc(var(--desk-scores) + var(--ui-space-md)); }
+.ui-desk-canvas[data-scores] .ui-desk-scores { width: min(304px, 50%); }
+@media (prefers-reduced-motion: reduce) { .ui-score-warn-open:active { transform: none; } }
+
+/* ---------- on the canvas, round 16 (PROPOSED 9 Nov 2026), as in Figma ----------
+   <span class="ui-desk-layers" data-dragging>
+     <span class="ui-desk-grid" [data-lines]><span class="ui-desk-grid-col" style="--start --end"/> <span class="ui-desk-grid-row"/></span>
+     <span class="ui-desk-guide" data-axis="x|y" style="--at"/>
+     <button class="ui-desk-layer" data-movable data-dragged> words <span class="ui-desk-layer-handle" data-edge="start|end"/></button>
+   The grid is a light tint over the picture (its columns, its rows); a grid without gutters (thirds) is drawn as lines.
+   A guide is the line a dragged layer snapped to. Both use difference blending, so they read on a light or a dark
+   picture without a colour of their own. */
+.ui-desk-layer[data-movable] { touch-action: none; user-select: none; }
+.ui-desk-layer[data-movable]:not(:disabled) { cursor: grab; }
+.ui-desk-layers[data-dragging], .ui-desk-layers[data-dragging] .ui-desk-layer { cursor: grabbing; }
+.ui-desk-layer[data-dragged] { opacity: 1; }
+.ui-desk-grid { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: difference; }
+.ui-desk-grid-col, .ui-desk-grid-row { position: absolute; background: var(--ui-text-on-ink); opacity: .14; }
+.ui-desk-grid-col { inset-block: 0; left: calc(var(--start) * 100%); width: calc((var(--end) - var(--start)) * 100%); }
+.ui-desk-grid-row { inset-inline: 0; top: calc(var(--start) * 100%); height: calc((var(--end) - var(--start)) * 100%); }
+.ui-desk-grid[data-lines] .ui-desk-grid-col, .ui-desk-grid[data-lines] .ui-desk-grid-row { background: transparent; opacity: .5; }
+.ui-desk-grid[data-lines] .ui-desk-grid-col:not(:last-of-type) { box-shadow: inset calc(var(--ui-size-ring) * -0.5) 0 0 var(--ui-text-on-ink); }
+.ui-desk-grid[data-lines] .ui-desk-grid-row:not(:last-of-type) { box-shadow: inset 0 calc(var(--ui-size-ring) * -0.5) 0 var(--ui-text-on-ink); }
+.ui-desk-guide { position: absolute; pointer-events: none; background: var(--ui-text-on-ink); mix-blend-mode: difference; }
+.ui-desk-guide[data-axis="x"] { inset-block: 0; left: calc(var(--at) * 100%); width: calc(var(--ui-size-ring) * .5); transform: translateX(-50%); }
+.ui-desk-guide[data-axis="y"] { inset-inline: 0; top: calc(var(--at) * 100%); height: calc(var(--ui-size-ring) * .5); transform: translateY(-50%); }
+/* the width handles: a short bar on each side of the picked layer, its hit area wider than it looks */
+.ui-desk-layer-handle {
+  position: absolute; inset-block-start: 50%; width: var(--ui-space-xs); height: calc(var(--ui-space-md) + var(--ui-space-sm));
+  border-radius: var(--ui-radius-check); background: var(--ui-action-primary-fg); cursor: ew-resize; touch-action: none;
+  transform: translate(-50%, -50%); -webkit-tap-highlight-color: transparent;
+}
+.ui-desk-layer-handle[data-edge="start"] { inset-inline-start: calc(var(--ui-space-xs) * -1); }
+.ui-desk-layer-handle[data-edge="end"] { inset-inline-start: calc(100% + var(--ui-space-xs)); }
+.ui-desk-layer-handle::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-desk-layer-handle:active { transform: translate(-50%, -50%) scaleY(1.15); }

@@ -147,15 +147,27 @@ function DetailRegion({
   const [open, setOpen] = useState(false);
   const fix = useFixProduct();
   const toast = useToast();
-  const marker = !find.ok && (
-    <span className="ui-pfix-marker">
-      <Icon name="triangle-alert" />
-      Reads {find.read}
-      {/* side by side the pictures are narrow: compare shows only what it reads */}
-      <span className="ui-pfix-should"> · should be {token.value}</span>
-    </span>
-  );
-  const label = `${token.label}: the Engine reads ${find.read}${find.ok ? "" : `, should be ${token.value}`}`;
+  // A part is compared, not read: its marker names the part, and the note says what differs.
+  const part = find.kind === "part";
+  const missing = part && find.read === "Not on the picture.";
+  const marker =
+    !find.ok &&
+    (part ? (
+      <span className="ui-pfix-marker">
+        <Icon name="triangle-alert" />
+        {token.label} {missing ? "missing" : "differs"}
+      </span>
+    ) : (
+      <span className="ui-pfix-marker">
+        <Icon name="triangle-alert" />
+        Reads {find.read}
+        {/* side by side the pictures are narrow: compare shows only what it reads */}
+        <span className="ui-pfix-should"> · should be {token.value}</span>
+      </span>
+    ));
+  const label = part
+    ? `${token.label}: ${find.ok ? "as on the real product" : (find.note ?? "not as on the real product")}`
+    : `${token.label}: the Engine reads ${find.read}${find.ok ? "" : `, should be ${token.value}`}`;
   if (readOnly)
     return (
       <span
@@ -195,9 +207,13 @@ function DetailRegion({
         <PopoverHeader>
           <PopoverTitle id={`pfix-${token.id}`}>{token.label}</PopoverTitle>
           <PopoverDescription>
-            {find.ok
-              ? `The Engine reads ${find.read}, as on the real product.`
-              : `The Engine reads ${find.read}. The real product says ${token.value}.`}
+            {part
+              ? find.ok
+                ? "The Engine compared it with the real product: it matches."
+                : (find.note ?? "The Engine compared it with the real product: it differs.")
+              : find.ok
+                ? `The Engine reads ${find.read}, as on the real product.`
+                : `The Engine reads ${find.read}. The real product says ${token.value}.`}
           </PopoverDescription>
         </PopoverHeader>
         <div className="ui-pfix-compare">

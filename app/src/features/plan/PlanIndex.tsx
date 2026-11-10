@@ -13,17 +13,39 @@ const scrollerOf = (el: Element | null) =>
 /** How much of the scroller's top the sticky rows cover: the parts say it themselves (scroll-margin-top). */
 const covered = (el: Element | null) => (el ? parseFloat(getComputedStyle(el).scrollMarginTop) || 0 : 0);
 
+/** Glides the page to an element, clear of the sticky rows (its own scroll-margin), and gives it the keyboard's focus. */
+export function glideTo(id: string, from: Element | null): boolean {
+  const el = document.getElementById(id);
+  const s = scrollerOf(from);
+  if (!el || !s) return false;
+  const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  const y = el.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop - covered(el);
+  s.scrollTo({ top: Math.max(0, y), behavior: reduce ? "auto" : "smooth" });
+  // the keyboard lands where the eye does
+  el.setAttribute("tabindex", "-1");
+  el.focus({ preventScroll: true });
+  return true;
+}
+
+type IndexPart = { id: string; label: string };
+
 export function PlanIndex({
   label = "In this plan",
   parts = partsOf(),
+  groups,
+  className,
 }: {
   label?: string;
-  parts?: { id: string; label: string }[];
+  parts?: IndexPart[];
+  /** Parts under small group titles, as a book's index has them (FLOWS §34.3): "Voice", "Copy", "This version". */
+  groups?: { title: string; parts: IndexPart[] }[];
+  className?: string;
 }) {
   const nav = useRef<HTMLElement>(null);
   const [current, setCurrent] = useState<string | null>(null);
   const picked = useRef<{ id: string; at: number } | null>(null);
-  const ids = parts.map((p) => p.id).join(" ");
+  const all = groups ? groups.flatMap((g) => g.parts) : parts;
+  const ids = all.map((p) => p.id).join(" ");
 
   useEffect(() => {
     const s = scrollerOf(nav.current);
@@ -59,39 +81,46 @@ export function PlanIndex({
 
   const go = (e: MouseEvent<HTMLAnchorElement>, id: string) => {
     if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    const el = document.getElementById(id);
-    const s = scrollerOf(nav.current);
-    if (!el || !s) return;
+    if (!document.getElementById(id) || !scrollerOf(nav.current)) return;
     e.preventDefault();
     picked.current = { id, at: Date.now() };
     setCurrent(id);
-    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const y = el.getBoundingClientRect().top - s.getBoundingClientRect().top + s.scrollTop - covered(el);
-    s.scrollTo({ top: Math.max(0, y), behavior: reduce ? "auto" : "smooth" });
-    // the keyboard lands where the eye does
-    el.setAttribute("tabindex", "-1");
-    el.focus({ preventScroll: true });
+    glideTo(id, nav.current);
   };
 
+  const list = (items: IndexPart[]) => (
+    <ul className="ui-plandoc-index-list">
+      {items.map((p) => (
+        <li key={p.id}>
+          <a
+            href={`#${p.id}`}
+            className="ui-plandoc-index-link"
+            aria-current={current === p.id ? "location" : undefined}
+            onClick={(e) => go(e, p.id)}
+          >
+            {p.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
   return (
-    <nav ref={nav} className="ui-plandoc-index" aria-label={label}>
-      <p className="ui-plandoc-index-title" aria-hidden="true">
-        {label}
-      </p>
-      <ul className="ui-plandoc-index-list">
-        {parts.map((p) => (
-          <li key={p.id}>
-            <a
-              href={`#${p.id}`}
-              className="ui-plandoc-index-link"
-              aria-current={current === p.id ? "location" : undefined}
-              onClick={(e) => go(e, p.id)}
-            >
-              {p.label}
-            </a>
-          </li>
-        ))}
-      </ul>
+    <nav ref={nav} className={className ?? "ui-plandoc-index"} aria-label={label}>
+      {groups ? (
+        groups.map((g) => (
+          <div key={g.title} className="ui-plandoc-index-group">
+            <p className="ui-plandoc-index-title">{g.title}</p>
+            {list(g.parts)}
+          </div>
+        ))
+      ) : (
+        <>
+          <p className="ui-plandoc-index-title" aria-hidden="true">
+            {label}
+          </p>
+          {list(parts)}
+        </>
+      )}
     </nav>
   );
 }

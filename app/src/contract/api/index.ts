@@ -17,6 +17,7 @@ import type { ProductsApi } from "./products";
 import type { QualityApi } from "./quality";
 import type { ReviewApi } from "./review";
 import type { StudioApi } from "./studio";
+import type { TrainApi } from "./train";
 
 export * from "./identity";
 export * from "./home";
@@ -32,6 +33,7 @@ export * from "./delivery";
 export * from "./conversation";
 export * from "./agency";
 export * from "./notifications";
+export * from "./train";
 
 export interface FumeApi
   extends
@@ -49,4 +51,5 @@ export interface FumeApi
     ConversationApi,
     AgencyApi,
     NotificationsApi,
+    TrainApi,
     EventsApi {}

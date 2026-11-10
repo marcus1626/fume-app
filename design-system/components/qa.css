@@ -10,13 +10,16 @@
                    <span class="ui-qa-layer" data-style="headline" style="--x:.08;--y:.72;--w:.84;--h:.1">For the hour before sleep.</span></figure></div></section>
                <aside class="ui-qa-panel">
                  <div class="ui-qa-panel-body">
-                   <header class="ui-qa-head"><h2 class="ui-qa-title"/><p class="ui-qa-sub"/><p class="ui-qa-state"> one line </p>
-                     <div class="ui-qa-badges"/></header>
-                   <section class="ui-qa-part"><h3 class="ui-qa-part-title">What the Engine found</h3><ul class="ui-qa-notes">
-                     <li class="ui-qa-note" data-result="pass|flag"/></ul>
-                     <div class="ui-collapsible ui-qa-against"> trigger · <dl class="ui-qa-against-list"><div class="ui-qa-against-row">
-                       <dt/><dd/></div></dl></div></section>
-                   words · Tell the Engine (textarea, .ui-qa-tell-foot) · <ol class="ui-qa-history"><li class="ui-qa-said"/></ol></div>
+                   <header class="ui-qa-head"><h2 class="ui-qa-title"/><p class="ui-qa-sub"/><p class="ui-qa-state" hidden?> one line </p>
+                     <div class="ui-qa-badges"> due · <button class="ui-badge ui-qa-score-chip" aria-expanded/> </div>
+                     <div class="ui-qa-scores"> the score board (scores.css) </div></header>
+                   <section class="ui-qa-thread"><div class="ui-qa-thread-head"><h3 class="ui-qa-part-title">Comments</h3> count </div>
+                     <ol class="ui-qa-comments"><li class="ui-qa-c" data-from="engine|person" data-active data-chosen data-resolved>
+                       <div class="ui-qa-c-head"><span class="ui-qa-c-num">1</span> avatar <span class="ui-qa-c-who">Engine</span>
+                         <span class="ui-qa-c-tag" data-stops>Product · decide first</span></div><p class="ui-qa-c-text"/>
+                       <p class="ui-qa-c-should"><span class="ui-qa-c-label">Should be</span> …</p><div class="ui-qa-c-actions"/></li></ol>
+                     folds (.ui-qa-against): earlier comments · n checks hold · Brand DNA v3 · the graphic design · words</section></div>
+                 <form class="ui-qa-compose"><div class="ui-qa-compose-row"> textarea · the real product · add </div></form>
                  <footer class="ui-qa-foot" data-ui-foot><button class="ui-btn ui-btn--primary ui-qa-foot-main">Mark checked
                    <kbd class="ui-kbd ui-qa-key">C</kbd></button><div class="ui-qa-foot-row"> Tell the Engine F · Open in Studio S </div>
                  </footer></aside>
@@ -29,8 +32,8 @@
    pill carries its key). The creative is fitted by width and by height in the Quality Gate's well (--ui-qg-well),
    white with its hairline, up to its real pixels. The list sits on the page ground; the selected row lifts onto the
    surface with depth (never a line, never Amber); an answered row stays in place. The panel lies on the surface; the
-   toasts rise at the foot of the well, beside the decision and wide enough to read (data-ui-toast-anchor), never over
-   the list. A Design creative's words sit on the creative at
+   toasts rise in the panel above the comment box and the decision (data-ui-toast-anchor on the panel, round 15), never
+   over the creative, its formats or the list. A Design creative's words sit on the creative at
    their own place and size (the layer's box reaches the stylesheet as --x --y --w --h, data). Amber only as the
    checked triangle on a checked creative (badge.css, creative.css). The end card sits in the well where the creative
    was. The phone sheet is the page ground, not glass: it is a page of its own, not a floating panel.
@@ -88,15 +91,40 @@
 .ui-qa-title { margin: 0; font-size: var(--ui-type-title); font-weight: var(--ui-type-weight-medium); line-height: 1.3; color: var(--ui-text); overflow-wrap: anywhere; text-wrap: balance; }
 .ui-qa-sub { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); }
 .ui-qa-state { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs); min-height: 1.5em; margin: 0; padding-top: var(--ui-space-xs); font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); }
+.ui-qa-state[hidden] { display: none; }
 .ui-qa-badges { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); padding-top: var(--ui-space-xs); }
 
 /* parts: 24 apart, 8 inside */
 .ui-qa-part { display: grid; gap: var(--ui-space-sm); min-width: 0; }
-.ui-qa-part-title { margin: 0; font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-qa-part-title { margin: 0; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text); } /* round 14: a part's name is read before its rows, so it is the rows' size, in Ink */
+/* The scores come first, on a sunken step (FLOWS §34.1); under the bar the title says so */
+.ui-qa-scores { gap: var(--ui-space-md); padding: var(--ui-inset-float); border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); }
+.ui-qa-scores .ui-score-meter { background: var(--ui-surface); } /* the track stays seen on the sunken step */
+.ui-qa-holds { padding-block-start: var(--ui-space-sm); }
 .ui-qa-notes, .ui-qa-history { display: grid; gap: var(--ui-space-sm); margin: 0; padding: 0; list-style: none; min-width: 0; }
 .ui-qa-note { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--ui-space-sm); font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); }
 .ui-qa-note > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-tertiary); }
 .ui-qa-note[data-result="flag"] > svg { color: var(--ui-text); }
+/* The Engine's findings (FLOWS §29.6, PROPOSED 4 Nov 2026): each one the finding, what it is about and how much it
+   weighs, what it should be against what the picture shows, and two quiet answers (Add to the note, Not a problem). Only a
+   finding that stops the check carries Rouge, on its mark; one set aside or fixed steps back to secondary. No boxes:
+   space between findings, the evidence in two short label rows. */
+.ui-qa-findings { display: grid; gap: var(--ui-space-lg); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.ui-qa-finding { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qa-finding > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); margin-block: calc((1lh - var(--ui-size-icon)) / 2); color: var(--ui-text); font-size: var(--ui-type-control); line-height: 1.5; }
+.ui-qa-finding[data-severity="critical"][data-status="open"] > svg { color: var(--ui-danger); }
+.ui-qa-finding:not([data-status="open"]) > svg { color: var(--ui-text-tertiary); }
+.ui-qa-finding-body { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-qa-finding-text { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); text-wrap: pretty; }
+.ui-qa-finding:not([data-status="open"]) .ui-qa-finding-text { color: var(--ui-text-secondary); }
+.ui-qa-finding-meta { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-qa-finding-evidence { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text); overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-qa-finding-label { color: var(--ui-text-tertiary); }
+.ui-qa-finding-meta + .ui-qa-finding-evidence { margin-block-start: var(--ui-space-xs); }
+.ui-qa-finding-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); margin-inline-start: calc(var(--ui-size-pad-sm) * -1); }
+.ui-qa-findings + .ui-qa-notes { margin-block-start: var(--ui-space-sm); }
+/* The graphic design Fume laid on the picture (FLOWS §33): its review and code's checks, read-only (studio-desk.css .ui-design-list) */
+.ui-qa-design-line { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
 .ui-qa-against { justify-items: start; }
 /* the fold's trigger and the chip are quiet pills: their words line up with the column, the pill reaches past it */
 .ui-qa-against > .ui-collapsible-trigger, .ui-qa-chip { justify-self: start; max-width: calc(100% + var(--ui-size-pad-sm)); margin-inline-start: calc(var(--ui-size-pad-sm) * -1); }
@@ -123,8 +151,103 @@
 .ui-qa-foot-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
 .ui-qa-foot-row > .ui-btn { flex: 1 1 auto; }
 .ui-qa-foot-note { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); text-align: center; }
+.ui-qa-foot > .ui-qa-foot-note:first-child { padding-block-start: var(--ui-space-sm); }
 .ui-qa-key { margin-inline-start: var(--ui-space-xs); }
 .ui-btn--primary .ui-qa-key { background: var(--ui-qg-key-on-ink); color: var(--ui-qg-key-on-ink-fg); }
+
+/* ---------- round 15: Check is one comment thread, like the customer's viewer (FLOWS §35.1, PROPOSED 9 Nov 2026) ----------
+   Marcus: the panel was "rotete" with much scrolling; the expert's check should be "litt som kunden sin, et kommentarfelt
+   og sånt som i Frame.io". So: the head (name, state, due, the score chip that opens the board), then Comments: the
+   Engine's findings as its comments with their pins, her own comments, and quiet folds for what was settled before, what
+   holds, the graphic design and the words. A field to write in sits over the decision. No boxes: a comment lifts onto
+   the sunken step only while it is open (its pin is open on the creative). Rouge only on the mark of a finding that
+   stops the check. The score chip is a quiet badge button; under the bar it carries the warning mark, never Rouge. */
+.ui-qa-score-chip { cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease); }
+.ui-qa-score-chip::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+@media (hover: hover) { .ui-qa-score-chip:hover { background: var(--bg-hover); } }
+.ui-qa-score-chip:active { background: var(--bg-pressed); transform: scale(var(--ui-motion-press-scale)); }
+.ui-qa-score-chip > svg:last-child { margin-inline-end: calc(var(--ui-space-xs) * -1); color: var(--ui-text-secondary); }
+.ui-qa-score-chip:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-qa-head .ui-qa-scores { margin-block-start: var(--ui-space-sm); }
+
+.ui-qa-thread { display: grid; align-content: start; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qa-thread-head { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qa-comments { display: grid; gap: var(--ui-space-xs); margin: 0 calc(var(--ui-space-sm) * -1); padding: 0; list-style: none; min-width: 0; }
+.ui-qa-c {
+  display: grid; gap: var(--ui-space-xs); min-width: 0; padding: var(--ui-space-md) var(--ui-space-sm); border-radius: var(--ui-radius-item);
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-qa-c[data-active] { background: var(--ui-surface-sunken); }
+.ui-qa-c-head { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; min-height: var(--ui-size-control-sm); }
+.ui-qa-c-who { flex: none; font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1.4; color: var(--ui-text); white-space: nowrap; }
+.ui-qa-c-tag { display: inline-flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; overflow: hidden; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); white-space: nowrap; text-overflow: ellipsis; }
+.ui-qa-c-tag > svg { flex: none; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-qa-c-tag[data-stops] { color: var(--ui-text); }
+.ui-qa-c-tag[data-stops] > svg { color: var(--ui-danger); }
+.ui-qa-c-when, .ui-qa-c-time, .ui-qa-c-remove { margin-inline-start: auto; }
+.ui-qa-c-when + .ui-qa-c-remove { margin-inline-start: 0; }
+.ui-qa-c :is(.ui-qa-c-when, .ui-qa-c-meta) .ui-qa-time { font-size: var(--ui-type-label); }
+.ui-qa-c-time { flex: none; font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; white-space: nowrap; } /* gate-allow:mono-is-data  a time is data */
+.ui-qa-c-text { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-qa-c[data-resolved] .ui-qa-c-text { color: var(--ui-text-secondary); }
+.ui-qa-c-should { margin: 0; font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text); overflow-wrap: anywhere; text-wrap: pretty; }
+.ui-qa-c-label { color: var(--ui-text-tertiary); }
+.ui-qa-c-meta { margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-qa-c-pinline { display: flex; align-items: baseline; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); overflow-wrap: anywhere; }
+/* a comment's buttons sit inside its padding: a chosen fix turns into a pill, and the open comment is a sunken card */
+.ui-qa-c-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); padding-block-start: var(--ui-space-xs); }
+.ui-qa-c-info { margin: 0; font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text-secondary); text-wrap: pretty; }
+/* the Engine's avatar: its mark on the sunken step; a person's is their avatar (avatar.css) */
+.ui-qa-c-engine { display: inline-grid; place-items: center; flex: none; background: var(--ui-surface-sunken); color: var(--ui-text); }
+.ui-qa-c-engine > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+/* a pin's number beside its comment: the same drop as on the creative, smaller, on the sunken step; Ink while open */
+.ui-qa-c-num {
+  display: inline-grid; place-items: center; flex: none; width: var(--ui-qg-marker); height: var(--ui-qg-marker);
+  border-radius: 50%; border-bottom-left-radius: 0; background: var(--ui-surface-sunken); color: var(--ui-text);
+  font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; font-variant-numeric: tabular-nums;
+}
+.ui-qa-c[data-active] .ui-qa-c-num { background: var(--ui-qg-pin-active); color: var(--ui-action-primary-fg); }
+/* her comment's remove comes forward with a mouse on it, with focus in it, or while it is open; always on touch */
+@media (hover: hover) {
+  .ui-qa-c-remove { opacity: 0; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+  .ui-qa-c:is(:hover, :focus-within, [data-active]) .ui-qa-c-remove { opacity: 1; }
+}
+.ui-qa-thread > .ui-qa-against { padding-block-start: var(--ui-space-xs); }
+.ui-qa-fold-body { display: grid; gap: var(--ui-space-sm); min-width: 0; padding-block-start: var(--ui-space-sm); }
+.ui-qa-against .ui-qa-comments { padding-block-start: var(--ui-space-xs); }
+
+/* the field to write in, over the decision */
+.ui-qa-compose { display: grid; min-width: 0; }
+.ui-qa-compose-row { display: flex; align-items: flex-end; gap: var(--ui-space-xs); min-width: 0; }
+.ui-qa-compose-row .ui-textarea { flex: 1 1 auto; min-height: var(--ui-field-height); padding-block: var(--ui-space-sm); resize: none; }
+@media (prefers-reduced-motion: reduce) { .ui-qa-c, .ui-qa-c-remove, .ui-qa-score-chip { transition: none; } .ui-qa-score-chip:active { transform: none; } }
+
+/* An ad's formats under the well (FLOWS §35.2, PROPOSED 9 Nov 2026). Marcus, round 15: an ad with several formats is one
+   ad in Check, its formats checked inside it. The master first, then each format made from it, a small picture at its
+   own ratio with its name and how it was made; the one shown lifts onto the surface with depth (as the list's selected
+   row), never a line and never Amber. Markup: <div class="ui-qa-formats" role="group"><button class="ui-qa-format"
+   aria-pressed><img class="ui-qa-format-media" data-format/><span class="ui-qa-format-text"><span
+   class="ui-qa-format-name">Square 1:1</span><span class="ui-qa-format-how">Cropped</span></span></button></div> */
+.ui-qa-formats { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--ui-space-xs); min-width: 0; flex: none; }
+.ui-qa-format {
+  position: relative; display: inline-flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; margin: 0;
+  padding: var(--ui-space-xs) var(--ui-space-md) var(--ui-space-xs) var(--ui-space-xs); border: 0; border-radius: var(--ui-radius-item);
+  background: transparent; color: var(--ui-text); font: inherit; text-align: start; cursor: pointer;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), box-shadow var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-qa-format::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+@media (hover: hover) { .ui-qa-format:hover { background: var(--ui-surface-sunken); } }
+.ui-qa-format[aria-pressed="true"] { background: var(--ui-surface); box-shadow: var(--ui-depth-raised); }
+.ui-qa-format:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-qa-format:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-qa-format-media { display: block; flex: none; height: var(--ui-size-control-lg); width: auto; aspect-ratio: var(--ui-creative-ratio-feed); border-radius: var(--ui-radius-check); object-fit: cover; background: var(--ui-creative-bg); }
+.ui-qa-format-media[data-format="square"] { aspect-ratio: var(--ui-creative-ratio-square); }
+.ui-qa-format-media[data-format="story"] { aspect-ratio: var(--ui-creative-ratio-story); }
+.ui-qa-format-text { display: grid; min-width: 0; }
+.ui-qa-format-name { font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1.35; white-space: nowrap; }
+.ui-qa-format-how { font-size: var(--ui-type-label); line-height: 1.35; color: var(--ui-text-tertiary); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .ui-qa-format { transition: none; } .ui-qa-format:active { transform: none; } }
 
 /* the end of the queue: what comes next, in the well where the creative was */
 .ui-qa-end {
@@ -172,6 +295,79 @@
 .ui-qa-pinbox[data-side="center"][data-flip-y] { translate: -50% calc(-100% - var(--ui-qg-pin) - var(--ui-space-sm)); }
 .ui-qa-pinbox-foot { display: flex; justify-content: flex-end; gap: var(--ui-space-sm); }
 
+/* FLOWS §34.7 a video in Check: the player fills the creative's box in the well (the box keeps the fit and the pins);
+   under it the transport and one strip of the shots, with the Engine's findings as marks over their stretch and her pins
+   at their second; the strip is the scrubber, the Ink line is the playhead */
+/* a video has no width of its own (a picture has its pixels): it takes the format's width in the well; on a desk the fit
+   below sizes it like a picture */
+.ui-qa-creative[data-video] { width: var(--qa-media); max-width: 100%; }
+.ui-qa-creative[data-video] > .ui-video-frame { width: 100%; height: 100%; border-radius: inherit; box-shadow: none; }
+.ui-qa-reel { --len: 1; --t: 0; flex: none; display: grid; gap: var(--ui-space-xs); min-width: 0; user-select: none; }
+.ui-qa-reel-bar { display: flex; align-items: center; gap: var(--ui-space-sm); min-width: 0; }
+.ui-qa-reel-track { position: relative; display: grid; grid-template-rows: var(--ui-size-control-sm) var(--ui-size-hit); gap: var(--ui-space-xs); min-width: 0; }
+.ui-qa-reel-marks { position: relative; min-width: 0; }
+.ui-qa-reel-mark {
+  position: absolute; top: 25%; bottom: 25%; left: calc(var(--from) / var(--len) * 100%);
+  width: max(var(--ui-space-sm), calc((var(--to) - var(--from)) / var(--len) * 100%)); margin: 0; padding: 0; border: 0;
+  border-radius: var(--ui-radius-action); background: var(--ui-text-tertiary); cursor: pointer;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+/* a finding that stops the check: the bar stays quiet, a small Rouge mark at its start says it stops (FLOWS §35.1) */
+.ui-qa-reel-mark[data-severity="critical"] { background: var(--ui-text-secondary); }
+.ui-qa-reel-mark[data-severity="critical"]::before {
+  content: ""; position: absolute; top: 50%; left: 0; width: var(--ui-space-sm); height: var(--ui-space-sm); translate: 0 -50%;
+  border-radius: 50%; background: var(--ui-danger);
+}
+.ui-qa-reel-mark::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+@media (hover: hover) { .ui-qa-reel-mark:hover { background: var(--ui-text-secondary); } .ui-qa-reel-mark[data-severity="critical"]:hover { background: var(--ui-text); } }
+.ui-qa-reel-mark:active { transform: scaleY(var(--ui-motion-press-scale)); }
+.ui-qa-reel-mark:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-qa-reel-pin {
+  position: absolute; top: 0; left: calc(var(--at) / var(--len) * 100%); z-index: 1; translate: 0 0;
+  display: grid; place-items: center; width: var(--ui-qg-marker); height: var(--ui-qg-marker); margin: 0; padding: 0; border: 0;
+  border-radius: 50%; border-bottom-left-radius: 0; background: var(--ui-action-primary); color: var(--ui-action-primary-fg);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-medium); line-height: 1; font-variant-numeric: tabular-nums;
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none;
+}
+.ui-qa-reel-pin::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); border-radius: 50%; }
+@media (hover: hover) { .ui-qa-reel-pin:hover { background: var(--ui-action-primary-hover); } }
+.ui-qa-reel-pin:active { transform: scale(var(--ui-motion-press-scale)); }
+.ui-qa-reel-pin:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-qa-reel-shots {
+  position: relative; display: flex; gap: var(--ui-space-xs); min-width: 0; border-radius: var(--ui-radius-item);
+  cursor: pointer; touch-action: none; outline: none; -webkit-tap-highlight-color: transparent;
+}
+.ui-qa-reel-shots:active { cursor: grabbing; }
+.ui-qa-reel-shots:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+/* a shot: a strip of its own frames, its name on a small Ink step (the timeline's shot, studio-video.css) */
+.ui-qa-reel-shot {
+  flex: var(--dur) 1 0; display: flex; align-items: flex-end; min-width: 0; padding: var(--ui-space-xs); border-radius: var(--ui-radius-item);
+  background-color: var(--ui-text); background-image: var(--poster); background-size: auto 100%; background-repeat: repeat-x; background-position: left center;
+}
+.ui-qa-reel-shot > span {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 1px var(--ui-space-xs); /* gate-allow:space-from-tokens a hairline of air around a 12 px name */
+  border-radius: var(--ui-radius-check); background: var(--ui-text); color: var(--ui-text-on-ink); font-size: var(--ui-type-label); line-height: 1.2;
+}
+.ui-qa-reel-head {
+  position: absolute; top: 0; bottom: 0; left: calc(var(--t) / var(--len) * 100%); z-index: 2; width: var(--ui-size-ring); translate: -50% 0;
+  background: var(--ui-action-primary); pointer-events: none; /* gate-allow:few-strokes the playhead is a position, not a decoration */
+}
+/* a second in the panel (a finding's stretch, a flag, a pin): data, and a quiet button that takes the playhead there */
+.ui-qa-time {
+  position: relative; display: inline; margin: 0; padding: 0; border: 0; background: none; color: inherit; cursor: pointer;
+  font-family: var(--ui-type-family-data); font-size: inherit; font-variant-numeric: tabular-nums; /* gate-allow:mono-is-data a second on the video is data */
+  text-decoration: underline; text-decoration-color: var(--ui-text-tertiary); text-underline-offset: 0.2em;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.ui-qa-time::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+@media (hover: hover) { .ui-qa-time:hover { text-decoration-color: currentColor; } }
+.ui-qa-time:active { opacity: 0.7; }
+.ui-qa-time:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); border-radius: var(--ui-radius-check); }
+.ui-qa-pin-text > .ui-qa-time { margin-inline-end: var(--ui-space-xs); color: var(--ui-text-secondary); }
+@media (pointer: coarse) { .ui-qa-reel-track { grid-template-rows: var(--ui-size-hit) var(--ui-size-hit); } .ui-qa-reel-shots { height: var(--ui-size-hit); } }
+@media (prefers-reduced-motion: reduce) { .ui-qa-reel-mark { transition: none; } .ui-qa-reel-mark:active, .ui-qa-reel-pin:active { transform: none; } }
+
 /* the pinned notes in the panel: the pin's number as the same drop, smaller, then the note */
 .ui-qa-pins { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; min-width: 0; }
 .ui-qa-pin-row {
@@ -190,7 +386,7 @@
 
 /* #52 the expert's check on Mark checked: the Focus pointer in Amber (the check); once checked, the head's state line
    carries the Amber pointer and "Checked by …" (CheckMark), and the foot keeps only Undo */
-.ui-qa-mark > .ico:first-child { color: var(--ui-check); } /* gate-allow:amber-is-a-point  the Amber checked triangle (fume-check) on the expert's Mark checked, beside its label (Marcus #52) */
+.ui-qa-mark:not(:disabled) > .ico:first-child { color: var(--ui-check); } /* gate-allow:amber-is-a-point  the Amber checked triangle (fume-check) on the expert's Mark checked, beside its label (Marcus #52) */
 
 /* the Plans tab: the plan picked, in the well */
 .ui-qa-plan .ui-qa-end-title { overflow-wrap: anywhere; }
@@ -234,6 +430,7 @@
     flex: 1 1 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: var(--ui-inset-float) var(--ui-inset-float) var(--ui-space-lg); scrollbar-width: thin;
   }
   .ui-qa-page .ui-qa-panel .ui-qa-said { background: var(--ui-ground); }
+  .ui-qa-page .ui-qa-compose { flex: none; padding: 0 var(--ui-inset-float) var(--ui-space-md); }
   .ui-qa-page .ui-qa-foot { flex: none; padding: 0 var(--ui-inset-float) var(--ui-inset-float); }
 
   .ui-qa-page .ui-qa-end { align-self: stretch; }
@@ -249,7 +446,7 @@
   .ui-qa-page .ui-qa-row { justify-content: center; }
 }
 @container ui-qa-page (min-width: 1100px) {
-  .ui-qa-page > .ui-qa { --qa-list: 272px; --qa-panel: 300px; } /* gate-allow:space-from-tokens  layout widths */
+  .ui-qa-page > .ui-qa { --qa-list: 256px; --qa-panel: 320px; } /* gate-allow:space-from-tokens  layout widths; round 15: the panel is a comment thread, its two answers on one line */
 }
 @container ui-qa-page (min-width: 1500px) {
   .ui-qa-page > .ui-qa { --qa-list: 304px; --qa-panel: 340px; } /* gate-allow:space-from-tokens  layout widths */

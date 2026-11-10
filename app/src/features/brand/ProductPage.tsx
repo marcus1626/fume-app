@@ -616,7 +616,7 @@ function AllDetails({
   function addShot(slotId: string, file: File) {
     setBusySlot(slotId);
     upload.mutate(
-      { productId: product.id, slotId, name: file.name, bytes: file.size, src: previewOf(file) },
+      { productId: product.id, slotId, name: file.name, bytes: file.size, src: previewOf(file), blob: file },
       { onError: fail, onSettled: () => setBusySlot(undefined) },
     );
   }
@@ -624,7 +624,7 @@ function AllDetails({
     const [file] = await pickFiles(fileAccept[kindOfFile], false);
     if (!file) return;
     uploadFile.mutate(
-      { productId: product.id, kind: kindOfFile, name: file.name, bytes: file.size },
+      { productId: product.id, kind: kindOfFile, name: file.name, bytes: file.size, blob: file },
       {
         onSuccess: () => toast.done(`${label} added`, { description: "Fume reads it and shows what it finds here." }),
         onError: fail,

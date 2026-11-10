@@ -4,7 +4,7 @@
 
 import type { Id, Instant } from "./common";
 import type { Format } from "./campaigns";
-import type { Layer, StudioKind } from "./studio";
+import type { DesignDrawing, Layer, StudioKind, VersionDesign } from "./studio";
 
 // ─── The Quality Gate check ─────────────────────────────────────────────────
 
@@ -74,6 +74,91 @@ export interface Evaluation {
   brandRules: "pass" | "flag";
   artefacts: "none" | "minor" | "major";
   notes: string[];
+  /** False when no one has evaluated the picture yet (made by hand, or before the Engine evaluates): Product Truth, the
+   *  brand rules and artefacts are then for the expert to check by eye, and nothing is said to hold or to be off. */
+  evaluated?: boolean;
+  /** Checks Fume ran on the file itself (its kind, shape, size and weight against the format), each with its result. */
+  checks?: { result: "pass" | "flag"; text: string }[];
+  /** The Engine's two scores of the picture, 0 to 100 (FLOWS §34.1, PROPOSED): the product against its own photographs
+   *  and verified facts, and the Engine's read of the brand's rules, taste and the planned scene. Under the bar
+   *  (SCORE_BAR) the version carries a warning; it is never held back from the designer. */
+  scores?: Scores;
+}
+
+/** The Engine's scores of one picture (FLOWS §34.1, PROPOSED). */
+export interface Scores {
+  /** The product: shape, label, cap, size and colour against its photographs and verified facts. */
+  product: number;
+  /** The Engine: the brand's rules, its taste and the planned scene. */
+  engine: number;
+  /** Why a score is under the bar, one short line each, the worst first ("The cap reads glossy"). */
+  why?: { score: "product" | "engine"; text: string }[];
+  /** Round 15 (FLOWS §35.3, PROPOSED 9 Nov 2026): what the finished version is scored on, by the studio that made it.
+   *  A picture: Product (part by part), Brand, Craft. A design: Readability, Design system, Placement, Words. A video:
+   *  Product, Brand, First second, Rhythm, Text on screen. When it is there, screens show it instead of the two
+   *  scores above, which stay for the pictures scored before it. */
+  measures?: ScoreMeasure[];
+}
+
+/** One thing a version is scored on, 0 to 100, with the bar (SCORE_BAR) the same for all (FLOWS §35.3, PROPOSED). */
+export interface ScoreMeasure {
+  id:
+    | "product"
+    | "brand"
+    | "craft"
+    | "readability"
+    | "system"
+    | "placement"
+    | "words"
+    | "first_second"
+    | "rhythm"
+    | "text_on_screen";
+  label: string;
+  value: number;
+  /** The product, part by part from its verified facts and photographs: the label, the cap, the glass, the size. */
+  parts?: { label: string; value: number }[];
+  /** Why it is under the bar, in one short line ("The words sit over the bottle"). */
+  why?: string;
+}
+
+/** What the Engine's picture check found, as a finding the one who checks settles (findings with method automated;
+ *  FLOWS §29.6, PROPOSED). Customers never read it. */
+export interface QaFinding {
+  id: Id;
+  /** product: the product against its own photographs; brand_brief: the brand's rules and the planned scene;
+   *  artefacts: something the image model got wrong; text_claims: printed words nobody asked for; design (round 15,
+   *  PROPOSED): the words and layout against the design system, measured by code (they cover the product, too little
+   *  contrast, outside the safe area). */
+  dimension: "product" | "brand_brief" | "artefacts" | "text_claims" | "design";
+  /** critical: the creative cannot be marked checked while it is open. */
+  severity: "critical" | "major" | "minor";
+  finding: string;
+  /** What it should be, and what the picture shows. */
+  expected?: string;
+  observed?: string;
+  /** open; accepted: the one who checks set it aside (not a problem here); resolved: the Engine fixed it. */
+  status: "open" | "accepted" | "resolved";
+  by?: Id;
+  at?: Instant;
+  /** On a video: where it is on the timeline, in the video's seconds, so the one who checks can go to it (FLOWS §34.7,
+   *  PROPOSED). */
+  seconds?: { from: number; to: number };
+  /** Where on the creative, 0–1 from the top left (FLOWS §35.1, PROPOSED): the Engine's finding is a comment with a
+   *  pin, like a person's, in Check's one comment thread. */
+  spot?: { x: number; y: number };
+}
+
+/** One of an ad's formats in Check (FLOWS §35.2, PROPOSED): how it was made from the master, and its picture. */
+export interface QaFormat {
+  placementId: Id;
+  format: Format;
+  image: string;
+  /** The same picture, cropped from the master, the scene extended by the Engine, or made again by the designer (FLOWS §16). */
+  method: "native" | "crop" | "expand" | "regenerate";
+  /** Live: the format's own version, which is checked and corrected as part of the ad. */
+  versionId?: Id;
+  /** Live: where the format itself stands; the ad waits while any of its formats does. */
+  state?: "waiting" | "fixing" | "checked" | "in_studio";
 }
 
 /** A spot on a creative in Check: a numbered pin, 0–1 from the top left, with what is wrong there. It goes to the
@@ -83,6 +168,10 @@ export interface QaPin {
   x: number;
   y: number;
   text: string;
+  /** On a video: the second it is pinned on (FLOWS §34.7, PROPOSED). */
+  at?: number;
+  /** On an ad with several formats: the format it is pinned on, when not the master (FLOWS §35.2, PROPOSED). */
+  format?: Format;
 }
 
 /** What a checker told the Engine to fix. */
@@ -95,6 +184,8 @@ export interface QaFeedback {
   state: "sent" | "fixed";
   /** The spots it is about. */
   pins?: QaPin[];
+  /** The Engine's own findings it took up. */
+  findingIds?: Id[];
 }
 
 /** A creative in Check. */
@@ -114,6 +205,13 @@ export interface QaItem {
   risk: "normal" | "high";
   state: "waiting" | "fixing" | "checked" | "in_studio";
   evaluation: Evaluation;
+  /** What the Engine's picture check found on this version, for the one who checks to settle. */
+  findings?: QaFinding[];
+  /** The graphic design Fume laid on the picture, when the version in check is one (FLOWS §33, PROPOSED): what code
+   *  measured and what Fume's review found. Fume's people only; read-only in Check. */
+  design?: VersionDesign;
+  /** Demo only: the words to draw on `image` (the live picture is the designed PNG). */
+  drawn?: DesignDrawing;
   feedback: QaFeedback[];
   /** Design creatives can be changed directly in Check (FLOWS §10). */
   layers?: Layer[];
@@ -126,10 +224,24 @@ export interface QaItem {
   version?: number;
   /** The version it replaced, when the Studio sent a new one to check (Before | After). */
   previous?: { image: string; version: number };
+  /** The ad's other formats, made from this one (FLOWS §35.2, PROPOSED 9 Nov 2026): Marcus, round 15, an ad with
+   *  several formats comes to Check as one ad, and the one who checks goes through its formats there. Its own image
+   *  and format are the master; Mark checked checks the ad with every format. */
+  formats?: QaFormat[];
   /** Who sent the version shown from the Studio, and when. */
   sentBy?: Id;
   sentAt?: Instant;
   /** Who opened it in the Studio, and when (state in_studio). */
   studioBy?: Id;
   studioAt?: Instant;
+  /** Clear faults the picture check found on the product (a part missing or different, a label that reads wrong).
+   *  They stop the check until the expert decides: a new version fixes them, or the expert accepts them as they
+   *  check, with their name. */
+  holds?: QaHold[];
+}
+
+/** A clear fault on the product that stops the check until the expert decides. */
+export interface QaHold {
+  id: Id;
+  text: string;
 }

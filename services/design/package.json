@@ -1,0 +1,31 @@
+{
+  "name": "@fume/design",
+  "private": true,
+  "type": "module",
+  "description": "Fume's graphic design layer: lays the brand's words on a picture from its design system with OpenPencil, and checks the layout by code.",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.ts",
+    "typecheck": "tsc -p .",
+    "build": "node tools/build.mjs"
+  },
+  "dependencies": {
+    "@open-pencil/core": "0.16.0",
+    "@open-pencil/scene-graph": "0.16.0",
+    "@sparticuz/chromium": "153.0.0",
+    "puppeteer-core": "25.16.0"
+  },
+  "devDependencies": {
+    "@fontsource/archivo": "^5.3.0",
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/libre-baskerville": "^5.3.0",
+    "@fontsource/noto-sans": "^5.3.0",
+    "@fontsource/nunito-sans": "^5.3.0",
+    "@fontsource/open-sans": "^5.3.0",
+    "@types/node": "^22.20.5",
+    "esbuild": "0.25.12",
+    "typescript": "^5.9.3"
+  }
+}

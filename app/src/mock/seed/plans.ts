@@ -1,6 +1,14 @@
 // The plans in the seed: Winter gifting's, written by hand and waiting on Maja, and Black Friday's, written by Fume from
 // its brief (db.ts) with the campaign's own look, in check with Anna because Maja asked for the check.
-import type { CampaignPlan, Id, PlannedCreative, PlanDirection, PlanLine, PlanReference } from "../../contract";
+import type {
+  CampaignPlan,
+  Id,
+  PlanCopyCheck,
+  PlannedCreative,
+  PlanDirection,
+  PlanLine,
+  PlanReference,
+} from "../../contract";
 import { at, gen, img, inDays } from "./helpers";
 
 export const line = (
@@ -474,11 +482,80 @@ export function blackFridayPlan(p: CampaignPlan): CampaignPlan {
     ref(gen("ritual-pack"), "The set", "product"),
     ref(img("02-09"), "The bottle close, glass catching light", "fume"),
   ];
+  // The words Fume wrote in LYSNE's Tone of Voice: the copy set (with the plan's other lines) and a line on each master.
+  const chosen = p.directions.find((d) => d.id === p.chosenDirectionId) ?? p.directions[0];
+  const masters = chosen.creatives.filter((c) => c.kind === "master");
+  masters.forEach((m, i) => (m.text = bfWords[i] ?? m.text));
+  const text = p.content.findIndex((l) => l.key === "text");
+  p.content.splice(text + 1, 0, ...bfCopy);
   return {
     ...p,
     state: "in_check",
     writtenAt: at(60 * 4),
     readyBy: inDays(2),
     checkAsked: { by: "u-maja", at: at(60 * 3) },
+    copyCheck: bfCopyCheck(
+      chosen.id,
+      masters.map((m) => m.id),
+    ),
+  };
+}
+
+/** Black Friday's words on its three masters. */
+const bfWords = ["Oljen og lyset. Én kveld.", "For en roligere søvn.", "Kveldens lille luxury. 100 ml."];
+
+/** Black Friday's copy set, as the plan writer keeps it among the plan's lines. */
+const bfCopy: PlanLine[] = [
+  line("headline", "Headline", "Én kveld, pakket inn.", "fume"),
+  line("support", "Supporting line", "Kveldsoljen og lyset, i én eske. 25 % av til mandag.", "fume"),
+  line("cta", "Call to action", "Gi den bort nå!", "fume"),
+];
+
+/** How Black Friday's words were read: written again once for "Norges beste", and now one claim nothing backs (sleep),
+ *  one line off the voice and one word the voice avoids; the offer is the brief's own, the size a verified fact. */
+function bfCopyCheck(direction: Id, masters: Id[]): PlanCopyCheck {
+  const [m1, m2, m3] = masters.map((id) => `${direction}/${id}`);
+  return {
+    read: true,
+    rewritten: true,
+    rewroteFor: [
+      {
+        ref: "copy:headline",
+        text: "Norges beste kveldsolje, nå i et sett.",
+        note: "“Norges beste kveldsolje” is a claim (superlative) that no verified fact states.",
+      },
+    ],
+    voiceBook: { version: 1, state: "approved" },
+    lines: [
+      { ref: "copy:headline", where: "Headline", text: "Én kveld, pakket inn.", claims: [], voice: "on" },
+      {
+        ref: "copy:support",
+        where: "Supporting line",
+        text: "Kveldsoljen og lyset, i én eske. 25 % av til mandag.",
+        claims: [{ words: "25 % av til mandag", kind: "offer", verdict: "brand_says" }],
+        voice: "on",
+      },
+      { ref: "copy:cta", where: "Call to action", text: "Gi den bort nå!", claims: [], voice: "off" },
+      { ref: m1, where: "Direction A: Master 1", text: bfWords[0], claims: [], voice: "on" },
+      {
+        ref: m2,
+        where: "Direction A: Master 2",
+        text: bfWords[1],
+        claims: [{ words: "roligere søvn", kind: "health", verdict: "unbacked" }],
+        voice: "on",
+      },
+      {
+        ref: m3,
+        where: "Direction A: Master 3",
+        text: bfWords[2],
+        claims: [{ words: "100 ml", kind: "other", verdict: "backed", backedBy: "Night Body Oil · 100 ml" }],
+        voice: "on",
+      },
+    ],
+    findings: [
+      { ref: m2, kind: "unbacked_claim", note: "“roligere søvn” is a claim (health) that no verified fact states." },
+      { ref: "copy:cta", kind: "off_voice", note: "An exclamation mark and “nå”: LYSNE never hurries the reader." },
+      { ref: m3, kind: "avoided_word", note: "The voice avoids “luxury”." },
+    ],
   };
 }

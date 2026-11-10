@@ -2,6 +2,7 @@
 // mock's latency with a copy of what it read, and the open pages hear what changed through `subscribe`.
 import type { FumeApi, Id } from "../contract";
 import { agencyCalls } from "./agency";
+import { bookCalls } from "./books";
 import { brandCalls } from "./brand";
 import { campaignCalls, installWaits } from "./campaigns";
 import { createMock, type MockOptions } from "./context";
@@ -18,6 +19,7 @@ import { fixLater, qualityCalls } from "./quality";
 import { settleQuestions } from "./questions";
 import { reviewCalls } from "./review";
 import { studioCalls } from "./studio";
+import { trainCalls } from "./train";
 
 export type { MockOptions } from "./context";
 
@@ -38,6 +40,7 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
     ...identityCalls(m),
     ...homeCalls(m),
     ...brandCalls(m),
+    ...bookCalls(m),
     ...productCalls(m),
     ...campaignCalls(m),
     ...planCalls(m),
@@ -49,6 +52,7 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
     ...conversationCalls(m),
     ...agencyCalls(m),
     ...notificationCalls(m),
+    ...trainCalls(m),
     subscribe(handler) {
       m.listeners.add(handler);
       return () => m.listeners.delete(handler);
