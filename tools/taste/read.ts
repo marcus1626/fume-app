@@ -45,15 +45,24 @@ for (const set of manifest.sets) {
     const id = p.path.split("/").pop() as string;
     if (only && !only.some((o) => id.includes(o))) continue;
     if (done.some((d) => d.id === id && d.set === set.name)) continue;
-    const started = Date.now();
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}`, apikey: env.VITE_SUPABASE_PUBLISHABLE_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({ workspaceId, reader, effort, picture: { base64: forReading(await Deno.readFile(p.path)), mediaType: "image/jpeg" } }),
-    });
-    const body = await res.json().catch(() => ({}));
-    const seconds = Math.round((Date.now() - started) / 1000);
-    spent += body.usage?.cost_usd ?? 0;
+    const picture = { base64: forReading(await Deno.readFile(p.path)), mediaType: "image/jpeg" };
+    type Answered = { message?: string; detail?: string; shows?: unknown; read?: unknown; fields?: number; answered?: number; failed?: unknown[]; usage?: { cost_usd: number } };
+    let res: Response, body: Answered, seconds = 0;
+    // A picture whose questions did not all come back (the provider was busy) is asked again, up to three times.
+    for (let attempt = 1; ; attempt++) {
+      const started = Date.now();
+      res = await fetch(endpoint, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}`, apikey: env.VITE_SUPABASE_PUBLISHABLE_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ workspaceId, reader, effort, picture }),
+      });
+      body = await res.json().catch(() => ({}));
+      seconds = Math.round((Date.now() - started) / 1000);
+      spent += body.usage?.cost_usd ?? 0;
+      const whole = res.ok && !body.failed?.length;
+      if (whole || attempt === 3 || res.status === 400 || res.status === 403 || res.status === 429) break;
+      await new Promise((r) => setTimeout(r, 8000 * attempt));
+    }
     if (!res.ok) {
       console.error(`${set.name} ${id}: ${res.status} ${body.message ?? ""} ${body.detail ?? ""}`);
       if (res.status === 403 || res.status === 429) Deno.exit(1);
@@ -61,7 +70,7 @@ for (const set of manifest.sets) {
     }
     done.push({ id, set: set.name, path: p.path, campaign: p.campaign, source: p.source, reader, effort, seconds, shows: body.shows, read: body.read, failed: body.failed, usage: body.usage });
     await Deno.writeTextFile(outPath, JSON.stringify(done, null, 1));
-    console.error(`${set.name} ${id}: ${body.answered} of ${body.fields} fields, ${body.failed.length} passes failed, ${seconds} s, $${body.usage.cost_usd}`);
+    console.error(`${set.name} ${id}: ${body.answered} of ${body.fields} fields, ${body.failed?.length ?? 0} passes failed, ${seconds} s, $${body.usage?.cost_usd ?? 0}`);
   }
 }
 console.error(`spent $${spent.toFixed(3)}`);
