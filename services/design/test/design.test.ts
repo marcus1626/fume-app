@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { better, design, fitFor, layoutsFor, tasteOf, type Tried } from "../src/design.ts";
-import { bindShort, compose } from "../src/compose.ts";
+import { better, design, fitFor, layoutsFor, searchOrder, tasteOf, type Tried } from "../src/design.ts";
+import { bindShort, compose, shadeFor } from "../src/compose.ts";
 import { boxOf, build, lineWidth, png, pixelsOf, slantJSX, splitWords } from "../src/render.ts";
 import { type DesignBook } from "../src/book.ts";
 import { startWithTestFonts } from "./fonts.ts";
@@ -373,4 +373,44 @@ test("a button with no fill of its own is read against the picture under it, and
   assert.ok(button, JSON.stringify(out.checks));
   assert.ok(button.ok, button.note);
   assert.ok(!(out.layout.cta === "bottom" && out.layout.colour === "text"), "a dark button never stays on the dark corner");
+});
+
+test("every place and ground gets a try before any gets a third, and a line the words lack is not tried twice", () => {
+  const all = [...layoutsFor(book, "feed", { band: "middle", align: "left" }, true)];
+  const order = searchOrder(all, false);
+  const share = (l: (typeof all)[number]) => `${l.band}|${l.ground}|${l.cta}|${l.ctaSide ?? ""}`;
+  const shares = new Set(all.map(share));
+  const firstRound = order.slice(0, shares.size * 2);
+  assert.equal(new Set(firstRound.map(share)).size, shares.size, "the first round reaches every share");
+  assert.ok(firstRound.some((l) => l.band === "middle" && l.ground === "gradient"), "words in the middle can stand on a shade");
+  const keys = order.map((l) => JSON.stringify({ ...l, subline: undefined }));
+  assert.equal(new Set(keys).size, keys.length, "no layout twice when the words have no subline");
+  assert.equal(order[0].band, "middle", "the model's own place comes first");
+});
+
+test("words in the middle are shaded from their own side, never from the top", () => {
+  const g = { w: 1080, h: 1350 } as never;
+  const l = { band: "middle", align: "left", ground: "gradient" } as never;
+  const s = shadeFor(book, l, g, { x: 72, y: 500, w: 500, h: 300 })!;
+  assert.equal(s.edge, "left");
+  assert.ok(s.full >= 572 && s.zero > s.full && s.zero <= 1080);
+  const r = shadeFor(book, { band: "middle", align: "right", ground: "gradient" } as never, g, { x: 508, y: 500, w: 500, h: 300 })!;
+  assert.equal(r.edge, "right");
+  assert.ok(r.full <= 508 && r.zero < r.full);
+  assert.equal(shadeFor(book, { band: "middle", align: "center", ground: "gradient" } as never, g, { x: 290, y: 500, w: 500, h: 300 }), null);
+});
+
+test("among layouts that fail, a broken word loses to words that read", () => {
+  const base = { ok: false, layout: { band: "middle", align: "left" }, boxes: {} } as unknown as Tried;
+  const broken = {
+    ...base,
+    score: 5,
+    checks: [
+      { check: "fits", node: "Headline", ok: false, hard: true, note: "Breaks inside a word: League." },
+      { check: "lines", node: "Headline", ok: false, hard: true, value: 5, note: "" },
+    ],
+  } as Tried;
+  const tight = { ...base, score: -10, checks: [{ check: "logo", node: "Logo", ok: false, hard: true, note: "" }] } as Tried;
+  assert.ok(better(tight, broken));
+  assert.ok(!better(broken, tight));
 });

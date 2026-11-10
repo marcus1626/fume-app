@@ -268,12 +268,22 @@ export function bindShort(text: string): string {
   return text.replace(/(?<=^|\s)(\p{L}{1,2}) (?=\S)/gu, "$1\u00A0");
 }
 
-/** The shade under the words once they are placed: dark from the nearer edge, full behind the words. */
-export function shadeFor(book: DesignBook, l: Layout, g: Grid, words: { y: number; h: number }): Shade | null {
+/**
+ * The shade under the words once they are placed: dark from the nearer edge, full behind the words. Words set in the
+ * middle get it from their own side, as the brand darkens its photo beside the words (Anthem, 10 Nov: the shade was
+ * only ever tried at the top or the bottom, so words in the middle stood on bright sand with nothing under them).
+ */
+export function shadeFor(book: DesignBook, l: Layout, g: Grid, words: { x?: number; y: number; w?: number; h: number }): Shade | null {
   if (l.ground !== "gradient") return null;
   const dark = colourOf(book, "text");
   const hex = dark && isDark(dark) ? dark : "#000000";
   const from = Math.min(0.75, Math.max(0.3, book.photoText?.scrimOpacity ?? 0.5));
+  if (l.band === "middle") {
+    if (l.align === "center" || words.x === undefined || words.w === undefined) return null;
+    const fade = Math.max(200, Math.round(words.w * 0.5));
+    if (l.align === "left") return { hex, from, edge: "left", full: words.x + words.w + 24, zero: Math.min(g.w, words.x + words.w + 24 + fade) };
+    return { hex, from, edge: "right", full: words.x - 24, zero: Math.max(0, words.x - 24 - fade) };
+  }
   const fade = Math.max(160, Math.round(words.h * 0.8));
   if (l.band === "bottom") {
     return { hex, from, edge: "bottom", full: words.y - 24, zero: Math.max(0, words.y - 24 - fade) };
@@ -281,15 +291,16 @@ export function shadeFor(book: DesignBook, l: Layout, g: Grid, words: { y: numbe
   return { hex, from, edge: "top", full: words.y + words.h + 24, zero: Math.min(g.h, words.y + words.h + 24 + fade) };
 }
 
-/** The shade as an OpenPencil fill on a rectangle from y to y + h. */
+/** The shade as an OpenPencil fill on a rectangle from y to y + h, or for a shade from the side, from x = y to y + h. */
 export function shadeFill(s: Shade, h: number, y: number) {
+  const across = s.edge === "left" || s.edge === "right";
   const { r, g, b } = rgb01(s.hex);
   const at = (pos: number, a: number) => ({ position: clamp01(pos), color: { r, g, b, a } });
   const stops =
-    s.edge === "top"
+    s.edge === "top" || s.edge === "left"
       ? [at(0, s.from), at((s.full - y) / h, s.from), at(1, 0)]
       : [at(0, 0), at((s.full - y) / h, s.from), at(1, s.from)];
-  // Top to bottom: the gradient's axis runs down the rectangle.
+  // Top to bottom: the gradient's axis runs down the rectangle; across, it runs left to right.
   return [
     {
       type: "GRADIENT_LINEAR",
@@ -297,7 +308,7 @@ export function shadeFill(s: Shade, h: number, y: number) {
       opacity: 1,
       visible: true,
       gradientStops: stops,
-      gradientTransform: { m00: 0, m01: 1, m02: 0, m10: -1, m11: 0, m12: 1 },
+      gradientTransform: across ? { m00: 1, m01: 0, m02: 0, m10: 0, m11: 1, m12: 0 } : { m00: 0, m01: 1, m02: 0, m10: -1, m11: 0, m12: 1 },
     },
   ];
 }

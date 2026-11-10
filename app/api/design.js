@@ -209,6 +209,12 @@ function shadeFor(book, l, g, words) {
   const dark = colourOf(book, "text");
   const hex = dark && isDark(dark) ? dark : "#000000";
   const from = Math.min(0.75, Math.max(0.3, book.photoText?.scrimOpacity ?? 0.5));
+  if (l.band === "middle") {
+    if (l.align === "center" || words.x === void 0 || words.w === void 0) return null;
+    const fade2 = Math.max(200, Math.round(words.w * 0.5));
+    if (l.align === "left") return { hex, from, edge: "left", full: words.x + words.w + 24, zero: Math.min(g.w, words.x + words.w + 24 + fade2) };
+    return { hex, from, edge: "right", full: words.x - 24, zero: Math.max(0, words.x - 24 - fade2) };
+  }
   const fade = Math.max(160, Math.round(words.h * 0.8));
   if (l.band === "bottom") {
     return { hex, from, edge: "bottom", full: words.y - 24, zero: Math.max(0, words.y - 24 - fade) };
@@ -216,9 +222,10 @@ function shadeFor(book, l, g, words) {
   return { hex, from, edge: "top", full: words.y + words.h + 24, zero: Math.min(g.h, words.y + words.h + 24 + fade) };
 }
 function shadeFill(s, h, y) {
+  const across = s.edge === "left" || s.edge === "right";
   const { r: r2, g, b } = rgb01(s.hex);
   const at = (pos, a) => ({ position: clamp01(pos), color: { r: r2, g, b, a } });
-  const stops = s.edge === "top" ? [at(0, s.from), at((s.full - y) / h, s.from), at(1, 0)] : [at(0, 0), at((s.full - y) / h, s.from), at(1, s.from)];
+  const stops = s.edge === "top" || s.edge === "left" ? [at(0, s.from), at((s.full - y) / h, s.from), at(1, 0)] : [at(0, 0), at((s.full - y) / h, s.from), at(1, s.from)];
   return [
     {
       type: "GRADIENT_LINEAR",
@@ -226,7 +233,7 @@ function shadeFill(s, h, y) {
       opacity: 1,
       visible: true,
       gradientStops: stops,
-      gradientTransform: { m00: 0, m01: 1, m02: 0, m10: -1, m11: 0, m12: 1 }
+      gradientTransform: across ? { m00: 1, m01: 0, m02: 0, m10: 0, m11: 1, m12: 0 } : { m00: 0, m01: 1, m02: 0, m10: -1, m11: 0, m12: 1 }
     }
   ];
 }
@@ -260,7 +267,8 @@ var q = (s) => JSON.stringify(s);
 var caseOf = (s) => s.case === "upper" ? ` textCase="upper"` : s.case === "lower" ? ` textCase="lower"` : "";
 
 // src/pixels.ts
-function shadeAt(s, y) {
+function shadeAt(s, y, x = 0) {
+  if (s.edge === "left" || s.edge === "right") return shadeAt({ ...s, edge: s.edge === "left" ? "top" : "bottom" }, x);
   if (s.edge === "top") {
     if (y <= s.full) return s.from;
     if (y >= s.zero) return 0;
@@ -292,7 +300,7 @@ function shaded(r2, g, b, y, x, shades) {
     if (s.box) {
       if (x >= s.box.x && x < s.box.x + s.box.w && y >= s.box.y && y < s.box.y + s.box.h) a = 1;
     } else {
-      a = shadeAt(s, y);
+      a = shadeAt(s, y, x);
     }
     if (a <= 0) continue;
     const [sr, sg, sb] = rgbOf(s.hex);
@@ -853,6 +861,26 @@ async function design(asked) {
   }
   return { ...best, tried, ms: Date.now() - t0 };
 }
+function searchOrder(all, hasSubline, rounds = [2, 4, 8, 36]) {
+  const shares = /* @__PURE__ */ new Map();
+  const seen = /* @__PURE__ */ new Set();
+  for (const l of all) {
+    const key = JSON.stringify(hasSubline ? l : { ...l, subline: void 0 });
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const share = `${l.band}|${l.ground}|${l.cta}|${l.ctaSide ?? ""}`;
+    const list = shares.get(share) ?? [];
+    list.push(l);
+    shares.set(share, list);
+  }
+  const out = [];
+  let from = 0;
+  for (const upto of rounds) {
+    for (const list of shares.values()) out.push(...list.slice(from, upto));
+    from = upto;
+  }
+  return out;
+}
 function hardFails(d) {
   return d.checks.filter((c) => !c.ok && c.hard).length;
 }
@@ -870,12 +898,8 @@ async function designOn(asked, until = Infinity) {
   let passed = 0;
   const taste = (t) => tasteOf(t, book, ask.prefer ?? {});
   const attempts = [];
-  const perBand = /* @__PURE__ */ new Map();
-  for (const l of layoutsFor(book, format, ask.prefer ?? {}, Boolean(words.cta))) {
-    const share = `${l.band}|${l.ground}|${l.cta}|${l.ctaSide ?? ""}`;
-    if ((perBand.get(share) ?? 0) >= 36) continue;
+  for (const l of searchOrder(layoutsFor(book, format, ask.prefer ?? {}, Boolean(words.cta)), Boolean(words.subline))) {
     if (best && Date.now() > until) break;
-    perBand.set(share, (perBand.get(share) ?? 0) + 1);
     const plan = logo ? logoPlan(book, g, l, logo) : null;
     const c = compose(book, format, words, l, familyFor, {}, plan ?? void 0);
     const doc = await build(c.jsx, ask.picture, plan?.logo.variants);
@@ -1028,8 +1052,8 @@ function* layoutsFor(book, format, prefer, hasCta) {
   for (const band of bands) {
     for (const place2 of places) {
       for (const ground of grounds) {
-        if (ground === "gradient" && band === "middle") continue;
         for (const align of aligns) {
+          if (ground === "gradient" && band === "middle" && align === "center") continue;
           for (const headline of steps.slice(0, 3)) {
             for (const columns of widths) {
               for (const subline of sublines) {
@@ -1078,10 +1102,16 @@ function measure(doc, c, l, book, p, keep, logo = null) {
   const shades = [];
   const shade = shadeFor(book, l, g, words);
   if (shade) {
-    const top = shade.edge === "top" ? 0 : shade.zero;
-    const h = shade.edge === "top" ? shade.zero : g.h - shade.zero;
     const id = doc.ids.get("Shade");
-    if (id) doc.graph.updateNode(id, { y: top, height: h, fills: shadeFill(shade, h, top) });
+    if (shade.edge === "left" || shade.edge === "right") {
+      const left = shade.edge === "left" ? 0 : shade.zero;
+      const w = shade.edge === "left" ? shade.zero : g.w - shade.zero;
+      if (id) doc.graph.updateNode(id, { x: left, y: 0, width: w, height: g.h, fills: shadeFill(shade, w, left) });
+    } else {
+      const top = shade.edge === "top" ? 0 : shade.zero;
+      const h = shade.edge === "top" ? shade.zero : g.h - shade.zero;
+      if (id) doc.graph.updateNode(id, { y: top, height: h, fills: shadeFill(shade, h, top) });
+    }
     shades.push(shade);
   }
   const boxes = { Words: words };
@@ -1323,6 +1353,9 @@ function fitFor(doc, sizes = {}) {
   const price = whole < 1 && whole >= PRICE_FLOOR ? Math.floor(whole * 100) / 100 : need("Price");
   return headline || cta || price ? { ...headline ? { headline } : {}, ...cta ? { cta } : {}, ...price ? { price } : {} } : null;
 }
+function unreadable(checks) {
+  return checks.filter((c) => !c.ok && c.hard && (c.check === "fits" || c.check === "lines" || c.check === "contrast")).length;
+}
 function covered(checks) {
   return checks.filter((c) => c.check === "covers" && !c.ok && c.node !== "Picture").reduce((s, c) => s + (c.value ?? 1), 0);
 }
@@ -1331,6 +1364,8 @@ function better(a, b, taste) {
   if (a.ok) return taste ? taste(a) > taste(b) + 0.05 : false;
   const ca = covered(a.checks), cb = covered(b.checks);
   if (Math.abs(ca - cb) > 1e-3) return ca < cb;
+  const ua = unreadable(a.checks), ub = unreadable(b.checks);
+  if (ua !== ub) return ua < ub;
   return a.score > b.score;
 }
 function tasteOf(t, book, prefer) {

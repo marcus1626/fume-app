@@ -23,14 +23,16 @@ export interface Box {
 export interface Shade {
   hex: string;
   from: number;
-  edge: "top" | "bottom";
+  /** The edge the shade is darkest at. Left and right shade the words set in the middle, beside what the picture shows. */
+  edge: "top" | "bottom" | "left" | "right";
   full: number;
   zero: number;
   box?: Box;
 }
 
-/** The shade's opacity at a height in the layout. */
-export function shadeAt(s: Shade, y: number): number {
+/** The shade's opacity at a place in the layout: its height, or for a shade from the side, its distance across. */
+export function shadeAt(s: Shade, y: number, x = 0): number {
+  if (s.edge === "left" || s.edge === "right") return shadeAt({ ...s, edge: s.edge === "left" ? "top" : "bottom" }, x);
   if (s.edge === "top") {
     if (y <= s.full) return s.from;
     if (y >= s.zero) return 0;
@@ -68,7 +70,7 @@ function shaded(r: number, g: number, b: number, y: number, x: number, shades: S
     if (s.box) {
       if (x >= s.box.x && x < s.box.x + s.box.w && y >= s.box.y && y < s.box.y + s.box.h) a = 1;
     } else {
-      a = shadeAt(s, y);
+      a = shadeAt(s, y, x);
     }
     if (a <= 0) continue;
     const [sr, sg, sb] = rgbOf(s.hex);

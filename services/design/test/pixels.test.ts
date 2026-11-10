@@ -45,3 +45,12 @@ test("overlap is the share of the first box inside the second", () => {
   assert.equal(overlap({ x: 0, y: 0, w: 10, h: 10 }, { x: 5, y: 0, w: 10, h: 10 }), 0.5);
   assert.equal(overlap({ x: 0, y: 0, w: 10, h: 10 }, { x: 20, y: 20, w: 5, h: 5 }), 0);
 });
+
+test("a shade from the side darkens across, for words set in the middle", () => {
+  const p = picture(200, 100, () => [240, 240, 240]);
+  const shade = { hex: "#000000", from: 0.7, edge: "left" as const, full: 80, zero: 160 };
+  assert.equal(shadeAt(shade, 10, 40), 0.7);
+  assert.equal(shadeAt(shade, 10, 180), 0);
+  assert.ok(under(p, { x: 0, y: 20, w: 60, h: 50 }, "#FFFFFF", [shade]).contrast > 3);
+  assert.ok(under(p, { x: 170, y: 20, w: 30, h: 50 }, "#FFFFFF", [shade]).contrast < 1.2);
+});

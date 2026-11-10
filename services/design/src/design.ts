@@ -113,6 +113,34 @@ export async function design(asked: Ask): Promise<Designed> {
   return { ...best, tried, ms: Date.now() - t0 };
 }
 
+/**
+ * The order the layouts are tried in. Each place for the words, ground and button place gets a few tries in turn, the
+ * model's own first, before any of them gets more: the search has time for about thirty, and a place or a ground that
+ * cannot work must not use them all (Anthem, 10 Nov: all thirty went to words straight on bright sand in the middle;
+ * the shade and the other places were never tried). A layout that differs only in a line the words do not have is
+ * tried once.
+ */
+export function searchOrder(all: Iterable<Layout>, hasSubline: boolean, rounds = [2, 4, 8, 36]): Layout[] {
+  const shares = new Map<string, Layout[]>();
+  const seen = new Set<string>();
+  for (const l of all) {
+    const key = JSON.stringify(hasSubline ? l : { ...l, subline: undefined });
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const share = `${l.band}|${l.ground}|${l.cta}|${l.ctaSide ?? ""}`;
+    const list = shares.get(share) ?? [];
+    list.push(l);
+    shares.set(share, list);
+  }
+  const out: Layout[] = [];
+  let from = 0;
+  for (const upto of rounds) {
+    for (const list of shares.values()) out.push(...list.slice(from, upto));
+    from = upto;
+  }
+  return out;
+}
+
 function hardFails(d: Designed): number {
   return d.checks.filter((c) => !c.ok && c.hard).length;
 }
@@ -136,12 +164,8 @@ async function designOn(asked: Ask, until = Infinity): Promise<Designed> {
   const attempts: Designed["attempts"] = [];
   // Each place for the words, and each ground there, gets its share of the tries, so a place or a ground that cannot
   // work never uses them all up (Anthem, 9 Nov: the photo used every try and the brand's navy block got none).
-  const perBand = new Map<string, number>();
-  for (const l of layoutsFor(book, format, ask.prefer ?? {}, Boolean(words.cta))) {
-    const share = `${l.band}|${l.ground}|${l.cta}|${l.ctaSide ?? ""}`;
-    if ((perBand.get(share) ?? 0) >= 36) continue;
+  for (const l of searchOrder(layoutsFor(book, format, ask.prefer ?? {}, Boolean(words.cta)), Boolean(words.subline))) {
     if (best && Date.now() > until) break;
-    perBand.set(share, (perBand.get(share) ?? 0) + 1);
     const plan = logo ? logoPlan(book, g, l, logo) : null;
     const c = compose(book, format, words, l, familyFor, {}, plan ?? undefined);
     const doc = await build(c.jsx, ask.picture, plan?.logo.variants);
@@ -339,8 +363,9 @@ export function* layoutsFor(book: DesignBook, format: Format, prefer: Partial<La
   for (const band of bands) {
     for (const place of places) {
       for (const ground of grounds) {
-        if (ground === "gradient" && band === "middle") continue;
         for (const align of aligns) {
+          // Words in the middle are shaded from their own side; centred there, there is no side to shade from.
+          if (ground === "gradient" && band === "middle" && align === "center") continue;
           for (const headline of steps.slice(0, 3)) {
             for (const columns of widths) {
               for (const subline of sublines) {
@@ -404,10 +429,16 @@ export function measure(
   const shades: Shade[] = [];
   const shade = shadeFor(book, l, g, words);
   if (shade) {
-    const top = shade.edge === "top" ? 0 : shade.zero;
-    const h = shade.edge === "top" ? shade.zero : g.h - shade.zero;
     const id = doc.ids.get("Shade");
-    if (id) doc.graph.updateNode(id, { y: top, height: h, fills: shadeFill(shade, h, top) as never });
+    if (shade.edge === "left" || shade.edge === "right") {
+      const left = shade.edge === "left" ? 0 : shade.zero;
+      const w = shade.edge === "left" ? shade.zero : g.w - shade.zero;
+      if (id) doc.graph.updateNode(id, { x: left, y: 0, width: w, height: g.h, fills: shadeFill(shade, w, left) as never });
+    } else {
+      const top = shade.edge === "top" ? 0 : shade.zero;
+      const h = shade.edge === "top" ? shade.zero : g.h - shade.zero;
+      if (id) doc.graph.updateNode(id, { y: top, height: h, fills: shadeFill(shade, h, top) as never });
+    }
     shades.push(shade);
   }
   const boxes: Record<string, Box> = { Words: words };
@@ -704,6 +735,11 @@ export function fitFor(doc: Doc, sizes: Record<string, number> = {}): Layout["fi
   return headline || cta || price ? { ...(headline ? { headline } : {}), ...(cta ? { cta } : {}), ...(price ? { price } : {}) } : null;
 }
 
+/** The hard failures that leave words unread or misread: a broken word, too many lines, too little contrast. */
+export function unreadable(checks: Check[]): number {
+  return checks.filter((c) => !c.ok && c.hard && (c.check === "fits" || c.check === "lines" || c.check === "contrast")).length;
+}
+
 /** How much of what must stay clear (the product, a face) the words cover. */
 export function covered(checks: Check[]): number {
   return checks.filter((c) => c.check === "covers" && !c.ok && c.node !== "Picture").reduce((s, c) => s + (c.value ?? 1), 0);
@@ -717,6 +753,10 @@ export function better(a: Tried, b: Tried, taste?: (t: Tried) => number): boolea
   if (a.ok) return taste ? taste(a) > taste(b) + 0.05 : false;
   const ca = covered(a.checks), cb = covered(b.checks);
   if (Math.abs(ca - cb) > 0.001) return ca < cb;
+  // Then the words that cannot be read as written: a word broken in two, or words lost on their ground (Anthem, 10 Nov:
+  // "Leagu/e" in five lines won on its score over a layout that read).
+  const ua = unreadable(a.checks), ub = unreadable(b.checks);
+  if (ua !== ub) return ua < ub;
   return a.score > b.score;
 }
 
