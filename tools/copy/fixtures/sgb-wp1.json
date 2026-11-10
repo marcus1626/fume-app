@@ -1,7 +1,7 @@
 {
   "brand": "SGB",
   "campaign": "Work package 1: from stranger to lead",
-  "file": "SGB_brief-1_Fumes",
+  "file": "SGB_Copy_Fume_Test",
   "status": "Work package 1, main work first, optional work at the end. For the call on 10 November 2026.",
   "sections": [
     {
@@ -2406,5 +2406,6 @@
       "label": "For the call",
       "href": "#call"
     }
-  ]
+  ],
+  "footer": "SGB_Copy_Fume_Test · work package 1 · 10 November 2026"
 }
